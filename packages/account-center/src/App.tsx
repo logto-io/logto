@@ -14,12 +14,20 @@ import LogtoErrorBoundary from './Providers/AppBoundary/LogtoErrorBoundary';
 import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
 import BrandingHeader from './components/BrandingHeader';
-import { emailRoute, emailSuccessRoute, phoneRoute, phoneSuccessRoute } from './constants/routes';
+import {
+  emailRoute,
+  emailSuccessRoute,
+  phoneRoute,
+  phoneSuccessRoute,
+  usernameRoute,
+  usernameSuccessRoute,
+} from './constants/routes';
 import initI18n from './i18n/init';
 import Email from './pages/Email';
 import Home from './pages/Home';
 import Phone from './pages/Phone';
 import UpdateSuccess from './pages/UpdateSuccess';
+import Username from './pages/Username';
 import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
 import '@experience/shared/scss/normalized.scss';
 
@@ -67,8 +75,13 @@ const Main = () => {
         path={phoneSuccessRoute}
         element={<UpdateSuccess identifierType={SignInIdentifier.Phone} />}
       />
+      <Route
+        path={usernameSuccessRoute}
+        element={<UpdateSuccess identifierType={SignInIdentifier.Username} />}
+      />
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
+      <Route path={usernameRoute} element={<Username />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>

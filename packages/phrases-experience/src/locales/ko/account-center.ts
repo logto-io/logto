@@ -49,6 +49,11 @@ const account_center = {
     success: '기본 전화번호가 연결되었습니다.',
     verification_required: '인증이 만료되었습니다. 다시 신원을 확인해주세요.',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: '인증 코드 보내기',
@@ -95,6 +100,10 @@ const account_center = {
     phone: {
       title: '전화번호가 업데이트되었습니다!',
       description: '계정의 전화번호가 성공적으로 변경되었습니다.',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };

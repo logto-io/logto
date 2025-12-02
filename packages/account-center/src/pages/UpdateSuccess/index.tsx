@@ -20,6 +20,10 @@ const translationMap: TranslationMap = {
     titleKey: 'account_center.update_success.phone.title',
     messageKey: 'account_center.update_success.phone.description',
   },
+  [SignInIdentifier.Username]: {
+    titleKey: 'account_center.update_success.username.title',
+    messageKey: 'account_center.update_success.username.description',
+  },
   default: {
     titleKey: 'account_center.update_success.default.title',
     messageKey: 'account_center.update_success.default.description',

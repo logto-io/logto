@@ -50,6 +50,11 @@ const account_center = {
     success: 'メインの電話番号をリンクしました。',
     verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: '認証コードを送信',
@@ -96,6 +101,10 @@ const account_center = {
     phone: {
       title: '電話番号を更新しました！',
       description: 'アカウントの電話番号が正常に変更されました。',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };

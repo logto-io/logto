@@ -49,6 +49,11 @@ const account_center = {
     success: '已成功連結主要電話。',
     verification_required: '驗證已失效，請再次驗證你的身份。',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: '發送驗證碼',
@@ -93,6 +98,10 @@ const account_center = {
     phone: {
       title: '電話號碼已更新！',
       description: '你的帳戶電話號碼已成功更改。',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };

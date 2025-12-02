@@ -49,6 +49,11 @@ const account_center = {
     success: '已成功关联主要手机号。',
     verification_required: '验证已失效，请重新验证身份。',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: '发送验证码',
@@ -92,6 +97,10 @@ const account_center = {
     phone: {
       title: '手机号已更新！',
       description: '你的账号手机号已成功更改。',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };

@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 
 export type ErrorHandlers = {
-  [key in RequestErrorBody['code']]?: (error: RequestErrorBody) => void | Promise<void>;
-} & {
+  [code: string]: ((error: RequestErrorBody) => void | Promise<void>) | undefined;
   // Overwrite default global error handle logic
   global?: (error: RequestErrorBody) => void | Promise<void>;
 };

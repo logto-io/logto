@@ -1,4 +1,11 @@
-import { emailRoute, emailSuccessRoute, phoneRoute, phoneSuccessRoute } from '@ac/constants/routes';
+import {
+  emailRoute,
+  emailSuccessRoute,
+  phoneRoute,
+  phoneSuccessRoute,
+  usernameRoute,
+  usernameSuccessRoute,
+} from '@ac/constants/routes';
 
 export const accountCenterBasePath = '/account-center';
 const storageKey = 'account-center-route-cache';
@@ -8,7 +15,8 @@ const knownRoutePrefixes: readonly string[] = [
   emailSuccessRoute,
   phoneRoute,
   phoneSuccessRoute,
-  '/username',
+  usernameRoute,
+  usernameSuccessRoute,
   '/password',
 ];
 

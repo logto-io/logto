@@ -50,6 +50,11 @@ const account_center = {
     success: 'Birincil telefon başarıyla bağlandı.',
     verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: 'Doğrulama kodu gönder',
@@ -95,6 +100,10 @@ const account_center = {
     phone: {
       title: 'Telefon numarası güncellendi!',
       description: 'Hesabınızın telefon numarası başarıyla değiştirildi.',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };

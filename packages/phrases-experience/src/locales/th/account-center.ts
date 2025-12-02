@@ -50,6 +50,11 @@ const account_center = {
     success: 'เชื่อมต่อโทรศัพท์หลักเรียบร้อยแล้ว',
     verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: 'ส่งรหัสยืนยัน',
@@ -95,6 +100,10 @@ const account_center = {
     phone: {
       title: 'หมายเลขโทรศัพท์ได้รับการอัปเดตแล้ว!',
       description: 'หมายเลขโทรศัพท์ของบัญชีคุณเปลี่ยนแปลงเรียบร้อยแล้ว',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };

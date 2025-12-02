@@ -54,6 +54,11 @@ const account_center = {
     success: 'Telefono principale collegato correttamente.',
     verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: 'Invia codice di verifica',
@@ -101,6 +106,10 @@ const account_center = {
     phone: {
       title: 'Numero di telefono aggiornato!',
       description: 'Il numero di telefono del tuo account è stato modificato con successo.',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };

@@ -50,6 +50,11 @@ const account_center = {
     success: 'تم ربط الهاتف الأساسي بنجاح.',
     verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: 'إرسال رمز التحقق',
@@ -95,6 +100,10 @@ const account_center = {
     phone: {
       title: 'تم تحديث رقم الهاتف!',
       description: 'تم تغيير رقم هاتف حسابك بنجاح.',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };

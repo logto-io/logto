@@ -50,6 +50,11 @@ const account_center = {
     success: 'Основной телефон успешно привязан.',
     verification_required: 'Срок действия проверки истёк. Подтвердите личность ещё раз.',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: 'Отправить код подтверждения',
@@ -96,6 +101,10 @@ const account_center = {
     phone: {
       title: 'Номер телефона обновлён!',
       description: 'Номер телефона вашего аккаунта успешно изменён.',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };

@@ -52,6 +52,11 @@ const account_center = {
     success: 'Основний телефон успішно прив’язано.',
     verification_required: 'Термін перевірки минув. Підтвердіть свою особу ще раз.',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
 
   code_verification: {
     send: 'Надіслати код підтвердження',
@@ -98,6 +103,10 @@ const account_center = {
     phone: {
       title: 'Номер телефону оновлено!',
       description: 'Номер телефону вашого облікового запису успішно змінено.',
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
     },
   },
 };
