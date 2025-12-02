@@ -10,11 +10,16 @@ const account_center = {
     title: 'Verifica di sicurezza',
     description:
       'Conferma che sei tu per proteggere la sicurezza del tuo account. Seleziona il metodo per verificare la tua identità.',
+    error_send_failed: 'Invio del codice di verifica non riuscito. Riprova più tardi.',
+    error_invalid_code: 'Il codice di verifica non è valido o è scaduto.',
+    error_verify_failed: 'Verifica non riuscita. Inserisci di nuovo il codice.',
+    verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
   },
   password_verification: {
-    title: 'Verify password',
-    description: "Verify it's you to protect your account security. Enter your password.",
-    error_failed: 'Verification failed. Please check your password.',
+    title: 'Verifica la password',
+    description:
+      'Per proteggere il tuo account, inserisci la password per confermare la tua identità.',
+    error_failed: 'Verifica non riuscita. Controlla la tua password.',
   },
   verification_method: {
     password: {
@@ -30,12 +35,38 @@ const account_center = {
       description: 'Invia il codice di verifica al tuo numero di telefono',
     },
   },
+  email: {
+    title: "Collega l'email",
+    description: "Collega la tua email per accedere o per aiutare con il recupero dell'account.",
+    verification_title: 'Inserisci il codice di verifica e-mail',
+    verification_description:
+      'Il codice di verifica è stato inviato alla tua e-mail {{email_address}}.',
+    success: 'Email principale collegata correttamente.',
+    verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
+  },
+  phone: {
+    title: 'Collega telefono',
+    description:
+      'Collega il tuo numero di telefono per accedere o aiutare con il recupero dell’account.',
+    verification_title: 'Inserisci il codice di verifica del telefono',
+    verification_description:
+      'Il codice di verifica è stato inviato al tuo telefono {{phone_number}}.',
+    success: 'Telefono principale collegato correttamente.',
+    verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
+  },
+
+  code_verification: {
+    send: 'Invia codice di verifica',
+    resend: 'Invia di nuovo il codice',
+    resend_countdown: "Non l'hai ricevuto? Reinvia dopo {{seconds}} s.",
+  },
+
   email_verification: {
     title: 'Verifica la tua e-mail',
     prepare_description:
       "Verify it's you to protect your account security. Send the verification code to your email.",
-    email_label: 'Email address',
-    send: 'Send verification code',
+    email_label: 'Indirizzo email',
+    send: 'Invia codice di verifica',
     description:
       "Il codice di verifica è stato inviato all'e-mail {{email}}. Inserisci il codice per continuare.",
     resend: 'Invia di nuovo il codice',
@@ -49,7 +80,7 @@ const account_center = {
     prepare_description:
       'Conferma che sei tu per proteggere la sicurezza del tuo account. Invia il codice di verifica al tuo telefono.',
     phone_label: 'Numero di telefono',
-    send: 'Send verification code',
+    send: 'Invia codice di verifica',
     description:
       'Il codice di verifica è stato inviato al tuo telefono {{phone}}. Inserisci il codice per continuare.',
     resend: 'Invia di nuovo il codice',
