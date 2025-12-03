@@ -2857,7 +2857,7 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       nodemailer:
-        specifier: ^7.0.7
+        specifier: ^7.0.10
         version: 7.0.10
       snakecase-keys:
         specifier: ^8.0.1

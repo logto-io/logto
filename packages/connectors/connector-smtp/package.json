@@ -7,7 +7,7 @@
     "@logto/connector-kit": "workspace:^",
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
-    "nodemailer": "^6.9.9",
+    "nodemailer": "^7.0.10",
     "snakecase-keys": "^8.0.1",
     "zod": "3.24.3"
   },
