@@ -86,6 +86,20 @@ const account_center = {
     error_verify_failed: 'Не вдалося підтвердити. Будь ласка, введіть код ще раз.',
     error_invalid_code: 'Код підтвердження недійсний або строк його дії минув.',
   },
+  update_success: {
+    default: {
+      title: 'Оновлення успішне',
+      description: 'Ваші зміни успішно збережено.',
+    },
+    email: {
+      title: 'Електронну адресу оновлено!',
+      description: 'Електронну адресу вашого облікового запису успішно змінено.',
+    },
+    phone: {
+      title: 'Номер телефону оновлено!',
+      description: 'Номер телефону вашого облікового запису успішно змінено.',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

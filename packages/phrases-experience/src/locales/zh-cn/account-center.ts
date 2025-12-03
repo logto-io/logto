@@ -80,6 +80,20 @@ const account_center = {
     error_verify_failed: '验证失败，请重新输入验证码。',
     error_invalid_code: '验证码无效或已过期。',
   },
+  update_success: {
+    default: {
+      title: '更新成功',
+      description: '你的更改已成功保存。',
+    },
+    email: {
+      title: '邮箱地址已更新！',
+      description: '你的账号邮箱地址已成功更改。',
+    },
+    phone: {
+      title: '手机号已更新！',
+      description: '你的账号手机号已成功更改。',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

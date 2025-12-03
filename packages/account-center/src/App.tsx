@@ -1,6 +1,6 @@
 import LogtoSignature from '@experience/shared/components/LogtoSignature';
 import { LogtoProvider, useLogto, UserScope } from '@logto/react';
-import { accountCenterApplicationId } from '@logto/schemas';
+import { accountCenterApplicationId, SignInIdentifier } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ import LogtoErrorBoundary from './Providers/AppBoundary/LogtoErrorBoundary';
 import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
 import BrandingHeader from './components/BrandingHeader';
-import { emailRoute, phoneRoute, updateSuccessRoute } from './constants/routes';
+import { emailRoute, emailSuccessRoute, phoneRoute, phoneSuccessRoute } from './constants/routes';
 import initI18n from './i18n/init';
 import Email from './pages/Email';
 import Home from './pages/Home';
@@ -59,7 +59,14 @@ const Main = () => {
 
   return (
     <Routes>
-      <Route path={updateSuccessRoute} element={<UpdateSuccess />} />
+      <Route
+        path={emailSuccessRoute}
+        element={<UpdateSuccess identifierType={SignInIdentifier.Email} />}
+      />
+      <Route
+        path={phoneSuccessRoute}
+        element={<UpdateSuccess identifierType={SignInIdentifier.Phone} />}
+      />
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
       <Route index element={<Home />} />

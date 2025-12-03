@@ -83,6 +83,20 @@ const account_center = {
     error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
     error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
   },
+  update_success: {
+    default: {
+      title: 'อัปเดตสำเร็จ',
+      description: 'บันทึกการเปลี่ยนแปลงของคุณเรียบร้อยแล้ว',
+    },
+    email: {
+      title: 'อีเมลได้รับการอัปเดตแล้ว!',
+      description: 'ที่อยู่อีเมลของบัญชีคุณเปลี่ยนแปลงเรียบร้อยแล้ว',
+    },
+    phone: {
+      title: 'หมายเลขโทรศัพท์ได้รับการอัปเดตแล้ว!',
+      description: 'หมายเลขโทรศัพท์ของบัญชีคุณเปลี่ยนแปลงเรียบร้อยแล้ว',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

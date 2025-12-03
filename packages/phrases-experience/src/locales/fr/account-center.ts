@@ -89,6 +89,20 @@ const account_center = {
     error_verify_failed: 'Échec de la vérification. Veuillez saisir le code à nouveau.',
     error_invalid_code: 'Le code de vérification est invalide ou a expiré.',
   },
+  update_success: {
+    default: {
+      title: 'Mise à jour réussie',
+      description: 'Vos modifications ont été enregistrées avec succès.',
+    },
+    email: {
+      title: 'Adresse e-mail mise à jour !',
+      description: "L'adresse e-mail de votre compte a bien été modifiée.",
+    },
+    phone: {
+      title: 'Numéro de téléphone mis à jour !',
+      description: 'Le numéro de téléphone de votre compte a bien été modifié.',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

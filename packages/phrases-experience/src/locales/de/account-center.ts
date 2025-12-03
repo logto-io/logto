@@ -93,6 +93,20 @@ const account_center = {
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
     error_invalid_code: 'Der Bestätigungscode ist ungültig oder abgelaufen.',
   },
+  update_success: {
+    default: {
+      title: 'Aktualisierung erfolgreich',
+      description: 'Deine Änderungen wurden erfolgreich gespeichert.',
+    },
+    email: {
+      title: 'E-Mail-Adresse aktualisiert!',
+      description: 'Die E-Mail-Adresse deines Kontos wurde erfolgreich geändert.',
+    },
+    phone: {
+      title: 'Telefonnummer aktualisiert!',
+      description: 'Die Telefonnummer deines Kontos wurde erfolgreich geändert.',
+    },
+  },
 };
 
 export default Object.freeze(account_center);

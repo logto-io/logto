@@ -9,7 +9,6 @@ import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext'
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { updateSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 
@@ -58,7 +57,7 @@ type IdentifierBindingPageProps<VerifyPayload, BindPayload> = {
     code: string
   ) => VerifyPayload;
   readonly buildBindPayload: (identifier: string, verificationRecordId: string) => BindPayload;
-  readonly successRedirect?: string;
+  readonly successRedirect: string;
   readonly initialValue?: string;
 };
 
@@ -73,7 +72,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   bindIdentifier,
   buildVerifyPayload,
   buildBindPayload,
-  successRedirect = updateSuccessRoute,
+  successRedirect,
   initialValue = '',
 }: IdentifierBindingPageProps<VerifyPayload, BindPayload>) => {
   const { t } = useTranslation();

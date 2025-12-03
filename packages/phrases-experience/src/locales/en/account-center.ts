@@ -85,6 +85,20 @@ const account_center = {
     error_verify_failed: 'Verification failed. Please enter the code again.',
     error_invalid_code: 'The verification code is invalid or has expired.',
   },
+  update_success: {
+    default: {
+      title: 'Update successful',
+      description: 'Your changes have been saved successfully.',
+    },
+    email: {
+      title: 'Email address updated!',
+      description: "Your account's email address has been successfully changed.",
+    },
+    phone: {
+      title: 'Phone number updated!',
+      description: "Your account's phone number has been successfully changed.",
+    },
+  },
 };
 
 export default Object.freeze(account_center);
