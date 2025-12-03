@@ -17,7 +17,14 @@ type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response
  */
 export type Subscription = Omit<
   RouteResponseType<GetRoutes['/api/tenants/my/subscription']>,
-  'currentPeriodStart' | 'currentPeriodEnd'
+  | 'currentPeriodStart'
+  | 'currentPeriodEnd'
+  /**
+   * Temporarily omit `quotaScope` for backward compatibility.
+   * When we require this field, implement the related logic here.
+   * TODO: @simeng-li
+   */
+  | 'quotaScope'
 > & {
   currentPeriodStart: string;
   currentPeriodEnd: string;
@@ -153,6 +160,5 @@ export const subscriptionCacheGuard = z.object({
   status: subscriptionStatusGuard,
   upcomingInvoice: upcomingInvoiceGuard.nullable().optional(),
   quota: logtoSkuQuotaGuard,
-  // Todo: @xiaoyijun: LOG-12360 make SystemLimit non-optional after this feature is fully rolled out
-  systemLimit: systemLimitGuard.optional(),
+  systemLimit: systemLimitGuard,
 }) satisfies ToZodObject<Subscription>;

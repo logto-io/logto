@@ -238,10 +238,6 @@ export class QuotaLibrary {
   }) => {
     const { systemLimit } = subscriptionData;
 
-    if (!systemLimit) {
-      return;
-    }
-
     const limit = systemLimit[key];
 
     if (limit === undefined) {
