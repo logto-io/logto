@@ -10,9 +10,3 @@ create table daily_token_usage (
 
 create unique index daily_token_usage__date
   on daily_token_usage (tenant_id, date);
-
-create index daily_token_usage__user_token_usage
-  on daily_token_usage (tenant_id, date, user_token_usage);
-
-create index daily_token_usage__m2m_token_usage
-  on daily_token_usage (tenant_id, date, m2m_token_usage);

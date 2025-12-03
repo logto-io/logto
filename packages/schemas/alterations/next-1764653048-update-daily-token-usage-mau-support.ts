@@ -16,28 +16,8 @@ const alteration: AlterationScript = {
       alter table daily_token_usage
       drop constraint if exists daily_token_usage_tenant_id_fkey;
     `);
-
-    // Create optimized indexes for billing cycle queries
-    await pool.query(sql`
-      create index daily_token_usage__user_token_usage
-        on daily_token_usage (tenant_id, date, user_token_usage);
-    `);
-
-    await pool.query(sql`
-      create index daily_token_usage__m2m_token_usage
-        on daily_token_usage (tenant_id, date, m2m_token_usage);
-    `);
   },
   down: async (pool) => {
-    // Drop the new indexes
-    await pool.query(sql`
-      drop index if exists daily_token_usage__user_token_usage;
-    `);
-
-    await pool.query(sql`
-      drop index if exists daily_token_usage__m2m_token_usage;
-    `);
-
     // Remove the new columns
     await pool.query(sql`
       alter table daily_token_usage
