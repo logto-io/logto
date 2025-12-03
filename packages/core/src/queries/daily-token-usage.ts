@@ -12,16 +12,6 @@ const { fields: fieldsWithPrefix } = convertToIdentifiers(DailyTokenUsage, true)
 
 type TokenUsageType = 'user' | 'm2m';
 
-type RecordTokenUsageOptions = {
-  type?: TokenUsageType;
-};
-
-type CountTokenUsageOptions = {
-  from: Date;
-  to: Date;
-  type?: TokenUsageType | 'detailed';
-};
-
 export const tokenUsageCountsGuard = z.object({
   totalUsage: z.number().nonnegative(),
   userTokenUsage: z.number().nonnegative(),
@@ -49,9 +39,7 @@ export const createDailyTokenUsageQueries = (pool: CommonQueryMethods) => {
    *
    * The approach we used allows us to accomplish the task within a single database query.
    */
-  const recordTokenUsage = async (date: Date, options?: RecordTokenUsageOptions) => {
-    const { type } = options ?? {};
-
+  const recordTokenUsage = async (date: Date, { type }: { type: TokenUsageType }) => {
     // For user tokens: increment both usage and user_token_usage
     // For M2M tokens: increment both usage and m2m_token_usage
     const userTokenIncrement =
@@ -86,12 +74,12 @@ export const createDailyTokenUsageQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
-  const countTokenUsage = async ({ from, to }: CountTokenUsageOptions) => {
+  const countTokenUsage = async ({ from, to }: { from: Date; to: Date }) => {
     return pool.one<TokenUsageCounts>(sql`
         select
-          sum(${fields.usage}) as total_usage,
-          sum(${fields.userTokenUsage}) as user_token_usage,
-          sum(${fields.m2mTokenUsage}) as m2m_token_usage
+          coalesce(sum(${fields.usage}), 0) as total_usage,
+          coalesce(sum(${fields.userTokenUsage}), 0) as user_token_usage,
+          coalesce(sum(${fields.m2mTokenUsage}), 0) as m2m_token_usage
         from ${table}
         where ${fields.date} >= to_timestamp(${getUtcStartOfTheDay(
           from
