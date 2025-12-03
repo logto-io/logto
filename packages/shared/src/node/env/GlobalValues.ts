@@ -119,6 +119,14 @@ export default class GlobalValues {
   /** Global switch for enabling/disabling case-sensitive usernames. */
   public readonly isCaseSensitiveUsername = yes(getEnv('CASE_SENSITIVE_USERNAME', 'true'));
 
+  /**
+   * The API key for status endpoint protection. If it's set, requests to the status endpoint may
+   * supply the key in the header for receiving response with additional details.
+   *
+   * @optional
+   */
+  public readonly statusApiKey = getEnv('STATUS_API_KEY');
+
   /** The write-only key for PostHog integration. */
   public readonly posthogPublicKey = process.env.POSTHOG_PUBLIC_KEY;
   /** The PostHog host URL for SDK to send events to. */
