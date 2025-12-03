@@ -1,7 +1,6 @@
 create table daily_active_users (
   id varchar(21) not null,
-  tenant_id varchar(21) not null
-    references tenants (id) on update cascade on delete cascade,
+  tenant_id varchar(21) not null,
   user_id varchar(21) not null,
   date timestamptz not null default (now()),
   primary key (id),
@@ -9,8 +8,14 @@ create table daily_active_users (
     unique (user_id, date)
 );
 
-create index daily_active_users__id
-  on daily_active_users (tenant_id, id);
+-- Optimized index for aggregation queries with better write performance
+create index daily_active_users__tenant_date_user
+  on daily_active_users (tenant_id, date, user_id);
+
+-- BRIN index for time-series date range queries
+-- Optimized for sequential data insertion and range scans (date >= ?)
+create index daily_active_users__date_brin
+  on daily_active_users using brin (date);
 
 create index daily_active_users__date
   on daily_active_users (tenant_id, date);
