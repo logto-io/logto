@@ -1,4 +1,3 @@
-import { type RegionResponse as RegionType } from '@logto/cloud/routes';
 import { Theme, TenantTag } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 import { useCallback, useMemo, useState } from 'react';
@@ -10,7 +9,7 @@ import Modal from 'react-modal';
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg?react';
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?react';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type TenantResponse } from '@/cloud/types/router';
+import { type TenantResponse, type RegionResponse as RegionType } from '@/cloud/types/router';
 import Region, {
   defaultRegionName,
   logtoDropdownItem,

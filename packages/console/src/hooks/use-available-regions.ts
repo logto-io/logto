@@ -1,8 +1,8 @@
-import { type RegionResponse as RegionType } from '@logto/cloud/routes';
 import { useCallback } from 'react';
 import useSWRImmutable from 'swr/immutable';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { type RegionResponse as RegionType } from '@/cloud/types/router';
 
 /** Checks if a region is a development-only region based on its name. */
 export const isDevOnlyRegion = (regionName?: string): boolean =>
