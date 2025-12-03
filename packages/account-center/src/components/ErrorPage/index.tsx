@@ -5,12 +5,21 @@ import DynamicT from '@experience/shared/components/DynamicT';
 import PageMeta from '@experience/shared/components/PageMeta';
 import { Theme } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
+import type { AnchorHTMLAttributes } from 'react';
 import { useContext } from 'react';
 import { Trans } from 'react-i18next';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 
 import styles from './index.module.scss';
+
+type SupportLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & { readonly text: string };
+
+const SupportLink = ({ text, ...rest }: SupportLinkProps) => (
+  <a {...rest} className={styles.supportLink}>
+    {text}
+  </a>
+);
 
 type Props = {
   readonly titleKey?: TFuncKey;
@@ -42,11 +51,7 @@ const SupportInfo = () => {
           <Trans
             i18nKey="description.support_email"
             components={{
-              link: (
-                <a className={styles.supportLink} href={`mailto:${supportEmail}`}>
-                  {supportEmail}
-                </a>
-              ),
+              link: <SupportLink href={`mailto:${supportEmail}`} text={supportEmail} />,
             }}
           />
         </div>
@@ -57,14 +62,12 @@ const SupportInfo = () => {
             i18nKey="description.support_website"
             components={{
               link: (
-                <a
-                  className={styles.supportLink}
+                <SupportLink
                   href={supportWebsiteUrl}
                   rel="noopener"
                   target="_blank"
-                >
-                  {supportWebsiteUrl}
-                </a>
+                  text={supportWebsiteUrl}
+                />
               ),
             }}
           />
