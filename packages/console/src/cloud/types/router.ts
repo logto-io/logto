@@ -65,4 +65,8 @@ export type TenantMemberResponse = GetArrayElementType<
 export type TenantInvitationResponse = GetArrayElementType<
   GuardedResponse<GetTenantAuthRoutes['/api/tenants/:tenantId/invitations']>
 >;
+
+export type RegionResponse = GetArrayElementType<
+  GuardedResponse<GetRoutes['/api/me/regions']>['regions']
+>;
 // End of the auth routes types

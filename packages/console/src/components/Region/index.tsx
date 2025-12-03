@@ -1,8 +1,9 @@
-import { type RegionResponse as RegionType } from '@logto/cloud/routes';
 import { TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
 import { useMemo, type FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { type RegionResponse as RegionType } from '@/cloud/types/router';
 
 import auFlag from './assets/au.svg?react';
 import euFlag from './assets/eu.svg?react';
