@@ -47,6 +47,8 @@ const security = {
     site_key: 'サイトキー',
     secret_key: 'シークレットキー',
     project_id: 'プロジェクト ID',
+    domain: 'ドメイン（オプション）',
+    domain_placeholder: 'www.google.com（デフォルト）または recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA キー ID',
     recaptcha_api_key: 'プロジェクトの API キー',
     deletion_description: 'この CAPTCHA プロバイダーを削除してもよろしいですか？',

@@ -45,6 +45,8 @@ const security = {
     site_key: '站點金鑰',
     secret_key: '私密金鑰',
     project_id: '項目 ID',
+    domain: '網域（可選）',
+    domain_placeholder: 'www.google.com（預設）或 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 金鑰 ID',
     recaptcha_api_key: '項目的 API 金鑰',
     deletion_description: '你確定要刪除此 CAPTCHA 供應商嗎？',

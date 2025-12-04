@@ -117,8 +117,10 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           'https://challenges.cloudflare.com/turnstile/v0/api.js',
           // Google Recaptcha Enterprise
           'https://www.google.com/recaptcha/enterprise.js',
+          'https://recaptcha.net/recaptcha/enterprise.js',
           // Google Recaptcha static resources
           'https://www.gstatic.com/recaptcha/',
+          'https://www.gstatic.cn/recaptcha/',
           // Allow "unsafe-eval" for debugging purpose in non-production environment
           ...conditionalArray(!isProduction && "'unsafe-eval'"),
         ],
@@ -129,7 +131,9 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           tenantEndpointOrigin,
           // Allow reCAPTCHA API calls
           'https://www.google.com/recaptcha/',
+          'https://recaptcha.net/recaptcha/',
           'https://www.gstatic.com/recaptcha/',
+          'https://www.gstatic.cn/recaptcha/',
           ...developmentOrigins,
         ],
         // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe

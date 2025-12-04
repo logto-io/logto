@@ -23,6 +23,9 @@ const CaptchaContextProvider = ({ children }: Props) => {
   const captchaPolicy = experienceSettings?.captchaPolicy;
   const captchaConfig = experienceSettings?.captchaConfig;
 
+  console.log('captchaPolicy', captchaPolicy);
+  console.log('captchaConfig', captchaConfig);
+
   const isCaptchaRequired = Boolean(captchaPolicy?.enabled);
 
   const initCaptcha = useCallback(() => {

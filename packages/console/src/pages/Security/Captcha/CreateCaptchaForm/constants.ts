@@ -97,6 +97,12 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
         label: 'security.captcha_details.project_id',
         placeholder: 'security.captcha_details.project_id',
       },
+      {
+        field: 'domain',
+        label: 'security.captcha_details.domain',
+        placeholder: 'security.captcha_details.domain_placeholder',
+        isOptional: true,
+      },
     ],
   },
   {
