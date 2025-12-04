@@ -6,7 +6,10 @@ import successIllustration from '@ac/assets/icons/success.svg';
 import ErrorPage from '@ac/components/ErrorPage';
 
 type TranslationMap = Partial<
-  Record<SignInIdentifier, { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey }>
+  Record<
+    SignInIdentifier | 'password',
+    { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey }
+  >
 > & {
   readonly default: { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey };
 };
@@ -20,6 +23,14 @@ const translationMap: TranslationMap = {
     titleKey: 'account_center.update_success.phone.title',
     messageKey: 'account_center.update_success.phone.description',
   },
+  [SignInIdentifier.Username]: {
+    titleKey: 'account_center.update_success.username.title',
+    messageKey: 'account_center.update_success.username.description',
+  },
+  password: {
+    titleKey: 'account_center.update_success.password.title',
+    messageKey: 'account_center.update_success.password.description',
+  },
   default: {
     titleKey: 'account_center.update_success.default.title',
     messageKey: 'account_center.update_success.default.description',
@@ -27,7 +38,7 @@ const translationMap: TranslationMap = {
 };
 
 type Props = {
-  readonly identifierType?: SignInIdentifier;
+  readonly identifierType?: SignInIdentifier | 'password';
 };
 
 const UpdateSuccess = ({ identifierType }: Props) => {

@@ -50,6 +50,16 @@ const account_center = {
     success: 'メインの電話番号をリンクしました。',
     verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
   },
+  username: {
+    title: 'ユーザー名を設定',
+    description: 'ユーザー名は英数字とアンダースコアのみ使用できます。',
+    success: 'ユーザー名を更新しました。',
+  },
+  password: {
+    title: 'パスワードを設定',
+    description: 'アカウントを守るために新しいパスワードを作成してください。',
+    success: 'パスワードを更新しました。',
+  },
 
   code_verification: {
     send: '認証コードを送信',
@@ -60,7 +70,7 @@ const account_center = {
   email_verification: {
     title: 'メールアドレスを確認',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+      'アカウントの安全を守るため、ご本人であることを確認します。認証コードをメールに送信します。',
     email_label: 'メールアドレス',
     send: '認証コードを送信',
     description:
@@ -96,6 +106,15 @@ const account_center = {
     phone: {
       title: '電話番号を更新しました！',
       description: 'アカウントの電話番号が正常に変更されました。',
+    },
+    username: {
+      title: 'ユーザー名を更新しました！',
+      description: 'アカウントのユーザー名が正常に変更されました。',
+    },
+
+    password: {
+      title: 'パスワードを更新しました！',
+      description: 'アカウントのパスワードが正常に変更されました。',
     },
   },
 };

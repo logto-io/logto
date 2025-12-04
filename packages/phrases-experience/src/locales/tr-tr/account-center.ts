@@ -50,6 +50,16 @@ const account_center = {
     success: 'Birincil telefon başarıyla bağlandı.',
     verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
   },
+  username: {
+    title: 'Kullanıcı adını ayarla',
+    description: 'Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir.',
+    success: 'Kullanıcı adı başarıyla güncellendi.',
+  },
+  password: {
+    title: 'Şifreyi ayarla',
+    description: 'Hesabını korumak için yeni bir şifre oluştur.',
+    success: 'Şifre başarıyla güncellendi.',
+  },
 
   code_verification: {
     send: 'Doğrulama kodu gönder',
@@ -60,7 +70,7 @@ const account_center = {
   email_verification: {
     title: 'E-postanı doğrula',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+      'Hesap güvenliğini korumak için kimliğini doğrula. Doğrulama kodunu e-postana gönder.',
     email_label: 'E-posta adresi',
     send: 'Doğrulama kodu gönder',
     description: 'Doğrulama kodu {{email}} adresine gönderildi. Devam etmek için kodu gir.',
@@ -95,6 +105,15 @@ const account_center = {
     phone: {
       title: 'Telefon numarası güncellendi!',
       description: 'Hesabınızın telefon numarası başarıyla değiştirildi.',
+    },
+    username: {
+      title: 'Kullanıcı adı güncellendi!',
+      description: 'Hesabının kullanıcı adı başarıyla değiştirildi.',
+    },
+
+    password: {
+      title: 'Şifre güncellendi!',
+      description: 'Hesabının şifresi başarıyla değiştirildi.',
     },
   },
 };

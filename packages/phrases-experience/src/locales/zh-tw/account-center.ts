@@ -49,6 +49,16 @@ const account_center = {
     success: '已成功連結主要電話。',
     verification_required: '驗證已失效，請再次驗證您的身分。',
   },
+  username: {
+    title: '設定使用者名稱',
+    description: '使用者名稱只能包含字母、數字和底線。',
+    success: '使用者名稱已成功更新。',
+  },
+  password: {
+    title: '設定密碼',
+    description: '建立新密碼以保障您的帳戶安全。',
+    success: '密碼已成功更新。',
+  },
 
   code_verification: {
     send: '傳送驗證碼',
@@ -58,8 +68,7 @@ const account_center = {
 
   email_verification: {
     title: '驗證您的電子郵件',
-    prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+    prepare_description: '為保護帳戶安全，請確認是您本人。傳送驗證碼到您的電子郵件。',
     email_label: '電子郵件地址',
     send: '傳送驗證碼',
     description: '驗證碼已傳送至您的電子郵件 {{email}}。請輸入驗證碼以繼續。',
@@ -93,6 +102,15 @@ const account_center = {
     phone: {
       title: '電話號碼已更新！',
       description: '您的帳戶電話號碼已成功變更。',
+    },
+    username: {
+      title: '使用者名稱已更新！',
+      description: '您的帳戶使用者名稱已成功變更。',
+    },
+
+    password: {
+      title: '密碼已更新！',
+      description: '您的帳戶密碼已成功變更。',
     },
   },
 };

@@ -52,6 +52,16 @@ const account_center = {
     success: 'Telefone principal vinculado com sucesso.',
     verification_required: 'A verificação expirou. Confirme sua identidade novamente.',
   },
+  username: {
+    title: 'Definir nome de usuário',
+    description: 'O nome de usuário deve conter apenas letras, números e sublinhados.',
+    success: 'Nome de usuário atualizado com sucesso.',
+  },
+  password: {
+    title: 'Definir senha',
+    description: 'Crie uma nova senha para proteger sua conta.',
+    success: 'Senha atualizada com sucesso.',
+  },
 
   code_verification: {
     send: 'Enviar código de verificação',
@@ -62,7 +72,7 @@ const account_center = {
   email_verification: {
     title: 'Verifique seu e-mail',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+      'Confirme que é você para proteger a segurança da sua conta. Envie o código de verificação para seu e-mail.',
     email_label: 'Endereço de e-mail',
     send: 'Enviar código de verificação',
     description:
@@ -99,6 +109,15 @@ const account_center = {
     phone: {
       title: 'Número de telefone atualizado!',
       description: 'O número de telefone da sua conta foi alterado com sucesso.',
+    },
+    username: {
+      title: 'Nome de usuário atualizado!',
+      description: 'O nome de usuário da sua conta foi alterado com sucesso.',
+    },
+
+    password: {
+      title: 'Senha atualizada!',
+      description: 'A senha da sua conta foi alterada com sucesso.',
     },
   },
 };

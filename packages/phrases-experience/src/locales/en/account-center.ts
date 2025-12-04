@@ -51,6 +51,17 @@ const account_center = {
     success: 'Primary phone linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
   },
+  username: {
+    title: 'Set username',
+    description: 'Username must contain only letters, numbers, and underscores.',
+    success: 'Username updated successfully.',
+  },
+  password: {
+    title: 'Set password',
+    description: 'Create a new password to secure your account.',
+    success: 'Password updated successfully.',
+  },
+
   code_verification: {
     send: 'Send verification code',
     resend: 'Resend code',
@@ -97,6 +108,14 @@ const account_center = {
     phone: {
       title: 'Phone number updated!',
       description: "Your account's phone number has been successfully changed.",
+    },
+    username: {
+      title: 'Username updated!',
+      description: "Your account's username has been successfully changed.",
+    },
+    password: {
+      title: 'Password updated!',
+      description: "Your account's password has been successfully changed.",
     },
   },
 };

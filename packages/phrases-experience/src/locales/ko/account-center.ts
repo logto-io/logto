@@ -49,6 +49,16 @@ const account_center = {
     success: '기본 전화번호가 연결되었습니다.',
     verification_required: '인증이 만료되었습니다. 다시 신원을 확인해주세요.',
   },
+  username: {
+    title: '사용자 이름 설정',
+    description: '사용자 이름은 문자, 숫자, 밑줄(_)만 사용할 수 있습니다.',
+    success: '사용자 이름이 성공적으로 업데이트되었습니다.',
+  },
+  password: {
+    title: '비밀번호 설정',
+    description: '계정을 안전하게 보호할 새 비밀번호를 만들어 주세요.',
+    success: '비밀번호가 성공적으로 업데이트되었습니다.',
+  },
 
   code_verification: {
     send: '인증 코드 보내기',
@@ -58,8 +68,7 @@ const account_center = {
 
   email_verification: {
     title: '이메일 확인',
-    prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+    prepare_description: '계정 보안을 위해 본인인지 확인하세요. 인증 코드를 이메일로 보냅니다.',
     email_label: '이메일 주소',
     send: '인증 코드 보내기',
     description:
@@ -95,6 +104,15 @@ const account_center = {
     phone: {
       title: '전화번호가 업데이트되었습니다!',
       description: '계정의 전화번호가 성공적으로 변경되었습니다.',
+    },
+    username: {
+      title: '사용자 이름이 업데이트되었습니다!',
+      description: '계정의 사용자 이름이 성공적으로 변경되었습니다.',
+    },
+
+    password: {
+      title: '비밀번호가 업데이트되었습니다!',
+      description: '계정의 비밀번호가 성공적으로 변경되었습니다.',
     },
   },
 };

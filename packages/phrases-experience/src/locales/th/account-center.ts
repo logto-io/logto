@@ -50,6 +50,16 @@ const account_center = {
     success: 'เชื่อมต่อโทรศัพท์หลักเรียบร้อยแล้ว',
     verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
   },
+  username: {
+    title: 'ตั้งชื่อผู้ใช้',
+    description: 'ชื่อผู้ใช้ต้องมีเฉพาะตัวอักษร ตัวเลข และขีดล่างเท่านั้น',
+    success: 'อัปเดตชื่อผู้ใช้เรียบร้อยแล้ว',
+  },
+  password: {
+    title: 'ตั้งรหัสผ่าน',
+    description: 'สร้างรหัสผ่านใหม่เพื่อความปลอดภัยของบัญชี',
+    success: 'อัปเดตรหัสผ่านเรียบร้อยแล้ว',
+  },
 
   code_verification: {
     send: 'ส่งรหัสยืนยัน',
@@ -60,7 +70,7 @@ const account_center = {
   email_verification: {
     title: 'ยืนยันอีเมลของคุณ',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+      'ยืนยันตัวตนของคุณเพื่อปกป้องความปลอดภัยของบัญชี ส่งรหัสยืนยันไปยังอีเมลของคุณ',
     email_label: 'ที่อยู่อีเมล',
     send: 'ส่งรหัสยืนยัน',
     description: 'ได้ส่งรหัสยืนยันไปยังอีเมล {{email}} แล้ว กรุณากรอกรหัสเพื่อดำเนินการต่อ',
@@ -95,6 +105,15 @@ const account_center = {
     phone: {
       title: 'หมายเลขโทรศัพท์ได้รับการอัปเดตแล้ว!',
       description: 'หมายเลขโทรศัพท์ของบัญชีคุณเปลี่ยนแปลงเรียบร้อยแล้ว',
+    },
+    username: {
+      title: 'อัปเดตชื่อผู้ใช้แล้ว!',
+      description: 'ชื่อผู้ใช้ของบัญชีคุณถูกเปลี่ยนเรียบร้อยแล้ว',
+    },
+
+    password: {
+      title: 'อัปเดตรหัสผ่านแล้ว!',
+      description: 'รหัสผ่านของบัญชีคุณถูกเปลี่ยนเรียบร้อยแล้ว',
     },
   },
 };

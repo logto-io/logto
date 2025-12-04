@@ -50,6 +50,16 @@ const account_center = {
     success: 'تم ربط الهاتف الأساسي بنجاح.',
     verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
   },
+  username: {
+    title: 'تعيين اسم المستخدم',
+    description: 'يجب أن يحتوي اسم المستخدم على أحرف وأرقام وشرطات سفلية فقط.',
+    success: 'تم تحديث اسم المستخدم بنجاح.',
+  },
+  password: {
+    title: 'تعيين كلمة المرور',
+    description: 'أنشئ كلمة مرور جديدة لحماية حسابك.',
+    success: 'تم تحديث كلمة المرور بنجاح.',
+  },
 
   code_verification: {
     send: 'إرسال رمز التحقق',
@@ -59,8 +69,7 @@ const account_center = {
 
   email_verification: {
     title: 'تحقق من بريدك الإلكتروني',
-    prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+    prepare_description: 'تحقق من هويتك لحماية أمان حسابك. أرسل رمز التحقق إلى بريدك الإلكتروني.',
     email_label: 'عنوان البريد الإلكتروني',
     send: 'إرسال رمز التحقق',
     description: 'تم إرسال رمز التحقق إلى بريدك الإلكتروني {{email}}. أدخل الرمز للمتابعة.',
@@ -72,8 +81,7 @@ const account_center = {
   },
   phone_verification: {
     title: 'تحقق من هاتفك',
-    prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your phone.",
+    prepare_description: 'تحقق من هويتك لحماية أمان حسابك. أرسل رمز التحقق إلى هاتفك.',
     phone_label: 'رقم الهاتف',
     send: 'إرسال رمز التحقق',
     description: 'تم إرسال رمز التحقق إلى هاتفك {{phone}}. أدخل الرمز للمتابعة.',
@@ -95,6 +103,15 @@ const account_center = {
     phone: {
       title: 'تم تحديث رقم الهاتف!',
       description: 'تم تغيير رقم هاتف حسابك بنجاح.',
+    },
+    username: {
+      title: 'تم تحديث اسم المستخدم!',
+      description: 'تم تغيير اسم مستخدم حسابك بنجاح.',
+    },
+
+    password: {
+      title: 'تم تحديث كلمة المرور!',
+      description: 'تم تغيير كلمة مرور حسابك بنجاح.',
     },
   },
 };

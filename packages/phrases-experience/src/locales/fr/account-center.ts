@@ -54,6 +54,17 @@ const account_center = {
     success: 'Téléphone principal lié avec succès.',
     verification_required: 'La vérification a expiré. Veuillez confirmer à nouveau votre identité.',
   },
+  username: {
+    title: "Définir le nom d'utilisateur",
+    description:
+      "Le nom d'utilisateur doit contenir uniquement des lettres, des chiffres et des tirets bas.",
+    success: "Nom d'utilisateur mis à jour avec succès.",
+  },
+  password: {
+    title: 'Définir le mot de passe',
+    description: 'Créez un nouveau mot de passe pour sécuriser votre compte.',
+    success: 'Mot de passe mis à jour avec succès.',
+  },
 
   code_verification: {
     send: 'Envoyer le code de vérification',
@@ -64,7 +75,7 @@ const account_center = {
   email_verification: {
     title: 'Vérifiez votre e-mail',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your email.",
+      'Confirmez votre identité pour protéger la sécurité de votre compte. Envoyez le code de vérification à votre e-mail.',
     email_label: 'Adresse e-mail',
     send: 'Envoyer le code de vérification',
     description:
@@ -78,7 +89,7 @@ const account_center = {
   phone_verification: {
     title: 'Vérifiez votre téléphone',
     prepare_description:
-      "Verify it's you to protect your account security. Send the verification code to your phone.",
+      'Confirmez votre identité pour protéger la sécurité de votre compte. Envoyez le code de vérification sur votre téléphone.',
     phone_label: 'Numéro de téléphone',
     send: 'Envoyer le code de vérification',
     description:
@@ -101,6 +112,15 @@ const account_center = {
     phone: {
       title: 'Numéro de téléphone mis à jour !',
       description: 'Le numéro de téléphone de votre compte a bien été modifié.',
+    },
+    username: {
+      title: "Nom d'utilisateur mis à jour !",
+      description: "Le nom d'utilisateur de votre compte a bien été modifié.",
+    },
+
+    password: {
+      title: 'Mot de passe mis à jour !',
+      description: 'Le mot de passe de votre compte a bien été modifié.',
     },
   },
 };

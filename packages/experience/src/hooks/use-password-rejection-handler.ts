@@ -1,8 +1,9 @@
 import { type RequestErrorBody } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 
+import usePasswordErrorMessage from '@/shared/hooks/use-password-error-message';
+
 import type { ErrorHandlers } from './use-error-handler';
-import usePasswordErrorMessage from './use-password-error-message';
 
 type Options = {
   setErrorMessage: (message?: string) => void;

@@ -49,6 +49,16 @@ const account_center = {
     success: '已成功关联主要手机号。',
     verification_required: '验证已失效，请重新验证身份。',
   },
+  username: {
+    title: '设置用户名',
+    description: '用户名只能包含字母、数字和下划线。',
+    success: '用户名更新成功。',
+  },
+  password: {
+    title: '设置密码',
+    description: '创建新密码以保护你的账号安全。',
+    success: '密码更新成功。',
+  },
 
   code_verification: {
     send: '发送验证码',
@@ -92,6 +102,15 @@ const account_center = {
     phone: {
       title: '手机号已更新！',
       description: '你的账号手机号已成功更改。',
+    },
+    username: {
+      title: '用户名已更新！',
+      description: '你的账号用户名已成功更改。',
+    },
+
+    password: {
+      title: '密码已更新！',
+      description: '你的账号密码已成功更改。',
     },
   },
 };

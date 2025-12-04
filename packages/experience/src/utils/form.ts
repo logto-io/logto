@@ -1,4 +1,4 @@
-import { usernameRegEx, emailRegEx } from '@logto/core-kit';
+import { emailRegEx } from '@logto/core-kit';
 import { SignInIdentifier } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared/universal';
 import i18next from 'i18next';
@@ -7,23 +7,10 @@ import { ParseError } from 'libphonenumber-js/mobile';
 
 import type { ErrorType } from '@/shared/components/ErrorMessage';
 import type { IdentifierInputType } from '@/shared/components/InputFields/SmartInputField';
+import { validateUsername } from '@/shared/utils/validate-username';
 import { parsePhoneNumber } from '@/utils/country-code';
 
 const { t } = i18next;
-
-export const validateUsername = (username: string): ErrorType | undefined => {
-  if (!username) {
-    return 'username_required';
-  }
-
-  if (/^\d/.test(username)) {
-    return 'username_should_not_start_with_number';
-  }
-
-  if (!usernameRegEx.test(username)) {
-    return 'username_invalid_charset';
-  }
-};
 
 export const validateEmail = (email: string): ErrorType | undefined => {
   if (!emailRegEx.test(email)) {
@@ -104,3 +91,5 @@ export const parseIdentifierValue = (type?: IdentifierInputType, value?: string)
     inputValue: value,
   };
 };
+
+export { validateUsername } from '@/shared/utils/validate-username';
