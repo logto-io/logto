@@ -10,7 +10,10 @@ import { convertToIdentifiers } from '#src/utils/sql.js';
 const { table, fields } = convertToIdentifiers(DailyTokenUsage);
 const { fields: fieldsWithPrefix } = convertToIdentifiers(DailyTokenUsage, true);
 
-type TokenUsageType = 'user' | 'm2m';
+export enum TokenUsageType {
+  User = 'User',
+  M2m = 'M2m',
+}
 
 export const tokenUsageCountsGuard = z.object({
   totalUsage: z.number().nonnegative(),
@@ -43,11 +46,11 @@ export const createDailyTokenUsageQueries = (pool: CommonQueryMethods) => {
     // For user tokens: increment both usage and user_token_usage
     // For M2M tokens: increment both usage and m2m_token_usage
     const userTokenIncrement =
-      type === 'user'
+      type === TokenUsageType.User
         ? sql`${fieldsWithPrefix.userTokenUsage} + 1`
         : sql`${fieldsWithPrefix.userTokenUsage}`;
     const m2mTokenIncrement =
-      type === 'm2m'
+      type === TokenUsageType.M2m
         ? sql`${fieldsWithPrefix.m2mTokenUsage} + 1`
         : sql`${fieldsWithPrefix.m2mTokenUsage}`;
 
@@ -63,8 +66,8 @@ export const createDailyTokenUsageQueries = (pool: CommonQueryMethods) => {
         ${generateStandardId()},
         to_timestamp(${getUtcStartOfTheDay(date).getTime()}::double precision / 1000),
         1,
-        ${type === 'user' ? 1 : 0},
-        ${type === 'm2m' ? 1 : 0}
+        ${type === TokenUsageType.User ? 1 : 0},
+        ${type === TokenUsageType.M2m ? 1 : 0}
       )
       on conflict (${fields.date}, ${fields.tenantId}) do update set
         ${fields.usage} = ${fieldsWithPrefix.usage} + 1,

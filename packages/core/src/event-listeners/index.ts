@@ -1,6 +1,7 @@
 import { ProductEvent } from '@logto/schemas';
 import { type Provider } from 'oidc-provider';
 
+import { TokenUsageType } from '#src/queries/daily-token-usage.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { captureEvent } from '#src/utils/posthog.js';
@@ -28,7 +29,7 @@ export const addOidcEventListeners = (tenantId: string, provider: Provider, quer
       );
     }
 
-    await recordTokenUsage(new Date(), { type: 'user' });
+    await recordTokenUsage(new Date(), { type: TokenUsageType.User });
   };
 
   // Listener for client credentials/M2M tokens (increment m2m_token_usage)
@@ -41,7 +42,7 @@ export const addOidcEventListeners = (tenantId: string, provider: Provider, quer
       );
     }
 
-    await recordTokenUsage(new Date(), { type: 'm2m' });
+    await recordTokenUsage(new Date(), { type: TokenUsageType.M2m });
   };
 
   provider.addListener('grant.success', grantListener);
