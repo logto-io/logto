@@ -13,25 +13,9 @@ services:
       - 3002:3002
     environment:
       - TRUST_PROXY_HEADER=1
-      - DB_URL=postgres://postgres:p0stgr3s@postgres:5432/logto
-      - ENDPOINT=http://localhost:3001
-      - ADMIN_ENDPOINT=http://localhost:3002
+      - DB_URL=${DB_URL}
+      - ENDPOINT=${ENDPOINT}
+      - ADMIN_ENDPOINT=${ADMIN_ENDPOINT}
     volumes:
       - ./packages/cli/alteration-scripts:/etc/logto/packages/cli/alteration-scripts
-  postgres:
-    image: postgres:17-alpine
-    user: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: p0stgr3s
-      POSTGRES_DB: logto
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  postgres_data:
+      - /opt/do/certs/ca-certificate.crt:/certs/ca-certificate.crt:ro
