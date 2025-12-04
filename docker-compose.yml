@@ -13,6 +13,7 @@ services:
       - DB_URL=${DB_URL}
       - ENDPOINT=${ENDPOINT}
       - ADMIN_ENDPOINT=${ADMIN_ENDPOINT}
+      - NODE_EXTRA_CA_CERTS=/certs/ca-certificate.crt
     volumes:
       - ./packages/cli/alteration-scripts:/etc/logto/packages/cli/alteration-scripts
       - /opt/do/certs/userdb-ca-certificate.crt:/certs/ca-certificate.crt:ro
