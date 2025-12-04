@@ -10,13 +10,17 @@ import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
+import SwitchVerificationMethodLink from '../SwitchVerificationMethodLink';
+
 import styles from './index.module.scss';
 
 type Props = {
   readonly onBack?: () => void;
+  readonly onSwitchMethod?: () => void;
+  readonly hasAlternativeMethod?: boolean;
 };
 
-const PasswordVerification = ({ onBack }: Props) => {
+const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: Props) => {
   const { t } = useTranslation();
   const { setVerificationId, setToast } = useContext(PageContext);
   const { loading } = useContext(LoadingContext);
@@ -70,6 +74,9 @@ const PasswordVerification = ({ onBack }: Props) => {
           disabled={!password || loading}
           isLoading={loading}
         />
+        {hasAlternativeMethod && (
+          <SwitchVerificationMethodLink className={styles.switchLink} onClick={onSwitchMethod} />
+        )}
       </form>
     </SecondaryPageLayout>
   );

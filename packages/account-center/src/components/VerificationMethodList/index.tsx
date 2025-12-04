@@ -49,10 +49,16 @@ const VerificationMethodList = () => {
     }
   }, [availableMethods, verifyingMethod]);
 
+  const hasAlternativeMethod = availableMethods.length > 1;
+
   if (verifyingMethod === VerificationMethod.Password) {
     return (
       <PasswordVerification
+        hasAlternativeMethod={hasAlternativeMethod}
         onBack={() => {
+          setVerifyingMethod(undefined);
+        }}
+        onSwitchMethod={() => {
           setVerifyingMethod(undefined);
         }}
       />
@@ -62,7 +68,11 @@ const VerificationMethodList = () => {
   if (verifyingMethod === VerificationMethod.EmailCode) {
     return (
       <EmailVerification
+        hasAlternativeMethod={hasAlternativeMethod}
         onBack={() => {
+          setVerifyingMethod(undefined);
+        }}
+        onSwitchMethod={() => {
           setVerifyingMethod(undefined);
         }}
       />
@@ -72,7 +82,11 @@ const VerificationMethodList = () => {
   if (verifyingMethod === VerificationMethod.PhoneCode) {
     return (
       <PhoneVerification
+        hasAlternativeMethod={hasAlternativeMethod}
         onBack={() => {
+          setVerifyingMethod(undefined);
+        }}
+        onSwitchMethod={() => {
           setVerifyingMethod(undefined);
         }}
       />

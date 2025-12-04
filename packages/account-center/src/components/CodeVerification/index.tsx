@@ -15,6 +15,8 @@ import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
+import SwitchVerificationMethodLink from '../SwitchVerificationMethodLink';
+
 import styles from './index.module.scss';
 
 const resendCooldownSeconds = 60;
@@ -38,6 +40,8 @@ type Props = {
     | 'account_center.phone_verification.phone_label';
   readonly descriptionPropsBuilder?: (identifier: string) => Record<string, string>;
   readonly onBack?: () => void;
+  readonly onSwitchMethod?: () => void;
+  readonly hasAlternativeMethod?: boolean;
   readonly sendCode: (
     accessToken: string,
     identifier: string
@@ -55,6 +59,8 @@ const CodeVerification = ({
   identifierLabelKey,
   descriptionPropsBuilder,
   onBack,
+  onSwitchMethod,
+  hasAlternativeMethod,
   sendCode,
   verifyCode,
 }: Props) => {
@@ -233,6 +239,9 @@ const CodeVerification = ({
               void handleVerify(codeInput);
             }}
           />
+          {hasAlternativeMethod && (
+            <SwitchVerificationMethodLink className={styles.switchLink} onClick={onSwitchMethod} />
+          )}
         </div>
       ) : (
         <div className={styles.prepare}>
@@ -254,6 +263,9 @@ const CodeVerification = ({
               void handleSendCode();
             }}
           />
+          {hasAlternativeMethod && (
+            <SwitchVerificationMethodLink className={styles.switchLink} onClick={onSwitchMethod} />
+          )}
         </div>
       )}
     </SecondaryPageLayout>

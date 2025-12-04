@@ -14,6 +14,7 @@ const account_center = {
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
     verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
+    try_another_method: 'Wypróbuj inny sposób weryfikacji',
   },
   password_verification: {
     title: 'Zweryfikuj hasło',

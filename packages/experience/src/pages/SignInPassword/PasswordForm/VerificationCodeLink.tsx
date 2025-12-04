@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import SwitchIcon from '@/assets/icons/switch-icon.svg?react';
 import TextLink from '@/components/TextLink';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import useToast from '@/hooks/use-toast';
+import SwitchIcon from '@/shared/assets/icons/switch-icon.svg?react';
 import type { VerificationCodeIdentifier } from '@/types';
 import { UserFlow } from '@/types';
 

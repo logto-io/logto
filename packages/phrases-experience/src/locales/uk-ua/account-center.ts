@@ -14,6 +14,7 @@ const account_center = {
     error_invalid_code: 'Код підтвердження недійсний або строк його дії минув.',
     error_verify_failed: 'Не вдалося підтвердити. Будь ласка, введіть код ще раз.',
     verification_required: 'Термін перевірки минув. Підтвердіть свою особу ще раз.',
+    try_another_method: 'Спробуйте інший спосіб підтвердження',
   },
   password_verification: {
     title: 'Підтвердьте пароль',

@@ -14,6 +14,7 @@ const account_center = {
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
     verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
+    try_another_method: '別の方法で確認する',
   },
   password_verification: {
     title: 'パスワードを確認',

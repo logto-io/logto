@@ -14,6 +14,7 @@ const account_center = {
     error_invalid_code: 'Код подтверждения недействителен или истёк.',
     error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
     verification_required: 'Срок действия проверки истёк. Подтвердите личность ещё раз.',
+    try_another_method: 'Попробовать другой способ подтверждения',
   },
   password_verification: {
     title: 'Подтвердите пароль',

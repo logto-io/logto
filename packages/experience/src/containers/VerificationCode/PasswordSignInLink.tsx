@@ -1,5 +1,5 @@
-import SwitchIcon from '@/assets/icons/switch-icon.svg?react';
 import TextLink from '@/components/TextLink';
+import SwitchIcon from '@/shared/assets/icons/switch-icon.svg?react';
 import { UserFlow } from '@/types';
 
 type Props = {

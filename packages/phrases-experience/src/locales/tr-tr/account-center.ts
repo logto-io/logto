@@ -14,6 +14,7 @@ const account_center = {
     error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
     verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
+    try_another_method: 'Başka bir doğrulama yöntemi deneyin',
   },
   password_verification: {
     title: 'Parolayı doğrula',

@@ -14,6 +14,7 @@ const account_center = {
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
+    try_another_method: 'جرّب طريقة أخرى للتحقق',
   },
   password_verification: {
     title: 'التحقق من كلمة المرور',

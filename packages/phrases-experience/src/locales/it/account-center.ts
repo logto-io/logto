@@ -14,6 +14,7 @@ const account_center = {
     error_invalid_code: 'Il codice di verifica non è valido o è scaduto.',
     error_verify_failed: 'Verifica non riuscita. Inserisci di nuovo il codice.',
     verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
+    try_another_method: 'Prova un altro metodo di verifica',
   },
   password_verification: {
     title: 'Verifica la password',

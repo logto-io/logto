@@ -7,6 +7,8 @@ import CodeVerification, { type TranslationKeys } from '../CodeVerification';
 
 type Props = {
   readonly onBack?: () => void;
+  readonly onSwitchMethod?: () => void;
+  readonly hasAlternativeMethod?: boolean;
 };
 
 const emailTranslationKeys: TranslationKeys = {
@@ -15,7 +17,7 @@ const emailTranslationKeys: TranslationKeys = {
   prepareDescription: 'account_center.email_verification.prepare_description',
 };
 
-const EmailVerification = ({ onBack }: Props) => {
+const EmailVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: Props) => {
   const { userInfo } = useContext(PageContext);
   const email = userInfo?.primaryEmail;
 
@@ -38,7 +40,9 @@ const EmailVerification = ({ onBack }: Props) => {
           email: payload.identifier,
         })
       }
+      hasAlternativeMethod={hasAlternativeMethod}
       onBack={onBack}
+      onSwitchMethod={onSwitchMethod}
     />
   );
 };

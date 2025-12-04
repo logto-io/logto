@@ -13,6 +13,7 @@ const account_center = {
     error_invalid_code: '验证码无效或已过期。',
     error_verify_failed: '验证失败，请重新输入验证码。',
     verification_required: '验证已失效，请重新验证身份。',
+    try_another_method: '尝试其他验证方式',
   },
   password_verification: {
     title: '验证密码',
