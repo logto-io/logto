@@ -54,6 +54,11 @@ const security = {
     deletion_description: 'Tem certeza de que deseja excluir este provedor de CAPTCHA?',
     captcha_deleted: 'Provedor de CAPTCHA excluído com sucesso',
     setup_captcha: 'Configurar CAPTCHA',
+    mode: 'Modo de verificação',
+    mode_invisible: 'Invisível',
+    mode_checkbox: 'Caixa de seleção',
+    mode_notice:
+      'O modo de verificação é definido nas configurações da chave reCAPTCHA no Google Cloud Console. Alterar o modo aqui requer um tipo de chave correspondente.',
   },
   password_policy: {
     password_requirements: 'Requisitos de senha',

@@ -25,6 +25,15 @@ declare global {
       enterprise: {
         ready: (callback: () => void) => void;
         execute: (sitekey: string, options: { action: string }) => Promise<string>;
+        render: (
+          element: HTMLElement,
+          options: {
+            sitekey: string;
+            callback: (token: string) => void;
+            theme?: 'light' | 'dark';
+            'error-callback'?: (errorCode?: string) => void;
+          }
+        ) => number;
       };
     };
     turnstile?: {

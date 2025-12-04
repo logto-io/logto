@@ -83,6 +83,11 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
     readme: reCAPTCHAEnterpriseReadme,
     requiredFields: [
       {
+        field: 'mode',
+        label: 'security.captcha_details.mode',
+        placeholder: 'security.captcha_details.mode',
+      },
+      {
         field: 'siteKey',
         label: 'security.captcha_details.recaptcha_key_id',
         placeholder: 'security.captcha_details.recaptcha_key_id',

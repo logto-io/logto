@@ -54,6 +54,11 @@ const security = {
     deletion_description: 'Sind Sie sicher, dass Sie diesen CAPTCHA-Anbieter löschen möchten?',
     captcha_deleted: 'CAPTCHA-Anbieter erfolgreich gelöscht',
     setup_captcha: 'CAPTCHA einrichten',
+    mode: 'Überprüfungsmodus',
+    mode_invisible: 'Unsichtbar',
+    mode_checkbox: 'Kontrollkästchen',
+    mode_notice:
+      'Der Überprüfungsmodus wird in Ihren reCAPTCHA-Schlüsseleinstellungen in der Google Cloud Console definiert. Zum Ändern des Modus hier ist ein passender Schlüsseltyp erforderlich.',
   },
   password_policy: {
     password_requirements: 'Passwortanforderungen',

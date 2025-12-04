@@ -1,4 +1,4 @@
-import { CaptchaType, Theme } from '@logto/schemas';
+import { CaptchaType, RecaptchaEnterpriseMode, Theme } from '@logto/schemas';
 import { useMemo, useContext, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -22,9 +22,6 @@ const CaptchaContextProvider = ({ children }: Props) => {
 
   const captchaPolicy = experienceSettings?.captchaPolicy;
   const captchaConfig = experienceSettings?.captchaConfig;
-
-  console.log('captchaPolicy', captchaPolicy);
-  console.log('captchaConfig', captchaConfig);
 
   const isCaptchaRequired = Boolean(captchaPolicy?.enabled);
 
@@ -82,6 +79,33 @@ const CaptchaContextProvider = ({ children }: Props) => {
       return;
     }
 
+    // Handle checkbox mode for reCAPTCHA Enterprise
+    if (captchaConfig.mode === RecaptchaEnterpriseMode.Checkbox) {
+      return new Promise<string | undefined>((resolve, reject) => {
+        if (!window.grecaptcha || !widgetRef.current) {
+          resolve(undefined);
+          return;
+        }
+
+        // Clear the dom element first
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        widgetRef.current.innerHTML = '';
+
+        window.grecaptcha.enterprise.render(widgetRef.current, {
+          sitekey: captchaConfig.siteKey,
+          theme: theme === Theme.Light ? 'light' : 'dark',
+          callback: (token: string) => {
+            resolve(token);
+          },
+          'error-callback': (errorCode) => {
+            setToast(t('error.captcha_verification_failed'));
+            reject(new Error(`reCAPTCHA error: ${errorCode}`));
+          },
+        });
+      });
+    }
+
+    // Default invisible mode
     return window.grecaptcha.enterprise.execute(captchaConfig.siteKey, {
       action: 'interaction',
     });

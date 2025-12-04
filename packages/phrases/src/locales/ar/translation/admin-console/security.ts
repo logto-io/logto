@@ -53,6 +53,11 @@ const security = {
     deletion_description: 'هل أنت متأكد أنك تريد حذف مزود CAPTCHA هذا؟',
     captcha_deleted: 'تم حذف موفر CAPTCHA بنجاح',
     setup_captcha: 'إعداد CAPTCHA',
+    mode: 'وضع التحقق',
+    mode_invisible: 'غير مرئي',
+    mode_checkbox: 'مربع اختيار',
+    mode_notice:
+      'يتم تحديد وضع التحقق في إعدادات مفتاح reCAPTCHA في Google Cloud Console. يتطلب تغيير الوضع هنا نوع مفتاح مطابق.',
   },
   password_policy: {
     password_requirements: 'متطلبات كلمة المرور',

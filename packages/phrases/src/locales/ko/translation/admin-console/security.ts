@@ -54,6 +54,11 @@ const security = {
     deletion_description: '이 CAPTCHA 제공자를 삭제하시겠습니까?',
     captcha_deleted: 'CAPTCHA 제공자가 성공적으로 삭제되었습니다',
     setup_captcha: 'CAPTCHA 설정',
+    mode: '인증 모드',
+    mode_invisible: '보이지 않음',
+    mode_checkbox: '체크박스',
+    mode_notice:
+      '인증 모드는 Google Cloud Console의 reCAPTCHA 키 설정에서 정의됩니다. 여기서 모드를 변경하려면 일치하는 키 유형이 필요합니다.',
   },
   password_policy: {
     password_requirements: '비밀번호 요구사항',

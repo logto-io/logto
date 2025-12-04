@@ -30,6 +30,7 @@ function CaptchaContent({ isDeleted, captchaProvider, onUpdate }: Props) {
     handleSubmit,
     reset,
     register,
+    control,
   } = useForm<CaptchaFormType>({
     reValidateMode: 'onBlur',
     defaultValues: captchaProvider.config,
@@ -77,7 +78,12 @@ function CaptchaContent({ isDeleted, captchaProvider, onUpdate }: Props) {
           description={metadata.description}
           learnMoreLink={{ href: '/security/captcha' }}
         >
-          <CaptchaFormFields metadata={metadata} errors={errors} register={register} />
+          <CaptchaFormFields
+            metadata={metadata}
+            errors={errors}
+            register={register}
+            control={control}
+          />
         </FormCard>
       </DetailsForm>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />

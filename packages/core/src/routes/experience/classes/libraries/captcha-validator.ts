@@ -1,5 +1,6 @@
 import {
   CaptchaType,
+  RecaptchaEnterpriseMode,
   type CaptchaProvider,
   type RecaptchaEnterpriseConfig,
   type TurnstileConfig,
@@ -108,12 +109,16 @@ export class CaptchaValidator {
         riskAnalysis: { score },
       } = responseGuard.parse(result);
 
+      // For checkbox mode, only check if the token is valid (skip score threshold)
+      // Checkbox challenges are interactive and provide binary pass/fail
+      const isCheckboxMode = config.mode === RecaptchaEnterpriseMode.Checkbox;
       // TODO: customize the score threshold
-      const success = valid && score >= 0.5;
+      const success = isCheckboxMode ? valid : valid && score >= 0.5;
 
       this.log.append({
         success,
         score,
+        mode: config.mode ?? RecaptchaEnterpriseMode.Invisible,
       });
 
       return success;
