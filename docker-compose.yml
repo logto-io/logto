@@ -18,4 +18,4 @@ services:
       - ADMIN_ENDPOINT=${ADMIN_ENDPOINT}
     volumes:
       - ./packages/cli/alteration-scripts:/etc/logto/packages/cli/alteration-scripts
-      - /opt/do/certs/ca-certificate.crt:/certs/ca-certificate.crt:ro
+      - /opt/do/certs/userdb-ca-certificate.crt:/certs/ca-certificate.crt:ro
