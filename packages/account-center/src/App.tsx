@@ -1,4 +1,3 @@
-import LogtoSignature from '@experience/shared/components/LogtoSignature';
 import { LogtoProvider, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId, SignInIdentifier } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
@@ -94,9 +93,6 @@ const Main = () => {
 };
 
 const Layout = () => {
-  const { experienceSettings, theme } = useContext(PageContext);
-  const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
-
   return (
     <div className={styles.app}>
       <BrandingHeader />
@@ -108,7 +104,6 @@ const Layout = () => {
                 <Main />
               </LogtoErrorBoundary>
             </ErrorBoundary>
-            {!hideLogtoBranding && <LogtoSignature className={styles.signature} theme={theme} />}
           </main>
         </div>
       </div>
