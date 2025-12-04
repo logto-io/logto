@@ -54,6 +54,11 @@ const security = {
     deletion_description: 'คุณแน่ใจหรือไม่ว่าต้องการลบผู้ให้บริการ CAPTCHA นี้?',
     captcha_deleted: 'ลบผู้ให้บริการ CAPTCHA เรียบร้อยแล้ว',
     setup_captcha: 'ตั้งค่า CAPTCHA',
+    mode: 'โหมดการตรวจสอบ',
+    mode_invisible: 'มองไม่เห็น',
+    mode_checkbox: 'ช่องทำเครื่องหมาย',
+    mode_notice:
+      'โหมดการตรวจสอบถูกกำหนดในการตั้งค่าคีย์ reCAPTCHA ใน Google Cloud Console การเปลี่ยนโหมดที่นี่ต้องใช้ประเภทคีย์ที่ตรงกัน',
   },
   password_policy: {
     password_requirements: 'ข้อกำหนดรหัสผ่าน',

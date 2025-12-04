@@ -1,4 +1,4 @@
-import { CaptchaType } from '@logto/schemas';
+import { CaptchaType, RecaptchaEnterpriseMode } from '@logto/schemas';
 import { useContext } from 'react';
 
 import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
@@ -8,8 +8,15 @@ import styles from './index.module.scss';
 const CaptchaBox = () => {
   const { captchaConfig, widgetRef, isCaptchaRequired } = useContext(CaptchaContext);
 
-  // Currently only Turnstile needs a widget to be rendered
-  if (!isCaptchaRequired || captchaConfig?.type !== CaptchaType.Turnstile) {
+  // Check if widget rendering is needed
+  // Turnstile always needs a widget, reCAPTCHA Enterprise needs it only in checkbox mode
+  const needsWidget =
+    isCaptchaRequired &&
+    captchaConfig &&
+    (captchaConfig.type === CaptchaType.Turnstile ||
+      captchaConfig.mode === RecaptchaEnterpriseMode.Checkbox);
+
+  if (!needsWidget) {
     return null;
   }
 
