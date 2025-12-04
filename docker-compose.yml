@@ -4,9 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    depends_on:
-      postgres:
-        condition: service_healthy
     entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
     ports:
       - 3001:3001
