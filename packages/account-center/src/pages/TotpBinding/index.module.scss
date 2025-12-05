@@ -1,0 +1,93 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  width: 100%;
+  max-width: _.unit(100);
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+}
+
+.stepTitle {
+  font: var(--font-label-1);
+  color: var(--color-type-primary);
+}
+
+.stepDescription {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+.secretContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: _.unit(2);
+  margin-top: _.unit(2);
+
+  .qrCode {
+    border: 1px solid var(--color-line-divider);
+    border-radius: var(--radius);
+    overflow: hidden;
+    height: 136px;
+    width: 136px;
+
+    > img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      @include _.image-align-center;
+    }
+  }
+
+  .rawSecret {
+    padding: _.unit(4);
+    width: 100%;
+    text-align: center;
+    font: var(--font-label-1);
+    border-radius: var(--radius);
+    background-color: var(--color-bg-light);
+    color: var(--color-type-primary);
+    margin-bottom: _.unit(3);
+    word-break: break-all;
+  }
+
+  .copySecret {
+    width: 100%;
+  }
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--color-line-divider);
+  margin: _.unit(2) 0;
+}
+
+.codeInput {
+  width: 100%;
+  margin-top: _.unit(2);
+}
+
+.submitButton {
+  margin-top: _.unit(2);
+  align-self: flex-start;
+}
+
+.switchLink {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font: var(--font-body-2);
+  color: var(--color-primary-50);
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

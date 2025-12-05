@@ -100,6 +100,12 @@ const account_center = {
     error_verify_failed: 'Verifica non riuscita. Inserisci di nuovo il codice.',
     error_invalid_code: 'Il codice di verifica non è valido o è scaduto.',
   },
+  mfa: {
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_not_enabled:
+      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+  },
   update_success: {
     default: {
       title: 'Aggiornamento riuscito',
@@ -121,6 +127,10 @@ const account_center = {
     password: {
       title: 'Password aggiornata!',
       description: 'La password del tuo account è stata modificata con successo.',
+    },
+    totp: {
+      title: 'Authenticator app added!',
+      description: 'Your authenticator app has been successfully linked to your account.',
     },
   },
 };

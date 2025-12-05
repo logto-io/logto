@@ -91,6 +91,10 @@ const account_center = {
     error_verify_failed: '验证失败，请重新输入验证码。',
     error_invalid_code: '验证码无效或已过期。',
   },
+  mfa: {
+    totp_already_added: '你已添加过身份验证器应用，请先移除现有的。',
+    totp_not_enabled: '身份验证器应用未启用，请联系管理员启用。',
+  },
   update_success: {
     default: {
       title: '更新成功',
@@ -112,6 +116,10 @@ const account_center = {
     password: {
       title: '密码已更新！',
       description: '你的账号密码已成功更改。',
+    },
+    totp: {
+      title: '身份验证器应用已添加！',
+      description: '身份验证器应用已成功关联到你的账号。',
     },
   },
 };

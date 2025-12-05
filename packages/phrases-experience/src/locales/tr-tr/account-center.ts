@@ -94,6 +94,12 @@ const account_center = {
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
     error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
   },
+  mfa: {
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_not_enabled:
+      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+  },
   update_success: {
     default: {
       title: 'Güncelleme başarılı',
@@ -115,6 +121,10 @@ const account_center = {
     password: {
       title: 'Şifre güncellendi!',
       description: 'Hesabının şifresi başarıyla değiştirildi.',
+    },
+    totp: {
+      title: 'Authenticator app added!',
+      description: 'Your authenticator app has been successfully linked to your account.',
     },
   },
 };

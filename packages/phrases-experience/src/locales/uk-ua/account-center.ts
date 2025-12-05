@@ -97,6 +97,12 @@ const account_center = {
     error_verify_failed: 'Не вдалося підтвердити. Будь ласка, введіть код ще раз.',
     error_invalid_code: 'Код підтвердження недійсний або строк його дії минув.',
   },
+  mfa: {
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_not_enabled:
+      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+  },
   update_success: {
     default: {
       title: 'Оновлення успішне',
@@ -118,6 +124,10 @@ const account_center = {
     password: {
       title: 'Пароль оновлено!',
       description: 'Пароль вашого облікового запису успішно змінено.',
+    },
+    totp: {
+      title: 'Authenticator app added!',
+      description: 'Your authenticator app has been successfully linked to your account.',
     },
   },
 };

@@ -92,6 +92,12 @@ const account_center = {
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
   },
+  mfa: {
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_not_enabled:
+      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+  },
   update_success: {
     default: {
       title: 'تم التحديث بنجاح',
@@ -113,6 +119,10 @@ const account_center = {
     password: {
       title: 'تم تحديث كلمة المرور!',
       description: 'تم تغيير كلمة مرور حسابك بنجاح.',
+    },
+    totp: {
+      title: 'Authenticator app added!',
+      description: 'Your authenticator app has been successfully linked to your account.',
     },
   },
 };

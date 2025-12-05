@@ -96,6 +96,12 @@ const account_center = {
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
   },
+  mfa: {
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_not_enabled:
+      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+  },
   update_success: {
     default: {
       title: 'Aktualizacja zakończona sukcesem',
@@ -117,6 +123,10 @@ const account_center = {
     password: {
       title: 'Zaktualizowano hasło!',
       description: 'Hasło Twojego konta zostało pomyślnie zmienione.',
+    },
+    totp: {
+      title: 'Authenticator app added!',
+      description: 'Your authenticator app has been successfully linked to your account.',
     },
   },
 };

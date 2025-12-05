@@ -6,3 +6,5 @@ export const usernameRoute = '/username';
 export const usernameSuccessRoute = '/username/success';
 export const passwordRoute = '/password';
 export const passwordSuccessRoute = '/password/success';
+export const totpRoute = '/mfa/totp';
+export const totpSuccessRoute = '/mfa/totp/success';

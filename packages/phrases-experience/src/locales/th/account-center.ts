@@ -94,6 +94,12 @@ const account_center = {
     error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
     error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
   },
+  mfa: {
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_not_enabled:
+      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+  },
   update_success: {
     default: {
       title: 'อัปเดตสำเร็จ',
@@ -115,6 +121,10 @@ const account_center = {
     password: {
       title: 'อัปเดตรหัสผ่านแล้ว!',
       description: 'รหัสผ่านของบัญชีคุณถูกเปลี่ยนเรียบร้อยแล้ว',
+    },
+    totp: {
+      title: 'Authenticator app added!',
+      description: 'Your authenticator app has been successfully linked to your account.',
     },
   },
 };

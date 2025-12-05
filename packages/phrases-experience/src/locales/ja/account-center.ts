@@ -95,6 +95,12 @@ const account_center = {
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
   },
+  mfa: {
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_not_enabled:
+      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+  },
   update_success: {
     default: {
       title: '更新が完了しました',
@@ -116,6 +122,10 @@ const account_center = {
     password: {
       title: 'パスワードを更新しました！',
       description: 'アカウントのパスワードが正常に変更されました。',
+    },
+    totp: {
+      title: 'Authenticator app added!',
+      description: 'Your authenticator app has been successfully linked to your account.',
     },
   },
 };

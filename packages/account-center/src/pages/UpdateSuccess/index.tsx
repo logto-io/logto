@@ -7,7 +7,7 @@ import ErrorPage from '@ac/components/ErrorPage';
 
 type TranslationMap = Partial<
   Record<
-    SignInIdentifier | 'password',
+    SignInIdentifier | 'password' | 'totp',
     { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey }
   >
 > & {
@@ -31,6 +31,10 @@ const translationMap: TranslationMap = {
     titleKey: 'account_center.update_success.password.title',
     messageKey: 'account_center.update_success.password.description',
   },
+  totp: {
+    titleKey: 'account_center.update_success.totp.title',
+    messageKey: 'account_center.update_success.totp.description',
+  },
   default: {
     titleKey: 'account_center.update_success.default.title',
     messageKey: 'account_center.update_success.default.description',
@@ -38,7 +42,7 @@ const translationMap: TranslationMap = {
 };
 
 type Props = {
-  readonly identifierType?: SignInIdentifier | 'password';
+  readonly identifierType?: SignInIdentifier | 'password' | 'totp';
 };
 
 const UpdateSuccess = ({ identifierType }: Props) => {
