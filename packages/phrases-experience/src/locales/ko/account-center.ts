@@ -93,6 +93,10 @@ const account_center = {
     error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
     error_invalid_code: '인증 코드가 잘못되었거나 만료되었습니다.',
   },
+  mfa: {
+    totp_already_added: '이미 인증 앱을 추가했습니다. 먼저 기존 앱을 제거해 주세요.',
+    totp_not_enabled: '인증 앱이 활성화되어 있지 않습니다. 관리자에게 문의하여 활성화해 주세요.',
+  },
   update_success: {
     default: {
       title: '업데이트 완료',
@@ -114,6 +118,10 @@ const account_center = {
     password: {
       title: '비밀번호가 업데이트되었습니다!',
       description: '계정의 비밀번호가 성공적으로 변경되었습니다.',
+    },
+    totp: {
+      title: '인증 앱이 추가되었습니다!',
+      description: '인증 앱이 계정에 성공적으로 연결되었습니다.',
     },
   },
 };

@@ -97,6 +97,12 @@ const account_center = {
     error_verify_failed: 'Verification failed. Please enter the code again.',
     error_invalid_code: 'The verification code is invalid or has expired.',
   },
+  mfa: {
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_not_enabled:
+      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+  },
   update_success: {
     default: {
       title: 'Update successful',
@@ -117,6 +123,10 @@ const account_center = {
     password: {
       title: 'Password updated!',
       description: "Your account's password has been successfully changed.",
+    },
+    totp: {
+      title: 'Authenticator app added!',
+      description: 'Your authenticator app has been successfully linked to your account.',
     },
   },
 };

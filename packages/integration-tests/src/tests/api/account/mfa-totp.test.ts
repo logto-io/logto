@@ -1,5 +1,6 @@
 import { UserScope } from '@logto/core-kit';
 import { MfaFactor } from '@logto/schemas';
+import { authenticator } from 'otplib';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import {
@@ -89,6 +90,31 @@ describe('my-account (mfa - TOTP)', () => {
           status: 400,
         }
       );
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should be able to add totp verification with code', async () => {
+      await enableAllAccountCenterFields();
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { secret } = await generateTotpSecret(api);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      const code = authenticator.generate(secret);
+
+      await addMfaVerification(api, verificationRecordId, {
+        type: MfaFactor.TOTP,
+        secret,
+        code,
+      });
+      const mfaVerifications = await getMfaVerifications(api);
+
+      expect(mfaVerifications).toHaveLength(1);
+      expect(mfaVerifications[0]?.type).toBe(MfaFactor.TOTP);
 
       await deleteDefaultTenantUser(user.id);
     });
