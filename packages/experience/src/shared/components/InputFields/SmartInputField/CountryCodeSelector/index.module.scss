@@ -35,6 +35,11 @@
   }
 }
 
+.countryIcon {
+  padding-inline-end: _.unit(2);
+  font-size: _.unit(5);
+}
+
 :global(body.desktop) {
   .countryCodeSelector {
     font: var(--font-body-2);

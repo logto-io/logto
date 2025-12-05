@@ -1,11 +1,16 @@
 import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
+import getCountryFlag from 'country-flag-icons/unicode';
 import type { ForwardedRef } from 'react';
 import { useState, useMemo, forwardRef } from 'react';
 
 import DownArrowIcon from '@/assets/icons/arrow-down.svg?react';
 import { onKeyDownHandler } from '@/shared/utils/a11y';
-import { getCountryList, getDefaultCountryCallingCode } from '@/utils/country-code';
+import {
+  getCountryList,
+  getDefaultCountryCallingCode,
+  getDefaultCountryCode,
+} from '@/utils/country-code';
 
 import CountryCodeDropdown from './CountryCodeDropdown';
 import styles from './index.module.scss';
@@ -25,7 +30,8 @@ const CountryCodeSelector = (
 ) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const countryList = useMemo(getCountryList, []);
-  const defaultCountCode = useMemo(getDefaultCountryCallingCode, []);
+  const defaultCountryCallingCode = useMemo(getDefaultCountryCallingCode, []);
+  const defaultCountryCode = useMemo(getDefaultCountryCode, []);
 
   const showDropDown = () => {
     setIsDropdownOpen(true);
@@ -36,7 +42,9 @@ const CountryCodeSelector = (
   };
 
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  const countryCode = value || defaultCountCode;
+  const countryCallingCode = value || defaultCountryCallingCode;
+  const country = countryList.find((item) => item.countryCallingCode === countryCallingCode);
+  const countryCode = country?.countryCode ?? defaultCountryCode;
 
   return (
     <div
@@ -55,12 +63,13 @@ const CountryCodeSelector = (
           : undefined
       }
     >
-      <span>{`+${countryCode}`}</span>
+      <span className={styles.countryIcon}>{getCountryFlag(countryCode)}</span>
+      <span>{`+${countryCallingCode}`}</span>
       <DownArrowIcon />
       <CountryCodeDropdown
         inputRef={inputRef}
         isOpen={isDropdownOpen}
-        countryCode={countryCode}
+        countryCode={countryCallingCode}
         countryList={countryList}
         onClose={hideDropDown}
         onChange={onChange}

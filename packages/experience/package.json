@@ -91,6 +91,7 @@
     "use-debounced-loader": "^0.1.1",
     "vite": "^6.2.7",
     "vite-plugin-compression": "^0.5.1",
+    "country-flag-icons": "^1.6.4",
     "vite-plugin-svgr": "^4.3.0"
   },
   "engines": {
