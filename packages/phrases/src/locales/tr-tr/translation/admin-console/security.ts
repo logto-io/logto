@@ -47,6 +47,8 @@ const security = {
     site_key: 'Site anahtarı',
     secret_key: 'Gizli anahtar',
     project_id: 'Proje ID',
+    domain: 'Domain (isteğe bağlı)',
+    domain_placeholder: 'www.google.com (varsayılan) veya recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA anahtar ID',
     recaptcha_api_key: 'Projenin API anahtarı',
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',

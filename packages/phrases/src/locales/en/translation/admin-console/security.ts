@@ -47,6 +47,8 @@ const security = {
     site_key: 'Site key',
     secret_key: 'Secret key',
     project_id: 'Project ID',
+    domain: 'Domain (optional)',
+    domain_placeholder: 'www.google.com (default) or recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA key ID',
     recaptcha_api_key: 'API key of the project',
     deletion_description: 'Are you sure you want to delete this CAPTCHA provider?',

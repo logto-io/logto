@@ -45,6 +45,8 @@ const security = {
     site_key: '站点密钥',
     secret_key: '秘密密钥',
     project_id: '项目 ID',
+    domain: '域名（可选）',
+    domain_placeholder: 'www.google.com（默认）或 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 密钥 ID',
     recaptcha_api_key: '项目的 API 密钥',
     deletion_description: '你确定要删除此验证码提供商吗？',

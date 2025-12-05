@@ -18,6 +18,7 @@ export const recaptchaEnterpriseConfigGuard = z.object({
   siteKey: z.string(),
   secretKey: z.string(),
   projectId: z.string(),
+  domain: z.string().optional(),
 });
 
 export type RecaptchaEnterpriseConfig = z.infer<typeof recaptchaEnterpriseConfigGuard>;

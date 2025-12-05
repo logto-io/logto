@@ -12,5 +12,6 @@ export const getScript = (config: SignInExperienceResponse['captchaConfig']) => 
     return `https://challenges.cloudflare.com/turnstile/v0/api.js`;
   }
 
-  return `https://www.google.com/recaptcha/enterprise.js?render=${config.siteKey}`;
+  const domain = config.domain ?? 'www.google.com';
+  return `https://${domain}/recaptcha/enterprise.js?render=${config.siteKey}`;
 };

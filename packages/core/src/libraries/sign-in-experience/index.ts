@@ -185,6 +185,9 @@ export const createSignInExperienceLibrary = (
     return {
       type,
       siteKey,
+      ...(type === 'RecaptchaEnterprise' &&
+        'domain' in provider.config &&
+        provider.config.domain && { domain: provider.config.domain }),
     };
   };
 

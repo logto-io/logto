@@ -48,6 +48,7 @@ export type FullSignInExperience = Omit<SignInExperience, 'forgotPasswordMethods
   captchaConfig?: {
     type: CaptchaType;
     siteKey: string;
+    domain?: string;
   };
   customProfileFields?: Readonly<CustomProfileField[]>;
 };
@@ -74,6 +75,7 @@ export const fullSignInExperienceGuard = SignInExperiences.guard
       .object({
         type: z.nativeEnum(CaptchaType),
         siteKey: z.string(),
+        domain: z.string().optional(),
       })
       .optional(),
     customProfileFields: CustomProfileFields.guard.array(),

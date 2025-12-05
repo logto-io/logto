@@ -46,6 +46,8 @@ const security = {
     site_key: 'مفتاح الموقع',
     secret_key: 'المفتاح السري',
     project_id: 'معرف المشروع',
+    domain: 'النطاق (اختياري)',
+    domain_placeholder: 'www.google.com (افتراضي) أو recaptcha.net',
     recaptcha_key_id: 'معرّف مفتاح reCAPTCHA',
     recaptcha_api_key: 'مفتاح API للمشروع',
     deletion_description: 'هل أنت متأكد أنك تريد حذف مزود CAPTCHA هذا؟',

@@ -47,6 +47,8 @@ const security = {
     site_key: '사이트 키',
     secret_key: '비밀 키',
     project_id: '프로젝트 ID',
+    domain: '도메인 (선택사항)',
+    domain_placeholder: 'www.google.com (기본값) 또는 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 키 ID',
     recaptcha_api_key: '프로젝트의 API 키',
     deletion_description: '이 CAPTCHA 제공자를 삭제하시겠습니까?',

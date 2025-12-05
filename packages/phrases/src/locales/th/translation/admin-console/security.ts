@@ -47,6 +47,8 @@ const security = {
     site_key: 'Site key',
     secret_key: 'Secret key',
     project_id: 'Project ID',
+    domain: 'Domain (optional)',
+    domain_placeholder: 'www.google.com (default) or recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA key ID',
     recaptcha_api_key: 'API key ของโปรเจกต์',
     deletion_description: 'คุณแน่ใจหรือไม่ว่าต้องการลบผู้ให้บริการ CAPTCHA นี้?',
