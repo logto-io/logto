@@ -1,6 +1,7 @@
 import { ProductEvent } from '@logto/schemas';
 import { type Provider } from 'oidc-provider';
 
+import { TokenUsageType } from '#src/queries/daily-token-usage.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { captureEvent } from '#src/utils/posthog.js';
@@ -17,7 +18,9 @@ import { getAccessTokenEventPayload } from './utils.js';
  */
 export const addOidcEventListeners = (tenantId: string, provider: Provider, queries: Queries) => {
   const { recordTokenUsage } = queries.dailyTokenUsage;
-  const tokenUsageListener = async (payload: unknown) => {
+
+  // Listener for user access tokens (increment user_token_usage)
+  const userTokenUsageListener = async (payload: unknown) => {
     if (payload instanceof provider.BaseToken) {
       captureEvent(
         { tenantId, request: undefined },
@@ -26,7 +29,20 @@ export const addOidcEventListeners = (tenantId: string, provider: Provider, quer
       );
     }
 
-    await recordTokenUsage(new Date());
+    await recordTokenUsage(new Date(), { type: TokenUsageType.User });
+  };
+
+  // Listener for client credentials/M2M tokens (increment m2m_token_usage)
+  const m2mTokenUsageListener = async (payload: unknown) => {
+    if (payload instanceof provider.BaseToken) {
+      captureEvent(
+        { tenantId, request: undefined },
+        ProductEvent.AccessTokenIssued,
+        getAccessTokenEventPayload(payload, provider)
+      );
+    }
+
+    await recordTokenUsage(new Date(), { type: TokenUsageType.M2m });
   };
 
   provider.addListener('grant.success', grantListener);
@@ -58,17 +74,15 @@ export const addOidcEventListeners = (tenantId: string, provider: Provider, quer
     return deleteSessionExtensions(queries, session);
   });
 
-  // Record token usage on token issue and save events. Note that some events are omitted:
+  // Record token usage on token issue and save events, with proper type distinction
   // - `initial_access_token.saved`: client registration related, DCR not enabled in our setup
   // - `registration_access_token.saved`: client registration related, DCR not enabled in our setup
-  const events = Object.freeze([
-    'access_token.saved',
-    'access_token.issued',
-    'client_credentials.saved',
-    'client_credentials.issued',
-  ] as const);
 
-  for (const event of events) {
-    provider.addListener(event, tokenUsageListener);
-  }
+  // User access tokens - increment user_token_usage
+  provider.addListener('access_token.saved', userTokenUsageListener);
+  provider.addListener('access_token.issued', userTokenUsageListener);
+
+  // Client credentials/M2M tokens - increment m2m_token_usage
+  provider.addListener('client_credentials.saved', m2mTokenUsageListener);
+  provider.addListener('client_credentials.issued', m2mTokenUsageListener);
 };
