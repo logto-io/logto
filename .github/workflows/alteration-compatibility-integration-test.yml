@@ -70,9 +70,11 @@ jobs:
     env:
       INTEGRATION_TEST: true
       DEV_FEATURES_ENABLED: false
-      # Key encryption key (KEK) for the secret vault. (For integration tests use only)
+      # Key encryption key (KEK) for the secret vault used in integration tests
       SECRET_VAULT_KEK: DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
       DB_URL: postgres://postgres:postgres@localhost:5432/postgres
+      # Mock key for authorized status API access during integration tests
+      STATUS_API_KEY: test-status-api-key
 
     steps:
       - uses: logto-io/actions-run-logto-integration-tests@v4
