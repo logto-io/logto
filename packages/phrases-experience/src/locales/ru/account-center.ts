@@ -99,33 +99,47 @@ const account_center = {
     totp_already_added:
       'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
-      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+      'Приложение для аутентификации не включено. Пожалуйста, свяжитесь с администратором, чтобы включить его.',
+    backup_code_already_added:
+      'У вас уже есть активные резервные коды. Пожалуйста, используйте или удалите их перед созданием новых.',
+    backup_code_not_enabled:
+      'Резервный код не включен. Пожалуйста, свяжитесь с администратором, чтобы включить его.',
+    backup_code_requires_other_mfa:
+      'Резервные коды требуют предварительной настройки другого метода MFA.',
   },
   update_success: {
     default: {
-      title: 'Обновление выполнено успешно',
-      description: 'Ваши изменения успешно сохранены.',
+      title: 'Обновлено!',
+      description: 'Ваша информация была обновлена.',
     },
     email: {
-      title: 'Адрес электронной почты обновлён!',
-      description: 'Адрес электронной почты вашего аккаунта успешно изменён.',
+      title: 'Электронная почта обновлена!',
+      description: 'Ваш адрес электронной почты был успешно обновлен.',
     },
     phone: {
-      title: 'Номер телефона обновлён!',
-      description: 'Номер телефона вашего аккаунта успешно изменён.',
+      title: 'Номер телефона обновлен!',
+      description: 'Ваш номер телефона был успешно обновлен.',
     },
     username: {
-      title: 'Имя пользователя обновлено!',
-      description: 'Имя пользователя вашего аккаунта успешно изменено.',
+      title: 'Имя пользователя изменено!',
+      description: 'Ваше имя пользователя было успешно обновлено.',
     },
 
     password: {
-      title: 'Пароль обновлён!',
-      description: 'Пароль вашего аккаунта успешно изменён.',
+      title: 'Пароль изменен!',
+      description: 'Ваш пароль был успешно обновлен.',
     },
     totp: {
-      title: 'Authenticator app added!',
-      description: 'Your authenticator app has been successfully linked to your account.',
+      title: 'Приложение для аутентификации добавлено!',
+      description: 'Ваше приложение для аутентификации было успешно привязано к вашему аккаунту.',
+    },
+    backup_code: {
+      title: 'Резервные коды созданы!',
+      description: 'Ваши резервные коды сохранены. Храните их в надежном месте.',
+    },
+    social: {
+      title: 'Социальный аккаунт привязан!',
+      description: 'Ваш социальный аккаунт был успешно привязан.',
     },
   },
 };

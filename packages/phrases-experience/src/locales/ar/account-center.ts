@@ -95,34 +95,45 @@ const account_center = {
   mfa: {
     totp_already_added:
       'You have already added an authenticator app. Please remove the existing one first.',
-    totp_not_enabled:
-      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+    totp_not_enabled: 'تطبيق المصادقة غير مفعل. يرجى الاتصال بالمسؤول لتمكينه.',
+    backup_code_already_added:
+      'لديك بالفعل رموز احتياطية نشطة. يرجى استخدامها أو إزالتها قبل إنشاء رموز جديدة.',
+    backup_code_not_enabled: 'رمز النسخ الاحتياطي غير ممكّن. يرجى الاتصال بالمسؤول لتمكينه.',
+    backup_code_requires_other_mfa: 'تتطلب رموز النسخ الاحتياطي إعداد طريقة MFA أخرى أولاً.',
   },
   update_success: {
     default: {
-      title: 'تم التحديث بنجاح',
-      description: 'تم حفظ تغييراتك بنجاح.',
+      title: 'تم التحديث!',
+      description: 'تم تحديث معلوماتك.',
     },
     email: {
       title: 'تم تحديث البريد الإلكتروني!',
-      description: 'تم تغيير عنوان البريد الإلكتروني لحسابك بنجاح.',
+      description: 'تم تحديث عنوان بريدك الإلكتروني بنجاح.',
     },
     phone: {
       title: 'تم تحديث رقم الهاتف!',
-      description: 'تم تغيير رقم هاتف حسابك بنجاح.',
+      description: 'تم تحديث رقم هاتفك بنجاح.',
     },
     username: {
-      title: 'تم تحديث اسم المستخدم!',
-      description: 'تم تغيير اسم مستخدم حسابك بنجاح.',
+      title: 'تم تغيير اسم المستخدم!',
+      description: 'تم تحديث اسم المستخدم الخاص بك بنجاح.',
     },
 
     password: {
-      title: 'تم تحديث كلمة المرور!',
-      description: 'تم تغيير كلمة مرور حسابك بنجاح.',
+      title: 'تم تغيير كلمة المرور!',
+      description: 'تم تحديث كلمة المرور الخاصة بك بنجاح.',
+    },
+    social: {
+      title: 'تم ربط الحساب الاجتماعي!',
+      description: 'تم ربط حسابك الاجتماعي بنجاح.',
     },
     totp: {
-      title: 'Authenticator app added!',
-      description: 'Your authenticator app has been successfully linked to your account.',
+      title: 'تم إضافة تطبيق المصادقة!',
+      description: 'تم ربط تطبيق المصادقة الخاص بك بنجاح بحسابك.',
+    },
+    backup_code: {
+      title: 'تم إنشاء رموز النسخ الاحتياطي!',
+      description: 'تم حفظ رموز النسخ الاحتياطي الخاصة بك. احتفظ بها في مكان آمن.',
     },
   },
 };

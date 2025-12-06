@@ -104,33 +104,47 @@ const account_center = {
     totp_already_added:
       'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
-      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+      'La aplicación de autenticación no está habilitada. Por favor, contacta a tu administrador para habilitarla.',
+    backup_code_already_added:
+      'Ya tienes códigos de respaldo activos. Úsalos o elimínalos antes de generar nuevos.',
+    backup_code_not_enabled:
+      'El código de respaldo no está habilitado. Contacta a tu administrador para habilitarlo.',
+    backup_code_requires_other_mfa:
+      'Los códigos de respaldo requieren que se configure otro método MFA primero.',
   },
   update_success: {
     default: {
-      title: 'Actualización exitosa',
-      description: 'Tus cambios se han guardado correctamente.',
+      title: '¡Actualizado!',
+      description: 'Tu información ha sido actualizada.',
     },
     email: {
-      title: '¡Dirección de correo electrónico actualizada!',
-      description: 'La dirección de correo electrónico de tu cuenta se ha cambiado correctamente.',
+      title: '¡Correo electrónico actualizado!',
+      description: 'Tu dirección de correo electrónico ha sido actualizada exitosamente.',
     },
     phone: {
       title: '¡Número de teléfono actualizado!',
-      description: 'El número de teléfono de tu cuenta se ha cambiado correctamente.',
+      description: 'Tu número de teléfono ha sido actualizado exitosamente.',
     },
     username: {
-      title: '¡Nombre de usuario actualizado!',
-      description: 'El nombre de usuario de tu cuenta se ha cambiado correctamente.',
+      title: '¡Nombre de usuario cambiado!',
+      description: 'Tu nombre de usuario ha sido actualizado exitosamente.',
     },
 
     password: {
-      title: '¡Contraseña actualizada!',
-      description: 'La contraseña de tu cuenta se ha cambiado correctamente.',
+      title: '¡Contraseña cambiada!',
+      description: 'Tu contraseña ha sido actualizada exitosamente.',
     },
     totp: {
-      title: 'Authenticator app added!',
-      description: 'Your authenticator app has been successfully linked to your account.',
+      title: '¡Aplicación de autenticación añadida!',
+      description: 'Tu aplicación de autenticación ha sido vinculada exitosamente a tu cuenta.',
+    },
+    backup_code: {
+      title: '¡Códigos de respaldo generados!',
+      description: 'Tus códigos de respaldo se han guardado. Guárdalos en un lugar seguro.',
+    },
+    social: {
+      title: '¡Cuenta social vinculada!',
+      description: 'Tu cuenta social ha sido vinculada exitosamente.',
     },
   },
 };

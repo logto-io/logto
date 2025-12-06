@@ -1,0 +1,37 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  width: 100%;
+  max-width: _.unit(100);
+}
+
+.backupCodes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: _.unit(4);
+  font: var(--font-label-2);
+  text-align: center;
+  border-radius: var(--radius);
+  background-color: var(--color-bg-light);
+  color: var(--color-type-primary);
+  row-gap: _.unit(2);
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: _.unit(4);
+}
+
+.hint {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+.submitButton {
+  margin-top: _.unit(2);
+  align-self: flex-start;
+}

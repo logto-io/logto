@@ -101,33 +101,47 @@ const account_center = {
     totp_already_added:
       'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
-      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+      'Додаток для автентифікації не увімкнено. Будь ласка, зверніться до адміністратора, щоб увімкнути його.',
+    backup_code_already_added:
+      'У вас вже є активні резервні коди. Будь ласка, використайте або видаліть їх перед створенням нових.',
+    backup_code_not_enabled:
+      'Резервний код не увімкнено. Будь ласка, зверніться до адміністратора, щоб увімкнути його.',
+    backup_code_requires_other_mfa:
+      'Резервні коди вимагають попереднього налаштування іншого методу MFA.',
   },
   update_success: {
     default: {
-      title: 'Оновлення успішне',
-      description: 'Ваші зміни успішно збережено.',
+      title: 'Оновлено!',
+      description: 'Вашу інформацію було оновлено.',
     },
     email: {
-      title: 'Електронну адресу оновлено!',
-      description: 'Електронну адресу вашого облікового запису успішно змінено.',
+      title: 'Електронну пошту оновлено!',
+      description: 'Вашу електронну адресу успішно оновлено.',
     },
     phone: {
       title: 'Номер телефону оновлено!',
-      description: 'Номер телефону вашого облікового запису успішно змінено.',
+      description: 'Ваш номер телефону успішно оновлено.',
     },
     username: {
-      title: 'Ім’я користувача оновлено!',
-      description: 'Ім’я користувача вашого облікового запису успішно змінено.',
+      title: "Ім'я користувача змінено!",
+      description: "Ваше ім'я користувача успішно оновлено.",
     },
 
     password: {
-      title: 'Пароль оновлено!',
-      description: 'Пароль вашого облікового запису успішно змінено.',
+      title: 'Пароль змінено!',
+      description: 'Ваш пароль успішно оновлено.',
+    },
+    social: {
+      title: "Соціальний акаунт під'єднано!",
+      description: "Ваш соціальний акаунт успішно під'єднано.",
     },
     totp: {
-      title: 'Authenticator app added!',
-      description: 'Your authenticator app has been successfully linked to your account.',
+      title: 'Додаток для автентифікації додано!',
+      description: "Ваш додаток для автентифікації успішно під'єднано до вашого акаунту.",
+    },
+    backup_code: {
+      title: 'Резервні коди створено!',
+      description: 'Ваші резервні коди збережено. Зберігайте їх у безпечному місці.',
     },
   },
 };

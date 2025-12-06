@@ -98,34 +98,47 @@ const account_center = {
   mfa: {
     totp_already_added:
       'You have already added an authenticator app. Please remove the existing one first.',
-    totp_not_enabled:
-      'Authenticator app is not enabled. Please contact your administrator to enable it.',
+    totp_not_enabled: '認証アプリは有効になっていません。管理者に連絡して有効にしてください。',
+    backup_code_already_added:
+      'すでに有効なバックアップコードがあります。新しいコードを生成する前に、これらを使用するか削除してください。',
+    backup_code_not_enabled:
+      'バックアップコードは有効になっていません。管理者に連絡して有効にしてください。',
+    backup_code_requires_other_mfa:
+      'バックアップコードを使用するには、まず他の MFA メソッドを設定する必要があります。',
   },
   update_success: {
     default: {
-      title: '更新が完了しました',
-      description: '変更内容が正常に保存されました。',
+      title: '更新しました！',
+      description: 'あなたの情報が更新されました。',
     },
     email: {
       title: 'メールアドレスを更新しました！',
-      description: 'アカウントのメールアドレスが正常に変更されました。',
+      description: 'メールアドレスが正常に更新されました。',
     },
     phone: {
       title: '電話番号を更新しました！',
-      description: 'アカウントの電話番号が正常に変更されました。',
+      description: '電話番号が正常に更新されました。',
     },
     username: {
-      title: 'ユーザー名を更新しました！',
-      description: 'アカウントのユーザー名が正常に変更されました。',
+      title: 'ユーザー名を変更しました！',
+      description: 'ユーザー名が正常に更新されました。',
     },
 
     password: {
-      title: 'パスワードを更新しました！',
-      description: 'アカウントのパスワードが正常に変更されました。',
+      title: 'パスワードを変更しました！',
+      description: 'パスワードが正常に更新されました。',
+    },
+    social: {
+      title: 'ソーシャルアカウントをリンクしました！',
+      description: 'ソーシャルアカウントが正常にリンクされました。',
     },
     totp: {
-      title: 'Authenticator app added!',
-      description: 'Your authenticator app has been successfully linked to your account.',
+      title: '認証アプリを追加しました！',
+      description: '認証アプリがアカウントに正常にリンクされました。',
+    },
+    backup_code: {
+      title: 'バックアップコードが生成されました！',
+      description: 'バックアップコードが保存されました。安全な場所に保管してください。',
     },
   },
 };
