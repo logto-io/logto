@@ -136,10 +136,25 @@ const account_center = {
       title: 'Yedek kodlar oluşturuldu!',
       description: 'Yedek kodlarınız kaydedildi. Onları güvenli bir yerde saklayın.',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
     social: {
       title: 'Sosyal hesap bağlandı!',
       description: 'Sosyal hesabınız başarıyla bağlandı.',
     },
+  },
+  backup_code: {
+    title: 'Yedek kodlar',
+    description:
+      '2 adımlı doğrulamada başka yollarla sorun yaşarsanız hesabınıza erişmek için bu yedek kodlardan birini kullanabilirsiniz. Her kod yalnızca bir kez kullanılabilir.',
+    copy_hint: 'Kopyalayıp güvenli bir yerde sakladığınızdan emin olun.',
+    generate_new_title: 'Yeni yedek kodlar oluştur',
+    generate_new: 'Yeni yedek kodlar oluştur',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

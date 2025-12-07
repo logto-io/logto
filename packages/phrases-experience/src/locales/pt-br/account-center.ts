@@ -115,14 +115,6 @@ const account_center = {
       title: 'Atualizado!',
       description: 'Suas informações foram atualizadas.',
     },
-    password: {
-      title: 'Senha alterada!',
-      description: 'Sua senha foi atualizada com sucesso.',
-    },
-    username: {
-      title: 'Nome de usuário alterado!',
-      description: 'Seu nome de usuário foi atualizado com sucesso.',
-    },
     email: {
       title: 'E-mail atualizado!',
       description: 'Seu endereço de e-mail foi atualizado com sucesso.',
@@ -131,9 +123,13 @@ const account_center = {
       title: 'Número de telefone atualizado!',
       description: 'Seu número de telefone foi atualizado com sucesso.',
     },
-    social: {
-      title: 'Conta social vinculada!',
-      description: 'Sua conta social foi vinculada com sucesso.',
+    username: {
+      title: 'Nome de usuário alterado!',
+      description: 'Seu nome de usuário foi atualizado com sucesso.',
+    },
+    password: {
+      title: 'Senha alterada!',
+      description: 'Sua senha foi atualizada com sucesso.',
     },
     totp: {
       title: 'Aplicativo autenticador adicionado!',
@@ -143,6 +139,21 @@ const account_center = {
       title: 'Códigos de backup gerados!',
       description: 'Seus códigos de backup foram salvos. Mantenha-os em um local seguro.',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
+  },
+  backup_code: {
+    title: 'Códigos de backup',
+    description:
+      'Você pode usar um destes códigos de backup para acessar sua conta se tiver problemas durante a verificação em duas etapas de outra forma. Cada código só pode ser usado uma vez.',
+    copy_hint: 'Certifique-se de copiá-los e salvá-los em um lugar seguro.',
+    generate_new_title: 'Gerar novos códigos de backup',
+    generate_new: 'Gerar novos códigos de backup',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

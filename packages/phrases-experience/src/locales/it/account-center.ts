@@ -145,6 +145,21 @@ const account_center = {
       title: 'Codici di backup generati!',
       description: 'I tuoi codici di backup sono stati salvati. Conservali in un luogo sicuro.',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
+  },
+  backup_code: {
+    title: 'Codici di backup',
+    description:
+      'Puoi utilizzare uno di questi codici di backup per accedere al tuo account se hai problemi durante la verifica in due passaggi in altri modi. Ogni codice può essere utilizzato una sola volta.',
+    copy_hint: 'Assicurati di copiarli e salvarli in un luogo sicuro.',
+    generate_new_title: 'Genera nuovi codici di backup',
+    generate_new: 'Genera nuovi codici di backup',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

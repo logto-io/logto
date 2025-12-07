@@ -130,12 +130,27 @@ const account_center = {
     },
     backup_code: {
       title: 'สร้างรหัสสำรองแล้ว!',
-      description: 'บันทึกรหัสสำรองของคุณแล้ว เก็บไว้ในที่ปลอดภัย',
+      description: 'รหัสสำรองของคุณถูกบันทึกแล้ว โปรดเก็บรักษาไว้ในที่ปลอดภัย',
+    },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
     },
     social: {
       title: 'เชื่อมต่อบัญชีโซเชียลแล้ว!',
       description: 'บัญชีโซเชียลของคุณได้รับการเชื่อมต่อเรียบร้อยแล้ว',
     },
+  },
+  backup_code: {
+    title: 'รหัสสำรอง',
+    description:
+      'คุณสามารถใช้รหัสสำรองเหล่านี้เพื่อเข้าถึงบัญชีของคุณหากมีปัญหาในการยืนยันตัวตนแบบ 2 ขั้นตอน แต่ละรหัสสามารถใช้ได้เพียงครั้งเดียว',
+    copy_hint: 'คัดลอกและเก็บรักษาไว้ในที่ปลอดภัย',
+    generate_new_title: 'สร้างรหัสสำรองใหม่',
+    generate_new: 'สร้างรหัสสำรองใหม่',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

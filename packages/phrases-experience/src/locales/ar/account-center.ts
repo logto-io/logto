@@ -134,6 +134,21 @@ const account_center = {
       title: 'تم إنشاء رموز النسخ الاحتياطي!',
       description: 'تم حفظ رموز النسخ الاحتياطي الخاصة بك. احتفظ بها في مكان آمن.',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
+  },
+  backup_code: {
+    title: 'رموز النسخ الاحتياطي',
+    description:
+      'يمكنك استخدام أحد رموز النسخ الاحتياطي هذه للوصول إلى حسابك إذا واجهت مشكلة أثناء التحقق بخطوتين بطرق أخرى. يمكن استخدام كل رمز مرة واحدة فقط.',
+    copy_hint: 'تأكد من نسخها وحفظها في مكان آمن.',
+    generate_new_title: 'إنشاء رموز نسخ احتياطي جديدة',
+    generate_new: 'إنشاء رموز نسخ احتياطي جديدة',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

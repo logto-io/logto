@@ -135,13 +135,28 @@ const account_center = {
       description: 'Twoja aplikacja uwierzytelniająca została pomyślnie połączona z kontem.',
     },
     backup_code: {
-      title: 'Wygenerowano kody zapasowe!',
+      title: 'Kody zapasowe wygenerowane!',
       description: 'Twoje kody zapasowe zostały zapisane. Przechowuj je w bezpiecznym miejscu.',
+    },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
     },
     social: {
       title: 'Konto społecznościowe połączone!',
       description: 'Twoje konto społecznościowe zostało pomyślnie połączone.',
     },
+  },
+  backup_code: {
+    title: 'Kody zapasowe',
+    description:
+      'Możesz użyć jednego z tych kodów zapasowych, aby uzyskać dostęp do swojego konta, jeśli masz problemy z weryfikacją dwuetapową w inny sposób. Każdy kod może być użyty tylko raz.',
+    copy_hint: 'Skopiuj je i przechowuj w bezpiecznym miejscu.',
+    generate_new_title: 'Wygeneruj nowe kody zapasowe',
+    generate_new: 'Wygeneruj nowe kody zapasowe',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

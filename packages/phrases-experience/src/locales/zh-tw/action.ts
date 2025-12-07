@@ -29,6 +29,7 @@ const action = {
   copy: '複製',
   verify_via_passkey: '透過 Passkey 驗證',
   download: '下載',
+  remove: '移除',
   single_sign_on: '單點登錄',
   authorize: '授權',
   use_another_account: '使用其他帳戶',

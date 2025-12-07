@@ -125,9 +125,24 @@ const account_center = {
       description: '身份驗證器應用程式已成功連結至您的帳戶。',
     },
     backup_code: {
-      title: '備份碼已產生！',
-      description: '您的備份碼已儲存，請妥善保管。',
+      title: '備用碼已產生！',
+      description: '您的備用碼已儲存。請將它們保存在安全的地方。',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
+  },
+  backup_code: {
+    title: '備用碼',
+    description:
+      '如果您在兩步驗證時遇到問題，可以使用這些備用碼中的一個來存取您的帳戶。每個代碼只能使用一次。',
+    copy_hint: '請務必複製並保存在安全的地方。',
+    generate_new_title: '產生新的備用碼',
+    generate_new: '產生新的備用碼',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

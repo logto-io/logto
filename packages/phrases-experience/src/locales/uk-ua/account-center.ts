@@ -143,6 +143,21 @@ const account_center = {
       title: 'Резервні коди створено!',
       description: 'Ваші резервні коди збережено. Зберігайте їх у безпечному місці.',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
+  },
+  backup_code: {
+    title: 'Резервні коди',
+    description:
+      'Ви можете використати один з цих резервних кодів для доступу до свого облікового запису, якщо у вас виникнуть проблеми під час двоетапної перевірки іншими способами. Кожен код можна використати лише один раз.',
+    copy_hint: "Обов'язково скопіюйте їх і збережіть у надійному місці.",
+    generate_new_title: 'Згенерувати нові резервні коди',
+    generate_new: 'Згенерувати нові резервні коди',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

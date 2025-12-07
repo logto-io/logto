@@ -142,10 +142,25 @@ const account_center = {
       title: '¡Códigos de respaldo generados!',
       description: 'Tus códigos de respaldo se han guardado. Guárdalos en un lugar seguro.',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
     social: {
       title: '¡Cuenta social vinculada!',
       description: 'Tu cuenta social ha sido vinculada exitosamente.',
     },
+  },
+  backup_code: {
+    title: 'Códigos de respaldo',
+    description:
+      'Puedes usar uno de estos códigos de respaldo para acceder a tu cuenta si tienes problemas durante la verificación en dos pasos de otra manera. Cada código solo se puede usar una vez.',
+    copy_hint: 'Asegúrate de copiarlos y guardarlos en un lugar seguro.',
+    generate_new_title: 'Generar nuevos códigos de respaldo',
+    generate_new: 'Generar nuevos códigos de respaldo',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

@@ -137,10 +137,25 @@ const account_center = {
       title: 'Резервные коды созданы!',
       description: 'Ваши резервные коды сохранены. Храните их в надежном месте.',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
     social: {
       title: 'Социальный аккаунт привязан!',
       description: 'Ваш социальный аккаунт был успешно привязан.',
     },
+  },
+  backup_code: {
+    title: 'Резервные коды',
+    description:
+      'Вы можете использовать один из этих резервных кодов для доступа к своей учетной записи, если у вас возникнут проблемы при двухэтапной проверке другими способами. Каждый код можно использовать только один раз.',
+    copy_hint: 'Обязательно скопируйте их и сохраните в надежном месте.',
+    generate_new_title: 'Сгенерировать новые резервные коды',
+    generate_new: 'Сгенерировать новые резервные коды',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

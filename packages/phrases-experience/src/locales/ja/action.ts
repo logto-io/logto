@@ -29,6 +29,7 @@ const action = {
   copy: 'コピー',
   verify_via_passkey: 'パスキー経由で確認',
   download: 'ダウンロード',
+  remove: '削除',
   single_sign_on: 'シングルサインオン',
   authorize: '認証する',
   use_another_account: '別のアカウントを使用する',
