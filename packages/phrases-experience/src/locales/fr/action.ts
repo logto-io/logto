@@ -29,6 +29,7 @@ const action = {
   copy: 'Copier',
   verify_via_passkey: "Vérifier via la clé d'accès",
   download: 'Télécharger',
+  remove: 'Supprimer',
   single_sign_on: 'Connexion unique',
   authorize: 'Autoriser',
   use_another_account: 'Utiliser un autre compte',

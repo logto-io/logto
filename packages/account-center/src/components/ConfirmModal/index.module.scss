@@ -1,0 +1,38 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-bg-mask);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background-color: var(--color-bg-float);
+  border-radius: _.unit(4);
+  padding: _.unit(6);
+  max-width: 400px;
+  width: calc(100% - _.unit(8));
+  box-shadow: var(--shadow-2);
+}
+
+.header {
+  font: var(--font-title-2);
+  color: var(--color-type-primary);
+  margin-bottom: _.unit(3);
+}
+
+.content {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+  margin-bottom: _.unit(6);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: _.unit(3);
+}

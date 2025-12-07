@@ -143,10 +143,25 @@ const account_center = {
       description:
         'Os seus códigos de cópia de segurança foram guardados. Guarde-os num local seguro.',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
     social: {
       title: 'Conta social associada!',
       description: 'A sua conta social foi associada com sucesso.',
     },
+  },
+  backup_code: {
+    title: 'Códigos de cópia de segurança',
+    description:
+      'Pode utilizar um destes códigos de cópia de segurança para aceder à sua conta se tiver problemas durante a verificação em duas etapas de outra forma. Cada código só pode ser utilizado uma vez.',
+    copy_hint: 'Certifique-se de os copiar e guardar num local seguro.',
+    generate_new_title: 'Gerar novos códigos de cópia de segurança',
+    generate_new: 'Gerar novos códigos de cópia de segurança',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

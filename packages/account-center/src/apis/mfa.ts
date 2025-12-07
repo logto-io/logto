@@ -11,6 +11,15 @@ export type BackupCodesResponse = {
   codes: string[];
 };
 
+export type BackupCodeItem = {
+  code: string;
+  usedAt?: string;
+};
+
+export type BackupCodesListResponse = {
+  codes: BackupCodeItem[];
+};
+
 export const getMfaVerifications = async (
   accessToken: string
 ): Promise<UserMfaVerificationResponse> => {
@@ -29,6 +38,17 @@ export const generateBackupCodes = async (accessToken: string): Promise<BackupCo
   return createAuthenticatedKy(accessToken)
     .post('/api/my-account/mfa-verifications/backup-codes/generate')
     .json<BackupCodesResponse>();
+};
+
+export const getBackupCodesList = async (
+  accessToken: string,
+  verificationRecordId: string
+): Promise<BackupCodesListResponse> => {
+  return createAuthenticatedKy(accessToken)
+    .get('/api/my-account/mfa-verifications/backup-codes', {
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    })
+    .json<BackupCodesListResponse>();
 };
 
 export const addTotpMfa = async (
@@ -51,4 +71,17 @@ export const addBackupCodeMfa = async (
     json: { type: MfaFactor.BackupCode, ...payload },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
+};
+
+export const deleteMfaVerification = async (
+  accessToken: string,
+  verificationRecordId: string,
+  mfaVerificationId: string
+): Promise<void> => {
+  await createAuthenticatedKy(accessToken).delete(
+    `/api/my-account/mfa-verifications/${mfaVerificationId}`,
+    {
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    }
+  );
 };

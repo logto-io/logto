@@ -9,4 +9,7 @@ export const passwordSuccessRoute = '/password/success';
 export const totpRoute = '/mfa/totp';
 export const totpSuccessRoute = '/mfa/totp/success';
 export const backupCodeRoute = '/mfa/backup-code';
+export const backupCodeViewRoute = '/mfa/backup-code/view';
+export const backupCodeRegenerateRoute = '/mfa/backup-code/regenerate';
 export const backupCodeSuccessRoute = '/mfa/backup-code/success';
+export const backupCodeDeletedRoute = '/mfa/backup-code/deleted';

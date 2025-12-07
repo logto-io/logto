@@ -29,6 +29,7 @@ const action = {
   copy: 'نسخ',
   verify_via_passkey: 'التحقق عبر مفتاح التحقق',
   download: 'تحميل',
+  remove: 'إزالة',
   single_sign_on: 'تسجيل الدخول الموحد',
   authorize: 'التفويض',
   use_another_account: 'استخدام حساب آخر',

@@ -29,6 +29,7 @@ const action = {
   copy: 'Копировать',
   verify_via_passkey: 'Проверить с помощью ключа доступа',
   download: 'Скачать',
+  remove: 'Удалить',
   single_sign_on: 'Единый вход',
   authorize: 'Авторизовать',
   use_another_account: 'Использовать другой аккаунт',

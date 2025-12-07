@@ -1,0 +1,65 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+}
+
+.backupCodes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: _.unit(4);
+  font: var(--font-label-2);
+  text-align: center;
+  border-radius: var(--radius);
+  background-color: var(--color-bg-light);
+  color: var(--color-type-primary);
+  row-gap: _.unit(2);
+}
+
+.used {
+  text-decoration: line-through;
+  color: var(--color-type-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-flow: row wrap;
+  gap: _.unit(4);
+  align-items: center;
+}
+
+.removeButton {
+  all: unset;
+  font: var(--font-label-2);
+  color: var(--color-danger-default);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--color-danger-hover);
+  }
+}
+
+.hint {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--color-divider);
+  margin: _.unit(2) 0;
+}
+
+.generateSection {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.generateTitle {
+  font: var(--font-title-2);
+  color: var(--color-type-primary);
+}

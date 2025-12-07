@@ -140,6 +140,21 @@ const account_center = {
       title: 'バックアップコードが生成されました！',
       description: 'バックアップコードが保存されました。安全な場所に保管してください。',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
+  },
+  backup_code: {
+    title: 'バックアップコード',
+    description:
+      '2段階認証で問題が発生した場合、これらのバックアップコードのいずれかを使用してアカウントにアクセスできます。各コードは1回のみ使用できます。',
+    copy_hint: 'コピーして安全な場所に保存してください。',
+    generate_new_title: '新しいバックアップコードを生成',
+    generate_new: '新しいバックアップコードを生成',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 
