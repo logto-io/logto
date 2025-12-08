@@ -294,6 +294,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         const signInUrl = await samlApplication.getSignInUrl({
           state,
         });
+        log.append({ signInUrl: signInUrl.toString() });
 
         const currentDate = new Date();
         const expiresAt = addMinutes(currentDate, 60); // Lifetime of the session is 60 minutes.
@@ -307,8 +308,11 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           expiresAt: expiresAt.getTime(),
           ...cond(RelayState && { relayState: RelayState }),
         };
+        log.append({ createSession });
 
         const insertSamlAppSession = await insertSession(createSession);
+        log.append({ insertSamlAppSession });
+
         // Set the session ID to cookie for later use.
         ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
           httpOnly: true,
@@ -319,7 +323,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
         log.append({
           cookie: {
-            spInitiatedSamlSsoSessionCookieName: insertSamlAppSession,
+            spInitiatedSamlSsoSessionCookieName: insertSamlAppSession.id,
           },
         });
 
@@ -394,10 +398,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         const signInUrl = await samlApplication.getSignInUrl({
           state,
         });
+        log.append({ signInUrl: signInUrl.toString() });
 
         const currentDate = new Date();
         const expiresAt = addMinutes(currentDate, 60); // Lifetime of the session is 60 minutes.
-        const insertSamlAppSession = await insertSession({
+
+        const createSession = {
           id: generateStandardId(),
           applicationId: id,
           oidcState: state,
@@ -406,7 +412,12 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
           // Expire the session in 60 minutes.
           expiresAt: expiresAt.getTime(),
           ...cond(RelayState && { relayState: RelayState }),
-        });
+        };
+        log.append({ createSession });
+
+        const insertSamlAppSession = await insertSession(createSession);
+        log.append({ insertSamlAppSession });
+
         // Set the session ID to cookie for later use.
         ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
           httpOnly: true,
@@ -417,7 +428,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
         log.append({
           cookie: {
-            spInitiatedSamlSsoSessionCookieName: insertSamlAppSession,
+            spInitiatedSamlSsoSessionCookieName: insertSamlAppSession.id,
           },
         });
 
