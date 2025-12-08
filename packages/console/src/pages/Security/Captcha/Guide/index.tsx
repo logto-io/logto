@@ -1,4 +1,4 @@
-import type { CaptchaProvider, CaptchaType } from '@logto/schemas';
+import { RecaptchaEnterpriseMode, type CaptchaProvider, type CaptchaType } from '@logto/schemas';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +43,7 @@ function Guide({ type, onClose }: Props) {
       siteKey: '',
       secretKey: '',
       projectId: '',
+      mode: RecaptchaEnterpriseMode.Invisible,
     },
   });
 
@@ -50,6 +51,7 @@ function Guide({ type, onClose }: Props) {
     formState: { isSubmitting, errors },
     handleSubmit,
     register,
+    control,
   } = methods;
 
   const onSubmit = handleSubmit(
@@ -122,6 +124,7 @@ function Guide({ type, onClose }: Props) {
                     metadata={captchaMetadata}
                     errors={errors}
                     register={register}
+                    control={control}
                   />
                 </div>
                 <div className={styles.footer}>

@@ -54,6 +54,11 @@ const security = {
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',
     captcha_deleted: 'CAPTCHA sağlayıcısı başarıyla silindi',
     setup_captcha: "CAPTCHA'yı ayarla",
+    mode: 'Doğrulama modu',
+    mode_invisible: 'Görünmez',
+    mode_checkbox: 'Onay kutusu',
+    mode_notice:
+      "Doğrulama modu, Google Cloud Console'daki reCAPTCHA anahtar ayarlarında tanımlanır. Buradaki modu değiştirmek için eşleşen bir anahtar türü gerekir.",
   },
   password_policy: {
     password_requirements: 'Parola gereksinimleri',
