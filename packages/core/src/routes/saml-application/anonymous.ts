@@ -335,6 +335,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
         throw new RequestError({
           code: 'application.saml.invalid_saml_request',
+          message: `Failed to process SAML authentication request: ${error instanceof Error ? error.message : String(error)}`,
         });
       }
 
@@ -440,6 +441,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
         throw new RequestError({
           code: 'application.saml.invalid_saml_request',
+          message: `Failed to process SAML authentication request: ${error instanceof Error ? error.message : String(error)}`,
         });
       }
 
