@@ -88,11 +88,9 @@ export enum EmailServiceProvider {
 export const sendgridEmailServiceConfigGuard = z.object({
   provider: z.literal(EmailServiceProvider.SendGrid),
   apiKey: z.string(),
-  /** @deprecated Use i18nTemplates instead */
   templateId: z.string(),
   fromName: z.string(),
   fromEmail: z.string(),
-  i18nTemplates: z.record(z.string()).optional(),
 });
 
 export type SendgridEmailServiceConfig = z.infer<typeof sendgridEmailServiceConfigGuard>;
