@@ -44,9 +44,16 @@ export const verifyAndGetSamlSessionData = async (
 
 export const databaseErrorHandler = (error: unknown) => {
   if (error instanceof DatabaseError && error.code === '22001') {
+    // Error code see https://www.postgresql.org/docs/14/errcodes-appendix.html
     throw new RequestError({
       code: 'application.saml.saml_request_id_or_relay_state_value_too_long',
     });
   }
+
+  /**
+   * Other database errors can be thrown directly, will be handled by:
+   * 1. slonik error handler middleware
+   * 2. general error handler middleware
+   */
   throw error;
 };
