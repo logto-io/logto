@@ -17,10 +17,17 @@ const alteration: AlterationScript = {
       alter table saml_application_sessions
       alter column relay_state type text
     `);
+    await pool.query(sql`
+      alter table saml_application_sessions
+      alter column saml_request_id type text
+    `);
   },
 
   down: async (pool) => {
-    // When rolling back, truncate to 256 characters if necessary
+    await pool.query(sql`
+      alter table saml_application_sessions
+      alter column saml_request_id type varchar(128)
+    `);
     await pool.query(sql`
       alter table saml_application_sessions
       alter column relay_state type varchar(256)
