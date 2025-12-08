@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 // TODO: refactor this file to reduce LOC
-import { authRequestInfoGuard } from '@logto/schemas';
+import { authRequestInfoGuard, SamlApplicationSessions } from '@logto/schemas';
 import { generateStandardId, generateStandardShortId } from '@logto/shared';
 import { cond, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { addMinutes } from 'date-fns';
@@ -27,6 +27,9 @@ const samlApplicationSignInCallbackQueryParametersGuard = z
     error_description: z.string(),
   })
   .partial();
+
+const { rawAuthRequest: samlRequestGuard, relayState: relayStateGuard } =
+  SamlApplicationSessions.createGuard.shape;
 
 export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter>(
   ...[router, { queries, envSet }]: RouterInitArgs<T>
@@ -231,10 +234,10 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       params: z.object({ id: z.string() }),
       query: z
         .object({
-          SAMLRequest: z.string().min(1),
+          SAMLRequest: samlRequestGuard,
           Signature: z.string().optional(),
           SigAlg: z.string().optional(),
-          RelayState: z.string().optional(),
+          RelayState: relayStateGuard,
         })
         .catchall(z.string()),
       status: [200, 302, 400, 404],
@@ -349,8 +352,8 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
     koaGuard({
       params: z.object({ id: z.string() }),
       body: z.object({
-        SAMLRequest: z.string().min(1),
-        RelayState: z.string().optional(),
+        SAMLRequest: samlRequestGuard,
+        RelayState: relayStateGuard,
       }),
       status: [200, 302, 400, 404],
     }),
