@@ -37,6 +37,8 @@ const application = {
     private_key_required: 'ต้องระบุ private key',
     certificate_required: 'ต้องระบุ certificate',
     invalid_saml_request: 'คำขอรับรองความถูกต้อง SAML ไม่ถูกต้อง',
+    saml_request_id_or_relay_state_value_too_long:
+      'SAML request ID หรือค่า relay state ยาวเกินไป ไม่สามารถเริ่มต้นบันทึกเซสชันได้',
     auth_request_issuer_not_match:
       'Issuer ของคำขอรับรองความถูกต้อง SAML ไม่ตรงกับ Service provider entity ID',
     sp_initiated_saml_sso_session_not_found_in_cookies:

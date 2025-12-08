@@ -40,6 +40,8 @@ const application = {
     private_key_required: '秘密鍵が必要です。',
     certificate_required: '証明書が必要です。',
     invalid_saml_request: '無効な SAML 認証要求です。',
+    saml_request_id_or_relay_state_value_too_long:
+      'SAML リクエスト ID または relay state の値が長すぎて、セッションレコードの初期化に失敗しました。',
     auth_request_issuer_not_match:
       'SAML 認証要求の発行者がサービスプロバイダーのエンティティ ID と一致しません。',
     sp_initiated_saml_sso_session_not_found_in_cookies:

@@ -34,6 +34,8 @@ const application = {
     private_key_required: '需要提供私鑰。',
     certificate_required: '需要提供證書。',
     invalid_saml_request: '無效的 SAML 驗證請求。',
+    saml_request_id_or_relay_state_value_too_long:
+      'SAML 請求 ID 或 relay state 值過長,無法初始化會話記錄。',
     auth_request_issuer_not_match: 'SAML 驗證請求的發行者與服務提供者的實體 ID 不匹配。',
     sp_initiated_saml_sso_session_not_found_in_cookies:
       '在 cookie 中找不到服務提供者發起的 SAML 單點登入會話 ID。',

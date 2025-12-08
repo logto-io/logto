@@ -41,6 +41,8 @@ const application = {
     private_key_required: 'Требуется закрытый ключ.',
     certificate_required: 'Требуется сертификат.',
     invalid_saml_request: 'Неверный запрос аутентификации SAML.',
+    saml_request_id_or_relay_state_value_too_long:
+      'Идентификатор SAML-запроса или значение relay state слишком длинное, не удалось инициализировать запись сеанса.',
     auth_request_issuer_not_match:
       'Издатель запроса аутентификации SAML не совпадает с идентификатором сущности поставщика услуг.',
     sp_initiated_saml_sso_session_not_found_in_cookies:
