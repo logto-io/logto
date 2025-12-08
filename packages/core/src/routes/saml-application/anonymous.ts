@@ -2,7 +2,7 @@
 // TODO: refactor this file to reduce LOC
 import { authRequestInfoGuard, SamlApplicationSessions } from '@logto/schemas';
 import { generateStandardId, generateStandardShortId } from '@logto/shared';
-import { cond, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
+import { cond, removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
 import { addMinutes } from 'date-fns';
 import { z } from 'zod';
 
@@ -16,7 +16,7 @@ import { generateAutoSubmitForm } from '#src/saml-application/SamlApplication/ut
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
-import { verifyAndGetSamlSessionData } from './utils.js';
+import { verifyAndGetSamlSessionData, databaseErrorHandler } from './utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z
   .object({
@@ -36,12 +36,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 ) {
   const {
     samlApplications: { getSamlApplicationDetailsById },
-    samlApplicationSessions: {
-      insertSession,
-      findSessionById,
-      removeSessionOidcStateById,
-      deleteExpiredSessions,
-    },
+    samlApplicationSessions: { insertSession, removeSessionOidcStateById, deleteExpiredSessions },
   } = queries;
 
   router.get(
@@ -313,7 +308,10 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         };
         log.append({ createSession });
 
-        const insertSamlAppSession = await insertSession(createSession);
+        const insertSamlAppSession = await tryThat(
+          async () => insertSession(createSession),
+          databaseErrorHandler
+        );
         log.append({ insertSamlAppSession });
 
         // Set the session ID to cookie for later use.
@@ -338,7 +336,6 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
         throw new RequestError({
           code: 'application.saml.invalid_saml_request',
-          message: `Failed to process SAML authentication request: ${error instanceof Error ? error.message : String(error)}`,
         });
       }
 
@@ -419,7 +416,10 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         };
         log.append({ createSession });
 
-        const insertSamlAppSession = await insertSession(createSession);
+        const insertSamlAppSession = await tryThat(
+          async () => insertSession(createSession),
+          databaseErrorHandler
+        );
         log.append({ insertSamlAppSession });
 
         // Set the session ID to cookie for later use.
@@ -444,7 +444,6 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
         throw new RequestError({
           code: 'application.saml.invalid_saml_request',
-          message: `Failed to process SAML authentication request: ${error instanceof Error ? error.message : String(error)}`,
         });
       }
 

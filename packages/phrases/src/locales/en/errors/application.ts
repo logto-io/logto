@@ -38,6 +38,8 @@ const application = {
     private_key_required: 'Private key is required.',
     certificate_required: 'Certificate is required.',
     invalid_saml_request: 'Invalid SAML authentication request.',
+    saml_request_id_or_relay_state_value_too_long:
+      'SAML request ID or relay state value is too long, failed to initialize session record.',
     auth_request_issuer_not_match:
       'The issuer of the SAML authentication request mismatch with service provider entity ID.',
     sp_initiated_saml_sso_session_not_found_in_cookies:
