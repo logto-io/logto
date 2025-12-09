@@ -42,8 +42,6 @@ const application = {
     private_key_required: 'Se requiere una clave privada.',
     certificate_required: 'Se requiere un certificado.',
     invalid_saml_request: 'Solicitud de autenticación SAML no válida.',
-    saml_request_id_or_relay_state_value_too_long:
-      'El ID de solicitud SAML o el valor de relay state es demasiado largo, no se pudo inicializar el registro de sesión.',
     auth_request_issuer_not_match:
       'El emisor de la solicitud de autenticación SAML no coincide con el ID de entidad del proveedor de servicios.',
     sp_initiated_saml_sso_session_not_found_in_cookies:

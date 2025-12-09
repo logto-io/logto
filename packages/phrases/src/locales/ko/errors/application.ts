@@ -38,8 +38,6 @@ const application = {
     private_key_required: '개인 키가 필요합니다.',
     certificate_required: '인증서가 필요합니다.',
     invalid_saml_request: '잘못된 SAML 인증 요청입니다.',
-    saml_request_id_or_relay_state_value_too_long:
-      'SAML 요청 ID 또는 relay state 값이 너무 길어서 세션 레코드를 초기화하지 못했습니다.',
     auth_request_issuer_not_match:
       'SAML 인증 요청의 발급자가 서비스 제공자 엔터티 ID 와 일치하지 않습니다.',
     sp_initiated_saml_sso_session_not_found_in_cookies:

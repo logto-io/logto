@@ -1,5 +1,6 @@
 const entity = {
   invalid_input: 'ข้อมูลไม่ถูกต้อง รายการค่าต้องไม่ว่างเปล่า',
+  value_too_long: 'ความยาวของค่ายาวเกินไปและเกินขีดจำกัด',
   create_failed: 'สร้าง {{name}} ไม่สำเร็จ',
   db_constraint_violated: 'ละเมิดข้อจำกัดฐานข้อมูล',
   not_exists: '{{name}} นี้ไม่มีอยู่',

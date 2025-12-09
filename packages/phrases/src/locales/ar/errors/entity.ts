@@ -1,5 +1,6 @@
 const entity = {
   invalid_input: 'إدخال غير صالح. يجب ألا يكون قائمة القيم فارغة.',
+  value_too_long: 'طول القيمة طويل جداً ويتجاوز الحد.',
   create_failed: 'فشل في إنشاء {{name}}.',
   db_constraint_violated: 'انتهاك قيد قاعدة البيانات.',
   not_exists: 'لا يوجد {{name}}.',

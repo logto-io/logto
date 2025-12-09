@@ -39,8 +39,6 @@ const application = {
     private_key_required: 'Özel anahtar gereklidir.',
     certificate_required: 'Sertifika gereklidir.',
     invalid_saml_request: 'Geçersiz SAML kimlik doğrulama isteği.',
-    saml_request_id_or_relay_state_value_too_long:
-      'SAML istek kimliği veya relay state değeri çok uzun, oturum kaydı başlatılamadı.',
     auth_request_issuer_not_match:
       "SAML kimlik doğrulama isteğinin veren kimliği, hizmet sağlayıcı kimlik varlığı ID'si ile eşleşmiyor.",
     sp_initiated_saml_sso_session_not_found_in_cookies:

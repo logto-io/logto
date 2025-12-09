@@ -39,8 +39,6 @@ const application = {
     private_key_required: 'Wymagany jest klucz prywatny.',
     certificate_required: 'Wymagany jest certyfikat.',
     invalid_saml_request: 'Nieprawidłowe żądanie uwierzytelnienia SAML.',
-    saml_request_id_or_relay_state_value_too_long:
-      'Identyfikator żądania SAML lub wartość relay state jest zbyt długa, nie udało się zainicjować rekordu sesji.',
     auth_request_issuer_not_match:
       'Podmiot wydający żądanie uwierzytelnienia SAML nie pasuje do identyfikatora podmiotu dostawcy usług.',
     sp_initiated_saml_sso_session_not_found_in_cookies:

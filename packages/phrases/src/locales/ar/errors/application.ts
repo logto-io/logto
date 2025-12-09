@@ -39,8 +39,6 @@ const application = {
     private_key_required: 'المفتاح الخاص مطلوب.',
     certificate_required: 'الشهادة مطلوبة.',
     invalid_saml_request: 'طلب مصادقة SAML غير صالح.',
-    saml_request_id_or_relay_state_value_too_long:
-      'معرف طلب SAML أو قيمة relay state طويلة جدًا، فشل في تهيئة سجل الجلسة.',
     auth_request_issuer_not_match: 'المرسل لطلب مصادقة SAML لا يتطابق مع معرف خدمة الكيان.',
     sp_initiated_saml_sso_session_not_found_in_cookies:
       'لم يتم العثور على معرف جلسة SAML SSO التي بدأت من قبل مزود الخدمة في ملفات تعريف الارتباط.',
