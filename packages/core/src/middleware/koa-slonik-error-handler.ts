@@ -15,7 +15,7 @@ import { DeletionError, InsertionError, UpdateError } from '#src/errors/SlonikEr
 
 /**
  * @remarks
- * We are now upgrading this error handler to simultaneously handle SlonikError and DatabaseError.
+ * We are now upgrading this error handler to handle both SlonikError and DatabaseError.
  * This is because DatabaseError and SlonikError, due to their different sources of definition, are not unified.
  * However, in practice, both are errors triggered by DB query failures.
  */
@@ -44,8 +44,6 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
             }
           );
         }
-
-        // TODO: add more DatabaseError code handling if needed.
       }
 
       if (error instanceof InvalidInputError) {
