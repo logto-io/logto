@@ -1,5 +1,6 @@
 const entity = {
   invalid_input: 'Ungültige Eingabe. Wertliste darf nicht leer sein.',
+  value_too_long: 'Die Wertlänge ist zu lang und überschreitet das Limit.',
   create_failed: 'Fehler beim Erstellen von {{name}}.',
   db_constraint_violated: 'Datenbankbeschränkung verletzt.',
   not_exists: '{{name}} existiert nicht.',

@@ -1,5 +1,6 @@
 const entity = {
   invalid_input: 'Geçersiz giriş. Değer listesi boş olmamalıdır.',
+  value_too_long: 'Değer uzunluğu çok uzun ve sınırı aşıyor.',
   create_failed: '{{name}} oluşturulamadı.',
   db_constraint_violated: 'Veritabanı kısıtı ihlal edildi.',
   not_exists: '{{name}} mevcut değil.',

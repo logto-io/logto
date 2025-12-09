@@ -1,5 +1,6 @@
 const entity = {
   invalid_input: '无效输入。值列表不能为空。',
+  value_too_long: '值长度过长，超过了限制。',
   create_failed: '创建 {{name}} 失败。',
   db_constraint_violated: '数据库约束被破坏。',
   not_exists: '该 {{name}} 不存在。',

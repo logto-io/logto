@@ -1,5 +1,6 @@
 const entity = {
   invalid_input: '입력이 잘못되었습니다. 값 목록은 비어 있을 수 없습니다.',
+  value_too_long: '값의 길이가 너무 길어서 제한을 초과했어요.',
   create_failed: '{{name}} 생성을 실패하였어요.',
   db_constraint_violated: '데이터베이스 제약 조건 위반.',
   not_exists: '{{name}}는 존재하지 않아요.',

@@ -1,5 +1,6 @@
 const entity = {
   invalid_input: 'Nieprawidłowe dane. Lista wartości nie może być pusta.',
+  value_too_long: 'Długość wartości jest zbyt długa i przekracza limit.',
   create_failed: 'Nie udało się utworzyć {{name}}.',
   db_constraint_violated: 'Constraint naruszenie bazy danych.',
   not_exists: '{{name}} nie istnieje.',

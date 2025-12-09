@@ -12,7 +12,7 @@ create table saml_application_sessions (
   /** The identifier of the OIDC auth request state. */
   oidc_state varchar(32),
   /** The relay state of the SAML auth request. */
-  relay_state varchar(256),
+  relay_state varchar(512),
   /** The raw request of the SAML auth request. */
   raw_auth_request text not null,
   created_at timestamptz not null default(now()),
