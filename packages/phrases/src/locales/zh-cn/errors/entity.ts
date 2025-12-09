@@ -9,6 +9,7 @@ const entity = {
   relation_foreign_key_not_found:
     '无法找到一个或多个外键。请检查输入，并确保所有引用的实体都存在。',
   unique_integrity_violation: 'The entity already exists. Please check the input and try again.',
+  general_db_error: '数据库查询操作出错，请稍后重试。',
 };
 
 export default Object.freeze(entity);

@@ -9,6 +9,8 @@ const entity = {
   relation_foreign_key_not_found:
     "Impossibile trovare una o più chiavi esterne. Si prega di controllare l'input e assicurarsi che tutte le entità referenziate esistano.",
   unique_integrity_violation: "L'entità esiste già. Si prega di controllare l'input e riprovare.",
+  general_db_error:
+    "Si è verificato un errore nell'operazione di query del database. Si prega di riprovare più tardi.",
 };
 
 export default Object.freeze(entity);

@@ -10,6 +10,8 @@ const entity = {
     'Não é possível encontrar uma ou mais chaves estrangeiras. Por favor, verifique a entrada e garanta que todas as entidades referenciadas existam.',
   unique_integrity_violation:
     'A entidade já existe. Por favor, verifique a entrada e tente novamente.',
+  general_db_error:
+    'Ocorreu um erro na operação de consulta do banco de dados. Por favor, tente novamente mais tarde.',
 };
 
 export default Object.freeze(entity);

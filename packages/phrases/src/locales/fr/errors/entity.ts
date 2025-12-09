@@ -9,6 +9,8 @@ const entity = {
   relation_foreign_key_not_found:
     'Impossible de trouver une ou plusieurs clés étrangères. Veuillez vérifier la saisie et vous assurer que toutes les entités référencées existent.',
   unique_integrity_violation: "L'entité existe déjà. Veuillez vérifier la saisie et réessayer.",
+  general_db_error:
+    "Une erreur lors de l'opération de requête de base de données s'est produite. Veuillez réessayer plus tard.",
 };
 
 export default Object.freeze(entity);

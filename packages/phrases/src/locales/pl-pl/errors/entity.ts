@@ -10,6 +10,7 @@ const entity = {
     'Nie można odnaleźć jednego lub więcej kluczy obcych. Proszę sprawdzić dane wejściowe i upewnić się, że wszystkie odwołane encje istnieją.',
   unique_integrity_violation:
     'Encja już istnieje. Proszę sprawdzić dane wejściowe i spróbować ponownie.',
+  general_db_error: 'Błąd operacji zapytania bazy danych. Spróbuj ponownie później.',
 };
 
 export default Object.freeze(entity);

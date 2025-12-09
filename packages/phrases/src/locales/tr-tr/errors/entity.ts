@@ -9,6 +9,7 @@ const entity = {
   relation_foreign_key_not_found:
     'Bir veya daha fazla yabancı anahtar bulunamıyor. Lütfen girişi kontrol edin ve tüm referans edilen varlıkların var olduğundan emin olun.',
   unique_integrity_violation: 'Varlık zaten mevcut. Lütfen girişi kontrol edin ve tekrar deneyin.',
+  general_db_error: 'Veritabanı sorgu işlemi hatası oluştu. Lütfen daha sonra tekrar deneyin.',
 };
 
 export default Object.freeze(entity);

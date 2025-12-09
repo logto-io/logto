@@ -9,6 +9,7 @@ const entity = {
   relation_foreign_key_not_found:
     '하나 이상의 외래 키를 찾을 수 없어요. 입력을 확인하고 참조된 모든 엔티티가 있는지 확인해주세요.',
   unique_integrity_violation: '엔티티가 이미 존재해요. 입력을 확인하고 다시 시도해주세요.',
+  general_db_error: '데이터베이스 쿼리 작업 오류가 발생했어요. 나중에 다시 시도해주세요.',
 };
 
 export default Object.freeze(entity);

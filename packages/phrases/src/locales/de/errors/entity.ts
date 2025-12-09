@@ -10,6 +10,8 @@ const entity = {
     'Ein oder mehrere Fremdschlüssel konnten nicht gefunden werden. Bitte überprüfen Sie die Eingabe und stellen Sie sicher, dass alle referenzierten Einträge vorhanden sind.',
   unique_integrity_violation:
     'Die Entität besteht bereits. Bitte überprüfen Sie die Eingabe und versuchen Sie es erneut.',
+  general_db_error:
+    'Ein Fehler beim Datenbankabfrageverfahren ist aufgetreten. Bitte versuchen Sie es später erneut.',
 };
 
 export default Object.freeze(entity);
