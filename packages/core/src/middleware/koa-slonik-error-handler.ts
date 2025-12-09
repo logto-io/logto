@@ -29,17 +29,26 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
         throw error;
       }
 
-      // https://www.postgresql.org/docs/14/errcodes-appendix.html
-      if (error instanceof DatabaseError && error.code === '22001') {
-        throw new RequestError(
-          {
-            code: 'entity.value_too_long',
-            status: 422,
-          },
-          {
-            message: error.message,
-          }
-        );
+      if (error instanceof DatabaseError) {
+        // https://www.postgresql.org/docs/14/errcodes-appendix.html
+        if (error.code === '22001') {
+          throw new RequestError(
+            {
+              code: 'entity.value_too_long',
+              status: 422,
+            },
+            {
+              message: error.message,
+            }
+          );
+        }
+
+        // TODO: add more DatabaseError code handling if needed.
+
+        throw new RequestError({
+          code: 'entity.general_db_error',
+          status: 400,
+        });
       }
 
       if (error instanceof InvalidInputError) {
