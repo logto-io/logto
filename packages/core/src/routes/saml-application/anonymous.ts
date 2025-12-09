@@ -4,7 +4,6 @@ import { authRequestInfoGuard, SamlApplicationSessions } from '@logto/schemas';
 import { generateStandardId, generateStandardShortId } from '@logto/shared';
 import { cond, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { addMinutes } from 'date-fns';
-import { DatabaseError } from 'pg-protocol';
 import { z } from 'zod';
 
 import { spInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
@@ -261,81 +260,71 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const { SAMLRequest, SigAlg } = rest;
 
       // Parse login request
-      try {
-        const loginRequestResult = await samlApplication.parseLoginRequest('redirect', {
-          query: removeUndefinedKeys({
-            SAMLRequest,
-            Signature,
-            SigAlg,
-          }),
-          octetString,
-        });
+      const loginRequestResult = await samlApplication.parseLoginRequest('redirect', {
+        query: removeUndefinedKeys({
+          SAMLRequest,
+          Signature,
+          SigAlg,
+        }),
+        octetString,
+      });
 
-        log.append({ loginRequestResult });
-        const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
-        log.append({ extractResult });
+      log.append({ loginRequestResult });
+      const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
+      log.append({ extractResult });
 
-        if (!extractResult.success) {
-          throw new RequestError({
-            code: 'application.saml.invalid_saml_request',
-            error: extractResult.error.flatten(),
-          });
-        }
-
-        log.append({ extractResultData: extractResult.data });
-
-        assertThat(
-          extractResult.data.issuer === samlApplication.config.spEntityId,
-          'application.saml.auth_request_issuer_not_match'
-        );
-
-        const state = generateStandardId(32);
-        const signInUrl = await samlApplication.getSignInUrl({
-          state,
-        });
-        log.append({ signInUrl: signInUrl.toString() });
-
-        const currentDate = new Date();
-        const expiresAt = addMinutes(currentDate, 60); // Lifetime of the session is 60 minutes.
-        const createSession = {
-          id: generateStandardId(32),
-          applicationId: id,
-          oidcState: state,
-          samlRequestId: extractResult.data.request.id,
-          rawAuthRequest: SAMLRequest,
-          // Expire the session in 60 minutes.
-          expiresAt: expiresAt.getTime(),
-          ...cond(RelayState && { relayState: RelayState }),
-        };
-        log.append({ createSession });
-
-        const insertSamlAppSession = await insertSession(createSession);
-        log.append({ insertSamlAppSession });
-
-        // Set the session ID to cookie for later use.
-        ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
-          httpOnly: true,
-          sameSite: 'strict',
-          expires: expiresAt,
-          overwrite: true,
-        });
-
-        log.append({
-          cookie: {
-            spInitiatedSamlSsoSessionCookieName: insertSamlAppSession.id,
-          },
-        });
-
-        ctx.redirect(signInUrl.toString());
-      } catch (error: unknown) {
-        if (error instanceof RequestError || error instanceof DatabaseError) {
-          throw error;
-        }
-
+      if (!extractResult.success) {
         throw new RequestError({
           code: 'application.saml.invalid_saml_request',
+          error: extractResult.error.flatten(),
         });
       }
+
+      log.append({ extractResultData: extractResult.data });
+
+      assertThat(
+        extractResult.data.issuer === samlApplication.config.spEntityId,
+        'application.saml.auth_request_issuer_not_match'
+      );
+
+      const state = generateStandardId(32);
+      const signInUrl = await samlApplication.getSignInUrl({
+        state,
+      });
+      log.append({ signInUrl: signInUrl.toString() });
+
+      const currentDate = new Date();
+      const expiresAt = addMinutes(currentDate, 60); // Lifetime of the session is 60 minutes.
+      const createSession = {
+        id: generateStandardId(32),
+        applicationId: id,
+        oidcState: state,
+        samlRequestId: extractResult.data.request.id,
+        rawAuthRequest: SAMLRequest,
+        // Expire the session in 60 minutes.
+        expiresAt: expiresAt.getTime(),
+        ...cond(RelayState && { relayState: RelayState }),
+      };
+      log.append({ createSession });
+
+      const insertSamlAppSession = await insertSession(createSession);
+      log.append({ insertSamlAppSession });
+
+      // Set the session ID to cookie for later use.
+      ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
+        httpOnly: true,
+        sameSite: 'strict',
+        expires: expiresAt,
+        overwrite: true,
+      });
+
+      log.append({
+        cookie: {
+          spInitiatedSamlSsoSessionCookieName: insertSamlAppSession.id,
+        },
+      });
+
+      ctx.redirect(signInUrl.toString());
 
       return next();
     }
@@ -369,78 +358,68 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const samlApplication = new SamlApplication(details, id, envSet);
 
       // Parse login request
-      try {
-        const loginRequestResult = await samlApplication.parseLoginRequest('post', {
-          body: {
-            SAMLRequest,
-          },
-        });
+      const loginRequestResult = await samlApplication.parseLoginRequest('post', {
+        body: {
+          SAMLRequest,
+        },
+      });
 
-        log.append({ loginRequestResult });
-        const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
-        log.append({ extractResult });
+      log.append({ loginRequestResult });
+      const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
+      log.append({ extractResult });
 
-        if (!extractResult.success) {
-          throw new RequestError({
-            code: 'application.saml.invalid_saml_request',
-            error: extractResult.error.flatten(),
-          });
-        }
-        log.append({ extractResultData: extractResult.data });
-
-        assertThat(
-          extractResult.data.issuer === samlApplication.config.spEntityId,
-          'application.saml.auth_request_issuer_not_match'
-        );
-
-        const state = generateStandardShortId();
-        const signInUrl = await samlApplication.getSignInUrl({
-          state,
-        });
-        log.append({ signInUrl: signInUrl.toString() });
-
-        const currentDate = new Date();
-        const expiresAt = addMinutes(currentDate, 60); // Lifetime of the session is 60 minutes.
-
-        const createSession = {
-          id: generateStandardId(),
-          applicationId: id,
-          oidcState: state,
-          samlRequestId: extractResult.data.request.id,
-          rawAuthRequest: SAMLRequest,
-          // Expire the session in 60 minutes.
-          expiresAt: expiresAt.getTime(),
-          ...cond(RelayState && { relayState: RelayState }),
-        };
-        log.append({ createSession });
-
-        const insertSamlAppSession = await insertSession(createSession);
-        log.append({ insertSamlAppSession });
-
-        // Set the session ID to cookie for later use.
-        ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
-          httpOnly: true,
-          sameSite: 'strict',
-          expires: expiresAt,
-          overwrite: true,
-        });
-
-        log.append({
-          cookie: {
-            spInitiatedSamlSsoSessionCookieName: insertSamlAppSession.id,
-          },
-        });
-
-        ctx.redirect(signInUrl.toString());
-      } catch (error: unknown) {
-        if (error instanceof RequestError || error instanceof DatabaseError) {
-          throw error;
-        }
-
+      if (!extractResult.success) {
         throw new RequestError({
           code: 'application.saml.invalid_saml_request',
+          error: extractResult.error.flatten(),
         });
       }
+      log.append({ extractResultData: extractResult.data });
+
+      assertThat(
+        extractResult.data.issuer === samlApplication.config.spEntityId,
+        'application.saml.auth_request_issuer_not_match'
+      );
+
+      const state = generateStandardShortId();
+      const signInUrl = await samlApplication.getSignInUrl({
+        state,
+      });
+      log.append({ signInUrl: signInUrl.toString() });
+
+      const currentDate = new Date();
+      const expiresAt = addMinutes(currentDate, 60); // Lifetime of the session is 60 minutes.
+
+      const createSession = {
+        id: generateStandardId(),
+        applicationId: id,
+        oidcState: state,
+        samlRequestId: extractResult.data.request.id,
+        rawAuthRequest: SAMLRequest,
+        // Expire the session in 60 minutes.
+        expiresAt: expiresAt.getTime(),
+        ...cond(RelayState && { relayState: RelayState }),
+      };
+      log.append({ createSession });
+
+      const insertSamlAppSession = await insertSession(createSession);
+      log.append({ insertSamlAppSession });
+
+      // Set the session ID to cookie for later use.
+      ctx.cookies.set(spInitiatedSamlSsoSessionCookieName, insertSamlAppSession.id, {
+        httpOnly: true,
+        sameSite: 'strict',
+        expires: expiresAt,
+        overwrite: true,
+      });
+
+      log.append({
+        cookie: {
+          spInitiatedSamlSsoSessionCookieName: insertSamlAppSession.id,
+        },
+      });
+
+      ctx.redirect(signInUrl.toString());
 
       return next();
     }

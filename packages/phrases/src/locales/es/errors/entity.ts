@@ -10,8 +10,6 @@ const entity = {
     'No se pueden encontrar una o más claves foráneas. Por favor, verifique la entrada y asegúrese de que todas las entidades referenciadas existan.',
   unique_integrity_violation:
     'La entidad ya existe. Por favor, verifique la entrada e intente\\lo de nuevo.',
-  general_db_error:
-    'Se ha producido un error en la operación de consulta de la base de datos. Por favor, inténtelo más tarde.',
 };
 
 export default Object.freeze(entity);

@@ -31,6 +31,8 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
 
       if (error instanceof DatabaseError) {
         // https://www.postgresql.org/docs/14/errcodes-appendix.html
+        // Can better infer SlonikError type.
+        // eslint-disable-next-line unicorn/no-lonely-if
         if (error.code === '22001') {
           throw new RequestError(
             {
@@ -44,11 +46,6 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
         }
 
         // TODO: add more DatabaseError code handling if needed.
-
-        throw new RequestError({
-          code: 'entity.general_db_error',
-          status: 400,
-        });
       }
 
       if (error instanceof InvalidInputError) {

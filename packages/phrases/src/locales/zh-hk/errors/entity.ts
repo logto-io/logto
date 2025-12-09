@@ -8,7 +8,6 @@ const entity = {
   not_found: '該資源不存在。',
   relation_foreign_key_not_found: '找不到一個或多個外鍵。請檢查輸入並確保所有參照的實體都存在。',
   unique_integrity_violation: 'The entity already exists. Please check the input and try again.',
-  general_db_error: '資料庫查詢操作出錯，請稍後重試。',
 };
 
 export default Object.freeze(entity);

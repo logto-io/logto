@@ -10,7 +10,6 @@ const entity = {
     '外部キーが1つ以上見つかりません。入力を確認し、すべての参照先エンティティが存在することを確認してください。',
   unique_integrity_violation:
     'エンティティは既に存在します。入力を確認してもう一度お試しください。',
-  general_db_error: 'データベースクエリ操作エラーが発生しました。後でもう一度お試しください。',
 };
 
 export default Object.freeze(entity);
