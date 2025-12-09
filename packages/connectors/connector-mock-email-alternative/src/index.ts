@@ -13,6 +13,7 @@ import {
   validateConfig,
   ConnectorType,
   mockConnectorFilePaths,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
@@ -24,8 +25,10 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, mockMailConfigGuard);
-    const { templates } = config;
-    const template = templates?.find((template) => template.usageType === type);
+
+    const template = config.templates
+      ? getConfigTemplateByType<typeof config, (typeof config.templates)[0]>(type, config)
+      : undefined;
 
     assert(
       template,

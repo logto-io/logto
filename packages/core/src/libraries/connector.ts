@@ -6,7 +6,12 @@ import type {
   GetI18nEmailTemplate,
   SmsConnector,
 } from '@logto/connector-kit';
-import { validateConfig, ServiceConnector, ConnectorType } from '@logto/connector-kit';
+import {
+  validateConfig,
+  ServiceConnector,
+  ConnectorType,
+  TemplateType,
+} from '@logto/connector-kit';
 import { type Nullable, conditional, pick, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -192,7 +197,17 @@ export const createConnectorLibrary = (
       fallbackLanguage
     );
 
-    return fallbackTemplate?.details;
+    if (fallbackTemplate) {
+      return fallbackTemplate.details;
+    }
+
+    // If the fallback template is also not available, finally fallback to the generic template type.
+    const genericTemplate = await emailTemplates.findByLanguageTagAndTemplateType(
+      TemplateType.Generic,
+      fallbackLanguage
+    );
+
+    return genericTemplate?.details;
   };
 
   return {
