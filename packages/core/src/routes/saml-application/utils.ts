@@ -1,9 +1,7 @@
 import { type Nullable } from '@silverhand/essentials';
 import { type Context } from 'koa';
-import { DatabaseError } from 'pg-protocol';
 
 import { spInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
-import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -40,20 +38,4 @@ export const verifyAndGetSamlSessionData = async (
     sessionId,
     sessionExpiresAt,
   };
-};
-
-export const databaseErrorHandler = (error: unknown) => {
-  if (error instanceof DatabaseError && error.code === '22001') {
-    // Error code see https://www.postgresql.org/docs/14/errcodes-appendix.html
-    throw new RequestError({
-      code: 'application.saml.saml_request_id_or_relay_state_value_too_long',
-    });
-  }
-
-  /**
-   * Other database errors can be thrown directly, will be handled by:
-   * 1. slonik error handler middleware
-   * 2. general error handler middleware
-   */
-  throw error;
 };

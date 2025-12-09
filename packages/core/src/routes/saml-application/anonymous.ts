@@ -2,8 +2,9 @@
 // TODO: refactor this file to reduce LOC
 import { authRequestInfoGuard, SamlApplicationSessions } from '@logto/schemas';
 import { generateStandardId, generateStandardShortId } from '@logto/shared';
-import { cond, removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
+import { cond, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { addMinutes } from 'date-fns';
+import { DatabaseError } from 'pg-protocol';
 import { z } from 'zod';
 
 import { spInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
@@ -16,7 +17,7 @@ import { generateAutoSubmitForm } from '#src/saml-application/SamlApplication/ut
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
-import { verifyAndGetSamlSessionData, databaseErrorHandler } from './utils.js';
+import { verifyAndGetSamlSessionData } from './utils.js';
 
 const samlApplicationSignInCallbackQueryParametersGuard = z
   .object({
@@ -308,10 +309,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         };
         log.append({ createSession });
 
-        const insertSamlAppSession = await tryThat(
-          async () => insertSession(createSession),
-          databaseErrorHandler
-        );
+        const insertSamlAppSession = await insertSession(createSession);
         log.append({ insertSamlAppSession });
 
         // Set the session ID to cookie for later use.
@@ -330,7 +328,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
         ctx.redirect(signInUrl.toString());
       } catch (error: unknown) {
-        if (error instanceof RequestError) {
+        if (error instanceof RequestError || error instanceof DatabaseError) {
           throw error;
         }
 
@@ -416,10 +414,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
         };
         log.append({ createSession });
 
-        const insertSamlAppSession = await tryThat(
-          async () => insertSession(createSession),
-          databaseErrorHandler
-        );
+        const insertSamlAppSession = await insertSession(createSession);
         log.append({ insertSamlAppSession });
 
         // Set the session ID to cookie for later use.
@@ -438,7 +433,7 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
 
         ctx.redirect(signInUrl.toString());
       } catch (error: unknown) {
-        if (error instanceof RequestError) {
+        if (error instanceof RequestError || error instanceof DatabaseError) {
           throw error;
         }
 
