@@ -1,6 +1,7 @@
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
+import getCountryFlag from 'country-flag-icons/unicode';
 import type { KeyboardEventHandler } from 'react';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -282,6 +283,7 @@ const CountryCodeDropdown = ({
                 }}
               >
                 {isActive && <CheckMark />}
+                <span className={styles.countryIcon}>{getCountryFlag(countryKeyCode)}</span>
                 {`+${countryCallingCode}`}
               </li>
             );

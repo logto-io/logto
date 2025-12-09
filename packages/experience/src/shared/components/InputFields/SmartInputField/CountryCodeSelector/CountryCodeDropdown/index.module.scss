@@ -36,6 +36,11 @@
   }
 }
 
+.countryIcon {
+  padding-inline-end: _.unit(2);
+  font-size: _.unit(5);
+}
+
 .countryList {
   margin: 0 _.unit(-3);
   padding: 0 _.unit(3);
