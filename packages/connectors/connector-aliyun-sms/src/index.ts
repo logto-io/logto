@@ -13,6 +13,7 @@ import {
   validateConfig,
   ConnectorType,
   parseJson,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
@@ -41,10 +42,9 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, aliyunSmsConfigGuard);
-    const { accessKeyId, accessKeySecret, signName, templates, strictPhoneRegionNumberCheck } =
-      config;
+    const { accessKeyId, accessKeySecret, signName, strictPhoneRegionNumberCheck } = config;
 
-    const template = templates.find(({ usageType }) => usageType === type);
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,

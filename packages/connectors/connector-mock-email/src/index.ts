@@ -15,6 +15,7 @@ import {
   ConnectorType,
   mockConnectorFilePaths,
   replaceSendMessageHandlebars,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
@@ -29,8 +30,7 @@ const sendMessage =
 
     const customTemplate = await trySafe(async () => getI18nTemplate?.(type, payload.locale));
     // Fall back to the default template if the custom template is not found.
-    const template =
-      customTemplate ?? config.templates.find((template) => template.usageType === type);
+    const template = customTemplate ?? getConfigTemplateByType(type, config);
 
     assert(
       template,

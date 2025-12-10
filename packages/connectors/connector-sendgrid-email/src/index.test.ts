@@ -40,8 +40,25 @@ describe('SendGrid connector', () => {
     });
   });
 
-  it('should throw error if template not found', async () => {
+  it('should fall back to generic template if usage-specific template not found', async () => {
+    nockMessages(mockedGenericEmailParameters);
     getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.BindMfa,
+      payload: { code: '123456' },
+    });
+  });
+
+  it('should throw error if required template (generic) is not found', async () => {
+    // Remove generic template to force template not found error
+    getConfig.mockResolvedValue({
+      ...mockedConfig,
+      templates: mockedConfig.templates.filter(
+        (template) => template.usageType !== TemplateType.Generic
+      ),
+    });
 
     await expect(
       connector.sendMessage({
@@ -49,7 +66,9 @@ describe('SendGrid connector', () => {
         type: TemplateType.OrganizationInvitation,
         payload: { link: 'https://example.com' },
       })
-    ).rejects.toThrowErrorMatchingInlineSnapshot('[Error: ConnectorError: template_not_found]');
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      '[Error: ConnectorError: {"issues":[{"code":"custom","message":"Template with UsageType (Generic) should be provided!","path":["templates"]}],"name":"ZodError"}]'
+    );
   });
 
   it('should send organization invitation email with default config', async () => {

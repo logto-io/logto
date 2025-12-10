@@ -15,6 +15,7 @@ import {
   validateConfig,
   parseJson,
   replaceSendMessageHandlebars,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 
 import { defaultMetadata } from './constant.js';
@@ -34,12 +35,11 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, aliyunDmConfigGuard);
-    const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
+    const { accessKeyId, accessKeySecret, accountName, fromAlias } = config;
 
     const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
 
-    // Fall back to the default template if the custom i18n template is not found.
-    const template = customTemplate ?? templates.find((template) => template.usageType === type);
+    const template = customTemplate ?? getConfigTemplateByType(type, config);
 
     assert(
       template,

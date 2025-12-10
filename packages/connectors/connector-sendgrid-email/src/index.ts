@@ -16,6 +16,7 @@ import {
   validateConfig,
   ConnectorType,
   replaceSendMessageHandlebars,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
@@ -85,11 +86,11 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, sendGridMailConfigGuard);
-    const { apiKey, templates } = config;
+    const { apiKey } = config;
 
     const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
 
-    const template = templates.find((template) => template.usageType === type);
+    const template = getConfigTemplateByType(type, config);
 
     const parameters = customTemplate
       ? buildParametersFromCustomTemplate(to, config, customTemplate, payload)

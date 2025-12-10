@@ -11,6 +11,7 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 import { ServerClient } from 'postmark';
 
@@ -25,8 +26,8 @@ const sendMessage =
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, postmarkConfigGuard);
 
-    const { serverToken, fromEmail, templates } = config;
-    const template = templates.find((template) => template.usageType === type);
+    const { serverToken, fromEmail } = config;
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,

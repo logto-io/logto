@@ -15,6 +15,7 @@ import {
   validateConfig,
   ConnectorType,
   replaceSendMessageHandlebars,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 import nodemailer from 'nodemailer';
 import type Mail from 'nodemailer/lib/mailer';
@@ -64,8 +65,7 @@ const sendMessage =
     validateConfig(config, smtpConfigGuard);
 
     const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
-    const template =
-      customTemplate ?? config.templates.find((template) => template.usageType === type);
+    const template = customTemplate ?? getConfigTemplateByType(type, config);
 
     assert(
       template,

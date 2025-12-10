@@ -13,6 +13,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorType,
+  getConfigTemplateByType,
   validateConfig,
 } from '@logto/connector-kit';
 
@@ -29,12 +30,12 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, awsSesConfigGuard);
-    const { accessKeyId, accessKeySecret, region, templates } = config;
+    const { accessKeyId, accessKeySecret, region } = config;
 
     const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
 
     // Fall back to the default template if the custom i18n template is not found.
-    const template = customTemplate ?? templates.find((template) => template.usageType === type);
+    const template = customTemplate ?? getConfigTemplateByType(type, config);
 
     assert(
       template,

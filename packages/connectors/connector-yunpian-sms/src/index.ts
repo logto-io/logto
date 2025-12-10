@@ -13,6 +13,7 @@ import {
   validateConfig,
   ConnectorType,
   replaceSendMessageHandlebars,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
@@ -58,9 +59,10 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, yunpianSmsConfigGuard);
-    const { apikey, templates, enableInternational, unsupportedCountriesMsg } = config;
+    const { apikey, enableInternational, unsupportedCountriesMsg } = config;
 
-    const template = templates.find((template) => template.usageType === type);
+    const template = getConfigTemplateByType(type, config);
+
     assert(
       template,
       new ConnectorError(

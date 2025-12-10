@@ -12,6 +12,7 @@ import {
   validateConfig,
   ConnectorType,
   replaceSendMessageHandlebars,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 import { Auth } from '@vonage/auth';
 import { Vonage } from '@vonage/server-sdk';
@@ -25,8 +26,8 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, vonageSmsConfigGuard);
-    const { apiKey, apiSecret, brandName, templates } = config;
-    const template = templates.find((template) => template.usageType === type);
+    const { apiKey, apiSecret, brandName } = config;
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,
