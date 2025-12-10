@@ -185,7 +185,7 @@ export function getConfigTemplateByType<Template extends { usageType: string }>(
   const { templates } = config;
 
   if (!templates) {
-    return undefined;
+    return;
   }
 
   return (
