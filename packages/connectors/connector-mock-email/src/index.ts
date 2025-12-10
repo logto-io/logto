@@ -30,7 +30,7 @@ const sendMessage =
 
     const customTemplate = await trySafe(async () => getI18nTemplate?.(type, payload.locale));
     // Fall back to the default template if the custom template is not found.
-    const template = customTemplate ?? getConfigTemplateByType<typeof config>(type, config);
+    const template = customTemplate ?? getConfigTemplateByType(type, config);
 
     assert(
       template,

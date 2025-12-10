@@ -90,7 +90,7 @@ const sendMessage =
 
     const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
 
-    const template = getConfigTemplateByType<typeof config>(type, config);
+    const template = getConfigTemplateByType(type, config);
 
     const parameters = customTemplate
       ? buildParametersFromCustomTemplate(to, config, customTemplate, payload)

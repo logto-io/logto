@@ -26,7 +26,7 @@ const sendMessage =
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, gatewayApiSmsConfigGuard);
     const { endpoint, apiToken, sender } = config;
-    const template = getConfigTemplateByType<typeof config>(type, config);
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,

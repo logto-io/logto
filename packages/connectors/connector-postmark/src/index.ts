@@ -27,7 +27,7 @@ const sendMessage =
     validateConfig(config, postmarkConfigGuard);
 
     const { serverToken, fromEmail } = config;
-    const template = getConfigTemplateByType<typeof config>(type, config);
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,

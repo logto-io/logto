@@ -26,9 +26,7 @@ const sendMessage =
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, mockMailConfigGuard);
 
-    const template = config.templates
-      ? getConfigTemplateByType<typeof config, (typeof config.templates)[0]>(type, config)
-      : undefined;
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,

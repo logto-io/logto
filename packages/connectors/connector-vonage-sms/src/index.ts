@@ -27,7 +27,7 @@ const sendMessage =
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, vonageSmsConfigGuard);
     const { apiKey, apiSecret, brandName } = config;
-    const template = getConfigTemplateByType<typeof config>(type, config);
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,

@@ -178,16 +178,6 @@ export const getAccessTokenByRefreshToken = async (
   }
 };
 
-export function getConfigTemplateByType<
-  Config extends { templates: Template[] },
-  Template extends { usageType: string } = { usageType: string },
->(type: string, config: Config): Config['templates'][number] | undefined;
-
-export function getConfigTemplateByType<
-  Config extends { templates?: Template[] },
-  Template extends { usageType: string } = { usageType: string },
->(type: string, config: Config): Template | undefined;
-
 export function getConfigTemplateByType<Template extends { usageType: string }>(
   type: string,
   config: { templates?: Template[] }

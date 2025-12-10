@@ -61,7 +61,7 @@ const sendMessage =
     validateConfig(config, yunpianSmsConfigGuard);
     const { apikey, enableInternational, unsupportedCountriesMsg } = config;
 
-    const template = getConfigTemplateByType<typeof config>(type, config);
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,

@@ -44,7 +44,7 @@ const sendMessage =
     validateConfig(config, aliyunSmsConfigGuard);
     const { accessKeyId, accessKeySecret, signName, strictPhoneRegionNumberCheck } = config;
 
-    const template = getConfigTemplateByType<typeof config>(type, config);
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,
