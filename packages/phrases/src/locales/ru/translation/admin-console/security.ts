@@ -47,11 +47,18 @@ const security = {
     site_key: 'Ключ сайта',
     secret_key: 'Секретный ключ',
     project_id: 'ID проекта',
+    domain: 'Домен (необязательно)',
+    domain_placeholder: 'www.google.com (по умолчанию) или recaptcha.net',
     recaptcha_key_id: 'ID ключа reCAPTCHA',
     recaptcha_api_key: 'API-ключ проекта',
     deletion_description: 'Вы уверены, что хотите удалить этого поставщика CAPTCHA?',
     captcha_deleted: 'Поставщик CAPTCHA успешно удалён',
     setup_captcha: 'Настройка CAPTCHA',
+    mode: 'Режим проверки',
+    mode_invisible: 'Невидимый',
+    mode_checkbox: 'Флажок',
+    mode_notice:
+      'Режим проверки определяется в настройках ключа reCAPTCHA в Google Cloud Console. Для изменения режима здесь требуется соответствующий тип ключа.',
   },
   password_policy: {
     password_requirements: 'Требования к паролю',

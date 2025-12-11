@@ -47,11 +47,18 @@ const security = {
     site_key: 'Chiave del sito',
     secret_key: 'Chiave segreta',
     project_id: 'ID del progetto',
+    domain: 'Dominio (opzionale)',
+    domain_placeholder: 'www.google.com (predefinito) o recaptcha.net',
     recaptcha_key_id: 'ID chiave reCAPTCHA',
     recaptcha_api_key: 'Chiave API del progetto',
     deletion_description: 'Sei sicuro di voler eliminare questo fornitore di CAPTCHA?',
     captcha_deleted: 'Fornitore di CAPTCHA eliminato con successo',
     setup_captcha: 'Configura CAPTCHA',
+    mode: 'Modalità di verifica',
+    mode_invisible: 'Invisibile',
+    mode_checkbox: 'Casella di controllo',
+    mode_notice:
+      'La modalità di verifica è definita nelle impostazioni della chiave reCAPTCHA in Google Cloud Console. Per cambiare la modalità qui è necessario un tipo di chiave corrispondente.',
   },
   password_policy: {
     password_requirements: 'Requisiti per la password',

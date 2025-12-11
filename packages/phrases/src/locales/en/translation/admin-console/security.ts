@@ -47,11 +47,18 @@ const security = {
     site_key: 'Site key',
     secret_key: 'Secret key',
     project_id: 'Project ID',
+    domain: 'Domain (optional)',
+    domain_placeholder: 'www.google.com (default) or recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA key ID',
     recaptcha_api_key: 'API key of the project',
     deletion_description: 'Are you sure you want to delete this CAPTCHA provider?',
     captcha_deleted: 'CAPTCHA provider deleted successfully',
     setup_captcha: 'Setup CAPTCHA',
+    mode: 'Verification mode',
+    mode_invisible: 'Invisible',
+    mode_checkbox: 'Checkbox',
+    mode_notice:
+      'The verification mode is defined in your reCAPTCHA key settings in Google Cloud Console. Changing the mode here requires a matching key type.',
   },
   password_policy: {
     password_requirements: 'Password requirements',

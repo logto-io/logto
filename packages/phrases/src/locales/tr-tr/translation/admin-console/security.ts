@@ -47,11 +47,18 @@ const security = {
     site_key: 'Site anahtarı',
     secret_key: 'Gizli anahtar',
     project_id: 'Proje ID',
+    domain: 'Domain (isteğe bağlı)',
+    domain_placeholder: 'www.google.com (varsayılan) veya recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA anahtar ID',
     recaptcha_api_key: 'Projenin API anahtarı',
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',
     captcha_deleted: 'CAPTCHA sağlayıcısı başarıyla silindi',
     setup_captcha: "CAPTCHA'yı ayarla",
+    mode: 'Doğrulama modu',
+    mode_invisible: 'Görünmez',
+    mode_checkbox: 'Onay kutusu',
+    mode_notice:
+      "Doğrulama modu, Google Cloud Console'daki reCAPTCHA anahtar ayarlarında tanımlanır. Buradaki modu değiştirmek için eşleşen bir anahtar türü gerekir.",
   },
   password_policy: {
     password_requirements: 'Parola gereksinimleri',

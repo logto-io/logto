@@ -45,11 +45,18 @@ const security = {
     site_key: '站点密钥',
     secret_key: '秘密密钥',
     project_id: '项目 ID',
+    domain: '域名（可选）',
+    domain_placeholder: 'www.google.com（默认）或 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 密钥 ID',
     recaptcha_api_key: '项目的 API 密钥',
     deletion_description: '你确定要删除此验证码提供商吗？',
     captcha_deleted: '验证码提供商删除成功',
     setup_captcha: '设置验证码',
+    mode: '验证模式',
+    mode_invisible: '无感验证',
+    mode_checkbox: '复选框验证',
+    mode_notice:
+      '验证模式在 Google Cloud Console 的 reCAPTCHA 密钥设置中定义。更改此处的模式需要匹配的密钥类型。',
   },
   password_policy: {
     password_requirements: '密码要求',

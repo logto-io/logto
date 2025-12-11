@@ -45,11 +45,18 @@ const security = {
     site_key: '站點金鑰',
     secret_key: '私密金鑰',
     project_id: '項目 ID',
+    domain: '網域（可選）',
+    domain_placeholder: 'www.google.com（預設）或 recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA 金鑰 ID',
     recaptcha_api_key: '項目的 API 金鑰',
     deletion_description: '你確定要刪除此 CAPTCHA 供應商嗎？',
     captcha_deleted: 'CAPTCHA 供應商已成功刪除',
     setup_captcha: '設定 CAPTCHA',
+    mode: '驗證模式',
+    mode_invisible: '無感驗證',
+    mode_checkbox: '複選框驗證',
+    mode_notice:
+      '驗證模式在 Google Cloud Console 的 reCAPTCHA 金鑰設定中定義。更改此處的模式需要匹配的金鑰類型。',
   },
   password_policy: {
     password_requirements: '密碼要求',

@@ -83,6 +83,11 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
     readme: reCAPTCHAEnterpriseReadme,
     requiredFields: [
       {
+        field: 'mode',
+        label: 'security.captcha_details.mode',
+        placeholder: 'security.captcha_details.mode',
+      },
+      {
         field: 'siteKey',
         label: 'security.captcha_details.recaptcha_key_id',
         placeholder: 'security.captcha_details.recaptcha_key_id',
@@ -96,6 +101,12 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
         field: 'projectId',
         label: 'security.captcha_details.project_id',
         placeholder: 'security.captcha_details.project_id',
+      },
+      {
+        field: 'domain',
+        label: 'security.captcha_details.domain',
+        placeholder: 'security.captcha_details.domain_placeholder',
+        isOptional: true,
       },
     ],
   },

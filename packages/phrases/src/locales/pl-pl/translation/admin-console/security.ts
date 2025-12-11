@@ -47,11 +47,18 @@ const security = {
     site_key: 'Klucz witryny',
     secret_key: 'Tajny klucz',
     project_id: 'ID projektu',
+    domain: 'Domena (opcjonalna)',
+    domain_placeholder: 'www.google.com (domyślna) lub recaptcha.net',
     recaptcha_key_id: 'ID klucza reCAPTCHA',
     recaptcha_api_key: 'Klucz API projektu',
     deletion_description: 'Czy na pewno chcesz usunąć tego dostawcę CAPTCHA?',
     captcha_deleted: 'Pomyślnie usunięto dostawcę CAPTCHA',
     setup_captcha: 'Skonfiguruj CAPTCHA',
+    mode: 'Tryb weryfikacji',
+    mode_invisible: 'Niewidoczny',
+    mode_checkbox: 'Pole wyboru',
+    mode_notice:
+      'Tryb weryfikacji jest zdefiniowany w ustawieniach klucza reCAPTCHA w Google Cloud Console. Zmiana trybu tutaj wymaga odpowiedniego typu klucza.',
   },
   password_policy: {
     password_requirements: 'Wymagania dotyczące hasła',

@@ -47,11 +47,18 @@ const security = {
     site_key: 'サイトキー',
     secret_key: 'シークレットキー',
     project_id: 'プロジェクト ID',
+    domain: 'ドメイン（オプション）',
+    domain_placeholder: 'www.google.com（デフォルト）または recaptcha.net',
     recaptcha_key_id: 'reCAPTCHA キー ID',
     recaptcha_api_key: 'プロジェクトの API キー',
     deletion_description: 'この CAPTCHA プロバイダーを削除してもよろしいですか？',
     captcha_deleted: 'CAPTCHA プロバイダーが正常に削除されました',
     setup_captcha: 'CAPTCHA をセットアップ',
+    mode: '認証モード',
+    mode_invisible: '非表示',
+    mode_checkbox: 'チェックボックス',
+    mode_notice:
+      '認証モードは Google Cloud Console の reCAPTCHA キー設定で定義されています。ここでモードを変更するには、一致するキータイプが必要です。',
   },
   password_policy: {
     password_requirements: 'パスワードの要件',

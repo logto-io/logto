@@ -5,6 +5,11 @@ export enum CaptchaType {
   Turnstile = 'Turnstile',
 }
 
+export enum RecaptchaEnterpriseMode {
+  Invisible = 'invisible',
+  Checkbox = 'checkbox',
+}
+
 export const turnstileConfigGuard = z.object({
   type: z.literal(CaptchaType.Turnstile),
   siteKey: z.string(),
@@ -18,6 +23,8 @@ export const recaptchaEnterpriseConfigGuard = z.object({
   siteKey: z.string(),
   secretKey: z.string(),
   projectId: z.string(),
+  domain: z.string().optional(),
+  mode: z.nativeEnum(RecaptchaEnterpriseMode).optional(),
 });
 
 export type RecaptchaEnterpriseConfig = z.infer<typeof recaptchaEnterpriseConfigGuard>;

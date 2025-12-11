@@ -12,7 +12,7 @@ import {
   type SignInExperience,
   SignInExperiences,
 } from '../db-entries/index.js';
-import { CaptchaType } from '../foundations/jsonb-types/index.js';
+import { CaptchaType, RecaptchaEnterpriseMode } from '../foundations/jsonb-types/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
 import { type SsoConnectorMetadata, ssoConnectorMetadataGuard } from './sso-connector.js';
@@ -48,6 +48,8 @@ export type FullSignInExperience = Omit<SignInExperience, 'forgotPasswordMethods
   captchaConfig?: {
     type: CaptchaType;
     siteKey: string;
+    domain?: string;
+    mode?: RecaptchaEnterpriseMode;
   };
   customProfileFields?: Readonly<CustomProfileField[]>;
 };
@@ -74,6 +76,8 @@ export const fullSignInExperienceGuard = SignInExperiences.guard
       .object({
         type: z.nativeEnum(CaptchaType),
         siteKey: z.string(),
+        domain: z.string().optional(),
+        mode: z.nativeEnum(RecaptchaEnterpriseMode).optional(),
       })
       .optional(),
     customProfileFields: CustomProfileFields.guard.array(),
