@@ -20,7 +20,7 @@ import { httpMailConfigGuard } from './types.js';
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
   async (data, inputConfig) => {
-    const { to, type, payload } = data;
+    const { to, type, payload, ip } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, httpMailConfigGuard);
     const { endpoint, authorization } = config;
@@ -35,6 +35,7 @@ const sendMessage =
           to,
           type,
           payload,
+          ...(ip && { ip }),
         },
       });
     } catch (error: unknown) {

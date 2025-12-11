@@ -89,6 +89,7 @@ export default function connectorConfigTestingRoutes<T extends ManagementApiRout
             code: '000000',
             ...conditional(locale && { locale }),
           },
+          ip: ctx.request.ip,
         },
         config
       );

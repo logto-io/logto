@@ -28,19 +28,21 @@ export const sendVerificationCodeToIdentifier = async (
     locale?: string;
     uiLocales?: string;
     messageContext?: VerificationCodeContextInfo;
+    /** The client IP address for rate limiting and fraud detection. */
+    ip?: string;
   },
   jti: string,
   createLog: LogContext['createLog'],
   { createPasscode, sendPasscode }: PasscodeLibrary
 ) => {
-  const { event, locale, messageContext, ...identifier } = payload;
+  const { event, locale, messageContext, ip, ...identifier } = payload;
   const messageType = getTemplateTypeByEvent(event);
 
   const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Create`);
   log.append(identifier);
 
   const verificationCode = await createPasscode(jti, messageType, identifier);
-  const { dbEntry } = await sendPasscode(verificationCode, { locale, ...messageContext });
+  const { dbEntry } = await sendPasscode(verificationCode, { locale, ...messageContext, ip });
 
   log.append({ connectorId: dbEntry.id });
 };

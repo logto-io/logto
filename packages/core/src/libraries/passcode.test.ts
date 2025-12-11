@@ -204,6 +204,46 @@ describe('sendPasscode', () => {
       },
     });
   });
+
+  it('should include IP address when provided in context payload', async () => {
+    const sendMessage = jest.fn();
+    getMessageConnector.mockResolvedValueOnce({
+      ...defaultConnectorMethods,
+      configGuard: any(),
+      dbEntry: {
+        ...mockConnector,
+        id: 'id0',
+      },
+      metadata: {
+        ...mockMetadata,
+        platform: null,
+      },
+      type: ConnectorType.Sms,
+      sendMessage,
+    });
+    const passcode: Passcode = {
+      tenantId: 'fake_tenant',
+      id: 'passcode_id',
+      interactionJti: 'jti',
+      phone: 'phone',
+      email: null,
+      type: TemplateType.SignIn,
+      code: '1234',
+      consumed: false,
+      tryCount: 0,
+      createdAt: Date.now(),
+    };
+    await sendPasscode(passcode, { locale: 'en', ip: '192.168.1.100' });
+    expect(sendMessage).toHaveBeenCalledWith({
+      to: passcode.phone,
+      type: passcode.type,
+      payload: {
+        code: passcode.code,
+        locale: 'en',
+      },
+      ip: '192.168.1.100',
+    });
+  });
 });
 
 describe('verifyPasscode', () => {

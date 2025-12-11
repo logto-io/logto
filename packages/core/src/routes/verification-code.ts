@@ -25,7 +25,7 @@ export default function verificationCodeRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const code = await createPasscode(undefined, codeType, ctx.guard.body);
-      await sendPasscode(code);
+      await sendPasscode(code, { ip: ctx.request.ip });
 
       ctx.status = 204;
 

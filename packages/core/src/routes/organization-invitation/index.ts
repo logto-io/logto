@@ -81,7 +81,7 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
         })
       );
 
-      ctx.body = await organizationInvitations.insert(body, messagePayload);
+      ctx.body = await organizationInvitations.insert(body, messagePayload, ctx.request.ip);
       ctx.status = 201;
       return next();
     }
@@ -107,10 +107,14 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
           inviterId
         );
 
-      await organizationInvitations.sendEmail(invitee, {
-        ...templateContext,
-        ...body,
-      });
+      await organizationInvitations.sendEmail(
+        invitee,
+        {
+          ...templateContext,
+          ...body,
+        },
+        ctx.request.ip
+      );
       ctx.status = 204;
       return next();
     }
