@@ -3841,8 +3841,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.1
       oidc-provider:
-        specifier: github:logto-io/node-oidc-provider#aa47a2b000d08e28c1d212aac1899eddd13009e9
-        version: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/aa47a2b000d08e28c1d212aac1899eddd13009e9
+        specifier: github:logto-io/node-oidc-provider#a3d4e2ed1d1c4f23dd3ac5cb4a81dcb38df10f99
+        version: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/a3d4e2ed1d1c4f23dd3ac5cb4a81dcb38df10f99
       openapi-types:
         specifier: ^12.1.3
         version: 12.1.3
@@ -12687,8 +12687,8 @@ packages:
   obuf@1.1.2:
     resolution: {integrity: sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==}
 
-  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/aa47a2b000d08e28c1d212aac1899eddd13009e9:
-    resolution: {tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/aa47a2b000d08e28c1d212aac1899eddd13009e9}
+  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/a3d4e2ed1d1c4f23dd3ac5cb4a81dcb38df10f99:
+    resolution: {tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/a3d4e2ed1d1c4f23dd3ac5cb4a81dcb38df10f99}
     version: 8.6.1
 
   oidc-token-hash@5.0.3:
@@ -25392,7 +25392,7 @@ snapshots:
 
   obuf@1.1.2: {}
 
-  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/aa47a2b000d08e28c1d212aac1899eddd13009e9:
+  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/a3d4e2ed1d1c4f23dd3ac5cb4a81dcb38df10f99:
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 13.1.0
