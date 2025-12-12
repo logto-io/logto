@@ -58,7 +58,8 @@ export class OrganizationInvitationLibrary {
       CreateOrganizationInvitation,
       'inviterId' | 'invitee' | 'organizationId' | 'expiresAt'
     > & { organizationRoleIds?: string[] },
-    messagePayload: SendMessagePayload | false
+    messagePayload: SendMessagePayload | false,
+    ip?: string
   ) {
     const { inviterId, invitee, organizationId, expiresAt, organizationRoleIds } = data;
 
@@ -101,10 +102,14 @@ export class OrganizationInvitationLibrary {
           inviterId
         );
 
-        await this.sendEmail(invitee, {
-          ...templateContext,
-          ...messagePayload,
-        });
+        await this.sendEmail(
+          invitee,
+          {
+            ...templateContext,
+            ...messagePayload,
+          },
+          ip
+        );
       }
 
       // Additional query to get the full invitation data
@@ -244,12 +249,17 @@ export class OrganizationInvitationLibrary {
   }
 
   /** Send an organization invitation email. */
-  async sendEmail(to: string, payload: SendMessagePayload & OrganizationInvitationContextInfo) {
+  async sendEmail(
+    to: string,
+    payload: SendMessagePayload & OrganizationInvitationContextInfo,
+    ip?: string
+  ) {
     const emailConnector = await this.connector.getMessageConnector(ConnectorType.Email);
     return emailConnector.sendMessage({
       to,
       type: TemplateType.OrganizationInvitation,
       payload,
+      ...(ip && { ip }),
     });
   }
 }

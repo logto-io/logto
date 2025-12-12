@@ -29,7 +29,10 @@ export const passcodeMaxTryCount = 10;
 export type PasscodeLibrary = ReturnType<typeof createPasscodeLibrary>;
 
 export type SendPasscodeContextPayload = Pick<SendMessagePayload, 'locale' | 'uiLocales'> &
-  VerificationCodeContextInfo;
+  VerificationCodeContextInfo & {
+    /** The client IP address for rate limiting and fraud detection. */
+    ip?: string;
+  };
 
 export const createPasscodeLibrary = (queries: Queries, connectorLibrary: ConnectorLibrary) => {
   const {
@@ -91,13 +94,16 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
     }
 
+    const { ip, ...payloadContext } = contextPayload ?? {};
+
     const response = await sendMessage({
       to: emailOrPhone,
       type: messageTypeResult.data,
       payload: {
         code: passcode.code,
-        ...contextPayload,
+        ...payloadContext,
       },
+      ...(ip && { ip }),
     });
 
     return { dbEntry, metadata, response };

@@ -112,12 +112,19 @@ export type SendMessageData = {
   to: string;
   type: TemplateType;
   payload: SendMessagePayload;
+  /**
+   * The client IP address of the user who triggered the message.
+   * This can be used by connectors for rate limiting, fraud detection, or logging purposes.
+   * @example '192.168.1.1'
+   */
+  ip?: string;
 };
 
 export const sendMessageDataGuard = z.object({
   to: z.string(),
   type: templateTypeGuard,
   payload: sendMessagePayloadGuard,
+  ip: z.string().optional(),
 }) satisfies z.ZodType<SendMessageData>;
 
 export type SendMessageFunction = (data: SendMessageData, config?: unknown) => Promise<unknown>;

@@ -36,6 +36,7 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
       await sendPasscode(code, {
         locale: ctx.locale,
         ...(uiLocales && { uiLocales }),
+        ip: ctx.request.ip,
       });
 
       ctx.status = 204;

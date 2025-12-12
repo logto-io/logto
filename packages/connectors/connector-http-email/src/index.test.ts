@@ -44,4 +44,58 @@ describe('HTTP email connector', () => {
 
     expect(mockPost.isDone()).toBe(true);
   });
+
+  it('should include IP address in request when provided', async () => {
+    const url = new URL(mockedConfig.endpoint);
+    const mockPost = nock(url.origin)
+      .post(url.pathname, (body) => {
+        expect(body).toMatchObject({
+          to: 'foo@logto.io',
+          type: TemplateType.SignIn,
+          payload: {
+            code: '123456',
+          },
+          ip: '192.168.1.100',
+        });
+        return true;
+      })
+      .reply(200, {
+        message: 'Email sent successfully',
+      });
+
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: 'foo@logto.io',
+      type: TemplateType.SignIn,
+      payload: {
+        code: '123456',
+      },
+      ip: '192.168.1.100',
+    });
+
+    expect(mockPost.isDone()).toBe(true);
+  });
+
+  it('should not include IP field when IP is not provided', async () => {
+    const url = new URL(mockedConfig.endpoint);
+    const mockPost = nock(url.origin)
+      .post(url.pathname, (body) => {
+        expect(body).not.toHaveProperty('ip');
+        return true;
+      })
+      .reply(200, {
+        message: 'Email sent successfully',
+      });
+
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: 'foo@logto.io',
+      type: TemplateType.SignIn,
+      payload: {
+        code: '123456',
+      },
+    });
+
+    expect(mockPost.isDone()).toBe(true);
+  });
 });
