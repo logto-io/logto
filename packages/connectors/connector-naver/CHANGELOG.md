@@ -1,5 +1,12 @@
 # @logto/connector-naver
 
+## 1.4.3
+
+### Patch Changes
+
+- Updated dependencies [462e430445]
+  - @logto/connector-kit@4.7.0
+
 ## 1.4.2
 
 ### Patch Changes
