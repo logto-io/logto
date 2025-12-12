@@ -94,6 +94,12 @@ const account_center = {
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
     error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
   },
+  mfa: {
+    totp_already_added:
+      'Zaten bir doğrulayıcı uygulama eklediniz. Lütfen önce mevcut olanı kaldırın.',
+    totp_not_enabled:
+      'Doğrulayıcı uygulama etkin değil. Lütfen etkinleştirmek için yöneticinizle iletişime geçin.',
+  },
   update_success: {
     default: {
       title: 'Güncelleme başarılı',
@@ -115,6 +121,10 @@ const account_center = {
     password: {
       title: 'Şifre güncellendi!',
       description: 'Hesabının şifresi başarıyla değiştirildi.',
+    },
+    totp: {
+      title: 'Doğrulayıcı uygulama eklendi!',
+      description: 'Doğrulayıcı uygulamanız hesabınıza başarıyla bağlandı.',
     },
   },
 };

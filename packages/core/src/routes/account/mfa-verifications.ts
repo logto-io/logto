@@ -19,7 +19,11 @@ import {
   generateBackupCodes,
   validateBackupCodes,
 } from '../interaction/utils/backup-code-validation.js';
-import { generateTotpSecret, validateTotpSecret } from '../interaction/utils/totp-validation.js';
+import {
+  generateTotpSecret,
+  validateTotpSecret,
+  validateTotpToken,
+} from '../interaction/utils/totp-validation.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
@@ -72,6 +76,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         z.object({
           type: z.literal(MfaFactor.TOTP),
           secret: z.string(),
+          code: z.string().optional(),
         }),
         z.object({
           type: z.literal(MfaFactor.BackupCode),
@@ -105,6 +110,8 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
 
       switch (ctx.guard.body.type) {
         case MfaFactor.TOTP: {
+          const { secret, code } = ctx.guard.body;
+
           // A user can only bind one TOTP factor
           assertThat(
             user.mfaVerifications.every(({ type }) => type !== MfaFactor.TOTP),
@@ -115,7 +122,18 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
           );
 
           // Check secret
-          assertThat(validateTotpSecret(ctx.guard.body.secret), 'user.totp_secret_invalid');
+          assertThat(validateTotpSecret(secret), 'user.totp_secret_invalid');
+
+          // Verify TOTP code if provided
+          if (code) {
+            assertThat(
+              validateTotpToken(secret, code),
+              new RequestError({
+                code: 'session.mfa.invalid_totp_code',
+                status: 400,
+              })
+            );
+          }
 
           const updatedUser = await updateUserById(userId, {
             mfaVerifications: [
@@ -124,7 +142,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
                 id: generateStandardId(),
                 createdAt: new Date().toISOString(),
                 type: MfaFactor.TOTP,
-                key: ctx.guard.body.secret,
+                key: secret,
               },
             ],
           });

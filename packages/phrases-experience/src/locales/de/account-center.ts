@@ -104,6 +104,12 @@ const account_center = {
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
     error_invalid_code: 'Der Bestätigungscode ist ungültig oder abgelaufen.',
   },
+  mfa: {
+    totp_already_added:
+      'Du hast bereits eine Authenticator-App hinzugefügt. Bitte entferne zuerst die vorhandene.',
+    totp_not_enabled:
+      'Die Authenticator-App ist nicht aktiviert. Bitte kontaktiere deinen Administrator, um sie zu aktivieren.',
+  },
   update_success: {
     default: {
       title: 'Aktualisierung erfolgreich',
@@ -125,6 +131,10 @@ const account_center = {
     password: {
       title: 'Passwort aktualisiert!',
       description: 'Das Passwort deines Kontos wurde erfolgreich geändert.',
+    },
+    totp: {
+      title: 'Authenticator-App hinzugefügt!',
+      description: 'Deine Authenticator-App wurde erfolgreich mit deinem Konto verknüpft.',
     },
   },
 };
