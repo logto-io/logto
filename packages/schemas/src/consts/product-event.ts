@@ -46,7 +46,6 @@ export enum ProductEvent {
   DeveloperCreated = 'developer created',
   /** A user has been deleted in the admin tenant. */
   DeveloperDeleted = 'developer deleted',
-  AccessTokenIssued = 'access token issued',
   AppCreated = 'app created',
   AppDeleted = 'app deleted',
   RoleCreated = 'role created',
@@ -89,15 +88,3 @@ export const tenantEventDistinctId = 'TENANT_EVENT';
  * identifying the user who initiated the Management API request proxied by the cloud service.
  */
 export const cloudUserIdHeader = 'logto-cloud-user-id';
-
-/**
- * The types of access tokens issued by Logto.
- *
- * Note that this is for internal use only and is different from other technical definitions of
- * token types.
- */
-export enum ProductAccessTokenType {
-  Unknown = 'unknown',
-  User = 'user',
-  ClientCredentials = 'client_credentials',
-}

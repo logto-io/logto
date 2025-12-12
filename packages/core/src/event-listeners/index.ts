@@ -1,16 +1,13 @@
-import { ProductEvent } from '@logto/schemas';
 import { type Provider } from 'oidc-provider';
 
 import { TokenUsageType } from '#src/queries/daily-token-usage.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
-import { captureEvent } from '#src/utils/posthog.js';
 
 import { grantListener, grantRevocationListener } from './grant.js';
 import { interactionEndedListener, interactionStartedListener } from './interaction.js';
 import { recordActiveUsers } from './record-active-users.js';
 import { deleteSessionExtensions } from './session.js';
-import { getAccessTokenEventPayload } from './utils.js';
 
 /**
  * @see {@link https://github.com/panva/node-oidc-provider/blob/v7.x/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details Getting auth error with no details?}
@@ -20,30 +17,12 @@ export const addOidcEventListeners = (tenantId: string, provider: Provider, quer
   const { recordTokenUsage } = queries.dailyTokenUsage;
 
   // Listener for user access tokens (increment user_token_usage)
-  const userTokenUsageListener = async (payload: unknown) => {
-    if (payload instanceof provider.BaseToken) {
-      captureEvent(
-        { tenantId, request: undefined },
-        ProductEvent.AccessTokenIssued,
-        getAccessTokenEventPayload(payload, provider)
-      );
-    }
-
-    await recordTokenUsage(new Date(), { type: TokenUsageType.User });
-  };
+  const userTokenUsageListener = async () =>
+    recordTokenUsage(new Date(), { type: TokenUsageType.User });
 
   // Listener for client credentials/M2M tokens (increment m2m_token_usage)
-  const m2mTokenUsageListener = async (payload: unknown) => {
-    if (payload instanceof provider.BaseToken) {
-      captureEvent(
-        { tenantId, request: undefined },
-        ProductEvent.AccessTokenIssued,
-        getAccessTokenEventPayload(payload, provider)
-      );
-    }
-
-    await recordTokenUsage(new Date(), { type: TokenUsageType.M2m });
-  };
+  const m2mTokenUsageListener = async () =>
+    recordTokenUsage(new Date(), { type: TokenUsageType.M2m });
 
   provider.addListener('grant.success', grantListener);
   provider.addListener('grant.error', grantListener);
