@@ -27,7 +27,24 @@ export default function koaServeStatic(root: string) {
       // placeholders in the file with the actual values. It should be OK as the index file is
       // small.
       if (isIndexPath(ctx.path)) {
-        const content = await fs.readFile(path.join(root, index), 'utf8');
+        let content = await fs.readFile(path.join(root, index), 'utf8');
+
+        // If a per-request CSP nonce is provided by previous middleware (see koa-security-headers),
+        // inject it into inline <script> tags so the browser will accept them under the CSP.
+        // We only add nonce to inline scripts (no src attribute) and skip if a nonce already exists.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const nonce = (ctx as any).state?.cspNonce;
+        if (typeof nonce === 'string' && nonce.length > 0) {
+          // Add nonce attribute to opening <script> tags that do not have a src or nonce attribute.
+          content = content.replace(/<script\b([^>]*)>/gi, (match, attrs) => {
+            const lower = attrs.toLowerCase();
+            if (lower.includes('src=') || lower.includes('nonce=')) {
+              return match;
+            }
+            return `<script${attrs} nonce="${nonce}">`;
+          });
+        }
+
         ctx.type = indexContentType;
         ctx.body = content;
         ctx.set('Cache-Control', 'no-cache, no-store, must-revalidate');
