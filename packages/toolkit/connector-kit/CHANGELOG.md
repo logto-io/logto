@@ -1,5 +1,11 @@
 # Change Log
 
+## 4.7.0
+
+### Minor Changes
+
+- 462e430445: fall back to `TemplateType.Generic` if a usage-specific template is not found
+
 ## 4.6.0
 
 ### Minor Changes
