@@ -10,9 +10,6 @@ create table logs (
   primary key (id)
 );
 
-create index logs__id
-  on logs (tenant_id, id);
-
 create index logs__key
   on logs (tenant_id, key);
 
