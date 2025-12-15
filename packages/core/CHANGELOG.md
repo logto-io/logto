@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.34.1
+
+### Patch Changes
+
+- Updated dependencies [d46c5cafb]
+  - @logto/experience@1.17.1
+  - @logto/account-center@0.1.0
+  - @logto/cli@1.34.1
+  - @logto/schemas@1.34.1
+  - @logto/console@1.31.0
+  - @logto/demo-app@1.5.0
+
 ## 1.34.0
 
 ### Minor Changes

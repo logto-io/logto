@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.17.1
+
+### Patch Changes
+
+- d46c5cafb: fix signature position in mobile
+
 ## 1.17.0
 
 ### Minor Changes
