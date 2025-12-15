@@ -115,6 +115,8 @@ const account_center = {
       'Backup-Code ist nicht aktiviert. Bitte wenden Sie sich an Ihren Administrator, um ihn zu aktivieren.',
     backup_code_requires_other_mfa:
       'Für Backup-Codes muss zuerst eine andere MFA-Methode eingerichtet werden.',
+    passkey_not_enabled:
+      'Passkey ist nicht aktiviert. Bitte kontaktieren Sie Ihren Administrator, um es zu aktivieren.',
   },
   update_success: {
     default: {
@@ -150,6 +152,10 @@ const account_center = {
     backup_code_deleted: {
       title: 'Backup codes removed!',
       description: 'Your backup codes have been removed from your account.',
+    },
+    passkey: {
+      title: 'Passkey hinzugefügt!',
+      description: 'Ihr Passkey wurde erfolgreich mit Ihrem Konto verknüpft.',
     },
     social: {
       title: 'Soziales Konto verknüpft!',

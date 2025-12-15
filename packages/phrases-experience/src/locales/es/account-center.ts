@@ -111,6 +111,8 @@ const account_center = {
       'El código de respaldo no está habilitado. Contacta a tu administrador para habilitarlo.',
     backup_code_requires_other_mfa:
       'Los códigos de respaldo requieren que se configure otro método MFA primero.',
+    passkey_not_enabled:
+      'Passkey no está habilitado. Por favor, contacta a tu administrador para habilitarlo.',
   },
   update_success: {
     default: {
@@ -145,6 +147,10 @@ const account_center = {
     backup_code_deleted: {
       title: 'Backup codes removed!',
       description: 'Your backup codes have been removed from your account.',
+    },
+    passkey: {
+      title: '¡Passkey añadido!',
+      description: 'Tu passkey se ha vinculado correctamente a tu cuenta.',
     },
     social: {
       title: '¡Cuenta social vinculada!',

@@ -99,7 +99,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+      'Ви вже додали додаток для автентифікації. Будь ласка, спочатку видаліть існуючий.',
     totp_not_enabled:
       'Додаток для автентифікації не увімкнено. Будь ласка, зверніться до адміністратора, щоб увімкнути його.',
     backup_code_already_added:
@@ -108,6 +108,8 @@ const account_center = {
       'Резервний код не увімкнено. Будь ласка, зверніться до адміністратора, щоб увімкнути його.',
     backup_code_requires_other_mfa:
       'Резервні коди вимагають попереднього налаштування іншого методу MFA.',
+    passkey_not_enabled:
+      'Passkey не увімкнено. Будь ласка, зверніться до адміністратора, щоб увімкнути його.',
   },
   update_success: {
     default: {
@@ -144,8 +146,12 @@ const account_center = {
       description: 'Ваші резервні коди збережено. Зберігайте їх у безпечному місці.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'Резервні коди видалено!',
+      description: 'Ваші резервні коди було видалено з вашого облікового запису.',
+    },
+    passkey: {
+      title: 'Passkey додано!',
+      description: "Ваш passkey успішно під'єднано до вашого облікового запису.",
     },
   },
   backup_code: {
@@ -155,9 +161,9 @@ const account_center = {
     copy_hint: "Обов'язково скопіюйте їх і збережіть у надійному місці.",
     generate_new_title: 'Згенерувати нові резервні коди',
     generate_new: 'Згенерувати нові резервні коди',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'Видалити ваші резервні коди',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'Якщо ви видалите ці резервні коди, ви не зможете використовувати їх для підтвердження.',
   },
 };
 

@@ -112,6 +112,8 @@ const account_center = {
       "Le code de secours n'est pas activé. Veuillez contacter votre administrateur pour l'activer.",
     backup_code_requires_other_mfa:
       "Les codes de secours nécessitent qu'une autre méthode MFA soit d'abord configurée.",
+    passkey_not_enabled:
+      "Passkey n'est pas activé. Veuillez contacter votre administrateur pour l'activer.",
   },
   update_success: {
     default: {
@@ -149,6 +151,10 @@ const account_center = {
     backup_code_deleted: {
       title: 'Backup codes removed!',
       description: 'Your backup codes have been removed from your account.',
+    },
+    passkey: {
+      title: 'Passkey ajouté !',
+      description: 'Votre passkey a été lié avec succès à votre compte.',
     },
   },
   backup_code: {

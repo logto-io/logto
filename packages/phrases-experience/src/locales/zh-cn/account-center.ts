@@ -97,6 +97,7 @@ const account_center = {
     backup_code_already_added: '你已拥有有效的备份码，请先使用或移除它们再生成新的。',
     backup_code_not_enabled: '备份码未启用，请联系管理员启用。',
     backup_code_requires_other_mfa: '备份码需要先设置其他 MFA 方式。',
+    passkey_not_enabled: 'Passkey 未启用，请联系管理员启用。',
   },
   update_success: {
     default: {
@@ -131,6 +132,14 @@ const account_center = {
     backup_code_deleted: {
       title: '备用码已移除！',
       description: '您的备用码已从账户中移除。',
+    },
+    passkey: {
+      title: 'Passkey 已添加！',
+      description: 'Passkey 已成功关联到你的账号。',
+    },
+    social: {
+      title: '社交账号已关联！',
+      description: '社交账号已成功关联到你的账号。',
     },
   },
   backup_code: {

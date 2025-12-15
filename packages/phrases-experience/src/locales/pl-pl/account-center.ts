@@ -97,8 +97,7 @@ const account_center = {
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
   },
   mfa: {
-    totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_already_added: 'Już dodano aplikację uwierzytelniającą. Najpierw usuń istniejącą.',
     totp_not_enabled:
       'Aplikacja uwierzytelniająca nie jest włączona. Skontaktuj się z administratorem, aby ją włączyć.',
     backup_code_already_added:
@@ -107,6 +106,8 @@ const account_center = {
       'Kod zapasowy nie jest włączony. Skontaktuj się z administratorem, aby go włączyć.',
     backup_code_requires_other_mfa:
       'Kody zapasowe wymagają wcześniejszego skonfigurowania innej metody MFA.',
+    passkey_not_enabled:
+      'Passkey nie jest włączony. Skontaktuj się z administratorem, aby go włączyć.',
   },
   update_success: {
     default: {
@@ -139,8 +140,12 @@ const account_center = {
       description: 'Twoje kody zapasowe zostały zapisane. Przechowuj je w bezpiecznym miejscu.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'Kody zapasowe usunięte!',
+      description: 'Twoje kody zapasowe zostały usunięte z konta.',
+    },
+    passkey: {
+      title: 'Passkey dodany!',
+      description: 'Twój passkey został pomyślnie połączony z kontem.',
     },
     social: {
       title: 'Konto społecznościowe połączone!',
@@ -154,9 +159,9 @@ const account_center = {
     copy_hint: 'Skopiuj je i przechowuj w bezpiecznym miejscu.',
     generate_new_title: 'Wygeneruj nowe kody zapasowe',
     generate_new: 'Wygeneruj nowe kody zapasowe',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'Usuń kody zapasowe',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'Jeśli usuniesz te kody zapasowe, nie będziesz mógł ich użyć do weryfikacji.',
   },
 };
 

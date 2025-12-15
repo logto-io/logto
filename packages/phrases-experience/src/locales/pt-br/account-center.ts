@@ -100,7 +100,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+      'Você já adicionou um aplicativo autenticador. Remova o existente primeiro.',
     totp_not_enabled:
       'O aplicativo autenticador não está ativado. Entre em contato com o administrador para ativá-lo.',
     backup_code_already_added:
@@ -109,6 +109,8 @@ const account_center = {
       'O código de backup não está ativado. Entre em contato com o administrador para ativá-lo.',
     backup_code_requires_other_mfa:
       'Os códigos de backup exigem que outro método MFA seja configurado primeiro.',
+    passkey_not_enabled:
+      'Passkey não está ativado. Entre em contato com o administrador para ativá-lo.',
   },
   update_success: {
     default: {
@@ -140,8 +142,16 @@ const account_center = {
       description: 'Seus códigos de backup foram salvos. Mantenha-os em um local seguro.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'Códigos de backup removidos!',
+      description: 'Seus códigos de backup foram removidos da sua conta.',
+    },
+    passkey: {
+      title: 'Passkey adicionado!',
+      description: 'Seu passkey foi vinculado com sucesso à sua conta.',
+    },
+    social: {
+      title: 'Conta social vinculada!',
+      description: 'Sua conta social foi vinculada com sucesso.',
     },
   },
   backup_code: {
@@ -151,9 +161,9 @@ const account_center = {
     copy_hint: 'Certifique-se de copiá-los e salvá-los em um lugar seguro.',
     generate_new_title: 'Gerar novos códigos de backup',
     generate_new: 'Gerar novos códigos de backup',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'Remover seus códigos de backup',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'Se você remover estes códigos de backup, não poderá usá-los para verificação.',
   },
 };
 

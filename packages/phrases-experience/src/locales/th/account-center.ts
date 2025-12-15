@@ -95,12 +95,12 @@ const account_center = {
     error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
   },
   mfa: {
-    totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_already_added: 'คุณได้เพิ่มแอป Authenticator แล้ว โปรดลบแอปที่มีอยู่ก่อน',
     totp_not_enabled: 'แอป Authenticator ไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อเปิดใช้งาน',
     backup_code_already_added: 'คุณมีรหัสสำรองที่ใช้งานอยู่แล้ว โปรดใช้หรือลบออกก่อนที่จะสร้างใหม่',
     backup_code_not_enabled: 'รหัสสำรองไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบของคุณเพื่อเปิดใช้งาน',
     backup_code_requires_other_mfa: 'รหัสสำรองต้องมีการตั้งค่าวิธี MFA อื่นก่อน',
+    passkey_not_enabled: 'Passkey ไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อเปิดใช้งาน',
   },
   update_success: {
     default: {
@@ -133,8 +133,12 @@ const account_center = {
       description: 'รหัสสำรองของคุณถูกบันทึกแล้ว โปรดเก็บรักษาไว้ในที่ปลอดภัย',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'ลบรหัสสำรองแล้ว!',
+      description: 'รหัสสำรองของคุณถูกลบออกจากบัญชีแล้ว',
+    },
+    passkey: {
+      title: 'เพิ่ม Passkey แล้ว!',
+      description: 'Passkey ของคุณได้รับการเชื่อมต่อกับบัญชีของคุณเรียบร้อยแล้ว',
     },
     social: {
       title: 'เชื่อมต่อบัญชีโซเชียลแล้ว!',
@@ -148,9 +152,8 @@ const account_center = {
     copy_hint: 'คัดลอกและเก็บรักษาไว้ในที่ปลอดภัย',
     generate_new_title: 'สร้างรหัสสำรองใหม่',
     generate_new: 'สร้างรหัสสำรองใหม่',
-    delete_confirmation_title: 'Remove your backup codes',
-    delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+    delete_confirmation_title: 'ลบรหัสสำรองของคุณ',
+    delete_confirmation_description: 'หากคุณลบรหัสสำรองเหล่านี้ คุณจะไม่สามารถใช้ยืนยันตัวตนได้',
   },
 };
 

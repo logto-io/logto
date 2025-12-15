@@ -105,6 +105,7 @@ const account_center = {
       'バックアップコードは有効になっていません。管理者に連絡して有効にしてください。',
     backup_code_requires_other_mfa:
       'バックアップコードを使用するには、まず他の MFA メソッドを設定する必要があります。',
+    passkey_not_enabled: 'パスキーが有効になっていません。管理者に連絡して有効にしてください。',
   },
   update_success: {
     default: {
@@ -143,6 +144,10 @@ const account_center = {
     backup_code_deleted: {
       title: 'Backup codes removed!',
       description: 'Your backup codes have been removed from your account.',
+    },
+    passkey: {
+      title: 'パスキーが追加されました！',
+      description: 'パスキーがアカウントに正常にリンクされました。',
     },
   },
   backup_code: {

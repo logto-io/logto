@@ -107,6 +107,7 @@ const account_center = {
     backup_code_not_enabled:
       'Backup code is not enabled. Please contact your administrator to enable it.',
     backup_code_requires_other_mfa: 'Backup codes require another MFA method to be set up first.',
+    passkey_not_enabled: 'Passkey is not enabled. Please contact your administrator to enable it.',
   },
   update_success: {
     default: {
@@ -140,6 +141,14 @@ const account_center = {
     backup_code_deleted: {
       title: 'Backup codes removed!',
       description: 'Your backup codes have been removed from your account.',
+    },
+    passkey: {
+      title: 'Passkey added!',
+      description: 'Your passkey has been successfully linked to your account.',
+    },
+    social: {
+      title: 'Social account linked!',
+      description: 'Your social account has been successfully linked.',
     },
   },
   backup_code: {

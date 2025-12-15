@@ -1,0 +1,14 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  width: 100%;
+  max-width: _.unit(100);
+}
+
+.submitButton {
+  margin-top: _.unit(2);
+  align-self: flex-start;
+}

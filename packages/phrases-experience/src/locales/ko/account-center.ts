@@ -101,6 +101,7 @@ const account_center = {
     backup_code_not_enabled:
       '백업 코드가 활성화되지 않았습니다. 관리자에게 문의하여 활성화하십시오.',
     backup_code_requires_other_mfa: '백업 코드를 사용하려면 다른 MFA 방법을 먼저 설정해야 합니다.',
+    passkey_not_enabled: '패스키가 활성화되지 않았습니다. 관리자에게 문의하여 활성화하세요.',
   },
   update_success: {
     default: {
@@ -135,6 +136,10 @@ const account_center = {
     backup_code_deleted: {
       title: 'Backup codes removed!',
       description: 'Your backup codes have been removed from your account.',
+    },
+    passkey: {
+      title: '패스키가 추가되었습니다!',
+      description: '패스키가 계정에 성공적으로 연결되었습니다.',
     },
     social: {
       title: '소셜 계정 연결됨!',

@@ -101,8 +101,7 @@ const account_center = {
     error_invalid_code: 'O código de verificação é inválido ou expirou.',
   },
   mfa: {
-    totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_already_added: 'Já adicionou uma aplicação de autenticação. Remova a existente primeiro.',
     totp_not_enabled:
       'A aplicação de autenticação não está ativa. Contacte o administrador para a ativar.',
     backup_code_already_added:
@@ -111,6 +110,7 @@ const account_center = {
       'O código de cópia de segurança não está ativado. Contacte o administrador para o ativar.',
     backup_code_requires_other_mfa:
       'Os códigos de cópia de segurança requerem que outro método MFA seja configurado primeiro.',
+    passkey_not_enabled: 'Passkey não está ativado. Contacte o administrador para o ativar.',
   },
   update_success: {
     default: {
@@ -144,8 +144,12 @@ const account_center = {
         'Os seus códigos de cópia de segurança foram guardados. Guarde-os num local seguro.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'Códigos de cópia de segurança removidos!',
+      description: 'Os seus códigos de cópia de segurança foram removidos da sua conta.',
+    },
+    passkey: {
+      title: 'Passkey adicionado!',
+      description: 'O seu passkey foi associado com sucesso à sua conta.',
     },
     social: {
       title: 'Conta social associada!',
@@ -159,9 +163,9 @@ const account_center = {
     copy_hint: 'Certifique-se de os copiar e guardar num local seguro.',
     generate_new_title: 'Gerar novos códigos de cópia de segurança',
     generate_new: 'Gerar novos códigos de cópia de segurança',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'Remover os seus códigos de cópia de segurança',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'Se remover estes códigos de cópia de segurança, não poderá utilizá-los para verificação.',
   },
 };
 

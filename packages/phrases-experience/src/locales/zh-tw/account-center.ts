@@ -97,6 +97,7 @@ const account_center = {
     backup_code_already_added: '您已擁有有效的備份碼，請先使用或移除它們再產生新的。',
     backup_code_not_enabled: '備份碼未啟用，請聯繫管理員啟用。',
     backup_code_requires_other_mfa: '備份碼需要先設定其他 MFA 方式。',
+    passkey_not_enabled: 'Passkey 未啟用，請聯繫管理員啟用。',
   },
   update_success: {
     default: {
@@ -129,8 +130,16 @@ const account_center = {
       description: '您的備用碼已儲存。請將它們保存在安全的地方。',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: '備用碼已移除！',
+      description: '您的備用碼已從帳戶中移除。',
+    },
+    passkey: {
+      title: 'Passkey 已新增！',
+      description: 'Passkey 已成功連結至您的帳戶。',
+    },
+    social: {
+      title: '社群帳號已連結！',
+      description: '您的社群帳號已成功連結。',
     },
   },
   backup_code: {
@@ -140,9 +149,8 @@ const account_center = {
     copy_hint: '請務必複製並保存在安全的地方。',
     generate_new_title: '產生新的備用碼',
     generate_new: '產生新的備用碼',
-    delete_confirmation_title: 'Remove your backup codes',
-    delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+    delete_confirmation_title: '移除您的備用碼',
+    delete_confirmation_description: '如果您移除這些備用碼，您將無法使用它們進行驗證。',
   },
 };
 

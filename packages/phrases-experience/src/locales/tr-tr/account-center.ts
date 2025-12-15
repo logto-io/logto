@@ -96,7 +96,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+      'Zaten bir authenticator uygulaması eklediniz. Lütfen önce mevcut olanı kaldırın.',
     totp_not_enabled:
       'Authenticator uygulaması etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
     backup_code_already_added:
@@ -105,6 +105,7 @@ const account_center = {
       'Yedek kod etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
     backup_code_requires_other_mfa:
       'Yedek kodlar, önce başka bir MFA yönteminin ayarlanmasını gerektirir.',
+    passkey_not_enabled: 'Passkey etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
   },
   update_success: {
     default: {
@@ -137,8 +138,12 @@ const account_center = {
       description: 'Yedek kodlarınız kaydedildi. Onları güvenli bir yerde saklayın.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'Yedek kodlar kaldırıldı!',
+      description: 'Yedek kodlarınız hesabınızdan kaldırıldı.',
+    },
+    passkey: {
+      title: 'Passkey eklendi!',
+      description: 'Passkey başarıyla hesabınıza bağlandı.',
     },
     social: {
       title: 'Sosyal hesap bağlandı!',
@@ -152,9 +157,9 @@ const account_center = {
     copy_hint: 'Kopyalayıp güvenli bir yerde sakladığınızdan emin olun.',
     generate_new_title: 'Yeni yedek kodlar oluştur',
     generate_new: 'Yeni yedek kodlar oluştur',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'Yedek kodlarınızı kaldırın',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'Bu yedek kodları kaldırırsanız, bunlarla doğrulama yapamayacaksınız.',
   },
 };
 

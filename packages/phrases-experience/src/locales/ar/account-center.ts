@@ -99,6 +99,7 @@ const account_center = {
       'لديك بالفعل رموز احتياطية نشطة. يرجى استخدامها أو إزالتها قبل إنشاء رموز جديدة.',
     backup_code_not_enabled: 'رمز النسخ الاحتياطي غير ممكّن. يرجى الاتصال بالمسؤول لتمكينه.',
     backup_code_requires_other_mfa: 'تتطلب رموز النسخ الاحتياطي إعداد طريقة MFA أخرى أولاً.',
+    passkey_not_enabled: 'مفتاح المرور غير مفعّل. يرجى التواصل مع المسؤول لتفعيله.',
   },
   update_success: {
     default: {
@@ -135,8 +136,12 @@ const account_center = {
       description: 'تم حفظ رموز النسخ الاحتياطي الخاصة بك. احتفظ بها في مكان آمن.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'تم حذف رموز النسخ الاحتياطي!',
+      description: 'تم حذف رموز النسخ الاحتياطي من حسابك.',
+    },
+    passkey: {
+      title: 'تمت إضافة مفتاح المرور!',
+      description: 'تم ربط مفتاح المرور بحسابك بنجاح.',
     },
   },
   backup_code: {
@@ -146,9 +151,9 @@ const account_center = {
     copy_hint: 'تأكد من نسخها وحفظها في مكان آمن.',
     generate_new_title: 'إنشاء رموز نسخ احتياطي جديدة',
     generate_new: 'إنشاء رموز نسخ احتياطي جديدة',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'حذف رموز النسخ الاحتياطي',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'إذا قمت بحذف رموز النسخ الاحتياطي هذه، فلن تتمكن من استخدامها للتحقق.',
   },
 };
 

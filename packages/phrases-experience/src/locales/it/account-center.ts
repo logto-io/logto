@@ -111,6 +111,7 @@ const account_center = {
       'Il codice di backup non è abilitato. Contatta il tuo amministratore per abilitarlo.',
     backup_code_requires_other_mfa:
       'I codici di backup richiedono che venga prima configurato un altro metodo MFA.',
+    passkey_not_enabled: "Passkey non è abilitato. Contatta l'amministratore per abilitarlo.",
   },
   update_success: {
     default: {
@@ -148,6 +149,10 @@ const account_center = {
     backup_code_deleted: {
       title: 'Backup codes removed!',
       description: 'Your backup codes have been removed from your account.',
+    },
+    passkey: {
+      title: 'Passkey aggiunto!',
+      description: 'Il tuo passkey è stato collegato con successo al tuo account.',
     },
   },
   backup_code: {
