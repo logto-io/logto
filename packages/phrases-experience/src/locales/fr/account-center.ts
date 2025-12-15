@@ -66,13 +66,11 @@ const account_center = {
     description: 'Créez un nouveau mot de passe pour sécuriser votre compte.',
     success: 'Mot de passe mis à jour avec succès.',
   },
-
   code_verification: {
     send: 'Envoyer le code de vérification',
     resend: 'Renvoyer le code',
     resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
   },
-
   email_verification: {
     title: 'Vérifiez votre e-mail',
     prepare_description:
@@ -103,35 +101,44 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      "Vous avez déjà ajouté une application d'authentification. Veuillez d'abord supprimer celle existante.",
+      "Vous avez déjà ajouté une application d'authentification. Veuillez d'abord supprimer celle qui existe.",
     totp_not_enabled:
       "L'application d'authentification n'est pas activée. Veuillez contacter votre administrateur pour l'activer.",
+    backup_code_already_added:
+      "Vous avez déjà des codes de secours actifs. Veuillez les utiliser ou les supprimer avant d'en générer de nouveaux.",
+    backup_code_not_enabled:
+      "Le code de secours n'est pas activé. Veuillez contacter votre administrateur pour l'activer.",
+    backup_code_requires_other_mfa:
+      "Les codes de secours nécessitent qu'une autre méthode MFA soit d'abord configurée.",
   },
   update_success: {
     default: {
-      title: 'Mise à jour réussie',
-      description: 'Vos modifications ont été enregistrées avec succès.',
+      title: 'Mis à jour !',
+      description: 'Vos informations ont été mises à jour.',
     },
     email: {
-      title: 'Adresse e-mail mise à jour !',
-      description: "L'adresse e-mail de votre compte a bien été modifiée.",
+      title: 'E-mail mis à jour !',
+      description: 'Votre adresse e-mail a été mise à jour avec succès.',
     },
     phone: {
       title: 'Numéro de téléphone mis à jour !',
-      description: 'Le numéro de téléphone de votre compte a bien été modifié.',
+      description: 'Votre numéro de téléphone a été mis à jour avec succès.',
     },
     username: {
-      title: "Nom d'utilisateur mis à jour !",
-      description: "Le nom d'utilisateur de votre compte a bien été modifié.",
+      title: "Nom d'utilisateur modifié !",
+      description: "Votre nom d'utilisateur a été mis à jour avec succès.",
     },
-
     password: {
-      title: 'Mot de passe mis à jour !',
-      description: 'Le mot de passe de votre compte a bien été modifié.',
+      title: 'Mot de passe modifié !',
+      description: 'Votre mot de passe a été mis à jour avec succès.',
     },
     totp: {
       title: "Application d'authentification ajoutée !",
-      description: "Votre application d'authentification a été liée à votre compte avec succès.",
+      description: "Votre application d'authentification a été liée avec succès à votre compte.",
+    },
+    backup_code: {
+      title: 'Codes de secours générés !',
+      description: 'Vos codes de secours ont été enregistrés. Conservez-les en lieu sûr.',
     },
   },
 };

@@ -7,6 +7,10 @@ export type TotpSecretResponse = {
   secret: string;
 };
 
+export type BackupCodesResponse = {
+  codes: string[];
+};
+
 export const getMfaVerifications = async (
   accessToken: string
 ): Promise<UserMfaVerificationResponse> => {
@@ -21,6 +25,12 @@ export const generateTotpSecret = async (accessToken: string): Promise<TotpSecre
     .json<TotpSecretResponse>();
 };
 
+export const generateBackupCodes = async (accessToken: string): Promise<BackupCodesResponse> => {
+  return createAuthenticatedKy(accessToken)
+    .post('/api/my-account/mfa-verifications/backup-codes/generate')
+    .json<BackupCodesResponse>();
+};
+
 export const addTotpMfa = async (
   accessToken: string,
   verificationRecordId: string,
@@ -28,6 +38,17 @@ export const addTotpMfa = async (
 ) => {
   await createAuthenticatedKy(accessToken).post('/api/my-account/mfa-verifications', {
     json: { type: MfaFactor.TOTP, ...payload },
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};
+
+export const addBackupCodeMfa = async (
+  accessToken: string,
+  verificationRecordId: string,
+  payload: { codes: string[] }
+) => {
+  await createAuthenticatedKy(accessToken).post('/api/my-account/mfa-verifications', {
+    json: { type: MfaFactor.BackupCode, ...payload },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 };

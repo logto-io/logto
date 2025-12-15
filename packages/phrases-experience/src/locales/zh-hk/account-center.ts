@@ -60,13 +60,11 @@ const account_center = {
     description: '建立新密碼以保障你的帳戶安全。',
     success: '密碼已成功更新。',
   },
-
   code_verification: {
     send: '發送驗證碼',
     resend: '重新傳送驗證碼',
     resend_countdown: '還未收到？{{seconds}} 秒後可重新傳送。',
   },
-
   email_verification: {
     title: '驗證你的電郵',
     prepare_description: '為保障帳戶安全，請確認是你本人。將驗證碼發送到你的電郵。',
@@ -94,6 +92,9 @@ const account_center = {
   mfa: {
     totp_already_added: '你已添加過身份驗證器應用程式，請先移除現有的。',
     totp_not_enabled: '身份驗證器應用程式未啟用，請聯繫管理員啟用。',
+    backup_code_already_added: '你已擁有有效的備份碼，請先使用或移除它們再產生新的。',
+    backup_code_not_enabled: '備份碼未啟用，請聯繫管理員啟用。',
+    backup_code_requires_other_mfa: '備份碼需要先設置其他 MFA 方式。',
   },
   update_success: {
     default: {
@@ -112,7 +113,6 @@ const account_center = {
       title: '用戶名已更新！',
       description: '你的帳戶用戶名已成功更改。',
     },
-
     password: {
       title: '密碼已更新！',
       description: '你的帳戶密碼已成功更改。',
@@ -120,6 +120,10 @@ const account_center = {
     totp: {
       title: '身份驗證器應用程式已添加！',
       description: '身份驗證器應用程式已成功連結到你的帳戶。',
+    },
+    backup_code: {
+      title: '備份碼已產生！',
+      description: '你的備份碼已儲存，請妥善保管。',
     },
   },
 };

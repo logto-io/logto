@@ -61,13 +61,11 @@ const account_center = {
     description: 'Hesabını korumak için yeni bir şifre oluştur.',
     success: 'Şifre başarıyla güncellendi.',
   },
-
   code_verification: {
     send: 'Doğrulama kodu gönder',
     resend: 'Kodu yeniden gönder',
     resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
   },
-
   email_verification: {
     title: 'E-postanı doğrula',
     prepare_description:
@@ -96,35 +94,44 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'Zaten bir doğrulayıcı uygulama eklediniz. Lütfen önce mevcut olanı kaldırın.',
+      'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
-      'Doğrulayıcı uygulama etkin değil. Lütfen etkinleştirmek için yöneticinizle iletişime geçin.',
+      'Authenticator uygulaması etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
+    backup_code_already_added:
+      'Halihazırda aktif yedek kodlarınız var. Yeni kodlar oluşturmadan önce lütfen bunları kullanın veya kaldırın.',
+    backup_code_not_enabled:
+      'Yedek kod etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
+    backup_code_requires_other_mfa:
+      'Yedek kodlar, önce başka bir MFA yönteminin ayarlanmasını gerektirir.',
   },
   update_success: {
     default: {
-      title: 'Güncelleme başarılı',
-      description: 'Değişiklikleriniz başarıyla kaydedildi.',
+      title: 'Güncellendi!',
+      description: 'Bilgileriniz güncellendi.',
     },
     email: {
-      title: 'E-posta adresi güncellendi!',
-      description: 'Hesabınızın e-posta adresi başarıyla değiştirildi.',
+      title: 'E-posta güncellendi!',
+      description: 'E-posta adresiniz başarıyla güncellendi.',
     },
     phone: {
       title: 'Telefon numarası güncellendi!',
-      description: 'Hesabınızın telefon numarası başarıyla değiştirildi.',
+      description: 'Telefon numaranız başarıyla güncellendi.',
     },
     username: {
-      title: 'Kullanıcı adı güncellendi!',
-      description: 'Hesabının kullanıcı adı başarıyla değiştirildi.',
+      title: 'Kullanıcı adı değiştirildi!',
+      description: 'Kullanıcı adınız başarıyla güncellendi.',
     },
-
     password: {
-      title: 'Şifre güncellendi!',
-      description: 'Hesabının şifresi başarıyla değiştirildi.',
+      title: 'Şifre değiştirildi!',
+      description: 'Şifreniz başarıyla güncellendi.',
     },
     totp: {
-      title: 'Doğrulayıcı uygulama eklendi!',
-      description: 'Doğrulayıcı uygulamanız hesabınıza başarıyla bağlandı.',
+      title: 'Authenticator uygulaması eklendi!',
+      description: 'Authenticator uygulamanız hesabınıza başarıyla bağlandı.',
+    },
+    backup_code: {
+      title: 'Yedek kodlar oluşturuldu!',
+      description: 'Yedek kodlarınız kaydedildi. Onları güvenli bir yerde saklayın.',
     },
   },
 };
