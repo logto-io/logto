@@ -96,6 +96,11 @@ const account_center = {
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
   },
+  mfa: {
+    totp_already_added: 'Dodałeś już aplikację uwierzytelniającą. Najpierw usuń istniejącą.',
+    totp_not_enabled:
+      'Aplikacja uwierzytelniająca nie jest włączona. Skontaktuj się z administratorem, aby ją włączyć.',
+  },
   update_success: {
     default: {
       title: 'Aktualizacja zakończona sukcesem',
@@ -117,6 +122,10 @@ const account_center = {
     password: {
       title: 'Zaktualizowano hasło!',
       description: 'Hasło Twojego konta zostało pomyślnie zmienione.',
+    },
+    totp: {
+      title: 'Dodano aplikację uwierzytelniającą!',
+      description: 'Twoja aplikacja uwierzytelniająca została pomyślnie połączona z Twoim kontem.',
     },
   },
 };

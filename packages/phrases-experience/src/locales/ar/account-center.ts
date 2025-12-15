@@ -92,6 +92,10 @@ const account_center = {
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
   },
+  mfa: {
+    totp_already_added: 'لقد أضفت تطبيق مصادقة بالفعل. يرجى إزالة التطبيق الحالي أولاً.',
+    totp_not_enabled: 'تطبيق المصادقة غير مفعّل. يرجى التواصل مع المسؤول لتفعيله.',
+  },
   update_success: {
     default: {
       title: 'تم التحديث بنجاح',
@@ -113,6 +117,10 @@ const account_center = {
     password: {
       title: 'تم تحديث كلمة المرور!',
       description: 'تم تغيير كلمة مرور حسابك بنجاح.',
+    },
+    totp: {
+      title: 'تمت إضافة تطبيق المصادقة!',
+      description: 'تم ربط تطبيق المصادقة بحسابك بنجاح.',
     },
   },
 };

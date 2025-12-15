@@ -23,12 +23,15 @@ import {
   passwordSuccessRoute,
   usernameRoute,
   usernameSuccessRoute,
+  totpRoute,
+  totpSuccessRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
 import Email from './pages/Email';
 import Home from './pages/Home';
 import Password from './pages/Password';
 import Phone from './pages/Phone';
+import TotpBinding from './pages/TotpBinding';
 import UpdateSuccess from './pages/UpdateSuccess';
 import Username from './pages/Username';
 import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
@@ -83,10 +86,12 @@ const Main = () => {
         element={<UpdateSuccess identifierType={SignInIdentifier.Username} />}
       />
       <Route path={passwordSuccessRoute} element={<UpdateSuccess identifierType="password" />} />
+      <Route path={totpSuccessRoute} element={<UpdateSuccess identifierType="totp" />} />
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />
       <Route path={usernameRoute} element={<Username />} />
+      <Route path={totpRoute} element={<TotpBinding />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>

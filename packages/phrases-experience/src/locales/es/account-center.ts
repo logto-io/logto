@@ -100,6 +100,12 @@ const account_center = {
     error_verify_failed: 'La verificación falló. Ingresa el código nuevamente.',
     error_invalid_code: 'El código de verificación no es válido o ha expirado.',
   },
+  mfa: {
+    totp_already_added:
+      'Ya has añadido una aplicación de autenticación. Por favor, elimina la existente primero.',
+    totp_not_enabled:
+      'La aplicación de autenticación no está habilitada. Por favor, contacta a tu administrador para habilitarla.',
+  },
   update_success: {
     default: {
       title: 'Actualización exitosa',
@@ -121,6 +127,10 @@ const account_center = {
     password: {
       title: '¡Contraseña actualizada!',
       description: 'La contraseña de tu cuenta se ha cambiado correctamente.',
+    },
+    totp: {
+      title: '¡Aplicación de autenticación añadida!',
+      description: 'Tu aplicación de autenticación se ha vinculado correctamente a tu cuenta.',
     },
   },
 };
