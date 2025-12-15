@@ -94,6 +94,9 @@ const account_center = {
   mfa: {
     totp_already_added: '您已新增過身份驗證器應用程式，請先移除現有的。',
     totp_not_enabled: '身份驗證器應用程式未啟用，請聯繫管理員啟用。',
+    backup_code_already_added: '您已擁有有效的備份碼，請先使用或移除它們再產生新的。',
+    backup_code_not_enabled: '備份碼未啟用，請聯繫管理員啟用。',
+    backup_code_requires_other_mfa: '備份碼需要先設定其他 MFA 方式。',
   },
   update_success: {
     default: {
@@ -120,6 +123,10 @@ const account_center = {
     totp: {
       title: '身份驗證器應用程式已新增！',
       description: '身份驗證器應用程式已成功連結至您的帳戶。',
+    },
+    backup_code: {
+      title: '備份碼已產生！',
+      description: '您的備份碼已儲存，請妥善保管。',
     },
   },
 };

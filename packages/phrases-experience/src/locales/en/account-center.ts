@@ -102,6 +102,11 @@ const account_center = {
       'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
       'Authenticator app is not enabled. Please contact your administrator to enable it.',
+    backup_code_already_added:
+      'You already have active backup codes. Please use or remove them before generating new ones.',
+    backup_code_not_enabled:
+      'Backup code is not enabled. Please contact your administrator to enable it.',
+    backup_code_requires_other_mfa: 'Backup codes require another MFA method to be set up first.',
   },
   update_success: {
     default: {
@@ -127,6 +132,10 @@ const account_center = {
     totp: {
       title: 'Authenticator app added!',
       description: 'Your authenticator app has been successfully linked to your account.',
+    },
+    backup_code: {
+      title: 'Backup codes generated!',
+      description: 'Your backup codes have been saved. Keep them in a safe place.',
     },
   },
 };

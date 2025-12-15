@@ -94,34 +94,47 @@ const account_center = {
     error_invalid_code: '인증 코드가 잘못되었거나 만료되었습니다.',
   },
   mfa: {
-    totp_already_added: '이미 인증 앱을 추가했습니다. 먼저 기존 앱을 제거해 주세요.',
-    totp_not_enabled: '인증 앱이 활성화되어 있지 않습니다. 관리자에게 문의하여 활성화해 주세요.',
+    totp_already_added: '이미 인증 앱을 추가했습니다. 먼저 기존 앱을 제거하십시오.',
+    totp_not_enabled: '인증 앱이 활성화되지 않았습니다. 관리자에게 문의하여 활성화하십시오.',
+    backup_code_already_added:
+      '이미 활성 백업 코드가 있습니다. 새 코드를 생성하기 전에 사용하거나 제거하십시오.',
+    backup_code_not_enabled:
+      '백업 코드가 활성화되지 않았습니다. 관리자에게 문의하여 활성화하십시오.',
+    backup_code_requires_other_mfa: '백업 코드를 사용하려면 다른 MFA 방법을 먼저 설정해야 합니다.',
   },
   update_success: {
     default: {
-      title: '업데이트 완료',
-      description: '변경 사항이 성공적으로 저장되었습니다.',
+      title: '업데이트되었습니다!',
+      description: '귀하의 정보가 업데이트되었습니다.',
     },
     email: {
-      title: '이메일 주소가 업데이트되었습니다!',
-      description: '계정의 이메일 주소가 성공적으로 변경되었습니다.',
+      title: '이메일 업데이트됨!',
+      description: '이메일 주소가 성공적으로 업데이트되었습니다.',
     },
     phone: {
-      title: '전화번호가 업데이트되었습니다!',
-      description: '계정의 전화번호가 성공적으로 변경되었습니다.',
+      title: '전화번호 업데이트됨!',
+      description: '전화번호가 성공적으로 업데이트되었습니다.',
     },
     username: {
-      title: '사용자 이름이 업데이트되었습니다!',
-      description: '계정의 사용자 이름이 성공적으로 변경되었습니다.',
+      title: '사용자 이름 변경됨!',
+      description: '사용자 이름이 성공적으로 업데이트되었습니다.',
     },
 
     password: {
-      title: '비밀번호가 업데이트되었습니다!',
-      description: '계정의 비밀번호가 성공적으로 변경되었습니다.',
+      title: '비밀번호 변경됨!',
+      description: '비밀번호가 성공적으로 업데이트되었습니다.',
     },
     totp: {
-      title: '인증 앱이 추가되었습니다!',
+      title: '인증 앱 추가됨!',
       description: '인증 앱이 계정에 성공적으로 연결되었습니다.',
+    },
+    backup_code: {
+      title: '백업 코드가 생성되었습니다!',
+      description: '백업 코드가 저장되었습니다. 안전한 곳에 보관하십시오.',
+    },
+    social: {
+      title: '소셜 계정 연결됨!',
+      description: '소셜 계정이 성공적으로 연결되었습니다.',
     },
   },
 };

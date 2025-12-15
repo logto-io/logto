@@ -102,35 +102,48 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      "Hai già aggiunto un'app di autenticazione. Rimuovi prima quella esistente.",
+      'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
       "L'app di autenticazione non è abilitata. Contatta il tuo amministratore per abilitarla.",
+    backup_code_already_added:
+      'Hai già codici di backup attivi. Utilizzali o rimuovili prima di generarne di nuovi.',
+    backup_code_not_enabled:
+      'Il codice di backup non è abilitato. Contatta il tuo amministratore per abilitarlo.',
+    backup_code_requires_other_mfa:
+      'I codici di backup richiedono che venga prima configurato un altro metodo MFA.',
   },
   update_success: {
     default: {
-      title: 'Aggiornamento riuscito',
-      description: 'Le tue modifiche sono state salvate con successo.',
+      title: 'Aggiornato!',
+      description: 'Le tue informazioni sono state aggiornate.',
+    },
+    password: {
+      title: 'Password cambiata!',
+      description: 'La tua password è stata aggiornata con successo.',
+    },
+    username: {
+      title: 'Nome utente cambiato!',
+      description: 'Il tuo nome utente è stato aggiornato con successo.',
     },
     email: {
-      title: 'Indirizzo email aggiornato!',
-      description: "L'indirizzo email del tuo account è stato modificato con successo.",
+      title: 'Email aggiornata!',
+      description: 'Il tuo indirizzo email è stato aggiornato con successo.',
     },
     phone: {
       title: 'Numero di telefono aggiornato!',
-      description: 'Il numero di telefono del tuo account è stato modificato con successo.',
+      description: 'Il tuo numero di telefono è stato aggiornato con successo.',
     },
-    username: {
-      title: 'Nome utente aggiornato!',
-      description: 'Il nome utente del tuo account è stato modificato con successo.',
-    },
-
-    password: {
-      title: 'Password aggiornata!',
-      description: 'La password del tuo account è stata modificata con successo.',
+    social: {
+      title: 'Account social collegato!',
+      description: 'Il tuo account social è stato collegato con successo.',
     },
     totp: {
       title: 'App di autenticazione aggiunta!',
-      description: 'La tua app di autenticazione è stata collegata correttamente al tuo account.',
+      description: 'La tua app di autenticazione è stata collegata con successo al tuo account.',
+    },
+    backup_code: {
+      title: 'Codici di backup generati!',
+      description: 'I tuoi codici di backup sono stati salvati. Conservali in un luogo sicuro.',
     },
   },
 };

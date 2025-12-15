@@ -109,32 +109,47 @@ const account_center = {
       'Du hast bereits eine Authenticator-App hinzugefügt. Bitte entferne zuerst die vorhandene.',
     totp_not_enabled:
       'Die Authenticator-App ist nicht aktiviert. Bitte kontaktiere deinen Administrator, um sie zu aktivieren.',
+    backup_code_already_added:
+      'Sie haben bereits aktive Backup-Codes. Bitte verwenden oder entfernen Sie diese, bevor Sie neue generieren.',
+    backup_code_not_enabled:
+      'Backup-Code ist nicht aktiviert. Bitte wenden Sie sich an Ihren Administrator, um ihn zu aktivieren.',
+    backup_code_requires_other_mfa:
+      'Für Backup-Codes muss zuerst eine andere MFA-Methode eingerichtet werden.',
   },
   update_success: {
     default: {
-      title: 'Aktualisierung erfolgreich',
-      description: 'Deine Änderungen wurden erfolgreich gespeichert.',
+      title: 'Aktualisiert!',
+      description: 'Ihre Informationen wurden aktualisiert.',
     },
     email: {
-      title: 'E-Mail-Adresse aktualisiert!',
-      description: 'Die E-Mail-Adresse deines Kontos wurde erfolgreich geändert.',
+      title: 'E-Mail aktualisiert!',
+      description: 'Ihre E-Mail-Adresse wurde erfolgreich aktualisiert.',
     },
     phone: {
       title: 'Telefonnummer aktualisiert!',
-      description: 'Die Telefonnummer deines Kontos wurde erfolgreich geändert.',
+      description: 'Ihre Telefonnummer wurde erfolgreich aktualisiert.',
     },
     username: {
-      title: 'Benutzername aktualisiert!',
-      description: 'Der Benutzername deines Kontos wurde erfolgreich geändert.',
+      title: 'Benutzername geändert!',
+      description: 'Ihr Benutzername wurde erfolgreich aktualisiert.',
     },
 
     password: {
-      title: 'Passwort aktualisiert!',
-      description: 'Das Passwort deines Kontos wurde erfolgreich geändert.',
+      title: 'Passwort geändert!',
+      description: 'Ihr Passwort wurde erfolgreich aktualisiert.',
     },
     totp: {
       title: 'Authenticator-App hinzugefügt!',
       description: 'Deine Authenticator-App wurde erfolgreich mit deinem Konto verknüpft.',
+    },
+    backup_code: {
+      title: 'Backup-Codes generiert!',
+      description:
+        'Ihre Backup-Codes wurden gespeichert. Bewahren Sie sie an einem sicheren Ort auf.',
+    },
+    social: {
+      title: 'Soziales Konto verknüpft!',
+      description: 'Ihr soziales Konto wurde erfolgreich verknüpft.',
     },
   },
 };

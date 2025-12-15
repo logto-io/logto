@@ -97,35 +97,50 @@ const account_center = {
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
   },
   mfa: {
-    totp_already_added: 'Dodałeś już aplikację uwierzytelniającą. Najpierw usuń istniejącą.',
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
       'Aplikacja uwierzytelniająca nie jest włączona. Skontaktuj się z administratorem, aby ją włączyć.',
+    backup_code_already_added:
+      'Masz już aktywne kody zapasowe. Użyj ich lub usuń przed wygenerowaniem nowych.',
+    backup_code_not_enabled:
+      'Kod zapasowy nie jest włączony. Skontaktuj się z administratorem, aby go włączyć.',
+    backup_code_requires_other_mfa:
+      'Kody zapasowe wymagają wcześniejszego skonfigurowania innej metody MFA.',
   },
   update_success: {
     default: {
-      title: 'Aktualizacja zakończona sukcesem',
-      description: 'Twoje zmiany zostały pomyślnie zapisane.',
+      title: 'Zaktualizowano!',
+      description: 'Twoje informacje zostały zaktualizowane.',
     },
     email: {
-      title: 'Zaktualizowano adres e-mail!',
-      description: 'Adres e-mail Twojego konta został pomyślnie zmieniony.',
+      title: 'Email zaktualizowany!',
+      description: 'Twój adres email został pomyślnie zaktualizowany.',
     },
     phone: {
-      title: 'Zaktualizowano numer telefonu!',
-      description: 'Numer telefonu Twojego konta został pomyślnie zmieniony.',
+      title: 'Numer telefonu zaktualizowany!',
+      description: 'Twój numer telefonu został pomyślnie zaktualizowany.',
     },
     username: {
-      title: 'Zaktualizowano nazwę użytkownika!',
-      description: 'Nazwa użytkownika Twojego konta została pomyślnie zmieniona.',
+      title: 'Nazwa użytkownika zmieniona!',
+      description: 'Twoja nazwa użytkownika została pomyślnie zaktualizowana.',
     },
 
     password: {
-      title: 'Zaktualizowano hasło!',
-      description: 'Hasło Twojego konta zostało pomyślnie zmienione.',
+      title: 'Hasło zmienione!',
+      description: 'Twoje hasło zostało pomyślnie zaktualizowane.',
     },
     totp: {
-      title: 'Dodano aplikację uwierzytelniającą!',
-      description: 'Twoja aplikacja uwierzytelniająca została pomyślnie połączona z Twoim kontem.',
+      title: 'Aplikacja uwierzytelniająca dodana!',
+      description: 'Twoja aplikacja uwierzytelniająca została pomyślnie połączona z kontem.',
+    },
+    backup_code: {
+      title: 'Wygenerowano kody zapasowe!',
+      description: 'Twoje kody zapasowe zostały zapisane. Przechowuj je w bezpiecznym miejscu.',
+    },
+    social: {
+      title: 'Konto społecznościowe połączone!',
+      description: 'Twoje konto społecznościowe zostało pomyślnie połączone.',
     },
   },
 };

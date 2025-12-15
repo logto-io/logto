@@ -100,35 +100,48 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'Você já adicionou um aplicativo autenticador. Remova o existente primeiro.',
+      'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
-      'O aplicativo autenticador não está habilitado. Entre em contato com seu administrador para habilitá-lo.',
+      'O aplicativo autenticador não está ativado. Entre em contato com o administrador para ativá-lo.',
+    backup_code_already_added:
+      'Você já possui códigos de backup ativos. Use-os ou remova-os antes de gerar novos.',
+    backup_code_not_enabled:
+      'O código de backup não está ativado. Entre em contato com o administrador para ativá-lo.',
+    backup_code_requires_other_mfa:
+      'Os códigos de backup exigem que outro método MFA seja configurado primeiro.',
   },
   update_success: {
     default: {
-      title: 'Atualização bem-sucedida',
-      description: 'Suas alterações foram salvas com sucesso.',
+      title: 'Atualizado!',
+      description: 'Suas informações foram atualizadas.',
+    },
+    password: {
+      title: 'Senha alterada!',
+      description: 'Sua senha foi atualizada com sucesso.',
+    },
+    username: {
+      title: 'Nome de usuário alterado!',
+      description: 'Seu nome de usuário foi atualizado com sucesso.',
     },
     email: {
-      title: 'Endereço de e-mail atualizado!',
-      description: 'O endereço de e-mail da sua conta foi alterado com sucesso.',
+      title: 'E-mail atualizado!',
+      description: 'Seu endereço de e-mail foi atualizado com sucesso.',
     },
     phone: {
       title: 'Número de telefone atualizado!',
-      description: 'O número de telefone da sua conta foi alterado com sucesso.',
+      description: 'Seu número de telefone foi atualizado com sucesso.',
     },
-    username: {
-      title: 'Nome de usuário atualizado!',
-      description: 'O nome de usuário da sua conta foi alterado com sucesso.',
-    },
-
-    password: {
-      title: 'Senha atualizada!',
-      description: 'A senha da sua conta foi alterada com sucesso.',
+    social: {
+      title: 'Conta social vinculada!',
+      description: 'Sua conta social foi vinculada com sucesso.',
     },
     totp: {
       title: 'Aplicativo autenticador adicionado!',
-      description: 'Seu aplicativo autenticador foi vinculado à sua conta com sucesso.',
+      description: 'Seu aplicativo autenticador foi vinculado com sucesso à sua conta.',
+    },
+    backup_code: {
+      title: 'Códigos de backup gerados!',
+      description: 'Seus códigos de backup foram salvos. Mantenha-os em um local seguro.',
     },
   },
 };

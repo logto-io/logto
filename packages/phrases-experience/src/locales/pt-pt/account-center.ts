@@ -101,35 +101,51 @@ const account_center = {
     error_invalid_code: 'O código de verificação é inválido ou expirou.',
   },
   mfa: {
-    totp_already_added: 'Já adicionou uma aplicação de autenticação. Remova primeiro a existente.',
+    totp_already_added:
+      'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
-      'A aplicação de autenticação não está ativada. Contacte o seu administrador para a ativar.',
+      'A aplicação de autenticação não está ativa. Contacte o administrador para a ativar.',
+    backup_code_already_added:
+      'Já tem códigos de cópia de segurança ativos. Utilize-os ou remova-os antes de gerar novos.',
+    backup_code_not_enabled:
+      'O código de cópia de segurança não está ativado. Contacte o administrador para o ativar.',
+    backup_code_requires_other_mfa:
+      'Os códigos de cópia de segurança requerem que outro método MFA seja configurado primeiro.',
   },
   update_success: {
     default: {
-      title: 'Atualização bem-sucedida',
-      description: 'As suas alterações foram guardadas com sucesso.',
+      title: 'Atualizado!',
+      description: 'Os seus dados foram atualizados.',
     },
     email: {
-      title: 'Endereço de e-mail atualizado!',
-      description: 'O endereço de e-mail da sua conta foi alterado com sucesso.',
+      title: 'E-mail atualizado!',
+      description: 'O seu endereço de e-mail foi atualizado com sucesso.',
     },
     phone: {
-      title: 'Número de telefone atualizado!',
-      description: 'O número de telefone da sua conta foi alterado com sucesso.',
+      title: 'Número de telemóvel atualizado!',
+      description: 'O seu número de telemóvel foi atualizado com sucesso.',
     },
     username: {
-      title: 'Nome de utilizador atualizado!',
-      description: 'O nome de utilizador da sua conta foi alterado com sucesso.',
+      title: 'Nome de utilizador alterado!',
+      description: 'O seu nome de utilizador foi atualizado com sucesso.',
     },
 
     password: {
-      title: 'Palavra-passe atualizada!',
-      description: 'A palavra-passe da sua conta foi alterada com sucesso.',
+      title: 'Palavra-passe alterada!',
+      description: 'A sua palavra-passe foi atualizada com sucesso.',
     },
     totp: {
       title: 'Aplicação de autenticação adicionada!',
-      description: 'A sua aplicação de autenticação foi associada à sua conta com sucesso.',
+      description: 'A sua aplicação de autenticação foi associada com sucesso à sua conta.',
+    },
+    backup_code: {
+      title: 'Códigos de cópia de segurança gerados!',
+      description:
+        'Os seus códigos de cópia de segurança foram guardados. Guarde-os num local seguro.',
+    },
+    social: {
+      title: 'Conta social associada!',
+      description: 'A sua conta social foi associada com sucesso.',
     },
   },
 };
