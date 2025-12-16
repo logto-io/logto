@@ -33,7 +33,7 @@ describe('Verification code verification APIs', () => {
     },
     {
       type: SignInIdentifier.Phone,
-      value: '+1234567890',
+      value: '1234567890',
     },
   ];
 
@@ -144,12 +144,15 @@ describe('Verification code verification APIs', () => {
         },
       });
 
+      // Use a valid but different identifier to trigger the mismatch error
+      const differentValue = type === SignInIdentifier.Email ? 'different@logto.io' : '9876543210';
+
       await expectRejects(
         client.verifyVerificationCode({
           code,
           identifier: {
             type,
-            value: 'invalid_identifier',
+            value: differentValue,
           },
           verificationId,
         }),
