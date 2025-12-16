@@ -19,7 +19,8 @@
 }
 
 .title {
-  @include _.title;
+  font: var(--font-title-1);
+  color: var(--color-type-primary);
 }
 
 .message {
@@ -38,7 +39,7 @@
 }
 
 .supportLink {
-  color: var(--color-primary);
+  color: var(--color-brand-default);
   text-decoration: none;
 
   &:hover {
