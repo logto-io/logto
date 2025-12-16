@@ -145,12 +145,16 @@ const account_center = {
       description: 'Tus códigos de respaldo se han guardado. Guárdalos en un lugar seguro.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: '¡Códigos de respaldo eliminados!',
+      description: 'Tus códigos de respaldo han sido eliminados de tu cuenta.',
     },
     passkey: {
       title: '¡Passkey añadido!',
       description: 'Tu passkey se ha vinculado correctamente a tu cuenta.',
+    },
+    passkey_deleted: {
+      title: '¡Passkey eliminado!',
+      description: 'Tu passkey ha sido eliminado de tu cuenta.',
     },
     social: {
       title: '¡Cuenta social vinculada!',
@@ -164,9 +168,26 @@ const account_center = {
     copy_hint: 'Asegúrate de copiarlos y guardarlos en un lugar seguro.',
     generate_new_title: 'Generar nuevos códigos de respaldo',
     generate_new: 'Generar nuevos códigos de respaldo',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'Eliminar tus códigos de respaldo',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'Si eliminas estos códigos de respaldo, no podrás verificarte con ellos.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Añadido: {{date}}',
+    last_used: 'Último uso: {{date}}',
+    never_used: 'Nunca',
+    unnamed: 'Passkey sin nombre',
+    renamed: 'Passkey renombrado correctamente.',
+    add_another_title: 'Añadir otro passkey',
+    add_another_description:
+      'Registra tu passkey usando biometría del dispositivo, llaves de seguridad (ej. YubiKey) u otros métodos disponibles.',
+    add_passkey: 'Añadir un passkey',
+    delete_confirmation_title: 'Eliminar passkey',
+    delete_confirmation_description:
+      '¿Estás seguro de que deseas eliminar "{{name}}"? Ya no podrás usar este passkey para iniciar sesión.',
+    rename_passkey: 'Renombrar passkey',
+    rename_description: 'Ingresa un nuevo nombre para este passkey.',
   },
 };
 

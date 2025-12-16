@@ -30,6 +30,8 @@ const action = {
   verify_via_passkey: 'Підтвердити за допомогою ключа доступу',
   download: 'Завантажити',
   remove: 'Видалити',
+  edit: 'Редагувати',
+  save: 'Зберегти',
   single_sign_on: 'Єдиний вхід (SSO)',
   authorize: 'Авторизуватися',
   use_another_account: 'Використати інший обліковий запис',

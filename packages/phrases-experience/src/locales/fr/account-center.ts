@@ -149,12 +149,16 @@ const account_center = {
       description: 'Vos codes de secours ont été enregistrés. Conservez-les en lieu sûr.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'Codes de secours supprimés !',
+      description: 'Vos codes de secours ont été supprimés de votre compte.',
     },
     passkey: {
       title: 'Passkey ajouté !',
       description: 'Votre passkey a été lié avec succès à votre compte.',
+    },
+    passkey_deleted: {
+      title: 'Passkey supprimé !',
+      description: 'Votre passkey a été supprimé de votre compte.',
     },
   },
   backup_code: {
@@ -164,9 +168,26 @@ const account_center = {
     copy_hint: 'Assurez-vous de les copier et de les conserver dans un endroit sûr.',
     generate_new_title: 'Générer de nouveaux codes de secours',
     generate_new: 'Générer de nouveaux codes de secours',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'Supprimer vos codes de secours',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'Si vous supprimez ces codes de secours, vous ne pourrez plus les utiliser pour la vérification.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Ajouté : {{date}}',
+    last_used: 'Dernière utilisation : {{date}}',
+    never_used: 'Jamais',
+    unnamed: 'Passkey sans nom',
+    renamed: 'Passkey renommé avec succès.',
+    add_another_title: 'Ajouter un autre passkey',
+    add_another_description:
+      "Enregistrez votre passkey à l'aide de la biométrie de l'appareil, des clés de sécurité (ex. YubiKey) ou d'autres méthodes disponibles.",
+    add_passkey: 'Ajouter un passkey',
+    delete_confirmation_title: 'Supprimer le passkey',
+    delete_confirmation_description:
+      'Êtes-vous sûr de vouloir supprimer « {{name}} » ? Vous ne pourrez plus utiliser ce passkey pour vous connecter.',
+    rename_passkey: 'Renommer le passkey',
+    rename_description: 'Entrez un nouveau nom pour ce passkey.',
   },
 };
 

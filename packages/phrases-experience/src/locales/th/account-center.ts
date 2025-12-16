@@ -140,6 +140,10 @@ const account_center = {
       title: 'เพิ่ม Passkey แล้ว!',
       description: 'Passkey ของคุณได้รับการเชื่อมต่อกับบัญชีของคุณเรียบร้อยแล้ว',
     },
+    passkey_deleted: {
+      title: 'ลบ Passkey แล้ว!',
+      description: 'Passkey ของคุณถูกลบออกจากบัญชีแล้ว',
+    },
     social: {
       title: 'เชื่อมต่อบัญชีโซเชียลแล้ว!',
       description: 'บัญชีโซเชียลของคุณได้รับการเชื่อมต่อเรียบร้อยแล้ว',
@@ -154,6 +158,23 @@ const account_center = {
     generate_new: 'สร้างรหัสสำรองใหม่',
     delete_confirmation_title: 'ลบรหัสสำรองของคุณ',
     delete_confirmation_description: 'หากคุณลบรหัสสำรองเหล่านี้ คุณจะไม่สามารถใช้ยืนยันตัวตนได้',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'เพิ่มเมื่อ: {{date}}',
+    last_used: 'ใช้ล่าสุด: {{date}}',
+    never_used: 'ไม่เคยใช้',
+    unnamed: 'Passkey ไม่มีชื่อ',
+    renamed: 'เปลี่ยนชื่อ Passkey เรียบร้อยแล้ว',
+    add_another_title: 'เพิ่ม Passkey อีกอัน',
+    add_another_description:
+      'ลงทะเบียน Passkey ของคุณโดยใช้ไบโอเมตริกซ์ของอุปกรณ์ กุญแจความปลอดภัย (เช่น YubiKey) หรือวิธีอื่นที่มี',
+    add_passkey: 'เพิ่ม Passkey',
+    delete_confirmation_title: 'ลบ Passkey',
+    delete_confirmation_description:
+      'คุณแน่ใจหรือไม่ว่าต้องการลบ "{{name}}"? คุณจะไม่สามารถใช้ Passkey นี้เข้าสู่ระบบได้อีก',
+    rename_passkey: 'เปลี่ยนชื่อ Passkey',
+    rename_description: 'ป้อนชื่อใหม่สำหรับ Passkey นี้',
   },
 };
 

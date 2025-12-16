@@ -30,6 +30,8 @@ const action = {
   verify_via_passkey: 'Parola ile doğrula',
   download: 'İndir',
   remove: 'Kaldır',
+  edit: 'Düzenle',
+  save: 'Kaydet',
   single_sign_on: 'Tek oturum açma',
   authorize: 'Yetkilendir',
   use_another_account: 'Başka bir hesap kullan',

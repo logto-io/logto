@@ -30,6 +30,8 @@ const action = {
   verify_via_passkey: '패스키로 확인',
   download: '다운로드',
   remove: '삭제',
+  edit: '편집',
+  save: '저장',
   single_sign_on: '단일 로그인',
   authorize: '권한 부여',
   use_another_account: '다른 계정 사용',

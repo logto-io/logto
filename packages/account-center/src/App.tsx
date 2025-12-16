@@ -31,7 +31,9 @@ import {
   backupCodeDeletedRoute,
   backupCodeViewRoute,
   passkeyRoute,
+  passkeyViewRoute,
   passkeySuccessRoute,
+  passkeyDeletedRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
 import BackupCodeBinding from './pages/BackupCodeBinding';
@@ -39,6 +41,7 @@ import BackupCodeView from './pages/BackupCodeView';
 import Email from './pages/Email';
 import Home from './pages/Home';
 import PasskeyBinding from './pages/PasskeyBinding';
+import PasskeyView from './pages/PasskeyView';
 import Password from './pages/Password';
 import Phone from './pages/Phone';
 import TotpBinding from './pages/TotpBinding';
@@ -106,6 +109,10 @@ const Main = () => {
         element={<UpdateSuccess identifierType="backup_code_deleted" />}
       />
       <Route path={passkeySuccessRoute} element={<UpdateSuccess identifierType="passkey" />} />
+      <Route
+        path={passkeyDeletedRoute}
+        element={<UpdateSuccess identifierType="passkey_deleted" />}
+      />
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />
@@ -115,6 +122,7 @@ const Main = () => {
       <Route path={backupCodeRegenerateRoute} element={<BackupCodeBinding isRegenerate />} />
       <Route path={backupCodeViewRoute} element={<BackupCodeView />} />
       <Route path={passkeyRoute} element={<PasskeyBinding />} />
+      <Route path={passkeyViewRoute} element={<PasskeyView />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>

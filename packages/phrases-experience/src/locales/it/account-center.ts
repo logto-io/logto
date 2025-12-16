@@ -102,7 +102,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+      "Hai già aggiunto un'app di autenticazione. Rimuovi prima quella esistente.",
     totp_not_enabled:
       "L'app di autenticazione non è abilitata. Contatta il tuo amministratore per abilitarla.",
     backup_code_already_added:
@@ -147,12 +147,16 @@ const account_center = {
       description: 'I tuoi codici di backup sono stati salvati. Conservali in un luogo sicuro.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'Codici di backup rimossi!',
+      description: 'I tuoi codici di backup sono stati rimossi dal tuo account.',
     },
     passkey: {
       title: 'Passkey aggiunto!',
       description: 'Il tuo passkey è stato collegato con successo al tuo account.',
+    },
+    passkey_deleted: {
+      title: 'Passkey rimosso!',
+      description: 'Il tuo passkey è stato rimosso dal tuo account.',
     },
   },
   backup_code: {
@@ -162,9 +166,26 @@ const account_center = {
     copy_hint: 'Assicurati di copiarli e salvarli in un luogo sicuro.',
     generate_new_title: 'Genera nuovi codici di backup',
     generate_new: 'Genera nuovi codici di backup',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'Rimuovi i tuoi codici di backup',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'Se rimuovi questi codici di backup, non potrai più usarli per la verifica.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Aggiunto: {{date}}',
+    last_used: 'Ultimo utilizzo: {{date}}',
+    never_used: 'Mai',
+    unnamed: 'Passkey senza nome',
+    renamed: 'Passkey rinominato con successo.',
+    add_another_title: 'Aggiungi un altro passkey',
+    add_another_description:
+      'Registra il tuo passkey utilizzando la biometria del dispositivo, le chiavi di sicurezza (es. YubiKey) o altri metodi disponibili.',
+    add_passkey: 'Aggiungi un passkey',
+    delete_confirmation_title: 'Rimuovi passkey',
+    delete_confirmation_description:
+      'Sei sicuro di voler rimuovere "{{name}}"? Non potrai più utilizzare questo passkey per accedere.',
+    rename_passkey: 'Rinomina passkey',
+    rename_description: 'Inserisci un nuovo nome per questo passkey.',
   },
 };
 

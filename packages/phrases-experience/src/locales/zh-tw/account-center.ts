@@ -137,6 +137,10 @@ const account_center = {
       title: 'Passkey 已新增！',
       description: 'Passkey 已成功連結至您的帳戶。',
     },
+    passkey_deleted: {
+      title: 'Passkey 已移除！',
+      description: 'Passkey 已從您的帳戶中移除。',
+    },
     social: {
       title: '社群帳號已連結！',
       description: '您的社群帳號已成功連結。',
@@ -151,6 +155,22 @@ const account_center = {
     generate_new: '產生新的備用碼',
     delete_confirmation_title: '移除您的備用碼',
     delete_confirmation_description: '如果您移除這些備用碼，您將無法使用它們進行驗證。',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: '新增於：{{date}}',
+    last_used: '上次使用：{{date}}',
+    never_used: '從未使用',
+    unnamed: '未命名的 Passkey',
+    renamed: 'Passkey 已成功重新命名。',
+    add_another_title: '新增另一個 Passkey',
+    add_another_description:
+      '使用設備生物識別、安全金鑰（例如 YubiKey）或其他可用方法註冊您的 Passkey。',
+    add_passkey: '新增 Passkey',
+    delete_confirmation_title: '移除 Passkey',
+    delete_confirmation_description: '您確定要移除「{{name}}」嗎？您將無法再使用此 Passkey 登入。',
+    rename_passkey: '重新命名 Passkey',
+    rename_description: '為此 Passkey 輸入新名稱。',
   },
 };
 

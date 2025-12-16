@@ -151,6 +151,10 @@ const account_center = {
       title: 'Passkey adicionado!',
       description: 'O seu passkey foi associado com sucesso à sua conta.',
     },
+    passkey_deleted: {
+      title: 'Passkey removido!',
+      description: 'O seu passkey foi removido da sua conta.',
+    },
     social: {
       title: 'Conta social associada!',
       description: 'A sua conta social foi associada com sucesso.',
@@ -166,6 +170,23 @@ const account_center = {
     delete_confirmation_title: 'Remover os seus códigos de cópia de segurança',
     delete_confirmation_description:
       'Se remover estes códigos de cópia de segurança, não poderá utilizá-los para verificação.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Adicionado: {{date}}',
+    last_used: 'Última utilização: {{date}}',
+    never_used: 'Nunca',
+    unnamed: 'Passkey sem nome',
+    renamed: 'Passkey renomeado com sucesso.',
+    add_another_title: 'Adicionar outro passkey',
+    add_another_description:
+      'Registe o seu passkey utilizando biometria do dispositivo, chaves de segurança (ex: YubiKey) ou outros métodos disponíveis.',
+    add_passkey: 'Adicionar um passkey',
+    delete_confirmation_title: 'Remover passkey',
+    delete_confirmation_description:
+      'Tem a certeza de que deseja remover "{{name}}"? Não poderá utilizar este passkey para iniciar sessão.',
+    rename_passkey: 'Renomear passkey',
+    rename_description: 'Introduza um novo nome para este passkey.',
   },
 };
 

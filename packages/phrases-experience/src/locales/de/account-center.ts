@@ -150,12 +150,16 @@ const account_center = {
         'Ihre Backup-Codes wurden gespeichert. Bewahren Sie sie an einem sicheren Ort auf.',
     },
     backup_code_deleted: {
-      title: 'Backup codes removed!',
-      description: 'Your backup codes have been removed from your account.',
+      title: 'Backup-Codes entfernt!',
+      description: 'Ihre Backup-Codes wurden von Ihrem Konto entfernt.',
     },
     passkey: {
       title: 'Passkey hinzugefügt!',
       description: 'Ihr Passkey wurde erfolgreich mit Ihrem Konto verknüpft.',
+    },
+    passkey_deleted: {
+      title: 'Passkey entfernt!',
+      description: 'Ihr Passkey wurde von Ihrem Konto entfernt.',
     },
     social: {
       title: 'Soziales Konto verknüpft!',
@@ -169,9 +173,26 @@ const account_center = {
     copy_hint: 'Kopieren Sie sie und bewahren Sie sie an einem sicheren Ort auf.',
     generate_new_title: 'Neue Backup-Codes generieren',
     generate_new: 'Neue Backup-Codes generieren',
-    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_title: 'Backup-Codes entfernen',
     delete_confirmation_description:
-      'If you remove these backup codes, you will not be able to verify with it.',
+      'Wenn Sie diese Backup-Codes entfernen, können Sie sich nicht mehr damit verifizieren.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Hinzugefügt: {{date}}',
+    last_used: 'Zuletzt verwendet: {{date}}',
+    never_used: 'Nie',
+    unnamed: 'Unbenannter Passkey',
+    renamed: 'Passkey erfolgreich umbenannt.',
+    add_another_title: 'Weiteren Passkey hinzufügen',
+    add_another_description:
+      'Registrieren Sie Ihren Passkey mit Geräte-Biometrie, Sicherheitsschlüsseln (z.B. YubiKey) oder anderen verfügbaren Methoden.',
+    add_passkey: 'Passkey hinzufügen',
+    delete_confirmation_title: 'Passkey entfernen',
+    delete_confirmation_description:
+      'Sind Sie sicher, dass Sie "{{name}}" entfernen möchten? Sie können sich danach nicht mehr mit diesem Passkey anmelden.',
+    rename_passkey: 'Passkey umbenennen',
+    rename_description: 'Geben Sie einen neuen Namen für diesen Passkey ein.',
   },
 };
 

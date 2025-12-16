@@ -29,16 +29,17 @@
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/eslint-config-react": "6.0.2",
     "@silverhand/essentials": "^2.9.1",
-    "@simplewebauthn/browser": "^10.0.0",
-    "@simplewebauthn/types": "^10.0.0",
     "@silverhand/ts-config": "6.0.0",
     "@silverhand/ts-config-react": "6.0.0",
+    "@simplewebauthn/browser": "^10.0.0",
+    "@simplewebauthn/types": "^10.0.0",
     "@types/color": "^4.2.0",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-helmet": "^6.1.6",
     "@types/react-modal": "^3.13.1",
+    "@types/ua-parser-js": "^0.7.39",
     "@vitejs/plugin-react": "^4.3.1",
     "classnames": "^2.3.1",
     "color": "^4.2.3",
@@ -49,10 +50,10 @@
     "lint-staged": "^15.0.0",
     "prettier": "^3.5.3",
     "react": "^18.3.1",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-i18next": "^12.3.1",
-    "react-device-detect": "^2.2.3",
     "react-modal": "^3.15.1",
     "react-top-loading-bar": "^2.3.1",
     "stylelint": "^15.0.0",
@@ -75,6 +76,7 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "qrcode": "^1.5.4",
-    "react-router-dom": "^7.9.6"
+    "react-router-dom": "^7.9.6",
+    "ua-parser-js": "^2.0.3"
   }
 }

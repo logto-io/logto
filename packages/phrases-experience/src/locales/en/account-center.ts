@@ -146,6 +146,10 @@ const account_center = {
       title: 'Passkey added!',
       description: 'Your passkey has been successfully linked to your account.',
     },
+    passkey_deleted: {
+      title: 'Passkey removed!',
+      description: 'Your passkey has been removed from your account.',
+    },
     social: {
       title: 'Social account linked!',
       description: 'Your social account has been successfully linked.',
@@ -161,6 +165,23 @@ const account_center = {
     delete_confirmation_title: 'Remove your backup codes',
     delete_confirmation_description:
       'If you remove these backup codes, you will not be able to verify with it.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Added: {{date}}',
+    last_used: 'Last used: {{date}}',
+    never_used: 'Never',
+    unnamed: 'Unnamed passkey',
+    renamed: 'Passkey renamed successfully.',
+    add_another_title: 'Add another passkey',
+    add_another_description:
+      'Register your passkey using device biometrics, security keys (e.g., YubiKey), or other available methods.',
+    add_passkey: 'Add a passkey',
+    delete_confirmation_title: 'Remove passkey',
+    delete_confirmation_description:
+      'Are you sure you want to remove "{{name}}"? You will no longer be able to use this passkey to sign in.',
+    rename_passkey: 'Rename passkey',
+    rename_description: 'Enter a new name for this passkey.',
   },
 };
 
