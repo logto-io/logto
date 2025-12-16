@@ -30,7 +30,7 @@ const experienceAliasPlugin = (): Plugin => ({
 });
 
 const buildConfig = (mode: string): UserConfig => ({
-  base: '/account-center',
+  base: '/account',
   server: {
     port: 5004,
     hmr: {

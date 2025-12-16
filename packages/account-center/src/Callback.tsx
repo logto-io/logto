@@ -9,7 +9,7 @@ const Callback = () => {
   }, [clearAllTokens]);
 
   const { error } = useHandleSignInCallback(() => {
-    window.location.assign('/account-center');
+    window.location.assign('/account');
   });
 
   if (error) {
@@ -20,7 +20,7 @@ const Callback = () => {
         <button
           type="button"
           onClick={() => {
-            window.location.assign('/account-center');
+            window.location.assign('/account');
           }}
         >
           Back to sign in

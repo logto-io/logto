@@ -9,7 +9,7 @@ import {
   usernameSuccessRoute,
 } from '@ac/constants/routes';
 
-export const accountCenterBasePath = '/account-center';
+export const accountCenterBasePath = '/account';
 const storageKey = 'account-center-route-cache';
 
 const knownRoutePrefixes: readonly string[] = [
