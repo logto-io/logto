@@ -29,6 +29,7 @@ const action = {
   copy: 'คัดลอก',
   verify_via_passkey: 'ยืนยันด้วยกุญแจรหัสผ่าน',
   download: 'ดาวน์โหลด',
+  remove: 'ลบ',
   single_sign_on: 'เข้าสู่ระบบ SSO',
   authorize: 'อนุมัติ',
   use_another_account: 'ใช้บัญชีอื่น',

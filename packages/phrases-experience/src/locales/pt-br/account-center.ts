@@ -98,7 +98,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+      'Você já adicionou um aplicativo autenticador. Por favor, remova o existente primeiro.',
     totp_not_enabled:
       'O aplicativo autenticador não está ativado. Entre em contato com o administrador para ativá-lo.',
     backup_code_already_added:
@@ -129,6 +129,10 @@ const account_center = {
       title: 'Senha alterada!',
       description: 'Sua senha foi atualizada com sucesso.',
     },
+    social: {
+      title: 'Conta social vinculada!',
+      description: 'Sua conta social foi vinculada com sucesso.',
+    },
     totp: {
       title: 'Aplicativo autenticador adicionado!',
       description: 'Seu aplicativo autenticador foi vinculado com sucesso à sua conta.',
@@ -137,6 +141,21 @@ const account_center = {
       title: 'Códigos de backup gerados!',
       description: 'Seus códigos de backup foram salvos. Mantenha-os em um local seguro.',
     },
+    backup_code_deleted: {
+      title: 'Códigos de backup removidos!',
+      description: 'Seus códigos de backup foram removidos da sua conta.',
+    },
+  },
+  backup_code: {
+    title: 'Códigos de backup',
+    description:
+      'Você pode usar um destes códigos de backup para acessar sua conta se tiver problemas durante a verificação em duas etapas de outra forma. Cada código só pode ser usado uma vez.',
+    copy_hint: 'Certifique-se de copiá-los e salvá-los em um lugar seguro.',
+    generate_new_title: 'Gerar novos códigos de backup',
+    generate_new: 'Gerar novos códigos de backup',
+    delete_confirmation_title: 'Remover seus códigos de backup',
+    delete_confirmation_description:
+      'Se você remover esses códigos de backup, não poderá usá-los para verificação.',
   },
 };
 

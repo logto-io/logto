@@ -100,7 +100,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+      'Ya has añadido una aplicación de autenticación. Por favor, elimina la existente primero.',
     totp_not_enabled:
       'La aplicación de autenticación no está habilitada. Por favor, contacta a tu administrador para habilitarla.',
     backup_code_already_added:
@@ -139,6 +139,25 @@ const account_center = {
       title: '¡Códigos de respaldo generados!',
       description: 'Tus códigos de respaldo se han guardado. Guárdalos en un lugar seguro.',
     },
+    backup_code_deleted: {
+      title: '¡Códigos de respaldo eliminados!',
+      description: 'Tus códigos de respaldo han sido eliminados de tu cuenta.',
+    },
+    social: {
+      title: '¡Cuenta social vinculada!',
+      description: 'Tu cuenta social ha sido vinculada exitosamente.',
+    },
+  },
+  backup_code: {
+    title: 'Códigos de respaldo',
+    description:
+      'Puedes usar uno de estos códigos de respaldo para acceder a tu cuenta si tienes problemas durante la verificación en dos pasos de otra manera. Cada código solo se puede usar una vez.',
+    copy_hint: 'Asegúrate de copiarlos y guardarlos en un lugar seguro.',
+    generate_new_title: 'Generar nuevos códigos de respaldo',
+    generate_new: 'Generar nuevos códigos de respaldo',
+    delete_confirmation_title: 'Eliminar tus códigos de respaldo',
+    delete_confirmation_description:
+      'Si eliminas estos códigos de respaldo, no podrás usarlos para verificación.',
   },
 };
 

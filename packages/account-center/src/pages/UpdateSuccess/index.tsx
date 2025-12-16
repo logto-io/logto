@@ -5,11 +5,15 @@ import { useMemo } from 'react';
 import successIllustration from '@ac/assets/icons/success.svg';
 import ErrorPage from '@ac/components/ErrorPage';
 
+type IdentifierType =
+  | SignInIdentifier
+  | 'password'
+  | 'totp'
+  | 'backup_code'
+  | 'backup_code_deleted';
+
 type TranslationMap = Partial<
-  Record<
-    SignInIdentifier | 'password' | 'totp' | 'backup_code',
-    { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey }
-  >
+  Record<IdentifierType, { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey }>
 > & {
   readonly default: { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey };
 };
@@ -39,6 +43,10 @@ const translationMap: TranslationMap = {
     titleKey: 'account_center.update_success.backup_code.title',
     messageKey: 'account_center.update_success.backup_code.description',
   },
+  backup_code_deleted: {
+    titleKey: 'account_center.update_success.backup_code_deleted.title',
+    messageKey: 'account_center.update_success.backup_code_deleted.description',
+  },
   default: {
     titleKey: 'account_center.update_success.default.title',
     messageKey: 'account_center.update_success.default.description',
@@ -46,7 +54,7 @@ const translationMap: TranslationMap = {
 };
 
 type Props = {
-  readonly identifierType?: SignInIdentifier | 'password' | 'totp' | 'backup_code';
+  readonly identifierType?: IdentifierType;
 };
 
 const UpdateSuccess = ({ identifierType }: Props) => {

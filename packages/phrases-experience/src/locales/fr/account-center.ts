@@ -140,6 +140,21 @@ const account_center = {
       title: 'Codes de secours générés !',
       description: 'Vos codes de secours ont été enregistrés. Conservez-les en lieu sûr.',
     },
+    backup_code_deleted: {
+      title: 'Codes de secours supprimés !',
+      description: 'Vos codes de secours ont été supprimés de votre compte.',
+    },
+  },
+  backup_code: {
+    title: 'Codes de secours',
+    description:
+      "Vous pouvez utiliser l'un de ces codes de secours pour accéder à votre compte si vous rencontrez des problèmes lors de la vérification en deux étapes. Chaque code ne peut être utilisé qu'une seule fois.",
+    copy_hint: 'Assurez-vous de les copier et de les conserver dans un endroit sûr.',
+    generate_new_title: 'Générer de nouveaux codes de secours',
+    generate_new: 'Générer de nouveaux codes de secours',
+    delete_confirmation_title: 'Supprimer vos codes de secours',
+    delete_confirmation_description:
+      'Si vous supprimez ces codes de secours, vous ne pourrez plus les utiliser pour la vérification.',
   },
 };
 
