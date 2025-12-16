@@ -46,7 +46,7 @@ const account_center = {
     verification_required: 'A verificação expirou. Confirme novamente a sua identidade.',
   },
   phone: {
-    title: 'Associar telefone',
+    title: 'Associar número de telefone',
     description:
       'Associe o seu número de telefone para iniciar sessão ou ajudar na recuperação da conta.',
     verification_title: 'Introduza o código de verificação do telefone',

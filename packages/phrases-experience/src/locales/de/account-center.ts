@@ -48,7 +48,7 @@ const account_center = {
     verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
   },
   phone: {
-    title: 'Telefon verknüpfen',
+    title: 'Telefonnummer verknüpfen',
     description:
       'Verknüpfe deine Telefonnummer, um dich anzumelden oder die Kontowiederherstellung zu unterstützen.',
     verification_title: 'Telefon-Bestätigungscode eingeben',

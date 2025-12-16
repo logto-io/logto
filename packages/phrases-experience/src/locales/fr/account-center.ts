@@ -46,7 +46,7 @@ const account_center = {
     verification_required: 'La vérification a expiré. Veuillez confirmer à nouveau votre identité.',
   },
   phone: {
-    title: 'Lier le téléphone',
+    title: 'Lier le numéro de téléphone',
     description:
       'Liez votre numéro de téléphone pour vous connecter ou faciliter la récupération du compte.',
     verification_title: 'Saisissez le code de vérification du téléphone',
