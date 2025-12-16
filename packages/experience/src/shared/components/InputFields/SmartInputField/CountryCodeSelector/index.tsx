@@ -1,4 +1,3 @@
-import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ForwardedRef } from 'react';
 import { useState, useMemo, forwardRef } from 'react';
@@ -13,7 +12,7 @@ import styles from './index.module.scss';
 type Props = {
   readonly className?: string;
   readonly value?: string;
-  readonly inputRef?: Nullable<HTMLInputElement>;
+  readonly inputRef?: React.RefObject<HTMLInputElement | undefined>;
   readonly isVisible?: boolean;
   readonly isInteractive?: boolean;
   readonly onChange?: (value: string) => void;

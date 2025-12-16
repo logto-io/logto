@@ -1,4 +1,3 @@
-import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { KeyboardEventHandler } from 'react';
@@ -21,7 +20,7 @@ type Props = {
   readonly isOpen: boolean;
   readonly countryCode: string;
   readonly countryList: CountryMetaData[];
-  readonly inputRef?: Nullable<HTMLInputElement>;
+  readonly inputRef?: React.RefObject<HTMLInputElement | undefined>;
   readonly onClose: () => void;
   readonly onChange?: (value: string) => void;
 };
@@ -62,7 +61,7 @@ const CountryCodeDropdown = ({
   );
 
   const updatePosition = useCallback(() => {
-    const parent = inputRef?.parentElement;
+    const parent = inputRef?.current?.parentElement;
     const offset = 8;
 
     if (!isMobile && parent) {
@@ -83,7 +82,7 @@ const CountryCodeDropdown = ({
     }
 
     setPosition({});
-  }, [inputRef?.parentElement, isMobile]);
+  }, [inputRef, isMobile]);
 
   useLayoutEffect(() => {
     // Use requestAnimationFrame to ensure the parent element is properly painted
