@@ -7,7 +7,6 @@ import AppLoading from '@/components/AppLoading';
 import Topbar from '@/components/Topbar';
 import { isCloud } from '@/consts/env';
 import SubscriptionDataProvider from '@/contexts/SubscriptionDataProvider';
-import useNewSubscriptionData from '@/contexts/SubscriptionDataProvider/use-new-subscription-data';
 import useSubscriptionData from '@/contexts/SubscriptionDataProvider/use-subscription-data';
 import {
   hasSurpassedSubscriptionQuotaLimit,
@@ -30,17 +29,13 @@ export default function AppContent() {
   const { isLoading: isLoadingPreference } = useUserPreferences();
   const { currentTenant } = useContext(TenantsContext);
   const isTenantSuspended = isCloud && currentTenant?.isSuspended;
-  // TODO: @darcyYe remove this
-  const { isLoading: isLoadingSubscriptionData, ...subscriptionDta } = useSubscriptionData();
 
-  const { isLoading: isLoadingNewSubscriptionData, ...newSubscriptionData } =
-    useNewSubscriptionData();
+  const { isLoading: isLoadingSubscriptionData, ...subscriptionData } = useSubscriptionData();
 
   const scrollableContent = useRef<HTMLDivElement>(null);
   const { scrollTop } = useScroll(scrollableContent.current);
 
-  const isLoading =
-    isLoadingPreference || isLoadingSubscriptionData || isLoadingNewSubscriptionData;
+  const isLoading = isLoadingPreference || isLoadingSubscriptionData;
 
   if (isLoading || !currentTenant) {
     return <AppLoading />;
@@ -49,36 +44,35 @@ export default function AppContent() {
   return (
     <SubscriptionDataProvider
       subscriptionDataAndUtils={{
-        ...subscriptionDta,
-        ...newSubscriptionData,
+        ...subscriptionData,
         hasSurpassedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
           quotaKey: T,
           usage?: NewSubscriptionCountBasedUsage[T]
         ) => {
-          if (!shouldEnforcePaywallInUI(newSubscriptionData.currentSubscription.planId, quotaKey)) {
+          if (!shouldEnforcePaywallInUI(subscriptionData.currentSubscription.planId, quotaKey)) {
             return false;
           }
 
           return hasSurpassedSubscriptionQuotaLimit({
             quotaKey,
             usage,
-            subscriptionUsage: newSubscriptionData.currentSubscriptionUsage,
-            subscriptionQuota: newSubscriptionData.currentSubscriptionQuota,
+            subscriptionUsage: subscriptionData.currentSubscriptionUsage,
+            subscriptionQuota: subscriptionData.currentSubscriptionQuota,
           });
         },
         hasReachedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
           quotaKey: T,
           usage?: NewSubscriptionCountBasedUsage[T]
         ) => {
-          if (!shouldEnforcePaywallInUI(newSubscriptionData.currentSubscription.planId, quotaKey)) {
+          if (!shouldEnforcePaywallInUI(subscriptionData.currentSubscription.planId, quotaKey)) {
             return false;
           }
 
           return hasReachedSubscriptionQuotaLimit({
             quotaKey,
             usage,
-            subscriptionUsage: newSubscriptionData.currentSubscriptionUsage,
-            subscriptionQuota: newSubscriptionData.currentSubscriptionQuota,
+            subscriptionUsage: subscriptionData.currentSubscriptionUsage,
+            subscriptionQuota: subscriptionData.currentSubscriptionQuota,
           });
         },
       }}
