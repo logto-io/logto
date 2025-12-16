@@ -2,7 +2,7 @@ import { conditional, joinPath } from '@silverhand/essentials';
 import { useContext, useRef } from 'react';
 import { Navigate, Outlet, useParams } from 'react-router-dom';
 
-import { type NewSubscriptionCountBasedUsage } from '@/cloud/types/router';
+import { type SubscriptionCountBasedUsage } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import Topbar from '@/components/Topbar';
 import { isCloud } from '@/consts/env';
@@ -45,9 +45,9 @@ export default function AppContent() {
     <SubscriptionDataProvider
       subscriptionDataAndUtils={{
         ...subscriptionData,
-        hasSurpassedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
+        hasSurpassedSubscriptionQuotaLimit: <T extends keyof SubscriptionCountBasedUsage>(
           quotaKey: T,
-          usage?: NewSubscriptionCountBasedUsage[T]
+          usage?: SubscriptionCountBasedUsage[T]
         ) => {
           if (!shouldEnforcePaywallInUI(subscriptionData.currentSubscription.planId, quotaKey)) {
             return false;
@@ -60,9 +60,9 @@ export default function AppContent() {
             subscriptionQuota: subscriptionData.currentSubscriptionQuota,
           });
         },
-        hasReachedSubscriptionQuotaLimit: <T extends keyof NewSubscriptionCountBasedUsage>(
+        hasReachedSubscriptionQuotaLimit: <T extends keyof SubscriptionCountBasedUsage>(
           quotaKey: T,
-          usage?: NewSubscriptionCountBasedUsage[T]
+          usage?: SubscriptionCountBasedUsage[T]
         ) => {
           if (!shouldEnforcePaywallInUI(subscriptionData.currentSubscription.planId, quotaKey)) {
             return false;

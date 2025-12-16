@@ -2,9 +2,9 @@ import { type AdminConsoleKey } from '@logto/phrases';
 import { type TFuncKey } from 'i18next';
 
 import {
-  type NewSubscriptionCountBasedUsage,
-  type NewSubscriptionPeriodicUsage,
-  type NewSubscriptionQuota,
+  type SubscriptionCountBasedUsage,
+  type SubscriptionPeriodicUsage,
+  type SubscriptionQuota,
 } from '@/cloud/types/router';
 import {
   resourceAddOnUnitPrice,
@@ -36,7 +36,7 @@ enum CustomUsageKey {
 
 type UsageKey =
   | keyof Pick<
-      NewSubscriptionQuota,
+      SubscriptionQuota,
       | 'mauLimit'
       | 'organizationsLimit'
       | 'mfaEnabled'
@@ -147,7 +147,7 @@ const enterpriseTooltipKeyMap: Record<
   customDomainsLimit: 'custom_domains.tooltip',
 };
 
-const isRbacEnabled = ({ userRolesLimit, machineToMachineRolesLimit }: NewSubscriptionQuota) =>
+const isRbacEnabled = ({ userRolesLimit, machineToMachineRolesLimit }: SubscriptionQuota) =>
   userRolesLimit === null && machineToMachineRolesLimit === null;
 
 export const formatNumber = (number: number): string => {
@@ -162,9 +162,9 @@ export const getUsageByKey = (
     countBasedUsage,
     basicQuota,
   }: {
-    periodicUsage: NewSubscriptionPeriodicUsage;
-    countBasedUsage: NewSubscriptionCountBasedUsage;
-    basicQuota: NewSubscriptionQuota;
+    periodicUsage: SubscriptionPeriodicUsage;
+    countBasedUsage: SubscriptionCountBasedUsage;
+    basicQuota: SubscriptionQuota;
   }
 ) => {
   if (key === 'mauLimit' || key === 'tokenLimit') {
@@ -192,7 +192,7 @@ export const getUsageByKey = (
   return countBasedUsage[key];
 };
 
-export const getQuotaByKey = (key: UsageKey, subscriptionQuota: NewSubscriptionQuota) => {
+export const getQuotaByKey = (key: UsageKey, subscriptionQuota: SubscriptionQuota) => {
   if (key === CustomUsageKey.RbacEnabled) {
     return isRbacEnabled(subscriptionQuota);
   }
@@ -202,7 +202,7 @@ export const getQuotaByKey = (key: UsageKey, subscriptionQuota: NewSubscriptionQ
 
 export const getToolTipByKey = (
   key: UsageKey,
-  basicQuota: NewSubscriptionQuota,
+  basicQuota: SubscriptionQuota,
   isEnterprisePlan: boolean
 ): AdminConsoleKey | undefined => {
   // Do not show tooltip if the RBAC quota is enabled (userRolesLimit and machineToMachineRolesLimit) is unlimited.
@@ -240,7 +240,7 @@ export const getToolTipByKey = (
 
 export const shouldHideQuotaNotice = (
   key: UsageKey,
-  basicQuota: NewSubscriptionQuota,
+  basicQuota: SubscriptionQuota,
   planId: string
 ) => {
   // Only applicable for Pro plans

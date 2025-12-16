@@ -2,10 +2,10 @@ import { ReservedPlanId, TenantTag, defaultManagementApi } from '@logto/schemas'
 import dayjs from 'dayjs';
 
 import {
-  type NewSubscriptionQuota,
+  type SubscriptionQuota,
   type LogtoSkuResponse,
   type TenantResponse,
-  type NewSubscriptionCountBasedUsage,
+  type SubscriptionCountBasedUsage,
 } from '@/cloud/types/router';
 import { defaultRegionName } from '@/components/Region';
 import { LogtoSkuType } from '@/types/skus';
@@ -91,7 +91,7 @@ export const defaultLogtoSku: LogtoSkuResponse = {
 };
 
 /** Quota for Free plan */
-export const defaultSubscriptionQuota: NewSubscriptionQuota = {
+export const defaultSubscriptionQuota: SubscriptionQuota = {
   mauLimit: 50_000,
   tokenLimit: 500_000,
   applicationsLimit: 3,
@@ -119,7 +119,7 @@ export const defaultSubscriptionQuota: NewSubscriptionQuota = {
   customDomainsLimit: 1,
 };
 
-export const defaultSubscriptionUsage: NewSubscriptionCountBasedUsage = {
+export const defaultSubscriptionUsage: SubscriptionCountBasedUsage = {
   applicationsLimit: 0,
   machineToMachineLimit: 0,
   resourcesLimit: 0,

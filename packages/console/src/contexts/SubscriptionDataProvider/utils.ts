@@ -1,10 +1,10 @@
-import { type NewSubscriptionCountBasedUsage } from '@/cloud/types/router';
+import { type SubscriptionCountBasedUsage } from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
 
 import { type SubscriptionUsageOptions } from './types';
 
 /* === For new pricing model === */
-const isSubscriptionUsageWithInLimit = <T extends keyof NewSubscriptionCountBasedUsage>(
+const isSubscriptionUsageWithInLimit = <T extends keyof SubscriptionCountBasedUsage>(
   { quotaKey, subscriptionUsage, subscriptionQuota, usage }: SubscriptionUsageOptions<T>,
   inclusive = true
 ) => {
@@ -33,11 +33,11 @@ const isSubscriptionUsageWithInLimit = <T extends keyof NewSubscriptionCountBase
   return inclusive ? usageValue <= quotaValue : usageValue < quotaValue;
 };
 
-export const hasSurpassedSubscriptionQuotaLimit = <T extends keyof NewSubscriptionCountBasedUsage>(
+export const hasSurpassedSubscriptionQuotaLimit = <T extends keyof SubscriptionCountBasedUsage>(
   options: SubscriptionUsageOptions<T>
 ) => !isSubscriptionUsageWithInLimit(options);
 
-export const hasReachedSubscriptionQuotaLimit = <T extends keyof NewSubscriptionCountBasedUsage>(
+export const hasReachedSubscriptionQuotaLimit = <T extends keyof SubscriptionCountBasedUsage>(
   options: SubscriptionUsageOptions<T>
 ) => !isSubscriptionUsageWithInLimit(options, false);
 /* === For new pricing model === */

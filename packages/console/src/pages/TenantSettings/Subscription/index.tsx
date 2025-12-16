@@ -3,7 +3,7 @@ import { useContext, useEffect } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type TenantUsageAddOnSkus, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
+import { type TenantUsageAddOnSkus, type SubscriptionPeriodicUsage } from '@/cloud/types/router';
 import PageMeta from '@/components/PageMeta';
 import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -26,7 +26,7 @@ function Subscription() {
   const reservedSkus = pickupFeaturedLogtoSkus(logtoSkus);
 
   const { data: periodicUsage, error: periodicUsageError } = useSWR<
-    NewSubscriptionPeriodicUsage,
+    SubscriptionPeriodicUsage,
     ResponseError
   >(isCloud && `/api/tenants/${currentTenantId}/subscription/periodic-usage`, async () =>
     cloudApi.get(`/api/tenants/:tenantId/subscription/periodic-usage`, {

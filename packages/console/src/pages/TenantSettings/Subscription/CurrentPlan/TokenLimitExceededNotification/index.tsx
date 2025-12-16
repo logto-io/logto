@@ -2,7 +2,7 @@ import { useContext, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
-import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
+import { type SubscriptionPeriodicUsage } from '@/cloud/types/router';
 import SkuName from '@/components/SkuName';
 import { subscriptionPage } from '@/consts/pages';
 import { latestProPlanId } from '@/consts/subscriptions';
@@ -16,7 +16,7 @@ import { isPaidPlan, parseExceededSkuQuotaLimitError } from '@/utils/subscriptio
 
 type Props = {
   readonly className?: string;
-  readonly periodicUsage: NewSubscriptionPeriodicUsage;
+  readonly periodicUsage: SubscriptionPeriodicUsage;
 };
 
 function TokenLimitExceededNotification({ periodicUsage, className }: Props) {
