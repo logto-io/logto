@@ -25,8 +25,11 @@ import {
   usernameSuccessRoute,
   totpRoute,
   totpSuccessRoute,
+  backupCodeRoute,
+  backupCodeSuccessRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
+import BackupCodeBinding from './pages/BackupCodeBinding';
 import Email from './pages/Email';
 import Home from './pages/Home';
 import Password from './pages/Password';
@@ -87,11 +90,16 @@ const Main = () => {
       />
       <Route path={passwordSuccessRoute} element={<UpdateSuccess identifierType="password" />} />
       <Route path={totpSuccessRoute} element={<UpdateSuccess identifierType="totp" />} />
+      <Route
+        path={backupCodeSuccessRoute}
+        element={<UpdateSuccess identifierType="backup_code" />}
+      />
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />
       <Route path={usernameRoute} element={<Username />} />
       <Route path={totpRoute} element={<TotpBinding />} />
+      <Route path={backupCodeRoute} element={<BackupCodeBinding />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>
