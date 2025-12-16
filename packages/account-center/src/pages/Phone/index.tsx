@@ -1,3 +1,4 @@
+import { formatPhoneNumberWithCountryCallingCode } from '@experience/utils/country-code';
 import { SignInIdentifier } from '@logto/schemas';
 
 import { updatePrimaryPhone } from '@ac/apis/account';
@@ -19,7 +20,9 @@ const Phone = () => (
     verifyStep={{
       titleKey: 'account_center.phone.verification_title',
       descriptionKey: 'account_center.phone.verification_description',
-      descriptionPropsBuilder: (identifier) => ({ phone_number: identifier }),
+      descriptionPropsBuilder: (identifier) => ({
+        phone_number: formatPhoneNumberWithCountryCallingCode(identifier),
+      }),
       codeInputName: 'phoneCode',
     }}
     mismatchErrorCode="verification_code.phone_mismatch"
