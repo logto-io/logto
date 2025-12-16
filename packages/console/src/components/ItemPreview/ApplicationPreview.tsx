@@ -2,6 +2,7 @@ import { type Application } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import ItemPreview from '.';
@@ -21,8 +22,8 @@ function ApplicationPreview({ data: { id, name, isThirdParty, type } }: Props) {
     <ItemPreview
       title={name}
       subtitle={
-        // We have ensured that SAML applications are always third party in DB schema, we use `||` here to make TypeScript happy.
-        isThirdParty
+        // TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production
+        isThirdParty && !isDevFeaturesEnabled
           ? t(`${applicationTypeI18nKey.thirdParty}.title`)
           : t(`${applicationTypeI18nKey[type]}.title`)
       }

@@ -5,6 +5,7 @@ const applications = {
   subtitle_with_app_type: '为你的 {{name}} 应用程序设置 Logto 身份验证',
   create: '创建应用',
   create_third_party: '创建第三方应用',
+  create_thrid_party_modal_title: '创建第三方应用（{{type}}）',
   application_name: '应用名称',
   application_name_placeholder: '我的应用',
   application_description: '应用描述',
@@ -59,6 +60,13 @@ const applications = {
     'Logto 使用 OIDC 的应用程序实体来帮助识别你的应用程序、管理登录和创建审计日志等任务。',
   third_party_application_placeholder_description:
     '使用 Logto 作为身份提供者为第三方服务提供 OAuth 授权。\n 包括资源访问的预建用户同意屏幕。<a>了解更多</a>',
+  guide: {
+    third_party: {
+      title: '集成第三方应用',
+      description:
+        '使用 Logto 作为身份提供者为第三方服务提供 OAuth 授权。包含用于安全资源访问的预建用户同意屏幕。',
+    },
+  },
 };
 
 export default Object.freeze(applications);

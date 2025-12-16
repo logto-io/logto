@@ -64,7 +64,7 @@ type Props = {
    * Shows a tag in the second row of the header metadata
    * Example usage: Application type "Native / SPA / Traditional"
    */
-  readonly primaryTag?: ReactNode;
+  readonly primaryTag?: ReactNode | ReactNode[];
   /**
    * Shows a status tag in the second row of the header metadata
    * Example usage: Connector status "In use / Not in use" in connector details page
@@ -180,7 +180,14 @@ function DetailsPageHeader({
         <div className={styles.row}>
           {primaryTag && (
             <>
-              {typeof primaryTag === 'string' ? <Tag>{primaryTag}</Tag> : primaryTag}
+              {Array.isArray(primaryTag) ? (
+                // eslint-disable-next-line react/no-array-index-key
+                primaryTag.map((tag, index) => <Tag key={index}>{tag}</Tag>)
+              ) : typeof primaryTag === 'string' ? (
+                <Tag>{primaryTag}</Tag>
+              ) : (
+                primaryTag
+              )}
               <div className={styles.verticalBar} />
             </>
           )}

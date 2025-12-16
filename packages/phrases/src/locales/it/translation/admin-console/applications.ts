@@ -6,6 +6,7 @@ const applications = {
   subtitle_with_app_type: "Configura l'autenticazione Logto per la tua applicazione {{name}}",
   create: 'Crea Applicazione',
   create_third_party: 'Crea applicazione di terze parti',
+  create_thrid_party_modal_title: 'Crea un’applicazione di terze parti ({{type}})',
   application_name: 'Nome applicazione',
   application_name_placeholder: 'La mia App',
   application_description: 'Descrizione applicazione',
@@ -61,6 +62,13 @@ const applications = {
     "Logto utilizza un'entità applicazione per OIDC per aiutarti in compiti come l'identificazione delle tue app, la gestione dell'accesso e la creazione di registri di audit.",
   third_party_application_placeholder_description:
     "Usa Logto come fornitore di identità per fornire l'autorizzazione OAuth ai servizi di terze parti. \n Include uno schermo preconfigurato di consenso utente per l'accesso alle risorse. <a>Scopri di più</a>",
+  guide: {
+    third_party: {
+      title: 'Integra un’applicazione di terze parti',
+      description:
+        'Usa Logto come fornitore di identità per fornire l’autorizzazione OAuth ai servizi di terze parti. Include una schermata di consenso utente preconfigurata per un accesso sicuro alle risorse.',
+    },
+  },
 };
 
 export default Object.freeze(applications);
