@@ -144,6 +144,25 @@ const account_center = {
       description:
         'Ihre Backup-Codes wurden gespeichert. Bewahren Sie sie an einem sicheren Ort auf.',
     },
+    backup_code_deleted: {
+      title: 'Backup-Codes entfernt!',
+      description: 'Ihre Backup-Codes wurden aus Ihrem Konto entfernt.',
+    },
+    social: {
+      title: 'Soziales Konto verknüpft!',
+      description: 'Ihr soziales Konto wurde erfolgreich verknüpft.',
+    },
+  },
+  backup_code: {
+    title: 'Backup-Codes',
+    description:
+      'Sie können einen dieser Backup-Codes verwenden, um auf Ihr Konto zuzugreifen, wenn Sie bei der 2-Faktor-Authentifizierung Probleme haben. Jeder Code kann nur einmal verwendet werden.',
+    copy_hint: 'Kopieren Sie sie und bewahren Sie sie an einem sicheren Ort auf.',
+    generate_new_title: 'Neue Backup-Codes generieren',
+    generate_new: 'Neue Backup-Codes generieren',
+    delete_confirmation_title: 'Backup-Codes entfernen',
+    delete_confirmation_description:
+      'Wenn Sie diese Backup-Codes entfernen, können Sie sich nicht mehr damit verifizieren.',
   },
 };
 

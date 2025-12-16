@@ -137,6 +137,21 @@ const account_center = {
       title: 'Backup codes generated!',
       description: 'Your backup codes have been saved. Keep them in a safe place.',
     },
+    backup_code_deleted: {
+      title: 'Backup codes removed!',
+      description: 'Your backup codes have been removed from your account.',
+    },
+  },
+  backup_code: {
+    title: 'Backup codes',
+    description:
+      'You can use one of these backup codes to access your account if you have trouble during 2-step verification in another ways. Each code may be used only once.',
+    copy_hint: 'Make sure copy them and save in a safe place.',
+    generate_new_title: 'Generate new backup codes',
+    generate_new: 'Generate new backup codes',
+    delete_confirmation_title: 'Remove your backup codes',
+    delete_confirmation_description:
+      'If you remove these backup codes, you will not be able to verify with it.',
   },
 };
 

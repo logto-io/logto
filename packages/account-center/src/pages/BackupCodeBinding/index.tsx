@@ -1,16 +1,26 @@
 import Button from '@experience/shared/components/Button';
 import DynamicT from '@experience/shared/components/DynamicT';
-import { AccountCenterControlValue, MfaFactor, type Mfa } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  MfaFactor,
+  type Mfa,
+  type UserMfaVerificationResponse,
+} from '@logto/schemas';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import { getMfaVerifications, generateBackupCodes, addBackupCodeMfa } from '@ac/apis/mfa';
+import {
+  getMfaVerifications,
+  generateBackupCodes,
+  addBackupCodeMfa,
+  deleteMfaVerification,
+} from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { backupCodeSuccessRoute } from '@ac/constants/routes';
+import { backupCodeSuccessRoute, backupCodeViewRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -19,21 +29,15 @@ import styles from './index.module.scss';
 
 const isBackupCodeEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.BackupCode) ?? false;
 
-const hasAvailableBackupCodes = (
-  mfaVerifications: Array<{ type: string; codes?: Array<{ usedAt?: string }> }>
-) => {
-  return mfaVerifications.some(
-    (verification) =>
-      verification.type === MfaFactor.BackupCode &&
-      verification.codes?.some(({ usedAt }) => !usedAt)
-  );
-};
-
-const hasOtherMfaFactor = (mfaVerifications: Array<{ type: string }>) => {
+const hasOtherMfaFactor = (mfaVerifications: UserMfaVerificationResponse) => {
   return mfaVerifications.some(({ type }) => type !== MfaFactor.BackupCode);
 };
 
-const BackupCodeBinding = () => {
+type Props = {
+  readonly isRegenerate?: boolean;
+};
+
+const BackupCodeBinding = ({ isRegenerate }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
@@ -42,11 +46,13 @@ const BackupCodeBinding = () => {
   const getMfaRequest = useApi(getMfaVerifications);
   const generateCodesRequest = useApi(generateBackupCodes);
   const addBackupCodeRequest = useApi(addBackupCodeMfa);
+  const deleteBackupCodeRequest = useApi(deleteMfaVerification);
   const handleError = useErrorHandler();
 
   const [codes, setCodes] = useState<string[]>();
   const [hasBackupCodeAlready, setHasBackupCodeAlready] = useState<boolean>();
   const [hasOtherMfa, setHasOtherMfa] = useState<boolean>();
+  const [existingBackupCodeId, setExistingBackupCodeId] = useState<string>();
 
   // Check if backup code already exists and if other MFA exists on mount
   useEffect(() => {
@@ -60,20 +66,36 @@ const BackupCodeBinding = () => {
         return;
       }
 
-      const hasBackupCode = hasAvailableBackupCodes(result ?? []);
+      const mfaVerifications = result ?? [];
+      const backupCodeVerification = mfaVerifications.find(
+        (verification) =>
+          verification.type === MfaFactor.BackupCode &&
+          verification.remainCodes !== undefined &&
+          verification.remainCodes > 0
+      );
+      const hasBackupCode = Boolean(backupCodeVerification);
+
       setHasBackupCodeAlready(hasBackupCode);
-      setHasOtherMfa(hasOtherMfaFactor(result ?? []));
+      setHasOtherMfa(hasOtherMfaFactor(mfaVerifications));
+
+      if (backupCodeVerification) {
+        setExistingBackupCodeId(backupCodeVerification.id);
+      }
+
+      if (hasBackupCode && !isRegenerate) {
+        void navigate(backupCodeViewRoute, { replace: true });
+      }
     };
 
     void checkExisting();
-  }, [getMfaRequest]);
+  }, [isRegenerate, getMfaRequest, navigate]);
 
   // Generate backup codes on mount
   useEffect(() => {
     if (
       !verificationId ||
       Boolean(codes) ||
-      hasBackupCodeAlready !== false ||
+      (hasBackupCodeAlready !== false && !isRegenerate) ||
       hasOtherMfa !== true
     ) {
       return;
@@ -93,7 +115,15 @@ const BackupCodeBinding = () => {
     };
 
     void generateCodes();
-  }, [codes, generateCodesRequest, handleError, hasBackupCodeAlready, hasOtherMfa, verificationId]);
+  }, [
+    codes,
+    isRegenerate,
+    generateCodesRequest,
+    handleError,
+    hasBackupCodeAlready,
+    hasOtherMfa,
+    verificationId,
+  ]);
 
   const copyText = useCallback(
     async (text: string, successMessage: string) => {
@@ -120,6 +150,20 @@ const BackupCodeBinding = () => {
       return;
     }
 
+    // If regenerating, delete the existing backup codes first
+    if (isRegenerate && existingBackupCodeId) {
+      const [deleteError] = await deleteBackupCodeRequest(verificationId, existingBackupCodeId);
+      if (deleteError) {
+        await handleError(deleteError, {
+          'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
+            setToast(t('account_center.verification.verification_required'));
+          },
+        });
+        return;
+      }
+    }
+
     const [error] = await addBackupCodeRequest(verificationId, { codes });
 
     if (error) {
@@ -142,7 +186,10 @@ const BackupCodeBinding = () => {
   }, [
     addBackupCodeRequest,
     codes,
+    deleteBackupCodeRequest,
+    existingBackupCodeId,
     handleError,
+    isRegenerate,
     loading,
     navigate,
     setToast,
@@ -169,7 +216,7 @@ const BackupCodeBinding = () => {
     );
   }
 
-  if (hasBackupCodeAlready) {
+  if (hasBackupCodeAlready && !isRegenerate) {
     return (
       <ErrorPage
         titleKey="error.something_went_wrong"

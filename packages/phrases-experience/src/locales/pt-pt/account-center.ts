@@ -100,7 +100,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+      'Já adicionou uma aplicação de autenticação. Por favor, remova a existente primeiro.',
     totp_not_enabled:
       'A aplicação de autenticação não está ativa. Contacte o administrador para a ativar.',
     backup_code_already_added:
@@ -140,6 +140,25 @@ const account_center = {
       description:
         'Os seus códigos de cópia de segurança foram guardados. Guarde-os num local seguro.',
     },
+    backup_code_deleted: {
+      title: 'Códigos de cópia de segurança removidos!',
+      description: 'Os seus códigos de cópia de segurança foram removidos da sua conta.',
+    },
+    social: {
+      title: 'Conta social associada!',
+      description: 'A sua conta social foi associada com sucesso.',
+    },
+  },
+  backup_code: {
+    title: 'Códigos de cópia de segurança',
+    description:
+      'Pode utilizar um destes códigos de cópia de segurança para aceder à sua conta se tiver problemas durante a verificação em duas etapas de outra forma. Cada código só pode ser utilizado uma vez.',
+    copy_hint: 'Certifique-se de os copiar e guardar num local seguro.',
+    generate_new_title: 'Gerar novos códigos de cópia de segurança',
+    generate_new: 'Gerar novos códigos de cópia de segurança',
+    delete_confirmation_title: 'Remover os seus códigos de cópia de segurança',
+    delete_confirmation_description:
+      'Se remover estes códigos de cópia de segurança, não poderá usá-los para verificação.',
   },
 };
 

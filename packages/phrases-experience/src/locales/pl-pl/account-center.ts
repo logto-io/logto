@@ -95,8 +95,7 @@ const account_center = {
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
   },
   mfa: {
-    totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_already_added: 'Dodałeś już aplikację uwierzytelniającą. Najpierw usuń istniejącą.',
     totp_not_enabled:
       'Aplikacja uwierzytelniająca nie jest włączona. Skontaktuj się z administratorem, aby ją włączyć.',
     backup_code_already_added:
@@ -132,9 +131,28 @@ const account_center = {
       description: 'Twoja aplikacja uwierzytelniająca została pomyślnie połączona z kontem.',
     },
     backup_code: {
-      title: 'Wygenerowano kody zapasowe!',
+      title: 'Kody zapasowe wygenerowane!',
       description: 'Twoje kody zapasowe zostały zapisane. Przechowuj je w bezpiecznym miejscu.',
     },
+    backup_code_deleted: {
+      title: 'Kody zapasowe usunięte!',
+      description: 'Twoje kody zapasowe zostały usunięte z konta.',
+    },
+    social: {
+      title: 'Konto społecznościowe połączone!',
+      description: 'Twoje konto społecznościowe zostało pomyślnie połączone.',
+    },
+  },
+  backup_code: {
+    title: 'Kody zapasowe',
+    description:
+      'Możesz użyć jednego z tych kodów zapasowych, aby uzyskać dostęp do swojego konta, jeśli masz problemy z weryfikacją dwuetapową w inny sposób. Każdy kod może być użyty tylko raz.',
+    copy_hint: 'Skopiuj je i przechowuj w bezpiecznym miejscu.',
+    generate_new_title: 'Wygeneruj nowe kody zapasowe',
+    generate_new: 'Wygeneruj nowe kody zapasowe',
+    delete_confirmation_title: 'Usuń kody zapasowe',
+    delete_confirmation_description:
+      'Jeśli usuniesz te kody zapasowe, nie będziesz mógł ich używać do weryfikacji.',
   },
 };
 

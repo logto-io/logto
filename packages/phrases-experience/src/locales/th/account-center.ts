@@ -93,8 +93,7 @@ const account_center = {
     error_invalid_code: 'รหัสยืนยันไม่ถูกต้องหรือหมดอายุแล้ว',
   },
   mfa: {
-    totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_already_added: 'คุณได้เพิ่มแอป Authenticator แล้ว โปรดลบแอปที่มีอยู่ก่อน',
     totp_not_enabled: 'แอป Authenticator ไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อเปิดใช้งาน',
     backup_code_already_added: 'คุณมีรหัสสำรองที่ใช้งานอยู่แล้ว โปรดใช้หรือลบออกก่อนที่จะสร้างใหม่',
     backup_code_not_enabled: 'รหัสสำรองไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบของคุณเพื่อเปิดใช้งาน',
@@ -127,8 +126,27 @@ const account_center = {
     },
     backup_code: {
       title: 'สร้างรหัสสำรองแล้ว!',
-      description: 'บันทึกรหัสสำรองของคุณแล้ว เก็บไว้ในที่ปลอดภัย',
+      description: 'รหัสสำรองของคุณถูกบันทึกแล้ว โปรดเก็บรักษาไว้ในที่ปลอดภัย',
     },
+    backup_code_deleted: {
+      title: 'ลบรหัสสำรองแล้ว!',
+      description: 'รหัสสำรองของคุณถูกลบออกจากบัญชีแล้ว',
+    },
+    social: {
+      title: 'เชื่อมต่อบัญชีโซเชียลแล้ว!',
+      description: 'บัญชีโซเชียลของคุณได้รับการเชื่อมต่อเรียบร้อยแล้ว',
+    },
+  },
+  backup_code: {
+    title: 'รหัสสำรอง',
+    description:
+      'คุณสามารถใช้รหัสสำรองเหล่านี้เพื่อเข้าถึงบัญชีของคุณหากมีปัญหาในการยืนยันตัวตนแบบ 2 ขั้นตอน แต่ละรหัสสามารถใช้ได้เพียงครั้งเดียว',
+    copy_hint: 'คัดลอกและเก็บรักษาไว้ในที่ปลอดภัย',
+    generate_new_title: 'สร้างรหัสสำรองใหม่',
+    generate_new: 'สร้างรหัสสำรองใหม่',
+    delete_confirmation_title: 'ลบรหัสสำรองของคุณ',
+    delete_confirmation_description:
+      'หากคุณลบรหัสสำรองเหล่านี้ คุณจะไม่สามารถใช้รหัสเหล่านี้ในการยืนยันได้',
   },
 };
 

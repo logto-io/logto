@@ -122,9 +122,23 @@ const account_center = {
       description: '身份验证器应用已成功关联到你的账号。',
     },
     backup_code: {
-      title: '备份码已生成！',
-      description: '你的备份码已保存，请妥善保管。',
+      title: '备用码已生成！',
+      description: '您的备用码已保存。请将它们保存在安全的地方。',
     },
+    backup_code_deleted: {
+      title: '备用码已移除！',
+      description: '您的备用码已从账户中移除。',
+    },
+  },
+  backup_code: {
+    title: '备用码',
+    description:
+      '如果您在两步验证时遇到问题，可以使用这些备用码中的一个来访问您的帐户。每个代码只能使用一次。',
+    copy_hint: '请务必复制并保存在安全的地方。',
+    generate_new_title: '生成新的备用码',
+    generate_new: '生成新的备用码',
+    delete_confirmation_title: '移除备用码',
+    delete_confirmation_description: '如果移除这些备用码，您将无法使用它们进行验证。',
   },
 };
 

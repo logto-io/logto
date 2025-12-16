@@ -94,8 +94,7 @@ const account_center = {
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
   },
   mfa: {
-    totp_already_added:
-      'You have already added an authenticator app. Please remove the existing one first.',
+    totp_already_added: '認証アプリは既に追加されています。まず既存のものを削除してください。',
     totp_not_enabled: '認証アプリは有効になっていません。管理者に連絡して有効にしてください。',
     backup_code_already_added:
       'すでに有効なバックアップコードがあります。新しいコードを生成する前に、これらを使用するか削除してください。',
@@ -125,6 +124,10 @@ const account_center = {
       title: 'パスワードを変更しました！',
       description: 'パスワードが正常に更新されました。',
     },
+    social: {
+      title: 'ソーシャルアカウントをリンクしました！',
+      description: 'ソーシャルアカウントが正常にリンクされました。',
+    },
     totp: {
       title: '認証アプリを追加しました！',
       description: '認証アプリがアカウントに正常にリンクされました。',
@@ -133,6 +136,21 @@ const account_center = {
       title: 'バックアップコードが生成されました！',
       description: 'バックアップコードが保存されました。安全な場所に保管してください。',
     },
+    backup_code_deleted: {
+      title: 'バックアップコードを削除しました！',
+      description: 'バックアップコードがアカウントから削除されました。',
+    },
+  },
+  backup_code: {
+    title: 'バックアップコード',
+    description:
+      '2段階認証で問題が発生した場合、これらのバックアップコードのいずれかを使用してアカウントにアクセスできます。各コードは1回のみ使用できます。',
+    copy_hint: 'コピーして安全な場所に保存してください。',
+    generate_new_title: '新しいバックアップコードを生成',
+    generate_new: '新しいバックアップコードを生成',
+    delete_confirmation_title: 'バックアップコードを削除',
+    delete_confirmation_description:
+      'これらのバックアップコードを削除すると、認証に使用できなくなります。',
   },
 };
 

@@ -129,6 +129,25 @@ const account_center = {
       title: '백업 코드가 생성되었습니다!',
       description: '백업 코드가 저장되었습니다. 안전한 곳에 보관하십시오.',
     },
+    backup_code_deleted: {
+      title: '백업 코드가 삭제되었습니다!',
+      description: '백업 코드가 계정에서 제거되었습니다.',
+    },
+    social: {
+      title: '소셜 계정 연결됨!',
+      description: '소셜 계정이 성공적으로 연결되었습니다.',
+    },
+  },
+  backup_code: {
+    title: '백업 코드',
+    description:
+      '2단계 인증에 문제가 있는 경우 이 백업 코드 중 하나를 사용하여 계정에 액세스할 수 있습니다. 각 코드는 한 번만 사용할 수 있습니다.',
+    copy_hint: '복사하여 안전한 곳에 보관하세요.',
+    generate_new_title: '새 백업 코드 생성',
+    generate_new: '새 백업 코드 생성',
+    delete_confirmation_title: '백업 코드 삭제',
+    delete_confirmation_description:
+      '이 백업 코드를 삭제하면 더 이상 이를 사용하여 인증할 수 없습니다.',
   },
 };
 
