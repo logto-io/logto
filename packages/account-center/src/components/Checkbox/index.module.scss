@@ -1,0 +1,56 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  .icon {
+    margin-inline-end: _.unit(2);
+    width: 18px;
+    height: 18px;
+
+    &.small {
+      width: 16px;
+      height: 16px;
+    }
+
+    > * {
+      display: none;
+
+      &:nth-child(1) {
+        color: var(--color-type-secondary);
+      }
+
+      &:nth-child(2) {
+        color: var(--color-brand-default);
+      }
+    }
+  }
+
+  input {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    inset-inline-start: 0;
+    top: 0;
+    margin: 0;
+    opacity: 0%;
+  }
+
+  input:not(:checked):not(:disabled) ~ .icon > *:nth-child(1),
+  input:checked:not(:disabled) ~ .icon > *:nth-child(2),
+  input:checked:not(:disabled) ~ .icon > *:nth-child(3) {
+    display: block;
+  }
+}
+
+:global(body.mobile) {
+  .checkbox {
+    .icon,
+    .icon.small {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
