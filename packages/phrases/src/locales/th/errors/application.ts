@@ -4,6 +4,8 @@ const application = {
   invalid_role_type: 'ไม่สามารถกำหนดบทบาทประเภทผู้ใช้ให้กับแอปพลิเคชัน machine to machine ได้',
   invalid_third_party_application_type:
     'เฉพาะแอปพลิเคชันเว็บแบบเดิมเท่านั้นที่สามารถถูกระบุว่าเป็นแอปของบุคคลที่สาม',
+  invalid_third_party_application_type_dev:
+    'เฉพาะแอปพลิเคชันเว็บแบบเดิม แอปพลิเคชันหน้าเดียว และแอปพลิเคชันเนทีฟเท่านั้นที่สามารถถูกระบุว่าเป็นแอปของบุคคลที่สาม',
   third_party_application_only: 'ฟีเจอร์นี้ใช้ได้เฉพาะกับแอปพลิเคชันบุคคลที่สามเท่านั้น',
   user_consent_scopes_not_found: 'พบขอบเขตการยินยอมของผู้ใช้ไม่ถูกต้อง',
   consent_management_api_scopes_not_allowed: 'ไม่อนุญาตให้ใช้ขอบเขต Management API',

@@ -5,6 +5,8 @@ const application = {
     'ユーザータイプのロールをマシン間アプリケーションに割り当てることはできません。',
   invalid_third_party_application_type:
     '伝統的な Web アプリケーションにのみ、サードパーティアプリとしてマークできます。',
+  invalid_third_party_application_type_dev:
+    '伝統的な Web アプリケーション、シングルページアプリケーション、ネイティブアプリケーションのみ、サードパーティアプリとしてマークできます。',
   third_party_application_only: 'この機能はサードパーティアプリケーションにのみ利用可能です。',
   user_consent_scopes_not_found: '無効なユーザー同意スコープ。',
   consent_management_api_scopes_not_allowed: '管理 API スコープは許可されていません。',
