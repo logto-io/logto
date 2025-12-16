@@ -59,7 +59,7 @@ const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
 
 const buildAccountCenterClientMetadata = (envSet: EnvSet): AllClientMetadata => {
   const urlStrings = getTenantUrls(envSet.tenantId, EnvSet.values).map(
-    (url) => appendPath(url, '/account-center').href
+    (url) => appendPath(url, '/account').href
   );
 
   return {
