@@ -1,15 +1,18 @@
 import { useLogto } from '@logto/react';
 import { ExtraParamsKey } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useContext, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useRedirectUri from '@/hooks/use-redirect-uri';
+import { saveRedirect } from '@/utils/storage';
 
 enum OneTimeTokenLandingSearchParams {
   OneTimeToken = 'one_time_token',
   Email = 'email',
+  Redirect = 'redirect',
 }
 
 /** The one-time token landing page for sign-in with one-time tokens. */
@@ -22,6 +25,7 @@ function OneTimeTokenLanding() {
 
   const oneTimeToken = searchParams.get(OneTimeTokenLandingSearchParams.OneTimeToken);
   const email = searchParams.get(OneTimeTokenLandingSearchParams.Email);
+  const redirectPath = searchParams.get(OneTimeTokenLandingSearchParams.Redirect);
 
   useEffect(() => {
     if (isAuthenticated || !oneTimeToken || !email) {
@@ -29,6 +33,8 @@ function OneTimeTokenLanding() {
       navigate('/', { replace: true });
       return;
     }
+
+    saveRedirect(conditional(redirectPath && new URL(redirectPath)));
 
     void signIn({
       redirectUri,
@@ -42,7 +48,16 @@ function OneTimeTokenLanding() {
         [ExtraParamsKey.LoginHint]: email,
       },
     });
-  }, [isAuthenticated, navigate, navigateTenant, signIn, redirectUri, oneTimeToken, email]);
+  }, [
+    isAuthenticated,
+    navigate,
+    navigateTenant,
+    signIn,
+    redirectUri,
+    oneTimeToken,
+    email,
+    redirectPath,
+  ]);
 
   return <AppLoading />;
 }

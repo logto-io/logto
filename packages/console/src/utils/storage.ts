@@ -5,8 +5,9 @@ import { z } from 'zod';
 import { storageKeys } from '@/consts';
 
 /** Save the current url to session storage so that we can redirect to it after sign in. */
-export const saveRedirect = () => {
-  const { pathname, search, hash } = window.location;
+export const saveRedirect = (target?: URL) => {
+  const isValidTarget = target && target.origin === window.location.origin;
+  const { pathname, search, hash } = isValidTarget ? target : window.location;
   sessionStorage.setItem(
     storageKeys.redirectAfterSignIn,
     JSON.stringify({ pathname, search, hash })
