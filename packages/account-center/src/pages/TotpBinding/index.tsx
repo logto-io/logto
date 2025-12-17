@@ -116,7 +116,7 @@ const TotpBinding = () => {
   }, [secret, setToast, t]);
 
   const handleSubmit = useCallback(
-    async (event?: FormEvent) => {
+    async (event?: FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
       if (!verificationId || !secret || loading || !isCodeReady(codeInput)) {
         return;

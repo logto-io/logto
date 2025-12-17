@@ -104,7 +104,7 @@ const CodeVerification = ({
   }, [countdown]);
 
   const handleSendCode = useCallback(
-    async (event?: FormEvent) => {
+    async (event?: FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
       if (!identifier || loading) {
         return;

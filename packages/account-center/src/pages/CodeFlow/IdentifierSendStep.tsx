@@ -55,7 +55,7 @@ const IdentifierSendStep = ({
     setPendingValue(value);
   }, [value]);
 
-  const handleSend = async (event?: FormEvent) => {
+  const handleSend = async (event?: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     const target = pendingValue.trim();
 
