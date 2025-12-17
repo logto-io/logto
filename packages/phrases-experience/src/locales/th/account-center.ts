@@ -61,11 +61,13 @@ const account_center = {
     description: 'สร้างรหัสผ่านใหม่เพื่อความปลอดภัยของบัญชี',
     success: 'อัปเดตรหัสผ่านเรียบร้อยแล้ว',
   },
+
   code_verification: {
     send: 'ส่งรหัสยืนยัน',
     resend: 'ส่งรหัสอีกครั้ง',
     resend_countdown: 'ยังไม่ได้รับใช่ไหม? ส่งใหม่ได้หลัง {{seconds}} วินาที',
   },
+
   email_verification: {
     title: 'ยืนยันอีเมลของคุณ',
     prepare_description:
@@ -98,6 +100,7 @@ const account_center = {
     backup_code_already_added: 'คุณมีรหัสสำรองที่ใช้งานอยู่แล้ว โปรดใช้หรือลบออกก่อนที่จะสร้างใหม่',
     backup_code_not_enabled: 'รหัสสำรองไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบของคุณเพื่อเปิดใช้งาน',
     backup_code_requires_other_mfa: 'รหัสสำรองต้องมีการตั้งค่าวิธี MFA อื่นก่อน',
+    passkey_not_enabled: 'Passkey ไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อเปิดใช้งาน',
   },
   update_success: {
     default: {
@@ -116,6 +119,7 @@ const account_center = {
       title: 'เปลี่ยนชื่อผู้ใช้แล้ว!',
       description: 'ชื่อผู้ใช้ของคุณได้รับการอัปเดตเรียบร้อยแล้ว',
     },
+
     password: {
       title: 'เปลี่ยนรหัสผ่านแล้ว!',
       description: 'รหัสผ่านของคุณได้รับการอัปเดตเรียบร้อยแล้ว',
@@ -132,6 +136,10 @@ const account_center = {
       title: 'ลบรหัสสำรองแล้ว!',
       description: 'รหัสสำรองของคุณถูกลบออกจากบัญชีแล้ว',
     },
+    passkey: {
+      title: 'เพิ่ม Passkey แล้ว!',
+      description: 'Passkey ของคุณได้รับการเชื่อมต่อกับบัญชีของคุณเรียบร้อยแล้ว',
+    },
     social: {
       title: 'เชื่อมต่อบัญชีโซเชียลแล้ว!',
       description: 'บัญชีโซเชียลของคุณได้รับการเชื่อมต่อเรียบร้อยแล้ว',
@@ -145,8 +153,7 @@ const account_center = {
     generate_new_title: 'สร้างรหัสสำรองใหม่',
     generate_new: 'สร้างรหัสสำรองใหม่',
     delete_confirmation_title: 'ลบรหัสสำรองของคุณ',
-    delete_confirmation_description:
-      'หากคุณลบรหัสสำรองเหล่านี้ คุณจะไม่สามารถใช้รหัสเหล่านี้ในการยืนยันได้',
+    delete_confirmation_description: 'หากคุณลบรหัสสำรองเหล่านี้ คุณจะไม่สามารถใช้ยืนยันตัวตนได้',
   },
 };
 

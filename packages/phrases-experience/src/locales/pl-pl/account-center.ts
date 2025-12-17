@@ -61,11 +61,13 @@ const account_center = {
     description: 'Utwórz nowe hasło, aby zabezpieczyć swoje konto.',
     success: 'Hasło zostało pomyślnie zaktualizowane.',
   },
+
   code_verification: {
     send: 'Wyślij kod weryfikacyjny',
     resend: 'Wyślij kod ponownie',
     resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
   },
+
   email_verification: {
     title: 'Zweryfikuj swój e-mail',
     prepare_description:
@@ -95,7 +97,7 @@ const account_center = {
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
   },
   mfa: {
-    totp_already_added: 'Dodałeś już aplikację uwierzytelniającą. Najpierw usuń istniejącą.',
+    totp_already_added: 'Już dodano aplikację uwierzytelniającą. Najpierw usuń istniejącą.',
     totp_not_enabled:
       'Aplikacja uwierzytelniająca nie jest włączona. Skontaktuj się z administratorem, aby ją włączyć.',
     backup_code_already_added:
@@ -104,6 +106,8 @@ const account_center = {
       'Kod zapasowy nie jest włączony. Skontaktuj się z administratorem, aby go włączyć.',
     backup_code_requires_other_mfa:
       'Kody zapasowe wymagają wcześniejszego skonfigurowania innej metody MFA.',
+    passkey_not_enabled:
+      'Passkey nie jest włączony. Skontaktuj się z administratorem, aby go włączyć.',
   },
   update_success: {
     default: {
@@ -122,6 +126,7 @@ const account_center = {
       title: 'Nazwa użytkownika zmieniona!',
       description: 'Twoja nazwa użytkownika została pomyślnie zaktualizowana.',
     },
+
     password: {
       title: 'Hasło zmienione!',
       description: 'Twoje hasło zostało pomyślnie zaktualizowane.',
@@ -138,6 +143,10 @@ const account_center = {
       title: 'Kody zapasowe usunięte!',
       description: 'Twoje kody zapasowe zostały usunięte z konta.',
     },
+    passkey: {
+      title: 'Passkey dodany!',
+      description: 'Twój passkey został pomyślnie połączony z kontem.',
+    },
     social: {
       title: 'Konto społecznościowe połączone!',
       description: 'Twoje konto społecznościowe zostało pomyślnie połączone.',
@@ -152,7 +161,7 @@ const account_center = {
     generate_new: 'Wygeneruj nowe kody zapasowe',
     delete_confirmation_title: 'Usuń kody zapasowe',
     delete_confirmation_description:
-      'Jeśli usuniesz te kody zapasowe, nie będziesz mógł ich używać do weryfikacji.',
+      'Jeśli usuniesz te kody zapasowe, nie będziesz mógł ich użyć do weryfikacji.',
   },
 };
 

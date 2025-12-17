@@ -67,11 +67,13 @@ const account_center = {
     description: 'Erstelle ein neues Passwort, um dein Konto zu schützen.',
     success: 'Passwort erfolgreich aktualisiert.',
   },
+
   code_verification: {
     send: 'Bestätigungscode senden',
     resend: 'Code erneut senden',
     resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
   },
+
   email_verification: {
     title: 'Bestätige deine E-Mail',
     prepare_description:
@@ -113,6 +115,8 @@ const account_center = {
       'Backup-Code ist nicht aktiviert. Bitte wenden Sie sich an Ihren Administrator, um ihn zu aktivieren.',
     backup_code_requires_other_mfa:
       'Für Backup-Codes muss zuerst eine andere MFA-Methode eingerichtet werden.',
+    passkey_not_enabled:
+      'Passkey ist nicht aktiviert. Bitte kontaktieren Sie Ihren Administrator, um es zu aktivieren.',
   },
   update_success: {
     default: {
@@ -131,6 +135,7 @@ const account_center = {
       title: 'Benutzername geändert!',
       description: 'Ihr Benutzername wurde erfolgreich aktualisiert.',
     },
+
     password: {
       title: 'Passwort geändert!',
       description: 'Ihr Passwort wurde erfolgreich aktualisiert.',
@@ -148,6 +153,10 @@ const account_center = {
       title: 'Backup-Codes entfernt!',
       description: 'Ihre Backup-Codes wurden aus Ihrem Konto entfernt.',
     },
+    passkey: {
+      title: 'Passkey hinzugefügt!',
+      description: 'Ihr Passkey wurde erfolgreich mit Ihrem Konto verknüpft.',
+    },
     social: {
       title: 'Soziales Konto verknüpft!',
       description: 'Ihr soziales Konto wurde erfolgreich verknüpft.',
@@ -162,7 +171,7 @@ const account_center = {
     generate_new: 'Neue Backup-Codes generieren',
     delete_confirmation_title: 'Backup-Codes entfernen',
     delete_confirmation_description:
-      'Wenn Sie diese Backup-Codes entfernen, können Sie sich nicht mehr damit verifizieren.',
+      'Wenn Sie diese Backup-Codes entfernen, können Sie sie nicht mehr zur Verifizierung verwenden.',
   },
 };
 

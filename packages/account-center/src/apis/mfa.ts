@@ -1,4 +1,9 @@
-import { type UserMfaVerificationResponse, MfaFactor } from '@logto/schemas';
+import {
+  type UserMfaVerificationResponse,
+  MfaFactor,
+  type WebAuthnRegistrationOptions,
+  type BindWebAuthnPayload,
+} from '@logto/schemas';
 
 import { verificationRecordIdHeader } from './account';
 import { createAuthenticatedKy } from './base-ky';
@@ -84,4 +89,41 @@ export const deleteMfaVerification = async (
       headers: { [verificationRecordIdHeader]: verificationRecordId },
     }
   );
+};
+
+export type WebAuthnRegistrationResponse = {
+  verificationRecordId: string;
+  registrationOptions: WebAuthnRegistrationOptions;
+  expiresAt: string;
+};
+
+export const createWebAuthnRegistration = async (
+  accessToken: string
+): Promise<WebAuthnRegistrationResponse> => {
+  return createAuthenticatedKy(accessToken)
+    .post('/api/verifications/web-authn/registration')
+    .json<WebAuthnRegistrationResponse>();
+};
+
+export const verifyWebAuthnRegistration = async (
+  accessToken: string,
+  verificationRecordId: string,
+  payload: BindWebAuthnPayload
+): Promise<{ verificationRecordId: string }> => {
+  return createAuthenticatedKy(accessToken)
+    .post('/api/verifications/web-authn/registration/verify', {
+      json: { verificationRecordId, payload },
+    })
+    .json<{ verificationRecordId: string }>();
+};
+
+export const addWebAuthnMfa = async (
+  accessToken: string,
+  verificationRecordId: string,
+  payload: { newIdentifierVerificationRecordId: string; name?: string }
+) => {
+  await createAuthenticatedKy(accessToken).post('/api/my-account/mfa-verifications', {
+    json: { type: MfaFactor.WebAuthn, ...payload },
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
 };

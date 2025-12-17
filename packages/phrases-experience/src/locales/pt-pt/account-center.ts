@@ -65,11 +65,13 @@ const account_center = {
     description: 'Crie uma nova palavra-passe para proteger a sua conta.',
     success: 'Palavra-passe atualizada com sucesso.',
   },
+
   code_verification: {
     send: 'Enviar código de verificação',
     resend: 'Reenviar código',
     resend_countdown: 'Ainda não recebeu? Reenvie após {{seconds}} s.',
   },
+
   email_verification: {
     title: 'Verifique o seu e-mail',
     prepare_description:
@@ -99,8 +101,7 @@ const account_center = {
     error_invalid_code: 'O código de verificação é inválido ou expirou.',
   },
   mfa: {
-    totp_already_added:
-      'Já adicionou uma aplicação de autenticação. Por favor, remova a existente primeiro.',
+    totp_already_added: 'Já adicionou uma aplicação de autenticação. Remova a existente primeiro.',
     totp_not_enabled:
       'A aplicação de autenticação não está ativa. Contacte o administrador para a ativar.',
     backup_code_already_added:
@@ -109,6 +110,7 @@ const account_center = {
       'O código de cópia de segurança não está ativado. Contacte o administrador para o ativar.',
     backup_code_requires_other_mfa:
       'Os códigos de cópia de segurança requerem que outro método MFA seja configurado primeiro.',
+    passkey_not_enabled: 'Passkey não está ativado. Contacte o administrador para o ativar.',
   },
   update_success: {
     default: {
@@ -127,6 +129,7 @@ const account_center = {
       title: 'Nome de utilizador alterado!',
       description: 'O seu nome de utilizador foi atualizado com sucesso.',
     },
+
     password: {
       title: 'Palavra-passe alterada!',
       description: 'A sua palavra-passe foi atualizada com sucesso.',
@@ -144,6 +147,10 @@ const account_center = {
       title: 'Códigos de cópia de segurança removidos!',
       description: 'Os seus códigos de cópia de segurança foram removidos da sua conta.',
     },
+    passkey: {
+      title: 'Passkey adicionado!',
+      description: 'O seu passkey foi associado com sucesso à sua conta.',
+    },
     social: {
       title: 'Conta social associada!',
       description: 'A sua conta social foi associada com sucesso.',
@@ -158,7 +165,7 @@ const account_center = {
     generate_new: 'Gerar novos códigos de cópia de segurança',
     delete_confirmation_title: 'Remover os seus códigos de cópia de segurança',
     delete_confirmation_description:
-      'Se remover estes códigos de cópia de segurança, não poderá usá-los para verificação.',
+      'Se remover estes códigos de cópia de segurança, não poderá utilizá-los para verificação.',
   },
 };
 

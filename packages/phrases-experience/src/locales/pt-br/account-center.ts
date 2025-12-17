@@ -63,11 +63,13 @@ const account_center = {
     description: 'Crie uma nova senha para proteger sua conta.',
     success: 'Senha atualizada com sucesso.',
   },
+
   code_verification: {
     send: 'Enviar código de verificação',
     resend: 'Reenviar código',
     resend_countdown: 'Ainda não recebeu? Reenvie após {{seconds}} s.',
   },
+
   email_verification: {
     title: 'Verifique seu e-mail',
     prepare_description:
@@ -98,7 +100,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'Você já adicionou um aplicativo autenticador. Por favor, remova o existente primeiro.',
+      'Você já adicionou um aplicativo autenticador. Remova o existente primeiro.',
     totp_not_enabled:
       'O aplicativo autenticador não está ativado. Entre em contato com o administrador para ativá-lo.',
     backup_code_already_added:
@@ -107,6 +109,8 @@ const account_center = {
       'O código de backup não está ativado. Entre em contato com o administrador para ativá-lo.',
     backup_code_requires_other_mfa:
       'Os códigos de backup exigem que outro método MFA seja configurado primeiro.',
+    passkey_not_enabled:
+      'Passkey não está ativado. Entre em contato com o administrador para ativá-lo.',
   },
   update_success: {
     default: {
@@ -129,10 +133,6 @@ const account_center = {
       title: 'Senha alterada!',
       description: 'Sua senha foi atualizada com sucesso.',
     },
-    social: {
-      title: 'Conta social vinculada!',
-      description: 'Sua conta social foi vinculada com sucesso.',
-    },
     totp: {
       title: 'Aplicativo autenticador adicionado!',
       description: 'Seu aplicativo autenticador foi vinculado com sucesso à sua conta.',
@@ -145,6 +145,14 @@ const account_center = {
       title: 'Códigos de backup removidos!',
       description: 'Seus códigos de backup foram removidos da sua conta.',
     },
+    passkey: {
+      title: 'Passkey adicionado!',
+      description: 'Seu passkey foi vinculado com sucesso à sua conta.',
+    },
+    social: {
+      title: 'Conta social vinculada!',
+      description: 'Sua conta social foi vinculada com sucesso.',
+    },
   },
   backup_code: {
     title: 'Códigos de backup',
@@ -155,7 +163,7 @@ const account_center = {
     generate_new: 'Gerar novos códigos de backup',
     delete_confirmation_title: 'Remover seus códigos de backup',
     delete_confirmation_description:
-      'Se você remover esses códigos de backup, não poderá usá-los para verificação.',
+      'Se você remover estes códigos de backup, não poderá usá-los para verificação.',
   },
 };
 

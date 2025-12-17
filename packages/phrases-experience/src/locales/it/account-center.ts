@@ -65,11 +65,13 @@ const account_center = {
     description: 'Crea una nuova password per proteggere il tuo account.',
     success: 'Password aggiornata con successo.',
   },
+
   code_verification: {
     send: 'Invia codice di verifica',
     resend: 'Invia di nuovo il codice',
     resend_countdown: "Non l'hai ricevuto? Reinvia dopo {{seconds}} s.",
   },
+
   email_verification: {
     title: 'Verifica la tua e-mail',
     prepare_description:
@@ -109,11 +111,20 @@ const account_center = {
       'Il codice di backup non è abilitato. Contatta il tuo amministratore per abilitarlo.',
     backup_code_requires_other_mfa:
       'I codici di backup richiedono che venga prima configurato un altro metodo MFA.',
+    passkey_not_enabled: "Passkey non è abilitato. Contatta l'amministratore per abilitarlo.",
   },
   update_success: {
     default: {
       title: 'Aggiornato!',
       description: 'Le tue informazioni sono state aggiornate.',
+    },
+    password: {
+      title: 'Password cambiata!',
+      description: 'La tua password è stata aggiornata con successo.',
+    },
+    username: {
+      title: 'Nome utente cambiato!',
+      description: 'Il tuo nome utente è stato aggiornato con successo.',
     },
     email: {
       title: 'Email aggiornata!',
@@ -122,14 +133,6 @@ const account_center = {
     phone: {
       title: 'Numero di telefono aggiornato!',
       description: 'Il tuo numero di telefono è stato aggiornato con successo.',
-    },
-    username: {
-      title: 'Nome utente cambiato!',
-      description: 'Il tuo nome utente è stato aggiornato con successo.',
-    },
-    password: {
-      title: 'Password cambiata!',
-      description: 'La tua password è stata aggiornata con successo.',
     },
     social: {
       title: 'Account social collegato!',
@@ -146,6 +149,10 @@ const account_center = {
     backup_code_deleted: {
       title: 'Codici di backup rimossi!',
       description: 'I tuoi codici di backup sono stati rimossi dal tuo account.',
+    },
+    passkey: {
+      title: 'Passkey aggiunto!',
+      description: 'Il tuo passkey è stato collegato con successo al tuo account.',
     },
   },
   backup_code: {

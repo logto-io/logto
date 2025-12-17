@@ -60,11 +60,13 @@ const account_center = {
     description: '계정을 안전하게 보호할 새 비밀번호를 만들어 주세요.',
     success: '비밀번호가 성공적으로 업데이트되었습니다.',
   },
+
   code_verification: {
     send: '인증 코드 보내기',
     resend: '코드 다시 보내기',
     resend_countdown: '아직 받지 못하셨나요? {{seconds}}초 후에 다시 보내세요.',
   },
+
   email_verification: {
     title: '이메일 확인',
     prepare_description: '계정 보안을 위해 본인인지 확인하세요. 인증 코드를 이메일로 보냅니다.',
@@ -99,6 +101,7 @@ const account_center = {
     backup_code_not_enabled:
       '백업 코드가 활성화되지 않았습니다. 관리자에게 문의하여 활성화하십시오.',
     backup_code_requires_other_mfa: '백업 코드를 사용하려면 다른 MFA 방법을 먼저 설정해야 합니다.',
+    passkey_not_enabled: '패스키가 활성화되지 않았습니다. 관리자에게 문의하여 활성화하세요.',
   },
   update_success: {
     default: {
@@ -117,6 +120,7 @@ const account_center = {
       title: '사용자 이름 변경됨!',
       description: '사용자 이름이 성공적으로 업데이트되었습니다.',
     },
+
     password: {
       title: '비밀번호 변경됨!',
       description: '비밀번호가 성공적으로 업데이트되었습니다.',
@@ -131,7 +135,11 @@ const account_center = {
     },
     backup_code_deleted: {
       title: '백업 코드가 삭제되었습니다!',
-      description: '백업 코드가 계정에서 제거되었습니다.',
+      description: '백업 코드가 계정에서 삭제되었습니다.',
+    },
+    passkey: {
+      title: '패스키가 추가되었습니다!',
+      description: '패스키가 계정에 성공적으로 연결되었습니다.',
     },
     social: {
       title: '소셜 계정 연결됨!',
@@ -146,8 +154,7 @@ const account_center = {
     generate_new_title: '새 백업 코드 생성',
     generate_new: '새 백업 코드 생성',
     delete_confirmation_title: '백업 코드 삭제',
-    delete_confirmation_description:
-      '이 백업 코드를 삭제하면 더 이상 이를 사용하여 인증할 수 없습니다.',
+    delete_confirmation_description: '이 백업 코드를 삭제하면 더 이상 인증에 사용할 수 없습니다.',
   },
 };
 
