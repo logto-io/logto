@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { useContext } from 'react';
 
-import { type NewSubscriptionPeriodicUsage, type TenantUsageAddOnSkus } from '@/cloud/types/router';
+import { type SubscriptionPeriodicUsage, type TenantUsageAddOnSkus } from '@/cloud/types/router';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import { formatPeriod, isPaidPlan } from '@/utils/subscription';
@@ -22,7 +22,7 @@ import {
 } from './utils';
 
 type Props = {
-  readonly periodicUsage: NewSubscriptionPeriodicUsage | undefined;
+  readonly periodicUsage: SubscriptionPeriodicUsage | undefined;
   readonly usageAddOnSkus?: TenantUsageAddOnSkus;
 };
 

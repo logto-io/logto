@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react';
 
-import { type TenantUsageAddOnSkus, type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
+import { type TenantUsageAddOnSkus, type SubscriptionPeriodicUsage } from '@/cloud/types/router';
 import BillInfo from '@/components/BillInfo';
 import FormCard from '@/components/FormCard';
 import PlanDescription from '@/components/PlanDescription';
@@ -17,7 +17,7 @@ import TokenLimitExceededNotification from './TokenLimitExceededNotification';
 import styles from './index.module.scss';
 
 type Props = {
-  readonly periodicUsage?: NewSubscriptionPeriodicUsage;
+  readonly periodicUsage?: SubscriptionPeriodicUsage;
   readonly usageAddOnSkus?: TenantUsageAddOnSkus;
 };
 

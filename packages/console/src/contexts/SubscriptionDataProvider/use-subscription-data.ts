@@ -3,7 +3,7 @@ import { useContext, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type LogtoSkuResponse, type NewSubscriptionUsageResponse } from '@/cloud/types/router';
+import { type LogtoSkuResponse, type SubscriptionUsageResponse } from '@/cloud/types/router';
 import {
   defaultLogtoSku,
   defaultTenantResponse,
@@ -34,7 +34,7 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
     data: subscriptionUsageData,
     isLoading: isSubscriptionUsageDataLoading,
     mutate: mutateSubscriptionQuotaAndUsages,
-  } = useSWR<NewSubscriptionUsageResponse, Error>(
+  } = useSWR<SubscriptionUsageResponse, Error>(
     isCloud && currentTenantId && `/api/tenants/${currentTenantId}/subscription-usage`,
     async () =>
       cloudApi.get('/api/tenants/:tenantId/subscription-usage', {

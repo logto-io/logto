@@ -2,7 +2,7 @@ import { conditional } from '@silverhand/essentials';
 import { useContext, useMemo, useState } from 'react';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
-import { type NewSubscriptionPeriodicUsage } from '@/cloud/types/router';
+import { type SubscriptionPeriodicUsage } from '@/cloud/types/router';
 import { subscriptionPage } from '@/consts/pages';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -16,7 +16,7 @@ import { parseExceededSkuQuotaLimitError } from '@/utils/subscription';
 
 type Props = {
   readonly className?: string;
-  readonly periodicUsage?: NewSubscriptionPeriodicUsage;
+  readonly periodicUsage?: SubscriptionPeriodicUsage;
 };
 
 function MauLimitExceededNotification({ periodicUsage: rawPeriodicUsage, className }: Props) {

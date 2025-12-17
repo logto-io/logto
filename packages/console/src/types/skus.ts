@@ -1,4 +1,4 @@
-import { type NewSubscriptionQuota } from '@/cloud/types/router';
+import { type SubscriptionQuota } from '@/cloud/types/router';
 
 // TODO: This is a copy from `@logto/cloud-models`, make a SSoT for this later
 export enum LogtoSkuType {
@@ -6,7 +6,7 @@ export enum LogtoSkuType {
   AddOn = 'AddOn',
 }
 
-export type LogtoSkuQuota = NewSubscriptionQuota & {
+export type LogtoSkuQuota = SubscriptionQuota & {
   // Add ticket support quota item to the plan since it will be compared in the downgrade plan notification modal.
   ticketSupportResponseTime: number;
 };

@@ -1,6 +1,6 @@
 import { ReservedPlanId } from '@logto/schemas';
 
-import { type NewSubscriptionCountBasedUsage } from '@/cloud/types/router';
+import { type SubscriptionCountBasedUsage } from '@/cloud/types/router';
 
 /**
  * Determines whether a paywall should be enforced in the UI for a given plan.
@@ -24,7 +24,7 @@ import { type NewSubscriptionCountBasedUsage } from '@/cloud/types/router';
  * // => true (shows upgrade prompt)
  * ```
  */
-export const shouldEnforcePaywallInUI = <T extends keyof NewSubscriptionCountBasedUsage>(
+export const shouldEnforcePaywallInUI = <T extends keyof SubscriptionCountBasedUsage>(
   planId: string,
   quotaKey: T
 ): boolean => {
