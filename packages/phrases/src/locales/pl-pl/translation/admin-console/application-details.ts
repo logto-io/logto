@@ -157,6 +157,18 @@ const application_details = {
     organization_description:
       'Wybierz uprawnienia żądane przez aplikację innej firmy do uzyskania dostępu do określonych danych organizacyjnych.',
     grant_organization_level_permissions: 'Udziel uprawnień do danych organizacyjnych',
+    oidc_title: 'OIDC',
+    oidc_description:
+      'Podstawowe uprawnienia OIDC są automatycznie konfigurowane dla Twojej aplikacji. Te zakresy (scopes) są niezbędne do uwierzytelniania i nie są wyświetlane na ekranie zgody użytkownika.',
+    default_oidc_permissions: 'Domyślne uprawnienia OIDC',
+    permission_column: 'Uprawnienie',
+    guide_column: 'Przewodnik',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "Opcjonalne dla dostępu do zasobów OAuth.\nWymagane do uwierzytelniania OIDC. Umożliwia dostęp do tokenu ID oraz do 'userinfo_endpoint'.",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      'Opcjonalne. Pobiera tokeny odświeżania do długotrwałego dostępu lub zadań w tle.',
   },
   roles: {
     assign_button: 'Przypisz role między maszynami',

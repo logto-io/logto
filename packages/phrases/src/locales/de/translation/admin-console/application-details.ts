@@ -163,6 +163,18 @@ const application_details = {
     organization_description:
       'Wählen Sie die Berechtigungen aus, die von der Drittanbieter-App für den Zugriff auf bestimmte Organisationsdaten angefordert werden.',
     grant_organization_level_permissions: 'Berechtigungen für Organisationdaten erteilen',
+    oidc_title: 'OIDC',
+    oidc_description:
+      'Kern-OIDC-Berechtigungen werden automatisch für Ihre App konfiguriert. Diese Scopes sind für die Authentifizierung erforderlich und werden nicht auf dem Einwilligungsbildschirm angezeigt.',
+    default_oidc_permissions: 'Standard-OIDC-Berechtigungen',
+    permission_column: 'Berechtigung',
+    guide_column: 'Anleitung',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "Optional für den Zugriff auf OAuth-Ressourcen.\nErforderlich für die OIDC-Authentifizierung. Gewährt Zugriff auf ein ID-Token und ermöglicht den Zugriff auf den 'userinfo_endpoint'.",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      'Optional. Ruft Refresh-Tokens für langfristigen Zugriff oder Hintergrundaufgaben ab.',
   },
   roles: {
     assign_button: 'Rollen von Maschine zu Maschine zuweisen',

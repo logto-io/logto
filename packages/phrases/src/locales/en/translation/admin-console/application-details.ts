@@ -156,6 +156,18 @@ const application_details = {
     organization_description:
       'Select the permissions requested by the third-party app for accessing specific organization data.',
     grant_organization_level_permissions: 'Grant permissions of organization data',
+    oidc_title: 'OIDC',
+    oidc_description:
+      'Core OIDC permissions are automatically configured for your app. These scopes are essential for authentication and are not displayed on the user consent screen.',
+    default_oidc_permissions: 'Default OIDC permissions',
+    permission_column: 'Permission',
+    guide_column: 'Guide',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "Optional for OAuth resource access.\nRequired for OIDC authentication. Grants access to an ID token and allows access to the 'userinfo_endpoint'.",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      'Optional. Retrieves refresh tokens for long-lived access or background tasks.',
   },
   roles: {
     assign_button: 'Assign roles',

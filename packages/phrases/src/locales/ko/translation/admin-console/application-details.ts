@@ -153,6 +153,18 @@ const application_details = {
     organization_title: '조직',
     organization_description: '제3자 앱에서 특정 조직 데이터에 액세스하려는 권한을 선택하세요.',
     grant_organization_level_permissions: '조직 데이터의 권한 부여',
+    oidc_title: 'OIDC',
+    oidc_description:
+      '핵심 OIDC 권한은 앱에 자동으로 구성됩니다. 이러한 스코프는 인증에 필수이며 사용자 동의 화면에 표시되지 않습니다.',
+    default_oidc_permissions: '기본 OIDC 권한',
+    permission_column: '권한',
+    guide_column: '가이드',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "OAuth 리소스 접근에는 선택 사항입니다.\nOIDC 인증에는 필수입니다. ID 토큰에 대한 접근을 부여하며 'userinfo_endpoint'에 접근할 수 있습니다.",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      '선택 사항입니다. 장기 접근 또는 백그라운드 작업을 위한 리프레시 토큰을 가져옵니다.',
   },
   roles: {
     assign_button: '머신 간 역할 할당',
