@@ -21,6 +21,7 @@ const helmetPromise = async (
   response: ServerResponse
 ) =>
   promisify((callback) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     helmet(settings)(request, response, (error) => {
       // Make TS happy
       callback(error, null);
@@ -179,7 +180,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     const { request, req, res } = ctx;
     // generate a per-request nonce for CSP and expose it to templates/pages
     const nonce = randomBytes(16).toString('base64');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
     (ctx as any).state = { ...(ctx as any).state, cspNonce: nonce };
     const requestPath = request.path;
 
@@ -189,18 +190,22 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       requestPath.startsWith(`/${AdminApps.Welcome}`)
     ) {
       // Inject nonce into console CSP so inline scripts with the matching nonce are allowed
+      const baseCsp = consoleSecurityHeaderSettings.contentSecurityPolicy;
       const consoleSettings: HelmetOptions = {
         ...consoleSecurityHeaderSettings,
-        contentSecurityPolicy: {
-          ...consoleSecurityHeaderSettings.contentSecurityPolicy,
-          directives: {
-            ...consoleSecurityHeaderSettings.contentSecurityPolicy?.directives,
-            scriptSrc: [
-              `'nonce-${nonce}'`,
-              ...(consoleSecurityHeaderSettings.contentSecurityPolicy?.directives?.scriptSrc ?? []),
-            ],
-          },
-        },
+        contentSecurityPolicy:
+          baseCsp && typeof baseCsp === 'object'
+            ? {
+                ...baseCsp,
+                directives: {
+                  ...baseCsp.directives,
+                  scriptSrc: [
+                    `'nonce-${nonce}'`,
+                    ...(baseCsp.directives?.scriptSrc ?? []),
+                  ],
+                },
+              }
+            : baseCsp,
       };
 
       await helmetPromise(consoleSettings, req, res);
@@ -217,18 +222,22 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
 
     // Experience
     // Inject nonce into experience CSP so inline boot scripts can use it
+    const baseExpCsp = experienceSecurityHeaderSettings.contentSecurityPolicy;
     const experienceSettings: HelmetOptions = {
       ...experienceSecurityHeaderSettings,
-      contentSecurityPolicy: {
-        ...experienceSecurityHeaderSettings.contentSecurityPolicy,
-        directives: {
-          ...experienceSecurityHeaderSettings.contentSecurityPolicy?.directives,
-          scriptSrc: [
-            `'nonce-${nonce}'`,
-            ...(experienceSecurityHeaderSettings.contentSecurityPolicy?.directives?.scriptSrc ?? []),
-          ],
-        },
-      },
+      contentSecurityPolicy:
+        baseExpCsp && typeof baseExpCsp === 'object'
+          ? {
+              ...baseExpCsp,
+              directives: {
+                ...baseExpCsp.directives,
+                scriptSrc: [
+                  `'nonce-${nonce}'`,
+                  ...(baseExpCsp.directives?.scriptSrc ?? []),
+                ],
+              },
+            }
+          : baseExpCsp,
     };
 
     await helmetPromise(experienceSettings, req, res);
