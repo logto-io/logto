@@ -128,6 +128,18 @@ describe('isOriginAllowed', () => {
       )
     ).toBeTruthy();
   });
+
+  it('should return true if redirectUris include a wildcard pattern that matches the origin', () => {
+    expect(
+      isOriginAllowed(
+        'https://pr-123.myapp.example.com',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        ['https://*.myapp.example.com/callback']
+      )
+    ).toBeTruthy();
+  });
 });
 
 describe('buildLoginPromptUrl', () => {

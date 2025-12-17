@@ -38,11 +38,22 @@ const hasMixedUriProtocols = (applicationType: ApplicationType, uris: string[]):
   }
 };
 
+const hasWildcardUri = (uris?: string[]) => Boolean(uris?.some((uri) => uri.includes('*')));
+
 function MixedUriWarning() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   return (
     <InlineNotification severity="alert" className={styles.mixedUriWarning}>
       {t('application_details.mixed_redirect_uri_warning')}
+    </InlineNotification>
+  );
+}
+
+function WildcardUriWarning() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  return (
+    <InlineNotification severity="alert" className={styles.mixedUriWarning}>
+      {t('application_details.wildcard_redirect_uri_warning')}
     </InlineNotification>
   );
 }
@@ -77,6 +88,8 @@ function Settings({ data }: Props) {
     applicationType,
     postLogoutRedirectUris
   );
+  const showRedirectUriWildcardWarning = hasWildcardUri(redirectUris);
+  const showPostLogoutUriWildcardWarning = hasWildcardUri(postLogoutRedirectUris);
 
   if (isProtectedApp) {
     return <ProtectedAppSettings data={data} />;
@@ -143,6 +156,7 @@ function Settings({ data }: Props) {
           )}
         />
       )}
+      {showRedirectUriWildcardWarning && <WildcardUriWarning />}
       {showRedirectUriMixedWarning && <MixedUriWarning />}
       {applicationType !== ApplicationType.MachineToMachine && (
         <Controller
@@ -164,6 +178,7 @@ function Settings({ data }: Props) {
           )}
         />
       )}
+      {showPostLogoutUriWildcardWarning && <WildcardUriWarning />}
       {showPostLogoutUriMixedWarning && <MixedUriWarning />}
       {applicationType !== ApplicationType.MachineToMachine && (
         <Controller
