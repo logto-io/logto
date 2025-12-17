@@ -5,7 +5,7 @@ import VerificationCodeInput, {
 } from '@experience/shared/components/VerificationCode';
 import { AccountCenterControlValue, MfaFactor, type Mfa } from '@logto/schemas';
 import qrcode from 'qrcode';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState, type FormEvent } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -115,53 +115,57 @@ const TotpBinding = () => {
     setToast(t('mfa.secret_key_copied'));
   }, [secret, setToast, t]);
 
-  const handleSubmit = useCallback(async () => {
-    if (!verificationId || !secret || loading || !isCodeReady(codeInput)) {
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (event?: FormEvent) => {
+      event?.preventDefault();
+      if (!verificationId || !secret || loading || !isCodeReady(codeInput)) {
+        return;
+      }
 
-    setErrorMessage(undefined);
+      setErrorMessage(undefined);
 
-    const codeString = codeInput.join('');
-    const [error] = await addTotpRequest(verificationId, { secret, code: codeString });
+      const codeString = codeInput.join('');
+      const [error] = await addTotpRequest(verificationId, { secret, code: codeString });
 
-    if (error) {
-      await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
-        'user.totp_already_in_use': async (requestError) => {
-          setToast(requestError.message);
-        },
-        'session.mfa.invalid_totp_code': async () => {
-          setErrorMessage(t('error.invalid_passcode'));
-          setCodeInput([]);
-        },
-      });
-      return;
-    }
+      if (error) {
+        await handleError(error, {
+          'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
+            setToast(t('account_center.verification.verification_required'));
+          },
+          'user.totp_already_in_use': async (requestError) => {
+            setToast(requestError.message);
+          },
+          'session.mfa.invalid_totp_code': async () => {
+            setErrorMessage(t('error.invalid_passcode'));
+            setCodeInput([]);
+          },
+        });
+        return;
+      }
 
-    if (isBackupCodeEnabled(experienceSettings?.mfa) && !hasBackupCodes) {
-      void navigate(backupCodeRoute, { replace: true });
-      return;
-    }
+      if (isBackupCodeEnabled(experienceSettings?.mfa) && !hasBackupCodes) {
+        void navigate(backupCodeRoute, { replace: true });
+        return;
+      }
 
-    void navigate(totpSuccessRoute, { replace: true });
-  }, [
-    addTotpRequest,
-    codeInput,
-    experienceSettings?.mfa,
-    handleError,
-    hasBackupCodes,
-    loading,
-    navigate,
-    secret,
-    setToast,
-    setVerificationId,
-    t,
-    verificationId,
-  ]);
+      void navigate(totpSuccessRoute, { replace: true });
+    },
+    [
+      addTotpRequest,
+      codeInput,
+      experienceSettings?.mfa,
+      handleError,
+      hasBackupCodes,
+      loading,
+      navigate,
+      secret,
+      setToast,
+      setVerificationId,
+      t,
+      verificationId,
+    ]
+  );
 
   if (
     !accountCenterSettings?.enabled ||
@@ -251,7 +255,7 @@ const TotpBinding = () => {
 
         {/* Step 2: Verification Code */}
         <div className={styles.divider} />
-        <div className={styles.step}>
+        <form className={styles.step} onSubmit={handleSubmit}>
           <div className={styles.stepTitle}>
             <DynamicT
               forKey="mfa.step"
@@ -276,13 +280,11 @@ const TotpBinding = () => {
           <Button
             title="action.continue"
             type="primary"
+            htmlType="submit"
             className={styles.submitButton}
             isLoading={loading}
-            onClick={() => {
-              void handleSubmit();
-            }}
           />
-        </div>
+        </form>
       </div>
     </SecondaryPageLayout>
   );
