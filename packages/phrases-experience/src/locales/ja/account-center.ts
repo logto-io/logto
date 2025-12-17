@@ -61,11 +61,13 @@ const account_center = {
     description: 'アカウントを守るために新しいパスワードを作成してください。',
     success: 'パスワードを更新しました。',
   },
+
   code_verification: {
     send: '認証コードを送信',
     resend: 'コードを再送',
     resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます。',
   },
+
   email_verification: {
     title: 'メールアドレスを確認',
     prepare_description:
@@ -102,6 +104,7 @@ const account_center = {
       'バックアップコードは有効になっていません。管理者に連絡して有効にしてください。',
     backup_code_requires_other_mfa:
       'バックアップコードを使用するには、まず他の MFA メソッドを設定する必要があります。',
+    passkey_not_enabled: 'パスキーが有効になっていません。管理者に連絡して有効にしてください。',
   },
   update_success: {
     default: {
@@ -120,6 +123,7 @@ const account_center = {
       title: 'ユーザー名を変更しました！',
       description: 'ユーザー名が正常に更新されました。',
     },
+
     password: {
       title: 'パスワードを変更しました！',
       description: 'パスワードが正常に更新されました。',
@@ -137,8 +141,12 @@ const account_center = {
       description: 'バックアップコードが保存されました。安全な場所に保管してください。',
     },
     backup_code_deleted: {
-      title: 'バックアップコードを削除しました！',
+      title: 'バックアップコードが削除されました！',
       description: 'バックアップコードがアカウントから削除されました。',
+    },
+    passkey: {
+      title: 'パスキーが追加されました！',
+      description: 'パスキーがアカウントに正常にリンクされました。',
     },
   },
   backup_code: {

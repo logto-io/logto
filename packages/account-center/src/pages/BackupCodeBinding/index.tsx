@@ -136,13 +136,11 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
   const downloadText = useCallback((text: string, filename: string) => {
     const blob = new Blob([text], { type: 'text/plain' });
     const downloadLink = document.createElement('a');
-    const objectUrl = URL.createObjectURL(blob);
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    downloadLink.href = objectUrl;
+    downloadLink.href = URL.createObjectURL(blob);
     // eslint-disable-next-line @silverhand/fp/no-mutation
     downloadLink.download = filename;
     downloadLink.click();
-    URL.revokeObjectURL(objectUrl);
   }, []);
 
   const handleSubmit = useCallback(async () => {

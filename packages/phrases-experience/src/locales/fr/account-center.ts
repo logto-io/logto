@@ -66,11 +66,13 @@ const account_center = {
     description: 'Créez un nouveau mot de passe pour sécuriser votre compte.',
     success: 'Mot de passe mis à jour avec succès.',
   },
+
   code_verification: {
     send: 'Envoyer le code de vérification',
     resend: 'Renvoyer le code',
     resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
   },
+
   email_verification: {
     title: 'Vérifiez votre e-mail',
     prepare_description:
@@ -110,6 +112,8 @@ const account_center = {
       "Le code de secours n'est pas activé. Veuillez contacter votre administrateur pour l'activer.",
     backup_code_requires_other_mfa:
       "Les codes de secours nécessitent qu'une autre méthode MFA soit d'abord configurée.",
+    passkey_not_enabled:
+      "Passkey n'est pas activé. Veuillez contacter votre administrateur pour l'activer.",
   },
   update_success: {
     default: {
@@ -132,6 +136,10 @@ const account_center = {
       title: 'Mot de passe modifié !',
       description: 'Votre mot de passe a été mis à jour avec succès.',
     },
+    social: {
+      title: 'Compte social lié !',
+      description: 'Votre compte social a été lié avec succès.',
+    },
     totp: {
       title: "Application d'authentification ajoutée !",
       description: "Votre application d'authentification a été liée avec succès à votre compte.",
@@ -143,6 +151,10 @@ const account_center = {
     backup_code_deleted: {
       title: 'Codes de secours supprimés !',
       description: 'Vos codes de secours ont été supprimés de votre compte.',
+    },
+    passkey: {
+      title: 'Passkey ajouté !',
+      description: 'Votre passkey a été lié avec succès à votre compte.',
     },
   },
   backup_code: {

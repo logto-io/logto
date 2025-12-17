@@ -61,11 +61,13 @@ const account_center = {
     description: 'Hesabını korumak için yeni bir şifre oluştur.',
     success: 'Şifre başarıyla güncellendi.',
   },
+
   code_verification: {
     send: 'Doğrulama kodu gönder',
     resend: 'Kodu yeniden gönder',
     resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
   },
+
   email_verification: {
     title: 'E-postanı doğrula',
     prepare_description:
@@ -103,6 +105,7 @@ const account_center = {
       'Yedek kod etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
     backup_code_requires_other_mfa:
       'Yedek kodlar, önce başka bir MFA yönteminin ayarlanmasını gerektirir.',
+    passkey_not_enabled: 'Passkey etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
   },
   update_success: {
     default: {
@@ -121,6 +124,7 @@ const account_center = {
       title: 'Kullanıcı adı değiştirildi!',
       description: 'Kullanıcı adınız başarıyla güncellendi.',
     },
+
     password: {
       title: 'Şifre değiştirildi!',
       description: 'Şifreniz başarıyla güncellendi.',
@@ -137,6 +141,10 @@ const account_center = {
       title: 'Yedek kodlar kaldırıldı!',
       description: 'Yedek kodlarınız hesabınızdan kaldırıldı.',
     },
+    passkey: {
+      title: 'Passkey eklendi!',
+      description: 'Passkey başarıyla hesabınıza bağlandı.',
+    },
     social: {
       title: 'Sosyal hesap bağlandı!',
       description: 'Sosyal hesabınız başarıyla bağlandı.',
@@ -151,7 +159,7 @@ const account_center = {
     generate_new: 'Yeni yedek kodlar oluştur',
     delete_confirmation_title: 'Yedek kodlarınızı kaldırın',
     delete_confirmation_description:
-      'Bu yedek kodları kaldırırsanız, onlarla doğrulama yapamazsınız.',
+      'Bu yedek kodları kaldırırsanız, bunlarla doğrulama yapamayacaksınız.',
   },
 };
 

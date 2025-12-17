@@ -60,11 +60,13 @@ const account_center = {
     description: '建立新密碼以保障你的帳戶安全。',
     success: '密碼已成功更新。',
   },
+
   code_verification: {
     send: '發送驗證碼',
     resend: '重新傳送驗證碼',
     resend_countdown: '還未收到？{{seconds}} 秒後可重新傳送。',
   },
+
   email_verification: {
     title: '驗證你的電郵',
     prepare_description: '為保障帳戶安全，請確認是你本人。將驗證碼發送到你的電郵。',
@@ -95,6 +97,7 @@ const account_center = {
     backup_code_already_added: '你已擁有有效的備份碼，請先使用或移除它們再產生新的。',
     backup_code_not_enabled: '備份碼未啟用，請聯繫管理員啟用。',
     backup_code_requires_other_mfa: '備份碼需要先設置其他 MFA 方式。',
+    passkey_not_enabled: 'Passkey 未啟用，請聯繫管理員啟用。',
   },
   update_success: {
     default: {
@@ -113,6 +116,7 @@ const account_center = {
       title: '用戶名已更新！',
       description: '你的帳戶用戶名已成功更改。',
     },
+
     password: {
       title: '密碼已更新！',
       description: '你的帳戶密碼已成功更改。',
@@ -129,6 +133,14 @@ const account_center = {
       title: '備用碼已移除！',
       description: '你的備用碼已從帳戶中移除。',
     },
+    passkey: {
+      title: 'Passkey 已添加！',
+      description: 'Passkey 已成功連結到你的帳戶。',
+    },
+    social: {
+      title: '社交帳號已連結！',
+      description: '你的社交帳號已成功連結。',
+    },
   },
   backup_code: {
     title: '備用碼',
@@ -137,8 +149,8 @@ const account_center = {
     copy_hint: '請務必複製並保存在安全的地方。',
     generate_new_title: '產生新的備用碼',
     generate_new: '產生新的備用碼',
-    delete_confirmation_title: '移除備用碼',
-    delete_confirmation_description: '如果移除這些備用碼，你將無法使用它們進行驗證。',
+    delete_confirmation_title: '移除你的備用碼',
+    delete_confirmation_description: '如果你移除這些備用碼，你將無法使用它們進行驗證。',
   },
 };
 

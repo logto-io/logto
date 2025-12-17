@@ -60,11 +60,13 @@ const account_center = {
     description: '创建新密码以保护你的账号安全。',
     success: '密码更新成功。',
   },
+
   code_verification: {
     send: '发送验证码',
     resend: '重新发送',
     resend_countdown: '还没有收到？{{seconds}} 秒后可重新发送。',
   },
+
   email_verification: {
     title: '验证您的邮箱',
     prepare_description: '为保护账户安全，请确认是您本人。发送验证码到您的邮箱。',
@@ -95,6 +97,7 @@ const account_center = {
     backup_code_already_added: '你已拥有有效的备份码，请先使用或移除它们再生成新的。',
     backup_code_not_enabled: '备份码未启用，请联系管理员启用。',
     backup_code_requires_other_mfa: '备份码需要先设置其他 MFA 方式。',
+    passkey_not_enabled: 'Passkey 未启用，请联系管理员启用。',
   },
   update_success: {
     default: {
@@ -113,6 +116,7 @@ const account_center = {
       title: '用户名已更新！',
       description: '你的账号用户名已成功更改。',
     },
+
     password: {
       title: '密码已更新！',
       description: '你的账号密码已成功更改。',
@@ -128,6 +132,14 @@ const account_center = {
     backup_code_deleted: {
       title: '备用码已移除！',
       description: '您的备用码已从账户中移除。',
+    },
+    passkey: {
+      title: 'Passkey 已添加！',
+      description: 'Passkey 已成功关联到你的账号。',
+    },
+    social: {
+      title: '社交账号已关联！',
+      description: '社交账号已成功关联到你的账号。',
     },
   },
   backup_code: {

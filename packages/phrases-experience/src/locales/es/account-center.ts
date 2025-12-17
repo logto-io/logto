@@ -65,11 +65,13 @@ const account_center = {
     description: 'Crea una nueva contraseña para proteger tu cuenta.',
     success: 'Contraseña actualizada correctamente.',
   },
+
   code_verification: {
     send: 'Enviar código de verificación',
     resend: 'Reenviar código',
     resend_countdown: '¿Aún no lo recibes? Reenvía después de {{seconds}} s.',
   },
+
   email_verification: {
     title: 'Verifica tu correo electrónico',
     prepare_description:
@@ -109,6 +111,8 @@ const account_center = {
       'El código de respaldo no está habilitado. Contacta a tu administrador para habilitarlo.',
     backup_code_requires_other_mfa:
       'Los códigos de respaldo requieren que se configure otro método MFA primero.',
+    passkey_not_enabled:
+      'Passkey no está habilitado. Por favor, contacta a tu administrador para habilitarlo.',
   },
   update_success: {
     default: {
@@ -127,6 +131,7 @@ const account_center = {
       title: '¡Nombre de usuario cambiado!',
       description: 'Tu nombre de usuario ha sido actualizado exitosamente.',
     },
+
     password: {
       title: '¡Contraseña cambiada!',
       description: 'Tu contraseña ha sido actualizada exitosamente.',
@@ -143,6 +148,10 @@ const account_center = {
       title: '¡Códigos de respaldo eliminados!',
       description: 'Tus códigos de respaldo han sido eliminados de tu cuenta.',
     },
+    passkey: {
+      title: '¡Passkey añadido!',
+      description: 'Tu passkey se ha vinculado correctamente a tu cuenta.',
+    },
     social: {
       title: '¡Cuenta social vinculada!',
       description: 'Tu cuenta social ha sido vinculada exitosamente.',
@@ -157,7 +166,7 @@ const account_center = {
     generate_new: 'Generar nuevos códigos de respaldo',
     delete_confirmation_title: 'Eliminar tus códigos de respaldo',
     delete_confirmation_description:
-      'Si eliminas estos códigos de respaldo, no podrás usarlos para verificación.',
+      'Si eliminas estos códigos de respaldo, no podrás usarlos para verificar.',
   },
 };
 
