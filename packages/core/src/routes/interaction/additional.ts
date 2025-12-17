@@ -132,6 +132,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
           locale: ctx.locale,
           ...(uiLocales && { uiLocales }),
           messageContext,
+          ip: ctx.request.ip,
         },
         interactionDetails.jti,
         createLog,
