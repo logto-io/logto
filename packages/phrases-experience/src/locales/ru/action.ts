@@ -30,6 +30,8 @@ const action = {
   verify_via_passkey: 'Проверить с помощью ключа доступа',
   download: 'Скачать',
   remove: 'Удалить',
+  edit: 'Редактировать',
+  save: 'Сохранить',
   single_sign_on: 'Единый вход',
   authorize: 'Авторизовать',
   use_another_account: 'Использовать другой аккаунт',

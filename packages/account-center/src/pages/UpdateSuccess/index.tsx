@@ -11,7 +11,8 @@ type IdentifierType =
   | 'totp'
   | 'backup_code'
   | 'backup_code_deleted'
-  | 'passkey';
+  | 'passkey'
+  | 'passkey_deleted';
 
 type TranslationMap = Partial<
   Record<IdentifierType, { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey }>
@@ -51,6 +52,10 @@ const translationMap: TranslationMap = {
   passkey: {
     titleKey: 'account_center.update_success.passkey.title',
     messageKey: 'account_center.update_success.passkey.description',
+  },
+  passkey_deleted: {
+    titleKey: 'account_center.update_success.passkey_deleted.title',
+    messageKey: 'account_center.update_success.passkey_deleted.description',
   },
   default: {
     titleKey: 'account_center.update_success.default.title',

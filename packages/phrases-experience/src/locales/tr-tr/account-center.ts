@@ -145,6 +145,10 @@ const account_center = {
       title: 'Passkey eklendi!',
       description: 'Passkey başarıyla hesabınıza bağlandı.',
     },
+    passkey_deleted: {
+      title: 'Passkey kaldırıldı!',
+      description: 'Passkey hesabınızdan kaldırıldı.',
+    },
     social: {
       title: 'Sosyal hesap bağlandı!',
       description: 'Sosyal hesabınız başarıyla bağlandı.',
@@ -160,6 +164,23 @@ const account_center = {
     delete_confirmation_title: 'Yedek kodlarınızı kaldırın',
     delete_confirmation_description:
       'Bu yedek kodları kaldırırsanız, bunlarla doğrulama yapamayacaksınız.',
+  },
+  passkey: {
+    title: "Passkey'ler",
+    added: 'Eklendi: {{date}}',
+    last_used: 'Son kullanım: {{date}}',
+    never_used: 'Hiç',
+    unnamed: 'İsimsiz passkey',
+    renamed: 'Passkey başarıyla yeniden adlandırıldı.',
+    add_another_title: 'Başka bir passkey ekle',
+    add_another_description:
+      "Cihaz biyometriği, güvenlik anahtarları (örn. YubiKey) veya diğer mevcut yöntemleri kullanarak passkey'inizi kaydedin.",
+    add_passkey: 'Bir passkey ekle',
+    delete_confirmation_title: "Passkey'i kaldır",
+    delete_confirmation_description:
+      '"{{name}}" kaldırmak istediğinizden emin misiniz? Bu passkey ile artık giriş yapamayacaksınız.',
+    rename_passkey: "Passkey'i yeniden adlandır",
+    rename_description: 'Bu passkey için yeni bir ad girin.',
   },
 };
 

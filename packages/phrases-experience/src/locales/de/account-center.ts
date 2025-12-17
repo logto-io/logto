@@ -151,11 +151,15 @@ const account_center = {
     },
     backup_code_deleted: {
       title: 'Backup-Codes entfernt!',
-      description: 'Ihre Backup-Codes wurden aus Ihrem Konto entfernt.',
+      description: 'Ihre Backup-Codes wurden von Ihrem Konto entfernt.',
     },
     passkey: {
       title: 'Passkey hinzugefügt!',
       description: 'Ihr Passkey wurde erfolgreich mit Ihrem Konto verknüpft.',
+    },
+    passkey_deleted: {
+      title: 'Passkey entfernt!',
+      description: 'Ihr Passkey wurde von Ihrem Konto entfernt.',
     },
     social: {
       title: 'Soziales Konto verknüpft!',
@@ -171,7 +175,24 @@ const account_center = {
     generate_new: 'Neue Backup-Codes generieren',
     delete_confirmation_title: 'Backup-Codes entfernen',
     delete_confirmation_description:
-      'Wenn Sie diese Backup-Codes entfernen, können Sie sie nicht mehr zur Verifizierung verwenden.',
+      'Wenn Sie diese Backup-Codes entfernen, können Sie sich nicht mehr damit verifizieren.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Hinzugefügt: {{date}}',
+    last_used: 'Zuletzt verwendet: {{date}}',
+    never_used: 'Nie',
+    unnamed: 'Unbenannter Passkey',
+    renamed: 'Passkey erfolgreich umbenannt.',
+    add_another_title: 'Weiteren Passkey hinzufügen',
+    add_another_description:
+      'Registrieren Sie Ihren Passkey mit Geräte-Biometrie, Sicherheitsschlüsseln (z.B. YubiKey) oder anderen verfügbaren Methoden.',
+    add_passkey: 'Passkey hinzufügen',
+    delete_confirmation_title: 'Passkey entfernen',
+    delete_confirmation_description:
+      'Sind Sie sicher, dass Sie "{{name}}" entfernen möchten? Sie können sich danach nicht mehr mit diesem Passkey anmelden.',
+    rename_passkey: 'Passkey umbenennen',
+    rename_description: 'Geben Sie einen neuen Namen für diesen Passkey ein.',
   },
 };
 

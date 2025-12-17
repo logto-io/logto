@@ -1,0 +1,101 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+}
+
+.passkeyList {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.passkeyItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: _.unit(4);
+  border: 1px solid var(--color-line-divider);
+  border-radius: var(--radius);
+  background-color: var(--color-bg-body);
+}
+
+.passkeyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+  flex: 1;
+  min-width: 0;
+}
+
+.passkeyName {
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+  word-break: break-word;
+}
+
+.passkeyMeta {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+}
+
+.passkeyActions {
+  display: flex;
+  gap: _.unit(4);
+  flex-shrink: 0;
+  margin-left: _.unit(4);
+}
+
+.editButton {
+  all: unset;
+  font: var(--font-label-2);
+  color: var(--color-brand-default);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--color-brand-hover);
+  }
+}
+
+.removeButton {
+  all: unset;
+  font: var(--font-label-2);
+  color: var(--color-danger-default);
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--color-danger-hover);
+  }
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--color-line-divider);
+  margin: _.unit(2) 0;
+}
+
+.addSection {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.addTitle {
+  font: var(--font-title-2);
+  color: var(--color-type-primary);
+}
+
+.addDescription {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+.editModalContent {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
