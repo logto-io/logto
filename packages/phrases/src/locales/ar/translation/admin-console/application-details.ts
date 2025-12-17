@@ -155,6 +155,18 @@ const application_details = {
     organization_description:
       'Select the permissions requested by the third-party app for accessing specific organization data.',
     grant_organization_level_permissions: 'Grant permissions of organization data',
+    oidc_title: 'OIDC',
+    oidc_description:
+      'يتم تكوين أذونات OIDC الأساسية تلقائيًا لتطبيقك. هذه النطاقات ضرورية للمصادقة ولا يتم عرضها على شاشة موافقة المستخدم.',
+    default_oidc_permissions: 'أذونات OIDC الافتراضية',
+    permission_column: 'الإذن',
+    guide_column: 'الدليل',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "اختياري للوصول إلى موارد OAuth.\nمطلوب لمصادقة OIDC. يمنح الوصول إلى رمز مميز للهوية (ID token) ويسمح بالوصول إلى 'userinfo_endpoint'.",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      'اختياري. يسترجع رموز التحديث للوصول طويل الأمد أو للمهام في الخلفية.',
   },
   roles: {
     assign_button: 'Assign roles',

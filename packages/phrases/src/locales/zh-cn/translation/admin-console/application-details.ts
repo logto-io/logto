@@ -145,6 +145,17 @@ const application_details = {
     organization_title: '组织',
     organization_description: '选择第三方应用程序需要访问特定组织数据的权限。',
     grant_organization_level_permissions: '授予组织数据权限',
+    oidc_title: 'OIDC',
+    oidc_description:
+      '核心 OIDC 权限会自动为你的应用配置。这些 scope 对认证至关重要，并且不会显示在用户授权屏幕上。',
+    default_oidc_permissions: '默认 OIDC 权限',
+    permission_column: '权限',
+    guide_column: '指南',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "用于访问 OAuth 资源时可选。\n用于 OIDC 认证时必需。授予访问 ID Token 的权限，并允许访问 'userinfo_endpoint'。",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide: '可选。获取刷新令牌，用于长时访问或后台任务。',
   },
   roles: {
     assign_button: '分配机器对机器角色',

@@ -159,6 +159,18 @@ const application_details = {
     organization_description:
       "Sélectionnez les permissions demandées par l'application tierce pour accéder à des données d'organisation spécifiques.",
     grant_organization_level_permissions: "Accorder des permissions des données d'organisation",
+    oidc_title: 'OIDC',
+    oidc_description:
+      'Les permissions OIDC de base sont configurées automatiquement pour votre application. Ces scopes sont essentiels à l’authentification et ne sont pas affichés sur l’écran de consentement de l’utilisateur.',
+    default_oidc_permissions: 'Permissions OIDC par défaut',
+    permission_column: 'Permission',
+    guide_column: 'Guide',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "Optionnel pour l’accès aux ressources OAuth.\nRequis pour l’authentification OIDC. Donne accès à un jeton d’identification (ID token) et permet d’accéder à 'userinfo_endpoint'.",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      'Optionnel. Récupère des jetons d’actualisation (refresh tokens) pour un accès de longue durée ou des tâches en arrière-plan.',
   },
   roles: {
     assign_button: 'Attribuer des rôles de machine à machine',

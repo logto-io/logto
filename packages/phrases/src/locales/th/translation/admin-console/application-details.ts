@@ -152,6 +152,18 @@ const application_details = {
     organization_title: 'องค์กร',
     organization_description: 'เลือกสิทธิ์ที่แอปบุคคลที่สามร้องขอสำหรับใช้เข้าถึงข้อมูลองค์กร',
     grant_organization_level_permissions: 'ให้สิทธิ์ข้อมูลองค์กร',
+    oidc_title: 'OIDC',
+    oidc_description:
+      'สิทธิ์ OIDC หลักจะถูกกำหนดค่าโดยอัตโนมัติสำหรับแอปของคุณ สโคปเหล่านี้จำเป็นสำหรับการยืนยันตัวตนและจะไม่แสดงบนหน้าจอความยินยอมของผู้ใช้',
+    default_oidc_permissions: 'สิทธิ์ OIDC เริ่มต้น',
+    permission_column: 'สิทธิ์',
+    guide_column: 'คู่มือ',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "ไม่จำเป็นสำหรับการเข้าถึงทรัพยากร OAuth\nจำเป็นสำหรับการยืนยันตัวตนแบบ OIDC ให้สิทธิ์เข้าถึง ID token และอนุญาตให้เข้าถึง 'userinfo_endpoint'",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      'ไม่จำเป็น รับ refresh token สำหรับการเข้าถึงระยะยาวหรือการทำงานเบื้องหลัง',
   },
   roles: {
     assign_button: 'กำหนดบทบาท',

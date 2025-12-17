@@ -158,6 +158,18 @@ const application_details = {
     organization_description:
       'Selecione as permissões solicitadas pela aplicação de terceiros para aceder a dados específicos da organização.',
     grant_organization_level_permissions: 'Conceder permissões de dados da organização',
+    oidc_title: 'OIDC',
+    oidc_description:
+      'As permissões principais de OIDC são configuradas automaticamente para a sua aplicação. Estes escopos são essenciais para autenticação e não são apresentados no ecrã de consentimento do utilizador.',
+    default_oidc_permissions: 'Permissões OIDC predefinidas',
+    permission_column: 'Permissão',
+    guide_column: 'Guia',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "Opcional para acesso a recursos OAuth.\nObrigatório para autenticação OIDC. Concede acesso a um token de ID e permite acesso ao 'userinfo_endpoint'.",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      'Opcional. Obtém tokens de atualização para acesso de longa duração ou tarefas em segundo plano.',
   },
   roles: {
     assign_button: 'Atribuir funções de máquina a máquina',

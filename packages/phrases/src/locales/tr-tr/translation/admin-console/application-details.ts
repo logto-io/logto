@@ -156,6 +156,18 @@ const application_details = {
     organization_description:
       'Üçüncü taraf uygulamanın belirli organizasyon verilerine erişmek için istediği izinleri seçin.',
     grant_organization_level_permissions: 'Organizasyon veri izinlerini ver',
+    oidc_title: 'OIDC',
+    oidc_description:
+      'Temel OIDC izinleri uygulamanız için otomatik olarak yapılandırılır. Bu kapsamlar kimlik doğrulama için gereklidir ve kullanıcı onay ekranında gösterilmez.',
+    default_oidc_permissions: 'Varsayılan OIDC izinleri',
+    permission_column: 'İzin',
+    guide_column: 'Kılavuz',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "OAuth kaynak erişimi için isteğe bağlıdır.\nOIDC kimlik doğrulaması için gereklidir. Bir ID token'a erişim sağlar ve 'userinfo_endpoint'e erişime izin verir.",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      'İsteğe bağlıdır. Uzun süreli erişim veya arka plan görevleri için yenileme belirteçleri (refresh token) alır.',
   },
   roles: {
     assign_button: 'Makineden makineye rolleri atayın',

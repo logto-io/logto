@@ -1,0 +1,16 @@
+@use '@/scss/underscore' as _;
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  gap: _.unit(3);
+}
+
+.title {
+  font: var(--font-label-2);
+}
+
+.guideText {
+  white-space: pre-line;
+}

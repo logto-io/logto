@@ -158,6 +158,18 @@ const application_details = {
     organization_description:
       'Выберите разрешения, которые запрашиваются сторонним приложением для доступа к определенным данным организации.',
     grant_organization_level_permissions: 'Предоставить разрешения на данные организации',
+    oidc_title: 'OIDC',
+    oidc_description:
+      'Основные разрешения OIDC автоматически настраиваются для вашего приложения. Эти области (scopes) необходимы для аутентификации и не отображаются на экране согласия пользователя.',
+    default_oidc_permissions: 'Разрешения OIDC по умолчанию',
+    permission_column: 'Разрешение',
+    guide_column: 'Руководство',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "Необязательно для доступа к ресурсам OAuth.\nОбязательно для аутентификации OIDC. Предоставляет доступ к ID-токену и позволяет обращаться к 'userinfo_endpoint'.",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide:
+      'Необязательно. Получает refresh-токены для долгосрочного доступа или фоновых задач.',
   },
   roles: {
     assign_button: 'Назначить роли между машинами',

@@ -145,6 +145,17 @@ const application_details = {
     organization_title: '組織',
     organization_description: '選擇第三方應用程式為存取特定組織數據所需的權限。',
     grant_organization_level_permissions: '授予組織數據的權限',
+    oidc_title: 'OIDC',
+    oidc_description:
+      '核心 OIDC 權限會自動為你的應用程式設定。這些 scope 對驗證至關重要，且不會顯示於使用者同意畫面。',
+    default_oidc_permissions: '預設 OIDC 權限',
+    permission_column: '權限',
+    guide_column: '指南',
+    openid_permission: 'openid',
+    openid_permission_guide:
+      "用於存取 OAuth 資源時為選填。\n用於 OIDC 驗證時為必填。授予存取 ID Token 的權限，並允許存取 'userinfo_endpoint'。",
+    offline_access_permission: 'offline_access',
+    offline_access_permission_guide: '選填。取得刷新令牌，用於長期存取或背景任務。',
   },
   roles: {
     assign_button: '分配機器對機器角色',
