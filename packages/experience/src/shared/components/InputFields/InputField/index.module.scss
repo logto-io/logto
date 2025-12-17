@@ -102,16 +102,6 @@
     }
   }
 
-  &.readOnly {
-    .inputField {
-      /* stylelint-disable-next-line no-descending-specificity */
-      input {
-        cursor: default;
-        user-select: none;
-      }
-    }
-  }
-
   // override for firefox & safari focus outline since we are using custom notchedOutline
   &:focus-visible {
     outline: none;

@@ -127,3 +127,18 @@ export const addWebAuthnMfa = async (
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 };
+
+export const updateWebAuthnName = async (
+  accessToken: string,
+  verificationRecordId: string,
+  mfaVerificationId: string,
+  name: string
+) => {
+  await createAuthenticatedKy(accessToken).patch(
+    `/api/my-account/mfa-verifications/${mfaVerificationId}/name`,
+    {
+      json: { name },
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    }
+  );
+};

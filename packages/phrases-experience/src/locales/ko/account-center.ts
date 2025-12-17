@@ -141,6 +141,10 @@ const account_center = {
       title: '패스키가 추가되었습니다!',
       description: '패스키가 계정에 성공적으로 연결되었습니다.',
     },
+    passkey_deleted: {
+      title: '패스키가 삭제되었습니다!',
+      description: '패스키가 계정에서 삭제되었습니다.',
+    },
     social: {
       title: '소셜 계정 연결됨!',
       description: '소셜 계정이 성공적으로 연결되었습니다.',
@@ -155,6 +159,23 @@ const account_center = {
     generate_new: '새 백업 코드 생성',
     delete_confirmation_title: '백업 코드 삭제',
     delete_confirmation_description: '이 백업 코드를 삭제하면 더 이상 인증에 사용할 수 없습니다.',
+  },
+  passkey: {
+    title: '패스키',
+    added: '추가됨: {{date}}',
+    last_used: '마지막 사용: {{date}}',
+    never_used: '사용 안 함',
+    unnamed: '이름 없는 패스키',
+    renamed: '패스키 이름이 변경되었습니다.',
+    add_another_title: '다른 패스키 추가',
+    add_another_description:
+      '기기 생체 인증, 보안 키(예: YubiKey) 또는 기타 사용 가능한 방법을 사용하여 패스키를 등록하세요.',
+    add_passkey: '패스키 추가',
+    delete_confirmation_title: '패스키 삭제',
+    delete_confirmation_description:
+      '"{{name}}"을(를) 삭제하시겠습니까? 이 패스키로 더 이상 로그인할 수 없습니다.',
+    rename_passkey: '패스키 이름 변경',
+    rename_description: '이 패스키의 새 이름을 입력하세요.',
   },
 };
 

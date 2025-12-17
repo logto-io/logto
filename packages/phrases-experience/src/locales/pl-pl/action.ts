@@ -30,6 +30,8 @@ const action = {
   verify_via_passkey: 'Weryfikacja za pomocą klucza dostępu',
   download: 'Pobierz',
   remove: 'Usuń',
+  edit: 'Edytuj',
+  save: 'Zapisz',
   single_sign_on: 'Pojedyncze logowanie',
   authorize: 'Autoryzuj',
   use_another_account: 'Użyj innego konta',

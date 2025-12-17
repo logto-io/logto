@@ -47,7 +47,6 @@ const InputField = (
     onChange,
     value,
     required = true,
-    readOnly,
     ...props
   }: Props,
   reference: Ref<Nullable<HTMLInputElement>>
@@ -96,8 +95,7 @@ const InputField = (
           styles.container,
           isDanger && styles.danger,
           isActive && styles.active,
-          !label && styles.noLabel,
-          readOnly && styles.readOnly
+          !label && styles.noLabel
         )}
       >
         <div
@@ -113,12 +111,9 @@ const InputField = (
             {...props}
             ref={innerRef}
             value={value}
-            readOnly={readOnly}
             onAnimationStart={handleAnimationStart}
             onFocus={(event) => {
-              if (!readOnly) {
-                setIsFocused(true);
-              }
+              setIsFocused(true);
               return onFocus?.(event);
             }}
             onBlur={(event) => {

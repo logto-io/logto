@@ -14,4 +14,6 @@ export const backupCodeRegenerateRoute = '/mfa/backup-code/regenerate';
 export const backupCodeSuccessRoute = '/mfa/backup-code/success';
 export const backupCodeDeletedRoute = '/mfa/backup-code/deleted';
 export const passkeyRoute = '/mfa/passkey';
+export const passkeyViewRoute = '/mfa/passkey/view';
 export const passkeySuccessRoute = '/mfa/passkey/success';
+export const passkeyDeletedRoute = '/mfa/passkey/deleted';

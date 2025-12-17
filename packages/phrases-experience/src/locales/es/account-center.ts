@@ -102,7 +102,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added:
-      'Ya has añadido una aplicación de autenticación. Por favor, elimina la existente primero.',
+      'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
       'La aplicación de autenticación no está habilitada. Por favor, contacta a tu administrador para habilitarla.',
     backup_code_already_added:
@@ -152,6 +152,10 @@ const account_center = {
       title: '¡Passkey añadido!',
       description: 'Tu passkey se ha vinculado correctamente a tu cuenta.',
     },
+    passkey_deleted: {
+      title: '¡Passkey eliminado!',
+      description: 'Tu passkey ha sido eliminado de tu cuenta.',
+    },
     social: {
       title: '¡Cuenta social vinculada!',
       description: 'Tu cuenta social ha sido vinculada exitosamente.',
@@ -166,7 +170,24 @@ const account_center = {
     generate_new: 'Generar nuevos códigos de respaldo',
     delete_confirmation_title: 'Eliminar tus códigos de respaldo',
     delete_confirmation_description:
-      'Si eliminas estos códigos de respaldo, no podrás usarlos para verificar.',
+      'Si eliminas estos códigos de respaldo, no podrás verificarte con ellos.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Añadido: {{date}}',
+    last_used: 'Último uso: {{date}}',
+    never_used: 'Nunca',
+    unnamed: 'Passkey sin nombre',
+    renamed: 'Passkey renombrado correctamente.',
+    add_another_title: 'Añadir otro passkey',
+    add_another_description:
+      'Registra tu passkey usando biometría del dispositivo, llaves de seguridad (ej. YubiKey) u otros métodos disponibles.',
+    add_passkey: 'Añadir un passkey',
+    delete_confirmation_title: 'Eliminar passkey',
+    delete_confirmation_description:
+      '¿Estás seguro de que deseas eliminar "{{name}}"? Ya no podrás usar este passkey para iniciar sesión.',
+    rename_passkey: 'Renombrar passkey',
+    rename_description: 'Ingresa un nuevo nombre para este passkey.',
   },
 };
 

@@ -96,7 +96,7 @@ const account_center = {
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
   },
   mfa: {
-    totp_already_added: '認証アプリは既に追加されています。まず既存のものを削除してください。',
+    totp_already_added: '認証アプリはすでに追加されています。まず既存のものを削除してください。',
     totp_not_enabled: '認証アプリは有効になっていません。管理者に連絡して有効にしてください。',
     backup_code_already_added:
       'すでに有効なバックアップコードがあります。新しいコードを生成する前に、これらを使用するか削除してください。',
@@ -148,6 +148,10 @@ const account_center = {
       title: 'パスキーが追加されました！',
       description: 'パスキーがアカウントに正常にリンクされました。',
     },
+    passkey_deleted: {
+      title: 'パスキーが削除されました！',
+      description: 'パスキーがアカウントから削除されました。',
+    },
   },
   backup_code: {
     title: 'バックアップコード',
@@ -159,6 +163,23 @@ const account_center = {
     delete_confirmation_title: 'バックアップコードを削除',
     delete_confirmation_description:
       'これらのバックアップコードを削除すると、認証に使用できなくなります。',
+  },
+  passkey: {
+    title: 'パスキー',
+    added: '追加日: {{date}}',
+    last_used: '最後の使用: {{date}}',
+    never_used: '未使用',
+    unnamed: '名前なしのパスキー',
+    renamed: 'パスキーの名前を変更しました。',
+    add_another_title: '別のパスキーを追加',
+    add_another_description:
+      'デバイスの生体認証、セキュリティキー（例: YubiKey）、またはその他の利用可能な方法を使用してパスキーを登録してください。',
+    add_passkey: 'パスキーを追加',
+    delete_confirmation_title: 'パスキーを削除',
+    delete_confirmation_description:
+      '「{{name}}」を削除してもよろしいですか？このパスキーでログインできなくなります。',
+    rename_passkey: 'パスキー名を変更',
+    rename_description: 'このパスキーの新しい名前を入力してください。',
   },
 };
 

@@ -30,6 +30,8 @@ const action = {
   verify_via_passkey: '通过 Passkey 验证',
   download: '下载',
   remove: '移除',
+  edit: '编辑',
+  save: '保存',
   single_sign_on: '单点登录',
   authorize: '授权',
   use_another_account: '使用另一个账号',

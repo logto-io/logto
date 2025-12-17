@@ -153,6 +153,10 @@ const account_center = {
       title: 'Passkey додано!',
       description: "Ваш passkey успішно під'єднано до вашого облікового запису.",
     },
+    passkey_deleted: {
+      title: 'Passkey видалено!',
+      description: 'Ваш passkey було видалено з вашого облікового запису.',
+    },
   },
   backup_code: {
     title: 'Резервні коди',
@@ -164,6 +168,23 @@ const account_center = {
     delete_confirmation_title: 'Видалити ваші резервні коди',
     delete_confirmation_description:
       'Якщо ви видалите ці резервні коди, ви не зможете використовувати їх для підтвердження.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Додано: {{date}}',
+    last_used: 'Останнє використання: {{date}}',
+    never_used: 'Ніколи',
+    unnamed: 'Passkey без назви',
+    renamed: 'Passkey успішно перейменовано.',
+    add_another_title: 'Додати інший passkey',
+    add_another_description:
+      'Зареєструйте свій passkey за допомогою біометрії пристрою, ключів безпеки (наприклад, YubiKey) або інших доступних методів.',
+    add_passkey: 'Додати passkey',
+    delete_confirmation_title: 'Видалити passkey',
+    delete_confirmation_description:
+      'Ви впевнені, що хочете видалити "{{name}}"? Ви більше не зможете використовувати цей passkey для входу.',
+    rename_passkey: 'Перейменувати passkey',
+    rename_description: 'Введіть нову назву для цього passkey.',
   },
 };
 

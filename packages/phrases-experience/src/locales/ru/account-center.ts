@@ -146,6 +146,10 @@ const account_center = {
       title: 'Passkey добавлен!',
       description: 'Ваш passkey был успешно привязан к вашему аккаунту.',
     },
+    passkey_deleted: {
+      title: 'Passkey удалён!',
+      description: 'Ваш passkey был удалён из вашего аккаунта.',
+    },
     social: {
       title: 'Социальный аккаунт привязан!',
       description: 'Ваш социальный аккаунт был успешно привязан.',
@@ -161,6 +165,23 @@ const account_center = {
     delete_confirmation_title: 'Удалить резервные коды',
     delete_confirmation_description:
       'Если вы удалите эти резервные коды, вы не сможете использовать их для подтверждения.',
+  },
+  passkey: {
+    title: 'Passkeys',
+    added: 'Добавлен: {{date}}',
+    last_used: 'Последнее использование: {{date}}',
+    never_used: 'Никогда',
+    unnamed: 'Безымянный passkey',
+    renamed: 'Passkey успешно переименован.',
+    add_another_title: 'Добавить другой passkey',
+    add_another_description:
+      'Зарегистрируйте свой passkey с помощью биометрии устройства, ключей безопасности (например, YubiKey) или других доступных методов.',
+    add_passkey: 'Добавить passkey',
+    delete_confirmation_title: 'Удалить passkey',
+    delete_confirmation_description:
+      'Вы уверены, что хотите удалить "{{name}}"? Вы больше не сможете использовать этот passkey для входа.',
+    rename_passkey: 'Переименовать passkey',
+    rename_description: 'Введите новое имя для этого passkey.',
   },
 };
 

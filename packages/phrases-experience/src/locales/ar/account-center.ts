@@ -143,6 +143,10 @@ const account_center = {
       title: 'تمت إضافة مفتاح المرور!',
       description: 'تم ربط مفتاح المرور بحسابك بنجاح.',
     },
+    passkey_deleted: {
+      title: 'تم حذف مفتاح المرور!',
+      description: 'تم حذف مفتاح المرور من حسابك.',
+    },
   },
   backup_code: {
     title: 'رموز النسخ الاحتياطي',
@@ -154,6 +158,23 @@ const account_center = {
     delete_confirmation_title: 'حذف رموز النسخ الاحتياطي',
     delete_confirmation_description:
       'إذا قمت بحذف رموز النسخ الاحتياطي هذه، فلن تتمكن من استخدامها للتحقق.',
+  },
+  passkey: {
+    title: 'مفاتيح المرور',
+    added: 'تمت الإضافة: {{date}}',
+    last_used: 'آخر استخدام: {{date}}',
+    never_used: 'أبدًا',
+    unnamed: 'مفتاح مرور بدون اسم',
+    renamed: 'تم تغيير اسم مفتاح المرور بنجاح.',
+    add_another_title: 'إضافة مفتاح مرور آخر',
+    add_another_description:
+      'قم بتسجيل مفتاح المرور الخاص بك باستخدام المقاييس الحيوية للجهاز أو مفاتيح الأمان (مثل YubiKey) أو الطرق الأخرى المتاحة.',
+    add_passkey: 'إضافة مفتاح مرور',
+    delete_confirmation_title: 'حذف مفتاح المرور',
+    delete_confirmation_description:
+      'هل أنت متأكد أنك تريد حذف "{{name}}"؟ لن تتمكن من استخدام مفتاح المرور هذا لتسجيل الدخول بعد الآن.',
+    rename_passkey: 'إعادة تسمية مفتاح المرور',
+    rename_description: 'أدخل اسمًا جديدًا لمفتاح المرور هذا.',
   },
 };
 
