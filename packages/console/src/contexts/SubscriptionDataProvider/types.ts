@@ -7,7 +7,7 @@ import {
   type NewSubscriptionRoleScopeUsage,
 } from '@/cloud/types/router';
 
-export type Context = {
+type BaseContext = {
   currentSubscription: Subscription;
   onCurrentSubscriptionUpdated: (subscription?: Subscription) => void;
 };
@@ -19,7 +19,7 @@ export type SubscriptionUsageOptions<T extends keyof NewSubscriptionCountBasedUs
   usage?: NewSubscriptionCountBasedUsage[T];
 };
 
-type NewSubscriptionSupplementContext = {
+type SubscriptionSupplementContext = {
   logtoSkus: LogtoSkuResponse[];
   currentSku: LogtoSkuResponse;
   currentSubscriptionQuota: NewSubscriptionQuota;
@@ -30,7 +30,7 @@ type NewSubscriptionSupplementContext = {
   mutateSubscriptionQuotaAndUsages: () => void;
 };
 
-type NewSubscriptionResourceStatus = {
+type SubscriptionResourceStatus = {
   /**
    * Quota checking function with business rules applied.
    *
@@ -55,8 +55,6 @@ type NewSubscriptionResourceStatus = {
   ) => boolean;
 };
 
-export type NewSubscriptionContext = Context & NewSubscriptionSupplementContext;
+export type SubscriptionContext = BaseContext & SubscriptionSupplementContext;
 
-export type FullContext = Context &
-  NewSubscriptionSupplementContext &
-  NewSubscriptionResourceStatus;
+export type FullContext = BaseContext & SubscriptionSupplementContext & SubscriptionResourceStatus;

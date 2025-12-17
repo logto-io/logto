@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 
@@ -46,24 +46,28 @@ export default function TenantAccess() {
   const { mutate } = useSWRConfig();
   const { pathname } = useLocation();
   const { defaultTenantId } = useUserDefaultTenantId();
+  const [isCacheCleared, setIsCacheCleared] = useState(false);
 
   // Clean the cache when the current tenant ID changes. This is required because the
   // SWR cache key is not tenant-aware.
   useEffect(() => {
-    /**
-     * The official cache clean method, see {@link https://github.com/vercel/swr/issues/1887#issuecomment-1171269211 | this comment}.
-     *
-     * Exceptions:
-     * - Exclude the `me` key because it's not tenant-aware. If don't, we need to manually
-     * revalidate the `me` key to make console work again.
-     * - Exclude keys that include `/.well-known/` because they are usually static and
-     * should not be revalidated.
-     */
-    void mutate(
-      (key) => typeof key !== 'string' || (key !== 'me' && !key.includes('/.well-known/')),
-      undefined,
-      { rollbackOnError: false, throwOnError: false }
-    );
+    (async () => {
+      /**
+       * The official cache clean method, see {@link https://github.com/vercel/swr/issues/1887#issuecomment-1171269211 | this comment}.
+       *
+       * Exceptions:
+       * - Exclude the `me` key because it's not tenant-aware. If don't, we need to manually
+       * revalidate the `me` key to make console work again.
+       * - Exclude keys that include `/.well-known/` because they are usually static and
+       * should not be revalidated.
+       */
+      await mutate(
+        (key) => typeof key !== 'string' || (key !== 'me' && !key.includes('/.well-known/')),
+        undefined,
+        { rollbackOnError: false, throwOnError: false }
+      );
+      setIsCacheCleared(true);
+    })();
   }, [mutate, currentTenantId]);
 
   useEffect(() => {
@@ -86,6 +90,10 @@ export default function TenantAccess() {
       window.location.href = '/';
     }
   }, [currentTenant, currentTenantId, isAuthenticated, pathname, defaultTenantId]);
+
+  if (!isCacheCleared) {
+    return null;
+  }
 
   return <Outlet />;
 }
