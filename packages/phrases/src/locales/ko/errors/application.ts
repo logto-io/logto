@@ -4,6 +4,8 @@ const application = {
   invalid_role_type: '사용자 유형 역할을 기계 대 기계 응용 프로그램에 할당할 수 없습니다.',
   invalid_third_party_application_type:
     '전통적인 웹 응용 프로그램만 제 3자 앱으로 표시할 수 있습니다.',
+  invalid_third_party_application_type_dev:
+    '전통적인 웹 응용 프로그램, 단일 페이지 응용 프로그램 및 네이티브 응용 프로그램만 제 3자 앱으로 표시할 수 있습니다.',
   third_party_application_only: '해당 기능은 제 3자 응용프로그램에만 사용할 수 있습니다.',
   user_consent_scopes_not_found: '유효하지 않은 사용자 동의 범위입니다.',
   consent_management_api_scopes_not_allowed: '管理 API 범위 허용되지 않습니다.',

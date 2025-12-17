@@ -5,6 +5,8 @@ const application = {
     'Es ist nicht möglich, einer Maschinen-zu-Maschinen-Anwendung eine Benutzertyp-Rolle zuzuweisen.',
   invalid_third_party_application_type:
     'Nur traditionelle Webanwendungen können als Drittanbieter-App markiert werden.',
+  invalid_third_party_application_type_dev:
+    'Nur traditionelle Web-, Single-Page- und native Anwendungen können als Drittanbieter-Apps markiert werden.',
   third_party_application_only: 'Das Feature ist nur für Drittanbieter-Anwendungen verfügbar.',
   user_consent_scopes_not_found: 'Ungültige Benutzerzustimmungsbereiche.',
   consent_management_api_scopes_not_allowed: 'Management API scopes sind nicht erlaubt.',

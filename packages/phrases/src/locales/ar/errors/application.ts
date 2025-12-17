@@ -4,6 +4,8 @@ const application = {
   invalid_role_type: 'لا يمكن تعيين دور نوع المستخدم لتطبيق آلي إلى آلة.',
   invalid_third_party_application_type:
     'يمكن تحديد التطبيقات الويب التقليدية فقط كتطبيقات طرف ثالث.',
+  invalid_third_party_application_type_dev:
+    'يمكن تحديد تطبيقات الويب التقليدية والتطبيقات أحادية الصفحة والتطبيقات الأصلية فقط كتطبيقات طرف ثالث.',
   third_party_application_only: 'الميزة متاحة فقط لتطبيقات الطرف الثالث.',
   user_consent_scopes_not_found: 'نطاقات موافقة المستخدم غير صالحة.',
   consent_management_api_scopes_not_allowed:

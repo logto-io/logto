@@ -9,6 +9,7 @@ import {
   updateApplication,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { devFeatureTest, devFeatureDisabledTest } from '#src/utils.js';
 
 describe('application APIs', () => {
   it('should create application successfully', async () => {
@@ -26,14 +27,18 @@ describe('application APIs', () => {
     expect(fetchedApplication.id).toBe(application.id);
   });
 
-  it('should throw error when creating an OIDC third party application with invalid type', async () => {
-    await expectRejects(
-      createApplication('test-create-app', ApplicationType.Native, {
-        isThirdParty: true,
-      }),
-      { code: 'application.invalid_third_party_application_type', status: 400 }
-    );
-  });
+  // TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production
+  devFeatureDisabledTest.it(
+    'should throw error when creating an OIDC third party application with invalid type',
+    async () => {
+      await expectRejects(
+        createApplication('test-create-app', ApplicationType.MachineToMachine, {
+          isThirdParty: true,
+        }),
+        { code: 'application.invalid_third_party_application_type', status: 400 }
+      );
+    }
+  );
 
   it('should throw error when creating a SAML application', async () => {
     await expectRejects(createApplication('test-create-saml-app', ApplicationType.SAML), {
@@ -53,6 +58,36 @@ describe('application APIs', () => {
 
     expect(application.name).toBe(applicationName);
     expect(application.type).toBe(ApplicationType.Traditional);
+    expect(application.isThirdParty).toBe(true);
+
+    await deleteApplication(application.id);
+  });
+
+  // TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production
+  devFeatureTest.it('should create OIDC third party SPA application successfully', async () => {
+    const applicationName = 'test-third-party-spa';
+
+    const application = await createApplication(applicationName, ApplicationType.SPA, {
+      isThirdParty: true,
+    });
+
+    expect(application.name).toBe(applicationName);
+    expect(application.type).toBe(ApplicationType.SPA);
+    expect(application.isThirdParty).toBe(true);
+
+    await deleteApplication(application.id);
+  });
+
+  // TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production
+  devFeatureTest.it('should create OIDC third party Native application successfully', async () => {
+    const applicationName = 'test-third-party-native';
+
+    const application = await createApplication(applicationName, ApplicationType.Native, {
+      isThirdParty: true,
+    });
+
+    expect(application.name).toBe(applicationName);
+    expect(application.type).toBe(ApplicationType.Native);
     expect(application.isThirdParty).toBe(true);
 
     await deleteApplication(application.id);

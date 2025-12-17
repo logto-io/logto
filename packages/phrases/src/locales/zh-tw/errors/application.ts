@@ -3,6 +3,8 @@ const application = {
   role_exists: '該角色 ID {{roleId}} 已被添加至此應用程式。',
   invalid_role_type: '無法將使用者類型的角色指派給機器對機器應用程式。',
   invalid_third_party_application_type: '僅傳統網路應用程式可以標記為第三方應用程式。',
+  invalid_third_party_application_type_dev:
+    '僅傳統網頁應用程式、單頁應用程式和原生應用程式可以標記為第三方應用程式。',
   third_party_application_only: '該功能僅適用於第三方應用程式。',
   user_consent_scopes_not_found: '無效的使用者同意範圍。',
   consent_management_api_scopes_not_allowed: '管理 API 範圍不被允許。',

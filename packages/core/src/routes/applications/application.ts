@@ -14,6 +14,7 @@ import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -186,9 +187,16 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       );
 
       if (rest.isThirdParty) {
+        // TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production
+        const supportedThirdPartyApplicationTypes = EnvSet.values.isDevFeaturesEnabled
+          ? [ApplicationType.Traditional, ApplicationType.SPA, ApplicationType.Native]
+          : [ApplicationType.Traditional];
+
         assertThat(
-          rest.type === ApplicationType.Traditional,
-          'application.invalid_third_party_application_type'
+          supportedThirdPartyApplicationTypes.includes(rest.type),
+          EnvSet.values.isDevFeaturesEnabled
+            ? 'application.invalid_third_party_application_type_dev'
+            : 'application.invalid_third_party_application_type'
         );
       }
 

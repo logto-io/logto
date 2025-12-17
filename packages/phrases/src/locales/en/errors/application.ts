@@ -4,6 +4,9 @@ const application = {
   invalid_role_type: 'Can not assign user type role to machine to machine application.',
   invalid_third_party_application_type:
     'Only traditional web applications can be marked as a third-party app.',
+  /** @deprecated TODO: @xiaoyijun Remove this when third-party SPA and Native apps are ready for production, and rename `invalid_third_party_application_type_dev` to `invalid_third_party_application_type` */
+  invalid_third_party_application_type_dev:
+    'Only traditional web, single-page, and native applications can be marked as third-party apps.',
   third_party_application_only: 'The feature is only available for third-party applications.',
   user_consent_scopes_not_found: 'Invalid user consent scopes.',
   consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
