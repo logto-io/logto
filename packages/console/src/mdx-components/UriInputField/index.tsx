@@ -24,7 +24,7 @@ import type {
   OidcClientMetadataKey,
 } from '@/types/guide';
 import { trySubmitSafe } from '@/utils/form';
-import { uriValidator } from '@/utils/validator';
+import { redirectUriValidator, uriValidator } from '@/utils/validator';
 
 import styles from './index.module.scss';
 
@@ -68,6 +68,8 @@ function UriInputField(props: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
   const title: AdminConsoleKey = nameToKey[name];
+  const validator =
+    name === 'redirectUris' || name === 'postLogoutRedirectUris' ? redirectUriValidator : uriValidator;
 
   const onSubmit = trySubmitSafe(async (value: string[]) => {
     if (!appId || !data) {
@@ -117,7 +119,7 @@ function UriInputField(props: Props) {
             validate: createValidatorForRhf({
               required: t('errors.required_field_missing_plural', { field: t(title) }),
               pattern: {
-                verify: (value) => !value || uriValidator(value),
+                verify: (value) => !value || validator(value),
                 message: t('errors.invalid_uri_format'),
               },
             }),
