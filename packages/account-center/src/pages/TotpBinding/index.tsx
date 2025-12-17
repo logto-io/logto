@@ -167,6 +167,14 @@ const TotpBinding = () => {
     ]
   );
 
+  // Auto-submit when all 6 digits are entered
+  useEffect(() => {
+    if (!isCodeReady(codeInput)) {
+      return;
+    }
+    void handleSubmit();
+  }, [codeInput, handleSubmit]);
+
   if (
     !accountCenterSettings?.enabled ||
     accountCenterSettings.fields.mfa !== AccountCenterControlValue.Edit

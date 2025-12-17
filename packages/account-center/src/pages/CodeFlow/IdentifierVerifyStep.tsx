@@ -70,6 +70,14 @@ const IdentifierVerifyStep = ({
     setCountdown(resendCooldownSeconds);
   }, [verificationRecordId, resetSignal]);
 
+  // Auto-submit when all 6 digits are entered
+  useEffect(() => {
+    if (!isCodeReady) {
+      return;
+    }
+    onSubmit(codeInput.join(''));
+  }, [codeInput, isCodeReady, onSubmit]);
+
   useEffect(() => {
     if (typeof window === 'undefined' || countdown <= 0) {
       return;
