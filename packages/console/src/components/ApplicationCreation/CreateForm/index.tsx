@@ -80,13 +80,15 @@ function CreateForm({
   const { data } = useSWR<[Application[], number], RequestError>(
     !isCloud &&
       defaultCreateType === ApplicationType.SAML &&
-      buildUrl(applicationsEndpoint, {
-        page: String(1),
-        page_size: String(defaultPageSize),
-        isThirdParty: 'false',
-        type: ApplicationType.SAML,
-      })
+      buildUrl(applicationsEndpoint, [
+        ['page', String(1)],
+        ['page_size', String(defaultPageSize)],
+        ['isThirdParty', 'false'],
+        // This implementation can cover the scenario where `value` is an array.
+        ['types', ApplicationType.SAML],
+      ])
   );
+
   const [_, samlAppTotalCount] = data ?? [];
 
   const {
