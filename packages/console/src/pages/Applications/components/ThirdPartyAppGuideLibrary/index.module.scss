@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  flex: 1;
+  background: var(--color-layer-1);
+  border-radius: 12px;
+  padding: _.unit(6) 0;
+  margin-top: _.unit(4);
+
+  .title {
+    align-items: center;
+    margin-bottom: _.unit(6);
+    text-align: center;
+
+    .subtitle {
+      max-width: 704px;
+    }
+  }
+
+  .library {
+    padding: 0 _.unit(32);
+
+    > label {
+      align-self: flex-start;
+    }
+  }
+}
+

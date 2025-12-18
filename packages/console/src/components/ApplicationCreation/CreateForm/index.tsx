@@ -11,7 +11,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils';
 import LearnMore from '@/components/LearnMore';
 import { pricingLink, defaultPageSize, integrateLogto, thirdPartyApp } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -227,7 +227,21 @@ function CreateForm({
     >
       <ModalLayout
         title={
-          isDefaultCreateThirdParty ? 'applications.create_third_party' : 'applications.create'
+          isDefaultCreateThirdParty ? (
+            <DynamicT
+              forKey={
+                // TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production
+                isDevFeaturesEnabled
+                  ? 'applications.create_thrid_party_modal_title'
+                  : 'applications.create_third_party'
+              }
+              interpolation={{
+                type: t(`${applicationTypeI18nKey[applicationType]}.title`),
+              }}
+            />
+          ) : (
+            <DynamicT forKey="applications.create" />
+          )
         }
         subtitle={subtitleElement}
         paywall={paywall}

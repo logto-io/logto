@@ -17,6 +17,7 @@ export type Props = {
   readonly learnMoreLink?: LearnMoreProps;
   readonly isWordWrapEnabled?: boolean;
   readonly className?: string;
+  readonly subtitleClassName?: string;
   /**
    * If a paywall tag should be shown next to the title. The value is the plan type.
    * If not provided, no paywall tag will be shown.
@@ -35,6 +36,7 @@ function CardTitle({
   isWordWrapEnabled = false,
   learnMoreLink,
   className,
+  subtitleClassName,
   paywall,
   hasAddOnTag,
 }: Props) {
@@ -45,7 +47,7 @@ function CardTitle({
         <CombinedAddOnAndFeatureTag hasAddOnTag={hasAddOnTag} paywall={paywall} />
       </div>
       {Boolean(subtitle ?? learnMoreLink) && (
-        <div className={styles.subtitle}>
+        <div className={classNames(styles.subtitle, subtitleClassName)}>
           {subtitle && (
             <span>{typeof subtitle === 'string' ? <DynamicT forKey={subtitle} /> : subtitle}</span>
           )}
