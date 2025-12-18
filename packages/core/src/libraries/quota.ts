@@ -1,4 +1,4 @@
-import { ReservedPlanId, ConnectorType } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -7,6 +7,7 @@ import assertThat from '#src/utils/assert-that.js';
 import {
   reportSubscriptionUpdates,
   isReportSubscriptionUpdatesUsageKey,
+  isReportablePlan,
 } from '#src/utils/subscription/index.js';
 import {
   type Subscription,
@@ -29,12 +30,6 @@ import type Queries from '../tenants/Queries.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 import { type ConnectorLibrary } from './connector.js';
-
-const paidReservedPlans = new Set<string>([
-  ReservedPlanId.Pro,
-  ReservedPlanId.Pro202411,
-  ReservedPlanId.Pro202509,
-]);
 
 /**
  * Options for quota guard operations.
@@ -220,8 +215,7 @@ export class QuotaLibrary {
     planId: string,
     isEnterprisePlan: boolean,
     key: keyof SubscriptionQuota
-  ) =>
-    (paidReservedPlans.has(planId) || isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
+  ) => isReportablePlan(planId, isEnterprisePlan) && isReportSubscriptionUpdatesUsageKey(key);
 
   private readonly assertSystemLimit = async ({
     key,

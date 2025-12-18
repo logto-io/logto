@@ -86,6 +86,7 @@ const {
   getFullSignInExperience,
   findCaptchaPublicConfig,
 } = createSignInExperienceLibrary(
+  'tenant_foo',
   queries,
   connectorLibrary,
   mockSsoConnectorLibrary,

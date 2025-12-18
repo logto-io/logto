@@ -9,11 +9,11 @@ const createTenantQueries = (pool: CommonQueryMethods) => {
     fields: Tenants.rawKeys,
   });
 
-  const findTenantSuspendStatusById = async (
+  const findTenantMetadataById = async (
     id: string
-  ): Promise<Pick<TenantModel, 'id' | 'isSuspended'>> => {
-    const result = await pool.one<Pick<TenantModel, 'id' | 'isSuspended'>>(sql`
-      select ${sql.join([fields.id, fields.isSuspended], sql`, `)}
+  ): Promise<Pick<TenantModel, 'id' | 'isSuspended' | 'tag'>> => {
+    const result = await pool.one<Pick<TenantModel, 'id' | 'isSuspended' | 'tag'>>(sql`
+      select ${sql.join([fields.id, fields.isSuspended, fields.tag], sql`, `)}
       from ${table}
       where ${fields.id} = ${id}
     `);
@@ -22,7 +22,7 @@ const createTenantQueries = (pool: CommonQueryMethods) => {
   };
 
   return {
-    findTenantSuspendStatusById,
+    findTenantMetadataById,
   };
 };
 

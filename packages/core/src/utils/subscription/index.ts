@@ -1,3 +1,4 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
@@ -54,4 +55,19 @@ export const isReportSubscriptionUpdatesUsageKey = (
 ): value is ReportSubscriptionUpdatesUsageKey => {
   // eslint-disable-next-line no-restricted-syntax
   return allReportSubscriptionUpdatesUsageKeys.includes(value as ReportSubscriptionUpdatesUsageKey);
+};
+
+const paidReservedPlans = new Set<string>([
+  ReservedPlanId.Pro,
+  ReservedPlanId.Pro202411,
+  ReservedPlanId.Pro202509,
+]);
+
+/**
+ * @remarks
+ * Check whether the provided plan ID is a reportable (paid) plan.
+ * This method is mainly used in the usage reporting logic.
+ */
+export const isReportablePlan = (planId: string, isEnterprisePlan: boolean): boolean => {
+  return paidReservedPlans.has(planId) || isEnterprisePlan;
 };

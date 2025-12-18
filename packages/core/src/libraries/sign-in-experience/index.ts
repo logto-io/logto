@@ -8,7 +8,7 @@ import type {
   SignInExperience,
   SsoConnectorMetadata,
 } from '@logto/schemas';
-import { ConnectorType, ForgotPasswordMethod, ReservedPlanId } from '@logto/schemas';
+import { adminTenantId, ConnectorType, ForgotPasswordMethod, TenantTag } from '@logto/schemas';
 import { deduplicate, trySafe } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
@@ -20,7 +20,6 @@ import type { SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
-import { getTenantSubscription } from '#src/utils/subscription/index.js';
 import { isKeyOfI18nPhrases } from '#src/utils/translation.js';
 
 import { type CloudConnectionLibrary } from '../cloud-connection.js';
@@ -29,13 +28,10 @@ export * from './sign-up.js';
 export * from './sign-in.js';
 export * from './email-blocklist-policy.js';
 
-export const developmentTenantPlanId = 'dev';
-
-export type SignInExperienceLibrary = ReturnType<typeof createSignInExperienceLibrary>;
-
 type SignInExperienceOverride = Partial<Omit<SignInExperience, 'color'> & { color: PartialColor }>;
 
 export const createSignInExperienceLibrary = (
+  tenantId: string,
   queries: Queries,
   { getLogtoConnectors }: ConnectorLibrary,
   { getAvailableSsoConnectors }: SsoConnectorLibrary,
@@ -43,6 +39,7 @@ export const createSignInExperienceLibrary = (
   wellKnownCache: WellKnownCache
 ) => {
   const {
+    tenants: { findTenantMetadataById },
     customPhrases: { findAllCustomLanguageTags },
     signInExperiences: { findDefaultSignInExperience, updateDefaultSignInExperience },
     applicationSignInExperiences: { safeFindSignInExperienceByApplicationId },
@@ -119,8 +116,14 @@ export const createSignInExperienceLibrary = (
       return false;
     }
 
-    const subscription = await getTenantSubscription(cloudConnection);
-    return subscription.planId === ReservedPlanId.Development;
+    if (tenantId === adminTenantId) {
+      return false;
+    }
+
+    const { tag } = await queries.tenants.findTenantMetadataById(tenantId);
+
+    // Admin tenant has special treatment, always return false
+    return tag === TenantTag.Development;
   }, ['is-development-tenant']);
 
   /**
