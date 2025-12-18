@@ -43,7 +43,7 @@ describe('koaTenantGuard middleware', () => {
       isCloud: true,
     });
 
-    mockFindTenantStatusById.mockResolvedValueOnce({ tenantId, isSuspended: true });
+    mockFindTenantStatusById.mockResolvedValueOnce({ id: tenantId, isSuspended: true });
 
     await expect(koaTenantGuard(tenantId, queries)(ctx, next)).rejects.toMatchError(
       new RequestError('subscription.tenant_suspended', 403)
