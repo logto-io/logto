@@ -57,9 +57,8 @@ const useSignInFlowCodeVerification = (
     }
 
     show({
-      confirmText: 'action.create',
+      confirmText: 'action.continue',
       ModalContent: t('description.sign_in_id_does_not_exist', {
-        type: t(`description.${type === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
         value:
           type === SignInIdentifier.Phone ? formatPhoneNumberWithCountryCallingCode(value) : value,
       }),

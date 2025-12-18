@@ -18,10 +18,9 @@ const description = {
   resend_after_seconds:
     'Nie otrzymałeś jeszcze? Wyślij ponownie za <span>{{seconds}}</span> sekund',
   resend_passcode: 'Nie otrzymałeś jeszcze? <a>Wyślij ponownie kod weryfikacyjny</a>',
-  create_account_id_exists: 'Konto z {{type}} {{value}} już istnieje. Czy chcesz się zalogować?',
+  create_account_id_exists: 'Konto z {{value}} już istnieje. Kontynuuj logowanie.',
   link_account_id_exists: 'Konto z {{type}} {{value}} już istnieje. Czy chcesz je połączyć?',
-  sign_in_id_does_not_exist:
-    'Konto z {{type}} {{value}} nie istnieje. Czy chcesz utworzyć nowe konto?',
+  sign_in_id_does_not_exist: 'Nie znaleziono konta dla {{value}}. Utworzyć nowe?',
   sign_in_id_does_not_exist_alert: 'Konto z {{type}} {{value}} nie istnieje.',
   create_account_id_exists_alert:
     'Konto z {{type}} {{value}} jest połączone z innym kontem. Spróbuj inny {{type}}.',

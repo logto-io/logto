@@ -17,10 +17,9 @@ const description = {
   passcode_sent: 'Il codice di verifica è stato inviato di nuovo',
   resend_after_seconds: 'Non ricevuto? Invia di nuovo dopo <span>{{seconds}}</span> secondi',
   resend_passcode: 'Non ricevuto? <a>Invia di nuovo il codice di verifica</a>',
-  create_account_id_exists: "L'account con {{type}} {{value}} già esiste, vuoi accedere?",
+  create_account_id_exists: 'Un account con {{value}} già esiste. Continua ad accedere.',
   link_account_id_exists: "L'account con {{type}} {{value}} è già esistente. Vuoi collegarlo?",
-  sign_in_id_does_not_exist:
-    "L'account con {{type}} {{value}} non esiste, vuoi creare un nuovo account?",
+  sign_in_id_does_not_exist: 'Nessun account trovato per {{value}}. Crearne uno nuovo?',
   sign_in_id_does_not_exist_alert: "L'account con {{type}} {{value}} non esiste.",
   create_account_id_exists_alert:
     "L'account {{type}} {{value}} è collegato ad un altro account. Prova con un altro {{type}}.",

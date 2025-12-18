@@ -62,7 +62,6 @@ const useRegisterFlowCodeVerification = (
     show({
       confirmText: 'action.sign_in',
       ModalContent: t('description.create_account_id_exists', {
-        type: t(`description.${type === SignInIdentifier.Email ? 'email' : 'phone_number'}`),
         value:
           type === SignInIdentifier.Phone ? formatPhoneNumberWithCountryCallingCode(value) : value,
       }),

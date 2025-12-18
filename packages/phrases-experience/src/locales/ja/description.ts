@@ -17,11 +17,10 @@ const description = {
   passcode_sent: '確認コードを再送します',
   resend_after_seconds: 'まだ届いていませんか？ <span>{{seconds}}</span> 秒後に再送',
   resend_passcode: 'まだ届いていませんか？ <a>認証コードを再送</a>',
-  create_account_id_exists:
-    '{{type}} {{value}}でアカウントが既に存在しています。ログインしますか？',
+  create_account_id_exists: 'アカウント {{value}} が既に存在しています。ログインを続けます。',
   link_account_id_exists: '{{type}} {{value}}でアカウントが既に存在しています。リンクしますか？',
   sign_in_id_does_not_exist:
-    '{{type}} {{value}}のアカウントは存在しません。新しいアカウントを作成しますか？',
+    '{{value}} のアカウントが見つかりません。新しいアカウントを作成しますか？',
   sign_in_id_does_not_exist_alert: '{{type}} {{value}}のアカウントは存在しません。',
   create_account_id_exists_alert:
     '{{type}} {{value}}は他のアカウントにリンクされています。他の{{type}}を試してください。',
