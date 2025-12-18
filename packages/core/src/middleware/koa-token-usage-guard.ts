@@ -7,8 +7,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
-
-import { isReportablePlan } from '../utils/subscription/index.js';
+import { isReportablePlan } from '#src/utils/subscription/index.js';
 
 /**
  * This middleware will be applied to the /token endpoint to validate the current tenant's token usage.
