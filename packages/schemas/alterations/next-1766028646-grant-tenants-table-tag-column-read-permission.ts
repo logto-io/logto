@@ -11,7 +11,7 @@ const getDatabaseName = async (pool: CommonQueryMethods) => {
 };
 
 /**
- * Grant read permission to the is_suspended column in the tenants table to the logto_tenant_<databaseName> role.
+ * Grant read permission to the tag column in the tenants table to the logto_tenant_<databaseName> role.
  */
 const alteration: AlterationScript = {
   up: async (pool) => {
@@ -29,7 +29,7 @@ const alteration: AlterationScript = {
     const baseRoleId = sql.identifier([`logto_tenant_${databaseName}`]);
 
     await pool.query(sql`
-      revoke select(tag)
+      revoke select (tag)
         on table tenants
         from ${baseRoleId}
     `);
