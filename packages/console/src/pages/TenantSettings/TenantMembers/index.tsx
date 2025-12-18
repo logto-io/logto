@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useContext, useState } from 'react';
+import { startTransition, useContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import useSWRMutation from 'swr/mutation';
 
@@ -76,7 +76,10 @@ function TenantMembers() {
               if (isInvitationTab) {
                 void mutateInvitations();
               } else {
-                navigate('invitations');
+                // Defer navigation to avoid modal closing render being interrupted
+                startTransition(() => {
+                  navigate('invitations');
+                });
               }
             }
           }}
