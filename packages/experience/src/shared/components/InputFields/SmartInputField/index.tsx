@@ -75,7 +75,7 @@ const SmartInputField = (
         <AnimatedPrefix isVisible={isPrefixVisible}>
           <CountryCodeSelector
             value={countryCode}
-            inputRef={innerRef.current}
+            inputRef={innerRef}
             isInteractive={isInputEditable}
             onChange={(value) => {
               onCountryCodeChange(value);
