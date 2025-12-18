@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import ClearIcon from '@/assets/icons/clear-icon.svg?react';
 import { InputField } from '@/components/InputFields';
+import ClearIcon from '@/shared/assets/icons/clear-icon.svg?react';
 import Button from '@/shared/components/Button';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import IconButton from '@/shared/components/IconButton';

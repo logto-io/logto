@@ -1,9 +1,12 @@
+import ClearIcon from '@experience/shared/assets/icons/clear-icon.svg?react';
 import Button from '@experience/shared/components/Button';
 import ErrorMessage from '@experience/shared/components/ErrorMessage';
-import PasswordInputField from '@experience/shared/components/InputFields/PasswordInputField';
+import IconButton from '@experience/shared/components/IconButton';
+import InputField from '@experience/shared/components/InputFields/InputField';
 import { useCallback, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import TogglePassword from './TogglePassword';
 import styles from './index.module.scss';
 
 type Props = {
@@ -31,6 +34,7 @@ const SetPassword = ({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [localError, setLocalError] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const mergedError = useMemo(() => localError ?? errorMessage, [errorMessage, localError]);
 
@@ -63,14 +67,25 @@ const SetPassword = ({
   return (
     <form className={className ?? styles.form} onSubmit={handleSubmit}>
       {beforeFields}
-      <PasswordInputField
+      <InputField
         className={styles.inputField}
+        type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
         label={t('input.password')}
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus={autoFocus}
         value={newPassword}
         maxLength={maxLength}
+        isSuffixFocusVisible={Boolean(newPassword)}
+        suffix={
+          <IconButton
+            onClick={() => {
+              setNewPassword('');
+            }}
+          >
+            <ClearIcon />
+          </IconButton>
+        }
         onChange={(event) => {
           if (event.target instanceof HTMLInputElement) {
             setNewPassword(event.target.value);
@@ -78,12 +93,23 @@ const SetPassword = ({
         }}
       />
 
-      <PasswordInputField
+      <InputField
         className={styles.inputField}
+        type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
         label={t('input.confirm_password')}
         value={confirmPassword}
         maxLength={maxLength}
+        isSuffixFocusVisible={Boolean(confirmPassword)}
+        suffix={
+          <IconButton
+            onClick={() => {
+              setConfirmPassword('');
+            }}
+          >
+            <ClearIcon />
+          </IconButton>
+        }
         onChange={(event) => {
           if (event.target instanceof HTMLInputElement) {
             setConfirmPassword(event.target.value);
@@ -91,7 +117,9 @@ const SetPassword = ({
         }}
       />
 
-      {mergedError && <ErrorMessage className={styles.errors}>{mergedError}</ErrorMessage>}
+      {mergedError && <ErrorMessage className={styles.formErrors}>{mergedError}</ErrorMessage>}
+
+      <TogglePassword isChecked={showPassword} onChange={setShowPassword} />
 
       <Button
         name="submit"

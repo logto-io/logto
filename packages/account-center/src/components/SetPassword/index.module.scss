@@ -1,15 +1,33 @@
 @use '@experience/shared/scss/underscore' as _;
 
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: _.unit(4);
+  @include _.flex-column;
+
+  > * {
+    width: 100%;
+  }
+
+  .inputField,
+  .formErrors,
+  .passwordSwitch {
+    margin-bottom: _.unit(4);
+  }
+
+  .formErrors {
+    margin-inline-start: _.unit(0.5);
+    margin-top: _.unit(-3);
+  }
 }
 
-.inputField {
+.passwordSwitch {
+  @include _.flex-row;
   width: 100%;
-}
+  user-select: none;
+  cursor: pointer;
 
-.errors {
-  margin-top: _.unit(2);
+  .checkbox {
+    margin-inline-end: _.unit(2);
+    fill: var(--color-type-secondary);
+    cursor: pointer;
+  }
 }
