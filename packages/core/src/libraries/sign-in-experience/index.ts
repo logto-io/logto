@@ -113,13 +113,13 @@ export const createSignInExperienceLibrary = (
       return false;
     }
 
+    // Admin tenant has special treatment, always return false
     if (tenantId === adminTenantId) {
       return false;
     }
 
     const { tag } = await findTenantMetadataById(tenantId);
 
-    // Admin tenant has special treatment, always return false
     return tag === TenantTag.Development;
   }, ['is-development-tenant']);
 
