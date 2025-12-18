@@ -1,3 +1,4 @@
+import { formatPhoneNumberWithCountryCallingCode } from '@experience/utils/country-code';
 import { useContext } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
@@ -31,7 +32,9 @@ const PhoneVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: Pro
       codeInputName="phoneCode"
       translationKeys={phoneTranslationKeys}
       identifierLabelKey="account_center.phone_verification.phone_label"
-      descriptionPropsBuilder={(value) => ({ phone: value })}
+      descriptionPropsBuilder={(value) => ({
+        phone: formatPhoneNumberWithCountryCallingCode(value),
+      })}
       sendCode={sendPhoneVerificationCode}
       verifyCode={async (accessToken, payload) =>
         verifyPhoneVerificationCode(accessToken, {
