@@ -17,10 +17,9 @@ const description = {
   passcode_sent: 'O código de verificação foi reenviado',
   resend_after_seconds: 'Ainda não recebeu? Reenviar após <span>{{seconds}}</span> segundos',
   resend_passcode: 'Ainda não recebeu? <a>Reenviar código de verificação</a>',
-  create_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de entrar?',
+  create_account_id_exists: 'Uma conta com {{value}} já existe. Continuar a entrar.',
   link_account_id_exists: 'A conta com {{type}} {{value}} já existe, gostaria de vincular?',
-  sign_in_id_does_not_exist:
-    'A conta com {{type}} {{value}} não existe, gostaria de criar uma nova conta?',
+  sign_in_id_does_not_exist: 'Nenhuma conta encontrada para {{value}}. Criar uma nova?',
   sign_in_id_does_not_exist_alert: 'A conta com {{type}} {{value}} não existe.',
   create_account_id_exists_alert:
     'A conta com {{type}} {{value}} está vinculada a outra conta. Por favor, tente outro {{type}}.',

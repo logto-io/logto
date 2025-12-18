@@ -17,10 +17,9 @@ const description = {
   passcode_sent: 'ได้ส่งรหัสยืนยันใหม่อีกครั้งแล้ว',
   resend_after_seconds: 'ยังไม่ได้รับใช่ไหม? ขอรหัสใหม่ได้หลัง <span>{{seconds}}</span> วินาที',
   resend_passcode: 'ยังไม่ได้รับใช่ไหม? <a>ขอรหัสยืนยันใหม่</a>',
-  create_account_id_exists: 'บัญชี {{type}} {{value}} นี้มีอยู่แล้ว คุณต้องการเข้าสู่ระบบไหม?',
+  create_account_id_exists: 'บัญชี {{value}} มีอยู่แล้ว ดำเนินการเข้าสู่ระบบต่อ',
   link_account_id_exists: 'บัญชี {{type}} {{value}} นี้มีอยู่แล้ว คุณต้องการเชื่อมโยงหรือไม่?',
-  sign_in_id_does_not_exist:
-    'บัญชี {{type}} {{value}} นี้ยังไม่มีอยู่ คุณต้องการสร้างบัญชีใหม่หรือไม่?',
+  sign_in_id_does_not_exist: 'ไม่พบบัญชีสำหรับ {{value}} สร้างบัญชีใหม่หรือไม่?',
   sign_in_id_does_not_exist_alert: 'บัญชี {{type}} {{value}} นี้ยังไม่มีอยู่',
   create_account_id_exists_alert:
     'บัญชี {{type}} {{value}} นี้ได้เชื่อมโยงกับบัญชีอื่นแล้ว โปรดลองใช้ {{type}} อื่น',
