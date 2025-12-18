@@ -22,8 +22,6 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isKeyOfI18nPhrases } from '#src/utils/translation.js';
 
-import { type CloudConnectionLibrary } from '../cloud-connection.js';
-
 export * from './sign-up.js';
 export * from './sign-in.js';
 export * from './email-blocklist-policy.js';
@@ -35,7 +33,6 @@ export const createSignInExperienceLibrary = (
   queries: Queries,
   { getLogtoConnectors }: ConnectorLibrary,
   { getAvailableSsoConnectors }: SsoConnectorLibrary,
-  cloudConnection: CloudConnectionLibrary,
   wellKnownCache: WellKnownCache
 ) => {
   const {
@@ -120,7 +117,7 @@ export const createSignInExperienceLibrary = (
       return false;
     }
 
-    const { tag } = await queries.tenants.findTenantMetadataById(tenantId);
+    const { tag } = await findTenantMetadataById(tenantId);
 
     // Admin tenant has special treatment, always return false
     return tag === TenantTag.Development;
