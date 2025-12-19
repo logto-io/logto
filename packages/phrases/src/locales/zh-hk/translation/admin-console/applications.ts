@@ -64,7 +64,7 @@ const applications = {
     third_party: {
       title: '整合第三方應用程式',
       description:
-        '使用 Logto 作為身份提供者為第三方服務提供 OAuth 授權。包含用於安全資源訪問的預建用戶同意螢幕。',
+        '使用 Logto 作為身份提供者為第三方服務提供 OAuth 授權。包含用於安全資源訪問的預建用戶同意螢幕。<a>了解更多</a>',
     },
   },
 };

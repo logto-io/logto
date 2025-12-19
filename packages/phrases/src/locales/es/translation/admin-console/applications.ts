@@ -66,7 +66,7 @@ const applications = {
     third_party: {
       title: 'Integrar una aplicación de terceros',
       description:
-        'Usa Logto como tu Proveedor de Identidad para proporcionar autorización OAuth a servicios de terceros. Incluye una pantalla de consentimiento de usuario preconstruida para un acceso seguro a los recursos.',
+        'Usa Logto como tu Proveedor de Identidad para proporcionar autorización OAuth a servicios de terceros. Incluye una pantalla de consentimiento de usuario preconstruida para un acceso seguro a los recursos. <a>Más información</a>',
     },
   },
 };

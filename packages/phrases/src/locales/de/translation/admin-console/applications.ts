@@ -66,7 +66,7 @@ const applications = {
     third_party: {
       title: 'Integriere eine Drittanbieteranwendung',
       description:
-        'Verwende Logto als Identity Provider, um OAuth-Autorisierung für Drittanbieterdienste bereitzustellen. Beinhaltet einen vorgefertigten Benutzerzustimmungsbildschirm für sicheren Ressourcenzugriff.',
+        'Verwende Logto als Identity Provider, um OAuth-Autorisierung für Drittanbieterdienste bereitzustellen. Beinhaltet einen vorgefertigten Benutzerzustimmungsbildschirm für sicheren Ressourcenzugriff. <a>Mehr erfahren</a>',
     },
   },
 };
