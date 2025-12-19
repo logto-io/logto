@@ -72,16 +72,20 @@ function TenantMembers() {
           isOpen={showInviteModal}
           onClose={(isSuccessful) => {
             setShowInviteModal(false);
-            if (isSuccessful) {
-              if (isInvitationTab) {
-                void mutateInvitations();
-              } else {
-                // Defer navigation to avoid modal closing render being interrupted
-                startTransition(() => {
-                  navigate('invitations');
-                });
-              }
+
+            if (!isSuccessful) {
+              return;
             }
+
+            if (isInvitationTab) {
+              void mutateInvitations();
+              return;
+            }
+
+            // Defer navigation to avoid modal closing render being interrupted
+            startTransition(() => {
+              navigate('invitations');
+            });
           }}
         />
       )}
