@@ -3,7 +3,6 @@ import {
   type ApplicationResponse,
   type SnakeCaseOidcConfig,
 } from '@logto/schemas';
-import { condArray } from '@silverhand/essentials';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -20,7 +19,6 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import OrganizationList from '@/components/OrganizationList';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedApp } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -129,10 +127,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
           data.isThirdParty
             ? [
                 t(`${applicationTypeI18nKey.thirdParty}.title`),
-                ...condArray(
-                  // TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production
-                  isDevFeaturesEnabled && t(`${applicationTypeI18nKey[data.type]}.title`)
-                ),
+                t(`${applicationTypeI18nKey[data.type]}.title`),
               ]
             : t(`${applicationTypeI18nKey[data.type]}.title`)
         }

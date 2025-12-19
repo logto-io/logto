@@ -13,7 +13,6 @@ import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
 import LearnMore from '@/components/LearnMore';
 import PageMeta from '@/components/PageMeta';
 import { integrateLogto } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -182,12 +181,10 @@ function Applications({ tab }: Props) {
           />
         </div>
       )}
-      {/* TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production */}
-      {!isLoading && !applications?.length && isThirdPartyTab && isDevFeaturesEnabled && (
+      {!isLoading && !applications?.length && isThirdPartyTab && (
         <ThirdPartyAppGuideLibrary onSelectGuide={setSelectedGuide} />
       )}
-      {/* TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production */}
-      {(isLoading || !!applications?.length || (isThirdPartyTab && !isDevFeaturesEnabled)) && (
+      {(isLoading || !!applications?.length) && (
         <Table
           isLoading={isLoading}
           className={pageLayout.table}

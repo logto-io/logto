@@ -8,8 +8,6 @@ const metadata: Readonly<GuideMetadata> = Object.freeze({
   target: ApplicationType.Native,
   isThirdParty: true,
   skipGuideAfterCreation: true,
-  // TODO: @xiaoyijun Remove isDevFeature when third-party SPA and Native apps are ready for production
-  isDevFeature: true,
 });
 
 export default metadata;
