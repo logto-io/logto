@@ -16,7 +16,7 @@ export default function koaTenantGuard<StateT, ContextT extends IRouterParamCont
       return next();
     }
 
-    const { isSuspended } = await tenants.findTenantSuspendStatusById(tenantId);
+    const { isSuspended } = await tenants.findTenantMetadataById(tenantId);
 
     if (isSuspended) {
       throw new RequestError('subscription.tenant_suspended', 403);

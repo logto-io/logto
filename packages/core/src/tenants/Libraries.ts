@@ -57,10 +57,10 @@ export default class Libraries {
   ssoConnectors = createSsoConnectorLibrary(this.queries);
   oneTimeTokens = createOneTimeTokenLibrary(this.queries);
   signInExperiences = createSignInExperienceLibrary(
+    this.tenantId,
     this.queries,
     this.connectors,
     this.ssoConnectors,
-    this.cloudConnection,
     this.queries.wellKnownCache
   );
 

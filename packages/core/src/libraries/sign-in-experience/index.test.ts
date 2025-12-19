@@ -19,12 +19,8 @@ import {
 import { WellKnownCache } from '#src/caches/well-known.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
-import {
-  mockLogtoConfigsLibrary,
-  mockSsoConnectorLibrary,
-} from '#src/test-utils/mock-libraries.js';
+import { mockSsoConnectorLibrary } from '#src/test-utils/mock-libraries.js';
 
-import { createCloudConnectionLibrary } from '../cloud-connection.js';
 import { createConnectorLibrary } from '../connector.js';
 
 const { jest } = import.meta;
@@ -68,14 +64,6 @@ const queries = new MockQueries({
 const connectorLibrary = createConnectorLibrary(queries, {
   getClient: jest.fn(),
 });
-const cloudConnection = createCloudConnectionLibrary({
-  ...mockLogtoConfigsLibrary,
-  getCloudConnectionData: jest.fn().mockResolvedValue({
-    appId: 'appId',
-    appSecret: 'appSecret',
-    resource: 'resource',
-  }),
-});
 
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
@@ -86,10 +74,10 @@ const {
   getFullSignInExperience,
   findCaptchaPublicConfig,
 } = createSignInExperienceLibrary(
+  'tenant_foo',
   queries,
   connectorLibrary,
   mockSsoConnectorLibrary,
-  cloudConnection,
   new WellKnownCache('foo', new TtlCache())
 );
 

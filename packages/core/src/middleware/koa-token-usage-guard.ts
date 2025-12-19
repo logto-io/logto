@@ -1,5 +1,5 @@
 import { appInsights } from '@logto/app-insights/node';
-import { adminTenantId, ReservedPlanId } from '@logto/schemas';
+import { adminTenantId } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
 import { type MiddlewareType } from 'koa';
 
@@ -7,8 +7,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type SubscriptionLibrary } from '#src/libraries/subscription.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
-
-const guardedPlanIds = new Set<string>([ReservedPlanId.Free, ReservedPlanId.Development]);
+import { isReportablePlan } from '#src/utils/subscription/index.js';
 
 /**
  * This middleware will be applied to the /token endpoint to validate the current tenant's token usage.
@@ -41,12 +40,14 @@ export default function koaTokenUsageGuard<StateT, ContextT, ResponseBodyT>(
     try {
       const {
         planId,
+        isEnterprisePlan,
         currentPeriodEnd,
         currentPeriodStart,
         quota: { tokenLimit },
       } = await subscriptionLibrary.getSubscriptionData();
 
-      if (!guardedPlanIds.has(planId)) {
+      // Skip the token usage guard for paid plans.
+      if (isReportablePlan(planId, isEnterprisePlan)) {
         await next();
         return;
       }
