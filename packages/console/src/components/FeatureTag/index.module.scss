@@ -10,6 +10,7 @@
   color: var(--color-white);
   text-transform: capitalize;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .beta {
