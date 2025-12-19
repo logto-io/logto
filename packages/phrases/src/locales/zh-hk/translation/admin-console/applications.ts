@@ -5,7 +5,7 @@ const applications = {
   subtitle_with_app_type: '為你的 {{name}} 應用程序設置 Logto 身份驗證',
   create: '創建應用',
   create_third_party: '創建第三方應用程式',
-  create_thrid_party_modal_title: '創建第三方應用程式（{{type}}）',
+  create_thrid_party_modal_title: '創建第三方應用（{{type}}）',
   application_name: '應用名稱',
   application_name_placeholder: '我的應用',
   application_description: '應用描述',

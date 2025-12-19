@@ -5,7 +5,7 @@ const applications = {
   subtitle_with_app_type: 'ตั้งค่าการยืนยันตัวตน Logto สำหรับแอปพลิเคชัน {{name}} ของคุณ',
   create: 'สร้างแอปพลิเคชัน',
   create_third_party: 'สร้างแอปพลิเคชันของบุคคลที่สาม',
-  create_thrid_party_modal_title: 'สร้างแอปพลิเคชันของบุคคลที่สาม ({{type}})',
+  create_thrid_party_modal_title: 'สร้างแอปของบุคคลที่สาม ({{type}})',
   application_name: 'ชื่อแอปพลิเคชัน',
   application_name_placeholder: 'แอปของฉัน',
   application_description: 'คำอธิบายแอปพลิเคชัน',

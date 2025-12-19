@@ -6,7 +6,7 @@ const applications = {
   subtitle_with_app_type: 'Configure a autenticação Logto para o seu aplicativo {{name}}',
   create: 'Criar aplicativo',
   create_third_party: 'Criar aplicativo de terceiros',
-  create_thrid_party_modal_title: 'Criar um aplicativo de terceiros ({{type}})',
+  create_thrid_party_modal_title: 'Criar um app de terceiros ({{type}})',
   application_name: 'Nome do Aplicativo',
   application_name_placeholder: 'Meu aplicativo',
   application_description: 'Descrição do aplicativo',

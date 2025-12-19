@@ -6,7 +6,7 @@ const applications = {
   subtitle_with_app_type: 'あなたの {{name}} アプリケーションに Logto 認証を設定する',
   create: 'アプリケーションを作成する',
   create_third_party: 'サードパーティアプリケーションを作成する',
-  create_thrid_party_modal_title: 'サードパーティアプリケーションを作成する（{{type}}）',
+  create_thrid_party_modal_title: 'サードパーティアプリを作成する（{{type}}）',
   application_name: 'アプリケーション名',
   application_name_placeholder: '私のアプリ',
   application_description: 'アプリケーションの説明',

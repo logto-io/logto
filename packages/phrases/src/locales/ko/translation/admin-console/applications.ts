@@ -6,7 +6,7 @@ const applications = {
   subtitle_with_app_type: '내 {{name}} 어플리케이션에 대한 Logto 인증 설정',
   create: '어플리케이션 생성',
   create_third_party: '서드파티 어플리케이션 생성',
-  create_thrid_party_modal_title: '서드파티 어플리케이션 생성 ({{type}})',
+  create_thrid_party_modal_title: '서드파티 앱 생성 ({{type}})',
   application_name: '어플리케이션 이름',
   application_name_placeholder: '나의 앱',
   application_description: '어플리케이션 설명',
