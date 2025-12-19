@@ -67,7 +67,7 @@ function OidcPermissionsCard() {
             {
               title: t('application_details.permissions.guide_column'),
               dataIndex: 'description',
-              colSpan: 5,
+              colSpan: 6,
               render: ({ description }) => (
                 <Breakable>
                   <span className={styles.guideText}>{description}</span>

@@ -102,6 +102,7 @@ function PermissionsCard({ applicationId, scopeLevel }: Props) {
           {
             title: null,
             dataIndex: 'delete',
+            colSpan: 1,
             render: (data) => (
               <ActionsButton
                 fieldName="application_details.permissions.name"
