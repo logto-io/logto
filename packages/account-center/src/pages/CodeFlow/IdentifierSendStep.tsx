@@ -81,6 +81,8 @@ const IdentifierSendStep = ({
     <SecondaryPageLayout title={titleKey} description={descriptionKey}>
       <div className={styles.container}>
         <SmartInputField
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
           className={styles.identifierInput}
           name={name}
           label={t(labelKey)}
