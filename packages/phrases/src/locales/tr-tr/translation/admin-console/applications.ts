@@ -66,7 +66,7 @@ const applications = {
     third_party: {
       title: 'Üçüncü taraf uygulamayı entegre et',
       description:
-        'Üçüncü taraf hizmetlere OAuth yetkilendirmesi sağlamak için Logto’yu Kimlik Sağlayıcınız olarak kullanın. Güvenli kaynak erişimi için önceden oluşturulmuş bir kullanıcı onay ekranı içerir.',
+        "Üçüncü taraf hizmetlere OAuth yetkilendirmesi sağlamak için Logto'yu Kimlik Sağlayıcınız olarak kullanın. Güvenli kaynak erişimi için önceden oluşturulmuş bir kullanıcı onay ekranı içerir. <a>Daha fazla bilgi</a>",
     },
   },
 };

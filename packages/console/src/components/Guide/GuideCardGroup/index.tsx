@@ -17,6 +17,7 @@ import styles from './index.module.scss';
 type Props = {
   readonly className?: string;
   readonly categoryName?: string;
+  readonly categoryDescription?: React.ReactNode;
   readonly guides?: readonly Guide[];
   readonly hasCardBorder?: boolean;
   readonly hasCardButton?: boolean;
@@ -49,7 +50,15 @@ function getPaywallTag(
 }
 
 function GuideCardGroup(
-  { className, categoryName, guides, hasCardBorder, hasCardButton, onClickGuide }: Props,
+  {
+    className,
+    categoryName,
+    categoryDescription,
+    guides,
+    hasCardBorder,
+    hasCardButton,
+    onClickGuide,
+  }: Props,
   ref: Ref<HTMLDivElement>
 ) {
   const {
@@ -66,6 +75,7 @@ function GuideCardGroup(
   return (
     <div ref={ref} className={classNames(styles.guideGroup, className)}>
       {categoryName && <label>{categoryName}</label>}
+      {categoryDescription && <div className={styles.description}>{categoryDescription}</div>}
       <div className={styles.grid}>
         {guides.map((guide) => (
           <GuideCard

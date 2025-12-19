@@ -1,8 +1,12 @@
-import { useCallback, useMemo } from 'react';
+import { type ReactNode, useCallback, useMemo } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { guides } from '@/assets/docs/guides';
 import { type Guide } from '@/assets/docs/guides/types';
 import { isCloud as isCloudEnv, isDevFeaturesEnabled } from '@/consts/env';
+import { thirdPartyApp } from '@/consts/external-links';
+import TextLink from '@/ds-components/TextLink';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import {
   thirdPartyAppCategory,
   type AppGuideCategory,
@@ -33,7 +37,11 @@ export const useAppGuideMetadata = (): {
   getStructuredAppGuideMetadata: (
     filters?: FilterOptions
   ) => Record<AppGuideCategory, readonly Guide[]>;
+  getCategoryDescription: (category: AppGuideCategory) => ReactNode;
 } => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { getDocumentationUrl } = useDocumentationUrl();
+
   const appGuides = useMemo(
     () =>
       guides.filter(
@@ -119,5 +127,25 @@ export const useAppGuideMetadata = (): {
     [getFilteredAppGuideMetadata]
   );
 
-  return { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata };
+  const categoryDescriptions: Partial<Record<AppGuideCategory, ReactNode>> = useMemo(
+    () => ({
+      [thirdPartyAppCategory]: (
+        <Trans
+          components={{
+            a: <TextLink targetBlank="noopener" href={getDocumentationUrl(thirdPartyApp)} />,
+          }}
+        >
+          {t('applications.guide.third_party.description')}
+        </Trans>
+      ),
+    }),
+    [t]
+  );
+
+  const getCategoryDescription = useCallback(
+    (category: AppGuideCategory): ReactNode => categoryDescriptions[category] ?? null,
+    [categoryDescriptions]
+  );
+
+  return { getFilteredAppGuideMetadata, getStructuredAppGuideMetadata, getCategoryDescription };
 };

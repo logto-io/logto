@@ -66,7 +66,7 @@ const applications = {
     third_party: {
       title: 'Zintegruj aplikację stron trzecich',
       description:
-        'Użyj Logto jako dostawcy tożsamości, aby zapewnić autoryzację OAuth dla usług stron trzecich. Zawiera wbudowany ekran zgody użytkownika na bezpieczny dostęp do zasobów.',
+        'Użyj Logto jako dostawcy tożsamości, aby zapewnić autoryzację OAuth dla usług stron trzecich. Zawiera wbudowany ekran zgody użytkownika na bezpieczny dostęp do zasobów. <a>Dowiedz się więcej</a>',
     },
   },
 };

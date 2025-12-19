@@ -6,7 +6,7 @@ const applications = {
   subtitle_with_app_type: 'Configurar autenticação Logto para a aplicação {{name}}',
   create: 'Criar aplicação',
   create_third_party: 'Criar aplicação de terceiros',
-  create_thrid_party_modal_title: 'Criar uma aplicação de terceiros ({{type}})',
+  create_thrid_party_modal_title: 'Criar uma app de terceiros ({{type}})',
   application_name: 'Nome da aplicação',
   application_name_placeholder: 'Ex: Site Empresa',
   application_description: 'Descrição da aplicação',
@@ -65,7 +65,7 @@ const applications = {
     third_party: {
       title: 'Integrar uma aplicação de terceiros',
       description:
-        'Use o Logto como o seu Fornecedor de Identidade para fornecer autorização OAuth a serviços de terceiros. Inclui um ecrã de consentimento do utilizador pré-construído para acesso seguro aos recursos.',
+        'Use o Logto como o seu Fornecedor de Identidade para fornecer autorização OAuth a serviços de terceiros. Inclui um ecrã de consentimento do utilizador pré-construído para acesso seguro aos recursos. <a>Saiba mais</a>',
     },
   },
 };

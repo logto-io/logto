@@ -5,7 +5,7 @@ const applications = {
   subtitle_with_app_type: '為你的 {{name}} 應用程序設置 Logto 身份驗證',
   create: '創建應用',
   create_third_party: '創建第三方應用程式',
-  create_thrid_party_modal_title: '創建第三方應用程式（{{type}}）',
+  create_thrid_party_modal_title: '創建第三方應用（{{type}}）',
   application_name: '應用名稱',
   application_name_placeholder: '我的應用',
   application_description: '應用描述',
@@ -64,7 +64,7 @@ const applications = {
     third_party: {
       title: '整合第三方應用程式',
       description:
-        '使用 Logto 作為身份提供者為第三方服務提供 OAuth 授權。包含用於安全資源訪問的預建用戶同意螢幕。',
+        '使用 Logto 作為身份提供者為第三方服務提供 OAuth 授權。包含用於安全資源訪問的預建用戶同意螢幕。<a>了解更多</a>',
     },
   },
 };
