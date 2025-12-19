@@ -120,7 +120,7 @@ const Username = () => {
         />
         <Button
           className={styles.submit}
-          title="action.confirm"
+          title="action.continue"
           htmlType="submit"
           disabled={!pendingUsername.trim() || loading}
           isLoading={loading}

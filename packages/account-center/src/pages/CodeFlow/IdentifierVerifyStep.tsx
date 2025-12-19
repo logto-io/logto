@@ -143,7 +143,7 @@ const IdentifierVerifyStep = ({
           )}
         </div>
         <Button
-          title="action.confirm"
+          title="action.continue"
           type="primary"
           className={styles.submit}
           isLoading={loading}
