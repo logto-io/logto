@@ -48,7 +48,7 @@ function ProtectedAppForm({
   const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(isCloud && 'api/systems/application');
   const {
     currentSubscriptionQuota,
-    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscription: { planId },
   } = useContext(SubscriptionDataContext);
   const { hasAppsReachedLimit } = useApplicationsUsage();
   const defaultDomain = data?.protectedApps.defaultDomain ?? '';

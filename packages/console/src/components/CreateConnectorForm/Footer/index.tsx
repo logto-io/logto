@@ -16,7 +16,7 @@ type Props = {
 function Footer({ isCreatingSocialConnector, isCreateButtonDisabled, onClickCreateButton }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
   const {
-    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscription: { planId },
     currentSubscriptionQuota,
     hasReachedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);

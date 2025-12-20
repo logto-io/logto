@@ -1,10 +1,9 @@
 import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
-import { type ReactNode, Suspense, useCallback, useContext } from 'react';
+import { type ReactNode, Suspense, useCallback } from 'react';
 
 import { type Guide, type GuideMetadata } from '@/assets/docs/guides/types';
 import { BetaTag } from '@/components/FeatureTag';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import useTheme from '@/hooks/use-theme';
 import { onKeyDownHandler } from '@/utils/a11y';
@@ -27,9 +26,6 @@ type Props = {
 
 function GuideCard({ data, onClick, hasBorder, hasButton, paywallTag, isBeta }: Props) {
   const { id, Logo, DarkLogo, metadata } = data;
-  const {
-    currentSubscription: { isEnterprisePlan },
-  } = useContext(SubscriptionDataContext);
 
   const { target, name, description } = metadata;
   const buttonText = target === 'API' ? 'guide.get_started' : 'guide.start_building';

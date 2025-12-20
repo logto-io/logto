@@ -20,18 +20,16 @@ import { trySubmitSafe } from '@/utils/form';
 
 type Props = {
   readonly resourceId: string;
-  /** @deprecated get usage from cloud API after migrating to new pricing model */
-  readonly totalResourceCount: number;
   readonly onClose: (scope?: Scope) => void;
 };
 
 type CreatePermissionFormData = Pick<CreateScope, 'name' | 'description'>;
 
-function CreatePermissionModal({ resourceId, totalResourceCount, onClose }: Props) {
+function CreatePermissionModal({ resourceId, onClose }: Props) {
   const {
     currentSubscriptionQuota,
     currentSubscriptionResourceScopeUsage,
-    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscription: { planId },
     hasReachedSubscriptionQuotaLimit,
   } = useContext(SubscriptionDataContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

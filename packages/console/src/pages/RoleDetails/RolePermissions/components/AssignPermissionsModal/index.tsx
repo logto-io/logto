@@ -24,7 +24,7 @@ type Props = {
 function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscription: { planId },
     currentSubscriptionRoleScopeUsage,
     currentSubscriptionQuota,
     hasSurpassedSubscriptionQuotaLimit,
