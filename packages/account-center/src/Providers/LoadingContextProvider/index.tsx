@@ -1,7 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
 
-import Loading from '@ac/components/Loading';
-
 import LoadingContext from './LoadingContext';
 
 type Props = {
@@ -19,12 +17,7 @@ const LoadingContextProvider = ({ children }: Props) => {
     [loading]
   );
 
-  return (
-    <LoadingContext.Provider value={value}>
-      {children}
-      {loading && <Loading />}
-    </LoadingContext.Provider>
-  );
+  return <LoadingContext.Provider value={value}>{children}</LoadingContext.Provider>;
 };
 
 export default LoadingContextProvider;
