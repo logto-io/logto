@@ -3,11 +3,10 @@ import VerificationCodeInput, {
   defaultLength,
 } from '@experience/shared/components/VerificationCode';
 import { type TFuncKey } from 'i18next';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
-import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import SwitchVerificationMethodLink from '@ac/components/SwitchVerificationMethodLink';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
@@ -26,11 +25,14 @@ type Props = {
     descriptionKey: TFuncKey;
     descriptionProps: Record<string, string>;
   };
+  readonly errorMessage?: string;
+  readonly clearErrorMessage?: () => void;
   readonly onResent: (verificationRecordId: string) => void;
+  readonly onResendFailed: (errorMessage: string) => void;
   readonly resetSignal: number;
   readonly onSubmit: (code: string) => void;
   readonly onBack: () => void;
-  readonly onInvalidCode: () => void;
+  readonly onInvalidCode: (errorMessage: string) => void;
   readonly onSwitchMethod?: () => void;
   readonly sendCode: (
     accessToken: string,
@@ -46,7 +48,10 @@ const IdentifierVerifyStep = ({
   verificationRecordId,
   codeInputName,
   translation,
+  errorMessage,
+  clearErrorMessage,
   onResent,
+  onResendFailed,
   resetSignal,
   onSubmit,
   onBack,
@@ -56,7 +61,6 @@ const IdentifierVerifyStep = ({
 }: Props) => {
   const { t } = useTranslation();
   const { loading } = useContext(LoadingContext);
-  const { setToast } = useContext(PageContext);
   const [codeInput, setCodeInput] = useState<string[]>([]);
   const [countdown, setCountdown] = useState(resendCooldownSeconds);
   const sendCodeRequest = useApi(sendCode);
@@ -101,7 +105,9 @@ const IdentifierVerifyStep = ({
     };
   }, [countdown]);
 
-  const handleResend = async () => {
+  const handleResend = useCallback(async () => {
+    clearErrorMessage?.();
+
     const [error, result] = await sendCodeRequest(identifier);
 
     if (error) {
@@ -110,12 +116,12 @@ const IdentifierVerifyStep = ({
     }
 
     if (!result) {
-      setToast(t('account_center.verification.error_send_failed'));
+      onResendFailed(t('account_center.verification.error_send_failed'));
       return;
     }
 
     onResent(result.verificationRecordId);
-  };
+  }, [clearErrorMessage, handleError, identifier, onResendFailed, onResent, sendCodeRequest, t]);
 
   return (
     <SecondaryPageLayout
@@ -129,6 +135,7 @@ const IdentifierVerifyStep = ({
           name={codeInputName}
           className={styles.codeInput}
           value={codeInput}
+          error={errorMessage}
           onChange={(code) => {
             setCodeInput(code);
           }}
@@ -163,8 +170,10 @@ const IdentifierVerifyStep = ({
           className={styles.submit}
           isLoading={loading}
           onClick={() => {
+            clearErrorMessage?.();
+
             if (!isCodeReady) {
-              onInvalidCode();
+              onInvalidCode(t('account_center.verification.error_invalid_code'));
               return;
             }
 

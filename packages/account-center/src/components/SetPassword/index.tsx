@@ -1,9 +1,8 @@
 import ClearIcon from '@experience/shared/assets/icons/clear-icon.svg?react';
 import Button from '@experience/shared/components/Button';
-import ErrorMessage from '@experience/shared/components/ErrorMessage';
 import IconButton from '@experience/shared/components/IconButton';
 import InputField from '@experience/shared/components/InputFields/InputField';
-import { useCallback, useMemo, useState, type FormEvent, type ReactNode } from 'react';
+import { useCallback, useState, type FormEvent, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TogglePassword from './TogglePassword';
@@ -14,6 +13,7 @@ type Props = {
   // eslint-disable-next-line react/boolean-prop-naming
   readonly autoFocus?: boolean;
   readonly onSubmit: (password: string) => Promise<void>;
+  /** Error message for the password field (e.g. password policy errors) */
   readonly errorMessage?: string;
   readonly clearErrorMessage?: () => void;
   readonly maxLength?: number;
@@ -32,16 +32,14 @@ const SetPassword = ({
   const { t } = useTranslation();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [localError, setLocalError] = useState<string>();
+  const [confirmPasswordError, setConfirmPasswordError] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const mergedError = useMemo(() => localError ?? errorMessage, [errorMessage, localError]);
 
   const handleSubmit = useCallback(
     async (event?: FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
-      setLocalError(undefined);
+      setConfirmPasswordError(undefined);
       clearErrorMessage?.();
 
       if (!newPassword || !confirmPassword) {
@@ -49,7 +47,7 @@ const SetPassword = ({
       }
 
       if (confirmPassword !== newPassword) {
-        setLocalError(t('error.passwords_do_not_match'));
+        setConfirmPasswordError(t('error.passwords_do_not_match'));
         return;
       }
 
@@ -76,6 +74,8 @@ const SetPassword = ({
         autoFocus={autoFocus}
         value={newPassword}
         maxLength={maxLength}
+        isDanger={Boolean(errorMessage)}
+        errorMessage={errorMessage}
         isSuffixFocusVisible={Boolean(newPassword)}
         suffix={
           <IconButton
@@ -100,6 +100,8 @@ const SetPassword = ({
         label={t('input.confirm_password')}
         value={confirmPassword}
         maxLength={maxLength}
+        isDanger={Boolean(confirmPasswordError)}
+        errorMessage={confirmPasswordError}
         isSuffixFocusVisible={Boolean(confirmPassword)}
         suffix={
           <IconButton
@@ -116,8 +118,6 @@ const SetPassword = ({
           }
         }}
       />
-
-      {mergedError && <ErrorMessage className={styles.formErrors}>{mergedError}</ErrorMessage>}
 
       <TogglePassword isChecked={showPassword} onChange={setShowPassword} />
 
