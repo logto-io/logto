@@ -51,7 +51,7 @@ const account_center = {
     title: 'Telefonnummer verknüpfen',
     description:
       'Verknüpfe deine Telefonnummer, um dich anzumelden oder die Kontowiederherstellung zu unterstützen.',
-    verification_title: 'Telefon-Bestätigungscode eingeben',
+    verification_title: 'SMS-Bestätigungscode eingeben',
     verification_description:
       'Der Bestätigungscode wurde an dein Telefon {{phone_number}} gesendet.',
     success: 'Primäre Telefonnummer wurde erfolgreich verknüpft.',
@@ -70,8 +70,8 @@ const account_center = {
 
   code_verification: {
     send: 'Bestätigungscode senden',
-    resend: 'Code erneut senden',
-    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
+    resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
+    resend_countdown: 'Noch nichts erhalten?<span> Erneut senden nach {{seconds}} s.</span>',
   },
 
   email_verification: {
@@ -82,8 +82,8 @@ const account_center = {
     send: 'Bestätigungscode senden',
     description:
       'Der Bestätigungscode wurde an deine E-Mail {{email}} gesendet. Gib den Code ein, um fortzufahren.',
-    resend: 'Code erneut senden',
-    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
+    resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
+    resend_countdown: 'Noch nichts erhalten?<span> Erneut senden nach {{seconds}} s.</span>',
     error_send_failed:
       'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
@@ -97,8 +97,8 @@ const account_center = {
     send: 'Bestätigungscode senden',
     description:
       'Der Bestätigungscode wurde an dein Telefon {{phone}} gesendet. Gib den Code ein, um fortzufahren.',
-    resend: 'Code erneut senden',
-    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
+    resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
+    resend_countdown: 'Noch nichts erhalten?<span> Erneut senden nach {{seconds}} s.</span>',
     error_send_failed:
       'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',

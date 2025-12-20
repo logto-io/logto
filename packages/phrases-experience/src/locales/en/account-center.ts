@@ -47,7 +47,7 @@ const account_center = {
   phone: {
     title: 'Link phone number',
     description: 'Link your phone number to sign in or help with account recovery.',
-    verification_title: 'Enter phone verification code',
+    verification_title: 'Enter SMS verification code',
     verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
     success: 'Primary phone linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
@@ -65,8 +65,8 @@ const account_center = {
 
   code_verification: {
     send: 'Send verification code',
-    resend: 'Resend code',
-    resend_countdown: 'Not received yet? Resend after {{seconds}}s.',
+    resend: 'Not received yet? <a>Resend verification code</a>',
+    resend_countdown: 'Not received yet?<span> Resend after {{seconds}}s.</span>',
   },
 
   email_verification: {
@@ -77,8 +77,8 @@ const account_center = {
     send: 'Send verification code',
     description:
       'The verification code has been sent to your email {{email}}. Enter the code to continue.',
-    resend: 'Resend code',
-    resend_countdown: 'Not received yet? Resend after {{seconds}}s.',
+    resend: 'Not received yet? <a>Resend verification code</a>',
+    resend_countdown: 'Not received yet?<span> Resend after {{seconds}}s.</span>',
     error_send_failed: 'Failed to send verification code. Please try again later.',
     error_verify_failed: 'Verification failed. Please enter the code again.',
     error_invalid_code: 'The verification code is invalid or has expired.',
@@ -91,8 +91,8 @@ const account_center = {
     send: 'Send verification code',
     description:
       'The verification code has been sent to your phone {{phone}}. Enter the code to continue.',
-    resend: 'Resend code',
-    resend_countdown: 'Not received yet? Resend after {{seconds}}s.',
+    resend: 'Not received yet? <a>Resend verification code</a>',
+    resend_countdown: 'Not received yet?<span> Resend after {{seconds}}s.</span>',
     error_send_failed: 'Failed to send verification code. Please try again later.',
     error_verify_failed: 'Verification failed. Please enter the code again.',
     error_invalid_code: 'The verification code is invalid or has expired.',

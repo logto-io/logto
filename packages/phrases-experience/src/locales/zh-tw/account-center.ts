@@ -45,7 +45,7 @@ const account_center = {
   phone: {
     title: '連結電話號碼',
     description: '連結你的電話號碼以登入或協助帳戶復原。',
-    verification_title: '輸入電話驗證碼',
+    verification_title: '輸入簡訊驗證碼',
     verification_description: '驗證碼已傳送至你的電話 {{phone_number}}。',
     success: '已成功連結主要電話。',
     verification_required: '驗證已失效，請再次驗證您的身分。',
@@ -63,8 +63,8 @@ const account_center = {
 
   code_verification: {
     send: '傳送驗證碼',
-    resend: '重新傳送驗證碼',
-    resend_countdown: '尚未收到？{{seconds}} 秒後可重新傳送。',
+    resend: '尚未收到？<a>重新傳送驗證碼</a>',
+    resend_countdown: '尚未收到？<span>{{seconds}} 秒後可重新傳送。</span>',
   },
 
   email_verification: {
@@ -73,8 +73,8 @@ const account_center = {
     email_label: '電子郵件地址',
     send: '傳送驗證碼',
     description: '驗證碼已傳送至您的電子郵件 {{email}}。請輸入驗證碼以繼續。',
-    resend: '重新傳送驗證碼',
-    resend_countdown: '尚未收到？{{seconds}} 秒後可重新傳送。',
+    resend: '尚未收到？<a>重新傳送驗證碼</a>',
+    resend_countdown: '尚未收到？<span>{{seconds}} 秒後可重新傳送。</span>',
     error_send_failed: '驗證碼傳送失敗，請稍後再試。',
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
     error_invalid_code: '驗證碼無效或已過期。',
@@ -85,8 +85,8 @@ const account_center = {
     phone_label: '電話號碼',
     send: '傳送驗證碼',
     description: '驗證碼已傳送至您的電話 {{phone}}。請輸入驗證碼以繼續。',
-    resend: '重新傳送驗證碼',
-    resend_countdown: '尚未收到？{{seconds}} 秒後可重新傳送。',
+    resend: '尚未收到？<a>重新傳送驗證碼</a>',
+    resend_countdown: '尚未收到？<span>{{seconds}} 秒後可重新傳送。</span>',
     error_send_failed: '驗證碼傳送失敗，請稍後再試。',
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
     error_invalid_code: '驗證碼無效或已過期。',

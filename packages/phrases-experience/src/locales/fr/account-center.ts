@@ -49,7 +49,7 @@ const account_center = {
     title: 'Lier le numéro de téléphone',
     description:
       'Liez votre numéro de téléphone pour vous connecter ou faciliter la récupération du compte.',
-    verification_title: 'Saisissez le code de vérification du téléphone',
+    verification_title: 'Saisissez le code de vérification SMS',
     verification_description:
       'Le code de vérification a été envoyé sur votre téléphone {{phone_number}}.',
     success: 'Téléphone principal lié avec succès.',
@@ -69,8 +69,8 @@ const account_center = {
 
   code_verification: {
     send: 'Envoyer le code de vérification',
-    resend: 'Renvoyer le code',
-    resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
+    resend: 'Pas encore reçu ? <a>Renvoyer le code de vérification</a>',
+    resend_countdown: 'Pas encore reçu ?<span> Renvoyez après {{seconds}} s.</span>',
   },
 
   email_verification: {
@@ -81,8 +81,8 @@ const account_center = {
     send: 'Envoyer le code de vérification',
     description:
       'Le code de vérification a été envoyé à votre e-mail {{email}}. Saisissez le code pour continuer.',
-    resend: 'Renvoyer le code',
-    resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
+    resend: 'Pas encore reçu ? <a>Renvoyer le code de vérification</a>',
+    resend_countdown: 'Pas encore reçu ?<span> Renvoyez après {{seconds}} s.</span>',
     error_send_failed: "Échec de l'envoi du code de vérification. Veuillez réessayer plus tard.",
     error_verify_failed: 'Échec de la vérification. Veuillez saisir le code à nouveau.',
     error_invalid_code: 'Le code de vérification est invalide ou a expiré.',
@@ -95,8 +95,8 @@ const account_center = {
     send: 'Envoyer le code de vérification',
     description:
       'Le code de vérification a été envoyé à votre téléphone {{phone}}. Saisissez le code pour continuer.',
-    resend: 'Renvoyer le code',
-    resend_countdown: 'Pas encore reçu ? Renvoyez après {{seconds}} s.',
+    resend: 'Pas encore reçu ? <a>Renvoyer le code de vérification</a>',
+    resend_countdown: 'Pas encore reçu ?<span> Renvoyez après {{seconds}} s.</span>',
     error_send_failed: "Échec de l'envoi du code de vérification. Veuillez réessayer plus tard.",
     error_verify_failed: 'Échec de la vérification. Veuillez saisir le code à nouveau.',
     error_invalid_code: 'Le code de vérification est invalide ou a expiré.',

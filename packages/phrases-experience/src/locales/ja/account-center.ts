@@ -46,7 +46,7 @@ const account_center = {
   phone: {
     title: '電話番号をリンク',
     description: 'サインインやアカウント復旧のために電話番号をリンクします。',
-    verification_title: '電話の認証コードを入力',
+    verification_title: 'SMS認証コードを入力',
     verification_description: '認証コードを電話番号 {{phone_number}} に送信しました。',
     success: 'メインの電話番号をリンクしました。',
     verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
@@ -64,8 +64,8 @@ const account_center = {
 
   code_verification: {
     send: '認証コードを送信',
-    resend: 'コードを再送',
-    resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます。',
+    resend: 'まだ届きませんか？ <a>認証コードを再送</a>',
+    resend_countdown: 'まだ届きませんか？<span> {{seconds}} 秒後に再送できます</span>',
   },
 
   email_verification: {
@@ -76,8 +76,8 @@ const account_center = {
     send: '認証コードを送信',
     description:
       '認証コードをメールアドレス {{email}} に送信しました。コードを入力して続行してください。',
-    resend: 'コードを再送',
-    resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます。',
+    resend: 'まだ届きませんか？ <a>認証コードを再送</a>',
+    resend_countdown: 'まだ届きませんか？<span> {{seconds}} 秒後に再送できます</span>',
     error_send_failed: '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
@@ -89,8 +89,8 @@ const account_center = {
     phone_label: '電話番号',
     send: '認証コードを送信',
     description: '認証コードを電話 {{phone}} に送信しました。コードを入力して続行してください。',
-    resend: 'コードを再送',
-    resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます。',
+    resend: 'まだ届きませんか？ <a>認証コードを再送</a>',
+    resend_countdown: 'まだ届きませんか？<span> {{seconds}} 秒後に再送できます</span>',
     error_send_failed: '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
