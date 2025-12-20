@@ -1,12 +1,14 @@
 import { z } from 'zod';
 
+import { templateTypeGuard } from '@logto/connector-kit';
+
 export enum ContextType {
   Text = 'text/plain',
   Html = 'text/html',
 }
 
 const templateGuard = z.object({
-  usageType: z.string(),
+  usageType: templateTypeGuard,
   type: z.nativeEnum(ContextType),
   subject: z.string(),
   content: z.string(), // With variable {{code}}, support HTML

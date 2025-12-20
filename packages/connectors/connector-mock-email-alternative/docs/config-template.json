@@ -16,16 +16,46 @@
       "content": "This is for registering purposes only. Your verification code is {{code}}."
     },
     {
+      "usageType": "ForgotPassword",
+      "type": "text/plain",
+      "subject": "Logto Forgot Password Template",
+      "content": "This is for forgot-password purposes only. Your verification code is {{code}}."
+    },
+    {
+      "usageType": "MfaVerification",
+      "type": "text/plain",
+      "subject": "Logto MfaVerification Template",
+      "content": "This is for MFA verification purposes only. Your verification code is {{code}}."
+    },
+    {
       "usageType": "Generic",
       "type": "text/plain",
       "subject": "Logto Generic Template",
       "content": "This is for generic purpose through management API only. Your verification code is {{code}}."
     },
     {
-      "usageType": "ForgotPassword",
+      "usageType": "OrganizationInvitation",
       "type": "text/plain",
-      "subject": "Logto Forgot Password Template",
-      "content": "This is for forgot-password purposes only. Your verification code is {{code}}."
+      "subject": "Logto Organization Invitation Template",
+      "content": "You have been invited to join an organization. Please click the link to accept: {{link}}."
+    },
+    {
+      "usageType": "UserPermissionValidation",
+      "type": "text/plain",
+      "subject": "Logto User Permission Validation Template",
+      "content": "This is for validating user permission. Your verification code is {{code}}."
+    },
+    {
+      "usageType": "BindNewIdentifier",
+      "type": "text/plain",
+      "subject": "Logto Bind New Identifier Template",
+      "content": "This is for binding a new identifier to your account. Your verification code is {{code}}."
+    },
+    {
+      "usageType": "BindMfa",
+      "type": "text/plain",
+      "subject": "Logto Bind MFA Template",
+      "content": "This is for binding MFA to your account. Your verification code is {{code}}."
     }
   ]
 }
