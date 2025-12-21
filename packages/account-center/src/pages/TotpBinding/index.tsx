@@ -15,7 +15,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { getMfaVerifications, generateTotpSecret, addTotpMfa } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { backupCodeRoute, totpSuccessRoute } from '@ac/constants/routes';
+import { authenticatorAppSuccessRoute, backupCodesGenerateRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -145,11 +145,11 @@ const TotpBinding = () => {
       }
 
       if (isBackupCodeEnabled(experienceSettings?.mfa) && !hasBackupCodes) {
-        void navigate(backupCodeRoute, { replace: true });
+        void navigate(backupCodesGenerateRoute, { replace: true });
         return;
       }
 
-      void navigate(totpSuccessRoute, { replace: true });
+      void navigate(authenticatorAppSuccessRoute, { replace: true });
     },
     [
       addTotpRequest,

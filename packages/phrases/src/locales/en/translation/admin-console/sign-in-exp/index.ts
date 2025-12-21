@@ -94,10 +94,11 @@ const sign_in_exp = {
   },
   account_center: {
     title: 'ACCOUNT CENTER',
-    description: 'Customize your account center flows using Logto APIs.',
-    enable_account_api: 'Enable Account API',
+    description:
+      'Implement your account center for end users to manage account security and profile information.',
+    enable_account_api: 'Enable account center',
     enable_account_api_description:
-      'Enable the Account API to build custom account center, giving end users direct API access without using Logto Management API.',
+      "Enable the user-facing Account API with configurable permissions, giving you the choice between Logto's out-of-the-box account center or a fully custom solution.",
     field_options: {
       off: 'Off',
       edit: 'Edit',
@@ -162,6 +163,27 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Add the domains of your front-end applications that are allowed to register passkeys via the Account API.',
     webauthn_related_origins_error: 'Origin must start with https:// or http://',
+    prebuilt_ui: {
+      title: 'INTEGRATE PREBUILT UI',
+      description:
+        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
+      flows_title: 'Integrate out-of-the-box security setting flows',
+      flows_description:
+        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+      tooltips: {
+        email: 'Update your primary email address',
+        phone: 'Update your primary phone number',
+        username: 'Update your username',
+        password: 'Set a new password',
+        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
+        passkey_add: 'Register a new passkey',
+        passkey_manage: 'Manage your existing passkeys or add new ones',
+        backup_codes_generate: 'Generate a new set of 10 backup codes',
+        backup_codes_manage: 'View your available backup codes or generate new ones',
+      },
+      customize_note: "Don't want the out-of-the-box experience? You can fully",
+      customize_link: 'customize your flows with the Account API instead.',
+    },
   },
   sign_up_and_sign_in,
   content,

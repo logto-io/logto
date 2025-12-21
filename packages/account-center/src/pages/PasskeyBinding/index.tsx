@@ -16,7 +16,7 @@ import {
 } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { backupCodeRoute, passkeySuccessRoute } from '@ac/constants/routes';
+import { backupCodesGenerateRoute, passkeySuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -145,7 +145,7 @@ const PasskeyBinding = () => {
 
     // Step 4: Navigate to success or backup code setup
     if (isBackupCodeEnabled(experienceSettings?.mfa) && !hasBackupCodes) {
-      void navigate(backupCodeRoute, { replace: true });
+      void navigate(backupCodesGenerateRoute, { replace: true });
       return;
     }
 

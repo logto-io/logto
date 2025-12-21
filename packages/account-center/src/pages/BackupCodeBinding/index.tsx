@@ -20,7 +20,7 @@ import {
 } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { backupCodeSuccessRoute, backupCodeViewRoute } from '@ac/constants/routes';
+import { backupCodesSuccessRoute, backupCodesManageRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -83,7 +83,7 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
       }
 
       if (hasBackupCode && !isRegenerate) {
-        void navigate(backupCodeViewRoute, { replace: true });
+        void navigate(backupCodesManageRoute, { replace: true });
       }
     };
 
@@ -180,7 +180,7 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
       return;
     }
 
-    void navigate(backupCodeSuccessRoute, { replace: true });
+    void navigate(backupCodesSuccessRoute, { replace: true });
   }, [
     addBackupCodeRequest,
     codes,

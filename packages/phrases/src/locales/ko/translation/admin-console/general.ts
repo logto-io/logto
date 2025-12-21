@@ -76,6 +76,7 @@ const general = {
   reset: '재설정',
   generate: '생성',
   manage: '관리',
+  live_preview: '실시간 미리보기',
 };
 
 export default Object.freeze(general);

@@ -1,0 +1,68 @@
+@use '@/scss/underscore' as _;
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin-bottom: _.unit(3);
+}
+
+.urlGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: _.unit(3);
+}
+
+.urlItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-layer-2);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0 _.unit(3);
+  height: 36px;
+  gap: _.unit(2);
+}
+
+.urlPath {
+  font: var(--font-body-2);
+  color: var(--color-text);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: _.unit(1);
+  flex-shrink: 0;
+}
+
+.iconButton {
+  color: var(--color-text-secondary);
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.customizeNote {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  display: flex;
+  gap: _.unit(1);
+  flex-wrap: wrap;
+}

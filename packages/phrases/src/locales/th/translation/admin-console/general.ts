@@ -76,6 +76,7 @@ const general = {
   reset: 'รีเซ็ต',
   generate: 'สร้าง',
   manage: 'จัดการ',
+  live_preview: 'ดูตัวอย่างสด',
 };
 
 export default Object.freeze(general);
