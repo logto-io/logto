@@ -13,15 +13,7 @@ import {
   goToAdminConsole,
   waitForToast,
 } from '#src/ui-helpers/index.js';
-import {
-  expectNavigation,
-  appendPathname,
-  dcls,
-  waitFor,
-  cls,
-  devFeatureTest,
-  devFeatureDisabledTest,
-} from '#src/utils.js';
+import { expectNavigation, appendPathname, dcls, waitFor, cls } from '#src/utils.js';
 
 import {
   type ApplicationMetadata,
@@ -29,7 +21,6 @@ import {
   initialApp,
   testApp,
   thirdPartyApp,
-  thirdPartyAppDevFeature,
 } from './constants.js';
 import {
   expectFrameworkExists,
@@ -339,7 +330,7 @@ describe('applications', () => {
     }
   );
 
-  devFeatureDisabledTest.it('can create an third party application', async () => {
+  it('can create a third party application', async () => {
     await expect(page).toClick('div[class$=main] div[class$=headline] button span', {
       text: 'Create application',
     });
@@ -371,44 +362,6 @@ describe('applications', () => {
     });
 
     await expectToProceedAppDeletion(page, thirdPartyApp.name);
-
-    expect(page.url()).toBe(
-      new URL('/console/applications/third-party-applications', logtoConsoleUrl).href
-    );
-  });
-
-  devFeatureTest.it('can create an third party application (dev feature)', async () => {
-    await expect(page).toClick('div[class$=main] div[class$=headline] button span', {
-      text: 'Create application',
-    });
-
-    await expectModalWithTitle(page, 'Start with SDK and guides');
-
-    await expectFrameworksInGroup(page, '.ReactModalPortal div[class$=guideGroup]:has(>label)');
-
-    // Expect the framework contains on the page
-    await expectFrameworkExists(page, thirdPartyAppDevFeature.framework);
-
-    // Filter
-    await expect(page).toFill('div[class$=searchInput] input', thirdPartyAppDevFeature.framework);
-
-    // Expect the framework exists after filtering
-    await expectFrameworkExists(page, thirdPartyAppDevFeature.framework);
-
-    await expectToChooseAndClickApplicationFramework(page, thirdPartyAppDevFeature.framework);
-
-    // Expect the app can be created successfully
-    await expectToProceedApplicationCreationFrom(
-      page,
-      thirdPartyAppDevFeature,
-      thirdPartyAppDevFeature.creationModalTitle
-    );
-
-    await expect(page).toMatchElement('div[class$=main] div[class$=header] div[class$=name]', {
-      text: thirdPartyAppDevFeature.name,
-    });
-
-    await expectToProceedAppDeletion(page, thirdPartyAppDevFeature.name);
 
     expect(page.url()).toBe(
       new URL('/console/applications/third-party-applications', logtoConsoleUrl).href

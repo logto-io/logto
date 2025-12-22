@@ -47,13 +47,6 @@ type ThirdPartyAppCase = Omit<
 };
 
 export const thirdPartyApp: ThirdPartyAppCase = {
-  framework: 'OIDC',
-  name: 'OIDC third party app',
-  description: 'This is a OIDC third party app',
-  creationModalTitle: 'Create third-party app',
-};
-
-export const thirdPartyAppDevFeature: ThirdPartyAppCase = {
   framework: 'Third-party app (Traditional web)',
   name: 'OIDC third party app',
   description: 'This is a OIDC third party app',

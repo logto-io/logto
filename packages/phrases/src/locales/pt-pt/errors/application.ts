@@ -4,8 +4,6 @@ const application = {
   invalid_role_type:
     'Não é possível atribuir uma função de tipo de utilizador a uma aplicação de máquina a máquina.',
   invalid_third_party_application_type:
-    'Apenas aplicações web tradicionais podem ser marcadas como uma aplicação de terceiros.',
-  invalid_third_party_application_type_dev:
     'Apenas aplicações web tradicionais, de página única e nativas podem ser marcadas como aplicações de terceiros.',
   third_party_application_only: 'A funcionalidade só está disponível para aplicações de terceiros.',
   user_consent_scopes_not_found: 'Escopos de consentimento de utilizador inválidos.',

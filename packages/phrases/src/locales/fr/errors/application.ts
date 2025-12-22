@@ -4,8 +4,6 @@ const application = {
   invalid_role_type:
     "Impossible d'assigner un rôle de type utilisateur à une application machine à machine.",
   invalid_third_party_application_type:
-    'Seules les applications Web traditionnelles peuvent être marquées comme une application tierce.',
-  invalid_third_party_application_type_dev:
     'Seules les applications Web traditionnelles, les applications monopage et les applications natives peuvent être marquées comme applications tierces.',
   third_party_application_only:
     'La fonctionnalité est uniquement disponible pour les applications tierces.',

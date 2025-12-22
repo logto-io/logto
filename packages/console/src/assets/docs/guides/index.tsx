@@ -3,8 +3,6 @@
 
 import { safeLazy } from 'react-safe-lazy';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
-
 import apiExpress from './api-express/index';
 import apiPython from './api-python/index';
 import apiSpringBoot from './api-spring-boot/index';
@@ -356,13 +354,8 @@ export const guides: Readonly<Guide[]> = Object.freeze([
   {
     order: Number.POSITIVE_INFINITY,
     id: 'third-party-oidc',
-    // TODO: @xiaoyijun Remove dev feature guard when third-party SPA and Native apps are ready for production
-    Logo: isDevFeaturesEnabled
-      ? safeLazy(async () => import('@/assets/icons/traditional-web-app.svg?react'))
-      : safeLazy(async () => import('./third-party-oidc/logo.svg?react')),
-    DarkLogo: isDevFeaturesEnabled
-      ? safeLazy(async () => import('@/assets/icons/traditional-web-app-dark.svg?react'))
-      : undefined,
+    Logo: safeLazy(async () => import('@/assets/icons/traditional-web-app.svg?react')),
+    DarkLogo: safeLazy(async () => import('@/assets/icons/traditional-web-app-dark.svg?react')),
     Component: safeLazy(async () => import('./third-party-oidc/README.mdx')),
     metadata: thirdPartyOidc,
   },
