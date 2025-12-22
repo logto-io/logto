@@ -15,6 +15,11 @@ import useErrorHandler from '@ac/hooks/use-error-handler';
 import IdentifierSendStep, { type IdentifierLabelKey } from './IdentifierSendStep';
 import IdentifierVerifyStep from './IdentifierVerifyStep';
 
+type ErrorState = {
+  sendError?: string;
+  verifyError?: string;
+};
+
 type AccountCenterField = keyof AccountCenter['fields'];
 
 type IdentifierBindingPageProps<VerifyPayload, BindPayload> = {
@@ -84,13 +89,23 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const [pendingIdentifier, setPendingIdentifier] = useState<string>();
   const [pendingVerificationRecordId, setPendingVerificationRecordId] = useState<string>();
   const [verifyResetSignal, setVerifyResetSignal] = useState(0);
+  const [errorState, setErrorState] = useState<ErrorState>({});
   const verifyCodeRequest = useApi(verifyCode);
   const bindIdentifierRequest = useApi(bindIdentifier);
   const handleError = useErrorHandler();
 
+  const clearSendError = useCallback(() => {
+    setErrorState((current) => ({ ...current, sendError: undefined }));
+  }, []);
+
+  const clearVerifyError = useCallback(() => {
+    setErrorState((current) => ({ ...current, verifyError: undefined }));
+  }, []);
+
   const resetFlow = useCallback((shouldClearIdentifier = false) => {
     setPendingIdentifier(undefined);
     setPendingVerificationRecordId(undefined);
+    setErrorState({});
 
     if (shouldClearIdentifier) {
       setIdentifier('');
@@ -117,7 +132,10 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
           code,
           async () => {
             setVerifyResetSignal((current) => current + 1);
-            setToast(t('account_center.verification.error_invalid_code'));
+            setErrorState((current) => ({
+              ...current,
+              verifyError: t('account_center.verification.error_invalid_code'),
+            }));
           },
         ])
       );
@@ -127,7 +145,10 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
           code,
           async () => {
             resetFlow(true);
-            setToast(t('account_center.verification.error_invalid_code'));
+            setErrorState((current) => ({
+              ...current,
+              sendError: t('account_center.verification.error_invalid_code'),
+            }));
           },
         ])
       );
@@ -137,11 +158,13 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
         ...resetHandlers,
       });
     },
-    [handleError, invalidCodeErrorCodes, resetFlow, resetFlowErrorCodes, setToast, t]
+    [handleError, invalidCodeErrorCodes, resetFlow, resetFlowErrorCodes, t]
   );
 
   const handleVerifyAndBind = useCallback(
     async (code: string) => {
+      clearVerifyError();
+
       if (!pendingIdentifier || !pendingVerificationRecordId || loading || !verificationId) {
         return;
       }
@@ -162,6 +185,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
 
       if (bindError) {
         await handleError(bindError, {
+          // This is a global error (session expired) that requires re-verification, so we use toast
           'verification_record.permission_denied': async () => {
             setVerificationId(undefined);
             resetFlow(true);
@@ -177,6 +201,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       bindIdentifierRequest,
       buildBindPayload,
       buildVerifyPayload,
+      clearVerifyError,
       handleError,
       handleVerifyError,
       loading,
@@ -214,11 +239,16 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       titleKey={sendStep.titleKey}
       descriptionKey={sendStep.descriptionKey}
       value={identifier}
+      errorMessage={errorState.sendError}
+      clearErrorMessage={clearSendError}
       sendCode={sendCode}
       onCodeSent={(value, recordId) => {
         setIdentifier(value);
         setPendingIdentifier(value);
         setPendingVerificationRecordId(recordId);
+      }}
+      onSendFailed={(message) => {
+        setErrorState((current) => ({ ...current, sendError: message }));
       }}
     />
   ) : (
@@ -231,10 +261,16 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
         descriptionKey: verifyStep.descriptionKey,
         descriptionProps: verifyStep.descriptionPropsBuilder(pendingIdentifier),
       }}
+      errorMessage={errorState.verifyError}
+      clearErrorMessage={clearVerifyError}
       sendCode={sendCode}
       resetSignal={verifyResetSignal}
       onResent={(recordId) => {
         setPendingVerificationRecordId(recordId);
+        clearVerifyError();
+      }}
+      onResendFailed={(message) => {
+        setErrorState((current) => ({ ...current, verifyError: message }));
       }}
       onSubmit={(value) => {
         void handleVerifyAndBind(value);
@@ -242,8 +278,8 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       onBack={() => {
         resetFlow(true);
       }}
-      onInvalidCode={() => {
-        setToast(t('account_center.verification.error_invalid_code'));
+      onInvalidCode={(message) => {
+        setErrorState((current) => ({ ...current, verifyError: message }));
       }}
     />
   );

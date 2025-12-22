@@ -4,11 +4,10 @@ import SmartInputField from '@experience/shared/components/InputFields/SmartInpu
 import { emailRegEx } from '@logto/core-kit';
 import { SignInIdentifier, type SignInIdentifier as SignInIdentifierType } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
-import { useContext, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useContext, useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
-import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -26,7 +25,10 @@ type Props = {
   readonly titleKey: TFuncKey;
   readonly descriptionKey: TFuncKey;
   readonly value: string;
+  readonly errorMessage?: string;
+  readonly clearErrorMessage?: () => void;
   readonly onCodeSent: (identifier: string, verificationRecordId: string) => void;
+  readonly onSendFailed: (errorMessage: string) => void;
   readonly sendCode: (
     accessToken: string,
     identifier: string
@@ -43,14 +45,16 @@ const IdentifierSendStep = ({
   titleKey,
   descriptionKey,
   value,
+  errorMessage,
+  clearErrorMessage,
   onCodeSent,
+  onSendFailed,
   sendCode,
 }: Props) => {
   const { t } = useTranslation();
   const { loading } = useContext(LoadingContext);
-  const { setToast } = useContext(PageContext);
   const [pendingValue, setPendingValue] = useState(value);
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [localErrorMessage, setLocalErrorMessage] = useState<string>();
   const sendCodeRequest = useApi(sendCode);
   const handleError = useErrorHandler();
 
@@ -58,37 +62,58 @@ const IdentifierSendStep = ({
     setPendingValue(value);
   }, [value]);
 
-  const handleSend = async (event?: FormEvent<HTMLFormElement>) => {
-    event?.preventDefault();
-    const target = pendingValue.trim();
+  const handleSend = useCallback(
+    async (event?: FormEvent<HTMLFormElement>) => {
+      event?.preventDefault();
+      clearErrorMessage?.();
 
-    if (!target || loading) {
-      return;
-    }
+      const target = pendingValue.trim();
 
-    // Validate email format before sending
-    if (identifierType === SignInIdentifier.Email && !emailRegEx.test(target)) {
-      setErrorMessage(t('error.invalid_email'));
-      return;
-    }
+      if (!target || loading) {
+        return;
+      }
 
-    // Clear any previous validation error
-    setErrorMessage(undefined);
+      // Validate email format before sending
+      if (identifierType === SignInIdentifier.Email && !emailRegEx.test(target)) {
+        setLocalErrorMessage(t('error.invalid_email'));
+        return;
+      }
 
-    const [error, result] = await sendCodeRequest(target);
+      // Clear any previous validation error
+      setLocalErrorMessage(undefined);
 
-    if (error) {
-      await handleError(error);
-      return;
-    }
+      const [error, result] = await sendCodeRequest(target);
 
-    if (!result) {
-      setToast(t('account_center.verification.error_send_failed'));
-      return;
-    }
+      if (error) {
+        await handleError(error, {
+          'guard.invalid_input': async (requestError) => {
+            onSendFailed(requestError.message);
+          },
+        });
+        return;
+      }
 
-    onCodeSent(target, result.verificationRecordId);
-  };
+      if (!result) {
+        onSendFailed(t('account_center.verification.error_send_failed'));
+        return;
+      }
+
+      onCodeSent(target, result.verificationRecordId);
+    },
+    [
+      clearErrorMessage,
+      handleError,
+      identifierType,
+      loading,
+      onCodeSent,
+      onSendFailed,
+      pendingValue,
+      sendCodeRequest,
+      t,
+    ]
+  );
+
+  const displayError = errorMessage ?? localErrorMessage;
 
   return (
     <SecondaryPageLayout title={titleKey} description={descriptionKey}>
@@ -101,16 +126,17 @@ const IdentifierSendStep = ({
           label={t(labelKey)}
           defaultValue={pendingValue}
           enabledTypes={[identifierType]}
-          isDanger={Boolean(errorMessage)}
+          isDanger={Boolean(displayError)}
+          errorMessage={displayError}
           onChange={(inputValue) => {
             if (inputValue.type === identifierType && inputValue.value !== pendingValue) {
               setPendingValue(inputValue.value);
               // Clear error when user modifies input
-              setErrorMessage(undefined);
+              setLocalErrorMessage(undefined);
             }
           }}
         />
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {displayError && <ErrorMessage>{displayError}</ErrorMessage>}
         <Button
           title="account_center.code_verification.send"
           type="primary"
