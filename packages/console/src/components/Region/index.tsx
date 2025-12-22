@@ -95,7 +95,7 @@ export type InstanceDropdownItemProps = Pick<
  * - When selected, it indicates that the user is choosing the public Logto instance, need to show the public region radio options below.
  * - When not selected, it indicates that the user is choosing a private instance, need to hide the public region radio options below.
  */
-export const publicInstancesDropDownItem: InstanceDropdownItemProps = {
+export const publicInstancesDropdownItem: InstanceDropdownItemProps = {
   name: 'logto',
   displayName: 'Logto Cloud (Public)',
   country: 'LOGTO',
