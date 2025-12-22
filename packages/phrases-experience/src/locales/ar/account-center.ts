@@ -44,7 +44,7 @@ const account_center = {
     verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
   },
   phone: {
-    title: 'ربط الهاتف',
+    title: 'ربط رقم الهاتف',
     description: 'اربط رقم هاتفك لتسجيل الدخول أو للمساعدة في استعادة الحساب.',
     verification_title: 'أدخل رمز التحقق عبر الهاتف',
     verification_description: 'تم إرسال رمز التحقق إلى هاتفك {{phone_number}}.',

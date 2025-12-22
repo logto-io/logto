@@ -45,7 +45,7 @@ const account_center = {
     verification_required: 'Verification expired. Please verify your identity again.',
   },
   phone: {
-    title: 'Link phone',
+    title: 'Link phone number',
     description: 'Link your phone number to sign in or help with account recovery.',
     verification_title: 'Enter phone verification code',
     verification_description: 'The verification code has been sent to your phone {{phone_number}}.',

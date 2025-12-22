@@ -44,7 +44,7 @@ const account_center = {
     verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
   },
   phone: {
-    title: 'Telefonu bağla',
+    title: 'Telefon numarasını bağla',
     description: 'Giriş yapmak veya hesap kurtarmaya yardımcı olmak için telefon numaranı bağla.',
     verification_title: 'Telefon doğrulama kodunu gir',
     verification_description: 'Doğrulama kodu telefonuna {{phone_number}} gönderildi.',

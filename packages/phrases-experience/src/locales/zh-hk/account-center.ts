@@ -43,7 +43,7 @@ const account_center = {
     verification_required: '驗證已失效，請再次驗證你的身份。',
   },
   phone: {
-    title: '連結電話',
+    title: '連結電話號碼',
     description: '連結你的電話號碼以登入或協助帳戶恢復。',
     verification_title: '輸入電話驗證碼',
     verification_description: '驗證碼已發送至你的電話 {{phone_number}}。',

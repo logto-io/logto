@@ -44,7 +44,7 @@ const account_center = {
     verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
   },
   phone: {
-    title: 'เชื่อมต่อโทรศัพท์',
+    title: 'เชื่อมต่อหมายเลขโทรศัพท์',
     description: 'เชื่อมต่อหมายเลขโทรศัพท์เพื่อใช้เข้าสู่ระบบหรือช่วยกู้คืนบัญชี',
     verification_title: 'กรอกรหัสยืนยันทางโทรศัพท์',
     verification_description: 'ได้ส่งรหัสยืนยันไปยังโทรศัพท์ {{phone_number}} แล้ว',

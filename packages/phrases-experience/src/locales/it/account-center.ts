@@ -46,7 +46,7 @@ const account_center = {
     verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
   },
   phone: {
-    title: 'Collega telefono',
+    title: 'Collega numero di telefono',
     description:
       'Collega il tuo numero di telefono per accedere o aiutare con il recupero dell’account.',
     verification_title: 'Inserisci il codice di verifica del telefono',

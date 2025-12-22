@@ -44,7 +44,7 @@ const account_center = {
     verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
   },
   phone: {
-    title: 'Połącz telefon',
+    title: 'Połącz numer telefonu',
     description: 'Połącz swój numer telefonu, aby się logować lub ułatwić odzyskiwanie konta.',
     verification_title: 'Wprowadź kod weryfikacyjny telefonu',
     verification_description: 'Kod weryfikacyjny został wysłany na Twój telefon {{phone_number}}.',
