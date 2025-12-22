@@ -299,6 +299,8 @@ const PasskeyView = () => {
         <div className={styles.editModalContent}>
           <DynamicT forKey="account_center.passkey.rename_description" />
           <InputField
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
             name="passkeyName"
             value={editName}
             required={false}

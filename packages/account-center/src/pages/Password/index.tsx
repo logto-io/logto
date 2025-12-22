@@ -126,8 +126,10 @@ const Password = () => {
     <SecondaryPageLayout title="account_center.password.title" description={description}>
       <div className={styles.container}>
         <SetPassword
-          errorMessage={errorMessage}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
           clearErrorMessage={clearErrorMessage}
+          errorMessage={errorMessage}
           maxLength={passwordPolicy.length.max}
           onSubmit={async (value) => handleSubmit(value)}
         />

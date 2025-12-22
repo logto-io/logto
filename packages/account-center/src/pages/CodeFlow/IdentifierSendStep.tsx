@@ -94,6 +94,8 @@ const IdentifierSendStep = ({
     <SecondaryPageLayout title={titleKey} description={descriptionKey}>
       <form className={styles.container} onSubmit={handleSend}>
         <SmartInputField
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
           className={styles.identifierInput}
           name={name}
           label={t(labelKey)}

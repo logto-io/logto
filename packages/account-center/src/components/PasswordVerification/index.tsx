@@ -58,6 +58,8 @@ const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: 
     >
       <form noValidate className={styles.form} onSubmit={handleVerify}>
         <PasswordInputField
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
           autoComplete="current-password"
           label={t('input.password')}
           value={password}

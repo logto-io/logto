@@ -109,6 +109,8 @@ const Username = () => {
       <form className={styles.container} onSubmit={handleSubmit}>
         <SmartInputField
           key={inputKey}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
           className={styles.identifierInput}
           name="username"
           label={t('input.username')}
