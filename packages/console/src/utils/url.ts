@@ -3,7 +3,7 @@ import { trySafe } from '@silverhand/essentials';
 /**
  * @remarks
  * `URLSearchParams` can handle cases where the value is an array, but its type definition does not accept parameters like `{ [key: string]: string[] }`.
- * 
+ *
  * @example
  * ```ts
  * buildUrl(applicationsEndpoint, [
