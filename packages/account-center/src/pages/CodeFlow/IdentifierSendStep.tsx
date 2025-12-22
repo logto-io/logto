@@ -2,7 +2,7 @@ import Button from '@experience/shared/components/Button';
 import SmartInputField from '@experience/shared/components/InputFields/SmartInputField';
 import { type SignInIdentifier } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
@@ -55,7 +55,8 @@ const IdentifierSendStep = ({
     setPendingValue(value);
   }, [value]);
 
-  const handleSend = async () => {
+  const handleSend = async (event?: FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     const target = pendingValue.trim();
 
     if (!target || loading) {
@@ -79,7 +80,7 @@ const IdentifierSendStep = ({
 
   return (
     <SecondaryPageLayout title={titleKey} description={descriptionKey}>
-      <div className={styles.container}>
+      <form className={styles.container} onSubmit={handleSend}>
         <SmartInputField
           className={styles.identifierInput}
           name={name}
@@ -95,14 +96,12 @@ const IdentifierSendStep = ({
         <Button
           title="account_center.code_verification.send"
           type="primary"
+          htmlType="submit"
           className={styles.submit}
           disabled={!pendingValue || loading}
           isLoading={loading}
-          onClick={() => {
-            void handleSend();
-          }}
         />
-      </div>
+      </form>
     </SecondaryPageLayout>
   );
 };

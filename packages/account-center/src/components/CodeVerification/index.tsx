@@ -6,7 +6,7 @@ import VerificationCodeInput, {
 } from '@experience/shared/components/VerificationCode';
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
@@ -103,31 +103,35 @@ const CodeVerification = ({
     };
   }, [countdown]);
 
-  const handleSendCode = useCallback(async () => {
-    if (!identifier || loading) {
-      return;
-    }
+  const handleSendCode = useCallback(
+    async (event?: FormEvent<HTMLFormElement>) => {
+      event?.preventDefault();
+      if (!identifier || loading) {
+        return;
+      }
 
-    const [error, result] = await sendCodeRequest(identifier);
+      const [error, result] = await sendCodeRequest(identifier);
 
-    if (error) {
-      await handleError(error);
-      return;
-    }
+      if (error) {
+        await handleError(error);
+        return;
+      }
 
-    if (!result) {
-      setToast(t('account_center.email_verification.error_send_failed'));
-      return;
-    }
+      if (!result) {
+        setToast(t('account_center.email_verification.error_send_failed'));
+        return;
+      }
 
-    setPendingVerificationRecord({
-      recordId: result.verificationRecordId,
-      expiresAt: result.expiresAt,
-    });
-    setCodeInput([]);
-    setHasSentCode(true);
-    startCountdown();
-  }, [handleError, identifier, loading, sendCodeRequest, setToast, startCountdown, t]);
+      setPendingVerificationRecord({
+        recordId: result.verificationRecordId,
+        expiresAt: result.expiresAt,
+      });
+      setCodeInput([]);
+      setHasSentCode(true);
+      startCountdown();
+    },
+    [handleError, identifier, loading, sendCodeRequest, setToast, startCountdown, t]
+  );
 
   const handleVerify = useCallback(
     async (code: string[]) => {
@@ -197,7 +201,17 @@ const CodeVerification = ({
       onBack={onBack}
     >
       {hasSentCode ? (
-        <div className={styles.container}>
+        <form
+          className={styles.container}
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!isCodeReady(codeInput)) {
+              setToast(t('error.invalid_passcode'));
+              return;
+            }
+            void handleVerify(codeInput);
+          }}
+        >
           <VerificationCodeInput
             name={codeInputName}
             className={styles.codeInput}
@@ -228,23 +242,16 @@ const CodeVerification = ({
           <Button
             title="action.confirm"
             type="primary"
+            htmlType="submit"
             className={styles.submit}
             isLoading={loading}
-            onClick={() => {
-              if (!isCodeReady(codeInput)) {
-                setToast(t('error.invalid_passcode'));
-                return;
-              }
-
-              void handleVerify(codeInput);
-            }}
           />
           {hasAlternativeMethod && (
             <SwitchVerificationMethodLink className={styles.switchLink} onClick={onSwitchMethod} />
           )}
-        </div>
+        </form>
       ) : (
-        <div className={styles.prepare}>
+        <form className={styles.prepare} onSubmit={handleSendCode}>
           <SmartInputField
             readOnly
             className={styles.identifierInput}
@@ -256,17 +263,15 @@ const CodeVerification = ({
           <Button
             title="account_center.email_verification.send"
             type="primary"
+            htmlType="submit"
             className={styles.prepareAction}
             disabled={loading}
             isLoading={loading}
-            onClick={() => {
-              void handleSendCode();
-            }}
           />
           {hasAlternativeMethod && (
             <SwitchVerificationMethodLink className={styles.switchLink} onClick={onSwitchMethod} />
           )}
-        </div>
+        </form>
       )}
     </SecondaryPageLayout>
   );
