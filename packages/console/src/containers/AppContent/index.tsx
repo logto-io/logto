@@ -27,7 +27,7 @@ import { type AppContentOutletContext } from './types';
 
 export default function AppContent() {
   const { isLoading: isLoadingPreference } = useUserPreferences();
-  const { currentTenant } = useContext(TenantsContext);
+  const { currentTenant, isDevTenant } = useContext(TenantsContext);
   const isTenantSuspended = isCloud && currentTenant?.isSuspended;
 
   const { isLoading: isLoadingSubscriptionData, ...subscriptionData } = useSubscriptionData();
@@ -49,7 +49,7 @@ export default function AppContent() {
           quotaKey: T,
           usage?: SubscriptionCountBasedUsage[T]
         ) => {
-          if (!shouldEnforcePaywallInUI(subscriptionData.currentSubscription.planId, quotaKey)) {
+          if (!shouldEnforcePaywallInUI(isDevTenant, quotaKey)) {
             return false;
           }
 
@@ -64,7 +64,7 @@ export default function AppContent() {
           quotaKey: T,
           usage?: SubscriptionCountBasedUsage[T]
         ) => {
-          if (!shouldEnforcePaywallInUI(subscriptionData.currentSubscription.planId, quotaKey)) {
+          if (!shouldEnforcePaywallInUI(isDevTenant, quotaKey)) {
             return false;
           }
 

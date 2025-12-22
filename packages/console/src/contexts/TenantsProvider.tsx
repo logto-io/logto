@@ -1,4 +1,4 @@
-import { defaultTenantId, TenantTag } from '@logto/schemas';
+import { adminTenantId, defaultTenantId, TenantTag } from '@logto/schemas';
 import { conditionalArray, noop } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, createContext, useState } from 'react';
@@ -169,7 +169,8 @@ function TenantsProvider({ children }: Props) {
       updateTenant,
       isInitComplete,
       currentTenantId,
-      isDevTenant: currentTenant?.tag === TenantTag.Development,
+      isDevTenant:
+        currentTenant?.tag === TenantTag.Development && currentTenant.id !== adminTenantId,
       currentTenant,
       navigateTenant,
     }),

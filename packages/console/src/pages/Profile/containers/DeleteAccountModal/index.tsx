@@ -1,9 +1,9 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { useContext } from 'react';
 import ReactModal from 'react-modal';
 
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import modalStyles from '@/scss/modal.module.scss';
+import { isPaidPlan } from '@/utils/subscription';
 
 import DeletionConfirmationModal from './components/DeletionConfirmationModal';
 import TenantsIssuesModal from './components/TenantsIssuesModal';
@@ -15,8 +15,9 @@ type Props = {
 
 export default function DeleteAccountModal({ isOpen, onClose }: Props) {
   const { tenants } = useContext(TenantsContext);
-  const paidPlans = tenants.filter(
-    ({ planId }) => planId !== ReservedPlanId.Free && planId !== ReservedPlanId.Development
+
+  const paidPlans = tenants.filter(({ subscription: { planId, isEnterprisePlan } }) =>
+    isPaidPlan(planId, isEnterprisePlan)
   );
   const subscriptionStatusIssues = tenants.filter(
     ({ subscription }) => subscription.status !== 'active'

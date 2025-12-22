@@ -6,6 +6,7 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import { contactEmailLink } from '@/consts';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
+import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button, { LinkButton } from '@/ds-components/Button';
 
 import useTenantMembersUsage from '../../hooks';
@@ -22,6 +23,7 @@ function Footer({ newInvitationCount = 0, isLoading, onSubmit }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.upsell.paywall' });
 
   const { currentSku, currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const { isDevTenant } = useContext(TenantsContext);
 
   const { hasTenantMembersReachedLimit, limit, usage } = useTenantMembersUsage();
 
@@ -39,10 +41,7 @@ function Footer({ newInvitationCount = 0, isLoading, onSubmit }: Props) {
     );
   }
 
-  if (
-    currentSku.id === ReservedPlanId.Development &&
-    (hasTenantMembersReachedLimit || usage + newInvitationCount > limit)
-  ) {
+  if (isDevTenant && (hasTenantMembersReachedLimit || usage + newInvitationCount > limit)) {
     // Display a custom "Contact us" footer instead of asking for upgrade
     return (
       <div className={styles.container}>
