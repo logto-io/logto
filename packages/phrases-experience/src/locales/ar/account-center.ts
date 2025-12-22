@@ -46,7 +46,7 @@ const account_center = {
   phone: {
     title: 'ربط رقم الهاتف',
     description: 'اربط رقم هاتفك لتسجيل الدخول أو للمساعدة في استعادة الحساب.',
-    verification_title: 'أدخل رمز التحقق عبر الهاتف',
+    verification_title: 'أدخل رمز التحقق عبر الرسائل القصيرة',
     verification_description: 'تم إرسال رمز التحقق إلى هاتفك {{phone_number}}.',
     success: 'تم ربط الهاتف الأساسي بنجاح.',
     verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
@@ -64,8 +64,8 @@ const account_center = {
 
   code_verification: {
     send: 'إرسال رمز التحقق',
-    resend: 'إعادة إرسال الرمز',
-    resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
+    resend: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
+    resend_countdown: 'لم تستلمه بعد؟<span> أعد الإرسال بعد {{seconds}} ث.</span>',
   },
 
   email_verification: {
@@ -74,8 +74,8 @@ const account_center = {
     email_label: 'عنوان البريد الإلكتروني',
     send: 'إرسال رمز التحقق',
     description: 'تم إرسال رمز التحقق إلى بريدك الإلكتروني {{email}}. أدخل الرمز للمتابعة.',
-    resend: 'إعادة إرسال الرمز',
-    resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
+    resend: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
+    resend_countdown: 'لم تستلمه بعد؟<span> أعد الإرسال بعد {{seconds}} ث.</span>',
     error_send_failed: 'فشل إرسال رمز التحقق. يرجى المحاولة لاحقًا.',
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
@@ -86,8 +86,8 @@ const account_center = {
     phone_label: 'رقم الهاتف',
     send: 'إرسال رمز التحقق',
     description: 'تم إرسال رمز التحقق إلى هاتفك {{phone}}. أدخل الرمز للمتابعة.',
-    resend: 'إعادة إرسال الرمز',
-    resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
+    resend: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
+    resend_countdown: 'لم تستلمه بعد؟<span> أعد الإرسال بعد {{seconds}} ث.</span>',
     error_send_failed: 'فشل إرسال رمز التحقق. يرجى المحاولة لاحقًا.',
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',

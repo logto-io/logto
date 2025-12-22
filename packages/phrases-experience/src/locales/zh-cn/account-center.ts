@@ -45,7 +45,7 @@ const account_center = {
   phone: {
     title: '关联手机号',
     description: '关联手机号用于登录或帮助找回账号。',
-    verification_title: '输入手机验证码',
+    verification_title: '输入短信验证码',
     verification_description: '验证码已发送到你的手机 {{phone_number}}。',
     success: '已成功关联主要手机号。',
     verification_required: '验证已失效，请重新验证身份。',
@@ -63,8 +63,8 @@ const account_center = {
 
   code_verification: {
     send: '发送验证码',
-    resend: '重新发送',
-    resend_countdown: '还没有收到？{{seconds}} 秒后可重新发送。',
+    resend: '还没有收到？<a>重新发送验证码</a>',
+    resend_countdown: '还没有收到？<span>{{seconds}} 秒后可重新发送</span>',
   },
 
   email_verification: {
@@ -73,8 +73,8 @@ const account_center = {
     email_label: '邮箱地址',
     send: '发送验证码',
     description: '验证码已发送至您的邮箱 {{email}}。请输入验证码以继续。',
-    resend: '重新发送',
-    resend_countdown: '还没有收到？{{seconds}} 秒后可重新发送。',
+    resend: '还没有收到？<a>重新发送验证码</a>',
+    resend_countdown: '还没有收到？<span>{{seconds}} 秒后可重新发送</span>',
     error_send_failed: '验证码发送失败，请稍后再试。',
     error_verify_failed: '验证失败，请重新输入验证码。',
     error_invalid_code: '验证码无效或已过期。',
@@ -85,8 +85,8 @@ const account_center = {
     phone_label: '手机号码',
     send: '发送验证码',
     description: '验证码已发送至您的手机 {{phone}}。请输入验证码以继续。',
-    resend: '重新发送',
-    resend_countdown: '还没有收到？{{seconds}} 秒后可重新发送。',
+    resend: '还没有收到？<a>重新发送验证码</a>',
+    resend_countdown: '还没有收到？<span>{{seconds}} 秒后可重新发送</span>',
     error_send_failed: '验证码发送失败，请稍后再试。',
     error_verify_failed: '验证失败，请重新输入验证码。',
     error_invalid_code: '验证码无效或已过期。',

@@ -1,14 +1,14 @@
 import Button from '@experience/shared/components/Button';
-import DynamicT from '@experience/shared/components/DynamicT';
 import VerificationCodeInput, {
   defaultLength,
 } from '@experience/shared/components/VerificationCode';
 import { type TFuncKey } from 'i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import SwitchVerificationMethodLink from '@ac/components/SwitchVerificationMethodLink';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -31,6 +31,7 @@ type Props = {
   readonly onSubmit: (code: string) => void;
   readonly onBack: () => void;
   readonly onInvalidCode: () => void;
+  readonly onSwitchMethod?: () => void;
   readonly sendCode: (
     accessToken: string,
     identifier: string
@@ -50,6 +51,7 @@ const IdentifierVerifyStep = ({
   onSubmit,
   onBack,
   onInvalidCode,
+  onSwitchMethod,
   sendCode,
 }: Props) => {
   const { t } = useTranslation();
@@ -133,21 +135,26 @@ const IdentifierVerifyStep = ({
         />
         <div className={styles.message}>
           {countdown > 0 ? (
-            <DynamicT
-              forKey="account_center.code_verification.resend_countdown"
-              interpolation={{ seconds: countdown }}
-            />
+            <Trans components={{ span: <span className={styles.highlight} /> }}>
+              {t('account_center.code_verification.resend_countdown', { seconds: countdown })}
+            </Trans>
           ) : (
-            <button
-              className={styles.resendButton}
-              type="button"
-              disabled={loading}
-              onClick={() => {
-                void handleResend();
+            <Trans
+              components={{
+                a: (
+                  <button
+                    className={styles.resendButton}
+                    type="button"
+                    disabled={loading}
+                    onClick={() => {
+                      void handleResend();
+                    }}
+                  />
+                ),
               }}
             >
-              <DynamicT forKey="account_center.code_verification.resend" />
-            </button>
+              {t('account_center.code_verification.resend')}
+            </Trans>
           )}
         </div>
         <Button
@@ -164,6 +171,9 @@ const IdentifierVerifyStep = ({
             onSubmit(codeInput.join(''));
           }}
         />
+        {onSwitchMethod && (
+          <SwitchVerificationMethodLink className={styles.switchMethod} onClick={onSwitchMethod} />
+        )}
       </div>
     </SecondaryPageLayout>
   );

@@ -48,8 +48,8 @@ const account_center = {
   phone: {
     title: 'Collega numero di telefono',
     description:
-      'Collega il tuo numero di telefono per accedere o aiutare con il recupero dell’account.',
-    verification_title: 'Inserisci il codice di verifica del telefono',
+      "Collega il tuo numero di telefono per accedere o aiutare con il recupero dell'account.",
+    verification_title: 'Inserisci il codice di verifica SMS',
     verification_description:
       'Il codice di verifica è stato inviato al tuo telefono {{phone_number}}.',
     success: 'Telefono principale collegato correttamente.',
@@ -68,8 +68,8 @@ const account_center = {
 
   code_verification: {
     send: 'Invia codice di verifica',
-    resend: 'Invia di nuovo il codice',
-    resend_countdown: "Non l'hai ricevuto? Reinvia dopo {{seconds}} s.",
+    resend: "Non l'hai ricevuto? <a>Reinvia il codice di verifica</a>",
+    resend_countdown: "Non l'hai ricevuto?<span> Reinvia dopo {{seconds}} s.</span>",
   },
 
   email_verification: {
@@ -80,8 +80,8 @@ const account_center = {
     send: 'Invia codice di verifica',
     description:
       "Il codice di verifica è stato inviato all'e-mail {{email}}. Inserisci il codice per continuare.",
-    resend: 'Invia di nuovo il codice',
-    resend_countdown: "Non l'hai ricevuto? Reinvia dopo {{seconds}} s.",
+    resend: "Non l'hai ricevuto? <a>Reinvia il codice di verifica</a>",
+    resend_countdown: "Non l'hai ricevuto?<span> Reinvia dopo {{seconds}} s.</span>",
     error_send_failed: 'Invio del codice di verifica non riuscito. Riprova più tardi.',
     error_verify_failed: 'Verifica non riuscita. Inserisci di nuovo il codice.',
     error_invalid_code: 'Il codice di verifica non è valido o è scaduto.',
@@ -94,8 +94,8 @@ const account_center = {
     send: 'Invia codice di verifica',
     description:
       'Il codice di verifica è stato inviato al tuo telefono {{phone}}. Inserisci il codice per continuare.',
-    resend: 'Invia di nuovo il codice',
-    resend_countdown: "Non l'hai ricevuto? Reinvia dopo {{seconds}} s.",
+    resend: "Non l'hai ricevuto? <a>Reinvia il codice di verifica</a>",
+    resend_countdown: "Non l'hai ricevuto?<span> Reinvia dopo {{seconds}} s.</span>",
     error_send_failed: 'Invio del codice di verifica non riuscito. Riprova più tardi.',
     error_verify_failed: 'Verifica non riuscita. Inserisci di nuovo il codice.',
     error_invalid_code: 'Il codice di verifica non è valido o è scaduto.',

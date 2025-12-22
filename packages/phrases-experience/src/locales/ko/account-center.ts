@@ -45,7 +45,7 @@ const account_center = {
   phone: {
     title: '전화번호 연결',
     description: '로그인하거나 계정 복구에 사용할 전화번호를 연결하세요.',
-    verification_title: '전화 인증 코드를 입력',
+    verification_title: 'SMS 인증 코드를 입력',
     verification_description: '인증 코드가 전화번호 {{phone_number}}(으)로 전송되었습니다.',
     success: '기본 전화번호가 연결되었습니다.',
     verification_required: '인증이 만료되었습니다. 다시 신원을 확인해주세요.',
@@ -63,8 +63,8 @@ const account_center = {
 
   code_verification: {
     send: '인증 코드 보내기',
-    resend: '코드 다시 보내기',
-    resend_countdown: '아직 받지 못하셨나요? {{seconds}}초 후에 다시 보내세요.',
+    resend: '아직 받지 못하셨나요? <a>인증 코드 다시 보내기</a>',
+    resend_countdown: '아직 받지 못하셨나요?<span> {{seconds}}초 후에 다시 보낼 수 있습니다</span>',
   },
 
   email_verification: {
@@ -74,8 +74,8 @@ const account_center = {
     send: '인증 코드 보내기',
     description:
       '인증 코드가 이메일 {{email}}(으)로 전송되었습니다. 코드를 입력해 계속 진행하세요.',
-    resend: '코드 다시 보내기',
-    resend_countdown: '아직 받지 못하셨나요? {{seconds}}초 후에 다시 보내세요.',
+    resend: '아직 받지 못하셨나요? <a>인증 코드 다시 보내기</a>',
+    resend_countdown: '아직 받지 못하셨나요?<span> {{seconds}}초 후에 다시 보낼 수 있습니다</span>',
     error_send_failed: '인증 코드를 보내지 못했습니다. 잠시 후 다시 시도해주세요.',
     error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
     error_invalid_code: '인증 코드가 잘못되었거나 만료되었습니다.',
@@ -87,8 +87,8 @@ const account_center = {
     send: '인증 코드 보내기',
     description:
       '인증 코드가 전화번호 {{phone}}(으)로 전송되었습니다. 코드를 입력해 계속 진행하세요.',
-    resend: '코드 다시 보내기',
-    resend_countdown: '아직 받지 못하셨나요? {{seconds}}초 후에 다시 보내세요.',
+    resend: '아직 받지 못하셨나요? <a>인증 코드 다시 보내기</a>',
+    resend_countdown: '아직 받지 못하셨나요?<span> {{seconds}}초 후에 다시 보낼 수 있습니다</span>',
     error_send_failed: '인증 코드를 보내지 못했습니다. 잠시 후 다시 시도해주세요.',
     error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
     error_invalid_code: '인증 코드가 잘못되었거나 만료되었습니다.',

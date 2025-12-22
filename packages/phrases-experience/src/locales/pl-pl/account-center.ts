@@ -46,7 +46,7 @@ const account_center = {
   phone: {
     title: 'Połącz numer telefonu',
     description: 'Połącz swój numer telefonu, aby się logować lub ułatwić odzyskiwanie konta.',
-    verification_title: 'Wprowadź kod weryfikacyjny telefonu',
+    verification_title: 'Wprowadź kod weryfikacyjny SMS',
     verification_description: 'Kod weryfikacyjny został wysłany na Twój telefon {{phone_number}}.',
     success: 'Główny telefon połączono pomyślnie.',
     verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
@@ -64,8 +64,8 @@ const account_center = {
 
   code_verification: {
     send: 'Wyślij kod weryfikacyjny',
-    resend: 'Wyślij kod ponownie',
-    resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
+    resend: 'Nie otrzymałeś? <a>Wyślij kod weryfikacyjny ponownie</a>',
+    resend_countdown: 'Nie otrzymałeś?<span> Wyślij ponownie po {{seconds}} s.</span>',
   },
 
   email_verification: {
@@ -76,8 +76,8 @@ const account_center = {
     send: 'Wyślij kod weryfikacyjny',
     description:
       'Kod weryfikacyjny został wysłany na adres {{email}}. Wprowadź kod, aby kontynuować.',
-    resend: 'Wyślij kod ponownie',
-    resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
+    resend: 'Nie otrzymałeś? <a>Wyślij kod weryfikacyjny ponownie</a>',
+    resend_countdown: 'Nie otrzymałeś?<span> Wyślij ponownie po {{seconds}} s.</span>',
     error_send_failed: 'Nie udało się wysłać kodu weryfikacyjnego. Spróbuj ponownie później.',
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
@@ -90,8 +90,8 @@ const account_center = {
     send: 'Wyślij kod weryfikacyjny',
     description:
       'Kod weryfikacyjny został wysłany na Twój telefon {{phone}}. Wprowadź kod, aby kontynuować.',
-    resend: 'Wyślij kod ponownie',
-    resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
+    resend: 'Nie otrzymałeś? <a>Wyślij kod weryfikacyjny ponownie</a>',
+    resend_countdown: 'Nie otrzymałeś?<span> Wyślij ponownie po {{seconds}} s.</span>',
     error_send_failed: 'Nie udało się wysłać kodu weryfikacyjnego. Spróbuj ponownie później.',
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
