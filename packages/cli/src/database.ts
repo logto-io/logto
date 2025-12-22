@@ -1,4 +1,5 @@
 import type { SchemaLike } from '@logto/schemas';
+import { parseTimeoutEnv } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import {
   createPool,
@@ -12,28 +13,6 @@ import { DatabaseError } from 'pg-protocol';
 
 import { convertToPrimitiveOrSql } from './sql.js';
 import { ConfigKey, consoleLog, getCliConfigWithPrompt } from './utils.js';
-
-const parseTimeoutEnv = (
-  value?: string
-): number | 'DISABLE_TIMEOUT' | undefined => {
-  if (!value) {
-    return undefined;
-  }
-
-  const normalized = value.trim();
-
-  if (!normalized) {
-    return undefined;
-  }
-
-  if (normalized === 'DISABLE_TIMEOUT') {
-    return 'DISABLE_TIMEOUT';
-  }
-
-  const parsed = Number(normalized);
-
-  return Number.isFinite(parsed) ? parsed : undefined;
-};
 
 const databaseStatementTimeout = parseTimeoutEnv(process.env.DATABASE_STATEMENT_TIMEOUT);
 

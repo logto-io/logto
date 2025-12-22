@@ -1,11 +1,16 @@
-import { assertEnv, getEnv, getEnvAsStringArray, tryThat, yes } from '@silverhand/essentials';
+import {
+  assertEnv,
+  getEnv,
+  getEnvAsStringArray,
+  tryThat,
+  yes,
+  type Optional,
+} from '@silverhand/essentials';
 
 import UrlSet from './UrlSet.js';
 import { throwErrorWithDsnMessage } from './throw-errors.js';
 
-const parseTimeoutEnv = (
-  value?: string
-): number | 'DISABLE_TIMEOUT' | undefined => {
+export const parseTimeoutEnv = (value?: string): Optional<number | 'DISABLE_TIMEOUT'> => {
   if (!value) {
     return undefined;
   }
@@ -149,9 +154,7 @@ export default class GlobalValues {
 
   public readonly databaseConnectionTimeout = Number(getEnv('DATABASE_CONNECTION_TIMEOUT', '5000'));
   // Use DISABLE_TIMEOUT to avoid sending startup parameters rejected by PgBouncer/RDS Proxy.
-  public readonly databaseStatementTimeout = parseTimeoutEnv(
-    getEnv('DATABASE_STATEMENT_TIMEOUT')
-  );
+  public readonly databaseStatementTimeout = parseTimeoutEnv(getEnv('DATABASE_STATEMENT_TIMEOUT'));
 
   /** Global switch for enabling/disabling case-sensitive usernames. */
   public readonly isCaseSensitiveUsername = yes(getEnv('CASE_SENSITIVE_USERNAME', 'true'));
