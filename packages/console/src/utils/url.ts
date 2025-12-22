@@ -1,7 +1,22 @@
 import { trySafe } from '@silverhand/essentials';
 
-export const buildUrl = (path: string, searchParameters: Record<string, string>) =>
-  `${path}?${new URLSearchParams(searchParameters).toString()}`;
+/**
+ * @remarks
+ * `URLSearchParams` can handle cases where the value is an array, but its type definition does not accept parameters like `{ [key: string]: string[] }`.
+ *
+ * @example
+ * ```ts
+ * buildUrl(applicationsEndpoint, [
+ *   ['types', ApplicationType.Traditional],
+ *   ['types', ApplicationType.SPA],
+ *   ['types', ApplicationType.SAML],
+ * ]);
+ * ```
+ */
+export const buildUrl = (
+  path: string,
+  searchParameters: ConstructorParameters<typeof URLSearchParams>[0]
+) => `${path}?${new URLSearchParams(searchParameters).toString()}`;
 
 export const formatSearchKeyword = (keyword: string) => `%${keyword}%`;
 
