@@ -60,7 +60,7 @@ const useRegisterFlowCodeVerification = (
 
     // TODO: replace with use-sign-in-with-exist-identifier-confirm-model.ts
     show({
-      confirmText: 'action.sign_in',
+      confirmText: 'action.continue',
       ModalContent: t('description.create_account_id_exists', {
         value:
           type === SignInIdentifier.Phone ? formatPhoneNumberWithCountryCallingCode(value) : value,
