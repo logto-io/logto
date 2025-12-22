@@ -13,6 +13,30 @@ import { DatabaseError } from 'pg-protocol';
 import { convertToPrimitiveOrSql } from './sql.js';
 import { ConfigKey, consoleLog, getCliConfigWithPrompt } from './utils.js';
 
+const parseTimeoutEnv = (
+  value?: string
+): number | 'DISABLE_TIMEOUT' | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  const normalized = value.trim();
+
+  if (!normalized) {
+    return undefined;
+  }
+
+  if (normalized === 'DISABLE_TIMEOUT') {
+    return 'DISABLE_TIMEOUT';
+  }
+
+  const parsed = Number(normalized);
+
+  return Number.isFinite(parsed) ? parsed : undefined;
+};
+
+const databaseStatementTimeout = parseTimeoutEnv(process.env.DATABASE_STATEMENT_TIMEOUT);
+
 export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';
 
 export const getDatabaseUrlFromConfig = async () =>
@@ -28,6 +52,7 @@ export const createPoolFromConfig = async () => {
 
   return createPool(databaseUrl, {
     interceptors: createInterceptorsPreset(),
+    statementTimeout: databaseStatementTimeout,
   });
 };
 
@@ -55,6 +80,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
     const databaseName = dsn.databaseName ?? '?';
     const maintenancePool = await createPool(stringifyDsn({ ...dsn, databaseName: 'postgres' }), {
       interceptors: createInterceptorsPreset(),
+      statementTimeout: databaseStatementTimeout,
     });
     await maintenancePool.query(sql`
       create database ${sql.identifier([databaseName])}
