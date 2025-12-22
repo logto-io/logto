@@ -3,6 +3,28 @@ import { assertEnv, getEnv, getEnvAsStringArray, tryThat, yes } from '@silverhan
 import UrlSet from './UrlSet.js';
 import { throwErrorWithDsnMessage } from './throw-errors.js';
 
+const parseTimeoutEnv = (
+  value?: string
+): number | 'DISABLE_TIMEOUT' | undefined => {
+  if (!value) {
+    return undefined;
+  }
+
+  const normalized = value.trim();
+
+  if (!normalized) {
+    return undefined;
+  }
+
+  if (normalized === 'DISABLE_TIMEOUT') {
+    return 'DISABLE_TIMEOUT';
+  }
+
+  const parsed = Number(normalized);
+
+  return Number.isFinite(parsed) ? parsed : undefined;
+};
+
 export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';
   public readonly isIntegrationTest = yes(getEnv('INTEGRATION_TEST'));
@@ -126,6 +148,10 @@ export default class GlobalValues {
   public readonly databasePoolSize = Number(getEnv('DATABASE_POOL_SIZE', '20'));
 
   public readonly databaseConnectionTimeout = Number(getEnv('DATABASE_CONNECTION_TIMEOUT', '5000'));
+  // Use DISABLE_TIMEOUT to avoid sending startup parameters rejected by PgBouncer/RDS Proxy.
+  public readonly databaseStatementTimeout = parseTimeoutEnv(
+    getEnv('DATABASE_STATEMENT_TIMEOUT')
+  );
 
   /** Global switch for enabling/disabling case-sensitive usernames. */
   public readonly isCaseSensitiveUsername = yes(getEnv('CASE_SENSITIVE_USERNAME', 'true'));
