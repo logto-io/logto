@@ -143,12 +143,15 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     ) => {
       onChange(nextId);
 
-      if (nextId !== publicInstancesDropDownItem.name) {
-        // If switching to a private instance, reset regionName as well.
+      if (nextId === publicInstancesDropDownItem.name && publicRegions[0]) {
+        // Otherwise, reset to the first public region when switching to public instance.
+        setValue('regionName', publicRegions[0].name, { shouldValidate: true, shouldDirty: true });
+      } else {
+        // If switching to a private instance, reset regionName using the instanceId.
         setValue('regionName', nextId, { shouldValidate: true, shouldDirty: true });
       }
     },
-    [setValue]
+    [publicRegions, setValue]
   );
 
   return (
