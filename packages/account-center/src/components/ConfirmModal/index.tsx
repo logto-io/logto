@@ -21,7 +21,7 @@ const ConfirmModal = ({
   isOpen,
   title,
   children,
-  confirmText = 'action.confirm',
+  confirmText = 'action.continue',
   cancelText = 'action.cancel',
   isLoading,
   onConfirm,

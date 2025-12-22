@@ -240,7 +240,7 @@ const CodeVerification = ({
             )}
           </div>
           <Button
-            title="action.confirm"
+            title="action.continue"
             type="primary"
             htmlType="submit"
             className={styles.submit}

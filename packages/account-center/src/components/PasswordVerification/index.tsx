@@ -70,7 +70,7 @@ const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: 
         <Button
           className={styles.submit}
           htmlType="submit"
-          title="action.confirm"
+          title="action.continue"
           disabled={!password || loading}
           isLoading={loading}
         />
