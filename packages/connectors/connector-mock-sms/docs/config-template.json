@@ -22,6 +22,22 @@
     {
       "usageType": "Generic",
       "content": "This is for generic purpose through management API only. Your verification code is {{code}}."
+    },
+    {
+      "usageType": "OrganizationInvitation",
+      "content": "You have been invited to join an organization. Please click the link to accept: {{link}}."
+    },
+    {
+      "usageType": "UserPermissionValidation",
+      "content": "This is for validating user permission. Your verification code is {{code}}."
+    },
+    {
+      "usageType": "BindNewIdentifier",
+      "content": "This is for binding a new identifier to your account. Your verification code is {{code}}."
+    },
+    {
+      "usageType": "BindMfa",
+      "content": "This is for binding MFA to your account. Your verification code is {{code}}."
     }
   ]
 }

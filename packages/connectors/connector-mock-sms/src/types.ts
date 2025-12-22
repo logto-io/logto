@@ -1,7 +1,9 @@
 import { z } from 'zod';
 
+import { templateTypeGuard } from '@logto/connector-kit';
+
 const templateGuard = z.object({
-  usageType: z.string(),
+  usageType: templateTypeGuard,
   content: z.string(),
 });
 
