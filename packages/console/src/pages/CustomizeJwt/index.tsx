@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import FormField from '@/ds-components/FormField';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -22,10 +21,8 @@ import useJwtCustomizer from './use-jwt-customizer';
 function CustomizeJwt() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { isDevTenant } = useContext(TenantsContext);
   const {
     currentSubscription: { planId, isEnterprisePlan },
-    currentSubscriptionQuota: { customJwtEnabled },
   } = useContext(SubscriptionDataContext);
 
   const { getDocumentationUrl } = useDocumentationUrl();

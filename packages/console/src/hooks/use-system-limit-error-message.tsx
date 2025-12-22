@@ -64,7 +64,7 @@ const systemLimitEntityPhrases: Record<SystemLimitKey, AdminConsoleKey> = {
 export const useSystemLimitErrorMessage = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscription: { planId },
   } = useContext(SubscriptionDataContext);
 
   const parseSystemLimitErrorMessage = useCallback(
@@ -85,14 +85,14 @@ export const useSystemLimitErrorMessage = () => {
         <Trans
           components={{
             a: <TextLink href={entityPolicyLink} targetBlank="noopener" />,
-            planName: <SkuName skuId={planId} isEnterprise={isEnterprisePlan} />,
+            planName: <SkuName skuId={planId} />,
           }}
         >
           {t('system_limit.limit_exceeded', { entity })}
         </Trans>
       );
     },
-    [t, planId, isEnterprisePlan]
+    [t, planId]
   );
 
   return {

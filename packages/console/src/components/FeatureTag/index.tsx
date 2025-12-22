@@ -15,12 +15,9 @@ export { default as BetaTag } from './BetaTag';
  * The display tag mapping for each plan type.
  */
 const planTagMap = {
-  [ReservedPlanId.Free]: 'free',
   [ReservedPlanId.Pro]: 'pro',
   [ReservedPlanId.Pro202411]: 'pro',
   [ReservedPlanId.Pro202509]: 'pro',
-  [ReservedPlanId.Development]: 'dev',
-  [ReservedPlanId.Admin]: 'admin',
   enterprise: 'enterprise',
 } as const;
 
