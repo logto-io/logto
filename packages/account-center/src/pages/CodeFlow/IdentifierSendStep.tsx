@@ -1,6 +1,8 @@
 import Button from '@experience/shared/components/Button';
+import ErrorMessage from '@experience/shared/components/ErrorMessage';
 import SmartInputField from '@experience/shared/components/InputFields/SmartInputField';
-import { type SignInIdentifier } from '@logto/schemas';
+import { emailRegEx } from '@logto/core-kit';
+import { SignInIdentifier, type SignInIdentifier as SignInIdentifierType } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
 import { useContext, useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +20,7 @@ export type IdentifierLabelKey =
   | 'account_center.phone_verification.phone_label';
 
 type Props = {
-  readonly identifierType: SignInIdentifier.Email | SignInIdentifier.Phone;
+  readonly identifierType: SignInIdentifierType.Email | SignInIdentifierType.Phone;
   readonly name: string;
   readonly labelKey: IdentifierLabelKey;
   readonly titleKey: TFuncKey;
@@ -48,6 +50,7 @@ const IdentifierSendStep = ({
   const { loading } = useContext(LoadingContext);
   const { setToast } = useContext(PageContext);
   const [pendingValue, setPendingValue] = useState(value);
+  const [errorMessage, setErrorMessage] = useState<string>();
   const sendCodeRequest = useApi(sendCode);
   const handleError = useErrorHandler();
 
@@ -62,6 +65,15 @@ const IdentifierSendStep = ({
     if (!target || loading) {
       return;
     }
+
+    // Validate email format before sending
+    if (identifierType === SignInIdentifier.Email && !emailRegEx.test(target)) {
+      setErrorMessage(t('error.invalid_email'));
+      return;
+    }
+
+    // Clear any previous validation error
+    setErrorMessage(undefined);
 
     const [error, result] = await sendCodeRequest(target);
 
@@ -87,12 +99,16 @@ const IdentifierSendStep = ({
           label={t(labelKey)}
           defaultValue={pendingValue}
           enabledTypes={[identifierType]}
+          isDanger={Boolean(errorMessage)}
           onChange={(inputValue) => {
-            if (inputValue.type === identifierType) {
+            if (inputValue.type === identifierType && inputValue.value !== pendingValue) {
               setPendingValue(inputValue.value);
+              // Clear error when user modifies input
+              setErrorMessage(undefined);
             }
           }}
         />
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         <Button
           title="account_center.code_verification.send"
           type="primary"

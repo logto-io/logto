@@ -134,7 +134,7 @@ describe('social verification', () => {
       const { verificationId } = await client.sendVerificationCode({
         identifier: {
           type: SignInIdentifier.Email,
-          value: 'foo',
+          value: 'foo@logto.io',
         },
         interactionEvent: InteractionEvent.SignIn,
       });

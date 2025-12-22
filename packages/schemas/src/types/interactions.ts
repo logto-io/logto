@@ -62,10 +62,16 @@ export type VerificationCodeIdentifier<
   type: T;
   value: string;
 };
-export const verificationCodeIdentifierGuard = z.object({
-  type: z.enum([SignInIdentifier.Email, SignInIdentifier.Phone]),
-  value: z.string(),
-}) satisfies ToZodObject<VerificationCodeIdentifier>;
+export const verificationCodeIdentifierGuard = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal(SignInIdentifier.Email),
+    value: z.string().regex(emailRegEx),
+  }),
+  z.object({
+    type: z.literal(SignInIdentifier.Phone),
+    value: z.string().regex(phoneRegEx),
+  }),
+]) satisfies z.ZodType<VerificationCodeIdentifier>;
 
 // REMARK: API payload guard
 
