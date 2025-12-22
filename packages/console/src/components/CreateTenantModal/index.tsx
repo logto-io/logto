@@ -1,7 +1,7 @@
 import { Theme, TenantTag } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 import { useCallback, useMemo, useState } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, type ControllerRenderProps, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -12,9 +12,10 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse, type RegionResponse as RegionType } from '@/cloud/types/router';
 import Region, {
   defaultRegionName,
-  logtoDropdownItem,
+  publicInstancesDropDownItem,
   type InstanceDropdownItemProps,
 } from '@/components/Region';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -48,8 +49,14 @@ const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdownItemPr
     .filter(({ isPrivate }) => isPrivate)
     .map(({ id, name, country, tags, displayName }) => ({ id, name, country, tags, displayName }));
 
-  return condArray(hasPublicRegions && logtoDropdownItem, ...privateInstances);
+  return condArray(hasPublicRegions && publicInstancesDropDownItem, ...privateInstances);
 };
+
+const defaultFormValues = Object.freeze({
+  tag: TenantTag.Development,
+  instanceId: publicInstancesDropDownItem.name,
+  regionName: defaultRegionName,
+});
 
 function CreateTenantModal({ isOpen, onClose }: Props) {
   const [tenantData, setTenantData] = useState<CreateTenantData>();
@@ -57,17 +64,13 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
   const cloudApi = useCloudApi();
   const { regions, regionsError, getRegionByName } = useAvailableRegions();
 
-  const defaultValues = Object.freeze({
-    tag: TenantTag.Development,
-    instanceId: logtoDropdownItem.name,
-    regionName: defaultRegionName,
-  });
   const methods = useForm<CreateTenantData>({
-    defaultValues,
+    defaultValues: defaultFormValues,
   });
 
   const {
     reset,
+    setValue,
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -84,7 +87,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     [reset, watch]
   );
 
-  const instanceOptions = useMemo(() => getInstanceDropdownItems(regions ?? []), [regions]);
+  const instanceDropdownItems = useMemo(() => getInstanceDropdownItems(regions ?? []), [regions]);
   const hasPrivateRegionsAccess = useMemo(() => checkPrivateRegionAccess(regions ?? []), [regions]);
 
   const publicRegions = useMemo(
@@ -92,26 +95,16 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     [regions]
   );
 
-  const isLogtoInstance = useMemo(() => instanceId === logtoDropdownItem.name, [instanceId]);
-
-  const currentRegion = useMemo(
-    () => getRegionByName(isLogtoInstance ? regionName : instanceId),
-    [isLogtoInstance, regionName, instanceId, getRegionByName]
+  const isPublicInstanceSelected = useMemo(
+    () => instanceId === publicInstancesDropDownItem.name,
+    [instanceId]
   );
 
-  const getFinalRegionName = useCallback(
-    (instanceId: string, regionName: string) => {
-      return isLogtoInstance ? regionName : instanceId;
-    },
-    [isLogtoInstance]
-  );
+  const currentRegion = useMemo(() => getRegionByName(regionName), [regionName, getRegionByName]);
 
-  const createTenant = async ({ name, tag, instanceId, regionName }: CreateTenantData) => {
-    // For Logto public instance, use the selected region
-    // For private instances, use the instance ID as the region
-    const finalRegionName = getFinalRegionName(instanceId, regionName);
+  const createTenant = async ({ name, tag, regionName }: CreateTenantData) => {
     const newTenant = await cloudApi.post('/api/tenants', {
-      body: { name, tag, regionName: finalRegionName },
+      body: { name, tag, regionName },
     });
     onClose(newTenant);
   };
@@ -119,16 +112,43 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
 
   const onCreateClick = handleSubmit(
     trySubmitSafe(async (data: CreateTenantData) => {
-      const { tag } = data;
+      const { tag, instanceId } = data;
       if (tag === TenantTag.Development) {
         await createTenant(data);
         toast.success(t('tenants.create_modal.tenant_created'));
         return;
       }
 
+      // TODO: remove the dev feature guard once the enterprise subscription is ready
+      // Private region production tenant creation
+      if (isDevFeaturesEnabled && instanceId !== publicInstancesDropDownItem.name) {
+        // Directly call the create tenant API instead of going through the plan selection modal.
+        // Based on product design, private region can only have one production tenant plan,
+        // and should not go through the subscription checkout flow,
+        // always associated the new tenant with the existing enterprise subscription of the private region.
+        await createTenant(data);
+        toast.success(t('tenants.create_modal.tenant_created'));
+        return;
+      }
+
       // For production tenants, store creation parameters with the correct regionName for later use after plan selection.
-      setTenantData({ ...data, regionName: getFinalRegionName(data.instanceId, data.regionName) });
+      setTenantData(data);
     })
+  );
+
+  const handleInstanceIdChange = useCallback(
+    (
+      nextId: string,
+      onChange: ControllerRenderProps<CreateTenantData, 'instanceId'>['onChange']
+    ) => {
+      onChange(nextId);
+
+      if (nextId !== publicInstancesDropDownItem.name) {
+        // If switching to a private instance, reset regionName as well.
+        setValue('regionName', nextId, { shouldValidate: true, shouldDirty: true });
+      }
+    },
+    [setValue]
   );
 
   return (
@@ -139,7 +159,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
       onAfterClose={() => {
-        reset(defaultValues);
+        reset(defaultFormValues);
       }}
       onRequestClose={() => {
         onClose();
@@ -191,18 +211,20 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                   rules={{ required: true }}
                   render={({ field: { onChange, value } }) => (
                     <InstanceSelector
-                      instances={instanceOptions}
+                      instances={instanceDropdownItems}
                       value={value}
                       isDisabled={isSubmitting}
                       setTenantTagInForm={setTenantTagInForm}
-                      onChange={onChange}
+                      onChange={(nextId) => {
+                        handleInstanceIdChange(nextId, onChange);
+                      }}
                     />
                   )}
                 />
               )}
             </FormField>
           )}
-          {isLogtoInstance && (
+          {isPublicInstanceSelected && (
             <FormField
               title="tenants.settings.tenant_region"
               tip={t('tenants.settings.tenant_region_description')}
