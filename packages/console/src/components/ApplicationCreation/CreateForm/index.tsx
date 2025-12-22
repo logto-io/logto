@@ -84,7 +84,6 @@ function CreateForm({
         ['page', String(1)],
         ['page_size', String(defaultPageSize)],
         ['isThirdParty', 'false'],
-        // This implementation can cover the scenario where `value` is an array.
         ['types', ApplicationType.SAML],
       ])
   );
