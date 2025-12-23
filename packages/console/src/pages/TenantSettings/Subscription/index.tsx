@@ -22,10 +22,10 @@ function Subscription() {
   const cloudApi = useCloudApi();
   const { logtoSkus, currentSku, onCurrentSubscriptionUpdated } =
     useContext(SubscriptionDataContext);
-  const { currentTenant } = useContext(TenantsContext);
-  const regions = useAvailableRegions();
 
-  const { currentTenantId, updateTenant } = useContext(TenantsContext);
+  const { currentTenant, currentTenantId, updateTenant } = useContext(TenantsContext);
+
+  const regions = useAvailableRegions();
 
   const reservedSkus = pickupFeaturedLogtoSkus(logtoSkus);
 

@@ -59,12 +59,14 @@ export const useTenantSettings = () => {
         },
         { path: TenantSettingsTabs.Domains, element: <TenantDomainSettings /> },
         !isDevTenant &&
-          canManageTenant && [{ path: TenantSettingsTabs.Subscription, element: <Subscription /> }],
-        !isDevTenant &&
-          // Hide the billing history page if the tenant is associated with a shared enterprise subscription
-          quotaScope !== 'shared' &&
           canManageTenant && [
-            { path: TenantSettingsTabs.BillingHistory, element: <BillingHistory /> },
+            { path: TenantSettingsTabs.Subscription, element: <Subscription /> },
+            ...condArray(
+              // Hide the billing history page if the tenant is associated with a shared enterprise subscription
+              quotaScope !== 'shared' && [
+                { path: TenantSettingsTabs.BillingHistory, element: <BillingHistory /> },
+              ]
+            ),
           ]
       ),
     }),
