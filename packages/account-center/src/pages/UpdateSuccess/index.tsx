@@ -1,9 +1,10 @@
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import successIllustration from '@ac/assets/icons/success.svg';
 import ErrorPage from '@ac/components/ErrorPage';
+import { clearRedirectUrl, getRedirectUrl } from '@ac/utils/account-center-route';
 
 type IdentifierType =
   | SignInIdentifier
@@ -68,6 +69,8 @@ type Props = {
 };
 
 const UpdateSuccess = ({ identifierType }: Props) => {
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
   const translationKeys = useMemo(() => {
     if (!identifierType) {
       return translationMap.default;
@@ -75,6 +78,21 @@ const UpdateSuccess = ({ identifierType }: Props) => {
 
     return translationMap[identifierType] ?? translationMap.default;
   }, [identifierType]);
+
+  useEffect(() => {
+    const redirectUrl = getRedirectUrl();
+
+    if (redirectUrl) {
+      setIsRedirecting(true);
+      clearRedirectUrl();
+      window.location.assign(redirectUrl);
+    }
+  }, []);
+
+  // Show nothing while redirecting to avoid flash of success page
+  if (isRedirecting) {
+    return null;
+  }
 
   return (
     <ErrorPage
