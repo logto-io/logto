@@ -98,6 +98,7 @@ export type Props = {
   readonly usageAddOnSku?: LogtoSkuResponse;
 };
 
+// eslint-disable-next-line complexity
 function PlanUsageCard({
   usage,
   quota,
@@ -112,7 +113,7 @@ function PlanUsageCard({
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    currentSubscription: { planId, isEnterprisePlan },
+    currentSubscription: { planId, isEnterprisePlan, quotaScope },
   } = useContext(SubscriptionDataContext);
 
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
@@ -175,7 +176,11 @@ function PlanUsageCard({
                   className={classNames(
                     styles.usageTip,
                     // Hide usage tip for free plan users.
-                    (!isPaidTenant || basicQuota === undefined || isQuotaNoticeHidden) &&
+                    (!isPaidTenant ||
+                      // Hide usage tip for shared enterprise subscription tenants.
+                      quotaScope === 'shared' ||
+                      basicQuota === undefined ||
+                      isQuotaNoticeHidden) &&
                       styles.hidden
                   )}
                 />
@@ -225,8 +230,8 @@ function PlanUsageCard({
               forKey={`subscription.usage.${usage ? 'status_active' : 'status_inactive'}`}
             />
           </Tag>
-          {/* Only show the quota notice for enterprise plan. */}
-          {quota !== undefined && isEnterprisePlan && (
+          {/* Only show the quota notice for enterprise plan with non-shared quota scope */}
+          {quota !== undefined && isEnterprisePlan && quotaScope !== 'shared' && (
             <div className={styles.usageTip}>
               {/* Consider the type of quota is number, null or boolean, the following statement covers all cases. */}
               {(() => {

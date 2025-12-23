@@ -1,5 +1,5 @@
 import { type ResponseError } from '@withtyped/client';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -8,6 +8,7 @@ import PageMeta from '@/components/PageMeta';
 import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import useAvailableRegions from '@/hooks/use-available-regions';
 import { pickupFeaturedLogtoSkus } from '@/utils/subscription';
 
 import Skeleton from '../components/Skeleton';
@@ -21,6 +22,9 @@ function Subscription() {
   const cloudApi = useCloudApi();
   const { logtoSkus, currentSku, onCurrentSubscriptionUpdated } =
     useContext(SubscriptionDataContext);
+  const { currentTenant } = useContext(TenantsContext);
+  const regions = useAvailableRegions();
+
   const { currentTenantId, updateTenant } = useContext(TenantsContext);
 
   const reservedSkus = pickupFeaturedLogtoSkus(logtoSkus);
@@ -42,6 +46,15 @@ function Subscription() {
       params: { tenantId: currentTenantId },
     })
   );
+
+  const isPrivateRegionTenant = useMemo(() => {
+    if (!currentTenant) {
+      return false;
+    }
+
+    const region = regions.getRegionByName(currentTenant.regionName);
+    return region ? region.isPrivate : false;
+  }, [currentTenant, regions]);
 
   const isLoading =
     (!periodicUsage && !periodicUsageError) || (!usageAddOnSkus && !usageAddOnSkusError);
@@ -71,19 +84,24 @@ function Subscription() {
     <div className={styles.container}>
       <PageMeta titleKey={['tenants.tabs.subscription', 'tenants.title']} />
       <CurrentPlan periodicUsage={periodicUsage} usageAddOnSkus={usageAddOnSkus} />
-      <ConsoleEmbeddedPricing />
-      <SwitchPlanActionBar
-        currentSkuId={currentSku.id}
-        logtoSkus={reservedSkus}
-        onSubscriptionUpdated={async () => {
-          /**
-           * The upcoming billing info is calculated based on the current subscription usage,
-           * and the usage is based on the current subscription plan,
-           * need to manually trigger the usage update while the subscription plan is changed.
-           */
-          onCurrentSubscriptionUpdated();
-        }}
-      />
+      {/* Hide pricing table for private regions */}
+      {!isPrivateRegionTenant && (
+        <>
+          <ConsoleEmbeddedPricing />
+          <SwitchPlanActionBar
+            currentSkuId={currentSku.id}
+            logtoSkus={reservedSkus}
+            onSubscriptionUpdated={async () => {
+              /**
+               * The upcoming billing info is calculated based on the current subscription usage,
+               * and the usage is based on the current subscription plan,
+               * need to manually trigger the usage update while the subscription plan is changed.
+               */
+              onCurrentSubscriptionUpdated();
+            }}
+          />
+        </>
+      )}
     </div>
   );
 }
