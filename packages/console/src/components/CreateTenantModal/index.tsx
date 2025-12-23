@@ -12,7 +12,7 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse, type RegionResponse as RegionType } from '@/cloud/types/router';
 import Region, {
   defaultRegionName,
-  publicInstancesDropDownItem,
+  publicInstancesDropdownItem,
   type InstanceDropdownItemProps,
 } from '@/components/Region';
 import { isDevFeaturesEnabled } from '@/consts/env';
@@ -49,12 +49,12 @@ const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdownItemPr
     .filter(({ isPrivate }) => isPrivate)
     .map(({ id, name, country, tags, displayName }) => ({ id, name, country, tags, displayName }));
 
-  return condArray(hasPublicRegions && publicInstancesDropDownItem, ...privateInstances);
+  return condArray(hasPublicRegions && publicInstancesDropdownItem, ...privateInstances);
 };
 
 const defaultFormValues = Object.freeze({
   tag: TenantTag.Development,
-  instanceId: publicInstancesDropDownItem.name,
+  instanceId: publicInstancesDropdownItem.name,
   regionName: defaultRegionName,
 });
 
@@ -96,7 +96,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
   );
 
   const isPublicInstanceSelected = useMemo(
-    () => instanceId === publicInstancesDropDownItem.name,
+    () => instanceId === publicInstancesDropdownItem.name,
     [instanceId]
   );
 
@@ -121,7 +121,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
 
       // TODO: remove the dev feature guard once the enterprise subscription is ready
       // Private region production tenant creation
-      if (isDevFeaturesEnabled && instanceId !== publicInstancesDropDownItem.name) {
+      if (isDevFeaturesEnabled && instanceId !== publicInstancesDropdownItem.name) {
         // Directly call the create tenant API instead of going through the plan selection modal.
         // Based on product design, private region can only have one production tenant plan,
         // and should not go through the subscription checkout flow,
@@ -143,7 +143,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
     ) => {
       onChange(nextId);
 
-      if (nextId === publicInstancesDropDownItem.name && publicRegions[0]) {
+      if (nextId === publicInstancesDropdownItem.name && publicRegions[0]) {
         // Otherwise, reset to the first public region when switching to public instance.
         setValue('regionName', publicRegions[0].name, { shouldValidate: true, shouldDirty: true });
       } else {
