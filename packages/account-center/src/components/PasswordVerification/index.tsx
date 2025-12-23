@@ -25,13 +25,16 @@ const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: 
   const { setVerificationId, setToast } = useContext(PageContext);
   const { loading } = useContext(LoadingContext);
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string>();
   const asyncVerifyPassword = useApi(verifyPassword);
   const handleError = useErrorHandler();
 
   const handleVerify = async (event?: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
+    setPasswordError(undefined);
 
-    if (!password || loading) {
+    if (!password) {
+      setPasswordError(t('error.password_required'));
       return;
     }
 
@@ -63,6 +66,8 @@ const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: 
           autoComplete="current-password"
           label={t('input.password')}
           value={password}
+          errorMessage={passwordError}
+          isDanger={Boolean(passwordError)}
           onChange={(event) => {
             if (event.target instanceof HTMLInputElement) {
               setPassword(String(event.target.value));
@@ -73,7 +78,6 @@ const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: 
           className={styles.submit}
           htmlType="submit"
           title="action.continue"
-          disabled={!password || loading}
           isLoading={loading}
         />
         {hasAlternativeMethod && (

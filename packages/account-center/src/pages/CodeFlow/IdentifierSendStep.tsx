@@ -65,11 +65,17 @@ const IdentifierSendStep = ({
   const handleSend = useCallback(
     async (event?: FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
+      setLocalErrorMessage(undefined);
       clearErrorMessage?.();
 
       const target = pendingValue.trim();
 
-      if (!target || loading) {
+      if (!target) {
+        setLocalErrorMessage(
+          t('error.general_required', {
+            types: [identifierType === 'email' ? t('input.email') : t('input.phone_number')],
+          })
+        );
         return;
       }
 
@@ -78,9 +84,6 @@ const IdentifierSendStep = ({
         setLocalErrorMessage(t('error.invalid_email'));
         return;
       }
-
-      // Clear any previous validation error
-      setLocalErrorMessage(undefined);
 
       const [error, result] = await sendCodeRequest(target);
 
@@ -104,7 +107,6 @@ const IdentifierSendStep = ({
       clearErrorMessage,
       handleError,
       identifierType,
-      loading,
       onCodeSent,
       onSendFailed,
       pendingValue,
@@ -142,7 +144,6 @@ const IdentifierSendStep = ({
           type="primary"
           htmlType="submit"
           className={styles.submit}
-          disabled={!pendingValue || loading}
           isLoading={loading}
         />
       </form>
