@@ -15,7 +15,7 @@ import {
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { backupCodeDeletedRoute, backupCodeRegenerateRoute } from '@ac/constants/routes';
+import { backupCodesDeletedRoute, backupCodesGenerateRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -84,7 +84,7 @@ const BackupCodeView = () => {
     }
 
     setShowDeleteConfirm(false);
-    void navigate(backupCodeDeletedRoute, { replace: true });
+    void navigate(backupCodesDeletedRoute, { replace: true });
   }, [
     backupCodeVerificationId,
     deleteBackupCodeRequest,
@@ -184,7 +184,7 @@ const BackupCodeView = () => {
               title="account_center.backup_code.generate_new"
               type="secondary"
               onClick={() => {
-                void navigate(backupCodeRegenerateRoute);
+                void navigate(backupCodesGenerateRoute);
               }}
             />
           </div>

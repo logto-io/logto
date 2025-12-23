@@ -17,6 +17,7 @@ import type {
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
 import AccountCenterField from './AccountCenterField';
+import IntegratePrebuiltUi from './IntegratePrebuiltUi';
 import SecretVaultSection from './SecretVaultSection';
 import WebauthnRelatedOriginsField from './WebauthnRelatedOriginsField';
 import { accountCenterSections } from './constants';
@@ -99,6 +100,7 @@ function AccountCenter({ isActive, data }: Props) {
           </FormField>
         </div>
       </FormCard>
+      <IntegratePrebuiltUi />
       {accountCenterSections.map((section) => (
         <FormCard key={section.key} title={section.title} description={section.description}>
           <div className={styles.cardContent}>

@@ -17,7 +17,7 @@ import { getMfaVerifications, deleteMfaVerification, updateWebAuthnName } from '
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { passkeyDeletedRoute, passkeyRoute } from '@ac/constants/routes';
+import { passkeyDeletedRoute, passkeyAddRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -264,7 +264,7 @@ const PasskeyView = () => {
               title="account_center.passkey.add_passkey"
               type="primary"
               onClick={() => {
-                void navigate(passkeyRoute);
+                void navigate(passkeyAddRoute);
               }}
             />
           </div>

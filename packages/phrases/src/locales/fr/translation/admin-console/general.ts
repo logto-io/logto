@@ -77,6 +77,7 @@ const general = {
   reset: 'Réinitialiser',
   generate: 'Générer',
   manage: 'Gérer',
+  live_preview: 'Aperçu en direct',
 };
 
 export default Object.freeze(general);

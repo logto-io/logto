@@ -76,6 +76,7 @@ const general = {
   reset: 'リセット',
   generate: '生成する',
   manage: '管理',
+  live_preview: 'ライブプレビュー',
 };
 
 export default Object.freeze(general);

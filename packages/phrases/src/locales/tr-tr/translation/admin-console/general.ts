@@ -77,6 +77,7 @@ const general = {
   reset: 'Sıfırla',
   generate: 'Oluştur',
   manage: 'Yönet',
+  live_preview: 'Canlı önizleme',
 };
 
 export default Object.freeze(general);

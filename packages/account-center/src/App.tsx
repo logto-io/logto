@@ -23,15 +23,14 @@ import {
   passwordSuccessRoute,
   usernameRoute,
   usernameSuccessRoute,
-  totpRoute,
-  totpSuccessRoute,
-  backupCodeRoute,
-  backupCodeRegenerateRoute,
-  backupCodeSuccessRoute,
-  backupCodeDeletedRoute,
-  backupCodeViewRoute,
-  passkeyRoute,
-  passkeyViewRoute,
+  authenticatorAppRoute,
+  authenticatorAppSuccessRoute,
+  backupCodesGenerateRoute,
+  backupCodesSuccessRoute,
+  backupCodesDeletedRoute,
+  backupCodesManageRoute,
+  passkeyAddRoute,
+  passkeyManageRoute,
   passkeySuccessRoute,
   passkeyDeletedRoute,
 } from './constants/routes';
@@ -99,13 +98,16 @@ const Main = () => {
         element={<UpdateSuccess identifierType={SignInIdentifier.Username} />}
       />
       <Route path={passwordSuccessRoute} element={<UpdateSuccess identifierType="password" />} />
-      <Route path={totpSuccessRoute} element={<UpdateSuccess identifierType="totp" />} />
       <Route
-        path={backupCodeSuccessRoute}
+        path={authenticatorAppSuccessRoute}
+        element={<UpdateSuccess identifierType="totp" />}
+      />
+      <Route
+        path={backupCodesSuccessRoute}
         element={<UpdateSuccess identifierType="backup_code" />}
       />
       <Route
-        path={backupCodeDeletedRoute}
+        path={backupCodesDeletedRoute}
         element={<UpdateSuccess identifierType="backup_code_deleted" />}
       />
       <Route path={passkeySuccessRoute} element={<UpdateSuccess identifierType="passkey" />} />
@@ -117,12 +119,11 @@ const Main = () => {
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />
       <Route path={usernameRoute} element={<Username />} />
-      <Route path={totpRoute} element={<TotpBinding />} />
-      <Route path={backupCodeRoute} element={<BackupCodeBinding />} />
-      <Route path={backupCodeRegenerateRoute} element={<BackupCodeBinding isRegenerate />} />
-      <Route path={backupCodeViewRoute} element={<BackupCodeView />} />
-      <Route path={passkeyRoute} element={<PasskeyBinding />} />
-      <Route path={passkeyViewRoute} element={<PasskeyView />} />
+      <Route path={authenticatorAppRoute} element={<TotpBinding />} />
+      <Route path={backupCodesGenerateRoute} element={<BackupCodeBinding />} />
+      <Route path={backupCodesManageRoute} element={<BackupCodeView />} />
+      <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
+      <Route path={passkeyManageRoute} element={<PasskeyView />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>

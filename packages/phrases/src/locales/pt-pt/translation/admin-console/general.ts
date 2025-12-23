@@ -76,6 +76,7 @@ const general = {
   reset: 'Repor',
   generate: 'Gerar',
   manage: 'Gerir',
+  live_preview: 'Pré-visualização ao vivo',
 };
 
 export default Object.freeze(general);
