@@ -33,6 +33,7 @@ const Username = () => {
   const defaultUsername = userInfo?.username ?? '';
   const [pendingUsername, setPendingUsername] = useState(defaultUsername);
   const [inputKey, setInputKey] = useState(defaultUsername);
+  const [usernameError, setUsernameError] = useState<string>();
   const updateUsernameRequest = useApi(updateUsername);
   const handleError = useErrorHandler();
 
@@ -56,12 +57,19 @@ const Username = () => {
 
   const handleSubmit = async (event?: FormEvent) => {
     event?.preventDefault();
+    setUsernameError(undefined);
 
-    if (!verificationId || loading) {
+    if (!verificationId) {
       return;
     }
 
     const username = pendingUsername.trim();
+
+    if (!username) {
+      setUsernameError(t('error.username_required'));
+      return;
+    }
+
     const validationError = validateUsername(username);
 
     if (validationError) {
@@ -69,7 +77,7 @@ const Username = () => {
         typeof validationError === 'string'
           ? t(`error.${validationError}`)
           : t(`error.${validationError.code}`, validationError.data ?? {});
-      setToast(message);
+      setUsernameError(message);
       return;
     }
 
@@ -116,6 +124,8 @@ const Username = () => {
           label={t('input.username')}
           defaultValue={pendingUsername}
           enabledTypes={[SignInIdentifier.Username]}
+          errorMessage={usernameError}
+          isDanger={Boolean(usernameError)}
           onChange={(inputValue) => {
             setPendingUsername(inputValue.value);
           }}
@@ -124,7 +134,6 @@ const Username = () => {
           className={styles.submit}
           title="action.continue"
           htmlType="submit"
-          disabled={!pendingUsername.trim() || loading}
           isLoading={loading}
         />
       </form>

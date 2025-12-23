@@ -32,6 +32,7 @@ const SetPassword = ({
   const { t } = useTranslation();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPasswordError, setNewPasswordError] = useState<string>();
   const [confirmPasswordError, setConfirmPasswordError] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -39,10 +40,17 @@ const SetPassword = ({
   const handleSubmit = useCallback(
     async (event?: FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
+      setNewPasswordError(undefined);
       setConfirmPasswordError(undefined);
       clearErrorMessage?.();
 
-      if (!newPassword || !confirmPassword) {
+      if (!newPassword) {
+        setNewPasswordError(t('error.password_required'));
+        return;
+      }
+
+      if (!confirmPassword) {
+        setConfirmPasswordError(t('error.password_required'));
         return;
       }
 
@@ -74,8 +82,8 @@ const SetPassword = ({
         autoFocus={autoFocus}
         value={newPassword}
         maxLength={maxLength}
-        isDanger={Boolean(errorMessage)}
-        errorMessage={errorMessage}
+        isDanger={Boolean(errorMessage ?? newPasswordError)}
+        errorMessage={errorMessage ?? newPasswordError}
         isSuffixFocusVisible={Boolean(newPassword)}
         suffix={
           <IconButton
@@ -126,7 +134,6 @@ const SetPassword = ({
         title="action.save_password"
         htmlType="submit"
         isLoading={isSubmitting}
-        disabled={!newPassword || !confirmPassword}
       />
     </form>
   );
