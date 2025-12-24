@@ -4,6 +4,7 @@ import { Navigate, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
 import { TenantSettingsTabs } from '@/consts';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import NotFound from '@/pages/NotFound';
@@ -25,6 +26,9 @@ const Subscription = safeLazy(async () => import('@/pages/TenantSettings/Subscri
 
 export const useTenantSettings = () => {
   const { isDevTenant } = useContext(TenantsContext);
+  const {
+    currentSubscription: { quotaScope },
+  } = useContext(SubscriptionDataContext);
   const {
     access: { canInviteMember, canManageTenant },
   } = useCurrentTenantScopes();
@@ -57,11 +61,16 @@ export const useTenantSettings = () => {
         !isDevTenant &&
           canManageTenant && [
             { path: TenantSettingsTabs.Subscription, element: <Subscription /> },
-            { path: TenantSettingsTabs.BillingHistory, element: <BillingHistory /> },
+            ...condArray(
+              // Hide the billing history page if the tenant is associated with a shared enterprise subscription
+              quotaScope !== 'shared' && [
+                { path: TenantSettingsTabs.BillingHistory, element: <BillingHistory /> },
+              ]
+            ),
           ]
       ),
     }),
-    [canInviteMember, canManageTenant, isDevTenant]
+    [canInviteMember, canManageTenant, isDevTenant, quotaScope]
   );
 
   return tenantSettings;
