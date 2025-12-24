@@ -29,6 +29,8 @@ export const basicOidcConnectorConfigGuard = z.object({
   clientSecret: z.string(),
   issuer: z.string(),
   scope: z.string().optional(),
+  acceptStringTypedBooleanClaims: z.boolean().optional(),
+  trustUnverifiedEmail: z.boolean().optional().default(false),
 });
 
 export type BasicOidcConnectorConfig = z.infer<typeof basicOidcConnectorConfigGuard>;
