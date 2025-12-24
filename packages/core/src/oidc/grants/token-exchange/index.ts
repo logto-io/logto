@@ -77,6 +77,7 @@ export const buildHandler: (
   } = providerInstance.configuration();
 
   const { userId, subjectTokenId } = await validateSubjectToken(
+    envSet,
     queries,
     String(params.subject_token),
     String(params.subject_token_type)
