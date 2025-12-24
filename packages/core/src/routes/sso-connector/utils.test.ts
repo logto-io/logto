@@ -111,12 +111,15 @@ describe('fetchConnectorProviderDetails', () => {
     expect(result).toMatchObject(
       expect.objectContaining({
         ...connector,
+        name: 'OIDC',
+        providerType: 'oidc',
         providerLogo: ssoConnectorFactories[connector.providerName].logo,
         providerLogoDark: ssoConnectorFactories[connector.providerName].logoDark,
         providerConfig: {
           ...connector.config,
           scope: 'openid profile email', // Default scope
           tokenEndpoint: 'http://example.com/token',
+          trustUnverifiedEmail: false,
         },
       })
     );
