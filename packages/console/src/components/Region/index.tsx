@@ -86,7 +86,16 @@ export type InstanceDropdownItemProps = Pick<
   'name' | 'country' | 'tags' | 'displayName'
 >;
 
-export const logtoDropdownItem: InstanceDropdownItemProps = {
+/**
+ * The default public Logto instance dropdown item.
+ *
+ * @remarks
+ * This item is a placeholder for the public Logto instance and is used in the instance selection dropdown.
+ *
+ * - When selected, it indicates that the user is choosing the public Logto instance, need to show the public region radio options below.
+ * - When not selected, it indicates that the user is choosing a private instance, need to hide the public region radio options below.
+ */
+export const publicInstancesDropdownItem: InstanceDropdownItemProps = {
   name: 'logto',
   displayName: 'Logto Cloud (Public)',
   country: 'LOGTO',
