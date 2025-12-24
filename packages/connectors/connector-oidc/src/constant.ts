@@ -50,6 +50,15 @@ export const defaultMetadata: ConnectorMetadata = {
       defaultValue: false,
     },
     {
+      key: 'trustUnverifiedEmail',
+      label: 'Trust Unverified Email',
+      description:
+        'Whether to trust the `email` claim even when `email_verified` is missing or false. Enable this only if you trust the provider to supply verified emails.',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      defaultValue: false,
+    },
+    {
       key: 'idTokenVerificationConfig',
       label: 'ID Token Verification Config',
       type: ConnectorConfigFormItemType.Json,
