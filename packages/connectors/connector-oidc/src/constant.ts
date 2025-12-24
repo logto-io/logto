@@ -54,6 +54,8 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'Trust Unverified Email',
       description:
         'Whether to trust the `email` claim even when `email_verified` is missing or false. Enable this only if you trust the provider to supply verified emails.',
+      tooltip:
+        "Some OIDC identity providers don't return the `email_verified` claim, so emails may be unverified. Logto won’t sync unverified email to the user profile by default. Enable this only if you fully trust the identity provider's email validation.",
       type: ConnectorConfigFormItemType.Switch,
       required: false,
       defaultValue: false,

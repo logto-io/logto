@@ -119,6 +119,8 @@ const enterprise_sso_details = {
     'Kimlik sağlayıcıdan dönen doğrulanmamış e-posta adreslerine her zaman güven',
   trust_unverified_email_tip:
     "Entra ID (OIDC) bağlayıcısı `email_verified` bilgisini döndürmez, bu da Azure'dan alınan e-posta adreslerinin doğrulandığının garanti edilmediği anlamına gelir. Varsayılan olarak, Logto doğrulanmamış e-posta adreslerini kullanıcı profiline senkronize etmeyecektir. Bu seçeneği yalnızca Entra ID dizininden gelen tüm e-posta adreslerine güveniyorsanız etkinleştirin.",
+  trust_unverified_email_tip_oidc:
+    "OIDC bağlayıcısı `email_verified` iddiasını döndürmeyebilir; bu, IdP'den gelen e-posta adreslerinin doğrulandığının garanti edilmediği anlamına gelir. Varsayılan olarak, Logto doğrulanmamış e-posta adreslerini kullanıcı profiline senkronize etmez. Bu seçeneği yalnızca IdP'den gelen tüm e-posta adreslerine güveniyorsanız etkinleştirin.",
   offline_access: {
     label: 'Erişim belirtecini yenile',
     description:
