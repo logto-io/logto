@@ -14,6 +14,11 @@ const tenants = {
       'Establezca el nombre del inquilino y vea la región de alojamiento de sus datos y el tipo de inquilino.',
     tenant_id: 'ID del inquilino',
     tenant_name: 'Nombre del inquilino',
+    /** UNTRANSLATED */
+    tenant_instance: 'Select your instance',
+    /** UNTRANSLATED */
+    tenant_instance_description:
+      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
     tenant_region: 'Región de alojamiento de datos',
     tenant_region_description:
       'La ubicación física donde se alojan sus recursos de inquilino (usuarios, aplicaciones, etc.). Esto no se puede cambiar después de la creación.',

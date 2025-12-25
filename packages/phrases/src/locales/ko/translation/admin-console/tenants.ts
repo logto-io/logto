@@ -13,6 +13,11 @@ const tenants = {
     description: '테넌트 이름 설정 및 호스팅된 데이터 영역 및 테넌트 유형을 확인합니다.',
     tenant_id: '테넌트 ID',
     tenant_name: '테넌트 이름',
+    /** UNTRANSLATED */
+    tenant_instance: 'Select your instance',
+    /** UNTRANSLATED */
+    tenant_instance_description:
+      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
     tenant_region: '데이터 호스팅 영역',
     tenant_region_description:
       '테넌트 리소스 (사용자, 앱 등) 가 호스팅되는 물리적 위치입니다. 생성 후에는 변경할 수 없습니다.',

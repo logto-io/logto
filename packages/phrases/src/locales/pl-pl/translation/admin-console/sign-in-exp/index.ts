@@ -163,6 +163,42 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Dodaj domeny swoich aplikacji front-end, którym pozwalasz rejestrować klucze dostępu przez Account API.',
     webauthn_related_origins_error: 'Źródło musi zaczynać się od https:// lub http://',
+    prebuilt_ui: {
+      /** UNTRANSLATED */
+      title: 'INTEGRATE PREBUILT UI',
+      /** UNTRANSLATED */
+      description:
+        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
+      /** UNTRANSLATED */
+      flows_title: 'Integrate out-of-the-box security setting flows',
+      /** UNTRANSLATED */
+      flows_description:
+        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+      tooltips: {
+        /** UNTRANSLATED */
+        email: 'Update your primary email address',
+        /** UNTRANSLATED */
+        phone: 'Update your primary phone number',
+        /** UNTRANSLATED */
+        username: 'Update your username',
+        /** UNTRANSLATED */
+        password: 'Set a new password',
+        /** UNTRANSLATED */
+        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
+        /** UNTRANSLATED */
+        passkey_add: 'Register a new passkey',
+        /** UNTRANSLATED */
+        passkey_manage: 'Manage your existing passkeys or add new ones',
+        /** UNTRANSLATED */
+        backup_codes_generate: 'Generate a new set of 10 backup codes',
+        /** UNTRANSLATED */
+        backup_codes_manage: 'View your available backup codes or generate new ones',
+      },
+      /** UNTRANSLATED */
+      customize_note: "Don't want the out-of-the-box experience? You can fully",
+      /** UNTRANSLATED */
+      customize_link: 'customize your flows with the Account API instead.',
+    },
   },
   sign_up_and_sign_in,
   content,

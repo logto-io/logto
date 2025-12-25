@@ -14,6 +14,11 @@ const tenants = {
       'Установите имя арендатора и просмотрите регион размещения данных и тип арендатора.',
     tenant_id: 'ID арендатора',
     tenant_name: 'Имя арендатора',
+    /** UNTRANSLATED */
+    tenant_instance: 'Select your instance',
+    /** UNTRANSLATED */
+    tenant_instance_description:
+      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
     tenant_region: 'Регион размещения данных',
     tenant_region_description:
       'Физическое местоположение, где размещены ваши ресурсы арендатора (пользователи, приложения и т. д.). Это нельзя изменить после создания.',

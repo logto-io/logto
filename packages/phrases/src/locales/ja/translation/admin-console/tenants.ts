@@ -13,6 +13,11 @@ const tenants = {
     description: 'テナント名を設定し、ホストされているデータの地域とテナントタイプを表示します。',
     tenant_id: 'テナントID',
     tenant_name: 'テナント名',
+    /** UNTRANSLATED */
+    tenant_instance: 'Select your instance',
+    /** UNTRANSLATED */
+    tenant_instance_description:
+      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
     tenant_region: 'データがホストされている地域',
     tenant_region_description:
       'テナントリソース（ユーザー、アプリなど）がホストされている物理的な場所です。作成後に変更することはできません。',

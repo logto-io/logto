@@ -45,6 +45,8 @@ function MauTokenExceededModal() {
         currentTenant && {
           mauLimit: currentTenant.usage.activeUsers,
           tokenLimit: currentTenant.usage.tokenUsage,
+          userTokenLimit: currentTenant.usage.userTokenUsage,
+          m2mTokenLimit: currentTenant.usage.m2mTokenUsage,
         }
       ),
     [currentTenant]

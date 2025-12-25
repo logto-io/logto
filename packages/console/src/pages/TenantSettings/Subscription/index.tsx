@@ -71,6 +71,8 @@ function Subscription() {
         usage: {
           activeUsers: periodicUsage.mauLimit,
           tokenUsage: periodicUsage.tokenLimit,
+          userTokenUsage: periodicUsage.userTokenLimit,
+          m2mTokenUsage: periodicUsage.m2mTokenLimit,
         },
       });
     }
