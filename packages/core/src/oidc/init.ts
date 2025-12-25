@@ -116,7 +116,6 @@ export default function initOidc(
       introspectionSigningAlgValues: [...supportedSigningAlgs],
     },
     conformIdTokenClaims: false,
-    allowWildcardRedirectUris: true,
     features: {
       userinfo: { enabled: true },
       revocation: { enabled: true },
