@@ -69,7 +69,9 @@ function UriInputField(props: Props) {
   const api = useApi();
   const title: AdminConsoleKey = nameToKey[name];
   const validator =
-    name === 'redirectUris' || name === 'postLogoutRedirectUris' ? redirectUriValidator : uriValidator;
+    name === 'redirectUris' || name === 'postLogoutRedirectUris'
+      ? redirectUriValidator
+      : uriValidator;
 
   const onSubmit = trySubmitSafe(async (value: string[]) => {
     if (!appId || !data) {
