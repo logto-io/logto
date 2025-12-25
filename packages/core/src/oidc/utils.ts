@@ -121,14 +121,20 @@ const getEffectivePort = (protocol: string, port: string) => {
   }
 };
 
-const escapeRegExp = (value: string) => value.replaceAll(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+const escapeRegExp = (value: string) => value.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&');
 
 const matchHostnameLabel = (pattern: string, actual: string) => {
   if (!pattern.includes('*')) {
     return pattern === actual;
   }
 
-  const regex = new RegExp(`^${pattern.split('*').map(escapeRegExp).join('[^.]+')}$`, 'i');
+  const regex = new RegExp(
+    `^${pattern
+      .split('*')
+      .map((part) => escapeRegExp(part))
+      .join('[^.]+')}$`,
+    'i'
+  );
   return regex.test(actual);
 };
 
@@ -158,7 +164,7 @@ const parseRedirectUriOriginPattern = (patternUrl: string) => {
   }
 
   const rest = patternUrl.slice(schemeSeparatorIndex + 3);
-  const authority = rest.split(/[/?#]/)[0] ?? '';
+  const authority = rest.split(/[#/?]/)[0] ?? '';
   if (!authority || authority.includes('@') || authority.startsWith('[')) {
     return;
   }
