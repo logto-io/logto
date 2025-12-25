@@ -17,7 +17,7 @@ export enum UserApps {
   Api = 'api',
   Oidc = 'oidc',
   DemoApp = 'demo-app',
-  AccountCenter = 'account',
+  Account = 'account',
   WellKnown = '.well-known',
 }
 

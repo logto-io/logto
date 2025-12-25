@@ -203,7 +203,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
       return next();
     }
 
-    if (requestPath.startsWith(`/${UserApps.AccountCenter}`)) {
+    if (requestPath.startsWith(`/${UserApps.Account}`)) {
       await helmetPromise(accountCenterSecurityHeaderSettings, req, res);
 
       return next();

@@ -204,13 +204,13 @@ export default class Tenant implements TenantContext {
         // Mount account center
         app.use(
           mount(
-            '/' + UserApps.AccountCenter,
+            '/' + UserApps.Account,
             koaSpaProxy({
               mountedApps,
               queries,
-              packagePath: UserApps.AccountCenter,
+              packagePath: UserApps.Account,
               port: 5004,
-              prefix: UserApps.AccountCenter,
+              prefix: UserApps.Account,
             })
           )
         );
