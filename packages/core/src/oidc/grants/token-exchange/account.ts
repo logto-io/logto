@@ -1,8 +1,8 @@
 import { trySafe } from '@silverhand/essentials';
-import { jwtVerify } from 'jose';
+import { type JWSHeaderParameters, type FlattenedJWSInput, type KeyLike, jwtVerify } from 'jose';
 import { errors } from 'oidc-provider';
 
-import { EnvSet, type EnvSet as EnvSetType } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -10,18 +10,32 @@ import { TokenExchangeTokenType } from './types.js';
 
 const { InvalidGrant } = errors;
 
-export const validateSubjectToken = async (
-  envSet: EnvSetType,
-  queries: Queries,
-  subjectToken: string,
-  type: string
-): Promise<{ userId: string; subjectTokenId?: string }> => {
+type ValidateSubjectTokenParams = {
+  queries: Queries;
+  subjectToken: string;
+  subjectTokenType: string;
+  /** For JWT access token verification. Required when dev features are enabled. */
+  jwtVerificationOptions?: {
+    localJWKSet: (
+      protectedHeader: JWSHeaderParameters,
+      token: FlattenedJWSInput
+    ) => Promise<KeyLike | Uint8Array>;
+    issuer: string;
+  };
+};
+
+export const validateSubjectToken = async ({
+  queries,
+  subjectToken,
+  subjectTokenType,
+  jwtVerificationOptions,
+}: ValidateSubjectTokenParams): Promise<{ userId: string; subjectTokenId?: string }> => {
   const {
     subjectTokens: { findSubjectToken },
     personalAccessTokens: { findByValue },
   } = queries;
 
-  if (type === TokenExchangeTokenType.AccessToken) {
+  if (subjectTokenType === TokenExchangeTokenType.AccessToken) {
     const token = await trySafe(async () => findSubjectToken(subjectToken));
     assertThat(token, new InvalidGrant('subject token not found'));
     assertThat(token.expiresAt > Date.now(), new InvalidGrant('subject token is expired'));
@@ -32,7 +46,7 @@ export const validateSubjectToken = async (
       subjectTokenId: token.id,
     };
   }
-  if (type === TokenExchangeTokenType.PersonalAccessToken) {
+  if (subjectTokenType === TokenExchangeTokenType.PersonalAccessToken) {
     const token = await findByValue(subjectToken);
     assertThat(token, new InvalidGrant('subject token not found'));
     assertThat(
@@ -44,8 +58,12 @@ export const validateSubjectToken = async (
   }
 
   // TODO: Remove dev feature guard when JWT access token exchange is ready for production
-  if (EnvSet.values.isDevFeaturesEnabled && type === TokenExchangeTokenType.JwtAccessToken) {
-    const { localJWKSet, issuer } = envSet.oidc;
+  if (
+    EnvSet.values.isDevFeaturesEnabled &&
+    subjectTokenType === TokenExchangeTokenType.JwtAccessToken
+  ) {
+    assertThat(jwtVerificationOptions, new InvalidGrant('JWT verification options are required'));
+    const { localJWKSet, issuer } = jwtVerificationOptions;
 
     try {
       const { payload } = await jwtVerify(subjectToken, localJWKSet, { issuer });
