@@ -40,6 +40,18 @@ const hasMixedUriProtocols = (applicationType: ApplicationType, uris: string[]):
 
 const hasWildcardUri = (uris?: string[]) => Boolean(uris?.some((uri) => uri.includes('*')));
 
+/**
+ * Validates redirect URIs based on application type.
+ * Wildcards are only allowed for web applications (SPA and Traditional), not for native apps.
+ */
+const createRedirectUriValidator = (applicationType: ApplicationType) => (value: string) => {
+  // Native apps don't support wildcard redirect URIs
+  if (applicationType === ApplicationType.Native && value.includes('*')) {
+    return false;
+  }
+  return validateRedirectUrl(value, 'web') || validateRedirectUrl(value, 'mobile');
+};
+
 function MixedUriWarning() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   return (
@@ -74,10 +86,10 @@ function Settings({ data }: Props) {
   const { type: applicationType, isThirdParty } = data;
 
   const isProtectedApp = applicationType === ApplicationType.Protected;
+  const redirectUriValidator = createRedirectUriValidator(applicationType);
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
-      verify: (value) =>
-        !value || validateRedirectUrl(value, 'web') || validateRedirectUrl(value, 'mobile'),
+      verify: (value) => !value || redirectUriValidator(value),
       message: t('errors.invalid_uri_format'),
     },
   };
