@@ -31,7 +31,7 @@
     "@azure/storage-blob": "^12.17.0",
     "@google-cloud/storage": "^7.10.0",
     "@koa/cors": "^5.0.0",
-    "@logto/account-center": "workspace:*",
+    "@logto/account": "workspace:*",
     "@logto/app-insights": "workspace:^",
     "@logto/cli": "workspace:^",
     "@logto/connector-kit": "workspace:^",
