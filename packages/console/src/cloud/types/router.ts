@@ -73,3 +73,7 @@ export type LogtoEnterpriseResponse = GetArrayElementType<
 export type LogtoEnterpriseSubscriptionResponse = GuardedResponse<
   GetRoutes['/api/me/logto-enterprises/:id']
 >;
+
+export type LogtoEnterpriseSubscriptionInvoiceResponse = GetArrayElementType<
+  GuardedResponse<GetRoutes['/api/me/logto-enterprises/:id/invoices']>['invoices']
+>;
