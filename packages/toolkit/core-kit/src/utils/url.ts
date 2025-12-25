@@ -72,7 +72,7 @@ const hasDotSegmentsInAbsoluteUrlPath = (url: string) => {
   const authority = getAuthorityFromUrl(url, schemeSeparatorIndex);
   const afterAuthorityIndex = schemeSeparatorIndex + 3 + authority.length;
   const rest = url.slice(afterAuthorityIndex);
-  const path = rest.split(/[?#]/)[0] ?? '';
+  const path = rest.split(/[#?]/)[0] ?? '';
 
   if (!path) {
     return false;
@@ -82,12 +82,7 @@ const hasDotSegmentsInAbsoluteUrlPath = (url: string) => {
   return segments.some((segment) => {
     const normalized = segment.toLowerCase();
 
-    return (
-      segment === '.' ||
-      segment === '..' ||
-      normalized === '%2e' ||
-      normalized === '%2e%2e'
-    );
+    return segment === '.' || segment === '..' || normalized === '%2e' || normalized === '%2e%2e';
   });
 };
 
