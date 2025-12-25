@@ -17,7 +17,7 @@ const hasDotSegmentsInPath = (url: string, schemeSeparatorIndex: number): boolea
   const authority = url.slice(schemeSeparatorIndex + 3).split(/[#/?]/)[0] ?? '';
   const afterAuthorityIndex = schemeSeparatorIndex + 3 + authority.length;
   const rest = url.slice(afterAuthorityIndex);
-  const path = rest.split(/[?#]/)[0] ?? '';
+  const path = rest.split(/[#?]/)[0] ?? '';
 
   if (!path) {
     return false;
@@ -26,12 +26,7 @@ const hasDotSegmentsInPath = (url: string, schemeSeparatorIndex: number): boolea
   const segments = path.split('/');
   return segments.some((segment) => {
     const normalized = segment.toLowerCase();
-    return (
-      segment === '.' ||
-      segment === '..' ||
-      normalized === '%2e' ||
-      normalized === '%2e%2e'
-    );
+    return segment === '.' || segment === '..' || normalized === '%2e' || normalized === '%2e%2e';
   });
 };
 
@@ -102,7 +97,7 @@ export const redirectUriValidator = (value: string) => {
     return false;
   }
 
-  const authority = value.slice(schemeSeparatorIndex + 3).split(/[/?#]/)[0] ?? '';
+  const authority = value.slice(schemeSeparatorIndex + 3).split(/[#/?]/)[0] ?? '';
   if (!isValidWildcardAuthority(authority)) {
     return false;
   }
