@@ -6,10 +6,12 @@ import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
 import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
+import useAccountApi from '@/hooks/use-account-api';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
@@ -33,11 +35,12 @@ type FormFields = {
 function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show: showModal } = useConfirmModal();
-  const api = useStaticApi({
+  const meApi_ = useStaticApi({
     prefixUrl: adminTenantEndpoint,
     resourceIndicator: meApi.indicator,
     hideErrorToast: true,
   });
+  const accountApi = useAccountApi({ hideErrorToast: true });
   const {
     register,
     clearErrors,
@@ -85,7 +88,11 @@ function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose 
     clearErrors();
     void handleSubmit(async (data) => {
       try {
-        await api.patch('me', { json: { [field]: data[field] } });
+        // Use Account API for name and username fields when dev features enabled,
+        // Me API for avatar (image upload not supported in Account API yet) and fallback
+        await (isDevFeaturesEnabled && field !== 'avatar'
+          ? accountApi.patch('api/my-account', { json: { [field]: data[field] } })
+          : meApi_.patch('me', { json: { [field]: data[field] } }));
         toast.success(t('profile.updated', { target: t(`profile.settings.${field}`) }));
         onClose();
       } catch (error: unknown) {
@@ -134,7 +141,7 @@ function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose 
                 name={name}
                 value={value}
                 uploadUrl="me/user-assets"
-                apiInstance={api}
+                apiInstance={meApi_}
                 onChange={onChange}
               />
             )}
