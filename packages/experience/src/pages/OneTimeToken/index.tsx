@@ -82,8 +82,8 @@ const OneTimeToken = () => {
   );
 
   /**
-   * Always try to submit the one-time token interaction with `Register` event first.
-   * If the email already exists, call the `signInWithOneTimeToken` function instead.
+   * Always try to submit the one-time token interaction with `SignIn` event first.
+   * If the user does not exist, call the `registerWithOneTimeToken` function instead.
    */
   const submit = useCallback(
     async (verificationId: string) => {
