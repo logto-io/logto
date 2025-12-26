@@ -35,7 +35,7 @@ describe('getConstantClientMetadata()', () => {
   });
   expect(getConstantClientMetadata(mockEnvSet, ApplicationType.MachineToMachine)).toEqual({
     application_type: 'web',
-    grant_types: [GrantType.ClientCredentials],
+    grant_types: [GrantType.ClientCredentials, GrantType.TokenExchange],
     token_endpoint_auth_method: 'client_secret_basic',
     response_types: [],
   });
