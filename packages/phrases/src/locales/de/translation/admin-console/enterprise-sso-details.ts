@@ -121,6 +121,8 @@ const enterprise_sso_details = {
     'Vertraue immer den unverifizierten E-Mail-Adressen, die vom Identitätsanbieter zurückgegeben werden',
   trust_unverified_email_tip:
     'Der Entra ID (OIDC) Connector gibt den `email_verified` Anspruch nicht zurück, was bedeutet, dass E-Mail-Adressen von Azure nicht garantiert überprüft werden. Standardmäßig synchronisiert Logto keine unverifizierten E-Mail-Adressen mit dem Benutzerprofil. Aktiviere diese Option nur, wenn du allen E-Mail-Adressen aus dem Entra ID Verzeichnis vertraust.',
+  trust_unverified_email_tip_oidc:
+    'Der OIDC-Connector gibt den `email_verified`-Claim möglicherweise nicht zurück, was bedeutet, dass E-Mail-Adressen vom IdP nicht garantiert verifiziert sind. Standardmäßig synchronisiert Logto keine unverifizierten E-Mail-Adressen mit dem Benutzerprofil. Aktivieren Sie diese Option nur, wenn Sie allen E-Mail-Adressen des IdP vertrauen.',
   offline_access: {
     label: 'Zugriffstoken aktualisieren',
     description:

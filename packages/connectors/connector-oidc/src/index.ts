@@ -137,7 +137,7 @@ const parseUserInfoFromIdToken = async (
       id,
       name: conditional(name),
       avatar: conditional(picture),
-      email: conditional(email_verified && email),
+      email: conditional((email_verified ?? config.trustUnverifiedEmail) && email),
       phone: conditional(phone_verified && phone),
       rawData: jsonGuard.parse(payload),
     };
