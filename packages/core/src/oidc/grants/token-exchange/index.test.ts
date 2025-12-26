@@ -3,12 +3,19 @@ import { type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 import { TokenExchangeTokenType } from './types.js';
 
 const { jest } = import.meta;
+
+const mockJwtVerify = jest.fn();
+
+jest.unstable_mockModule('jose', () => ({
+  jwtVerify: mockJwtVerify,
+}));
 
 const { buildHandler } = await import('./index.js');
 
@@ -99,6 +106,7 @@ afterAll(() => {
 describe('token exchange', () => {
   afterEach(() => {
     findApplicationById.mockClear();
+    updateSubjectTokenById.mockClear();
   });
 
   it('should throw when client is not available', async () => {
@@ -238,6 +246,84 @@ describe('token exchange', () => {
         accountId,
         clientId,
         aud: 'urn:logto:organization:some_org_id',
+      });
+    });
+  });
+
+  describe('JWT access token exchange', () => {
+    // Stub EnvSet.values to enable dev features for JWT access token exchange
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDevFeaturesEnabled: true,
+    });
+
+    afterAll(() => {
+      stub.restore();
+    });
+
+    const jwtOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
+      params: {
+        subject_token: 'some_jwt_token',
+        subject_token_type: TokenExchangeTokenType.JwtAccessToken,
+      },
+      entities: {
+        Client: validClient,
+      },
+      client: validClient,
+    };
+
+    const createPreparedJwtContext = () => {
+      const ctx = createOidcContext(jwtOidcContext);
+      return ctx;
+    };
+
+    afterEach(() => {
+      mockJwtVerify.mockClear();
+    });
+
+    it('should throw when JWT verification fails', async () => {
+      const ctx = createPreparedJwtContext();
+      mockJwtVerify.mockRejectedValueOnce(new Error('invalid signature'));
+      await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+        new errors.InvalidGrant('invalid subject token')
+      );
+    });
+
+    it('should throw when JWT does not contain sub claim', async () => {
+      const ctx = createPreparedJwtContext();
+      mockJwtVerify.mockResolvedValueOnce({ payload: {} });
+      await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+        new errors.InvalidGrant('subject token does not contain a valid `sub` claim')
+      );
+    });
+
+    it('should throw when account cannot be found', async () => {
+      const ctx = createPreparedJwtContext();
+      mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
+      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves();
+      await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
+    });
+
+    it('should not consume the token (allow multiple exchanges)', async () => {
+      const ctx = createPreparedJwtContext();
+      mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
+      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+
+      const entityStub = Sinon.stub(ctx.oidc, 'entity');
+      const noopStub = Sinon.stub().resolves();
+
+      await expect(mockHandler(mockTenant)(ctx, noopStub)).resolves.toBeUndefined();
+      expect(noopStub.callCount).toBe(1);
+      // JWT tokens should NOT be consumption-tracked
+      expect(updateSubjectTokenById).not.toHaveBeenCalled();
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const [key, value] = entityStub.lastCall.args;
+      expect(key).toBe('AccessToken');
+      expect(value).toMatchObject({
+        accountId,
+        clientId,
+        gty: 'urn:ietf:params:oauth:grant-type:token-exchange',
       });
     });
   });
