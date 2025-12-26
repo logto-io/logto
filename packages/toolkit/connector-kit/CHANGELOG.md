@@ -1,5 +1,14 @@
 # Change Log
 
+## 4.7.0
+
+### Minor Changes
+
+- 462e430445: fall back to `TemplateType.Generic` if a usage-specific template is not found
+- 7c87ebc068: add client IP address to passwordless connector message payload
+
+  The `SendMessageData` type now includes an optional `ip` field that contains the client IP address of the user who triggered the message. This can be used by HTTP email/SMS connectors for rate limiting, fraud detection, or logging purposes.
+
 ## 4.6.0
 
 ### Minor Changes

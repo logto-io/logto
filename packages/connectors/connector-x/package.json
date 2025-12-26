@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-x",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "X web connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

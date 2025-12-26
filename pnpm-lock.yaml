@@ -1442,7 +1442,7 @@ importers:
   packages/connectors/connector-http-sms:
     dependencies:
       '@logto/connector-kit':
-        specifier: workspace:^4.3.0
+        specifier: workspace:^4.7.0
         version: link:../../toolkit/connector-kit
       '@silverhand/essentials':
         specifier: ^2.9.1
@@ -4026,7 +4026,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.34.0
+        specifier: workspace:^1.35.0
         version: link:../cli
 
   packages/demo-app:
