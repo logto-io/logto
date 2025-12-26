@@ -30,11 +30,11 @@ import { isProPlan } from '@/utils/subscription';
  * two quotas.
  * So we need to manually define it here, and calculate the status based on the two quotas.
  */
-enum CustomUsageKey {
+export enum CustomUsageKey {
   RbacEnabled = 'rbacEnabled',
 }
 
-type UsageKey =
+export type UsageKey =
   | keyof Pick<
       SubscriptionQuota,
       | 'mauLimit'
@@ -68,6 +68,13 @@ export const usageKeys: UsageKey[] = [
   'tenantMembersLimit',
   'tokenLimit',
   'securityFeaturesEnabled',
+];
+
+export const featureEnablementUsageKeys: UsageKey[] = [
+  'mfaEnabled',
+  CustomUsageKey.RbacEnabled,
+  'securityFeaturesEnabled',
+  'organizationsLimit',
 ];
 
 export const usageKeyPriceMap: Record<UsageKey, number> = {

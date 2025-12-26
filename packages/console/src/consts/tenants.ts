@@ -36,6 +36,8 @@ export const defaultTenantResponse: TenantResponse = {
   usage: {
     activeUsers: 0,
     tokenUsage: 0,
+    userTokenUsage: 0,
+    m2mTokenUsage: 0,
   },
   quota: {
     mauLimit: null,
@@ -62,6 +64,7 @@ export const defaultLogtoSku: LogtoSkuResponse = {
   productId: null,
   defaultPriceId: null,
   isDefault: true,
+  isDevPlan: true,
   quota: {
     // A soft limit for abuse monitoring
     mauLimit: 100,
@@ -135,7 +138,6 @@ export const defaultSubscriptionUsage: SubscriptionCountBasedUsage = {
   thirdPartyApplicationsLimit: 0,
   tenantMembersLimit: 0,
   customJwtEnabled: false,
-  subjectTokenEnabled: false,
   bringYourUiEnabled: false,
   collectUserProfileEnabled: false,
   idpInitiatedSsoEnabled: false,

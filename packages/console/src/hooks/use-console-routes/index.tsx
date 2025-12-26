@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import NotFound from '@/pages/NotFound';
 
 import { apiResources } from './routes/api-resources';
@@ -12,6 +12,7 @@ import { auditLogs } from './routes/audit-logs';
 import { connectors } from './routes/connectors';
 import { customizeJwt } from './routes/customize-jwt';
 import { enterpriseSso } from './routes/enterprise-sso';
+import { enterpriseSubscriptionRoute } from './routes/enterprise-subscription';
 import { mfa } from './routes/mfa';
 import { organizationTemplate } from './routes/organization-template';
 import { organizations } from './routes/organizations';
@@ -50,6 +51,8 @@ export const useConsoleRoutes = () => {
         organizations,
         { path: 'signing-keys', element: <SigningKeys /> },
         isCloud && tenantSettings,
+        // TODO: Remove dev features flag check when enterprise subscription is generally available
+        isCloud && isDevFeaturesEnabled && enterpriseSubscriptionRoute,
         customizeJwt
       ),
     [tenantSettings]

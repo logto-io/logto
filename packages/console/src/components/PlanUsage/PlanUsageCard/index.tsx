@@ -13,27 +13,12 @@ import IconButton from '@/ds-components/IconButton';
 import Tag from '@/ds-components/Tag';
 import TextLink from '@/ds-components/TextLink';
 import { ToggleTip } from '@/ds-components/Tip';
+import { formatQuotaNumber } from '@/utils/number';
 import { isPaidPlan } from '@/utils/subscription';
 
 import { formatNumber } from '../utils';
 
 import styles from './index.module.scss';
-
-const formatQuotaNumber = (number: number): string => {
-  if (number >= 1e6) {
-    return (number / 1e6).toFixed(1) + 'M';
-  }
-
-  if (number >= 1e3) {
-    return (number / 1e3).toFixed(1) + 'K';
-  }
-
-  if (Number.isInteger(number)) {
-    return number.toString();
-  }
-
-  return number.toFixed(2);
-};
 
 const formatNumberTypedUsageDescription = ({
   usage,

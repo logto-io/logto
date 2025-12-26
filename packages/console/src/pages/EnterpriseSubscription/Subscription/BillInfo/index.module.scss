@@ -1,0 +1,38 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid var(--color-divider);
+  background: var(--color-layer-1);
+  padding: _.unit(5) _.unit(6);
+}
+
+.billInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.price {
+  font: var(--font-title-2);
+  display: flex;
+  align-items: center;
+}
+
+.description {
+  margin-top: _.unit(2);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.articleLink {
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:active {
+    color: var(--color-text-secondary);
+  }
+}

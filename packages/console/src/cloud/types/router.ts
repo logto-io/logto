@@ -60,8 +60,16 @@ export type TenantMemberResponse = GetArrayElementType<
 export type TenantInvitationResponse = GetArrayElementType<
   GuardedResponse<GetTenantAuthRoutes['/api/tenants/:tenantId/invitations']>
 >;
+// End of the auth routes types
 
 export type RegionResponse = GetArrayElementType<
   GuardedResponse<GetRoutes['/api/me/regions']>['regions']
 >;
-// End of the auth routes types
+
+export type LogtoEnterpriseResponse = GetArrayElementType<
+  GuardedResponse<GetRoutes['/api/me/logto-enterprises']>['logtoEnterprises']
+>;
+
+export type LogtoEnterpriseSubscriptionResponse = GuardedResponse<
+  GetRoutes['/api/me/logto-enterprises/:id']
+>;

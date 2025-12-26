@@ -60,3 +60,8 @@ export enum OrganizationRoleDetailsTabs {
   Permissions = 'permissions',
   General = 'general',
 }
+
+export enum EnterpriseSubscriptionTabs {
+  Subscription = 'subscription',
+  BillingHistory = 'billing-history',
+}

@@ -11,6 +11,7 @@ import dashboard from './dashboard.js';
 import domain from './domain.js';
 import enterprise_sso_details from './enterprise-sso-details.js';
 import enterprise_sso from './enterprise-sso.js';
+import enterprise_subscription from './enterprise-subscription.js';
 import errors from './errors.js';
 import general from './general.js';
 import get_started from './get-started.js';
@@ -105,6 +106,7 @@ const admin_console = {
   organization_role_details,
   inkeep_ai_bot,
   user_identity_details,
+  enterprise_subscription,
 };
 
 export default Object.freeze(admin_console);
