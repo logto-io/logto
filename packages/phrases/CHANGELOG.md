@@ -1,5 +1,34 @@
 # Change Log
 
+## 1.24.0
+
+### Minor Changes
+
+- 116dcf5e7d: support reCaptcha domain customization
+
+  You can now customize the domain for reCaptcha, for example, using reCaptcha with `recaptcha.net` domain.
+
+- d551f5ccc3: support creating third-party SPA and Native applications
+
+  Previously, only traditional web applications could be marked as third-party apps. Now you can also create third-party single-page applications (SPA) and native applications, enabling more flexible OAuth/OIDC integration scenarios.
+
+- 116dcf5e7d: support reCAPTCHA Enterprise checkbox mode
+
+  You can now choose between two verification modes for reCAPTCHA Enterprise:
+
+  - **Invisible**: Score-based verification that runs automatically in the background (default)
+  - **Checkbox**: Displays the "I'm not a robot" widget for user interaction
+
+  Note: The verification mode must match your reCAPTCHA key type configured in Google Cloud Console.
+
+### Patch Changes
+
+- a6858e76cf: update SAML relay state length and improve error handling
+
+  The data type of the `relay_state` column in the `saml_application_sessions` table has been changed from varchar(256) to varchar(512) to accommodate longer Relay State values. For example, when Firebase acts as a Service Provider and initiates a SAML request, the relay state length is approximately 300-400 characters, which previously prevented Firebase from integrating with Logto as an SP before this fix.
+
+  Additionally, we have updated the error handling logic in the APIs related to the SAML authentication flow to make error messages more straightforward.
+
 ## 1.23.0
 
 ### Minor Changes

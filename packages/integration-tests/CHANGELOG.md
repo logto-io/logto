@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.17.0
+
+### Minor Changes
+
+- d551f5ccc3: support creating third-party SPA and Native applications
+
+  Previously, only traditional web applications could be marked as third-party apps. Now you can also create third-party single-page applications (SPA) and native applications, enabling more flexible OAuth/OIDC integration scenarios.
+
 ## 1.16.0
 
 ### Minor Changes
