@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
 import { decodeAccessToken } from '@logto/js';
 import {
@@ -11,7 +12,11 @@ import { formUrlEncodedHeaders } from '@logto/shared';
 
 import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
 import { oidcApi } from '#src/api/api.js';
-import { createApplication, deleteApplication } from '#src/api/application.js';
+import {
+  createApplication,
+  deleteApplication,
+  getApplicationSecrets,
+} from '#src/api/application.js';
 import { putInteraction } from '#src/api/interaction.js';
 import { deleteJwtCustomizer, upsertJwtCustomizer } from '#src/api/logto-config.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
@@ -224,6 +229,37 @@ describe('Token Exchange', () => {
       expect(body).toHaveProperty('expires_in');
       expect(body).toHaveProperty('scope', UserScope.Profile);
     });
+
+    it('should exchange an access token with a machine-to-machine application', async () => {
+      const m2mApp = await createApplication(generateName(), ApplicationType.MachineToMachine);
+      const m2mSecrets = await getApplicationSecrets(m2mApp.id);
+      const m2mAuthorizationHeader = `Basic ${Buffer.from(
+        `${m2mApp.id}:${m2mSecrets[0]!.value}`
+      ).toString('base64')}`;
+
+      const { subjectToken } = await createSubjectToken(testUserId);
+
+      const body = await oidcApi
+        .post('token', {
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: m2mAuthorizationHeader,
+          },
+          body: new URLSearchParams({
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+          }),
+        })
+        .json();
+
+      expect(body).toHaveProperty('access_token');
+      expect(body).toHaveProperty('token_type', 'Bearer');
+      expect(body).toHaveProperty('expires_in');
+      expect(body).toHaveProperty('scope', '');
+
+      await deleteApplication(m2mApp.id);
+    });
   });
 
   describe('get access token for resource', () => {
@@ -383,3 +419,4 @@ describe('Token Exchange', () => {
     });
   });
 });
+/* eslint-enable max-lines */
