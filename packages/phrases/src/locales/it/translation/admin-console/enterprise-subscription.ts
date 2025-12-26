@@ -49,6 +49,8 @@ const enterprise_subscription = {
       total_price: 'Total',
     },
     /** UNTRANSLATED */
+    add_on_sku_price: '${{price}}/mo',
+    /** UNTRANSLATED */
     private_region_title: 'Private cloud instance ({{regionName}})',
     /** UNTRANSLATED */
     shared_cross_tenants: 'Across tenants',

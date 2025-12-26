@@ -28,6 +28,7 @@ const enterprise_subscription = {
       quantity: 'Quantity',
       total_price: 'Total',
     },
+    add_on_sku_price: '${{price}}/mo',
     private_region_title: 'Private cloud instance ({{regionName}})',
     shared_cross_tenants: 'Across tenants',
   },

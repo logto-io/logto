@@ -111,7 +111,8 @@ function AddOnTable({ skuItems, quotaScope }: Props) {
           {
             title: t('enterprise_subscription.subscription.add_on_column_title.unit_price'),
             dataIndex: 'unitPrice',
-            render: ({ unitPrice }) => `$${unitPrice}/mo`,
+            render: ({ unitPrice }) =>
+              t('enterprise_subscription.subscription.add_on_sku_price', { price: unitPrice }),
           },
           {
             title: t('enterprise_subscription.subscription.add_on_column_title.quantity'),
@@ -127,7 +128,8 @@ function AddOnTable({ skuItems, quotaScope }: Props) {
           {
             title: t('enterprise_subscription.subscription.add_on_column_title.total_price'),
             dataIndex: 'totalPrice',
-            render: ({ totalPrice }) => `$${totalPrice}/mo`,
+            render: ({ totalPrice }) =>
+              t('enterprise_subscription.subscription.add_on_sku_price', { price: totalPrice }),
           },
         ]}
       />
