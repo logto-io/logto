@@ -11,7 +11,8 @@ const createPoolByEnv = async (
   databaseDsn: string,
   mockDatabaseConnection: boolean,
   poolSize?: number,
-  connectionTimeout?: number
+  connectionTimeout?: number,
+  statementTimeout?: number | 'DISABLE_TIMEOUT'
 ) => {
   // Database connection is disabled in unit test environment
   if (mockDatabaseConnection) {
@@ -24,6 +25,7 @@ const createPoolByEnv = async (
     interceptors: createInterceptorsPreset(),
     maximumPoolSize: poolSize,
     connectionTimeout,
+    statementTimeout,
   });
 };
 
