@@ -61,7 +61,8 @@
       }
     },
     "patchedDependencies": {
-      "tsup": "patches/tsup.patch"
+      "tsup": "patches/tsup.patch",
+      "oidc-provider": "patches/oidc-provider.patch"
     }
   },
   "dependencies": {

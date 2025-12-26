@@ -128,6 +128,107 @@ describe('isOriginAllowed', () => {
       )
     ).toBeTruthy();
   });
+
+  it('should return true if redirectUris include a wildcard pattern that matches the origin', () => {
+    expect(
+      isOriginAllowed(
+        'https://pr-123.myapp.example.com',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        ['https://*.myapp.example.com/callback']
+      )
+    ).toBeTruthy();
+  });
+
+  it('should return false if wildcard pattern does not match the origin (no subdomain)', () => {
+    // *.example.com should NOT match example.com (requires at least one subdomain label)
+    expect(
+      isOriginAllowed(
+        'https://example.com',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        ['https://*.example.com/callback']
+      )
+    ).toBeFalsy();
+  });
+
+  it('should handle port matching with wildcards correctly', () => {
+    // Same port should match
+    expect(
+      isOriginAllowed(
+        'https://pr-123.example.com:8080',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        ['https://*.example.com:8080/callback']
+      )
+    ).toBeTruthy();
+
+    // Different port should not match
+    expect(
+      isOriginAllowed(
+        'https://pr-123.example.com:3000',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        ['https://*.example.com:8080/callback']
+      )
+    ).toBeFalsy();
+
+    // Default port (443 for https) should match when not specified
+    expect(
+      isOriginAllowed(
+        'https://pr-123.example.com',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        ['https://*.example.com/callback']
+      )
+    ).toBeTruthy();
+  });
+
+  it('should return false for protocol mismatch', () => {
+    expect(
+      isOriginAllowed(
+        'http://pr-123.example.com',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        ['https://*.example.com/callback']
+      )
+    ).toBeFalsy();
+  });
+
+  it('should return true when only one of multiple wildcard patterns matches', () => {
+    expect(
+      isOriginAllowed(
+        'https://pr-123.myapp.example.com',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        [
+          'https://*.other-domain.com/callback',
+          'https://*.myapp.example.com/callback',
+          'https://*.another.com/callback',
+        ]
+      )
+    ).toBeTruthy();
+  });
+
+  it('should handle malformed wildcard patterns gracefully', () => {
+    // Invalid/malformed patterns should not crash and should return false
+    expect(
+      isOriginAllowed(
+        'https://example.com',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        ['not-a-valid-url', 'https://*.example.com/callback']
+      )
+    ).toBeFalsy();
+  });
 });
 
 describe('buildLoginPromptUrl', () => {
