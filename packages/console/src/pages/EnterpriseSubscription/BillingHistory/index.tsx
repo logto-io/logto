@@ -76,7 +76,7 @@ function BillingHistory() {
           },
           {
             title: <DynamicT forKey="subscription.billing_history.invoice_created_date_column" />,
-            dataIndex: 'created',
+            dataIndex: 'createdAt',
             render: ({ createdAt }) => {
               return dayjs(createdAt).format('MMMM DD, YYYY');
             },
