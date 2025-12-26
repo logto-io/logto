@@ -22,7 +22,7 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "build": "rm -rf lib/ && tsc",
+    "build": "node ../../.scripts/rm.mjs lib && tsc",
     "build:test": "pnpm build",
     "dev": "tsc --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",

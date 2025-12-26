@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "prepack": "pnpm generate",
-    "generate": "./generate.sh",
+    "generate": "node scripts/generate.mjs",
     "precommit": "lint-staged",
     "start": "vite",
     "dev": "vite",
