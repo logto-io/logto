@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-naver",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Naver connector implementation.",
   "author": "Kyungyoon Kim. <ruddbs5302@gmail.com>",
   "dependencies": {

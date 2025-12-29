@@ -1,5 +1,13 @@
 # @logto/connector-mailgun
 
+## 1.5.3
+
+### Patch Changes
+
+- Updated dependencies [462e430445]
+- Updated dependencies [7c87ebc068]
+  - @logto/connector-kit@4.7.0
+
 ## 1.5.2
 
 ### Patch Changes

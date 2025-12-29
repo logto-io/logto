@@ -1,5 +1,14 @@
 # @logto/connector-sendgrid-email
 
+## 1.5.1
+
+### Patch Changes
+
+- 462e430445: fall back to `TemplateType.Generic` if a usage-specific template is not found
+- Updated dependencies [462e430445]
+- Updated dependencies [7c87ebc068]
+  - @logto/connector-kit@4.7.0
+
 ## 1.5.0
 
 ### Minor Changes
