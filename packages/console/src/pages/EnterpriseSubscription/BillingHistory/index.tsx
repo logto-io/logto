@@ -1,6 +1,6 @@
 import { type ResponseError } from '@withtyped/client';
 import dayjs from 'dayjs';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -28,7 +28,10 @@ function BillingHistory() {
   );
 
   // Filter out draft invoices
-  const invoices = (data?.invoices ?? []).filter(({ status }) => status !== 'draft');
+  const invoices = useMemo(
+    () => (data?.invoices ?? []).filter(({ status }) => status !== 'draft'),
+    [data?.invoices]
+  );
 
   const openStripeHostedInvoicePage = useCallback(
     async (invoiceId: string) => {
