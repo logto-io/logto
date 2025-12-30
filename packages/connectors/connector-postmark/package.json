@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-postmark",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Postmark connector implementation.",
   "author": "Sten Sandvik <stenrs@gmail.com>",
   "dependencies": {

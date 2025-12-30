@@ -1,5 +1,14 @@
 # @logto/connector-huggingface
 
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [462e430445]
+- Updated dependencies [7c87ebc068]
+  - @logto/connector-kit@4.7.0
+  - @logto/connector-oauth@1.7.2
+
 ## 0.4.1
 
 ### Patch Changes
