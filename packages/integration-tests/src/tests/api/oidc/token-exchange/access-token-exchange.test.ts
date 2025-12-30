@@ -16,20 +16,20 @@ import {
   getAccessTokenPayload,
 } from '#src/utils.js';
 
-const subjectTokenType = 'urn:ietf:params:oauth:token-type:jwt';
+const subjectTokenType = 'urn:ietf:params:oauth:token-type:access_token';
 
-devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
+devFeatureTest.describe('Token Exchange (Access Token)', () => {
   const username = generateUsername();
   const password = generatePassword();
 
   const testApiResourceInfo: Pick<Resource, 'name' | 'indicator'> = {
-    name: 'test-jwt-exchange-resource',
-    indicator: 'https://jwt-exchange.logto.io/api',
+    name: 'test-token-exchange-resource',
+    indicator: 'https://token-exchange.logto.io/api',
   };
 
   const secondApiResourceInfo: Pick<Resource, 'name' | 'indicator'> = {
-    name: 'second-jwt-exchange-resource',
-    indicator: 'https://jwt-exchange-2.logto.io/api',
+    name: 'second-token-exchange-resource',
+    indicator: 'https://token-exchange-2.logto.io/api',
   };
 
   /* eslint-disable @silverhand/fp/no-let */
@@ -37,7 +37,7 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
   let secondApiResourceId: string;
   let testApplicationId: string;
   let testUserId: string;
-  let jwtAccessToken: string;
+  let accessToken: string;
   /* eslint-enable @silverhand/fp/no-let */
 
   beforeAll(async () => {
@@ -53,7 +53,7 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
     );
     secondApiResourceId = secondResource.id;
 
-    const applicationName = 'test-jwt-exchange-app';
+    const applicationName = 'test-token-exchange-app';
     const applicationType = ApplicationType.SPA;
     const application = await createApplication(applicationName, applicationType, {
       oidcClientMetadata: { redirectUris: ['http://localhost:3000'], postLogoutRedirectUris: [] },
@@ -63,7 +63,7 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
     const { id } = await createUserByAdmin({ username, password });
     testUserId = id;
 
-    // Sign in and get a JWT access token
+    // Sign in and get an access token (JWT format when resource is specified)
     const client = await initClient({
       resources: [testApiResourceInfo.indicator],
     });
@@ -73,7 +73,7 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
     });
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
-    jwtAccessToken = await client.getAccessToken(testApiResourceInfo.indicator);
+    accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
     /* eslint-enable @silverhand/fp/no-mutation */
   });
 
@@ -84,14 +84,14 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
     await deleteApplication(testApplicationId);
   });
 
-  it('should exchange a JWT access token for another access token', async () => {
+  it('should exchange an access token for another access token', async () => {
     const body = await oidcApi
       .post('token', {
         headers: formUrlEncodedHeaders,
         body: new URLSearchParams({
           client_id: testApplicationId,
           grant_type: GrantType.TokenExchange,
-          subject_token: jwtAccessToken,
+          subject_token: accessToken,
           subject_token_type: subjectTokenType,
         }),
       })
@@ -102,14 +102,14 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
     expect(body).toHaveProperty('expires_in');
   });
 
-  it('should exchange a JWT access token for an access token with a different resource', async () => {
+  it('should exchange an access token for an access token with a different resource', async () => {
     const { access_token } = await oidcApi
       .post('token', {
         headers: formUrlEncodedHeaders,
         body: new URLSearchParams({
           client_id: testApplicationId,
           grant_type: GrantType.TokenExchange,
-          subject_token: jwtAccessToken,
+          subject_token: accessToken,
           subject_token_type: subjectTokenType,
           resource: secondApiResourceInfo.indicator,
         }),
@@ -122,7 +122,7 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
     );
   });
 
-  it('should allow the same JWT access token to be exchanged multiple times', async () => {
+  it('should allow the same access token to be exchanged multiple times', async () => {
     // First exchange
     const body1 = await oidcApi
       .post('token', {
@@ -130,7 +130,7 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
         body: new URLSearchParams({
           client_id: testApplicationId,
           grant_type: GrantType.TokenExchange,
-          subject_token: jwtAccessToken,
+          subject_token: accessToken,
           subject_token_type: subjectTokenType,
         }),
       })
@@ -144,7 +144,7 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
         body: new URLSearchParams({
           client_id: testApplicationId,
           grant_type: GrantType.TokenExchange,
-          subject_token: jwtAccessToken,
+          subject_token: accessToken,
           subject_token_type: subjectTokenType,
         }),
       })
@@ -152,23 +152,23 @@ devFeatureTest.describe('Token Exchange (JWT Access Token)', () => {
     expect(body2).toHaveProperty('access_token');
   });
 
-  it('should fail with an invalid JWT', async () => {
+  it('should fail with an invalid access token', async () => {
     await expect(
       oidcApi.post('token', {
         headers: formUrlEncodedHeaders,
         body: new URLSearchParams({
           client_id: testApplicationId,
           grant_type: GrantType.TokenExchange,
-          subject_token: 'invalid.jwt.token',
+          subject_token: 'invalid.access.token',
           subject_token_type: subjectTokenType,
         }),
       })
     ).rejects.toThrow();
   });
 
-  it('should fail with a JWT signed by a different issuer', async () => {
-    // Create a fake JWT with wrong signature (just modify the signature part)
-    const parts = jwtAccessToken.split('.');
+  it('should fail with an access token signed by a different issuer', async () => {
+    // Create a fake token with wrong signature (just modify the signature part)
+    const parts = accessToken.split('.');
     const fakeToken = `${parts[0]}.${parts[1]}.invalid_signature`;
 
     await expect(

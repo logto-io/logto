@@ -80,6 +80,7 @@ export const buildHandler: (
     queries,
     subjectToken: String(params.subject_token),
     subjectTokenType: String(params.subject_token_type),
+    AccessToken,
     jwtVerificationOptions: {
       localJWKSet: envSet.oidc.localJWKSet,
       issuer: envSet.oidc.issuer,

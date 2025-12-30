@@ -65,7 +65,8 @@ const validSubjectToken: SubjectToken = {
 
 const validOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
   params: {
-    subject_token: 'some_subject_token',
+    // Using sub_ prefix for backward compatibility test - this should be treated as impersonation token
+    subject_token: 'sub_some_subject_token',
     subject_token_type: TokenExchangeTokenType.AccessToken,
   },
   entities: {
@@ -263,8 +264,9 @@ describe('token exchange', () => {
 
     const jwtOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
       params: {
+        // JWT tokens don't start with sub_ prefix
         subject_token: 'some_jwt_token',
-        subject_token_type: TokenExchangeTokenType.JwtAccessToken,
+        subject_token_type: TokenExchangeTokenType.AccessToken,
       },
       entities: {
         Client: validClient,
@@ -274,6 +276,8 @@ describe('token exchange', () => {
 
     const createPreparedJwtContext = () => {
       const ctx = createOidcContext(jwtOidcContext);
+      // Mock AccessToken.find to return undefined (so it falls back to JWT verification)
+      Sinon.stub(ctx.oidc.provider.AccessToken, 'find').resolves();
       return ctx;
     };
 
@@ -316,6 +320,138 @@ describe('token exchange', () => {
       expect(noopStub.callCount).toBe(1);
       // JWT tokens should NOT be consumption-tracked
       expect(updateSubjectTokenById).not.toHaveBeenCalled();
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const [key, value] = entityStub.lastCall.args;
+      expect(key).toBe('AccessToken');
+      expect(value).toMatchObject({
+        accountId,
+        clientId,
+        gty: 'urn:ietf:params:oauth:grant-type:token-exchange',
+      });
+    });
+  });
+
+  describe('opaque access token exchange', () => {
+    // Stub EnvSet.values to enable dev features for access token exchange
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDevFeaturesEnabled: true,
+    });
+
+    afterAll(() => {
+      stub.restore();
+    });
+
+    const opaqueOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
+      params: {
+        subject_token: 'opaque_access_token',
+        subject_token_type: TokenExchangeTokenType.AccessToken,
+      },
+      entities: {
+        Client: validClient,
+      },
+      client: validClient,
+    };
+
+    const createPreparedOpaqueContext = () => {
+      const ctx = createOidcContext(opaqueOidcContext);
+      return ctx;
+    };
+
+    it('should exchange opaque access token successfully', async () => {
+      const ctx = createPreparedOpaqueContext();
+      // Mock AccessToken.find to return a valid token
+      Sinon.stub(ctx.oidc.provider.AccessToken, 'find').resolves({
+        accountId,
+        isExpired: false,
+      });
+      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+
+      const entityStub = Sinon.stub(ctx.oidc, 'entity');
+      const noopStub = Sinon.stub().resolves();
+
+      await expect(mockHandler(mockTenant)(ctx, noopStub)).resolves.toBeUndefined();
+      expect(noopStub.callCount).toBe(1);
+      // Opaque tokens should NOT be consumption-tracked
+      expect(updateSubjectTokenById).not.toHaveBeenCalled();
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const [key, value] = entityStub.lastCall.args;
+      expect(key).toBe('AccessToken');
+      expect(value).toMatchObject({
+        accountId,
+        clientId,
+        gty: 'urn:ietf:params:oauth:grant-type:token-exchange',
+      });
+    });
+
+    it('should throw when opaque token is expired', async () => {
+      const ctx = createPreparedOpaqueContext();
+      Sinon.stub(ctx.oidc.provider.AccessToken, 'find').resolves({
+        accountId,
+        isExpired: true,
+      });
+
+      await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
+        new errors.InvalidGrant('subject token is expired')
+      );
+    });
+
+    it('should fallback to JWT when opaque token is not found', async () => {
+      const ctx = createPreparedOpaqueContext();
+      // Mock AccessToken.find to return undefined (not found)
+      Sinon.stub(ctx.oidc.provider.AccessToken, 'find').resolves();
+      // Mock jwtVerify to succeed
+      mockJwtVerify.mockResolvedValueOnce({ payload: { sub: accountId } });
+      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+
+      const entityStub = Sinon.stub(ctx.oidc, 'entity');
+      const noopStub = Sinon.stub().resolves();
+
+      await expect(mockHandler(mockTenant)(ctx, noopStub)).resolves.toBeUndefined();
+      expect(noopStub.callCount).toBe(1);
+      expect(mockJwtVerify).toHaveBeenCalled();
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const [key, value] = entityStub.lastCall.args;
+      expect(key).toBe('AccessToken');
+      expect(value).toMatchObject({
+        accountId,
+        clientId,
+        gty: 'urn:ietf:params:oauth:grant-type:token-exchange',
+      });
+    });
+  });
+
+  describe('impersonation token with explicit type', () => {
+    const impersonationOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
+      params: {
+        subject_token: 'sub_impersonation_token',
+        subject_token_type: TokenExchangeTokenType.ImpersonationToken,
+      },
+      entities: {
+        Client: validClient,
+      },
+      client: validClient,
+    };
+
+    const createPreparedImpersonationContext = () => {
+      const ctx = createOidcContext(impersonationOidcContext);
+      return ctx;
+    };
+
+    it('should validate impersonation token with explicit type', async () => {
+      const ctx = createPreparedImpersonationContext();
+      findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+      Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+
+      const entityStub = Sinon.stub(ctx.oidc, 'entity');
+      const noopStub = Sinon.stub().resolves();
+
+      await expect(mockHandler(mockTenant)(ctx, noopStub)).resolves.toBeUndefined();
+      expect(noopStub.callCount).toBe(1);
+      expect(updateSubjectTokenById).toHaveBeenCalled();
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const [key, value] = entityStub.lastCall.args;
