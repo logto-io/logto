@@ -26,6 +26,7 @@ import {
   authenticatorAppRoute,
   authenticatorAppSuccessRoute,
   backupCodesGenerateRoute,
+  backupCodesRegenerateRoute,
   backupCodesSuccessRoute,
   backupCodesDeletedRoute,
   backupCodesManageRoute,
@@ -121,6 +122,7 @@ const Main = () => {
       <Route path={usernameRoute} element={<Username />} />
       <Route path={authenticatorAppRoute} element={<TotpBinding />} />
       <Route path={backupCodesGenerateRoute} element={<BackupCodeBinding />} />
+      <Route path={backupCodesRegenerateRoute} element={<BackupCodeBinding isRegenerate />} />
       <Route path={backupCodesManageRoute} element={<BackupCodeView />} />
       <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
       <Route path={passkeyManageRoute} element={<PasskeyView />} />
