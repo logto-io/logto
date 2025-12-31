@@ -156,10 +156,6 @@ const account_center = {
       title: 'Passkey ajouté !',
       description: 'Votre passkey a été lié avec succès à votre compte.',
     },
-    passkey_deleted: {
-      title: 'Passkey supprimé !',
-      description: 'Votre passkey a été supprimé de votre compte.',
-    },
   },
   backup_code: {
     title: 'Codes de secours',
@@ -179,6 +175,7 @@ const account_center = {
     never_used: 'Jamais',
     unnamed: 'Passkey sans nom',
     renamed: 'Passkey renommé avec succès.',
+    deleted: 'Passkey supprimé avec succès.',
     add_another_title: 'Ajouter un autre passkey',
     add_another_description:
       "Enregistrez votre passkey à l'aide de la biométrie de l'appareil, des clés de sécurité (ex. YubiKey) ou d'autres méthodes disponibles.",
