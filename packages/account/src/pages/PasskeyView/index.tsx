@@ -17,7 +17,7 @@ import { getMfaVerifications, deleteMfaVerification, updateWebAuthnName } from '
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { passkeyDeletedRoute, passkeyAddRoute } from '@ac/constants/routes';
+import { passkeyAddRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -102,12 +102,12 @@ const PasskeyView = () => {
       return;
     }
 
+    setPasskeys((previous) => previous?.filter((passkey) => passkey.id !== selectedPasskey.id));
     setShowDeleteConfirm(false);
-    void navigate(passkeyDeletedRoute, { replace: true });
+    setToast(t('account_center.passkey.deleted'));
   }, [
     deletePasskeyRequest,
     handleError,
-    navigate,
     selectedPasskey,
     setToast,
     setVerificationId,
