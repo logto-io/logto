@@ -15,7 +15,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { getMfaVerifications, generateTotpSecret, addTotpMfa } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { authenticatorAppSuccessRoute, backupCodesGenerateRoute } from '@ac/constants/routes';
+import { authenticatorAppSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -27,7 +27,6 @@ const isCodeReady = (code: string[]) => {
 };
 
 const isTotpEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.TOTP) ?? false;
-const isBackupCodeEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.BackupCode) ?? false;
 
 const TotpBinding = () => {
   const { t } = useTranslation();
@@ -52,7 +51,6 @@ const TotpBinding = () => {
   const [codeInput, setCodeInput] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [hasTotpAlready, setHasTotpAlready] = useState<boolean>();
-  const [hasBackupCodes, setHasBackupCodes] = useState<boolean>();
 
   // Check if TOTP already exists on mount
   useEffect(() => {
@@ -62,14 +60,11 @@ const TotpBinding = () => {
       if (error) {
         // If there's an error, we'll let the user continue and the backend will validate
         setHasTotpAlready(false);
-        setHasBackupCodes(false);
         return;
       }
 
       const hasTotp = result?.some((mfa) => mfa.type === MfaFactor.TOTP) ?? false;
-      const hasBackup = result?.some((mfa) => mfa.type === MfaFactor.BackupCode) ?? false;
       setHasTotpAlready(hasTotp);
-      setHasBackupCodes(hasBackup);
     };
 
     void checkExistingMfa();
@@ -144,19 +139,12 @@ const TotpBinding = () => {
         return;
       }
 
-      if (isBackupCodeEnabled(experienceSettings?.mfa) && !hasBackupCodes) {
-        void navigate(backupCodesGenerateRoute, { replace: true });
-        return;
-      }
-
       void navigate(authenticatorAppSuccessRoute, { replace: true });
     },
     [
       addTotpRequest,
       codeInput,
-      experienceSettings?.mfa,
       handleError,
-      hasBackupCodes,
       loading,
       navigate,
       secret,

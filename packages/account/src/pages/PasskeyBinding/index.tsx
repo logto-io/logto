@@ -12,11 +12,10 @@ import {
   createWebAuthnRegistration,
   verifyWebAuthnRegistration,
   addWebAuthnMfa,
-  getMfaVerifications,
 } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { backupCodesGenerateRoute, passkeySuccessRoute } from '@ac/constants/routes';
+import { passkeySuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -24,7 +23,6 @@ import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import styles from './index.module.scss';
 
 const isWebAuthnEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.WebAuthn) ?? false;
-const isBackupCodeEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.BackupCode) ?? false;
 
 const PasskeyBinding = () => {
   const { t } = useTranslation();
@@ -32,14 +30,12 @@ const PasskeyBinding = () => {
   const { loading } = useContext(LoadingContext);
   const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
     useContext(PageContext);
-  const getMfaRequest = useApi(getMfaVerifications);
   const createRegistrationRequest = useApi(createWebAuthnRegistration);
   const verifyRegistrationRequest = useApi(verifyWebAuthnRegistration);
   const addWebAuthnRequest = useApi(addWebAuthnMfa);
   const handleError = useErrorHandler();
 
   const [isWebAuthnSupported, setIsWebAuthnSupported] = useState<boolean>();
-  const [hasBackupCodes, setHasBackupCodes] = useState<boolean>();
   // Pre-fetched WebAuthn registration options to ensure startRegistration() is called
   // synchronously in the click handler (required for iOS Safari/WKWebView user gesture)
   const [registrationData, setRegistrationData] = useState<{
@@ -74,23 +70,6 @@ const PasskeyBinding = () => {
 
     void fetchRegistrationOptions();
   }, [verificationId, createRegistrationRequest]);
-
-  // Check if user has backup codes
-  useEffect(() => {
-    const checkExistingMfa = async () => {
-      const [error, result] = await getMfaRequest();
-
-      if (error) {
-        setHasBackupCodes(false);
-        return;
-      }
-
-      const hasBackup = result?.some((mfa) => mfa.type === MfaFactor.BackupCode) ?? false;
-      setHasBackupCodes(hasBackup);
-    };
-
-    void checkExistingMfa();
-  }, [getMfaRequest]);
 
   const handleAddPasskey = useCallback(async () => {
     if (!verificationId || loading || !registrationData) {
@@ -143,18 +122,10 @@ const PasskeyBinding = () => {
       return;
     }
 
-    // Step 4: Navigate to success or backup code setup
-    if (isBackupCodeEnabled(experienceSettings?.mfa) && !hasBackupCodes) {
-      void navigate(backupCodesGenerateRoute, { replace: true });
-      return;
-    }
-
     void navigate(passkeySuccessRoute, { replace: true });
   }, [
     addWebAuthnRequest,
-    experienceSettings?.mfa,
     handleError,
-    hasBackupCodes,
     loading,
     navigate,
     registrationData,
