@@ -94,8 +94,8 @@ const validateOpaqueAccessToken = async (
   return { userId: token.accountId };
 };
 
-/** Prefix used by impersonation tokens for backward compatibility detection. */
-const legacyImpersonationTokenPrefix = 'sub_';
+/** Prefix used by impersonation tokens. */
+const IMPERSONATION_TOKEN_PREFIX = 'sub_';
 
 export const validateSubjectToken = async ({
   queries,
@@ -117,7 +117,7 @@ export const validateSubjectToken = async ({
   // Handle access token type - can be opaque token, JWT, or legacy impersonation token
   if (subjectTokenType === TokenExchangeTokenType.AccessToken) {
     // Backward compatibility: if token starts with "sub_", treat as impersonation token
-    if (subjectToken.startsWith(legacyImpersonationTokenPrefix)) {
+    if (subjectToken.startsWith(IMPERSONATION_TOKEN_PREFIX)) {
       return validateImpersonationToken(findSubjectToken, subjectToken);
     }
 
