@@ -17,7 +17,7 @@ import { boolean, object, string, z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import { buildOidcClientMetadata } from '#src/oidc/utils.js';
+import { buildOidcClientMetadata, buildCustomClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -167,7 +167,8 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     }),
     // eslint-disable-next-line complexity
     async (ctx, next) => {
-      const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
+      const { oidcClientMetadata, protectedAppMetadata, customClientMetadata, ...rest } =
+        ctx.guard.body;
 
       if (rest.type === ApplicationType.SAML) {
         throw new RequestError('application.saml.use_saml_app_api');
@@ -198,6 +199,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         id: generateStandardId(),
         secret: generateInternalSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
+        customClientMetadata: buildCustomClientMetadata(rest.type, customClientMetadata),
         ...conditional(
           rest.type === ApplicationType.Protected &&
             protectedAppMetadata &&

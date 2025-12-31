@@ -16,6 +16,7 @@ import {
   createApplication,
   deleteApplication,
   getApplicationSecrets,
+  updateApplication,
 } from '#src/api/application.js';
 import { putInteraction } from '#src/api/interaction.js';
 import { deleteJwtCustomizer, upsertJwtCustomizer } from '#src/api/logto-config.js';
@@ -52,6 +53,7 @@ describe('Token Exchange', () => {
   let testApplicationId: string;
   let testUserId: string;
   let client: MockClient;
+  let authorizationHeader: string;
   /* eslint-enable @silverhand/fp/no-let */
 
   beforeAll(async () => {
@@ -61,11 +63,17 @@ describe('Token Exchange', () => {
     const resource = await createResource(testApiResourceInfo.name, testApiResourceInfo.indicator);
     testApiResourceId = resource.id;
     const applicationName = 'test-token-exchange-app';
-    const applicationType = ApplicationType.SPA;
+    // Use Traditional (confidential client) and explicitly enable token exchange
+    const applicationType = ApplicationType.Traditional;
     const application = await createApplication(applicationName, applicationType, {
       oidcClientMetadata: { redirectUris: ['http://localhost:3000'], postLogoutRedirectUris: [] },
+      customClientMetadata: { allowTokenExchange: true },
     });
     testApplicationId = application.id;
+    const secrets = await getApplicationSecrets(application.id);
+    authorizationHeader = `Basic ${Buffer.from(`${application.id}:${secrets[0]!.value}`).toString(
+      'base64'
+    )}`;
     const { id } = await createUserByAdmin({ username, password });
     testUserId = id;
     client = await initClient({
@@ -93,9 +101,11 @@ describe('Token Exchange', () => {
 
       const body = await oidcApi
         .post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
@@ -129,7 +139,7 @@ describe('Token Exchange', () => {
       expect(body).toHaveProperty('expires_in');
     });
 
-    it('should fail without valid client_id', async () => {
+    it('should fail without valid client credentials', async () => {
       const { subjectToken } = await createSubjectToken(testUserId);
 
       await expect(
@@ -147,9 +157,11 @@ describe('Token Exchange', () => {
     it('should failed with invalid subject token', async () => {
       await expect(
         oidcApi.post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: 'sub_invalid_subject_token',
             subject_token_type: impersonationTokenType,
@@ -162,9 +174,11 @@ describe('Token Exchange', () => {
       const { subjectToken } = await createSubjectToken(testUserId);
 
       await oidcApi.post('token', {
-        headers: formUrlEncodedHeaders,
+        headers: {
+          ...formUrlEncodedHeaders,
+          Authorization: authorizationHeader,
+        },
         body: new URLSearchParams({
-          client_id: testApplicationId,
           grant_type: GrantType.TokenExchange,
           subject_token: subjectToken,
           subject_token_type: impersonationTokenType,
@@ -172,9 +186,11 @@ describe('Token Exchange', () => {
       });
       await expect(
         oidcApi.post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
@@ -192,12 +208,18 @@ describe('Token Exchange', () => {
           isThirdParty: true,
         }
       );
+      const thirdPartySecrets = await getApplicationSecrets(thirdPartyApplication.id);
+      const thirdPartyAuthorizationHeader = `Basic ${Buffer.from(
+        `${thirdPartyApplication.id}:${thirdPartySecrets[0]!.value}`
+      ).toString('base64')}`;
 
       await expect(
         oidcApi.post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: thirdPartyAuthorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: thirdPartyApplication.id,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
@@ -208,14 +230,47 @@ describe('Token Exchange', () => {
       await deleteApplication(thirdPartyApplication.id);
     });
 
+    it('should fail when token exchange is disabled for the application', async () => {
+      const { subjectToken } = await createSubjectToken(testUserId);
+      const application = await createApplication(generateName(), ApplicationType.Traditional, {
+        oidcClientMetadata: { redirectUris: ['http://localhost:3000'], postLogoutRedirectUris: [] },
+      });
+      // Disable token exchange for this application
+      await updateApplication(application.id, {
+        customClientMetadata: { allowTokenExchange: false },
+      });
+      const secrets = await getApplicationSecrets(application.id);
+      const disabledAppAuthorizationHeader = `Basic ${Buffer.from(
+        `${application.id}:${secrets[0]!.value}`
+      ).toString('base64')}`;
+
+      await expect(
+        oidcApi.post('token', {
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: disabledAppAuthorizationHeader,
+          },
+          body: new URLSearchParams({
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+          }),
+        })
+      ).rejects.toThrow();
+
+      await deleteApplication(application.id);
+    });
+
     it('should filter out non-oidc scopes', async () => {
       const { subjectToken } = await createSubjectToken(testUserId);
 
       const body = await oidcApi
         .post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
@@ -231,7 +286,9 @@ describe('Token Exchange', () => {
     });
 
     it('should exchange an access token with a machine-to-machine application', async () => {
-      const m2mApp = await createApplication(generateName(), ApplicationType.MachineToMachine);
+      const m2mApp = await createApplication(generateName(), ApplicationType.MachineToMachine, {
+        customClientMetadata: { allowTokenExchange: true },
+      });
       const m2mSecrets = await getApplicationSecrets(m2mApp.id);
       const m2mAuthorizationHeader = `Basic ${Buffer.from(
         `${m2mApp.id}:${m2mSecrets[0]!.value}`
@@ -268,9 +325,11 @@ describe('Token Exchange', () => {
 
       const { access_token } = await oidcApi
         .post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
@@ -290,9 +349,11 @@ describe('Token Exchange', () => {
 
       await expect(
         oidcApi.post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
@@ -334,9 +395,11 @@ describe('Token Exchange', () => {
 
       const { access_token } = await oidcApi
         .post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
@@ -358,9 +421,11 @@ describe('Token Exchange', () => {
 
       await expect(
         oidcApi.post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
@@ -375,9 +440,11 @@ describe('Token Exchange', () => {
       await createUserMfaVerification(testUserId, MfaFactor.TOTP);
       const { access_token } = await oidcApi
         .post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
@@ -403,9 +470,11 @@ describe('Token Exchange', () => {
 
       const { access_token } = await oidcApi
         .post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: impersonationTokenType,
