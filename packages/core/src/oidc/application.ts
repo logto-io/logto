@@ -8,7 +8,7 @@ import type Queries from '#src/tenants/Queries.js';
  *
  * Returns an error message if the application is not allowed, otherwise returns undefined.
  */
-export const getTokenExchangeValidationError = async (
+export const validateTokenExchangeAccess = async (
   { applications }: Queries,
   applicationId: string
 ): Promise<string | undefined> => {

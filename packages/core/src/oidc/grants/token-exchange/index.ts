@@ -16,7 +16,7 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { getTokenExchangeValidationError } from '../../application.js';
+import { validateTokenExchangeAccess } from '../../application.js';
 import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../../resource.js';
 import { handleClientCertificate, handleDPoP, checkOrganizationAccess } from '../utils.js';
 
@@ -61,7 +61,7 @@ export const buildHandler: (
   assertThat(client, new InvalidClient('client must be available'));
 
   // Validate the application is allowed to perform token exchange
-  const tokenExchangeError = await getTokenExchangeValidationError(queries, client.clientId);
+  const tokenExchangeError = await validateTokenExchangeAccess(queries, client.clientId);
   assertThat(!tokenExchangeError, new InvalidClient(tokenExchangeError));
 
   validatePresence(ctx, ...requiredParameters);
