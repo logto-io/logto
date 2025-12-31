@@ -145,10 +145,6 @@ const account_center = {
       title: 'Резервні коди створено!',
       description: 'Ваші резервні коди збережено. Зберігайте їх у безпечному місці.',
     },
-    backup_code_deleted: {
-      title: 'Резервні коди видалено!',
-      description: 'Ваші резервні коди було видалено з вашого облікового запису.',
-    },
     passkey: {
       title: 'Passkey додано!',
       description: "Ваш passkey успішно під'єднано до вашого облікового запису.",
@@ -165,9 +161,6 @@ const account_center = {
     copy_hint: "Обов'язково скопіюйте їх і збережіть у надійному місці.",
     generate_new_title: 'Згенерувати нові резервні коди',
     generate_new: 'Згенерувати нові резервні коди',
-    delete_confirmation_title: 'Видалити ваші резервні коди',
-    delete_confirmation_description:
-      'Якщо ви видалите ці резервні коди, ви не зможете використовувати їх для підтвердження.',
   },
   passkey: {
     title: 'Passkeys',

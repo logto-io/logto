@@ -135,10 +135,6 @@ const account_center = {
       title: 'تم إنشاء رموز النسخ الاحتياطي!',
       description: 'تم حفظ رموز النسخ الاحتياطي الخاصة بك. احتفظ بها في مكان آمن.',
     },
-    backup_code_deleted: {
-      title: 'تم حذف رموز النسخ الاحتياطي!',
-      description: 'تم حذف رموز النسخ الاحتياطي من حسابك.',
-    },
     passkey: {
       title: 'تمت إضافة مفتاح المرور!',
       description: 'تم ربط مفتاح المرور بحسابك بنجاح.',
@@ -155,9 +151,6 @@ const account_center = {
     copy_hint: 'تأكد من نسخها وحفظها في مكان آمن.',
     generate_new_title: 'إنشاء رموز نسخ احتياطي جديدة',
     generate_new: 'إنشاء رموز نسخ احتياطي جديدة',
-    delete_confirmation_title: 'حذف رموز النسخ الاحتياطي',
-    delete_confirmation_description:
-      'إذا قمت بحذف رموز النسخ الاحتياطي هذه، فلن تتمكن من استخدامها للتحقق.',
   },
   passkey: {
     title: 'مفاتيح المرور',

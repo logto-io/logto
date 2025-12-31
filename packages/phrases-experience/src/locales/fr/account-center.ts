@@ -148,10 +148,6 @@ const account_center = {
       title: 'Codes de secours générés !',
       description: 'Vos codes de secours ont été enregistrés. Conservez-les en lieu sûr.',
     },
-    backup_code_deleted: {
-      title: 'Codes de secours supprimés !',
-      description: 'Vos codes de secours ont été supprimés de votre compte.',
-    },
     passkey: {
       title: 'Passkey ajouté !',
       description: 'Votre passkey a été lié avec succès à votre compte.',
@@ -168,9 +164,6 @@ const account_center = {
     copy_hint: 'Assurez-vous de les copier et de les conserver dans un endroit sûr.',
     generate_new_title: 'Générer de nouveaux codes de secours',
     generate_new: 'Générer de nouveaux codes de secours',
-    delete_confirmation_title: 'Supprimer vos codes de secours',
-    delete_confirmation_description:
-      'Si vous supprimez ces codes de secours, vous ne pourrez plus les utiliser pour la vérification.',
   },
   passkey: {
     title: 'Passkeys',

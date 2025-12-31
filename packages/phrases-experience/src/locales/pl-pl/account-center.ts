@@ -139,10 +139,6 @@ const account_center = {
       title: 'Kody zapasowe wygenerowane!',
       description: 'Twoje kody zapasowe zostały zapisane. Przechowuj je w bezpiecznym miejscu.',
     },
-    backup_code_deleted: {
-      title: 'Kody zapasowe usunięte!',
-      description: 'Twoje kody zapasowe zostały usunięte z konta.',
-    },
     passkey: {
       title: 'Passkey dodany!',
       description: 'Twój passkey został pomyślnie połączony z kontem.',
@@ -163,9 +159,6 @@ const account_center = {
     copy_hint: 'Skopiuj je i przechowuj w bezpiecznym miejscu.',
     generate_new_title: 'Wygeneruj nowe kody zapasowe',
     generate_new: 'Wygeneruj nowe kody zapasowe',
-    delete_confirmation_title: 'Usuń kody zapasowe',
-    delete_confirmation_description:
-      'Jeśli usuniesz te kody zapasowe, nie będziesz mógł ich użyć do weryfikacji.',
   },
   passkey: {
     title: 'Passkeys',

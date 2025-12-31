@@ -149,10 +149,6 @@ const account_center = {
       description:
         'Ihre Backup-Codes wurden gespeichert. Bewahren Sie sie an einem sicheren Ort auf.',
     },
-    backup_code_deleted: {
-      title: 'Backup-Codes entfernt!',
-      description: 'Ihre Backup-Codes wurden von Ihrem Konto entfernt.',
-    },
     passkey: {
       title: 'Passkey hinzugefügt!',
       description: 'Ihr Passkey wurde erfolgreich mit Ihrem Konto verknüpft.',
@@ -173,9 +169,6 @@ const account_center = {
     copy_hint: 'Kopieren Sie sie und bewahren Sie sie an einem sicheren Ort auf.',
     generate_new_title: 'Neue Backup-Codes generieren',
     generate_new: 'Neue Backup-Codes generieren',
-    delete_confirmation_title: 'Backup-Codes entfernen',
-    delete_confirmation_description:
-      'Wenn Sie diese Backup-Codes entfernen, können Sie sich nicht mehr damit verifizieren.',
   },
   passkey: {
     title: 'Passkeys',

@@ -137,10 +137,6 @@ const account_center = {
       title: 'Yedek kodlar oluşturuldu!',
       description: 'Yedek kodlarınız kaydedildi. Onları güvenli bir yerde saklayın.',
     },
-    backup_code_deleted: {
-      title: 'Yedek kodlar kaldırıldı!',
-      description: 'Yedek kodlarınız hesabınızdan kaldırıldı.',
-    },
     passkey: {
       title: 'Passkey eklendi!',
       description: 'Passkey başarıyla hesabınıza bağlandı.',
@@ -161,9 +157,6 @@ const account_center = {
     copy_hint: 'Kopyalayıp güvenli bir yerde sakladığınızdan emin olun.',
     generate_new_title: 'Yeni yedek kodlar oluştur',
     generate_new: 'Yeni yedek kodlar oluştur',
-    delete_confirmation_title: 'Yedek kodlarınızı kaldırın',
-    delete_confirmation_description:
-      'Bu yedek kodları kaldırırsanız, bunlarla doğrulama yapamayacaksınız.',
   },
   passkey: {
     title: "Passkey'ler",
