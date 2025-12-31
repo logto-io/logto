@@ -1,6 +1,6 @@
 import Button from '@experience/shared/components/Button';
 import DynamicT from '@experience/shared/components/DynamicT';
-import { MfaFactor } from '@logto/schemas';
+import { AccountCenterControlValue, MfaFactor, type Mfa } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -22,10 +22,13 @@ import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
 import styles from './index.module.scss';
 
+const isBackupCodeEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.BackupCode) ?? false;
+
 const BackupCodeView = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { verificationId, setVerificationId, setToast } = useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
+    useContext(PageContext);
   const getBackupCodesRequest = useApi(getBackupCodesList);
   const getMfaRequest = useApi(getMfaVerifications);
   const deleteBackupCodeRequest = useApi(deleteMfaVerification);
@@ -113,6 +116,24 @@ const BackupCodeView = () => {
     downloadLink.download = filename;
     downloadLink.click();
   }, []);
+
+  if (
+    !accountCenterSettings?.enabled ||
+    accountCenterSettings.fields.mfa !== AccountCenterControlValue.Edit
+  ) {
+    return (
+      <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
+    );
+  }
+
+  if (!isBackupCodeEnabled(experienceSettings?.mfa)) {
+    return (
+      <ErrorPage
+        titleKey="error.something_went_wrong"
+        messageKey="account_center.mfa.backup_code_not_enabled"
+      />
+    );
+  }
 
   if (!verificationId) {
     return <VerificationMethodList />;
