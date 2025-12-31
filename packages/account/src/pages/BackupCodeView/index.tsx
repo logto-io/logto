@@ -8,7 +8,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { type BackupCodeItem, getBackupCodesList } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { backupCodesGenerateRoute } from '@ac/constants/routes';
+import { backupCodesRegenerateRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
@@ -117,7 +117,7 @@ const BackupCodeView = () => {
             title="account_center.backup_code.generate_new"
             type="secondary"
             onClick={() => {
-              void navigate(backupCodesGenerateRoute);
+              void navigate(backupCodesRegenerateRoute);
             }}
           />
         </div>
