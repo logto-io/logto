@@ -29,6 +29,9 @@ import {
   generateUsername,
 } from '#src/utils.js';
 
+const impersonationTokenType = 'urn:logto:token-type:impersonation_token';
+const legacyAccessTokenType = 'urn:ietf:params:oauth:token-type:access_token';
+
 describe('Token Exchange', () => {
   const username = generateUsername();
   const password = generatePassword();
@@ -80,7 +83,7 @@ describe('Token Exchange', () => {
   });
 
   describe('Basic flow', () => {
-    it('should exchange an access token by a subject token', async () => {
+    it('should exchange an access token by an impersonation token', async () => {
       const { subjectToken } = await createSubjectToken(testUserId);
 
       const body = await oidcApi
@@ -90,7 +93,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
         .json();
@@ -99,6 +102,26 @@ describe('Token Exchange', () => {
       expect(body).toHaveProperty('token_type', 'Bearer');
       expect(body).toHaveProperty('expires_in');
       expect(body).toHaveProperty('scope', '');
+    });
+
+    it('should exchange an access token using legacy access_token type for backward compatibility', async () => {
+      const { subjectToken } = await createSubjectToken(testUserId);
+
+      const body = await oidcApi
+        .post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: testApplicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: legacyAccessTokenType,
+          }),
+        })
+        .json();
+
+      expect(body).toHaveProperty('access_token');
+      expect(body).toHaveProperty('token_type', 'Bearer');
+      expect(body).toHaveProperty('expires_in');
     });
 
     it('should fail without valid client_id', async () => {
@@ -110,7 +133,7 @@ describe('Token Exchange', () => {
           body: new URLSearchParams({
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
       ).rejects.toThrow();
@@ -123,8 +146,8 @@ describe('Token Exchange', () => {
           body: new URLSearchParams({
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
-            subject_token: 'invalid_subject_token',
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token: 'sub_invalid_subject_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
       ).rejects.toThrow();
@@ -139,7 +162,7 @@ describe('Token Exchange', () => {
           client_id: testApplicationId,
           grant_type: GrantType.TokenExchange,
           subject_token: subjectToken,
-          subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+          subject_token_type: impersonationTokenType,
         }),
       });
       await expect(
@@ -149,7 +172,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
       ).rejects.toThrow();
@@ -172,7 +195,7 @@ describe('Token Exchange', () => {
             client_id: thirdPartyApplication.id,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
       ).rejects.toThrow();
@@ -190,7 +213,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             scope: [UserScope.Profile, 'non-oidc-scope'].join(' '),
           }),
         })
@@ -214,7 +237,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             resource: testApiResourceInfo.indicator,
           }),
         })
@@ -236,7 +259,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             resource: 'invalid_resource',
           }),
         })
@@ -280,7 +303,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             organization_id: testOrganizationId,
             scope: scopeName,
           }),
@@ -304,7 +327,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             organization_id: testOrganizationId,
           }),
         })
@@ -321,7 +344,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             organization_id: testOrganizationId,
           }),
         })
@@ -349,7 +372,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             resource: testApiResourceInfo.indicator,
           }),
         })
