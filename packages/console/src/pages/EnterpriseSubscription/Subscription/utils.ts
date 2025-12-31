@@ -2,7 +2,13 @@ import { type Nullable } from '@silverhand/essentials';
 import { t } from 'i18next';
 
 import { type LogtoEnterpriseSubscriptionResponse } from '@/cloud/types/router';
-import { titleKeyMap, type UsageKey, usageKeys } from '@/components/PlanUsage/utils';
+import {
+  CustomUsageKey,
+  titleKeyMap,
+  type UsageKey,
+  usageKeys,
+} from '@/components/PlanUsage/utils';
+import { UsageReportingType } from '@/types/subscriptions';
 
 type TableDataItem = {
   id: string;
@@ -46,12 +52,13 @@ export const formatTableData = (
     return regionUsages;
   }
 
-  // If usages or basicQuota is undefined, return the region usages only.
+  // If usages or basicQuota is not undefined, return the region usages only.
+  // Note: Only `shared` quota scope subscription has quota field returned
   if (!usages || !quota?.basicQuota) {
     return regionUsages;
   }
 
-  const { basicQuota } = quota;
+  const { basicQuota, usageReportingType } = quota;
 
   const quotaUsageItems: TableDataItem[] = usageKeys
     // Only show the usage item when its quota is defined and not zero/false (included).
@@ -59,7 +66,7 @@ export const formatTableData = (
       // We need to specially handle the RBAC enabled usage case
       // RBAC is considered enabled if both userRolesLimit and machineToMachineRolesLimit are null in the quota,
       // and if the usage for userRolesLimit is greater than 0 or the usage for machineToMachineRolesLimit is greater than 1.
-      if (key === 'rbacEnabled') {
+      if (key === CustomUsageKey.RbacEnabled) {
         const { userRolesLimit, machineToMachineRolesLimit } = basicQuota;
         const isRbacEnabledInQuota = userRolesLimit === null && machineToMachineRolesLimit === null;
 
@@ -86,6 +93,15 @@ export const formatTableData = (
 
       if (typeof quotaValue === 'number' && quotaValue === 0) {
         return;
+      }
+
+      if (key === 'tokenLimit' && usageReportingType === UsageReportingType.MauUsageWithM2MTokens) {
+        return {
+          id: key,
+          title: t('admin_console.subscription.usage.m2mTokens.title'),
+          usages: usages.m2mTokenLimit,
+          quota: quotaValue,
+        };
       }
 
       const usageValue = usages[key];

@@ -23,14 +23,14 @@ import {
 } from '@/consts/subscriptions';
 import { isProPlan } from '@/utils/subscription';
 
-/**
- * Unlike other usage keys,
- * `rbacEnabled` add-on is not a part of the standard Logto SKU quota key,
- * instead it is calculated based on the `userRolesLimit` and `machineToMachineRolesLimit`
- * two quotas.
- * So we need to manually define it here, and calculate the status based on the two quotas.
- */
 export enum CustomUsageKey {
+  /**
+   * Unlike other usage keys,
+   * `rbacEnabled` add-on is not a part of the standard Logto SKU quota key,
+   * instead it is calculated based on the `userRolesLimit` and `machineToMachineRolesLimit`
+   * two quotas.
+   * So we need to manually define it here, and calculate the status based on the two quotas.
+   */
   RbacEnabled = 'rbacEnabled',
 }
 

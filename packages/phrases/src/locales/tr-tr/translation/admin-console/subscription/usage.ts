@@ -74,6 +74,10 @@ const usage = {
     tooltip_for_enterprise:
       'Sözleşmeye dayalı planınız, ilk {{basicQuota}} tokenleri içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her {{tokenLimit}} token için aylık ${{price, number}}.',
   },
+  m2mTokens: {
+    /** UNTRANSLATED */
+    title: 'M2M tokens',
+  },
   hooks: {
     title: 'Hooklar',
     tooltip: 'Her bir hook için {{price, number}} $ ücretle ek özellik. İlk 10 hook dahildir.',
