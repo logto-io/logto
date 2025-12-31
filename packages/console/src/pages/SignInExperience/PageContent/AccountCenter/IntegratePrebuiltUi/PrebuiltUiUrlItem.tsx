@@ -34,7 +34,7 @@ function PrebuiltUiUrlItem({ path, tooltip, tenantEndpoint }: Props) {
   const handleCopy = async () => {
     copyIconRef.current?.blur();
     setCopyState('copying');
-    await navigator.clipboard.writeText(fullUrl);
+    await navigator.clipboard.writeText(path);
     setCopyState('copied');
   };
 
