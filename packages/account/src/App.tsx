@@ -31,7 +31,6 @@ import {
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
-  passkeyDeletedRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
 import BackupCodeBinding from './pages/BackupCodeBinding';
@@ -106,10 +105,6 @@ const Main = () => {
         element={<UpdateSuccess identifierType="backup_code" />}
       />
       <Route path={passkeySuccessRoute} element={<UpdateSuccess identifierType="passkey" />} />
-      <Route
-        path={passkeyDeletedRoute}
-        element={<UpdateSuccess identifierType="passkey_deleted" />}
-      />
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />

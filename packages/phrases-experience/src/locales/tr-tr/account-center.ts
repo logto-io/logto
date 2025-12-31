@@ -143,10 +143,6 @@ const account_center = {
       title: 'Passkey eklendi!',
       description: 'Passkey başarıyla hesabınıza bağlandı.',
     },
-    passkey_deleted: {
-      title: 'Passkey kaldırıldı!',
-      description: 'Passkey hesabınızdan kaldırıldı.',
-    },
     social: {
       title: 'Sosyal hesap bağlandı!',
       description: 'Sosyal hesabınız başarıyla bağlandı.',
@@ -167,6 +163,7 @@ const account_center = {
     never_used: 'Hiç',
     unnamed: 'İsimsiz passkey',
     renamed: 'Passkey başarıyla yeniden adlandırıldı.',
+    deleted: 'Passkey başarıyla kaldırıldı.',
     add_another_title: 'Başka bir passkey ekle',
     add_another_description:
       "Cihaz biyometriği, güvenlik anahtarları (örn. YubiKey) veya diğer mevcut yöntemleri kullanarak passkey'inizi kaydedin.",

@@ -139,10 +139,6 @@ const account_center = {
       title: '패스키가 추가되었습니다!',
       description: '패스키가 계정에 성공적으로 연결되었습니다.',
     },
-    passkey_deleted: {
-      title: '패스키가 삭제되었습니다!',
-      description: '패스키가 계정에서 삭제되었습니다.',
-    },
     social: {
       title: '소셜 계정 연결됨!',
       description: '소셜 계정이 성공적으로 연결되었습니다.',
@@ -163,6 +159,7 @@ const account_center = {
     never_used: '사용 안 함',
     unnamed: '이름 없는 패스키',
     renamed: '패스키 이름이 변경되었습니다.',
+    deleted: '패스키가 삭제되었습니다.',
     add_another_title: '다른 패스키 추가',
     add_another_description:
       '기기 생체 인증, 보안 키(예: YubiKey) 또는 기타 사용 가능한 방법을 사용하여 패스키를 등록하세요.',

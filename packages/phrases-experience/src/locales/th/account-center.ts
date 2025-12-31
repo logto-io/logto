@@ -138,10 +138,6 @@ const account_center = {
       title: 'เพิ่ม Passkey แล้ว!',
       description: 'Passkey ของคุณได้รับการเชื่อมต่อกับบัญชีของคุณเรียบร้อยแล้ว',
     },
-    passkey_deleted: {
-      title: 'ลบ Passkey แล้ว!',
-      description: 'Passkey ของคุณถูกลบออกจากบัญชีแล้ว',
-    },
     social: {
       title: 'เชื่อมต่อบัญชีโซเชียลแล้ว!',
       description: 'บัญชีโซเชียลของคุณได้รับการเชื่อมต่อเรียบร้อยแล้ว',
@@ -162,6 +158,7 @@ const account_center = {
     never_used: 'ไม่เคยใช้',
     unnamed: 'Passkey ไม่มีชื่อ',
     renamed: 'เปลี่ยนชื่อ Passkey เรียบร้อยแล้ว',
+    deleted: 'ลบ Passkey เรียบร้อยแล้ว',
     add_another_title: 'เพิ่ม Passkey อีกอัน',
     add_another_description:
       'ลงทะเบียน Passkey ของคุณโดยใช้ไบโอเมตริกซ์ของอุปกรณ์ กุญแจความปลอดภัย (เช่น YubiKey) หรือวิธีอื่นที่มี',
