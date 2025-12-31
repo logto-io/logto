@@ -76,6 +76,13 @@ const application_details = {
   backchannel_logout_uri_session_required: 'A sessão é necessária?',
   backchannel_logout_uri_session_required_description:
     'Quando ativado, o RP exige que uma reivindicação `sid` (ID da sessão) seja incluída no token de logout para identificar a sessão do RP com o OP quando o `backchannel_logout_uri` é utilizado.',
+  token_exchange: 'Troca de tokens',
+  token_exchange_description: 'Gerir as definições de troca de tokens para esta aplicação.',
+  allow_token_exchange: 'Permitir troca de tokens',
+  allow_token_exchange_description:
+    'Permita que esta aplicação inicie pedidos de troca de tokens. Isto é necessário para <impersonationLink>impersonação de utilizador</impersonationLink> e <patLink>tokens de acesso pessoal</patLink>.',
+  allow_token_exchange_public_client_warning:
+    'Não é recomendado ativar a troca de tokens para clientes públicos (aplicação de página única / aplicação nativa). Clientes públicos não conseguem armazenar credenciais de forma segura, o que pode expor a sua aplicação a riscos de impersonação de tokens.',
   delete_description:
     'Esta ação não pode ser revertida. Esta ação irá eliminar permanentemente a aplicação. Insira o nome da aplicação <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Insira o nome da aplicação',

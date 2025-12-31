@@ -72,6 +72,13 @@ const application_details = {
   backchannel_logout_uri_session_required: '是否需要会话？',
   backchannel_logout_uri_session_required_description:
     '启用后，当使用 `backchannel_logout_uri` 时，RP 需要在注销令牌中包含 `sid`（会话 ID）声明，以标识 RP 与 OP 的会话。',
+  token_exchange: '令牌交换',
+  token_exchange_description: '管理此应用程序的令牌交换设置。',
+  allow_token_exchange: '允许令牌交换',
+  allow_token_exchange_description:
+    '允许此应用程序发起令牌交换请求。这是 <impersonationLink>用户冒充</impersonationLink> 和 <patLink>个人访问令牌</patLink> 所必需的。',
+  allow_token_exchange_public_client_warning:
+    '不建议为公共客户端（单页应用/原生应用）启用令牌交换。公共客户端无法安全存储凭据，可能会使你的应用暴露于令牌冒充风险。',
   delete_description: '本操作会永久性地删除该应用，且不可撤销。输入 <span>{{name}}</span> 确认。',
   enter_your_application_name: '输入你的应用名称',
   application_deleted: '应用 {{name}} 成功删除。',

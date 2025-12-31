@@ -75,6 +75,13 @@ const application_details = {
   backchannel_logout_uri_session_required: 'Oturum gerekli mi?',
   backchannel_logout_uri_session_required_description:
     'Etkinleştirildiğinde, RP, `sid` (oturum IDsi) talebinin oturumu kapatma belirtecinde bulunmasını ve `backchannel_logout_uri` kullanıldığında RP oturumunu OP ile tanımlamak için dahil edilmesini isteyecektir.',
+  token_exchange: 'Token değişimi',
+  token_exchange_description: 'Bu uygulama için token değişimi ayarlarını yönetin.',
+  allow_token_exchange: 'Token değişimine izin ver',
+  allow_token_exchange_description:
+    "Bu uygulamanın token değişimi istekleri başlatmasına izin verin. Bu, <impersonationLink>kullanıcı kimliğine bürünme</impersonationLink> ve <patLink>kişisel erişim token'ları</patLink> için gereklidir.",
+  allow_token_exchange_public_client_warning:
+    'Genel istemciler (tek sayfa uygulama / yerel uygulama) için token değişimini etkinleştirmek önerilmez. Genel istemciler kimlik bilgilerini güvenli şekilde saklayamaz; bu da uygulamanızı token kimliğine bürünme risklerine maruz bırakabilir.',
   delete_description:
     'Bu eylem geri alınamaz. Uygulama kalıcı olarak silinecektir. Lütfen onaylamak için uygulama adı <span>{{name}}</span> girin.',
   enter_your_application_name: 'Uygulama adı giriniz',

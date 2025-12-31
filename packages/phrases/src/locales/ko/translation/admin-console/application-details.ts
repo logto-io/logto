@@ -75,6 +75,13 @@ const application_details = {
   backchannel_logout_uri_session_required: '세션이 필요합니까?',
   backchannel_logout_uri_session_required_description:
     '활성화되면, RP는 `sid` (세션 ID) 클레임이 로그아웃 토큰에 포함되어 `backchannel_logout_uri` 사용 시 OP와 RP 세션을 식별하도록 요구합니다.',
+  token_exchange: '토큰 교환',
+  token_exchange_description: '이 애플리케이션의 토큰 교환 설정을 관리합니다.',
+  allow_token_exchange: '토큰 교환 허용',
+  allow_token_exchange_description:
+    '이 애플리케이션이 토큰 교환 요청을 시작할 수 있도록 허용합니다. 이는 <impersonationLink>사용자 가장</impersonationLink> 및 <patLink>개인 액세스 토큰</patLink>에 필요합니다.',
+  allow_token_exchange_public_client_warning:
+    '공개 클라이언트(단일 페이지 앱/네이티브 앱)에서 토큰 교환을 활성화하는 것은 권장되지 않습니다. 공개 클라이언트는 자격 증명을 안전하게 저장할 수 없으므로 애플리케이션이 토큰 가장 위험에 노출될 수 있습니다.',
   delete_description:
     '이 행동은 취소할 수 없습니다. 애플리케이션을 영구적으로 삭제할 것입니다. 삭제를 진행하려면 <span>{{name}}</span>를 입력하세요.',
   enter_your_application_name: '어플리케이션 이름을 입력하세요.',
