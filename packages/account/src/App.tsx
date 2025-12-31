@@ -27,7 +27,6 @@ import {
   authenticatorAppSuccessRoute,
   backupCodesGenerateRoute,
   backupCodesSuccessRoute,
-  backupCodesDeletedRoute,
   backupCodesManageRoute,
   passkeyAddRoute,
   passkeyManageRoute,
@@ -105,10 +104,6 @@ const Main = () => {
       <Route
         path={backupCodesSuccessRoute}
         element={<UpdateSuccess identifierType="backup_code" />}
-      />
-      <Route
-        path={backupCodesDeletedRoute}
-        element={<UpdateSuccess identifierType="backup_code_deleted" />}
       />
       <Route path={passkeySuccessRoute} element={<UpdateSuccess identifierType="passkey" />} />
       <Route
