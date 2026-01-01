@@ -49,6 +49,10 @@ const tenantContext = new MockTenant(
             ...mockApplication.oidcClientMetadata,
             ...body.oidcClientMetadata,
           },
+          customClientMetadata: {
+            ...mockApplication.customClientMetadata,
+            ...body.customClientMetadata,
+          },
         })
       ),
       updateApplicationById,
@@ -113,6 +117,10 @@ describe('application route', () => {
       name,
       description,
       type,
+      customClientMetadata: {
+        ...mockApplication.customClientMetadata,
+        allowTokenExchange: true,
+      },
     });
   });
 
@@ -157,7 +165,10 @@ describe('application route', () => {
       id: mockId,
       name,
       type,
-      customClientMetadata,
+      customClientMetadata: {
+        ...customClientMetadata,
+        allowTokenExchange: true,
+      },
     });
   });
 

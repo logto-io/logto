@@ -113,6 +113,7 @@ export const createTenantMachineToMachineApplication = (
     },
     customClientMetadata: {
       tenantId,
+      allowTokenExchange: true,
     },
   });
 

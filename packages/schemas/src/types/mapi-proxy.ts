@@ -58,4 +58,7 @@ export const getMapiProxyM2mApp = (tenantId: string): Readonly<CreateApplication
       redirectUris: [],
       postLogoutRedirectUris: [],
     },
+    customClientMetadata: {
+      allowTokenExchange: true,
+    },
   });
