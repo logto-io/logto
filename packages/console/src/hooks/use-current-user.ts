@@ -6,7 +6,9 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 
+import useAccountApi from './use-account-api';
 import type { RequestError } from './use-api';
 import { useStaticApi } from './use-api';
 import useSwrFetcher from './use-swr-fetcher';
@@ -14,14 +16,22 @@ import useSwrFetcher from './use-swr-fetcher';
 const useCurrentUser = () => {
   const { isAuthenticated } = useLogto();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
+  const meApi_ = useStaticApi({
+    prefixUrl: adminTenantEndpoint,
+    resourceIndicator: meApi.indicator,
+  });
+  const accountApi = useAccountApi();
+  const api = isDevFeaturesEnabled ? accountApi : meApi_;
   const fetcher = useSwrFetcher<UserProfileResponse>(api);
   const {
     data: user,
     error,
     isLoading,
     mutate,
-  } = useSWR<UserProfileResponse, RequestError>(isAuthenticated && 'me', fetcher);
+  } = useSWR<UserProfileResponse, RequestError>(
+    isAuthenticated && (isDevFeaturesEnabled ? 'api/my-account' : 'me'),
+    fetcher
+  );
 
   const updateCustomData = useCallback(
     async (customData: JsonObject) => {
@@ -30,16 +40,26 @@ const useCurrentUser = () => {
         return;
       }
 
-      await mutate({
-        ...user,
-        customData: await api
-          .patch(`me/custom-data`, {
-            json: customData,
+      await (isDevFeaturesEnabled
+        ? mutate({
+            ...user,
+            customData: await accountApi
+              .patch('api/my-account', {
+                json: { customData },
+              })
+              .json<UserProfileResponse>()
+              .then((response) => response.customData),
           })
-          .json<JsonObject>(),
-      });
+        : mutate({
+            ...user,
+            customData: await meApi_
+              .patch('me/custom-data', {
+                json: customData,
+              })
+              .json<JsonObject>(),
+          }));
     },
-    [api, mutate, t, user]
+    [accountApi, meApi_, mutate, t, user]
   );
 
   return {
