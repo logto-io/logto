@@ -6,6 +6,8 @@ const application = {
   invalid_third_party_application_type:
     'Solo las aplicaciones web tradicionales, de una sola página y nativas pueden ser marcadas como aplicaciones de terceros.',
   third_party_application_only: 'La función solo está disponible para aplicaciones de terceros.',
+  third_party_application_cannot_enable_token_exchange:
+    'Las aplicaciones de terceros no pueden habilitar el intercambio de tokens.',
   user_consent_scopes_not_found: 'Ámbitos de consentimiento de usuario no válidos.',
   consent_management_api_scopes_not_allowed:
     'Los ámbitos de la API de administración no están permitidos.',

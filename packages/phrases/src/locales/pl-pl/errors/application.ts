@@ -5,6 +5,8 @@ const application = {
   invalid_third_party_application_type:
     'Tylko tradycyjne aplikacje internetowe, jednostronicowe i natywne mogą być oznaczone jako aplikacje zewnętrzne.',
   third_party_application_only: 'Ta funkcja jest dostępna tylko dla aplikacji zewnętrznych.',
+  third_party_application_cannot_enable_token_exchange:
+    'Aplikacje firm trzecich nie mogą włączać wymiany tokenów.',
   user_consent_scopes_not_found: 'Nieprawidłowe zakresy zgody użytkownika.',
   consent_management_api_scopes_not_allowed: 'Nie są dozwolone zakresy API zarządzania.',
   protected_app_metadata_is_required: 'Wymagane jest zabezpieczone metadane aplikacji.',

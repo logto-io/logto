@@ -5,6 +5,8 @@ const application = {
   invalid_third_party_application_type:
     'يمكن تحديد تطبيقات الويب التقليدية والتطبيقات أحادية الصفحة والتطبيقات الأصلية فقط كتطبيقات طرف ثالث.',
   third_party_application_only: 'الميزة متاحة فقط لتطبيقات الطرف الثالث.',
+  third_party_application_cannot_enable_token_exchange:
+    'لا يُسمح للتطبيقات التابعة لجهات خارجية بتمكين تبادل الرموز المميّزة.',
   user_consent_scopes_not_found: 'نطاقات موافقة المستخدم غير صالحة.',
   consent_management_api_scopes_not_allowed:
     'لا يُسمح باستخدام نطاقات واجهة برمجة التطبيقات لإدارة الموافقة.',
