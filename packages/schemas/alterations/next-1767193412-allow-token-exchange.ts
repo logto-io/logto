@@ -4,10 +4,7 @@ import type { AlterationScript } from '../lib/types/alteration.js';
 
 const alteration: AlterationScript = {
   up: async (pool) => {
-    /**
-     * Set allowTokenExchange = true for existing first-party MachineToMachine and Traditional applications
-     * This matches the default behavior in buildCustomClientMetadata() for newly created apps
-     */
+    // Only set allowTokenExchange = true for first-party M2M and Traditional applications
     await pool.query(sql`
       update applications
         set custom_client_metadata = custom_client_metadata || '{"allowTokenExchange": true}'::jsonb

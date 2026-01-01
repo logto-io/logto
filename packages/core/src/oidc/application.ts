@@ -1,4 +1,4 @@
-import { CustomClientMetadataKey } from '@logto/schemas';
+import { CustomClientMetadataKey, isBuiltInApplicationId } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import type Queries from '#src/tenants/Queries.js';
@@ -12,7 +12,13 @@ export const validateTokenExchangeAccess = async (
   { applications }: Queries,
   applicationId: string
 ): Promise<string | undefined> => {
-  // Note: Demo-app (with a fixed app ID "demo-app") does not exist in the database
+  const tokenExchangeDisabledErrorMessage = 'token exchange is not allowed for this application';
+
+  // Built-in applications (demo-app, account center) are not allowed to perform token exchange
+  if (isBuiltInApplicationId(applicationId)) {
+    return tokenExchangeDisabledErrorMessage;
+  }
+
   const application = await trySafe(async () => applications.findApplicationById(applicationId));
 
   // Third-party applications are not allowed to perform token exchange
@@ -20,15 +26,11 @@ export const validateTokenExchangeAccess = async (
     return 'third-party applications are not allowed for this grant type';
   }
 
-  /**
-   * Note: For demo-app, `allowTokenExchange` will be `undefined` because the application
-   * does not exist. Since it cannot be controlled via Console UI, it's forbidden to prevent abuse.
-   */
   const allowTokenExchange =
     application?.customClientMetadata[CustomClientMetadataKey.AllowTokenExchange];
 
   if (allowTokenExchange !== true) {
-    return 'token exchange is not allowed for this application';
+    return tokenExchangeDisabledErrorMessage;
   }
 
   return undefined;

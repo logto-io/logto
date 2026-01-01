@@ -59,18 +59,23 @@ export const buildOidcClientMetadata = (metadata?: OidcClientMetadata): OidcClie
 /**
  * Build custom client metadata with default values based on application type.
  *
- * - `allowTokenExchange`: M2M and Traditional Web apps default to `true`,
- *   SPA and Native apps default to `false`.
+ * - `allowTokenExchange`: Only set to `true` for first-party M2M and Traditional Web apps.
+ *   Other apps (SPA, Native, third-party) leave it unset to be rejected by validateTokenExchangeAccess.
  */
 export const buildCustomClientMetadata = (
   type: ApplicationType,
-  metadata?: CustomClientMetadata
-): CustomClientMetadata => ({
-  ...metadata,
-  allowTokenExchange:
-    metadata?.allowTokenExchange ??
-    (type === ApplicationType.MachineToMachine || type === ApplicationType.Traditional),
-});
+  metadata?: CustomClientMetadata,
+  isThirdParty?: boolean
+): CustomClientMetadata => {
+  const shouldEnableTokenExchange =
+    !isThirdParty &&
+    (type === ApplicationType.MachineToMachine || type === ApplicationType.Traditional);
+
+  return {
+    ...metadata,
+    ...(shouldEnableTokenExchange && { allowTokenExchange: true }),
+  };
+};
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const isKeyOf = <T extends object>(object: T, key: string | number | symbol): key is keyof T =>

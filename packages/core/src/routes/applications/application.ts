@@ -199,7 +199,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         id: generateStandardId(),
         secret: generateInternalSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
-        customClientMetadata: buildCustomClientMetadata(rest.type, customClientMetadata),
+        customClientMetadata: buildCustomClientMetadata(
+          rest.type,
+          customClientMetadata,
+          rest.isThirdParty
+        ),
         ...conditional(
           rest.type === ApplicationType.Protected &&
             protectedAppMetadata &&
@@ -290,6 +294,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       response: Applications.guard,
       status: [200, 400, 404, 422, 500],
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         params: { id },
@@ -301,6 +306,17 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       const pendingUpdateApplication = await queries.applications.findApplicationById(id);
       if (pendingUpdateApplication.type === ApplicationType.SAML) {
         throw new RequestError('application.saml.use_saml_app_api');
+      }
+
+      // Third-party applications are not allowed to enable token exchange
+      if (
+        pendingUpdateApplication.isThirdParty &&
+        rest.customClientMetadata?.allowTokenExchange === true
+      ) {
+        throw new RequestError({
+          code: 'application.third_party_application_cannot_enable_token_exchange',
+          status: 422,
+        });
       }
 
       // @deprecated
