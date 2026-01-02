@@ -36,6 +36,7 @@ const action = {
   authorize: 'อนุมัติ',
   use_another_account: 'ใช้บัญชีอื่น',
   back_to_current_account: 'กลับไปยังบัญชีปัจจุบัน',
+  done: 'เสร็จสิ้น',
 };
 
 export default Object.freeze(action);
