@@ -113,6 +113,8 @@ const account_center = {
       'Los códigos de respaldo requieren que se configure otro método MFA primero.',
     passkey_not_enabled:
       'Passkey no está habilitado. Por favor, contacta a tu administrador para habilitarlo.',
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {

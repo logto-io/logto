@@ -108,6 +108,8 @@ const account_center = {
       'Backup code is not enabled. Please contact your administrator to enable it.',
     backup_code_requires_other_mfa: 'Backup codes require another MFA method to be set up first.',
     passkey_not_enabled: 'Passkey is not enabled. Please contact your administrator to enable it.',
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {

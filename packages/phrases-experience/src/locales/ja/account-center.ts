@@ -105,6 +105,8 @@ const account_center = {
     backup_code_requires_other_mfa:
       'バックアップコードを使用するには、まず他の MFA メソッドを設定する必要があります。',
     passkey_not_enabled: 'パスキーが有効になっていません。管理者に連絡して有効にしてください。',
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {

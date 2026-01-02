@@ -101,6 +101,8 @@ const account_center = {
     backup_code_not_enabled: 'รหัสสำรองไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบของคุณเพื่อเปิดใช้งาน',
     backup_code_requires_other_mfa: 'รหัสสำรองต้องมีการตั้งค่าวิธี MFA อื่นก่อน',
     passkey_not_enabled: 'Passkey ไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อเปิดใช้งาน',
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {

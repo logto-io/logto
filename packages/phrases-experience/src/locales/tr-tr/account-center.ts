@@ -106,6 +106,8 @@ const account_center = {
     backup_code_requires_other_mfa:
       'Yedek kodlar, önce başka bir MFA yönteminin ayarlanmasını gerektirir.',
     passkey_not_enabled: 'Passkey etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {
