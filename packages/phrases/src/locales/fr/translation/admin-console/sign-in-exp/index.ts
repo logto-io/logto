@@ -171,6 +171,8 @@ const sign_in_exp = {
       /** UNTRANSLATED */
       description:
         'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
+      permission_notice:
+        "Pour intégrer ces flux préconstruits, définissez les autorisations de l'API de compte associées sur <strong>Modifier</strong> dans les paramètres ci-dessous.",
       /** UNTRANSLATED */
       flows_title: 'Integrate out-of-the-box security setting flows',
       /** UNTRANSLATED */

@@ -1,12 +1,14 @@
 import { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import useUserPreferences from '@/hooks/use-user-preferences';
 
 import PrebuiltUiUrlItem from './PrebuiltUiUrlItem';
 import styles from './index.module.scss';
@@ -48,6 +50,10 @@ function IntegratePrebuiltUi() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tenantEndpoint } = useContext(AppDataContext);
   const { getDocumentationUrl } = useDocumentationUrl();
+  const {
+    data: { prebuiltUiPermissionNoticeAcknowledged },
+    update,
+  } = useUserPreferences();
 
   return (
     <FormCard
@@ -63,6 +69,23 @@ function IntegratePrebuiltUi() {
           <div className={styles.description}>
             <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.flows_description" />
           </div>
+          {!prebuiltUiPermissionNoticeAcknowledged && (
+            <InlineNotification
+              className={styles.notice}
+              action="general.got_it"
+              onClick={() => {
+                void update({ prebuiltUiPermissionNoticeAcknowledged: true });
+              }}
+            >
+              <Trans
+                components={{
+                  strong: <strong />,
+                }}
+              >
+                {t('sign_in_exp.account_center.prebuilt_ui.permission_notice')}
+              </Trans>
+            </InlineNotification>
+          )}
           <div className={styles.urlGrid}>
             {prebuiltRoutes.map(({ path, tooltipKey }) => (
               <PrebuiltUiUrlItem
