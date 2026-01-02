@@ -65,7 +65,7 @@ const account_center = {
   code_verification: {
     send: 'Doğrulama kodu gönder',
     resend: 'Hâlâ gelmedi mi? <a>Doğrulama kodunu yeniden gönder</a>',
-    resend_countdown: 'Hâlâ gelmedi mi?<span> {{seconds}} sn sonra tekrar gönder.</span>',
+    resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
   },
 
   email_verification: {
@@ -76,7 +76,7 @@ const account_center = {
     send: 'Doğrulama kodu gönder',
     description: 'Doğrulama kodu {{email}} adresine gönderildi. Devam etmek için kodu gir.',
     resend: 'Hâlâ gelmedi mi? <a>Doğrulama kodunu yeniden gönder</a>',
-    resend_countdown: 'Hâlâ gelmedi mi?<span> {{seconds}} sn sonra tekrar gönder.</span>',
+    resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
     error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
     error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
@@ -89,7 +89,7 @@ const account_center = {
     send: 'Doğrulama kodu gönder',
     description: 'Doğrulama kodu telefonuna {{phone}} gönderildi. Devam etmek için kodu gir.',
     resend: 'Hâlâ gelmedi mi? <a>Doğrulama kodunu yeniden gönder</a>',
-    resend_countdown: 'Hâlâ gelmedi mi?<span> {{seconds}} sn sonra tekrar gönder.</span>',
+    resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
     error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
     error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',

@@ -65,7 +65,7 @@ const account_center = {
   code_verification: {
     send: 'Wyślij kod weryfikacyjny',
     resend: 'Nie otrzymałeś? <a>Wyślij kod weryfikacyjny ponownie</a>',
-    resend_countdown: 'Nie otrzymałeś?<span> Wyślij ponownie po {{seconds}} s.</span>',
+    resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
   },
 
   email_verification: {
@@ -77,7 +77,7 @@ const account_center = {
     description:
       'Kod weryfikacyjny został wysłany na adres {{email}}. Wprowadź kod, aby kontynuować.',
     resend: 'Nie otrzymałeś? <a>Wyślij kod weryfikacyjny ponownie</a>',
-    resend_countdown: 'Nie otrzymałeś?<span> Wyślij ponownie po {{seconds}} s.</span>',
+    resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
     error_send_failed: 'Nie udało się wysłać kodu weryfikacyjnego. Spróbuj ponownie później.',
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
@@ -91,7 +91,7 @@ const account_center = {
     description:
       'Kod weryfikacyjny został wysłany na Twój telefon {{phone}}. Wprowadź kod, aby kontynuować.',
     resend: 'Nie otrzymałeś? <a>Wyślij kod weryfikacyjny ponownie</a>',
-    resend_countdown: 'Nie otrzymałeś?<span> Wyślij ponownie po {{seconds}} s.</span>',
+    resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
     error_send_failed: 'Nie udało się wysłać kodu weryfikacyjnego. Spróbuj ponownie później.',
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
     error_invalid_code: 'Kod weryfikacyjny jest nieprawidłowy lub wygasł.',
