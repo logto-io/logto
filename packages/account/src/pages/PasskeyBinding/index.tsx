@@ -200,7 +200,8 @@ const PasskeyBinding = () => {
           title="action.continue"
           type="primary"
           className={styles.submitButton}
-          isLoading={loading || !registrationData}
+          isLoading={loading}
+          isDisabled={!registrationData}
           onClick={() => {
             void handleAddPasskey();
           }}
