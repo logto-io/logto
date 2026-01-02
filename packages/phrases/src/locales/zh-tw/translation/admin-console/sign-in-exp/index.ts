@@ -163,6 +163,8 @@ const sign_in_exp = {
       /** UNTRANSLATED */
       description:
         'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
+      permission_notice:
+        '要整合這些預建流程，請在下方設定中將相關的帳戶 API 權限設為<strong>編輯</strong>。',
       /** UNTRANSLATED */
       flows_title: 'Integrate out-of-the-box security setting flows',
       /** UNTRANSLATED */

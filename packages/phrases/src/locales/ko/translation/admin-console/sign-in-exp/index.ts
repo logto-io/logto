@@ -165,6 +165,8 @@ const sign_in_exp = {
       /** UNTRANSLATED */
       description:
         'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
+      permission_notice:
+        '이 사전 구축된 흐름을 통합하려면 아래 설정에서 관련 계정 API 권한을 <strong>편집</strong>으로 설정하세요.',
       /** UNTRANSLATED */
       flows_title: 'Integrate out-of-the-box security setting flows',
       /** UNTRANSLATED */

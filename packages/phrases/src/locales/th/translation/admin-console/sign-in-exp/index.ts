@@ -167,6 +167,8 @@ const sign_in_exp = {
       /** UNTRANSLATED */
       description:
         'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
+      permission_notice:
+        'หากต้องการรวมโฟลว์สำเร็จรูปเหล่านี้ ให้ตั้งค่าสิทธิ์ Account API ที่เกี่ยวข้องเป็น<strong>แก้ไข</strong>ในการตั้งค่าด้านล่าง',
       /** UNTRANSLATED */
       flows_title: 'Integrate out-of-the-box security setting flows',
       /** UNTRANSLATED */
