@@ -109,7 +109,12 @@ const sign_in_exp = {
       account_security: {
         title: 'SEGURANÇA DA CONTA',
         description:
-          'Gerencie o acesso à Account API, permitindo que os usuários vejam ou editem suas informações de identidade e fatores de autenticação depois de entrar no aplicativo. Antes de fazer essas alterações relacionadas à segurança, os usuários precisam verificar a identidade e obter um ID de registro válido por 10 minutos.',
+          'Gerencie o acesso à Account API, permitindo que os usuários vejam ou editem suas informações de identidade e fatores de autenticação depois de entrar no aplicativo.',
+        security_verification: {
+          title: 'Verificação de segurança',
+          description:
+            'Antes de alterar as configurações de segurança, os usuários devem verificar sua identidade para obter um ID de registro de verificação válido por 10 minutos. Para habilitar um método de verificação (e-mail, telefone, senha), defina a permissão da Account API abaixo como <strong>Somente leitura</strong> (mínimo) ou <strong>Editar</strong> para que o sistema possa detectar se o usuário o configurou. <a>Saiba mais</a>',
+        },
         groups: {
           identifiers: {
             title: 'Identificadores',
