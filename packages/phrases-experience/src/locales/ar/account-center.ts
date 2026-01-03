@@ -169,7 +169,11 @@ const account_center = {
     delete_confirmation_description:
       'هل أنت متأكد أنك تريد حذف "{{name}}"؟ لن تتمكن من استخدام مفتاح المرور هذا لتسجيل الدخول بعد الآن.',
     rename_passkey: 'إعادة تسمية مفتاح المرور',
-    rename_description: 'أدخل اسمًا جديدًا لمفتاح المرور هذا.',
+    rename_description: 'Enter a new name for this passkey.',
+    name_this_passkey: 'Name this device passkey',
+    name_passkey_description:
+      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
+    name_input_label: 'Name',
   },
 };
 

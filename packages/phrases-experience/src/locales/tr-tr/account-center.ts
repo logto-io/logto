@@ -175,7 +175,11 @@ const account_center = {
     delete_confirmation_description:
       '"{{name}}" kaldırmak istediğinizden emin misiniz? Bu passkey ile artık giriş yapamayacaksınız.',
     rename_passkey: "Passkey'i yeniden adlandır",
-    rename_description: 'Bu passkey için yeni bir ad girin.',
+    rename_description: 'Enter a new name for this passkey.',
+    name_this_passkey: 'Name this device passkey',
+    name_passkey_description:
+      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
+    name_input_label: 'Name',
   },
 };
 

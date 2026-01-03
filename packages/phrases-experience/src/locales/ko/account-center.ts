@@ -171,7 +171,11 @@ const account_center = {
     delete_confirmation_description:
       '"{{name}}"을(를) 삭제하시겠습니까? 이 패스키로 더 이상 로그인할 수 없습니다.',
     rename_passkey: '패스키 이름 변경',
-    rename_description: '이 패스키의 새 이름을 입력하세요.',
+    rename_description: 'Enter a new name for this passkey.',
+    name_this_passkey: 'Name this device passkey',
+    name_passkey_description:
+      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
+    name_input_label: 'Name',
   },
 };
 
