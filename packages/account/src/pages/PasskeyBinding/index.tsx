@@ -1,10 +1,12 @@
 import Button from '@experience/shared/components/Button';
+import InputField from '@experience/shared/components/InputFields/InputField';
 import { AccountCenterControlValue, MfaFactor, type Mfa } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { browserSupportsWebAuthn, startRegistration } from '@simplewebauthn/browser';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { UAParser as parseUa } from 'ua-parser-js';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
@@ -46,6 +48,18 @@ const PasskeyBinding = () => {
     verificationRecordId: string;
     registrationOptions: Parameters<typeof startRegistration>[0];
   }>();
+  // State for the naming step
+  const [webAuthnVerificationRecordId, setWebAuthnVerificationRecordId] = useState<string>();
+  const [passkeyName, setPasskeyName] = useState<string>('');
+
+  // Generate default passkey name from user-agent
+  const defaultPasskeyName = useMemo(() => {
+    const { browser, os } = parseUa(navigator.userAgent);
+    if (browser.name && os.name) {
+      return `${browser.name} on ${os.name}`;
+    }
+    return '';
+  }, []);
 
   // Check WebAuthn browser support on mount
   useEffect(() => {
@@ -128,9 +142,29 @@ const PasskeyBinding = () => {
       return;
     }
 
-    // Step 3: Add WebAuthn MFA to user
+    // Step 3: Show naming step instead of directly adding the MFA
+    setWebAuthnVerificationRecordId(verifyResponse.verificationRecordId);
+    setPasskeyName(defaultPasskeyName);
+  }, [
+    defaultPasskeyName,
+    handleError,
+    loading,
+    registrationData,
+    setToast,
+    t,
+    verificationId,
+    verifyRegistrationRequest,
+  ]);
+
+  const handleSubmitName = useCallback(async () => {
+    if (!verificationId || !webAuthnVerificationRecordId || loading) {
+      return;
+    }
+
+    // Add WebAuthn MFA to user with the custom name
     const [addError] = await addWebAuthnRequest(verificationId, {
-      newIdentifierVerificationRecordId: verifyResponse.verificationRecordId,
+      newIdentifierVerificationRecordId: webAuthnVerificationRecordId,
+      name: passkeyName.trim() || undefined,
     });
 
     if (addError) {
@@ -143,7 +177,7 @@ const PasskeyBinding = () => {
       return;
     }
 
-    // Step 4: Navigate to success or backup code setup
+    // Navigate to success or backup code setup
     if (isBackupCodeEnabled(experienceSettings?.mfa) && !hasBackupCodes) {
       void navigate(backupCodesGenerateRoute, { replace: true });
       return;
@@ -157,12 +191,12 @@ const PasskeyBinding = () => {
     hasBackupCodes,
     loading,
     navigate,
-    registrationData,
+    passkeyName,
     setToast,
     setVerificationId,
     t,
     verificationId,
-    verifyRegistrationRequest,
+    webAuthnVerificationRecordId,
   ]);
 
   if (
@@ -191,6 +225,36 @@ const PasskeyBinding = () => {
 
   if (!verificationId) {
     return <VerificationMethodList />;
+  }
+
+  // Show naming step after WebAuthn registration is verified
+  if (webAuthnVerificationRecordId) {
+    return (
+      <SecondaryPageLayout
+        title="account_center.passkey.name_this_passkey"
+        description="account_center.passkey.name_passkey_description"
+      >
+        <div className={styles.container}>
+          <InputField
+            name="passkeyName"
+            label={t('account_center.passkey.name_input_label')}
+            value={passkeyName}
+            onChange={({ currentTarget }) => {
+              setPasskeyName(currentTarget.value);
+            }}
+          />
+          <Button
+            title="action.continue"
+            type="primary"
+            className={styles.submitButton}
+            isLoading={loading}
+            onClick={() => {
+              void handleSubmitName();
+            }}
+          />
+        </div>
+      </SecondaryPageLayout>
+    );
   }
 
   return (
