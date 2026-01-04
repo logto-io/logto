@@ -45,3 +45,6 @@ create trigger set_updated_at
   before update on users
   for each row
   execute procedure set_updated_at();
+
+create index users_identities_gin
+      on users using GIN (identities);
