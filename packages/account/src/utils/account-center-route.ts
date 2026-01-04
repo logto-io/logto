@@ -12,7 +12,9 @@ import {
 export const accountCenterBasePath = '/account';
 const routeStorageKey = 'account-center-route-cache';
 const redirectStorageKey = 'logto:account-center:redirect-url';
+const showSuccessStorageKey = 'logto:account-center:show-success';
 const redirectUrlParameter = 'redirect';
+const showSuccessParameter = 'show_success';
 
 const knownRoutePrefixes: readonly string[] = [
   emailRoute,
@@ -89,15 +91,57 @@ export const clearRedirectUrl = (): void => {
 };
 
 /**
- * Parse and store the redirect URL from the query parameter.
+ * Get the stored show success flag from sessionStorage.
+ */
+export const getShowSuccess = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return sessionStorage.getItem(showSuccessStorageKey) === 'true';
+};
+
+/**
+ * Store the show success flag to sessionStorage.
+ */
+export const setShowSuccess = (value: boolean): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  if (value) {
+    sessionStorage.setItem(showSuccessStorageKey, 'true');
+  } else {
+    sessionStorage.removeItem(showSuccessStorageKey);
+  }
+};
+
+/**
+ * Clear the stored show success flag from sessionStorage.
+ */
+export const clearShowSuccess = (): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  sessionStorage.removeItem(showSuccessStorageKey);
+};
+
+/**
+ * Parse and store the redirect URL and show success flag from query parameters.
  * This needs to be done before OAuth flow starts so it persists through the sign-in.
  */
 const handleRedirectParameter = () => {
   const parameters = new URLSearchParams(window.location.search);
   const redirectUrl = parameters.get(redirectUrlParameter);
+  const showSuccess = parameters.get(showSuccessParameter);
 
   if (redirectUrl) {
     setRedirectUrl(redirectUrl);
+  }
+
+  if (showSuccess === '1' || showSuccess === 'true') {
+    setShowSuccess(true);
   }
 };
 

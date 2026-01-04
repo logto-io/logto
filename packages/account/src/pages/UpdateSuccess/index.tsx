@@ -4,7 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 
 import successIllustration from '@ac/assets/icons/success.svg';
 import ErrorPage from '@ac/components/ErrorPage';
-import { clearRedirectUrl, getRedirectUrl } from '@ac/utils/account-center-route';
+import {
+  clearRedirectUrl,
+  clearShowSuccess,
+  getRedirectUrl,
+  getShowSuccess,
+} from '@ac/utils/account-center-route';
 
 type IdentifierType =
   | SignInIdentifier
@@ -65,6 +70,7 @@ type Props = {
 
 const UpdateSuccess = ({ identifierType }: Props) => {
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState<string>();
 
   const translationKeys = useMemo(() => {
     if (!identifierType) {
@@ -75,14 +81,31 @@ const UpdateSuccess = ({ identifierType }: Props) => {
   }, [identifierType]);
 
   useEffect(() => {
-    const redirectUrl = getRedirectUrl();
+    const storedRedirectUrl = getRedirectUrl();
+    const showSuccess = getShowSuccess();
 
+    if (storedRedirectUrl) {
+      // If show_success is set, show the success page with a Done button
+      if (showSuccess) {
+        setRedirectUrl(storedRedirectUrl);
+        return;
+      }
+
+      // Otherwise, redirect immediately
+      setIsRedirecting(true);
+      clearRedirectUrl();
+      window.location.assign(storedRedirectUrl);
+    }
+  }, []);
+
+  const handleDoneClick = () => {
     if (redirectUrl) {
       setIsRedirecting(true);
       clearRedirectUrl();
+      clearShowSuccess();
       window.location.assign(redirectUrl);
     }
-  }, []);
+  };
 
   // Show nothing while redirecting to avoid flash of success page
   if (isRedirecting) {
@@ -94,6 +117,14 @@ const UpdateSuccess = ({ identifierType }: Props) => {
       illustration={successIllustration}
       titleKey={translationKeys.titleKey}
       messageKey={translationKeys.messageKey}
+      action={
+        redirectUrl
+          ? {
+              titleKey: 'action.done',
+              onClick: handleDoneClick,
+            }
+          : undefined
+      }
     />
   );
 };
