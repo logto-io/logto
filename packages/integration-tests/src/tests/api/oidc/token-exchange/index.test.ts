@@ -29,6 +29,9 @@ import {
   generateUsername,
 } from '#src/utils.js';
 
+const impersonationTokenType = 'urn:logto:token-type:impersonation_token';
+const legacyAccessTokenType = 'urn:ietf:params:oauth:token-type:access_token';
+
 describe('Token Exchange', () => {
   const username = generateUsername();
   const password = generatePassword();
@@ -43,7 +46,6 @@ describe('Token Exchange', () => {
   let testApiResourceId: string;
   let testApplicationId: string;
   let testUserId: string;
-  let testAccessToken: string;
   let client: MockClient;
   /* eslint-enable @silverhand/fp/no-let */
 
@@ -70,7 +72,7 @@ describe('Token Exchange', () => {
     });
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
-    testAccessToken = await client.getAccessToken();
+    await client.getAccessToken();
     /* eslint-enable @silverhand/fp/no-mutation */
   });
 
@@ -81,7 +83,7 @@ describe('Token Exchange', () => {
   });
 
   describe('Basic flow', () => {
-    it('should exchange an access token by a subject token', async () => {
+    it('should exchange an access token by an impersonation token', async () => {
       const { subjectToken } = await createSubjectToken(testUserId);
 
       const body = await oidcApi
@@ -91,7 +93,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
         .json();
@@ -100,6 +102,26 @@ describe('Token Exchange', () => {
       expect(body).toHaveProperty('token_type', 'Bearer');
       expect(body).toHaveProperty('expires_in');
       expect(body).toHaveProperty('scope', '');
+    });
+
+    it('should exchange an access token using legacy access_token type for backward compatibility', async () => {
+      const { subjectToken } = await createSubjectToken(testUserId);
+
+      const body = await oidcApi
+        .post('token', {
+          headers: formUrlEncodedHeaders,
+          body: new URLSearchParams({
+            client_id: testApplicationId,
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: legacyAccessTokenType,
+          }),
+        })
+        .json();
+
+      expect(body).toHaveProperty('access_token');
+      expect(body).toHaveProperty('token_type', 'Bearer');
+      expect(body).toHaveProperty('expires_in');
     });
 
     it('should fail without valid client_id', async () => {
@@ -111,7 +133,7 @@ describe('Token Exchange', () => {
           body: new URLSearchParams({
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
       ).rejects.toThrow();
@@ -124,8 +146,8 @@ describe('Token Exchange', () => {
           body: new URLSearchParams({
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
-            subject_token: 'invalid_subject_token',
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token: 'sub_invalid_subject_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
       ).rejects.toThrow();
@@ -140,7 +162,7 @@ describe('Token Exchange', () => {
           client_id: testApplicationId,
           grant_type: GrantType.TokenExchange,
           subject_token: subjectToken,
-          subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+          subject_token_type: impersonationTokenType,
         }),
       });
       await expect(
@@ -150,7 +172,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
       ).rejects.toThrow();
@@ -173,7 +195,7 @@ describe('Token Exchange', () => {
             client_id: thirdPartyApplication.id,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
           }),
         })
       ).rejects.toThrow();
@@ -191,7 +213,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             scope: [UserScope.Profile, 'non-oidc-scope'].join(' '),
           }),
         })
@@ -215,7 +237,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             resource: testApiResourceInfo.indicator,
           }),
         })
@@ -237,7 +259,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             resource: 'invalid_resource',
           }),
         })
@@ -249,26 +271,23 @@ describe('Token Exchange', () => {
     const scopeName = `read:${randomString()}`;
 
     /* eslint-disable @silverhand/fp/no-let */
-    let testApiScopeId: string;
     let testOrganizationId: string;
     /* eslint-enable @silverhand/fp/no-let */
 
     const organizationApi = new OrganizationApiTest();
 
-    /* eslint-disable @silverhand/fp/no-mutation */
     beforeAll(async () => {
+      /* eslint-disable @silverhand/fp/no-mutation */
       const organization = await organizationApi.create({ name: 'org1' });
       testOrganizationId = organization.id;
+      /* eslint-enable @silverhand/fp/no-mutation */
       await organizationApi.addUsers(testOrganizationId, [testUserId]);
 
       const scope = await organizationApi.scopeApi.create({ name: scopeName });
-      testApiScopeId = scope.id;
-
       const role = await organizationApi.roleApi.create({ name: `role1:${randomString()}` });
       await organizationApi.roleApi.addScopes(role.id, [scope.id]);
       await organizationApi.addUserRoles(testOrganizationId, testUserId, [role.id]);
     });
-    /* eslint-enable @silverhand/fp/no-mutation */
 
     afterAll(async () => {
       await organizationApi.cleanUp();
@@ -284,7 +303,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             organization_id: testOrganizationId,
             scope: scopeName,
           }),
@@ -308,7 +327,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             organization_id: testOrganizationId,
           }),
         })
@@ -325,7 +344,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             organization_id: testOrganizationId,
           }),
         })
@@ -334,88 +353,6 @@ describe('Token Exchange', () => {
       expect(decodeAccessToken(access_token)).toMatchObject({
         aud: buildOrganizationUrn(testOrganizationId),
       });
-    });
-  });
-
-  describe('with actor token', () => {
-    it('should exchange an access token with `act` claim', async () => {
-      const { subjectToken } = await createSubjectToken(testUserId);
-
-      const { access_token } = await oidcApi
-        .post('token', {
-          headers: formUrlEncodedHeaders,
-          body: new URLSearchParams({
-            client_id: testApplicationId,
-            grant_type: GrantType.TokenExchange,
-            subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
-            actor_token: testAccessToken,
-            actor_token_type: 'urn:ietf:params:oauth:token-type:access_token',
-            resource: testApiResourceInfo.indicator,
-          }),
-        })
-        .json<{ access_token: string }>();
-
-      expect(getAccessTokenPayload(access_token)).toHaveProperty('act', { sub: testUserId });
-    });
-
-    it('should fail with invalid actor_token_type', async () => {
-      const { subjectToken } = await createSubjectToken(testUserId);
-
-      await expect(
-        oidcApi.post('token', {
-          headers: formUrlEncodedHeaders,
-          body: new URLSearchParams({
-            client_id: testApplicationId,
-            grant_type: GrantType.TokenExchange,
-            subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
-            actor_token: testAccessToken,
-            actor_token_type: 'invalid_actor_token_type',
-            resource: testApiResourceInfo.indicator,
-          }),
-        })
-      ).rejects.toThrow();
-    });
-
-    it('should fail with invalid actor_token', async () => {
-      const { subjectToken } = await createSubjectToken(testUserId);
-
-      await expect(
-        oidcApi.post('token', {
-          headers: formUrlEncodedHeaders,
-          body: new URLSearchParams({
-            client_id: testApplicationId,
-            grant_type: GrantType.TokenExchange,
-            subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
-            actor_token: 'invalid_actor_token',
-            actor_token_type: 'urn:ietf:params:oauth:token-type:access_token',
-            resource: testApiResourceInfo.indicator,
-          }),
-        })
-      ).rejects.toThrow();
-    });
-
-    it('should fail when the actor token do not have `openid` scope', async () => {
-      const { subjectToken } = await createSubjectToken(testUserId);
-      // Set `resource` to ensure that the access token is JWT, and then it won't have `openid` scope.
-      const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
-
-      await expect(
-        oidcApi.post('token', {
-          headers: formUrlEncodedHeaders,
-          body: new URLSearchParams({
-            client_id: testApplicationId,
-            grant_type: GrantType.TokenExchange,
-            subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
-            actor_token: accessToken,
-            actor_token_type: 'urn:ietf:params:oauth:token-type:access_token',
-            resource: testApiResourceInfo.indicator,
-          }),
-        })
-      ).rejects.toThrow();
     });
   });
 
@@ -435,7 +372,7 @@ describe('Token Exchange', () => {
             client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
-            subject_token_type: 'urn:ietf:params:oauth:token-type:access_token',
+            subject_token_type: impersonationTokenType,
             resource: testApiResourceInfo.indicator,
           }),
         })

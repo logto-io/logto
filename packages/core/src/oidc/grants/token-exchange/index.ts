@@ -76,11 +76,16 @@ export const buildHandler: (
     scopes: oidcScopes,
   } = providerInstance.configuration();
 
-  const { userId, subjectTokenId } = await validateSubjectToken(
+  const { userId, subjectTokenId } = await validateSubjectToken({
     queries,
-    String(params.subject_token),
-    String(params.subject_token_type)
-  );
+    subjectToken: String(params.subject_token),
+    subjectTokenType: String(params.subject_token_type),
+    AccessToken,
+    jwtVerificationOptions: {
+      localJWKSet: envSet.oidc.localJWKSet,
+      issuer: envSet.oidc.issuer,
+    },
+  });
 
   const account = await Account.findAccount(ctx, userId);
 
