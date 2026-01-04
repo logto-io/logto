@@ -75,6 +75,13 @@ const application_details = {
   backchannel_logout_uri_session_required: 'هل الجلسة مطلوبة؟',
   backchannel_logout_uri_session_required_description:
     'عند التمكين ، يتطلب RP تضمين مطالبة "sid" (معرف الجلسة) في رمز التسجيل الخروج لتحديد جلسة RP مع OP عند استخدام "backchannel_logout_uri".',
+  token_exchange: 'تبادل الرموز المميّزة',
+  token_exchange_description: 'إدارة إعدادات تبادل الرموز المميّزة لهذا التطبيق.',
+  allow_token_exchange: 'السماح بتبادل الرموز المميّزة',
+  allow_token_exchange_description:
+    'اسمح لهذا التطبيق ببدء طلبات تبادل الرموز المميّزة. هذا مطلوب لـ <impersonationLink>انتحال هوية المستخدم</impersonationLink> و <patLink>رموز الوصول الشخصية</patLink>.',
+  allow_token_exchange_public_client_warning:
+    'لا يُنصح بتمكين تبادل الرموز المميّزة للعملاء العموميين (تطبيق صفحة واحدة / تطبيق أصلي). لا يمكن للعملاء العموميين تخزين بيانات الاعتماد بشكل آمن، مما قد يعرّض تطبيقك لمخاطر انتحال الرموز المميّزة.',
   delete_description:
     'لا يمكن التراجع عن هذا الإجراء. سيتم حذف التطبيق بشكل دائم. يرجى إدخال اسم التطبيق <span>{{name}}</span> للتأكيد.',
   enter_your_application_name: 'أدخل اسم التطبيق الخاص بك',

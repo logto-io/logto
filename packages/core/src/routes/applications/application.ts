@@ -39,6 +39,19 @@ const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false' | undefi
   return isThirdPartyQuery === 'true';
 };
 
+/** Third-party applications are not allowed to enable token exchange. */
+const assertThirdPartyApplicationTokenExchangeDisabled = (
+  isThirdParty: boolean,
+  allowTokenExchange?: boolean
+) => {
+  if (isThirdParty && allowTokenExchange === true) {
+    throw new RequestError({
+      code: 'application.third_party_application_cannot_enable_token_exchange',
+      status: 422,
+    });
+  }
+};
+
 const hideOidcClientMetadataForSamlApp = (application: Application) => {
   return {
     ...application,
@@ -192,6 +205,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
           ),
           'application.invalid_third_party_application_type'
         );
+
+        assertThirdPartyApplicationTokenExchangeDisabled(
+          true,
+          rest.customClientMetadata?.allowTokenExchange
+        );
       }
 
       const application = await queries.applications.insertApplication({
@@ -288,6 +306,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       response: Applications.guard,
       status: [200, 400, 404, 422, 500],
     }),
+
     async (ctx, next) => {
       const {
         params: { id },
@@ -300,6 +319,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       if (pendingUpdateApplication.type === ApplicationType.SAML) {
         throw new RequestError('application.saml.use_saml_app_api');
       }
+
+      assertThirdPartyApplicationTokenExchangeDisabled(
+        pendingUpdateApplication.isThirdParty,
+        rest.customClientMetadata?.allowTokenExchange
+      );
 
       // @deprecated
       // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.

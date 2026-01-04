@@ -7,6 +7,8 @@ const application = {
     'Только традиционные веб-приложения, одностраничные и нативные приложения могут быть помечены как приложения сторонних разработчиков.',
   third_party_application_only:
     'Эта функция доступна только для приложений сторонних разработчиков.',
+  third_party_application_cannot_enable_token_exchange:
+    'Сторонние приложения не могут включать обмен токенов.',
   user_consent_scopes_not_found: 'Недействительные области согласия пользователя.',
   consent_management_api_scopes_not_allowed: 'API-области управления не разрешены.',
   protected_app_metadata_is_required: 'Требуется защищенная метаданные приложения.',

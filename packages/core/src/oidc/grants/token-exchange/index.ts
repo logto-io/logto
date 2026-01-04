@@ -16,11 +16,8 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import {
-  isThirdPartyApplication,
-  getSharedResourceServerData,
-  reversedResourceAccessTokenTtl,
-} from '../../resource.js';
+import { validateTokenExchangeAccess } from '../../application.js';
+import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../../resource.js';
 import { handleClientCertificate, handleDPoP, checkOrganizationAccess } from '../utils.js';
 
 import { validateSubjectToken } from './account.js';
@@ -62,11 +59,10 @@ export const buildHandler: (
 
   assertThat(params, new InvalidGrant('parameters must be available'));
   assertThat(client, new InvalidClient('client must be available'));
-  // We don't allow third-party applications to perform token exchange
-  assertThat(
-    !(await isThirdPartyApplication(queries, client.clientId)),
-    new InvalidClient('third-party applications are not allowed for this grant type')
-  );
+
+  // Validate the application is allowed to perform token exchange
+  const tokenExchangeError = await validateTokenExchangeAccess(queries, client.clientId);
+  assertThat(!tokenExchangeError, new InvalidClient(tokenExchangeError));
 
   validatePresence(ctx, ...requiredParameters);
 

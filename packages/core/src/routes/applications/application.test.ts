@@ -49,6 +49,10 @@ const tenantContext = new MockTenant(
             ...mockApplication.oidcClientMetadata,
             ...body.oidcClientMetadata,
           },
+          customClientMetadata: {
+            ...mockApplication.customClientMetadata,
+            ...body.customClientMetadata,
+          },
         })
       ),
       updateApplicationById,

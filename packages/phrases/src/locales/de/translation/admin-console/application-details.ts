@@ -77,6 +77,14 @@ const application_details = {
   backchannel_logout_uri_session_required: 'Ist eine Sitzung erforderlich?',
   backchannel_logout_uri_session_required_description:
     'Wenn aktiviert, erfordert der RP, dass ein `sid`- (Sitzungs-ID) Anspruch im Logout-Token enthalten ist, um die RP-Sitzung mit dem OP zu identifizieren, wenn die `backchannel_logout_uri` verwendet wird.',
+  token_exchange: 'Token-Austausch',
+  token_exchange_description:
+    'Verwalten Sie die Token-Austausch-Einstellungen für diese Anwendung.',
+  allow_token_exchange: 'Token-Austausch zulassen',
+  allow_token_exchange_description:
+    'Erlauben Sie dieser Anwendung, Token-Austausch-Anfragen zu initiieren. Dies ist erforderlich für <impersonationLink>Benutzer-Impersonation</impersonationLink> und <patLink>persönliche Zugriffstoken</patLink>.',
+  allow_token_exchange_public_client_warning:
+    'Das Aktivieren des Token-Austauschs für öffentliche Clients (Single-Page-App / native App) wird nicht empfohlen. Öffentliche Clients können Anmeldeinformationen nicht sicher speichern, was Ihre Anwendung Risiken der Token-Impersonation aussetzen kann.',
   delete_description:
     'Diese Aktion ist nicht umkehrbar. Die Anwendung wird dauerhaft gelöscht. Bitte geben Sie den Anwendungsnamen <span>{{name}}</span> zur Bestätigung ein.',
   enter_your_application_name: 'Geben Sie einen Anwendungsnamen ein',

@@ -75,6 +75,13 @@ const application_details = {
   backchannel_logout_uri_session_required: 'ต้องใช้เซสชันหรือไม่?',
   backchannel_logout_uri_session_required_description:
     'เมื่อเปิดใช้งาน RP ต้องมี claim `sid` (session ID) ใน logout token เพื่อระบุเซสชัน RP กับ OP เมื่อใช้ `backchannel_logout_uri`',
+  token_exchange: 'การแลกเปลี่ยนโทเคน',
+  token_exchange_description: 'จัดการการตั้งค่าการแลกเปลี่ยนโทเคนสำหรับแอปพลิเคชันนี้',
+  allow_token_exchange: 'อนุญาตการแลกเปลี่ยนโทเคน',
+  allow_token_exchange_description:
+    'อนุญาตให้แอปพลิเคชันนี้เริ่มคำขอแลกเปลี่ยนโทเคน จำเป็นสำหรับ <impersonationLink>การสวมรอยผู้ใช้</impersonationLink> และ <patLink>โทเคนการเข้าถึงส่วนบุคคล</patLink>.',
+  allow_token_exchange_public_client_warning:
+    'ไม่แนะนำให้เปิดใช้การแลกเปลี่ยนโทเคนสำหรับไคลเอนต์สาธารณะ (แอปหน้าเดียว / แอปเนทีฟ) ไคลเอนต์สาธารณะไม่สามารถเก็บข้อมูลรับรองอย่างปลอดภัย ซึ่งอาจทำให้แอปพลิเคชันของคุณเสี่ยงต่อการสวมรอยโทเคน.',
   delete_description:
     'การดำเนินการนี้ไม่สามารถย้อนกลับได้ จะลบแอปพลิเคชันนี้อย่างถาวร กรุณากรอกชื่อแอปพลิเคชัน <span>{{name}}</span> เพื่อยืนยัน',
   enter_your_application_name: 'กรอกชื่อแอปพลิเคชันของคุณ',

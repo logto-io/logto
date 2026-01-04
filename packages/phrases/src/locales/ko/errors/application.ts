@@ -5,6 +5,8 @@ const application = {
   invalid_third_party_application_type:
     '전통적인 웹 응용 프로그램, 단일 페이지 응용 프로그램 및 네이티브 응용 프로그램만 제 3자 앱으로 표시할 수 있습니다.',
   third_party_application_only: '해당 기능은 제 3자 응용프로그램에만 사용할 수 있습니다.',
+  third_party_application_cannot_enable_token_exchange:
+    '서드파티 애플리케이션에서는 토큰 교환을 활성화할 수 없습니다.',
   user_consent_scopes_not_found: '유효하지 않은 사용자 동의 범위입니다.',
   consent_management_api_scopes_not_allowed: '管理 API 범위 허용되지 않습니다.',
   protected_app_metadata_is_required: '보호된 응용 프로그램 메타데이터가 필요합니다.',

@@ -76,6 +76,13 @@ const application_details = {
   backchannel_logout_uri_session_required: 'Требуется ли сеанс?',
   backchannel_logout_uri_session_required_description:
     'При включении RP требует, чтобы претензия `sid` (идентификатор сеанса) была включена в токен выхода, чтобы идентифицировать сеанс RP с OP, когда используется `backchannel_logout_uri`.',
+  token_exchange: 'Обмен токенов',
+  token_exchange_description: 'Управляйте настройками обмена токенов для этого приложения.',
+  allow_token_exchange: 'Разрешить обмен токенов',
+  allow_token_exchange_description:
+    'Разрешите этому приложению инициировать запросы на обмен токенов. Это необходимо для <impersonationLink>подмены пользователя</impersonationLink> и <patLink>персональных токенов доступа</patLink>.',
+  allow_token_exchange_public_client_warning:
+    'Включать обмен токенов для публичных клиентов (SPA / нативное приложение) не рекомендуется. Публичные клиенты не могут безопасно хранить учетные данные, что может подвергнуть ваше приложение рискам подмены токенов.',
   delete_description:
     'Это действие нельзя отменить. Оно навсегда удалит приложение. Введите название приложения <span> {{name}} </span>, чтобы подтвердить.',
   enter_your_application_name: 'Введите название своего приложения',
