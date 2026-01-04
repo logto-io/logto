@@ -8,8 +8,8 @@ const alteration: AlterationScript = {
      * For backward compatibility, set allowTokenExchange = true for existing first-party
      * Traditional, Native, and SPA applications.
      * M2M applications were never allowed to use token exchange before this feature.
-     * The admin-console is excluded as a built-in application.
-     * Note: demo-app and account-center are virtual built-in apps that don't exist in the database.
+     *
+     * The admin-console should keep token exchange disabled, so we skip it here.
      */
     await pool.query(sql`
       update applications
