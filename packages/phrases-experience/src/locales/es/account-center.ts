@@ -69,7 +69,7 @@ const account_center = {
   code_verification: {
     send: 'Enviar código de verificación',
     resend: '¿Aún no lo recibes? <a>Reenviar código de verificación</a>',
-    resend_countdown: '¿Aún no lo recibes?<span> Reenvía después de {{seconds}} s.</span>',
+    resend_countdown: '¿Aún no lo recibes? Reenvía después de {{seconds}} s.',
   },
 
   email_verification: {
@@ -81,7 +81,7 @@ const account_center = {
     description:
       'El código de verificación se ha enviado a tu correo {{email}}. Ingresa el código para continuar.',
     resend: '¿Aún no lo recibes? <a>Reenviar código de verificación</a>',
-    resend_countdown: '¿Aún no lo recibes?<span> Reenvía después de {{seconds}} s.</span>',
+    resend_countdown: '¿Aún no lo recibes? Reenvía después de {{seconds}} s.',
     error_send_failed: 'No se pudo enviar el código de verificación. Inténtalo de nuevo más tarde.',
     error_verify_failed: 'La verificación falló. Ingresa el código nuevamente.',
     error_invalid_code: 'El código de verificación no es válido o ha expirado.',
@@ -95,7 +95,7 @@ const account_center = {
     description:
       'El código de verificación se ha enviado a tu teléfono {{phone}}. Ingresa el código para continuar.',
     resend: '¿Aún no lo recibes? <a>Reenviar código de verificación</a>',
-    resend_countdown: '¿Aún no lo recibes?<span> Reenvía después de {{seconds}} s.</span>',
+    resend_countdown: '¿Aún no lo recibes? Reenvía después de {{seconds}} s.',
     error_send_failed: 'No se pudo enviar el código de verificación. Inténtalo de nuevo más tarde.',
     error_verify_failed: 'La verificación falló. Ingresa el código nuevamente.',
     error_invalid_code: 'El código de verificación no es válido o ha expirado.',

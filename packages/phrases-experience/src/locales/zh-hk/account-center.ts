@@ -64,7 +64,7 @@ const account_center = {
   code_verification: {
     send: '發送驗證碼',
     resend: '還未收到？<a>重新傳送驗證碼</a>',
-    resend_countdown: '還未收到？<span>{{seconds}} 秒後可重新傳送。</span>',
+    resend_countdown: '還未收到？{{seconds}} 秒後可重新傳送。',
   },
 
   email_verification: {
@@ -74,7 +74,7 @@ const account_center = {
     send: '發送驗證碼',
     description: '驗證碼已發送至你的電郵 {{email}}。輸入驗證碼以繼續。',
     resend: '還未收到？<a>重新傳送驗證碼</a>',
-    resend_countdown: '還未收到？<span>{{seconds}} 秒後可重新傳送。</span>',
+    resend_countdown: '還未收到？{{seconds}} 秒後可重新傳送。',
     error_send_failed: '驗證碼傳送失敗，請稍後再試。',
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
     error_invalid_code: '驗證碼無效或已過期。',
@@ -86,7 +86,7 @@ const account_center = {
     send: '發送驗證碼',
     description: '驗證碼已發送至你的電話 {{phone}}。輸入驗證碼以繼續。',
     resend: '還未收到？<a>重新傳送驗證碼</a>',
-    resend_countdown: '還未收到？<span>{{seconds}} 秒後可重新傳送。</span>',
+    resend_countdown: '還未收到？{{seconds}} 秒後可重新傳送。',
     error_send_failed: '驗證碼傳送失敗，請稍後再試。',
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
     error_invalid_code: '驗證碼無效或已過期。',

@@ -65,7 +65,7 @@ const account_center = {
   code_verification: {
     send: 'إرسال رمز التحقق',
     resend: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
-    resend_countdown: 'لم تستلمه بعد؟<span> أعد الإرسال بعد {{seconds}} ث.</span>',
+    resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
   },
 
   email_verification: {
@@ -75,7 +75,7 @@ const account_center = {
     send: 'إرسال رمز التحقق',
     description: 'تم إرسال رمز التحقق إلى بريدك الإلكتروني {{email}}. أدخل الرمز للمتابعة.',
     resend: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
-    resend_countdown: 'لم تستلمه بعد؟<span> أعد الإرسال بعد {{seconds}} ث.</span>',
+    resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
     error_send_failed: 'فشل إرسال رمز التحقق. يرجى المحاولة لاحقًا.',
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
@@ -87,7 +87,7 @@ const account_center = {
     send: 'إرسال رمز التحقق',
     description: 'تم إرسال رمز التحقق إلى هاتفك {{phone}}. أدخل الرمز للمتابعة.',
     resend: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
-    resend_countdown: 'لم تستلمه بعد؟<span> أعد الإرسال بعد {{seconds}} ث.</span>',
+    resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
     error_send_failed: 'فشل إرسال رمز التحقق. يرجى المحاولة لاحقًا.',
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',

@@ -71,7 +71,7 @@ const account_center = {
   code_verification: {
     send: 'Bestätigungscode senden',
     resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
-    resend_countdown: 'Noch nichts erhalten?<span> Erneut senden nach {{seconds}} s.</span>',
+    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
   },
 
   email_verification: {
@@ -83,7 +83,7 @@ const account_center = {
     description:
       'Der Bestätigungscode wurde an deine E-Mail {{email}} gesendet. Gib den Code ein, um fortzufahren.',
     resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
-    resend_countdown: 'Noch nichts erhalten?<span> Erneut senden nach {{seconds}} s.</span>',
+    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
     error_send_failed:
       'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
@@ -98,7 +98,7 @@ const account_center = {
     description:
       'Der Bestätigungscode wurde an dein Telefon {{phone}} gesendet. Gib den Code ein, um fortzufahren.',
     resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
-    resend_countdown: 'Noch nichts erhalten?<span> Erneut senden nach {{seconds}} s.</span>',
+    resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
     error_send_failed:
       'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
