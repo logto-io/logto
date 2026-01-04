@@ -1,59 +1,36 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: '구독',
+  title: '구독 관리',
+  subtitle: '다중 테넌트 구독 세부 정보 및 청구 정보를 확인하고 관리합니다.',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: '구독',
+    billing_history: '청구 내역',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: '구독',
+    description: '현재 구독 계획 사용 세부 정보 및 청구 정보를 검토하십시오.',
+    enterprise_plan_title: '엔터프라이즈 플랜',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      '이것은 당신의 엔터프라이즈 플랜 구독이며 이 할당량은 엔터프라이즈 구독 하의 모든 테넌트에 걸쳐 공유됩니다.',
+    add_on_title: '사용량에 따른 추가 요금',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      '이것은 계약 혹은 Logto의 표준 사용량에 따른 요금에 기반한 추가 요금 아이템입니다. 실제 사용량에 따라 청구됩니다.',
+    included: '포함됨',
+    over_quota: '할당 초과',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
-      quota: 'Quota',
+      product: '제품',
+      usage: '사용량',
+      quota: '할당량',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: '제품',
+      unit_price: '단가',
+      quantity: '수량',
+      total_price: '합계',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '${{price}}/월',
+    private_region_title: '프라이빗 클라우드 인스턴스 ({{regionName}})',
+    shared_cross_tenants: '테넌트에 걸쳐 있음',
   },
 };
 

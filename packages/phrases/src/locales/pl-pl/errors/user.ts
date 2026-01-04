@@ -7,6 +7,7 @@ const user = {
   email_not_exist: 'Podany adres email nie został jeszcze zarejestrowany.',
   phone_not_exist: 'Podany numer telefonu nie został jeszcze zarejestrowany.',
   identity_not_exist: 'Konto społecznościowe nie zostało jeszcze zarejestrowane.',
+  sso_identity_not_exist: 'Konto przedsiębiorstwa SSO nie zostało jeszcze zarejestrowane.',
   identity_already_in_use: 'Konto społecznościowe zostało już powiązane z istniejącym kontem.',
   social_account_exists_in_profile:
     'To konto społecznościowe zostało już powiązane z Twoim profilem.',

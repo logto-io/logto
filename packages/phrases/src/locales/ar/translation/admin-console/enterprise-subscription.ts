@@ -1,59 +1,36 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: 'الاشتراك',
+  title: 'إدارة اشتراكك',
+  subtitle: 'عرض وإدارة تفاصيل اشتراكك متعدد المستأجرين ومعلومات الفوترة.',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: 'الاشتراك',
+    billing_history: 'تاريخ الفوترة',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: 'الاشتراك',
+    description: 'راجع تفاصيل استخدام خطة اشتراكك الحالية ومعلومات الفوترة.',
+    enterprise_plan_title: 'خطة الشركات',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      'هذا هو اشتراك خطتك للشركات، وهذه الحصة المشتركة بين جميع المستأجرين تحت اشتراكك على مستوى الشركات.',
+    add_on_title: 'إضافات الدفع حسب الاستخدام',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      'هذه هي الإضافات التي تم دفعها كاشتراك حسب الاستخدام بناءً على عقدك أو على أسعار الدفع القياسية الخاصة ب Logto. سيتم احتساب الرسوم حسب استخدامك الفعلي.',
+    included: 'مضمن',
+    over_quota: 'تجاوز الحصة',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
-      quota: 'Quota',
+      product: 'المنتج',
+      usage: 'الاستخدام',
+      quota: 'الحصة',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: 'المنتج',
+      unit_price: 'السعر لكل وحدة',
+      quantity: 'الكمية',
+      total_price: 'الإجمالي',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '${{price}}/شهر',
+    private_region_title: 'مثيل سحابي خاص ({{regionName}})',
+    shared_cross_tenants: 'عبر المستأجرين',
   },
 };
 

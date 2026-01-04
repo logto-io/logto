@@ -7,6 +7,7 @@ const user = {
   email_not_exist: 'عنوان البريد الإلكتروني غير مسجل حتى الآن.',
   phone_not_exist: 'رقم الهاتف غير مسجل حتى الآن.',
   identity_not_exist: 'الحساب الاجتماعي غير مسجل حتى الآن.',
+  sso_identity_not_exist: 'لم يتم تسجيل حساب SSO المؤسسي بعد.',
   identity_already_in_use: 'تم ربط الحساب الاجتماعي بحساب موجود بالفعل.',
   social_account_exists_in_profile: 'لقد قمت بربط هذا الحساب الاجتماعي بالفعل.',
   cannot_delete_self: 'لا يمكنك حذف نفسك.',

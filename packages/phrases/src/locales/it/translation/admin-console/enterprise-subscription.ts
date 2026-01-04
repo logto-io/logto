@@ -1,59 +1,38 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: 'Abbonamento',
+  title: 'Gestisci il tuo abbonamento',
+  subtitle:
+    'Visualizza e gestisci i dettagli del tuo abbonamento multi-tenant e le informazioni di fatturazione.',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: 'Abbonamento',
+    billing_history: 'Storico fatturazioni',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: 'Abbonamento',
+    description:
+      'Rivedi i dettagli di utilizzo del tuo attuale piano di abbonamento e le informazioni di fatturazione.',
+    enterprise_plan_title: 'Piano Enterprise',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      'Questo è il tuo abbonamento al Piano Enterprise e questa quota è condivisa tra tutti i tenant sotto il tuo abbonamento aziendale.',
+    add_on_title: 'Componenti aggiuntivi a consumo',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      'Questi sono componenti aggiuntivi a consumo basati sul tuo contratto o sulle tariffe standard a consumo di Logto. Ti verrà addebitato in base al tuo utilizzo effettivo.',
+    included: 'Incluso',
+    over_quota: 'Fuori quota',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
+      product: 'Prodotto',
+      usage: 'Utilizzo',
       quota: 'Quota',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: 'Prodotto',
+      unit_price: 'Prezzo unitario',
+      quantity: 'Quantità',
+      total_price: 'Totale',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '${{price}}/mese',
+    private_region_title: 'Istanza cloud privata ({{regionName}})',
+    shared_cross_tenants: 'Tra tenant',
   },
 };
 

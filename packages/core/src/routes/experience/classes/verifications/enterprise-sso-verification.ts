@@ -149,7 +149,7 @@ export class EnterpriseSsoVerification
       return userSsoIdentityResult.user;
     }
 
-    throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
+    throw new RequestError({ code: 'user.sso_identity_not_exist', status: 404 });
   }
 
   async identifyRelatedUser(): Promise<User> {
@@ -164,7 +164,7 @@ export class EnterpriseSsoVerification
       return relatedUser;
     }
 
-    throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
+    throw new RequestError({ code: 'user.sso_identity_not_exist', status: 404 });
   }
 
   /**

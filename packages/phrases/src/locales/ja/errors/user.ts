@@ -7,6 +7,7 @@ const user = {
   email_not_exist: 'このメールアドレスは登録されていません。',
   phone_not_exist: 'この電話番号は登録されていません。',
   identity_not_exist: 'このソーシャルアカウントは登録されていません。',
+  sso_identity_not_exist: 'エンタープライズ SSO アカウントはまだ登録されていません。',
   identity_already_in_use: 'このソーシャルアカウントはすでに別のアカウントに関連付けされています。',
   social_account_exists_in_profile: 'このソーシャルアカウントはすでに関連付けられています。',
   cannot_delete_self: '自分自身を削除することはできません。',

@@ -165,40 +165,25 @@ const sign_in_exp = {
       'Adicione os domínios dos seus aplicativos front-end autorizados a registrar passkeys por meio da Account API.',
     webauthn_related_origins_error: 'A origem deve começar com https:// ou http://',
     prebuilt_ui: {
-      /** UNTRANSLATED */
-      title: 'INTEGRATE PREBUILT UI',
-      /** UNTRANSLATED */
+      title: 'INTEGRAR UI PRÉ-CONSTRUÍDO',
       description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
-      /** UNTRANSLATED */
-      flows_title: 'Integrate out-of-the-box security setting flows',
-      /** UNTRANSLATED */
+        'Integre rapidamente fluxos de verificação e configuração de segurança prontos para uso com UI pré-construída.',
+      flows_title: 'Integrar fluxos de configuração de segurança prontos para uso',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        'Combine seu domínio com a rota para formar o URL de configurações da conta (por exemplo, https://auth.foo.com/account/email). Opcionalmente, adicione um parâmetro de URL `redirect=` para retornar os usuários ao seu aplicativo após atualização bem-sucedida.',
       tooltips: {
-        /** UNTRANSLATED */
-        email: 'Update your primary email address',
-        /** UNTRANSLATED */
-        phone: 'Update your primary phone number',
-        /** UNTRANSLATED */
-        username: 'Update your username',
-        /** UNTRANSLATED */
-        password: 'Set a new password',
-        /** UNTRANSLATED */
-        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
-        /** UNTRANSLATED */
-        passkey_add: 'Register a new passkey',
-        /** UNTRANSLATED */
-        passkey_manage: 'Manage your existing passkeys or add new ones',
-        /** UNTRANSLATED */
-        backup_codes_generate: 'Generate a new set of 10 backup codes',
-        /** UNTRANSLATED */
-        backup_codes_manage: 'View your available backup codes or generate new ones',
+        email: 'Atualize seu endereço de e-mail principal',
+        phone: 'Atualize seu número de telefone principal',
+        username: 'Atualize seu nome de usuário',
+        password: 'Configure uma nova senha',
+        authenticator_app: 'Configure um novo aplicativo autenticador para autenticação multifator',
+        passkey_add: 'Registre uma nova chave de acesso',
+        passkey_manage: 'Gerencie suas chaves de acesso existentes ou adicione novas',
+        backup_codes_generate: 'Gere um novo conjunto de 10 códigos de backup',
+        backup_codes_manage: 'Veja seus códigos de backup disponíveis ou gere novos',
       },
-      /** UNTRANSLATED */
-      customize_note: "Don't want the out-of-the-box experience? You can fully",
-      /** UNTRANSLATED */
-      customize_link: 'customize your flows with the Account API instead.',
+      customize_note: 'Não quer a experiência pronta para uso? Você pode totalmente',
+      customize_link: 'personalizar seus fluxos com a Account API em vez disso.',
     },
   },
   sign_up_and_sign_in,

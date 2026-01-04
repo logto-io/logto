@@ -162,40 +162,25 @@ const sign_in_exp = {
       'เพิ่มโดเมนของแอปพลิเคชันส่วนหน้าที่ได้รับอนุญาตให้ลงทะเบียน passkey ผ่าน Account API.',
     webauthn_related_origins_error: 'ต้นทางต้องขึ้นต้นด้วย https:// หรือ http://',
     prebuilt_ui: {
-      /** UNTRANSLATED */
-      title: 'INTEGRATE PREBUILT UI',
-      /** UNTRANSLATED */
+      title: 'รวมเข้ากับ UI ที่สร้างไว้ล่วงหน้า',
       description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
-      /** UNTRANSLATED */
-      flows_title: 'Integrate out-of-the-box security setting flows',
-      /** UNTRANSLATED */
+        'รวมการตรวจสอบและตั้งค่าความปลอดภัยแบบสำเร็จรูปอย่างรวดเร็วด้วย UI ที่สร้างไว้ล่วงหน้า',
+      flows_title: 'รวมขั้นตอนการตั้งค่าความปลอดภัยสำเร็จรูป',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        'รวมโดเมนของคุณเข้ากับเส้นทางเพื่อสร้าง URL การตั้งค่าบัญชีของคุณ (เช่น, https://auth.foo.com/account/email). หรือเพิ่มพารามิเตอร์ URL `redirect=` เพื่อให้ผู้ใช้กลับไปยังแอปพลิเคชันของคุณหลังจากอัปเดตสำเร็จ.',
       tooltips: {
-        /** UNTRANSLATED */
-        email: 'Update your primary email address',
-        /** UNTRANSLATED */
-        phone: 'Update your primary phone number',
-        /** UNTRANSLATED */
-        username: 'Update your username',
-        /** UNTRANSLATED */
-        password: 'Set a new password',
-        /** UNTRANSLATED */
-        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
-        /** UNTRANSLATED */
-        passkey_add: 'Register a new passkey',
-        /** UNTRANSLATED */
-        passkey_manage: 'Manage your existing passkeys or add new ones',
-        /** UNTRANSLATED */
-        backup_codes_generate: 'Generate a new set of 10 backup codes',
-        /** UNTRANSLATED */
-        backup_codes_manage: 'View your available backup codes or generate new ones',
+        email: 'อัปเดตที่อยู่อีเมลหลักของคุณ',
+        phone: 'อัปเดตหมายเลขโทรศัพท์หลักของคุณ',
+        username: 'อัปเดตชื่อผู้ใช้ของคุณ',
+        password: 'ตั้งรหัสผ่านใหม่',
+        authenticator_app: 'ตั้งค่าแอปยืนยันตัวตนใหม่สำหรับการยืนยันตัวตนหลายปัจจัย',
+        passkey_add: 'ลงทะเบียน passkey ใหม่',
+        passkey_manage: 'จัดการ passkey ที่มีอยู่ของคุณหรือเพิ่มใหม่',
+        backup_codes_generate: 'สร้างชุดโค้ดสำรองใหม่ 10 ชุด',
+        backup_codes_manage: 'ดูโค้ดสำรองที่มีอยู่ของคุณหรือสร้างใหม่',
       },
-      /** UNTRANSLATED */
-      customize_note: "Don't want the out-of-the-box experience? You can fully",
-      /** UNTRANSLATED */
-      customize_link: 'customize your flows with the Account API instead.',
+      customize_note: 'ไม่ต้องการประสบการณ์แบบสำเร็จรูปใช่หรือไม่? คุณสามารถ',
+      customize_link: 'ปรับแต่งขั้นตอนด้วย Account API แทนได้',
     },
   },
   sign_up_and_sign_in,

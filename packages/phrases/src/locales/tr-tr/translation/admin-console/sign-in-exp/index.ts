@@ -163,40 +163,26 @@ const sign_in_exp = {
       'Account API aracılığıyla passkey kaydedilmesine izin verilen ön uç uygulamalarınızın alan adlarını ekleyin.',
     webauthn_related_origins_error: 'Kaynak https:// veya http:// ile başlamalıdır',
     prebuilt_ui: {
-      /** UNTRANSLATED */
-      title: 'INTEGRATE PREBUILT UI',
-      /** UNTRANSLATED */
+      title: 'ÖN TANIMLI ARAYÜZÜ ENTEGRE ET',
       description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
-      /** UNTRANSLATED */
-      flows_title: 'Integrate out-of-the-box security setting flows',
-      /** UNTRANSLATED */
+        'Hazır doğrulama ve güvenlik ayarı akışlarını ön tanımlı arayüzle hızlıca entegre edin.',
+      flows_title: 'Hazır güvenlik ayarı akışlarını entegre et',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        "Hesap ayar URL'nizi oluşturmak için alan adınızı rota ile birleştirin (örneğin, https://auth.foo.com/account/email). Başarılı bir güncellemeden sonra kullanıcıları uygulamanıza geri döndürmek için isteğe bağlı olarak bir `redirect=` URL parametresi ekleyin.",
       tooltips: {
-        /** UNTRANSLATED */
-        email: 'Update your primary email address',
-        /** UNTRANSLATED */
-        phone: 'Update your primary phone number',
-        /** UNTRANSLATED */
-        username: 'Update your username',
-        /** UNTRANSLATED */
-        password: 'Set a new password',
-        /** UNTRANSLATED */
-        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
-        /** UNTRANSLATED */
-        passkey_add: 'Register a new passkey',
-        /** UNTRANSLATED */
-        passkey_manage: 'Manage your existing passkeys or add new ones',
-        /** UNTRANSLATED */
-        backup_codes_generate: 'Generate a new set of 10 backup codes',
-        /** UNTRANSLATED */
-        backup_codes_manage: 'View your available backup codes or generate new ones',
+        email: 'Birincil e-posta adresinizi güncelleyin',
+        phone: 'Birincil telefon numaranızı güncelleyin',
+        username: 'Kullanıcı adınızı güncelleyin',
+        password: 'Yeni bir parola ayarlayın',
+        authenticator_app:
+          'Çok faktörlü kimlik doğrulama için yeni bir doğrulayıcı uygulaması ayarlayın',
+        passkey_add: 'Yeni bir passkey kaydedin',
+        passkey_manage: "Mevcut passkey'lerinizi yönetin veya yenilerini ekleyin",
+        backup_codes_generate: 'Yeni bir 10 yedek kod seti oluşturun',
+        backup_codes_manage: 'Mevcut yedek kodlarınızı görüntüleyin veya yenilerini oluşturun',
       },
-      /** UNTRANSLATED */
-      customize_note: "Don't want the out-of-the-box experience? You can fully",
-      /** UNTRANSLATED */
-      customize_link: 'customize your flows with the Account API instead.',
+      customize_note: 'Hazır deneyimi istemiyor musunuz? Bunun yerine, Akın API ile',
+      customize_link: 'akışlarınızı tamamen özelleştirebilirsiniz.',
     },
   },
   sign_up_and_sign_in,

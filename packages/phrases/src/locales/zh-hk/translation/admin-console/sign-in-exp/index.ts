@@ -158,40 +158,24 @@ const sign_in_exp = {
       '新增允許透過 Account API 註冊通行密鑰的前端應用程式網域。',
     webauthn_related_origins_error: '來源必須以 https:// 或 http:// 開頭',
     prebuilt_ui: {
-      /** UNTRANSLATED */
-      title: 'INTEGRATE PREBUILT UI',
-      /** UNTRANSLATED */
-      description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
-      /** UNTRANSLATED */
-      flows_title: 'Integrate out-of-the-box security setting flows',
-      /** UNTRANSLATED */
+      title: '整合預建 UI',
+      description: '快速整合開箱即用的驗證和安全設置流程。',
+      flows_title: '整合開箱即用的安全設置流程',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        '結合你的域名與路徑形成你的帳戶設置 URL（例如，https://auth.foo.com/account/email）。可以選擇性地添加一個 `redirect=` URL 參數來在成功更新後返回用戶至你的應用程式。',
       tooltips: {
-        /** UNTRANSLATED */
-        email: 'Update your primary email address',
-        /** UNTRANSLATED */
-        phone: 'Update your primary phone number',
-        /** UNTRANSLATED */
-        username: 'Update your username',
-        /** UNTRANSLATED */
-        password: 'Set a new password',
-        /** UNTRANSLATED */
-        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
-        /** UNTRANSLATED */
-        passkey_add: 'Register a new passkey',
-        /** UNTRANSLATED */
-        passkey_manage: 'Manage your existing passkeys or add new ones',
-        /** UNTRANSLATED */
-        backup_codes_generate: 'Generate a new set of 10 backup codes',
-        /** UNTRANSLATED */
-        backup_codes_manage: 'View your available backup codes or generate new ones',
+        email: '更新你的主電郵地址',
+        phone: '更新你的主電話號碼',
+        username: '更新你的使用者名稱',
+        password: '設置新密碼',
+        authenticator_app: '設置多因素驗證的新的身份驗證應用',
+        passkey_add: '註冊新的通行密鑰',
+        passkey_manage: '管理你現有的通行密鑰或添加新的',
+        backup_codes_generate: '生成一組新的 10 個備份代碼',
+        backup_codes_manage: '查看可用的備份代碼或生成新的',
       },
-      /** UNTRANSLATED */
-      customize_note: "Don't want the out-of-the-box experience? You can fully",
-      /** UNTRANSLATED */
-      customize_link: 'customize your flows with the Account API instead.',
+      customize_note: '不想要開箱即用的體驗？你可以完全',
+      customize_link: '使用 Account API 自定義你的流程。',
     },
   },
   sign_up_and_sign_in,

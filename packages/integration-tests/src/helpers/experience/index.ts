@@ -248,7 +248,7 @@ export const signInWithEnterpriseSso = async (
 
   if (registerNewUser) {
     await expectRejects(client.identifyUser({ verificationId }), {
-      code: 'user.identity_not_exist',
+      code: 'user.sso_identity_not_exist',
       status: 404,
     });
 

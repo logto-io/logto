@@ -102,7 +102,7 @@ const useSingleSignOnListener = (connectorId: string) => {
       if (error) {
         setLoading(false);
         await handleError(error, {
-          'user.identity_not_exist': async (error) => {
+          'user.sso_identity_not_exist': async (error) => {
             // Should not let user register new social account under sign-in only mode
             if (signInMode === SignInMode.SignIn) {
               setToast(error.message);

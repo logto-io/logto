@@ -1,59 +1,36 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: 'การสมัครสมาชิก',
+  title: 'จัดการการสมัครสมาชิกของคุณ',
+  subtitle: 'ดูและจัดการรายละเอียดการสมัครสมาชิกแบบหลายผู้เช่าและข้อมูลการเรียกเก็บเงินของคุณ',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: 'การสมัครสมาชิก',
+    billing_history: 'ประวัติการเรียกเก็บเงิน',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: 'การสมัครสมาชิก',
+    description: 'ตรวจสอบรายละเอียดการใช้งานแผนสมัครสมาชิกปัจจุบันและข้อมูลการเรียกเก็บเงินของคุณ',
+    enterprise_plan_title: 'แผนองค์กร',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      'นี่คือการสมัครสมาชิกแผนองค์กรของคุณ ซึ่งโควตานี้ใช้ร่วมกันระหว่างผู้เช่าทั้งหมดภายใต้การสมัครสมาชิกองค์กรของคุณ',
+    add_on_title: 'จ่ายตามการใช้งานเสริม',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      'เหล่านี้คือการใช้งานเสริมแบบจ่ายตามการใช้งานตามสัญญาของคุณหรืออัตรามาตรฐานแบบจ่ายตามการใช้งานของ Logto จะถูกเรียกเก็บเงินตามการใช้งานจริงของคุณ',
+    included: 'ถูกรวมไว้',
+    over_quota: 'เกินโควตา',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
-      quota: 'Quota',
+      product: 'ผลิตภัณฑ์',
+      usage: 'การใช้งาน',
+      quota: 'โควตา',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: 'ผลิตภัณฑ์',
+      unit_price: 'ราคาต่อหน่วย',
+      quantity: 'ปริมาณ',
+      total_price: 'ทั้งหมด',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '${{price}}/เดือน',
+    private_region_title: 'อินสแตนซ์คลาวด์ส่วนตัว ({{regionName}})',
+    shared_cross_tenants: 'ข้ามผู้เช่า',
   },
 };
 

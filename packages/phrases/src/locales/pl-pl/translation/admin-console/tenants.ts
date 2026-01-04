@@ -14,11 +14,9 @@ const tenants = {
       'Ustaw nazwę najemcy i wyświetl informacje o regionie hostowania danych oraz typie najemcy.',
     tenant_id: 'ID Najemcy',
     tenant_name: 'Nazwa Najemcy',
-    /** UNTRANSLATED */
-    tenant_instance: 'Select your instance',
-    /** UNTRANSLATED */
+    tenant_instance: 'Wybierz swoją instancję',
     tenant_instance_description:
-      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
+      'Wybierz, gdzie będzie hostowany twój najemca. Wybierz Logto Cloud dla publicznej, współdzielonej infrastruktury, lub prywatną instancję dla dedykowanych zasobów.',
     tenant_region: 'Region hostowania danych',
     tenant_region_description:
       'Fizyczna lokalizacja, w której hostowane są zasoby twojego najemcy (użytkownicy, aplikacje itp.). Tego nie można zmienić po utworzeniu.',

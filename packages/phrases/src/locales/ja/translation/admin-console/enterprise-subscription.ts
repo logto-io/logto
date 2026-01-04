@@ -1,59 +1,36 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: 'サブスクリプション',
+  title: 'サブスクリプションを管理する',
+  subtitle: 'マルチテナントのサブスクリプションの詳細と請求情報を表示および管理します。',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: 'サブスクリプション',
+    billing_history: '請求履歴',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: 'サブスクリプション',
+    description: '現在のサブスクリプションプランの使用詳細と請求情報を確認します。',
+    enterprise_plan_title: 'エンタープライズプラン',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      'これはエンタープライズプランのサブスクリプションであり、このクォータはエンタープライズサブスクリプションの下にあるすべてのテナントで共有されます。',
+    add_on_title: '従量課金の追加オプション',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      'これらは契約または Logto の標準従量課金率に基づく追加の従量課金オプションです。実際の使用量に応じて請求されます。',
+    included: '含まれています',
+    over_quota: 'クォータ超過',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
-      quota: 'Quota',
+      product: '製品',
+      usage: '使用量',
+      quota: 'クォータ',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: '製品',
+      unit_price: '単価',
+      quantity: '数量',
+      total_price: '合計',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '${{price}}/月',
+    private_region_title: 'プライベートクラウドインスタンス ({{regionName}})',
+    shared_cross_tenants: 'テナント間で共有',
   },
 };
 

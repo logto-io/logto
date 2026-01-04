@@ -14,11 +14,9 @@ const tenants = {
       'Legen Sie den Mandantennamen fest und überprüfen Sie Ihre gehostete Datenregion und den Mandantentyp.',
     tenant_id: 'Mieter-ID',
     tenant_name: 'Mietername',
-    /** UNTRANSLATED */
-    tenant_instance: 'Select your instance',
-    /** UNTRANSLATED */
+    tenant_instance: 'Wähle deine Instanz aus',
     tenant_instance_description:
-      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
+      'Wählen Sie, wo Ihr Mandant gehostet wird. Wählen Sie Logto Cloud für eine öffentliche geteilte Infrastruktur oder eine private Instanz für dedizierte Ressourcen.',
     tenant_region: 'Gehostete Region der Daten',
     tenant_region_description:
       'Der physische Ort, an dem Ihre Mandantenressourcen (Benutzer, Apps, usw.) gehostet werden. Dies kann nach Erstellung nicht mehr geändert werden.',

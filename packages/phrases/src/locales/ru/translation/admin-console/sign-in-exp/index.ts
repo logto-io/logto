@@ -164,40 +164,26 @@ const sign_in_exp = {
       'Добавьте домены ваших фронтенд-приложений, которым разрешено регистрировать passkey через Account API.',
     webauthn_related_origins_error: 'Источник должен начинаться с https:// или http://',
     prebuilt_ui: {
-      /** UNTRANSLATED */
-      title: 'INTEGRATE PREBUILT UI',
-      /** UNTRANSLATED */
+      title: 'ИСПОЛЬЗОВАТЬ ГОТОВЫЙ ИНТЕРФЕЙС',
       description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
-      /** UNTRANSLATED */
-      flows_title: 'Integrate out-of-the-box security setting flows',
-      /** UNTRANSLATED */
+        'Быстро интегрируйте поток верификации и настройки безопасности с готовым интерфейсом.',
+      flows_title: 'Интегрируйте готовые потоки настройки безопасности',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        'Объедините ваш домен с маршрутом, чтобы сформировать URL настроек аккаунта (например, https://auth.foo.com/account/email). При желании добавьте параметр URL `redirect=` для возврата пользователей в ваше приложение после успешного обновления.',
       tooltips: {
-        /** UNTRANSLATED */
-        email: 'Update your primary email address',
-        /** UNTRANSLATED */
-        phone: 'Update your primary phone number',
-        /** UNTRANSLATED */
-        username: 'Update your username',
-        /** UNTRANSLATED */
-        password: 'Set a new password',
-        /** UNTRANSLATED */
-        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
-        /** UNTRANSLATED */
-        passkey_add: 'Register a new passkey',
-        /** UNTRANSLATED */
-        passkey_manage: 'Manage your existing passkeys or add new ones',
-        /** UNTRANSLATED */
-        backup_codes_generate: 'Generate a new set of 10 backup codes',
-        /** UNTRANSLATED */
-        backup_codes_manage: 'View your available backup codes or generate new ones',
+        email: 'Обновите ваш основной адрес электронной почты',
+        phone: 'Обновите ваш основной номер телефона',
+        username: 'Обновите ваше имя пользователя',
+        password: 'Установите новый пароль',
+        authenticator_app:
+          'Настройте новое приложение-аутентификатор для многофакторной аутентификации',
+        passkey_add: 'Зарегистрируйте новый ключ доступа',
+        passkey_manage: 'Управляйте вашими существующими ключами или добавляйте новые',
+        backup_codes_generate: 'Сгенерируйте новый набор из 10 резервных кодов',
+        backup_codes_manage: 'Просмотрите доступные резервные коды или сгенерируйте новые',
       },
-      /** UNTRANSLATED */
-      customize_note: "Don't want the out-of-the-box experience? You can fully",
-      /** UNTRANSLATED */
-      customize_link: 'customize your flows with the Account API instead.',
+      customize_note: 'Не хотите использовать базовый опыт? Вы можете полностью',
+      customize_link: 'настроить ваши потоки с помощью Account API.',
     },
   },
   sign_up_and_sign_in,

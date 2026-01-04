@@ -13,11 +13,9 @@ const tenants = {
     description: '设置租户名称并查看您的数据托管地区和租户类型。',
     tenant_id: '租户 ID',
     tenant_name: '租户名称',
-    /** UNTRANSLATED */
-    tenant_instance: 'Select your instance',
-    /** UNTRANSLATED */
+    tenant_instance: '选择您的实例',
     tenant_instance_description:
-      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
+      '选择您的租户将在哪里托管。选择 Logto Cloud 作为公共共享基础设施，或选择私人实例以获得专用资源。',
     tenant_region: '数据托管地区',
     tenant_region_description: '托管您的租户资源（用户、应用程序等）的物理位置。创建后无法更改。',
     tenant_region_tip: '您的租户资源托管在 {{region}}。 <a>了解更多</a>',

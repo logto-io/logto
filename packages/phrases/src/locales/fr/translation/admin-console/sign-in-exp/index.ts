@@ -166,40 +166,27 @@ const sign_in_exp = {
       'Ajoutez les domaines de vos applications front-end autorisés à enregistrer des passkeys via l’API Account.',
     webauthn_related_origins_error: "L'origine doit commencer par https:// ou http://",
     prebuilt_ui: {
-      /** UNTRANSLATED */
-      title: 'INTEGRATE PREBUILT UI',
-      /** UNTRANSLATED */
+      title: "INTÉGRER L'INTERFACE UTILISATEUR PRÉCONSTRUITE",
       description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
-      /** UNTRANSLATED */
-      flows_title: 'Integrate out-of-the-box security setting flows',
-      /** UNTRANSLATED */
+        "Intégrez rapidement des flux de vérification et de paramètres de sécurité prêts à l'emploi avec une interface utilisateur préconstruite.",
+      flows_title: "Intégrer des flux de paramètres de sécurité prêts à l'emploi",
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        'Combinez votre domaine avec le chemin pour former votre URL de paramètres de compte (par exemple, https://auth.foo.com/account/email). Ajoutez éventuellement un paramètre d’URL `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie.',
       tooltips: {
-        /** UNTRANSLATED */
-        email: 'Update your primary email address',
-        /** UNTRANSLATED */
-        phone: 'Update your primary phone number',
-        /** UNTRANSLATED */
-        username: 'Update your username',
-        /** UNTRANSLATED */
-        password: 'Set a new password',
-        /** UNTRANSLATED */
-        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
-        /** UNTRANSLATED */
-        passkey_add: 'Register a new passkey',
-        /** UNTRANSLATED */
-        passkey_manage: 'Manage your existing passkeys or add new ones',
-        /** UNTRANSLATED */
-        backup_codes_generate: 'Generate a new set of 10 backup codes',
-        /** UNTRANSLATED */
-        backup_codes_manage: 'View your available backup codes or generate new ones',
+        email: 'Mettre à jour votre adresse e-mail principale',
+        phone: 'Mettre à jour votre numéro de téléphone principal',
+        username: "Mettre à jour votre nom d'utilisateur",
+        password: 'Définir un nouveau mot de passe',
+        authenticator_app:
+          "Configurer une nouvelle application d'authentification pour l'authentification multifacteur",
+        passkey_add: 'Enregistrer une nouvelle clé de passe',
+        passkey_manage: 'Gérer vos clés de passe existantes ou en ajouter de nouvelles',
+        backup_codes_generate: 'Générer un nouvel ensemble de 10 codes de sauvegarde',
+        backup_codes_manage: 'Voir vos codes de sauvegarde disponibles ou en générer de nouveaux',
       },
-      /** UNTRANSLATED */
-      customize_note: "Don't want the out-of-the-box experience? You can fully",
-      /** UNTRANSLATED */
-      customize_link: 'customize your flows with the Account API instead.',
+      customize_note:
+        "Vous ne voulez pas d'une expérience prête à l'emploi ? Vous pouvez pleinement",
+      customize_link: "personnaliser vos flux avec l'API Account à la place.",
     },
   },
   sign_up_and_sign_in,

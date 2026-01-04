@@ -13,11 +13,9 @@ const tenants = {
     description: 'ตั้งชื่อผู้เช่าและดูภูมิภาคโฮสต์ข้อมูลของคุณและประเภทผู้เช่า',
     tenant_id: 'รหัสผู้เช่า',
     tenant_name: 'ชื่อผู้เช่า',
-    /** UNTRANSLATED */
-    tenant_instance: 'Select your instance',
-    /** UNTRANSLATED */
+    tenant_instance: 'เลือกอินสแตนซ์ของคุณ',
     tenant_instance_description:
-      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
+      'เลือกสถานที่โฮสต์สำหรับผู้เช่าของคุณ เลือก Logto Cloud สำหรับโครงสร้างพื้นฐานที่ใช้ร่วมกันสาธารณะ หรืออินสแตนซ์ส่วนตัวสำหรับทรัพยากรเฉพาะ',
     tenant_region: 'ภูมิภาคข้อมูล',
     tenant_region_description:
       'ตำแหน่งทางกายภาพที่ทรัพยากรผู้เช่าของคุณ (ผู้ใช้, แอปพลิเคชัน ฯลฯ) ถูกโฮสต์ ไม่สามารถเปลี่ยนแปลงได้หลังจากสร้างแล้ว',

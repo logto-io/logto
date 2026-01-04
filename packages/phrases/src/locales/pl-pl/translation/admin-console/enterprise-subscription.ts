@@ -1,59 +1,38 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: 'Subskrypcja',
+  title: 'Zarządzaj swoją subskrypcją',
+  subtitle:
+    'Przeglądaj i zarządzaj szczegółami subskrypcji dla wielu najemców oraz informacjami o rozliczeniach.',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: 'Subskrypcja',
+    billing_history: 'Historia rozliczeń',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: 'Subskrypcja',
+    description:
+      'Sprawdź szczegóły dotyczące wykorzystania bieżącego planu subskrypcji oraz informacje o rozliczeniach.',
+    enterprise_plan_title: 'Plan przedsiębiorstwa',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      'To jest Twoja subskrypcja planu przedsiębiorstwa, a ten limit jest współdzielony przez wszystkich najemców w ramach subskrypcji przedsiębiorstwa.',
+    add_on_title: 'Dodatki „płać za użycie”',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      'Są to dodatkowe dodatki „płać za użycie” na podstawie twojej umowy lub standardowych stawek „płać za użycie” Logto. Pobierana będzie opłata zgodnie z faktycznym użyciem.',
+    included: 'W zestawie',
+    over_quota: 'Poza limitem',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
-      quota: 'Quota',
+      product: 'Produkt',
+      usage: 'Zużycie',
+      quota: 'Limit',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: 'Produkt',
+      unit_price: 'Cena jednostkowa',
+      quantity: 'Ilość',
+      total_price: 'Suma',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '{{price}} USD/mies.',
+    private_region_title: 'Prywatna instancja chmury ({{regionName}})',
+    shared_cross_tenants: 'W tym dla najemców',
   },
 };
 
