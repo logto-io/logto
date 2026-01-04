@@ -74,6 +74,9 @@ const usage = {
     tooltip_for_enterprise:
       'Die ersten {{basicQuota}} Tokens sind in deinem vertragsbasierten Plan enthalten und kostenlos. Wenn du mehr benötigst, ${{price, number}} pro {{tokenLimit}} Tokens pro Monat.',
   },
+  m2mTokens: {
+    title: 'M2M-Tokens',
+  },
   hooks: {
     title: 'Hooks',
     tooltip:

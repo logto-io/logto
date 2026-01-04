@@ -75,6 +75,9 @@ const usage = {
     tooltip_for_enterprise:
       '最初の {{basicQuota}} トークンは契約ベースのプランで含まれており、無料で使用できます。より多くが必要な場合、{{tokenLimit}} トークンにつき月額 {{price, number}} ドルの料金がかかります。',
   },
+  m2mTokens: {
+    title: 'M2M トークン',
+  },
   hooks: {
     title: 'フック',
     tooltip:

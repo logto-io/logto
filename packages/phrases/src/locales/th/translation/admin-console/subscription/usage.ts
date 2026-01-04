@@ -73,6 +73,9 @@ const usage = {
     tooltip_for_enterprise:
       'โทเคน {{basicQuota}} แรก รวมอยู่และใช้งานฟรีในแผนตามสัญญาของคุณ หากต้องการมากขึ้น ราคา ${{price, number}} ต่อ {{tokenLimit}} โทเคนต่อเดือน',
   },
+  m2mTokens: {
+    title: 'โทเคน M2M',
+  },
   hooks: {
     title: 'Hook',
     tooltip: 'ฟีเจอร์เสริมราคา ${{price, number}} ต่อ hook โดย 10 hook แรก รวมอยู่ด้วย',

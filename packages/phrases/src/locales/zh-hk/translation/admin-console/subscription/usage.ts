@@ -66,6 +66,9 @@ const usage = {
     tooltip_for_enterprise:
       '你的合約計劃中包含前 {{basicQuota}} 次令牌並可免費使用。如果你需要更多，每 {{tokenLimit}} 次令牌每月 ${{price, number}}。',
   },
+  m2mTokens: {
+    title: 'M2M 令牌',
+  },
   hooks: {
     title: '鉤子',
     tooltip: '附加功能，每個鉤子 ${{price, number}}。首 10 個鉤子已包含在內。',
