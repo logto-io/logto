@@ -36,6 +36,7 @@ const action = {
   authorize: 'Yetkilendir',
   use_another_account: 'Başka bir hesap kullan',
   back_to_current_account: 'Mevcut hesaba geri dön',
+  done: 'Bitti',
 };
 
 export default Object.freeze(action);
