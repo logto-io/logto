@@ -103,6 +103,7 @@ export const oidcConnectorConfigGuard = oauth2ConfigGuard.extend({
   // Override `scope` to ensure it contains 'openid'.
   scope: z.string().transform(scopePostProcessor),
   acceptStringTypedBooleanClaims: z.boolean().optional().default(false),
+  trustUnverifiedEmail: z.boolean().optional().default(false),
   idTokenVerificationConfig: idTokenVerificationConfigGuard,
   authRequestOptionalConfig: authRequestOptionalConfigGuard.optional(),
   customConfig: z.record(z.string()).optional(),

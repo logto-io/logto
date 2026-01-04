@@ -93,10 +93,15 @@ function OidcMetadataForm({ providerConfig, config, providerName }: Props) {
           placeholder={t('enterprise_sso.metadata.oidc.scope_field_placeholder')}
         />
       </FormField>
-      {providerName === SsoProviderName.AZURE_AD_OIDC && (
+      {(providerName === SsoProviderName.AZURE_AD_OIDC ||
+        providerName === SsoProviderName.OIDC) && (
         <FormField
           title="enterprise_sso_details.trust_unverified_email"
-          tip={t('enterprise_sso_details.trust_unverified_email_tip')}
+          tip={
+            providerName === SsoProviderName.AZURE_AD_OIDC
+              ? t('enterprise_sso_details.trust_unverified_email_tip')
+              : t('enterprise_sso_details.trust_unverified_email_tip_oidc')
+          }
         >
           <Switch
             label={t('enterprise_sso_details.trust_unverified_email_label')}
