@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.35.1
+
+### Patch Changes
+
+- a4093a4aed: fix enterprise sso account not exist error code
+
+  Fixes the enterprise SSO account not exist error code to use a specific one instead of the generic social account one.
+
+- Updated dependencies [a4093a4aed]
+  - @logto/experience@1.18.1
+  - @logto/account@0.1.0
+  - @logto/cli@1.35.1
+  - @logto/schemas@1.35.1
+  - @logto/console@1.32.0
+  - @logto/demo-app@1.5.0
+
 ## 1.35.0
 
 ### Minor Changes
