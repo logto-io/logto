@@ -146,10 +146,6 @@ const account_center = {
       title: 'パスキーが追加されました！',
       description: 'パスキーがアカウントに正常にリンクされました。',
     },
-    passkey_deleted: {
-      title: 'パスキーが削除されました！',
-      description: 'パスキーがアカウントから削除されました。',
-    },
   },
   backup_code: {
     title: 'バックアップコード',
@@ -166,6 +162,7 @@ const account_center = {
     never_used: '未使用',
     unnamed: '名前なしのパスキー',
     renamed: 'パスキーの名前を変更しました。',
+    deleted: 'パスキーが削除されました。',
     add_another_title: '別のパスキーを追加',
     add_another_description:
       'デバイスの生体認証、セキュリティキー（例: YubiKey）、またはその他の利用可能な方法を使用してパスキーを登録してください。',

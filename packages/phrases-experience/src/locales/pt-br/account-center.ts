@@ -147,10 +147,6 @@ const account_center = {
       title: 'Passkey adicionado!',
       description: 'Seu passkey foi vinculado com sucesso à sua conta.',
     },
-    passkey_deleted: {
-      title: 'Passkey removido!',
-      description: 'Seu passkey foi removido da sua conta.',
-    },
     social: {
       title: 'Conta social vinculada!',
       description: 'Sua conta social foi vinculada com sucesso.',
@@ -171,6 +167,7 @@ const account_center = {
     never_used: 'Nunca',
     unnamed: 'Passkey sem nome',
     renamed: 'Passkey renomeado com sucesso.',
+    deleted: 'Passkey removido com sucesso.',
     add_another_title: 'Adicionar outro passkey',
     add_another_description:
       'Registre seu passkey usando biometria do dispositivo, chaves de segurança (ex: YubiKey) ou outros métodos disponíveis.',

@@ -141,10 +141,6 @@ const account_center = {
       title: 'تمت إضافة مفتاح المرور!',
       description: 'تم ربط مفتاح المرور بحسابك بنجاح.',
     },
-    passkey_deleted: {
-      title: 'تم حذف مفتاح المرور!',
-      description: 'تم حذف مفتاح المرور من حسابك.',
-    },
   },
   backup_code: {
     title: 'رموز النسخ الاحتياطي',
@@ -161,6 +157,7 @@ const account_center = {
     never_used: 'أبدًا',
     unnamed: 'مفتاح مرور بدون اسم',
     renamed: 'تم تغيير اسم مفتاح المرور بنجاح.',
+    deleted: 'تم حذف مفتاح المرور بنجاح.',
     add_another_title: 'إضافة مفتاح مرور آخر',
     add_another_description:
       'قم بتسجيل مفتاح المرور الخاص بك باستخدام المقاييس الحيوية للجهاز أو مفاتيح الأمان (مثل YubiKey) أو الطرق الأخرى المتاحة.',

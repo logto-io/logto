@@ -135,10 +135,6 @@ const account_center = {
       title: 'Passkey 已新增！',
       description: 'Passkey 已成功連結至您的帳戶。',
     },
-    passkey_deleted: {
-      title: 'Passkey 已移除！',
-      description: 'Passkey 已從您的帳戶中移除。',
-    },
     social: {
       title: '社群帳號已連結！',
       description: '您的社群帳號已成功連結。',
@@ -159,6 +155,7 @@ const account_center = {
     never_used: '從未使用',
     unnamed: '未命名的 Passkey',
     renamed: 'Passkey 已成功重新命名。',
+    deleted: 'Passkey 已移除。',
     add_another_title: '新增另一個 Passkey',
     add_another_description:
       '使用設備生物識別、安全金鑰（例如 YubiKey）或其他可用方法註冊您的 Passkey。',
