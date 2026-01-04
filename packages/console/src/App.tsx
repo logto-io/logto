@@ -84,7 +84,6 @@ function Providers() {
 
   const scopes = useMemo(
     () => [
-      UserScope.Profile,
       UserScope.Email,
       UserScope.Identities,
       UserScope.CustomData,
