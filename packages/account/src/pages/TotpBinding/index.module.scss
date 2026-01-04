@@ -83,11 +83,18 @@
   background: transparent;
   border: none;
   padding: 0;
-  font: var(--font-body-2);
-  color: var(--color-primary-50);
+  font: var(--font-label-2);
+  color: var(--color-brand-default);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 
-  &:hover {
-    text-decoration: underline;
+  &:active {
+    color: var(--color-brand-hover);
+  }
+}
+
+:global(body.desktop) {
+  .switchLink:hover {
+    color: var(--color-brand-hover);
   }
 }
