@@ -48,10 +48,12 @@ export type OidcClientMetadata = {
 export const oidcClientMetadataGuard = z.object({
   redirectUris: z
     .string()
-    .refine((url) => validateRedirectUrl(url, 'web'))
-    .or(z.string().refine((url) => validateRedirectUrl(url, 'mobile')))
+    .refine((url) => validateRedirectUrl(url, 'web') || validateRedirectUrl(url, 'mobile'))
     .array(),
-  postLogoutRedirectUris: z.string().url().array(),
+  postLogoutRedirectUris: z
+    .string()
+    .refine((url) => validateRedirectUrl(url, 'web') || validateRedirectUrl(url, 'mobile'))
+    .array(),
   backchannelLogoutUri: z.string().url().optional(),
   backchannelLogoutSessionRequired: z.boolean().optional(),
   logoUri: z.string().optional(),
