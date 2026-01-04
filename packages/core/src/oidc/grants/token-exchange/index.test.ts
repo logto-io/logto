@@ -52,16 +52,16 @@ const validClient: Client = {
   clientAuthMethod: 'none',
 };
 
-const validSubjectToken: SubjectToken = {
+const createValidSubjectToken = (): SubjectToken => ({
   id: subjectTokenId,
   userId: accountId,
   context: {},
-  expiresAt: Date.now() + 1000,
+  expiresAt: Date.now() + 3_600_000,
   consumedAt: null,
   tenantId: 'some_tenant_id',
   creatorId: 'some_creator_id',
   createdAt: Date.now(),
-};
+});
 
 const validOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
   params: {
@@ -106,6 +106,7 @@ afterAll(() => {
 
 describe('token exchange', () => {
   afterEach(() => {
+    findSubjectToken.mockClear();
     findApplicationById.mockClear();
     updateSubjectTokenById.mockClear();
   });
@@ -140,7 +141,10 @@ describe('token exchange', () => {
 
   it('should throw when subject token is expired', async () => {
     const ctx = createOidcContext(validOidcContext);
-    findSubjectToken.mockResolvedValueOnce({ ...validSubjectToken, expiresAt: Date.now() - 1000 });
+    findSubjectToken.mockResolvedValueOnce({
+      ...createValidSubjectToken(),
+      expiresAt: Date.now() - 1000,
+    });
     await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
       new errors.InvalidGrant('subject token is expired')
     );
@@ -148,7 +152,10 @@ describe('token exchange', () => {
 
   it('should throw when subject token has been consumed', async () => {
     const ctx = createOidcContext(validOidcContext);
-    findSubjectToken.mockResolvedValueOnce({ ...validSubjectToken, consumedAt: Date.now() - 1000 });
+    findSubjectToken.mockResolvedValueOnce({
+      ...createValidSubjectToken(),
+      consumedAt: Date.now() - 1000,
+    });
     await expect(mockHandler()(ctx, noop)).rejects.toMatchError(
       new errors.InvalidGrant('subject token is already consumed')
     );
@@ -156,7 +163,7 @@ describe('token exchange', () => {
 
   it('should throw when account cannot be found', async () => {
     const ctx = createOidcContext(validOidcContext);
-    findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+    findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
     Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves();
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
   });
@@ -167,7 +174,7 @@ describe('token exchange', () => {
   // integration tests.
   it('should not explode when everything looks fine', async () => {
     const ctx = createPreparedContext();
-    findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+    findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
     Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
@@ -190,7 +197,7 @@ describe('token exchange', () => {
   describe('RFC 0001 organization token', () => {
     it('should throw if the user is not a member of the organization', async () => {
       const ctx = createPreparedOrganizationContext();
-      findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+      findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
       Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
 
       const tenant = new MockTenant(undefined, mockQueries);
@@ -202,7 +209,7 @@ describe('token exchange', () => {
 
     it('should throw if the organization requires MFA but the user has not configured it', async () => {
       const ctx = createPreparedOrganizationContext();
-      findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+      findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
       Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
 
       const tenant = new MockTenant(undefined, mockQueries);
@@ -218,7 +225,7 @@ describe('token exchange', () => {
 
     it('should not explode when everything looks fine', async () => {
       const ctx = createPreparedOrganizationContext();
-      findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+      findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
       Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
 
       const tenant = new MockTenant(undefined, mockQueries);
@@ -443,7 +450,7 @@ describe('token exchange', () => {
 
     it('should validate impersonation token with explicit type', async () => {
       const ctx = createPreparedImpersonationContext();
-      findSubjectToken.mockResolvedValueOnce(validSubjectToken);
+      findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
       Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
