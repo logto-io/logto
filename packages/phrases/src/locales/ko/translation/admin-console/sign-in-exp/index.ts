@@ -160,40 +160,24 @@ const sign_in_exp = {
       'Account API를 통해 패스키를 등록할 수 있도록 허용된 프런트엔드 애플리케이션 도메인을 추가하세요.',
     webauthn_related_origins_error: '오리진은 https:// 또는 http:// 로 시작해야 합니다',
     prebuilt_ui: {
-      /** UNTRANSLATED */
-      title: 'INTEGRATE PREBUILT UI',
-      /** UNTRANSLATED */
-      description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
-      /** UNTRANSLATED */
-      flows_title: 'Integrate out-of-the-box security setting flows',
-      /** UNTRANSLATED */
+      title: '기본 제공 UI 통합',
+      description: '기본 제공 UI 를 사용하여 즉시 검증 및 보안 설정 흐름을 빠르게 통합하세요.',
+      flows_title: '기본 제공 보안 설정 흐름 통합',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        '도메인과 경로를 결합하여 계정 설정 URL 을 형성하세요 (예: https://auth.foo.com/account/email). 성공적으로 업데이트 후 사용자를 앱으로 되돌리려면 `redirect=` URL 매개변수를 선택적으로 추가하세요.',
       tooltips: {
-        /** UNTRANSLATED */
-        email: 'Update your primary email address',
-        /** UNTRANSLATED */
-        phone: 'Update your primary phone number',
-        /** UNTRANSLATED */
-        username: 'Update your username',
-        /** UNTRANSLATED */
-        password: 'Set a new password',
-        /** UNTRANSLATED */
-        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
-        /** UNTRANSLATED */
-        passkey_add: 'Register a new passkey',
-        /** UNTRANSLATED */
-        passkey_manage: 'Manage your existing passkeys or add new ones',
-        /** UNTRANSLATED */
-        backup_codes_generate: 'Generate a new set of 10 backup codes',
-        /** UNTRANSLATED */
-        backup_codes_manage: 'View your available backup codes or generate new ones',
+        email: '주 이메일 주소 업데이트',
+        phone: '주 전화번호 업데이트',
+        username: '사용자 이름 업데이트',
+        password: '새 비밀번호 설정',
+        authenticator_app: '다중 요소 인증을 위한 새 인증 앱 설정',
+        passkey_add: '새 패스키 등록',
+        passkey_manage: '기존 패스키 관리 또는 새 패스키 추가',
+        backup_codes_generate: '새로운 10 개의 백업 코드 세트 생성',
+        backup_codes_manage: '사용 가능한 백업 코드 보기 또는 새로 생성',
       },
-      /** UNTRANSLATED */
-      customize_note: "Don't want the out-of-the-box experience? You can fully",
-      /** UNTRANSLATED */
-      customize_link: 'customize your flows with the Account API instead.',
+      customize_note: '기본 제공 경험이 원치 않으시나요? 대신 계정 API 를 사용하여',
+      customize_link: '흐름을 완전히 사용자화할 수 있습니다.',
     },
   },
   sign_up_and_sign_in,

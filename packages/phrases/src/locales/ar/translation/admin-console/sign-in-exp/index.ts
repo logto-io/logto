@@ -161,40 +161,25 @@ const sign_in_exp = {
       'أضف نطاقات تطبيقات الواجهة الأمامية المسموح لها بتسجيل مفاتيح المرور عبر واجهة Account API.',
     webauthn_related_origins_error: 'يجب أن يبدأ الأصل بـ https:// أو http://',
     prebuilt_ui: {
-      /** UNTRANSLATED */
-      title: 'INTEGRATE PREBUILT UI',
-      /** UNTRANSLATED */
+      title: 'دمج واجهة المستخدم المُعدة مسبقًا',
       description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
-      /** UNTRANSLATED */
-      flows_title: 'Integrate out-of-the-box security setting flows',
-      /** UNTRANSLATED */
+        'دمج سريع لتدفقات التحقق وإعدادات الأمان الجاهزة مع واجهة المستخدم المُعدة مسبقًا.',
+      flows_title: 'دمج تدفقات إعدادات الأمان الجاهزة',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        'اتخذ نطاقك وأضفه إلى المسار لتشكل عنوان URL لإعدادات حسابك (مثل، https://auth.foo.com/account/email). بشكل اختياري، أضف معامل `redirect=` URL لإرجاع المستخدمين إلى تطبيقك بعد التحديث بنجاح.',
       tooltips: {
-        /** UNTRANSLATED */
-        email: 'Update your primary email address',
-        /** UNTRANSLATED */
-        phone: 'Update your primary phone number',
-        /** UNTRANSLATED */
-        username: 'Update your username',
-        /** UNTRANSLATED */
-        password: 'Set a new password',
-        /** UNTRANSLATED */
-        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
-        /** UNTRANSLATED */
-        passkey_add: 'Register a new passkey',
-        /** UNTRANSLATED */
-        passkey_manage: 'Manage your existing passkeys or add new ones',
-        /** UNTRANSLATED */
-        backup_codes_generate: 'Generate a new set of 10 backup codes',
-        /** UNTRANSLATED */
-        backup_codes_manage: 'View your available backup codes or generate new ones',
+        email: 'قم بتحديث عنوان بريدك الإلكتروني الرئيسي',
+        phone: 'قم بتحديث رقم هاتفك المحمول الرئيسي',
+        username: 'قم بتحديث اسم المستخدم الخاص بك',
+        password: 'عين كلمة مرور جديدة',
+        authenticator_app: 'قم بإعداد تطبيق مصادق جديد للمصادقة متعددة العوامل',
+        passkey_add: 'تسجيل مفتاح مرور جديد',
+        passkey_manage: 'إدارة مفاتيح المرور الحالية أو إضافة مفاتيح جديدة',
+        backup_codes_generate: 'توليد مجموعة جديدة من 10 أكواد احتياطية',
+        backup_codes_manage: 'عرض الأكواد الاحتياطية المتاحة أو توليد أكواد جديدة',
       },
-      /** UNTRANSLATED */
-      customize_note: "Don't want the out-of-the-box experience? You can fully",
-      /** UNTRANSLATED */
-      customize_link: 'customize your flows with the Account API instead.',
+      customize_note: 'لا تريد التجربة المعدة مسبقًا؟ يمكنك بالكامل',
+      customize_link: 'تخصيص التدفقات الخاصة بك باستخدام واجهة Account API بدلاً من ذلك.',
     },
   },
   sign_up_and_sign_in,

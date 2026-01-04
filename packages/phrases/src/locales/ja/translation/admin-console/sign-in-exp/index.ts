@@ -164,40 +164,26 @@ const sign_in_exp = {
       'Account API を通じてパスキーを登録できるフロントエンドアプリケーションのドメインを追加します。',
     webauthn_related_origins_error: 'オリジンは https:// または http:// で始める必要があります',
     prebuilt_ui: {
-      /** UNTRANSLATED */
-      title: 'INTEGRATE PREBUILT UI',
-      /** UNTRANSLATED */
+      title: '組み込み UI を統合',
       description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
-      /** UNTRANSLATED */
-      flows_title: 'Integrate out-of-the-box security setting flows',
-      /** UNTRANSLATED */
+        'すぐに使える検証フローとセキュリティ設定フローを組み込み UI で迅速に統合します。',
+      flows_title: 'すぐに使えるセキュリティ設定フローを統合',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        'ドメインとルートを組み合わせてアカウント設定 URL を形成します（例: https://auth.foo.com/account/email）。更新後にユーザーをアプリに戻すために「redirect=」URL パラメータをオプションで追加できます。',
       tooltips: {
-        /** UNTRANSLATED */
-        email: 'Update your primary email address',
-        /** UNTRANSLATED */
-        phone: 'Update your primary phone number',
-        /** UNTRANSLATED */
-        username: 'Update your username',
-        /** UNTRANSLATED */
-        password: 'Set a new password',
-        /** UNTRANSLATED */
-        authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
-        /** UNTRANSLATED */
-        passkey_add: 'Register a new passkey',
-        /** UNTRANSLATED */
-        passkey_manage: 'Manage your existing passkeys or add new ones',
-        /** UNTRANSLATED */
-        backup_codes_generate: 'Generate a new set of 10 backup codes',
-        /** UNTRANSLATED */
-        backup_codes_manage: 'View your available backup codes or generate new ones',
+        email: 'プライマリメールアドレスを更新',
+        phone: 'プライマリ電話番号を更新',
+        username: 'ユーザー名を更新',
+        password: '新しいパスワードを設定',
+        authenticator_app: '多要素認証のための新しい認証アプリを設定',
+        passkey_add: '新しいパスキーを登録',
+        passkey_manage: '既存のパスキーを管理または新しいものを追加',
+        backup_codes_generate: '新しいバックアップコード 10 セットを生成',
+        backup_codes_manage: '使用可能なバックアップコードを表示または新しいものを生成',
       },
-      /** UNTRANSLATED */
-      customize_note: "Don't want the out-of-the-box experience? You can fully",
-      /** UNTRANSLATED */
-      customize_link: 'customize your flows with the Account API instead.',
+      customize_note:
+        'すぐに使えるエクスペリエンスを望まない？ 代わりに Account API でフローを完全に',
+      customize_link: 'カスタマイズできます。',
     },
   },
   sign_up_and_sign_in,

@@ -1,59 +1,38 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: 'Abonnement',
+  title: 'Verwalten Sie Ihr Abonnement',
+  subtitle:
+    'Anzeigen und Verwalten Ihrer Multi-Mandanten-Abonnementdetails und Abrechnungsinformationen.',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: 'Abonnement',
+    billing_history: 'Zahlungsverlauf',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: 'Abonnement',
+    description:
+      'Überprüfen Sie Ihre aktuellen Abonnementplannutzungsdetails und Abrechnungsinformationen.',
+    enterprise_plan_title: 'Unternehmensplan',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      'Dies ist Ihr Unternehmensplan-Abonnement, und dieses Kontingent wird über alle Mandanten hinweg unter Ihrem Unternehmensabonnement geteilt.',
+    add_on_title: 'Add-ons nach Bedarf',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      'Dies sind zusätzliche Add-ons nach Bedarf basierend auf Ihrem Vertrag oder den standardmäßigen Pay-as-you-go-Sätzen von Logto. Ihnen werden Gebühren entsprechend Ihrer tatsächlichen Nutzung berechnet.',
+    included: 'Inklusive',
+    over_quota: 'Über dem Kontingent',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
-      quota: 'Quota',
+      product: 'Produkt',
+      usage: 'Nutzung',
+      quota: 'Kontingent',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: 'Produkt',
+      unit_price: 'Stückpreis',
+      quantity: 'Menge',
+      total_price: 'Gesamt',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '${{price}}/Monat',
+    private_region_title: 'Private Cloud-Instanz ({{regionName}})',
+    shared_cross_tenants: 'Über Mandanten hinweg',
   },
 };
 

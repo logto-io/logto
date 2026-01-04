@@ -1,59 +1,38 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: 'Abonelik',
+  title: 'Aboneliğinizi yönetin',
+  subtitle:
+    'Çok kiracılı abonelik detaylarınızı ve faturalandırma bilgilerinizi görüntüleyin ve yönetin.',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: 'Abonelik',
+    billing_history: 'Fatura geçmişi',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: 'Abonelik',
+    description:
+      'Mevcut abonelik planı kullanım detaylarınızı ve faturalandırma bilgilerinizi inceleyin.',
+    enterprise_plan_title: 'Enterprise Planı',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      'Bu, Enterprise plan aboneliğinizdir ve bu kota, kurumsal aboneliğiniz altındaki tüm kiracılar arasında paylaşılır.',
+    add_on_title: 'Kullandıkça öde eklentiler',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      "Bunlar, sözleşmenize veya Logto'nun standart kullandıkça öde tarifesine dayanan ek eklentilerdir. Gerçek kullanımınıza göre ücretlendirilirsiniz.",
+    included: 'Dahil',
+    over_quota: 'Kota Aşıldı',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
-      quota: 'Quota',
+      product: 'Ürün',
+      usage: 'Kullanım',
+      quota: 'Kota',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: 'Ürün',
+      unit_price: 'Birim Fiyatı',
+      quantity: 'Miktar',
+      total_price: 'Toplam',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '{{price}}/ay',
+    private_region_title: 'Özel bulut örneği ({{regionName}})',
+    shared_cross_tenants: 'Kiracılar arası',
   },
 };
 

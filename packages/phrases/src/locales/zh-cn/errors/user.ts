@@ -7,6 +7,7 @@ const user = {
   email_not_exist: '邮箱地址尚未注册。',
   phone_not_exist: '手机号码尚未注册。',
   identity_not_exist: '该社交帐号尚未注册。',
+  sso_identity_not_exist: '企业级 SSO 账户尚未注册。',
   identity_already_in_use: '该社交帐号已被注册。',
   social_account_exists_in_profile: '你已绑定当前社交账号，无需重复操作。',
   cannot_delete_self: '无法删除自己的账户。',

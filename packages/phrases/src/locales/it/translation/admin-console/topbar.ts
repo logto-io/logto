@@ -1,8 +1,7 @@
 const topbar = {
   docs: 'Documentazione',
   help: 'Aiuto',
-  /** UNTRANSLATED */
-  subscription: 'Subscription',
+  subscription: 'Abbonamento',
 };
 
 export default Object.freeze(topbar);

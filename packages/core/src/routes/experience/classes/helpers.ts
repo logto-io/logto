@@ -158,7 +158,7 @@ export const identifyUserByVerificationRecord = async (
         return { user, syncedProfile };
       } catch (error: unknown) {
         // Auto fallback to identify the related user if the user does not exist for enterprise SSO.
-        if (error instanceof RequestError && error.code === 'user.identity_not_exist') {
+        if (error instanceof RequestError && error.code === 'user.sso_identity_not_exist') {
           const user = await verificationRecord.identifyRelatedUser();
 
           const syncedProfile = {

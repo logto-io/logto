@@ -1,59 +1,35 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: '订阅',
+  title: '管理你的订阅',
+  subtitle: '查看和管理你的多租户订阅详细信息和账单信息。',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: '订阅',
+    billing_history: '账单历史',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
-    enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+    title: '订阅',
+    description: '查看你当前订阅计划的使用详情和账单信息。',
+    enterprise_plan_title: '企业计划',
+    enterprise_plan_description: '这是你的企业计划订阅，该配额在你的企业订阅下的所有租户之间共享。',
+    add_on_title: '按需付费附加项',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      '这些是基于你的合同或 Logto 的标准按需付费费率的额外附加项。你将根据实际使用量收费。',
+    included: '已包含',
+    over_quota: '超出配额',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
-      quota: 'Quota',
+      product: '产品',
+      usage: '使用量',
+      quota: '配额',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: '产品',
+      unit_price: '单价',
+      quantity: '数量',
+      total_price: '总计',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '¥{{price}}/月',
+    private_region_title: '私有云实例 ({{regionName}})',
+    shared_cross_tenants: '跨租户',
   },
 };
 

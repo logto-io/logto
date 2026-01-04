@@ -1,8 +1,7 @@
 const topbar = {
   docs: 'Docs',
   help: 'ช่วยเหลือ',
-  /** UNTRANSLATED */
-  subscription: 'Subscription',
+  subscription: 'การสมัครสมาชิก',
 };
 
 export default Object.freeze(topbar);

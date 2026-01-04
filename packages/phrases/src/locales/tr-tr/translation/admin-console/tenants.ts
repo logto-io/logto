@@ -13,11 +13,9 @@ const tenants = {
     description: 'Kiracı adını ayarlayın ve verilerinizin barındırıldığı bölgeyi görüntüleyin.',
     tenant_id: 'Kiracı Kimliği',
     tenant_name: 'Kiracı Adı',
-    /** UNTRANSLATED */
-    tenant_instance: 'Select your instance',
-    /** UNTRANSLATED */
+    tenant_instance: 'Örnek seçin',
     tenant_instance_description:
-      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
+      "Kiracınızın nerede barındırılacağını seçin. Genel paylaşımlı altyapı için Logto Cloud'u veya özel kaynaklar için özel bir örneği seçin.",
     tenant_region: 'Veriler barındırılan bölge',
     tenant_region_description:
       'Kiracı kaynaklarınızın (kullanıcılar, uygulamalar vb.) barındırıldığı fiziksel konum. Bu, oluşturulduktan sonra değiştirilemez.',

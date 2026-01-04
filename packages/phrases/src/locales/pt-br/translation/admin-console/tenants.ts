@@ -14,11 +14,9 @@ const tenants = {
       'Defina o nome do locatário e visualize a região de hospedagem dos seus dados e o tipo de locatário.',
     tenant_id: 'ID do Locatário',
     tenant_name: 'Nome do Locatário',
-    /** UNTRANSLATED */
-    tenant_instance: 'Select your instance',
-    /** UNTRANSLATED */
+    tenant_instance: 'Selecione sua instância',
     tenant_instance_description:
-      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
+      'Selecione onde seu locatário será hospedado. Escolha Logto Cloud para infraestrutura pública compartilhada, ou uma instância privada para recursos dedicados.',
     tenant_region: 'Região de hospedagem',
     tenant_region_description:
       'A localização física onde seus recursos de locatário (usuários, aplicativos, etc.) estão hospedados. Isso não pode ser alterado após a criação.',

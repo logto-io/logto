@@ -7,6 +7,7 @@ const user = {
   email_not_exist: '이메일 주소가 아직 등록되지 않았어요.',
   phone_not_exist: '휴대전화번호가 아직 등록되지 않았어요.',
   identity_not_exist: '소셜 계정이 아직 등록되지 않았어요.',
+  sso_identity_not_exist: '엔터프라이즈 SSO 계정이 아직 등록되지 않았어요.',
   identity_already_in_use: '소셜 계정이 이미 등록되어 있어요.',
   social_account_exists_in_profile: '이 소셜 계정은 이미 연동되어 있습니다.',
   cannot_delete_self: '자기 자신을 삭제할 수 없어요.',

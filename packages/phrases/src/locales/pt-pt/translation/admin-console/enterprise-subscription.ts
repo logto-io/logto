@@ -1,59 +1,38 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: 'Subscrição',
+  title: 'Gerir a tua subscrição',
+  subtitle:
+    'Visualiza e gere os detalhes da tua subscrição multi-inquilino e informações de faturação.',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: 'Subscrição',
+    billing_history: 'Histórico de faturação',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: 'Subscrição',
+    description:
+      'Revê os detalhes de uso do teu plano de subscrição atual e informações de faturação.',
+    enterprise_plan_title: 'Plano Empresarial',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      'Esta é a tua subscrição do Plano Empresarial e esta quota é partilhada entre todos os inquilinos sob a tua subscrição empresarial.',
+    add_on_title: 'Add-ons pagas conforme o uso',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      'Estes são add-ons pagas conforme o uso, com base no teu contrato ou nas taxas padrão paga conforme o uso da Logto. Serás cobrado de acordo com o teu uso real.',
+    included: 'Incluído',
+    over_quota: 'Acima da quota',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
+      product: 'Produto',
+      usage: 'Uso',
       quota: 'Quota',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
+      product: 'Produto',
+      unit_price: 'Preço Unitário',
+      quantity: 'Quantidade',
       total_price: 'Total',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '${{price}}/mês',
+    private_region_title: 'Instância em nuvem privada ({{regionName}})',
+    shared_cross_tenants: 'Entre inquilinos',
   },
 };
 

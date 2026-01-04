@@ -7,6 +7,7 @@ const user = {
   email_not_exist: 'O endereço de email ainda não foi registado.',
   phone_not_exist: 'O número de telefone ainda não foi registado.',
   identity_not_exist: 'A conta social ainda não foi registada.',
+  sso_identity_not_exist: 'A conta empresarial SSO ainda não foi registada.',
   identity_already_in_use: 'A conta social foi registada.',
   social_account_exists_in_profile: 'A conta social já foi associada a este perfil.',
   cannot_delete_self: 'Não se pode remover a si mesmo.',

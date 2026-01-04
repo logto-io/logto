@@ -1,59 +1,38 @@
 const enterprise_subscription = {
-  /** UNTRANSLATED */
-  page_title: 'Subscription',
-  /** UNTRANSLATED */
-  title: 'Manage your subscription',
-  /** UNTRANSLATED */
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  page_title: 'Подписка',
+  title: 'Управляйте своей подпиской',
+  subtitle:
+    'Просматривайте и управляйте деталями вашей многопользовательской подписки и информацией о платежах.',
   tab: {
-    /** UNTRANSLATED */
-    subscription: 'Subscription',
-    /** UNTRANSLATED */
-    billing_history: 'Billing history',
+    subscription: 'Подписка',
+    billing_history: 'История платежей',
   },
   subscription: {
-    /** UNTRANSLATED */
-    title: 'Subscription',
-    /** UNTRANSLATED */
-    description: 'Review your current subscription plan usage details and billing information.',
-    /** UNTRANSLATED */
-    enterprise_plan_title: 'Enterprise Plan',
-    /** UNTRANSLATED */
+    title: 'Подписка',
+    description:
+      'Просмотрите детали использования и информации о платежах вашего текущего плана подписки.',
+    enterprise_plan_title: 'Корпоративный план',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
-    /** UNTRANSLATED */
-    add_on_title: 'Pay as you go add-ons',
-    /** UNTRANSLATED */
+      'Это ваша подписка на корпоративный план, и эта квота распределяется между всеми арендаторами вашей корпоративной подписки.',
+    add_on_title: 'Дополнения с поминутной оплатой',
     add_on_description:
-      "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",
-    /** UNTRANSLATED */
-    included: 'Included',
-    /** UNTRANSLATED */
-    over_quota: 'Over quota',
+      'Это дополнительные дополнения с оплатой по мере использования на основе вашего контракта или стандартных ставок Logto. Вы будете платить в соответствии с вашим фактическим использованием.',
+    included: 'Включено',
+    over_quota: 'Перерасход',
     basic_plan_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      usage: 'Usage',
-      /** UNTRANSLATED */
-      quota: 'Quota',
+      product: 'Продукт',
+      usage: 'Использование',
+      quota: 'Квота',
     },
     add_on_column_title: {
-      /** UNTRANSLATED */
-      product: 'Product',
-      /** UNTRANSLATED */
-      unit_price: 'Unit Price',
-      /** UNTRANSLATED */
-      quantity: 'Quantity',
-      /** UNTRANSLATED */
-      total_price: 'Total',
+      product: 'Продукт',
+      unit_price: 'Цена за единицу',
+      quantity: 'Количество',
+      total_price: 'Итоговая сумма',
     },
-    /** UNTRANSLATED */
-    add_on_sku_price: '${{price}}/mo',
-    /** UNTRANSLATED */
-    private_region_title: 'Private cloud instance ({{regionName}})',
-    /** UNTRANSLATED */
-    shared_cross_tenants: 'Across tenants',
+    add_on_sku_price: '${{price}}/месяц',
+    private_region_title: 'Частный облачный экземпляр ({{regionName}})',
+    shared_cross_tenants: 'Между арендаторами',
   },
 };
 
