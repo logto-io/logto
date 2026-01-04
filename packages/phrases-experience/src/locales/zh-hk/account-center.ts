@@ -129,10 +129,6 @@ const account_center = {
       title: '備用碼已產生！',
       description: '您的備用碼已儲存。請將它們保存在安全的地方。',
     },
-    backup_code_deleted: {
-      title: '備用碼已移除！',
-      description: '你的備用碼已從帳戶中移除。',
-    },
     passkey: {
       title: 'Passkey 已添加！',
       description: 'Passkey 已成功連結到你的帳戶。',
@@ -153,8 +149,6 @@ const account_center = {
     copy_hint: '請務必複製並保存在安全的地方。',
     generate_new_title: '產生新的備用碼',
     generate_new: '產生新的備用碼',
-    delete_confirmation_title: '移除你的備用碼',
-    delete_confirmation_description: '如果你移除這些備用碼，你將無法使用它們進行驗證。',
   },
   passkey: {
     title: 'Passkeys',

@@ -11,7 +11,6 @@ export const authenticatorAppSuccessRoute = '/authenticator-app/success';
 export const backupCodesGenerateRoute = '/backup-codes/generate';
 export const backupCodesManageRoute = '/backup-codes/manage';
 export const backupCodesSuccessRoute = '/backup-codes/success';
-export const backupCodesDeletedRoute = '/backup-codes/deleted';
 export const passkeyAddRoute = '/passkey/add';
 export const passkeyManageRoute = '/passkey/manage';
 export const passkeySuccessRoute = '/passkey/success';

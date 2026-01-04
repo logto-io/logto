@@ -132,10 +132,6 @@ const account_center = {
       title: 'สร้างรหัสสำรองแล้ว!',
       description: 'รหัสสำรองของคุณถูกบันทึกแล้ว โปรดเก็บรักษาไว้ในที่ปลอดภัย',
     },
-    backup_code_deleted: {
-      title: 'ลบรหัสสำรองแล้ว!',
-      description: 'รหัสสำรองของคุณถูกลบออกจากบัญชีแล้ว',
-    },
     passkey: {
       title: 'เพิ่ม Passkey แล้ว!',
       description: 'Passkey ของคุณได้รับการเชื่อมต่อกับบัญชีของคุณเรียบร้อยแล้ว',
@@ -156,8 +152,6 @@ const account_center = {
     copy_hint: 'คัดลอกและเก็บรักษาไว้ในที่ปลอดภัย',
     generate_new_title: 'สร้างรหัสสำรองใหม่',
     generate_new: 'สร้างรหัสสำรองใหม่',
-    delete_confirmation_title: 'ลบรหัสสำรองของคุณ',
-    delete_confirmation_description: 'หากคุณลบรหัสสำรองเหล่านี้ คุณจะไม่สามารถใช้ยืนยันตัวตนได้',
   },
   passkey: {
     title: 'Passkeys',

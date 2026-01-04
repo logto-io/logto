@@ -133,10 +133,6 @@ const account_center = {
       title: '백업 코드가 생성되었습니다!',
       description: '백업 코드가 저장되었습니다. 안전한 곳에 보관하십시오.',
     },
-    backup_code_deleted: {
-      title: '백업 코드가 삭제되었습니다!',
-      description: '백업 코드가 계정에서 삭제되었습니다.',
-    },
     passkey: {
       title: '패스키가 추가되었습니다!',
       description: '패스키가 계정에 성공적으로 연결되었습니다.',
@@ -157,8 +153,6 @@ const account_center = {
     copy_hint: '복사하여 안전한 곳에 보관하세요.',
     generate_new_title: '새 백업 코드 생성',
     generate_new: '새 백업 코드 생성',
-    delete_confirmation_title: '백업 코드 삭제',
-    delete_confirmation_description: '이 백업 코드를 삭제하면 더 이상 인증에 사용할 수 없습니다.',
   },
   passkey: {
     title: '패스키',

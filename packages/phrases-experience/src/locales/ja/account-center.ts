@@ -140,10 +140,6 @@ const account_center = {
       title: 'バックアップコードが生成されました！',
       description: 'バックアップコードが保存されました。安全な場所に保管してください。',
     },
-    backup_code_deleted: {
-      title: 'バックアップコードが削除されました！',
-      description: 'バックアップコードがアカウントから削除されました。',
-    },
     passkey: {
       title: 'パスキーが追加されました！',
       description: 'パスキーがアカウントに正常にリンクされました。',
@@ -160,9 +156,6 @@ const account_center = {
     copy_hint: 'コピーして安全な場所に保存してください。',
     generate_new_title: '新しいバックアップコードを生成',
     generate_new: '新しいバックアップコードを生成',
-    delete_confirmation_title: 'バックアップコードを削除',
-    delete_confirmation_description:
-      'これらのバックアップコードを削除すると、認証に使用できなくなります。',
   },
   passkey: {
     title: 'パスキー',

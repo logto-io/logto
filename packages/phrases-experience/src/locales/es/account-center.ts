@@ -144,10 +144,6 @@ const account_center = {
       title: '¡Códigos de respaldo generados!',
       description: 'Tus códigos de respaldo se han guardado. Guárdalos en un lugar seguro.',
     },
-    backup_code_deleted: {
-      title: '¡Códigos de respaldo eliminados!',
-      description: 'Tus códigos de respaldo han sido eliminados de tu cuenta.',
-    },
     passkey: {
       title: '¡Passkey añadido!',
       description: 'Tu passkey se ha vinculado correctamente a tu cuenta.',
@@ -168,9 +164,6 @@ const account_center = {
     copy_hint: 'Asegúrate de copiarlos y guardarlos en un lugar seguro.',
     generate_new_title: 'Generar nuevos códigos de respaldo',
     generate_new: 'Generar nuevos códigos de respaldo',
-    delete_confirmation_title: 'Eliminar tus códigos de respaldo',
-    delete_confirmation_description:
-      'Si eliminas estos códigos de respaldo, no podrás verificarte con ellos.',
   },
   passkey: {
     title: 'Passkeys',
