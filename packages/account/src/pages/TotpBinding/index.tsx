@@ -144,6 +144,10 @@ const TotpBinding = () => {
         return;
       }
 
+      // Clear code input to prevent duplicate submission from the auto-submit useEffect
+      // (when loading state changes, handleSubmit gets recreated, which triggers the effect again)
+      setCodeInput([]);
+
       if (isBackupCodeEnabled(experienceSettings?.mfa) && !hasBackupCodes) {
         void navigate(backupCodesGenerateRoute, { replace: true });
         return;
