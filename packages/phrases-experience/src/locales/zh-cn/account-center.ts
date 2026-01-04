@@ -98,6 +98,7 @@ const account_center = {
     backup_code_not_enabled: '备份码未启用，请联系管理员启用。',
     backup_code_requires_other_mfa: '备份码需要先设置其他 MFA 方式。',
     passkey_not_enabled: 'Passkey 未启用，请联系管理员启用。',
+    passkey_already_registered: '此 Passkey 已绑定到您的账户，请使用其他认证器。',
   },
   update_success: {
     default: {

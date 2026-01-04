@@ -102,6 +102,8 @@ const account_center = {
       '백업 코드가 활성화되지 않았습니다. 관리자에게 문의하여 활성화하십시오.',
     backup_code_requires_other_mfa: '백업 코드를 사용하려면 다른 MFA 방법을 먼저 설정해야 합니다.',
     passkey_not_enabled: '패스키가 활성화되지 않았습니다. 관리자에게 문의하여 활성화하세요.',
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {

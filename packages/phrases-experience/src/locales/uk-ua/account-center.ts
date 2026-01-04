@@ -110,6 +110,8 @@ const account_center = {
       'Резервні коди вимагають попереднього налаштування іншого методу MFA.',
     passkey_not_enabled:
       'Passkey не увімкнено. Будь ласка, зверніться до адміністратора, щоб увімкнути його.',
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {

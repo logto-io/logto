@@ -117,6 +117,8 @@ const account_center = {
       'Für Backup-Codes muss zuerst eine andere MFA-Methode eingerichtet werden.',
     passkey_not_enabled:
       'Passkey ist nicht aktiviert. Bitte kontaktieren Sie Ihren Administrator, um es zu aktivieren.',
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {

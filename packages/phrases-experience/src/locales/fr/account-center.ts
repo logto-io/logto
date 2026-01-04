@@ -114,6 +114,8 @@ const account_center = {
       "Les codes de secours nécessitent qu'une autre méthode MFA soit d'abord configurée.",
     passkey_not_enabled:
       "Passkey n'est pas activé. Veuillez contacter votre administrateur pour l'activer.",
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {

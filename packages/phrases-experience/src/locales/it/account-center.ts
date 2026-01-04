@@ -112,6 +112,8 @@ const account_center = {
     backup_code_requires_other_mfa:
       'I codici di backup richiedono che venga prima configurato un altro metodo MFA.',
     passkey_not_enabled: "Passkey non è abilitato. Contatta l'amministratore per abilitarlo.",
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {

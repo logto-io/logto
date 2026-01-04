@@ -1,7 +1,7 @@
 import Button from '@experience/shared/components/Button';
 import { AccountCenterControlValue, MfaFactor, type Mfa } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
-import { browserSupportsWebAuthn, startRegistration } from '@simplewebauthn/browser';
+import { browserSupportsWebAuthn, startRegistration, WebAuthnError } from '@simplewebauthn/browser';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -105,6 +105,23 @@ const PasskeyBinding = () => {
       async () => startRegistration(registrationOptions),
       (error) => {
         console.error('WebAuthn registration failed:', error);
+
+        if (error instanceof WebAuthnError) {
+          switch (error.code) {
+            case 'ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED': {
+              setToast(t('account_center.mfa.passkey_already_registered'));
+              return;
+            }
+            case 'ERROR_CEREMONY_ABORTED': {
+              // User cancelled the operation, no need to show error
+              return;
+            }
+            default: {
+              break;
+            }
+          }
+        }
+
         setToast(t('mfa.webauthn_failed_to_create'));
       }
     );
