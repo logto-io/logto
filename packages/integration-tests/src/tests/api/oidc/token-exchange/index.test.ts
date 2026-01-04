@@ -124,9 +124,11 @@ describe('Token Exchange', () => {
 
       const body = await oidcApi
         .post('token', {
-          headers: formUrlEncodedHeaders,
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
           body: new URLSearchParams({
-            client_id: testApplicationId,
             grant_type: GrantType.TokenExchange,
             subject_token: subjectToken,
             subject_token_type: legacyAccessTokenType,
