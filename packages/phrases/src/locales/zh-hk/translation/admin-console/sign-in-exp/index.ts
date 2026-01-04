@@ -106,7 +106,12 @@ const sign_in_exp = {
       account_security: {
         title: '帳戶安全',
         description:
-          '管理對 Account API 的存取權限，讓使用者在登入應用程式後，可以檢視或編輯身份資訊與驗證因素。進行這些與安全相關的變更前，使用者必須先完成身份驗證並取得有效期 10 分鐘的驗證紀錄 ID。',
+          '管理對 Account API 的存取權限，讓使用者在登入應用程式後，可以檢視或編輯身份資訊與驗證因素。',
+        security_verification: {
+          title: '安全驗證',
+          description:
+            '在變更安全設定之前，使用者必須驗證身份以取得有效期 10 分鐘的驗證紀錄 ID。要啟用驗證方式（電郵、手機、密碼），請將下方的 Account API 權限設定為<strong>唯讀</strong>（最低要求）或<strong>可編輯</strong>，以便系統偵測使用者是否已配置。<a>了解更多</a>',
+        },
         groups: {
           identifiers: {
             title: '身份識別',

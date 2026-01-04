@@ -106,7 +106,12 @@ const sign_in_exp = {
       account_security: {
         title: '계정 보안',
         description:
-          'Account API 접근을 관리해 사용자가 애플리케이션에 로그인한 뒤 자신의 신원 정보와 인증 요소를 확인하거나 수정할 수 있도록 합니다. 이러한 보안 관련 변경을 진행하기 전에 사용자는 본인 확인을 완료하고 유효 기간 10분의 검증 기록 ID를 받아야 합니다.',
+          'Account API 접근을 관리해 사용자가 애플리케이션에 로그인한 뒤 자신의 신원 정보와 인증 요소를 확인하거나 수정할 수 있도록 합니다.',
+        security_verification: {
+          title: '보안 인증',
+          description:
+            '보안 설정을 변경하기 전에 사용자는 본인 확인을 완료하고 유효 기간 10분의 검증 기록 ID를 받아야 합니다. 인증 방법(이메일, 전화, 비밀번호)을 활성화하려면 아래 Account API 권한을 <strong>읽기 전용</strong>(최소) 또는 <strong>편집</strong>으로 설정하여 시스템이 사용자의 설정 여부를 감지할 수 있도록 하세요. <a>자세히 알아보기</a>',
+        },
         groups: {
           identifiers: {
             title: '식별자',

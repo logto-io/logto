@@ -16,7 +16,7 @@ import TextLink from '../TextLink';
 import styles from './index.module.scss';
 
 type Props = {
-  readonly severity?: 'info' | 'alert' | 'success' | 'error';
+  readonly severity?: 'info' | 'alert' | 'success' | 'error' | 'plain';
   readonly children?: ReactNode;
   readonly action?: AdminConsoleKey;
   readonly href?: string;
@@ -42,6 +42,9 @@ function NotificationIcon({ severity }: Required<Pick<Props, 'severity'>>) {
     }
     case 'error': {
       return <Error />;
+    }
+    case 'plain': {
+      return <Info />;
     }
   }
 }

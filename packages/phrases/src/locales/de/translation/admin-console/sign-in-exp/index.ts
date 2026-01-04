@@ -109,7 +109,12 @@ const sign_in_exp = {
       account_security: {
         title: 'KONTO-SICHERHEIT',
         description:
-          'Verwalten Sie den Zugriff auf die Account-API, damit Benutzer nach der Anmeldung Identitätsinformationen und Authentifizierungsfaktoren anzeigen oder bearbeiten können. Bevor sie sicherheitsrelevante Änderungen vornehmen, müssen sie ihre Identität verifizieren und eine 10 Minuten gültige Verifizierungs-ID erhalten.',
+          'Verwalten Sie den Zugriff auf die Account-API, damit Benutzer nach der Anmeldung Identitätsinformationen und Authentifizierungsfaktoren anzeigen oder bearbeiten können.',
+        security_verification: {
+          title: 'Sicherheitsüberprüfung',
+          description:
+            'Bevor Sicherheitseinstellungen geändert werden, müssen Benutzer ihre Identität verifizieren und eine 10 Minuten gültige Verifizierungs-ID erhalten. Um eine Verifizierungsmethode (E-Mail, Telefon, Passwort) zu aktivieren, setzen Sie die Account-API-Berechtigung unten auf <strong>Nur lesen</strong> (Minimum) oder <strong>Bearbeiten</strong>, damit das System erkennen kann, ob der Benutzer sie konfiguriert hat. <a>Mehr erfahren</a>',
+        },
         groups: {
           identifiers: {
             title: 'Identifikatoren',

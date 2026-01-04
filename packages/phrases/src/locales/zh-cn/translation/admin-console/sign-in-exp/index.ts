@@ -106,7 +106,12 @@ const sign_in_exp = {
       account_security: {
         title: '账户安全',
         description:
-          '管理对 Account API 的访问，允许用户在登录应用后查看或编辑其身份信息和认证要素。用户必须先完成身份验证并获取有效期 10 分钟的验证记录 ID，才能进行这些与安全相关的更改。',
+          '管理对 Account API 的访问，允许用户在登录应用后查看或编辑其身份信息和认证要素。',
+        security_verification: {
+          title: '安全验证',
+          description:
+            '在更改安全设置之前，用户必须验证身份以获取有效期 10 分钟的验证记录 ID。要启用验证方式（邮箱、手机、密码），请将下方的 Account API 权限设置为<strong>只读</strong>（最低要求）或<strong>编辑</strong>，以便系统检测用户是否已配置。<a>了解更多</a>',
+        },
         groups: {
           identifiers: {
             title: '身份标识',

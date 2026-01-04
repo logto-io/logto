@@ -110,7 +110,12 @@ const sign_in_exp = {
       account_security: {
         title: 'SÉCURITÉ DU COMPTE',
         description:
-          'Gérez l’accès à l’API Account afin de permettre aux utilisateurs, après leur connexion à l’application, d’afficher ou de modifier leurs informations d’identité et leurs facteurs d’authentification. Avant d’effectuer ces changements liés à la sécurité, les utilisateurs doivent vérifier leur identité et obtenir un identifiant d’enregistrement de vérification valable 10 minutes.',
+          "Gérez l'accès à l'API Account afin de permettre aux utilisateurs, après leur connexion à l'application, d'afficher ou de modifier leurs informations d'identité et leurs facteurs d'authentification.",
+        security_verification: {
+          title: 'Vérification de sécurité',
+          description:
+            "Avant de modifier les paramètres de sécurité, les utilisateurs doivent vérifier leur identité pour obtenir un identifiant d'enregistrement de vérification valable 10 minutes. Pour activer une méthode de vérification (e-mail, téléphone, mot de passe), définissez l'autorisation de l'API Account ci-dessous sur <strong>Lecture seule</strong> (minimum) ou <strong>Modifier</strong> afin que le système puisse détecter si l'utilisateur l'a configurée. <a>En savoir plus</a>",
+        },
         groups: {
           identifiers: {
             title: 'Identifiants',

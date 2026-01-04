@@ -110,7 +110,12 @@ const sign_in_exp = {
       account_security: {
         title: 'ACCOUNT SECURITY',
         description:
-          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application. Users must verify their identity to get a valid 10-minute verification record ID before making these security-related changes.',
+          'Manage access to the Account API, enabling users to view or edit their identity information and authentication factors after signing into the application.',
+        security_verification: {
+          title: 'Security verification',
+          description:
+            'Before changing security settings, users must verify their identity to get a 10-minute verification record ID. To enable a verification method (email, phone, password), set the Account API permission to <strong>Read only</strong> (minimum) or <strong>Edit</strong> below so the system can detect if the user has it configured. <a>Learn more</a>',
+        },
         groups: {
           identifiers: {
             title: 'Identifiers',

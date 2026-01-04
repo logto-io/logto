@@ -109,7 +109,12 @@ const sign_in_exp = {
       account_security: {
         title: 'BEZPIECZEŃSTWO KONTA',
         description:
-          'Zarządzaj dostępem do Account API, aby użytkownicy po zalogowaniu mogli przeglądać lub edytować swoje dane tożsamości oraz czynniki uwierzytelniania. Zanim wprowadzą te zmiany związane z bezpieczeństwem, użytkownicy muszą potwierdzić swoją tożsamość i uzyskać identyfikator rekordu weryfikacji ważny przez 10 minut.',
+          'Zarządzaj dostępem do Account API, aby użytkownicy po zalogowaniu mogli przeglądać lub edytować swoje dane tożsamości oraz czynniki uwierzytelniania.',
+        security_verification: {
+          title: 'Weryfikacja bezpieczeństwa',
+          description:
+            'Przed zmianą ustawień bezpieczeństwa użytkownicy muszą potwierdzić swoją tożsamość, aby uzyskać identyfikator rekordu weryfikacji ważny przez 10 minut. Aby włączyć metodę weryfikacji (e-mail, telefon, hasło), ustaw uprawnienie Account API poniżej na <strong>Tylko do odczytu</strong> (minimum) lub <strong>Edytuj</strong>, aby system mógł wykryć, czy użytkownik ją skonfigurował. <a>Dowiedz się więcej</a>',
+        },
         groups: {
           identifiers: {
             title: 'Identyfikatory',
