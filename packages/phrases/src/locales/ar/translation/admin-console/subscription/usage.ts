@@ -74,8 +74,7 @@ const usage = {
       'تشمل خطتك القائمة على العقد أول {{basicQuota}} من الرموز وتكون مجانية للاستخدام. إذا كنت بحاجة إلى المزيد ، {{price, number}} لكل {{tokenLimit}} رمز شهريًا.',
   },
   m2mTokens: {
-    /** UNTRANSLATED */
-    title: 'M2M tokens',
+    title: 'رموز M2M',
   },
   hooks: {
     title: 'الخطافات',

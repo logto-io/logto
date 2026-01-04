@@ -75,8 +75,7 @@ const usage = {
       'Sözleşmeye dayalı planınız, ilk {{basicQuota}} tokenleri içerir ve ücretsiz kullanım sağlar. Daha fazla ihtiyacınız varsa, her {{tokenLimit}} token için aylık ${{price, number}}.',
   },
   m2mTokens: {
-    /** UNTRANSLATED */
-    title: 'M2M tokens',
+    title: 'M2M tokenler',
   },
   hooks: {
     title: 'Hooklar',

@@ -75,8 +75,7 @@ const usage = {
       'Pierwszy {{basicQuota}} tokenów jest wliczony i darmowy w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za {{tokenLimit}} tokenów miesięcznie.',
   },
   m2mTokens: {
-    /** UNTRANSLATED */
-    title: 'M2M tokens',
+    title: 'Tokeny M2M',
   },
   hooks: {
     title: 'Haki',

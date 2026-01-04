@@ -67,8 +67,7 @@ const usage = {
       '合同计划包括首 {{basicQuota}} 个令牌，免费使用。如果需要更多，每 {{tokenLimit}} 个令牌每月 ${{price, number}}。',
   },
   m2mTokens: {
-    /** UNTRANSLATED */
-    title: 'M2M tokens',
+    title: 'M2M 令牌',
   },
   hooks: {
     title: '钩子',

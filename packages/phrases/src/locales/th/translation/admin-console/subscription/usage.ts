@@ -74,8 +74,7 @@ const usage = {
       'โทเคน {{basicQuota}} แรก รวมอยู่และใช้งานฟรีในแผนตามสัญญาของคุณ หากต้องการมากขึ้น ราคา ${{price, number}} ต่อ {{tokenLimit}} โทเคนต่อเดือน',
   },
   m2mTokens: {
-    /** UNTRANSLATED */
-    title: 'M2M tokens',
+    title: 'โทเคน M2M',
   },
   hooks: {
     title: 'Hook',

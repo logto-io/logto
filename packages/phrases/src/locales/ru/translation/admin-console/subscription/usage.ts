@@ -75,8 +75,7 @@ const usage = {
       'Первые {{basicQuota}} токенов включены и бесплатны в вашем плановом контракте. Если вам нужно больше, то ${{price, number}} за {{tokenLimit}} токенов в месяц.',
   },
   m2mTokens: {
-    /** UNTRANSLATED */
-    title: 'M2M tokens',
+    title: 'M2M токены',
   },
   hooks: {
     title: 'Хуки',
