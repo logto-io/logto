@@ -20,10 +20,13 @@ const alteration: AlterationScript = {
     `);
   },
   down: async (pool) => {
-    // Remove allowTokenExchange from all applications
+    // Remove allowTokenExchange only from applications that were updated in the `up` migration
     await pool.query(sql`
       update applications
-        set custom_client_metadata = custom_client_metadata - 'allowTokenExchange';
+        set custom_client_metadata = custom_client_metadata - 'allowTokenExchange'
+        where is_third_party = false
+        and type in ('Traditional', 'Native', 'SPA')
+        and id != 'admin-console';
     `);
   },
 };
