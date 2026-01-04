@@ -177,6 +177,10 @@ const account_center = {
       'Are you sure you want to remove "{{name}}"? You will no longer be able to use this passkey to sign in.',
     rename_passkey: 'Rename passkey',
     rename_description: 'Enter a new name for this passkey.',
+    name_this_passkey: 'Name this device passkey',
+    name_passkey_description:
+      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
+    name_input_label: 'Name',
   },
 };
 

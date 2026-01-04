@@ -170,7 +170,11 @@ const account_center = {
     delete_confirmation_description:
       'คุณแน่ใจหรือไม่ว่าต้องการลบ "{{name}}"? คุณจะไม่สามารถใช้ Passkey นี้เข้าสู่ระบบได้อีก',
     rename_passkey: 'เปลี่ยนชื่อ Passkey',
-    rename_description: 'ป้อนชื่อใหม่สำหรับ Passkey นี้',
+    rename_description: 'Enter a new name for this passkey.',
+    name_this_passkey: 'Name this device passkey',
+    name_passkey_description:
+      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
+    name_input_label: 'Name',
   },
 };
 

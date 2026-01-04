@@ -166,6 +166,10 @@ const account_center = {
     delete_confirmation_description: '确定要移除"{{name}}"吗？移除后您将无法使用此 Passkey 登录。',
     rename_passkey: '重命名 Passkey',
     rename_description: '为此 Passkey 输入新名称。',
+    name_this_passkey: '为此设备 Passkey 命名',
+    name_passkey_description:
+      '您已成功验证此设备用于两步验证。自定义名称以便在拥有多个密钥时进行识别。',
+    name_input_label: '名称',
   },
 };
 

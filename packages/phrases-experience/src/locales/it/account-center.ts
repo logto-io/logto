@@ -180,7 +180,11 @@ const account_center = {
     delete_confirmation_description:
       'Sei sicuro di voler rimuovere "{{name}}"? Non potrai più utilizzare questo passkey per accedere.',
     rename_passkey: 'Rinomina passkey',
-    rename_description: 'Inserisci un nuovo nome per questo passkey.',
+    rename_description: 'Enter a new name for this passkey.',
+    name_this_passkey: 'Name this device passkey',
+    name_passkey_description:
+      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
+    name_input_label: 'Name',
   },
 };
 
