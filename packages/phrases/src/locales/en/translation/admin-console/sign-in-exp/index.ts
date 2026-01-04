@@ -172,6 +172,8 @@ const sign_in_exp = {
       title: 'INTEGRATE PREBUILT UI',
       description:
         'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
+      permission_notice:
+        'To integrate these prebuilt flows, set the related Account API permissions to <strong>Edit</strong> in the settings below.',
       flows_title: 'Integrate out-of-the-box security setting flows',
       flows_description:
         'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',

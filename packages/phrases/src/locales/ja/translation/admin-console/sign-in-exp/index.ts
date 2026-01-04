@@ -172,6 +172,8 @@ const sign_in_exp = {
       title: '組み込み UI を統合',
       description:
         'すぐに使える検証フローとセキュリティ設定フローを組み込み UI で迅速に統合します。',
+      permission_notice:
+        'これらのプリビルトフローを統合するには、以下の設定で関連するアカウント API の権限を<strong>編集</strong>に設定してください。',
       flows_title: 'すぐに使えるセキュリティ設定フローを統合',
       flows_description:
         'ドメインとルートを組み合わせてアカウント設定 URL を形成します（例: https://auth.foo.com/account/email）。更新後にユーザーをアプリに戻すために「redirect=」URL パラメータをオプションで追加できます。',

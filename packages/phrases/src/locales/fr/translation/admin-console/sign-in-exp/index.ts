@@ -174,6 +174,8 @@ const sign_in_exp = {
       title: "INTÉGRER L'INTERFACE UTILISATEUR PRÉCONSTRUITE",
       description:
         "Intégrez rapidement des flux de vérification et de paramètres de sécurité prêts à l'emploi avec une interface utilisateur préconstruite.",
+      permission_notice:
+        "Pour intégrer ces flux préconstruits, définissez les autorisations de l'API de compte associées sur <strong>Modifier</strong> dans les paramètres ci-dessous.",
       flows_title: "Intégrer des flux de paramètres de sécurité prêts à l'emploi",
       flows_description:
         'Combinez votre domaine avec le chemin pour former votre URL de paramètres de compte (par exemple, https://auth.foo.com/account/email). Ajoutez éventuellement un paramètre d’URL `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie.',

@@ -171,6 +171,8 @@ const sign_in_exp = {
       title: 'ÖN TANIMLI ARAYÜZÜ ENTEGRE ET',
       description:
         'Hazır doğrulama ve güvenlik ayarı akışlarını ön tanımlı arayüzle hızlıca entegre edin.',
+      permission_notice:
+        'Bu önceden oluşturulmuş akışları entegre etmek için aşağıdaki ayarlarda ilgili Hesap API izinlerini <strong>Düzenle</strong> olarak ayarlayın.',
       flows_title: 'Hazır güvenlik ayarı akışlarını entegre et',
       flows_description:
         "Hesap ayar URL'nizi oluşturmak için alan adınızı rota ile birleştirin (örneğin, https://auth.foo.com/account/email). Başarılı bir güncellemeden sonra kullanıcıları uygulamanıza geri döndürmek için isteğe bağlı olarak bir `redirect=` URL parametresi ekleyin.",

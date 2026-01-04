@@ -174,6 +174,8 @@ const sign_in_exp = {
       title: 'INTEGRA UNA INTERFAZ DE USUARIO PRECONSTRUIDA',
       description:
         'Integra rápidamente los flujos de verificación y configuración de seguridad listos para usar con una interfaz de usuario preconstruida.',
+      permission_notice:
+        'Para integrar estos flujos prediseñados, establezca los permisos de la API de cuenta relacionados en <strong>Editar</strong> en la configuración a continuación.',
       flows_title: 'Integra flujos de configuración de seguridad predefinidos',
       flows_description:
         'Combina tu dominio con la ruta para formar tu URL de configuración de cuenta (por ejemplo, https://auth.foo.com/account/email). Opcionalmente, agrega un parámetro de URL `redirect=` para devolver a los usuarios a tu aplicación después de actualizar con éxito.',

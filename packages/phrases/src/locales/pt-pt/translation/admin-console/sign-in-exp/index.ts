@@ -172,6 +172,8 @@ const sign_in_exp = {
       title: 'INTEGRAR UI PRÉ-CONSTRUÍDA',
       description:
         'Integre rapidamente fluxos de verificação e definição de segurança prontos para uso com UI pré-construído.',
+      permission_notice:
+        'Para integrar estes fluxos pré-construídos, defina as permissões da API de conta relacionadas como <strong>Editar</strong> nas definições abaixo.',
       flows_title: 'Integrar fluxos de definição de segurança prontos para uso',
       flows_description:
         'Combine o seu domínio com a rota para formar o seu URL de definição de conta (por exemplo, https://auth.foo.com/account/email). Opcionalmente, adicione um parâmetro de URL `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida.',

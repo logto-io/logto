@@ -172,6 +172,8 @@ const sign_in_exp = {
       title: 'INTEGRAZIONE UI PREDEFINITA',
       description:
         'Integra rapidamente i flussi di verifica e impostazione di sicurezza predefiniti con una UI integrata.',
+      permission_notice:
+        "Per integrare questi flussi predefiniti, imposta i permessi dell'API account correlati su <strong>Modifica</strong> nelle impostazioni sottostanti.",
       flows_title: 'Integra i flussi di impostazione di sicurezza predefiniti',
       flows_description:
         "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi un parametro URL `redirect=` per riportare gli utenti alla tua app dopo l'aggiornamento avvenuto con successo.",

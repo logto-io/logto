@@ -165,6 +165,8 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: '集成預構建界面',
       description: '快速整合預構建界面中的驗證和安全設置流程。',
+      permission_notice:
+        '要整合這些預建流程，請在下方設定中將相關的帳戶 API 權限設為<strong>編輯</strong>。',
       flows_title: '整合預構建安全設置流程',
       flows_description:
         '結合你的域名與路徑形成你的帳戶設置 URL（例如：https://auth.foo.com/account/email）。你可以選擇添加一個 `redirect=` URL 參數，在成功更新後將用戶返回到你的應用。',

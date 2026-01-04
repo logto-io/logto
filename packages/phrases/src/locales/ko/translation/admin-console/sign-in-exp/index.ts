@@ -167,6 +167,8 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: '기본 제공 UI 통합',
       description: '기본 제공 UI 를 사용하여 즉시 검증 및 보안 설정 흐름을 빠르게 통합하세요.',
+      permission_notice:
+        '이 사전 구축된 흐름을 통합하려면 아래 설정에서 관련 계정 API 권한을 <strong>편집</strong>으로 설정하세요.',
       flows_title: '기본 제공 보안 설정 흐름 통합',
       flows_description:
         '도메인과 경로를 결합하여 계정 설정 URL 을 형성하세요 (예: https://auth.foo.com/account/email). 성공적으로 업데이트 후 사용자를 앱으로 되돌리려면 `redirect=` URL 매개변수를 선택적으로 추가하세요.',

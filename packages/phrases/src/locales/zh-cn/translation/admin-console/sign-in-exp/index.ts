@@ -164,6 +164,8 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: '集成预构建 UI',
       description: '使用预构建 UI 快速集成开箱即用的验证和安全设置流程。',
+      permission_notice:
+        '要集成这些预构建流程，请在下方设置中将相关的帐户 API 权限设置为<strong>编辑</strong>。',
       flows_title: '集成开箱即用的安全设置流程',
       flows_description:
         '将你的域名与路由组合以形成账户设置 URL（例如 https://auth.foo.com/account/email）。可选择添加 `redirect=` URL 参数，以在成功更新后将用户返回到你的应用。',
