@@ -65,7 +65,7 @@ const account_center = {
   code_verification: {
     send: '認証コードを送信',
     resend: 'まだ届きませんか？ <a>認証コードを再送</a>',
-    resend_countdown: 'まだ届きませんか？<span> {{seconds}} 秒後に再送できます</span>',
+    resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます',
   },
 
   email_verification: {
@@ -77,7 +77,7 @@ const account_center = {
     description:
       '認証コードをメールアドレス {{email}} に送信しました。コードを入力して続行してください。',
     resend: 'まだ届きませんか？ <a>認証コードを再送</a>',
-    resend_countdown: 'まだ届きませんか？<span> {{seconds}} 秒後に再送できます</span>',
+    resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます',
     error_send_failed: '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
@@ -90,7 +90,7 @@ const account_center = {
     send: '認証コードを送信',
     description: '認証コードを電話 {{phone}} に送信しました。コードを入力して続行してください。',
     resend: 'まだ届きませんか？ <a>認証コードを再送</a>',
-    resend_countdown: 'まだ届きませんか？<span> {{seconds}} 秒後に再送できます</span>',
+    resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます',
     error_send_failed: '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
     error_invalid_code: '認証コードが無効か、有効期限が切れています。',
