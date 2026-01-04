@@ -42,6 +42,7 @@ describe('Token Exchange (Personal Access Token)', () => {
     const applicationType = ApplicationType.Traditional;
     const application = await createApplication(applicationName, applicationType, {
       oidcClientMetadata: { redirectUris: ['http://localhost:3000'], postLogoutRedirectUris: [] },
+      customClientMetadata: { allowTokenExchange: true },
     });
     testApplicationId = application.id;
     const secrets = await getApplicationSecrets(application.id);

@@ -76,6 +76,13 @@ const application_details = {
   backchannel_logout_uri_session_required: 'Czy sesja jest wymagana?',
   backchannel_logout_uri_session_required_description:
     'Po włączeniu, RP wymaga, aby roszczenie `sid` (ID sesji) było zawarte w tokenie wylogowania, aby zidentyfikować sesję RP z OP, gdy używany jest `backchannel_logout_uri`.',
+  token_exchange: 'Wymiana tokenów',
+  token_exchange_description: 'Zarządzaj ustawieniami wymiany tokenów dla tej aplikacji.',
+  allow_token_exchange: 'Zezwól na wymianę tokenów',
+  allow_token_exchange_description:
+    'Pozwól tej aplikacji inicjować żądania wymiany tokenów. Jest to wymagane dla <impersonationLink>podszywania się pod użytkownika</impersonationLink> i <patLink>osobistych tokenów dostępu</patLink>.',
+  allow_token_exchange_public_client_warning:
+    'Włączanie wymiany tokenów dla klientów publicznych (aplikacja jednostronicowa / aplikacja natywna) nie jest zalecane. Klienci publiczni nie mogą bezpiecznie przechowywać poświadczeń, co może narazić aplikację na ryzyko podszywania się pod tokeny.',
   delete_description:
     'Ta operacja nie może zostać cofnięta. Spowoduje trwałe usunięcie aplikacji. Aby potwierdzić, wpisz nazwę aplikacji <span>{{name}}</span>.',
   enter_your_application_name: 'Wpisz nazwę swojej aplikacji',

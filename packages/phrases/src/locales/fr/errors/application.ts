@@ -7,6 +7,8 @@ const application = {
     'Seules les applications Web traditionnelles, les applications monopage et les applications natives peuvent être marquées comme applications tierces.',
   third_party_application_only:
     'La fonctionnalité est uniquement disponible pour les applications tierces.',
+  third_party_application_cannot_enable_token_exchange:
+    'Les applications tierces ne sont pas autorisées à activer l’échange de jetons.',
   user_consent_scopes_not_found: 'Portées de consentement utilisateur invalides.',
   consent_management_api_scopes_not_allowed:
     "Les scopes de l'API de gestion ne sont pas autorisés.",

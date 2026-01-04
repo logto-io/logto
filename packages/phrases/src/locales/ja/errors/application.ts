@@ -6,6 +6,8 @@ const application = {
   invalid_third_party_application_type:
     '伝統的な Web アプリケーション、シングルページアプリケーション、ネイティブアプリケーションのみ、サードパーティアプリとしてマークできます。',
   third_party_application_only: 'この機能はサードパーティアプリケーションにのみ利用可能です。',
+  third_party_application_cannot_enable_token_exchange:
+    'サードパーティアプリケーションではトークン交換を有効にできません。',
   user_consent_scopes_not_found: '無効なユーザー同意スコープ。',
   consent_management_api_scopes_not_allowed: '管理 API スコープは許可されていません。',
   protected_app_metadata_is_required: '保護されたアプリケーションメタデータが必要です。',

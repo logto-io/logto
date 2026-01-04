@@ -76,6 +76,13 @@ const application_details = {
   backchannel_logout_uri_session_required: 'La session est-elle requise ?',
   backchannel_logout_uri_session_required_description:
     "Lorsqu'elle est activée, le RP exige qu'une réclamation `sid` (ID de session) soit incluse dans le jeton de déconnexion pour identifier la session RP avec l'OP lorsque l'`URI de déconnexion en backchannel` est utilisé.",
+  token_exchange: 'Échange de jetons',
+  token_exchange_description: 'Gérez les paramètres d’échange de jetons pour cette application.',
+  allow_token_exchange: 'Autoriser l’échange de jetons',
+  allow_token_exchange_description:
+    'Autorisez cette application à initier des requêtes d’échange de jetons. Ceci est nécessaire pour <impersonationLink>l’usurpation d’utilisateur</impersonationLink> et les <patLink>jetons d’accès personnels</patLink>.',
+  allow_token_exchange_public_client_warning:
+    'Activer l’échange de jetons pour les clients publics (application monopage / application native) n’est pas recommandé. Les clients publics ne peuvent pas stocker les identifiants de manière sécurisée, ce qui peut exposer votre application à des risques d’usurpation de jeton.',
   delete_description:
     "Cette action ne peut être annulée. Elle supprimera définitivement l'application. Veuillez entrer le nom de l'application <span>{{nom}}</span> pour confirmer.",
   enter_your_application_name: 'Entrez le nom de votre application',

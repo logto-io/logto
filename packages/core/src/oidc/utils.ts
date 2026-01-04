@@ -38,7 +38,7 @@ export const getConstantClientMetadata = (
     application_type: type === ApplicationType.Native ? 'native' : 'web',
     grant_types:
       type === ApplicationType.MachineToMachine
-        ? [GrantType.ClientCredentials]
+        ? [GrantType.ClientCredentials, GrantType.TokenExchange]
         : [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
     token_endpoint_auth_method: getTokenEndpointAuthMethod(),
     response_types: conditional(type === ApplicationType.MachineToMachine && []),

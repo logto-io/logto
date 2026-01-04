@@ -23,7 +23,10 @@ const { buildHandler } = await import('./index.js');
 const noop = async () => {};
 const findSubjectToken = jest.fn();
 const updateSubjectTokenById = jest.fn();
-const findApplicationById = jest.fn().mockResolvedValue(mockApplication);
+const findApplicationById = jest.fn().mockResolvedValue({
+  ...mockApplication,
+  customClientMetadata: { ...mockApplication.customClientMetadata, allowTokenExchange: true },
+});
 
 const mockQueries = {
   subjectTokens: {

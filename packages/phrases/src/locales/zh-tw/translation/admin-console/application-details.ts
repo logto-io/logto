@@ -72,6 +72,13 @@ const application_details = {
   backchannel_logout_uri_session_required: '需要會話嗎？',
   backchannel_logout_uri_session_required_description:
     '啟用後，RP 要求 logout token 中包含 `sid`（會話 ID）聲明，以便當使用 `backchannel_logout_uri` 時識別 RP 與 OP 的會話。',
+  token_exchange: '權杖交換',
+  token_exchange_description: '管理此應用程式的權杖交換設定。',
+  allow_token_exchange: '允許權杖交換',
+  allow_token_exchange_description:
+    '允許此應用程式發起權杖交換請求。這是 <impersonationLink>使用者冒充</impersonationLink> 與 <patLink>個人存取權杖</patLink> 所必需的。',
+  allow_token_exchange_public_client_warning:
+    '不建議為公開用戶端（單頁應用／原生應用）啟用權杖交換。公開用戶端無法安全儲存憑證，可能使你的應用暴露於權杖冒充風險。',
   delete_description:
     '本操作會永久性地刪除該應用程式，且不可撤銷。輸入 <span>{{name}}</span> 確認。',
   enter_your_application_name: '輸入你的應用程式姓名',

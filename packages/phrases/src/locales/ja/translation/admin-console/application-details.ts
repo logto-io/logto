@@ -76,6 +76,13 @@ const application_details = {
   backchannel_logout_uri_session_required: 'セッションが必要ですか？',
   backchannel_logout_uri_session_required_description:
     '有効にすると、RP は、`sid` （セッション ID）クレームをログアウトトークンに含めて、`backchannel_logout_uri` が使用されるときに RP セッションが OP と一致するように要求します。',
+  token_exchange: 'トークン交換',
+  token_exchange_description: 'このアプリケーションのトークン交換設定を管理します。',
+  allow_token_exchange: 'トークン交換を許可',
+  allow_token_exchange_description:
+    'このアプリケーションがトークン交換リクエストを開始できるようにします。これは <impersonationLink>ユーザーなりすまし</impersonationLink> と <patLink>個人用アクセストークン</patLink> に必要です。',
+  allow_token_exchange_public_client_warning:
+    'パブリッククライアント（シングルページアプリ／ネイティブアプリ）でトークン交換を有効にすることは推奨されません。パブリッククライアントは資格情報を安全に保存できないため、アプリケーションがトークンなりすましのリスクにさらされる可能性があります。',
   delete_description:
     'この操作は元に戻すことはできません。アプリケーション名「<span>{{name}}</span>」を入力して確認してください。',
   enter_your_application_name: 'アプリケーション名を入力してください',

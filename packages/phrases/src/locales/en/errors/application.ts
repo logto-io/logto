@@ -5,6 +5,8 @@ const application = {
   invalid_third_party_application_type:
     'Only traditional web, single-page, and native applications can be marked as third-party apps.',
   third_party_application_only: 'The feature is only available for third-party applications.',
+  third_party_application_cannot_enable_token_exchange:
+    'Third-party applications are not allowed to enable token exchange.',
   user_consent_scopes_not_found: 'Invalid user consent scopes.',
   consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   protected_app_metadata_is_required: 'Protected app metadata is required.',

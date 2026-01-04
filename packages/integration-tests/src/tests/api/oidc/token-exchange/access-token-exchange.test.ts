@@ -57,6 +57,7 @@ devFeatureTest.describe('Token Exchange (Access Token)', () => {
     const applicationType = ApplicationType.SPA;
     const application = await createApplication(applicationName, applicationType, {
       oidcClientMetadata: { redirectUris: ['http://localhost:3000'], postLogoutRedirectUris: [] },
+      customClientMetadata: { allowTokenExchange: true },
     });
     testApplicationId = application.id;
 

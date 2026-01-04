@@ -40,6 +40,7 @@ import MachineLogs from './MachineLogs';
 import MachineToMachineApplicationRoles from './MachineToMachineApplicationRoles';
 import RefreshTokenSettings from './RefreshTokenSettings';
 import Settings from './Settings';
+import TokenExchangeSettings from './TokenExchangeSettings';
 import styles from './index.module.scss';
 import { applicationFormDataParser, type ApplicationForm } from './utils';
 
@@ -233,6 +234,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
               <RefreshTokenSettings data={data} />
             )}
             {data.type !== ApplicationType.MachineToMachine && <BackchannelLogout />}
+            <TokenExchangeSettings data={data} />
           </DetailsForm>
         </FormProvider>
         {tab === ApplicationDetailsTabs.Settings && (

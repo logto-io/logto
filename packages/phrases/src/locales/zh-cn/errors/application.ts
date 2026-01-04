@@ -5,6 +5,7 @@ const application = {
   invalid_third_party_application_type:
     '只有传统网页应用、单页应用和原生应用可以标记为第三方应用。',
   third_party_application_only: '该功能仅适用于第三方应用程序。',
+  third_party_application_cannot_enable_token_exchange: '第三方应用程序不允许启用令牌交换。',
   user_consent_scopes_not_found: '无效的用户同意范围。',
   consent_management_api_scopes_not_allowed: '管理 API 范围不允许。',
   protected_app_metadata_is_required: '需要保护的应用程序元数据。',

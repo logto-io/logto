@@ -75,6 +75,13 @@ const application_details = {
   backchannel_logout_uri_session_required: 'Is session required?',
   backchannel_logout_uri_session_required_description:
     'When enabled, the RP requires that a `sid` (session ID) claim be included in the logout token to identify the RP session with the OP when the `backchannel_logout_uri` is used.',
+  token_exchange: 'Token exchange',
+  token_exchange_description: 'Manage the token exchange settings for this application.',
+  allow_token_exchange: 'Allow token exchange',
+  allow_token_exchange_description:
+    'Allow this application to initiate token exchange requests. This is required for <impersonationLink>user impersonation</impersonationLink> and <patLink>personal access tokens</patLink>.',
+  allow_token_exchange_public_client_warning:
+    'Enabling token exchange for public clients (single-page app / native app) is not recommended. Public clients cannot securely store credentials, which may expose your application to token impersonation risks.',
   delete_description:
     'This action cannot be undone. It will permanently delete the application. Please enter the application name <span>{{name}}</span> to confirm.',
   enter_your_application_name: 'Enter your application name',

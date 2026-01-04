@@ -78,6 +78,15 @@ export enum CustomClientMetadataKey {
    * It can be turned off for only traditional web apps for enhanced security.
    */
   RotateRefreshToken = 'rotateRefreshToken',
+  /**
+   * Whether the application is allowed to initiate token exchange requests.
+   *
+   * Only first-party applications can use token exchange. Third-party applications are always
+   * forbidden.
+   *
+   * Defaults to `false` for all new applications. Users must explicitly enable it.
+   */
+  AllowTokenExchange = 'allowTokenExchange',
 }
 
 export const customClientMetadataGuard = z.object({
@@ -88,6 +97,7 @@ export const customClientMetadataGuard = z.object({
   [CustomClientMetadataKey.TenantId]: z.string().optional(),
   [CustomClientMetadataKey.AlwaysIssueRefreshToken]: z.boolean().optional(),
   [CustomClientMetadataKey.RotateRefreshToken]: z.boolean().optional(),
+  [CustomClientMetadataKey.AllowTokenExchange]: z.boolean().optional(),
 } satisfies Record<CustomClientMetadataKey, z.ZodType>);
 
 /**
