@@ -108,6 +108,8 @@ const account_center = {
       'Kody zapasowe wymagają wcześniejszego skonfigurowania innej metody MFA.',
     passkey_not_enabled:
       'Passkey nie jest włączony. Skontaktuj się z administratorem, aby go włączyć.',
+    passkey_already_registered:
+      'This passkey is already registered to your account. Please use a different authenticator.',
   },
   update_success: {
     default: {
