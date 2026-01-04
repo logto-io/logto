@@ -139,6 +139,10 @@ const TotpBinding = () => {
         return;
       }
 
+      // Clear code input to prevent duplicate submission from the auto-submit useEffect
+      // (when loading state changes, handleSubmit gets recreated, which triggers the effect again)
+      setCodeInput([]);
+
       void navigate(authenticatorAppSuccessRoute, { replace: true });
     },
     [
