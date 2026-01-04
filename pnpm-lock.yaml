@@ -4026,7 +4026,7 @@ importers:
   packages/create:
     dependencies:
       '@logto/cli':
-        specifier: workspace:^1.35.0
+        specifier: workspace:^1.35.1
         version: link:../cli
 
   packages/demo-app:
