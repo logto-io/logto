@@ -117,10 +117,6 @@ describe('application route', () => {
       name,
       description,
       type,
-      customClientMetadata: {
-        ...mockApplication.customClientMetadata,
-        allowTokenExchange: true,
-      },
     });
   });
 
@@ -165,10 +161,7 @@ describe('application route', () => {
       id: mockId,
       name,
       type,
-      customClientMetadata: {
-        ...customClientMetadata,
-        allowTokenExchange: true,
-      },
+      customClientMetadata,
     });
   });
 

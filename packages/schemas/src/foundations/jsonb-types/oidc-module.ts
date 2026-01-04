@@ -84,7 +84,7 @@ export enum CustomClientMetadataKey {
    * Only first-party applications can use token exchange. Third-party applications are always
    * forbidden.
    *
-   * Defaults to `true` for M2M and Traditional Web apps, `false` for SPA and Native apps.
+   * Defaults to `false` for all new applications. Users must explicitly enable it.
    */
   AllowTokenExchange = 'allowTokenExchange',
 }

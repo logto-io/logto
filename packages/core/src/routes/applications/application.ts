@@ -17,7 +17,7 @@ import { boolean, object, string, z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import { buildOidcClientMetadata, buildCustomClientMetadata } from '#src/oidc/utils.js';
+import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -37,6 +37,19 @@ const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false' | undefi
   }
 
   return isThirdPartyQuery === 'true';
+};
+
+/** Third-party applications are not allowed to enable token exchange. */
+const assertThirdPartyApplicationTokenExchangeDisabled = (
+  isThirdParty: boolean,
+  allowTokenExchange?: boolean
+) => {
+  if (isThirdParty && allowTokenExchange === true) {
+    throw new RequestError({
+      code: 'application.third_party_application_cannot_enable_token_exchange',
+      status: 422,
+    });
+  }
 };
 
 const hideOidcClientMetadataForSamlApp = (application: Application) => {
@@ -167,8 +180,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     }),
     // eslint-disable-next-line complexity
     async (ctx, next) => {
-      const { oidcClientMetadata, protectedAppMetadata, customClientMetadata, ...rest } =
-        ctx.guard.body;
+      const { oidcClientMetadata, protectedAppMetadata, ...rest } = ctx.guard.body;
 
       if (rest.type === ApplicationType.SAML) {
         throw new RequestError('application.saml.use_saml_app_api');
@@ -193,17 +205,17 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
           ),
           'application.invalid_third_party_application_type'
         );
+
+        assertThirdPartyApplicationTokenExchangeDisabled(
+          true,
+          rest.customClientMetadata?.allowTokenExchange
+        );
       }
 
       const application = await queries.applications.insertApplication({
         id: generateStandardId(),
         secret: generateInternalSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
-        customClientMetadata: buildCustomClientMetadata(
-          rest.type,
-          customClientMetadata,
-          rest.isThirdParty
-        ),
         ...conditional(
           rest.type === ApplicationType.Protected &&
             protectedAppMetadata &&
@@ -294,7 +306,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       response: Applications.guard,
       status: [200, 400, 404, 422, 500],
     }),
-    // eslint-disable-next-line complexity
+
     async (ctx, next) => {
       const {
         params: { id },
@@ -308,16 +320,10 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         throw new RequestError('application.saml.use_saml_app_api');
       }
 
-      // Third-party applications are not allowed to enable token exchange
-      if (
-        pendingUpdateApplication.isThirdParty &&
-        rest.customClientMetadata?.allowTokenExchange === true
-      ) {
-        throw new RequestError({
-          code: 'application.third_party_application_cannot_enable_token_exchange',
-          status: 422,
-        });
-      }
+      assertThirdPartyApplicationTokenExchangeDisabled(
+        pendingUpdateApplication.isThirdParty,
+        rest.customClientMetadata?.allowTokenExchange
+      );
 
       // @deprecated
       // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.

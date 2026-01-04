@@ -61,13 +61,6 @@ export const buildAccountCenterAppDataForTenant = (tenantId: string): Applicatio
 
 export type BuiltInApplicationId = typeof demoAppApplicationId | typeof accountCenterApplicationId;
 
-/**
- * Check if the application ID is a built-in application.
- *
- * Note: Built-in applications do not exist in the database and are not allowed to perform
- * token exchange. If you add a new built-in application that requires token exchange,
- * update the `validateTokenExchangeAccess` function in `packages/core/src/oidc/application.ts`.
- */
 export const isBuiltInApplicationId = (
   applicationId: string
 ): applicationId is BuiltInApplicationId =>
@@ -113,7 +106,6 @@ export const createTenantMachineToMachineApplication = (
     },
     customClientMetadata: {
       tenantId,
-      allowTokenExchange: true,
     },
   });
 
