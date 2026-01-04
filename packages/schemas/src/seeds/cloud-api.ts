@@ -30,6 +30,8 @@ export enum CloudScope {
   ManageAffiliate = 'manage:affiliate',
   /** The user can create new affiliates and logs. */
   CreateAffiliate = 'create:affiliate',
+  /** Allow accessing Logto MCP API (part of Logto Cloud API). This scope is only available to M2M MCP server. */
+  AccessMcpApi = 'access:mcp:api',
 }
 
 export const createCloudApi = (): Readonly<[UpdateAdminData, ...CreateScope[]]> => {
