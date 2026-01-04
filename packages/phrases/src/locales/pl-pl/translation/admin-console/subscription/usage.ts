@@ -74,6 +74,10 @@ const usage = {
     tooltip_for_enterprise:
       'Pierwszy {{basicQuota}} tokenów jest wliczony i darmowy w twoim kontrakcie. Jeśli potrzebujesz więcej, ${{price, number}} za {{tokenLimit}} tokenów miesięcznie.',
   },
+  m2mTokens: {
+    /** UNTRANSLATED */
+    title: 'M2M tokens',
+  },
   hooks: {
     title: 'Haki',
     tooltip:

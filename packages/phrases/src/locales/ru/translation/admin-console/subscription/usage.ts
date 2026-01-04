@@ -74,6 +74,10 @@ const usage = {
     tooltip_for_enterprise:
       'Первые {{basicQuota}} токенов включены и бесплатны в вашем плановом контракте. Если вам нужно больше, то ${{price, number}} за {{tokenLimit}} токенов в месяц.',
   },
+  m2mTokens: {
+    /** UNTRANSLATED */
+    title: 'M2M tokens',
+  },
   hooks: {
     title: 'Хуки',
     tooltip: 'Дополнительная функция с ценой ${{price, number}} за хук. Первые 10 хуков включены.',

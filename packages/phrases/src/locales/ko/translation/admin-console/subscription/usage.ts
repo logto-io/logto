@@ -74,6 +74,10 @@ const usage = {
     tooltip_for_enterprise:
       '플랜에는 처음 {{basicQuota}} 개의 토큰이 포함되어 무료로 사용할 수 있습니다. 더 필요하다면, 매달 {{tokenLimit}} 개의 토큰당 ${{price, number}} 입니다.',
   },
+  m2mTokens: {
+    /** UNTRANSLATED */
+    title: 'M2M tokens',
+  },
   hooks: {
     title: '훅',
     tooltip:

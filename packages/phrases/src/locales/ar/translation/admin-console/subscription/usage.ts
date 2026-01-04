@@ -73,6 +73,10 @@ const usage = {
     tooltip_for_enterprise:
       'تشمل خطتك القائمة على العقد أول {{basicQuota}} من الرموز وتكون مجانية للاستخدام. إذا كنت بحاجة إلى المزيد ، {{price, number}} لكل {{tokenLimit}} رمز شهريًا.',
   },
+  m2mTokens: {
+    /** UNTRANSLATED */
+    title: 'M2M tokens',
+  },
   hooks: {
     title: 'الخطافات',
     tooltip: 'ميزة إضافية بسعر قدره ${{price, number}} لكل خطاف. الخطافات الأولى 10 مشمولة.',
