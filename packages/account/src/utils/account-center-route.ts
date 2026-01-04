@@ -115,8 +115,10 @@ export const handleAccountCenterRoute = () => {
   // Restore the stored route if the current path is the base path.
   if (window.location.pathname === accountCenterBasePath) {
     const storedRoute = parseStoredRoute(sessionStorage.getItem(routeStorageKey) ?? undefined);
+    // Always clear the stored route to ensure one-time restoration
+    sessionStorage.removeItem(routeStorageKey);
+
     if (!storedRoute) {
-      sessionStorage.removeItem(routeStorageKey);
       return;
     }
 
