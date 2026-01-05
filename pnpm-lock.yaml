@@ -3855,7 +3855,7 @@ importers:
         version: 1.3.3
       oidc-provider:
         specifier: github:logto-io/node-oidc-provider#11070941b286b89d8608607b5148569b3322db41
-        version: git+https://git@github.com:logto-io/node-oidc-provider.git#11070941b286b89d8608607b5148569b3322db41
+        version: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/11070941b286b89d8608607b5148569b3322db41
       openapi-types:
         specifier: ^12.1.3
         version: 12.1.3
@@ -12700,8 +12700,8 @@ packages:
   obuf@1.1.2:
     resolution: {integrity: sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==}
 
-  oidc-provider@git+https://git@github.com:logto-io/node-oidc-provider.git#11070941b286b89d8608607b5148569b3322db41:
-    resolution: {commit: 11070941b286b89d8608607b5148569b3322db41, repo: git@github.com:logto-io/node-oidc-provider.git, type: git}
+  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/11070941b286b89d8608607b5148569b3322db41:
+    resolution: {tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/11070941b286b89d8608607b5148569b3322db41}
     version: 8.6.1
 
   oidc-token-hash@5.0.3:
@@ -25406,7 +25406,7 @@ snapshots:
 
   obuf@1.1.2: {}
 
-  oidc-provider@git+https://git@github.com:logto-io/node-oidc-provider.git#11070941b286b89d8608607b5148569b3322db41:
+  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/11070941b286b89d8608607b5148569b3322db41:
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 13.1.0
