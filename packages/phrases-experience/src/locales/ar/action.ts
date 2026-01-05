@@ -36,6 +36,7 @@ const action = {
   authorize: 'التفويض',
   use_another_account: 'استخدام حساب آخر',
   back_to_current_account: 'الرجوع إلى الحساب الحالي',
+  done: 'تم',
 };
 
 export default Object.freeze(action);

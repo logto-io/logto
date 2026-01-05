@@ -1,3 +1,5 @@
+import { yes } from '@silverhand/essentials';
+
 import {
   emailRoute,
   emailSuccessRoute,
@@ -9,10 +11,12 @@ import {
   usernameSuccessRoute,
 } from '@ac/constants/routes';
 
+import { sessionStorage } from './session-storage';
+
 export const accountCenterBasePath = '/account';
 const routeStorageKey = 'account-center-route-cache';
-const redirectStorageKey = 'logto:account-center:redirect-url';
 const redirectUrlParameter = 'redirect';
+const showSuccessParameter = 'show_success';
 
 const knownRoutePrefixes: readonly string[] = [
   emailRoute,
@@ -43,61 +47,30 @@ const shouldSkipHandling = (search: string) => {
   return parameters.has('code') || parameters.has('error');
 };
 
-/**
- * Get the stored redirect URL from sessionStorage.
- */
-export const getRedirectUrl = (): string | undefined => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  return sessionStorage.getItem(redirectStorageKey) ?? undefined;
-};
+export const {
+  getRedirectUrl,
+  setRedirectUrl,
+  clearRedirectUrl,
+  getShowSuccess,
+  setShowSuccess,
+  clearShowSuccess,
+} = sessionStorage;
 
 /**
- * Store the redirect URL to sessionStorage.
- * The URL is validated to be a valid absolute URL with http/https protocol.
- */
-export const setRedirectUrl = (url: string): boolean => {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-
-  try {
-    const parsed = new URL(url);
-    // Only allow http and https protocols
-    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-      return false;
-    }
-    sessionStorage.setItem(redirectStorageKey, url);
-    return true;
-  } catch {
-    // Invalid URL
-    return false;
-  }
-};
-
-/**
- * Clear the stored redirect URL from sessionStorage.
- */
-export const clearRedirectUrl = (): void => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  sessionStorage.removeItem(redirectStorageKey);
-};
-
-/**
- * Parse and store the redirect URL from the query parameter.
+ * Parse and store the redirect URL and show success flag from query parameters.
  * This needs to be done before OAuth flow starts so it persists through the sign-in.
  */
 const handleRedirectParameter = () => {
   const parameters = new URLSearchParams(window.location.search);
   const redirectUrl = parameters.get(redirectUrlParameter);
+  const showSuccess = parameters.get(showSuccessParameter);
 
   if (redirectUrl) {
     setRedirectUrl(redirectUrl);
+  }
+
+  if (yes(showSuccess)) {
+    setShowSuccess(true);
   }
 };
 
@@ -114,9 +87,11 @@ export const handleAccountCenterRoute = () => {
 
   // Restore the stored route if the current path is the base path.
   if (window.location.pathname === accountCenterBasePath) {
-    const storedRoute = parseStoredRoute(sessionStorage.getItem(routeStorageKey) ?? undefined);
+    const storedRoute = parseStoredRoute(
+      window.sessionStorage.getItem(routeStorageKey) ?? undefined
+    );
     // Always clear the stored route to ensure one-time restoration
-    sessionStorage.removeItem(routeStorageKey);
+    window.sessionStorage.removeItem(routeStorageKey);
 
     if (!storedRoute) {
       return;
@@ -125,6 +100,6 @@ export const handleAccountCenterRoute = () => {
     const { search, hash } = window.location;
     window.history.replaceState({}, '', `${storedRoute}${search}${hash}`);
   } else if (isKnownRoute(window.location.pathname)) {
-    sessionStorage.setItem(routeStorageKey, window.location.pathname);
+    window.sessionStorage.setItem(routeStorageKey, window.location.pathname);
   }
 };

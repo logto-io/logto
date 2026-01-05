@@ -36,6 +36,7 @@ const action = {
   authorize: '授權',
   use_another_account: '使用其他帳戶',
   back_to_current_account: '返回當前帳戶',
+  done: '完成',
 };
 
 export default Object.freeze(action);

@@ -36,6 +36,7 @@ const action = {
   authorize: 'Autorizza',
   use_another_account: 'Usa un altro account',
   back_to_current_account: "Torna all'account attuale",
+  done: 'Fatto',
 };
 
 export default Object.freeze(action);
