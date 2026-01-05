@@ -1,13 +1,13 @@
 import Button from '@experience/shared/components/Button';
 import PasswordInputField from '@experience/shared/components/InputFields/PasswordInputField';
-import { useState, useContext, type FormEvent } from 'react';
+import { useState, useContext, useMemo, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { verifyPassword } from '@ac/apis/verification';
 import useApi from '@ac/hooks/use-api';
-import useErrorHandler from '@ac/hooks/use-error-handler';
+import useErrorHandler, { type ErrorHandlers } from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
 import SwitchVerificationMethodLink from '../SwitchVerificationMethodLink';
@@ -22,12 +22,24 @@ type Props = {
 
 const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: Props) => {
   const { t } = useTranslation();
-  const { setVerificationId, setToast } = useContext(PageContext);
+  const { setVerificationId } = useContext(PageContext);
   const { loading } = useContext(LoadingContext);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState<string>();
   const asyncVerifyPassword = useApi(verifyPassword);
   const handleError = useErrorHandler();
+
+  const errorHandlers: ErrorHandlers = useMemo(
+    () => ({
+      'session.invalid_credentials': (error) => {
+        setPasswordError(error.message);
+      },
+      global: (error) => {
+        setPasswordError(error.message);
+      },
+    }),
+    []
+  );
 
   const handleVerify = async (event?: FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
@@ -41,12 +53,12 @@ const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: 
     const [error, result] = await asyncVerifyPassword(password);
 
     if (error) {
-      await handleError(error);
+      await handleError(error, errorHandlers);
       return;
     }
 
     if (!result) {
-      setToast(t('account_center.password_verification.error_failed'));
+      setPasswordError(t('account_center.password_verification.error_failed'));
       return;
     }
 
