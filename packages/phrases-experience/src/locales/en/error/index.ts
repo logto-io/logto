@@ -28,8 +28,9 @@ const error = {
   terms_acceptance_required: 'Terms acceptance required',
   terms_acceptance_required_description:
     'You must agree to the terms to continue. Please try again.',
-  something_went_wrong: 'Something went wrong.',
-  feature_not_enabled: 'This feature is not enabled.',
+  something_went_wrong: 'Something went wrong',
+  feature_not_enabled:
+    'You do not have permission to access this feature. Please contact your administrator for assistance.',
 };
 
 export default Object.freeze(error);

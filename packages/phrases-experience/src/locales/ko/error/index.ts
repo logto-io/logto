@@ -26,8 +26,8 @@ const error = {
   captcha_verification_failed: '캡차 검증에 실패했어요.',
   terms_acceptance_required: '약관 동의가 필요해요',
   terms_acceptance_required_description: '계속하려면 약관에 동의해야 해요. 다시 시도해 주세요.',
-  something_went_wrong: '문제가 발생했어요.',
-  feature_not_enabled: '이 기능은 활성화되어 있지 않습니다.',
+  something_went_wrong: '문제가 발생했어요',
+  feature_not_enabled: '이 기능에 액세스할 권한이 없습니다. 관리자에게 도움을 요청하세요.',
 };
 
 export default Object.freeze(error);

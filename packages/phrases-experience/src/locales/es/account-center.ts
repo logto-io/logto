@@ -104,15 +104,15 @@ const account_center = {
     totp_already_added:
       'You have already added an authenticator app. Please remove the existing one first.',
     totp_not_enabled:
-      'La aplicación de autenticación OTP no está habilitada. Por favor, contacta a tu administrador para habilitarla.',
+      'La aplicación de autenticación OTP no está habilitada. Por favor, contacte a su administrador para obtener ayuda.',
     backup_code_already_added:
       'Ya tienes códigos de respaldo activos. Úsalos o elimínalos antes de generar nuevos.',
     backup_code_not_enabled:
-      'El código de respaldo no está habilitado. Contacta a tu administrador para habilitarlo.',
+      'El código de respaldo no está habilitado. Por favor, contacte a su administrador para obtener ayuda.',
     backup_code_requires_other_mfa:
       'Los códigos de respaldo requieren que se configure otro método MFA primero.',
     passkey_not_enabled:
-      'Passkey no está habilitado. Por favor, contacta a tu administrador para habilitarlo.',
+      'Passkey no está habilitado. Por favor, contacte a su administrador para obtener ayuda.',
     passkey_already_registered:
       'This passkey is already registered to your account. Please use a different authenticator.',
   },

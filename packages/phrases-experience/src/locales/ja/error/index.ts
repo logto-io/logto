@@ -29,8 +29,8 @@ const error = {
   terms_acceptance_required: '利用規約の同意が必要です',
   terms_acceptance_required_description:
     '続行するには利用規約に同意する必要があります。もう一度お試しください。',
-  something_went_wrong: '問題が発生しました。',
-  feature_not_enabled: 'この機能は有効になっていません。',
+  something_went_wrong: '問題が発生しました',
+  feature_not_enabled: 'この機能にアクセスする権限がありません。管理者にお問い合わせください。',
 };
 
 export default Object.freeze(error);

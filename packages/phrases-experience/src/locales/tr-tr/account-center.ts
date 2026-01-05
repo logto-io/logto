@@ -98,14 +98,14 @@ const account_center = {
     totp_already_added:
       'Zaten bir authenticator uygulaması eklediniz. Lütfen önce mevcut olanı kaldırın.',
     totp_not_enabled:
-      'Authenticator uygulaması OTP etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
+      'Authenticator uygulaması OTP etkin değil. Yardım için lütfen yöneticinizle iletişime geçin.',
     backup_code_already_added:
       'Halihazırda aktif yedek kodlarınız var. Yeni kodlar oluşturmadan önce lütfen bunları kullanın veya kaldırın.',
     backup_code_not_enabled:
-      'Yedek kod etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
+      'Yedek kod etkin değil. Yardım için lütfen yöneticinizle iletişime geçin.',
     backup_code_requires_other_mfa:
       'Yedek kodlar, önce başka bir MFA yönteminin ayarlanmasını gerektirir.',
-    passkey_not_enabled: 'Passkey etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
+    passkey_not_enabled: 'Passkey etkin değil. Yardım için lütfen yöneticinizle iletişime geçin.',
     passkey_already_registered:
       'This passkey is already registered to your account. Please use a different authenticator.',
   },

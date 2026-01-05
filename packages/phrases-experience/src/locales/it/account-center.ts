@@ -104,14 +104,14 @@ const account_center = {
     totp_already_added:
       "Hai già aggiunto un'app di autenticazione. Rimuovi prima quella esistente.",
     totp_not_enabled:
-      "L'app di autenticazione OTP non è abilitata. Contatta il tuo amministratore per abilitarla.",
+      "L'app di autenticazione OTP non è abilitata. Per assistenza, contatta il tuo amministratore.",
     backup_code_already_added:
       'Hai già codici di backup attivi. Utilizzali o rimuovili prima di generarne di nuovi.',
     backup_code_not_enabled:
-      'Il codice di backup non è abilitato. Contatta il tuo amministratore per abilitarlo.',
+      'Il codice di backup non è abilitato. Per assistenza, contatta il tuo amministratore.',
     backup_code_requires_other_mfa:
       'I codici di backup richiedono che venga prima configurato un altro metodo MFA.',
-    passkey_not_enabled: "Passkey non è abilitato. Contatta l'amministratore per abilitarlo.",
+    passkey_not_enabled: 'Passkey non è abilitato. Per assistenza, contatta il tuo amministratore.',
     passkey_already_registered:
       'This passkey is already registered to your account. Please use a different authenticator.',
   },

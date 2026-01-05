@@ -29,8 +29,9 @@ const error = {
   terms_acceptance_required: 'Aceitação dos termos necessária',
   terms_acceptance_required_description:
     'Deves aceitar os termos para continuar. Por favor, tenta novamente.',
-  something_went_wrong: 'Algo correu mal.',
-  feature_not_enabled: 'Esta funcionalidade não está ativada.',
+  something_went_wrong: 'Algo correu mal',
+  feature_not_enabled:
+    'Não tem permissão para aceder a esta funcionalidade. Por favor, contacte o seu administrador para obter ajuda.',
 };
 
 export default Object.freeze(error);

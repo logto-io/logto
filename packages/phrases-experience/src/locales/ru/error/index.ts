@@ -29,8 +29,9 @@ const error = {
   terms_acceptance_required: 'Требуется согласие с условиями',
   terms_acceptance_required_description:
     'Вы должны согласиться с условиями, чтобы продолжить. Пожалуйста, попробуйте снова.',
-  something_went_wrong: 'Что-то пошло не так.',
-  feature_not_enabled: 'Эта функция не включена.',
+  something_went_wrong: 'Что-то пошло не так',
+  feature_not_enabled:
+    'У вас нет прав на доступ к этой функции. Обратитесь к администратору за помощью.',
 };
 
 export default Object.freeze(error);
