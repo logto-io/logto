@@ -1,8 +1,7 @@
 const enterprise_subscription = {
   page_title: 'Subskrypcja',
   title: 'Zarządzaj swoją subskrypcją',
-  subtitle:
-    'Przeglądaj i zarządzaj szczegółami subskrypcji dla wielu najemców oraz informacjami o rozliczeniach.',
+  subtitle: 'To jest do zarządzania swoją subskrypcją wielu najemców i historią rozliczeń',
   tab: {
     subscription: 'Subskrypcja',
     billing_history: 'Historia rozliczeń',
@@ -10,10 +9,10 @@ const enterprise_subscription = {
   subscription: {
     title: 'Subskrypcja',
     description:
-      'Sprawdź szczegóły dotyczące wykorzystania bieżącego planu subskrypcji oraz informacje o rozliczeniach.',
+      'Łatwo śledź swoje zużycie, zobacz swój następny rachunek i przejrzyj swoją oryginalną umowę.',
     enterprise_plan_title: 'Plan przedsiębiorstwa',
     enterprise_plan_description:
-      'To jest Twoja subskrypcja planu przedsiębiorstwa, a ten limit jest współdzielony przez wszystkich najemców w ramach subskrypcji przedsiębiorstwa.',
+      'To jest Twoja subskrypcja planu przedsiębiorstwa, a ten limit jest dzielony między najemców. Zużycie może być opóźnione w aktualizacjach.',
     add_on_title: 'Dodatki „płać za użycie”',
     add_on_description:
       'Są to dodatkowe dodatki „płać za użycie” na podstawie twojej umowy lub standardowych stawek „płać za użycie” Logto. Pobierana będzie opłata zgodnie z faktycznym użyciem.',

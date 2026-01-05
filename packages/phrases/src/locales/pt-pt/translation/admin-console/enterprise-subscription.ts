@@ -1,8 +1,7 @@
 const enterprise_subscription = {
   page_title: 'Subscrição',
   title: 'Gerir a tua subscrição',
-  subtitle:
-    'Visualiza e gere os detalhes da tua subscrição multi-inquilino e informações de faturação.',
+  subtitle: 'Isto é para gerir a tua subscrição multi-inquilino e histórico de faturação',
   tab: {
     subscription: 'Subscrição',
     billing_history: 'Histórico de faturação',
@@ -10,10 +9,10 @@ const enterprise_subscription = {
   subscription: {
     title: 'Subscrição',
     description:
-      'Revê os detalhes de uso do teu plano de subscrição atual e informações de faturação.',
+      'Acompanhe facilmente o teu uso, veja a tua próxima fatura e reveja o teu contrato original.',
     enterprise_plan_title: 'Plano Empresarial',
     enterprise_plan_description:
-      'Esta é a tua subscrição do Plano Empresarial e esta quota é partilhada entre todos os inquilinos sob a tua subscrição empresarial.',
+      'Esta é a tua subscrição do Plano Empresarial e esta quota é partilhada entre inquilinos. O uso pode estar sujeito a um ligeiro atraso nas atualizações.',
     add_on_title: 'Add-ons pagas conforme o uso',
     add_on_description:
       'Estes são add-ons pagas conforme o uso, com base no teu contrato ou nas taxas padrão paga conforme o uso da Logto. Serás cobrado de acordo com o teu uso real.',
