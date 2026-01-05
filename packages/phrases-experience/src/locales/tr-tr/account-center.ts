@@ -98,7 +98,7 @@ const account_center = {
     totp_already_added:
       'Zaten bir authenticator uygulaması eklediniz. Lütfen önce mevcut olanı kaldırın.',
     totp_not_enabled:
-      'Authenticator uygulaması etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
+      'Authenticator uygulaması OTP etkin değil. Etkinleştirmek için lütfen yöneticinize başvurun.',
     backup_code_already_added:
       'Halihazırda aktif yedek kodlarınız var. Yeni kodlar oluşturmadan önce lütfen bunları kullanın veya kaldırın.',
     backup_code_not_enabled:

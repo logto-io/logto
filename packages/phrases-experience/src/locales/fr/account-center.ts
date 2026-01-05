@@ -105,7 +105,7 @@ const account_center = {
     totp_already_added:
       "Vous avez déjà ajouté une application d'authentification. Veuillez d'abord supprimer celle qui existe.",
     totp_not_enabled:
-      "L'application d'authentification n'est pas activée. Veuillez contacter votre administrateur pour l'activer.",
+      "L'application d'authentification OTP n'est pas activée. Veuillez contacter votre administrateur pour l'activer.",
     backup_code_already_added:
       "Vous avez déjà des codes de secours actifs. Veuillez les utiliser ou les supprimer avant d'en générer de nouveaux.",
     backup_code_not_enabled:

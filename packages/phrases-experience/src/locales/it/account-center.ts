@@ -104,7 +104,7 @@ const account_center = {
     totp_already_added:
       "Hai già aggiunto un'app di autenticazione. Rimuovi prima quella esistente.",
     totp_not_enabled:
-      "L'app di autenticazione non è abilitata. Contatta il tuo amministratore per abilitarla.",
+      "L'app di autenticazione OTP non è abilitata. Contatta il tuo amministratore per abilitarla.",
     backup_code_already_added:
       'Hai già codici di backup attivi. Utilizzali o rimuovili prima di generarne di nuovi.',
     backup_code_not_enabled:
