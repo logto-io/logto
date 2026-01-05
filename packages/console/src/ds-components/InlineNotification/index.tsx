@@ -16,7 +16,7 @@ import TextLink from '../TextLink';
 import styles from './index.module.scss';
 
 type Props = {
-  readonly severity?: 'info' | 'alert' | 'success' | 'error' | 'plain';
+  readonly severity?: 'info' | 'alert' | 'success' | 'error';
   readonly children?: ReactNode;
   readonly action?: AdminConsoleKey;
   readonly href?: string;
@@ -43,9 +43,6 @@ function NotificationIcon({ severity }: Required<Pick<Props, 'severity'>>) {
     case 'error': {
       return <Error />;
     }
-    case 'plain': {
-      return <Info />;
-    }
   }
 }
 
@@ -57,7 +54,7 @@ function InlineNotification(
     hrefTargetBlank,
     onClick,
     severity = 'info',
-    variant = 'plain',
+    variant,
     hasIcon = true,
     isActionLoading = false,
     actionButtonProps,
@@ -71,7 +68,7 @@ function InlineNotification(
       className={classNames(
         styles.inlineNotification,
         styles[severity],
-        styles[variant],
+        variant && styles[variant],
         className
       )}
     >

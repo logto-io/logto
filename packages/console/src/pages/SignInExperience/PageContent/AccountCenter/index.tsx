@@ -111,7 +111,7 @@ function AccountCenter({ isActive, data }: Props) {
                 title="sign_in_exp.account_center.sections.account_security.security_verification.title"
                 headlineSpacing="large"
               >
-                <InlineNotification severity="plain" hasIcon={false}>
+                <InlineNotification variant="plain" hasIcon={false}>
                   <Trans
                     components={{
                       strong: <strong />,
