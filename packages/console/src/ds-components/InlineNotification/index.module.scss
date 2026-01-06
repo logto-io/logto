@@ -8,10 +8,6 @@
   align-items: center;
   gap: _.unit(3);
 
-  &.shadow {
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-1);
-  }
 
   .icon {
     flex-shrink: 0;
@@ -52,6 +48,11 @@
 
   &.plain {
     background: none;
+    border: 1px solid var(--color-neutral-90);
+  }
+
+  &.shadow {
     border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-1);
   }
 }
