@@ -17,8 +17,6 @@ import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import { type SingleSignOnConnectorSession } from '../types/session.js';
 
 export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn {
-  private readonly trustUnverifiedEmail: boolean;
-
   constructor(readonly data: SingleSignOnConnectorData) {
     const parseConfigResult = basicOidcConnectorConfigGuard.safeParse(data.config);
 
@@ -31,7 +29,6 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
     }
 
     super(parseConfigResult.data);
-    this.trustUnverifiedEmail = parseConfigResult.data.trustUnverifiedEmail;
   }
 
   async getConfig() {
@@ -108,12 +105,11 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
       id,
       ...conditional(name && { name }),
       ...conditional(picture && { avatar: picture }),
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      ...conditional(email && (email_verified || this.trustUnverifiedEmail) && { email }),
+      ...conditional(email && (email_verified ?? oidcConfig.trustUnverifiedEmail) && { email }),
       ...conditional(phone && phone_verified && { phone }),
       ...camelcaseKeys(rest),
       ...conditional(
-        email && !email_verified && !this.trustUnverifiedEmail && { unverifiedEmail: email }
+        email && !email_verified && !oidcConfig.trustUnverifiedEmail && { unverifiedEmail: email }
       ),
       ...conditional(phone && !phone_verified && { unverifiedPhone: phone }),
     };

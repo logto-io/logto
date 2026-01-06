@@ -44,11 +44,10 @@ export const oidcConfigResponseGuard = z.object({
 
 export type OidcConfigResponse = z.infer<typeof oidcConfigResponseGuard>;
 
-export type BaseOidcConfig = CamelCaseKeys<OidcConfigResponse> & {
-  clientId: string;
-  clientSecret: string;
-  scope: string;
-};
+export type BaseOidcConfig = CamelCaseKeys<OidcConfigResponse> &
+  Required<
+    Pick<BasicOidcConnectorConfig, 'clientId' | 'clientSecret' | 'scope' | 'trustUnverifiedEmail'>
+  >;
 
 export const oidcAuthorizationResponseGuard = z.object({
   code: z.string(),
