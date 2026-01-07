@@ -1,6 +1,6 @@
 const secondary = {
   social_bind_with:
-    'Already have an account? Sign in to link {{methods, list(type: disjunction;)}} with your social identity.',
+    'Máš už účet? Přihlas se a propoj ho se svým {{methods, list(type: disjunction;)}} sociálním účtem.',
 };
 
 export default Object.freeze(secondary);
