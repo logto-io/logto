@@ -6,13 +6,13 @@ import VerificationCodeInput, {
 } from '@experience/shared/components/VerificationCode';
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
-import { useCallback, useContext, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import useApi from '@ac/hooks/use-api';
-import useErrorHandler from '@ac/hooks/use-error-handler';
+import useErrorHandler, { type ErrorHandlers } from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
 import SwitchVerificationMethodLink from '../SwitchVerificationMethodLink';
@@ -71,12 +71,28 @@ const CodeVerification = ({
   const verifyCodeRequest = useApi(verifyCode);
   const handleError = useErrorHandler();
   const [codeInput, setCodeInput] = useState<string[]>([]);
+  const [codeError, setCodeError] = useState<string>();
   const [countdown, setCountdown] = useState(0);
   const [pendingVerificationRecord, setPendingVerificationRecord] = useState<{
     recordId: string;
     expiresAt: string;
   }>();
   const [hasSentCode, setHasSentCode] = useState(false);
+
+  const verifyCodeErrorHandlers: ErrorHandlers = useMemo(
+    () => ({
+      'verification_code.expired': (error) => {
+        setCodeError(error.message);
+      },
+      'verification_code.code_mismatch': (error) => {
+        setCodeError(error.message);
+      },
+      global: (error) => {
+        setCodeError(error.message);
+      },
+    }),
+    []
+  );
 
   const startCountdown = useCallback(() => {
     setCountdown(resendCooldownSeconds);
@@ -135,6 +151,8 @@ const CodeVerification = ({
 
   const handleVerify = useCallback(
     async (code: string[]) => {
+      setCodeError(undefined);
+
       if (
         !identifier ||
         !pendingVerificationRecord?.recordId ||
@@ -155,7 +173,7 @@ const CodeVerification = ({
 
       if (error) {
         setCodeInput([]);
-        await handleError(error);
+        await handleError(error, verifyCodeErrorHandlers);
         return;
       }
 
@@ -168,6 +186,7 @@ const CodeVerification = ({
       loading,
       pendingVerificationRecord,
       setVerificationId,
+      verifyCodeErrorHandlers,
       verifyCodeRequest,
     ]
   );
@@ -206,7 +225,7 @@ const CodeVerification = ({
           onSubmit={(event) => {
             event.preventDefault();
             if (!isCodeReady(codeInput)) {
-              setToast(t('error.invalid_passcode'));
+              setCodeError(t('error.invalid_passcode'));
               return;
             }
             void handleVerify(codeInput);
@@ -216,7 +235,9 @@ const CodeVerification = ({
             name={codeInputName}
             className={styles.codeInput}
             value={codeInput}
+            error={codeError}
             onChange={(code) => {
+              setCodeError(undefined);
               setCodeInput(code);
             }}
           />
