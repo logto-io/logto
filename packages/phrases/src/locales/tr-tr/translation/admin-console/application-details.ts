@@ -43,6 +43,8 @@ const application_details = {
     'Kullanıcının oturum açma işlemi tamamlandıktan sonra (başarılı olsa da olmasa da) yönlendirilen bir URI. Daha fazla bilgi için OpenID Connect <a>AuthRequesta</a> bakınız.',
   mixed_redirect_uri_warning:
     'Uygulama türünüz en az bir yönlendirme URIı ile uyumlu değil. Bu, en iyi uygulamaları takip etmez ve yönlendirme URIlarını tutarlı tutmanızı şiddetle öneriyoruz.',
+  wildcard_redirect_uri_warning:
+    'Joker karakter içeren yönlendirme URIları standart OIDC değildir ve saldırı yüzeyini artırabilir. Dikkatli kullanın ve mümkün olduğunca tam yönlendirme URIlarını tercih edin.',
   post_sign_out_redirect_uri: 'Oturumdan Çıkış sonrası yönlendirme URIı',
   post_sign_out_redirect_uris: 'Oturumdan Çıkış sonrası yönlendirme URIları',
   post_sign_out_redirect_uri_placeholder: 'https://siteniz.com/anasayfa',

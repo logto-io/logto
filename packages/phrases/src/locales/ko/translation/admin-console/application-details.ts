@@ -43,6 +43,8 @@ const application_details = {
     '사용자 로그인 후 리디렉트될 URI 경로입니다. 더 자세한 정보는 OpenID Connect <a>인증 요청</a>을 참조하세요.',
   mixed_redirect_uri_warning:
     '어플리케이션 유형이 적어도 하나의 리디렉트 URI 와 호환되지 않습니다. 이는 모범 사례를 따르지 않으며, 리디렉트 URI 들을 일관되게 유지할 것을 강력히 권장합니다.',
+  wildcard_redirect_uri_warning:
+    '와일드카드 리디렉트 URI는 표준 OIDC가 아니며 공격 표면을 증가시킬 수 있습니다. 주의하여 사용하고 가능하면 정확한 리디렉트 URI를 사용하세요.',
   post_sign_out_redirect_uri: '로그아웃 후 리디렉트 URI',
   post_sign_out_redirect_uris: '로그아웃 후 리디렉트 URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',

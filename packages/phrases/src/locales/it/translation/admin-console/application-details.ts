@@ -44,6 +44,8 @@ const application_details = {
     'Il URI di reindirizzamento dopo il login di un utente (sia riuscito che non). Vedi OpenID Connect autenticazione richiesta per ulteriori informazioni.',
   mixed_redirect_uri_warning:
     'Il tuo tipo di applicazione non è compatibile con almeno uno degli URI di reindirizzamento. Non segue le migliori pratiche e consigliamo vivamente di mantenere gli URI di reindirizzamento coerenti.',
+  wildcard_redirect_uri_warning:
+    'Gli URI di reindirizzamento con wildcard non sono standard OIDC e possono aumentare la superficie di attacco. Usali con cautela e preferisci URI di reindirizzamento esatti quando possibile.',
   post_sign_out_redirect_uri: 'URI di reindirizzamento post disconnessione',
   post_sign_out_redirect_uris: 'URI di reindirizzamento post disconnessione',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',

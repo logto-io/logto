@@ -43,6 +43,8 @@ const application_details = {
     'عنوان URI الذي يتم إعادة التوجيه إليه بعد تسجيل المستخدم (سواء نجح أم فشل). انظر OpenID Connect <a>AuthRequest</a> لمزيد من المعلومات.',
   mixed_redirect_uri_warning:
     'نوع التطبيق الخاص بك غير متوافق مع واحد على الأقل من عناوين URI لإعادة التوجيه. لا يتبع أفضل الممارسات ونوصي بشدة بالحفاظ على الاتساق في عناوين URI لإعادة التوجيه.',
+  wildcard_redirect_uri_warning:
+    'عناوين URI لإعادة التوجيه التي تحتوي على أحرف البدل ليست معيار OIDC وقد تزيد من سطح الهجوم. استخدمها بحذر وفضّل عناوين URI الدقيقة لإعادة التوجيه كلما أمكن ذلك.',
   post_sign_out_redirect_uri: 'عنوان URI لإعادة التوجيه بعد تسجيل الخروج',
   post_sign_out_redirect_uris: 'عناوين URI لإعادة التوجيه بعد تسجيل الخروج',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
