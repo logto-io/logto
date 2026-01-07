@@ -132,7 +132,7 @@ const Username = () => {
         />
         <Button
           className={styles.submit}
-          title="action.continue"
+          title="action.save"
           htmlType="submit"
           isLoading={loading}
         />
