@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Info from '@/assets/icons/circle-info.svg?react';
 import Copy from '@/assets/icons/copy.svg?react';
-import Info from '@/assets/icons/info.svg?react';
-import TriangleRight from '@/assets/icons/triangle-right.svg?react';
-import FlipOnRtl from '@/ds-components/FlipOnRtl';
+import Start from '@/assets/icons/start.svg?react';
 import IconButton from '@/ds-components/IconButton';
 import { Tooltip } from '@/ds-components/Tip';
 
@@ -63,9 +62,7 @@ function PrebuiltUiUrlItem({ path, tooltip, tenantEndpoint }: Props) {
         </Tooltip>
         <Tooltip content={t('live_preview')}>
           <IconButton size="small" className={styles.iconButton} onClick={handleLivePreview}>
-            <FlipOnRtl>
-              <TriangleRight className={styles.icon} />
-            </FlipOnRtl>
+            <Start className={styles.icon} />
           </IconButton>
         </Tooltip>
       </div>
