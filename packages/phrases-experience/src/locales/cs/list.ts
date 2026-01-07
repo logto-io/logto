@@ -1,6 +1,6 @@
 const list = {
-  or: 'or',
-  and: 'and',
+  or: 'nebo',
+  and: 'a',
   separator: ',',
 };
 
