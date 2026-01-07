@@ -1,4 +1,4 @@
-import { ConnectorType } from '@logto/schemas';
+import { adminTenantId, ConnectorType } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -156,6 +156,11 @@ export class QuotaLibrary {
       return;
     }
 
+    // Admin tenant is not subject to quota & system limits
+    if (this.tenantId === adminTenantId) {
+      return;
+    }
+
     const subscriptionData = await this.subscription.getSubscriptionData();
 
     const tenantUsageQuery = new TenantUsageQuery(
@@ -190,6 +195,11 @@ export class QuotaLibrary {
 
     // Cloud only feature, skip in non-cloud environments
     if (!isCloud) {
+      return;
+    }
+
+    // Admin tenant is not subject to subscription updates reporting
+    if (this.tenantId === adminTenantId) {
       return;
     }
 
