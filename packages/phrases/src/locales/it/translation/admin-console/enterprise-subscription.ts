@@ -2,7 +2,7 @@ const enterprise_subscription = {
   page_title: 'Abbonamento',
   title: 'Gestisci il tuo abbonamento',
   subtitle:
-    'Visualizza e gestisci i dettagli del tuo abbonamento multi-tenant e le informazioni di fatturazione.',
+    'Questo serve per gestire il tuo abbonamento multi-tenant e la cronologia delle fatturazioni',
   tab: {
     subscription: 'Abbonamento',
     billing_history: 'Storico fatturazioni',
@@ -10,10 +10,10 @@ const enterprise_subscription = {
   subscription: {
     title: 'Abbonamento',
     description:
-      'Rivedi i dettagli di utilizzo del tuo attuale piano di abbonamento e le informazioni di fatturazione.',
+      'Tieni facilmente traccia del tuo utilizzo, vedi la prossima fattura e rivedi il tuo contratto originale.',
     enterprise_plan_title: 'Piano Enterprise',
     enterprise_plan_description:
-      'Questo è il tuo abbonamento al Piano Enterprise e questa quota è condivisa tra tutti i tenant sotto il tuo abbonamento aziendale.',
+      "Questo è il tuo abbonamento al piano Enterprise e questa quota è condivisa tra i tenant. L'utilizzo potrebbe essere soggetto a un leggero ritardo negli aggiornamenti.",
     add_on_title: 'Componenti aggiuntivi a consumo',
     add_on_description:
       'Questi sono componenti aggiuntivi a consumo basati sul tuo contratto o sulle tariffe standard a consumo di Logto. Ti verrà addebitato in base al tuo utilizzo effettivo.',

@@ -1,17 +1,17 @@
 const enterprise_subscription = {
   page_title: 'Subscription',
   title: 'Manage your subscription',
-  subtitle: 'View and manage your multi-tenant subscription details and billing information.',
+  subtitle: 'This is to manage your multi-tenant subscription and billing history',
   tab: {
     subscription: 'Subscription',
     billing_history: 'Billing history',
   },
   subscription: {
     title: 'Subscription',
-    description: 'Review your current subscription plan usage details and billing information.',
+    description: 'Easily track your usage, see your next bill, and review your original contract.',
     enterprise_plan_title: 'Enterprise Plan',
     enterprise_plan_description:
-      'This is your Enterprise plan subscription and this quota is shared across all tenants under your enterprise subscription.',
+      'This is your Enterprise plan subscription and this quota is shared across tenants. Usage may be subject to a slight delay in updates. ',
     add_on_title: 'Pay as you go add-ons',
     add_on_description:
       "These are additional pay-as-you-go add-ons based on your contract or Logto's standard pay-as-you-go rates. You will be charged according to your actual usage.",

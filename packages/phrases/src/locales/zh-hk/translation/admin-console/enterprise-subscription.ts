@@ -1,16 +1,17 @@
 const enterprise_subscription = {
   page_title: '訂閱',
   title: '管理你的訂閱',
-  subtitle: '查看和管理你的多租戶訂閱詳情和帳單信息。',
+  subtitle: '這是用來管理你的多租戶訂閱和帳單歷史',
   tab: {
     subscription: '訂閱',
     billing_history: '帳單歷史',
   },
   subscription: {
     title: '訂閱',
-    description: '查看你當前訂閱計劃的使用詳情和帳單信息。',
+    description: '輕鬆追踪你的使用情況，查看你的下次帳單，並查看你的原始合約。',
     enterprise_plan_title: '企業計劃',
-    enterprise_plan_description: '這是你的企業計劃訂閱，這個配額是你企業訂閱下的所有租戶共享的。',
+    enterprise_plan_description:
+      '這是你的企業計劃訂閱，這個配額是跨租戶共享的。使用情況的更新可能會有輕微的延遲。',
     add_on_title: '按使用量付費的附加功能',
     add_on_description:
       '這些是基於你的合約或 Logto 的標準按使用量付費費率的附加功能。你將根據你的實際使用量進行收費。',

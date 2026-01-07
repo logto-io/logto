@@ -1,8 +1,7 @@
 const enterprise_subscription = {
   page_title: 'Abonelik',
   title: 'Aboneliğinizi yönetin',
-  subtitle:
-    'Çok kiracılı abonelik detaylarınızı ve faturalandırma bilgilerinizi görüntüleyin ve yönetin.',
+  subtitle: 'Bu, çok kiracılı aboneliğinizi ve fatura geçmişinizi yönetmek içindir',
   tab: {
     subscription: 'Abonelik',
     billing_history: 'Fatura geçmişi',
@@ -10,10 +9,10 @@ const enterprise_subscription = {
   subscription: {
     title: 'Abonelik',
     description:
-      'Mevcut abonelik planı kullanım detaylarınızı ve faturalandırma bilgilerinizi inceleyin.',
+      'Kullanımınızı kolayca takip edin, bir sonraki faturanızı görün ve orijinal sözleşmenizi gözden geçirin.',
     enterprise_plan_title: 'Enterprise Planı',
     enterprise_plan_description:
-      'Bu, Enterprise plan aboneliğinizdir ve bu kota, kurumsal aboneliğiniz altındaki tüm kiracılar arasında paylaşılır.',
+      'Bu, Enterprise planı aboneliğinizdir ve bu kota kiracılar arasında paylaşılır. Kullanım güncellemelerinde küçük bir gecikme olabilir.',
     add_on_title: 'Kullandıkça öde eklentiler',
     add_on_description:
       "Bunlar, sözleşmenize veya Logto'nun standart kullandıkça öde tarifesine dayanan ek eklentilerdir. Gerçek kullanımınıza göre ücretlendirilirsiniz.",

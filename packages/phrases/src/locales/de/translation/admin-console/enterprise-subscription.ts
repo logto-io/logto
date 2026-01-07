@@ -1,8 +1,7 @@
 const enterprise_subscription = {
   page_title: 'Abonnement',
   title: 'Verwalten Sie Ihr Abonnement',
-  subtitle:
-    'Anzeigen und Verwalten Ihrer Multi-Mandanten-Abonnementdetails und Abrechnungsinformationen.',
+  subtitle: 'Hier können Sie Ihr Multi-Tenant-Abonnement und den Zahlungsverlauf verwalten',
   tab: {
     subscription: 'Abonnement',
     billing_history: 'Zahlungsverlauf',
@@ -10,10 +9,10 @@ const enterprise_subscription = {
   subscription: {
     title: 'Abonnement',
     description:
-      'Überprüfen Sie Ihre aktuellen Abonnementplannutzungsdetails und Abrechnungsinformationen.',
+      'Verfolgen Sie ganz einfach Ihre Nutzung, sehen Sie Ihre nächste Rechnung und überprüfen Sie Ihren ursprünglichen Vertrag.',
     enterprise_plan_title: 'Unternehmensplan',
     enterprise_plan_description:
-      'Dies ist Ihr Unternehmensplan-Abonnement, und dieses Kontingent wird über alle Mandanten hinweg unter Ihrem Unternehmensabonnement geteilt.',
+      'Dies ist Ihr Unternehmensplan-Abonnement und dieses Kontingent wird zwischen den Mandanten geteilt. Die Nutzung kann unter Umständen leicht verzögert aktualisiert werden. ',
     add_on_title: 'Add-ons nach Bedarf',
     add_on_description:
       'Dies sind zusätzliche Add-ons nach Bedarf basierend auf Ihrem Vertrag oder den standardmäßigen Pay-as-you-go-Sätzen von Logto. Ihnen werden Gebühren entsprechend Ihrer tatsächlichen Nutzung berechnet.',

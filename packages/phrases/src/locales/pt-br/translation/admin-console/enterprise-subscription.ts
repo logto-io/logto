@@ -1,8 +1,7 @@
 const enterprise_subscription = {
   page_title: 'Assinatura',
   title: 'Gerencie sua assinatura',
-  subtitle:
-    'Visualize e gerencie os detalhes da sua assinatura multi-inquilino e informações de cobrança.',
+  subtitle: 'Isto é para gerenciar sua assinatura multi-inquilino e histórico de faturamento',
   tab: {
     subscription: 'Assinatura',
     billing_history: 'Histórico de cobranças',
@@ -10,10 +9,10 @@ const enterprise_subscription = {
   subscription: {
     title: 'Assinatura',
     description:
-      'Revise os detalhes de uso do seu plano de assinatura atual e informações de cobrança.',
+      'Acompanhe facilmente seu uso, veja sua próxima fatura e reveja seu contrato original.',
     enterprise_plan_title: 'Plano Empresarial',
     enterprise_plan_description:
-      'Esta é sua assinatura do plano empresarial e esta cota é compartilhada entre todos os inquilinos sob sua assinatura empresarial.',
+      'Esta é sua assinatura do Plano Empresarial e esta cota é compartilhada entre inquilinos. O uso pode estar sujeito a um pequeno atraso nas atualizações. ',
     add_on_title: 'Complementos pay as you go',
     add_on_description:
       'Estes são complementos pay-as-you-go adicionais baseados no seu contrato ou nas tarifas padrão pay-as-you-go do Logto. Você será cobrado de acordo com o seu uso real.',

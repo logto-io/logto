@@ -2,7 +2,7 @@ const enterprise_subscription = {
   page_title: 'Abonnement',
   title: 'Gérer votre abonnement',
   subtitle:
-    'Consultez et gérez les détails de votre abonnement multi-locataire et les informations de facturation.',
+    'Ceci est pour gérer votre abonnement multi-locataires et votre historique de facturation',
   tab: {
     subscription: 'Abonnement',
     billing_history: 'Historique de facturation',
@@ -10,10 +10,10 @@ const enterprise_subscription = {
   subscription: {
     title: 'Abonnement',
     description:
-      "Vérifiez les détails d'utilisation et les informations de facturation de votre plan d'abonnement actuel.",
+      'Suivez facilement votre utilisation, voyez votre prochaine facture, et révisez votre contrat original.',
     enterprise_plan_title: 'Forfait Entreprise',
     enterprise_plan_description:
-      'Ceci est votre abonnement au forfait Entreprise, et ce quota est partagé entre tous les locataires sous votre abonnement entreprise.',
+      "Ceci est votre abonnement au forfait Entreprise et ce quota est partagé entre les locataires. L' utilisation peut être soumise à un léger retard de mise à jour.",
     add_on_title: 'Modules complémentaires à la carte',
     add_on_description:
       'Ce sont des modules complémentaires à la carte basés sur votre contrat ou sur les tarifs standards à la carte de Logto. Vous serez facturé en fonction de votre utilisation réelle.',
