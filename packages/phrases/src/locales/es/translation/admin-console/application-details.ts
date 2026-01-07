@@ -44,6 +44,8 @@ const application_details = {
     'El URI hacia donde se redirecciona después de que un usuario inicie sesión (correctamente o no). Consulta OpenID Connect <a>AuthRequest</a> para más información.',
   mixed_redirect_uri_warning:
     'Tu tipo de aplicación no es compatible con al menos uno de los URIs de redireccionamiento. No sigue las mejores prácticas y recomendamos encarecidamente mantener los URIs de redireccionamiento consistentes.',
+  wildcard_redirect_uri_warning:
+    'Los URIs de redireccionamiento con comodín no son estándar OIDC y pueden aumentar la superficie de ataque. Úsalos con cuidado y prefiere URIs de redireccionamiento exactos siempre que sea posible.',
   post_sign_out_redirect_uri: 'Post Sign-out URI de Redireccionamiento',
   post_sign_out_redirect_uris: 'Post Sign-out URIs de Redireccionamiento',
   post_sign_out_redirect_uri_placeholder: 'https://tu.pagina.com/home',

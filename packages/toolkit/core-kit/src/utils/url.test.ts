@@ -14,6 +14,9 @@ describe('url utilities', () => {
     expect(validateRedirectUrl('https://logto.dev/callback', 'web')).toBeTruthy();
     expect(validateRedirectUrl('https://my-company.com/callback?test=123', 'web')).toBeTruthy();
     expect(validateRedirectUrl('https://abc.com/callback?test=123#param=hash', 'web')).toBeTruthy();
+    expect(validateRedirectUrl('https://*.example.com/callback', 'web')).toBeTruthy();
+    expect(validateRedirectUrl('https://pr-*-myapp.vercel.app/callback', 'web')).toBeTruthy();
+    expect(validateRedirectUrl('https://example.com/callback/*', 'web')).toBeTruthy();
     expect(validateRedirectUrl('io.logto://my-app/callback', 'mobile')).toBeTruthy();
     expect(validateRedirectUrl('com.company://myDemoApp/callback', 'mobile')).toBeTruthy();
     expect(validateRedirectUrl('com.company://demo:1234', 'mobile')).toBeTruthy();
@@ -31,6 +34,12 @@ describe('url utilities', () => {
     expect(validateRedirectUrl('http://localhost:3001', 'mobile')).toBeFalsy();
     expect(validateRedirectUrl('https://logto.dev/callback', 'mobile')).toBeFalsy();
     expect(validateRedirectUrl('demoApp/callback', 'mobile')).toBeFalsy();
+    expect(validateRedirectUrl('https://example.com:*/*', 'web')).toBeFalsy();
+    expect(validateRedirectUrl('https://example.com/callback?x=*', 'web')).toBeFalsy();
+    expect(validateRedirectUrl('ht*ps://example.com/callback', 'web')).toBeFalsy();
+    expect(validateRedirectUrl('https://*/callback', 'web')).toBeFalsy();
+    expect(validateRedirectUrl('https://example.com/callback/../../admin', 'web')).toBeFalsy();
+    expect(validateRedirectUrl('https://example.com/callback/%2e%2e/admin', 'web')).toBeFalsy();
   });
 
   it('should allow valid URIs', () => {

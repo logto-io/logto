@@ -44,6 +44,8 @@ const application_details = {
     'ユーザーがサインイン（成功した場合も失敗した場合も）した後にリダイレクトされる URI です。詳細については、OpenID Connect の<a>AuthRequest</a>を参照してください。',
   mixed_redirect_uri_warning:
     'アプリケーションの種類は少なくとも一つのリダイレクト URI と互換性がありません。これは最善のプラクティスに従っておらず、リダイレクト URI を一貫性のあるものにすることを強くお勧めします。',
+  wildcard_redirect_uri_warning:
+    'ワイルドカードリダイレクト URI は標準 OIDC ではなく、攻撃対象領域を広げる可能性があります。慎重に使用し、可能な限り正確なリダイレクト URI を使用してください。',
   post_sign_out_redirect_uri: 'サインアウト後のリダイレクト URI',
   post_sign_out_redirect_uris: 'サインアウト後のリダイレクト URI',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',

@@ -45,6 +45,8 @@ const application_details = {
     'URI, zu dem der Benutzer nach der Anmeldung (egal ob erfolgreich oder nicht) weitergeleitet wird. Siehe OpenID Connect <a>AuthRequest</a> für weitere Informationen.',
   mixed_redirect_uri_warning:
     'Dein Anwendungstyp ist nicht mit mindestens einer der Umleitungs-URIs kompatibel. Es folgt nicht den bewährten Methoden und wir empfehlen dringend, die Umleitungs-URIs konsistent zu halten.',
+  wildcard_redirect_uri_warning:
+    'Wildcard-Umleitungs-URIs sind kein Standard-OIDC und können die Angriffsfläche vergrößern. Verwende sie mit Vorsicht und bevorzuge exakte Umleitungs-URIs, wann immer möglich.',
   post_sign_out_redirect_uri: 'Umleitungs-URI nach Abmeldung',
   post_sign_out_redirect_uris: 'Umleitungs-URIs nach Abmeldung',
   post_sign_out_redirect_uri_placeholder: 'https://deine.website.de/home',

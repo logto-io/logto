@@ -44,6 +44,8 @@ const application_details = {
     'Adres URL, na który użytkownik jest przekierowywany po zalogowaniu (zarówno pozytywnym, jak i negatywnym). Zobacz OpenID Connect <a>AuthRequest</a> po więcej informacji.',
   mixed_redirect_uri_warning:
     'Typ Twojej aplikacji jest niekompatybilny z co najmniej jednym z adresów URL przekierowania. To nie jest zgodne z najlepszymi praktykami i zdecydowanie zalecamy zachowanie spójności adresów URL przekierowania.',
+  wildcard_redirect_uri_warning:
+    'Adresy URL przekierowania z symbolami wieloznacznymi nie są standardem OIDC i mogą zwiększyć powierzchnię ataku. Używaj ich ostrożnie i preferuj dokładne adresy URL przekierowania, gdy to możliwe.',
   post_sign_out_redirect_uri: 'Adres URL przekierowania po wylogowaniu',
   post_sign_out_redirect_uris: 'Adresy URL przekierowania po wylogowaniu',
   post_sign_out_redirect_uri_placeholder: 'https://twoja.strona.com/strona-startowa',

@@ -41,6 +41,8 @@ const application_details = {
     '在用戶登錄完成（不論成功與否）後，重新導向的目標 URI。參見 OpenID Connect <a>AuthRequest</a> 以了解更多。',
   mixed_redirect_uri_warning:
     '你的應用程式類型不相容於至少一個重定向 URI。這不符合最佳實踐，我們強烈建議保持重定向 URI 一致。',
+  wildcard_redirect_uri_warning:
+    '萬用字元重定向 URI 不是標準 OIDC，可能會增加攻擊面。請謹慎使用，儘可能使用精確的重定向 URI。',
   post_sign_out_redirect_uri: '登出後重定向的 URI',
   post_sign_out_redirect_uris: '登出後重定向的 URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',

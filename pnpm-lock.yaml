@@ -3854,8 +3854,8 @@ importers:
         specifier: ^1.3.1
         version: 1.3.3
       oidc-provider:
-        specifier: github:logto-io/node-oidc-provider#aa47a2b000d08e28c1d212aac1899eddd13009e9
-        version: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/aa47a2b000d08e28c1d212aac1899eddd13009e9
+        specifier: github:logto-io/node-oidc-provider#b958a6a389df308033f2d9ca23163928dd3e1f80
+        version: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/b958a6a389df308033f2d9ca23163928dd3e1f80
       openapi-types:
         specifier: ^12.1.3
         version: 12.1.3
@@ -3882,7 +3882,7 @@ importers:
         version: 5.9.2
       qrcode:
         specifier: ^1.5.3
-        version: 1.5.3
+        version: 1.5.4
       raw-body:
         specifier: ^3.0.0
         version: 3.0.0
@@ -3970,7 +3970,7 @@ importers:
         version: 0.0.33
       '@types/qrcode':
         specifier: ^1.5.2
-        version: 1.5.2
+        version: 1.5.6
       '@types/semver':
         specifier: ^7.3.12
         version: 7.5.8
@@ -8005,9 +8005,6 @@ packages:
   '@types/psl@1.1.3':
     resolution: {integrity: sha512-Iu174JHfLd7i/XkXY6VDrqSlPvTDQOtQI7wNAXKKOAADJ9TduRLkNdMgjGiMxSttUIZnomv81JAbAbC0DhggxA==}
 
-  '@types/qrcode@1.5.2':
-    resolution: {integrity: sha512-W4KDz75m7rJjFbyCctzCtRzZUj+PrUHV+YjqDp50sSRezTbrtEAIq2iTzC6lISARl3qw+8IlcCyljdcVJE0Wug==}
-
   '@types/qrcode@1.5.6':
     resolution: {integrity: sha512-te7NQcV2BOvdj2b1hCAHzAoMNuj65kNBMz0KBaxM6c3VGBOhU0dURQKOtH8CFNI/dsKkwlv32p26qYQTWoB5bw==}
 
@@ -9836,9 +9833,6 @@ packages:
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
-
-  encode-utf8@1.0.3:
-    resolution: {integrity: sha512-ucAnuBEhUK4boH2HjVYG5Q2mQyPorvv0u/ocS+zhdw0S8AlHYY+GOFhP1Gio5z4icpP2ivFSvhtFjQi8+T9ppw==}
 
   encodeurl@1.0.2:
     resolution: {integrity: sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==}
@@ -12706,8 +12700,8 @@ packages:
   obuf@1.1.2:
     resolution: {integrity: sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==}
 
-  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/aa47a2b000d08e28c1d212aac1899eddd13009e9:
-    resolution: {tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/aa47a2b000d08e28c1d212aac1899eddd13009e9}
+  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/b958a6a389df308033f2d9ca23163928dd3e1f80:
+    resolution: {tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/b958a6a389df308033f2d9ca23163928dd3e1f80}
     version: 8.6.1
 
   oidc-token-hash@5.0.3:
@@ -13379,11 +13373,6 @@ packages:
   pvutils@1.1.3:
     resolution: {integrity: sha512-pMpnA0qRdFp32b1sJl1wOJNxZLQ2cbQx+k6tjNtZ8CpvVhNqEPRgivZ2WOUev2YMajecdH7ctUPDvEe87nariQ==}
     engines: {node: '>=6.0.0'}
-
-  qrcode@1.5.3:
-    resolution: {integrity: sha512-puyri6ApkEHYiVl4CFzo1tDkAZ+ATcnbJrJ6RiBM1Fhctdn/ix9MTE3hRph33omisEbC/2fcfemsseiKgBPKZg==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
 
   qrcode@1.5.4:
     resolution: {integrity: sha512-1ca71Zgiu6ORjHqFBDpnSMTR2ReToX4l1Au1VFLyVeBTFavzQnv5JxMFr3ukHVKpSrSA2MCk0lNJSykjUfz7Zg==}
@@ -19337,10 +19326,6 @@ snapshots:
 
   '@types/psl@1.1.3': {}
 
-  '@types/qrcode@1.5.2':
-    dependencies:
-      '@types/node': 22.14.1
-
   '@types/qrcode@1.5.6':
     dependencies:
       '@types/node': 22.14.1
@@ -21534,8 +21519,6 @@ snapshots:
   emoji-regex@8.0.0: {}
 
   emoji-regex@9.2.2: {}
-
-  encode-utf8@1.0.3: {}
 
   encodeurl@1.0.2: {}
 
@@ -25423,7 +25406,7 @@ snapshots:
 
   obuf@1.1.2: {}
 
-  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/aa47a2b000d08e28c1d212aac1899eddd13009e9:
+  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/b958a6a389df308033f2d9ca23163928dd3e1f80:
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 13.1.0
@@ -26127,13 +26110,6 @@ snapshots:
       tslib: 2.8.1
 
   pvutils@1.1.3: {}
-
-  qrcode@1.5.3:
-    dependencies:
-      dijkstrajs: 1.0.3
-      encode-utf8: 1.0.3
-      pngjs: 5.0.0
-      yargs: 15.4.1
 
   qrcode@1.5.4:
     dependencies:

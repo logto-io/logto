@@ -43,6 +43,8 @@ const application_details = {
     'URI สำหรับ redirect หลังจากผู้ใช้ลงชื่อเข้าใช้ (ไม่ว่าจะสำเร็จหรือไม่) ดูข้อมูลเพิ่มเติมใน OpenID Connect <a>AuthRequest</a>',
   mixed_redirect_uri_warning:
     'ประเภทแอปพลิเคชันของคุณไม่เข้ากันกับ Redirect URI อย่างน้อยหนึ่งรายการ ซึ่งไม่เป็นไปตามแนวทางที่แนะนำและแนะนำให้ตั้งค่า Redirect URIs ให้สอดคล้องกัน',
+  wildcard_redirect_uri_warning:
+    'Wildcard Redirect URI ไม่ใช่มาตรฐาน OIDC และอาจเพิ่มพื้นที่การโจมตี ใช้ด้วยความระมัดระวังและควรใช้ Redirect URI ที่แน่นอนเมื่อเป็นไปได้',
   post_sign_out_redirect_uri: 'Post sign-out redirect URI',
   post_sign_out_redirect_uris: 'Post sign-out redirect URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',

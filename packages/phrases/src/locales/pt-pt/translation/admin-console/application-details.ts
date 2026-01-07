@@ -44,6 +44,8 @@ const application_details = {
     'O URI para redirecionar após o início de sessão de um utilizador (com sucesso ou insucesso). Consulte a <a>AuthRequest</a> do OpenID Connect para obter mais informações.',
   mixed_redirect_uri_warning:
     'O tipo de aplicação não é compatível com pelo menos um dos URIs de redirecionamento. Isso não segue as melhores práticas e recomendamos fortemente manter os URIs de redirecionamento consistentes.',
+  wildcard_redirect_uri_warning:
+    'URIs de redirecionamento com wildcard não são padrão OIDC e podem aumentar a superfície de ataque. Utilize com cuidado e prefira URIs de redirecionamento exatos sempre que possível.',
   post_sign_out_redirect_uri: 'URI de redirecionamento pós-saída',
   post_sign_out_redirect_uris: 'URIs de redirecionamento pós-saída',
   post_sign_out_redirect_uri_placeholder: 'https://seusite.com/home',
