@@ -108,7 +108,7 @@ const account_center = {
     totp_already_added:
       'Du hast bereits eine Authenticator-App hinzugefügt. Bitte entferne zuerst die vorhandene.',
     totp_not_enabled:
-      'Die Authenticator-App ist nicht aktiviert. Bitte kontaktiere deinen Administrator, um sie zu aktivieren.',
+      'Die Authenticator-App OTP ist nicht aktiviert. Bitte kontaktiere deinen Administrator, um sie zu aktivieren.',
     backup_code_already_added:
       'Sie haben bereits aktive Backup-Codes. Bitte verwenden oder entfernen Sie diese, bevor Sie neue generieren.',
     backup_code_not_enabled:

@@ -99,7 +99,7 @@ const account_center = {
   mfa: {
     totp_already_added: 'Już dodano aplikację uwierzytelniającą. Najpierw usuń istniejącą.',
     totp_not_enabled:
-      'Aplikacja uwierzytelniająca nie jest włączona. Skontaktuj się z administratorem, aby ją włączyć.',
+      'Aplikacja uwierzytelniająca OTP nie jest włączona. Skontaktuj się z administratorem, aby ją włączyć.',
     backup_code_already_added:
       'Masz już aktywne kody zapasowe. Użyj ich lub usuń przed wygenerowaniem nowych.',
     backup_code_not_enabled:

@@ -97,7 +97,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added: '認証アプリはすでに追加されています。まず既存のものを削除してください。',
-    totp_not_enabled: '認証アプリは有効になっていません。管理者に連絡して有効にしてください。',
+    totp_not_enabled: '認証アプリ OTP は有効になっていません。管理者に連絡して有効にしてください。',
     backup_code_already_added:
       'すでに有効なバックアップコードがあります。新しいコードを生成する前に、これらを使用するか削除してください。',
     backup_code_not_enabled:

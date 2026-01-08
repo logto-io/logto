@@ -103,7 +103,7 @@ const account_center = {
   mfa: {
     totp_already_added: 'Já adicionou uma aplicação de autenticação. Remova a existente primeiro.',
     totp_not_enabled:
-      'A aplicação de autenticação não está ativa. Contacte o administrador para a ativar.',
+      'A aplicação de autenticação OTP não está ativa. Contacte o administrador para a ativar.',
     backup_code_already_added:
       'Já tem códigos de cópia de segurança ativos. Utilize-os ou remova-os antes de gerar novos.',
     backup_code_not_enabled:

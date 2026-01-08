@@ -95,7 +95,7 @@ const account_center = {
   },
   mfa: {
     totp_already_added: '이미 인증 앱을 추가했습니다. 먼저 기존 앱을 제거하십시오.',
-    totp_not_enabled: '인증 앱이 활성화되지 않았습니다. 관리자에게 문의하여 활성화하십시오.',
+    totp_not_enabled: '인증 앱 OTP가 활성화되지 않았습니다. 관리자에게 문의하여 활성화하십시오.',
     backup_code_already_added:
       '이미 활성 백업 코드가 있습니다. 새 코드를 생성하기 전에 사용하거나 제거하십시오.',
     backup_code_not_enabled:
