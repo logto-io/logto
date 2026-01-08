@@ -1,3 +1,4 @@
+import { type Nullable } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +7,6 @@ import { type LogtoEnterpriseSubscriptionResponse } from '@/cloud/types/router';
 import {
   usageKeys,
   titleKeyMap,
-  usageKeyPriceMap,
   type UsageKey,
   featureEnablementUsageKeys,
   CustomUsageKey,
@@ -29,9 +29,9 @@ type AddOnSkuTableItem = {
   id: string;
   usageKey: UsageKey;
   title: TFuncKey<'translation', 'admin_console.subscription.usage'>;
-  unitPrice: number;
+  unitPrice: Nullable<number>;
   count: number;
-  totalPrice: number;
+  totalPrice: Nullable<number>;
 };
 
 const findUsageKeyByAddOnItem = (
@@ -55,7 +55,7 @@ const findUsageKeyByAddOnItem = (
 
 const formatAddOnSkuTableItems = (addOnSkuItems: Props['skuItems']) => {
   return addOnSkuItems
-    .map(({ quota, logtoSkuId, count }) => {
+    .map(({ quota, logtoSkuId, count, unitPrice }) => {
       const supportedAddOnUsageKey = findUsageKeyByAddOnItem(quota);
 
       // Temporarily filter out unsupported add-on items
@@ -63,17 +63,16 @@ const formatAddOnSkuTableItems = (addOnSkuItems: Props['skuItems']) => {
         return;
       }
 
-      // TODO: Should replace, read the unit price from SKU item once the backend supports it
-      const unitPrice = usageKeyPriceMap[supportedAddOnUsageKey];
+      const price = unitPrice ? unitPrice / 100 : null;
 
       return {
         id: logtoSkuId,
         title: titleKeyMap[supportedAddOnUsageKey],
         usageKey: supportedAddOnUsageKey,
-        unitPrice,
+        unitPrice: price,
         count,
-        totalPrice: unitPrice * count,
-      };
+        totalPrice: price && price * count,
+      } satisfies AddOnSkuTableItem;
     })
     .filter((item): item is AddOnSkuTableItem => item !== undefined);
 };
@@ -112,7 +111,10 @@ function AddOnTable({ skuItems, quotaScope }: Props) {
             title: t('enterprise_subscription.subscription.add_on_column_title.unit_price'),
             dataIndex: 'unitPrice',
             render: ({ unitPrice }) =>
-              t('enterprise_subscription.subscription.add_on_sku_price', { price: unitPrice }),
+              unitPrice &&
+              t('enterprise_subscription.subscription.add_on_sku_price', {
+                price: unitPrice,
+              }),
           },
           {
             title: t('enterprise_subscription.subscription.add_on_column_title.quantity'),
@@ -129,7 +131,10 @@ function AddOnTable({ skuItems, quotaScope }: Props) {
             title: t('enterprise_subscription.subscription.add_on_column_title.total_price'),
             dataIndex: 'totalPrice',
             render: ({ totalPrice }) =>
-              t('enterprise_subscription.subscription.add_on_sku_price', { price: totalPrice }),
+              totalPrice &&
+              t('enterprise_subscription.subscription.add_on_sku_price', {
+                price: totalPrice,
+              }),
           },
         ]}
       />
