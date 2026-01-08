@@ -217,7 +217,6 @@ function Content() {
     if (!tenantEndpoint || (isCloud && isAuthenticated && !isLoaded)) {
       return <AppLoading />;
     }
-
     return <ConsoleRoutes />;
   }
 

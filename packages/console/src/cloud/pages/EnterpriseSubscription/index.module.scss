@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.pageContainer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .scrollable {
+    width: 100%;
+  }
+
+  .wrapper {
+    @include _.main-content-width;
+    width: 100%;
+    padding: _.unit(3) _.unit(6) 0;
+  }
+}
+
+.container {
+  flex-grow: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTitle {
+  flex-shrink: 0;
+}
+
+.tabs {
+  margin: _.unit(4) 0;
+}
