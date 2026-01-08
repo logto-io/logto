@@ -160,8 +160,8 @@ const account_center = {
     add_another_description:
       '使用設備生物識別、安全密鑰（例如 YubiKey）或其他可用方法註冊你的 Passkey。',
     add_passkey: '添加 Passkey',
-    delete_confirmation_title: '移除 Passkey',
-    delete_confirmation_description: '你確定要移除「{{name}}」嗎？你將無法再使用此 Passkey 登入。',
+    delete_confirmation_title: '移除你的 Passkey',
+    delete_confirmation_description: '如果你移除此 Passkey，你將無法使用它進行驗證。',
     rename_passkey: '重新命名 Passkey',
     rename_description: 'Enter a new name for this passkey.',
     name_this_passkey: 'Name this device passkey',

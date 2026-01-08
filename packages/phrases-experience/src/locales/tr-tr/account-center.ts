@@ -168,9 +168,9 @@ const account_center = {
     add_another_description:
       "Cihaz biyometriği, güvenlik anahtarları (örn. YubiKey) veya diğer mevcut yöntemleri kullanarak passkey'inizi kaydedin.",
     add_passkey: 'Bir passkey ekle',
-    delete_confirmation_title: "Passkey'i kaldır",
+    delete_confirmation_title: "Passkey'inizi kaldırın",
     delete_confirmation_description:
-      '"{{name}}" kaldırmak istediğinizden emin misiniz? Bu passkey ile artık giriş yapamayacaksınız.',
+      "Bu passkey'i kaldırırsanız, onunla doğrulama yapamayacaksınız.",
     rename_passkey: "Passkey'i yeniden adlandır",
     rename_description: 'Enter a new name for this passkey.',
     name_this_passkey: 'Name this device passkey',

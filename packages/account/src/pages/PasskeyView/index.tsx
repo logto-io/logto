@@ -8,7 +8,7 @@ import {
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
 import { format } from 'date-fns';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -155,16 +155,6 @@ const PasskeyView = () => {
     verificationId,
   ]);
 
-  const passkeyDisplayName = useMemo(() => {
-    if (!selectedPasskey) {
-      return '';
-    }
-    return (
-      formatPasskeyName(selectedPasskey.name, selectedPasskey.agent) ??
-      t('account_center.passkey.unnamed')
-    );
-  }, [selectedPasskey, t]);
-
   if (
     !accountCenterSettings?.enabled ||
     accountCenterSettings.fields.mfa !== AccountCenterControlValue.Edit
@@ -273,6 +263,8 @@ const PasskeyView = () => {
       <ConfirmModal
         isOpen={showDeleteConfirm}
         title="account_center.passkey.delete_confirmation_title"
+        confirmText="action.remove"
+        confirmButtonType="danger"
         onConfirm={() => {
           void handleDelete();
         }}
@@ -280,10 +272,7 @@ const PasskeyView = () => {
           setShowDeleteConfirm(false);
         }}
       >
-        <DynamicT
-          forKey="account_center.passkey.delete_confirmation_description"
-          interpolation={{ name: passkeyDisplayName }}
-        />
+        <DynamicT forKey="account_center.passkey.delete_confirmation_description" />
       </ConfirmModal>
       <ConfirmModal
         isOpen={showEditModal}

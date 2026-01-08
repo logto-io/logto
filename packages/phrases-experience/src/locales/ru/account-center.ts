@@ -169,9 +169,9 @@ const account_center = {
     add_another_description:
       'Зарегистрируйте свой passkey с помощью биометрии устройства, ключей безопасности (например, YubiKey) или других доступных методов.',
     add_passkey: 'Добавить passkey',
-    delete_confirmation_title: 'Удалить passkey',
+    delete_confirmation_title: 'Удалить ваш passkey',
     delete_confirmation_description:
-      'Вы уверены, что хотите удалить "{{name}}"? Вы больше не сможете использовать этот passkey для входа.',
+      'Если вы удалите этот passkey, вы не сможете использовать его для проверки.',
     rename_passkey: 'Переименовать passkey',
     rename_description: 'Enter a new name for this passkey.',
     name_this_passkey: 'Name this device passkey',

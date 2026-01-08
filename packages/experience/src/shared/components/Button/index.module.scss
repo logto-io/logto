@@ -85,6 +85,25 @@
   }
 }
 
+.danger {
+  border: none;
+  background: var(--color-danger-default);
+  color: var(--color-static-white);
+
+  &.disabled:not(.loading),
+  &:disabled:not(.loading) {
+    background: var(--color-bg-state-disabled);
+    color: var(--color-type-disable);
+  }
+
+  &:active {
+    background: var(--color-danger-pressed);
+  }
+
+  &.loadingActive {
+    background-color: var(--color-danger-hover);
+  }
+}
 
 :global(body.desktop) {
   .button {
@@ -108,6 +127,16 @@
 
     &:not(:disabled):not(:active):not(.loadingActive):hover {
       background: var(--color-overlay-neutral-hover);
+    }
+  }
+
+  .danger {
+    &:focus-visible {
+      outline: 3px solid var(--color-overlay-danger-focused);
+    }
+
+    &:not(:disabled):not(:active):not(.loadingActive):hover {
+      background: var(--color-danger-hover);
     }
   }
 }

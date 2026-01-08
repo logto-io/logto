@@ -162,9 +162,9 @@ const account_center = {
     add_another_description:
       'قم بتسجيل مفتاح المرور الخاص بك باستخدام المقاييس الحيوية للجهاز أو مفاتيح الأمان (مثل YubiKey) أو الطرق الأخرى المتاحة.',
     add_passkey: 'إضافة مفتاح مرور',
-    delete_confirmation_title: 'حذف مفتاح المرور',
+    delete_confirmation_title: 'إزالة مفتاح المرور الخاص بك',
     delete_confirmation_description:
-      'هل أنت متأكد أنك تريد حذف "{{name}}"؟ لن تتمكن من استخدام مفتاح المرور هذا لتسجيل الدخول بعد الآن.',
+      'إذا قمت بإزالة مفتاح المرور هذا، فلن تتمكن من التحقق باستخدامه.',
     rename_passkey: 'إعادة تسمية مفتاح المرور',
     rename_description: 'Enter a new name for this passkey.',
     name_this_passkey: 'Name this device passkey',
