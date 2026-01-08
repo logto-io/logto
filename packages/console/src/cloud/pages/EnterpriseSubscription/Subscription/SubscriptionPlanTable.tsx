@@ -21,6 +21,7 @@ function SubscriptionPlanTable({ data, isLoading }: Props) {
 
   return (
     <Table
+      isRowHoverEffectDisabled
       hasBorder
       className={styles.table}
       isLoading={isLoading}
