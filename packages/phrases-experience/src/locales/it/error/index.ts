@@ -28,8 +28,9 @@ const error = {
   terms_acceptance_required: 'Accettazione dei termini richiesta',
   terms_acceptance_required_description:
     'Devi accettare i termini per continuare. Per favore riprova.',
-  something_went_wrong: 'Qualcosa è andato storto.',
-  feature_not_enabled: 'Questa funzione non è abilitata.',
+  something_went_wrong: 'Qualcosa è andato storto',
+  feature_not_enabled:
+    'Non hai il permesso di accedere a questa funzionalità. Per assistenza, contatta il tuo amministratore.',
 };
 
 export default Object.freeze(error);

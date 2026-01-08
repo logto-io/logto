@@ -94,12 +94,13 @@ const account_center = {
   },
   mfa: {
     totp_already_added: 'لقد أضفت تطبيق مصادقة بالفعل. يرجى إزالة التطبيق الحالي أولاً.',
-    totp_not_enabled: 'تطبيق المصادقة OTP غير مفعّل. يرجى التواصل مع المسؤول لتفعيله.',
+    totp_not_enabled: 'تطبيق المصادقة OTP غير مفعّل. يرجى الاتصال بالمسؤول للحصول على المساعدة.',
     backup_code_already_added:
       'لديك بالفعل رموز احتياطية نشطة. يرجى استخدامها أو إزالتها قبل إنشاء رموز جديدة.',
-    backup_code_not_enabled: 'رمز النسخ الاحتياطي غير ممكّن. يرجى الاتصال بالمسؤول لتمكينه.',
+    backup_code_not_enabled:
+      'رمز النسخ الاحتياطي غير ممكّن. يرجى الاتصال بالمسؤول للحصول على المساعدة.',
     backup_code_requires_other_mfa: 'تتطلب رموز النسخ الاحتياطي إعداد طريقة MFA أخرى أولاً.',
-    passkey_not_enabled: 'مفتاح المرور غير مفعّل. يرجى التواصل مع المسؤول لتفعيله.',
+    passkey_not_enabled: 'مفتاح المرور غير مفعّل. يرجى الاتصال بالمسؤول للحصول على المساعدة.',
     passkey_already_registered:
       'This passkey is already registered to your account. Please use a different authenticator.',
   },

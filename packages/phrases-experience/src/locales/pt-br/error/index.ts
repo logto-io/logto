@@ -28,8 +28,9 @@ const error = {
   terms_acceptance_required: 'Aceitação dos termos obrigatória',
   terms_acceptance_required_description:
     'Você deve aceitar os termos para continuar. Por favor, tente novamente.',
-  something_went_wrong: 'Algo deu errado.',
-  feature_not_enabled: 'Este recurso não está habilitado.',
+  something_went_wrong: 'Algo deu errado',
+  feature_not_enabled:
+    'Você não tem permissão para acessar esse recurso. Entre em contato com seu administrador para obter ajuda.',
 };
 
 export default Object.freeze(error);

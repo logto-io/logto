@@ -28,8 +28,9 @@ const error = {
   terms_acceptance_required: 'Wymagana akceptacja warunków',
   terms_acceptance_required_description:
     'Musisz zaakceptować warunki, aby kontynuować. Spróbuj ponownie.',
-  something_went_wrong: 'Coś poszło nie tak.',
-  feature_not_enabled: 'Ta funkcja nie jest włączona.',
+  something_went_wrong: 'Coś poszło nie tak',
+  feature_not_enabled:
+    'Nie masz uprawnień do dostępu do tej funkcji. Skontaktuj się z administratorem, aby uzyskać pomoc.',
 };
 
 export default Object.freeze(error);

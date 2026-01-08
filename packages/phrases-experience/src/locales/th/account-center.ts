@@ -96,11 +96,12 @@ const account_center = {
   },
   mfa: {
     totp_already_added: 'คุณได้เพิ่มแอป Authenticator แล้ว โปรดลบแอปที่มีอยู่ก่อน',
-    totp_not_enabled: 'แอป Authenticator OTP ไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อเปิดใช้งาน',
+    totp_not_enabled:
+      'แอป Authenticator OTP ไม่ได้เปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
     backup_code_already_added: 'คุณมีรหัสสำรองที่ใช้งานอยู่แล้ว โปรดใช้หรือลบออกก่อนที่จะสร้างใหม่',
-    backup_code_not_enabled: 'รหัสสำรองไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบของคุณเพื่อเปิดใช้งาน',
+    backup_code_not_enabled: 'รหัสสำรองไม่ได้เปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
     backup_code_requires_other_mfa: 'รหัสสำรองต้องมีการตั้งค่าวิธี MFA อื่นก่อน',
-    passkey_not_enabled: 'Passkey ไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อเปิดใช้งาน',
+    passkey_not_enabled: 'Passkey ไม่ได้เปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
     passkey_already_registered:
       'This passkey is already registered to your account. Please use a different authenticator.',
   },

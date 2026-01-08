@@ -103,14 +103,15 @@ const account_center = {
   mfa: {
     totp_already_added: 'Já adicionou uma aplicação de autenticação. Remova a existente primeiro.',
     totp_not_enabled:
-      'A aplicação de autenticação OTP não está ativa. Contacte o administrador para a ativar.',
+      'A aplicação de autenticação OTP não está ativa. Por favor, contacte o seu administrador para obter ajuda.',
     backup_code_already_added:
       'Já tem códigos de cópia de segurança ativos. Utilize-os ou remova-os antes de gerar novos.',
     backup_code_not_enabled:
-      'O código de cópia de segurança não está ativado. Contacte o administrador para o ativar.',
+      'O código de cópia de segurança não está ativado. Por favor, contacte o seu administrador para obter ajuda.',
     backup_code_requires_other_mfa:
       'Os códigos de cópia de segurança requerem que outro método MFA seja configurado primeiro.',
-    passkey_not_enabled: 'Passkey não está ativado. Contacte o administrador para o ativar.',
+    passkey_not_enabled:
+      'Passkey não está ativado. Por favor, contacte o seu administrador para obter ajuda.',
     passkey_already_registered:
       'This passkey is already registered to your account. Please use a different authenticator.',
   },

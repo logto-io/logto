@@ -99,15 +99,15 @@ const account_center = {
   mfa: {
     totp_already_added: 'Już dodano aplikację uwierzytelniającą. Najpierw usuń istniejącą.',
     totp_not_enabled:
-      'Aplikacja uwierzytelniająca OTP nie jest włączona. Skontaktuj się z administratorem, aby ją włączyć.',
+      'Aplikacja uwierzytelniająca OTP nie jest włączona. Skontaktuj się z administratorem, aby uzyskać pomoc.',
     backup_code_already_added:
       'Masz już aktywne kody zapasowe. Użyj ich lub usuń przed wygenerowaniem nowych.',
     backup_code_not_enabled:
-      'Kod zapasowy nie jest włączony. Skontaktuj się z administratorem, aby go włączyć.',
+      'Kod zapasowy nie jest włączony. Skontaktuj się z administratorem, aby uzyskać pomoc.',
     backup_code_requires_other_mfa:
       'Kody zapasowe wymagają wcześniejszego skonfigurowania innej metody MFA.',
     passkey_not_enabled:
-      'Passkey nie jest włączony. Skontaktuj się z administratorem, aby go włączyć.',
+      'Passkey nie jest włączony. Skontaktuj się z administratorem, aby uzyskać pomoc.',
     passkey_already_registered:
       'This passkey is already registered to your account. Please use a different authenticator.',
   },

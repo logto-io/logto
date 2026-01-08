@@ -105,15 +105,15 @@ const account_center = {
     totp_already_added:
       "Vous avez déjà ajouté une application d'authentification. Veuillez d'abord supprimer celle qui existe.",
     totp_not_enabled:
-      "L'application d'authentification OTP n'est pas activée. Veuillez contacter votre administrateur pour l'activer.",
+      "L'application d'authentification OTP n'est pas activée. Veuillez contacter votre administrateur pour obtenir de l'aide.",
     backup_code_already_added:
       "Vous avez déjà des codes de secours actifs. Veuillez les utiliser ou les supprimer avant d'en générer de nouveaux.",
     backup_code_not_enabled:
-      "Le code de secours n'est pas activé. Veuillez contacter votre administrateur pour l'activer.",
+      "Le code de secours n'est pas activé. Veuillez contacter votre administrateur pour obtenir de l'aide.",
     backup_code_requires_other_mfa:
       "Les codes de secours nécessitent qu'une autre méthode MFA soit d'abord configurée.",
     passkey_not_enabled:
-      "Passkey n'est pas activé. Veuillez contacter votre administrateur pour l'activer.",
+      "Passkey n'est pas activé. Veuillez contacter votre administrateur pour obtenir de l'aide.",
     passkey_already_registered:
       'This passkey is already registered to your account. Please use a different authenticator.',
   },

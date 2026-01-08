@@ -26,8 +26,8 @@ const error = {
   captcha_verification_failed: '验证码验证失败。',
   terms_acceptance_required: '需要同意条款',
   terms_acceptance_required_description: '必须同意条款后才能继续，请重试。',
-  something_went_wrong: '出现错误。',
-  feature_not_enabled: '此功能未启用。',
+  something_went_wrong: '出现错误',
+  feature_not_enabled: '您没有权限访问此功能。请联系管理员寻求帮助。',
 };
 
 export default Object.freeze(error);

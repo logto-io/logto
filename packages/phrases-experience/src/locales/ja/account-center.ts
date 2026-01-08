@@ -97,14 +97,14 @@ const account_center = {
   },
   mfa: {
     totp_already_added: '認証アプリはすでに追加されています。まず既存のものを削除してください。',
-    totp_not_enabled: '認証アプリ OTP は有効になっていません。管理者に連絡して有効にしてください。',
+    totp_not_enabled: '認証アプリ OTP は有効になっていません。管理者にお問い合わせください。',
     backup_code_already_added:
       'すでに有効なバックアップコードがあります。新しいコードを生成する前に、これらを使用するか削除してください。',
     backup_code_not_enabled:
-      'バックアップコードは有効になっていません。管理者に連絡して有効にしてください。',
+      'バックアップコードは有効になっていません。管理者にお問い合わせください。',
     backup_code_requires_other_mfa:
       'バックアップコードを使用するには、まず他の MFA メソッドを設定する必要があります。',
-    passkey_not_enabled: 'パスキーが有効になっていません。管理者に連絡して有効にしてください。',
+    passkey_not_enabled: 'パスキーが有効になっていません。管理者にお問い合わせください。',
     passkey_already_registered:
       'This passkey is already registered to your account. Please use a different authenticator.',
   },
