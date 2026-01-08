@@ -11,9 +11,9 @@
   },
   "exports": {
     "./management": {
-      "default": "./lib/management.js",
       "types": "./lib/management.d.ts",
-      "import": "./lib/management.js"
+      "import": "./lib/management.js",
+      "default": "./lib/management.js"
     }
   },
   "files": [
