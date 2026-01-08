@@ -24,7 +24,7 @@ import RedirectUrisWeb, { defaultRedirectUri, defaultPostSignOutUri } from '../.
 Import and use `LogtoProvider` to provide a Logto context to your app:
 
 <Code className="language-tsx" title="App.tsx">
-    {`import { LogtoProvider, LogtoConfig } from '@logto/react';
+    {`import { LogtoProvider, type LogtoConfig } from '@logto/react';
 
 const config: LogtoConfig = {
   endpoint: '${props.endpoint}',

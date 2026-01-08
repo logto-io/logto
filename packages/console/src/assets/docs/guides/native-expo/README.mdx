@@ -31,7 +31,7 @@ If you're installing this in a [bare React Native app](https://docs.expo.dev/bar
 Import and use `LogtoProvider` to provide a Logto context:
 
 <Code className="language-tsx" title="App.tsx">
-    {`import { LogtoProvider, LogtoConfig } from '@logto/rn';
+    {`import { LogtoProvider, type LogtoConfig } from '@logto/rn';
 
 const config: LogtoConfig = {
   endpoint: '${props.endpoint}',
