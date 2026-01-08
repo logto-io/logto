@@ -12,15 +12,15 @@
   "main": "./lib/index.js",
   "exports": {
     ".": {
-      "default": "./lib/index.js",
       "types": "./lib/index.d.ts",
-      "import": "./lib/index.js"
+      "import": "./lib/index.js",
+      "default": "./lib/index.js"
     },
     "./declaration": "./declaration/index.ts",
     "./scss/*": "./scss/*.scss",
     "./custom-jwt": {
-      "node": "./lib/custom-jwt/index.js",
-      "types": "./lib/custom-jwt/index.d.ts"
+      "types": "./lib/custom-jwt/index.d.ts",
+      "node": "./lib/custom-jwt/index.js"
     }
   },
   "types": "./lib/index.d.ts",
