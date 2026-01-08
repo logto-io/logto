@@ -1,0 +1,45 @@
+@use '@/shared/scss/underscore' as _;
+
+.link {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-flex;
+  justify-content: center;
+
+  > svg {
+    margin-inline-end: _.unit(2);
+  }
+
+  &.primary {
+    font: var(--font-label-2);
+    color: var(--color-brand-default);
+    text-decoration: none;
+
+    &:active {
+      color: var(--color-brand-hover);
+    }
+  }
+
+  &.secondary {
+    color: var(--color-type-primary);
+    font: inherit;
+    text-decoration: none;
+  }
+}
+
+:global(body.desktop) {
+  .link {
+    &.primary:hover {
+      color: var(--color-brand-hover);
+    }
+
+    &.primary:focus-visible {
+      outline: _.border(var(--color-overlay-brand-focused));
+    }
+
+    &.secondary:hover,
+    &.secondary:active {
+      color: var(--color-brand-default);
+    }
+  }
+}

@@ -32,24 +32,7 @@
 
 .message {
   font: var(--font-body-2);
-  color: var(--color-text-secondary);
-  min-height: _.unit(5);
-  display: flex;
-  align-items: center;
-}
-
-.resendButton {
-  background: transparent;
-  border: none;
-  padding: 0;
-  font: var(--font-body-2-medium);
-  color: var(--color-primary-50);
-  cursor: pointer;
-
-  &:disabled {
-    cursor: not-allowed;
-    color: var(--color-text-secondary);
-  }
+  color: var(--color-type-secondary);
 }
 
 .submit {

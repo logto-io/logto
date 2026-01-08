@@ -1,7 +1,9 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, Theme } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
+import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import successDarkIllustration from '@ac/assets/icons/success-dark.svg';
 import successIllustration from '@ac/assets/icons/success.svg';
 import ErrorPage from '@ac/components/ErrorPage';
 import {
@@ -65,8 +67,11 @@ type Props = {
 };
 
 const UpdateSuccess = ({ identifierType }: Props) => {
+  const { theme } = useContext(PageContext);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState<string>();
+
+  const illustration = theme === Theme.Dark ? successDarkIllustration : successIllustration;
 
   const translationKeys = useMemo(() => {
     if (!identifierType) {
@@ -110,7 +115,7 @@ const UpdateSuccess = ({ identifierType }: Props) => {
 
   return (
     <ErrorPage
-      illustration={successIllustration}
+      illustration={illustration}
       titleKey={translationKeys.titleKey}
       messageKey={translationKeys.messageKey}
       action={

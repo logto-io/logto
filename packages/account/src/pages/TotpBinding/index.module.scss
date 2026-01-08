@@ -28,7 +28,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: _.unit(2);
+  gap: _.unit(4);
   margin-top: _.unit(2);
 
   .qrCode {
@@ -54,7 +54,7 @@
     border-radius: var(--radius);
     background-color: var(--color-bg-light);
     color: var(--color-type-primary);
-    margin-bottom: _.unit(3);
+    margin-bottom: _.unit(4);
     word-break: break-all;
   }
 
