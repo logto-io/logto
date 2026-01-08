@@ -121,8 +121,10 @@ export const validateSubjectToken = async ({
       return validateImpersonationToken(findSubjectToken, subjectToken);
     }
 
-    // TODO: Remove dev feature guard when access token exchange is ready for production
-    if (EnvSet.values.isDevFeaturesEnabled) {
+    // Access token exchange is enabled when:
+    // 1. Dev features are enabled (for development/testing)
+    // 2. ACCESS_TOKEN_EXCHANGE_ENABLED env is set (for enterprise customers)
+    if (EnvSet.values.isDevFeaturesEnabled || EnvSet.values.isAccessTokenExchangeEnabled) {
       // First, try to find the token as an opaque access token
       const opaqueResult = await validateOpaqueAccessToken(subjectToken, AccessToken);
       if (opaqueResult) {

@@ -100,6 +100,16 @@ export default class GlobalValues {
    */
   public readonly isMultipleCustomDomainsEnabled = yes(getEnv('MULTIPLE_CUSTOM_DOMAINS_ENABLED'));
 
+  /**
+   * Indicates whether this Logto instance supports access token exchange.
+   *
+   * **NOTE: Only available to enterprise customers running private instances that need this feature.**
+   *
+   * Controlled by the `ACCESS_TOKEN_EXCHANGE_ENABLED` environment variable. When enabled, the instance
+   * supports exchanging access tokens (opaque or JWT) for new tokens via the token exchange grant.
+   */
+  public readonly isAccessTokenExchangeEnabled = yes(getEnv('ACCESS_TOKEN_EXCHANGE_ENABLED'));
+
   // eslint-disable-next-line unicorn/consistent-function-scoping
   public readonly databaseUrl = tryThat(() => assertEnv('DB_URL'), throwErrorWithDsnMessage);
   public readonly developmentTenantId = getEnv('DEVELOPMENT_TENANT_ID');
