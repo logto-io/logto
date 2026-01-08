@@ -1,8 +1,10 @@
+import classNames from 'classnames';
 import useSWR from 'swr';
 
 import CardIcon from '@/assets/icons/card.svg?react';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type LogtoEnterpriseResponse } from '@/cloud/types/router';
+import { GlobalRoute } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
 
@@ -34,9 +36,11 @@ function EnterpriseSubscriptions({ className }: Props) {
 
   return (
     <TextLink
-      to={`enterprise-subscriptions/${defaultEnterpriseSubscription.id}`}
-      className={styles.button}
+      className={classNames(styles.button, className)}
       icon={<CardIcon className={styles.icon} />}
+      onClick={() => {
+        window.open(`${GlobalRoute.EnterpriseSubscription}/${defaultEnterpriseSubscription.id}`);
+      }}
     >
       <DynamicT forKey="topbar.subscription" />
     </TextLink>
