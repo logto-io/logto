@@ -1,4 +1,4 @@
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
@@ -20,12 +20,11 @@ const buildEnterpriseSubscriptionPathname = (
 function EnterpriseSubscription() {
   const { logtoEnterpriseId } = useParams();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   if (!logtoEnterpriseId) {
     return null;
   }
-
-  const currentPathname = window.location.pathname;
 
   const subscriptionPathname = buildEnterpriseSubscriptionPathname(
     logtoEnterpriseId,
@@ -51,7 +50,7 @@ function EnterpriseSubscription() {
               />
               <TabNav className={styles.tabs}>
                 <TabNavItem
-                  isActive={currentPathname === subscriptionPathname}
+                  isActive={pathname === subscriptionPathname}
                   onClick={() => {
                     navigate(subscriptionPathname);
                   }}
@@ -59,7 +58,7 @@ function EnterpriseSubscription() {
                   <DynamicT forKey="enterprise_subscription.tab.subscription" />
                 </TabNavItem>
                 <TabNavItem
-                  isActive={currentPathname === billingHistoryPathname}
+                  isActive={pathname === billingHistoryPathname}
                   onClick={() => {
                     navigate(billingHistoryPathname);
                   }}
