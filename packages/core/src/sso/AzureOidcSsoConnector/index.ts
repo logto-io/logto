@@ -2,7 +2,6 @@ import { SsoProviderName, SsoProviderType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import camelcaseKeys from 'camelcase-keys';
 import { decodeJwt } from 'jose';
-import { z } from 'zod';
 
 import OidcConnector from '../OidcConnector/index.js';
 import { fetchToken, getIdTokenClaims, getUserInfo } from '../OidcConnector/utils.js';
@@ -17,15 +16,9 @@ import { basicOidcConnectorConfigGuard, type OidcTokenResponse } from '../types/
 import { type ExtendedSocialUserInfo } from '../types/saml.js';
 import { type SingleSignOnConnectorSession } from '../types/session.js';
 
-export const azureOidcConnectorConfigGuard = basicOidcConnectorConfigGuard.extend({
-  trustUnverifiedEmail: z.boolean().optional(),
-});
-
 export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn {
-  private readonly trustUnverifiedEmail: boolean;
-
   constructor(readonly data: SingleSignOnConnectorData) {
-    const parseConfigResult = azureOidcConnectorConfigGuard.safeParse(data.config);
+    const parseConfigResult = basicOidcConnectorConfigGuard.safeParse(data.config);
 
     if (!parseConfigResult.success) {
       throw new SsoConnectorError(SsoConnectorErrorCodes.InvalidConfig, {
@@ -35,11 +28,7 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
       });
     }
 
-    const { trustUnverifiedEmail, ...oidcConfig } = parseConfigResult.data;
-
-    super(oidcConfig);
-
-    this.trustUnverifiedEmail = trustUnverifiedEmail ?? false;
+    super(parseConfigResult.data);
   }
 
   async getConfig() {
@@ -116,12 +105,11 @@ export class AzureOidcSsoConnector extends OidcConnector implements SingleSignOn
       id,
       ...conditional(name && { name }),
       ...conditional(picture && { avatar: picture }),
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-      ...conditional(email && (email_verified || this.trustUnverifiedEmail) && { email }),
+      ...conditional(email && (email_verified ?? oidcConfig.trustUnverifiedEmail) && { email }),
       ...conditional(phone && phone_verified && { phone }),
       ...camelcaseKeys(rest),
       ...conditional(
-        email && !email_verified && !this.trustUnverifiedEmail && { unverifiedEmail: email }
+        email && !email_verified && !oidcConfig.trustUnverifiedEmail && { unverifiedEmail: email }
       ),
       ...conditional(phone && !phone_verified && { unverifiedPhone: phone }),
     };
@@ -160,6 +148,6 @@ export const azureOidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.A
   name: {
     en: 'Microsoft Entra ID (OIDC)',
   },
-  configGuard: azureOidcConnectorConfigGuard,
+  configGuard: basicOidcConnectorConfigGuard,
   constructor: AzureOidcSsoConnector,
 };

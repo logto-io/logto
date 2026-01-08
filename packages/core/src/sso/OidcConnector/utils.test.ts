@@ -1,5 +1,6 @@
 import { createMockUtils } from '@logto/shared/esm';
 import camelcaseKeys from 'camelcase-keys';
+import { type CamelCaseKeys } from 'camelcase-keys';
 
 import {
   SsoConnectorConfigErrorCodes,
@@ -10,6 +11,9 @@ import {
   oidcConfigResponseGuard,
   oidcAuthorizationResponseGuard,
   oidcTokenResponseGuard,
+  type BasicOidcConnectorConfig,
+  type BaseOidcConfig,
+  type OidcConfigResponse,
 } from '../types/oidc.js';
 
 const { jest } = import.meta;
@@ -32,10 +36,11 @@ mockEsm('got', () => ({
 const { fetchOidcConfig, fetchToken } = await import('./utils.js');
 
 const issuer = 'https://example.com';
-const oidcConfig = {
+const oidcConfig: Required<BasicOidcConnectorConfig> = {
   clientId: 'clientId',
   clientSecret: 'clientSecret',
   scope: 'openid',
+  trustUnverifiedEmail: false,
   issuer,
 };
 const oidcConfigResponse = {
@@ -45,7 +50,13 @@ const oidcConfigResponse = {
   jwks_uri: 'https://example.com/jwks',
   issuer,
 };
-const oidcConfigResponseCamelCase = camelcaseKeys(oidcConfigResponse);
+const oidcConfigResponseCamelCase: CamelCaseKeys<OidcConfigResponse> =
+  camelcaseKeys(oidcConfigResponse);
+
+const baseOidcConfig: BaseOidcConfig = {
+  ...oidcConfig,
+  ...oidcConfigResponseCamelCase,
+};
 
 describe('fetchOidcConfig', () => {
   it('should throw connector error if the discovery endpoint is not found', async () => {
@@ -120,16 +131,7 @@ describe('fetchToken', () => {
       throw new Error('invalid test case');
     }
 
-    await expect(
-      fetchToken(
-        {
-          ...oidcConfig,
-          ...oidcConfigResponseCamelCase,
-        },
-        data,
-        redirectUri
-      )
-    ).rejects.toMatchError(
+    await expect(fetchToken(baseOidcConfig, data, redirectUri)).rejects.toMatchError(
       new SsoConnectorError(SsoConnectorErrorCodes.InvalidRequestParameters, {
         url: oidcConfigResponseCamelCase.tokenEndpoint,
         params: data,
@@ -143,16 +145,7 @@ describe('fetchToken', () => {
   it('should throw connector error if the token endpoint throws HTTPError', async () => {
     postMock.mockRejectedValueOnce(new MockHttpError({ body: 'invalid response' }));
 
-    await expect(
-      fetchToken(
-        {
-          ...oidcConfig,
-          ...oidcConfigResponseCamelCase,
-        },
-        data,
-        redirectUri
-      )
-    ).rejects.toMatchError(
+    await expect(fetchToken(baseOidcConfig, data, redirectUri)).rejects.toMatchError(
       new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
         message: 'Fail to fetch token',
         error: 'invalid response',
@@ -187,16 +180,7 @@ describe('fetchToken', () => {
       body: JSON.stringify(body),
     });
 
-    await expect(
-      fetchToken(
-        {
-          ...oidcConfig,
-          ...oidcConfigResponseCamelCase,
-        },
-        data,
-        redirectUri
-      )
-    ).rejects.toMatchError(
+    await expect(fetchToken(baseOidcConfig, data, redirectUri)).rejects.toMatchError(
       new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
         message: 'Invalid token response',
         response: JSON.stringify(body),
@@ -210,15 +194,6 @@ describe('fetchToken', () => {
       body: JSON.stringify(tokenResponse),
     });
 
-    await expect(
-      fetchToken(
-        {
-          ...oidcConfig,
-          ...oidcConfigResponseCamelCase,
-        },
-        data,
-        redirectUri
-      )
-    ).resolves.toEqual(tokenResponse);
+    await expect(fetchToken(baseOidcConfig, data, redirectUri)).resolves.toEqual(tokenResponse);
   });
 });

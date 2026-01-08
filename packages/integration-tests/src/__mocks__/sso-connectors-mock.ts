@@ -63,6 +63,7 @@ export const partialConfigAndProviderNames: Array<{
       clientSecret: 'foo',
       issuer: logtoIssuer,
       scope: 'openid profile email',
+      trustUnverifiedEmail: false,
     },
   },
   {

@@ -142,13 +142,14 @@ class OidcConnector {
       oidcConfig.userinfoEndpoint
         ? await getUserInfo(accessToken, oidcConfig.userinfoEndpoint)
         : idTokenClaims;
+    const { trustUnverifiedEmail } = this.config;
 
     return {
       userInfo: {
         id: sub,
         ...conditional(name && { name }),
         ...conditional(picture && { avatar: picture }),
-        ...conditional(email && email_verified && { email }),
+        ...conditional(email && (email_verified ?? trustUnverifiedEmail) && { email }),
         ...conditional(phone && phone_verified && { phone }),
         ...camelcaseKeys(rest),
       },
