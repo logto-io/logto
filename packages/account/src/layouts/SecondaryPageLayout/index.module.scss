@@ -20,6 +20,7 @@
 
 :global(body.mobile) {
   .container {
+    max-width: none;
     margin-block: _.unit(2);
   }
 

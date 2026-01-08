@@ -3,12 +3,9 @@
 .header {
   display: flex;
   align-items: center;
-  padding: _.unit(4) _.unit(6);
-  min-height: _.unit(16);
   gap: _.unit(4);
 
   .logo {
-    max-height: _.unit(10);
     width: auto;
   }
 
@@ -19,7 +16,40 @@
   }
 
   .title {
-    font: var(--font-title-1);
     color: var(--color-text-strong);
+  }
+}
+
+:global(body.mobile) {
+  .header {
+    padding: _.unit(2.5) _.unit(3);
+    min-height: _.unit(11);
+
+    .logo {
+      max-height: _.unit(5);
+    }
+
+    .splitter {
+      height: 12px;
+    }
+
+    .title {
+      font: var(--font-title-3);
+    }
+  }
+}
+
+:global(body.desktop) {
+  .header {
+    padding: _.unit(4) _.unit(6);
+    min-height: _.unit(16);
+
+    .logo {
+      max-height: _.unit(10);
+    }
+
+    .title {
+      font: var(--font-title-1);
+    }
   }
 }
