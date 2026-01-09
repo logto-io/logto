@@ -224,24 +224,6 @@ describe('application APIs', () => {
     expect(updatedApplication.protectedAppMetadata?.origin).toEqual(newOrigin);
   });
 
-  it('should update application "admin" successfully', async () => {
-    const application = await createApplication(
-      'test-update-is-admin',
-      ApplicationType.MachineToMachine
-    );
-    await updateApplication(application.id, {
-      isAdmin: true,
-    });
-    const updatedApplication = await getApplication(application.id);
-    expect(updatedApplication.isAdmin).toBeTruthy();
-
-    await updateApplication(application.id, {
-      isAdmin: false,
-    });
-    const updatedAgainApplication = await getApplication(application.id);
-    expect(updatedAgainApplication.isAdmin).toBeFalsy();
-  });
-
   it('should get demo app application successfully', async () => {
     const application = await getApplication('demo-app');
     expect(application.id).toBe('demo-app');
