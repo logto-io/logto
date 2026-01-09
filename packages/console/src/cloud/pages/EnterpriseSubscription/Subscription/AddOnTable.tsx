@@ -63,6 +63,7 @@ const formatAddOnSkuTableItems = (addOnSkuItems: Props['skuItems']) => {
         return;
       }
 
+      // UnitPrice is expected to be in cents (price unit used by Stripe) , convert it to dollars
       const price = unitPrice ? unitPrice / 100 : null;
 
       return {
