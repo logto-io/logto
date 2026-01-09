@@ -168,8 +168,7 @@ const account_center = {
       'デバイスの生体認証、セキュリティキー（例: YubiKey）、またはその他の利用可能な方法を使用してパスキーを登録してください。',
     add_passkey: 'パスキーを追加',
     delete_confirmation_title: 'パスキーを削除',
-    delete_confirmation_description:
-      '「{{name}}」を削除してもよろしいですか？このパスキーでログインできなくなります。',
+    delete_confirmation_description: 'このパスキーを削除すると、認証に使用できなくなります。',
     rename_passkey: 'パスキー名を変更',
     rename_description: 'Enter a new name for this passkey.',
     name_this_passkey: 'Name this device passkey',

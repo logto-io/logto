@@ -8,7 +8,7 @@ import DynamicT from '@/shared/components/DynamicT';
 import RotatingRingIcon from './RotatingRingIcon';
 import styles from './index.module.scss';
 
-export type ButtonType = 'primary' | 'secondary';
+export type ButtonType = 'primary' | 'secondary' | 'danger';
 
 type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   readonly htmlType?: 'button' | 'submit' | 'reset';

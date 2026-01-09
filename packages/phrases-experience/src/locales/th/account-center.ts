@@ -164,9 +164,8 @@ const account_center = {
     add_another_description:
       'ลงทะเบียน Passkey ของคุณโดยใช้ไบโอเมตริกซ์ของอุปกรณ์ กุญแจความปลอดภัย (เช่น YubiKey) หรือวิธีอื่นที่มี',
     add_passkey: 'เพิ่ม Passkey',
-    delete_confirmation_title: 'ลบ Passkey',
-    delete_confirmation_description:
-      'คุณแน่ใจหรือไม่ว่าต้องการลบ "{{name}}"? คุณจะไม่สามารถใช้ Passkey นี้เข้าสู่ระบบได้อีก',
+    delete_confirmation_title: 'ลบ Passkey ของคุณ',
+    delete_confirmation_description: 'หากคุณลบ Passkey นี้ คุณจะไม่สามารถใช้เพื่อยืนยันตัวตนได้',
     rename_passkey: 'เปลี่ยนชื่อ Passkey',
     rename_description: 'Enter a new name for this passkey.',
     name_this_passkey: 'Name this device passkey',

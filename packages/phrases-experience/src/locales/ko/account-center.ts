@@ -164,8 +164,7 @@ const account_center = {
       '기기 생체 인증, 보안 키(예: YubiKey) 또는 기타 사용 가능한 방법을 사용하여 패스키를 등록하세요.',
     add_passkey: '패스키 추가',
     delete_confirmation_title: '패스키 삭제',
-    delete_confirmation_description:
-      '"{{name}}"을(를) 삭제하시겠습니까? 이 패스키로 더 이상 로그인할 수 없습니다.',
+    delete_confirmation_description: '이 패스키를 삭제하면 더 이상 인증에 사용할 수 없습니다.',
     rename_passkey: '패스키 이름 변경',
     rename_description: 'Enter a new name for this passkey.',
     name_this_passkey: 'Name this device passkey',
