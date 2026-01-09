@@ -72,6 +72,7 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ roleIds: string().min(1).array() }),
+      response: object({ addedRoleIds: string().min(1).array() }),
       status: [201, 404, 422],
     }),
     async (ctx, next) => {
@@ -100,6 +101,7 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
         );
       }
 
+      ctx.body = { addedRoleIds: roleIdsToAdd };
       ctx.status = 201;
 
       return next();
@@ -111,6 +113,7 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ roleIds: string().min(1).array() }),
+      response: object({ roleIds: string().min(1).array() }),
       status: [200, 404, 422],
     }),
     async (ctx, next) => {
@@ -139,6 +142,7 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
         roleIdsToAdd.map((roleId) => ({ id: generateStandardId(), userId, roleId }))
       );
 
+      ctx.body = { roleIds: [...new Set(roleIds)] };
       ctx.status = 200;
 
       return next();

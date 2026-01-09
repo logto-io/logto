@@ -78,10 +78,12 @@ export const deleteUserIdentity = async (userId: string, connectorTarget: string
   authedAdminApi.delete(`users/${userId}/identities/${connectorTarget}`);
 
 export const assignRolesToUser = async (userId: string, roleIds: string[]) =>
-  authedAdminApi.post(`users/${userId}/roles`, { json: { roleIds } });
+  authedAdminApi
+    .post(`users/${userId}/roles`, { json: { roleIds } })
+    .json<{ addedRoleIds: string[] }>();
 
 export const putRolesToUser = async (userId: string, roleIds: string[]) =>
-  authedAdminApi.put(`users/${userId}/roles`, { json: { roleIds } });
+  authedAdminApi.put(`users/${userId}/roles`, { json: { roleIds } }).json<{ roleIds: string[] }>();
 
 /**
  * Get roles assigned to the user.

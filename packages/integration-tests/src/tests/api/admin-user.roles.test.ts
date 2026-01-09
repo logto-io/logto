@@ -1,7 +1,12 @@
 import { RoleType } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
-import { assignRolesToUser, getUserRoles, deleteRoleFromUser } from '#src/api/index.js';
+import {
+  assignRolesToUser,
+  getUserRoles,
+  deleteRoleFromUser,
+  putRolesToUser,
+} from '#src/api/index.js';
 import { createRole } from '#src/api/role.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 
@@ -24,7 +29,8 @@ describe('admin console user management (roles)', () => {
       status: 422,
     });
 
-    await assignRolesToUser(user.id, [role1.id, role2.id]);
+    const assignment = await assignRolesToUser(user.id, [role1.id, role2.id]);
+    expect(assignment.addedRoleIds).toEqual([role1.id, role2.id]);
     const roles = await getUserRoles(user.id);
     expect(roles.length).toBe(2);
     expect(roles.find(({ id }) => id === role1.id)).toBeDefined();
@@ -47,6 +53,20 @@ describe('admin console user management (roles)', () => {
     const roles = await getUserRoles(user.id);
     expect(roles.length).toBe(1);
     expect(roles[0]).toHaveProperty('id', role.id);
+  });
+
+  it('should replace roles and return roleIds successfully', async () => {
+    const user = await createUserByAdmin();
+    const role1 = await createRole({});
+    const role2 = await createRole({});
+
+    await assignRolesToUser(user.id, [role1.id]);
+    const replacement = await putRolesToUser(user.id, [role2.id]);
+
+    expect(replacement.roleIds).toEqual([role2.id]);
+    const roles = await getUserRoles(user.id);
+    expect(roles.length).toBe(1);
+    expect(roles[0]).toHaveProperty('id', role2.id);
   });
 
   it('should delete role from user successfully', async () => {

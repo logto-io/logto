@@ -55,6 +55,7 @@ describe('user role routes', () => {
         roleIds: [mockAdminUserRole.id],
       });
       expect(response.status).toEqual(201);
+      expect(response.body).toEqual({ addedRoleIds: [mockAdminUserRole.id] });
       expect(insertUsersRoles).toHaveBeenCalledWith([
         { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
       ]);
@@ -81,6 +82,7 @@ describe('user role routes', () => {
         roleIds: [mockAdminUserRole2.id],
       });
       expect(response.status).toEqual(200);
+      expect(response.body).toEqual({ roleIds: [mockAdminUserRole2.id] });
       expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(
         mockUser.id,
         mockUserRole.roleId
@@ -100,6 +102,7 @@ describe('user role routes', () => {
         roleIds: [mockAdminUserRole3.id],
       });
       expect(response.status).toEqual(200);
+      expect(response.body).toEqual({ roleIds: [mockAdminUserRole3.id] });
       expect(deleteUsersRolesByUserIdAndRoleId).not.toHaveBeenCalled();
       expect(insertUsersRoles).toHaveBeenCalledWith([]);
     });
@@ -110,6 +113,7 @@ describe('user role routes', () => {
         roleIds: [mockAdminUserRole.id],
       });
       expect(response.status).toEqual(201);
+      expect(response.body).toEqual({ addedRoleIds: [mockAdminUserRole.id] });
       expect(insertUsersRoles).toHaveBeenCalledWith([
         { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
       ]);
@@ -121,6 +125,7 @@ describe('user role routes', () => {
         roleIds: [mockAdminUserRole2.id],
       });
       expect(response.status).toEqual(200);
+      expect(response.body).toEqual({ roleIds: [mockAdminUserRole2.id] });
       expect(deleteUsersRolesByUserIdAndRoleId).toHaveBeenCalledWith(
         mockUser.id,
         mockAdminUserRole.id
