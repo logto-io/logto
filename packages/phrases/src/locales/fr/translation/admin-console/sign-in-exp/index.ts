@@ -178,7 +178,7 @@ const sign_in_exp = {
         "Pour intégrer ces flux préconstruits, définissez les autorisations de l'API de compte associées sur <strong>Modifier</strong> dans les paramètres ci-dessous.",
       flows_title: "Intégrer des flux de paramètres de sécurité prêts à l'emploi",
       flows_description:
-        'Combinez votre domaine avec le chemin pour former votre URL de paramètres de compte (par exemple, https://auth.foo.com/account/email). Ajoutez éventuellement un paramètre d’URL `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie.',
+        'Combinez votre domaine avec le chemin pour former votre URL de paramètres de compte (par exemple, https://auth.foo.com/account/email). Ajoutez éventuellement un paramètre d’URL `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie, ou un paramètre `user_id=` pour s’assurer que le bon utilisateur est connecté (reconnexion automatique en cas de non-correspondance).',
       tooltips: {
         email: 'Mettre à jour votre adresse e-mail principale',
         phone: 'Mettre à jour votre numéro de téléphone principal',

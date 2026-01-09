@@ -175,7 +175,7 @@ const sign_in_exp = {
         'Bu önceden oluşturulmuş akışları entegre etmek için aşağıdaki ayarlarda ilgili Hesap API izinlerini <strong>Düzenle</strong> olarak ayarlayın.',
       flows_title: 'Hazır güvenlik ayarı akışlarını entegre et',
       flows_description:
-        "Hesap ayar URL'nizi oluşturmak için alan adınızı rota ile birleştirin (örneğin, https://auth.foo.com/account/email). Başarılı bir güncellemeden sonra kullanıcıları uygulamanıza geri döndürmek için isteğe bağlı olarak bir `redirect=` URL parametresi ekleyin.",
+        "Hesap ayar URL'nizi oluşturmak için alan adınızı rota ile birleştirin (örneğin, https://auth.foo.com/account/email). Başarılı bir güncellemeden sonra kullanıcıları uygulamanıza geri döndürmek için isteğe bağlı olarak bir `redirect=` URL parametresi ekleyin veya doğru kullanıcının oturum açtığından emin olmak için `user_id=` parametresi ekleyin (uyumsuzluk durumunda otomatik yeniden oturum açma).",
       tooltips: {
         email: 'Birincil e-posta adresinizi güncelleyin',
         phone: 'Birincil telefon numaranızı güncelleyin',

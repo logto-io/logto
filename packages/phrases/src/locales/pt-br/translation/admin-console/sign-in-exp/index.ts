@@ -177,7 +177,7 @@ const sign_in_exp = {
         'Para integrar esses fluxos pré-construídos, defina as permissões da API de conta relacionadas como <strong>Editar</strong> nas configurações abaixo.',
       flows_title: 'Integrar fluxos de configuração de segurança prontos para uso',
       flows_description:
-        'Combine seu domínio com a rota para formar o URL de configurações da conta (por exemplo, https://auth.foo.com/account/email). Opcionalmente, adicione um parâmetro de URL `redirect=` para retornar os usuários ao seu aplicativo após atualização bem-sucedida.',
+        'Combine seu domínio com a rota para formar o URL de configurações da conta (por exemplo, https://auth.foo.com/account/email). Opcionalmente, adicione um parâmetro de URL `redirect=` para retornar os usuários ao seu aplicativo após atualização bem-sucedida, ou um parâmetro `user_id=` para garantir que o usuário correto esteja conectado (re-login automático se não corresponder).',
       tooltips: {
         email: 'Atualize seu endereço de e-mail principal',
         phone: 'Atualize seu número de telefone principal',
