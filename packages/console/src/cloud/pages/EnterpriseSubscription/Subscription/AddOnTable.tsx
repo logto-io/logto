@@ -98,6 +98,7 @@ function AddOnTable({ skuItems, quotaScope }: Props) {
         {t('enterprise_subscription.subscription.add_on_description')}
       </div>
       <Table
+        isRowHoverEffectDisabled
         hasBorder
         className={styles.table}
         rowGroups={[{ key: 'id', data: addOnSkuTableItems }]}
