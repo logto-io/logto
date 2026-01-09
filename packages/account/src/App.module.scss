@@ -25,13 +25,30 @@
 }
 
 :global(body.mobile) {
+  .app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .layout {
+    position: static;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
   .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
     padding-bottom: env(safe-area-inset-bottom);
   }
 
   .main {
     flex: 1;
-    align-self: stretch;
     padding: _.unit(4) _.unit(5);
     position: relative;
     background: var(--color-bg-body);

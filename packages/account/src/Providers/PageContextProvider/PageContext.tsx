@@ -1,6 +1,7 @@
-import type { SignInExperienceResponse } from '@experience/shared/types';
+import type { SignInExperienceResponse, Platform } from '@experience/shared/types';
 import { Theme, type AccountCenter, type UserProfileResponse } from '@logto/schemas';
 import { createContext } from 'react';
+import { isMobile } from 'react-device-detect';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -8,6 +9,7 @@ const noop = () => {};
 export type PageContextType = {
   theme: Theme;
   toast: string;
+  platform: Platform;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
   setToast: React.Dispatch<React.SetStateAction<string>>;
   experienceSettings?: SignInExperienceResponse;
@@ -26,6 +28,7 @@ export type PageContextType = {
 const PageContext = createContext<PageContextType>({
   theme: Theme.Light,
   toast: '',
+  platform: isMobile ? 'mobile' : 'web',
   setTheme: noop,
   setToast: noop,
   experienceSettings: undefined,

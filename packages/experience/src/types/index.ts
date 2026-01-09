@@ -6,9 +6,9 @@ import type {
   InteractionEvent,
 } from '@logto/schemas';
 
-import type { SignInExperienceResponse } from '../shared/types';
+import type { SignInExperienceResponse, Platform } from '../shared/types';
 
-export type { SignInExperienceResponse } from '../shared/types';
+export type { SignInExperienceResponse, Platform } from '../shared/types';
 
 export enum UserFlow {
   SignIn = 'sign-in',
@@ -27,8 +27,6 @@ export enum SearchParameters {
   RedirectTo = 'redirect_to',
   LinkSocial = 'link_social',
 }
-
-export type Platform = 'web' | 'mobile';
 
 export type VerificationCodeIdentifier = SignInIdentifier.Email | SignInIdentifier.Phone;
 

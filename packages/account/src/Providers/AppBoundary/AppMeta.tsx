@@ -31,7 +31,7 @@ const themeToFavicon = Object.freeze({
  */
 
 const AppMeta = () => {
-  const { experienceSettings, theme, platform, isPreview } = useContext(PageContext);
+  const { experienceSettings, theme, platform } = useContext(PageContext);
   const favicon =
     experienceSettings?.branding[themeToFavicon[theme]] ?? experienceSettings?.branding.favicon;
 
@@ -43,7 +43,6 @@ const AppMeta = () => {
       {experienceSettings?.customCss && <style>{experienceSettings.customCss}</style>}
       <body
         className={classNames(
-          conditionalString(isPreview && styles.preview),
           platform === 'mobile' ? 'mobile' : 'desktop',
           conditionalString(styles[theme])
         )}

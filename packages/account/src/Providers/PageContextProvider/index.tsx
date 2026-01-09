@@ -1,6 +1,7 @@
 import { useLogto } from '@logto/react';
 import { Theme } from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 
 import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
@@ -123,10 +124,13 @@ const PageContextProvider = ({ children }: Props) => {
     };
   }, [experienceSettings]);
 
+  const platform = isMobile ? 'mobile' : 'web';
+
   const value = useMemo<PageContextType>(
     () => ({
       theme,
       toast,
+      platform,
       setTheme,
       setToast,
       experienceSettings,
@@ -146,6 +150,7 @@ const PageContextProvider = ({ children }: Props) => {
       experienceError,
       experienceSettings,
       isLoadingExperience,
+      platform,
       theme,
       toast,
       userInfo,
