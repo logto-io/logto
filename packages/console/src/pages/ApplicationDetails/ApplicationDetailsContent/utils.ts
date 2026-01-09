@@ -10,7 +10,6 @@ export type ApplicationForm = {
   description?: ApplicationResponse['description'];
   oidcClientMetadata?: ApplicationResponse['oidcClientMetadata'];
   customClientMetadata?: ApplicationResponse['customClientMetadata'];
-  isAdmin?: ApplicationResponse['isAdmin'];
   // eslint-disable-next-line @typescript-eslint/ban-types
   protectedAppMetadata?: Omit<Exclude<ProtectedAppMetadataType, null>, 'customDomains'>; // Custom domains are handled separately
   customData?: string;
@@ -29,7 +28,6 @@ export const applicationFormDataParser = {
       description,
       oidcClientMetadata,
       customClientMetadata,
-      isAdmin,
       /** Specific metadata for protected apps */
       protectedAppMetadata,
       customData,
@@ -46,7 +44,6 @@ export const applicationFormDataParser = {
             ...customClientMetadata,
           },
           customData: JSON.stringify(customData, null, 2),
-          isAdmin,
         }
       ),
       ...cond(
@@ -65,7 +62,6 @@ export const applicationFormDataParser = {
       description,
       oidcClientMetadata,
       customClientMetadata,
-      isAdmin,
       protectedAppMetadata,
       customData,
     } = data;
@@ -95,7 +91,6 @@ export const applicationFormDataParser = {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             customData && isJsonObject(customData) && { customData: JSON.parse(customData) }
           ),
-          isAdmin,
         }
       ),
       ...cond(

@@ -104,6 +104,11 @@
                   "properties": {
                     "secret": {
                       "$ref": "#/components/schemas/ApplicationLegacySecret"
+                    },
+                    "isAdmin": {
+                      "type": "boolean",
+                      "deprecated": true,
+                      "description": "Deprecated. Whether the application has admin access. This field is deprecated. M2M apps' admin access should be managed through role assignments."
                     }
                   }
                 }
@@ -124,7 +129,8 @@
               "schema": {
                 "properties": {
                   "isAdmin": {
-                    "description": "Whether the application has admin access. User can enable the admin access for Machine-to-Machine apps."
+                    "deprecated": true,
+                    "description": "Deprecated. Whether the application has admin access. This field is deprecated and will be ignored. M2M apps' admin access should be managed through role assignments."
                   }
                 }
               }

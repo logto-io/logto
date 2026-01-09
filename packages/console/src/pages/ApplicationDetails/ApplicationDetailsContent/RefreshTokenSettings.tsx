@@ -16,7 +16,7 @@ function RefreshTokenSettings({ data: { type } }: Props) {
   const {
     register,
     formState: { errors },
-  } = useFormContext<Application & { isAdmin?: boolean }>();
+  } = useFormContext<Application>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { minValue, maxValue } =

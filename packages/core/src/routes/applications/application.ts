@@ -1,12 +1,11 @@
 // TODO: @darcyYe refactor this file later to remove disable max line comment
 /* eslint-disable max-lines */
-import type { Role, Application } from '@logto/schemas';
+import type { Application } from '@logto/schemas';
 import {
   Applications,
   ApplicationType,
   buildBuiltInApplicationDataForTenant,
   hasSecrets,
-  InternalRole,
   ProductEvent,
   isBuiltInApplicationId,
 } from '@logto/schemas';
@@ -27,9 +26,6 @@ import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 import applicationCustomDataRoutes from './application-custom-data.js';
 import { generateInternalSecret } from './application-secret.js';
 import { applicationCreateGuard, applicationPatchGuard } from './types.js';
-
-const includesInternalAdminRole = (roles: Readonly<Array<{ role: Role }>>) =>
-  roles.some(({ role: { name } }) => name === InternalRole.Admin);
 
 const parseIsThirdPartQueryParam = (isThirdPartyQuery: 'true' | 'false' | undefined) => {
   if (isThirdPartyQuery === undefined) {
@@ -264,7 +260,16 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      response: Applications.guard.merge(z.object({ isAdmin: z.boolean() })),
+      response: Applications.guard.merge(
+        z.object({
+          /**
+           * @deprecated The `isAdmin` field is deprecated.
+           * M2M apps' admin access should be managed through role assignments.
+           * This field always returns `false` for new applications.
+           */
+          isAdmin: z.boolean(),
+        })
+      ),
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -282,12 +287,16 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       }
 
       const application = await queries.applications.findApplicationById(id);
-      const applicationsRoles =
-        await queries.applicationsRoles.findApplicationsRolesByApplicationId(id);
 
       ctx.body = {
         ...hideOidcClientMetadataForSamlApp(application),
-        isAdmin: includesInternalAdminRole(applicationsRoles),
+        /**
+         * @deprecated The `isAdmin` field is deprecated and always returns `false`.
+         * The internal admin role (`#internal:admin`) is no longer used since version 1.9.2.
+         * M2M apps' admin access has been migrated to regular RBAC role assignments.
+         * This field is kept for backward API compatibility only.
+         */
+        isAdmin: false,
       };
 
       return next();
@@ -300,6 +309,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       params: object({ id: string().min(1) }),
       body: applicationPatchGuard.merge(
         object({
+          /**
+           * @deprecated The `isAdmin` field is deprecated and has no effect.
+           * M2M apps' admin access should be managed through role assignments.
+           * This field is kept for backward API compatibility but will be ignored.
+           */
           isAdmin: boolean().optional(),
         })
       ),
@@ -313,7 +327,9 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         body,
       } = ctx.guard;
 
-      const { isAdmin, protectedAppMetadata, ...rest } = body;
+      // Note: `isAdmin` is intentionally ignored as it's deprecated.
+      // M2M apps' admin access should be managed through role assignments.
+      const { isAdmin: _, protectedAppMetadata, ...rest } = body;
 
       const pendingUpdateApplication = await queries.applications.findApplicationById(id);
       if (pendingUpdateApplication.type === ApplicationType.SAML) {
@@ -324,35 +340,6 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         pendingUpdateApplication.isThirdParty,
         rest.customClientMetadata?.allowTokenExchange
       );
-
-      // @deprecated
-      // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.
-      // Since those apps sit in the user tenant, we provide an internal role to apply the necessary scopes.
-      // This role is NOT intended for user assignment.
-      if (isAdmin !== undefined) {
-        const [applicationsRoles, internalAdminRole] = await Promise.all([
-          queries.applicationsRoles.findApplicationsRolesByApplicationId(id),
-          queries.roles.findRoleByRoleName(InternalRole.Admin),
-        ]);
-        const usedToBeAdmin = includesInternalAdminRole(applicationsRoles);
-
-        assertThat(
-          internalAdminRole,
-          new RequestError({
-            code: 'entity.not_exists',
-            status: 500,
-            data: { name: InternalRole.Admin },
-          })
-        );
-
-        if (isAdmin && !usedToBeAdmin) {
-          await queries.applicationsRoles.insertApplicationsRoles([
-            { id: generateStandardId(), applicationId: id, roleId: internalAdminRole.id },
-          ]);
-        } else if (!isAdmin && usedToBeAdmin) {
-          await queries.applicationsRoles.deleteApplicationRole(id, internalAdminRole.id);
-        }
-      }
 
       if (protectedAppMetadata) {
         const { type, protectedAppMetadata: originProtectedAppMetadata } = pendingUpdateApplication;
