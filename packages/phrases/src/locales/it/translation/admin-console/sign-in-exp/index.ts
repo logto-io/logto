@@ -176,7 +176,7 @@ const sign_in_exp = {
         "Per integrare questi flussi predefiniti, imposta i permessi dell'API account correlati su <strong>Modifica</strong> nelle impostazioni sottostanti.",
       flows_title: 'Integra i flussi di impostazione di sicurezza predefiniti',
       flows_description:
-        "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi un parametro URL `redirect=` per riportare gli utenti alla tua app dopo l'aggiornamento avvenuto con successo.",
+        "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi un parametro URL `redirect=` per riportare gli utenti alla tua app dopo l'aggiornamento avvenuto con successo, o un parametro `user_id=` per garantire che l'utente corretto sia connesso (ri-accesso automatico se non corrispondente).",
       tooltips: {
         email: 'Aggiorna il tuo indirizzo email principale',
         phone: 'Aggiorna il tuo numero di telefono principale',
