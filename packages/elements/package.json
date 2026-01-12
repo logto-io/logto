@@ -65,7 +65,7 @@
     "@web/dev-server-esbuild": "^1.0.2",
     "@web/test-runner": "^0.20.0",
     "@web/test-runner-playwright": "^0.11.0",
-    "eslint": "^8.56.0",
+    "eslint": "^9.0.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.5.3",
     "tsup": "^8.5.0"
