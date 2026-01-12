@@ -2,6 +2,7 @@
 /* eslint-disable max-lines */
 import type { Role, Application } from '@logto/schemas';
 import {
+  adminTenantId,
   Applications,
   ApplicationType,
   buildBuiltInApplicationDataForTenant,
@@ -329,7 +330,14 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.
       // Since those apps sit in the user tenant, we provide an internal role to apply the necessary scopes.
       // This role is NOT intended for user assignment.
-      if (isAdmin !== undefined) {
+      if (
+        isAdmin !== undefined &&
+        /**
+         * Note: The internal admin role was not created for the admin tenant, and it's no longer needed
+         * since we migrated to RBAC-based access control. Skip this logic for the admin tenant.
+         */
+        tenantId !== adminTenantId
+      ) {
         const [applicationsRoles, internalAdminRole] = await Promise.all([
           queries.applicationsRoles.findApplicationsRolesByApplicationId(id),
           queries.roles.findRoleByRoleName(InternalRole.Admin),
