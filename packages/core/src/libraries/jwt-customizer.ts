@@ -214,7 +214,7 @@ export class JwtCustomizerLibrary {
       this.logtoConfigs.getJwtCustomizers(consoleLog),
     ]);
 
-    assert(jwtCustomizers[key], new RequestError({ code: 'entity.not_exists', key }));
+    assert(jwtCustomizers[key], new RequestError({ code: 'entity.not_exists', name: key }));
 
     // Undeploy the worker directly if the only JWT customizer is being deleted.
     if (Object.entries(jwtCustomizers).length === 1) {
