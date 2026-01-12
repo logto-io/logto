@@ -122,6 +122,7 @@ export const mockSignInExperience: SignInExperience = {
   emailBlocklistPolicy: {},
   forgotPasswordMethods: [],
   hideLogtoBranding: false,
+  passkeySignIn: {},
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -164,6 +165,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   captchaPolicy: {},
   sentinelPolicy: {},
   emailBlocklistPolicy: {},
+  passkeySignIn: {},
 };
 
 const usernameSettings = {

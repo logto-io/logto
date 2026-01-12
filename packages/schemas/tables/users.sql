@@ -41,6 +41,9 @@ create unique index users__id
 create index users__name
   on users (tenant_id, name);
 
+create index users_mfa_verifications_gin
+  on users using gin (mfa_verifications jsonb_path_ops);
+
 create trigger set_updated_at
   before update on users
   for each row
