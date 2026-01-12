@@ -40,7 +40,7 @@ function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose 
     resourceIndicator: meApi.indicator,
     hideErrorToast: true,
   });
-  const accountApi = useAccountApi({ hideErrorToast: true });
+  const accountApi = useAccountApi();
   const {
     register,
     clearErrors,
