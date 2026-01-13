@@ -4423,6 +4423,9 @@ importers:
       '@jest/types':
         specifier: ^29.1.2
         version: 29.6.3
+      '@logto/api':
+        specifier: workspace:^
+        version: link:../api
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../toolkit/connector-kit
