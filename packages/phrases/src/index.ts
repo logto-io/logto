@@ -4,6 +4,7 @@ import type { DeepPartial, NormalizeKeyPaths } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import ar from './locales/ar/index.js';
+import cs from './locales/cs/index.js';
 import de from './locales/de/index.js';
 import en from './locales/en/index.js';
 import es from './locales/es/index.js';
@@ -29,6 +30,7 @@ export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 
 export const builtInLanguages = [
   'ar',
+  'cs',
   'de',
   'en',
   'es',
@@ -77,6 +79,7 @@ export type Resource = Record<
 
 const resource: Resource = {
   ar,
+  cs,
   de,
   en,
   es,
