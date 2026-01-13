@@ -15,6 +15,7 @@ import FactorTotp from '@/assets/icons/factor-totp.svg?react';
 import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg?react';
 import FormCard from '@/components/FormCard';
 import { adminTenantEndpoint } from '@/consts';
+import Tag from '@/ds-components/Tag';
 import useAccountApi from '@/hooks/use-account-api';
 
 import CardContent, { type Row } from '../CardContent';
@@ -85,10 +86,9 @@ function MfaSection({ user, signInExperience }: Props) {
           value: hasPasskeys ? 'configured' : undefined,
           renderer: () =>
             hasPasskeys ? (
-              <span className={styles.status}>
-                <span className={styles.dot} />
+              <Tag type="state" status="success" variant="outlined">
                 {t('profile.mfa.passkeys_count', { count: webAuthnVerifications.length })}
-              </span>
+              </Tag>
             ) : (
               <span>{t('profile.mfa.not_configured')}</span>
             ),
@@ -123,10 +123,9 @@ function MfaSection({ user, signInExperience }: Props) {
           value: hasTotp ? 'configured' : undefined,
           renderer: () =>
             hasTotp ? (
-              <span className={styles.status}>
-                <span className={styles.dot} />
+              <Tag type="state" status="success" variant="outlined">
                 {t('profile.mfa.configured')}
-              </span>
+              </Tag>
             ) : (
               <span>{t('profile.mfa.not_configured')}</span>
             ),
@@ -226,10 +225,9 @@ function MfaSection({ user, signInExperience }: Props) {
           value: hasBackupCodes ? 'configured' : undefined,
           renderer: () =>
             hasBackupCodes ? (
-              <span className={styles.status}>
-                <span className={styles.dot} />
+              <Tag type="state" status="success" variant="outlined">
                 {t('profile.mfa.backup_codes_count', { count: remainCodes })}
-              </span>
+              </Tag>
             ) : (
               <span>{t('profile.mfa.not_configured')}</span>
             ),
