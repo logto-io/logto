@@ -4,7 +4,7 @@ import {
   type UserMfaVerificationResponse,
   type UserProfileResponse,
 } from '@logto/schemas';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -14,7 +14,7 @@ import FactorPhone from '@/assets/icons/factor-phone.svg?react';
 import FactorTotp from '@/assets/icons/factor-totp.svg?react';
 import FactorWebAuthn from '@/assets/icons/factor-webauthn.svg?react';
 import FormCard from '@/components/FormCard';
-import { AppDataContext } from '@/contexts/AppDataProvider';
+import { adminTenantEndpoint } from '@/consts';
 import useAccountApi from '@/hooks/use-account-api';
 
 import CardContent, { type Row } from '../CardContent';
@@ -36,7 +36,6 @@ type Props = {
 
 function MfaSection({ user, signInExperience }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { tenantEndpoint } = useContext(AppDataContext);
   const accountApi = useAccountApi();
 
   const fetcher = useCallback(
@@ -46,19 +45,13 @@ function MfaSection({ user, signInExperience }: Props) {
 
   const { data: mfaVerifications } = useSWR('account-mfa-verifications', fetcher);
 
-  const navigateToAccountPage = useCallback(
-    (path: string) => {
-      if (!tenantEndpoint) {
-        return;
-      }
-      const currentProfileUrl = `${window.location.origin}${window.location.pathname}`;
-      const accountUrl = new URL(path, tenantEndpoint);
-      accountUrl.searchParams.set('redirect', currentProfileUrl);
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      window.location.href = accountUrl.toString();
-    },
-    [tenantEndpoint]
-  );
+  const navigateToAccountPage = useCallback((path: string) => {
+    const currentProfileUrl = `${window.location.origin}${window.location.pathname}`;
+    const accountUrl = new URL(path, adminTenantEndpoint);
+    accountUrl.searchParams.set('redirect', currentProfileUrl);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    window.location.href = accountUrl.toString();
+  }, []);
 
   const rows = useMemo<Array<Row<string | boolean | undefined>>>(() => {
     if (!signInExperience?.mfa.factors.length) {
