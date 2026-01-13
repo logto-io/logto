@@ -6,9 +6,9 @@ const mfa = {
   multi_factors: 'หลายปัจจัย',
   multi_factors_description:
     'ผู้ใช้ต้องยืนยันหนึ่งในปัจจัยที่เปิดใช้งานสำหรับการยืนยันตัวตนแบบ 2 ขั้นตอน',
-  totp: 'รหัส OTP จากแอปพลิเคชันยืนยันตัวตน',
+  totp: 'แอปพลิเคชันยืนยันตัวตน',
   otp_description: 'เชื่อมต่อ Google Authenticator ฯลฯ เพื่อตรวจสอบรหัสผ่านแบบครั้งเดียว',
-  webauthn: 'WebAuthn (Passkey)',
+  webauthn: 'Passkeys',
   webauthn_description:
     'ยืนยันผ่านวิธีที่เบราว์เซอร์รองรับ: ไบโอเมตริกส์, สแกนโทรศัพท์ หรือคีย์ความปลอดภัย ฯลฯ',
   webauthn_native_tip: 'WebAuthn ไม่รองรับสำหรับแอปพลิเคชัน Native',

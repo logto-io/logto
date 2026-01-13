@@ -6,15 +6,15 @@ const mfa = {
   multi_factors: 'Multi-factors',
   multi_factors_description:
     'Users need to verify one of the enabled factors for 2-step verification.',
-  totp: 'Authenticator app OTP',
+  totp: 'Authenticator app',
   otp_description: 'Link Google Authenticator, etc., to verify one-time passwords.',
-  webauthn: 'WebAuthn (Passkey)',
+  webauthn: 'Passkeys',
   webauthn_description:
     'Verify via browser-supported method: biometrics, phone scanning, or security key, etc.',
   webauthn_native_tip: 'WebAuthn is not supported for Native applications.',
   webauthn_domain_tip:
     'WebAuthn binds public keys to the specific domain. Modifying your service domain will block users from authenticating via existing passkeys.',
-  backup_code: 'Backup code',
+  backup_code: 'Backup codes',
   backup_code_description: 'Generate 10 one-time backup codes after users set up any MFA method.',
   backup_code_setup_hint: "When users can't verify the above MFA factors, use the backup option.",
   backup_code_error_hint:
