@@ -9,17 +9,17 @@ type BreakdownKeysToObject<Key extends string> = {
 type RejectionPhrases = BreakdownKeysToObject<PasswordRejectionCode>;
 
 const password_rejected = {
-  too_short: 'Minimum length is {{min}}.',
-  too_long: 'Maximum length is {{max}}.',
-  character_types: 'At least {{min}} types of characters are required.',
-  unsupported_characters: 'Unsupported character found.',
-  pwned: 'Avoid using simple passwords that are easy to guess.',
-  restricted_found: 'Avoid overusing {{list, list}}.',
+  too_short: 'Minimální délka je {{min}} znaků.',
+  too_long: 'Maximální délka je {{max}} znaků.',
+  character_types: 'Je vyžadováno alespoň {{min}} typů znaků.',
+  unsupported_characters: 'Byl nalezen nepodporovaný znak.',
+  pwned: 'Vyhni se jednoduchým heslům, která jsou snadno uhodnutelná.',
+  restricted_found: 'Nepoužívej příliš často {{list, list}}.',
   restricted: {
-    repetition: 'repeated characters',
-    sequence: 'sequential characters',
-    user_info: 'your personal information',
-    words: 'product context',
+    repetition: 'opakující se znaky',
+    sequence: 'pořadové znaky',
+    user_info: 'tvé osobní údaje',
+    words: 'slova z kontextu produktu',
   },
 } satisfies RejectionPhrases & {
   // Use for displaying a list of restricted issues
