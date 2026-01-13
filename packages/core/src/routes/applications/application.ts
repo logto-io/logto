@@ -349,7 +349,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
           new RequestError({
             code: 'entity.not_exists',
             status: 500,
-            data: { name: InternalRole.Admin },
+            name: InternalRole.Admin,
           })
         );
 
