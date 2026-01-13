@@ -1,5 +1,5 @@
 const development_tenant = {
-  notification: "You're in development mode",
+  notification: "Jsi v režimu vývoje",
 };
 
 export default Object.freeze(development_tenant);
