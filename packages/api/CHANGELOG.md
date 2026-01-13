@@ -1,5 +1,13 @@
 # @logto/api
 
+## 1.36.0
+
+### Minor Changes
+
+- add `createApiClient` function for custom token authentication
+
+  This new function allows you to create a type-safe API client with your own token retrieval logic, useful for scenarios like custom authentication flows.
+
 ## 1.35.0
 
 ## 1.34.0
