@@ -26,11 +26,13 @@ export type Row<T> = {
 
 type Props<T> = {
   readonly title: AdminConsoleKey;
+  readonly description?: AdminConsoleKey;
   readonly data: Array<Row<T>>;
 };
 
 function CardContent<T extends Nullable<boolean | string | Record<string, unknown>> | undefined>({
   title,
+  description,
   data,
 }: Props<T>) {
   const defaultRenderer = (value: unknown) => (value ? <span>{String(value)}</span> : <NotSet />);
@@ -44,6 +46,11 @@ function CardContent<T extends Nullable<boolean | string | Record<string, unknow
       <div className={styles.title}>
         <DynamicT forKey={title} />
       </div>
+      {description && (
+        <div className={styles.description}>
+          <DynamicT forKey={description} />
+        </div>
+      )}
       <table>
         <tbody>
           {data.map(({ key, icon, label, value, renderer = defaultRenderer, action }) => {
