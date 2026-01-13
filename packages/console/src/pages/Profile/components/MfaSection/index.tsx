@@ -263,7 +263,7 @@ function MfaSection({ user, signInExperience }: Props) {
   }
 
   return (
-    <FormCard title="profile.mfa.title">
+    <FormCard title="profile.mfa.title" description="profile.mfa.section_description">
       <CardContent title="profile.mfa.two_step_verification" data={rows} />
     </FormCard>
   );

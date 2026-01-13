@@ -89,10 +89,10 @@ const profile = {
     permanently_delete: 'Permanently delete',
   },
   mfa: {
-    title: 'MULTI-FACTOR AUTH',
+    title: 'TWO-FACTOR AUTHENTICATION',
+    section_description:
+      'Add an additional layer of security to your account, using authenticator app, passkey, or backup codes.',
     two_step_verification: '2-step verification',
-    description:
-      'Add an extra layer of security to your account by requiring a second verification step.',
     not_configured: 'Not configured',
     configured: 'Configured',
     passkeys_count_one: '{{count}} passkey',
