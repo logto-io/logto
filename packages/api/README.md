@@ -51,6 +51,27 @@ const { apiClient } = createManagementApi('default', {
 });
 ```
 
+#### Custom authentication
+
+For advanced use cases where you need full control over the authentication logic, use `createApiClient`:
+
+```ts
+import { createApiClient } from '@logto/api/management';
+
+const client = createApiClient({
+  baseUrl: 'https://your-logto-instance.com',
+  getToken: async () => {
+    // Your custom token retrieval logic
+    return getYourToken();
+  },
+});
+
+// Type-safe API calls
+const response = await client.GET('/api/applications/{id}', {
+  params: { path: { id: 'your-app-id' } },
+});
+```
+
 ### API documentation
 
 For detailed API documentation, refer to the [Logto Management API documentation](https://openapi.logto.io/).

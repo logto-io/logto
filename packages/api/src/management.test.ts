@@ -4,6 +4,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ClientCredentials } from './client-credentials.js';
 import {
   createManagementApi,
+  createApiClient,
   getBaseUrl,
   getManagementApiIndicator,
   allScope,
@@ -201,6 +202,91 @@ describe('Management API', () => {
       );
 
       consoleSpy.mockRestore();
+    });
+  });
+
+  describe('createApiClient', () => {
+    const mockApiClient = {
+      use: vi.fn(),
+    };
+
+    beforeEach(() => {
+      // @ts-expect-error
+      mockCreateClient.mockReturnValue(mockApiClient);
+    });
+
+    it('should create API client with provided options', () => {
+      const getToken = vi.fn().mockResolvedValue('test-token');
+
+      const result = createApiClient({
+        baseUrl: 'https://test.logto.app',
+        getToken,
+      });
+
+      expect(mockCreateClient).toHaveBeenCalledWith({
+        baseUrl: 'https://test.logto.app',
+      });
+
+      expect(result).toBe(mockApiClient);
+    });
+
+    it('should configure middleware correctly', async () => {
+      const getToken = vi.fn().mockResolvedValue('test-token');
+
+      createApiClient({
+        baseUrl: 'https://test.logto.app',
+        getToken,
+      });
+
+      expect(mockApiClient.use).toHaveBeenCalledWith({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        onRequest: expect.any(Function),
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const middleware: Middleware = mockApiClient.use.mock.calls[0]?.[0];
+      const mockRequest = {
+        headers: {
+          set: vi.fn(),
+        },
+      };
+
+      const result = await middleware.onRequest?.({
+        schemaPath: '/api/test',
+        // @ts-expect-error: Mock request object
+        request: mockRequest,
+      });
+
+      expect(getToken).toHaveBeenCalled();
+      expect(mockRequest.headers.set).toHaveBeenCalledWith('Authorization', 'Bearer test-token');
+      expect(result).toBe(mockRequest);
+    });
+
+    it('should skip auth for well-known endpoints', async () => {
+      const getToken = vi.fn().mockResolvedValue('test-token');
+
+      createApiClient({
+        baseUrl: 'https://test.logto.app',
+        getToken,
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const middleware: Middleware = mockApiClient.use.mock.calls[0]?.[0];
+      const mockRequest = {
+        headers: {
+          set: vi.fn(),
+        },
+      };
+
+      const result = await middleware.onRequest?.({
+        schemaPath: '/.well-known/openid-configuration',
+        // @ts-expect-error: Mock request object
+        request: mockRequest,
+      });
+
+      expect(getToken).not.toHaveBeenCalled();
+      expect(mockRequest.headers.set).not.toHaveBeenCalled();
+      expect(result).toBeUndefined();
     });
   });
 });
