@@ -12,17 +12,17 @@ import user_scopes from './user-scopes.js';
 
 const en = {
   translation: {
-    input,
-    secondary,
-    action,
-    description,
-    error,
-    list,
-    mfa,
-    development_tenant,
-    user_scopes,
-    profile,
-    account_center,
+    vstup,
+    druhé,
+    akce,
+    popis,
+    chyba,
+    seznam,
+    vícefázové_ověření,
+    vývojové_prostředí,
+    oprávnění_uživatele,
+    profil,
+    centrum_účtu,
   },
 };
 
