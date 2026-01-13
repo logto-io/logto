@@ -12,3 +12,11 @@
   border-radius: 50%;
   background-color: var(--color-success-60);
 }
+
+.valueIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-right: 8px;
+  vertical-align: middle;
+}

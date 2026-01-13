@@ -175,6 +175,7 @@ function MfaSection({ user, signInExperience }: Props) {
           value: user.primaryEmail,
           renderer: (value) => (
             <span className={styles.status}>
+              <Icon className={styles.valueIcon} />
               <span className={styles.dot} />
               {value}
             </span>
@@ -202,6 +203,7 @@ function MfaSection({ user, signInExperience }: Props) {
           value: user.primaryPhone,
           renderer: (value) => (
             <span className={styles.status}>
+              <Icon className={styles.valueIcon} />
               <span className={styles.dot} />
               {value}
             </span>
