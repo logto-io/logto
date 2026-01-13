@@ -31,6 +31,21 @@ export type CreateManagementApiOptions = {
 };
 
 /**
+ * Options for creating an API client with custom token authentication.
+ */
+export type CreateApiClientOptions = {
+  /**
+   * The base URL for the Management API.
+   */
+  baseUrl: string;
+  /**
+   * A function that returns a promise resolving to the access token.
+   * This function will be called for each request that requires authentication.
+   */
+  getToken: () => Promise<string>;
+};
+
+/**
  * Returns the base URL for the Management API based on the tenant ID.
  * @param tenantId The tenant ID to construct the base URL.
  * @returns The base URL for the Management API.
@@ -50,6 +65,48 @@ export const getManagementApiIndicator = (tenantId: string) => `${getBaseUrl(ten
  * This is used when requesting an access token for the Management API.
  */
 export const allScope = 'all';
+
+/**
+ * Creates an API client with custom token authentication.
+ *
+ * This function is useful when you need full control over the authentication flow,
+ * such as custom token sources.
+ *
+ * The client automatically skips authentication for `.well-known` endpoints.
+ *
+ * @param options The options including base URL and token getter function.
+ * @returns A configured API client with type-safe methods.
+ * @example
+ * ```ts
+ * import { createApiClient } from '@logto/api/management';
+ *
+ * const client = createApiClient({
+ *   baseUrl: 'https://my-tenant.logto.app',
+ *   getToken: async () => getYourToken(),
+ * });
+ *
+ * const response = await client.GET('/api/applications/{id}', {
+ *   params: { path: { id: 'app-id' } },
+ * });
+ * ```
+ */
+export function createApiClient(options: CreateApiClientOptions): Client<paths> {
+  const { baseUrl, getToken } = options;
+  const client = createClient<paths>({ baseUrl });
+
+  client.use({
+    async onRequest({ schemaPath, request }) {
+      if (schemaPath.includes('/.well-known/')) {
+        return;
+      }
+      const token = await getToken();
+      request.headers.set('Authorization', `Bearer ${token}`);
+      return request;
+    },
+  });
+
+  return client;
+}
 
 type ManagementApiReturnType = {
   /**
@@ -122,16 +179,10 @@ export function createManagementApi(
       scope: allScope,
     },
   });
-  const apiClient = createClient<paths>({
-    baseUrl,
-  });
 
-  apiClient.use({
-    async onRequest({ schemaPath, request }) {
-      if (schemaPath.includes('/.well-known/')) {
-        // Skip auth for well-known endpoints
-        return;
-      }
+  const apiClient = createApiClient({
+    baseUrl,
+    getToken: async () => {
       const { value, scope } = await clientCredentials.getAccessToken();
 
       if (scope !== allScope) {
@@ -140,8 +191,7 @@ export function createManagementApi(
         );
       }
 
-      request.headers.set('Authorization', `Bearer ${value}`);
-      return request;
+      return value;
     },
   });
 
