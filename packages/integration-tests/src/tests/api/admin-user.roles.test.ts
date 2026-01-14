@@ -167,6 +167,13 @@ describe('admin console user management (roles)', () => {
 
     expect(assignment.data).toEqual({ addedRoleIds: [role1.id, role2.id] });
 
+    const duplicatedAssignment = await post('/api/users/{userId}/roles', {
+      params: { path: { userId: createdUser.data.id } },
+      body: { roleIds: [role1.id, role2.id] },
+    });
+
+    expect(duplicatedAssignment.data).toEqual({ addedRoleIds: [] });
+
     const replacement = await put('/api/users/{userId}/roles', {
       params: { path: { userId: createdUser.data.id } },
       body: { roleIds: [role3.id] },
