@@ -28,7 +28,7 @@ import {
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { generateEmail, generateUsername } from '#src/utils.js';
+import { devFeatureTest, generateEmail, generateUsername } from '#src/utils.js';
 
 const state = 'state';
 const redirectUri = 'http://localhost:3000';
@@ -271,33 +271,36 @@ describe('fulfill missing mandatory profile fields', () => {
     await deleteUser(userId);
   });
 
-  it('should not ask to provide email if `skipRequiredIdentifiers` is true', async () => {
-    await updateSignInExperience({
-      socialSignIn: {
-        skipRequiredIdentifiers: true,
-      },
-      signUp: {
-        identifiers: [SignInIdentifier.Email, SignInIdentifier.Username],
-        password: true,
-        verify: false,
-      },
-    });
+  devFeatureTest.it(
+    'should not ask to provide email if `skipRequiredIdentifiers` is true',
+    async () => {
+      await updateSignInExperience({
+        socialSignIn: {
+          skipRequiredIdentifiers: true,
+        },
+        signUp: {
+          identifiers: [SignInIdentifier.Email, SignInIdentifier.Username],
+          password: true,
+          verify: false,
+        },
+      });
 
-    const userId = await signInWithSocial(
-      connectorIdMap.get(mockSocialConnectorId)!,
-      {
-        id: generateStandardId(),
-      },
-      {
-        registerNewUser: true,
-      }
-    );
+      const userId = await signInWithSocial(
+        connectorIdMap.get(mockSocialConnectorId)!,
+        {
+          id: generateStandardId(),
+        },
+        {
+          registerNewUser: true,
+        }
+      );
 
-    expect(userId).toBeDefined();
-    const { primaryEmail, username } = await getUser(userId);
-    expect(primaryEmail).toBeUndefined();
-    expect(username).toBeUndefined();
+      expect(userId).toBeDefined();
+      const { primaryEmail, username } = await getUser(userId);
+      expect(primaryEmail).toBeUndefined();
+      expect(username).toBeUndefined();
 
-    await deleteUser(userId);
-  });
+      await deleteUser(userId);
+    }
+  );
 });
