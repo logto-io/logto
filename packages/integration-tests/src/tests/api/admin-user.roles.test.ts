@@ -34,7 +34,10 @@ describe('admin console user management (roles)', () => {
     });
 
     const assignment = await assignRolesToUser(user.id, [role1.id, role2.id]);
-    expect(assignment.addedRoleIds).toEqual([role1.id, role2.id]);
+    expect(assignment).toEqual({
+      roleIds: [role1.id, role2.id],
+      addedRoleIds: [role1.id, role2.id],
+    });
     const roles = await getUserRoles(user.id);
     expect(roles.length).toBe(2);
     expect(roles.find(({ id }) => id === role1.id)).toBeDefined();
@@ -124,7 +127,7 @@ describe('admin console user management (roles)', () => {
         (
           path: '/api/users/{userId}/roles',
           init: { params: { path: { userId: string } }; body: { roleIds: string[] } }
-        ): Promise<{ data?: { addedRoleIds: string[] } }>;
+        ): Promise<{ data?: { roleIds: string[]; addedRoleIds: string[] } }>;
       };
       PUT: (
         path: '/api/users/{userId}/roles',
@@ -165,14 +168,20 @@ describe('admin console user management (roles)', () => {
       body: { roleIds: [role1.id, role2.id] },
     });
 
-    expect(assignment.data).toEqual({ addedRoleIds: [role1.id, role2.id] });
+    expect(assignment.data).toEqual({
+      roleIds: [role1.id, role2.id],
+      addedRoleIds: [role1.id, role2.id],
+    });
 
     const duplicatedAssignment = await post('/api/users/{userId}/roles', {
       params: { path: { userId: createdUser.data.id } },
       body: { roleIds: [role1.id, role2.id] },
     });
 
-    expect(duplicatedAssignment.data).toEqual({ addedRoleIds: [] });
+    expect(duplicatedAssignment.data).toEqual({
+      roleIds: [role1.id, role2.id],
+      addedRoleIds: [],
+    });
 
     const replacement = await put('/api/users/{userId}/roles', {
       params: { path: { userId: createdUser.data.id } },

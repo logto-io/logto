@@ -55,7 +55,10 @@ describe('user role routes', () => {
         roleIds: [mockAdminUserRole.id],
       });
       expect(response.status).toEqual(201);
-      expect(response.body).toEqual({ addedRoleIds: [mockAdminUserRole.id] });
+      expect(response.body).toEqual({
+        roleIds: [mockAdminUserRole.id],
+        addedRoleIds: [mockAdminUserRole.id],
+      });
       expect(insertUsersRoles).toHaveBeenCalledWith([
         { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
       ]);
@@ -113,7 +116,10 @@ describe('user role routes', () => {
         roleIds: [mockAdminUserRole.id],
       });
       expect(response.status).toEqual(201);
-      expect(response.body).toEqual({ addedRoleIds: [mockAdminUserRole.id] });
+      expect(response.body).toEqual({
+        roleIds: [mockAdminUserRole.id],
+        addedRoleIds: [mockAdminUserRole.id],
+      });
       expect(insertUsersRoles).toHaveBeenCalledWith([
         { id: mockId, userId: mockUser.id, roleId: mockAdminUserRole.id },
       ]);

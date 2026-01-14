@@ -31,6 +31,9 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "roleIds": {
+                      "description": "An array of API resource role IDs requested for assignment."
+                    },
                     "addedRoleIds": {
                       "description": "An array of API resource role IDs newly assigned to the user."
                     }
