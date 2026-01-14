@@ -192,13 +192,32 @@ export class Profile {
   /**
    * Checks if the user has fulfilled the mandatory profile fields.
    *
-   * - Skip the check if the profile contains an enterprise SSO identity.
+   * @remarks
+   * - Skip the check if the profile contains an enterprise SSO identity or the user is verified via SSO.
+   * - Skip the check if the profile contains a social identity or the user is verified via social identity and `skipRequiredIdentifiers` is true.
+   *
+   * @throws {RequestError} 422 if the mandatory profile fields are not fulfilled.
    */
-  async assertUserMandatoryProfileFulfilled() {
+  async assertUserMandatoryProfileFulfilled({
+    hasVerifiedSocialIdentity,
+    hasVerifiedSsoIdentity,
+  }: {
+    hasVerifiedSocialIdentity: boolean;
+    hasVerifiedSsoIdentity: boolean;
+  }) {
     const user = await this.safeGetIdentifiedUser();
 
-    if (this.#data.enterpriseSsoIdentity) {
+    if (this.#data.enterpriseSsoIdentity ?? hasVerifiedSsoIdentity) {
       return;
+    }
+
+    if (this.#data.socialIdentity ?? hasVerifiedSocialIdentity) {
+      const { skipRequiredIdentifiers } =
+        await this.signInExperienceValidator.getSocialSignInPolicy();
+
+      if (skipRequiredIdentifiers) {
+        return;
+      }
     }
 
     const mandatoryProfileFields =

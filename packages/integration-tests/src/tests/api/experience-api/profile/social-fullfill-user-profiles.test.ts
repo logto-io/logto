@@ -35,7 +35,7 @@ const redirectUri = 'http://localhost:3000';
 const socialUserId = generateStandardId();
 const email = generateEmail();
 
-describe('fulfill missing username ', () => {
+describe('fulfill missing mandatory profile fields', () => {
   const connectorIdMap = new Map<string, string>();
 
   beforeAll(async () => {
@@ -267,6 +267,36 @@ describe('fulfill missing username ', () => {
 
     const { identities } = await getUser(userId);
     expect(identities[mockSocialConnectorTarget]).toBeTruthy();
+
+    await deleteUser(userId);
+  });
+
+  it('should not ask to provide email if `skipRequiredIdentifiers` is true', async () => {
+    await updateSignInExperience({
+      socialSignIn: {
+        skipRequiredIdentifiers: true,
+      },
+      signUp: {
+        identifiers: [SignInIdentifier.Email, SignInIdentifier.Username],
+        password: true,
+        verify: false,
+      },
+    });
+
+    const userId = await signInWithSocial(
+      connectorIdMap.get(mockSocialConnectorId)!,
+      {
+        id: generateStandardId(),
+      },
+      {
+        registerNewUser: true,
+      }
+    );
+
+    expect(userId).toBeDefined();
+    const { primaryEmail, username } = await getUser(userId);
+    expect(primaryEmail).toBeUndefined();
+    expect(username).toBeUndefined();
 
     await deleteUser(userId);
   });
