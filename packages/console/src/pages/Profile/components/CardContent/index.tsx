@@ -21,7 +21,7 @@ export type Row<T> = {
   label: AdminConsoleKey | ReactElement;
   value: T;
   renderer?: (value: T) => ReactElement;
-  action: Action | Action[];
+  action?: Action | Action[];
 };
 
 type Props<T> = {
@@ -54,7 +54,7 @@ function CardContent<T extends Nullable<boolean | string | Record<string, unknow
       <table>
         <tbody>
           {data.map(({ key, icon, label, value, renderer = defaultRenderer, action }) => {
-            const actions = Array.isArray(action) ? action : [action];
+            const actions = action ? (Array.isArray(action) ? action : [action]) : [];
 
             return (
               <tr key={key}>
