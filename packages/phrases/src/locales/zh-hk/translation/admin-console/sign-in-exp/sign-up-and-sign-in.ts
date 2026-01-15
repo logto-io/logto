@@ -43,9 +43,13 @@ const sign_up_and_sign_in = {
       set_up_more: '立即設置',
       go_to: '其他社交連接器。',
     },
-    automatic_account_linking: '自動帳戶連結',
-    automatic_account_linking_label:
-      '當啟用時，如果用戶以系統中新身份登錄，但存在與之相同標識（如電郵地址）的唯一帳戶，Logto 將自動連結該帳戶與社交身份，而不要求用戶進行帳戶連結。',
+    settings_title: '社交登錄體驗',
+    automatic_account_linking: '自動鏈接具有相同標識的帳戶',
+    automatic_account_linking_tip:
+      '啟用後，如果用戶使用新的社交身份登錄，並且恰好有一個具有相同標識（例如，郵件地址）的現有帳戶，Logto 將自動將該社交身份鏈接到該帳戶。用戶將不會被要求選擇是否鏈接帳戶。',
+    required_sign_up_identifiers: '要求用戶提供遺漏的註冊標識',
+    required_sign_up_identifiers_tip:
+      '啟用後，通過社交提供商登錄的用戶在完成登錄之前必須填寫任何遺漏的註冊標識（例如，郵件）。\n\n若禁用，則用戶即使社交帳戶未同步，也可以在不提供遺漏標識的情況下繼續。',
   },
   tip: {
     set_a_password: '啟用用戶名註冊，必須設置密碼。',

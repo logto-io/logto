@@ -49,9 +49,13 @@ const sign_up_and_sign_in = {
       set_up_more: 'Daha fazlasını kur',
       go_to: 'şimdi farklı sosyal bağlantı noktalarına.',
     },
-    automatic_account_linking: 'Otomatik hesap bağlantısı',
-    automatic_account_linking_label:
-      'Açıkken, bir kullanıcı sisteme yeni bir sosyal kimlikle giriş yaparsa ve aynı tanımlayıcıya (örn., e-posta) sahip yalnızca bir mevcut hesap varsa, Logto kullanıcıdan hesap bağlantısı istemek yerine hesabı otomatik olarak sosyal kimlikle bağlar.',
+    settings_title: 'Sosyal oturum açma deneyimi',
+    automatic_account_linking: 'Aynı tanımlayıcıya sahip hesapları otomatik olarak bağla',
+    automatic_account_linking_tip:
+      'Etkinleştirildiğinde, bir kullanıcı yeni bir sosyal kimlikle oturum açarsa ve aynı tanımlayıcıya sahip (örneğin, e-posta adresi) tam olarak bir mevcut hesap varsa, Logto sosyal kimliği otomatik olarak o hesaba bağlayacaktır. Kullanıcıya hesapları bağlamak isteyip istemediği sorulmaz.',
+    required_sign_up_identifiers: 'Kullanıcılardan eksik kayıt tanımlayıcıyı sağlamalarını isteyin',
+    required_sign_up_identifiers_tip:
+      'Etkinleştirildiğinde, sosyal sağlayıcılar aracılığıyla oturum açan kullanıcıların, oturum açmayı tamamlamadan önce eksik olan zorunlu kayıt tanımlayıcılarını (örneğin e-posta) doldurmaları gerekmektedir.\n\nDevre dışı bırakıldığında, kullanıcılar eksik tanımlayıcıları sağlamadan devam edebilirler, hatta sosyal hesap bu tanımlayıcıları senkronize etmemiş olsa bile.',
   },
   tip: {
     set_a_password: 'Kullanıcı adınıza benzersiz bir şifre belirlemek şarttır.',

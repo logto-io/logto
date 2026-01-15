@@ -46,9 +46,13 @@ const sign_up_and_sign_in = {
       set_up_more: '다른 소셜 연동',
       go_to: '을 설정해 보세요.',
     },
-    automatic_account_linking: '자동 계정 연결',
-    automatic_account_linking_label:
-      '활성화되면 사용자가 새 시스템에서 소셜 ID로 로그인할 때 동일한 식별자(예: 이메일)를 가지고 있는 기존 계정이 하나만 있을 경우 Logto가 사용자에게 계정 연결을 요청하는 대신 자동으로 소셜 ID와 계정을 연결합니다.',
+    settings_title: '소셜 로그인 환경',
+    automatic_account_linking: '동일한 식별자로 계정 자동 연결',
+    automatic_account_linking_tip:
+      '이 기능을 활성화하면 사용자가 새로운 소셜 ID로 로그인할 때 동일한 식별자(예: 이메일 주소)를 가진 기존 계정이 정확히 하나만 있는 경우, Logto는 소셜 ID를 해당 계정에 자동으로 연결합니다. 사용자에게 계정을 연결할지 선택하게 요청하지 않습니다.',
+    required_sign_up_identifiers: '사용자가 누락된 회원가입 식별자를 제공하도록 요구',
+    required_sign_up_identifiers_tip:
+      '이 기능을 활성화하면 소셜 제공자를 통해 로그인하는 사용자는 로그인을 완료하기 전에 누락된 필수 회원가입 식별자(예: 이메일)를 채워야 합니다. \n\n비활성화하면 소셜 계정이 동기화하지 않은 경우에도 사용자는 누락된 식별자를 제공하지 않고도 진행할 수 있습니다.',
   },
   tip: {
     set_a_password: '사용자 이름에 대한 고유한 암호 집합은 필수예요.',

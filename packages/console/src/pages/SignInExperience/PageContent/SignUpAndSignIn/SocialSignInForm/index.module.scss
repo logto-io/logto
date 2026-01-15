@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.switchRows {
+  > :not(:first-child) {
+    margin-top: _.unit(3);
+  }
+}
