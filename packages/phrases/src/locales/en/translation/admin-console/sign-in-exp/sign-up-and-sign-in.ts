@@ -48,9 +48,13 @@ const sign_up_and_sign_in = {
       set_up_more: 'Set up',
       go_to: 'other social connectors now.',
     },
-    automatic_account_linking: 'Automatic account linking',
-    automatic_account_linking_label:
-      'When switched on, if a user signs in with a social identity that is new to the system, and there is exactly one existing account with the same identifier (e.g., email), Logto will automatically link the account with the social identity instead of prompting the user for account linking.',
+    settings_title: 'Social sign-in experience',
+    automatic_account_linking: 'Automatically link accounts with the same identifier',
+    automatic_account_linking_tip:
+      'When enabled, if a user signs in with a new social identity and there is exactly one existing account with the same identifier (e.g., an email address), Logto will automatically link the social identity to that account. The user will not be asked to choose whether to link accounts.',
+    required_sign_up_identifiers: 'Require users to provide missing sign-up identifier',
+    required_sign_up_identifiers_tip:
+      'When enabled, users logging in via social providers must fill in any missing required sign-up identifier (such as email) before completing their login. \n\nIf disabled, users can proceed without providing missing identifiers, even if the social account didn’t sync them.',
   },
   tip: {
     set_a_password: 'A unique set of a password to your username is a must.',

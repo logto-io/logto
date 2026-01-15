@@ -43,9 +43,13 @@ const sign_up_and_sign_in = {
       set_up_more: '立即设置',
       go_to: '其他社交连接器。',
     },
-    automatic_account_linking: '自动账号关联',
-    automatic_account_linking_label:
-      '开启后，如果用户使用系统中新社交身份登录，且系统中存在同一标识（如邮件地址）的唯一账号，Logto 会自动将该账号与社交身份关联，而不是提示用户进行账号关联。',
+    settings_title: '社交登录体验',
+    automatic_account_linking: '自动关联具有相同标识符的账户',
+    automatic_account_linking_tip:
+      '启用后，如果用户使用新的社交身份登录，并且有且仅有一个现有账户具有相同的标识符（例如电子邮件地址），Logto 将自动将该社交身份链接到该账户。用户不会被要求选择是否链接账户。',
+    required_sign_up_identifiers: '要求用户提供缺失的注册标识符',
+    required_sign_up_identifiers_tip:
+      '启用后，通过社交提供商登录的用户必须填写任何缺失的必需注册标识符（例如电子邮件），才能完成登录。\n\n如果禁用，用户可以在不提供缺失标识符的情况下继续，即使社交账户没有同步它们。',
   },
   tip: {
     set_a_password: '启用户名注册，必须设置密码。',

@@ -49,9 +49,14 @@ const sign_up_and_sign_in = {
       set_up_more: 'Ustaw',
       go_to: 'inne łączniki społecznościowe teraz.',
     },
-    automatic_account_linking: 'Automatyczne łączenie kont',
-    automatic_account_linking_label:
-      'Gdy jest włączone, jeśli użytkownik zaloguje się za pomocą tożsamości społecznościowej, która jest nowa w systemie, a istnieje jedno istniejące konto z tym samym identyfikatorem (np. adres e-mail), Logto automatycznie połączy konto z tożsamością społecznościową zamiast prosić użytkownika o powiązanie konta.',
+    settings_title: 'Doświadczenie korzystania z logowania społecznościowego',
+    automatic_account_linking: 'Automatycznie łącz konta z tym samym identyfikatorem',
+    automatic_account_linking_tip:
+      'Po włączeniu, jeśli użytkownik zaloguje się z nową tożsamością społecznościową i istnieje dokładnie jedno istniejące konto z tym samym identyfikatorem (np. adres e-mail), Logto automatycznie połączy tożsamość społecznościową z tym kontem. Użytkownik nie zostanie zapytany o to, czy połączyć konta.',
+    required_sign_up_identifiers:
+      'Wymagaj od użytkowników podania brakującego identyfikatora rejestracji',
+    required_sign_up_identifiers_tip:
+      'Po włączeniu użytkownicy logujący się za pośrednictwem dostawców społecznościowych muszą wypełnić wszelkie brakujące wymagane identyfikatory rejestracji (takie jak e-mail) przed zakończeniem rejestracji. \n\nJeśli jest wyłączone, użytkownicy mogą kontynuować bez podawania brakujących identyfikatorów, nawet jeśli konto społecznościowe ich nie zsynchronizowało.',
   },
   tip: {
     set_a_password: 'Unikatowe hasło dla nazwy użytkownika jest konieczne.',

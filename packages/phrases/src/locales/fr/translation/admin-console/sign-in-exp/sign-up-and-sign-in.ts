@@ -52,9 +52,14 @@ const sign_up_and_sign_in = {
       set_up_more: 'Configurer',
       go_to: "d'autres connecteurs sociaux maintenant.",
     },
-    automatic_account_linking: 'Lien automatique de compte',
-    automatic_account_linking_label:
-      "Lorsqu'elle est activée, si un utilisateur se connecte avec une identité sociale nouvelle pour le système, et qu'il existe exactement un compte existant avec le même identificateur (par exemple, l'adresse e-mail), Logto liera automatiquement le compte à l'identité sociale au lieu d'inviter l'utilisateur à lier son compte.",
+    settings_title: 'Expérience de connexion sociale',
+    automatic_account_linking: 'Lier automatiquement les comptes avec le même identifiant',
+    automatic_account_linking_tip:
+      "Lors de l'activation, si un utilisateur se connecte avec une nouvelle identité sociale et qu'il y a exactement un compte existant avec le même identifiant (par exemple, une adresse e-mail), Logto liera automatiquement l'identité sociale à ce compte. L'utilisateur ne sera pas invité à choisir s'il souhaite lier les comptes.",
+    required_sign_up_identifiers:
+      "Exiger des utilisateurs qu'ils fournissent l'identifiant d'inscription manquant",
+    required_sign_up_identifiers_tip:
+      "Lors de l'activation, les utilisateurs se connectant via des fournisseurs sociaux doivent remplir tout identifiant d'inscription manquant requis (tel qu'un e-mail) avant de terminer leur connexion.\n\nSi désactivé, les utilisateurs peuvent continuer sans fournir les identifiants manquants, même si le compte social ne les a pas synchronisés.",
   },
   tip: {
     set_a_password:
