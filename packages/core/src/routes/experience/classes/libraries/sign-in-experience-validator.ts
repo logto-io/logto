@@ -175,6 +175,12 @@ export class SignInExperienceValidator {
     return passwordPolicy;
   }
 
+  public async getSocialSignInPolicy() {
+    const { socialSignIn } = await this.getSignInExperienceData();
+
+    return socialSignIn;
+  }
+
   public async getSignInExperienceData() {
     this.signInExperienceDataCache ||=
       await this.queries.signInExperiences.findDefaultSignInExperience();

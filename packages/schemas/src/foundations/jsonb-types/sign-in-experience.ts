@@ -149,10 +149,20 @@ export type SocialSignIn = {
    * to the system and exactly one existing account is found with the same identifier (e.g., email).
    */
   automaticAccountLinking?: boolean;
+  /**
+   * If required identifiers (e.g., email, phone) should be skipped during social sign-in.
+   * @remarks
+   * By default, if a social identity does not provide all required identifiers,
+   * the user will be prompted to provide them before completing sign-in.
+   *
+   * Setting this to `true` will bypass that requirement.
+   */
+  skipRequiredIdentifiers?: boolean;
 };
 
 export const socialSignInGuard = z.object({
   automaticAccountLinking: z.boolean().optional(),
+  skipRequiredIdentifiers: z.boolean().optional(),
 }) satisfies ToZodObject<SocialSignIn>;
 
 export const connectorTargetsGuard = z.string().array();

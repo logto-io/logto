@@ -23,19 +23,16 @@ import {
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
 import { expectRejects } from '#src/helpers/index.js';
-import {
-  enableAllPasswordSignInMethods,
-  enableAllVerificationCodeSignInMethods,
-} from '#src/helpers/sign-in-experience.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { generateEmail, generateUsername } from '#src/utils.js';
+import { devFeatureTest, generateEmail, generateUsername } from '#src/utils.js';
 
 const state = 'state';
 const redirectUri = 'http://localhost:3000';
 const socialUserId = generateStandardId();
 const email = generateEmail();
 
-describe('fulfill missing username ', () => {
+describe('fulfill missing mandatory profile fields', () => {
   const connectorIdMap = new Map<string, string>();
 
   beforeAll(async () => {
@@ -46,12 +43,23 @@ describe('fulfill missing username ', () => {
       setEmailConnector(),
     ]);
     connectorIdMap.set(mockSocialConnectorId, socialConnectorId);
+
+    await updateSignInExperience({
+      socialSignIn: {
+        skipRequiredIdentifiers: false,
+      },
+    });
   });
 
   afterAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Social]);
     // Reset sign-up methods to default
     await enableAllPasswordSignInMethods();
+    await updateSignInExperience({
+      socialSignIn: {
+        skipRequiredIdentifiers: false,
+      },
+    });
   });
 
   it('should successfully sign-up with social and fulfill missing username', async () => {
@@ -104,10 +112,12 @@ describe('fulfill missing username ', () => {
   });
 
   it('should directly sync trusted email', async () => {
-    await enableAllVerificationCodeSignInMethods({
-      identifiers: [SignInIdentifier.Email],
-      password: true,
-      verify: true,
+    await updateSignInExperience({
+      signUp: {
+        identifiers: [SignInIdentifier.Email],
+        password: false,
+        verify: true,
+      },
     });
 
     const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
@@ -130,6 +140,14 @@ describe('fulfill missing username ', () => {
   });
 
   it('should ask to provide email if no verified email is returned from social', async () => {
+    await updateSignInExperience({
+      signUp: {
+        identifiers: [SignInIdentifier.Email],
+        password: false,
+        verify: true,
+      },
+    });
+
     const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
 
     const client = await initExperienceClient();
@@ -190,6 +208,24 @@ describe('fulfill missing username ', () => {
   });
 
   it('should ask to sign-in and link social if the email is already in use', async () => {
+    await updateSignInExperience({
+      signIn: {
+        methods: [
+          {
+            identifier: SignInIdentifier.Email,
+            password: false,
+            verificationCode: true,
+            isPasswordPrimary: false,
+          },
+        ],
+      },
+      signUp: {
+        identifiers: [SignInIdentifier.Email],
+        password: false,
+        verify: true,
+      },
+    });
+
     const { userProfile, user } = await generateNewUser({
       primaryEmail: true,
     });
@@ -270,4 +306,37 @@ describe('fulfill missing username ', () => {
 
     await deleteUser(userId);
   });
+
+  devFeatureTest.it(
+    'should not ask to provide email if `skipRequiredIdentifiers` is true',
+    async () => {
+      await updateSignInExperience({
+        socialSignIn: {
+          skipRequiredIdentifiers: true,
+        },
+        signUp: {
+          identifiers: [SignInIdentifier.Email, SignInIdentifier.Username],
+          password: true,
+          verify: true,
+        },
+      });
+
+      const userId = await signInWithSocial(
+        connectorIdMap.get(mockSocialConnectorId)!,
+        {
+          id: generateStandardId(),
+        },
+        {
+          registerNewUser: true,
+        }
+      );
+
+      expect(userId).toBeDefined();
+      const { primaryEmail, username } = await getUser(userId);
+      expect(primaryEmail).toBe(null);
+      expect(username).toBe(null);
+
+      await deleteUser(userId);
+    }
+  );
 });

@@ -282,7 +282,10 @@ export default class ExperienceInteraction {
       this.verificationRecords.get(VerificationType.OneTimeToken)?.isVerified
     );
     await this.guardCaptcha();
-    await this.profile.assertUserMandatoryProfileFulfilled();
+    await this.profile.assertUserMandatoryProfileFulfilled({
+      hasVerifiedSocialIdentity: this.hasVerifiedSocialIdentity,
+      hasVerifiedSsoIdentity: this.hasVerifiedSsoIdentity,
+    });
 
     const user = await this.provisionLibrary.createUser(this.profile.data);
     log?.append({ user });
@@ -471,9 +474,10 @@ export default class ExperienceInteraction {
     await this.profile.validateAvailability();
 
     // Profile fulfilled
-    if (!this.hasVerifiedSsoIdentity) {
-      await this.profile.assertUserMandatoryProfileFulfilled();
-    }
+    await this.profile.assertUserMandatoryProfileFulfilled({
+      hasVerifiedSocialIdentity: this.hasVerifiedSocialIdentity,
+      hasVerifiedSsoIdentity: this.hasVerifiedSsoIdentity,
+    });
 
     // Revalidate the new MFA data if any
     await this.mfa.checkAvailability();
@@ -665,6 +669,11 @@ export default class ExperienceInteraction {
     const ssoVerificationRecord = this.verificationRecords.get(VerificationType.EnterpriseSso);
 
     return Boolean(ssoVerificationRecord?.isVerified);
+  }
+
+  private get hasVerifiedSocialIdentity() {
+    const socialVerificationRecord = this.verificationRecords.get(VerificationType.Social);
+    return Boolean(socialVerificationRecord?.isVerified);
   }
 
   /**
