@@ -1,11 +1,14 @@
 import { useHandleSignInCallback, useLogto } from '@logto/react';
 import { useEffect } from 'react';
 
+import { clearVerificationRecord } from './Providers/PageContextProvider/verification-storage';
+
 const Callback = () => {
   const { clearAllTokens } = useLogto();
 
   useEffect(() => {
     void clearAllTokens();
+    clearVerificationRecord();
   }, [clearAllTokens]);
 
   const { error } = useHandleSignInCallback(() => {
