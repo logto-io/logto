@@ -23,10 +23,7 @@ import {
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
 import { expectRejects } from '#src/helpers/index.js';
-import {
-  enableAllPasswordSignInMethods,
-  enableAllVerificationCodeSignInMethods,
-} from '#src/helpers/sign-in-experience.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import { devFeatureTest, generateEmail, generateUsername } from '#src/utils.js';
 
@@ -46,12 +43,23 @@ describe('fulfill missing mandatory profile fields', () => {
       setEmailConnector(),
     ]);
     connectorIdMap.set(mockSocialConnectorId, socialConnectorId);
+
+    await updateSignInExperience({
+      socialSignIn: {
+        skipRequiredIdentifiers: false,
+      },
+    });
   });
 
   afterAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Social]);
     // Reset sign-up methods to default
     await enableAllPasswordSignInMethods();
+    await updateSignInExperience({
+      socialSignIn: {
+        skipRequiredIdentifiers: false,
+      },
+    });
   });
 
   it('should successfully sign-up with social and fulfill missing username', async () => {
@@ -104,10 +112,12 @@ describe('fulfill missing mandatory profile fields', () => {
   });
 
   it('should directly sync trusted email', async () => {
-    await enableAllVerificationCodeSignInMethods({
-      identifiers: [SignInIdentifier.Email],
-      password: true,
-      verify: true,
+    await updateSignInExperience({
+      signUp: {
+        identifiers: [SignInIdentifier.Email],
+        password: false,
+        verify: true,
+      },
     });
 
     const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
@@ -130,6 +140,14 @@ describe('fulfill missing mandatory profile fields', () => {
   });
 
   it('should ask to provide email if no verified email is returned from social', async () => {
+    await updateSignInExperience({
+      signUp: {
+        identifiers: [SignInIdentifier.Email],
+        password: false,
+        verify: true,
+      },
+    });
+
     const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
 
     const client = await initExperienceClient();
@@ -190,6 +208,14 @@ describe('fulfill missing mandatory profile fields', () => {
   });
 
   it('should ask to sign-in and link social if the email is already in use', async () => {
+    await updateSignInExperience({
+      signUp: {
+        identifiers: [SignInIdentifier.Email],
+        password: false,
+        verify: true,
+      },
+    });
+
     const { userProfile, user } = await generateNewUser({
       primaryEmail: true,
     });
@@ -281,7 +307,7 @@ describe('fulfill missing mandatory profile fields', () => {
         signUp: {
           identifiers: [SignInIdentifier.Email, SignInIdentifier.Username],
           password: true,
-          verify: false,
+          verify: true,
         },
       });
 
@@ -297,8 +323,8 @@ describe('fulfill missing mandatory profile fields', () => {
 
       expect(userId).toBeDefined();
       const { primaryEmail, username } = await getUser(userId);
-      expect(primaryEmail).toBeUndefined();
-      expect(username).toBeUndefined();
+      expect(primaryEmail).toBe(null);
+      expect(username).toBe(null);
 
       await deleteUser(userId);
     }
