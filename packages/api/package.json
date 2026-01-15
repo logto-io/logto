@@ -31,7 +31,6 @@
     "prepublishOnly": "pnpm generate-types && pnpm build",
     "generate-types": "./generate-types.sh",
     "build": "./check-types.sh && rm -rf lib/ && tsc -p tsconfig.build.json",
-    "prepack": "pnpm build",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "vitest src",
