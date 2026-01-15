@@ -6,7 +6,9 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 
+import useAccountApi from './use-account-api';
 import type { RequestError } from './use-api';
 import { useStaticApi } from './use-api';
 import useSwrFetcher from './use-swr-fetcher';
@@ -14,14 +16,28 @@ import useSwrFetcher from './use-swr-fetcher';
 const useCurrentUser = () => {
   const { isAuthenticated } = useLogto();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const api = useStaticApi({ prefixUrl: adminTenantEndpoint, resourceIndicator: meApi.indicator });
-  const fetcher = useSwrFetcher<UserProfileResponse>(api);
+
+  const meApi_ = useStaticApi({
+    prefixUrl: adminTenantEndpoint,
+    resourceIndicator: meApi.indicator,
+  });
+  const meApiFetcher = useSwrFetcher<UserProfileResponse>(meApi_);
+
+  const accountApi = useAccountApi();
+  const accountApiFetcher = useCallback(
+    async () => accountApi.get('').json<UserProfileResponse>(),
+    [accountApi]
+  );
+
   const {
     data: user,
     error,
     isLoading,
     mutate,
-  } = useSWR<UserProfileResponse, RequestError>(isAuthenticated && 'me', fetcher);
+  } = useSWR<UserProfileResponse, RequestError>(
+    isAuthenticated && 'me',
+    isDevFeaturesEnabled ? accountApiFetcher : meApiFetcher
+  );
 
   const updateCustomData = useCallback(
     async (customData: JsonObject) => {
@@ -30,16 +46,19 @@ const useCurrentUser = () => {
         return;
       }
 
-      await mutate({
-        ...user,
-        customData: await api
-          .patch(`me/custom-data`, {
-            json: customData,
-          })
-          .json<JsonObject>(),
-      });
+      if (isDevFeaturesEnabled) {
+        const data = await accountApi
+          .patch('', { json: { customData } })
+          .json<UserProfileResponse>();
+        await mutate({ ...user, customData: data.customData });
+      } else {
+        await mutate({
+          ...user,
+          customData: await meApi_.patch('me/custom-data', { json: customData }).json<JsonObject>(),
+        });
+      }
     },
-    [api, mutate, t, user]
+    [accountApi, meApi_, mutate, t, user]
   );
 
   return {
