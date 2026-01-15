@@ -209,6 +209,16 @@ describe('fulfill missing mandatory profile fields', () => {
 
   it('should ask to sign-in and link social if the email is already in use', async () => {
     await updateSignInExperience({
+      signIn: {
+        methods: [
+          {
+            identifier: SignInIdentifier.Email,
+            password: false,
+            verificationCode: true,
+            isPasswordPrimary: false,
+          },
+        ],
+      },
       signUp: {
         identifiers: [SignInIdentifier.Email],
         password: false,
