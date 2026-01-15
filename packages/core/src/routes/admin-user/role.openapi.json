@@ -26,7 +26,21 @@
         },
         "responses": {
           "201": {
-            "description": "The API resource roles has been assigned to the user."
+            "description": "The API resource roles has been assigned to the user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "roleIds": {
+                      "description": "An array of API resource role IDs requested for assignment."
+                    },
+                    "addedRoleIds": {
+                      "description": "An array of API resource role IDs newly assigned to the user."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Assign roles to user",
@@ -49,7 +63,18 @@
         },
         "responses": {
           "200": {
-            "description": "The API resource roles has been updated for the user successfully."
+            "description": "The API resource roles has been updated for the user successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "roleIds": {
+                      "description": "An array of API resource role IDs assigned to the user."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Update roles for user",

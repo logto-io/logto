@@ -26,6 +26,7 @@
     "@apidevtools/swagger-parser": "^10.1.0",
     "@jest/test-sequencer": "^29.5.0",
     "@jest/types": "^29.1.2",
+    "@logto/api": "workspace:^",
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",
     "@logto/js": "^5.1.0",
