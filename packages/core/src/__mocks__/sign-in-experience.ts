@@ -108,4 +108,9 @@ export const mockSignInExperience: SignInExperience = {
   sentinelPolicy: {},
   emailBlocklistPolicy: {},
   forgotPasswordMethods: null,
+  passkeySignIn: {
+    enabled: false,
+    showPasskeyButton: false,
+    allowAutofill: false,
+  },
 };

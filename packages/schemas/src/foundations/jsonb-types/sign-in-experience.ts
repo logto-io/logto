@@ -299,3 +299,17 @@ export enum ForgotPasswordMethod {
 export const forgotPasswordMethodsGuard = z.nativeEnum(ForgotPasswordMethod).array();
 
 export type ForgotPasswordMethods = z.infer<typeof forgotPasswordMethodsGuard>;
+
+export type PasskeySignIn = {
+  enabled?: boolean;
+  showPasskeyButton?: boolean;
+  allowAutofill?: boolean;
+};
+
+export const passkeySignInGuard = z
+  .object({
+    enabled: z.boolean(),
+    showPasskeyButton: z.boolean(),
+    allowAutofill: z.boolean(),
+  })
+  .partial() satisfies ToZodObject<PasskeySignIn>;
