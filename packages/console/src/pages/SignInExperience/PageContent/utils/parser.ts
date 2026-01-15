@@ -123,6 +123,7 @@ export const sieFormDataParser = {
       captchaPolicy,
       sentinelPolicy,
       emailBlocklistPolicy,
+      socialSignIn,
       // End: Remove the omitted fields from the data
       ...rest
     } = data;
@@ -132,6 +133,11 @@ export const sieFormDataParser = {
       signUp: signUpFormDataParser.fromSignUp(signUp),
       createAccountEnabled: rest.signInMode !== SignInMode.SignIn,
       customCss: customCss ?? undefined,
+      socialSignIn: {
+        automaticAccountLinking: false,
+        skipRequiredIdentifiers: false,
+        ...socialSignIn,
+      },
       branding: {
         ...emptyBranding,
         ...branding,
@@ -139,12 +145,13 @@ export const sieFormDataParser = {
     };
   },
   toSignInExperience: (formData: SignInExperienceForm): SignInExperiencePageManagedData => {
-    const { branding, createAccountEnabled, signUp, customCss, forgotPasswordMethods } = formData;
+    const { branding, createAccountEnabled, signUp, customCss, socialSignIn } = formData;
 
     return {
       ...formData,
       branding: removeFalsyValues(branding),
       signUp: signUpFormDataParser.toSignUp(signUp),
+      socialSignIn,
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
     };
