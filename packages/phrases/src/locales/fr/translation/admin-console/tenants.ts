@@ -30,6 +30,9 @@ const tenants = {
     production_description:
       'Destiné aux applications utilisées par les utilisateurs finaux et pouvant nécessiter une souscription payante.',
     tenant_info_saved: 'Les informations du locataire ont été enregistrées avec succès.',
+    enterprise_sso: 'Enterprise SSO',
+    enterprise_sso_description:
+      "Disponible sur les plans payants. Contactez-nous pour activer Enterprise SSO afin que tous les membres puissent se connecter à la console Logto Cloud en utilisant le fournisseur d'identité de votre organisation.",
   },
   full_env_tag: {
     development: 'Développement',

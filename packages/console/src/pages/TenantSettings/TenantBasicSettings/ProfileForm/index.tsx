@@ -8,6 +8,7 @@ import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
 import { type TenantSettingsForm } from '../types.js';
 
+import EnterpriseSso from './EnterpriseSso/index.js';
 import TenantEnvironment from './TenantEnvironment/index.js';
 import TenantRegion from './TenantRegion/index.js';
 
@@ -42,6 +43,9 @@ function ProfileForm({ currentTenantId }: Props) {
       </FormField>
       <FormField title="tenants.settings.tenant_type">
         <TenantEnvironment tag={getValues('profile.tag')} />
+      </FormField>
+      <FormField title="tenants.settings.enterprise_sso">
+        <EnterpriseSso />
       </FormField>
     </FormCard>
   );

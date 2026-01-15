@@ -28,6 +28,9 @@ const tenants = {
     production_description:
       'مخصص للتطبيقات التي يستخدمها المستخدمون النهائيون وقد تتطلب اشتراكًا مدفوعًا.',
     tenant_info_saved: 'تم حفظ معلومات المستأجر بنجاح.',
+    enterprise_sso: 'Enterprise SSO',
+    enterprise_sso_description:
+      'متاح في الخطط المدفوعة. اتصل بنا لتمكين Enterprise SSO حتى يتمكن جميع الأعضاء من تسجيل الدخول إلى Logto Cloud Console باستخدام موفر هوية مؤسستك.',
   },
   full_env_tag: {
     development: 'تطوير',

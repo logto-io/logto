@@ -30,6 +30,9 @@ const tenants = {
     production_description:
       'Destinado para aplicaciones que son utilizadas por usuarios finales y pueden requerir una suscripción paga.',
     tenant_info_saved: 'Información del inquilino guardada correctamente.',
+    enterprise_sso: 'Enterprise SSO',
+    enterprise_sso_description:
+      'Disponible en planes de pago. Contáctenos para habilitar Enterprise SSO para que todos los miembros puedan iniciar sesión en Logto Cloud Console usando el proveedor de identidad de su organización.',
   },
   full_env_tag: {
     development: 'Desarrollo',

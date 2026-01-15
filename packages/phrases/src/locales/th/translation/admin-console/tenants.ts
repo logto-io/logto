@@ -28,6 +28,9 @@ const tenants = {
     production_description:
       'สำหรับแอปที่ถูกใช้งานโดยผู้ใช้งานจริงและอาจต้องการการสมัครสมาชิกแบบชำระเงิน',
     tenant_info_saved: 'บันทึกข้อมูลผู้เช่าสำเร็จ',
+    enterprise_sso: 'Enterprise SSO',
+    enterprise_sso_description:
+      'มีให้บริการในแผนชำระเงิน ติดต่อเราเพื่อเปิดใช้งาน Enterprise SSO เพื่อให้สมาชิกทุกคนสามารถลงชื่อเข้าใช้คอนโซล Logto Cloud โดยใช้ผู้ให้บริการตัวตนขององค์กรของคุณ',
   },
   full_env_tag: {
     development: 'ทดสอบ',
