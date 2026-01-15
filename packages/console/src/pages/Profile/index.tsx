@@ -10,7 +10,7 @@ import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
 import { adminTenantEndpoint, meApi } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import AppBoundary from '@/containers/AppBoundary';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
@@ -105,7 +105,9 @@ function Profile() {
                     ]}
                   />
                 </FormCard>
-                <MfaSection user={user} signInExperience={signInExperience} />
+                {isDevFeaturesEnabled && (
+                  <MfaSection user={user} signInExperience={signInExperience} />
+                )}
                 {isCloud && (
                   <FormCard title="profile.delete_account.title">
                     <div className={styles.deleteAccount}>
