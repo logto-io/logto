@@ -42,6 +42,10 @@ jobs:
       - name: Prepack
         run: pnpm prepack
 
+      # Build @logto/api so @logto/integration-tests can resolve client imports in CI.
+      - name: Build API package
+        run: pnpm --filter @logto/api build
+
       - name: Check
         run: pnpm -r check
 
