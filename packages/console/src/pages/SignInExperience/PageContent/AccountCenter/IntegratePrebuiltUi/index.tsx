@@ -71,7 +71,6 @@ function IntegratePrebuiltUi() {
           </div>
           {!prebuiltUiPermissionNoticeAcknowledged && (
             <InlineNotification
-              variant="plain"
               className={styles.notice}
               action="general.got_it"
               onClick={() => {
