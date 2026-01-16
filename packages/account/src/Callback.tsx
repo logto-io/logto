@@ -2,6 +2,7 @@ import { useHandleSignInCallback, useLogto } from '@logto/react';
 import { useEffect } from 'react';
 
 import { clearVerificationRecord } from './Providers/PageContextProvider/verification-storage';
+import GlobalLoading from './components/GlobalLoading';
 
 const Callback = () => {
   const { clearAllTokens } = useLogto();
@@ -32,7 +33,7 @@ const Callback = () => {
     );
   }
 
-  return <p>Finishing sign in…</p>;
+  return <GlobalLoading />;
 };
 
 export default Callback;
