@@ -76,10 +76,15 @@ const InputField = (
    */
   const handleAnimationStart = useCallback((event: AnimationEvent<HTMLInputElement>) => {
     /**
-     * Because SCSS adds some random characters to the ‘onAutoFillStart’ animation name during the build process, we can’t use the exact name here.
+     * Because SCSS adds some random characters to the animation name during the build process,
+     * we can't use the exact name here.
      */
     if (event.animationName.includes('onAutoFillStart')) {
       setHasValue(true);
+    }
+
+    if (event.animationName.includes('onAutoFillCancel')) {
+      setHasValue(Boolean(innerRef.current?.value));
     }
   }, []);
 

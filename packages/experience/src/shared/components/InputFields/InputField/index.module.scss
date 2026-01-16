@@ -51,7 +51,13 @@
          * JavaScript will then be able to hook onto the 'animationstart' event.
          * see https://stackoverflow.com/questions/11708092/detecting-browser-autofill/41530164#41530164
          */
-        animation-name: onAutoFillStart;
+        /* stylelint-disable-next-line time-min-milliseconds -- Short duration needed for autofill detection */
+        animation: onAutoFillStart 0.01s forwards;
+      }
+
+      &:not(:-webkit-autofill) {
+        /* stylelint-disable-next-line time-min-milliseconds -- Short duration needed for autofill detection */
+        animation: onAutoFillCancel 0.01s forwards;
       }
     }
 
@@ -139,6 +145,14 @@
 * see https://stackoverflow.com/questions/11708092/detecting-browser-autofill/41530164#41530164
 */
 @keyframes onAutoFillStart {
+  /* stylelint-disable-next-line block-no-empty */
+  from {}
+
+  /* stylelint-disable-next-line block-no-empty */
+  to {}
+}
+
+@keyframes onAutoFillCancel {
   /* stylelint-disable-next-line block-no-empty */
   from {}
 
