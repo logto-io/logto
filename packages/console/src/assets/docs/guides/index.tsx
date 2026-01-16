@@ -40,6 +40,7 @@ import webOutline from './web-outline/index';
 import webPassport from './web-passport/index';
 import webPhp from './web-php/index';
 import webPython from './web-python/index';
+import webReactRouter from './web-react-router/index';
 import webRemix from './web-remix';
 import webRuby from './web-ruby/index';
 import webSveltekit from './web-sveltekit/index';
@@ -110,6 +111,14 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     DarkLogo: undefined,
     Component: safeLazy(async () => import('./web-sveltekit/README.mdx')),
     metadata: webSveltekit,
+  },
+  {
+    order: 1.2,
+    id: 'web-react-router',
+    Logo: safeLazy(async () => import('./web-react-router/logo.svg?react')),
+    DarkLogo: safeLazy(async () => import('./web-react-router/logo-dark.svg?react')),
+    Component: safeLazy(async () => import('./web-react-router/README.mdx')),
+    metadata: webReactRouter,
   },
   {
     order: 1.2,
