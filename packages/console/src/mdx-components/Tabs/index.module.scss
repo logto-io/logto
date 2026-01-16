@@ -11,11 +11,12 @@
     margin: _.unit(1) 0;
     padding: 0;
 
-    li {
+    // Use `> li` to increase specificity and override Guide's `.content section ul > li` styles
+    > li {
       position: relative;
       list-style: none;
       padding-inline-start: unset;
-      margin-block: 0 unset;
+      margin-block: 0 _.unit(1);
       margin-inline: 0 _.unit(6);
       padding: _.unit(0.5) _.unit(1.5);
       font: var(--font-label-2);
@@ -28,7 +29,7 @@
       }
     }
 
-    li[aria-selected='true'] {
+    > li[aria-selected='true'] {
       color: var(--color-text-link);
       outline: none;
 
@@ -37,7 +38,7 @@
         content: '';
         display: block;
         position: absolute;
-        // Underline position = item's margin-bottom (_.unit(1)) + tab item list's border-bottom width (1px)
+        // Underline position = li's margin-bottom (4px) + ul's border-bottom width (1px)
         bottom: -5px;
         left: 0;
         right: 0;
