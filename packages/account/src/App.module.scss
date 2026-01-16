@@ -17,13 +17,6 @@
   @include _.flex_column;
 }
 
-.status {
-  @include _.flex_column(center, center);
-  text-align: center;
-  gap: _.unit(2);
-  flex: 1;
-}
-
 :global(body.mobile) {
   .app {
     display: flex;
