@@ -8,6 +8,12 @@
     margin-bottom: _.unit(1);
   }
 
+  .description {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+    margin-bottom: _.unit(3);
+  }
+
   .actionButton {
     display: inline-flex;
 
@@ -22,8 +28,8 @@
   }
 
   .icon {
-    width: 32px;
-    height: 32px;
+    width: 20px;
+    height: 20px;
     margin-inline-end: _.unit(4);
   }
 
@@ -40,8 +46,7 @@
       border-bottom: 1px solid var(--color-neutral-variant-90);
 
       &:first-child {
-        max-width: 248px;
-        width: 25%;
+        width: 280px;
         font: var(--font-label-2);
       }
 

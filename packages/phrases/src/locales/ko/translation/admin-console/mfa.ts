@@ -4,9 +4,9 @@ const mfa = {
   factors: '요소',
   multi_factors: '다중 요소',
   multi_factors_description: '사용자는 2단계 인증을 위해 활성화된 요소 중 하나를 확인해야 합니다.',
-  totp: '인증기 앱 OTP',
+  totp: '인증기 앱',
   otp_description: 'Google Authenticator 등을 연결하여 일회용 암호를 확인합니다.',
-  webauthn: 'WebAuthn(패스키)',
+  webauthn: 'Passkeys',
   webauthn_description:
     '브라우저에서 지원하는 방법으로 확인합니다: 생체 인식, 휴대폰 스캔 또는 보안 키 등.',
   webauthn_native_tip: '네이티브 애플리케이션에서는 WebAuthn이 지원되지 않습니다.',

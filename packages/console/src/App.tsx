@@ -86,6 +86,7 @@ function Providers() {
     () => [
       UserScope.Profile,
       UserScope.Email,
+      UserScope.Phone,
       UserScope.Identities,
       UserScope.CustomData,
       UserScope.Organizations,

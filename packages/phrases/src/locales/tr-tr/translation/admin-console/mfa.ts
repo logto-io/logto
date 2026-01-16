@@ -6,15 +6,15 @@ const mfa = {
   multi_factors: 'Çoklu faktörler',
   multi_factors_description:
     'Kullanıcılar, 2 aşamalı doğrulama için etkinleştirilmiş faktörlerden birini doğrulamalıdır.',
-  totp: 'Authenticator uygulama OTP',
+  totp: 'Authenticator uygulaması',
   otp_description: 'Google Authenticator vb. bağlayarak tek kullanımlık şifreleri doğrulamak için.',
-  webauthn: 'WebAuthn (Pas anahtarı)',
+  webauthn: 'Passkeys',
   webauthn_description:
     'Tarayıcı tarafından desteklenen yöntemle doğrulama yapın: biyometri, telefon tarama veya güvenlik anahtarı vb.',
   webauthn_native_tip: 'WebAuthn, Native uygulamalar için desteklenmiyor.',
   webauthn_domain_tip:
     'WebAuthn, genel anahtarları belirli bir alanla ilişkilendirir. Hizmet alanınızı değiştirmek, kullanıcıların mevcut geçiş anahtarları aracılığıyla kimlik doğrulamasını engeller.',
-  backup_code: 'Yedek kod',
+  backup_code: 'Yedek kodlar',
   backup_code_description:
     'Kullanıcılar herhangi bir MFA yöntemini ayarladıktan sonra 10 tek kullanımlık yedek kod üretir.',
   backup_code_setup_hint:
