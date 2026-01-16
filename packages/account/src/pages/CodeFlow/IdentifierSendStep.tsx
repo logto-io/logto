@@ -1,5 +1,4 @@
 import Button from '@experience/shared/components/Button';
-import ErrorMessage from '@experience/shared/components/ErrorMessage';
 import SmartInputField from '@experience/shared/components/InputFields/SmartInputField';
 import { emailRegEx } from '@logto/core-kit';
 import { SignInIdentifier, type SignInIdentifier as SignInIdentifierType } from '@logto/schemas';
@@ -138,7 +137,6 @@ const IdentifierSendStep = ({
             }
           }}
         />
-        {displayError && <ErrorMessage>{displayError}</ErrorMessage>}
         <Button
           title="account_center.code_verification.send"
           type="primary"
