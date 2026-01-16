@@ -1,0 +1,196 @@
+import NpmLikeInstallation from '@/mdx-components/NpmLikeInstallation';
+import { generateStandardSecret } from '@logto/shared/universal';
+import Steps from '@/mdx-components/Steps';
+import Step from '@/mdx-components/Step';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
+import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
+import Checkpoint from '../../fragments/_checkpoint.md';
+import RedirectUrisWeb, { defaultBaseUrl } from '../../fragments/_redirect-uris-web.mdx';
+
+<Steps>
+
+<Step
+  title="Installation"
+  subtitle="Install Logto SDK"
+>
+
+<NpmLikeInstallation packageName="@logto/react-router" />
+
+</Step>
+
+<Step
+  title="Init LogtoClient"
+>
+
+Before initializing the SDK, we have to create a `SessionStorage` instance which takes care of the session persistence. In our case, we want to use a cookie-based session:
+
+<Code title="app/services/auth.server.ts" className="language-ts">
+    {`import { createCookieSessionStorage } from 'react-router';
+import { makeLogtoReactRouter } from '@logto/react-router';
+
+const sessionStorage = createCookieSessionStorage({
+  cookie: {
+    name: 'logto-session',
+    maxAge: 14 * 24 * 60 * 60,
+    secrets: ['${generateStandardSecret()}'], // Auto-generated 32 digit secret
+  },
+});
+
+export const logto = makeLogtoReactRouter(
+  {
+    endpoint: '${props.endpoint}',
+    appId: '${props.app.id}',
+    appSecret: '${props.secrets[0]?.value ?? props.app.secret}',
+    baseUrl: '${defaultBaseUrl}',  // Change to your own base URL
+  },
+  { sessionStorage }
+);`}
+</Code>
+
+<br/>
+
+<CustomDomainEndpointNotice />
+
+</Step>
+
+<Step
+  title="Configure redirect URIs"
+  subtitle="2 URIs"
+>
+
+<RedirectUrisWeb defaultRedirectUri={`${defaultBaseUrl}api/logto/callback`} />
+
+</Step>
+
+<Step title="Configure routes and mount authentication routes">
+
+The SDK ships with a convenient function that mounts the authentication routes: sign-in, sign-in callback and the sign-out route. First, create a file `app/routes/api.logto.$action.ts`:
+
+```ts title="app/routes/api.logto.$action.ts"
+import { logto } from '../services/auth.server';
+
+export const loader = logto.handleAuthRoutes({
+  'sign-in': {
+    path: '/api/logto/sign-in',
+    redirectBackTo: '/api/logto/callback',
+  },
+  'sign-in-callback': {
+    path: '/api/logto/callback',
+    redirectBackTo: '/',
+  },
+  'sign-out': {
+    path: '/api/logto/sign-out',
+    redirectBackTo: '/',
+  },
+  'sign-up': {
+    path: '/api/logto/sign-up',
+    redirectBackTo: '/api/logto/callback',
+  },
+});
+```
+
+Then, configure the routes in your `app/routes.ts` file. You can choose between file-based routing or manual routing:
+
+<Tabs>
+
+<TabItem value="file-based" label="File-based routing">
+
+To use file-based routing, first install the `@react-router/fs-routes` package:
+
+<NpmLikeInstallation packageName="@react-router/fs-routes" />
+
+Then update your `app/routes.ts`:
+
+```ts title="app/routes.ts"
+import { type RouteConfig } from '@react-router/dev/routes';
+import { flatRoutes } from '@react-router/fs-routes';
+
+export default flatRoutes() satisfies RouteConfig;
+```
+
+This will automatically generate routes based on the files in the `app/routes` directory.
+
+</TabItem>
+
+<TabItem value="manual" label="Manual routing">
+
+If you prefer not to use file-based routing, manually add the authentication route to your `app/routes.ts`:
+
+```ts title="app/routes.ts"
+import { type RouteConfig, index, route } from "@react-router/dev/routes";
+
+export default [
+  index("routes/home.tsx"),
+  route("api/logto/:action", "routes/api.logto.$action.ts"),
+] satisfies RouteConfig;
+```
+
+</TabItem>
+
+</Tabs>
+
+As you can see, the mount process is configurable and you can adjust it for your particular route structure. The whole URL path structure can be customized via the passed configuration object.
+
+When mounting the routes as described above, you can navigate your browser to `/api/logto/sign-in` and you should be redirected to your Logto instance where you have to authenticate then.
+
+</Step>
+
+<Step
+  title="Implement sign-in and sign-out"
+>
+
+We have prepared the authentication routes, now let's implement the sign-in and sign-out buttons in your home page. We need to redirect the user to the sign-in or sign-out route when needed. To help with this, use `loader` to fetch authentication status from Logto client.
+
+```tsx title="app/routes/_index.tsx"
+import { type LogtoContext } from '@logto/react-router';
+import { Link, type LoaderFunctionArgs } from 'react-router';
+
+import { logto } from '../services/auth.server';
+
+type LoaderResponse = {
+  readonly context: LogtoContext;
+};
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const context = await logto.getContext({ getAccessToken: false })(request);
+
+  return { context };
+};
+
+const Home = ({ loaderData }: { readonly loaderData: LoaderResponse }) => {
+  const { context } = loaderData;
+  const { isAuthenticated, claims } = context;
+
+  return (
+    <div>
+      {isAuthenticated ? (
+        <div>
+          <p>Hello {claims?.email ?? claims?.name ?? claims?.sub}</p>
+          <form action="/api/logto/sign-out" method="get">
+            <button type="submit">Sign Out</button>
+          </form>
+        </div>
+      ) : (
+        <form action="/api/logto/sign-in" method="get">
+          <button type="submit">Sign In</button>
+        </form>
+      )}
+    </div>
+  );
+};
+
+export default Home;
+```
+
+</Step>
+
+<Step
+  title="Checkpoint: Test your application"
+>
+
+<Checkpoint />
+
+</Step>
+
+</Steps>
