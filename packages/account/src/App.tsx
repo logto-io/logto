@@ -13,7 +13,6 @@ import ErrorBoundary from './Providers/AppBoundary/ErrorBoundary';
 import LogtoErrorBoundary from './Providers/AppBoundary/LogtoErrorBoundary';
 import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
-import BrandingHeader from './components/BrandingHeader';
 import {
   emailRoute,
   emailSuccessRoute,
@@ -141,7 +140,6 @@ const Layout = () => {
 
   return (
     <div className={styles.app}>
-      <BrandingHeader />
       <div className={styles.layout}>
         <div className={styles.container}>
           <main className={styles.main}>
