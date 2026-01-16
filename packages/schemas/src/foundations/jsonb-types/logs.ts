@@ -14,6 +14,7 @@ export const logContextPayloadGuard = z
     error: z.record(z.string(), z.unknown()).or(z.string()).optional(),
     ip: z.string().optional(),
     userAgent: z.string().optional(),
+    injectedHeaders: z.record(z.string(), z.string()).optional(),
     userId: z.string().optional(),
     applicationId: z.string().optional(),
     sessionId: z.string().optional(),

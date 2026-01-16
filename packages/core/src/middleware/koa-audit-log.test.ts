@@ -68,6 +68,42 @@ describe('koaAuditLog middleware', () => {
     });
   });
 
+  it('should include injected header values when mapped headers are present', async () => {
+    // @ts-expect-error
+    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+      ...createContextWithRouteParameters({
+        headers: {
+          'user-agent': userAgent,
+          'x-logto-cf-country': 'US',
+          'x-logto-cf-city': 'New York',
+        },
+      }),
+    };
+    ctx.request.ip = ip;
+
+    const next = async () => {
+      const log = ctx.createLog(logKey);
+      log.append(mockPayload);
+    };
+    await koaLog(queries)(ctx, next);
+
+    expect(insertLog).toBeCalledWith({
+      id: mockId,
+      key: logKey,
+      payload: {
+        ...mockPayload,
+        key: logKey,
+        result: LogResult.Success,
+        ip,
+        userAgent,
+        injectedHeaders: {
+          country: 'US',
+          city: 'New York',
+        },
+      },
+    });
+  });
+
   it('should insert multiple success logs when needed', async () => {
     // @ts-expect-error
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
