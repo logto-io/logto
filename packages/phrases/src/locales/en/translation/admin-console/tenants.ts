@@ -28,6 +28,9 @@ const tenants = {
     production_description:
       'Intended for apps that are being used by end-users and may require a paid subscription.',
     tenant_info_saved: 'Tenant information saved successfully.',
+    enterprise_sso: 'Enterprise SSO',
+    enterprise_sso_description:
+      "Available on paid plans. Contact us to enable enterprise SSO so all members can sign in to the Logto Cloud Console using your organization's identity provider.",
   },
   full_env_tag: {
     development: 'Development',

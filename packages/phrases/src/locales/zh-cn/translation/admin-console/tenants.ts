@@ -26,6 +26,9 @@ const tenants = {
       '仅用于测试，不应在生产环境中使用。不需要订阅。它具有所有专业功能，但有像登录横幅之类的限制。',
     production_description: '适用于由最终用户使用且可能需要付费订阅的应用程序。',
     tenant_info_saved: '租户信息成功保存。',
+    enterprise_sso: '企业 SSO',
+    enterprise_sso_description:
+      '仅限付费计划。联系我们启用企业 SSO，让所有成员可以使用您组织的身份提供商登录 Logto Cloud 控制台。',
   },
   full_env_tag: {
     development: '开发',

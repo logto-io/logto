@@ -28,6 +28,9 @@ const tenants = {
     production_description:
       'エンドユーザーに使用することを意図しており、有料のサブスクリプションが必要なアプリ向け。',
     tenant_info_saved: 'テナント情報は正常に保存されました。',
+    enterprise_sso: 'エンタープライズ SSO',
+    enterprise_sso_description:
+      '有料プランで利用可能です。お問い合わせいただくと、すべてのメンバーが組織のアイデンティティプロバイダーを使用して Logto Cloud コンソールにサインインできるようになります。',
   },
   full_env_tag: {
     development: '開発',

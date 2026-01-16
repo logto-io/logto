@@ -29,6 +29,9 @@ const tenants = {
     production_description:
       'Son kullanıcılar tarafından kullanılan uygulamalar için tasarlanmıştır ve ücretli abonelik gerektirebilir.',
     tenant_info_saved: 'Kiracı bilgileri başarıyla kaydedildi.',
+    enterprise_sso: 'Enterprise SSO',
+    enterprise_sso_description:
+      'Ücretli planlarda kullanılabilir. Tüm üyelerin kuruluşunuzun kimlik sağlayıcısını kullanarak Logto Cloud Konsoluna giriş yapabilmesi için Enterprise SSO etkinleştirmek üzere bizimle iletişime geçin.',
   },
   full_env_tag: {
     development: 'Geliştirme',
