@@ -6,17 +6,6 @@
     }
   ],
   "components": {
-    "parameters": {
-      "saml-applicationId-root": {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "description": "The ID of the SAML application.",
-        "schema": {
-          "type": "string"
-        }
-      }
-    },
     "schemas": {
       "SamlApplicationResponse": {
         "type": "object",
@@ -59,17 +48,6 @@
       "get": {
         "summary": "Get SAML application metadata",
         "description": "Get the SAML metadata XML for the application.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the SAML application.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "The SAML metadata XML.",
@@ -135,17 +113,6 @@
       "get": {
         "summary": "Get SAML application",
         "description": "Get SAML application details by ID.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the SAML application.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "The SAML application details."
@@ -218,17 +185,6 @@
       "post": {
         "summary": "Create SAML application secret",
         "description": "Create a new signing certificate for the SAML application.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the SAML application.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -307,17 +263,6 @@
       "delete": {
         "summary": "Delete SAML application secret",
         "description": "Delete a signing certificate of the SAML application. Active certificates cannot be deleted.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the SAML application.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "204": {
             "description": "The signing certificate was deleted successfully."
@@ -367,15 +312,6 @@
         "summary": "SAML application callback",
         "description": "Handle the OIDC callback for SAML application and generate SAML response.",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "The ID of the SAML application.",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "code",
             "in": "query",
