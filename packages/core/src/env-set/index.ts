@@ -40,7 +40,8 @@ export class EnvSet {
     this.dbUrl,
     EnvSet.values.isUnitTest,
     this.values.databasePoolSize,
-    EnvSet.values.databaseConnectionTimeout
+    EnvSet.values.databaseConnectionTimeout,
+    EnvSet.values.databaseStatementTimeout
   );
 
   #pool: Optional<DatabasePool>;
@@ -81,7 +82,8 @@ export class EnvSet {
       this.databaseUrl,
       EnvSet.values.isUnitTest,
       EnvSet.values.databasePoolSize,
-      EnvSet.values.databaseConnectionTimeout
+      EnvSet.values.databaseConnectionTimeout,
+      EnvSet.values.databaseStatementTimeout
     );
 
     this.#pool = pool;
