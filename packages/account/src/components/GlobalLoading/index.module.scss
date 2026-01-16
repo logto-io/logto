@@ -1,0 +1,39 @@
+@use '@experience/shared/scss/_underscore.scss' as _;
+
+.container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: _.unit(6);
+  background: var(--color-bg-body-base);
+}
+
+:global(body.mobile) {
+  .container {
+    background: var(--color-bg-body);
+  }
+}
+
+.logo {
+  max-height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.spinner {
+  color: var(--color-type-primary);
+  animation: rotating 1s steps(12, end) infinite;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
