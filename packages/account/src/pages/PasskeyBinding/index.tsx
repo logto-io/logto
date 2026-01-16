@@ -32,7 +32,7 @@ const PasskeyBinding = () => {
   const { loading } = useContext(LoadingContext);
   const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
     useContext(PageContext);
-  const createRegistrationRequest = useApi(createWebAuthnRegistration);
+  const createRegistrationRequest = useApi(createWebAuthnRegistration, { silent: true });
   const verifyRegistrationRequest = useApi(verifyWebAuthnRegistration);
   const addWebAuthnRequest = useApi(addWebAuthnMfa);
   const handleError = useErrorHandler();
