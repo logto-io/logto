@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.18.1
+
+### Patch Changes
+
+- a4093a4aed: fix enterprise sso account not exist error code
+
+  Fixes the enterprise SSO account not exist error code to use a specific one instead of the generic social account one.
+
 ## 1.18.0
 
 ### Minor Changes
