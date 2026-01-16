@@ -2574,8 +2574,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       samlify:
-        specifier: 2.10.0
-        version: 2.10.0
+        specifier: 2.10.2
+        version: 2.10.2
       snakecase-keys:
         specifier: ^8.0.1
         version: 8.0.1
@@ -3693,7 +3693,7 @@ importers:
     dependencies:
       '@authenio/samlify-node-xmllint':
         specifier: ^2.0.0
-        version: 2.0.0(samlify@2.10.0)
+        version: 2.0.0(samlify@2.10.2)
       '@aws-sdk/client-s3':
         specifier: ^3.556.0
         version: 3.556.0
@@ -3893,8 +3893,8 @@ importers:
         specifier: ^7.11.0
         version: 7.21.1
       samlify:
-        specifier: 2.10.0
-        version: 2.10.0
+        specifier: 2.10.2
+        version: 2.10.2
       semver:
         specifier: ^7.3.8
         version: 7.7.1
@@ -6314,12 +6314,15 @@ packages:
 
   '@otplib/plugin-crypto@12.0.1':
     resolution: {integrity: sha512-qPuhN3QrT7ZZLcLCyKOSNhuijUi9G5guMRVrxq63r9YNOxxQjPm59gVxLM+7xGnHnM6cimY57tuKsjK7y9LM1g==}
+    deprecated: Please upgrade to v13 of otplib. Refer to otplib docs for migration paths
 
   '@otplib/plugin-thirty-two@12.0.1':
     resolution: {integrity: sha512-MtT+uqRso909UkbrrYpJ6XFjj9D+x2Py7KjTO9JDPhL0bJUYVu5kFP4TFZW4NFAywrAtFRxOVY261u0qwb93gA==}
+    deprecated: Please upgrade to v13 of otplib. Refer to otplib docs for migration paths
 
   '@otplib/preset-default@12.0.1':
     resolution: {integrity: sha512-xf1v9oOJRyXfluBhMdpOkr+bsE+Irt+0D5uHtvg6x1eosfmHCsCC6ej/m7FXiWqdo0+ZUI6xSKDhJwc8yfiOPQ==}
+    deprecated: Please upgrade to v13 of otplib. Refer to otplib docs for migration paths
 
   '@otplib/preset-v11@12.0.1':
     resolution: {integrity: sha512-9hSetMI7ECqbFiKICrNa4w70deTUfArtwXykPUvSHWOdzOlfa9ajglu7mNCntlvxycTiOAXkQGwjQCzzDEMRMg==}
@@ -13942,8 +13945,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  samlify@2.10.0:
-    resolution: {integrity: sha512-IIFg193YPn9IpTd2jCWVvLLC9xdWz/eLn1rtF9YMSwK/B1rt2OM2zAuP99cw3MPYyYsm+I9rlvYgq9FuJ9JqSA==}
+  samlify@2.10.2:
+    resolution: {integrity: sha512-y5s1cHwclqwP8h7K2Wj9SfP1q+1S9+jrs5OAegYTLAiuFi7nDvuKqbiXLmUTvYPMpzHcX94wTY2+D604jgTKvA==}
 
   sass@1.77.8:
     resolution: {integrity: sha512-4UHg6prsrycW20fqLGPShtEvo/WyHRVRHwOP4DzkUrObWoWI05QBSfzU71TVB7PFaL104TwNaHpjlWXAZbQiNQ==}
@@ -15061,6 +15064,7 @@ packages:
   whatwg-encoding@2.0.0:
     resolution: {integrity: sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==}
     engines: {node: '>=12'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
@@ -15360,10 +15364,10 @@ snapshots:
       lru-cache: 10.4.3
     optional: true
 
-  '@authenio/samlify-node-xmllint@2.0.0(samlify@2.10.0)':
+  '@authenio/samlify-node-xmllint@2.0.0(samlify@2.10.2)':
     dependencies:
       node-xmllint: 1.0.0
-      samlify: 2.10.0
+      samlify: 2.10.2
 
   '@authenio/xml-encryption@2.0.2':
     dependencies:
@@ -18404,7 +18408,7 @@ snapshots:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
       eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
@@ -21783,12 +21787,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 4.4.1(supports-color@5.5.0)
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
@@ -21800,14 +21804,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -21839,7 +21843,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -26774,7 +26778,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  samlify@2.10.0:
+  samlify@2.10.2:
     dependencies:
       '@authenio/xml-encryption': 2.0.2
       '@xmldom/xmldom': 0.8.10
