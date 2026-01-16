@@ -72,7 +72,7 @@ describe('admin console user search params', () => {
     });
 
     it('should search primaryPhone', async () => {
-      const { headers, json } = await getUsers<User[]>([['search', '%000%']]);
+      const { headers, json } = await getUsers<User[]>([['search', '%1310805000%']]);
 
       expect(headers.get('total-number')).toEqual('10');
       expect(
