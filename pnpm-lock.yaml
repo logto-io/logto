@@ -335,8 +335,8 @@ importers:
         specifier: ^7.3.8
         version: 7.7.1
       tar:
-        specifier: ^7.0.0
-        version: 7.0.1
+        specifier: ^7.5.3
+        version: 7.5.3
       yargs:
         specifier: ^17.6.0
         version: 17.7.2
@@ -3855,7 +3855,7 @@ importers:
         version: 1.3.3
       oidc-provider:
         specifier: github:logto-io/node-oidc-provider#b958a6a389df308033f2d9ca23163928dd3e1f80
-        version: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/b958a6a389df308033f2d9ca23163928dd3e1f80
+        version: git+https://git@github.com:logto-io/node-oidc-provider.git#b958a6a389df308033f2d9ca23163928dd3e1f80
       openapi-types:
         specifier: ^12.1.3
         version: 12.1.3
@@ -5298,6 +5298,10 @@ packages:
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/code-frame@7.28.6':
+    resolution: {integrity: sha512-JYgintcMjRiCvS8mMECzaEn+m3PfoQiyqukOMCCVQtoJGYJw8j/8LBJEiqkHLkfwCcs74E3pbAUFNg7d9VNJ+Q==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/compat-data@7.24.4':
     resolution: {integrity: sha512-vg8Gih2MLK+kOkHJp4gBEIkyaIi00jgWot2D9QOmmfLC8jINSOzmCLta6Bvz/JSBCqnegV0L80jhxkol5GWNfQ==}
     engines: {node: '>=6.9.0'}
@@ -5420,6 +5424,10 @@ packages:
 
   '@babel/helper-validator-identifier@7.27.1':
     resolution: {integrity: sha512-D2hP9eA+Sqx1kBZgzxZh0y1trbuU+JoDkiEwqhQ36nodYqJwyEIhPSdMNd7lOm/4io72luTPWH20Yda0xOuUow==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/helper-validator-identifier@7.28.5':
+    resolution: {integrity: sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==}
     engines: {node: '>=6.9.0'}
 
   '@babel/helper-validator-option@7.23.5':
@@ -5552,6 +5560,10 @@ packages:
 
   '@babel/runtime@7.28.4':
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.28.6':
+    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.18.10':
@@ -6314,12 +6326,15 @@ packages:
 
   '@otplib/plugin-crypto@12.0.1':
     resolution: {integrity: sha512-qPuhN3QrT7ZZLcLCyKOSNhuijUi9G5guMRVrxq63r9YNOxxQjPm59gVxLM+7xGnHnM6cimY57tuKsjK7y9LM1g==}
+    deprecated: Please upgrade to v13 of otplib. Refer to otplib docs for migration paths
 
   '@otplib/plugin-thirty-two@12.0.1':
     resolution: {integrity: sha512-MtT+uqRso909UkbrrYpJ6XFjj9D+x2Py7KjTO9JDPhL0bJUYVu5kFP4TFZW4NFAywrAtFRxOVY261u0qwb93gA==}
+    deprecated: Please upgrade to v13 of otplib. Refer to otplib docs for migration paths
 
   '@otplib/preset-default@12.0.1':
     resolution: {integrity: sha512-xf1v9oOJRyXfluBhMdpOkr+bsE+Irt+0D5uHtvg6x1eosfmHCsCC6ej/m7FXiWqdo0+ZUI6xSKDhJwc8yfiOPQ==}
+    deprecated: Please upgrade to v13 of otplib. Refer to otplib docs for migration paths
 
   '@otplib/preset-v11@12.0.1':
     resolution: {integrity: sha512-9hSetMI7ECqbFiKICrNa4w70deTUfArtwXykPUvSHWOdzOlfa9ajglu7mNCntlvxycTiOAXkQGwjQCzzDEMRMg==}
@@ -12471,16 +12486,12 @@ packages:
     resolution: {integrity: sha512-fNzuVyifolSLFL4NzpF+wEF4qrgqaaKX0haXPQEdQ7NKAN+WecoKMHV09YcuL/DHxrUsYQOK3MiuDf7Ip2OXfQ==}
     engines: {node: '>=8'}
 
-  minipass@5.0.0:
-    resolution: {integrity: sha512-3FnjYuehv9k6ovOEbyOswadCDPX1piCfhV8ncmYtHOjuPwylVWsghTLo7rabjC3Rx5xD4HDx8Wm1xnMF7S5qFQ==}
-    engines: {node: '>=8'}
-
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
 
-  minizlib@3.0.1:
-    resolution: {integrity: sha512-umcy022ILvb5/3Djuu8LWeqUa8D68JaBzlttKeMWen48SjabqS3iY5w/vzeMzMUNhLDifyhbOwKDSznB1vvrwg==}
+  minizlib@3.1.0:
+    resolution: {integrity: sha512-KZxYo1BUkWD2TVFLr0MQoM8vUUigWD3LlD83a/75BqC+4qE0Hb1Vo5v1FgcfaNXvfXzr+5EhQ6ing/CaBijTlw==}
     engines: {node: '>= 18'}
 
   mitt@3.0.1:
@@ -12496,11 +12507,6 @@ packages:
 
   mkdirp@1.0.4:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
-    engines: {node: '>=10'}
-    hasBin: true
-
-  mkdirp@3.0.1:
-    resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -12703,8 +12709,8 @@ packages:
   obuf@1.1.2:
     resolution: {integrity: sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==}
 
-  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/b958a6a389df308033f2d9ca23163928dd3e1f80:
-    resolution: {tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/b958a6a389df308033f2d9ca23163928dd3e1f80}
+  oidc-provider@git+https://git@github.com:logto-io/node-oidc-provider.git#b958a6a389df308033f2d9ca23163928dd3e1f80:
+    resolution: {commit: b958a6a389df308033f2d9ca23163928dd3e1f80, repo: git@github.com:logto-io/node-oidc-provider.git, type: git}
     version: 8.6.1
 
   oidc-token-hash@5.0.3:
@@ -13884,11 +13890,6 @@ packages:
     deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
-  rimraf@5.0.5:
-    resolution: {integrity: sha512-CqDakW+hMe/Bz202FPEymy68P+G50RfMQK+Qo5YUqc9SPipvbGjCGKd0RSKEelbsfQuw3g5NZDSrlZZAJurH1A==}
-    engines: {node: '>=14'}
-    hasBin: true
-
   roarr@7.21.1:
     resolution: {integrity: sha512-3niqt5bXFY1InKU8HKWqqYTYjtrBaxBMnXELXCXUYgtNYGUtZM5rB46HIC430AyacL95iEniGf7RgqsesykLmQ==}
     engines: {node: '>=18.0'}
@@ -14427,8 +14428,8 @@ packages:
   tar-stream@3.1.6:
     resolution: {integrity: sha512-B/UyjYwPpMBv+PaFSWAmtYjwdrlEaZQEhMIBFNC5oEG8lpiW8XjcSdmEaClj28ArfKScKHs2nshz3k2le6crsg==}
 
-  tar@7.0.1:
-    resolution: {integrity: sha512-IjMhdQMZFpKsHEQT3woZVxBtCQY+0wk3CVxdRkGXEgyGa0dNS/ehPvOMr2nmfC7x5Zj2N+l6yZUpmICjLGS35w==}
+  tar@7.5.3:
+    resolution: {integrity: sha512-ENg5JUHUm2rDD7IvKNFGzyElLXNjachNLp6RaGf4+JOgxXHkqA+gq81ZAMCUmtMtqBsoU62lcp6S27g1LCYGGQ==}
     engines: {node: '>=18'}
 
   teeny-request@9.0.0:
@@ -15061,6 +15062,7 @@ packages:
   whatwg-encoding@2.0.0:
     resolution: {integrity: sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==}
     engines: {node: '>=12'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
@@ -16055,6 +16057,12 @@ snapshots:
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
+  '@babel/code-frame@7.28.6':
+    dependencies:
+      '@babel/helper-validator-identifier': 7.28.5
+      js-tokens: 4.0.0
+      picocolors: 1.1.1
+
   '@babel/compat-data@7.24.4': {}
 
   '@babel/compat-data@7.24.9': {}
@@ -16223,6 +16231,8 @@ snapshots:
 
   '@babel/helper-validator-identifier@7.27.1': {}
 
+  '@babel/helper-validator-identifier@7.28.5': {}
+
   '@babel/helper-validator-option@7.23.5': {}
 
   '@babel/helper-validator-option@7.24.8': {}
@@ -16349,6 +16359,8 @@ snapshots:
       regenerator-runtime: 0.14.1
 
   '@babel/runtime@7.28.4': {}
+
+  '@babel/runtime@7.28.6': {}
 
   '@babel/template@7.18.10':
     dependencies:
@@ -18404,7 +18416,7 @@ snapshots:
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-config-xo: 0.44.0(eslint@8.57.0)
       eslint-config-xo-typescript: 4.0.0(@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
@@ -18959,8 +18971,8 @@ snapshots:
 
   '@testing-library/dom@10.0.0':
     dependencies:
-      '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.28.4
+      '@babel/code-frame': 7.28.6
+      '@babel/runtime': 7.28.6
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -21783,12 +21795,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0):
+  eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 4.4.1(supports-color@5.5.0)
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
@@ -21800,14 +21812,14 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0)(typescript@5.5.3)
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -21839,7 +21851,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -25188,14 +25200,11 @@ snapshots:
 
   minipass@4.2.8: {}
 
-  minipass@5.0.0: {}
-
   minipass@7.1.2: {}
 
-  minizlib@3.0.1:
+  minizlib@3.1.0:
     dependencies:
       minipass: 7.1.2
-      rimraf: 5.0.5
 
   mitt@3.0.1: {}
 
@@ -25206,8 +25215,6 @@ snapshots:
       minimist: 1.2.8
 
   mkdirp@1.0.4: {}
-
-  mkdirp@3.0.1: {}
 
   mlly@1.7.4:
     dependencies:
@@ -25409,7 +25416,7 @@ snapshots:
 
   obuf@1.1.2: {}
 
-  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/b958a6a389df308033f2d9ca23163928dd3e1f80:
+  oidc-provider@git+https://git@github.com:logto-io/node-oidc-provider.git#b958a6a389df308033f2d9ca23163928dd3e1f80:
     dependencies:
       '@koa/cors': 5.0.0
       '@koa/router': 13.1.0
@@ -26694,10 +26701,6 @@ snapshots:
     dependencies:
       glob: 7.2.3
 
-  rimraf@5.0.5:
-    dependencies:
-      glob: 10.5.0
-
   roarr@7.21.1:
     dependencies:
       fast-printf: 1.6.9
@@ -27354,13 +27357,12 @@ snapshots:
       fast-fifo: 1.3.2
       streamx: 2.22.0
 
-  tar@7.0.1:
+  tar@7.5.3:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
-      minipass: 5.0.0
-      minizlib: 3.0.1
-      mkdirp: 3.0.1
+      minipass: 7.1.2
+      minizlib: 3.1.0
       yallist: 5.0.0
 
   teeny-request@9.0.0:
