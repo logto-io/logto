@@ -7,6 +7,7 @@ import type { IRouterParamContext } from 'koa-router';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
+import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -161,13 +162,15 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         ip,
         headers: { 'user-agent': userAgent },
       } = ctx.request;
+      const injectedHeaders = getInjectedHeaderValues(ctx.request.headers);
+      const basePayload = removeUndefinedKeys({ ip, userAgent, injectedHeaders });
 
       await Promise.all(
         entries.map(async ({ payload }) => {
           return insertLog({
             id: generateStandardId(),
             key: payload.key,
-            payload: { ip, userAgent, ...payload },
+            payload: { ...basePayload, ...payload },
           });
         })
       );
