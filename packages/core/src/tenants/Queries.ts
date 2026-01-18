@@ -31,6 +31,7 @@ import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.j
 import SsoConnectorQueries from '#src/queries/sso-connectors.js';
 import { createSubjectTokenQueries } from '#src/queries/subject-token.js';
 import createTenantQueries from '#src/queries/tenant.js';
+import { createUserCountryVisitsQueries } from '#src/queries/user-country-visits.js';
 import UserSsoIdentityQueries from '#src/queries/user-sso-identities.js';
 import { createUserQueries } from '#src/queries/user.js';
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
@@ -73,6 +74,7 @@ export default class Queries {
   organizations = new OrganizationQueries(this.pool);
   ssoConnectors = new SsoConnectorQueries(this.pool);
   userSsoIdentities = new UserSsoIdentityQueries(this.pool);
+  userCountryVisits = createUserCountryVisitsQueries(this.pool);
   subjectTokens = createSubjectTokenQueries(this.pool);
   samlApplicationSecrets = createSamlApplicationSecretsQueries(this.pool);
   samlApplicationConfigs = createSamlApplicationConfigQueries(this.pool);
