@@ -1,9 +1,10 @@
 import type { LogContextPayload, LogKey } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { pick } from '@silverhand/essentials';
+import { type Optional, pick } from '@silverhand/essentials';
 import type { Context, MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
+import { UAParser } from 'ua-parser-js';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -113,6 +114,7 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
  * {
  *   ip: 'request-ip-addr',
  *   userAgent: 'request-user-agent',
+ *   userAgentParsed: { ...parsedUserAgent },
  *   ...log.payload,
  * }
  * ```
@@ -163,7 +165,23 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         headers: { 'user-agent': userAgent },
       } = ctx.request;
       const injectedHeaders = getInjectedHeaderValues(ctx.request.headers);
-      const basePayload = removeUndefinedKeys({ ip, userAgent, injectedHeaders });
+      const userAgentValue: Optional<string> =
+        typeof userAgent === 'string' ? userAgent : userAgent?.[0];
+      const userAgentParsed: Optional<UAParser.IResult> = (() => {
+        if (!userAgentValue) {
+          return;
+        }
+
+        try {
+          return new UAParser(userAgentValue).getResult();
+        } catch {}
+      })();
+      const basePayload = removeUndefinedKeys({
+        ip,
+        userAgent: userAgentValue,
+        userAgentParsed,
+        injectedHeaders,
+      });
 
       await Promise.all(
         entries.map(async ({ payload }) => {

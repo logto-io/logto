@@ -98,6 +98,7 @@
     "snake-case": "^4.0.0",
     "snakecase-keys": "^8.0.1",
     "tinypool": "^1.0.2",
+    "ua-parser-js": "^2.0.3",
     "zod": "3.24.3"
   },
   "devDependencies": {
@@ -124,6 +125,7 @@
     "@types/semver": "^7.3.12",
     "@types/sinon": "^17.0.0",
     "@types/supertest": "^6.0.2",
+    "@types/ua-parser-js": "^0.7.39",
     "adm-zip": "^0.5.14",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",

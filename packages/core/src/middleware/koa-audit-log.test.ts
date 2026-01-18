@@ -2,6 +2,7 @@ import type { LogKey } from '@logto/schemas';
 import { LogResult, VerificationType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 import i18next from 'i18next';
+import { UAParser } from 'ua-parser-js';
 
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 
@@ -34,6 +35,7 @@ describe('koaAuditLog middleware', () => {
   const ip = '192.168.0.1';
   const userAgent =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36';
+  const userAgentParsed = new UAParser(userAgent).getResult();
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -64,6 +66,7 @@ describe('koaAuditLog middleware', () => {
         result: LogResult.Success,
         ip,
         userAgent,
+        userAgentParsed,
       },
     });
   });
@@ -96,6 +99,7 @@ describe('koaAuditLog middleware', () => {
         result: LogResult.Success,
         ip,
         userAgent,
+        userAgentParsed,
         injectedHeaders: {
           country: 'US',
           city: 'New York',
@@ -127,6 +131,7 @@ describe('koaAuditLog middleware', () => {
       result: LogResult.Success,
       ip,
       userAgent,
+      userAgentParsed,
     };
 
     expect(insertLog).toHaveBeenCalledWith({
@@ -191,6 +196,7 @@ describe('koaAuditLog middleware', () => {
         result: LogResult.Success,
         ip,
         userAgent,
+        userAgentParsed,
       },
     });
   });
@@ -234,6 +240,7 @@ describe('koaAuditLog middleware', () => {
         result: LogResult.Success,
         ip,
         userAgent,
+        userAgentParsed,
       },
     });
   });
@@ -266,6 +273,7 @@ describe('koaAuditLog middleware', () => {
           error: { message: `Error: ${message}` },
           ip,
           userAgent,
+          userAgentParsed,
         },
       });
     });
@@ -303,6 +311,7 @@ describe('koaAuditLog middleware', () => {
           error: { message, code, data },
           ip,
           userAgent,
+          userAgentParsed,
         },
       });
     });
