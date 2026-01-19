@@ -1,7 +1,7 @@
 import { languages, languageTagGuard } from '@logto/language-kit';
 import { jsonGuard, jsonObjectGuard, translationGuard } from '@logto/schemas';
 import type { ValuesOf } from '@silverhand/essentials';
-import { conditional } from '@silverhand/essentials';
+import { conditional, deduplicate } from '@silverhand/essentials';
 import type { OpenAPIV3 } from 'openapi-types';
 import {
   ZodDiscriminatedUnion,
@@ -157,6 +157,7 @@ export const zodTypeToSwagger = (
 
   if (config === jsonGuard) {
     return {
+      type: 'object',
       oneOf: [
         {
           type: 'object',
@@ -169,7 +170,11 @@ export const zodTypeToSwagger = (
               { type: 'string' },
               { type: 'number' },
               { type: 'boolean' },
-              { nullable: true },
+              {
+                type: 'string',
+                nullable: true,
+                description: 'null value',
+              },
               {
                 type: 'object',
                 description: 'arbitrary JSON object',
@@ -203,10 +208,39 @@ export const zodTypeToSwagger = (
   }
 
   if (config instanceof ZodNullable) {
-    return {
+    const schema = zodTypeToSwagger(config._def.innerType);
+
+    if ('$ref' in schema) {
+      return {
+        allOf: [schema],
+        nullable: true,
+      };
+    }
+
+    const nullableSchema: OpenAPIV3.SchemaObject = {
+      ...schema,
       nullable: true,
-      ...zodTypeToSwagger(config._def.innerType),
     };
+
+    if (!nullableSchema.type && Array.isArray(nullableSchema.oneOf)) {
+      const types = nullableSchema.oneOf
+        .map((option) =>
+          typeof option === 'object' && !('$ref' in option) ? option.type : undefined
+        )
+        .filter(
+          (type): type is OpenAPIV3.NonArraySchemaObjectType =>
+            typeof type === 'string' && type !== 'array'
+        );
+
+      const uniqueTypes = deduplicate(types);
+
+      if (uniqueTypes.length === 1) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        nullableSchema.type = uniqueTypes[0];
+      }
+    }
+
+    return nullableSchema;
   }
 
   if (config instanceof ZodNativeEnum || config instanceof ZodEnum) {
