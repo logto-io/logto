@@ -15,7 +15,7 @@ import Button from '@/shared/components/Button';
 import DynamicT from '@/shared/components/DynamicT';
 import LoadingLayer from '@/shared/components/LoadingLayer';
 import PageMeta from '@/shared/components/PageMeta';
-import { getBrandingLogoUrl } from '@/utils/logo';
+import { getBrandingLogoUrl } from '@/shared/utils/logo';
 
 import styles from './index.module.scss';
 

@@ -1,4 +1,4 @@
-import { getBrandingLogoUrl } from '@experience/utils/logo';
+import { getBrandingLogoUrl } from '@experience/shared/utils/logo';
 import { useContext } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';

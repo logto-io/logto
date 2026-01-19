@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
-import { getLogoUrl } from '@/utils/logo';
+import { getLogoUrl } from '@/shared/utils/logo';
 
 import styles from './index.module.scss';
 import useSocial from './use-social';

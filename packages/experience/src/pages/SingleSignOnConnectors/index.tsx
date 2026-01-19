@@ -7,7 +7,7 @@ import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSingleSignOn from '@/hooks/use-single-sign-on';
-import { getLogoUrl } from '@/utils/logo';
+import { getLogoUrl } from '@/shared/utils/logo';
 
 import styles from './index.module.scss';
 
