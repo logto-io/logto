@@ -1,8 +1,8 @@
+import { getBrandingLogoUrl } from '@experience/utils/logo';
 import { useContext } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import LoadingIcon from '@ac/assets/icons/loading-icon.svg?react';
-import { getBrandingLogoUrl } from '@ac/utils/logo';
 
 import styles from './index.module.scss';
 
