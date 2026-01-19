@@ -30,6 +30,13 @@ export enum SentinelActivityAction {
    * themselves (target), e.g. Magic Link.
    */
   OneTimeToken = 'OneTimeToken',
+  /**
+   * The subject tries to pass an MFA verification.
+   *
+   * For example, a user (subject) who inputted an MFA code (action) to authenticate themselves
+   * (target).
+   */
+  Mfa = 'Mfa',
 }
 export const sentinelActivityActionGuard = z.nativeEnum(SentinelActivityAction);
 

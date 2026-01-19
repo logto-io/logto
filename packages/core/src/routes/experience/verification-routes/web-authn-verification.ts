@@ -1,4 +1,6 @@
 import {
+  AdditionalIdentifier,
+  SentinelActivityAction,
   bindWebAuthnPayloadGuard,
   VerificationType,
   webAuthnAuthenticationOptionsGuard,
@@ -9,11 +11,13 @@ import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { withSentinel } from '../classes/libraries/sentinel-guard.js';
 import { WebAuthnVerification } from '../classes/verifications/web-authn-verification.js';
 import { experienceRoutes } from '../const.js';
 import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
@@ -23,7 +27,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
   router: Router<unknown, T>,
   tenantContext: TenantContext
 ) {
-  const { libraries, queries } = tenantContext;
+  const { libraries, queries, sentinel } = tenantContext;
 
   router.post(
     `${experienceRoutes.verification}/web-authn/registration`,
@@ -232,7 +236,23 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         })
       );
 
-      await webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload);
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withSentinel(
+            {
+              ctx,
+              sentinel,
+              action: SentinelActivityAction.Mfa,
+              identifier: {
+                type: AdditionalIdentifier.UserId,
+                value: experienceInteraction.identifiedUserId,
+              },
+              payload: {
+                verificationId: webAuthnVerification.id,
+              },
+            },
+            webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload)
+          )
+        : webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload));
 
       await experienceInteraction.save();
 

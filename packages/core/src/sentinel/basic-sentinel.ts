@@ -27,14 +27,28 @@ const { fields, table } = convertToIdentifiers(SentinelActivities);
  */
 export default class BasicSentinel extends Sentinel {
   /** The list of actions that are accepted to be reported to this sentinel. */
-  static supportedActions = Object.freeze([
+  static pooledActions = Object.freeze([
     SentinelActivityAction.Password,
     SentinelActivityAction.VerificationCode,
     SentinelActivityAction.OneTimeToken,
   ] as const);
 
-  /** The array of all supported actions in SQL format. */
-  static supportedActionArray = sql.array(BasicSentinel.supportedActions, 'varchar');
+  static supportedActions = Object.freeze([
+    ...BasicSentinel.pooledActions,
+    SentinelActivityAction.Mfa,
+  ] as const);
+
+  /** The array of pooled actions in SQL format. */
+  static pooledActionArray = sql.array(BasicSentinel.pooledActions, 'varchar');
+
+  /** The array of MFA actions in SQL format. */
+  static mfaActionArray = sql.array([SentinelActivityAction.Mfa], 'varchar');
+
+  static getActionArray(action: SentinelActivityAction) {
+    return action === SentinelActivityAction.Mfa
+      ? BasicSentinel.mfaActionArray
+      : BasicSentinel.pooledActionArray;
+  }
 
   /**
    * Asserts that the given action is supported by this sentinel.
@@ -98,18 +112,20 @@ export default class BasicSentinel extends Sentinel {
    * @returns The decision made by the sentinel, or `null` if the target is not blocked.
    *
    * @remarks
-   * All supported actions share the same pool of activities, i.e. once a user has failed to
-   * perform any of the supported actions for certain times, the user will be blocked from
-   * performing any of the supported actions.
+   * The password/verification-code/one-time-token actions share the same pool of activities.
+   * MFA uses a dedicated pool and is blocked independently from the other actions.
+   * This avoids cross-stage lockouts (e.g. repeated MFA failures preventing password or
+   * verification-code sign-in) and reduces false positives from short-lived OTP mistakes.
    */
   protected async isBlocked(
-    query: Pick<SentinelActivity, 'targetType' | 'targetHash'>
+    query: Pick<SentinelActivity, 'targetType' | 'targetHash' | 'action'>
   ): Promise<Nullable<SentinelDecisionTuple>> {
+    const actionArray = BasicSentinel.getActionArray(query.action);
     const blocked = await this.pool.maybeOne<Pick<SentinelActivity, 'decisionExpiresAt'>>(sql`
       select ${fields.decisionExpiresAt} from ${table}
       where ${fields.targetType} = ${query.targetType}
         and ${fields.targetHash} = ${query.targetHash}
-        and ${fields.action} = any(${BasicSentinel.supportedActionArray})
+        and ${fields.action} = any(${actionArray})
         and ${fields.decision} = ${SentinelDecision.Blocked}
         and ${fields.decisionExpiresAt} > now()
       limit 1
@@ -132,7 +148,7 @@ export default class BasicSentinel extends Sentinel {
   }
 
   protected async decide(
-    query: Pick<SentinelActivity, 'targetType' | 'targetHash' | 'actionResult'>
+    query: Pick<SentinelActivity, 'targetType' | 'targetHash' | 'action' | 'actionResult'>
   ): Promise<SentinelDecisionTuple> {
     const blocked = await this.isBlocked(query);
 
@@ -140,11 +156,12 @@ export default class BasicSentinel extends Sentinel {
       return blocked;
     }
 
+    const actionArray = BasicSentinel.getActionArray(query.action);
     const failedAttempts = await this.pool.oneFirst<number>(sql`
       select count(*) from ${table}
       where ${fields.targetType} = ${query.targetType}
         and ${fields.targetHash} = ${query.targetHash}
-        and ${fields.action} = any(${BasicSentinel.supportedActionArray})
+        and ${fields.action} = any(${actionArray})
         and ${fields.actionResult} = ${SentinelActionResult.Failed}
         and ${fields.decision} != ${SentinelDecision.Blocked}
         and ${fields.createdAt} > now() - interval '1 hour'

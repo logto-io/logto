@@ -1,15 +1,20 @@
 import { TemplateType } from '@logto/connector-kit';
 import {
+  AdditionalIdentifier,
   AlternativeSignUpIdentifier,
   InteractionEvent,
   SignInIdentifier,
   verificationCodeIdentifierGuard,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import { codeVerificationIdentifierRecordTypeMap } from '../classes/utils.js';
 import {
@@ -162,6 +167,17 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     async (ctx, next) => {
       const { verificationId, code, identifierType } = ctx.guard.body;
       const { experienceInteraction } = ctx;
+      const { isDevFeaturesEnabled } = EnvSet.values;
+
+      if (isDevFeaturesEnabled) {
+        assertThat(
+          experienceInteraction.identifiedUserId,
+          new RequestError({
+            code: 'session.identifier_not_found',
+            status: 404,
+          })
+        );
+      }
 
       const mfaVerificationType = getMfaVerificationType(identifierType);
 
@@ -180,6 +196,13 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         verificationId,
         code,
         identifier,
+        sentinelIdentifier: conditional(
+          isDevFeaturesEnabled &&
+            experienceInteraction.identifiedUserId && {
+              type: AdditionalIdentifier.UserId,
+              value: experienceInteraction.identifiedUserId,
+            }
+        ),
         verificationType: mfaVerificationType,
         sentinel,
         ctx,
