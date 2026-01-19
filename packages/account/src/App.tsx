@@ -13,6 +13,7 @@ import ErrorBoundary from './Providers/AppBoundary/ErrorBoundary';
 import LogtoErrorBoundary from './Providers/AppBoundary/LogtoErrorBoundary';
 import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
+import GlobalLoading from './components/GlobalLoading';
 import {
   emailRoute,
   emailSuccessRoute,
@@ -87,11 +88,11 @@ const Main = () => {
   }
 
   if (isInitialAuthLoading || isLoadingExperience) {
-    return <div className={styles.status}>Loading…</div>;
+    return <GlobalLoading />;
   }
 
   if (!isAuthenticated) {
-    return <div className={styles.status}>Redirecting to sign in…</div>;
+    return <GlobalLoading />;
   }
 
   return (

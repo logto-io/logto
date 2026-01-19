@@ -6,8 +6,8 @@ import { useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import BrandingHeader from '@/components/BrandingHeader';
+import { getBrandingLogoUrl } from '@/shared/utils/logo';
 import { layoutClassNames } from '@/utils/consts';
-import { getBrandingLogoUrl } from '@/utils/logo';
 
 import FirstScreenLayout from '../FirstScreenLayout';
 
