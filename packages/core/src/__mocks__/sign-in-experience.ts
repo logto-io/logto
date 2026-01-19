@@ -99,6 +99,9 @@ export const mockSignInExperience: SignInExperience = {
     policy: MfaPolicy.PromptAtSignInAndSignUp,
     factors: [],
   },
+  adaptiveMfa: {
+    enabled: false,
+  },
   singleSignOnEnabled: true,
   socialSignIn: {},
   supportEmail: null,

@@ -58,6 +58,9 @@
                     "mfa": {
                       "description": "MFA settings"
                     },
+                    "adaptiveMfa": {
+                      "description": "Adaptive MFA settings."
+                    },
                     "supportEmail": {
                       "description": "The support email address to display on the error pages."
                     },
@@ -146,6 +149,9 @@
                   },
                   "mfa": {
                     "description": "MFA settings"
+                  },
+                  "adaptiveMfa": {
+                    "description": "Adaptive MFA settings. Only effective when developer features are enabled."
                   },
                   "supportEmail": {
                     "description": "The support email address to display on the error pages."

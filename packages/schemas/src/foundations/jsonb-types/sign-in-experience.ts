@@ -235,6 +235,14 @@ export const mfaGuard = z.object({
   organizationRequiredMfaPolicy: z.nativeEnum(OrganizationRequiredMfaPolicy).optional(),
 }) satisfies ToZodObject<Mfa>;
 
+export type AdaptiveMfa = {
+  enabled?: boolean;
+};
+
+export const adaptiveMfaGuard = z.object({
+  enabled: z.boolean().optional(),
+}) satisfies ToZodObject<AdaptiveMfa>;
+
 export const customUiAssetsGuard = z.object({
   id: z.string(),
   createdAt: z.number(),

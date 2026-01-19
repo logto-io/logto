@@ -55,6 +55,7 @@ describe('.well-known api', () => {
       },
       signInMode: 'SignInAndRegister',
     });
+    expect(response).toHaveProperty('adaptiveMfa');
   });
 
   // Also test for Redis cache invalidation

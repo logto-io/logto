@@ -71,6 +71,49 @@ const signInExperienceRequester = createRequester({
   tenantContext,
 });
 
+const createDevFeaturesDisabledRequester = async () => {
+  jest.resetModules();
+
+  await mockEsmWithActual('#src/env-set/index.js', () => ({
+    EnvSet: {
+      values: {
+        isDevFeaturesEnabled: false,
+        isCloud: false,
+        isProduction: false,
+        isUnitTest: true,
+      },
+    },
+  }));
+
+  const updateDefaultSignInExperience = jest.fn(
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+      ...mockSignInExperience,
+      ...data,
+    })
+  );
+
+  const tenant = new MockTenant(
+    undefined,
+    {
+      signInExperiences: {
+        updateDefaultSignInExperience,
+        findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+      },
+      customPhrases: { findAllCustomLanguageTags: async () => [] },
+    },
+    { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
+    { signInExperiences: { validateLanguageInfo: jest.fn() } }
+  );
+
+  const routes = await pickDefault(import('./index.js'));
+  const requester = createRequester({
+    authedRoutes: routes,
+    tenantContext: tenant,
+  });
+
+  return { requester, updateDefaultSignInExperience };
+};
+
 describe('GET /sign-in-exp', () => {
   afterAll(() => {
     jest.clearAllMocks();
@@ -190,6 +233,20 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
+  it('should update adaptive mfa config when dev features are enabled', async () => {
+    const adaptiveMfa = { enabled: true };
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({ adaptiveMfa });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        adaptiveMfa,
+      },
+    });
+  });
+
   it('should guard support email field format', async () => {
     const exception = await signInExperienceRequester
       .patch('/sign-in-exp')
@@ -274,5 +331,26 @@ describe('PATCH /sign-in-exp', () => {
         forgotPasswordMethods: [],
       },
     });
+  });
+});
+
+describe('sign-in experience routes with dev features disabled', () => {
+  it('should include adaptive mfa in GET response', async () => {
+    const { requester } = await createDevFeaturesDisabledRequester();
+
+    const response = await requester.get('/sign-in-exp');
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(mockSignInExperience);
+  });
+
+  it('should ignore adaptive mfa updates', async () => {
+    const { requester, updateDefaultSignInExperience } = await createDevFeaturesDisabledRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({ adaptiveMfa: { enabled: true } });
+
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({});
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(mockSignInExperience);
   });
 });
