@@ -137,7 +137,57 @@ describe('BasicSentinel -> decide()', () => {
   });
 });
 
-describe('BasicSentinel  with custom policy', () => {
+describe('BasicSentinel -> action pools', () => {
+  beforeEach(() => {
+    findDefaultSignInExperienceMock.mockResolvedValue(mockSignInExperience);
+  });
+
+  it('should use the pooled actions for password decisions', async () => {
+    methods.maybeOne.mockResolvedValueOnce(null);
+    methods.oneFirst.mockResolvedValueOnce(0);
+
+    const activity = createMockActivityReport();
+
+    await sentinel.decide(activity);
+
+    const blockedQuery: unknown = methods.maybeOne.mock.calls[0]?.[0];
+    const failedAttemptsQuery: unknown = methods.oneFirst.mock.calls[0]?.[0];
+
+    expect(blockedQuery).toHaveProperty(
+      'values',
+      expect.arrayContaining([expect.arrayContaining([...BasicSentinel.pooledActions])])
+    );
+    expect(failedAttemptsQuery).toHaveProperty(
+      'values',
+      expect.arrayContaining([expect.arrayContaining([...BasicSentinel.pooledActions])])
+    );
+  });
+
+  it('should use a dedicated pool for MFA decisions', async () => {
+    methods.maybeOne.mockResolvedValueOnce(null);
+    methods.oneFirst.mockResolvedValueOnce(0);
+
+    const activity = createMockActivityReport();
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    activity.action = SentinelActivityAction.Mfa;
+
+    await sentinel.decide(activity);
+
+    const blockedQuery: unknown = methods.maybeOne.mock.calls[0]?.[0];
+    const failedAttemptsQuery: unknown = methods.oneFirst.mock.calls[0]?.[0];
+
+    expect(blockedQuery).toHaveProperty(
+      'values',
+      expect.arrayContaining([expect.arrayContaining([SentinelActivityAction.Mfa])])
+    );
+    expect(failedAttemptsQuery).toHaveProperty(
+      'values',
+      expect.arrayContaining([expect.arrayContaining([SentinelActivityAction.Mfa])])
+    );
+  });
+});
+
+describe('BasicSentinel with custom policy', () => {
   beforeEach(() => {
     findDefaultSignInExperienceMock.mockResolvedValue({
       ...mockSignInExperience,
