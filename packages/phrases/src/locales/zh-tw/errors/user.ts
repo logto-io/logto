@@ -45,6 +45,7 @@ const user = {
     '該用戶沒有連結到指定 SSO 連接器 ID 的企業身份：{{ ssoConnectorId }}。',
   identity_not_exists_in_current_user:
     '指定的身份在當前用戶帳戶中不存在。請先綁定該身份再繼續操作。',
+  passkey_preferred: '建立通行密鑰以簡化登入流程。',
 };
 
 export default Object.freeze(user);

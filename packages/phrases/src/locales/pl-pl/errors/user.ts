@@ -50,6 +50,7 @@ const user = {
     'Użytkownik nie ma tożsamości przedsiębiorstwa powiązanej ze wskazanym identyfikatorem połączenia SSO: {{ ssoConnectorId }}.',
   identity_not_exists_in_current_user:
     'Określona tożsamość nie istnieje w bieżącym koncie użytkownika. Proszę połączyć tożsamość przed kontynuowaniem.',
+  passkey_preferred: 'Utwórz klucz dostępu, aby uprościć proces logowania.',
 };
 
 export default Object.freeze(user);

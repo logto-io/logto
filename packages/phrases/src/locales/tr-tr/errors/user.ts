@@ -47,6 +47,7 @@ const user = {
     'Kullanıcının belirtilen SSO bağlantı kimliği ile bağlantılı bir kurumsal kimliği yoktur: {{ ssoConnectorId }}.',
   identity_not_exists_in_current_user:
     'Belirtilen kimlik mevcut kullanıcı hesabında mevcut değil. Lütfen devam etmeden önce kimliği ekleyin.',
+  passkey_preferred: 'Oturum açma sürecini basitleştirmek için bir passkey oluşturun.',
 };
 
 export default Object.freeze(user);

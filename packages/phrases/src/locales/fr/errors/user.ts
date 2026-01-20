@@ -52,6 +52,7 @@ const user = {
     "L'utilisateur n'a pas d'identité d'entreprise liée à l'ID du connecteur SSO spécifié : {{ ssoConnectorId }}.",
   identity_not_exists_in_current_user:
     "L'identité spécifiée n'existe pas dans le compte utilisateur actuel. Veuillez lier l'identité avant de continuer.",
+  passkey_preferred: 'Créez une passkey pour simplifier votre connexion.',
 };
 
 export default Object.freeze(user);

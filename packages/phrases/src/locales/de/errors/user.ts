@@ -53,6 +53,7 @@ const user = {
     'Der Benutzer hat keine Unternehmensidentität, die mit der angegebenen SSO-Konnektor-ID verknüpft ist: {{ ssoConnectorId }}.',
   identity_not_exists_in_current_user:
     'Die angegebene Identität existiert nicht im aktuellen Benutzerkonto. Bitte verknüpfen Sie die Identität, bevor Sie fortfahren.',
+  passkey_preferred: 'Erstelle einen Passkey, um deinen Anmeldevorgang zu vereinfachen.',
 };
 
 export default Object.freeze(user);

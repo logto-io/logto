@@ -44,6 +44,7 @@ const user = {
   enterprise_sso_identity_not_exists:
     '用户没有与指定的 SSO 连接器 ID {{ ssoConnectorId }} 关联的企业身份。',
   identity_not_exists_in_current_user: '当前用户账户中不存在指定的身份。请在继续之前链接此身份。',
+  passkey_preferred: '创建通行密钥以简化登录流程。',
 };
 
 export default Object.freeze(user);

@@ -46,6 +46,7 @@ const user = {
     'ผู้ใช้ยังไม่ได้เชื่อมโยงข้อมูลองค์กรกับ SSO connector ID ที่ระบุ: {{ ssoConnectorId }}',
   identity_not_exists_in_current_user:
     'ไม่พบข้อมูลบัญชีที่ระบุในบัญชีผู้ใช้นี้ กรุณาเชื่อมโยงบัญชีก่อนดำเนินการต่อ',
+  passkey_preferred: 'สร้าง passkey เพื่อทำให้ขั้นตอนการเข้าสู่ระบบง่ายขึ้น',
 };
 
 export default Object.freeze(user);
