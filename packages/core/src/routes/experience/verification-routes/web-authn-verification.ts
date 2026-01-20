@@ -45,14 +45,6 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      assertThat(
-        experienceInteraction.identifiedUserId,
-        new RequestError({
-          code: 'session.identifier_not_found',
-          status: 404,
-        })
-      );
-
       const webAuthnVerification = WebAuthnVerification.create(
         libraries,
         queries,
@@ -156,14 +148,6 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      assertThat(
-        experienceInteraction.identifiedUserId,
-        new RequestError({
-          code: 'session.identifier_not_found',
-          status: 404,
-        })
-      );
-
       const webAuthnVerification = WebAuthnVerification.create(
         libraries,
         queries,
@@ -215,26 +199,20 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         },
       });
 
-      assertThat(
-        experienceInteraction.identifiedUserId,
-        new RequestError({
-          code: 'session.identifier_not_found',
-          status: 404,
-        })
-      );
-
       const webAuthnVerification = experienceInteraction.getVerificationRecordByTypeAndId(
         VerificationType.WebAuthn,
         verificationId
       );
 
-      assertThat(
-        webAuthnVerification.userId === experienceInteraction.identifiedUserId,
-        new RequestError({
-          code: 'session.verification_session_not_found',
-          status: 404,
-        })
-      );
+      if (experienceInteraction.identifiedUserId && webAuthnVerification.userId) {
+        assertThat(
+          experienceInteraction.identifiedUserId === webAuthnVerification.userId,
+          new RequestError({
+            code: 'session.verification_session_not_found',
+            status: 404,
+          })
+        );
+      }
 
       await (EnvSet.values.isDevFeaturesEnabled
         ? withSentinel(

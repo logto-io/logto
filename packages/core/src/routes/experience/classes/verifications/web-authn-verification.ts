@@ -3,6 +3,7 @@ import {
   type BindWebAuthnPayload,
   MfaFactor,
   VerificationType,
+  type User,
   type WebAuthnRegistrationOptions,
   type WebAuthnVerificationPayload,
   type WebAuthnVerificationRecordData,
@@ -25,7 +26,10 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { type MfaVerificationRecord } from './verification-record.js';
+import {
+  type IdentifierVerificationRecord,
+  type MfaVerificationRecord,
+} from './verification-record.js';
 
 export {
   type WebAuthnVerificationRecordData,
@@ -34,14 +38,18 @@ export {
   sanitizedWebAuthnVerificationRecordDataGuard,
 } from '@logto/schemas';
 
-export class WebAuthnVerification implements MfaVerificationRecord<VerificationType.WebAuthn> {
+export class WebAuthnVerification
+  implements
+    MfaVerificationRecord<VerificationType.WebAuthn>,
+    IdentifierVerificationRecord<VerificationType.WebAuthn>
+{
   /**
    * Factory method to create a new WebAuthnVerification instance
    *
-   * @param userId The user id is required for generating and verifying WebAuthn options.
-   * A WebAuthnVerification instance can only be created if the interaction is identified.
+   * @param userId Optional user id. When omitted, a discoverable-passkey authentication
+   * flow will be used and the user will be resolved during verification.
    */
-  static create(libraries: Libraries, queries: Queries, userId: string) {
+  static create(libraries: Libraries, queries: Queries, userId?: string) {
     return new WebAuthnVerification(libraries, queries, {
       id: generateStandardId(),
       type: VerificationType.WebAuthn,
@@ -52,11 +60,12 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
 
   readonly id;
   readonly type = VerificationType.WebAuthn;
-  readonly userId;
+  userId;
   private verified;
   private registrationChallenge?: string;
   private registrationRpId?: string;
   private authenticationChallenge?: string;
+  private authenticationRpId?: string;
   #registrationInfo?: BindWebAuthn;
 
   constructor(
@@ -71,6 +80,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
       registrationChallenge,
       authenticationChallenge,
       registrationRpId,
+      authenticationRpId,
       registrationInfo,
     } = webAuthnVerificationRecordDataGuard.parse(data);
 
@@ -80,6 +90,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     this.registrationChallenge = registrationChallenge;
     this.registrationRpId = registrationRpId;
     this.authenticationChallenge = authenticationChallenge;
+    this.authenticationRpId = authenticationRpId;
     this.#registrationInfo = registrationInfo;
   }
 
@@ -105,7 +116,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
    * TODO: Consider relocating the function under a shared folder
    */
   async generateWebAuthnRegistrationOptions(rpId: string): Promise<WebAuthnRegistrationOptions> {
-    const user = await this.findUser();
+    const user = await this.identifyUser();
 
     const registrationOptions = await generateWebAuthnRegistrationOptions({
       user,
@@ -183,14 +194,16 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     ctx: WithLogContext
   ): Promise<PublicKeyCredentialRequestOptionsJSON> {
     const { hostname } = ctx.URL;
-    const { mfaVerifications } = await this.findUser();
 
+    const { mfaVerifications = [] } = this.userId ? await this.identifyUser() : {};
     const authenticationOptions = await generateWebAuthnAuthenticationOptions({
       mfaVerifications,
       rpId: hostname,
+      allowDiscoverable: true,
     });
 
     this.authenticationChallenge = authenticationOptions.challenge;
+    this.authenticationRpId = hostname;
 
     return authenticationOptions;
   }
@@ -208,10 +221,19 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     payload: Omit<WebAuthnVerificationPayload, 'type'>
   ) {
     const { hostname: expectedRpId, origin } = ctx.URL;
-    const { mfaVerifications } = await this.findUser();
 
     assertThat(this.authenticationChallenge, 'session.mfa.pending_info_not_found');
 
+    const { findUserByWebAuthnCredential, updateUserById } = this.queries.users;
+
+    const credentialId = payload.id;
+    const user = this.userId
+      ? await this.identifyUser()
+      : await findUserByWebAuthnCredential(credentialId, expectedRpId);
+
+    assertThat(user, 'session.mfa.webauthn_verification_failed');
+
+    const { id: userId, mfaVerifications } = user;
     const { result, newCounter } = await verifyWebAuthnAuthentication({
       payload,
       challenge: this.authenticationChallenge,
@@ -223,10 +245,9 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     assertThat(result, 'session.mfa.webauthn_verification_failed');
 
     this.verified = true;
+    this.userId = userId;
 
-    // Update the counter and last used time
-    const { updateUserById } = this.queries.users;
-    await updateUserById(this.userId, {
+    await updateUserById(userId, {
       mfaVerifications: mfaVerifications.map((mfa) => {
         if (mfa.type !== MfaFactor.WebAuthn || mfa.id !== result.id) {
           return mfa;
@@ -234,10 +255,9 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
 
         return {
           ...mfa,
-          // Save missing `rpId` for existing passkey
           rpId: mfa.rpId ?? expectedRpId,
           lastUsedAt: new Date().toISOString(),
-          ...conditional(newCounter !== undefined && { counter: newCounter }),
+          ...conditional(newCounter && { counter: newCounter }),
         };
       }),
     });
@@ -253,6 +273,11 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
     return this.#registrationInfo;
   }
 
+  async identifyUser(): Promise<User> {
+    assertThat(this.userId, 'session.identifier_not_found');
+    return this.queries.users.findUserById(this.userId);
+  }
+
   toJson(): WebAuthnVerificationRecordData {
     const {
       id,
@@ -262,6 +287,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
       registrationChallenge,
       authenticationChallenge,
       registrationRpId,
+      authenticationRpId,
       registrationInfo,
     } = this;
 
@@ -273,6 +299,7 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
       registrationChallenge,
       authenticationChallenge,
       registrationRpId,
+      authenticationRpId,
       registrationInfo,
     };
   }
@@ -280,10 +307,5 @@ export class WebAuthnVerification implements MfaVerificationRecord<VerificationT
   toSanitizedJson(): SanitizedWebAuthnVerificationRecordData {
     const { id, type, userId, verified } = this;
     return { id, type, userId, verified };
-  }
-
-  private async findUser() {
-    const { findUserById } = this.queries.users;
-    return findUserById(this.userId);
   }
 }
