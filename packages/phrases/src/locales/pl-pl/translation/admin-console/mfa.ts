@@ -6,15 +6,15 @@ const mfa = {
   multi_factors: 'Wieloczynniki',
   multi_factors_description:
     'Użytkownicy muszą zweryfikować jeden z włączonych czynników podczas dwustopniowej weryfikacji.',
-  totp: 'Aplikacja autentykacyjna OTP',
+  totp: 'Aplikacja autentykacyjna',
   otp_description: 'Połącz Google Authenticator itp., aby zweryfikować jednorazowe hasła.',
-  webauthn: 'WebAuthn (Klucz przechodni)',
+  webauthn: 'Passkeys',
   webauthn_description:
     'Zweryfikuj za pomocą metody obsługiwanej przez przeglądarkę: biometria, skanowanie telefonem lub klucz zabezpieczeń, itp.',
   webauthn_native_tip: 'WebAuthn nie jest obsługiwane dla aplikacji natywnych.',
   webauthn_domain_tip:
     'WebAuthn łączy klucze publiczne z konkretną domeną. Modyfikacja domeny usługi zablokuje użytkowników przed uwierzytelnianiem za pomocą istniejących kluczy przechodnich.',
-  backup_code: 'Kod zapasowy',
+  backup_code: 'Kody zapasowe',
   backup_code_description:
     'Generuj 10 jednorazowych kodów zapasowych po skonfigurowaniu dowolnej metody MFA przez użytkowników.',
   backup_code_setup_hint:

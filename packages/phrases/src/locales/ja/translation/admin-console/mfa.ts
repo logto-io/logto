@@ -6,9 +6,9 @@ const mfa = {
   multi_factors: 'マルチファクタ',
   multi_factors_description:
     'ユーザーは2段階認証のために有効になっている要因のうちの1つを検証する必要があります。',
-  totp: '認証アプリ OTP',
+  totp: '認証アプリ',
   otp_description: 'Google Authenticatorなどをリンクしてワンタイムパスワードを検証します。',
-  webauthn: 'WebAuthn（パスキー）',
+  webauthn: 'Passkeys',
   webauthn_description:
     'ブラウザでサポートされている方法を使用して検証します：生体認証、電話のスキャン、またはセキュリティキーなど。',
   webauthn_native_tip: 'WebAuthnはネイティブアプリケーションではサポートされていません。',

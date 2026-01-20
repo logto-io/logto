@@ -4,9 +4,9 @@ const mfa = {
   factors: '因素',
   multi_factors: '多因素',
   multi_factors_description: '用户需要验证启用的两步验证中的一个因素。',
-  totp: '身份验证器应用 OTP',
+  totp: '身份验证器应用',
   otp_description: '将 Google Authenticator 等链接，以验证一次性密码。',
-  webauthn: 'WebAuthn（通行证）',
+  webauthn: 'Passkeys',
   webauthn_description: '通过浏览器支持的方法进行验证：生物识别、手机扫描或安全密钥等。',
   webauthn_native_tip: 'WebAuthn 不支持原生应用。',
   webauthn_domain_tip:

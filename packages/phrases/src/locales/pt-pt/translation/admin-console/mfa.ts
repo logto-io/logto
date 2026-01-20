@@ -6,15 +6,15 @@ const mfa = {
   multi_factors: 'Vários fatores',
   multi_factors_description:
     'Os usuários precisam verificar um dos fatores habilitados para a verificação em duas etapas.',
-  totp: 'OTP do aplicativo autenticador',
+  totp: 'Aplicativo autenticador',
   otp_description: 'Vincule o Google Authenticator, etc., para verificar senhas únicas.',
-  webauthn: 'WebAuthn (Senha)',
+  webauthn: 'Passkeys',
   webauthn_description:
     'Verifique por meio de um método suportado pelo navegador: biometria, digitalização de telefone ou chave de segurança, etc.',
   webauthn_native_tip: 'O WebAuthn não é suportado para aplicativos nativos.',
   webauthn_domain_tip:
     'O WebAuthn vincula chaves públicas ao domínio específico. Modificar o domínio do seu serviço bloqueará usuários de autenticar via senhas existentes.',
-  backup_code: 'Código de backup',
+  backup_code: 'Códigos de backup',
   backup_code_description:
     'Gere 10 códigos de backup únicos após os usuários configurarem qualquer método MFA.',
   backup_code_setup_hint:

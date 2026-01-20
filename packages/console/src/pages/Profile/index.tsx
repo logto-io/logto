@@ -1,14 +1,16 @@
-import type { ConnectorResponse } from '@logto/schemas';
+import type { ConnectorResponse, SignInExperience } from '@logto/schemas';
+import ky from 'ky';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRoutes } from 'react-router-dom';
+import useSWR from 'swr';
 import useSWRImmutable from 'swr/immutable';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
 import { adminTenantEndpoint, meApi } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import AppBoundary from '@/containers/AppBoundary';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
@@ -26,6 +28,7 @@ import pageLayout from '@/scss/page-layout.module.scss';
 import BasicUserInfoSection from './components/BasicUserInfoSection';
 import CardContent from './components/CardContent';
 import LinkAccountSection from './components/LinkAccountSection';
+import MfaSection from './components/MfaSection';
 import NotSet from './components/NotSet';
 import Skeleton from './components/Skeleton';
 import DeleteAccountModal from './containers/DeleteAccountModal';
@@ -46,6 +49,10 @@ function Profile() {
   const isLoadingConnectors = !connectors && !fetchConnectorsError;
   const { user, reload, isLoading: isLoadingUser } = useCurrentUser();
   const { isLoading: isUserAssetServiceLoading } = useUserAssetsService();
+  const { data: signInExperience } = useSWR<SignInExperience>(
+    new URL('api/.well-known/sign-in-exp', adminTenantEndpoint).toString(),
+    async (url: string) => ky.get(url).json<SignInExperience>()
+  );
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
   // Avoid unnecessary re-renders in child components
@@ -98,6 +105,9 @@ function Profile() {
                     ]}
                   />
                 </FormCard>
+                {isDevFeaturesEnabled && (
+                  <MfaSection user={user} signInExperience={signInExperience} />
+                )}
                 {isCloud && (
                   <FormCard title="profile.delete_account.title">
                     <div className={styles.deleteAccount}>

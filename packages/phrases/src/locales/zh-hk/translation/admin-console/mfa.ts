@@ -4,9 +4,9 @@ const mfa = {
   factors: '因素',
   multi_factors: '多重因素',
   multi_factors_description: '用戶需要驗證其中一個已啟用的因素以完成兩步驗證。',
-  totp: '驗證器應用程式 OTP',
+  totp: '驗證器應用程式',
   otp_description: '連結 Google Authenticator 等應用程式，以驗證一次性密碼。',
-  webauthn: 'WebAuthn（通行密鑰）',
+  webauthn: 'Passkeys',
   webauthn_description: '透過瀏覽器支援的方式進行驗證：生物識別、手機掃描或安全密鑰等。',
   webauthn_native_tip: '原生應用程式不支援 WebAuthn。',
   webauthn_domain_tip:

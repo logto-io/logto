@@ -1,6 +1,8 @@
 import type { CreateAccountCenter } from '../db-entries/index.js';
 import { AccountCenterControlValue } from '../foundations/index.js';
 
+import { adminTenantId } from './tenant.js';
+
 export const createDefaultAccountCenter = (forTenantId: string): Readonly<CreateAccountCenter> =>
   Object.freeze({
     tenantId: forTenantId,
@@ -14,11 +16,9 @@ export const createDefaultAccountCenter = (forTenantId: string): Readonly<Create
  * The account center is enabled by default and allows editing all fields,
  * so that the console profile page can use the Account API.
  */
-export const createAdminTenantAccountCenter = (
-  forTenantId: string
-): Readonly<CreateAccountCenter> =>
+export const createAdminTenantAccountCenter = (): Readonly<CreateAccountCenter> =>
   Object.freeze({
-    tenantId: forTenantId,
+    tenantId: adminTenantId,
     id: 'default',
     enabled: true,
     fields: {
