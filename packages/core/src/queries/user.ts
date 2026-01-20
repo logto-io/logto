@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { User, CreateUser } from '@logto/schemas';
 import { Users } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared';
@@ -334,6 +335,23 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `)
       : [];
 
+  const findUserByWebAuthnCredential = async (credentialId: string, rpId?: string) =>
+    pool.maybeOne<User>(sql`
+      select ${sql.join(
+        Object.values(fields).map((field) => sql`${table}.${field}`),
+        sql`,`
+      )}
+      from ${table}
+      where ${fields.mfaVerifications}::jsonb @> ${sql.jsonb([
+        {
+          type: 'WebAuthn',
+          credentialId,
+          ...(rpId ? { rpId } : {}),
+        },
+      ])}
+      limit 1
+    `);
+
   const updateUser = buildUpdateWhereWithPool(pool)(Users, true);
 
   const updateUserById = async (
@@ -423,6 +441,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     findUserByPhone,
     findUserByNormalizedPhone,
     findUserById,
+    findUserByWebAuthnCredential,
     findUserByIdentity,
     hasUser,
     hasUserWithId,
@@ -441,3 +460,4 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     getDailyNewUserCountsByTimeInterval,
   };
 };
+/* eslint-enable max-lines */
