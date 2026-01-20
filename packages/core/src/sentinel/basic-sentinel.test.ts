@@ -144,7 +144,7 @@ describe('BasicSentinel -> action pools', () => {
 
   const isolatedMfaActions = [
     SentinelActivityAction.MfaTotp,
-    SentinelActivityAction.MfaWebAuthn,
+    SentinelActivityAction.WebAuthn,
     SentinelActivityAction.MfaBackupCode,
   ];
 

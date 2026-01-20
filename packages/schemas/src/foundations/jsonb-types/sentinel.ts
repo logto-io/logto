@@ -37,7 +37,7 @@ export enum SentinelActivityAction {
   /**
    * The subject tries to pass a WebAuthn MFA verification.
    */
-  MfaWebAuthn = 'MfaWebAuthn',
+  WebAuthn = 'WebAuthn',
   /**
    * The subject tries to pass a backup code MFA verification.
    */

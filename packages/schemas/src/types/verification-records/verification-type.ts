@@ -10,6 +10,7 @@ export enum VerificationType {
   EnterpriseSso = 'EnterpriseSso',
   TOTP = 'Totp',
   WebAuthn = 'WebAuthn',
+  SignInWebAuthn = 'SignInWebAuthn',
   BackupCode = 'BackupCode',
   NewPasswordIdentity = 'NewPasswordIdentity',
   OneTimeToken = 'OneTimeToken',

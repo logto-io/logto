@@ -39,7 +39,7 @@ await mockEsmWithActual('@simplewebauthn/server/helpers', () => ({
 const { WebAuthnVerification } = await import('./web-authn-verification.js');
 
 describe('WebAuthnVerification', () => {
-  const userId = 'user-id';
+  const userId = mockUser.id;
   const rpId = 'example.com';
 
   const findUserById = jest.fn().mockResolvedValue(mockUser);

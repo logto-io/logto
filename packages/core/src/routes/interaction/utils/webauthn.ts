@@ -21,6 +21,7 @@ import {
 } from '@simplewebauthn/server';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 type GenerateWebAuthnRegistrationOptionsParameters = {
@@ -30,6 +31,8 @@ type GenerateWebAuthnRegistrationOptionsParameters = {
     'id' | 'name' | 'username' | 'primaryEmail' | 'primaryPhone' | 'mfaVerifications'
   >;
 };
+
+const { isDevFeaturesEnabled } = EnvSet.values;
 
 export const generateWebAuthnRegistrationOptions = async ({
   rpId,
@@ -56,9 +59,17 @@ export const generateWebAuthnRegistrationOptions = async ({
         type: 'public-key',
         transports,
       })),
-    authenticatorSelection: {
-      residentKey: 'discouraged',
-    },
+    authenticatorSelection: isDevFeaturesEnabled
+      ? {
+          // Set to `required` so newly generated credentials are discoverable and can be used
+          // for passkey sign-in.
+          residentKey: 'required',
+          requireResidentKey: true,
+          userVerification: 'required',
+        }
+      : {
+          residentKey: 'discouraged',
+        },
     // Values for COSEALG.ES256, COSEALG.RS256, Node.js don't have those enums
     supportedAlgorithmIDs: [-7, -257],
   };
@@ -78,7 +89,8 @@ export const verifyWebAuthnRegistration = async (
     },
     expectedChallenge: challenge,
     expectedOrigin: origins,
-    requireUserVerification: false,
+    // Enforce verification to align with passkey sign-in requirements
+    requireUserVerification: isDevFeaturesEnabled,
   };
 
   try {
@@ -94,16 +106,19 @@ export const verifyWebAuthnRegistration = async (
 export const generateWebAuthnAuthenticationOptions = async ({
   rpId,
   mfaVerifications,
+  allowDiscoverable = false,
 }: {
   rpId: string;
   mfaVerifications: MfaVerifications;
+  /** Allow generating options without allowCredentials (discoverable passkeys) */
+  allowDiscoverable?: boolean;
 }) => {
   const webAuthnVerifications = mfaVerifications.filter(
     (verification): verification is MfaVerificationWebAuthn =>
       verification.type === MfaFactor.WebAuthn
   );
 
-  if (webAuthnVerifications.length === 0) {
+  if (webAuthnVerifications.length === 0 && !allowDiscoverable) {
     throw new RequestError('session.mfa.webauthn_verification_not_found');
   }
 

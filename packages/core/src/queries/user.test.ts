@@ -1,4 +1,4 @@
-import { Users } from '@logto/schemas';
+import { MfaFactor, Users } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 import Sinon from 'sinon';
 
@@ -25,6 +25,7 @@ const {
   findUserByEmail,
   findUserByPhone,
   findUserByIdentity,
+  findUserByWebAuthnCredential,
   hasUser,
   hasUserWithId,
   hasUserWithEmail,
@@ -142,6 +143,79 @@ describe('user query', () => {
     });
 
     await expect(findUserByIdentity(target, mockUser.id)).resolves.toEqual(databaseValue);
+  });
+
+  it('findUserByWebAuthnCredential', async () => {
+    const credentialId = 'credential-id';
+
+    const expectSql = sql`
+      select ${sql.join(
+        Object.values(fields).map((field) => sql`${table}.${field}`),
+        sql`,`
+      )}
+      from ${table}
+      where ${fields.mfaVerifications}::jsonb @> ${sql.jsonb([
+        {
+          type: MfaFactor.WebAuthn,
+          credentialId,
+        },
+      ])}
+      limit 1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([
+        JSON.stringify([
+          {
+            type: MfaFactor.WebAuthn,
+            credentialId,
+          },
+        ]),
+      ]);
+
+      return createMockQueryResult([databaseValue]);
+    });
+
+    await expect(findUserByWebAuthnCredential(credentialId)).resolves.toEqual(databaseValue);
+  });
+
+  it('findUserByWebAuthnCredential (with rpId)', async () => {
+    const credentialId = 'credential-id';
+    const rpId = 'example.com';
+
+    const expectSql = sql`
+      select ${sql.join(
+        Object.values(fields).map((field) => sql`${table}.${field}`),
+        sql`,`
+      )}
+      from ${table}
+      where ${fields.mfaVerifications}::jsonb @> ${sql.jsonb([
+        {
+          type: MfaFactor.WebAuthn,
+          credentialId,
+          rpId,
+        },
+      ])}
+      limit 1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([
+        JSON.stringify([
+          {
+            type: MfaFactor.WebAuthn,
+            credentialId,
+            rpId,
+          },
+        ]),
+      ]);
+
+      return createMockQueryResult([databaseValue]);
+    });
+
+    await expect(findUserByWebAuthnCredential(credentialId, rpId)).resolves.toEqual(databaseValue);
   });
 
   it('hasUser', async () => {

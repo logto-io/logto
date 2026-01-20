@@ -486,10 +486,14 @@ export class Mfa {
     };
   }
 
-  private async checkMfaFactorsEnabledInSignInExperience(factors: MfaFactor[]) {
-    const { factors: enabledFactors } = await this.signInExperienceValidator.getMfaSettings();
+  private async checkMfaFactorsEnabledInSignInExperience(newBindMfaFactors: MfaFactor[]) {
+    const { mfa, passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
 
-    const isFactorsEnabled = factors.every((factor) => enabledFactors.includes(factor));
+    const isFactorsEnabled = newBindMfaFactors.every(
+      (newBindFactor) =>
+        mfa.factors.includes(newBindFactor) ||
+        (newBindFactor === MfaFactor.WebAuthn && passkeySignIn.enabled)
+    );
 
     assertThat(isFactorsEnabled, new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' }));
   }
