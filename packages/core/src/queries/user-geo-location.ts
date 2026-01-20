@@ -1,9 +1,9 @@
-import { UserGeoLocation, type UserGeoLocation as UserGeoLocationEntity } from '@logto/schemas';
+import { UserGeoLocations, type UserGeoLocation as UserGeoLocationEntity } from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
-const { table, fields } = convertToIdentifiers(UserGeoLocation);
+const { table, fields } = convertToIdentifiers(UserGeoLocations);
 
 export const createUserGeoLocationQueries = (pool: CommonQueryMethods) => {
   const findUserGeoLocationByUserId = async (userId: string) =>
@@ -23,15 +23,15 @@ export const createUserGeoLocationQueries = (pool: CommonQueryMethods) => {
     return pool.one<UserGeoLocationEntity>(sql`
       insert into ${table} (
         ${fields.userId},
-        ${fields.lastLatitude},
-        ${fields.lastLongitude},
+        ${fields.latitude},
+        ${fields.longitude},
         ${fields.updatedAt}
       )
       values (${userId}, ${normalizedLatitude}, ${normalizedLongitude}, now())
       on conflict (${fields.tenantId}, ${fields.userId})
       do update set
-        ${fields.lastLatitude} = coalesce(excluded.${fields.lastLatitude}, ${table}.${fields.lastLatitude}),
-        ${fields.lastLongitude} = coalesce(excluded.${fields.lastLongitude}, ${table}.${fields.lastLongitude}),
+        ${fields.latitude} = coalesce(excluded.${fields.latitude}, ${table}.${fields.latitude}),
+        ${fields.longitude} = coalesce(excluded.${fields.longitude}, ${table}.${fields.longitude}),
         ${fields.updatedAt} = now()
       returning ${sql.join(Object.values(fields), sql`, `)}
     `);
