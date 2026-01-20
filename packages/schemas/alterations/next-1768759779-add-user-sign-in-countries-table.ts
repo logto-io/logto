@@ -12,7 +12,7 @@ const alteration: AlterationScript = {
           references tenants (id) on update cascade on delete cascade,
         user_id varchar(12) not null
           references users (id) on update cascade on delete cascade,
-        country varchar(2) not null,
+        country varchar(16) not null,
         last_sign_in_at timestamptz not null default(now()),
         primary key (tenant_id, user_id, country)
       );
