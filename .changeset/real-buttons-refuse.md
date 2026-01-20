@@ -25,6 +25,6 @@ For iOS mobile app users, Apple App Store guidelines mandate social sign-in opti
 
 We have updated the sign-in-experience settings with a new option `skipRequiredIdentifiers` for social sign-in and sign-up flows. When enabled, this option allows users to bypass the mandatory identifier collection step during social sign-in and sign-up.
 
-By default, this option is set to `false` to maintain existing behavior. Administrators can enable this option in the sign-in-experience settings if they wish to allow users to skip mandatory identifier collection during social sign-in and sign-up.
+By default, this option is set to `false` to maintain existing behavior. Administrators can enable this option in the sign-in experience settings if they wish to allow users to skip mandatory identifier collection during social sign-in and sign-up.
 
-On Logto console, this option is represented as a checkbox labeled "Require users to provide missing sign-up identifier" on the sign-in experience configuration page under the "Social sign-In" section. Checked by default.
+On Logto console, this option is represented as a checkbox labeled "Require users to provide missing sign-up identifier" on the sign-in experience configuration page under the "Social sign-in" section. Checked by default.
