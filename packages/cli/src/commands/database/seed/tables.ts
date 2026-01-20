@@ -207,9 +207,7 @@ export const seedTables = async (
     connection.query(insertInto(createAdminTenantSignInExperience(), SignInExperiences.table)),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
     connection.query(insertInto(createDefaultAccountCenter(defaultTenantId), AccountCenters.table)),
-    connection.query(
-      insertInto(createAdminTenantAccountCenter(adminTenantId), AccountCenters.table)
-    ),
+    connection.query(insertInto(createAdminTenantAccountCenter(), AccountCenters.table)),
   ]);
 
   // The below seed data is for the Logto Cloud only. We put it here for the sake of simplicity.

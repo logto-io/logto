@@ -6,16 +6,16 @@ const mfa = {
   multi_factors: 'Multi-facteurs',
   multi_factors_description:
     "Les utilisateurs doivent vérifier l'un des facteurs activés pour la vérification en deux étapes.",
-  totp: "OTP de l'application authentificatrice",
+  totp: 'Application authentificatrice',
   otp_description:
     'Liez Google Authenticator, etc., pour vérifier les mots de passe à usage unique.',
-  webauthn: 'WebAuthn (Passkey)',
+  webauthn: 'Passkeys',
   webauthn_description:
     'Vérifiez via une méthode prise en charge par le navigateur : biométrie, scan de téléphone ou clé de sécurité, etc.',
   webauthn_native_tip: "WebAuthn n'est pas pris en charge pour les applications natives.",
   webauthn_domain_tip:
     "WebAuthn lie les clés publiques au domaine spécifique. Modifier votre domaine de service bloquera les utilisateurs pour l'authentification via les passkeys existantes.",
-  backup_code: 'Code de secours',
+  backup_code: 'Codes de secours',
   backup_code_description:
     'Générez 10 codes de secours à usage unique après que les utilisateurs aient configuré une méthode de MFA.',
   backup_code_setup_hint:
