@@ -225,6 +225,9 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+      lint-staged:
+        specifier: ^15.0.0
+        version: 15.0.2
       openapi-typescript:
         specifier: ^7.8.0
         version: 7.8.0(typescript@5.5.3)
