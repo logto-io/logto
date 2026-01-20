@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import {
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
@@ -14,6 +15,8 @@ import {
 import { type ConsoleLog } from '@logto/shared';
 import { assert, deduplicate, pick, pickState } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
+import { got } from 'got';
+import { type KoaContextWithOIDC } from 'oidc-provider';
 import { ZodError, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -29,6 +32,7 @@ import {
   buildLocalVmErrorBody,
   type CustomJwtDeployRequestBody,
 } from '#src/utils/custom-jwt/index.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -233,6 +237,42 @@ export class JwtCustomizerLibrary {
 
     await client.put(`/api/services/custom-jwt/worker`, {
       body: deepmerge(customizerScriptsFromDatabase, newCustomizerScripts),
+    });
+  }
+
+  /**
+   * @remarks
+   * For Logto Cloud service use only. Run the custom JWT claims script remotely in a isolated environment.
+   * For OSS version, use @see JwtCustomizerLibrary.runScriptInLocalVm instead.
+   */
+  async runScriptRemotely(payload: CustomJwtFetcher, ctx: KoaContextWithOIDC) {
+    const {
+      isDevFeaturesEnabled,
+      azureFunctionUntrustedAppKey,
+      azureFunctionUntrustedAppEndpoint,
+    } = EnvSet.values;
+
+    if (isDevFeaturesEnabled && azureFunctionUntrustedAppEndpoint && azureFunctionUntrustedAppKey) {
+      try {
+        const result = await got
+          .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
+            json: payload,
+            headers: {
+              'x-functions-key': azureFunctionUntrustedAppKey,
+            },
+          })
+          .json<Record<string, unknown>>();
+
+        return result;
+      } catch (error: unknown) {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
+      }
+    }
+
+    const client = await this.cloudConnection.getClient();
+    return client.post(`/api/services/custom-jwt`, {
+      body: payload,
+      search: {},
     });
   }
 }

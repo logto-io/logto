@@ -171,6 +171,18 @@ export default class GlobalValues {
   }
 
   /**
+   * For cloud use only.
+   * Define regional Untrusted Azure function app endpoint and key to enable the Logto Azure Functions integration for untrusted operations.
+   */
+  public get azureFunctionUntrustedAppEndpoint() {
+    return getEnv('AZURE_FUNCTION_UNTRUSTED_APP_ENDPOINT');
+  }
+
+  public get azureFunctionUntrustedAppKey() {
+    return getEnv('AZURE_FUNCTION_UNTRUSTED_APP_KEY');
+  }
+
+  /**
    * The key encryption key (KEK) for the secret vault.
    * It is used to encrypt and decrypt secret DEKs (data encryption keys) in the secret vault.
    */
