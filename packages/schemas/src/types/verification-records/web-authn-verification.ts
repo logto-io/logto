@@ -16,6 +16,8 @@ export type MfaWebAuthnVerificationRecordData = {
   registrationRpId?: string;
   /** The challenge generated for the WebAuthn authentication */
   authenticationChallenge?: string;
+  /** The rpId used when generating the authentication options */
+  authenticationRpId?: string;
   registrationInfo?: BindWebAuthn;
 };
 
@@ -27,6 +29,7 @@ export const mfaWebAuthnVerificationRecordDataGuard = z.object({
   registrationChallenge: z.string().optional(),
   registrationRpId: z.string().optional(),
   authenticationChallenge: z.string().optional(),
+  authenticationRpId: z.string().optional(),
   registrationInfo: bindWebAuthnGuard.optional(),
 }) satisfies ToZodObject<MfaWebAuthnVerificationRecordData>;
 
