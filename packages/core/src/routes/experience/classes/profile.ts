@@ -13,7 +13,6 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { EnvSet } from '../../../env-set/index.js';
 import type {
   SanitizedInteractionProfile,
   InteractionContext,
@@ -212,11 +211,7 @@ export class Profile {
       return;
     }
 
-    if (
-      // TODO: Remove dev features check when the feature is stable
-      EnvSet.values.isDevFeaturesEnabled &&
-      (this.#data.socialIdentity ?? hasVerifiedSocialIdentity)
-    ) {
+    if (this.#data.socialIdentity ?? hasVerifiedSocialIdentity) {
       const { skipRequiredIdentifiers } =
         await this.signInExperienceValidator.getSocialSignInPolicy();
 
