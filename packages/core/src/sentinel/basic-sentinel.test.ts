@@ -142,6 +142,12 @@ describe('BasicSentinel -> action pools', () => {
     findDefaultSignInExperienceMock.mockResolvedValue(mockSignInExperience);
   });
 
+  const isolatedMfaActions = [
+    SentinelActivityAction.MfaTotp,
+    SentinelActivityAction.MfaWebAuthn,
+    SentinelActivityAction.MfaBackupCode,
+  ];
+
   it('should use the pooled actions for password decisions', async () => {
     methods.maybeOne.mockResolvedValueOnce(null);
     methods.oneFirst.mockResolvedValueOnce(0);
@@ -163,28 +169,32 @@ describe('BasicSentinel -> action pools', () => {
     );
   });
 
-  it('should use a dedicated pool for MFA WebAuthn decisions', async () => {
-    methods.maybeOne.mockResolvedValueOnce(null);
-    methods.oneFirst.mockResolvedValueOnce(0);
+  it.each(isolatedMfaActions)(
+    'should use a dedicated pool for MFA action %s decisions',
+    async (action) => {
+      methods.maybeOne.mockResolvedValueOnce(null);
+      methods.oneFirst.mockResolvedValueOnce(0);
 
-    const activity = createMockActivityReport();
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    activity.action = SentinelActivityAction.MfaWebAuthn;
+      const activity = {
+        ...createMockActivityReport(),
+        action,
+      };
 
-    await sentinel.decide(activity);
+      await sentinel.decide(activity);
 
-    const blockedQuery: unknown = methods.maybeOne.mock.calls[0]?.[0];
-    const failedAttemptsQuery: unknown = methods.oneFirst.mock.calls[0]?.[0];
+      const blockedQuery: unknown = methods.maybeOne.mock.calls[0]?.[0];
+      const failedAttemptsQuery: unknown = methods.oneFirst.mock.calls[0]?.[0];
 
-    expect(blockedQuery).toHaveProperty(
-      'values',
-      expect.arrayContaining([expect.arrayContaining([SentinelActivityAction.MfaWebAuthn])])
-    );
-    expect(failedAttemptsQuery).toHaveProperty(
-      'values',
-      expect.arrayContaining([expect.arrayContaining([SentinelActivityAction.MfaWebAuthn])])
-    );
-  });
+      expect(blockedQuery).toHaveProperty(
+        'values',
+        expect.arrayContaining([expect.arrayContaining([action])])
+      );
+      expect(failedAttemptsQuery).toHaveProperty(
+        'values',
+        expect.arrayContaining([expect.arrayContaining([action])])
+      );
+    }
+  );
 });
 
 describe('BasicSentinel with custom policy', () => {
