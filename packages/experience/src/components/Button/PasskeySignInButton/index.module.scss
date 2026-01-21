@@ -1,0 +1,48 @@
+@use '@/shared/scss/underscore' as _;
+
+.button {
+  justify-content: normal;
+  padding: 0 _.unit(4);
+
+  svg {
+    width: 24px;
+    height: 24px;
+    color: var(--color-text-primary);
+  }
+
+  .loadingIcon {
+    display: block;
+    // To avoid the layout shift, add padding manually (keep the same size as the icon)
+    padding: 0 1.5px;
+    color: var(--color-brand-loading);
+    font-size: 0;
+    line-height: normal;
+  }
+
+  .name {
+    flex: 1;
+    overflow: hidden;
+    margin-inline-start: _.unit(-6);
+    @include _.flex-row;
+    height: 100%;
+
+    span {
+      @include _.multi-line-ellipsis(2);
+      line-height: _.unit(5);
+    }
+
+    .placeHolder {
+      flex: 1;
+
+      &:first-child {
+        min-width: _.unit(10);
+      }
+    }
+  }
+}
+
+:global(body.desktop) {
+  .name span {
+    line-height: _.unit(4);
+  }
+}

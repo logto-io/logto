@@ -35,6 +35,7 @@ type UseSieMethodsReturnType = {
   forgotPassword: SignInExperienceResponse['forgotPassword'] | undefined;
   customContent: SignInExperienceResponse['customContent'] | undefined;
   singleSignOnEnabled: boolean | undefined;
+  passkeySignIn: SignInExperienceResponse['passkeySignIn'] | undefined;
   /**
    * Check if the given verification code identifier is enabled for sign-up.
    * Used in the verification code sign-in flow, if the verified email/phone number has not been registered,
@@ -115,6 +116,7 @@ export const useSieMethods = (): UseSieMethodsReturnType => {
       forgotPassword: experienceSettings?.forgotPassword,
       customContent: experienceSettings?.customContent,
       singleSignOnEnabled: experienceSettings?.singleSignOnEnabled,
+      passkeySignIn: experienceSettings?.passkeySignIn,
       passwordRequiredForSignUp,
       isVerificationCodeEnabledForSignUp,
       isVerificationCodeEnabledForSignIn,
@@ -130,6 +132,7 @@ export const useSieMethods = (): UseSieMethodsReturnType => {
       experienceSettings?.forgotPassword,
       experienceSettings?.customContent,
       experienceSettings?.singleSignOnEnabled,
+      experienceSettings?.passkeySignIn,
       passwordRequiredForSignUp,
       isVerificationCodeEnabledForSignUp,
       isVerificationCodeEnabledForSignIn,
