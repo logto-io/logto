@@ -1,11 +1,12 @@
 import type { LogContextPayload, LogKey } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { type Optional, pick } from '@silverhand/essentials';
+import { conditional, type Optional, pick } from '@silverhand/essentials';
 import type { Context, MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import { UAParser } from 'ua-parser-js';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
@@ -164,23 +165,29 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         ip,
         headers: { 'user-agent': userAgent },
       } = ctx.request;
-      const injectedHeaders = getInjectedHeaderValues(ctx.request.headers);
+      const { isDevFeaturesEnabled } = EnvSet.values;
+      const injectedHeaders = conditional(
+        isDevFeaturesEnabled && getInjectedHeaderValues(ctx.request.headers)
+      );
       const userAgentValue: Optional<string> =
         typeof userAgent === 'string' ? userAgent : userAgent?.[0];
-      const userAgentParsed: Optional<UAParser.IResult> = (() => {
-        if (!userAgentValue) {
-          return;
-        }
+      const userAgentParsed: Optional<UAParser.IResult> = conditional(
+        isDevFeaturesEnabled &&
+          (() => {
+            if (!userAgentValue) {
+              return;
+            }
 
-        try {
-          return new UAParser(userAgentValue).getResult();
-        } catch {}
-      })();
+            try {
+              return new UAParser(userAgentValue).getResult();
+            } catch {}
+          })()
+      );
       const basePayload = removeUndefinedKeys({
         ip,
         userAgent: userAgentValue,
-        userAgentParsed,
-        injectedHeaders,
+        ...conditional(userAgentParsed && { userAgentParsed }),
+        ...conditional(injectedHeaders && { injectedHeaders }),
       });
 
       await Promise.all(

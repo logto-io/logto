@@ -1,9 +1,13 @@
 import type { LogKey } from '@logto/schemas';
 import { LogResult, VerificationType } from '@logto/schemas';
-import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import { createMockUtils } from '@logto/shared/esm';
 import i18next from 'i18next';
+import type { Context } from 'koa';
+import Router, { type IRouterParamContext } from 'koa-router';
 import { UAParser } from 'ua-parser-js';
 
+import type Queries from '#src/tenants/Queries.js';
+import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-context.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 
 import { type TotpVerificationRecordData } from '../routes/experience/classes/verifications/totp-verification.js';
@@ -12,18 +16,43 @@ import type { WithLogContext, LogPayload } from './koa-audit-log.js';
 
 const { jest } = import.meta;
 
-const { mockEsmWithActual } = createMockUtils(jest);
-
 await mockIdGenerators();
 
-const { default: RequestError } = await import('#src/errors/RequestError/index.js');
-const { MockQueries } = await import('#src/test-utils/tenant.js');
-const { createContextWithRouteParameters } = await import('#src/utils/test-utils.js');
+const { mockEsm } = createMockUtils(jest);
+const getIsDevFeaturesEnabled = jest.fn(() => true);
+
+mockEsm('#src/env-set/index.js', () => ({
+  EnvSet: {
+    values: {
+      get isDevFeaturesEnabled() {
+        return getIsDevFeaturesEnabled();
+      },
+    },
+  },
+}));
 
 const insertLog = jest.fn();
-const queries = new MockQueries({ logs: { insertLog } });
+const queries = { logs: { insertLog } } as unknown as Queries;
 
-const koaLog = await pickDefault(import('./koa-audit-log.js'));
+const { default: koaLog } = await import('./koa-audit-log.js');
+const { default: RequestError } = await import('#src/errors/RequestError/index.js');
+
+type TestContext = WithLogContext<IRouterParamContext & Context>;
+const createTestContext = (headers: Record<string, string>): TestContext => {
+  const ctx = createMockContext({ headers });
+
+  return {
+    ...ctx,
+    params: {},
+    headers: ctx.headers,
+    router: new Router(),
+    _matchedRoute: undefined,
+    _matchedRouteName: undefined,
+    i18n: i18next,
+    locale: 'en',
+    emailI18n: { locale: 'en' },
+  } as unknown as TestContext;
+};
 
 describe('koaAuditLog middleware', () => {
   const logKey: LogKey = 'Interaction.SignIn.Identifier.VerificationCode.Submit';
@@ -41,11 +70,12 @@ describe('koaAuditLog middleware', () => {
     jest.clearAllMocks();
   });
 
+  beforeEach(() => {
+    getIsDevFeaturesEnabled.mockReturnValue(true);
+  });
+
   it('should insert a success log when next() does not throw an error', async () => {
-    // @ts-expect-error
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-    };
+    const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
     ctx.request.ip = ip;
     const additionalMockPayload: LogPayload = { foo: 'bar' };
 
@@ -72,16 +102,11 @@ describe('koaAuditLog middleware', () => {
   });
 
   it('should include injected header values when mapped headers are present', async () => {
-    // @ts-expect-error
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters({
-        headers: {
-          'user-agent': userAgent,
-          'x-logto-cf-country': 'US',
-          'x-logto-cf-city': 'New York',
-        },
-      }),
-    };
+    const ctx: TestContext = createTestContext({
+      'user-agent': userAgent,
+      'x-logto-cf-country': 'US',
+      'x-logto-cf-city': 'New York',
+    });
     ctx.request.ip = ip;
 
     const next = async () => {
@@ -108,11 +133,35 @@ describe('koaAuditLog middleware', () => {
     });
   });
 
-  it('should insert multiple success logs when needed', async () => {
-    // @ts-expect-error
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
+  it('should skip injected headers and parsed user agent when dev features are disabled', async () => {
+    getIsDevFeaturesEnabled.mockReturnValue(false);
+    const ctx: TestContext = createTestContext({
+      'user-agent': userAgent,
+      'x-logto-cf-country': 'US',
+    });
+    ctx.request.ip = ip;
+
+    const next = async () => {
+      const log = ctx.createLog(logKey);
+      log.append(mockPayload);
     };
+    await koaLog(queries)(ctx, next);
+
+    expect(insertLog).toBeCalledWith({
+      id: mockId,
+      key: logKey,
+      payload: {
+        ...mockPayload,
+        key: logKey,
+        result: LogResult.Success,
+        ip,
+        userAgent,
+      },
+    });
+  });
+
+  it('should insert multiple success logs when needed', async () => {
+    const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
     ctx.request.ip = ip;
     const additionalMockPayload: LogPayload = { foo: 'bar' };
 
@@ -150,10 +199,7 @@ describe('koaAuditLog middleware', () => {
   });
 
   it('should not log when there is no log type', async () => {
-    // @ts-expect-error
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-    };
+    const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
     ctx.request.ip = ip;
 
     // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-empty-function
@@ -163,10 +209,7 @@ describe('koaAuditLog middleware', () => {
   });
 
   it('should filter password sensitive data in log', async () => {
-    // @ts-expect-error
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-    };
+    const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
     ctx.request.ip = ip;
 
     const additionalMockPayload = {
@@ -202,10 +245,7 @@ describe('koaAuditLog middleware', () => {
   });
 
   it('should filter TOTP secret in log', async () => {
-    // @ts-expect-error
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-    };
+    const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
     ctx.request.ip = ip;
 
     const mockVerificationData: TotpVerificationRecordData = {
@@ -247,10 +287,7 @@ describe('koaAuditLog middleware', () => {
 
   describe('should insert an error log with the error message when next() throws an error', () => {
     it('should log with error message when next throws a normal Error', async () => {
-      // @ts-expect-error
-      const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-        ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      };
+      const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
       ctx.request.ip = ip;
 
       const message = 'Normal error';
@@ -279,10 +316,7 @@ describe('koaAuditLog middleware', () => {
     });
 
     it('should update all logs with error result when next() throws a RequestError', async () => {
-      // @ts-expect-error
-      const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-        ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      };
+      const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
       ctx.request.ip = ip;
 
       const message = 'Error message';
