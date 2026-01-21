@@ -1,0 +1,5 @@
+@use '@/shared/scss/underscore' as _;
+
+.button {
+  margin: _.unit(4) 0;
+}

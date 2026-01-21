@@ -83,7 +83,7 @@ abstract class WebAuthnVerification {
    * TODO: Consider relocating the function under a shared folder
    */
   async generateWebAuthnRegistrationOptions(rpId: string): Promise<WebAuthnRegistrationOptions> {
-    const user = await this.identifyUser();
+    const user = await this.findUser();
 
     const registrationOptions = await generateWebAuthnRegistrationOptions({
       user,
