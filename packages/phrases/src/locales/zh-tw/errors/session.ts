@@ -37,6 +37,10 @@ const session = {
     mfa_factor_not_enabled: 'MFA 因素未啟用。',
     suggest_additional_mfa: '為了更強的保護，建議新增另一種多重驗證方式。你可以跳過此步驟並繼續。',
   },
+  passkey_sign_in: {
+    pending_info_not_found: '未找到待處理的 Passkey 登入資訊。請重新啟動登入流程。',
+    conflict_rp_id: 'Relying Party ID 不相符。請使用正確的用戶端登入。',
+  },
   sso_enabled: '該郵箱已開啟單點登錄，請使用 SSO 登錄。',
   captcha_required: '需要驗證碼。',
   captcha_failed: '驗證碼驗證失敗。',

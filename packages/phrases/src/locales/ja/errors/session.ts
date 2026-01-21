@@ -46,6 +46,11 @@ const session = {
     suggest_additional_mfa:
       'より強力な保護のため、別のMFA方法の追加を検討してください。この手順はスキップして続行できます。',
   },
+  passkey_sign_in: {
+    pending_info_not_found:
+      '保留中のパスキーサインイン情報が見つかりません。サインインフローを再開始してください。',
+    conflict_rp_id: 'Relying Party ID が一致しません。正しいクライアントでサインインしてください。',
+  },
   sso_enabled:
     'このメールアドレスではシングルサインオンが有効になっています。SSO でサインインしてください。',
   captcha_required: 'Captcha が必要です。',

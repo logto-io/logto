@@ -50,6 +50,12 @@ const session = {
     suggest_additional_mfa:
       'Para mayor protección, considera agregar otro método de MFA. Puedes omitir este paso y continuar.',
   },
+  passkey_sign_in: {
+    pending_info_not_found:
+      'No se encontró la información pendiente de inicio de sesión con passkey. Vuelve a iniciar el flujo de inicio de sesión.',
+    conflict_rp_id:
+      'El ID de la parte de confianza (Relying Party) no coincide. Usa el cliente correcto para iniciar sesión.',
+  },
   sso_enabled:
     'El inicio de sesión único está habilitado para este correo electrónico dado. Inicie sesión con SSO, por favor.',
   captcha_required: 'Se requiere captcha.',

@@ -46,6 +46,12 @@ const session = {
     suggest_additional_mfa:
       'Daha güçlü koruma için başka bir MFA yöntemi eklemeyi düşünün. Bu adımı atlayıp devam edebilirsiniz.',
   },
+  passkey_sign_in: {
+    pending_info_not_found:
+      'Bekleyen passkey oturum açma bilgisi bulunamadı. Lütfen oturum açma akışını yeniden başlatın.',
+    conflict_rp_id:
+      'Relying Party ID eşleşmiyor. Lütfen oturum açmak için doğru istemciyi kullanın.',
+  },
   sso_enabled: 'Bu e-posta için tek oturum açma etkin. Lütfen SSO ile oturum açın.',
   captcha_required: 'Captcha gereklidir.',
   captcha_failed: 'Captcha doğrulaması başarısız oldu.',

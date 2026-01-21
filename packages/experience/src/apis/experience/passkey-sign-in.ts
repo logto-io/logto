@@ -18,7 +18,7 @@ export const bindSignInWebAuthn = async (payload: BindWebAuthnPayload, verificat
 
 export const createSignInWebAuthnAuthenticationOptions = async () =>
   api.post(`${experienceApiRoutes.prefix}/preflight/sign-in-web-authn/authentication`).json<{
-    options: WebAuthnAuthenticationOptions;
+    authenticationOptions: WebAuthnAuthenticationOptions;
   }>();
 
 export const verifySignInWebAuthn = async (payload: WebAuthnVerificationPayload) => {

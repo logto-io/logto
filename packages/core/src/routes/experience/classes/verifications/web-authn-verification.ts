@@ -314,9 +314,10 @@ export class SignInWebAuthnVerification
     ctx: WithLogContext,
     payload: Omit<WebAuthnVerificationPayload, 'type'>
   ) {
-    const { hostname: expectedRpId, origin } = ctx.URL;
+    const { hostname, origin } = ctx.URL;
 
-    assertThat(this.authenticationChallenge, 'session.mfa.pending_info_not_found');
+    assertThat(this.authenticationChallenge, 'session.passkey_sign_in.pending_info_not_found');
+    assertThat(this.authenticationRpId === hostname, 'session.passkey_sign_in.conflict_rp_id');
 
     const { findUserByWebAuthnCredential, updateUserById } = this.queries.users;
 
@@ -328,7 +329,7 @@ export class SignInWebAuthnVerification
     const { result, newCounter } = await verifyWebAuthnAuthentication({
       payload,
       challenge: this.authenticationChallenge,
-      rpId: expectedRpId,
+      rpId: hostname,
       origin,
       mfaVerifications,
     });
@@ -346,7 +347,7 @@ export class SignInWebAuthnVerification
 
         return {
           ...mfa,
-          rpId: mfa.rpId ?? expectedRpId,
+          rpId: mfa.rpId ?? hostname,
           lastUsedAt: new Date().toISOString(),
           ...conditional(newCounter !== undefined && { counter: newCounter }),
         };

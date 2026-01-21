@@ -1,4 +1,5 @@
 import {
+  InteractionEvent,
   MfaFactor,
   type WebAuthnAuthenticationOptions,
   type WebAuthnRegistrationOptions,
@@ -12,7 +13,7 @@ import {
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { bindSignInWebAuthn, verifySignInWebAuthn } from '@/apis/experience';
+import { bindSignInWebAuthn, initInteraction, verifySignInWebAuthn } from '@/apis/experience';
 
 import useApi from './use-api';
 import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
@@ -82,6 +83,8 @@ const usePasskeySignIn = () => {
       if (!response) {
         return;
       }
+
+      await initInteraction(InteractionEvent.SignIn);
 
       const [error, result] = await asyncVerifySignInWebAuthn({
         ...response,
