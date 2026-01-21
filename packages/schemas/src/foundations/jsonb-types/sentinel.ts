@@ -31,12 +31,17 @@ export enum SentinelActivityAction {
    */
   OneTimeToken = 'OneTimeToken',
   /**
-   * The subject tries to pass an MFA verification.
-   *
-   * For example, a user (subject) who inputted an MFA code (action) to authenticate themselves
-   * (target).
+   * The subject tries to pass a TOTP MFA verification.
    */
-  Mfa = 'Mfa',
+  MfaTotp = 'MfaTotp',
+  /**
+   * The subject tries to pass a WebAuthn MFA verification.
+   */
+  MfaWebAuthn = 'MfaWebAuthn',
+  /**
+   * The subject tries to pass a backup code MFA verification.
+   */
+  MfaBackupCode = 'MfaBackupCode',
 }
 export const sentinelActivityActionGuard = z.nativeEnum(SentinelActivityAction);
 

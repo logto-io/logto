@@ -163,13 +163,13 @@ describe('BasicSentinel -> action pools', () => {
     );
   });
 
-  it('should use a dedicated pool for MFA decisions', async () => {
+  it('should use a dedicated pool for MFA WebAuthn decisions', async () => {
     methods.maybeOne.mockResolvedValueOnce(null);
     methods.oneFirst.mockResolvedValueOnce(0);
 
     const activity = createMockActivityReport();
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    activity.action = SentinelActivityAction.Mfa;
+    activity.action = SentinelActivityAction.MfaWebAuthn;
 
     await sentinel.decide(activity);
 
@@ -178,11 +178,11 @@ describe('BasicSentinel -> action pools', () => {
 
     expect(blockedQuery).toHaveProperty(
       'values',
-      expect.arrayContaining([expect.arrayContaining([SentinelActivityAction.Mfa])])
+      expect.arrayContaining([expect.arrayContaining([SentinelActivityAction.MfaWebAuthn])])
     );
     expect(failedAttemptsQuery).toHaveProperty(
       'values',
-      expect.arrayContaining([expect.arrayContaining([SentinelActivityAction.Mfa])])
+      expect.arrayContaining([expect.arrayContaining([SentinelActivityAction.MfaWebAuthn])])
     );
   });
 });

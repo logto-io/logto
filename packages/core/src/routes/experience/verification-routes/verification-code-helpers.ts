@@ -3,13 +3,11 @@ import {
   SentinelActivityAction,
   SignInIdentifier,
   type VerificationCodeIdentifier,
-  type VerificationIdentifier,
   VerificationType,
   type Sentinel,
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
@@ -129,7 +127,6 @@ type VerifyCodeParams = {
   verificationId: string;
   code: string;
   identifier: VerificationCodeIdentifier;
-  sentinelIdentifier?: VerificationIdentifier;
   verificationType:
     | VerificationType.EmailVerificationCode
     | VerificationType.PhoneVerificationCode
@@ -147,7 +144,6 @@ export const verifyCode = async ({
   verificationId,
   code,
   identifier,
-  sentinelIdentifier,
   verificationType,
   sentinel,
   ctx,
@@ -175,23 +171,12 @@ export const verifyCode = async ({
   // Verify with sentinel protection
   // The verify method is guaranteed to exist because verificationType is constrained
   // to code verification types (Email, Phone, MfaEmail, MfaPhone)
-  const isMfaVerification =
-    verificationType === VerificationType.MfaEmailVerificationCode ||
-    verificationType === VerificationType.MfaPhoneVerificationCode;
-  const useDevFeatures = EnvSet.values.isDevFeaturesEnabled;
-  const sentinelAction =
-    useDevFeatures && isMfaVerification
-      ? SentinelActivityAction.Mfa
-      : SentinelActivityAction.VerificationCode;
-  const identifierForSentinel =
-    useDevFeatures && isMfaVerification && sentinelIdentifier ? sentinelIdentifier : identifier;
-
   await withSentinel(
     {
       ctx,
       sentinel,
-      action: sentinelAction,
-      identifier: identifierForSentinel,
+      action: SentinelActivityAction.VerificationCode,
+      identifier,
       payload: {
         event: experienceInteraction.interactionEvent,
         verificationId: codeVerificationRecord.id,

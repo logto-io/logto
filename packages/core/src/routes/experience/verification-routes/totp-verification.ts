@@ -143,7 +143,7 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
             {
               ctx,
               sentinel,
-              action: SentinelActivityAction.Mfa,
+              action: SentinelActivityAction.MfaTotp,
               identifier: {
                 type: AdditionalIdentifier.UserId,
                 value: experienceInteraction.identifiedUserId,

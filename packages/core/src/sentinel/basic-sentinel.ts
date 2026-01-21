@@ -33,21 +33,35 @@ export default class BasicSentinel extends Sentinel {
     SentinelActivityAction.OneTimeToken,
   ] as const);
 
+  static isolatedActions = Object.freeze([
+    SentinelActivityAction.MfaTotp,
+    SentinelActivityAction.MfaWebAuthn,
+    SentinelActivityAction.MfaBackupCode,
+  ] as const);
+
   static supportedActions = Object.freeze([
     ...BasicSentinel.pooledActions,
-    SentinelActivityAction.Mfa,
+    ...BasicSentinel.isolatedActions,
   ] as const);
 
   /** The array of pooled actions in SQL format. */
   static pooledActionArray = sql.array(BasicSentinel.pooledActions, 'varchar');
 
-  /** The array of MFA actions in SQL format. */
-  static mfaActionArray = sql.array([SentinelActivityAction.Mfa], 'varchar');
+  static pooledActionSet = new Set<SentinelActivityAction>(BasicSentinel.pooledActions);
+
+  /** The arrays of isolated actions in SQL format. */
+  static isolatedActionArrays = new Map<SentinelActivityAction, ReturnType<typeof sql.array>>(
+    BasicSentinel.isolatedActions.map((action) => [action, sql.array([action], 'varchar')])
+  );
 
   static getActionArray(action: SentinelActivityAction) {
-    return action === SentinelActivityAction.Mfa
-      ? BasicSentinel.mfaActionArray
-      : BasicSentinel.pooledActionArray;
+    const isPooledAction = BasicSentinel.pooledActionSet.has(action);
+
+    if (isPooledAction) {
+      return BasicSentinel.pooledActionArray;
+    }
+
+    return BasicSentinel.isolatedActionArrays.get(action) ?? sql.array([action], 'varchar');
   }
 
   /**
@@ -113,9 +127,9 @@ export default class BasicSentinel extends Sentinel {
    *
    * @remarks
    * The password/verification-code/one-time-token actions share the same pool of activities.
-   * MFA uses a dedicated pool and is blocked independently from the other actions.
+   * Each MFA action uses its own pool and is blocked independently from the other actions.
    * This avoids cross-stage lockouts (e.g. repeated MFA failures preventing password or
-   * verification-code sign-in) and reduces false positives from short-lived OTP mistakes.
+   * verification-code sign-in) and cross-factor lockouts (e.g. WebAuthn lockouts blocking TOTP).
    */
   protected async isBlocked(
     query: Pick<SentinelActivity, 'targetType' | 'targetHash' | 'action'>

@@ -241,7 +241,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
             {
               ctx,
               sentinel,
-              action: SentinelActivityAction.Mfa,
+              action: SentinelActivityAction.MfaWebAuthn,
               identifier: {
                 type: AdditionalIdentifier.UserId,
                 value: experienceInteraction.identifiedUserId,
