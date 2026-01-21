@@ -2,7 +2,7 @@
 "@logto/experience": patch
 ---
 
-fix: prevent repeated auto sign-in requests on direct sign-in page
+prevent repeated auto sign-in requests on direct sign-in page
 
 In certain scenarios, the direct sign-in page may trigger repeated auto sign-in attempts due to re-renders, resulting in unexpected behavior.
 
