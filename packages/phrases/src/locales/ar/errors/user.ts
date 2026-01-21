@@ -47,6 +47,7 @@ const user = {
     'المستخدم ليس لديه هوية مؤسسية مرتبطة بمعرف الموصل SSO المحدد: {{ ssoConnectorId }}.',
   identity_not_exists_in_current_user:
     'الهوية المحددة غير موجودة في حساب المستخدم الحالي. من فضلك قم بربط الهوية قبل المتابعة.',
+  passkey_preferred: 'أنشئ مفتاح مرور لتبسيط عملية تسجيل الدخول الخاصة بك.',
 };
 
 export default Object.freeze(user);

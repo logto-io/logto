@@ -48,6 +48,7 @@ const user = {
     'ユーザーは、指定された SSO コネクタ ID: {{ ssoConnectorId }} にリンクされたエンタープライズ ID を持っていません。',
   identity_not_exists_in_current_user:
     '指定されたアイデンティティは現在のユーザーアカウントに存在しません。続行する前にアイデンティティをリンクしてください。',
+  passkey_preferred: 'パスキーを作成してサインインを簡単にしましょう。',
 };
 
 export default Object.freeze(user);

@@ -9,6 +9,7 @@ import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { EnvSet } from '../../../env-set/index.js';
 import {
   interactionStorageGuard,
   type InteractionStorage,
@@ -431,7 +432,11 @@ export default class ExperienceInteraction {
   // eslint-disable-next-line complexity
   public async submit() {
     const {
-      queries: { users: userQueries, userSsoIdentities: userSsoIdentityQueries },
+      queries: {
+        users: userQueries,
+        userSsoIdentities: userSsoIdentityQueries,
+        signInExperiences: signInExperienceQueries,
+      },
       libraries: {
         socials: { upsertSocialTokenSetSecret },
         ssoConnectors: { upsertEnterpriseSsoTokenSetSecret },
@@ -478,6 +483,20 @@ export default class ExperienceInteraction {
       hasVerifiedSocialIdentity: this.hasVerifiedSocialIdentity,
       hasVerifiedSsoIdentity: this.hasVerifiedSsoIdentity,
     });
+
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      // Check if passkey sign-in is enabled in the sign-in experience, if yes, check if user has `WebAuthn`
+      // type of MFA verification record in `users.mfaVerifications`.
+      const signInExperience = await signInExperienceQueries.findDefaultSignInExperience();
+      if (
+        signInExperience.passkeySignIn.enabled &&
+        this.#interactionEvent === InteractionEvent.Register
+      ) {
+        const hasWebAuthn = this.mfa.data.webAuthn?.length;
+
+        assertThat(hasWebAuthn, new RequestError({ code: 'user.passkey_preferred', status: 422 }));
+      }
+    }
 
     // Revalidate the new MFA data if any
     await this.mfa.checkAvailability();
