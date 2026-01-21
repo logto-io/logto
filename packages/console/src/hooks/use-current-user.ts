@@ -47,8 +47,10 @@ const useCurrentUser = () => {
       }
 
       if (isDevFeaturesEnabled) {
+        // Account API uses 'replace' mode, so we need to merge with existing customData
+        const mergedCustomData = { ...user.customData, ...customData };
         const data = await accountApi
-          .patch('', { json: { customData } })
+          .patch('', { json: { customData: mergedCustomData } })
           .json<UserProfileResponse>();
         await mutate({ ...user, customData: data.customData });
       } else {
