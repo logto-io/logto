@@ -263,8 +263,11 @@ export class JwtCustomizerLibrary {
           })
           .json<Record<string, unknown>>();
 
+        // TODO: log the result
+
         return result;
       } catch (error: unknown) {
+        // TODO: log the error
         void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
       }
     }
