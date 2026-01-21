@@ -1,5 +1,5 @@
 import { GoogleConnector } from '@logto/connector-kit';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
@@ -20,7 +20,17 @@ const DirectSignIn = () => {
   const fallback = useFallbackRoute();
   const { experienceSettings } = useContext(PageContext);
 
+  // Prevent multiple invocations due to `invokeSocialSignIn` or `invokeSso` causing re-renders
+  const hasSignInInvokedRef = useRef(false);
+
   useEffect(() => {
+    if (hasSignInInvokedRef.current) {
+      return;
+    }
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    hasSignInInvokedRef.current = true;
+
     if (method === 'social') {
       const social = socialConnectors.find((connector) => connector.target === target);
 
