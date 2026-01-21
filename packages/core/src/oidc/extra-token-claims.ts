@@ -127,9 +127,9 @@ const getInteractionLastSubmission = async (
  *
  * - Only processes tokens issued via the Token Exchange grant type.
  * - Safely parses the `extra` field of the access token to extract the `subjectTokenId`.
- * - fetches the subject token if the `subjectTokenId` is present and valid.
+ * - Fetches the subject token if the `subjectTokenId` is present and valid.
  */
-const getAssociatedSubjectToken = async (query: Queries, token: AccessToken) => {
+const getAssociatedSubjectToken = async (queries: Queries, token: AccessToken) => {
   if (token.gty !== GrantType.TokenExchange) {
     return;
   }
@@ -144,7 +144,7 @@ const getAssociatedSubjectToken = async (query: Queries, token: AccessToken) => 
     return;
   }
 
-  return query.subjectTokens.findSubjectToken(tokenExtraResult.data.subjectTokenId);
+  return queries.subjectTokens.findSubjectToken(tokenExtraResult.data.subjectTokenId);
 };
 
 /* eslint-disable complexity */

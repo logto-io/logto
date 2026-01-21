@@ -16,7 +16,7 @@ import { type ConsoleLog } from '@logto/shared';
 import { assert, deduplicate, pick, pickState } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { got } from 'got';
-import { type KoaContextWithOIDC } from 'oidc-provider';
+import { type UnknownObject, type KoaContextWithOIDC } from 'oidc-provider';
 import { ZodError, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -242,10 +242,13 @@ export class JwtCustomizerLibrary {
 
   /**
    * @remarks
-   * For Logto Cloud service use only. Run the custom JWT claims script remotely in a isolated environment.
+   * For Logto Cloud service use only. Run the custom JWT claims script remotely in an isolated environment.
    * For OSS version, use @see JwtCustomizerLibrary.runScriptInLocalVm instead.
    */
-  async runScriptRemotely(payload: CustomJwtFetcher, ctx: KoaContextWithOIDC) {
+  async runScriptRemotely(
+    payload: CustomJwtFetcher,
+    ctx: KoaContextWithOIDC
+  ): Promise<UnknownObject | undefined> {
     const {
       isDevFeaturesEnabled,
       azureFunctionUntrustedAppKey,
@@ -261,14 +264,15 @@ export class JwtCustomizerLibrary {
               'x-functions-key': azureFunctionUntrustedAppKey,
             },
           })
-          .json<Record<string, unknown>>();
+          .json<unknown>();
 
+        const parsedResult = z.record(z.unknown()).parse(result);
         // TODO: log the result
-
-        return result;
+        return parsedResult;
       } catch (error: unknown) {
         // TODO: log the error
         void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
+        throw error;
       }
     }
 
