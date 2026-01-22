@@ -33,6 +33,7 @@ import InstanceSelector from './InstanceSelector';
 import SelectTenantPlanModal from './SelectTenantPlanModal';
 import styles from './index.module.scss';
 import { type CreateTenantData } from './types';
+import { validateTenantIdSuffix } from './utils';
 
 type Props = {
   readonly isOpen: boolean;
@@ -56,6 +57,7 @@ const defaultFormValues = Object.freeze({
   tag: TenantTag.Development,
   instanceId: publicInstancesDropdownItem.name,
   regionName: defaultRegionName,
+  tenantIdSuffix: '',
 });
 
 function CreateTenantModal({ isOpen, onClose }: Props) {
@@ -102,9 +104,20 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
 
   const currentRegion = useMemo(() => getRegionByName(regionName), [regionName, getRegionByName]);
 
-  const createTenant = async ({ name, tag, regionName }: CreateTenantData) => {
+  const customTenantIdPrefix = useMemo(
+    () => (currentRegion?.isPrivate ? currentRegion.customTenantIdPrefix : undefined),
+    [currentRegion]
+  );
+
+  const createTenant = async ({ name, tag, regionName, tenantIdSuffix }: CreateTenantData) => {
+    const region = getRegionByName(regionName);
+    const id =
+      region?.isPrivate && region.customTenantIdPrefix && tenantIdSuffix
+        ? `${region.customTenantIdPrefix}${tenantIdSuffix}`
+        : undefined;
+
     const newTenant = await cloudApi.post('/api/tenants', {
-      body: { name, tag, regionName },
+      body: { name, tag, regionName, id },
     });
     onClose(newTenant);
   };
@@ -256,6 +269,26 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                     </RadioGroup>
                   )}
                 />
+              )}
+            </FormField>
+          )}
+
+          {customTenantIdPrefix && (
+            <FormField title="tenants.create_modal.tenant_id">
+              <div className={styles.tenantIdInput}>
+                <span className={styles.tenantIdPrefix}>{customTenantIdPrefix}</span>
+                <TextInput
+                  {...register('tenantIdSuffix', {
+                    validate: (value) => validateTenantIdSuffix(value, customTenantIdPrefix),
+                  })}
+                  className={styles.tenantIdSuffix}
+                  placeholder="your-tenant-id"
+                  error={Boolean(errors.tenantIdSuffix)}
+                  disabled={isSubmitting}
+                />
+              </div>
+              {errors.tenantIdSuffix && (
+                <div className={styles.error}>{errors.tenantIdSuffix.message}</div>
               )}
             </FormField>
           )}

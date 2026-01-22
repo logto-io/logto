@@ -15,4 +15,26 @@
 .error {
   font: var(--font-body-2);
   color: var(--color-error);
+  margin-top: _.unit(1);
+}
+
+.tenantIdInput {
+  display: flex;
+  align-items: center;
+  gap: _.unit(1);
+}
+
+.tenantIdPrefix {
+  flex-shrink: 0;
+  padding: _.unit(1.5) _.unit(3);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  background-color: var(--color-layer-2);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  user-select: none;
+}
+
+.tenantIdSuffix {
+  flex: 1;
 }
