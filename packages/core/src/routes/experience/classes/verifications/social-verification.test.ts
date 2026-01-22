@@ -243,7 +243,8 @@ describe('SocialVerification', () => {
       expect(getUserInfoWithOptionalTokenResponse).toHaveBeenCalledWith(
         'google',
         connectorData,
-        expect.any(Function)
+        expect.any(Function),
+        ctx
       );
     });
 
@@ -327,7 +328,8 @@ describe('SocialVerification', () => {
       expect(getUserInfoWithOptionalTokenResponse).toHaveBeenCalledWith(
         'google',
         connectorData,
-        expect.any(Function)
+        expect.any(Function),
+        ctx
       );
     });
   });
