@@ -1,9 +1,16 @@
-import { Logs, interaction, token, LogKeyUnknown, jwtCustomizer, saml } from '@logto/schemas';
+import {
+  Logs,
+  interaction,
+  token,
+  LogKeyUnknown,
+  jwtCustomizer,
+  saml,
+  type AuditLogPrefix,
+} from '@logto/schemas';
 import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import { type AllowedKeyPrefix } from '#src/queries/log.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
@@ -30,7 +37,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
         query: { userId, applicationId, logKey },
       } = ctx.guard;
 
-      const includeKeyPrefix: AllowedKeyPrefix[] = [
+      const includeKeyPrefix: AuditLogPrefix[] = [
         token.Type.ExchangeTokenBy,
         token.Type.RevokeToken,
         interaction.prefix,

@@ -1,50 +1,23 @@
-import type { AuditLogKey, LogKey } from '@logto/schemas';
+import type { AuditLogKey, LogKey, interaction } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
-export const auditLogEventTitle: Record<string, Optional<string>> & {
-  [key in AuditLogKey]?: string;
-} = Object.freeze({
+export const auditLogEventTitle = Object.freeze({
   'ExchangeTokenBy.AuthorizationCode': 'Exchange token by Code',
   'ExchangeTokenBy.ClientCredentials': 'Exchange token by Client Credentials',
   'ExchangeTokenBy.RefreshToken': 'Exchange token by Refresh Token',
   'ExchangeTokenBy.TokenExchange': 'Token exchange',
   'Interaction.Create': 'Interaction started',
-  'Interaction.Create.Captcha': 'CAPTCHA verification',
   'Interaction.End': 'Interaction ended',
-  'Interaction.ForgotPassword.Identifier.VerificationCode.Create':
-    'Create and send forgot-password verification code',
-  'Interaction.ForgotPassword.Identifier.VerificationCode.Submit':
-    'Submit and verify forgot-password verification code',
-  'Interaction.ForgotPassword.Profile.Create': 'Put new forgot-password interaction profile',
-  'Interaction.ForgotPassword.Profile.Delete': 'Delete forgot-password interaction profile',
+  'Interaction.Create.Captcha': 'Create CAPTCHA verification',
   'Interaction.ForgotPassword.Profile.Update': 'Patch update forgot-password interaction profile',
   'Interaction.ForgotPassword.Submit': 'Submit forgot-password interaction',
   'Interaction.ForgotPassword.Update': 'Update forgot-password interaction',
-  'Interaction.Register.Identifier.VerificationCode.Create':
-    'Create and send register identifier with verification code',
-  'Interaction.Register.Identifier.VerificationCode.Submit':
-    'Submit and verify register verification code',
-  'Interaction.Register.Profile.Create': 'Put new register interaction profile',
-  'Interaction.Register.Profile.Delete': 'Delete register interaction profile',
   'Interaction.Register.Profile.Update': 'Patch update register interaction profile',
   'Interaction.Register.Submit': 'Submit register interaction',
   'Interaction.Register.Update': 'Update register interaction',
-  'Interaction.SignIn.Identifier.Password.Submit': 'Submit sign-in identifier with password',
-  'Interaction.SignIn.Identifier.Social.Create': 'Create social sign-in authorization-url',
-  'Interaction.SignIn.Identifier.Social.Submit': 'Authenticate and submit social identifier',
-  'Interaction.SignIn.Identifier.VerificationCode.Create':
-    'Create and send sign-in verification code',
-  'Interaction.SignIn.Identifier.VerificationCode.Submit':
-    'Submit and verify sign-in identifier with verification code',
-  'Interaction.SignIn.Profile.Create': 'Put new sign-in interaction profile',
-  'Interaction.SignIn.Profile.Delete': 'Delete sign-in interaction profile',
   'Interaction.SignIn.Profile.Update': 'Patch update sign-in interaction profile',
   'Interaction.SignIn.Submit': 'Submit sign-in interaction',
   'Interaction.SignIn.Update': 'Update sign-in interaction',
-  'Interaction.SignIn.Identifier.SingleSignOn.Create':
-    'Create single-sign-on authentication session',
-  'Interaction.SignIn.Identifier.SingleSignOn.Submit':
-    'Submit single-sign-on authentication interaction',
   'Interaction.Register.Create': 'Create new register interaction',
   'Interaction.SignIn.Create': 'Create new sign-in interaction',
   'Interaction.ForgotPassword.Create': 'Create new forgot-password interaction',
@@ -56,15 +29,15 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
   'Interaction.SignIn.Verification.BackupCode.Submit': 'Sign-in: Verify backup code',
   'Interaction.SignIn.Verification.Totp.Create': 'Create TOTP verification secret for MFA binding',
   'Interaction.SignIn.Verification.Totp.Submit': 'Sign-in: Verify TOTP code',
-  'Interaction.SignIn.Verification.Webauthn.Create': 'Sign-in: Create WebAuthn authentication',
+  'Interaction.SignIn.Verification.WebAuthn.Create': 'Sign-in: Create WebAuthn authentication',
   'Interaction.SignIn.Verification.WebAuthn.Submit': 'Sign-in: Verify WebAuthn authentication',
   'Interaction.SignIn.Verification.EmailVerificationCode.Create':
     'Create and send sign-in email verification code',
   'Interaction.SignIn.Verification.EmailVerificationCode.Submit':
     'Verify sign-in email verification code',
-  'Interaction.SignIn.Verification.SmsVerificationCode.Create':
+  'Interaction.SignIn.Verification.PhoneVerificationCode.Create':
     'Create and send sign-in SMS verification code',
-  'Interaction.SignIn.Verification.SmsVerificationCode.Submit':
+  'Interaction.SignIn.Verification.PhoneVerificationCode.Submit':
     'Verify sign-in SMS verification code',
   'Interaction.SignIn.Verification.EnterpriseSso.Create':
     'Create enterprise SSO authentication URL',
@@ -72,7 +45,8 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
     'Sign-in: Verify enterprise SSO authentication',
   'Interaction.SignIn.Verification.Social.Create': 'Sign-in: Create social authentication URL',
   'Interaction.SignIn.Verification.Social.Submit': 'Sign-in: Verify social authentication',
-  'Interaction.SignIn.Verification.NewPassword.Submit': 'Create new password identity for register',
+  'Interaction.SignIn.Verification.NewPasswordIdentity.Submit':
+    'Create new password identity for register',
   'Interaction.SignIn.Verification.Password.Submit':
     'Create and verify identifier with password verification',
   'Interaction.Register.Verification.BackupCode.Create':
@@ -81,15 +55,15 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
   'Interaction.Register.Verification.Totp.Create':
     'Create TOTP verification secret for MFA binding',
   'Interaction.Register.Verification.Totp.Submit': 'Register: Verify TOTP code',
-  'Interaction.Register.Verification.Webauthn.Create': 'Register: Create WebAuthn authentication',
+  'Interaction.Register.Verification.WebAuthn.Create': 'Register: Create WebAuthn authentication',
   'Interaction.Register.Verification.WebAuthn.Submit': 'Register: Verify WebAuthn authentication',
   'Interaction.Register.Verification.EmailVerificationCode.Create':
     'Create and send register email verification code',
   'Interaction.Register.Verification.EmailVerificationCode.Submit':
     'Verify register email verification code',
-  'Interaction.Register.Verification.SmsVerificationCode.Create':
+  'Interaction.Register.Verification.PhoneVerificationCode.Create':
     'Create and send register SMS verification code',
-  'Interaction.Register.Verification.SmsVerificationCode.Submit':
+  'Interaction.Register.Verification.PhoneVerificationCode.Submit':
     'Verify register SMS verification code',
   'Interaction.Register.Verification.EnterpriseSso.Create':
     'Create enterprise SSO authentication URL',
@@ -97,7 +71,7 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
     'Register: Verify enterprise SSO authentication',
   'Interaction.Register.Verification.Social.Create': 'Register: Create social authentication URL',
   'Interaction.Register.Verification.Social.Submit': 'Register: Verify social authentication',
-  'Interaction.Register.Verification.NewPassword.Submit':
+  'Interaction.Register.Verification.NewPasswordIdentity.Submit':
     'Create new password identity for register',
   'Interaction.Register.Verification.Password.Submit':
     'Create and verify identifier with password verification',
@@ -105,17 +79,17 @@ export const auditLogEventTitle: Record<string, Optional<string>> & {
     'Create and send forgot-password email verification code',
   'Interaction.ForgotPassword.Verification.EmailVerificationCode.Submit':
     'Verify forgot-password email verification code',
-  'Interaction.ForgotPassword.Verification.SmsVerificationCode.Create':
+  'Interaction.ForgotPassword.Verification.PhoneVerificationCode.Create':
     'Create and send forgot-password SMS verification code',
-  'Interaction.ForgotPassword.Verification.SmsVerificationCode.Submit':
+  'Interaction.ForgotPassword.Verification.PhoneVerificationCode.Submit':
     'Verify forgot-password SMS verification code',
   'Interaction.SignIn.Verification.IdpInitiatedSso.Create':
     'Create IdP-initiated SAML SSO authentication session',
   'JwtCustomizer.AccessToken': 'Get custom user access token claims',
-  'JwtCustomizer.ClientCredential': 'Get custom M2M access token claims',
+  'JwtCustomizer.ClientCredentials': 'Get custom M2M access token claims',
   'SamlApplication.AuthnRequest': 'Receive SAML application authentication request',
   'SamlApplication.Callback': 'Handle SAML application callback',
-});
+} satisfies Partial<Record<Exclude<AuditLogKey, interaction.DeprecatedInteractionLogKey>, string>>);
 
 export const logEventTitle: Record<string, Optional<string>> & {
   [key in LogKey]?: string;

@@ -23,7 +23,7 @@ import styles from './index.module.scss';
 
 const auditLogEventOptions = Object.entries(auditLogEventTitle).map(([value, title]) => ({
   value,
-  title: title ?? value,
+  title,
 }));
 
 type Props = {
