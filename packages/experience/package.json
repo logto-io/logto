@@ -80,7 +80,7 @@
     "react-hook-form": "^7.56.1",
     "react-i18next": "^12.3.1",
     "react-modal": "^3.15.1",
-    "react-router-dom": "^6.10.0",
+    "react-router-dom": "^6.30.2",
     "react-string-replace": "^1.0.0",
     "react-timer-hook": "^3.0.5",
     "react-top-loading-bar": "^2.3.1",
