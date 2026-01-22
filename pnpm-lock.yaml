@@ -3910,6 +3910,9 @@ importers:
       tinypool:
         specifier: ^1.0.2
         version: 1.0.2
+      ua-parser-js:
+        specifier: ^2.0.3
+        version: 2.0.3
       zod:
         specifier: 3.24.3
         version: 3.24.3
@@ -3983,6 +3986,9 @@ importers:
       '@types/supertest':
         specifier: ^6.0.2
         version: 6.0.2
+      '@types/ua-parser-js':
+        specifier: ^0.7.39
+        version: 0.7.39
       adm-zip:
         specifier: ^0.5.14
         version: 0.5.14

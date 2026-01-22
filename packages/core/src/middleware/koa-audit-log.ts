@@ -1,12 +1,15 @@
 import type { LogContextPayload, LogKey } from '@logto/schemas';
 import { LogResult } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { pick } from '@silverhand/essentials';
+import { conditional, type Optional, pick } from '@silverhand/essentials';
 import type { Context, MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
+import { UAParser } from 'ua-parser-js';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
+import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -112,6 +115,7 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
  * {
  *   ip: 'request-ip-addr',
  *   userAgent: 'request-user-agent',
+ *   userAgentParsed: { ...parsedUserAgent },
  *   ...log.payload,
  * }
  * ```
@@ -161,13 +165,37 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         ip,
         headers: { 'user-agent': userAgent },
       } = ctx.request;
+      const { isDevFeaturesEnabled } = EnvSet.values;
+      const injectedHeaders = conditional(
+        isDevFeaturesEnabled && getInjectedHeaderValues(ctx.request.headers)
+      );
+      const userAgentValue: Optional<string> =
+        typeof userAgent === 'string' ? userAgent : userAgent?.[0];
+      const userAgentParsed: Optional<UAParser.IResult> = conditional(
+        isDevFeaturesEnabled &&
+          (() => {
+            if (!userAgentValue) {
+              return;
+            }
+
+            try {
+              return new UAParser(userAgentValue).getResult();
+            } catch {}
+          })()
+      );
+      const basePayload = removeUndefinedKeys({
+        ip,
+        userAgent: userAgentValue,
+        ...conditional(userAgentParsed && { userAgentParsed }),
+        ...conditional(injectedHeaders && { injectedHeaders }),
+      });
 
       await Promise.all(
         entries.map(async ({ payload }) => {
           return insertLog({
             id: generateStandardId(),
             key: payload.key,
-            payload: { ip, userAgent, ...payload },
+            payload: { ...basePayload, ...payload },
           });
         })
       );
