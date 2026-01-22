@@ -6,7 +6,7 @@ const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
       alter table sign_in_experiences
-        add column adaptive_mfa jsonb /* @use AdaptiveMfa */ not null default '{}'::jsonb;
+        add column adaptive_mfa jsonb not null default '{}'::jsonb;
     `);
   },
   down: async (pool) => {
