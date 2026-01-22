@@ -23,6 +23,7 @@ create table sign_in_experiences (
   custom_ui_assets jsonb /* @use CustomUiAssets */,
   password_policy jsonb /* @use PartialPasswordPolicy */ not null default '{}'::jsonb,
   mfa jsonb /* @use Mfa */ not null default '{}'::jsonb,
+  adaptive_mfa jsonb /* @use AdaptiveMfa */ not null default '{}'::jsonb,
   single_sign_on_enabled boolean not null default false,
   support_email text,
   support_website_url text,

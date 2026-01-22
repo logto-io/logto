@@ -21,7 +21,7 @@ import {
 } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { defaultSignInSignUpConfigs } from '#src/helpers/sign-in-experience.js';
-import { generatePassword } from '#src/utils.js';
+import { devFeatureTest, generatePassword } from '#src/utils.js';
 
 describe('admin console sign-in experience', () => {
   afterAll(async () => {
@@ -76,6 +76,15 @@ describe('admin console sign-in experience', () => {
       code: 'sign_in_experiences.passwordless_requires_verify',
       status: 400,
     });
+  });
+
+  devFeatureTest.it('should update adaptive mfa config', async () => {
+    const adaptiveMfa = { enabled: true };
+
+    await updateSignInExperience({ adaptiveMfa });
+
+    const signInExperience = await getSignInExperience();
+    expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
   });
 });
 

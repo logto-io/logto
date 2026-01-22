@@ -31,6 +31,12 @@ import customUiAssetsRoutes from './custom-ui-assets/index.js';
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
 
+const { isDevFeaturesEnabled } = EnvSet.values;
+const signInExperienceResponseGuard = SignInExperiences.guard;
+const signInExperienceCreateGuard = isDevFeaturesEnabled
+  ? SignInExperiences.createGuard
+  : SignInExperiences.createGuard.omit({ adaptiveMfa: true });
+
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
@@ -51,7 +57,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   router.get(
     '/sign-in-exp',
     koaGuard({
-      response: SignInExperiences.guard,
+      response: signInExperienceResponseGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -65,7 +71,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     '/sign-in-exp',
     koaGuard({
       query: z.object({ removeUnusedDemoSocialConnector: z.string().optional() }),
-      body: SignInExperiences.createGuard
+      body: signInExperienceCreateGuard
         .omit({
           id: true,
           termsOfUseUrl: true,
@@ -84,10 +90,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           })
         )
         .partial(),
-      response: SignInExperiences.guard,
+      response: signInExperienceResponseGuard,
       status: [200, 400, 404, 422, 403],
     }),
-
     // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {

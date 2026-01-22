@@ -235,6 +235,33 @@ export const mfaGuard = z.object({
   organizationRequiredMfaPolicy: z.nativeEnum(OrganizationRequiredMfaPolicy).optional(),
 }) satisfies ToZodObject<Mfa>;
 
+/**
+ * Adaptive MFA configuration for the sign-in experience.
+ *
+ * @remarks
+ * This is a single enable switch for the rule-based Adaptive MFA flow.
+ * Use it in Management API sign-in experience updates (`PATCH /api/sign-in-exp`).
+ * When enabled, the server evaluates fixed risk rules from request signals
+ * (IP, User-Agent, edge-injected headers) and may require MFA verification.
+ * If omitted, Adaptive MFA is disabled.
+ *
+ * @example
+ * ```ts
+ * {
+ *   adaptiveMfa: {
+ *     enabled: true,
+ *   },
+ * }
+ * ```
+ */
+export type AdaptiveMfa = {
+  enabled?: boolean;
+};
+
+export const adaptiveMfaGuard = z.object({
+  enabled: z.boolean().optional(),
+}) satisfies ToZodObject<AdaptiveMfa>;
+
 export const customUiAssetsGuard = z.object({
   id: z.string(),
   createdAt: z.number(),
