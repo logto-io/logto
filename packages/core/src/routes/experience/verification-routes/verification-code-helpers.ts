@@ -55,10 +55,13 @@ const buildVerificationCodeTemplateContext = async (
 
   const { appId: applicationId, organizationId } = getLogtoCookie(ctx);
 
-  return passcodeLibrary.buildVerificationCodeContext({
-    applicationId,
-    organizationId,
-  });
+  return passcodeLibrary.buildVerificationCodeContext(
+    {
+      applicationId,
+      organizationId,
+    },
+    ctx
+  );
 };
 
 type SendCodeParams = {

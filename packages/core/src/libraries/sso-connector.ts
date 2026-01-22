@@ -14,10 +14,12 @@ import { assert, deduplicate, trySafe } from '@silverhand/essentials';
 
 import { defaultIdPInitiatedSamlSsoSessionTtl } from '#src/constants/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { isSupportedSsoConnector } from '#src/sso/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { type OmitAutoSetFields } from '#src/utils/sql.js';
 
 import OidcConnector from '../sso/OidcConnector/index.js';
@@ -175,6 +177,7 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
    *
    * @param issuer The oidc issuer endpoint of the current tenant.
    * @param authConfig The IdP-initiated SAML SSO authentication configuration.
+   * @param ctx The Koa context. For logging purpose only.
    *
    * @throw {RequestError} Throws a 400 error if the redirect URI is not provided and the default application does not have a registered redirect URI.
    */
@@ -231,7 +234,8 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
     }: {
       encryptedTokenSet: EncryptedTokenSet;
       enterpriseSsoConnectorRelationPayload: SecretEnterpriseSsoConnectorRelationPayload;
-    }
+    },
+    ctx?: WithLogContext
   ) => {
     const { encryptedTokenSetBase64, metadata } = encryptedTokenSet;
 
@@ -247,7 +251,7 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
       );
     } catch (error: unknown) {
       // Upsert token set secret should not break the normal social authentication and link flow
-      void appInsights.trackException(error);
+      void appInsights.trackException(error, ctx && buildAppInsightsTelemetry(ctx));
     }
   };
 

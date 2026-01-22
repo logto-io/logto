@@ -7,7 +7,6 @@ import {
   webAuthnRegistrationOptionsGuard,
 } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared';
-import { type Context } from 'koa';
 import type Router from 'koa-router';
 import { type IRouterParamContext } from 'koa-router';
 import { authenticator } from 'otplib';
@@ -45,7 +44,7 @@ import verifyProfile from './verifications/profile-verification.js';
 
 const buildVerificationCodeTemplateContext = async (
   passcodeLibrary: PasscodeLibrary,
-  ctx: Context,
+  ctx: WithLogContext,
   body: RequestVerificationCodePayload
 ) => {
   // Build extra context for email verification only
@@ -56,10 +55,13 @@ const buildVerificationCodeTemplateContext = async (
   // Safely get the orgId and appId context from cookie
   const { appId: applicationId, organizationId } = getLogtoCookie(ctx);
 
-  return passcodeLibrary.buildVerificationCodeContext({
-    applicationId,
-    organizationId,
-  });
+  return passcodeLibrary.buildVerificationCodeContext(
+    {
+      applicationId,
+      organizationId,
+    },
+    ctx
+  );
 };
 
 export default function additionalRoutes<T extends IRouterParamContext>(

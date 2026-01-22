@@ -10,16 +10,17 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
-
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import {
   deserializeEncryptedSecret,
   encryptAndSerializeTokenResponse,
   encryptTokenResponse,
   isValidAccessTokenResponse,
-} from '../utils/secret-encryption.js';
+} from '#src/utils/secret-encryption.js';
 
 const getUserInfoFromInteractionResult = async (
   connectorId: string,
@@ -94,7 +95,8 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
   const getUserInfoWithOptionalTokenResponse = async (
     connectorId: string,
     data: unknown,
-    getConnectorSession: GetSession
+    getConnectorSession: GetSession,
+    ctx?: WithLogContext
   ): Promise<{
     userInfo: SocialUserInfo;
     encryptedTokenSet?: EncryptedTokenSet;
@@ -134,7 +136,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
         () => encryptAndSerializeTokenResponse(tokenResponse),
         (error) => {
           // If the token response cannot be encrypted, we log the error but continue to return user info.
-          void appInsights.trackException(error);
+          void appInsights.trackException(error, ctx && buildAppInsightsTelemetry(ctx));
         }
       );
 
