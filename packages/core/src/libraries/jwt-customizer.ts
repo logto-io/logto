@@ -15,7 +15,7 @@ import {
 import { type ConsoleLog } from '@logto/shared';
 import { assert, deduplicate, pick, pickState } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
-import { got } from 'got';
+import { got, HTTPError } from 'got';
 import { type UnknownObject, type KoaContextWithOIDC } from 'oidc-provider';
 import { ZodError, z } from 'zod';
 
@@ -31,6 +31,7 @@ import {
   runScriptFunctionInLocalVm,
   buildLocalVmErrorBody,
   type CustomJwtDeployRequestBody,
+  parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
@@ -242,7 +243,7 @@ export class JwtCustomizerLibrary {
 
   /**
    * @remarks
-   * For Logto Cloud service use only. Run the custom JWT claims script remotely in an isolated environment.
+   * For Logto cloud use only. Run the custom JWT claims script remotely in an isolated environment.
    * For OSS version, use @see JwtCustomizerLibrary.runScriptInLocalVm instead.
    */
   async runScriptRemotely(
@@ -270,12 +271,20 @@ export class JwtCustomizerLibrary {
         // TODO: log the result
         return parsedResult;
       } catch (error: unknown) {
+        // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
+        if (error instanceof HTTPError) {
+          const responseError = parseAzureFunctionsResponseError(error);
+          void appInsights.trackException(responseError, buildAppInsightsTelemetry(ctx));
+          throw responseError;
+        }
+
         // TODO: log the error
         void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
         throw error;
       }
     }
 
+    // Fallback to use cloud connection to call the custom JWT API.
     const client = await this.cloudConnection.getClient();
     return client.post(`/api/services/custom-jwt`, {
       body: payload,

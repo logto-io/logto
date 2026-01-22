@@ -4,7 +4,9 @@ import {
   customJwtErrorBodyGuard,
   type CustomJwtErrorBody,
 } from '@logto/schemas';
-import { type ResponseError } from '@withtyped/client';
+import { conditional, trySafe } from '@silverhand/essentials';
+import { ResponseError } from '@withtyped/client';
+import { type HTTPError } from 'got';
 import { z } from 'zod';
 
 import RequestError from '../../errors/RequestError/index.js';
@@ -30,6 +32,8 @@ const errorResponseGuard = z.object({
   error: z.unknown().optional(),
 });
 
+type ErrorResponse = z.infer<typeof errorResponseGuard>;
+
 /**
  * Parse the CustomJwtErrorBody from the response.
  *
@@ -54,6 +58,7 @@ export const parseCustomJwtResponseError = async (
   }
 
   const errorResponseData = errorResponse.data;
+
   const errorBody = customJwtErrorBodyGuard.safeParse(errorResponseData.error);
 
   // Not a standard CustomJwtError body.
@@ -68,4 +73,39 @@ export const parseCustomJwtResponseError = async (
   }
 
   return errorBody.data;
+};
+
+/**
+ * This function is used to convert the GOT @see {HTTPError} from Azure Functions response
+ * to WithTyped client @see {ResponseError} for unified error handling.
+ *
+ * - extract the response body from  @see {HTTPError}
+ * - convert to @see {ErrorResponse} type
+ * - create a new @see {ResponseError} with the extracted data
+ */
+export const parseAzureFunctionsResponseError = (error: HTTPError): ResponseError => {
+  const { statusCode, statusMessage, headers, body } = error.response;
+
+  const responseBody =
+    conditional(
+      typeof body === 'string' &&
+        // eslint-disable-next-line no-restricted-syntax
+        trySafe(() => JSON.parse(body) as unknown)
+    ) ?? body;
+
+  const parsedBody = errorResponseGuard.omit({ error: true }).safeParse(responseBody);
+  const errorResponseData: ErrorResponse = {
+    message: parsedBody.success ? parsedBody.data.message : error.message,
+    error: responseBody,
+  };
+
+  // Generate a new Response object to create ResponseError
+  const errorResponse = new Response(JSON.stringify(errorResponseData), {
+    status: statusCode,
+    statusText: statusMessage,
+    // eslint-disable-next-line no-restricted-syntax
+    headers: headers as HeadersInit,
+  });
+
+  return new ResponseError(errorResponse);
 };
