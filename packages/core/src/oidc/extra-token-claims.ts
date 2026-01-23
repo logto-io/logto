@@ -122,6 +122,31 @@ const getInteractionLastSubmission = async (
   return interactionData.data;
 };
 
+/**
+ * Safely retrieves the associated subject token for a given access token.
+ *
+ * - Only processes tokens issued via the Token Exchange grant type.
+ * - Safely parses the `extra` field of the access token to extract the `subjectTokenId`.
+ * - Fetches the subject token if the `subjectTokenId` is present and valid.
+ */
+const getAssociatedSubjectToken = async (queries: Queries, token: AccessToken) => {
+  if (token.gty !== GrantType.TokenExchange) {
+    return;
+  }
+
+  const tokenExtraResult = z
+    .object({
+      subjectTokenId: z.string(),
+    })
+    .safeParse(token.extra);
+
+  if (!tokenExtraResult.success) {
+    return;
+  }
+
+  return queries.subjectTokens.findSubjectToken(tokenExtraResult.data.subjectTokenId);
+};
+
 /* eslint-disable complexity */
 export const getExtraTokenClaimsForJwtCustomization = async (
   ctx: KoaContextWithOIDC,
@@ -131,7 +156,6 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     queries,
     libraries,
     logtoConfigs,
-    cloudConnection,
   }: {
     envSet: EnvSet;
     queries: Queries;
@@ -148,7 +172,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     return;
   }
 
-  const isTokenClientCredentials = token instanceof ctx.oidc.provider.ClientCredentials;
+  const isClientCredentialsToken = token instanceof ctx.oidc.provider.ClientCredentials;
 
   try {
     /**
@@ -159,7 +183,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     const { script, environmentVariables } =
       (await trySafe(
         logtoConfigs.getJwtCustomizer(
-          isTokenClientCredentials
+          isClientCredentialsToken
             ? LogtoJwtTokenKey.ClientCredentials
             : LogtoJwtTokenKey.AccessToken
         )
@@ -169,43 +193,39 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       return;
     }
 
-    const pickedFields = isTokenClientCredentials
+    // Pick only the fields that will be included in the token payload based on the token type.
+    const pickedFields = isClientCredentialsToken
       ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
       : ctx.oidc.provider.AccessToken.IN_PAYLOAD;
-    const readOnlyToken = Object.fromEntries(
+
+    const originalTokenPayload = Object.fromEntries(
       pickedFields
         .filter((field) => Reflect.get(token, field) !== undefined)
         .map((field) => [field, Reflect.get(token, field)])
     );
 
-    // We pass context to the cloud API only when it is a user's access token.
+    // Fetch user info context for user access token.
     const logtoUserInfo = conditional(
-      !isTokenClientCredentials &&
+      !isClientCredentialsToken &&
         token.accountId &&
         (await libraries.jwtCustomizers.getUserContext(token.accountId))
     );
 
-    const interactionContext = isTokenClientCredentials
-      ? undefined
-      : await getInteractionLastSubmission(queries, token);
+    // Fetch user interaction context for user access token.
+    const interactionContext = conditional(
+      !isClientCredentialsToken && (await getInteractionLastSubmission(queries, token))
+    );
 
-    const subjectTokenResult = z
-      .object({
-        subjectTokenId: z.string(),
-      })
-      .safeParse(token.extra);
-    const subjectToken =
-      isTokenClientCredentials || token.gty !== GrantType.TokenExchange
-        ? undefined
-        : subjectTokenResult.success
-          ? await queries.subjectTokens.findSubjectToken(subjectTokenResult.data.subjectTokenId)
-          : undefined;
+    // Safely retrieve the associated subject token for user access token (Token Exchange grant type only).
+    const subjectToken = conditional(
+      !isClientCredentialsToken && (await getAssociatedSubjectToken(queries, token))
+    );
 
     const payload: CustomJwtFetcher = {
       script,
       environmentVariables,
-      token: readOnlyToken,
-      ...(isTokenClientCredentials
+      token: originalTokenPayload,
+      ...(isClientCredentialsToken
         ? { tokenType: LogtoJwtTokenKeyType.ClientCredentials }
         : {
             tokenType: LogtoJwtTokenKeyType.AccessToken,
@@ -232,17 +252,14 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     };
 
     if (EnvSet.values.isCloud) {
-      const client = await cloudConnection.getClient();
-      return await client.post(`/api/services/custom-jwt`, {
-        body: payload,
-        search: {},
-      });
+      return await libraries.jwtCustomizers.runScriptRemotely(payload, ctx);
     }
+
     return await JwtCustomizerLibrary.runScriptInLocalVm(payload);
   } catch (error: unknown) {
     const entry = new LogEntry(
       `${jwtCustomizerLog.prefix}.${
-        isTokenClientCredentials
+        isClientCredentialsToken
           ? jwtCustomizerLog.Type.ClientCredentials
           : jwtCustomizerLog.Type.AccessToken
       }`
