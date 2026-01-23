@@ -202,7 +202,7 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
         ...conditional(userData && { user: buildUserContextInfo(userData) }),
       };
     } catch (error: unknown) {
-      void appInsights.trackException(error, ctx && buildAppInsightsTelemetry(ctx));
+      void appInsights.trackException(error, ctx ? buildAppInsightsTelemetry(ctx) : undefined);
 
       // Should not block the verification code sending if the context information is not available.
       return {};

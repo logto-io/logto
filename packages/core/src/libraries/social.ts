@@ -136,7 +136,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
         () => encryptAndSerializeTokenResponse(tokenResponse),
         (error) => {
           // If the token response cannot be encrypted, we log the error but continue to return user info.
-          void appInsights.trackException(error, ctx && buildAppInsightsTelemetry(ctx));
+          void appInsights.trackException(error, ctx ? buildAppInsightsTelemetry(ctx) : undefined);
         }
       );
 

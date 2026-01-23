@@ -251,7 +251,7 @@ export const createSsoConnectorLibrary = (queries: Queries) => {
       );
     } catch (error: unknown) {
       // Upsert token set secret should not break the normal social authentication and link flow
-      void appInsights.trackException(error, ctx && buildAppInsightsTelemetry(ctx));
+      void appInsights.trackException(error, ctx ? buildAppInsightsTelemetry(ctx) : undefined);
     }
   };
 
