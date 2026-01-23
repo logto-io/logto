@@ -1,4 +1,3 @@
-import { appInsights } from '@logto/app-insights/node';
 import {
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
@@ -11,12 +10,13 @@ import {
   type LogtoJwtTokenKey,
   type CustomJwtApiContext,
   type CustomJwtScriptPayload,
+  jsonObjectGuard,
 } from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
 import { assert, deduplicate, pick, pickState } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { got, HTTPError } from 'got';
-import { type UnknownObject, type KoaContextWithOIDC } from 'oidc-provider';
+import { type UnknownObject } from 'oidc-provider';
 import { ZodError, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -33,7 +33,6 @@ import {
   type CustomJwtDeployRequestBody,
   parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
-import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 
@@ -246,10 +245,7 @@ export class JwtCustomizerLibrary {
    * For Logto cloud use only. Run the custom JWT claims script remotely in an isolated environment.
    * For OSS version, use @see JwtCustomizerLibrary.runScriptInLocalVm instead.
    */
-  async runScriptRemotely(
-    payload: CustomJwtFetcher,
-    ctx: KoaContextWithOIDC
-  ): Promise<UnknownObject | undefined> {
+  async runScriptRemotely(payload: CustomJwtFetcher): Promise<UnknownObject | undefined> {
     const {
       isDevFeaturesEnabled,
       azureFunctionUntrustedAppKey,
@@ -267,19 +263,14 @@ export class JwtCustomizerLibrary {
           })
           .json<unknown>();
 
-        const parsedResult = z.record(z.unknown()).parse(result);
-        // TODO: log the result
+        const parsedResult = jsonObjectGuard.parse(result);
         return parsedResult;
       } catch (error: unknown) {
         // Convert got HTTPError to WithTyped client ResponseError for unified error handling.
         if (error instanceof HTTPError) {
-          const responseError = parseAzureFunctionsResponseError(error);
-          void appInsights.trackException(responseError, buildAppInsightsTelemetry(ctx));
-          throw responseError;
+          throw parseAzureFunctionsResponseError(error);
         }
 
-        // TODO: log the error
-        void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
         throw error;
       }
     }
