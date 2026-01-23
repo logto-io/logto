@@ -9,6 +9,15 @@ import {
   passwordSuccessRoute,
   usernameRoute,
   usernameSuccessRoute,
+  authenticatorAppRoute,
+  authenticatorAppSuccessRoute,
+  backupCodesGenerateRoute,
+  backupCodesRegenerateRoute,
+  backupCodesManageRoute,
+  backupCodesSuccessRoute,
+  passkeyAddRoute,
+  passkeyManageRoute,
+  passkeySuccessRoute,
 } from '@ac/constants/routes';
 
 import { sessionStorage } from './session-storage';
@@ -27,6 +36,15 @@ const knownRoutePrefixes: readonly string[] = [
   passwordSuccessRoute,
   usernameRoute,
   usernameSuccessRoute,
+  authenticatorAppRoute,
+  authenticatorAppSuccessRoute,
+  backupCodesGenerateRoute,
+  backupCodesRegenerateRoute,
+  backupCodesManageRoute,
+  backupCodesSuccessRoute,
+  passkeyAddRoute,
+  passkeyManageRoute,
+  passkeySuccessRoute,
 ];
 
 const isKnownRoute = (pathname?: string): pathname is string =>
