@@ -1,4 +1,3 @@
-import { CustomJwtErrorCode } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import type { HTTPError } from 'got';
 
@@ -7,33 +6,27 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { parseAzureFunctionsResponseError, parseCustomJwtResponseError } from './index.js';
 
 describe('parseCustomJwtResponseError', () => {
-  it('returns parsed custom JWT error body', async () => {
-    const customErrorBody = {
-      code: CustomJwtErrorCode.AccessDenied,
-      message: 'denied',
-    };
-
+  it('returns parsed error response body', async () => {
     const response = new Response(
       JSON.stringify({
         message: 'outer message',
-        error: customErrorBody,
+        error: { detail: 'reason' },
       }),
       { status: 403 }
     );
 
     const responseError = new ResponseError(response);
 
-    await expect(parseCustomJwtResponseError(responseError)).resolves.toEqual(customErrorBody);
+    await expect(parseCustomJwtResponseError(responseError)).resolves.toEqual({
+      message: 'outer message',
+      error: { detail: 'reason' },
+    });
   });
 
-  it('throws RequestError when body is not a standard custom JWT error', async () => {
-    const response = new Response(
-      JSON.stringify({
-        message: 'outer message',
-        error: { unexpected: true },
-      }),
-      { status: 422 }
-    );
+  it('throws RequestError when response body shape is invalid', async () => {
+    const response = new Response(JSON.stringify({ error: { unexpected: true } }), {
+      status: 422,
+    });
 
     const responseError = new ResponseError(response);
 
