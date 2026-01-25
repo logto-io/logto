@@ -104,11 +104,14 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         signUp,
         signIn,
         mfa,
+        adaptiveMfa,
         sentinelPolicy,
         captchaPolicy,
         forgotPasswordMethods,
         hideLogtoBranding,
-      } = rest;
+        // Guard omits adaptiveMfa when dev features are disabled; cast to handle both cases.
+        // eslint-disable-next-line no-restricted-syntax
+      } = rest as Partial<SignInExperience>;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -144,6 +147,13 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         // Get the current sign-in configuration
         const { signIn: currentSignIn } = signIn ? { signIn } : currentSettings;
         validateMfa(mfa, currentSignIn);
+      }
+
+      // Adaptive MFA requires MFA to be enabled.
+      if (adaptiveMfa?.enabled) {
+        const effectiveMfa = mfa ?? currentSettings.mfa;
+
+        assertThat(isMfaEnabled(effectiveMfa), 'sign_in_experiences.adaptive_mfa_requires_mfa');
       }
 
       if (forgotPasswordMethods) {

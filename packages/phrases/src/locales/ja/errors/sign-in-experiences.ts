@@ -28,6 +28,7 @@ const sign_in_experiences = {
     'メール検証コードは、MFA に使用するために有効になっている場合、サインインには使用できません。',
   phone_verification_code_cannot_be_used_for_sign_in:
     'SMS 検証コードは、MFA に使用するために有効になっている場合、サインインには使用できません。',
+  adaptive_mfa_requires_mfa: 'アダプティブ MFA を有効にする前に MFA を有効にする必要があります。',
   duplicated_sign_up_identifiers: '重複したサインアップ識別子が検出されました。',
   missing_sign_up_identifiers: '主要なサインアップ識別子を空にすることはできません。',
   invalid_custom_email_blocklist_format:

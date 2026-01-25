@@ -1,4 +1,9 @@
-import type { SignInExperience, CreateSignInExperience } from '@logto/schemas';
+import {
+  MfaFactor,
+  MfaPolicy,
+  type SignInExperience,
+  type CreateSignInExperience,
+} from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
 import {
@@ -233,18 +238,51 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
-  it('should update adaptive mfa config when dev features are enabled', async () => {
+  it('should reject adaptive mfa enablement when mfa is disabled', async () => {
     const adaptiveMfa = { enabled: true };
 
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({ adaptiveMfa });
+
+    expect(response).toMatchObject({
+      status: 400,
+    });
+  });
+
+  it('should update adaptive mfa config when enabling mfa in the same request', async () => {
+    const adaptiveMfa = { enabled: true };
+    const mfa = {
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
+      factors: [MfaFactor.TOTP],
+    };
+
+    const response = await signInExperienceRequester
+      .patch('/sign-in-exp')
+      .send({ adaptiveMfa, mfa });
 
     expect(response).toMatchObject({
       status: 200,
       body: {
         ...mockSignInExperience,
         adaptiveMfa,
+        mfa,
       },
     });
+  });
+
+  it('should update adaptive mfa config when mfa is already enabled', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+      },
+    });
+
+    const adaptiveMfa = { enabled: true };
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({ adaptiveMfa });
+
+    expect(response.status).toEqual(200);
   });
 
   it('should guard support email field format', async () => {
