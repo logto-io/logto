@@ -54,10 +54,15 @@ const isMfaVerificationRecord = (
   return mfaVerificationTypes.includes(verification.type);
 };
 
+type MfaValidatorOptions = {
+  ignoreSkipMfaOnSignIn?: boolean;
+};
+
 export class MfaValidator {
   constructor(
     private readonly mfaSettings: Mfa,
-    private readonly user: User
+    private readonly user: User,
+    private readonly options: MfaValidatorOptions = {}
   ) {}
 
   /**
@@ -101,7 +106,11 @@ export class MfaValidator {
     const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
 
-    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
+    if (
+      !this.options.ignoreSkipMfaOnSignIn &&
+      skipMfaOnSignIn &&
+      this.mfaSettings.policy !== MfaPolicy.Mandatory
+    ) {
       return false;
     }
 
