@@ -32,11 +32,13 @@ import MfaSection from './components/MfaSection';
 import NotSet from './components/NotSet';
 import Skeleton from './components/Skeleton';
 import DeleteAccountModal from './containers/DeleteAccountModal';
+import { useNavigateToAccountCenter } from './hooks';
 import styles from './index.module.scss';
 
 function Profile() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
+  const navigateToAccountCenter = useNavigateToAccountCenter();
   const childrenRoutes = useRoutes(profile);
   usePlausiblePageview(profile, 'profile');
 
@@ -96,6 +98,10 @@ function Profile() {
                         action: {
                           name: 'profile.change',
                           handler: () => {
+                            if (isDevFeaturesEnabled) {
+                              navigateToAccountCenter('/account/password');
+                              return;
+                            }
                             navigate(user.hasPassword ? 'verify-password' : 'change-password', {
                               state: { email: user.primaryEmail, action: 'changePassword' },
                             });
