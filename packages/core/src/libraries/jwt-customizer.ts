@@ -108,7 +108,7 @@ export class JwtCustomizerLibrary {
     } = EnvSet.values;
 
     return Boolean(
-      isDevFeaturesEnabled && azureFunctionUntrustedAppKey && azureFunctionUntrustedAppKey
+      isDevFeaturesEnabled && azureFunctionUntrustedAppKey && azureFunctionUntrustedAppEndpoint
     );
   }
 
