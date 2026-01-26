@@ -1,8 +1,9 @@
 import {
+  type CustomJwtErrorBody,
+  customJwtErrorBodyGuard,
+  CustomJwtErrorCode,
   LogtoJwtTokenKey,
   type JwtCustomizerType,
-  customJwtErrorBodyGuard,
-  type CustomJwtErrorBody,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
@@ -27,27 +28,27 @@ export const getJwtCustomizerScripts = (jwtCustomizers: Partial<JwtCustomizerTyp
  * Parse the withtyped ResponseError body.
  * @see {@link https://github.com/withtyped/withtyped/blob/master/packages/server/src/index.ts} handleError method
  */
-const errorResponseGuard = z.object({
+const errorResponseBodyGuard = z.object({
   message: z.string(),
   error: z.unknown().optional(),
 });
 
-type ErrorResponse = z.infer<typeof errorResponseGuard>;
+type ErrorResponseBody = z.infer<typeof errorResponseBodyGuard>;
 
 /**
- * Parse the CustomJwtErrorBody from the response.
+ * Extract and parse the @see {ResponseError} body
  *
- * @param {ResponseError} error The response error, should always be the cloud service ResponseError type.
- * @returns {Promise<CustomJwtErrorBody>} The parsed CustomJwtErrorBody.
- * @throws {RequestError} error if the response is not a standard CustomJwtError.
+ * @param {ResponseError} error - The ResponseError instance
+ * @throws {RequestError} when can not parse the ResponseError body
+ * @returns {Promise<ErrorResponseBody>} Parsed error response body
  */
 export const parseCustomJwtResponseError = async (
   error: ResponseError
-): Promise<CustomJwtErrorBody> => {
-  const errorResponse = errorResponseGuard.safeParse(await error.response.json());
+): Promise<ErrorResponseBody> => {
+  const errorResponseResult = errorResponseBodyGuard.safeParse(await error.response.json());
 
-  // Can not parse the ResponseError body.
-  if (!errorResponse.success) {
+  // Should not happen: Can not parse the ResponseError body.
+  if (!errorResponseResult.success) {
     throw new RequestError(
       {
         code: 'jwt_customizer.general',
@@ -57,22 +58,17 @@ export const parseCustomJwtResponseError = async (
     );
   }
 
-  const errorResponseData = errorResponse.data;
+  return errorResponseResult.data;
+};
 
-  const errorBody = customJwtErrorBodyGuard.safeParse(errorResponseData.error);
-
-  // Not a standard CustomJwtError body.
-  if (!errorBody.success) {
-    throw new RequestError(
-      {
-        code: 'jwt_customizer.general',
-        status: 422,
-      },
-      { message: errorResponseData.message }
-    );
-  }
-
-  return errorBody.data;
+/**
+ * Safely check if the error is an access denied error.
+ */
+export const isAccessDeniedError = (
+  error: unknown
+): error is CustomJwtErrorBody & { code: CustomJwtErrorCode.AccessDenied } => {
+  const errorData = customJwtErrorBodyGuard.safeParse(error);
+  return errorData.success && errorData.data.code === CustomJwtErrorCode.AccessDenied;
 };
 
 /**
@@ -80,7 +76,7 @@ export const parseCustomJwtResponseError = async (
  * to WithTyped client @see {ResponseError} for unified error handling.
  *
  * - extract the response body from  @see {HTTPError}
- * - convert to @see {ErrorResponse} type
+ * - convert to @see {ErrorResponseBody}
  * - create a new @see {ResponseError} with the extracted data
  */
 export const parseAzureFunctionsResponseError = (error: HTTPError): ResponseError => {
@@ -93,8 +89,9 @@ export const parseAzureFunctionsResponseError = (error: HTTPError): ResponseErro
         trySafe(() => JSON.parse(body) as unknown)
     ) ?? body;
 
-  const parsedBody = errorResponseGuard.omit({ error: true }).safeParse(responseBody);
-  const errorResponseData: ErrorResponse = {
+  const parsedBody = errorResponseBodyGuard.omit({ error: true }).safeParse(responseBody);
+
+  const errorResponseData: ErrorResponseBody = {
     message: parsedBody.success ? parsedBody.data.message : error.message,
     error: responseBody,
   };

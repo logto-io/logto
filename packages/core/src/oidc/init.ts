@@ -18,7 +18,7 @@ import {
 } from '@logto/schemas';
 import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
-import { Provider, errors } from 'oidc-provider';
+import { type KoaContextWithOIDC, Provider, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -27,7 +27,7 @@ import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilation.js';
-import koaAuditLog from '#src/middleware/koa-audit-log.js';
+import koaAuditLog, { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
@@ -260,13 +260,17 @@ export default function initOidc(
         await Promise.all([
           getExtraTokenClaimsForTokenExchange(ctx, token),
           getExtraTokenClaimsForOrganizationApiResource(ctx, token),
-          getExtraTokenClaimsForJwtCustomization(ctx, token, {
-            envSet,
-            queries,
-            libraries,
-            logtoConfigs,
-            cloudConnection,
-          }),
+          getExtraTokenClaimsForJwtCustomization(
+            // eslint-disable-next-line no-restricted-syntax -- see `oidc.use(koaAuditLog(queries))` below;
+            ctx as KoaContextWithOIDC & WithLogContext,
+            token,
+            {
+              envSet,
+              queries,
+              libraries,
+              logtoConfigs,
+            }
+          ),
         ]);
 
       if (!organizationApiResourceClaims && !jwtCustomizedClaims && !tokenExchangeClaims) {
