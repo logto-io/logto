@@ -9,7 +9,7 @@ import { ResponseError } from '@withtyped/client';
 import { type HTTPError } from 'got';
 import { z } from 'zod';
 
-import RequestError from '../../errors/RequestError/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 
 import { type CustomJwtDeployRequestBody } from './types.js';
 

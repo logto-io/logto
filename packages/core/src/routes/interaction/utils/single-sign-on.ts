@@ -24,6 +24,7 @@ import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { safeParseUnknownJson } from '#src/utils/json.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { encryptAndSerializeTokenResponse } from '#src/utils/secret-encryption.js';
 
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
@@ -194,7 +195,7 @@ export const verifySsoIdentity = async (
               () => encryptAndSerializeTokenResponse(tokenResponse),
               (error) => {
                 // If the token response cannot be encrypted, we log the error but continue to return user info.
-                void appInsights.trackException(error);
+                void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
               }
             )
         ),

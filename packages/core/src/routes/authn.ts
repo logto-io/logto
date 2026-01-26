@@ -3,7 +3,10 @@ import { ConnectorError, ConnectorErrorCodes, ConnectorType } from '@logto/conne
 import { jsonObjectGuard, SsoAuthenticationQueryKey } from '@logto/schemas';
 import { z } from 'zod';
 
+import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
@@ -15,10 +18,6 @@ import {
   getSingleSignOnSessionResultByJti,
   assignSamlAssertionResultViaJti,
 } from '#src/utils/saml-assertion-handler.js';
-
-import { idpInitiatedSamlSsoSessionCookieName } from '../constants/index.js';
-import { EnvSet } from '../env-set/index.js';
-import koaAuditLog from '../middleware/koa-audit-log.js';
 
 import { ssoPath } from './interaction/const.js';
 import type { AnonymousRouter, RouterInitArgs } from './types.js';

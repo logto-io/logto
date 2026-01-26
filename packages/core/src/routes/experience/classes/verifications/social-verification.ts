@@ -452,7 +452,8 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
       return this.libraries.socials.getUserInfoWithOptionalTokenResponse(
         connectorId,
         connectorData,
-        async () => this.connectorSession
+        async () => this.connectorSession,
+        ctx
       );
     }
 
@@ -460,7 +461,8 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     return this.libraries.socials.getUserInfoWithOptionalTokenResponse(
       connectorId,
       connectorData,
-      async () => getConnectorSessionResult(ctx, provider)
+      async () => getConnectorSessionResult(ctx, provider),
+      ctx
     );
   }
 }

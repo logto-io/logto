@@ -20,6 +20,7 @@ import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/e
 
 import { EnvSet } from '#src/env-set/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import { type InteractionProfile, type WithHooksAndLogsContext } from '../../types.js';
@@ -96,13 +97,17 @@ export class ProvisionLibrary {
       await trySafe(
         async () => upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret),
         (error) => {
-          void appInsights.trackException(error);
+          void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
         }
       );
     }
 
     if (enterpriseSsoConnectorTokenSetSecret) {
-      await upsertEnterpriseSsoTokenSetSecret(user.id, enterpriseSsoConnectorTokenSetSecret);
+      await upsertEnterpriseSsoTokenSetSecret(
+        user.id,
+        enterpriseSsoConnectorTokenSetSecret,
+        this.ctx
+      );
     }
 
     await this.provisionNewUserJitOrganizations(user.id, profile);

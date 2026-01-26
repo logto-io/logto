@@ -115,7 +115,7 @@ export default function verificationRoutes<T extends UserRouter>(
       // Build the user context information for the verification code email template.
       const emailContextPayload =
         identifier.type === SignInIdentifier.Email
-          ? await libraries.passcodes.buildVerificationCodeContext({ user, applicationId })
+          ? await libraries.passcodes.buildVerificationCodeContext({ user, applicationId }, ctx)
           : undefined;
 
       await codeVerification.sendVerificationCode({

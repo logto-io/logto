@@ -4,12 +4,13 @@ import { InteractionEvent, MfaFactor, VerificationType, type User } from '@logto
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
-import { EnvSet } from '../../../env-set/index.js';
 import {
   interactionStorageGuard,
   type InteractionStorage,
@@ -566,14 +567,18 @@ export default class ExperienceInteraction {
       await trySafe(
         async () => upsertSocialTokenSetSecret(user.id, socialConnectorTokenSetSecret),
         (error) => {
-          void appInsights.trackException(error);
+          void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
         }
       );
     }
 
     // Sync enterprise sso token set secret
     if (enterpriseSsoConnectorTokenSetSecret) {
-      await upsertEnterpriseSsoTokenSetSecret(user.id, enterpriseSsoConnectorTokenSetSecret);
+      await upsertEnterpriseSsoTokenSetSecret(
+        user.id,
+        enterpriseSsoConnectorTokenSetSecret,
+        this.ctx
+      );
     }
 
     // Provision organizations for one-time token that carries organization IDs in the context.

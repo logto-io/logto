@@ -4,11 +4,12 @@ import { VerificationType, AccountCenterControlValue } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
+import { buildVerificationRecordByIdAndType } from '#src/libraries/verification.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
+import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
-import RequestError from '../../errors/RequestError/index.js';
-import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
-import assertThat from '../../utils/assert-that.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
@@ -86,7 +87,7 @@ export default function identitiesRoutes<T extends UserRouter>(
         await trySafe(
           async () => upsertSocialTokenSetSecret(user.id, tokenSetSecret),
           (error) => {
-            void appInsights.trackException(error);
+            void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
           }
         );
       }
