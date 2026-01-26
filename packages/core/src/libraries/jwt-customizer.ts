@@ -100,6 +100,18 @@ export class JwtCustomizerLibrary {
     private readonly scopeLibrary: ScopeLibrary
   ) {}
 
+  get isRegionalAzureFunctionAppConfigured(): boolean {
+    const {
+      isDevFeaturesEnabled,
+      azureFunctionUntrustedAppKey,
+      azureFunctionUntrustedAppEndpoint,
+    } = EnvSet.values;
+
+    return Boolean(
+      isDevFeaturesEnabled && azureFunctionUntrustedAppKey && azureFunctionUntrustedAppKey
+    );
+  }
+
   /**
    * We does not include org roles' scopes for the following reason:
    * 1. The org scopes query method requires `limit` and `offset` parameters. Other management API get
@@ -175,6 +187,13 @@ export class JwtCustomizerLibrary {
       return;
     }
 
+    if (this.isRegionalAzureFunctionAppConfigured) {
+      consoleLog.info(
+        'Skipping Cloudflare Workers deployment since regional Azure Function App is configured.'
+      );
+      return;
+    }
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
     // @ts-ignore TS2589: caused by router type growth from @logto/cloud
     const [client, jwtCustomizers] = await Promise.all([
@@ -213,6 +232,13 @@ export class JwtCustomizerLibrary {
       return;
     }
 
+    if (this.isRegionalAzureFunctionAppConfigured) {
+      consoleLog.info(
+        'Skipping Cloudflare Workers deployment since regional Azure Function App is configured.'
+      );
+      return;
+    }
+
     const [client, jwtCustomizers] = await Promise.all([
       this.cloudConnection.getClient(),
       this.logtoConfigs.getJwtCustomizers(consoleLog),
@@ -244,15 +270,17 @@ export class JwtCustomizerLibrary {
    * @remarks
    * For Logto cloud use only. Run the custom JWT claims script remotely in an isolated environment.
    * For OSS version, use @see JwtCustomizerLibrary.runScriptInLocalVm instead.
+   *
+   * @param payload - The custom JWT fetcher payload.
+   * @param isTest - Whether to run the script in test mode.
    */
-  async runScriptRemotely(payload: CustomJwtFetcher): Promise<UnknownObject | undefined> {
-    const {
-      isDevFeaturesEnabled,
-      azureFunctionUntrustedAppKey,
-      azureFunctionUntrustedAppEndpoint,
-    } = EnvSet.values;
+  async runScriptRemotely(
+    payload: CustomJwtFetcher,
+    isTest?: boolean
+  ): Promise<UnknownObject | undefined> {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
 
-    if (isDevFeaturesEnabled && azureFunctionUntrustedAppEndpoint && azureFunctionUntrustedAppKey) {
+    if (this.isRegionalAzureFunctionAppConfigured) {
       try {
         const result = await got
           .post(new URL('/api/custom-jwt', azureFunctionUntrustedAppEndpoint), {
@@ -279,7 +307,7 @@ export class JwtCustomizerLibrary {
     const client = await this.cloudConnection.getClient();
     return client.post(`/api/services/custom-jwt`, {
       body: payload,
-      search: {},
+      search: isTest ? { isTest: 'true' } : {},
     });
   }
 }
