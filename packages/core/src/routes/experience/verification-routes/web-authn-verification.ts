@@ -208,7 +208,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         assertThat(
           experienceInteraction.identifiedUserId === webAuthnVerification.userId,
           new RequestError({
-            code: 'session.verification_session_not_found',
+            code: 'session.identity_conflict',
             status: 404,
           })
         );
