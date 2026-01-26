@@ -1,6 +1,8 @@
+import { ReservedPlanId } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 
 import FormCard from '@/components/FormCard';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
@@ -10,6 +12,7 @@ import { type TenantSettingsForm } from '../types.js';
 
 import EnterpriseSso from './EnterpriseSso/index.js';
 import TenantEnvironment from './TenantEnvironment/index.js';
+import TenantMfa, { useTenantMfaFeature } from './TenantMfa/index.js';
 import TenantRegion from './TenantRegion/index.js';
 
 type Props = {
@@ -25,6 +28,7 @@ function ProfileForm({ currentTenantId }: Props) {
     formState: { errors },
     getValues,
   } = useFormContext<TenantSettingsForm>();
+  const { isFreeOrDevPlan } = useTenantMfaFeature();
 
   return (
     <FormCard title="tenants.settings.title" description="tenants.settings.description">
@@ -44,6 +48,17 @@ function ProfileForm({ currentTenantId }: Props) {
       <FormField title="tenants.settings.tenant_type">
         <TenantEnvironment tag={getValues('profile.tag')} />
       </FormField>
+      {isDevFeaturesEnabled && (
+        <FormField
+          title="tenants.settings.tenant_mfa"
+          featureTag={{
+            isVisible: isFreeOrDevPlan,
+            plan: ReservedPlanId.Pro,
+          }}
+        >
+          <TenantMfa />
+        </FormField>
+      )}
       <FormField title="tenants.settings.enterprise_sso">
         <EnterpriseSso />
       </FormField>

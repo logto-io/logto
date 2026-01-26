@@ -30,6 +30,9 @@ const tenants = {
     production_description:
       'Vorgesehen für Apps, die von Endbenutzern verwendet werden und möglicherweise ein kostenpflichtiges Abonnement erfordern.',
     tenant_info_saved: 'Mieterinformationen erfolgreich gespeichert.',
+    tenant_mfa: 'Multi-Faktor-Authentifizierung',
+    tenant_mfa_description:
+      'Verlangen Sie von Ihren Mitgliedern, dass sie die Multi-Faktor-Authentifizierung einrichten, um auf diesen Mandanten zuzugreifen.',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       'Verfügbar in kostenpflichtigen Plänen. Kontaktieren Sie uns, um Enterprise SSO zu aktivieren, damit alle Mitglieder sich mit dem Identitätsanbieter Ihrer Organisation bei der Logto Cloud Console anmelden können.',
