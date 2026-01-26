@@ -1,14 +1,11 @@
 /* eslint-disable max-lines */
-import { type User } from '@logto/schemas';
+import { type UserSignInCountry, type User } from '@logto/schemas';
 import { conditional, type Optional, yes } from '@silverhand/essentials';
 import haversine from 'haversine-distance';
 
 import type Queries from '#src/tenants/Queries.js';
 
 type IpRiskSignals = {
-  isVpn?: boolean;
-  isProxy?: boolean;
-  ipUsageType?: string;
   botScore?: number;
   botVerified?: boolean;
 };
@@ -38,14 +35,14 @@ type TriggeredRule =
       details: {
         currentCountry: string;
         windowDays: number;
-        recentCountries?: string[];
+        recentCountries?: Array<Pick<UserSignInCountry, 'country' | 'lastSignInAt'>>;
       };
     }
   | {
       rule: AdaptiveMfaRule.GeoVelocity;
       details: {
         previous: {
-          country?: string;
+          country?: Pick<UserSignInCountry, 'country' | 'lastSignInAt'>;
           city?: string;
           at?: string;
         };
@@ -86,15 +83,6 @@ const adaptiveMfaGeoVelocityThresholdKmh = 900;
 const adaptiveMfaLongInactivityThresholdDays = 30;
 const adaptiveMfaMinBotScore = 30;
 
-const untrustedIpUsageTypes = new Set([
-  'hosting',
-  'data_center',
-  'proxy',
-  'tor',
-  'anonymous_vpn',
-  'vpn',
-]);
-
 const normalizeString = (value: Optional<string>): Optional<string> => value?.trim();
 
 // Normalize country code to upper-case 2-letter format, which is used in ISO 3166-1 alpha-2.
@@ -123,7 +111,6 @@ const parseBoolean = (value: Optional<string>): Optional<boolean> => {
   return conditional(normalized && yes(normalized));
 };
 
-// eslint-disable-next-line complexity
 export const parseAdaptiveMfaContext = (
   injectedHeaders?: Record<string, string>
 ): Optional<AdaptiveMfaContext> => {
@@ -136,9 +123,6 @@ export const parseAdaptiveMfaContext = (
   const city = normalizeString(injectedHeaders.city);
   const latitude = parseNumber(injectedHeaders.latitude);
   const longitude = parseNumber(injectedHeaders.longitude);
-  const ipUsageType = normalizeString(injectedHeaders.ipUsageType);
-  const isProxy = parseBoolean(injectedHeaders.isProxy);
-  const isVpn = parseBoolean(injectedHeaders.isVpn);
   const botScore = parseNumber(injectedHeaders.botScore);
   const botVerified = parseBoolean(injectedHeaders.botVerified);
 
@@ -151,10 +135,7 @@ export const parseAdaptiveMfaContext = (
     }
   );
   const ipRiskSignals = conditional(
-    (isProxy ?? isVpn ?? ipUsageType ?? botScore ?? botVerified) !== undefined && {
-      isProxy,
-      isVpn,
-      ipUsageType,
+    (botScore ?? botVerified) !== undefined && {
       botScore,
       botVerified,
     }
@@ -193,7 +174,7 @@ export class AdaptiveMfaValidator {
   private readonly geoVelocityThresholdKmh: number;
   private readonly minBotScore: number;
 
-  private recentCountries?: string[];
+  private recentCountries?: Array<Pick<UserSignInCountry, 'country' | 'lastSignInAt'>>;
   private userGeoLocation?: Awaited<
     ReturnType<Queries['userGeoLocations']['findUserGeoLocationByUserId']>
   >;
@@ -264,7 +245,7 @@ export class AdaptiveMfaValidator {
     const recentCountries = await this.loadRecentCountries();
     const normalizedCurrent = currentCountry.toUpperCase();
     const hasRecentVisit = recentCountries.some(
-      (country) => country.toUpperCase() === normalizedCurrent
+      ({ country }) => country.toUpperCase() === normalizedCurrent
     );
 
     if (hasRecentVisit) {
@@ -356,43 +337,19 @@ export class AdaptiveMfaValidator {
     };
   }
 
-  // eslint-disable-next-line complexity
   private getUntrustedIpRule(): Optional<TriggeredRule> {
     const signals = this.currentContext.ipRiskSignals;
     if (!signals) {
       return;
     }
 
-    const hasRiskSignal =
-      signals.isProxy !== undefined ||
-      signals.isVpn !== undefined ||
-      Boolean(signals.ipUsageType) ||
-      typeof signals.botScore === 'number' ||
-      signals.botVerified !== undefined;
+    const hasRiskSignal = typeof signals.botScore === 'number' || signals.botVerified !== undefined;
 
     if (!hasRiskSignal) {
       return;
     }
 
     const matchedSignals: string[] = [];
-
-    if (signals.isProxy === true) {
-      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      matchedSignals.push('isProxy');
-    }
-
-    if (signals.isVpn === true) {
-      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      matchedSignals.push('isVpn');
-    }
-
-    if (signals.ipUsageType) {
-      const normalizedUsageType = signals.ipUsageType.toLowerCase();
-      if (untrustedIpUsageTypes.has(normalizedUsageType)) {
-        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        matchedSignals.push('ipUsageType');
-      }
-    }
 
     if (typeof signals.botScore === 'number' && signals.botScore < this.minBotScore) {
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
@@ -419,25 +376,29 @@ export class AdaptiveMfaValidator {
 
   private cleanIpRiskSignals(signals: IpRiskSignals): IpRiskSignals {
     return {
-      ...(signals.isProxy !== undefined && { isProxy: signals.isProxy }),
-      ...(signals.isVpn !== undefined && { isVpn: signals.isVpn }),
-      ...(signals.ipUsageType !== undefined && { ipUsageType: signals.ipUsageType }),
       ...(signals.botScore !== undefined && { botScore: signals.botScore }),
       ...(signals.botVerified !== undefined && { botVerified: signals.botVerified }),
     };
   }
 
   private async loadRecentCountries() {
-    this.recentCountries ??=
-      await this.queries.userSignInCountries.findRecentSignInCountriesByUserId(
-        this.user.id,
-        this.newCountryWindowDays
-      );
+    if (this.recentCountries) {
+      return this.recentCountries;
+    }
+
+    this.recentCountries = await this.queries.userSignInCountries.findRecentSignInCountriesByUserId(
+      this.user.id,
+      this.newCountryWindowDays
+    );
     return this.recentCountries;
   }
 
   private async loadUserGeoLocation() {
-    this.userGeoLocation ??= await this.queries.userGeoLocations.findUserGeoLocationByUserId(
+    if (this.userGeoLocation) {
+      return this.userGeoLocation;
+    }
+
+    this.userGeoLocation = await this.queries.userGeoLocations.findUserGeoLocationByUserId(
       this.user.id
     );
     return this.userGeoLocation;
