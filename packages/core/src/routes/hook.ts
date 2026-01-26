@@ -2,6 +2,7 @@ import {
   Hooks,
   Logs,
   ProductEvent,
+  type WebhookLogPrefix,
   hook,
   hookConfigGuard,
   hookEventGuard,
@@ -19,7 +20,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { koaReportSubscriptionUpdates, koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
-import { type AllowedKeyPrefix } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { captureEvent } from '../utils/posthog.js';
@@ -133,7 +133,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         query: { logKey },
       } = ctx.guard;
 
-      const includeKeyPrefix: AllowedKeyPrefix[] = [hook.Type.TriggerHook];
+      const includeKeyPrefix: WebhookLogPrefix[] = [hook.Type.TriggerHook];
       const startTimeExclusive = subDays(new Date(), 1).getTime();
 
       const [{ count }, logs] = await Promise.all([

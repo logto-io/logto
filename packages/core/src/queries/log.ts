@@ -1,13 +1,9 @@
 import {
-  type token,
-  type hook,
+  type AuditLogPrefix,
   Logs,
   type HookExecutionStats,
   type Log,
-  type interaction,
-  type LogKeyUnknown,
-  type jwtCustomizer,
-  type saml,
+  type WebhookLogPrefix,
 } from '@logto/schemas';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 import { sql } from '@silverhand/slonik';
@@ -20,13 +16,7 @@ import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 
-export type AllowedKeyPrefix =
-  | hook.Type
-  | token.Type
-  | interaction.Prefix
-  | jwtCustomizer.Prefix
-  | saml.Prefix
-  | typeof LogKeyUnknown;
+type AllowedKeyPrefix = AuditLogPrefix | WebhookLogPrefix;
 
 type LogCondition = {
   logKey?: string;
