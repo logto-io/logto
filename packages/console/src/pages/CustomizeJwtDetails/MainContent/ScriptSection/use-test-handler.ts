@@ -37,19 +37,20 @@ const useTestHandler = () => {
         if (error instanceof HTTPError) {
           const { response } = error;
           const errorResponse = await response.clone().json<RequestErrorBody>();
+          const { code, data } = errorResponse;
 
           // Get error message from cloud connection client.
-          if (errorResponse.code === jwtCustomizerGeneralErrorCode) {
-            const result = z
-              .object({ message: z.string(), code: z.string().optional() })
-              .safeParse(errorResponse.data);
-
-            if (result.success) {
-              setTestResult({
-                error: JSON.stringify(result.data, null, 2),
-              });
-              return;
-            }
+          if (code === jwtCustomizerGeneralErrorCode) {
+            setTestResult({
+              error:
+                typeof data === 'string'
+                  ? data
+                  : trySafe(
+                      () => JSON.stringify(data, null, 2),
+                      () => String(data)
+                    ),
+            });
+            return;
           }
 
           /**
@@ -58,7 +59,7 @@ const useTestHandler = () => {
            * 1. `RequestError`
            * 2. `koaGuard`
            */
-          if (errorResponse.code === apiInvalidInputErrorCode) {
+          if (code === apiInvalidInputErrorCode) {
             const result = z.string().safeParse(errorResponse.details);
             if (result.success) {
               setTestResult({
