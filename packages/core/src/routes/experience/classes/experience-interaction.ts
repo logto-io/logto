@@ -608,12 +608,28 @@ export default class ExperienceInteraction {
       ...this.toJson(),
     });
 
-    await trySafe(
-      async () => this.adaptiveMfaValidator.persistContext(user),
-      (error) => {
-        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      const recordGeoPromise = trySafe(
+        async () =>
+          this.adaptiveMfaValidator.recordSignInGeoContext(user, this.#interactionEvent),
+        (error) => {
+          void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+
+          // Throw the error in integration test to catch potential issues early in CI.
+          if (EnvSet.values.isIntegrationTest) {
+            throw error;
+          }
+        }
+      );
+
+      // In integration tests we await to surface failures deterministically;
+      // in other envs we fire-and-forget to avoid blocking the sign-in flow.
+      if (EnvSet.values.isIntegrationTest) {
+        await recordGeoPromise;
+      } else {
+        void recordGeoPromise;
       }
-    );
+    }
 
     this.ctx.body = { redirectTo };
 

@@ -15,7 +15,10 @@ const normalizeCountryCode = (value?: string) => {
   return conditional(/^[A-Z]{2}$/.test(normalized) && normalized);
 };
 
-const parseNumber = (value: Optional<string>): Optional<number> => {
+const parseNumber = (
+  value: Optional<string>,
+  range?: { min: number; max: number }
+): Optional<number> => {
   const normalized = normalizeString(value);
   if (!normalized) {
     return;
@@ -23,6 +26,10 @@ const parseNumber = (value: Optional<string>): Optional<number> => {
 
   const parsed = Number(normalized);
   if (!Number.isFinite(parsed)) {
+    return;
+  }
+
+  if (range && (parsed < range.min || parsed > range.max)) {
     return;
   }
 
@@ -44,8 +51,8 @@ export const parseAdaptiveMfaContext = (
   const rawCountry = normalizeString(injectedHeaders.country);
   const country = normalizeCountryCode(rawCountry);
   const city = normalizeString(injectedHeaders.city);
-  const latitude = parseNumber(injectedHeaders.latitude);
-  const longitude = parseNumber(injectedHeaders.longitude);
+  const latitude = parseNumber(injectedHeaders.latitude, { min: -90, max: 90 });
+  const longitude = parseNumber(injectedHeaders.longitude, { min: -180, max: 180 });
   const botScore = parseNumber(injectedHeaders.botScore);
   const botVerified = parseBoolean(injectedHeaders.botVerified);
 

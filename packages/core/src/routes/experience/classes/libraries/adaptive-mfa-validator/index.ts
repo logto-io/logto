@@ -1,4 +1,4 @@
-import type { User, UserGeoLocation } from '@logto/schemas';
+import { InteractionEvent, type User, type UserGeoLocation } from '@logto/schemas';
 import { conditional, type Nullable, type Optional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -55,6 +55,14 @@ export class AdaptiveMfaValidator {
       new LongInactivityRule(this.ruleDependencies),
       new UntrustedIpRule(this.ruleDependencies),
     ];
+  }
+
+  public async recordSignInGeoContext(user: User, interactionEvent: InteractionEvent) {
+    if (interactionEvent !== InteractionEvent.SignIn) {
+      return;
+    }
+
+    await this.persistContext(user);
   }
 
   public async getResult(
