@@ -267,7 +267,11 @@ export const getExtraTokenClaimsForJwtCustomization = async (
           }),
     };
 
-    logEntry.append({ payload });
+    // DOT not log custom script and environment variables for security reason.
+    const { script: _script, environmentVariables: _environmentVariables, ...logPayload } = payload;
+    logEntry.append({
+      payload: logPayload,
+    });
 
     const result = EnvSet.values.isCloud
       ? await libraries.jwtCustomizers.runScriptRemotely(payload)

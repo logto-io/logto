@@ -76,7 +76,7 @@ export const isAccessDeniedError = (
  * to WithTyped client @see {ResponseError} for unified error handling.
  *
  * - extract the response body from  @see {HTTPError}
- * - convert to @see {ErrorResponse}
+ * - convert to @see {ErrorResponseBody}
  * - create a new @see {ResponseError} with the extracted data
  */
 export const parseAzureFunctionsResponseError = (error: HTTPError): ResponseError => {
