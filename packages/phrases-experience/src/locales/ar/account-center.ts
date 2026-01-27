@@ -16,7 +16,7 @@ const account_center = {
   password_verification: {
     title: 'التحقق من كلمة المرور',
     description: 'لحماية أمان حسابك، أدخل كلمة المرور للتحقق من هويتك.',
-    error_failed: 'فشل التحقق. يرجى التحقق من كلمة المرور.',
+    error_failed: 'كلمة المرور غير صحيحة. يرجى التحقق من المدخلات.',
   },
   verification_method: {
     password: {

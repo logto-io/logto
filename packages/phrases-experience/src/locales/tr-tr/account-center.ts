@@ -16,7 +16,7 @@ const account_center = {
   password_verification: {
     title: 'Parolayı doğrula',
     description: 'Hesabını korumak için kimliğini doğrula. Parolanı gir.',
-    error_failed: 'Doğrulama başarısız. Lütfen parolanı kontrol et.',
+    error_failed: 'Yanlış parola. Lütfen girişinizi kontrol edin.',
   },
   verification_method: {
     password: {

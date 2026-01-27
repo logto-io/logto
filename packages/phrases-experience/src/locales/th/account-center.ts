@@ -16,7 +16,7 @@ const account_center = {
   password_verification: {
     title: 'ยืนยันรหัสผ่าน',
     description: 'เพื่อปกป้องบัญชี กรุณากรอกรหัสผ่านเพื่อยืนยันตัวตน',
-    error_failed: 'การยืนยันล้มเหลว โปรดตรวจสอบรหัสผ่านของคุณ',
+    error_failed: 'รหัสผ่านไม่ถูกต้อง โปรดตรวจสอบข้อมูลที่ป้อน',
   },
   verification_method: {
     password: {

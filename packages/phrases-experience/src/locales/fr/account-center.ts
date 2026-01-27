@@ -17,7 +17,7 @@ const account_center = {
     title: 'Vérifier le mot de passe',
     description:
       'Pour protéger votre compte, saisissez votre mot de passe afin de confirmer votre identité.',
-    error_failed: 'La vérification a échoué. Vérifiez votre mot de passe.',
+    error_failed: 'Mot de passe incorrect. Veuillez vérifier votre saisie.',
   },
   verification_method: {
     password: {

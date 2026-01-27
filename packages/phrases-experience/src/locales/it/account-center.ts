@@ -17,7 +17,7 @@ const account_center = {
     title: 'Verifica la password',
     description:
       'Per proteggere il tuo account, inserisci la password per confermare la tua identità.',
-    error_failed: 'Verifica non riuscita. Controlla la tua password.',
+    error_failed: 'Password errata. Controlla il tuo inserimento.',
   },
   verification_method: {
     password: {
