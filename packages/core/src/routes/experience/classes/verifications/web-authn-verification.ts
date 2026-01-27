@@ -199,7 +199,9 @@ export class WebAuthnVerification
     const authenticationOptions = await generateWebAuthnAuthenticationOptions({
       mfaVerifications,
       rpId: hostname,
-      allowDiscoverable: true,
+      // Generate discoverable credential options when userId is not provided. This is for passkey sign-in
+      // flow where the user is resolved later by credentialId/rpId.
+      allowDiscoverable: !this.userId,
     });
 
     this.authenticationChallenge = authenticationOptions.challenge;
@@ -275,6 +277,7 @@ export class WebAuthnVerification
 
   async identifyUser(): Promise<User> {
     assertThat(this.userId, 'session.identifier_not_found');
+    assertThat(this.isVerified, 'session.verification_failed');
     return this.queries.users.findUserById(this.userId);
   }
 

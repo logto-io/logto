@@ -61,7 +61,8 @@ export const generateWebAuthnRegistrationOptions = async ({
       })),
     authenticatorSelection: isDevFeaturesEnabled
       ? {
-          // Required so credentials are discoverable and can be used for passkey sign-in
+          // Set to `required` so newly generated credentials are discoverable and can be used
+          // for passkey sign-in.
           residentKey: 'required',
           requireResidentKey: true,
           userVerification: 'required',

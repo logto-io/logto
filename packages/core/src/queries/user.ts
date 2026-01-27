@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import type { User, CreateUser } from '@logto/schemas';
-import { Users } from '@logto/schemas';
+import { MfaFactor, Users } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared';
 import { cond, conditionalArray, type Nullable, pick } from '@silverhand/essentials';
 import type { CommonQueryMethods } from '@silverhand/slonik';
@@ -344,7 +344,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       from ${table}
       where ${fields.mfaVerifications}::jsonb @> ${sql.jsonb([
         {
-          type: 'WebAuthn',
+          type: MfaFactor.WebAuthn,
           credentialId,
           ...(rpId ? { rpId } : {}),
         },
