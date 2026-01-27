@@ -285,6 +285,37 @@ describe('PATCH /sign-in-exp', () => {
     expect(response.status).toEqual(200);
   });
 
+  it('should allow disabling mfa when adaptive mfa is already enabled', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      adaptiveMfa: {
+        enabled: true,
+      },
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+      },
+    });
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [],
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          factors: [],
+        },
+      },
+    });
+  });
+
   it('should guard support email field format', async () => {
     const exception = await signInExperienceRequester
       .patch('/sign-in-exp')

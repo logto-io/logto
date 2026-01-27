@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   MfaFactor,
   MfaPolicy,
@@ -128,6 +129,30 @@ describe('admin console sign-in experience', () => {
 
         expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
         expect(signInExperience.mfa).toMatchObject(mfa);
+      }
+    );
+
+    devFeatureTest.it(
+      'should allow disabling mfa when adaptive mfa is already enabled',
+      async () => {
+        await updateSignInExperience({
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.TOTP],
+          },
+        });
+
+        await updateSignInExperience({ adaptiveMfa: { enabled: true } });
+
+        const signInExperience = await updateSignInExperience({
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [],
+          },
+        });
+
+        expect(signInExperience.mfa.factors).toEqual([]);
+        expect(signInExperience.adaptiveMfa).toEqual({ enabled: true });
       }
     );
   });
@@ -425,3 +450,4 @@ describe('MFA validation', () => {
     );
   });
 });
+/* eslint-enable max-lines */

@@ -149,7 +149,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         validateMfa(mfa, currentSignIn);
       }
 
-      // Adaptive MFA requires MFA to be enabled.
+      // Adaptive MFA requires MFA to be enabled when it is being enabled.
       if (adaptiveMfa?.enabled) {
         const effectiveMfa = mfa ?? currentSettings.mfa;
 
