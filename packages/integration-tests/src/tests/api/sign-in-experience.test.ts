@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   MfaFactor,
   MfaPolicy,
@@ -78,13 +79,82 @@ describe('admin console sign-in experience', () => {
     });
   });
 
-  devFeatureTest.it('should update adaptive mfa config', async () => {
-    const adaptiveMfa = { enabled: true };
+  devFeatureTest.describe('adaptive mfa', () => {
+    beforeEach(async () => {
+      await updateSignInExperience({
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          factors: [],
+        },
+        adaptiveMfa: {
+          enabled: false,
+        },
+      });
+    });
 
-    await updateSignInExperience({ adaptiveMfa });
+    devFeatureTest.it('should reject adaptive mfa enablement when mfa is disabled', async () => {
+      await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
+        code: 'sign_in_experiences.adaptive_mfa_requires_mfa',
+        status: 422,
+      });
+    });
 
-    const signInExperience = await getSignInExperience();
-    expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
+    devFeatureTest.it(
+      'should allow enabling adaptive mfa when mfa is already enabled',
+      async () => {
+        await updateSignInExperience({
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.TOTP],
+          },
+        });
+
+        const adaptiveMfa = { enabled: true };
+
+        const signInExperience = await updateSignInExperience({ adaptiveMfa });
+        expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
+      }
+    );
+
+    devFeatureTest.it(
+      'should allow enabling adaptive mfa with mfa in the same request',
+      async () => {
+        const adaptiveMfa = { enabled: true };
+        const mfa = {
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          factors: [MfaFactor.TOTP],
+        };
+
+        const signInExperience = await updateSignInExperience({ adaptiveMfa, mfa });
+
+        expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
+        expect(signInExperience.mfa).toMatchObject(mfa);
+      }
+    );
+
+    devFeatureTest.it(
+      'should allow disabling mfa when adaptive mfa is already enabled',
+      async () => {
+        await updateSignInExperience({
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.TOTP],
+          },
+        });
+
+        await updateSignInExperience({ adaptiveMfa: { enabled: true } });
+
+        const signInExperience = await updateSignInExperience({
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [],
+          },
+        });
+
+        expect(signInExperience.mfa.factors).toEqual([]);
+        expect(signInExperience.adaptiveMfa).toEqual({ enabled: true });
+      }
+    );
   });
 });
 
@@ -380,3 +450,4 @@ describe('MFA validation', () => {
     );
   });
 });
+/* eslint-enable max-lines */

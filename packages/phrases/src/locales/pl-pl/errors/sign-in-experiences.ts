@@ -27,6 +27,7 @@ const sign_in_experiences = {
     'Kod weryfikacyjny e-mail nie może być używany do logowania, gdy jest włączony dla MFA.',
   phone_verification_code_cannot_be_used_for_sign_in:
     'Kod weryfikacyjny SMS nie może być używany do logowania, gdy jest włączony dla MFA.',
+  adaptive_mfa_requires_mfa: 'Przed włączeniem Adaptive MFA należy włączyć MFA.',
   duplicated_sign_up_identifiers: 'Wykryto zduplikowane identyfikatory rejestracji.',
   missing_sign_up_identifiers: 'Podstawowy identyfikator rejestracji nie może być pusty.',
   invalid_custom_email_blocklist_format:

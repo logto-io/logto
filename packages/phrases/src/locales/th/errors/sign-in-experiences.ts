@@ -27,6 +27,7 @@ const sign_in_experiences = {
     'ไม่สามารถใช้รหัสยืนยันอีเมลเพื่อเข้าสู่ระบบเมื่อเปิดใช้งานกับ MFA',
   phone_verification_code_cannot_be_used_for_sign_in:
     'ไม่สามารถใช้รหัสยืนยัน SMS เพื่อเข้าสู่ระบบเมื่อเปิดใช้งานกับ MFA',
+  adaptive_mfa_requires_mfa: 'ต้องเปิดใช้ MFA ก่อนจึงจะเปิดใช้ Adaptive MFA ได้',
   duplicated_sign_up_identifiers: 'ตรวจพบตัวระบุสมัครสมาชิกซ้ำ',
   missing_sign_up_identifiers: 'ตัวระบุสมัครสมาชิกหลักต้องไม่เว้นว่าง',
   invalid_custom_email_blocklist_format:

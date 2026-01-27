@@ -25,6 +25,7 @@ const sign_in_experiences = {
     'لا يمكن استخدام رمز التحقق من البريد الإلكتروني لتسجيل الدخول عندما يتم تمكينه للمصادقة متعددة العوامل.',
   phone_verification_code_cannot_be_used_for_sign_in:
     'لا يمكن استخدام رمز التحقق عبر الرسائل القصيرة لتسجيل الدخول عندما يتم تمكينه للمصادقة متعددة العوامل.',
+  adaptive_mfa_requires_mfa: 'يجب تمكين MFA قبل تمكين Adaptive MFA.',
   duplicated_sign_up_identifiers: 'تم اكتشاف معرفات تسجيل مكررة.',
   missing_sign_up_identifiers: 'لا يمكن أن يكون معرف التسجيل الأساسي فارغًا.',
   invalid_custom_email_blocklist_format:
