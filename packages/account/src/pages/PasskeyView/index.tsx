@@ -21,6 +21,7 @@ import { passkeyAddRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { getDateFnsLocale } from '@ac/utils/date';
 import { formatPasskeyName } from '@ac/utils/passkey';
 
 import styles from './index.module.scss';
@@ -35,10 +36,11 @@ type PasskeyInfo = {
 
 const isWebAuthnEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.WebAuthn) ?? false;
 
-const formatDate = (dateString: string): string => format(new Date(dateString), 'MMMM d, yyyy');
+const formatDate = (dateString: string, language: string): string =>
+  format(new Date(dateString), 'PPP', { locale: getDateFnsLocale(language) });
 
 const PasskeyView = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
     useContext(PageContext);
@@ -201,7 +203,7 @@ const PasskeyView = () => {
                     <div className={styles.passkeyMeta}>
                       <DynamicT
                         forKey="account_center.passkey.added"
-                        interpolation={{ date: formatDate(passkey.createdAt) }}
+                        interpolation={{ date: formatDate(passkey.createdAt, i18n.language) }}
                       />
                     </div>
                     <div className={styles.passkeyMeta}>
@@ -209,7 +211,7 @@ const PasskeyView = () => {
                         forKey="account_center.passkey.last_used"
                         interpolation={{
                           date: passkey.lastUsedAt
-                            ? formatDate(passkey.lastUsedAt)
+                            ? formatDate(passkey.lastUsedAt, i18n.language)
                             : t('account_center.passkey.never_used'),
                         }}
                       />

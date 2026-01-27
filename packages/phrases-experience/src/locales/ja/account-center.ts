@@ -103,7 +103,7 @@ const account_center = {
       'バックアップコードを使用するには、まず他の MFA メソッドを設定する必要があります。',
     passkey_not_enabled: 'パスキーが有効になっていません。管理者にお問い合わせください。',
     passkey_already_registered:
-      'This passkey is already registered to your account. Please use a different authenticator.',
+      'このパスキーはすでにアカウントに登録されています。別の認証器をご使用ください。',
   },
   update_success: {
     default: {
@@ -167,11 +167,11 @@ const account_center = {
     delete_confirmation_title: 'パスキーを削除',
     delete_confirmation_description: 'このパスキーを削除すると、認証に使用できなくなります。',
     rename_passkey: 'パスキー名を変更',
-    rename_description: 'Enter a new name for this passkey.',
-    name_this_passkey: 'Name this device passkey',
+    rename_description: 'このパスキーの新しい名前を入力してください。',
+    name_this_passkey: 'このデバイスのパスキーに名前を付ける',
     name_passkey_description:
-      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
-    name_input_label: 'Name',
+      'このデバイスの2段階認証の確認が完了しました。複数のキーがある場合に識別できるよう名前をカスタマイズしてください。',
+    name_input_label: '名前',
   },
 };
 

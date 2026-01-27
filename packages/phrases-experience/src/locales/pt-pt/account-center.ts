@@ -110,7 +110,7 @@ const account_center = {
     passkey_not_enabled:
       'Passkey não está ativado. Por favor, contacte o seu administrador para obter ajuda.',
     passkey_already_registered:
-      'This passkey is already registered to your account. Please use a different authenticator.',
+      'Esta passkey já está registada na sua conta. Por favor, utilize um autenticador diferente.',
   },
   update_success: {
     default: {
@@ -175,11 +175,11 @@ const account_center = {
     delete_confirmation_title: 'Remover a sua passkey',
     delete_confirmation_description: 'Se remover esta passkey, não poderá usá-la para verificação.',
     rename_passkey: 'Renomear passkey',
-    rename_description: 'Enter a new name for this passkey.',
-    name_this_passkey: 'Name this device passkey',
+    rename_description: 'Introduza um novo nome para esta passkey.',
+    name_this_passkey: 'Nomear esta passkey do dispositivo',
     name_passkey_description:
-      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
-    name_input_label: 'Name',
+      'Verificou este dispositivo com sucesso para autenticação em duas etapas. Personalize o nome para o reconhecer se tiver várias chaves.',
+    name_input_label: 'Nome',
   },
 };
 

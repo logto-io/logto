@@ -99,7 +99,7 @@ const account_center = {
     backup_code_requires_other_mfa: '백업 코드를 사용하려면 다른 MFA 방법을 먼저 설정해야 합니다.',
     passkey_not_enabled: '패스키가 활성화되지 않았습니다. 관리자에게 도움을 요청하세요.',
     passkey_already_registered:
-      'This passkey is already registered to your account. Please use a different authenticator.',
+      '이 패스키는 이미 계정에 등록되어 있습니다. 다른 인증기를 사용해 주세요.',
   },
   update_success: {
     default: {
@@ -163,11 +163,11 @@ const account_center = {
     delete_confirmation_title: '패스키 삭제',
     delete_confirmation_description: '이 패스키를 삭제하면 더 이상 인증에 사용할 수 없습니다.',
     rename_passkey: '패스키 이름 변경',
-    rename_description: 'Enter a new name for this passkey.',
-    name_this_passkey: 'Name this device passkey',
+    rename_description: '이 패스키의 새 이름을 입력하세요.',
+    name_this_passkey: '이 기기 패스키 이름 지정',
     name_passkey_description:
-      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
-    name_input_label: 'Name',
+      '2단계 인증을 위해 이 기기가 성공적으로 확인되었습니다. 여러 키가 있는 경우 식별할 수 있도록 이름을 사용자 지정하세요.',
+    name_input_label: '이름',
   },
 };
 

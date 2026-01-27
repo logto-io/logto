@@ -107,7 +107,7 @@ const account_center = {
       'Резервні коди вимагають попереднього налаштування іншого методу MFA.',
     passkey_not_enabled: 'Passkey не увімкнено. Зверніться до адміністратора за допомогою.',
     passkey_already_registered:
-      'This passkey is already registered to your account. Please use a different authenticator.',
+      'Цей passkey вже зареєстровано у вашому обліковому записі. Будь ласка, використовуйте інший автентифікатор.',
   },
   update_success: {
     default: {
@@ -172,11 +172,11 @@ const account_center = {
     delete_confirmation_description:
       'Якщо ви видалите цей passkey, ви не зможете використовувати його для підтвердження.',
     rename_passkey: 'Перейменувати passkey',
-    rename_description: 'Enter a new name for this passkey.',
-    name_this_passkey: 'Name this device passkey',
+    rename_description: 'Введіть нову назву для цього passkey.',
+    name_this_passkey: 'Назвіть цей passkey пристрою',
     name_passkey_description:
-      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
-    name_input_label: 'Name',
+      'Ви успішно підтвердили цей пристрій для двоетапної автентифікації. Налаштуйте назву для розпізнавання, якщо у вас кілька ключів.',
+    name_input_label: "Ім'я",
   },
 };
 

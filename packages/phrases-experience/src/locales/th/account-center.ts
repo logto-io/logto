@@ -100,7 +100,7 @@ const account_center = {
     backup_code_requires_other_mfa: 'รหัสสำรองต้องมีการตั้งค่าวิธี MFA อื่นก่อน',
     passkey_not_enabled: 'Passkey ไม่ได้เปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
     passkey_already_registered:
-      'This passkey is already registered to your account. Please use a different authenticator.',
+      'Passkey นี้ลงทะเบียนกับบัญชีของคุณแล้ว กรุณาใช้ตัวยืนยันตัวตนอื่น',
   },
   update_success: {
     default: {
@@ -164,11 +164,11 @@ const account_center = {
     delete_confirmation_title: 'ลบ Passkey ของคุณ',
     delete_confirmation_description: 'หากคุณลบ Passkey นี้ คุณจะไม่สามารถใช้เพื่อยืนยันตัวตนได้',
     rename_passkey: 'เปลี่ยนชื่อ Passkey',
-    rename_description: 'Enter a new name for this passkey.',
-    name_this_passkey: 'Name this device passkey',
+    rename_description: 'ป้อนชื่อใหม่สำหรับ Passkey นี้',
+    name_this_passkey: 'ตั้งชื่อ Passkey ของอุปกรณ์นี้',
     name_passkey_description:
-      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
-    name_input_label: 'Name',
+      'คุณยืนยันอุปกรณ์นี้สำหรับการยืนยันตัวตนแบบ 2 ขั้นตอนสำเร็จแล้ว ปรับแต่งชื่อเพื่อให้จดจำได้หากคุณมีหลายคีย์',
+    name_input_label: 'ชื่อ',
   },
 };
 
