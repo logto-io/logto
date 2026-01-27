@@ -72,6 +72,8 @@ const tenants = {
     invitation_failed:
       'Niektóre zaproszenia nie udało się wysłać. Spróbuj ponownie później w Ustawienia -> Członkowie.',
     tenant_type_description: 'Tego nie można zmienić po utworzeniu.',
+    tenant_id_invalid:
+      'Identyfikator najemcy może zawierać tylko małe litery, cyfry i myślniki oraz nie może przekraczać {{max}} znaków.',
   },
   dev_tenant_migration: {
     title:

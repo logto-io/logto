@@ -66,6 +66,8 @@ const tenants = {
     tenant_created: '테넌트가 성공적으로 생성되었습니다.',
     invitation_failed: '초대 전송에 실패했습니다. 나중에 설정 -> 멤버에서 다시 시도하십시오.',
     tenant_type_description: '생성 후에는 변경할 수 없습니다.',
+    tenant_id_invalid:
+      '테넌트 ID는 소문자, 숫자, 하이픈만 포함할 수 있으며 {{max}}자를 초과할 수 없습니다.',
   },
   dev_tenant_migration: {
     title: '사용자 정의 테넌트로 전환하여 Pro 기능을 무료로 이용할 수 있습니다!',

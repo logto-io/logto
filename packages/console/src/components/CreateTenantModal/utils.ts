@@ -12,5 +12,5 @@ export const validateCustomTenantId = (value: string | undefined, prefix: string
     return true;
   }
 
-  return isValidCustomTenantId(prefix + value);
+  return isValidCustomTenantId(`${prefix}${value}`);
 };

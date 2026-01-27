@@ -72,6 +72,8 @@ const tenants = {
     invitation_failed:
       'Einige Einladungen konnten nicht gesendet werden. Bitte versuchen Sie es später erneut unter Einstellungen -> Mitglieder.',
     tenant_type_description: 'Dies kann nach Erstellung nicht geändert werden.',
+    tenant_id_invalid:
+      'Die Mandanten-ID darf nur Kleinbuchstaben, Zahlen und Bindestriche enthalten und darf {{max}} Zeichen nicht überschreiten.',
   },
   dev_tenant_migration: {
     title:
