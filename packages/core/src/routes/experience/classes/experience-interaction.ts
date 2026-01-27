@@ -2,14 +2,13 @@
 import { appInsights } from '@logto/app-insights/node';
 import { InteractionEvent, MfaFactor, VerificationType, type User } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
-import { conditional, type Optional, trySafe } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
-import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import {
@@ -26,13 +25,7 @@ import {
   identifyUserByVerificationRecord,
   mergeUserMfaVerifications,
 } from './helpers.js';
-import {
-  AdaptiveMfaValidator,
-  adaptiveMfaNewCountryWindowDays,
-  type AdaptiveMfaContext,
-  type AdaptiveMfaResult,
-  parseAdaptiveMfaContext,
-} from './libraries/adaptive-mfa-validator.js';
+import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
@@ -66,8 +59,8 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
-  private adaptiveMfaContext?: AdaptiveMfaContext;
-  private adaptiveMfaResult?: AdaptiveMfaResult;
+  private adaptiveMfaValidator?: AdaptiveMfaValidator;
+  private adaptiveMfaValidatorUserId?: string;
 
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
@@ -352,7 +345,7 @@ export default class ExperienceInteraction {
 
     const user = await this.getIdentifiedUser();
     const signInExperience = await this.signInExperienceValidator.getSignInExperienceData();
-    const adaptiveMfaResult = await this.getAdaptiveMfaResult(user);
+    const adaptiveMfaResult = await this.getAdaptiveMfaValidator(user).getResult();
     const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
     const mfaValidator = new MfaValidator(signInExperience.mfa, user, {
       ignoreSkipMfaOnSignIn: requiresAdaptiveMfa,
@@ -561,8 +554,6 @@ export default class ExperienceInteraction {
       lastSignInAt: Date.now(),
     });
 
-    await this.updateAdaptiveMfaContext(user.id);
-
     // Sync SSO identity
     if (syncedEnterpriseSsoIdentity) {
       const { identityId, issuer, detail } = syncedEnterpriseSsoIdentity;
@@ -612,6 +603,13 @@ export default class ExperienceInteraction {
       // Persist the interaction status to the OIDC session after interaction submission
       ...this.toJson(),
     });
+
+    await trySafe(
+      async () => this.getAdaptiveMfaValidator(user).persistContext(),
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
 
     this.ctx.body = { redirectTo };
 
@@ -716,82 +714,18 @@ export default class ExperienceInteraction {
     return Boolean(socialVerificationRecord?.isVerified);
   }
 
-  private getAdaptiveMfaContext(): Optional<AdaptiveMfaContext> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
+  private getAdaptiveMfaValidator(user: User) {
+    if (!this.adaptiveMfaValidator || this.adaptiveMfaValidatorUserId !== user.id) {
+      this.adaptiveMfaValidator = new AdaptiveMfaValidator({
+        user,
+        ctx: this.ctx,
+        queries: this.tenant.queries,
+        signInExperienceValidator: this.signInExperienceValidator,
+      });
+      this.adaptiveMfaValidatorUserId = user.id;
     }
 
-    if (this.adaptiveMfaContext) {
-      return this.adaptiveMfaContext;
-    }
-
-    const injectedHeaders = getInjectedHeaderValues(this.ctx.request.headers);
-    const context = parseAdaptiveMfaContext(injectedHeaders);
-    this.adaptiveMfaContext = context;
-
-    return context;
-  }
-
-  private async getAdaptiveMfaResult(user: User): Promise<Optional<AdaptiveMfaResult>> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
-    const { adaptiveMfa } = await this.signInExperienceValidator.getSignInExperienceData();
-
-    if (!adaptiveMfa.enabled) {
-      return;
-    }
-
-    if (this.adaptiveMfaResult) {
-      return this.adaptiveMfaResult;
-    }
-
-    const validator = new AdaptiveMfaValidator({
-      user,
-      queries: this.tenant.queries,
-      currentContext: this.getAdaptiveMfaContext(),
-    });
-
-    const result = await validator.evaluateRules();
-    this.adaptiveMfaResult = result;
-
-    return result;
-  }
-
-  private async updateAdaptiveMfaContext(userId: string) {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
-    const { adaptiveMfa } = await this.signInExperienceValidator.getSignInExperienceData();
-
-    if (!adaptiveMfa.enabled) {
-      return;
-    }
-
-    const context = this.getAdaptiveMfaContext();
-    const location = context?.location;
-
-    if (!location) {
-      return;
-    }
-
-    const { latitude, longitude, country } = location;
-    const hasCoordinates = typeof latitude === 'number' && typeof longitude === 'number';
-    const { userGeoLocations, userSignInCountries } = this.tenant.queries;
-
-    if (hasCoordinates) {
-      await userGeoLocations.upsertUserGeoLocation(userId, latitude, longitude);
-    }
-
-    if (country) {
-      await userSignInCountries.upsertUserSignInCountry(userId, country);
-      await userSignInCountries.pruneUserSignInCountriesByUserId(
-        userId,
-        adaptiveMfaNewCountryWindowDays
-      );
-    }
+    return this.adaptiveMfaValidator;
   }
 
   /**

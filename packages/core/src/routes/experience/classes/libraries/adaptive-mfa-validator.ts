@@ -1,9 +1,15 @@
 /* eslint-disable max-lines */
+import type { IncomingHttpHeaders } from 'node:http';
+
 import { type UserSignInCountry, type User } from '@logto/schemas';
-import { conditional, type Optional, yes } from '@silverhand/essentials';
+import { conditional, type Optional, trySafe, yes } from '@silverhand/essentials';
 import haversine from 'haversine-distance';
 
+import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
+import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
+
+import type { SignInExperienceValidator } from './sign-in-experience-validator.js';
 
 type IpRiskSignals = {
   botScore?: number;
@@ -17,7 +23,7 @@ type CurrentLocation = {
   longitude?: number;
 };
 
-export type AdaptiveMfaContext = {
+type AdaptiveMfaContext = {
   location?: CurrentLocation;
   ipRiskSignals?: IpRiskSignals;
 };
@@ -73,7 +79,7 @@ type TriggeredRule =
       };
     };
 
-export type AdaptiveMfaResult = {
+type AdaptiveMfaResult = {
   requiresMfa: boolean;
   triggeredRules: TriggeredRule[];
 };
@@ -103,7 +109,11 @@ const parseNumber = (value: Optional<string>): Optional<number> => {
   }
 
   const parsed = Number(normalized);
-  return conditional(Number.isFinite(parsed) && parsed);
+  if (!Number.isFinite(parsed)) {
+    return;
+  }
+
+  return parsed;
 };
 
 const parseBoolean = (value: Optional<string>): Optional<boolean> => {
@@ -111,7 +121,7 @@ const parseBoolean = (value: Optional<string>): Optional<boolean> => {
   return conditional(normalized && yes(normalized));
 };
 
-export const parseAdaptiveMfaContext = (
+const parseAdaptiveMfaContext = (
   injectedHeaders?: Record<string, string>
 ): Optional<AdaptiveMfaContext> => {
   if (!injectedHeaders) {
@@ -148,15 +158,19 @@ export const parseAdaptiveMfaContext = (
   return { location, ipRiskSignals };
 };
 
+type AdaptiveMfaValidatorContext = {
+  request: {
+    headers: IncomingHttpHeaders;
+  };
+};
+
 type AdaptiveMfaValidatorOptions = {
   user: User;
   queries: Pick<Queries, 'userGeoLocations' | 'userSignInCountries'>;
+  signInExperienceValidator: SignInExperienceValidator;
+  ctx?: AdaptiveMfaValidatorContext;
   currentContext?: AdaptiveMfaContext;
   now?: Date;
-  newCountryWindowDays?: number;
-  longInactivityDays?: number;
-  geoVelocityThresholdKmh?: number;
-  minBotScore?: number;
 };
 
 const msPerHour = 1000 * 60 * 60;
@@ -167,12 +181,14 @@ const roundTo = (value: number, fractionDigits = 2) => Number(value.toFixed(frac
 export class AdaptiveMfaValidator {
   private readonly user: User;
   private readonly queries: Pick<Queries, 'userGeoLocations' | 'userSignInCountries'>;
-  private readonly currentContext: AdaptiveMfaContext;
+  private readonly signInExperienceValidator: SignInExperienceValidator;
+  private readonly ctx?: AdaptiveMfaValidatorContext;
+  private readonly contextOverride?: AdaptiveMfaContext;
   private readonly now: Date;
-  private readonly newCountryWindowDays: number;
-  private readonly longInactivityDays: number;
-  private readonly geoVelocityThresholdKmh: number;
-  private readonly minBotScore: number;
+
+  private adaptiveMfaContext?: AdaptiveMfaContext;
+  private adaptiveMfaResult?: AdaptiveMfaResult;
+  private isAdaptiveMfaEnabledCache?: boolean;
 
   private recentCountries?: Array<Pick<UserSignInCountry, 'country' | 'lastSignInAt'>>;
   private userGeoLocation?: Awaited<
@@ -182,24 +198,66 @@ export class AdaptiveMfaValidator {
   constructor({
     user,
     queries,
+    signInExperienceValidator,
+    ctx,
     currentContext,
     now = new Date(),
-    newCountryWindowDays = adaptiveMfaNewCountryWindowDays,
-    longInactivityDays = adaptiveMfaLongInactivityThresholdDays,
-    geoVelocityThresholdKmh = adaptiveMfaGeoVelocityThresholdKmh,
-    minBotScore = adaptiveMfaMinBotScore,
   }: AdaptiveMfaValidatorOptions) {
     this.user = user;
     this.queries = queries;
-    this.currentContext = currentContext ?? {};
+    this.signInExperienceValidator = signInExperienceValidator;
+    this.ctx = ctx;
+    this.contextOverride = currentContext;
     this.now = now;
-    this.newCountryWindowDays = newCountryWindowDays;
-    this.longInactivityDays = longInactivityDays;
-    this.geoVelocityThresholdKmh = geoVelocityThresholdKmh;
-    this.minBotScore = minBotScore;
   }
 
-  async evaluateRules(): Promise<AdaptiveMfaResult> {
+  public async getResult(): Promise<Optional<AdaptiveMfaResult>> {
+    if (!(await this.isAdaptiveMfaEnabled())) {
+      return;
+    }
+
+    if (this.adaptiveMfaResult) {
+      return this.adaptiveMfaResult;
+    }
+
+    const result = await this.evaluateRules();
+    this.adaptiveMfaResult = result;
+
+    return result;
+  }
+
+  public async persistContext() {
+    if (!(await this.isAdaptiveMfaEnabled())) {
+      return;
+    }
+
+    const context = this.getCurrentContext();
+    if (!context) {
+      return;
+    }
+
+    const { location } = context;
+    if (!location) {
+      return;
+    }
+
+    const { latitude, longitude, country } = location;
+    const hasCoordinates = typeof latitude === 'number' && typeof longitude === 'number';
+
+    if (hasCoordinates) {
+      await this.queries.userGeoLocations.upsertUserGeoLocation(this.user.id, latitude, longitude);
+    }
+
+    await this.queries.userSignInCountries.upsertUserSignInCountry(this.user.id, country);
+    await trySafe(async () =>
+      this.queries.userSignInCountries.pruneUserSignInCountriesByUserId(
+        this.user.id,
+        adaptiveMfaNewCountryWindowDays
+      )
+    );
+  }
+
+  private async evaluateRules(): Promise<AdaptiveMfaResult> {
     const triggeredRules: TriggeredRule[] = [];
 
     const newCountryRule = await this.getNewCountryRule();
@@ -233,7 +291,7 @@ export class AdaptiveMfaValidator {
   }
 
   private async getNewCountryRule(): Promise<Optional<TriggeredRule>> {
-    const currentCountry = this.currentContext.location?.country;
+    const currentCountry = this.getCurrentContext()?.location?.country;
     if (!currentCountry) {
       return;
     }
@@ -256,14 +314,14 @@ export class AdaptiveMfaValidator {
       rule: AdaptiveMfaRule.NewCountry,
       details: {
         currentCountry,
-        windowDays: this.newCountryWindowDays,
+        windowDays: adaptiveMfaNewCountryWindowDays,
         recentCountries: conditional(recentCountries.length > 0 && recentCountries),
       },
     };
   }
 
   private async getGeoVelocityRule(): Promise<Optional<TriggeredRule>> {
-    const { latitude, longitude, country, city } = this.currentContext.location ?? {};
+    const { latitude, longitude, country, city } = this.getCurrentContext()?.location ?? {};
     if (typeof latitude !== 'number' || typeof longitude !== 'number') {
       return;
     }
@@ -289,7 +347,7 @@ export class AdaptiveMfaValidator {
 
     const speedKmh = distanceKm / durationHours;
 
-    if (speedKmh <= this.geoVelocityThresholdKmh) {
+    if (speedKmh <= adaptiveMfaGeoVelocityThresholdKmh) {
       return;
     }
 
@@ -311,7 +369,7 @@ export class AdaptiveMfaValidator {
         distanceKm: roundTo(distanceKm),
         durationHours: roundTo(durationHours),
         speedKmh: roundTo(speedKmh),
-        thresholdKmh: this.geoVelocityThresholdKmh,
+        thresholdKmh: adaptiveMfaGeoVelocityThresholdKmh,
       },
     };
   }
@@ -323,7 +381,7 @@ export class AdaptiveMfaValidator {
 
     const inactivityDays = (this.now.getTime() - this.user.lastSignInAt) / msPerDay;
 
-    if (inactivityDays <= this.longInactivityDays) {
+    if (inactivityDays <= adaptiveMfaLongInactivityThresholdDays) {
       return;
     }
 
@@ -332,13 +390,13 @@ export class AdaptiveMfaValidator {
       details: {
         lastSignInAt: new Date(this.user.lastSignInAt).toISOString(),
         inactivityDays: roundTo(inactivityDays),
-        thresholdDays: this.longInactivityDays,
+        thresholdDays: adaptiveMfaLongInactivityThresholdDays,
       },
     };
   }
 
   private getUntrustedIpRule(): Optional<TriggeredRule> {
-    const signals = this.currentContext.ipRiskSignals;
+    const signals = this.getCurrentContext()?.ipRiskSignals;
     if (!signals) {
       return;
     }
@@ -351,9 +409,9 @@ export class AdaptiveMfaValidator {
 
     const matchedSignals: string[] = [];
 
-    if (typeof signals.botScore === 'number' && signals.botScore < this.minBotScore) {
+    if (typeof signals.botScore === 'number' && signals.botScore < adaptiveMfaMinBotScore) {
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      matchedSignals.push(`botScore<${this.minBotScore}`);
+      matchedSignals.push(`botScore<${adaptiveMfaMinBotScore}`);
     }
 
     if (signals.botVerified === true) {
@@ -388,7 +446,7 @@ export class AdaptiveMfaValidator {
 
     this.recentCountries = await this.queries.userSignInCountries.findRecentSignInCountriesByUserId(
       this.user.id,
-      this.newCountryWindowDays
+      adaptiveMfaNewCountryWindowDays
     );
     return this.recentCountries;
   }
@@ -402,6 +460,39 @@ export class AdaptiveMfaValidator {
       this.user.id
     );
     return this.userGeoLocation;
+  }
+
+  private getCurrentContext(): Optional<AdaptiveMfaContext> {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    if (this.adaptiveMfaContext) {
+      return this.adaptiveMfaContext;
+    }
+
+    const injectedHeaders = conditional(
+      this.ctx && getInjectedHeaderValues(this.ctx.request.headers)
+    );
+    const context = this.contextOverride ?? parseAdaptiveMfaContext(injectedHeaders);
+
+    this.adaptiveMfaContext = context;
+    return this.adaptiveMfaContext;
+  }
+
+  private async isAdaptiveMfaEnabled(): Promise<Optional<boolean>> {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    if (this.isAdaptiveMfaEnabledCache !== undefined) {
+      return this.isAdaptiveMfaEnabledCache;
+    }
+
+    const { adaptiveMfa } = await this.signInExperienceValidator.getSignInExperienceData();
+    this.isAdaptiveMfaEnabledCache = adaptiveMfa.enabled;
+
+    return this.isAdaptiveMfaEnabledCache;
   }
 
   /**
