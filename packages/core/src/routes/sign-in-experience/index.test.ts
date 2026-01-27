@@ -244,7 +244,7 @@ describe('PATCH /sign-in-exp', () => {
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({ adaptiveMfa });
 
     expect(response).toMatchObject({
-      status: 400,
+      status: 422,
     });
   });
 

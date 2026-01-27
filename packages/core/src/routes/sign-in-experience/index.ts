@@ -153,7 +153,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       if (adaptiveMfa?.enabled) {
         const effectiveMfa = mfa ?? currentSettings.mfa;
 
-        assertThat(isMfaEnabled(effectiveMfa), 'sign_in_experiences.adaptive_mfa_requires_mfa');
+        assertThat(
+          isMfaEnabled(effectiveMfa),
+          'sign_in_experiences.adaptive_mfa_requires_mfa',
+          422
+        );
       }
 
       if (forgotPasswordMethods) {

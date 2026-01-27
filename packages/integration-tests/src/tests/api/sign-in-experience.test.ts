@@ -95,7 +95,7 @@ describe('admin console sign-in experience', () => {
     devFeatureTest.it('should reject adaptive mfa enablement when mfa is disabled', async () => {
       await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
         code: 'sign_in_experiences.adaptive_mfa_requires_mfa',
-        status: 400,
+        status: 422,
       });
     });
 
