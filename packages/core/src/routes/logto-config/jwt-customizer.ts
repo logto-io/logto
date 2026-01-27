@@ -227,23 +227,19 @@ export default function logtoConfigJwtCustomizerRoutes<T extends ManagementApiRo
     async (ctx, next) => {
       const { body } = ctx.guard;
 
-      // Deploy the test script
-      await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
-        key:
-          body.tokenType === LogtoJwtTokenKeyType.AccessToken
-            ? LogtoJwtTokenKey.AccessToken
-            : LogtoJwtTokenKey.ClientCredentials,
-        value: body,
-        useCase: 'test',
-      });
-
       try {
         if (EnvSet.values.isCloud) {
-          const client = await cloudConnection.getClient();
-          ctx.body = await client.post(`/api/services/custom-jwt`, {
-            body,
-            search: { isTest: 'true' },
+          // Deploy the test script if needed.(Only for cloud worker service)
+          await libraries.jwtCustomizers.deployJwtCustomizerScript(getConsoleLogFromContext(ctx), {
+            key:
+              body.tokenType === LogtoJwtTokenKeyType.AccessToken
+                ? LogtoJwtTokenKey.AccessToken
+                : LogtoJwtTokenKey.ClientCredentials,
+            value: body,
+            useCase: 'test',
           });
+
+          ctx.body = await libraries.jwtCustomizers.runScriptRemotely(body, true);
         } else {
           ctx.body = removeUndefinedKeys(await JwtCustomizerLibrary.runScriptInLocalVm(body));
         }
