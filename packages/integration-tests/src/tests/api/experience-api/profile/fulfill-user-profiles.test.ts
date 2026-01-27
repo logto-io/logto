@@ -27,7 +27,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { generateEmail, generateNationalPhoneNumber } from '#src/utils.js';
+import { generateEmail, generateNationalPhoneNumber, generatePassword } from '#src/utils.js';
 
 describe('Fulfill User Profiles', () => {
   const userApi = new UserApiTest();
@@ -84,7 +84,10 @@ describe('Fulfill User Profiles', () => {
       }
     );
 
-    await expectRejects(client.updateProfile({ type: 'password', value: 'password' }), {
+    const newPassword = generatePassword();
+    const passwordForUpdate = newPassword === password ? `${newPassword}_1` : newPassword;
+
+    await expectRejects(client.updateProfile({ type: 'password', value: passwordForUpdate }), {
       status: 422,
       code: 'user.password_exists_in_profile',
     });
