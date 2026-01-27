@@ -137,7 +137,67 @@ describe('BasicSentinel -> decide()', () => {
   });
 });
 
-describe('BasicSentinel  with custom policy', () => {
+describe('BasicSentinel -> action pools', () => {
+  beforeEach(() => {
+    findDefaultSignInExperienceMock.mockResolvedValue(mockSignInExperience);
+  });
+
+  const isolatedMfaActions = [
+    SentinelActivityAction.MfaTotp,
+    SentinelActivityAction.MfaWebAuthn,
+    SentinelActivityAction.MfaBackupCode,
+  ];
+
+  it('should use the pooled actions for password decisions', async () => {
+    methods.maybeOne.mockResolvedValueOnce(null);
+    methods.oneFirst.mockResolvedValueOnce(0);
+
+    const activity = createMockActivityReport();
+
+    await sentinel.decide(activity);
+
+    const blockedQuery: unknown = methods.maybeOne.mock.calls[0]?.[0];
+    const failedAttemptsQuery: unknown = methods.oneFirst.mock.calls[0]?.[0];
+
+    expect(blockedQuery).toHaveProperty(
+      'values',
+      expect.arrayContaining([expect.arrayContaining([...BasicSentinel.pooledActions])])
+    );
+    expect(failedAttemptsQuery).toHaveProperty(
+      'values',
+      expect.arrayContaining([expect.arrayContaining([...BasicSentinel.pooledActions])])
+    );
+  });
+
+  it.each(isolatedMfaActions)(
+    'should use a dedicated pool for MFA action %s decisions',
+    async (action) => {
+      methods.maybeOne.mockResolvedValueOnce(null);
+      methods.oneFirst.mockResolvedValueOnce(0);
+
+      const activity = {
+        ...createMockActivityReport(),
+        action,
+      };
+
+      await sentinel.decide(activity);
+
+      const blockedQuery: unknown = methods.maybeOne.mock.calls[0]?.[0];
+      const failedAttemptsQuery: unknown = methods.oneFirst.mock.calls[0]?.[0];
+
+      expect(blockedQuery).toHaveProperty(
+        'values',
+        expect.arrayContaining([expect.arrayContaining([action])])
+      );
+      expect(failedAttemptsQuery).toHaveProperty(
+        'values',
+        expect.arrayContaining([expect.arrayContaining([action])])
+      );
+    }
+  );
+});
+
+describe('BasicSentinel with custom policy', () => {
   beforeEach(() => {
     findDefaultSignInExperienceMock.mockResolvedValue({
       ...mockSignInExperience,

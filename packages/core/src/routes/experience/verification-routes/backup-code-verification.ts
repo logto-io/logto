@@ -1,13 +1,20 @@
-import { backupCodeVerificationVerifyPayloadGuard, VerificationType } from '@logto/schemas';
+import {
+  AdditionalIdentifier,
+  SentinelActivityAction,
+  backupCodeVerificationVerifyPayloadGuard,
+  VerificationType,
+} from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { withSentinel } from '../classes/libraries/sentinel-guard.js';
 import { BackupCodeVerification } from '../classes/verifications/backup-code-verification.js';
 import { experienceRoutes } from '../const.js';
 import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
@@ -17,7 +24,7 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
   router: Router<unknown, T>,
   tenantContext: TenantContext
 ) {
-  const { libraries, queries } = tenantContext;
+  const { libraries, queries, sentinel } = tenantContext;
 
   router.post(
     `${experienceRoutes.verification}/backup-code/generate`,
@@ -98,7 +105,23 @@ export default function backupCodeVerificationRoutes<T extends ExperienceInterac
         experienceInteraction.identifiedUserId
       );
 
-      await backupCodeVerificationRecord.verify(code);
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withSentinel(
+            {
+              ctx,
+              sentinel,
+              action: SentinelActivityAction.MfaBackupCode,
+              identifier: {
+                type: AdditionalIdentifier.UserId,
+                value: experienceInteraction.identifiedUserId,
+              },
+              payload: {
+                verificationId: backupCodeVerificationRecord.id,
+              },
+            },
+            backupCodeVerificationRecord.verify(code)
+          )
+        : backupCodeVerificationRecord.verify(code));
 
       ctx.experienceInteraction.setVerificationRecord(backupCodeVerificationRecord);
 

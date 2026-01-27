@@ -27,14 +27,42 @@ const { fields, table } = convertToIdentifiers(SentinelActivities);
  */
 export default class BasicSentinel extends Sentinel {
   /** The list of actions that are accepted to be reported to this sentinel. */
-  static supportedActions = Object.freeze([
+  static pooledActions = Object.freeze([
     SentinelActivityAction.Password,
     SentinelActivityAction.VerificationCode,
     SentinelActivityAction.OneTimeToken,
   ] as const);
 
-  /** The array of all supported actions in SQL format. */
-  static supportedActionArray = sql.array(BasicSentinel.supportedActions, 'varchar');
+  static isolatedActions = Object.freeze([
+    SentinelActivityAction.MfaTotp,
+    SentinelActivityAction.MfaWebAuthn,
+    SentinelActivityAction.MfaBackupCode,
+  ] as const);
+
+  static supportedActions = Object.freeze([
+    ...BasicSentinel.pooledActions,
+    ...BasicSentinel.isolatedActions,
+  ] as const);
+
+  /** The array of pooled actions in SQL format. */
+  static pooledActionArray = sql.array(BasicSentinel.pooledActions, 'varchar');
+
+  static pooledActionSet = new Set<SentinelActivityAction>(BasicSentinel.pooledActions);
+
+  /** The arrays of isolated actions in SQL format. */
+  static isolatedActionArrays = new Map<SentinelActivityAction, ReturnType<typeof sql.array>>(
+    BasicSentinel.isolatedActions.map((action) => [action, sql.array([action], 'varchar')])
+  );
+
+  static getActionArray(action: SentinelActivityAction) {
+    const isPooledAction = BasicSentinel.pooledActionSet.has(action);
+
+    if (isPooledAction) {
+      return BasicSentinel.pooledActionArray;
+    }
+
+    return BasicSentinel.isolatedActionArrays.get(action) ?? sql.array([action], 'varchar');
+  }
 
   /**
    * Asserts that the given action is supported by this sentinel.
@@ -98,18 +126,20 @@ export default class BasicSentinel extends Sentinel {
    * @returns The decision made by the sentinel, or `null` if the target is not blocked.
    *
    * @remarks
-   * All supported actions share the same pool of activities, i.e. once a user has failed to
-   * perform any of the supported actions for certain times, the user will be blocked from
-   * performing any of the supported actions.
+   * The password/verification-code/one-time-token actions share the same pool of activities.
+   * Each MFA action uses its own pool and is blocked independently from the other actions.
+   * This avoids cross-stage lockouts (e.g. repeated MFA failures preventing password or
+   * verification-code sign-in) and cross-factor lockouts (e.g. WebAuthn lockouts blocking TOTP).
    */
   protected async isBlocked(
-    query: Pick<SentinelActivity, 'targetType' | 'targetHash'>
+    query: Pick<SentinelActivity, 'targetType' | 'targetHash' | 'action'>
   ): Promise<Nullable<SentinelDecisionTuple>> {
+    const actionArray = BasicSentinel.getActionArray(query.action);
     const blocked = await this.pool.maybeOne<Pick<SentinelActivity, 'decisionExpiresAt'>>(sql`
       select ${fields.decisionExpiresAt} from ${table}
       where ${fields.targetType} = ${query.targetType}
         and ${fields.targetHash} = ${query.targetHash}
-        and ${fields.action} = any(${BasicSentinel.supportedActionArray})
+        and ${fields.action} = any(${actionArray})
         and ${fields.decision} = ${SentinelDecision.Blocked}
         and ${fields.decisionExpiresAt} > now()
       limit 1
@@ -132,7 +162,7 @@ export default class BasicSentinel extends Sentinel {
   }
 
   protected async decide(
-    query: Pick<SentinelActivity, 'targetType' | 'targetHash' | 'actionResult'>
+    query: Pick<SentinelActivity, 'targetType' | 'targetHash' | 'action' | 'actionResult'>
   ): Promise<SentinelDecisionTuple> {
     const blocked = await this.isBlocked(query);
 
@@ -140,11 +170,12 @@ export default class BasicSentinel extends Sentinel {
       return blocked;
     }
 
+    const actionArray = BasicSentinel.getActionArray(query.action);
     const failedAttempts = await this.pool.oneFirst<number>(sql`
       select count(*) from ${table}
       where ${fields.targetType} = ${query.targetType}
         and ${fields.targetHash} = ${query.targetHash}
-        and ${fields.action} = any(${BasicSentinel.supportedActionArray})
+        and ${fields.action} = any(${actionArray})
         and ${fields.actionResult} = ${SentinelActionResult.Failed}
         and ${fields.decision} != ${SentinelDecision.Blocked}
         and ${fields.createdAt} > now() - interval '1 hour'
