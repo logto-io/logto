@@ -13,7 +13,7 @@ import {
   jsonObjectGuard,
 } from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
-import { assert, deduplicate, pick, pickState } from '@silverhand/essentials';
+import { assert, deduplicate, type Optional, pick, pickState } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { got, HTTPError } from 'got';
 import { type UnknownObject } from 'oidc-provider';
@@ -234,7 +234,7 @@ export class JwtCustomizerLibrary {
 
     if (this.isRegionalAzureFunctionAppConfigured) {
       consoleLog.info(
-        'Skipping Cloudflare Workers deployment since regional Azure Function App is configured.'
+        'Skipping Cloudflare Workers undeployment since regional Azure Function App is configured.'
       );
       return;
     }
@@ -277,7 +277,7 @@ export class JwtCustomizerLibrary {
   async runScriptRemotely(
     payload: CustomJwtFetcher,
     isTest?: boolean
-  ): Promise<UnknownObject | undefined> {
+  ): Promise<Optional<UnknownObject>> {
     const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
 
     if (this.isRegionalAzureFunctionAppConfigured) {
