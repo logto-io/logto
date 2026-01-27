@@ -60,8 +60,7 @@ const tenants = {
     tenant_created: '租戶建立成功。',
     invitation_failed: '某些邀請發送失敗。請稍後在設置 -> 成員中再試。',
     tenant_type_description: '這一點在建立後無法更改。',
-    tenant_id_invalid:
-      '租戶 ID 只能包含小寫字母、數字和連字符，且不能超過 {{max}} 個字元。',
+    tenant_id_invalid: '租戶 ID 只能包含小寫字母、數字和連字符，且不能超過 {{max}} 個字元。',
   },
   dev_tenant_migration: {
     title: '您現在可以通過創建新的 "開發租戶" 免費試用我們的專業功能！',
