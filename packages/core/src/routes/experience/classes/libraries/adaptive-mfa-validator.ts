@@ -242,7 +242,7 @@ export class AdaptiveMfaValidator {
       return;
     }
 
-    const recentCountries = await this.loadRecentCountries();
+    const recentCountries = await this.getRecentCountries();
     const normalizedCurrent = currentCountry.toUpperCase();
     const hasRecentVisit = recentCountries.some(
       ({ country }) => country.toUpperCase() === normalizedCurrent
@@ -272,7 +272,7 @@ export class AdaptiveMfaValidator {
       return;
     }
 
-    const geoLocation = await this.loadUserGeoLocation();
+    const geoLocation = await this.getUserGeoLocation();
     const lastLatitude = geoLocation?.latitude;
     const lastLongitude = geoLocation?.longitude;
 
@@ -293,7 +293,7 @@ export class AdaptiveMfaValidator {
       return;
     }
 
-    const recentCountries = await this.loadRecentCountries();
+    const recentCountries = await this.getRecentCountries();
     const previousCountry = recentCountries[0];
 
     return {
@@ -381,7 +381,7 @@ export class AdaptiveMfaValidator {
     };
   }
 
-  private async loadRecentCountries() {
+  private async getRecentCountries() {
     if (this.recentCountries) {
       return this.recentCountries;
     }
@@ -393,7 +393,7 @@ export class AdaptiveMfaValidator {
     return this.recentCountries;
   }
 
-  private async loadUserGeoLocation() {
+  private async getUserGeoLocation() {
     if (this.userGeoLocation) {
       return this.userGeoLocation;
     }
