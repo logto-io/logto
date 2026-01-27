@@ -1,5 +1,4 @@
-const maxTenantIdLength = 21;
-const tenantIdSuffixPattern = /^[\da-z-]*$/;
+import { customTenantIdMaxLength, customTenantIdRegEx } from '@logto/core-kit';
 
 /**
  * Validate the custom tenant ID suffix.
@@ -16,7 +15,7 @@ export const validateTenantIdSuffix = (
     return true;
   }
 
-  if (!tenantIdSuffixPattern.test(value)) {
+  if (!customTenantIdRegEx.test(value)) {
     return 'Only lowercase letters, numbers, and hyphens are allowed';
   }
 
@@ -24,8 +23,8 @@ export const validateTenantIdSuffix = (
     return 'Cannot start or end with a hyphen';
   }
 
-  if (prefix.length + value.length > maxTenantIdLength) {
-    return `Total length cannot exceed ${maxTenantIdLength} characters`;
+  if (prefix.length + value.length > customTenantIdMaxLength) {
+    return `Total length cannot exceed ${customTenantIdMaxLength} characters`;
   }
 
   return true;

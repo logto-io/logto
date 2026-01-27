@@ -13,3 +13,22 @@ export const noSpaceRegEx = /^\S+$/;
 export const domainRegEx =
   /^[\dA-Za-z](?:[\dA-Za-z-]*[\dA-Za-z])?(?:\.[\dA-Za-z](?:[\dA-Za-z-]*[\dA-Za-z])?){2,}$/;
 export const numberAndAlphabetRegEx = /^[\dA-Za-z]+$/;
+
+/**
+ * Custom tenant ID validation rules.
+ * Used when creating tenants with custom IDs in private cloud regions.
+ */
+
+/** Maximum length for custom tenant ID */
+export const customTenantIdMaxLength = 21;
+
+/** Pattern for custom tenant ID: lowercase letters, numbers, and hyphens only */
+export const customTenantIdRegEx = /^[\da-z-]+$/;
+
+/**
+ * Validates a custom tenant ID format.
+ * @returns `true` if valid, `false` otherwise
+ */
+export const isValidCustomTenantId = (id: string): boolean => {
+  return id.length <= customTenantIdMaxLength && customTenantIdRegEx.test(id);
+};
