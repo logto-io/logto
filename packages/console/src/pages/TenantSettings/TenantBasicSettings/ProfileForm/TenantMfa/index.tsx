@@ -29,10 +29,9 @@ function TenantMfa() {
   const { data, error, isLoading, mutate } = useSWR<TenantSettingsResponse, RequestError>(
     isCloud && `api/tenants/${currentTenantId}/settings`,
     async () =>
-      // eslint-disable-next-line no-restricted-syntax
-      (cloudApi as unknown as { get: (path: string) => Promise<TenantSettingsResponse> }).get(
-        `/api/tenants/${currentTenantId}/settings`
-      )
+      cloudApi.get(`/api/tenants/:tenantId/settings`, {
+        params: { tenantId: currentTenantId },
+      })
   );
 
   const isFreeOrDevPlan =
@@ -46,18 +45,10 @@ function TenantMfa() {
 
     setIsUpdating(true);
     try {
-      /* eslint-disable no-restricted-syntax */
-      const updated = await (
-        cloudApi as unknown as {
-          patch: (
-            path: string,
-            options: { body: { isMfaRequired: boolean } }
-          ) => Promise<TenantSettingsResponse>;
-        }
-      ).patch(`/api/tenants/${currentTenantId}/settings`, {
+      const updated = await cloudApi.patch(`/api/tenants/:tenantId/settings`, {
+        params: { tenantId: currentTenantId },
         body: { isMfaRequired: checked },
       });
-      /* eslint-enable no-restricted-syntax */
       void mutate(updated);
       toast.success(t('general.saved'));
     } finally {

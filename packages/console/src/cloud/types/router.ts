@@ -61,11 +61,9 @@ export type TenantInvitationResponse = GetArrayElementType<
   GuardedResponse<GetTenantAuthRoutes['/api/tenants/:tenantId/invitations']>
 >;
 
-// TODO: This type will be auto-generated after cloud project is rebuilt.
-// For now, define it manually to match the API response.
-export type TenantSettingsResponse = {
-  isMfaRequired: boolean;
-};
+export type TenantSettingsResponse = GuardedResponse<
+  GetTenantAuthRoutes['/api/tenants/:tenantId/settings']
+>;
 // End of the auth routes types
 
 export type RegionResponse = GetArrayElementType<
