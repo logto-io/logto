@@ -10,15 +10,28 @@ import {
 import UrlSet from './UrlSet.js';
 import { throwErrorWithDsnMessage } from './throw-errors.js';
 
+/**
+ * Parse a timeout value from an environment variable string.
+ *
+ * Accepts a numeric string (milliseconds) or the literal `DISABLE_TIMEOUT` to
+ * skip sending a startup parameter. Empty/whitespace or invalid values return
+ * `undefined` so callers can fall back to server defaults.
+ *
+ * @example
+ * const timeout = parseTimeoutEnv(process.env.DATABASE_STATEMENT_TIMEOUT);
+ * if (timeout === 'DISABLE_TIMEOUT') {
+ *   // omit the startup parameter entirely
+ * }
+ */
 export const parseTimeoutEnv = (value?: string): Optional<number | 'DISABLE_TIMEOUT'> => {
-  if (!value) {
-    return undefined;
+  if (value === undefined) {
+    return;
   }
 
   const normalized = value.trim();
 
-  if (!normalized) {
-    return undefined;
+  if (normalized === '') {
+    return;
   }
 
   if (normalized === 'DISABLE_TIMEOUT') {
@@ -27,6 +40,7 @@ export const parseTimeoutEnv = (value?: string): Optional<number | 'DISABLE_TIME
 
   const parsed = Number(normalized);
 
+  // Can not use `conditional()` since 0 will be treated as falsy and hence return undefined incorrectly.
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
@@ -153,7 +167,16 @@ export default class GlobalValues {
   public readonly databasePoolSize = Number(getEnv('DATABASE_POOL_SIZE', '20'));
 
   public readonly databaseConnectionTimeout = Number(getEnv('DATABASE_CONNECTION_TIMEOUT', '5000'));
-  // Use DISABLE_TIMEOUT to avoid sending startup parameters rejected by PgBouncer/RDS Proxy.
+  /**
+   * PostgreSQL statement timeout in milliseconds.
+   *
+   * - Provide a numeric string (for example, `"5000"`) to send that timeout value.
+   * - Use `"DISABLE_TIMEOUT"` to skip the startup parameter entirely (helps with PgBouncer/RDS Proxy).
+   *
+   * If unset or invalid, Logto will not send a `statement_timeout` parameter and the server
+   * default applies. PostgreSQL defaults to `0` (no timeout) unless overridden by server,
+   * database, or role settings.
+   */
   public readonly databaseStatementTimeout = parseTimeoutEnv(getEnv('DATABASE_STATEMENT_TIMEOUT'));
 
   /** Global switch for enabling/disabling case-sensitive usernames. */
