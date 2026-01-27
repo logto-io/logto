@@ -1,6 +1,4 @@
-import { customTenantIdMaxLength } from '@logto/core-kit';
 import { Theme, TenantTag } from '@logto/schemas';
-import { condArray } from '@silverhand/essentials';
 import { useCallback, useMemo, useState } from 'react';
 import { Controller, type ControllerRenderProps, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -10,12 +8,8 @@ import Modal from 'react-modal';
 import CreateTenantHeaderIconDark from '@/assets/icons/create-tenant-header-dark.svg?react';
 import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?react';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type TenantResponse, type RegionResponse as RegionType } from '@/cloud/types/router';
-import Region, {
-  defaultRegionName,
-  publicInstancesDropdownItem,
-  type InstanceDropdownItemProps,
-} from '@/components/Region';
+import { type TenantResponse } from '@/cloud/types/router';
+import Region, { defaultRegionName, publicInstancesDropdownItem } from '@/components/Region';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -32,26 +26,14 @@ import { trySubmitSafe } from '@/utils/form';
 import EnvTagOptionContent from './EnvTagOptionContent';
 import InstanceSelector from './InstanceSelector';
 import SelectTenantPlanModal from './SelectTenantPlanModal';
+import TenantIdField from './TenantIdField';
 import styles from './index.module.scss';
 import { type CreateTenantData } from './types';
-import { validateCustomTenantId } from './utils';
+import { checkPrivateRegionAccess, getInstanceDropdownItems } from './utils';
 
 type Props = {
   readonly isOpen: boolean;
   readonly onClose: (tenant?: TenantResponse) => void;
-};
-
-const checkPrivateRegionAccess = (regions: RegionType[]): boolean => {
-  return regions.some(({ isPrivate }) => isPrivate);
-};
-
-const getInstanceDropdownItems = (regions: RegionType[]): InstanceDropdownItemProps[] => {
-  const hasPublicRegions = regions.some(({ isPrivate }) => !isPrivate);
-  const privateInstances = regions
-    .filter(({ isPrivate }) => isPrivate)
-    .map(({ id, name, country, tags, displayName }) => ({ id, name, country, tags, displayName }));
-
-  return condArray(hasPublicRegions && publicInstancesDropdownItem, ...privateInstances);
 };
 
 const defaultFormValues = Object.freeze({
@@ -275,27 +257,7 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
           )}
 
           {customTenantIdPrefix && (
-            <FormField title="tenants.create_modal.tenant_id">
-              <div className={styles.tenantIdInput}>
-                <span className={styles.tenantIdPrefix}>{customTenantIdPrefix}</span>
-                <TextInput
-                  {...register('tenantIdSuffix', {
-                    validate: (value) =>
-                      validateCustomTenantId(value, customTenantIdPrefix) ||
-                      t('tenants.create_modal.tenant_id_invalid', {
-                        max: customTenantIdMaxLength,
-                      }),
-                  })}
-                  className={styles.tenantIdSuffix}
-                  placeholder="your-tenant-id"
-                  error={Boolean(errors.tenantIdSuffix)}
-                  disabled={isSubmitting}
-                />
-              </div>
-              {errors.tenantIdSuffix && (
-                <div className={styles.error}>{errors.tenantIdSuffix.message}</div>
-              )}
-            </FormField>
+            <TenantIdField prefix={customTenantIdPrefix} isSubmitting={isSubmitting} />
           )}
 
           {currentRegion && (
