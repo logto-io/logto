@@ -68,6 +68,8 @@ const tenants = {
     invitation_failed:
       'Some invitation failed to send. Please try again in Settings -> Members later.',
     tenant_type_description: 'This cannot be changed after creation.',
+    tenant_id_invalid:
+      'Tenant ID can only contain lowercase letters, numbers, and hyphens, and must not exceed {{max}} characters.',
   },
   dev_tenant_migration: {
     title: 'You can now try our Pro features for free by creating a new "Development tenant"!',

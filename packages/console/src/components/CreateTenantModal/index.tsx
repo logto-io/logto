@@ -1,3 +1,4 @@
+import { customTenantIdMaxLength } from '@logto/core-kit';
 import { Theme, TenantTag } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 import { useCallback, useMemo, useState } from 'react';
@@ -33,7 +34,7 @@ import InstanceSelector from './InstanceSelector';
 import SelectTenantPlanModal from './SelectTenantPlanModal';
 import styles from './index.module.scss';
 import { type CreateTenantData } from './types';
-import { validateTenantIdSuffix } from './utils';
+import { validateCustomTenantId } from './utils';
 
 type Props = {
   readonly isOpen: boolean;
@@ -279,7 +280,11 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
                 <span className={styles.tenantIdPrefix}>{customTenantIdPrefix}</span>
                 <TextInput
                   {...register('tenantIdSuffix', {
-                    validate: (value) => validateTenantIdSuffix(value, customTenantIdPrefix),
+                    validate: (value) =>
+                      validateCustomTenantId(value, customTenantIdPrefix) ||
+                      t('tenants.create_modal.tenant_id_invalid', {
+                        max: customTenantIdMaxLength,
+                      }),
                   })}
                   className={styles.tenantIdSuffix}
                   placeholder="your-tenant-id"
