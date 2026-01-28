@@ -68,15 +68,7 @@ export type TenantSettingsResponse = GuardedResponse<
 
 export type RegionResponse = GetArrayElementType<
   GuardedResponse<GetRoutes['/api/me/regions']>['regions']
-> & {
-  /**
-   * Custom tenant ID prefix for private regions.
-   * When set, custom tenant IDs must start with this prefix.
-   *
-   * @remarks This is a temporary extension until @logto/cloud package is updated.
-   */
-  customTenantIdPrefix?: string;
-};
+>;
 
 export type LogtoEnterpriseResponse = GetArrayElementType<
   GuardedResponse<GetRoutes['/api/me/logto-enterprises']>['logtoEnterprises']
