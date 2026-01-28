@@ -59,8 +59,7 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
-  private adaptiveMfaValidator?: AdaptiveMfaValidator;
-  private adaptiveMfaValidatorUserId?: string;
+  private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
@@ -92,6 +91,11 @@ export default class ExperienceInteraction {
 
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
     this.provisionLibrary = new ProvisionLibrary(tenant, ctx);
+    this.adaptiveMfaValidator = new AdaptiveMfaValidator({
+      ctx,
+      queries,
+      signInExperienceValidator: this.signInExperienceValidator,
+    });
 
     const interactionContext: InteractionContext = {
       getInteractionEvent: () => this.#interactionEvent,
@@ -345,7 +349,7 @@ export default class ExperienceInteraction {
 
     const user = await this.getIdentifiedUser();
     const signInExperience = await this.signInExperienceValidator.getSignInExperienceData();
-    const adaptiveMfaResult = await this.getAdaptiveMfaValidator(user).getResult();
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
     const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
     const mfaValidator = new MfaValidator(signInExperience.mfa, user, {
       ignoreSkipMfaOnSignIn: requiresAdaptiveMfa,
@@ -605,7 +609,7 @@ export default class ExperienceInteraction {
     });
 
     await trySafe(
-      async () => this.getAdaptiveMfaValidator(user).persistContext(),
+      async () => this.adaptiveMfaValidator.persistContext(user),
       (error) => {
         void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
       }
@@ -712,20 +716,6 @@ export default class ExperienceInteraction {
   private get hasVerifiedSocialIdentity() {
     const socialVerificationRecord = this.verificationRecords.get(VerificationType.Social);
     return Boolean(socialVerificationRecord?.isVerified);
-  }
-
-  private getAdaptiveMfaValidator(user: User) {
-    if (!this.adaptiveMfaValidator || this.adaptiveMfaValidatorUserId !== user.id) {
-      this.adaptiveMfaValidator = new AdaptiveMfaValidator({
-        user,
-        ctx: this.ctx,
-        queries: this.tenant.queries,
-        signInExperienceValidator: this.signInExperienceValidator,
-      });
-      this.adaptiveMfaValidatorUserId = user.id;
-    }
-
-    return this.adaptiveMfaValidator;
   }
 
   /**

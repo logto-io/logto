@@ -64,14 +64,14 @@ describe('AdaptiveMfaValidator', () => {
     });
 
     const validator = new AdaptiveMfaValidator({
-      user,
       queries,
-      now,
       signInExperienceValidator: createSignInExperienceValidator(),
-      currentContext: { location: { country: 'FR' } },
     });
 
-    const result = await validator.getResult();
+    const result = await validator.getResult(user, {
+      now,
+      currentContext: { location: { country: 'FR' } },
+    });
 
     expect(result?.requiresMfa).toBe(true);
     expect(result?.triggeredRules).toEqual(
@@ -91,10 +91,12 @@ describe('AdaptiveMfaValidator', () => {
     });
 
     const validator = new AdaptiveMfaValidator({
-      user,
       queries,
-      now,
       signInExperienceValidator: createSignInExperienceValidator(),
+    });
+
+    const result = await validator.getResult(user, {
+      now,
       currentContext: {
         location: {
           latitude: 50,
@@ -104,8 +106,6 @@ describe('AdaptiveMfaValidator', () => {
         },
       },
     });
-
-    const result = await validator.getResult();
 
     expect(result?.requiresMfa).toBe(true);
     expect(result?.triggeredRules).toEqual(
@@ -122,14 +122,14 @@ describe('AdaptiveMfaValidator', () => {
     const queries = createQueries();
 
     const validator = new AdaptiveMfaValidator({
-      user,
       queries,
-      now,
       signInExperienceValidator: createSignInExperienceValidator(),
-      currentContext: {},
     });
 
-    const result = await validator.getResult();
+    const result = await validator.getResult(user, {
+      now,
+      currentContext: {},
+    });
 
     expect(result?.requiresMfa).toBe(true);
     expect(result?.triggeredRules).toEqual(
@@ -146,18 +146,18 @@ describe('AdaptiveMfaValidator', () => {
     const queries = createQueries();
 
     const validator = new AdaptiveMfaValidator({
-      user,
       queries,
-      now,
       signInExperienceValidator: createSignInExperienceValidator(),
+    });
+
+    const result = await validator.getResult(user, {
+      now,
       currentContext: {
         ipRiskSignals: {
           botScore: 10,
         },
       },
     });
-
-    const result = await validator.getResult();
 
     expect(result?.requiresMfa).toBe(true);
     expect(result?.triggeredRules).toEqual(
@@ -173,9 +173,11 @@ describe('AdaptiveMfaValidator', () => {
     const queries = createQueries();
 
     const validator = new AdaptiveMfaValidator({
-      user,
       queries,
       signInExperienceValidator: createSignInExperienceValidator(),
+    });
+
+    await validator.persistContext(user, {
       currentContext: {
         location: {
           latitude: 12.3,
@@ -184,8 +186,6 @@ describe('AdaptiveMfaValidator', () => {
         },
       },
     });
-
-    await validator.persistContext();
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
       user.id,
@@ -215,13 +215,12 @@ describe('AdaptiveMfaValidator', () => {
     };
 
     const validator = new AdaptiveMfaValidator({
-      user,
       queries,
       ctx,
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-    await validator.persistContext();
+    await validator.persistContext(user);
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(user.id, 0, 0);
   });
@@ -234,9 +233,11 @@ describe('AdaptiveMfaValidator', () => {
     const queries = createQueries();
 
     const validator = new AdaptiveMfaValidator({
-      user,
       queries,
       signInExperienceValidator: createSignInExperienceValidator(false),
+    });
+
+    await validator.persistContext(user, {
       currentContext: {
         location: {
           latitude: 12.3,
@@ -245,8 +246,6 @@ describe('AdaptiveMfaValidator', () => {
         },
       },
     });
-
-    await validator.persistContext();
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
     expect(queries.userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
@@ -263,9 +262,11 @@ describe('AdaptiveMfaValidator', () => {
     const queries = createQueries();
 
     const validator = new AdaptiveMfaValidator({
-      user,
       queries,
       signInExperienceValidator: createSignInExperienceValidator(),
+    });
+
+    await validator.persistContext(user, {
       currentContext: {
         location: {
           latitude: 12.3,
@@ -274,8 +275,6 @@ describe('AdaptiveMfaValidator', () => {
         },
       },
     });
-
-    await validator.persistContext();
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
     expect(queries.userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
