@@ -74,6 +74,7 @@ const tenants = {
     tenant_type_description: 'Tego nie można zmienić po utworzeniu.',
     tenant_id_invalid:
       'Identyfikator najemcy może zawierać tylko małe litery, cyfry i myślniki oraz nie może przekraczać {{max}} znaków.',
+    tenant_id_placeholder: 'Identyfikator najemcy',
   },
   dev_tenant_migration: {
     title:

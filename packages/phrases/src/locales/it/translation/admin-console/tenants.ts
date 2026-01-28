@@ -75,6 +75,7 @@ const tenants = {
     tenant_type_description: 'Questo non può essere cambiato dopo la creazione.',
     tenant_id_invalid:
       "L'ID del tenant può contenere solo lettere minuscole, numeri e trattini e non deve superare {{max}} caratteri.",
+    tenant_id_placeholder: 'Il tuo ID tenant',
   },
   dev_tenant_migration: {
     title:

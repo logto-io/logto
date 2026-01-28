@@ -73,6 +73,7 @@ const tenants = {
     tenant_type_description: 'Это нельзя изменить после создания.',
     tenant_id_invalid:
       'Идентификатор арендатора может содержать только строчные буквы, цифры и дефисы и не должен превышать {{max}} символов.',
+    tenant_id_placeholder: 'Идентификатор арендатора',
   },
   dev_tenant_migration: {
     title:

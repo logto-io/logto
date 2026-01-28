@@ -73,6 +73,7 @@ const tenants = {
     tenant_type_description: 'Esto no se puede cambiar después de la creación.',
     tenant_id_invalid:
       'El ID del inquilino solo puede contener letras minúsculas, números y guiones, y no debe exceder {{max}} caracteres.',
+    tenant_id_placeholder: 'Su ID de inquilino',
   },
   dev_tenant_migration: {
     title:

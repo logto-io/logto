@@ -34,7 +34,7 @@ function TenantIdField({ prefix, isSubmitting }: Props) {
               }),
           })}
           className={styles.tenantIdSuffix}
-          placeholder="your-tenant-id"
+          placeholder={t('tenants.create_modal.tenant_id_placeholder')}
           error={Boolean(errors.tenantIdSuffix)}
           disabled={isSubmitting}
         />

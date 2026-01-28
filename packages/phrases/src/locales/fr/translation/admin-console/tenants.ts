@@ -74,6 +74,7 @@ const tenants = {
     tenant_type_description: 'Cela ne peut pas être changé après la création.',
     tenant_id_invalid:
       "L'identifiant du locataire ne peut contenir que des lettres minuscules, des chiffres et des tirets, et ne doit pas dépasser {{max}} caractères.",
+    tenant_id_placeholder: 'Votre identifiant de locataire',
   },
   dev_tenant_migration: {
     title:
