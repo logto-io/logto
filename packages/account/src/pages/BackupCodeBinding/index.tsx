@@ -1,6 +1,6 @@
+import { InlineNotification } from '@experience/components/Notification';
 import Button from '@experience/shared/components/Button';
 import DynamicT from '@experience/shared/components/DynamicT';
-import { InlineNotification } from '@experience/components/Notification';
 import {
   AccountCenterControlValue,
   MfaFactor,
