@@ -1,4 +1,3 @@
-import { ReservedPlanId } from '@logto/schemas';
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -7,22 +6,21 @@ import useSWR from 'swr';
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantSettingsResponse } from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
-import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Switch from '@/ds-components/Switch';
 import { type RequestError } from '@/hooks/use-api';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 
+import useTenantMfaFeature from './use-tenant-mfa-feature.js';
+
 function TenantMfa() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const cloudApi = useAuthedCloudApi({ hideErrorToast: true });
-  const { currentTenantId, isDevTenant } = useContext(TenantsContext);
-  const {
-    currentSubscription: { planId, isEnterprisePlan },
-  } = useContext(SubscriptionDataContext);
+  const cloudApi = useAuthedCloudApi();
+  const { currentTenantId } = useContext(TenantsContext);
   const {
     access: { canManageTenant },
   } = useCurrentTenantScopes();
+  const { isFeatureAvailable } = useTenantMfaFeature();
 
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -33,10 +31,6 @@ function TenantMfa() {
         params: { tenantId: currentTenantId },
       })
   );
-
-  const isFreeOrDevPlan =
-    planId === ReservedPlanId.Free || planId === ReservedPlanId.Development || isDevTenant;
-  const isFeatureAvailable = !isFreeOrDevPlan || isEnterprisePlan;
 
   const handleToggle = async (checked: boolean) => {
     if (isUpdating || !isFeatureAvailable) {
@@ -51,6 +45,8 @@ function TenantMfa() {
       });
       void mutate(updated);
       toast.success(t('general.saved'));
+    } catch {
+      toast.error(t('general.unknown_error'));
     } finally {
       setIsUpdating(false);
     }
