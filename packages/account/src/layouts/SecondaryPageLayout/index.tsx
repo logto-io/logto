@@ -11,6 +11,7 @@ type Props = {
   readonly description?: TFuncKey | ReactElement | '';
   readonly titleProps?: Record<string, unknown>;
   readonly descriptionProps?: Record<string, unknown>;
+  readonly notification?: ReactElement;
   readonly onSkip?: () => void;
   readonly onBack?: () => void;
   readonly isNavBarHidden?: boolean;
@@ -22,6 +23,7 @@ const SecondaryPageLayout = ({
   description,
   titleProps,
   descriptionProps,
+  notification,
   onSkip,
   onBack,
   isNavBarHidden,
@@ -32,6 +34,7 @@ const SecondaryPageLayout = ({
       <PageMeta titleKey={title} />
       <NavBar isHidden={isNavBarHidden} onSkip={onSkip} onClose={onBack} />
       <div className={styles.container}>
+        {notification}
         <div className={styles.header}>
           <div className={styles.title}>
             <DynamicT forKey={title} interpolation={titleProps} />

@@ -53,6 +53,8 @@ const mfa = {
   save_backup_code_description:
     "Vous pouvez utiliser l'un de ces codes de sauvegarde pour accéder à votre compte en cas de problème lors de la vérification en deux étapes par d'autres moyens. Chaque code ne peut être utilisé qu'une fois.",
   backup_code_hint: 'Assurez-vous de les copier et de les sauvegarder dans un endroit sûr.',
+  new_backup_codes_generated:
+    "De nouveaux codes de secours ont remplacé vos anciens codes. Enregistrez-les dans un endroit sûr dès que possible.",
   enter_a_backup_code: 'Saisissez un code de sauvegarde',
   enter_backup_code_description:
     'Saisissez le code de sauvegarde que vous avez enregistré lorsque la vérification en deux étapes a été activée initialement.',

@@ -51,6 +51,8 @@ const mfa = {
   save_backup_code_description:
     '2段階認証中に他の方法で問題が発生した場合、これらのバックアップコードのいずれかを使用してアカウントにアクセスできます。各コードは一度だけ使用できます。',
   backup_code_hint: '必ずコピーして安全な場所に保存してください。',
+  new_backup_codes_generated:
+    '新しいバックアップコードが古いコードに置き換わりました。できるだけ早く安全な場所に保存してください。',
   enter_a_backup_code: 'バックアップコードを入力',
   enter_backup_code_description:
     '初めて2段階認証が有効になったときに保存したバックアップコードを入力してください。',

@@ -53,6 +53,8 @@ const mfa = {
   save_backup_code_description:
     'Możesz użyć jednego z tych kodów zapasowych, aby uzyskać dostęp do swojego konta w przypadku problemów z weryfikacją dwuetapową w inny sposób. Każdy kod można użyć tylko raz.',
   backup_code_hint: 'Upewnij się, że je skopiujesz i zapiszesz w bezpiecznym miejscu.',
+  new_backup_codes_generated:
+    'Nowe kody zapasowe zastąpiły Twoje stare kody. Zapisz je w bezpiecznym miejscu jak najszybciej.',
   enter_a_backup_code: 'Wprowadź kod zapasowy',
   enter_backup_code_description:
     'Wprowadź kod zapasowy, który zapisałeś, gdy włączono weryfikację dwuetapową.',

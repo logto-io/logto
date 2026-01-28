@@ -1,5 +1,6 @@
 import Button from '@experience/shared/components/Button';
 import DynamicT from '@experience/shared/components/DynamicT';
+import { InlineNotification } from '@experience/components/Notification';
 import {
   AccountCenterControlValue,
   MfaFactor,
@@ -242,6 +243,9 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
     <SecondaryPageLayout
       title="mfa.save_backup_code"
       description="mfa.save_backup_code_description"
+      notification={
+        isRegenerate ? <InlineNotification message="mfa.new_backup_codes_generated" /> : undefined
+      }
     >
       <div className={styles.container}>
         <div className={styles.backupCodes}>

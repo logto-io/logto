@@ -53,6 +53,8 @@ const mfa = {
   save_backup_code_description:
     'Puede usar uno de estos códigos de respaldo para acceder a su cuenta si tiene problemas durante la verificación de 2 pasos de otras maneras. Cada código solo se puede usar una vez.',
   backup_code_hint: 'Asegúrese de copiarlos y guardarlos en un lugar seguro.',
+  new_backup_codes_generated:
+    'Los nuevos códigos de respaldo han reemplazado sus códigos anteriores. Guárdelos en un lugar seguro lo antes posible.',
   enter_a_backup_code: 'Ingrese un código de respaldo',
   enter_backup_code_description:
     'Ingrese el código de respaldo que guardó cuando se habilitó la verificación de 2 pasos inicialmente.',

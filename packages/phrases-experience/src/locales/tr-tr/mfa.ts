@@ -52,6 +52,8 @@ const mfa = {
   save_backup_code_description:
     'Başka bir yöntemle 2 aşamalı doğrulama sırasında sorun yaşarsanız bu yedek kodlardan birini kullanabilirsiniz. Her kod sadece bir kez kullanılabilir.',
   backup_code_hint: 'Onları kopyalayın ve güvenli bir yerde sakladığınızdan emin olun.',
+  new_backup_codes_generated:
+    'Yeni yedek kodlar eski kodlarınızın yerini aldı. Onları mümkün olan en kısa sürede güvenli bir yere kaydedin.',
   enter_a_backup_code: 'Bir yedek kod girin',
   enter_backup_code_description:
     'İlk olarak 2 aşamalı doğrulama etkinleştirildiğinde kaydettiğiniz yedek kodu girin.',
