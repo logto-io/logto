@@ -229,7 +229,7 @@ export class Mfa {
    */
   async addWebAuthnByVerificationId(verificationId: string, log?: LogEntry) {
     const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
-      VerificationType.WebAuthn,
+      VerificationType.MfaWebAuthn,
       verificationId
     );
 

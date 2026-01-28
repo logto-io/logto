@@ -8,6 +8,7 @@ import {
   webAuthnVerificationPayloadGuard,
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
+import { generateStandardId } from '@logto/shared';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -18,16 +19,22 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { withSentinel } from '../classes/libraries/sentinel-guard.js';
-import { WebAuthnVerification } from '../classes/verifications/web-authn-verification.js';
+import {
+  MfaWebAuthnVerification,
+  PasskeySignInWebAuthnVerification,
+} from '../classes/verifications/web-authn-verification.js';
 import { experienceRoutes } from '../const.js';
 import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
-import { type ExperienceInteractionRouterContext } from '../types.js';
+import {
+  webAuthnAuthenticationOptionsInteractionStorageGuard,
+  type ExperienceInteractionRouterContext,
+} from '../types.js';
 
 export default function webAuthnVerificationRoute<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
   tenantContext: TenantContext
 ) {
-  const { libraries, queries, sentinel } = tenantContext;
+  const { libraries, queries, sentinel, provider } = tenantContext;
 
   router.post(
     `${experienceRoutes.verification}/web-authn/registration`,
@@ -39,13 +46,21 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       status: [200, 400, 404],
     }),
     koaExperienceVerificationsAuditLog({
-      type: VerificationType.WebAuthn,
+      type: VerificationType.MfaWebAuthn,
       action: Action.Create,
     }),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      const webAuthnVerification = WebAuthnVerification.create(
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
+
+      const webAuthnVerification = MfaWebAuthnVerification.create(
         libraries,
         queries,
         experienceInteraction.identifiedUserId
@@ -83,7 +98,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       status: [200, 400, 404],
     }),
     koaExperienceVerificationsAuditLog({
-      type: VerificationType.WebAuthn,
+      type: VerificationType.MfaWebAuthn,
       action: Action.Submit,
     }),
     async (ctx, next) => {
@@ -106,7 +121,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       );
 
       const webAuthnVerification = experienceInteraction.getVerificationRecordByTypeAndId(
-        VerificationType.WebAuthn,
+        VerificationType.MfaWebAuthn,
         verificationId
       );
 
@@ -142,13 +157,21 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       status: [200, 400, 404],
     }),
     koaExperienceVerificationsAuditLog({
-      type: VerificationType.WebAuthn,
+      type: VerificationType.MfaWebAuthn,
       action: Action.Create,
     }),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      const webAuthnVerification = WebAuthnVerification.create(
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
+
+      const webAuthnVerification = MfaWebAuthnVerification.create(
         libraries,
         queries,
         experienceInteraction.identifiedUserId
@@ -185,7 +208,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       status: [200, 400, 404],
     }),
     koaExperienceVerificationsAuditLog({
-      type: VerificationType.WebAuthn,
+      type: VerificationType.MfaWebAuthn,
       action: Action.Submit,
     }),
     async (ctx, next) => {
@@ -199,20 +222,26 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         },
       });
 
+      assertThat(
+        experienceInteraction.identifiedUserId,
+        new RequestError({
+          code: 'session.identifier_not_found',
+          status: 404,
+        })
+      );
+
       const webAuthnVerification = experienceInteraction.getVerificationRecordByTypeAndId(
-        VerificationType.WebAuthn,
+        VerificationType.MfaWebAuthn,
         verificationId
       );
 
-      if (experienceInteraction.identifiedUserId && webAuthnVerification.userId) {
-        assertThat(
-          experienceInteraction.identifiedUserId === webAuthnVerification.userId,
-          new RequestError({
-            code: 'session.identity_conflict',
-            status: 404,
-          })
-        );
-      }
+      assertThat(
+        experienceInteraction.identifiedUserId === webAuthnVerification.userId,
+        new RequestError({
+          code: 'session.identity_conflict',
+          status: 404,
+        })
+      );
 
       await (EnvSet.values.isDevFeaturesEnabled
         ? withSentinel(
@@ -220,6 +249,90 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
               ctx,
               sentinel,
               action: SentinelActivityAction.MfaWebAuthn,
+              identifier: {
+                type: AdditionalIdentifier.UserId,
+                value: experienceInteraction.identifiedUserId,
+              },
+              payload: {
+                verificationId: webAuthnVerification.id,
+              },
+            },
+            webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload)
+          )
+        : webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload));
+
+      await experienceInteraction.save();
+
+      ctx.body = {
+        verificationId: webAuthnVerification.id,
+      };
+
+      ctx.status = 200;
+
+      return next();
+    }
+  );
+
+  /**
+   * Verify passkey authentication for sign-in flow.
+   * This route must be used in conjunction with the authentication options generation endpoint
+   * in `./anonymous-routes/index.ts` which generates the initial challenge.
+   *
+   * Flow:
+   * 1. Client calls `/api/experience/passkey-sign-in/authentication` to get authentication options
+   * 2. User completes WebAuthn authentication with the browser
+   * 3. Client submits verification with this endpoint to complete sign-in
+   *
+   * @see POST /api/experience/passkey-sign-in/authentication
+   */
+  router.post(
+    `${experienceRoutes.verification}/passkey-sign-in/authentication/verify`,
+    koaGuard({
+      body: z.object({
+        payload: webAuthnVerificationPayloadGuard,
+      }),
+      response: z.object({
+        verificationId: z.string(),
+      }),
+      status: [200, 400, 404],
+    }),
+    koaExperienceVerificationsAuditLog({
+      type: VerificationType.MfaWebAuthn,
+      action: Action.Submit,
+    }),
+    async (ctx, next) => {
+      const { experienceInteraction, verificationAuditLog } = ctx;
+      const { payload } = ctx.guard.body;
+
+      const details = await provider.interactionDetails(ctx.req, ctx.res);
+      const authenticationOptionsParseResult =
+        webAuthnAuthenticationOptionsInteractionStorageGuard.safeParse(details.result);
+
+      assertThat(
+        authenticationOptionsParseResult.success,
+        'session.verification_session_not_found'
+      );
+
+      const webAuthnVerification = new PasskeySignInWebAuthnVerification(libraries, queries, {
+        id: generateStandardId(),
+        type: VerificationType.PasskeySignInWebAuthn,
+        verified: false,
+        ...authenticationOptionsParseResult.data,
+      });
+
+      verificationAuditLog.append({
+        payload: {
+          verificationId: webAuthnVerification.id,
+          payload,
+        },
+      });
+
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withSentinel(
+            {
+              ctx,
+              sentinel,
+              action: SentinelActivityAction.PasskeySignInWebAuthn,
               identifier: {
                 type: AdditionalIdentifier.UserId,
                 value: experienceInteraction.identifiedUserId,

@@ -43,7 +43,7 @@ export abstract class IdentifierVerificationRecord<
 type MfaVerificationType =
   | VerificationType.TOTP
   | VerificationType.BackupCode
-  | VerificationType.WebAuthn;
+  | VerificationType.MfaWebAuthn;
 
 export abstract class MfaVerificationRecord<
   T extends MfaVerificationType = MfaVerificationType,

@@ -36,9 +36,9 @@ await mockEsmWithActual('@simplewebauthn/server/helpers', () => ({
   isoBase64URL: { fromBuffer: jest.fn((value) => value), toBuffer: jest.fn((value) => value) },
 }));
 
-const { WebAuthnVerification } = await import('./web-authn-verification.js');
+const { MfaWebAuthnVerification } = await import('./web-authn-verification.js');
 
-describe('WebAuthnVerification', () => {
+describe('MfaWebAuthnVerification', () => {
   const userId = mockUser.id;
   const rpId = 'example.com';
 
@@ -68,10 +68,10 @@ describe('WebAuthnVerification', () => {
 
   describe('verifyWebAuthnRegistration', () => {
     it('should throw when registrationRpId is missing', async () => {
-      const verification = new WebAuthnVerification(tenant.libraries, tenant.queries, {
+      const verification = new MfaWebAuthnVerification(tenant.libraries, tenant.queries, {
         id: 'v-id',
         userId,
-        type: VerificationType.WebAuthn,
+        type: VerificationType.MfaWebAuthn,
         verified: false,
         registrationChallenge: 'challenge-only',
       });
@@ -87,10 +87,10 @@ describe('WebAuthnVerification', () => {
     });
 
     it('should verify and produce BindWebAuthn with rpId', async () => {
-      const verification = new WebAuthnVerification(tenant.libraries, tenant.queries, {
+      const verification = new MfaWebAuthnVerification(tenant.libraries, tenant.queries, {
         id: 'v-id',
         userId,
-        type: VerificationType.WebAuthn,
+        type: VerificationType.MfaWebAuthn,
         verified: false,
         registrationChallenge: 'challenge',
         registrationRpId: rpId,
@@ -132,10 +132,10 @@ describe('WebAuthnVerification', () => {
         mfaVerifications: [mockUserWebAuthnMfaVerification],
       });
 
-      const verification = new WebAuthnVerification(tenant.libraries, tenant.queries, {
+      const verification = new MfaWebAuthnVerification(tenant.libraries, tenant.queries, {
         id: 'v-id',
         userId,
-        type: VerificationType.WebAuthn,
+        type: VerificationType.MfaWebAuthn,
         verified: false,
         authenticationChallenge: 'auth-challenge',
       });

@@ -5,13 +5,47 @@ import { bindWebAuthnGuard, type BindWebAuthn } from '../interactions.js';
 
 import { VerificationType } from './verification-type.js';
 
-export type WebAuthnVerificationRecordData = {
+export type MfaWebAuthnVerificationRecordData = {
   id: string;
-  type: VerificationType.WebAuthn;
-  /**
-   * UserId is required for legacy flows. For discoverable-passkey sign-in, the user
-   * is resolved later by credentialId/rpId, so this field can be absent.
-   */
+  type: VerificationType.MfaWebAuthn;
+  userId: string;
+  verified: boolean;
+  /** The challenge generated for the WebAuthn registration */
+  registrationChallenge?: string;
+  /** The rpId used when generating the registration options */
+  registrationRpId?: string;
+  /** The challenge generated for the WebAuthn authentication */
+  authenticationChallenge?: string;
+  registrationInfo?: BindWebAuthn;
+};
+
+export const mfaWebAuthnVerificationRecordDataGuard = z.object({
+  id: z.string(),
+  type: z.literal(VerificationType.MfaWebAuthn),
+  userId: z.string(),
+  verified: z.boolean(),
+  registrationChallenge: z.string().optional(),
+  registrationRpId: z.string().optional(),
+  authenticationChallenge: z.string().optional(),
+  registrationInfo: bindWebAuthnGuard.optional(),
+}) satisfies ToZodObject<MfaWebAuthnVerificationRecordData>;
+
+export type SanitizedMfaWebAuthnVerificationRecordData = Omit<
+  MfaWebAuthnVerificationRecordData,
+  'registrationInfo' | 'registrationChallenge' | 'registrationRpId' | 'authenticationChallenge'
+>;
+
+export const sanitizedMfaWebAuthnVerificationRecordDataGuard =
+  mfaWebAuthnVerificationRecordDataGuard.omit({
+    registrationInfo: true,
+    registrationChallenge: true,
+    registrationRpId: true,
+    authenticationChallenge: true,
+  }) satisfies ToZodObject<SanitizedMfaWebAuthnVerificationRecordData>;
+
+export type PasskeySignInWebAuthnVerificationRecordData = {
+  id: string;
+  type: VerificationType.PasskeySignInWebAuthn;
   userId?: string;
   verified: boolean;
   /** The challenge generated for the WebAuthn registration */
@@ -25,9 +59,9 @@ export type WebAuthnVerificationRecordData = {
   registrationInfo?: BindWebAuthn;
 };
 
-export const webAuthnVerificationRecordDataGuard = z.object({
+export const passkeySignInWebAuthnVerificationRecordDataGuard = z.object({
   id: z.string(),
-  type: z.literal(VerificationType.WebAuthn),
+  type: z.literal(VerificationType.PasskeySignInWebAuthn),
   userId: z.string().optional(),
   verified: z.boolean(),
   registrationChallenge: z.string().optional(),
@@ -35,10 +69,10 @@ export const webAuthnVerificationRecordDataGuard = z.object({
   authenticationChallenge: z.string().optional(),
   authenticationRpId: z.string().optional(),
   registrationInfo: bindWebAuthnGuard.optional(),
-}) satisfies ToZodObject<WebAuthnVerificationRecordData>;
+}) satisfies ToZodObject<PasskeySignInWebAuthnVerificationRecordData>;
 
-export type SanitizedWebAuthnVerificationRecordData = Omit<
-  WebAuthnVerificationRecordData,
+export type SanitizedPasskeySignInWebAuthnVerificationRecordData = Omit<
+  PasskeySignInWebAuthnVerificationRecordData,
   | 'registrationInfo'
   | 'registrationChallenge'
   | 'registrationRpId'
@@ -46,11 +80,11 @@ export type SanitizedWebAuthnVerificationRecordData = Omit<
   | 'authenticationRpId'
 >;
 
-export const sanitizedWebAuthnVerificationRecordDataGuard =
-  webAuthnVerificationRecordDataGuard.omit({
+export const sanitizedPasskeySignInWebAuthnVerificationRecordDataGuard =
+  passkeySignInWebAuthnVerificationRecordDataGuard.omit({
     registrationInfo: true,
     registrationChallenge: true,
     registrationRpId: true,
     authenticationChallenge: true,
     authenticationRpId: true,
-  }) satisfies ToZodObject<SanitizedWebAuthnVerificationRecordData>;
+  }) satisfies ToZodObject<SanitizedPasskeySignInWebAuthnVerificationRecordData>;
