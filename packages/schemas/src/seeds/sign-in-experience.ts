@@ -2,7 +2,12 @@ import { generateDarkColor } from '@logto/core-kit';
 
 import type { CreateSignInExperience } from '../db-entries/index.js';
 import { SignInMode } from '../db-entries/index.js';
-import { MfaFactor, MfaPolicy, SignInIdentifier } from '../foundations/index.js';
+import {
+  MfaFactor,
+  MfaPolicy,
+  OrganizationRequiredMfaPolicy,
+  SignInIdentifier,
+} from '../foundations/index.js';
 
 import { adminTenantId, defaultTenantId } from './tenant.js';
 
@@ -77,5 +82,6 @@ export const createAdminTenantSignInExperience = (): Readonly<CreateSignInExperi
     mfa: {
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
       policy: MfaPolicy.NoPrompt,
+      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
     },
   });

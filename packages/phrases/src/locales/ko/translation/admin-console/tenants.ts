@@ -28,6 +28,8 @@ const tenants = {
     production_description:
       '최종 사용자가 사용하는 앱을 위한 것으로 유료 구독이 필요할 수 있습니다.',
     tenant_info_saved: '테넌트 정보가 성공적으로 저장되었습니다.',
+    tenant_mfa: '다단계 인증',
+    tenant_mfa_description: '이 테넌트에 접근하려면 구성원이 다단계 인증을 설정해야 합니다.',
     enterprise_sso: '엔터프라이즈 SSO',
     enterprise_sso_description:
       '유료 플랜에서 사용 가능합니다. 엔터프라이즈 SSO를 활성화하여 모든 구성원이 조직의 ID 공급자를 사용하여 Logto Cloud 콘솔에 로그인할 수 있도록 하려면 문의해 주세요.',

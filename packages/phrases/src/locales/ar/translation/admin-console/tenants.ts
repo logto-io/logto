@@ -28,6 +28,8 @@ const tenants = {
     production_description:
       'مخصص للتطبيقات التي يستخدمها المستخدمون النهائيون وقد تتطلب اشتراكًا مدفوعًا.',
     tenant_info_saved: 'تم حفظ معلومات المستأجر بنجاح.',
+    tenant_mfa: 'المصادقة متعددة العوامل',
+    tenant_mfa_description: 'اطلب من أعضائك إعداد المصادقة متعددة العوامل للوصول إلى هذا المستأجر.',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
       'متاح في الخطط المدفوعة. اتصل بنا لتمكين Enterprise SSO حتى يتمكن جميع الأعضاء من تسجيل الدخول إلى Logto Cloud Console باستخدام موفر هوية مؤسستك.',

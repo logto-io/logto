@@ -60,19 +60,15 @@ export type TenantMemberResponse = GetArrayElementType<
 export type TenantInvitationResponse = GetArrayElementType<
   GuardedResponse<GetTenantAuthRoutes['/api/tenants/:tenantId/invitations']>
 >;
+
+export type TenantSettingsResponse = GuardedResponse<
+  GetTenantAuthRoutes['/api/tenants/:tenantId/settings']
+>;
 // End of the auth routes types
 
 export type RegionResponse = GetArrayElementType<
   GuardedResponse<GetRoutes['/api/me/regions']>['regions']
-> & {
-  /**
-   * Custom tenant ID prefix for private regions.
-   * When set, custom tenant IDs must start with this prefix.
-   *
-   * @remarks This is a temporary extension until @logto/cloud package is updated.
-   */
-  customTenantIdPrefix?: string;
-};
+>;
 
 export type LogtoEnterpriseResponse = GetArrayElementType<
   GuardedResponse<GetRoutes['/api/me/logto-enterprises']>['logtoEnterprises']

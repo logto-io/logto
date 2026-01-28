@@ -26,6 +26,8 @@ const tenants = {
       '僅供測試使用，不應在生產中使用。無需訂閱。它具有所有專業功能，但存在限制，例如登錄橫幅。',
     production_description: '用於最終用戶使用並可能需要付費訂閱。',
     tenant_info_saved: '租戶信息成功保存。',
+    tenant_mfa: '多因素認證',
+    tenant_mfa_description: '要求成員設置多因素認證才能訪問此租戶。',
     enterprise_sso: '企業 SSO',
     enterprise_sso_description:
       '僅限付費計劃。聯繫我們啟用企業 SSO，讓所有成員可以使用您組織的身份提供商登錄 Logto Cloud 控制台。',
