@@ -1,3 +1,4 @@
+import { webAuthnAuthenticationOptionsGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -7,6 +8,7 @@ import { type WithInteractionDetailsContext } from '#src/middleware/koa-interact
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { generateWebAuthnAuthenticationOptions } from '../../interaction/utils/webauthn.js';
 import { SignInExperienceValidator } from '../classes/libraries/sign-in-experience-validator.js';
 import { experienceRoutes } from '../const.js';
 
@@ -14,7 +16,7 @@ export default function experienceAnonymousRoutes<T extends WithInteractionDetai
   router: Router<unknown, T>,
   tenantContext: TenantContext
 ) {
-  const { libraries, queries } = tenantContext;
+  const { libraries, queries, provider } = tenantContext;
 
   router.get(
     `${experienceRoutes.prefix}/sso-connectors`,
@@ -41,6 +43,40 @@ export default function experienceAnonymousRoutes<T extends WithInteractionDetai
       ctx.body = {
         connectorIds: connectors.map(({ id }) => id),
       };
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${experienceRoutes.prefix}/passkey-sign-in/authentication`,
+    koaGuard({
+      response: z.object({
+        authenticationOptions: webAuthnAuthenticationOptionsGuard,
+      }),
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { hostname } = ctx.URL;
+      const authenticationOptions = await generateWebAuthnAuthenticationOptions({
+        mfaVerifications: [],
+        rpId: hostname,
+        // Generate discoverable credential options on initiating passkey sign-in. The user
+        // will be resolved later by credentialId/rpId on verification.
+        allowDiscoverable: true,
+      });
+
+      const details = await provider.interactionDetails(ctx.req, ctx.res);
+      await provider.interactionResult(ctx.req, ctx.res, {
+        ...details.result,
+        authenticationOptions,
+      });
+
+      ctx.body = {
+        authenticationOptions,
+      };
+
+      ctx.status = 200;
 
       return next();
     }

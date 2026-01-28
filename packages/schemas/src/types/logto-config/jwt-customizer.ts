@@ -25,7 +25,10 @@ import { oneTimeTokenVerificationRecordDataGuard } from '../verification-records
 import { passwordVerificationRecordDataGuard } from '../verification-records/password-verification.js';
 import { socialVerificationRecordDataGuard } from '../verification-records/social-verification.js';
 import { totpVerificationRecordDataGuard } from '../verification-records/totp-verification.js';
-import { webAuthnVerificationRecordDataGuard } from '../verification-records/web-authn-verification.js';
+import {
+  mfaWebAuthnVerificationRecordDataGuard,
+  passkeySignInWebAuthnVerificationRecordDataGuard,
+} from '../verification-records/web-authn-verification.js';
 
 import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
 
@@ -115,10 +118,16 @@ const jwtCustomizerUserInteractionVerificationRecordGuard = z.discriminatedUnion
   backupCodeVerificationRecordDataGuard.omit({
     backupCodes: true,
   }),
-  webAuthnVerificationRecordDataGuard.omit({
+  mfaWebAuthnVerificationRecordDataGuard.omit({
     registrationChallenge: true,
     authenticationChallenge: true,
     registrationInfo: true,
+  }),
+  passkeySignInWebAuthnVerificationRecordDataGuard.omit({
+    registrationChallenge: true,
+    authenticationChallenge: true,
+    registrationInfo: true,
+    authenticationRpId: true,
   }),
   oneTimeTokenVerificationRecordDataGuard,
   newPasswordIdentityVerificationRecordDataGuard.omit({

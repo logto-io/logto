@@ -348,7 +348,7 @@ export class SignInExperienceValidator {
         );
         break;
       }
-      case VerificationType.WebAuthn: {
+      case VerificationType.PasskeySignInWebAuthn: {
         assertThat(
           passkeySignIn.enabled,
           new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 })

@@ -1,7 +1,15 @@
 import {
   mfaEmailCodeVerificationRecordDataGuard,
   mfaPhoneCodeVerificationRecordDataGuard,
+  type MfaWebAuthnVerificationRecordData,
+  type PasskeySignInWebAuthnVerificationRecordData,
+  type SanitizedMfaWebAuthnVerificationRecordData,
+  sanitizedMfaWebAuthnVerificationRecordDataGuard,
+  type SanitizedPasskeySignInWebAuthnVerificationRecordData,
+  sanitizedPasskeySignInWebAuthnVerificationRecordDataGuard,
   VerificationType,
+  mfaWebAuthnVerificationRecordDataGuard,
+  passkeySignInWebAuthnVerificationRecordDataGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -64,11 +72,8 @@ import {
 } from './totp-verification.js';
 import { type VerificationRecord as GenericVerificationRecord } from './verification-record.js';
 import {
-  WebAuthnVerification,
-  webAuthnVerificationRecordDataGuard,
-  sanitizedWebAuthnVerificationRecordDataGuard,
-  type WebAuthnVerificationRecordData,
-  type SanitizedWebAuthnVerificationRecordData,
+  MfaWebAuthnVerification,
+  PasskeySignInWebAuthnVerification,
 } from './web-authn-verification.js';
 
 export type VerificationRecordData =
@@ -81,7 +86,8 @@ export type VerificationRecordData =
   | EnterpriseSsoVerificationRecordData
   | TotpVerificationRecordData
   | BackupCodeVerificationRecordData
-  | WebAuthnVerificationRecordData
+  | MfaWebAuthnVerificationRecordData
+  | PasskeySignInWebAuthnVerificationRecordData
   | NewPasswordIdentityVerificationRecordData
   | OneTimeTokenVerificationRecordData;
 
@@ -95,7 +101,8 @@ export type SanitizedVerificationRecordData =
   | SanitizedEnterpriseSsoVerificationRecordData
   | SanitizedTotpVerificationRecordData
   | SanitizedBackupCodeVerificationRecordData
-  | SanitizedWebAuthnVerificationRecordData
+  | SanitizedMfaWebAuthnVerificationRecordData
+  | SanitizedPasskeySignInWebAuthnVerificationRecordData
   | SanitizedNewPasswordIdentityVerificationRecordData
   | OneTimeTokenVerificationRecordData;
 
@@ -115,7 +122,8 @@ export type VerificationRecordMap = AssertVerificationMap<{
   [VerificationType.EnterpriseSso]: EnterpriseSsoVerification;
   [VerificationType.TOTP]: TotpVerification;
   [VerificationType.BackupCode]: BackupCodeVerification;
-  [VerificationType.WebAuthn]: WebAuthnVerification;
+  [VerificationType.MfaWebAuthn]: MfaWebAuthnVerification;
+  [VerificationType.PasskeySignInWebAuthn]: PasskeySignInWebAuthnVerification;
   [VerificationType.NewPasswordIdentity]: NewPasswordIdentityVerification;
   [VerificationType.OneTimeToken]: OneTimeTokenVerification;
 }>;
@@ -141,7 +149,8 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   enterpriseSsoVerificationRecordDataGuard,
   totpVerificationRecordDataGuard,
   backupCodeVerificationRecordDataGuard,
-  webAuthnVerificationRecordDataGuard,
+  mfaWebAuthnVerificationRecordDataGuard,
+  passkeySignInWebAuthnVerificationRecordDataGuard,
   newPasswordIdentityVerificationRecordDataGuard,
   oneTimeTokenVerificationRecordDataGuard,
 ]);
@@ -156,7 +165,8 @@ export const publicVerificationRecordDataGuard = z.discriminatedUnion('type', [
   sanitizedEnterpriseSsoVerificationRecordDataGuard,
   sanitizedTotpVerificationRecordDataGuard,
   sanitizedBackupCodeVerificationRecordDataGuard,
-  sanitizedWebAuthnVerificationRecordDataGuard,
+  sanitizedMfaWebAuthnVerificationRecordDataGuard,
+  sanitizedPasskeySignInWebAuthnVerificationRecordDataGuard,
   sanitizedNewPasswordIdentityVerificationRecordDataGuard,
   oneTimeTokenVerificationRecordDataGuard,
 ]);
@@ -198,8 +208,11 @@ export const buildVerificationRecord = (
     case VerificationType.BackupCode: {
       return new BackupCodeVerification(libraries, queries, data);
     }
-    case VerificationType.WebAuthn: {
-      return new WebAuthnVerification(libraries, queries, data);
+    case VerificationType.MfaWebAuthn: {
+      return new MfaWebAuthnVerification(libraries, queries, data);
+    }
+    case VerificationType.PasskeySignInWebAuthn: {
+      return new PasskeySignInWebAuthnVerification(libraries, queries, data);
     }
     case VerificationType.NewPasswordIdentity: {
       return new NewPasswordIdentityVerification(libraries, queries, data);
