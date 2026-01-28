@@ -1,5 +1,7 @@
+import { cond } from '@silverhand/essentials';
 import { useMemo } from 'react';
 
+import { isDevFeaturesEnabled } from '@/constants/env';
 import { type ContinueFlowInteractionEvent } from '@/types';
 
 import useEmailBlockedErrorHandler from './use-email-blocked-error-handler';
@@ -7,6 +9,7 @@ import { type ErrorHandlers } from './use-error-handler';
 import useMfaErrorHandler, {
   type Options as UseMfaVerificationErrorHandlerOptions,
 } from './use-mfa-error-handler';
+import useMissingPasskeyErrorHandler from './use-missing-passkey-error-handler';
 import useRequiredProfileErrorHandler, {
   type Options as UseRequiredProfileErrorHandlerOptions,
 } from './use-required-profile-error-handler';
@@ -38,14 +41,21 @@ const useSubmitInteractionErrorHandler = (
   });
   const mfaErrorHandler = useMfaErrorHandler({ replace });
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler();
+  const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
 
   return useMemo(
     () => ({
       ...emailBlockedErrorHandler,
       ...requiredProfileErrorHandler,
       ...mfaErrorHandler,
+      ...cond(isDevFeaturesEnabled && passkeySignInErrorHandler),
     }),
-    [emailBlockedErrorHandler, mfaErrorHandler, requiredProfileErrorHandler]
+    [
+      emailBlockedErrorHandler,
+      mfaErrorHandler,
+      passkeySignInErrorHandler,
+      requiredProfileErrorHandler,
+    ]
   );
 };
 

@@ -29,6 +29,7 @@ export {
 export * from './mfa';
 export * from './social';
 export * from './one-time-token';
+export * from './passkey-sign-in';
 
 /**
  * For sign-in flow user identity not found error handling use.

@@ -10,6 +10,7 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
+import { isDevFeaturesEnabled } from './constants/env';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
@@ -33,6 +34,7 @@ import TotpVerification from './pages/MfaVerification/TotpVerification';
 import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
 import OneTimeToken from './pages/OneTimeToken';
 import OneTimeTokenErrorPage from './pages/OneTimeToken/Error';
+import PasskeySetup from './pages/PasskeySetup';
 import Register from './pages/Register';
 import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -90,6 +92,11 @@ const App = () => {
                         <Route index element={<SignIn />} />
                         <Route path="password" element={<SignInPassword />} />
                       </Route>
+
+                      {/* Create passkey for sign-in */}
+                      {isDevFeaturesEnabled && (
+                        <Route path="create-passkey" element={<PasskeySetup />} />
+                      )}
 
                       {/* Register */}
                       <Route path={experience.routes.register}>
