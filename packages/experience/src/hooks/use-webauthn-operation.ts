@@ -27,7 +27,7 @@ const isAuthenticationResponseJSON = (
   return 'signature' in responseJson.response;
 };
 
-const useWebAuthnOperation = () => {
+const useWebAuthnOperation = (shouldIdentifyUser?: boolean) => {
   const { t } = useTranslation();
   const { setToast } = useToast();
   const sendMfaPayload = useSendMfaPayload();
@@ -76,6 +76,7 @@ const useWebAuthnOperation = () => {
               flow: UserMfaFlow.MfaVerification,
               payload: { ...response, type: MfaFactor.WebAuthn },
               verificationId,
+              shouldIdentifyUser,
             }
           : {
               flow: UserMfaFlow.MfaBinding,

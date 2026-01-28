@@ -10,7 +10,7 @@ import {
 import api from '../api';
 
 import { experienceApiRoutes } from './const';
-import { submitInteraction } from './interaction';
+import { identifyUser, submitInteraction } from './interaction';
 
 const addMfa = async (type: MfaFactor, verificationId: string) =>
   api.post(`${experienceApiRoutes.mfa}`, {
@@ -103,7 +103,11 @@ export const bindMfa = async (
   return submitInteraction();
 };
 
-export const verifyMfa = async (payload: VerifyMfaPayload, verificationId?: string) => {
+export const verifyMfa = async (
+  payload: VerifyMfaPayload,
+  verificationId?: string,
+  shouldIdentifyUser?: boolean
+) => {
   switch (payload.type) {
     case MfaFactor.TOTP: {
       const { code } = payload;
@@ -132,6 +136,10 @@ export const verifyMfa = async (payload: VerifyMfaPayload, verificationId?: stri
       });
       break;
     }
+  }
+
+  if (shouldIdentifyUser) {
+    await identifyUser({ verificationId });
   }
 
   return submitInteraction();
