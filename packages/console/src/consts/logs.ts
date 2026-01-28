@@ -29,8 +29,12 @@ export const auditLogEventTitle = Object.freeze({
   'Interaction.SignIn.Verification.BackupCode.Submit': 'Sign-in: Verify backup code',
   'Interaction.SignIn.Verification.Totp.Create': 'Create TOTP verification secret for MFA binding',
   'Interaction.SignIn.Verification.Totp.Submit': 'Sign-in: Verify TOTP code',
-  'Interaction.SignIn.Verification.WebAuthn.Create': 'Sign-in: Create WebAuthn authentication',
-  'Interaction.SignIn.Verification.WebAuthn.Submit': 'Sign-in: Verify WebAuthn authentication',
+  'Interaction.SignIn.Verification.MfaWebAuthn.Create': 'Sign-in: Create WebAuthn authentication',
+  'Interaction.SignIn.Verification.MfaWebAuthn.Submit': 'Sign-in: Verify WebAuthn authentication',
+  'Interaction.SignIn.Verification.PasskeySignInWebAuthn.Create':
+    'Sign-in: Create passkey sign-in authentication',
+  'Interaction.SignIn.Verification.PasskeySignInWebAuthn.Submit':
+    'Sign-in: Verify passkey sign-in authentication',
   'Interaction.SignIn.Verification.EmailVerificationCode.Create':
     'Create and send sign-in email verification code',
   'Interaction.SignIn.Verification.EmailVerificationCode.Submit':
@@ -55,8 +59,10 @@ export const auditLogEventTitle = Object.freeze({
   'Interaction.Register.Verification.Totp.Create':
     'Create TOTP verification secret for MFA binding',
   'Interaction.Register.Verification.Totp.Submit': 'Register: Verify TOTP code',
-  'Interaction.Register.Verification.WebAuthn.Create': 'Register: Create WebAuthn authentication',
-  'Interaction.Register.Verification.WebAuthn.Submit': 'Register: Verify WebAuthn authentication',
+  'Interaction.Register.Verification.MfaWebAuthn.Create':
+    'Register: Create WebAuthn authentication',
+  'Interaction.Register.Verification.MfaWebAuthn.Submit':
+    'Register: Verify WebAuthn authentication',
   'Interaction.Register.Verification.EmailVerificationCode.Create':
     'Create and send register email verification code',
   'Interaction.Register.Verification.EmailVerificationCode.Submit':

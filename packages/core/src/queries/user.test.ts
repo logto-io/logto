@@ -149,7 +149,10 @@ describe('user query', () => {
     const credentialId = 'credential-id';
 
     const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`,`)}
+      select ${sql.join(
+        Object.values(fields).map((field) => sql`${table}.${field}`),
+        sql`,`
+      )}
       from ${table}
       where ${fields.mfaVerifications}::jsonb @> ${sql.jsonb([
         {
@@ -182,7 +185,10 @@ describe('user query', () => {
     const rpId = 'example.com';
 
     const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`,`)}
+      select ${sql.join(
+        Object.values(fields).map((field) => sql`${table}.${field}`),
+        sql`,`
+      )}
       from ${table}
       where ${fields.mfaVerifications}::jsonb @> ${sql.jsonb([
         {

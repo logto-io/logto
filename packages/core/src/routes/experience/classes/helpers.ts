@@ -120,7 +120,8 @@ export const identifyUserByVerificationRecord = async (
     case VerificationType.PhoneVerificationCode:
     case VerificationType.MfaEmailVerificationCode:
     case VerificationType.MfaPhoneVerificationCode:
-    case VerificationType.WebAuthn: {
+    case VerificationType.MfaWebAuthn:
+    case VerificationType.PasskeySignInWebAuthn: {
       return {
         user: await verificationRecord.identifyUser(),
       };

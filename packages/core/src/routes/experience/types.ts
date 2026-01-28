@@ -9,6 +9,7 @@ import {
   Users,
   UserSsoIdentities,
   type UserSsoIdentity,
+  webAuthnAuthenticationOptionsGuard,
 } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 import { z } from 'zod';
@@ -226,3 +227,7 @@ export const sanitizedInteractionStorageGuard = z.object({
     })
     .optional(),
 }) satisfies ToZodObject<SanitizedInteractionStorageData>;
+
+export const webAuthnAuthenticationOptionsInteractionStorageGuard = z.object({
+  authenticationOptions: webAuthnAuthenticationOptionsGuard,
+});
