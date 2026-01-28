@@ -101,15 +101,9 @@ export class JwtCustomizerLibrary {
   ) {}
 
   get isRegionalAzureFunctionAppConfigured(): boolean {
-    const {
-      isDevFeaturesEnabled,
-      azureFunctionUntrustedAppKey,
-      azureFunctionUntrustedAppEndpoint,
-    } = EnvSet.values;
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
 
-    return Boolean(
-      isDevFeaturesEnabled && azureFunctionUntrustedAppKey && azureFunctionUntrustedAppEndpoint
-    );
+    return Boolean(azureFunctionUntrustedAppKey && azureFunctionUntrustedAppEndpoint);
   }
 
   /**
