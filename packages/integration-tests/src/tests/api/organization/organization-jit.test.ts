@@ -43,19 +43,31 @@ describe('organization just-in-time provisioning', () => {
       await expect(organizationApi.jit.getEmailDomains(organization.id)).resolves.toEqual([]);
     });
 
-    it('should have default pagination', async () => {
+    it('should NOT have default pagination', async () => {
       const organization = await organizationApi.create({ name: 'foo' });
 
       const emailDomains = Array.from({ length: 30 }, () => `${randomId()}.com`);
 
       await organizationApi.jit.replaceEmailDomains(organization.id, emailDomains);
 
-      const emailDomainsPage1 = await organizationApi.jit.getEmailDomains(organization.id);
-      const emailDomainsPage2 = await organizationApi.jit.getEmailDomains(organization.id, 2);
+      const emailDomainsPage = await organizationApi.jit.getEmailDomains(organization.id);
 
-      expect(emailDomainsPage1).toHaveLength(20);
-      expect(emailDomainsPage2).toHaveLength(10);
-      expect(emailDomainsPage1.concat(emailDomainsPage2)).toEqual(
+      expect(emailDomainsPage).toHaveLength(30);
+    });
+
+    it('should apply pagination when specified', async () => {
+      const organization = await organizationApi.create({ name: 'foo' });
+
+      const emailDomains = Array.from({ length: 30 }, () => `${randomId()}.com`);
+      await organizationApi.jit.replaceEmailDomains(organization.id, emailDomains);
+
+      const pageSize = 20;
+      const page1 = await organizationApi.jit.getEmailDomains(organization.id, 1, pageSize);
+      const page2 = await organizationApi.jit.getEmailDomains(organization.id, 2, pageSize);
+
+      expect(page1).toHaveLength(pageSize);
+      expect(page2).toHaveLength(emailDomains.length - pageSize);
+      expect(page1.concat(page2)).toEqual(
         expect.arrayContaining(
           emailDomains.map((emailDomain) => expect.objectContaining({ emailDomain }))
         )

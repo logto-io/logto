@@ -26,13 +26,22 @@ export class EmailDomainQueries {
 
   async getEntities(
     organizationId: string,
-    options: GetEntitiesOptions
+    options?: GetEntitiesOptions
   ): Promise<[number, readonly OrganizationJitEmailDomain[]]> {
-    const { limit, offset } = options;
     const mainSql = sql`
       from ${table}
       where ${fields.organizationId} = ${organizationId}
     `;
+
+    if (!options) {
+      const rows = await this.pool.any<OrganizationJitEmailDomain>(sql`
+        select ${sql.join(Object.values(fields), sql`, `)}
+        ${mainSql}
+      `);
+      return [rows.length, rows];
+    }
+
+    const { limit, offset } = options;
 
     const [{ count }, rows] = await Promise.all([
       this.pool.one<{ count: string }>(sql`

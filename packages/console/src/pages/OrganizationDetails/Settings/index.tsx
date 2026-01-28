@@ -17,7 +17,6 @@ import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { mfa } from '@/hooks/use-console-routes/routes/mfa';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
 import { isJsonObject } from '@/utils/json';
 
@@ -48,7 +47,6 @@ function Settings() {
   } = form;
   const [isMfaRequired] = watch(['isMfaRequired']);
   const api = useApi();
-  const { getDocumentationUrl } = useDocumentationUrl();
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (data) => {

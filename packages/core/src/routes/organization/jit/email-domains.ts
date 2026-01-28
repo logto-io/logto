@@ -16,7 +16,9 @@ export default function emailDomainRoutes(
 
   router.get(
     pathname,
-    koaPagination(),
+    koaPagination({
+      isOptional: true,
+    }),
     koaGuard({
       params: z.object(params),
       response: OrganizationJitEmailDomains.guard.array(),
@@ -24,9 +26,12 @@ export default function emailDomainRoutes(
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
-      const { limit, offset } = ctx.pagination;
+      const { limit, offset, disabled } = ctx.pagination;
 
-      const [count, rows] = await organizations.jit.emailDomains.getEntities(id, { limit, offset });
+      const options = disabled ? undefined : { limit, offset };
+
+      const [count, rows] = await organizations.jit.emailDomains.getEntities(id, options);
+
       ctx.pagination.totalCount = count;
       ctx.body = rows;
       return next();
