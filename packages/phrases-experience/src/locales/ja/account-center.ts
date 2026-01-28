@@ -74,6 +74,8 @@ const account_center = {
     description:
       '認証コードをメールアドレス {{email}} に送信しました。コードを入力して続行してください。',
     resend: 'まだ届きませんか？ <a>認証コードを再送</a>',
+    not_received: 'まだ届きませんか？',
+    resend_action: '認証コードを再送',
     resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます',
     error_send_failed: '認証コードの送信に失敗しました。しばらくしてからもう一度お試しください。',
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',

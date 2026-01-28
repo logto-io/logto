@@ -72,6 +72,8 @@ const account_center = {
     description:
       '인증 코드가 이메일 {{email}}(으)로 전송되었습니다. 코드를 입력해 계속 진행하세요.',
     resend: '아직 받지 못하셨나요? <a>인증 코드 다시 보내기</a>',
+    not_received: '아직 받지 못하셨나요?',
+    resend_action: '인증 코드 다시 보내기',
     resend_countdown: '아직 받지 못하셨나요? {{seconds}}초 후에 다시 보낼 수 있습니다',
     error_send_failed: '인증 코드를 보내지 못했습니다. 잠시 후 다시 시도해주세요.',
     error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',

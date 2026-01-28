@@ -33,6 +33,7 @@
   background: transparent;
   border: none;
   padding: 0;
+  margin-inline-start: _.unit(1);
   font: var(--font-body-2);
   color: var(--color-brand-default);
   cursor: pointer;
