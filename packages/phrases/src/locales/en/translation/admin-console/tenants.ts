@@ -53,6 +53,7 @@ const tenants = {
   create_modal: {
     title: 'Create tenant',
     subtitle: 'Create a new tenant that has isolated resources and users.',
+    tenant_id: 'Tenant ID (optional)',
     tenant_usage_purpose: 'What do you want to use this tenant for?',
     development_description:
       "For testing only and shouldn't be used in production. No subscription is required.",
@@ -67,6 +68,9 @@ const tenants = {
     invitation_failed:
       'Some invitation failed to send. Please try again in Settings -> Members later.',
     tenant_type_description: 'This cannot be changed after creation.',
+    tenant_id_invalid:
+      'Tenant ID can only contain lowercase letters, numbers, and hyphens, and must not exceed {{max}} characters.',
+    tenant_id_placeholder: 'Your tenant ID',
   },
   dev_tenant_migration: {
     title: 'You can now try our Pro features for free by creating a new "Development tenant"!',

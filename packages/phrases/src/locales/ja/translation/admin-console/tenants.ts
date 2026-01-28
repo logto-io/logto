@@ -68,6 +68,9 @@ const tenants = {
     invitation_failed:
       '一部の招待を送信できませんでした。後で設定 -> メンバーで再試行してください。',
     tenant_type_description: '作成後に変更することはできません。',
+    tenant_id_invalid:
+      'テナントIDには小文字、数字、ハイフンのみ使用でき、{{max}}文字を超えることはできません。',
+    tenant_id_placeholder: 'テナントID',
   },
   dev_tenant_migration: {
     title: '新しい「開発テナント」を作成して、プロの機能を無料でお試しできます！',

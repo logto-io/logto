@@ -71,6 +71,9 @@ const tenants = {
     invitation_failed:
       'Bazı davetler gönderilemedi. Lütfen daha sonra Ayarlar -> Üyeler üzerinden tekrar deneyin.',
     tenant_type_description: 'Bu, oluşturulduktan sonra değiştirilemez.',
+    tenant_id_invalid:
+      'Kiracı kimliği yalnızca küçük harfler, sayılar ve kısa çizgiler içerebilir ve {{max}} karakteri aşmamalıdır.',
+    tenant_id_placeholder: 'Kiracı kimliğiniz',
   },
   dev_tenant_migration: {
     title:

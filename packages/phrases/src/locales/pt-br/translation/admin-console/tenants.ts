@@ -71,6 +71,9 @@ const tenants = {
     invitation_failed:
       'Algumas convites falharam ao serem enviadas. Por favor, tente novamente em Configurações -> Membros mais tarde.',
     tenant_type_description: 'Isso não pode ser alterado após a criação.',
+    tenant_id_invalid:
+      'O ID do inquilino pode conter apenas letras minúsculas, números e hífens, e não deve exceder {{max}} caracteres.',
+    tenant_id_placeholder: 'Seu ID de inquilino',
   },
   dev_tenant_migration: {
     title:
