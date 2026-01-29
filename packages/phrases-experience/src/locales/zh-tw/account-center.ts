@@ -71,6 +71,8 @@ const account_center = {
     send: '傳送驗證碼',
     description: '驗證碼已傳送至您的電子郵件 {{email}}。請輸入驗證碼以繼續。',
     resend: '尚未收到？<a>重新傳送驗證碼</a>',
+    not_received: '尚未收到？',
+    resend_action: '重新傳送驗證碼',
     resend_countdown: '尚未收到？{{seconds}} 秒後可重新傳送。',
     error_send_failed: '驗證碼傳送失敗，請稍後再試。',
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',

@@ -76,6 +76,8 @@ const account_center = {
     description:
       'O código de verificação foi enviado para o e-mail {{email}}. Digite o código para continuar.',
     resend: 'Ainda não recebeu? <a>Reenviar código de verificação</a>',
+    not_received: 'Ainda não recebeu?',
+    resend_action: 'Reenviar código de verificação',
     resend_countdown: 'Ainda não recebeu? Reenvie após {{seconds}} s.',
     error_send_failed: 'Falha ao enviar o código de verificação. Tente novamente mais tarde.',
     error_verify_failed: 'Falha na verificação. Digite o código novamente.',

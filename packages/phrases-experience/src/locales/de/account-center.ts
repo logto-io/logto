@@ -80,6 +80,8 @@ const account_center = {
     description:
       'Der Bestätigungscode wurde an deine E-Mail {{email}} gesendet. Gib den Code ein, um fortzufahren.',
     resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
+    not_received: 'Noch nichts erhalten?',
+    resend_action: 'Bestätigungscode erneut senden',
     resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
     error_send_failed:
       'Bestätigungscode konnte nicht gesendet werden. Bitte versuche es später noch einmal.',

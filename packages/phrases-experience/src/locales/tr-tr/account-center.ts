@@ -73,6 +73,8 @@ const account_center = {
     send: 'Doğrulama kodu gönder',
     description: 'Doğrulama kodu {{email}} adresine gönderildi. Devam etmek için kodu gir.',
     resend: 'Hâlâ gelmedi mi? <a>Doğrulama kodunu yeniden gönder</a>',
+    not_received: 'Hâlâ gelmedi mi?',
+    resend_action: 'Doğrulama kodunu yeniden gönder',
     resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
     error_send_failed: 'Doğrulama kodu gönderilemedi. Lütfen daha sonra tekrar dene.',
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',

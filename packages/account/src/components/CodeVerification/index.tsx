@@ -1,14 +1,12 @@
 import Button from '@experience/shared/components/Button';
-import DynamicT from '@experience/shared/components/DynamicT';
 import SmartInputField from '@experience/shared/components/InputFields/SmartInputField';
-import TextLink from '@experience/shared/components/TextLink';
 import VerificationCodeInput, {
   defaultLength,
 } from '@experience/shared/components/VerificationCode';
 import { SignInIdentifier } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useCallback, useContext, useEffect, useMemo, useState, type FormEvent } from 'react';
-import { useTranslation, Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
@@ -244,24 +242,21 @@ const CodeVerification = ({
           />
           <div className={styles.message}>
             {countdown > 0 ? (
-              <DynamicT
-                forKey="account_center.email_verification.resend_countdown"
-                interpolation={{ seconds: countdown }}
-              />
+              t('account_center.email_verification.resend_countdown', { seconds: countdown })
             ) : (
-              <Trans
-                components={{
-                  a: (
-                    <TextLink
-                      onClick={() => {
-                        void handleSendCode();
-                      }}
-                    />
-                  ),
-                }}
-              >
-                {t('account_center.email_verification.resend')}
-              </Trans>
+              <>
+                {`${t('account_center.email_verification.not_received')} `}
+                <button
+                  className={styles.resendButton}
+                  type="button"
+                  disabled={loading}
+                  onClick={() => {
+                    void handleSendCode();
+                  }}
+                >
+                  {t('account_center.email_verification.resend_action')}
+                </button>
+              </>
             )}
           </div>
           <Button
