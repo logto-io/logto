@@ -11,16 +11,22 @@ import UrlSet from './UrlSet.js';
 import { throwErrorWithDsnMessage } from './throw-errors.js';
 
 /**
- * Parse a timeout value from an environment variable string.
+ * Parses a timeout value from an environment variable string.
  *
- * Accepts a numeric string (milliseconds) or the literal `DISABLE_TIMEOUT` to
- * skip sending a startup parameter. Empty/whitespace or invalid values return
- * `undefined` so callers can fall back to server defaults.
+ * The input may be:
+ * - a numeric string (milliseconds), or
+ * - the literal `DISABLE_TIMEOUT` to omit the startup parameter.
+ *
+ * Empty/whitespace or invalid values return `undefined`, which lets Slonik apply
+ * its default timeout of 60000 ms.
+ *
+ * @param value - Raw string value from an environment variable.
+ * @returns A finite numeric timeout, `DISABLE_TIMEOUT`, or `undefined`.
  *
  * @example
  * const timeout = parseTimeoutEnv(process.env.DATABASE_STATEMENT_TIMEOUT);
  * if (timeout === 'DISABLE_TIMEOUT') {
- *   // omit the startup parameter entirely
+ *   // omit the startup parameter entirely so server defaults apply
  * }
  */
 export const parseTimeoutEnv = (value?: string): Optional<number | 'DISABLE_TIMEOUT'> => {
@@ -171,11 +177,9 @@ export default class GlobalValues {
    * PostgreSQL statement timeout in milliseconds.
    *
    * - Provide a numeric string (for example, `"5000"`) to send that timeout value.
-   * - Use `"DISABLE_TIMEOUT"` to skip the startup parameter entirely (helps with PgBouncer/RDS Proxy).
-   *
-   * If unset or invalid, Logto will not send a `statement_timeout` parameter and the server
-   * default applies. PostgreSQL defaults to `0` (no timeout) unless overridden by server,
-   * database, or role settings.
+   * - Use `"DISABLE_TIMEOUT"` to omit the startup parameter so server defaults apply
+   *   (helps with PgBouncer/RDS Proxy).
+   * - If unset or invalid, Slonik uses its default timeout of 60000 ms (1 minute).
    */
   public readonly databaseStatementTimeout = parseTimeoutEnv(getEnv('DATABASE_STATEMENT_TIMEOUT'));
 
