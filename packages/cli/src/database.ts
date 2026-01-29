@@ -1,4 +1,5 @@
 import type { SchemaLike } from '@logto/schemas';
+import { parseTimeoutEnv } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
 import {
   createPool,
@@ -12,6 +13,8 @@ import { DatabaseError } from 'pg-protocol';
 
 import { convertToPrimitiveOrSql } from './sql.js';
 import { ConfigKey, consoleLog, getCliConfigWithPrompt } from './utils.js';
+
+const databaseStatementTimeout = parseTimeoutEnv(process.env.DATABASE_STATEMENT_TIMEOUT);
 
 export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';
 
@@ -28,6 +31,7 @@ export const createPoolFromConfig = async () => {
 
   return createPool(databaseUrl, {
     interceptors: createInterceptorsPreset(),
+    statementTimeout: databaseStatementTimeout,
   });
 };
 
@@ -55,6 +59,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
     const databaseName = dsn.databaseName ?? '?';
     const maintenancePool = await createPool(stringifyDsn({ ...dsn, databaseName: 'postgres' }), {
       interceptors: createInterceptorsPreset(),
+      statementTimeout: databaseStatementTimeout,
     });
     await maintenancePool.query(sql`
       create database ${sql.identifier([databaseName])}
