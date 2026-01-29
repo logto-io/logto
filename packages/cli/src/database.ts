@@ -1,6 +1,6 @@
 import type { SchemaLike } from '@logto/schemas';
 import { parseTimeoutEnv } from '@logto/shared';
-import { assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 import {
   createPool,
   parseDsn,
@@ -31,7 +31,9 @@ export const createPoolFromConfig = async () => {
 
   return createPool(databaseUrl, {
     interceptors: createInterceptorsPreset(),
-    statementTimeout: databaseStatementTimeout,
+    ...conditional(
+      databaseStatementTimeout !== undefined && { statementTimeout: databaseStatementTimeout }
+    ),
   });
 };
 
@@ -59,7 +61,9 @@ export const createPoolAndDatabaseIfNeeded = async () => {
     const databaseName = dsn.databaseName ?? '?';
     const maintenancePool = await createPool(stringifyDsn({ ...dsn, databaseName: 'postgres' }), {
       interceptors: createInterceptorsPreset(),
-      statementTimeout: databaseStatementTimeout,
+      ...(databaseStatementTimeout === undefined
+        ? {}
+        : { statementTimeout: databaseStatementTimeout }),
     });
     await maintenancePool.query(sql`
       create database ${sql.identifier([databaseName])}

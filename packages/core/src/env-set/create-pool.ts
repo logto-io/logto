@@ -1,4 +1,4 @@
-import { assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 import {
   createMockPool,
   createMockQueryResult,
@@ -21,12 +21,14 @@ const createPoolByEnv = async (
 
   assert(parseDsn(databaseDsn).databaseName, new Error('Database name is required'));
 
-  return createPool(databaseDsn, {
+  const poolOptions = {
     interceptors: createInterceptorsPreset(),
     maximumPoolSize: poolSize,
     connectionTimeout,
-    statementTimeout,
-  });
+    ...conditional(statementTimeout !== undefined && { statementTimeout }),
+  };
+
+  return createPool(databaseDsn, poolOptions);
 };
 
 export default createPoolByEnv;
