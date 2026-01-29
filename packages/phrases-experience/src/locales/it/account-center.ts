@@ -110,7 +110,7 @@ const account_center = {
       'I codici di backup richiedono che venga prima configurato un altro metodo MFA.',
     passkey_not_enabled: 'Passkey non è abilitato. Per assistenza, contatta il tuo amministratore.',
     passkey_already_registered:
-      'This passkey is already registered to your account. Please use a different authenticator.',
+      'Questa passkey è già registrata nel tuo account. Utilizza un autenticatore diverso.',
   },
   update_success: {
     default: {
@@ -174,11 +174,11 @@ const account_center = {
     delete_confirmation_description:
       'Se rimuovi questa passkey, non potrai più utilizzarla per la verifica.',
     rename_passkey: 'Rinomina passkey',
-    rename_description: 'Enter a new name for this passkey.',
-    name_this_passkey: 'Name this device passkey',
+    rename_description: 'Inserisci un nuovo nome per questa passkey.',
+    name_this_passkey: 'Nomina questa passkey del dispositivo',
     name_passkey_description:
-      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
-    name_input_label: 'Name',
+      "Hai verificato con successo questo dispositivo per l'autenticazione a due fattori. Personalizza il nome per riconoscerlo se hai più chiavi.",
+    name_input_label: 'Nome',
   },
 };
 

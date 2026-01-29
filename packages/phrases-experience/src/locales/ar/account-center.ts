@@ -99,7 +99,7 @@ const account_center = {
     backup_code_requires_other_mfa: 'تتطلب رموز النسخ الاحتياطي إعداد طريقة MFA أخرى أولاً.',
     passkey_not_enabled: 'مفتاح المرور غير مفعّل. يرجى الاتصال بالمسؤول للحصول على المساعدة.',
     passkey_already_registered:
-      'This passkey is already registered to your account. Please use a different authenticator.',
+      'مفتاح المرور هذا مسجّل بالفعل في حسابك. يرجى استخدام أداة مصادقة مختلفة.',
   },
   update_success: {
     default: {
@@ -164,11 +164,11 @@ const account_center = {
     delete_confirmation_description:
       'إذا قمت بإزالة مفتاح المرور هذا، فلن تتمكن من التحقق باستخدامه.',
     rename_passkey: 'إعادة تسمية مفتاح المرور',
-    rename_description: 'Enter a new name for this passkey.',
-    name_this_passkey: 'Name this device passkey',
+    rename_description: 'أدخل اسمًا جديدًا لمفتاح المرور هذا.',
+    name_this_passkey: 'تسمية مفتاح المرور لهذا الجهاز',
     name_passkey_description:
-      'You have successfully verified this device for 2-step authentication. Customize the name to recognize if you have multiple keys.',
-    name_input_label: 'Name',
+      'لقد نجحت في التحقق من هذا الجهاز للمصادقة بخطوتين. خصص الاسم للتعرف عليه إذا كان لديك مفاتيح متعددة.',
+    name_input_label: 'الاسم',
   },
 };
 
