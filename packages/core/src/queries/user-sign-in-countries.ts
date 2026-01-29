@@ -20,15 +20,15 @@ export const createUserSignInCountriesQueries = (pool: CommonQueryMethods) => {
   };
 
   const findRecentSignInCountriesByUserId = async (userId: string, withinDays: number) => {
-    const rows = await pool.any<Pick<UserSignInCountry, 'country'>>(sql`
-      select ${fields.country}
+    const rows = await pool.any<UserSignInCountry>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
       where ${fields.userId} = ${userId}
         and ${fields.lastSignInAt} >= now() - ${withinDays} * interval '1 day'
       order by ${fields.lastSignInAt} desc
     `);
 
-    return rows.map(({ country }) => country);
+    return rows.map(({ country, lastSignInAt }) => ({ country, lastSignInAt }));
   };
 
   const pruneUserSignInCountriesByUserId = async (userId: string, retentionDays: number) => {

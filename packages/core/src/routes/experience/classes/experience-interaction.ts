@@ -25,6 +25,7 @@ import {
   identifyUserByVerificationRecord,
   mergeUserMfaVerifications,
 } from './helpers.js';
+import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
@@ -58,6 +59,7 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
+  private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
@@ -89,6 +91,11 @@ export default class ExperienceInteraction {
 
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
     this.provisionLibrary = new ProvisionLibrary(tenant, ctx);
+    this.adaptiveMfaValidator = new AdaptiveMfaValidator({
+      ctx,
+      queries,
+      signInExperienceValidator: this.signInExperienceValidator,
+    });
 
     const interactionContext: InteractionContext = {
       getInteractionEvent: () => this.#interactionEvent,
@@ -342,7 +349,11 @@ export default class ExperienceInteraction {
 
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const mfaValidator = new MfaValidator(mfaSettings, user);
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
+    const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
+    const mfaValidator = new MfaValidator(mfaSettings, user, {
+      forceMfaVerification: requiresAdaptiveMfa,
+    });
     const isVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
 
     const { primaryEmail, primaryPhone } = user;
@@ -596,6 +607,13 @@ export default class ExperienceInteraction {
       // Persist the interaction status to the OIDC session after interaction submission
       ...this.toJson(),
     });
+
+    await trySafe(
+      async () => this.adaptiveMfaValidator.persistContext(user),
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
 
     this.ctx.body = { redirectTo };
 

@@ -62,6 +62,7 @@
     "find-up": "^7.0.0",
     "got": "^14.0.0",
     "hash-wasm": "^4.11.0",
+    "haversine-distance": "1.2.4",
     "helmet": "^7.1.0",
     "http-errors": "^2.0.0",
     "i18next": "^22.4.15",
