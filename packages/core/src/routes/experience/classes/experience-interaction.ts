@@ -610,8 +610,7 @@ export default class ExperienceInteraction {
 
     if (EnvSet.values.isDevFeaturesEnabled) {
       const recordGeoPromise = trySafe(
-        async () =>
-          this.adaptiveMfaValidator.recordSignInGeoContext(user, this.#interactionEvent),
+        async () => this.adaptiveMfaValidator.recordSignInGeoContext(user, this.#interactionEvent),
         (error) => {
           void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
 
