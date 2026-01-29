@@ -112,19 +112,20 @@ export class AdaptiveMfaValidator {
   }
 
   private async evaluateRules(state: AdaptiveMfaEvaluationState): Promise<AdaptiveMfaResult> {
-    const triggeredRules: TriggeredRule[] = [];
+    const triggeredRules = new Set<TriggeredRule>();
     for (const ruleValidator of this.ruleValidators) {
       // eslint-disable-next-line no-await-in-loop
       const triggeredRule = await ruleValidator.validate(state);
       if (triggeredRule) {
-        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        triggeredRules.push(triggeredRule);
+        triggeredRules.add(triggeredRule);
       }
     }
 
+    const triggeredRulesList = Array.from(triggeredRules);
+
     return {
-      requiresMfa: triggeredRules.length > 0,
-      triggeredRules,
+      requiresMfa: triggeredRulesList.length > 0,
+      triggeredRules: triggeredRulesList,
     };
   }
 
