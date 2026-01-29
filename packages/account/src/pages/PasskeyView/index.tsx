@@ -244,7 +244,7 @@ const PasskeyView = () => {
               );
             })}
           </div>
-          <div className={styles.divider} />
+          {passkeys.length > 0 && <div className={styles.divider} />}
           <div className={styles.addSection}>
             <div className={styles.addTitle}>
               <DynamicT forKey="account_center.passkey.add_another_title" />
