@@ -1,5 +1,103 @@
 # Change Log
 
+## 1.36.0
+
+### Minor Changes
+
+- 7cbe315dde: support token exchange grant type with app-level control
+
+  - Add `allowTokenExchange` field to `customClientMetadata` to control whether an application can initiate token exchange requests
+  - Machine-to-machine applications now support token exchange
+  - All new applications will have token exchange disabled by default, you can enable it in the application settings
+  - For backward compatibility, existing first-party Traditional, Native, and SPA applications will have this enabled
+  - Third-party applications are not allowed to use token exchange
+  - Add UI toggle in Console with risk warning for public clients (single-page application / native application)
+
+- c8b2caec5c: add trust-unverified-email support for OIDC social connector and OIDC-based enterprise SSO connectors
+
+  - Add `trustUnverifiedEmail` to the OIDC social connector config (default `false`) to allow syncing emails when `email_verified` is missing or false
+  - Apply the setting in core OIDC/Azure OIDC SSO connectors and expose it in the Admin Console with new tips and translations
+
+- ce65b07964: support wildcard patterns in redirect URIs
+
+  Added support for wildcard patterns (`*`) in redirect URIs to better support dynamic environments like preview deployments.
+
+  Rules (web only):
+
+  - Wildcards are allowed for http/https redirect URIs in the hostname and/or pathname.
+  - Wildcards are rejected in scheme, port, query, and hash.
+  - Hostname wildcard patterns must contain at least one dot to avoid overly broad patterns.
+
+### Patch Changes
+
+- a4093a4aed: fix enterprise sso account not exist error code
+
+  Fixes the enterprise SSO account not exist error code to use a specific one instead of the generic social account one.
+
+- 7f8b9cd769: remove default pagination from `GET /organizations/:id/jit/email-domains`
+
+  This refactor fixes an issue in the Logto Console.
+
+  Previously, default pagination (page size = 20) was implicitly enabled on the
+  `GET /organizations/:id/jit/email-domains` endpoint. However, in the Logto Console’s Organization details page, JIT email domains are displayed in a single multi-input field, which does not support pagination. As a result, only the first 20 records were returned and displayed, leading to confusing behavior and unexpected bugs.
+
+  Since the number of JIT email domains is currently expected to be relatively small, this change removes the default pagination behavior from the API. Clients may still explicitly enable pagination by providing pagination query parameters (for example, `page` and `page_size`). If no pagination query parameters are provided, the API will return the full list of JIT email domain records.
+
+- 10a9e68f1d: allow skipping mandatory sign-up identifier collection for social sign-in and sign-up
+
+  ## Background
+
+  Previously, Logto enforced mandatory user identifier collection during both sign-in and sign-up flows. Users were required to provide all identifiers configured as mandatory in the sign-up settings. This behavior applies to all sign-in methods except for enterprise SSO.
+
+  For example:
+
+  1. A new user signs up via a GitHub social connector
+  2. The IdP does not provide a verified email address
+  3. Email is configured as a mandatory sign-up identifier in Logto
+  4. In this case, the user would be prompted to provide and verify an email address before the account could be successfully created.
+
+  ## Problem
+
+  For iOS mobile app users, Apple App Store guidelines mandate social sign-in options like "Sign in with Apple" should not require additional information collection beyond what is provided by the social IdP. Enforcing additional identifier collection during social sign-in can result in app review rejection.
+
+  ## Solution
+
+  We have updated the sign-in-experience settings with a new option `skipRequiredIdentifiers` for social sign-in and sign-up flows. When enabled, this option allows users to bypass the mandatory identifier collection step during social sign-in and sign-up.
+
+  By default, this option is set to `false` to maintain existing behavior. Administrators can enable this option in the sign-in experience settings if they wish to allow users to skip mandatory identifier collection during social sign-in and sign-up.
+
+  On Logto console, this option is represented as a checkbox labeled "Require users to provide missing sign-up identifier" on the sign-in experience configuration page under the "Social sign-in" section. Checked by default.
+
+- 1fc65a2536: return role assignment results in user role APIs
+
+  - POST `/users/:userId/roles` now returns `{ roleIds: string[]; addedRoleIds: string[] }` where `roleIds` echoes the requested IDs, and `addedRoleIds` includes only the IDs that were newly created (existing assignments are omitted)
+  - PUT `/users/:userId/roles` now returns `{ roleIds: string[] }` to confirm the final assigned roles
+
+- 317f9744d1: allow disabling Postgres `statement_timeout` for PgBouncer/RDS Proxy
+
+  - add `DATABASE_STATEMENT_TIMEOUT` parsing in shared, core, and CLI
+  - set `DATABASE_STATEMENT_TIMEOUT=DISABLE_TIMEOUT` to omit the startup parameter
+
+- Updated dependencies [d65fa52917]
+- Updated dependencies [fce241ad25]
+- Updated dependencies [a4093a4aed]
+- Updated dependencies [d65fa52917]
+- Updated dependencies [7cbe315dde]
+- Updated dependencies [c8b2caec5c]
+- Updated dependencies [10a9e68f1d]
+- Updated dependencies [317f9744d1]
+- Updated dependencies [ce65b07964]
+  - @logto/console@1.33.0
+  - @logto/experience@1.18.1
+  - @logto/schemas@1.36.0
+  - @logto/phrases@1.25.0
+  - @logto/shared@3.3.1
+  - @logto/cli@1.36.0
+  - @logto/core-kit@2.7.0
+  - @logto/account@0.1.0
+  - @logto/demo-app@1.5.0
+  - @logto/phrases-experience@1.12.1
+
 ## 1.35.0
 
 ### Minor Changes

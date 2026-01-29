@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-huggingface",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Hugging Face connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

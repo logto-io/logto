@@ -1,5 +1,14 @@
 # @logto/tunnel
 
+## 0.3.4
+
+### Patch Changes
+
+- Updated dependencies [317f9744d1]
+- Updated dependencies [ce65b07964]
+  - @logto/shared@3.3.1
+  - @logto/core-kit@2.7.0
+
 ## 0.3.3
 
 ### Patch Changes

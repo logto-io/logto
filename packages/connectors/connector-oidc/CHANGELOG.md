@@ -1,5 +1,20 @@
 # @logto/connector-oidc
 
+## 1.7.0
+
+### Minor Changes
+
+- c8b2caec5c: add trust-unverified-email support for OIDC social connector and OIDC-based enterprise SSO connectors
+
+  - Add `trustUnverifiedEmail` to the OIDC social connector config (default `false`) to allow syncing emails when `email_verified` is missing or false
+  - Apply the setting in core OIDC/Azure OIDC SSO connectors and expose it in the Admin Console with new tips and translations
+
+### Patch Changes
+
+- Updated dependencies [317f9744d1]
+  - @logto/shared@3.3.1
+  - @logto/connector-oauth@1.7.3
+
 ## 1.6.2
 
 ### Patch Changes

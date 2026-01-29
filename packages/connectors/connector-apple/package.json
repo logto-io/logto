@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-apple",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Apple web connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
