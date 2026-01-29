@@ -51,6 +51,8 @@ const mfa = {
   save_backup_code_description:
     '다른 방법으로 2단계 인증 중 문제가 발생하면 이러한 백업 코드 중 하나를 사용하여 계정에 액세스할 수 있습니다. 각 코드는 한 번만 사용할 수 있습니다.',
   backup_code_hint: '반드시 복사하고 안전한 곳에 저장하세요.',
+  new_backup_codes_generated:
+    '새 백업 코드가 이전 코드를 대체했습니다. 가능한 한 빨리 안전한 곳에 저장하세요.',
   enter_a_backup_code: '백업 코드 입력',
   enter_backup_code_description: '2단계 인증이 초기에 활성화될 때 저장한 백업 코드를 입력하세요.',
   create_a_passkey: '패스키 생성',

@@ -54,6 +54,8 @@ const mfa = {
     'Sie können einen dieser Backup-Codes verwenden, um auf Ihr Konto zuzugreifen, wenn Sie während der 2-Schritte-Verifizierung auf andere Weise Probleme haben. Jeder Code kann nur einmal verwendet werden.',
   backup_code_hint:
     'Stellen Sie sicher, dass Sie sie kopieren und an einem sicheren Ort speichern.',
+  new_backup_codes_generated:
+    'Neue Backup-Codes haben Ihre alten Codes ersetzt. Speichern Sie sie so schnell wie möglich an einem sicheren Ort.',
   enter_a_backup_code: 'Backup-Code eingeben',
   enter_backup_code_description:
     'Geben Sie den Backup-Code ein, den Sie gespeichert haben, als die 2-Schritte-Verifizierung initial aktiviert wurde.',

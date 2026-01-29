@@ -49,6 +49,7 @@ const mfa = {
   save_backup_code_description:
     '如果在其他方式的兩步驗證中遇到問題，您可以使用這些備份代碼之一訪問您的帳戶。每個代碼只能使用一次。',
   backup_code_hint: '確保複製它們並保存在安全的地方。',
+  new_backup_codes_generated: '新的備份碼已取代了你的舊碼。請盡快將它們儲存在安全的地方。',
   enter_a_backup_code: '輸入備份代碼',
   enter_backup_code_description: '輸入初始啟用兩步驗證時保存的備份代碼。',
   create_a_passkey: '創建通行證',

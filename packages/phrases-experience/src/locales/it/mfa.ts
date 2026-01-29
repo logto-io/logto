@@ -53,6 +53,8 @@ const mfa = {
   save_backup_code_description:
     'Puoi utilizzare uno di questi codici di backup per accedere al tuo account in caso di problemi durante la verifica in due passaggi in altri modi. Ogni codice può essere utilizzato solo una volta.',
   backup_code_hint: 'Assicurati di copiarli e salvarli in un luogo sicuro.',
+  new_backup_codes_generated:
+    'I nuovi codici di backup hanno sostituito i tuoi vecchi codici. Salvali in un luogo sicuro il prima possibile.',
   enter_a_backup_code: 'Inserisci un codice di backup',
   enter_backup_code_description:
     'Inserisci il codice di backup salvato quando è stata abilitata la verifica in due passaggi.',
