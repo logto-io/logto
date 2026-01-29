@@ -55,7 +55,7 @@ const isMfaVerificationRecord = (
 };
 
 type MfaValidatorOptions = {
-  ignoreSkipMfaOnSignIn?: boolean;
+  forceMfaVerification?: boolean;
 };
 
 export class MfaValidator {
@@ -107,7 +107,7 @@ export class MfaValidator {
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
 
     if (
-      !this.options.ignoreSkipMfaOnSignIn &&
+      !this.options.forceMfaVerification &&
       skipMfaOnSignIn &&
       this.mfaSettings.policy !== MfaPolicy.Mandatory
     ) {

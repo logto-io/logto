@@ -3,8 +3,9 @@ import { type User } from '@logto/schemas';
 import { mockUser } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 
-import { AdaptiveMfaValidator, adaptiveMfaNewCountryWindowDays } from './adaptive-mfa-validator.js';
-import type { SignInExperienceValidator } from './sign-in-experience-validator.js';
+import type { SignInExperienceValidator } from '../sign-in-experience-validator.js';
+
+import { AdaptiveMfaValidator, adaptiveMfaNewCountryWindowDays } from './index.js';
 
 const { jest } = import.meta;
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;

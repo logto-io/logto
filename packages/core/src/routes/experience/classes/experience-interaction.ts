@@ -25,7 +25,7 @@ import {
   identifyUserByVerificationRecord,
   mergeUserMfaVerifications,
 } from './helpers.js';
-import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator.js';
+import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
@@ -348,11 +348,11 @@ export default class ExperienceInteraction {
     }
 
     const user = await this.getIdentifiedUser();
-    const signInExperience = await this.signInExperienceValidator.getSignInExperienceData();
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
     const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
-    const mfaValidator = new MfaValidator(signInExperience.mfa, user, {
-      ignoreSkipMfaOnSignIn: requiresAdaptiveMfa,
+    const mfaValidator = new MfaValidator(mfaSettings, user, {
+      forceMfaVerification: requiresAdaptiveMfa,
     });
     const isVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
 
