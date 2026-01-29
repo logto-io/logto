@@ -13,9 +13,6 @@ const defaultInjectedHeaderMapping: InjectedHeaderMapping = Object.freeze({
   city: 'x-logto-cf-city',
   latitude: 'x-logto-cf-latitude',
   longitude: 'x-logto-cf-longitude',
-  isProxy: 'x-logto-cf-is-proxy',
-  isVpn: 'x-logto-cf-is-vpn',
-  ipUsageType: 'x-logto-cf-ip-usage-type',
   botScore: 'x-logto-cf-bot-score',
   botVerified: 'x-logto-cf-bot-verified',
 });
