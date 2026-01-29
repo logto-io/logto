@@ -15,7 +15,7 @@ const account_center = {
   password_verification: {
     title: '비밀번호 확인',
     description: '계정 보안을 위해 비밀번호를 입력해 본인임을 확인하세요.',
-    error_failed: '인증에 실패했습니다. 비밀번호를 확인해주세요.',
+    error_failed: '비밀번호가 올바르지 않습니다. 입력 내용을 확인해주세요.',
   },
   verification_method: {
     password: {

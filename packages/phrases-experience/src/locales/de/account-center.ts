@@ -18,7 +18,7 @@ const account_center = {
     title: 'Passwort bestätigen',
     description:
       'Zum Schutz deines Kontos gib dein Passwort ein, um deine Identität zu bestätigen.',
-    error_failed: 'Verifizierung fehlgeschlagen. Bitte überprüfe dein Passwort.',
+    error_failed: 'Falsches Passwort. Bitte überprüfe deine Eingabe.',
   },
   verification_method: {
     password: {

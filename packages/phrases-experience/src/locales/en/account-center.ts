@@ -16,7 +16,7 @@ const account_center = {
   password_verification: {
     title: 'Verify password',
     description: "Verify it's you to protect your account security. Enter your password.",
-    error_failed: 'Verification failed. Please check your password.',
+    error_failed: 'Incorrect password. Please check your input.',
   },
   verification_method: {
     password: {

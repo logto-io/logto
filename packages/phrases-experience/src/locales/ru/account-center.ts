@@ -16,7 +16,7 @@ const account_center = {
   password_verification: {
     title: 'Подтвердите пароль',
     description: 'Чтобы защитить аккаунт, введите пароль для подтверждения своей личности.',
-    error_failed: 'Проверка не удалась. Проверьте пароль.',
+    error_failed: 'Неверный пароль. Проверьте введённые данные.',
   },
   verification_method: {
     password: {

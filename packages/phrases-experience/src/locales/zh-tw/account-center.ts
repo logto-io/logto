@@ -15,7 +15,7 @@ const account_center = {
   password_verification: {
     title: '驗證密碼',
     description: '為保護帳戶安全，請輸入您的密碼完成驗證。',
-    error_failed: '驗證失敗，請檢查您的密碼。',
+    error_failed: '密碼錯誤，請重新輸入。',
   },
   verification_method: {
     password: {

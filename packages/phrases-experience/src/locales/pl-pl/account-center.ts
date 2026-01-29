@@ -16,7 +16,7 @@ const account_center = {
   password_verification: {
     title: 'Zweryfikuj hasło',
     description: 'Aby chronić konto, wprowadź hasło, aby potwierdzić swoją tożsamość.',
-    error_failed: 'Weryfikacja nie powiodła się. Sprawdź swoje hasło.',
+    error_failed: 'Nieprawidłowe hasło. Sprawdź wprowadzone dane.',
   },
   verification_method: {
     password: {

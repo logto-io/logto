@@ -16,7 +16,7 @@ const account_center = {
   password_verification: {
     title: 'パスワードを確認',
     description: 'アカウントを保護するため、パスワードを入力して本人確認してください。',
-    error_failed: '認証に失敗しました。パスワードを確認してください。',
+    error_failed: 'パスワードが正しくありません。入力内容を確認してください。',
   },
   verification_method: {
     password: {

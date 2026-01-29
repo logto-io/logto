@@ -31,8 +31,8 @@ const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: 
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'session.invalid_credentials': (error) => {
-        setPasswordError(error.message);
+      'session.invalid_credentials': () => {
+        setPasswordError(t('account_center.password_verification.error_failed'));
       },
       global: (error) => {
         setPasswordError(error.message);

@@ -17,7 +17,7 @@ const account_center = {
     title: 'Verificar palavra-passe',
     description:
       'Para proteger a sua conta, introduza a sua palavra-passe para confirmar a sua identidade.',
-    error_failed: 'Falha na verificação. Verifique a sua palavra-passe.',
+    error_failed: 'Palavra-passe incorreta. Verifique a sua entrada.',
   },
   verification_method: {
     password: {

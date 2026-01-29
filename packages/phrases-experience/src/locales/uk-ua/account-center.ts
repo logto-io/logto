@@ -16,7 +16,7 @@ const account_center = {
   password_verification: {
     title: 'Підтвердьте пароль',
     description: 'Щоб захистити обліковий запис, введіть пароль для підтвердження своєї особи.',
-    error_failed: 'Перевірка не вдалася. Перевірте пароль.',
+    error_failed: 'Невірний пароль. Перевірте введені дані.',
   },
   verification_method: {
     password: {
