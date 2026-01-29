@@ -74,6 +74,8 @@ export type TriggeredRule =
       };
     };
 
+export type TriggeredRuleByRule<R extends AdaptiveMfaRule> = Extract<TriggeredRule, { rule: R }>;
+
 export type AdaptiveMfaResult = {
   requiresMfa: boolean;
   triggeredRules: TriggeredRule[];

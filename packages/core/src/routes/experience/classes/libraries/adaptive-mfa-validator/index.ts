@@ -18,6 +18,7 @@ import type {
   AdaptiveMfaContext,
   AdaptiveMfaEvaluationOptions,
   AdaptiveMfaEvaluationState,
+  AdaptiveMfaRule,
   AdaptiveMfaResult,
   AdaptiveMfaValidatorContext,
   AdaptiveMfaValidatorOptions,
@@ -33,7 +34,7 @@ export class AdaptiveMfaValidator {
   private readonly ctx?: AdaptiveMfaValidatorContext;
   private readonly recentCountriesCache = new Map<string, RecentCountry[]>();
   private readonly ruleDependencies: RuleDependencies;
-  private readonly ruleValidators: AdaptiveMfaRuleValidator[];
+  private readonly ruleValidators: Array<AdaptiveMfaRuleValidator<AdaptiveMfaRule>>;
 
   private readonly userGeoLocationCache = new Map<string, Nullable<UserGeoLocation>>();
 

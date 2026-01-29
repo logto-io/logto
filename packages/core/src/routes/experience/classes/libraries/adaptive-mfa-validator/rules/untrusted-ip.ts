@@ -1,7 +1,7 @@
 import type { Optional } from '@silverhand/essentials';
 
 import { adaptiveMfaMinBotScore } from '../constants.js';
-import type { AdaptiveMfaEvaluationState, IpRiskSignals, TriggeredRule } from '../types.js';
+import type { AdaptiveMfaEvaluationState, IpRiskSignals, TriggeredRuleByRule } from '../types.js';
 import { AdaptiveMfaRule } from '../types.js';
 
 import { AdaptiveMfaRuleValidator } from './base-rule.js';
@@ -11,8 +11,10 @@ const cleanIpRiskSignals = (signals: IpRiskSignals): IpRiskSignals => ({
   ...(signals.botVerified !== undefined && { botVerified: signals.botVerified }),
 });
 
-export class UntrustedIpRule extends AdaptiveMfaRuleValidator {
-  async validate(state: AdaptiveMfaEvaluationState): Promise<Optional<TriggeredRule>> {
+export class UntrustedIpRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.UntrustedIp> {
+  async validate(
+    state: AdaptiveMfaEvaluationState
+  ): Promise<Optional<TriggeredRuleByRule<AdaptiveMfaRule.UntrustedIp>>> {
     const signals = state.context?.ipRiskSignals;
     if (!signals) {
       return;

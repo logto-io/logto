@@ -1,13 +1,15 @@
 import { conditional, type Optional } from '@silverhand/essentials';
 
 import { adaptiveMfaNewCountryWindowDays } from '../constants.js';
-import type { AdaptiveMfaEvaluationState, TriggeredRule } from '../types.js';
+import type { AdaptiveMfaEvaluationState, TriggeredRuleByRule } from '../types.js';
 import { AdaptiveMfaRule } from '../types.js';
 
 import { AdaptiveMfaRuleValidator } from './base-rule.js';
 
-export class NewCountryRule extends AdaptiveMfaRuleValidator {
-  async validate(state: AdaptiveMfaEvaluationState): Promise<Optional<TriggeredRule>> {
+export class NewCountryRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.NewCountry> {
+  async validate(
+    state: AdaptiveMfaEvaluationState
+  ): Promise<Optional<TriggeredRuleByRule<AdaptiveMfaRule.NewCountry>>> {
     const currentCountry = state.context?.location?.country;
     if (!currentCountry) {
       return;

@@ -1,14 +1,16 @@
 import type { Optional } from '@silverhand/essentials';
 
 import { adaptiveMfaGeoVelocityThresholdKmh, msPerHour } from '../constants.js';
-import type { AdaptiveMfaEvaluationState, TriggeredRule } from '../types.js';
+import type { AdaptiveMfaEvaluationState, TriggeredRuleByRule } from '../types.js';
 import { AdaptiveMfaRule } from '../types.js';
 import { haversineDistance, roundTo } from '../utils.js';
 
 import { AdaptiveMfaRuleValidator } from './base-rule.js';
 
-export class GeoVelocityRule extends AdaptiveMfaRuleValidator {
-  async validate(state: AdaptiveMfaEvaluationState): Promise<Optional<TriggeredRule>> {
+export class GeoVelocityRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.GeoVelocity> {
+  async validate(
+    state: AdaptiveMfaEvaluationState
+  ): Promise<Optional<TriggeredRuleByRule<AdaptiveMfaRule.GeoVelocity>>> {
     const { latitude, longitude, country, city } = state.context?.location ?? {};
     if (typeof latitude !== 'number' || typeof longitude !== 'number') {
       return;
