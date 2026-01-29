@@ -1,4 +1,4 @@
-import type { User, UserGeoLocation } from '@logto/schemas';
+import { InteractionEvent, type User, type UserGeoLocation } from '@logto/schemas';
 import { conditional, type Nullable, type Optional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -57,6 +57,14 @@ export class AdaptiveMfaValidator {
     ];
   }
 
+  public async recordSignInGeoContext(user: User, interactionEvent: InteractionEvent) {
+    if (interactionEvent !== InteractionEvent.SignIn) {
+      return;
+    }
+
+    await this.persistContext(user);
+  }
+
   public async getResult(
     user: User,
     options: AdaptiveMfaEvaluationOptions = {}
@@ -87,11 +95,16 @@ export class AdaptiveMfaValidator {
     const { latitude, longitude, country } = location;
     const hasCoordinates = typeof latitude === 'number' && typeof longitude === 'number';
 
-    if (hasCoordinates) {
-      await this.queries.userGeoLocations.upsertUserGeoLocation(user.id, latitude, longitude);
-    }
+    const tasks = [
+      ...(hasCoordinates
+        ? [this.queries.userGeoLocations.upsertUserGeoLocation(user.id, latitude, longitude)]
+        : []),
+      this.queries.userSignInCountries.upsertUserSignInCountry(user.id, country),
+    ];
 
-    await this.queries.userSignInCountries.upsertUserSignInCountry(user.id, country);
+    if (tasks.length > 0) {
+      await Promise.all(tasks);
+    }
     await trySafe(async () =>
       this.queries.userSignInCountries.pruneUserSignInCountriesByUserId(
         user.id,
