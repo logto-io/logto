@@ -1,4 +1,4 @@
-import { assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 import {
   createMockPool,
   createMockQueryResult,
@@ -11,7 +11,8 @@ const createPoolByEnv = async (
   databaseDsn: string,
   mockDatabaseConnection: boolean,
   poolSize?: number,
-  connectionTimeout?: number
+  connectionTimeout?: number,
+  statementTimeout?: number | 'DISABLE_TIMEOUT'
 ) => {
   // Database connection is disabled in unit test environment
   if (mockDatabaseConnection) {
@@ -20,11 +21,14 @@ const createPoolByEnv = async (
 
   assert(parseDsn(databaseDsn).databaseName, new Error('Database name is required'));
 
-  return createPool(databaseDsn, {
+  const poolOptions = {
     interceptors: createInterceptorsPreset(),
     maximumPoolSize: poolSize,
     connectionTimeout,
-  });
+    ...conditional(statementTimeout !== undefined && { statementTimeout }),
+  };
+
+  return createPool(databaseDsn, poolOptions);
 };
 
 export default createPoolByEnv;
