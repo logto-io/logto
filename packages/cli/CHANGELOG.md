@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.36.0
+
+### Patch Changes
+
+- Updated dependencies [7cbe315dde]
+- Updated dependencies [10a9e68f1d]
+- Updated dependencies [ce65b07964]
+  - @logto/schemas@1.36.0
+  - @logto/core-kit@2.7.0
+
 ## 1.35.0
 
 ### Patch Changes
