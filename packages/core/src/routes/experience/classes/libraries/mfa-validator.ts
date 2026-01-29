@@ -16,12 +16,12 @@ import {
 } from '../verifications/code-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
 import { type TotpVerification } from '../verifications/totp-verification.js';
-import { type WebAuthnVerification } from '../verifications/web-authn-verification.js';
+import { type MfaWebAuthnVerification } from '../verifications/web-authn-verification.js';
 
 const mfaVerificationTypes = Object.freeze([
   VerificationType.TOTP,
   VerificationType.BackupCode,
-  VerificationType.WebAuthn,
+  VerificationType.MfaWebAuthn,
   VerificationType.MfaEmailVerificationCode,
   VerificationType.MfaPhoneVerificationCode,
 ]);
@@ -29,21 +29,21 @@ const mfaVerificationTypes = Object.freeze([
 type MfaVerificationType =
   | VerificationType.TOTP
   | VerificationType.BackupCode
-  | VerificationType.WebAuthn
+  | VerificationType.MfaWebAuthn
   | VerificationType.MfaEmailVerificationCode
   | VerificationType.MfaPhoneVerificationCode;
 
 const mfaVerificationTypeToMfaFactorMap = Object.freeze({
   [VerificationType.TOTP]: MfaFactor.TOTP,
   [VerificationType.BackupCode]: MfaFactor.BackupCode,
-  [VerificationType.WebAuthn]: MfaFactor.WebAuthn,
+  [VerificationType.MfaWebAuthn]: MfaFactor.WebAuthn,
   [VerificationType.MfaEmailVerificationCode]: MfaFactor.EmailVerificationCode,
   [VerificationType.MfaPhoneVerificationCode]: MfaFactor.PhoneVerificationCode,
 }) satisfies Record<MfaVerificationType, MfaFactor>;
 
 type MfaVerificationRecord =
   | TotpVerification
-  | WebAuthnVerification
+  | MfaWebAuthnVerification
   | BackupCodeVerification
   | MfaEmailCodeVerification
   | MfaPhoneCodeVerification;

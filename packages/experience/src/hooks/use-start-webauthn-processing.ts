@@ -31,7 +31,7 @@ const useStartWebAuthnProcessing = () => {
 
       if (result) {
         const { verificationId, options } = result;
-        setVerificationId(VerificationType.WebAuthn, verificationId);
+        setVerificationId(VerificationType.MfaWebAuthn, verificationId);
 
         const state: WebAuthnState = {
           options,

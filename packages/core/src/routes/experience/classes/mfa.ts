@@ -229,7 +229,7 @@ export class Mfa {
    */
   async addWebAuthnByVerificationId(verificationId: string, log?: LogEntry) {
     const verificationRecord = this.interactionContext.getVerificationRecordByTypeAndId(
-      VerificationType.WebAuthn,
+      VerificationType.MfaWebAuthn,
       verificationId
     );
 
@@ -487,11 +487,18 @@ export class Mfa {
   }
 
   private async checkMfaFactorsEnabledInSignInExperience(factors: MfaFactor[]) {
-    const { factors: enabledFactors } = await this.signInExperienceValidator.getMfaSettings();
+    const { mfa, passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
 
-    const isFactorsEnabled = factors.every((factor) => enabledFactors.includes(factor));
+    const isFactorsEnabled = factors.every((factor) => mfa.factors.includes(factor));
 
-    assertThat(isFactorsEnabled, new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' }));
+    // If we are only adding WebAuthn factor, and passkey sign-in is enabled, bypass the check.
+    const isPasskeyUsedAsSignInMethod =
+      passkeySignIn.enabled && factors.length === 1 && factors[0] === MfaFactor.WebAuthn;
+
+    assertThat(
+      isFactorsEnabled || isPasskeyUsedAsSignInMethod,
+      new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' })
+    );
   }
 
   private async isMfaRequiredByUserOrganizations(mfaSettings: MfaSettings, userId: string) {

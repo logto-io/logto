@@ -42,6 +42,10 @@ export enum SentinelActivityAction {
    * The subject tries to pass a backup code MFA verification.
    */
   MfaBackupCode = 'MfaBackupCode',
+  /**
+   * The subject tries to pass a WebAuthn passkey sign-in verification.
+   */
+  PasskeySignInWebAuthn = 'PasskeySignInWebAuthn',
 }
 export const sentinelActivityActionGuard = z.nativeEnum(SentinelActivityAction);
 

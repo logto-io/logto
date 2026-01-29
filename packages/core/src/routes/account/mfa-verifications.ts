@@ -199,7 +199,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
           const { newIdentifierVerificationRecordId, name } = ctx.guard.body;
           // Check new identifier
           const newVerificationRecord = await buildVerificationRecordByIdAndType({
-            type: VerificationType.WebAuthn,
+            type: VerificationType.MfaWebAuthn,
             id: newIdentifierVerificationRecordId,
             queries,
             libraries,

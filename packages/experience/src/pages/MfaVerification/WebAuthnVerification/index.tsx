@@ -20,7 +20,7 @@ const WebAuthnVerification = () => {
   const { state } = useLocation();
   const [, webAuthnState] = validate(state, webAuthnStateGuard);
   const { verificationIdsMap } = useContext(UserInteractionContext);
-  const verificationId = verificationIdsMap[VerificationType.WebAuthn];
+  const verificationId = verificationIdsMap[VerificationType.MfaWebAuthn];
 
   const handleWebAuthn = useWebAuthnOperation();
   const [isVerifying, setIsVerifying] = useState(false);

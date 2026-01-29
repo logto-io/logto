@@ -23,7 +23,7 @@ import { withSentinel } from '../experience/classes/libraries/sentinel-guard.js'
 import { createNewCodeVerificationRecord } from '../experience/classes/verifications/code-verification.js';
 import { PasswordVerification } from '../experience/classes/verifications/password-verification.js';
 import { SocialVerification } from '../experience/classes/verifications/social-verification.js';
-import { WebAuthnVerification } from '../experience/classes/verifications/web-authn-verification.js';
+import { MfaWebAuthnVerification } from '../experience/classes/verifications/web-authn-verification.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 export const verificationApiPrefix = '/verifications';
@@ -284,7 +284,7 @@ export default function verificationRoutes<T extends UserRouter>(
         URL: { hostname },
       } = ctx;
 
-      const webAuthnVerification = WebAuthnVerification.create(libraries, queries, userId);
+      const webAuthnVerification = MfaWebAuthnVerification.create(libraries, queries, userId);
 
       const registrationOptions = await webAuthnVerification.generateWebAuthnRegistrationOptions(
         hostname // RP ID: Use the domain of the current API request (custom domain supported)
@@ -318,7 +318,7 @@ export default function verificationRoutes<T extends UserRouter>(
       const { verificationRecordId, payload } = ctx.guard.body;
 
       const webAuthnVerification = await buildVerificationRecordByIdAndType({
-        type: VerificationType.WebAuthn,
+        type: VerificationType.MfaWebAuthn,
         id: verificationRecordId,
         queries,
         libraries,
