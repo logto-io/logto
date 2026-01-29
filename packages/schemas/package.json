@@ -23,9 +23,9 @@
   "scripts": {
     "precommit": "lint-staged",
     "version": "./update-next.sh && git add alterations/",
-    "generate": "./generate.sh",
-    "build:alterations": "rm -rf alterations-js && tsc -p tsconfig.build.alterations.json",
-    "build": "pnpm generate && rm -rf lib/ && tsc -p tsconfig.build.json && pnpm build:alterations",
+    "generate": "node scripts/generate.mjs",
+    "build:alterations": "node ../../.scripts/rm.mjs alterations-js && tsc -p tsconfig.build.alterations.json",
+    "build": "pnpm generate && node ../../.scripts/rm.mjs lib && tsc -p tsconfig.build.json && pnpm build:alterations",
     "build:test": "pnpm build",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",

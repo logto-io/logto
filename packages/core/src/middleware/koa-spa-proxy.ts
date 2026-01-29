@@ -44,7 +44,11 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
           getConsoleLogFromContext(ctx).plain(`\tproxy --> ${target}`);
         },
         rewrite: (requestPath) => {
-          return '/' + path.join(prefix, requestPath);
+          // `rewrite` is for URLs, so we must use POSIX separators and avoid Windows absolute-path
+          // semantics (e.g. `path.join('console', '/@fs/...')` would drop the prefix on win32).
+          const normalized = requestPath.replace(/^\/+/, '');
+          const joined = prefix ? path.posix.join(prefix, normalized) : normalized;
+          return '/' + joined;
         },
       });
 
