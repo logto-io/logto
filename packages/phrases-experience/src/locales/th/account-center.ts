@@ -99,8 +99,7 @@ const account_center = {
     backup_code_not_enabled: 'รหัสสำรองไม่ได้เปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
     backup_code_requires_other_mfa: 'รหัสสำรองต้องมีการตั้งค่าวิธี MFA อื่นก่อน',
     passkey_not_enabled: 'Passkey ไม่ได้เปิดใช้งาน กรุณาติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
-    passkey_already_registered:
-      'Passkey นี้ลงทะเบียนกับบัญชีของคุณแล้ว กรุณาใช้ตัวยืนยันตัวตนอื่น',
+    passkey_already_registered: 'Passkey นี้ลงทะเบียนกับบัญชีของคุณแล้ว กรุณาใช้ตัวยืนยันตัวตนอื่น',
   },
   update_success: {
     default: {

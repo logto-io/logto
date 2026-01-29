@@ -104,7 +104,7 @@ const account_center = {
       'Yedek kodlar, önce başka bir MFA yönteminin ayarlanmasını gerektirir.',
     passkey_not_enabled: 'Passkey etkin değil. Yardım için lütfen yöneticinizle iletişime geçin.',
     passkey_already_registered:
-      "Bu passkey zaten hesabınıza kayıtlı. Lütfen farklı bir kimlik doğrulayıcı kullanın.",
+      'Bu passkey zaten hesabınıza kayıtlı. Lütfen farklı bir kimlik doğrulayıcı kullanın.',
   },
   update_success: {
     default: {
@@ -169,10 +169,10 @@ const account_center = {
     delete_confirmation_description:
       "Bu passkey'i kaldırırsanız, onunla doğrulama yapamayacaksınız.",
     rename_passkey: "Passkey'i yeniden adlandır",
-    rename_description: "Bu passkey için yeni bir ad girin.",
+    rename_description: 'Bu passkey için yeni bir ad girin.',
     name_this_passkey: "Bu cihaz passkey'ini adlandır",
     name_passkey_description:
-      "Bu cihazı 2 adımlı kimlik doğrulama için başarıyla doğruladınız. Birden fazla anahtarınız varsa tanımak için adı özelleştirin.",
+      'Bu cihazı 2 adımlı kimlik doğrulama için başarıyla doğruladınız. Birden fazla anahtarınız varsa tanımak için adı özelleştirin.',
     name_input_label: 'Ad',
   },
 };

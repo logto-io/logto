@@ -112,7 +112,7 @@ const account_center = {
     passkey_not_enabled:
       "Passkey n'est pas activé. Veuillez contacter votre administrateur pour obtenir de l'aide.",
     passkey_already_registered:
-      "Ce passkey est déjà enregistré sur votre compte. Veuillez utiliser un autre authentificateur.",
+      'Ce passkey est déjà enregistré sur votre compte. Veuillez utiliser un autre authentificateur.',
   },
   update_success: {
     default: {
@@ -177,7 +177,7 @@ const account_center = {
       "Si vous supprimez ce passkey, vous ne pourrez plus l'utiliser pour vous vérifier.",
     rename_passkey: 'Renommer le passkey',
     rename_description: 'Entrez un nouveau nom pour ce passkey.',
-    name_this_passkey: 'Nommer ce passkey de l\'appareil',
+    name_this_passkey: "Nommer ce passkey de l'appareil",
     name_passkey_description:
       "Vous avez vérifié cet appareil avec succès pour l'authentification en deux étapes. Personnalisez le nom pour le reconnaître si vous avez plusieurs clés.",
     name_input_label: 'Nom',
