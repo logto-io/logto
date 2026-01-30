@@ -181,7 +181,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       const log = createLog(`Interaction.${experienceInteraction.interactionEvent}.Submit`);
 
-      await ctx.experienceInteraction.submit();
+      await ctx.experienceInteraction.submit(log);
 
       log.append({
         interaction: ctx.experienceInteraction.toJson(),
