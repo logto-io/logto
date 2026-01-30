@@ -167,7 +167,10 @@ describe('POST /experience/submit', () => {
       35.6762,
       139.6503
     );
-    expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalled();
+    expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(
+      mockUser.id,
+      undefined
+    );
   });
 
   it('should normalize lowercase country codes', async () => {
@@ -182,6 +185,49 @@ describe('POST /experience/submit', () => {
 
     expect(response.status).toBe(200);
     expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'JP');
+  });
+
+  it('should record country when coordinates are missing', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
+
+    const response = await requester.post('/experience/submit').set('x-logto-cf-country', 'JP');
+
+    expect(response.status).toBe(200);
+    expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
+    expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'JP');
+  });
+
+  it('should record coordinates when country is missing', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
+
+    const response = await requester
+      .post('/experience/submit')
+      .set('x-logto-cf-latitude', '51.5074')
+      .set('x-logto-cf-longitude', '-0.1278');
+
+    expect(response.status).toBe(200);
+    expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+      mockUser.id,
+      51.5074,
+      -0.1278
+    );
+    expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(
+      mockUser.id,
+      undefined
+    );
+  });
+
+  it('should skip recording when no geo headers are provided', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
+
+    const response = await requester.post('/experience/submit');
+
+    expect(response.status).toBe(200);
+    expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
+    expect(userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
   });
 
   it('should skip recording when adaptive MFA is disabled', async () => {

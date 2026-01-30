@@ -292,7 +292,10 @@ describe('ExperienceInteraction class', () => {
         37.7749,
         -122.4194
       );
-      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalled();
+      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(
+        mockUser.id,
+        undefined
+      );
     });
 
     it('should normalize lowercase country codes', async () => {
