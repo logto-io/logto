@@ -117,4 +117,35 @@ describe('test token sample guard', () => {
     });
     expect(result.success).toBe(false);
   });
+
+  it('should allow access token sample without session context', () => {
+    const result = accessTokenJwtCustomizerGuard.safeParse(testAccessTokenPayload);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should keep session context in access token sample', () => {
+    const sessionContext = {
+      injectedHeaders: { country: 'US' },
+      adaptiveMfa: {
+        requiresMfa: true,
+        triggeredRules: [],
+      },
+    };
+
+    const result = accessTokenJwtCustomizerGuard.safeParse({
+      ...testAccessTokenPayload,
+      contextSample: {
+        ...testAccessTokenPayload.contextSample,
+        session: sessionContext,
+      },
+    });
+
+    expect(result.success).toBe(true);
+    if (!result.success) {
+      return;
+    }
+
+    expect(result.data.contextSample?.session).toEqual(sessionContext);
+  });
 });

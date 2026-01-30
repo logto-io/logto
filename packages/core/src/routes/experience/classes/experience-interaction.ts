@@ -9,6 +9,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import {
@@ -16,6 +17,7 @@ import {
   type InteractionStorage,
   type Interaction,
   type InteractionContext,
+  type InteractionSessionContext,
   type WithHooksAndLogsContext,
   type SanitizedInteractionStorageData,
 } from '../types.js';
@@ -59,6 +61,7 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
+  private sessionContext?: InteractionSessionContext;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
   /** The captcha verification status for the current interaction. */
@@ -110,6 +113,9 @@ export default class ExperienceInteraction {
       this.#interactionEvent = interactionData;
       this.profile = new Profile(libraries, queries, {}, interactionContext);
       this.mfa = new Mfa(libraries, queries, {}, interactionContext);
+      this.mergeSessionContext({
+        injectedHeaders: getInjectedHeaderValues(this.ctx.request.headers),
+      });
       return;
     }
 
@@ -127,6 +133,7 @@ export default class ExperienceInteraction {
       mfa = {},
       userId,
       interactionEvent,
+      sessionContext,
       captcha = {
         verified: false,
         skipped: false,
@@ -137,7 +144,11 @@ export default class ExperienceInteraction {
     this.userId = userId;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
+    this.sessionContext = sessionContext;
     this.captcha = captcha;
+    this.mergeSessionContext({
+      injectedHeaders: getInjectedHeaderValues(this.ctx.request.headers),
+    });
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -350,6 +361,14 @@ export default class ExperienceInteraction {
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
+    this.mergeSessionContext({
+      adaptiveMfa: adaptiveMfaResult
+        ? {
+            requiresMfa: adaptiveMfaResult.requiresMfa,
+            triggeredRules: adaptiveMfaResult.triggeredRules,
+          }
+        : undefined,
+    });
     const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
     const mfaValidator = new MfaValidator(mfaSettings, user, {
       forceMfaVerification: requiresAdaptiveMfa,
@@ -643,6 +662,7 @@ export default class ExperienceInteraction {
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
       captcha,
+      ...conditional(this.sessionContext && { sessionContext: this.sessionContext }),
     };
   }
 
@@ -661,6 +681,28 @@ export default class ExperienceInteraction {
 
   private get verificationRecordsArray() {
     return this.verificationRecords.array();
+  }
+
+  private mergeSessionContext(update: Partial<InteractionSessionContext>) {
+    const { injectedHeaders, adaptiveMfa } = update;
+
+    if (!injectedHeaders && !adaptiveMfa) {
+      return;
+    }
+
+    this.sessionContext ||= {};
+
+    if (injectedHeaders && !this.sessionContext.injectedHeaders) {
+      this.sessionContext.injectedHeaders = injectedHeaders;
+    }
+
+    if (adaptiveMfa && !this.sessionContext.adaptiveMfa) {
+      this.sessionContext.adaptiveMfa = adaptiveMfa;
+    }
+
+    if (!this.sessionContext.injectedHeaders && !this.sessionContext.adaptiveMfa) {
+      this.sessionContext = undefined;
+    }
   }
 
   /**

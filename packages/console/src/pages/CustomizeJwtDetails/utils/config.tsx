@@ -33,6 +33,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant] - The grant context associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction] - The user interaction context associated with the token.
+ * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerSessionContext}} [session] - The session context associated with the token.
  */
 declare type Context = {
   /**
@@ -47,6 +48,10 @@ declare type Context = {
    * The user interaction context associated with the token.
    */
   interaction?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext};
+  /**
+   * The session context associated with the token.
+   */
+  session?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerSessionContext};
 }
 
 declare type Payload = {
@@ -55,12 +60,13 @@ declare type Payload = {
    */
   token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
   /**
-   * Logto internal data that can be used to pass additional information.
-   *
-   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
-   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
-   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]
-   */
+  * Logto internal data that can be used to pass additional information.
+  *
+  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
+  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
+  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]
+  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerSessionContext}} [session]
+  */
   context: Context;
   /**
    * Custom environment variables.

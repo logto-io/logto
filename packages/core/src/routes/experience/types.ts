@@ -154,6 +154,16 @@ export type InteractionContext = {
   getCurrentProfile: () => InteractionProfile;
 };
 
+type AdaptiveMfaSessionContext = {
+  requiresMfa: boolean;
+  triggeredRules: unknown[];
+};
+
+export type InteractionSessionContext = {
+  injectedHeaders?: Record<string, string>;
+  adaptiveMfa?: AdaptiveMfaSessionContext;
+};
+
 export type ExperienceInteractionRouterContext<ContextT extends WithLogContext = WithLogContext> =
   ContextT &
     WithI18nContext &
@@ -177,11 +187,22 @@ export type InteractionStorage = {
   profile?: InteractionProfile;
   mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
+  sessionContext?: InteractionSessionContext;
   captcha?: {
     verified: boolean;
     skipped: boolean;
   };
 };
+
+const interactionSessionContextGuard = z.object({
+  injectedHeaders: z.record(z.string(), z.string()).optional(),
+  adaptiveMfa: z
+    .object({
+      requiresMfa: z.boolean(),
+      triggeredRules: z.array(z.unknown()),
+    })
+    .optional(),
+}) satisfies ToZodObject<InteractionSessionContext>;
 
 export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
@@ -189,6 +210,7 @@ export const interactionStorageGuard = z.object({
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
+  sessionContext: interactionSessionContextGuard.optional(),
   captcha: z
     .object({
       verified: z.boolean(),
