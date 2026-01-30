@@ -6,11 +6,19 @@ const { jest } = import.meta;
 
 const { mockEsm } = createMockUtils(jest);
 
-const loadGetInjectedHeaderValues = async (injectedHeaderMappingJson?: string) => {
+const loadGetInjectedHeaderValues = async (
+  injectedHeaderMappingJson?: string,
+  debugInjectedHeadersJson?: string,
+  isDevFeaturesEnabled = true
+) => {
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { injectedHeaderMappingJson },
+      values: {
+        injectedHeaderMappingJson,
+        debugInjectedHeadersJson,
+        isDevFeaturesEnabled,
+      },
     },
   }));
 
@@ -53,6 +61,31 @@ describe('getInjectedHeaderValues', () => {
 
   it('should fall back to default mapping when mapping JSON is invalid', async () => {
     const getInjectedHeaderValues = await loadGetInjectedHeaderValues('not-json');
+    const headers: IncomingHttpHeaders = {
+      'x-logto-cf-country': 'US',
+    };
+
+    expect(getInjectedHeaderValues(headers)).toEqual({ country: 'US' });
+  });
+
+  it('should use debug injected headers when enabled', async () => {
+    const getInjectedHeaderValues = await loadGetInjectedHeaderValues(
+      undefined,
+      JSON.stringify({ country: 'FR', botScore: 10 })
+    );
+    const headers: IncomingHttpHeaders = {
+      'x-logto-cf-country': 'US',
+    };
+
+    expect(getInjectedHeaderValues(headers)).toEqual({ country: 'FR', botScore: '10' });
+  });
+
+  it('should ignore debug injected headers when dev features disabled', async () => {
+    const getInjectedHeaderValues = await loadGetInjectedHeaderValues(
+      undefined,
+      JSON.stringify({ country: 'FR' }),
+      false
+    );
     const headers: IncomingHttpHeaders = {
       'x-logto-cf-country': 'US',
     };

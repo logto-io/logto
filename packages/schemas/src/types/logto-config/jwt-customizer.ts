@@ -146,6 +146,18 @@ export type JwtCustomizerUserInteractionContext = z.infer<
   typeof jwtCustomizerUserInteractionContextGuard
 >;
 
+export const jwtCustomizerSessionContextGuard = z.object({
+  injectedHeaders: z.record(z.string(), z.string()).optional(),
+  adaptiveMfa: z
+    .object({
+      requiresMfa: z.boolean(),
+      triggeredRules: z.array(jsonGuard),
+    })
+    .optional(),
+});
+
+export type JwtCustomizerSessionContext = z.infer<typeof jwtCustomizerSessionContextGuard>;
+
 export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
   .extend({
     // Use partial token guard since users customization may not rely on all fields.
@@ -155,6 +167,7 @@ export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
         user: jwtCustomizerUserContextGuard.partial(),
         grant: jwtCustomizerGrantContextGuard.partial().optional(),
         interaction: jwtCustomizerUserInteractionContextGuard.partial().optional(),
+        session: jwtCustomizerSessionContextGuard.partial().optional(),
       })
       .optional(),
   })

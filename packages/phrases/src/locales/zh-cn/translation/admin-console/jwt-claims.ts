@@ -38,6 +38,10 @@ const jwt_claims = {
     subtitle:
       '使用 `context.interaction` 参数访问当前身份验证会话的用户交互详细信息，包括 `interactionEvent`、`userId` 和 `verificationRecords`。',
   },
+  session_data: {
+    title: '会话上下文',
+    subtitle: '使用 `context.session` 参数访问用户会话详情，用于自适应 MFA 等。',
+  },
   token_data: {
     title: '令牌数据',
     subtitle: '使用`token`输入参数查看当前访问令牌负载。',

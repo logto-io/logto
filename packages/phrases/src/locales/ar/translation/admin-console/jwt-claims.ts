@@ -40,6 +40,10 @@ const jwt_claims = {
     subtitle:
       'استخدم المعلمة `context.interaction` للوصول إلى تفاصيل تفاعل المستخدم في جلسة المصادقة الحالية، بما في ذلك `interactionEvent`, `userId`, و `verificationRecords`.',
   },
+  session_data: {
+    title: 'سياق الجلسة',
+    subtitle: 'استخدم `context.session` للوصول إلى تفاصيل جلسة المستخدم (مثل MFA التكيفي).',
+  },
   token_data: {
     title: 'بيانات الرمز',
     subtitle: 'استخدم معلمة الإدخال `token` لحمولة رمز الوصول الحالي.',

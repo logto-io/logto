@@ -43,6 +43,11 @@ const jwt_claims = {
     subtitle:
       'Use o parâmetro `context.interaction` para aceder aos detalhes da interação do utilizador para a sessão de autenticação atual, incluindo `interactionEvent`, `userId` e `verificationRecords`.',
   },
+  session_data: {
+    title: 'Contexto de sessão',
+    subtitle:
+      'Utilize `context.session` para aceder aos detalhes da sessão do utilizador (ex.: MFA adaptativa).',
+  },
   token_data: {
     title: 'Dados do token',
     subtitle: 'Utilize o parâmetro de entrada `token` para a carga util atual do token de acesso.',

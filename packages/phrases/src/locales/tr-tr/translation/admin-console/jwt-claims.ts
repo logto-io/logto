@@ -42,6 +42,11 @@ const jwt_claims = {
     subtitle:
       'Kullanıcının etkileşim ayrıntılarına, mevcut kimlik doğrulama oturumu için `context.interaction` parametresini kullanarak erişin, `interactionEvent`, `userId` ve `verificationRecords` dahil.',
   },
+  session_data: {
+    title: 'Oturum bağlamı',
+    subtitle:
+      '`context.session` parametresini kullanarak kullanıcı oturumu ayrıntılarına (örn. uyarlamalı MFA) erişin.',
+  },
   token_data: {
     title: 'Belge verisi',
     subtitle: '`belge` giriş parametresini mevcut erişim belgesi yükü için kullanın. ',

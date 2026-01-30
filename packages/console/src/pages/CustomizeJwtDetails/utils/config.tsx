@@ -5,6 +5,7 @@ import {
   type JwtCustomizerUserContext,
   type JwtCustomizerGrantContext,
   type JwtCustomizerUserInteractionContext,
+  type JwtCustomizerSessionContext,
   InteractionEvent,
 } from '@logto/schemas';
 import { type EditorProps } from '@monaco-editor/react';
@@ -33,6 +34,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant] - The grant context associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction] - The user interaction context associated with the token.
+ * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerSessionContext}} [session] - The session context associated with the token (adaptive MFA).
  */
 declare type Context = {
   /**
@@ -47,6 +49,10 @@ declare type Context = {
    * The user interaction context associated with the token.
    */
   interaction?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext};
+  /**
+   * The session context associated with the token.
+   */
+  session?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerSessionContext};
 }
 
 declare type Payload = {
@@ -55,12 +61,13 @@ declare type Payload = {
    */
   token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
   /**
-   * Logto internal data that can be used to pass additional information.
-   *
-   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
-   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
-   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]
-   */
+  * Logto internal data that can be used to pass additional information.
+  *
+  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
+  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
+  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]
+  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerSessionContext}} [session]
+  */
   context: Context;
   /**
    * Custom environment variables.
@@ -102,6 +109,8 @@ declare type Payload = {
 export const defaultAccessTokenJwtCustomizerCode = `/**
  * This function is called during the access token generation process to get custom claims for the access token.
  * Limit custom claims to under 50KB.
+ *
+ * \`context.session\` is available for adaptive MFA and session-related context.
  *
  * @param {Payload} payload - The input argument of the function.
  * 
@@ -270,10 +279,36 @@ const defaultUserInteractionContext: Partial<JwtCustomizerUserInteractionContext
   userId: '123',
 };
 
+const defaultSessionContext: JwtCustomizerSessionContext = {
+  injectedHeaders: {
+    country: 'US',
+    city: 'San Francisco',
+    latitude: '37.7749',
+    longitude: '-122.4194',
+    botScore: '10',
+    botVerified: 'false',
+  },
+  adaptiveMfa: {
+    requiresMfa: true,
+    triggeredRules: [
+      {
+        rule: 'untrusted_ip',
+        details: {
+          signals: {
+            botScore: 10,
+          },
+          matchedSignals: ['botScore<30'],
+        },
+      },
+    ],
+  },
+};
+
 export const defaultUserTokenContextData = {
   user: defaultUserContext,
   grant: defaultGrantContext,
   interaction: defaultUserInteractionContext,
+  session: defaultSessionContext,
 };
 
 export const accessTokenPayloadTestModel: ModelSettings = {

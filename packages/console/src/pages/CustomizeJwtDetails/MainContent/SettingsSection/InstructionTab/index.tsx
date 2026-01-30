@@ -19,6 +19,7 @@ import {
   jwtCustomizerUserContextTypeDefinition,
   jwtCustomizerGrantContextTypeDefinition,
   jwtCustomizerUserInteractionContextTypeDefinition,
+  jwtCustomizerSessionContextTypeDefinition,
 } from '@/pages/CustomizeJwtDetails/utils/type-definitions';
 
 import tabContentStyles from '../index.module.scss';
@@ -111,6 +112,24 @@ function InstructionTab({ isActive }: Props) {
             className={styles.sampleCode}
             value={`declare ${jwtCustomizerUserInteractionContextTypeDefinition}`}
             height="400px"
+            theme="logto-dark"
+            options={typeDefinitionCodeEditorOptions}
+          />
+        </GuideCard>
+      )}
+      {tokenType === LogtoJwtTokenKeyType.AccessToken && (
+        <GuideCard
+          name={CardType.SessionData}
+          isExpanded={expendCard === CardType.SessionData}
+          setExpanded={(expand) => {
+            setExpendCard(expand ? CardType.SessionData : undefined);
+          }}
+        >
+          <Editor
+            language="typescript"
+            className={styles.sampleCode}
+            value={`declare ${jwtCustomizerSessionContextTypeDefinition}`}
+            height="180px"
             theme="logto-dark"
             options={typeDefinitionCodeEditorOptions}
           />
