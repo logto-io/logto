@@ -15,16 +15,21 @@ const { jest } = import.meta;
 
 const experienceRoutes = await pickDefault(import('./index.js'));
 
-const createLogMiddleware = (): Middleware<unknown, IRouterParamContext> => {
-  const { createLog, prependAllLogEntries } = createMockLogContext();
+const createLogMiddleware = (): {
+  middleware: Middleware<unknown, IRouterParamContext>;
+  mockAppend: jest.Mock;
+} => {
+  const { createLog, prependAllLogEntries, mockAppend } = createMockLogContext();
 
-  return async (ctx, next) => {
+  const middleware: Middleware<unknown, IRouterParamContext> = async (ctx, next) => {
     // @ts-expect-error -- mock log context
     ctx.createLog = createLog;
     // @ts-expect-error -- mock log context
     ctx.prependAllLogEntries = prependAllLogEntries;
     return next();
   };
+
+  return { middleware, mockAppend };
 };
 
 const createRequesterWithMocks = ({
@@ -68,13 +73,14 @@ const createRequesterWithMocks = ({
     userSignInCountries,
   });
 
+  const { middleware: logMiddleware, mockAppend } = createLogMiddleware();
   const requester = createRequester({
     anonymousRoutes: experienceRoutes,
     tenantContext: tenant,
-    middlewares: [createLogMiddleware()],
+    middlewares: [logMiddleware],
   });
 
-  return { requester, userGeoLocations, userSignInCountries };
+  return { requester, userGeoLocations, userSignInCountries, mockAppend };
 };
 
 describe('POST /experience/submit', () => {
@@ -120,6 +126,57 @@ describe('POST /experience/submit', () => {
       139.6503
     );
     expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'JP');
+  });
+
+  it('should append adaptive MFA context to submit audit log', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, mockAppend } = createRequesterWithMocks();
+
+    const response = await requester
+      .post('/experience/submit')
+      .set('x-logto-cf-country', 'JP')
+      .set('x-logto-cf-latitude', '35.6762')
+      .set('x-logto-cf-longitude', '139.6503')
+      .set('x-logto-cf-bot-score', '42')
+      .set('x-logto-cf-bot-verified', 'true');
+
+    expect(response.status).toBe(200);
+    expect(mockAppend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        adaptiveMfaContext: {
+          location: {
+            country: 'JP',
+            latitude: 35.6762,
+            longitude: 139.6503,
+          },
+          ipRiskSignals: {
+            botScore: 42,
+            botVerified: true,
+          },
+        },
+      })
+    );
+  });
+
+  it('should append adaptive MFA result to submit audit log', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, mockAppend } = createRequesterWithMocks();
+
+    const response = await requester.post('/experience/submit').set('x-logto-cf-bot-score', '10');
+
+    expect(response.status).toBe(200);
+    const adaptiveMfaResult = mockAppend.mock.calls
+      .map(
+        ([payload]) =>
+          (payload as { adaptiveMfaResult?: { requiresMfa: boolean; triggeredRules: unknown[] } })
+            .adaptiveMfaResult
+      )
+      .find(Boolean);
+
+    expect(adaptiveMfaResult?.requiresMfa).toBe(true);
+    expect(adaptiveMfaResult?.triggeredRules).toEqual(
+      expect.arrayContaining([expect.objectContaining({ rule: 'untrusted_ip' })])
+    );
   });
 
   it('should allow zero coordinates and record them', async () => {

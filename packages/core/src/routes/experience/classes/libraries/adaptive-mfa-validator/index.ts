@@ -116,6 +116,28 @@ export class AdaptiveMfaValidator {
     );
   }
 
+  public getCurrentContext(contextOverride?: AdaptiveMfaContext): Optional<AdaptiveMfaContext> {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    if (contextOverride !== undefined) {
+      return contextOverride;
+    }
+
+    if (this.adaptiveMfaContext) {
+      return this.adaptiveMfaContext;
+    }
+
+    const injectedHeaders = conditional(
+      this.ctx && getInjectedHeaderValues(this.ctx.request.headers)
+    );
+    const context = parseAdaptiveMfaContext(injectedHeaders);
+
+    this.adaptiveMfaContext = context;
+    return this.adaptiveMfaContext;
+  }
+
   private buildEvaluationState(
     user: User,
     options: AdaptiveMfaEvaluationOptions
@@ -167,28 +189,6 @@ export class AdaptiveMfaValidator {
     const geoLocation = await this.queries.userGeoLocations.findUserGeoLocationByUserId(user.id);
     this.userGeoLocationCache.set(user.id, geoLocation);
     return geoLocation;
-  }
-
-  private getCurrentContext(contextOverride?: AdaptiveMfaContext): Optional<AdaptiveMfaContext> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
-    if (contextOverride !== undefined) {
-      return contextOverride;
-    }
-
-    if (this.adaptiveMfaContext) {
-      return this.adaptiveMfaContext;
-    }
-
-    const injectedHeaders = conditional(
-      this.ctx && getInjectedHeaderValues(this.ctx.request.headers)
-    );
-    const context = parseAdaptiveMfaContext(injectedHeaders);
-
-    this.adaptiveMfaContext = context;
-    return this.adaptiveMfaContext;
   }
 
   private async isAdaptiveMfaEnabled(): Promise<Optional<boolean>> {
