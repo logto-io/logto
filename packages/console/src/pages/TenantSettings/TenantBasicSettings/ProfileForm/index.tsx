@@ -28,7 +28,7 @@ function ProfileForm({ currentTenantId }: Props) {
     formState: { errors },
     getValues,
   } = useFormContext<TenantSettingsForm>();
-  const { isFreeOrDevPlan } = useTenantMfaFeature();
+  const { shouldShowPaywallTag } = useTenantMfaFeature();
 
   return (
     <FormCard title="tenants.settings.title" description="tenants.settings.description">
@@ -52,7 +52,7 @@ function ProfileForm({ currentTenantId }: Props) {
         <FormField
           title="tenants.settings.tenant_mfa"
           featureTag={{
-            isVisible: isFreeOrDevPlan,
+            isVisible: shouldShowPaywallTag,
             plan: ReservedPlanId.Pro,
           }}
         >
