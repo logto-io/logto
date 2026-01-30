@@ -342,7 +342,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 404 if the if the user is not identified or not found
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
-  public async guardMfaVerificationStatus() {
+  public async guardMfaVerificationStatus(log?: LogEntry) {
     if (this.hasVerifiedSsoIdentity) {
       return;
     }
@@ -350,6 +350,9 @@ export default class ExperienceInteraction {
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
+    if (adaptiveMfaResult) {
+      log?.append({ adaptiveMfaResult });
+    }
     const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
     const mfaValidator = new MfaValidator(mfaSettings, user, {
       forceMfaVerification: requiresAdaptiveMfa,
@@ -442,7 +445,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 422 if the required profile fields are missing
    **/
   // eslint-disable-next-line complexity
-  public async submit() {
+  public async submit(log?: LogEntry) {
     const {
       queries: {
         users: userQueries,
@@ -454,6 +457,11 @@ export default class ExperienceInteraction {
         ssoConnectors: { upsertEnterpriseSsoTokenSetSecret },
       },
     } = this.tenant;
+
+    const adaptiveMfaContext = this.adaptiveMfaValidator.getCurrentContext();
+    if (adaptiveMfaContext) {
+      log?.append({ adaptiveMfaContext });
+    }
 
     await this.guardCaptcha();
 
@@ -484,7 +492,7 @@ export default class ExperienceInteraction {
 
     // Verified, only SignIn requires MFA verification, for register, it does not make sense to verify MFA
     if (this.#interactionEvent === InteractionEvent.SignIn) {
-      await this.guardMfaVerificationStatus();
+      await this.guardMfaVerificationStatus(log);
     }
 
     // Revalidate the new profile data if any
