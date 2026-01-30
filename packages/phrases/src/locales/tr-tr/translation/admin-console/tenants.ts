@@ -58,6 +58,7 @@ const tenants = {
   create_modal: {
     title: 'Kiracı Oluştur',
     subtitle: 'İzolasyonlu kaynaklara ve kullanıcılara sahip yeni bir kiracı oluşturun.',
+    tenant_id: 'Kiracı Kimliği',
     tenant_usage_purpose: 'Bu kiracıyı ne için kullanmak istiyorsunuz?',
     development_description:
       'Yalnızca test amacıyla ve üretimde kullanılmamalıdır. Abonelik gerekli değildir.',

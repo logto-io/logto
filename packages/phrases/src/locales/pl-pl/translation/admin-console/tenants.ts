@@ -59,6 +59,7 @@ const tenants = {
   create_modal: {
     title: 'Utwórz nowego najemcę',
     subtitle: 'Utwórz nowego najemcę z izolowanymi zasobami i użytkownikami.',
+    tenant_id: 'ID Najemcy',
     tenant_usage_purpose: 'Co chcesz zrobić z tym najemcą?',
     development_description:
       'Wyłącznie do testów i nie powinien być używany w produkcji. Nie jest wymagana subskrypcja.',

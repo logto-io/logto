@@ -57,6 +57,7 @@ const tenants = {
   create_modal: {
     title: 'テナントを作成する',
     subtitle: '隔離されたリソースとユーザーを持つ新しいテナントを作成します。',
+    tenant_id: 'テナントID',
     tenant_usage_purpose: 'このテナントを使用する目的は何ですか？',
     development_description:
       'テスト用であり、本番で使用すべきではありません。サブスクリプションは必要ありません。',

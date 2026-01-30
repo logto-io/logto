@@ -56,7 +56,7 @@ const tenants = {
   create_modal: {
     title: 'Create tenant',
     subtitle: 'Create a new tenant that has isolated resources and users.',
-    tenant_id: 'Tenant ID (optional)',
+    tenant_id: 'Tenant ID',
     tenant_usage_purpose: 'What do you want to use this tenant for?',
     development_description:
       "For testing only and shouldn't be used in production. No subscription is required.",

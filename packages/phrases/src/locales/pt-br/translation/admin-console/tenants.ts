@@ -59,6 +59,7 @@ const tenants = {
   create_modal: {
     title: 'Criar inquilino',
     subtitle: 'Crie um novo locatário que tenha recursos e usuários isolados.',
+    tenant_id: 'ID do Locatário',
     tenant_usage_purpose: 'Para que você deseja usar este locatário?',
     development_description:
       'Apenas para testes e não deve ser usado em produção. Nenhuma assinatura é necessária.',
