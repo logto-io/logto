@@ -57,6 +57,9 @@ export class AdaptiveMfaValidator {
     ];
   }
 
+  /**
+   * @remarks Record geo context on sign-in event only.
+   */
   public async recordSignInGeoContext(user: User, interactionEvent: InteractionEvent) {
     if (interactionEvent !== InteractionEvent.SignIn) {
       return;
