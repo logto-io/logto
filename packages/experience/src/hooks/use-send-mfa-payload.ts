@@ -21,11 +21,11 @@ export type SendMfaPayloadApiOptions =
       verificationId?: string;
     };
 
-const sendMfaPayloadApi = async ({ flow, payload, verificationId }: SendMfaPayloadApiOptions) => {
-  if (flow === UserMfaFlow.MfaBinding) {
-    return bindMfa(payload.type, verificationId, payload);
-  }
-  return verifyMfa(payload, verificationId);
+const sendMfaPayloadApi = async (options: SendMfaPayloadApiOptions) => {
+  const { flow, payload, verificationId } = options;
+  return flow === UserMfaFlow.MfaBinding
+    ? bindMfa(payload.type, verificationId, payload)
+    : verifyMfa(payload, verificationId);
 };
 
 const useSendMfaPayload = () => {

@@ -222,14 +222,6 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         },
       });
 
-      assertThat(
-        experienceInteraction.identifiedUserId,
-        new RequestError({
-          code: 'session.identifier_not_found',
-          status: 404,
-        })
-      );
-
       const webAuthnVerification = experienceInteraction.getVerificationRecordByTypeAndId(
         VerificationType.MfaWebAuthn,
         verificationId
