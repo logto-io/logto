@@ -74,6 +74,8 @@ const tenants = {
     tenant_id_invalid:
       'テナントIDには小文字、数字、ハイフンのみ使用でき、{{max}}文字を超えることはできません。',
     tenant_id_placeholder: 'テナントID',
+    tenant_id_tip:
+      'テナントIDをカスタマイズします。空のままにすると、Logtoがデフォルトのidを生成します。テナントIDは作成後に変更できません。',
   },
   dev_tenant_migration: {
     title: '新しい「開発テナント」を作成して、プロの機能を無料でお試しできます！',

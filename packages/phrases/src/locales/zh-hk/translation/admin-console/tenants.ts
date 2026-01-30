@@ -64,6 +64,7 @@ const tenants = {
     tenant_type_description: '這無法在創建後更改。',
     tenant_id_invalid: '租戶 ID 只能包含小寫字母、數字和連字符，且不能超過 {{max}} 個字符。',
     tenant_id_placeholder: '你的租戶 ID',
+    tenant_id_tip: '自訂租戶 ID。如果留空，Logto 將產生預設 ID。租戶 ID 在建立後無法更改。',
   },
   dev_tenant_migration: {
     title: '現在，你可以通過創建新的“開發租戶”免費試用我們的專業功能！',

@@ -77,6 +77,8 @@ const tenants = {
     tenant_id_invalid:
       'El ID del inquilino solo puede contener letras minúsculas, números y guiones, y no debe exceder {{max}} caracteres.',
     tenant_id_placeholder: 'Su ID de inquilino',
+    tenant_id_tip:
+      'Personalice el ID del inquilino. Si se deja vacío, Logto generará un ID predeterminado. El ID del inquilino no se puede cambiar después de la creación.',
   },
   dev_tenant_migration: {
     title:

@@ -71,6 +71,8 @@ const tenants = {
     tenant_id_invalid:
       '테넌트 ID는 소문자, 숫자, 하이픈만 포함할 수 있으며 {{max}}자를 초과할 수 없습니다.',
     tenant_id_placeholder: '테넌트 ID',
+    tenant_id_tip:
+      '테넌트 ID를 사용자 정의합니다. 비워두면 Logto가 기본 ID를 생성합니다. 테넌트 ID는 생성 후 변경할 수 없습니다.',
   },
   dev_tenant_migration: {
     title: '사용자 정의 테넌트로 전환하여 Pro 기능을 무료로 이용할 수 있습니다!',

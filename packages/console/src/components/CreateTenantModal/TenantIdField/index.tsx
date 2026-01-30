@@ -22,7 +22,7 @@ function TenantIdField({ prefix, isSubmitting }: Props) {
   } = useFormContext<CreateTenantData>();
 
   return (
-    <FormField title="tenants.create_modal.tenant_id">
+    <FormField title="tenants.create_modal.tenant_id" tip={t('tenants.create_modal.tenant_id_tip')}>
       <div className={styles.tenantIdInput}>
         <span className={styles.tenantIdPrefix}>{prefix}</span>
         <TextInput

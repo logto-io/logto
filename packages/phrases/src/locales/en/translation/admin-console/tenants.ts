@@ -74,6 +74,8 @@ const tenants = {
     tenant_id_invalid:
       'Tenant ID can only contain lowercase letters, numbers, and hyphens, and must not exceed {{max}} characters.',
     tenant_id_placeholder: 'Your tenant ID',
+    tenant_id_tip:
+      'Customize the Tenant ID. If left empty, Logto will generate a default ID. The Tenant ID cannot be changed after creation.',
   },
   dev_tenant_migration: {
     title: 'You can now try our Pro features for free by creating a new "Development tenant"!',

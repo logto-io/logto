@@ -79,6 +79,8 @@ const tenants = {
     tenant_id_invalid:
       "L'ID del tenant può contenere solo lettere minuscole, numeri e trattini e non deve superare {{max}} caratteri.",
     tenant_id_placeholder: 'Il tuo ID tenant',
+    tenant_id_tip:
+      "Personalizza l'ID tenant. Se lasciato vuoto, Logto genererà un ID predefinito. L'ID tenant non può essere modificato dopo la creazione.",
   },
   dev_tenant_migration: {
     title:

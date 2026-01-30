@@ -77,6 +77,8 @@ const tenants = {
     tenant_id_invalid:
       'Kiracı kimliği yalnızca küçük harfler, sayılar ve kısa çizgiler içerebilir ve {{max}} karakteri aşmamalıdır.',
     tenant_id_placeholder: 'Kiracı kimliğiniz',
+    tenant_id_tip:
+      'Kiracı kimliğini özelleştirin. Boş bırakılırsa, Logto varsayılan bir kimlik oluşturur. Kiracı kimliği oluşturulduktan sonra değiştirilemez.',
   },
   dev_tenant_migration: {
     title:
