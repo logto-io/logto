@@ -48,7 +48,7 @@ function ProfileForm({ currentTenantId }: Props) {
       <FormField title="tenants.settings.tenant_type">
         <TenantEnvironment tag={getValues('profile.tag')} />
       </FormField>
-      {isDevFeaturesEnabled && (
+      {isDevFeaturesEnabled && canManageTenant && (
         <FormField
           title="tenants.settings.tenant_mfa"
           featureTag={{
