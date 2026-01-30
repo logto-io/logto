@@ -94,7 +94,7 @@
     "raw-body": "^3.0.0",
     "redis": "^4.6.14",
     "roarr": "^7.11.0",
-    "samlify": "2.10.0",
+    "samlify": "2.10.2",
     "semver": "^7.3.8",
     "snake-case": "^4.0.0",
     "snakecase-keys": "^8.0.1",
