@@ -1,5 +1,64 @@
 # Change Log
 
+## 1.36.0
+
+### Minor Changes
+
+- 7cbe315dde: support token exchange grant type with app-level control
+
+  - Add `allowTokenExchange` field to `customClientMetadata` to control whether an application can initiate token exchange requests
+  - Machine-to-machine applications now support token exchange
+  - All new applications will have token exchange disabled by default, you can enable it in the application settings
+  - For backward compatibility, existing first-party Traditional, Native, and SPA applications will have this enabled
+  - Third-party applications are not allowed to use token exchange
+  - Add UI toggle in Console with risk warning for public clients (single-page application / native application)
+
+- ce65b07964: support wildcard patterns in redirect URIs
+
+  Added support for wildcard patterns (`*`) in redirect URIs to better support dynamic environments like preview deployments.
+
+  Rules (web only):
+
+  - Wildcards are allowed for http/https redirect URIs in the hostname and/or pathname.
+  - Wildcards are rejected in scheme, port, query, and hash.
+  - Hostname wildcard patterns must contain at least one dot to avoid overly broad patterns.
+
+### Patch Changes
+
+- 10a9e68f1d: allow skipping mandatory sign-up identifier collection for social sign-in and sign-up
+
+  ## Background
+
+  Previously, Logto enforced mandatory user identifier collection during both sign-in and sign-up flows. Users were required to provide all identifiers configured as mandatory in the sign-up settings. This behavior applies to all sign-in methods except for enterprise SSO.
+
+  For example:
+
+  1. A new user signs up via a GitHub social connector
+  2. The IdP does not provide a verified email address
+  3. Email is configured as a mandatory sign-up identifier in Logto
+  4. In this case, the user would be prompted to provide and verify an email address before the account could be successfully created.
+
+  ## Problem
+
+  For iOS mobile app users, Apple App Store guidelines mandate social sign-in options like "Sign in with Apple" should not require additional information collection beyond what is provided by the social IdP. Enforcing additional identifier collection during social sign-in can result in app review rejection.
+
+  ## Solution
+
+  We have updated the sign-in-experience settings with a new option `skipRequiredIdentifiers` for social sign-in and sign-up flows. When enabled, this option allows users to bypass the mandatory identifier collection step during social sign-in and sign-up.
+
+  By default, this option is set to `false` to maintain existing behavior. Administrators can enable this option in the sign-in experience settings if they wish to allow users to skip mandatory identifier collection during social sign-in and sign-up.
+
+  On Logto console, this option is represented as a checkbox labeled "Require users to provide missing sign-up identifier" on the sign-in experience configuration page under the "Social sign-in" section. Checked by default.
+
+- Updated dependencies [7cbe315dde]
+- Updated dependencies [c8b2caec5c]
+- Updated dependencies [317f9744d1]
+- Updated dependencies [ce65b07964]
+  - @logto/phrases@1.25.0
+  - @logto/shared@3.3.1
+  - @logto/core-kit@2.7.0
+  - @logto/phrases-experience@1.12.1
+
 ## 1.35.0
 
 ### Minor Changes

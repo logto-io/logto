@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-gitlab",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "GitLab social connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-oauth",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "OAuth standard connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

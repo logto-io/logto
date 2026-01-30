@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.36.0
+
+### Patch Changes
+
+- Updated dependencies [317f9744d1]
+  - @logto/cli@1.36.0
+
 ## 1.35.0
 
 ### Patch Changes

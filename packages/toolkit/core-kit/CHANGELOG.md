@@ -1,5 +1,24 @@
 # Change Log
 
+## 2.7.0
+
+### Minor Changes
+
+- ce65b07964: support wildcard patterns in redirect URIs
+
+  Added support for wildcard patterns (`*`) in redirect URIs to better support dynamic environments like preview deployments.
+
+  Rules (web only):
+
+  - Wildcards are allowed for http/https redirect URIs in the hostname and/or pathname.
+  - Wildcards are rejected in scheme, port, query, and hash.
+  - Hostname wildcard patterns must contain at least one dot to avoid overly broad patterns.
+
+### Patch Changes
+
+- Updated dependencies [317f9744d1]
+  - @logto/shared@3.3.1
+
 ## 2.6.1
 
 ### Patch Changes

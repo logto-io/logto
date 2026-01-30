@@ -1,5 +1,13 @@
 # @logto/connector-gitlab
 
+## 1.2.3
+
+### Patch Changes
+
+- Updated dependencies [317f9744d1]
+  - @logto/shared@3.3.1
+  - @logto/connector-oauth@1.7.3
+
 ## 1.2.2
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # Change Log
 
+## 1.36.0
+
+### Patch Changes
+
+- 317f9744d1: allow disabling Postgres `statement_timeout` for PgBouncer/RDS Proxy
+
+  - add `DATABASE_STATEMENT_TIMEOUT` parsing in shared, core, and CLI
+  - set `DATABASE_STATEMENT_TIMEOUT=DISABLE_TIMEOUT` to omit the startup parameter
+
+- Updated dependencies [7cbe315dde]
+- Updated dependencies [10a9e68f1d]
+- Updated dependencies [317f9744d1]
+- Updated dependencies [ce65b07964]
+  - @logto/schemas@1.36.0
+  - @logto/shared@3.3.1
+  - @logto/core-kit@2.7.0
+
 ## 1.35.0
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-patreon",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Patreon web connector implementation.",
   "author": "DevTekVE <devtekve@gmail.com> & Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

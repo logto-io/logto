@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-kook",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "KOOK connector implementation.",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
