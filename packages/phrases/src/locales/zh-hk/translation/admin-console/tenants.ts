@@ -51,6 +51,7 @@ const tenants = {
   create_modal: {
     title: '創建租戶',
     subtitle: '創建一個擁有獨立資源和用戶的新租戶。',
+    tenant_id: '租戶ID',
     tenant_usage_purpose: '你希望使用此租戶做什麼？',
     development_description: '僅供測試使用，不應在生產中使用。無需訂閱。',
     development_description_for_private_regions: '僅供測試使用，不應在生產中使用。',

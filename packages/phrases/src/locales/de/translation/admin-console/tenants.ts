@@ -59,6 +59,7 @@ const tenants = {
   create_modal: {
     title: 'Mieter erstellen',
     subtitle: 'Erstellen Sie einen neuen Mandanten, der isolierte Ressourcen und Benutzer hat.',
+    tenant_id: 'Mieter-ID',
     tenant_usage_purpose: 'Wofür möchten Sie diesen Mieter verwenden?',
     development_description:
       'Nur für Tests und sollte nicht in der Produktion verwendet werden. Es ist kein Abonnement erforderlich.',

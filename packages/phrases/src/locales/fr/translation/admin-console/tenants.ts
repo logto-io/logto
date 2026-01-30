@@ -59,6 +59,7 @@ const tenants = {
   create_modal: {
     title: 'Créer un locataire',
     subtitle: "Créer un nouveau locataire qui dispose de ressources et d'utilisateurs isolés.",
+    tenant_id: 'ID du locataire',
     tenant_usage_purpose: 'Dans quel but souhaitez-vous utiliser ce locataire?',
     development_description:
       "Uniquement pour les tests et ne devrait pas être utilisé en production. Aucune souscription n'est requise.",
