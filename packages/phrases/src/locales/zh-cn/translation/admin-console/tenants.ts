@@ -65,6 +65,7 @@ const tenants = {
     tenant_type_description: '创建后将无法更改。',
     tenant_id_invalid: '租户 ID 只能包含小写字母、数字和连字符，且不能超过 {{max}} 个字符。',
     tenant_id_placeholder: '你的租户 ID',
+    tenant_id_tip: '自定义租户 ID。如果留空，Logto 将生成默认 ID。租户 ID 在创建后无法更改。',
   },
   dev_tenant_migration: {
     title: '您现在可以通过创建新的“开发租户”免费尝试我们的专业功能！',

@@ -79,6 +79,8 @@ const tenants = {
     tenant_id_invalid:
       'Die Mandanten-ID darf nur Kleinbuchstaben, Zahlen und Bindestriche enthalten und darf {{max}} Zeichen nicht überschreiten.',
     tenant_id_placeholder: 'Ihre Mandanten-ID',
+    tenant_id_tip:
+      'Passen Sie die Mandanten-ID an. Wenn leer gelassen, generiert Logto eine Standard-ID. Die Mandanten-ID kann nach der Erstellung nicht geändert werden.',
   },
   dev_tenant_migration: {
     title:

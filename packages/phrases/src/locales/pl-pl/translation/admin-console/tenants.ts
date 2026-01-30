@@ -79,6 +79,8 @@ const tenants = {
     tenant_id_invalid:
       'Identyfikator najemcy może zawierać tylko małe litery, cyfry i myślniki oraz nie może przekraczać {{max}} znaków.',
     tenant_id_placeholder: 'Identyfikator najemcy',
+    tenant_id_tip:
+      'Dostosuj identyfikator najemcy. Jeśli pozostawisz puste, Logto wygeneruje domyślny identyfikator. Identyfikator najemcy nie może zostać zmieniony po utworzeniu.',
   },
   dev_tenant_migration: {
     title:

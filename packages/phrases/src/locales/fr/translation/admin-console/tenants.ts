@@ -79,6 +79,8 @@ const tenants = {
     tenant_id_invalid:
       "L'identifiant du locataire ne peut contenir que des lettres minuscules, des chiffres et des tirets, et ne doit pas dépasser {{max}} caractères.",
     tenant_id_placeholder: 'Votre identifiant de locataire',
+    tenant_id_tip:
+      "Personnalisez l'identifiant du locataire. Si laissé vide, Logto générera un identifiant par défaut. L'identifiant du locataire ne peut pas être modifié après la création.",
   },
   dev_tenant_migration: {
     title:
