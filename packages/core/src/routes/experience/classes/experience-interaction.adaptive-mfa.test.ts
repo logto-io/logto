@@ -89,4 +89,68 @@ describe('ExperienceInteraction adaptive MFA', () => {
       )
     );
   });
+
+  it('stores session context in toJson but not toSanitizedJson', async () => {
+    const user: User = {
+      ...mockUserWithMfaVerifications,
+      logtoConfig: {
+        mfa: {
+          skipMfaOnSignIn: true,
+        },
+      },
+    };
+
+    users.findUserById.mockResolvedValueOnce(user);
+
+    // @ts-expect-error -- mock test context
+    const ctx: WithHooksAndLogsContext = {
+      assignInteractionHookResult: jest.fn(),
+      appendDataHookContext: jest.fn(),
+      ...createContextWithRouteParameters({
+        headers: {
+          'x-logto-cf-country': 'US',
+          'x-logto-cf-bot-score': '10',
+        },
+      }),
+      ...createMockLogContext(),
+    };
+
+    const interactionDetails = {
+      result: {
+        interactionEvent: InteractionEvent.SignIn,
+        userId: user.id,
+      },
+    } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
+    const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+    const { adaptiveMfaValidator } = experienceInteraction as unknown as {
+      adaptiveMfaValidator: { getResult: jest.Mock };
+    };
+
+    jest.spyOn(adaptiveMfaValidator, 'getResult').mockResolvedValue({
+      requiresMfa: true,
+      triggeredRules: [],
+    });
+
+    await expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchError(
+      new RequestError(
+        { code: 'session.mfa.require_mfa_verification', status: 403 },
+        {
+          availableFactors: [MfaFactor.TOTP],
+          maskedIdentifiers: {},
+        }
+      )
+    );
+
+    expect(experienceInteraction.toJson().sessionContext).toEqual({
+      injectedHeaders: {
+        country: 'US',
+        botScore: '10',
+      },
+      adaptiveMfa: {
+        requiresMfa: true,
+        triggeredRules: [],
+      },
+    });
+    expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('sessionContext');
+  });
 });
