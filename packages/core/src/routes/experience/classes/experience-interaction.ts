@@ -1,6 +1,12 @@
 /* eslint-disable max-lines */
 import { appInsights } from '@logto/app-insights/node';
-import { InteractionEvent, MfaFactor, VerificationType, type User } from '@logto/schemas';
+import {
+  InteractionEvent,
+  MfaFactor,
+  VerificationType,
+  type User,
+  type LogContextPayload,
+} from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
@@ -350,12 +356,18 @@ export default class ExperienceInteraction {
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
-    if (adaptiveMfaResult) {
-      log?.append({ adaptiveMfaResult });
-    }
     const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
     const mfaValidator = new MfaValidator(mfaSettings, user, {
       forceMfaVerification: requiresAdaptiveMfa,
+    });
+    const mfaRequired = mfaValidator.isMfaEnabled;
+    const mfaRequirement: Readonly<Required<LogContextPayload>['mfaRequirement']> = {
+      required: mfaRequired,
+      source: requiresAdaptiveMfa ? 'adaptive' : mfaRequired ? 'policy' : 'none',
+    } as const;
+    log?.append({
+      ...conditional(adaptiveMfaResult && { adaptiveMfaResult }),
+      mfaRequirement,
     });
     const isVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
 
