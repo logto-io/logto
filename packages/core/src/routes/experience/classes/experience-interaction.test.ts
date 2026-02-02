@@ -274,28 +274,49 @@ describe('ExperienceInteraction class', () => {
       expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
     });
 
-    it('should skip invalid country codes but record coordinates', async () => {
+    it('should skip out-of-range latitude but still record valid country', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction({
           headers: {
-            'x-logto-cf-country': 'USA',
-            'x-logto-cf-latitude': '37.7749',
-            'x-logto-cf-longitude': '-122.4194',
+            'x-logto-cf-country': 'US',
+            'x-logto-cf-latitude': '-91',
+            'x-logto-cf-longitude': '10',
           },
         });
 
       await experienceInteraction.submit();
 
-      expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
-        mockUser.id,
-        37.7749,
-        -122.4194
-      );
-      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(
-        mockUser.id,
-        undefined
-      );
+      expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
+      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
+    });
+
+    it('should skip invalid country codes but record coordinates', async () => {
+      setDevFeaturesEnabled(true);
+      const invalidCountries = ['USA', 'jpn'];
+
+      for (const country of invalidCountries) {
+        const { experienceInteraction, userGeoLocations, userSignInCountries } =
+          createSignInInteraction({
+            headers: {
+              'x-logto-cf-country': country,
+              'x-logto-cf-latitude': '37.7749',
+              'x-logto-cf-longitude': '-122.4194',
+            },
+          });
+
+        await experienceInteraction.submit();
+
+        expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+          mockUser.id,
+          37.7749,
+          -122.4194
+        );
+        expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(
+          mockUser.id,
+          undefined
+        );
+      }
     });
 
     it('should normalize lowercase country codes', async () => {
@@ -326,6 +347,24 @@ describe('ExperienceInteraction class', () => {
 
       expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
       expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
+    });
+
+    it('should skip recording coordinates when only latitude is provided', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction, userGeoLocations, userSignInCountries } =
+        createSignInInteraction({
+          headers: {
+            'x-logto-cf-latitude': '51.5074',
+          },
+        });
+
+      await experienceInteraction.submit();
+
+      expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
+      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(
+        mockUser.id,
+        undefined
+      );
     });
 
     it('should skip recording when adaptive MFA is disabled', async () => {

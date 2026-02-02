@@ -151,26 +151,45 @@ describe('POST /experience/submit', () => {
     expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'JP');
   });
 
-  it('should skip invalid country codes but record coordinates', async () => {
+  it('should skip out-of-range latitude but still record valid country', async () => {
     setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester
       .post('/experience/submit')
-      .set('x-logto-cf-country', 'JPN')
-      .set('x-logto-cf-latitude', '35.6762')
-      .set('x-logto-cf-longitude', '139.6503');
+      .set('x-logto-cf-country', 'JP')
+      .set('x-logto-cf-latitude', '91')
+      .set('x-logto-cf-longitude', '10');
 
     expect(response.status).toBe(200);
-    expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
-      mockUser.id,
-      35.6762,
-      139.6503
-    );
-    expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(
-      mockUser.id,
-      undefined
-    );
+    expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
+    expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'JP');
+  });
+
+  it('should skip invalid country codes but record coordinates', async () => {
+    setDevFeaturesEnabled(true);
+    const invalidCountries = ['JPN', 'jpn'];
+
+    for (const country of invalidCountries) {
+      const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
+
+      const response = await requester
+        .post('/experience/submit')
+        .set('x-logto-cf-country', country)
+        .set('x-logto-cf-latitude', '35.6762')
+        .set('x-logto-cf-longitude', '139.6503');
+
+      expect(response.status).toBe(200);
+      expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+        mockUser.id,
+        35.6762,
+        139.6503
+      );
+      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(
+        mockUser.id,
+        undefined
+      );
+    }
   });
 
   it('should normalize lowercase country codes', async () => {
@@ -196,6 +215,22 @@ describe('POST /experience/submit', () => {
     expect(response.status).toBe(200);
     expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
     expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'JP');
+  });
+
+  it('should skip recording coordinates when only latitude is provided', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
+
+    const response = await requester
+      .post('/experience/submit')
+      .set('x-logto-cf-latitude', '51.5074');
+
+    expect(response.status).toBe(200);
+    expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
+    expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(
+      mockUser.id,
+      undefined
+    );
   });
 
   it('should record coordinates when country is missing', async () => {
