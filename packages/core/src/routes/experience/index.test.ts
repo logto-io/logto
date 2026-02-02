@@ -196,7 +196,7 @@ describe('POST /experience/submit', () => {
 
     const response = await requester.post('/experience/submit').set('x-logto-cf-bot-score', '10');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(403);
     const mfaRequirement = mockAppend.mock.calls
       .map(
         ([payload]) =>
@@ -220,7 +220,7 @@ describe('POST /experience/submit', () => {
 
     const response = await requester.post('/experience/submit');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(403);
     const mfaRequirement = mockAppend.mock.calls
       .map(
         ([payload]) =>
