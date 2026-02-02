@@ -7,7 +7,7 @@ import {
   jwtCustomizer as jwtCustomizerLog,
   type CustomJwtFetcher,
   GrantType,
-  jsonGuard,
+  jwtCustomizerSessionContextGuard,
   jwtCustomizerUserInteractionContextGuard,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -30,16 +30,6 @@ import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/cus
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
-
-const sessionContextGuard = z.object({
-  injectedHeaders: z.record(z.string(), z.string()).optional(),
-  adaptiveMfa: z
-    .object({
-      requiresMfa: z.boolean(),
-      triggeredRules: z.array(jsonGuard),
-    })
-    .optional(),
-});
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -134,7 +124,7 @@ const getInteractionLastSubmission = async (
 
   const { lastSubmission } = sessionExtension;
   const interactionData = jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
-  const sessionContextData = sessionContextGuard.safeParse(
+  const sessionContextData = jwtCustomizerSessionContextGuard.safeParse(
     getSessionContextFromLastSubmission(lastSubmission)
   );
 

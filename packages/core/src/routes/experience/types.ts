@@ -3,6 +3,7 @@ import {
   type CreateUser,
   encryptedTokenSetGuard,
   InteractionEvent,
+  jsonGuard,
   secretEnterpriseSsoConnectorRelationPayloadGuard,
   secretSocialConnectorRelationPayloadGuard,
   type User,
@@ -200,7 +201,7 @@ const interactionSessionContextGuard = z.object({
   adaptiveMfa: z
     .object({
       requiresMfa: z.boolean(),
-      triggeredRules: z.array(z.unknown()),
+      triggeredRules: z.array(jsonGuard),
     })
     .optional(),
 }) satisfies ToZodObject<InteractionSessionContext>;
