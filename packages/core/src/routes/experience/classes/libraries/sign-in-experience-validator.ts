@@ -169,6 +169,12 @@ export class SignInExperienceValidator {
     return mfa;
   }
 
+  public async getPasskeySignInSettings() {
+    const { passkeySignIn } = await this.getSignInExperienceData();
+
+    return passkeySignIn;
+  }
+
   public async getPasswordPolicy() {
     const { passwordPolicy } = await this.getSignInExperienceData();
 
@@ -307,6 +313,7 @@ export class SignInExperienceValidator {
     const {
       signIn: { methods: signInMethods },
       singleSignOnEnabled,
+      passkeySignIn,
     } = await this.getSignInExperienceData();
 
     switch (verificationRecord.type) {
@@ -337,6 +344,13 @@ export class SignInExperienceValidator {
       case VerificationType.EnterpriseSso: {
         assertThat(
           singleSignOnEnabled,
+          new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 })
+        );
+        break;
+      }
+      case VerificationType.SignInWebAuthn: {
+        assertThat(
+          passkeySignIn.enabled,
           new RequestError({ code: 'user.sign_in_method_not_enabled', status: 422 })
         );
         break;

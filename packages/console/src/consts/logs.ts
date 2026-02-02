@@ -31,6 +31,10 @@ export const auditLogEventTitle = Object.freeze({
   'Interaction.SignIn.Verification.Totp.Submit': 'Sign-in: Verify TOTP code',
   'Interaction.SignIn.Verification.WebAuthn.Create': 'Sign-in: Create WebAuthn authentication',
   'Interaction.SignIn.Verification.WebAuthn.Submit': 'Sign-in: Verify WebAuthn authentication',
+  'Interaction.SignIn.Verification.SignInWebAuthn.Create':
+    'Sign-in: Create passkey sign-in authentication',
+  'Interaction.SignIn.Verification.SignInWebAuthn.Submit':
+    'Sign-in: Verify passkey sign-in authentication',
   'Interaction.SignIn.Verification.EmailVerificationCode.Create':
     'Create and send sign-in email verification code',
   'Interaction.SignIn.Verification.EmailVerificationCode.Submit':

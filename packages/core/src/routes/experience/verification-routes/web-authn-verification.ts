@@ -8,6 +8,7 @@ import {
   webAuthnVerificationPayloadGuard,
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
+import { generateStandardId } from '@logto/shared';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -18,16 +19,22 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { withSentinel } from '../classes/libraries/sentinel-guard.js';
-import { WebAuthnVerification } from '../classes/verifications/web-authn-verification.js';
+import {
+  SignInWebAuthnVerification,
+  WebAuthnVerification,
+} from '../classes/verifications/web-authn-verification.js';
 import { experienceRoutes } from '../const.js';
 import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
-import { type ExperienceInteractionRouterContext } from '../types.js';
+import {
+  webAuthnAuthenticationOptionsInteractionStorageGuard,
+  type ExperienceInteractionRouterContext,
+} from '../types.js';
 
 export default function webAuthnVerificationRoute<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
   tenantContext: TenantContext
 ) {
-  const { libraries, queries, sentinel } = tenantContext;
+  const { libraries, queries, sentinel, provider } = tenantContext;
 
   router.post(
     `${experienceRoutes.verification}/web-authn/registration`,
@@ -229,9 +236,9 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       );
 
       assertThat(
-        webAuthnVerification.userId === experienceInteraction.identifiedUserId,
+        experienceInteraction.identifiedUserId === webAuthnVerification.userId,
         new RequestError({
-          code: 'session.verification_session_not_found',
+          code: 'session.identity_conflict',
           status: 404,
         })
       );
@@ -241,7 +248,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
             {
               ctx,
               sentinel,
-              action: SentinelActivityAction.MfaWebAuthn,
+              action: SentinelActivityAction.WebAuthn,
               identifier: {
                 type: AdditionalIdentifier.UserId,
                 value: experienceInteraction.identifiedUserId,
@@ -265,4 +272,74 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       return next();
     }
   );
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    /**
+     * Verify passkey authentication for sign-in flow.
+     * This route must be used in conjunction with the authentication options generation endpoint
+     * in `./anonymous-routes/index.ts` which generates the initial challenge.
+     *
+     * Flow:
+     * 1. Client calls `/api/experience/preflight/sign-in-web-authn/authentication` to get authentication options
+     * 2. User completes WebAuthn authentication with the browser
+     * 3. Client submits verification with this endpoint to complete sign-in
+     *
+     * @see POST /api/experience/preflight/sign-in-web-authn/authentication
+     */
+    router.post(
+      `${experienceRoutes.verification}/sign-in-web-authn/authentication/verify`,
+      koaGuard({
+        body: z.object({
+          payload: webAuthnVerificationPayloadGuard,
+        }),
+        response: z.object({
+          verificationId: z.string(),
+        }),
+        status: [200, 400, 404],
+      }),
+      koaExperienceVerificationsAuditLog({
+        type: VerificationType.SignInWebAuthn,
+        action: Action.Submit,
+      }),
+      async (ctx, next) => {
+        const { experienceInteraction, verificationAuditLog } = ctx;
+        const { payload } = ctx.guard.body;
+
+        const details = await provider.interactionDetails(ctx.req, ctx.res);
+        const authenticationOptionsParseResult =
+          webAuthnAuthenticationOptionsInteractionStorageGuard.safeParse(details.result);
+
+        assertThat(
+          authenticationOptionsParseResult.success,
+          'session.verification_session_not_found'
+        );
+
+        const webAuthnVerification = new SignInWebAuthnVerification(libraries, queries, {
+          id: generateStandardId(),
+          type: VerificationType.SignInWebAuthn,
+          verified: false,
+          ...authenticationOptionsParseResult.data,
+        });
+
+        verificationAuditLog.append({
+          payload: {
+            verificationId: webAuthnVerification.id,
+            payload,
+          },
+        });
+
+        await webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload);
+
+        await experienceInteraction.save();
+
+        ctx.body = {
+          verificationId: webAuthnVerification.id,
+        };
+
+        ctx.status = 200;
+
+        return next();
+      }
+    );
+  }
 }

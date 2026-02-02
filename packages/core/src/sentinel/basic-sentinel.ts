@@ -35,7 +35,7 @@ export default class BasicSentinel extends Sentinel {
 
   static isolatedActions = Object.freeze([
     SentinelActivityAction.MfaTotp,
-    SentinelActivityAction.MfaWebAuthn,
+    SentinelActivityAction.WebAuthn,
     SentinelActivityAction.MfaBackupCode,
   ] as const);
 

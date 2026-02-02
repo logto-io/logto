@@ -150,6 +150,49 @@
           }
         }
       }
+    },
+    "/api/experience/verification/sign-in-web-authn/authentication/verify": {
+      "post": {
+        "tags": ["Dev feature"],
+        "operationId": "VerifySignInWebAuthnAuthentication",
+        "summary": "Verify passkey sign-in WebAuthn authentication",
+        "description": "Verify the passkey sign-in WebAuthn authentication response against the stored authentication challenge. Upon successful verification, the verification record will be marked as verified and the user will be resolved by the credential.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "payload": {
+                    "description": "The WebAuthn assertion response from the user's passkey credential."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The passkey sign-in WebAuthn authentication has been successfully verified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "verificationId": {
+                      "description": "The unique verification ID of the passkey sign-in WebAuthn authentication verification record."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. <br/> - `session.mfa.pending_info_not_found:` The WebAuthn authentication challenge is missing in the current verification record. <br/>- `session.mfa.webauthn_verification_failed:` The WebAuthn assertion response is invalid or cannot be verified."
+          },
+          "404": {
+            "description": "Verification session not found."
+          }
+        }
+      }
     }
   }
 }
