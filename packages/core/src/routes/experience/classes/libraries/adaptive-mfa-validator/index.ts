@@ -103,17 +103,15 @@ export class AdaptiveMfaValidator {
         ? [this.queries.userGeoLocations.upsertUserGeoLocation(user.id, latitude, longitude)]
         : []),
       this.queries.userSignInCountries.upsertUserSignInCountry(user.id, country),
+      trySafe(async () =>
+        this.queries.userSignInCountries.pruneUserSignInCountriesByUserId(
+          user.id,
+          adaptiveMfaNewCountryWindowDays
+        )
+      ),
     ];
 
-    if (tasks.length > 0) {
-      await Promise.all(tasks);
-    }
-    await trySafe(async () =>
-      this.queries.userSignInCountries.pruneUserSignInCountriesByUserId(
-        user.id,
-        adaptiveMfaNewCountryWindowDays
-      )
-    );
+    await Promise.all(tasks);
   }
 
   private buildEvaluationState(

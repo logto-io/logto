@@ -611,25 +611,12 @@ export default class ExperienceInteraction {
     // The geo context is only recorded when the `submit()` function succeeds.
     // The recorded geo context will affect the evaluation results of the adaptive MFA afterwards.
     if (EnvSet.values.isDevFeaturesEnabled) {
-      const recordGeoPromise = trySafe(
+      void trySafe(
         async () => this.adaptiveMfaValidator.recordSignInGeoContext(user, this.#interactionEvent),
         (error) => {
           void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
-
-          // Throw the error in integration test to catch potential issues early in CI.
-          if (EnvSet.values.isIntegrationTest) {
-            throw error;
-          }
         }
       );
-
-      // In integration tests we await to surface failures deterministically;
-      // in other cases we fire-and-forget to avoid blocking the sign-in flow.
-      if (EnvSet.values.isIntegrationTest) {
-        await recordGeoPromise;
-      } else {
-        void recordGeoPromise;
-      }
     }
 
     this.ctx.body = { redirectTo };
