@@ -608,12 +608,16 @@ export default class ExperienceInteraction {
       ...this.toJson(),
     });
 
-    await trySafe(
-      async () => this.adaptiveMfaValidator.persistContext(user),
-      (error) => {
-        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
-      }
-    );
+    // The geo context is only recorded when the `submit()` function succeeds.
+    // The recorded geo context will affect the evaluation results of the adaptive MFA afterwards.
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      void trySafe(
+        async () => this.adaptiveMfaValidator.recordSignInGeoContext(user, this.#interactionEvent),
+        (error) => {
+          void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+        }
+      );
+    }
 
     this.ctx.body = { redirectTo };
 
