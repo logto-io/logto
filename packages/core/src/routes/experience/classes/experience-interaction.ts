@@ -361,10 +361,10 @@ export default class ExperienceInteraction {
       forceMfaVerification: requiresAdaptiveMfa,
     });
     const mfaRequired = mfaValidator.isMfaEnabled;
-    const mfaRequirement: Readonly<Required<LogContextPayload>['mfaRequirement']> = {
+    const mfaRequirement: NonNullable<LogContextPayload['mfaRequirement']> = {
       required: mfaRequired,
       source: requiresAdaptiveMfa ? 'adaptive' : mfaRequired ? 'policy' : 'none',
-    } as const;
+    };
     log?.append({
       ...conditional(adaptiveMfaResult && { adaptiveMfaResult }),
       mfaRequirement,

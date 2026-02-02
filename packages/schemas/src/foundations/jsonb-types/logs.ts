@@ -78,7 +78,7 @@ export const logContextPayloadGuard = z
     params: z.record(z.string(), z.unknown()).optional(),
     // MFA requirement source for monitoring:
     // - adaptive: adaptive MFA rules required verification
-    // - policy: sign-in experience MFA policy required verification
+    // - policy: regular MFA requirement based on user MFA configuration and sign-in experience policy
     // - none: MFA not required for this interaction
     mfaRequirement: z
       .object({
