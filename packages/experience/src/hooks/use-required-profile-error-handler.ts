@@ -42,8 +42,7 @@ const useRequiredProfileErrorHandler = ({
           : undefined;
 
         switch (missingProfile) {
-          case MissingProfile.password:
-          case MissingProfile.username: {
+          case MissingProfile.password: {
             navigate(
               {
                 pathname: `/${UserFlow.Continue}/${missingProfile}`,
@@ -52,6 +51,7 @@ const useRequiredProfileErrorHandler = ({
             );
             break;
           }
+          case MissingProfile.username:
           case MissingProfile.email:
           case MissingProfile.phone:
           case MissingProfile.emailOrPhone: {
