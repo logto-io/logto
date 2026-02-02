@@ -173,6 +173,7 @@ describe('POST /experience/submit', () => {
     for (const country of invalidCountries) {
       const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
+      // eslint-disable-next-line no-await-in-loop
       const response = await requester
         .post('/experience/submit')
         .set('x-logto-cf-country', country)

@@ -305,6 +305,7 @@ describe('ExperienceInteraction class', () => {
             },
           });
 
+        // eslint-disable-next-line no-await-in-loop
         await experienceInteraction.submit();
 
         expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
