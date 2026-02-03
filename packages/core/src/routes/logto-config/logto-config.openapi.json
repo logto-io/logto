@@ -292,6 +292,26 @@
           }
         }
       }
+    },
+    "/api/configs/id-token": {
+      "get": {
+        "summary": "Get ID token config",
+        "description": "Get the ID token configuration for the tenant.",
+        "responses": {
+          "200": {
+            "description": "The ID token configuration."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update ID token config",
+        "description": "Update the ID token configuration for the tenant.",
+        "responses": {
+          "200": {
+            "description": "The updated ID token configuration."
+          }
+        }
+      }
     }
   }
 }
