@@ -8,6 +8,8 @@ import {
   type LogtoOidcConfigKey,
   type OidcConfigKey,
   type LogtoJwtTokenKey,
+  LogtoIdTokenConfigKey,
+  type IdTokenConfig,
 } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
@@ -82,6 +84,15 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
 
   const deleteJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) => deleteRowByKey(key);
 
+  const upsertIdTokenConfig = async (value: IdTokenConfig) =>
+    pool.one<{ key: typeof LogtoIdTokenConfigKey.IdTokenConfig; value: IdTokenConfig }>(sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+      values (${LogtoIdTokenConfigKey.IdTokenConfig}, ${sql.jsonb(value)})
+      on conflict (${fields.tenantId}, ${fields.key})
+      do update set ${fields.value} = ${sql.jsonb(value)}
+      returning *
+    `);
+
   return {
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
@@ -90,5 +101,6 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     updateOidcConfigsByKey,
     upsertJwtCustomizer,
     deleteJwtCustomizer,
+    upsertIdTokenConfig,
   };
 };

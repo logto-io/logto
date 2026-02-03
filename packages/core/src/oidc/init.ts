@@ -16,7 +16,7 @@ import {
   type LogtoUiCookie,
   ExtraParamsKey,
 } from '@logto/schemas';
-import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
+import { cond, removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
 import { type KoaContextWithOIDC, Provider, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
@@ -310,7 +310,14 @@ export default function initOidc(
             use === 'id_token' || use === 'userinfo',
             'use should be either `id_token` or `userinfo`'
           );
-          const acceptedClaims = getAcceptedUserClaims(use, scope, claims, rejected);
+          // DEV: custom data in ID token
+          const idTokenConfig = cond(
+            EnvSet.values.isDevFeaturesEnabled && (await logtoConfigs.getIdTokenConfig())
+          );
+
+          const acceptedClaims = getAcceptedUserClaims(use, scope, claims, rejected, {
+            includeUserCustomData: idTokenConfig?.includeUserCustomData,
+          });
 
           return snakecaseKeys(
             {

@@ -1,3 +1,5 @@
+import { UserScope } from '@logto/core-kit';
+
 import { getAcceptedUserClaims } from './scope.js';
 
 const use = {
@@ -58,5 +60,56 @@ describe('OIDC getUserClaims()', () => {
     expect(
       getAcceptedUserClaims(use.idToken, 'openid profile custom_data', { email: null }, [])
     ).toEqual(profileExpectation);
+  });
+
+  describe('includeUserCustomData option', () => {
+    it('should include custom_data in ID token when includeUserCustomData is true', () => {
+      expect(
+        getAcceptedUserClaims(use.idToken, `openid ${UserScope.CustomData}`, {}, [], {
+          includeUserCustomData: true,
+        })
+      ).toEqual(['custom_data']);
+    });
+
+    it('should not include custom_data in ID token when includeUserCustomData is false', () => {
+      expect(
+        getAcceptedUserClaims(use.idToken, `openid ${UserScope.CustomData}`, {}, [], {
+          includeUserCustomData: false,
+        })
+      ).toEqual([]);
+    });
+
+    it('should not include custom_data in ID token by default (no options)', () => {
+      expect(getAcceptedUserClaims(use.idToken, `openid ${UserScope.CustomData}`, {}, [])).toEqual(
+        []
+      );
+    });
+
+    it('should include custom_data in userinfo regardless of includeUserCustomData option', () => {
+      // Userinfo always includes custom_data when scope is present (behavior unchanged)
+      expect(
+        getAcceptedUserClaims(use.userinfo, `openid ${UserScope.CustomData}`, {}, [], {
+          includeUserCustomData: false,
+        })
+      ).toEqual(['custom_data']);
+
+      expect(
+        getAcceptedUserClaims(use.userinfo, `openid ${UserScope.CustomData}`, {}, [], {
+          includeUserCustomData: true,
+        })
+      ).toEqual(['custom_data']);
+    });
+
+    it('should work with other scopes combined', () => {
+      expect(
+        getAcceptedUserClaims(
+          use.idToken,
+          `openid ${UserScope.Profile} ${UserScope.CustomData}`,
+          {},
+          [],
+          { includeUserCustomData: true }
+        )
+      ).toEqual([...profileExpectation, 'custom_data']);
+    });
   });
 });

@@ -85,6 +85,27 @@ export const jwtCustomizerConfigsGuard = z.discriminatedUnion('key', [
 
 export type JwtCustomizerConfigs = z.infer<typeof jwtCustomizerConfigsGuard>;
 
+/* --- Logto ID token configs --- */
+export enum LogtoIdTokenConfigKey {
+  IdTokenConfig = 'idToken.config',
+}
+
+export const idTokenConfigGuard = z.object({
+  includeUserCustomData: z.boolean().optional(),
+});
+
+export type IdTokenConfig = z.infer<typeof idTokenConfigGuard>;
+
+export type LogtoIdTokenConfigType = {
+  [LogtoIdTokenConfigKey.IdTokenConfig]: IdTokenConfig;
+};
+
+const logtoIdTokenConfigGuard: Readonly<{
+  [key in LogtoIdTokenConfigKey]: ZodType<LogtoIdTokenConfigType[key]>;
+}> = Object.freeze({
+  [LogtoIdTokenConfigKey.IdTokenConfig]: idTokenConfigGuard,
+});
+
 /* --- Logto tenant configs --- */
 export const adminConsoleDataGuard = z.object({
   signInExperienceCustomized: z.boolean(),
@@ -142,22 +163,33 @@ export const logtoTenantConfigGuard: Readonly<{
 });
 
 /* --- Summary --- */
-export type LogtoConfigKey = LogtoOidcConfigKey | LogtoJwtTokenKey | LogtoTenantConfigKey;
-export type LogtoConfigType = LogtoOidcConfigType | JwtCustomizerType | LogtoTenantConfigType;
+export type LogtoConfigKey =
+  | LogtoOidcConfigKey
+  | LogtoJwtTokenKey
+  | LogtoTenantConfigKey
+  | LogtoIdTokenConfigKey;
+export type LogtoConfigType =
+  | LogtoOidcConfigType
+  | JwtCustomizerType
+  | LogtoTenantConfigType
+  | LogtoIdTokenConfigType;
 export type LogtoConfigGuard = typeof logtoOidcConfigGuard &
   typeof jwtCustomizerConfigGuard &
-  typeof logtoTenantConfigGuard;
+  typeof logtoTenantConfigGuard &
+  typeof logtoIdTokenConfigGuard;
 
 export const logtoConfigKeys: readonly LogtoConfigKey[] = Object.freeze([
   ...Object.values(LogtoOidcConfigKey),
   ...Object.values(LogtoJwtTokenKey),
   ...Object.values(LogtoTenantConfigKey),
+  ...Object.values(LogtoIdTokenConfigKey),
 ]);
 
 export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
   ...logtoOidcConfigGuard,
   ...jwtCustomizerConfigGuard,
   ...logtoTenantConfigGuard,
+  ...logtoIdTokenConfigGuard,
 });
 
 export const oidcConfigKeysResponseGuard = oidcConfigKeyGuard

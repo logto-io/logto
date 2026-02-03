@@ -1,10 +1,17 @@
-import type { CloudConnectionData, JwtCustomizerType, LogtoOidcConfigType } from '@logto/schemas';
+import type {
+  CloudConnectionData,
+  JwtCustomizerType,
+  LogtoOidcConfigType,
+  IdTokenConfig,
+} from '@logto/schemas';
 import {
   LogtoConfigs,
+  LogtoIdTokenConfigKey,
   LogtoJwtTokenKey,
   LogtoOidcConfigKey,
   cloudApiIndicator,
   cloudConnectionDataGuard,
+  idTokenConfigGuard,
   jwtCustomizerConfigGuard,
   logtoOidcConfigGuard,
 } from '@logto/schemas';
@@ -129,6 +136,14 @@ export const createLogtoConfigLibrary = ({
     return updatedRow.value;
   };
 
+  const getIdTokenConfig = async (): Promise<IdTokenConfig> => {
+    const { rows } = await getRowsByKeys([LogtoIdTokenConfigKey.IdTokenConfig]);
+    if (rows.length === 0) {
+      return {};
+    }
+    return z.object({ value: idTokenConfigGuard }).parse(rows[0]).value;
+  };
+
   return {
     getOidcConfigs,
     getCloudConnectionData,
@@ -136,5 +151,6 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizer,
     getJwtCustomizers,
     updateJwtCustomizer,
+    getIdTokenConfig,
   };
 };

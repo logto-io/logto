@@ -12,9 +12,11 @@ import {
   type OidcConfigKeysResponse,
   type OidcConfigKey,
   LogtoOidcConfigKeyType,
+  idTokenConfigGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -187,4 +189,33 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   );
 
   logtoConfigJwtCustomizerRoutes(router, tenant);
+
+  // DEV: custom data in ID token
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.get(
+      '/configs/id-token',
+      koaGuard({
+        response: idTokenConfigGuard,
+        status: [200],
+      }),
+      async (ctx, next) => {
+        ctx.body = await tenant.logtoConfigs.getIdTokenConfig();
+        return next();
+      }
+    );
+
+    router.patch(
+      '/configs/id-token',
+      koaGuard({
+        body: idTokenConfigGuard,
+        response: idTokenConfigGuard,
+        status: [200],
+      }),
+      async (ctx, next) => {
+        const { value } = await tenant.queries.logtoConfigs.upsertIdTokenConfig(ctx.guard.body);
+        ctx.body = value;
+        return next();
+      }
+    );
+  }
 }

@@ -142,6 +142,10 @@ export const getUserClaimsData = async (
   );
 };
 
+type GetAcceptedUserClaimsOptions = {
+  includeUserCustomData?: boolean;
+};
+
 /**
  * Get accepted user claims according to the context.
  *
@@ -149,13 +153,16 @@ export const getUserClaimsData = async (
  * @param scope The scope of the request. Each scope will be expanded to the corresponding claims.
  * @param _claims Claims parameter. (Ignored since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled)
  * @param rejected Claims rejected by the user.
+ * @param options Optional configuration for claim inclusion.
  * @returns An array of accepted user claims.
  */
 export const getAcceptedUserClaims = (
   use: 'id_token' | 'userinfo',
   scope: string,
   _claims: Record<string, Nullable<ClaimsParameterMember>>,
-  rejected: string[]
+  rejected: string[],
+  options?: GetAcceptedUserClaimsOptions
+  // eslint-disable-next-line max-params
 ): UserClaim[] => {
   const scopes = scope.split(' ');
   const isUserinfo = use === 'userinfo';
@@ -170,7 +177,11 @@ export const getAcceptedUserClaims = (
         return [];
       }
 
-      if (isUserinfo) {
+      /**
+       * For userinfo endpoint, or when includeUserCustomData is enabled for custom_data scope,
+       * include both idToken and userinfo claims.
+       */
+      if (isUserinfo || (options?.includeUserCustomData && scope === UserScope.CustomData)) {
         return [...idTokenClaims[scope], ...userinfoClaims[scope]];
       }
 
