@@ -55,12 +55,12 @@ declare type Payload = {
    */
   token: ${JwtCustomizerTypeDefinitionKey.AccessTokenPayload};
   /**
-  * Logto internal data that can be used to pass additional information.
-  *
-  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
-  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
-  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]
-  */
+   * Logto internal data that can be used to pass additional information.
+   *
+   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
+   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
+   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]
+   */
   context: Context;
   /**
    * Custom environment variables.
@@ -103,7 +103,7 @@ export const defaultAccessTokenJwtCustomizerCode = `/**
  * This function is called during the access token generation process to get custom claims for the access token.
  * Limit custom claims to under 50KB.
  *
- * \`context.interaction\` also includes adaptive MFA and injected header context.
+ * \`context.interaction\` also includes injected header context.
  *
  * @param {Payload} payload - The input argument of the function.
  * 
@@ -277,20 +277,6 @@ const defaultUserInteractionContext: Partial<JwtCustomizerUserInteractionContext
     longitude: '-122.4194',
     botScore: '10',
     botVerified: 'false',
-  },
-  adaptiveMfa: {
-    requiresMfa: true,
-    triggeredRules: [
-      {
-        rule: 'untrusted_ip',
-        details: {
-          signals: {
-            botScore: 10,
-          },
-          matchedSignals: ['botScore<30'],
-        },
-      },
-    ],
   },
 };
 

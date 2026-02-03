@@ -141,12 +141,6 @@ export const jwtCustomizerUserInteractionContextGuard = z.object({
   userId: z.string(),
   verificationRecords: jwtCustomizerUserInteractionVerificationRecordGuard.array(),
   injectedHeaders: z.record(z.string(), z.string()).optional(),
-  adaptiveMfa: z
-    .object({
-      requiresMfa: z.boolean(),
-      triggeredRules: z.array(jsonGuard),
-    })
-    .optional(),
 });
 
 export type JwtCustomizerUserInteractionContext = z.infer<

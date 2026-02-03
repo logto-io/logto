@@ -124,13 +124,9 @@ describe('test token sample guard', () => {
     expect(result.success).toBe(true);
   });
 
-  it('should keep adaptive MFA in interaction context sample', () => {
+  it('should keep injected headers in interaction context sample', () => {
     const interactionContext = {
       injectedHeaders: { country: 'US' },
-      adaptiveMfa: {
-        requiresMfa: true,
-        triggeredRules: [],
-      },
     };
 
     const result = accessTokenJwtCustomizerGuard.safeParse({

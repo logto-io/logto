@@ -6,17 +6,15 @@ import {
   VerificationType,
   type User,
   type LogContextPayload,
-  type Json,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
-import { conditional, trySafe } from '@silverhand/essentials';
+import { conditional, trySafe, type Optional } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
-import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import {
@@ -67,12 +65,6 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
-  private injectedHeaders?: Record<string, string>;
-  private adaptiveMfa?: {
-    requiresMfa: boolean;
-    triggeredRules: Json[];
-  };
-
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
   /** The captcha verification status for the current interaction. */
@@ -124,9 +116,6 @@ export default class ExperienceInteraction {
       this.#interactionEvent = interactionData;
       this.profile = new Profile(libraries, queries, {}, interactionContext);
       this.mfa = new Mfa(libraries, queries, {}, interactionContext);
-      this.mergeInteractionContext({
-        injectedHeaders: getInjectedHeaderValues(this.ctx.request.headers),
-      });
       return;
     }
 
@@ -144,8 +133,6 @@ export default class ExperienceInteraction {
       mfa = {},
       userId,
       interactionEvent,
-      injectedHeaders,
-      adaptiveMfa,
       captcha = {
         verified: false,
         skipped: false,
@@ -156,12 +143,7 @@ export default class ExperienceInteraction {
     this.userId = userId;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
-    this.injectedHeaders = injectedHeaders;
-    this.adaptiveMfa = adaptiveMfa;
     this.captcha = captcha;
-    this.mergeInteractionContext({
-      injectedHeaders: getInjectedHeaderValues(this.ctx.request.headers),
-    });
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -374,16 +356,6 @@ export default class ExperienceInteraction {
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
-    if (adaptiveMfaResult) {
-      log?.append({ adaptiveMfaResult });
-      this.mergeInteractionContext({
-        adaptiveMfa: {
-          requiresMfa: adaptiveMfaResult.requiresMfa,
-          triggeredRules: adaptiveMfaResult.triggeredRules,
-        },
-      });
-    }
-
     const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
     const mfaValidator = new MfaValidator(mfaSettings, user, {
       forceMfaVerification: requiresAdaptiveMfa,
@@ -459,7 +431,7 @@ export default class ExperienceInteraction {
   public async save() {
     const { provider } = this.tenant;
     const details = await provider.interactionDetails(this.ctx.req, this.ctx.res);
-    const interactionData = this.toJson();
+    const interactionData = await this.toJson();
 
     // `mergeWithLastSubmission` will only merge current request's interaction results.
     // Manually merge with previous interaction results here.
@@ -650,10 +622,11 @@ export default class ExperienceInteraction {
 
     const { provider } = this.tenant;
 
+    const interactionData = await this.toJson();
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
       login: { accountId: user.id },
       // Persist the interaction status to the OIDC session after interaction submission
-      ...this.toJson(),
+      ...interactionData,
     });
 
     // The geo context is only recorded when the `submit()` function succeeds.
@@ -685,8 +658,9 @@ export default class ExperienceInteraction {
   }
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
-  public toJson(): InteractionStorage {
+  public async toJson(): Promise<InteractionStorage> {
     const { interactionEvent, userId, captcha } = this;
+    const injectedHeaders = await this.getInjectedHeaders();
 
     return {
       interactionEvent,
@@ -695,48 +669,32 @@ export default class ExperienceInteraction {
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
       captcha,
-      ...conditional(this.injectedHeaders && { injectedHeaders: this.injectedHeaders }),
-      ...conditional(this.adaptiveMfa && { adaptiveMfa: this.adaptiveMfa }),
+      ...conditional(injectedHeaders && { injectedHeaders }),
     };
   }
 
-  public toSanitizedJson(): SanitizedInteractionStorageData {
-    const { interactionEvent, userId, captcha } = this;
+  public async toSanitizedJson(): Promise<SanitizedInteractionStorageData> {
+    const rawJson = await this.toJson();
 
     return {
-      interactionEvent,
-      userId,
+      ...rawJson,
       profile: this.profile.sanitizedData,
       mfa: this.mfa.sanitizedData,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
-      captcha,
     };
+  }
+
+  private async getInjectedHeaders(): Promise<Optional<Record<string, string>>> {
+    const shouldPersistInjectedHeaders =
+      await this.adaptiveMfaValidator.shouldPersistInjectedHeaders();
+    const injectedHeaders = shouldPersistInjectedHeaders
+      ? this.adaptiveMfaValidator.getInjectedHeaders()
+      : undefined;
+    return injectedHeaders;
   }
 
   private get verificationRecordsArray() {
     return this.verificationRecords.array();
-  }
-
-  private mergeInteractionContext(update: {
-    injectedHeaders?: Record<string, string>;
-    adaptiveMfa?: {
-      requiresMfa: boolean;
-      triggeredRules: Json[];
-    };
-  }) {
-    const { injectedHeaders, adaptiveMfa } = update;
-
-    if (!injectedHeaders && !adaptiveMfa) {
-      return;
-    }
-
-    if (injectedHeaders && !this.injectedHeaders) {
-      this.injectedHeaders = injectedHeaders;
-    }
-
-    if (adaptiveMfa && !this.adaptiveMfa) {
-      this.adaptiveMfa = adaptiveMfa;
-    }
   }
 
   /**

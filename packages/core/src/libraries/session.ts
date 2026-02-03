@@ -106,7 +106,6 @@ const saveInteractionLastSubmissionToSession = async (
     ...(interactionResult?.injectedHeaders
       ? { injectedHeaders: interactionResult.injectedHeaders }
       : {}),
-    ...(interactionResult?.adaptiveMfa ? { adaptiveMfa: interactionResult.adaptiveMfa } : {}),
   };
 
   const parseResult = jsonObjectGuard.safeParse(lastSubmissionWithInteractionContext);

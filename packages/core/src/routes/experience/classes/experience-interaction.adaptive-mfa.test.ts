@@ -90,7 +90,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     );
   });
 
-  it('stores injected headers and adaptive MFA in toJson but not toSanitizedJson', async () => {
+  it('stores injected headers in toJson but not toSanitizedJson', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       logtoConfig: {
@@ -123,7 +123,10 @@ describe('ExperienceInteraction adaptive MFA', () => {
     } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
     const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
     const { adaptiveMfaValidator } = experienceInteraction as unknown as {
-      adaptiveMfaValidator: { getResult: jest.Mock };
+      adaptiveMfaValidator: {
+        getResult: jest.Mock;
+        shouldPersistInjectedHeaders: () => Promise<boolean>;
+      };
     };
 
     jest.spyOn(adaptiveMfaValidator, 'getResult').mockResolvedValue({
@@ -141,19 +144,16 @@ describe('ExperienceInteraction adaptive MFA', () => {
       )
     );
 
-    expect(experienceInteraction.toJson()).toEqual(
+    await adaptiveMfaValidator.shouldPersistInjectedHeaders();
+
+    expect(await experienceInteraction.toJson()).toEqual(
       expect.objectContaining({
         injectedHeaders: {
           country: 'US',
           botScore: '10',
         },
-        adaptiveMfa: {
-          requiresMfa: true,
-          triggeredRules: [],
-        },
       })
     );
     expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('injectedHeaders');
-    expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('adaptiveMfa');
   });
 });
