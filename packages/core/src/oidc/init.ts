@@ -24,7 +24,6 @@ import snakecaseKeys from 'snakecase-keys';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
-import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilation.js';
 import koaAuditLog, { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -69,7 +68,6 @@ export default function initOidc(
   queries: Queries,
   libraries: Libraries,
   logtoConfigs: LogtoConfigLibrary,
-  cloudConnection: CloudConnectionLibrary,
   subscription: SubscriptionLibrary
 ): Provider {
   const {
