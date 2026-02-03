@@ -118,14 +118,14 @@ describe('test token sample guard', () => {
     expect(result.success).toBe(false);
   });
 
-  it('should allow access token sample without session context', () => {
+  it('should allow access token sample without interaction context', () => {
     const result = accessTokenJwtCustomizerGuard.safeParse(testAccessTokenPayload);
 
     expect(result.success).toBe(true);
   });
 
-  it('should keep session context in access token sample', () => {
-    const sessionContext = {
+  it('should keep adaptive MFA in interaction context sample', () => {
+    const interactionContext = {
       injectedHeaders: { country: 'US' },
       adaptiveMfa: {
         requiresMfa: true,
@@ -137,7 +137,7 @@ describe('test token sample guard', () => {
       ...testAccessTokenPayload,
       contextSample: {
         ...testAccessTokenPayload.contextSample,
-        session: sessionContext,
+        interaction: interactionContext,
       },
     });
 
@@ -146,6 +146,8 @@ describe('test token sample guard', () => {
       return;
     }
 
-    expect(result.data.contextSample?.session).toEqual(sessionContext);
+    expect(result.data.contextSample?.interaction).toEqual(
+      expect.objectContaining(interactionContext)
+    );
   });
 });

@@ -140,13 +140,6 @@ export const jwtCustomizerUserInteractionContextGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string(),
   verificationRecords: jwtCustomizerUserInteractionVerificationRecordGuard.array(),
-});
-
-export type JwtCustomizerUserInteractionContext = z.infer<
-  typeof jwtCustomizerUserInteractionContextGuard
->;
-
-export const jwtCustomizerSessionContextGuard = z.object({
   injectedHeaders: z.record(z.string(), z.string()).optional(),
   adaptiveMfa: z
     .object({
@@ -156,7 +149,9 @@ export const jwtCustomizerSessionContextGuard = z.object({
     .optional(),
 });
 
-export type JwtCustomizerSessionContext = z.infer<typeof jwtCustomizerSessionContextGuard>;
+export type JwtCustomizerUserInteractionContext = z.infer<
+  typeof jwtCustomizerUserInteractionContextGuard
+>;
 
 export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
   .extend({
@@ -167,7 +162,6 @@ export const accessTokenJwtCustomizerGuard = jwtCustomizerGuard
         user: jwtCustomizerUserContextGuard.partial(),
         grant: jwtCustomizerGrantContextGuard.partial().optional(),
         interaction: jwtCustomizerUserInteractionContextGuard.partial().optional(),
-        session: jwtCustomizerSessionContextGuard.partial().optional(),
       })
       .optional(),
   })

@@ -3,6 +3,7 @@ import {
   type CreateUser,
   encryptedTokenSetGuard,
   InteractionEvent,
+  type Json,
   jsonGuard,
   secretEnterpriseSsoConnectorRelationPayloadGuard,
   secretSocialConnectorRelationPayloadGuard,
@@ -158,12 +159,7 @@ export type InteractionContext = {
 
 type AdaptiveMfaSessionContext = {
   requiresMfa: boolean;
-  triggeredRules: unknown[];
-};
-
-export type InteractionSessionContext = {
-  injectedHeaders?: Record<string, string>;
-  adaptiveMfa?: AdaptiveMfaSessionContext;
+  triggeredRules: Json[];
 };
 
 export type ExperienceInteractionRouterContext<ContextT extends WithLogContext = WithLogContext> =
@@ -189,22 +185,13 @@ export type InteractionStorage = {
   profile?: InteractionProfile;
   mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
-  sessionContext?: InteractionSessionContext;
+  injectedHeaders?: Record<string, string>;
+  adaptiveMfa?: AdaptiveMfaSessionContext;
   captcha?: {
     verified: boolean;
     skipped: boolean;
   };
 };
-
-const interactionSessionContextGuard = z.object({
-  injectedHeaders: z.record(z.string(), z.string()).optional(),
-  adaptiveMfa: z
-    .object({
-      requiresMfa: z.boolean(),
-      triggeredRules: z.array(jsonGuard),
-    })
-    .optional(),
-}) satisfies ToZodObject<InteractionSessionContext>;
 
 export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
@@ -212,7 +199,13 @@ export const interactionStorageGuard = z.object({
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
-  sessionContext: interactionSessionContextGuard.optional(),
+  injectedHeaders: z.record(z.string(), z.string()).optional(),
+  adaptiveMfa: z
+    .object({
+      requiresMfa: z.boolean(),
+      triggeredRules: z.array(jsonGuard),
+    })
+    .optional(),
   captcha: z
     .object({
       verified: z.boolean(),

@@ -40,11 +40,6 @@ const jwt_claims = {
     subtitle:
       'ใช้พารามิเตอร์ `context.interaction` เพื่อเข้าถึงรายละเอียดการโต้ตอบของผู้ใช้ใน session การยืนยันตัวตนปัจจุบัน รวมถึง `interactionEvent`, `userId` และ `verificationRecords`',
   },
-  session_data: {
-    title: 'บริบทเซสชัน',
-    subtitle:
-      'ใช้พารามิเตอร์ `context.session` เพื่อเข้าถึงรายละเอียดเซสชันของผู้ใช้ (เช่น MFA แบบปรับตามบริบท)',
-  },
   token_data: {
     title: 'payload ของ token',
     subtitle: 'ใช้พารามิเตอร์ `token` เพื่อ payload ของ access token ปัจจุบัน',

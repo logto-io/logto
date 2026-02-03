@@ -39,17 +39,15 @@ describe('saveInteractionLastSubmissionToSession', () => {
     jest.clearAllMocks();
   });
 
-  it('should merge sessionContext into lastSubmission before persisting', async () => {
-    const sessionContext = {
-      injectedHeaders: { country: 'US' },
-      adaptiveMfa: { requiresMfa: true, triggeredRules: [] },
-    };
+  it('should merge interaction context into lastSubmission before persisting', async () => {
+    const injectedHeaders = { country: 'US' };
+    const adaptiveMfa = { requiresMfa: true, triggeredRules: [] };
     const interactionDetails = {
       session: { accountId: mockUser.id, uid: 'sessionUid' },
       params: { client_id: 'clientId' },
       prompt: { details: {} },
       lastSubmission: { foo: 'bar' },
-      result: { sessionContext },
+      result: { injectedHeaders, adaptiveMfa },
     } as unknown as Interaction;
 
     const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
@@ -59,7 +57,7 @@ describe('saveInteractionLastSubmissionToSession', () => {
     expect(oidcSessionExtensionsInsert).toHaveBeenCalledWith({
       sessionUid: 'sessionUid',
       accountId: mockUser.id,
-      lastSubmission: { foo: 'bar', sessionContext },
+      lastSubmission: { foo: 'bar', injectedHeaders, adaptiveMfa },
     });
   });
 });

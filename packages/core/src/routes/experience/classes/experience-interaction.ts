@@ -6,6 +6,7 @@ import {
   VerificationType,
   type User,
   type LogContextPayload,
+  type Json,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -23,7 +24,6 @@ import {
   type InteractionStorage,
   type Interaction,
   type InteractionContext,
-  type InteractionSessionContext,
   type WithHooksAndLogsContext,
   type SanitizedInteractionStorageData,
 } from '../types.js';
@@ -67,7 +67,12 @@ export default class ExperienceInteraction {
   /** The userId of the user for the current interaction. Only available once the user is identified. */
   private userId?: string;
   private userCache?: User;
-  private sessionContext?: InteractionSessionContext;
+  private injectedHeaders?: Record<string, string>;
+  private adaptiveMfa?: {
+    requiresMfa: boolean;
+    triggeredRules: Json[];
+  };
+
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
   /** The captcha verification status for the current interaction. */
@@ -119,7 +124,7 @@ export default class ExperienceInteraction {
       this.#interactionEvent = interactionData;
       this.profile = new Profile(libraries, queries, {}, interactionContext);
       this.mfa = new Mfa(libraries, queries, {}, interactionContext);
-      this.mergeSessionContext({
+      this.mergeInteractionContext({
         injectedHeaders: getInjectedHeaderValues(this.ctx.request.headers),
       });
       return;
@@ -139,7 +144,8 @@ export default class ExperienceInteraction {
       mfa = {},
       userId,
       interactionEvent,
-      sessionContext,
+      injectedHeaders,
+      adaptiveMfa,
       captcha = {
         verified: false,
         skipped: false,
@@ -150,9 +156,10 @@ export default class ExperienceInteraction {
     this.userId = userId;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
-    this.sessionContext = sessionContext;
+    this.injectedHeaders = injectedHeaders;
+    this.adaptiveMfa = adaptiveMfa;
     this.captcha = captcha;
-    this.mergeSessionContext({
+    this.mergeInteractionContext({
       injectedHeaders: getInjectedHeaderValues(this.ctx.request.headers),
     });
 
@@ -369,7 +376,7 @@ export default class ExperienceInteraction {
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
     if (adaptiveMfaResult) {
       log?.append({ adaptiveMfaResult });
-      this.mergeSessionContext({
+      this.mergeInteractionContext({
         adaptiveMfa: {
           requiresMfa: adaptiveMfaResult.requiresMfa,
           triggeredRules: adaptiveMfaResult.triggeredRules,
@@ -688,7 +695,8 @@ export default class ExperienceInteraction {
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
       captcha,
-      ...conditional(this.sessionContext && { sessionContext: this.sessionContext }),
+      ...conditional(this.injectedHeaders && { injectedHeaders: this.injectedHeaders }),
+      ...conditional(this.adaptiveMfa && { adaptiveMfa: this.adaptiveMfa }),
     };
   }
 
@@ -709,25 +717,25 @@ export default class ExperienceInteraction {
     return this.verificationRecords.array();
   }
 
-  private mergeSessionContext(update: Partial<InteractionSessionContext>) {
+  private mergeInteractionContext(update: {
+    injectedHeaders?: Record<string, string>;
+    adaptiveMfa?: {
+      requiresMfa: boolean;
+      triggeredRules: Json[];
+    };
+  }) {
     const { injectedHeaders, adaptiveMfa } = update;
 
     if (!injectedHeaders && !adaptiveMfa) {
       return;
     }
 
-    this.sessionContext ||= {};
-
-    if (injectedHeaders && !this.sessionContext.injectedHeaders) {
-      this.sessionContext.injectedHeaders = injectedHeaders;
+    if (injectedHeaders && !this.injectedHeaders) {
+      this.injectedHeaders = injectedHeaders;
     }
 
-    if (adaptiveMfa && !this.sessionContext.adaptiveMfa) {
-      this.sessionContext.adaptiveMfa = adaptiveMfa;
-    }
-
-    if (!this.sessionContext.injectedHeaders && !this.sessionContext.adaptiveMfa) {
-      this.sessionContext = undefined;
+    if (adaptiveMfa && !this.adaptiveMfa) {
+      this.adaptiveMfa = adaptiveMfa;
     }
   }
 

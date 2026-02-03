@@ -101,10 +101,17 @@ const saveInteractionLastSubmissionToSession = async (
   }
 
   const { oidcSessionExtensions } = queries;
-  const lastSubmissionWithSessionContext = interactionResult?.sessionContext
-    ? { ...lastSubmission, sessionContext: interactionResult.sessionContext }
-    : lastSubmission;
-  const parseResult = jsonObjectGuard.safeParse(lastSubmissionWithSessionContext);
+  const lastSubmissionWithInteractionContext = { ...lastSubmission };
+
+  if (interactionResult?.injectedHeaders) {
+    lastSubmissionWithInteractionContext.injectedHeaders = interactionResult.injectedHeaders;
+  }
+
+  if (interactionResult?.adaptiveMfa) {
+    lastSubmissionWithInteractionContext.adaptiveMfa = interactionResult.adaptiveMfa;
+  }
+
+  const parseResult = jsonObjectGuard.safeParse(lastSubmissionWithInteractionContext);
 
   if (parseResult.success) {
     // Persist the last submission to the session extensions

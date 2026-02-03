@@ -7,7 +7,6 @@ import {
   jwtCustomizer as jwtCustomizerLog,
   type CustomJwtFetcher,
   GrantType,
-  jwtCustomizerSessionContextGuard,
   jwtCustomizerUserInteractionContextGuard,
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -30,17 +29,6 @@ import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/cus
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
-
-const getSessionContextFromLastSubmission = (value: unknown): unknown => {
-  if (!isRecord(value)) {
-    return;
-  }
-
-  return value.sessionContext;
-};
 
 /**
  * For organization API resource feature, add extra token claim `organization_id` to the
@@ -124,18 +112,12 @@ const getInteractionLastSubmission = async (
 
   const { lastSubmission } = sessionExtension;
   const interactionData = jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
-  const sessionContextData = jwtCustomizerSessionContextGuard.safeParse(
-    getSessionContextFromLastSubmission(lastSubmission)
-  );
 
   if (!interactionData.success) {
     return;
   }
 
-  return {
-    interactionContext: interactionData.data,
-    ...conditional(sessionContextData.success && { sessionContext: sessionContextData.data }),
-  };
+  return interactionData.data;
 };
 
 /**
@@ -229,11 +211,9 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     );
 
     // Fetch user interaction context for user access token.
-    const interactionSubmission = conditional(
+    const interactionContext = conditional(
       !isClientCredentialsToken && (await getInteractionLastSubmission(queries, token))
     );
-    const interactionContext = interactionSubmission?.interactionContext;
-    const sessionContext = interactionSubmission?.sessionContext;
 
     // Safely retrieve the associated subject token for user access token (Token Exchange grant type only).
     const subjectToken = conditional(
@@ -281,12 +261,6 @@ export const getExtraTokenClaimsForJwtCustomization = async (
               ...conditional(
                 interactionContext && {
                   interaction: interactionContext,
-                }
-              ),
-              ...conditional(
-                sessionContext && {
-                  // eslint-disable-next-line no-restricted-syntax
-                  session: sessionContext as Record<string, Json>,
                 }
               ),
             },

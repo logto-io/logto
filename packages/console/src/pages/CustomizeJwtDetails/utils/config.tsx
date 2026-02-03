@@ -5,7 +5,6 @@ import {
   type JwtCustomizerUserContext,
   type JwtCustomizerGrantContext,
   type JwtCustomizerUserInteractionContext,
-  type JwtCustomizerSessionContext,
   InteractionEvent,
 } from '@logto/schemas';
 import { type EditorProps } from '@monaco-editor/react';
@@ -34,7 +33,6 @@ declare interface CustomJwtClaims extends Record<string, any> {}
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant] - The grant context associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction] - The user interaction context associated with the token.
- * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerSessionContext}} [session] - The session context associated with the token (adaptive MFA).
  */
 declare type Context = {
   /**
@@ -49,10 +47,6 @@ declare type Context = {
    * The user interaction context associated with the token.
    */
   interaction?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext};
-  /**
-   * The session context associated with the token.
-   */
-  session?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerSessionContext};
 }
 
 declare type Payload = {
@@ -66,7 +60,6 @@ declare type Payload = {
   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user
   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant]
   * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction]
-  * @params {${JwtCustomizerTypeDefinitionKey.JwtCustomizerSessionContext}} [session]
   */
   context: Context;
   /**
@@ -110,7 +103,7 @@ export const defaultAccessTokenJwtCustomizerCode = `/**
  * This function is called during the access token generation process to get custom claims for the access token.
  * Limit custom claims to under 50KB.
  *
- * \`context.session\` is available for adaptive MFA and session-related context.
+ * \`context.interaction\` also includes adaptive MFA and injected header context.
  *
  * @param {Payload} payload - The input argument of the function.
  * 
@@ -277,9 +270,6 @@ const defaultGrantContext: Partial<JwtCustomizerGrantContext> = {
 const defaultUserInteractionContext: Partial<JwtCustomizerUserInteractionContext> = {
   interactionEvent: InteractionEvent.SignIn,
   userId: '123',
-};
-
-const defaultSessionContext: JwtCustomizerSessionContext = {
   injectedHeaders: {
     country: 'US',
     city: 'San Francisco',
@@ -308,7 +298,6 @@ export const defaultUserTokenContextData = {
   user: defaultUserContext,
   grant: defaultGrantContext,
   interaction: defaultUserInteractionContext,
-  session: defaultSessionContext,
 };
 
 export const accessTokenPayloadTestModel: ModelSettings = {

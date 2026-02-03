@@ -90,7 +90,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     );
   });
 
-  it('stores session context in toJson but not toSanitizedJson', async () => {
+  it('stores injected headers and adaptive MFA in toJson but not toSanitizedJson', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       logtoConfig: {
@@ -141,16 +141,19 @@ describe('ExperienceInteraction adaptive MFA', () => {
       )
     );
 
-    expect(experienceInteraction.toJson().sessionContext).toEqual({
-      injectedHeaders: {
-        country: 'US',
-        botScore: '10',
-      },
-      adaptiveMfa: {
-        requiresMfa: true,
-        triggeredRules: [],
-      },
-    });
-    expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('sessionContext');
+    expect(experienceInteraction.toJson()).toEqual(
+      expect.objectContaining({
+        injectedHeaders: {
+          country: 'US',
+          botScore: '10',
+        },
+        adaptiveMfa: {
+          requiresMfa: true,
+          triggeredRules: [],
+        },
+      })
+    );
+    expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('injectedHeaders');
+    expect(experienceInteraction.toSanitizedJson()).not.toHaveProperty('adaptiveMfa');
   });
 });

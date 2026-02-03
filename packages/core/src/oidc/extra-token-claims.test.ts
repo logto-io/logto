@@ -18,12 +18,10 @@ jest.unstable_mockModule('#src/libraries/jwt-customizer.js', () => ({
 const { getExtraTokenClaimsForJwtCustomization } = await import('./extra-token-claims.js');
 
 describe('getExtraTokenClaimsForJwtCustomization', () => {
-  it('includes session context when lastSubmission has sessionContext', async () => {
+  it('includes injected headers in interaction context when lastSubmission has them', async () => {
     const accountId = 'user-1';
     const sessionUid = 'session-1';
-    const sessionContext = {
-      injectedHeaders: { country: 'US' },
-    };
+    const injectedHeaders = { country: 'US' };
 
     const oidcSessionExtensions = {
       findBySessionUid: jest.fn().mockResolvedValue({
@@ -32,7 +30,7 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
           interactionEvent: InteractionEvent.SignIn,
           userId: accountId,
           verificationRecords: [],
-          sessionContext,
+          injectedHeaders,
         },
       }),
     };
@@ -85,7 +83,9 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
 
     expect(runScriptInLocalVm.mock.calls[0]?.[0]).toMatchObject({
       context: {
-        session: sessionContext,
+        interaction: {
+          injectedHeaders,
+        },
       },
     });
   });

@@ -43,11 +43,6 @@ const jwt_claims = {
     subtitle:
       'Используйте параметр `context.interaction` для доступа к деталям взаимодействия пользователя для текущей сессии аутентификации, включая `interactionEvent`, `userId` и `verificationRecords`.',
   },
-  session_data: {
-    title: 'Контекст сессии',
-    subtitle:
-      'Используйте `context.session`, чтобы получить сведения о сессии пользователя (например, адаптивный MFA).',
-  },
   token_data: {
     title: 'Данные токена',
     subtitle: 'Используйте параметр ввода `token` для полезной нагрузки текущего токена доступа. ',
