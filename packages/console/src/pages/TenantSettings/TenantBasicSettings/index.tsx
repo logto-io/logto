@@ -52,8 +52,8 @@ function TenantBasicSettings() {
     );
   }
 
-  const resolvedTenantSettings =
-    tenantSettings ?? ({ isMfaRequired: false } as TenantSettingsResponse);
+  const resolvedTenantSettings: TenantSettingsResponse =
+    tenantSettings ?? { isMfaRequired: false };
 
   return (
     <>
@@ -179,7 +179,7 @@ function TenantBasicSettingsForm({
       reset({
         profile: nextProfile,
         settings: {
-          isMfaRequired: nextSettings?.isMfaRequired ?? settings.isMfaRequired,
+          isMfaRequired: nextSettings.isMfaRequired,
         },
       });
 
