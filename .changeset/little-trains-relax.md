@@ -11,9 +11,9 @@ Repro:
 - sign in with a new social identity lacking verified email;
 - create new account, fulfill required username, then fulfill required email with an address already registered.
 
-Expected: show link-and-sign-in modal and link the new social identity to the existing email account when user clicks on the `Link` button.
+Expected: show a link-and-sign-in modal and link the new social identity to the existing email account when the user clicks the `Link` button.
 
-Actual: loses `link_social` state. User are prompt with a simple email exists confirm to sign-in modal instead. Clicking on `Sign In` button will perform a normal sign-in flow without linking the social identity.
+Actual: the `link_social` state is lost. Users are prompted with a simple email-exists confirmation modal instead. Clicking the `Sign In` button performs a normal sign-in flow without linking the social identity.
 
 Root cause: `link_social` query parameter wasn’t propagated after username fulfillment, so the email verification step lost linking context.
 
