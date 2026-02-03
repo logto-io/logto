@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Switch from '@/ds-components/Switch';
 
 import { type TenantSettingsForm } from '../../types.js';
+
 import useTenantMfaFeature from './use-tenant-mfa-feature.js';
 
 type Props = {
