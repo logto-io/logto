@@ -15,7 +15,6 @@ import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
-import useToast from '@/hooks/use-toast';
 import { SearchParameters } from '@/types';
 import { mfaFlowStateGuard } from '@/types/guard';
 
@@ -43,7 +42,6 @@ const useContinueFlowCodeVerification = (
   );
 
   const handleError = useErrorHandler();
-  const { setToast } = useToast();
 
   const verifyVerificationCode = useApi(updateProfileWithVerificationCode);
   const asyncBindMfa = useApi(bindMfa);
