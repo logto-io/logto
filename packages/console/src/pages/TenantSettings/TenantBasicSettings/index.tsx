@@ -1,16 +1,19 @@
-import { ReservedPlanId, type TenantTag } from '@logto/schemas';
+import { ReservedPlanId } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { useAuthedCloudApi, useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { type TenantSettingsResponse } from '@/cloud/types/router';
 import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import { trySubmitSafe } from '@/utils/form';
@@ -28,6 +31,7 @@ function TenantBasicSettings() {
     access: { canManageTenant },
   } = useCurrentTenantScopes();
   const api = useCloudApi();
+  const cloudApi = useAuthedCloudApi();
   const {
     currentTenant,
     currentTenantId,
@@ -40,8 +44,20 @@ function TenantBasicSettings() {
   const [isDeleting, setIsDeleting] = useState(false);
   const { show: showModal } = useConfirmModal();
 
+  const { data: tenantSettings, mutate: mutateTenantSettings } = useSWR<
+    TenantSettingsResponse,
+    RequestError
+  >(`api/tenants/${currentTenantId}/settings`, async () =>
+    cloudApi.get(`/api/tenants/:tenantId/settings`, {
+      params: { tenantId: currentTenantId },
+    })
+  );
+
   const methods = useForm<TenantSettingsForm>({
-    defaultValues: { profile: currentTenant },
+    defaultValues: {
+      profile: currentTenant,
+      isMfaRequired: tenantSettings?.isMfaRequired ?? false,
+    },
   });
   const {
     watch,
@@ -51,18 +67,11 @@ function TenantBasicSettings() {
   } = methods;
 
   useEffect(() => {
-    reset({ profile: currentTenant });
-  }, [currentTenant, reset]);
-
-  const saveData = async (data: { name?: string; tag?: TenantTag }) => {
-    const { name, tag } = await api.patch(`/api/tenants/:tenantId`, {
-      params: { tenantId: currentTenantId },
-      body: data,
+    reset({
+      profile: currentTenant,
+      isMfaRequired: tenantSettings?.isMfaRequired ?? false,
     });
-    reset({ profile: { name, tag } });
-    toast.success(t('tenants.settings.tenant_info_saved'));
-    updateTenant(currentTenantId, data);
-  };
+  }, [currentTenant, tenantSettings, reset]);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData: TenantSettingsForm) => {
@@ -72,8 +81,28 @@ function TenantBasicSettings() {
 
       const {
         profile: { name, tag },
+        isMfaRequired,
       } = formData;
-      await saveData({ name, tag });
+
+      const profileData = { name, tag };
+      const [{ name: updatedName, tag: updatedTag }, updatedTenantSettings] = await Promise.all([
+        api.patch(`/api/tenants/:tenantId`, {
+          params: { tenantId: currentTenantId },
+          body: profileData,
+        }),
+        cloudApi.patch(`/api/tenants/:tenantId/settings`, {
+          params: { tenantId: currentTenantId },
+          body: { isMfaRequired },
+        }),
+      ]);
+
+      reset({
+        profile: { name: updatedName, tag: updatedTag },
+        isMfaRequired: updatedTenantSettings.isMfaRequired,
+      });
+      void mutateTenantSettings(updatedTenantSettings);
+      toast.success(t('tenants.settings.tenant_info_saved'));
+      updateTenant(currentTenantId, profileData);
     })
   );
 
