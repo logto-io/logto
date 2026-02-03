@@ -202,20 +202,18 @@ export default class Tenant implements TenantContext {
     }
 
     // Mount account center for all tenants (including admin tenant for profile MFA management)
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      app.use(
-        mount(
-          '/' + UserApps.AccountCenter,
-          koaSpaProxy({
-            mountedApps,
-            queries,
-            packagePath: UserApps.AccountCenter,
-            port: 5004,
-            prefix: UserApps.AccountCenter,
-          })
-        )
-      );
-    }
+    app.use(
+      mount(
+        '/' + UserApps.AccountCenter,
+        koaSpaProxy({
+          mountedApps,
+          queries,
+          packagePath: UserApps.AccountCenter,
+          port: 5004,
+          prefix: UserApps.AccountCenter,
+        })
+      )
+    );
 
     // Mount experience app
     app.use(

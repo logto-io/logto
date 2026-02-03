@@ -5,7 +5,6 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import type { Option } from '@/ds-components/Select';
@@ -103,7 +102,7 @@ function AccountCenter({ isActive, data }: Props) {
           </FormField>
         </div>
       </FormCard>
-      {isDevFeaturesEnabled && <IntegratePrebuiltUi />}
+      <IntegratePrebuiltUi />
       {accountCenterSections.map((section) => (
         <FormCard key={section.key} title={section.title} description={section.description}>
           <div className={styles.cardContent}>

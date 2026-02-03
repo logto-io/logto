@@ -5,23 +5,12 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import { adminTenantEndpoint, meApi } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
-
 import useAccountApi from './use-account-api';
 import type { RequestError } from './use-api';
-import { useStaticApi } from './use-api';
-import useSwrFetcher from './use-swr-fetcher';
 
 const useCurrentUser = () => {
   const { isAuthenticated } = useLogto();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
-  const meApi_ = useStaticApi({
-    prefixUrl: adminTenantEndpoint,
-    resourceIndicator: meApi.indicator,
-  });
-  const meApiFetcher = useSwrFetcher<UserProfileResponse>(meApi_);
 
   const accountApi = useAccountApi();
   const accountApiFetcher = useCallback(
@@ -34,10 +23,7 @@ const useCurrentUser = () => {
     error,
     isLoading,
     mutate,
-  } = useSWR<UserProfileResponse, RequestError>(
-    isAuthenticated && 'me',
-    isDevFeaturesEnabled ? accountApiFetcher : meApiFetcher
-  );
+  } = useSWR<UserProfileResponse, RequestError>(isAuthenticated && 'me', accountApiFetcher);
 
   const updateCustomData = useCallback(
     async (customData: JsonObject) => {
@@ -46,21 +32,14 @@ const useCurrentUser = () => {
         return;
       }
 
-      if (isDevFeaturesEnabled) {
-        // Account API uses 'replace' mode, so we need to merge with existing customData
-        const mergedCustomData = { ...user.customData, ...customData };
-        const data = await accountApi
-          .patch('', { json: { customData: mergedCustomData } })
-          .json<UserProfileResponse>();
-        await mutate({ ...user, customData: data.customData });
-      } else {
-        await mutate({
-          ...user,
-          customData: await meApi_.patch('me/custom-data', { json: customData }).json<JsonObject>(),
-        });
-      }
+      // Account API uses 'replace' mode, so we need to merge with existing customData
+      const mergedCustomData = { ...user.customData, ...customData };
+      const data = await accountApi
+        .patch('', { json: { customData: mergedCustomData } })
+        .json<UserProfileResponse>();
+      await mutate({ ...user, customData: data.customData });
     },
-    [accountApi, meApi_, mutate, t, user]
+    [accountApi, mutate, t, user]
   );
 
   return {

@@ -10,7 +10,7 @@ import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
 import { adminTenantEndpoint, meApi } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import AppBoundary from '@/containers/AppBoundary';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
@@ -21,7 +21,6 @@ import { profile } from '@/hooks/use-console-routes/routes/profile';
 import useCurrentUser from '@/hooks/use-current-user';
 import { usePlausiblePageview } from '@/hooks/use-plausible-pageview';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useUserAssetsService from '@/hooks/use-user-assets-service';
 import pageLayout from '@/scss/page-layout.module.scss';
 
@@ -37,7 +36,6 @@ import styles from './index.module.scss';
 
 function Profile() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate } = useTenantPathname();
   const navigateToAccountCenter = useNavigateToAccountCenter();
   const childrenRoutes = useRoutes(profile);
   usePlausiblePageview(profile, 'profile');
@@ -98,22 +96,14 @@ function Profile() {
                         action: {
                           name: 'profile.change',
                           handler: () => {
-                            if (isDevFeaturesEnabled) {
-                              navigateToAccountCenter('/account/password');
-                              return;
-                            }
-                            navigate(user.hasPassword ? 'verify-password' : 'change-password', {
-                              state: { email: user.primaryEmail, action: 'changePassword' },
-                            });
+                            navigateToAccountCenter('/account/password');
                           },
                         },
                       },
                     ]}
                   />
                 </FormCard>
-                {isDevFeaturesEnabled && (
-                  <MfaSection user={user} signInExperience={signInExperience} />
-                )}
+                <MfaSection user={user} signInExperience={signInExperience} />
                 {isCloud && (
                   <FormCard title="profile.delete_account.title">
                     <div className={styles.deleteAccount}>
