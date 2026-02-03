@@ -17,9 +17,15 @@ import TenantRegion from './TenantRegion/index.js';
 
 type Props = {
   readonly currentTenantId: string;
+  readonly isTenantSettingsLoading: boolean;
+  readonly hasTenantSettingsError: boolean;
 };
 
-function ProfileForm({ currentTenantId }: Props) {
+function ProfileForm({
+  currentTenantId,
+  isTenantSettingsLoading,
+  hasTenantSettingsError,
+}: Props) {
   const {
     access: { canManageTenant },
   } = useCurrentTenantScopes();
@@ -56,7 +62,10 @@ function ProfileForm({ currentTenantId }: Props) {
             plan: ReservedPlanId.Pro,
           }}
         >
-          <TenantMfa />
+          <TenantMfa
+            isLoading={isTenantSettingsLoading}
+            hasError={hasTenantSettingsError}
+          />
         </FormField>
       )}
       <FormField title="tenants.settings.enterprise_sso">

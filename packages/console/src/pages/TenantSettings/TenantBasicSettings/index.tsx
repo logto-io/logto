@@ -1,11 +1,13 @@
 import { ReservedPlanId, type TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { useAuthedCloudApi, useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { type TenantSettingsResponse } from '@/cloud/types/router';
 import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
@@ -13,6 +15,7 @@ import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
+import { type RequestError } from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 
 import DeleteCard from './DeleteCard';
@@ -28,6 +31,7 @@ function TenantBasicSettings() {
     access: { canManageTenant },
   } = useCurrentTenantScopes();
   const api = useCloudApi();
+  const authedCloudApi = useAuthedCloudApi();
   const {
     currentTenant,
     currentTenantId,
@@ -40,28 +44,71 @@ function TenantBasicSettings() {
   const [isDeleting, setIsDeleting] = useState(false);
   const { show: showModal } = useConfirmModal();
 
+  const {
+    data: tenantSettings,
+    error: tenantSettingsError,
+    isLoading: isTenantSettingsLoading,
+    mutate: mutateTenantSettings,
+  } = useSWR<TenantSettingsResponse, RequestError>(
+    `api/tenants/${currentTenantId}/settings`,
+    async () =>
+      authedCloudApi.get(`/api/tenants/:tenantId/settings`, {
+        params: { tenantId: currentTenantId },
+      })
+  );
+
   const methods = useForm<TenantSettingsForm>({
-    defaultValues: { profile: currentTenant },
+    defaultValues: {
+      profile: currentTenant,
+      settings: {
+        isMfaRequired: tenantSettings?.isMfaRequired ?? false,
+      },
+    },
   });
   const {
     watch,
     reset,
     handleSubmit,
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, dirtyFields },
   } = methods;
 
+  const lastTenantId = useRef(currentTenantId);
+
   useEffect(() => {
-    reset({ profile: currentTenant });
-  }, [currentTenant, reset]);
+    const hasTenantChanged = lastTenantId.current !== currentTenantId;
+    const nextValues = {
+      profile: currentTenant,
+      settings: {
+        isMfaRequired: tenantSettings?.isMfaRequired ?? false,
+      },
+    };
+
+    if (hasTenantChanged) {
+      reset(nextValues);
+      lastTenantId.current = currentTenantId;
+      return;
+    }
+
+    reset(nextValues, { keepDirtyValues: true });
+  }, [currentTenant, currentTenantId, reset, tenantSettings?.isMfaRequired]);
 
   const saveData = async (data: { name?: string; tag?: TenantTag }) => {
     const { name, tag } = await api.patch(`/api/tenants/:tenantId`, {
       params: { tenantId: currentTenantId },
       body: data,
     });
-    reset({ profile: { name, tag } });
-    toast.success(t('tenants.settings.tenant_info_saved'));
     updateTenant(currentTenantId, data);
+
+    return { name, tag };
+  };
+
+  const saveTenantSettings = async (isMfaRequired: boolean) => {
+    const updated = await authedCloudApi.patch(`/api/tenants/:tenantId/settings`, {
+      params: { tenantId: currentTenantId },
+      body: { isMfaRequired },
+    });
+    void mutateTenantSettings(updated);
+    return updated;
   };
 
   const onSubmit = handleSubmit(
@@ -70,10 +117,34 @@ function TenantBasicSettings() {
         return;
       }
 
-      const {
-        profile: { name, tag },
-      } = formData;
-      await saveData({ name, tag });
+      const { profile, settings } = formData;
+      const hasProfileChanges = Boolean(dirtyFields.profile?.name || dirtyFields.profile?.tag);
+      const hasMfaChanges = Boolean(dirtyFields.settings?.isMfaRequired);
+
+      let nextProfile = profile;
+      let nextSettings = tenantSettings;
+
+      if (hasProfileChanges) {
+        const { name, tag } = await saveData({ name: profile.name, tag: profile.tag });
+        nextProfile = { ...profile, name, tag };
+      }
+
+      if (hasMfaChanges) {
+        nextSettings = await saveTenantSettings(settings.isMfaRequired);
+      }
+
+      reset({
+        profile: nextProfile,
+        settings: {
+          isMfaRequired: nextSettings?.isMfaRequired ?? settings.isMfaRequired,
+        },
+      });
+
+      if (hasProfileChanges) {
+        toast.success(t('tenants.settings.tenant_info_saved'));
+      } else if (hasMfaChanges) {
+        toast.success(t('general.saved'));
+      }
     })
   );
 
@@ -124,7 +195,11 @@ function TenantBasicSettings() {
       <form className={classNames(styles.container, isDirty && styles.withSubmitActionBar)}>
         <FormProvider {...methods}>
           <div className={styles.fields}>
-            <ProfileForm currentTenantId={currentTenantId} />
+            <ProfileForm
+              currentTenantId={currentTenantId}
+              isTenantSettingsLoading={isTenantSettingsLoading}
+              hasTenantSettingsError={Boolean(tenantSettingsError)}
+            />
             <LeaveCard />
             {canManageTenant && (
               <DeleteCard currentTenantId={currentTenantId} onClick={onClickDeletionButton} />
