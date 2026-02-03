@@ -7,6 +7,12 @@ const jwt_claims = {
     card_field: 'Kullanıcı erişim belgesi',
     card_description: 'Erişim belgesi verilirken kullanıcıya özgü veri ekleyin.',
     for: 'kullanıcı için',
+    custom_data_in_id_token: {
+      title: 'ID belgesine kullanıcı özel verilerini ekle',
+      tip: 'ID belgesi, oturum açma sonrasında istemcinin kullanıcının kim olduğunu kanıtlamak için aldığı kimlik iddiasıdır. İstemci için tasarlanmıştır, görüntüleme veya oturum oluşturma için kullanıcı kimlik taleplerini içerir.',
+      description:
+        'ID belgesine <a>kullanıcı özel verilerinizi</a> dahil etmek için etkinleştirin, istemcilerin ek profil çağrıları olmadan bu kimlik ayrıntılarına hemen erişmesine izin verin.',
+    },
   },
   machine_to_machine_jwt: {
     card_title: 'Makine için',

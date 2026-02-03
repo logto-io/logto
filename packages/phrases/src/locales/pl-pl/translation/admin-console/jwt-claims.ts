@@ -8,6 +8,12 @@ const jwt_claims = {
     card_description:
       'Dodaj dane specyficzne dla użytkownika podczas wydawania tokenu dostępowego.',
     for: 'dla użytkownika',
+    custom_data_in_id_token: {
+      title: 'Dodaj niestandardowe dane użytkownika do tokena ID',
+      tip: 'Token ID to asercja tożsamości, którą klient otrzymuje po zalogowaniu, aby udowodnić, kim jest użytkownik. Jest przeznaczony dla klienta, zawiera roszczenia tożsamości użytkownika do wyświetlania lub tworzenia sesji.',
+      description:
+        'Włącz, aby uwzględnić <a>niestandardowe dane użytkownika</a> w tokenie ID, umożliwiając klientom natychmiastowy dostęp do tych szczegółów tożsamości bez dodatkowych wywołań profilu.',
+    },
   },
   machine_to_machine_jwt: {
     card_title: 'Dla M2M',

@@ -6,6 +6,12 @@ const jwt_claims = {
     card_field: '用戶存取權杖',
     card_description: '在發行存取權杖期間添加用戶特定數據。',
     for: '用於用戶',
+    custom_data_in_id_token: {
+      title: '在 ID Token 中添加用戶自定義數據',
+      tip: 'ID token 是客戶端在登入後收到的身份斷言，用於證明用戶身份。它面向客戶端，包含用於顯示或創建會話的用戶身份聲明。',
+      description:
+        '啟用後，將<a>用戶自定義數據</a>包含在 ID Token 中，使客戶端可以立即訪問這些身份詳情，無需額外的用戶資料請求。',
+    },
   },
   machine_to_machine_jwt: {
     card_title: '用於 M2M',

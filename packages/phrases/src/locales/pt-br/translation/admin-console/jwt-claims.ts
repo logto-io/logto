@@ -7,6 +7,12 @@ const jwt_claims = {
     card_field: 'Token de acesso do usuário',
     card_description: 'Adicione dados específicos do usuário durante a emissão do token de acesso.',
     for: 'para usuário',
+    custom_data_in_id_token: {
+      title: 'Adicionar dados personalizados do usuário ao token de ID',
+      tip: 'O token de ID é a afirmação de identidade que o cliente recebe após o login para provar quem é o usuário. É destinado ao cliente, contém declarações de identidade do usuário para exibição ou criação de sessão.',
+      description:
+        'Ative para incluir seus <a>dados personalizados do usuário</a> no token de ID, permitindo que os clientes acessem esses detalhes de identidade imediatamente sem chamadas de perfil adicionais.',
+    },
   },
   machine_to_machine_jwt: {
     card_title: 'Para M2M',

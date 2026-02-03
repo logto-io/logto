@@ -6,6 +6,12 @@ const jwt_claims = {
     card_field: '用戶訪問令牌',
     card_description: '在發出訪問令牌時添加用戶特定數據。',
     for: '針對用戶',
+    custom_data_in_id_token: {
+      title: '在 ID Token 中新增用戶自訂資料',
+      tip: 'ID token 是客戶端在登入後收到的身份斷言，用於證明用戶身份。它面向客戶端，包含用於顯示或建立工作階段的用戶身份宣告。',
+      description:
+        '啟用後，將<a>用戶自訂資料</a>包含在 ID Token 中，使客戶端可以立即存取這些身份詳情，無需額外的用戶資料請求。',
+    },
   },
   machine_to_machine_jwt: {
     card_title: '針對 M2M',

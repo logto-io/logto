@@ -7,6 +7,12 @@ const jwt_claims = {
     card_field: '사용자 액세스 토큰',
     card_description: '액세스 토큰 발급 시 사용자별 데이터 추가.',
     for: '사용자용',
+    custom_data_in_id_token: {
+      title: 'ID 토큰에 사용자 커스텀 데이터 추가',
+      tip: 'ID 토큰은 로그인 후 클라이언트가 받는 신원 증명으로, 사용자가 누구인지 증명합니다. 클라이언트용으로, 표시 또는 세션 생성을 위한 사용자 신원 클레임을 포함합니다.',
+      description:
+        '활성화하면 <a>사용자 커스텀 데이터</a>를 ID 토큰에 포함하여, 클라이언트가 추가 프로필 호출 없이 즉시 이러한 신원 세부 정보에 액세스할 수 있습니다.',
+    },
   },
   machine_to_machine_jwt: {
     card_title: 'M2M용',

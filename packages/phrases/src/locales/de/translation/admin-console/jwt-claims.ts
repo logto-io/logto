@@ -8,6 +8,12 @@ const jwt_claims = {
     card_description:
       'Fügen Sie benutzerspezifische Daten während der Ausstellung des Zugriffstokens hinzu.',
     for: 'für Benutzer',
+    custom_data_in_id_token: {
+      title: 'Benutzerdefinierte Daten zum ID-Token hinzufügen',
+      tip: 'Das ID-Token ist die Identitätsbestätigung, die der Client nach der Anmeldung erhält, um zu beweisen, wer der Benutzer ist. Es ist für den Client bestimmt und enthält Benutzeridentitätsansprüche zur Anzeige oder Sitzungserstellung.',
+      description:
+        'Aktivieren Sie diese Option, um Ihre <a>benutzerdefinierten Daten</a> in das ID-Token aufzunehmen, sodass Clients sofort auf diese Identitätsdetails zugreifen können, ohne zusätzliche Profilaufrufe zu benötigen.',
+    },
   },
   machine_to_machine_jwt: {
     card_title: 'Für M2M',

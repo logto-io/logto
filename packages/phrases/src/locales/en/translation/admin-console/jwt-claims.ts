@@ -7,6 +7,12 @@ const jwt_claims = {
     card_field: 'User access token',
     card_description: 'Add user-specific data during access token issuance.',
     for: 'for user',
+    custom_data_in_id_token: {
+      title: 'Add user custom data to ID token',
+      tip: "ID token is the identity assertion the client receives after sign-in to prove who the user is. It's intended for the client, contains user identity claims for display or session creation.",
+      description:
+        'Enable to include your <a>user custom data</a> in the ID token, allowing clients to access these identity details immediately without extra profile calls.',
+    },
   },
   machine_to_machine_jwt: {
     card_title: 'For M2M',
