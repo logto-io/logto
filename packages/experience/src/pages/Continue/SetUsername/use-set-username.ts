@@ -25,7 +25,7 @@ const useSetUsername = (interactionEvent: ContinueFlowInteractionEvent) => {
   const redirectTo = useGlobalRedirectTo();
 
   // Need to carry over link social param if additional profile fulfillment is required later
-  // TODO: find a beter way to store the link social param globally in the flow
+  // TODO: find a better way to store the link social param globally in the flow
   const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(interactionEvent, {
     linkSocial: linkSocial ?? undefined,
   });
