@@ -1,6 +1,6 @@
 import { ReservedPlanId, type TenantTag } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -13,9 +13,9 @@ import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar'
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
+import { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
-import { type RequestError } from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
 
 import DeleteCard from './DeleteCard';
@@ -72,10 +72,10 @@ function TenantBasicSettings() {
     formState: { isDirty, isSubmitting, dirtyFields },
   } = methods;
 
-  const lastTenantId = useRef(currentTenantId);
+  const [lastTenantId, setLastTenantId] = useState(currentTenantId);
 
   useEffect(() => {
-    const hasTenantChanged = lastTenantId.current !== currentTenantId;
+    const hasTenantChanged = lastTenantId !== currentTenantId;
     const nextValues = {
       profile: currentTenant,
       settings: {
@@ -85,12 +85,12 @@ function TenantBasicSettings() {
 
     if (hasTenantChanged) {
       reset(nextValues);
-      lastTenantId.current = currentTenantId;
+      setLastTenantId(currentTenantId);
       return;
     }
 
     reset(nextValues, { keepDirtyValues: true });
-  }, [currentTenant, currentTenantId, reset, tenantSettings?.isMfaRequired]);
+  }, [currentTenant, currentTenantId, lastTenantId, reset, tenantSettings?.isMfaRequired]);
 
   const saveData = async (data: { name?: string; tag?: TenantTag }) => {
     const { name, tag } = await api.patch(`/api/tenants/:tenantId`, {
@@ -118,20 +118,21 @@ function TenantBasicSettings() {
       }
 
       const { profile, settings } = formData;
-      const hasProfileChanges = Boolean(dirtyFields.profile?.name || dirtyFields.profile?.tag);
+      const hasProfileChanges = Boolean(dirtyFields.profile?.name ?? dirtyFields.profile?.tag);
       const hasMfaChanges = Boolean(dirtyFields.settings?.isMfaRequired);
 
-      let nextProfile = profile;
-      let nextSettings = tenantSettings;
-
-      if (hasProfileChanges) {
-        const { name, tag } = await saveData({ name: profile.name, tag: profile.tag });
-        nextProfile = { ...profile, name, tag };
-      }
-
-      if (hasMfaChanges) {
-        nextSettings = await saveTenantSettings(settings.isMfaRequired);
-      }
+      const [nextProfile, nextSettings] = await Promise.all([
+        hasProfileChanges
+          ? saveData({ name: profile.name, tag: profile.tag }).then(({ name, tag }) => ({
+              ...profile,
+              name,
+              tag,
+            }))
+          : Promise.resolve(profile),
+        hasMfaChanges
+          ? saveTenantSettings(settings.isMfaRequired)
+          : Promise.resolve(tenantSettings),
+      ]);
 
       reset({
         profile: nextProfile,

@@ -21,11 +21,7 @@ type Props = {
   readonly hasTenantSettingsError: boolean;
 };
 
-function ProfileForm({
-  currentTenantId,
-  isTenantSettingsLoading,
-  hasTenantSettingsError,
-}: Props) {
+function ProfileForm({ currentTenantId, isTenantSettingsLoading, hasTenantSettingsError }: Props) {
   const {
     access: { canManageTenant },
   } = useCurrentTenantScopes();
@@ -62,10 +58,7 @@ function ProfileForm({
             plan: ReservedPlanId.Pro,
           }}
         >
-          <TenantMfa
-            isLoading={isTenantSettingsLoading}
-            hasError={hasTenantSettingsError}
-          />
+          <TenantMfa isLoading={isTenantSettingsLoading} hasError={hasTenantSettingsError} />
         </FormField>
       )}
       <FormField title="tenants.settings.enterprise_sso">
