@@ -83,8 +83,15 @@
       position: fixed;
       inset-inline-start: _.unit(2);
       top: _.unit(2);
+      max-height: calc(100vh - _.unit(4));
+      overflow-y: auto;
       padding: _.unit(4);
       gap: _.unit(3);
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
 
       .item {
         margin: _.unit(2) 0;
