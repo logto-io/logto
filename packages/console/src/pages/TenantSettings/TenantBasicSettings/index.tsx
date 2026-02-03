@@ -4,10 +4,11 @@ import { useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
+import useSWR, { type KeyedMutator } from 'swr';
 
 import { useAuthedCloudApi, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantSettingsResponse } from '@/cloud/types/router';
+import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
@@ -26,6 +27,60 @@ import styles from './index.module.scss';
 import { type TenantSettingsForm } from './types.js';
 
 function TenantBasicSettings() {
+  const authedCloudApi = useAuthedCloudApi();
+  const { currentTenantId } = useContext(TenantsContext);
+
+  const {
+    data: tenantSettings,
+    error: tenantSettingsError,
+    isLoading: isTenantSettingsLoading,
+    mutate: mutateTenantSettings,
+  } = useSWR<TenantSettingsResponse, RequestError>(
+    `api/tenants/${currentTenantId}/settings`,
+    async () =>
+      authedCloudApi.get(`/api/tenants/:tenantId/settings`, {
+        params: { tenantId: currentTenantId },
+      })
+  );
+
+  if (isTenantSettingsLoading) {
+    return (
+      <>
+        <PageMeta titleKey={['tenants.tabs.settings', 'tenants.title']} />
+        <AppLoading />
+      </>
+    );
+  }
+
+  const resolvedTenantSettings =
+    tenantSettings ?? ({ isMfaRequired: false } as TenantSettingsResponse);
+
+  return (
+    <>
+      <PageMeta titleKey={['tenants.tabs.settings', 'tenants.title']} />
+      <TenantBasicSettingsForm
+        tenantSettings={resolvedTenantSettings}
+        mutateTenantSettings={mutateTenantSettings}
+        isTenantSettingsLoading={isTenantSettingsLoading}
+        hasTenantSettingsError={Boolean(tenantSettingsError)}
+      />
+    </>
+  );
+}
+
+type TenantBasicSettingsFormProps = {
+  readonly tenantSettings: TenantSettingsResponse;
+  readonly mutateTenantSettings: KeyedMutator<TenantSettingsResponse>;
+  readonly isTenantSettingsLoading: boolean;
+  readonly hasTenantSettingsError: boolean;
+};
+
+function TenantBasicSettingsForm({
+  tenantSettings,
+  mutateTenantSettings,
+  isTenantSettingsLoading,
+  hasTenantSettingsError,
+}: TenantBasicSettingsFormProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     access: { canManageTenant },
@@ -44,24 +99,11 @@ function TenantBasicSettings() {
   const [isDeleting, setIsDeleting] = useState(false);
   const { show: showModal } = useConfirmModal();
 
-  const {
-    data: tenantSettings,
-    error: tenantSettingsError,
-    isLoading: isTenantSettingsLoading,
-    mutate: mutateTenantSettings,
-  } = useSWR<TenantSettingsResponse, RequestError>(
-    `api/tenants/${currentTenantId}/settings`,
-    async () =>
-      authedCloudApi.get(`/api/tenants/:tenantId/settings`, {
-        params: { tenantId: currentTenantId },
-      })
-  );
-
   const methods = useForm<TenantSettingsForm>({
     defaultValues: {
       profile: currentTenant,
       settings: {
-        isMfaRequired: tenantSettings?.isMfaRequired ?? false,
+        isMfaRequired: tenantSettings.isMfaRequired,
       },
     },
   });
@@ -79,7 +121,7 @@ function TenantBasicSettings() {
     const nextValues = {
       profile: currentTenant,
       settings: {
-        isMfaRequired: tenantSettings?.isMfaRequired ?? false,
+        isMfaRequired: tenantSettings.isMfaRequired,
       },
     };
 
@@ -90,7 +132,7 @@ function TenantBasicSettings() {
     }
 
     reset(nextValues, { keepDirtyValues: true });
-  }, [currentTenant, currentTenantId, lastTenantId, reset, tenantSettings?.isMfaRequired]);
+  }, [currentTenant, currentTenantId, lastTenantId, reset, tenantSettings.isMfaRequired]);
 
   const saveData = async (data: { name?: string; tag?: TenantTag }) => {
     const { name, tag } = await api.patch(`/api/tenants/:tenantId`, {
@@ -192,14 +234,13 @@ function TenantBasicSettings() {
 
   return (
     <>
-      <PageMeta titleKey={['tenants.tabs.settings', 'tenants.title']} />
       <form className={classNames(styles.container, isDirty && styles.withSubmitActionBar)}>
         <FormProvider {...methods}>
           <div className={styles.fields}>
             <ProfileForm
               currentTenantId={currentTenantId}
               isTenantSettingsLoading={isTenantSettingsLoading}
-              hasTenantSettingsError={Boolean(tenantSettingsError)}
+              hasTenantSettingsError={hasTenantSettingsError}
             />
             <LeaveCard />
             {canManageTenant && (
