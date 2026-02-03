@@ -52,8 +52,7 @@ function TenantBasicSettings() {
     );
   }
 
-  const resolvedTenantSettings: TenantSettingsResponse =
-    tenantSettings ?? { isMfaRequired: false };
+  const resolvedTenantSettings: TenantSettingsResponse = tenantSettings ?? { isMfaRequired: false };
 
   return (
     <>
