@@ -47,6 +47,12 @@ const session = {
     suggest_additional_mfa:
       'Dla lepszej ochrony rozważ dodanie kolejnej metody MFA. Możesz pominąć ten krok i kontynuować.',
   },
+  passkey_sign_in: {
+    pending_info_not_found:
+      'Nie znaleziono oczekujących informacji logowania passkey. Uruchom ponownie proces logowania.',
+    conflict_rp_id:
+      'Identyfikator Relying Party nie pasuje. Użyj właściwego klienta, aby się zalogować.',
+  },
   sso_enabled: 'Single sign on jest włączony dla tego adresu e-mail. Zaloguj się za pomocą SSO.',
   captcha_required: 'Wymagana jest captcha.',
   captcha_failed: 'Weryfikacja captchy nie powiodła się.',

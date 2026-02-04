@@ -51,6 +51,12 @@ const session = {
     suggest_additional_mfa:
       'Pour une meilleure protection, ajoutez une autre méthode MFA. Vous pouvez ignorer cette étape et continuer.',
   },
+  passkey_sign_in: {
+    pending_info_not_found:
+      'Impossible de trouver les informations de connexion par passkey en attente. Veuillez relancer le flux de connexion.',
+    conflict_rp_id:
+      "L'ID de la partie de confiance (Relying Party) ne correspond pas. Veuillez utiliser le bon client pour vous connecter.",
+  },
   sso_enabled:
     'La connexion unique est activée pour cet e-mail donné. Veuillez vous connecter avec SSO.',
   captcha_required: 'Le captcha est requis.',

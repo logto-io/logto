@@ -6,9 +6,12 @@ import { Navigate, useSearchParams } from 'react-router-dom';
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import SingleSignOnFormModeContext from '@/Providers/SingleSignOnFormModeContextProvider/SingleSignOnFormModeContext';
+import WebAuthnContextProvider from '@/Providers/WebAuthnContextProvider';
+import PasskeySignInButton from '@/components/Button/PasskeySignInButton';
 import Divider from '@/components/Divider';
 import GoogleOneTap from '@/components/GoogleOneTap';
 import TextLink from '@/components/TextLink';
+import { isDevFeaturesEnabled } from '@/constants/env';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
@@ -26,8 +29,14 @@ const SignInFooters = () => {
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const navigate = useNavigateWithPreservedSearchParams();
 
-  const { signInMethods, signUpMethods, socialConnectors, signInMode, singleSignOnEnabled } =
-    useSieMethods();
+  const {
+    signInMethods,
+    signUpMethods,
+    socialConnectors,
+    signInMode,
+    singleSignOnEnabled,
+    passkeySignIn,
+  } = useSieMethods();
 
   const { showSingleSignOnForm } = useContext(SingleSignOnFormModeContext);
 
@@ -88,6 +97,9 @@ const SignInFooters = () => {
           </>
         )
       }
+      {isDevFeaturesEnabled && passkeySignIn?.enabled && passkeySignIn.showPasskeyButton && (
+        <PasskeySignInButton />
+      )}
     </>
   );
 };
@@ -117,10 +129,12 @@ const SignIn = () => {
   return (
     <LandingPageLayout title="description.sign_in_to_your_account">
       <GoogleOneTap context="signin" />
-      <SingleSignOnFormModeContextProvider>
-        <Main signInMethods={signInMethods} socialConnectors={socialConnectors} />
-        <SignInFooters />
-      </SingleSignOnFormModeContextProvider>
+      <WebAuthnContextProvider>
+        <SingleSignOnFormModeContextProvider>
+          <Main signInMethods={signInMethods} socialConnectors={socialConnectors} />
+          <SignInFooters />
+        </SingleSignOnFormModeContextProvider>
+      </WebAuthnContextProvider>
       {
         // Only show terms and privacy links for sign in page if the agree to terms policy is `Automatic` or `ManualRegistrationOnly`
         agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && (

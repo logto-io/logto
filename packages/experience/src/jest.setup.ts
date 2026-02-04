@@ -19,6 +19,24 @@ jest.mock('overlayscrollbars-react', () => {
   return { __esModule: true, OverlayScrollbarsComponent };
 });
 
+// Mock @simplewebauthn/browser to avoid ESM parsing issues in Jest and provide stable stubs
+jest.mock('@simplewebauthn/browser', () => ({
+  __esModule: true,
+  WebAuthnAbortService: class WebAuthnAbortService {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    abort() {}
+  },
+  WebAuthnError: class WebAuthnError extends Error {},
+  base64URLStringToBuffer: (value: string) => new Uint8Array(Buffer.from(value)),
+  bufferToBase64URLString: (value: ArrayBuffer | Uint8Array) =>
+    Buffer.from(new Uint8Array(value)).toString('base64url'),
+  browserSupportsWebAuthn: () => true,
+  browserSupportsWebAuthnAutofill: () => true,
+  platformAuthenticatorIsAvailable: async () => true,
+  startAuthentication: async () => ({}),
+  startRegistration: async () => ({}),
+}));
+
 // Simple resources for testing
 const defaultI18nResources: DeepPartial<LocalePhrase> = {
   translation: { action: { agree: 'Agree' } },

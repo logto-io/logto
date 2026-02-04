@@ -43,6 +43,12 @@ const session = {
     suggest_additional_mfa:
       '보안을 강화하기 위해 다른 MFA 방법을 추가하는 것을 권장합니다. 이 단계는 건너뛰고 계속할 수 있습니다.',
   },
+  passkey_sign_in: {
+    pending_info_not_found:
+      '대기 중인 패스키 로그인 정보를 찾을 수 없습니다. 로그인 흐름을 다시 시작해 주세요.',
+    conflict_rp_id:
+      'Relying Party ID가 일치하지 않습니다. 올바른 클라이언트를 사용해 로그인해 주세요.',
+  },
   sso_enabled: '이 이메일로는 SSO가 활성화되어 있어요. SSO로 로그인해 주세요.',
   captcha_required: 'Captcha 가 필요해요.',
   captcha_failed: 'Captcha 인증에 실패했어요.',

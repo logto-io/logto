@@ -37,6 +37,10 @@ const session = {
     mfa_factor_not_enabled: 'MFA 因素未启用。',
     suggest_additional_mfa: '为更强的安全性，建议添加另一种多因素认证方式。你可以跳过此步骤继续。',
   },
+  passkey_sign_in: {
+    pending_info_not_found: '未找到待处理的 Passkey 登录信息。请重新发起登录流程。',
+    conflict_rp_id: 'Relying Party ID 不匹配。请使用正确的客户端登录。',
+  },
   sso_enabled: '该邮箱已开启单点登录，请使用 SSO 登录。',
   captcha_required: '需要验证码。',
   captcha_failed: '验证码验证失败。',

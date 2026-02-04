@@ -45,6 +45,11 @@ const session = {
     suggest_additional_mfa:
       'For stronger protection, consider adding another MFA method. You can skip this step and continue.',
   },
+  passkey_sign_in: {
+    pending_info_not_found:
+      'Pending passkey sign-in info not found. Please re-initiate the sign-in flow.',
+    conflict_rp_id: 'Relying Party ID does not match. Please use the correct client to sign in.',
+  },
   sso_enabled: 'Single sign on is enabled for this given email. Please sign in with SSO.',
   captcha_required: 'Captcha is required.',
   captcha_failed: 'Captcha verification failed.',

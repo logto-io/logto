@@ -314,11 +314,14 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
           'session.verification_session_not_found'
         );
 
+        const { authenticationOptions } = authenticationOptionsParseResult.data.signInWebAuthn;
+
         const webAuthnVerification = new SignInWebAuthnVerification(libraries, queries, {
           id: generateStandardId(),
           type: VerificationType.SignInWebAuthn,
           verified: false,
-          ...authenticationOptionsParseResult.data,
+          authenticationChallenge: authenticationOptions.challenge,
+          authenticationRpId: authenticationOptions.rpId,
         });
 
         verificationAuditLog.append({
@@ -329,6 +332,8 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         });
 
         await webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload);
+
+        experienceInteraction.setVerificationRecord(webAuthnVerification);
 
         await experienceInteraction.save();
 
