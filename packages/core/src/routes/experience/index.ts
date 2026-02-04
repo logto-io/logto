@@ -184,7 +184,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
       await ctx.experienceInteraction.submit(log);
 
       log.append({
-        interaction: await ctx.experienceInteraction.toJson(),
+        interaction: ctx.experienceInteraction.toJson(),
         userId: ctx.experienceInteraction.identifiedUserId,
       });
 
@@ -202,7 +202,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
 
-      ctx.body = await experienceInteraction.toSanitizedJson();
+      ctx.body = experienceInteraction.toSanitizedJson();
       ctx.status = 200;
       return next();
     }

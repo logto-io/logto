@@ -56,7 +56,7 @@ describe('saveInteractionLastSubmissionToSession', () => {
     expect(oidcSessionExtensionsInsert).toHaveBeenCalledWith({
       sessionUid: 'sessionUid',
       accountId: mockUser.id,
-      lastSubmission: { foo: 'bar', injectedHeaders },
+      lastSubmission: { foo: 'bar' },
     });
   });
 });

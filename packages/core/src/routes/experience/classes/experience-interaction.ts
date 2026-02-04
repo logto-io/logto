@@ -8,7 +8,7 @@ import {
   type LogContextPayload,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
-import { conditional, trySafe, type Optional } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -431,7 +431,7 @@ export default class ExperienceInteraction {
   public async save() {
     const { provider } = this.tenant;
     const details = await provider.interactionDetails(this.ctx.req, this.ctx.res);
-    const interactionData = await this.toJson();
+    const interactionData = this.toJson();
 
     // `mergeWithLastSubmission` will only merge current request's interaction results.
     // Manually merge with previous interaction results here.
@@ -622,7 +622,7 @@ export default class ExperienceInteraction {
 
     const { provider } = this.tenant;
 
-    const interactionData = await this.toJson();
+    const interactionData = this.toJson();
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
       login: { accountId: user.id },
       // Persist the interaction status to the OIDC session after interaction submission
@@ -658,9 +658,9 @@ export default class ExperienceInteraction {
   }
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
-  public async toJson(): Promise<InteractionStorage> {
+  public toJson(): InteractionStorage {
     const { interactionEvent, userId, captcha } = this;
-    const injectedHeaders = await this.getInjectedHeaders();
+    const injectedHeaders = this.adaptiveMfaValidator.getInjectedHeaders();
 
     return {
       interactionEvent,
@@ -673,8 +673,8 @@ export default class ExperienceInteraction {
     };
   }
 
-  public async toSanitizedJson(): Promise<SanitizedInteractionStorageData> {
-    const rawJson = await this.toJson();
+  public toSanitizedJson(): SanitizedInteractionStorageData {
+    const { injectedHeaders: _injectedHeaders, ...rawJson } = this.toJson();
 
     return {
       ...rawJson,
@@ -682,15 +682,6 @@ export default class ExperienceInteraction {
       mfa: this.mfa.sanitizedData,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
     };
-  }
-
-  private async getInjectedHeaders(): Promise<Optional<Record<string, string>>> {
-    const shouldPersistInjectedHeaders =
-      await this.adaptiveMfaValidator.shouldPersistInjectedHeaders();
-    const injectedHeaders = shouldPersistInjectedHeaders
-      ? this.adaptiveMfaValidator.getInjectedHeaders()
-      : undefined;
-    return injectedHeaders;
   }
 
   private get verificationRecordsArray() {

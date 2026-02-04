@@ -150,14 +150,6 @@ export class AdaptiveMfaValidator {
     return this.injectedHeaders;
   }
 
-  public async shouldPersistInjectedHeaders(): Promise<boolean> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return false;
-    }
-
-    return Boolean(await this.isAdaptiveMfaEnabled());
-  }
-
   private buildEvaluationState(
     user: User,
     options: AdaptiveMfaEvaluationOptions

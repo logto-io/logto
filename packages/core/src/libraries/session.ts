@@ -94,28 +94,21 @@ const saveInteractionLastSubmissionToSession = async (
   queries: Queries,
   interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>
 ) => {
-  const { session, lastSubmission, result: interactionResult } = interactionDetails;
+  const { session, lastSubmission } = interactionDetails;
 
   if (!session || !lastSubmission) {
     return;
   }
 
   const { oidcSessionExtensions } = queries;
-  const lastSubmissionWithInteractionContext = {
-    ...lastSubmission,
-    ...(interactionResult?.injectedHeaders
-      ? { injectedHeaders: interactionResult.injectedHeaders }
-      : {}),
-  };
+  const result = jsonObjectGuard.safeParse(lastSubmission);
 
-  const parseResult = jsonObjectGuard.safeParse(lastSubmissionWithInteractionContext);
-
-  if (parseResult.success) {
+  if (result.success) {
     // Persist the last submission to the session extensions
     await oidcSessionExtensions.insert({
       sessionUid: session.uid,
       accountId: session.accountId,
-      lastSubmission: parseResult.data,
+      lastSubmission: result.data,
     });
   }
 };

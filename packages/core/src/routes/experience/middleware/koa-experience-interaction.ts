@@ -69,7 +69,7 @@ export default function koaExperienceInteraction<
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- make sure the interaction is initialized
       if (ctx.experienceInteraction) {
         ctx.prependAllLogEntries({
-          interaction: await ctx.experienceInteraction.toJson(),
+          interaction: ctx.experienceInteraction.toJson(),
           userId: ctx.experienceInteraction.identifiedUserId,
         });
       }

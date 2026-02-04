@@ -125,7 +125,6 @@ describe('ExperienceInteraction adaptive MFA', () => {
     const { adaptiveMfaValidator } = experienceInteraction as unknown as {
       adaptiveMfaValidator: {
         getResult: jest.Mock;
-        shouldPersistInjectedHeaders: () => Promise<boolean>;
       };
     };
 
@@ -144,9 +143,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
       )
     );
 
-    await adaptiveMfaValidator.shouldPersistInjectedHeaders();
-
-    expect(await experienceInteraction.toJson()).toEqual(
+    expect(experienceInteraction.toJson()).toEqual(
       expect.objectContaining({
         injectedHeaders: {
           country: 'US',
