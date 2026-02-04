@@ -144,9 +144,7 @@ export class AdaptiveMfaValidator {
       return this.signInContext;
     }
 
-    this.signInContext = conditional(
-      this.ctx && getInjectedHeaderValues(this.ctx.request.headers)
-    );
+    this.signInContext = conditional(this.ctx && getInjectedHeaderValues(this.ctx.request.headers));
     return this.signInContext;
   }
 
