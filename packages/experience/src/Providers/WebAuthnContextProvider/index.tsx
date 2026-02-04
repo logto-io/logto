@@ -1,15 +1,18 @@
 import { type WebAuthnAuthenticationOptions } from '@logto/schemas';
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
-import { useState, useMemo, type ReactNode, useEffect, useCallback } from 'react';
+import { useState, useMemo, type ReactNode, useEffect, useCallback, useContext } from 'react';
 
 import { createSignInWebAuthnAuthenticationOptions } from '@/apis/experience/passkey-sign-in';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 
+import PageContext from '../PageContextProvider/PageContext';
+
 import WebAuthnContext from './WebAuthnContext';
 
 const WebAuthnContextProvider = ({ children }: { readonly children: ReactNode }) => {
+  const { isPreview } = useContext(PageContext);
   const { passkeySignIn } = useSieMethods();
   const handleError = useErrorHandler();
   const asyncCreateAuthenticationOptions = useApi(createSignInWebAuthnAuthenticationOptions);
@@ -17,7 +20,8 @@ const WebAuthnContextProvider = ({ children }: { readonly children: ReactNode })
     useState<WebAuthnAuthenticationOptions>();
   const [isLoading, setIsLoading] = useState(false);
   const [isConsumed, setIsConsumed] = useState(false);
-  const shouldFetch = Boolean(passkeySignIn?.enabled) && (!authenticationOptions || isConsumed);
+  const shouldFetch =
+    !!passkeySignIn?.enabled && !isPreview && (!authenticationOptions || isConsumed);
 
   const markAuthenticationOptionsConsumed = useCallback(() => {
     setAuthenticationOptions(undefined);
