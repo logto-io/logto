@@ -5,6 +5,7 @@ const passkey_sign_in = {
     description:
       'Registe a sua chave de acesso utilizando a biometria do dispositivo, chaves de segurança como a YubiKey ou outros métodos disponíveis.',
   },
+  trigger_conditional_ui_failed: 'Falha ao acionar o preenchimento automático com passkey.',
 };
 
 export default Object.freeze(passkey_sign_in);

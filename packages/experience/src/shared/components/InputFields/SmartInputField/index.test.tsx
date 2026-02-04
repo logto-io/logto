@@ -2,6 +2,7 @@ import { SignInIdentifier } from '@logto/schemas';
 import { Globals } from '@react-spring/web';
 import { assert } from '@silverhand/essentials';
 import { act, fireEvent, render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { getBoundingClientRectMock } from '@/__mocks__/logto';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
@@ -23,7 +24,12 @@ describe('SmartInputField Component', () => {
     defaultValue?: string;
     defaultType?: IdentifierInputType;
     enabledTypes?: IdentifierInputType[];
-  }) => render(<SmartInputField {...props} onChange={onChange} />);
+  }) =>
+    render(
+      <MemoryRouter>
+        <SmartInputField {...props} onChange={onChange} />
+      </MemoryRouter>
+    );
 
   beforeAll(() => {
     Globals.assign({

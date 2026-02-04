@@ -5,6 +5,7 @@ const passkey_sign_in = {
     description:
       'سجّل مفتاح المرور باستخدام القياسات الحيوية للجهاز، أو مفاتيح الأمان مثل YubiKey، أو أي طرق متاحة أخرى.',
   },
+  trigger_conditional_ui_failed: 'فشل تشغيل التعبئة التلقائية بمفتاح المرور.',
 };
 
 export default Object.freeze(passkey_sign_in);

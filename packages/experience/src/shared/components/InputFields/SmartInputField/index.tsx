@@ -2,8 +2,9 @@ import { SignInIdentifier } from '@logto/schemas';
 import { animated, config, useSpring } from '@react-spring/web';
 import type { Nullable } from '@silverhand/essentials';
 import type { HTMLProps, Ref } from 'react';
-import { useEffect, useImperativeHandle, useRef, forwardRef } from 'react';
+import { useEffect, useImperativeHandle, useRef, forwardRef, useMemo } from 'react';
 
+import usePasskeyAutofillConditionalUI from '@/hooks/use-passkey-autofill-conditional-ui';
 import ClearIcon from '@/shared/assets/icons/clear-icon.svg?react';
 import IconButton from '@/shared/components/IconButton';
 import InputField from '@/shared/components/InputFields/InputField';
@@ -20,9 +21,7 @@ type Props = Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'prefix' | 'value'> 
   readonly className?: string;
   readonly errorMessage?: string;
   readonly isDanger?: boolean;
-
   readonly enabledTypes?: IdentifierInputType[];
-
   readonly defaultValue?: string;
   readonly onChange?: (data: IdentifierInputValue) => void;
 };
@@ -62,9 +61,19 @@ const SmartInputField = (
     });
   }, [countryCode, identifierType, inputValue, isPrefixVisible, onChange]);
 
+  const { isPasskeyAutofillEnabled } = usePasskeyAutofillConditionalUI();
+
+  const inputHtmlProps = useMemo(() => {
+    const { autoComplete, ...rest } = getInputHtmlProps(enabledTypes, identifierType);
+    return {
+      ...rest,
+      autoComplete: isPasskeyAutofillEnabled ? `username webauthn` : autoComplete,
+    };
+  }, [enabledTypes, identifierType, isPasskeyAutofillEnabled]);
+
   return (
     <AnimatedInputField
-      {...getInputHtmlProps(enabledTypes, identifierType)}
+      {...inputHtmlProps}
       {...rest}
       ref={innerRef}
       isSuffixFocusVisible={isInputEditable && Boolean(inputValue)}
