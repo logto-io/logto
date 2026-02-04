@@ -269,6 +269,35 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
+  it('should accept adaptive mfa thresholds when mfa is enabled', async () => {
+    const adaptiveMfa = {
+      enabled: true,
+      thresholds: {
+        geoVelocityKmh: 1200,
+        longInactivityDays: 10,
+        newCountryWindowDays: 60,
+        minBotScore: 20,
+      },
+    };
+    const mfa = {
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
+      factors: [MfaFactor.TOTP],
+    };
+
+    const response = await signInExperienceRequester
+      .patch('/sign-in-exp')
+      .send({ adaptiveMfa, mfa });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        adaptiveMfa,
+        mfa,
+      },
+    });
+  });
+
   it('should update adaptive mfa config when mfa is already enabled', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,

@@ -1,6 +1,5 @@
 import type { Optional } from '@silverhand/essentials';
 
-import { adaptiveMfaMinBotScore } from '../constants.js';
 import type { AdaptiveMfaEvaluationState, IpRiskSignals, TriggeredRuleByRule } from '../types.js';
 import { AdaptiveMfaRule } from '../types.js';
 
@@ -28,9 +27,9 @@ export class UntrustedIpRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.Un
 
     const matchedSignals: string[] = [];
 
-    if (typeof signals.botScore === 'number' && signals.botScore < adaptiveMfaMinBotScore) {
+    if (typeof signals.botScore === 'number' && signals.botScore < state.thresholds.minBotScore) {
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      matchedSignals.push(`botScore<${adaptiveMfaMinBotScore}`);
+      matchedSignals.push(`botScore<${state.thresholds.minBotScore}`);
     }
 
     if (signals.botVerified === true) {

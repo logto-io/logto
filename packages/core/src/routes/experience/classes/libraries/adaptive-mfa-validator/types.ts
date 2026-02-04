@@ -1,6 +1,10 @@
 import type { IncomingHttpHeaders } from 'node:http';
 
-import type { User, UserSignInCountry } from '@logto/schemas';
+import type {
+  AdaptiveMfaThresholds as AdaptiveMfaThresholdsConfig,
+  User,
+  UserSignInCountry,
+} from '@logto/schemas';
 
 import type Queries from '#src/tenants/Queries.js';
 
@@ -98,10 +102,13 @@ export type AdaptiveMfaEvaluationOptions = {
   now?: Date;
 };
 
+export type AdaptiveMfaThresholds = Required<AdaptiveMfaThresholdsConfig>;
+
 export type AdaptiveMfaEvaluationState = {
   user: User;
   now: Date;
   context?: AdaptiveMfaContext;
+  thresholds: AdaptiveMfaThresholds;
 };
 
 export type RecentCountry = Pick<UserSignInCountry, 'country' | 'lastSignInAt'>;

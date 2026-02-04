@@ -9,7 +9,7 @@ import type {
 } from '../types.js';
 
 export type RuleDependencies = {
-  getRecentCountries: (user: User) => Promise<RecentCountry[]>;
+  getRecentCountries: (user: User, windowDays: number) => Promise<RecentCountry[]>;
   getUserGeoLocation: (user: User) => Promise<Nullable<UserGeoLocation>>;
 };
 

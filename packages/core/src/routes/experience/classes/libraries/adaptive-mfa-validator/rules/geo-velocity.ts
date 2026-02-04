@@ -1,6 +1,6 @@
 import type { Optional } from '@silverhand/essentials';
 
-import { adaptiveMfaGeoVelocityThresholdKmh, msPerHour } from '../constants.js';
+import { msPerHour } from '../constants.js';
 import type { AdaptiveMfaEvaluationState, TriggeredRuleByRule } from '../types.js';
 import { AdaptiveMfaRule } from '../types.js';
 import { haversineDistance, roundTo } from '../utils.js';
@@ -37,11 +37,14 @@ export class GeoVelocityRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.Ge
 
     const speedKmh = distanceKm / durationHours;
 
-    if (speedKmh <= adaptiveMfaGeoVelocityThresholdKmh) {
+    if (speedKmh <= state.thresholds.geoVelocityKmh) {
       return;
     }
 
-    const recentCountries = await this.dependencies.getRecentCountries(state.user);
+    const recentCountries = await this.dependencies.getRecentCountries(
+      state.user,
+      state.thresholds.newCountryWindowDays
+    );
     const previousCountry = recentCountries[0];
 
     return {
@@ -59,7 +62,7 @@ export class GeoVelocityRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.Ge
         distanceKm: roundTo(distanceKm),
         durationHours: roundTo(durationHours),
         speedKmh: roundTo(speedKmh),
-        thresholdKmh: adaptiveMfaGeoVelocityThresholdKmh,
+        thresholdKmh: state.thresholds.geoVelocityKmh,
       },
     };
   }

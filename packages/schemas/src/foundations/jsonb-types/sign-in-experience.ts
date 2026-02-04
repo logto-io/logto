@@ -236,10 +236,24 @@ export const mfaGuard = z.object({
 }) satisfies ToZodObject<Mfa>;
 
 /**
+ * Adaptive MFA thresholds for the sign-in experience.
+ */
+export type AdaptiveMfaThresholds = {
+  geoVelocityKmh?: number;
+  longInactivityDays?: number;
+  newCountryWindowDays?: number;
+  /**
+   * Cloudflare bot scores range from 1 to 99. (0 means not computed.)
+   * https://developers.cloudflare.com/bots/concepts/bot-score/#bot-groupings
+   */
+  minBotScore?: number;
+};
+
+/**
  * Adaptive MFA configuration for the sign-in experience.
  *
  * @remarks
- * This is a single enable switch for the rule-based Adaptive MFA flow.
+ * This is a single enable switch for the rule-based Adaptive MFA flow with optional thresholds.
  * Use it in Management API sign-in experience updates (`PATCH /api/sign-in-exp`).
  * When enabled, the server evaluates fixed risk rules from request signals
  * (IP, User-Agent, edge-injected headers) and may require MFA verification.
@@ -256,10 +270,22 @@ export const mfaGuard = z.object({
  */
 export type AdaptiveMfa = {
   enabled?: boolean;
+  thresholds?: AdaptiveMfaThresholds;
 };
+
+const adaptiveMfaThresholdsGuard = z
+  .object({
+    geoVelocityKmh: z.number().min(0),
+    longInactivityDays: z.number().min(0),
+    newCountryWindowDays: z.number().min(0),
+    // Cloudflare bot score is 1-99; keep 0 for "not computed".
+    minBotScore: z.number().min(0).max(99),
+  })
+  .partial() satisfies ToZodObject<AdaptiveMfaThresholds>;
 
 export const adaptiveMfaGuard = z.object({
   enabled: z.boolean().optional(),
+  thresholds: adaptiveMfaThresholdsGuard.optional(),
 }) satisfies ToZodObject<AdaptiveMfa>;
 
 export const customUiAssetsGuard = z.object({

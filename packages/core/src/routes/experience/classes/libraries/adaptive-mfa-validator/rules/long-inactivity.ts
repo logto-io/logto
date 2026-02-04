@@ -1,6 +1,6 @@
 import type { Optional } from '@silverhand/essentials';
 
-import { adaptiveMfaLongInactivityThresholdDays, msPerDay } from '../constants.js';
+import { msPerDay } from '../constants.js';
 import type { AdaptiveMfaEvaluationState, TriggeredRuleByRule } from '../types.js';
 import { AdaptiveMfaRule } from '../types.js';
 import { roundTo } from '../utils.js';
@@ -17,7 +17,7 @@ export class LongInactivityRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule
 
     const inactivityDays = (state.now.getTime() - state.user.lastSignInAt) / msPerDay;
 
-    if (inactivityDays <= adaptiveMfaLongInactivityThresholdDays) {
+    if (inactivityDays <= state.thresholds.longInactivityDays) {
       return;
     }
 
@@ -26,7 +26,7 @@ export class LongInactivityRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule
       details: {
         lastSignInAt: new Date(state.user.lastSignInAt).toISOString(),
         inactivityDays: roundTo(inactivityDays),
-        thresholdDays: adaptiveMfaLongInactivityThresholdDays,
+        thresholdDays: state.thresholds.longInactivityDays,
       },
     };
   }

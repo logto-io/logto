@@ -1,6 +1,5 @@
 import { conditional, type Optional } from '@silverhand/essentials';
 
-import { adaptiveMfaNewCountryWindowDays } from '../constants.js';
 import type { AdaptiveMfaEvaluationState, TriggeredRuleByRule } from '../types.js';
 import { AdaptiveMfaRule } from '../types.js';
 
@@ -19,7 +18,10 @@ export class NewCountryRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.New
       return;
     }
 
-    const recentCountries = await this.dependencies.getRecentCountries(state.user);
+    const recentCountries = await this.dependencies.getRecentCountries(
+      state.user,
+      state.thresholds.newCountryWindowDays
+    );
     const normalizedCurrent = currentCountry.toUpperCase();
     const hasRecentVisit = recentCountries.some(
       ({ country }) => country.toUpperCase() === normalizedCurrent
@@ -33,7 +35,7 @@ export class NewCountryRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.New
       rule: AdaptiveMfaRule.NewCountry,
       details: {
         currentCountry,
-        windowDays: adaptiveMfaNewCountryWindowDays,
+        windowDays: state.thresholds.newCountryWindowDays,
         recentCountries: conditional(recentCountries.length > 0 && recentCountries),
       },
     };
