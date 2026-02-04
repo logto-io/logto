@@ -37,7 +37,7 @@ export class AdaptiveMfaValidator {
 
   private readonly userGeoLocationCache = new Map<string, Nullable<UserGeoLocation>>();
 
-  private injectedHeaders?: Record<string, string>;
+  private signInContext?: Record<string, string>;
   private adaptiveMfaContext?: AdaptiveMfaContext;
   private isAdaptiveMfaEnabledCache?: boolean;
 
@@ -129,25 +129,25 @@ export class AdaptiveMfaValidator {
       return this.adaptiveMfaContext;
     }
 
-    const context = parseAdaptiveMfaContext(this.getInjectedHeaders());
+    const context = parseAdaptiveMfaContext(this.getSignInContext());
 
     this.adaptiveMfaContext = context;
     return this.adaptiveMfaContext;
   }
 
-  public getInjectedHeaders(): Optional<Record<string, string>> {
+  public getSignInContext(): Optional<Record<string, string>> {
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
 
-    if (this.injectedHeaders) {
-      return this.injectedHeaders;
+    if (this.signInContext) {
+      return this.signInContext;
     }
 
-    this.injectedHeaders = conditional(
+    this.signInContext = conditional(
       this.ctx && getInjectedHeaderValues(this.ctx.request.headers)
     );
-    return this.injectedHeaders;
+    return this.signInContext;
   }
 
   private buildEvaluationState(

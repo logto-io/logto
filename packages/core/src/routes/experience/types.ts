@@ -178,7 +178,7 @@ export type InteractionStorage = {
   profile?: InteractionProfile;
   mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
-  injectedHeaders?: Record<string, string>;
+  signInContext?: Record<string, string>;
   captcha?: {
     verified: boolean;
     skipped: boolean;
@@ -191,7 +191,7 @@ export const interactionStorageGuard = z.object({
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
-  injectedHeaders: z.record(z.string(), z.string()).optional(),
+  signInContext: z.record(z.string(), z.string()).optional(),
   captcha: z
     .object({
       verified: z.boolean(),
@@ -206,7 +206,7 @@ export type SanitizedInteractionStorageData = {
   profile?: SanitizedInteractionProfile;
   verificationRecords?: SanitizedVerificationRecordData[];
   mfa?: SanitizedMfaData;
-  injectedHeaders?: Record<string, string>;
+  signInContext?: Record<string, string>;
   captcha?: {
     verified: boolean;
     skipped: boolean;
@@ -223,7 +223,7 @@ export const sanitizedInteractionStorageGuard = z.object({
   profile: sanitizedInteractionProfileGuard,
   verificationRecords: publicVerificationRecordDataGuard.array().optional(),
   mfa: sanitizedMfaDataGuard.optional(),
-  injectedHeaders: z.record(z.string(), z.string()).optional(),
+  signInContext: z.record(z.string(), z.string()).optional(),
   captcha: z
     .object({
       verified: z.boolean(),

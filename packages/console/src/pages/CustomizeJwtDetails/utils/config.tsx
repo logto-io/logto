@@ -270,7 +270,7 @@ const defaultGrantContext: Partial<JwtCustomizerGrantContext> = {
 const defaultUserInteractionContext: Partial<JwtCustomizerUserInteractionContext> = {
   interactionEvent: InteractionEvent.SignIn,
   userId: '123',
-  injectedHeaders: {
+  signInContext: {
     country: 'US',
     city: 'San Francisco',
     latitude: '37.7749',

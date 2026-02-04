@@ -39,14 +39,14 @@ describe('saveInteractionLastSubmissionToSession', () => {
     jest.clearAllMocks();
   });
 
-  it('should merge injected headers into lastSubmission before persisting', async () => {
-    const injectedHeaders = { country: 'US' };
+  it('should persist lastSubmission to session', async () => {
+    const signInContext = { country: 'US' };
     const interactionDetails = {
       session: { accountId: mockUser.id, uid: 'sessionUid' },
       params: { client_id: 'clientId' },
       prompt: { details: {} },
       lastSubmission: { foo: 'bar' },
-      result: { injectedHeaders },
+      result: { signInContext },
     } as unknown as Interaction;
 
     const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);

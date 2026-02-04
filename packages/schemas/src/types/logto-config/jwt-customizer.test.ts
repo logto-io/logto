@@ -124,9 +124,9 @@ describe('test token sample guard', () => {
     expect(result.success).toBe(true);
   });
 
-  it('should keep injected headers in interaction context sample', () => {
+  it('should keep sign-in context in interaction context sample', () => {
     const interactionContext = {
-      injectedHeaders: { country: 'US' },
+      signInContext: { country: 'US' },
     };
 
     const result = accessTokenJwtCustomizerGuard.safeParse({
