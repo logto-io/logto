@@ -128,7 +128,8 @@ export class AdaptiveMfaValidator {
     }
 
     const injectedHeaders = conditional(
-      this.ctx && getInjectedHeaderValues(this.ctx.request.headers)
+      this.ctx &&
+        getInjectedHeaderValues(this.ctx.request.headers, this.ctx.request.socket?.remoteAddress)
     );
     const context = parseAdaptiveMfaContext(injectedHeaders);
 

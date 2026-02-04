@@ -164,6 +164,7 @@ export default class GlobalValues {
   public readonly userDefaultRoleNames = getEnvAsStringArray('USER_DEFAULT_ROLE_NAMES');
   public readonly developmentUserId = getEnv('DEVELOPMENT_USER_ID');
   public readonly trustProxyHeader = yes(getEnv('TRUST_PROXY_HEADER'));
+  public readonly trustedProxyRanges = getEnv('TRUSTED_PROXY_RANGES');
   public readonly ignoreConnectorVersionCheck = yes(getEnv('IGNORE_CONNECTOR_VERSION_CHECK'));
   public readonly injectedHeaderMappingJson = getEnv('INJECTED_HEADER_MAPPING_JSON');
 

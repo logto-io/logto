@@ -84,6 +84,9 @@ export type AdaptiveMfaResult = {
 export type AdaptiveMfaValidatorContext = {
   request: {
     headers: IncomingHttpHeaders;
+    socket?: {
+      remoteAddress?: string;
+    };
   };
 };
 

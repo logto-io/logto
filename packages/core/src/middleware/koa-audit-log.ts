@@ -165,9 +165,10 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         ip,
         headers: { 'user-agent': userAgent },
       } = ctx.request;
+      const remoteAddress = ctx.request.socket.remoteAddress ?? ctx.req.socket.remoteAddress;
       const { isDevFeaturesEnabled } = EnvSet.values;
       const injectedHeaders = conditional(
-        isDevFeaturesEnabled && getInjectedHeaderValues(ctx.request.headers)
+        isDevFeaturesEnabled && getInjectedHeaderValues(ctx.request.headers, remoteAddress)
       );
       const userAgentValue: Optional<string> =
         typeof userAgent === 'string' ? userAgent : userAgent?.[0];
