@@ -1,4 +1,9 @@
-import type { CloudConnectionData, JwtCustomizerType, LogtoOidcConfigType } from '@logto/schemas';
+import type {
+  CloudConnectionData,
+  IdTokenConfig,
+  JwtCustomizerType,
+  LogtoOidcConfigType,
+} from '@logto/schemas';
 import {
   LogtoConfigs,
   LogtoJwtTokenKey,
@@ -24,6 +29,7 @@ export const createLogtoConfigLibrary = ({
     getRowsByKeys,
     getCloudConnectionData: queryCloudConnectionData,
     upsertJwtCustomizer: queryUpsertJwtCustomizer,
+    updateIdTokenConfig: queryUpdateIdTokenConfig,
   },
 }: Pick<Queries, 'logtoConfigs'>) => {
   const getOidcConfigs = async (consoleLog: ConsoleLog): Promise<LogtoOidcConfigType> => {
@@ -141,6 +147,11 @@ export const createLogtoConfigLibrary = ({
     return idTokenConfigGuard.parse(rows[0]?.value);
   };
 
+  const updateIdTokenConfig = async (idTokenConfig: IdTokenConfig) => {
+    const { value } = await queryUpdateIdTokenConfig(idTokenConfig);
+    return idTokenConfigGuard.parse(value);
+  };
+
   return {
     getOidcConfigs,
     getCloudConnectionData,
@@ -149,5 +160,6 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizers,
     updateJwtCustomizer,
     getIdTokenConfig,
+    updateIdTokenConfig,
   };
 };

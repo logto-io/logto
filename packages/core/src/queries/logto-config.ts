@@ -3,6 +3,7 @@ import {
   LogtoConfigs,
   LogtoTenantConfigKey,
   type AdminConsoleData,
+  type IdTokenConfig,
   type LogtoConfig,
   type LogtoConfigKey,
   type LogtoOidcConfigKey,
@@ -82,6 +83,14 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
 
   const deleteJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) => deleteRowByKey(key);
 
+  const updateIdTokenConfig = async (value: IdTokenConfig) =>
+    pool.one<Record<string, unknown>>(sql`
+      update ${table}
+      set ${fields.value} = ${sql.jsonb(value)}
+      where ${fields.key} = ${LogtoTenantConfigKey.IdToken}
+      returning ${fields.value}
+    `);
+
   return {
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
@@ -90,5 +99,6 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     updateOidcConfigsByKey,
     upsertJwtCustomizer,
     deleteJwtCustomizer,
+    updateIdTokenConfig,
   };
 };

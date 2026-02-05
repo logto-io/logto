@@ -292,6 +292,44 @@
           }
         }
       }
+    },
+    "/api/configs/id-token": {
+      "get": {
+        "tags": ["Dev feature"],
+        "summary": "Get ID token claims configuration",
+        "description": "Get the ID token extended claims configuration for the tenant. This configuration controls which extended claims (e.g., `custom_data`, `identities`, `roles`, `organizations`, `organization_roles`) are included in ID tokens.",
+        "responses": {
+          "200": {
+            "description": "The ID token claims configuration."
+          },
+          "404": {
+            "description": "Configuration not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Dev feature"],
+        "summary": "Update ID token claims configuration",
+        "description": "Update the ID token extended claims configuration for the tenant. This controls which extended claims are included in ID tokens when the corresponding scopes are requested.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "enabledExtendedClaims": {
+                    "description": "An array of extended claims to include in ID tokens. Possible values: `custom_data`, `identities`, `sso_identities`, `roles`, `organizations`, `organization_data`, `organization_roles`."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated ID token claims configuration."
+          }
+        }
+      }
     }
   }
 }
