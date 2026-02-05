@@ -140,6 +140,7 @@ export const jwtCustomizerUserInteractionContextGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string(),
   verificationRecords: jwtCustomizerUserInteractionVerificationRecordGuard.array(),
+  signInContext: z.record(z.string(), z.string()).optional(),
 });
 
 export type JwtCustomizerUserInteractionContext = z.infer<

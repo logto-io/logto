@@ -103,6 +103,8 @@ export const defaultAccessTokenJwtCustomizerCode = `/**
  * This function is called during the access token generation process to get custom claims for the access token.
  * Limit custom claims to under 50KB.
  *
+ * \`context.interaction\` also includes injected header context.
+ *
  * @param {Payload} payload - The input argument of the function.
  * 
  * @returns The custom claims.
@@ -268,6 +270,14 @@ const defaultGrantContext: Partial<JwtCustomizerGrantContext> = {
 const defaultUserInteractionContext: Partial<JwtCustomizerUserInteractionContext> = {
   interactionEvent: InteractionEvent.SignIn,
   userId: '123',
+  signInContext: {
+    country: 'US',
+    city: 'San Francisco',
+    latitude: '37.7749',
+    longitude: '-122.4194',
+    botScore: '10',
+    botVerified: 'false',
+  },
 };
 
 export const defaultUserTokenContextData = {

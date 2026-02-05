@@ -42,19 +42,19 @@ const parseBoolean = (value: Optional<string>): Optional<boolean> => {
 };
 
 export const parseAdaptiveMfaContext = (
-  injectedHeaders?: Record<string, string>
+  signInContext?: Record<string, string>
 ): Optional<AdaptiveMfaContext> => {
-  if (!injectedHeaders) {
+  if (!signInContext) {
     return;
   }
 
-  const rawCountry = normalizeString(injectedHeaders.country);
+  const rawCountry = normalizeString(signInContext.country);
   const country = normalizeCountryCode(rawCountry);
-  const city = normalizeString(injectedHeaders.city);
-  const latitude = parseNumber(injectedHeaders.latitude, { min: -90, max: 90 });
-  const longitude = parseNumber(injectedHeaders.longitude, { min: -180, max: 180 });
-  const botScore = parseNumber(injectedHeaders.botScore);
-  const botVerified = parseBoolean(injectedHeaders.botVerified);
+  const city = normalizeString(signInContext.city);
+  const latitude = parseNumber(signInContext.latitude, { min: -90, max: 90 });
+  const longitude = parseNumber(signInContext.longitude, { min: -180, max: 180 });
+  const botScore = parseNumber(signInContext.botScore);
+  const botVerified = parseBoolean(signInContext.botVerified);
 
   const location = conditional(
     (country ?? city ?? latitude ?? longitude) !== undefined && {

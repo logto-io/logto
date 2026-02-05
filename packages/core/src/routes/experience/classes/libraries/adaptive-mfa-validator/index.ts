@@ -33,7 +33,6 @@ export class AdaptiveMfaValidator {
   private readonly signInExperienceValidator: SignInExperienceValidator;
   private readonly ctx?: AdaptiveMfaValidatorContext;
   private readonly recentCountriesCache = new Map<string, RecentCountry[]>();
-  private readonly ruleDependencies: RuleDependencies;
   private readonly ruleValidators: Array<AdaptiveMfaRuleValidator<AdaptiveMfaRule>>;
 
   private readonly userGeoLocationCache = new Map<string, Nullable<UserGeoLocation>>();
@@ -45,15 +44,17 @@ export class AdaptiveMfaValidator {
     this.queries = queries;
     this.signInExperienceValidator = signInExperienceValidator;
     this.ctx = ctx;
-    this.ruleDependencies = {
+
+    const ruleDependencies: RuleDependencies = {
       getRecentCountries: async (user: User) => this.getRecentCountries(user),
       getUserGeoLocation: async (user: User) => this.getUserGeoLocation(user),
     };
+
     this.ruleValidators = [
-      new NewCountryRule(this.ruleDependencies),
-      new GeoVelocityRule(this.ruleDependencies),
-      new LongInactivityRule(this.ruleDependencies),
-      new UntrustedIpRule(this.ruleDependencies),
+      new NewCountryRule(ruleDependencies),
+      new GeoVelocityRule(ruleDependencies),
+      new LongInactivityRule(ruleDependencies),
+      new UntrustedIpRule(ruleDependencies),
     ];
   }
 
@@ -127,13 +128,18 @@ export class AdaptiveMfaValidator {
       return this.adaptiveMfaContext;
     }
 
-    const injectedHeaders = conditional(
-      this.ctx && getInjectedHeaderValues(this.ctx.request.headers)
-    );
-    const context = parseAdaptiveMfaContext(injectedHeaders);
+    const context = parseAdaptiveMfaContext(this.getSignInContext());
 
     this.adaptiveMfaContext = context;
     return this.adaptiveMfaContext;
+  }
+
+  public getSignInContext(): Optional<Record<string, string>> {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    return conditional(this.ctx && getInjectedHeaderValues(this.ctx.request.headers));
   }
 
   private buildEvaluationState(

@@ -1,6 +1,6 @@
 import type { IncomingHttpHeaders } from 'node:http';
 
-import { type Optional } from '@silverhand/essentials';
+import { conditional, type Optional } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { safeParseJson } from '#src/utils/json.js';
@@ -65,9 +65,50 @@ const normalizeHeaderValue = (value: Optional<string | string[]>): Optional<stri
   return undefined;
 };
 
+const parseDebugInjectedHeaderValues = (
+  rawValues: Optional<string>
+): Optional<InjectedHeaderValues> => {
+  if (!rawValues?.trim()) {
+    return;
+  }
+
+  const parsed = safeParseJson(rawValues);
+
+  if (!isRecord(parsed)) {
+    return;
+  }
+
+  const entries = Object.entries(parsed).flatMap<[string, string]>(([key, value]) => {
+    if (typeof value === 'string') {
+      return [[key, value]];
+    }
+
+    if (typeof value === 'number' || typeof value === 'boolean') {
+      return [[key, String(value)]];
+    }
+
+    return [];
+  });
+
+  if (entries.length === 0) {
+    return;
+  }
+
+  return Object.fromEntries(entries);
+};
+
 export const getInjectedHeaderValues = (
   headers: IncomingHttpHeaders
 ): Optional<InjectedHeaderValues> => {
+  const debugInjectedHeaderValues = conditional(
+    EnvSet.values.isDevFeaturesEnabled &&
+      parseDebugInjectedHeaderValues(EnvSet.values.debugInjectedHeadersJson)
+  );
+
+  if (debugInjectedHeaderValues) {
+    return debugInjectedHeaderValues;
+  }
+
   const entries = Object.entries(injectedHeaderMapping).flatMap<[string, string]>(
     ([key, headerName]) => {
       const value = normalizeHeaderValue(headers[headerName]);

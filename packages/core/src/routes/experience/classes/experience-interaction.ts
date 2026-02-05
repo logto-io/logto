@@ -659,6 +659,7 @@ export default class ExperienceInteraction {
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   public toJson(): InteractionStorage {
     const { interactionEvent, userId, captcha } = this;
+    const signInContext = this.adaptiveMfaValidator.getSignInContext();
 
     return {
       interactionEvent,
@@ -667,19 +668,16 @@ export default class ExperienceInteraction {
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
       captcha,
+      ...conditional(signInContext && { signInContext }),
     };
   }
 
   public toSanitizedJson(): SanitizedInteractionStorageData {
-    const { interactionEvent, userId, captcha } = this;
-
     return {
-      interactionEvent,
-      userId,
+      ...this.toJson(),
       profile: this.profile.sanitizedData,
       mfa: this.mfa.sanitizedData,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
-      captcha,
     };
   }
 

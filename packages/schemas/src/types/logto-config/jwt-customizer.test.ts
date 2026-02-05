@@ -117,4 +117,33 @@ describe('test token sample guard', () => {
     });
     expect(result.success).toBe(false);
   });
+
+  it('should allow access token sample without interaction context', () => {
+    const result = accessTokenJwtCustomizerGuard.safeParse(testAccessTokenPayload);
+
+    expect(result.success).toBe(true);
+  });
+
+  it('should keep sign-in context in interaction context sample', () => {
+    const interactionContext = {
+      signInContext: { country: 'US' },
+    };
+
+    const result = accessTokenJwtCustomizerGuard.safeParse({
+      ...testAccessTokenPayload,
+      contextSample: {
+        ...testAccessTokenPayload.contextSample,
+        interaction: interactionContext,
+      },
+    });
+
+    expect(result.success).toBe(true);
+    if (!result.success) {
+      return;
+    }
+
+    expect(result.data.contextSample?.interaction).toEqual(
+      expect.objectContaining(interactionContext)
+    );
+  });
 });
