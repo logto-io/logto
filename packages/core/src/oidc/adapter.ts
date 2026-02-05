@@ -68,6 +68,7 @@ const buildAccountCenterClientMetadata = (envSet: EnvSet): AllClientMetadata => 
     client_name: 'Account Center',
     redirect_uris: urlStrings,
     post_logout_redirect_uris: urlStrings,
+    alwaysIssueRefreshToken: true,
   };
 };
 
