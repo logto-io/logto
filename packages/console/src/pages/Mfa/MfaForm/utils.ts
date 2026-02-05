@@ -1,4 +1,4 @@
-import { MfaFactor, MfaPolicy } from '@logto/schemas';
+import { type AdaptiveMfa, MfaFactor, MfaPolicy } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import { type SignInPrompt, type MfaConfig, type MfaConfigForm } from '../types';
@@ -8,11 +8,10 @@ const isSignInPrompt = (policy: MfaPolicy): policy is SignInPrompt =>
     policy
   );
 
-export const convertMfaConfigToForm = ({
-  policy,
-  factors,
-  organizationRequiredMfaPolicy,
-}: MfaConfig): MfaConfigForm => ({
+export const convertMfaConfigToForm = (
+  { policy, factors, organizationRequiredMfaPolicy }: MfaConfig,
+  adaptiveMfa?: AdaptiveMfa
+): MfaConfigForm => ({
   isMandatory: policy === MfaPolicy.Mandatory,
   setUpPrompt: isSignInPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUp,
   totpEnabled: factors.includes(MfaFactor.TOTP),
@@ -21,6 +20,7 @@ export const convertMfaConfigToForm = ({
   emailVerificationCodeEnabled: factors.includes(MfaFactor.EmailVerificationCode),
   phoneVerificationCodeEnabled: factors.includes(MfaFactor.PhoneVerificationCode),
   organizationRequiredMfaPolicy,
+  adaptiveMfaEnabled: Boolean(adaptiveMfa?.enabled),
 });
 
 export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig => {
@@ -53,4 +53,18 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
 
 export const validateBackupCodeFactor = (factors: MfaFactor[]): boolean => {
   return !(factors.length === 1 && factors.includes(MfaFactor.BackupCode));
+};
+
+export const buildMfaPatchPayload = (
+  mfaConfigForm: MfaConfigForm,
+  isDevFeaturesEnabled: boolean
+): { mfa: MfaConfig; adaptiveMfa?: AdaptiveMfa } => {
+  const mfa = convertMfaFormToConfig(mfaConfigForm);
+
+  return {
+    mfa,
+    ...conditional(
+      isDevFeaturesEnabled && { adaptiveMfa: { enabled: mfaConfigForm.adaptiveMfaEnabled } }
+    ),
+  };
 };
