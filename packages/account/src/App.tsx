@@ -1,5 +1,5 @@
 import LogtoSignature from '@experience/shared/components/LogtoSignature';
-import { LogtoProvider, Prompt, useLogto, UserScope } from '@logto/react';
+import { LogtoProvider, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId, SignInIdentifier } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -56,9 +56,8 @@ const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 const Main = () => {
   const params = new URLSearchParams(window.location.search);
   const isInCallback = Boolean(params.get('code'));
-  const expectedUserId = params.get('user_id');
   const { isAuthenticated, isLoading, signIn } = useLogto();
-  const { isLoadingExperience, userInfo } = useContext(PageContext);
+  const { isLoadingExperience } = useContext(PageContext);
   const isInitialAuthLoading = !isAuthenticated && isLoading;
 
   useEffect(() => {
@@ -70,18 +69,6 @@ const Main = () => {
       void signIn({ redirectUri });
     }
   }, [isAuthenticated, isInCallback, isInitialAuthLoading, signIn]);
-
-  // Check if the current user matches the expected user ID from URL parameter
-  useEffect(() => {
-    if (!isAuthenticated || !userInfo?.id || !expectedUserId) {
-      return;
-    }
-
-    // If user ID doesn't match, force re-login
-    if (userInfo.id !== expectedUserId) {
-      void signIn({ redirectUri, prompt: Prompt.Login });
-    }
-  }, [expectedUserId, isAuthenticated, signIn, userInfo?.id]);
 
   if (isInCallback) {
     return <Callback />;
