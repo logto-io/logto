@@ -1,10 +1,14 @@
 import assert from 'node:assert';
 
 import type { UserClaim } from '@logto/core-kit';
-import { idTokenClaims, userinfoClaims, UserScope } from '@logto/core-kit';
+import {
+  extendedIdTokenClaimsByScope,
+  idTokenClaims,
+  userClaims,
+  UserScope,
+} from '@logto/core-kit';
 import { userProfileKeys, type User, type UserProfile } from '@logto/schemas';
-import { cond, pick, type Nullable } from '@silverhand/essentials';
-import type { ClaimsParameterMember } from 'oidc-provider';
+import { cond, pick } from '@silverhand/essentials';
 import { snakeCase } from 'snake-case';
 import { type SnakeCaseKeys } from 'snakecase-keys';
 
@@ -142,21 +146,32 @@ export const getUserClaimsData = async (
   );
 };
 
+type GetAcceptedUserClaimsOptions = {
+  /** Where the claims will be used. Either `id_token` or `userinfo`. */
+  use: 'id_token' | 'userinfo';
+  /** The scope of the request. Each scope will be expanded to the corresponding claims. */
+  scope: string;
+  /** Claims rejected by the user. */
+  rejected: string[];
+  /**
+   * An optional array of extended claims enabled in the tenant configuration.
+   * Only applicable for `id_token` use. When provided, only the extended claims in this array
+   * will be included.
+   */
+  enabledExtendedIdTokenClaims?: string[];
+};
+
 /**
  * Get accepted user claims according to the context.
  *
- * @param use Where the claims will be used. Either `id_token` or `userinfo`.
- * @param scope The scope of the request. Each scope will be expanded to the corresponding claims.
- * @param _claims Claims parameter. (Ignored since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled)
- * @param rejected Claims rejected by the user.
  * @returns An array of accepted user claims.
  */
-export const getAcceptedUserClaims = (
-  use: 'id_token' | 'userinfo',
-  scope: string,
-  _claims: Record<string, Nullable<ClaimsParameterMember>>,
-  rejected: string[]
-): UserClaim[] => {
+export const getAcceptedUserClaims = ({
+  use,
+  scope,
+  rejected,
+  enabledExtendedIdTokenClaims,
+}: GetAcceptedUserClaimsOptions): UserClaim[] => {
   const scopes = scope.split(' ');
   const isUserinfo = use === 'userinfo';
   const allScopes = Object.values(UserScope);
@@ -171,10 +186,20 @@ export const getAcceptedUserClaims = (
       }
 
       if (isUserinfo) {
-        return [...idTokenClaims[scope], ...userinfoClaims[scope]];
+        // Userinfo always includes all claims regardless of config
+        return userClaims[scope];
       }
 
-      return idTokenClaims[scope];
+      // For id_token: get base claims and conditionally add extended claims
+      const baseClaims = idTokenClaims[scope];
+      const extendedClaims = extendedIdTokenClaimsByScope[scope] ?? [];
+
+      // If enabledExtendedIdTokenClaims is provided, filter extended claims based on the configuration
+      const filteredExtendedClaims = extendedClaims.filter((claim) =>
+        enabledExtendedIdTokenClaims?.includes(claim)
+      );
+
+      return [...baseClaims, ...filteredExtendedClaims];
     })
     .filter((claim) => !rejected.includes(claim));
 };

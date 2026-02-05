@@ -3,8 +3,10 @@ import {
   LogtoConfigs,
   LogtoJwtTokenKey,
   LogtoOidcConfigKey,
+  LogtoTenantConfigKey,
   cloudApiIndicator,
   cloudConnectionDataGuard,
+  idTokenConfigGuard,
   jwtCustomizerConfigGuard,
   logtoOidcConfigGuard,
 } from '@logto/schemas';
@@ -129,6 +131,16 @@ export const createLogtoConfigLibrary = ({
     return updatedRow.value;
   };
 
+  const getIdTokenConfig = async () => {
+    const { rows } = await getRowsByKeys([LogtoTenantConfigKey.IdToken]);
+
+    if (rows.length === 0) {
+      return;
+    }
+
+    return idTokenConfigGuard.parse(rows[0]?.value);
+  };
+
   return {
     getOidcConfigs,
     getCloudConnectionData,
@@ -136,5 +148,6 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizer,
     getJwtCustomizers,
     updateJwtCustomizer,
+    getIdTokenConfig,
   };
 };

@@ -303,12 +303,27 @@ export default function initOidc(
 
       return {
         accountId: sub,
-        claims: async (use, scope, claims, rejected) => {
+        /**
+         * The third argument `_claims` is not used since
+         * [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter)
+         * is not enabled.
+         */
+        claims: async (use, scope, _claims, rejected) => {
           assert(
             use === 'id_token' || use === 'userinfo',
             'use should be either `id_token` or `userinfo`'
           );
-          const acceptedClaims = getAcceptedUserClaims(use, scope, claims, rejected);
+
+          // Get the ID token config to determine which extended claims are enabled
+          const idTokenConfig =
+            use === 'id_token' ? await logtoConfigs.getIdTokenConfig() : undefined;
+
+          const acceptedClaims = getAcceptedUserClaims({
+            use,
+            scope,
+            rejected,
+            enabledExtendedIdTokenClaims: idTokenConfig?.enabledExtendedClaims,
+          });
 
           return snakecaseKeys(
             {

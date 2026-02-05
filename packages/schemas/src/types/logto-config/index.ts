@@ -121,16 +121,38 @@ export const cloudConnectionDataGuard = z.object({
 
 export type CloudConnectionData = z.infer<typeof cloudConnectionDataGuard>;
 
+/* --- ID Token Config --- */
+export const extendedIdTokenClaims = [
+  'custom_data',
+  'identities',
+  'sso_identities',
+  'roles',
+  'organizations',
+  'organization_data',
+  'organization_roles',
+] as const;
+
+export const extendedIdTokenClaimsGuard = z.enum(extendedIdTokenClaims);
+export type ExtendedIdTokenClaim = z.infer<typeof extendedIdTokenClaimsGuard>;
+
+export const idTokenConfigGuard = z.object({
+  enabledExtendedClaims: extendedIdTokenClaimsGuard.array().optional(),
+});
+export type IdTokenConfig = z.infer<typeof idTokenConfigGuard>;
+
 export enum LogtoTenantConfigKey {
   AdminConsole = 'adminConsole',
   CloudConnection = 'cloudConnection',
   /** The URL to redirect when session not found in Sign-in Experience. */
   SessionNotFoundRedirectUrl = 'sessionNotFoundRedirectUrl',
+  /** ID token configuration for extended claims. */
+  IdToken = 'idToken',
 }
 export type LogtoTenantConfigType = {
   [LogtoTenantConfigKey.AdminConsole]: AdminConsoleData;
   [LogtoTenantConfigKey.CloudConnection]: CloudConnectionData;
   [LogtoTenantConfigKey.SessionNotFoundRedirectUrl]: { url: string };
+  [LogtoTenantConfigKey.IdToken]: IdTokenConfig;
 };
 
 export const logtoTenantConfigGuard: Readonly<{
@@ -139,6 +161,7 @@ export const logtoTenantConfigGuard: Readonly<{
   [LogtoTenantConfigKey.AdminConsole]: adminConsoleDataGuard,
   [LogtoTenantConfigKey.CloudConnection]: cloudConnectionDataGuard,
   [LogtoTenantConfigKey.SessionNotFoundRedirectUrl]: z.object({ url: z.string() }),
+  [LogtoTenantConfigKey.IdToken]: idTokenConfigGuard,
 });
 
 /* --- Summary --- */

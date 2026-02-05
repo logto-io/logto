@@ -25,12 +25,22 @@ const profileExpectation = Object.freeze([
 ]);
 
 describe('OIDC getUserClaims()', () => {
-  it('should return proper ID Token claims', () => {
-    expect(getAcceptedUserClaims(use.idToken, 'openid profile', {}, [])).toEqual(
-      profileExpectation
-    );
+  it('should return proper ID Token claims without extended claims by default', () => {
+    expect(
+      getAcceptedUserClaims({
+        use: use.idToken,
+        scope: 'openid profile',
+        rejected: [],
+      })
+    ).toEqual(profileExpectation);
 
-    expect(getAcceptedUserClaims(use.idToken, 'openid profile email phone', {}, [])).toEqual([
+    expect(
+      getAcceptedUserClaims({
+        use: use.idToken,
+        scope: 'openid profile email phone',
+        rejected: [],
+      })
+    ).toEqual([
       ...profileExpectation,
       'email',
       'email_verified',
@@ -38,25 +48,86 @@ describe('OIDC getUserClaims()', () => {
       'phone_number_verified',
     ]);
 
+    // Extended claims (custom_data, identities) are not included without enabledExtendedIdTokenClaims
     expect(
-      getAcceptedUserClaims(use.idToken, 'openid profile custom_data identities', {}, [])
+      getAcceptedUserClaims({
+        use: use.idToken,
+        scope: 'openid profile custom_data identities',
+        rejected: [],
+      })
     ).toEqual(profileExpectation);
 
     expect(
-      getAcceptedUserClaims(use.idToken, 'openid profile email', {}, ['email_verified'])
+      getAcceptedUserClaims({
+        use: use.idToken,
+        scope: 'openid profile email',
+        rejected: ['email_verified'],
+      })
     ).toEqual([...profileExpectation, 'email']);
   });
 
-  it('should return proper Userinfo claims', () => {
+  it('should return extended claims when explicitly enabled', () => {
+    // With custom_data enabled
     expect(
-      getAcceptedUserClaims(use.userinfo, 'openid profile custom_data identities', {}, [])
+      getAcceptedUserClaims({
+        use: use.idToken,
+        scope: 'openid profile custom_data',
+        rejected: [],
+        enabledExtendedIdTokenClaims: ['custom_data'],
+      })
+    ).toEqual([...profileExpectation, 'custom_data']);
+
+    // With multiple extended claims enabled
+    expect(
+      getAcceptedUserClaims({
+        use: use.idToken,
+        scope: 'openid profile custom_data identities',
+        rejected: [],
+        enabledExtendedIdTokenClaims: ['custom_data', 'identities', 'sso_identities'],
+      })
     ).toEqual([...profileExpectation, 'custom_data', 'identities', 'sso_identities']);
+
+    // With roles, organizations, and organization_roles enabled
+    expect(
+      getAcceptedUserClaims({
+        use: use.idToken,
+        scope:
+          'openid profile roles urn:logto:scope:organizations urn:logto:scope:organization_roles',
+        rejected: [],
+        enabledExtendedIdTokenClaims: [
+          'roles',
+          'organizations',
+          'organization_data',
+          'organization_roles',
+        ],
+      })
+    ).toEqual([
+      ...profileExpectation,
+      'roles',
+      'organizations',
+      'organization_data',
+      'organization_roles',
+    ]);
   });
 
-  // Ignore `_claims` since [Claims Parameter](https://github.com/panva/node-oidc-provider/tree/main/docs#featuresclaimsparameter) is not enabled
-  it('should ignore claims parameter', () => {
+  it('should return proper Userinfo claims (not affected by enabledExtendedIdTokenClaims)', () => {
+    // Userinfo always includes all claims for the requested scopes
     expect(
-      getAcceptedUserClaims(use.idToken, 'openid profile custom_data', { email: null }, [])
-    ).toEqual(profileExpectation);
+      getAcceptedUserClaims({
+        use: use.userinfo,
+        scope: 'openid profile custom_data identities',
+        rejected: [],
+      })
+    ).toEqual([...profileExpectation, 'custom_data', 'identities', 'sso_identities']);
+
+    // EnabledExtendedIdTokenClaims should not affect userinfo
+    expect(
+      getAcceptedUserClaims({
+        use: use.userinfo,
+        scope: 'openid profile custom_data identities',
+        rejected: [],
+        enabledExtendedIdTokenClaims: [],
+      })
+    ).toEqual([...profileExpectation, 'custom_data', 'identities', 'sso_identities']);
   });
 });

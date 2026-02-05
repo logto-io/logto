@@ -1,7 +1,7 @@
 import {
   type jwtCustomizerConfigGuard,
-  LogtoTenantConfigKey,
   LogtoConfigs,
+  LogtoTenantConfigKey,
   type AdminConsoleData,
   type LogtoConfig,
   type LogtoConfigKey,
