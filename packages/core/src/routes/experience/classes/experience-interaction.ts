@@ -622,11 +622,10 @@ export default class ExperienceInteraction {
 
     const { provider } = this.tenant;
 
-    const interactionData = this.toJson();
     const redirectTo = await provider.interactionResult(this.ctx.req, this.ctx.res, {
       login: { accountId: user.id },
       // Persist the interaction status to the OIDC session after interaction submission
-      ...interactionData,
+      ...this.toJson(),
     });
 
     // The geo context is only recorded when the `submit()` function succeeds.
