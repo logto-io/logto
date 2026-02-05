@@ -16,4 +16,5 @@ export type MfaConfigForm = {
   isMandatory: boolean;
   setUpPrompt: SignInPrompt;
   organizationRequiredMfaPolicy?: OrganizationRequiredMfaPolicy;
+  adaptiveMfaEnabled: boolean;
 };

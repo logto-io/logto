@@ -34,6 +34,9 @@ const mfa = {
   require_mfa: 'MFA 필요',
   require_mfa_label:
     '애플리케이션에 액세스하기 위해 2단계 인증을 필수로 만들려면 이것을 활성화하세요. 비활성화하면 사용자가 스스로 MFA 사용 여부를 결정할 수 있습니다.',
+  adaptive_mfa: '적응형 MFA',
+  adaptive_mfa_label:
+    '위험 신호가 감지될 때만 MFA를 트리거합니다. 필수 MFA가 이 설정을 우선 적용합니다. 최소 하나의 MFA 요인이 필요합니다.',
   set_up_prompt: 'MFA 설정 프롬프트',
   no_prompt: '사용자에게 MFA 설정을 요청하지 않습니다',
   prompt_at_sign_in_and_sign_up:
