@@ -37,7 +37,6 @@ export class AdaptiveMfaValidator {
 
   private readonly userGeoLocationCache = new Map<string, Nullable<UserGeoLocation>>();
 
-  private signInContext?: Record<string, string>;
   private adaptiveMfaContext?: AdaptiveMfaContext;
   private isAdaptiveMfaEnabledCache?: boolean;
 
@@ -140,12 +139,7 @@ export class AdaptiveMfaValidator {
       return;
     }
 
-    if (this.signInContext) {
-      return this.signInContext;
-    }
-
-    this.signInContext = conditional(this.ctx && getInjectedHeaderValues(this.ctx.request.headers));
-    return this.signInContext;
+    return conditional(this.ctx && getInjectedHeaderValues(this.ctx.request.headers));
   }
 
   private buildEvaluationState(
