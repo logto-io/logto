@@ -6,6 +6,8 @@ import {
   VerificationType,
   type User,
   type LogContextPayload,
+  userPasskeySignInDataKey,
+  userMfaDataKey,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -36,7 +38,7 @@ import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
-import { Mfa, userMfaDataKey } from './mfa.js';
+import { Mfa } from './mfa.js';
 import { Profile } from './profile.js';
 import { toUserSocialIdentityData } from './utils.js';
 import {
@@ -459,11 +461,7 @@ export default class ExperienceInteraction {
   // eslint-disable-next-line complexity
   public async submit(log?: LogEntry) {
     const {
-      queries: {
-        users: userQueries,
-        userSsoIdentities: userSsoIdentityQueries,
-        signInExperiences: signInExperienceQueries,
-      },
+      queries: { users: userQueries, userSsoIdentities: userSsoIdentityQueries },
       libraries: {
         socials: { upsertSocialTokenSetSecret },
         ssoConnectors: { upsertEnterpriseSsoTokenSetSecret },
@@ -518,16 +516,8 @@ export default class ExperienceInteraction {
 
     if (EnvSet.values.isDevFeaturesEnabled) {
       // Check if passkey sign-in is enabled in the sign-in experience, if yes, check if user has `WebAuthn`
-      // type of MFA verification record in `users.mfaVerifications`.
-      const signInExperience = await signInExperienceQueries.findDefaultSignInExperience();
-      if (
-        signInExperience.passkeySignIn.enabled &&
-        this.#interactionEvent === InteractionEvent.Register
-      ) {
-        const hasWebAuthn = this.mfa.data.webAuthn?.length;
-
-        assertThat(hasWebAuthn, new RequestError({ code: 'user.passkey_preferred', status: 422 }));
-      }
+      // type of MFA verification record in `users.mfaVerifications`. Suggest user to add a passkey if not.
+      await this.mfa.checkPasskeySignInAvailability();
     }
 
     // Revalidate the new MFA data if any
@@ -547,7 +537,7 @@ export default class ExperienceInteraction {
       enterpriseSsoConnectorTokenSetSecret,
       ...rest
     } = this.profile.data;
-    const { mfaSkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
+    const { mfaSkipped, passkeySkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
 
     // Update user profile
     const updatedUser = await userQueries.updateUserById(user.id, {
@@ -574,6 +564,18 @@ export default class ExperienceInteraction {
             },
           },
         }
+      ),
+      ...conditional(
+        // Only persist passkey skipped status on sign-in event
+        passkeySkipped &&
+          this.#interactionEvent === InteractionEvent.SignIn && {
+            logtoConfig: {
+              ...user.logtoConfig,
+              [userPasskeySignInDataKey]: {
+                skipped: true,
+              },
+            },
+          }
       ),
       lastSignInAt: Date.now(),
     });

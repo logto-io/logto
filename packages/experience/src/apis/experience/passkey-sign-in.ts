@@ -8,7 +8,7 @@ import {
 import api from '../api';
 
 import { experienceApiRoutes } from './const';
-import { identifyAndSubmitInteraction } from './interaction';
+import { identifyAndSubmitInteraction, submitInteraction } from './interaction';
 import { bindMfa } from './mfa';
 
 export { createWebAuthnRegistration as createSignInWebAuthnRegistrationOptions } from './mfa';
@@ -29,4 +29,15 @@ export const verifySignInWebAuthn = async (payload: WebAuthnVerificationPayload)
     .json<{ verificationId: string }>();
 
   return identifyAndSubmitInteraction({ verificationId });
+};
+
+/**
+ * Skip binding passkey for the current user.
+ *
+ * Note: When calling this API on sign-up, the skip is temporary for the current interaction.
+ * On sign-in, the skip flag will be persisted to user config.
+ */
+export const skipPasskeyBinding = async () => {
+  await api.post(`${experienceApiRoutes.profile}/mfa/passkey-skipped`);
+  return submitInteraction();
 };

@@ -18,6 +18,8 @@ import {
   MfaFactor,
   SignInIdentifier,
   AlternativeSignUpIdentifier,
+  userMfaDataKey,
+  userPasskeySignInDataKey,
 } from '@logto/schemas';
 import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
 import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
@@ -41,6 +43,7 @@ export type MfaData = {
    * This flag lives only in the current interaction and should NOT be persisted to user profile.
    */
   additionalBindingSuggestionSkipped?: boolean;
+  passkeySkipped?: boolean;
   totp?: BindTotp;
   webAuthn?: BindWebAuthn[];
   backupCode?: BindBackupCode;
@@ -48,6 +51,7 @@ export type MfaData = {
 
 export type SanitizedMfaData = {
   mfaSkipped?: boolean;
+  passkeySkipped?: boolean;
   totp?: Pick<BindTotp, 'type'>;
   webAuthn?: BindWebAuthn[];
   backupCode?: Omit<BindBackupCode, 'codes'>;
@@ -56,6 +60,7 @@ export type SanitizedMfaData = {
 export const mfaDataGuard = z.object({
   mfaSkipped: z.boolean().optional(),
   additionalBindingSuggestionSkipped: z.boolean().optional(),
+  passkeySkipped: z.boolean().optional(),
   totp: bindTotpGuard.optional(),
   webAuthn: z.array(bindWebAuthnGuard).optional(),
   backupCode: bindBackupCodeGuard.optional(),
@@ -63,12 +68,11 @@ export const mfaDataGuard = z.object({
 
 export const sanitizedMfaDataGuard = z.object({
   mfaSkipped: z.boolean().optional(),
+  passkeySkipped: z.boolean().optional(),
   totp: z.object({ type: z.literal(MfaFactor.TOTP) }).optional(),
   webAuthn: z.array(bindWebAuthnGuard).optional(),
   backupCode: bindBackupCodeGuard.pick({ type: true }).optional(),
 }) satisfies ToZodObject<SanitizedMfaData>;
-
-export const userMfaDataKey = 'mfa';
 
 /**
  * Check if the user has skipped MFA binding
@@ -83,6 +87,18 @@ const isMfaSkipped = (logtoConfig: JsonObject): boolean => {
   return parsed.success ? parsed.data[userMfaDataKey].skipped === true : false;
 };
 
+const isPasskeySkipped = (logtoConfig: JsonObject): boolean => {
+  const userPasskeySignInDataGuard = z.object({
+    skipped: z.boolean().optional(),
+  });
+
+  const parsed = z
+    .object({ [userPasskeySignInDataKey]: userPasskeySignInDataGuard })
+    .safeParse(logtoConfig);
+
+  return parsed.success ? parsed.data[userPasskeySignInDataKey].skipped === true : false;
+};
+
 /**
  * This class stores all the pending new MFA settings for a user.
  */
@@ -90,6 +106,7 @@ export class Mfa {
   private readonly signInExperienceValidator: SignInExperienceValidator;
   #mfaSkipped?: boolean;
   #additionalBindingSuggestionSkipped?: boolean;
+  #passkeySkipped?: boolean;
   #totp?: BindTotp;
   #webAuthn?: BindWebAuthn[];
   #backupCode?: BindBackupCode;
@@ -101,13 +118,13 @@ export class Mfa {
     private readonly interactionContext: InteractionContext
   ) {
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
-    const { mfaSkipped, additionalBindingSuggestionSkipped, totp, webAuthn, backupCode } = data;
 
-    this.#mfaSkipped = mfaSkipped;
-    this.#additionalBindingSuggestionSkipped = additionalBindingSuggestionSkipped;
-    this.#totp = totp;
-    this.#webAuthn = webAuthn;
-    this.#backupCode = backupCode;
+    this.#mfaSkipped = data.mfaSkipped;
+    this.#additionalBindingSuggestionSkipped = data.additionalBindingSuggestionSkipped;
+    this.#passkeySkipped = data.passkeySkipped;
+    this.#totp = data.totp;
+    this.#webAuthn = data.webAuthn;
+    this.#backupCode = data.backupCode;
   }
 
   get mfaSkipped() {
@@ -127,6 +144,7 @@ export class Mfa {
    */
   toUserMfaVerifications(): {
     mfaSkipped?: boolean;
+    passkeySkipped?: boolean;
     mfaVerifications: User['mfaVerifications'];
   } {
     const verificationSet = new Set<User['mfaVerifications'][number]>();
@@ -161,6 +179,7 @@ export class Mfa {
 
     return {
       mfaSkipped: this.mfaSkipped,
+      passkeySkipped: this.#passkeySkipped,
       mfaVerifications: [...verificationSet],
     };
   }
@@ -183,6 +202,13 @@ export class Mfa {
     );
 
     this.#mfaSkipped = true;
+  }
+
+  /**
+   * Mark the passkey binding as skipped and persist to user config.
+   */
+  skipPasskey() {
+    this.#passkeySkipped = true;
   }
 
   /**
@@ -467,10 +493,22 @@ export class Mfa {
     );
   }
 
+  async checkPasskeySignInAvailability() {
+    const { passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
+    const { logtoConfig } = await this.interactionContext.getIdentifiedUser();
+
+    if (passkeySignIn.enabled && !(this.#passkeySkipped ?? isPasskeySkipped(logtoConfig))) {
+      const hasPasskey = this.data.webAuthn?.length;
+
+      assertThat(hasPasskey, new RequestError({ code: 'user.passkey_preferred', status: 422 }));
+    }
+  }
+
   get data(): MfaData {
     return {
       mfaSkipped: this.mfaSkipped,
       additionalBindingSuggestionSkipped: this.additionalBindingSuggestionSkipped,
+      passkeySkipped: this.#passkeySkipped,
       totp: this.#totp,
       webAuthn: this.#webAuthn,
       backupCode: this.#backupCode,
@@ -480,6 +518,7 @@ export class Mfa {
   get sanitizedData(): SanitizedMfaData {
     return {
       mfaSkipped: this.mfaSkipped,
+      passkeySkipped: this.#passkeySkipped,
       totp: cond(this.#totp && pick(this.#totp, 'type')),
       webAuthn: this.#webAuthn,
       backupCode: cond(this.#backupCode && pick(this.#backupCode, 'type')),
