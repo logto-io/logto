@@ -5,6 +5,7 @@ const passkey_sign_in = {
     description:
       'Register your passkey using device biometrics, security keys like YubiKey, or other available methods.',
   },
+  trigger_conditional_ui_failed: 'Failed to trigger passkey autofill.',
 };
 
 export default Object.freeze(passkey_sign_in);

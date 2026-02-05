@@ -5,6 +5,7 @@ const passkey_sign_in = {
     description:
       'Зареєструйте ключ-пароль за допомогою біометрії пристрою, ключів безпеки на кшталт YubiKey чи інших доступних методів.',
   },
+  trigger_conditional_ui_failed: 'Не вдалося запустити автозаповнення ключа-пароля.',
 };
 
 export default Object.freeze(passkey_sign_in);

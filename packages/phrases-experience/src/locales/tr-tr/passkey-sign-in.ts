@@ -5,6 +5,7 @@ const passkey_sign_in = {
     description:
       'Geçiş anahtarını cihaz biyometrisi, YubiKey gibi güvenlik anahtarları veya diğer kullanılabilir yöntemlerle kaydet.',
   },
+  trigger_conditional_ui_failed: 'Passkey otomatik doldurma tetiklenemedi.',
 };
 
 export default Object.freeze(passkey_sign_in);
