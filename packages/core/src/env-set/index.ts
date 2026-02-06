@@ -1,9 +1,10 @@
-import { ConsoleLog, GlobalValues } from '@logto/shared';
+import { ConsoleLog, GlobalValues, TtlCache } from '@logto/shared';
 import type { Optional } from '@silverhand/essentials';
 import { appendPath } from '@silverhand/essentials';
 import type { DatabasePool } from '@silverhand/slonik';
 import chalk from 'chalk';
 
+import { WellKnownCache } from '#src/caches/well-known.js';
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 
@@ -90,7 +91,10 @@ export class EnvSet {
 
     const consoleLog = new ConsoleLog(chalk.magenta('env-set'));
     const { getOidcConfigs } = createLogtoConfigLibrary({
-      logtoConfigs: createLogtoConfigQueries(pool),
+      logtoConfigs: createLogtoConfigQueries(
+        pool,
+        new WellKnownCache(this.tenantId, new TtlCache(60_000))
+      ),
     });
 
     const oidcConfigs = await getOidcConfigs(consoleLog);

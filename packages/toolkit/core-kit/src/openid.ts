@@ -17,6 +17,22 @@ export enum ReservedResource {
 }
 
 /**
+ * All extended claims for ID token that are controlled by tenant configuration.
+ * This is the single source of truth for which claims can be toggled on/off in ID tokens.
+ */
+export const extendedIdTokenClaims = [
+  'custom_data',
+  'identities',
+  'sso_identities',
+  'roles',
+  'organizations',
+  'organization_data',
+  'organization_roles',
+] as const;
+
+export type ExtendedIdTokenClaim = (typeof extendedIdTokenClaims)[number];
+
+/**
  * A comprehensive list of all available user claims that can be used in SAML applications.
  * This array serves two purposes:
  * 1. Acts as a single source of truth for all possible `UserClaim` values
@@ -51,15 +67,9 @@ export const userClaimsList = [
   'address',
   'updated_at',
   // Custom claims
-  'username',
-  'roles',
-  'organizations',
-  'organization_data',
-  'organization_roles',
-  'custom_data',
-  'identities',
-  'sso_identities',
-  'created_at',
+  'username', // Planned to be migrated into OIDC standard `preferred_username`, not configurable for now.
+  'created_at', // Follows the profile scope convention (always included). Not configurable for now, may change in the future.
+  ...extendedIdTokenClaims,
 ] as const;
 
 /**
@@ -76,55 +86,55 @@ export enum UserScope {
   /**
    * Scope for basic user info.
    *
-   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   * See {@link userClaims} for mapped claims.
    */
   Profile = 'profile',
   /**
    * Scope for user email address.
    *
-   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   * See {@link userClaims} for mapped claims.
    */
   Email = 'email',
   /**
    * Scope for user phone number.
    *
-   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   * See {@link userClaims} for mapped claims.
    */
   Phone = 'phone',
   /**
    * Scope for user address.
    *
-   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   * See {@link userClaims} for mapped claims.
    */
   Address = 'address',
   /**
    * Scope for user's custom data.
    *
-   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   * See {@link userClaims} for mapped claims.
    */
   CustomData = 'custom_data',
   /**
    * Scope for user's social and SSO identity details.
    *
-   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   * See {@link userClaims} for mapped claims.
    */
   Identities = 'identities',
   /**
    * Scope for user's roles.
    *
-   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   * See {@link userClaims} for mapped claims.
    */
   Roles = 'roles',
   /**
    * Scope for user's organization IDs and perform organization token grant per [RFC 0001](https://github.com/logto-io/rfcs).
    *
-   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   * See {@link userClaims} for mapped claims.
    */
   Organizations = 'urn:logto:scope:organizations',
   /**
    * Scope for user's organization roles per [RFC 0001](https://github.com/logto-io/rfcs).
    *
-   * See {@link idTokenClaims} for mapped claims in ID Token and {@link userinfoClaims} for additional claims in Userinfo Endpoint.
+   * See {@link userClaims} for mapped claims.
    */
   OrganizationRoles = 'urn:logto:scope:organization_roles',
 }
@@ -133,6 +143,9 @@ export enum UserScope {
  * Mapped claims that ID Token includes.
  *
  * @see {@link https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims | OpenID Connect Core 1.0} for standard scope - claim mapping.
+ *
+ * Note: For scopes `Roles`, `Organizations`, `OrganizationRoles`, `CustomData`, and `Identities`,
+ * the claims are configured via `extendedIdTokenClaimsByScope` and are controlled by tenant settings.
  */
 export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.freeze({
   [UserScope.Profile]: [
@@ -158,35 +171,54 @@ export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.fr
   [UserScope.Email]: ['email', 'email_verified'],
   [UserScope.Phone]: ['phone_number', 'phone_number_verified'],
   [UserScope.Address]: ['address'],
-  [UserScope.Roles]: ['roles'],
-  [UserScope.Organizations]: ['organizations'],
-  [UserScope.OrganizationRoles]: ['organization_roles'],
+  // The following scopes have their claims controlled by tenant configuration
+  // via `extendedIdTokenClaimsByScope`. See below.
+  [UserScope.Roles]: [],
+  [UserScope.Organizations]: [],
+  [UserScope.OrganizationRoles]: [],
   [UserScope.CustomData]: [],
   [UserScope.Identities]: [],
 });
 
 /**
- * Additional claims that Userinfo Endpoint returns.
+ * Extended claims for ID token grouped by scope, controlled by tenant configuration.
+ * These claims can be enabled or disabled in the ID token via tenant settings.
+ *
+ * @see {@link extendedIdTokenClaims} for the full list of extended claims.
+ * @see {@link idTokenClaims} for base claims always included in ID token.
+ * @see {@link userClaims} for all possible claims (used by userinfo endpoint).
  */
-export const userinfoClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.freeze({
-  [UserScope.Profile]: [],
-  [UserScope.Email]: [],
-  [UserScope.Phone]: [],
-  [UserScope.Address]: [],
-  [UserScope.Roles]: [],
-  [UserScope.Organizations]: ['organization_data'],
-  [UserScope.OrganizationRoles]: [],
+export const extendedIdTokenClaimsByScope: Readonly<
+  Partial<Record<UserScope, ExtendedIdTokenClaim[]>>
+> = Object.freeze({
   [UserScope.CustomData]: ['custom_data'],
   [UserScope.Identities]: ['identities', 'sso_identities'],
+  [UserScope.Roles]: ['roles'],
+  [UserScope.Organizations]: ['organizations', 'organization_data'],
+  [UserScope.OrganizationRoles]: ['organization_roles'],
 });
 
+/**
+ * All possible claims for each scope, combining base ID token claims and extended claims.
+ *
+ * This mapping is used for:
+ * - OIDC provider claim configuration (to tell the provider which claims are available for each
+ *   scope)
+ * - Userinfo endpoint (always returns all claims regardless of tenant configuration)
+ * - SAML application attribute mapping (to determine which scope to request based on required
+ *   claims)
+ *
+ * Note: The actual claims returned in ID tokens are controlled by tenant configuration via
+ * {@link extendedIdTokenClaimsByScope}. See `getAcceptedUserClaims` in core for the filtering
+ * logic.
+ */
 export const userClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.freeze(
   // Hard to infer type directly, use `as` for a workaround.
   // eslint-disable-next-line no-restricted-syntax
   Object.fromEntries(
     Object.values(UserScope).map((current) => [
       current,
-      [...idTokenClaims[current], ...userinfoClaims[current]],
+      [...idTokenClaims[current], ...(extendedIdTokenClaimsByScope[current] ?? [])],
     ])
   ) as Record<UserScope, UserClaim[]>
 );

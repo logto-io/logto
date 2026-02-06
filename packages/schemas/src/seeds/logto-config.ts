@@ -1,5 +1,10 @@
 import { type CreateLogtoConfig } from '../db-entries/index.js';
-import type { AdminConsoleData, CloudConnectionData } from '../types/index.js';
+import type {
+  AdminConsoleData,
+  CloudConnectionData,
+  ExtendedIdTokenClaim,
+  IdTokenConfig,
+} from '../types/index.js';
 import { LogtoTenantConfigKey } from '../types/index.js';
 
 import { cloudApiIndicator } from './cloud-api.js';
@@ -36,5 +41,24 @@ export const createCloudConnectionConfig = (
       appId,
       appSecret,
       resource: cloudApiIndicator,
+    },
+  } satisfies CreateLogtoConfig);
+
+export const createDefaultIdTokenConfig = (
+  forTenantId: string
+): Readonly<{
+  tenantId: string;
+  key: LogtoTenantConfigKey;
+  value: IdTokenConfig;
+}> =>
+  Object.freeze({
+    tenantId: forTenantId,
+    key: LogtoTenantConfigKey.IdToken,
+    value: {
+      enabledExtendedClaims: [
+        'roles',
+        'organizations',
+        'organization_roles',
+      ] satisfies ExtendedIdTokenClaim[],
     },
   } satisfies CreateLogtoConfig);

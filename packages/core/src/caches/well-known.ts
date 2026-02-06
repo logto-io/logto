@@ -5,6 +5,8 @@ import {
   SignInExperiences,
   type AccountCenter,
   AccountCenters,
+  type IdTokenConfig,
+  idTokenConfigGuard,
 } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
 import { type ZodType, z } from 'zod';
@@ -23,6 +25,7 @@ type WellKnownMap = {
   // Currently, tenant type cannot be updated once created. So it's safe to cache.
   'is-development-tenant': boolean;
   'account-center': AccountCenter;
+  'id-token-config': Nullable<IdTokenConfig>;
 };
 
 type WellKnownCacheType = keyof WellKnownMap;
@@ -57,6 +60,9 @@ function getValueGuard(type: WellKnownCacheType): ZodType<WellKnownMap[typeof ty
     }
     case 'account-center': {
       return AccountCenters.guard;
+    }
+    case 'id-token-config': {
+      return idTokenConfigGuard.nullable();
     }
   }
 }

@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import {
   createDefaultAdminConsoleConfig,
+  createDefaultIdTokenConfig,
   defaultTenantId,
   adminTenantId,
   defaultManagementApi,
@@ -201,6 +202,8 @@ export const seedTables = async (
     connection.query(
       insertInto(createDefaultAdminConsoleConfig(adminTenantId), LogtoConfigs.table)
     ),
+    connection.query(insertInto(createDefaultIdTokenConfig(defaultTenantId), LogtoConfigs.table)),
+    connection.query(insertInto(createDefaultIdTokenConfig(adminTenantId), LogtoConfigs.table)),
     connection.query(
       insertInto(createDefaultSignInExperience(defaultTenantId, isCloud), SignInExperiences.table)
     ),
