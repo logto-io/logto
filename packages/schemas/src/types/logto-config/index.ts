@@ -1,3 +1,4 @@
+import { extendedIdTokenClaims } from '@logto/core-kit';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -122,18 +123,8 @@ export const cloudConnectionDataGuard = z.object({
 export type CloudConnectionData = z.infer<typeof cloudConnectionDataGuard>;
 
 /* --- ID Token Config --- */
-export const extendedIdTokenClaims = [
-  'custom_data',
-  'identities',
-  'sso_identities',
-  'roles',
-  'organizations',
-  'organization_data',
-  'organization_roles',
-] as const;
-
 export const extendedIdTokenClaimsGuard = z.enum(extendedIdTokenClaims);
-export type ExtendedIdTokenClaim = z.infer<typeof extendedIdTokenClaimsGuard>;
+export type ExtendedIdTokenClaim = (typeof extendedIdTokenClaims)[number];
 
 export const idTokenConfigGuard = z.object({
   enabledExtendedClaims: extendedIdTokenClaimsGuard.array().optional(),

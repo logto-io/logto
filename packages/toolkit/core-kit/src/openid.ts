@@ -17,6 +17,22 @@ export enum ReservedResource {
 }
 
 /**
+ * All extended claims for ID token that are controlled by tenant configuration.
+ * This is the single source of truth for which claims can be toggled on/off in ID tokens.
+ */
+export const extendedIdTokenClaims = [
+  'custom_data',
+  'identities',
+  'sso_identities',
+  'roles',
+  'organizations',
+  'organization_data',
+  'organization_roles',
+] as const;
+
+export type ExtendedIdTokenClaim = (typeof extendedIdTokenClaims)[number];
+
+/**
  * A comprehensive list of all available user claims that can be used in SAML applications.
  * This array serves two purposes:
  * 1. Acts as a single source of truth for all possible `UserClaim` values
@@ -51,15 +67,9 @@ export const userClaimsList = [
   'address',
   'updated_at',
   // Custom claims
-  'username',
-  'roles',
-  'organizations',
-  'organization_data',
-  'organization_roles',
-  'custom_data',
-  'identities',
-  'sso_identities',
-  'created_at',
+  'username', // Planned to be migrated into OIDC standard `preferred_username`, not configurable for now.
+  'created_at', // Follows the profile scope convention (always included). Not configurable for now, may change in the future.
+  ...extendedIdTokenClaims,
 ] as const;
 
 /**
@@ -171,20 +181,22 @@ export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.fr
 });
 
 /**
- * Extended claims for ID token that are controlled by tenant configuration.
+ * Extended claims for ID token grouped by scope, controlled by tenant configuration.
  * These claims can be enabled or disabled in the ID token via tenant settings.
  *
+ * @see {@link extendedIdTokenClaims} for the full list of extended claims.
  * @see {@link idTokenClaims} for base claims always included in ID token.
  * @see {@link userClaims} for all possible claims (used by userinfo endpoint).
  */
-export const extendedIdTokenClaimsByScope: Readonly<Partial<Record<UserScope, UserClaim[]>>> =
-  Object.freeze({
-    [UserScope.CustomData]: ['custom_data'],
-    [UserScope.Identities]: ['identities', 'sso_identities'],
-    [UserScope.Roles]: ['roles'],
-    [UserScope.Organizations]: ['organizations', 'organization_data'],
-    [UserScope.OrganizationRoles]: ['organization_roles'],
-  });
+export const extendedIdTokenClaimsByScope: Readonly<
+  Partial<Record<UserScope, ExtendedIdTokenClaim[]>>
+> = Object.freeze({
+  [UserScope.CustomData]: ['custom_data'],
+  [UserScope.Identities]: ['identities', 'sso_identities'],
+  [UserScope.Roles]: ['roles'],
+  [UserScope.Organizations]: ['organizations', 'organization_data'],
+  [UserScope.OrganizationRoles]: ['organization_roles'],
+});
 
 /**
  * All possible claims for each scope, combining base ID token claims and extended claims.
