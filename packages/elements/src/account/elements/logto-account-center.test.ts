@@ -17,7 +17,7 @@ suite('logto-account-center', () => {
     );
     await element.updateComplete;
 
-    assert.equal(element.shadowRoot?.textContent?.trim(), 'Unable to retrieve account context.');
+    assert.equal(element.shadowRoot?.textContent.trim(), 'Unable to retrieve account context.');
   });
 
   test('should render components correctly based on user info', async () => {

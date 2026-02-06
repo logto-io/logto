@@ -39,9 +39,7 @@ suite('logto-user-password', () => {
 
     await waitUntil(
       () =>
-        logtoUserPassword?.shadowRoot
-          ?.querySelector('.status')
-          ?.textContent?.includes('Configured'),
+        logtoUserPassword?.shadowRoot?.querySelector('.status')?.textContent.includes('Configured'),
       'Unable to get password status from account context'
     );
   });
