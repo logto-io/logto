@@ -34,9 +34,9 @@ create index oidc_model_instances__model_name_payload_grant_id
     (payload->>'grantId')
   );
 
-create index concurrently oidc_model_instances__expires_at
+create index oidc_model_instances__expires_at
   on oidc_model_instances (tenant_id, expires_at);
 
-create index concurrently oidc_model_instances__session_payload_account_id_expires_at
+create index oidc_model_instances__session_payload_account_id_expires_at
   ON oidc_model_instances (tenant_id, (payload->>'accountId'), expires_at)
   WHERE model_name = 'Session';
