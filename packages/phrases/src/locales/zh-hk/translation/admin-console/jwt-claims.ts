@@ -1,17 +1,27 @@
 const jwt_claims = {
   title: '自訂 JWT',
   description: '設定自訂 JWT 聲明以包含在存取權杖中。這些聲明可用於將額外信息傳遞給你的應用程式。',
+  description_with_id_token: '自訂存取權杖或ID權杖，為你的應用程式提供額外信息。',
+  access_token: {
+    card_title: '存取權杖',
+    card_description: '存取權杖是API用於授權請求的憑證，僅包含存取決策所需的聲明。',
+  },
   user_jwt: {
-    card_title: '用於用戶',
     card_field: '用戶存取權杖',
     card_description: '在發行存取權杖期間添加用戶特定數據。',
     for: '用於用戶',
   },
   machine_to_machine_jwt: {
-    card_title: '用於 M2M',
-    card_field: '機器對機器權杖',
+    card_field: '機器對機器存取權杖',
     card_description: '在發行機器對機器權杖期間添加額外數據。',
     for: '用於 M2M',
+  },
+  id_token: {
+    card_title: 'ID權杖',
+    card_description: 'ID權杖是登入後收到的身份斷言，包含客戶端用於顯示或創建會話的用戶身份聲明。',
+    card_field: '用戶ID權杖',
+    card_field_description:
+      '標準OIDC聲明（例如sub、email、profile）始終可用，而Logto定義的聲明必須先在此處啟用。在這兩種情況下，你都必須在應用集成期間請求匹配的scope才能接收它們。',
   },
   code_editor_title: '自訂 {{token}} 聲明',
   custom_jwt_create_button: '添加自訂聲明',

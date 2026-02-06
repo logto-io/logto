@@ -2,17 +2,30 @@ const jwt_claims = {
   title: 'Özel JWT',
   description:
     'Erişim belgesine dahil edilecek özel JWT iddialarını ayarlayın. Bu iddialar, uygulamanıza ek bilgi iletmek için kullanılabilir.',
+  description_with_id_token:
+    'Erişim belgesini veya kimlik belgesini özelleştirerek uygulamanıza ek bilgi sağlayın.',
+  access_token: {
+    card_title: 'Erişim belgesi',
+    card_description:
+      "Erişim belgesi, API'ler tarafından istekleri yetkilendirmek için kullanılan kimlik bilgisidir ve yalnızca erişim kararları için gerekli iddialari içerir.",
+  },
   user_jwt: {
-    card_title: 'Kullanıcı İçin',
     card_field: 'Kullanıcı erişim belgesi',
     card_description: 'Erişim belgesi verilirken kullanıcıya özgü veri ekleyin.',
     for: 'kullanıcı için',
   },
   machine_to_machine_jwt: {
-    card_title: 'Makine için',
-    card_field: 'Makine-makine belgesi',
+    card_field: 'Makine-makine erişim belgesi',
     card_description: 'Makine-makine belgesi verilirken ek veri ekleyin.',
     for: 'M2M için',
+  },
+  id_token: {
+    card_title: 'Kimlik belgesi',
+    card_description:
+      'Kimlik belgesi, oturum açma sonrasında alınan bir kimlik ifadesidir ve istemcinin görüntüleme veya oturum oluşturma için kullanabileceği kullanıcı kimlik iddialarını içerir.',
+    card_field: 'Kullanıcı kimlik belgesi',
+    card_field_description:
+      'Standart OIDC iddialari (örneğin, sub, email, profile) her zaman kullanılabilirdir, Logto tarafından tanımlanmış iddiaların ise önce burada etkinleştirilmesi gerekir. Her iki durumda da, bunları almak için uygulama entegrasyonu sırasında eşleşen kapsamları talep etmeniz gerekir.',
   },
   code_editor_title: 'Özel {{token}} iddialarını özelleştirin',
   custom_jwt_create_button: 'Özel iddialar ekle',

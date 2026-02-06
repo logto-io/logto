@@ -2,19 +2,32 @@ const jwt_claims = {
   title: 'Benutzerdefiniertes JWT',
   description:
     'Legen Sie benutzerdefinierte JWT-Ansprüche fest, die im Zugriffstoken enthalten sein sollen. Diese Ansprüche können verwendet werden, um zusätzliche Informationen an Ihre Anwendung zu übergeben.',
+  description_with_id_token:
+    'Passen Sie Zugriffstoken oder ID-Token an und stellen Sie Ihrer Anwendung zusätzliche Informationen zur Verfügung.',
+  access_token: {
+    card_title: 'Zugriffstoken',
+    card_description:
+      'Das Zugriffstoken ist die von APIs zur Autorisierung von Anfragen verwendete Berechtigung und enthält nur die für Zugriffsentscheidungen erforderlichen Ansprüche.',
+  },
   user_jwt: {
-    card_title: 'Für Benutzer',
     card_field: 'Benutzerzugriffstoken',
     card_description:
       'Fügen Sie benutzerspezifische Daten während der Ausstellung des Zugriffstokens hinzu.',
     for: 'für Benutzer',
   },
   machine_to_machine_jwt: {
-    card_title: 'Für M2M',
-    card_field: 'Maschine-zu-Maschine-Token',
+    card_field: 'Maschine-zu-Maschine-Zugriffstoken',
     card_description:
       'Fügen Sie zusätzliche Daten während der Ausstellung des Maschine-zu-Maschine-Tokens hinzu.',
     for: 'für M2M',
+  },
+  id_token: {
+    card_title: 'ID-Token',
+    card_description:
+      'Das ID-Token ist eine Identitätsaussage, die nach der Anmeldung empfangen wird und Benutzeridentitätsansprüche enthält, die der Client zur Anzeige oder Sitzungserstellung verwenden kann.',
+    card_field: 'Benutzer-ID-Token',
+    card_field_description:
+      'Standard-OIDC-Ansprüche (z. B. sub, email, profile) sind immer verfügbar, während von Logto definierte Ansprüche zuerst hier aktiviert werden müssen. In beiden Fällen müssen Sie die entsprechenden Scopes bei der App-Integration anfordern, um sie zu erhalten.',
   },
   code_editor_title: 'Passen Sie die {{token}}-Ansprüche an',
   custom_jwt_create_button: 'Benutzerdefinierte Ansprüche hinzufügen',

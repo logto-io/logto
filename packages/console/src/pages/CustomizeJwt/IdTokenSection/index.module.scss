@@ -1,0 +1,31 @@
+@use '@/scss/underscore' as _;
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin-bottom: _.unit(3);
+}
+
+.claimsContainer {
+  columns: 280px auto;
+  column-gap: _.unit(6);
+}
+
+.scopeGroup {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+  break-inside: avoid;
+  margin-bottom: _.unit(4);
+}
+
+.scopeTitle {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+}

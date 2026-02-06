@@ -2,17 +2,30 @@ const jwt_claims = {
   title: 'カスタムJWT',
   description:
     'アクセストークンに含めるカスタムJWTクレームを設定します。これらのクレームを使用して、追加の情報をアプリケーションに渡すことができます。',
+  description_with_id_token:
+    'アクセストークンまたはIDトークンをカスタマイズして、アプリケーションに追加情報を提供します。',
+  access_token: {
+    card_title: 'アクセストークン',
+    card_description:
+      'アクセストークンは、APIがリクエストを承認するために使用する資格情報であり、アクセス決定に必要なクレームのみを含みます。',
+  },
   user_jwt: {
-    card_title: 'ユーザー向け',
     card_field: 'ユーザーアクセストークン',
     card_description: 'アクセストークン発行時にユーザー固有のデータを追加します。',
     for: 'ユーザー向け',
   },
   machine_to_machine_jwt: {
-    card_title: 'M2M向け',
-    card_field: 'マシン対マシントークン',
+    card_field: 'マシン対マシンアクセストークン',
     card_description: 'マシン対マシントークン発行時に追加データを含めます。',
     for: 'M2M向け',
+  },
+  id_token: {
+    card_title: 'IDトークン',
+    card_description:
+      'IDトークンはサインイン後に受け取る身元証明であり、クライアントが表示またはセッション作成に使用するユーザー識別クレームを含みます。',
+    card_field: 'ユーザーIDトークン',
+    card_field_description:
+      '標準OIDCクレーム（例：sub、email、profile）は常に利用可能ですが、Logto定義のクレームはここで最初に有効にする必要があります。いずれの場合も、アプリ統合時に一致するスコープをリクエストして受信する必要があります。',
   },
   code_editor_title: 'カスタマイズ{{token}}クレーム',
   custom_jwt_create_button: 'カスタムクレームを追加',

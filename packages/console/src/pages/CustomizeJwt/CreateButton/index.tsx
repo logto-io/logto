@@ -55,7 +55,6 @@ function CreateButton({ isDisabled, tokenType }: Props) {
 
   return (
     <Button
-      type="primary"
       title="jwt_claims.custom_jwt_create_button"
       disabled={isDisabled}
       onClick={onCreateButtonClick}
