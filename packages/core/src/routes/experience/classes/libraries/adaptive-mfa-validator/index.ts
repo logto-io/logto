@@ -96,14 +96,14 @@ export class AdaptiveMfaValidator {
       return;
     }
 
-    const { latitude, longitude, country } = location;
+    const { latitude, longitude, regionOrCountry } = location;
     const hasCoordinates = typeof latitude === 'number' && typeof longitude === 'number';
 
     const tasks = [
       ...(hasCoordinates
         ? [this.queries.userGeoLocations.upsertUserGeoLocation(user.id, latitude, longitude)]
         : []),
-      this.queries.userSignInCountries.upsertUserSignInCountry(user.id, country),
+      this.queries.userSignInCountries.upsertUserSignInCountry(user.id, regionOrCountry),
       trySafe(async () =>
         this.queries.userSignInCountries.pruneUserSignInCountriesByUserId(
           user.id,

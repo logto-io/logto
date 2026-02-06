@@ -269,7 +269,7 @@ describe('ExperienceInteraction class', () => {
             (
               payload as {
                 adaptiveMfaContext?: {
-                  location?: { country?: string; latitude?: number; longitude?: number };
+                  location?: { regionOrCountry?: string; latitude?: number; longitude?: number };
                   ipRiskSignals?: { botScore?: number; botVerified?: boolean };
                 };
               }
@@ -279,7 +279,7 @@ describe('ExperienceInteraction class', () => {
 
       expect(adaptiveMfaContext).toEqual({
         location: {
-          country: 'JP',
+          regionOrCountry: 'JP',
           latitude: 35.6762,
           longitude: 139.6503,
         },
