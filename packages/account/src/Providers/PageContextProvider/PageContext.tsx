@@ -19,6 +19,7 @@ export type PageContextType = {
   userInfo?: Partial<UserProfileResponse>;
   setUserInfo: React.Dispatch<React.SetStateAction<Partial<UserProfileResponse> | undefined>>;
   userInfoError?: Error;
+  isLoadingUserInfo: boolean;
   verificationId?: string;
   setVerificationId: (verificationId?: string, expiresAt?: string) => void;
   isLoadingExperience: boolean;
@@ -38,6 +39,7 @@ const PageContext = createContext<PageContextType>({
   userInfo: undefined,
   setUserInfo: noop,
   userInfoError: undefined,
+  isLoadingUserInfo: false,
   verificationId: undefined,
   setVerificationId: noop,
   isLoadingExperience: false,

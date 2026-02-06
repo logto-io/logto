@@ -2,6 +2,36 @@
 
 The Logto account center app that allows users to manage their account settings, profile, and security options.
 
+## Authentication Behavior
+
+Account Center runs inside the same browser session as other applications. This creates a potential
+stale-login issue: another app may trigger a global `end_session` logout, which invalidates the
+server-side session, but the SDK may still consider the user "authenticated" based on cached tokens.
+
+To avoid showing the wrong user or a "ghost" session, Account Center treats the `/api/my-account`
+response as the source of truth:
+
+- We still use `isAuthenticated` to decide whether to start the login flow.
+- We verify the session by fetching user info (`/api/my-account`).
+- If that request fails (e.g. 401), we force `prompt=login` to obtain a fresh session.
+
+This removes stale state without causing redirect loops (we only re-login on request error, not
+on a temporary `userInfo` absence).
+
+### Reserved Scopes and Refresh Token Policy
+
+The Logto client SDK automatically adds reserved scopes (`openid`, `offline_access`, `profile`) by
+default. For Account Center we disable this behavior and explicitly include only the scopes we need:
+
+- `includeReservedScopes: false`
+- `scopes: ['openid', 'profile', 'email', 'phone', 'identities']`
+
+This keeps refresh tokens **session-bound** (no `offline_access`) so they are revoked when the
+session is terminated by `end_session` in another app.
+
+Account Center is a built-in application (not stored in the DB), so its `alwaysIssueRefreshToken`
+policy is configured in the core adapter rather than via application-level settings.
+
 ## Development
 
 ```bash

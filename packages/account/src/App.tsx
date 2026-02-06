@@ -1,5 +1,5 @@
 import LogtoSignature from '@experience/shared/components/LogtoSignature';
-import { LogtoProvider, useLogto, UserScope } from '@logto/react';
+import { LogtoProvider, Prompt, ReservedScope, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId, SignInIdentifier } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -57,7 +57,8 @@ const Main = () => {
   const params = new URLSearchParams(window.location.search);
   const isInCallback = Boolean(params.get('code'));
   const { isAuthenticated, isLoading, signIn } = useLogto();
-  const { isLoadingExperience } = useContext(PageContext);
+  const { isLoadingExperience, isLoadingUserInfo, userInfo, userInfoError } =
+    useContext(PageContext);
   const isInitialAuthLoading = !isAuthenticated && isLoading;
 
   useEffect(() => {
@@ -70,15 +71,31 @@ const Main = () => {
     }
   }, [isAuthenticated, isInCallback, isInitialAuthLoading, signIn]);
 
+  useEffect(() => {
+    if (isInCallback || isInitialAuthLoading || !isAuthenticated || isLoadingUserInfo) {
+      return;
+    }
+
+    if (userInfoError) {
+      void signIn({ redirectUri, prompt: Prompt.Login });
+    }
+  }, [
+    isAuthenticated,
+    isInCallback,
+    isInitialAuthLoading,
+    isLoadingUserInfo,
+    signIn,
+    userInfoError,
+  ]);
   if (isInCallback) {
     return <Callback />;
   }
 
-  if (isInitialAuthLoading || isLoadingExperience) {
+  if (isInitialAuthLoading || isLoadingExperience || isLoadingUserInfo) {
     return <GlobalLoading />;
   }
 
-  if (!isAuthenticated) {
+  if (!userInfo) {
     return <GlobalLoading />;
   }
 
@@ -150,7 +167,14 @@ const App = () => (
       config={{
         endpoint: window.location.origin,
         appId: accountCenterApplicationId,
-        scopes: [UserScope.Profile, UserScope.Email, UserScope.Phone, UserScope.Identities],
+        includeReservedScopes: false,
+        scopes: [
+          ReservedScope.OpenId,
+          UserScope.Profile,
+          UserScope.Email,
+          UserScope.Phone,
+          UserScope.Identities,
+        ],
       }}
     >
       <LoadingContextProvider>

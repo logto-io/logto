@@ -32,6 +32,7 @@ const PageContextProvider = ({ children }: Props) => {
     useState<PageContextType['accountCenterSettings']>(undefined);
   const [userInfo, setUserInfo] = useState<PageContextType['userInfo']>(undefined);
   const [userInfoError, setUserInfoError] = useState<Error>();
+  const [isLoadingUserInfo, setIsLoadingUserInfo] = useState(false);
   const [verificationId, setVerificationId] = useState<string>();
   const [isLoadingExperience, setIsLoadingExperience] = useState(true);
   const [experienceError, setExperienceError] = useState<Error>();
@@ -60,21 +61,28 @@ const PageContextProvider = ({ children }: Props) => {
 
   useEffect(() => {
     if (!isAuthenticated) {
+      setUserInfo(undefined);
+      setUserInfoError(undefined);
+      setIsLoadingUserInfo(false);
       return;
     }
 
     const fetchUserInfo = async () => {
+      setIsLoadingUserInfo(true);
       const [error, data] = await getUserInfoRequest();
 
       if (error || !data) {
         setUserInfoError(
           error instanceof Error ? error : new Error('Failed to load user information.')
         );
+        setUserInfo(undefined);
+        setIsLoadingUserInfo(false);
         return;
       }
 
       setUserInfo(data);
       setUserInfoError(undefined);
+      setIsLoadingUserInfo(false);
     };
 
     void fetchUserInfo();
@@ -140,6 +148,7 @@ const PageContextProvider = ({ children }: Props) => {
       userInfo,
       setUserInfo,
       userInfoError,
+      isLoadingUserInfo,
       verificationId,
       setVerificationId: setVerificationIdCallback,
       isLoadingExperience,
@@ -155,6 +164,7 @@ const PageContextProvider = ({ children }: Props) => {
       toast,
       userInfo,
       userInfoError,
+      isLoadingUserInfo,
       verificationId,
       setVerificationIdCallback,
     ]
