@@ -10,7 +10,12 @@ export class OidcSessionExtensionsQueries {
   public readonly insert = buildInsertIntoWithPool(this.pool)(OidcSessionExtensions, {
     onConflict: {
       fields: [fields.tenantId, fields.sessionUid],
-      setExcludedFields: [fields.lastSubmission, fields.updatedAt, fields.accountId],
+      setExcludedFields: [
+        fields.lastSubmission,
+        fields.updatedAt,
+        fields.accountId,
+        fields.clientId,
+      ],
     },
     returning: true,
   });
