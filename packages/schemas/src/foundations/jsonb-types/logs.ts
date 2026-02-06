@@ -71,7 +71,7 @@ export const logContextPayloadGuard = z
     ip: z.string().optional(),
     userAgent: z.string().optional(),
     userAgentParsed: userAgentParsedGuard.optional(),
-    injectedHeaders: z.record(z.string(), z.string()).optional(),
+    signInContext: z.record(z.string(), z.string()).optional(),
     userId: z.string().optional(),
     applicationId: z.string().optional(),
     sessionId: z.string().optional(),

@@ -101,7 +101,7 @@ describe('koaAuditLog middleware', () => {
     });
   });
 
-  it('should include injected header values when mapped headers are present', async () => {
+  it('should include sign-in context when mapped headers are present', async () => {
     const ctx: TestContext = createTestContext({
       'user-agent': userAgent,
       'x-logto-cf-country': 'US',
@@ -125,7 +125,7 @@ describe('koaAuditLog middleware', () => {
         ip,
         userAgent,
         userAgentParsed,
-        injectedHeaders: {
+        signInContext: {
           country: 'US',
           city: 'New York',
         },
@@ -133,7 +133,7 @@ describe('koaAuditLog middleware', () => {
     });
   });
 
-  it('should skip injected headers and parsed user agent when dev features are disabled', async () => {
+  it('should skip sign-in context and parsed user agent when dev features are disabled', async () => {
     getIsDevFeaturesEnabled.mockReturnValue(false);
     const ctx: TestContext = createTestContext({
       'user-agent': userAgent,
