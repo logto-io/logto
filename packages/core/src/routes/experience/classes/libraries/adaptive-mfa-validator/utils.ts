@@ -1,6 +1,13 @@
 import haversine from 'haversine-distance';
 
+import type { RecentCountry, RecentRegionOrCountry } from './types.js';
+
 export const roundTo = (value: number, fractionDigits = 2) => Number(value.toFixed(fractionDigits));
+
+export const toRecentRegionOrCountry = (recentCountry: RecentCountry): RecentRegionOrCountry => ({
+  regionOrCountry: recentCountry.country,
+  lastSignInAt: recentCountry.lastSignInAt,
+});
 
 /**
  * @param latitudeA Latitude of point A.
