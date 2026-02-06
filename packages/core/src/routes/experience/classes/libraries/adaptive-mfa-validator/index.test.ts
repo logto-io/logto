@@ -207,11 +207,7 @@ describe('AdaptiveMfaValidator', () => {
     );
   });
 
-<<<<<<< HEAD
-  it('records geo location and country on sign-in when context has data', async () => {
-=======
   it('persists geo location and region or country when context has data', async () => {
->>>>>>> 02c71309c (refactor: rename adaptive MFA country label)
     const user: User = {
       ...mockUser,
       lastSignInAt: Date.now(),
@@ -233,19 +229,7 @@ describe('AdaptiveMfaValidator', () => {
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-<<<<<<< HEAD
     await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
-=======
-    await validator.persistContext(user, {
-      currentContext: {
-        location: {
-          latitude: 12.3,
-          longitude: 45.6,
-          regionOrCountry: 'US',
-        },
-      },
-    });
->>>>>>> 02c71309c (refactor: rename adaptive MFA country label)
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
       user.id,
@@ -339,19 +323,7 @@ describe('AdaptiveMfaValidator', () => {
       signInExperienceValidator: createSignInExperienceValidator(false),
     });
 
-<<<<<<< HEAD
     await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
-=======
-    await validator.persistContext(user, {
-      currentContext: {
-        location: {
-          latitude: 12.3,
-          longitude: 45.6,
-          regionOrCountry: 'US',
-        },
-      },
-    });
->>>>>>> 02c71309c (refactor: rename adaptive MFA country label)
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
       user.id,
@@ -389,7 +361,6 @@ describe('AdaptiveMfaValidator', () => {
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-<<<<<<< HEAD
     await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
@@ -409,14 +380,6 @@ describe('AdaptiveMfaValidator', () => {
           'x-logto-cf-country': 'US',
           'x-logto-cf-latitude': '12.3',
           'x-logto-cf-longitude': '45.6',
-=======
-    await validator.persistContext(user, {
-      currentContext: {
-        location: {
-          latitude: 12.3,
-          longitude: 45.6,
-          regionOrCountry: 'US',
->>>>>>> 02c71309c (refactor: rename adaptive MFA country label)
         },
       },
     };
