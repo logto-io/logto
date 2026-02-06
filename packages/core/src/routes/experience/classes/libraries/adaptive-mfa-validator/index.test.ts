@@ -6,6 +6,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import type { SignInExperienceValidator } from '../sign-in-experience-validator.js';
 
 import { AdaptiveMfaValidator, adaptiveMfaNewCountryWindowDays } from './index.js';
+import { AdaptiveMfaRule } from './types.js';
 
 const { jest } = import.meta;
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
@@ -49,17 +50,18 @@ describe('AdaptiveMfaValidator', () => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
-  it('triggers new country rule when current country is not in recent list', async () => {
+  it('triggers new region or country rule when current region or country is not in recent list', async () => {
     const now = new Date('2024-01-02T00:00:00Z');
     const user: User = {
       ...mockUser,
       lastSignInAt: now.getTime() - 60 * 60 * 1000,
     };
+    const lastSignInAt = now.getTime() - 2 * 60 * 60 * 1000;
     const queries = createQueries({
       recentCountries: [
         {
           country: 'US',
-          lastSignInAt: now.getTime() - 2 * 60 * 60 * 1000,
+          lastSignInAt,
         },
       ],
     });
@@ -71,12 +73,27 @@ describe('AdaptiveMfaValidator', () => {
 
     const result = await validator.getResult(user, {
       now,
-      currentContext: { location: { country: 'FR' } },
+      currentContext: { location: { regionOrCountry: 'FR' } },
     });
 
     expect(result?.requiresMfa).toBe(true);
-    expect(result?.triggeredRules).toEqual(
-      expect.arrayContaining([expect.objectContaining({ rule: 'new_country' })])
+    const triggeredRule = result?.triggeredRules.find(
+      ({ rule }) => rule === AdaptiveMfaRule.NewRegionOrCountry
+    );
+    expect(triggeredRule).toEqual(
+      expect.objectContaining({
+        rule: AdaptiveMfaRule.NewRegionOrCountry,
+        details: {
+          currentRegionOrCountry: 'FR',
+          windowDays: adaptiveMfaNewCountryWindowDays,
+          recentRegionsOrCountries: [
+            {
+              regionOrCountry: 'US',
+              lastSignInAt,
+            },
+          ],
+        },
+      })
     );
   });
 
@@ -86,8 +103,14 @@ describe('AdaptiveMfaValidator', () => {
       ...mockUser,
       lastSignInAt: now.getTime() - 2 * 60 * 60 * 1000,
     };
+    const previousLastSignInAt = now.getTime() - 3 * 60 * 60 * 1000;
     const queries = createQueries({
-      recentCountries: [],
+      recentCountries: [
+        {
+          country: 'US',
+          lastSignInAt: previousLastSignInAt,
+        },
+      ],
       geoLocation: { latitude: 0, longitude: 0 },
     });
 
@@ -102,15 +125,33 @@ describe('AdaptiveMfaValidator', () => {
         location: {
           latitude: 50,
           longitude: 0,
-          country: 'DE',
+          regionOrCountry: 'DE',
           city: 'Frankfurt',
         },
       },
     });
 
     expect(result?.requiresMfa).toBe(true);
-    expect(result?.triggeredRules).toEqual(
-      expect.arrayContaining([expect.objectContaining({ rule: 'geo_velocity' })])
+    const triggeredRule = result?.triggeredRules.find(({ rule }) => rule === 'geo_velocity');
+    expect(triggeredRule).toEqual(
+      expect.objectContaining({
+        rule: 'geo_velocity',
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        details: expect.objectContaining({
+          previous: {
+            regionOrCountry: {
+              regionOrCountry: 'US',
+              lastSignInAt: previousLastSignInAt,
+            },
+            at: new Date(user.lastSignInAt ?? 0).toISOString(),
+          },
+          current: {
+            regionOrCountry: 'DE',
+            city: 'Frankfurt',
+            at: now.toISOString(),
+          },
+        }),
+      })
     );
   });
 
@@ -166,7 +207,11 @@ describe('AdaptiveMfaValidator', () => {
     );
   });
 
+<<<<<<< HEAD
   it('records geo location and country on sign-in when context has data', async () => {
+=======
+  it('persists geo location and region or country when context has data', async () => {
+>>>>>>> 02c71309c (refactor: rename adaptive MFA country label)
     const user: User = {
       ...mockUser,
       lastSignInAt: Date.now(),
@@ -188,7 +233,19 @@ describe('AdaptiveMfaValidator', () => {
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
+<<<<<<< HEAD
     await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
+=======
+    await validator.persistContext(user, {
+      currentContext: {
+        location: {
+          latitude: 12.3,
+          longitude: 45.6,
+          regionOrCountry: 'US',
+        },
+      },
+    });
+>>>>>>> 02c71309c (refactor: rename adaptive MFA country label)
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
       user.id,
@@ -282,7 +339,19 @@ describe('AdaptiveMfaValidator', () => {
       signInExperienceValidator: createSignInExperienceValidator(false),
     });
 
+<<<<<<< HEAD
     await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
+=======
+    await validator.persistContext(user, {
+      currentContext: {
+        location: {
+          latitude: 12.3,
+          longitude: 45.6,
+          regionOrCountry: 'US',
+        },
+      },
+    });
+>>>>>>> 02c71309c (refactor: rename adaptive MFA country label)
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
       user.id,
@@ -320,6 +389,7 @@ describe('AdaptiveMfaValidator', () => {
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
+<<<<<<< HEAD
     await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
@@ -339,6 +409,14 @@ describe('AdaptiveMfaValidator', () => {
           'x-logto-cf-country': 'US',
           'x-logto-cf-latitude': '12.3',
           'x-logto-cf-longitude': '45.6',
+=======
+    await validator.persistContext(user, {
+      currentContext: {
+        location: {
+          latitude: 12.3,
+          longitude: 45.6,
+          regionOrCountry: 'US',
+>>>>>>> 02c71309c (refactor: rename adaptive MFA country label)
         },
       },
     };

@@ -54,7 +54,7 @@ export const parseAdaptiveMfaContext = (
   }
 
   const rawCountry = normalizeString(signInContext.country);
-  const country = normalizeCountryCode(rawCountry);
+  const regionOrCountry = normalizeCountryCode(rawCountry);
   const city = normalizeString(signInContext.city);
   const latitude = parseNumber(signInContext.latitude, { min: -90, max: 90 });
   const longitude = parseNumber(signInContext.longitude, { min: -180, max: 180 });
@@ -62,8 +62,8 @@ export const parseAdaptiveMfaContext = (
   const botVerified = parseBoolean(signInContext.botVerified);
 
   const location = conditional(
-    (country ?? city ?? latitude ?? longitude) !== undefined && {
-      country,
+    (regionOrCountry ?? city ?? latitude ?? longitude) !== undefined && {
+      regionOrCountry,
       city,
       latitude,
       longitude,

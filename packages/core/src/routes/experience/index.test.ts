@@ -150,7 +150,7 @@ describe('POST /experience/submit', () => {
       expect.objectContaining({
         adaptiveMfaContext: {
           location: {
-            country: 'JP',
+            regionOrCountry: 'JP',
             latitude: 35.6762,
             longitude: 139.6503,
           },
