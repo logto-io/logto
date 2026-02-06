@@ -2,19 +2,32 @@ const jwt_claims = {
   title: 'JWT personnalisé',
   description:
     "Configurer des revendications JWT personnalisées à inclure dans le jeton d'accès. Ces revendications peuvent être utilisées pour transmettre des informations supplémentaires à votre application.",
+  description_with_id_token:
+    "Personnalisez le jeton d'accès ou le jeton d'identité, fournissant des informations supplémentaires à votre application.",
+  access_token: {
+    card_title: "Jeton d'accès",
+    card_description:
+      "Le jeton d'accès est l'identifiant utilisé par les API pour autoriser les demandes, contenant uniquement les revendications nécessaires aux décisions d'accès.",
+  },
   user_jwt: {
-    card_title: "Pour l'utilisateur",
     card_field: "Jeton d'accès utilisateur",
     card_description:
       "Ajouter des données spécifiques à l'utilisateur lors de l'émission du jeton d'accès.",
     for: "pour l'utilisateur",
   },
   machine_to_machine_jwt: {
-    card_title: 'Pour M2M',
-    card_field: 'Jeton machine-à-machine',
+    card_field: "Jeton d'accès machine-à-machine",
     card_description:
       "Ajouter des données supplémentaires lors de l'émission du jeton machine-à-machine.",
     for: 'pour M2M',
+  },
+  id_token: {
+    card_title: "Jeton d'identité",
+    card_description:
+      "Le jeton d'identité est une assertion d'identité reçue après la connexion, contenant des revendications d'identité utilisateur pour que le client les utilise pour l'affichage ou la création de session.",
+    card_field: "Jeton d'identité utilisateur",
+    card_field_description:
+      "Les revendications OIDC standard (par exemple, sub, email, profile) sont toujours disponibles, tandis que les revendications définies par Logto doivent d'abord être activées ici. Dans les deux cas, vous devez demander les scopes correspondants lors de l'intégration de l'application pour les recevoir.",
   },
   code_editor_title: 'Personnalisez les revendications {{token}}',
   custom_jwt_create_button: 'Ajouter des revendications personnalisées',

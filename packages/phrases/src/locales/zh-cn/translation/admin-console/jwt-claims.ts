@@ -1,17 +1,27 @@
 const jwt_claims = {
   title: '自定义JWT',
   description: '设置自定义JWT声明以包含在访问令牌中。这些声明可以用于向应用程序传递附加信息。',
+  description_with_id_token: '自定义访问令牌或ID令牌，为您的应用程序提供额外信息。',
+  access_token: {
+    card_title: '访问令牌',
+    card_description: '访问令牌是API用于授权请求的凭证，仅包含访问决策所需的声明。',
+  },
   user_jwt: {
-    card_title: '对于用户',
     card_field: '用户访问令牌',
     card_description: '在访问令牌发放期间添加用户特定数据。',
     for: '给用户',
   },
   machine_to_machine_jwt: {
-    card_title: '对于M2M',
-    card_field: '机器间令牌',
+    card_field: '机器间访问令牌',
     card_description: '在机器间令牌发放期间添加额外数据。',
     for: '给M2M',
+  },
+  id_token: {
+    card_title: 'ID令牌',
+    card_description: 'ID令牌是登录后收到的身份断言，包含客户端用于显示或创建会话的用户身份声明。',
+    card_field: '用户ID令牌',
+    card_field_description:
+      '标准OIDC声明（例如sub、email、profile）始终可用，而Logto定义的声明必须先在此处启用。在这两种情况下，您都必须在应用集成期间请求匹配的scope才能接收它们。',
   },
   code_editor_title: '自定义{{token}}声明',
   custom_jwt_create_button: '添加自定义声明',

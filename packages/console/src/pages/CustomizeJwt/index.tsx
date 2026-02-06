@@ -1,9 +1,13 @@
-import { LogtoJwtTokenKeyType, ReservedPlanId } from '@logto/schemas';
+import { LogtoJwtTokenKeyType, ReservedPlanId, type ExtendedIdTokenClaim } from '@logto/schemas';
 import { cond } from '@silverhand/essentials';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
+import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import CardTitle from '@/ds-components/CardTitle';
@@ -14,8 +18,10 @@ import { isPaidPlan } from '@/utils/subscription';
 import CreateButton from './CreateButton';
 import CustomizerItem from './CustomizerItem';
 import DeleteConfirmModal from './DeleteConfirmModal';
+import IdTokenSection from './IdTokenSection';
 import UpsellNotice from './UpsellNotice';
 import styles from './index.module.scss';
+import useIdTokenConfig from './use-id-token-config';
 import useJwtCustomizer from './use-jwt-customizer';
 
 function CustomizeJwt() {
@@ -37,15 +43,67 @@ function CustomizeJwt() {
 
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
 
-  const { isLoading, accessTokenJwtCustomizer, clientCredentialsJwtCustomizer } =
-    useJwtCustomizer();
+  const {
+    isLoading: isJwtLoading,
+    accessTokenJwtCustomizer,
+    clientCredentialsJwtCustomizer,
+  } = useJwtCustomizer();
+
+  // DEV: ID token claims configuration
+  const {
+    data: idTokenConfig,
+    isLoading: isIdTokenLoading,
+    updateConfig: updateIdTokenConfig,
+  } = useIdTokenConfig({ enabled: isDevFeaturesEnabled });
+
+  const isLoading = isJwtLoading || (isDevFeaturesEnabled && isIdTokenLoading);
+
+  // Local state for ID token claims editing
+  const [enabledClaims, setEnabledClaims] = useState<ExtendedIdTokenClaim[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Initialize local state when data is loaded
+  if (isDevFeaturesEnabled && !isInitialized && idTokenConfig) {
+    setEnabledClaims(idTokenConfig.enabledExtendedClaims ?? []);
+    setIsInitialized(true);
+  }
+
+  // Check if there are unsaved changes
+  const hasChanges = useMemo(() => {
+    if (!isDevFeaturesEnabled || !idTokenConfig) {
+      return false;
+    }
+    const originalClaims = idTokenConfig.enabledExtendedClaims ?? [];
+    if (originalClaims.length !== enabledClaims.length) {
+      return true;
+    }
+    return !originalClaims.every((claim) => enabledClaims.includes(claim));
+  }, [idTokenConfig, enabledClaims]);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      await updateIdTokenConfig({ enabledExtendedClaims: enabledClaims });
+      toast.success(t('general.saved'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDiscard = () => {
+    setEnabledClaims(idTokenConfig?.enabledExtendedClaims ?? []);
+  };
 
   return (
     <main className={styles.mainContent}>
       <CardTitle
         paywall={cond(!isPaidTenant && latestProPlanId)}
         title="jwt_claims.title"
-        subtitle="jwt_claims.description"
+        subtitle={
+          isDevFeaturesEnabled ? 'jwt_claims.description_with_id_token' : 'jwt_claims.description'
+        }
         learnMoreLink={{
           href: getDocumentationUrl('/docs/recipes/custom-jwt'),
           targetBlank: 'noopener',
@@ -56,13 +114,20 @@ function CustomizeJwt() {
       <div className={styles.container}>
         {isLoading && (
           <>
-            <FormCardSkeleton formFieldCount={1} />
-            <FormCardSkeleton formFieldCount={1} />
+            <FormCardSkeleton formFieldCount={2} />
+            {isDevFeaturesEnabled && <FormCardSkeleton formFieldCount={1} />}
           </>
         )}
         {!isLoading && (
           <>
-            <FormCard title="jwt_claims.user_jwt.card_title">
+            <FormCard
+              title="jwt_claims.access_token.card_title"
+              description="jwt_claims.access_token.card_description"
+              learnMoreLink={{
+                href: getDocumentationUrl('/docs/recipes/custom-jwt'),
+                targetBlank: 'noopener',
+              }}
+            >
               <FormField title="jwt_claims.user_jwt.card_field">
                 <div className={styles.description}>
                   {t('jwt_claims.user_jwt.card_description')}
@@ -79,8 +144,6 @@ function CustomizeJwt() {
                   />
                 )}
               </FormField>
-            </FormCard>
-            <FormCard title="jwt_claims.machine_to_machine_jwt.card_title">
               <FormField title="jwt_claims.machine_to_machine_jwt.card_field">
                 <div className={styles.description}>
                   {t('jwt_claims.machine_to_machine_jwt.card_description')}
@@ -98,6 +161,23 @@ function CustomizeJwt() {
                 )}
               </FormField>
             </FormCard>
+            {/* DEV: ID token claims configuration */}
+            {isDevFeaturesEnabled && (
+              <FormCard
+                title="jwt_claims.id_token.card_title"
+                description="jwt_claims.id_token.card_description"
+                learnMoreLink={{
+                  href: getDocumentationUrl('/docs/recipes/custom-jwt/id-token'),
+                  targetBlank: 'noopener',
+                }}
+              >
+                <IdTokenSection
+                  value={enabledClaims}
+                  isDisabled={showPaywall}
+                  onChange={setEnabledClaims}
+                />
+              </FormCard>
+            )}
           </>
         )}
       </div>
@@ -108,6 +188,13 @@ function CustomizeJwt() {
           setDeleteModalTokenType(undefined);
         }}
       />
+      <SubmitFormChangesActionBar
+        isOpen={hasChanges}
+        isSubmitting={isSubmitting}
+        onSubmit={handleSubmit}
+        onDiscard={handleDiscard}
+      />
+      <UnsavedChangesAlertModal hasUnsavedChanges={hasChanges} />
     </main>
   );
 }

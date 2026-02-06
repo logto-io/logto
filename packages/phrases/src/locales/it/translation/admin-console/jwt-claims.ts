@@ -2,18 +2,31 @@ const jwt_claims = {
   title: 'JWT personalizzato',
   description:
     'Imposta richieste JWT personalizzate da includere nel token di accesso. Queste richieste possono essere utilizzate per passare informazioni aggiuntive alla tua applicazione.',
+  description_with_id_token:
+    'Personalizza il token di accesso o token ID, fornendo informazioni aggiuntive alla tua applicazione.',
+  access_token: {
+    card_title: 'Token di accesso',
+    card_description:
+      'Il token di accesso è la credenziale utilizzata dalle API per autorizzare le richieste, contenente solo le richieste necessarie per le decisioni di accesso.',
+  },
   user_jwt: {
-    card_title: 'Per utente',
     card_field: 'Token di accesso utente',
     card_description:
       "Aggiungi dati specifici dell'utente durante l'emissione del token di accesso.",
     for: 'per utente',
   },
   machine_to_machine_jwt: {
-    card_title: 'Per M2M',
-    card_field: 'Token da macchina a macchina',
+    card_field: 'Token di accesso da macchina a macchina',
     card_description: "Aggiungi dati extra durante l'emissione del token da macchina a macchina.",
     for: 'per M2M',
+  },
+  id_token: {
+    card_title: 'Token ID',
+    card_description:
+      "Il token ID è un'asserzione di identità ricevuta dopo l'accesso, contenente richieste di identità utente per il client da utilizzare per la visualizzazione o la creazione di sessioni.",
+    card_field: 'Token ID utente',
+    card_field_description:
+      "Le richieste OIDC standard (ad es. sub, email, profile) sono sempre disponibili, mentre le richieste definite da Logto devono prima essere abilitate qui. In entrambi i casi, devi richiedere gli scopes corrispondenti durante l'integrazione dell'app per riceverli.",
   },
   code_editor_title: 'Personalizza le richieste {{token}}',
   custom_jwt_create_button: 'Aggiungi richieste personalizzate',
