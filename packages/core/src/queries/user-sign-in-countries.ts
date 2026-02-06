@@ -5,6 +5,14 @@ import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(UserSignInCountries);
 
+/**
+ * Create queries for user sign-in country records.
+ *
+ * @remarks
+ * The `country` value stored and returned here is an ISO 3166-1 alpha-2 country code
+ * derived from request context (e.g., edge-provided signals). It is not a political
+ * statement or a special designation for disputed regions.
+ */
 export const createUserSignInCountriesQueries = (pool: CommonQueryMethods) => {
   const upsertUserSignInCountry = async (userId: string, country?: string) => {
     if (!country) {
