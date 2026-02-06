@@ -316,7 +316,7 @@ export default function initOidc(
 
           // Get the ID token config to determine which extended claims are enabled
           const idTokenConfig =
-            use === 'id_token' ? await logtoConfigs.getIdTokenConfig() : undefined;
+            use === 'id_token' ? await queries.logtoConfigs.getIdTokenConfig() : undefined;
 
           const acceptedClaims = getAcceptedUserClaims({
             use,

@@ -8,17 +8,22 @@ import {
   type LogtoOidcConfigKey,
   type OidcConfigKey,
   type LogtoJwtTokenKey,
+  idTokenConfigGuard,
 } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 import { type z } from 'zod';
 
+import { type WellKnownCache } from '#src/caches/well-known.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
-export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
+export const createLogtoConfigQueries = (
+  pool: CommonQueryMethods,
+  wellKnownCache: WellKnownCache
+) => {
   const getAdminConsoleConfig = async () =>
     pool.one<Record<string, unknown>>(sql`
       select ${fields.value} from ${table}
@@ -82,6 +87,16 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
 
   const deleteJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) => deleteRowByKey(key);
 
+  const getIdTokenConfig = wellKnownCache.memoize(async () => {
+    const { rows } = await getRowsByKeys([LogtoTenantConfigKey.IdToken]);
+
+    if (rows.length === 0) {
+      return null;
+    }
+
+    return idTokenConfigGuard.parse(rows[0]?.value);
+  }, ['id-token-config']);
+
   return {
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
@@ -90,5 +105,6 @@ export const createLogtoConfigQueries = (pool: CommonQueryMethods) => {
     updateOidcConfigsByKey,
     upsertJwtCustomizer,
     deleteJwtCustomizer,
+    getIdTokenConfig,
   };
 };

@@ -6,6 +6,7 @@ import {
 } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
+import { MockWellKnownCache } from '#src/test-utils/tenant.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 import { expectSqlAssert, type QueryType } from '#src/utils/test-utils.js';
 
@@ -27,7 +28,7 @@ const {
   getRowsByKeys,
   updateAdminConsoleConfig,
   updateOidcConfigsByKey,
-} = createLogtoConfigQueries(pool);
+} = createLogtoConfigQueries(pool, new MockWellKnownCache());
 
 describe('connector queries', () => {
   const { table, fields } = convertToIdentifiers(LogtoConfigs);
