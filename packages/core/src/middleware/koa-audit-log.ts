@@ -166,7 +166,7 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         headers: { 'user-agent': userAgent },
       } = ctx.request;
       const { isDevFeaturesEnabled } = EnvSet.values;
-      const injectedHeaders = conditional(
+      const signInContext = conditional(
         isDevFeaturesEnabled && getInjectedHeaderValues(ctx.request.headers)
       );
       const userAgentValue: Optional<string> =
@@ -187,7 +187,7 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         ip,
         userAgent: userAgentValue,
         ...conditional(userAgentParsed && { userAgentParsed }),
-        ...conditional(injectedHeaders && { injectedHeaders }),
+        ...conditional(signInContext && { signInContext }),
       });
 
       await Promise.all(
