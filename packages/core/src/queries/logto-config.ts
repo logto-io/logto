@@ -3,6 +3,7 @@ import {
   LogtoConfigs,
   LogtoTenantConfigKey,
   type AdminConsoleData,
+  type IdTokenConfig,
   type LogtoConfig,
   type LogtoConfigKey,
   type LogtoOidcConfigKey,
@@ -97,6 +98,17 @@ export const createLogtoConfigQueries = (
     return idTokenConfigGuard.parse(rows[0]?.value);
   }, ['id-token-config']);
 
+  const upsertIdTokenConfig = wellKnownCache.mutate(
+    async (value: IdTokenConfig) =>
+      pool.one<Record<string, unknown>>(sql`
+        insert into ${table} (${fields.key}, ${fields.value})
+          values (${LogtoTenantConfigKey.IdToken}, ${sql.jsonb(value)})
+          on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(value)}
+          returning ${fields.value}
+      `),
+    ['id-token-config']
+  );
+
   return {
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
@@ -106,5 +118,6 @@ export const createLogtoConfigQueries = (
     upsertJwtCustomizer,
     deleteJwtCustomizer,
     getIdTokenConfig,
+    upsertIdTokenConfig,
   };
 };

@@ -27,7 +27,11 @@ const methodToVerb = Object.freeze({
 
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
-const devFeatureCustomRoutes: RouteDictionary = Object.freeze({});
+const devFeatureCustomRoutes: RouteDictionary = Object.freeze({
+  // DEV: ID token claims configuration
+  'get /configs/id-token': 'GetIdTokenConfig',
+  'put /configs/id-token': 'UpsertIdTokenConfig',
+});
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Authn
