@@ -84,17 +84,15 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(
 
   experienceRoutes(router, libraries);
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.get(
-      '/.well-known/account-center',
-      koaGuard({
-        response: AccountCenters.guard,
-        status: 200,
-      }),
-      async (ctx, next) => {
-        ctx.body = await findDefaultAccountCenter();
-        return next();
-      }
-    );
-  }
+  router.get(
+    '/.well-known/account-center',
+    koaGuard({
+      response: AccountCenters.guard,
+      status: 200,
+    }),
+    async (ctx, next) => {
+      ctx.body = await findDefaultAccountCenter();
+      return next();
+    }
+  );
 }

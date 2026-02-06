@@ -13,11 +13,9 @@ import FormCard from '@/components/FormCard';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import UserInfoCard from '@/components/UserInfoCard';
 import { adminTenantEndpoint, meApi, storageKeys } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import ImageWithErrorFallback from '@/ds-components/ImageWithErrorFallback';
 import { useStaticApi } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
-import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 
 import { useNavigateToAccountCenter } from '../../hooks';
@@ -36,7 +34,6 @@ type Props = {
 
 function LinkAccountSection({ user, connectors, onUpdate }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { navigate } = useTenantPathname();
   const navigateToAccountCenter = useNavigateToAccountCenter();
   const theme = useTheme();
   const { show: showConfirm } = useConfirmModal();
@@ -154,13 +151,7 @@ function LinkAccountSection({ user, connectors, onUpdate }: Props) {
             action: {
               name: user.primaryEmail ? 'profile.change' : 'profile.link',
               handler: () => {
-                if (isDevFeaturesEnabled) {
-                  navigateToAccountCenter('/account/email');
-                  return;
-                }
-                navigate('link-email', {
-                  state: { email: user.primaryEmail, action: 'changeEmail' },
-                });
+                navigateToAccountCenter('/account/email');
               },
             },
           },

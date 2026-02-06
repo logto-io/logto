@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import { adminTenantEndpoint, meApi } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextInput from '@/ds-components/TextInput';
@@ -88,11 +87,11 @@ function BasicUserInfoUpdateModal({ field, value: initialValue, isOpen, onClose 
     clearErrors();
     void handleSubmit(async (data) => {
       try {
-        // Use Account API for name and username fields when dev features enabled,
-        // Me API for avatar (image upload not supported in Account API yet) and fallback
-        await (isDevFeaturesEnabled && field !== 'avatar'
-          ? accountApi.patch('', { json: { [field]: data[field] } })
-          : meApi_.patch('me', { json: { [field]: data[field] } }));
+        // Use Account API for name and username fields,
+        // Me API for avatar (image upload not supported in Account API yet).
+        await (field === 'avatar'
+          ? meApi_.patch('me', { json: { [field]: data[field] } })
+          : accountApi.patch('', { json: { [field]: data[field] } }));
         toast.success(t('profile.updated', { target: t(`profile.settings.${field}`) }));
         onClose();
       } catch (error: unknown) {

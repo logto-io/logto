@@ -49,9 +49,8 @@
     },
     "/api/.well-known/account-center": {
       "get": {
-        "tags": ["Dev feature"],
         "summary": "Get default account center",
-        "description": "Get the default account center configuration. Available only when developer features are enabled.",
+        "description": "Get the default account center configuration.",
         "responses": {
           "200": {
             "description": "The default account center configuration."
