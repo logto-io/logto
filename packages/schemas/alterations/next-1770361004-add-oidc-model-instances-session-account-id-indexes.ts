@@ -10,7 +10,7 @@ const alteration: AlterationScript = {
         on oidc_model_instances (tenant_id, expires_at);
     `);
 
-    // Add index to optimize the query performance for query not expired session instances by accountId.
+    // Add index to optimize the query performance for querying non-expired session instances by accountId.
     await pool.query(sql`
       create index concurrently oidc_model_instances__session_payload_account_id_expires_at
         ON oidc_model_instances (tenant_id, (payload->>'accountId'), expires_at)
