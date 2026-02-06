@@ -12,7 +12,7 @@ export type IpRiskSignals = {
 };
 
 type CurrentLocation = {
-  country?: string;
+  regionOrCountry?: string;
   city?: string;
   latitude?: number;
   longitude?: number;
@@ -24,31 +24,36 @@ export type AdaptiveMfaContext = {
 };
 
 export enum AdaptiveMfaRule {
-  NewCountry = 'new_country',
+  NewRegionOrCountry = 'new_region_or_country',
   GeoVelocity = 'geo_velocity',
   LongInactivity = 'long_inactivity',
   UntrustedIp = 'untrusted_ip',
 }
 
+export type RecentRegionOrCountry = {
+  regionOrCountry: string;
+  lastSignInAt: UserSignInCountry['lastSignInAt'];
+};
+
 export type TriggeredRule =
   | {
-      rule: AdaptiveMfaRule.NewCountry;
+      rule: AdaptiveMfaRule.NewRegionOrCountry;
       details: {
-        currentCountry: string;
+        currentRegionOrCountry: string;
         windowDays: number;
-        recentCountries?: Array<Pick<UserSignInCountry, 'country' | 'lastSignInAt'>>;
+        recentRegionsOrCountries?: RecentRegionOrCountry[];
       };
     }
   | {
       rule: AdaptiveMfaRule.GeoVelocity;
       details: {
         previous: {
-          country?: Pick<UserSignInCountry, 'country' | 'lastSignInAt'>;
+          regionOrCountry?: RecentRegionOrCountry;
           city?: string;
           at?: string;
         };
         current: {
-          country?: string;
+          regionOrCountry?: string;
           city?: string;
           at?: string;
         };
@@ -96,4 +101,4 @@ export type AdaptiveMfaEvaluationState = {
   context?: AdaptiveMfaContext;
 };
 
-export type RecentCountry = Pick<UserSignInCountry, 'country' | 'lastSignInAt'>;
+export type RecentRegionOrCountrySource = Pick<UserSignInCountry, 'country' | 'lastSignInAt'>;

@@ -1,4 +1,4 @@
-export const adaptiveMfaNewCountryWindowDays = 180;
+export const adaptiveMfaRegionOrCountryWindowDays = 180;
 export const adaptiveMfaGeoVelocityThresholdKmh = 900;
 export const adaptiveMfaLongInactivityThresholdDays = 30;
 export const adaptiveMfaMinBotScore = 30;

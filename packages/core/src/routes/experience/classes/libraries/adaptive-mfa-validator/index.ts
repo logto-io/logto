@@ -2,38 +2,37 @@ import { InteractionEvent, type User, type UserGeoLocation } from '@logto/schema
 import { conditional, type Nullable, type Optional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { type WithLogContext, type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 
 import type { SignInExperienceValidator } from '../sign-in-experience-validator.js';
 
-import { adaptiveMfaNewCountryWindowDays } from './constants.js';
+import { adaptiveMfaRegionOrCountryWindowDays } from './constants.js';
 import { parseAdaptiveMfaContext } from './context.js';
 import type { AdaptiveMfaRuleValidator, RuleDependencies } from './rules/base-rule.js';
 import { GeoVelocityRule } from './rules/geo-velocity.js';
 import { LongInactivityRule } from './rules/long-inactivity.js';
-import { NewCountryRule } from './rules/new-country.js';
+import { NewRegionOrCountryRule } from './rules/new-region-or-country.js';
 import { UntrustedIpRule } from './rules/untrusted-ip.js';
 import type {
   AdaptiveMfaContext,
+  AdaptiveMfaEvaluationOptions,
   AdaptiveMfaEvaluationState,
-  AdaptiveMfaInteractionContext,
   AdaptiveMfaRule,
   AdaptiveMfaResult,
+  AdaptiveMfaValidatorContext,
   AdaptiveMfaValidatorOptions,
-  RecentCountry,
+  RecentRegionOrCountrySource,
   TriggeredRule,
 } from './types.js';
 
-export { adaptiveMfaNewCountryWindowDays } from './constants.js';
+export { adaptiveMfaRegionOrCountryWindowDays } from './constants.js';
 
 export class AdaptiveMfaValidator {
   private readonly queries: Pick<Queries, 'userGeoLocations' | 'userSignInCountries'>;
   private readonly signInExperienceValidator: SignInExperienceValidator;
-  private readonly interactionContext: AdaptiveMfaInteractionContext;
-  private readonly ctx?: WithLogContext;
-  private readonly recentCountriesCache = new Map<string, RecentCountry[]>();
+  private readonly ctx?: AdaptiveMfaValidatorContext;
+  private readonly recentRegionsOrCountriesCache = new Map<string, RecentRegionOrCountrySource[]>();
   private readonly ruleValidators: Array<AdaptiveMfaRuleValidator<AdaptiveMfaRule>>;
 
   private readonly userGeoLocationCache = new Map<string, Nullable<UserGeoLocation>>();
@@ -41,24 +40,18 @@ export class AdaptiveMfaValidator {
   private adaptiveMfaContext?: AdaptiveMfaContext;
   private isAdaptiveMfaEnabledCache?: boolean;
 
-  constructor({
-    queries,
-    signInExperienceValidator,
-    interactionContext,
-    ctx,
-  }: AdaptiveMfaValidatorOptions) {
+  constructor({ queries, signInExperienceValidator, ctx }: AdaptiveMfaValidatorOptions) {
     this.queries = queries;
     this.signInExperienceValidator = signInExperienceValidator;
-    this.interactionContext = interactionContext;
     this.ctx = ctx;
 
     const ruleDependencies: RuleDependencies = {
-      getRecentCountries: async (user: User) => this.getRecentCountries(user),
+      getRecentRegionsOrCountries: async (user: User) => this.getRecentRegionsOrCountries(user),
       getUserGeoLocation: async (user: User) => this.getUserGeoLocation(user),
     };
 
     this.ruleValidators = [
-      new NewCountryRule(ruleDependencies),
+      new NewRegionOrCountryRule(ruleDependencies),
       new GeoVelocityRule(ruleDependencies),
       new LongInactivityRule(ruleDependencies),
       new UntrustedIpRule(ruleDependencies),
@@ -76,53 +69,25 @@ export class AdaptiveMfaValidator {
     await this.persistContext(user);
   }
 
-  public async getResult(log?: LogEntry): Promise<Optional<AdaptiveMfaResult>> {
+  public async getResult(
+    user: User,
+    options: AdaptiveMfaEvaluationOptions = {}
+  ): Promise<Optional<AdaptiveMfaResult>> {
     if (!(await this.isAdaptiveMfaEnabled())) {
       return;
     }
 
-    const adaptiveMfaContext = this.getCurrentContext();
-
-    log?.append({
-      adaptiveMfaContext,
-    });
-
-    const user = await this.interactionContext.getIdentifiedUser();
-    const state = this.buildEvaluationState(user);
-    const result = await this.evaluateRules(state);
-
-    log?.append({
-      adaptiveMfaResult: result,
-    });
-
-    return result;
+    const state = this.buildEvaluationState(user, options);
+    return this.evaluateRules(state);
   }
 
-  public getSignInContext(): Optional<Record<string, string>> {
+  public getCurrentContext(contextOverride?: AdaptiveMfaContext): Optional<AdaptiveMfaContext> {
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
 
-    if (!this.ctx) {
-      return;
-    }
-
-    const {
-      request: { ip, headers },
-    } = this.ctx;
-
-    const { 'user-agent': userAgent } = headers;
-
-    return {
-      ip,
-      ...conditional(userAgent && { userAgent }),
-      ...getInjectedHeaderValues(headers),
-    };
-  }
-
-  public getCurrentContext(): Optional<AdaptiveMfaContext> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
+    if (contextOverride !== undefined) {
+      return contextOverride;
     }
 
     if (this.adaptiveMfaContext) {
@@ -135,12 +100,20 @@ export class AdaptiveMfaValidator {
     return this.adaptiveMfaContext;
   }
 
-  private async persistContext(user: User) {
+  public getSignInContext(): Optional<Record<string, string>> {
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
 
-    const context = this.getCurrentContext();
+    return conditional(this.ctx && getInjectedHeaderValues(this.ctx.request.headers));
+  }
+
+  private async persistContext(user: User, options: AdaptiveMfaEvaluationOptions = {}) {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    const context = this.getCurrentContext(options.currentContext);
     if (!context) {
       return;
     }
@@ -150,18 +123,18 @@ export class AdaptiveMfaValidator {
       return;
     }
 
-    const { latitude, longitude, country } = location;
+    const { latitude, longitude, regionOrCountry } = location;
     const hasCoordinates = typeof latitude === 'number' && typeof longitude === 'number';
 
     const tasks = [
       ...(hasCoordinates
         ? [this.queries.userGeoLocations.upsertUserGeoLocation(user.id, latitude, longitude)]
         : []),
-      this.queries.userSignInCountries.upsertUserSignInCountry(user.id, country),
+      this.queries.userSignInCountries.upsertUserSignInCountry(user.id, regionOrCountry),
       trySafe(async () =>
         this.queries.userSignInCountries.pruneUserSignInCountriesByUserId(
           user.id,
-          adaptiveMfaNewCountryWindowDays
+          adaptiveMfaRegionOrCountryWindowDays
         )
       ),
     ];
@@ -169,11 +142,14 @@ export class AdaptiveMfaValidator {
     await Promise.all(tasks);
   }
 
-  private buildEvaluationState(user: User): AdaptiveMfaEvaluationState {
+  private buildEvaluationState(
+    user: User,
+    options: AdaptiveMfaEvaluationOptions
+  ): AdaptiveMfaEvaluationState {
     return {
       user,
-      now: new Date(),
-      context: this.getCurrentContext(),
+      now: options.now ?? new Date(),
+      context: this.getCurrentContext(options.currentContext),
     };
   }
 
@@ -195,18 +171,18 @@ export class AdaptiveMfaValidator {
     };
   }
 
-  private async getRecentCountries(user: User) {
-    if (this.recentCountriesCache.has(user.id)) {
-      return this.recentCountriesCache.get(user.id) ?? [];
+  private async getRecentRegionsOrCountries(user: User) {
+    if (this.recentRegionsOrCountriesCache.has(user.id)) {
+      return this.recentRegionsOrCountriesCache.get(user.id) ?? [];
     }
 
-    const recentCountries =
+    const recentRegionsOrCountries =
       await this.queries.userSignInCountries.findRecentSignInCountriesByUserId(
         user.id,
-        adaptiveMfaNewCountryWindowDays
+        adaptiveMfaRegionOrCountryWindowDays
       );
-    this.recentCountriesCache.set(user.id, recentCountries);
-    return recentCountries;
+    this.recentRegionsOrCountriesCache.set(user.id, recentRegionsOrCountries);
+    return recentRegionsOrCountries;
   }
 
   private async getUserGeoLocation(user: User) {
