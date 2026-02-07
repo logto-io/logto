@@ -1,4 +1,5 @@
-import { isBuiltInLanguageTag } from '@logto/phrases-experience';
+import { findSupportedLanguageTag, matchSupportedLanguageTag } from '@logto/language-kit';
+import { builtInLanguages } from '@logto/phrases-experience';
 import { type SignInExperience } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import type { i18n } from 'i18next';
@@ -34,13 +35,19 @@ export const getExperienceLanguage = ({
   customLanguages,
   lng,
 }: GetExperienceLanguage) => {
-  const acceptableLanguages = conditionalArray<string | string[]>(
+  const acceptableLanguageCandidates = conditionalArray<string | string[]>(
     lng?.split(/\s+/).filter(Boolean),
     autoDetect && detectLanguage(ctx),
     fallbackLanguage
   );
-  const language =
-    acceptableLanguages.find((tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)) ??
-    'en';
-  return language;
+  const acceptableLanguages = acceptableLanguageCandidates.flatMap<string>((language) =>
+    Array.isArray(language) ? language : [language]
+  );
+  const { match: customLanguage } = matchSupportedLanguageTag(acceptableLanguages, customLanguages);
+
+  if (customLanguage) {
+    return customLanguage;
+  }
+
+  return findSupportedLanguageTag(acceptableLanguages, builtInLanguages);
 };
