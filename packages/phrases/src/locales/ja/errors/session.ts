@@ -50,6 +50,7 @@ const session = {
     pending_info_not_found:
       '保留中のパスキーサインイン情報が見つかりません。サインインフローを再開始してください。',
     conflict_rp_id: 'Relying Party ID が一致しません。正しいクライアントでサインインしてください。',
+    sso_users_not_allowed: 'パスキーサインインオプションは SSO ユーザーには利用できません。',
   },
   sso_enabled:
     'このメールアドレスではシングルサインオンが有効になっています。SSO でサインインしてください。',

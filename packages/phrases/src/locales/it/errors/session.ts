@@ -53,6 +53,7 @@ const session = {
       "Impossibile trovare le informazioni in sospeso per l'accesso con passkey. Riavvia il flusso di accesso.",
     conflict_rp_id:
       "L'ID della Relying Party non corrisponde. Usa il client corretto per accedere.",
+    sso_users_not_allowed: "L'opzione di accesso con passkey non è disponibile per gli utenti SSO.",
   },
   sso_enabled: "L'accesso singolo è abilitato per questa email. Accedi con SSO.",
   captcha_required: 'È richiesto il Captcha.',

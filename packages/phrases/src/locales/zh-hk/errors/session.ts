@@ -40,6 +40,7 @@ const session = {
   passkey_sign_in: {
     pending_info_not_found: '未找到待處理的 Passkey 登入資訊。請重新啟動登入流程。',
     conflict_rp_id: 'Relying Party ID 不相符。請使用正確的用戶端登入。',
+    sso_users_not_allowed: 'SSO 用戶無法使用 Passkey 登入選項。',
   },
   sso_enabled: '該郵箱已開啟單點登錄，請使用 SSO 登錄。',
   captcha_required: '需要 Captcha。',

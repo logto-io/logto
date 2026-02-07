@@ -51,6 +51,7 @@ const session = {
       'Bekleyen passkey oturum açma bilgisi bulunamadı. Lütfen oturum açma akışını yeniden başlatın.',
     conflict_rp_id:
       'Relying Party ID eşleşmiyor. Lütfen oturum açmak için doğru istemciyi kullanın.',
+    sso_users_not_allowed: 'Passkey ile oturum açma seçeneği SSO kullanıcıları için kullanılamaz.',
   },
   sso_enabled: 'Bu e-posta için tek oturum açma etkin. Lütfen SSO ile oturum açın.',
   captcha_required: 'Captcha gereklidir.',

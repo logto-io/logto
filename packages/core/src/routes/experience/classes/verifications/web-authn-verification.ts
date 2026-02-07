@@ -320,10 +320,13 @@ export class SignInWebAuthnVerification
     assertThat(this.authenticationRpId === hostname, 'session.passkey_sign_in.conflict_rp_id');
 
     const { findUserByWebAuthnCredential, updateUserById } = this.queries.users;
+    const { findUserSsoIdentitiesByUserId } = this.queries.userSsoIdentities;
 
     // Find user by credential ID and rpId
     const user = await findUserByWebAuthnCredential(payload.id, this.authenticationRpId);
     assertThat(user, 'session.mfa.webauthn_verification_failed');
+    const ssoIdentities = await findUserSsoIdentitiesByUserId(user.id);
+    assertThat(ssoIdentities.length === 0, 'session.passkey_sign_in.sso_users_not_allowed');
 
     const { id: userId, mfaVerifications } = user;
     const { result, newCounter } = await verifyWebAuthnAuthentication({

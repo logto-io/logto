@@ -516,7 +516,7 @@ export default class ExperienceInteraction {
       hasVerifiedSsoIdentity: this.hasVerifiedSsoIdentity,
     });
 
-    if (EnvSet.values.isDevFeaturesEnabled) {
+    if (EnvSet.values.isDevFeaturesEnabled && !this.hasVerifiedSsoIdentity) {
       // Check if passkey sign-in is enabled in the sign-in experience, if yes, check if user has `WebAuthn`
       // type of MFA verification record in `users.mfaVerifications`.
       const signInExperience = await signInExperienceQueries.findDefaultSignInExperience();

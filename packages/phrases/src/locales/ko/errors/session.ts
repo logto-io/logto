@@ -48,6 +48,7 @@ const session = {
       '대기 중인 패스키 로그인 정보를 찾을 수 없습니다. 로그인 흐름을 다시 시작해 주세요.',
     conflict_rp_id:
       'Relying Party ID가 일치하지 않습니다. 올바른 클라이언트를 사용해 로그인해 주세요.',
+    sso_users_not_allowed: 'SSO 사용자는 패스키 로그인 옵션을 사용할 수 없습니다.',
   },
   sso_enabled: '이 이메일로는 SSO가 활성화되어 있어요. SSO로 로그인해 주세요.',
   captcha_required: 'Captcha 가 필요해요.',
