@@ -14,7 +14,16 @@ export const userPasskeySignInDataKey = 'passkey_sign_in';
  * Schema for MFA-related data stored in user's logto_config
  */
 export const userMfaDataGuard = z.object({
+  /**
+   * Whether the user has skipped MFA binding flow
+   */
   skipped: z.boolean().optional(),
+  /**
+   * Whether the user has skipped MFA verification on sign-in
+   *
+   * Users can manually disable MFA verification requirement for sign-in,
+   * but if the MFA policy is set to mandatory, this setting will be ignored.
+   */
   skipMfaOnSignIn: z.boolean().optional(),
 });
 
