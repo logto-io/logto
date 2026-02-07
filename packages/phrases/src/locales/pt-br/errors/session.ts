@@ -53,6 +53,7 @@ const session = {
       'Não foi possível encontrar as informações pendentes de login com passkey. Inicie o fluxo de login novamente.',
     conflict_rp_id:
       'O ID da Relying Party não corresponde. Use o cliente correto para fazer login.',
+    sso_users_not_allowed: 'A opção de login com passkey não está disponível para usuários SSO.',
   },
   sso_enabled:
     'O login único está habilitado para este e-mail fornecido. Faça login com SSO, por favor.',

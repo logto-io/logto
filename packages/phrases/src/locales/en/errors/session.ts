@@ -49,6 +49,7 @@ const session = {
     pending_info_not_found:
       'Pending passkey sign-in info not found. Please re-initiate the sign-in flow.',
     conflict_rp_id: 'Relying Party ID does not match. Please use the correct client to sign in.',
+    sso_users_not_allowed: 'Passkey sign-in option is not eligible for SSO users.',
   },
   sso_enabled: 'Single sign on is enabled for this given email. Please sign in with SSO.',
   captcha_required: 'Captcha is required.',

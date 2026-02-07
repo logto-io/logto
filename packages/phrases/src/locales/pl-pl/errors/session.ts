@@ -52,6 +52,8 @@ const session = {
       'Nie znaleziono oczekujących informacji logowania passkey. Uruchom ponownie proces logowania.',
     conflict_rp_id:
       'Identyfikator Relying Party nie pasuje. Użyj właściwego klienta, aby się zalogować.',
+    sso_users_not_allowed:
+      'Opcja logowania za pomocą passkey nie jest dostępna dla użytkowników SSO.',
   },
   sso_enabled: 'Single sign on jest włączony dla tego adresu e-mail. Zaloguj się za pomocą SSO.',
   captcha_required: 'Wymagana jest captcha.',

@@ -56,6 +56,8 @@ const session = {
       'Impossible de trouver les informations de connexion par passkey en attente. Veuillez relancer le flux de connexion.',
     conflict_rp_id:
       "L'ID de la partie de confiance (Relying Party) ne correspond pas. Veuillez utiliser le bon client pour vous connecter.",
+    sso_users_not_allowed:
+      "L'option de connexion par passkey n'est pas disponible pour les utilisateurs SSO.",
   },
   sso_enabled:
     'La connexion unique est activée pour cet e-mail donné. Veuillez vous connecter avec SSO.',
