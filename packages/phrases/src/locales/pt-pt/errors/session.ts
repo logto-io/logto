@@ -55,6 +55,8 @@ const session = {
       'Não foi possível encontrar as informações pendentes de início de sessão com passkey. Volte a iniciar o fluxo de início de sessão.',
     conflict_rp_id:
       'O ID da Relying Party não corresponde. Utilize o cliente correto para iniciar sessão.',
+    sso_users_not_allowed:
+      'A opção de início de sessão com passkey não está disponível para utilizadores SSO.',
   },
   sso_enabled:
     'O login único está habilitado para este e-mail fornecido. Faça login com SSO, por favor.',

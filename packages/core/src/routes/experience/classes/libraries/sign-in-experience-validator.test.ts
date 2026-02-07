@@ -19,6 +19,7 @@ import { type VerificationRecord } from '../verifications/index.js';
 import { OneTimeTokenVerification } from '../verifications/one-time-token-verification.js';
 import { PasswordVerification } from '../verifications/password-verification.js';
 import { SocialVerification } from '../verifications/social-verification.js';
+import { SignInWebAuthnVerification } from '../verifications/web-authn-verification.js';
 
 import { SignInExperienceValidator } from './sign-in-experience-validator.js';
 
@@ -399,6 +400,132 @@ describe('SignInExperienceValidator', () => {
           socialVerificationRecord
         )
       ).rejects.toMatchError(expectError);
+    });
+
+    it('should throw when SSO user tries to sign in with passkey', async () => {
+      const findUserSsoIdentitiesByUserId = jest.fn().mockResolvedValue([
+        {
+          id: 'sso-identity-id',
+          userId: 'mock_user_id',
+          connectorId: 'sso-connector',
+          identityId: 'sub-1',
+        },
+      ]);
+
+      const tenantWithSsoIdentities = new MockTenant(
+        undefined,
+        {
+          signInExperiences,
+          userSsoIdentities: { findUserSsoIdentitiesByUserId },
+        },
+        undefined,
+        { ssoConnectors }
+      );
+
+      signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        passkeySignIn: { enabled: true, showPasskeyButton: true, allowAutofill: false },
+      });
+
+      const signInWebAuthnVerification = new SignInWebAuthnVerification(
+        tenantWithSsoIdentities.libraries,
+        tenantWithSsoIdentities.queries,
+        {
+          id: 'sign-in-webauthn-id',
+          type: VerificationType.SignInWebAuthn,
+          verified: true,
+          userId: 'mock_user_id',
+          authenticationChallenge: 'challenge',
+          authenticationRpId: 'example.com',
+        }
+      );
+
+      const signInExperienceValidator = new SignInExperienceValidator(
+        tenantWithSsoIdentities.libraries,
+        tenantWithSsoIdentities.queries
+      );
+
+      await expect(
+        signInExperienceValidator.guardIdentificationMethod(
+          InteractionEvent.SignIn,
+          signInWebAuthnVerification
+        )
+      ).rejects.toMatchError(new RequestError('session.passkey_sign_in.sso_users_not_allowed'));
+    });
+
+    it('should not throw when non-SSO user signs in with passkey', async () => {
+      const findUserSsoIdentitiesByUserId = jest.fn().mockResolvedValue([]);
+
+      const tenantWithSsoIdentities = new MockTenant(
+        undefined,
+        {
+          signInExperiences,
+          userSsoIdentities: { findUserSsoIdentitiesByUserId },
+        },
+        undefined,
+        { ssoConnectors }
+      );
+
+      signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        passkeySignIn: { enabled: true, showPasskeyButton: true, allowAutofill: false },
+      });
+
+      const signInWebAuthnVerification = new SignInWebAuthnVerification(
+        tenantWithSsoIdentities.libraries,
+        tenantWithSsoIdentities.queries,
+        {
+          id: 'sign-in-webauthn-id',
+          type: VerificationType.SignInWebAuthn,
+          verified: true,
+          userId: 'mock_user_id',
+          authenticationChallenge: 'challenge',
+          authenticationRpId: 'example.com',
+        }
+      );
+
+      const signInExperienceValidator = new SignInExperienceValidator(
+        tenantWithSsoIdentities.libraries,
+        tenantWithSsoIdentities.queries
+      );
+
+      await expect(
+        signInExperienceValidator.guardIdentificationMethod(
+          InteractionEvent.SignIn,
+          signInWebAuthnVerification
+        )
+      ).resolves.not.toThrow();
+    });
+
+    it('should throw when passkey sign-in user has no userId', async () => {
+      signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        passkeySignIn: { enabled: true, showPasskeyButton: true, allowAutofill: false },
+      });
+
+      const signInWebAuthnVerification = new SignInWebAuthnVerification(
+        mockTenant.libraries,
+        mockTenant.queries,
+        {
+          id: 'sign-in-webauthn-id',
+          type: VerificationType.SignInWebAuthn,
+          verified: true,
+          authenticationChallenge: 'challenge',
+          authenticationRpId: 'example.com',
+        }
+      );
+
+      const signInExperienceValidator = new SignInExperienceValidator(
+        mockTenant.libraries,
+        mockTenant.queries
+      );
+
+      await expect(
+        signInExperienceValidator.guardIdentificationMethod(
+          InteractionEvent.SignIn,
+          signInWebAuthnVerification
+        )
+      ).rejects.toMatchError(new RequestError('session.identifier_not_found'));
     });
   });
 

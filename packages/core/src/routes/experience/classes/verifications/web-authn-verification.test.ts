@@ -36,7 +36,9 @@ await mockEsmWithActual('@simplewebauthn/server/helpers', () => ({
   isoBase64URL: { fromBuffer: jest.fn((value) => value), toBuffer: jest.fn((value) => value) },
 }));
 
-const { WebAuthnVerification } = await import('./web-authn-verification.js');
+const { WebAuthnVerification, SignInWebAuthnVerification } = await import(
+  './web-authn-verification.js'
+);
 
 describe('WebAuthnVerification', () => {
   const userId = mockUser.id;
@@ -159,6 +161,63 @@ describe('WebAuthnVerification', () => {
           }),
         ],
       });
+    });
+  });
+});
+
+describe('SignInWebAuthnVerification', () => {
+  const rpId = 'example.com';
+
+  const findUserById = jest.fn().mockResolvedValue(mockUser);
+  const updateUserById = jest.fn();
+  const findUserByWebAuthnCredential = jest.fn().mockResolvedValue({
+    ...mockUser,
+    mfaVerifications: [mockUserWebAuthnMfaVerification],
+  });
+  const findDefaultAccountCenter = jest
+    .fn()
+    .mockResolvedValue({ webauthnRelatedOrigins: [] as string[] });
+
+  const tenant = new MockTenant(undefined, {
+    users: { findUserById, updateUserById, findUserByWebAuthnCredential },
+    accountCenters: { findDefaultAccountCenter },
+  });
+
+  const baseCtx: WithLogContext = {
+    ...createContextWithRouteParameters({
+      url: '/path',
+      encrypted: true,
+      host: rpId,
+    }),
+    ...createMockLogContext(),
+    URL: new URL(`https://${rpId}/path`),
+  } as unknown as WithLogContext;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    findUserByWebAuthnCredential.mockResolvedValue({
+      ...mockUser,
+      mfaVerifications: [mockUserWebAuthnMfaVerification],
+    });
+  });
+
+  describe('verifyWebAuthnAuthentication', () => {
+    it('should succeed for passkey sign-in verification', async () => {
+      const verification = new SignInWebAuthnVerification(tenant.libraries, tenant.queries, {
+        id: 'v-id',
+        type: VerificationType.SignInWebAuthn,
+        verified: false,
+        authenticationChallenge: 'auth-challenge',
+        authenticationRpId: rpId,
+      });
+
+      await verification.verifyWebAuthnAuthentication(baseCtx, {
+        ...mockWebAuthnVerificationPayload,
+        id: mockUserWebAuthnMfaVerification.credentialId,
+      });
+
+      expect(verification.isVerified).toBe(true);
+      expect(updateUserById).toHaveBeenCalled();
     });
   });
 });
