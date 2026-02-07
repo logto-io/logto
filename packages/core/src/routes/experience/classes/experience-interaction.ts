@@ -344,12 +344,13 @@ export default class ExperienceInteraction {
    *
    * @remarks
    * - EnterpriseSso verified interaction does not require MFA verification.
+   * - Users signing in with passkey does not require MFA verification.
    *
    * @throws {RequestError} with 404 if the if the user is not identified or not found
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
   public async guardMfaVerificationStatus(log?: LogEntry) {
-    if (this.hasVerifiedSsoIdentity) {
+    if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInWebAuthn) {
       return;
     }
 
@@ -738,6 +739,13 @@ export default class ExperienceInteraction {
   private get hasVerifiedSocialIdentity() {
     const socialVerificationRecord = this.verificationRecords.get(VerificationType.Social);
     return Boolean(socialVerificationRecord?.isVerified);
+  }
+
+  private get hasVerifiedSignInWebAuthn() {
+    const webAuthnVerificationRecord = this.verificationRecords.get(
+      VerificationType.SignInWebAuthn
+    );
+    return Boolean(webAuthnVerificationRecord?.isVerified);
   }
 
   /**
