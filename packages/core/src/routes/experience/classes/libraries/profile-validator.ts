@@ -200,16 +200,22 @@ export class ProfileValidator {
 
   public async hasMissingExtraProfileFields(profile: InteractionProfile, user?: User) {
     const customProfileFields = await this.queries.customProfileFields.findAllCustomProfileFields();
-    const mandatoryCustomProfileFieldNames = customProfileFields
-      .filter(({ required }) => required)
-      .reduce((accumulator, currentField) => {
-        if (currentField.name === 'fullname') {
-          return [...accumulator, ...(currentField.config.parts?.map(({ name }) => name) ?? [])];
-        }
-        return [...accumulator, currentField.name];
-      }, new Array<string>());
 
-    for (const name of mandatoryCustomProfileFieldNames) {
+    // Return false early if there are no custom profile fields defined
+    if (customProfileFields.length === 0) {
+      return false;
+    }
+
+    // Get all custom profile field names (both required and optional)
+    // to allow users to fill optional fields during signup
+    const customProfileFieldNames = customProfileFields.reduce((accumulator, currentField) => {
+      if (currentField.name === 'fullname') {
+        return [...accumulator, ...(currentField.config.parts?.map(({ name }) => name) ?? [])];
+      }
+      return [...accumulator, currentField.name];
+    }, new Array<string>());
+
+    for (const name of customProfileFieldNames) {
       const foundInUser =
         this.hasField(user, name) ||
         this.hasField(user?.profile, name) ||
