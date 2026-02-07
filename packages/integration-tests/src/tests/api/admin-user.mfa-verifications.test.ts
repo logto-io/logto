@@ -61,19 +61,47 @@ describe('admin console user management (mfa verifications)', () => {
     const user = await createUserByAdmin();
 
     const config = await getUserLogtoConfig(user.id);
-    expect(config.mfa.skipped).toBe(false);
+    expect(config).toEqual({
+      mfa: { skipped: false, skipMfaOnSignIn: false },
+      passkeySignIn: { skipped: false },
+    });
 
-    const response = await updateUserLogtoConfig(user.id, true);
-    expect(response).toEqual({ mfa: { skipped: true } });
+    const response = await updateUserLogtoConfig(user.id, {
+      mfa: { skipped: true, skipMfaOnSignIn: false },
+      passkeySignIn: { skipped: false },
+    });
+    expect(response).toEqual({
+      mfa: { skipped: true, skipMfaOnSignIn: false },
+      passkeySignIn: { skipped: false },
+    });
 
     const updatedConfig = await getUserLogtoConfig(user.id);
     expect(updatedConfig.mfa.skipped).toBe(true);
+    expect(updatedConfig.mfa.skipMfaOnSignIn).toBe(false);
 
-    const response2 = await updateUserLogtoConfig(user.id, false);
-    expect(response2).toEqual({ mfa: { skipped: false } });
+    const response2 = await updateUserLogtoConfig(user.id, {
+      mfa: { skipped: false, skipMfaOnSignIn: true },
+      passkeySignIn: { skipped: true },
+    });
+    expect(response2).toEqual({
+      mfa: { skipped: false, skipMfaOnSignIn: true },
+      passkeySignIn: { skipped: true },
+    });
 
     const updatedConfig2 = await getUserLogtoConfig(user.id);
     expect(updatedConfig2.mfa.skipped).toBe(false);
+    expect(updatedConfig2.mfa.skipMfaOnSignIn).toBe(true);
+    expect(updatedConfig2.passkeySignIn.skipped).toBe(true);
+
+    // Reset all flags
+    const response3 = await updateUserLogtoConfig(user.id, {
+      mfa: { skipped: false, skipMfaOnSignIn: false },
+      passkeySignIn: { skipped: false },
+    });
+    expect(response3).toEqual({
+      mfa: { skipped: false, skipMfaOnSignIn: false },
+      passkeySignIn: { skipped: false },
+    });
 
     await deleteUser(user.id);
   });

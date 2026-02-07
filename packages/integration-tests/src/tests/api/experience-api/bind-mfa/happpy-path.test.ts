@@ -212,7 +212,10 @@ describe('Bind MFA APIs happy path', () => {
         password,
       });
 
-      await updateUserLogtoConfig(userId, false);
+      await updateUserLogtoConfig(userId, {
+        mfa: { skipped: false, skipMfaOnSignIn: false },
+        passkeySignIn: { skipped: false },
+      });
       const resetConfig = await getUserLogtoConfig(userId);
       expect(resetConfig.mfa.skipped).toBe(false);
 

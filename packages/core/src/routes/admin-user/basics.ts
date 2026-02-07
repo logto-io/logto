@@ -7,6 +7,8 @@ import {
   jsonObjectGuard,
   userMfaDataGuard,
   userMfaDataKey,
+  userPasskeySignInDataGuard,
+  userPasskeySignInDataKey,
   userProfileGuard,
   userProfileResponseGuard,
 } from '@logto/schemas';
@@ -127,6 +129,10 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       response: object({
         mfa: object({
           skipped: boolean(),
+          skipMfaOnSignIn: boolean(),
+        }),
+        passkeySignIn: object({
+          skipped: boolean(),
         }),
       }),
       status: [200, 404],
@@ -138,10 +144,21 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       const user = await findUserById(userId);
       const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
+      const existingPasskeySignInData = userPasskeySignInDataGuard.safeParse(
+        user.logtoConfig[userPasskeySignInDataKey]
+      );
 
       ctx.body = {
         mfa: {
           skipped: existingMfaData.success ? Boolean(existingMfaData.data.skipped) : false,
+          skipMfaOnSignIn: existingMfaData.success
+            ? Boolean(existingMfaData.data.skipMfaOnSignIn)
+            : false,
+        },
+        passkeySignIn: {
+          skipped: existingPasskeySignInData.success
+            ? Boolean(existingPasskeySignInData.data.skipped)
+            : false,
         },
       };
 
@@ -156,10 +173,18 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       body: object({
         mfa: object({
           skipped: boolean(),
+          skipMfaOnSignIn: boolean(),
+        }),
+        passkeySignIn: object({
+          skipped: boolean(),
         }),
       }),
       response: object({
         mfa: object({
+          skipped: boolean(),
+          skipMfaOnSignIn: boolean(),
+        }),
+        passkeySignIn: object({
           skipped: boolean(),
         }),
       }),
@@ -168,20 +193,26 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         params: { userId },
-        body: {
-          mfa: { skipped },
-        },
+        body: { mfa, passkeySignIn },
       } = ctx.guard;
 
       const user = await findUserById(userId);
       const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
+      const existingPasskeySignInData = userPasskeySignInDataGuard.safeParse(
+        user.logtoConfig[userPasskeySignInDataKey]
+      );
 
       const updatedUser = await updateUserById(userId, {
         logtoConfig: {
           ...user.logtoConfig,
           [userMfaDataKey]: {
             ...(existingMfaData.success ? existingMfaData.data : {}),
-            skipped,
+            skipped: mfa.skipped,
+            skipMfaOnSignIn: mfa.skipMfaOnSignIn,
+          },
+          [userPasskeySignInDataKey]: {
+            ...(existingPasskeySignInData.success ? existingPasskeySignInData.data : {}),
+            skipped: passkeySignIn.skipped,
           },
         },
       });
@@ -189,7 +220,8 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
       ctx.body = {
-        mfa: { skipped },
+        mfa: { skipped: mfa.skipped, skipMfaOnSignIn: mfa.skipMfaOnSignIn },
+        passkeySignIn: { skipped: passkeySignIn.skipped },
       };
 
       return next();
