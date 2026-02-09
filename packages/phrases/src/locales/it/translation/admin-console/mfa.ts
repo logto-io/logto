@@ -40,11 +40,11 @@ const mfa = {
   require_mfa_label:
     'Abilitalo per rendere obbligatoria la verifica in due passaggi per accedere alle tue applicazioni. Se disabilitato, gli utenti possono decidere se abilitare MFA per se stessi.',
   require_mfa_optional:
-    'Optional MFA: Let users choose to enable MFA for their own account security',
+    'MFA facoltativa: consenti agli utenti di scegliere se abilitare MFA per la sicurezza del proprio account',
   require_mfa_adaptive:
-    'Adaptive MFA: Only ask for MFA when a sign-in seems risky (e.g., new device / location)',
+    'MFA adattiva: richiedi MFA solo quando un accesso sembra rischioso (ad es. nuovo dispositivo/posizione)',
   require_mfa_mandatory:
-    'Mandatory MFA: Requires all users to complete MFA every time they sign in',
+    'MFA obbligatoria: richiede a tutti gli utenti di completare MFA a ogni accesso',
   set_up_prompt: 'Messaggio di configurazione MFA',
   no_prompt: 'Non chiedere agli utenti di configurare MFA',
   prompt_at_sign_in_and_sign_up:

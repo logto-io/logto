@@ -37,11 +37,11 @@ const mfa = {
   require_mfa_label:
     'قم بتمكين هذا لجعل التحقق بخطوتين إلزاميًا للوصول إلى التطبيقات الخاصة بك. إذا تم تعطيله، يمكن للمستخدمين تحديد ما إذا كانوا سيمكّنون MFA لأنفسهم.',
   require_mfa_optional:
-    'Optional MFA: Let users choose to enable MFA for their own account security',
+    'MFA الاختيارية: اسمح للمستخدمين باختيار تمكين MFA لتعزيز أمان حساباتهم',
   require_mfa_adaptive:
-    'Adaptive MFA: Only ask for MFA when a sign-in seems risky (e.g., new device / location)',
+    'MFA التكيفية: اطلب MFA فقط عندما تبدو محاولة تسجيل الدخول محفوفة بالمخاطر (مثل جهاز أو موقع جديد)',
   require_mfa_mandatory:
-    'Mandatory MFA: Requires all users to complete MFA every time they sign in',
+    'MFA الإلزامية: تتطلب من جميع المستخدمين إكمال MFA في كل مرة يسجلون فيها الدخول',
   set_up_prompt: 'موجه إعداد MFA',
   no_prompt: 'لا تطلب من المستخدمين إعداد MFA',
   prompt_at_sign_in_and_sign_up:

@@ -198,6 +198,17 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
     [formValues.isMandatory, formValues.adaptiveMfaEnabled]
   );
 
+  useEffect(() => {
+    if (mfaRequirementMode === MfaRequirementMode.Mandatory && formValues.adaptiveMfaEnabled) {
+      // Normalize legacy state { isMandatory: true, adaptiveMfaEnabled: true }
+      // to match the 3-option dropdown semantics, without marking the form dirty.
+      reset(
+        { ...formValues, adaptiveMfaEnabled: false },
+        { keepDirty: true, keepDirtyValues: true }
+      );
+    }
+  }, [mfaRequirementMode, formValues, reset]);
+
   const shouldShowSetUpPrompts = mfaRequirementMode !== MfaRequirementMode.Mandatory;
 
   const onSubmit = handleSubmit(
