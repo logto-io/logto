@@ -42,6 +42,9 @@ import {
   buildMfaPatchPayload,
   convertMfaFormToConfig,
   convertMfaConfigToForm,
+  getMfaRequirementMode,
+  getMfaRequirementState,
+  MfaRequirementMode,
   validateBackupCodeFactor,
 } from './utils';
 
@@ -167,6 +170,35 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
     ],
     [t]
   );
+
+  const mfaRequirementOptions = useMemo(
+    () => [
+      {
+        value: MfaRequirementMode.Optional,
+        title: t('mfa.require_mfa_optional'),
+      },
+      {
+        value: MfaRequirementMode.Adaptive,
+        title: t('mfa.require_mfa_adaptive'),
+      },
+      {
+        value: MfaRequirementMode.Mandatory,
+        title: t('mfa.require_mfa_mandatory'),
+      },
+    ],
+    [t]
+  );
+
+  const mfaRequirementMode = useMemo(
+    () =>
+      getMfaRequirementMode({
+        isMandatory: formValues.isMandatory,
+        adaptiveMfaEnabled: formValues.adaptiveMfaEnabled,
+      }),
+    [formValues.isMandatory, formValues.adaptiveMfaEnabled]
+  );
+
+  const shouldShowSetUpPrompts = mfaRequirementMode !== MfaRequirementMode.Mandatory;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -302,20 +334,47 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
           description="mfa.policy_description"
           learnMoreLink={{ href: mfa }}
         >
-          <FormField title="mfa.require_mfa" headlineSpacing="large">
-            <Switch
-              disabled={isPolicySettingsDisabled}
-              label={t('mfa.require_mfa_label')}
-              {...register('isMandatory')}
-            />
-          </FormField>
-          {!formValues.isMandatory && (
+          {isDevFeaturesEnabled ? (
+            <FormField title="mfa.require_mfa" headlineSpacing="large">
+              <Select
+                hasSelectedOptionIndicator
+                value={mfaRequirementMode}
+                options={mfaRequirementOptions}
+                isReadOnly={isPolicySettingsDisabled}
+                onChange={(mode) => {
+                  if (!mode) {
+                    return;
+                  }
+
+                  const nextState = getMfaRequirementState(mode);
+                  setValue('isMandatory', nextState.isMandatory, {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  });
+                  setValue('adaptiveMfaEnabled', nextState.adaptiveMfaEnabled, {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  });
+                }}
+              />
+            </FormField>
+          ) : (
+            <FormField title="mfa.require_mfa" headlineSpacing="large">
+              <Switch
+                disabled={isPolicySettingsDisabled}
+                label={t('mfa.require_mfa_label')}
+                {...register('isMandatory')}
+              />
+            </FormField>
+          )}
+          {shouldShowSetUpPrompts && (
             <FormField title="mfa.set_up_prompt" headlineSpacing="large">
               <Controller
                 control={control}
                 name="setUpPrompt"
                 render={({ field: { onChange, value } }) => (
                   <Select
+                    hasSelectedOptionIndicator
                     value={value}
                     options={mfaPolicyOptions}
                     isReadOnly={isPolicySettingsDisabled}
@@ -325,7 +384,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
               />
             </FormField>
           )}
-          {!formValues.isMandatory && (
+          {shouldShowSetUpPrompts && (
             <FormField title="mfa.set_up_organization_required_mfa_prompt" headlineSpacing="large">
               <Controller
                 control={control}
@@ -333,21 +392,13 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
                 render={({ field: { onChange, value } }) => (
                   <Select
                     // Fallback to `NoPrompt` if the value is not set
+                    hasSelectedOptionIndicator
                     value={value ?? OrganizationRequiredMfaPolicy.NoPrompt}
                     options={organizationEnabledMfaPolicyOptions}
                     isReadOnly={isPolicySettingsDisabled}
                     onChange={onChange}
                   />
                 )}
-              />
-            </FormField>
-          )}
-          {isDevFeaturesEnabled && (
-            <FormField title="mfa.adaptive_mfa" headlineSpacing="large">
-              <Switch
-                disabled={isPolicySettingsDisabled}
-                label={t('mfa.adaptive_mfa_label')}
-                {...register('adaptiveMfaEnabled')}
               />
             </FormField>
           )}

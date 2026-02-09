@@ -37,9 +37,12 @@ const mfa = {
   require_mfa: 'บังคับใช้ MFA',
   require_mfa_label:
     'เปิดใช้งานเพื่อบังคับให้ต้องมีการยืนยันตัวตนแบบ 2 ขั้นตอนในการเข้าถึงแอปพลิเคชันของคุณ หากปิดใช้งาน ผู้ใช้สามารถเลือกว่าจะเปิดใช้ MFA หรือไม่',
-  adaptive_mfa: 'Adaptive MFA',
-  adaptive_mfa_label:
-    'ทริกเกอร์ MFA เฉพาะเมื่อพบสัญญาณความเสี่ยงเท่านั้น MFA แบบบังคับจะมีผลเหนือการตั้งค่านี้ ต้องมีอย่างน้อยหนึ่งปัจจัย MFA',
+  require_mfa_optional:
+    'Optional MFA: Let users choose to enable MFA for their own account security',
+  require_mfa_adaptive:
+    'Adaptive MFA: Only ask for MFA when a sign-in seems risky (e.g., new device / location)',
+  require_mfa_mandatory:
+    'Mandatory MFA: Requires all users to complete MFA every time they sign in',
   set_up_prompt: 'ข้อความเตือนให้ตั้งค่า MFA',
   no_prompt: 'ไม่ขอให้ผู้ใช้ตั้งค่า MFA',
   prompt_at_sign_in_and_sign_up:

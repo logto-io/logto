@@ -7,6 +7,7 @@ import Close from '@/assets/icons/close.svg?react';
 import KeyboardArrowDown from '@/assets/icons/keyboard-arrow-down.svg?react';
 import KeyboardArrowUp from '@/assets/icons/keyboard-arrow-up.svg?react';
 import SearchIcon from '@/assets/icons/search.svg?react';
+import Tick from '@/assets/icons/tick.svg?react';
 import useWindowResize from '@/hooks/use-window-resize';
 import { onKeyDownHandler } from '@/utils/a11y';
 
@@ -32,6 +33,7 @@ type Props<T> = {
   readonly size?: 'small' | 'medium' | 'large';
   readonly isSearchEnabled?: boolean;
   readonly isDropdownFullWidth?: boolean;
+  readonly hasSelectedOptionIndicator?: boolean;
 };
 
 function Select<T extends string>({
@@ -46,6 +48,7 @@ function Select<T extends string>({
   size = 'large',
   isSearchEnabled,
   isDropdownFullWidth = true,
+  hasSelectedOptionIndicator,
 }: Props<T>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isOpen, setIsOpen] = useState(false);
@@ -184,11 +187,23 @@ function Select<T extends string>({
             />
           </div>
         )}
-        {filteredOptions.map(({ value, title }) => (
+        {filteredOptions.map(({ value: optionValue, title }) => (
           <DropdownItem
-            key={value}
+            key={optionValue}
+            className={classNames(
+              hasSelectedOptionIndicator && styles.optionWithIndicator,
+              hasSelectedOptionIndicator && value === optionValue && styles.selectedOption
+            )}
+            icon={
+              hasSelectedOptionIndicator && (
+                <Tick
+                  className={classNames(value !== optionValue && styles.hiddenSelectedOptionIcon)}
+                />
+              )
+            }
+            iconClassName={hasSelectedOptionIndicator ? styles.selectedOptionIcon : undefined}
             onClick={() => {
-              handleSelect(value);
+              handleSelect(optionValue);
             }}
           >
             {title}

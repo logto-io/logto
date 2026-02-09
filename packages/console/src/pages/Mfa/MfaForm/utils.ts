@@ -3,6 +3,50 @@ import { conditional } from '@silverhand/essentials';
 
 import { type SignInPrompt, type MfaConfig, type MfaConfigForm } from '../types';
 
+export enum MfaRequirementMode {
+  Optional = 'optional',
+  Adaptive = 'adaptive',
+  Mandatory = 'mandatory',
+}
+
+export const getMfaRequirementMode = ({
+  isMandatory,
+  adaptiveMfaEnabled,
+}: Pick<MfaConfigForm, 'isMandatory' | 'adaptiveMfaEnabled'>): MfaRequirementMode => {
+  if (isMandatory) {
+    return MfaRequirementMode.Mandatory;
+  }
+
+  if (adaptiveMfaEnabled) {
+    return MfaRequirementMode.Adaptive;
+  }
+
+  return MfaRequirementMode.Optional;
+};
+
+export const getMfaRequirementState = (
+  mode: MfaRequirementMode
+): Pick<MfaConfigForm, 'isMandatory' | 'adaptiveMfaEnabled'> => {
+  if (mode === MfaRequirementMode.Mandatory) {
+    return {
+      isMandatory: true,
+      adaptiveMfaEnabled: false,
+    };
+  }
+
+  if (mode === MfaRequirementMode.Adaptive) {
+    return {
+      isMandatory: false,
+      adaptiveMfaEnabled: true,
+    };
+  }
+
+  return {
+    isMandatory: false,
+    adaptiveMfaEnabled: false,
+  };
+};
+
 const isSignInPrompt = (policy: MfaPolicy): policy is SignInPrompt =>
   [MfaPolicy.NoPrompt, MfaPolicy.PromptAtSignInAndSignUp, MfaPolicy.PromptOnlyAtSignIn].includes(
     policy

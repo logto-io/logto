@@ -38,9 +38,12 @@ const mfa = {
   require_mfa: 'MFA を要求',
   require_mfa_label:
     'アプリケーションにアクセスするために 2 段階認証を必須にするには、これを有効にします。無効にすると、ユーザーは自分で MFA を有効にするかどうかを決めることができます。',
-  adaptive_mfa: 'アダプティブ MFA',
-  adaptive_mfa_label:
-    'リスクシグナルが検出された場合にのみ MFA を実行します。必須 MFA はこの設定を上書きします。少なくとも 1 つの MFA 要因が必要です。',
+  require_mfa_optional:
+    'Optional MFA: Let users choose to enable MFA for their own account security',
+  require_mfa_adaptive:
+    'Adaptive MFA: Only ask for MFA when a sign-in seems risky (e.g., new device / location)',
+  require_mfa_mandatory:
+    'Mandatory MFA: Requires all users to complete MFA every time they sign in',
   set_up_prompt: 'MFA の設定プロンプト',
   no_prompt: 'MFA の設定をユーザーに求めない',
   prompt_at_sign_in_and_sign_up:
