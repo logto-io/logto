@@ -29,12 +29,9 @@ const mfa = {
   require_mfa: '需要 MFA',
   require_mfa_label:
     '啟用此選項可將雙重驗證設為存取應用程式的強制要求。若停用，用戶可自行決定是否啟用 MFA。',
-  require_mfa_optional:
-    '選用 MFA:讓用戶自行選擇是否啟用 MFA 以加強帳戶安全',
-  require_mfa_adaptive:
-    '自適應 MFA:只在登入風險較高時(例如新裝置／新地點)才要求使用 MFA',
-  require_mfa_mandatory:
-    '強制 MFA:所有用戶每次登入時都必須完成 MFA',
+  require_mfa_optional: '選用 MFA:讓用戶自行選擇是否啟用 MFA 以加強帳戶安全',
+  require_mfa_adaptive: '自適應 MFA:只在登入風險較高時(例如新裝置／新地點)才要求使用 MFA',
+  require_mfa_mandatory: '強制 MFA:所有用戶每次登入時都必須完成 MFA',
   set_up_prompt: 'MFA 設定提示',
   no_prompt: '不要求用戶設定 MFA',
   prompt_at_sign_in_and_sign_up: '在註冊期間要求用戶設定 MFA（可跳過的一次性提示）',

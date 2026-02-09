@@ -41,11 +41,11 @@ const mfa = {
   require_mfa_label:
     "Uygulamalarınıza erişim için 2 aşamalı doğrulamayı zorunlu hale getirmek üzere bunu etkinleştirin. Eğer devre dışıysa, kullanıcılar MFA'yı kendileri için etkinleştirip etkinleştirmemeye karar verebilir.",
   require_mfa_optional:
-    'İsteğe bağlı MFA: Kullanıcıların kendi hesap güvenlikleri için MFA\'yı etkinleştirmeyi seçmelerine izin verin',
+    "İsteğe bağlı MFA: Kullanıcıların kendi hesap güvenlikleri için MFA'yı etkinleştirmeyi seçmelerine izin verin",
   require_mfa_adaptive:
     'Uyarlanabilir MFA: Yalnızca oturum açma riskli göründüğünde (ör. yeni cihaz / konum) MFA isteyin',
   require_mfa_mandatory:
-    'Zorunlu MFA: Tüm kullanıcıların her oturum açışlarında MFA\'yı tamamlamasını gerektirir',
+    "Zorunlu MFA: Tüm kullanıcıların her oturum açışlarında MFA'yı tamamlamasını gerektirir",
   set_up_prompt: 'MFA kurulum istemi',
   no_prompt: 'Kullanıcılardan MFA kurmalarını istemeyin',
   prompt_at_sign_in_and_sign_up:

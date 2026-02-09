@@ -41,7 +41,7 @@ const mfa = {
   require_mfa_label:
     "Activez cette option pour rendre la vérification en deux étapes obligatoire pour accéder à vos applications. Si désactivé, les utilisateurs peuvent décider eux-mêmes d'activer MFA.",
   require_mfa_optional:
-    'MFA facultative : laissez les utilisateurs choisir d\'activer MFA pour la sécurité de leur propre compte',
+    "MFA facultative : laissez les utilisateurs choisir d'activer MFA pour la sécurité de leur propre compte",
   require_mfa_adaptive:
     'MFA adaptative : ne demandez MFA que lorsque une connexion semble risquée (par ex. nouvel appareil / localisation)',
   require_mfa_mandatory:
