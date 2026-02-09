@@ -51,15 +51,16 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
   it('computes MFA requirement based on adaptive decision only', () => {
     const cases = [
-      // Adaptive MFA enabled: only requires MFA when triggered and user has MFA.
-      { adaptive: true, requires: false, hasMfa: false, fallbackRequired: false },
-      { adaptive: true, requires: false, hasMfa: false, fallbackRequired: true },
-      { adaptive: true, requires: false, hasMfa: true, fallbackRequired: false },
-      { adaptive: true, requires: false, hasMfa: true, fallbackRequired: true },
+      // Adaptive MFA enabled and triggered: only requires MFA when user has MFA.
       { adaptive: true, requires: true, hasMfa: false, fallbackRequired: false },
       { adaptive: true, requires: true, hasMfa: false, fallbackRequired: true },
       { adaptive: true, requires: true, hasMfa: true, fallbackRequired: false },
       { adaptive: true, requires: true, hasMfa: true, fallbackRequired: true },
+      // Adaptive MFA enabled but not triggered: fall back to policy requirement.
+      { adaptive: true, requires: false, hasMfa: false, fallbackRequired: false },
+      { adaptive: true, requires: false, hasMfa: false, fallbackRequired: true },
+      { adaptive: true, requires: false, hasMfa: true, fallbackRequired: false },
+      { adaptive: true, requires: false, hasMfa: true, fallbackRequired: true },
       // Adaptive MFA disabled: fall back to policy requirement.
       { adaptive: false, requires: false, hasMfa: true, fallbackRequired: false },
       { adaptive: false, requires: false, hasMfa: true, fallbackRequired: true },
