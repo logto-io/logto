@@ -19,6 +19,8 @@ const oidc = {
   provider_error_fallback: 'Si è verificato un errore OIDC: {{code}}.',
   key_required: 'È richiesta almeno una chiave.',
   key_not_found: 'Chiave con ID {{id}} non trovata.',
+  /** UNTRANSLATED */
+  invalid_session_payload: 'Invalid session payload.',
 };
 
 export default Object.freeze(oidc);

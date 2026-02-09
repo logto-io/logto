@@ -18,6 +18,8 @@ const oidc = {
   provider_error_fallback: 'حدث خطأ OIDC: {{code}}.',
   key_required: 'مطلوب مفتاح واحد على الأقل.',
   key_not_found: 'لم يتم العثور على المفتاح بالمعرف {{id}}.',
+  /** UNTRANSLATED */
+  invalid_session_payload: 'Invalid session payload.',
 };
 
 export default Object.freeze(oidc);

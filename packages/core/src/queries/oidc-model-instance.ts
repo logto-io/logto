@@ -135,6 +135,18 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
+  const sessionModelName = 'Session';
+  type SessionInstance = OidcModelInstance & { modelName: typeof sessionModelName };
+  const findNonExpiredSessionByUserId = async (userId: string) => {
+    const result = await pool.any<SessionInstance>(sql`
+      ${findByModel('Session')}
+      and ${fields.payload}->>'accountId'=${userId}
+      and ${fields.expiresAt} > ${convertToTimestamp()}
+    `);
+
+    return result;
+  };
+
   return {
     upsertInstance,
     findPayloadById,
@@ -143,5 +155,6 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     destroyInstanceById,
     revokeInstanceByGrantId,
     revokeInstanceByUserId,
+    findNonExpiredSessionByUserId,
   };
 };

@@ -1,9 +1,14 @@
-import { jsonObjectGuard } from '@logto/schemas';
+import {
+  jsonObjectGuard,
+  jwtCustomizerUserInteractionContextGuard,
+  oidcSessionInstancePayloadGuard,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { InteractionResults, PromptDetail, Provider } from 'oidc-provider';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -171,4 +176,39 @@ export const consent = async ({
 
   // Configure consent
   return updateInteractionResult(ctx, provider, { consent: { grantId: finalGrantId } }, true);
+};
+
+export const createSessionLibrary = (queries: Queries) => {
+  const { oidcSessionExtensions } = queries;
+
+  const findUserActiveSessionsWithExtensions = async (userId: string) => {
+    const result = await oidcSessionExtensions.findUserActiveSessionsWithExtensions(userId);
+
+    const formattedResult = result.map((session) => {
+      const { lastSubmission, clientId, accountId, payload, ...rest } = session;
+
+      const interactionContextResult =
+        jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
+
+      const payloadResult = oidcSessionInstancePayloadGuard.safeParse(payload);
+
+      if (!payloadResult.success) {
+        throw new RequestError('oidc.invalid_session_payload', { status: 500 });
+      }
+
+      return {
+        ...rest,
+        payload: payloadResult.data,
+        lastSubmission: interactionContextResult.success ? interactionContextResult.data : null,
+        clientId,
+        accountId,
+      };
+    });
+
+    return formattedResult;
+  };
+
+  return {
+    findUserActiveSessionsWithExtensions,
+  };
 };
