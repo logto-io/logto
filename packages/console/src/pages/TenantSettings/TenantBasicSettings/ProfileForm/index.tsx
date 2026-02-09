@@ -2,7 +2,6 @@ import { ReservedPlanId } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 
 import FormCard from '@/components/FormCard';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
@@ -48,7 +47,7 @@ function ProfileForm({ currentTenantId }: Props) {
       <FormField title="tenants.settings.tenant_type">
         <TenantEnvironment tag={getValues('profile.tag')} />
       </FormField>
-      {isDevFeaturesEnabled && canManageTenant && (
+      {canManageTenant && (
         <FormField
           title="tenants.settings.tenant_mfa"
           featureTag={{
