@@ -139,7 +139,7 @@ const BackupCodeView = () => {
             title="account_center.backup_code.generate_new"
             type="secondary"
             onClick={() => {
-              void navigate(backupCodesRegenerateRoute);
+              navigate(backupCodesRegenerateRoute);
             }}
           />
         </div>

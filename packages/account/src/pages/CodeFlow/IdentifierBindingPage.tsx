@@ -195,7 +195,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
         return;
       }
 
-      void navigate(successRedirect, { replace: true });
+      navigate(successRedirect, { replace: true });
     },
     [
       bindIdentifierRequest,

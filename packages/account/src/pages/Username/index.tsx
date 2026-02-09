@@ -106,7 +106,7 @@ const Username = () => {
     }
 
     setUserInfo((current) => ({ ...current, username }));
-    void navigate(usernameSuccessRoute, { replace: true });
+    navigate(usernameSuccessRoute, { replace: true });
   };
 
   return (
