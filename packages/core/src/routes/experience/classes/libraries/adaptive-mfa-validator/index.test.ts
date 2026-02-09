@@ -258,7 +258,7 @@ describe('AdaptiveMfaValidator', () => {
     }
   );
 
-  it('skips persisting context when adaptive MFA is disabled', async () => {
+  it('persists context when adaptive MFA is disabled', async () => {
     const user: User = {
       ...mockUser,
       lastSignInAt: Date.now(),
@@ -280,12 +280,19 @@ describe('AdaptiveMfaValidator', () => {
       },
     });
 
-    expect(queries.userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
-    expect(queries.userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
-    expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).not.toHaveBeenCalled();
+    expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+      user.id,
+      12.3,
+      45.6
+    );
+    expect(queries.userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(user.id, 'US');
+    expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).toHaveBeenCalledWith(
+      user.id,
+      adaptiveMfaNewCountryWindowDays
+    );
   });
 
-  it('skips persisting context when dev features are disabled', async () => {
+  it('skips persisting context when dev features are disabled even with context override', async () => {
     setDevFeaturesEnabled(false);
 
     const user: User = {

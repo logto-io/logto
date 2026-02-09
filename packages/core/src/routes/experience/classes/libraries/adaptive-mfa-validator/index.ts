@@ -82,7 +82,7 @@ export class AdaptiveMfaValidator {
   }
 
   public async persistContext(user: User, options: AdaptiveMfaEvaluationOptions = {}) {
-    if (!(await this.isAdaptiveMfaEnabled())) {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
 
