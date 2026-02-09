@@ -1,9 +1,6 @@
 const jwt_claims = {
   title: 'JWT ที่กำหนดเอง',
-  description:
-    'ตั้งค่าค่าเคลมที่กำหนดเองใน access token ค่าต่าง ๆ เหล่านี้สามารถใช้ส่งข้อมูลเพิ่มเติมไปยังแอปพลิเคชันของคุณได้',
-  description_with_id_token:
-    'ปรับแต่ง access token หรือ ID token เพื่อให้ข้อมูลเพิ่มเติมกับแอปพลิเคชันของคุณ',
+  description: 'ปรับแต่ง access token หรือ ID token เพื่อให้ข้อมูลเพิ่มเติมกับแอปพลิเคชันของคุณ',
   access_token: {
     card_title: 'Access token',
     card_description:
@@ -25,7 +22,7 @@ const jwt_claims = {
       'ID token คือการยืนยันตัวตนที่ได้รับหลังเข้าสู่ระบบ ประกอบด้วย claims ของตัวตนผู้ใช้สำหรับ client เพื่อใช้ในการแสดงผลหรือสร้าง session',
     card_field: 'User ID token',
     card_field_description:
-      'Standard OIDC claims (เช่น sub, email, profile) สามารถใช้ได้เสมอ ขณะที่ claims ที่กำหนดโดย Logto ต้องเปิดใช้งานที่นี่ก่อน ทั้งสองกรณี คุณต้องขอ scopes ที่ตรงกันระหว่างการ integration ของแอปเพื่อรับมัน',
+      "Claims 'sub', 'email', 'phone', 'profile' และ 'address' สามารถใช้ได้เสมอ Claims อื่น ๆ ต้องเปิดใช้งานที่นี่ก่อน ในทุกกรณี แอปของคุณต้องขอ scopes ที่ตรงกันระหว่างการ integration เพื่อรับมัน",
   },
   code_editor_title: 'ปรับแต่ง claims ของ {{token}}',
   custom_jwt_create_button: 'เพิ่มค่าเคลมที่กำหนดเอง',

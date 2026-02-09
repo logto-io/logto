@@ -1,8 +1,6 @@
 const jwt_claims = {
   title: 'JWT Personalizado',
   description:
-    'Configure reivindicações JWT personalizadas a incluir no token de acesso. Estas reivindicações podem ser usadas para passar informações adicionais para a sua aplicação.',
-  description_with_id_token:
     'Personalize o token de acesso ou token de ID, fornecendo informações adicionais à sua aplicação.',
   access_token: {
     card_title: 'Token de acesso',
@@ -26,7 +24,7 @@ const jwt_claims = {
       'O token de ID é uma afirmação de identidade recebida após o início de sessão, contendo reivindicações de identidade do utilizador para o cliente usar para apresentação ou criação de sessão.',
     card_field: 'Token de ID do utilizador',
     card_field_description:
-      'Reivindicações OIDC padrão (por exemplo, sub, email, profile) estão sempre disponíveis, enquanto as reivindicações definidas pelo Logto devem ser habilitadas primeiro aqui. Em ambos os casos, deve solicitar os scopes correspondentes durante a integração da aplicação para recebê-las.',
+      "As reivindicações 'sub', 'email', 'phone', 'profile' e 'address' estão sempre disponíveis. Outras reivindicações devem ser habilitadas aqui primeiro. Em todos os casos, a sua aplicação deve solicitar os scopes correspondentes durante a integração para recebê-las.",
   },
   code_editor_title: 'Personalizar as reivindicações {{token}}',
   custom_jwt_create_button: 'Adicionar reivindicações personalizadas',

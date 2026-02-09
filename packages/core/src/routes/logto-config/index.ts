@@ -15,7 +15,6 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -190,8 +189,5 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
 
   logtoConfigJwtCustomizerRoutes(router, tenant);
 
-  // DEV: ID token claims configuration
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    idTokenRoutes(router, tenant);
-  }
+  idTokenRoutes(router, tenant);
 }

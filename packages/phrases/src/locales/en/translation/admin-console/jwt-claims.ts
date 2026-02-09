@@ -1,8 +1,6 @@
 const jwt_claims = {
   title: 'Custom JWT',
   description:
-    'Set up custom claims in the access token. These claims can be used to pass additional information to your application.',
-  description_with_id_token:
     'Customize access token or ID token, providing extra information to your application.',
   access_token: {
     card_title: 'Access token',
@@ -25,7 +23,7 @@ const jwt_claims = {
       'ID token is an identity assertion received after sign-in, containing user identity claims for the client to use for display or session creation.',
     card_field: 'User ID token',
     card_field_description:
-      'Standard OIDC claims (e.g., sub, email, profile) are always available, while Logto-defined claims must first be enabled here. In both cases, you must request the matching scopes during app integration to receive them.',
+      "Claims 'sub', 'email', 'phone', 'profile', and 'address' are always available. Other claims must be enabled here first. In all cases, your app must request the matching scopes during integration to receive them.",
   },
   code_editor_title: 'Customize the {{token}} claims',
   custom_jwt_create_button: 'Add custom claims',
