@@ -134,13 +134,18 @@ export const createUserMfaVerification = async (userId: string, type: MfaFactor)
       | { type: MfaFactor.BackupCode; codes: string[] }
     >();
 
-export const getUserLogtoConfig = async (userId: string) =>
-  authedAdminApi.get(`users/${userId}/logto-configs`).json<{ mfa: { skipped: boolean } }>();
+type UserLogtoConfig = {
+  mfa: { skipped: boolean; skipMfaOnSignIn: boolean };
+  passkeySignIn: { skipped: boolean };
+};
 
-export const updateUserLogtoConfig = async (userId: string, skipped: boolean) =>
+export const getUserLogtoConfig = async (userId: string) =>
+  authedAdminApi.get(`users/${userId}/logto-configs`).json<UserLogtoConfig>();
+
+export const updateUserLogtoConfig = async (userId: string, logtoConfig: UserLogtoConfig) =>
   authedAdminApi
-    .patch(`users/${userId}/logto-configs`, { json: { mfa: { skipped } } })
-    .json<{ mfa: { skipped: boolean } }>();
+    .patch(`users/${userId}/logto-configs`, { json: logtoConfig })
+    .json<UserLogtoConfig>();
 
 export const getUserOrganizations = async (userId: string) =>
   authedAdminApi.get(`users/${userId}/organizations`).json<OrganizationWithRoles[]>();
