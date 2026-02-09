@@ -143,7 +143,7 @@ const TotpBinding = () => {
       // (when loading state changes, handleSubmit gets recreated, which triggers the effect again)
       setCodeInput([]);
 
-      void navigate(authenticatorAppSuccessRoute, { replace: true });
+      navigate(authenticatorAppSuccessRoute, { replace: true });
     },
     [
       addTotpRequest,

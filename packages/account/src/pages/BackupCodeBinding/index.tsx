@@ -84,7 +84,7 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
       }
 
       if (hasBackupCode && !isRegenerate) {
-        void navigate(backupCodesManageRoute, { replace: true });
+        navigate(backupCodesManageRoute, { replace: true });
       }
     };
 
@@ -181,7 +181,7 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
       return;
     }
 
-    void navigate(backupCodesSuccessRoute, { replace: true });
+    navigate(backupCodesSuccessRoute, { replace: true });
   }, [
     addBackupCodeRequest,
     codes,

@@ -109,7 +109,7 @@ const Password = () => {
     }
 
     setUserInfo((current) => ({ ...current, hasPassword: true }));
-    void navigate(passwordSuccessRoute, { replace: true });
+    navigate(passwordSuccessRoute, { replace: true });
   };
 
   const description =

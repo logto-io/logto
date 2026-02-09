@@ -256,7 +256,7 @@ const PasskeyView = () => {
               title="account_center.passkey.add_passkey"
               type="primary"
               onClick={() => {
-                void navigate(passkeyAddRoute);
+                navigate(passkeyAddRoute);
               }}
             />
           </div>
