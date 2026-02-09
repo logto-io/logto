@@ -54,15 +54,10 @@ const isMfaVerificationRecord = (
   return mfaVerificationTypes.includes(verification.type);
 };
 
-type MfaValidatorOptions = {
-  forceMfaVerification?: boolean;
-};
-
 export class MfaValidator {
   constructor(
     private readonly mfaSettings: Mfa,
-    private readonly user: User,
-    private readonly options: MfaValidatorOptions = {}
+    private readonly user: User
   ) {}
 
   /**
@@ -106,11 +101,7 @@ export class MfaValidator {
     const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
 
-    if (
-      !this.options.forceMfaVerification &&
-      skipMfaOnSignIn &&
-      this.mfaSettings.policy !== MfaPolicy.Mandatory
-    ) {
+    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
       return false;
     }
 
@@ -123,6 +114,10 @@ export class MfaValidator {
       return true;
     }
 
+    return this.isMfaVerifiedForRequirement(verificationRecords);
+  }
+
+  isMfaVerifiedForRequirement(verificationRecords: VerificationRecord[]) {
     const verifiedMfaVerificationRecords = verificationRecords.filter(
       (verification) =>
         isMfaVerificationRecord(verification) &&
