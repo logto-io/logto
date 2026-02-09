@@ -495,10 +495,12 @@ export class Mfa {
 
   async checkPasskeySignInAvailability() {
     const { passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
-    const { logtoConfig } = await this.interactionContext.getIdentifiedUser();
+    const { logtoConfig, mfaVerifications } = await this.interactionContext.getIdentifiedUser();
 
     if (passkeySignIn.enabled && !(this.#passkeySkipped ?? isPasskeySkipped(logtoConfig))) {
-      const hasPasskey = this.data.webAuthn?.length;
+      const hasPasskey =
+        Boolean(this.data.webAuthn?.length) ||
+        mfaVerifications.some((verification) => verification.type === MfaFactor.WebAuthn);
 
       assertThat(hasPasskey, new RequestError({ code: 'user.passkey_preferred', status: 422 }));
     }
