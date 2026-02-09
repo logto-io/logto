@@ -6,9 +6,10 @@ import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
-import { createSignInWebAuthnRegistrationOptions } from '@/apis/experience';
+import { createSignInWebAuthnRegistrationOptions, skipPasskeyBinding } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import usePasskeySignIn from '@/hooks/use-passkey-sign-in';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import ErrorPage from '@/pages/ErrorPage';
@@ -24,6 +25,7 @@ type RegistrationState = {
 
 const PasskeySetup = () => {
   const { state } = useLocation();
+  const redirectTo = useGlobalRedirectTo();
   const [, continueFlowState] = validate(state, continueFlowStateGuard);
 
   const { handleBindPasskey } = usePasskeySignIn();
@@ -40,6 +42,8 @@ const PasskeySetup = () => {
       replace: true,
     }
   );
+
+  const asyncSkipPasskeyBinding = useApi(skipPasskeyBinding);
 
   useEffect(() => {
     if (!browserSupportsWebAuthn()) {
@@ -76,9 +80,18 @@ const PasskeySetup = () => {
     setIsSubmitting(false);
   }, [handleBindPasskey, registrationResult, onSubmitErrorHandlers]);
 
-  const onSkip = useCallback(() => {
-    // TODO: Skip adding passkey for sign-in and redirect to the next step
-  }, []);
+  const onSkip = useCallback(async () => {
+    const [error, result] = await asyncSkipPasskeyBinding();
+
+    if (error) {
+      await handleError(error, onSubmitErrorHandlers);
+      return;
+    }
+
+    if (result) {
+      await redirectTo(result.redirectTo);
+    }
+  }, [asyncSkipPasskeyBinding, handleError, onSubmitErrorHandlers, redirectTo]);
 
   if (!browserSupportsWebAuthn()) {
     return <ErrorPage title="mfa.webauthn_not_supported" />;

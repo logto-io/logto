@@ -164,6 +164,24 @@
           }
         }
       }
+    },
+    "/api/experience/profile/mfa/passkey-skipped": {
+      "post": {
+        "operationId": "SkipPasskeyBinding",
+        "summary": "Skip passkey binding",
+        "description": "Skip passkey binding flow. The users can temporarily skip the passkey binding flow by calling this API during sign-up. On sign-in, the skip flag will be persisted to user config.",
+        "responses": {
+          "204": {
+            "description": "The passkey binding flow has been permanently skipped."
+          },
+          "400": {
+            "description": "Not supported for the current interaction event. This API can only be used in the `SignIn` or `Register` interaction."
+          },
+          "404": {
+            "description": "The user has not been identified yet. The `passkey-skipped` configuration must be associated with a identified user."
+          }
+        }
+      }
     }
   }
 }
