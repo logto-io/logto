@@ -94,7 +94,11 @@ const saveInteractionLastSubmissionToSession = async (
   queries: Queries,
   interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>
 ) => {
-  const { session, lastSubmission } = interactionDetails;
+  const {
+    session,
+    lastSubmission,
+    params: { client_id: clientId },
+  } = interactionDetails;
 
   if (!session || !lastSubmission) {
     return;
@@ -109,6 +113,7 @@ const saveInteractionLastSubmissionToSession = async (
       sessionUid: session.uid,
       accountId: session.accountId,
       lastSubmission: result.data,
+      ...conditional(typeof clientId === 'string' && { clientId }),
     });
   }
 };

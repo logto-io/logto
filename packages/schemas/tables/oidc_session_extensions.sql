@@ -7,6 +7,7 @@ create table oidc_session_extensions (
   account_id varchar(12) not null
     references users (id) on update cascade on delete cascade,
   last_submission jsonb /* @use JsonObject */ not null default '{}'::jsonb,
+  client_id varchar(21) null,
   created_at timestamptz not null default(now()),
   updated_at timestamptz not null default(now()),
   primary key (tenant_id, session_uid)

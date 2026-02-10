@@ -57,6 +57,7 @@ describe('saveInteractionLastSubmissionToSession', () => {
       sessionUid: 'sessionUid',
       accountId: mockUser.id,
       lastSubmission: { foo: 'bar' },
+      clientId: 'clientId',
     });
   });
 });
