@@ -66,6 +66,7 @@ export const manageRolePermissions =
 export const userManagement = '/user-management';
 export const userCustomData = '/user-management/user-data#custom-data';
 export const personalAccessToken = '/user-management/personal-access-token';
+export const customIdToken = '/developers/custom-id-token';
 export const userImpersonation = '/developers/user-impersonation';
 export const webhooks = '/developers/webhooks';
 export const secureWebhooks = '/developers/webhooks/secure-webhooks';

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import { customIdToken } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import CardTitle from '@/ds-components/CardTitle';
@@ -49,28 +49,27 @@ function CustomizeJwt() {
     clientCredentialsJwtCustomizer,
   } = useJwtCustomizer();
 
-  // DEV: ID token claims configuration
   const {
     data: idTokenConfig,
     isLoading: isIdTokenLoading,
     updateConfig: updateIdTokenConfig,
-  } = useIdTokenConfig({ enabled: isDevFeaturesEnabled });
+  } = useIdTokenConfig();
 
-  const isLoading = isJwtLoading || (isDevFeaturesEnabled && isIdTokenLoading);
+  const isLoading = isJwtLoading || isIdTokenLoading;
 
   // Local state for ID token claims editing
   const [enabledClaims, setEnabledClaims] = useState<ExtendedIdTokenClaim[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Initialize local state when data is loaded
-  if (isDevFeaturesEnabled && !isInitialized && idTokenConfig) {
+  if (!isInitialized && idTokenConfig) {
     setEnabledClaims(idTokenConfig.enabledExtendedClaims ?? []);
     setIsInitialized(true);
   }
 
   // Check if there are unsaved changes
   const hasChanges = useMemo(() => {
-    if (!isDevFeaturesEnabled || !idTokenConfig) {
+    if (!idTokenConfig) {
       return false;
     }
     const originalClaims = idTokenConfig.enabledExtendedClaims ?? [];
@@ -101,9 +100,7 @@ function CustomizeJwt() {
       <CardTitle
         paywall={cond(!isPaidTenant && latestProPlanId)}
         title="jwt_claims.title"
-        subtitle={
-          isDevFeaturesEnabled ? 'jwt_claims.description_with_id_token' : 'jwt_claims.description'
-        }
+        subtitle="jwt_claims.description"
         learnMoreLink={{
           href: getDocumentationUrl('/docs/recipes/custom-jwt'),
           targetBlank: 'noopener',
@@ -115,7 +112,7 @@ function CustomizeJwt() {
         {isLoading && (
           <>
             <FormCardSkeleton formFieldCount={2} />
-            {isDevFeaturesEnabled && <FormCardSkeleton formFieldCount={1} />}
+            <FormCardSkeleton formFieldCount={1} />
           </>
         )}
         {!isLoading && (
@@ -161,23 +158,20 @@ function CustomizeJwt() {
                 )}
               </FormField>
             </FormCard>
-            {/* DEV: ID token claims configuration */}
-            {isDevFeaturesEnabled && (
-              <FormCard
-                title="jwt_claims.id_token.card_title"
-                description="jwt_claims.id_token.card_description"
-                learnMoreLink={{
-                  href: getDocumentationUrl('/docs/recipes/custom-jwt/id-token'),
-                  targetBlank: 'noopener',
-                }}
-              >
-                <IdTokenSection
-                  value={enabledClaims}
-                  isDisabled={showPaywall}
-                  onChange={setEnabledClaims}
-                />
-              </FormCard>
-            )}
+            <FormCard
+              title="jwt_claims.id_token.card_title"
+              description="jwt_claims.id_token.card_description"
+              learnMoreLink={{
+                href: getDocumentationUrl(customIdToken),
+                targetBlank: 'noopener',
+              }}
+            >
+              <IdTokenSection
+                value={enabledClaims}
+                isDisabled={showPaywall}
+                onChange={setEnabledClaims}
+              />
+            </FormCard>
           </>
         )}
       </div>

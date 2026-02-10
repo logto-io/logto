@@ -1,8 +1,6 @@
 const jwt_claims = {
   title: 'Niestandardowe JWT',
   description:
-    'Ustaw niestandardowe roszczenia JWT, które mają być dołączone do tokenu dostępowego. Te roszczenia mogą być wykorzystane do przekazywania dodatkowych informacji do Twojej aplikacji.',
-  description_with_id_token:
     'Dostosuj token dostępowy lub token ID, dostarczając dodatkowe informacje do Twojej aplikacji.',
   access_token: {
     card_title: 'Token dostępowy',
@@ -26,7 +24,7 @@ const jwt_claims = {
       'Token ID to twierdzenie tożsamości otrzymane po zalogowaniu, zawierające roszczenia tożsamości użytkownika dla klienta do wykorzystania w celu wyświetlenia lub tworzenia sesji.',
     card_field: 'Token ID użytkownika',
     card_field_description:
-      'Standardowe roszczenia OIDC (np. sub, email, profile) są zawsze dostępne, podczas gdy roszczenia zdefiniowane przez Logto muszą być najpierw włączone tutaj. W obu przypadkach musisz zażądać odpowiednich zakresów podczas integracji aplikacji, aby je otrzymać.',
+      "Roszczenia 'sub', 'email', 'phone', 'profile' i 'address' są zawsze dostępne. Inne roszczenia muszą być najpierw włączone tutaj. We wszystkich przypadkach Twoja aplikacja musi zażądać odpowiednich zakresów podczas integracji, aby je otrzymać.",
   },
   code_editor_title: 'Dostosuj roszczenia {{token}}',
   custom_jwt_create_button: 'Dodaj niestandardowe roszczenia',

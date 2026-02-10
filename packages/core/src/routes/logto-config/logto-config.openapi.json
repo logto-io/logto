@@ -295,7 +295,6 @@
     },
     "/api/configs/id-token": {
       "get": {
-        "tags": ["Dev feature"],
         "summary": "Get ID token claims configuration",
         "description": "Get the ID token extended claims configuration for the tenant. This configuration controls which extended claims (e.g., `custom_data`, `identities`, `roles`, `organizations`, `organization_roles`) are included in ID tokens.",
         "responses": {
@@ -308,7 +307,6 @@
         }
       },
       "put": {
-        "tags": ["Dev feature"],
         "summary": "Upsert ID token claims configuration",
         "description": "Create or update the ID token extended claims configuration for the tenant. This controls which extended claims are included in ID tokens when the corresponding scopes are requested.",
         "requestBody": {

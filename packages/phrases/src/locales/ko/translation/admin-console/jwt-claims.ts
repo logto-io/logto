@@ -1,9 +1,6 @@
 const jwt_claims = {
   title: '사용자 정의 JWT',
-  description:
-    '액세스 토큰에 포함할 사용자 정의 JWT 클레임을 설정하세요. 이러한 클레임은 추가 정보를 응용 프로그램에 전달하는 데 사용될 수 있습니다.',
-  description_with_id_token:
-    '액세스 토큰 또는 ID 토큰을 커스터마이즈하여 애플리케이션에 추가 정보를 제공합니다.',
+  description: '액세스 토큰 또는 ID 토큰을 커스터마이즈하여 애플리케이션에 추가 정보를 제공합니다.',
   access_token: {
     card_title: '액세스 토큰',
     card_description:
@@ -25,7 +22,7 @@ const jwt_claims = {
       'ID 토큰은 로그인 후 받는 신원 인증으로, 클라이언트가 표시 또는 세션 생성에 사용하는 사용자 식별 클레임을 포함합니다.',
     card_field: '사용자 ID 토큰',
     card_field_description:
-      '표준 OIDC 클레임(예: sub, email, profile)은 항상 사용 가능하지만, Logto 정의 클레임은 먼저 여기서 활성화해야 합니다. 두 경우 모두 앱 통합 중에 일치하는 스코프를 요청해야 받을 수 있습니다.',
+      "클레임 'sub', 'email', 'phone', 'profile', 'address'는 항상 사용 가능합니다. 다른 클레임은 먼저 여기서 활성화해야 합니다. 모든 경우에 앱은 통합 시 일치하는 스코프를 요청해야 받을 수 있습니다.",
   },
   code_editor_title: '{{$token}} 클레임을 사용자화',
   custom_jwt_create_button: '사용자 정의 클레임 추가',
