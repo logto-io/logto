@@ -20,6 +20,10 @@ const oidc = {
   key_not_found: 'ID가 {{id}}인 키를 찾을 수 없어요.',
   /** UNTRANSLATED */
   invalid_session_payload: 'Invalid session payload.',
+  /** UNTRANSLATED */
+  session_not_found: 'Session not found.',
+  /** UNTRANSLATED */
+  invalid_session_account_id: 'Session accountId mismatch.',
 };
 
 export default Object.freeze(oidc);

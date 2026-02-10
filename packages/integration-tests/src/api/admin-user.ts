@@ -228,3 +228,10 @@ export const getUserSsoIdentity = async (
 
 export const getUserSessions = async (userId: string) =>
   authedAdminApi.get(`users/${userId}/sessions`).json<GetUserSessionsResponse>();
+
+export const revokeUserSession = async (userId: string, sessionId: string, revokeGrants = false) =>
+  authedAdminApi.delete(`users/${userId}/sessions/${sessionId}`, {
+    searchParams: new URLSearchParams({
+      ...conditional(revokeGrants && { revokeGrants: 'true' }),
+    }),
+  });

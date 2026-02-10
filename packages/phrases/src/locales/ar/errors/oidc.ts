@@ -20,6 +20,10 @@ const oidc = {
   key_not_found: 'لم يتم العثور على المفتاح بالمعرف {{id}}.',
   /** UNTRANSLATED */
   invalid_session_payload: 'Invalid session payload.',
+  /** UNTRANSLATED */
+  session_not_found: 'Session not found.',
+  /** UNTRANSLATED */
+  invalid_session_account_id: 'Session accountId mismatch.',
 };
 
 export default Object.freeze(oidc);

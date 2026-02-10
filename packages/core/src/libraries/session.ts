@@ -179,7 +179,7 @@ export const consent = async ({
 };
 
 export const createSessionLibrary = (queries: Queries) => {
-  const { oidcSessionExtensions } = queries;
+  const { oidcSessionExtensions, oidcModelInstances } = queries;
 
   const findUserActiveSessionsWithExtensions = async (userId: string) => {
     const result = await oidcSessionExtensions.findUserActiveSessionsWithExtensions(userId);

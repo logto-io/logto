@@ -12,6 +12,25 @@
         "summary": "Get user active sessions",
         "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available."
       }
+    },
+    "/api/users/{userId}/sessions/{sessionId}": {
+      "delete": {
+        "tags": ["Dev feature"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "revokeGrants",
+            "description": "Whether to revoke all associated grants and tokens along with the session."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Session revoked successfully."
+          }
+        },
+        "summary": "Revoke a user session",
+        "description": "Revoke a specific user session by its ID, optionally revoking all associated grants and tokens."
+      }
     }
   }
 }
