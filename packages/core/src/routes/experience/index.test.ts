@@ -392,7 +392,7 @@ describe('POST /experience/submit', () => {
     expect(userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
   });
 
-  it('should skip recording when adaptive MFA is disabled', async () => {
+  it('should record geo context when adaptive MFA is disabled', async () => {
     setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks({
       adaptiveMfaEnabled: false,
@@ -405,8 +405,12 @@ describe('POST /experience/submit', () => {
       .set('x-logto-cf-longitude', '139.6503');
 
     expect(response.status).toBe(200);
-    expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
-    expect(userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
+    expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+      mockUser.id,
+      35.6762,
+      139.6503
+    );
+    expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'JP');
   });
 
   it('should skip recording for non-sign-in interactions', async () => {
