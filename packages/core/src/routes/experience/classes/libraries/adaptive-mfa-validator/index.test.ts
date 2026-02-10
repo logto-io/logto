@@ -1,4 +1,4 @@
-import { type User } from '@logto/schemas';
+import { InteractionEvent, type User } from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
@@ -166,27 +166,29 @@ describe('AdaptiveMfaValidator', () => {
     );
   });
 
-  it('persists geo location and country when context has data', async () => {
+  it('records geo location and country on sign-in when context has data', async () => {
     const user: User = {
       ...mockUser,
       lastSignInAt: Date.now(),
     };
     const queries = createQueries();
+    const ctx = {
+      request: {
+        headers: {
+          'x-logto-cf-country': 'US',
+          'x-logto-cf-latitude': '12.3',
+          'x-logto-cf-longitude': '45.6',
+        },
+      },
+    };
 
     const validator = new AdaptiveMfaValidator({
       queries,
+      ctx,
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-    await validator.persistContext(user, {
-      currentContext: {
-        location: {
-          latitude: 12.3,
-          longitude: 45.6,
-          country: 'US',
-        },
-      },
-    });
+    await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
       user.id,
@@ -221,7 +223,7 @@ describe('AdaptiveMfaValidator', () => {
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-    await validator.persistContext(user);
+    await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(user.id, 0, 0);
   });
@@ -258,27 +260,29 @@ describe('AdaptiveMfaValidator', () => {
     }
   );
 
-  it('persists context when adaptive MFA is disabled', async () => {
+  it('records context when adaptive MFA is disabled', async () => {
     const user: User = {
       ...mockUser,
       lastSignInAt: Date.now(),
     };
     const queries = createQueries();
+    const ctx = {
+      request: {
+        headers: {
+          'x-logto-cf-country': 'US',
+          'x-logto-cf-latitude': '12.3',
+          'x-logto-cf-longitude': '45.6',
+        },
+      },
+    };
 
     const validator = new AdaptiveMfaValidator({
       queries,
+      ctx,
       signInExperienceValidator: createSignInExperienceValidator(false),
     });
 
-    await validator.persistContext(user, {
-      currentContext: {
-        location: {
-          latitude: 12.3,
-          longitude: 45.6,
-          country: 'US',
-        },
-      },
-    });
+    await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
       user.id,
@@ -292,7 +296,7 @@ describe('AdaptiveMfaValidator', () => {
     );
   });
 
-  it('skips persisting context when dev features are disabled even with context override', async () => {
+  it('skips recording sign-in geo context when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);
 
     const user: User = {
@@ -300,21 +304,52 @@ describe('AdaptiveMfaValidator', () => {
       lastSignInAt: Date.now(),
     };
     const queries = createQueries();
+    const ctx = {
+      request: {
+        headers: {
+          'x-logto-cf-country': 'US',
+          'x-logto-cf-latitude': '12.3',
+          'x-logto-cf-longitude': '45.6',
+        },
+      },
+    };
 
     const validator = new AdaptiveMfaValidator({
       queries,
+      ctx,
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-    await validator.persistContext(user, {
-      currentContext: {
-        location: {
-          latitude: 12.3,
-          longitude: 45.6,
-          country: 'US',
+    await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
+
+    expect(queries.userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
+    expect(queries.userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
+    expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).not.toHaveBeenCalled();
+  });
+
+  it('skips recording context for non-sign-in interactions', async () => {
+    const user: User = {
+      ...mockUser,
+      lastSignInAt: Date.now(),
+    };
+    const queries = createQueries();
+    const ctx = {
+      request: {
+        headers: {
+          'x-logto-cf-country': 'US',
+          'x-logto-cf-latitude': '12.3',
+          'x-logto-cf-longitude': '45.6',
         },
       },
+    };
+
+    const validator = new AdaptiveMfaValidator({
+      queries,
+      ctx,
+      signInExperienceValidator: createSignInExperienceValidator(),
     });
+
+    await validator.recordSignInGeoContext(user, InteractionEvent.Register);
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
     expect(queries.userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();

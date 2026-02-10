@@ -81,7 +81,34 @@ export class AdaptiveMfaValidator {
     return this.evaluateRules(state);
   }
 
-  public async persistContext(user: User, options: AdaptiveMfaEvaluationOptions = {}) {
+  public getCurrentContext(contextOverride?: AdaptiveMfaContext): Optional<AdaptiveMfaContext> {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    if (contextOverride !== undefined) {
+      return contextOverride;
+    }
+
+    if (this.adaptiveMfaContext) {
+      return this.adaptiveMfaContext;
+    }
+
+    const context = parseAdaptiveMfaContext(this.getSignInContext());
+
+    this.adaptiveMfaContext = context;
+    return this.adaptiveMfaContext;
+  }
+
+  public getSignInContext(): Optional<Record<string, string>> {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    return conditional(this.ctx && getInjectedHeaderValues(this.ctx.request.headers));
+  }
+
+  private async persistContext(user: User, options: AdaptiveMfaEvaluationOptions = {}) {
     if (!EnvSet.values.isDevFeaturesEnabled) {
       return;
     }
@@ -113,33 +140,6 @@ export class AdaptiveMfaValidator {
     ];
 
     await Promise.all(tasks);
-  }
-
-  public getCurrentContext(contextOverride?: AdaptiveMfaContext): Optional<AdaptiveMfaContext> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
-    if (contextOverride !== undefined) {
-      return contextOverride;
-    }
-
-    if (this.adaptiveMfaContext) {
-      return this.adaptiveMfaContext;
-    }
-
-    const context = parseAdaptiveMfaContext(this.getSignInContext());
-
-    this.adaptiveMfaContext = context;
-    return this.adaptiveMfaContext;
-  }
-
-  public getSignInContext(): Optional<Record<string, string>> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
-    return conditional(this.ctx && getInjectedHeaderValues(this.ctx.request.headers));
   }
 
   private buildEvaluationState(
