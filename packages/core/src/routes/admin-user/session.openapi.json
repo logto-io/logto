@@ -21,6 +21,18 @@
             "in": "query",
             "name": "revokeGrants",
             "description": "Whether to revoke all associated grants and tokens along with the session."
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "description": "The ID of the user whose session is to be revoked."
+          },
+          {
+            "in": "path",
+            "name": "sessionId",
+            "required": true,
+            "description": "The ID of the session to revoke."
           }
         ],
         "responses": {
