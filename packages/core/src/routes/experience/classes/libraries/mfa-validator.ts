@@ -100,18 +100,11 @@ export class MfaValidator {
   }
 
   /**
-   * Check if the user has enabled MFA verifications, if true, MFA verification records are required.
+   * Check if the user has any MFA factors bound (configured and enabled in SIE).
+   * This is a pure user-state check — it does NOT consider MFA policy or `skipMfaOnSignIn`.
+   * For policy-aware decisions, use {@link isMfaRequired} instead.
    */
   get isMfaEnabled() {
-    // Users can manually disable MFA verification requirement for sign-in,
-    // but if the MFA policy is set to mandatory, this setting will be ignored.
-    const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
-    const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
-
-    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
-      return false;
-    }
-
     return this.userEnabledMfaVerifications.length > 0;
   }
 
@@ -123,7 +116,7 @@ export class MfaValidator {
    * - Otherwise, do not require (adaptive not triggered, or user has no MFA).
    *
    * When adaptive MFA is disabled (result is undefined):
-   * - Fall back to `isMfaEnabled` (policy-based check, respects `skipMfaOnSignIn`).
+   * - Fall back to policy-based check (respects `skipMfaOnSignIn` and MFA policy).
    */
   get isMfaRequired(): boolean {
     return this.mfaRequirement.required;
@@ -144,11 +137,10 @@ export class MfaValidator {
   }
 
   /**
-   * Check if MFA is verified based on policy (respects `skipMfaOnSignIn`).
-   * Returns `true` if MFA is not enabled or if a valid MFA verification record exists.
+   * Check if MFA is verified. Returns `true` if the user has no MFA factors bound,
+   * or if a valid MFA verification record exists.
    */
   isMfaVerified(verificationRecords: VerificationRecord[]) {
-    // MFA validation is not enabled
     if (!this.isMfaEnabled) {
       return true;
     }
@@ -190,6 +182,15 @@ export class MfaValidator {
         };
       }
 
+      return { required: false, source: 'none' };
+    }
+
+    // Fallback to policy-based check when adaptive MFA is disabled.
+    // Respects `skipMfaOnSignIn` unless MFA policy is mandatory.
+    const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
+    const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
+
+    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
       return { required: false, source: 'none' };
     }
 
