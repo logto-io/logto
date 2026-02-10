@@ -39,9 +39,12 @@ const mfa = {
   require_mfa: 'MFA erforderlich',
   require_mfa_label:
     'Aktivieren Sie dies, um die Zwei-Schritt-Verifizierung für den Zugriff auf Ihre Anwendungen obligatorisch zu machen. Wenn deaktiviert, können Benutzer entscheiden, ob sie MFA für sich selbst aktivieren möchten.',
-  adaptive_mfa: 'Adaptive MFA',
-  adaptive_mfa_label:
-    'MFA nur auslösen, wenn Risikosignale erkannt werden. Verpflichtende MFA setzt diese Einstellung außer Kraft. Erfordert mindestens einen MFA-Faktor.',
+  require_mfa_optional:
+    'Optionale MFA: Ermöglicht Benutzern, MFA für die Sicherheit ihres eigenen Kontos zu aktivieren',
+  require_mfa_adaptive:
+    'Adaptive MFA: Nur nach MFA fragen, wenn eine Anmeldung riskant erscheint (z. B. neues Gerät/Standort)',
+  require_mfa_mandatory:
+    'Obligatorische MFA: Erfordert, dass alle Benutzer bei jeder Anmeldung MFA abschließen',
   set_up_prompt: 'MFA-Einrichtungsaufforderung',
   no_prompt: 'Benutzer nicht zur Einrichtung von MFA auffordern',
   prompt_at_sign_in_and_sign_up:

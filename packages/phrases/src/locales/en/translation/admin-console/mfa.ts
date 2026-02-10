@@ -37,9 +37,12 @@ const mfa = {
   require_mfa: 'Require MFA',
   require_mfa_label:
     'Enable this to make 2-step verification mandatory for accessing your applications. If disabled, users can decide whether to enable MFA for themselves.',
-  adaptive_mfa: 'Adaptive MFA',
-  adaptive_mfa_label:
-    'Triggers MFA only when risk signals are detected. Mandatory MFA overrides this setting. Requires at least one MFA factor.',
+  require_mfa_optional:
+    'Optional MFA: Let users choose to enable MFA for their own account security',
+  require_mfa_adaptive:
+    'Adaptive MFA: Only ask for MFA when a sign-in seems risky (e.g., new device / location)',
+  require_mfa_mandatory:
+    'Mandatory MFA: Requires all users to complete MFA every time they sign in',
   set_up_prompt: 'MFA set-up prompt',
   no_prompt: 'Do not ask users to set up MFA',
   prompt_at_sign_in_and_sign_up:

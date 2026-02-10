@@ -29,9 +29,9 @@ const mfa = {
   require_mfa: '需要 MFA',
   require_mfa_label:
     '啟用此功能可使雙步驗證成為訪問你的應用的必須步驟。如果禁用，用戶可以自行決定是否啟用 MFA。',
-  adaptive_mfa: '自適應 MFA',
-  adaptive_mfa_label:
-    '僅在偵測到風險訊號時觸發 MFA 驗證。強制 MFA 會覆蓋此設定。需先啟用至少一種 MFA 因素。',
+  require_mfa_optional: '可選 MFA：允許用戶自行選擇是否為其帳號啟用 MFA',
+  require_mfa_adaptive: '自適應 MFA：僅在登入看似有風險時（例如新裝置/地點）才要求 MFA',
+  require_mfa_mandatory: '強制 MFA：要求所有用戶在每次登入時完成 MFA',
   set_up_prompt: 'MFA 設定提示',
   no_prompt: '不要求用戶設置 MFA',
   prompt_at_sign_in_and_sign_up: '在註冊期間提示用戶設置 MFA（可跳過，一次性提示）',

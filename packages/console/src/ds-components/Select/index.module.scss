@@ -135,6 +135,24 @@
   max-height: 288px;
 }
 
+.selectedOption {
+  color: var(--color-primary);
+}
+
+.optionWithIndicator {
+  gap: _.unit(1);
+}
+
+.selectedOptionIcon {
+  color: var(--color-primary);
+  width: _.unit(5);
+  height: _.unit(5);
+}
+
+.hiddenSelectedOptionIcon {
+  visibility: hidden;
+}
+
 .spinner {
   color: var(--color-placeholder);
   margin: _.unit(2);
