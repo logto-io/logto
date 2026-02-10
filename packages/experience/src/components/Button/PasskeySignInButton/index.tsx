@@ -20,6 +20,7 @@ const PasskeySignInButton = () => {
     authenticationOptions,
     isLoading: isPreparing,
     markAuthenticationOptionsConsumed,
+    abortConditionalUI,
   } = useContext(WebAuthnContext);
   const { handleVerifyPasskey } = usePasskeySignIn();
 
@@ -35,6 +36,9 @@ const PasskeySignInButton = () => {
     if (!authenticationOptions) {
       return;
     }
+    // Abort any pending conditional UI request before starting manual passkey sign-in
+    // to prevent `OperationError: A request is already pending`.
+    abortConditionalUI();
     setIsSubmitting(true);
     try {
       await handleVerifyPasskey(authenticationOptions, preSignInErrorHandler);
@@ -43,6 +47,7 @@ const PasskeySignInButton = () => {
       setIsSubmitting(false);
     }
   }, [
+    abortConditionalUI,
     authenticationOptions,
     handleVerifyPasskey,
     markAuthenticationOptionsConsumed,

@@ -75,7 +75,14 @@ const usePasskeySignIn = () => {
       }
       const response = await trySafe(
         async () => startAuthentication(options),
-        () => {
+        (error: unknown) => {
+          // User cancelled the WebAuthn dialog, no need to show an error toast
+          if (
+            (error instanceof DOMException && error.name === 'NotAllowedError') ||
+            (error instanceof Error && error.name === 'NotAllowedError')
+          ) {
+            return;
+          }
           setToast(t('mfa.webauthn_failed_to_verify'));
         }
       );
