@@ -45,6 +45,7 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
         userId: string(),
         sessionId: string(),
       }),
+      status: [204, 404, 500],
     }),
     async (ctx, next) => {
       const { sessionId, userId } = ctx.guard.params;

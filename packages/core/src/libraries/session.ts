@@ -179,7 +179,7 @@ export const consent = async ({
 };
 
 export const createSessionLibrary = (queries: Queries) => {
-  const { oidcSessionExtensions, oidcModelInstances } = queries;
+  const { oidcSessionExtensions } = queries;
 
   const findUserActiveSessionsWithExtensions = async (userId: string) => {
     const result = await oidcSessionExtensions.findUserActiveSessionsWithExtensions(userId);
@@ -196,7 +196,7 @@ export const createSessionLibrary = (queries: Queries) => {
         throw new RequestError(
           { code: 'oidc.invalid_session_payload', status: 500 },
           {
-            originalError: payloadResult.error,
+            cause: payloadResult.error,
           }
         );
       }
