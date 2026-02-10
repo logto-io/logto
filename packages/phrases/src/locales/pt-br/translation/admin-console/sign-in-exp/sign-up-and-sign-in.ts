@@ -57,6 +57,18 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       'Quando ativado, os usuários que fazem login via provedores sociais devem preencher qualquer identificador de inscrição obrigatório ausente (como e-mail) antes de concluir o login. \n\nSe desativado, os usuários podem prosseguir sem fornecer identificadores ausentes, mesmo que a conta social não os sincronizou.',
   },
+  passkey_sign_in: {
+    title: 'LOGIN COM PASSKEY',
+    passkey_sign_in: 'Login com Passkey',
+    enable_passkey_sign_in_description:
+      'Permitir que os usuários acessem o aplicativo de forma rápida e segura via Passkey (WebAuthn), usando biometria ou chave de segurança, etc.',
+    prompts: 'Prompts de Passkey',
+    show_passkey_button: 'Mostrar o botão "Continuar com Passkey" na página de login',
+    show_passkey_button_tip:
+      'Desabilitar o botão "Continuar com Passkey" torna o fluxo de login baseado em identificador primeiro, mostrando as opções de senha e Passkey na próxima etapa.',
+    allow_autofill:
+      'Permitir prompts e preenchimento automático de Passkeys registradas nos campos de identificador',
+  },
   tip: {
     set_a_password: 'Um conjunto exclusivo de uma senha para o seu nome de usuário é obrigatório.',
     verify_at_sign_up:

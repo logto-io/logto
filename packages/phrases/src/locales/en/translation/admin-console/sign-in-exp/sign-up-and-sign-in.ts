@@ -56,6 +56,17 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       'When enabled, users logging in via social providers must fill in any missing required sign-up identifier (such as email) before completing their login. \n\nIf disabled, users can proceed without providing missing identifiers, even if the social account didn’t sync them.',
   },
+  passkey_sign_in: {
+    title: 'PASSKEY SIGN-IN',
+    passkey_sign_in: 'Passkey sign-in',
+    enable_passkey_sign_in_description:
+      'Enable users to quickly and securely access the application via Passkey (WebAuthn), using biometrics or security key, etc.',
+    prompts: 'Passkey prompts',
+    show_passkey_button: 'Show “Continue with passkey” button on the sign-in page',
+    show_passkey_button_tip:
+      'Disabling “Continue with passkey” button makes the sign-in flow identifier-first, showing password and passkey options on the next step.',
+    allow_autofill: 'Allow prompting and autofill of registered passkeys in identifier fields',
+  },
   tip: {
     set_a_password: 'A unique set of a password to your username is a must.',
     verify_at_sign_up:

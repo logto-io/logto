@@ -52,6 +52,10 @@
     align-items: center;
   }
 
+  .toggleTipButton {
+    margin-block: _.unit(-0.5);
+  }
+
   .label {
     font: var(--font-body-2);
     color: var(--color-text);

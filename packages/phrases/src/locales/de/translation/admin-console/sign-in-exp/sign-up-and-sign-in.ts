@@ -57,6 +57,18 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       'Wenn aktiviert, müssen sich Benutzer über soziale Anbieter einloggen und alle fehlenden Anmeldeidentifier (wie E-Mail) ausfüllen, bevor sie sich anmelden können.\n\nWenn deaktiviert, können Benutzer fortfahren, ohne fehlende Identifier anzugeben, auch wenn das soziale Konto sie nicht synchronisiert hat.',
   },
+  passkey_sign_in: {
+    title: 'PASSKEY-ANMELDUNG',
+    passkey_sign_in: 'Passkey-Anmeldung',
+    enable_passkey_sign_in_description:
+      'Ermöglichen Sie Benutzern, über Passkey (WebAuthn) schnell und sicher auf die Anwendung zuzugreifen, z. B. mit Biometrie oder Sicherheitsschlüssel.',
+    prompts: 'Passkey-Eingabeaufforderungen',
+    show_passkey_button: '"Mit Passkey fortfahren"-Schaltfläche auf der Anmeldeseite anzeigen',
+    show_passkey_button_tip:
+      'Das Deaktivieren der "Mit Passkey fortfahren"-Schaltfläche macht den Anmeldefluss identifikatorbasiert, wobei Passwort- und Passkey-Optionen im nächsten Schritt angezeigt werden.',
+    allow_autofill:
+      'Eingabeaufforderung und automatisches Ausfüllen registrierter Passkeys in Identifikatorfeldern erlauben',
+  },
   tip: {
     set_a_password: 'Ein einmaliges Passwort für Ihren Benutzernamen ist ein Muss.',
     verify_at_sign_up:

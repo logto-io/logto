@@ -57,6 +57,18 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       'Etkinleştirildiğinde, sosyal sağlayıcılar aracılığıyla oturum açan kullanıcıların, oturum açmayı tamamlamadan önce eksik olan zorunlu kayıt tanımlayıcılarını (örneğin e-posta) doldurmaları gerekmektedir.\n\nDevre dışı bırakıldığında, kullanıcılar eksik tanımlayıcıları sağlamadan devam edebilirler, hatta sosyal hesap bu tanımlayıcıları senkronize etmemiş olsa bile.',
   },
+  passkey_sign_in: {
+    title: 'PASSKEY İLE OTURUM AÇMA',
+    passkey_sign_in: 'Passkey ile oturum açma',
+    enable_passkey_sign_in_description:
+      'Kullanıcıların biyometri veya güvenlik anahtarı vb. kullanarak Passkey (WebAuthn) aracılığıyla uygulamaya hızlı ve güvenli bir şekilde erişmesini sağlayın.',
+    prompts: 'Passkey istemleri',
+    show_passkey_button: 'Oturum açma sayfasında "Passkey ile devam et" düğmesini göster',
+    show_passkey_button_tip:
+      '"Passkey ile devam et" düğmesini devre dışı bırakmak, oturum açma akışını tanımlayıcı öncelikli yapar ve bir sonraki adımda şifre ve Passkey seçeneklerini gösterir.',
+    allow_autofill:
+      "Tanımlayıcı alanlarında kayıtlı Passkey'lerin istemini ve otomatik doldurmasını izin ver",
+  },
   tip: {
     set_a_password: 'Kullanıcı adınıza benzersiz bir şifre belirlemek şarttır.',
     verify_at_sign_up:

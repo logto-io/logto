@@ -51,6 +51,17 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       '啟用後，通過社交提供者登入的用戶必須在完成登入前填寫任何缺失的註冊標識符（例如郵件）。\n\n如果禁用，用戶可以在不提供缺失標識符的情況下繼續，即使社交帳戶未同步它們。',
   },
+  passkey_sign_in: {
+    title: '通行密鑰登入',
+    passkey_sign_in: '通行密鑰登入',
+    enable_passkey_sign_in_description:
+      '啟用使用者透過通行密鑰（WebAuthn）快速安全地存取應用程式，使用生物辨識或安全金鑰等。',
+    prompts: '通行密鑰提示',
+    show_passkey_button: '在登入頁面顯示「使用通行密鑰繼續」按鈕',
+    show_passkey_button_tip:
+      '停用「使用通行密鑰繼續」按鈕後，登入流程將優先使用識別碼，在下一步顯示密碼和通行密鑰選項。',
+    allow_autofill: '允許在識別碼欄位中提示和自動填入已註冊的通行密鑰',
+  },
   tip: {
     set_a_password: '啟用使用者名稱註冊，必須設定密碼。',
     verify_at_sign_up:

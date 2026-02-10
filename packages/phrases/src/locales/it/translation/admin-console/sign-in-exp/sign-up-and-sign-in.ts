@@ -58,6 +58,18 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       "Quando abilitato, gli utenti che accedono tramite fornitori sociali devono completare gli identificatori di registrazione mancanti (come l'email) prima di completare il login. \n\nSe disabilitato, gli utenti possono procedere senza fornire identificatori mancanti, anche se l'account social non li ha sincronizzati.",
   },
+  passkey_sign_in: {
+    title: 'ACCESSO CON PASSKEY',
+    passkey_sign_in: 'Accesso con Passkey',
+    enable_passkey_sign_in_description:
+      "Consenti agli utenti di accedere rapidamente e in sicurezza all'applicazione tramite Passkey (WebAuthn), utilizzando biometria o chiave di sicurezza, ecc.",
+    prompts: 'Prompt Passkey',
+    show_passkey_button: 'Mostra il pulsante "Continua con Passkey" nella pagina di accesso',
+    show_passkey_button_tip:
+      'Disabilitando il pulsante "Continua con Passkey", il flusso di accesso diventa prima per identificatore, mostrando le opzioni password e Passkey nel passaggio successivo.',
+    allow_autofill:
+      'Consenti prompt e compilazione automatica delle Passkey registrate nei campi identificatore',
+  },
   tip: {
     set_a_password: 'Un set unico di password per il tuo nome utente è un must.',
     verify_at_sign_up:
