@@ -2,11 +2,15 @@ import {
   MfaFactor,
   MfaPolicy,
   VerificationType,
+  type LogContextPayload,
   userMfaDataGuard,
   userMfaDataKey,
   type Mfa,
   type User,
 } from '@logto/schemas';
+import { conditional, type Optional } from '@silverhand/essentials';
+
+import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 
 import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
@@ -17,6 +21,8 @@ import {
 import { type VerificationRecord } from '../verifications/index.js';
 import { type TotpVerification } from '../verifications/totp-verification.js';
 import { type WebAuthnVerification } from '../verifications/web-authn-verification.js';
+
+import type { AdaptiveMfaResult } from './adaptive-mfa-validator/types.js';
 
 const mfaVerificationTypes = Object.freeze([
   VerificationType.TOTP,
@@ -57,7 +63,8 @@ const isMfaVerificationRecord = (
 export class MfaValidator {
   constructor(
     private readonly mfaSettings: Mfa,
-    private readonly user: User
+    private readonly user: User,
+    private readonly adaptiveMfaResult?: Optional<AdaptiveMfaResult>
   ) {}
 
   /**
@@ -108,6 +115,38 @@ export class MfaValidator {
     return this.userEnabledMfaVerifications.length > 0;
   }
 
+  /**
+   * Check if the MFA verification is required for the current interaction.
+   *
+   * When adaptive MFA is enabled (result is defined):
+   * - If adaptive MFA triggers and user has MFA bound, require MFA verification.
+   * - Otherwise, do not require (adaptive not triggered, or user has no MFA).
+   *
+   * When adaptive MFA is disabled (result is undefined):
+   * - Fall back to `isMfaEnabled` (policy-based check, respects `skipMfaOnSignIn`).
+   */
+  get isMfaRequired(): boolean {
+    return this.mfaRequirement.required;
+  }
+
+  /**
+   * Append the MFA requirement decision (and adaptive MFA result if present) to the audit log.
+   */
+  logMfaRequirement(log?: LogEntry) {
+    if (!log) {
+      return;
+    }
+
+    log.append({
+      ...conditional(this.adaptiveMfaResult && { adaptiveMfaResult: this.adaptiveMfaResult }),
+      mfaRequirement: this.mfaRequirement,
+    });
+  }
+
+  /**
+   * Check if MFA is verified based on policy (respects `skipMfaOnSignIn`).
+   * Returns `true` if MFA is not enabled or if a valid MFA verification record exists.
+   */
   isMfaVerified(verificationRecords: VerificationRecord[]) {
     // MFA validation is not enabled
     if (!this.isMfaEnabled) {
@@ -117,6 +156,11 @@ export class MfaValidator {
     return this.isMfaVerifiedForRequirement(verificationRecords);
   }
 
+  /**
+   * Check if a valid MFA verification record exists in the given records, regardless of
+   * whether MFA is enabled by policy. Used when MFA is unconditionally required
+   * (e.g. adaptive MFA triggered).
+   */
   isMfaVerifiedForRequirement(verificationRecords: VerificationRecord[]) {
     const verifiedMfaVerificationRecords = verificationRecords.filter(
       (verification) =>
@@ -131,5 +175,25 @@ export class MfaValidator {
     );
 
     return verifiedMfaVerificationRecords.length > 0;
+  }
+
+  /**
+   * Single source of truth for the MFA requirement decision.
+   * Used by both `isMfaRequired` and `logMfaRequirement` to ensure consistency.
+   */
+  private get mfaRequirement(): NonNullable<LogContextPayload['mfaRequirement']> {
+    if (this.adaptiveMfaResult !== undefined) {
+      if (this.adaptiveMfaResult.requiresMfa) {
+        return {
+          required: this.userEnabledMfaVerifications.length > 0,
+          source: 'adaptive',
+        };
+      }
+
+      return { required: false, source: 'none' };
+    }
+
+    const fallback = this.isMfaEnabled;
+    return { required: fallback, source: fallback ? 'policy' : 'none' };
   }
 }

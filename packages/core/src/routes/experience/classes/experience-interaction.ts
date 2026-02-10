@@ -5,7 +5,6 @@ import {
   MfaFactor,
   VerificationType,
   type User,
-  type LogContextPayload,
   userPasskeySignInDataKey,
   userMfaDataKey,
 } from '@logto/schemas';
@@ -55,29 +54,6 @@ import { VerificationRecordsMap } from './verifications/verification-records-map
  * @see {@link https://github.com/logto-io/rfcs | Logto RFCs} for more information about RFC 0004.
  */
 export default class ExperienceInteraction {
-  public static getMfaRequirement(
-    adaptiveMfaEnabled: boolean,
-    requiresAdaptiveMfa: boolean,
-    hasUserMfa: boolean,
-    fallbackMfaRequired: boolean
-  ): NonNullable<LogContextPayload['mfaRequirement']> {
-    if (adaptiveMfaEnabled) {
-      if (requiresAdaptiveMfa) {
-        if (hasUserMfa) {
-          return { required: true, source: 'adaptive' };
-        }
-
-        // TODO: Decide whether to block sign-in or require MFA setup when adaptive MFA triggers
-        // but the user has no supported MFA factors configured.
-        return { required: false, source: 'adaptive' };
-      }
-
-      return { required: false, source: 'none' };
-    }
-
-    return { required: fallbackMfaRequired, source: fallbackMfaRequired ? 'policy' : 'none' };
-  }
-
   public readonly signInExperienceValidator: SignInExperienceValidator;
   public readonly provisionLibrary: ProvisionLibrary;
   /** The user provided profile data in the current interaction that needs to be stored to database. */
@@ -382,26 +358,15 @@ export default class ExperienceInteraction {
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
-    const adaptiveMfaEnabled = adaptiveMfaResult !== undefined;
-    const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
-    const mfaValidator = new MfaValidator(mfaSettings, user);
-    const hasUserMfa = mfaValidator.userEnabledMfaVerifications.length > 0;
-    const mfaRequirement = ExperienceInteraction.getMfaRequirement(
-      adaptiveMfaEnabled,
-      requiresAdaptiveMfa,
-      hasUserMfa,
-      mfaValidator.isMfaEnabled
-    );
-    log?.append({
-      ...conditional(adaptiveMfaResult && { adaptiveMfaResult }),
-      mfaRequirement,
-    });
-    const isVerified =
-      !mfaRequirement.required ||
-      mfaValidator.isMfaVerifiedForRequirement(this.verificationRecordsArray);
+    const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
+
+    mfaValidator.logMfaRequirement(log);
+
+    if (!mfaValidator.isMfaRequired) {
+      return;
+    }
 
     const { primaryEmail, primaryPhone } = user;
-    // Build masked identifiers for UX hints when applicable
     const maskedIdentifiers: Record<string, string> = {
       ...(mfaValidator.availableUserMfaVerificationTypes.includes(
         MfaFactor.EmailVerificationCode
@@ -416,7 +381,7 @@ export default class ExperienceInteraction {
     };
 
     assertThat(
-      isVerified,
+      mfaValidator.isMfaVerifiedForRequirement(this.verificationRecordsArray),
       new RequestError(
         { code: 'session.mfa.require_mfa_verification', status: 403 },
         {
