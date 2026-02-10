@@ -37,12 +37,12 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
     });
   });
 
-  devFeatureTest.describe('with Mandatory MFA policy + adaptive MFA enabled', () => {
+  devFeatureTest.describe('with MFA policy + adaptive MFA enabled', () => {
     beforeAll(async () => {
       await updateSignInExperience({
         mfa: {
           factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
-          policy: MfaPolicy.Mandatory,
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
         },
         adaptiveMfa: { enabled: true },
       });
@@ -112,7 +112,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       await updateSignInExperience({
         mfa: {
           factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
-          policy: MfaPolicy.Mandatory,
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
         },
         adaptiveMfa: { enabled: true },
       });
@@ -159,7 +159,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       await updateSignInExperience({
         mfa: {
           factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
-          policy: MfaPolicy.Mandatory,
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
         },
         adaptiveMfa: { enabled: true },
       });
