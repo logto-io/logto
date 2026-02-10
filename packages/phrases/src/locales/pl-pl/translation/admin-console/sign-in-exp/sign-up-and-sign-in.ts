@@ -58,6 +58,18 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       'Po włączeniu użytkownicy logujący się za pośrednictwem dostawców społecznościowych muszą wypełnić wszelkie brakujące wymagane identyfikatory rejestracji (takie jak e-mail) przed zakończeniem rejestracji. \n\nJeśli jest wyłączone, użytkownicy mogą kontynuować bez podawania brakujących identyfikatorów, nawet jeśli konto społecznościowe ich nie zsynchronizowało.',
   },
+  passkey_sign_in: {
+    title: 'LOGOWANIE PASSKEY',
+    passkey_sign_in: 'Logowanie Passkey',
+    enable_passkey_sign_in_description:
+      'Umożliwia użytkownikom szybki i bezpieczny dostęp do aplikacji za pomocą Passkey (WebAuthn), używając biometrii lub klucza bezpieczeństwa itp.',
+    prompts: 'Monity Passkey',
+    show_passkey_button: 'Pokaż przycisk "Kontynuuj z Passkey" na stronie logowania',
+    show_passkey_button_tip:
+      'Wyłączenie przycisku "Kontynuuj z Passkey" sprawia, że przepływ logowania jest oparty na identyfikatorze, pokazując opcje hasła i Passkey w następnym kroku.',
+    allow_autofill:
+      'Zezwalaj na monity i autouzupełnianie zarejestrowanych Passkey w polach identyfikatora',
+  },
   tip: {
     set_a_password: 'Unikatowe hasło dla nazwy użytkownika jest konieczne.',
     verify_at_sign_up:

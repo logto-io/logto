@@ -142,6 +142,12 @@ export const sieFormDataParser = {
         ...emptyBranding,
         ...branding,
       },
+      passkeySignIn: {
+        enabled: false,
+        showPasskeyButton: false,
+        allowAutofill: false,
+        ...rest.passkeySignIn,
+      },
     };
   },
   toSignInExperience: (formData: SignInExperienceForm): SignInExperiencePageManagedData => {

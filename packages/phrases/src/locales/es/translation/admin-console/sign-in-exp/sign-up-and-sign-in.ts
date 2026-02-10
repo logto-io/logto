@@ -61,6 +61,19 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       'Cuando está habilitado, los usuarios que inicien sesión a través de proveedores sociales deben completar cualquier identificador de registro faltante (como el correo electrónico) antes de completar su inicio de sesión.\n\nSi está deshabilitado, los usuarios pueden proceder sin proporcionar identificadores faltantes, incluso si la cuenta social no los sincronizó.',
   },
+  passkey_sign_in: {
+    title: 'INICIO DE SESIÓN CON PASSKEY',
+    passkey_sign_in: 'Inicio de sesión con Passkey',
+    enable_passkey_sign_in_description:
+      'Permitir a los usuarios acceder rápida y seguramente a la aplicación mediante Passkey (WebAuthn), utilizando biometría o clave de seguridad, etc.',
+    prompts: 'Indicaciones de Passkey',
+    show_passkey_button:
+      'Mostrar el botón "Continuar con Passkey" en la página de inicio de sesión',
+    show_passkey_button_tip:
+      'Deshabilitar el botón "Continuar con Passkey" hace que el flujo de inicio de sesión sea primero por identificador, mostrando las opciones de contraseña y Passkey en el siguiente paso.',
+    allow_autofill:
+      'Permitir indicaciones y autocompletado de Passkeys registrados en los campos de identificador',
+  },
   tip: {
     set_a_password:
       'Es esencial que se establezca una contraseña única para que coincida con tu nombre de usuario.',

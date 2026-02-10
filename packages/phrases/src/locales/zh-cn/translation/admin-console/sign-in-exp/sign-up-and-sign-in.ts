@@ -51,6 +51,17 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       '启用后，通过社交提供商登录的用户必须填写任何缺失的必需注册标识符（例如电子邮件），才能完成登录。\n\n如果禁用，用户可以在不提供缺失标识符的情况下继续，即使社交账户没有同步它们。',
   },
+  passkey_sign_in: {
+    title: '通行密钥登录',
+    passkey_sign_in: '通行密钥登录',
+    enable_passkey_sign_in_description:
+      '启用用户通过通行密钥（WebAuthn）快速安全地访问应用程序，使用生物识别或安全密钥等。',
+    prompts: '通行密钥提示',
+    show_passkey_button: '在登录页面显示"使用通行密钥继续"按钮',
+    show_passkey_button_tip:
+      '禁用"使用通行密钥继续"按钮后，登录流程将优先使用标识符，在下一步显示密码和通行密钥选项。',
+    allow_autofill: '允许在标识符字段中提示和自动填充已注册的通行密钥',
+  },
   tip: {
     set_a_password: '启用户名注册，必须设置密码。',
     verify_at_sign_up:

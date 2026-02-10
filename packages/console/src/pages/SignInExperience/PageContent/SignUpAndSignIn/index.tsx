@@ -1,10 +1,12 @@
 import type { SignInExperience } from '@logto/schemas';
 
 import PageMeta from '@/components/PageMeta';
+import { isDevFeaturesEnabled } from '@/consts/env';
 
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
 import AdvancedOptions from './AdvancedOptions';
+import PasskeySignInForm from './PasskeySignInForm';
 import SignInForm from './SignInForm';
 import SignUpFrom from './SignUpForm';
 import SocialSignInForm from './SocialSignInForm';
@@ -23,6 +25,7 @@ function SignUpAndSignIn({ isActive, data }: Props) {
       <SignUpFrom signInExperience={data} />
       <SignInForm signInExperience={data} />
       <SocialSignInForm />
+      {isDevFeaturesEnabled && <PasskeySignInForm />}
       <AdvancedOptions />
     </SignInExperienceTabWrapper>
   );

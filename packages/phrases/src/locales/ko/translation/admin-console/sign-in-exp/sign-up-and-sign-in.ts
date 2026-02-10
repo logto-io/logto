@@ -54,6 +54,17 @@ const sign_up_and_sign_in = {
     required_sign_up_identifiers_tip:
       '이 기능을 활성화하면 소셜 제공자를 통해 로그인하는 사용자는 로그인을 완료하기 전에 누락된 필수 회원가입 식별자(예: 이메일)를 채워야 합니다. \n\n비활성화하면 소셜 계정이 동기화하지 않은 경우에도 사용자는 누락된 식별자를 제공하지 않고도 진행할 수 있습니다.',
   },
+  passkey_sign_in: {
+    title: '패스키 로그인',
+    passkey_sign_in: '패스키 로그인',
+    enable_passkey_sign_in_description:
+      '사용자가 생체 인식 또는 보안 키 등을 사용하여 패스키(WebAuthn)를 통해 애플리케이션에 빠르고 안전하게 액세스할 수 있도록 합니다.',
+    prompts: '패스키 프롬프트',
+    show_passkey_button: '로그인 페이지에 "패스키로 계속" 버튼 표시',
+    show_passkey_button_tip:
+      '"패스키로 계속" 버튼을 비활성화하면 로그인 흐름이 식별자 우선이 되어 다음 단계에서 비밀번호와 패스키 옵션이 표시됩니다.',
+    allow_autofill: '식별자 필드에서 등록된 패스키의 프롬프트 및 자동 완성 허용',
+  },
   tip: {
     set_a_password: '사용자 이름에 대한 고유한 암호 집합은 필수예요.',
     verify_at_sign_up:
