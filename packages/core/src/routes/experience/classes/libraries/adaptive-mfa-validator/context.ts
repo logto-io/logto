@@ -38,7 +38,12 @@ const parseNumber = (
 
 const parseBoolean = (value: Optional<string>): Optional<boolean> => {
   const normalized = normalizeString(value)?.toLowerCase();
-  return conditional(normalized && yes(normalized));
+
+  if (!normalized) {
+    return;
+  }
+
+  return yes(normalized);
 };
 
 export const parseAdaptiveMfaContext = (

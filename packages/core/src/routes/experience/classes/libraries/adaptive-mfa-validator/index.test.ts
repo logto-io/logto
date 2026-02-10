@@ -226,6 +226,38 @@ describe('AdaptiveMfaValidator', () => {
     expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(user.id, 0, 0);
   });
 
+  it.each([
+    ['false', false],
+    ['0', false],
+    ['no', false],
+    ['maybe', false],
+    ['yes', true],
+  ])(
+    'parses bot verification signal from injected header %s as %s',
+    (botVerifiedHeader, expectedBotVerified) => {
+      const queries = createQueries();
+      const ctx = {
+        request: {
+          headers: {
+            'x-logto-cf-bot-verified': botVerifiedHeader,
+          },
+        },
+      };
+
+      const validator = new AdaptiveMfaValidator({
+        queries,
+        ctx,
+        signInExperienceValidator: createSignInExperienceValidator(),
+      });
+
+      expect(validator.getCurrentContext()).toEqual({
+        ipRiskSignals: {
+          botVerified: expectedBotVerified,
+        },
+      });
+    }
+  );
+
   it('skips persisting context when adaptive MFA is disabled', async () => {
     const user: User = {
       ...mockUser,
