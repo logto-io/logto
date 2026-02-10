@@ -200,8 +200,15 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
 
   useEffect(() => {
     if (mfaRequirementMode === MfaRequirementMode.Mandatory && formValues.adaptiveMfaEnabled) {
-      // Normalize legacy state { isMandatory: true, adaptiveMfaEnabled: true }
-      // to match the 3-option dropdown semantics, without marking the form dirty.
+      // This effect normalizes legacy state after form hydration/watch updates.
+      // Older data can contain { isMandatory: true, adaptiveMfaEnabled: true },
+      // but the new 3-option requirement mode treats "Mandatory" as
+      // { isMandatory: true, adaptiveMfaEnabled: false }.
+      //
+      // Use `reset()` instead of `setValue()` so the normalized snapshot becomes
+      // the form baseline and we avoid introducing extra dirty changes from this
+      // internal normalization. `keepDirty` and `keepDirtyValues` preserve any
+      // existing user edits/state instead of clearing them.
       reset(
         { ...formValues, adaptiveMfaEnabled: false },
         { keepDirty: true, keepDirtyValues: true }
