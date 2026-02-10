@@ -2,15 +2,12 @@ import {
   MfaFactor,
   MfaPolicy,
   VerificationType,
-  type LogContextPayload,
   userMfaDataGuard,
   userMfaDataKey,
   type Mfa,
   type User,
 } from '@logto/schemas';
-import { conditional, type Optional } from '@silverhand/essentials';
-
-import { type LogEntry } from '#src/middleware/koa-audit-log.js';
+import { type Optional } from '@silverhand/essentials';
 
 import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
@@ -100,59 +97,38 @@ export class MfaValidator {
   }
 
   /**
-   * Check if the user has any MFA factors bound (configured and enabled in SIE).
-   * This is a pure user-state check — it does NOT consider MFA policy or `skipMfaOnSignIn`.
-   * For policy-aware decisions, use {@link isMfaRequired} instead.
-   */
-  get isMfaEnabled() {
-    return this.userEnabledMfaVerifications.length > 0;
-  }
-
-  /**
-   * Check if the MFA verification is required for the current interaction.
+   * Whether MFA verification is required for the current sign-in interaction.
    *
-   * When adaptive MFA is enabled (result is defined):
-   * - If adaptive MFA triggers and user has MFA bound, require MFA verification.
-   * - Otherwise, do not require (adaptive not triggered, or user has no MFA).
-   *
-   * When adaptive MFA is disabled (result is undefined):
-   * - Fall back to policy-based check (respects `skipMfaOnSignIn` and MFA policy).
+   * Decision order:
+   * 1. If adaptive MFA is enabled (result defined):
+   *    - triggered + user has factors → required
+   *    - otherwise → not required
+   * 2. If adaptive MFA is disabled (result undefined), fall back to SIE policy:
+   *    - skipMfaOnSignIn + non-Mandatory policy → not required
+   *    - user has factors → required
+   *    - otherwise → not required
    */
   get isMfaRequired(): boolean {
-    return this.mfaRequirement.required;
-  }
+    const hasUserFactors = this.userEnabledMfaVerifications.length > 0;
 
-  /**
-   * Append the MFA requirement decision (and adaptive MFA result if present) to the audit log.
-   */
-  logMfaRequirement(log?: LogEntry) {
-    if (!log) {
-      return;
+    if (this.adaptiveMfaResult !== undefined) {
+      // TODO: When adaptive MFA triggers (requiresMfa === true) but the user has no MFA factors
+      // enabled, we should still enforce MFA. Currently we return false and skip MFA in this case,
+      // which means the risk signal is silently ignored. Once the product decision is finalized,
+      // add handling here (e.g. prompt the user to set up MFA before proceeding).
+      return this.adaptiveMfaResult.requiresMfa && hasUserFactors;
     }
 
-    log.append({
-      ...conditional(this.adaptiveMfaResult && { adaptiveMfaResult: this.adaptiveMfaResult }),
-      mfaRequirement: this.mfaRequirement,
-    });
-  }
+    const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
+    const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
 
-  /**
-   * Check if MFA is verified. Returns `true` if the user has no MFA factors bound,
-   * or if a valid MFA verification record exists.
-   */
-  isMfaVerified(verificationRecords: VerificationRecord[]) {
-    if (!this.isMfaEnabled) {
-      return true;
+    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
+      return false;
     }
 
-    return this.isMfaVerifiedForRequirement(verificationRecords);
+    return hasUserFactors;
   }
 
-  /**
-   * Check if a valid MFA verification record exists in the given records, regardless of
-   * whether MFA is enabled by policy. Used when MFA is unconditionally required
-   * (e.g. adaptive MFA triggered).
-   */
   isMfaVerifiedForRequirement(verificationRecords: VerificationRecord[]) {
     const verifiedMfaVerificationRecords = verificationRecords.filter(
       (verification) =>
@@ -167,34 +143,5 @@ export class MfaValidator {
     );
 
     return verifiedMfaVerificationRecords.length > 0;
-  }
-
-  /**
-   * Single source of truth for the MFA requirement decision.
-   * Used by both `isMfaRequired` and `logMfaRequirement` to ensure consistency.
-   */
-  private get mfaRequirement(): NonNullable<LogContextPayload['mfaRequirement']> {
-    if (this.adaptiveMfaResult !== undefined) {
-      if (this.adaptiveMfaResult.requiresMfa) {
-        return {
-          required: this.userEnabledMfaVerifications.length > 0,
-          source: 'adaptive',
-        };
-      }
-
-      return { required: false, source: 'none' };
-    }
-
-    // Fallback to policy-based check when adaptive MFA is disabled.
-    // Respects `skipMfaOnSignIn` unless MFA policy is mandatory.
-    const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
-    const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
-
-    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
-      return { required: false, source: 'none' };
-    }
-
-    const fallback = this.isMfaEnabled;
-    return { required: fallback, source: fallback ? 'policy' : 'none' };
   }
 }

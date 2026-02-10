@@ -360,7 +360,9 @@ export default class ExperienceInteraction {
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
-    mfaValidator.logMfaRequirement(log);
+    if (adaptiveMfaResult) {
+      log?.append({ adaptiveMfaResult });
+    }
 
     if (!mfaValidator.isMfaRequired) {
       return;

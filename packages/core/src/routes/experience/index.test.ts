@@ -1,10 +1,10 @@
-import { InteractionEvent, MfaFactor, MfaPolicy, type Mfa } from '@logto/schemas';
+import { InteractionEvent, type Mfa } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import type { Middleware } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
+import { mockUser } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -182,70 +182,6 @@ describe('POST /experience/submit', () => {
     expect(adaptiveMfaResult?.triggeredRules).toEqual(
       expect.arrayContaining([expect.objectContaining({ rule: 'untrusted_ip' })])
     );
-  });
-
-  it('should append mfaRequirement with adaptive source when adaptive MFA triggers', async () => {
-    setDevFeaturesEnabled(true);
-    const { requester, mockAppend } = createRequesterWithMocks({
-      user: mockUserWithMfaVerifications,
-      mfa: {
-        policy: MfaPolicy.PromptAtSignInAndSignUp,
-        factors: [MfaFactor.TOTP],
-      },
-    });
-
-    const response = await requester.post('/experience/submit').set('x-logto-cf-bot-score', '10');
-
-    expect(response.status).toBe(403);
-    const mfaRequirement = mockAppend.mock.calls
-      .map(
-        ([payload]) =>
-          (payload as { mfaRequirement?: { required: boolean; source: string } }).mfaRequirement
-      )
-      .find(Boolean);
-
-    expect(mfaRequirement).toEqual({ required: true, source: 'adaptive' });
-  });
-
-  it('should append mfaRequirement with policy source when MFA is required', async () => {
-    setDevFeaturesEnabled(true);
-    const { requester, mockAppend } = createRequesterWithMocks({
-      adaptiveMfaEnabled: false,
-      user: mockUserWithMfaVerifications,
-      mfa: {
-        policy: MfaPolicy.PromptAtSignInAndSignUp,
-        factors: [MfaFactor.TOTP],
-      },
-    });
-
-    const response = await requester.post('/experience/submit');
-
-    expect(response.status).toBe(403);
-    const mfaRequirement = mockAppend.mock.calls
-      .map(
-        ([payload]) =>
-          (payload as { mfaRequirement?: { required: boolean; source: string } }).mfaRequirement
-      )
-      .find(Boolean);
-
-    expect(mfaRequirement).toEqual({ required: true, source: 'policy' });
-  });
-
-  it('should append mfaRequirement with none source when MFA is not required', async () => {
-    setDevFeaturesEnabled(true);
-    const { requester, mockAppend } = createRequesterWithMocks({ adaptiveMfaEnabled: false });
-
-    const response = await requester.post('/experience/submit');
-
-    expect(response.status).toBe(200);
-    const mfaRequirement = mockAppend.mock.calls
-      .map(
-        ([payload]) =>
-          (payload as { mfaRequirement?: { required: boolean; source: string } }).mfaRequirement
-      )
-      .find(Boolean);
-
-    expect(mfaRequirement).toEqual({ required: false, source: 'none' });
   });
 
   it('should allow zero coordinates and record them', async () => {

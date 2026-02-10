@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { InteractionEvent, MfaFactor, MfaPolicy, type User } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { type Optional } from '@silverhand/essentials';
@@ -133,26 +132,6 @@ describe('ExperienceInteraction adaptive MFA', () => {
       expect(mfaValidator.isMfaRequired).toBe(expected);
     }
   );
-
-  it('logs MFA requirement metadata via logMfaRequirement', () => {
-    const mfaSettings = {
-      policy: MfaPolicy.PromptAtSignInAndSignUp,
-      factors: [MfaFactor.TOTP],
-    };
-    const adaptiveMfaResult = { requiresMfa: true, triggeredRules: [] };
-    const mfaValidator = new MfaValidator(
-      mfaSettings,
-      mockUserWithMfaVerifications,
-      adaptiveMfaResult
-    );
-    const mockLog = { append: jest.fn() };
-    // @ts-expect-error -- mock log entry
-    mfaValidator.logMfaRequirement(mockLog);
-    expect(mockLog.append).toHaveBeenCalledWith({
-      adaptiveMfaResult,
-      mfaRequirement: { required: true, source: 'adaptive' },
-    });
-  });
 
   it('requires MFA even when skipMfaOnSignIn is true if adaptive MFA triggers', async () => {
     const user: User = {
@@ -485,4 +464,3 @@ describe('ExperienceInteraction adaptive MFA', () => {
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
   });
 });
-/* eslint-enable max-lines */

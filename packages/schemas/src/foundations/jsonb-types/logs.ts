@@ -76,16 +76,6 @@ export const logContextPayloadGuard = z
     applicationId: z.string().optional(),
     sessionId: z.string().optional(),
     params: z.record(z.string(), z.unknown()).optional(),
-    // MFA requirement source for monitoring:
-    // - adaptive: adaptive MFA rules required verification
-    // - policy: regular MFA requirement based on user MFA configuration and sign-in experience policy
-    // - none: MFA not required for this interaction
-    mfaRequirement: z
-      .object({
-        required: z.boolean(),
-        source: z.enum(['adaptive', 'policy', 'none']),
-      })
-      .optional(),
   })
   .catchall(z.unknown());
 
