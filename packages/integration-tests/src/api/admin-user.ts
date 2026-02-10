@@ -2,6 +2,7 @@ import type {
   CreatePersonalAccessToken,
   DesensitizedEnterpriseSsoTokenSetSecret,
   DesensitizedSocialTokenSetSecret,
+  GetUserSessionsResponse,
   Identities,
   Identity,
   MfaFactor,
@@ -224,3 +225,6 @@ export const getUserSsoIdentity = async (
       tokenSecret?: DesensitizedEnterpriseSsoTokenSetSecret;
     }>();
 };
+
+export const getUserSessions = async (userId: string) =>
+  authedAdminApi.get(`users/${userId}/sessions`).json<GetUserSessionsResponse>();

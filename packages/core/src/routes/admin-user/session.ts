@@ -1,9 +1,5 @@
-import {
-  jwtCustomizerUserInteractionContextGuard,
-  OidcModelInstances,
-  oidcSessionInstancePayloadGuard,
-} from '@logto/schemas';
-import { object, string, array } from 'zod';
+import { getUserSessionsResponseGuard } from '@logto/schemas';
+import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 
@@ -20,16 +16,7 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
     '/users/:userId/sessions',
     koaGuard({
       params: object({ userId: string() }),
-      response: object({
-        sessions: array(
-          OidcModelInstances.guard.extend({
-            payload: oidcSessionInstancePayloadGuard,
-            lastSubmission: jwtCustomizerUserInteractionContextGuard.nullable(),
-            clientId: string().nullable(),
-            accountId: string().nullable(),
-          })
-        ),
-      }),
+      response: getUserSessionsResponseGuard,
     }),
     async (ctx, next) => {
       const {
