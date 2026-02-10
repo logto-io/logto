@@ -1,13 +1,13 @@
 import { conditional, type Optional } from '@silverhand/essentials';
 
-import { adaptiveMfaNewCountryWindowDays } from '../constants.js';
+import { adaptiveMfaRegionOrCountryWindowDays } from '../constants.js';
 import type { AdaptiveMfaEvaluationState, TriggeredRuleByRule } from '../types.js';
 import { AdaptiveMfaRule } from '../types.js';
 import { toRecentRegionOrCountry } from '../utils.js';
 
 import { AdaptiveMfaRuleValidator } from './base-rule.js';
 
-export class NewCountryRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.NewRegionOrCountry> {
+export class NewRegionOrCountryRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.NewRegionOrCountry> {
   async validate(
     state: AdaptiveMfaEvaluationState
   ): Promise<Optional<TriggeredRuleByRule<AdaptiveMfaRule.NewRegionOrCountry>>> {
@@ -20,9 +20,11 @@ export class NewCountryRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.New
       return;
     }
 
-    const recentCountries = await this.dependencies.getRecentCountries(state.user);
+    const recentRegionsOrCountries = await this.dependencies.getRecentRegionsOrCountries(
+      state.user
+    );
     const normalizedCurrent = currentRegionOrCountry.toUpperCase();
-    const hasRecentVisit = recentCountries.some(
+    const hasRecentVisit = recentRegionsOrCountries.some(
       ({ country }) => country.toUpperCase() === normalizedCurrent
     );
 
@@ -34,10 +36,12 @@ export class NewCountryRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.New
       rule: AdaptiveMfaRule.NewRegionOrCountry,
       details: {
         currentRegionOrCountry,
-        windowDays: adaptiveMfaNewCountryWindowDays,
+        windowDays: adaptiveMfaRegionOrCountryWindowDays,
         recentRegionsOrCountries: conditional(
-          recentCountries.length > 0 &&
-            recentCountries.map((recentCountry) => toRecentRegionOrCountry(recentCountry))
+          recentRegionsOrCountries.length > 0 &&
+            recentRegionsOrCountries.map((recentRegionOrCountry) =>
+              toRecentRegionOrCountry(recentRegionOrCountry)
+            )
         ),
       },
     };

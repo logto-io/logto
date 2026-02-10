@@ -109,4 +109,4 @@ export type AdaptiveMfaEvaluationState = {
   context?: AdaptiveMfaContext;
 };
 
-export type RecentCountry = Pick<UserSignInCountry, 'country' | 'lastSignInAt'>;
+export type RecentRegionOrCountrySource = Pick<UserSignInCountry, 'country' | 'lastSignInAt'>;

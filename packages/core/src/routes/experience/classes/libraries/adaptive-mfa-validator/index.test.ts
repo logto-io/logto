@@ -5,7 +5,7 @@ import { EnvSet } from '#src/env-set/index.js';
 
 import type { SignInExperienceValidator } from '../sign-in-experience-validator.js';
 
-import { AdaptiveMfaValidator, adaptiveMfaNewCountryWindowDays } from './index.js';
+import { AdaptiveMfaValidator, adaptiveMfaRegionOrCountryWindowDays } from './index.js';
 import { AdaptiveMfaRule } from './types.js';
 
 const { jest } = import.meta;
@@ -16,7 +16,7 @@ const setDevFeaturesEnabled = (value: boolean) => {
 };
 
 const createQueries = (overrides?: {
-  recentCountries?: Array<{ country: string; lastSignInAt: number }>;
+  recentRegionsOrCountries?: Array<{ country: string; lastSignInAt: number }>;
   geoLocation?: { latitude: number; longitude: number } | undefined;
 }) => {
   return {
@@ -24,7 +24,7 @@ const createQueries = (overrides?: {
       upsertUserSignInCountry: jest.fn(),
       findRecentSignInCountriesByUserId: jest
         .fn()
-        .mockResolvedValue(overrides?.recentCountries ?? []),
+        .mockResolvedValue(overrides?.recentRegionsOrCountries ?? []),
       pruneUserSignInCountriesByUserId: jest.fn(),
     },
     userGeoLocations: {
@@ -58,7 +58,7 @@ describe('AdaptiveMfaValidator', () => {
     };
     const lastSignInAt = now.getTime() - 2 * 60 * 60 * 1000;
     const queries = createQueries({
-      recentCountries: [
+      recentRegionsOrCountries: [
         {
           country: 'US',
           lastSignInAt,
@@ -85,7 +85,7 @@ describe('AdaptiveMfaValidator', () => {
         rule: AdaptiveMfaRule.NewRegionOrCountry,
         details: {
           currentRegionOrCountry: 'FR',
-          windowDays: adaptiveMfaNewCountryWindowDays,
+          windowDays: adaptiveMfaRegionOrCountryWindowDays,
           recentRegionsOrCountries: [
             {
               regionOrCountry: 'US',
@@ -95,6 +95,10 @@ describe('AdaptiveMfaValidator', () => {
         },
       })
     );
+    if (triggeredRule?.rule === AdaptiveMfaRule.NewRegionOrCountry) {
+      expect('currentCountry' in triggeredRule.details).toBe(false);
+      expect('recentCountries' in triggeredRule.details).toBe(false);
+    }
   });
 
   it('triggers geo velocity rule when travel speed exceeds threshold', async () => {
@@ -105,7 +109,7 @@ describe('AdaptiveMfaValidator', () => {
     };
     const previousLastSignInAt = now.getTime() - 3 * 60 * 60 * 1000;
     const queries = createQueries({
-      recentCountries: [
+      recentRegionsOrCountries: [
         {
           country: 'US',
           lastSignInAt: previousLastSignInAt,
@@ -153,6 +157,10 @@ describe('AdaptiveMfaValidator', () => {
         }),
       })
     );
+    if (triggeredRule?.rule === AdaptiveMfaRule.GeoVelocity) {
+      expect('country' in triggeredRule.details.previous).toBe(false);
+      expect('country' in triggeredRule.details.current).toBe(false);
+    }
   });
 
   it('triggers long inactivity rule after threshold', async () => {
@@ -239,7 +247,7 @@ describe('AdaptiveMfaValidator', () => {
     expect(queries.userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(user.id, 'US');
     expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).toHaveBeenCalledWith(
       user.id,
-      adaptiveMfaNewCountryWindowDays
+      adaptiveMfaRegionOrCountryWindowDays
     );
   });
 
@@ -333,7 +341,7 @@ describe('AdaptiveMfaValidator', () => {
     expect(queries.userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(user.id, 'US');
     expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).toHaveBeenCalledWith(
       user.id,
-      adaptiveMfaNewCountryWindowDays
+      adaptiveMfaRegionOrCountryWindowDays
     );
   });
 

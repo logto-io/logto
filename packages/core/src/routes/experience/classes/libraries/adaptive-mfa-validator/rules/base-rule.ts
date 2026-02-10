@@ -4,12 +4,12 @@ import type { Nullable, Optional } from '@silverhand/essentials';
 import type {
   AdaptiveMfaEvaluationState,
   AdaptiveMfaRule,
-  RecentCountry,
+  RecentRegionOrCountrySource,
   TriggeredRuleByRule,
 } from '../types.js';
 
 export type RuleDependencies = {
-  getRecentCountries: (user: User) => Promise<RecentCountry[]>;
+  getRecentRegionsOrCountries: (user: User) => Promise<RecentRegionOrCountrySource[]>;
   getUserGeoLocation: (user: User) => Promise<Nullable<UserGeoLocation>>;
 };
 

@@ -41,10 +41,12 @@ export class GeoVelocityRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.Ge
       return;
     }
 
-    const recentCountries = await this.dependencies.getRecentCountries(state.user);
-    const previousCountry = recentCountries[0];
+    const recentRegionsOrCountries = await this.dependencies.getRecentRegionsOrCountries(
+      state.user
+    );
+    const previousRegionOrCountrySource = recentRegionsOrCountries[0];
     const previousRegionOrCountry = conditional(
-      previousCountry && toRecentRegionOrCountry(previousCountry)
+      previousRegionOrCountrySource && toRecentRegionOrCountry(previousRegionOrCountrySource)
     );
 
     return {
