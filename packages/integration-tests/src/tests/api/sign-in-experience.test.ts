@@ -152,9 +152,26 @@ describe('admin console sign-in experience', () => {
         });
 
         expect(signInExperience.mfa.factors).toEqual([]);
-        expect(signInExperience.adaptiveMfa).toEqual({ enabled: true });
+        expect(signInExperience.adaptiveMfa).toEqual({ enabled: false });
       }
     );
+
+    devFeatureTest.it('should reject adaptive mfa when mfa policy is mandatory', async () => {
+      await updateSignInExperience({
+        mfa: {
+          policy: MfaPolicy.Mandatory,
+          factors: [MfaFactor.TOTP],
+        },
+      });
+
+      await expect(
+        updateSignInExperience({ adaptiveMfa: { enabled: true } })
+      ).rejects.toMatchObject({
+        response: {
+          status: 422,
+        },
+      });
+    });
   });
 });
 

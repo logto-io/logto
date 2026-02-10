@@ -308,11 +308,34 @@ describe('PATCH /sign-in-exp', () => {
       status: 200,
       body: {
         ...mockSignInExperience,
+        adaptiveMfa: {
+          enabled: false,
+        },
         mfa: {
           policy: MfaPolicy.PromptAtSignInAndSignUp,
           factors: [],
         },
       },
+    });
+  });
+
+  it('should reject adaptive mfa when effective mfa policy is mandatory', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      mfa: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.TOTP],
+      },
+    });
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      adaptiveMfa: {
+        enabled: true,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 422,
     });
   });
 

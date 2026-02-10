@@ -4,6 +4,7 @@ import {
   ConnectorType,
   SignInExperiences,
   ForgotPasswordMethod,
+  MfaPolicy,
   ProductEvent,
   type SignInExperience,
 } from '@logto/schemas';
@@ -158,7 +159,16 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           'sign_in_experiences.adaptive_mfa_requires_mfa',
           422
         );
+
+        assertThat(effectiveMfa.policy !== MfaPolicy.Mandatory, 'request.invalid_input', 422);
       }
+
+      // Keep backend state aligned with console semantics:
+      // if MFA is disabled and adaptive MFA is omitted in request, reset adaptive MFA to false.
+      const normalizedAdaptiveMfa =
+        isDevFeaturesEnabled && mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined
+          ? { enabled: false }
+          : adaptiveMfa;
 
       if (forgotPasswordMethods) {
         const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);
@@ -224,6 +234,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       const payload = {
         ...rest,
+        ...conditional(normalizedAdaptiveMfa && { adaptiveMfa: normalizedAdaptiveMfa }),
         ...conditional(
           filteredSocialSignInConnectorTargets && {
             socialSignInConnectorTargets: filteredSocialSignInConnectorTargets,
