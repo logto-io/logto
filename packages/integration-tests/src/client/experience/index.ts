@@ -8,6 +8,8 @@ import {
   type PasswordVerificationPayload,
   type UpdateProfileApiPayload,
   type VerificationCodeIdentifier,
+  type WebAuthnAuthenticationOptions,
+  type WebAuthnVerificationPayload,
 } from '@logto/schemas';
 
 import MockClient from '#src/client/index.js';
@@ -270,5 +272,28 @@ export class ExperienceClient extends MockClient {
         headers: { cookie: this.interactionCookie },
       })
       .json<SanitizedInteractionStorageData>();
+  }
+
+  public async createSignInWebAuthnAuthentication(payload: {
+    identifier: { type: SignInIdentifier; value: string };
+  }) {
+    return this.api
+      .post(`${experienceRoutes.verification}/sign-in-web-authn/authentication`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string; authenticationOptions: WebAuthnAuthenticationOptions }>();
+  }
+
+  public async verifySignInWebAuthnAuthentication(payload: {
+    verificationId?: string;
+    payload: Omit<WebAuthnVerificationPayload, 'type'>;
+  }) {
+    return this.api
+      .post(`${experienceRoutes.verification}/sign-in-web-authn/authentication/verify`, {
+        headers: { cookie: this.interactionCookie },
+        json: payload,
+      })
+      .json<{ verificationId: string }>();
   }
 }
