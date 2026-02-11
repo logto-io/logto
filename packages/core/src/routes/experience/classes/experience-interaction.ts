@@ -383,7 +383,7 @@ export default class ExperienceInteraction {
     };
 
     assertThat(
-      mfaValidator.isMfaVerifiedForRequirement(this.verificationRecordsArray),
+      mfaValidator.isMfaVerified(this.verificationRecordsArray),
       new RequestError(
         { code: 'session.mfa.require_mfa_verification', status: 403 },
         {

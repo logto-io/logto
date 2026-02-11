@@ -129,7 +129,7 @@ export class MfaValidator {
     return hasUserFactors;
   }
 
-  isMfaVerifiedForRequirement(verificationRecords: VerificationRecord[]) {
+  isMfaVerified(verificationRecords: VerificationRecord[]) {
     const verifiedMfaVerificationRecords = verificationRecords.filter(
       (verification) =>
         isMfaVerificationRecord(verification) &&
