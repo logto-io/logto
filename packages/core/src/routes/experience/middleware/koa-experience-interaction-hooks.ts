@@ -74,7 +74,7 @@ export function koaExperienceInteractionHooks<
     try {
       await next();
 
-      if (interactionHookContext.interactionHookResult) {
+      if (interactionHookContext.interactionHookResults.length > 0) {
         // Hooks should not crash the app
         void trySafe(
           triggerInteractionHooks(getConsoleLogFromContext(ctx), interactionHookContext)

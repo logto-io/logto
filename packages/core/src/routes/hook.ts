@@ -44,7 +44,13 @@ const guardAdaptiveMfaHookEvent = (events?: HookEvent[], event?: HookEvent) => {
 
   assertThat(
     !hasAdaptiveMfaHookEvent,
-    new RequestError({ code: 'guard.invalid_input', status: 400 })
+    new RequestError(
+      { code: 'guard.invalid_input', status: 400 },
+      {
+        reason: 'hook.event_not_supported_when_dev_features_disabled',
+        event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+      }
+    )
   );
 };
 
@@ -227,6 +233,8 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         body: { events, config },
       } = ctx.guard;
 
+      guardAdaptiveMfaHookEvent(events);
+
       await triggerTestHook(id, events, config);
 
       ctx.status = 204;
@@ -254,6 +262,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         body,
       } = ctx.guard;
 
+      // `body.event` could be `null`.
       guardAdaptiveMfaHookEvent(body.events, body.event ?? undefined);
 
       ctx.body = await updateHookById(id, body, 'replace');

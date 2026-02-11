@@ -297,6 +297,19 @@ describe('hook routes', () => {
     expect(response.status).toEqual(204);
   });
 
+  it('POST /hooks/:id/test should reject adaptive MFA event when dev features disabled', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    mockEnvSetValues.isDevFeaturesEnabled = false;
+
+    const targetMockHook = mockHookList[0] ?? mockHook;
+    const response = await hookRequest.post(`/hooks/${targetMockHook.id}/test`).send({
+      events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],
+      config: { url: 'https://example.com' },
+    });
+
+    expect(response.status).toEqual(400);
+  });
+
   it('PATCH /hooks/:id', async () => {
     const targetMockHook = mockHookList[0] ?? mockHook;
     const name = 'newName';

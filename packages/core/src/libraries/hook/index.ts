@@ -97,6 +97,22 @@ export const createHookLibrary = (queries: Queries) => {
       concurrency: 10,
     });
 
+  const fetchInteractionHookUsersById = async (
+    contextManager: InteractionHookContextManager
+  ): Promise<Map<string, Optional<Awaited<ReturnType<typeof findUserById>>>>> => {
+    const userIds = deduplicate(contextManager.interactionHookResults.map(({ userId }) => userId));
+    const users: Array<readonly [string, Optional<Awaited<ReturnType<typeof findUserById>>>]> =
+      await pMap(
+        userIds,
+        async (userId) => [userId, await trySafe(findUserById(userId))] as const,
+        {
+          concurrency: 10,
+        }
+      );
+
+    return new Map(users);
+  };
+
   /**
    * Trigger interaction hooks with the given interaction context and result.
    */
@@ -117,17 +133,10 @@ export const createHookLibrary = (queries: Queries) => {
       return;
     }
 
-    const application = await trySafe(async () =>
-      conditional(applicationId && (await findApplicationById(applicationId)))
-    );
-
-    type HookUser = Awaited<ReturnType<typeof findUserById>>;
-
-    const userIds = deduplicate(contextManager.interactionHookResults.map(({ userId }) => userId));
-    const users: Array<readonly [string, Optional<HookUser>]> = await Promise.all(
-      userIds.map(async (userId) => [userId, await trySafe(findUserById(userId))] as const)
-    );
-    const usersById = new Map(users);
+    const [application, usersById] = await Promise.all([
+      trySafe(async () => conditional(applicationId && (await findApplicationById(applicationId)))),
+      fetchInteractionHookUsersById(contextManager),
+    ]);
 
     const webhooks: Array<{
       hook: Hook;
@@ -150,6 +159,7 @@ export const createHookLibrary = (queries: Queries) => {
       const user = usersById.get(userId);
 
       const payload = {
+        ...customPayload,
         event: hookEvent,
         interactionEvent,
         createdAt: new Date().toISOString(),
@@ -159,7 +169,6 @@ export const createHookLibrary = (queries: Queries) => {
         userIp,
         user: user && pick(user, ...userInfoSelectFields),
         application: application && pick(application, 'id', 'type', 'name', 'description'),
-        ...customPayload,
       } satisfies BetterOmit<InteractionHookEventPayload, 'hookId'>;
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
