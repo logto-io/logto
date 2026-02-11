@@ -1,6 +1,6 @@
 import { InteractionEvent, MfaFactor, type WebAuthnAuthenticationOptions } from '@logto/schemas';
 import { browserSupportsWebAuthnAutofill } from '@simplewebauthn/browser';
-import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import WebAuthnContext from '@/Providers/WebAuthnContextProvider/WebAuthnContext';
@@ -18,7 +18,8 @@ import useToast from './use-toast';
 const usePasskeyAutofillConditionalUI = () => {
   const { t } = useTranslation();
   const { setToast } = useToast();
-  const { authenticationOptions } = useContext(WebAuthnContext);
+  const { authenticationOptions, abortConditionalUI, setConditionalUIAbortController } =
+    useContext(WebAuthnContext);
   const { passkeySignIn } = useSieMethods();
   const asyncVerifySignInWebAuthn = useApi(verifySignInWebAuthn);
   const handleError = useErrorHandler();
@@ -27,7 +28,6 @@ const usePasskeyAutofillConditionalUI = () => {
   const preSignInErrorHandlers = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
     replace: true,
   });
-  const passkeyAutofillAbortControllerRef = useRef<AbortController>();
 
   const triggerPasskeySignInViaConditionalUi = useCallback(
     async (options: WebAuthnAuthenticationOptions) => {
@@ -35,18 +35,19 @@ const usePasskeyAutofillConditionalUI = () => {
         return;
       }
       try {
-        if (passkeyAutofillAbortControllerRef.current) {
-          passkeyAutofillAbortControllerRef.current.abort();
-        }
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        passkeyAutofillAbortControllerRef.current = new AbortController();
+        // Abort any previous conditional UI request before starting a new one
+        abortConditionalUI();
+
+        const abortController = new AbortController();
+        setConditionalUIAbortController(abortController);
+
         window.setTimeout(() => {
-          passkeyAutofillAbortControllerRef.current?.abort();
+          abortController.abort();
         }, 60_000);
 
         const credential = await navigator.credentials.get({
           mediation: 'conditional',
-          signal: passkeyAutofillAbortControllerRef.current.signal,
+          signal: abortController.signal,
           publicKey: toPublicKeyRequest(options),
         });
 
@@ -76,12 +77,19 @@ const usePasskeyAutofillConditionalUI = () => {
         ) {
           return;
         }
-        // TODO: @charles Remove later
-        console.error(error);
         setToast(t('passkey_sign_in.trigger_conditional_ui_failed'));
       }
     },
-    [asyncVerifySignInWebAuthn, handleError, preSignInErrorHandlers, redirectTo, setToast, t]
+    [
+      asyncVerifySignInWebAuthn,
+      handleError,
+      preSignInErrorHandlers,
+      redirectTo,
+      setToast,
+      t,
+      abortConditionalUI,
+      setConditionalUIAbortController,
+    ]
   );
 
   useEffect(() => {

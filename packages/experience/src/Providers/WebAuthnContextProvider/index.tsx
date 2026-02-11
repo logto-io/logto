@@ -1,6 +1,14 @@
 import { type WebAuthnAuthenticationOptions } from '@logto/schemas';
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
-import { useState, useMemo, type ReactNode, useEffect, useCallback, useContext } from 'react';
+import {
+  useState,
+  useMemo,
+  type ReactNode,
+  useEffect,
+  useCallback,
+  useContext,
+  useRef,
+} from 'react';
 
 import { createSignInWebAuthnAuthenticationOptions } from '@/apis/experience/passkey-sign-in';
 import useApi from '@/hooks/use-api';
@@ -23,9 +31,22 @@ const WebAuthnContextProvider = ({ children }: { readonly children: ReactNode })
   const shouldFetch =
     !!passkeySignIn?.enabled && !isPreview && (!authenticationOptions || isConsumed);
 
+  const conditionalUIAbortControllerRef = useRef<AbortController>();
+
   const markAuthenticationOptionsConsumed = useCallback(() => {
     setAuthenticationOptions(undefined);
     setIsConsumed(true);
+  }, []);
+
+  const abortConditionalUI = useCallback(() => {
+    conditionalUIAbortControllerRef.current?.abort();
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    conditionalUIAbortControllerRef.current = undefined;
+  }, []);
+
+  const setConditionalUIAbortController = useCallback((controller: AbortController | undefined) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    conditionalUIAbortControllerRef.current = controller;
   }, []);
 
   useEffect(() => {
@@ -55,8 +76,16 @@ const WebAuthnContextProvider = ({ children }: { readonly children: ReactNode })
       authenticationOptions,
       isLoading,
       markAuthenticationOptionsConsumed,
+      abortConditionalUI,
+      setConditionalUIAbortController,
     }),
-    [authenticationOptions, isLoading, markAuthenticationOptionsConsumed]
+    [
+      authenticationOptions,
+      isLoading,
+      markAuthenticationOptionsConsumed,
+      abortConditionalUI,
+      setConditionalUIAbortController,
+    ]
   );
 
   return <WebAuthnContext.Provider value={contextValue}>{children}</WebAuthnContext.Provider>;
