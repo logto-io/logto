@@ -50,6 +50,11 @@ const jwt_claims = {
     subtitle:
       'استخدم المعلمة `context.interaction` للوصول إلى تفاصيل تفاعل المستخدم في جلسة المصادقة الحالية، بما في ذلك `interactionEvent`, `userId`, و `verificationRecords`.',
   },
+  application_data: {
+    title: 'سياق التطبيق',
+    subtitle:
+      'استخدم معامل الإدخال `context.application` لتوفير معلومات التطبيق المرتبطة بالرمز المميز.',
+  },
   token_data: {
     title: 'بيانات الرمز',
     subtitle: 'استخدم معلمة الإدخال `token` لحمولة رمز الوصول الحالي.',

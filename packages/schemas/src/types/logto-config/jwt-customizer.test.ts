@@ -13,7 +13,12 @@ const optionalFields = ['environmentVariables', 'contextSample', 'tokenSample'] 
 const testClientCredentialsTokenPayload = {
   script: '',
   environmentVariables: {},
-  contextSample: {},
+  contextSample: {
+    application: {
+      id: 'my-app',
+      name: 'My M2M App',
+    },
+  },
   tokenSample: {},
 };
 

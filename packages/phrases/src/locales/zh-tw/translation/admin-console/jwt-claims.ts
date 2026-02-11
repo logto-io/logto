@@ -47,6 +47,10 @@ const jwt_claims = {
     subtitle:
       '使用 `context.interaction` 參數訪問當前身份驗證會話的用戶交互詳細信息，包括 `interactionEvent`、`userId` 和 `verificationRecords`。',
   },
+  application_data: {
+    title: '應用程式上下文',
+    subtitle: '使用 `context.application` 輸入參數提供與令牌關聯的應用程式資訊。',
+  },
   token_data: {
     title: '令牌數據',
     subtitle: '使用 `token` 輸入參數獲取當前訪問令牌有效載荷。',

@@ -265,6 +265,7 @@ describe('logto config', () => {
     const testResult = await testJwtCustomizer({
       tokenType: LogtoJwtTokenKeyType.ClientCredentials,
       token: clientCredentialsJwtCustomizerPayload.tokenSample,
+      context: clientCredentialsJwtCustomizerPayload.contextSample,
       script: clientCredentialsSampleScript,
       environmentVariables: clientCredentialsJwtCustomizerPayload.environmentVariables,
     });
@@ -292,6 +293,7 @@ describe('logto config', () => {
       testJwtCustomizer({
         tokenType: LogtoJwtTokenKeyType.ClientCredentials,
         token: clientCredentialsJwtCustomizerPayload.tokenSample,
+        context: clientCredentialsJwtCustomizerPayload.contextSample,
         script: clientCredentialsAccessDeniedSampleScript,
         environmentVariables: clientCredentialsJwtCustomizerPayload.environmentVariables,
       }),

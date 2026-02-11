@@ -1,10 +1,10 @@
 import { LogtoJwtTokenKeyType } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useFormContext, type ControllerRenderProps } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import MonacoCodeEditor, {
   type ModelControl,
 } from '@/pages/CustomizeJwtDetails/MainContent/MonacoCodeEditor';
@@ -12,6 +12,7 @@ import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
   accessTokenPayloadTestModel,
   clientCredentialsPayloadTestModel,
+  m2mContextTestModel,
   userContextTestModel,
 } from '@/pages/CustomizeJwtDetails/utils/config';
 
@@ -24,7 +25,10 @@ type Props = {
 };
 
 const accessTokenModelSettings = [accessTokenPayloadTestModel, userContextTestModel];
-const clientCredentialsModelSettings = [clientCredentialsPayloadTestModel];
+// DEV: application context in JWT customizer
+const clientCredentialsModelSettings = isDevFeaturesEnabled
+  ? [clientCredentialsPayloadTestModel, m2mContextTestModel]
+  : [clientCredentialsPayloadTestModel];
 
 function TestTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });
@@ -47,29 +51,17 @@ function TestTab({ isActive }: Props) {
 
   const getModelControllerProps = useCallback(
     ({ value, onChange }: ControllerRenderProps<JwtCustomizerForm, 'testSample'>): ModelControl => {
+      const isContextModel =
+        activeModelName === userContextTestModel.name ||
+        activeModelName === m2mContextTestModel.name;
+
       return {
-        value:
-          activeModelName === userContextTestModel.name ? value.contextSample : value.tokenSample,
+        value: isContextModel ? value.contextSample : value.tokenSample,
         onChange: (newValue: string | undefined) => {
           // Form value is a object we need to update the specific field
           const updatedValue: JwtCustomizerForm['testSample'] = {
             ...value,
-            ...conditional(
-              activeModelName === userContextTestModel.name && {
-                contextSample: newValue,
-              }
-            ),
-            ...conditional(
-              activeModelName === accessTokenPayloadTestModel.name && {
-                tokenSample: newValue,
-              }
-            ),
-            ...conditional(
-              activeModelName === clientCredentialsPayloadTestModel.name && {
-                // Reset the field to undefined if the value is the same as the default value
-                tokenSample: newValue,
-              }
-            ),
+            ...(isContextModel ? { contextSample: newValue } : { tokenSample: newValue }),
           };
 
           onChange(updatedValue);

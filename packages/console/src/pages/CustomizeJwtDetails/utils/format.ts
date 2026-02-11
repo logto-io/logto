@@ -7,6 +7,7 @@ import {
   defaultAccessTokenPayload,
   defaultClientCredentialsJwtCustomizerCode,
   defaultClientCredentialsPayload,
+  defaultM2mTokenContextData,
   defaultUserTokenContextData,
 } from './config';
 
@@ -64,7 +65,7 @@ const defaultValues = Object.freeze({
   [LogtoJwtTokenKeyType.ClientCredentials]: {
     script: defaultClientCredentialsJwtCustomizerCode,
     tokenSample: defaultClientCredentialsPayload,
-    contextSample: undefined,
+    contextSample: defaultM2mTokenContextData,
   },
 });
 

@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import {
   accessTokenPayloadGuard,
   clientCredentialsPayloadGuard,
+  jwtCustomizerApplicationContextGuard,
   jwtCustomizerGrantContextGuard,
   jwtCustomizerUserContextGuard,
   jwtCustomizerUserInteractionContextGuard,
@@ -19,6 +20,7 @@ const typeIdentifiers = `export enum JwtCustomizerTypeDefinitionKey {
   JwtCustomizerUserContext = 'JwtCustomizerUserContext',
   JwtCustomizerGrantContext = 'JwtCustomizerGrantContext',
   JwtCustomizerUserInteractionContext = 'JwtCustomizerUserInteractionContext',
+  JwtCustomizerApplicationContext = 'JwtCustomizerApplicationContext',
   AccessTokenPayload = 'AccessTokenPayload',
   ClientCredentialsPayload = 'ClientCredentialsPayload',
   EnvironmentVariables = 'EnvironmentVariables',
@@ -87,6 +89,11 @@ const createJwtCustomizerTypeDefinitions = async () => {
       )
     );
 
+  const jwtCustomizerApplicationContextTypeDefinition = inferTsDefinitionFromZod(
+    jwtCustomizerApplicationContextGuard,
+    'JwtCustomizerApplicationContext'
+  );
+
   const accessTokenPayloadTypeDefinition = inferTsDefinitionFromZod(
     accessTokenPayloadGuard,
     'AccessTokenPayload'
@@ -105,6 +112,8 @@ export const jwtCustomizerUserContextTypeDefinition = \`${jwtCustomizerUserConte
 export const jwtCustomizerGrantContextTypeDefinition = \`${jwtCustomizerGrantContextTypeDefinition}\`;
 
 export const jwtCustomizerUserInteractionContextTypeDefinition = \`${jwtCustomizerUserInteractionContextTypeDefinition}\`;
+
+export const jwtCustomizerApplicationContextTypeDefinition = \`${jwtCustomizerApplicationContextTypeDefinition}\`;
 
 export const accessTokenPayloadTypeDefinition = \`${accessTokenPayloadTypeDefinition}\`;
 

@@ -1,19 +1,28 @@
 import {
   type CustomJwtErrorBody,
   CustomJwtErrorCode,
-  LogtoJwtTokenKeyType,
   jwtCustomizerUserContextGuard,
   userInfoSelectFields,
   type CustomJwtFetcher,
   type JwtCustomizerType,
   type JwtCustomizerUserContext,
+  type JwtCustomizerApplicationContext,
   type LogtoJwtTokenKey,
   type CustomJwtApiContext,
   type CustomJwtScriptPayload,
   jsonObjectGuard,
+  isBuiltInApplicationId,
+  buildBuiltInApplicationDataForTenant,
 } from '@logto/schemas';
 import { type ConsoleLog } from '@logto/shared';
-import { assert, deduplicate, type Optional, pick, pickState } from '@silverhand/essentials';
+import {
+  assert,
+  deduplicate,
+  type Optional,
+  pick,
+  pickState,
+  trySafe,
+} from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { got, HTTPError } from 'got';
 import { type UnknownObject } from 'oidc-provider';
@@ -58,9 +67,7 @@ export class JwtCustomizerLibrary {
   static async runScriptInLocalVm(data: CustomJwtFetcher) {
     try {
       const payload: CustomJwtScriptPayload = {
-        ...(data.tokenType === LogtoJwtTokenKeyType.AccessToken
-          ? pick(data, 'token', 'context', 'environmentVariables')
-          : pick(data, 'token', 'environmentVariables')),
+        ...pick(data, 'token', 'context', 'environmentVariables'),
         api: apiContext,
       };
 
@@ -152,6 +159,22 @@ export class JwtCustomizerLibrary {
     };
 
     return jwtCustomizerUserContextGuard.parse(userContext);
+  }
+
+  async getApplicationContext(
+    tenantId: string,
+    clientId: string
+  ): Promise<JwtCustomizerApplicationContext | undefined> {
+    const application = isBuiltInApplicationId(clientId)
+      ? buildBuiltInApplicationDataForTenant(tenantId, clientId)
+      : await trySafe(this.queries.applications.findApplicationById(clientId));
+
+    if (!application) {
+      return;
+    }
+
+    const { secret: _, ...rest } = application;
+    return rest;
   }
 
   /**
