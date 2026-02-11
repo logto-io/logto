@@ -15,6 +15,7 @@ import {
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest } from '#src/helpers/user.js';
+import { devFeatureDisabledTest } from '#src/utils.js';
 
 describe('skipMfaOnSignIn user setting', () => {
   const userApi = new UserApiTest();
@@ -62,7 +63,7 @@ describe('skipMfaOnSignIn user setting', () => {
     });
   });
 
-  describe('Mandatory MFA policy override', () => {
+  devFeatureDisabledTest.describe('Mandatory MFA policy override', () => {
     it('should ignore user setting when MFA policy is Mandatory', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
 

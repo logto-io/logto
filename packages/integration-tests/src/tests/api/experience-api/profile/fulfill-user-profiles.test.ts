@@ -27,7 +27,12 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { generateEmail, generateNationalPhoneNumber, generatePassword } from '#src/utils.js';
+import {
+  devFeatureDisabledTest,
+  generateEmail,
+  generateNationalPhoneNumber,
+  generatePassword,
+} from '#src/utils.js';
 
 describe('Fulfill User Profiles', () => {
   const userApi = new UserApiTest();
@@ -179,7 +184,10 @@ describe('Fulfill User Profiles', () => {
     );
   });
 
-  describe('MFA verification status is required', () => {
+  // When dev features are enabled, adaptive MFA may be active and changes the MFA enforcement
+  // behavior. These tests assume the legacy policy-based MFA path. See the adaptive MFA
+  // integration tests for the dev-feature-enabled equivalent.
+  devFeatureDisabledTest.describe('MFA verification status is required', () => {
     beforeAll(async () => {
       await enableMandatoryMfaWithTotpAndBackupCode();
     });

@@ -7,6 +7,7 @@ import {
   type Mfa,
   type User,
 } from '@logto/schemas';
+import { type Optional } from '@silverhand/essentials';
 
 import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
@@ -17,6 +18,8 @@ import {
 import { type VerificationRecord } from '../verifications/index.js';
 import { type TotpVerification } from '../verifications/totp-verification.js';
 import { type WebAuthnVerification } from '../verifications/web-authn-verification.js';
+
+import type { AdaptiveMfaResult } from './adaptive-mfa-validator/types.js';
 
 const mfaVerificationTypes = Object.freeze([
   VerificationType.TOTP,
@@ -54,15 +57,11 @@ const isMfaVerificationRecord = (
   return mfaVerificationTypes.includes(verification.type);
 };
 
-type MfaValidatorOptions = {
-  forceMfaVerification?: boolean;
-};
-
 export class MfaValidator {
   constructor(
     private readonly mfaSettings: Mfa,
     private readonly user: User,
-    private readonly options: MfaValidatorOptions = {}
+    private readonly adaptiveMfaResult?: Optional<AdaptiveMfaResult>
   ) {}
 
   /**
@@ -98,31 +97,39 @@ export class MfaValidator {
   }
 
   /**
-   * Check if the user has enabled MFA verifications, if true, MFA verification records are required.
+   * Whether MFA verification is required for the current sign-in interaction.
+   *
+   * Decision order:
+   * 1. If adaptive MFA is enabled (result defined):
+   *    - triggered + user has factors → required
+   *    - otherwise → not required
+   * 2. If adaptive MFA is disabled (result undefined), fall back to SIE policy:
+   *    - skipMfaOnSignIn + non-Mandatory policy → not required
+   *    - user has factors → required
+   *    - otherwise → not required
    */
-  get isMfaEnabled() {
-    // Users can manually disable MFA verification requirement for sign-in,
-    // but if the MFA policy is set to mandatory, this setting will be ignored.
+  get isMfaRequired(): boolean {
+    const hasUserFactors = this.userEnabledMfaVerifications.length > 0;
+
+    if (this.adaptiveMfaResult !== undefined) {
+      // TODO: When adaptive MFA triggers (requiresMfa === true) but the user has no MFA factors
+      // enabled, we should still enforce MFA. Currently we return false and skip MFA in this case,
+      // which means the risk signal is silently ignored. Once the product decision is finalized,
+      // add handling here (e.g. prompt the user to set up MFA before proceeding).
+      return this.adaptiveMfaResult.requiresMfa && hasUserFactors;
+    }
+
     const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
 
-    if (
-      !this.options.forceMfaVerification &&
-      skipMfaOnSignIn &&
-      this.mfaSettings.policy !== MfaPolicy.Mandatory
-    ) {
+    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
       return false;
     }
 
-    return this.userEnabledMfaVerifications.length > 0;
+    return hasUserFactors;
   }
 
   isMfaVerified(verificationRecords: VerificationRecord[]) {
-    // MFA validation is not enabled
-    if (!this.isMfaEnabled) {
-      return true;
-    }
-
     const verifiedMfaVerificationRecords = verificationRecords.filter(
       (verification) =>
         isMfaVerificationRecord(verification) &&

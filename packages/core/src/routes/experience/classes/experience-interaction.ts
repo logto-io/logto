@@ -5,7 +5,6 @@ import {
   MfaFactor,
   VerificationType,
   type User,
-  type LogContextPayload,
   userPasskeySignInDataKey,
   userMfaDataKey,
 } from '@logto/schemas';
@@ -359,23 +358,17 @@ export default class ExperienceInteraction {
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
-    const requiresAdaptiveMfa = adaptiveMfaResult?.requiresMfa ?? false;
-    const mfaValidator = new MfaValidator(mfaSettings, user, {
-      forceMfaVerification: requiresAdaptiveMfa,
-    });
-    const mfaRequired = mfaValidator.isMfaEnabled;
-    const mfaRequirement: NonNullable<LogContextPayload['mfaRequirement']> = {
-      required: mfaRequired,
-      source: requiresAdaptiveMfa ? 'adaptive' : mfaRequired ? 'policy' : 'none',
-    };
-    log?.append({
-      ...conditional(adaptiveMfaResult && { adaptiveMfaResult }),
-      mfaRequirement,
-    });
-    const isVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
+    const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
+
+    if (adaptiveMfaResult) {
+      log?.append({ adaptiveMfaResult });
+    }
+
+    if (!mfaValidator.isMfaRequired) {
+      return;
+    }
 
     const { primaryEmail, primaryPhone } = user;
-    // Build masked identifiers for UX hints when applicable
     const maskedIdentifiers: Record<string, string> = {
       ...(mfaValidator.availableUserMfaVerificationTypes.includes(
         MfaFactor.EmailVerificationCode
@@ -390,7 +383,7 @@ export default class ExperienceInteraction {
     };
 
     assertThat(
-      isVerified,
+      mfaValidator.isMfaVerified(this.verificationRecordsArray),
       new RequestError(
         { code: 'session.mfa.require_mfa_verification', status: 403 },
         {
