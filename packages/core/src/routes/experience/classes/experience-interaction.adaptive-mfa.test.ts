@@ -1,4 +1,11 @@
-import { InteractionEvent, MfaFactor, MfaPolicy, type User } from '@logto/schemas';
+/* eslint-disable max-lines */
+import {
+  InteractionEvent,
+  InteractionHookEvent,
+  MfaFactor,
+  MfaPolicy,
+  type User,
+} from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { type Optional } from '@silverhand/essentials';
 
@@ -164,6 +171,64 @@ describe('ExperienceInteraction adaptive MFA', () => {
       },
     } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
     const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+    const { createLog } = createMockLogContext();
+    const log = createLog('Interaction.SignIn.Submit');
+
+    await expect(experienceInteraction.guardMfaVerificationStatus(log)).rejects.toMatchError(
+      new RequestError(
+        { code: 'session.mfa.require_mfa_verification', status: 403 },
+        {
+          availableFactors: [MfaFactor.TOTP],
+          maskedIdentifiers: {},
+        }
+      )
+    );
+
+    expect(ctx.assignInteractionHookResult).toHaveBeenCalledWith({
+      event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+      payload: {
+        adaptiveMfaResult: expect.objectContaining({
+          requiresMfa: true,
+          triggeredRules: expect.arrayContaining([
+            expect.objectContaining({ rule: 'untrusted_ip' }),
+          ]) as unknown,
+        }) as unknown,
+      },
+      userId: user.id,
+    });
+  });
+
+  it('assigns adaptive MFA hook result even when log is not provided', async () => {
+    const user: User = {
+      ...mockUserWithMfaVerifications,
+      logtoConfig: {
+        mfa: {
+          skipMfaOnSignIn: true,
+        },
+      },
+    };
+
+    users.findUserById.mockResolvedValueOnce(user);
+
+    // @ts-expect-error -- mock test context
+    const ctx: WithHooksAndLogsContext = {
+      assignInteractionHookResult: jest.fn(),
+      appendDataHookContext: jest.fn(),
+      ...createContextWithRouteParameters({
+        headers: {
+          'x-logto-cf-bot-score': '10',
+        },
+      }),
+      ...createMockLogContext(),
+    };
+
+    const interactionDetails = {
+      result: {
+        interactionEvent: InteractionEvent.SignIn,
+        userId: user.id,
+      },
+    } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
+    const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchError(
       new RequestError(
@@ -173,6 +238,13 @@ describe('ExperienceInteraction adaptive MFA', () => {
           maskedIdentifiers: {},
         }
       )
+    );
+
+    expect(ctx.assignInteractionHookResult).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+        userId: user.id,
+      })
     );
   });
 
@@ -210,6 +282,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
+    expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
   });
 
   it('allows sign-in when adaptive MFA does not trigger even if skipMfaOnSignIn is false', async () => {
@@ -416,6 +489,8 @@ describe('ExperienceInteraction adaptive MFA', () => {
         }
       )
     );
+
+    expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
   });
 
   it('allows skipMfaOnSignIn when dev features are disabled', async () => {
@@ -464,3 +539,5 @@ describe('ExperienceInteraction adaptive MFA', () => {
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
   });
 });
+
+/* eslint-enable max-lines */

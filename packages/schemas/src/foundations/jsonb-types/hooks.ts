@@ -12,6 +12,7 @@ import { z } from 'zod';
 export enum InteractionHookEvent {
   PostRegister = 'PostRegister',
   PostSignIn = 'PostSignIn',
+  PostSignInAdaptiveMfaTriggered = 'PostSignInAdaptiveMfaTriggered',
   PostResetPassword = 'PostResetPassword',
 }
 
@@ -55,6 +56,7 @@ export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
 export const hookEvents = Object.freeze([
   InteractionHookEvent.PostRegister,
   InteractionHookEvent.PostSignIn,
+  InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
   InteractionHookEvent.PostResetPassword,
   'User.Created',
   'User.Deleted',

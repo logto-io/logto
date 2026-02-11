@@ -2,6 +2,7 @@
 import { appInsights } from '@logto/app-insights/node';
 import {
   InteractionEvent,
+  InteractionHookEvent,
   MfaFactor,
   VerificationType,
   type User,
@@ -350,6 +351,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 404 if the if the user is not identified or not found
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
+
   public async guardMfaVerificationStatus(log?: LogEntry) {
     if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInWebAuthn) {
       return;
@@ -366,6 +368,14 @@ export default class ExperienceInteraction {
 
     if (!mfaValidator.isMfaRequired) {
       return;
+    }
+
+    if (EnvSet.values.isDevFeaturesEnabled && adaptiveMfaResult?.requiresMfa) {
+      this.ctx.assignInteractionHookResult({
+        event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+        payload: { adaptiveMfaResult },
+        userId: user.id,
+      });
     }
 
     const { primaryEmail, primaryPhone } = user;

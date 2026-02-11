@@ -9,7 +9,7 @@ import {
   type InteractionHookEventPayload,
 } from '@logto/schemas';
 import { generateStandardId, normalizeError, type ConsoleLog } from '@logto/shared';
-import { conditional, pick, trySafe } from '@silverhand/essentials';
+import { conditional, deduplicate, type Optional, pick, trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
 import pMap from 'p-map';
 
@@ -104,47 +104,73 @@ export const createHookLibrary = (queries: Queries) => {
     consoleLog: ConsoleLog,
     contextManager: InteractionHookContextManager
   ) => {
-    if (!contextManager.interactionHookResult) {
+    if (contextManager.interactionHookResults.length === 0) {
       return;
     }
 
     const { interactionEvent, sessionId, applicationId, userIp, userAgent } =
       contextManager.metadata;
-    const { userId } = contextManager.interactionHookResult;
-    const { hookEvent } = contextManager;
 
     const found = await findAllHooks();
 
-    const hooks = found.filter(
-      ({ event, events, enabled }) =>
-        enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
-    );
-
-    if (hooks.length === 0) {
+    if (found.length === 0) {
       return;
     }
 
-    const [user, application] = await Promise.all([
-      trySafe(findUserById(userId)),
-      trySafe(async () => conditional(applicationId && (await findApplicationById(applicationId)))),
-    ]);
-
-    const payload = {
-      event: hookEvent,
-      interactionEvent,
-      createdAt: new Date().toISOString(),
-      sessionId,
-      userAgent,
-      userId,
-      userIp,
-      user: user && pick(user, ...userInfoSelectFields),
-      application: application && pick(application, 'id', 'type', 'name', 'description'),
-    } satisfies BetterOmit<InteractionHookEventPayload, 'hookId'>;
-
-    await sendWebhooks(
-      hooks.map((hook) => ({ hook, payload })),
-      consoleLog
+    const application = await trySafe(async () =>
+      conditional(applicationId && (await findApplicationById(applicationId)))
     );
+
+    type HookUser = Awaited<ReturnType<typeof findUserById>>;
+
+    const userIds = deduplicate(contextManager.interactionHookResults.map(({ userId }) => userId));
+    const users: Array<readonly [string, Optional<HookUser>]> = await Promise.all(
+      userIds.map(async (userId) => [userId, await trySafe(findUserById(userId))] as const)
+    );
+    const usersById = new Map(users);
+
+    const webhooks: Array<{
+      hook: Hook;
+      payload: BetterOmit<InteractionHookEventPayload, 'hookId'>;
+    }> = [];
+
+    for (const interactionHookResult of contextManager.interactionHookResults) {
+      const { userId, event, payload: customPayload } = interactionHookResult;
+      const hookEvent = event ?? contextManager.hookEvent;
+
+      const hooks = found.filter(
+        ({ event, events, enabled }) =>
+          enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
+      );
+
+      if (hooks.length === 0) {
+        continue;
+      }
+
+      const user = usersById.get(userId);
+
+      const payload = {
+        event: hookEvent,
+        interactionEvent,
+        createdAt: new Date().toISOString(),
+        sessionId,
+        userAgent,
+        userId,
+        userIp,
+        user: user && pick(user, ...userInfoSelectFields),
+        application: application && pick(application, 'id', 'type', 'name', 'description'),
+        ...customPayload,
+      } satisfies BetterOmit<InteractionHookEventPayload, 'hookId'>;
+
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      webhooks.push(...hooks.map((hook) => ({ hook, payload })));
+    }
+
+    if (webhooks.length === 0) {
+      return;
+    }
+
+    await sendWebhooks(webhooks, consoleLog);
   };
 
   /**

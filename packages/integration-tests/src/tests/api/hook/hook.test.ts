@@ -95,6 +95,26 @@ describe('hooks', () => {
     });
   });
 
+  it('should support creating and updating adaptive MFA interaction hook event', async () => {
+    const payload = getHookCreationPayload(InteractionHookEvent.PostSignInAdaptiveMfaTriggered);
+    const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
+
+    expect(created.events).toContain(InteractionHookEvent.PostSignInAdaptiveMfaTriggered);
+
+    const updated = await authedAdminApi
+      .patch(`hooks/${created.id}`, {
+        json: { events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered] },
+      })
+      .json<Hook>();
+
+    expect(updated.events).toEqual([InteractionHookEvent.PostSignInAdaptiveMfaTriggered]);
+
+    await expect(authedAdminApi.delete(`hooks/${created.id}`)).resolves.toHaveProperty(
+      'status',
+      204
+    );
+  });
+
   it('should throw error if update a hook with a invalid hook id', async () => {
     const payload = {
       name: 'new_hook_name',

@@ -124,6 +124,8 @@ type InteractionHookMetadata = {
  */
 type InteractionHookResult = {
   userId: string;
+  event?: InteractionHookEvent;
+  payload?: Record<string, unknown>;
 };
 
 const interactionEventToHookEvent: Record<InteractionEvent, InteractionHookEvent> = {
@@ -133,7 +135,7 @@ const interactionEventToHookEvent: Record<InteractionEvent, InteractionHookEvent
 };
 
 export class InteractionHookContextManager {
-  public interactionHookResult: Optional<InteractionHookResult>;
+  public interactionHookResultArray: InteractionHookResult[] = [];
 
   constructor(public metadata: InteractionHookMetadata) {}
 
@@ -141,12 +143,21 @@ export class InteractionHookContextManager {
     return interactionEventToHookEvent[this.metadata.interactionEvent];
   }
 
+  get interactionHookResult(): Optional<InteractionHookResult> {
+    return this.interactionHookResultArray.at(0);
+  }
+
+  get interactionHookResults(): readonly InteractionHookResult[] {
+    return this.interactionHookResultArray;
+  }
+
   /**
    * Assign an interaction hook result to trigger webhook.
-   * Calling it multiple times will overwrite the original result, but only one webhook will be triggered.
+   * Calling it multiple times will queue multiple webhook triggers.
    * @param result The result to assign.
    */
   assignInteractionHookResult(result: InteractionHookResult) {
-    this.interactionHookResult = result;
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    this.interactionHookResultArray.push(result);
   }
 }
