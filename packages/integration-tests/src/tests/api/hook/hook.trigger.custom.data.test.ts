@@ -13,7 +13,7 @@ import { createScope } from '#src/api/scope.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
-import { WebHookApiTest } from '#src/helpers/hook.js';
+import { getSupportedHookEvents, WebHookApiTest } from '#src/helpers/hook.js';
 import { registerWithEmail } from '#src/helpers/interactions.js';
 import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
@@ -43,7 +43,7 @@ describe('manual data hook tests', () => {
   beforeEach(async () => {
     await webHookApi.create({
       name: hookName,
-      events: [...hookEvents],
+      events: getSupportedHookEvents([...hookEvents]),
       config: { url: webHookMockServer.endpoint },
     });
   });
