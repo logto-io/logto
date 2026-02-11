@@ -220,6 +220,14 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       !isClientCredentialsToken && (await getAssociatedSubjectToken(queries, token))
     );
 
+    // DEV: application context in JWT customizer
+    const clientId = token.clientId ?? ctx.oidc.client?.clientId;
+    const applicationContext = conditional(
+      EnvSet.values.isDevFeaturesEnabled &&
+        clientId &&
+        (await libraries.jwtCustomizers.getApplicationContext(envSet.tenantId, clientId))
+    );
+
     const logEntry = ctx.createLog(
       `${jwtCustomizerLog.prefix}.${
         isClientCredentialsToken
@@ -242,11 +250,19 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       environmentVariables,
       token: originalTokenPayload,
       ...(isClientCredentialsToken
-        ? { tokenType: LogtoJwtTokenKeyType.ClientCredentials }
+        ? {
+            tokenType: LogtoJwtTokenKeyType.ClientCredentials,
+            context: {
+              ...conditional(
+                applicationContext && {
+                  application: applicationContext,
+                }
+              ),
+            },
+          }
         : {
             tokenType: LogtoJwtTokenKeyType.AccessToken,
             // TODO (LOG-8555): the newly added `UserProfile` type includes undefined fields and can not be directly assigned to `Json` type. And the `undefined` fields should be removed by zod guard.
-            // `context` parameter is only eligible for user's access token for now.
             context: {
               // eslint-disable-next-line no-restricted-syntax
               user: logtoUserInfo as Record<string, Json>,
@@ -261,6 +277,11 @@ export const getExtraTokenClaimsForJwtCustomization = async (
               ...conditional(
                 interactionContext && {
                   interaction: interactionContext,
+                }
+              ),
+              ...conditional(
+                applicationContext && {
+                  application: applicationContext,
                 }
               ),
             },

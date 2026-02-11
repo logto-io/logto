@@ -1,3 +1,4 @@
+import { isDevFeaturesEnabled } from '@/consts/env';
 import {
   JwtCustomizerTypeDefinitionKey,
   accessTokenPayloadTypeDefinition,
@@ -5,6 +6,7 @@ import {
   jwtCustomizerUserContextTypeDefinition,
   jwtCustomizerGrantContextTypeDefinition,
   jwtCustomizerUserInteractionContextTypeDefinition,
+  jwtCustomizerApplicationContextTypeDefinition,
   jwtCustomizerApiContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 
@@ -17,6 +19,7 @@ export {
   jwtCustomizerUserContextTypeDefinition,
   jwtCustomizerGrantContextTypeDefinition,
   jwtCustomizerUserInteractionContextTypeDefinition,
+  jwtCustomizerApplicationContextTypeDefinition,
 } from '@/consts/jwt-customizer-type-definition';
 
 export const buildAccessTokenJwtCustomizerContextTsDefinition = () => {
@@ -27,13 +30,13 @@ export const buildAccessTokenJwtCustomizerContextTsDefinition = () => {
   declare ${jwtCustomizerApiContextTypeDefinition}
 
   declare ${accessTokenPayloadTypeDefinition}
-  
-  declare ${jwtCustomizerUserInteractionContextTypeDefinition}`;
+
+  declare ${jwtCustomizerUserInteractionContextTypeDefinition}${isDevFeaturesEnabled ? `\n\n  declare ${jwtCustomizerApplicationContextTypeDefinition}` : ''}`;
 };
 
 export const buildClientCredentialsJwtCustomizerContextTsDefinition = () =>
   `declare ${clientCredentialsPayloadTypeDefinition}
-
+${isDevFeaturesEnabled ? `\n  declare ${jwtCustomizerApplicationContextTypeDefinition}\n` : ''}
   declare ${jwtCustomizerApiContextTypeDefinition}`;
 
 export const buildEnvironmentVariablesTypeDefinition = (

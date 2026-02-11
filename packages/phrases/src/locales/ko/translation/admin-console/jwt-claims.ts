@@ -50,6 +50,11 @@ const jwt_claims = {
     subtitle:
       '`context.interaction` 매개변수를 사용하여 현재 인증 세션에 대한 사용자의 상호작용 세부 정보에 접근합니다. 여기에는 `interactionEvent`, `userId`, `verificationRecords`가 포함됩니다.',
   },
+  application_data: {
+    title: '애플리케이션 컨텍스트',
+    subtitle:
+      '`context.application` 입력 매개변수를 사용하여 토큰과 관련된 애플리케이션 정보를 제공합니다.',
+  },
   token_data: {
     title: '토큰 데이터',
     subtitle: '현재 액세스 토큰 페이로드에 대한 `token` 입력 매개변수 사용.',

@@ -166,6 +166,7 @@ describe('configs JWT customizer routes', () => {
       script: mockJwtCustomizerConfigForClientCredentials.value.script,
       environmentVariables: mockJwtCustomizerConfigForClientCredentials.value.environmentVariables,
       token: {},
+      context: { application: { id: 'my-app' } },
     };
 
     await routeRequester.post('/configs/jwt-customizer/test').send(payload);

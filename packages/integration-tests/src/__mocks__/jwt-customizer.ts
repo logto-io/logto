@@ -33,7 +33,12 @@ export const clientCredentialsJwtCustomizerPayload = {
     foo: 'bar',
     API_KEY: '12345',
   },
-  contextSample: {},
+  contextSample: {
+    application: {
+      id: 'my-app',
+      name: 'My M2M App',
+    },
+  },
   tokenSample: clientCredentialsTokenSample,
 };
 

@@ -42,6 +42,8 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
       {
         jwtCustomizers: {
           getUserContext: jest.fn().mockResolvedValue({ id: accountId }),
+          // eslint-disable-next-line unicorn/no-useless-undefined
+          getApplicationContext: jest.fn().mockResolvedValue(undefined),
         },
       },
       {
