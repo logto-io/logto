@@ -96,7 +96,7 @@ declare type Context = {
   /**
    * The application data associated with the token.
    */
-  application: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerApplicationContext};
+  application?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerApplicationContext};
 }
 
 `
