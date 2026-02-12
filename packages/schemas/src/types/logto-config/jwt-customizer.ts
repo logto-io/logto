@@ -229,7 +229,9 @@ export const customJwtFetcherGuard = z.discriminatedUnion('tokenType', [
   }),
   commonJwtCustomizerGuard.extend({
     tokenType: z.literal(LogtoJwtTokenKeyType.ClientCredentials),
-    context: jsonObjectGuard,
+    // TODO: @xiaoyijun Make `context` required once the application context feature is fully launched
+    // and all core instances are sending `context` for client credentials requests.
+    context: jsonObjectGuard.optional(),
   }),
 ]);
 
