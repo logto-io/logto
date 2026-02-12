@@ -48,7 +48,7 @@ const jwt_claims = {
   interaction_data: {
     title: 'سياق تفاعل المستخدم',
     subtitle:
-      'استخدم المعلمة `context.interaction` للوصول إلى تفاصيل تفاعل المستخدم في جلسة المصادقة الحالية، بما في ذلك `interactionEvent`, `userId`, و `verificationRecords`.',
+      'استخدم المعلمة `context.interaction` للوصول إلى تفاصيل تفاعل المستخدم في جلسة المصادقة الحالية.',
   },
   application_data: {
     title: 'سياق التطبيق',

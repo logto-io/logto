@@ -53,7 +53,7 @@ const jwt_claims = {
   interaction_data: {
     title: "Contexte d'interaction utilisateur",
     subtitle:
-      "Utilisez le paramètre `context.interaction` pour accéder aux détails de l'interaction de l'utilisateur pour la session d'authentification en cours, y compris `interactionEvent`, `userId` et `verificationRecords`.",
+      "Utilisez le paramètre `context.interaction` pour accéder aux détails de l'interaction de l'utilisateur pour la session d'authentification en cours.",
   },
   application_data: {
     title: "Contexte de l'application",

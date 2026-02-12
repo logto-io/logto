@@ -48,7 +48,7 @@ const jwt_claims = {
   interaction_data: {
     title: 'บริบทปฏิสัมพันธ์กับผู้ใช้',
     subtitle:
-      'ใช้พารามิเตอร์ `context.interaction` เพื่อเข้าถึงรายละเอียดการโต้ตอบของผู้ใช้ใน session การยืนยันตัวตนปัจจุบัน รวมถึง `interactionEvent`, `userId` และ `verificationRecords`',
+      'ใช้พารามิเตอร์ `context.interaction` เพื่อเข้าถึงรายละเอียดการโต้ตอบของผู้ใช้ใน session การยืนยันตัวตนปัจจุบัน',
   },
   application_data: {
     title: 'บริบทของแอปพลิเคชัน',

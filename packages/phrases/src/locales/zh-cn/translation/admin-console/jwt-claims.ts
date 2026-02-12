@@ -44,8 +44,7 @@ const jwt_claims = {
   },
   interaction_data: {
     title: '用户交互上下文',
-    subtitle:
-      '使用 `context.interaction` 参数访问当前身份验证会话的用户交互详细信息，包括 `interactionEvent`、`userId` 和 `verificationRecords`。',
+    subtitle: '使用 `context.interaction` 参数访问当前身份验证会话的用户交互详细信息。',
   },
   application_data: {
     title: '应用程序上下文',
