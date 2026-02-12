@@ -196,7 +196,7 @@ export const createSessionLibrary = (queries: Queries) => {
         throw new RequestError(
           { code: 'oidc.invalid_session_payload', status: 500 },
           {
-            originalError: payloadResult.error,
+            cause: payloadResult.error,
           }
         );
       }

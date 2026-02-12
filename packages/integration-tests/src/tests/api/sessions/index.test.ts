@@ -1,6 +1,6 @@
 import { SignInIdentifier, demoAppApplicationId } from '@logto/schemas';
 
-import { getUserSessions } from '#src/api/index.js';
+import { getUserSessions, revokeUserSession } from '#src/api/index.js';
 import { signInWithPassword } from '#src/helpers/experience/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
@@ -13,7 +13,7 @@ devFeatureTest.describe('Sessions API', () => {
     await userApi.cleanUp();
   });
 
-  it('should get user sessions', async () => {
+  it('should get user sessions and revoke session properly', async () => {
     await enableAllPasswordSignInMethods();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -47,5 +47,14 @@ devFeatureTest.describe('Sessions API', () => {
       expect(session.payload.accountId).toBe(user.id);
       expect(session.payload.authorizations).toHaveProperty(demoAppApplicationId);
     }
+
+    // Revoke the first session including grants
+    const sessionId = sessions[0]!.payload.uid;
+    await revokeUserSession(user.id, sessionId, true);
+
+    // Verify the session is revoked
+    const { sessions: sessionsAfterRevoke } = await getUserSessions(user.id);
+    expect(sessionsAfterRevoke).toHaveLength(1);
+    expect(sessionsAfterRevoke[0]!.id).toBe(sessions[1]!.id);
   });
 });
