@@ -67,7 +67,7 @@ export default function accountSessionRoutes<T extends UserRouter>(
 
       assertThat(
         fields.session === AccountCenterControlValue.Edit,
-        'account_center.field_not_enabled'
+        'account_center.field_not_editable'
       );
 
       const session = await provider.Session.findByUid(sessionId);
