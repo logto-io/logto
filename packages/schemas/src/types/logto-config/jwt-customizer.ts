@@ -178,7 +178,7 @@ export const clientCredentialsJwtCustomizerGuard = jwtCustomizerGuard
     tokenSample: clientCredentialsPayloadGuard.partial().optional(),
     contextSample: z
       .object({
-        application: jwtCustomizerApplicationContextGuard.partial(),
+        application: jwtCustomizerApplicationContextGuard.partial().optional(),
       })
       .optional(),
   })
