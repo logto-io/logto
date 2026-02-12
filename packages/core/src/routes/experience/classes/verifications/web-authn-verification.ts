@@ -323,9 +323,20 @@ export class SignInWebAuthnVerification
 
     // Find user by credential ID and rpId
     const user = await findUserByWebAuthnCredential(payload.id, this.authenticationRpId);
-    assertThat(user, 'session.mfa.webauthn_verification_failed');
+    assertThat(user, 'session.identifier_not_found');
 
     const { id: userId, mfaVerifications } = user;
+
+    if (this.userId) {
+      // In identifier first passkey sign-in flow, the user is provided in the verification record before verification.
+      // We need to make sure in the verification process, the user found by credential ID is the same as the user in
+      // the verification record, otherwise it's a verification failure.
+      assertThat(
+        this.userId === userId,
+        new RequestError({ code: 'session.identity_conflict', status: 409 })
+      );
+    }
+
     const { result, newCounter } = await verifyWebAuthnAuthentication({
       payload,
       challenge: this.authenticationChallenge,
