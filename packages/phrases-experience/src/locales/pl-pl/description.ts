@@ -110,6 +110,17 @@ const description = {
   switch_account_description:
     'Aby kontynuować, zostaniesz wylogowany z obecnego konta i automatycznie przełączony na nowe konto.',
   about_yourself: 'Opowiedz nam o sobie',
+  verify_identity: 'Zweryfikuj swoją tożsamość',
+  choose_verification_method: 'Wybierz sposób logowania',
+  verification_method: {
+    passkey: 'Klucz dostępu',
+    passkey_description: 'Weryfikacja przez urządzenie lub sprzęt USB',
+    password: 'Hasło',
+    password_description: 'Wpisz hasło',
+    email_verification_code: 'Kod weryfikacyjny e-mail',
+    phone_verification_code: 'Kod weryfikacyjny telefonu',
+    verification_code_description: 'Wyślij do {{target}}',
+  },
 };
 
 export default Object.freeze(description);

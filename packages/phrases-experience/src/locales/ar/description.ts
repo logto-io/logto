@@ -106,6 +106,17 @@ const description = {
   switch_account_description:
     'للمتابعة، سيتم تسجيل الخروج من الحساب الحالي، والتبديل تلقائيًا إلى الحساب الجديد.',
   about_yourself: 'أخبرنا عن نفسك',
+  verify_identity: 'تحقق من هويتك',
+  choose_verification_method: 'اختر طريقة تسجيل الدخول',
+  verification_method: {
+    passkey: 'مفتاح التحقق',
+    passkey_description: 'تحقق عبر جهازك أو أجهزة USB',
+    password: 'كلمة المرور',
+    password_description: 'أدخل كلمة المرور',
+    email_verification_code: 'رمز التحقق عبر البريد الإلكتروني',
+    phone_verification_code: 'رمز التحقق عبر الهاتف',
+    verification_code_description: 'إرسال إلى {{target}}',
+  },
 };
 
 export default Object.freeze(description);

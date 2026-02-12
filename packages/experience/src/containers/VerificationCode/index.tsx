@@ -3,12 +3,12 @@ import classNames from 'classnames';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
+import SwitchToVerificationMethodsLink from '@/components/SwitchToVerificationMethodsLink';
 import TextLink from '@/components/TextLink';
 import Button from '@/shared/components/Button';
 import VerificationCodeInput, { defaultLength } from '@/shared/components/VerificationCode';
 import { UserFlow } from '@/types';
 
-import PasswordSignInLink from './PasswordSignInLink';
 import styles from './index.module.scss';
 import useResendVerificationCode from './use-resend-verification-code';
 import { getCodeVerificationHookByFlow } from './utils';
@@ -112,8 +112,13 @@ const VerificationCode = ({
           </Trans>
         )}
       </div>
-      {flow === UserFlow.SignIn && hasPasswordButton && (
-        <PasswordSignInLink className={styles.switch} />
+      {flow === UserFlow.SignIn && (
+        <SwitchToVerificationMethodsLink
+          hasPassword={hasPasswordButton}
+          identifier={identifier.type}
+          value={identifier.value}
+          className={styles.switch}
+        />
       )}
       <Button
         title="action.continue"

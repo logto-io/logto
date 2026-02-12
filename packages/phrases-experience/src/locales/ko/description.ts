@@ -100,6 +100,17 @@ const description = {
   switch_account_description:
     '계속 진행하려면 현재 계정에서 로그아웃되고 새 계정으로 자동 전환됩니다.',
   about_yourself: '자신에 대해 알려주세요',
+  verify_identity: '신원 확인',
+  choose_verification_method: '로그인 방법을 선택하세요',
+  verification_method: {
+    passkey: '패스키',
+    passkey_description: '기기 또는 USB 하드웨어로 확인',
+    password: '비밀번호',
+    password_description: '비밀번호 입력',
+    email_verification_code: '이메일 인증 코드',
+    phone_verification_code: '전화 인증 코드',
+    verification_code_description: '{{target}}로 전송',
+  },
 };
 
 export default Object.freeze(description);

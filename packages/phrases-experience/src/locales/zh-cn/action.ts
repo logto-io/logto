@@ -21,6 +21,7 @@ const action = {
   switch_to: '切换到{{method}}',
   sign_in_via_passcode: '用验证码登录',
   sign_in_via_password: '密码登录',
+  sign_in_via_passkey: '使用 Passkey 登录',
   change: '更改{{method}}',
   link_another_email: '绑定其它邮箱',
   link_another_phone: '绑定其它手机',

@@ -94,6 +94,17 @@ const description = {
   switch_account_title: '你当前登录的账号是 {{account}}',
   switch_account_description: '要继续，你将退出当前账户，并自动切换到新账户。',
   about_yourself: '介绍一下你自己',
+  verify_identity: '验证你的身份',
+  choose_verification_method: '选择登录方式',
+  verification_method: {
+    passkey: 'Passkey',
+    passkey_description: '通过设备或 USB 硬件验证',
+    password: '密码',
+    password_description: '输入密码',
+    email_verification_code: '邮箱验证码',
+    phone_verification_code: '短信验证码',
+    verification_code_description: '发送至 {{target}}',
+  },
 };
 
 export default Object.freeze(description);

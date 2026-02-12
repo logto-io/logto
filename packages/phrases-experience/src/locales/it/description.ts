@@ -110,6 +110,17 @@ const description = {
   switch_account_description:
     "Per continuare, verrai disconnesso dall'account attuale e passerai automaticamente al nuovo account.",
   about_yourself: 'Parlaci di te',
+  verify_identity: 'Verifica la tua identità',
+  choose_verification_method: 'Scegli come vuoi accedere',
+  verification_method: {
+    passkey: 'Passkey',
+    passkey_description: 'Verifica tramite dispositivo o hardware USB',
+    password: 'Password',
+    password_description: 'Inserisci la password',
+    email_verification_code: 'Codice di verifica email',
+    phone_verification_code: 'Codice di verifica telefonico',
+    verification_code_description: 'Invia a {{target}}',
+  },
 };
 
 export default Object.freeze(description);

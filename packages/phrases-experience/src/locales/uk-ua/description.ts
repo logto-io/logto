@@ -111,6 +111,17 @@ const description = {
   switch_account_description:
     'Щоб продовжити, ви будете вийдені з поточного облікового запису та автоматично переключені на новий.',
   about_yourself: 'Розкажіть про себе',
+  verify_identity: 'Підтвердьте свою особу',
+  choose_verification_method: 'Виберіть спосіб входу',
+  verification_method: {
+    passkey: 'Ключ доступу',
+    passkey_description: 'Підтвердження через пристрій або USB-обладнання',
+    password: 'Пароль',
+    password_description: 'Введіть пароль',
+    email_verification_code: 'Код підтвердження електронною поштою',
+    phone_verification_code: 'Код підтвердження телефоном',
+    verification_code_description: 'Надіслати на {{target}}',
+  },
 };
 
 export default Object.freeze(description);

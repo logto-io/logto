@@ -6,6 +6,8 @@ import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import useTerms from '@/hooks/use-terms';
 
+import useIdentifierSignInMethods from '../IdentifierSignIn/use-identifier-sign-in-methods';
+
 import styles from './index.module.scss';
 
 type Props = {
@@ -15,6 +17,7 @@ type Props = {
 
 const Main = ({ signInMethods, socialConnectors }: Props) => {
   const { agreeToTermsPolicy } = useTerms();
+  const { isPasswordOnly } = useIdentifierSignInMethods();
 
   if (signInMethods.length === 0 && socialConnectors.length > 0) {
     return (
@@ -32,10 +35,6 @@ const Main = ({ signInMethods, socialConnectors }: Props) => {
       </>
     );
   }
-
-  const isPasswordOnly =
-    signInMethods.length > 0 &&
-    signInMethods.every(({ password, verificationCode }) => password && !verificationCode);
 
   if (isPasswordOnly) {
     return (

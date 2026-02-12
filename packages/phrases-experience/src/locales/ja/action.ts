@@ -21,6 +21,7 @@ const action = {
   switch_to: '{{method}} に切り替える',
   sign_in_via_passcode: '認証コードでサインインする',
   sign_in_via_password: 'パスワードでサインインする',
+  sign_in_via_passkey: 'パスキーでサインインする',
   change: '{{method}} を変更する',
   link_another_email: '別のメールアドレスをリンクする',
   link_another_phone: '別の電話番号をリンクする',

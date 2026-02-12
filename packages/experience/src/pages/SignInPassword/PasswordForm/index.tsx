@@ -1,4 +1,5 @@
 import { SignInIdentifier } from '@logto/schemas';
+import { cond } from '@silverhand/essentials';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -6,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { PasswordInputField } from '@/components/InputFields';
+import SwitchToVerificationMethodsLink from '@/components/SwitchToVerificationMethodsLink';
 import CaptchaBox from '@/containers/CaptchaBox';
 import ForgotPasswordLink from '@/containers/ForgotPasswordLink';
 import usePasswordSignIn from '@/hooks/use-password-sign-in';
@@ -15,8 +17,6 @@ import ErrorMessage from '@/shared/components/ErrorMessage';
 import type { IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
 
 import styles from '../index.module.scss';
-
-import VerificationCodeLink from './VerificationCodeLink';
 
 type Props = {
   readonly className?: string;
@@ -118,9 +118,12 @@ const PasswordForm = ({
       <CaptchaBox />
       <Button title="action.continue" name="submit" htmlType="submit" isLoading={isSubmitting} />
 
-      {identifier !== SignInIdentifier.Username && isVerificationCodeEnabled && (
-        <VerificationCodeLink className={styles.switch} identifier={identifier} value={value} />
-      )}
+      <SwitchToVerificationMethodsLink
+        hasVerificationCode={identifier !== SignInIdentifier.Username && isVerificationCodeEnabled}
+        className={styles.switch}
+        identifier={cond(identifier !== SignInIdentifier.Username && identifier)}
+        value={value}
+      />
 
       <input hidden type="submit" />
     </form>

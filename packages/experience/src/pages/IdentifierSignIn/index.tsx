@@ -1,5 +1,4 @@
 import { AgreeToTermsPolicy, experience } from '@logto/schemas';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
@@ -26,14 +25,7 @@ import useIdentifierSignInMethods from './use-identifier-sign-in-methods';
 const IdentifierSignIn = () => {
   const { t } = useTranslation();
 
-  const signInMethods = useIdentifierSignInMethods();
-
-  const isPasswordOnly = useMemo(
-    () =>
-      signInMethods.length > 0 &&
-      signInMethods.every(({ password, verificationCode }) => password && !verificationCode),
-    [signInMethods]
-  );
+  const { signInMethods, isPasswordOnly } = useIdentifierSignInMethods();
 
   // Fallback to sign-in page if no sign-in methods are available
   if (signInMethods.length === 0) {
