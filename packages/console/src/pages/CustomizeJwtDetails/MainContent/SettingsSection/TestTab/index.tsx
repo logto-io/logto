@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useFormContext, type ControllerRenderProps } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import MonacoCodeEditor, {
   type ModelControl,
 } from '@/pages/CustomizeJwtDetails/MainContent/MonacoCodeEditor';
@@ -25,10 +24,7 @@ type Props = {
 };
 
 const accessTokenModelSettings = [accessTokenPayloadTestModel, userContextTestModel];
-// DEV: application context in JWT customizer
-const clientCredentialsModelSettings = isDevFeaturesEnabled
-  ? [clientCredentialsPayloadTestModel, m2mContextTestModel]
-  : [clientCredentialsPayloadTestModel];
+const clientCredentialsModelSettings = [clientCredentialsPayloadTestModel, m2mContextTestModel];
 
 function TestTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.jwt_claims' });

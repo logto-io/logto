@@ -220,12 +220,9 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       !isClientCredentialsToken && (await getAssociatedSubjectToken(queries, token))
     );
 
-    // DEV: application context in JWT customizer
     const clientId = token.clientId ?? ctx.oidc.client?.clientId;
     const applicationContext = conditional(
-      EnvSet.values.isDevFeaturesEnabled &&
-        clientId &&
-        (await libraries.jwtCustomizers.getApplicationContext(envSet.tenantId, clientId))
+      clientId && (await libraries.jwtCustomizers.getApplicationContext(envSet.tenantId, clientId))
     );
 
     const logEntry = ctx.createLog(
