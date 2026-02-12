@@ -122,7 +122,7 @@ export const oidcSessionAuthorizationDetailsGuard = z
      *
      * @remarks
      * Mark optional to make the guard more robust.
-     * Should always be present in the session authorization details when the session is authorized with an grant.
+     * Should always be present in the session authorization details when the session is authorized with a grant.
      */
     grantId: z.string().optional(),
     /**

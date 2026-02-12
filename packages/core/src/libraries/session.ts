@@ -193,7 +193,12 @@ export const createSessionLibrary = (queries: Queries) => {
       const payloadResult = oidcSessionInstancePayloadGuard.safeParse(payload);
 
       if (!payloadResult.success) {
-        throw new RequestError('oidc.invalid_session_payload', { status: 500 });
+        throw new RequestError(
+          { code: 'oidc.invalid_session_payload', status: 500 },
+          {
+            originalError: payloadResult.error,
+          }
+        );
       }
 
       return {
