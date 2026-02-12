@@ -143,7 +143,9 @@ export const createHookLibrary = (queries: Queries) => {
     }> = [];
 
     for (const interactionHookResult of contextManager.interactionHookResults) {
-      const { userId, event, payload: customPayload } = interactionHookResult;
+      const { userId, event } = interactionHookResult;
+      const customPayload =
+        'payload' in interactionHookResult ? interactionHookResult.payload : undefined;
       const hookEvent = event ?? contextManager.hookEvent;
 
       const hooks = found.filter(

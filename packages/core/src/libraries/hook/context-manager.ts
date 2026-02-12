@@ -126,7 +126,6 @@ type InteractionHookMetadata = {
 type InteractionHookResult = {
   userId: string;
   event?: Exclude<InteractionHookEvent, InteractionHookEvent.PostSignInAdaptiveMfaTriggered>;
-  payload?: Record<string, unknown>;
 };
 
 type AdaptiveMfaTriggeredInteractionHookResult = {
