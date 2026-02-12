@@ -19,6 +19,8 @@ const oidc = {
   provider_error_fallback: 'OIDCエラーが発生しました: {{code}}。',
   key_required: '少なくとも1つのキーが必要です。',
   key_not_found: 'IDが{{id}}のキーが見つかりません。',
+  /** UNTRANSLATED */
+  invalid_session_payload: 'Invalid session payload.',
 };
 
 export default Object.freeze(oidc);

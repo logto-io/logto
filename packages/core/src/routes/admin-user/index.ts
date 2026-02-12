@@ -1,3 +1,5 @@
+import { EnvSet } from '#src/env-set/index.js';
+
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import adminUserBasicsRoutes from './basics.js';
@@ -7,6 +9,7 @@ import adminUserOrganizationRoutes from './organization.js';
 import adminUserPersonalAccessTokenRoutes from './personal-access-token.js';
 import adminUserRoleRoutes from './role.js';
 import adminUserSearchRoutes from './search.js';
+import adminUserSessionRoutes from './session.js';
 import adminUserSocialRoutes from './social.js';
 
 export default function adminUserRoutes<T extends ManagementApiRouter>(...args: RouterInitArgs<T>) {
@@ -18,4 +21,8 @@ export default function adminUserRoutes<T extends ManagementApiRouter>(...args: 
   adminUserMfaVerificationsRoutes(...args);
   adminUserPersonalAccessTokenRoutes(...args);
   adminUserEnterpriseSsoRoutes(...args);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    adminUserSessionRoutes(...args);
+  }
 }

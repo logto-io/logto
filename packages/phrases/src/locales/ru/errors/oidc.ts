@@ -19,6 +19,8 @@ const oidc = {
   provider_error_fallback: 'Произошла ошибка OIDC: {{code}}.',
   key_required: 'Требуется как минимум один ключ.',
   key_not_found: 'Ключ с идентификатором {{id}} не найден.',
+  /** UNTRANSLATED */
+  invalid_session_payload: 'Invalid session payload.',
 };
 
 export default Object.freeze(oidc);

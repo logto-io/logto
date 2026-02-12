@@ -18,6 +18,8 @@ const oidc = {
   provider_error_fallback: '發生了一個 OIDC 錯誤: {{code}}。',
   key_required: '至少需要一個金鑰。',
   key_not_found: '未找到 ID 為 {{id}} 的金鑰。',
+  /** UNTRANSLATED */
+  invalid_session_payload: 'Invalid session payload.',
 };
 
 export default Object.freeze(oidc);
