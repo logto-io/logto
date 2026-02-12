@@ -1,6 +1,7 @@
 import {
   InteractionEvent,
   InteractionHookEvent,
+  type InteractionHookEventPayload,
   type User,
   managementApiHooksRegistration,
   type DataHookEvent,
@@ -9,7 +10,7 @@ import {
   userInfoSelectFields,
   type ExceptionHookEvent,
 } from '@logto/schemas';
-import { pick, type Optional } from '@silverhand/essentials';
+import { pick } from '@silverhand/essentials';
 import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
 
@@ -124,7 +125,16 @@ type InteractionHookMetadata = {
  */
 type InteractionHookResult = {
   userId: string;
+  event?: Exclude<InteractionHookEvent, InteractionHookEvent.PostSignInAdaptiveMfaTriggered>;
 };
+
+type AdaptiveMfaTriggeredInteractionHookResult = {
+  userId: string;
+  event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered;
+  payload: Pick<InteractionHookEventPayload, 'adaptiveMfaResult'>;
+};
+
+type InteractionHookResultUnion = InteractionHookResult | AdaptiveMfaTriggeredInteractionHookResult;
 
 const interactionEventToHookEvent: Record<InteractionEvent, InteractionHookEvent> = {
   [InteractionEvent.Register]: InteractionHookEvent.PostRegister,
@@ -133,7 +143,7 @@ const interactionEventToHookEvent: Record<InteractionEvent, InteractionHookEvent
 };
 
 export class InteractionHookContextManager {
-  public interactionHookResult: Optional<InteractionHookResult>;
+  public interactionHookResultArray: InteractionHookResultUnion[] = [];
 
   constructor(public metadata: InteractionHookMetadata) {}
 
@@ -141,12 +151,17 @@ export class InteractionHookContextManager {
     return interactionEventToHookEvent[this.metadata.interactionEvent];
   }
 
+  get interactionHookResults(): readonly InteractionHookResultUnion[] {
+    return this.interactionHookResultArray;
+  }
+
   /**
    * Assign an interaction hook result to trigger webhook.
-   * Calling it multiple times will overwrite the original result, but only one webhook will be triggered.
+   * Calling it multiple times will queue multiple webhook triggers.
    * @param result The result to assign.
    */
-  assignInteractionHookResult(result: InteractionHookResult) {
-    this.interactionHookResult = result;
+  assignInteractionHookResult(result: InteractionHookResultUnion) {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    this.interactionHookResultArray.push(result);
   }
 }

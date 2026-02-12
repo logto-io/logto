@@ -12,7 +12,7 @@ import {
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { setEmailConnector } from '#src/helpers/connector.js';
-import { WebHookApiTest } from '#src/helpers/hook.js';
+import { getSupportedHookEvents, WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
   createDefaultTenantUserWithPassword,
@@ -45,7 +45,7 @@ describe('account', () => {
   beforeEach(async () => {
     await webHookApi.create({
       name: hookName,
-      events: [...hookEvents],
+      events: getSupportedHookEvents([...hookEvents]),
       config: { url: webHookMockServer.endpoint },
     });
   });

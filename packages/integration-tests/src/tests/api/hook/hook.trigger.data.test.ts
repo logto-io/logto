@@ -15,7 +15,7 @@ import { createApplication, deleteApplication } from '#src/api/application.js';
 import { createResource } from '#src/api/resource.js';
 import { createScope } from '#src/api/scope.js';
 import { isDevFeaturesEnabled } from '#src/constants.js';
-import { WebHookApiTest } from '#src/helpers/hook.js';
+import { getSupportedHookEvents, WebHookApiTest } from '#src/helpers/hook.js';
 import {
   OrganizationApiTest,
   OrganizationRoleApiTest,
@@ -91,7 +91,7 @@ beforeAll(async () => {
 
   await webHookApi.create({
     name: hookName,
-    events: [...hookEvents],
+    events: getSupportedHookEvents([...hookEvents]),
     config: {
       url: webhookServer.endpoint,
     },

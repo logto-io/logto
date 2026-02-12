@@ -2,6 +2,7 @@ import type { Hook } from '@logto/schemas';
 import { InteractionHookEvent } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/index.js';
+import { isDevFeaturesEnabled } from '#src/constants.js';
 import { getHookCreationPayload } from '#src/helpers/hook.js';
 import { expectRejects } from '#src/helpers/index.js';
 
@@ -94,6 +95,31 @@ describe('hooks', () => {
       status: 400,
     });
   });
+
+  const itIfDevFeaturesEnabled = isDevFeaturesEnabled ? it : it.skip;
+
+  itIfDevFeaturesEnabled(
+    'should support creating and updating adaptive MFA interaction hook event',
+    async () => {
+      const payload = getHookCreationPayload(InteractionHookEvent.PostSignInAdaptiveMfaTriggered);
+      const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
+
+      expect(created.events).toContain(InteractionHookEvent.PostSignInAdaptiveMfaTriggered);
+
+      const updated = await authedAdminApi
+        .patch(`hooks/${created.id}`, {
+          json: { events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered] },
+        })
+        .json<Hook>();
+
+      expect(updated.events).toEqual([InteractionHookEvent.PostSignInAdaptiveMfaTriggered]);
+
+      await expect(authedAdminApi.delete(`hooks/${created.id}`)).resolves.toHaveProperty(
+        'status',
+        204
+      );
+    }
+  );
 
   it('should throw error if update a hook with a invalid hook id', async () => {
     const payload = {

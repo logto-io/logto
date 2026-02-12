@@ -20,7 +20,7 @@ import {
   signInWithEnterpriseSso,
   signInWithPassword,
 } from '#src/helpers/experience/index.js';
-import { WebHookApiTest } from '#src/helpers/hook.js';
+import { getSupportedHookEvents, WebHookApiTest } from '#src/helpers/hook.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import {
   enableAllPasswordSignInMethods,
@@ -36,7 +36,6 @@ const webHookMockServer = new WebhookMockServer(9999);
 const userNamePrefix = 'experienceApiHookTriggerTestUser';
 const username = `${userNamePrefix}_0`;
 const password = generatePassword();
-// For email fulfilling and reset password use
 const email = generateEmail();
 
 const userApi = new UserApiTest();
@@ -66,11 +65,9 @@ beforeAll(async () => {
 afterAll(async () => {
   await Promise.all([userApi.cleanUp(), webHookMockServer.close()]);
 });
-
 afterEach(async () => {
   await Promise.all([organizationApi.cleanUp(), ssoConnectorApi.cleanUp()]);
 });
-
 describe('trigger invalid hook', () => {
   beforeAll(async () => {
     await webHookApi.create({
@@ -90,24 +87,21 @@ describe('trigger invalid hook', () => {
     });
 
     const hook = webHookApi.hooks.get('invalidHookEventListener')!;
-
     await assertHookLogResult(hook, InteractionHookEvent.PostSignIn, {
       errorMessage: 'Failed to parse URL from not_work_url',
     });
   });
-
   afterAll(async () => {
     await webHookApi.cleanUp();
   });
 });
 
 describe('experience api hook trigger', () => {
-  // Use new hooks for each test to ensure test isolation
   beforeEach(async () => {
     await Promise.all([
       webHookApi.create({
         name: 'interactionHookEventListener',
-        events: Object.values(InteractionHookEvent),
+        events: getSupportedHookEvents(Object.values(InteractionHookEvent)),
         config: { url: webHookMockServer.endpoint },
       }),
       webHookApi.create({

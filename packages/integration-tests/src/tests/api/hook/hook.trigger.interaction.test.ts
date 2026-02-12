@@ -6,6 +6,7 @@ import {
 } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
+import { isDevFeaturesEnabled } from '#src/constants.js';
 import { resetPasswordlessConnectors } from '#src/helpers/connector.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
 import {
@@ -23,6 +24,10 @@ import { generateEmail, generatePassword } from '#src/utils.js';
 
 import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
+
+const supportedInteractionHookEvents = Object.values(InteractionHookEvent).filter(
+  (event) => isDevFeaturesEnabled || event !== InteractionHookEvent.PostSignInAdaptiveMfaTriggered
+);
 
 const webHookMockServer = new WebhookMockServer(9999);
 const userNamePrefix = 'hookTriggerTestUser';
@@ -81,7 +86,7 @@ describe('interaction api trigger hooks', () => {
     await Promise.all([
       webHookApi.create({
         name: 'interactionHookEventListener',
-        events: Object.values(InteractionHookEvent),
+        events: supportedInteractionHookEvents,
         config: { url: webHookMockServer.endpoint },
       }),
       webHookApi.create({
