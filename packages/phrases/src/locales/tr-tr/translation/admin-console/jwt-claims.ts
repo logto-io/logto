@@ -51,7 +51,7 @@ const jwt_claims = {
   interaction_data: {
     title: 'Kullanıcı etkileşim bağlamı',
     subtitle:
-      'Kullanıcının etkileşim ayrıntılarına, mevcut kimlik doğrulama oturumu için `context.interaction` parametresini kullanarak erişin, `interactionEvent`, `userId` ve `verificationRecords` dahil.',
+      'Kullanıcının etkileşim ayrıntılarına, mevcut kimlik doğrulama oturumu için `context.interaction` parametresini kullanarak erişin.',
   },
   application_data: {
     title: 'Uygulama bağlamı',

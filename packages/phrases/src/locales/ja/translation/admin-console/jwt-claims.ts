@@ -49,7 +49,7 @@ const jwt_claims = {
   interaction_data: {
     title: 'ユーザーインタラクションコンテキスト',
     subtitle:
-      '`context.interaction` パラメーターを使用して、現在の認証セッションにおけるユーザーのインタラクション詳細にアクセスします。包含されるのは `interactionEvent`、`userId`、`verificationRecords` です。',
+      '`context.interaction` パラメーターを使用して、現在の認証セッションにおけるユーザーのインタラクション詳細にアクセスします。',
   },
   application_data: {
     title: 'アプリケーションコンテキスト',

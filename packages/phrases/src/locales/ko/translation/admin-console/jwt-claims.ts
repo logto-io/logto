@@ -48,7 +48,7 @@ const jwt_claims = {
   interaction_data: {
     title: '사용자 상호작용 컨텍스트',
     subtitle:
-      '`context.interaction` 매개변수를 사용하여 현재 인증 세션에 대한 사용자의 상호작용 세부 정보에 접근합니다. 여기에는 `interactionEvent`, `userId`, `verificationRecords`가 포함됩니다.',
+      '`context.interaction` 매개변수를 사용하여 현재 인증 세션에 대한 사용자의 상호작용 세부 정보에 접근합니다.',
   },
   application_data: {
     title: '애플리케이션 컨텍스트',
