@@ -10,7 +10,7 @@ import { type UserRouter, type RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
 
-function accountSessionRoutes<T extends UserRouter>(
+export default function accountSessionRoutes<T extends UserRouter>(
   ...[router, { provider, libraries }]: RouterInitArgs<T>
 ) {
   const { session: sessionLibrary } = libraries;
@@ -18,12 +18,17 @@ function accountSessionRoutes<T extends UserRouter>(
   router.get(
     `${accountApiPrefix}/sessions`,
     koaGuard({
-      status: [200, 400, 500],
+      status: [200, 400, 401, 500],
       response: getUserSessionsResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId } = ctx.auth;
+      const { id: userId, identityVerified } = ctx.auth;
       const { fields } = ctx.accountCenter;
+
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
 
       assertThat(
         fields.session === AccountCenterControlValue.Edit ||
@@ -48,12 +53,17 @@ function accountSessionRoutes<T extends UserRouter>(
       params: z.object({
         sessionId: z.string().min(1),
       }),
-      status: [204, 400, 404, 500],
+      status: [204, 400, 401, 404, 500],
     }),
     async (ctx, next) => {
       const { sessionId } = ctx.guard.params;
-      const { id: userId } = ctx.auth;
+      const { id: userId, identityVerified } = ctx.auth;
       const { fields } = ctx.accountCenter;
+
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
 
       assertThat(
         fields.session === AccountCenterControlValue.Edit,
