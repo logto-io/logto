@@ -52,7 +52,8 @@ const managementApiIdentifiableEntityNames = Object.freeze(
     'saml-application',
     'secret',
     'email-template',
-    'one-time-token'
+    'one-time-token',
+    'session'
   )
 );
 
