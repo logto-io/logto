@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
   denyAccessCodeExample,
@@ -118,25 +117,22 @@ function InstructionTab({ isActive }: Props) {
           />
         </GuideCard>
       )}
-      {/* DEV: application context in JWT customizer */}
-      {isDevFeaturesEnabled && (
-        <GuideCard
-          name={CardType.ApplicationData}
-          isExpanded={expendCard === CardType.ApplicationData}
-          setExpanded={(expand) => {
-            setExpendCard(expand ? CardType.ApplicationData : undefined);
-          }}
-        >
-          <Editor
-            language="typescript"
-            className={styles.sampleCode}
-            value={`declare ${jwtCustomizerApplicationContextTypeDefinition}`}
-            height="400px"
-            theme="logto-dark"
-            options={typeDefinitionCodeEditorOptions}
-          />
-        </GuideCard>
-      )}
+      <GuideCard
+        name={CardType.ApplicationData}
+        isExpanded={expendCard === CardType.ApplicationData}
+        setExpanded={(expand) => {
+          setExpendCard(expand ? CardType.ApplicationData : undefined);
+        }}
+      >
+        <Editor
+          language="typescript"
+          className={styles.sampleCode}
+          value={`declare ${jwtCustomizerApplicationContextTypeDefinition}`}
+          height="400px"
+          theme="logto-dark"
+          options={typeDefinitionCodeEditorOptions}
+        />
+      </GuideCard>
       <GuideCard
         name={CardType.FetchExternalData}
         isExpanded={expendCard === CardType.FetchExternalData}
