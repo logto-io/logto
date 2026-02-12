@@ -30,7 +30,7 @@ const mfa = {
   require_mfa_label:
     '启用此选项以使两步验证成为访问你的应用程序的强制要求。如果禁用，用户可以决定是否为自己启用 MFA。',
   require_mfa_optional: '可选 MFA：允许用户自行选择是否为其账号启用 MFA',
-  require_mfa_adaptive: '自适应 MFA：仅在登录存在风险（例如新设备/地点）时要求 MFA',
+  require_mfa_adaptive: '自适应 MFA：仅在登录存在风险（例如新国家/长期未活动）时要求 MFA',
   require_mfa_mandatory: '强制 MFA：要求所有用户在每次登录时完成 MFA',
   set_up_prompt: 'MFA 设置提示',
   no_prompt: '不要要求用户设置 MFA',
