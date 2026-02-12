@@ -101,13 +101,12 @@ export const createHookLibrary = (queries: Queries) => {
     contextManager: InteractionHookContextManager
   ): Promise<Map<string, Optional<Awaited<ReturnType<typeof findUserById>>>>> => {
     const userIds = deduplicate(contextManager.interactionHookResults.map(({ userId }) => userId));
+
+    // Current interaction flow typically yields very few user IDs per request.
+    // If this cardinality grows in the future, switch to pMap with capped concurrency.
     const users: Array<readonly [string, Optional<Awaited<ReturnType<typeof findUserById>>>]> =
-      await pMap(
-        userIds,
-        async (userId) => [userId, await trySafe(findUserById(userId))] as const,
-        {
-          concurrency: 10,
-        }
+      await Promise.all(
+        userIds.map(async (userId) => [userId, await trySafe(findUserById(userId))] as const)
       );
 
     return new Map(users);
