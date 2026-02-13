@@ -54,12 +54,12 @@ const requiredParameters = Object.freeze([
 export const buildHandler: (
   envSet: EnvSet,
   queries: Queries
-  // eslint-disable-next-line complexity
 ) => Parameters<Provider['registerGrantType']>['1'] = (envSet, queries) => async (ctx, next) => {
   const shouldMeasure = EnvSet.values.isDevFeaturesEnabled;
   const requestStartedAt = Date.now();
   const timings: Record<string, number> = {};
-  const requestId = 'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
+  const requestId =
+    'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
 
   const writeLog = (payload: Record<string, unknown>) => {
     if (!shouldMeasure) {
@@ -230,8 +230,9 @@ export const buildHandler: (
   }
 
   // Handle the actor token
-  const actorId = await measure('handleActorTokenMs', async () => handleActorToken(ctx));
+  const { actorId } = await measure('handleActorTokenMs', async () => handleActorToken(ctx));
   if (actorId) {
+    // @see https://github.com/panva/node-oidc-provider/blob/main/lib/models/formats/jwt.js#L118
     // The JWT generator in node-oidc-provider only recognizes a fixed list of claims,
     // to add other claims to JWT, the only way is to return them in `extraTokenClaims` function.
     // We save the `act` data in the `extra` field temporarily,

@@ -62,6 +62,8 @@ import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
+const requestIdFromContext = (ctx: Parameters<typeof getConsoleLogFromContext>[0]) =>
+  'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
 
 export default function initOidc(
   tenantId: string,
@@ -151,7 +153,7 @@ export default function initOidc(
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
-          const startedAt = shouldMeasure ? Date.now() : undefined;
+          const startedAt = shouldMeasure ? Date.now() : 0;
           const timings: Record<string, number> = {};
           const measure = async <T>(step: string, callback: () => Promise<T>): Promise<T> => {
             if (!shouldMeasure) {
@@ -163,11 +165,14 @@ export default function initOidc(
             try {
               return await callback();
             } finally {
+              // eslint-disable-next-line @silverhand/fp/no-mutation
               timings[step] = Date.now() - stepStartedAt;
             }
           };
 
-          const resourceServer = await measure('findResourceMs', async () => findResource(queries, indicator));
+          const resourceServer = await measure('findResourceMs', async () =>
+            findResource(queries, indicator)
+          );
 
           if (!resourceServer) {
             throw new errors.InvalidTarget();
@@ -183,35 +188,40 @@ export default function initOidc(
               libraries,
               indicator,
               findFromOrganizations: true,
-              organizationId: typeof params?.organization_id === 'string' ? params.organization_id : undefined,
+              organizationId:
+                typeof params?.organization_id === 'string' ? params.organization_id : undefined,
               applicationId: client?.clientId,
               userId,
             })
           );
 
-          const isThirdParty = Boolean(
-            client &&
-              (await measure('checkThirdPartyApplicationMs', async () =>
-                isThirdPartyApplication(queries, client.clientId)
-              ))
-          );
+          const availableScopes = await (async () => {
+            if (!client) {
+              return scopes;
+            }
 
-          // Need to filter out the unsupported scopes for the third-party application.
-          const availableScopes = isThirdParty
-            ? await measure('filterResourceScopesMs', async () =>
-                filterResourceScopesForTheThirdPartyApplication(
-                  libraries,
-                  client!.clientId,
-                  indicator,
-                  scopes
-                )
+            const isThirdParty = await measure('checkThirdPartyApplicationMs', async () =>
+              isThirdPartyApplication(queries, client.clientId)
+            );
+
+            if (!isThirdParty) {
+              return scopes;
+            }
+
+            return measure('filterResourceScopesMs', async () =>
+              filterResourceScopesForTheThirdPartyApplication(
+                libraries,
+                client.clientId,
+                indicator,
+                scopes
               )
-            : scopes;
+            );
+          })();
 
           logOidc(ctx, {
             event: 'oidc.get_resource_server_info_timing',
             status: 'success',
-            totalMs: shouldMeasure ? Date.now() - startedAt! : undefined,
+            totalMs: shouldMeasure ? Date.now() - startedAt : undefined,
             timings,
           });
 
@@ -280,7 +290,7 @@ export default function initOidc(
     },
     extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
-      const startedAt = shouldMeasure ? Date.now() : undefined;
+      const startedAt = shouldMeasure ? Date.now() : 0;
       const timings: Record<string, number> = {};
       const measure = async <T>(step: string, callback: () => Promise<T>): Promise<T> => {
         if (!shouldMeasure) {
@@ -292,6 +302,7 @@ export default function initOidc(
         try {
           return await callback();
         } finally {
+          // eslint-disable-next-line @silverhand/fp/no-mutation
           timings[step] = Date.now() - stepStartedAt;
         }
       };
@@ -328,7 +339,7 @@ export default function initOidc(
       logOidc(ctx, {
         event: 'oidc.extra_token_claims_timing',
         status: hasExtraClaims ? 'success' : 'skip',
-        totalMs: shouldMeasure ? Date.now() - startedAt! : undefined,
+        totalMs: shouldMeasure ? Date.now() - startedAt : undefined,
         timings,
       });
 
@@ -468,9 +479,10 @@ export default function initOidc(
   registerGrants(oidc, envSet, queries);
 
   const shouldMeasure = EnvSet.values.isDevFeaturesEnabled;
-  const requestIdFromContext = (ctx: Parameters<typeof getConsoleLogFromContext>[0]) =>
-    'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
-  const logOidc = (ctx: Parameters<typeof getConsoleLogFromContext>[0], payload: Record<string, unknown>) => {
+  const logOidc = (
+    ctx: Parameters<typeof getConsoleLogFromContext>[0],
+    payload: Record<string, unknown>
+  ) => {
     if (!shouldMeasure) {
       return;
     }
