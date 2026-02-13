@@ -15,7 +15,7 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const navigate = useNavigateWithPreservedSearchParams();
   const { ssoConnectors, passkeySignIn } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
-  const { setIdentifierInputValue, setHasBoundPasskey } = useContext(UserInteractionContext);
+  const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { startProcessing: startIdentifierPasskeySignInProcessing } =
     useStartIdentifierPasskeySignInProcessing();
 
@@ -61,7 +61,6 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
         });
 
         if (passkeySucceeded) {
-          setHasBoundPasskey(passkeySucceeded);
           return;
         }
         // User has no passkeys, continue with other methods
@@ -90,7 +89,6 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       passkeySignIn?.enabled,
       checkSingleSignOn,
       startIdentifierPasskeySignInProcessing,
-      setHasBoundPasskey,
       navigateToPasswordPage,
       sendVerificationCode,
     ]

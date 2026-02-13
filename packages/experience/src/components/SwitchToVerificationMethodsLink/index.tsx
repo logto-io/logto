@@ -35,11 +35,13 @@ const SwitchToVerificationMethodsLink = ({
   value,
 }: Props) => {
   const { pathname } = useLocation();
-  const { identifierHasBoundPasskey } = useIdentifierSignInMethods();
+  const { identifierHasBoundPasskey, isPasskeySignInEnabled } = useIdentifierSignInMethods();
 
-  const optionCounts = [identifierHasBoundPasskey, hasPassword, hasVerificationCode].filter(
-    Boolean
-  ).length;
+  const optionCounts = [
+    isPasskeySignInEnabled && identifierHasBoundPasskey,
+    hasPassword,
+    hasVerificationCode,
+  ].filter(Boolean).length;
 
   if (optionCounts > 2) {
     return (
@@ -52,7 +54,13 @@ const SwitchToVerificationMethodsLink = ({
     );
   }
 
-  if (identifierHasBoundPasskey && !pathname.endsWith('/sign-in/passkey') && identifier && value) {
+  if (
+    isPasskeySignInEnabled &&
+    identifierHasBoundPasskey &&
+    !pathname.endsWith('/sign-in/passkey') &&
+    identifier &&
+    value
+  ) {
     return <PasskeySignInLink className={className} identifier={identifier} value={value} />;
   }
   if (hasPassword && !pathname.endsWith('/sign-in/password')) {

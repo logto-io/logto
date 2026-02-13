@@ -29,13 +29,13 @@ import styles from './index.module.scss';
  */
 const SignInVerificationMethods = () => {
   const { identifierInputValue, hasBoundPasskey } = useContext(UserInteractionContext);
-  const { signInMethods } = useSieMethods();
+  const { signInMethods, passkeySignIn } = useSieMethods();
 
   const navigate = useNavigateWithPreservedSearchParams();
 
   const { startProcessing: onClickPasskeySignInMethod, isProcessing } =
     useStartIdentifierPasskeySignInProcessing({
-      toastError: true,
+      hideErrorToast: false,
     });
   const onClickVerificationCodeMethod = useVerificationCodeLink();
 
@@ -54,7 +54,7 @@ const SignInVerificationMethods = () => {
       description="description.choose_verification_method"
     >
       <div className={styles.methodList}>
-        {hasBoundPasskey && (
+        {passkeySignIn?.enabled && hasBoundPasskey && (
           <VerificationMethodCard
             titleKey="description.verification_method.passkey"
             descriptionKey="description.verification_method.passkey_description"

@@ -13,7 +13,7 @@ import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
 import useToast from './use-toast';
 
 type Props = {
-  readonly toastError?: boolean;
+  readonly hideErrorToast?: boolean;
 };
 
 /**
@@ -33,7 +33,7 @@ const useStartIdentifierPasskeySignInProcessing = (props?: Props) => {
   const { setToast } = useToast();
   const navigate = useNavigateWithPreservedSearchParams();
   const asyncCreateAuthentication = useApi(createIdentifierPasskeyAuthentication);
-  const { setVerificationId } = useContext(UserInteractionContext);
+  const { setVerificationId, setHasBoundPasskey } = useContext(UserInteractionContext);
   const { abortConditionalUI } = useContext(WebAuthnContext);
   const [isProcessing, setIsProcessing] = useState(false);
   const handleError = useErrorHandler();
@@ -42,13 +42,13 @@ const useStartIdentifierPasskeySignInProcessing = (props?: Props) => {
     () => ({
       'session.mfa.webauthn_verification_not_found': async (error) => {
         // No passkeys registered
-        if (props?.toastError) {
+        if (!props?.hideErrorToast) {
           setToast(error.message);
         }
-        // Do nothing and silently fall back to other methods if toastError is false
+        // Do nothing and silently fall back to other methods if hideErrorToast is true
       },
     }),
-    [setToast, props?.toastError]
+    [setToast, props?.hideErrorToast]
   );
 
   /**
@@ -80,6 +80,7 @@ const useStartIdentifierPasskeySignInProcessing = (props?: Props) => {
       if (result) {
         const { verificationId, options } = result;
         setVerificationId(VerificationType.SignInWebAuthn, verificationId);
+        setHasBoundPasskey(true);
 
         const state: IdentifierPasskeyState = { options };
 
@@ -95,6 +96,7 @@ const useStartIdentifierPasskeySignInProcessing = (props?: Props) => {
       handleError,
       isProcessing,
       navigate,
+      setHasBoundPasskey,
       setVerificationId,
     ]
   );

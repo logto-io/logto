@@ -12,7 +12,7 @@ type Props = {
 const PasskeySignInLink = ({ className, identifier, value }: Props) => {
   const { startProcessing: onClickPasskeySignInMethod, isProcessing } =
     useStartIdentifierPasskeySignInProcessing({
-      toastError: true,
+      hideErrorToast: false,
     });
 
   return (
