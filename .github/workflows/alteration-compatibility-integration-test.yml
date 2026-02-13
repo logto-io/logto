@@ -77,7 +77,7 @@ jobs:
       STATUS_API_KEY: test-status-api-key
 
     steps:
-      - uses: logto-io/actions-run-logto-integration-tests@v4
+      - uses: logto-io/actions-run-logto-integration-tests@v4.0.1
         with:
           branch: ${{ github.base_ref }}
           logto-artifact: alteration-integration-test-${{ github.sha }}
