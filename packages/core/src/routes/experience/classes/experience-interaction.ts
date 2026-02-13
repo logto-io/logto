@@ -351,7 +351,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 404 if the if the user is not identified or not found
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
-
+  // eslint-disable-next-line complexity
   public async guardMfaVerificationStatus(log?: LogEntry) {
     if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInWebAuthn) {
       return;
@@ -364,6 +364,26 @@ export default class ExperienceInteraction {
 
     if (adaptiveMfaResult) {
       log?.append({ adaptiveMfaResult });
+    }
+
+    if (
+      adaptiveMfaResult?.requiresMfa &&
+      mfaValidator.availableUserMfaVerificationTypes.length === 0
+    ) {
+      // Adaptive MFA triggered but user has no usable factors.
+      // Force binding flow and attach available factors from SIE settings.
+      // Avoid throwing `session.mfa.require_mfa_verification` with empty options.
+      const availableFactors =
+        await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
+
+      // If no factors are enabled in SIE, surface a config error instead of sending
+      // users into a binding flow with an empty list.
+      assertThat(
+        availableFactors.length > 0,
+        new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 400 })
+      );
+
+      throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
     }
 
     if (!mfaValidator.isMfaRequired) {

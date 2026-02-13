@@ -2,12 +2,14 @@ import {
   AlternativeSignUpIdentifier,
   ForgotPasswordMethod,
   InteractionEvent,
+  MfaFactor,
   MissingProfile,
   type SignInExperience,
   SignInIdentifier,
   SignInMode,
   VerificationType,
 } from '@logto/schemas';
+import { deduplicate } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { validateEmailAgainstBlocklistPolicy } from '#src/libraries/sign-in-experience/index.js';
@@ -15,6 +17,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { sortMfaFactors } from '../helpers.js';
 import { type EnterpriseSsoVerification } from '../verifications/enterprise-sso-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
 
@@ -167,6 +170,22 @@ export class SignInExperienceValidator {
     const { mfa } = await this.getSignInExperienceData();
 
     return mfa;
+  }
+
+  /**
+   * Get MFA factors that are available for binding during experience flows.
+   * - Union SIE `mfa.factors` with passkey WebAuthn when enabled
+   * - Exclude backup code (cannot be the only factor)
+   * - Return in display order
+   */
+  public async getAvailableMfaFactorsForBinding(): Promise<MfaFactor[]> {
+    const { mfa, passkeySignIn } = await this.getSignInExperienceData();
+
+    return sortMfaFactors(
+      deduplicate([...mfa.factors, ...(passkeySignIn.enabled ? [MfaFactor.WebAuthn] : [])]).filter(
+        (factor) => factor !== MfaFactor.BackupCode
+      )
+    );
   }
 
   public async getPasskeySignInSettings() {

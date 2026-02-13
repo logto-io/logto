@@ -34,7 +34,7 @@ const createLogMiddleware = (): {
 
 const createRequesterWithMocks = ({
   interactionEvent = InteractionEvent.SignIn,
-  adaptiveMfaEnabled = true,
+  adaptiveMfaEnabled = false,
   user = mockUser,
   mfa = mockSignInExperience.mfa,
 }: {
@@ -135,7 +135,7 @@ describe('POST /experience/submit', () => {
 
   it('should append adaptive MFA context to submit audit log', async () => {
     setDevFeaturesEnabled(true);
-    const { requester, mockAppend } = createRequesterWithMocks();
+    const { requester, mockAppend } = createRequesterWithMocks({ adaptiveMfaEnabled: true });
 
     const response = await requester
       .post('/experience/submit')
@@ -145,7 +145,7 @@ describe('POST /experience/submit', () => {
       .set('x-logto-cf-bot-score', '42')
       .set('x-logto-cf-bot-verified', 'true');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(400);
     expect(mockAppend).toHaveBeenCalledWith(
       expect.objectContaining({
         adaptiveMfaContext: {
@@ -165,11 +165,11 @@ describe('POST /experience/submit', () => {
 
   it('should append adaptive MFA result to submit audit log', async () => {
     setDevFeaturesEnabled(true);
-    const { requester, mockAppend } = createRequesterWithMocks();
+    const { requester, mockAppend } = createRequesterWithMocks({ adaptiveMfaEnabled: true });
 
     const response = await requester.post('/experience/submit').set('x-logto-cf-bot-score', '10');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(400);
     const adaptiveMfaResult = mockAppend.mock.calls
       .map(
         ([payload]) =>

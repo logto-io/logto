@@ -198,6 +198,49 @@ describe('ExperienceInteraction adaptive MFA', () => {
     });
   });
 
+  it('requires MFA binding when adaptive MFA triggers and user has no factors', async () => {
+    const user: User = {
+      ...mockUserWithMfaVerifications,
+      mfaVerifications: [],
+      logtoConfig: {},
+    };
+
+    users.findUserById.mockResolvedValueOnce(user);
+
+    // @ts-expect-error -- mock test context
+    const ctx: WithHooksAndLogsContext = {
+      assignInteractionHookResult: jest.fn(),
+      appendDataHookContext: jest.fn(),
+      ...createContextWithRouteParameters({
+        headers: {
+          'x-logto-cf-bot-score': '10',
+        },
+      }),
+      ...createMockLogContext(),
+    };
+
+    const interactionDetails = {
+      result: {
+        interactionEvent: InteractionEvent.SignIn,
+        userId: user.id,
+      },
+    } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
+    const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+    const { createLog } = createMockLogContext();
+    const log = createLog('Interaction.SignIn.Submit');
+
+    await expect(experienceInteraction.guardMfaVerificationStatus(log)).rejects.toMatchError(
+      new RequestError(
+        { code: 'user.missing_mfa', status: 422 },
+        {
+          availableFactors: [MfaFactor.TOTP],
+        }
+      )
+    );
+
+    expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
+  });
+
   it('assigns adaptive MFA hook result even when log is not provided', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
@@ -317,7 +360,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
   });
 
-  it('allows sign-in when adaptive MFA triggers but user has no supported factors', async () => {
+  it('requires MFA binding when adaptive MFA triggers but user has no supported factors', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       mfaVerifications: [],
@@ -346,7 +389,15 @@ describe('ExperienceInteraction adaptive MFA', () => {
     } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
     const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
-    await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
+    await expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchError(
+      new RequestError(
+        { code: 'user.missing_mfa', status: 422 },
+        {
+          availableFactors: [MfaFactor.TOTP],
+        }
+      )
+    );
+    expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
   });
 
   it('keeps skipMfaOnSignIn behavior when adaptive MFA is disabled', async () => {
