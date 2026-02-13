@@ -118,6 +118,34 @@ describe('identifier-first verification method switching', () => {
       await experience.page.close();
     });
 
+    it('should fall back to verification code page when password is not primary', async () => {
+      await setupSignInExperience({
+        passkeyEnabled: true,
+        passwordEnabled: true,
+        verificationCodeEnabled: true,
+        isPasswordPrimary: false,
+      });
+
+      // Create a user WITHOUT passkeys (via API, not registration flow)
+      const { userProfile, user } = await generateNewUser({
+        primaryEmail: true,
+        password: true,
+      });
+
+      const experience = new ExpectWebAuthnExperience(await browser.newPage());
+      await experience.startWith(demoAppUrl);
+
+      // Fill in email without expecting immediate navigation (submit: false)
+      await experience.toFillInput('identifier', userProfile.primaryEmail, { submit: true });
+
+      // Should fall back to verification code page (user has no passkeys registered)
+      experience.toBeAt('sign-in/verification-code');
+
+      // Clean up
+      await deleteUser(user.id);
+      await experience.page.close();
+    });
+
     it('should show password form directly when passkey sign-in is disabled and password-only', async () => {
       await setupSignInExperience({
         passkeyEnabled: false,
