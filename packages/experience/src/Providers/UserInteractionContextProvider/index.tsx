@@ -39,6 +39,8 @@ const UserInteractionContextProvider = ({ children }: Props) => {
     get(StorageKeys.verificationIds) ?? {}
   );
 
+  const [hasBoundPasskey, setHasBoundPasskey] = useState(false);
+
   useEffect(() => {
     if (!ssoEmail) {
       remove(StorageKeys.SsoEmail);
@@ -113,6 +115,8 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       verificationIdsMap,
       setVerificationId,
       clearInteractionContextSessionStorage,
+      hasBoundPasskey,
+      setHasBoundPasskey,
     }),
     [
       ssoEmail,
@@ -123,6 +127,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       verificationIdsMap,
       setVerificationId,
       clearInteractionContextSessionStorage,
+      hasBoundPasskey,
     ]
   );
 

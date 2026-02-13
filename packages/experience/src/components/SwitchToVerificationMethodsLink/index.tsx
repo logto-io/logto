@@ -1,8 +1,7 @@
 import { useLocation } from 'react-router-dom';
 
 import TextLink from '@/components/TextLink';
-import { isDevFeaturesEnabled } from '@/constants/env';
-import { useSieMethods } from '@/hooks/use-sie';
+import useIdentifierSignInMethods from '@/pages/IdentifierSignIn/use-identifier-sign-in-methods';
 import SwitchIcon from '@/shared/assets/icons/switch-icon.svg?react';
 import { type VerificationCodeIdentifier } from '@/types';
 
@@ -36,11 +35,11 @@ const SwitchToVerificationMethodsLink = ({
   value,
 }: Props) => {
   const { pathname } = useLocation();
-  const { passkeySignIn } = useSieMethods();
+  const { identifierHasBoundPasskey } = useIdentifierSignInMethods();
 
-  const hasPasskey = isDevFeaturesEnabled && Boolean(passkeySignIn?.enabled);
-
-  const optionCounts = [hasPasskey, hasPassword, hasVerificationCode].filter(Boolean).length;
+  const optionCounts = [identifierHasBoundPasskey, hasPassword, hasVerificationCode].filter(
+    Boolean
+  ).length;
 
   if (optionCounts > 2) {
     return (
@@ -53,7 +52,7 @@ const SwitchToVerificationMethodsLink = ({
     );
   }
 
-  if (hasPasskey && !pathname.endsWith('/sign-in/passkey') && identifier && value) {
+  if (identifierHasBoundPasskey && !pathname.endsWith('/sign-in/passkey') && identifier && value) {
     return <PasskeySignInLink className={className} identifier={identifier} value={value} />;
   }
   if (hasPassword && !pathname.endsWith('/sign-in/password')) {

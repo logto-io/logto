@@ -8,15 +8,16 @@ import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { useSieMethods } from '@/hooks/use-sie';
-import useStartIdentifierPasskeyProcessing from '@/hooks/use-start-identifier-passkey-processing';
+import useStartIdentifierPasskeySignInProcessing from '@/hooks/use-start-identifier-passkey-sign-in-processing';
 import { UserFlow } from '@/types';
 
 const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const navigate = useNavigateWithPreservedSearchParams();
   const { ssoConnectors, passkeySignIn } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
-  const { setIdentifierInputValue } = useContext(UserInteractionContext);
-  const startIdentifierPasskeyProcessing = useStartIdentifierPasskeyProcessing();
+  const { setIdentifierInputValue, setHasBoundPasskey } = useContext(UserInteractionContext);
+  const { startProcessing: startIdentifierPasskeySignInProcessing } =
+    useStartIdentifierPasskeySignInProcessing();
 
   const navigateToPasswordPage = useCallback(() => {
     navigate({
@@ -54,11 +55,13 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       // Try passkey sign-in first if enabled
       // If the user has no passkeys, fall back to password/verification code
       if (isDevFeaturesEnabled && passkeySignIn?.enabled) {
-        const passkeySucceeded = await startIdentifierPasskeyProcessing({
+        const passkeySucceeded = await startIdentifierPasskeySignInProcessing({
           type: identifier,
           value,
         });
+
         if (passkeySucceeded) {
+          setHasBoundPasskey(passkeySucceeded);
           return;
         }
         // User has no passkeys, continue with other methods
@@ -86,7 +89,8 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       ssoConnectors.length,
       passkeySignIn?.enabled,
       checkSingleSignOn,
-      startIdentifierPasskeyProcessing,
+      startIdentifierPasskeySignInProcessing,
+      setHasBoundPasskey,
       navigateToPasswordPage,
       sendVerificationCode,
     ]

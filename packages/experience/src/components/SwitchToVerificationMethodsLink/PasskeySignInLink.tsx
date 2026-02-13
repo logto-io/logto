@@ -1,5 +1,5 @@
 import TextLink from '@/components/TextLink';
-import useStartIdentifierPasskeyProcessing from '@/hooks/use-start-identifier-passkey-processing';
+import useStartIdentifierPasskeySignInProcessing from '@/hooks/use-start-identifier-passkey-sign-in-processing';
 import SwitchIcon from '@/shared/assets/icons/switch-icon.svg?react';
 import { type VerificationCodeIdentifier } from '@/types';
 
@@ -10,7 +10,10 @@ type Props = {
 };
 
 const PasskeySignInLink = ({ className, identifier, value }: Props) => {
-  const onClickPasskeyMethod = useStartIdentifierPasskeyProcessing();
+  const { startProcessing: onClickPasskeySignInMethod, isProcessing } =
+    useStartIdentifierPasskeySignInProcessing({
+      toastError: true,
+    });
 
   return (
     <TextLink
@@ -18,8 +21,11 @@ const PasskeySignInLink = ({ className, identifier, value }: Props) => {
       className={className}
       icon={<SwitchIcon />}
       text="action.sign_in_via_passkey"
-      onClick={() => {
-        void onClickPasskeyMethod({ type: identifier, value });
+      onClick={async () => {
+        if (isProcessing) {
+          return;
+        }
+        await onClickPasskeySignInMethod({ type: identifier, value });
       }}
     />
   );

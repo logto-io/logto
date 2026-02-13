@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useIdentifierParams from '@/hooks/use-identifier-params';
 import { useSieMethods } from '@/hooks/use-sie';
 
@@ -13,6 +14,7 @@ import { useSieMethods } from '@/hooks/use-sie';
  */
 const useIdentifierSignInMethods = () => {
   const { signInMethods, passkeySignIn } = useSieMethods();
+  const { hasBoundPasskey } = useContext(UserInteractionContext);
   const { identifiers } = useIdentifierParams();
 
   const methods = useMemo(() => {
@@ -44,8 +46,9 @@ const useIdentifierSignInMethods = () => {
       signInMethods: methods,
       isPasswordOnly,
       isPasskeySignInEnabled: Boolean(passkeySignIn?.enabled),
+      identifierHasBoundPasskey: hasBoundPasskey,
     }),
-    [methods, isPasswordOnly, passkeySignIn?.enabled]
+    [methods, isPasswordOnly, passkeySignIn?.enabled, hasBoundPasskey]
   );
 };
 

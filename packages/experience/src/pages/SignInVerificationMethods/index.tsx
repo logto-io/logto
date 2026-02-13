@@ -10,7 +10,7 @@ import LockIcon from '@/assets/icons/lock.svg?react';
 import useVerificationCodeLink from '@/components/SwitchToVerificationMethodsLink/use-verification-code-link';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
-import useStartIdentifierPasskeyProcessing from '@/hooks/use-start-identifier-passkey-processing';
+import useStartIdentifierPasskeySignInProcessing from '@/hooks/use-start-identifier-passkey-sign-in-processing';
 import { UserFlow } from '@/types';
 
 import ErrorPage from '../ErrorPage';
@@ -28,12 +28,15 @@ import styles from './index.module.scss';
  * to determine which methods are available.
  */
 const SignInVerificationMethods = () => {
-  const { identifierInputValue } = useContext(UserInteractionContext);
-  const { signInMethods, passkeySignIn } = useSieMethods();
+  const { identifierInputValue, hasBoundPasskey } = useContext(UserInteractionContext);
+  const { signInMethods } = useSieMethods();
 
   const navigate = useNavigateWithPreservedSearchParams();
 
-  const onClickPasskeyMethod = useStartIdentifierPasskeyProcessing();
+  const { startProcessing: onClickPasskeySignInMethod, isProcessing } =
+    useStartIdentifierPasskeySignInProcessing({
+      toastError: true,
+    });
   const onClickVerificationCodeMethod = useVerificationCodeLink();
 
   if (!identifierInputValue?.type) {
@@ -44,7 +47,6 @@ const SignInVerificationMethods = () => {
   const methodSetting = signInMethods.find((method) => method.identifier === type);
   const hasPassword = Boolean(methodSetting?.password);
   const hasVerificationCode = Boolean(methodSetting?.verificationCode);
-  const hasPasskey = Boolean(passkeySignIn?.enabled);
 
   return (
     <SecondaryPageLayout
@@ -52,13 +54,16 @@ const SignInVerificationMethods = () => {
       description="description.choose_verification_method"
     >
       <div className={styles.methodList}>
-        {hasPasskey && (
+        {hasBoundPasskey && (
           <VerificationMethodCard
             titleKey="description.verification_method.passkey"
             descriptionKey="description.verification_method.passkey_description"
             Icon={FactorWebAuthn}
-            onClick={() => {
-              void onClickPasskeyMethod({ type, value });
+            onClick={async () => {
+              if (isProcessing) {
+                return;
+              }
+              await onClickPasskeySignInMethod({ type, value });
             }}
           />
         )}
@@ -79,7 +84,7 @@ const SignInVerificationMethods = () => {
             descriptionProps={{ target: value }}
             Icon={type === SignInIdentifier.Phone ? FactorPhone : FactorEmail}
             onClick={async () => {
-              void onClickVerificationCodeMethod({ identifier: type, value });
+              await onClickVerificationCodeMethod({ identifier: type, value });
             }}
           />
         )}
