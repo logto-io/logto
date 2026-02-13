@@ -56,10 +56,15 @@ export const buildHandler: (
   queries: Queries
   // eslint-disable-next-line complexity
 ) => Parameters<Provider['registerGrantType']>['1'] = (envSet, queries) => async (ctx, next) => {
+  const shouldMeasure = EnvSet.values.isDevFeaturesEnabled;
   const requestStartedAt = Date.now();
   const timings: Record<string, number> = {};
 
   const measure = async <T>(step: string, callback: () => Promise<T>): Promise<T> => {
+    if (!shouldMeasure) {
+      return callback();
+    }
+
     const stepStartedAt = Date.now();
 
     try {
@@ -243,7 +248,7 @@ export const buildHandler: (
 
   await measure('nextMiddlewareMs', next);
 
-  if (EnvSet.values.isDevFeaturesEnabled && !EnvSet.values.isProduction) {
+  if (shouldMeasure) {
     const requestId =
       'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
 
