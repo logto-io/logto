@@ -65,7 +65,7 @@ const account_center = {
   code_verification: {
     send: 'Odeslat ověřovací kód',
     resend: 'Stále jsi ho neobdržel/a? <a>Odeslat kód znovu</a>',
-    resend_countdown: 'Stále jsi ho neobdržel/a?<span> Odeslat znovu za {{seconds}}s.</span>',
+    resend_countdown: 'Stále jsi ho neobdržel/a? Odeslat znovu za {{seconds}}s.',
   },
 
   email_verification: {
@@ -76,7 +76,7 @@ const account_center = {
     send: 'Odeslat ověřovací kód',
     description: 'Ověřovací kód byl odeslán na tvůj e-mail {{email}}. Zadej kód pro pokračování.',
     resend: 'Stále jsi ho neobdržel/a? <a>Odeslat kód znovu</a>',
-    resend_countdown: 'Stále jsi ho neobdržel/a?<span> Odeslat znovu za {{seconds}}s.</span>',
+    resend_countdown: 'Stále jsi ho neobdržel/a? Odeslat znovu za {{seconds}}s.',
     error_send_failed: 'Odeslání ověřovacího kódu se nezdařilo. Zkus to prosím později.',
     error_verify_failed: 'Ověření se nezdařilo. Prosím, zadej kód znovu.',
     error_invalid_code: 'Ověřovací kód je neplatný nebo vypršel.',
@@ -90,7 +90,7 @@ const account_center = {
     description:
       'Ověřovací kód byl odeslán na tvé telefonní číslo {{phone}}. Zadej kód pro pokračování.',
     resend: 'Stále jsi ho neobdržel/a? <a>Odeslat kód znovu</a>',
-    resend_countdown: 'Stále jsi ho neobdržel/a?<span> deslat znovu za {{seconds}}s.</span>',
+    resend_countdown: 'Stále jsi ho neobdržel/a? Odeslat znovu za {{seconds}}s.',
     error_send_failed: 'Odeslání ověřovacího kódu se nezdařilo. Zkus to prosím později.',
     error_verify_failed: 'Ověření se nezdařilo. Prosím, zadej kód znovu.',
     error_invalid_code: 'Ověřovací kód je neplatný nebo vypršel.',
