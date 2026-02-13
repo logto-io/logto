@@ -42,6 +42,7 @@ import { i18next } from '#src/utils/i18n.js';
 
 import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
+import { getConsoleLogFromContext } from '../utils/console.js';
 
 import defaults from './defaults.js';
 import {
@@ -150,49 +151,74 @@ export default function initOidc(
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
-          const resourceServer = await findResource(queries, indicator);
+          const startedAt = shouldMeasure ? Date.now() : undefined;
+          const timings: Record<string, number> = {};
+          const measure = async <T>(step: string, callback: () => Promise<T>): Promise<T> => {
+            if (!shouldMeasure) {
+              return callback();
+            }
+
+            const stepStartedAt = Date.now();
+
+            try {
+              return await callback();
+            } finally {
+              timings[step] = Date.now() - stepStartedAt;
+            }
+          };
+
+          const resourceServer = await measure('findResourceMs', async () => findResource(queries, indicator));
 
           if (!resourceServer) {
             throw new errors.InvalidTarget();
           }
 
           const { accessTokenTtl: accessTokenTTL } = resourceServer;
-
           const { client, params, session, entities } = ctx.oidc;
           const userId = session?.accountId ?? entities.Account?.accountId;
 
-          const organizationId = params?.organization_id;
-          const scopes = await findResourceScopes({
-            queries,
-            libraries,
-            indicator,
-            findFromOrganizations: true,
-            organizationId: typeof organizationId === 'string' ? organizationId : undefined,
-            applicationId: client?.clientId,
-            userId,
-          });
+          const scopes = await measure('findResourceScopesMs', async () =>
+            findResourceScopes({
+              queries,
+              libraries,
+              indicator,
+              findFromOrganizations: true,
+              organizationId: typeof params?.organization_id === 'string' ? params.organization_id : undefined,
+              applicationId: client?.clientId,
+              userId,
+            })
+          );
+
+          const isThirdParty = Boolean(
+            client &&
+              (await measure('checkThirdPartyApplicationMs', async () =>
+                isThirdPartyApplication(queries, client.clientId)
+              ))
+          );
 
           // Need to filter out the unsupported scopes for the third-party application.
-          if (client && (await isThirdPartyApplication(queries, client.clientId))) {
-            // Get application consent resource scopes, from RBAC roles
-            const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
-              libraries,
-              client.clientId,
-              indicator,
-              scopes
-            );
+          const availableScopes = isThirdParty
+            ? await measure('filterResourceScopesMs', async () =>
+                filterResourceScopesForTheThirdPartyApplication(
+                  libraries,
+                  client!.clientId,
+                  indicator,
+                  scopes
+                )
+              )
+            : scopes;
 
-            return {
-              ...getSharedResourceServerData(envSet),
-              accessTokenTTL,
-              scope: filteredScopes.map(({ name }) => name).join(' '),
-            };
-          }
+          logOidc(ctx, {
+            event: 'oidc.get_resource_server_info_timing',
+            status: 'success',
+            totalMs: shouldMeasure ? Date.now() - startedAt! : undefined,
+            timings,
+          });
 
           return {
             ...getSharedResourceServerData(envSet),
             accessTokenTTL,
-            scope: scopes.map(({ name }) => name).join(' '),
+            scope: availableScopes.map(({ name }) => name).join(' '),
           };
         },
       },
@@ -254,24 +280,59 @@ export default function initOidc(
     },
     extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
+      const startedAt = shouldMeasure ? Date.now() : undefined;
+      const timings: Record<string, number> = {};
+      const measure = async <T>(step: string, callback: () => Promise<T>): Promise<T> => {
+        if (!shouldMeasure) {
+          return callback();
+        }
+
+        const stepStartedAt = Date.now();
+
+        try {
+          return await callback();
+        } finally {
+          timings[step] = Date.now() - stepStartedAt;
+        }
+      };
+
       const [tokenExchangeClaims, organizationApiResourceClaims, jwtCustomizedClaims] =
         await Promise.all([
-          getExtraTokenClaimsForTokenExchange(ctx, token),
-          getExtraTokenClaimsForOrganizationApiResource(ctx, token),
-          getExtraTokenClaimsForJwtCustomization(
-            // eslint-disable-next-line no-restricted-syntax -- see `oidc.use(koaAuditLog(queries))` below;
-            ctx as KoaContextWithOIDC & WithLogContext,
-            token,
-            {
-              envSet,
-              queries,
-              libraries,
-              logtoConfigs,
-            }
+          measure('tokenExchangeClaimsMs', async () =>
+            getExtraTokenClaimsForTokenExchange(ctx, token)
+          ),
+          measure('organizationApiResourceClaimsMs', async () =>
+            getExtraTokenClaimsForOrganizationApiResource(ctx, token)
+          ),
+          measure('jwtCustomizedClaimsMs', async () =>
+            getExtraTokenClaimsForJwtCustomization(
+              // eslint-disable-next-line no-restricted-syntax -- see `oidc.use(koaAuditLog(queries))` below;
+              ctx as KoaContextWithOIDC & WithLogContext,
+              token,
+              {
+                envSet,
+                queries,
+                libraries,
+                logtoConfigs,
+              }
+            )
           ),
         ]);
 
-      if (!organizationApiResourceClaims && !jwtCustomizedClaims && !tokenExchangeClaims) {
+      const hasTokenExchangeClaims = tokenExchangeClaims !== undefined;
+      const hasOrganizationApiResourceClaims = organizationApiResourceClaims !== undefined;
+      const hasJwtCustomizedClaims = jwtCustomizedClaims !== undefined;
+      const hasExtraClaims =
+        hasTokenExchangeClaims || hasOrganizationApiResourceClaims || hasJwtCustomizedClaims;
+
+      logOidc(ctx, {
+        event: 'oidc.extra_token_claims_timing',
+        status: hasExtraClaims ? 'success' : 'skip',
+        totalMs: shouldMeasure ? Date.now() - startedAt! : undefined,
+        timings,
+      });
+
+      if (!hasExtraClaims) {
         return;
       }
 
@@ -406,6 +467,22 @@ export default function initOidc(
   addOidcEventListeners(tenantId, oidc, queries);
   registerGrants(oidc, envSet, queries);
 
+  const shouldMeasure = EnvSet.values.isDevFeaturesEnabled;
+  const requestIdFromContext = (ctx: Parameters<typeof getConsoleLogFromContext>[0]) =>
+    'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
+  const logOidc = (ctx: Parameters<typeof getConsoleLogFromContext>[0], payload: Record<string, unknown>) => {
+    if (!shouldMeasure) {
+      return;
+    }
+
+    getConsoleLogFromContext(ctx).info(
+      JSON.stringify({
+        requestId: requestIdFromContext(ctx),
+        ...payload,
+      })
+    );
+  };
+
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
   /**
@@ -452,6 +529,27 @@ export default function initOidc(
     }
 
     return next();
+  });
+
+  oidc.use(async (ctx, next) => {
+    if (ctx.path !== '/token') {
+      return next();
+    }
+
+    const startedAt = Date.now();
+
+    logOidc(ctx, {
+      event: 'oidc.token_request',
+      status: 'start',
+    });
+
+    await next();
+
+    logOidc(ctx, {
+      event: 'oidc.token_response',
+      status: 'finished',
+      totalMs: Date.now() - startedAt,
+    });
   });
 
   oidc.use(koaAppSecretTranspilation(queries));

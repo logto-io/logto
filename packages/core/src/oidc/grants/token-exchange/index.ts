@@ -59,6 +59,21 @@ export const buildHandler: (
   const shouldMeasure = EnvSet.values.isDevFeaturesEnabled;
   const requestStartedAt = Date.now();
   const timings: Record<string, number> = {};
+  const requestId = 'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
+
+  const writeLog = (payload: Record<string, unknown>) => {
+    if (!shouldMeasure) {
+      return;
+    }
+
+    getConsoleLogFromContext(ctx).info(
+      JSON.stringify({
+        requestId,
+        grantType: GrantType.TokenExchange,
+        ...payload,
+      })
+    );
+  };
 
   const measure = async <T>(step: string, callback: () => Promise<T>): Promise<T> => {
     if (!shouldMeasure) {
@@ -73,6 +88,8 @@ export const buildHandler: (
       timings[step] = Date.now() - stepStartedAt;
     }
   };
+
+  writeLog({ event: 'oidc.token_exchange_request', status: 'start' });
 
   const { client, params, requestParamScopes, provider } = ctx.oidc;
   const { Account, AccessToken, Grant } = provider;
@@ -213,11 +230,10 @@ export const buildHandler: (
   }
 
   // Handle the actor token
-  const { actorId } = await measure('handleActorTokenMs', async () => handleActorToken(ctx));
+  const actorId = await measure('handleActorTokenMs', async () => handleActorToken(ctx));
   if (actorId) {
     // The JWT generator in node-oidc-provider only recognizes a fixed list of claims,
     // to add other claims to JWT, the only way is to return them in `extraTokenClaims` function.
-    // @see https://github.com/panva/node-oidc-provider/blob/main/lib/models/formats/jwt.js#L118
     // We save the `act` data in the `extra` field temporarily,
     // so that we can get this context it in the `extraTokenClaims` function and add it to the JWT.
     accessToken.extra = {
@@ -248,21 +264,11 @@ export const buildHandler: (
 
   await measure('nextMiddlewareMs', next);
 
-  if (shouldMeasure) {
-    const requestId =
-      'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
-
-    getConsoleLogFromContext(ctx).info(
-      JSON.stringify({
-        event: 'oidc.token_exchange_timing',
-        grantType: GrantType.TokenExchange,
-        requestId,
-        clientId: ctx.oidc.client?.clientId,
-        status: 'success',
-        totalMs: Date.now() - requestStartedAt,
-        timings,
-      })
-    );
-  }
+  writeLog({
+    event: 'oidc.token_exchange_timing',
+    status: 'finished',
+    totalMs: Date.now() - requestStartedAt,
+    timings,
+  });
 };
 /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
