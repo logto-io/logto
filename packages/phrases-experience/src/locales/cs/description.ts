@@ -1,5 +1,5 @@
 const description = {
-  email: 'e-mai',
+  email: 'e-mail',
   phone_number: 'telefonní číslo',
   username: 'uživatelské jméno',
   reminder: 'Připomenutí',
@@ -17,14 +17,14 @@ const description = {
   passcode_sent: 'Ověřovací kód byl znovu odeslán',
   resend_after_seconds:
     'Stále jsi ho neobdržel/a? Odeslat znovu za <span>{{seconds}}</span> sekund',
-  resend_passcode: 'Stále jsi ho neobdržel/a?? <a>Odeslat ověřovací kód znovu</a>',
+  resend_passcode: 'Stále jsi ho neobdržel/a? <a>Odeslat ověřovací kód znovu</a>',
   create_account_id_exists: 'Účet s {{value}} již existuje. Pokračuj v přihlášení.',
   link_account_id_exists: 'Účet s {{type}} {{value}} již existuje. Chceš ho propojit?',
   sign_in_id_does_not_exist: 'Pro {{value}} nebyl nalezen žádný účet. Chceš vytvořit nový?',
   sign_in_id_does_not_exist_alert: 'Účet s {{type}} {{value}} neexistuje.',
   create_account_id_exists_alert:
     'Účet s {{type}} {{value}} je propojen s jiným účtem. Zkus prosím jiný {{type}}.',
-  social_identity_exist: '{{type}} {{value}} je propozen s jiným účtem. Zkus prosím jiný {{type}}.',
+  social_identity_exist: '{{type}} {{value}} je propojen s jiným účtem. Zkus prosím jiný {{type}}.',
   bind_account_title: 'Propojit nebo vytvořit účet',
   social_create_account: 'Můžeš vytvořit nový účet.',
   social_link_email: 'Můžeš propojit jiný e-mail',
