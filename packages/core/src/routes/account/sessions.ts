@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import { AccountCenterControlValue, getUserSessionsResponseGuard } from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -22,7 +23,7 @@ export default function accountSessionRoutes<T extends UserRouter>(
       response: getUserSessionsResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
       assertThat(
@@ -34,6 +35,11 @@ export default function accountSessionRoutes<T extends UserRouter>(
         fields.session === AccountCenterControlValue.Edit ||
           fields.session === AccountCenterControlValue.ReadOnly,
         'account_center.field_not_enabled'
+      );
+
+      assertThat(
+        scopes.has(UserScope.Sessions),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
 
       const sessions = await sessionLibrary.findUserActiveSessionsWithExtensions(userId);
@@ -57,7 +63,7 @@ export default function accountSessionRoutes<T extends UserRouter>(
     }),
     async (ctx, next) => {
       const { sessionId } = ctx.guard.params;
-      const { id: userId, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
       assertThat(
@@ -68,6 +74,11 @@ export default function accountSessionRoutes<T extends UserRouter>(
       assertThat(
         fields.session === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
+      );
+
+      assertThat(
+        scopes.has(UserScope.Sessions),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
 
       const session = await provider.Session.findByUid(sessionId);

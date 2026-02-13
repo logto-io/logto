@@ -137,6 +137,13 @@ export enum UserScope {
    * See {@link userClaims} for mapped claims.
    */
   OrganizationRoles = 'urn:logto:scope:organization_roles',
+  /**
+   * Scope for user's sessions.
+   *
+   * Only used for session management via account API.
+   * Not included in user claims, even when the scope is requested, as it's not meant for ID token or userinfo endpoint.
+   */
+  Sessions = 'urn:logto:scope:sessions',
 }
 
 /**
@@ -178,6 +185,7 @@ export const idTokenClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.fr
   [UserScope.OrganizationRoles]: [],
   [UserScope.CustomData]: [],
   [UserScope.Identities]: [],
+  [UserScope.Sessions]: [],
 });
 
 /**
