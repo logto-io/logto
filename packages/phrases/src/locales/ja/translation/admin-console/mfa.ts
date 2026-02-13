@@ -41,7 +41,7 @@ const mfa = {
   require_mfa_optional:
     '任意の MFA: ユーザー自身のアカウントセキュリティのために MFA を有効にするかどうかを選択できるようにします',
   require_mfa_adaptive:
-    'アダプティブ MFA: サインインがリスクの高い状況(新しいデバイスや場所など)の場合にのみ MFA を求めます',
+    'アダプティブ MFA: サインインがリスクの高い状況(新しい国 / 長期間の非アクティブなど)の場合にのみ MFA を求めます',
   require_mfa_mandatory:
     '必須の MFA: すべてのユーザーに、サインインのたびに MFA を完了することを求めます',
   set_up_prompt: 'MFA の設定プロンプト',

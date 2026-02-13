@@ -42,7 +42,7 @@ const mfa = {
   require_mfa_optional:
     'MFA opcional: permite que os usuários escolham ativar o MFA para a segurança de suas próprias contas',
   require_mfa_adaptive:
-    'MFA adaptativo: solicita MFA apenas quando um login parecer arriscado (por exemplo, novo dispositivo ou localização)',
+    'MFA adaptativo: solicita MFA apenas quando um login parecer arriscado (por exemplo, novo país ou inatividade prolongada)',
   require_mfa_mandatory:
     'MFA obrigatório: exige que todos os usuários concluam o MFA sempre que fizerem login',
   set_up_prompt: 'Prompt de configuração do MFA',

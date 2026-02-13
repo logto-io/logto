@@ -43,7 +43,7 @@ const mfa = {
   require_mfa_optional:
     "İsteğe bağlı MFA: Kullanıcıların kendi hesap güvenlikleri için MFA'yı etkinleştirmeyi seçmelerine izin verin",
   require_mfa_adaptive:
-    'Uyarlanabilir MFA: Yalnızca oturum açma riskli göründüğünde (ör. yeni cihaz / konum) MFA isteyin',
+    'Uyarlanabilir MFA: Yalnızca oturum açma riskli göründüğünde (ör. yeni ülke / uzun süreli hareketsizlik) MFA isteyin',
   require_mfa_mandatory:
     "Zorunlu MFA: Tüm kullanıcıların her oturum açışlarında MFA'yı tamamlamasını gerektirir",
   set_up_prompt: 'MFA kurulum istemi',

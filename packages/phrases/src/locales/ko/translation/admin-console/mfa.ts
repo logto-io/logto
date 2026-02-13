@@ -37,7 +37,7 @@ const mfa = {
   require_mfa_optional:
     '선택형 MFA: 사용자가 자신의 계정 보안을 위해 MFA 활성화를 선택할 수 있습니다',
   require_mfa_adaptive:
-    '적응형 MFA: 로그인에 위험 신호가 있을 때만 MFA를 요청합니다 (예: 새 기기/위치)',
+    '적응형 MFA: 로그인에 위험 신호가 있을 때만 MFA를 요청합니다 (예: 새로운 국가 / 장기간 비활동)',
   require_mfa_mandatory: '필수 MFA: 모든 사용자가 로그인할 때마다 MFA를 완료해야 합니다',
   set_up_prompt: 'MFA 설정 프롬프트',
   no_prompt: '사용자에게 MFA 설정을 요청하지 않습니다',

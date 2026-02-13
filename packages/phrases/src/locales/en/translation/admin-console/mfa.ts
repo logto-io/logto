@@ -40,7 +40,7 @@ const mfa = {
   require_mfa_optional:
     'Optional MFA: Let users choose to enable MFA for their own account security',
   require_mfa_adaptive:
-    'Adaptive MFA: Only ask for MFA when a sign-in seems risky (e.g., new device / location)',
+    'Adaptive MFA: Only ask for MFA when a sign-in seems risky (e.g., new country / long inactivity)',
   require_mfa_mandatory:
     'Mandatory MFA: Requires all users to complete MFA every time they sign in',
   set_up_prompt: 'MFA set-up prompt',
