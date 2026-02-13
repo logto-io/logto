@@ -110,6 +110,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         captchaPolicy,
         forgotPasswordMethods,
         hideLogtoBranding,
+        passkeySignIn,
         // Guard omits adaptiveMfa when dev features are disabled; cast to handle both cases.
         // eslint-disable-next-line no-restricted-syntax
       } = rest as Partial<SignInExperience>;
@@ -230,6 +231,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           })
         );
         await quota.guardTenantUsageByKey('bringYourUiEnabled');
+      }
+      if (passkeySignIn) {
+        await quota.guardTenantUsageByKey('passkeySignInEnabled');
       }
 
       const payload = {

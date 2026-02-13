@@ -1,6 +1,9 @@
+import { useContext } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { latestProPlanId } from '@/consts/subscriptions';
+import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
 import Checkbox from '@/ds-components/Checkbox';
 import FormField from '@/ds-components/FormField';
@@ -15,12 +18,22 @@ function PasskeySignInForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { control, register } = useFormContext<SignInExperienceForm>();
 
+  const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
+  const isPasskeySignInEnabled = currentSubscriptionQuota.passkeySignInEnabled;
+
   return (
     <Card>
       <FormSectionTitle title="sign_up_and_sign_in.passkey_sign_in.title" />
-      <FormField title="sign_in_exp.sign_up_and_sign_in.passkey_sign_in.passkey_sign_in">
+      <FormField
+        title="sign_in_exp.sign_up_and_sign_in.passkey_sign_in.passkey_sign_in"
+        featureTag={{
+          isVisible: !isPasskeySignInEnabled,
+          plan: latestProPlanId,
+        }}
+      >
         <Switch
           {...register('passkeySignIn.enabled')}
+          disabled={!isPasskeySignInEnabled}
           label={t(
             'sign_in_exp.sign_up_and_sign_in.passkey_sign_in.enable_passkey_sign_in_description'
           )}
@@ -33,6 +46,7 @@ function PasskeySignInForm() {
             name="passkeySignIn.showPasskeyButton"
             render={({ field: { value, onChange } }) => (
               <Checkbox
+                disabled={!isPasskeySignInEnabled}
                 label={t('sign_in_exp.sign_up_and_sign_in.passkey_sign_in.show_passkey_button')}
                 suffixTooltip={t(
                   'sign_in_exp.sign_up_and_sign_in.passkey_sign_in.show_passkey_button_tip'
@@ -47,6 +61,7 @@ function PasskeySignInForm() {
             name="passkeySignIn.allowAutofill"
             render={({ field: { value, onChange } }) => (
               <Checkbox
+                disabled={!isPasskeySignInEnabled}
                 label={t('sign_in_exp.sign_up_and_sign_in.passkey_sign_in.allow_autofill')}
                 checked={value}
                 onChange={onChange}

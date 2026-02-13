@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: 'Unlimited custom domains',
     not_eligible: 'Remove your custom domains',
   },
+  passkey_sign_in_enabled: {
+    name: 'Passkey sign-in',
+    limited: 'Passkey sign-in',
+    unlimited: 'Passkey sign-in',
+    not_eligible: 'No passkey sign-in support',
+  },
 };
 
 export default Object.freeze(quota_item);

@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: 'Dominios personalizados ilimitados',
     not_eligible: 'Elimine sus dominios personalizados',
   },
+  passkey_sign_in_enabled: {
+    name: 'Inicio de sesión con passkey',
+    limited: 'Inicio de sesión con passkey',
+    unlimited: 'Inicio de sesión con passkey',
+    not_eligible: 'Sin compatibilidad con inicio de sesión con passkey',
+  },
 };
 
 export default Object.freeze(quota_item);

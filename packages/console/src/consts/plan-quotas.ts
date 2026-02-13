@@ -36,6 +36,7 @@ export const skuQuotaItemOrder: Array<keyof LogtoSkuQuota> = [
   'subjectTokenEnabled',
   'bringYourUiEnabled',
   'collectUserProfileEnabled',
+  'passkeySignInEnabled',
   'ticketSupportResponseTime',
 ];
 

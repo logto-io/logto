@@ -76,6 +76,8 @@ const paywall = {
     'Schalten Sie erweiterte Sicherheitsfunktionen durch ein Upgrade auf den Pro-Plan frei. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Fragen haben.',
   collect_user_profile:
     'Upgraden Sie auf einen kostenpflichtigen Plan, um bei der Anmeldung zusätzliche Benutzerprofilinformationen zu sammeln. Zögern Sie nicht, uns zu <a>kontaktieren</a>, wenn Sie Fragen haben.',
+  passkey_sign_in:
+    'Upgrade auf einen kostenpflichtigen Plan, um die Passkey-Anmeldung und Premium-Vorteile zu nutzen. Bei Fragen <a>kontaktieren Sie uns</a> gerne.',
 };
 
 export default Object.freeze(paywall);

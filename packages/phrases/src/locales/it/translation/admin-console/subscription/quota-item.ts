@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: 'Domini personalizzati illimitati',
     not_eligible: 'Rimuovi i tuoi domini personalizzati',
   },
+  passkey_sign_in_enabled: {
+    name: 'Accesso con passkey',
+    limited: 'Accesso con passkey',
+    unlimited: 'Accesso con passkey',
+    not_eligible: "Nessun supporto per l'accesso con passkey",
+  },
 };
 
 export default Object.freeze(quota_item);

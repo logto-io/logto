@@ -76,6 +76,8 @@ const paywall = {
     'Sblocca funzionalità di sicurezza avanzate passando al piano Pro. Non esitare a <a>contattarci</a> se hai domande.',
   collect_user_profile:
     'Aggiorna a un piano a pagamento per raccogliere informazioni aggiuntive del profilo utente durante la registrazione. Non esitare a <a>contattarci</a> se hai domande.',
+  passkey_sign_in:
+    'Passa a un piano a pagamento per ottenere la funzionalità di accesso con passkey e vantaggi premium. Non esitare a <a>contattarci</a> se hai domande.',
 };
 
 export default Object.freeze(paywall);

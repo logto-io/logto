@@ -76,6 +76,8 @@ const paywall = {
     'Odblokuj zaawansowane funkcje bezpieczeństwa, ulepszając do planu Pro. Nie wahaj się <a>skontaktować z nami</a>, jeśli masz jakieś pytania.',
   collect_user_profile:
     'Ulepsz do płatnego planu, aby zbierać dodatkowe informacje o profilu użytkownika podczas rejestracji. Nie wahaj się <a>skontaktować z nami</a>, jeśli masz jakieś pytania.',
+  passkey_sign_in:
+    'Aby korzystać z logowania passkey i funkcji premium, przejdź na płatny plan. W razie pytań <a>skontaktuj się z nami</a>.',
 };
 
 export default Object.freeze(paywall);

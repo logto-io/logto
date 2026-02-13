@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: 'Domaines personnalisés illimités',
     not_eligible: 'Supprimez vos domaines personnalisés',
   },
+  passkey_sign_in_enabled: {
+    name: 'Connexion par passkey',
+    limited: 'Connexion par passkey',
+    unlimited: 'Connexion par passkey',
+    not_eligible: 'Pas de prise en charge de la connexion par passkey',
+  },
 };
 
 export default Object.freeze(quota_item);

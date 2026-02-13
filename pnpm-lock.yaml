@@ -1819,8 +1819,8 @@ importers:
         version: 3.24.3
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-da1425a
-        version: 0.2.5-da1425a(zod@3.24.3)
+        specifier: 0.2.5-cbf0233
+        version: 0.2.5-cbf0233(zod@3.24.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
@@ -3408,8 +3408,8 @@ importers:
         specifier: ^29.5.0
         version: 29.6.3
       '@logto/cloud':
-        specifier: 0.2.5-cb80c9b
-        version: 0.2.5-cb80c9b(zod@3.24.3)
+        specifier: 0.2.5-cbf0233
+        version: 0.2.5-cbf0233(zod@3.24.3)
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../toolkit/connector-kit
@@ -3934,8 +3934,8 @@ importers:
         version: 3.24.3
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-da1425a
-        version: 0.2.5-da1425a(zod@3.24.3)
+        specifier: 0.2.5-cbf0233
+        version: 0.2.5-cbf0233(zod@3.24.3)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
@@ -6217,12 +6217,8 @@ packages:
   '@logto/client@3.1.1':
     resolution: {integrity: sha512-IYhZqP/hzBhNn3u0MpJD/0MSiPRbxt5sYgDXOkhXmNxRnAnXQOBk57+zNmAT3CqCiERJovriEpLM6eVVsLc3ow==}
 
-  '@logto/cloud@0.2.5-cb80c9b':
-    resolution: {integrity: sha512-bWKWSmtQHRwoQgNv6fqZfQAl7aYcgxfhmNRm9PBUOVwDKAq74L5Ngj/JSTAUyeq2abiOSFOvGwDojT5VvaJ/Qg==}
-    engines: {node: ^22.14.0}
-
-  '@logto/cloud@0.2.5-da1425a':
-    resolution: {integrity: sha512-Q7sr+zImaH6GOaC6e4T4/CIi8vPUYqn5DPFFUYTsYr8DJWPgkCMv4a8qAzesmP0nSfJy/6uAZaXX565q+m2KXA==}
+  '@logto/cloud@0.2.5-cbf0233':
+    resolution: {integrity: sha512-u9927SAlxVTV4odr1k1UKAQHFiUNMurTGUBQ9wRqLOg6o93GR4NCEnbcbBUuiFonqwEF9o4IY7vGvdVPODyAUA==}
     engines: {node: ^22.14.0}
 
   '@logto/js@5.1.0':
@@ -17379,14 +17375,7 @@ snapshots:
       camelcase-keys: 9.1.3
       jose: 5.9.6
 
-  '@logto/cloud@0.2.5-cb80c9b(zod@3.24.3)':
-    dependencies:
-      '@silverhand/essentials': 2.9.2
-      '@withtyped/server': 0.14.0(zod@3.24.3)
-    transitivePeerDependencies:
-      - zod
-
-  '@logto/cloud@0.2.5-da1425a(zod@3.24.3)':
+  '@logto/cloud@0.2.5-cbf0233(zod@3.24.3)':
     dependencies:
       '@silverhand/essentials': 2.9.2
       '@withtyped/server': 0.14.0(zod@3.24.3)
