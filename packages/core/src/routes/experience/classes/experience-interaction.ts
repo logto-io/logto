@@ -10,7 +10,7 @@ import {
   userMfaDataKey,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
-import { conditional, type Optional, trySafe } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -34,7 +34,6 @@ import {
   mergeUserMfaVerifications,
 } from './helpers.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
-import type { AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
@@ -69,15 +68,6 @@ export default class ExperienceInteraction {
   private userId?: string;
   private userCache?: User;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
-  /**
-   * Cached adaptive MFA evaluation result for the current interaction state.
-   *
-   * Note: `undefined` is also a valid resolved value (e.g. adaptive MFA feature disabled),
-   * so we need `isAdaptiveMfaResultResolved` to distinguish "not resolved yet" from "resolved to undefined".
-   */
-  private adaptiveMfaResult?: Optional<AdaptiveMfaResult>;
-  /** Indicates whether `adaptiveMfaResult` has been evaluated for current interaction state. */
-  private isAdaptiveMfaResultResolved = false;
 
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
@@ -254,7 +244,6 @@ export default class ExperienceInteraction {
     // Update the current interaction with the identified user
     this.userCache = user;
     this.userId = id;
-    this.invalidateAdaptiveMfaResultCache();
 
     // Sync social/enterprise SSO identity profile data.
     // Note: The profile data is not saved to the user profile until the user submits the interaction.
@@ -329,7 +318,6 @@ export default class ExperienceInteraction {
    */
   public setVerificationRecord(record: VerificationRecord) {
     this.verificationRecords.setValue(record);
-    this.invalidateAdaptiveMfaResultCache();
   }
 
   /**
@@ -371,7 +359,7 @@ export default class ExperienceInteraction {
 
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const adaptiveMfaResult = await this.getAdaptiveMfaResult();
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
     if (adaptiveMfaResult) {
@@ -541,8 +529,11 @@ export default class ExperienceInteraction {
 
     // MFA fulfilled
     if (!this.hasVerifiedSsoIdentity) {
-      if (this.#interactionEvent === InteractionEvent.SignIn) {
-        await this.mfa.assertAdaptiveMfaBindingFulfilled(await this.getAdaptiveMfaResult());
+      // Passkey sign-in (`SignInWebAuthn`) is already treated as MFA-fulfilled at verification stage.
+      // Keep adaptive MFA binding enforcement aligned with that behavior to avoid blocking this sign-in path.
+      if (this.#interactionEvent === InteractionEvent.SignIn && !this.hasVerifiedSignInWebAuthn) {
+        const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
+        await this.mfa.assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult);
       }
 
       await this.mfa.assertUserMandatoryMfaFulfilled();
@@ -705,35 +696,6 @@ export default class ExperienceInteraction {
 
   private get verificationRecordsArray() {
     return this.verificationRecords.array();
-  }
-
-  /**
-   * Lazily resolve adaptive MFA result and cache it.
-   *
-   * The cache must be invalidated whenever user identity or verification records change.
-   */
-  private async getAdaptiveMfaResult(): Promise<Optional<AdaptiveMfaResult>> {
-    if (this.isAdaptiveMfaResultResolved) {
-      return this.adaptiveMfaResult;
-    }
-
-    if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInWebAuthn) {
-      this.isAdaptiveMfaResultResolved = true;
-      this.adaptiveMfaResult = undefined;
-      return this.adaptiveMfaResult;
-    }
-
-    const user = await this.getIdentifiedUser();
-    this.adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
-    this.isAdaptiveMfaResultResolved = true;
-
-    return this.adaptiveMfaResult;
-  }
-
-  /** Clear adaptive MFA result cache when interaction state changes. */
-  private invalidateAdaptiveMfaResultCache() {
-    this.isAdaptiveMfaResultResolved = false;
-    this.adaptiveMfaResult = undefined;
   }
 
   /**
