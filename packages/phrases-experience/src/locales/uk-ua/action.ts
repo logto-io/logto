@@ -21,6 +21,7 @@ const action = {
   switch_to: 'Перемкнутися на {{method}}',
   sign_in_via_passcode: 'Увійти за допомогою коду підтвердження',
   sign_in_via_password: 'Увійти за допомогою пароля',
+  sign_in_via_passkey: 'Увійти за допомогою ключа доступу',
   change: 'Змінити {{method}}',
   link_another_email: 'Зв’язати іншу електронну пошту',
   link_another_phone: 'Зв’язати інший телефон',

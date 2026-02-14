@@ -21,6 +21,7 @@ const action = {
   switch_to: '切換到{{method}}',
   sign_in_via_passcode: '用驗證碼登錄',
   sign_in_via_password: '密碼登錄',
+  sign_in_via_passkey: '用 Passkey 登錄',
   change: '更改{{method}}',
   link_another_email: '綁定其他郵箱',
   link_another_phone: '綁定其他手機',

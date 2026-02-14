@@ -21,6 +21,7 @@ const action = {
   switch_to: 'Mudar para {{method}}',
   sign_in_via_passcode: 'Iniciar sessão com código de verificação',
   sign_in_via_password: 'Iniciar sessão com palavra-passe',
+  sign_in_via_passkey: 'Iniciar sessão com chave de acesso',
   change: 'Alterar {{method}}',
   link_another_email: 'Vincular outro email',
   link_another_phone: 'Vincular outro telefone',

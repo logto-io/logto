@@ -21,6 +21,7 @@ const action = {
   switch_to: '{{method}}로 전환',
   sign_in_via_passcode: '인증번호로 로그인',
   sign_in_via_password: '비밀번호로 로그인',
+  sign_in_via_passkey: '패스키로 로그인',
   change: '변경 {{method}}',
   link_another_email: '다른 이메일 연동',
   link_another_phone: '다른 전화번호 연동',

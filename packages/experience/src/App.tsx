@@ -40,7 +40,9 @@ import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
 import ResetPasswordLanding from './pages/ResetPasswordLanding';
 import SignIn from './pages/SignIn';
+import SignInPasskeyVerification from './pages/SignInPasskeyVerification';
 import SignInPassword from './pages/SignInPassword';
+import SignInVerificationMethods from './pages/SignInVerificationMethods';
 import SingleSignOnConnectors from './pages/SingleSignOnConnectors';
 import SingleSignOnEmail from './pages/SingleSignOnEmail';
 import SingleSignOnLanding from './pages/SingleSignOnLanding';
@@ -91,6 +93,15 @@ const App = () => {
                       <Route path={experience.routes.signIn}>
                         <Route index element={<SignIn />} />
                         <Route path="password" element={<SignInPassword />} />
+                        {isDevFeaturesEnabled && (
+                          <>
+                            <Route path="passkey" element={<SignInPasskeyVerification />} />
+                            <Route
+                              path="verification-methods"
+                              element={<SignInVerificationMethods />}
+                            />
+                          </>
+                        )}
                       </Route>
 
                       {/* Create passkey for sign-in */}

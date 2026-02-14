@@ -108,6 +108,17 @@ const description = {
   switch_account_description:
     'To continue, you will be signed out of the current account, and switch to the new account automatically.',
   about_yourself: 'Tell us about yourself',
+  verify_identity: 'Verify your identity',
+  choose_verification_method: 'Choose how you want to sign in',
+  verification_method: {
+    passkey: 'Passkey',
+    passkey_description: 'Verify via your device or USB hardware',
+    password: 'Password',
+    password_description: 'Enter your password',
+    email_verification_code: 'Email verification code',
+    phone_verification_code: 'Phone verification code',
+    verification_code_description: 'Send to {{target}}',
+  },
 };
 
 export default Object.freeze(description);

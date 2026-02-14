@@ -27,7 +27,9 @@ export type ExperiencePath =
   | 'identifier-sign-in'
   | 'identifier-register'
   | 'single-sign-on'
-  | 'reset-password';
+  | 'reset-password'
+  | 'sign-in/passkey'
+  | 'sign-in/verification-methods';
 
 export type ExpectExperienceOptions = {
   /** The URL of the experience endpoint. */

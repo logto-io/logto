@@ -1,6 +1,6 @@
 /* Test the sign-in with different password policies. */
 
-import { ConnectorType, SignInIdentifier } from '@logto/schemas';
+import { ConnectorType, ForgotPasswordMethod, SignInIdentifier } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
@@ -33,6 +33,9 @@ describe('password policy', () => {
         userInfo: true,
         words: [username],
       },
+    });
+    await updateSignInExperience({
+      forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
     });
   });
 

@@ -21,6 +21,7 @@ const action = {
   switch_to: 'Przełącz na {{method}}',
   sign_in_via_passcode: 'Zaloguj się za pomocą kodu weryfikacyjnego',
   sign_in_via_password: 'Zaloguj się za pomocą hasła',
+  sign_in_via_passkey: 'Zaloguj się za pomocą klucza dostępu',
   change: 'Zmień {{method}}',
   link_another_email: 'Połącz inne konto email',
   link_another_phone: 'Połącz inne konto telefoniczne',

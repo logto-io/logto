@@ -3,17 +3,21 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { isDevFeaturesEnabled } from '@/constants/env';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
 import { useSieMethods } from '@/hooks/use-sie';
+import useStartIdentifierPasskeySignInProcessing from '@/hooks/use-start-identifier-passkey-sign-in-processing';
 import { UserFlow } from '@/types';
 
 const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const navigate = useNavigateWithPreservedSearchParams();
-  const { ssoConnectors } = useSieMethods();
+  const { ssoConnectors, passkeySignIn } = useSieMethods();
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
+  const { startProcessing: startIdentifierPasskeySignInProcessing } =
+    useStartIdentifierPasskeySignInProcessing();
 
   const navigateToPasswordPage = useCallback(() => {
     navigate({
@@ -39,12 +43,6 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
 
       const { password, isPasswordPrimary, verificationCode } = method;
 
-      if (identifier === SignInIdentifier.Username) {
-        navigateToPasswordPage();
-
-        return;
-      }
-
       // Check if the email is registered with any SSO connectors. If the email is registered with any SSO connectors, we should not proceed to the next step
       if (identifier === SignInIdentifier.Email && ssoConnectors.length > 0) {
         const result = await checkSingleSignOn(value);
@@ -52,6 +50,26 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
         if (result) {
           return;
         }
+      }
+
+      // Try passkey sign-in first if enabled
+      // If the user has no passkeys, fall back to password/verification code
+      if (isDevFeaturesEnabled && passkeySignIn?.enabled) {
+        const passkeySucceeded = await startIdentifierPasskeySignInProcessing({
+          type: identifier,
+          value,
+        });
+
+        if (passkeySucceeded) {
+          return;
+        }
+        // User has no passkeys, continue with other methods
+      }
+
+      if (identifier === SignInIdentifier.Username) {
+        navigateToPasswordPage();
+
+        return;
       }
 
       if (password && (isPasswordPrimary || !verificationCode)) {
@@ -68,8 +86,10 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
       signInMethods,
       setIdentifierInputValue,
       ssoConnectors.length,
-      navigateToPasswordPage,
+      passkeySignIn?.enabled,
       checkSingleSignOn,
+      startIdentifierPasskeySignInProcessing,
+      navigateToPasswordPage,
       sendVerificationCode,
     ]
   );

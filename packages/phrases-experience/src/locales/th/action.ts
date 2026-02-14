@@ -21,6 +21,7 @@ const action = {
   switch_to: 'เปลี่ยนเป็น {{method}}',
   sign_in_via_passcode: 'เข้าสู่ระบบด้วยรหัสยืนยัน',
   sign_in_via_password: 'เข้าสู่ระบบด้วยรหัสผ่าน',
+  sign_in_via_passkey: 'เข้าสู่ระบบด้วยกุญแจรหัสผ่าน',
   change: 'เปลี่ยน {{method}}',
   link_another_email: 'เชื่อมต่ออีเมลอื่น',
   link_another_phone: 'เชื่อมต่อเบอร์โทรศัพท์อื่น',

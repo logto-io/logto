@@ -110,6 +110,17 @@ const description = {
   switch_account_description:
     'Чтобы продолжить, вы будете выйти из текущей учетной записи и автоматически переключены на новую учетную запись.',
   about_yourself: 'Расскажите нам о себе',
+  verify_identity: 'Подтвердите свою личность',
+  choose_verification_method: 'Выберите способ входа',
+  verification_method: {
+    passkey: 'Ключ доступа',
+    passkey_description: 'Проверка через устройство или USB-оборудование',
+    password: 'Пароль',
+    password_description: 'Введите пароль',
+    email_verification_code: 'Код подтверждения по электронной почте',
+    phone_verification_code: 'Код подтверждения по телефону',
+    verification_code_description: 'Отправить на {{target}}',
+  },
 };
 
 export default Object.freeze(description);

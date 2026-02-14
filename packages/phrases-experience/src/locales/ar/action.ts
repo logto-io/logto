@@ -21,6 +21,7 @@ const action = {
   switch_to: 'التبديل إلى {{method}}',
   sign_in_via_passcode: 'تسجيل الدخول باستخدام رمز التحقق',
   sign_in_via_password: 'تسجيل الدخول باستخدام كلمة المرور',
+  sign_in_via_passkey: 'تسجيل الدخول باستخدام مفتاح التحقق',
   change: 'تغيير {{method}}',
   link_another_email: 'ربط بريد إلكتروني آخر',
   link_another_phone: 'ربط هاتف آخر',

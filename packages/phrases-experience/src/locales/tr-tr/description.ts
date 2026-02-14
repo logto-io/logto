@@ -104,6 +104,17 @@ const description = {
   switch_account_description:
     'Devam etmek için, mevcut hesaptan çıkış yapacak ve otomatik olarak yeni hesaba geçeceksiniz.',
   about_yourself: 'Kendinizden bahsedin',
+  verify_identity: 'Kimliğinizi doğrulayın',
+  choose_verification_method: 'Nasıl giriş yapmak istediğinizi seçin',
+  verification_method: {
+    passkey: 'Passkey',
+    passkey_description: 'Cihazınız veya USB donanımıyla doğrulayın',
+    password: 'Şifre',
+    password_description: 'Şifrenizi girin',
+    email_verification_code: 'E-posta doğrulama kodu',
+    phone_verification_code: 'Telefon doğrulama kodu',
+    verification_code_description: '{{target}} adresine gönder',
+  },
 };
 
 export default Object.freeze(description);

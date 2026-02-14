@@ -21,6 +21,7 @@ const action = {
   switch_to: 'Zu {{method}} wechseln',
   sign_in_via_passcode: 'Mit Bestätigungscode anmelden',
   sign_in_via_password: 'Mit Passwort anmelden',
+  sign_in_via_passkey: 'Mit Passkey anmelden',
   change: '{{method}} ändern',
   link_another_email: 'Andere Email verknüpfen',
   link_another_phone: 'Andere Telefonnummer verknüpfen',

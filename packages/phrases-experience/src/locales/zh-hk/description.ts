@@ -94,6 +94,17 @@ const description = {
   switch_account_title: '你當前以 {{account}} 登錄',
   switch_account_description: '要繼續，你將退出當前帳號，並自動切換到新帳號。',
   about_yourself: '講講你自己',
+  verify_identity: '驗證你的身份',
+  choose_verification_method: '選擇你要登入的方式',
+  verification_method: {
+    passkey: 'Passkey',
+    passkey_description: '透過你的裝置或 USB 硬體驗證',
+    password: '密碼',
+    password_description: '輸入密碼',
+    email_verification_code: '電郵驗證碼',
+    phone_verification_code: '短訊驗證碼',
+    verification_code_description: '發送至 {{target}}',
+  },
 };
 
 export default Object.freeze(description);

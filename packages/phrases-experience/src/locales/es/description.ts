@@ -112,6 +112,17 @@ const description = {
   switch_account_description:
     'Para continuar, se cerrará la sesión de la cuenta actual, y se cambiará automáticamente a la nueva cuenta.',
   about_yourself: 'Cuéntanos sobre ti',
+  verify_identity: 'Verifica tu identidad',
+  choose_verification_method: 'Elige cómo quieres iniciar sesión',
+  verification_method: {
+    passkey: 'Clave de acceso',
+    passkey_description: 'Verifica mediante tu dispositivo o hardware USB',
+    password: 'Contraseña',
+    password_description: 'Introduce tu contraseña',
+    email_verification_code: 'Código de verificación por correo',
+    phone_verification_code: 'Código de verificación por teléfono',
+    verification_code_description: 'Enviar a {{target}}',
+  },
 };
 
 export default Object.freeze(description);

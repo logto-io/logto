@@ -105,6 +105,17 @@ const description = {
   switch_account_description:
     '続行するには、現在のアカウントからサインアウトし、新しいアカウントに自動的に切り替わります。',
   about_yourself: 'あなたについて教えてください',
+  verify_identity: '本人確認を行う',
+  choose_verification_method: 'サインイン方法を選択してください',
+  verification_method: {
+    passkey: 'パスキー',
+    passkey_description: 'デバイスまたはUSBハードウェアで確認',
+    password: 'パスワード',
+    password_description: 'パスワードを入力',
+    email_verification_code: 'メール認証コード',
+    phone_verification_code: '電話認証コード',
+    verification_code_description: '{{target}}に送信',
+  },
 };
 
 export default Object.freeze(description);
