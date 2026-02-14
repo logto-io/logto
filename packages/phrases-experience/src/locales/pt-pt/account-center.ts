@@ -62,13 +62,11 @@ const account_center = {
     description: 'Crie uma nova palavra-passe para proteger a sua conta.',
     success: 'Palavra-passe atualizada com sucesso.',
   },
-
   code_verification: {
     send: 'Enviar código de verificação',
     resend: 'Ainda não recebeu? <a>Reenviar código de verificação</a>',
     resend_countdown: 'Ainda não recebeu? Reenvie após {{seconds}} s.',
   },
-
   email_verification: {
     title: 'Verifique o seu e-mail',
     prepare_description:
@@ -131,7 +129,6 @@ const account_center = {
       title: 'Nome de utilizador alterado!',
       description: 'O seu nome de utilizador foi atualizado com sucesso.',
     },
-
     password: {
       title: 'Palavra-passe alterada!',
       description: 'A sua palavra-passe foi atualizada com sucesso.',

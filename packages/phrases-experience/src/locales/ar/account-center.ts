@@ -58,13 +58,11 @@ const account_center = {
     description: 'أنشئ كلمة مرور جديدة لحماية حسابك.',
     success: 'تم تحديث كلمة المرور بنجاح.',
   },
-
   code_verification: {
     send: 'إرسال رمز التحقق',
     resend: 'لم تستلمه بعد؟ <a>إعادة إرسال رمز التحقق</a>',
     resend_countdown: 'لم تستلمه بعد؟ أعد الإرسال بعد {{seconds}} ث.',
   },
-
   email_verification: {
     title: 'تحقق من بريدك الإلكتروني',
     prepare_description: 'تحقق من هويتك لحماية أمان حسابك. أرسل رمز التحقق إلى بريدك الإلكتروني.',
@@ -120,14 +118,9 @@ const account_center = {
       title: 'تم تغيير اسم المستخدم!',
       description: 'تم تحديث اسم المستخدم الخاص بك بنجاح.',
     },
-
     password: {
       title: 'تم تغيير كلمة المرور!',
       description: 'تم تحديث كلمة المرور الخاصة بك بنجاح.',
-    },
-    social: {
-      title: 'تم ربط الحساب الاجتماعي!',
-      description: 'تم ربط حسابك الاجتماعي بنجاح.',
     },
     totp: {
       title: 'تمت إضافة تطبيق المصادقة!',
@@ -140,6 +133,10 @@ const account_center = {
     passkey: {
       title: 'تمت إضافة مفتاح المرور!',
       description: 'تم ربط مفتاح المرور بحسابك بنجاح.',
+    },
+    social: {
+      title: 'تم ربط الحساب الاجتماعي!',
+      description: 'تم ربط حسابك الاجتماعي بنجاح.',
     },
   },
   backup_code: {

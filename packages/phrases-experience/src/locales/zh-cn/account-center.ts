@@ -57,13 +57,11 @@ const account_center = {
     description: '创建新密码以保护你的账号安全。',
     success: '密码更新成功。',
   },
-
   code_verification: {
     send: '发送验证码',
     resend: '还没有收到？<a>重新发送验证码</a>',
     resend_countdown: '还没有收到？{{seconds}} 秒后可重新发送',
   },
-
   email_verification: {
     title: '验证您的邮箱',
     prepare_description: '为保护账户安全，请确认是您本人。发送验证码到您的邮箱。',
@@ -116,7 +114,6 @@ const account_center = {
       title: '用户名已更新！',
       description: '你的账号用户名已成功更改。',
     },
-
     password: {
       title: '密码已更新！',
       description: '你的账号密码已成功更改。',

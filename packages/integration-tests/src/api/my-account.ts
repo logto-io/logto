@@ -1,4 +1,5 @@
 import {
+  type GetUserSessionsResponse,
   type GetThirdPartyAccessTokenResponse,
   type UserMfaVerificationResponse,
   type UserProfileResponse,
@@ -158,3 +159,19 @@ export const updateSocialAccessToken = async (
       json: { verificationRecordId },
     })
     .json<GetThirdPartyAccessTokenResponse>();
+
+export const getSessions = async (api: KyInstance, verificationRecordId: string) =>
+  api
+    .get('api/my-account/sessions', {
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    })
+    .json<GetUserSessionsResponse>();
+
+export const deleteSession = async (
+  api: KyInstance,
+  sessionId: string,
+  verificationRecordId: string
+) =>
+  api.delete(`api/my-account/sessions/${sessionId}`, {
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });

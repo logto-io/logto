@@ -58,13 +58,11 @@ const account_center = {
     description: 'สร้างรหัสผ่านใหม่เพื่อความปลอดภัยของบัญชี',
     success: 'อัปเดตรหัสผ่านเรียบร้อยแล้ว',
   },
-
   code_verification: {
     send: 'ส่งรหัสยืนยัน',
     resend: 'ยังไม่ได้รับใช่ไหม? <a>ส่งรหัสยืนยันอีกครั้ง</a>',
     resend_countdown: 'ยังไม่ได้รับใช่ไหม? ส่งใหม่ได้หลัง {{seconds}} วินาที',
   },
-
   email_verification: {
     title: 'ยืนยันอีเมลของคุณ',
     prepare_description:
@@ -120,7 +118,6 @@ const account_center = {
       title: 'เปลี่ยนชื่อผู้ใช้แล้ว!',
       description: 'ชื่อผู้ใช้ของคุณได้รับการอัปเดตเรียบร้อยแล้ว',
     },
-
     password: {
       title: 'เปลี่ยนรหัสผ่านแล้ว!',
       description: 'รหัสผ่านของคุณได้รับการอัปเดตเรียบร้อยแล้ว',

@@ -64,13 +64,11 @@ const account_center = {
     description: 'Erstelle ein neues Passwort, um dein Konto zu schützen.',
     success: 'Passwort erfolgreich aktualisiert.',
   },
-
   code_verification: {
     send: 'Bestätigungscode senden',
     resend: 'Noch nichts erhalten? <a>Bestätigungscode erneut senden</a>',
     resend_countdown: 'Noch nichts erhalten? Erneut senden nach {{seconds}} s.',
   },
-
   email_verification: {
     title: 'Bestätige deine E-Mail',
     prepare_description:
@@ -136,7 +134,6 @@ const account_center = {
       title: 'Benutzername geändert!',
       description: 'Ihr Benutzername wurde erfolgreich aktualisiert.',
     },
-
     password: {
       title: 'Passwort geändert!',
       description: 'Ihr Passwort wurde erfolgreich aktualisiert.',

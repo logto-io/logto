@@ -41,6 +41,7 @@ export const enableAllAccountCenterFields = async (api: KyInstance = authedAdmin
         social: AccountCenterControlValue.Edit,
         customData: AccountCenterControlValue.Edit,
         mfa: AccountCenterControlValue.Edit,
+        session: AccountCenterControlValue.Edit,
       },
     },
     api

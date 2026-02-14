@@ -62,13 +62,11 @@ const account_center = {
     description: 'Crea una nuova password per proteggere il tuo account.',
     success: 'Password aggiornata con successo.',
   },
-
   code_verification: {
     send: 'Invia codice di verifica',
     resend: "Non l'hai ricevuto? <a>Reinvia il codice di verifica</a>",
     resend_countdown: "Non l'hai ricevuto? Reinvia dopo {{seconds}} s.",
   },
-
   email_verification: {
     title: 'Verifica la tua e-mail',
     prepare_description:
@@ -119,14 +117,6 @@ const account_center = {
       title: 'Aggiornato!',
       description: 'Le tue informazioni sono state aggiornate.',
     },
-    password: {
-      title: 'Password cambiata!',
-      description: 'La tua password è stata aggiornata con successo.',
-    },
-    username: {
-      title: 'Nome utente cambiato!',
-      description: 'Il tuo nome utente è stato aggiornato con successo.',
-    },
     email: {
       title: 'Email aggiornata!',
       description: 'Il tuo indirizzo email è stato aggiornato con successo.',
@@ -135,9 +125,13 @@ const account_center = {
       title: 'Numero di telefono aggiornato!',
       description: 'Il tuo numero di telefono è stato aggiornato con successo.',
     },
-    social: {
-      title: 'Account social collegato!',
-      description: 'Il tuo account social è stato collegato con successo.',
+    username: {
+      title: 'Nome utente cambiato!',
+      description: 'Il tuo nome utente è stato aggiornato con successo.',
+    },
+    password: {
+      title: 'Password cambiata!',
+      description: 'La tua password è stata aggiornata con successo.',
     },
     totp: {
       title: 'App di autenticazione aggiunta!',
@@ -150,6 +144,10 @@ const account_center = {
     passkey: {
       title: 'Passkey aggiunto!',
       description: 'Il tuo passkey è stato collegato con successo al tuo account.',
+    },
+    social: {
+      title: 'Account social collegato!',
+      description: 'Il tuo account social è stato collegato con successo.',
     },
   },
   backup_code: {

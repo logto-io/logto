@@ -57,13 +57,11 @@ const account_center = {
     description: '계정을 안전하게 보호할 새 비밀번호를 만들어 주세요.',
     success: '비밀번호가 성공적으로 업데이트되었습니다.',
   },
-
   code_verification: {
     send: '인증 코드 보내기',
     resend: '아직 받지 못하셨나요? <a>인증 코드 다시 보내기</a>',
     resend_countdown: '아직 받지 못하셨나요? {{seconds}}초 후에 다시 보낼 수 있습니다',
   },
-
   email_verification: {
     title: '이메일 확인',
     prepare_description: '계정 보안을 위해 본인인지 확인하세요. 인증 코드를 이메일로 보냅니다.',
@@ -120,7 +118,6 @@ const account_center = {
       title: '사용자 이름 변경됨!',
       description: '사용자 이름이 성공적으로 업데이트되었습니다.',
     },
-
     password: {
       title: '비밀번호 변경됨!',
       description: '비밀번호가 성공적으로 업데이트되었습니다.',

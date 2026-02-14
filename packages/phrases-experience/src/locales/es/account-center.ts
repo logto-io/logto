@@ -62,13 +62,11 @@ const account_center = {
     description: 'Crea una nueva contraseña para proteger tu cuenta.',
     success: 'Contraseña actualizada correctamente.',
   },
-
   code_verification: {
     send: 'Enviar código de verificación',
     resend: '¿Aún no lo recibes? <a>Reenviar código de verificación</a>',
     resend_countdown: '¿Aún no lo recibes? Reenvía después de {{seconds}} s.',
   },
-
   email_verification: {
     title: 'Verifica tu correo electrónico',
     prepare_description:
@@ -132,7 +130,6 @@ const account_center = {
       title: '¡Nombre de usuario cambiado!',
       description: 'Tu nombre de usuario ha sido actualizado exitosamente.',
     },
-
     password: {
       title: '¡Contraseña cambiada!',
       description: 'Tu contraseña ha sido actualizada exitosamente.',

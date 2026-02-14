@@ -130,4 +130,14 @@ describe('OIDC getUserClaims()', () => {
       })
     ).toEqual([...profileExpectation, 'custom_data', 'identities', 'sso_identities']);
   });
+
+  it('should ignore account API session scope in getUserClaims()', () => {
+    expect(
+      getAcceptedUserClaims({
+        use: use.idToken,
+        scope: 'openid profile urn:logto:scope:sessions',
+        rejected: [],
+      })
+    ).toEqual(profileExpectation);
+  });
 });

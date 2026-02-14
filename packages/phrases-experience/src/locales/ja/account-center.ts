@@ -58,13 +58,11 @@ const account_center = {
     description: 'アカウントを守るために新しいパスワードを作成してください。',
     success: 'パスワードを更新しました。',
   },
-
   code_verification: {
     send: '認証コードを送信',
     resend: 'まだ届きませんか？ <a>認証コードを再送</a>',
     resend_countdown: 'まだ届きませんか？ {{seconds}} 秒後に再送できます',
   },
-
   email_verification: {
     title: 'メールアドレスを確認',
     prepare_description:
@@ -124,14 +122,9 @@ const account_center = {
       title: 'ユーザー名を変更しました！',
       description: 'ユーザー名が正常に更新されました。',
     },
-
     password: {
       title: 'パスワードを変更しました！',
       description: 'パスワードが正常に更新されました。',
-    },
-    social: {
-      title: 'ソーシャルアカウントをリンクしました！',
-      description: 'ソーシャルアカウントが正常にリンクされました。',
     },
     totp: {
       title: '認証アプリを追加しました！',
@@ -144,6 +137,10 @@ const account_center = {
     passkey: {
       title: 'パスキーが追加されました！',
       description: 'パスキーがアカウントに正常にリンクされました。',
+    },
+    social: {
+      title: 'ソーシャルアカウントをリンクしました！',
+      description: 'ソーシャルアカウントが正常にリンクされました。',
     },
   },
   backup_code: {

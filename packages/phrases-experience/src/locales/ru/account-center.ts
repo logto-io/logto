@@ -58,13 +58,11 @@ const account_center = {
     description: 'Создайте новый пароль, чтобы защитить свой аккаунт.',
     success: 'Пароль успешно обновлён.',
   },
-
   code_verification: {
     send: 'Отправить код подтверждения',
     resend: 'Не получили? <a>Отправить код подтверждения ещё раз</a>',
     resend_countdown: 'Не получили? Повторная отправка через {{seconds}} с.',
   },
-
   email_verification: {
     title: 'Подтвердите свою почту',
     prepare_description:
@@ -125,7 +123,6 @@ const account_center = {
       title: 'Имя пользователя изменено!',
       description: 'Ваше имя пользователя было успешно обновлено.',
     },
-
     password: {
       title: 'Пароль изменен!',
       description: 'Ваш пароль был успешно обновлен.',

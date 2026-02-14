@@ -58,13 +58,11 @@ const account_center = {
     description: 'Hesabını korumak için yeni bir şifre oluştur.',
     success: 'Şifre başarıyla güncellendi.',
   },
-
   code_verification: {
     send: 'Doğrulama kodu gönder',
     resend: 'Hâlâ gelmedi mi? <a>Doğrulama kodunu yeniden gönder</a>',
     resend_countdown: 'Hâlâ gelmedi mi? {{seconds}} sn sonra tekrar gönder.',
   },
-
   email_verification: {
     title: 'E-postanı doğrula',
     prepare_description:
@@ -125,7 +123,6 @@ const account_center = {
       title: 'Kullanıcı adı değiştirildi!',
       description: 'Kullanıcı adınız başarıyla güncellendi.',
     },
-
     password: {
       title: 'Şifre değiştirildi!',
       description: 'Şifreniz başarıyla güncellendi.',

@@ -60,13 +60,11 @@ const account_center = {
     description: 'Crie uma nova senha para proteger sua conta.',
     success: 'Senha atualizada com sucesso.',
   },
-
   code_verification: {
     send: 'Enviar código de verificação',
     resend: 'Ainda não recebeu? <a>Reenviar código de verificação</a>',
     resend_countdown: 'Ainda não recebeu? Reenvie após {{seconds}} s.',
   },
-
   email_verification: {
     title: 'Verifique seu e-mail',
     prepare_description:
