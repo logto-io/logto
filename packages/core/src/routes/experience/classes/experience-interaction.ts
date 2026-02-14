@@ -530,10 +530,13 @@ export default class ExperienceInteraction {
     await this.mfa.checkAvailability();
 
     // MFA fulfilled
-    if (!this.hasVerifiedSsoIdentity) {
-      // Passkey sign-in (`SignInWebAuthn`) is already treated as MFA-fulfilled at verification stage.
-      // Keep adaptive MFA binding enforcement aligned with that behavior to avoid blocking this sign-in path.
-      if (this.#interactionEvent === InteractionEvent.SignIn && !this.hasVerifiedSignInWebAuthn) {
+    const isSignInEvent = this.#interactionEvent === InteractionEvent.SignIn;
+    // Sign-in passkey verification (`SignInWebAuthn`) is already treated as MFA-fulfilled.
+    const shouldSkipSubmitMfaFulfillment =
+      this.hasVerifiedSsoIdentity || (isSignInEvent && this.hasVerifiedSignInWebAuthn);
+
+    if (!shouldSkipSubmitMfaFulfillment) {
+      if (isSignInEvent) {
         const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult();
         await this.mfa.assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult);
       }

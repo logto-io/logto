@@ -145,7 +145,7 @@ describe('POST /experience/submit', () => {
       .set('x-logto-cf-bot-score', '42')
       .set('x-logto-cf-bot-verified', 'true');
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(200);
     expect(mockAppend).toHaveBeenCalledWith(
       expect.objectContaining({
         adaptiveMfaContext: {
@@ -169,7 +169,7 @@ describe('POST /experience/submit', () => {
 
     const response = await requester.post('/experience/submit').set('x-logto-cf-bot-score', '10');
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(200);
     const adaptiveMfaResult = mockAppend.mock.calls
       .map(
         ([payload]) =>

@@ -428,16 +428,24 @@ export class Mfa {
     const user = await this.interactionContext.getIdentifiedUser();
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
-    if (!mfaValidator.isAdaptiveMfaBindingRequired) {
+    // Adaptive MFA binding is only needed when risk requires MFA but user currently has no
+    // available factors for verification, so they must complete a binding step first.
+    const shouldEnforceAdaptiveMfaBinding =
+      mfaValidator.availableUserMfaVerificationTypes.length === 0;
+
+    if (!shouldEnforceAdaptiveMfaBinding) {
       return;
     }
 
-    const availableFactors = await this.getAvailableMfaFactorsForBinding();
+    const availableFactors =
+      await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
 
-    assertThat(
-      availableFactors.length > 0,
-      new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 400 })
-    );
+    // Tenant has no bindable MFA factors enabled in SIE (e.g. all disabled).
+    // In this case there is no actionable binding step for end users, so skip
+    // adaptive binding enforcement instead of throwing a non-actionable error.
+    if (availableFactors.length === 0) {
+      return;
+    }
 
     throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
   }
@@ -553,23 +561,12 @@ export class Mfa {
     };
   }
 
-  private async getAvailableMfaFactorsForBinding() {
-    const { mfa, passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
-
-    return sortMfaFactors(
-      deduplicate([...mfa.factors, ...(passkeySignIn.enabled ? [MfaFactor.WebAuthn] : [])]).filter(
-        (factor) => factor !== MfaFactor.BackupCode
-      )
-    );
-  }
-
   private async checkMfaFactorsEnabledInSignInExperience(newBindMfaFactors: MfaFactor[]) {
-    const { mfa, passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
+    const availableFactors =
+      await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
 
-    const isFactorsEnabled = newBindMfaFactors.every(
-      (newBindFactor) =>
-        mfa.factors.includes(newBindFactor) ||
-        (newBindFactor === MfaFactor.WebAuthn && passkeySignIn.enabled)
+    const isFactorsEnabled = newBindMfaFactors.every((newBindFactor) =>
+      availableFactors.includes(newBindFactor)
     );
 
     assertThat(isFactorsEnabled, new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' }));
