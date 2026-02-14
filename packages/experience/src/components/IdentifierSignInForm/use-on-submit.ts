@@ -17,7 +17,9 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
   const { onSubmit: checkSingleSignOn } = useCheckSingleSignOn();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { startProcessing: startIdentifierPasskeySignInProcessing } =
-    useStartIdentifierPasskeySignInProcessing();
+    useStartIdentifierPasskeySignInProcessing({
+      hideErrorToast: true,
+    });
 
   const navigateToPasswordPage = useCallback(() => {
     navigate({
