@@ -2,7 +2,6 @@
 import { TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
-  MfaFactor,
   MissingProfile,
   type SignInExperience,
   SignInIdentifier,
@@ -173,51 +172,6 @@ describe('SignInExperienceValidator', () => {
       await expect(
         signInExperienceSettings.guardInteractionEvent(InteractionEvent.ForgotPassword)
       ).resolves.not.toThrow();
-    });
-  });
-
-  describe('getAvailableMfaFactorsForBinding', () => {
-    it('should include passkey WebAuthn and exclude backup code', async () => {
-      signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
-        ...mockSignInExperience,
-        mfa: {
-          policy: mockSignInExperience.mfa.policy,
-          factors: [MfaFactor.BackupCode, MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-        },
-        passkeySignIn: { enabled: true, showPasskeyButton: true, allowAutofill: false },
-      });
-
-      const signInExperienceValidator = new SignInExperienceValidator(
-        mockTenant.libraries,
-        mockTenant.queries
-      );
-
-      await expect(signInExperienceValidator.getAvailableMfaFactorsForBinding()).resolves.toEqual([
-        MfaFactor.WebAuthn,
-        MfaFactor.TOTP,
-        MfaFactor.EmailVerificationCode,
-      ]);
-    });
-
-    it('should deduplicate and keep display order', async () => {
-      signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
-        ...mockSignInExperience,
-        mfa: {
-          policy: mockSignInExperience.mfa.policy,
-          factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-        },
-        passkeySignIn: { enabled: false, showPasskeyButton: false, allowAutofill: false },
-      });
-
-      const signInExperienceValidator = new SignInExperienceValidator(
-        mockTenant.libraries,
-        mockTenant.queries
-      );
-
-      await expect(signInExperienceValidator.getAvailableMfaFactorsForBinding()).resolves.toEqual([
-        MfaFactor.TOTP,
-        MfaFactor.EmailVerificationCode,
-      ]);
     });
   });
 

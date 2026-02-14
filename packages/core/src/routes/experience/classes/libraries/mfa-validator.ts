@@ -96,6 +96,13 @@ export class MfaValidator {
     );
   }
 
+  get isAdaptiveMfaBindingRequired() {
+    return (
+      this.adaptiveMfaResult?.requiresMfa === true &&
+      this.availableUserMfaVerificationTypes.length === 0
+    );
+  }
+
   /**
    * Whether MFA verification is required for the current sign-in interaction.
    *

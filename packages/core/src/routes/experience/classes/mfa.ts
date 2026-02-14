@@ -22,9 +22,10 @@ import {
   userPasskeySignInDataKey,
 } from '@logto/schemas';
 import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
-import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
+import { cond, condObject, deduplicate, pick, type Optional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -34,6 +35,8 @@ import assertThat from '#src/utils/assert-that.js';
 import { type InteractionContext } from '../types.js';
 
 import { getAllUserEnabledMfaVerifications, sortMfaFactors } from './helpers.js';
+import type { AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
+import { MfaValidator } from './libraries/mfa-validator.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 
 export type MfaData = {
@@ -416,6 +419,29 @@ export class Mfa {
     );
   }
 
+  async assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult?: Optional<AdaptiveMfaResult>) {
+    if (!EnvSet.values.isDevFeaturesEnabled || !adaptiveMfaResult?.requiresMfa) {
+      return;
+    }
+
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+    const user = await this.interactionContext.getIdentifiedUser();
+    const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
+
+    if (!mfaValidator.isAdaptiveMfaBindingRequired) {
+      return;
+    }
+
+    const availableFactors = await this.getAvailableMfaFactorsForBinding();
+
+    assertThat(
+      availableFactors.length > 0,
+      new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 400 })
+    );
+
+    throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
+  }
+
   /**
    * @throws {RequestError} with status 422 if the user has not bound the required MFA factors
    * @throws {RequestError} with status 422 if the user has not bound the backup code but enabled in the sign-in experience
@@ -525,6 +551,16 @@ export class Mfa {
       webAuthn: this.#webAuthn,
       backupCode: cond(this.#backupCode && pick(this.#backupCode, 'type')),
     };
+  }
+
+  private async getAvailableMfaFactorsForBinding() {
+    const { mfa, passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
+
+    return sortMfaFactors(
+      deduplicate([...mfa.factors, ...(passkeySignIn.enabled ? [MfaFactor.WebAuthn] : [])]).filter(
+        (factor) => factor !== MfaFactor.BackupCode
+      )
+    );
   }
 
   private async checkMfaFactorsEnabledInSignInExperience(newBindMfaFactors: MfaFactor[]) {

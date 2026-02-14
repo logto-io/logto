@@ -10,7 +10,7 @@ import {
   userMfaDataKey,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
-import { conditional, trySafe } from '@silverhand/essentials';
+import { conditional, type Optional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -34,6 +34,7 @@ import {
   mergeUserMfaVerifications,
 } from './helpers.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
+import type { AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
@@ -68,6 +69,7 @@ export default class ExperienceInteraction {
   private userId?: string;
   private userCache?: User;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
+  private adaptiveMfaResult?: Optional<AdaptiveMfaResult>;
 
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
@@ -351,39 +353,21 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 404 if the if the user is not identified or not found
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
-  // eslint-disable-next-line complexity
+
   public async guardMfaVerificationStatus(log?: LogEntry) {
     if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInWebAuthn) {
+      this.adaptiveMfaResult = undefined;
       return;
     }
 
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
+    this.adaptiveMfaResult = adaptiveMfaResult;
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
     if (adaptiveMfaResult) {
       log?.append({ adaptiveMfaResult });
-    }
-
-    if (
-      adaptiveMfaResult?.requiresMfa &&
-      mfaValidator.availableUserMfaVerificationTypes.length === 0
-    ) {
-      // Adaptive MFA triggered but user has no usable factors.
-      // Force binding flow and attach available factors from SIE settings.
-      // Avoid throwing `session.mfa.require_mfa_verification` with empty options.
-      const availableFactors =
-        await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
-
-      // If no factors are enabled in SIE, surface a config error instead of sending
-      // users into a binding flow with an empty list.
-      assertThat(
-        availableFactors.length > 0,
-        new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 400 })
-      );
-
-      throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
     }
 
     if (!mfaValidator.isMfaRequired) {
@@ -549,6 +533,10 @@ export default class ExperienceInteraction {
 
     // MFA fulfilled
     if (!this.hasVerifiedSsoIdentity) {
+      if (this.#interactionEvent === InteractionEvent.SignIn) {
+        await this.mfa.assertAdaptiveMfaBindingFulfilled(this.adaptiveMfaResult);
+      }
+
       await this.mfa.assertUserMandatoryMfaFulfilled();
     }
 
