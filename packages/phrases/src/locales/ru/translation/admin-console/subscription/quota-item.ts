@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: 'Неограниченное количество пользовательских доменов',
     not_eligible: 'Удалите свои пользовательские домены',
   },
+  passkey_sign_in_enabled: {
+    name: 'Вход с passkey',
+    limited: 'Вход с passkey',
+    unlimited: 'Вход с passkey',
+    not_eligible: 'Вход с passkey не поддерживается',
+  },
 };
 
 export default Object.freeze(quota_item);

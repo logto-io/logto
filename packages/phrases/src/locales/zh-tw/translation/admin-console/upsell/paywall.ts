@@ -70,6 +70,8 @@ const paywall = {
     '通過升級到 Pro 計劃解鎖高級安全功能。如果你有任何問題，請隨時<a>聯繫我們</a>。',
   collect_user_profile:
     '升級到付費計劃以解鎖在新用戶註冊期間收集更多用戶資料資訊的功能。如有任何問題，請不要猶豫 <a>聯繫我們</a>。',
+  passkey_sign_in:
+    '升級至付費方案，以使用通行密鑰登入功能與進階權益。如有任何問題，請隨時 <a>聯絡我們</a>。',
 };
 
 export default Object.freeze(paywall);

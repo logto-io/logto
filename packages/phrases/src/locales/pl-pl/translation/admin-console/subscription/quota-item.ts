@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: 'Nieograniczone niestandardowe domeny',
     not_eligible: 'Usuń swoje niestandardowe domeny',
   },
+  passkey_sign_in_enabled: {
+    name: 'Logowanie passkey',
+    limited: 'Logowanie passkey',
+    unlimited: 'Logowanie passkey',
+    not_eligible: 'Brak obsługi logowania passkey',
+  },
 };
 
 export default Object.freeze(quota_item);

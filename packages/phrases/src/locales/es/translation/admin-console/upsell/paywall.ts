@@ -76,6 +76,8 @@ const paywall = {
     'Desbloquea funciones de seguridad avanzadas al actualizar al plan Pro. No dudes en <a>contactarnos</a> si tienes alguna pregunta.',
   collect_user_profile:
     'Actualiza a un plan de pago para recopilar información adicional del perfil de usuario durante el registro. No dudes en <a>contactarnos</a> si tienes alguna pregunta.',
+  passkey_sign_in:
+    'Actualiza a un plan de pago para habilitar el inicio de sesión con passkey y disfrutar de beneficios premium. No dudes en <a>contactarnos</a> si tienes alguna pregunta.',
 };
 
 export default Object.freeze(paywall);

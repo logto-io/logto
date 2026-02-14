@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: '無限自定義域名',
     not_eligible: '刪除您的自定義域名',
   },
+  passkey_sign_in_enabled: {
+    name: '通行密鑰登入',
+    limited: '通行密鑰登入',
+    unlimited: '通行密鑰登入',
+    not_eligible: '不支援通行密鑰登入',
+  },
 };
 
 export default Object.freeze(quota_item);

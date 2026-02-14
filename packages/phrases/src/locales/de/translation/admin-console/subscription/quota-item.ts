@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: 'Unbegrenzte benutzerdefinierte Domains',
     not_eligible: 'Entferne deine benutzerdefinierten Domains',
   },
+  passkey_sign_in_enabled: {
+    name: 'Passkey-Anmeldung',
+    limited: 'Passkey-Anmeldung',
+    unlimited: 'Passkey-Anmeldung',
+    not_eligible: 'Keine Unterstützung für Passkey-Anmeldung',
+  },
 };
 
 export default Object.freeze(quota_item);

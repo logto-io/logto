@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: '無制限のカスタムドメイン',
     not_eligible: 'カスタムドメインを削除してください',
   },
+  passkey_sign_in_enabled: {
+    name: 'パスキーサインイン',
+    limited: 'パスキーサインイン',
+    unlimited: 'パスキーサインイン',
+    not_eligible: 'パスキーサインインはサポートされていません',
+  },
 };
 
 export default Object.freeze(quota_item);

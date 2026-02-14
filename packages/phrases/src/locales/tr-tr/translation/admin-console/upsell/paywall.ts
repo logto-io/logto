@@ -76,6 +76,8 @@ const paywall = {
     'Gelişmiş güvenlik özelliklerinin kilidini açmak için Pro planına yükseltin. Sorularınız varsa, <a>bizimle iletişime geçmekten</a> çekinmeyin.',
   collect_user_profile:
     'Kayıt sırasında ek kullanıcı profil bilgilerini toplamak için ücretli bir plana yükseltin. Sorularınız varsa, <a>bizimle iletişime geçmekten</a> çekinmeyin.',
+  passkey_sign_in:
+    'Passkey ile oturum açma özelliğini ve premium avantajları kullanmak için ücretli bir plana yükseltin. Sorularınız varsa çekinmeden <a>bize ulaşın</a>.',
 };
 
 export default Object.freeze(paywall);

@@ -28,7 +28,7 @@
     "@fontsource/roboto-mono": "^5.0.0",
     "@inkeep/cxkit-react": "^0.5.66",
     "@jest/types": "^29.5.0",
-    "@logto/cloud": "0.2.5-cb80c9b",
+    "@logto/cloud": "0.2.5-cbf0233",
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",
     "@logto/language-kit": "workspace:^",

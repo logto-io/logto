@@ -209,6 +209,12 @@ const quota_item = {
     unlimited: 'Sınırsız özel alan adları',
     not_eligible: 'Özel alan adlarınızı kaldırın',
   },
+  passkey_sign_in_enabled: {
+    name: 'Passkey ile oturum açma',
+    limited: 'Passkey ile oturum açma',
+    unlimited: 'Passkey ile oturum açma',
+    not_eligible: 'Passkey ile oturum açma desteği yok',
+  },
 };
 
 export default Object.freeze(quota_item);
