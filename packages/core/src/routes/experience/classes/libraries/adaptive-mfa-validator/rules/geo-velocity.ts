@@ -1,9 +1,9 @@
-import type { Optional } from '@silverhand/essentials';
+import { conditional, type Optional } from '@silverhand/essentials';
 
 import { adaptiveMfaGeoVelocityThresholdKmh, msPerHour } from '../constants.js';
 import type { AdaptiveMfaEvaluationState, TriggeredRuleByRule } from '../types.js';
 import { AdaptiveMfaRule } from '../types.js';
-import { haversineDistance, roundTo } from '../utils.js';
+import { haversineDistance, roundTo, toRecentRegionOrCountry } from '../utils.js';
 
 import { AdaptiveMfaRuleValidator } from './base-rule.js';
 
@@ -11,7 +11,7 @@ export class GeoVelocityRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.Ge
   async validate(
     state: AdaptiveMfaEvaluationState
   ): Promise<Optional<TriggeredRuleByRule<AdaptiveMfaRule.GeoVelocity>>> {
-    const { latitude, longitude, country, city } = state.context?.location ?? {};
+    const { latitude, longitude, regionOrCountry, city } = state.context?.location ?? {};
     if (typeof latitude !== 'number' || typeof longitude !== 'number') {
       return;
     }
@@ -41,18 +41,23 @@ export class GeoVelocityRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.Ge
       return;
     }
 
-    const recentCountries = await this.dependencies.getRecentCountries(state.user);
-    const previousCountry = recentCountries[0];
+    const recentRegionsOrCountries = await this.dependencies.getRecentRegionsOrCountries(
+      state.user
+    );
+    const previousRegionOrCountrySource = recentRegionsOrCountries[0];
+    const previousRegionOrCountry = conditional(
+      previousRegionOrCountrySource && toRecentRegionOrCountry(previousRegionOrCountrySource)
+    );
 
     return {
       rule: AdaptiveMfaRule.GeoVelocity,
       details: {
         previous: {
-          country: previousCountry,
+          regionOrCountry: previousRegionOrCountry,
           at: new Date(state.user.lastSignInAt).toISOString(),
         },
         current: {
-          country,
+          regionOrCountry,
           city,
           at: state.now.toISOString(),
         },

@@ -7,12 +7,12 @@ import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 
 import type { SignInExperienceValidator } from '../sign-in-experience-validator.js';
 
-import { adaptiveMfaNewCountryWindowDays } from './constants.js';
+import { adaptiveMfaRegionOrCountryWindowDays } from './constants.js';
 import { parseAdaptiveMfaContext } from './context.js';
 import type { AdaptiveMfaRuleValidator, RuleDependencies } from './rules/base-rule.js';
 import { GeoVelocityRule } from './rules/geo-velocity.js';
 import { LongInactivityRule } from './rules/long-inactivity.js';
-import { NewCountryRule } from './rules/new-country.js';
+import { NewRegionOrCountryRule } from './rules/new-region-or-country.js';
 import { UntrustedIpRule } from './rules/untrusted-ip.js';
 import type {
   AdaptiveMfaContext,
@@ -22,17 +22,17 @@ import type {
   AdaptiveMfaResult,
   AdaptiveMfaValidatorContext,
   AdaptiveMfaValidatorOptions,
-  RecentCountry,
+  RecentRegionOrCountrySource,
   TriggeredRule,
 } from './types.js';
 
-export { adaptiveMfaNewCountryWindowDays } from './constants.js';
+export { adaptiveMfaRegionOrCountryWindowDays } from './constants.js';
 
 export class AdaptiveMfaValidator {
   private readonly queries: Pick<Queries, 'userGeoLocations' | 'userSignInCountries'>;
   private readonly signInExperienceValidator: SignInExperienceValidator;
   private readonly ctx?: AdaptiveMfaValidatorContext;
-  private readonly recentCountriesCache = new Map<string, RecentCountry[]>();
+  private readonly recentRegionsOrCountriesCache = new Map<string, RecentRegionOrCountrySource[]>();
   private readonly ruleValidators: Array<AdaptiveMfaRuleValidator<AdaptiveMfaRule>>;
 
   private readonly userGeoLocationCache = new Map<string, Nullable<UserGeoLocation>>();
@@ -46,12 +46,12 @@ export class AdaptiveMfaValidator {
     this.ctx = ctx;
 
     const ruleDependencies: RuleDependencies = {
-      getRecentCountries: async (user: User) => this.getRecentCountries(user),
+      getRecentRegionsOrCountries: async (user: User) => this.getRecentRegionsOrCountries(user),
       getUserGeoLocation: async (user: User) => this.getUserGeoLocation(user),
     };
 
     this.ruleValidators = [
-      new NewCountryRule(ruleDependencies),
+      new NewRegionOrCountryRule(ruleDependencies),
       new GeoVelocityRule(ruleDependencies),
       new LongInactivityRule(ruleDependencies),
       new UntrustedIpRule(ruleDependencies),
@@ -123,18 +123,18 @@ export class AdaptiveMfaValidator {
       return;
     }
 
-    const { latitude, longitude, country } = location;
+    const { latitude, longitude, regionOrCountry } = location;
     const hasCoordinates = typeof latitude === 'number' && typeof longitude === 'number';
 
     const tasks = [
       ...(hasCoordinates
         ? [this.queries.userGeoLocations.upsertUserGeoLocation(user.id, latitude, longitude)]
         : []),
-      this.queries.userSignInCountries.upsertUserSignInCountry(user.id, country),
+      this.queries.userSignInCountries.upsertUserSignInCountry(user.id, regionOrCountry),
       trySafe(async () =>
         this.queries.userSignInCountries.pruneUserSignInCountriesByUserId(
           user.id,
-          adaptiveMfaNewCountryWindowDays
+          adaptiveMfaRegionOrCountryWindowDays
         )
       ),
     ];
@@ -171,18 +171,18 @@ export class AdaptiveMfaValidator {
     };
   }
 
-  private async getRecentCountries(user: User) {
-    if (this.recentCountriesCache.has(user.id)) {
-      return this.recentCountriesCache.get(user.id) ?? [];
+  private async getRecentRegionsOrCountries(user: User) {
+    if (this.recentRegionsOrCountriesCache.has(user.id)) {
+      return this.recentRegionsOrCountriesCache.get(user.id) ?? [];
     }
 
-    const recentCountries =
+    const recentRegionsOrCountries =
       await this.queries.userSignInCountries.findRecentSignInCountriesByUserId(
         user.id,
-        adaptiveMfaNewCountryWindowDays
+        adaptiveMfaRegionOrCountryWindowDays
       );
-    this.recentCountriesCache.set(user.id, recentCountries);
-    return recentCountries;
+    this.recentRegionsOrCountriesCache.set(user.id, recentRegionsOrCountries);
+    return recentRegionsOrCountries;
   }
 
   private async getUserGeoLocation(user: User) {
