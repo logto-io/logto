@@ -12,9 +12,10 @@ import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
 import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { validateTokenExchangeAccess } from '../../application.js';
 import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../../resource.js';
@@ -54,6 +55,42 @@ export const buildHandler: (
   envSet: EnvSet,
   queries: Queries
 ) => Parameters<Provider['registerGrantType']>['1'] = (envSet, queries) => async (ctx, next) => {
+  const shouldMeasure = EnvSet.values.isDevFeaturesEnabled;
+  const requestStartedAt = Date.now();
+  const timings: Record<string, number> = {};
+  const requestId =
+    'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
+
+  const writeLog = (payload: Record<string, unknown>) => {
+    if (!shouldMeasure) {
+      return;
+    }
+
+    getConsoleLogFromContext(ctx).info(
+      JSON.stringify({
+        requestId,
+        grantType: GrantType.TokenExchange,
+        ...payload,
+      })
+    );
+  };
+
+  const measure = async <T>(step: string, callback: () => Promise<T>): Promise<T> => {
+    if (!shouldMeasure) {
+      return callback();
+    }
+
+    const stepStartedAt = Date.now();
+
+    try {
+      return await callback();
+    } finally {
+      timings[step] = Date.now() - stepStartedAt;
+    }
+  };
+
+  writeLog({ event: 'oidc.token_exchange_request', status: 'start' });
+
   const { client, params, requestParamScopes, provider } = ctx.oidc;
   const { Account, AccessToken, Grant } = provider;
 
@@ -61,7 +98,9 @@ export const buildHandler: (
   assertThat(client, new InvalidClient('client must be available'));
 
   // Validate the application is allowed to perform token exchange
-  const tokenExchangeError = await validateTokenExchangeAccess(queries, client.clientId);
+  const tokenExchangeError = await measure('validateTokenExchangeAccessMs', async () =>
+    validateTokenExchangeAccess(queries, client.clientId)
+  );
   assertThat(!tokenExchangeError, new InvalidClient(tokenExchangeError));
 
   validatePresence(ctx, ...requiredParameters);
@@ -72,18 +111,20 @@ export const buildHandler: (
     scopes: oidcScopes,
   } = providerInstance.configuration();
 
-  const { userId, subjectTokenId } = await validateSubjectToken({
-    queries,
-    subjectToken: String(params.subject_token),
-    subjectTokenType: String(params.subject_token_type),
-    AccessToken,
-    jwtVerificationOptions: {
-      localJWKSet: envSet.oidc.localJWKSet,
-      issuer: envSet.oidc.issuer,
-    },
-  });
+  const { userId, subjectTokenId } = await measure('validateSubjectTokenMs', async () =>
+    validateSubjectToken({
+      queries,
+      subjectToken: String(params.subject_token),
+      subjectTokenType: String(params.subject_token_type),
+      AccessToken,
+      jwtVerificationOptions: {
+        localJWKSet: envSet.oidc.localJWKSet,
+        issuer: envSet.oidc.issuer,
+      },
+    })
+  );
 
-  const account = await Account.findAccount(ctx, userId);
+  const account = await measure('findAccountMs', async () => Account.findAccount(ctx, userId));
 
   if (!account) {
     throw new InvalidGrant('subject token invalid (referenced account not found)');
@@ -96,14 +137,18 @@ export const buildHandler: (
     clientId: client.clientId,
   });
 
-  const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
+  const { organizationId } = await measure('checkOrganizationAccessMs', async () =>
+    checkOrganizationAccess(ctx, queries, account)
+  );
+
+  const grantId = await measure('grantSaveInitialMs', async () => grant.save());
 
   const accessToken = new AccessToken({
     accountId: account.accountId,
     clientId: client.clientId,
     gty: GrantType.TokenExchange,
     client,
-    grantId: await grant.save(),
+    grantId,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     scope: undefined!,
     extra: {
@@ -111,30 +156,34 @@ export const buildHandler: (
     },
   });
 
-  await handleDPoP(ctx, accessToken);
-  await handleClientCertificate(ctx, accessToken);
+  await measure('handleDpopMs', async () => handleDPoP(ctx, accessToken));
+  await measure('handleClientCertificateMs', async () => handleClientCertificate(ctx, accessToken));
 
   /** The scopes requested by the client. If not provided, use the scopes from the refresh token. */
   const scope = requestParamScopes;
-  const resource = await resolveResource(
-    ctx,
-    {
-      // We don't restrict the resource indicators to the requested resource,
-      // because the subject token does not have a resource indicator.
-      // Use the params.resource to bypass the resource indicator check.
-      resourceIndicators: new Set([params.resource]),
-    },
-    { userinfo, resourceIndicators },
-    scope
+  const resource = await measure('resolveResourceMs', async () =>
+    resolveResource(
+      ctx,
+      {
+        // We don't restrict the resource indicators to the requested resource,
+        // because the subject token does not have a resource indicator.
+        // Use the params.resource to bypass the resource indicator check.
+        resourceIndicators: new Set([params.resource]),
+      },
+      { userinfo, resourceIndicators },
+      scope
+    )
   );
 
   if (organizationId && !resource) {
     /* === RFC 0001 === */
     const audience = buildOrganizationUrn(organizationId);
     /** All available scopes for the user in the organization. */
-    const availableScopes = await queries.organizations.relations.usersRoles
-      .getUserScopes(organizationId, account.accountId)
-      .then((scopes) => scopes.map(({ name }) => name));
+    const availableScopes = await measure('getOrganizationUserScopesMs', async () =>
+      queries.organizations.relations.usersRoles
+        .getUserScopes(organizationId, account.accountId)
+        .then((scopes) => scopes.map(({ name }) => name))
+    );
 
     /** The intersection of the available scopes and the requested scopes. */
     const issuedScopes = availableScopes.filter((name) => scope.has(name)).join(' ');
@@ -154,10 +203,8 @@ export const buildHandler: (
     grant.addResourceScope(audience, accessToken.scope);
     /* === End RFC 0001 === */
   } else if (resource) {
-    const resourceServerInfo = await resourceIndicators.getResourceServerInfo(
-      ctx,
-      resource,
-      client
+    const resourceServerInfo = await measure('getResourceServerInfoMs', async () =>
+      resourceIndicators.getResourceServerInfo(ctx, resource, client)
     );
     // @ts-expect-error -- code from oidc-provider
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -183,11 +230,11 @@ export const buildHandler: (
   }
 
   // Handle the actor token
-  const { actorId } = await handleActorToken(ctx);
+  const { actorId } = await measure('handleActorTokenMs', async () => handleActorToken(ctx));
   if (actorId) {
+    // @see https://github.com/panva/node-oidc-provider/blob/main/lib/models/formats/jwt.js#L118
     // The JWT generator in node-oidc-provider only recognizes a fixed list of claims,
     // to add other claims to JWT, the only way is to return them in `extraTokenClaims` function.
-    // @see https://github.com/panva/node-oidc-provider/blob/main/lib/models/formats/jwt.js#L118
     // We save the `act` data in the `extra` field temporarily,
     // so that we can get this context it in the `extraTokenClaims` function and add it to the JWT.
     accessToken.extra = {
@@ -196,15 +243,17 @@ export const buildHandler: (
     };
   }
 
-  await grant.save();
+  await measure('grantSaveFinalMs', async () => grant.save());
   ctx.oidc.entity('Grant', grant);
   ctx.oidc.entity('AccessToken', accessToken);
-  const accessTokenString = await accessToken.save();
+  const accessTokenString = await measure('accessTokenSaveMs', async () => accessToken.save());
 
   if (subjectTokenId) {
-    await queries.subjectTokens.updateSubjectTokenById(subjectTokenId, {
-      consumedAt: Date.now(),
-    });
+    await measure('consumeSubjectTokenMs', async () =>
+      queries.subjectTokens.updateSubjectTokenById(subjectTokenId, {
+        consumedAt: Date.now(),
+      })
+    );
   }
 
   ctx.body = {
@@ -214,6 +263,13 @@ export const buildHandler: (
     token_type: accessToken.tokenType,
   };
 
-  await next();
+  await measure('nextMiddlewareMs', next);
+
+  writeLog({
+    event: 'oidc.token_exchange_timing',
+    status: 'finished',
+    totalMs: Date.now() - requestStartedAt,
+    timings,
+  });
 };
 /* eslint-enable @silverhand/fp/no-mutation, @typescript-eslint/no-unsafe-assignment */
