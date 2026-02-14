@@ -99,11 +99,6 @@ export default class ExperienceInteraction {
 
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
     this.provisionLibrary = new ProvisionLibrary(tenant, ctx);
-    this.adaptiveMfaValidator = new AdaptiveMfaValidator({
-      ctx,
-      queries,
-      signInExperienceValidator: this.signInExperienceValidator,
-    });
 
     const interactionContext: InteractionContext = {
       getInteractionEvent: () => this.#interactionEvent,
@@ -113,6 +108,13 @@ export default class ExperienceInteraction {
       getVerificationRecordById: (verificationId) => this.getVerificationRecordById(verificationId),
       getCurrentProfile: () => this.profile.data,
     };
+
+    this.adaptiveMfaValidator = new AdaptiveMfaValidator({
+      ctx,
+      queries,
+      interactionContext,
+      signInExperienceValidator: this.signInExperienceValidator,
+    });
 
     if (typeof interactionData === 'string') {
       this.#interactionEvent = interactionData;
@@ -359,7 +361,7 @@ export default class ExperienceInteraction {
 
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult();
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
     if (adaptiveMfaResult) {
@@ -532,7 +534,7 @@ export default class ExperienceInteraction {
       // Passkey sign-in (`SignInWebAuthn`) is already treated as MFA-fulfilled at verification stage.
       // Keep adaptive MFA binding enforcement aligned with that behavior to avoid blocking this sign-in path.
       if (this.#interactionEvent === InteractionEvent.SignIn && !this.hasVerifiedSignInWebAuthn) {
-        const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
+        const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult();
         await this.mfa.assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult);
       }
 
