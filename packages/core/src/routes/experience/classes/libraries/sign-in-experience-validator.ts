@@ -171,14 +171,18 @@ export class SignInExperienceValidator {
     return mfa;
   }
 
-  public async getAvailableMfaFactorsForBinding() {
+  public async getEnabledMfaFactorsForBinding() {
     const { mfa, passkeySignIn } = await this.getSignInExperienceData();
 
-    return sortMfaFactors(
-      [...new Set([...mfa.factors, ...(passkeySignIn.enabled ? [MfaFactor.WebAuthn] : [])])].filter(
-        (factor) => factor !== MfaFactor.BackupCode
-      )
-    );
+    return sortMfaFactors([
+      ...new Set([...mfa.factors, ...(passkeySignIn.enabled ? [MfaFactor.WebAuthn] : [])]),
+    ]);
+  }
+
+  public async getAvailableMfaFactorsForBinding() {
+    const enabledFactors = await this.getEnabledMfaFactorsForBinding();
+
+    return enabledFactors.filter((factor) => factor !== MfaFactor.BackupCode);
   }
 
   public async getPasswordPolicy() {

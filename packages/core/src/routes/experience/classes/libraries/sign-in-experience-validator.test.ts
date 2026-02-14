@@ -231,6 +231,39 @@ describe('SignInExperienceValidator', () => {
     });
   });
 
+  describe('getEnabledMfaFactorsForBinding', () => {
+    it('includes backup code and passkey-backed WebAuthn for factor validation', async () => {
+      signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: {
+          ...mockSignInExperience.mfa,
+          factors: [
+            MfaFactor.EmailVerificationCode,
+            MfaFactor.BackupCode,
+            MfaFactor.TOTP,
+            MfaFactor.WebAuthn,
+          ],
+        },
+        passkeySignIn: {
+          ...mockSignInExperience.passkeySignIn,
+          enabled: true,
+        },
+      });
+
+      const signInExperienceValidator = new SignInExperienceValidator(
+        mockTenant.libraries,
+        mockTenant.queries
+      );
+
+      await expect(signInExperienceValidator.getEnabledMfaFactorsForBinding()).resolves.toEqual([
+        MfaFactor.WebAuthn,
+        MfaFactor.TOTP,
+        MfaFactor.EmailVerificationCode,
+        MfaFactor.BackupCode,
+      ]);
+    });
+  });
+
   describe('verifyIdentificationMethod (SignIn)', () => {
     const signInVerificationTestCases: Record<
       string,

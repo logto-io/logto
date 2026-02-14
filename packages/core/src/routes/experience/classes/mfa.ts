@@ -562,8 +562,7 @@ export class Mfa {
   }
 
   private async checkMfaFactorsEnabledInSignInExperience(newBindMfaFactors: MfaFactor[]) {
-    const availableFactors =
-      await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
+    const availableFactors = await this.signInExperienceValidator.getEnabledMfaFactorsForBinding();
 
     const isFactorsEnabled = newBindMfaFactors.every((newBindFactor) =>
       availableFactors.includes(newBindFactor)
