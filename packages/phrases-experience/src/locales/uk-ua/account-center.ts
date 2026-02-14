@@ -60,13 +60,11 @@ const account_center = {
     description: 'Створіть новий пароль, щоб захистити свій обліковий запис.',
     success: 'Пароль успішно оновлено.',
   },
-
   code_verification: {
     send: 'Надіслати код підтвердження',
     resend: 'Ще не отримали? <a>Надіслати код підтвердження ще раз</a>',
     resend_countdown: 'Ще не отримали? Повторна відправка через {{seconds}} с.',
   },
-
   email_verification: {
     title: 'Підтвердьте свою електронну пошту',
     prepare_description:
@@ -128,14 +126,9 @@ const account_center = {
       title: "Ім'я користувача змінено!",
       description: "Ваше ім'я користувача успішно оновлено.",
     },
-
     password: {
       title: 'Пароль змінено!',
       description: 'Ваш пароль успішно оновлено.',
-    },
-    social: {
-      title: "Соціальний акаунт під'єднано!",
-      description: "Ваш соціальний акаунт успішно під'єднано.",
     },
     totp: {
       title: 'Додаток для автентифікації додано!',
@@ -148,6 +141,10 @@ const account_center = {
     passkey: {
       title: 'Passkey додано!',
       description: "Ваш passkey успішно під'єднано до вашого облікового запису.",
+    },
+    social: {
+      title: "Соціальний акаунт під'єднано!",
+      description: "Ваш соціальний акаунт успішно під'єднано.",
     },
   },
   backup_code: {

@@ -57,13 +57,11 @@ const account_center = {
     description: '建立新密碼以保障您的帳戶安全。',
     success: '密碼已成功更新。',
   },
-
   code_verification: {
     send: '傳送驗證碼',
     resend: '尚未收到？<a>重新傳送驗證碼</a>',
     resend_countdown: '尚未收到？{{seconds}} 秒後可重新傳送。',
   },
-
   email_verification: {
     title: '驗證您的電子郵件',
     prepare_description: '為保護帳戶安全，請確認是您本人。傳送驗證碼到您的電子郵件。',
@@ -116,7 +114,6 @@ const account_center = {
       title: '使用者名稱已更新！',
       description: '您的帳戶使用者名稱已成功變更。',
     },
-
     password: {
       title: '密碼已更新！',
       description: '您的帳戶密碼已成功變更。',
