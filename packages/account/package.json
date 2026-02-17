@@ -32,7 +32,7 @@
     "@silverhand/ts-config": "6.0.0",
     "@silverhand/ts-config-react": "6.0.0",
     "@simplewebauthn/browser": "^10.0.0",
-    "@simplewebauthn/types": "^10.0.0",
+    "@simplewebauthn/types": "^12.0.0",
     "@types/color": "^4.2.0",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.3.3",
