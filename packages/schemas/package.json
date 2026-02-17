@@ -41,7 +41,7 @@
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/essentials": "^2.9.1",
-    "@silverhand/slonik": "31.0.0-beta.2",
+    "@silverhand/slonik": "31.0.0-beta.3",
     "@silverhand/ts-config": "6.0.0",
     "@types/inquirer": "^9.0.0",
     "@types/node": "^22.14.0",
