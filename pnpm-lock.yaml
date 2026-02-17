@@ -357,8 +357,8 @@ importers:
         specifier: ^17.6.0
         version: 17.7.2
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -389,7 +389,7 @@ importers:
         version: 3.1.1(vitest@3.1.1(@types/debug@4.1.12)(@types/node@22.14.1)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       '@withtyped/server':
         specifier: ^0.14.0
-        version: 0.14.0(zod@3.24.3)
+        version: 0.14.0(zod@3.25.76)
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -430,8 +430,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
@@ -497,8 +497,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
@@ -558,8 +558,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -616,8 +616,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -677,8 +677,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -741,8 +741,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -805,8 +805,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -866,8 +866,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -930,8 +930,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@shopify/jest-koa-mocks':
         specifier: ^5.0.0
@@ -991,8 +991,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1049,8 +1049,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1107,8 +1107,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1165,8 +1165,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1226,8 +1226,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1296,8 +1296,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1357,8 +1357,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1412,8 +1412,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1467,8 +1467,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1519,8 +1519,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1577,8 +1577,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1635,8 +1635,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1696,8 +1696,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1757,8 +1757,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1815,12 +1815,12 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@logto/cloud':
         specifier: 0.2.5-cbf0233
-        version: 0.2.5-cbf0233(zod@3.24.3)
+        version: 0.2.5-cbf0233(zod@3.25.76)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
@@ -1876,8 +1876,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1934,8 +1934,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -1992,8 +1992,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2050,8 +2050,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2108,8 +2108,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2166,8 +2166,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2224,8 +2224,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2291,8 +2291,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2361,8 +2361,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2419,8 +2419,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2474,8 +2474,8 @@ importers:
         specifier: ^4.0.5
         version: 4.0.5
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2532,8 +2532,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2596,8 +2596,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2654,8 +2654,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2715,8 +2715,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2773,8 +2773,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2834,8 +2834,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2895,8 +2895,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -2953,8 +2953,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3011,8 +3011,8 @@ importers:
         specifier: ^3.19.0
         version: 3.19.0
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3066,8 +3066,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3124,8 +3124,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3182,8 +3182,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3243,8 +3243,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3298,8 +3298,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3353,8 +3353,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -3403,13 +3403,13 @@ importers:
         version: 5.0.0
       '@inkeep/cxkit-react':
         specifier: ^0.5.66
-        version: 0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.24.3)
+        version: 0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.25.76)
       '@jest/types':
         specifier: ^29.5.0
         version: 29.6.3
       '@logto/cloud':
         specifier: 0.2.5-cbf0233
-        version: 0.2.5-cbf0233(zod@3.24.3)
+        version: 0.2.5-cbf0233(zod@3.25.76)
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../toolkit/connector-kit
@@ -3505,7 +3505,7 @@ importers:
         version: 4.3.1(vite@6.4.1(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       '@withtyped/client':
         specifier: ^0.8.8
-        version: 0.8.8(zod@3.24.3)
+        version: 0.8.8(zod@3.25.76)
       classnames:
         specifier: ^2.3.1
         version: 2.3.1
@@ -3699,11 +3699,11 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(rollup@4.40.1)(typescript@5.5.3)(vite@6.4.1(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
       zod-to-ts:
         specifier: ^1.2.0
-        version: 1.2.0(typescript@5.5.3)(zod@3.24.3)
+        version: 1.2.0(typescript@5.5.3)(zod@3.25.76)
 
   packages/core:
     dependencies:
@@ -3775,7 +3775,7 @@ importers:
         version: 10.0.0
       '@withtyped/client':
         specifier: ^0.8.8
-        version: 0.8.8(zod@3.24.3)
+        version: 0.8.8(zod@3.25.76)
       camelcase:
         specifier: ^8.0.0
         version: 8.0.0
@@ -3930,12 +3930,12 @@ importers:
         specifier: ^2.0.3
         version: 2.0.3
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@logto/cloud':
         specifier: 0.2.5-cbf0233
-        version: 0.2.5-cbf0233(zod@3.24.3)
+        version: 0.2.5-cbf0233(zod@3.25.76)
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
@@ -4138,8 +4138,8 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1(vite@6.4.1(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5))
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
 
   packages/elements:
     dependencies:
@@ -4527,8 +4527,8 @@ importers:
         specifier: ^5.5.3
         version: 5.5.3
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
 
   packages/phrases:
     dependencies:
@@ -4539,8 +4539,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.2
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4573,8 +4573,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.2
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4617,13 +4617,13 @@ importers:
         version: link:../shared
       '@withtyped/server':
         specifier: ^0.14.0
-        version: 0.14.0(zod@3.24.3)
+        version: 0.14.0(zod@3.25.76)
       nanoid:
         specifier: ^5.0.9
         version: 5.0.9
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4736,10 +4736,10 @@ importers:
         version: 2.9.2
       '@withtyped/client':
         specifier: ^0.8.8
-        version: 0.8.8(zod@3.24.3)
+        version: 0.8.8(zod@3.25.76)
       '@withtyped/server':
         specifier: ^0.14.0
-        version: 0.14.0(zod@3.24.3)
+        version: 0.14.0(zod@3.25.76)
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4776,8 +4776,8 @@ importers:
         version: 3.1.1(@types/debug@4.1.12)(@types/node@22.14.1)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     optionalDependencies:
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
 
   packages/toolkit/core-kit:
     dependencies:
@@ -4841,8 +4841,8 @@ importers:
         version: 3.1.1(@types/debug@4.1.12)(@types/node@22.14.1)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     optionalDependencies:
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
 
   packages/toolkit/language-kit:
     devDependencies:
@@ -4875,8 +4875,8 @@ importers:
         version: 3.1.1(@types/debug@4.1.12)(@types/node@22.14.1)(jiti@1.21.0)(jsdom@26.0.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.4.5)
     optionalDependencies:
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
 
   packages/translate:
     dependencies:
@@ -4926,8 +4926,8 @@ importers:
         specifier: ^17.6.0
         version: 17.7.2
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -4993,8 +4993,8 @@ importers:
         specifier: ^17.6.0
         version: 17.7.2
       zod:
-        specifier: 3.24.3
-        version: 3.24.3
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@silverhand/eslint-config':
         specifier: 6.0.1
@@ -6351,12 +6351,15 @@ packages:
 
   '@otplib/plugin-crypto@12.0.1':
     resolution: {integrity: sha512-qPuhN3QrT7ZZLcLCyKOSNhuijUi9G5guMRVrxq63r9YNOxxQjPm59gVxLM+7xGnHnM6cimY57tuKsjK7y9LM1g==}
+    deprecated: Please upgrade to v13 of otplib. Refer to otplib docs for migration paths
 
   '@otplib/plugin-thirty-two@12.0.1':
     resolution: {integrity: sha512-MtT+uqRso909UkbrrYpJ6XFjj9D+x2Py7KjTO9JDPhL0bJUYVu5kFP4TFZW4NFAywrAtFRxOVY261u0qwb93gA==}
+    deprecated: Please upgrade to v13 of otplib. Refer to otplib docs for migration paths
 
   '@otplib/preset-default@12.0.1':
     resolution: {integrity: sha512-xf1v9oOJRyXfluBhMdpOkr+bsE+Irt+0D5uHtvg6x1eosfmHCsCC6ej/m7FXiWqdo0+ZUI6xSKDhJwc8yfiOPQ==}
+    deprecated: Please upgrade to v13 of otplib. Refer to otplib docs for migration paths
 
   '@otplib/preset-v11@12.0.1':
     resolution: {integrity: sha512-9hSetMI7ECqbFiKICrNa4w70deTUfArtwXykPUvSHWOdzOlfa9ajglu7mNCntlvxycTiOAXkQGwjQCzzDEMRMg==}
@@ -10696,11 +10699,12 @@ packages:
 
   glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-directory@4.0.1:
     resolution: {integrity: sha512-wHTUcDUoZ1H5/0iVqEudYW4/kAlN5cZ3j/bXn0Dpbizl9iaUVeWSHqiOjsgk6OW2bkLclbBjzewBz6weQ1zA2Q==}
@@ -14515,6 +14519,7 @@ packages:
   tar@7.5.7:
     resolution: {integrity: sha512-fov56fJiRuThVFXD6o6/Q354S7pnWMJIVlDBYijsTNx6jKSE4pvrDTs6lUnmGvNyfJwFQQwWy3owKz1ucIhveQ==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   teeny-request@9.0.0:
     resolution: {integrity: sha512-resvxdc6Mgb7YEThw6G6bExlXKkv6+YbuzGg9xuXxSgxJF7Ozs+o8Y9+2R3sArdWdW8nOokoQb1yrpFB0pQK2g==}
@@ -15401,8 +15406,8 @@ packages:
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
-  zod@3.24.3:
-    resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zwitch@2.0.2:
     resolution: {integrity: sha512-JZxotl7SxAJH0j7dN4pxsTV6ZLXoLdGME+PsjkL/DaBrVryK9kTGq06GfKrwcSOqypP+fdXGoCHE36b99fWVoA==}
@@ -17005,7 +17010,7 @@ snapshots:
 
   '@inkeep/cxkit-color-mode@0.5.66': {}
 
-  '@inkeep/cxkit-primitives@0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.24.3)':
+  '@inkeep/cxkit-primitives@0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.25.76)':
     dependencies:
       '@inkeep/cxkit-color-mode': 0.5.66
       '@inkeep/cxkit-theme': 0.5.66
@@ -17037,7 +17042,7 @@ snapshots:
       dequal: 2.0.3
       humps: 2.0.1
       merge-anything: 5.1.7
-      openai: 4.78.1(zod@3.24.3)
+      openai: 4.78.1(zod@3.25.76)
       prism-react-renderer: 2.4.1(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -17058,9 +17063,9 @@ snapshots:
       - supports-color
       - zod
 
-  '@inkeep/cxkit-react@0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.24.3)':
+  '@inkeep/cxkit-react@0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.25.76)':
     dependencies:
-      '@inkeep/cxkit-styled': 0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.24.3)
+      '@inkeep/cxkit-styled': 0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.25.76)
       '@radix-ui/react-use-controllable-state': 1.1.1(@types/react@18.3.3)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
@@ -17071,9 +17076,9 @@ snapshots:
       - supports-color
       - zod
 
-  '@inkeep/cxkit-styled@0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.24.3)':
+  '@inkeep/cxkit-styled@0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.25.76)':
     dependencies:
-      '@inkeep/cxkit-primitives': 0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.24.3)
+      '@inkeep/cxkit-primitives': 0.5.66(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.25.76)
       class-variance-authority: 0.7.1
       clsx: 2.1.1
       merge-anything: 5.1.7
@@ -17375,10 +17380,10 @@ snapshots:
       camelcase-keys: 9.1.3
       jose: 5.9.6
 
-  '@logto/cloud@0.2.5-cbf0233(zod@3.24.3)':
+  '@logto/cloud@0.2.5-cbf0233(zod@3.25.76)':
     dependencies:
       '@silverhand/essentials': 2.9.2
-      '@withtyped/server': 0.14.0(zod@3.24.3)
+      '@withtyped/server': 0.14.0(zod@3.25.76)
     transitivePeerDependencies:
       - zod
 
@@ -18508,7 +18513,7 @@ snapshots:
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0)
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.5.3)
@@ -20266,19 +20271,19 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@withtyped/client@0.8.8(zod@3.24.3)':
+  '@withtyped/client@0.8.8(zod@3.25.76)':
     dependencies:
-      '@withtyped/server': 0.14.0(zod@3.24.3)
+      '@withtyped/server': 0.14.0(zod@3.25.76)
       '@withtyped/shared': 0.2.2
     transitivePeerDependencies:
       - zod
 
-  '@withtyped/server@0.14.0(zod@3.24.3)':
+  '@withtyped/server@0.14.0(zod@3.25.76)':
     dependencies:
       '@silverhand/essentials': 2.9.2
       '@withtyped/shared': 0.2.2
       nanoid: 5.0.9
-      zod: 3.24.3
+      zod: 3.25.76
 
   '@withtyped/shared@0.2.2': {}
 
@@ -20962,7 +20967,7 @@ snapshots:
     dependencies:
       devtools-protocol: 0.0.1425554
       mitt: 3.0.1
-      zod: 3.24.3
+      zod: 3.25.76
 
   ci-info@3.8.0: {}
 
@@ -22038,7 +22043,7 @@ snapshots:
       enhanced-resolve: 5.16.0
       eslint: 8.57.0
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -22106,7 +22111,7 @@ snapshots:
       eslint: 8.57.0
       ignore: 5.3.1
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0))(eslint@8.57.0))(eslint@8.57.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0)(typescript@5.5.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -24300,7 +24305,7 @@ snapshots:
       '@types/koa': 2.15.0
       co-body: 6.1.0
       formidable: 3.5.4
-      zod: 3.24.3
+      zod: 3.25.76
 
   koa-compose@4.1.0: {}
 
@@ -25769,7 +25774,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@4.78.1(zod@3.24.3):
+  openai@4.78.1(zod@3.25.76):
     dependencies:
       '@types/node': 18.19.86
       '@types/node-fetch': 2.6.12
@@ -25779,7 +25784,7 @@ snapshots:
       formdata-node: 4.4.1
       node-fetch: 2.7.0
     optionalDependencies:
-      zod: 3.24.3
+      zod: 3.25.76
     transitivePeerDependencies:
       - encoding
 
@@ -28583,13 +28588,13 @@ snapshots:
 
   yocto-queue@1.1.1: {}
 
-  zod-to-ts@1.2.0(typescript@5.5.3)(zod@3.24.3):
+  zod-to-ts@1.2.0(typescript@5.5.3)(zod@3.25.76):
     dependencies:
       typescript: 5.5.3
-      zod: 3.24.3
+      zod: 3.25.76
 
   zod@3.23.8: {}
 
-  zod@3.24.3: {}
+  zod@3.25.76: {}
 
   zwitch@2.0.2: {}
