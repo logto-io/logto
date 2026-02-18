@@ -13,10 +13,9 @@
     text-align: center;
     font: var(--font-label-1);
     color: var(--color-type-primary);
-    caret-color: var(--color-brand-default);
 
     &:focus {
-      border: _.border(var(--color-brand-default));
+      border: _.border(var(--zerve-input-focus-border-color));
       outline: none;
     }
 
@@ -38,8 +37,7 @@
       outline: 3px solid transparent;
 
       &:focus {
-        border: _.border(var(--color-brand-default));
-        outline-color: var(--color-overlay-brand-focused);
+        border: _.border(var(--zerve-input-focus-border-color));
       }
     }
   }

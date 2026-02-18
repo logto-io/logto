@@ -21,7 +21,6 @@
       padding: 0 _.unit(4);
       flex: 1;
       background: inherit;
-      caret-color: var(--color-brand-default);
       font: var(--font-body-1);
       color: var(--color-type-primary);
       outline: none;
@@ -95,15 +94,6 @@
     .inputField {
       input::placeholder {
         opacity: 100%;
-      }
-    }
-  }
-
-  &.danger {
-    .inputField {
-      /* stylelint-disable-next-line no-descending-specificity */
-      input {
-        caret-color: var(--color-danger-default);
       }
     }
   }

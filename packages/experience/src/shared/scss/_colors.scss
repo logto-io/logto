@@ -228,3 +228,12 @@
   --color-overlay-brand-pressed: rgba(202, 190, 255, 12%); // 12% --color-brand-40
   --color-overlay-brand-focused: rgba(202, 190, 255, 16%); // 16% --color-brand-40
 }
+
+@mixin zerve {
+  --color-neutral-100: #18181b;
+  --color-surface-3: #27272b;
+  --color-shadow-2: 0 0 0 1px #333336;
+  --color-danger-default: #f04438;
+  --zerve-primary-button-text-color: #0d0d11;
+  --zerve-input-focus-border-color: #fff;
+}

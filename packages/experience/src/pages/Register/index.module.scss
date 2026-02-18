@@ -7,9 +7,9 @@
 }
 
 .terms {
-  margin-bottom: _.unit(4);
-  text-align: center;
+  margin-top: _.unit(4);
   @include _.text-hint;
+  text-align: center;
   font: var(--font-body-3);
 }
 

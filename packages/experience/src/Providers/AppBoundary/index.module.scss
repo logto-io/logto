@@ -9,6 +9,11 @@ body {
   &.dark {
     @include colors.dark;
   }
+
+  // overrides other themes
+  &.zerve {
+    @include colors.zerve;
+  }
 }
 
 /* Preview Settings */

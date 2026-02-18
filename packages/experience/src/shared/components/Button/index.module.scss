@@ -52,7 +52,7 @@
 .primary {
   border: none;
   background: var(--color-brand-default);
-  color: var(--color-static-white);
+  color: var(--zerve-primary-button-text-color);
 
   &.disabled:not(.loading),
   &:disabled:not(.loading) {

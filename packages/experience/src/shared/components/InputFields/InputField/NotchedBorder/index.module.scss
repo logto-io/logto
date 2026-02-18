@@ -79,11 +79,11 @@
 
   &.focused {
     .border {
-      border-color: var(--color-brand-default);
+      border-color: var(--zerve-input-focus-border-color);
     }
 
     .label {
-      color: var(--color-brand-default);
+      color: var(--zerve-input-focus-border-color);
     }
   }
 }
@@ -121,10 +121,12 @@
       }
     }
 
-    &.focused {
-      .outline {
-        display: block;
-      }
-    }
+    // Zerve: no outline
+
+    // &.focused {
+    //   .outline {
+    //     display: block;
+    //   }
+    // }
   }
 }
