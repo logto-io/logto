@@ -69,6 +69,7 @@ type SendCodeParams = {
   interactionEvent?: InteractionEvent;
   createVerificationRecord: () => CodeVerificationRecord;
   libraries: Libraries;
+  queries: Queries;
   ctx: ExperienceInteractionRouterContext;
 };
 
@@ -81,6 +82,7 @@ export const sendCode = async ({
   interactionEvent,
   createVerificationRecord,
   libraries,
+  queries,
   ctx,
 }: SendCodeParams): Promise<{ verificationId: string }> => {
   const { experienceInteraction } = ctx;
@@ -93,6 +95,18 @@ export const sendCode = async ({
       ...(interactionEvent && { interactionEvent }),
     },
   });
+
+  const userExists = await (async () => {
+    if (interactionEvent !== InteractionEvent.ForgotPassword) {
+      return true;
+    }
+
+    if (identifier.type === SignInIdentifier.Email) {
+      return queries.users.hasUserWithEmail(identifier.value);
+    }
+
+    return queries.users.hasUserWithNormalizedPhone(identifier.value);
+  })();
 
   const codeVerification = createVerificationRecord();
 
@@ -111,11 +125,15 @@ export const sendCode = async ({
     identifier
   );
 
-  // Send verification code
-  await codeVerification.sendVerificationCode({
-    ...ctx.emailI18n,
-    ...templateContext,
-  });
+  // Send verification code only if user exists (or it's not a forgot password flow)
+  if (userExists) {
+    await codeVerification.sendVerificationCode({
+      ...ctx.emailI18n,
+      ...templateContext,
+    });
+  } else {
+    log.append({ userExists: false });
+  }
 
   // Save state
   experienceInteraction.setVerificationRecord(codeVerification);
