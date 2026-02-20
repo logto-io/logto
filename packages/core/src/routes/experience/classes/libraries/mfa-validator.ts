@@ -112,10 +112,8 @@ export class MfaValidator {
     const hasUserFactors = this.userEnabledMfaVerifications.length > 0;
 
     if (this.adaptiveMfaResult !== undefined) {
-      // TODO: When adaptive MFA triggers (requiresMfa === true) but the user has no MFA factors
-      // enabled, we should still enforce MFA. Currently we return false and skip MFA in this case,
-      // which means the risk signal is silently ignored. Once the product decision is finalized,
-      // add handling here (e.g. prompt the user to set up MFA before proceeding).
+      // Verification guard only applies when the user already has MFA factors.
+      // If adaptive MFA requires MFA but no factors are available, submit flow will enforce binding.
       return this.adaptiveMfaResult.requiresMfa && hasUserFactors;
     }
 

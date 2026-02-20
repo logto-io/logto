@@ -40,6 +40,10 @@ const createSignInExperienceValidator = (enabled = true) =>
     }),
   }) as unknown as SignInExperienceValidator;
 
+const createInteractionContext = (user: User) => ({
+  getIdentifiedUser: jest.fn().mockResolvedValue(user),
+});
+
 describe('AdaptiveMfaValidator', () => {
   beforeEach(() => {
     setDevFeaturesEnabled(true);
@@ -66,10 +70,11 @@ describe('AdaptiveMfaValidator', () => {
 
     const validator = new AdaptiveMfaValidator({
       queries,
+      interactionContext: createInteractionContext(user),
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-    const result = await validator.getResult(user, {
+    const result = await validator.getResult({
       now,
       currentContext: { location: { country: 'FR' } },
     });
@@ -93,10 +98,11 @@ describe('AdaptiveMfaValidator', () => {
 
     const validator = new AdaptiveMfaValidator({
       queries,
+      interactionContext: createInteractionContext(user),
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-    const result = await validator.getResult(user, {
+    const result = await validator.getResult({
       now,
       currentContext: {
         location: {
@@ -124,10 +130,11 @@ describe('AdaptiveMfaValidator', () => {
 
     const validator = new AdaptiveMfaValidator({
       queries,
+      interactionContext: createInteractionContext(user),
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-    const result = await validator.getResult(user, {
+    const result = await validator.getResult({
       now,
       currentContext: {},
     });
@@ -148,10 +155,11 @@ describe('AdaptiveMfaValidator', () => {
 
     const validator = new AdaptiveMfaValidator({
       queries,
+      interactionContext: createInteractionContext(user),
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
-    const result = await validator.getResult(user, {
+    const result = await validator.getResult({
       now,
       currentContext: {
         ipRiskSignals: {
@@ -185,6 +193,7 @@ describe('AdaptiveMfaValidator', () => {
     const validator = new AdaptiveMfaValidator({
       queries,
       ctx,
+      interactionContext: createInteractionContext(user),
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
@@ -220,6 +229,7 @@ describe('AdaptiveMfaValidator', () => {
     const validator = new AdaptiveMfaValidator({
       queries,
       ctx,
+      interactionContext: createInteractionContext(user),
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
@@ -249,6 +259,7 @@ describe('AdaptiveMfaValidator', () => {
       const validator = new AdaptiveMfaValidator({
         queries,
         ctx,
+        interactionContext: createInteractionContext(mockUser),
         signInExperienceValidator: createSignInExperienceValidator(),
       });
 
@@ -279,6 +290,7 @@ describe('AdaptiveMfaValidator', () => {
     const validator = new AdaptiveMfaValidator({
       queries,
       ctx,
+      interactionContext: createInteractionContext(user),
       signInExperienceValidator: createSignInExperienceValidator(false),
     });
 
@@ -317,6 +329,7 @@ describe('AdaptiveMfaValidator', () => {
     const validator = new AdaptiveMfaValidator({
       queries,
       ctx,
+      interactionContext: createInteractionContext(user),
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 
@@ -346,6 +359,7 @@ describe('AdaptiveMfaValidator', () => {
     const validator = new AdaptiveMfaValidator({
       queries,
       ctx,
+      interactionContext: createInteractionContext(user),
       signInExperienceValidator: createSignInExperienceValidator(),
     });
 

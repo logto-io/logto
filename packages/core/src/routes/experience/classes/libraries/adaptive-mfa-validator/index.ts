@@ -18,6 +18,7 @@ import type {
   AdaptiveMfaContext,
   AdaptiveMfaEvaluationOptions,
   AdaptiveMfaEvaluationState,
+  AdaptiveMfaInteractionContext,
   AdaptiveMfaRule,
   AdaptiveMfaResult,
   AdaptiveMfaValidatorContext,
@@ -31,6 +32,7 @@ export { adaptiveMfaNewCountryWindowDays } from './constants.js';
 export class AdaptiveMfaValidator {
   private readonly queries: Pick<Queries, 'userGeoLocations' | 'userSignInCountries'>;
   private readonly signInExperienceValidator: SignInExperienceValidator;
+  private readonly interactionContext: AdaptiveMfaInteractionContext;
   private readonly ctx?: AdaptiveMfaValidatorContext;
   private readonly recentCountriesCache = new Map<string, RecentCountry[]>();
   private readonly ruleValidators: Array<AdaptiveMfaRuleValidator<AdaptiveMfaRule>>;
@@ -40,9 +42,15 @@ export class AdaptiveMfaValidator {
   private adaptiveMfaContext?: AdaptiveMfaContext;
   private isAdaptiveMfaEnabledCache?: boolean;
 
-  constructor({ queries, signInExperienceValidator, ctx }: AdaptiveMfaValidatorOptions) {
+  constructor({
+    queries,
+    signInExperienceValidator,
+    interactionContext,
+    ctx,
+  }: AdaptiveMfaValidatorOptions) {
     this.queries = queries;
     this.signInExperienceValidator = signInExperienceValidator;
+    this.interactionContext = interactionContext;
     this.ctx = ctx;
 
     const ruleDependencies: RuleDependencies = {
@@ -70,13 +78,13 @@ export class AdaptiveMfaValidator {
   }
 
   public async getResult(
-    user: User,
     options: AdaptiveMfaEvaluationOptions = {}
   ): Promise<Optional<AdaptiveMfaResult>> {
     if (!(await this.isAdaptiveMfaEnabled())) {
       return;
     }
 
+    const user = await this.interactionContext.getIdentifiedUser();
     const state = this.buildEvaluationState(user, options);
     return this.evaluateRules(state);
   }
