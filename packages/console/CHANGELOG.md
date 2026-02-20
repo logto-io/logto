@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.34.0
+
+### Minor Changes
+
+- eced1f02d4: add application context to JWT customizer
+
+  The application context is now available in the JWT customizer script for both access token and client credentials token types. This allows you to access application details (e.g., name, description, custom data) when customizing JWT claims.
+
+- b8ca1a40c7: support ID token claims configuration
+
+  You can now customize which additional claims (e.g., `custom_data`, `identities`, `roles`, `organizations`, `organization_roles`) are included in the ID token via Console or Management API.
+
 ## 1.33.0
 
 ### Minor Changes

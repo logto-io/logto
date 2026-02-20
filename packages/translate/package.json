@@ -1,6 +1,6 @@
 {
   "name": "@logto/translate",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "A CLI tool that helps translate phrases and experience-phrases to i18n resources.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
