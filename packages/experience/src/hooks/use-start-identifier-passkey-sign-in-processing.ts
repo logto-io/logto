@@ -13,7 +13,7 @@ import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
 import useToast from './use-toast';
 
 type Props = {
-  readonly hideErrorToast?: boolean;
+  readonly hideErrorToast: boolean;
 };
 
 /**
@@ -29,7 +29,7 @@ type Props = {
  * Only passes WebAuthn options in navigation state. Identifier and available
  * methods are read from UserInteractionContext and useSieMethods() by the target page.
  */
-const useStartIdentifierPasskeySignInProcessing = (props?: Props) => {
+const useStartIdentifierPasskeySignInProcessing = ({ hideErrorToast }: Props) => {
   const { setToast } = useToast();
   const navigate = useNavigateWithPreservedSearchParams();
   const asyncCreateAuthentication = useApi(createIdentifierPasskeyAuthentication);
@@ -42,13 +42,13 @@ const useStartIdentifierPasskeySignInProcessing = (props?: Props) => {
     () => ({
       'session.mfa.webauthn_verification_not_found': async (error) => {
         // No passkeys registered
-        if (!props?.hideErrorToast) {
+        if (!hideErrorToast) {
           setToast(error.message);
         }
         // Do nothing and silently fall back to other methods if hideErrorToast is true
       },
     }),
-    [setToast, props?.hideErrorToast]
+    [setToast, hideErrorToast]
   );
 
   /**
