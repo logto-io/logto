@@ -127,8 +127,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
       '@simplewebauthn/types':
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^12.0.0
+        version: 12.0.0
       '@types/color':
         specifier: ^4.2.0
         version: 4.2.0
@@ -4265,8 +4265,8 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
       '@simplewebauthn/types':
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^12.0.0
+        version: 12.0.0
       '@swc/core':
         specifier: ^1.3.52
         version: 1.3.52(@swc/helpers@0.5.1)
@@ -7357,6 +7357,10 @@ packages:
 
   '@simplewebauthn/types@10.0.0':
     resolution: {integrity: sha512-SFXke7xkgPRowY2E+8djKbdEznTVnD5R6GO7GPTthpHrokLvNKw8C3lFZypTxLI7KkCfGPfhtqB3d7OVGGa9jQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+
+  '@simplewebauthn/types@12.0.0':
+    resolution: {integrity: sha512-q6y8MkoV8V8jB4zzp18Uyj2I7oFp2/ONL8c3j8uT06AOWu3cIChc1au71QYHrP2b+xDapkGTiv+9lX7xkTlAsA==}
     deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@sinclair/typebox@0.27.8':
@@ -18619,6 +18623,8 @@ snapshots:
       - encoding
 
   '@simplewebauthn/types@10.0.0': {}
+
+  '@simplewebauthn/types@12.0.0': {}
 
   '@sinclair/typebox@0.27.8': {}
 
