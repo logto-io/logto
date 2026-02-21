@@ -46,7 +46,7 @@
     "@logto/schemas": "workspace:^",
     "@logto/shared": "workspace:^",
     "@silverhand/essentials": "^2.9.1",
-    "@silverhand/slonik": "31.0.0-beta.2",
+    "@silverhand/slonik": "31.0.0-beta.3",
     "@simplewebauthn/server": "^10.0.0",
     "@withtyped/client": "^0.8.8",
     "camelcase": "^8.0.0",

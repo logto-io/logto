@@ -312,8 +312,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.2
       '@silverhand/slonik':
-        specifier: 31.0.0-beta.2
-        version: 31.0.0-beta.2
+        specifier: 31.0.0-beta.3
+        version: 31.0.0-beta.3
       chalk:
         specifier: ^5.3.0
         version: 5.3.0
@@ -3768,8 +3768,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.2
       '@silverhand/slonik':
-        specifier: 31.0.0-beta.2
-        version: 31.0.0-beta.2
+        specifier: 31.0.0-beta.3
+        version: 31.0.0-beta.3
       '@simplewebauthn/server':
         specifier: ^10.0.0
         version: 10.0.0
@@ -4632,8 +4632,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.2
       '@silverhand/slonik':
-        specifier: 31.0.0-beta.2
-        version: 31.0.0-beta.2
+        specifier: 31.0.0-beta.3
+        version: 31.0.0-beta.3
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
@@ -7332,8 +7332,8 @@ packages:
     resolution: {integrity: sha512-bD+82D9Dfa1F5xX1kfdR5ODIoJS41NOxTuHx4shVS5A4/ayEG+ZplpDDjB19fsa7kZXgSgD75R4sUCXjm88x6w==}
     engines: {node: ^18.12.0 || ^20.9.0 || ^22.0.0, pnpm: ^9.0.0}
 
-  '@silverhand/slonik@31.0.0-beta.2':
-    resolution: {integrity: sha512-4IM57Er5We8+hT8IY9z5La1JAGNRFZ63tp3N0XYUYTNV9fLfUXF78yT+PoW4arnf4qc+4n498bMmKgFmt/mo9Q==}
+  '@silverhand/slonik@31.0.0-beta.3':
+    resolution: {integrity: sha512-vY+IA8//3YNe5oewnUjqeAJ2zGHczh/F/d3hQNxK4XHH397TDx5uOScjLncChXtFjIpJZRJyfTw1j3qGZMu4CA==}
     engines: {node: ^20.9.0}
 
   '@silverhand/ts-config-react@6.0.0':
@@ -13121,6 +13121,9 @@ packages:
   pg-protocol@1.6.0:
     resolution: {integrity: sha512-M+PDm637OY5WM307051+bsDia5Xej6d9IR4GwJse1qA1DIhiKlksvrneZOYQq42OM+spubpcNYEo2FcKQrDk+Q==}
 
+  pg-protocol@1.8.0:
+    resolution: {integrity: sha512-jvuYlEkL03NRvOoyoRktBK7+qU5kOvlAwvmrH8sr3wbLrOdVWsRxQfz8mMy9sZFsqJ1hEWNfdWKI4SAmoL+j7g==}
+
   pg-types@2.2.0:
     resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
     engines: {node: '>=4'}
@@ -18567,7 +18570,7 @@ snapshots:
 
   '@silverhand/essentials@2.9.2': {}
 
-  '@silverhand/slonik@31.0.0-beta.2':
+  '@silverhand/slonik@31.0.0-beta.3':
     dependencies:
       '@types/pg': 8.11.2
       camelcase: 8.0.0
@@ -18577,7 +18580,7 @@ snapshots:
       p-defer: 4.0.0
       pg: 8.11.3
       pg-cursor: 2.10.3(pg@8.11.3)
-      pg-protocol: 1.6.0
+      pg-protocol: 1.8.0
       pg-types: 4.0.2
       postgres-array: 3.0.2
       postgres-interval: 4.0.2
@@ -26082,6 +26085,8 @@ snapshots:
       pg: 8.11.3
 
   pg-protocol@1.6.0: {}
+
+  pg-protocol@1.8.0: {}
 
   pg-types@2.2.0:
     dependencies:
