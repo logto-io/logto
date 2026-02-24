@@ -116,6 +116,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           await experienceInteraction.profile.setProfileWithValidation(
             validateAndParseCustomProfile(profilePayload.values)
           );
+          experienceInteraction.profile.markProfileSubmitted();
           break;
         }
       }
