@@ -17,9 +17,7 @@ describe('Twilio SMS connector', () => {
   });
 
   it('should send `To` number in E.164 format', async () => {
-    const url = new URL(
-      'https://api.twilio.com/2010-04-01/Accounts/account-sid/Messages.json'
-    );
+    const url = new URL('https://api.twilio.com/2010-04-01/Accounts/account-sid/Messages.json');
     const mockedPost = nock(url.origin)
       .post(url.pathname, (body) => {
         expect(body).toMatchObject({ To: '+4512345678' });
