@@ -19,12 +19,9 @@ const oidc = {
   provider_error_fallback: 'OIDCエラーが発生しました: {{code}}。',
   key_required: '少なくとも1つのキーが必要です。',
   key_not_found: 'IDが{{id}}のキーが見つかりません。',
-  /** UNTRANSLATED */
-  invalid_session_payload: 'Invalid session payload.',
-  /** UNTRANSLATED */
-  session_not_found: 'Session not found.',
-  /** UNTRANSLATED */
-  invalid_session_account_id: 'Session accountId mismatch.',
+  invalid_session_payload: '無効なセッションペイロード。',
+  session_not_found: 'セッションが見つかりません。',
+  invalid_session_account_id: 'セッションの accountId が一致しません。',
 };
 
 export default Object.freeze(oidc);

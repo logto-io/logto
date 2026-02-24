@@ -122,6 +122,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: 'Czynniki uwierzytelniające',
           },
+          session_management: {
+            title: 'Zarządzanie sesją',
+          },
         },
       },
       user_profile: {
@@ -163,6 +166,7 @@ const sign_in_exp = {
       custom_data: 'Dane niestandardowe',
       custom_data_description:
         'Kontroluj dostęp do niestandardowych danych JSON przechowywanych przy użytkowniku.',
+      sessions: 'Sesje',
     },
     webauthn_related_origins: 'Powiązane źródła WebAuthn',
     webauthn_related_origins_description:

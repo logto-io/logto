@@ -7,6 +7,9 @@ import {
   type SignUpIdentifier as SignUpIdentifierMethod,
   type AccountCenterFieldControl,
 } from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
+
+import { isDevFeaturesEnabled } from '@/consts/env';
 
 /**
  * Omit the `mfa`, `captchaPolicy`, 'passwordPolicy', `sentinelPolicy` and `emailBlocklistPolicy` fields from the sign-in experience.
@@ -36,6 +39,7 @@ const accountCenterFieldKeys: Array<keyof AccountCenterFieldControl> = [
   'avatar',
   'profile',
   'customData',
+  ...conditionalArray(isDevFeaturesEnabled && (['session'] as const)),
 ] as const;
 
 export type AccountCenterFieldKey = (typeof accountCenterFieldKeys)[number];

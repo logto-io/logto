@@ -19,12 +19,9 @@ const oidc = {
   provider_error_fallback: 'Si è verificato un errore OIDC: {{code}}.',
   key_required: 'È richiesta almeno una chiave.',
   key_not_found: 'Chiave con ID {{id}} non trovata.',
-  /** UNTRANSLATED */
-  invalid_session_payload: 'Invalid session payload.',
-  /** UNTRANSLATED */
-  session_not_found: 'Session not found.',
-  /** UNTRANSLATED */
-  invalid_session_account_id: 'Session accountId mismatch.',
+  invalid_session_payload: 'Payload di sessione non valido.',
+  session_not_found: 'Sessione non trovata.',
+  invalid_session_account_id: "L'accountId della sessione non corrisponde.",
 };
 
 export default Object.freeze(oidc);

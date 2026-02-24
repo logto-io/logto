@@ -119,6 +119,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: '驗證因素',
           },
+          session_management: {
+            title: '會話管理',
+          },
         },
       },
       user_profile: {
@@ -157,6 +160,7 @@ const sign_in_exp = {
       profile_description: '控制對結構化檔案屬性的存取權。',
       custom_data: '自訂資料',
       custom_data_description: '控制對儲存在使用者上的自訂 JSON 資料的存取權。',
+      sessions: '會話',
     },
     webauthn_related_origins: 'WebAuthn 關聯來源',
     webauthn_related_origins_description:

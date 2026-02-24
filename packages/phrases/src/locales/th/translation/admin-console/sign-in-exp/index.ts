@@ -121,6 +121,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: 'ปัจจัยการยืนยันตัวตน',
           },
+          session_management: {
+            title: 'การจัดการเซสชัน',
+          },
         },
       },
       user_profile: {
@@ -161,6 +164,7 @@ const sign_in_exp = {
       profile_description: 'ควบคุมการเข้าถึงคุณลักษณะของโปรไฟล์ที่มีโครงสร้าง.',
       custom_data: 'ข้อมูลแบบกำหนดเอง',
       custom_data_description: 'ควบคุมการเข้าถึงข้อมูล JSON แบบกำหนดเองที่เก็บไว้กับผู้ใช้.',
+      sessions: 'การจัดการเซสชัน',
     },
     webauthn_related_origins: 'ต้นทางที่เกี่ยวข้องกับ WebAuthn',
     webauthn_related_origins_description:
