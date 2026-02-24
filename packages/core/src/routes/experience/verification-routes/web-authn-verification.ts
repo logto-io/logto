@@ -436,6 +436,9 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
 
         experienceInteraction.setVerificationRecord(webAuthnVerification);
 
+        // Skip CAPTCHA for passkey sign-in flow
+        ctx.experienceInteraction.skipCaptcha();
+
         await experienceInteraction.save();
 
         ctx.body = {
