@@ -4,6 +4,7 @@ import type { User, UserSignInCountry } from '@logto/schemas';
 
 import type Queries from '#src/tenants/Queries.js';
 
+import { type InteractionContext } from '../../../types.js';
 import type { SignInExperienceValidator } from '../sign-in-experience-validator.js';
 
 export type IpRiskSignals = {
@@ -87,9 +88,12 @@ export type AdaptiveMfaValidatorContext = {
   };
 };
 
+export type AdaptiveMfaInteractionContext = Pick<InteractionContext, 'getIdentifiedUser'>;
+
 export type AdaptiveMfaValidatorOptions = {
   queries: Pick<Queries, 'userGeoLocations' | 'userSignInCountries'>;
   signInExperienceValidator: SignInExperienceValidator;
+  interactionContext: AdaptiveMfaInteractionContext;
   ctx?: AdaptiveMfaValidatorContext;
 };
 

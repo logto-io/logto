@@ -11,6 +11,7 @@ import {
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import RequestError from '../../errors/RequestError/index.js';
@@ -25,6 +26,7 @@ import identitiesRoutes from './identities.js';
 import logtoConfigRoutes from './logto-config.js';
 import mfaVerificationsRoutes from './mfa-verifications.js';
 import koaAccountCenter from './middlewares/koa-account-center.js';
+import accountSessionRoutes from './sessions.js';
 import thirdPartyTokensRoutes from './third-party-tokens.js';
 import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-scoped-profile.js';
 
@@ -286,4 +288,8 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   emailAndPhoneRoutes(...args);
   identitiesRoutes(...args);
   mfaVerificationsRoutes(...args);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    accountSessionRoutes(...args);
+  }
 }
