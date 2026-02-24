@@ -566,6 +566,45 @@
           }
         }
       }
+    },
+    "/api/my-account/sessions": {
+      "get": {
+        "tags": ["Dev feature"],
+        "operationId": "GetSessions",
+        "summary": "Get all active sessions",
+        "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available. A logto-verification-id in header is required for checking sensitive session details.",
+        "responses": {
+          "200": {
+            "description": "Return a list of non-expired sessions of the user."
+          }
+        }
+      }
+    },
+    "/api/my-account/sessions/{sessionId}": {
+      "delete": {
+        "tags": ["Dev feature"],
+        "operationId": "DeleteSessionById",
+        "summary": "Revoke a session by ID",
+        "description": "Revoke a specific user session by its ID, optionally revoking all associated grants and tokens.  A logto-verification-id in header is required for revoking sessions.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "revokeGrants",
+            "description": "Whether to revoke all associated grants and tokens along with the session."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The session was revoked successfully."
+          },
+          "400": {
+            "description": "The field is not editable."
+          },
+          "404": {
+            "description": "The session does not exist."
+          }
+        }
+      }
     }
   }
 }

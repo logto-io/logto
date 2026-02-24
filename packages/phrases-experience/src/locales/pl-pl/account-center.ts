@@ -58,13 +58,11 @@ const account_center = {
     description: 'Utwórz nowe hasło, aby zabezpieczyć swoje konto.',
     success: 'Hasło zostało pomyślnie zaktualizowane.',
   },
-
   code_verification: {
     send: 'Wyślij kod weryfikacyjny',
     resend: 'Nie otrzymałeś? <a>Wyślij kod weryfikacyjny ponownie</a>',
     resend_countdown: 'Nie otrzymałeś? Wyślij ponownie po {{seconds}} s.',
   },
-
   email_verification: {
     title: 'Zweryfikuj swój e-mail',
     prepare_description:
@@ -127,7 +125,6 @@ const account_center = {
       title: 'Nazwa użytkownika zmieniona!',
       description: 'Twoja nazwa użytkownika została pomyślnie zaktualizowana.',
     },
-
     password: {
       title: 'Hasło zmienione!',
       description: 'Twoje hasło zostało pomyślnie zaktualizowane.',
