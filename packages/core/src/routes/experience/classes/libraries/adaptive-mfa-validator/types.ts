@@ -97,11 +97,6 @@ export type AdaptiveMfaValidatorOptions = {
   ctx?: AdaptiveMfaValidatorContext;
 };
 
-export type AdaptiveMfaEvaluationOptions = {
-  currentContext?: AdaptiveMfaContext;
-  now?: Date;
-};
-
 export type AdaptiveMfaEvaluationState = {
   user: User;
   now: Date;

@@ -8,7 +8,7 @@ import { safeParseJson } from '#src/utils/json.js';
 type InjectedHeaderMapping = Record<string, string>;
 type InjectedHeaderValues = Record<string, string>;
 
-const defaultInjectedHeaderMapping: InjectedHeaderMapping = Object.freeze({
+export const defaultInjectedHeaderMapping: InjectedHeaderMapping = Object.freeze({
   country: 'x-logto-cf-country',
   city: 'x-logto-cf-city',
   latitude: 'x-logto-cf-latitude',

@@ -361,13 +361,9 @@ export default class ExperienceInteraction {
 
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult();
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
 
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
-
-    if (adaptiveMfaResult) {
-      log?.append({ adaptiveMfaResult });
-    }
 
     if (!mfaValidator.isMfaRequired) {
       return;
@@ -475,11 +471,6 @@ export default class ExperienceInteraction {
       },
     } = this.tenant;
 
-    const adaptiveMfaContext = this.adaptiveMfaValidator.getCurrentContext();
-    if (adaptiveMfaContext) {
-      log?.append({ adaptiveMfaContext });
-    }
-
     await this.guardCaptcha();
 
     // Identified
@@ -541,7 +532,7 @@ export default class ExperienceInteraction {
 
     if (!shouldSkipSubmitMfaFulfillment) {
       if (isSignInEvent) {
-        const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult();
+        const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
         await this.mfa.assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult);
       }
 
