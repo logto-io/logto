@@ -20,6 +20,9 @@ import { defaultMetadata, endpoint } from './constant.js';
 import type { PublicParameters } from './types.js';
 import { twilioSmsConfigGuard } from './types.js';
 
+const toE164PhoneNumber = (phoneNumber: string) =>
+  phoneNumber.startsWith('+') ? phoneNumber : `+${phoneNumber}`;
+
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
   async (data, inputConfig) => {
@@ -38,7 +41,7 @@ const sendMessage =
     );
 
     const parameters: PublicParameters = {
-      To: to,
+      To: toE164PhoneNumber(to),
       MessagingServiceSid: fromMessagingServiceSID,
       Body: replaceSendMessageHandlebars(template.content, payload),
       RiskCheck: disableRiskCheck ? 'disable' : 'enable',
