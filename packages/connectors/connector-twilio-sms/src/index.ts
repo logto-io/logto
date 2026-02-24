@@ -20,6 +20,7 @@ import { defaultMetadata, endpoint } from './constant.js';
 import type { PublicParameters } from './types.js';
 import { twilioSmsConfigGuard } from './types.js';
 
+// Phone number validity is checked upstream; only normalize a missing "+" for Twilio E.164 input.
 const toE164PhoneNumber = (phoneNumber: string) =>
   phoneNumber.startsWith('+') ? phoneNumber : `+${phoneNumber}`;
 
