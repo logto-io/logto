@@ -2,6 +2,7 @@ import {
   AlternativeSignUpIdentifier,
   ForgotPasswordMethod,
   InteractionEvent,
+  MfaFactor,
   MissingProfile,
   type SignInExperience,
   SignInIdentifier,
@@ -15,6 +16,7 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { sortMfaFactors } from '../helpers.js';
 import { type EnterpriseSsoVerification } from '../verifications/enterprise-sso-verification.js';
 import { type VerificationRecord } from '../verifications/index.js';
 
@@ -169,10 +171,18 @@ export class SignInExperienceValidator {
     return mfa;
   }
 
-  public async getPasskeySignInSettings() {
-    const { passkeySignIn } = await this.getSignInExperienceData();
+  public async getEnabledMfaFactorsForBinding() {
+    const { mfa, passkeySignIn } = await this.getSignInExperienceData();
 
-    return passkeySignIn;
+    return sortMfaFactors([
+      ...new Set([...mfa.factors, ...(passkeySignIn.enabled ? [MfaFactor.WebAuthn] : [])]),
+    ]);
+  }
+
+  public async getAvailableMfaFactorsForBinding() {
+    const enabledFactors = await this.getEnabledMfaFactorsForBinding();
+
+    return enabledFactors.filter((factor) => factor !== MfaFactor.BackupCode);
   }
 
   public async getPasswordPolicy() {

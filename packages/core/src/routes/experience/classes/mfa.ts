@@ -22,9 +22,10 @@ import {
   userPasskeySignInDataKey,
 } from '@logto/schemas';
 import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
-import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
+import { cond, condObject, deduplicate, pick, type Optional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -34,6 +35,8 @@ import assertThat from '#src/utils/assert-that.js';
 import { type InteractionContext } from '../types.js';
 
 import { getAllUserEnabledMfaVerifications, sortMfaFactors } from './helpers.js';
+import type { AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
+import { MfaValidator } from './libraries/mfa-validator.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 
 export type MfaData = {
@@ -416,6 +419,37 @@ export class Mfa {
     );
   }
 
+  async assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult?: Optional<AdaptiveMfaResult>) {
+    if (!EnvSet.values.isDevFeaturesEnabled || !adaptiveMfaResult?.requiresMfa) {
+      return;
+    }
+
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+    const user = await this.interactionContext.getIdentifiedUser();
+    const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
+
+    // Adaptive MFA binding is only needed when risk requires MFA but user currently has no
+    // available factors for verification, so they must complete a binding step first.
+    const shouldEnforceAdaptiveMfaBinding =
+      mfaValidator.availableUserMfaVerificationTypes.length === 0;
+
+    if (!shouldEnforceAdaptiveMfaBinding) {
+      return;
+    }
+
+    const availableFactors =
+      await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
+
+    // Tenant has no bindable MFA factors enabled in SIE (e.g. all disabled).
+    // In this case there is no actionable binding step for end users, so skip
+    // adaptive binding enforcement instead of throwing a non-actionable error.
+    if (availableFactors.length === 0) {
+      return;
+    }
+
+    throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
+  }
+
   /**
    * @throws {RequestError} with status 422 if the user has not bound the required MFA factors
    * @throws {RequestError} with status 422 if the user has not bound the backup code but enabled in the sign-in experience
@@ -528,12 +562,10 @@ export class Mfa {
   }
 
   private async checkMfaFactorsEnabledInSignInExperience(newBindMfaFactors: MfaFactor[]) {
-    const { mfa, passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
+    const availableFactors = await this.signInExperienceValidator.getEnabledMfaFactorsForBinding();
 
-    const isFactorsEnabled = newBindMfaFactors.every(
-      (newBindFactor) =>
-        mfa.factors.includes(newBindFactor) ||
-        (newBindFactor === MfaFactor.WebAuthn && passkeySignIn.enabled)
+    const isFactorsEnabled = newBindMfaFactors.every((newBindFactor) =>
+      availableFactors.includes(newBindFactor)
     );
 
     assertThat(isFactorsEnabled, new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' }));

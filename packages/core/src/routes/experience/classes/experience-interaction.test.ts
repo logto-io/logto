@@ -69,7 +69,7 @@ const ExperienceInteraction = await pickDefault(import('./experience-interaction
 const createSignInInteraction = ({
   headers,
   interactionEvent = InteractionEvent.SignIn,
-  adaptiveMfaEnabled = true,
+  adaptiveMfaEnabled = false,
 }: {
   headers?: Record<string, string>;
   interactionEvent?: InteractionEvent;
