@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
@@ -80,6 +81,7 @@ const createRequesterWithMocks = ({
         result: Record<string, unknown>,
         options?: { mergeWithLastSubmission?: boolean }
       ) => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
         mockedInteractionDetails.result = options?.mergeWithLastSubmission
           ? { ...mockedInteractionDetails.result, ...result }
           : result;
@@ -426,13 +428,7 @@ describe('POST /experience/submit', () => {
     },
   ])(
     'should allow adaptive MFA submit after binding $name via /experience/profile/mfa',
-    async ({
-      factor,
-      verificationType,
-      identifierType,
-      identifierValue,
-      updatePatch,
-    }) => {
+    async ({ factor, verificationType, identifierType, identifierValue, updatePatch }) => {
       setDevFeaturesEnabled(true);
       const verificationId = `mock-${identifierType}-verification-id`;
       const user = {
@@ -492,3 +488,4 @@ describe('POST /experience/submit', () => {
     }
   );
 });
+/* eslint-enable max-lines */
