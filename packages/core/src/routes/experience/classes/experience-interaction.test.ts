@@ -248,48 +248,6 @@ describe('ExperienceInteraction class', () => {
       expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
     });
 
-    it('should append adaptive MFA context to submit log', async () => {
-      setDevFeaturesEnabled(true);
-      const { experienceInteraction, createLog, mockAppend } = createSignInInteraction({
-        headers: {
-          'x-logto-cf-country': 'JP',
-          'x-logto-cf-latitude': '35.6762',
-          'x-logto-cf-longitude': '139.6503',
-          'x-logto-cf-bot-score': '10',
-          'x-logto-cf-bot-verified': 'true',
-        },
-      });
-
-      const log = createLog('Interaction.SignIn.Submit');
-      await experienceInteraction.submit(log);
-
-      const adaptiveMfaContext = mockAppend.mock.calls
-        .map(
-          ([payload]) =>
-            (
-              payload as {
-                adaptiveMfaContext?: {
-                  location?: { country?: string; latitude?: number; longitude?: number };
-                  ipRiskSignals?: { botScore?: number; botVerified?: boolean };
-                };
-              }
-            ).adaptiveMfaContext
-        )
-        .find(Boolean);
-
-      expect(adaptiveMfaContext).toEqual({
-        location: {
-          country: 'JP',
-          latitude: 35.6762,
-          longitude: 139.6503,
-        },
-        ipRiskSignals: {
-          botScore: 10,
-          botVerified: true,
-        },
-      });
-    });
-
     it('should allow zero coordinates and record them', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations } = createSignInInteraction({

@@ -527,7 +527,7 @@ export class Mfa {
     );
   }
 
-  async checkPasskeySignInAvailability() {
+  async assertPasskeySignInFulfilled() {
     const { passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
     const { logtoConfig, mfaVerifications } = await this.interactionContext.getIdentifiedUser();
 

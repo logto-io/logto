@@ -361,12 +361,9 @@ export default class ExperienceInteraction {
 
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult();
-    const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
 
-    if (adaptiveMfaResult) {
-      log?.append({ adaptiveMfaResult });
-    }
+    const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
     if (!mfaValidator.isMfaRequired) {
       return;
@@ -474,11 +471,6 @@ export default class ExperienceInteraction {
       },
     } = this.tenant;
 
-    const adaptiveMfaContext = this.adaptiveMfaValidator.getCurrentContext();
-    if (adaptiveMfaContext) {
-      log?.append({ adaptiveMfaContext });
-    }
-
     await this.guardCaptcha();
 
     // Identified
@@ -523,7 +515,7 @@ export default class ExperienceInteraction {
     if (EnvSet.values.isDevFeaturesEnabled && !this.hasVerifiedSsoIdentity) {
       // Check if passkey sign-in is enabled in the sign-in experience, if yes, check if user has `WebAuthn`
       // type of MFA verification record in `users.mfaVerifications`. Suggest user to add a passkey if not.
-      await this.mfa.checkPasskeySignInAvailability();
+      await this.mfa.assertPasskeySignInFulfilled();
     }
 
     // Revalidate the new MFA data if any
@@ -531,13 +523,16 @@ export default class ExperienceInteraction {
 
     // MFA fulfilled
     const isSignInEvent = this.#interactionEvent === InteractionEvent.SignIn;
-    // Sign-in passkey verification (`SignInWebAuthn`) is already treated as MFA-fulfilled.
+
+    // Skip mandatory MFA fulfillment validation if the user
+    // - signIn/register via SSO verification method
+    // - signIn via Passkey verification method
     const shouldSkipSubmitMfaFulfillment =
       this.hasVerifiedSsoIdentity || (isSignInEvent && this.hasVerifiedSignInWebAuthn);
 
     if (!shouldSkipSubmitMfaFulfillment) {
       if (isSignInEvent) {
-        const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult();
+        const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
         await this.mfa.assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult);
       }
 
