@@ -143,7 +143,6 @@ const user_details = {
     name_column: 'Nazwa',
     session_id_column: 'ID sesji',
     location_column: 'Lokalizacja',
-    expires_at_column: 'Wygasa',
   },
   connections: {
     title: 'Połączenie',

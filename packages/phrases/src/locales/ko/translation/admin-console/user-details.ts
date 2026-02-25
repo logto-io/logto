@@ -140,7 +140,6 @@ const user_details = {
     name_column: '이름',
     session_id_column: '세션 ID',
     location_column: '위치',
-    expires_at_column: '만료 시각',
   },
   connections: {
     title: '연결',

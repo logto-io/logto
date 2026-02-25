@@ -141,7 +141,6 @@ const user_details = {
     name_column: 'ชื่อ',
     session_id_column: 'รหัสเซสชัน',
     location_column: 'ตำแหน่ง',
-    expires_at_column: 'หมดอายุเมื่อ',
   },
   connections: {
     title: 'การเชื่อมต่อ',

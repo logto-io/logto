@@ -133,7 +133,6 @@ const user_details = {
     name_column: '名稱',
     session_id_column: '會話 ID',
     location_column: '位置',
-    expires_at_column: '過期於',
   },
   connections: {
     title: '連接',

@@ -141,7 +141,6 @@ const user_details = {
     name_column: '名前',
     session_id_column: 'セッションID',
     location_column: '場所',
-    expires_at_column: '有効期限',
   },
   connections: {
     title: '接続',

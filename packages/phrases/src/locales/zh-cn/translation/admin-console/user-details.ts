@@ -134,7 +134,6 @@ const user_details = {
     name_column: '名称',
     session_id_column: '会话 ID',
     location_column: '位置',
-    expires_at_column: '到期时间',
   },
   connections: {
     title: '连接',

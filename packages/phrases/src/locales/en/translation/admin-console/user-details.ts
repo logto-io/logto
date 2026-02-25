@@ -143,7 +143,6 @@ const user_details = {
     name_column: 'Name',
     session_id_column: 'Session ID',
     location_column: 'Location',
-    expires_at_column: 'ExpiresAt',
   },
   connections: {
     title: 'Connection',

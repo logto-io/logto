@@ -141,7 +141,6 @@ const user_details = {
     name_column: 'الاسم',
     session_id_column: 'معرف الجلسة',
     location_column: 'الموقع',
-    expires_at_column: 'ينتهي عند',
   },
   connections: {
     title: 'الاتصال',

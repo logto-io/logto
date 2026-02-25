@@ -145,7 +145,6 @@ const user_details = {
     name_column: 'İsim',
     session_id_column: 'Oturum ID',
     location_column: 'Konum',
-    expires_at_column: 'Sona Erme Tarihi',
   },
   connections: {
     title: 'Bağlantı',

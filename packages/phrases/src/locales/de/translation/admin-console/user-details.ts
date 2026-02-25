@@ -148,7 +148,6 @@ const user_details = {
     name_column: 'Name',
     session_id_column: 'Sitzungs-ID',
     location_column: 'Standort',
-    expires_at_column: 'Läuft ab am',
   },
   connections: {
     title: 'Verbindung',

@@ -144,7 +144,6 @@ const user_details = {
     name_column: 'Имя',
     session_id_column: 'ID сессии',
     location_column: 'Местоположение',
-    expires_at_column: 'Срок истечения действия',
   },
   connections: {
     title: 'Подключение',
