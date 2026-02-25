@@ -195,14 +195,14 @@ const getUserInfo =
 
       return {
         id,
-        avatar: userDetail.avatar ?? '',
-        email: userDetail.email ?? '',
+        avatar: userDetail.avatar,
+        email: userDetail.email,
+        name: userDetail.name,
         phone:
           conditional(userDetail.mobile) &&
           trySafe(
             () => new PhoneNumberParser(normalizePhoneNumebr(userDetail.mobile)).internationalNumber
           ),
-        name: userDetail.name ?? id,
         rawData: parseJsonObject(JSON.stringify({ ...rawData, ...userDetail })),
       };
     } catch (error: unknown) {
