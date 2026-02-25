@@ -9,7 +9,7 @@ import type { PublicParameters } from './types.js';
  * @see https://help.aliyun.com/document_detail/29442.html
  * Special characters that need to be encoded differently from standard encodeURIComponent
  */
-const escaper = (string_: string) =>
+export const escaper = (string_: string) =>
   encodeURIComponent(string_)
     .replaceAll('!', '%21')
     .replaceAll('"', '%22')

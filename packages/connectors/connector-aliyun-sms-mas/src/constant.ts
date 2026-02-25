@@ -34,22 +34,6 @@ export const systemProvidedSignNames = [
 ];
 
 /**
- * System-provided templates for Message Authentication Service
- * These templates are provided by Aliyun and do not require application
- * Template codes 100001-100005 cover different verification scenarios
- * @doc https://help.aliyun.com/zh/pnvs/developer-reference/api-dypnsapi-2017-05-25-sendsmsverifycode
- */
-export const systemProvidedTemplates = [
-  { code: '100001', usageType: 'SignIn', description: 'Login/Register' },
-  { code: '100001', usageType: 'Register', description: 'Login/Register' },
-  { code: '100003', usageType: 'ForgotPassword', description: 'Reset Password' },
-  { code: '100002', usageType: 'BindNewIdentifier', description: 'Change Phone Number' },
-  { code: '100004', usageType: 'BindNewIdentifier', description: 'Bind Phone Number' },
-  { code: '100005', usageType: 'UserPermissionValidation', description: 'Verify Phone Number' },
-  { code: '100001', usageType: 'Generic', description: 'General Verification' },
-];
-
-/**
  * Connector metadata
  * This defines how the connector appears in Logto Console
  */

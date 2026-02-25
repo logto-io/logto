@@ -40,7 +40,6 @@
         "@silverhand/essentials",
         "got",
         "nock",
-        "snakecase-keys",
         "zod"
       ]
     }
