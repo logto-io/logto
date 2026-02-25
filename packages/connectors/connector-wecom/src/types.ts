@@ -33,32 +33,34 @@ export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
 
 export type UserInfoResponseMessageParser = (userInfo: Partial<UserInfoResponse>) => void;
 
-export const userDetailResponseGuard = z.object({
-  errcode: z.number().optional(),
-  errmsg: z.string().optional(),
-  userid: z.string().optional(),
-  name: z.string().optional(),
-  mobile: z.string().optional(),
-  email: z.string().optional(),
-  biz_mail: z.string().optional(),
-  alias: z.string().optional(),
-  qr_code: z.string().optional(),
-  telephone: z.string().optional(),
-  department: z.array(z.number()).optional(),
-  main_department: z.number().optional(),
-  order: z.array(z.number()).optional(),
-  position: z.string().optional(),
-  external_position: z.string().optional(),
-  external_profile: z.record(z.string(), z.unknown()).optional(),
-  extattr: z.record(z.string(), z.unknown()).optional(),
-  avatar: z.string().optional(),
-  thumb_avatar: z.string().optional(),
-  gender: z.string().optional(),
-  status: z.number().optional(),
-  is_leader_in_dept: z.array(z.number()).optional(),
-  direct_leader: z.array(z.string()).optional(),
-  address: z.string().optional(),
-});
+export const userDetailResponseGuard = z
+  .object({
+    errcode: z.number(),
+    errmsg: z.string(),
+    userid: z.string(),
+    name: z.string(),
+    mobile: z.string(),
+    email: z.string(),
+    biz_mail: z.string(),
+    alias: z.string(),
+    qr_code: z.string(),
+    telephone: z.string(),
+    department: z.array(z.number()),
+    main_department: z.number(),
+    order: z.array(z.number()),
+    position: z.string(),
+    external_position: z.string(),
+    external_profile: z.record(z.string(), z.unknown()),
+    extattr: z.record(z.string(), z.unknown()),
+    avatar: z.string(),
+    thumb_avatar: z.string(),
+    gender: z.string(),
+    status: z.number(),
+    is_leader_in_dept: z.array(z.number()),
+    direct_leader: z.array(z.string()),
+    address: z.string(),
+  })
+  .partial();
 
 export type UserDetailResponse = z.infer<typeof userDetailResponseGuard>;
 
