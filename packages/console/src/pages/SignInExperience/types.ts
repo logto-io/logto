@@ -12,12 +12,17 @@ import { conditionalArray } from '@silverhand/essentials';
 import { isDevFeaturesEnabled } from '@/consts/env';
 
 /**
- * Omit the `mfa`, `captchaPolicy`, 'passwordPolicy', `sentinelPolicy` and `emailBlocklistPolicy` fields from the sign-in experience.
+ * Omit the `mfa`, `adaptiveMfa`, `captchaPolicy`, 'passwordPolicy', `sentinelPolicy` and `emailBlocklistPolicy` fields from the sign-in experience.
  * Since those fields are not managed by the sign-in experience page.
  */
 type OmittedSignInExperienceKeys = keyof Pick<
   SignInExperience,
-  'mfa' | 'captchaPolicy' | 'sentinelPolicy' | 'passwordPolicy' | 'emailBlocklistPolicy'
+  | 'mfa'
+  | 'adaptiveMfa'
+  | 'captchaPolicy'
+  | 'sentinelPolicy'
+  | 'passwordPolicy'
+  | 'emailBlocklistPolicy'
 >;
 
 export enum SignInExperienceTab {
