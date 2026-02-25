@@ -124,6 +124,18 @@ const user_details = {
       edited: '令牌 {{name}} 已成功编辑。',
     },
   },
+  sessions: {
+    title: '会话',
+    description:
+      '管理由 Logto 授权服务器维护的会话。在这里撤销 Logto 会话将阻止未来授权请求的自动同意。',
+    field_name: '会话',
+    multiple_signed_in: '该用户已在多个设备或浏览器上登录。',
+    not_found: '未找到活动的 Logto 会话。该用户当前未在任何设备上登录。',
+    name_column: '名称',
+    session_id_column: '会话 ID',
+    location_column: '位置',
+    expires_at_column: '到期时间',
+  },
   connections: {
     title: '连接',
     description: '用户关联第三方账户用于社交登录、企业单点登录或资源访问。',

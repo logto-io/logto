@@ -134,6 +134,19 @@ const user_details = {
       edited: 'O token {{name}} foi editado com sucesso.',
     },
   },
+  sessions: {
+    title: 'Sessões',
+    description:
+      'Gerencie as sessões mantidas pelo Logto Authorization Server. Revogar uma sessão do Logto aqui impede consentimento automático em solicitações futuras de autorização.',
+    field_name: 'Sessões',
+    multiple_signed_in: 'Este usuário fez login em vários dispositivos ou navegadores.',
+    not_found:
+      'Nenhuma sessão ativa do Logto encontrada. O usuário não está atualmente conectado em nenhum dispositivo.',
+    name_column: 'Nome',
+    session_id_column: 'ID da Sessão',
+    location_column: 'Localização',
+    expires_at_column: 'Expira em',
+  },
   connections: {
     title: 'Conexão',
     description:

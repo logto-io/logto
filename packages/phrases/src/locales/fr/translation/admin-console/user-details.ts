@@ -137,6 +137,19 @@ const user_details = {
       edited: 'Le jeton {{name}} a été modifié avec succès.',
     },
   },
+  sessions: {
+    title: 'Sessions',
+    description:
+      "Gérer les sessions maintenues par le Logto Authorization Server. Révoquer une session Logto ici empêche le consentement automatique lors de futures demandes d'autorisation.",
+    field_name: 'Sessions',
+    multiple_signed_in: "Cet utilisateur s'est connecté sur plusieurs appareils ou navigateurs.",
+    not_found:
+      "Aucune session Logto active trouvée. L'utilisateur n'est actuellement connecté sur aucun appareil.",
+    name_column: 'Nom',
+    session_id_column: 'ID de session',
+    location_column: 'Emplacement',
+    expires_at_column: 'Expire à',
+  },
   connections: {
     title: 'Connexion',
     description:

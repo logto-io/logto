@@ -137,6 +137,19 @@ const user_details = {
       edited: 'Das Token {{name}} wurde erfolgreich bearbeitet.',
     },
   },
+  sessions: {
+    title: 'Sitzungen',
+    description:
+      'Verwalte Sitzungen, die vom Logto Authorization Server aufrechterhalten werden. Das Widerrufen einer Logto-Sitzung hier verhindert die automatische Zustimmung bei zukünftigen Autorisierungsanfragen.',
+    field_name: 'Sitzungen',
+    multiple_signed_in: 'Dieser Benutzer hat sich an mehreren Geräten oder Browsern angemeldet.',
+    not_found:
+      'Keine aktiven Logto-Sitzungen gefunden. Der Benutzer ist derzeit auf keinem Gerät angemeldet.',
+    name_column: 'Name',
+    session_id_column: 'Sitzungs-ID',
+    location_column: 'Standort',
+    expires_at_column: 'Läuft ab am',
+  },
   connections: {
     title: 'Verbindung',
     description:

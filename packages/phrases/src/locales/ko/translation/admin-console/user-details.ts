@@ -129,6 +129,19 @@ const user_details = {
       edited: '토큰 {{name}}이/가 성공적으로 편집되었습니다.',
     },
   },
+  sessions: {
+    title: '세션',
+    description:
+      'Logto 인증 서버에 의해 유지되는 세션을 관리합니다. 여기서 Logto 세션을 해지하면 자동 동의가 미래의 인증 요청에서 방지됩니다.',
+    field_name: '세션',
+    multiple_signed_in: '이 사용자는 여러 기기나 브라우저에 로그인했습니다.',
+    not_found:
+      '활성 Logto 세션을 찾을 수 없습니다. 사용자가 현재 어떤 장치에서도 로그인되어 있지 않습니다.',
+    name_column: '이름',
+    session_id_column: '세션 ID',
+    location_column: '위치',
+    expires_at_column: '만료 시각',
+  },
   connections: {
     title: '연결',
     description: '사용자는 소셜 로그인, 기업 SSO 또는 리소스 접근을 위해 타사 계정을 연결합니다.',
