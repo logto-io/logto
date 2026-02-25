@@ -123,6 +123,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: 'Authentication factors',
           },
+          session_management: {
+            title: 'Session management',
+          },
         },
       },
       user_profile: {
@@ -163,6 +166,7 @@ const sign_in_exp = {
       profile_description: 'Control access to structured profile attributes.',
       custom_data: 'Custom data',
       custom_data_description: 'Control access to custom JSON data stored on the user.',
+      sessions: 'Sessions',
     },
     webauthn_related_origins: 'WebAuthn Related Origins',
     webauthn_related_origins_description:

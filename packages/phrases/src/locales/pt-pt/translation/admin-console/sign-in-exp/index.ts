@@ -121,6 +121,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: 'Fatores de autenticação',
           },
+          session_management: {
+            title: 'Gestão de sessão',
+          },
         },
       },
       user_profile: {
@@ -163,6 +166,7 @@ const sign_in_exp = {
       custom_data: 'Dados personalizados',
       custom_data_description:
         'Controle o acesso aos dados JSON personalizados guardados no utilizador.',
+      sessions: 'Sessões',
     },
     webauthn_related_origins: 'Origens relacionadas com WebAuthn',
     webauthn_related_origins_description:

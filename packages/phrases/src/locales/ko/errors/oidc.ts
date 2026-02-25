@@ -18,12 +18,9 @@ const oidc = {
   provider_error_fallback: 'OIDC 오류가 발생했어요: {{code}}.',
   key_required: '최소한 하나의 키가 필요해요.',
   key_not_found: 'ID가 {{id}}인 키를 찾을 수 없어요.',
-  /** UNTRANSLATED */
-  invalid_session_payload: 'Invalid session payload.',
-  /** UNTRANSLATED */
-  session_not_found: 'Session not found.',
-  /** UNTRANSLATED */
-  invalid_session_account_id: 'Session accountId mismatch.',
+  invalid_session_payload: '유효하지 않은 세션 페이로드입니다.',
+  session_not_found: '세션을 찾을 수 없습니다.',
+  invalid_session_account_id: '세션 accountId가 일치하지 않습니다.',
 };
 
 export default Object.freeze(oidc);

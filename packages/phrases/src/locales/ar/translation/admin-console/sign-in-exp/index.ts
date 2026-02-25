@@ -120,6 +120,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: 'عوامل المصادقة',
           },
+          session_management: {
+            title: 'إدارة الجلسات',
+          },
         },
       },
       user_profile: {
@@ -160,6 +163,7 @@ const sign_in_exp = {
       profile_description: 'تحكم في الوصول إلى سمات الملف الشخصي المنظمة.',
       custom_data: 'بيانات مخصصة',
       custom_data_description: 'تحكم في الوصول إلى بيانات JSON المخصصة المخزنة للمستخدم.',
+      sessions: 'إدارة الجلسات',
     },
     webauthn_related_origins: 'أصول WebAuthn ذات الصلة',
     webauthn_related_origins_description:

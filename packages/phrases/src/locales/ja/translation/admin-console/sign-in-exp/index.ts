@@ -122,6 +122,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: '認証要素',
           },
+          session_management: {
+            title: 'セッション管理',
+          },
         },
       },
       user_profile: {
@@ -163,6 +166,7 @@ const sign_in_exp = {
       custom_data: 'カスタムデータ',
       custom_data_description:
         'ユーザーに保存されているカスタム JSON データへのアクセスを制御します。',
+      sessions: 'セッション',
     },
     webauthn_related_origins: 'WebAuthn 関連オリジン',
     webauthn_related_origins_description:

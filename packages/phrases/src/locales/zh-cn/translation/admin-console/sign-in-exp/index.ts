@@ -119,6 +119,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: '认证要素',
           },
+          session_management: {
+            title: '会话管理',
+          },
         },
       },
       user_profile: {
@@ -157,6 +160,7 @@ const sign_in_exp = {
       profile_description: '控制对结构化资料属性的访问。',
       custom_data: '自定义数据',
       custom_data_description: '控制对存储在用户上的自定义 JSON 数据的访问。',
+      sessions: '会话',
     },
     webauthn_related_origins: 'WebAuthn 关联来源',
     webauthn_related_origins_description: '添加允许通过 Account API 注册通行密钥的前端应用域名。',

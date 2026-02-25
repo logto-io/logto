@@ -19,12 +19,9 @@ const oidc = {
   provider_error_fallback: 'Bir OIDC hatası oluştu: {{code}}.',
   key_required: 'En az bir anahtar gereklidir.',
   key_not_found: "ID'si {{id}} olan anahtar bulunamadı.",
-  /** UNTRANSLATED */
-  invalid_session_payload: 'Invalid session payload.',
-  /** UNTRANSLATED */
-  session_not_found: 'Session not found.',
-  /** UNTRANSLATED */
-  invalid_session_account_id: 'Session accountId mismatch.',
+  invalid_session_payload: 'Geçersiz oturum yükü.',
+  session_not_found: 'Oturum bulunamadı.',
+  invalid_session_account_id: 'Oturum accountId uyumsuzluğu.',
 };
 
 export default Object.freeze(oidc);

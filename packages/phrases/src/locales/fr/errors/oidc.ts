@@ -19,12 +19,9 @@ const oidc = {
   provider_error_fallback: "Une erreur OIDC s'est produite : {{code}}.",
   key_required: 'Au moins une clé est requise.',
   key_not_found: "La clé avec l'ID {{id}} n'est pas trouvée.",
-  /** UNTRANSLATED */
-  invalid_session_payload: 'Invalid session payload.',
-  /** UNTRANSLATED */
-  session_not_found: 'Session not found.',
-  /** UNTRANSLATED */
-  invalid_session_account_id: 'Session accountId mismatch.',
+  invalid_session_payload: 'Charge utile de session invalide.',
+  session_not_found: 'Session non trouvée.',
+  invalid_session_account_id: "incohérence de l'accountId de session.",
 };
 
 export default Object.freeze(oidc);

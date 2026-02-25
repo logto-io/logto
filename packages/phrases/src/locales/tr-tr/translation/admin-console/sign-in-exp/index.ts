@@ -122,6 +122,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: 'Kimlik doğrulama faktörleri',
           },
+          session_management: {
+            title: 'Oturum yönetimi',
+          },
         },
       },
       user_profile: {
@@ -162,6 +165,7 @@ const sign_in_exp = {
       profile_description: 'Yapılandırılmış profil özniteliklerine erişimi kontrol edin.',
       custom_data: 'Özel veriler',
       custom_data_description: 'Kullanıcıda saklanan özel JSON verilerine erişimi kontrol edin.',
+      sessions: 'Oturumlar',
     },
     webauthn_related_origins: 'WebAuthn İlgili Kaynaklar',
     webauthn_related_origins_description:

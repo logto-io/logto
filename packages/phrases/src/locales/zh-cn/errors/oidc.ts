@@ -18,12 +18,9 @@ const oidc = {
   provider_error_fallback: '发生了 OIDC 错误: {{code}}。',
   key_required: '至少需要一个密钥。',
   key_not_found: '未找到 ID 为 {{id}} 的密钥。',
-  /** UNTRANSLATED */
-  invalid_session_payload: 'Invalid session payload.',
-  /** UNTRANSLATED */
-  session_not_found: 'Session not found.',
-  /** UNTRANSLATED */
-  invalid_session_account_id: 'Session accountId mismatch.',
+  invalid_session_payload: '无效的会话负载。',
+  session_not_found: '未找到会话。',
+  invalid_session_account_id: '会话的 accountId 不匹配。',
 };
 
 export default Object.freeze(oidc);

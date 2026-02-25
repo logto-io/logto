@@ -119,6 +119,9 @@ const sign_in_exp = {
           authentication_factors: {
             title: '인증 요소',
           },
+          session_management: {
+            title: '세션 관리',
+          },
         },
       },
       user_profile: {
@@ -159,6 +162,7 @@ const sign_in_exp = {
       profile_description: '구조화된 프로필 속성에 대한 접근을 제어합니다.',
       custom_data: '사용자 정의 데이터',
       custom_data_description: '사용자에 저장된 사용자 정의 JSON 데이터에 대한 접근을 제어합니다.',
+      sessions: '세션',
     },
     webauthn_related_origins: 'WebAuthn 관련 오리진',
     webauthn_related_origins_description:
