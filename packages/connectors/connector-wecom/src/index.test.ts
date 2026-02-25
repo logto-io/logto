@@ -1,6 +1,8 @@
+import { conditional, trySafe } from '@silverhand/essentials';
 import nock from 'nock';
 
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
+import { PhoneNumberParser } from '@logto/shared';
 
 import {
   accessTokenEndpoint,
@@ -215,8 +217,8 @@ describe('getUserInfo', () => {
     expect(socialUserInfo).toMatchObject({
       id: 'zhangsan',
       name: mockedUserDetailByUserIdResponse.name,
-      email: '',
-      phone: '',
+      email: undefined,
+      phone: undefined,
       rawData: mockedUserDetailByUserIdResponse,
     });
   });
@@ -258,7 +260,11 @@ describe('getUserInfo', () => {
       id: 'zhangsan',
       name: userDetail.name,
       email: userDetail.email,
-      phone: normalizePhoneNumebr(userDetail.mobile),
+      phone:
+        conditional(userDetail.mobile) &&
+        trySafe(
+          () => new PhoneNumberParser(normalizePhoneNumebr(userDetail.mobile)).internationalNumber
+        ),
       avatar: userDetail.avatar,
       rawData: userDetail,
     });
