@@ -1,4 +1,4 @@
-import { getUserSessionsResponseGuard } from '@logto/schemas';
+import { getUserSessionResponseGuard, getUserSessionsResponseGuard } from '@logto/schemas';
 import { assert, yes } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
@@ -37,6 +37,29 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
     }
   );
 
+  router.get(
+    '/users/:userId/sessions/:sessionId',
+    koaGuard({
+      params: object({ userId: string(), sessionId: string() }),
+      response: getUserSessionResponseGuard,
+      status: [200, 404, 500],
+    }),
+    async (ctx, next) => {
+      const { userId, sessionId } = ctx.guard.params;
+
+      const extendedSession = await sessionLibrary.findUserActiveSessionWithExtension(
+        userId,
+        sessionId
+      );
+
+      assert(extendedSession, new RequestError({ code: 'oidc.session_not_found', status: 404 }));
+
+      ctx.body = extendedSession;
+
+      return next();
+    }
+  );
+
   router.delete(
     '/users/:userId/sessions/:sessionId',
     koaGuard({
@@ -52,11 +75,11 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
 
       const session = await provider.Session.findByUid(sessionId);
 
-      assert(session, new RequestError('oidc.session_not_found', { status: 404 }));
+      assert(session, new RequestError({ code: 'oidc.session_not_found', status: 404 }));
 
       assert(
         session.accountId === userId,
-        new RequestError('oidc.invalid_session_account_id', { status: 404 })
+        new RequestError({ code: 'oidc.invalid_session_account_id', status: 404 })
       );
 
       const { revokeGrants } = ctx.guard.query;

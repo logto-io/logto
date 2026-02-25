@@ -87,4 +87,31 @@ export class OidcSessionExtensionsQueries {
         and ${modelInstanceFields.expiresAt} > ${convertToTimestamp()}
     `);
   }
+
+  async findUserActiveSessionWithExtension(accountId: string, sessionUid: string) {
+    const { tenantId: _modelInstanceTenantId, ...modelInstanceFieldsWithoutTenantId } =
+      modelInstanceFields;
+    const modelInstanceTenantIdSelection = sql`${modelInstanceTable}.tenant_id as tenant_id`;
+
+    return this.pool.maybeOne<SessionInstanceWithExtension>(sql`
+      select ${sql.join(
+        [
+          modelInstanceTenantIdSelection,
+          ...Object.values(modelInstanceFieldsWithoutTenantId),
+          fields.lastSubmission,
+          fields.clientId,
+          fields.accountId,
+        ],
+        sql`, `
+      )}
+      from ${modelInstanceTable}
+      left join ${table}
+        on ${modelInstanceFields.payload} ->> 'uid' = ${fields.sessionUid}
+        and ${fields.accountId} = ${accountId}
+      where ${modelInstanceFields.modelName} = ${sessionModelName}
+        and ${modelInstanceFields.payload} ->> 'accountId' = ${accountId}
+        and ${modelInstanceFields.payload} ->> 'uid' = ${sessionUid}
+        and ${modelInstanceFields.expiresAt} > ${convertToTimestamp()}
+    `);
+  }
 }
