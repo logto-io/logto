@@ -43,7 +43,7 @@ describe('sendMessage()', () => {
 
   /**
    * Test that sendSmsVerifyCode is called with correct parameters
-   * including default min value (10 minutes)
+   * including fixed min value (10 minutes) - Logto uses fixed 10-min expiration
    */
   it('should call sendSmsVerifyCode() with correct parameters', async () => {
     const connector = await createConnector({ getConfig });
@@ -65,20 +65,86 @@ describe('sendMessage()', () => {
   });
 
   /**
-   * Test that custom min parameter is respected when provided
+   * Test all supported template types
    */
-  it('should use custom min parameter when provided', async () => {
+  it.each([
+    [TemplateType.SignIn, '100001'],
+    [TemplateType.Register, '100001'],
+    [TemplateType.ForgotPassword, '100003'],
+    [TemplateType.Generic, '100001'],
+    [TemplateType.UserPermissionValidation, '100005'],
+    [TemplateType.BindNewIdentifier, '100002'],
+    [TemplateType.OrganizationInvitation, '100001'],
+    [TemplateType.MfaVerification, '100001'],
+    [TemplateType.BindMfa, '100001'],
+  ])('should use correct template code for %s', async (type, expectedTemplateCode) => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
       to: phoneTest,
-      type: TemplateType.SignIn,
-      payload: { code: codeTest, min: '5' },
+      type,
+      payload: { code: codeTest },
     });
     expect(sendSmsVerifyCode).toHaveBeenCalledWith(
       expect.objectContaining({
-        TemplateParam: `{"code":"${codeTest}","min":"5"}`,
+        TemplateCode: expectedTemplateCode,
       }),
-      mockedConnectorConfig.accessKeySecret
+      expect.any(String)
     );
+  });
+});
+
+describe('sendMessage() with API errors', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  /**
+   * Test that BUSINESS_LIMIT_CONTROL error throws RateLimitExceeded
+   */
+  it('should throw RateLimitExceeded for BUSINESS_LIMIT_CONTROL error', async () => {
+    sendSmsVerifyCode.mockResolvedValueOnce({
+      body: JSON.stringify({
+        Code: 'BUSINESS_LIMIT_CONTROL',
+        Message: 'The number has exceeded the limit for the day.',
+        RequestId: 'request-id',
+      }),
+      statusCode: 200,
+    });
+
+    const connector = await createConnector({ getConfig });
+    await expect(
+      connector.sendMessage({
+        to: phoneTest,
+        type: TemplateType.SignIn,
+        payload: { code: codeTest },
+      })
+    ).rejects.toMatchObject({
+      code: 'rate_limit_exceeded',
+    });
+  });
+
+  /**
+   * Test that general API error throws General error
+   */
+  it('should throw General error for other API errors', async () => {
+    sendSmsVerifyCode.mockResolvedValueOnce({
+      body: JSON.stringify({
+        Code: 'MOBILE_NUMBER_ILLEGAL',
+        Message: 'The mobile number is illegal.',
+        RequestId: 'request-id',
+      }),
+      statusCode: 200,
+    });
+
+    const connector = await createConnector({ getConfig });
+    await expect(
+      connector.sendMessage({
+        to: phoneTest,
+        type: TemplateType.SignIn,
+        payload: { code: codeTest },
+      })
+    ).rejects.toMatchObject({
+      code: 'general',
+    });
   });
 });
