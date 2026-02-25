@@ -1,12 +1,5 @@
 import { z } from 'zod';
 
-/**
- * Response guard for SendSmsVerifyCode API
- * @doc https://help.aliyun.com/zh/pnvs/developer-reference/api-dypnsapi-2017-05-25-sendsmsverifycode
- *
- * Note: Unlike standard SMS service, MAS response includes a Model object
- * that contains additional fields like VerifyCode (when ReturnVerifyCode is true)
- */
 export const sendSmsVerifyCodeResponseGuard = z.object({
   Code: z.string(),
   Message: z.string(),
@@ -24,36 +17,9 @@ export const sendSmsVerifyCodeResponseGuard = z.object({
 export type SendSmsVerifyCodeResponse = z.infer<typeof sendSmsVerifyCodeResponseGuard>;
 
 /**
- * SendSmsVerifyCode API request parameters
- * @doc https://help.aliyun.com/zh/pnvs/developer-reference/api-dypnsapi-2017-05-25-sendsmsverifycode
- *
- * Key parameters:
- * - PhoneNumber: Target phone number (single number, not array like standard SMS)
- * - SignName: Must be one of the system-provided signatures
- * - TemplateCode: Must be one of the system-provided template codes (100001-100005)
- * - TemplateParam: JSON string with code and min (e.g., {"code":"123456","min":"10"})
- */
-export type SendSmsVerifyCode = {
-  SchemeName?: string;
-  CountryCode?: string;
-  PhoneNumber: string;
-  SignName: string;
-  TemplateCode: string;
-  TemplateParam: string;
-  SmsUpExtendCode?: string;
-  OutId?: string;
-  CodeLength?: string;
-  ValidTime?: string;
-  DuplicatePolicy?: string;
-  Interval?: string;
-  CodeType?: string;
-  ReturnVerifyCode?: string;
-  AutoRetry?: string;
-};
-
-/**
- * Public parameters required for all Aliyun API requests
- * These are combined with request-specific parameters
+ * Public parameters for Aliyun API requests
+ * These are common parameters used across all Aliyun API calls
+ * @see https://help.aliyun.com/document_detail/29442.html
  */
 export type PublicParameters = {
   AccessKeyId: string;
@@ -68,27 +34,41 @@ export type PublicParameters = {
 };
 
 /**
- * Required template usage types
- * These must all be present in the connector configuration
- * For MAS, some types may reuse the same template code (e.g., 100001 for multiple types)
+ * Parameters for SendSmsVerifyCode API
+ * All parameters are string type for URL encoding compatibility
+ * @see https://help.aliyun.com/zh/pnvs/developer-reference/api-dypnsapi-2017-05-25-sendsmsverifycode
  */
-const requiredTemplateUsageTypes = [
+export type SendSmsVerifyCode = {
+  /** 短信接收方手机号（不加区号，如：13012345678） */
+  PhoneNumber: string;
+  /** 签名名称（必须使用系统赠送签名） */
+  SignName: string;
+  /** 短信模板 CODE（必须使用系统赠送模板） */
+  TemplateCode: string;
+  /** 短信模板参数，JSON 格式字符串，如 {"code":"123456","min":"10"} */
+  TemplateParam?: string;
+  /** 号码国家编码，默认为 86，目前仅支持国内号码 */
+  CountryCode?: string;
+  /** 方案名称 */
+  SchemeName?: string;
+  /** 外部流水号 */
+  OutId?: string;
+  /** 上行短信扩展码 */
+  SmsUpExtendCode?: string;
+};
+
+const REQUIRED_TEMPLATE_USAGE_TYPES = [
   'Register',
   'SignIn',
   'ForgotPassword',
-  'OrganizationInvitation',
   'Generic',
   'UserPermissionValidation',
   'BindNewIdentifier',
+  'OrganizationInvitation',
   'MfaVerification',
   'BindMfa',
-];
+] as const;
 
-/**
- * Template configuration guard
- * Simplified for MAS - only usageType and templateCode are needed
- * (No template type selection needed as MAS only supports verification code)
- */
 export const templateGuard = z.object({
   usageType: z.string(),
   templateCode: z.string(),
@@ -96,25 +76,19 @@ export const templateGuard = z.object({
 
 export type Template = z.infer<typeof templateGuard>;
 
-/**
- * Connector configuration guard
- * Validates that all required usage types are present in templates
- */
 export const aliyunSmsMasConfigGuard = z.object({
   accessKeyId: z.string(),
   accessKeySecret: z.string(),
   signName: z.string(),
   templates: z.array(templateGuard).refine(
     (templates) =>
-      requiredTemplateUsageTypes.every((requiredType) =>
+      REQUIRED_TEMPLATE_USAGE_TYPES.every((requiredType) =>
         templates.map((template) => template.usageType).includes(requiredType)
       ),
     (templates) => ({
-      message: `UsageType (${requiredTemplateUsageTypes
-        .filter(
-          (requiredType) => !templates.map((template) => template.usageType).includes(requiredType)
-        )
-        .join(', ')}) should be provided in templates.`,
+      message: `UsageType (${REQUIRED_TEMPLATE_USAGE_TYPES.filter(
+        (requiredType) => !templates.map((template) => template.usageType).includes(requiredType)
+      ).join(', ')}) should be provided in templates.`,
     })
   ),
 });

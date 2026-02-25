@@ -72,6 +72,12 @@ If you need to send SMS to international numbers or regions outside mainland Chi
 | Register | 100001 | Registration verification |
 | ForgotPassword | 100003 | Password reset |
 | Generic | 100001 | General verification |
+| UserPermissionValidation | 100005 | User permission validation |
+| BindNewIdentifier | 100002 | Bind new identifier |
+| OrganizationInvitation | 100001 | Organization invitation |
+| MfaVerification | 100001 | MFA verification |
+| BindMfa | 100001 | Bind MFA |
+
 
 Example configuration:
 
@@ -84,7 +90,12 @@ Example configuration:
     { "usageType": "SignIn", "templateCode": "100001" },
     { "usageType": "Register", "templateCode": "100001" },
     { "usageType": "ForgotPassword", "templateCode": "100003" },
-    { "usageType": "Generic", "templateCode": "100001" }
+    { "usageType": "Generic", "templateCode": "100001" },
+    { "usageType": "UserPermissionValidation", "templateCode": "100005" },
+    { "usageType": "BindNewIdentifier", "templateCode": "100002" },
+    { "usageType": "OrganizationInvitation", "templateCode": "100001" },
+    { "usageType": "MfaVerification", "templateCode": "100001" },
+    { "usageType": "BindMfa", "templateCode": "100001" }
   ]
 }
 ```
@@ -95,7 +106,7 @@ Example configuration:
 |------|------|-------------|
 | accessKeyId | string | Aliyun Access Key ID |
 | accessKeySecret | string | Aliyun Access Key Secret |
-| signName | enum | System-provided signature name |
+| signName | enum | Signature name |
 | templates | Template[] | Array of template configurations |
 
 ## References
@@ -129,7 +140,7 @@ Example configuration:
 
 - **仅限中国大陆手机号**：目前仅支持中国移动、中国联通和中国电信的手机号码（中国大陆）
 - **不支持国际及港澳台**：**不支持**中国台湾、中国香港、中国澳门及海外地区使用
-- **不支持自定义签名**：自2025年11月12日起，阿里云发布[公告](https://help.aliyun.com/zh/pnvs/product-overview/sms-service-does-not-support-custom-signatures)称“因运营商签名实名制政策管控要求，即日起号码认证产品下所有使用短信验证码触达的认证方式，均不支持使用自定义签名下发短信，具体恢复时间另行通知。”
+- **不支持自定义签名**：自2025年11月12日起，阿里云发布[公告](https://help.aliyun.com/zh/pnvs/product-overview/sms-service-does-not-support-custom-signatures)称"因运营商签名实名制政策管控要求，即日起号码认证产品下所有使用短信验证码触达的认证方式，均不支持使用自定义签名下发短信，具体恢复时间另行通知。"
 
 如果您需要向国际号码或中国大陆以外的地区发送短信，请改用[阿里云短信服务连接器](../connector-aliyun-sms/)。
 
@@ -157,6 +168,12 @@ Example configuration:
 | Register | 100001 | 注册验证 |
 | ForgotPassword | 100003 | 重置密码 |
 | Generic | 100001 | 通用验证 |
+| UserPermissionValidation | 100005 | 用户权限验证 |
+| BindNewIdentifier | 100002 | 绑定新标识符 |
+| OrganizationInvitation | 100001 | 组织邀请 |
+| MfaVerification | 100001 | MFA 验证 |
+| BindMfa | 100001 | 绑定 MFA |
+
 
 示例配置：
 
@@ -169,7 +186,12 @@ Example configuration:
     { "usageType": "SignIn", "templateCode": "100001" },
     { "usageType": "Register", "templateCode": "100001" },
     { "usageType": "ForgotPassword", "templateCode": "100003" },
-    { "usageType": "Generic", "templateCode": "100001" }
+    { "usageType": "Generic", "templateCode": "100001" },
+    { "usageType": "UserPermissionValidation", "templateCode": "100005" },
+    { "usageType": "BindNewIdentifier", "templateCode": "100002" },
+    { "usageType": "OrganizationInvitation", "templateCode": "100001" },
+    { "usageType": "MfaVerification", "templateCode": "100001" },
+    { "usageType": "BindMfa", "templateCode": "100001" }
   ]
 }
 ```
@@ -180,7 +202,7 @@ Example configuration:
 |------|------|-------------|
 | accessKeyId | string | 阿里云 Access Key ID |
 | accessKeySecret | string | 阿里云 Access Key Secret |
-| signName | enum | 系统赠送的签名名称 |
+| signName | enum | 签名名称 |
 | templates | Template[] | 模板配置数组 |
 
 ## 参考

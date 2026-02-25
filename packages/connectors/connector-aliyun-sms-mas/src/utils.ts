@@ -74,16 +74,17 @@ export const getSignature = (
  */
 export const request = async (
   url: string,
-  parameters: PublicParameters & Record<string, string>,
+  parameters: PublicParameters & Record<string, string | number>,
   accessKeySecret: string
 ) => {
   // Prepare final parameters with signature-related fields
-  const finalParameters = Object.entries<Optional<string>>({
+  // Convert all values to strings for signature calculation
+  const finalParameters = Object.entries<Optional<string | number>>({
     ...parameters,
     SignatureNonce: randomUUID(),
     Timestamp: formatDateString(new Date()),
   }).reduce<Record<string, string>>(
-    (result, [key, value]) => (value === undefined ? result : { ...result, [key]: value }),
+    (result, [key, value]) => (value === undefined ? result : { ...result, [key]: String(value) }),
     {}
   );
 
@@ -98,21 +99,4 @@ export const request = async (
     },
     form: { ...finalParameters, Signature: signature },
   });
-};
-
-/**
- * Check if a phone number is a China mobile number
- *
- * Note: This function is kept for compatibility with the original connector
- * but is not used in MAS connector as MAS only supports domestic (China) numbers
- *
- * @param to - Phone number to check
- * @param isStrictOnRegionNumber - If true, requires explicit region code (+86/0086/86)
- */
-export const isChinaNumber = (to: string, isStrictOnRegionNumber?: boolean) => {
-  if (isStrictOnRegionNumber) {
-    return /^(\+86|0086|86)\d{11}$/.test(to);
-  }
-
-  return /^(\+86|0086|86)?\d{11}$/.test(to);
 };
