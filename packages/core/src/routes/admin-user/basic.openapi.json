@@ -190,10 +190,10 @@
                     "description": "Plain text password for the user."
                   },
                   "passwordDigest": {
-                    "description": "In case you already have the password digests and not the passwords, you can use them for the newly created user via this property. The value should be generated with one of the supported algorithms. The algorithm can be specified using the `passwordAlgorithm` property."
+                    "description": "In case you already have the password digests and not the passwords, you can use them for the newly created user via this property. The algorithm can be specified using the `passwordAlgorithm` property. For `Legacy`, pass a JSON string in the format `[algorithm, args, encryptedPassword]`. For PBKDF2 under `Legacy`, salt supports plain string or `hex:`-prefixed hex string (for binary salt bytes)."
                   },
                   "passwordAlgorithm": {
-                    "description": "The hash algorithm used for the password. It should be one of the supported algorithms: argon2, md5, sha1, sha256. Should the encryption algorithm differ from argon2, it will automatically be upgraded to argon2 upon the user's next sign-in."
+                    "description": "The hash algorithm used for the password. It should be one of the supported algorithms, including `Legacy` for custom legacy expressions. Should the encryption algorithm differ from argon2, it will automatically be upgraded to argon2 upon the user's next sign-in."
                   }
                 }
               }
