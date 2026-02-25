@@ -5,7 +5,10 @@ import { createUserMfaVerification } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
-import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
+import {
+  successfullyCreateAndVerifyTotp,
+  successfullyVerifyTotp,
+} from '#src/helpers/experience/totp-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
@@ -180,6 +183,40 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
           code: 'session.mfa.require_mfa_verification',
           status: 403,
         });
+      }
+    );
+  });
+
+  devFeatureTest.describe('adaptive MFA binding flow', () => {
+    beforeAll(async () => {
+      await updateSignInExperience({
+        mfa: {
+          factors: [MfaFactor.TOTP],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
+        adaptiveMfa: { enabled: true },
+      });
+    });
+
+    devFeatureTest.it(
+      'should allow submit after binding TOTP when adaptive MFA triggers and user has no MFA factors',
+      async () => {
+        const { username, password } = generateNewUserProfile({ username: true, password: true });
+        await userApi.create({ username, password });
+
+        const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
+        await identifyUserWithUsernamePassword(client, username, password);
+
+        await expectRejects(client.submitInteraction(), {
+          code: 'user.missing_mfa',
+          status: 422,
+        });
+
+        const totpVerificationId = await successfullyCreateAndVerifyTotp(client);
+        await client.bindMfa(MfaFactor.TOTP, totpVerificationId);
+
+        const { redirectTo } = await client.submitInteraction();
+        await processSession(client, redirectTo);
       }
     );
   });
