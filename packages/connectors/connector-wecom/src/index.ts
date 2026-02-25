@@ -3,7 +3,7 @@
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
  */
 
-import { assert } from '@silverhand/essentials';
+import { assert, conditional, trySafe } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -21,6 +21,7 @@ import {
   parseJson,
   parseJsonObject,
 } from '@logto/connector-kit';
+import { PhoneNumberParser } from '@logto/shared';
 
 import {
   authorizationEndpointInside,
@@ -196,7 +197,11 @@ const getUserInfo =
         id,
         avatar: userDetail.avatar ?? '',
         email: userDetail.email ?? '',
-        phone: normalizePhoneNumebr(userDetail.mobile),
+        phone:
+          conditional(userDetail.mobile) &&
+          trySafe(
+            () => new PhoneNumberParser(normalizePhoneNumebr(userDetail.mobile)).internationalNumber
+          ),
         name: userDetail.name ?? id,
         rawData: parseJsonObject(JSON.stringify({ ...rawData, ...userDetail })),
       };
