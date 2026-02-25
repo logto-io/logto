@@ -5,6 +5,7 @@ import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedLoader } from 'use-debounced-loader';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import WebAuthnContext from '@/Providers/WebAuthnContextProvider/WebAuthnContext';
 import PasskeyIcon from '@/assets/icons/passkey-icon.svg?react';
 import usePasskeySignIn from '@/hooks/use-passkey-sign-in';
@@ -16,6 +17,7 @@ import styles from './index.module.scss';
 
 const PasskeySignInButton = () => {
   const { t } = useTranslation();
+  const { isPreview } = useContext(PageContext);
   const {
     authenticationOptions,
     isLoading: isPreparing,
@@ -60,13 +62,13 @@ const PasskeySignInButton = () => {
 
   return (
     <button
-      disabled={isDisabled}
+      disabled={isDisabled && !isPreview}
       className={classNames(
         buttonStyles.button,
         buttonStyles.secondary,
         buttonStyles.large,
         styles.button,
-        isDisabled && buttonStyles.disabled
+        isDisabled && !isPreview && buttonStyles.disabled
       )}
       type="button"
       onClick={onPasskeySignIn}
