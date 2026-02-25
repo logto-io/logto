@@ -7,22 +7,33 @@ import { mockedConnectorConfig, phoneTest, codeTest } from './mock.js';
  */
 const getConfig = vi.fn().mockResolvedValue(mockedConnectorConfig);
 
+type SendSmsVerifyCodeInput = Record<string, string>;
+
+type SendSmsVerifyCodeResult = {
+  body: string;
+  statusCode: number;
+};
+
 /**
  * Mock sendSmsVerifyCode function that simulates successful API response
  */
-const sendSmsVerifyCode = vi.fn().mockResolvedValue({
-  body: JSON.stringify({
-    Code: 'OK',
-    RequestId: 'request-id',
-    Message: 'OK',
-    Model: {
-      VerifyCode: codeTest,
-      RequestId: 'model-request-id',
-      BizId: 'biz-id',
-    },
-  }),
-  statusCode: 200,
-});
+const sendSmsVerifyCode = vi
+  .fn<
+    (request: SendSmsVerifyCodeInput, accessKeySecret: string) => Promise<SendSmsVerifyCodeResult>
+  >()
+  .mockResolvedValue({
+    body: JSON.stringify({
+      Code: 'OK',
+      RequestId: 'request-id',
+      Message: 'OK',
+      Model: {
+        VerifyCode: codeTest,
+        RequestId: 'model-request-id',
+        BizId: 'biz-id',
+      },
+    }),
+    statusCode: 200,
+  });
 
 /**
  * Mock the send-verify-code module
@@ -52,16 +63,16 @@ describe('sendMessage()', () => {
       type: TemplateType.SignIn,
       payload: { code: codeTest, locale: 'zh-CN' },
     });
-    expect(sendSmsVerifyCode).toHaveBeenCalledWith(
-      expect.objectContaining({
-        AccessKeyId: mockedConnectorConfig.accessKeyId,
-        PhoneNumber: phoneTest,
-        SignName: mockedConnectorConfig.signName,
-        TemplateCode: '100001',
-        TemplateParam: `{"code":"${codeTest}","min":"10"}`,
-      }),
-      mockedConnectorConfig.accessKeySecret
-    );
+    const [sendRequest, accessKeySecret] = sendSmsVerifyCode.mock.calls[0] ?? [];
+
+    expect(sendRequest).toMatchObject({
+      AccessKeyId: mockedConnectorConfig.accessKeyId,
+      PhoneNumber: phoneTest,
+      SignName: mockedConnectorConfig.signName,
+      TemplateCode: '100001',
+      TemplateParam: `{"code":"${codeTest}","min":"10"}`,
+    });
+    expect(accessKeySecret).toBe(mockedConnectorConfig.accessKeySecret);
   });
 
   /**
@@ -84,12 +95,11 @@ describe('sendMessage()', () => {
       type,
       payload: { code: codeTest },
     });
-    expect(sendSmsVerifyCode).toHaveBeenCalledWith(
-      expect.objectContaining({
-        TemplateCode: expectedTemplateCode,
-      }),
-      expect.any(String)
-    );
+    const [sendRequest] = sendSmsVerifyCode.mock.calls[0] ?? [];
+
+    expect(sendRequest).toMatchObject({
+      TemplateCode: expectedTemplateCode,
+    });
   });
 });
 
