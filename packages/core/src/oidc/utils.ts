@@ -10,14 +10,25 @@ import {
   FirstScreen,
   experience,
 } from '@logto/schemas';
-import { conditional, trySafe } from '@silverhand/essentials';
+import { condArray, conditional, trySafe } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
 
+/**
+ * Build constant client metadata for an application based on its type and optional flags.
+ *
+ * Grant types are dynamically computed: base grant types are determined by application type,
+ * and optional grant types (e.g., token exchange) are conditionally included based on the
+ * provided options.
+ *
+ * The oidc-provider will enforce `client.grantTypeAllowed(type)` before invoking any grant handler,
+ * so there's no need for additional runtime access checks in individual grant handlers.
+ */
 export const getConstantClientMetadata = (
   envSet: EnvSet,
-  type: ApplicationType
+  type: ApplicationType,
+  options?: { allowTokenExchange?: boolean }
 ): AllClientMetadata => {
   const { jwkSigningAlg } = envSet.oidc;
 
@@ -34,12 +45,16 @@ export const getConstantClientMetadata = (
     }
   };
 
+  const grantTypes = [
+    ...(type === ApplicationType.MachineToMachine
+      ? [GrantType.ClientCredentials]
+      : [GrantType.AuthorizationCode, GrantType.RefreshToken]),
+    ...condArray(options?.allowTokenExchange && GrantType.TokenExchange),
+  ];
+
   return {
     application_type: type === ApplicationType.Native ? 'native' : 'web',
-    grant_types:
-      type === ApplicationType.MachineToMachine
-        ? [GrantType.ClientCredentials, GrantType.TokenExchange]
-        : [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
+    grant_types: grantTypes,
     token_endpoint_auth_method: getTokenEndpointAuthMethod(),
     response_types: conditional(type === ApplicationType.MachineToMachine && []),
     // https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use
