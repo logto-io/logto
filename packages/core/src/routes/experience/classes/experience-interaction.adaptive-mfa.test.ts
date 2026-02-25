@@ -52,6 +52,10 @@ const signInExperiences = {
 const users = {
   findUserById: jest.fn(),
   updateUserById: jest.fn(),
+  hasUser: jest.fn().mockResolvedValue(false),
+  hasUserWithEmail: jest.fn().mockResolvedValue(false),
+  hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
+  hasUserWithIdentity: jest.fn().mockResolvedValue(false),
 };
 
 const tenant = new MockTenant(createMockProvider(), { signInExperiences, users });
@@ -433,6 +437,118 @@ describe('ExperienceInteraction adaptive MFA', () => {
       )
     );
   });
+
+  it('allows submit after binding TOTP in current interaction when adaptive MFA triggers', async () => {
+    const user: User = {
+      ...mockUserWithMfaVerifications,
+      mfaVerifications: [],
+      logtoConfig: {
+        [userMfaDataKey]: {
+          skipped: true,
+        },
+      },
+    };
+
+    users.findUserById.mockResolvedValueOnce(user);
+    users.updateUserById.mockResolvedValueOnce(user);
+
+    // @ts-expect-error -- mock test context
+    const ctx: WithHooksAndLogsContext = {
+      assignInteractionHookResult: jest.fn(),
+      appendDataHookContext: jest.fn(),
+      ...createContextWithRouteParameters({
+        headers: {
+          'x-logto-cf-bot-score': '10',
+        },
+      }),
+      ...createMockLogContext(),
+    };
+
+    const interactionDetails = {
+      result: {
+        interactionEvent: InteractionEvent.SignIn,
+        userId: user.id,
+        mfa: {
+          totp: {
+            type: MfaFactor.TOTP,
+            secret: 'mock-secret',
+          },
+        },
+      },
+    } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
+    const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+
+    await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+  });
+
+  it.each([
+    {
+      name: 'email',
+      factor: MfaFactor.EmailVerificationCode,
+      profile: { primaryEmail: 'bound@logto.dev', primaryPhone: null },
+    },
+    {
+      name: 'phone',
+      factor: MfaFactor.PhoneVerificationCode,
+      profile: { primaryEmail: null, primaryPhone: '13100000000' },
+    },
+  ])(
+    'does not enforce adaptive MFA binding after binding $name MFA factor in current interaction',
+    async ({ factor, profile }) => {
+      const signInExperienceWithFactor = {
+        ...mockSignInExperience,
+        adaptiveMfa: { enabled: true },
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          factors: [factor],
+        },
+      };
+
+      signInExperiences.findDefaultSignInExperience
+        .mockResolvedValueOnce(signInExperienceWithFactor)
+        .mockResolvedValueOnce(signInExperienceWithFactor)
+        .mockResolvedValueOnce(signInExperienceWithFactor)
+        .mockResolvedValueOnce(signInExperienceWithFactor);
+
+      const user: User = {
+        ...mockUserWithMfaVerifications,
+        mfaVerifications: [],
+        primaryEmail: null,
+        primaryPhone: null,
+        logtoConfig: {
+          [userMfaDataKey]: {
+            skipped: true,
+          },
+        },
+      };
+
+      users.findUserById.mockResolvedValueOnce(user);
+      users.updateUserById.mockResolvedValueOnce(user);
+
+      // @ts-expect-error -- mock test context
+      const ctx: WithHooksAndLogsContext = {
+        assignInteractionHookResult: jest.fn(),
+        appendDataHookContext: jest.fn(),
+        ...createContextWithRouteParameters({
+          headers: {
+            'x-logto-cf-bot-score': '10',
+          },
+        }),
+        ...createMockLogContext(),
+      };
+
+      const interactionDetails = {
+        result: {
+          interactionEvent: InteractionEvent.SignIn,
+          userId: user.id,
+          profile,
+        },
+      } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
+      const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+
+      await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+    }
+  );
 
   it('skips submit-stage MFA fulfillment checks when sign-in passkey is already verified', async () => {
     const user: User = {

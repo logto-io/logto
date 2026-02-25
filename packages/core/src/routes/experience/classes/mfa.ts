@@ -36,7 +36,6 @@ import { type InteractionContext } from '../types.js';
 
 import { getAllUserEnabledMfaVerifications, sortMfaFactors } from './helpers.js';
 import type { AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
-import { MfaValidator } from './libraries/mfa-validator.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 
 export type MfaData = {
@@ -424,14 +423,11 @@ export class Mfa {
       return;
     }
 
-    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const user = await this.interactionContext.getIdentifiedUser();
-    const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
+    const availableFactorsForVerification = await this.getUserMfaFactors();
 
-    // Adaptive MFA binding is only needed when risk requires MFA but user currently has no
-    // available factors for verification, so they must complete a binding step first.
-    const shouldEnforceAdaptiveMfaBinding =
-      mfaValidator.availableUserMfaVerificationTypes.length === 0;
+    // Adaptive MFA binding is only needed when risk requires MFA and there is no available
+    // factor for verification in the current interaction context.
+    const shouldEnforceAdaptiveMfaBinding = availableFactorsForVerification.length === 0;
 
     if (!shouldEnforceAdaptiveMfaBinding) {
       return;
