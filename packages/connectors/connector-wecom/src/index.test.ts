@@ -12,7 +12,7 @@ import {
   userDetailByUserTicketEndpoint,
   userInfoEndpoint,
 } from './constant.js';
-import createConnector, { getAccessToken, normalizePhoneNumebr } from './index.js';
+import createConnector, { getAccessToken, normalizePhoneNumber } from './index.js';
 import {
   mockedConfig,
   mockedUserDetailByUserIdResponse,
@@ -137,16 +137,16 @@ describe('getAccessToken', () => {
 
 describe('normalizePhoneNumebr', () => {
   it('should normalize phone number', () => {
-    expect(normalizePhoneNumebr('12345678901')).toEqual('+8612345678901');
+    expect(normalizePhoneNumber('12345678901')).toEqual('+8612345678901');
   });
 
   it('should return empty string if phone number is not provided', () => {
     const mobile = undefined;
-    expect(normalizePhoneNumebr(mobile)).toEqual('');
+    expect(normalizePhoneNumber(mobile)).toEqual('');
   });
 
   it('should return phone number if it starts with +', () => {
-    expect(normalizePhoneNumebr('+12345678901')).toEqual('+12345678901');
+    expect(normalizePhoneNumber('+12345678901')).toEqual('+12345678901');
   });
 });
 
@@ -263,7 +263,7 @@ describe('getUserInfo', () => {
       phone:
         conditional(userDetail.mobile) &&
         trySafe(
-          () => new PhoneNumberParser(normalizePhoneNumebr(userDetail.mobile)).internationalNumber
+          () => new PhoneNumberParser(normalizePhoneNumber(userDetail.mobile)).internationalNumber
         ),
       avatar: userDetail.avatar,
       rawData: userDetail,

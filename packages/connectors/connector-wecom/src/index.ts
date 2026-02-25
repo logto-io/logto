@@ -21,7 +21,7 @@ import {
   parseJson,
   parseJsonObject,
 } from '@logto/connector-kit';
-import { PhoneNumberParser } from '@logto/shared';
+import { parsePhoneNumber, PhoneNumberParser } from '@logto/shared';
 
 import {
   authorizationEndpointInside,
@@ -99,7 +99,7 @@ export const getAccessToken = async (config: WecomConfig): Promise<{ accessToken
   return { accessToken };
 };
 
-export const normalizePhoneNumebr = (mobile?: string) => {
+export const normalizePhoneNumber = (mobile?: string) => {
   if (!mobile) {
     return '';
   }
@@ -201,7 +201,9 @@ const getUserInfo =
         phone:
           conditional(userDetail.mobile) &&
           trySafe(
-            () => new PhoneNumberParser(normalizePhoneNumebr(userDetail.mobile)).internationalNumber
+            () =>
+              new PhoneNumberParser(parsePhoneNumber(normalizePhoneNumber(userDetail.mobile)))
+                .internationalNumber
           ),
         rawData: parseJsonObject(JSON.stringify({ ...rawData, ...userDetail })),
       };
