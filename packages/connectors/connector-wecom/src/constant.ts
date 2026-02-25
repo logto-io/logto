@@ -5,6 +5,9 @@ export const authorizationEndpointInside = 'https://open.weixin.qq.com/connect/o
 export const authorizationEndpointQrcode = 'https://open.work.weixin.qq.com/wwopen/sso/qrConnect';
 export const accessTokenEndpoint = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken';
 export const userInfoEndpoint = 'https://qyapi.weixin.qq.com/cgi-bin/auth/getuserinfo';
+export const userDetailByUserTicketEndpoint =
+  'https://qyapi.weixin.qq.com/cgi-bin/auth/getuserdetail';
+export const userDetailByUserIdEndpoint = 'https://qyapi.weixin.qq.com/cgi-bin/user/get';
 export const scope = 'snsapi_userinfo';
 
 // See https://developer.work.weixin.qq.com/document/path/90313 to know more about WeCom response error code
