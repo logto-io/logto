@@ -6,8 +6,6 @@ import {
   MfaFactor,
   VerificationType,
   type User,
-  userPasskeySignInDataKey,
-  userMfaDataKey,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -32,6 +30,7 @@ import {
   getNewUserProfileFromVerificationRecord,
   identifyUserByVerificationRecord,
   mergeUserMfaVerifications,
+  parseMfaPropertiesToUserConfig,
 } from './helpers.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
@@ -541,7 +540,8 @@ export default class ExperienceInteraction {
       enterpriseSsoConnectorTokenSetSecret,
       ...rest
     } = this.profile.data;
-    const { mfaSkipped, passkeySkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
+    const userMfaVerifications = this.mfa.toUserMfaVerifications();
+    const { mfaVerifications } = userMfaVerifications;
 
     // Update user profile
     const updatedUser = await userQueries.updateUserById(user.id, {
@@ -559,28 +559,10 @@ export default class ExperienceInteraction {
           mfaVerifications: mergeUserMfaVerifications(user.mfaVerifications, mfaVerifications),
         }
       ),
-      ...conditional(
-        mfaSkipped && {
-          logtoConfig: {
-            ...user.logtoConfig,
-            [userMfaDataKey]: {
-              skipped: true,
-            },
-          },
-        }
-      ),
-      ...conditional(
-        // Only persist passkey skipped status on sign-in event
-        passkeySkipped &&
-          this.#interactionEvent === InteractionEvent.SignIn && {
-            logtoConfig: {
-              ...user.logtoConfig,
-              [userPasskeySignInDataKey]: {
-                skipped: true,
-              },
-            },
-          }
-      ),
+      logtoConfig: {
+        ...user.logtoConfig,
+        ...parseMfaPropertiesToUserConfig(userMfaVerifications, this.#interactionEvent),
+      },
       lastSignInAt: Date.now(),
     });
 

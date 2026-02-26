@@ -80,6 +80,8 @@ export const mfaErrorDataGuard = s.object({
   maskedIdentifiers: s.optional(s.record(s.enums(mfaFactorEnumValues), s.string())),
   // Whether this MFA flow is an optional suggestion (e.g., add another factor after sign-up)
   suggestion: s.optional(s.boolean()),
+  // Whether the current WebAuthn factor is used as a sign-in passkey.
+  isWebAuthnUsedAsSignInPasskey: s.optional(s.boolean()),
 });
 
 export const mfaFlowStateGuard = mfaErrorDataGuard;

@@ -21,6 +21,7 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
     koaGuard({
       response: z.object({
         mfa: z.object({
+          enabled: z.boolean().optional(),
           skipped: z.boolean(),
         }),
       }),
@@ -45,12 +46,11 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
 
       const user = await findUserById(userId);
       const mfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
+      const enabled = mfaData.success ? mfaData.data.enabled : undefined;
       const skipped = mfaData.success ? (mfaData.data.skipped ?? false) : false;
 
       ctx.body = {
-        mfa: {
-          skipped,
-        },
+        mfa: { enabled, skipped },
       };
 
       return next();
@@ -62,11 +62,13 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
     koaGuard({
       body: z.object({
         mfa: z.object({
-          skipped: z.boolean(),
+          enabled: z.boolean().optional(),
+          skipped: z.boolean().optional(),
         }),
       }),
       response: z.object({
         mfa: z.object({
+          enabled: z.boolean().optional(),
           skipped: z.boolean(),
         }),
       }),
@@ -79,10 +81,10 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
       const {
-        mfa: { skipped },
+        mfa: { enabled, skipped },
       } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
-      // Currently, only the MFA skip state is exposed in logto_config
+      // Currently, only the MFA enabled and skipped states are exposed in logto_config
       // so we only need to check the MFA field
       assertThat(
         fields.mfa === AccountCenterControlValue.Edit,
@@ -92,12 +94,17 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
       const user = await findUserById(userId);
       const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
 
+      const configToUpdate = {
+        ...(enabled === undefined ? {} : { enabled }),
+        ...(skipped === undefined ? {} : { skipped }),
+      };
+
       const updatedUser = await updateUserById(userId, {
         logtoConfig: {
           ...user.logtoConfig,
           [userMfaDataKey]: {
             ...(existingMfaData.success ? existingMfaData.data : {}),
-            skipped,
+            ...configToUpdate,
           },
         },
       });
@@ -105,9 +112,7 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
       ctx.body = {
-        mfa: {
-          skipped,
-        },
+        mfa: { ...configToUpdate },
       };
 
       return next();

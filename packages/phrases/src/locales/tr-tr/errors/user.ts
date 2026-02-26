@@ -30,6 +30,7 @@ const user = {
   missing_profile: 'Oturum açmadan önce ek bilgi sağlamanız gerekiyor.',
   role_exists: '{{roleId}} rol kimliği bu kullanıcıya zaten eklenmiştir.',
   invalid_role_type: 'Geçersiz rol türü, makine-makine rolü kullanıcıya atanamaz.',
+  suggest_mfa: "Daha iyi hesap güvenliği için MFA'yı hesabınıza bağlamanızı öneririz.",
   missing_mfa: 'Oturum açmadan önce ekstra MFA bağlamanız gerekiyor.',
   totp_already_in_use: 'TOTP zaten kullanımda.',
   backup_code_already_in_use: 'Yedek kod zaten kullanımda.',

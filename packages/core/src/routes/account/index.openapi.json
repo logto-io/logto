@@ -178,7 +178,7 @@
       "get": {
         "operationId": "GetLogtoConfig",
         "summary": "Get logto config",
-        "description": "Retrieve the exposed portion of the current user's logto config. This endpoint currently includes only the MFA skip state.",
+        "description": "Retrieve the exposed portion of the current user's logto config. This endpoint currently includes only the MFA enabled and skipped states.",
         "responses": {
           "200": {
             "description": "The exposed logto config fields were retrieved successfully."
@@ -194,7 +194,7 @@
       "patch": {
         "operationId": "UpdateLogtoConfig",
         "summary": "Update logto config",
-        "description": "Update the exposed portion of the current user's logto config. This endpoint currently allows updating only the MFA skip state.",
+        "description": "Update the exposed portion of the current user's logto config. This endpoint currently allows updating only the MFA enabled and skipped states.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -202,6 +202,9 @@
                 "properties": {
                   "mfa": {
                     "properties": {
+                      "enabled": {
+                        "description": "Set whether MFA is enabled for the user."
+                      },
                       "skipped": {
                         "description": "Set whether the user is marked as having skipped MFA binding."
                       }

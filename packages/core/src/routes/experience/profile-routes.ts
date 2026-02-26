@@ -170,6 +170,22 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
   );
 
   router.post(
+    `${experienceRoutes.mfa}/mfa-enabled`,
+    koaGuard({ status: [204, 400, 403, 404] }),
+    verifiedInteractionGuard(),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
+
+      experienceInteraction.mfa.markMfaEnabled();
+      await experienceInteraction.save();
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
     `${experienceRoutes.mfa}/mfa-skipped`,
     koaGuard({ status: [204, 400, 403, 404, 422] }),
     verifiedInteractionGuard(),
@@ -331,6 +347,8 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           break;
         }
       }
+
+      experienceInteraction.mfa.markMfaEnabled();
 
       await experienceInteraction.save();
 

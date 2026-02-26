@@ -15,6 +15,15 @@ export const userPasskeySignInDataKey = 'passkey_sign_in';
  */
 export const userMfaDataGuard = z.object({
   /**
+   * Whether the user has actively enabled/bound MFA factors
+   *
+   * Note: The `undefined` value indicates that a new user has never made a choice on enabling the optional MFA; or an
+   * existing user data was created before the introduction of this field, so the MFA enabled state is unknown. We need
+   * to check extra conditions to determine it when the user submits the experience interaction.
+   * @see {@link @logto/core/packages/core/src/routes/experience/classes/mfa.ts#assertOptionalMfaEnablement}
+   */
+  enabled: z.boolean().optional(),
+  /**
    * Whether the user has skipped MFA binding flow
    */
   skipped: z.boolean().optional(),

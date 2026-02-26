@@ -29,6 +29,7 @@ const user = {
   missing_profile: '請於登錄時提供必要的用戶補充信息。',
   role_exists: '角色 ID {{roleId}} 已添加到此用戶',
   invalid_role_type: '無效角色類型，無法將機器對機器角色分配給用戶。',
+  suggest_mfa: '為了提升帳戶安全性，我們建議你將 MFA 綁定到你的帳戶。',
   missing_mfa: '在登錄前需要綁定額外的多因素驗證。',
   totp_already_in_use: 'TOTP 已經在使用中。',
   backup_code_already_in_use: '備份代碼已經在使用中。',

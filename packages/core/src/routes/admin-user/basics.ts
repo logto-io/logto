@@ -128,6 +128,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       params: object({ userId: string() }),
       response: object({
         mfa: object({
+          enabled: boolean().optional(),
           skipped: boolean(),
           skipMfaOnSignIn: boolean(),
         }),
@@ -150,6 +151,9 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       ctx.body = {
         mfa: {
+          // The `undefined` value indicates the MFA `enabled` status is unknown for legacy users.
+          // New users created after the `enabled` field introduction will have a `false` value by default.
+          enabled: existingMfaData.success ? existingMfaData.data.enabled : undefined,
           skipped: existingMfaData.success ? Boolean(existingMfaData.data.skipped) : false,
           skipMfaOnSignIn: existingMfaData.success
             ? Boolean(existingMfaData.data.skipMfaOnSignIn)
@@ -172,6 +176,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       params: object({ userId: string() }),
       body: object({
         mfa: object({
+          enabled: boolean(),
           skipped: boolean(),
           skipMfaOnSignIn: boolean(),
         }),
@@ -181,6 +186,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       }),
       response: object({
         mfa: object({
+          enabled: boolean(),
           skipped: boolean(),
           skipMfaOnSignIn: boolean(),
         }),
@@ -207,6 +213,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
           ...user.logtoConfig,
           [userMfaDataKey]: {
             ...(existingMfaData.success ? existingMfaData.data : {}),
+            enabled: mfa.enabled,
             skipped: mfa.skipped,
             skipMfaOnSignIn: mfa.skipMfaOnSignIn,
           },
@@ -220,8 +227,8 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
       ctx.body = {
-        mfa: { skipped: mfa.skipped, skipMfaOnSignIn: mfa.skipMfaOnSignIn },
-        passkeySignIn: { skipped: passkeySignIn.skipped },
+        mfa,
+        passkeySignIn,
       };
 
       return next();

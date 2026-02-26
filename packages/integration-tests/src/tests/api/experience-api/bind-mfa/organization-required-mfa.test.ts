@@ -221,7 +221,7 @@ describe('Organization required MFA policy', () => {
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
       await expectRejects(client.submitInteraction(), {
-        code: 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
       await client.skipMfaBinding();
@@ -253,7 +253,7 @@ describe('Organization required MFA policy', () => {
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
       await expectRejects(client.submitInteraction(), {
-        code: 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
       await client.skipMfaBinding();
