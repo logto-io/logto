@@ -495,17 +495,18 @@ export class Mfa {
       return;
     }
 
-    const availableFactors =
-      await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
+    // Adaptive binding should only expose factors that users can bind right now.
+    // This excludes non-bindable factors (e.g. backup code) for actionability.
+    const bindableFactors = await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
 
     // Tenant has no bindable MFA factors enabled in SIE (e.g. all disabled).
     // In this case there is no actionable binding step for end users, so skip
     // adaptive binding enforcement instead of throwing a non-actionable error.
-    if (availableFactors.length === 0) {
+    if (bindableFactors.length === 0) {
       return;
     }
 
-    throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
+    throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors: bindableFactors });
   }
 
   /**
@@ -556,7 +557,10 @@ export class Mfa {
       return;
     }
 
-    const availableFactors = sortMfaFactors(
+    // Mandatory policy should check the factor set configured by tenant/org policy.
+    // This is policy-required scope (may include backup requirement via separate assertion),
+    // not the bindable-factor scope used by adaptive binding enforcement.
+    const requiredFactors = sortMfaFactors(
       factors.filter((factor) => factor !== MfaFactor.BackupCode)
     );
 
@@ -566,17 +570,17 @@ export class Mfa {
 
     // Assert that the user has at least one of the required factors bound
     assertThat(
-      availableFactors.some((factor) => linkedFactors.includes(factor)),
+      requiredFactors.some((factor) => linkedFactors.includes(factor)),
       new RequestError(
         { code: 'user.missing_mfa', status: 422 },
         policy === MfaPolicy.Mandatory || isMfaRequiredByUserOrganizations
-          ? { availableFactors }
-          : { availableFactors, skippable: true }
+          ? { availableFactors: requiredFactors }
+          : { availableFactors: requiredFactors, skippable: true }
       )
     );
 
     // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
-    await this.guardAdditionalBindingSuggestion(factorsInUser, availableFactors);
+    await this.guardAdditionalBindingSuggestion(factorsInUser, requiredFactors);
 
     // Assert backup code
     assertThat(
