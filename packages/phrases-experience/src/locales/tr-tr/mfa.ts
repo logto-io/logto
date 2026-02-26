@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: 'Telefonunuza gönderilen kodu girin',
   send_to_email: '{{identifier}} adresine gönder',
   send_to_phone: '{{identifier}} adresine gönder',
+  onboarding: '2 aşamalı doğrulamayı aç',
+  onboarding_description:
+    'Hesabınızı 2 aşamalı doğrulama ile koruyun. Bir veya daha fazla yöntem seçin: Geçiş anahtarı, kimlik doğrulama uygulaması (OTP), SMS doğrulama kodu veya yedek kodlar.',
+  enable_mfa: '2 aşamalı doğrulamayı etkinleştir',
   add_mfa_factors: '2 aşamalı doğrulamayı ekle',
   add_mfa_description:
     'İki faktörlü doğrulama etkinleştirildi. Güvenli oturum açmak için ikinci doğrulama yönteminizi seçin.',

@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: 'Enter the code sent to your phone',
   send_to_email: 'Send to {{identifier}}',
   send_to_phone: 'Send to {{identifier}}',
+  onboarding: 'Turn on 2-step verification',
+  onboarding_description:
+    'Protect your account with 2-step verification. Choose one or more methods: Passkey, authenticator app (OTP), SMS verification code, or backup codes.',
+  enable_mfa: 'Enable 2-step verification',
   add_mfa_factors: 'Add 2-step verification',
   add_mfa_description:
     'Two-factor verification is enabled. Select your second verification method for secure sign-in.',

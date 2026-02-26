@@ -257,6 +257,7 @@ export class Mfa {
     );
 
     this.#totp = bindTotp;
+    this.markMfaEnabled();
   }
 
   /**
@@ -279,6 +280,7 @@ export class Mfa {
 
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.WebAuthn]);
     this.#webAuthn = [...(this.#webAuthn ?? []), bindWebAuthn];
+    this.markMfaEnabled();
   }
 
   /**
@@ -314,6 +316,7 @@ export class Mfa {
     );
 
     this.#backupCode = verificationRecord.toBindMfa();
+    this.markMfaEnabled();
   }
 
   /**

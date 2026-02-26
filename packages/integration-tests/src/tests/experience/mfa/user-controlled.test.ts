@@ -11,7 +11,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
-import { generateUsername, waitFor } from '#src/utils.js';
+import { generateUsername } from '#src/utils.js';
 
 describe('MFA - User controlled', () => {
   beforeAll(async () => {
@@ -55,12 +55,13 @@ describe('MFA - User controlled', () => {
     experience.toBeAt('register/password');
     await experience.toFillNewPasswords(password);
 
-    // Skip MFA
+    // MfaOnboarding page should appear, skip MFA
+    await experience.waitForPathname('mfa-onboarding');
     await experience.toClick('div[role=button][class$=skipButton]');
     await experience.page.waitForNetworkIdle();
     await experience.verifyThenEnd(false);
 
-    // Sign in
+    // Sign in - should not need MFA prompt since user already skipped
     await experience.startWith(demoAppUrl, 'sign-in');
     await experience.toFillForm(
       {
@@ -87,10 +88,10 @@ describe('MFA - User controlled', () => {
         identifier: userProfile.username,
         password: userProfile.password,
       },
-      { submit: true, shouldNavigate: false }
+      { submit: true }
     );
-    // Wait for the TOTP page rendered
-    await waitFor(1000);
+    // MfaOnboarding page should appear, skip MFA
+    await experience.waitForPathname('mfa-onboarding');
     await experience.toClick('div[role=button][class$=skipButton]');
     // Wait for the sign-in requests to be handled
     await experience.page.waitForNetworkIdle();
@@ -110,6 +111,12 @@ describe('MFA - User controlled', () => {
       },
       { submit: true }
     );
+    // MfaOnboarding page should appear, click Enable to proceed to binding
+    await experience.waitForPathname('mfa-onboarding');
+    await experience.toClick('button', 'Enable 2-step verification');
+    // Select TOTP factor from the binding list
+    await experience.waitForPathname('mfa-binding');
+    await experience.toClick('button', 'Authenticator app OTP');
     const totpSecret = await experience.toBindTotp();
     await experience.verifyThenEnd(false);
 

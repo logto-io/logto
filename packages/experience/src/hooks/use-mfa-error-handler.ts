@@ -130,6 +130,14 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
             ? factors.filter((factor) => factor !== MfaFactor.WebAuthn)
             : factors;
 
+        if (error.code === 'user.suggest_mfa') {
+          navigate(
+            { pathname: `/mfa-onboarding` },
+            { replace, state: { availableFactors, skippable } }
+          );
+          return;
+        }
+
         await handleMfaRedirect(flow, {
           availableFactors,
           skippable,
@@ -138,11 +146,12 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         });
       };
     },
-    [handleMfaRedirect, setToast]
+    [handleMfaRedirect, navigate, replace, setToast]
   );
 
   const mfaVerificationErrorHandler = useMemo<ErrorHandlers>(
     () => ({
+      'user.suggest_mfa': handleMfaError(UserMfaFlow.MfaBinding),
       'user.missing_mfa': handleMfaError(UserMfaFlow.MfaBinding),
       'session.mfa.require_mfa_verification': handleMfaError(UserMfaFlow.MfaVerification),
       // Optional suggestion to add another MFA during registration
