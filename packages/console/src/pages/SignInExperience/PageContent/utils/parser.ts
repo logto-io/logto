@@ -120,6 +120,7 @@ export const sieFormDataParser = {
       // Start: Remove the omitted fields from the data
       passwordPolicy,
       mfa,
+      adaptiveMfa,
       captchaPolicy,
       sentinelPolicy,
       emailBlocklistPolicy,
@@ -176,6 +177,7 @@ export const sieFormDataParser = {
  * - `signUp.secondaryIdentifiers`: This field is optional in the data schema,
  *  but through the form, we always fill it with an empty array.
  * - `mfa`
+ * - `adaptiveMfa`
  * - `passwordPolicy`
  * - `captchaPolicy`
  * - `sentinelPolicy`
@@ -188,6 +190,7 @@ export const signInExperienceToUpdatedDataParser = (
     signUp,
     // Start: Remove the omitted fields from the data
     mfa,
+    adaptiveMfa,
     passwordPolicy,
     captchaPolicy,
     sentinelPolicy,
