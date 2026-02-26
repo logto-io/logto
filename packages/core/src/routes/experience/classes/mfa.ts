@@ -101,6 +101,12 @@ const isPasskeySkipped = (logtoConfig: JsonObject): boolean => {
   return parsed.success ? parsed.data[userPasskeySignInDataKey].skipped === true : false;
 };
 
+type SubmitMfaValidationContext = {
+  mfaSettings: MfaSettings;
+  user: User;
+  userFactors: MfaFactor[];
+};
+
 /**
  * This class stores all the pending new MFA settings for a user.
  */
@@ -418,12 +424,16 @@ export class Mfa {
     );
   }
 
-  async assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult?: Optional<AdaptiveMfaResult>) {
+  async assertAdaptiveMfaBindingFulfilled(
+    adaptiveMfaResult?: Optional<AdaptiveMfaResult>,
+    submitMfaValidationContext?: SubmitMfaValidationContext
+  ) {
     if (!EnvSet.values.isDevFeaturesEnabled || !adaptiveMfaResult?.requiresMfa) {
       return;
     }
 
-    const availableFactorsForVerification = await this.getUserMfaFactors();
+    const availableFactorsForVerification =
+      submitMfaValidationContext?.userFactors ?? (await this.getUserMfaFactors());
 
     // Adaptive MFA binding is only needed when risk requires MFA and there is no available
     // factor for verification in the current interaction context.
@@ -473,11 +483,15 @@ export class Mfa {
     interactionEvent: InteractionEvent;
     adaptiveMfaResult?: Optional<AdaptiveMfaResult>;
   }) {
+    // Compute shared async context once per submit to avoid duplicated reads
+    // across adaptive and mandatory phases.
+    const submitMfaValidationContext = await this.buildSubmitMfaValidationContext();
+
     if (interactionEvent === InteractionEvent.SignIn) {
-      await this.assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult);
+      await this.assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult, submitMfaValidationContext);
     }
 
-    await this.assertUserMandatoryMfaFulfilled();
+    await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext);
   }
 
   /**
@@ -486,8 +500,10 @@ export class Mfa {
    * @throws {RequestError} with status 422 if the user existing backup codes is empty, new backup codes is required
    */
   // eslint-disable-next-line complexity
-  async assertUserMandatoryMfaFulfilled() {
-    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+  async assertUserMandatoryMfaFulfilled(submitMfaValidationContext?: SubmitMfaValidationContext) {
+    const mfaSettings =
+      submitMfaValidationContext?.mfaSettings ??
+      (await this.signInExperienceValidator.getMfaSettings());
     const { policy, factors } = mfaSettings;
 
     // If there are no factors, then there is nothing to check
@@ -495,7 +511,9 @@ export class Mfa {
       return;
     }
 
-    const { logtoConfig, id: userId } = await this.interactionContext.getIdentifiedUser();
+    const identifiedUser =
+      submitMfaValidationContext?.user ?? (await this.interactionContext.getIdentifiedUser());
+    const { logtoConfig, id: userId } = identifiedUser;
 
     const isMfaRequiredByUserOrganizations = await this.isMfaRequiredByUserOrganizations(
       mfaSettings,
@@ -529,7 +547,12 @@ export class Mfa {
       factors.filter((factor) => factor !== MfaFactor.BackupCode)
     );
 
-    const factorsInUser = await this.getUserMfaFactors();
+    const factorsInUser =
+      submitMfaValidationContext?.userFactors ??
+      (await this.getUserMfaFactors({
+        mfaSettings,
+        user: identifiedUser,
+      }));
     const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);
     const linkedFactors = deduplicate([...factorsInUser, ...factorsInBind]);
 
@@ -612,20 +635,52 @@ export class Mfa {
     return organizations.some(({ isMfaRequired }) => isMfaRequired);
   }
 
-  private async getUserMfaFactors(): Promise<MfaFactor[]> {
-    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const user = await this.interactionContext.getIdentifiedUser();
+  /**
+   * Build shared context for submit-time MFA fulfillment checks.
+   *
+   * @remarks
+   * This context is shared by both adaptive MFA binding check and mandatory MFA policy check,
+   * so we can reuse the same resolved values and avoid duplicated async logic in one submit flow.
+   *
+   * Although we still call async getters here, both of them already rely on internal caching:
+   * - `signInExperienceValidator.getMfaSettings()` reads from cached sign-in experience data.
+   * - `interactionContext.getIdentifiedUser()` resolves to the interaction-level user cache.
+   */
+  private async buildSubmitMfaValidationContext(): Promise<SubmitMfaValidationContext> {
+    const [mfaSettings, user] = await Promise.all([
+      this.signInExperienceValidator.getMfaSettings(),
+      this.interactionContext.getIdentifiedUser(),
+    ]);
+    const userFactors = await this.getUserMfaFactors({ mfaSettings, user });
+
+    return {
+      mfaSettings,
+      user,
+      userFactors,
+    };
+  }
+
+  private async getUserMfaFactors({
+    mfaSettings,
+    user,
+  }: {
+    mfaSettings?: MfaSettings;
+    user?: User;
+  } = {}): Promise<MfaFactor[]> {
+    const resolvedMfaSettings =
+      mfaSettings ?? (await this.signInExperienceValidator.getMfaSettings());
+    const resolvedUser = user ?? (await this.interactionContext.getIdentifiedUser());
     const currentProfile = this.interactionContext.getCurrentProfile();
 
-    const existingFactors = getAllUserEnabledMfaVerifications(mfaSettings, user);
+    const existingFactors = getAllUserEnabledMfaVerifications(resolvedMfaSettings, resolvedUser);
     const inSessionBoundFactors = [
       ...(this.#totp ? [MfaFactor.TOTP] : []),
       ...(this.#webAuthn?.length ? [MfaFactor.WebAuthn] : []),
-      ...(mfaSettings.factors.includes(MfaFactor.EmailVerificationCode) &&
+      ...(resolvedMfaSettings.factors.includes(MfaFactor.EmailVerificationCode) &&
       currentProfile.primaryEmail
         ? [MfaFactor.EmailVerificationCode]
         : []),
-      ...(mfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) &&
+      ...(resolvedMfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) &&
       currentProfile.primaryPhone
         ? [MfaFactor.PhoneVerificationCode]
         : []),

@@ -1,4 +1,11 @@
-import { InteractionEvent } from '@logto/schemas';
+import {
+  InteractionEvent,
+  MfaFactor,
+  type Mfa as MfaSettings,
+  MfaPolicy,
+  OrganizationRequiredMfaPolicy,
+  type User,
+} from '@logto/schemas';
 
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -6,31 +13,59 @@ import type Queries from '#src/tenants/Queries.js';
 import { type InteractionContext } from '../types.js';
 
 import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
+import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import { Mfa } from './mfa.js';
 
 const { jest } = import.meta;
 
-const createMfa = () => {
+const createMfa = ({
+  mfaSettings = {
+    policy: MfaPolicy.NoPrompt,
+    factors: [],
+    organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+  },
+  user = {
+    id: 'user-id',
+    logtoConfig: {},
+    mfaVerifications: [],
+  },
+  currentProfile = {},
+}: {
+  mfaSettings?: MfaSettings;
+  user?: Partial<User>;
+  currentProfile?: Record<string, unknown>;
+} = {}) => {
+  const getIdentifiedUser = jest.fn(async () => user as User);
   const interactionContext: InteractionContext = {
     getInteractionEvent: () => InteractionEvent.SignIn,
-    getIdentifiedUser: async () => {
-      throw new Error('should not be called');
-    },
+    getIdentifiedUser,
     getVerificationRecordById: () => {
       throw new Error('should not be called');
     },
     getVerificationRecordByTypeAndId: () => {
       throw new Error('should not be called');
     },
-    getCurrentProfile: () => ({}),
+    getCurrentProfile: () => currentProfile,
   };
 
-  return new Mfa({} as Libraries, {} as Queries, {}, interactionContext);
+  const mfa = new Mfa({} as Libraries, {} as Queries, {}, interactionContext);
+  const signInExperienceValidator = (
+    mfa as unknown as { signInExperienceValidator: SignInExperienceValidator }
+  ).signInExperienceValidator;
+  const getMfaSettings = jest
+    .spyOn(signInExperienceValidator, 'getMfaSettings')
+    .mockResolvedValue(mfaSettings);
+
+  return {
+    mfa,
+    getIdentifiedUser,
+    getMfaSettings,
+  };
 };
 
 describe('Mfa.assertSubmitMfaFulfilled', () => {
   it('runs adaptive binding check before mandatory check for sign-in', async () => {
-    const mfa = createMfa();
+    const { mfa } = createMfa();
     const adaptiveMfaResult: AdaptiveMfaResult = {
       requiresMfa: true,
       triggeredRules: [],
@@ -44,15 +79,15 @@ describe('Mfa.assertSubmitMfaFulfilled', () => {
       adaptiveMfaResult,
     });
 
-    expect(adaptiveSpy).toHaveBeenCalledWith(adaptiveMfaResult);
-    expect(mandatorySpy).toHaveBeenCalledTimes(1);
+    expect(adaptiveSpy).toHaveBeenCalledWith(adaptiveMfaResult, expect.any(Object));
+    expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object));
     expect(adaptiveSpy.mock.invocationCallOrder[0]).toBeLessThan(
       mandatorySpy.mock.invocationCallOrder[0]!
     );
   });
 
   it('skips adaptive binding check for non-sign-in events', async () => {
-    const mfa = createMfa();
+    const { mfa } = createMfa();
 
     const adaptiveSpy = jest.spyOn(mfa, 'assertAdaptiveMfaBindingFulfilled').mockResolvedValue();
     const mandatorySpy = jest.spyOn(mfa, 'assertUserMandatoryMfaFulfilled').mockResolvedValue();
@@ -62,6 +97,49 @@ describe('Mfa.assertSubmitMfaFulfilled', () => {
     });
 
     expect(adaptiveSpy).not.toHaveBeenCalled();
-    expect(mandatorySpy).toHaveBeenCalledTimes(1);
+    expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object));
+  });
+
+  it('reuses submit async context across adaptive and mandatory checks', async () => {
+    const mandatoryMfaSettings: MfaSettings = {
+      policy: MfaPolicy.Mandatory,
+      factors: [MfaFactor.TOTP],
+      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+    };
+
+    const { mfa, getIdentifiedUser, getMfaSettings } = createMfa({
+      mfaSettings: mandatoryMfaSettings,
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        mfaVerifications: [
+          {
+            type: MfaFactor.TOTP,
+            id: 'totp-id',
+            key: 'totp-secret',
+            createdAt: new Date(0).toISOString(),
+          },
+        ],
+      },
+    });
+
+    const getUserMfaFactorsSpy = jest.spyOn(
+      mfa as unknown as {
+        getUserMfaFactors: (...args: unknown[]) => Promise<unknown>;
+      },
+      'getUserMfaFactors'
+    );
+
+    await mfa.assertSubmitMfaFulfilled({
+      interactionEvent: InteractionEvent.SignIn,
+      adaptiveMfaResult: {
+        requiresMfa: true,
+        triggeredRules: [],
+      },
+    });
+
+    expect(getMfaSettings).toHaveBeenCalledTimes(1);
+    expect(getIdentifiedUser).toHaveBeenCalledTimes(1);
+    expect(getUserMfaFactorsSpy).toHaveBeenCalledTimes(1);
   });
 });
