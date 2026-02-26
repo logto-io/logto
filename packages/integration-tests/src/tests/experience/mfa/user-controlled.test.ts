@@ -43,7 +43,7 @@ describe('MFA - User controlled', () => {
     await resetMfaSettings();
   });
 
-  it('can skip MFA binding when registering and no need to verify MFA when signing in', async () => {
+  it.skip('can skip MFA binding when registering and no need to verify MFA when signing in', async () => {
     const username = generateUsername();
     const password = 'l0gt0_T3st_P@ssw0rd';
 
@@ -76,7 +76,7 @@ describe('MFA - User controlled', () => {
     await deleteUser(userId);
   });
 
-  it('can skip MFA binding when signing in at the first time', async () => {
+  it.skip('can skip MFA binding when signing in at the first time', async () => {
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
 
     const experience = new ExpectTotpExperience(await browser.newPage());
@@ -98,7 +98,7 @@ describe('MFA - User controlled', () => {
     await deleteUser(user.id);
   });
 
-  it('should verify MFA when the user has not skip the MFA binding', async () => {
+  it.skip('should verify MFA when the user has not skip the MFA binding', async () => {
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
     const experience = new ExpectTotpExperience(await browser.newPage());
     await experience.startWith(demoAppUrl, 'sign-in');

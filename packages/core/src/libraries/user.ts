@@ -4,6 +4,8 @@ import {
   ProductEvent,
   RoleType,
   UsersPasswordEncryptionMethod,
+  userMfaDataGuard,
+  userMfaDataKey,
 } from '@logto/schemas';
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
@@ -191,9 +193,14 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
 
   const addUserMfaVerification = async (userId: string, payload: BindMfa) => {
     // TODO @sijie use jsonb array append
-    const { mfaVerifications } = await findUserById(userId);
+    const { mfaVerifications, logtoConfig } = await findUserById(userId);
+    const userMfaData = userMfaDataGuard.safeParse(logtoConfig[userMfaDataKey]);
     await updateUserById(userId, {
       mfaVerifications: [...mfaVerifications, convertBindMfaToMfaVerification(payload)],
+      logtoConfig: {
+        ...logtoConfig,
+        [userMfaDataKey]: { ...(userMfaData.success ? userMfaData.data : {}), enabled: true },
+      },
     });
   };
 

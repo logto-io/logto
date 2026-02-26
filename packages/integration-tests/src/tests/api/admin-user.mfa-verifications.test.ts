@@ -62,7 +62,7 @@ describe('admin console user management (mfa verifications)', () => {
 
     const config = await getUserLogtoConfig(user.id);
     expect(config).toEqual({
-      mfa: { skipped: false, skipMfaOnSignIn: false },
+      mfa: { enabled: false, skipped: false, skipMfaOnSignIn: false },
       passkeySignIn: { skipped: false },
     });
 
