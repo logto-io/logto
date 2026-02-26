@@ -141,6 +141,8 @@ const user_details = {
     name_column: 'ชื่อ',
     session_id_column: 'รหัสเซสชัน',
     location_column: 'ตำแหน่ง',
+    revoke_session: 'เพิกถอนเซสชัน',
+    revoke_session_confirmation: 'หากลบเซสชันนี้ ผู้ใช้จะต้องยืนยันตัวตนอีกครั้ง',
   },
   connections: {
     title: 'การเชื่อมต่อ',

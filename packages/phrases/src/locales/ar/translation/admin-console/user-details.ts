@@ -141,6 +141,8 @@ const user_details = {
     name_column: 'الاسم',
     session_id_column: 'معرف الجلسة',
     location_column: 'الموقع',
+    revoke_session: 'إبطال الجلسة',
+    revoke_session_confirmation: 'إذا أزلت هذه الجلسة، فسيُطلب من المستخدمين إعادة المصادقة.',
   },
   connections: {
     title: 'الاتصال',

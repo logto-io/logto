@@ -140,6 +140,8 @@ const user_details = {
     name_column: '이름',
     session_id_column: '세션 ID',
     location_column: '위치',
+    revoke_session: '세션 해지',
+    revoke_session_confirmation: '이 세션을 제거하면 사용자는 다시 인증해야 합니다.',
   },
   connections: {
     title: '연결',

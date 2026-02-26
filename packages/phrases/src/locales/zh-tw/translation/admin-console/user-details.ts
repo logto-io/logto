@@ -133,6 +133,8 @@ const user_details = {
     name_column: '名稱',
     session_id_column: '會話 ID',
     location_column: '位置',
+    revoke_session: '撤銷工作階段',
+    revoke_session_confirmation: '如果移除此工作階段，使用者將需要重新驗證。',
   },
   connections: {
     title: '連接',

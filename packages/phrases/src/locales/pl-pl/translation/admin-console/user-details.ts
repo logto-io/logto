@@ -143,6 +143,9 @@ const user_details = {
     name_column: 'Nazwa',
     session_id_column: 'ID sesji',
     location_column: 'Lokalizacja',
+    revoke_session: 'Unieważnij sesję',
+    revoke_session_confirmation:
+      'Jeśli usuniesz tę sesję, użytkownicy będą musieli ponownie się uwierzytelnić.',
   },
   connections: {
     title: 'Połączenie',

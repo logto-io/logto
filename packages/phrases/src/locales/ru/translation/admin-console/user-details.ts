@@ -144,6 +144,9 @@ const user_details = {
     name_column: 'Имя',
     session_id_column: 'ID сессии',
     location_column: 'Местоположение',
+    revoke_session: 'Отозвать сессию',
+    revoke_session_confirmation:
+      'Если удалить эту сессию, пользователям потребуется повторная аутентификация.',
   },
   connections: {
     title: 'Подключение',

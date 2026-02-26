@@ -145,6 +145,9 @@ const user_details = {
     name_column: 'İsim',
     session_id_column: 'Oturum ID',
     location_column: 'Konum',
+    revoke_session: 'Oturumu iptal et',
+    revoke_session_confirmation:
+      'Bu oturumu kaldırırsanız, kullanıcıların yeniden kimlik doğrulaması gerekir.',
   },
   connections: {
     title: 'Bağlantı',

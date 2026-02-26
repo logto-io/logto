@@ -141,6 +141,8 @@ const user_details = {
     name_column: '名前',
     session_id_column: 'セッションID',
     location_column: '場所',
+    revoke_session: 'セッションを失効',
+    revoke_session_confirmation: 'このセッションを削除すると、ユーザーは再認証が必要になります。',
   },
   connections: {
     title: '接続',

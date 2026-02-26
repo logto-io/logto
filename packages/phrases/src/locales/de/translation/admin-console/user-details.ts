@@ -148,6 +148,9 @@ const user_details = {
     name_column: 'Name',
     session_id_column: 'Sitzungs-ID',
     location_column: 'Standort',
+    revoke_session: 'Sitzung widerrufen',
+    revoke_session_confirmation:
+      'Wenn Sie diese Sitzung entfernen, müssen sich Benutzer erneut authentifizieren.',
   },
   connections: {
     title: 'Verbindung',

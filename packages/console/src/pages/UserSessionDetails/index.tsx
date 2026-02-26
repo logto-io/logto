@@ -1,8 +1,10 @@
 import { Theme, type GetUserSessionResponse } from '@logto/schemas';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import useSWR from 'swr';
+import { useNavigate, useParams } from 'react-router-dom';
+import useSWR, { useSWRConfig } from 'swr';
 
+import Delete from '@/assets/icons/delete.svg?react';
 import SessionDarkIcon from '@/assets/icons/session-dark.svg?react';
 import SessionIcon from '@/assets/icons/session.svg?react';
 import DetailsPage from '@/components/DetailsPage';
@@ -17,6 +19,7 @@ import useTheme from '@/hooks/use-theme';
 
 import { getSessionDisplayInfo } from '../UserDetails/UserSettings/UserSessions/utils';
 
+import RevokeSessionConfirmModal from './RevokeSessionConfirmModal';
 import styles from './index.module.scss';
 
 type PageTitleProps = {
@@ -43,6 +46,8 @@ function UserSessionDetails() {
     keyPrefix: 'admin_console',
   });
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { mutate: mutateGlobal } = useSWRConfig();
 
   const { userId, sessionId } = useParams();
 
@@ -58,6 +63,7 @@ function UserSessionDetails() {
   const isLoading = isSessionLoading;
   const error = sessionError;
   const sessionLocation = sessionData ? getSessionDisplayInfo(sessionData).location : '';
+  const [showRevokeConfirmModal, setShowRevokeConfirmModal] = useState(false);
   const headerSubtitle = sessionData && (
     <span>
       {t('user_details.sessions.session_id_column')}{' '}
@@ -86,6 +92,16 @@ function UserSessionDetails() {
               value: sessionLocation || '-',
               copyToClipboard: false,
             }}
+            actionMenuItems={[
+              {
+                title: 'user_details.sessions.revoke_session',
+                icon: <Delete />,
+                onClick: () => {
+                  setShowRevokeConfirmModal(true);
+                },
+                type: 'danger',
+              },
+            ]}
           />
           <TabNav>
             <TabNavItem href={getDetailsTabNavLink(userId ?? '', sessionId ?? '')}>
@@ -100,6 +116,21 @@ function UserSessionDetails() {
             </div>
           </Card>
         </>
+      )}
+      {userId && sessionId && (
+        <RevokeSessionConfirmModal
+          userId={userId}
+          sessionId={sessionId}
+          isOpen={showRevokeConfirmModal}
+          onCancel={() => {
+            setShowRevokeConfirmModal(false);
+          }}
+          onRevokeCallback={() => {
+            setShowRevokeConfirmModal(false);
+            void mutateGlobal(`api/users/${userId}/sessions`);
+            navigate(-1);
+          }}
+        />
       )}
     </DetailsPage>
   );

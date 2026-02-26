@@ -147,6 +147,9 @@ const user_details = {
     name_column: 'Nome',
     session_id_column: 'ID Sessione',
     location_column: 'Posizione',
+    revoke_session: 'Revoca sessione',
+    revoke_session_confirmation:
+      'Se rimuovi questa sessione, gli utenti dovranno autenticarsi nuovamente.',
   },
   connections: {
     title: 'Connessione',

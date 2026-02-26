@@ -134,6 +134,8 @@ const user_details = {
     name_column: '名称',
     session_id_column: '会话 ID',
     location_column: '位置',
+    revoke_session: '撤销会话',
+    revoke_session_confirmation: '如果移除此会话，用户将被迫重新进行身份验证。',
   },
   connections: {
     title: '连接',
