@@ -14,6 +14,17 @@
       }
     },
     "/api/users/{userId}/sessions/{sessionId}": {
+      "get": {
+        "tags": ["Dev feature"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return a non-expired session of the user."
+          }
+        },
+        "summary": "Get user active session",
+        "description": "Retrieve a non-expired session for the user by session ID, including session metadata and interaction details when available."
+      },
       "delete": {
         "tags": ["Dev feature"],
         "parameters": [

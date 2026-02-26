@@ -181,39 +181,59 @@ export const consent = async ({
 export const createSessionLibrary = (queries: Queries) => {
   const { oidcSessionExtensions } = queries;
 
+  const formatSessionWithExtension = (
+    session: Awaited<
+      ReturnType<typeof oidcSessionExtensions.findUserActiveSessionsWithExtensions>
+    >[number]
+  ) => {
+    const { lastSubmission, clientId, accountId, payload, ...rest } = session;
+
+    const interactionContextResult =
+      jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
+
+    const payloadResult = oidcSessionInstancePayloadGuard.safeParse(payload);
+
+    if (!payloadResult.success) {
+      throw new RequestError(
+        { code: 'oidc.invalid_session_payload', status: 500 },
+        {
+          cause: payloadResult.error,
+        }
+      );
+    }
+
+    return {
+      ...rest,
+      payload: payloadResult.data,
+      lastSubmission: interactionContextResult.success ? interactionContextResult.data : null,
+      clientId,
+      accountId,
+    };
+  };
+
   const findUserActiveSessionsWithExtensions = async (userId: string) => {
     const result = await oidcSessionExtensions.findUserActiveSessionsWithExtensions(userId);
 
-    const formattedResult = result.map((session) => {
-      const { lastSubmission, clientId, accountId, payload, ...rest } = session;
-
-      const interactionContextResult =
-        jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
-
-      const payloadResult = oidcSessionInstancePayloadGuard.safeParse(payload);
-
-      if (!payloadResult.success) {
-        throw new RequestError(
-          { code: 'oidc.invalid_session_payload', status: 500 },
-          {
-            cause: payloadResult.error,
-          }
-        );
-      }
-
-      return {
-        ...rest,
-        payload: payloadResult.data,
-        lastSubmission: interactionContextResult.success ? interactionContextResult.data : null,
-        clientId,
-        accountId,
-      };
-    });
+    const formattedResult = result.map((session) => formatSessionWithExtension(session));
 
     return formattedResult;
   };
 
+  const findUserActiveSessionWithExtension = async (userId: string, sessionId: string) => {
+    const result = await oidcSessionExtensions.findUserActiveSessionWithExtension(
+      userId,
+      sessionId
+    );
+
+    if (!result) {
+      return null;
+    }
+
+    return formatSessionWithExtension(result);
+  };
+
   return {
     findUserActiveSessionsWithExtensions,
+    findUserActiveSessionWithExtension,
   };
 };
