@@ -128,6 +128,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       params: object({ userId: string() }),
       response: object({
         mfa: object({
+          enabled: boolean(),
           skipped: boolean(),
           skipMfaOnSignIn: boolean(),
         }),
@@ -150,6 +151,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       ctx.body = {
         mfa: {
+          enabled: existingMfaData.success ? Boolean(existingMfaData.data.enabled) : false,
           skipped: existingMfaData.success ? Boolean(existingMfaData.data.skipped) : false,
           skipMfaOnSignIn: existingMfaData.success
             ? Boolean(existingMfaData.data.skipMfaOnSignIn)

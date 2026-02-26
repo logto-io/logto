@@ -270,6 +270,7 @@ describe('addUserMfaVerification()', () => {
     expect(updateUserById).toHaveBeenCalledWith(mockUser.id, {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       mfaVerifications: [{ type: MfaFactor.TOTP, key: 'secret', id: expect.anything(), createdAt }],
+      logtoConfig: { mfa: { enabled: true } },
     });
   });
 });
