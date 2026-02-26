@@ -34,7 +34,11 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type InteractionContext } from '../types.js';
 
-import { getAllUserEnabledMfaVerifications, sortMfaFactors } from './helpers.js';
+import {
+  getAllUserEnabledMfaVerifications,
+  getProfileMfaFactors,
+  sortMfaFactors,
+} from './helpers.js';
 import type { AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 
@@ -676,14 +680,7 @@ export class Mfa {
     const inSessionBoundFactors = [
       ...(this.#totp ? [MfaFactor.TOTP] : []),
       ...(this.#webAuthn?.length ? [MfaFactor.WebAuthn] : []),
-      ...(resolvedMfaSettings.factors.includes(MfaFactor.EmailVerificationCode) &&
-      currentProfile.primaryEmail
-        ? [MfaFactor.EmailVerificationCode]
-        : []),
-      ...(resolvedMfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) &&
-      currentProfile.primaryPhone
-        ? [MfaFactor.PhoneVerificationCode]
-        : []),
+      ...getProfileMfaFactors(resolvedMfaSettings, currentProfile),
     ];
 
     return deduplicate([...existingFactors, ...inSessionBoundFactors]);
