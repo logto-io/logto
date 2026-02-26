@@ -446,6 +446,20 @@ export class Mfa {
     throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
   }
 
+  async assertSubmitMfaFulfilled({
+    interactionEvent,
+    adaptiveMfaResult,
+  }: {
+    interactionEvent: InteractionEvent;
+    adaptiveMfaResult?: Optional<AdaptiveMfaResult>;
+  }) {
+    if (interactionEvent === InteractionEvent.SignIn) {
+      await this.assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult);
+    }
+
+    await this.assertUserMandatoryMfaFulfilled();
+  }
+
   /**
    * @throws {RequestError} with status 422 if the user has not bound the required MFA factors
    * @throws {RequestError} with status 422 if the user has not bound the backup code but enabled in the sign-in experience
