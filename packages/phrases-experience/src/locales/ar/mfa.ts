@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: 'أدخل الرمز المرسل إلى هاتفك',
   send_to_email: 'إرسال إلى {{identifier}}',
   send_to_phone: 'إرسال إلى {{identifier}}',
+  onboarding: 'تشغيل التحقق بخطوتين',
+  onboarding_description:
+    'احمِ حسابك بالتحقق بخطوتين. اختر طريقة أو أكثر: مفتاح المرور، تطبيق المصادقة (OTP)، رمز التحقق عبر الرسائل القصيرة، أو رموز النسخ الاحتياطي.',
+  enable_mfa: 'تفعيل التحقق بخطوتين',
   add_mfa_factors: 'إضافة التحقق من خطوتين',
   add_mfa_description: 'تم تمكين التحقق من خطوتين. حدد طريقة التحقق الثانية لتسجيل الدخول الآمن.',
   add_another_mfa_factor: 'إضافة تحقق آخر من خطوتين',

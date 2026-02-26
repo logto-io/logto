@@ -26,6 +26,7 @@ import EmailMfaBinding from './pages/MfaBinding/EmailMfaBinding';
 import PhoneMfaBinding from './pages/MfaBinding/PhoneMfaBinding';
 import TotpBinding from './pages/MfaBinding/TotpBinding';
 import WebAuthnBinding from './pages/MfaBinding/WebAuthnBinding';
+import MfaOnboarding from './pages/MfaOnboarding';
 import MfaVerification from './pages/MfaVerification';
 import BackupCodeVerification from './pages/MfaVerification/BackupCodeVerification';
 import EmailVerificationCode from './pages/MfaVerification/EmailVerificationCode';
@@ -123,6 +124,9 @@ const App = () => {
 
                       {/* Passwordless verification code */}
                       <Route path=":flow/verification-code" element={<VerificationCode />} />
+
+                      {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
+                      <Route path="mfa-onboarding" element={<MfaOnboarding />} />
 
                       {/* Mfa binding */}
                       <Route path={UserMfaFlow.MfaBinding}>

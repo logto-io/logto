@@ -42,6 +42,7 @@ import { type UserMfaVerificationsData, type InteractionContext } from '../types
 import {
   getAllUserEnabledMfaVerifications,
   getProfileMfaFactors,
+  mergeUserMfaVerifications,
   sortMfaFactors,
 } from './helpers.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
@@ -550,16 +551,17 @@ export class Mfa {
     factorsInUser: MfaFactor[],
     availableFactors: MfaFactor[]
   ) {
-    // Only suggest during registration flow
-    if (this.interactionContext.getInteractionEvent() !== InteractionEvent.Register) {
-      return;
-    }
-
     const { passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
+    const user = await this.interactionContext.getIdentifiedUser();
+    // Merged user MFA verifications result from both user profile and current interaction
+    const mergedUserMfaVerifications = mergeUserMfaVerifications(
+      user.mfaVerifications,
+      this.toUserMfaVerifications().mfaVerifications
+    );
     const hasOnlyBoundWebAuthnForPasskeySignIn =
       passkeySignIn.enabled &&
-      this.bindMfaFactorsArray.length === 1 &&
-      this.bindMfaFactorsArray[0]?.type === MfaFactor.WebAuthn;
+      mergedUserMfaVerifications.length === 1 &&
+      mergedUserMfaVerifications[0]?.type === MfaFactor.WebAuthn;
 
     const { signUp } = await this.signInExperienceValidator.getSignInExperienceData();
     // If the user has email, but not registered by email, no suggestion
@@ -596,7 +598,7 @@ export class Mfa {
       return;
     }
 
-    // If user already bound an MFA in this interaction, don't suggest again
+    // If user already bound an MFA in this interaction and it's not sign-in passkey, don't suggest again
     if (this.bindMfaFactorsArray.length > 0 && !hasOnlyBoundWebAuthnForPasskeySignIn) {
       return;
     }
@@ -607,7 +609,6 @@ export class Mfa {
     }
 
     // Get user data for masking
-    const user = await this.interactionContext.getIdentifiedUser();
     const { primaryEmail, primaryPhone } = user;
 
     // Build masked identifiers for bound factors
