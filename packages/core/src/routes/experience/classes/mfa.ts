@@ -506,7 +506,10 @@ export class Mfa {
       return;
     }
 
-    throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors: bindableFactors });
+    throw new RequestError(
+      { code: 'user.missing_mfa', status: 422 },
+      { availableFactors: bindableFactors }
+    );
   }
 
   /**
