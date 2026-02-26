@@ -63,6 +63,7 @@ const user_details = {
     field_name: '多重因素驗證',
     field_description: '這個使用者已啟用 2 步驗證因素。',
     name_column: '多重因素驗證',
+
     field_description_empty: '此用戶尚未啟用兩步驟身份驗證因素。',
     deletion_confirmation: '你正在刪除現有的雙步驗證中的 <name/>。你確定要繼續嗎？',
   },
@@ -134,6 +135,15 @@ const user_details = {
     name_column: '名稱',
     session_id_column: '會話 ID',
     location_column: '位置',
+
+    browser_on_os: '在 {{os}} 上的 {{browser}}',
+    user: '使用者',
+    application: '應用程式',
+    created_at: '建立時間',
+    ip: 'IP',
+    browser_name: '瀏覽器名稱',
+    os_name: '作業系統名稱',
+    device_model: '裝置型號',
     revoke_session: '撤銷工作階段',
     revoke_session_confirmation: '如果移除此工作階段，使用者將需要重新驗證。',
   },

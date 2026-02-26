@@ -57,7 +57,7 @@ function UserSessions({ userId }: Props) {
                 title: t('user_details.sessions.name_column'),
                 dataIndex: 'name',
                 colSpan: 6,
-                render: ({ name }) => name || '-',
+                render: ({ name }) => name ?? '-',
               },
               {
                 title: t('user_details.sessions.session_id_column'),
@@ -74,7 +74,7 @@ function UserSessions({ userId }: Props) {
                 title: t('user_details.sessions.location_column'),
                 dataIndex: 'location',
                 colSpan: 5,
-                render: ({ location }) => location || '-',
+                render: ({ location }) => location ?? '-',
               },
               {
                 title: null,

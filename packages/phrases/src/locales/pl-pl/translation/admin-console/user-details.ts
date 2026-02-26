@@ -66,6 +66,7 @@ const user_details = {
     field_name: 'Wieloetapowa autoryzacja',
     field_description: 'Ten użytkownik włączył autoryzację dwuetapową.',
     name_column: 'Wieloetapowa autoryzacja',
+
     field_description_empty: 'Ten użytkownik nie włączył autoryzacji dwuetapowej.',
     deletion_confirmation:
       'Usuwasz istniejące <name/> w celu weryfikacji dwuetapowej. Czy na pewno chcesz kontynuować?',
@@ -141,8 +142,17 @@ const user_details = {
     not_found:
       'Nie znaleziono aktywnych sesji Logto. Użytkownik nie jest obecnie zalogowany na żadnym urządzeniu.',
     name_column: 'Nazwa',
-    session_id_column: 'ID sesji',
+    session_id_column: 'Identyfikator sesji',
     location_column: 'Lokalizacja',
+
+    browser_on_os: '{{browser}} na {{os}}',
+    user: 'Użytkownik',
+    application: 'Aplikacja',
+    created_at: 'Utworzono',
+    ip: 'IP',
+    browser_name: 'Nazwa przeglądarki',
+    os_name: 'Nazwa systemu operacyjnego',
+    device_model: 'Model urządzenia',
     revoke_session: 'Unieważnij sesję',
     revoke_session_confirmation:
       'Jeśli usuniesz tę sesję, użytkownicy będą musieli ponownie się uwierzytelnić.',

@@ -64,6 +64,7 @@ const user_details = {
     field_name: '다단계 인증',
     field_description: '이 사용자는 2단계 인증 요소를 활성화했습니다.',
     name_column: '다단계 인증',
+
     field_description_empty: '이 사용자는 2단계 인증 요소를 활성화하지 않았습니다.',
     deletion_confirmation:
       '기존의 2단계 인증에서 <name/>을(를) 제거하고 있습니다. 계속 진행하시겠습니까?',
@@ -140,6 +141,15 @@ const user_details = {
     name_column: '이름',
     session_id_column: '세션 ID',
     location_column: '위치',
+
+    browser_on_os: '{{os}}의 {{browser}}',
+    user: '사용자',
+    application: '애플리케이션',
+    created_at: '생성 시각',
+    ip: 'IP',
+    browser_name: '브라우저 이름',
+    os_name: 'OS 이름',
+    device_model: '기기 모델',
     revoke_session: '세션 해지',
     revoke_session_confirmation: '이 세션을 제거하면 사용자는 다시 인증해야 합니다.',
   },

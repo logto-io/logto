@@ -69,6 +69,7 @@ const user_details = {
     field_name: 'Autenticação de dois fatores',
     field_description: 'Este utilizador ativou fatores de autenticação de 2 etapas.',
     name_column: 'Autenticação de dois fatores',
+
     field_description_empty: 'Este utilizador não ativou fatores de autenticação de 2 passos.',
     deletion_confirmation:
       'Está a remover o existente <name/> para a verificação em duas etapas. Tem a certeza de que deseja continuar?',
@@ -145,8 +146,17 @@ const user_details = {
     not_found:
       'Nenhuma sessão Logto ativa encontrada. O utilizador não está atualmente logado em nenhum dispositivo.',
     name_column: 'Nome',
-    session_id_column: 'ID da Sessão',
+    session_id_column: 'ID da sessão',
     location_column: 'Localização',
+
+    browser_on_os: '{{browser}} em {{os}}',
+    user: 'Utilizador',
+    application: 'Aplicação',
+    created_at: 'Criado em',
+    ip: 'IP',
+    browser_name: 'Nome do navegador',
+    os_name: 'Nome do sistema operativo',
+    device_model: 'Modelo do dispositivo',
     revoke_session: 'Revogar sessão',
     revoke_session_confirmation:
       'Se remover esta sessão, os utilizadores terão de se autenticar novamente.',

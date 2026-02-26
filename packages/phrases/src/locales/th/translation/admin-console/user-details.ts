@@ -66,6 +66,7 @@ const user_details = {
     field_name: 'การยืนยันตัวตนแบบหลายขั้นตอน',
     field_description: 'ผู้ใช้นี้ได้เปิดใช้งานขั้นตอนยืนยันสองขั้น',
     name_column: 'หลายขั้นตอน',
+
     field_description_empty: 'ผู้ใช้นี้ยังไม่ได้เปิดใช้งานขั้นตอนยืนยันสองขั้น',
     deletion_confirmation:
       'คุณกำลังนำ <name/> สำหรับ ขั้นตอนยืนยันสองขั้น ออก คุณแน่ใจหรือว่าต้องการดำเนินการต่อ?',
@@ -141,6 +142,15 @@ const user_details = {
     name_column: 'ชื่อ',
     session_id_column: 'รหัสเซสชัน',
     location_column: 'ตำแหน่ง',
+
+    browser_on_os: '{{browser}} บน {{os}}',
+    user: 'ผู้ใช้',
+    application: 'แอปพลิเคชัน',
+    created_at: 'สร้างเมื่อ',
+    ip: 'IP',
+    browser_name: 'ชื่อเบราว์เซอร์',
+    os_name: 'ชื่อระบบปฏิบัติการ',
+    device_model: 'รุ่นอุปกรณ์',
     revoke_session: 'เพิกถอนเซสชัน',
     revoke_session_confirmation: 'หากลบเซสชันนี้ ผู้ใช้จะต้องยืนยันตัวตนอีกครั้ง',
   },

@@ -69,6 +69,7 @@ const user_details = {
     field_name: 'Zwei-Faktor-Authentifizierung',
     field_description: 'Dieser Benutzer hat 2-Stufen-Authentifizierungsfaktoren aktiviert.',
     name_column: 'Zwei-Faktor',
+
     field_description_empty:
       'Dieser Benutzer hat keine zweistufigen Authentifizierungsfaktoren aktiviert.',
     deletion_confirmation:
@@ -148,6 +149,15 @@ const user_details = {
     name_column: 'Name',
     session_id_column: 'Sitzungs-ID',
     location_column: 'Standort',
+
+    browser_on_os: '{{browser}} unter {{os}}',
+    user: 'Benutzer',
+    application: 'Anwendung',
+    created_at: 'Erstellt am',
+    ip: 'IP-Adresse',
+    browser_name: 'Browsername',
+    os_name: 'Betriebssystemname',
+    device_model: 'Gerätemodell',
     revoke_session: 'Sitzung widerrufen',
     revoke_session_confirmation:
       'Wenn Sie diese Sitzung entfernen, müssen sich Benutzer erneut authentifizieren.',
