@@ -176,7 +176,7 @@ describe('SignInExperienceValidator', () => {
     });
   });
 
-  describe('getAvailableMfaFactorsForBinding', () => {
+  describe('getBindableMfaFactors', () => {
     it('includes passkey-backed WebAuthn and excludes backup code', async () => {
       signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
         ...mockSignInExperience,
@@ -200,7 +200,7 @@ describe('SignInExperienceValidator', () => {
         mockTenant.queries
       );
 
-      await expect(signInExperienceValidator.getAvailableMfaFactorsForBinding()).resolves.toEqual([
+      await expect(signInExperienceValidator.getBindableMfaFactors()).resolves.toEqual([
         MfaFactor.WebAuthn,
         MfaFactor.TOTP,
         MfaFactor.EmailVerificationCode,
@@ -225,13 +225,39 @@ describe('SignInExperienceValidator', () => {
         mockTenant.queries
       );
 
-      await expect(signInExperienceValidator.getAvailableMfaFactorsForBinding()).resolves.toEqual([
+      await expect(signInExperienceValidator.getBindableMfaFactors()).resolves.toEqual([
         MfaFactor.TOTP,
       ]);
     });
+
+    it('keeps enabled factor ordering after removing backup code', async () => {
+      signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: {
+          ...mockSignInExperience.mfa,
+          factors: [MfaFactor.EmailVerificationCode, MfaFactor.BackupCode, MfaFactor.TOTP],
+        },
+        passkeySignIn: {
+          ...mockSignInExperience.passkeySignIn,
+          enabled: true,
+        },
+      });
+
+      const signInExperienceValidator = new SignInExperienceValidator(
+        mockTenant.libraries,
+        mockTenant.queries
+      );
+
+      const enabledFactors = await signInExperienceValidator.getMfaFactorsEnabledForBinding();
+      const availableFactors = await signInExperienceValidator.getBindableMfaFactors();
+
+      expect(availableFactors).toEqual(
+        enabledFactors.filter((factor) => factor !== MfaFactor.BackupCode)
+      );
+    });
   });
 
-  describe('getEnabledMfaFactorsForBinding', () => {
+  describe('getMfaFactorsEnabledForBinding', () => {
     it('includes backup code and passkey-backed WebAuthn for factor validation', async () => {
       signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
         ...mockSignInExperience,
@@ -255,11 +281,37 @@ describe('SignInExperienceValidator', () => {
         mockTenant.queries
       );
 
-      await expect(signInExperienceValidator.getEnabledMfaFactorsForBinding()).resolves.toEqual([
+      await expect(signInExperienceValidator.getMfaFactorsEnabledForBinding()).resolves.toEqual([
         MfaFactor.WebAuthn,
         MfaFactor.TOTP,
         MfaFactor.EmailVerificationCode,
         MfaFactor.BackupCode,
+      ]);
+    });
+  });
+
+  describe('getConfiguredMfaFactors', () => {
+    it('excludes backup code and does not inject passkey-backed WebAuthn', async () => {
+      signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: {
+          ...mockSignInExperience.mfa,
+          factors: [MfaFactor.EmailVerificationCode, MfaFactor.BackupCode, MfaFactor.TOTP],
+        },
+        passkeySignIn: {
+          ...mockSignInExperience.passkeySignIn,
+          enabled: true,
+        },
+      });
+
+      const signInExperienceValidator = new SignInExperienceValidator(
+        mockTenant.libraries,
+        mockTenant.queries
+      );
+
+      await expect(signInExperienceValidator.getConfiguredMfaFactors()).resolves.toEqual([
+        MfaFactor.TOTP,
+        MfaFactor.EmailVerificationCode,
       ]);
     });
   });

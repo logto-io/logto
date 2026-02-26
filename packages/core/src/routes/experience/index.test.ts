@@ -1,4 +1,12 @@
-import { InteractionEvent, type Mfa } from '@logto/schemas';
+/* eslint-disable max-lines */
+import { TemplateType } from '@logto/connector-kit';
+import {
+  InteractionEvent,
+  MfaFactor,
+  SignInIdentifier,
+  VerificationType,
+  type Mfa,
+} from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import type { Middleware } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
@@ -37,20 +45,50 @@ const createRequesterWithMocks = ({
   adaptiveMfaEnabled = false,
   user = mockUser,
   mfa = mockSignInExperience.mfa,
+  singleSignOnEnabled = mockSignInExperience.singleSignOnEnabled,
+  interactionResult = {},
+  persistInteractionResult = false,
 }: {
   interactionEvent?: InteractionEvent;
   adaptiveMfaEnabled?: boolean;
   user?: typeof mockUser;
   mfa?: Mfa;
+  singleSignOnEnabled?: boolean;
+  interactionResult?: Record<string, unknown>;
+  persistInteractionResult?: boolean;
 } = {}) => {
-  const interactionDetails = jest.fn().mockResolvedValue({
+  const mockedInteractionDetails: {
+    params: { client_id: string };
+    jti: string;
+    result: Record<string, unknown>;
+  } = {
     params: { client_id: 'client_id' },
     jti: 'jti',
     result: {
       interactionEvent,
       userId: user.id,
+      ...interactionResult,
     },
-  });
+  };
+  const interactionDetails = jest.fn().mockImplementation(async () => mockedInteractionDetails);
+  const provider = createMockProvider(interactionDetails);
+
+  if (persistInteractionResult) {
+    (provider.interactionResult as jest.Mock).mockImplementation(
+      async (
+        _request: unknown,
+        _response: unknown,
+        result: Record<string, unknown>,
+        options?: { mergeWithLastSubmission?: boolean }
+      ) => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        mockedInteractionDetails.result = options?.mergeWithLastSubmission
+          ? { ...mockedInteractionDetails.result, ...result }
+          : result;
+        return 'redirectTo';
+      }
+    );
+  }
 
   const userGeoLocations = {
     upsertUserGeoLocation: jest.fn().mockResolvedValue(null),
@@ -62,16 +100,21 @@ const createRequesterWithMocks = ({
   const users = {
     findUserById: jest.fn().mockResolvedValue(user),
     updateUserById: jest.fn().mockResolvedValue(user),
+    hasUser: jest.fn().mockResolvedValue(false),
+    hasUserWithEmail: jest.fn().mockResolvedValue(false),
+    hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
+    hasUserWithIdentity: jest.fn().mockResolvedValue(false),
   };
   const signInExperiences = {
     findDefaultSignInExperience: jest.fn().mockResolvedValue({
       ...mockSignInExperience,
       adaptiveMfa: { enabled: adaptiveMfaEnabled },
       mfa,
+      singleSignOnEnabled,
     }),
   };
 
-  const tenant = new MockTenant(createMockProvider(interactionDetails), {
+  const tenant = new MockTenant(provider, {
     users,
     signInExperiences,
     userGeoLocations,
@@ -85,7 +128,7 @@ const createRequesterWithMocks = ({
     middlewares: [logMiddleware],
   });
 
-  return { requester, userGeoLocations, userSignInCountries, mockAppend };
+  return { requester, userGeoLocations, userSignInCountries, mockAppend, users };
 };
 
 describe('POST /experience/submit', () => {
@@ -365,4 +408,84 @@ describe('POST /experience/submit', () => {
     expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
     expect(userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
   });
+
+  it.each([
+    {
+      name: 'email',
+      factor: MfaFactor.EmailVerificationCode,
+      verificationType: VerificationType.EmailVerificationCode,
+      identifierType: SignInIdentifier.Email,
+      identifierValue: 'bind-mfa@logto.dev',
+      updatePatch: { primaryEmail: 'bind-mfa@logto.dev' },
+    },
+    {
+      name: 'phone',
+      factor: MfaFactor.PhoneVerificationCode,
+      verificationType: VerificationType.PhoneVerificationCode,
+      identifierType: SignInIdentifier.Phone,
+      identifierValue: '13100000000',
+      updatePatch: { primaryPhone: '13100000000' },
+    },
+  ])(
+    'should allow adaptive MFA submit after binding $name via /experience/profile/mfa',
+    async ({ factor, verificationType, identifierType, identifierValue, updatePatch }) => {
+      setDevFeaturesEnabled(true);
+      const verificationId = `mock-${identifierType}-verification-id`;
+      const user = {
+        ...mockUser,
+        primaryEmail: null,
+        primaryPhone: null,
+        mfaVerifications: [],
+      };
+
+      const { requester, users, mockAppend } = createRequesterWithMocks({
+        adaptiveMfaEnabled: true,
+        user,
+        mfa: {
+          policy: mockSignInExperience.mfa.policy,
+          factors: [factor],
+        },
+        singleSignOnEnabled: false,
+        interactionResult: {
+          verificationRecords: [
+            {
+              id: verificationId,
+              type: verificationType,
+              identifier: {
+                type: identifierType,
+                value: identifierValue,
+              },
+              templateType: TemplateType.BindMfa,
+              verified: true,
+            },
+          ],
+        },
+        persistInteractionResult: true,
+      });
+
+      const bindResponse = await requester.post('/experience/profile/mfa').send({
+        type: factor,
+        verificationId,
+      });
+      expect(bindResponse.status).toBe(204);
+
+      const submitResponse = await requester
+        .post('/experience/submit')
+        .set('x-logto-cf-bot-score', '10');
+      expect(submitResponse.status).toBe(200);
+
+      expect(users.updateUserById).toHaveBeenCalledWith(
+        user.id,
+        expect.objectContaining(updatePatch)
+      );
+      const adaptiveMfaResult = mockAppend.mock.calls
+        .map(
+          ([payload]) =>
+            (payload as { adaptiveMfaResult?: { requiresMfa: boolean } }).adaptiveMfaResult
+        )
+        .find(Boolean);
+      expect(adaptiveMfaResult?.requiresMfa).toBe(true);
+    }
+  );
 });
+/* eslint-enable max-lines */

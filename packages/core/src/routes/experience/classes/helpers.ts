@@ -6,7 +6,7 @@
  */
 
 import { MfaFactor, VerificationType, type User, type Mfa } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, type Nullable } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -206,6 +206,29 @@ const filterOutEmptyBackupCodes = (
   });
 
 /**
+ * Resolve implicit profile-based MFA factors (Email/Phone) from the provided profile source.
+ */
+export const getProfileMfaFactors = (
+  mfaSettings: Mfa,
+  {
+    primaryEmail,
+    primaryPhone,
+  }: {
+    primaryEmail?: Nullable<string>;
+    primaryPhone?: Nullable<string>;
+  }
+): MfaFactor[] => {
+  return [
+    ...(mfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) && primaryPhone
+      ? [MfaFactor.PhoneVerificationCode]
+      : []),
+    ...(mfaSettings.factors.includes(MfaFactor.EmailVerificationCode) && primaryEmail
+      ? [MfaFactor.EmailVerificationCode]
+      : []),
+  ];
+};
+
+/**
  * Get all enabled MFA verifications for a user (stored + implicit)
  * @param mfaSettings - MFA settings from sign-in experience
  * @param user - User object with mfaVerifications and profile data
@@ -256,19 +279,10 @@ export const getAllUserEnabledMfaVerifications = (
     })
     .map(({ type }) => type);
 
-  const email = currentProfile?.primaryEmail ?? user.primaryEmail;
-  const phone = currentProfile?.primaryPhone ?? user.primaryPhone;
-
-  const implicitVerifications = [
-    // Phone MFA Factor: user has primaryPhone + Phone factor enabled in SIE
-    ...(mfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) && phone
-      ? [MfaFactor.PhoneVerificationCode]
-      : []),
-    // Email MFA Factor: user has primaryEmail + Email factor enabled in SIE
-    ...(mfaSettings.factors.includes(MfaFactor.EmailVerificationCode) && email
-      ? [MfaFactor.EmailVerificationCode]
-      : []),
-  ];
+  const implicitVerifications = getProfileMfaFactors(mfaSettings, {
+    primaryEmail: currentProfile?.primaryEmail ?? user.primaryEmail,
+    primaryPhone: currentProfile?.primaryPhone ?? user.primaryPhone,
+  });
 
   return [...storedVerifications, ...implicitVerifications].slice().sort((factorA, factorB) => {
     // Backup code always comes last
