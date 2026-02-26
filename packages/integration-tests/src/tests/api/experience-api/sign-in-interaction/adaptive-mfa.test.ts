@@ -208,7 +208,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
         await identifyUserWithUsernamePassword(client, username, password);
 
         await expectRejects(client.submitInteraction(), {
-          code: 'user.missing_mfa',
+          code: 'user.suggest_mfa',
           status: 422,
         });
 
