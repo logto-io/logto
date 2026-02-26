@@ -1,4 +1,5 @@
 import {
+  type GetUserSessionResponse,
   type GetUserSessionsResponse,
   type UserSessionSignInContext,
   userSessionSignInContextGuard,
@@ -11,8 +12,10 @@ type UserSessionTableRow = {
   location: string;
 };
 
+type SessionWithLastSubmission = Pick<GetUserSessionResponse, 'lastSubmission'>;
+
 const formatSessionLocation = ({ country, city }: UserSessionSignInContext) => {
-  return [country, city].filter(Boolean).join(', ');
+  return [city, country].filter(Boolean).join(', ');
 };
 
 const formatSessionDeviceName = ({ userAgent }: UserSessionSignInContext) => {
@@ -49,16 +52,21 @@ const normalizeSessionInfo = (signInContext: UserSessionSignInContext) => {
   };
 };
 
+export const getSessionDisplayInfo = (session: SessionWithLastSubmission) => {
+  const signInContextResult = userSessionSignInContextGuard.safeParse(
+    session.lastSubmission?.signInContext
+  );
+
+  return signInContextResult.success
+    ? normalizeSessionInfo(signInContextResult.data)
+    : { name: '', location: '' };
+};
+
 export const normalizeSessionRows = (
   sessions: GetUserSessionsResponse['sessions']
 ): UserSessionTableRow[] => {
   return sessions.map<UserSessionTableRow>((session) => {
-    const signInContextResult = userSessionSignInContextGuard.safeParse(
-      session.lastSubmission?.signInContext
-    );
-    const normalized = signInContextResult.success
-      ? normalizeSessionInfo(signInContextResult.data)
-      : { name: '', location: '' };
+    const normalized = getSessionDisplayInfo(session);
 
     return {
       name: normalized.name,

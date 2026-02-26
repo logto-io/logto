@@ -5,9 +5,11 @@ import useSWR from 'swr';
 
 import FormCard from '@/components/FormCard';
 import Button from '@/ds-components/Button';
+import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
 import Table from '@/ds-components/Table';
 import { type RequestError } from '@/hooks/use-api';
+import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import styles from './index.module.scss';
 import { normalizeSessionRows } from './utils';
@@ -24,6 +26,7 @@ function UserSessions({ userId }: Props) {
   const { data, isLoading, error, mutate } = useSWR<GetUserSessionsResponse, RequestError>(
     `api/users/${userId}/sessions`
   );
+  const { navigate } = useTenantPathname();
 
   const sessionCount = useMemo(() => data?.sessions.length ?? 0, [data?.sessions.length]);
   const rowData = useMemo(() => normalizeSessionRows(data?.sessions ?? []), [data?.sessions]);
@@ -60,7 +63,12 @@ function UserSessions({ userId }: Props) {
                 title: t('user_details.sessions.session_id_column'),
                 dataIndex: 'sessionId',
                 colSpan: 5,
-                render: ({ sessionId }) => sessionId,
+                render: ({ sessionId }) => (
+                  <>
+                    {sessionId}
+                    <CopyToClipboard variant="icon" value={sessionId} />
+                  </>
+                ),
               },
               {
                 title: t('user_details.sessions.location_column'),
@@ -72,7 +80,16 @@ function UserSessions({ userId }: Props) {
                 title: null,
                 dataIndex: 'action',
                 colSpan: 2,
-                render: () => <Button title="general.manage" type="text" size="small" />,
+                render: ({ sessionId }) => (
+                  <Button
+                    title="general.manage"
+                    type="text"
+                    size="small"
+                    onClick={() => {
+                      navigate(`/users/${userId}/sessions/${sessionId}`);
+                    }}
+                  />
+                ),
               },
             ]}
             onRetry={async () => mutate(undefined, true)}

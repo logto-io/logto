@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { OidcModelInstances } from '../db-entries/oidc-model-instance.js';
 import { oidcSessionInstancePayloadGuard } from '../foundations/index.js';
 
 import { jwtCustomizerUserInteractionContextGuard } from './logto-config/jwt-customizer.js';
@@ -20,19 +19,28 @@ export const userSessionSignInContextGuard = z
 
 export type UserSessionSignInContext = z.infer<typeof userSessionSignInContextGuard>;
 
-export const userExtendedSessionGuard = OidcModelInstances.guard.extend({
+/**
+ * Public session shape for session management APIs.
+ *
+ * We intentionally expose only fields needed by management/account-center session views and actions.
+ * Internal OIDC storage fields (e.g. `tenantId`, `id`, `consumedAt`) are omitted on purpose.
+ */
+export const userExtendedSessionGuard = z.object({
   payload: oidcSessionInstancePayloadGuard,
   lastSubmission: jwtCustomizerUserInteractionContextGuard.nullable(),
   clientId: z.string().nullable(),
   accountId: z.string().nullable(),
+  expiresAt: z.number(),
 });
 
 export const getUserSessionsResponseGuard = z.object({
   sessions: z.array(userExtendedSessionGuard),
 });
 
+/** Response type for `GET /users/:userId/sessions`. */
 export type GetUserSessionsResponse = z.infer<typeof getUserSessionsResponseGuard>;
 
 export const getUserSessionResponseGuard = userExtendedSessionGuard;
 
+/** Response type for `GET /users/:userId/sessions/:sessionId`. */
 export type GetUserSessionResponse = z.infer<typeof getUserSessionResponseGuard>;
