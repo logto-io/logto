@@ -43,6 +43,7 @@ import type { AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 
 export type MfaData = {
+  mfaEnabled?: boolean;
   mfaSkipped?: boolean;
   /**
    * Whether user skipped the optional suggestion to add another MFA factor during registration.
@@ -56,6 +57,7 @@ export type MfaData = {
 };
 
 export type SanitizedMfaData = {
+  mfaEnabled?: boolean;
   mfaSkipped?: boolean;
   passkeySkipped?: boolean;
   totp?: Pick<BindTotp, 'type'>;
@@ -64,6 +66,7 @@ export type SanitizedMfaData = {
 };
 
 export const mfaDataGuard = z.object({
+  mfaEnabled: z.boolean().optional(),
   mfaSkipped: z.boolean().optional(),
   additionalBindingSuggestionSkipped: z.boolean().optional(),
   passkeySkipped: z.boolean().optional(),
@@ -73,6 +76,7 @@ export const mfaDataGuard = z.object({
 }) satisfies ToZodObject<MfaData>;
 
 export const sanitizedMfaDataGuard = z.object({
+  mfaEnabled: z.boolean().optional(),
   mfaSkipped: z.boolean().optional(),
   passkeySkipped: z.boolean().optional(),
   totp: z.object({ type: z.literal(MfaFactor.TOTP) }).optional(),
@@ -80,17 +84,21 @@ export const sanitizedMfaDataGuard = z.object({
   backupCode: bindBackupCodeGuard.pick({ type: true }).optional(),
 }) satisfies ToZodObject<SanitizedMfaData>;
 
+const parseUserMfaData = (logtoConfig: JsonObject): { enabled?: boolean; skipped?: boolean } => {
+  const guard = z.object({
+    enabled: z.boolean().optional(),
+    skipped: z.boolean().optional(),
+  });
+
+  const parsed = z.object({ [userMfaDataKey]: guard }).safeParse(logtoConfig);
+  return parsed.success ? parsed.data[userMfaDataKey] : {};
+};
+
 /**
  * Check if the user has skipped MFA binding
  */
 const isMfaSkipped = (logtoConfig: JsonObject): boolean => {
-  const userMfaDataGuard = z.object({
-    skipped: z.boolean().optional(),
-  });
-
-  const parsed = z.object({ [userMfaDataKey]: userMfaDataGuard }).safeParse(logtoConfig);
-
-  return parsed.success ? parsed.data[userMfaDataKey].skipped === true : false;
+  return parseUserMfaData(logtoConfig).skipped === true;
 };
 
 const isPasskeySkipped = (logtoConfig: JsonObject): boolean => {
@@ -116,6 +124,7 @@ type SubmitMfaValidationContext = {
  */
 export class Mfa {
   private readonly signInExperienceValidator: SignInExperienceValidator;
+  #mfaEnabled?: boolean;
   #mfaSkipped?: boolean;
   #additionalBindingSuggestionSkipped?: boolean;
   #passkeySkipped?: boolean;
@@ -131,12 +140,17 @@ export class Mfa {
   ) {
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
 
+    this.#mfaEnabled = data.mfaEnabled;
     this.#mfaSkipped = data.mfaSkipped;
     this.#additionalBindingSuggestionSkipped = data.additionalBindingSuggestionSkipped;
     this.#passkeySkipped = data.passkeySkipped;
     this.#totp = data.totp;
     this.#webAuthn = data.webAuthn;
     this.#backupCode = data.backupCode;
+  }
+
+  get mfaEnabled() {
+    return this.#mfaEnabled;
   }
 
   get mfaSkipped() {
@@ -151,10 +165,15 @@ export class Mfa {
     return [this.#totp, ...(this.#webAuthn ?? []), this.#backupCode].filter(Boolean);
   }
 
+  markMfaEnabled() {
+    this.#mfaEnabled = true;
+  }
+
   /**
    * Format the MFA verifications data to be updated in the user account
    */
   toUserMfaVerifications(): {
+    mfaEnabled?: boolean;
     mfaSkipped?: boolean;
     passkeySkipped?: boolean;
     mfaVerifications: User['mfaVerifications'];
@@ -190,6 +209,7 @@ export class Mfa {
     }
 
     return {
+      mfaEnabled: this.mfaEnabled,
       mfaSkipped: this.mfaSkipped,
       passkeySkipped: this.#passkeySkipped,
       mfaVerifications: [...verificationSet],
@@ -443,6 +463,63 @@ export class Mfa {
     await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext);
   }
 
+  /**
+   * If the MFA is not mandatory, prompt policy is NOT `NoPrompt`, and the user has not skipped MFA, suggest MFA binding
+   * by throwing a 422 `user.suggest_mfa` error and navigate user to a "Turn on MFA" screen.
+   *
+   * @throws {RequestError} with status 422 if the user should be suggested to bind MFA according to the policy and user state
+   */
+  async assertOptionalMfaEnablement() {
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+    const { policy, factors } = mfaSettings;
+
+    // If there are no factors, bypass the check.
+    if (factors.length === 0) {
+      return;
+    }
+
+    // If the policy is `NoPrompt`, bypass the check.
+    if (policy === MfaPolicy.NoPrompt) {
+      return;
+    }
+
+    const { logtoConfig, id: userId } = await this.interactionContext.getIdentifiedUser();
+
+    const isMfaRequiredByUserOrganizations = await this.isMfaRequiredByUserOrganizations(
+      mfaSettings,
+      userId
+    );
+
+    // If MFA is mandatory or required by organizations, bypass the check.
+    if (policy === MfaPolicy.Mandatory || isMfaRequiredByUserOrganizations) {
+      return;
+    }
+
+    // For PromptOnlyAtSignIn policy, don't prompt during registration.
+    if (
+      this.interactionContext.getInteractionEvent() === InteractionEvent.Register &&
+      policy === MfaPolicy.PromptOnlyAtSignIn
+    ) {
+      return;
+    }
+
+    const userMfaData = parseUserMfaData(logtoConfig);
+    const hasEnabledMfa = this.#mfaEnabled ?? userMfaData.enabled === true;
+    const hasSkippedMfa = this.#mfaSkipped ?? userMfaData.skipped === true;
+
+    const configuredFactors = await this.signInExperienceValidator.getConfiguredMfaFactors();
+
+    // Suggest MFA binding if the user has not completed MFA binding, even if the policy is not mandatory,
+    // to encourage better account security.
+    assertThat(
+      hasEnabledMfa || hasSkippedMfa,
+      new RequestError(
+        { code: 'user.suggest_mfa', status: 422 },
+        { availableFactors: configuredFactors, skippable: true }
+      )
+    );
+  }
+
   async assertPasskeySignInFulfilled() {
     const { passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
     const { logtoConfig, mfaVerifications } = await this.interactionContext.getIdentifiedUser();
@@ -458,6 +535,7 @@ export class Mfa {
 
   get data(): MfaData {
     return {
+      mfaEnabled: this.mfaEnabled,
       mfaSkipped: this.mfaSkipped,
       additionalBindingSuggestionSkipped: this.additionalBindingSuggestionSkipped,
       passkeySkipped: this.#passkeySkipped,
@@ -469,6 +547,7 @@ export class Mfa {
 
   get sanitizedData(): SanitizedMfaData {
     return {
+      mfaEnabled: this.mfaEnabled,
       mfaSkipped: this.mfaSkipped,
       passkeySkipped: this.#passkeySkipped,
       totp: cond(this.#totp && pick(this.#totp, 'type')),
