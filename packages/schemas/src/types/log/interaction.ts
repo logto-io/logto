@@ -15,6 +15,7 @@ export enum Field {
   Mfa = 'Mfa',
   Verification = 'Verification',
   Captcha = 'Captcha',
+  Passkey = 'Passkey',
 }
 
 /** Method to verify the identifier */
@@ -110,6 +111,7 @@ export type LogKey =
   | `${Prefix}.${InteractionEvent}.${Field.BindMfa}.${MfaFactor}.${Action.Submit}`
   | `${Prefix}.${InteractionEvent}.${Field.Verification}.${VerificationType}.${Action}`
   | `${Prefix}.${InteractionEvent}.${Field.Identifier}.${Action.Submit}`
+  | `${Prefix}.${InteractionEvent}.${Field.Passkey}.${Action.Submit}`
   // IdpInitiatedSingleSignOn log, used upon receiving a SAML request from the IdP
   | `${Prefix}.${InteractionEvent.SignIn}.${Field.Verification}.IdpInitiatedSso.${Action.Create}`
   | DeprecatedInteractionLogKey;

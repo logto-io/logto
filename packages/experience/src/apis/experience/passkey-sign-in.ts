@@ -1,7 +1,6 @@
 import {
   type BindWebAuthnPayload,
   InteractionEvent,
-  MfaFactor,
   type SignInIdentifier,
   type WebAuthnAuthenticationOptions,
   type WebAuthnVerificationPayload,
@@ -11,12 +10,23 @@ import api from '../api';
 
 import { experienceApiRoutes } from './const';
 import { identifyAndSubmitInteraction, initInteraction, submitInteraction } from './interaction';
-import { bindMfa } from './mfa';
 
 export { createWebAuthnRegistration as createSignInWebAuthnRegistrationOptions } from './mfa';
 
-export const bindSignInWebAuthn = async (payload: BindWebAuthnPayload, verificationId: string) =>
-  bindMfa(MfaFactor.WebAuthn, verificationId, payload);
+export const bindSignInWebAuthn = async (payload: BindWebAuthnPayload, verificationId: string) => {
+  await api.post(`${experienceApiRoutes.verification}/web-authn/registration/verify`, {
+    json: {
+      verificationId,
+      payload,
+    },
+  });
+  await api.post(`${experienceApiRoutes.profile}/mfa/passkey`, {
+    json: {
+      verificationId,
+    },
+  });
+  return submitInteraction();
+};
 
 export const createSignInWebAuthnAuthenticationOptions = async () =>
   api.post(`${experienceApiRoutes.prefix}/preflight/sign-in-web-authn/authentication`).json<{
