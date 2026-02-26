@@ -1,3 +1,5 @@
+
+
 # SMTP connector
 
 The official Logto connector for SMTP.
@@ -32,6 +34,33 @@ We hope you can figure out all other email vendors' setups with the following ex
 You can get a new Gmail account at [Gmail](https://mail.google.com/), or you can use an existing account if you have one.
 
 A [Gmail official post](https://support.google.com/a/answer/176600) shows how to determine required properties' values to operate Gmail via an SMTP connector.
+
+See also: [Gmail SMTP server settings](https://support.google.com/a/answer/176793?hl=en) and [Sign in with App Passwords](https://support.google.com/accounts/answer/185833).
+
+#### Gmail Configuration Guide
+
+If you are using **Gmail** as your SMTP provider, please pay attention to the following settings to avoid connection errors:
+
+###### 1. Name (HELO/EHLO identity)
+Gmail's SMTP server requires the HELO/EHLO identity to be valid ASCII characters.
+*   **Do NOT** use non-ASCII characters (e.g., Chinese, Emoji) in the `name` field.
+*   **Error Reference**: `501-5.5.4 HELO/EHLO argument "..." invalid`
+*   **Recommended**: Use English names like "LobeChat" or "My App".
+
+###### 2. Port and Secure Connection
+Choose one of the following combinations. **Do not mix them.**
+
+**Option A (Recommended): Implicit SSL**
+*   **Host**: `smtp.gmail.com`
+*   **Port**: `465`
+*   **Secure**: `On` (True)
+*   **RequireTLS**: `Off` (False)
+
+**Option B: STARTTLS**
+*   **Host**: `smtp.gmail.com`
+*   **Port**: `587`
+*   **Secure**: `Off` (False) -> *Important: Enabling Secure on 587 causes "wrong version number" error.*
+*   **RequireTLS**: `On` (True)
 
 ### Integrate with SendGrid SMTP API
 
