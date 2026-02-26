@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   AlternativeSignUpIdentifier,
   ForgotPasswordMethod,
@@ -75,6 +76,9 @@ const parseMandatoryPrimaryIdentifier = (
     return MissingProfile.phone;
   }
 };
+
+const filterOutBackupCodeFactor = (factors: MfaFactor[]) =>
+  factors.filter((factor) => factor !== MfaFactor.BackupCode);
 
 /**
  *  SignInExperienceValidator class provides all the sign-in experience settings validation logic.
@@ -171,7 +175,7 @@ export class SignInExperienceValidator {
     return mfa;
   }
 
-  public async getEnabledMfaFactorsForBinding() {
+  public async getMfaFactorsEnabledForBinding() {
     const { mfa, passkeySignIn } = await this.getSignInExperienceData();
 
     return sortMfaFactors([
@@ -179,10 +183,23 @@ export class SignInExperienceValidator {
     ]);
   }
 
-  public async getAvailableMfaFactorsForBinding() {
-    const enabledFactors = await this.getEnabledMfaFactorsForBinding();
+  public async getBindableMfaFactors() {
+    const enabledFactors = await this.getMfaFactorsEnabledForBinding();
 
-    return enabledFactors.filter((factor) => factor !== MfaFactor.BackupCode);
+    return filterOutBackupCodeFactor(enabledFactors);
+  }
+
+  /**
+   * Get MFA factors configured in sign-in experience for policy fulfillment checks.
+   *
+   * @remarks
+   * Backup code is intentionally excluded because it is validated separately as an additive
+   * requirement (when enabled), not as a primary factor candidate for missing-MFA prompts.
+   */
+  public async getConfiguredMfaFactors() {
+    const { mfa } = await this.getSignInExperienceData();
+
+    return sortMfaFactors(filterOutBackupCodeFactor(mfa.factors));
   }
 
   public async getPasswordPolicy() {
@@ -417,3 +434,4 @@ export class SignInExperienceValidator {
     assertThat(ssoIdentities.length === 0, 'session.passkey_sign_in.sso_users_not_allowed');
   }
 }
+/* eslint-enable max-lines */

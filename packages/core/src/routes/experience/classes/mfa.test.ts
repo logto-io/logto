@@ -55,11 +55,15 @@ const createMfa = ({
   const getMfaSettings = jest
     .spyOn(signInExperienceValidator, 'getMfaSettings')
     .mockResolvedValue(mfaSettings);
+  const getConfiguredMfaFactors = jest
+    .spyOn(signInExperienceValidator, 'getConfiguredMfaFactors')
+    .mockResolvedValue(mfaSettings.factors.filter((factor) => factor !== MfaFactor.BackupCode));
 
   return {
     mfa,
     getIdentifiedUser,
     getMfaSettings,
+    getConfiguredMfaFactors,
   };
 };
 

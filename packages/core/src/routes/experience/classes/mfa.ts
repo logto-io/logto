@@ -495,9 +495,8 @@ export class Mfa {
       return;
     }
 
-    // Adaptive binding should only expose factors that users can bind right now.
-    // This excludes non-bindable factors (e.g. backup code) for actionability.
-    const bindableFactors = await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
+    // Bindable factors are actionable options for this step (backup code excluded).
+    const bindableFactors = await this.signInExperienceValidator.getBindableMfaFactors();
 
     // Tenant has no bindable MFA factors enabled in SIE (e.g. all disabled).
     // In this case there is no actionable binding step for end users, so skip
@@ -560,12 +559,8 @@ export class Mfa {
       return;
     }
 
-    // Mandatory policy should check the factor set configured by tenant/org policy.
-    // This is policy-required scope (may include backup requirement via separate assertion),
-    // not the bindable-factor scope used by adaptive binding enforcement.
-    const requiredFactors = sortMfaFactors(
-      factors.filter((factor) => factor !== MfaFactor.BackupCode)
-    );
+    // Use configured factors for policy fulfillment; backup code is asserted separately below.
+    const configuredFactors = await this.signInExperienceValidator.getConfiguredMfaFactors();
 
     const { userFactors: factorsInUser } = submitMfaValidationContext;
     const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);
@@ -573,17 +568,17 @@ export class Mfa {
 
     // Assert that the user has at least one of the required factors bound
     assertThat(
-      requiredFactors.some((factor) => linkedFactors.includes(factor)),
+      configuredFactors.some((factor) => linkedFactors.includes(factor)),
       new RequestError(
         { code: 'user.missing_mfa', status: 422 },
         policy === MfaPolicy.Mandatory || isMfaRequiredByUserOrganizations
-          ? { availableFactors: requiredFactors }
-          : { availableFactors: requiredFactors, skippable: true }
+          ? { availableFactors: configuredFactors }
+          : { availableFactors: configuredFactors, skippable: true }
       )
     );
 
     // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
-    await this.guardAdditionalBindingSuggestion(factorsInUser, requiredFactors);
+    await this.guardAdditionalBindingSuggestion(factorsInUser, configuredFactors);
 
     // Assert backup code
     assertThat(
@@ -596,7 +591,7 @@ export class Mfa {
   }
 
   private async checkMfaFactorsEnabledInSignInExperience(newBindMfaFactors: MfaFactor[]) {
-    const availableFactors = await this.signInExperienceValidator.getEnabledMfaFactorsForBinding();
+    const availableFactors = await this.signInExperienceValidator.getMfaFactorsEnabledForBinding();
 
     const isFactorsEnabled = newBindMfaFactors.every((newBindFactor) =>
       availableFactors.includes(newBindFactor)
