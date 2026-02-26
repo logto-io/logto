@@ -1,7 +1,6 @@
-import type { IncomingHttpHeaders } from 'node:http';
-
 import type { User, UserSignInCountry } from '@logto/schemas';
 
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import { type InteractionContext } from '../../../types.js';
@@ -82,19 +81,13 @@ export type AdaptiveMfaResult = {
   triggeredRules: TriggeredRule[];
 };
 
-export type AdaptiveMfaValidatorContext = {
-  request: {
-    headers: IncomingHttpHeaders;
-  };
-};
-
 export type AdaptiveMfaInteractionContext = Pick<InteractionContext, 'getIdentifiedUser'>;
 
 export type AdaptiveMfaValidatorOptions = {
   queries: Pick<Queries, 'userGeoLocations' | 'userSignInCountries'>;
   signInExperienceValidator: SignInExperienceValidator;
   interactionContext: AdaptiveMfaInteractionContext;
-  ctx?: AdaptiveMfaValidatorContext;
+  ctx?: WithLogContext;
 };
 
 export type AdaptiveMfaEvaluationState = {

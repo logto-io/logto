@@ -4,6 +4,7 @@ import { InteractionEvent, type User } from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { defaultInjectedHeaderMapping } from '#src/utils/injected-header-mapping.js';
 
 import type { SignInExperienceValidator } from '../sign-in-experience-validator.js';
@@ -87,11 +88,13 @@ const buildInjectedHeadersFromAdaptiveMfaContext = (
   return Object.fromEntries(headers);
 };
 
-const buildMockContext = (context: AdaptiveMfaContext) => ({
-  request: {
-    headers: buildInjectedHeadersFromAdaptiveMfaContext(context),
-  },
-});
+const buildMockContext = (context: AdaptiveMfaContext) =>
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- mock headers only
+  ({
+    request: {
+      headers: buildInjectedHeadersFromAdaptiveMfaContext(context),
+    },
+  }) as WithLogContext;
 
 describe('AdaptiveMfaValidator', () => {
   beforeEach(() => {
@@ -240,15 +243,14 @@ describe('AdaptiveMfaValidator', () => {
       lastSignInAt: Date.now(),
     };
     const queries = createQueries();
-    const ctx = {
-      request: {
-        headers: {
-          'x-logto-cf-country': 'US',
-          'x-logto-cf-latitude': '12.3',
-          'x-logto-cf-longitude': '45.6',
-        },
+
+    const ctx = buildMockContext({
+      location: {
+        country: 'US',
+        latitude: 12.3,
+        longitude: 45.6,
       },
-    };
+    });
 
     const validator = new AdaptiveMfaValidator({
       queries,
@@ -277,14 +279,12 @@ describe('AdaptiveMfaValidator', () => {
       lastSignInAt: Date.now(),
     };
     const queries = createQueries();
-    const ctx = {
-      request: {
-        headers: {
-          'x-logto-cf-latitude': '0',
-          'x-logto-cf-longitude': '0',
-        },
+    const ctx = buildMockContext({
+      location: {
+        latitude: 0,
+        longitude: 0,
       },
-    };
+    });
 
     const validator = new AdaptiveMfaValidator({
       queries,
@@ -308,6 +308,7 @@ describe('AdaptiveMfaValidator', () => {
     'parses bot verification signal from injected header %s as %s',
     (botVerifiedHeader, expectedBotVerified) => {
       const queries = createQueries();
+
       const ctx = {
         request: {
           headers: {
@@ -318,6 +319,7 @@ describe('AdaptiveMfaValidator', () => {
 
       const validator = new AdaptiveMfaValidator({
         queries,
+        /* @ts-expect-error -- partial context for testing parsing logic only */
         ctx,
         interactionContext: createInteractionContext(mockUser),
         signInExperienceValidator: createSignInExperienceValidator(),
@@ -337,15 +339,13 @@ describe('AdaptiveMfaValidator', () => {
       lastSignInAt: Date.now(),
     };
     const queries = createQueries();
-    const ctx = {
-      request: {
-        headers: {
-          'x-logto-cf-country': 'US',
-          'x-logto-cf-latitude': '12.3',
-          'x-logto-cf-longitude': '45.6',
-        },
+    const ctx = buildMockContext({
+      location: {
+        country: 'US',
+        latitude: 12.3,
+        longitude: 45.6,
       },
-    };
+    });
 
     const validator = new AdaptiveMfaValidator({
       queries,
@@ -376,15 +376,13 @@ describe('AdaptiveMfaValidator', () => {
       lastSignInAt: Date.now(),
     };
     const queries = createQueries();
-    const ctx = {
-      request: {
-        headers: {
-          'x-logto-cf-country': 'US',
-          'x-logto-cf-latitude': '12.3',
-          'x-logto-cf-longitude': '45.6',
-        },
+    const ctx = buildMockContext({
+      location: {
+        country: 'US',
+        latitude: 12.3,
+        longitude: 45.6,
       },
-    };
+    });
 
     const validator = new AdaptiveMfaValidator({
       queries,
@@ -406,15 +404,13 @@ describe('AdaptiveMfaValidator', () => {
       lastSignInAt: Date.now(),
     };
     const queries = createQueries();
-    const ctx = {
-      request: {
-        headers: {
-          'x-logto-cf-country': 'US',
-          'x-logto-cf-latitude': '12.3',
-          'x-logto-cf-longitude': '45.6',
-        },
+    const ctx = buildMockContext({
+      location: {
+        country: 'US',
+        latitude: 12.3,
+        longitude: 45.6,
       },
-    };
+    });
 
     const validator = new AdaptiveMfaValidator({
       queries,

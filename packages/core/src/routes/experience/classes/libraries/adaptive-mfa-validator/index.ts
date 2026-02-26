@@ -2,7 +2,7 @@ import { InteractionEvent, type User, type UserGeoLocation } from '@logto/schema
 import { conditional, type Nullable, type Optional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { type LogEntry } from '#src/middleware/koa-audit-log.js';
+import { type WithLogContext, type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 
@@ -21,7 +21,6 @@ import type {
   AdaptiveMfaInteractionContext,
   AdaptiveMfaRule,
   AdaptiveMfaResult,
-  AdaptiveMfaValidatorContext,
   AdaptiveMfaValidatorOptions,
   RecentCountry,
   TriggeredRule,
@@ -33,7 +32,7 @@ export class AdaptiveMfaValidator {
   private readonly queries: Pick<Queries, 'userGeoLocations' | 'userSignInCountries'>;
   private readonly signInExperienceValidator: SignInExperienceValidator;
   private readonly interactionContext: AdaptiveMfaInteractionContext;
-  private readonly ctx?: AdaptiveMfaValidatorContext;
+  private readonly ctx?: WithLogContext;
   private readonly recentCountriesCache = new Map<string, RecentCountry[]>();
   private readonly ruleValidators: Array<AdaptiveMfaRuleValidator<AdaptiveMfaRule>>;
 
@@ -104,7 +103,21 @@ export class AdaptiveMfaValidator {
       return;
     }
 
-    return conditional(this.ctx && getInjectedHeaderValues(this.ctx.request.headers));
+    if (!this.ctx) {
+      return;
+    }
+
+    const {
+      request: { ip, headers },
+    } = this.ctx;
+
+    const { 'user-agent': userAgent } = headers;
+
+    return {
+      ip,
+      ...conditional(userAgent && { userAgent }),
+      ...getInjectedHeaderValues(headers),
+    };
   }
 
   public getCurrentContext(): Optional<AdaptiveMfaContext> {
