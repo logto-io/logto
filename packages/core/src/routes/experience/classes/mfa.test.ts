@@ -13,7 +13,7 @@ import type Queries from '#src/tenants/Queries.js';
 import { type InteractionContext } from '../types.js';
 
 import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
-import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
+import { type SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import { Mfa } from './mfa.js';
 
 const { jest } = import.meta;
@@ -49,9 +49,9 @@ const createMfa = ({
   };
 
   const mfa = new Mfa({} as Libraries, {} as Queries, {}, interactionContext);
-  const signInExperienceValidator = (
-    mfa as unknown as { signInExperienceValidator: SignInExperienceValidator }
-  ).signInExperienceValidator;
+  const { signInExperienceValidator } = mfa as unknown as {
+    signInExperienceValidator: SignInExperienceValidator;
+  };
   const getMfaSettings = jest
     .spyOn(signInExperienceValidator, 'getMfaSettings')
     .mockResolvedValue(mfaSettings);
