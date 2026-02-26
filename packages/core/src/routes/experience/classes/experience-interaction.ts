@@ -536,7 +536,6 @@ export default class ExperienceInteraction {
         : undefined;
 
       await this.mfa.assertSubmitMfaFulfilled({
-        interactionEvent: this.#interactionEvent,
         adaptiveMfaResult,
       });
     }

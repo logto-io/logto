@@ -71,32 +71,57 @@ describe('Mfa.assertSubmitMfaFulfilled', () => {
       triggeredRules: [],
     };
 
-    const adaptiveSpy = jest.spyOn(mfa, 'assertAdaptiveMfaBindingFulfilled').mockResolvedValue();
-    const mandatorySpy = jest.spyOn(mfa, 'assertUserMandatoryMfaFulfilled').mockResolvedValue();
+    const adaptiveSpy = jest
+      .spyOn(
+        mfa as unknown as {
+          assertAdaptiveMfaBindingFulfilled: (...args: unknown[]) => Promise<void>;
+        },
+        'assertAdaptiveMfaBindingFulfilled'
+      )
+      .mockResolvedValue();
+    const mandatorySpy = jest
+      .spyOn(
+        mfa as unknown as {
+          assertUserMandatoryMfaFulfilled: (...args: unknown[]) => Promise<void>;
+        },
+        'assertUserMandatoryMfaFulfilled'
+      )
+      .mockResolvedValue();
 
     await mfa.assertSubmitMfaFulfilled({
-      interactionEvent: InteractionEvent.SignIn,
       adaptiveMfaResult,
     });
 
-    expect(adaptiveSpy).toHaveBeenCalledWith(adaptiveMfaResult, expect.any(Object));
+    expect(adaptiveSpy).toHaveBeenCalledWith(expect.any(Object), adaptiveMfaResult);
     expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object));
     expect(adaptiveSpy.mock.invocationCallOrder[0]).toBeLessThan(
       mandatorySpy.mock.invocationCallOrder[0]!
     );
   });
 
-  it('skips adaptive binding check for non-sign-in events', async () => {
+  it('runs adaptive binding check with undefined adaptive result', async () => {
     const { mfa } = createMfa();
 
-    const adaptiveSpy = jest.spyOn(mfa, 'assertAdaptiveMfaBindingFulfilled').mockResolvedValue();
-    const mandatorySpy = jest.spyOn(mfa, 'assertUserMandatoryMfaFulfilled').mockResolvedValue();
+    const adaptiveSpy = jest
+      .spyOn(
+        mfa as unknown as {
+          assertAdaptiveMfaBindingFulfilled: (...args: unknown[]) => Promise<void>;
+        },
+        'assertAdaptiveMfaBindingFulfilled'
+      )
+      .mockResolvedValue();
+    const mandatorySpy = jest
+      .spyOn(
+        mfa as unknown as {
+          assertUserMandatoryMfaFulfilled: (...args: unknown[]) => Promise<void>;
+        },
+        'assertUserMandatoryMfaFulfilled'
+      )
+      .mockResolvedValue();
 
-    await mfa.assertSubmitMfaFulfilled({
-      interactionEvent: InteractionEvent.Register,
-    });
+    await mfa.assertSubmitMfaFulfilled({ adaptiveMfaResult: undefined });
 
-    expect(adaptiveSpy).not.toHaveBeenCalled();
+    expect(adaptiveSpy).toHaveBeenCalledWith(expect.any(Object), undefined);
     expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object));
   });
 
@@ -131,7 +156,6 @@ describe('Mfa.assertSubmitMfaFulfilled', () => {
     );
 
     await mfa.assertSubmitMfaFulfilled({
-      interactionEvent: InteractionEvent.SignIn,
       adaptiveMfaResult: {
         requiresMfa: true,
         triggeredRules: [],

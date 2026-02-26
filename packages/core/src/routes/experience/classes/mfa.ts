@@ -428,38 +428,6 @@ export class Mfa {
     );
   }
 
-  async assertAdaptiveMfaBindingFulfilled(
-    adaptiveMfaResult?: Optional<AdaptiveMfaResult>,
-    submitMfaValidationContext?: SubmitMfaValidationContext
-  ) {
-    if (!EnvSet.values.isDevFeaturesEnabled || !adaptiveMfaResult?.requiresMfa) {
-      return;
-    }
-
-    const availableFactorsForVerification =
-      submitMfaValidationContext?.userFactors ?? (await this.getUserMfaFactors());
-
-    // Adaptive MFA binding is only needed when risk requires MFA and there is no available
-    // factor for verification in the current interaction context.
-    const shouldEnforceAdaptiveMfaBinding = availableFactorsForVerification.length === 0;
-
-    if (!shouldEnforceAdaptiveMfaBinding) {
-      return;
-    }
-
-    const availableFactors =
-      await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
-
-    // Tenant has no bindable MFA factors enabled in SIE (e.g. all disabled).
-    // In this case there is no actionable binding step for end users, so skip
-    // adaptive binding enforcement instead of throwing a non-actionable error.
-    if (availableFactors.length === 0) {
-      return;
-    }
-
-    throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
-  }
-
   /**
    * Assert MFA fulfillment on submit for the current interaction.
    *
@@ -481,107 +449,17 @@ export class Mfa {
    *    - Continue to mandatory policy enforcement only after adaptive binding gate passes.
    */
   async assertSubmitMfaFulfilled({
-    interactionEvent,
     adaptiveMfaResult,
   }: {
-    interactionEvent: InteractionEvent;
-    adaptiveMfaResult?: Optional<AdaptiveMfaResult>;
+    adaptiveMfaResult: Optional<AdaptiveMfaResult>;
   }) {
     // Compute shared async context once per submit to avoid duplicated reads
     // across adaptive and mandatory phases.
     const submitMfaValidationContext = await this.buildSubmitMfaValidationContext();
 
-    if (interactionEvent === InteractionEvent.SignIn) {
-      await this.assertAdaptiveMfaBindingFulfilled(adaptiveMfaResult, submitMfaValidationContext);
-    }
+    await this.assertAdaptiveMfaBindingFulfilled(submitMfaValidationContext, adaptiveMfaResult);
 
     await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext);
-  }
-
-  /**
-   * @throws {RequestError} with status 422 if the user has not bound the required MFA factors
-   * @throws {RequestError} with status 422 if the user has not bound the backup code but enabled in the sign-in experience
-   * @throws {RequestError} with status 422 if the user existing backup codes is empty, new backup codes is required
-   */
-  // eslint-disable-next-line complexity
-  async assertUserMandatoryMfaFulfilled(submitMfaValidationContext?: SubmitMfaValidationContext) {
-    const mfaSettings =
-      submitMfaValidationContext?.mfaSettings ??
-      (await this.signInExperienceValidator.getMfaSettings());
-    const { policy, factors } = mfaSettings;
-
-    // If there are no factors, then there is nothing to check
-    if (factors.length === 0) {
-      return;
-    }
-
-    const identifiedUser =
-      submitMfaValidationContext?.user ?? (await this.interactionContext.getIdentifiedUser());
-    const { logtoConfig, id: userId } = identifiedUser;
-
-    const isMfaRequiredByUserOrganizations = await this.isMfaRequiredByUserOrganizations(
-      mfaSettings,
-      userId
-    );
-
-    // If the policy is no prompt, and mfa is not required by the user organizations, then there is nothing to check
-    if (policy === MfaPolicy.NoPrompt && !isMfaRequiredByUserOrganizations) {
-      return;
-    }
-
-    // If the policy is not mandatory and the user has skipped MFA,
-    // and MFA is not required by the user organizations, then there is nothing to check
-    if (
-      policy !== MfaPolicy.Mandatory &&
-      (this.#mfaSkipped ?? isMfaSkipped(logtoConfig)) &&
-      !isMfaRequiredByUserOrganizations
-    ) {
-      return;
-    }
-
-    // If the policy is prompt only at sign-in, and the event is register, skip check
-    if (
-      this.interactionContext.getInteractionEvent() === InteractionEvent.Register &&
-      policy === MfaPolicy.PromptOnlyAtSignIn
-    ) {
-      return;
-    }
-
-    const availableFactors = sortMfaFactors(
-      factors.filter((factor) => factor !== MfaFactor.BackupCode)
-    );
-
-    const factorsInUser =
-      submitMfaValidationContext?.userFactors ??
-      (await this.getUserMfaFactors({
-        mfaSettings,
-        user: identifiedUser,
-      }));
-    const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);
-    const linkedFactors = deduplicate([...factorsInUser, ...factorsInBind]);
-
-    // Assert that the user has at least one of the required factors bound
-    assertThat(
-      availableFactors.some((factor) => linkedFactors.includes(factor)),
-      new RequestError(
-        { code: 'user.missing_mfa', status: 422 },
-        policy === MfaPolicy.Mandatory || isMfaRequiredByUserOrganizations
-          ? { availableFactors }
-          : { availableFactors, skippable: true }
-      )
-    );
-
-    // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
-    await this.guardAdditionalBindingSuggestion(factorsInUser, availableFactors);
-
-    // Assert backup code
-    assertThat(
-      !factors.includes(MfaFactor.BackupCode) || linkedFactors.includes(MfaFactor.BackupCode),
-      new RequestError({
-        code: 'session.mfa.backup_code_required',
-        status: 422,
-      })
-    );
   }
 
   async assertPasskeySignInFulfilled() {
@@ -616,6 +494,117 @@ export class Mfa {
       webAuthn: this.#webAuthn,
       backupCode: cond(this.#backupCode && pick(this.#backupCode, 'type')),
     };
+  }
+
+  private async assertAdaptiveMfaBindingFulfilled(
+    submitMfaValidationContext: SubmitMfaValidationContext,
+    adaptiveMfaResult: Optional<AdaptiveMfaResult>
+  ) {
+    if (!EnvSet.values.isDevFeaturesEnabled || !adaptiveMfaResult?.requiresMfa) {
+      return;
+    }
+
+    const { userFactors: availableFactorsForVerification } = submitMfaValidationContext;
+
+    // Adaptive MFA binding is only needed when risk requires MFA and there is no available
+    // factor for verification in the current interaction context.
+    const shouldEnforceAdaptiveMfaBinding = availableFactorsForVerification.length === 0;
+
+    if (!shouldEnforceAdaptiveMfaBinding) {
+      return;
+    }
+
+    const availableFactors =
+      await this.signInExperienceValidator.getAvailableMfaFactorsForBinding();
+
+    // Tenant has no bindable MFA factors enabled in SIE (e.g. all disabled).
+    // In this case there is no actionable binding step for end users, so skip
+    // adaptive binding enforcement instead of throwing a non-actionable error.
+    if (availableFactors.length === 0) {
+      return;
+    }
+
+    throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
+  }
+
+  /**
+   * @throws {RequestError} with status 422 if the user has not bound the required MFA factors
+   * @throws {RequestError} with status 422 if the user has not bound the backup code but enabled in the sign-in experience
+   * @throws {RequestError} with status 422 if the user existing backup codes is empty, new backup codes is required
+   */
+  // eslint-disable-next-line complexity
+  private async assertUserMandatoryMfaFulfilled(
+    submitMfaValidationContext: SubmitMfaValidationContext
+  ) {
+    const { mfaSettings } = submitMfaValidationContext;
+    const { policy, factors } = mfaSettings;
+
+    // If there are no factors, then there is nothing to check
+    if (factors.length === 0) {
+      return;
+    }
+
+    const { user: identifiedUser } = submitMfaValidationContext;
+    const { logtoConfig, id: userId } = identifiedUser;
+
+    const isMfaRequiredByUserOrganizations = await this.isMfaRequiredByUserOrganizations(
+      mfaSettings,
+      userId
+    );
+
+    // If the policy is no prompt, and mfa is not required by the user organizations, then there is nothing to check
+    if (policy === MfaPolicy.NoPrompt && !isMfaRequiredByUserOrganizations) {
+      return;
+    }
+
+    // If the policy is not mandatory and the user has skipped MFA,
+    // and MFA is not required by the user organizations, then there is nothing to check
+    if (
+      policy !== MfaPolicy.Mandatory &&
+      (this.#mfaSkipped ?? isMfaSkipped(logtoConfig)) &&
+      !isMfaRequiredByUserOrganizations
+    ) {
+      return;
+    }
+
+    // If the policy is prompt only at sign-in, and the event is register, skip check
+    if (
+      this.interactionContext.getInteractionEvent() === InteractionEvent.Register &&
+      policy === MfaPolicy.PromptOnlyAtSignIn
+    ) {
+      return;
+    }
+
+    const availableFactors = sortMfaFactors(
+      factors.filter((factor) => factor !== MfaFactor.BackupCode)
+    );
+
+    const { userFactors: factorsInUser } = submitMfaValidationContext;
+    const factorsInBind = this.bindMfaFactorsArray.map(({ type }) => type);
+    const linkedFactors = deduplicate([...factorsInUser, ...factorsInBind]);
+
+    // Assert that the user has at least one of the required factors bound
+    assertThat(
+      availableFactors.some((factor) => linkedFactors.includes(factor)),
+      new RequestError(
+        { code: 'user.missing_mfa', status: 422 },
+        policy === MfaPolicy.Mandatory || isMfaRequiredByUserOrganizations
+          ? { availableFactors }
+          : { availableFactors, skippable: true }
+      )
+    );
+
+    // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
+    await this.guardAdditionalBindingSuggestion(factorsInUser, availableFactors);
+
+    // Assert backup code
+    assertThat(
+      !factors.includes(MfaFactor.BackupCode) || linkedFactors.includes(MfaFactor.BackupCode),
+      new RequestError({
+        code: 'session.mfa.backup_code_required',
+        status: 422,
+      })
+    );
   }
 
   private async checkMfaFactorsEnabledInSignInExperience(newBindMfaFactors: MfaFactor[]) {
