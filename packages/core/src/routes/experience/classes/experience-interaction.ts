@@ -535,7 +535,7 @@ export default class ExperienceInteraction {
         ? await this.adaptiveMfaValidator.getResult(log)
         : undefined;
 
-      await this.mfa.assertSubmitMfaFulfilled({
+      await this.mfa.assertMfaFulfilled({
         adaptiveMfaResult,
       });
     }

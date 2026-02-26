@@ -63,7 +63,7 @@ const createMfa = ({
   };
 };
 
-describe('Mfa.assertSubmitMfaFulfilled', () => {
+describe('Mfa.assertMfaFulfilled', () => {
   it('runs adaptive binding check before mandatory check for sign-in', async () => {
     const { mfa } = createMfa();
     const adaptiveMfaResult: AdaptiveMfaResult = {
@@ -88,7 +88,7 @@ describe('Mfa.assertSubmitMfaFulfilled', () => {
       )
       .mockResolvedValue();
 
-    await mfa.assertSubmitMfaFulfilled({
+    await mfa.assertMfaFulfilled({
       adaptiveMfaResult,
     });
 
@@ -119,7 +119,7 @@ describe('Mfa.assertSubmitMfaFulfilled', () => {
       )
       .mockResolvedValue();
 
-    await mfa.assertSubmitMfaFulfilled({ adaptiveMfaResult: undefined });
+    await mfa.assertMfaFulfilled({ adaptiveMfaResult: undefined });
 
     expect(adaptiveSpy).toHaveBeenCalledWith(expect.any(Object), undefined);
     expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object));
@@ -155,7 +155,7 @@ describe('Mfa.assertSubmitMfaFulfilled', () => {
       'getUserMfaFactors'
     );
 
-    await mfa.assertSubmitMfaFulfilled({
+    await mfa.assertMfaFulfilled({
       adaptiveMfaResult: {
         requiresMfa: true,
         triggeredRules: [],
