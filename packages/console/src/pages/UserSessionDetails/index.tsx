@@ -1,4 +1,4 @@
-import { Theme, type GetUserSessionResponse } from '@logto/schemas';
+import { Theme, type GetUserSessionResponse, type UserProfileResponse } from '@logto/schemas';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,6 +16,7 @@ import FormField from '@/ds-components/FormField';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import { type RequestError } from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
+import { getUserTitle } from '@/utils/user';
 
 import { getSessionDisplayInfo } from '../UserDetails/UserSettings/UserSessions/utils';
 
@@ -23,11 +24,12 @@ import RevokeSessionConfirmModal from './RevokeSessionConfirmModal';
 import styles from './index.module.scss';
 
 type PageTitleProps = {
-  readonly userName: string;
+  readonly user: UserProfileResponse;
   readonly session: GetUserSessionResponse;
 };
 
-function PageTitle({ userName, session }: PageTitleProps) {
+function PageTitle({ user, session }: PageTitleProps) {
+  const userName = getUserTitle(user);
   const sessionInfo = getSessionDisplayInfo(session);
   const sessionName = sessionInfo.name || session.payload.uid;
 
@@ -52,6 +54,13 @@ function UserSessionDetails() {
   const { userId, sessionId } = useParams();
 
   const {
+    data: userData,
+    error: userError,
+    isLoading: isUserLoading,
+    mutate: mutateUser,
+  } = useSWR<UserProfileResponse, RequestError>(userId && `api/users/${userId}`);
+
+  const {
     data: sessionData,
     error: sessionError,
     isLoading: isSessionLoading,
@@ -60,8 +69,8 @@ function UserSessionDetails() {
     userId && sessionId && `api/users/${userId}/sessions/${sessionId}`
   );
 
-  const isLoading = isSessionLoading;
-  const error = sessionError;
+  const isLoading = isUserLoading || isSessionLoading;
+  const error = userError ?? sessionError;
   const sessionLocation = sessionData ? getSessionDisplayInfo(sessionData).location : '';
   const [showRevokeConfirmModal, setShowRevokeConfirmModal] = useState(false);
   const headerSubtitle = sessionData && (
@@ -78,14 +87,14 @@ function UserSessionDetails() {
       isLoading={isLoading}
       error={error}
       onRetry={async () => {
-        await mutateSession();
+        await Promise.all([mutateUser(), mutateSession()]);
       }}
     >
-      {sessionData && (
+      {userData && sessionData && (
         <>
           <DetailsPageHeader
             icon={theme === Theme.Dark ? <SessionDarkIcon /> : <SessionIcon />}
-            title={<PageTitle userName={userId ?? '-'} session={sessionData} />}
+            title={<PageTitle user={userData} session={sessionData} />}
             subtitle={headerSubtitle}
             identifier={{
               name: t('user_details.sessions.location_column'),
