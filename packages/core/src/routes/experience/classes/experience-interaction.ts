@@ -518,6 +518,9 @@ export default class ExperienceInteraction {
       await this.mfa.assertPasskeySignInFulfilled();
     }
 
+    // For optional policies, suggest MFA binding if user hasn't set it up or skipped yet
+    await this.mfa.assertOptionalMfaEnablement();
+
     // Revalidate the new MFA data if any
     await this.mfa.checkAvailability();
 
@@ -549,7 +552,8 @@ export default class ExperienceInteraction {
       enterpriseSsoConnectorTokenSetSecret,
       ...rest
     } = this.profile.data;
-    const { mfaSkipped, passkeySkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
+    const { mfaEnabled, mfaSkipped, passkeySkipped, mfaVerifications } =
+      this.mfa.toUserMfaVerifications();
 
     // Update user profile
     const updatedUser = await userQueries.updateUserById(user.id, {
@@ -565,6 +569,16 @@ export default class ExperienceInteraction {
       ...conditional(
         mfaVerifications.length > 0 && {
           mfaVerifications: mergeUserMfaVerifications(user.mfaVerifications, mfaVerifications),
+        }
+      ),
+      ...conditional(
+        mfaEnabled && {
+          logtoConfig: {
+            ...user.logtoConfig,
+            [userMfaDataKey]: {
+              enabled: true,
+            },
+          },
         }
       ),
       ...conditional(

@@ -15,6 +15,10 @@ export const userPasskeySignInDataKey = 'passkey_sign_in';
  */
 export const userMfaDataGuard = z.object({
   /**
+   * Whether the user has actively enabled/bound MFA factors
+   */
+  enabled: z.boolean().optional(),
+  /**
    * Whether the user has skipped MFA binding flow
    */
   skipped: z.boolean().optional(),

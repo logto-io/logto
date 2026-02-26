@@ -331,6 +331,8 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         }
       }
 
+      experienceInteraction.mfa.markMfaEnabled();
+
       await experienceInteraction.save();
 
       ctx.status = 204;
