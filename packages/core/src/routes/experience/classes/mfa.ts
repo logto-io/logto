@@ -446,6 +446,26 @@ export class Mfa {
     throw new RequestError({ code: 'user.missing_mfa', status: 422 }, { availableFactors });
   }
 
+  /**
+   * Assert MFA fulfillment on submit for the current interaction.
+   *
+   * @remarks
+   * Keep adaptive and mandatory checks as two distinct phases instead of merging adaptive
+   * binding logic into mandatory policy validation:
+   *
+   * 1. Different semantics:
+   *    - Adaptive check is risk-driven and only enforces binding when risk requires MFA and
+   *      there is no factor available in the current interaction context.
+   *    - Mandatory check enforces tenant/organization MFA policy (skip behavior, registration
+   *      exceptions, and backup code requirements).
+   * 2. Different factor scope:
+   *    - Adaptive binding uses bindable factors for actionability.
+   *    - Mandatory policy may include requirements (for example backup code) that should not be
+   *      implicitly coupled to adaptive-triggered binding.
+   * 3. Clear failure semantics:
+   *    - Run adaptive first and fail early with an actionable binding error when needed.
+   *    - Continue to mandatory policy enforcement only after adaptive binding gate passes.
+   */
   async assertSubmitMfaFulfilled({
     interactionEvent,
     adaptiveMfaResult,
