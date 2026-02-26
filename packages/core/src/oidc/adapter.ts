@@ -139,7 +139,7 @@ export default function postgresAdapter(
       client_id,
       client_secret,
       client_name,
-      ...getConstantClientMetadata(envSet, type),
+      ...getConstantClientMetadata(envSet, type, customClientMetadata),
       ...transpileMetadata(client_id, snakecaseKeys(oidcClientMetadata)),
       // `node-oidc-provider` won't camelCase custom parameter keys, so we need to keep the keys camelCased
       ...customClientMetadata,

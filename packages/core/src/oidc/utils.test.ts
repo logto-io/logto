@@ -18,26 +18,61 @@ import {
 } from './utils.js';
 
 describe('getConstantClientMetadata()', () => {
-  expect(getConstantClientMetadata(mockEnvSet, ApplicationType.SPA)).toEqual({
-    application_type: 'web',
-    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
-    token_endpoint_auth_method: 'none',
+  it('should return correct metadata for SPA', () => {
+    expect(getConstantClientMetadata(mockEnvSet, ApplicationType.SPA)).toMatchObject({
+      application_type: 'web',
+      grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+      token_endpoint_auth_method: 'none',
+    });
   });
-  expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Native)).toEqual({
-    application_type: 'native',
-    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
-    token_endpoint_auth_method: 'none',
+
+  it('should return correct metadata for Native', () => {
+    expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Native)).toMatchObject({
+      application_type: 'native',
+      grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+      token_endpoint_auth_method: 'none',
+    });
   });
-  expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Traditional)).toEqual({
-    application_type: 'web',
-    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
-    token_endpoint_auth_method: 'client_secret_basic',
+
+  it('should return correct metadata for Traditional', () => {
+    expect(getConstantClientMetadata(mockEnvSet, ApplicationType.Traditional)).toMatchObject({
+      application_type: 'web',
+      grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+      token_endpoint_auth_method: 'client_secret_basic',
+    });
   });
-  expect(getConstantClientMetadata(mockEnvSet, ApplicationType.MachineToMachine)).toEqual({
-    application_type: 'web',
-    grant_types: [GrantType.ClientCredentials, GrantType.TokenExchange],
-    token_endpoint_auth_method: 'client_secret_basic',
-    response_types: [],
+
+  it('should return correct metadata for M2M', () => {
+    expect(getConstantClientMetadata(mockEnvSet, ApplicationType.MachineToMachine)).toMatchObject({
+      application_type: 'web',
+      grant_types: [GrantType.ClientCredentials],
+      token_endpoint_auth_method: 'client_secret_basic',
+      response_types: [],
+    });
+  });
+
+  it('should include TokenExchange grant type when allowTokenExchange is true', () => {
+    expect(
+      getConstantClientMetadata(mockEnvSet, ApplicationType.SPA, { allowTokenExchange: true })
+    ).toMatchObject({
+      grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, GrantType.TokenExchange],
+    });
+
+    expect(
+      getConstantClientMetadata(mockEnvSet, ApplicationType.MachineToMachine, {
+        allowTokenExchange: true,
+      })
+    ).toMatchObject({
+      grant_types: [GrantType.ClientCredentials, GrantType.TokenExchange],
+    });
+  });
+
+  it('should not include TokenExchange grant type when allowTokenExchange is false', () => {
+    expect(
+      getConstantClientMetadata(mockEnvSet, ApplicationType.SPA, { allowTokenExchange: false })
+    ).toMatchObject({
+      grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+    });
   });
 });
 

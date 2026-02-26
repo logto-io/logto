@@ -2,7 +2,6 @@ import { type SubjectToken } from '@logto/schemas';
 import { type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
-import { mockApplication } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -23,18 +22,11 @@ const { buildHandler } = await import('./index.js');
 const noop = async () => {};
 const findSubjectToken = jest.fn();
 const updateSubjectTokenById = jest.fn();
-const findApplicationById = jest.fn().mockResolvedValue({
-  ...mockApplication,
-  customClientMetadata: { ...mockApplication.customClientMetadata, allowTokenExchange: true },
-});
 
 const mockQueries = {
   subjectTokens: {
     findSubjectToken,
     updateSubjectTokenById,
-  },
-  applications: {
-    findApplicationById,
   },
 };
 const mockTenant = new MockTenant(undefined, mockQueries);
@@ -110,18 +102,11 @@ afterAll(() => {
 describe('token exchange', () => {
   afterEach(() => {
     findSubjectToken.mockClear();
-    findApplicationById.mockClear();
     updateSubjectTokenById.mockClear();
   });
 
   it('should throw when client is not available', async () => {
     const ctx = createOidcContext({ ...validOidcContext, client: undefined });
-    await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
-  });
-
-  it('should throw when client is third-party application', async () => {
-    findApplicationById.mockResolvedValueOnce({ ...mockApplication, isThirdParty: true });
-    const ctx = createOidcContext(validOidcContext);
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
   });
 
