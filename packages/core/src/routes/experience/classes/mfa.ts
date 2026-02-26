@@ -583,16 +583,21 @@ export class Mfa {
     const user = await this.interactionContext.getIdentifiedUser();
     const currentProfile = this.interactionContext.getCurrentProfile();
 
-    const existingVerifications = getAllUserEnabledMfaVerifications(
-      mfaSettings,
-      user,
-      currentProfile
-    );
-    return [
-      ...existingVerifications,
+    const existingFactors = getAllUserEnabledMfaVerifications(mfaSettings, user);
+    const inSessionBoundFactors = [
       ...(this.#totp ? [MfaFactor.TOTP] : []),
       ...(this.#webAuthn?.length ? [MfaFactor.WebAuthn] : []),
-    ].filter(Boolean);
+      ...(mfaSettings.factors.includes(MfaFactor.EmailVerificationCode) &&
+      currentProfile.primaryEmail
+        ? [MfaFactor.EmailVerificationCode]
+        : []),
+      ...(mfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) &&
+      currentProfile.primaryPhone
+        ? [MfaFactor.PhoneVerificationCode]
+        : []),
+    ];
+
+    return deduplicate([...existingFactors, ...inSessionBoundFactors]);
   }
 }
 /* eslint-enable max-lines */
