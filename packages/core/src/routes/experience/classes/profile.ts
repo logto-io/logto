@@ -45,6 +45,14 @@ export class Profile {
     this.#data = data;
   }
 
+  markProfileSubmitted() {
+    this.#data.submitted = true;
+  }
+
+  get profileSubmitted() {
+    return this.#data.submitted;
+  }
+
   get data() {
     return this.#data;
   }
@@ -273,8 +281,12 @@ export class Profile {
     };
   }
 
+  /**
+   * Clean up the user related profile data from interaction storage after successfully creating the user,
+   * keeping only the `submitted` flag to indicate whether the user has submitted the profile form.
+   */
   cleanUp() {
-    this.#data = {};
+    this.#data = pick(this.#data, 'submitted');
   }
 
   /**
