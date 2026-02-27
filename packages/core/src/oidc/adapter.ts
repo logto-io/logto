@@ -5,7 +5,7 @@ import {
   adminConsoleApplicationId,
   demoAppApplicationId,
 } from '@logto/schemas';
-import { appendPath, tryThat, conditional } from '@silverhand/essentials';
+import { appendPath, conditional, deduplicate, tryThat } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import type { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import { errors } from 'oidc-provider';
@@ -58,9 +58,10 @@ const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
 };
 
 const buildAccountCenterClientMetadata = (envSet: EnvSet): AllClientMetadata => {
-  const urlStrings = getTenantUrls(envSet.tenantId, EnvSet.values).map(
-    (url) => appendPath(url, '/account').href
-  );
+  const urlStrings = deduplicate([
+    ...getTenantUrls(envSet.tenantId, EnvSet.values).map(String),
+    envSet.endpoint.toString(),
+  ]).map((url) => appendPath(new URL(url), '/account').href);
 
   return {
     ...getConstantClientMetadata(envSet, ApplicationType.SPA),

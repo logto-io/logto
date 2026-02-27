@@ -1,8 +1,11 @@
-import type { Application } from '@logto/schemas';
+import { accountCenterApplicationId, type Application } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
+import { appendPath, deduplicate } from '@silverhand/essentials';
 import snakecaseKeys from 'snakecase-keys';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
+import { getTenantUrls } from '#src/env-set/utils.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -114,5 +117,32 @@ describe('postgres Adapter', () => {
 
     await adapter.revokeByGrantId(grantId);
     expect(revokeInstanceByGrantId).toBeCalledWith(modelName, grantId);
+  });
+
+  it('should include custom endpoint in account center redirect uris', async () => {
+    const customEndpoint = new URL('https://auth.izumilife.xyz');
+    const endpointGetterSpy = jest
+      .spyOn(mockEnvSet, 'endpoint', 'get')
+      .mockReturnValue(customEndpoint);
+
+    try {
+      const adapter = postgresAdapter(mockEnvSet, queries, 'Client');
+      const accountCenterClient = await adapter.find(accountCenterApplicationId);
+      expect(accountCenterClient).toBeDefined();
+
+      if (!accountCenterClient) {
+        throw new Error('Account center client should exist');
+      }
+
+      const expectedUrls = deduplicate([
+        ...getTenantUrls(mockEnvSet.tenantId, EnvSet.values).map(String),
+        customEndpoint.toString(),
+      ]).map((url) => appendPath(new URL(url), '/account').href);
+
+      expect(accountCenterClient.redirect_uris).toEqual(expectedUrls);
+      expect(accountCenterClient.post_logout_redirect_uris).toEqual(expectedUrls);
+    } finally {
+      endpointGetterSpy.mockRestore();
+    }
   });
 });
