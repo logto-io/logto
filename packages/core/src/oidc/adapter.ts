@@ -44,7 +44,7 @@ const transpileMetadata = (clientId: string, data: AllClientMetadata): AllClient
 };
 
 const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
-  const urlStrings = getTenantUrls(envSet.tenantId, EnvSet.values).map(
+  const urlStrings = getTenantUrls(envSet.tenantId, EnvSet.values, envSet.endpoint).map(
     (url) => appendPath(url, '/demo-app').href
   );
 
@@ -58,7 +58,7 @@ const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
 };
 
 const buildAccountCenterClientMetadata = (envSet: EnvSet): AllClientMetadata => {
-  const urlStrings = getTenantUrls(envSet.tenantId, EnvSet.values).map(
+  const urlStrings = getTenantUrls(envSet.tenantId, EnvSet.values, envSet.endpoint).map(
     (url) => appendPath(url, '/account').href
   );
 
