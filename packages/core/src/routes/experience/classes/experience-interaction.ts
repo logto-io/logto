@@ -112,7 +112,6 @@ export default class ExperienceInteraction {
     this.adaptiveMfaValidator = new AdaptiveMfaValidator({
       ctx,
       queries,
-      interactionContext,
       signInExperienceValidator: this.signInExperienceValidator,
     });
 
@@ -361,7 +360,7 @@ export default class ExperienceInteraction {
 
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user, {}, log);
 
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
@@ -532,7 +531,7 @@ export default class ExperienceInteraction {
 
     if (!shouldSkipSubmitMfaFulfillment) {
       const adaptiveMfaResult = isSignInEvent
-        ? await this.adaptiveMfaValidator.getResult(log)
+        ? await this.adaptiveMfaValidator.getResult(user, {}, log)
         : undefined;
 
       await this.mfa.assertMfaFulfilled({
