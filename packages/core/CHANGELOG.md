@@ -1,5 +1,53 @@
 # Change Log
 
+## 1.37.0
+
+### Minor Changes
+
+- 32d1562699: add out-of-the-box account center app
+
+  Summary
+
+  - Release the Account Center single-page app as a built-in Logto application for end users.
+  - Support profile updates for primary email, phone, username, and password with verification flows.
+  - Provide MFA management for TOTP, backup codes (download/regenerate), and passkeys (WebAuthn), including rename and delete actions.
+  - Gate sensitive operations behind password/email/phone verification and surface dedicated success screens.
+
+  To learn more about this feature, please refer to the documentation: https://docs.logto.io/end-user-flows/account-settings/by-account-api
+
+- eced1f02d4: add application context to JWT customizer
+
+  The application context is now available in the JWT customizer script for both access token and client credentials token types. This allows you to access application details (e.g., name, description, custom data) when customizing JWT claims.
+
+- b8ca1a40c7: support ID token claims configuration
+
+  You can now customize which additional claims (e.g., `custom_data`, `identities`, `roles`, `organizations`, `organization_roles`) are included in the ID token via Console or Management API.
+
+### Patch Changes
+
+- b7632ab97b: ensure built-in Account center and Demo app automatically register custom-domain callback URLs as valid redirect URIs
+
+  - Issue: On custom-domain requests, Account center signs in with `redirect_uri` based on `window.location.origin` (for example `https://custom.example.com/account`), but built-in client metadata was generated from default tenant URLs only, so OIDC validation could reject it with `invalid_redirect_uri`. Demo app had the same gap.
+  - Fix: Updated `getTenantUrls` to accept an optional runtime endpoint and include it in the deduplicated tenant URL list. Then updated built-in metadata generation for both Account center and Demo app to pass `envSet.endpoint`, so redirect/logout URIs now include the active custom domain automatically.
+
+- bb2f4ea7c7: fix the issue that the "Tell us about yourself" section does not appear during signup when only optional custom profile fields are configured
+
+  Previously, the `hasMissingExtraProfileFields` method only checked for required custom profile fields, causing the "Tell us about yourself" section to not appear during signup when only optional fields were configured.
+
+  Now, the method also checks for optional fields and whether the user has submitted the extra profile form, ensuring that the section is always displayed as expected.
+
+- Updated dependencies [32d1562699]
+- Updated dependencies [eced1f02d4]
+- Updated dependencies [3c47f4f947]
+- Updated dependencies [b8ca1a40c7]
+  - @logto/account@0.2.0
+  - @logto/cli@1.37.0
+  - @logto/schemas@1.37.0
+  - @logto/console@1.34.0
+  - @logto/phrases@1.26.0
+  - @logto/experience@1.18.2
+  - @logto/demo-app@1.5.0
+
 ## 1.36.0
 
 ### Minor Changes
