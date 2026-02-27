@@ -2,7 +2,6 @@ import { InteractionEvent, type User, type UserGeoLocation } from '@logto/schema
 import { conditional, type Nullable, type Optional, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
-import type { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 
@@ -72,22 +71,14 @@ export class AdaptiveMfaValidator {
 
   public async getResult(
     user: User,
-    options: AdaptiveMfaEvaluationOptions = {},
-    log?: LogEntry
+    options: AdaptiveMfaEvaluationOptions = {}
   ): Promise<Optional<AdaptiveMfaResult>> {
     if (!(await this.isAdaptiveMfaEnabled())) {
       return;
     }
 
-    const adaptiveMfaContext = this.getCurrentContext(options.currentContext);
-    log?.append({ adaptiveMfaContext });
-
     const state = this.buildEvaluationState(user, options);
-    const result = await this.evaluateRules(state);
-
-    log?.append({ adaptiveMfaResult: result });
-
-    return result;
+    return this.evaluateRules(state);
   }
 
   public getCurrentContext(contextOverride?: AdaptiveMfaContext): Optional<AdaptiveMfaContext> {

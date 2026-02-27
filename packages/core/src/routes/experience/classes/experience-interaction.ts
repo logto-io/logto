@@ -360,7 +360,10 @@ export default class ExperienceInteraction {
 
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user, {}, log);
+    const adaptiveMfaContext = this.adaptiveMfaValidator.getCurrentContext();
+    log?.append({ adaptiveMfaContext });
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(user);
+    log?.append({ adaptiveMfaResult });
 
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
@@ -530,9 +533,12 @@ export default class ExperienceInteraction {
       this.hasVerifiedSsoIdentity || (isSignInEvent && this.hasVerifiedSignInWebAuthn);
 
     if (!shouldSkipSubmitMfaFulfillment) {
+      const adaptiveMfaContext = this.adaptiveMfaValidator.getCurrentContext();
+      log?.append({ adaptiveMfaContext });
       const adaptiveMfaResult = isSignInEvent
-        ? await this.adaptiveMfaValidator.getResult(user, {}, log)
+        ? await this.adaptiveMfaValidator.getResult(user)
         : undefined;
+      log?.append({ adaptiveMfaResult });
 
       await this.mfa.assertMfaFulfilled({
         adaptiveMfaResult,
