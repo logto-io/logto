@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: '輸入發送至您手機的驗證碼',
   send_to_email: '發送至 {{identifier}}',
   send_to_phone: '發送至 {{identifier}}',
+  onboarding: '開啟兩步驗證',
+  onboarding_description:
+    '使用兩步驗證保護您的帳戶。選擇一種或多種方式：通行密碼、身份驗證器（OTP）、簡訊驗證碼或備用碼。',
+  enable_mfa: '啟用兩步驗證',
   add_mfa_factors: '添加兩步驗證',
   add_mfa_description: '已啟用兩步驗證。選擇第二種驗證方法進行安全登錄。',
   add_another_mfa_factor: '新增另一個兩步驟驗證',
