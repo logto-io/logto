@@ -134,6 +134,18 @@ const user_details = {
       edited: 'Belirteç {{name}} başarıyla düzenlendi.',
     },
   },
+  sessions: {
+    title: 'Oturumlar',
+    description:
+      'Logto Yetkilendirme Sunucusu tarafından sürdürülen oturumları yönetin. Burada bir Logto oturumunu iptal etmek, gelecekteki yetkilendirme isteklerinde otomatik onayı engeller.',
+    field_name: 'Oturumlar',
+    multiple_signed_in: 'Bu kullanıcı birden fazla cihaz veya tarayıcıdan oturum açtı.',
+    not_found:
+      'Aktif bir Logto oturumu bulunamadı. Kullanıcı şu anda herhangi bir cihazda oturum açmamıştır.',
+    name_column: 'İsim',
+    session_id_column: 'Oturum ID',
+    location_column: 'Konum',
+  },
   connections: {
     title: 'Bağlantı',
     description:

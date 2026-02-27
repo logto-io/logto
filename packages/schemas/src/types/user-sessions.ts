@@ -5,6 +5,21 @@ import { oidcSessionInstancePayloadGuard } from '../foundations/index.js';
 
 import { jwtCustomizerUserInteractionContextGuard } from './logto-config/jwt-customizer.js';
 
+export const userSessionSignInContextGuard = z
+  .object({
+    ip: z.string().optional(),
+    userAgent: z.string().optional(),
+    country: z.string().optional(),
+    city: z.string().optional(),
+    latitude: z.string().optional(),
+    longitude: z.string().optional(),
+    botScore: z.string().optional(),
+    botVerified: z.string().optional(),
+  })
+  .catchall(z.string());
+
+export type UserSessionSignInContext = z.infer<typeof userSessionSignInContextGuard>;
+
 export const userExtendedSessionGuard = OidcModelInstances.guard.extend({
   payload: oidcSessionInstancePayloadGuard,
   lastSubmission: jwtCustomizerUserInteractionContextGuard.nullable(),

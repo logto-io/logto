@@ -132,6 +132,18 @@ const user_details = {
       edited: 'Token {{name}} został pomyślnie edytowany.',
     },
   },
+  sessions: {
+    title: 'Sesje',
+    description:
+      'Zarządzaj sesjami utrzymywanymi przez serwer autoryzacji Logto. Odwołanie sesji Logto tutaj uniemożliwia automatyczną zgodę na przyszłe żądania autoryzacji.',
+    field_name: 'Sesje',
+    multiple_signed_in: 'Ten użytkownik zalogował się na wielu urządzeniach lub w przeglądarkach.',
+    not_found:
+      'Nie znaleziono aktywnych sesji Logto. Użytkownik nie jest obecnie zalogowany na żadnym urządzeniu.',
+    name_column: 'Nazwa',
+    session_id_column: 'ID sesji',
+    location_column: 'Lokalizacja',
+  },
   connections: {
     title: 'Połączenie',
     description:

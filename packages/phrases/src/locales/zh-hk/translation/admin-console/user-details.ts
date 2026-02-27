@@ -124,6 +124,17 @@ const user_details = {
       edited: '令牌 {{name}} 已成功編輯。',
     },
   },
+  sessions: {
+    title: '會話',
+    description:
+      '管理由 Logto 授權服務器維護的會話。在此撤銷 Logto 會話將阻止在未來授權請求時自動同意。',
+    field_name: '會話',
+    multiple_signed_in: '該用戶已登入多個設備或瀏覽器。',
+    not_found: '未找到活動的 Logto 會話。該用戶目前未在任何設備上登錄。',
+    name_column: '名稱',
+    session_id_column: '會話 ID',
+    location_column: '位置',
+  },
   connections: {
     title: '連接',
     description: '用戶連結第三方帳戶以進行社交登入、企業單點登錄或資源訪問。',

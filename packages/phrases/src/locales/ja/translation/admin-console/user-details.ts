@@ -130,6 +130,18 @@ const user_details = {
       edited: 'トークン {{name}} が正常に編集されました。',
     },
   },
+  sessions: {
+    title: 'セッション',
+    description:
+      'Logto 認可サーバーによって維持されるセッションを管理します。ここで Logto セッションを取り消すと、今後の認可リクエストでの自動同意が防止されます。',
+    field_name: 'セッション',
+    multiple_signed_in: 'このユーザーは複数のデバイスまたはブラウザにサインインしています。',
+    not_found:
+      'アクティブな Logto セッションが見つかりません。ユーザーは現在どのデバイスにもサインインしていません。',
+    name_column: '名前',
+    session_id_column: 'セッションID',
+    location_column: '場所',
+  },
   connections: {
     title: '接続',
     description:
