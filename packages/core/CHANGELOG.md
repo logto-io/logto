@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.37.1
+
+### Patch Changes
+
+- Updated dependencies [57b0008ee8]
+  - @logto/core-kit@2.7.1
+  - @logto/account@0.2.0
+  - @logto/cli@1.37.1
+  - @logto/console@1.34.0
+  - @logto/demo-app@1.5.0
+  - @logto/experience@1.18.2
+  - @logto/phrases-experience@1.12.2
+  - @logto/schemas@1.37.1
+
 ## 1.37.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.37.1
+
+### Patch Changes
+
+- Updated dependencies [57b0008ee8]
+  - @logto/core-kit@2.7.1
+  - @logto/schemas@1.37.1
+
 ## 1.37.0
 
 ### Minor Changes
