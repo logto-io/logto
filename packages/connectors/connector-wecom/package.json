@@ -5,6 +5,7 @@
   "author": "Dove<dove@feegr.cc> fork from Wechat Web connector",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
+    "@logto/shared": "workspace:^",
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
     "snakecase-keys": "^8.0.1",

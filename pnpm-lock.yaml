@@ -3182,6 +3182,9 @@ importers:
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../../toolkit/connector-kit
+      '@logto/shared':
+        specifier: workspace:^
+        version: link:../../shared
       '@silverhand/essentials':
         specifier: ^2.9.1
         version: 2.9.2

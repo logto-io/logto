@@ -3,7 +3,7 @@
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
  */
 
-import { assert } from '@silverhand/essentials';
+import { assert, conditional, trySafe } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -19,7 +19,9 @@ import {
   validateConfig,
   ConnectorType,
   parseJson,
+  parseJsonObject,
 } from '@logto/connector-kit';
+import { parsePhoneNumber, PhoneNumberParser } from '@logto/shared';
 
 import {
   authorizationEndpointInside,
@@ -31,9 +33,12 @@ import {
   defaultTimeout,
   invalidAccessTokenErrcode,
   invalidAuthCodeErrcode,
+  userDetailByUserIdEndpoint,
+  userDetailByUserTicketEndpoint,
 } from './constant.js';
 import type {
   GetAccessTokenErrorHandler,
+  UserDetailResponse,
   UserInfoResponseMessageParser,
   WecomConfig,
 } from './types.js';
@@ -42,6 +47,7 @@ import {
   accessTokenResponseGuard,
   userInfoResponseGuard,
   authResponseGuard,
+  userDetailResponseGuard,
 } from './types.js';
 
 const getAuthorizationUri =
@@ -93,6 +99,67 @@ export const getAccessToken = async (config: WecomConfig): Promise<{ accessToken
   return { accessToken };
 };
 
+export const normalizePhoneNumber = (mobile?: string) => {
+  if (!mobile) {
+    return '';
+  }
+  if (mobile.startsWith('+')) {
+    return mobile;
+  }
+  return `+86${mobile}`;
+};
+
+const getUserDetail = async ({
+  accessToken,
+  userId,
+  userTicket,
+}: {
+  accessToken: string;
+  userId: string;
+  userTicket?: string;
+}): Promise<UserDetailResponse> => {
+  const userDetailByUserIdResponse = await got.get(userDetailByUserIdEndpoint, {
+    searchParams: { access_token: accessToken, userid: userId },
+    timeout: { request: defaultTimeout },
+  });
+  const userDetailByUserIdResult = userDetailResponseGuard.safeParse(
+    parseJson(userDetailByUserIdResponse.body)
+  );
+
+  if (!userDetailByUserIdResult.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, userDetailByUserIdResult.error);
+  }
+
+  errorResponseHandler(userDetailByUserIdResult.data);
+
+  if (userTicket) {
+    const userDetailByUserTicketResponse = await got.post(userDetailByUserTicketEndpoint, {
+      searchParams: { access_token: accessToken },
+      json: { user_ticket: userTicket },
+      timeout: { request: defaultTimeout },
+    });
+    const userDetailByUserTicketResult = userDetailResponseGuard.safeParse(
+      parseJson(userDetailByUserTicketResponse.body)
+    );
+
+    if (!userDetailByUserTicketResult.success) {
+      throw new ConnectorError(
+        ConnectorErrorCodes.InvalidResponse,
+        userDetailByUserTicketResult.error
+      );
+    }
+
+    errorResponseHandler(userDetailByUserTicketResult.data);
+
+    return {
+      ...userDetailByUserIdResult.data,
+      ...userDetailByUserTicketResult.data,
+    };
+  }
+
+  return userDetailByUserIdResult.data;
+};
+
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data) => {
@@ -106,7 +173,7 @@ const getUserInfo =
         searchParams: { access_token: accessToken, code },
         timeout: { request: defaultTimeout },
       });
-      const rawData = parseJson(httpResponse.body);
+      const rawData = parseJsonObject(httpResponse.body);
       const result = userInfoResponseGuard.safeParse(rawData);
 
       if (!result.success) {
@@ -117,18 +184,28 @@ const getUserInfo =
       // 'errmsg' and 'errcode' turn to non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
       errorResponseHandler(result.data);
       //
-      const { userid, openid } = result.data;
+      const { userid, openid, user_ticket } = result.data;
       const id = userid ?? openid;
 
       if (!id) {
         throw new Error('Both userid and openid are undefined or null.');
       }
 
+      const userDetail = await getUserDetail({ accessToken, userId: id, userTicket: user_ticket });
+
       return {
         id,
-        avatar: '',
-        name: id,
-        rawData,
+        avatar: userDetail.avatar,
+        email: userDetail.email,
+        name: userDetail.name,
+        phone:
+          conditional(userDetail.mobile) &&
+          trySafe(
+            () =>
+              new PhoneNumberParser(parsePhoneNumber(normalizePhoneNumber(userDetail.mobile)))
+                .internationalNumber
+          ),
+        rawData: parseJsonObject(JSON.stringify({ ...rawData, ...userDetail })),
       };
     } catch (error: unknown) {
       return getUserInfoErrorHandler(error);
