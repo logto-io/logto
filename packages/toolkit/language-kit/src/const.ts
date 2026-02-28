@@ -14,6 +14,7 @@ export const languages = Object.freeze({
   'ca-ES': 'Català',
   'cb-IQ': 'کوردیی ناوەندی',
   'co-FR': 'Corsu',
+  cs: 'Čeština',
   'cs-CZ': 'Čeština',
   'cx-PH': 'Bisaya',
   'cy-GB': 'Cymraeg',
