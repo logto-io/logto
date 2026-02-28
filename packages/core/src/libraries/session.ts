@@ -12,6 +12,8 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { type SessionInstanceWithExtension } from '../queries/oidc-session-extensions.js';
+
 const updateInteractionResult = async (
   ctx: Context,
   provider: Provider,
@@ -178,38 +180,34 @@ export const consent = async ({
   return updateInteractionResult(ctx, provider, { consent: { grantId: finalGrantId } }, true);
 };
 
+const formatSessionWithExtension = (session: SessionInstanceWithExtension) => {
+  const { lastSubmission, clientId, accountId, payload, ...rest } = session;
+
+  const interactionContextResult =
+    jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
+
+  const payloadResult = oidcSessionInstancePayloadGuard.safeParse(payload);
+
+  if (!payloadResult.success) {
+    throw new RequestError(
+      { code: 'oidc.invalid_session_payload', status: 500 },
+      {
+        cause: payloadResult.error,
+      }
+    );
+  }
+
+  return {
+    ...rest,
+    payload: payloadResult.data,
+    lastSubmission: interactionContextResult.success ? interactionContextResult.data : null,
+    clientId,
+    accountId,
+  };
+};
+
 export const createSessionLibrary = (queries: Queries) => {
   const { oidcSessionExtensions } = queries;
-
-  const formatSessionWithExtension = (
-    session: Awaited<
-      ReturnType<typeof oidcSessionExtensions.findUserActiveSessionsWithExtensions>
-    >[number]
-  ) => {
-    const { lastSubmission, clientId, accountId, payload, ...rest } = session;
-
-    const interactionContextResult =
-      jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
-
-    const payloadResult = oidcSessionInstancePayloadGuard.safeParse(payload);
-
-    if (!payloadResult.success) {
-      throw new RequestError(
-        { code: 'oidc.invalid_session_payload', status: 500 },
-        {
-          cause: payloadResult.error,
-        }
-      );
-    }
-
-    return {
-      ...rest,
-      payload: payloadResult.data,
-      lastSubmission: interactionContextResult.success ? interactionContextResult.data : null,
-      clientId,
-      accountId,
-    };
-  };
 
   const findUserActiveSessionsWithExtensions = async (userId: string) => {
     const result = await oidcSessionExtensions.findUserActiveSessionsWithExtensions(userId);

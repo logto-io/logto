@@ -69,6 +69,7 @@ const user_details = {
     field_name: 'Autenticazione a due fattori',
     field_description: 'Questo utente ha abilitato fattori di autenticazione a 2 passaggi.',
     name_column: 'Autenticazione a due fattori',
+
     field_description_empty:
       'Questo utente non ha abilitato fattori di autenticazione a due fattori.',
     deletion_confirmation:
@@ -145,8 +146,20 @@ const user_details = {
     not_found:
       "Nessuna sessione Logto attiva trovata. L'utente non è attualmente connesso su alcun dispositivo.",
     name_column: 'Nome',
-    session_id_column: 'ID Sessione',
+    session_id_column: 'ID sessione',
     location_column: 'Posizione',
+
+    browser_on_os: '{{browser}} su {{os}}',
+    user: 'Utente',
+    application: 'Applicazione',
+    created_at: 'Creato il',
+    ip: 'IP',
+    browser_name: 'Nome browser',
+    os_name: 'Nome sistema operativo',
+    device_model: 'Modello dispositivo',
+    revoke_session: 'Revoca sessione',
+    revoke_session_confirmation:
+      'Se rimuovi questa sessione, gli utenti dovranno autenticarsi nuovamente.',
   },
   connections: {
     title: 'Connessione',

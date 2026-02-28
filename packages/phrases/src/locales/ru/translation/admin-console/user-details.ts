@@ -67,6 +67,7 @@ const user_details = {
     field_name: 'Двухфакторная аутентификация',
     field_description: 'Этот пользователь включил двухэтапные факторы аутентификации.',
     name_column: 'Двухфакторная аутентификация',
+
     field_description_empty: 'Этот пользователь не включил двухфакторную аутентификацию.',
     deletion_confirmation:
       'Вы удаляете существующий <name/> для двухэтапной верификации. Вы уверены, что хотите продолжить?',
@@ -142,8 +143,20 @@ const user_details = {
     not_found:
       'Активные сеансы Logto не найдены. Пользователь в настоящее время не вошел ни на одно устройство.',
     name_column: 'Имя',
-    session_id_column: 'ID сессии',
+    session_id_column: 'Идентификатор сессии',
     location_column: 'Местоположение',
+
+    browser_on_os: '{{browser}} на {{os}}',
+    user: 'Пользователь',
+    application: 'Приложение',
+    created_at: 'Создано',
+    ip: 'IP',
+    browser_name: 'Название браузера',
+    os_name: 'Название ОС',
+    device_model: 'Модель устройства',
+    revoke_session: 'Отозвать сессию',
+    revoke_session_confirmation:
+      'Если удалить эту сессию, пользователям потребуется повторная аутентификация.',
   },
   connections: {
     title: 'Подключение',

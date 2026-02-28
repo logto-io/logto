@@ -66,6 +66,7 @@ const user_details = {
     field_name: '多要素認証',
     field_description: 'このユーザーは2段階認証要素を有効にしました。',
     name_column: '多要素認証',
+
     field_description_empty: 'このユーザーは2段階認証の要因を有効にしていません。',
     deletion_confirmation: '2段階認証の既存の<name/>を削除しています。本当に続行しますか？',
   },
@@ -139,8 +140,19 @@ const user_details = {
     not_found:
       'アクティブな Logto セッションが見つかりません。ユーザーは現在どのデバイスにもサインインしていません。',
     name_column: '名前',
-    session_id_column: 'セッションID',
+    session_id_column: 'セッション ID',
     location_column: '場所',
+
+    browser_on_os: '{{os}} 上の {{browser}}',
+    user: 'ユーザー',
+    application: 'アプリケーション',
+    created_at: '作成日時',
+    ip: 'IP',
+    browser_name: 'ブラウザー名',
+    os_name: 'OS 名',
+    device_model: 'デバイスモデル',
+    revoke_session: 'セッションを失効',
+    revoke_session_confirmation: 'このセッションを削除すると、ユーザーは再認証が必要になります。',
   },
   connections: {
     title: '接続',

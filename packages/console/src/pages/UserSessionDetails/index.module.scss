@@ -1,0 +1,65 @@
+@use '@/scss/underscore' as _;
+
+.header {
+  padding: _.unit(6);
+  display: flex;
+
+  > *:not(:first-child) {
+    margin-inline-start: _.unit(6);
+  }
+
+  .content {
+    flex: 1;
+
+    .eventName {
+      color: var(--color-text);
+      font: var(--font-title-1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: _.unit(3);
+      flex-wrap: wrap;
+    }
+
+    .basicInfo {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      padding-top: _.unit(4);
+
+      > * {
+        width: calc((100% - #{_.unit(8)}) / 3);
+        min-width: 220px;
+        margin-block: 0 _.unit(4);
+      }
+    }
+
+    .infoItem {
+      word-break: break-word;
+      color: var(--color-text);
+      font: var(--font-body-2);
+
+      .label {
+        color: var(--color-text-secondary);
+        font: var(--font-label-2);
+        margin-bottom: _.unit(2);
+      }
+    }
+  }
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+  margin-bottom: _.unit(6);
+
+  > :not(:first-child) {
+    margin-top: _.unit(4);
+  }
+
+  .main {
+    padding-bottom: _.unit(4);
+  }
+}

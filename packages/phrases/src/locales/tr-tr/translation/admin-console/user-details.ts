@@ -67,6 +67,7 @@ const user_details = {
     field_name: 'Çok faktörlü kimlik doğrulama',
     field_description: 'Bu kullanıcı 2 adımlı kimlik doğrulama faktörlerini etkinleştirdi.',
     name_column: 'Çok Faktörlü Kimlik Doğrulama',
+
     field_description_empty:
       'Bu kullanıcı 2 aşamalı kimlik doğrulama faktörlerini etkinleştirmedi.',
     deletion_confirmation:
@@ -143,8 +144,20 @@ const user_details = {
     not_found:
       'Aktif bir Logto oturumu bulunamadı. Kullanıcı şu anda herhangi bir cihazda oturum açmamıştır.',
     name_column: 'İsim',
-    session_id_column: 'Oturum ID',
+    session_id_column: 'Oturum Kimliği',
     location_column: 'Konum',
+
+    browser_on_os: '{{os}} üzerinde {{browser}}',
+    user: 'Kullanıcı',
+    application: 'Uygulama',
+    created_at: 'Oluşturulma zamanı',
+    ip: 'IP',
+    browser_name: 'Tarayıcı adı',
+    os_name: 'İşletim sistemi adı',
+    device_model: 'Cihaz modeli',
+    revoke_session: 'Oturumu iptal et',
+    revoke_session_confirmation:
+      'Bu oturumu kaldırırsanız, kullanıcıların yeniden kimlik doğrulaması gerekir.',
   },
   connections: {
     title: 'Bağlantı',

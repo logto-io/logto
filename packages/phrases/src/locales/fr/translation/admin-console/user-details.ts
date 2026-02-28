@@ -69,6 +69,7 @@ const user_details = {
     field_name: 'Authentification à deux facteurs',
     field_description: "Cet utilisateur a activé des facteurs d'authentification à 2 étapes.",
     name_column: 'Authentification à deux facteurs',
+
     field_description_empty:
       "Cet utilisateur n'a pas activé les facteurs d'authentification à deux étapes.",
     deletion_confirmation:
@@ -148,6 +149,18 @@ const user_details = {
     name_column: 'Nom',
     session_id_column: 'ID de session',
     location_column: 'Emplacement',
+
+    browser_on_os: '{{browser}} sur {{os}}',
+    user: 'Utilisateur',
+    application: 'Application',
+    created_at: 'Créé le',
+    ip: 'IP',
+    browser_name: 'Nom du navigateur',
+    os_name: 'Nom du système d’exploitation',
+    device_model: "Modèle de l'appareil",
+    revoke_session: 'Révoquer la session',
+    revoke_session_confirmation:
+      'Si vous supprimez cette session, les utilisateurs devront se réauthentifier.',
   },
   connections: {
     title: 'Connexion',
