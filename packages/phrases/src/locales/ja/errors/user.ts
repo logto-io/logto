@@ -31,6 +31,8 @@ const user = {
   role_exists: 'このユーザーには既に役割ID {{roleId}}が追加されています。',
   invalid_role_type:
     '役割タイプが無効です。ユーザーにはマシン対マシンの役割を割り当てることはできません。',
+  suggest_mfa:
+    'アカウントのセキュリティ向上のため、MFAをアカウントに連携することをおすすめします。',
   missing_mfa: 'MFAを追加してからサインインしてください。',
   totp_already_in_use: 'TOTPはすでに使用されています。',
   backup_code_already_in_use: 'バックアップコードはすでに使用されています。',

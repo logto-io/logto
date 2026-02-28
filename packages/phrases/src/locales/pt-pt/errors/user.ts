@@ -31,6 +31,7 @@ const user = {
   role_exists: 'O id da função {{roleId}} já foi adicionado a este utilizador.',
   invalid_role_type:
     'Tipo de função inválido, não é possível atribuir uma função máquina a máquina ao utilizador.',
+  suggest_mfa: 'Para maior segurança da conta, recomendamos que vincules MFA à tua conta.',
   missing_mfa: 'Precisas de vincular MFA adicional antes de iniciares sessão.',
   totp_already_in_use: 'TOTP já está em uso.',
   backup_code_already_in_use: 'Código de backup já está em uso.',
