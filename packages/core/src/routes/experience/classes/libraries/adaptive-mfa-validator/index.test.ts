@@ -140,6 +140,36 @@ describe('AdaptiveMfaValidator', () => {
     jest.useRealTimers();
   });
 
+  it('does not trigger new country rule when recent countries are empty', async () => {
+    const now = new Date('2024-01-02T00:00:00Z');
+
+    jest.useFakeTimers().setSystemTime(now);
+
+    const user: User = {
+      ...mockUser,
+      lastSignInAt: now.getTime() - 60 * 60 * 1000,
+    };
+    const queries = createQueries({
+      recentCountries: [],
+    });
+
+    const validator = new AdaptiveMfaValidator({
+      queries,
+      interactionContext: createInteractionContext(user),
+      signInExperienceValidator: createSignInExperienceValidator(),
+      ctx: buildMockContext({ location: { country: 'FR' } }),
+    });
+
+    const result = await validator.getResult();
+
+    expect(result).toEqual({
+      requiresMfa: false,
+      triggeredRules: [],
+    });
+
+    jest.useRealTimers();
+  });
+
   it('triggers geo velocity rule when travel speed exceeds threshold', async () => {
     const now = new Date('2024-01-02T00:00:00Z');
 
@@ -398,7 +428,7 @@ describe('AdaptiveMfaValidator', () => {
     expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).not.toHaveBeenCalled();
   });
 
-  it('skips recording context for non-sign-in interactions', async () => {
+  it('records context for register interactions', async () => {
     const user: User = {
       ...mockUser,
       lastSignInAt: Date.now(),
@@ -420,6 +450,41 @@ describe('AdaptiveMfaValidator', () => {
     });
 
     await validator.recordSignInGeoContext(user, InteractionEvent.Register);
+
+    expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+      user.id,
+      12.3,
+      45.6
+    );
+    expect(queries.userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(user.id, 'US');
+    expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).toHaveBeenCalledWith(
+      user.id,
+      adaptiveMfaNewCountryWindowDays
+    );
+  });
+
+  it('skips recording context for unsupported interactions', async () => {
+    const user: User = {
+      ...mockUser,
+      lastSignInAt: Date.now(),
+    };
+    const queries = createQueries();
+    const ctx = buildMockContext({
+      location: {
+        country: 'US',
+        latitude: 12.3,
+        longitude: 45.6,
+      },
+    });
+
+    const validator = new AdaptiveMfaValidator({
+      queries,
+      ctx,
+      interactionContext: createInteractionContext(user),
+      signInExperienceValidator: createSignInExperienceValidator(),
+    });
+
+    await validator.recordSignInGeoContext(user, InteractionEvent.ForgotPassword);
 
     expect(queries.userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
     expect(queries.userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();

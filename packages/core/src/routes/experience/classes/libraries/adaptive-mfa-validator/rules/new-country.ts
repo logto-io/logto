@@ -20,6 +20,11 @@ export class NewCountryRule extends AdaptiveMfaRuleValidator<AdaptiveMfaRule.New
     }
 
     const recentCountries = await this.dependencies.getRecentCountries(state.user);
+    // Cold start: no recent country baseline yet, so skip new-country detection.
+    if (recentCountries.length === 0) {
+      return;
+    }
+
     const normalizedCurrent = currentCountry.toUpperCase();
     const hasRecentVisit = recentCountries.some(
       ({ country }) => country.toUpperCase() === normalizedCurrent
