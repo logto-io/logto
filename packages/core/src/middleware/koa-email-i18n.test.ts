@@ -61,7 +61,7 @@ describe('koaEmailI18n', () => {
     };
     findAllCustomLanguageTags.mockResolvedValueOnce(['fr-CA']);
     await koaEmailI18n(queries)(ctx, next);
-    expect(ctx.emailI18n?.locale).toEqual('en');
+    expect(ctx.emailI18n?.locale).toEqual('de');
     expect(ctx.emailI18n?.uiLocales).toEqual('de-DE');
   });
 

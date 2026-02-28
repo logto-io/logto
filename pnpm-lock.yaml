@@ -4859,6 +4859,9 @@ importers:
       '@silverhand/eslint-config':
         specifier: 6.0.1
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
+      '@silverhand/essentials':
+        specifier: ^2.9.1
+        version: 2.9.2
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
