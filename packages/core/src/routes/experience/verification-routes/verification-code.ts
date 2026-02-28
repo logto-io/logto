@@ -76,6 +76,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
             isBindingEmailForMfa ? TemplateType.BindMfa : getTemplateTypeByEvent(interactionEvent)
           ),
         libraries,
+        queries,
         ctx,
       });
 
@@ -139,6 +140,7 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
         createVerificationRecord: () =>
           createNewMfaCodeVerificationRecord(libraries, queries, identifier),
         libraries,
+        queries,
         ctx,
       });
 

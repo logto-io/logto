@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   InteractionEvent,
   MfaFactor,
@@ -75,7 +76,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
       passcodes,
     },
     queries: {
-      users: { findUserById },
+      users: { findUserById, hasUserWithEmail, hasUserWithNormalizedPhone },
     },
   } = tenant;
 
@@ -127,19 +128,40 @@ export default function additionalRoutes<T extends IRouterParamContext>(
       const messageContext = await buildVerificationCodeTemplateContext(passcodes, ctx, guard.body);
       const { uiLocales } = getLogtoCookie(ctx);
 
-      await sendVerificationCodeToIdentifier(
-        {
-          event,
-          ...guard.body,
-          locale: ctx.locale,
-          ...(uiLocales && { uiLocales }),
-          messageContext,
-          ip: ctx.request.ip,
-        },
-        interactionDetails.jti,
-        createLog,
-        passcodes
-      );
+      const userExists = await (async () => {
+        if (event === InteractionEvent.Register) {
+          return true;
+        }
+
+        if ('email' in guard.body) {
+          return hasUserWithEmail(guard.body.email);
+        }
+
+        if ('phone' in guard.body) {
+          return hasUserWithNormalizedPhone(guard.body.phone);
+        }
+
+        return false;
+      })();
+
+      if (userExists) {
+        await sendVerificationCodeToIdentifier(
+          {
+            event,
+            ...guard.body,
+            locale: ctx.locale,
+            ...(uiLocales && { uiLocales }),
+            messageContext,
+            ip: ctx.request.ip,
+          },
+          interactionDetails.jti,
+          createLog,
+          passcodes
+        );
+      } else {
+        const log = createLog(`Interaction.${event}.Identifier.VerificationCode.Create`);
+        log.append({ ...guard.body, userExists: false });
+      }
 
       ctx.status = 204;
 
@@ -337,3 +359,5 @@ export default function additionalRoutes<T extends IRouterParamContext>(
     }
   );
 }
+
+/* eslint-enable max-lines */
