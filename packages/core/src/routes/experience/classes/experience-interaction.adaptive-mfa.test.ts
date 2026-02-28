@@ -207,7 +207,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     });
   });
 
-  it('defers MFA binding enforcement to submit when adaptive MFA triggers and user has no factors', async () => {
+  it('does not require MFA verification when adaptive MFA triggers and user has no factors', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       mfaVerifications: [],
@@ -362,10 +362,17 @@ describe('ExperienceInteraction adaptive MFA', () => {
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
   });
 
-  it('defers MFA binding enforcement to submit when adaptive MFA triggers but user has no supported factors', async () => {
+  it('does not require MFA verification when adaptive MFA triggers but user has no supported factors', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
-      mfaVerifications: [],
+      mfaVerifications: [
+        {
+          id: 'backup-code-id',
+          type: MfaFactor.BackupCode,
+          createdAt: new Date().toISOString(),
+          codes: [{ code: 'mock-backup-code' }],
+        },
+      ],
       logtoConfig: {},
     };
 
@@ -395,7 +402,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
   });
 
-  it('forces MFA binding on submit when adaptive MFA triggers and dev features are enabled', async () => {
+  it('does not force MFA binding on submit when adaptive MFA triggers and user has no factors', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       mfaVerifications: [],
@@ -428,14 +435,51 @@ describe('ExperienceInteraction adaptive MFA', () => {
     } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
     const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
-    await expect(experienceInteraction.submit()).rejects.toMatchError(
-      new RequestError(
-        { code: 'user.missing_mfa', status: 422 },
+    await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+  });
+
+  it('does not force MFA binding on submit when adaptive MFA triggers but user only has disabled factors', async () => {
+    const user: User = {
+      ...mockUserWithMfaVerifications,
+      mfaVerifications: [
         {
-          availableFactors: [MfaFactor.TOTP],
-        }
-      )
-    );
+          id: 'backup-code-id',
+          type: MfaFactor.BackupCode,
+          createdAt: new Date().toISOString(),
+          codes: [{ code: 'mock-backup-code' }],
+        },
+      ],
+      logtoConfig: {
+        [userMfaDataKey]: {
+          skipped: true,
+        },
+      },
+    };
+
+    users.findUserById.mockResolvedValueOnce(user);
+    users.updateUserById.mockResolvedValueOnce(user);
+
+    // @ts-expect-error -- mock test context
+    const ctx: WithHooksAndLogsContext = {
+      assignInteractionHookResult: jest.fn(),
+      appendDataHookContext: jest.fn(),
+      ...createContextWithRouteParameters({
+        headers: {
+          'x-logto-cf-bot-score': '10',
+        },
+      }),
+      ...createMockLogContext(),
+    };
+
+    const interactionDetails = {
+      result: {
+        interactionEvent: InteractionEvent.SignIn,
+        userId: user.id,
+      },
+    } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
+    const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+
+    await expect(experienceInteraction.submit()).resolves.toBeUndefined();
   });
 
   it('allows submit after binding TOTP in current interaction when adaptive MFA triggers', async () => {
@@ -596,7 +640,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     await expect(experienceInteraction.submit()).resolves.toBeUndefined();
   });
 
-  it('skips adaptive MFA binding enforcement when no bindable MFA factors are enabled in SIE', async () => {
+  it('allows submit when adaptive MFA triggers and no MFA factors are enabled in SIE', async () => {
     signInExperiences.findDefaultSignInExperience.mockResolvedValue({
       ...mockSignInExperience,
       adaptiveMfa: { enabled: true },

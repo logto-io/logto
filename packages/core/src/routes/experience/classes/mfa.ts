@@ -22,10 +22,9 @@ import {
   userPasskeySignInDataKey,
 } from '@logto/schemas';
 import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
-import { cond, condObject, deduplicate, pick, type Optional } from '@silverhand/essentials';
+import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -39,7 +38,6 @@ import {
   getProfileMfaFactors,
   sortMfaFactors,
 } from './helpers.js';
-import type { AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 
 export type MfaData = {
@@ -429,16 +427,10 @@ export class Mfa {
   }
 
   /** Assert MFA fulfillment for the current interaction submit. */
-  async assertMfaFulfilled({
-    adaptiveMfaResult,
-  }: {
-    adaptiveMfaResult: Optional<AdaptiveMfaResult>;
-  }) {
+  async assertMfaFulfilled() {
     // Compute shared async context once per submit to avoid duplicated reads
     // across adaptive and mandatory phases.
     const submitMfaValidationContext = await this.buildSubmitMfaValidationContext();
-
-    await this.assertAdaptiveMfaBindingFulfilled(submitMfaValidationContext, adaptiveMfaResult);
 
     await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext);
   }
@@ -475,40 +467,6 @@ export class Mfa {
       webAuthn: this.#webAuthn,
       backupCode: cond(this.#backupCode && pick(this.#backupCode, 'type')),
     };
-  }
-
-  private async assertAdaptiveMfaBindingFulfilled(
-    submitMfaValidationContext: SubmitMfaValidationContext,
-    adaptiveMfaResult: Optional<AdaptiveMfaResult>
-  ) {
-    if (!EnvSet.values.isDevFeaturesEnabled || !adaptiveMfaResult?.requiresMfa) {
-      return;
-    }
-
-    const { userFactors: availableFactorsForVerification } = submitMfaValidationContext;
-
-    // Adaptive MFA binding is only needed when risk requires MFA and there is no available
-    // factor for verification in the current interaction context.
-    const shouldEnforceAdaptiveMfaBinding = availableFactorsForVerification.length === 0;
-
-    if (!shouldEnforceAdaptiveMfaBinding) {
-      return;
-    }
-
-    // Bindable factors are actionable options for this step (backup code excluded).
-    const bindableFactors = await this.signInExperienceValidator.getBindableMfaFactors();
-
-    // Tenant has no bindable MFA factors enabled in SIE (e.g. all disabled).
-    // In this case there is no actionable binding step for end users, so skip
-    // adaptive binding enforcement instead of throwing a non-actionable error.
-    if (bindableFactors.length === 0) {
-      return;
-    }
-
-    throw new RequestError(
-      { code: 'user.missing_mfa', status: 422 },
-      { availableFactors: bindableFactors }
-    );
   }
 
   /**
