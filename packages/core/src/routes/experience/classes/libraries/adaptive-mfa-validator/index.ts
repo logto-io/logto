@@ -69,10 +69,7 @@ export class AdaptiveMfaValidator {
    * @remarks Record geo context on successful sign-in and register events only.
    */
   public async recordSignInGeoContext(user: User, interactionEvent: InteractionEvent) {
-    if (
-      interactionEvent !== InteractionEvent.SignIn &&
-      interactionEvent !== InteractionEvent.Register
-    ) {
+    if (interactionEvent === InteractionEvent.ForgotPassword) {
       return;
     }
 
