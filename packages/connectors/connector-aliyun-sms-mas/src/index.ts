@@ -20,6 +20,11 @@ import { defaultMetadata } from './constant.js';
 import { sendSmsVerifyCode } from './send-verify-code.js';
 import type { Template } from './types.js';
 import { aliyunSmsMasConfigGuard, sendSmsVerifyCodeResponseGuard } from './types.js';
+import {
+  isMainlandChinaPhoneNumber,
+  mainlandChinaCountryCode,
+  normalizeMainlandChinaPhoneNumber,
+} from './utils.js';
 
 const getTemplateCode = ({ templateCode }: Template) => templateCode;
 
@@ -40,7 +45,10 @@ const parseVerifyCodeResponseString = (response: string) => {
  * Send SMS verification code
  *
  * Note: This connector only supports China mainland mobile numbers.
- * The phone number should be provided without country code (e.g., "13012345678").
+ * It accepts both:
+ * - international digits from Logto (e.g., "8613012345678")
+ * - local mainland number (e.g., "13012345678")
+ * and normalizes to MAS API format automatically.
  *
  * Logto uses a fixed 10-minute verification code expiration time:
  * @see https://docs.logto.io/zh-CN/connectors/sms-connectors/sms-templates
@@ -51,7 +59,7 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, aliyunSmsMasConfigGuard);
-    const { accessKeyId, accessKeySecret, signName } = config;
+    const { accessKeyId, accessKeySecret, signName, strictPhoneRegionNumberCheck } = config;
 
     const template = getConfigTemplateByType(type, config);
     assert(
@@ -69,11 +77,22 @@ const sendMessage =
     // min parameter is used in template: "您的验证码是${code}，有效期${min}分钟，请勿告诉他人。"
     const masPayload = { ...filteredPayload, min: '10' };
 
+    if (strictPhoneRegionNumberCheck && !isMainlandChinaPhoneNumber(to)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidRequestParameters, {
+        errorDescription:
+          'Phone number must be a China mainland mobile number. Accepted formats: 13012345678, 8613012345678, +8613012345678, 008613012345678.',
+        phoneNumber: to,
+      });
+    }
+
+    const normalizedPhoneNumber = normalizeMainlandChinaPhoneNumber(to);
+
     try {
       const httpResponse = await sendSmsVerifyCode(
         {
           AccessKeyId: accessKeyId,
-          PhoneNumber: to,
+          CountryCode: mainlandChinaCountryCode,
+          PhoneNumber: normalizedPhoneNumber,
           SignName: signName,
           TemplateCode: getTemplateCode(template),
           TemplateParam: JSON.stringify(masPayload),

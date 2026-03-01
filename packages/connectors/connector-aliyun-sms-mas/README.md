@@ -57,6 +57,13 @@ If you need to send SMS to international numbers or regions outside mainland Chi
 
 ## Compose the connector JSON
 
+### Phone number format in Logto and MAS
+
+- Logto internal phone value is a digits-only international number (typically with country code, e.g., `8613012345678`).
+- Aliyun MAS `SendSmsVerifyCode` expects local mainland number in `PhoneNumber` (e.g., `13012345678`) and country info via `CountryCode`.
+- This connector automatically normalizes `+86` / `0086` / `86` prefixes when sending SMS requests.
+- Recommended: keep phone identifiers in Logto as international digits with country code (e.g., `86...`) to avoid ambiguous display/formatting in other flows.
+
 1. Fill out the `accessKeyId` and `accessKeySecret` with your AccessKey pair.
 2. Select a `signName` from the system-provided options:
    - 云渚科技验证平台

@@ -91,6 +91,7 @@ export const aliyunSmsMasConfigGuard = z.object({
       ).join(', ')}) should be provided in templates.`,
     })
   ),
+  strictPhoneRegionNumberCheck: z.boolean().optional(),
 });
 
 export type AliyunSmsMasConfig = z.infer<typeof aliyunSmsMasConfigGuard>;
