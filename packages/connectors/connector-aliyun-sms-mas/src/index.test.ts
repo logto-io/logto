@@ -67,6 +67,7 @@ describe('sendMessage()', () => {
 
     expect(sendRequest).toMatchObject({
       AccessKeyId: mockedConnectorConfig.accessKeyId,
+      CountryCode: '86',
       PhoneNumber: phoneTest,
       SignName: mockedConnectorConfig.signName,
       TemplateCode: '100001',
@@ -99,6 +100,21 @@ describe('sendMessage()', () => {
 
     expect(sendRequest).toMatchObject({
       TemplateCode: expectedTemplateCode,
+    });
+  });
+
+  it('should strip country code prefix before sending to MAS API', async () => {
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: `86${phoneTest}`,
+      type: TemplateType.SignIn,
+      payload: { code: codeTest },
+    });
+    const [sendRequest] = sendSmsVerifyCode.mock.calls[0] ?? [];
+
+    expect(sendRequest).toMatchObject({
+      CountryCode: '86',
+      PhoneNumber: phoneTest,
     });
   });
 });
@@ -155,6 +171,55 @@ describe('sendMessage() with API errors', () => {
       })
     ).rejects.toMatchObject({
       code: 'general',
+    });
+  });
+});
+
+describe('sendMessage() with strictPhoneRegionNumberCheck', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should throw invalid_request_parameters for non-mainland number in strict mode', async () => {
+    const connector = await createConnector({ getConfig });
+    await expect(
+      connector.sendMessage(
+        {
+          to: '+1123123123',
+          type: TemplateType.SignIn,
+          payload: { code: codeTest },
+        },
+        {
+          ...mockedConnectorConfig,
+          strictPhoneRegionNumberCheck: true,
+        }
+      )
+    ).rejects.toMatchObject({
+      code: 'invalid_request_parameters',
+    });
+
+    expect(sendSmsVerifyCode).not.toHaveBeenCalled();
+  });
+
+  it('should allow mainland number in strict mode', async () => {
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage(
+      {
+        to: `+86${phoneTest}`,
+        type: TemplateType.SignIn,
+        payload: { code: codeTest },
+      },
+      {
+        ...mockedConnectorConfig,
+        strictPhoneRegionNumberCheck: true,
+      }
+    );
+
+    const [sendRequest] = sendSmsVerifyCode.mock.calls[0] ?? [];
+
+    expect(sendRequest).toMatchObject({
+      CountryCode: '86',
+      PhoneNumber: phoneTest,
     });
   });
 });

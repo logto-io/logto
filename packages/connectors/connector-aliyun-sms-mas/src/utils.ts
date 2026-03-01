@@ -100,3 +100,46 @@ export const request = async (
     form: { ...finalParameters, Signature: signature },
   });
 };
+
+const chinaCountryCode = '86';
+const mainlandChinaNationalNumberRegEx = /^1\d{10}$/;
+
+/**
+ * Normalize phone number for Aliyun MAS API.
+ *
+ * Logto stores phone numbers as international digits without the leading `+`.
+ * For example, a China mainland phone can be `8613012345678`.
+ *
+ * MAS `SendSmsVerifyCode` expects the local mainland phone number in `PhoneNumber`
+ * and uses `CountryCode` (default `86`) for country information.
+ *
+ * This helper strips `+86` / `0086` / `86` prefixes when present.
+ */
+export const normalizeMainlandChinaPhoneNumber = (phoneNumber: string): string => {
+  const trimmedPhoneNumber = phoneNumber.trim();
+
+  if (mainlandChinaNationalNumberRegEx.test(trimmedPhoneNumber)) {
+    return trimmedPhoneNumber;
+  }
+
+  const normalizedPhoneNumber = trimmedPhoneNumber.replace(/^\+?86|^0086/, '');
+
+  return mainlandChinaNationalNumberRegEx.test(normalizedPhoneNumber)
+    ? normalizedPhoneNumber
+    : trimmedPhoneNumber;
+};
+
+/**
+ * Check whether the input can be recognized as a mainland China mobile phone number.
+ *
+ * Accepted examples:
+ * - 13012345678
+ * - 8613012345678
+ * - +8613012345678
+ * - 008613012345678
+ */
+export const isMainlandChinaPhoneNumber = (phoneNumber: string): boolean => {
+  return mainlandChinaNationalNumberRegEx.test(normalizeMainlandChinaPhoneNumber(phoneNumber));
+};
+
+export const mainlandChinaCountryCode = chinaCountryCode;

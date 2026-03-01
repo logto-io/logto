@@ -130,5 +130,14 @@ export const defaultMetadata: ConnectorMetadata = {
       description:
         'Use system-provided template codes: 100001 (SignIn/Register/Generic), 100002 (Change Phone), 100003 (Reset Password), 100004 (Bind Phone), 100005 (Verify Phone).',
     },
+    {
+      key: 'strictPhoneRegionNumberCheck',
+      label: 'Strict phone region check',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      defaultValue: true,
+      description:
+        'When enabled, only China mainland mobile numbers are accepted (13012345678, 8613012345678, +8613012345678, 008613012345678). Keep this enabled by default since Aliyun Message Authentication Service currently supports China mainland numbers only.',
+    },
   ],
 };
