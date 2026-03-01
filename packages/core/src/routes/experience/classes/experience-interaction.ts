@@ -531,13 +531,11 @@ export default class ExperienceInteraction {
       this.hasVerifiedSsoIdentity || (isSignInEvent && this.hasVerifiedSignInWebAuthn);
 
     if (!shouldSkipSubmitMfaFulfillment) {
-      const adaptiveMfaResult = isSignInEvent
-        ? await this.adaptiveMfaValidator.getResult(log)
-        : undefined;
+      if (isSignInEvent) {
+        await this.adaptiveMfaValidator.getResult(log);
+      }
 
-      await this.mfa.assertMfaFulfilled({
-        adaptiveMfaResult,
-      });
+      await this.mfa.assertMfaFulfilled();
     }
 
     const {
