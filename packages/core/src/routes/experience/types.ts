@@ -64,6 +64,12 @@ export type InteractionProfile = {
    * Store encrypted token set from a enterprise SSO verification record.  If present, Logto will save this token set in the Secret Vault for future use by the user.
    */
   enterpriseSsoConnectorTokenSetSecret?: EnterpriseSsoConnectorTokenSetSecret;
+  /**
+   * Whether the user has explicitly submitted the profile form.
+   * When true, only required custom profile fields are enforced;
+   * optional fields can be skipped.
+   */
+  submitted?: boolean;
 } & Pick<
   CreateUser,
   | 'avatar'
@@ -124,6 +130,7 @@ const interactionProfileGuard = Users.createGuard
         enterpriseSsoConnectorRelationPayload: secretEnterpriseSsoConnectorRelationPayloadGuard,
       })
       .optional(),
+    submitted: z.boolean().optional(),
   }) satisfies ToZodObject<InteractionProfile>;
 
 export type SanitizedInteractionProfile = Omit<

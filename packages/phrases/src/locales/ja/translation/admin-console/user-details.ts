@@ -66,6 +66,7 @@ const user_details = {
     field_name: '多要素認証',
     field_description: 'このユーザーは2段階認証要素を有効にしました。',
     name_column: '多要素認証',
+
     field_description_empty: 'このユーザーは2段階認証の要因を有効にしていません。',
     deletion_confirmation: '2段階認証の既存の<name/>を削除しています。本当に続行しますか？',
   },
@@ -129,6 +130,29 @@ const user_details = {
       title: '個人用アクセス トークンを編集',
       edited: 'トークン {{name}} が正常に編集されました。',
     },
+  },
+  sessions: {
+    title: 'セッション',
+    description:
+      'Logto 認可サーバーによって維持されるセッションを管理します。ここで Logto セッションを取り消すと、今後の認可リクエストでの自動同意が防止されます。',
+    field_name: 'セッション',
+    multiple_signed_in: 'このユーザーは複数のデバイスまたはブラウザにサインインしています。',
+    not_found:
+      'アクティブな Logto セッションが見つかりません。ユーザーは現在どのデバイスにもサインインしていません。',
+    name_column: '名前',
+    session_id_column: 'セッション ID',
+    location_column: '場所',
+
+    browser_on_os: '{{os}} 上の {{browser}}',
+    user: 'ユーザー',
+    applications: 'アプリケーション',
+    signed_in_at: '最終サインイン',
+    ip: 'IP',
+    browser_name: 'ブラウザー名',
+    os_name: 'OS 名',
+    device_model: 'デバイスモデル',
+    revoke_session: 'セッションを失効',
+    revoke_session_confirmation: 'このセッションを削除すると、ユーザーは再認証が必要になります。',
   },
   connections: {
     title: '接続',

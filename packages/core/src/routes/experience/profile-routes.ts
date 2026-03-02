@@ -116,6 +116,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           await experienceInteraction.profile.setProfileWithValidation(
             validateAndParseCustomProfile(profilePayload.values)
           );
+          experienceInteraction.profile.markProfileSubmitted();
           break;
         }
       }
@@ -209,6 +210,37 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       const { experienceInteraction } = ctx;
 
       experienceInteraction.mfa.skipPasskey();
+      await experienceInteraction.save();
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${experienceRoutes.mfa}/passkey`,
+    koaGuard({
+      body: z.object({
+        verificationId: z.string(),
+      }),
+      status: [204, 400, 404],
+    }),
+    verifiedInteractionGuard(),
+    async (ctx, next) => {
+      const { experienceInteraction, guard } = ctx;
+      const { verificationId } = guard.body;
+
+      const log = ctx.createLog(
+        `Interaction.${experienceInteraction.interactionEvent}.BindMfa.${MfaFactor.WebAuthn}.Submit`
+      );
+
+      log.append({
+        verificationId,
+      });
+
+      await experienceInteraction.mfa.addWebAuthnByVerificationId(verificationId, log);
+
       await experienceInteraction.save();
 
       ctx.status = 204;

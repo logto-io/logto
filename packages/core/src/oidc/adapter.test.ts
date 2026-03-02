@@ -1,8 +1,9 @@
-import type { Application } from '@logto/schemas';
+import { accountCenterApplicationId, demoAppApplicationId, type Application } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import snakecaseKeys from 'snakecase-keys';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import type { EnvSet } from '#src/env-set/index.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -44,6 +45,13 @@ const queries = new MockQueries({
 });
 
 const now = Date.now();
+const mockBuiltInAppEnvSet = (customDomain: string): EnvSet =>
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  ({
+    tenantId: mockEnvSet.tenantId,
+    oidc: mockEnvSet.oidc,
+    endpoint: new URL(customDomain),
+  }) as EnvSet;
 
 describe('postgres Adapter', () => {
   it('Client Modal', async () => {
@@ -114,5 +122,33 @@ describe('postgres Adapter', () => {
 
     await adapter.revokeByGrantId(grantId);
     expect(revokeInstanceByGrantId).toBeCalledWith(modelName, grantId);
+  });
+
+  it('includes runtime custom-domain redirect URI for Account Center built-in app', async () => {
+    const customDomain = 'https://account.custom.test';
+    const adapter = postgresAdapter(mockBuiltInAppEnvSet(customDomain), queries, 'Client');
+
+    const application = await adapter.find(accountCenterApplicationId);
+    expect(application).toBeDefined();
+
+    expect(application?.redirect_uris).toEqual(expect.arrayContaining([`${customDomain}/account`]));
+    expect(application?.post_logout_redirect_uris).toEqual(
+      expect.arrayContaining([`${customDomain}/account`])
+    );
+  });
+
+  it('includes runtime custom-domain redirect URI for Demo App built-in app', async () => {
+    const customDomain = 'https://preview.custom.test';
+    const adapter = postgresAdapter(mockBuiltInAppEnvSet(customDomain), queries, 'Client');
+
+    const application = await adapter.find(demoAppApplicationId);
+    expect(application).toBeDefined();
+
+    expect(application?.redirect_uris).toEqual(
+      expect.arrayContaining([`${customDomain}/demo-app`])
+    );
+    expect(application?.post_logout_redirect_uris).toEqual(
+      expect.arrayContaining([`${customDomain}/demo-app`])
+    );
   });
 });

@@ -51,12 +51,16 @@ const getTenantLocalhost = (
   }
 };
 
-export const getTenantUrls = (id: string, globalValues: GlobalValues): URL[] => {
+export const getTenantUrls = (
+  id: string,
+  globalValues: GlobalValues,
+  runtimeEndpoint?: URL
+): URL[] => {
   const endpoint = getTenantEndpoint(id, globalValues);
   const localhost = getTenantLocalhost(id, globalValues);
 
   return deduplicate(
-    [endpoint.toString(), localhost?.toString()].filter(
+    [runtimeEndpoint?.toString(), endpoint.toString(), localhost?.toString()].filter(
       (value): value is string => typeof value === 'string'
     )
   ).map((element) => new URL(element));

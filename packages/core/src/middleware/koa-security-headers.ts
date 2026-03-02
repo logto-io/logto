@@ -84,6 +84,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
     // Google One Tap iframe request does not respond the proper CORP header (it uses `same-site` instead of `cross-origin`)
     // and we cannot add the `crossorigin` attribute to the iframe, so the only solution is to disable the COEP header here.
     // TODO: Re-enable COEP header when Google One Tap supports CORP header.
+    // Security scan note: ZAP rule 90004 is ignored in .zap/rules.conf for this intentional exception.
     crossOriginEmbedderPolicy: false,
     dnsPrefetchControl: false,
     referrerPolicy: {

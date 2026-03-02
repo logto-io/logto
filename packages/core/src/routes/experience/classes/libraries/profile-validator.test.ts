@@ -163,5 +163,67 @@ describe('ProfileValidator', () => {
         )
       ).toBe(false);
     });
+    it('should return true if missing optional custom profile fields on first check to trigger collection page', async () => {
+      mockFindAllCustomProfileFields.mockResolvedValue([
+        {
+          type: 'Text',
+          name: 'inviteCode',
+          required: false,
+        },
+      ]);
+      // Should return true when optional field is not filled (first check, triggers collection page)
+      expect(await profileValidator.hasMissingExtraProfileFields({})).toBe(true);
+      // Should return false when optional field is filled in profile
+      expect(
+        await profileValidator.hasMissingExtraProfileFields({
+          customData: { inviteCode: 'ABC123' },
+        })
+      ).toBe(false);
+      // Should return false when optional field is already in user data
+      expect(
+        await profileValidator.hasMissingExtraProfileFields(
+          {},
+          { ...mockUser, customData: { inviteCode: 'ABC123' } }
+        )
+      ).toBe(false);
+    });
+    it('should skip optional fields when extraProfileSubmitted is true (user chose to skip)', async () => {
+      mockFindAllCustomProfileFields.mockResolvedValue([
+        {
+          type: 'Text',
+          name: 'inviteCode',
+          required: false,
+        },
+      ]);
+      // After user submitted extra profile form with empty values, optional fields should be skipped
+      expect(await profileValidator.hasMissingExtraProfileFields({ submitted: true })).toBe(false);
+    });
+    it('should still enforce required fields even when extraProfileSubmitted is true', async () => {
+      mockFindAllCustomProfileFields.mockResolvedValue([
+        {
+          type: 'Text',
+          name: 'company',
+          required: true,
+        },
+        {
+          type: 'Text',
+          name: 'inviteCode',
+          required: false,
+        },
+      ]);
+      // Required field still missing even after form submission
+      expect(await profileValidator.hasMissingExtraProfileFields({ submitted: true })).toBe(true);
+      // Required field provided, optional skipped
+      expect(
+        await profileValidator.hasMissingExtraProfileFields({
+          customData: { company: 'Logto Inc.' },
+          submitted: true,
+        })
+      ).toBe(false);
+    });
+    it('should return false when no custom profile fields are defined', async () => {
+      mockFindAllCustomProfileFields.mockResolvedValue([]);
+      expect(await profileValidator.hasMissingExtraProfileFields({})).toBe(false);
+    });
   });
 });

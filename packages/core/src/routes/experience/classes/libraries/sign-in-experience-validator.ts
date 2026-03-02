@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   AlternativeSignUpIdentifier,
   ForgotPasswordMethod,
@@ -75,6 +76,9 @@ const parseMandatoryPrimaryIdentifier = (
     return MissingProfile.phone;
   }
 };
+
+const filterOutBackupCodeFactor = (factors: MfaFactor[]) =>
+  factors.filter((factor) => factor !== MfaFactor.BackupCode);
 
 /**
  *  SignInExperienceValidator class provides all the sign-in experience settings validation logic.
@@ -171,7 +175,21 @@ export class SignInExperienceValidator {
     return mfa;
   }
 
-  public async getEnabledMfaFactorsForBinding() {
+  /**
+   * Get all MFA factors that are currently considered enabled for binding validation.
+   *
+   * @remarks
+   * This is the broadest "enabled" set for binding-time checks:
+   * - Includes all factors in `mfa.factors`.
+   * - Includes `WebAuthn` when passkey sign-in is enabled, even if it is not explicitly listed
+   *   in `mfa.factors`.
+   * - Keeps `BackupCode` in the returned set.
+   *
+   * @example
+   * Used when validating user-submitted binding requests, to ensure every requested factor is
+   * actually enabled by tenant settings before accepting the bind operation.
+   */
+  public async getMfaFactorsEnabledForBinding() {
     const { mfa, passkeySignIn } = await this.getSignInExperienceData();
 
     return sortMfaFactors([
@@ -179,10 +197,43 @@ export class SignInExperienceValidator {
     ]);
   }
 
-  public async getAvailableMfaFactorsForBinding() {
-    const enabledFactors = await this.getEnabledMfaFactorsForBinding();
+  /**
+   * Get actionable MFA factors that can be presented to end users for binding.
+   *
+   * @remarks
+   * This is derived from {@link getMfaFactorsEnabledForBinding} and excludes `BackupCode`.
+   * Backup code is not treated as a primary, user-facing binding option for "bind an MFA factor now"
+   * prompts.
+   *
+   * @example
+   * Used in adaptive MFA flows when risk requires MFA and the user has no available verification
+   * factor, to populate `availableFactors` in `user.missing_mfa` responses.
+   */
+  public async getBindableMfaFactors() {
+    const enabledFactors = await this.getMfaFactorsEnabledForBinding();
 
-    return enabledFactors.filter((factor) => factor !== MfaFactor.BackupCode);
+    return filterOutBackupCodeFactor(enabledFactors);
+  }
+
+  /**
+   * Get MFA factors configured in sign-in experience for policy-fulfillment checks.
+   *
+   * @remarks
+   * This method reflects explicit MFA configuration only:
+   * - Reads from `mfa.factors`.
+   * - Excludes `BackupCode`.
+   * - Does not inject passkey-backed `WebAuthn`.
+   *
+   * Backup code is validated separately as an additive requirement, not as a primary factor candidate.
+   *
+   * @example
+   * Used when checking whether a user has fulfilled mandatory MFA policy (or organization-required
+   * MFA), i.e. whether the user has at least one configured primary MFA factor bound.
+   */
+  public async getConfiguredMfaFactors() {
+    const { mfa } = await this.getSignInExperienceData();
+
+    return sortMfaFactors(filterOutBackupCodeFactor(mfa.factors));
   }
 
   public async getPasswordPolicy() {
@@ -417,3 +468,4 @@ export class SignInExperienceValidator {
     assertThat(ssoIdentities.length === 0, 'session.passkey_sign_in.sso_users_not_allowed');
   }
 }
+/* eslint-enable max-lines */

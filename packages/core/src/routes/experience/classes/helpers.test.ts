@@ -7,7 +7,27 @@ import {
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/user.js';
 
-import { getAllUserEnabledMfaVerifications, sortMfaFactors } from './helpers.js';
+import {
+  getAllUserEnabledMfaVerifications,
+  getProfileMfaFactors,
+  sortMfaFactors,
+} from './helpers.js';
+
+describe('getProfileMfaFactors', () => {
+  it('returns email and phone factors based on sign-in experience settings and profile', () => {
+    const mfaSettings: Mfa = {
+      factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
+    };
+
+    expect(
+      getProfileMfaFactors(mfaSettings, {
+        primaryEmail: 'foo@example.com',
+        primaryPhone: '+123456789',
+      })
+    ).toEqual([MfaFactor.PhoneVerificationCode, MfaFactor.EmailVerificationCode]);
+  });
+});
 
 describe('getAllUserEnabledMfaVerifications', () => {
   it('puts WebAuthn first when available', () => {

@@ -66,6 +66,7 @@ const user_details = {
     field_name: 'Wieloetapowa autoryzacja',
     field_description: 'Ten użytkownik włączył autoryzację dwuetapową.',
     name_column: 'Wieloetapowa autoryzacja',
+
     field_description_empty: 'Ten użytkownik nie włączył autoryzacji dwuetapowej.',
     deletion_confirmation:
       'Usuwasz istniejące <name/> w celu weryfikacji dwuetapowej. Czy na pewno chcesz kontynuować?',
@@ -131,6 +132,30 @@ const user_details = {
       title: 'Edytuj token dostępu osobistego',
       edited: 'Token {{name}} został pomyślnie edytowany.',
     },
+  },
+  sessions: {
+    title: 'Sesje',
+    description:
+      'Zarządzaj sesjami utrzymywanymi przez serwer autoryzacji Logto. Odwołanie sesji Logto tutaj uniemożliwia automatyczną zgodę na przyszłe żądania autoryzacji.',
+    field_name: 'Sesje',
+    multiple_signed_in: 'Ten użytkownik zalogował się na wielu urządzeniach lub w przeglądarkach.',
+    not_found:
+      'Nie znaleziono aktywnych sesji Logto. Użytkownik nie jest obecnie zalogowany na żadnym urządzeniu.',
+    name_column: 'Nazwa',
+    session_id_column: 'Identyfikator sesji',
+    location_column: 'Lokalizacja',
+
+    browser_on_os: '{{browser}} na {{os}}',
+    user: 'Użytkownik',
+    applications: 'Aplikacje',
+    signed_in_at: 'Ostatnie logowanie',
+    ip: 'IP',
+    browser_name: 'Nazwa przeglądarki',
+    os_name: 'Nazwa systemu operacyjnego',
+    device_model: 'Model urządzenia',
+    revoke_session: 'Unieważnij sesję',
+    revoke_session_confirmation:
+      'Jeśli usuniesz tę sesję, użytkownicy będą musieli ponownie się uwierzytelnić.',
   },
   connections: {
     title: 'Połączenie',

@@ -133,6 +133,28 @@ const user_details = {
       edited: 'The token {{name}} has been successfully edited.',
     },
   },
+  sessions: {
+    title: 'Sessions',
+    description:
+      'Manage sessions maintained by the Logto Authorization Server. Revoking a Logto session here prevents automatic consent on future authorization requests.',
+    field_name: 'Sessions',
+    multiple_signed_in: 'This user has signed into multiple devices or browsers.',
+    not_found: 'No active Logto sessions found. The user is not currently signed in on any device.',
+    name_column: 'Name',
+    session_id_column: 'Session ID',
+    location_column: 'Location',
+    browser_on_os: '{{browser}} on {{os}}',
+    user: 'User',
+    applications: 'Applications',
+    signed_in_at: 'Last signed in',
+    ip: 'IP',
+    browser_name: 'Browser name',
+    os_name: 'OS name',
+    device_model: 'Device model',
+    revoke_session: 'Revoke session',
+    revoke_session_confirmation:
+      'If you remove this session, users will be forced to re-authentication.',
+  },
   connections: {
     title: 'Connection',
     description:

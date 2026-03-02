@@ -21,7 +21,7 @@ type SessionInstance = OidcModelInstance & { modelName: typeof sessionModelName 
 type NullablePick<T, K extends keyof T> = {
   [P in K]: Nullable<T[P]>;
 };
-type SessionInstanceWithExtension = SessionInstance &
+export type SessionInstanceWithExtension = SessionInstance &
   NullablePick<OidcSessionExtension, 'lastSubmission' | 'clientId' | 'accountId'>;
 
 export class OidcSessionExtensionsQueries {

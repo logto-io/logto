@@ -41,10 +41,13 @@ devFeatureTest.describe('Sessions API', () => {
     expect(sessions).toHaveLength(2);
 
     for (const session of sessions) {
-      expect(session).toHaveProperty('id');
       expect(session).toHaveProperty('accountId', user.id);
       expect(session).toHaveProperty('lastSubmission');
       expect(session).toHaveProperty('clientId', demoAppApplicationId);
+      expect(session).toHaveProperty('expiresAt');
+      expect(session).not.toHaveProperty('id');
+      expect(session).not.toHaveProperty('tenantId');
+      expect(session).not.toHaveProperty('consumedAt');
       expect(session.payload.accountId).toBe(user.id);
       expect(session.payload.authorizations).toHaveProperty(demoAppApplicationId);
     }
@@ -56,7 +59,7 @@ devFeatureTest.describe('Sessions API', () => {
     // Verify the session is revoked
     const { sessions: sessionsAfterRevoke } = await getUserSessions(user.id);
     expect(sessionsAfterRevoke).toHaveLength(1);
-    expect(sessionsAfterRevoke[0]!.id).toBe(sessions[1]!.id);
+    expect(sessionsAfterRevoke[0]!.payload.uid).toBe(sessions[1]!.payload.uid);
   });
 
   it('should get a single user session by session id', async () => {
@@ -78,10 +81,13 @@ devFeatureTest.describe('Sessions API', () => {
 
     const session = await getUserSession(user.id, sessionId);
 
-    expect(session).toHaveProperty('id', sessions[0]!.id);
     expect(session).toHaveProperty('accountId', user.id);
     expect(session).toHaveProperty('lastSubmission');
     expect(session).toHaveProperty('clientId', demoAppApplicationId);
+    expect(session).toHaveProperty('expiresAt');
+    expect(session).not.toHaveProperty('id');
+    expect(session).not.toHaveProperty('tenantId');
+    expect(session).not.toHaveProperty('consumedAt');
     expect(session.payload.uid).toBe(sessionId);
     expect(session.payload.accountId).toBe(user.id);
     expect(session.payload.authorizations).toHaveProperty(demoAppApplicationId);

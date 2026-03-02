@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.7.1
+
+### Patch Changes
+
+- 57b0008ee8: add extended id token claims exports
+
 ## 2.7.0
 
 ### Minor Changes

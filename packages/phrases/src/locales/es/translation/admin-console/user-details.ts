@@ -69,6 +69,7 @@ const user_details = {
     field_name: 'Autenticación de dos factores',
     field_description: 'Este usuario ha habilitado factores de autenticación de 2 pasos.',
     name_column: 'Autenticación de dos factores',
+
     field_description_empty: 'Este usuario no ha habilitado factores de autenticación de 2 pasos.',
     deletion_confirmation:
       'Estás eliminando la existente <name/> para la verificación en dos pasos. ¿Estás seguro/a de que deseas continuar?',
@@ -135,6 +136,30 @@ const user_details = {
       title: 'Editar token de acceso personal',
       edited: 'El token {{name}} ha sido editado con éxito.',
     },
+  },
+  sessions: {
+    title: 'Sesiones',
+    description:
+      'Gestiona las sesiones mantenidas por el Servidor de Autorización de Logto. Revocar una sesión de Logto aquí evita el consentimiento automático en futuras solicitudes de autorización.',
+    field_name: 'Sesiones',
+    multiple_signed_in: 'Este usuario ha iniciado sesión en múltiples dispositivos o navegadores.',
+    not_found:
+      'No se encontraron sesiones activas de Logto. El usuario no ha iniciado sesión actualmente en ningún dispositivo.',
+    name_column: 'Nombre',
+    session_id_column: 'ID de sesión',
+    location_column: 'Ubicación',
+
+    browser_on_os: '{{browser}} en {{os}}',
+    user: 'Usuario',
+    applications: 'Aplicaciones',
+    signed_in_at: 'Último inicio de sesión',
+    ip: 'IP',
+    browser_name: 'Nombre del navegador',
+    os_name: 'Nombre del sistema operativo',
+    device_model: 'Modelo del dispositivo',
+    revoke_session: 'Revocar sesión',
+    revoke_session_confirmation:
+      'Si eliminas esta sesión, los usuarios tendrán que volver a autenticarse.',
   },
   connections: {
     title: 'Conexión',

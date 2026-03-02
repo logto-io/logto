@@ -69,6 +69,7 @@ const user_details = {
     field_name: 'Zwei-Faktor-Authentifizierung',
     field_description: 'Dieser Benutzer hat 2-Stufen-Authentifizierungsfaktoren aktiviert.',
     name_column: 'Zwei-Faktor',
+
     field_description_empty:
       'Dieser Benutzer hat keine zweistufigen Authentifizierungsfaktoren aktiviert.',
     deletion_confirmation:
@@ -136,6 +137,30 @@ const user_details = {
       title: 'Persönliches Zugriffstoken bearbeiten',
       edited: 'Das Token {{name}} wurde erfolgreich bearbeitet.',
     },
+  },
+  sessions: {
+    title: 'Sitzungen',
+    description:
+      'Verwalte Sitzungen, die vom Logto Authorization Server aufrechterhalten werden. Das Widerrufen einer Logto-Sitzung hier verhindert die automatische Zustimmung bei zukünftigen Autorisierungsanfragen.',
+    field_name: 'Sitzungen',
+    multiple_signed_in: 'Dieser Benutzer hat sich an mehreren Geräten oder Browsern angemeldet.',
+    not_found:
+      'Keine aktiven Logto-Sitzungen gefunden. Der Benutzer ist derzeit auf keinem Gerät angemeldet.',
+    name_column: 'Name',
+    session_id_column: 'Sitzungs-ID',
+    location_column: 'Standort',
+
+    browser_on_os: '{{browser}} unter {{os}}',
+    user: 'Benutzer',
+    applications: 'Anwendungen',
+    signed_in_at: 'Zuletzt angemeldet',
+    ip: 'IP-Adresse',
+    browser_name: 'Browsername',
+    os_name: 'Betriebssystemname',
+    device_model: 'Gerätemodell',
+    revoke_session: 'Sitzung widerrufen',
+    revoke_session_confirmation:
+      'Wenn Sie diese Sitzung entfernen, müssen sich Benutzer erneut authentifizieren.',
   },
   connections: {
     title: 'Verbindung',

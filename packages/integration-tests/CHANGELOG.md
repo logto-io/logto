@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.19.0
+
+### Minor Changes
+
+- b8ca1a40c7: support ID token claims configuration
+
+  You can now customize which additional claims (e.g., `custom_data`, `identities`, `roles`, `organizations`, `organization_roles`) are included in the ID token via Console or Management API.
+
+### Patch Changes
+
+- bb2f4ea7c7: fix the issue that the "Tell us about yourself" section does not appear during signup when only optional custom profile fields are configured
+
+  Previously, the `hasMissingExtraProfileFields` method only checked for required custom profile fields, causing the "Tell us about yourself" section to not appear during signup when only optional fields were configured.
+
+  Now, the method also checks for optional fields and whether the user has submitted the extra profile form, ensuring that the section is always displayed as expected.
+
 ## 1.18.0
 
 ### Minor Changes
