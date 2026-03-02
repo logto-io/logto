@@ -1,7 +1,11 @@
 import { MfaFactor, MfaPolicy, SignInIdentifier } from '@logto/schemas';
 import { authenticator } from 'otplib';
 
-import { createUserMfaVerification } from '#src/api/admin-user.js';
+import {
+  createUserMfaVerification,
+  deleteUserMfaVerification,
+  getUserMfaVerifications,
+} from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
@@ -214,7 +218,18 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
         const user = await userApi.create({ username, password });
+        await createUserMfaVerification(user.id, MfaFactor.TOTP);
         await createUserMfaVerification(user.id, MfaFactor.BackupCode);
+
+        const mfaVerifications = await getUserMfaVerifications(user.id);
+        const totpVerification = mfaVerifications.find(({ type }) => type === MfaFactor.TOTP);
+        expect(totpVerification).toBeDefined();
+
+        if (!totpVerification) {
+          throw new Error('missing totp verification');
+        }
+
+        await deleteUserMfaVerification(user.id, totpVerification.id);
 
         const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
         await identifyUserWithUsernamePassword(client, username, password);
