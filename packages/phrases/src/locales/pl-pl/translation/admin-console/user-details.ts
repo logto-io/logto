@@ -148,7 +148,7 @@ const user_details = {
     browser_on_os: '{{browser}} na {{os}}',
     user: 'Użytkownik',
     application: 'Aplikacja',
-    created_at: 'Utworzono',
+    signed_in_at: 'Ostatnie logowanie',
     ip: 'IP',
     browser_name: 'Nazwa przeglądarki',
     os_name: 'Nazwa systemu operacyjnego',

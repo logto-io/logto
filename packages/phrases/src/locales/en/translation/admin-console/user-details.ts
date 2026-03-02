@@ -146,7 +146,7 @@ const user_details = {
     browser_on_os: '{{browser}} on {{os}}',
     user: 'User',
     application: 'Application',
-    created_at: 'Created at',
+    signed_in_at: 'Last signed in',
     ip: 'IP',
     browser_name: 'Browser name',
     os_name: 'OS name',

@@ -86,7 +86,7 @@ function UserSessionDetails() {
     [sessionInfo, t]
   );
 
-  const createdAt = useMemo(() => formatTimestamp(sessionData?.payload.loginTs), [sessionData]);
+  const signedInAt = useMemo(() => formatTimestamp(sessionData?.payload.loginTs), [sessionData]);
 
   const infoFields = useMemo<Array<{ key: string; label: string; value: ReactNode }>>(() => {
     if (!sessionData) {
@@ -117,9 +117,9 @@ function UserSessionDetails() {
         ),
       },
       {
-        key: 'created-at',
-        label: t('user_details.sessions.created_at'),
-        value: createdAt,
+        key: 'signed-in-at',
+        label: t('user_details.sessions.signed_in_at'),
+        value: signedInAt,
       },
       {
         key: 'ip',
@@ -147,7 +147,7 @@ function UserSessionDetails() {
         value: sessionInfo?.deviceModel ?? '-',
       },
     ];
-  }, [createdAt, sessionData, sessionInfo, sessionLocation, t, userId]);
+  }, [sessionData, sessionInfo, sessionLocation, signedInAt, t, userId]);
 
   return (
     <DetailsPage

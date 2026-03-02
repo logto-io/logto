@@ -150,7 +150,7 @@ const user_details = {
     browser_on_os: '{{os}} üzerinde {{browser}}',
     user: 'Kullanıcı',
     application: 'Uygulama',
-    created_at: 'Oluşturulma zamanı',
+    signed_in_at: 'Son oturum açma',
     ip: 'IP',
     browser_name: 'Tarayıcı adı',
     os_name: 'İşletim sistemi adı',

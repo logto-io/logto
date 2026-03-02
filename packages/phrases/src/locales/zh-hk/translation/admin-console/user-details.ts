@@ -139,7 +139,7 @@ const user_details = {
     browser_on_os: '在 {{os}} 上的 {{browser}}',
     user: '使用者',
     application: '應用程式',
-    created_at: '建立時間',
+    signed_in_at: '最近登入',
     ip: 'IP',
     browser_name: '瀏覽器名稱',
     os_name: '作業系統名稱',

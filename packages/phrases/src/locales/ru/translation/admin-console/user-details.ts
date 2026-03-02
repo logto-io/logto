@@ -149,7 +149,7 @@ const user_details = {
     browser_on_os: '{{browser}} на {{os}}',
     user: 'Пользователь',
     application: 'Приложение',
-    created_at: 'Создано',
+    signed_in_at: 'Последний вход',
     ip: 'IP',
     browser_name: 'Название браузера',
     os_name: 'Название ОС',
