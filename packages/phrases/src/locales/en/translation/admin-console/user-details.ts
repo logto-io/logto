@@ -145,7 +145,7 @@ const user_details = {
     location_column: 'Location',
     browser_on_os: '{{browser}} on {{os}}',
     user: 'User',
-    application: 'Application',
+    applications: 'Applications',
     signed_in_at: 'Last signed in',
     ip: 'IP',
     browser_name: 'Browser name',

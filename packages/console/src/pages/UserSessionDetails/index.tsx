@@ -1,6 +1,6 @@
+import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme, isBuiltInApplicationId, type GetUserSessionResponse } from '@logto/schemas';
-import type { ReactNode } from 'react';
-import { useMemo, useState } from 'react';
+import { Fragment, type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
@@ -75,20 +75,49 @@ function UserSessionDetails() {
 
   const sessionLocation = sessionInfo?.location ?? '-';
 
-  const headerTitle = useMemo(
-    () =>
-      sessionInfo?.browserName && sessionInfo.osName
-        ? t('user_details.sessions.browser_on_os', {
+  const headerTitle = useMemo<ReactNode>(() => {
+    if (sessionInfo?.browserName && sessionInfo.osName) {
+      return (
+        <DynamicT
+          forKey="user_details.sessions.browser_on_os"
+          interpolation={{
             browser: sessionInfo.browserName,
             os: sessionInfo.osName,
-          })
-        : (sessionInfo?.browserName ?? sessionInfo?.osName ?? sessionInfo?.name ?? '-'),
-    [sessionInfo, t]
-  );
+          }}
+        />
+      );
+    }
+
+    return sessionInfo?.browserName ?? sessionInfo?.osName ?? sessionInfo?.name ?? '-';
+  }, [sessionInfo]);
 
   const signedInAt = useMemo(() => formatTimestamp(sessionData?.payload.loginTs), [sessionData]);
 
-  const infoFields = useMemo<Array<{ key: string; label: string; value: ReactNode }>>(() => {
+  const applications = useMemo<ReactNode>(() => {
+    // `authorizations` is a clientId-keyed record map that stores all apps authorized by this session.
+    // We use the keys of this record to get the authorized application IDs.
+    const authorizedApplicationIds = sessionData
+      ? Object.keys(sessionData.payload.authorizations)
+      : [];
+
+    if (authorizedApplicationIds.length === 0) {
+      return '-';
+    }
+
+    return authorizedApplicationIds.map((applicationId, index) => (
+      <Fragment key={applicationId}>
+        {index > 0 ? ', ' : null}
+        <ApplicationName
+          applicationId={applicationId}
+          isLink={!isBuiltInApplicationId(applicationId)}
+        />
+      </Fragment>
+    ));
+  }, [sessionData]);
+
+  const infoFields = useMemo<
+    Array<{ key: string; labelKey: AdminConsoleKey; value: ReactNode }>
+  >(() => {
     if (!sessionData) {
       return [];
     }
@@ -96,58 +125,51 @@ function UserSessionDetails() {
     return [
       {
         key: 'session-id',
-        label: t('user_details.sessions.session_id_column'),
+        labelKey: 'user_details.sessions.session_id_column',
         value: sessionData.payload.uid,
       },
       {
         key: 'user',
-        label: t('user_details.sessions.user'),
+        labelKey: 'user_details.sessions.user',
         value: userId ? <UserName isLink userId={userId} /> : '-',
       },
       {
-        key: 'application',
-        label: t('user_details.sessions.application'),
-        value: sessionData.clientId ? (
-          <ApplicationName
-            applicationId={sessionData.clientId}
-            isLink={!isBuiltInApplicationId(sessionData.clientId)}
-          />
-        ) : (
-          '-'
-        ),
+        key: 'applications',
+        labelKey: 'user_details.sessions.applications',
+        value: applications,
       },
       {
         key: 'signed-in-at',
-        label: t('user_details.sessions.signed_in_at'),
+        labelKey: 'user_details.sessions.signed_in_at',
         value: signedInAt,
       },
       {
         key: 'ip',
-        label: t('user_details.sessions.ip'),
+        labelKey: 'user_details.sessions.ip',
         value: sessionInfo?.ip ?? '-',
       },
       {
         key: 'location',
-        label: t('user_details.sessions.location_column'),
+        labelKey: 'user_details.sessions.location_column',
         value: sessionLocation,
       },
       {
         key: 'browser-name',
-        label: t('user_details.sessions.browser_name'),
+        labelKey: 'user_details.sessions.browser_name',
         value: sessionInfo?.browserName ?? '-',
       },
       {
         key: 'os-name',
-        label: t('user_details.sessions.os_name'),
+        labelKey: 'user_details.sessions.os_name',
         value: sessionInfo?.osName ?? '-',
       },
       {
         key: 'device-model',
-        label: t('user_details.sessions.device_model'),
+        labelKey: 'user_details.sessions.device_model',
         value: sessionInfo?.deviceModel ?? '-',
       },
     ];
-  }, [sessionData, sessionInfo, sessionLocation, signedInAt, t, userId]);
+  }, [applications, sessionData, sessionInfo, sessionLocation, signedInAt, userId]);
 
   return (
     <DetailsPage
@@ -166,7 +188,7 @@ function UserSessionDetails() {
                 <span>{headerTitle}</span>
                 <ActionMenu
                   buttonProps={{ icon: <More />, size: 'large' }}
-                  title={t('general.more_options')}
+                  title={<DynamicT forKey="general.more_options" />}
                 >
                   <ActionMenuItem
                     icon={<Delete />}
@@ -180,9 +202,11 @@ function UserSessionDetails() {
                 </ActionMenu>
               </div>
               <div className={styles.basicInfo}>
-                {infoFields.map(({ key, label, value }) => (
+                {infoFields.map(({ key, labelKey, value }) => (
                   <div key={key} className={styles.infoItem}>
-                    <div className={styles.label}>{label}</div>
+                    <div className={styles.label}>
+                      <DynamicT forKey={labelKey} />
+                    </div>
                     <div>{value}</div>
                   </div>
                 ))}
