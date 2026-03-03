@@ -40,7 +40,7 @@
           }
         },
         "summary": "Revoke a user session",
-        "description": "Revoke a specific user session by its ID, optionally revoking all associated grants and tokens."
+        "description": "Revoke a specific user session by its ID, optionally revoking associated target grants and tokens."
       }
     }
   }

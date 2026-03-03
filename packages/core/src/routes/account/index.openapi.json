@@ -585,7 +585,7 @@
         "tags": ["Dev feature"],
         "operationId": "DeleteSessionById",
         "summary": "Revoke a session by ID",
-        "description": "Revoke a specific user session by its ID, optionally revoking all associated grants and tokens.  A logto-verification-id in header is required for revoking sessions.",
+        "description": "Revoke a specific user session by its ID, optionally revoking target associated grants and tokens.  A logto-verification-id in header is required for revoking sessions.",
         "parameters": [
           {
             "in": "query",
