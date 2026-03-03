@@ -25,6 +25,45 @@
   gap: _.unit(1);
 }
 
+.developActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: _.unit(4);
+}
+
+.mcpTag {
+  padding: 0;
+  border-radius: 999px;
+  background: var(--color-overlay-primary-hover);
+}
+
+.mcpLink {
+  display: inline-flex;
+  align-items: center;
+  padding: _.unit(1.5) _.unit(3);
+  border-radius: inherit;
+  font: var(--font-label-2);
+  color: var(--color-text-link);
+
+  &:active {
+    background: var(--color-overlay-primary-pressed);
+    color: var(--color-text-link);
+  }
+
+  &:not(:disabled):hover {
+    color: var(--color-text-link);
+    text-decoration: none;
+  }
+}
+
+.mcpLinkIcon {
+  display: block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
 .card {
   display: flex;
   flex-direction: column;

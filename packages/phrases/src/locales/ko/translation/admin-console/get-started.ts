@@ -6,6 +6,7 @@ const get_started = {
     title: '개발: 앱을 통합하는 데 5분이면 충분합니다',
     title_cloud: '개발: 몇 분 안에 앱을 안전하게 통합하기',
     subtitle_cloud: '아니면 미리 만들어진 SDK와 자습서로 앱을 5분만에 통합해 보세요.',
+    try_mcp: 'MCP로 한 번의 프롬프트로 통합 시도해 보기',
   },
   customize: {
     title: '사용자 정의: 훌륭한 로그인 경험 전달하기',

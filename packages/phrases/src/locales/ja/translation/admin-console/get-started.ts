@@ -7,6 +7,7 @@ const get_started = {
     title_cloud: '開発: 数分でアプリを安全に統合する',
     subtitle_cloud:
       'または、5分間でアプリを当社の事前構築済みSDKおよびチュートリアルで統合してください。',
+    try_mcp: 'MCPで1プロンプト統合を試す',
   },
   customize: {
     title: 'カスタマイズ: 素晴らしいサインイン体験を提供する',
