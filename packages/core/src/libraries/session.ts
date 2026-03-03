@@ -1,9 +1,10 @@
 import {
+  SessionGrantRevokeTarget,
   jsonObjectGuard,
   jwtCustomizerUserInteractionContextGuard,
   oidcSessionInstancePayloadGuard,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, deduplicate } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { InteractionResults, PromptDetail, Provider } from 'oidc-provider';
 import { z } from 'zod';
@@ -206,6 +207,17 @@ const formatSessionWithExtension = (session: SessionInstanceWithExtension) => {
   };
 };
 
+/* ================ Session management =============== */
+
+type SessionAuthorizationDetails = {
+  grantId?: string;
+};
+
+type SessionAuthorizations = Record<string, SessionAuthorizationDetails>;
+
+const pickGrantIds = (entries: Array<[string, SessionAuthorizationDetails]>) =>
+  entries.flatMap(([, { grantId }]) => (grantId ? [grantId] : []));
+
 export const createSessionLibrary = (queries: Queries) => {
   const { oidcSessionExtensions } = queries;
 
@@ -230,8 +242,56 @@ export const createSessionLibrary = (queries: Queries) => {
     return formatSessionWithExtension(result);
   };
 
+  const revokeSessionAssociatedGrants = async ({
+    provider,
+    authorizations,
+    target,
+  }: {
+    provider: Provider;
+    authorizations: SessionAuthorizations;
+    target: SessionGrantRevokeTarget;
+  }) => {
+    const authorizationEntries = Object.entries(authorizations);
+
+    if (authorizationEntries.length === 0) {
+      return;
+    }
+
+    const grantIds =
+      target === SessionGrantRevokeTarget.All
+        ? pickGrantIds(authorizationEntries)
+        : await (async () => {
+            const applicationIds = authorizationEntries.map(([clientId]) => clientId);
+            const applications = await queries.applications.findApplicationsByIds(applicationIds);
+
+            return pickGrantIds(
+              authorizationEntries.filter(([clientId]) =>
+                applications.some(
+                  (application) => application.id === clientId && !application.isThirdParty
+                )
+              )
+            );
+          })();
+
+    const uniqueGrantIds = deduplicate(grantIds);
+
+    await Promise.all(
+      uniqueGrantIds.map(async (grantId) => {
+        await Promise.all(
+          [provider.AccessToken, provider.RefreshToken, provider.AuthorizationCode]
+            .map(async (model) => model.revokeByGrantId(grantId))
+            .concat(provider.Grant.adapter.destroy(grantId))
+        );
+        // Note: Unlike end_session request.
+        // We do not have oidc context here so we cannot trigger the `grant.revoked` event here.
+        // This is a known limitation.
+      })
+    );
+  };
+
   return {
     findUserActiveSessionsWithExtensions,
     findUserActiveSessionWithExtension,
+    revokeSessionAssociatedGrants,
   };
 };

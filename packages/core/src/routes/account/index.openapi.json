@@ -589,8 +589,8 @@
         "parameters": [
           {
             "in": "query",
-            "name": "revokeGrants",
-            "description": "Whether to revoke all associated grants and tokens along with the session."
+            "name": "revokeGrantsTarget",
+            "description": "Optional target for revoking associated grants and tokens. 'all' revokes grants for every application authorized by this session. 'firstParty' revokes only first-party app grants; third-party app grants remain active. If omitted, grants remain active when the session authorizations include offline_access; otherwise they are revoked."
           }
         ],
         "responses": {
