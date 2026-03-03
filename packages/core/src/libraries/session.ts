@@ -272,9 +272,7 @@ export const createSessionLibrary = (queries: Queries) => {
             );
 
             return pickGrantIds(
-              authorizationEntries.filter(([clientId]) =>
-                firstPartyApplicationIds.has(clientId)
-              )
+              authorizationEntries.filter(([clientId]) => firstPartyApplicationIds.has(clientId))
             );
           })();
 
