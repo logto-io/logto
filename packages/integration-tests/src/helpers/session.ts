@@ -45,7 +45,8 @@ export const assertRefreshTokenInvalidGrant = async (options: {
       tokenEndpoint,
       refreshToken: options.refreshToken,
     },
-    async (...args: Parameters<typeof fetch>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (...args: Parameters<typeof fetch>): Promise<any> => {
       const response = await fetch(...args);
       expect(response.status).toBe(400);
       const body: unknown = await response.json();
@@ -69,7 +70,8 @@ export const assertRefreshTokenValid = async (options: {
       tokenEndpoint,
       refreshToken: options.refreshToken,
     },
-    async (...args: Parameters<typeof fetch>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (...args: Parameters<typeof fetch>): Promise<any> => {
       const response = await fetch(...args);
       assert(response.ok, new Error('Refresh token exchange failed'));
 
