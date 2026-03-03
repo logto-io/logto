@@ -262,13 +262,18 @@ export const createSessionLibrary = (queries: Queries) => {
         ? pickGrantIds(authorizationEntries)
         : await (async () => {
             const applicationIds = authorizationEntries.map(([clientId]) => clientId);
-            const applications = await queries.applications.findApplicationsByIds(applicationIds);
+            const applications = await queries.applications.findApplicationsByIds(
+              deduplicate(applicationIds)
+            );
+            const firstPartyApplicationIds = new Set(
+              applications
+                .filter((application) => !application.isThirdParty)
+                .map((application) => application.id)
+            );
 
             return pickGrantIds(
               authorizationEntries.filter(([clientId]) =>
-                applications.some(
-                  (application) => application.id === clientId && !application.isThirdParty
-                )
+                firstPartyApplicationIds.has(clientId)
               )
             );
           })();
