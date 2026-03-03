@@ -389,15 +389,19 @@ describe('ExperienceInteraction class', () => {
       expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
     });
 
-    it('should skip recording for non-sign-in interactions', async () => {
+    it('should record geo context for register interactions', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction({ interactionEvent: InteractionEvent.Register });
 
       await experienceInteraction.submit();
 
-      expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
-      expect(userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
+      expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+        mockUser.id,
+        37.7749,
+        -122.4194
+      );
+      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
     });
   });
 });
