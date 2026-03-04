@@ -2,7 +2,7 @@
 "@logto/core-kit": minor
 ---
 
-introduce new `User.Sessions` scope
+introduce new `UserScope.Sessions` scope
 
 This change introduces a new `urn:logto:scope:sessions` user scope to the Logto system.
 
