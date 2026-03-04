@@ -187,6 +187,7 @@ describe('oidc-model-instance query', () => {
     const expectSql = sql`
       delete from ${table}
       where ${fields.modelName}=$1
+      and ${fields.payload} ? 'grantId'
       and ${fields.payload}->>'grantId'=$2
     `;
 

@@ -34,6 +34,10 @@ create index oidc_model_instances__model_name_payload_grant_id
     (payload->>'grantId')
   );
 
+create index oidc_model_instances__grant_id_partial
+  on oidc_model_instances (tenant_id, model_name, (payload->>'grantId'))
+  where payload ? 'grantId';
+
 create index oidc_model_instances__expires_at
   on oidc_model_instances (tenant_id, expires_at);
 
