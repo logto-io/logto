@@ -6,7 +6,7 @@ introduce user session management in Console.
 
 Account center settings:
 
-- Added a new `sessions` permission control for account API access, with `off`, `readOnly`, and `edit` options.
+- Added a new `session` permission control for account API access, with `off`, `readOnly`, and `edit` options.
 
 User sessions page:
 
