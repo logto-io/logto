@@ -428,8 +428,6 @@ export class Mfa {
 
   /** Assert MFA fulfillment for the current interaction submit. */
   async assertMfaFulfilled() {
-    // Compute shared async context once per submit to avoid duplicated reads
-    // during the mandatory MFA check.
     const submitMfaValidationContext = await this.buildSubmitMfaValidationContext();
 
     await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext);
