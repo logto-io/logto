@@ -521,23 +521,15 @@ export default class ExperienceInteraction {
     // Revalidate the new MFA data if any
     await this.mfa.checkAvailability();
 
-    // MFA fulfilled
-    const isSignInEvent = this.#interactionEvent === InteractionEvent.SignIn;
-
     // Skip mandatory MFA fulfillment validation if the user
     // - signIn/register via SSO verification method
     // - signIn via Passkey verification method
     const shouldSkipSubmitMfaFulfillment =
-      this.hasVerifiedSsoIdentity || (isSignInEvent && this.hasVerifiedSignInWebAuthn);
+      this.hasVerifiedSsoIdentity ||
+      (this.#interactionEvent === InteractionEvent.SignIn && this.hasVerifiedSignInWebAuthn);
 
     if (!shouldSkipSubmitMfaFulfillment) {
-      const adaptiveMfaResult = isSignInEvent
-        ? await this.adaptiveMfaValidator.getResult(log)
-        : undefined;
-
-      await this.mfa.assertMfaFulfilled({
-        adaptiveMfaResult,
-      });
+      await this.mfa.assertMfaFulfilled();
     }
 
     const {

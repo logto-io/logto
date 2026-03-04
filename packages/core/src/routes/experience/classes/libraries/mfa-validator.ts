@@ -112,8 +112,8 @@ export class MfaValidator {
     const hasUserFactors = this.userEnabledMfaVerifications.length > 0;
 
     if (this.adaptiveMfaResult !== undefined) {
-      // Verification guard only applies when the user already has MFA factors.
-      // If adaptive MFA requires MFA but no factors are available, submit flow will enforce binding.
+      // Verification guard only applies when the user already has MFA factors
+      // enabled in the current sign-in experience.
       return this.adaptiveMfaResult.requiresMfa && hasUserFactors;
     }
 

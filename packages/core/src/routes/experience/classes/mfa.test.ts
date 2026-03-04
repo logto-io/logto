@@ -12,7 +12,6 @@ import type Queries from '#src/tenants/Queries.js';
 
 import { type InteractionContext } from '../types.js';
 
-import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import { type SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import { Mfa } from './mfa.js';
 
@@ -68,21 +67,8 @@ const createMfa = ({
 };
 
 describe('Mfa.assertMfaFulfilled', () => {
-  it('runs adaptive binding check before mandatory check for sign-in', async () => {
+  it('runs mandatory check for sign-in', async () => {
     const { mfa } = createMfa();
-    const adaptiveMfaResult: AdaptiveMfaResult = {
-      requiresMfa: true,
-      triggeredRules: [],
-    };
-
-    const adaptiveSpy = jest
-      .spyOn(
-        mfa as unknown as {
-          assertAdaptiveMfaBindingFulfilled: (...args: unknown[]) => Promise<void>;
-        },
-        'assertAdaptiveMfaBindingFulfilled'
-      )
-      .mockResolvedValue();
     const mandatorySpy = jest
       .spyOn(
         mfa as unknown as {
@@ -92,44 +78,12 @@ describe('Mfa.assertMfaFulfilled', () => {
       )
       .mockResolvedValue();
 
-    await mfa.assertMfaFulfilled({
-      adaptiveMfaResult,
-    });
+    await mfa.assertMfaFulfilled();
 
-    expect(adaptiveSpy).toHaveBeenCalledWith(expect.any(Object), adaptiveMfaResult);
-    expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object));
-    expect(adaptiveSpy.mock.invocationCallOrder[0]).toBeLessThan(
-      mandatorySpy.mock.invocationCallOrder[0]!
-    );
-  });
-
-  it('runs adaptive binding check with undefined adaptive result', async () => {
-    const { mfa } = createMfa();
-
-    const adaptiveSpy = jest
-      .spyOn(
-        mfa as unknown as {
-          assertAdaptiveMfaBindingFulfilled: (...args: unknown[]) => Promise<void>;
-        },
-        'assertAdaptiveMfaBindingFulfilled'
-      )
-      .mockResolvedValue();
-    const mandatorySpy = jest
-      .spyOn(
-        mfa as unknown as {
-          assertUserMandatoryMfaFulfilled: (...args: unknown[]) => Promise<void>;
-        },
-        'assertUserMandatoryMfaFulfilled'
-      )
-      .mockResolvedValue();
-
-    await mfa.assertMfaFulfilled({ adaptiveMfaResult: undefined });
-
-    expect(adaptiveSpy).toHaveBeenCalledWith(expect.any(Object), undefined);
     expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object));
   });
 
-  it('reuses submit async context across adaptive and mandatory checks', async () => {
+  it('reuses submit async context during mandatory check', async () => {
     const mandatoryMfaSettings: MfaSettings = {
       policy: MfaPolicy.Mandatory,
       factors: [MfaFactor.TOTP],
@@ -159,12 +113,7 @@ describe('Mfa.assertMfaFulfilled', () => {
       'getUserMfaFactors'
     );
 
-    await mfa.assertMfaFulfilled({
-      adaptiveMfaResult: {
-        requiresMfa: true,
-        triggeredRules: [],
-      },
-    });
+    await mfa.assertMfaFulfilled();
 
     expect(getMfaSettings).toHaveBeenCalledTimes(1);
     expect(getIdentifiedUser).toHaveBeenCalledTimes(1);
@@ -198,11 +147,7 @@ describe('Mfa.assertMfaFulfilled', () => {
       'getSignInExperienceData'
     );
 
-    await expect(
-      mfa.assertMfaFulfilled({
-        adaptiveMfaResult: { requiresMfa: false, triggeredRules: [] },
-      })
-    ).resolves.toBeUndefined();
+    await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
 
     expect(getSignInExperienceDataSpy).not.toHaveBeenCalled();
   });
