@@ -1,7 +1,16 @@
 import { UserScope } from '@logto/core-kit';
-import { AccountCenterControlValue, userMfaDataGuard, userMfaDataKey } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  userMfaDataGuard,
+  userPasskeySignInDataGuard,
+} from '@logto/schemas';
 import { z } from 'zod';
 
+import {
+  buildUpdatedUserLogtoConfig,
+  buildUserLogtoConfigResponse,
+  userLogtoConfigResponseGuard,
+} from '#src/libraries/user-logto-config.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import RequestError from '../../errors/RequestError/index.js';
@@ -19,12 +28,7 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
   router.get(
     `${accountApiPrefix}/logto-configs`,
     koaGuard({
-      response: z.object({
-        mfa: z.object({
-          enabled: z.boolean().optional(),
-          skipped: z.boolean(),
-        }),
-      }),
+      response: userLogtoConfigResponseGuard,
       status: [200, 400, 401],
     }),
     async (ctx, next) => {
@@ -36,8 +40,8 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
       );
 
       const { fields } = ctx.accountCenter;
-      // Currently, only the MFA skip state is exposed in logto_config
-      // so we only need to check the MFA field
+      // MFA and passkey sign-in data are both exposed in logto_config.
+      // Passkey is a WebAuthn MFA factor, so it reuses the MFA field access control.
       assertThat(
         fields.mfa === AccountCenterControlValue.Edit ||
           fields.mfa === AccountCenterControlValue.ReadOnly,
@@ -45,13 +49,7 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
       );
 
       const user = await findUserById(userId);
-      const mfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
-      const enabled = mfaData.success ? mfaData.data.enabled : undefined;
-      const skipped = mfaData.success ? (mfaData.data.skipped ?? false) : false;
-
-      ctx.body = {
-        mfa: { enabled, skipped },
-      };
+      ctx.body = buildUserLogtoConfigResponse(user.logtoConfig);
 
       return next();
     }
@@ -61,17 +59,10 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
     `${accountApiPrefix}/logto-configs`,
     koaGuard({
       body: z.object({
-        mfa: z.object({
-          enabled: z.boolean().optional(),
-          skipped: z.boolean().optional(),
-        }),
+        mfa: userMfaDataGuard.optional(),
+        passkeySignIn: userPasskeySignInDataGuard.optional(),
       }),
-      response: z.object({
-        mfa: z.object({
-          enabled: z.boolean().optional(),
-          skipped: z.boolean(),
-        }),
-      }),
+      response: userLogtoConfigResponseGuard,
       status: [200, 400, 401],
     }),
     async (ctx, next) => {
@@ -80,40 +71,21 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
-      const {
-        mfa: { enabled, skipped },
-      } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
-      // Currently, only the MFA enabled and skipped states are exposed in logto_config
-      // so we only need to check the MFA field
+      // MFA and passkey sign-in data are both exposed in logto_config.
+      // Passkey is a WebAuthn MFA factor, so it reuses the MFA field access control.
       assertThat(
         fields.mfa === AccountCenterControlValue.Edit,
         new RequestError({ code: 'account_center.field_not_editable', status: 400 })
       );
 
       const user = await findUserById(userId);
-      const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
-
-      const configToUpdate = {
-        ...(enabled === undefined ? {} : { enabled }),
-        ...(skipped === undefined ? {} : { skipped }),
-      };
-
       const updatedUser = await updateUserById(userId, {
-        logtoConfig: {
-          ...user.logtoConfig,
-          [userMfaDataKey]: {
-            ...(existingMfaData.success ? existingMfaData.data : {}),
-            ...configToUpdate,
-          },
-        },
+        logtoConfig: buildUpdatedUserLogtoConfig(user, ctx.guard.body),
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
-
-      ctx.body = {
-        mfa: { ...configToUpdate },
-      };
+      ctx.body = buildUserLogtoConfigResponse(updatedUser.logtoConfig);
 
       return next();
     }
