@@ -19,6 +19,7 @@ import {
   createApplication,
   deleteApplication,
 } from '#src/api/application.js';
+import { deleteJwtCustomizer, upsertJwtCustomizer } from '#src/api/logto-config.js';
 import {
   createResource as createResourceApi,
   deleteResource,
@@ -28,7 +29,7 @@ import { assignScopesToRole, createRole as createRoleApi, deleteRole } from '#sr
 import { createScope as createScopeApi } from '#src/api/scope.js';
 import { logtoUrl } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { randomString } from '#src/utils.js';
+import { devFeatureDisabledTest, devFeatureTest, randomString } from '#src/utils.js';
 
 type TokenResponse = {
   access_token: string;
@@ -104,6 +105,8 @@ describe('client credentials grant', () => {
       ...currentResources.map(async ({ id }) => deleteResource(id).catch(() => {})),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       ...currentRoles.map(async ({ id }) => deleteRole(`roles/${id}`).catch(() => {})),
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      deleteJwtCustomizer('client-credentials').catch(() => {}),
     ]);
   });
 
@@ -285,6 +288,55 @@ describe('client credentials grant', () => {
       const verified2 = await jwtVerify(accessToken2, jwkSet, { audience: resource.indicator });
       expect(verified1.payload.organization_id).toBe(organization.id);
       expect(verified2.payload.scope).toBe(undefined);
+    });
+  });
+
+  devFeatureTest.describe('custom jwt error handling (dev features enabled)', () => {
+    it('should return server_error when script throws and blocking is enabled', async () => {
+      const resource = await createResource();
+
+      await upsertJwtCustomizer('client-credentials', {
+        script: `const getCustomJwtClaims = async () => {
+  throw new Error('boom');
+};`,
+        blockIssuanceOnError: true,
+      });
+
+      await expectError({ resource: resource.indicator }, 500, {
+        error: 'server_error',
+      });
+    });
+
+    it('should keep access_denied when script calls denyAccess', async () => {
+      const resource = await createResource();
+
+      await upsertJwtCustomizer('client-credentials', {
+        script: `const getCustomJwtClaims = async ({ api }) => {
+  return api.denyAccess('blocked');
+};`,
+        blockIssuanceOnError: true,
+      });
+
+      await expectError({ resource: resource.indicator }, 403, {
+        error: 'access_denied',
+      });
+    });
+  });
+
+  devFeatureDisabledTest.describe('custom jwt error handling (dev features disabled)', () => {
+    it('should keep fail-open when script throws and blocking is enabled', async () => {
+      const resource = await createResource();
+
+      await upsertJwtCustomizer('client-credentials', {
+        script: `const getCustomJwtClaims = async () => {
+  throw new Error('boom');
+};`,
+        blockIssuanceOnError: true,
+      });
+
+      const { access_token: accessToken } = await post({ resource: resource.indicator });
+      const verified = await jwtVerify(accessToken, jwkSet, { audience: resource.indicator });
+      expect(verified.payload.client_id).toBe(client.id);
     });
   });
 });

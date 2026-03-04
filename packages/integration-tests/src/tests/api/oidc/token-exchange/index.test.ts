@@ -9,6 +9,7 @@ import {
   type Resource,
 } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
+import { HTTPError } from 'ky';
 
 import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
 import { oidcApi } from '#src/api/api.js';
@@ -27,6 +28,8 @@ import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import {
+  devFeatureDisabledTest,
+  devFeatureTest,
   getAccessTokenPayload,
   randomString,
   generateName,
@@ -489,6 +492,107 @@ describe('Token Exchange', () => {
         .json<{ access_token: string }>();
 
       expect(getAccessTokenPayload(access_token)).toHaveProperty('foo', 'bar');
+      await deleteJwtCustomizer('access-token');
+    });
+
+    devFeatureTest.it(
+      'should return server_error when access-token script throws and blocking is enabled',
+      async () => {
+        const { subjectToken } = await createSubjectToken(testUserId, { foo: 'bar' });
+
+        await upsertJwtCustomizer('access-token', {
+          script: `const getCustomJwtClaims = async () => {
+  throw new Error('boom');
+};`,
+          blockIssuanceOnError: true,
+        });
+
+        const error = await oidcApi
+          .post('token', {
+            headers: {
+              ...formUrlEncodedHeaders,
+              Authorization: authorizationHeader,
+            },
+            body: new URLSearchParams({
+              grant_type: GrantType.TokenExchange,
+              subject_token: subjectToken,
+              subject_token_type: impersonationTokenType,
+              resource: testApiResourceInfo.indicator,
+            }),
+          })
+          .catch((error: unknown) => error);
+        expect(error).toBeInstanceOf(HTTPError);
+        expect(await (error as HTTPError).response.json()).toMatchObject({
+          error: 'server_error',
+        });
+
+        await deleteJwtCustomizer('access-token');
+      }
+    );
+
+    devFeatureDisabledTest.it(
+      'should keep fail-open when access-token script throws and blocking is enabled',
+      async () => {
+        const { subjectToken } = await createSubjectToken(testUserId, { foo: 'bar' });
+
+        await upsertJwtCustomizer('access-token', {
+          script: `const getCustomJwtClaims = async () => {
+  throw new Error('boom');
+};`,
+          blockIssuanceOnError: true,
+        });
+
+        const { access_token } = await oidcApi
+          .post('token', {
+            headers: {
+              ...formUrlEncodedHeaders,
+              Authorization: authorizationHeader,
+            },
+            body: new URLSearchParams({
+              grant_type: GrantType.TokenExchange,
+              subject_token: subjectToken,
+              subject_token_type: impersonationTokenType,
+              resource: testApiResourceInfo.indicator,
+            }),
+          })
+          .json<{
+            access_token: string;
+          }>();
+        expect(getAccessTokenPayload(access_token).sub).toBe(testUserId);
+
+        await deleteJwtCustomizer('access-token');
+      }
+    );
+
+    devFeatureTest.it('should keep access_denied when script calls denyAccess', async () => {
+      const { subjectToken } = await createSubjectToken(testUserId, { foo: 'bar' });
+
+      await upsertJwtCustomizer('access-token', {
+        script: `const getCustomJwtClaims = async ({ api }) => {
+  return api.denyAccess('blocked');
+};`,
+        blockIssuanceOnError: true,
+      });
+
+      const error = await oidcApi
+        .post('token', {
+          headers: {
+            ...formUrlEncodedHeaders,
+            Authorization: authorizationHeader,
+          },
+          body: new URLSearchParams({
+            grant_type: GrantType.TokenExchange,
+            subject_token: subjectToken,
+            subject_token_type: impersonationTokenType,
+            resource: testApiResourceInfo.indicator,
+          }),
+        })
+        .catch((error: unknown) => error);
+      expect(error).toBeInstanceOf(HTTPError);
+      expect(await (error as HTTPError).response.json()).toMatchObject({
+        error: 'access_denied',
+      });
+
       await deleteJwtCustomizer('access-token');
     });
   });
