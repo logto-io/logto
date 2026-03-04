@@ -30,7 +30,7 @@
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
-    "test": "vitest src",
+    "test": "vitest run src",
     "test:ci": "pnpm run test --silent --coverage"
   },
   "dependencies": {

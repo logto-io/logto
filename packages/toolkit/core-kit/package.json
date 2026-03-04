@@ -38,7 +38,7 @@
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
     "stylelint": "stylelint \"scss/**/*.scss\"",
-    "test": "vitest src",
+    "test": "vitest run src",
     "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {

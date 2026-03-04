@@ -45,7 +45,7 @@
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
+    "test": "vitest run src",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },
