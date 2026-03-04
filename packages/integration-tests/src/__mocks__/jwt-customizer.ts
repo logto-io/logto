@@ -29,6 +29,7 @@ export const clientCredentialsTokenSample: ClientCredentialsPayload = {
 
 export const clientCredentialsJwtCustomizerPayload = {
   script: '',
+  blockIssuanceOnError: false,
   environmentVariables: {
     foo: 'bar',
     API_KEY: '12345',
