@@ -5,6 +5,7 @@ import { z } from 'zod';
 export type JwtCustomizerForm = {
   tokenType: LogtoJwtTokenKeyType;
   script: string;
+  blockIssuanceOnError: boolean;
   environmentVariables?: Array<{ key: string; value: string }>;
   testSample: {
     contextSample?: string;

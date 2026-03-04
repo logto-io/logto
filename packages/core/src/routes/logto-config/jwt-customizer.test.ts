@@ -49,33 +49,37 @@ describe('configs JWT customizer routes', () => {
   });
 
   it('PUT /configs/jwt-customizer/:tokenType should add a record successfully', async () => {
+    const payload = {
+      ...mockJwtCustomizerConfigForAccessToken.value,
+      blockIssuanceOnError: true,
+    };
+
     logtoConfigQueries.getRowsByKeys.mockResolvedValueOnce({
       ...mockLogtoConfigRows,
       rows: [],
       rowCount: 0,
     });
-    mockLogtoConfigsLibrary.upsertJwtCustomizer.mockResolvedValueOnce(
-      mockJwtCustomizerConfigForAccessToken
-    );
-    const response = await routeRequester
-      .put(`/configs/jwt-customizer/access-token`)
-      .send(mockJwtCustomizerConfigForAccessToken.value);
+    mockLogtoConfigsLibrary.upsertJwtCustomizer.mockResolvedValueOnce({
+      ...mockJwtCustomizerConfigForAccessToken,
+      value: payload,
+    });
+    const response = await routeRequester.put(`/configs/jwt-customizer/access-token`).send(payload);
 
     expect(tenantContext.libraries.jwtCustomizers.deployJwtCustomizerScript).toHaveBeenCalledWith(
       expect.any(ConsoleLog),
       {
         key: LogtoJwtTokenKey.AccessToken,
-        value: mockJwtCustomizerConfigForAccessToken.value,
+        value: payload,
         useCase: 'production',
       }
     );
 
     expect(mockLogtoConfigsLibrary.upsertJwtCustomizer).toHaveBeenCalledWith(
       LogtoJwtTokenKey.AccessToken,
-      mockJwtCustomizerConfigForAccessToken.value
+      payload
     );
     expect(response.status).toEqual(201);
-    expect(response.body).toEqual(mockJwtCustomizerConfigForAccessToken.value);
+    expect(response.body).toEqual(payload);
   });
 
   it('PUT /configs/jwt-customizer/:tokenType should update a record successfully', async () => {
