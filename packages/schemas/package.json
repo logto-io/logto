@@ -33,6 +33,7 @@
     "prepublishOnly": "! ls alterations/next-*",
     "prepack": "pnpm build",
     "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {

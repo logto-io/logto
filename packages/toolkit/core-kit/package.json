@@ -39,6 +39,7 @@
     "prepack": "pnpm build",
     "stylelint": "stylelint \"scss/**/*.scss\"",
     "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {

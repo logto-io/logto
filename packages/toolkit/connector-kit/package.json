@@ -31,6 +31,7 @@
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
     "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage"
   },
   "dependencies": {

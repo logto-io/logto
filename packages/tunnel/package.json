@@ -31,6 +31,7 @@
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage",
     "prepack": "pnpm build"
   },
