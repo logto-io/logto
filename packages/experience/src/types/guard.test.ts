@@ -1,7 +1,7 @@
-import { VerificationType } from '@logto/schemas';
+import { MfaFactor, VerificationType } from '@logto/schemas';
 import * as s from 'superstruct';
 
-import { verificationIdsMapGuard } from './guard';
+import { mfaErrorDataGuard, verificationIdsMapGuard } from './guard';
 
 describe('guard', () => {
   it.each(Object.values(VerificationType))('verificationIdsMapGuard: %s', (type) => {
@@ -27,5 +27,19 @@ describe('guard', () => {
 
     expect(error).toBeUndefined();
     expect(value).toEqual(record);
+  });
+
+  it('mfaErrorDataGuard should accept passkey suggestion metadata', () => {
+    expect(() => {
+      s.assert(
+        {
+          availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+          skippable: true,
+          suggestion: true,
+          isWebAuthnUsedAsSignInPasskey: true,
+        },
+        mfaErrorDataGuard
+      );
+    }).not.toThrow();
   });
 });

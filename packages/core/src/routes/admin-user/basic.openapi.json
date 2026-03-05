@@ -112,11 +112,11 @@
       "get": {
         "responses": {
           "200": {
-            "description": "Returns the exposed user logto config fields. Currently, only the MFA skip state is available."
+            "description": "Returns the exposed user logto config fields, including MFA states (enabled, skipped, skipMfaOnSignIn) and passkey sign-in states (skipped)."
           }
         },
         "summary": "Get user logto config",
-        "description": "Retrieve the exposed portion of a user's logto config. This endpoint currently includes only the MFA skip state."
+        "description": "Retrieve the exposed portion of a user's logto config. Includes MFA states (enabled, skipped, skipMfaOnSignIn) and passkey sign-in states (skipped)."
       },
       "patch": {
         "requestBody": {
@@ -126,8 +126,21 @@
                 "properties": {
                   "mfa": {
                     "properties": {
+                      "enabled": {
+                        "description": "Set whether MFA is enabled for the user."
+                      },
                       "skipped": {
                         "description": "Set whether the user is marked as having skipped MFA binding."
+                      },
+                      "skipMfaOnSignIn": {
+                        "description": "Set whether the user has opted to skip MFA verification on sign-in. This is ignored when the MFA policy is mandatory."
+                      }
+                    }
+                  },
+                  "passkeySignIn": {
+                    "properties": {
+                      "skipped": {
+                        "description": "Set whether the user has persistently skipped binding a passkey for sign-in."
                       }
                     }
                   }
@@ -142,7 +155,7 @@
           }
         },
         "summary": "Update user logto config",
-        "description": "Update the exposed portion of a user's logto config. This endpoint currently allows updating only the MFA skip state."
+        "description": "Update the exposed portion of a user's logto config. Supports updating MFA states (enabled, skipped, skipMfaOnSignIn) and passkey sign-in states (skipped). All fields are optional — only provided fields will be updated."
       }
     },
     "/api/users/{userId}/profile": {

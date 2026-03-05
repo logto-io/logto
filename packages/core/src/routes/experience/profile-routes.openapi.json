@@ -80,6 +80,27 @@
         }
       }
     },
+    "/api/experience/profile/mfa/mfa-enabled": {
+      "post": {
+        "operationId": "MarkMfaEnabled",
+        "summary": "Mark MFA as enabled",
+        "description": "Mark the user's MFA as enabled for the current interaction and persist in DB user configs upon successful submission.",
+        "responses": {
+          "204": {
+            "description": "The MFA has been successfully marked as enabled. This is typically useful for optional MFA scenarios as the client can prompt an MFA enrollment flow if the user has not enabled MFA yet, for added security."
+          },
+          "400": {
+            "description": "Not supported for the current interaction event. The MFA profile API can only be used in the `SignIn` or `Register` interaction."
+          },
+          "403": {
+            "description": "MFA verification is required but has not been completed. The user must verify the existing MFA before updating MFA settings."
+          },
+          "404": {
+            "description": "The user has not been identified yet. The `mfa-enabled` configuration must be associated with an identified user."
+          }
+        }
+      }
+    },
     "/api/experience/profile/mfa/mfa-skipped": {
       "post": {
         "operationId": "SkipMfaBindingFlow",
@@ -96,7 +117,7 @@
             "description": "Some MFA factors has already been enabled for the user. The user must verify the MFA before updating the MFA settings."
           },
           "404": {
-            "description": "The user has not been identified yet. The `mfa-skipped` configuration must be associated with a identified user."
+            "description": "The user has not been identified yet. The `mfa-skipped` configuration must be associated with an identified user."
           },
           "422": {
             "description": "The MFA verification binding is `Mandatory`, user can not skip the MFA verification binding flow."

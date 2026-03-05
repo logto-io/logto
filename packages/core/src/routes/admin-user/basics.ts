@@ -6,9 +6,7 @@ import {
   adminTenantId,
   jsonObjectGuard,
   userMfaDataGuard,
-  userMfaDataKey,
   userPasskeySignInDataGuard,
-  userPasskeySignInDataKey,
   userProfileGuard,
   userProfileResponseGuard,
 } from '@logto/schemas';
@@ -17,6 +15,11 @@ import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
+import {
+  buildUpdatedUserLogtoConfig,
+  buildUserLogtoConfigResponse,
+  userLogtoConfigResponseGuard,
+} from '#src/libraries/user-logto-config.js';
 import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -126,15 +129,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     '/users/:userId/logto-configs',
     koaGuard({
       params: object({ userId: string() }),
-      response: object({
-        mfa: object({
-          skipped: boolean(),
-          skipMfaOnSignIn: boolean(),
-        }),
-        passkeySignIn: object({
-          skipped: boolean(),
-        }),
-      }),
+      response: userLogtoConfigResponseGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -143,24 +138,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       } = ctx.guard;
 
       const user = await findUserById(userId);
-      const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
-      const existingPasskeySignInData = userPasskeySignInDataGuard.safeParse(
-        user.logtoConfig[userPasskeySignInDataKey]
-      );
-
-      ctx.body = {
-        mfa: {
-          skipped: existingMfaData.success ? Boolean(existingMfaData.data.skipped) : false,
-          skipMfaOnSignIn: existingMfaData.success
-            ? Boolean(existingMfaData.data.skipMfaOnSignIn)
-            : false,
-        },
-        passkeySignIn: {
-          skipped: existingPasskeySignInData.success
-            ? Boolean(existingPasskeySignInData.data.skipped)
-            : false,
-        },
-      };
+      ctx.body = buildUserLogtoConfigResponse(user.logtoConfig);
 
       return next();
     }
@@ -171,58 +149,31 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({
-        mfa: object({
-          skipped: boolean(),
-          skipMfaOnSignIn: boolean(),
-        }),
-        passkeySignIn: object({
-          skipped: boolean(),
-        }),
+        mfa: userMfaDataGuard.optional(),
+        passkeySignIn: userPasskeySignInDataGuard.optional(),
       }),
-      response: object({
-        mfa: object({
-          skipped: boolean(),
-          skipMfaOnSignIn: boolean(),
-        }),
-        passkeySignIn: object({
-          skipped: boolean(),
-        }),
-      }),
+      response: userLogtoConfigResponseGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
       const {
         params: { userId },
-        body: { mfa, passkeySignIn },
+        body: {
+          mfa: { enabled, skipped, skipMfaOnSignIn } = {},
+          passkeySignIn: { skipped: passkeySkipped } = {},
+        },
       } = ctx.guard;
 
       const user = await findUserById(userId);
-      const existingMfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
-      const existingPasskeySignInData = userPasskeySignInDataGuard.safeParse(
-        user.logtoConfig[userPasskeySignInDataKey]
-      );
-
       const updatedUser = await updateUserById(userId, {
-        logtoConfig: {
-          ...user.logtoConfig,
-          [userMfaDataKey]: {
-            ...(existingMfaData.success ? existingMfaData.data : {}),
-            skipped: mfa.skipped,
-            skipMfaOnSignIn: mfa.skipMfaOnSignIn,
-          },
-          [userPasskeySignInDataKey]: {
-            ...(existingPasskeySignInData.success ? existingPasskeySignInData.data : {}),
-            skipped: passkeySignIn.skipped,
-          },
-        },
+        logtoConfig: buildUpdatedUserLogtoConfig(user, {
+          mfa: { enabled, skipped, skipMfaOnSignIn },
+          passkeySignIn: { skipped: passkeySkipped },
+        }),
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
-
-      ctx.body = {
-        mfa: { skipped: mfa.skipped, skipMfaOnSignIn: mfa.skipMfaOnSignIn },
-        passkeySignIn: { skipped: passkeySignIn.skipped },
-      };
+      ctx.body = buildUserLogtoConfigResponse(updatedUser.logtoConfig);
 
       return next();
     }

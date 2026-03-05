@@ -30,6 +30,7 @@ const user = {
   role_exists: '역할 ID {{roleId}}은/는 이미 이 사용자에게 할당되어 있어요.',
   invalid_role_type:
     '유효하지 않은 역할 유형입니다. 사용자에게 기계 대 기계 역할을 할당할 수 없습니다.',
+  suggest_mfa: '계정 보안을 강화하려면 MFA를 계정에 연동하는 것을 권장해요.',
   missing_mfa: '추가 MFA를 연동한 후에 로그인할 수 있습니다.',
   totp_already_in_use: 'TOTP가 이미 사용 중입니다.',
   backup_code_already_in_use: '백업 코드가 이미 사용 중입니다.',

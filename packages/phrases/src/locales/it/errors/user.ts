@@ -31,6 +31,8 @@ const user = {
   role_exists: "L'ID ruolo {{roleId}} è già stato aggiunto a questo utente",
   invalid_role_type:
     'Tipo di ruolo non valido, non è possibile assegnare un ruolo da macchina a utente.',
+  suggest_mfa:
+    "Per una migliore sicurezza dell'account, ti consigliamo di collegare l'MFA al tuo account.",
   missing_mfa: "Devi legare un'ulteriore MFA prima di accedere.",
   totp_already_in_use: 'TOTP è già in uso.',
   backup_code_already_in_use: 'Il codice di backup è già in uso.',
