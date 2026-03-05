@@ -11,7 +11,9 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
-import { generateUsername } from '#src/utils.js';
+import { generateUsername, devFeatureTest } from '#src/utils.js';
+
+const { describe, it } = devFeatureTest;
 
 describe('MFA - User controlled', () => {
   beforeAll(async () => {
@@ -99,7 +101,7 @@ describe('MFA - User controlled', () => {
     await deleteUser(user.id);
   });
 
-  it('should verify MFA when the user has not skip the MFA binding', async () => {
+  it('should verify MFA when the user has not skipped the MFA binding', async () => {
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
     const experience = new ExpectTotpExperience(await browser.newPage());
     await experience.startWith(demoAppUrl, 'sign-in');
@@ -115,8 +117,7 @@ describe('MFA - User controlled', () => {
     await experience.waitForPathname('mfa-onboarding');
     await experience.toClick('button', 'Enable 2-step verification');
     // Select TOTP factor from the binding list
-    await experience.waitForPathname('mfa-binding');
-    await experience.toClick('button', 'Authenticator app OTP');
+    await experience.waitForPathname('mfa-binding/Totp');
     const totpSecret = await experience.toBindTotp();
     await experience.verifyThenEnd(false);
 
