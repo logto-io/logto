@@ -123,6 +123,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     await pool.query(sql`
       delete from ${table}
       where ${fields.modelName}=${modelName}
+      and ${fields.payload} ? 'grantId'
       and ${fields.payload}->>'grantId'=${grantId}
     `);
   };
