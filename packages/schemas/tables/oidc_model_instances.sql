@@ -45,3 +45,10 @@ create index oidc_model_instances__expires_at
 create index oidc_model_instances__session_payload_account_id_expires_at
   on oidc_model_instances (tenant_id, (payload->>'accountId'), expires_at)
   WHERE model_name = 'Session';
+
+alter table oidc_model_instances set (
+  autovacuum_vacuum_scale_factor = 0.05,
+  autovacuum_analyze_scale_factor = 0.02,
+  autovacuum_vacuum_threshold = 5000,
+  autovacuum_analyze_threshold = 2000
+);
