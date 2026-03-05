@@ -169,12 +169,9 @@ describe('admin console sign-in experience', () => {
         },
       });
 
-      await expect(
-        updateSignInExperience({ adaptiveMfa: { enabled: true } })
-      ).rejects.toMatchObject({
-        response: {
-          status: 422,
-        },
+      await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
+        code: 'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+        status: 422,
       });
     });
 
@@ -189,7 +186,7 @@ describe('admin console sign-in experience', () => {
         });
 
         await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
-          code: 'request.invalid_input',
+          code: 'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
           status: 422,
         });
       }
@@ -205,7 +202,7 @@ describe('admin console sign-in experience', () => {
           },
         }),
         {
-          code: 'request.invalid_input',
+          code: 'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
           status: 422,
         }
       );
