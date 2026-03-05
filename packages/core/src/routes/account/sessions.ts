@@ -1,6 +1,9 @@
 import { UserScope } from '@logto/core-kit';
-import { AccountCenterControlValue, getUserSessionsResponseGuard } from '@logto/schemas';
-import { yes } from '@silverhand/essentials';
+import {
+  AccountCenterControlValue,
+  SessionGrantRevokeTarget,
+  getUserSessionsResponseGuard,
+} from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -55,7 +58,9 @@ export default function accountSessionRoutes<T extends UserRouter>(
   router.delete(
     `${accountApiPrefix}/sessions/:sessionId`,
     koaGuard({
-      query: z.object({ revokeGrants: z.string().optional() }),
+      query: z.object({
+        revokeGrantsTarget: z.nativeEnum(SessionGrantRevokeTarget).optional(),
+      }),
       params: z.object({
         sessionId: z.string().min(1),
       }),
@@ -90,30 +95,14 @@ export default function accountSessionRoutes<T extends UserRouter>(
         new RequestError('oidc.invalid_session_account_id', { status: 404 })
       );
 
-      const { revokeGrants } = ctx.guard.query;
+      const { revokeGrantsTarget } = ctx.guard.query;
 
-      const authorizations = Object.entries(session.authorizations ?? {});
-
-      if (yes(revokeGrants)) {
-        /**
-         * Revoking all grants and associated tokens for the session.
-         * @link https://github.com/logto-io/node-oidc-provider/blob/460feeea606d4f1c0bbab82bc196311053070ffc/lib/actions/end_session.js#L166
-         * @link https://github.com/logto-io/node-oidc-provider/blob/460feeea606d4f1c0bbab82bc196311053070ffc/lib/helpers/revoke.js
-         */
-        await Promise.all(
-          authorizations.map(async ([, { grantId }]) => {
-            if (grantId) {
-              await Promise.all(
-                [provider.AccessToken, provider.RefreshToken, provider.AuthorizationCode]
-                  .map(async (model) => model.revokeByGrantId(grantId))
-                  .concat(provider.Grant.adapter.destroy(grantId))
-              );
-              // Note: Unlike end_session request.
-              // We do not have oidc context here so we cannot trigger the `grant.revoked` event here.
-              // This is a known limitation.
-            }
-          })
-        );
+      if (revokeGrantsTarget) {
+        await sessionLibrary.revokeSessionAssociatedGrants({
+          provider,
+          authorizations: session.authorizations ?? {},
+          target: revokeGrantsTarget,
+        });
       }
 
       await session.destroy();

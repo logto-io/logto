@@ -1,4 +1,4 @@
-import { type User } from '@logto/schemas';
+import { SessionGrantRevokeTarget, type User } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import type { Provider } from 'oidc-provider';
 
@@ -7,7 +7,7 @@ import type Queries from '#src/tenants/Queries.js';
 import { GrantMock, createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { consent } from './session.js';
+import { consent, createSessionLibrary } from './session.js';
 
 const { jest } = import.meta;
 
@@ -136,5 +136,98 @@ describe('consent', () => {
       'resource1_scope1 resource1_scope2'
     );
     expect(grantAddResourceScope).toHaveBeenCalledWith('resource2', 'resource2_scope1');
+  });
+});
+
+describe('revokeSessionAssociatedGrants', () => {
+  const revokeAccessTokenByGrantId = jest.fn(async () => 'ok');
+  const revokeRefreshTokenByGrantId = jest.fn(async () => 'ok');
+  const revokeAuthorizationCodeByGrantId = jest.fn(async () => 'ok');
+  const destroyGrant = jest.fn(async () => 'ok');
+
+  const provider = {
+    AccessToken: { revokeByGrantId: revokeAccessTokenByGrantId },
+    RefreshToken: { revokeByGrantId: revokeRefreshTokenByGrantId },
+    AuthorizationCode: { revokeByGrantId: revokeAuthorizationCodeByGrantId },
+    Grant: { adapter: { destroy: destroyGrant } },
+  } as unknown as Provider;
+
+  const findApplicationsByIds = jest.fn<
+    Promise<Array<{ id: string; isThirdParty: boolean }>>,
+    [string[]]
+  >(async () => []);
+
+  const sessionLibrary = createSessionLibrary({
+    applications: { findApplicationsByIds },
+    oidcSessionExtensions: {
+      findUserActiveSessionsWithExtensions: jest.fn(async () => []),
+      findUserActiveSessionWithExtension: jest.fn(async () => null),
+    },
+  } as unknown as Queries);
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should revoke all grants when revokeAllGrants is true', async () => {
+    await sessionLibrary.revokeSessionAssociatedGrants({
+      provider,
+      authorizations: {
+        app1: { grantId: 'grant-1' },
+        app2: { grantId: 'grant-2' },
+        app3: {},
+      },
+      target: SessionGrantRevokeTarget.All,
+    });
+
+    expect(findApplicationsByIds).not.toHaveBeenCalled();
+    expect(revokeAccessTokenByGrantId).toHaveBeenCalledTimes(2);
+    expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-1');
+    expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-2');
+    expect(revokeRefreshTokenByGrantId).toHaveBeenCalledTimes(2);
+    expect(revokeAuthorizationCodeByGrantId).toHaveBeenCalledTimes(2);
+    expect(destroyGrant).toHaveBeenCalledTimes(2);
+  });
+
+  it('should revoke first-party grants only when revokeFirstPartyAppGrants is true', async () => {
+    findApplicationsByIds.mockResolvedValueOnce([
+      { id: 'first-party-app', isThirdParty: false },
+      { id: 'third-party-app', isThirdParty: true },
+    ]);
+
+    await sessionLibrary.revokeSessionAssociatedGrants({
+      provider,
+      authorizations: {
+        'first-party-app': { grantId: 'grant-1' },
+        'third-party-app': { grantId: 'grant-2' },
+        'unknown-app': { grantId: 'grant-3' },
+      },
+      target: SessionGrantRevokeTarget.FirstParty,
+    });
+
+    expect(findApplicationsByIds).toHaveBeenCalledWith([
+      'first-party-app',
+      'third-party-app',
+      'unknown-app',
+    ]);
+    expect(revokeAccessTokenByGrantId).toHaveBeenCalledTimes(1);
+    expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-1');
+    expect(revokeRefreshTokenByGrantId).toHaveBeenCalledTimes(1);
+    expect(revokeAuthorizationCodeByGrantId).toHaveBeenCalledTimes(1);
+    expect(destroyGrant).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not revoke grants when no authorizations are found', async () => {
+    await sessionLibrary.revokeSessionAssociatedGrants({
+      provider,
+      authorizations: {},
+      target: SessionGrantRevokeTarget.FirstParty,
+    });
+
+    expect(findApplicationsByIds).not.toHaveBeenCalled();
+    expect(revokeAccessTokenByGrantId).not.toHaveBeenCalled();
+    expect(revokeRefreshTokenByGrantId).not.toHaveBeenCalled();
+    expect(revokeAuthorizationCodeByGrantId).not.toHaveBeenCalled();
+    expect(destroyGrant).not.toHaveBeenCalled();
   });
 });

@@ -11,6 +11,7 @@ import type {
   OrganizationWithRoles,
   PersonalAccessToken,
   Role,
+  SessionGrantRevokeTarget,
   User,
   UserSsoIdentity,
   UsersPasswordEncryptionMethod,
@@ -233,9 +234,13 @@ export const getUserSessions = async (userId: string) =>
 export const getUserSession = async (userId: string, sessionId: string) =>
   authedAdminApi.get(`users/${userId}/sessions/${sessionId}`).json<GetUserSessionResponse>();
 
-export const revokeUserSession = async (userId: string, sessionId: string, revokeGrants = false) =>
+export const revokeUserSession = async (
+  userId: string,
+  sessionId: string,
+  revokeGrantsTarget?: SessionGrantRevokeTarget
+) =>
   authedAdminApi.delete(`users/${userId}/sessions/${sessionId}`, {
     searchParams: new URLSearchParams({
-      ...conditional(revokeGrants && { revokeGrants: 'true' }),
+      ...conditional(revokeGrantsTarget && { revokeGrantsTarget }),
     }),
   });

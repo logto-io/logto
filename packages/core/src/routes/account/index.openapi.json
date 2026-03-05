@@ -585,12 +585,12 @@
         "tags": ["Dev feature"],
         "operationId": "DeleteSessionById",
         "summary": "Revoke a session by ID",
-        "description": "Revoke a specific user session by its ID, optionally revoking all associated grants and tokens.  A logto-verification-id in header is required for revoking sessions.",
+        "description": "Revoke a specific user session by its ID, optionally revoking target associated grants and tokens.  A logto-verification-id in header is required for revoking sessions.",
         "parameters": [
           {
             "in": "query",
-            "name": "revokeGrants",
-            "description": "Whether to revoke all associated grants and tokens along with the session."
+            "name": "revokeGrantsTarget",
+            "description": "Optional target for revoking associated grants and tokens. 'all' revokes grants for every application authorized by this session. 'firstParty' revokes only first-party app grants; third-party app grants remain active. If omitted, grants remain active when the session authorizations include offline_access; otherwise they are revoked."
           }
         ],
         "responses": {

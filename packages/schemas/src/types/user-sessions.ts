@@ -19,6 +19,11 @@ export const userSessionSignInContextGuard = z
 
 export type UserSessionSignInContext = z.infer<typeof userSessionSignInContextGuard>;
 
+export enum SessionGrantRevokeTarget {
+  All = 'all',
+  FirstParty = 'firstParty',
+}
+
 /**
  * Public session shape for session management APIs.
  *

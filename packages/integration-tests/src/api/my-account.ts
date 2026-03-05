@@ -1,9 +1,11 @@
-import {
-  type GetUserSessionsResponse,
-  type GetThirdPartyAccessTokenResponse,
-  type UserMfaVerificationResponse,
-  type UserProfileResponse,
+import type {
+  GetUserSessionsResponse,
+  GetThirdPartyAccessTokenResponse,
+  SessionGrantRevokeTarget,
+  UserMfaVerificationResponse,
+  UserProfileResponse,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { type KyInstance } from 'ky';
 
 const verificationRecordIdHeader = 'logto-verification-id';
@@ -170,8 +172,16 @@ export const getSessions = async (api: KyInstance, verificationRecordId: string)
 export const deleteSession = async (
   api: KyInstance,
   sessionId: string,
-  verificationRecordId: string
+  verificationRecordId: string,
+  options?: {
+    revokeGrantsTarget?: SessionGrantRevokeTarget;
+  }
 ) =>
   api.delete(`api/my-account/sessions/${sessionId}`, {
+    searchParams: new URLSearchParams({
+      ...conditional(
+        options?.revokeGrantsTarget && { revokeGrantsTarget: options.revokeGrantsTarget }
+      ),
+    }),
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
