@@ -1,5 +1,11 @@
 import type { User, UserMfaData, UserPasskeySignInData } from '@logto/schemas';
-import { userLogtoConfigGuard, userMfaDataKey, userPasskeySignInDataKey } from '@logto/schemas';
+import {
+  userLogtoConfigGuard,
+  userMfaDataGuard,
+  userMfaDataKey,
+  userPasskeySignInDataGuard,
+  userPasskeySignInDataKey,
+} from '@logto/schemas';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -11,12 +17,12 @@ import { z } from 'zod';
  */
 export const userLogtoConfigResponseGuard = z.object({
   mfa: z.object({
-    enabled: z.boolean().optional(),
-    skipped: z.boolean(),
-    skipMfaOnSignIn: z.boolean(),
+    enabled: userMfaDataGuard.shape.enabled,
+    skipped: userMfaDataGuard.shape.skipped.unwrap(),
+    skipMfaOnSignIn: userMfaDataGuard.shape.skipMfaOnSignIn.unwrap(),
   }),
   passkeySignIn: z.object({
-    skipped: z.boolean(),
+    skipped: userPasskeySignInDataGuard.shape.skipped.unwrap(),
   }),
 });
 

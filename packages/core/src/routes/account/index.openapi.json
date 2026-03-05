@@ -178,7 +178,7 @@
       "get": {
         "operationId": "GetLogtoConfig",
         "summary": "Get logto config",
-        "description": "Retrieve the exposed portion of the current user's logto config. This includes MFA states (enabled, skipped, skipMfaOnSignIn) and passkey sign-in states (skipped). Passkey is a WebAuthn MFA factor and shares the same account center field access control as MFA.",
+        "description": "Retrieve the exposed portion of the current user's logto config. This includes MFA states (enabled, skipped, skipMfaOnSignIn) and passkey sign-in binding states (skipped). Passkey is a WebAuthn MFA factor and shares the same account center field access control as MFA.",
         "responses": {
           "200": {
             "description": "The exposed logto config fields were retrieved successfully."
@@ -194,7 +194,7 @@
       "patch": {
         "operationId": "UpdateLogtoConfig",
         "summary": "Update logto config",
-        "description": "Update the exposed portion of the current user's logto config. Supports updating MFA states (enabled, skipped, skipMfaOnSignIn) and passkey sign-in states (skipped). Passkey is a WebAuthn MFA factor and shares the same account center field access control as MFA.",
+        "description": "Update the exposed portion of the current user's logto config. Supports updating MFA states (enabled, skipped, skipMfaOnSignIn) and passkey sign-in binding states (skipped). Passkey is a WebAuthn MFA factor and shares the same account center field access control as MFA.",
         "requestBody": {
           "content": {
             "application/json": {

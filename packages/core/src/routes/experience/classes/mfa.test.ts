@@ -151,4 +151,27 @@ describe('Mfa.assertMfaFulfilled', () => {
 
     expect(getSignInExperienceDataSpy).not.toHaveBeenCalled();
   });
+
+  it('allows binding WebAuthn when passkey sign-in is enabled even if WebAuthn is not an MFA factor', async () => {
+    const { mfa } = createMfa();
+
+    const { signInExperienceValidator } = mfa as unknown as {
+      signInExperienceValidator: SignInExperienceValidator;
+    };
+
+    jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
+      passkeySignIn: { enabled: true },
+    } as never);
+    jest
+      .spyOn(signInExperienceValidator, 'getMfaFactorsEnabledForBinding')
+      .mockResolvedValue([MfaFactor.TOTP]);
+
+    expect(async () => {
+      await (
+        mfa as unknown as {
+          checkMfaFactorsEnabledInSignInExperience: (factors: MfaFactor[]) => Promise<void>;
+        }
+      ).checkMfaFactorsEnabledInSignInExperience([MfaFactor.WebAuthn]);
+    }).not.toThrow();
+  });
 });

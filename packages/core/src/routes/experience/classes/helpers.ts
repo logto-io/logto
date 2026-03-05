@@ -11,6 +11,7 @@ import {
   type User,
   type Mfa,
   InteractionEvent,
+  type UserLogtoConfig,
   userMfaDataKey,
   userPasskeySignInDataKey,
 } from '@logto/schemas';
@@ -320,7 +321,7 @@ export const getAllUserEnabledMfaVerifications = (
 export const parseMfaPropertiesToUserConfig = (
   mfaVerificationData: UserMfaVerificationsData,
   interactionEvent: InteractionEvent
-) => {
+): UserLogtoConfig => {
   const { mfaEnabled, mfaSkipped, passkeySkipped } = mfaVerificationData;
   return {
     [userMfaDataKey]: {
