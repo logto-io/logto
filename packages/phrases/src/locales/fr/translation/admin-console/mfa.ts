@@ -52,6 +52,10 @@ const mfa = {
     "Demander aux utilisateurs de configurer MFA lors de l'inscription (optionnel, invitation unique)",
   prompt_only_at_sign_in:
     "Demander aux utilisateurs de configurer MFA lors de leur prochaine tentative de connexion après l'inscription (optionnel, invitation unique)",
+  prompt_at_sign_in_and_sign_up_mandatory:
+    "Demander aux utilisateurs de configurer MFA lors de l'inscription. (non ignoré)",
+  prompt_only_at_sign_in_mandatory:
+    "Demander aux utilisateurs de configurer MFA lors de leur prochaine tentative de connexion après l'inscription. (non ignoré)",
   set_up_organization_required_mfa_prompt:
     "Invite de configuration MFA pour les utilisateurs après que l'organisation a activé MFA",
   prompt_at_sign_in_no_skip:

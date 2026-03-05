@@ -46,7 +46,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       await updateSignInExperience({
         mfa: {
           factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
-          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         },
         adaptiveMfa: { enabled: true },
       });
@@ -116,7 +116,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       await updateSignInExperience({
         mfa: {
           factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
-          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         },
         adaptiveMfa: { enabled: true },
       });
@@ -163,7 +163,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       await updateSignInExperience({
         mfa: {
           factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
-          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         },
         adaptiveMfa: { enabled: true },
       });
@@ -193,14 +193,14 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       await updateSignInExperience({
         mfa: {
           factors: [MfaFactor.TOTP],
-          policy: MfaPolicy.NoPrompt,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         },
         adaptiveMfa: { enabled: true },
       });
     });
 
     devFeatureTest.it(
-      'should allow direct sign-in when adaptive MFA triggers and user has no MFA factors',
+      'should not allow skipping MFA binding for adaptive no-skip policies',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
         await userApi.create({ username, password });
@@ -208,13 +208,36 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
         const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
         await identifyUserWithUsernamePassword(client, username, password);
 
-        const { redirectTo } = await client.submitInteraction();
-        await processSession(client, redirectTo);
+        await expectRejects(client.submitInteraction(), {
+          code: 'user.missing_mfa',
+          status: 422,
+        });
+
+        await expectRejects(client.skipMfaBinding(), {
+          code: 'session.mfa.mfa_policy_not_user_controlled',
+          status: 422,
+        });
       }
     );
 
     devFeatureTest.it(
-      'should allow direct sign-in when adaptive MFA triggers but user only has factors disabled in SIE',
+      'should reject submit when adaptive MFA triggers and user has no MFA factors',
+      async () => {
+        const { username, password } = generateNewUserProfile({ username: true, password: true });
+        await userApi.create({ username, password });
+
+        const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
+        await identifyUserWithUsernamePassword(client, username, password);
+
+        await expectRejects(client.submitInteraction(), {
+          code: 'user.missing_mfa',
+          status: 422,
+        });
+      }
+    );
+
+    devFeatureTest.it(
+      'should reject submit when adaptive MFA triggers but user only has factors disabled in SIE',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
         const user = await userApi.create({ username, password });
@@ -234,8 +257,10 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
         const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
         await identifyUserWithUsernamePassword(client, username, password);
 
-        const { redirectTo } = await client.submitInteraction();
-        await processSession(client, redirectTo);
+        await expectRejects(client.submitInteraction(), {
+          code: 'user.missing_mfa',
+          status: 422,
+        });
       }
     );
   });

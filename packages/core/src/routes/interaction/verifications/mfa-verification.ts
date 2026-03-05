@@ -12,6 +12,10 @@ import { type Context } from 'koa';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  isNoSkipMfaPolicy,
+  isPromptOnlyAtSignInPolicy,
+} from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -109,7 +113,7 @@ export const verifyMfa = async (
   if (availableUserVerifications.length > 0) {
     const mfaData = userMfaDataGuard.safeParse(logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
-    const canSkipMfa = skipMfaOnSignIn && policy !== MfaPolicy.Mandatory;
+    const canSkipMfa = skipMfaOnSignIn && !isNoSkipMfaPolicy(policy);
 
     assertThat(
       Boolean(canSkipMfa) || Boolean(verifiedMfa),
@@ -154,12 +158,12 @@ export const validateMandatoryBindMfa = async (
 
   // If the policy is not mandatory and the user has skipped MFA (in the current interaction), skip check
   const { mfaSkipped } = interaction;
-  if (policy !== MfaPolicy.Mandatory && mfaSkipped) {
+  if (!isNoSkipMfaPolicy(policy) && mfaSkipped) {
     return interaction;
   }
 
   // If the policy is prompt only at sign-in, and the event is register, skip check
-  if (interaction.event === InteractionEvent.Register && policy === MfaPolicy.PromptOnlyAtSignIn) {
+  if (interaction.event === InteractionEvent.Register && isPromptOnlyAtSignInPolicy(policy)) {
     return interaction;
   }
 
@@ -177,7 +181,7 @@ export const validateMandatoryBindMfa = async (
     const { mfaVerifications, logtoConfig } = await tenant.queries.users.findUserById(accountId);
 
     // If the policy is not mandatory and the user has skipped MFA (not in the current interaction), skip check
-    if (policy !== MfaPolicy.Mandatory && isMfaSkipped(logtoConfig)) {
+    if (!isNoSkipMfaPolicy(policy) && isMfaSkipped(logtoConfig)) {
       return interaction;
     }
 
@@ -197,7 +201,7 @@ export const validateMandatoryBindMfa = async (
       code: 'user.missing_mfa',
       status: 422,
     },
-    policy === MfaPolicy.Mandatory ? { availableFactors } : { availableFactors, skippable: true }
+    isNoSkipMfaPolicy(policy) ? { availableFactors } : { availableFactors, skippable: true }
   );
 };
 

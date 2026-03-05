@@ -49,6 +49,10 @@ const mfa = {
     'Ask users to set up MFA during registration (skippable, one-time prompt)',
   prompt_only_at_sign_in:
     'Ask users to set up MFA on their next sign-in attempt after registration (skippable, one-time prompt)',
+  prompt_at_sign_in_and_sign_up_mandatory:
+    'Ask users to set up MFA during registration (non-skippable)',
+  prompt_only_at_sign_in_mandatory:
+    'Ask users to set up MFA on their next sign-in attempt after registration (non-skippable)',
   set_up_organization_required_mfa_prompt:
     'MFA setup prompt for users after organization enables MFA',
   prompt_at_sign_in_no_skip: 'Ask users to set up MFA on next sign-in (no skipping)',

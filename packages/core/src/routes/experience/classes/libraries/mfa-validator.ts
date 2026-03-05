@@ -1,6 +1,5 @@
 import {
   MfaFactor,
-  MfaPolicy,
   VerificationType,
   userMfaDataGuard,
   userMfaDataKey,
@@ -8,6 +7,8 @@ import {
   type User,
 } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
+
+import { isNoSkipMfaPolicy } from '#src/libraries/sign-in-experience/mfa-policy.js';
 
 import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
@@ -120,7 +121,7 @@ export class MfaValidator {
     const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
 
-    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
+    if (skipMfaOnSignIn && !isNoSkipMfaPolicy(this.mfaSettings.policy)) {
       return false;
     }
 

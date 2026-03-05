@@ -24,11 +24,12 @@ const baseForm: MfaConfigForm = {
 
 test('maps adaptive MFA enablement into form state', () => {
   const formState = convertMfaConfigToForm(
-    { policy: MfaPolicy.NoPrompt, factors: [MfaFactor.TOTP] },
+    { policy: MfaPolicy.PromptAtSignInAndSignUpMandatory, factors: [MfaFactor.TOTP] },
     { enabled: true }
   );
 
   expect(formState.adaptiveMfaEnabled).toBe(true);
+  expect(formState.setUpPrompt).toBe(MfaPolicy.PromptAtSignInAndSignUpMandatory);
 });
 
 test('defaults adaptive MFA to false when missing', () => {
@@ -40,12 +41,21 @@ test('defaults adaptive MFA to false when missing', () => {
   expect(formState.adaptiveMfaEnabled).toBe(false);
 });
 
+test('normalizes setup prompt to adaptive policy when adaptive MFA is enabled', () => {
+  const formState = convertMfaConfigToForm(
+    { policy: MfaPolicy.NoPrompt, factors: [MfaFactor.TOTP] },
+    { enabled: true }
+  );
+
+  expect(formState.setUpPrompt).toBe(MfaPolicy.PromptAtSignInAndSignUpMandatory);
+});
+
 test('builds payload with adaptive MFA only when dev features enabled', () => {
   const payload = buildMfaPatchPayload({ ...baseForm, adaptiveMfaEnabled: true }, true);
 
   expect(payload).toEqual({
     mfa: {
-      policy: MfaPolicy.NoPrompt,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       factors: [MfaFactor.TOTP],
     },
     adaptiveMfa: { enabled: true },
@@ -58,7 +68,7 @@ test('builds payload with adaptive MFA only when dev features enabled', () => {
 
   expect(payloadWithoutAdaptiveMfa).toEqual({
     mfa: {
-      policy: MfaPolicy.NoPrompt,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       factors: [MfaFactor.TOTP],
     },
   });
@@ -118,7 +128,7 @@ test.each([
   {
     title: 'writes adaptive selection to non-mandatory and adaptive enabled payload',
     selectedMode: MfaRequirementMode.Adaptive,
-    expectedPolicy: MfaPolicy.NoPrompt,
+    expectedPolicy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     expectedAdaptiveMfaEnabled: true,
   },
   {

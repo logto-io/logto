@@ -43,7 +43,7 @@ const signInExperiences = {
     ...mockSignInExperience,
     adaptiveMfa: { enabled: true },
     mfa: {
-      policy: MfaPolicy.PromptAtSignInAndSignUp,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       factors: [MfaFactor.TOTP],
     },
   }),
@@ -402,7 +402,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
   });
 
-  it('does not force MFA binding on submit when adaptive MFA triggers and user has no factors', async () => {
+  it('requires MFA binding on submit when adaptive MFA triggers and user has no factors', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       mfaVerifications: [],
@@ -435,10 +435,13 @@ describe('ExperienceInteraction adaptive MFA', () => {
     } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
     const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
-    await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+    await expect(experienceInteraction.submit()).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+    });
   });
 
-  it('does not force MFA binding on submit when adaptive MFA triggers but user only has disabled factors', async () => {
+  it('requires MFA binding on submit when adaptive MFA triggers but user only has disabled factors', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       mfaVerifications: [
@@ -479,7 +482,10 @@ describe('ExperienceInteraction adaptive MFA', () => {
     } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
     const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
-    await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+    await expect(experienceInteraction.submit()).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+    });
   });
 
   it('allows submit after binding TOTP in current interaction when adaptive MFA triggers', async () => {
@@ -543,7 +549,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
         ...mockSignInExperience,
         adaptiveMfa: { enabled: true },
         mfa: {
-          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
           factors: [factor],
         },
       };
@@ -645,7 +651,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
       ...mockSignInExperience,
       adaptiveMfa: { enabled: true },
       mfa: {
-        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         factors: [],
       },
     });

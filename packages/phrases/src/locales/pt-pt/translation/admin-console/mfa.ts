@@ -51,6 +51,10 @@ const mfa = {
     'Pedir aos usuários para configurar o MFA durante o registo (pode ser ignorado, prompt único)',
   prompt_only_at_sign_in:
     'Pedir aos usuários para configurar o MFA na próxima tentativa de início de sessão após o registo (pode ser ignorado, prompt único)',
+  prompt_at_sign_in_and_sign_up_mandatory:
+    'Peça aos utilizadores para configurar o MFA durante o registo. (não pode ser ignorado)',
+  prompt_only_at_sign_in_mandatory:
+    'Peça aos utilizadores para configurar o MFA na próxima tentativa de início de sessão após o registo. (não pode ser ignorado)',
   set_up_organization_required_mfa_prompt:
     'Prompt de configuração do MFA para utilizadores após a ativação do MFA pela organização',
   prompt_at_sign_in_no_skip:

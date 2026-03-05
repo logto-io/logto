@@ -51,6 +51,10 @@ const mfa = {
     'Benutzer bei der Registrierung zur MFA-Einrichtung auffordern (überspringbare, einmalige Aufforderung)',
   prompt_only_at_sign_in:
     'Benutzer bei ihrem nächsten Anmeldeversuch nach der Registrierung zur MFA-Einrichtung auffordern (überspringbare, einmalige Aufforderung)',
+  prompt_at_sign_in_and_sign_up_mandatory:
+    'Benutzer bei der Registrierung zur MFA-Einrichtung auffordern. (nicht überspringbar)',
+  prompt_only_at_sign_in_mandatory:
+    'Benutzer bei ihrem nächsten Anmeldeversuch nach der Registrierung zur MFA-Einrichtung auffordern. (nicht überspringbar)',
   set_up_organization_required_mfa_prompt:
     'MFA-Einrichtungsaufforderung für Benutzer, nachdem die Organisation MFA aktiviert hat',
   prompt_at_sign_in_no_skip:

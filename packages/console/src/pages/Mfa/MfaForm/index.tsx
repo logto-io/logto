@@ -45,6 +45,7 @@ import {
   getMfaRequirementMode,
   getMfaRequirementState,
   MfaRequirementMode,
+  normalizeSetUpPrompt,
   validateBackupCodeFactor,
 } from './utils';
 
@@ -139,7 +140,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
     }
   }, [formValues, setValue]);
 
-  const mfaPolicyOptions = useMemo(
+  const optionalMfaPolicyOptions = useMemo(
     () => [
       {
         value: MfaPolicy.NoPrompt,
@@ -152,6 +153,20 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
       {
         value: MfaPolicy.PromptOnlyAtSignIn,
         title: t('mfa.prompt_only_at_sign_in'),
+      },
+    ],
+    [t]
+  );
+
+  const nonSkippableMfaPromptOptions = useMemo(
+    () => [
+      {
+        value: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+        title: t('mfa.prompt_at_sign_in_and_sign_up_mandatory'),
+      },
+      {
+        value: MfaPolicy.PromptOnlyAtSignInMandatory,
+        title: t('mfa.prompt_only_at_sign_in_mandatory'),
       },
     ],
     [t]
@@ -217,6 +232,10 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
   }, [mfaRequirementMode, formValues, reset]);
 
   const shouldShowSetUpPrompts = mfaRequirementMode !== MfaRequirementMode.Mandatory;
+  const setUpPromptOptions =
+    mfaRequirementMode === MfaRequirementMode.Adaptive
+      ? nonSkippableMfaPromptOptions
+      : optionalMfaPolicyOptions;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -365,6 +384,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
                   }
 
                   const nextState = getMfaRequirementState(mode);
+                  const currentSetUpPrompt = formValues.setUpPrompt;
                   setValue('isMandatory', nextState.isMandatory, {
                     shouldDirty: true,
                     shouldTouch: true,
@@ -373,6 +393,20 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
                     shouldDirty: true,
                     shouldTouch: true,
                   });
+
+                  if (mode !== MfaRequirementMode.Mandatory) {
+                    setValue(
+                      'setUpPrompt',
+                      normalizeSetUpPrompt(
+                        currentSetUpPrompt,
+                        mode === MfaRequirementMode.Adaptive
+                      ),
+                      {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                      }
+                    );
+                  }
                 }}
               />
             </FormField>
@@ -394,7 +428,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
                   <Select
                     hasSelectedOptionIndicator
                     value={value}
-                    options={mfaPolicyOptions}
+                    options={setUpPromptOptions}
                     isReadOnly={isPolicySettingsDisabled}
                     onChange={onChange}
                   />
