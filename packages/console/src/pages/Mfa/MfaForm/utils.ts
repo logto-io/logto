@@ -62,8 +62,11 @@ const isNonSkippableMfaPrompt = (policy: MfaPolicy): policy is MfaPromptMandator
     policy
   );
 
-export const normalizeSetUpPrompt = (policy: MfaPolicy, adaptiveMfaEnabled: boolean) => {
-  if (adaptiveMfaEnabled) {
+const isMandatoryModePolicy = (policy: MfaPolicy): boolean =>
+  policy === MfaPolicy.Mandatory || isNonSkippableMfaPrompt(policy);
+
+export const normalizeSetUpPrompt = (policy: MfaPolicy, requireNonSkippablePrompt: boolean) => {
+  if (requireNonSkippablePrompt) {
     return isNonSkippableMfaPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUpMandatory;
   }
 
@@ -73,17 +76,22 @@ export const normalizeSetUpPrompt = (policy: MfaPolicy, adaptiveMfaEnabled: bool
 export const convertMfaConfigToForm = (
   { policy, factors, organizationRequiredMfaPolicy }: MfaConfig,
   adaptiveMfa?: AdaptiveMfa
-): MfaConfigForm => ({
-  isMandatory: policy === MfaPolicy.Mandatory,
-  setUpPrompt: normalizeSetUpPrompt(policy, Boolean(adaptiveMfa?.enabled)),
-  totpEnabled: factors.includes(MfaFactor.TOTP),
-  webAuthnEnabled: factors.includes(MfaFactor.WebAuthn),
-  backupCodeEnabled: factors.includes(MfaFactor.BackupCode),
-  emailVerificationCodeEnabled: factors.includes(MfaFactor.EmailVerificationCode),
-  phoneVerificationCodeEnabled: factors.includes(MfaFactor.PhoneVerificationCode),
-  organizationRequiredMfaPolicy,
-  adaptiveMfaEnabled: Boolean(adaptiveMfa?.enabled),
-});
+): MfaConfigForm => {
+  const adaptiveMfaEnabled = Boolean(adaptiveMfa?.enabled);
+  const isMandatory = !adaptiveMfaEnabled && isMandatoryModePolicy(policy);
+
+  return {
+    isMandatory,
+    setUpPrompt: normalizeSetUpPrompt(policy, adaptiveMfaEnabled || isMandatory),
+    totpEnabled: factors.includes(MfaFactor.TOTP),
+    webAuthnEnabled: factors.includes(MfaFactor.WebAuthn),
+    backupCodeEnabled: factors.includes(MfaFactor.BackupCode),
+    emailVerificationCodeEnabled: factors.includes(MfaFactor.EmailVerificationCode),
+    phoneVerificationCodeEnabled: factors.includes(MfaFactor.PhoneVerificationCode),
+    organizationRequiredMfaPolicy,
+    adaptiveMfaEnabled,
+  };
+};
 
 export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig => {
   const {
@@ -111,9 +119,7 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
     !isMandatory && !adaptiveMfaEnabled && Boolean(organizationRequiredMfaPolicy);
 
   return {
-    policy: isMandatory
-      ? MfaPolicy.Mandatory
-      : normalizeSetUpPrompt(setUpPrompt, adaptiveMfaEnabled),
+    policy: normalizeSetUpPrompt(setUpPrompt, isMandatory || adaptiveMfaEnabled),
     factors,
     ...conditional(shouldIncludeOrganizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }),
   };

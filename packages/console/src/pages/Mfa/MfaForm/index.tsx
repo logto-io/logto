@@ -231,13 +231,25 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
     }
   }, [mfaRequirementMode, formValues, reset]);
 
-  const shouldShowSetUpPrompt = mfaRequirementMode !== MfaRequirementMode.Mandatory;
+  useEffect(() => {
+    if (
+      mfaRequirementMode === MfaRequirementMode.Mandatory &&
+      formValues.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.NoPrompt
+    ) {
+      setValue('organizationRequiredMfaPolicy', OrganizationRequiredMfaPolicy.NoPrompt, {
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [formValues.organizationRequiredMfaPolicy, mfaRequirementMode, setValue]);
+
+  const shouldShowSetUpPrompt = true;
   const shouldShowOrganizationRequiredMfaPolicy =
-    mfaRequirementMode === MfaRequirementMode.Optional;
+    mfaRequirementMode !== MfaRequirementMode.Mandatory;
   const setUpPromptOptions =
-    mfaRequirementMode === MfaRequirementMode.Adaptive
-      ? nonSkippableMfaPromptOptions
-      : optionalMfaPolicyOptions;
+    mfaRequirementMode === MfaRequirementMode.Optional
+      ? optionalMfaPolicyOptions
+      : nonSkippableMfaPromptOptions;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -395,16 +407,14 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
                   shouldTouch: true,
                 });
 
-                if (mode !== MfaRequirementMode.Mandatory) {
-                  setValue(
-                    'setUpPrompt',
-                    normalizeSetUpPrompt(currentSetUpPrompt, mode === MfaRequirementMode.Adaptive),
-                    {
-                      shouldDirty: true,
-                      shouldTouch: true,
-                    }
-                  );
-                }
+                setValue(
+                  'setUpPrompt',
+                  normalizeSetUpPrompt(currentSetUpPrompt, mode !== MfaRequirementMode.Optional),
+                  {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  }
+                );
               }}
             />
           </FormField>
