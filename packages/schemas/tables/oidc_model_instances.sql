@@ -27,6 +27,7 @@ create index oidc_model_instances__model_name_payload_uid
     (payload->>'uid')
   );
 
+/* TODO: Consider dropping this full data index if the partial index proves to be effective and safe. */
 create index oidc_model_instances__model_name_payload_grant_id
   on oidc_model_instances (
     tenant_id,
