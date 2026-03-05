@@ -231,11 +231,26 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
     }
   }, [mfaRequirementMode, formValues, reset]);
 
-  const shouldShowSetUpPrompts = mfaRequirementMode !== MfaRequirementMode.Mandatory;
+  useEffect(() => {
+    if (
+      mfaRequirementMode === MfaRequirementMode.Mandatory &&
+      formValues.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.NoPrompt
+    ) {
+      setValue('organizationRequiredMfaPolicy', OrganizationRequiredMfaPolicy.NoPrompt, {
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [formValues.organizationRequiredMfaPolicy, mfaRequirementMode, setValue]);
+
+  const shouldShowSetUpPrompts =
+    isDevFeaturesEnabled || mfaRequirementMode !== MfaRequirementMode.Mandatory;
+  const shouldShowOrganizationRequiredMfaPrompt =
+    mfaRequirementMode !== MfaRequirementMode.Mandatory;
   const setUpPromptOptions =
-    mfaRequirementMode === MfaRequirementMode.Adaptive
-      ? nonSkippableMfaPromptOptions
-      : optionalMfaPolicyOptions;
+    mfaRequirementMode === MfaRequirementMode.Optional
+      ? optionalMfaPolicyOptions
+      : nonSkippableMfaPromptOptions;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -394,19 +409,14 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
                     shouldTouch: true,
                   });
 
-                  if (mode !== MfaRequirementMode.Mandatory) {
-                    setValue(
-                      'setUpPrompt',
-                      normalizeSetUpPrompt(
-                        currentSetUpPrompt,
-                        mode === MfaRequirementMode.Adaptive
-                      ),
-                      {
-                        shouldDirty: true,
-                        shouldTouch: true,
-                      }
-                    );
-                  }
+                  setValue(
+                    'setUpPrompt',
+                    normalizeSetUpPrompt(currentSetUpPrompt, mode !== MfaRequirementMode.Optional),
+                    {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    }
+                  );
                 }}
               />
             </FormField>
@@ -436,7 +446,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
               />
             </FormField>
           )}
-          {shouldShowSetUpPrompts && (
+          {shouldShowOrganizationRequiredMfaPrompt && (
             <FormField title="mfa.set_up_organization_required_mfa_prompt" headlineSpacing="large">
               <Controller
                 control={control}
