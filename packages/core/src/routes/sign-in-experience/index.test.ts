@@ -391,6 +391,34 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
+  it('should keep mandatory no-skip policy when adaptive mfa is already disabled and mfa is omitted', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      adaptiveMfa: {
+        enabled: false,
+      },
+      mfa: {
+        policy: MfaPolicy.PromptOnlyAtSignInMandatory,
+        factors: [MfaFactor.TOTP],
+      },
+    });
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      adaptiveMfa: {
+        enabled: false,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        adaptiveMfa: {
+          enabled: false,
+        },
+      },
+    });
+  });
+
   it('should guard support email field format', async () => {
     const exception = await signInExperienceRequester
       .patch('/sign-in-exp')

@@ -26,8 +26,8 @@ const sign_in_experiences = {
   phone_verification_code_cannot_be_used_for_sign_in:
     'SMS verification code cannot be used for sign-in when it is enabled for MFA.',
   adaptive_mfa_requires_mfa: 'MFA must be enabled before enabling adaptive MFA.',
-  adaptive_mfa_requires_non_skippable_policy:
-    'Adaptive MFA requires a non-skippable MFA prompt policy. Use PromptOnlyAtSignInMandatory or PromptAtSignInAndSignUpMandatory.',
+  required_mfa_requires_non_skippable_policy:
+    'Adaptive MFA and mandatory MFA require a non-skippable MFA prompt policy. Use PromptOnlyAtSignInMandatory or PromptAtSignInAndSignUpMandatory.',
   optional_mfa_requires_skippable_policy:
     'Optional MFA requires a skippable MFA prompt policy. Do not use PromptOnlyAtSignInMandatory or PromptAtSignInAndSignUpMandatory.',
   duplicated_sign_up_identifiers: 'Duplicate sign-up identifiers detected.',
