@@ -190,12 +190,16 @@ export enum MfaPolicy {
   UserControlled = 'UserControlled',
   /** MFA is required for all users */
   Mandatory = 'Mandatory',
-  /** Ask users to set up MFA on their sign-in after registration (skippable, one-time prompt) */
+  /** Ask users to set up MFA on their sign-in after registration (skippable, one-time prompt, Optional MFA only) */
   PromptOnlyAtSignIn = 'PromptOnlyAtSignIn',
-  /** Ask users to set up MFA during registration (skippable, one-time prompt) */
+  /** Ask users to set up MFA during registration (skippable, one-time prompt, Optional MFA only) */
   PromptAtSignInAndSignUp = 'PromptAtSignInAndSignUp',
   /** Do not ask users to set up MFA */
   NoPrompt = 'NoPrompt',
+  /** Ask users to set up MFA during registration or at next sign-in (no-skip, Adaptive MFA only) */
+  PromptAtSignInAndSignUpMandatory = 'PromptAtSignInAndSignUpMandatory',
+  /** Ask users to set up MFA at next sign-in after registration (no-skip, Adaptive MFA only) */
+  PromptOnlyAtSignInMandatory = 'PromptOnlyAtSignInMandatory',
 }
 
 export enum OrganizationRequiredMfaPolicy {

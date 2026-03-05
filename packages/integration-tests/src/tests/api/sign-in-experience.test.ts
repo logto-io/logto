@@ -111,7 +111,13 @@ describe('admin console sign-in experience', () => {
 
         const adaptiveMfa = { enabled: true };
 
-        const signInExperience = await updateSignInExperience({ adaptiveMfa });
+        const signInExperience = await updateSignInExperience({
+          adaptiveMfa,
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+            factors: [MfaFactor.TOTP],
+          },
+        });
         expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
       }
     );
@@ -121,7 +127,7 @@ describe('admin console sign-in experience', () => {
       async () => {
         const adaptiveMfa = { enabled: true };
         const mfa = {
-          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
           factors: [MfaFactor.TOTP],
         };
 
@@ -136,13 +142,12 @@ describe('admin console sign-in experience', () => {
       'should allow disabling mfa when adaptive mfa is already enabled',
       async () => {
         await updateSignInExperience({
+          adaptiveMfa: { enabled: true },
           mfa: {
-            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
             factors: [MfaFactor.TOTP],
           },
         });
-
-        await updateSignInExperience({ adaptiveMfa: { enabled: true } });
 
         const signInExperience = await updateSignInExperience({
           mfa: {
@@ -164,13 +169,43 @@ describe('admin console sign-in experience', () => {
         },
       });
 
-      await expect(
-        updateSignInExperience({ adaptiveMfa: { enabled: true } })
-      ).rejects.toMatchObject({
-        response: {
-          status: 422,
-        },
+      await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
+        code: 'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+        status: 422,
       });
+    });
+
+    devFeatureTest.it(
+      'should reject adaptive mfa when mfa policy is optional prompt policy',
+      async () => {
+        await updateSignInExperience({
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.TOTP],
+          },
+        });
+
+        await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
+          code: 'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+          status: 422,
+        });
+      }
+    );
+
+    devFeatureTest.it('should reject adaptive policy when adaptive mfa is disabled', async () => {
+      await expectRejects(
+        updateSignInExperience({
+          adaptiveMfa: { enabled: false },
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+            factors: [MfaFactor.TOTP],
+          },
+        }),
+        {
+          code: 'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
+          status: 422,
+        }
+      );
     });
   });
 });

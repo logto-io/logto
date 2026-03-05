@@ -49,7 +49,7 @@ describe('adaptive MFA experience hook trigger', () => {
         await updateSignInExperience({
           mfa: {
             factors: [MfaFactor.TOTP],
-            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
           },
           adaptiveMfa: { enabled: true },
         });

@@ -52,6 +52,10 @@ const mfa = {
     'Kaydolurken kullanıcılardan MFA kurmalarını isteyin (atlanabilir, tek seferlik istek)',
   prompt_only_at_sign_in:
     'Kayıttan sonraki ilk giriş denemelerinde kullanıcılardan MFA kurmalarını isteyin (atlanabilir, tek seferlik istek)',
+  prompt_at_sign_in_and_sign_up_mandatory:
+    'Kayıt sırasında kullanıcılardan MFA kurmalarını isteyin. (atlanamaz)',
+  prompt_only_at_sign_in_mandatory:
+    'Kayıttan sonraki bir sonraki giriş denemesinde kullanıcılardan MFA kurmalarını isteyin. (atlanamaz)',
   set_up_organization_required_mfa_prompt:
     "Organizasyon MFA'yı etkinleştirdikten sonra kullanıcılardan MFA kurmalarını isteyin",
   prompt_at_sign_in_no_skip:

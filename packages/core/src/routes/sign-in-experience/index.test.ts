@@ -251,7 +251,7 @@ describe('PATCH /sign-in-exp', () => {
   it('should update adaptive mfa config when enabling mfa in the same request', async () => {
     const adaptiveMfa = { enabled: true };
     const mfa = {
-      policy: MfaPolicy.PromptAtSignInAndSignUp,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       factors: [MfaFactor.TOTP],
     };
 
@@ -273,7 +273,7 @@ describe('PATCH /sign-in-exp', () => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       mfa: {
-        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         factors: [MfaFactor.TOTP],
       },
     });
@@ -292,7 +292,7 @@ describe('PATCH /sign-in-exp', () => {
         enabled: true,
       },
       mfa: {
-        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         factors: [MfaFactor.TOTP],
       },
     });
@@ -319,11 +319,14 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
-  it('should reject adaptive mfa when effective mfa policy is mandatory', async () => {
+  it.each([
+    { title: 'mandatory', policy: MfaPolicy.Mandatory },
+    { title: 'optional prompt', policy: MfaPolicy.PromptAtSignInAndSignUp },
+  ])('should reject adaptive mfa when effective mfa policy is $title', async ({ policy }) => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       mfa: {
-        policy: MfaPolicy.Mandatory,
+        policy,
         factors: [MfaFactor.TOTP],
       },
     });
@@ -331,6 +334,22 @@ describe('PATCH /sign-in-exp', () => {
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       adaptiveMfa: {
         enabled: true,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 422,
+    });
+  });
+
+  it('should reject adaptive mfa policy when adaptive mfa is disabled', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      adaptiveMfa: {
+        enabled: false,
+      },
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+        factors: [MfaFactor.TOTP],
       },
     });
 

@@ -36,6 +36,8 @@ const mfa = {
   no_prompt: '不要求用戶設定 MFA',
   prompt_at_sign_in_and_sign_up: '在註冊期間要求用戶設定 MFA（可跳過的一次性提示）',
   prompt_only_at_sign_in: '在註冊後的下次登入時要求用戶設定 MFA（可跳過的一次性提示）',
+  prompt_at_sign_in_and_sign_up_mandatory: '在註冊時要求用戶設定 MFA。（不可跳過）',
+  prompt_only_at_sign_in_mandatory: '在註冊後的下次登入嘗試時要求用戶設定 MFA。（不可跳過）',
   set_up_organization_required_mfa_prompt: '組織啟用 MFA 後要求用戶設定的 MFA 提示',
   prompt_at_sign_in_no_skip: '在下次登入時要求用戶設定 MFA（不可跳過）',
   email_primary_method_tip: 'Email 驗證碼已是你的主要登入方法。為了保持安全性，不能重複用於 MFA。',

@@ -51,6 +51,10 @@ const mfa = {
     'Zapytaj użytkowników o skonfigurowanie MFA podczas rejestracji (można pominąć, jednorazowy monit)',
   prompt_only_at_sign_in:
     'Zapytaj użytkowników o skonfigurowanie MFA przy następnym logowaniu po rejestracji (można pominąć, jednorazowy monit)',
+  prompt_at_sign_in_and_sign_up_mandatory:
+    'Poproś użytkowników o skonfigurowanie MFA podczas rejestracji. (nie można pominąć)',
+  prompt_only_at_sign_in_mandatory:
+    'Poproś użytkowników o skonfigurowanie MFA przy następnym logowaniu po rejestracji. (nie można pominąć)',
   set_up_organization_required_mfa_prompt:
     'Monit o konfigurację MFA dla organizacji wymagającej MFA',
   prompt_at_sign_in_no_skip:

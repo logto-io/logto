@@ -32,6 +32,11 @@ import customUiAssetsRoutes from './custom-ui-assets/index.js';
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
 
+const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
+  [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
+    policy
+  );
+
 const { isDevFeaturesEnabled } = EnvSet.values;
 const signInExperienceResponseGuard = SignInExperiences.guard;
 const signInExperienceCreateGuard = isDevFeaturesEnabled
@@ -161,7 +166,37 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           422
         );
 
-        assertThat(effectiveMfa.policy !== MfaPolicy.Mandatory, 'request.invalid_input', 422);
+        assertThat(
+          isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
+          'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+          422
+        );
+      }
+
+      if (adaptiveMfa?.enabled === false) {
+        const effectiveMfa = mfa ?? currentSettings.mfa;
+        assertThat(
+          !isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
+          'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
+          422
+        );
+      }
+
+      if (adaptiveMfa === undefined && mfa && isMfaEnabled(mfa)) {
+        const { adaptiveMfa: currentAdaptiveMfa } = currentSettings;
+        if (currentAdaptiveMfa.enabled) {
+          assertThat(
+            isNonSkippableMfaPromptPolicy(mfa.policy),
+            'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+            422
+          );
+        } else {
+          assertThat(
+            !isNonSkippableMfaPromptPolicy(mfa.policy),
+            'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
+            422
+          );
+        }
       }
 
       // Keep backend state aligned with console semantics:

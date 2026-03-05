@@ -27,6 +27,10 @@ import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  isNoSkipMfaPolicy,
+  isPromptOnlyAtSignInPolicy,
+} from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -214,7 +218,7 @@ export class Mfa {
     const user = await this.interactionContext.getIdentifiedUser();
 
     assertThat(
-      policy !== MfaPolicy.Mandatory &&
+      !isNoSkipMfaPolicy(policy) &&
         !(await this.isMfaRequiredByUserOrganizations(mfaSettings, user.id)),
       new RequestError({
         code: 'session.mfa.mfa_policy_not_user_controlled',
@@ -405,8 +409,8 @@ export class Mfa {
       return;
     }
 
-    // If the policy is `Mandatory` or `NoPrompt`, bypass the check.
-    if (policy === MfaPolicy.Mandatory || policy === MfaPolicy.NoPrompt) {
+    // If the policy is non-skippable or `NoPrompt`, bypass this optional suggestion check.
+    if (isNoSkipMfaPolicy(policy) || policy === MfaPolicy.NoPrompt) {
       return;
     }
 
@@ -472,7 +476,7 @@ export class Mfa {
     // If the policy is prompt only at sign-in, and the event is register, skip the check
     if (
       this.interactionContext.getInteractionEvent() === InteractionEvent.Register &&
-      policy === MfaPolicy.PromptOnlyAtSignIn
+      isPromptOnlyAtSignInPolicy(policy)
     ) {
       return;
     }
@@ -493,7 +497,7 @@ export class Mfa {
     // If the policy is not mandatory and the user has skipped MFA,
     // and MFA is not required by the user organizations, then there is nothing to check
     if (
-      policy !== MfaPolicy.Mandatory &&
+      !isNoSkipMfaPolicy(policy) &&
       (this.#mfaSkipped ?? isMfaSkipped(logtoConfig)) &&
       !isMfaRequiredByUserOrganizations
     ) {
@@ -512,7 +516,7 @@ export class Mfa {
       configuredFactors.some((factor) => linkedFactors.includes(factor)),
       new RequestError(
         { code: 'user.missing_mfa', status: 422 },
-        policy === MfaPolicy.Mandatory || isMfaRequiredByUserOrganizations
+        isNoSkipMfaPolicy(policy) || isMfaRequiredByUserOrganizations
           ? { availableFactors: configuredFactors }
           : { availableFactors: configuredFactors, skippable: true }
       )

@@ -174,4 +174,53 @@ describe('Mfa.assertMfaFulfilled', () => {
       ).checkMfaFactorsEnabledInSignInExperience([MfaFactor.WebAuthn]);
     }).not.toThrow();
   });
+
+  it('returns non-skippable missing_mfa for adaptive no-skip policy', async () => {
+    const adaptiveNoSkipSettings: MfaSettings = {
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+      factors: [MfaFactor.TOTP],
+      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+    };
+
+    const { mfa } = createMfa({
+      mfaSettings: adaptiveNoSkipSettings,
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+      data: {
+        availableFactors: [MfaFactor.TOTP],
+      },
+    });
+  });
+});
+
+describe('Mfa.skip', () => {
+  it('rejects skip for adaptive no-skip policies', async () => {
+    const adaptiveNoSkipSettings: MfaSettings = {
+      policy: MfaPolicy.PromptOnlyAtSignInMandatory,
+      factors: [MfaFactor.TOTP],
+      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+    };
+
+    const { mfa } = createMfa({
+      mfaSettings: adaptiveNoSkipSettings,
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.skip()).rejects.toMatchObject({
+      code: 'session.mfa.mfa_policy_not_user_controlled',
+      status: 422,
+    });
+  });
 });

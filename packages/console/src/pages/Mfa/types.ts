@@ -5,7 +5,14 @@ import {
 } from '@logto/schemas';
 
 export type MfaConfig = SignInExperience['mfa'];
-export type SignInPrompt = Exclude<MfaPolicy, MfaPolicy.UserControlled | MfaPolicy.Mandatory>;
+export type OptionalMfaPrompt =
+  | MfaPolicy.NoPrompt
+  | MfaPolicy.PromptAtSignInAndSignUp
+  | MfaPolicy.PromptOnlyAtSignIn;
+export type MfaPromptMandatory =
+  | MfaPolicy.PromptAtSignInAndSignUpMandatory
+  | MfaPolicy.PromptOnlyAtSignInMandatory;
+type MfaSetUpPrompt = OptionalMfaPrompt | MfaPromptMandatory;
 
 export type MfaConfigForm = {
   totpEnabled: boolean;
@@ -14,7 +21,7 @@ export type MfaConfigForm = {
   emailVerificationCodeEnabled: boolean;
   phoneVerificationCodeEnabled: boolean;
   isMandatory: boolean;
-  setUpPrompt: SignInPrompt;
+  setUpPrompt: MfaSetUpPrompt;
   organizationRequiredMfaPolicy?: OrganizationRequiredMfaPolicy;
   adaptiveMfaEnabled: boolean;
 };
