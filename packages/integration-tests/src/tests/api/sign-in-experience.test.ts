@@ -192,21 +192,42 @@ describe('admin console sign-in experience', () => {
       }
     );
 
-    devFeatureTest.it('should reject adaptive policy when adaptive mfa is disabled', async () => {
-      await expectRejects(
-        updateSignInExperience({
+    devFeatureTest.it(
+      'should allow mandatory no-skip policy when adaptive mfa is disabled',
+      async () => {
+        const signInExperience = await updateSignInExperience({
           adaptiveMfa: { enabled: false },
           mfa: {
             policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
             factors: [MfaFactor.TOTP],
           },
-        }),
-        {
-          code: 'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
+        });
+
+        expect(signInExperience.adaptiveMfa).toEqual({ enabled: false });
+        expect(signInExperience.mfa).toMatchObject({
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+          factors: [MfaFactor.TOTP],
+        });
+      }
+    );
+
+    devFeatureTest.it(
+      'should reject disabling adaptive mfa without explicit mfa policy when current policy is no-skip',
+      async () => {
+        await updateSignInExperience({
+          adaptiveMfa: { enabled: true },
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+            factors: [MfaFactor.TOTP],
+          },
+        });
+
+        await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: false } }), {
+          code: 'sign_in_experiences.optional_mfa_requires_skippable_policy',
           status: 422,
-        }
-      );
-    });
+        });
+      }
+    );
   });
 });
 
