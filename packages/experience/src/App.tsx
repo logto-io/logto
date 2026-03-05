@@ -126,7 +126,9 @@ const App = () => {
                       <Route path=":flow/verification-code" element={<VerificationCode />} />
 
                       {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
-                      <Route path="mfa-onboarding" element={<MfaOnboarding />} />
+                      {isDevFeaturesEnabled && (
+                        <Route path="mfa-onboarding" element={<MfaOnboarding />} />
+                      )}
 
                       {/* Mfa binding */}
                       <Route path={UserMfaFlow.MfaBinding}>
