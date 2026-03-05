@@ -76,6 +76,7 @@ export const formatResponseDataToFormData = <T extends LogtoJwtTokenKeyType>(
   return {
     tokenType,
     script: data?.script ?? defaultValues[tokenType].script,
+    blockIssuanceOnError: data?.blockIssuanceOnError ?? false,
     environmentVariables: formatEnvVariablesResponseToFormData(data?.environmentVariables) ?? [
       { key: '', value: '' },
     ],
@@ -93,6 +94,7 @@ export const formatResponseDataToFormData = <T extends LogtoJwtTokenKeyType>(
 export const formatFormDataToRequestData = (data: JwtCustomizerForm) => {
   return {
     script: data.script,
+    blockIssuanceOnError: data.blockIssuanceOnError,
     environmentVariables: formatEnvVariablesFormDataToRequest(data.environmentVariables),
     tokenSample: formatSampleCodeStringToJson(data.testSample.tokenSample),
     contextSample: formatSampleCodeStringToJson(data.testSample.contextSample),

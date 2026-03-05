@@ -58,6 +58,14 @@ const jwt_claims = {
     title: 'API 上下文：訪問控制',
     subtitle: '使用 `api.denyAccess` 方法拒絕令牌請求。',
   },
+  error_handling: {
+    title: 'Error handling',
+    subtitle: 'Control whether token issuance should be blocked when the script fails.',
+    input_field_title: 'Token issuance behavior on script error',
+    block_issuance_switch: 'Block token issuance when the script errors',
+    warning:
+      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+  },
   fetch_external_data: {
     title: '提取外部數據',
     subtitle: '直接將來自外部 APIs 的數據合併到聲明中。',

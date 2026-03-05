@@ -67,6 +67,14 @@ const jwt_claims = {
     title: 'Kontekst API: kontrola dostępu',
     subtitle: 'Użyj metody `api.denyAccess`, aby odrzucić żądanie tokenu.',
   },
+  error_handling: {
+    title: 'Error handling',
+    subtitle: 'Control whether token issuance should be blocked when the script fails.',
+    input_field_title: 'Token issuance behavior on script error',
+    block_issuance_switch: 'Block token issuance when the script errors',
+    warning:
+      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+  },
   fetch_external_data: {
     title: 'Pobierz zewnętrzne dane',
     subtitle: 'Włóż dane bezpośrednio z Twoich zewnętrznych API do roszczeń.',
