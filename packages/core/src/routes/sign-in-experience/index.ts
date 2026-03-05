@@ -170,9 +170,10 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       if (adaptiveMfa?.enabled === false) {
         const effectiveMfa = mfa ?? currentSettings.mfa;
+        const isExplicitMfaPolicyProvided = mfa !== undefined;
         assertThat(
-          !isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
-          'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
+          isExplicitMfaPolicyProvided || !isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
+          'sign_in_experiences.optional_mfa_requires_skippable_policy',
           422
         );
       }
@@ -183,12 +184,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           assertThat(
             isNonSkippableMfaPromptPolicy(mfa.policy),
             'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
-            422
-          );
-        } else {
-          assertThat(
-            !isNonSkippableMfaPromptPolicy(mfa.policy),
-            'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
             422
           );
         }
