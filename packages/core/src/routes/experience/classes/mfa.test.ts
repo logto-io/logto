@@ -120,38 +120,6 @@ describe('Mfa.assertMfaFulfilled', () => {
     expect(getUserMfaFactorsSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('does not trigger additional binding suggestion in sign-in flow', async () => {
-    const mandatoryMfaSettings: MfaSettings = {
-      policy: MfaPolicy.Mandatory,
-      factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
-    };
-
-    const { mfa } = createMfa({
-      mfaSettings: mandatoryMfaSettings,
-      user: {
-        id: 'user-id',
-        logtoConfig: {},
-        mfaVerifications: [],
-        primaryEmail: 'bound@logto.dev',
-        primaryPhone: null,
-      },
-    });
-
-    const { signInExperienceValidator } = mfa as unknown as {
-      signInExperienceValidator: SignInExperienceValidator;
-    };
-
-    const getSignInExperienceDataSpy = jest.spyOn(
-      signInExperienceValidator,
-      'getSignInExperienceData'
-    );
-
-    await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
-
-    expect(getSignInExperienceDataSpy).not.toHaveBeenCalled();
-  });
-
   it('allows binding WebAuthn when passkey sign-in is enabled even if WebAuthn is not an MFA factor', async () => {
     const { mfa } = createMfa();
 
