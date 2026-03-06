@@ -42,7 +42,6 @@ import { type UserMfaVerificationsData, type InteractionContext } from '../types
 import {
   getAllUserEnabledMfaVerifications,
   getProfileMfaFactors,
-  mergeUserMfaVerifications,
   sortMfaFactors,
 } from './helpers.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
@@ -540,7 +539,7 @@ export class Mfa {
   }
 
   /**
-   * Optionally suggest user to bind additional MFA factors during registration.
+   * Optionally suggest user to bind additional MFA factors.
    * Encapsulates suggestion logic and throws a 422 with `session.mfa.suggest_additional_mfa`
    * when conditions are met.
    * The purpose is to suggest another MFA factor if the user has only Email, Phone, or Passkey factor,
@@ -551,65 +550,62 @@ export class Mfa {
     factorsInUser: MfaFactor[],
     availableFactors: MfaFactor[]
   ) {
-    const { passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
-    const user = await this.interactionContext.getIdentifiedUser();
-    // Merged user MFA verifications result from both user profile and current interaction
-    const mergedUserMfaVerifications = mergeUserMfaVerifications(
-      user.mfaVerifications,
-      this.toUserMfaVerifications().mfaVerifications
-    );
-    const hasOnlyBoundWebAuthnForPasskeySignIn =
-      passkeySignIn.enabled &&
-      mergedUserMfaVerifications.length === 1 &&
-      mergedUserMfaVerifications[0]?.type === MfaFactor.WebAuthn;
-
-    const { signUp } = await this.signInExperienceValidator.getSignInExperienceData();
-    // If the user has email, but not registered by email, no suggestion
-    if (
-      factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
-      !signUp.identifiers.includes(SignInIdentifier.Email) &&
-      !signUp.secondaryIdentifiers?.some(
-        ({ identifier }) =>
-          identifier === SignInIdentifier.Email ||
-          identifier === AlternativeSignUpIdentifier.EmailOrPhone
-      )
-    ) {
-      return;
-    }
-    // If the user has phone, but not registered by phone, no suggestion
-    if (
-      factorsInUser.includes(MfaFactor.PhoneVerificationCode) &&
-      !signUp.identifiers.includes(SignInIdentifier.Phone) &&
-      !signUp.secondaryIdentifiers?.some(
-        ({ identifier }) =>
-          identifier === SignInIdentifier.Phone ||
-          identifier === AlternativeSignUpIdentifier.EmailOrPhone
-      )
-    ) {
-      return;
-    }
-
-    const sortedFactors = sortMfaFactors(availableFactors);
-
-    const additionalFactors = sortedFactors.filter((factor) => !factorsInUser.includes(factor));
-
     // Respect user's choice to skip suggestion for this interaction
     if (this.additionalBindingSuggestionSkipped) {
       return;
     }
+    const sortedFactors = sortMfaFactors(availableFactors);
 
-    // If user already bound an MFA in this interaction and it's not sign-in passkey, don't suggest again
-    if (this.bindMfaFactorsArray.length > 0 && !hasOnlyBoundWebAuthnForPasskeySignIn) {
-      return;
-    }
-
+    const additionalFactors = sortedFactors.filter((factor) => !factorsInUser.includes(factor));
     // No available factors to suggest
     if (additionalFactors.length === 0) {
       return;
     }
 
-    // Get user data for masking
-    const { primaryEmail, primaryPhone } = user;
+    const { passkeySignIn, signUp } =
+      await this.signInExperienceValidator.getSignInExperienceData();
+
+    if (this.interactionContext.getInteractionEvent() === InteractionEvent.Register) {
+      // If the user has email, but not registered by email, no suggestion. (Email bound as MFA factor)
+      if (
+        factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
+        !signUp.identifiers.includes(SignInIdentifier.Email) &&
+        !signUp.secondaryIdentifiers?.some(
+          ({ identifier }) =>
+            identifier === SignInIdentifier.Email ||
+            identifier === AlternativeSignUpIdentifier.EmailOrPhone
+        )
+      ) {
+        return;
+      }
+      // If the user has phone, but not registered by phone, no suggestion. (Phone bound as MFA factor)
+      if (
+        factorsInUser.includes(MfaFactor.PhoneVerificationCode) &&
+        !signUp.identifiers.includes(SignInIdentifier.Phone) &&
+        !signUp.secondaryIdentifiers?.some(
+          ({ identifier }) =>
+            identifier === SignInIdentifier.Phone ||
+            identifier === AlternativeSignUpIdentifier.EmailOrPhone
+        )
+      ) {
+        return;
+      }
+    }
+
+    const { primaryEmail, primaryPhone, logtoConfig } =
+      await this.interactionContext.getIdentifiedUser();
+
+    // User has just bound WebAuthn factor and it's used as sign-in passkey only (MFA not enabled).
+    const hasOnlyBoundWebAuthnForPasskeySignIn =
+      passkeySignIn.enabled &&
+      this.bindMfaFactorsArray.length === 1 &&
+      this.bindMfaFactorsArray[0]?.type === MfaFactor.WebAuthn &&
+      !(this.#mfaEnabled ?? parseUserMfaData(logtoConfig).enabled);
+
+    // If user already bound an MFA in this interaction and it's not sign-in passkey, don't suggest again
+    if (this.bindMfaFactorsArray.length > 0 && !hasOnlyBoundWebAuthnForPasskeySignIn) {
+      return;
+    }
 
     // Build masked identifiers for bound factors
     const maskedIdentifiers = condObject({
@@ -628,7 +624,8 @@ export class Mfa {
       {
         availableFactors: sortedFactors,
         maskedIdentifiers,
-        isWebAuthnUsedAsSignInPasskey: hasOnlyBoundWebAuthnForPasskeySignIn,
+        isWebAuthnUsedAsSignInPasskey:
+          passkeySignIn.enabled && factorsInUser.includes(MfaFactor.WebAuthn),
         skippable: true,
         suggestion: true,
       }
