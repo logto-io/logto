@@ -1,4 +1,9 @@
-import { type AdaptiveMfa, MfaFactor, MfaPolicy } from '@logto/schemas';
+import {
+  type AdaptiveMfa,
+  MfaFactor,
+  MfaPolicy,
+  OrganizationRequiredMfaPolicy,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import {
@@ -65,12 +70,23 @@ const isNonSkippableMfaPrompt = (policy: MfaPolicy): policy is MfaPromptMandator
 const isMandatoryModePolicy = (policy: MfaPolicy): boolean =>
   policy === MfaPolicy.Mandatory || isNonSkippableMfaPrompt(policy);
 
-export const normalizeSetUpPrompt = (policy: MfaPolicy, requireNonSkippablePrompt: boolean) => {
+const normalizeSetUpPrompt = (policy: MfaPolicy, requireNonSkippablePrompt: boolean) => {
   if (requireNonSkippablePrompt) {
     return isNonSkippableMfaPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUpMandatory;
   }
 
   return isOptionalMfaPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUp;
+};
+
+export const normalizeSetUpPromptByRequirementMode = (
+  policy: MfaPolicy,
+  mode: MfaRequirementMode
+) => {
+  if (mode === MfaRequirementMode.Optional) {
+    return isOptionalMfaPrompt(policy) ? policy : MfaPolicy.NoPrompt;
+  }
+
+  return normalizeSetUpPrompt(policy, true);
 };
 
 export const convertMfaConfigToForm = (
@@ -79,6 +95,9 @@ export const convertMfaConfigToForm = (
 ): MfaConfigForm => {
   const adaptiveMfaEnabled = Boolean(adaptiveMfa?.enabled);
   const isMandatory = !adaptiveMfaEnabled && isMandatoryModePolicy(policy);
+  const normalizedOrganizationRequiredMfaPolicy = isMandatory
+    ? OrganizationRequiredMfaPolicy.NoPrompt
+    : organizationRequiredMfaPolicy;
 
   return {
     isMandatory,
@@ -88,7 +107,7 @@ export const convertMfaConfigToForm = (
     backupCodeEnabled: factors.includes(MfaFactor.BackupCode),
     emailVerificationCodeEnabled: factors.includes(MfaFactor.EmailVerificationCode),
     phoneVerificationCodeEnabled: factors.includes(MfaFactor.PhoneVerificationCode),
-    organizationRequiredMfaPolicy,
+    organizationRequiredMfaPolicy: normalizedOrganizationRequiredMfaPolicy,
     adaptiveMfaEnabled,
   };
 };

@@ -45,7 +45,7 @@ import {
   getMfaRequirementMode,
   getMfaRequirementState,
   MfaRequirementMode,
-  normalizeSetUpPrompt,
+  normalizeSetUpPromptByRequirementMode,
   validateBackupCodeFactor,
 } from './utils';
 
@@ -411,7 +411,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
 
                   setValue(
                     'setUpPrompt',
-                    normalizeSetUpPrompt(currentSetUpPrompt, mode !== MfaRequirementMode.Optional),
+                    normalizeSetUpPromptByRequirementMode(currentSetUpPrompt, mode),
                     {
                       shouldDirty: true,
                       shouldTouch: true,

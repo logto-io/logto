@@ -8,6 +8,7 @@ import {
   convertMfaConfigToForm,
   getMfaRequirementMode,
   getMfaRequirementState,
+  normalizeSetUpPromptByRequirementMode,
 } from './utils';
 
 const baseForm: MfaConfigForm = {
@@ -75,6 +76,16 @@ test('maps legacy mandatory policy to default non-skippable prompt', () => {
   expect(formState.isMandatory).toBe(true);
   expect(formState.adaptiveMfaEnabled).toBe(false);
   expect(formState.setUpPrompt).toBe(MfaPolicy.PromptAtSignInAndSignUpMandatory);
+});
+
+test('normalizes organization policy to no prompt in mandatory mode', () => {
+  const formState = convertMfaConfigToForm({
+    policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+    factors: [MfaFactor.TOTP],
+    organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+  });
+
+  expect(formState.organizationRequiredMfaPolicy).toBe(OrganizationRequiredMfaPolicy.NoPrompt);
 });
 
 test('normalizes setup prompt to adaptive policy when adaptive MFA is enabled', () => {
@@ -223,4 +234,19 @@ test('does not persist organization-required mfa policy in mandatory mode', () =
     policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     factors: [MfaFactor.TOTP],
   });
+});
+
+test('switches prompt to no prompt when changing from required mfa to optional mfa', () => {
+  expect(
+    normalizeSetUpPromptByRequirementMode(
+      MfaPolicy.PromptOnlyAtSignInMandatory,
+      MfaRequirementMode.Optional
+    )
+  ).toBe(MfaPolicy.NoPrompt);
+});
+
+test('keeps current optional prompt when switching within optional mode', () => {
+  expect(
+    normalizeSetUpPromptByRequirementMode(MfaPolicy.PromptOnlyAtSignIn, MfaRequirementMode.Optional)
+  ).toBe(MfaPolicy.PromptOnlyAtSignIn);
 });
