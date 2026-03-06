@@ -12,6 +12,7 @@ import { initExperienceClient } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
+  setSmsConnector,
   setSocialConnector,
 } from '#src/helpers/connector.js';
 import {
@@ -98,18 +99,19 @@ devFeatureTest.describe('GET /experience/interaction', () => {
   const ssoConnectorApi = new SsoConnectorApi();
 
   beforeAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email]);
+    await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email, ConnectorType.Sms]);
 
     const [emailConnector, socialConnector] = await Promise.all([
       setEmailConnector(),
       setSocialConnector(),
+      setSmsConnector(),
     ]);
     connectorIdMap.set(mockEmailConnectorId, emailConnector.id);
     connectorIdMap.set(mockSocialConnectorId, socialConnector.id);
   });
 
   afterAll(async () => {
-    await clearConnectorsByTypes([ConnectorType.Social]);
+    await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Sms]);
     await userApi.cleanUp();
     await ssoConnectorApi.cleanUp();
   });
