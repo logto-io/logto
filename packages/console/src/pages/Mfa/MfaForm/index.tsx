@@ -232,6 +232,16 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
   }, [mfaRequirementMode, formValues, reset]);
 
   useEffect(() => {
+    // Mandatory mode does not expose organization-level prompt settings in the UI.
+    // If user switches from optional/adaptive (where this field is editable) to mandatory,
+    // we must actively normalize it to `NoPrompt` to keep the in-form state valid.
+    //
+    // Mark this change as dirty on purpose: this normalization is a user-triggered
+    // effective config change (switching requirement mode), not a passive hydration fix.
+    //
+    // To avoid "saved but still dirty" regressions, the post-save baseline is normalized
+    // in `convertMfaConfigToForm()` as well, so this effect will not re-dirty the form
+    // after `reset()` with server data.
     if (
       mfaRequirementMode === MfaRequirementMode.Mandatory &&
       formValues.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.NoPrompt
