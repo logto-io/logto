@@ -8,6 +8,7 @@ import CheckPreviewDark from '@/assets/icons/check-demo-dark.svg?react';
 import CheckPreview from '@/assets/icons/check-demo.svg?react';
 import CreateRoleDark from '@/assets/icons/create-role-dark.svg?react';
 import CreateRole from '@/assets/icons/create-role.svg?react';
+import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import SocialDark from '@/assets/icons/social-dark.svg?react';
 import Social from '@/assets/icons/social.svg?react';
 import ApplicationCreation from '@/components/ApplicationCreation';
@@ -22,8 +23,10 @@ import { TenantsContext } from '@/contexts/TenantsProvider';
 import { LinkButton } from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import Spacer from '@/ds-components/Spacer';
+import Tag from '@/ds-components/Tag';
 import TextLink from '@/ds-components/TextLink';
 import { isDevOnlyRegion } from '@/hooks/use-available-regions';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import useWindowResize from '@/hooks/use-window-resize';
@@ -42,6 +45,7 @@ const icons = {
 function GetStarted() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { navigate } = useTenantPathname();
+  const { getDocumentationUrl } = useDocumentationUrl();
   const { tenantEndpoint } = useContext(AppDataContext);
   const { currentTenant, isDevTenant } = useContext(TenantsContext);
   const [selectedGuide, setSelectedGuide] = useState<SelectedGuide>();
@@ -151,7 +155,22 @@ function GetStarted() {
             }}
           />
         )}
-        <TextLink to="/applications/create">{t('get_started.view_all')}</TextLink>
+        <div className={styles.developActions}>
+          <TextLink to="/applications/create">{t('get_started.view_all')}</TextLink>
+          {isCloud && (
+            <Tag variant="plain" className={styles.mcpTag}>
+              <TextLink
+                isTrailingIcon
+                className={styles.mcpLink}
+                href={getDocumentationUrl('/logto-cloud/logto-mcp-server')}
+                icon={<ExternalLinkIcon className={styles.mcpLinkIcon} />}
+                targetBlank="noopener"
+              >
+                {t('get_started.develop.try_mcp')}
+              </TextLink>
+            </Tag>
+          )}
+        </div>
       </Card>
       <Card className={styles.card}>
         <div className={styles.title}>{t('get_started.customize.title')}</div>

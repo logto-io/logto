@@ -7,6 +7,7 @@ const get_started = {
     title_cloud: 'Entwicklung: Integrieren Sie Ihre App in Minuten sicher',
     subtitle_cloud:
       'Oder nehmen Sie 5 Minuten Zeit, um Ihre App mit unseren vorgefertigten SDKs und Tutorials zu integrieren.',
+    try_mcp: 'Einfach-Prompt-Integration mit MCP ausprobieren',
   },
   customize: {
     title: 'Anpassen: Liefern Sie ein großartiges Anmeldeerlebnis',

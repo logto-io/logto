@@ -7,6 +7,7 @@ const get_started = {
     title_cloud: 'Geliştir: Uygulamanızı dakikalar içinde güvenli bir şekilde entegre edin',
     subtitle_cloud:
       "Veya uygulamanızı hazır SDK'larımız ve rehberlerimizle entegre etmek için 5 dakika ayırın.",
+    try_mcp: 'MCP ile tek bir komutla entegrasyonu deneyin',
   },
   customize: {
     title: 'Özelleştir: Harika bir oturum açma deneyimi sunun',

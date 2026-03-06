@@ -6,6 +6,7 @@ const get_started = {
     title: '開發：花 5 分鐘集成您的應用程式',
     title_cloud: '開發：在幾分鐘內安全集成您的應用程式',
     subtitle_cloud: '或花 5 分鐘用我們預先構建的 SDK 和教程集成您的應用程式。',
+    try_mcp: '試試用 MCP 一個提示完成整合',
   },
   customize: {
     title: '自訂：提供出色的登錄體驗',
