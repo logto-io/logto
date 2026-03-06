@@ -9,6 +9,7 @@ const application = {
     'แอปพลิเคชันของบุคคลที่สามไม่สามารถเปิดใช้งานการแลกเปลี่ยนโทเคนได้',
   user_consent_scopes_not_found: 'พบขอบเขตการยินยอมของผู้ใช้ไม่ถูกต้อง',
   consent_management_api_scopes_not_allowed: 'ไม่อนุญาตให้ใช้ขอบเขต Management API',
+  device_flow_native_only: 'ขั้นตอนอุปกรณ์ใช้ได้เฉพาะแอปพลิเคชันเนทีฟเท่านั้น',
   protected_app_metadata_is_required: 'ต้องระบุข้อมูล metadata ของแอปที่ได้รับการป้องกัน',
   protected_app_not_configured:
     'ยังไม่ได้ตั้งค่าผู้ให้บริการแอปที่ได้รับการป้องกัน ฟีเจอร์นี้ไม่พร้อมใช้งานสำหรับเวอร์ชันโอเพนซอร์ซ',

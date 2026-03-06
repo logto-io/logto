@@ -194,6 +194,13 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         quota.guardTenantUsageByKey('applicationsLimit'),
       ]);
 
+      if (rest.type !== ApplicationType.Native && rest.customClientMetadata?.isDeviceFlow) {
+        throw new RequestError({
+          code: 'application.device_flow_native_only',
+          status: 422,
+        });
+      }
+
       assertThat(
         rest.type !== ApplicationType.Protected || protectedAppMetadata,
         'application.protected_app_metadata_is_required'

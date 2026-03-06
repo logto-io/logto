@@ -10,6 +10,7 @@ const application = {
   user_consent_scopes_not_found: 'نطاقات موافقة المستخدم غير صالحة.',
   consent_management_api_scopes_not_allowed:
     'لا يُسمح باستخدام نطاقات واجهة برمجة التطبيقات لإدارة الموافقة.',
+  device_flow_native_only: 'تدفق الجهاز متاح فقط للتطبيقات الأصلية.',
   protected_app_metadata_is_required: 'مطلوب بيانات التطبيق المحمي.',
   protected_app_not_configured:
     'مزود التطبيق المحمي غير مكون. هذه الميزة غير متاحة في النسخة المفتوحة المصدر.',

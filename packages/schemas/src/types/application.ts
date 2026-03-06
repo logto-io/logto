@@ -9,6 +9,7 @@ import {
   Scopes,
   ApplicationSignInExperiences,
 } from '../db-entries/index.js';
+import { customClientMetadataGuard, CustomClientMetadataKey } from '../foundations/index.js';
 
 export type ApplicationResponse = Application & { isAdmin: boolean };
 
@@ -35,10 +36,17 @@ export const applicationCreateGuard = Applications.createGuard
   .partial()
   .merge(Applications.createGuard.pick({ name: true, type: true }));
 
-export const applicationPatchGuard = applicationCreateGuard.partial().omit({
-  type: true,
-  isThirdParty: true,
-});
+export const applicationPatchGuard = applicationCreateGuard
+  .partial()
+  .omit({
+    type: true,
+    isThirdParty: true,
+  })
+  .extend({
+    customClientMetadata: customClientMetadataGuard
+      .omit({ [CustomClientMetadataKey.IsDeviceFlow]: true })
+      .optional(),
+  });
 
 const resourceScopesGuard = z.array(
   z.object({

@@ -330,4 +330,55 @@ describe('application APIs', () => {
     const response = await getApplication(application.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
   });
+
+  it('should create native application with device flow successfully', async () => {
+    const application = await createApplication('test-native-device-flow', ApplicationType.Native, {
+      customClientMetadata: { isDeviceFlow: true },
+    });
+
+    expect(application.customClientMetadata.isDeviceFlow).toBe(true);
+    expect(application.type).toBe(ApplicationType.Native);
+
+    await deleteApplication(application.id);
+  });
+
+  it('should create native application with default authorization code flow', async () => {
+    const application = await createApplication('test-native-default-flow', ApplicationType.Native);
+
+    expect(application.customClientMetadata.isDeviceFlow).toBeUndefined();
+
+    await deleteApplication(application.id);
+  });
+
+  it('should throw 422 when creating non-native application with device flow', async () => {
+    await expectRejects(
+      createApplication('test-spa-device-flow', ApplicationType.SPA, {
+        customClientMetadata: { isDeviceFlow: true },
+      }),
+      { code: 'application.device_flow_native_only', status: 422 }
+    );
+
+    await expectRejects(
+      createApplication('test-traditional-device-flow', ApplicationType.Traditional, {
+        customClientMetadata: { isDeviceFlow: true },
+      }),
+      { code: 'application.device_flow_native_only', status: 422 }
+    );
+  });
+
+  it('should ignore isDeviceFlow when patching application', async () => {
+    const application = await createApplication('test-patch-device-flow', ApplicationType.Native, {
+      customClientMetadata: { isDeviceFlow: true },
+    });
+
+    const updated = await updateApplication(application.id, {
+      customClientMetadata: { isDeviceFlow: false, idTokenTtl: 3600 },
+    });
+
+    // IsDeviceFlow should be stripped by guard, idTokenTtl should be updated
+    expect(updated.customClientMetadata.isDeviceFlow).toBe(true);
+    expect(updated.customClientMetadata.idTokenTtl).toBe(3600);
+
+    await deleteApplication(application.id);
+  });
 });

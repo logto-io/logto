@@ -10,6 +10,7 @@ const application = {
     'Drittanbieteranwendungen dürfen den Token-Austausch nicht aktivieren.',
   user_consent_scopes_not_found: 'Ungültige Benutzerzustimmungsbereiche.',
   consent_management_api_scopes_not_allowed: 'Management API scopes sind nicht erlaubt.',
+  device_flow_native_only: 'Der Gerätefluss ist nur für native Anwendungen verfügbar.',
   protected_app_metadata_is_required: 'Geschützte App-Metadaten sind erforderlich.',
   protected_app_not_configured:
     'Geschützter App-Anbieter ist nicht konfiguriert. Dieses Feature ist in der Open-Source-Version nicht verfügbar.',

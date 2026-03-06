@@ -9,6 +9,7 @@ const application = {
     '서드파티 애플리케이션에서는 토큰 교환을 활성화할 수 없습니다.',
   user_consent_scopes_not_found: '유효하지 않은 사용자 동의 범위입니다.',
   consent_management_api_scopes_not_allowed: '管理 API 범위 허용되지 않습니다.',
+  device_flow_native_only: '디바이스 플로우는 네이티브 애플리케이션에서만 사용할 수 있습니다.',
   protected_app_metadata_is_required: '보호된 응용 프로그램 메타데이터가 필요합니다.',
   protected_app_not_configured:
     '보호된 앱 제공자가 구성되지 않았습니다. 이 기능은 오픈 소스 버전에는 사용할 수 없습니다.',

@@ -10,6 +10,7 @@ const application = {
     'Aplicações de terceiros não podem ativar a troca de tokens.',
   user_consent_scopes_not_found: 'Escopos de consentimento de utilizador inválidos.',
   consent_management_api_scopes_not_allowed: 'Os escopos de API de gestão não são permitidos.',
+  device_flow_native_only: 'O fluxo de dispositivo está disponível apenas para aplicações nativas.',
   protected_app_metadata_is_required: 'Metadados de aplicação protegida são necessários.',
   protected_app_not_configured:
     'O provedor de aplicação protegida não está configurado. Esta funcionalidade não está disponível na versão de código aberto.',
