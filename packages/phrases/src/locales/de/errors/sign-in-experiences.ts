@@ -30,6 +30,10 @@ const sign_in_experiences = {
   phone_verification_code_cannot_be_used_for_sign_in:
     'SMS-Verifizierungscode kann nicht für die Anmeldung verwendet werden, wenn er für MFA aktiviert ist.',
   adaptive_mfa_requires_mfa: 'MFA muss aktiviert sein, bevor Adaptive MFA aktiviert wird.',
+  required_mfa_requires_non_skippable_policy:
+    'Adaptive MFA und obligatorisches MFA erfordern eine nicht überspringbare MFA-Eingabeaufforderungsrichtlinie. Verwenden Sie PromptOnlyAtSignInMandatory oder PromptAtSignInAndSignUpMandatory.',
+  optional_mfa_requires_skippable_policy:
+    'Optionales MFA erfordert eine überspringbare MFA-Eingabeaufforderungsrichtlinie. Verwenden Sie nicht PromptOnlyAtSignInMandatory oder PromptAtSignInAndSignUpMandatory.',
   duplicated_sign_up_identifiers: 'Doppelte Anmeldekennungen erkannt.',
   missing_sign_up_identifiers: 'Primäre Anmeldekennung darf nicht leer sein.',
   invalid_custom_email_blocklist_format:

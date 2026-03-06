@@ -21,6 +21,10 @@ const sign_in_experiences = {
   phone_verification_code_cannot_be_used_for_sign_in:
     '當 SMS 驗證碼啟用用於 MFA 時，不能用於登錄。',
   adaptive_mfa_requires_mfa: '啟用自適應 MFA 前必須先啟用 MFA。',
+  required_mfa_requires_non_skippable_policy:
+    '自適應 MFA 與強制 MFA 需要不可跳過的 MFA 提示策略。請使用 PromptOnlyAtSignInMandatory 或 PromptAtSignInAndSignUpMandatory。',
+  optional_mfa_requires_skippable_policy:
+    '可選 MFA 需要可跳過的 MFA 提示策略。請勿使用 PromptOnlyAtSignInMandatory 或 PromptAtSignInAndSignUpMandatory。',
   duplicated_sign_up_identifiers: '檢測到重複的註冊識別符。',
   missing_sign_up_identifiers: '主要註冊識別符不能為空。',
   invalid_custom_email_blocklist_format:
