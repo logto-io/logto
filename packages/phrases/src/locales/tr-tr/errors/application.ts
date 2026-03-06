@@ -10,6 +10,7 @@ const application = {
   user_consent_scopes_not_found: 'Geçersiz kullanıcı onay kapsamları.',
   consent_management_api_scopes_not_allowed: 'Yönetim API kapsamları izin verilmiyor.',
   device_flow_native_only: 'Cihaz akışı yalnızca yerel uygulamalar için kullanılabilir.',
+  device_flow_not_changeable: 'Cihaz akışı uygulama oluşturulduktan sonra değiştirilemez.',
   protected_app_metadata_is_required: 'Korunan uygulama meta verileri gereklidir.',
   protected_app_not_configured:
     'Korunan uygulama sağlayıcısı yapılandırılmamıştır. Bu özellik açık kaynak sürümü için mevcut değil.',

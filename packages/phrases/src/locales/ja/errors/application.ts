@@ -11,6 +11,7 @@ const application = {
   user_consent_scopes_not_found: '無効なユーザー同意スコープ。',
   consent_management_api_scopes_not_allowed: '管理 API スコープは許可されていません。',
   device_flow_native_only: 'デバイスフローはネイティブアプリケーションでのみ利用可能です。',
+  device_flow_not_changeable: 'デバイスフローはアプリケーション作成後に変更できません。',
   protected_app_metadata_is_required: '保護されたアプリケーションメタデータが必要です。',
   protected_app_not_configured:
     '保護されたアプリケーションプロバイダーが構成されていません。この機能はオープンソースバージョンでは利用できません。',

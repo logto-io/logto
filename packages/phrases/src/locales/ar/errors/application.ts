@@ -11,6 +11,7 @@ const application = {
   consent_management_api_scopes_not_allowed:
     'لا يُسمح باستخدام نطاقات واجهة برمجة التطبيقات لإدارة الموافقة.',
   device_flow_native_only: 'تدفق الجهاز متاح فقط للتطبيقات الأصلية.',
+  device_flow_not_changeable: 'لا يمكن تغيير تدفق الجهاز بعد إنشاء التطبيق.',
   protected_app_metadata_is_required: 'مطلوب بيانات التطبيق المحمي.',
   protected_app_not_configured:
     'مزود التطبيق المحمي غير مكون. هذه الميزة غير متاحة في النسخة المفتوحة المصدر.',

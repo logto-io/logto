@@ -10,6 +10,7 @@ const application = {
   user_consent_scopes_not_found: 'Invalid user consent scopes.',
   consent_management_api_scopes_not_allowed: 'Management API scopes are not allowed.',
   device_flow_native_only: 'Device flow is only available for native applications.',
+  device_flow_not_changeable: 'Device flow cannot be changed after application creation.',
   protected_app_metadata_is_required: 'Protected app metadata is required.',
   protected_app_not_configured:
     'Protected app provider is not configured. This feature is not available for open source version.',

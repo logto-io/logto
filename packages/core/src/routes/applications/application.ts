@@ -315,6 +315,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
       status: [200, 400, 404, 422, 500],
     }),
 
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         params: { id },
@@ -332,6 +333,21 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         pendingUpdateApplication.isThirdParty,
         rest.customClientMetadata?.allowTokenExchange
       );
+
+      /**
+       * Compare instead of omitting from patch guard — `customClientMetadata` is a JSONB column
+       * that gets replaced wholesale, so omitting the key would lose the existing value.
+       */
+      if (
+        rest.customClientMetadata &&
+        Boolean(rest.customClientMetadata.isDeviceFlow) !==
+          Boolean(pendingUpdateApplication.customClientMetadata.isDeviceFlow)
+      ) {
+        throw new RequestError({
+          code: 'application.device_flow_not_changeable',
+          status: 422,
+        });
+      }
 
       // @deprecated
       // User can enable the admin access of Machine-to-Machine apps by switching on a toggle on Admin Console.

@@ -9,6 +9,7 @@ const application = {
   user_consent_scopes_not_found: '无效的用户同意范围。',
   consent_management_api_scopes_not_allowed: '管理 API 范围不允许。',
   device_flow_native_only: '设备流仅适用于原生应用。',
+  device_flow_not_changeable: '设备流在应用创建后不可更改。',
   protected_app_metadata_is_required: '需要保护的应用程序元数据。',
   protected_app_not_configured: '受保护的应用程序提供程序未配置。 此功能不适用于开源版本。',
   cloudflare_unknown_error: '请求 Cloudflare API 时发生未知错误',

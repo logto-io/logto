@@ -366,18 +366,107 @@ describe('application APIs', () => {
     );
   });
 
-  it('should ignore isDeviceFlow when patching application', async () => {
+  it('should throw 422 when changing isDeviceFlow via patch', async () => {
     const application = await createApplication('test-patch-device-flow', ApplicationType.Native, {
       customClientMetadata: { isDeviceFlow: true },
     });
 
+    await expectRejects(
+      updateApplication(application.id, {
+        customClientMetadata: { isDeviceFlow: false },
+      }),
+      { code: 'application.device_flow_not_changeable', status: 422 }
+    );
+
+    await deleteApplication(application.id);
+  });
+
+  it('should allow patching other fields while keeping isDeviceFlow unchanged', async () => {
+    const application = await createApplication(
+      'test-patch-keep-device-flow',
+      ApplicationType.Native,
+      {
+        customClientMetadata: { isDeviceFlow: true },
+      }
+    );
+
     const updated = await updateApplication(application.id, {
-      customClientMetadata: { isDeviceFlow: false, idTokenTtl: 3600 },
+      customClientMetadata: { isDeviceFlow: true, idTokenTtl: 3600 },
     });
 
-    // IsDeviceFlow should be stripped by guard, idTokenTtl should be updated
     expect(updated.customClientMetadata.isDeviceFlow).toBe(true);
     expect(updated.customClientMetadata.idTokenTtl).toBe(3600);
+
+    await deleteApplication(application.id);
+  });
+
+  it('should throw 422 when patching customClientMetadata without isDeviceFlow on a device flow app', async () => {
+    const application = await createApplication(
+      'test-patch-omit-device-flow',
+      ApplicationType.Native,
+      {
+        customClientMetadata: { isDeviceFlow: true },
+      }
+    );
+
+    /**
+     * Omitting isDeviceFlow from customClientMetadata effectively sets it to false (JSONB replace),
+     * which is a change from true -> false.
+     */
+    await expectRejects(
+      updateApplication(application.id, {
+        customClientMetadata: { idTokenTtl: 3600 },
+      }),
+      { code: 'application.device_flow_not_changeable', status: 422 }
+    );
+
+    await deleteApplication(application.id);
+  });
+
+  it('should allow patching customClientMetadata on a non-device-flow app without isDeviceFlow', async () => {
+    const application = await createApplication('test-patch-normal-app', ApplicationType.Native);
+
+    // Both are false/undefined — no device flow change
+    const updated = await updateApplication(application.id, {
+      customClientMetadata: { idTokenTtl: 3600 },
+    });
+
+    expect(updated.customClientMetadata.idTokenTtl).toBe(3600);
+
+    await deleteApplication(application.id);
+  });
+
+  it('should allow patching customClientMetadata on an explicitly non-device-flow app without isDeviceFlow', async () => {
+    const application = await createApplication(
+      'test-patch-explicit-false',
+      ApplicationType.Native,
+      {
+        customClientMetadata: { isDeviceFlow: false },
+      }
+    );
+
+    // Existing isDeviceFlow is false, omitting it from patch is also false — no device flow change
+    const updated = await updateApplication(application.id, {
+      customClientMetadata: { idTokenTtl: 3600 },
+    });
+
+    expect(updated.customClientMetadata.idTokenTtl).toBe(3600);
+
+    await deleteApplication(application.id);
+  });
+
+  it('should allow patching isDeviceFlow to false when original value is undefined', async () => {
+    const application = await createApplication(
+      'test-patch-undefined-to-false',
+      ApplicationType.Native
+    );
+
+    // Original isDeviceFlow is undefined, patching to false — both are falsy, no device flow change
+    const updated = await updateApplication(application.id, {
+      customClientMetadata: { isDeviceFlow: false },
+    });
+
+    expect(updated.customClientMetadata.isDeviceFlow).toBe(false);
 
     await deleteApplication(application.id);
   });

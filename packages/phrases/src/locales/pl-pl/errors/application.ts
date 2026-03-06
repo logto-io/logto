@@ -10,6 +10,7 @@ const application = {
   user_consent_scopes_not_found: 'Nieprawidłowe zakresy zgody użytkownika.',
   consent_management_api_scopes_not_allowed: 'Nie są dozwolone zakresy API zarządzania.',
   device_flow_native_only: 'Przepływ urządzenia jest dostępny tylko dla aplikacji natywnych.',
+  device_flow_not_changeable: 'Przepływ urządzenia nie może być zmieniony po utworzeniu aplikacji.',
   protected_app_metadata_is_required: 'Wymagane jest zabezpieczone metadane aplikacji.',
   protected_app_not_configured:
     'Dostawca aplikacji zabezpieczonej nie jest skonfigurowany. Ta funkcja nie jest dostępna dla wersji open source.',
