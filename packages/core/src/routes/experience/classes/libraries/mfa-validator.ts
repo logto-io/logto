@@ -120,8 +120,12 @@ export class MfaValidator {
 
     const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
+    const isMfaEnabled = mfaData.success ? mfaData.data.enabled : undefined;
 
-    if (skipMfaOnSignIn && !isNoSkipMfaPolicy(this.mfaSettings.policy)) {
+    if (
+      (isMfaEnabled === false || skipMfaOnSignIn) &&
+      !isNoSkipMfaPolicy(this.mfaSettings.policy)
+    ) {
       return false;
     }
 
