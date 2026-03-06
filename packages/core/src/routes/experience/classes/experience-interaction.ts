@@ -400,6 +400,8 @@ export default class ExperienceInteraction {
         }
       )
     );
+
+    this.mfa.markMfaVerified();
   }
 
   /**
@@ -708,6 +710,14 @@ export default class ExperienceInteraction {
     );
 
     return verificationRecord;
+  }
+
+  private async createMfaValidator(log?: LogEntry) {
+    const user = await this.getIdentifiedUser();
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
+
+    return new MfaValidator(mfaSettings, user, adaptiveMfaResult);
   }
 
   private get hasVerifiedSsoIdentity() {

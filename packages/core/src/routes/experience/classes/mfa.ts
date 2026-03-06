@@ -58,6 +58,10 @@ export type MfaData = {
   totp?: BindTotp;
   webAuthn?: BindWebAuthn[];
   backupCode?: BindBackupCode;
+  /**
+   * Whether the existing MFA verifications have been checked and verified in this interaction.
+   */
+  isVerified?: boolean;
 };
 
 export type SanitizedMfaData = {
@@ -67,6 +71,7 @@ export type SanitizedMfaData = {
   totp?: Pick<BindTotp, 'type'>;
   webAuthn?: BindWebAuthn[];
   backupCode?: Omit<BindBackupCode, 'codes'>;
+  isVerified: boolean;
 };
 
 export const mfaDataGuard = z.object({
@@ -77,6 +82,7 @@ export const mfaDataGuard = z.object({
   totp: bindTotpGuard.optional(),
   webAuthn: z.array(bindWebAuthnGuard).optional(),
   backupCode: bindBackupCodeGuard.optional(),
+  isVerified: z.boolean().optional(),
 }) satisfies ToZodObject<MfaData>;
 
 export const sanitizedMfaDataGuard = z.object({
@@ -86,6 +92,7 @@ export const sanitizedMfaDataGuard = z.object({
   totp: z.object({ type: z.literal(MfaFactor.TOTP) }).optional(),
   webAuthn: z.array(bindWebAuthnGuard).optional(),
   backupCode: bindBackupCodeGuard.pick({ type: true }).optional(),
+  isVerified: z.boolean(),
 }) satisfies ToZodObject<SanitizedMfaData>;
 
 const parseUserMfaData = (logtoConfig: JsonObject): { enabled?: boolean; skipped?: boolean } => {
@@ -130,6 +137,7 @@ export class Mfa {
   #totp?: BindTotp;
   #webAuthn?: BindWebAuthn[];
   #backupCode?: BindBackupCode;
+  #isVerified: boolean;
 
   constructor(
     private readonly libraries: Libraries,
@@ -146,6 +154,7 @@ export class Mfa {
     this.#totp = data.totp;
     this.#webAuthn = data.webAuthn;
     this.#backupCode = data.backupCode;
+    this.#isVerified = data.isVerified ?? false;
   }
 
   get mfaEnabled() {
@@ -164,8 +173,16 @@ export class Mfa {
     return [this.#totp, ...(this.#webAuthn ?? []), this.#backupCode].filter(Boolean);
   }
 
+  get isVerified() {
+    return this.#isVerified;
+  }
+
   markMfaEnabled() {
     this.#mfaEnabled = true;
+  }
+
+  markMfaVerified() {
+    this.#isVerified = true;
   }
 
   /**
@@ -380,6 +397,7 @@ export class Mfa {
       totp: this.#totp,
       webAuthn: this.#webAuthn,
       backupCode: this.#backupCode,
+      isVerified: this.isVerified,
     };
   }
 
@@ -391,6 +409,7 @@ export class Mfa {
       totp: cond(this.#totp && pick(this.#totp, 'type')),
       webAuthn: this.#webAuthn,
       backupCode: cond(this.#backupCode && pick(this.#backupCode, 'type')),
+      isVerified: this.isVerified,
     };
   }
 
@@ -554,9 +573,16 @@ export class Mfa {
     if (this.additionalBindingSuggestionSkipped) {
       return;
     }
-    const sortedFactors = sortMfaFactors(availableFactors);
 
+    // If MFA is already verified in this interaction, no need to suggest, as the MFA fulfillment and binding
+    // should happen before verification.
+    if (this.isVerified) {
+      return;
+    }
+
+    const sortedFactors = sortMfaFactors(availableFactors);
     const additionalFactors = sortedFactors.filter((factor) => !factorsInUser.includes(factor));
+
     // No available factors to suggest
     if (additionalFactors.length === 0) {
       return;
