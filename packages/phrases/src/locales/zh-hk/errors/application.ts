@@ -8,6 +8,7 @@ const application = {
   third_party_application_cannot_enable_token_exchange: '第三方應用程式不允許啟用權杖交換。',
   user_consent_scopes_not_found: '無效的使用者同意範圍。',
   consent_management_api_scopes_not_allowed: '管理 API 範圍不被允許。',
+  device_flow_native_only: '裝置流程僅適用於原生應用。',
   protected_app_metadata_is_required: '保護應用程式元數據是必需的。',
   protected_app_not_configured: '未配置保護應用程式提供商。此功能對開源版本不可用。',
   cloudflare_unknown_error: '請求 Cloudflare API 時發生未知錯誤',

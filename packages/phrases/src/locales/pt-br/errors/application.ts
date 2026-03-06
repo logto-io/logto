@@ -11,6 +11,7 @@ const application = {
   user_consent_scopes_not_found: 'Escopos de consentimento do usuário inválidos.',
   consent_management_api_scopes_not_allowed:
     'Os escopos da API de gerenciamento não são permitidos.',
+  device_flow_native_only: 'O fluxo de dispositivo está disponível apenas para aplicações nativas.',
   protected_app_metadata_is_required: 'Protegido metadados do app é necessário.',
   protected_app_not_configured:
     'Provedor de app protegido não está configurado. Este recurso não está disponível na versão de código aberto.',

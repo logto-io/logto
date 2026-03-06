@@ -3,6 +3,7 @@
 import type { Role, Application } from '@logto/schemas';
 import {
   adminTenantId,
+  ApplicationAuthorizationFlow,
   Applications,
   ApplicationType,
   buildBuiltInApplicationDataForTenant,
@@ -193,6 +194,16 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         rest.isThirdParty && quota.guardTenantUsageByKey('thirdPartyApplicationsLimit'),
         quota.guardTenantUsageByKey('applicationsLimit'),
       ]);
+
+      if (
+        rest.type !== ApplicationType.Native &&
+        rest.authorizationFlow === ApplicationAuthorizationFlow.DeviceFlow
+      ) {
+        throw new RequestError({
+          code: 'application.device_flow_native_only',
+          status: 422,
+        });
+      }
 
       assertThat(
         rest.type !== ApplicationType.Protected || protectedAppMetadata,

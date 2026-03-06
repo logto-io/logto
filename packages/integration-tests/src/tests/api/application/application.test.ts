@@ -1,4 +1,4 @@
-import { ApplicationType } from '@logto/schemas';
+import { ApplicationAuthorizationFlow, ApplicationType } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
 import {
@@ -329,5 +329,40 @@ describe('application APIs', () => {
 
     const response = await getApplication(application.id).catch((error: unknown) => error);
     expect(response instanceof HTTPError && response.response.status === 404).toBe(true);
+  });
+
+  it('should create native application with device flow successfully', async () => {
+    const application = await createApplication('test-native-device-flow', ApplicationType.Native, {
+      authorizationFlow: ApplicationAuthorizationFlow.DeviceFlow,
+    });
+
+    expect(application.authorizationFlow).toBe(ApplicationAuthorizationFlow.DeviceFlow);
+    expect(application.type).toBe(ApplicationType.Native);
+
+    await deleteApplication(application.id);
+  });
+
+  it('should create native application with default authorization code flow', async () => {
+    const application = await createApplication('test-native-default-flow', ApplicationType.Native);
+
+    expect(application.authorizationFlow).toBe(ApplicationAuthorizationFlow.AuthorizationCode);
+
+    await deleteApplication(application.id);
+  });
+
+  it('should throw 422 when creating non-native application with device flow', async () => {
+    await expectRejects(
+      createApplication('test-spa-device-flow', ApplicationType.SPA, {
+        authorizationFlow: ApplicationAuthorizationFlow.DeviceFlow,
+      }),
+      { code: 'application.device_flow_native_only', status: 422 }
+    );
+
+    await expectRejects(
+      createApplication('test-traditional-device-flow', ApplicationType.Traditional, {
+        authorizationFlow: ApplicationAuthorizationFlow.DeviceFlow,
+      }),
+      { code: 'application.device_flow_native_only', status: 422 }
+    );
   });
 });
