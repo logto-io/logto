@@ -2,6 +2,8 @@
 
 create type application_type as enum ('Native', 'SPA', 'Traditional', 'MachineToMachine', 'Protected', 'SAML');
 
+create type application_authorization_flow as enum ('AuthorizationCode', 'DeviceFlow');
+
 create table applications (
   tenant_id varchar(21) not null
     references tenants (id) on update cascade on delete cascade,
@@ -16,6 +18,7 @@ create table applications (
   protected_app_metadata jsonb /* @use ProtectedAppMetadata */,
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   is_third_party boolean not null default false,
+  authorization_flow application_authorization_flow not null default 'AuthorizationCode',
   created_at timestamptz not null default(now()),
   primary key (id)
 );

@@ -5,7 +5,7 @@ import type {
   CreateApplication,
   CreateApplicationsRole,
 } from '../db-entries/index.js';
-import { ApplicationType } from '../db-entries/index.js';
+import { ApplicationAuthorizationFlow, ApplicationType } from '../db-entries/index.js';
 
 import { adminTenantId } from './tenant.js';
 
@@ -41,6 +41,7 @@ const buildSpaApplicationData = (
   customClientMetadata: {},
   protectedAppMetadata: null,
   isThirdParty: false,
+  authorizationFlow: ApplicationAuthorizationFlow.AuthorizationCode,
   createdAt: 0,
   customData: {},
 });
