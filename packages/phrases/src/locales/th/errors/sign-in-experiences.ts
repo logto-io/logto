@@ -28,10 +28,10 @@ const sign_in_experiences = {
   phone_verification_code_cannot_be_used_for_sign_in:
     'ไม่สามารถใช้รหัสยืนยัน SMS เพื่อเข้าสู่ระบบเมื่อเปิดใช้งานกับ MFA',
   adaptive_mfa_requires_mfa: 'ต้องเปิดใช้ MFA ก่อนจึงจะเปิดใช้ Adaptive MFA ได้',
-  adaptive_mfa_requires_non_skippable_policy:
-    'Adaptive MFA ต้องการนโยบาย MFA แจ้งเตือนที่ไม่สามารถข้ามได้ ใช้ PromptOnlyAtSignInMandatory หรือ PromptAtSignInAndSignUpMandatory.',
-  non_adaptive_mfa_requires_skippable_policy:
-    'เมื่อปิดใช้งาน Adaptive MFA นโยบายแจ้งเตือน MFA จะต้องสามารถข้ามได้ ห้ามใช้ PromptOnlyAtSignInMandatory หรือ PromptAtSignInAndSignUpMandatory.',
+  required_mfa_requires_non_skippable_policy:
+    'MFA แบบปรับตามความเสี่ยงและ MFA แบบบังคับต้องใช้นโยบายการแจ้งตั้งค่า MFA ที่ข้ามไม่ได้ โปรดใช้ PromptOnlyAtSignInMandatory หรือ PromptAtSignInAndSignUpMandatory',
+  optional_mfa_requires_skippable_policy:
+    'MFA แบบไม่บังคับต้องใช้นโยบายการแจ้งตั้งค่า MFA ที่ข้ามได้ ห้ามใช้ PromptOnlyAtSignInMandatory หรือ PromptAtSignInAndSignUpMandatory',
   duplicated_sign_up_identifiers: 'ตรวจพบตัวระบุสมัครสมาชิกซ้ำ',
   missing_sign_up_identifiers: 'ตัวระบุสมัครสมาชิกหลักต้องไม่เว้นว่าง',
   invalid_custom_email_blocklist_format:
