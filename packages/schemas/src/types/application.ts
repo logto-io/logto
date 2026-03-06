@@ -38,7 +38,6 @@ export const applicationCreateGuard = Applications.createGuard
 export const applicationPatchGuard = applicationCreateGuard.partial().omit({
   type: true,
   isThirdParty: true,
-  authorizationFlow: true,
 });
 
 const resourceScopesGuard = z.array(

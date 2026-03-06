@@ -12,7 +12,6 @@ import type {
   UsersRole,
 } from '@logto/schemas';
 import {
-  ApplicationAuthorizationFlow,
   ApplicationType,
   DomainStatus,
   internalPrefix,
@@ -52,7 +51,6 @@ export const mockApplication: Application = {
   },
   protectedAppMetadata: null,
   isThirdParty: false,
-  authorizationFlow: ApplicationAuthorizationFlow.AuthorizationCode,
   createdAt: 1_645_334_775_356,
   customData: {},
 };
@@ -82,7 +80,6 @@ export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'>
     pageRules: [],
   },
   isThirdParty: false,
-  authorizationFlow: ApplicationAuthorizationFlow.AuthorizationCode,
   createdAt: 1_645_334_775_356,
   customData: {},
 };
