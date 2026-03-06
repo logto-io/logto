@@ -26,6 +26,7 @@ import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
 import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   isNoSkipMfaPolicy,
@@ -349,8 +350,10 @@ export class Mfa {
   async assertMfaFulfilled() {
     const submitMfaValidationContext = await this.buildSubmitMfaValidationContext();
 
-    // For optional MFA, prompt an MFA enrollment page in prior if user hasn't set up or skipped MFA binding yet.
-    await this.assertOptionalMfaEnablement(submitMfaValidationContext);
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      // For optional MFA, prompt an MFA enrollment page in prior if user hasn't set up or skipped MFA binding yet.
+      await this.assertOptionalMfaEnablement(submitMfaValidationContext);
+    }
 
     await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext);
   }
