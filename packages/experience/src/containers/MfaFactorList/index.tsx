@@ -20,7 +20,7 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
   const startTotpBinding = useStartTotpBinding();
   const startWebAuthnProcessing = useStartWebAuthnProcessing();
   const navigate = useNavigateWithPreservedSearchParams();
-  const { availableFactors } = flowState;
+  const { availableFactors, isWebAuthnUsedAsSignInPasskey } = flowState;
   const { onSubmit: sendMfaVerificationCode } = useSendMfaVerificationCode();
 
   const handleSelectFactor = useCallback(
@@ -53,10 +53,9 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
       {availableFactors.map((factor) => {
         const isEmailOrPhone =
           factor === MfaFactor.EmailVerificationCode || factor === MfaFactor.PhoneVerificationCode;
-        const isDisabled = Boolean(
-          flowState.suggestion && isEmailOrPhone && flowState.maskedIdentifiers?.[factor]
-        );
         const maskedIdentifier = isEmailOrPhone ? flowState.maskedIdentifiers?.[factor] : undefined;
+        const isWebAuthnBound = factor === MfaFactor.WebAuthn && !!isWebAuthnUsedAsSignInPasskey;
+        const isDisabled = !!flowState.suggestion && (!!maskedIdentifier || isWebAuthnBound);
 
         return (
           <MfaFactorButton

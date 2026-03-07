@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: '휴대폰으로 전송된 코드 입력',
   send_to_email: '{{identifier}}로 전송',
   send_to_phone: '{{identifier}}로 전송',
+  onboarding: '2단계 인증 켜기',
+  onboarding_description:
+    '2단계 인증으로 계정을 보호하세요. 하나 이상의 방법을 선택하세요: 패스키, 인증 앱(OTP), SMS 인증 코드 또는 백업 코드.',
+  enable_mfa: '2단계 인증 활성화',
   add_mfa_factors: '2단계 인증 추가',
   add_mfa_description:
     '2단계 인증이 활성화되었습니다. 안전한 로그인을 위해 두 번째 인증 방법을 선택하세요.',

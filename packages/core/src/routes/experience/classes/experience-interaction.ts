@@ -400,6 +400,8 @@ export default class ExperienceInteraction {
         }
       )
     );
+
+    this.mfa.markMfaVerified();
   }
 
   /**
@@ -520,14 +522,7 @@ export default class ExperienceInteraction {
     // Revalidate the new MFA data if any
     await this.mfa.checkAvailability();
 
-    // Skip mandatory MFA fulfillment validation if the user
-    // - signIn/register via SSO verification method
-    // - signIn via Passkey verification method
-    const shouldSkipSubmitMfaFulfillment =
-      this.hasVerifiedSsoIdentity ||
-      (this.#interactionEvent === InteractionEvent.SignIn && this.hasVerifiedSignInWebAuthn);
-
-    if (!shouldSkipSubmitMfaFulfillment) {
+    if (!this.hasVerifiedSsoIdentity) {
       await this.mfa.assertMfaFulfilled();
     }
 
@@ -715,6 +710,14 @@ export default class ExperienceInteraction {
     );
 
     return verificationRecord;
+  }
+
+  private async createMfaValidator(log?: LogEntry) {
+    const user = await this.getIdentifiedUser();
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+    const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
+
+    return new MfaValidator(mfaSettings, user, adaptiveMfaResult);
   }
 
   private get hasVerifiedSsoIdentity() {

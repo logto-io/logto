@@ -56,6 +56,11 @@ export const createBackupCode = async () =>
     codes: string[];
   }>();
 
+export const enableMfa = async () => {
+  await api.post(`${experienceApiRoutes.mfa}/mfa-enabled`);
+  return submitInteraction();
+};
+
 export const skipMfa = async () => {
   await api.post(`${experienceApiRoutes.mfa}/mfa-skipped`);
   return submitInteraction();
