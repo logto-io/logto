@@ -267,7 +267,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         );
         await quota.guardTenantUsageByKey('bringYourUiEnabled');
       }
-      if (passkeySignIn) {
+      if (passkeySignIn?.enabled) {
         await quota.guardTenantUsageByKey('passkeySignInEnabled');
       }
 
