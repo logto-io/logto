@@ -2,7 +2,6 @@
   "paths": {
     "/api/users/{userId}/sessions": {
       "get": {
-        "tags": ["Dev feature"],
         "parameters": [],
         "responses": {
           "200": {
@@ -15,7 +14,6 @@
     },
     "/api/users/{userId}/sessions/{sessionId}": {
       "get": {
-        "tags": ["Dev feature"],
         "parameters": [],
         "responses": {
           "200": {
@@ -26,7 +24,6 @@
         "description": "Retrieve a non-expired session for the user by session ID, including session metadata and interaction details when available."
       },
       "delete": {
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "query",

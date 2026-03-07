@@ -13,7 +13,6 @@ import FormCard from '@/components/FormCard';
 import LearnMore from '@/components/LearnMore';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { profilePropertyReferenceLink, userCustomData } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
@@ -167,7 +166,7 @@ function UserSettings() {
           <PersonalAccessTokens userId={user.id} />
         </FormCard>
         <UserConnections userId={user.id} />
-        {isDevFeaturesEnabled && <UserSessions userId={user.id} />}
+        <UserSessions userId={user.id} />
         <FormCard title="user_details.user_profile">
           <FormField title="user_details.field_name">
             <TextInput {...register('name')} placeholder={t('users.placeholder_name')} />
