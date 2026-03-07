@@ -36,6 +36,22 @@ function isLegacyHashAlgorithm(algorithm: string): boolean {
   }
 }
 
+function parsePbkdf2Salt(salt: string): string | Uint8Array {
+  if (!salt.startsWith('hex:')) {
+    return salt;
+  }
+
+  const hexSalt = salt.slice(4);
+  const isHexSaltValid =
+    hexSalt.length > 0 && hexSalt.length % 2 === 0 && /^[\da-f]+$/iu.test(hexSalt);
+
+  if (!isHexSaltValid) {
+    throw new RequestError({ code: 'password.invalid_legacy_password_format' });
+  }
+
+  return Buffer.from(hexSalt, 'hex');
+}
+
 function isLegacyPassword(value: string): [string, string[], string] | undefined {
   const json = safeParseJson(value);
 
@@ -107,7 +123,7 @@ export const executeLegacyHash = async (
     return crypto
       .pbkdf2Sync(
         inputPassword,
-        salt,
+        parsePbkdf2Salt(salt),
         Number.parseInt(`${iterations}`, 10),
         Number.parseInt(`${keylen}`, 10),
         digest
