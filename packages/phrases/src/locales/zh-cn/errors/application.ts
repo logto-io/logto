@@ -8,6 +8,8 @@ const application = {
   third_party_application_cannot_enable_token_exchange: '第三方应用程序不允许启用令牌交换。',
   user_consent_scopes_not_found: '无效的用户同意范围。',
   consent_management_api_scopes_not_allowed: '管理 API 范围不允许。',
+  device_flow_native_only: 'Device flow 仅适用于原生应用。',
+  device_flow_not_changeable: 'Device flow 在应用创建后不可更改。',
   protected_app_metadata_is_required: '需要保护的应用程序元数据。',
   protected_app_not_configured: '受保护的应用程序提供程序未配置。 此功能不适用于开源版本。',
   cloudflare_unknown_error: '请求 Cloudflare API 时发生未知错误',

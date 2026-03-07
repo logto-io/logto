@@ -11,6 +11,9 @@ const application = {
     'Le applicazioni di terze parti non possono abilitare lo scambio di token.',
   user_consent_scopes_not_found: 'Scopi di consenso utente non validi.',
   consent_management_api_scopes_not_allowed: 'I Management API scopes non sono consentiti.',
+  device_flow_native_only: 'Il flusso dispositivo è disponibile solo per le applicazioni native.',
+  device_flow_not_changeable:
+    "Il flusso dispositivo non può essere modificato dopo la creazione dell'applicazione.",
   protected_app_metadata_is_required: "I metadati dell'applicazione protetta sono obbligatori.",
   protected_app_not_configured:
     "Il provider dell'applicazione protetta non è configurato. Questa funzionalità non è disponibile nella versione open source.",
