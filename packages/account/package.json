@@ -75,7 +75,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "date-fns": "^2.29.3",
+    "date-fns": "^4.0.0",
     "qrcode": "^1.5.4",
     "react-router-dom": "^6.30.2",
     "ua-parser-js": "^2.0.3"
