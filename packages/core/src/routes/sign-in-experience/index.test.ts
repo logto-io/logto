@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   MfaFactor,
   MfaPolicy,
@@ -342,7 +343,7 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
-  it('should reject adaptive mfa policy when adaptive mfa is disabled', async () => {
+  it('should allow mandatory no-skip mfa policy when adaptive mfa is disabled', async () => {
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       adaptiveMfa: {
         enabled: false,
@@ -354,7 +355,67 @@ describe('PATCH /sign-in-exp', () => {
     });
 
     expect(response).toMatchObject({
+      status: 200,
+      body: {
+        adaptiveMfa: {
+          enabled: false,
+        },
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+          factors: [MfaFactor.TOTP],
+        },
+      },
+    });
+  });
+
+  it('should reject disabling adaptive mfa without explicit mfa policy when current policy is no-skip', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      adaptiveMfa: {
+        enabled: true,
+      },
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+        factors: [MfaFactor.TOTP],
+      },
+    });
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      adaptiveMfa: {
+        enabled: false,
+      },
+    });
+
+    expect(response).toMatchObject({
       status: 422,
+    });
+  });
+
+  it('should keep mandatory no-skip policy when adaptive mfa is already disabled and mfa is omitted', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      adaptiveMfa: {
+        enabled: false,
+      },
+      mfa: {
+        policy: MfaPolicy.PromptOnlyAtSignInMandatory,
+        factors: [MfaFactor.TOTP],
+      },
+    });
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      adaptiveMfa: {
+        enabled: false,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        adaptiveMfa: {
+          enabled: false,
+        },
+      },
     });
   });
 
@@ -465,3 +526,4 @@ describe('sign-in experience routes with dev features disabled', () => {
     expect(response.body).toEqual(mockSignInExperience);
   });
 });
+/* eslint-enable max-lines */

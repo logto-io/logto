@@ -196,9 +196,15 @@ export enum MfaPolicy {
   PromptAtSignInAndSignUp = 'PromptAtSignInAndSignUp',
   /** Do not ask users to set up MFA */
   NoPrompt = 'NoPrompt',
-  /** Ask users to set up MFA during registration or at next sign-in (no-skip, Adaptive MFA only) */
+  /**
+   * Ask users to set up MFA during registration or at next sign-in (no-skip).
+   * Used by Adaptive MFA and Mandatory MFA.
+   */
   PromptAtSignInAndSignUpMandatory = 'PromptAtSignInAndSignUpMandatory',
-  /** Ask users to set up MFA at next sign-in after registration (no-skip, Adaptive MFA only) */
+  /**
+   * Ask users to set up MFA at next sign-in after registration (no-skip).
+   * Used by Adaptive MFA and Mandatory MFA.
+   */
   PromptOnlyAtSignInMandatory = 'PromptOnlyAtSignInMandatory',
 }
 

@@ -26,6 +26,10 @@ const sign_in_experiences = {
   phone_verification_code_cannot_be_used_for_sign_in:
     'لا يمكن استخدام رمز التحقق عبر الرسائل القصيرة لتسجيل الدخول عندما يتم تمكينه للمصادقة متعددة العوامل.',
   adaptive_mfa_requires_mfa: 'يجب تمكين MFA قبل تمكين Adaptive MFA.',
+  required_mfa_requires_non_skippable_policy:
+    'يتطلب كل من MFA التكيفي وMFA الإلزامي سياسة مطالبة MFA غير قابلة للتخطي. استخدم PromptOnlyAtSignInMandatory أو PromptAtSignInAndSignUpMandatory.',
+  optional_mfa_requires_skippable_policy:
+    'يتطلب MFA الاختياري سياسة مطالبة MFA قابلة للتخطي. لا تستخدم PromptOnlyAtSignInMandatory أو PromptAtSignInAndSignUpMandatory.',
   duplicated_sign_up_identifiers: 'تم اكتشاف معرفات تسجيل مكررة.',
   missing_sign_up_identifiers: 'لا يمكن أن يكون معرف التسجيل الأساسي فارغًا.',
   invalid_custom_email_blocklist_format:

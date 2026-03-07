@@ -28,6 +28,10 @@ const sign_in_experiences = {
     'SMS doğrulama kodu, MFA için etkinleştirildiğinde oturum açma için kullanılamaz.',
   adaptive_mfa_requires_mfa:
     "Adaptive MFA'yı etkinleştirmeden önce MFA'yı etkinleştirmeniz gerekir.",
+  required_mfa_requires_non_skippable_policy:
+    'Uyarlanabilir MFA ve zorunlu MFA, atlanamayan bir MFA istem ilkesi gerektirir. PromptOnlyAtSignInMandatory veya PromptAtSignInAndSignUpMandatory kullanın.',
+  optional_mfa_requires_skippable_policy:
+    'İsteğe bağlı MFA, atlanabilir bir MFA istem ilkesi gerektirir. PromptOnlyAtSignInMandatory veya PromptAtSignInAndSignUpMandatory kullanmayın.',
   duplicated_sign_up_identifiers: 'Yinelenen kayıt kimlikleri tespit edildi.',
   missing_sign_up_identifiers: 'Birincil kayıt kimliği boş olamaz.',
   invalid_custom_email_blocklist_format:

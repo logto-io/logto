@@ -45,7 +45,7 @@ import {
   getMfaRequirementMode,
   getMfaRequirementState,
   MfaRequirementMode,
-  normalizeSetUpPrompt,
+  normalizeSetUpPromptByRequirementMode,
   validateBackupCodeFactor,
 } from './utils';
 
@@ -231,11 +231,36 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
     }
   }, [mfaRequirementMode, formValues, reset]);
 
-  const shouldShowSetUpPrompts = mfaRequirementMode !== MfaRequirementMode.Mandatory;
+  useEffect(() => {
+    // Mandatory mode does not expose organization-level prompt settings in the UI.
+    // If user switches from optional/adaptive (where this field is editable) to mandatory,
+    // we must actively normalize it to `NoPrompt` to keep the in-form state valid.
+    //
+    // Mark this change as dirty on purpose: this normalization is a user-triggered
+    // effective config change (switching requirement mode), not a passive hydration fix.
+    //
+    // To avoid "saved but still dirty" regressions, the post-save baseline is normalized
+    // in `convertMfaConfigToForm()` as well, so this effect will not re-dirty the form
+    // after `reset()` with server data.
+    if (
+      mfaRequirementMode === MfaRequirementMode.Mandatory &&
+      formValues.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.NoPrompt
+    ) {
+      setValue('organizationRequiredMfaPolicy', OrganizationRequiredMfaPolicy.NoPrompt, {
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [formValues.organizationRequiredMfaPolicy, mfaRequirementMode, setValue]);
+
+  const shouldShowSetUpPrompts =
+    isDevFeaturesEnabled || mfaRequirementMode !== MfaRequirementMode.Mandatory;
+  const shouldShowOrganizationRequiredMfaPrompt =
+    mfaRequirementMode !== MfaRequirementMode.Mandatory;
   const setUpPromptOptions =
-    mfaRequirementMode === MfaRequirementMode.Adaptive
-      ? nonSkippableMfaPromptOptions
-      : optionalMfaPolicyOptions;
+    mfaRequirementMode === MfaRequirementMode.Optional
+      ? optionalMfaPolicyOptions
+      : nonSkippableMfaPromptOptions;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -394,19 +419,14 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
                     shouldTouch: true,
                   });
 
-                  if (mode !== MfaRequirementMode.Mandatory) {
-                    setValue(
-                      'setUpPrompt',
-                      normalizeSetUpPrompt(
-                        currentSetUpPrompt,
-                        mode === MfaRequirementMode.Adaptive
-                      ),
-                      {
-                        shouldDirty: true,
-                        shouldTouch: true,
-                      }
-                    );
-                  }
+                  setValue(
+                    'setUpPrompt',
+                    normalizeSetUpPromptByRequirementMode(currentSetUpPrompt, mode),
+                    {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    }
+                  );
                 }}
               />
             </FormField>
@@ -436,7 +456,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
               />
             </FormField>
           )}
-          {shouldShowSetUpPrompts && (
+          {shouldShowOrganizationRequiredMfaPrompt && (
             <FormField title="mfa.set_up_organization_required_mfa_prompt" headlineSpacing="large">
               <Controller
                 control={control}
