@@ -382,6 +382,7 @@ export default function initOidc(
 
         return 60 * 60; // 1 hour in seconds
       },
+      /** Align with the oidc-provider default. @see {@link https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#ttl} */
       DeviceCode: 900 /* 15 minutes in seconds */,
       Interaction: 3600 /* 1 hour in seconds */,
       Session: 1_209_600 /* 14 days in seconds */,
