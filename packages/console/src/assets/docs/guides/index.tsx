@@ -388,8 +388,8 @@ export const guides: Readonly<Guide[]> = Object.freeze([
   {
     order: 6,
     id: 'native-device-flow',
-    Logo: safeLazy(async () => import('@/assets/icons/native-app.svg?react')),
-    DarkLogo: safeLazy(async () => import('@/assets/icons/native-app-dark.svg?react')),
+    Logo: safeLazy(async () => import('./native-device-flow/logo.svg?react')),
+    DarkLogo: safeLazy(async () => import('./native-device-flow/logo-dark.svg?react')),
     Component: safeLazy(async () => import('./native-device-flow/README.mdx')),
     metadata: nativeDeviceFlow,
   },
