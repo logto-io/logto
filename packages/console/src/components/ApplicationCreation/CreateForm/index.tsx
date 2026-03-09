@@ -71,7 +71,7 @@ function CreateForm({
     defaultValues: {
       type: defaultCreateType,
       isThirdParty: isDefaultCreateThirdParty,
-      isDeviceFlow: isDefaultCreateDeviceFlow,
+      ...(isDefaultCreateDeviceFlow && { authorizationFlow: AuthorizationFlow.DeviceFlow }),
     },
   });
   const {
