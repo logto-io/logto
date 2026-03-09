@@ -7,14 +7,20 @@ import {
 
 import { authedAdminApi } from '#src/api/api.js';
 import { isDevFeaturesEnabled } from '#src/constants.js';
+import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { resetPasswordlessConnectors } from '#src/helpers/connector.js';
-import { WebHookApiTest } from '#src/helpers/hook.js';
 import {
-  registerNewUser,
-  resetPassword,
+  identifyUserWithUsernamePassword,
+  identifyUserWithEmailVerificationCode,
+  registerNewUserUsernamePassword,
   signInWithPassword,
-  signInWithUsernamePasswordAndUpdateEmailOrPhone,
-} from '#src/helpers/interactions.js';
+} from '#src/helpers/experience/index.js';
+import {
+  successfullySendVerificationCode,
+  successfullyVerifyVerificationCode,
+} from '#src/helpers/experience/verification-code.js';
+import { WebHookApiTest } from '#src/helpers/hook.js';
+import { expectRejects } from '#src/helpers/index.js';
 import {
   enableAllPasswordSignInMethods,
   enableAllVerificationCodeSignInMethods,
@@ -66,7 +72,10 @@ describe('trigger invalid hook', () => {
   });
 
   it('should log invalid hook url error', async () => {
-    await signInWithPassword({ username, password });
+    await signInWithPassword({
+      identifier: { type: SignInIdentifier.Username, value: username },
+      password,
+    });
 
     const hook = webHookApi.hooks.get('invalidHookEventListener')!;
 
@@ -111,7 +120,7 @@ describe('interaction api trigger hooks', () => {
     const registerHook = webHookApi.hooks.get('registerOnlyInteractionHookEventListener')!;
     const dataHook = webHookApi.hooks.get('dataHookEventListener')!;
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const userId = await registerNewUser(username, password);
+    const userId = await registerNewUserUsernamePassword(username, password);
 
     const interactionHookEventPayload: Record<string, unknown> = {
       event: InteractionHookEvent.PostRegister,
@@ -149,7 +158,10 @@ describe('interaction api trigger hooks', () => {
   });
 
   it('user sign in interaction API  without profile update', async () => {
-    await signInWithPassword({ username, password });
+    await signInWithPassword({
+      identifier: { type: SignInIdentifier.Username, value: username },
+      password,
+    });
 
     const interactionHook = webHookApi.hooks.get('interactionHookEventListener')!;
     const dataHook = webHookApi.hooks.get('dataHookEventListener')!;
@@ -187,9 +199,30 @@ describe('interaction api trigger hooks', () => {
     const dataHook = webHookApi.hooks.get('dataHookEventListener')!;
     const user = userApi.users.find(({ username: name }) => name === username)!;
 
-    await signInWithUsernamePasswordAndUpdateEmailOrPhone(username, password, {
-      email,
+    const client = await initExperienceClient();
+    await identifyUserWithUsernamePassword(client, username, password);
+
+    await expectRejects(client.identifyUser(), {
+      code: 'user.missing_profile',
+      status: 422,
     });
+
+    const identifier = { type: SignInIdentifier.Email, value: email } as const;
+    const { verificationId, code } = await successfullySendVerificationCode(client, {
+      identifier,
+      interactionEvent: InteractionEvent.SignIn,
+    });
+    await successfullyVerifyVerificationCode(client, {
+      identifier,
+      verificationId,
+      code,
+    });
+    await client.updateProfile({ type: SignInIdentifier.Email, verificationId });
+    await client.identifyUser();
+
+    const { redirectTo } = await client.submitInteraction();
+    await processSession(client, redirectTo);
+    await logoutClient(client);
 
     const interactionHookEventPayload: Record<string, unknown> = {
       event: InteractionHookEvent.PostSignIn,
@@ -223,7 +256,13 @@ describe('interaction api trigger hooks', () => {
     const dataHook = webHookApi.hooks.get('dataHookEventListener')!;
     const user = userApi.users.find(({ username: name }) => name === username)!;
 
-    await resetPassword({ email }, newPassword);
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
+
+    await identifyUserWithEmailVerificationCode(client, email);
+    await client.resetPassword({ password: newPassword });
+    await client.submitInteraction();
 
     const interactionHookEventPayload: Record<string, unknown> = {
       event: InteractionHookEvent.PostResetPassword,
