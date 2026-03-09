@@ -4,6 +4,8 @@ const applications = {
   subtitle:
     'Настроить аутентификацию Logto для вашего нативного, одностраничного, машина-машина или традиционного приложения.',
   subtitle_with_app_type: 'Настроить аутентификацию Logto для вашего приложения {{name}}',
+  create_device_flow_description:
+    'Создайте нативное приложение, использующее OAuth 2.0 Device Authorization Grant для устройств с ограниченным вводом или headless-приложений.',
   create: 'Создать заявку',
   create_third_party: 'Создать стороннее приложение',
   create_thrid_party_modal_title: 'Создать стороннее приложение ({{type}})',

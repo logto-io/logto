@@ -231,6 +231,7 @@ function Applications({ tab }: Props) {
           )}
           defaultCreateFrameworkName={selectedGuide?.metadata.name ?? undefined}
           isDefaultCreateThirdParty={selectedGuide?.metadata.isThirdParty ?? undefined}
+          isDefaultCreateDeviceFlow={selectedGuide?.id === 'native-device-flow' || undefined}
           onCompleted={onAppCreationCompleted}
         />
       )}

@@ -9,6 +9,7 @@ import apiSpringBoot from './api-spring-boot/index';
 import m2mGeneral from './m2m-general/index';
 import nativeAndroid from './native-android/index';
 import nativeCapacitor from './native-capacitor/index';
+import nativeDeviceFlow from './native-device-flow/index';
 import nativeExpo from './native-expo/index';
 import nativeFlutter from './native-flutter/index';
 import nativeIosSwift from './native-ios-swift/index';
@@ -383,6 +384,14 @@ export const guides: Readonly<Guide[]> = Object.freeze([
     DarkLogo: safeLazy(async () => import('@/assets/icons/native-app-dark.svg?react')),
     Component: safeLazy(async () => import('./third-party-oidc-native/README.mdx')),
     metadata: thirdPartyOidcNative,
+  },
+  {
+    order: 6,
+    id: 'native-device-flow',
+    Logo: safeLazy(async () => import('@/assets/icons/native-app.svg?react')),
+    DarkLogo: safeLazy(async () => import('@/assets/icons/native-app-dark.svg?react')),
+    Component: safeLazy(async () => import('./native-device-flow/README.mdx')),
+    metadata: nativeDeviceFlow,
   },
 ]);
 /* eslint-enable max-lines */

@@ -4,6 +4,8 @@ const applications = {
   subtitle:
     'ネイティブ、シングルページ、マシン・トゥ・マシン、または従来のアプリケーションに Logto 認証を設定する',
   subtitle_with_app_type: 'あなたの {{name}} アプリケーションに Logto 認証を設定する',
+  create_device_flow_description:
+    'OAuth 2.0 デバイス認可グラントを使用するネイティブアプリケーションを作成します。入力制限のあるデバイスやヘッドレスアプリ向けです。',
   create: 'アプリケーションを作成する',
   create_third_party: 'サードパーティアプリケーションを作成する',
   create_thrid_party_modal_title: 'サードパーティアプリを作成する（{{type}}）',

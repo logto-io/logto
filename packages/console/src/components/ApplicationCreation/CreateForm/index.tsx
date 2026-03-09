@@ -56,6 +56,7 @@ export type Props = {
   readonly isDefaultCreateThirdParty?: boolean;
   readonly defaultCreateType?: ApplicationType;
   readonly defaultCreateFrameworkName?: string;
+  readonly isDefaultCreateDeviceFlow?: boolean;
   readonly onClose?: (createdApp?: Application) => void;
 };
 
@@ -63,10 +64,15 @@ function CreateForm({
   defaultCreateType,
   defaultCreateFrameworkName,
   isDefaultCreateThirdParty,
+  isDefaultCreateDeviceFlow,
   onClose,
 }: Props) {
   const formMethods = useForm<FormData>({
-    defaultValues: { type: defaultCreateType, isThirdParty: isDefaultCreateThirdParty },
+    defaultValues: {
+      type: defaultCreateType,
+      isThirdParty: isDefaultCreateThirdParty,
+      isDeviceFlow: isDefaultCreateDeviceFlow,
+    },
   });
   const {
     handleSubmit,
@@ -204,13 +210,24 @@ function CreateForm({
       );
     }
 
+    // DEV: Device flow create form description
+    if (isDefaultCreateDeviceFlow) {
+      return <DynamicT forKey="applications.create_device_flow_description" />;
+    }
+
     return (
       <DynamicT
         forKey="applications.subtitle_with_app_type"
         interpolation={{ name: defaultCreateFrameworkName }}
       />
     );
-  }, [defaultCreateFrameworkName, getDocumentationUrl, isDefaultCreateThirdParty, t]);
+  }, [
+    defaultCreateFrameworkName,
+    isDefaultCreateDeviceFlow,
+    getDocumentationUrl,
+    isDefaultCreateThirdParty,
+    t,
+  ]);
 
   return (
     <Modal
@@ -324,9 +341,9 @@ function CreateForm({
               />
             </FormField>
             {/* DEV: Device flow authorization flow selector */}
-            {isDevFeaturesEnabled && applicationType === ApplicationType.Native && (
-              <AuthorizationFlowSelector />
-            )}
+            {isDevFeaturesEnabled &&
+              applicationType === ApplicationType.Native &&
+              !defaultCreateFrameworkName && <AuthorizationFlowSelector />}
             {defaultCreateType && <input hidden {...register('type')} value={defaultCreateType} />}
           </form>
         </FormProvider>

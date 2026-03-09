@@ -3,6 +3,8 @@ const applications = {
   title: '全部應用',
   subtitle: '創建一個移動、單頁、machine-to-machine 或傳統 web 應用程序，並通過 Logto 進行身份驗證',
   subtitle_with_app_type: '設置 {{name}} 應用程序的 Logto 身份驗證',
+  create_device_flow_description:
+    '建立一個使用 OAuth 2.0 裝置授權許可的原生應用程式，適用於輸入受限裝置或無頭應用程式。',
   create: '創建應用',
   create_third_party: '創建第三方應用',
   create_thrid_party_modal_title: '創建第三方應用（{{type}}）',

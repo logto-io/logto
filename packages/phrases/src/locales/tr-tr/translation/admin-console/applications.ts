@@ -4,6 +4,8 @@ const applications = {
   subtitle:
     'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa, machine to machine veya geleneksel bir uygulama ayarlayınız',
   subtitle_with_app_type: 'Logto Doğrulamasını {{name}} uygulamanız için yapılandırın',
+  create_device_flow_description:
+    'Giriş kısıtlı cihazlar veya headless uygulamalar için OAuth 2.0 Cihaz Yetkilendirme Hakkı kullanan yerel bir uygulama oluşturun.',
   create: 'Uygulama oluştur',
   create_third_party: 'Üçüncü taraf uygulama oluştur',
   create_thrid_party_modal_title: 'Üçüncü taraf uygulaması oluştur ({{type}})',
