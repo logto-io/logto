@@ -231,7 +231,9 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
     }
   }, [mfaRequirementMode, formValues, reset]);
 
-  const shouldShowSetUpPrompts = mfaRequirementMode !== MfaRequirementMode.Mandatory;
+  const shouldShowSetUpPrompt = mfaRequirementMode !== MfaRequirementMode.Mandatory;
+  const shouldShowOrganizationRequiredMfaPolicy =
+    mfaRequirementMode === MfaRequirementMode.Optional;
   const setUpPromptOptions =
     mfaRequirementMode === MfaRequirementMode.Adaptive
       ? nonSkippableMfaPromptOptions
@@ -419,7 +421,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
               />
             </FormField>
           )}
-          {shouldShowSetUpPrompts && (
+          {shouldShowSetUpPrompt && (
             <FormField title="mfa.set_up_prompt" headlineSpacing="large">
               <Controller
                 control={control}
@@ -436,7 +438,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
               />
             </FormField>
           )}
-          {shouldShowSetUpPrompts && (
+          {shouldShowOrganizationRequiredMfaPolicy && (
             <FormField title="mfa.set_up_organization_required_mfa_prompt" headlineSpacing="large">
               <Controller
                 control={control}
