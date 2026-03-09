@@ -16,11 +16,11 @@ import {
   type Mfa as MfaSettings,
   OrganizationRequiredMfaPolicy,
   MfaFactor,
-  SignInIdentifier,
-  AlternativeSignUpIdentifier,
   userMfaDataKey,
   userPasskeySignInDataKey,
   userMfaDataGuard,
+  AlternativeSignUpIdentifier,
+  SignInIdentifier,
 } from '@logto/schemas';
 import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
 import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
@@ -539,7 +539,7 @@ export class Mfa {
   }
 
   /**
-   * Optionally suggest user to bind additional MFA factors during registration.
+   * Optionally suggest user to bind additional MFA factors.
    * Encapsulates suggestion logic and throws a 422 with `session.mfa.suggest_additional_mfa`
    * when conditions are met.
    * The purpose is to suggest another MFA factor if the user has only Email, Phone, or Passkey factor,
@@ -550,19 +550,29 @@ export class Mfa {
     factorsInUser: MfaFactor[],
     availableFactors: MfaFactor[]
   ) {
-    // Only suggest during registration flow
-    if (this.interactionContext.getInteractionEvent() !== InteractionEvent.Register) {
+    // Respect user's choice to skip suggestion for this interaction
+    if (this.additionalBindingSuggestionSkipped) {
       return;
     }
 
-    const { passkeySignIn } = await this.signInExperienceValidator.getSignInExperienceData();
-    const hasOnlyBoundWebAuthnForPasskeySignIn =
-      passkeySignIn.enabled &&
-      this.bindMfaFactorsArray.length === 1 &&
-      this.bindMfaFactorsArray[0]?.type === MfaFactor.WebAuthn;
+    if (
+      !EnvSet.values.isDevFeaturesEnabled &&
+      this.interactionContext.getInteractionEvent() !== InteractionEvent.Register
+    ) {
+      return;
+    }
 
-    const { signUp } = await this.signInExperienceValidator.getSignInExperienceData();
-    // If the user has email, but not registered by email, no suggestion
+    const sortedFactors = sortMfaFactors(availableFactors);
+    const additionalFactors = sortedFactors.filter((factor) => !factorsInUser.includes(factor));
+
+    // No available factors to suggest
+    if (additionalFactors.length === 0) {
+      return;
+    }
+
+    const { signUp, passkeySignIn } =
+      await this.signInExperienceValidator.getSignInExperienceData();
+    // If the user has email, but not registered by email, no suggestion. (Email bound as MFA factor)
     if (
       factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
       !signUp.identifiers.includes(SignInIdentifier.Email) &&
@@ -574,7 +584,7 @@ export class Mfa {
     ) {
       return;
     }
-    // If the user has phone, but not registered by phone, no suggestion
+    // If the user has phone, but not registered by phone, no suggestion. (Phone bound as MFA factor)
     if (
       factorsInUser.includes(MfaFactor.PhoneVerificationCode) &&
       !signUp.identifiers.includes(SignInIdentifier.Phone) &&
@@ -587,28 +597,15 @@ export class Mfa {
       return;
     }
 
-    const sortedFactors = sortMfaFactors(availableFactors);
-
-    const additionalFactors = sortedFactors.filter((factor) => !factorsInUser.includes(factor));
-
-    // Respect user's choice to skip suggestion for this interaction
-    if (this.additionalBindingSuggestionSkipped) {
+    if (
+      factorsInUser.includes(MfaFactor.TOTP) ||
+      factorsInUser.includes(MfaFactor.BackupCode) ||
+      (factorsInUser.includes(MfaFactor.WebAuthn) && !passkeySignIn.enabled)
+    ) {
       return;
     }
 
-    // If user already bound an MFA in this interaction, don't suggest again
-    if (this.bindMfaFactorsArray.length > 0 && !hasOnlyBoundWebAuthnForPasskeySignIn) {
-      return;
-    }
-
-    // No available factors to suggest
-    if (additionalFactors.length === 0) {
-      return;
-    }
-
-    // Get user data for masking
-    const user = await this.interactionContext.getIdentifiedUser();
-    const { primaryEmail, primaryPhone } = user;
+    const { primaryEmail, primaryPhone } = await this.interactionContext.getIdentifiedUser();
 
     // Build masked identifiers for bound factors
     const maskedIdentifiers = condObject({
@@ -627,7 +624,8 @@ export class Mfa {
       {
         availableFactors: sortedFactors,
         maskedIdentifiers,
-        isWebAuthnUsedAsSignInPasskey: hasOnlyBoundWebAuthnForPasskeySignIn,
+        isWebAuthnUsedAsSignInPasskey:
+          passkeySignIn.enabled && factorsInUser.includes(MfaFactor.WebAuthn),
         skippable: true,
         suggestion: true,
       }

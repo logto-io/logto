@@ -113,8 +113,14 @@ const usePasskeyAutofillConditionalUI = () => {
       isPasskeyAutofillEnabled:
         isDevFeaturesEnabled && passkeySignIn?.enabled && passkeySignIn.allowAutofill,
       triggerPasskeySignInViaConditionalUi,
+      abortConditionalUI,
     }),
-    [passkeySignIn?.enabled, passkeySignIn?.allowAutofill, triggerPasskeySignInViaConditionalUi]
+    [
+      passkeySignIn?.enabled,
+      passkeySignIn?.allowAutofill,
+      triggerPasskeySignInViaConditionalUi,
+      abortConditionalUI,
+    ]
   );
 };
 

@@ -12,7 +12,7 @@ import {
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { mockUser } from '#src/__mocks__/user.js';
+import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -23,6 +23,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
 
 import { EmailCodeVerification } from './verifications/code-verification.js';
+import { SignInWebAuthnVerification } from './verifications/web-authn-verification.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -402,6 +403,30 @@ describe('ExperienceInteraction class', () => {
         -122.4194
       );
       expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
+    });
+  });
+
+  describe('guardMfaVerificationStatus', () => {
+    it('skips MFA verification check when sign-in passkey is already verified', async () => {
+      const { libraries, queries } = tenant;
+      const interactionDetails = {
+        result: {
+          interactionEvent: InteractionEvent.SignIn,
+          userId: mockUserWithMfaVerifications.id,
+        },
+      } as unknown as Interaction;
+      const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+
+      experienceInteraction.setVerificationRecord(
+        new SignInWebAuthnVerification(libraries, queries, {
+          id: 'mock-sign-in-webauthn-verification-id',
+          type: VerificationType.SignInWebAuthn,
+          verified: true,
+          userId: mockUserWithMfaVerifications.id,
+        })
+      );
+
+      await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.not.toThrow();
     });
   });
 });
