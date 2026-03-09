@@ -192,9 +192,9 @@ describe('adaptive MFA experience hook trigger', () => {
           }
         );
 
-        expect(
-          await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)
-        ).toHaveLength(0);
+        expect(await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(
+          0
+        );
 
         await successfullyVerifyTotp(client, {
           code: authenticator.generate(totpVerification.secret),
@@ -207,7 +207,9 @@ describe('adaptive MFA experience hook trigger', () => {
         expect(
           await getHookLogs(adaptiveHook.id, InteractionHookEvent.PostSignInAdaptiveMfaTriggered)
         ).toHaveLength(1);
-        expect(await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(1);
+        expect(await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(
+          1
+        );
 
         await assertHookLogResult(postSignInHook, InteractionHookEvent.PostSignIn, {
           hookPayload: {

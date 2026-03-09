@@ -24,6 +24,7 @@ import {
   signInWithEnterpriseSso,
   signInWithPassword,
 } from '#src/helpers/experience/index.js';
+import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
 import { getSupportedHookEvents, WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
@@ -31,7 +32,6 @@ import {
   enableAllPasswordSignInMethods,
   enableAllVerificationCodeSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
-import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 import { generateEmail, generatePassword, randomString, waitFor } from '#src/utils.js';
 
@@ -242,7 +242,9 @@ describe('experience api hook trigger', () => {
         },
       });
 
-      expect(await getHookLogs(interactionHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(0);
+      expect(await getHookLogs(interactionHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(
+        0
+      );
 
       await successfullyVerifyTotp(client, {
         code: authenticator.generate(totpVerification.secret),
@@ -252,7 +254,9 @@ describe('experience api hook trigger', () => {
       await processSession(client, redirectTo);
       await logoutClient(client);
 
-      expect(await getHookLogs(interactionHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(1);
+      expect(await getHookLogs(interactionHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(
+        1
+      );
 
       await assertHookLogResult(interactionHook, InteractionHookEvent.PostSignIn, {
         hookPayload: {
