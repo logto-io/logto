@@ -75,11 +75,19 @@ export function koaExperienceInteractionHooks<
       await next();
 
       if (dataHookContext.dataHookContextArray.length > 0) {
+        // Data hooks represent successful data mutations and should only be dispatched
+        // after the interaction flow completes without throwing.
         // Hooks should not crash the app
         void trySafe(triggerDataHooks(getConsoleLogFromContext(ctx), dataHookContext));
       }
     } finally {
       if (interactionHookContext.interactionHookResults.length > 0) {
+        // Interaction hooks are queued when the corresponding interaction event is known to
+        // have happened. `PostSignInAdaptiveMfaTriggered` is assigned before the MFA
+        // challenge error is thrown, so dispatch must happen in `finally`.
+        // If future interaction hooks need mixed semantics, split them by dispatch policy
+        // (for example, success-only vs finally) instead of sending every interaction hook
+        // on failed submits.
         // Hooks should not crash the app
         void trySafe(
           triggerInteractionHooks(getConsoleLogFromContext(ctx), interactionHookContext)
