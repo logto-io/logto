@@ -74,6 +74,11 @@ export function koaExperienceInteractionHooks<
     try {
       await next();
 
+      if (dataHookContext.dataHookContextArray.length > 0) {
+        // Hooks should not crash the app
+        void trySafe(triggerDataHooks(getConsoleLogFromContext(ctx), dataHookContext));
+      }
+    } finally {
       if (interactionHookContext.interactionHookResults.length > 0) {
         // Hooks should not crash the app
         void trySafe(
@@ -81,11 +86,6 @@ export function koaExperienceInteractionHooks<
         );
       }
 
-      if (dataHookContext.dataHookContextArray.length > 0) {
-        // Hooks should not crash the app
-        void trySafe(triggerDataHooks(getConsoleLogFromContext(ctx), dataHookContext));
-      }
-    } finally {
       if (dataHookContext.exceptionHookContextArray.length > 0) {
         // Hooks should not crash the app
         void trySafe(triggerExceptionHooks(getConsoleLogFromContext(ctx), dataHookContext));

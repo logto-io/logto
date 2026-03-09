@@ -12,6 +12,7 @@ import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { isDevFeaturesEnabled } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { resetPasswordlessConnectors } from '#src/helpers/connector.js';
+import { expectRejects } from '#src/helpers/index.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
@@ -100,6 +101,85 @@ describe('adaptive MFA experience hook trigger', () => {
             },
           }
         );
+      } finally {
+        await updateSignInExperience({
+          mfa: {
+            factors: [],
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+          },
+          adaptiveMfa: { enabled: false },
+        });
+      }
+    }
+  );
+
+  (isDevFeaturesEnabled ? it : it.skip)(
+    'triggers adaptive MFA interaction hook when submit requires MFA verification',
+    async () => {
+      try {
+        await updateSignInExperience({
+          mfa: {
+            factors: [MfaFactor.TOTP],
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+          },
+          adaptiveMfa: { enabled: true },
+        });
+
+        await webHookApi.create({
+          name: 'adaptiveMfaFailedSubmitHookEventListener',
+          events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],
+          config: { url: webHookMockServer.endpoint },
+        });
+
+        const { username, password } = generateNewUserProfile({ username: true, password: true });
+        const user = await userApi.create({ username, password });
+        const totpVerification = await createUserMfaVerification(user.id, MfaFactor.TOTP);
+
+        if (totpVerification.type !== MfaFactor.TOTP) {
+          throw new Error('unexpected mfa type');
+        }
+
+        const client = await initExperienceClient({
+          extraHeaders: { 'x-logto-cf-bot-score': '10' },
+        });
+        await identifyUserWithUsernamePassword(client, username, password);
+
+        await expectRejects(client.submitInteraction(), {
+          code: 'session.mfa.require_mfa_verification',
+          status: 403,
+          expectData: (data: { availableFactors: string[] }) => {
+            expect(data.availableFactors).toEqual([MfaFactor.TOTP]);
+          },
+        });
+
+        const adaptiveHook = webHookApi.hooks.get('adaptiveMfaFailedSubmitHookEventListener')!;
+
+        await assertHookLogResult(
+          adaptiveHook,
+          InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+          {
+            hookPayload: {
+              event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+              interactionEvent: InteractionEvent.SignIn,
+              sessionId: expect.any(String),
+              adaptiveMfaResult: expect.objectContaining({
+                requiresMfa: true,
+                triggeredRules: expect.arrayContaining([
+                  expect.objectContaining({ rule: 'untrusted_ip' }),
+                ]) as unknown,
+              }),
+              user: expect.objectContaining({ id: user.id, username }),
+            },
+          }
+        );
+
+        await successfullyVerifyTotp(client, {
+          code: authenticator.generate(totpVerification.secret),
+        });
+
+        const { redirectTo } = await client.submitInteraction();
+        await processSession(client, redirectTo);
+        await logoutClient(client);
       } finally {
         await updateSignInExperience({
           mfa: {
