@@ -12,10 +12,10 @@ import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { isDevFeaturesEnabled } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { resetPasswordlessConnectors } from '#src/helpers/connector.js';
-import { expectRejects } from '#src/helpers/index.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verification.js';
 import { WebHookApiTest } from '#src/helpers/hook.js';
+import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 
