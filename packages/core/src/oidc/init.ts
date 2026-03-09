@@ -122,6 +122,9 @@ export default function initOidc(
       devInteractions: { enabled: false },
       clientCredentials: { enabled: true },
       backchannelLogout: { enabled: true },
+      deviceFlow: {
+        enabled: EnvSet.values.isDevFeaturesEnabled,
+      },
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
