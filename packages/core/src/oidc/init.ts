@@ -382,6 +382,7 @@ export default function initOidc(
 
         return 60 * 60; // 1 hour in seconds
       },
+      DeviceCode: 900 /* 15 minutes in seconds */,
       Interaction: 3600 /* 1 hour in seconds */,
       Session: 1_209_600 /* 14 days in seconds */,
       // Set this to the longest allowed duration of the refresh token
