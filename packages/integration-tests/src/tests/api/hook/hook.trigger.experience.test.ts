@@ -227,7 +227,7 @@ describe('experience api hook trigger', () => {
       await updateSignInExperience({
         mfa: {
           factors: [MfaFactor.TOTP],
-          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+          policy: MfaPolicy.Mandatory,
         },
       });
 

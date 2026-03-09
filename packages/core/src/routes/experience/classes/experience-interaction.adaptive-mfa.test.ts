@@ -7,6 +7,7 @@ import {
   type User,
   userMfaDataKey,
 } from '@logto/schemas';
+import { VerificationType } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { type Optional } from '@silverhand/essentials';
 

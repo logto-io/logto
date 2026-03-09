@@ -1,10 +1,44 @@
-import { LogResult, type Hook, type HookEvent } from '@logto/schemas';
+import { LogResult, type Hook, type HookEvent, type Log } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import { getWebhookRecentLogs } from '#src/api/logs.js';
 import { waitFor } from '#src/utils.js';
 
 import { mockHookResponseGuard, verifySignature } from './WebhookMockServer.js';
+
+const getRecentHookLogs = async (hookId: string, event: HookEvent) =>
+  getWebhookRecentLogs(
+    hookId,
+    new URLSearchParams({ logKey: `TriggerHook.${event}`, page_size: '10' })
+  );
+
+const getLatestHookLog = async (hookId: string, event: HookEvent) => {
+  const logs = await getRecentHookLogs(hookId, event);
+
+  return logs[0];
+};
+
+const waitForLatestHookLog = async (
+  hookId: string,
+  event: HookEvent,
+  retriesLeft = 50
+): Promise<Log | undefined> => {
+  const logEntry = await getLatestHookLog(hookId, event);
+
+  if (logEntry !== undefined || retriesLeft <= 1) {
+    return logEntry;
+  }
+
+  await waitFor(100);
+
+  return waitForLatestHookLog(hookId, event, retriesLeft - 1);
+};
+
+const getLatestHookLogAfterDelay = async (hookId: string, event: HookEvent) => {
+  await waitFor(100);
+
+  return getLatestHookLog(hookId, event);
+};
 
 export const assertHookLogResult = async (
   { id: hookId, signingKey }: Hook,
@@ -15,15 +49,9 @@ export const assertHookLogResult = async (
     hookPayload?: Record<string, unknown>;
   }
 ) => {
-  //  Since the webhook request is async, we need to wait for a while to ensure the webhook response is received.
-  await waitFor(100);
-
-  const logs = await getWebhookRecentLogs(
-    hookId,
-    new URLSearchParams({ logKey: `TriggerHook.${event}`, page_size: '10' })
-  );
-
-  const logEntry = logs[0];
+  const logEntry = assertions.toBeUndefined
+    ? await getLatestHookLogAfterDelay(hookId, event)
+    : await waitForLatestHookLog(hookId, event);
 
   if (assertions.toBeUndefined) {
     expect(logEntry).toBeUndefined();
