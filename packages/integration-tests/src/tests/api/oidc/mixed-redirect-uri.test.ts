@@ -4,13 +4,11 @@
  */
 
 import { Prompt } from '@logto/js';
-import { ApplicationType, InteractionEvent } from '@logto/schemas';
+import { ApplicationType, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { createApplication } from '#src/api/application.js';
-import { putInteraction } from '#src/api/interaction.js';
-import MockClient from '#src/client/index.js';
-import { processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generatePassword, generateUsername } from '#src/utils.js';
@@ -35,16 +33,21 @@ describe('mixed redirect URI protocols', () => {
     const application = await createApplication('Mixed Redirect URI', applicationType, {
       oidcClientMetadata: { redirectUris: [redirectUri], postLogoutRedirectUris: [redirectUri] },
     });
-    const client = new MockClient({
-      appId: application.id,
-      prompt: Prompt.Login,
-      scopes: [],
+    const client = await initExperienceClient({
+      config: {
+        appId: application.id,
+        prompt: Prompt.Login,
+        scopes: [],
+      },
+      redirectUri,
     });
-    await client.initSession(redirectUri);
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
+
+    const { verificationId } = await client.verifyPassword({
+      identifier: { type: SignInIdentifier.Username, value: username },
+      password,
     });
+    await client.identifyUser({ verificationId });
+
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
   };

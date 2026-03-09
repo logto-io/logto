@@ -1,11 +1,11 @@
 import { Prompt } from '@logto/node';
-import { InteractionEvent, demoAppApplicationId } from '@logto/schemas';
+import { demoAppApplicationId } from '@logto/schemas';
 
-import { assignRolesToUser, putRolesToUser, putInteraction } from '#src/api/index.js';
+import { assignRolesToUser, putRolesToUser } from '#src/api/index.js';
 import { createRole } from '#src/api/role.js';
-import MockClient from '#src/client/index.js';
 import { demoAppRedirectUri } from '#src/constants.js';
-import { processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
+import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
@@ -19,16 +19,15 @@ describe('OpenID Connect ID token', () => {
   let userId = '';
 
   const fetchIdToken = async (scopes: string[], expectClaims?: Record<string, unknown>) => {
-    const client = new MockClient({
-      appId: demoAppApplicationId,
-      prompt: Prompt.Login,
-      scopes,
+    const client = await initExperienceClient({
+      config: {
+        appId: demoAppApplicationId,
+        prompt: Prompt.Login,
+        scopes,
+      },
+      redirectUri: demoAppRedirectUri,
     });
-    await client.initSession(demoAppRedirectUri);
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
-    });
+    await identifyUserWithUsernamePassword(client, username, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     const idToken = await client.getIdTokenClaims();

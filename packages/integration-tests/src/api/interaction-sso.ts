@@ -2,39 +2,6 @@ import api from './api.js';
 
 export const ssoPath = 'single-sign-on';
 
-export const getSsoAuthorizationUrl = async (
-  cookie: string,
-  data: {
-    connectorId: string;
-    state: string;
-    redirectUri: string;
-  }
-) => {
-  const { connectorId, ...payload } = data;
-  return api
-    .post(`interaction/${ssoPath}/${connectorId}/authorization-url`, {
-      headers: { cookie },
-      json: payload,
-    })
-    .json<{ redirectTo: string }>();
-};
-
-export const getSsoConnectorsByEmail = async (
-  cookie: string,
-  data: {
-    email: string;
-  }
-) => {
-  return api
-    .get(`interaction/${ssoPath}/connectors`, {
-      headers: { cookie },
-      searchParams: {
-        email: data.email,
-      },
-    })
-    .json<string[]>();
-};
-
 export const postSamlAssertion = async (data: {
   connectorId: string;
   RelayState: string;
@@ -46,28 +13,4 @@ export const postSamlAssertion = async (data: {
       json: payload,
     })
     .json();
-};
-
-export const postSsoAuthentication = async (
-  cookie: string,
-  payload: {
-    connectorId: string;
-    data: Record<string, unknown>;
-  }
-) => {
-  const { connectorId, data } = payload;
-  return api
-    .post(`interaction/${ssoPath}/${connectorId}/authentication`, {
-      headers: { cookie },
-      json: data,
-    })
-    .json<{ redirectTo: string }>();
-};
-
-export const postSsoRegistration = async (cookie: string, connectorId: string) => {
-  return api
-    .post(`interaction/${ssoPath}/${connectorId}/registration`, {
-      headers: { cookie },
-    })
-    .json<{ redirectTo: string }>();
 };

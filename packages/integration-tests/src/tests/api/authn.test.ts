@@ -5,9 +5,9 @@ import {
   mockOktaSamlAssertion,
 } from '#src/__mocks__/sso-connectors-mock.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
-import { getSsoAuthorizationUrl, postSamlAssertion } from '#src/api/interaction-sso.js';
+import { postSamlAssertion } from '#src/api/interaction-sso.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
-import { initClient } from '#src/helpers/client.js';
+import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest, randomString } from '#src/utils.js';
 
@@ -45,18 +45,15 @@ describe('SAML SSO ACS endpoint', () => {
 
   it('should throw 401 if the assertion is invalid', async () => {
     const connectorId = ssoConnectorApi.firstConnectorId!;
-    const client = await initClient();
+    const client = await initExperienceClient();
 
-    const { redirectTo } = await client.send(getSsoAuthorizationUrl, {
-      connectorId,
+    const { authorizationUri } = await client.getEnterpriseSsoAuthorizationUri(connectorId, {
       state: 'foo_state',
       redirectUri: 'http://foo.dev/callback',
     });
 
-    const url = new URL(redirectTo);
+    const url = new URL(authorizationUri);
     const RelayState = url.searchParams.get('RelayState')!;
-
-    const { providerConfig } = await ssoConnectorApi.getSsoConnectorById(connectorId);
 
     await expectRejects(
       postSamlAssertion({ connectorId, RelayState, SAMLResponse: encodedSamlAssertion }),

@@ -1,10 +1,10 @@
 import { UserScope } from '@logto/core-kit';
-import { InteractionEvent, type Resource } from '@logto/schemas';
+import { type Resource } from '@logto/schemas';
 
-import { createResource, deleteResource, deleteUser, putInteraction } from '#src/api/index.js';
+import { createResource, deleteResource, deleteUser } from '#src/api/index.js';
 import { createScope, deleteScope } from '#src/api/scope.js';
-import MockClient from '#src/client/index.js';
-import { processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
+import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
@@ -77,15 +77,13 @@ describe('get access token for organization API resource', () => {
   });
 
   it('can sign in and get access token with resource and organization_id', async () => {
-    const client = new MockClient({
-      resources: [testApiResourceInfo.indicator],
-      scopes: [scopeName, scopeName2, UserScope.Organizations],
+    const client = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+        scopes: [scopeName, scopeName2, UserScope.Organizations],
+      },
     });
-    await client.initSession();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
-    });
+    await identifyUserWithUsernamePassword(client, username, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     const accessToken = await client.getAccessToken(
@@ -103,15 +101,13 @@ describe('get access token for organization API resource', () => {
   });
 
   it('can sign in and get normal access token with all scopes', async () => {
-    const client = new MockClient({
-      resources: [testApiResourceInfo.indicator],
-      scopes: [scopeName, scopeName2],
+    const client = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+        scopes: [scopeName, scopeName2],
+      },
     });
-    await client.initSession();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
-    });
+    await identifyUserWithUsernamePassword(client, username, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
@@ -131,15 +127,13 @@ describe('get access token for organization API resource', () => {
     const username = generateUsername();
     const password = generatePassword();
     const guestUser = await createUserByAdmin({ username, password });
-    const client = new MockClient({
-      resources: [testApiResourceInfo.indicator],
-      scopes: [scopeName, UserScope.Organizations],
+    const client = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+        scopes: [scopeName, UserScope.Organizations],
+      },
     });
-    await client.initSession();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
-    });
+    await identifyUserWithUsernamePassword(client, username, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     await expect(
@@ -156,15 +150,13 @@ describe('get access token for organization API resource', () => {
     const role = await organizationApi.roleApi.create({ name: 'role3' });
     // Noted that we do not add the scope to the role.
     await organizationApi.addUserRoles(testOrganizationId, guestUser.id, [role.id]);
-    const client = new MockClient({
-      resources: [testApiResourceInfo.indicator],
-      scopes: [scopeName, UserScope.Organizations],
+    const client = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+        scopes: [scopeName, UserScope.Organizations],
+      },
     });
-    await client.initSession();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
-    });
+    await identifyUserWithUsernamePassword(client, username, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     const accessToken = await client.getAccessToken(

@@ -1,13 +1,7 @@
 import path from 'node:path';
 
 import { fetchTokenByRefreshToken } from '@logto/js';
-import {
-  InteractionEvent,
-  type Resource,
-  RoleType,
-  SignInIdentifier,
-  VerificationType,
-} from '@logto/schemas';
+import { InteractionEvent, type Resource, RoleType, VerificationType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
@@ -20,14 +14,14 @@ import {
   deleteJwtCustomizer,
   deleteResource,
   deleteUser,
-  putInteraction,
   upsertJwtCustomizer,
 } from '#src/api/index.js';
 import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
 import { createScope, deleteScope } from '#src/api/scope.js';
-import MockClient, { defaultConfig } from '#src/client/index.js';
+import { defaultConfig } from '#src/client/index.js';
 import { logtoUrl } from '#src/constants.js';
 import { initExperienceClient, processSession } from '#src/helpers/client.js';
+import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateUsername, generatePassword, getAccessTokenPayload } from '#src/utils.js';
@@ -88,15 +82,13 @@ describe('get access token', () => {
   });
 
   it('can sign in and getAccessToken with admin user', async () => {
-    const client = new MockClient({
-      resources: [testApiResourceInfo.indicator],
-      scopes: testApiScopeNames,
+    const client = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+        scopes: testApiScopeNames,
+      },
     });
-    await client.initSession();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
-    });
+    await identifyUserWithUsernamePassword(client, username, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
@@ -119,17 +111,7 @@ describe('get access token', () => {
         scopes: testApiScopeNames,
       },
     });
-
-    const { verificationId } = await client.verifyPassword({
-      identifier: {
-        type: SignInIdentifier.Username,
-        value: guestUsername,
-      },
-      password,
-    });
-    await client.identifyUser({
-      verificationId,
-    });
+    await identifyUserWithUsernamePassword(client, guestUsername, password);
 
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
@@ -156,15 +138,13 @@ describe('get access token', () => {
   });
 
   it('sign in and verify jwt', async () => {
-    const client = new MockClient({
-      resources: [testApiResourceInfo.indicator],
-      scopes: testApiScopeNames,
+    const client = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+        scopes: testApiScopeNames,
+      },
     });
-    await client.initSession();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username: guestUsername, password },
-    });
+    await identifyUserWithUsernamePassword(client, guestUsername, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
@@ -179,14 +159,10 @@ describe('get access token', () => {
   });
 
   it('can sign in and get multiple access tokens by the same refresh token within `refreshTokenReuseInterval`', async () => {
-    const client = new MockClient({ resources: [testApiResourceInfo.indicator] });
-
-    await client.initSession();
-
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
+    const client = await initExperienceClient({
+      config: { resources: [testApiResourceInfo.indicator] },
     });
+    await identifyUserWithUsernamePassword(client, username, password);
 
     const { redirectTo } = await client.submitInteraction();
 

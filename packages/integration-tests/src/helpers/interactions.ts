@@ -3,32 +3,52 @@ import type {
   PhonePasswordPayload,
   UsernamePasswordPayload,
 } from '@logto/schemas';
-import { InteractionEvent } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
-import {
-  createSocialAuthorizationUri,
-  patchInteractionIdentifiers,
-  putInteraction,
-  putInteractionProfile,
-  sendVerificationCode,
-} from '#src/api/index.js';
 import { generateUserId } from '#src/utils.js';
 
-import { initClient, logoutClient, processSession } from './client.js';
-import { expectRejects, readConnectorMessage } from './index.js';
+import { initExperienceClient, logoutClient, processSession } from './client.js';
+import {
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
+} from './experience/social-verification.js';
+import {
+  successfullySendVerificationCode,
+  successfullyVerifyVerificationCode,
+} from './experience/verification-code.js';
+import { expectRejects } from './index.js';
 import { enableAllPasswordSignInMethods } from './sign-in-experience.js';
 import { generateNewUser } from './user.js';
 
-export const registerNewUser = async (username: string, password: string) => {
-  const client = await initClient();
+const parseIdentifier = (
+  payload: UsernamePasswordPayload | EmailPasswordPayload | PhonePasswordPayload
+) => {
+  if ('username' in payload) {
+    return {
+      identifier: { type: SignInIdentifier.Username, value: payload.username },
+      password: payload.password,
+    };
+  }
 
-  await client.send(putInteraction, {
-    event: InteractionEvent.Register,
-    profile: {
-      username,
-      password,
-    },
-  });
+  if ('email' in payload) {
+    return {
+      identifier: { type: SignInIdentifier.Email, value: payload.email },
+      password: payload.password,
+    };
+  }
+
+  return {
+    identifier: { type: SignInIdentifier.Phone, value: payload.phone },
+    password: payload.password,
+  };
+};
+
+export const registerNewUser = async (username: string, password: string) => {
+  const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
+
+  await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+  await client.updateProfile({ type: 'password', value: password });
+  await client.identifyUser();
 
   const { redirectTo } = await client.submitInteraction();
   const userId = await processSession(client, redirectTo);
@@ -43,33 +63,21 @@ export const registerNewUser = async (username: string, password: string) => {
  * @returns The client and the user ID.
  */
 export const registerWithEmail = async (email: string) => {
-  const client = await initClient();
+  const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
 
-  await client.successSend(putInteraction, {
-    event: InteractionEvent.Register,
+  const identifier = { type: SignInIdentifier.Email, value: email } as const;
+  const { verificationId, code } = await successfullySendVerificationCode(client, {
+    identifier,
+    interactionEvent: InteractionEvent.Register,
   });
 
-  await client.successSend(sendVerificationCode, {
-    email,
+  await successfullyVerifyVerificationCode(client, {
+    identifier,
+    verificationId,
+    code,
   });
 
-  const verificationCodeRecord = await readConnectorMessage('Email');
-
-  expect(verificationCodeRecord).toMatchObject({
-    address: email,
-    type: InteractionEvent.Register,
-  });
-
-  const { code } = verificationCodeRecord;
-
-  await client.successSend(patchInteractionIdentifiers, {
-    email,
-    verificationCode: code,
-  });
-
-  await client.successSend(putInteractionProfile, {
-    email,
-  });
+  await client.identifyUser({ verificationId });
 
   const { redirectTo } = await client.submitInteraction();
   const id = await processSession(client, redirectTo);
@@ -78,21 +86,21 @@ export const registerWithEmail = async (email: string) => {
 };
 
 export const signInWithEmail = async (email: string) => {
-  const client = await initClient();
+  const client = await initExperienceClient();
 
-  await client.successSend(putInteraction, {
-    event: InteractionEvent.SignIn,
-  });
-  await client.successSend(sendVerificationCode, {
-    email,
+  const identifier = { type: SignInIdentifier.Email, value: email } as const;
+  const { verificationId, code } = await successfullySendVerificationCode(client, {
+    identifier,
+    interactionEvent: InteractionEvent.SignIn,
   });
 
-  const { code } = await readConnectorMessage('Email');
-
-  await client.successSend(patchInteractionIdentifiers, {
-    email,
-    verificationCode: code,
+  await successfullyVerifyVerificationCode(client, {
+    identifier,
+    verificationId,
+    code,
   });
+
+  await client.identifyUser({ verificationId });
 
   const { redirectTo } = await client.submitInteraction();
   const id = await processSession(client, redirectTo);
@@ -102,12 +110,11 @@ export const signInWithEmail = async (email: string) => {
 export const signInWithPassword = async (
   payload: UsernamePasswordPayload | EmailPasswordPayload | PhonePasswordPayload
 ) => {
-  const client = await initClient();
+  const client = await initExperienceClient();
+  const passwordPayload = parseIdentifier(payload);
 
-  await client.successSend(putInteraction, {
-    event: InteractionEvent.SignIn,
-    identifier: payload,
-  });
+  const { verificationId } = await client.verifyPassword(passwordPayload);
+  await client.identifyUser({ verificationId });
 
   const { redirectTo } = await client.submitInteraction();
 
@@ -123,30 +130,38 @@ export const createNewSocialUserWithUsernameAndPassword = async (connectorId: st
 
   const {
     userProfile: { username, password },
-    user,
   } = await generateNewUser({ username: true, password: true });
 
   await enableAllPasswordSignInMethods();
 
-  const client = await initClient();
+  const client = await initExperienceClient();
 
-  await client.successSend(putInteraction, {
-    event: InteractionEvent.SignIn,
+  const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
+    redirectUri,
+    state,
   });
 
-  await client.successSend(createSocialAuthorizationUri, { state, redirectUri, connectorId });
-
-  await client.successSend(patchInteractionIdentifiers, {
-    connectorId,
+  await successfullyVerifySocialAuthorization(client, connectorId, {
+    verificationId,
     connectorData: { state, redirectUri, code, userId: socialUserId },
   });
 
-  await expectRejects(client.submitInteraction(), {
+  await expectRejects(client.identifyUser({ verificationId }), {
     code: 'user.identity_not_exist',
+    status: 404,
+  });
+
+  await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
+
+  await expectRejects(client.identifyUser({ verificationId }), {
+    code: 'user.missing_profile',
     status: 422,
   });
-  await client.successSend(patchInteractionIdentifiers, { username, password });
-  await client.successSend(putInteractionProfile, { connectorId });
+
+  await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+  await client.updateProfile({ type: 'password', value: password });
+  await client.updateProfile({ type: 'social', verificationId });
+  await client.identifyUser();
 
   const { redirectTo } = await client.submitInteraction();
 
@@ -158,31 +173,43 @@ export const signInWithUsernamePasswordAndUpdateEmailOrPhone = async (
   password: string,
   profile: { email: string } | { phone: string }
 ) => {
-  const client = await initClient();
+  const client = await initExperienceClient();
 
-  await client.successSend(putInteraction, {
-    event: InteractionEvent.SignIn,
+  const { verificationId: passwordVerificationId } = await client.verifyPassword({
     identifier: {
-      username,
-      password,
+      type: SignInIdentifier.Username,
+      value: username,
     },
+    password,
   });
 
-  await expectRejects(client.submitInteraction(), {
+  await expectRejects(client.identifyUser({ verificationId: passwordVerificationId }), {
     code: 'user.missing_profile',
     status: 422,
   });
 
-  await client.successSend(sendVerificationCode, profile);
+  const identifier =
+    'email' in profile
+      ? ({ type: SignInIdentifier.Email, value: profile.email } as const)
+      : ({ type: SignInIdentifier.Phone, value: profile.phone } as const);
 
-  const { code } = await readConnectorMessage('email' in profile ? 'Email' : 'Sms');
-
-  await client.successSend(patchInteractionIdentifiers, {
-    ...profile,
-    verificationCode: code,
+  const { verificationId, code } = await successfullySendVerificationCode(client, {
+    identifier,
+    interactionEvent: InteractionEvent.SignIn,
   });
 
-  await client.successSend(putInteractionProfile, profile);
+  await successfullyVerifyVerificationCode(client, {
+    identifier,
+    verificationId,
+    code,
+  });
+
+  await client.updateProfile({
+    type: identifier.type,
+    verificationId,
+  });
+
+  await client.identifyUser();
 
   const { redirectTo } = await client.submitInteraction();
 
@@ -194,20 +221,25 @@ export const resetPassword = async (
   profile: { email: string } | { phone: string },
   newPassword: string
 ) => {
-  const client = await initClient();
+  const client = await initExperienceClient({ interactionEvent: InteractionEvent.ForgotPassword });
 
-  await client.successSend(putInteraction, { event: InteractionEvent.ForgotPassword });
-  await client.successSend(sendVerificationCode, {
-    ...profile,
+  const identifier =
+    'email' in profile
+      ? ({ type: SignInIdentifier.Email, value: profile.email } as const)
+      : ({ type: SignInIdentifier.Phone, value: profile.phone } as const);
+
+  const { verificationId, code } = await successfullySendVerificationCode(client, {
+    identifier,
+    interactionEvent: InteractionEvent.ForgotPassword,
   });
 
-  const { code: verificationCode } = await readConnectorMessage(
-    'email' in profile ? 'Email' : 'Sms'
-  );
-  await client.successSend(patchInteractionIdentifiers, {
-    ...profile,
-    verificationCode,
+  await successfullyVerifyVerificationCode(client, {
+    identifier,
+    verificationId,
+    code,
   });
-  await client.successSend(putInteractionProfile, { password: newPassword });
+
+  await client.identifyUser({ verificationId });
+  await client.resetPassword({ password: newPassword });
   await client.submitInteraction();
 };
