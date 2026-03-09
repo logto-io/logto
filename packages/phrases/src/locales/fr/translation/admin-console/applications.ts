@@ -23,7 +23,7 @@ const applications = {
     native: {
       title: 'Application native',
       subtitle: 'Une application qui fonctionne dans un environnement natif',
-      description: 'Exemple: application iOS, application Android',
+      description: 'Exemple : application iOS, application Android, application de bureau, TV, CLI',
     },
     spa: {
       title: 'Application à page unique',
@@ -56,6 +56,21 @@ const applications = {
       title: 'Application tierce',
       subtitle: 'Une application utilisée comme connecteur IdP tiers',
       description: 'Par exemple, OIDC, SAML',
+    },
+  },
+  authorization_flow: {
+    title: "Flux d'autorisation",
+    tooltip:
+      "Sélectionnez le flux d'autorisation pour votre application. Une fois défini, il ne pourra pas être modifié.",
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        "Le type d'autorisation par défaut et le plus courant. Les utilisateurs sont redirigés vers une page de connexion pour autoriser l'accès directement.",
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        "Pour les appareils à saisie limitée ou les applications sans interface (par ex., téléviseurs, CLI). Les utilisateurs complètent la connexion sur un appareil séparé en saisissant un code d'appareil ou en scannant un QR code.",
     },
   },
   placeholder_title: "Sélectionnez un type d'application pour continuer",

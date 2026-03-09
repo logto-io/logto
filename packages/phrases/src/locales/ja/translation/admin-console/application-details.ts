@@ -85,6 +85,10 @@ const application_details = {
     'このアプリケーションがトークン交換リクエストを開始できるようにします。これは <impersonationLink>ユーザーなりすまし</impersonationLink> と <patLink>個人用アクセストークン</patLink> に必要です。',
   allow_token_exchange_public_client_warning:
     'パブリッククライアント（シングルページアプリ／ネイティブアプリ）でトークン交換を有効にすることは推奨されません。パブリッククライアントは資格情報を安全に保存できないため、アプリケーションがトークンなりすましのリスクにさらされる可能性があります。',
+  device_flow_tag: 'デバイスフロー',
+  device_flow_notification:
+    'このアプリは入力制限のあるデバイスやヘッドレスアプリ（テレビ、CLIなど）向けに OAuth 2.0 Device Authorization Flow を有効にしています。ユーザーはデバイスコードの入力または QR コードのスキャンにより、別のデバイスでログインを完了します。<a>詳細はこちら</a>',
+  device_flow_try_demo: 'デモを試す',
   delete_description:
     'この操作は元に戻すことはできません。アプリケーション名「<span>{{name}}</span>」を入力して確認してください。',
   enter_your_application_name: 'アプリケーション名を入力してください',

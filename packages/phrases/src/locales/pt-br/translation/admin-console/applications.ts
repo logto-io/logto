@@ -23,7 +23,7 @@ const applications = {
     native: {
       title: 'Aplicativo Nativo',
       subtitle: 'Um aplicativo executado em um ambiente nativo',
-      description: 'Ex: aplicativo iOS, aplicativo Android',
+      description: 'Ex: aplicativo iOS, aplicativo Android, aplicativo desktop, TVs, CLI',
     },
     spa: {
       title: 'Aplicativo de Página Única',
@@ -55,6 +55,21 @@ const applications = {
       title: 'Aplicativo de Terceiros',
       subtitle: 'Um aplicativo usado como conector de IdP de terceiros',
       description: 'Ex.: OIDC, SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Fluxo de autorização',
+    tooltip:
+      'Selecione o fluxo de autorização para seu aplicativo. Uma vez definido, não poderá ser alterado.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'O tipo de autorização padrão e mais comum. Os usuários são redirecionados para uma página de login para autorizar o acesso diretamente.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'Para dispositivos com entrada limitada ou aplicativos headless (ex.: TVs, CLI). Os usuários completam o login em um dispositivo separado inserindo um código de dispositivo ou escaneando um QR code.',
     },
   },
   placeholder_title: 'Selecione um tipo de aplicativo para continuar',

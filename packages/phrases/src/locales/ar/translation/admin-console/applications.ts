@@ -22,7 +22,8 @@ const applications = {
     native: {
       title: 'تطبيق محلي',
       subtitle: 'تطبيق يعمل في بيئة محلية',
-      description: 'على سبيل المثال، تطبيق iOS، تطبيق Android',
+      description:
+        'على سبيل المثال، تطبيق iOS، تطبيق Android، تطبيق سطح المكتب، أجهزة التلفاز، CLI',
     },
     spa: {
       title: 'تطبيق صفحة واحدة',
@@ -53,6 +54,20 @@ const applications = {
       title: 'تطبيق الجهة الخارجية',
       subtitle: 'تطبيق يستخدم كموصل IdP من جهة خارجية',
       description: 'على سبيل المثال، OIDC، SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'تدفق التفويض',
+    tooltip: 'حدد تدفق التفويض لتطبيقك. بمجرد التعيين، لا يمكن تغييره.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'نوع التفويض الافتراضي والأكثر شيوعًا. يتم إعادة توجيه المستخدمين إلى صفحة تسجيل الدخول لتفويض الوصول مباشرة.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'للأجهزة ذات الإدخال المحدود أو التطبيقات بدون واجهة (مثل أجهزة التلفزيون، CLI). يُكمل المستخدمون تسجيل الدخول على جهاز منفصل عن طريق إدخال رمز الجهاز أو مسح رمز QR.',
     },
   },
   placeholder_title: 'حدد نوع التطبيق للمتابعة',

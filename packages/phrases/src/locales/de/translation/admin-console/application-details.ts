@@ -87,6 +87,10 @@ const application_details = {
     'Erlauben Sie dieser Anwendung, Token-Austausch-Anfragen zu initiieren. Dies ist erforderlich für <impersonationLink>Benutzer-Impersonation</impersonationLink> und <patLink>persönliche Zugriffstoken</patLink>.',
   allow_token_exchange_public_client_warning:
     'Das Aktivieren des Token-Austauschs für öffentliche Clients (Single-Page-App / native App) wird nicht empfohlen. Öffentliche Clients können Anmeldeinformationen nicht sicher speichern, was Ihre Anwendung Risiken der Token-Impersonation aussetzen kann.',
+  device_flow_tag: 'Gerätefluss',
+  device_flow_notification:
+    'Diese App aktiviert den OAuth 2.0 Device Authorization Flow für eingabebeschränkte Geräte oder kopflose Apps (z. B. Fernseher, CLI). Benutzer schließen die Anmeldung auf einem separaten Gerät ab, indem sie einen Gerätecode eingeben oder einen QR-Code scannen. <a>Mehr erfahren</a>',
+  device_flow_try_demo: 'Demo ausprobieren',
   delete_description:
     'Diese Aktion ist nicht umkehrbar. Die Anwendung wird dauerhaft gelöscht. Bitte geben Sie den Anwendungsnamen <span>{{name}}</span> zur Bestätigung ein.',
   enter_your_application_name: 'Geben Sie einen Anwendungsnamen ein',

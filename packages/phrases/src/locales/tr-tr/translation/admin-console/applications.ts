@@ -23,7 +23,7 @@ const applications = {
     native: {
       title: 'Yerel Uygulama',
       subtitle: 'Nativede çalışan bir uygulama ',
-      description: 'Örneğin, iOS uygulaması, Android uygulaması',
+      description: 'Örneğin, iOS uygulaması, Android uygulaması, masaüstü uygulaması, TV, CLI',
     },
     spa: {
       title: 'Tek Sayfalı Uygulama',
@@ -55,6 +55,20 @@ const applications = {
       title: 'Üçüncü Taraf Uygulama',
       subtitle: 'Üçüncü taraf bir IdP bağlayıcısı olarak kullanılan bir uygulama',
       description: 'Ör., OIDC, SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Yetkilendirme akışı',
+    tooltip: 'Uygulamanız için yetkilendirme akışını seçin. Bir kez ayarlandığında değiştirilemez.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'Varsayılan ve en yaygın yetkilendirme türü. Kullanıcılar, erişimi doğrudan yetkilendirmek için oturum açma sayfasına yönlendirilir.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        "Giriş kısıtlı cihazlar veya arayüzsüz uygulamalar (ör. TV'ler, CLI) için. Kullanıcılar, bir cihaz kodu girerek veya QR kodu tarayarak ayrı bir cihazda oturum açmayı tamamlar.",
     },
   },
   placeholder_title: 'Devam etmek için bir uygulama tipi seçin',

@@ -3,6 +3,7 @@ import {
   type ApplicationResponse,
   type SnakeCaseOidcConfig,
 } from '@logto/schemas';
+import { condArray } from '@silverhand/essentials';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -19,6 +20,7 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import OrganizationList from '@/components/OrganizationList';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedApp } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -124,14 +126,14 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
       <DetailsPageHeader
         icon={<ApplicationIcon type={data.type} isThirdParty={data.isThirdParty} />}
         title={data.name}
-        primaryTag={
-          data.isThirdParty
-            ? [
-                t(`${applicationTypeI18nKey.thirdParty}.title`),
-                t(`${applicationTypeI18nKey[data.type]}.title`),
-              ]
-            : t(`${applicationTypeI18nKey[data.type]}.title`)
-        }
+        primaryTag={condArray(
+          data.isThirdParty && t(`${applicationTypeI18nKey.thirdParty}.title`),
+          t(`${applicationTypeI18nKey[data.type]}.title`),
+          // DEV: Show device flow tag
+          isDevFeaturesEnabled &&
+            data.customClientMetadata.isDeviceFlow &&
+            t('application_details.device_flow_tag')
+        )}
         identifier={{ name: 'App ID', value: data.id }}
         additionalActionButton={{
           title: 'application_details.check_guide',

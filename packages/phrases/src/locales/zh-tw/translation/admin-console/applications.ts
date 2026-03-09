@@ -22,7 +22,7 @@ const applications = {
     native: {
       title: '原生應用',
       subtitle: '在原生環境中運行的應用程序',
-      description: '例如 iOS 應用程式，Android 應用程式',
+      description: '例如 iOS 應用程式、Android 應用程式、桌面應用程式、電視、CLI',
     },
     spa: {
       title: '單頁應用',
@@ -53,6 +53,19 @@ const applications = {
       title: '第三方應用程式',
       subtitle: '作為第三方 IdP 連接器使用的應用程式',
       description: '例如，OIDC、SAML',
+    },
+  },
+  authorization_flow: {
+    title: '授權流程',
+    tooltip: '選擇應用程式的授權流程。一旦設定，將無法更改。',
+    authorization_code: {
+      title: 'Authorization code',
+      description: '預設且最常見的授權類型。使用者將被重新導向到登入頁面以直接授權存取。',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        '適用於輸入受限的裝置或無介面應用程式（如電視、CLI）。使用者在另一台裝置上透過輸入裝置碼或掃描 QR 碼完成登入。',
     },
   },
   placeholder_title: '選擇應用程式類型以繼續',

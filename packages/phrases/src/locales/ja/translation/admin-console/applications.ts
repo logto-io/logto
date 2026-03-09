@@ -23,7 +23,7 @@ const applications = {
     native: {
       title: 'ネイティブアプリ',
       subtitle: 'ネイティブ環境で実行されるアプリケーション',
-      description: '例：iOSアプリ、Androidアプリ',
+      description: '例：iOSアプリ、Androidアプリ、デスクトップアプリ、テレビ、CLI',
     },
     spa: {
       title: 'シングルページアプリ',
@@ -54,6 +54,20 @@ const applications = {
       title: 'Third-party App',
       subtitle: 'サードパーティ IdP コネクターとして使用されるアプリ',
       description: '例：OIDC、SAML',
+    },
+  },
+  authorization_flow: {
+    title: '認可フロー',
+    tooltip: 'アプリケーションの認可フローを選択してください。一度設定すると変更できません。',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'デフォルトで最も一般的な認可タイプです。ユーザーはサインインページにリダイレクトされ、直接アクセスを認可します。',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        '入力制限のあるデバイスやヘッドレスアプリ（テレビ、CLIなど）向けです。ユーザーはデバイスコードの入力または QR コードのスキャンにより、別のデバイスでログインを完了します。',
     },
   },
   placeholder_title: '続行するにはアプリケーションタイプを選択してください',
