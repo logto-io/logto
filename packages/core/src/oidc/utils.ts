@@ -13,7 +13,7 @@ import {
 import { condArray, conditional, trySafe } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 
 /**
  * Build constant client metadata for an application based on its type and optional flags.
@@ -63,7 +63,12 @@ export const getConstantClientMetadata = (
    * `response_types` is set to an empty array on purpose to override oidc-provider's default
    * value, because device authorization does not use the `/authorize` response contract.
    */
-  if (type === ApplicationType.Native && options?.isDeviceFlow) {
+  // DEV: Device flow
+  if (
+    EnvSet.values.isDevFeaturesEnabled &&
+    type === ApplicationType.Native &&
+    options?.isDeviceFlow
+  ) {
     return {
       ...constantMetadata,
       grant_types: [GrantType.DeviceCode, GrantType.RefreshToken, ...optionalGrantTypes],

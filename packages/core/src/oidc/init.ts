@@ -122,6 +122,7 @@ export default function initOidc(
       devInteractions: { enabled: false },
       clientCredentials: { enabled: true },
       backchannelLogout: { enabled: true },
+      // DEV: Device flow
       deviceFlow: {
         enabled: EnvSet.values.isDevFeaturesEnabled,
       },
