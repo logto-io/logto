@@ -120,8 +120,15 @@ export class MfaValidator {
 
     const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
+    const isMfaEnabled = mfaData.success ? mfaData.data.enabled : undefined;
 
-    if (skipMfaOnSignIn && !isNoSkipMfaPolicy(this.mfaSettings.policy)) {
+    // If `isMfaEnabled` is undefined, it means the user exists before the `enabled` flag is introduced,
+    // we should still enforce MFA for them if they have MFA factors. Only skip the check if mfa is explicitly
+    // disabled, or skipped on sign-in.
+    if (
+      (isMfaEnabled === false || skipMfaOnSignIn) &&
+      !isNoSkipMfaPolicy(this.mfaSettings.policy)
+    ) {
       return false;
     }
 

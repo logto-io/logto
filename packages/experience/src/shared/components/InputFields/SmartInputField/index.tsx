@@ -61,7 +61,7 @@ const SmartInputField = (
     });
   }, [countryCode, identifierType, inputValue, isPrefixVisible, onChange]);
 
-  const { isPasskeyAutofillEnabled } = usePasskeyAutofillConditionalUI();
+  const { isPasskeyAutofillEnabled, abortConditionalUI } = usePasskeyAutofillConditionalUI();
 
   const inputHtmlProps = useMemo(() => {
     const { autoComplete, ...rest } = getInputHtmlProps(enabledTypes, identifierType);
@@ -70,6 +70,12 @@ const SmartInputField = (
       autoComplete: isPasskeyAutofillEnabled ? `username webauthn` : autoComplete,
     };
   }, [enabledTypes, identifierType, isPasskeyAutofillEnabled]);
+
+  useEffect(() => {
+    return () => {
+      abortConditionalUI();
+    };
+  }, [abortConditionalUI]);
 
   return (
     <AnimatedInputField

@@ -19,6 +19,10 @@ const mfa = {
   verify_phone_verification_code_description: 'Ingrese el código enviado a su teléfono',
   send_to_email: 'Enviar a {{identifier}}',
   send_to_phone: 'Enviar a {{identifier}}',
+  onboarding: 'Activar la verificación de 2 pasos',
+  onboarding_description:
+    'Proteja su cuenta con la verificación de 2 pasos. Elija uno o más métodos: Passkey, aplicación de autenticación (OTP), código de verificación por SMS o códigos de respaldo.',
+  enable_mfa: 'Activar la verificación de 2 pasos',
   add_mfa_factors: 'Agregar verificación de 2 pasos',
   add_mfa_description:
     'La verificación de dos factores está habilitada. Seleccione su segundo método de verificación para iniciar sesión de forma segura.',
