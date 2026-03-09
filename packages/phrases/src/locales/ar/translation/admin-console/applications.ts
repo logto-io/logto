@@ -3,6 +3,8 @@ const applications = {
   title: 'التطبيقات',
   subtitle: 'إنشاء وإدارة التطبيقات للمصادقة بواسطة OIDC.',
   subtitle_with_app_type: 'قم بإعداد مصادقة Logto لتطبيقك {{name}}',
+  create_device_flow_description:
+    'أنشئ تطبيقًا أصليًا يستخدم منح تفويض جهاز OAuth 2.0 للأجهزة ذات الإدخال المحدود أو التطبيقات بدون واجهة.',
   create: 'إنشاء تطبيق',
   create_third_party: 'إنشاء تطبيق جهة خارجية',
   create_thrid_party_modal_title: 'إنشاء تطبيق جهة خارجية ({{type}})',

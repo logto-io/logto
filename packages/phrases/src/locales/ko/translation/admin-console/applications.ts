@@ -4,6 +4,8 @@ const applications = {
   subtitle:
     '인증에 Logto를 사용할 모바일, 단일 페이지, Machine-to-Machine 또는 기존 어플리케이션을 설정할 수 있어요.',
   subtitle_with_app_type: '내 {{name}} 어플리케이션에 대한 Logto 인증 설정',
+  create_device_flow_description:
+    'OAuth 2.0 디바이스 인증 부여를 사용하는 네이티브 애플리케이션을 생성합니다. 입력이 제한된 디바이스 또는 헤드리스 앱용입니다.',
   create: '어플리케이션 생성',
   create_third_party: '서드파티 어플리케이션 생성',
   create_thrid_party_modal_title: '서드파티 앱 생성 ({{type}})',

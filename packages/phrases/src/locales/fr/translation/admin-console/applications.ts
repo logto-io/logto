@@ -4,6 +4,8 @@ const applications = {
   subtitle:
     "Configurez une application mobile, une page unique, machine to machine ou une application traditionnelle pour utiliser Logto pour l'authentification.",
   subtitle_with_app_type: "Configurez l'authentification Logto pour votre application {{name}}",
+  create_device_flow_description:
+    "Créez une application native utilisant l'octroi d'autorisation de dispositif OAuth 2.0 pour les appareils à saisie limitée ou les applications headless.",
   create: 'Créer une application',
   create_third_party: 'Créer une application tierce',
   create_thrid_party_modal_title: 'Créer une app tierce ({{type}})',

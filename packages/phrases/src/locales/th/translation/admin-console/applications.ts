@@ -3,6 +3,8 @@ const applications = {
   title: 'แอปพลิเคชัน',
   subtitle: 'สร้างและจัดการแอปพลิเคชันสำหรับการรับรองความถูกต้อง OIDC',
   subtitle_with_app_type: 'ตั้งค่าการยืนยันตัวตน Logto สำหรับแอปพลิเคชัน {{name}} ของคุณ',
+  create_device_flow_description:
+    'สร้างแอปพลิเคชันเนทีฟที่ใช้ OAuth 2.0 Device Authorization Grant สำหรับอุปกรณ์ที่มีการป้อนข้อมูลจำกัดหรือแอปแบบ headless',
   create: 'สร้างแอปพลิเคชัน',
   create_third_party: 'สร้างแอปพลิเคชันของบุคคลที่สาม',
   create_thrid_party_modal_title: 'สร้างแอปของบุคคลที่สาม ({{type}})',

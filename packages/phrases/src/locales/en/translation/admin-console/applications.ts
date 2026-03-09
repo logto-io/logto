@@ -3,6 +3,8 @@ const applications = {
   title: 'Applications',
   subtitle: 'Create and manage applications for OIDC authentication.',
   subtitle_with_app_type: 'Set up Logto authentication for your {{name}} application',
+  create_device_flow_description:
+    'Create a native application that uses the OAuth 2.0 Device Authorization Grant for input-limited devices or headless apps.',
   create: 'Create application',
   create_third_party: 'Create third-party application',
   create_thrid_party_modal_title: 'Create a third-party app ({{type}})',
