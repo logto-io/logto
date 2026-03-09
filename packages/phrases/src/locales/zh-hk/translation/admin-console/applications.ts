@@ -56,18 +56,16 @@ const applications = {
     },
   },
   authorization_flow: {
-    title: 'Authorization flow',
-    tooltip:
-      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    title: '授權流程',
+    tooltip: '選擇應用程式的授權流程。一旦設定，將無法更改。',
     authorization_code: {
       title: 'Authorization code',
-      description:
-        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+      description: '預設且最常見的授權類型。使用者將被重新導向到登入頁面以直接授權存取。',
     },
     device_flow: {
       title: 'Device flow',
       description:
-        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
+        '適用於輸入受限的裝置或無介面應用程式（如電視、CLI）。使用者在另一台裝置上透過輸入裝置碼或掃描 QR 碼完成登入。',
     },
   },
   placeholder_title: '選擇應用程式類型以繼續',

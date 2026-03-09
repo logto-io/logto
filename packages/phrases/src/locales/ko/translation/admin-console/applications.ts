@@ -57,18 +57,17 @@ const applications = {
     },
   },
   authorization_flow: {
-    title: 'Authorization flow',
-    tooltip:
-      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    title: '인증 플로우',
+    tooltip: '애플리케이션의 인증 플로우를 선택하세요. 한 번 설정하면 변경할 수 없습니다.',
     authorization_code: {
       title: 'Authorization code',
       description:
-        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+        '가장 기본적이고 일반적인 인증 유형입니다. 사용자가 로그인 페이지로 리디렉션되어 직접 액세스를 인증합니다.',
     },
     device_flow: {
       title: 'Device flow',
       description:
-        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
+        '입력이 제한된 장치나 헤드리스 앱(예: TV, CLI)을 위한 방식입니다. 사용자는 디바이스 코드를 입력하거나 QR 코드를 스캔하여 별도의 장치에서 로그인을 완료합니다.',
     },
   },
   placeholder_title: '어플리케이션 유형을 선택하여 계속하세요',

@@ -84,10 +84,10 @@ const application_details = {
     'อนุญาตให้แอปพลิเคชันนี้เริ่มคำขอแลกเปลี่ยนโทเคน จำเป็นสำหรับ <impersonationLink>การสวมรอยผู้ใช้</impersonationLink> และ <patLink>โทเคนการเข้าถึงส่วนบุคคล</patLink>.',
   allow_token_exchange_public_client_warning:
     'ไม่แนะนำให้เปิดใช้การแลกเปลี่ยนโทเคนสำหรับไคลเอนต์สาธารณะ (แอปหน้าเดียว / แอปเนทีฟ) ไคลเอนต์สาธารณะไม่สามารถเก็บข้อมูลรับรองอย่างปลอดภัย ซึ่งอาจทำให้แอปพลิเคชันของคุณเสี่ยงต่อการสวมรอยโทเคน.',
-  device_flow_tag: 'Device flow',
+  device_flow_tag: 'โฟลว์อุปกรณ์',
   device_flow_notification:
-    'This app enables OAuth 2.0 Device Authorization Flow for input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code. <a>Learn more</a>',
-  device_flow_try_demo: 'Try the demo',
+    'แอปนี้เปิดใช้งาน OAuth 2.0 Device Authorization Flow สำหรับอุปกรณ์ที่มีข้อจำกัดในการป้อนข้อมูลหรือแอปแบบ headless (เช่น ทีวี, CLI) ผู้ใช้จะทำการเข้าสู่ระบบบนอุปกรณ์อื่นโดยการป้อนรหัสอุปกรณ์หรือสแกน QR โค้ด <a>เรียนรู้เพิ่มเติม</a>',
+  device_flow_try_demo: 'ลองใช้เดโม',
   delete_description:
     'การดำเนินการนี้ไม่สามารถย้อนกลับได้ จะลบแอปพลิเคชันนี้อย่างถาวร กรุณากรอกชื่อแอปพลิเคชัน <span>{{name}}</span> เพื่อยืนยัน',
   enter_your_application_name: 'กรอกชื่อแอปพลิเคชันของคุณ',

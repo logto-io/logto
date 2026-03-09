@@ -56,18 +56,17 @@ const applications = {
     },
   },
   authorization_flow: {
-    title: 'Authorization flow',
-    tooltip:
-      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    title: 'โฟลว์การอนุญาต',
+    tooltip: 'เลือกโฟลว์การอนุญาตสำหรับแอปพลิเคชันของคุณ เมื่อตั้งค่าแล้วจะไม่สามารถเปลี่ยนแปลงได้',
     authorization_code: {
       title: 'Authorization code',
       description:
-        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+        'ประเภทการอนุญาตเริ่มต้นและพบบ่อยที่สุด ผู้ใช้จะถูกเปลี่ยนเส้นทางไปยังหน้าลงชื่อเข้าใช้เพื่ออนุญาตการเข้าถึงโดยตรง',
     },
     device_flow: {
       title: 'Device flow',
       description:
-        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
+        'สำหรับอุปกรณ์ที่มีข้อจำกัดในการป้อนข้อมูลหรือแอปแบบ headless (เช่น ทีวี, CLI) ผู้ใช้จะทำการเข้าสู่ระบบบนอุปกรณ์อื่นโดยการป้อนรหัสอุปกรณ์หรือสแกน QR โค้ด',
     },
   },
   placeholder_title: 'เลือกประเภทแอปพลิเคชันเพื่อดำเนินการต่อ',

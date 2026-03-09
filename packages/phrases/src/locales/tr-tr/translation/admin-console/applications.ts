@@ -58,18 +58,17 @@ const applications = {
     },
   },
   authorization_flow: {
-    title: 'Authorization flow',
-    tooltip:
-      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    title: 'Yetkilendirme akışı',
+    tooltip: 'Uygulamanız için yetkilendirme akışını seçin. Bir kez ayarlandığında değiştirilemez.',
     authorization_code: {
       title: 'Authorization code',
       description:
-        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+        'Varsayılan ve en yaygın yetkilendirme türü. Kullanıcılar, erişimi doğrudan yetkilendirmek için oturum açma sayfasına yönlendirilir.',
     },
     device_flow: {
       title: 'Device flow',
       description:
-        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
+        "Giriş kısıtlı cihazlar veya arayüzsüz uygulamalar (ör. TV'ler, CLI) için. Kullanıcılar, bir cihaz kodu girerek veya QR kodu tarayarak ayrı bir cihazda oturum açmayı tamamlar.",
     },
   },
   placeholder_title: 'Devam etmek için bir uygulama tipi seçin',

@@ -5,7 +5,7 @@ import FormField from '@/ds-components/FormField';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 
 import styles from '../index.module.scss';
-import type { CreateApplicationFormData } from '../types';
+import { AuthorizationFlow, type CreateApplicationFormData } from '../types';
 
 function AuthorizationFlowSelector() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -17,19 +17,17 @@ function AuthorizationFlowSelector() {
       tip={t('applications.authorization_flow.tooltip')}
     >
       <Controller
-        name="isDeviceFlow"
+        name="authorizationFlow"
         control={control}
         render={({ field: { onChange, value } }) => (
           <RadioGroup
             className={styles.authorizationFlowRadioGroup}
-            name="isDeviceFlow"
-            value={value ? 'device_flow' : 'authorization_code'}
+            name="authorizationFlow"
+            value={value ?? AuthorizationFlow.AuthorizationCode}
             type="card"
-            onChange={(radioValue) => {
-              onChange(radioValue === 'device_flow');
-            }}
+            onChange={onChange}
           >
-            <Radio value="authorization_code">
+            <Radio value={AuthorizationFlow.AuthorizationCode}>
               <div className={styles.authFlowCard}>
                 <div className={styles.authFlowCardTitle}>
                   {t('applications.authorization_flow.authorization_code.title')}
@@ -39,7 +37,7 @@ function AuthorizationFlowSelector() {
                 </div>
               </div>
             </Radio>
-            <Radio value="device_flow">
+            <Radio value={AuthorizationFlow.DeviceFlow}>
               <div className={styles.authFlowCard}>
                 <div className={styles.authFlowCardTitle}>
                   {t('applications.authorization_flow.device_flow.title')}

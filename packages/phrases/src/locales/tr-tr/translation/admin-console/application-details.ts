@@ -84,10 +84,10 @@ const application_details = {
     "Bu uygulamanın token değişimi istekleri başlatmasına izin verin. Bu, <impersonationLink>kullanıcı kimliğine bürünme</impersonationLink> ve <patLink>kişisel erişim token'ları</patLink> için gereklidir.",
   allow_token_exchange_public_client_warning:
     'Genel istemciler (tek sayfa uygulama / yerel uygulama) için token değişimini etkinleştirmek önerilmez. Genel istemciler kimlik bilgilerini güvenli şekilde saklayamaz; bu da uygulamanızı token kimliğine bürünme risklerine maruz bırakabilir.',
-  device_flow_tag: 'Device flow',
+  device_flow_tag: 'Cihaz akışı',
   device_flow_notification:
-    'This app enables OAuth 2.0 Device Authorization Flow for input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code. <a>Learn more</a>',
-  device_flow_try_demo: 'Try the demo',
+    "Bu uygulama, giriş kısıtlı cihazlar veya arayüzsüz uygulamalar (ör. TV'ler, CLI) için OAuth 2.0 Device Authorization Flow'u etkinleştirir. Kullanıcılar, bir cihaz kodu girerek veya QR kodu tarayarak ayrı bir cihazda oturum açmayı tamamlar. <a>Daha fazla bilgi</a>",
+  device_flow_try_demo: 'Demoyu dene',
   delete_description:
     'Bu eylem geri alınamaz. Uygulama kalıcı olarak silinecektir. Lütfen onaylamak için uygulama adı <span>{{name}}</span> girin.',
   enter_your_application_name: 'Uygulama adı giriniz',

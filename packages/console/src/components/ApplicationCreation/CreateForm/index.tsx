@@ -2,7 +2,7 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
-import { type ReactElement, useContext, useMemo } from 'react';
+import { type ReactElement, useContext, useEffect, useMemo } from 'react';
 import { FormProvider, useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -37,7 +37,7 @@ import { buildUrl } from '@/utils/url';
 import AuthorizationFlowSelector from './AuthorizationFlowSelector';
 import Footer from './Footer';
 import styles from './index.module.scss';
-import type { CreateApplicationFormData } from './types';
+import { AuthorizationFlow, type CreateApplicationFormData } from './types';
 
 const applicationsEndpoint = 'api/applications';
 const samlApplicationsLimit = 3;
@@ -107,6 +107,14 @@ function CreateForm({
   const { getDocumentationUrl } = useDocumentationUrl();
   const applicationType = watch('type');
   const isThirdPartyApp = watch('isThirdParty');
+
+  // Reset authorizationFlow when switching away from Native app type
+  useEffect(() => {
+    if (applicationType !== ApplicationType.Native) {
+      formMethods.setValue('authorizationFlow', undefined);
+    }
+  }, [applicationType, formMethods]);
+
   const paywall = useMemo(() => {
     if (isPaidTenant) {
       return;
@@ -144,7 +152,7 @@ function CreateForm({
   ]);
 
   const onSubmit = handleSubmit(
-    trySubmitSafe(async ({ isDeviceFlow, ...data }) => {
+    trySubmitSafe(async ({ authorizationFlow, ...data }) => {
       if (isSubmitting) {
         return;
       }
@@ -156,7 +164,7 @@ function CreateForm({
         .post(appCreationEndpoint, {
           json: {
             ...data,
-            ...(isDeviceFlow && {
+            ...(authorizationFlow === AuthorizationFlow.DeviceFlow && {
               customClientMetadata: { isDeviceFlow: true },
             }),
           },

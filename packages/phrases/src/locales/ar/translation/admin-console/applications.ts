@@ -57,18 +57,17 @@ const applications = {
     },
   },
   authorization_flow: {
-    title: 'Authorization flow',
-    tooltip:
-      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    title: 'تدفق التفويض',
+    tooltip: 'حدد تدفق التفويض لتطبيقك. بمجرد التعيين، لا يمكن تغييره.',
     authorization_code: {
       title: 'Authorization code',
       description:
-        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+        'نوع التفويض الافتراضي والأكثر شيوعًا. يتم إعادة توجيه المستخدمين إلى صفحة تسجيل الدخول لتفويض الوصول مباشرة.',
     },
     device_flow: {
       title: 'Device flow',
       description:
-        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
+        'للأجهزة ذات الإدخال المحدود أو التطبيقات بدون واجهة (مثل أجهزة التلفزيون، CLI). يُكمل المستخدمون تسجيل الدخول على جهاز منفصل عن طريق إدخال رمز الجهاز أو مسح رمز QR.',
     },
   },
   placeholder_title: 'حدد نوع التطبيق للمتابعة',

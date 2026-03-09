@@ -58,18 +58,18 @@ const applications = {
     },
   },
   authorization_flow: {
-    title: 'Authorization flow',
+    title: 'Fluxo de autorização',
     tooltip:
-      'Select the authorization flow for your application. Once set, this cannot be changed.',
+      'Selecione o fluxo de autorização para seu aplicativo. Uma vez definido, não poderá ser alterado.',
     authorization_code: {
       title: 'Authorization code',
       description:
-        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+        'O tipo de autorização padrão e mais comum. Os usuários são redirecionados para uma página de login para autorizar o acesso diretamente.',
     },
     device_flow: {
       title: 'Device flow',
       description:
-        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
+        'Para dispositivos com entrada limitada ou aplicativos headless (ex.: TVs, CLI). Os usuários completam o login em um dispositivo separado inserindo um código de dispositivo ou escaneando um QR code.',
     },
   },
   placeholder_title: 'Selecione um tipo de aplicativo para continuar',

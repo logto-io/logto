@@ -86,10 +86,10 @@ const application_details = {
     'Permite que esta aplicación inicie solicitudes de intercambio de tokens. Esto es necesario para la <impersonationLink>suplantación de usuario</impersonationLink> y los <patLink>tokens de acceso personal</patLink>.',
   allow_token_exchange_public_client_warning:
     'No se recomienda habilitar el intercambio de tokens para clientes públicos (aplicación de una sola página / aplicación nativa). Los clientes públicos no pueden almacenar credenciales de forma segura, lo que puede exponer tu aplicación a riesgos de suplantación de tokens.',
-  device_flow_tag: 'Device flow',
+  device_flow_tag: 'Flujo de dispositivo',
   device_flow_notification:
-    'This app enables OAuth 2.0 Device Authorization Flow for input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code. <a>Learn more</a>',
-  device_flow_try_demo: 'Try the demo',
+    'Esta aplicación habilita el flujo de autorización de dispositivos OAuth 2.0 (Device Authorization Flow) para dispositivos con entrada limitada o aplicaciones sin interfaz (p. ej., televisores, CLI). Los usuarios completan el inicio de sesión en un dispositivo separado ingresando un código de dispositivo o escaneando un código QR. <a>Más información</a>',
+  device_flow_try_demo: 'Probar la demo',
   delete_description:
     'Esta acción no se puede deshacer. Eliminará permanentemente la aplicación. Ingresa el nombre de la aplicación <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Ingresa el nombre de tu aplicación',
