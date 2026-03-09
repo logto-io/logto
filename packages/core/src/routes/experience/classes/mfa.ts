@@ -555,6 +555,13 @@ export class Mfa {
       return;
     }
 
+    if (
+      !EnvSet.values.isDevFeaturesEnabled &&
+      this.interactionContext.getInteractionEvent() !== InteractionEvent.Register
+    ) {
+      return;
+    }
+
     const sortedFactors = sortMfaFactors(availableFactors);
     const additionalFactors = sortedFactors.filter((factor) => !factorsInUser.includes(factor));
 
