@@ -19,7 +19,10 @@ import {
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
+import {
+  enableAllVerificationCodeSignInMethods,
+  resetMfaSettings,
+} from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 import { generateUsername } from '#src/utils.js';
 
@@ -44,6 +47,7 @@ describe('register new user with username and password', () => {
       },
       passwordPolicy: {},
     });
+    await resetMfaSettings();
   });
 
   afterAll(async () => {
