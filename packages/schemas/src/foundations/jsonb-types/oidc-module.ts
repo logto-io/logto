@@ -89,6 +89,13 @@ export enum CustomClientMetadataKey {
    * Defaults to `false` for all new applications. Users must explicitly enable it.
    */
   AllowTokenExchange = 'allowTokenExchange',
+  /**
+   * Whether the application uses the OAuth 2.0 Device Authorization Grant (RFC 8628)
+   * instead of the standard Authorization Code flow.
+   *
+   * Only applicable to native applications. Defaults to `false`.
+   */
+  IsDeviceFlow = 'isDeviceFlow',
 }
 
 export const customClientMetadataGuard = z.object({
@@ -100,6 +107,7 @@ export const customClientMetadataGuard = z.object({
   [CustomClientMetadataKey.AlwaysIssueRefreshToken]: z.boolean().optional(),
   [CustomClientMetadataKey.RotateRefreshToken]: z.boolean().optional(),
   [CustomClientMetadataKey.AllowTokenExchange]: z.boolean().optional(),
+  [CustomClientMetadataKey.IsDeviceFlow]: z.boolean().optional(),
 } satisfies Record<CustomClientMetadataKey, z.ZodType>);
 
 /**
