@@ -22,7 +22,7 @@ const applications = {
     native: {
       title: '原生應用',
       subtitle: '在原生環境中運行的應用程序',
-      description: '例如 iOS app，Android app',
+      description: '例如 iOS app、Android app、桌面 app、電視、CLI',
     },
     spa: {
       title: '單頁應用',
@@ -53,6 +53,21 @@ const applications = {
       title: '第三方應用程序',
       subtitle: '作為第三方 IdP 連接器使用的應用程序',
       description: '例如 OIDC，SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Authorization flow',
+    tooltip:
+      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
     },
   },
   placeholder_title: '選擇應用程式類型以繼續',

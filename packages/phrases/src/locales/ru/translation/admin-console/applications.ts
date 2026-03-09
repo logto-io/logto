@@ -23,7 +23,8 @@ const applications = {
     native: {
       title: 'Нативное приложение',
       subtitle: 'Приложение, работающее в нативной среде',
-      description: 'Например, приложение для iOS, приложение для Android',
+      description:
+        'Например, приложение для iOS, приложение для Android, десктопное приложение, ТВ, CLI',
     },
     spa: {
       title: 'Одностраничное приложение',
@@ -55,6 +56,21 @@ const applications = {
       subtitle:
         'Приложение, используемое в качестве коннектора стороннего поставщика идентификации',
       description: 'Например, OIDC, SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Authorization flow',
+    tooltip:
+      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
     },
   },
   placeholder_title: 'Выберите тип приложения, чтобы продолжить',

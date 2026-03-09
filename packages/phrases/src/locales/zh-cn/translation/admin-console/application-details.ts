@@ -81,6 +81,10 @@ const application_details = {
     '允许此应用程序发起令牌交换请求。这是 <impersonationLink>用户冒充</impersonationLink> 和 <patLink>个人访问令牌</patLink> 所必需的。',
   allow_token_exchange_public_client_warning:
     '不建议为公共客户端（单页应用/原生应用）启用令牌交换。公共客户端无法安全存储凭据，可能会使你的应用暴露于令牌冒充风险。',
+  device_flow_tag: '设备流',
+  device_flow_notification:
+    '此应用启用了 OAuth 2.0 Device Authorization Flow，适用于输入受限的设备或无界面应用（如电视、CLI）。用户在另一台设备上通过输入设备码或扫描二维码完成登录。<a>了解更多</a>',
+  device_flow_try_demo: '试用演示',
   delete_description: '本操作会永久性地删除该应用，且不可撤销。输入 <span>{{name}}</span> 确认。',
   enter_your_application_name: '输入你的应用名称',
   application_deleted: '应用 {{name}} 成功删除。',

@@ -23,7 +23,7 @@ const applications = {
     native: {
       title: 'ネイティブアプリ',
       subtitle: 'ネイティブ環境で実行されるアプリケーション',
-      description: '例：iOSアプリ、Androidアプリ',
+      description: '例：iOSアプリ、Androidアプリ、デスクトップアプリ、テレビ、CLI',
     },
     spa: {
       title: 'シングルページアプリ',
@@ -54,6 +54,21 @@ const applications = {
       title: 'Third-party App',
       subtitle: 'サードパーティ IdP コネクターとして使用されるアプリ',
       description: '例：OIDC、SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Authorization flow',
+    tooltip:
+      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
     },
   },
   placeholder_title: '続行するにはアプリケーションタイプを選択してください',

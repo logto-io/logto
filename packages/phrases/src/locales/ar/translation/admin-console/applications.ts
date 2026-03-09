@@ -22,7 +22,8 @@ const applications = {
     native: {
       title: 'تطبيق محلي',
       subtitle: 'تطبيق يعمل في بيئة محلية',
-      description: 'على سبيل المثال، تطبيق iOS، تطبيق Android',
+      description:
+        'على سبيل المثال، تطبيق iOS، تطبيق Android، تطبيق سطح المكتب، أجهزة التلفاز، CLI',
     },
     spa: {
       title: 'تطبيق صفحة واحدة',
@@ -53,6 +54,21 @@ const applications = {
       title: 'تطبيق الجهة الخارجية',
       subtitle: 'تطبيق يستخدم كموصل IdP من جهة خارجية',
       description: 'على سبيل المثال، OIDC، SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Authorization flow',
+    tooltip:
+      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
     },
   },
   placeholder_title: 'حدد نوع التطبيق للمتابعة',

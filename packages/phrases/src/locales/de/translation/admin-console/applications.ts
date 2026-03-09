@@ -23,7 +23,7 @@ const applications = {
     native: {
       title: 'Native App',
       subtitle: 'Eine Anwendung, die in einer nativen Umgebung läuft',
-      description: 'z.B. iOS-App, Android-App',
+      description: 'z.B. iOS-App, Android-App, Desktop-App, TVs, CLI',
     },
     spa: {
       title: 'Single-Page-App',
@@ -55,6 +55,21 @@ const applications = {
       title: 'Drittanbieter-App',
       subtitle: 'Eine App, die als Drittanbieter-IdP-Konnektor verwendet wird',
       description: 'z.B. OIDC, SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Authorization flow',
+    tooltip:
+      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
     },
   },
   placeholder_title: 'Wähle einen Anwendungstyp, um fortzufahren',

@@ -85,6 +85,10 @@ const application_details = {
     'Разрешите этому приложению инициировать запросы на обмен токенов. Это необходимо для <impersonationLink>подмены пользователя</impersonationLink> и <patLink>персональных токенов доступа</patLink>.',
   allow_token_exchange_public_client_warning:
     'Включать обмен токенов для публичных клиентов (SPA / нативное приложение) не рекомендуется. Публичные клиенты не могут безопасно хранить учетные данные, что может подвергнуть ваше приложение рискам подмены токенов.',
+  device_flow_tag: 'Device flow',
+  device_flow_notification:
+    'This app enables OAuth 2.0 Device Authorization Flow for input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code. <a>Learn more</a>',
+  device_flow_try_demo: 'Try the demo',
   delete_description:
     'Это действие нельзя отменить. Оно навсегда удалит приложение. Введите название приложения <span> {{name}} </span>, чтобы подтвердить.',
   enter_your_application_name: 'Введите название своего приложения',

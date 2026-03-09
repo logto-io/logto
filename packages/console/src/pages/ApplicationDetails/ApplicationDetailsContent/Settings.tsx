@@ -4,10 +4,14 @@ import { ApplicationType } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
+import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
 import { applicationDataStructure, thirdPartyApp } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import Button from '@/ds-components/Button';
 import CodeEditor from '@/ds-components/CodeEditor';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
@@ -83,8 +87,10 @@ function Settings({ data }: Props) {
     formState: { errors },
   } = useFormContext<ApplicationForm>();
 
-  const { type: applicationType, isThirdParty } = data;
+  const { type: applicationType, isThirdParty, customClientMetadata } = data;
 
+  // DEV: Device flow
+  const isDeviceFlow = isDevFeaturesEnabled && Boolean(customClientMetadata.isDeviceFlow);
   const isProtectedApp = applicationType === ApplicationType.Protected;
   const redirectUriValidator = createRedirectUriValidator(applicationType);
   const uriPatternRules: MultiTextInputRule = {
@@ -113,6 +119,33 @@ function Settings({ data }: Props) {
       description={`application_details.${isThirdParty ? 'third_party_' : ''}settings_description`}
       learnMoreLink={{ href: isThirdParty ? thirdPartyApp : applicationDataStructure }}
     >
+      {/* DEV: Device flow notification banner */}
+      {isDeviceFlow && (
+        <div className={styles.deviceFlowBanner}>
+          <span className={styles.deviceFlowEmoji}>🎉</span>
+          <span>
+            <Trans
+              components={{
+                // TODO: Replace with actual documentation link when available
+                a: <TextLink href="" />,
+              }}
+            >
+              {t('application_details.device_flow_notification')}
+            </Trans>
+          </span>
+          {/* TODO: Replace with actual demo page link when available */}
+          <Button
+            className={styles.deviceFlowTryDemoButton}
+            size="small"
+            title="application_details.device_flow_try_demo"
+            trailingIcon={
+              <FlipOnRtl>
+                <ExternalLinkIcon />
+              </FlipOnRtl>
+            }
+          />
+        </div>
+      )}
       <FormField isRequired title="application_details.application_name">
         <TextInput
           {...register('name', { required: true })}
@@ -126,7 +159,7 @@ function Settings({ data }: Props) {
           placeholder={t('application_details.description_placeholder')}
         />
       </FormField>
-      {applicationType !== ApplicationType.MachineToMachine && (
+      {applicationType !== ApplicationType.MachineToMachine && !isDeviceFlow && (
         <Controller
           name="oidcClientMetadata.redirectUris"
           control={control}
@@ -168,9 +201,9 @@ function Settings({ data }: Props) {
           )}
         />
       )}
-      {showRedirectUriWildcardWarning && <WildcardUriWarning />}
-      {showRedirectUriMixedWarning && <MixedUriWarning />}
-      {applicationType !== ApplicationType.MachineToMachine && (
+      {showRedirectUriWildcardWarning && !isDeviceFlow && <WildcardUriWarning />}
+      {showRedirectUriMixedWarning && !isDeviceFlow && <MixedUriWarning />}
+      {applicationType !== ApplicationType.MachineToMachine && !isDeviceFlow && (
         <Controller
           name="oidcClientMetadata.postLogoutRedirectUris"
           control={control}
@@ -190,9 +223,9 @@ function Settings({ data }: Props) {
           )}
         />
       )}
-      {showPostLogoutUriWildcardWarning && <WildcardUriWarning />}
-      {showPostLogoutUriMixedWarning && <MixedUriWarning />}
-      {applicationType !== ApplicationType.MachineToMachine && (
+      {showPostLogoutUriWildcardWarning && !isDeviceFlow && <WildcardUriWarning />}
+      {showPostLogoutUriMixedWarning && !isDeviceFlow && <MixedUriWarning />}
+      {applicationType !== ApplicationType.MachineToMachine && !isDeviceFlow && (
         <Controller
           name="customClientMetadata.corsAllowedOrigins"
           control={control}

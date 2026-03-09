@@ -84,6 +84,10 @@ const application_details = {
     'Allow this application to initiate token exchange requests. This is required for <impersonationLink>user impersonation</impersonationLink> and <patLink>personal access tokens</patLink>.',
   allow_token_exchange_public_client_warning:
     'Enabling token exchange for public clients (single-page app / native app) is not recommended. Public clients cannot securely store credentials, which may expose your application to token impersonation risks.',
+  device_flow_tag: 'Device flow',
+  device_flow_notification:
+    'This app enables OAuth 2.0 Device Authorization Flow for input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code. <a>Learn more</a>',
+  device_flow_try_demo: 'Try the demo',
   delete_description:
     'This action cannot be undone. It will permanently delete the application. Please enter the application name <span>{{name}}</span> to confirm.',
   enter_your_application_name: 'Enter your application name',

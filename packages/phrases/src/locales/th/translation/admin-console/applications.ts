@@ -22,7 +22,7 @@ const applications = {
     native: {
       title: 'แอปเนทีฟ',
       subtitle: 'แอปที่ทำงานในสภาพแวดล้อมเนทีฟ',
-      description: 'เช่น แอป iOS , แอป Android',
+      description: 'เช่น แอป iOS, แอป Android, แอปเดสก์ท็อป, ทีวี, CLI',
     },
     spa: {
       title: 'แอปหน้าเดียว',
@@ -53,6 +53,21 @@ const applications = {
       title: 'แอปของบุคคลที่สาม',
       subtitle: 'แอปที่ใช้เป็นตัวเชื่อมต่อ IdP ของบุคคลที่สาม',
       description: 'เช่น OIDC',
+    },
+  },
+  authorization_flow: {
+    title: 'Authorization flow',
+    tooltip:
+      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
     },
   },
   placeholder_title: 'เลือกประเภทแอปพลิเคชันเพื่อดำเนินการต่อ',

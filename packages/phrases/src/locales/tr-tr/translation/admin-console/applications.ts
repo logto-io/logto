@@ -23,7 +23,7 @@ const applications = {
     native: {
       title: 'Yerel Uygulama',
       subtitle: 'Nativede çalışan bir uygulama ',
-      description: 'Örneğin, iOS uygulaması, Android uygulaması',
+      description: 'Örneğin, iOS uygulaması, Android uygulaması, masaüstü uygulaması, TV, CLI',
     },
     spa: {
       title: 'Tek Sayfalı Uygulama',
@@ -55,6 +55,21 @@ const applications = {
       title: 'Üçüncü Taraf Uygulama',
       subtitle: 'Üçüncü taraf bir IdP bağlayıcısı olarak kullanılan bir uygulama',
       description: 'Ör., OIDC, SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Authorization flow',
+    tooltip:
+      'Select the authorization flow for your application. Once set, this cannot be changed.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'The default and most common grant type. Users are redirected to a sign-in page to authorize access directly.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'For input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code.',
     },
   },
   placeholder_title: 'Devam etmek için bir uygulama tipi seçin',

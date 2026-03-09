@@ -84,6 +84,10 @@ const application_details = {
     'اسمح لهذا التطبيق ببدء طلبات تبادل الرموز المميّزة. هذا مطلوب لـ <impersonationLink>انتحال هوية المستخدم</impersonationLink> و <patLink>رموز الوصول الشخصية</patLink>.',
   allow_token_exchange_public_client_warning:
     'لا يُنصح بتمكين تبادل الرموز المميّزة للعملاء العموميين (تطبيق صفحة واحدة / تطبيق أصلي). لا يمكن للعملاء العموميين تخزين بيانات الاعتماد بشكل آمن، مما قد يعرّض تطبيقك لمخاطر انتحال الرموز المميّزة.',
+  device_flow_tag: 'Device flow',
+  device_flow_notification:
+    'This app enables OAuth 2.0 Device Authorization Flow for input-limited devices or headless apps (e.g., TVs, CLI). Users complete login on a separate device by entering a device code or scanning a QR code. <a>Learn more</a>',
+  device_flow_try_demo: 'Try the demo',
   delete_description:
     'لا يمكن التراجع عن هذا الإجراء. سيتم حذف التطبيق بشكل دائم. يرجى إدخال اسم التطبيق <span>{{name}}</span> للتأكيد.',
   enter_your_application_name: 'أدخل اسم التطبيق الخاص بك',
