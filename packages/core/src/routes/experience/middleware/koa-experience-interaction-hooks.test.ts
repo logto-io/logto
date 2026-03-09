@@ -68,6 +68,8 @@ describe('exception hooks', () => {
       error
     );
 
+    expect(triggerInteractionHooks).not.toBeCalled();
+    expect(triggerDataHooks).not.toBeCalled();
     expect(triggerExceptionHooks).toBeCalledTimes(1);
     expect(triggerExceptionHooks).toBeCalledWith(
       expect.any(ConsoleLog),

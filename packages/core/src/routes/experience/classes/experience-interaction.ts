@@ -368,7 +368,13 @@ export default class ExperienceInteraction {
       return;
     }
 
-    if (EnvSet.values.isDevFeaturesEnabled && adaptiveMfaResult?.requiresMfa) {
+    const isMfaVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
+
+    if (EnvSet.values.isDevFeaturesEnabled && adaptiveMfaResult?.requiresMfa && !isMfaVerified) {
+      // `PostSignInAdaptiveMfaTriggered` should be emitted when adaptive MFA raises a
+      // challenge for the current sign-in attempt. Once the interaction already carries a
+      // verified MFA record, later submit retries in the same interaction should complete the
+      // sign-in flow without enqueueing another adaptive MFA hook for the same risk decision.
       this.ctx.assignInteractionHookResult({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         payload: { adaptiveMfaResult },
@@ -391,7 +397,7 @@ export default class ExperienceInteraction {
     };
 
     assertThat(
-      mfaValidator.isMfaVerified(this.verificationRecordsArray),
+      isMfaVerified,
       new RequestError(
         { code: 'session.mfa.require_mfa_verification', status: 403 },
         {

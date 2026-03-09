@@ -8,6 +8,7 @@ import {
 import { authenticator } from 'otplib';
 
 import { createUserMfaVerification } from '#src/api/admin-user.js';
+import { getWebhookRecentLogs } from '#src/api/logs.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { isDevFeaturesEnabled } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
@@ -18,6 +19,7 @@ import { WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
+import { waitFor } from '#src/utils.js';
 
 import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
@@ -25,6 +27,15 @@ import { assertHookLogResult } from './utils.js';
 const webHookMockServer = new WebhookMockServer(9999);
 const webHookApi = new WebHookApiTest();
 const userApi = new UserApiTest();
+
+const getHookLogs = async (hookId: string, event: InteractionHookEvent) => {
+  await waitFor(100);
+
+  return getWebhookRecentLogs(
+    hookId,
+    new URLSearchParams({ logKey: `TriggerHook.${event}`, page_size: '10' })
+  );
+};
 
 beforeAll(async () => {
   await Promise.all([
@@ -114,7 +125,7 @@ describe('adaptive MFA experience hook trigger', () => {
   );
 
   (isDevFeaturesEnabled ? it : it.skip)(
-    'triggers adaptive MFA interaction hook when submit requires MFA verification',
+    'triggers adaptive MFA once per sign-in flow and keeps PostSignIn success-only',
     async () => {
       try {
         await updateSignInExperience({
@@ -125,11 +136,18 @@ describe('adaptive MFA experience hook trigger', () => {
           adaptiveMfa: { enabled: true },
         });
 
-        await webHookApi.create({
-          name: 'adaptiveMfaFailedSubmitHookEventListener',
-          events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],
-          config: { url: webHookMockServer.endpoint },
-        });
+        await Promise.all([
+          webHookApi.create({
+            name: 'adaptiveMfaFailedSubmitHookEventListener',
+            events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],
+            config: { url: webHookMockServer.endpoint },
+          }),
+          webHookApi.create({
+            name: 'postSignInHookEventListener',
+            events: [InteractionHookEvent.PostSignIn],
+            config: { url: webHookMockServer.endpoint },
+          }),
+        ]);
 
         const { username, password } = generateNewUserProfile({ username: true, password: true });
         const user = await userApi.create({ username, password });
@@ -153,6 +171,7 @@ describe('adaptive MFA experience hook trigger', () => {
         });
 
         const adaptiveHook = webHookApi.hooks.get('adaptiveMfaFailedSubmitHookEventListener')!;
+        const postSignInHook = webHookApi.hooks.get('postSignInHookEventListener')!;
 
         await assertHookLogResult(
           adaptiveHook,
@@ -173,6 +192,10 @@ describe('adaptive MFA experience hook trigger', () => {
           }
         );
 
+        expect(
+          await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)
+        ).toHaveLength(0);
+
         await successfullyVerifyTotp(client, {
           code: authenticator.generate(totpVerification.secret),
         });
@@ -180,6 +203,20 @@ describe('adaptive MFA experience hook trigger', () => {
         const { redirectTo } = await client.submitInteraction();
         await processSession(client, redirectTo);
         await logoutClient(client);
+
+        expect(
+          await getHookLogs(adaptiveHook.id, InteractionHookEvent.PostSignInAdaptiveMfaTriggered)
+        ).toHaveLength(1);
+        expect(await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(1);
+
+        await assertHookLogResult(postSignInHook, InteractionHookEvent.PostSignIn, {
+          hookPayload: {
+            event: InteractionHookEvent.PostSignIn,
+            interactionEvent: InteractionEvent.SignIn,
+            sessionId: expect.any(String),
+            user: expect.objectContaining({ id: user.id, username }),
+          },
+        });
       } finally {
         await updateSignInExperience({
           mfa: {

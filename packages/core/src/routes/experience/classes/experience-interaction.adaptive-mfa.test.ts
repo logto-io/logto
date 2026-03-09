@@ -336,6 +336,50 @@ describe('ExperienceInteraction adaptive MFA', () => {
     expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
   });
 
+  it('does not assign adaptive MFA hook result when current interaction already satisfies MFA verification', async () => {
+    const user: User = {
+      ...mockUserWithMfaVerifications,
+      logtoConfig: {
+        mfa: {
+          skipped: true,
+        },
+      },
+    };
+
+    users.findUserById.mockResolvedValueOnce(user);
+
+    // @ts-expect-error -- mock test context
+    const ctx: WithHooksAndLogsContext = {
+      assignInteractionHookResult: jest.fn(),
+      appendDataHookContext: jest.fn(),
+      ...createContextWithRouteParameters({
+        headers: {
+          'x-logto-cf-bot-score': '10',
+        },
+      }),
+      ...createMockLogContext(),
+    };
+
+    const interactionDetails = {
+      result: {
+        interactionEvent: InteractionEvent.SignIn,
+        userId: user.id,
+        verificationRecords: [
+          {
+            id: 'verified-totp',
+            type: VerificationType.TOTP,
+            userId: user.id,
+            verified: true,
+          },
+        ],
+      },
+    } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
+    const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+
+    await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
+    expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
+  });
+
   it('allows sign-in when adaptive MFA does not trigger even if skipMfaOnSignIn is false', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
