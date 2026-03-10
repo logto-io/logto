@@ -168,18 +168,24 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
         assertThat(
           isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
-          'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+          'sign_in_experiences.required_mfa_requires_non_skippable_policy',
           422
         );
       }
 
       if (adaptiveMfa?.enabled === false) {
         const effectiveMfa = mfa ?? currentSettings.mfa;
-        assertThat(
-          !isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
-          'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
-          422
-        );
+        const isCurrentAdaptiveMfaEnabled = currentSettings.adaptiveMfa.enabled;
+
+        // When disabling adaptive MFA without explicitly updating MFA policy,
+        // the effective mode falls back to optional MFA.
+        if (mfa === undefined && isCurrentAdaptiveMfaEnabled) {
+          assertThat(
+            !isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
+            'sign_in_experiences.optional_mfa_requires_skippable_policy',
+            422
+          );
+        }
       }
 
       if (adaptiveMfa === undefined && mfa && isMfaEnabled(mfa)) {
@@ -187,13 +193,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         if (currentAdaptiveMfa.enabled) {
           assertThat(
             isNonSkippableMfaPromptPolicy(mfa.policy),
-            'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
-            422
-          );
-        } else {
-          assertThat(
-            !isNonSkippableMfaPromptPolicy(mfa.policy),
-            'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
+            'sign_in_experiences.required_mfa_requires_non_skippable_policy',
             422
           );
         }
