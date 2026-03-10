@@ -12,6 +12,11 @@ import { type WithInteractionDetailsContext } from '#src/middleware/koa-interact
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
+import {
+  createInteractionHookContext,
+  shouldReleaseInteractionHookAnyway,
+} from './interaction-hook-dispatch.js';
+
 const interactionEventGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
 });
@@ -74,6 +79,26 @@ export function koaExperienceInteractionHooks<
     try {
       await next();
 
+      const releaseOnSuccessInteractionHookContext = createInteractionHookContext(
+        {
+          ...interactionApiMetadata,
+          userIp: ip,
+        },
+        interactionHookContext.interactionHookResults.filter(
+          (interactionHookResult) => !shouldReleaseInteractionHookAnyway(interactionHookResult)
+        )
+      );
+
+      if (releaseOnSuccessInteractionHookContext.interactionHookResults.length > 0) {
+        // Hooks should not crash the app
+        void trySafe(
+          triggerInteractionHooks(
+            getConsoleLogFromContext(ctx),
+            releaseOnSuccessInteractionHookContext
+          )
+        );
+      }
+
       if (dataHookContext.dataHookContextArray.length > 0) {
         // Data hooks represent successful data mutations and should only be dispatched
         // after the interaction flow completes without throwing.
@@ -81,16 +106,26 @@ export function koaExperienceInteractionHooks<
         void trySafe(triggerDataHooks(getConsoleLogFromContext(ctx), dataHookContext));
       }
     } finally {
-      if (interactionHookContext.interactionHookResults.length > 0) {
+      const releaseAnywayInteractionHookContext = createInteractionHookContext(
+        {
+          ...interactionApiMetadata,
+          userIp: ip,
+        },
+        interactionHookContext.interactionHookResults.filter((interactionHookResult) =>
+          shouldReleaseInteractionHookAnyway(interactionHookResult)
+        )
+      );
+
+      if (releaseAnywayInteractionHookContext.interactionHookResults.length > 0) {
         // Interaction hooks are queued when the corresponding interaction event is known to
         // have happened. `PostSignInAdaptiveMfaTriggered` is assigned before the MFA
         // challenge error is thrown, so dispatch must happen in `finally`.
-        // If future interaction hooks need mixed semantics, split them by dispatch policy
-        // (for example, success-only vs finally) instead of sending every interaction hook
-        // on failed submits.
         // Hooks should not crash the app
         void trySafe(
-          triggerInteractionHooks(getConsoleLogFromContext(ctx), interactionHookContext)
+          triggerInteractionHooks(
+            getConsoleLogFromContext(ctx),
+            releaseAnywayInteractionHookContext
+          )
         );
       }
 
