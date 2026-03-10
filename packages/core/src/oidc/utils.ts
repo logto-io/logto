@@ -13,7 +13,7 @@ import {
 import { condArray, conditional, trySafe } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 
 /**
  * Build constant client metadata for an application based on its type and optional flags.
@@ -28,40 +28,72 @@ import { type EnvSet } from '#src/env-set/index.js';
 export const getConstantClientMetadata = (
   envSet: EnvSet,
   type: ApplicationType,
-  options?: { allowTokenExchange?: boolean }
+  options?: Pick<CustomClientMetadata, 'allowTokenExchange' | 'isDeviceFlow'>
 ): AllClientMetadata => {
   const { jwkSigningAlg } = envSet.oidc;
 
-  const getTokenEndpointAuthMethod = (): ClientAuthMethod => {
-    switch (type) {
-      case ApplicationType.Native:
-      case ApplicationType.SPA: {
-        return 'none';
-      }
+  const optionalGrantTypes = condArray(options?.allowTokenExchange && GrantType.TokenExchange);
 
-      default: {
-        return 'client_secret_basic';
-      }
-    }
-  };
+  const applicationType: AllClientMetadata['application_type'] =
+    type === ApplicationType.Native ? 'native' : 'web';
 
-  const grantTypes = [
-    ...(type === ApplicationType.MachineToMachine
-      ? [GrantType.ClientCredentials]
-      : [GrantType.AuthorizationCode, GrantType.RefreshToken]),
-    ...condArray(options?.allowTokenExchange && GrantType.TokenExchange),
-  ];
+  /**
+   * Native and SPA clients are public clients, so they do not authenticate at the token endpoint.
+   * Traditional web apps and M2M apps are confidential clients and use client secret based auth.
+   */
+  const tokenEndpointAuthMethod: ClientAuthMethod =
+    type === ApplicationType.Native || type === ApplicationType.SPA
+      ? 'none'
+      : 'client_secret_basic';
 
-  return {
-    application_type: type === ApplicationType.Native ? 'native' : 'web',
-    grant_types: grantTypes,
-    token_endpoint_auth_method: getTokenEndpointAuthMethod(),
-    response_types: conditional(type === ApplicationType.MachineToMachine && []),
+  const constantMetadata = {
+    application_type: applicationType,
+    token_endpoint_auth_method: tokenEndpointAuthMethod,
     // https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use
     authorization_signed_response_alg: jwkSigningAlg,
     userinfo_signed_response_alg: jwkSigningAlg,
     id_token_signed_response_alg: jwkSigningAlg,
     introspection_signed_response_alg: jwkSigningAlg,
+  };
+
+  /**
+   * Device flow is a native-app-only variant. It skips authorization code
+   * response handling and only allows device_code + refresh_token grants.
+   *
+   * `response_types` is set to an empty array on purpose to override oidc-provider's default
+   * value, because device authorization does not use the `/authorize` response contract.
+   */
+  // DEV: Device flow
+  if (
+    EnvSet.values.isDevFeaturesEnabled &&
+    type === ApplicationType.Native &&
+    options?.isDeviceFlow
+  ) {
+    return {
+      ...constantMetadata,
+      grant_types: [GrantType.DeviceCode, GrantType.RefreshToken, ...optionalGrantTypes],
+      response_types: [],
+    };
+  }
+
+  /**
+   * M2M clients can only use client credentials and never participate in front-channel auth flows.
+   *
+   * As with device flow, we must override the default response type. Otherwise the
+   * client would be treated as an authorization client and be forced to provide redirect URIs.
+   */
+  if (type === ApplicationType.MachineToMachine) {
+    return {
+      ...constantMetadata,
+      grant_types: [GrantType.ClientCredentials, ...optionalGrantTypes],
+      response_types: [],
+    };
+  }
+
+  // Interactive applications intentionally inherit oidc-provider's default `response_types`.
+  return {
+    ...constantMetadata,
+    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, ...optionalGrantTypes],
   };
 };
 

@@ -74,6 +74,39 @@ describe('getConstantClientMetadata()', () => {
       grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
     });
   });
+
+  it('should use device code grant metadata for native device flow applications', () => {
+    expect(
+      getConstantClientMetadata(mockEnvSet, ApplicationType.Native, { isDeviceFlow: true })
+    ).toMatchObject({
+      application_type: 'native',
+      grant_types: [GrantType.DeviceCode, GrantType.RefreshToken],
+      token_endpoint_auth_method: 'none',
+      response_types: [],
+    });
+  });
+
+  it('should include token exchange on top of device flow grant types when enabled', () => {
+    expect(
+      getConstantClientMetadata(mockEnvSet, ApplicationType.Native, {
+        allowTokenExchange: true,
+        isDeviceFlow: true,
+      })
+    ).toMatchObject({
+      grant_types: [GrantType.DeviceCode, GrantType.RefreshToken, GrantType.TokenExchange],
+      response_types: [],
+    });
+  });
+
+  it('should ignore device flow flag for non-native applications', () => {
+    expect(
+      getConstantClientMetadata(mockEnvSet, ApplicationType.SPA, { isDeviceFlow: true })
+    ).toMatchObject({
+      application_type: 'web',
+      grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+      token_endpoint_auth_method: 'none',
+    });
+  });
 });
 
 describe('buildOidcClientMetadata()', () => {

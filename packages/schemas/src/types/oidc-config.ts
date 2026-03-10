@@ -13,4 +13,5 @@ export enum GrantType {
   RefreshToken = 'refresh_token',
   ClientCredentials = 'client_credentials',
   TokenExchange = 'urn:ietf:params:oauth:grant-type:token-exchange',
+  DeviceCode = 'urn:ietf:params:oauth:grant-type:device_code',
 }

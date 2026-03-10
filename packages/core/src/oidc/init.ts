@@ -122,6 +122,10 @@ export default function initOidc(
       devInteractions: { enabled: false },
       clientCredentials: { enabled: true },
       backchannelLogout: { enabled: true },
+      // DEV: Device flow
+      deviceFlow: {
+        enabled: EnvSet.values.isDevFeaturesEnabled,
+      },
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
@@ -378,6 +382,8 @@ export default function initOidc(
 
         return 60 * 60; // 1 hour in seconds
       },
+      /** Align with the oidc-provider default (10 minutes). */
+      DeviceCode: 600 /* 10 minutes in seconds */,
       Interaction: 3600 /* 1 hour in seconds */,
       Session: 1_209_600 /* 14 days in seconds */,
       // Set this to the longest allowed duration of the refresh token

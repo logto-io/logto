@@ -98,6 +98,15 @@ describe('grantSuccessListener', () => {
     );
   });
 
+  it('should log type ExchangeTokenBy when grant type is device_code', () => {
+    testGrantListener(
+      { grant_type: 'urn:ietf:params:oauth:grant-type:device_code', device_code: 'deviceCode' },
+      { access_token: 'newAccessTokenValue', refresh_token: 'newRefreshTokenValue' },
+      'ExchangeTokenBy.DeviceCode',
+      [token.TokenType.AccessToken, token.TokenType.RefreshToken]
+    );
+  });
+
   it('should log type ExchangeTokenBy when grant type is unknown', () => {
     testGrantListener(
       { grant_type: 'foo' },
