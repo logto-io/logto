@@ -5,7 +5,9 @@ const { jest } = import.meta;
 
 const { assertHookLogResult } = await import('./utils.js');
 
-const advanceTimersByTimeAsync = jest.advanceTimersByTimeAsync as (ms: number) => Promise<void>;
+const { advanceTimersByTimeAsync } = jest as typeof jest & {
+  advanceTimersByTimeAsync: (ms: number) => Promise<void>;
+};
 
 describe('assertHookLogResult', () => {
   beforeEach(() => {
