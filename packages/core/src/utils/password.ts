@@ -36,7 +36,7 @@ function isLegacyHashAlgorithm(algorithm: string): boolean {
   }
 }
 
-function parsePbkdf2Salt(salt: string): string | Uint8Array {
+function parsePbkdf2Salt(salt: string): crypto.BinaryLike {
   if (!salt.startsWith('hex:')) {
     return salt;
   }
@@ -92,6 +92,11 @@ export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyP
     isLegacyHashAlgorithm(algorithm),
     new RequestError({ code: 'password.unsupported_legacy_hash_algorithm', algorithm })
   );
+
+  // Validate PBKDF2 salt format early to surface errors at user creation time
+  if (isPbkdf2Algorithm(algorithm) && args[0] !== undefined) {
+    parsePbkdf2Salt(args[0]);
+  }
 
   return {
     algorithm,
