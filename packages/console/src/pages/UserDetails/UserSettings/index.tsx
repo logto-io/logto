@@ -33,6 +33,7 @@ import UserConnections from './UserConnections';
 import UserMfaVerifications from './UserMfaVerifications';
 import UserPassword from './UserPassword';
 import UserSessions from './UserSessions';
+import UserSignInPasskeys from './UserSignInPasskeys';
 
 function UserSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -161,6 +162,11 @@ function UserSettings() {
               }}
             />
           </FormField>
+          {isDevFeaturesEnabled && (
+            <FormField title="user_details.passkey.field_name">
+              <UserSignInPasskeys userId={user.id} />
+            </FormField>
+          )}
           <FormField title="user_details.mfa.field_name">
             <UserMfaVerifications userId={user.id} />
           </FormField>

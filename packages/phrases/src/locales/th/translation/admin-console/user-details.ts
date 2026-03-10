@@ -71,6 +71,12 @@ const user_details = {
     deletion_confirmation:
       'คุณกำลังนำ <name/> สำหรับ ขั้นตอนยืนยันสองขั้น ออก คุณแน่ใจหรือว่าต้องการดำเนินการต่อ?',
   },
+  passkey: {
+    field_name: 'พาสคีย์',
+    field_description_empty: 'ผู้ใช้นี้ยังไม่ได้เปิดใช้งานการลงชื่อเข้าใช้ด้วยพาสคีย์',
+    deletion_confirmation:
+      'คุณกำลังนำ <name/> สำหรับการลงชื่อเข้าใช้ด้วยพาสคีย์ ออก คุณแน่ใจหรือว่าต้องการดำเนินการต่อ?',
+  },
   suspended: 'ระงับ',
   suspend_user: 'ระงับผู้ใช้',
   suspend_user_reminder:

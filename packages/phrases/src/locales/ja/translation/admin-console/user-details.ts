@@ -70,6 +70,12 @@ const user_details = {
     field_description_empty: 'このユーザーは2段階認証の要因を有効にしていません。',
     deletion_confirmation: '2段階認証の既存の<name/>を削除しています。本当に続行しますか？',
   },
+  passkey: {
+    field_name: 'パスキー',
+    field_description_empty: 'このユーザーはパスキーサインインを有効にしていません。',
+    deletion_confirmation:
+      'パスキーサインインのために既存の<name/>を削除しています。本当に続行しますか？',
+  },
   suspended: '停止中',
   suspend_user: 'ユーザーを一時停止',
   suspend_user_reminder:

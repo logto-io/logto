@@ -70,6 +70,12 @@ const user_details = {
     deletion_confirmation:
       'أنت تقوم بإزالة <name/> الحالية للتحقق المتعدد من عوامل التحقق. هل أنت متأكد أنك تريد المتابعة؟',
   },
+  passkey: {
+    field_name: 'مفاتيح المرور',
+    field_description_empty: 'لم يقم هذا المستخدم بتمكين تسجيل الدخول بمفاتيح المرور.',
+    deletion_confirmation:
+      'أنت تقوم بإزالة <name/> الحالية لتسجيل الدخول بمفاتيح المرور. هل أنت متأكد أنك تريد المتابعة؟',
+  },
   suspended: 'موقوف',
   suspend_user: 'تعليق المستخدم',
   suspend_user_reminder:

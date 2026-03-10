@@ -71,6 +71,12 @@ const user_details = {
     deletion_confirmation:
       'You are removing the existing <name/> for the 2-step verification. Are you sure you want to continue?',
   },
+  passkey: {
+    field_name: 'Passkeys',
+    field_description_empty: 'This user has not enabled passkey sign-in.',
+    deletion_confirmation:
+      'You are removing the existing <name/> for passkey sign-in. Are you sure you want to continue?',
+  },
   suspended: 'Suspended',
   suspend_user: 'Suspend user',
   suspend_user_reminder:

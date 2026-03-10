@@ -75,6 +75,12 @@ const user_details = {
     deletion_confirmation:
       'Sie entfernen die bestehende <name/> für die Zwei-Faktor-Authentifizierung. Sind Sie sicher, dass Sie fortfahren möchten?',
   },
+  passkey: {
+    field_name: 'Passkeys',
+    field_description_empty: 'Dieser Benutzer hat die Passkey-Anmeldung nicht aktiviert.',
+    deletion_confirmation:
+      'Sie entfernen den vorhandenen <name/> für die Passkey-Anmeldung. Sind Sie sicher, dass Sie fortfahren möchten?',
+  },
   suspended: 'Gesperrt',
   suspend_user: 'Benutzer sperren',
   suspend_user_reminder:

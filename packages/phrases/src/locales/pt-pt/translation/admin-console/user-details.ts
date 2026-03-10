@@ -74,6 +74,12 @@ const user_details = {
     deletion_confirmation:
       'Está a remover o existente <name/> para a verificação em duas etapas. Tem a certeza de que deseja continuar?',
   },
+  passkey: {
+    field_name: 'Chaves de acesso',
+    field_description_empty: 'Este utilizador não ativou o início de sessão com chave de acesso.',
+    deletion_confirmation:
+      'Está a remover a chave de acesso existente <name/> para o início de sessão. Tem a certeza de que deseja continuar?',
+  },
   suspended: 'suspenso',
   suspend_user: 'Suspender utilizador',
   suspend_user_reminder:

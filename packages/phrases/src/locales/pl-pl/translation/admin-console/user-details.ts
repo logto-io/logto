@@ -71,6 +71,12 @@ const user_details = {
     deletion_confirmation:
       'Usuwasz istniejące <name/> w celu weryfikacji dwuetapowej. Czy na pewno chcesz kontynuować?',
   },
+  passkey: {
+    field_name: 'Klucze dostępu',
+    field_description_empty: 'Ten użytkownik nie włączył logowania za pomocą klucza dostępu.',
+    deletion_confirmation:
+      'Usuwasz istniejący <name/> do logowania za pomocą klucza dostępu. Czy na pewno chcesz kontynuować?',
+  },
   suspended: 'Zawieszony',
   suspend_user: 'Zawieś użytkownika',
   suspend_user_reminder:

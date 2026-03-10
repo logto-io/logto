@@ -72,6 +72,12 @@ const user_details = {
     deletion_confirmation:
       'Вы удаляете существующий <name/> для двухэтапной верификации. Вы уверены, что хотите продолжить?',
   },
+  passkey: {
+    field_name: 'Ключи доступа',
+    field_description_empty: 'Этот пользователь не включил вход с ключом доступа.',
+    deletion_confirmation:
+      'Вы удаляете существующий <name/> для входа с ключом доступа. Вы уверены, что хотите продолжить?',
+  },
   suspended: 'Приостановлен',
   suspend_user: 'Приостановить пользователя',
   suspend_user_reminder:
