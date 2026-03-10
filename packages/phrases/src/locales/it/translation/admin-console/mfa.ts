@@ -57,8 +57,8 @@ const mfa = {
     'Chiedi agli utenti di configurare MFA al successivo tentativo di accesso dopo la registrazione. (non saltabile)',
   set_up_organization_required_mfa_prompt:
     "Messaggio di configurazione MFA per gli utenti dopo che l'organizzazione abilita MFA",
-  prompt_at_sign_in_no_skip:
-    'Chiedi agli utenti di configurare MFA al prossimo accesso (senza possibilità di saltare)',
+  prompt_at_sign_in_non_skippable:
+    'Chiedi agli utenti di configurare MFA al prossimo accesso (non saltabile)',
   email_primary_method_tip:
     'Il codice di verifica email è già il tuo metodo principale di accesso. Per mantenere la sicurezza, non può essere riutilizzato per la MFA.',
   phone_primary_method_tip:

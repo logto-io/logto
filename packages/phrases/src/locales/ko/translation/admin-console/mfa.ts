@@ -51,7 +51,7 @@ const mfa = {
     '등록 후 다음 로그인 시도 시 사용자에게 MFA 설정을 요청합니다. (건너뛸 수 없음)',
   set_up_organization_required_mfa_prompt:
     '조직이 MFA를 활성화 한 후 사용자를 위한 MFA 설정 프롬프트',
-  prompt_at_sign_in_no_skip: '다음 로그인에 사용자에게 MFA 설정을 요청합니다 (건너뛰기 불가)',
+  prompt_at_sign_in_non_skippable: '다음 로그인에 사용자에게 MFA 설정을 요청합니다 (건너뛰기 불가)',
   email_primary_method_tip:
     '이메일 인증 코드는 이미 주 로그인 방법입니다. 보안을 유지하기 위해 MFA로 재사용할 수 없습니다.',
   phone_primary_method_tip:

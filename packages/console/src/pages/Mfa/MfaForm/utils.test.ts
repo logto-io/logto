@@ -1,4 +1,4 @@
-import { MfaFactor, MfaPolicy } from '@logto/schemas';
+import { MfaFactor, MfaPolicy, OrganizationRequiredMfaPolicy } from '@logto/schemas';
 
 import { type MfaConfigForm } from '../types';
 
@@ -71,6 +71,45 @@ test('builds payload with adaptive MFA only when dev features enabled', () => {
       policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       factors: [MfaFactor.TOTP],
     },
+  });
+});
+
+test('filters organization-required MFA policy when adaptive MFA is enabled', () => {
+  const payload = buildMfaPatchPayload(
+    {
+      ...baseForm,
+      adaptiveMfaEnabled: true,
+      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+    },
+    true
+  );
+
+  expect(payload).toEqual({
+    mfa: {
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+      factors: [MfaFactor.TOTP],
+    },
+    adaptiveMfa: { enabled: true },
+  });
+});
+
+test('filters hidden prompt policies when mandatory MFA is selected', () => {
+  const payload = buildMfaPatchPayload(
+    {
+      ...baseForm,
+      isMandatory: true,
+      setUpPrompt: MfaPolicy.PromptOnlyAtSignIn,
+      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+    },
+    true
+  );
+
+  expect(payload).toEqual({
+    mfa: {
+      policy: MfaPolicy.Mandatory,
+      factors: [MfaFactor.TOTP],
+    },
+    adaptiveMfa: { enabled: false },
   });
 });
 

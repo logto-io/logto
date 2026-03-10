@@ -39,7 +39,7 @@ const mfa = {
   prompt_at_sign_in_and_sign_up_mandatory: '在注册时要求用户设置 MFA。（不可跳过）',
   prompt_only_at_sign_in_mandatory: '在注册后的下次登录尝试时要求用户设置 MFA。（不可跳过）',
   set_up_organization_required_mfa_prompt: '组织启用 MFA 后，提示用户设置 MFA',
-  prompt_at_sign_in_no_skip: '在下次登录时要求用户设置 MFA （不可跳过）',
+  prompt_at_sign_in_non_skippable: '在下次登录时要求用户设置 MFA （不可跳过）',
   email_primary_method_tip: '邮件验证码已经是你的主要登录方式。为了确保安全性，不能再次用于 MFA。',
   phone_primary_method_tip: '短信验证码已经是你的主要登录方式。为了确保安全性，不能再次用于 MFA。',
   no_email_connector_warning:

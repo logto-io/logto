@@ -107,12 +107,15 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
     // eslint-disable-next-line unicorn/prefer-native-coercion-functions
   ].filter((factor): factor is MfaFactor => Boolean(factor));
 
+  const shouldIncludeOrganizationRequiredMfaPolicy =
+    !isMandatory && !adaptiveMfaEnabled && Boolean(organizationRequiredMfaPolicy);
+
   return {
     policy: isMandatory
       ? MfaPolicy.Mandatory
       : normalizeSetUpPrompt(setUpPrompt, adaptiveMfaEnabled),
     factors,
-    ...conditional(organizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }),
+    ...conditional(shouldIncludeOrganizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }),
   };
 };
 
