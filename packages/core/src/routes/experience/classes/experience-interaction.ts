@@ -33,6 +33,7 @@ import {
   parseMfaPropertiesToUserConfig,
 } from './helpers.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
+import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
@@ -67,6 +68,7 @@ export default class ExperienceInteraction {
   private userId?: string;
   private userCache?: User;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
+  private adaptiveMfaHookTriggered = false;
 
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
@@ -134,6 +136,7 @@ export default class ExperienceInteraction {
       verificationRecords = [],
       profile = {},
       mfa = {},
+      adaptiveMfaHookTriggered = false,
       userId,
       interactionEvent,
       captcha = {
@@ -144,6 +147,7 @@ export default class ExperienceInteraction {
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
+    this.adaptiveMfaHookTriggered = adaptiveMfaHookTriggered;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
@@ -368,22 +372,16 @@ export default class ExperienceInteraction {
       return;
     }
 
+    this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
+
     const isMfaVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
 
     if (isMfaVerified) {
       return;
     }
 
-    if (EnvSet.values.isDevFeaturesEnabled && adaptiveMfaResult?.requiresMfa) {
-      // `PostSignInAdaptiveMfaTriggered` should be emitted when adaptive MFA raises a
-      // challenge for the current sign-in attempt. Once the interaction already carries a
-      // verified MFA record, later submit retries in the same interaction should complete the
-      // sign-in flow without enqueueing another adaptive MFA hook for the same risk decision.
-      this.ctx.assignInteractionHookResult({
-        event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
-        payload: { adaptiveMfaResult },
-        userId: user.id,
-      });
+    if (this.adaptiveMfaHookTriggered) {
+      await this.save();
     }
 
     const { primaryEmail, primaryPhone } = user;
@@ -661,6 +659,7 @@ export default class ExperienceInteraction {
       profile: this.profile.data,
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
+      ...conditional(this.adaptiveMfaHookTriggered && { adaptiveMfaHookTriggered: true }),
       captcha,
       ...conditional(signInContext && { signInContext }),
     };
@@ -673,6 +672,23 @@ export default class ExperienceInteraction {
       mfa: this.mfa.sanitizedData,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
     };
+  }
+
+  private assignAdaptiveMfaHookResult(userId: string, adaptiveMfaResult?: AdaptiveMfaResult) {
+    if (
+      !EnvSet.values.isDevFeaturesEnabled ||
+      !adaptiveMfaResult?.requiresMfa ||
+      this.adaptiveMfaHookTriggered
+    ) {
+      return;
+    }
+
+    this.ctx.assignInteractionHookResult({
+      event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+      payload: { adaptiveMfaResult },
+      userId,
+    });
+    this.adaptiveMfaHookTriggered = true;
   }
 
   private get verificationRecordsArray() {

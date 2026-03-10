@@ -185,6 +185,7 @@ export type InteractionStorage = {
   profile?: InteractionProfile;
   mfa?: MfaData;
   verificationRecords?: VerificationRecordData[];
+  adaptiveMfaHookTriggered?: boolean;
   signInContext?: Record<string, string>;
   captcha?: {
     verified: boolean;
@@ -198,6 +199,7 @@ export const interactionStorageGuard = z.object({
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
+  adaptiveMfaHookTriggered: z.boolean().optional(),
   signInContext: z.record(z.string(), z.string()).optional(),
   captcha: z
     .object({
