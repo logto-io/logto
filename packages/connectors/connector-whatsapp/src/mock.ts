@@ -10,22 +10,22 @@ export const mockedConfig: WhatsAppSmsConfig = {
     {
       usageType: 'Generic',
       templateName: 'logto_generic',
-      language: 'es_AR',
+      language: 'en',
     },
     {
       usageType: 'SignIn',
       templateName: 'logto_sign_in',
-      language: 'es_AR',
+      language: 'en',
     },
     {
       usageType: 'Register',
       templateName: 'logto_register',
-      language: 'es_AR',
+      language: 'en',
     },
     {
       usageType: 'ForgotPassword',
       templateName: 'logto_forgot_password',
-      language: 'es_AR',
+      language: 'en',
     },
   ],
 };
