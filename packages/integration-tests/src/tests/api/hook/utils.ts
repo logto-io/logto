@@ -34,10 +34,20 @@ const waitForLatestHookLog = async (
   return waitForLatestHookLog(hookId, event, retriesLeft - 1);
 };
 
-const getLatestHookLogAfterDelay = async (hookId: string, event: HookEvent) => {
+const waitForNoHookLog = async (
+  hookId: string,
+  event: HookEvent,
+  retriesLeft = 50
+): Promise<Log | undefined> => {
+  const logEntry = await getLatestHookLog(hookId, event);
+
+  if (logEntry !== undefined || retriesLeft <= 1) {
+    return logEntry;
+  }
+
   await waitFor(100);
 
-  return getLatestHookLog(hookId, event);
+  return waitForNoHookLog(hookId, event, retriesLeft - 1);
 };
 
 export const assertHookLogResult = async (
@@ -50,7 +60,7 @@ export const assertHookLogResult = async (
   }
 ) => {
   const logEntry = assertions.toBeUndefined
-    ? await getLatestHookLogAfterDelay(hookId, event)
+    ? await waitForNoHookLog(hookId, event)
     : await waitForLatestHookLog(hookId, event);
 
   if (assertions.toBeUndefined) {

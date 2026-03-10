@@ -6,8 +6,8 @@ import {
   MfaPolicy,
   type User,
   userMfaDataKey,
+  VerificationType,
 } from '@logto/schemas';
-import { VerificationType } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { type Optional } from '@silverhand/essentials';
 
@@ -337,7 +337,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
   });
 
-  it('does not assign adaptive MFA hook result when current interaction already satisfies MFA verification', async () => {
+  it('should not assign adaptive MFA hook result when current interaction already satisfies MFA verification', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       logtoConfig: {

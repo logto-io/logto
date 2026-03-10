@@ -370,7 +370,11 @@ export default class ExperienceInteraction {
 
     const isMfaVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
 
-    if (EnvSet.values.isDevFeaturesEnabled && adaptiveMfaResult?.requiresMfa && !isMfaVerified) {
+    if (isMfaVerified) {
+      return;
+    }
+
+    if (EnvSet.values.isDevFeaturesEnabled && adaptiveMfaResult?.requiresMfa) {
       // `PostSignInAdaptiveMfaTriggered` should be emitted when adaptive MFA raises a
       // challenge for the current sign-in attempt. Once the interaction already carries a
       // verified MFA record, later submit retries in the same interaction should complete the
