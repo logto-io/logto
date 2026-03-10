@@ -102,6 +102,7 @@ function Table<
     return result + (colSpan ?? 1);
   }, 0);
 
+  const hasTableHeader = columns.some(({ title }) => !!title);
   const hasData = rowGroups.some(({ data }) => data?.length);
   const hasError = !isLoading && !hasData && errorMessage;
   const isEmpty = !isLoading && !hasData && !errorMessage;
@@ -115,26 +116,29 @@ function Table<
             <div className={styles.filter}>{filter}</div>
           </div>
         )}
-        <table
-          className={classNames(
-            styles.headerTable,
-            filter && styles.hideTopBorderRadius,
-            headerTableClassName
-          )}
-        >
-          <thead>
-            <tr>
-              {columns.map(({ title, colSpan, dataIndex }) => (
-                <th key={dataIndex} colSpan={colSpan}>
-                  {title}
-                </th>
-              ))}
-            </tr>
-          </thead>
-        </table>
+        {hasTableHeader && (
+          <table
+            className={classNames(
+              styles.headerTable,
+              filter && styles.hideTopBorderRadius,
+              headerTableClassName
+            )}
+          >
+            <thead>
+              <tr>
+                {columns.map(({ title, colSpan, dataIndex }) => (
+                  <th key={dataIndex} colSpan={colSpan}>
+                    {title}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+          </table>
+        )}
         <OverlayScrollbar
           className={classNames(
             styles.bodyTable,
+            !hasTableHeader && styles.roundedTopCorners,
             isEmpty && styles.empty,
             bodyTableWrapperClassName
           )}

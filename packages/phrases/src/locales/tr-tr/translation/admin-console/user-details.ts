@@ -73,6 +73,12 @@ const user_details = {
     deletion_confirmation:
       'Varolan 2 aşamalı doğrulama için <name/> kaldırıyorsunuz. Devam etmek istediğinizden emin misiniz?',
   },
+  passkey: {
+    field_name: "Passkey'ler",
+    field_description_empty: 'Bu kullanıcı passkey girişini etkinleştirmedi.',
+    deletion_confirmation:
+      'Passkey girişi için mevcut <name/> kaldırıyorsunuz. Devam etmek istediğinizden emin misiniz?',
+  },
   suspended: 'Askıya alınmış',
   suspend_user: 'Kullanıcıyı Askıya Al',
   suspend_user_reminder:

@@ -75,6 +75,12 @@ const user_details = {
     deletion_confirmation:
       "Stai rimuovendo l'esistente <name/> per la verifica in due passaggi. Sei sicuro di voler continuare?",
   },
+  passkey: {
+    field_name: 'Passkeys',
+    field_description_empty: "Questo utente non ha abilitato l'accesso con passkey.",
+    deletion_confirmation:
+      "Stai rimuovendo il passkey esistente <name/> per l'accesso. Sei sicuro di voler continuare?",
+  },
   suspended: 'Sospeso',
   suspend_user: 'Sospendi utente',
   suspend_user_reminder:

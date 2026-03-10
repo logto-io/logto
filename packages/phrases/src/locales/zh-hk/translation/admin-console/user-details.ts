@@ -67,6 +67,11 @@ const user_details = {
     field_description_empty: '此用戶尚未啟用兩步驟身份驗證因素。',
     deletion_confirmation: '你正在刪除現有的雙步驗證中的 <name/>。你確定要繼續嗎？',
   },
+  passkey: {
+    field_name: '通行密鑰',
+    field_description_empty: '此用戶尚未啟用通行密鑰登錄。',
+    deletion_confirmation: '你正在刪除用於通行密鑰登錄的現有 <name/>。你確定要繼續嗎？',
+  },
   suspended: '已禁用',
   suspend_user: '禁用用戶',
   suspend_user_reminder:
