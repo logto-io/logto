@@ -33,12 +33,19 @@ const useIdentifierSignInMethods = () => {
     return methods;
   }, [identifiers, signInMethods]);
 
+  // Hide password input field if passkey sign-in is enabled but the "Continue with passkey" option
+  // is not checked, which means the tenant wants to use passkey sign-in in an identifier-first flow.
+  // User will only be able to input the identifier in the first step, and then choose to verify via
+  // passkey or other methods in the next step.
+  const isIdentifierFirstPasskeySignInConfig =
+    passkeySignIn?.enabled && !passkeySignIn.showPasskeyButton;
+
   const isPasswordOnly = useMemo(
     () =>
       signInMethods.length > 0 &&
       signInMethods.every(({ password, verificationCode }) => password && !verificationCode) &&
-      !passkeySignIn?.enabled,
-    [signInMethods, passkeySignIn]
+      !isIdentifierFirstPasskeySignInConfig,
+    [signInMethods, isIdentifierFirstPasskeySignInConfig]
   );
 
   return useMemo(
