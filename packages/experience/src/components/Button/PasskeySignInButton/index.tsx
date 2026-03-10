@@ -73,7 +73,7 @@ const PasskeySignInButton = () => {
       type="button"
       onClick={onPasskeySignIn}
     >
-      {!isLoadingActive && <PasskeyIcon />}
+      {!isLoadingActive && <PasskeyIcon className={styles.icon} />}
       {isLoadingActive && (
         <span className={styles.loadingIcon}>
           <RotatingRingIcon />
