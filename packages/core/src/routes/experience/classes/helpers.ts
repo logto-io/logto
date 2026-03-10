@@ -14,6 +14,8 @@ import {
   type UserLogtoConfig,
   userMfaDataKey,
   userPasskeySignInDataKey,
+  type JsonObject,
+  userLogtoConfigGuard,
 } from '@logto/schemas';
 import { conditional, type Nullable } from '@silverhand/essentials';
 
@@ -319,15 +321,19 @@ export const getAllUserEnabledMfaVerifications = (
  * - The returned object is structured to be directly used for updating the user account with the new MFA settings.
  */
 export const parseMfaPropertiesToUserConfig = (
+  logtoConfig: JsonObject,
   mfaVerificationData: UserMfaVerificationsData,
   interactionEvent: InteractionEvent
 ): UserLogtoConfig => {
   const { mfaEnabled, mfaSkipped, passkeySkipped } = mfaVerificationData;
+  const userMfaData = userLogtoConfigGuard.safeParse(logtoConfig).data?.[userMfaDataKey];
   return {
+    ...logtoConfig,
     [userMfaDataKey]: {
+      ...userMfaData,
       // Force cast optional value to boolean since the `enabled` field is newly introduced and legacy users may NOT have this field
       // in their config. The absence of `enabled` field will be treated as MFA not enabled after the next sign-in attempt.
-      enabled: mfaEnabled === true,
+      ...conditional(userMfaData?.enabled === undefined && { enabled: mfaEnabled === true }),
       // For users who have explicitly skipped MFA, set `skipped` to true to persist the skipped status.
       ...conditional(mfaSkipped && { skipped: true }),
     },
