@@ -1,14 +1,13 @@
-import { ApplicationType, GrantType, InteractionEvent, type Resource } from '@logto/schemas';
+import { ApplicationType, GrantType, SignInIdentifier, type Resource } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
-import { putInteraction } from '#src/api/interaction.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { createSubjectToken } from '#src/api/subject-token.js';
 import type MockClient from '#src/client/index.js';
-import { initClient, processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generatePassword, generateUsername, getAccessTokenPayload } from '#src/utils.js';
@@ -48,16 +47,20 @@ describe('Token Exchange (Actor Token)', () => {
     const { id } = await createUserByAdmin({ username, password });
     testUserId = id;
 
-    client = await initClient({
-      resources: [testApiResourceInfo.indicator],
+    const signInClient = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+      },
     });
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
+    const { verificationId } = await signInClient.verifyPassword({
+      identifier: { type: SignInIdentifier.Username, value: username },
+      password,
     });
-    const { redirectTo } = await client.submitInteraction();
-    await processSession(client, redirectTo);
-    testAccessToken = await client.getAccessToken();
+    await signInClient.identifyUser({ verificationId });
+    const { redirectTo } = await signInClient.submitInteraction();
+    await processSession(signInClient, redirectTo);
+    testAccessToken = await signInClient.getAccessToken();
+    client = signInClient;
     /* eslint-enable @silverhand/fp/no-mutation */
   });
 

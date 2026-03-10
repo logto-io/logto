@@ -1,4 +1,4 @@
-import { UsersPasswordEncryptionMethod, ConnectorType } from '@logto/schemas';
+import { UsersPasswordEncryptionMethod, ConnectorType, SignInIdentifier } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
 import {
@@ -21,11 +21,8 @@ import {
   updateUserProfile,
 } from '#src/api/index.js';
 import { clearConnectorsByTypes } from '#src/helpers/connector.js';
+import { signInWithPassword, signInWithSocial } from '#src/helpers/experience/index.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
-import {
-  createNewSocialUserWithUsernameAndPassword,
-  signInWithPassword,
-} from '#src/helpers/interactions.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import {
   generateUsername,
@@ -229,7 +226,12 @@ describe('admin console user management', () => {
 
     await enableAllPasswordSignInMethods();
     // Sign in with deleted user should throw error
-    await expect(signInWithPassword({ username, password })).rejects.toThrowError();
+    await expect(
+      signInWithPassword({
+        identifier: { type: SignInIdentifier.Username, value: username },
+        password,
+      })
+    ).rejects.toThrowError();
   });
 
   it('should update user password successfully', async () => {
@@ -337,7 +339,11 @@ describe('admin console user management', () => {
       config: mockSocialConnectorConfig,
     });
 
-    const createdUserId = await createNewSocialUserWithUsernameAndPassword(connectorId);
+    const createdUserId = await signInWithSocial(
+      connectorId,
+      { id: `social_user_${randomString()}` },
+      { registerNewUser: true }
+    );
 
     const userInfo = await getUser(createdUserId);
     expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);

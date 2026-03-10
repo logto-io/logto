@@ -1,14 +1,10 @@
 import { InteractionEvent } from '@logto/schemas';
 
+import { initExperienceClient, logoutClient, processSession } from './client.js';
 import {
-  getSsoAuthorizationUrl,
-  postSsoAuthentication,
-  postSsoRegistration,
-} from '#src/api/interaction-sso.js';
-import { putInteractionEvent } from '#src/api/interaction.js';
-
-import { putInteraction } from './admin-tenant.js';
-import { initClient, logoutClient, processSession } from './client.js';
+  successfullyCreateEnterpriseSsoVerification,
+  successfullyVerifyEnterpriseSsoAuthorization,
+} from './experience/enterprise-sso-verification.js';
 import { expectRejects } from './index.js';
 
 export type MockOidcSsoConnectorIdTokenProfileStandardClaims = {
@@ -31,35 +27,31 @@ export const registerNewUserWithSso = async (
   const redirectUri = 'http://foo.dev/callback';
 
   const { authData } = params;
-  const client = await initClient();
+  const client = await initExperienceClient();
 
-  await client.successSend(putInteraction, {
-    event: InteractionEvent.SignIn,
-  });
-
-  const response = await client.send(getSsoAuthorizationUrl, {
+  const { verificationId } = await successfullyCreateEnterpriseSsoVerification(
+    client,
     connectorId,
-    state,
-    redirectUri,
-  });
-
-  expect(response.redirectTo).not.toBeUndefined();
-  expect(response.redirectTo.indexOf(state)).not.toBe(-1);
-
-  await expectRejects(
-    client.send(postSsoAuthentication, {
-      connectorId,
-      data: authData,
-    }),
     {
-      code: 'user.identity_not_exist',
-      status: 422,
+      redirectUri,
+      state,
     }
   );
 
-  await client.successSend(putInteractionEvent, { event: InteractionEvent.Register });
+  await successfullyVerifyEnterpriseSsoAuthorization(client, connectorId, {
+    verificationId,
+    connectorData: authData,
+  });
 
-  const { redirectTo } = await client.send(postSsoRegistration, connectorId);
+  await expectRejects(client.identifyUser({ verificationId }), {
+    code: 'user.sso_identity_not_exist',
+    status: 404,
+  });
+
+  await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
+  await client.identifyUser({ verificationId });
+
+  const { redirectTo } = await client.submitInteraction();
 
   const userId = await processSession(client, redirectTo);
   await logoutClient(client);
@@ -77,25 +69,25 @@ export const signInWithSso = async (
   const redirectUri = 'http://foo.dev/callback';
 
   const { authData } = params;
-  const client = await initClient();
+  const client = await initExperienceClient();
 
-  await client.successSend(putInteraction, {
-    event: InteractionEvent.SignIn,
-  });
-
-  const response = await client.send(getSsoAuthorizationUrl, {
+  const { verificationId } = await successfullyCreateEnterpriseSsoVerification(
+    client,
     connectorId,
-    state,
-    redirectUri,
+    {
+      redirectUri,
+      state,
+    }
+  );
+
+  await successfullyVerifyEnterpriseSsoAuthorization(client, connectorId, {
+    verificationId,
+    connectorData: authData,
   });
 
-  expect(response.redirectTo).not.toBeUndefined();
-  expect(response.redirectTo.indexOf(state)).not.toBe(-1);
+  await client.identifyUser({ verificationId });
 
-  const { redirectTo } = await client.send(postSsoAuthentication, {
-    connectorId,
-    data: authData,
-  });
+  const { redirectTo } = await client.submitInteraction();
 
   const userId = await processSession(client, redirectTo);
   await logoutClient(client);

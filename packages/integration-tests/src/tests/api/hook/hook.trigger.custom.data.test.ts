@@ -13,8 +13,8 @@ import { createScope } from '#src/api/scope.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
+import { registerNewUserWithVerificationCode } from '#src/helpers/experience/index.js';
 import { getSupportedHookEvents, WebHookApiTest } from '#src/helpers/hook.js';
-import { registerWithEmail } from '#src/helpers/interactions.js';
 import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { registerNewUserWithSso } from '#src/helpers/single-sign-on.js';
@@ -149,7 +149,10 @@ describe('manual data hook tests', () => {
       const domain = 'example.com';
       await organizationApi.jit.addEmailDomain(organization.id, domain);
 
-      await registerWithEmail(`${randomString()}@${domain}`);
+      await registerNewUserWithVerificationCode({
+        type: SignInIdentifier.Email,
+        value: `${randomString()}@${domain}`,
+      });
       await assertOrganizationMembershipUpdated(organization.id);
     });
 

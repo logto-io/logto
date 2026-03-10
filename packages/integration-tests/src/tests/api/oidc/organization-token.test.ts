@@ -2,12 +2,12 @@ import assert from 'node:assert';
 
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
 import { LogtoRequestError } from '@logto/js';
-import { InteractionEvent, MfaFactor } from '@logto/schemas';
+import { MfaFactor } from '@logto/schemas';
 
 import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
-import { putInteraction } from '#src/api/index.js';
-import MockClient from '#src/client/index.js';
-import { processSession } from '#src/helpers/client.js';
+import { type ExperienceClient } from '#src/client/experience/index.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
+import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
@@ -18,9 +18,8 @@ describe('get access token for organization', () => {
   const password = generatePassword();
   const scopeName = `read:${randomString()}`;
   const scopeName2 = `read:other:${randomString()}`;
-  const client = new MockClient({
-    scopes: [scopeName, scopeName2, UserScope.Organizations],
-  });
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let client: ExperienceClient;
 
   /* eslint-disable @silverhand/fp/no-let */
   let testApiScopeId: string;
@@ -60,11 +59,12 @@ describe('get access token for organization', () => {
     await enableAllPasswordSignInMethods();
 
     // Prepare client
-    await client.initSession();
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
+    client = await initExperienceClient({
+      config: {
+        scopes: [scopeName, scopeName2, UserScope.Organizations],
+      },
     });
+    await identifyUserWithUsernamePassword(client, username, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
   });

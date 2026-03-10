@@ -4,8 +4,8 @@ import { decodeAccessToken } from '@logto/js';
 import {
   ApplicationType,
   GrantType,
-  InteractionEvent,
   MfaFactor,
+  SignInIdentifier,
   type Resource,
 } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
@@ -18,12 +18,11 @@ import {
   getApplicationSecrets,
   updateApplication,
 } from '#src/api/application.js';
-import { putInteraction } from '#src/api/interaction.js';
 import { deleteJwtCustomizer, upsertJwtCustomizer } from '#src/api/logto-config.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { createSubjectToken } from '#src/api/subject-token.js';
 import type MockClient from '#src/client/index.js';
-import { initClient, processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
@@ -76,16 +75,20 @@ describe('Token Exchange', () => {
     )}`;
     const { id } = await createUserByAdmin({ username, password });
     testUserId = id;
-    client = await initClient({
-      resources: [testApiResourceInfo.indicator],
+    const signInClient = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+      },
     });
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
+    const { verificationId } = await signInClient.verifyPassword({
+      identifier: { type: SignInIdentifier.Username, value: username },
+      password,
     });
-    const { redirectTo } = await client.submitInteraction();
-    await processSession(client, redirectTo);
-    await client.getAccessToken();
+    await signInClient.identifyUser({ verificationId });
+    const { redirectTo } = await signInClient.submitInteraction();
+    await processSession(signInClient, redirectTo);
+    await signInClient.getAccessToken();
+    client = signInClient;
     /* eslint-enable @silverhand/fp/no-mutation */
   });
 
