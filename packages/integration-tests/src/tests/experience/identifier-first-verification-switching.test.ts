@@ -22,12 +22,14 @@ const { describe, it } = devFeatureTest;
 
 const setupSignInExperience = async (options: {
   passkeyEnabled?: boolean;
+  showPasskeyButton?: boolean;
   passwordEnabled?: boolean;
   verificationCodeEnabled?: boolean;
   isPasswordPrimary?: boolean;
 }) => {
   const {
     passkeyEnabled = false,
+    showPasskeyButton = false,
     passwordEnabled = true,
     verificationCodeEnabled = false,
     isPasswordPrimary = true,
@@ -53,7 +55,7 @@ const setupSignInExperience = async (options: {
     forgotPasswordMethods: [],
     passkeySignIn: {
       enabled: passkeyEnabled,
-      showPasskeyButton: passkeyEnabled,
+      showPasskeyButton,
     },
   });
 };
@@ -227,7 +229,7 @@ describe('identifier-first verification method switching', () => {
       await updateSignInExperience({
         passkeySignIn: {
           enabled: true,
-          showPasskeyButton: true,
+          showPasskeyButton: false,
           allowAutofill: false,
         },
       });
@@ -275,7 +277,7 @@ describe('identifier-first verification method switching', () => {
       await updateSignInExperience({
         passkeySignIn: {
           enabled: true,
-          showPasskeyButton: true,
+          showPasskeyButton: false,
           allowAutofill: false,
         },
       });
