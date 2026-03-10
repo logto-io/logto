@@ -3,6 +3,7 @@ import { useContext, useEffect } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import InlineUpsell from '@/components/InlineUpsell';
 import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -88,6 +89,13 @@ function PasskeySignInForm() {
             />
           </div>
         </FormField>
+      )}
+      {!isPasskeySignInEnabled && (
+        <InlineUpsell
+          for="passkey_sign_in"
+          actionButtonText="upsell.view_plans"
+          className={styles.inlineNote}
+        />
       )}
     </Card>
   );
