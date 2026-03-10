@@ -57,7 +57,7 @@ const mfa = {
     'Peça aos utilizadores para configurar o MFA na próxima tentativa de início de sessão após o registo. (não pode ser ignorado)',
   set_up_organization_required_mfa_prompt:
     'Prompt de configuração do MFA para utilizadores após a ativação do MFA pela organização',
-  prompt_at_sign_in_no_skip:
+  prompt_at_sign_in_non_skippable:
     'Pedir aos utilizadores para configurar MFA no próximo início de sessão (não pode ser ignorado)',
   email_primary_method_tip:
     'O código de verificação por email já é o seu método principal de início de sessão. Para manter a segurança, ele não pode ser reutilizado para MFA.',

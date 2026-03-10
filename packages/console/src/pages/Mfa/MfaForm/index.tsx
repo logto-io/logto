@@ -180,7 +180,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
       },
       {
         value: OrganizationRequiredMfaPolicy.Mandatory,
-        title: t('mfa.prompt_at_sign_in_no_skip'),
+        title: t('mfa.prompt_at_sign_in_non_skippable'),
       },
     ],
     [t]

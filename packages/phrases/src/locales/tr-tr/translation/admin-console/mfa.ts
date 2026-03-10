@@ -58,7 +58,7 @@ const mfa = {
     'Kayıttan sonraki bir sonraki giriş denemesinde kullanıcılardan MFA kurmalarını isteyin. (atlanamaz)',
   set_up_organization_required_mfa_prompt:
     "Organizasyon MFA'yı etkinleştirdikten sonra kullanıcılardan MFA kurmalarını isteyin",
-  prompt_at_sign_in_no_skip:
+  prompt_at_sign_in_non_skippable:
     'Bir sonraki girişte kullanıcılardan MFA kurmalarını isteyin (atlanamaz)',
   email_primary_method_tip:
     'E-posta doğrulama kodu zaten birincil oturum açma yönteminizdir. Güvenliği sağlamak için MFA için tekrar kullanılamaz.',

@@ -58,8 +58,8 @@ const mfa = {
     'Pedir a los usuarios que configuren MFA en su siguiente intento de inicio de sesión después del registro. (no se puede omitir)',
   set_up_organization_required_mfa_prompt:
     'Sugerencia de configuración de MFA para usuarios después de que la organización habilita MFA',
-  prompt_at_sign_in_no_skip:
-    'Pedir a los usuarios que configuren MFA en el próximo inicio de sesión (sin omitir)',
+  prompt_at_sign_in_non_skippable:
+    'Pedir a los usuarios que configuren MFA en el próximo inicio de sesión (no se puede omitir)',
   email_primary_method_tip:
     'El código de verificación de email ya es tu método principal de inicio de sesión. Para mantener la seguridad, no se puede reutilizar para MFA.',
   phone_primary_method_tip:
