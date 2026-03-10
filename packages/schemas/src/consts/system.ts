@@ -12,3 +12,8 @@ export const ossConsolePath = '/console';
 
 /** The prefix for keys and values that need to be explicitly marked as internal. */
 export const internalPrefix = '#internal:';
+
+/**
+ * The timeout for WebAuthn authentication options, in milliseconds.
+ */
+export const webAuthnAuthenticationOptionsTimeout = 60_000;

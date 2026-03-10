@@ -5,6 +5,7 @@ import {
   type WebAuthnRegistrationOptions,
   type BindWebAuthn,
   type WebAuthnVerificationPayload,
+  webAuthnAuthenticationOptionsTimeout,
 } from '@logto/schemas';
 
 export const mockWebAuthnRegistrationOptions: WebAuthnRegistrationOptions = {
@@ -36,7 +37,7 @@ export const mockWebAuthnAuthenticationOptions: WebAuthnAuthenticationOptions = 
     },
   ],
   userVerification: 'preferred',
-  timeout: 60_000,
+  timeout: webAuthnAuthenticationOptionsTimeout,
   rpId: 'logto.io',
 };
 
