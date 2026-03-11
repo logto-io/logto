@@ -32,7 +32,6 @@ const PasskeySetup = () => {
   const asyncCreateRegistrationOptions = useApi(createSignInWebAuthnRegistrationOptions);
 
   const [registrationResult, setRegistrationResult] = useState<RegistrationState>();
-  const [isPreparing, setIsPreparing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleError = useErrorHandler();
@@ -51,9 +50,7 @@ const PasskeySetup = () => {
     }
 
     (async () => {
-      setIsPreparing(true);
       const [error, result] = await asyncCreateRegistrationOptions();
-      setIsPreparing(false);
 
       if (error) {
         await handleError(error);
@@ -106,8 +103,8 @@ const PasskeySetup = () => {
         <Button
           className={styles.button}
           title="passkey_sign_in.setup_page.subtitle"
-          isLoading={isSubmitting || isPreparing}
-          disabled={isPreparing && !registrationResult}
+          isLoading={isSubmitting}
+          disabled={!registrationResult}
           onClick={onCreatePasskey}
         />
       </SectionLayout>
