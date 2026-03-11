@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import Switch from '@/ds-components/Switch';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
@@ -215,9 +216,9 @@ function InstructionTab({ isActive }: Props) {
               )}
             />
           </FormField>
-          <div className={tabContentStyles.description}>
+          <InlineNotification severity="alert">
             {t('jwt_claims.error_handling.warning')}
-          </div>
+          </InlineNotification>
         </GuideCard>
       )}
       <div className={tabContentStyles.description}>{t('jwt_claims.jwt_claims_description')}</div>
