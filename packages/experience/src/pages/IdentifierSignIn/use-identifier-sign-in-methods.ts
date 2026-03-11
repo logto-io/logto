@@ -33,12 +33,17 @@ const useIdentifierSignInMethods = () => {
     return methods;
   }, [identifiers, signInMethods]);
 
+  // Hide password input field only if passkey sign-in is enabled and the "Continue with passkey." is hidden.
+  // The user enters their identifier on the first screen, then selects a verification method (password or passkey) on the next step.
+  const isIdentifierFirstPasskeySignInConfig =
+    passkeySignIn?.enabled && !passkeySignIn.showPasskeyButton;
+
   const isPasswordOnly = useMemo(
     () =>
       signInMethods.length > 0 &&
       signInMethods.every(({ password, verificationCode }) => password && !verificationCode) &&
-      !passkeySignIn?.enabled,
-    [signInMethods, passkeySignIn]
+      !isIdentifierFirstPasskeySignInConfig,
+    [signInMethods, isIdentifierFirstPasskeySignInConfig]
   );
 
   return useMemo(
