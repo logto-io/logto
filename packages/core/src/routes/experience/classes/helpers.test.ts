@@ -112,4 +112,23 @@ describe('parseMfaPropertiesToUserConfig', () => {
       },
     });
   });
+
+  it('persists additionalBindingSuggestionSkipped to user mfa config', () => {
+    expect(
+      parseMfaPropertiesToUserConfig(
+        {},
+        {
+          mfaEnabled: true,
+          additionalBindingSuggestionSkipped: true,
+          mfaVerifications: [],
+        },
+        InteractionEvent.SignIn
+      )
+    ).toEqual({
+      [userMfaDataKey]: {
+        enabled: true,
+        additionalBindingSuggestionSkipped: true,
+      },
+    });
+  });
 });
