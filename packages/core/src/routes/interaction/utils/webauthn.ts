@@ -7,6 +7,7 @@ import {
   type MfaVerifications,
   type WebAuthnVerificationPayload,
   type VerifyMfaResult,
+  webAuthnAuthenticationOptionsTimeout,
 } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared';
 import {
@@ -47,7 +48,7 @@ export const generateWebAuthnRegistrationOptions = async ({
     userName: getUserDisplayName({ username, primaryEmail, primaryPhone }) ?? 'Unnamed User',
     userDisplayName:
       getUserDisplayName({ name, username, primaryEmail, primaryPhone }) ?? 'Unnamed User',
-    timeout: 60_000,
+    timeout: webAuthnAuthenticationOptionsTimeout,
     attestationType: 'none',
     excludeCredentials: mfaVerifications
       .filter(
@@ -123,7 +124,7 @@ export const generateWebAuthnAuthenticationOptions = async ({
   }
 
   const options: GenerateAuthenticationOptionsOpts = {
-    timeout: 60_000,
+    timeout: webAuthnAuthenticationOptionsTimeout,
     allowCredentials: webAuthnVerifications.map(({ credentialId, transports }) => ({
       id: credentialId,
       type: 'public-key',

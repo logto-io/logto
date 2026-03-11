@@ -1,4 +1,9 @@
-import { InteractionEvent, MfaFactor, type WebAuthnAuthenticationOptions } from '@logto/schemas';
+import {
+  InteractionEvent,
+  MfaFactor,
+  webAuthnAuthenticationOptionsTimeout,
+  type WebAuthnAuthenticationOptions,
+} from '@logto/schemas';
 import { browserSupportsWebAuthnAutofill } from '@simplewebauthn/browser';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +48,7 @@ const usePasskeyAutofillConditionalUI = () => {
 
         window.setTimeout(() => {
           abortController.abort();
-        }, 60_000);
+        }, webAuthnAuthenticationOptionsTimeout);
 
         const credential = await navigator.credentials.get({
           mediation: 'conditional',
