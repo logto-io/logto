@@ -79,7 +79,7 @@ const useStartIdentifierPasskeySignInProcessing = ({ hideErrorToast }: Props) =>
 
       if (result) {
         const { verificationId, options } = result;
-        setVerificationId(VerificationType.SignInWebAuthn, verificationId);
+        setVerificationId(VerificationType.SignInPasskey, verificationId);
         setHasBoundPasskey(true);
 
         const state: IdentifierPasskeyState = { options };

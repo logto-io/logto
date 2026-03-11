@@ -173,7 +173,7 @@ devFeatureTest.describe('MFA - Passkey sign-in should skip MFA verification', ()
     });
 
     // Step 4: Sign in using the passkey sign-in button
-    // The passkey sign-in creates a SignInWebAuthn verification record,
+    // The passkey sign-in creates a SignInPasskey verification record,
     // which should skip MFA verification according to the new logic
     await experience.startWith(demoAppUrl, 'sign-in');
 

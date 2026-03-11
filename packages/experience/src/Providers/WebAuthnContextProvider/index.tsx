@@ -10,7 +10,7 @@ import {
   useRef,
 } from 'react';
 
-import { createSignInWebAuthnAuthenticationOptions } from '@/apis/experience/passkey-sign-in';
+import { createSignInPasskeyAuthenticationOptions } from '@/apis/experience/passkey-sign-in';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -23,7 +23,7 @@ const WebAuthnContextProvider = ({ children }: { readonly children: ReactNode })
   const { isPreview } = useContext(PageContext);
   const { passkeySignIn } = useSieMethods();
   const handleError = useErrorHandler();
-  const asyncCreateAuthenticationOptions = useApi(createSignInWebAuthnAuthenticationOptions);
+  const asyncCreateAuthenticationOptions = useApi(createSignInPasskeyAuthenticationOptions);
   const [authenticationOptions, setAuthenticationOptions] =
     useState<WebAuthnAuthenticationOptions>();
   const [isLoading, setIsLoading] = useState(false);

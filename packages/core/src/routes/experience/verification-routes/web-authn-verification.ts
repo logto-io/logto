@@ -24,7 +24,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { withSentinel } from '../classes/libraries/sentinel-guard.js';
 import { findUserByIdentifier } from '../classes/utils.js';
 import {
-  SignInWebAuthnVerification,
+  SignInPasskeyVerification,
   WebAuthnVerification,
 } from '../classes/verifications/web-authn-verification.js';
 import { experienceRoutes } from '../const.js';
@@ -284,7 +284,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
      * the user's WebAuthn credentials and generates non-discoverable authentication options.
      */
     router.post(
-      `${experienceRoutes.verification}/sign-in-web-authn/authentication`,
+      `${experienceRoutes.verification}/sign-in-passkey/authentication`,
       koaGuard({
         body: z.object({
           identifier: z.object({
@@ -299,7 +299,7 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         status: [200, 400, 404],
       }),
       koaExperienceVerificationsAuditLog({
-        type: VerificationType.SignInWebAuthn,
+        type: VerificationType.SignInPasskey,
         action: Action.Create,
       }),
       async (ctx, next) => {
@@ -318,9 +318,9 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
           allowDiscoverable: false,
         });
 
-        const webAuthnVerification = new SignInWebAuthnVerification(libraries, queries, {
+        const webAuthnVerification = new SignInPasskeyVerification(libraries, queries, {
           id: generateStandardId(),
-          type: VerificationType.SignInWebAuthn,
+          type: VerificationType.SignInPasskey,
           userId: user?.id,
           verified: false,
           authenticationChallenge: authenticationOptions.challenge,
@@ -357,25 +357,25 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
      * in previous step to store the challenge and rpId.
      *
      * Flow:
-     * 1. Client calls `/api/experience/verification/sign-in-web-authn/authentication` with identifier to get authentication options
+     * 1. Client calls `/api/experience/verification/sign-in-passkey/authentication` with identifier to get authentication options
      * 2. User completes WebAuthn authentication with the browser
      * 3. Client submits verification with this endpoint to complete sign-in
      *
-     * @see POST /api/experience/verification/sign-in-web-authn/authentication
+     * @see POST /api/experience/verification/sign-in-passkey/authentication
      *
      * Case II: Without identifier (discoverable passkey)
      * When the verification ID is not provided, this route must be used in conjunction with the authentication
      * options generation endpoint in `./anonymous-routes/index.ts` which generates the initial challenge.
      *
      * Flow:
-     * 1. Client calls `/api/experience/preflight/sign-in-web-authn/authentication` to get authentication options
+     * 1. Client calls `/api/experience/preflight/sign-in-passkey/authentication` to get authentication options
      * 2. User completes WebAuthn authentication with the browser
      * 3. Client submits verification with this endpoint to complete sign-in
      *
-     * @see POST /api/experience/preflight/sign-in-web-authn/authentication
+     * @see POST /api/experience/preflight/sign-in-passkey/authentication
      */
     router.post(
-      `${experienceRoutes.verification}/sign-in-web-authn/authentication/verify`,
+      `${experienceRoutes.verification}/sign-in-passkey/authentication/verify`,
       koaGuard({
         body: z.object({
           verificationId: z.string().optional(),
@@ -387,18 +387,18 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         status: [200, 400, 404, 409],
       }),
       koaExperienceVerificationsAuditLog({
-        type: VerificationType.SignInWebAuthn,
+        type: VerificationType.SignInPasskey,
         action: Action.Submit,
       }),
       async (ctx, next) => {
         const { experienceInteraction, verificationAuditLog } = ctx;
         const { verificationId, payload } = ctx.guard.body;
 
-        const webAuthnVerification: SignInWebAuthnVerification = verificationId
+        const webAuthnVerification: SignInPasskeyVerification = verificationId
           ? // Case I: With identifier (non-discoverable passkey).
             // Verification record created in previous step.
             experienceInteraction.getVerificationRecordByTypeAndId(
-              VerificationType.SignInWebAuthn,
+              VerificationType.SignInPasskey,
               verificationId
             )
           : await (async () => {
@@ -413,12 +413,11 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
                 new RequestError({ code: 'session.verification_session_not_found', status: 404 })
               );
 
-              const { authenticationOptions } =
-                authenticationOptionsParseResult.data.signInWebAuthn;
+              const { authenticationOptions } = authenticationOptionsParseResult.data.signInPasskey;
 
-              return new SignInWebAuthnVerification(libraries, queries, {
+              return new SignInPasskeyVerification(libraries, queries, {
                 id: generateStandardId(),
-                type: VerificationType.SignInWebAuthn,
+                type: VerificationType.SignInPasskey,
                 verified: false,
                 authenticationChallenge: authenticationOptions.challenge,
                 authenticationRpId: authenticationOptions.rpId,

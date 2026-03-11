@@ -354,7 +354,7 @@ export default class ExperienceInteraction {
    */
 
   public async guardMfaVerificationStatus(log?: LogEntry) {
-    if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInWebAuthn) {
+    if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInPasskey) {
       return;
     }
 
@@ -724,10 +724,8 @@ export default class ExperienceInteraction {
     return Boolean(socialVerificationRecord?.isVerified);
   }
 
-  private get hasVerifiedSignInWebAuthn() {
-    const webAuthnVerificationRecord = this.verificationRecords.get(
-      VerificationType.SignInWebAuthn
-    );
+  private get hasVerifiedSignInPasskey() {
+    const webAuthnVerificationRecord = this.verificationRecords.get(VerificationType.SignInPasskey);
     return Boolean(webAuthnVerificationRecord?.isVerified);
   }
 

@@ -240,7 +240,7 @@ export const sanitizedInteractionStorageGuard = z.object({
 }) satisfies ToZodObject<SanitizedInteractionStorageData>;
 
 export const webAuthnAuthenticationOptionsInteractionStorageGuard = z.object({
-  signInWebAuthn: z.object({
+  signInPasskey: z.object({
     authenticationOptions: webAuthnAuthenticationOptionsGuard,
   }),
 });

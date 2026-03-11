@@ -36,7 +36,7 @@ await mockEsmWithActual('@simplewebauthn/server/helpers', () => ({
   isoBase64URL: { fromBuffer: jest.fn((value) => value), toBuffer: jest.fn((value) => value) },
 }));
 
-const { WebAuthnVerification, SignInWebAuthnVerification } = await import(
+const { WebAuthnVerification, SignInPasskeyVerification } = await import(
   './web-authn-verification.js'
 );
 
@@ -165,7 +165,7 @@ describe('WebAuthnVerification', () => {
   });
 });
 
-describe('SignInWebAuthnVerification', () => {
+describe('SignInPasskeyVerification', () => {
   const rpId = 'example.com';
 
   const findUserById = jest.fn().mockResolvedValue(mockUser);
@@ -203,9 +203,9 @@ describe('SignInWebAuthnVerification', () => {
 
   describe('verifyWebAuthnAuthentication', () => {
     it('should succeed for passkey sign-in verification', async () => {
-      const verification = new SignInWebAuthnVerification(tenant.libraries, tenant.queries, {
+      const verification = new SignInPasskeyVerification(tenant.libraries, tenant.queries, {
         id: 'v-id',
-        type: VerificationType.SignInWebAuthn,
+        type: VerificationType.SignInPasskey,
         verified: false,
         authenticationChallenge: 'auth-challenge',
         authenticationRpId: rpId,

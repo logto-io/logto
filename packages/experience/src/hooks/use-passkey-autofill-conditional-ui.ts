@@ -4,7 +4,7 @@ import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import WebAuthnContext from '@/Providers/WebAuthnContextProvider/WebAuthnContext';
-import { initInteraction, verifySignInWebAuthn } from '@/apis/experience';
+import { initInteraction, verifySignInPasskey } from '@/apis/experience';
 import { isDevFeaturesEnabled } from '@/constants/env';
 import { toPublicKeyRequest, toAuthenticationResponseJSON } from '@/utils/webauthn';
 
@@ -21,7 +21,7 @@ const usePasskeyAutofillConditionalUI = () => {
   const { authenticationOptions, abortConditionalUI, setConditionalUIAbortController } =
     useContext(WebAuthnContext);
   const { passkeySignIn } = useSieMethods();
-  const asyncVerifySignInWebAuthn = useApi(verifySignInWebAuthn);
+  const asyncVerifySignInPasskey = useApi(verifySignInPasskey);
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
 
@@ -57,7 +57,7 @@ const usePasskeyAutofillConditionalUI = () => {
 
         await initInteraction(InteractionEvent.SignIn);
 
-        const [error, result] = await asyncVerifySignInWebAuthn({
+        const [error, result] = await asyncVerifySignInPasskey({
           ...toAuthenticationResponseJSON(credential),
           type: MfaFactor.WebAuthn,
         });
@@ -81,7 +81,7 @@ const usePasskeyAutofillConditionalUI = () => {
       }
     },
     [
-      asyncVerifySignInWebAuthn,
+      asyncVerifySignInPasskey,
       handleError,
       preSignInErrorHandlers,
       redirectTo,

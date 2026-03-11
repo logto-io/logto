@@ -29,7 +29,7 @@ import { socialVerificationRecordDataGuard } from '../verification-records/socia
 import { totpVerificationRecordDataGuard } from '../verification-records/totp-verification.js';
 import {
   webAuthnVerificationRecordDataGuard,
-  signInWebAuthnVerificationRecordDataGuard,
+  signInPasskeyVerificationRecordDataGuard,
 } from '../verification-records/web-authn-verification.js';
 
 import { accessTokenPayloadGuard, clientCredentialsPayloadGuard } from './oidc-provider.js';
@@ -125,7 +125,7 @@ const jwtCustomizerUserInteractionVerificationRecordGuard = z.discriminatedUnion
     authenticationChallenge: true,
     registrationInfo: true,
   }),
-  signInWebAuthnVerificationRecordDataGuard.omit({
+  signInPasskeyVerificationRecordDataGuard.omit({
     registrationChallenge: true,
     authenticationChallenge: true,
     registrationInfo: true,
