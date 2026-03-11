@@ -6,7 +6,7 @@ import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
-import { createSignInWebAuthnRegistrationOptions, skipPasskeyBinding } from '@/apis/experience';
+import { createSignInPasskeyRegistrationOptions, skipPasskeyBinding } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -29,7 +29,7 @@ const PasskeySetup = () => {
   const [, continueFlowState] = validate(state, continueFlowStateGuard);
 
   const { handleBindPasskey } = usePasskeySignIn();
-  const asyncCreateRegistrationOptions = useApi(createSignInWebAuthnRegistrationOptions);
+  const asyncCreateRegistrationOptions = useApi(createSignInPasskeyRegistrationOptions);
 
   const [registrationResult, setRegistrationResult] = useState<RegistrationState>();
   const [isSubmitting, setIsSubmitting] = useState(false);

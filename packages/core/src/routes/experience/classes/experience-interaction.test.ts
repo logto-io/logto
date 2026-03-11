@@ -23,7 +23,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
 
 import { EmailCodeVerification } from './verifications/code-verification.js';
-import { SignInWebAuthnVerification } from './verifications/web-authn-verification.js';
+import { SignInPasskeyVerification } from './verifications/web-authn-verification.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -418,9 +418,9 @@ describe('ExperienceInteraction class', () => {
       const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
       experienceInteraction.setVerificationRecord(
-        new SignInWebAuthnVerification(libraries, queries, {
-          id: 'mock-sign-in-webauthn-verification-id',
-          type: VerificationType.SignInWebAuthn,
+        new SignInPasskeyVerification(libraries, queries, {
+          id: 'mock-sign-in-passkey-verification-id',
+          type: VerificationType.SignInPasskey,
           verified: true,
           userId: mockUserWithMfaVerifications.id,
         })

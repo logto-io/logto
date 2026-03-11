@@ -13,7 +13,7 @@ import {
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { bindSignInWebAuthn, initInteraction, verifySignInWebAuthn } from '@/apis/experience';
+import { bindSignInPasskey, initInteraction, verifySignInPasskey } from '@/apis/experience';
 
 import useApi from './use-api';
 import useErrorHandler, { type ErrorHandlers } from './use-error-handler';
@@ -23,8 +23,8 @@ import useToast from './use-toast';
 const usePasskeySignIn = () => {
   const { t } = useTranslation();
   const { setToast } = useToast();
-  const asyncBindSignInWebAuthn = useApi(bindSignInWebAuthn);
-  const asyncVerifySignInWebAuthn = useApi(verifySignInWebAuthn);
+  const asyncBindSignInPasskey = useApi(bindSignInPasskey);
+  const asyncVerifySignInPasskey = useApi(verifySignInPasskey);
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
 
@@ -50,7 +50,7 @@ const usePasskeySignIn = () => {
         return;
       }
 
-      const [error, result] = await asyncBindSignInWebAuthn(
+      const [error, result] = await asyncBindSignInPasskey(
         { ...response, type: MfaFactor.WebAuthn },
         verificationId
       );
@@ -64,7 +64,7 @@ const usePasskeySignIn = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncBindSignInWebAuthn, handleError, redirectTo, setToast, t]
+    [asyncBindSignInPasskey, handleError, redirectTo, setToast, t]
   );
 
   const handleVerifyPasskey = useCallback(
@@ -93,7 +93,7 @@ const usePasskeySignIn = () => {
 
       await initInteraction(InteractionEvent.SignIn);
 
-      const [error, result] = await asyncVerifySignInWebAuthn({
+      const [error, result] = await asyncVerifySignInPasskey({
         ...response,
         type: MfaFactor.WebAuthn,
       });
@@ -107,7 +107,7 @@ const usePasskeySignIn = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncVerifySignInWebAuthn, handleError, redirectTo, setToast, t]
+    [asyncVerifySignInPasskey, handleError, redirectTo, setToast, t]
   );
 
   return useMemo(

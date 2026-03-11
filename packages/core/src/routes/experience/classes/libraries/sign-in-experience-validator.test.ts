@@ -20,7 +20,7 @@ import { type VerificationRecord } from '../verifications/index.js';
 import { OneTimeTokenVerification } from '../verifications/one-time-token-verification.js';
 import { PasswordVerification } from '../verifications/password-verification.js';
 import { SocialVerification } from '../verifications/social-verification.js';
-import { SignInWebAuthnVerification } from '../verifications/web-authn-verification.js';
+import { SignInPasskeyVerification } from '../verifications/web-authn-verification.js';
 
 import { SignInExperienceValidator } from './sign-in-experience-validator.js';
 
@@ -568,12 +568,12 @@ describe('SignInExperienceValidator', () => {
         passkeySignIn: { enabled: true, showPasskeyButton: true, allowAutofill: false },
       });
 
-      const signInWebAuthnVerification = new SignInWebAuthnVerification(
+      const signInPasskeyVerification = new SignInPasskeyVerification(
         tenantWithSsoIdentities.libraries,
         tenantWithSsoIdentities.queries,
         {
-          id: 'sign-in-webauthn-id',
-          type: VerificationType.SignInWebAuthn,
+          id: 'sign-in-passkey-id',
+          type: VerificationType.SignInPasskey,
           verified: true,
           userId: 'mock_user_id',
           authenticationChallenge: 'challenge',
@@ -589,7 +589,7 @@ describe('SignInExperienceValidator', () => {
       await expect(
         signInExperienceValidator.guardIdentificationMethod(
           InteractionEvent.SignIn,
-          signInWebAuthnVerification
+          signInPasskeyVerification
         )
       ).rejects.toMatchError(new RequestError('session.passkey_sign_in.sso_users_not_allowed'));
     });
@@ -612,12 +612,12 @@ describe('SignInExperienceValidator', () => {
         passkeySignIn: { enabled: true, showPasskeyButton: true, allowAutofill: false },
       });
 
-      const signInWebAuthnVerification = new SignInWebAuthnVerification(
+      const signInPasskeyVerification = new SignInPasskeyVerification(
         tenantWithSsoIdentities.libraries,
         tenantWithSsoIdentities.queries,
         {
-          id: 'sign-in-webauthn-id',
-          type: VerificationType.SignInWebAuthn,
+          id: 'sign-in-passkey-id',
+          type: VerificationType.SignInPasskey,
           verified: true,
           userId: 'mock_user_id',
           authenticationChallenge: 'challenge',
@@ -633,7 +633,7 @@ describe('SignInExperienceValidator', () => {
       await expect(
         signInExperienceValidator.guardIdentificationMethod(
           InteractionEvent.SignIn,
-          signInWebAuthnVerification
+          signInPasskeyVerification
         )
       ).resolves.not.toThrow();
     });
@@ -644,12 +644,12 @@ describe('SignInExperienceValidator', () => {
         passkeySignIn: { enabled: true, showPasskeyButton: true, allowAutofill: false },
       });
 
-      const signInWebAuthnVerification = new SignInWebAuthnVerification(
+      const signInPasskeyVerification = new SignInPasskeyVerification(
         mockTenant.libraries,
         mockTenant.queries,
         {
-          id: 'sign-in-webauthn-id',
-          type: VerificationType.SignInWebAuthn,
+          id: 'sign-in-passkey-id',
+          type: VerificationType.SignInPasskey,
           verified: true,
           authenticationChallenge: 'challenge',
           authenticationRpId: 'example.com',
@@ -664,7 +664,7 @@ describe('SignInExperienceValidator', () => {
       await expect(
         signInExperienceValidator.guardIdentificationMethod(
           InteractionEvent.SignIn,
-          signInWebAuthnVerification
+          signInPasskeyVerification
         )
       ).rejects.toMatchError(new RequestError('session.identifier_not_found'));
     });

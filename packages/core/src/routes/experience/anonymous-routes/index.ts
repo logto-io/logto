@@ -51,7 +51,7 @@ export default function experienceAnonymousRoutes<T extends WithInteractionDetai
 
   if (EnvSet.values.isDevFeaturesEnabled) {
     router.post(
-      `${experienceRoutes.prefix}/preflight/sign-in-web-authn/authentication`,
+      `${experienceRoutes.prefix}/preflight/sign-in-passkey/authentication`,
       koaGuard({
         response: z.object({
           authenticationOptions: webAuthnAuthenticationOptionsGuard,
@@ -71,7 +71,7 @@ export default function experienceAnonymousRoutes<T extends WithInteractionDetai
         const details = await provider.interactionDetails(ctx.req, ctx.res);
         await provider.interactionResult(ctx.req, ctx.res, {
           ...details.result,
-          signInWebAuthn: { authenticationOptions },
+          signInPasskey: { authenticationOptions },
         });
 
         ctx.body = {

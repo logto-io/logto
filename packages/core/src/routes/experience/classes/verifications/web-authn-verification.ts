@@ -7,9 +7,9 @@ import {
   type WebAuthnRegistrationOptions,
   type WebAuthnVerificationPayload,
   type WebAuthnVerificationRecordData,
-  type SignInWebAuthnVerificationRecordData,
+  type SignInPasskeyVerificationRecordData,
   type SanitizedWebAuthnVerificationRecordData,
-  type SanitizedSignInWebAuthnVerificationRecordData,
+  type SanitizedSignInPasskeyVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -35,11 +35,11 @@ import {
 
 export {
   type WebAuthnVerificationRecordData,
-  type SignInWebAuthnVerificationRecordData,
+  type SignInPasskeyVerificationRecordData,
   type SanitizedWebAuthnVerificationRecordData,
-  type SanitizedSignInWebAuthnVerificationRecordData,
+  type SanitizedSignInPasskeyVerificationRecordData,
   sanitizedWebAuthnVerificationRecordDataGuard,
-  sanitizedSignInWebAuthnVerificationRecordDataGuard,
+  sanitizedSignInPasskeyVerificationRecordDataGuard,
 } from '@logto/schemas';
 
 abstract class BaseWebAuthnVerification {
@@ -54,7 +54,7 @@ abstract class BaseWebAuthnVerification {
   constructor(
     readonly libraries: Libraries,
     readonly queries: Queries,
-    data: WebAuthnVerificationRecordData | SignInWebAuthnVerificationRecordData
+    data: WebAuthnVerificationRecordData | SignInPasskeyVerificationRecordData
   ) {
     this.id = data.id;
     this.userId = data.userId;
@@ -280,25 +280,25 @@ export class WebAuthnVerification
   }
 }
 
-export class SignInWebAuthnVerification
+export class SignInPasskeyVerification
   extends BaseWebAuthnVerification
-  implements IdentifierVerificationRecord<VerificationType.SignInWebAuthn>
+  implements IdentifierVerificationRecord<VerificationType.SignInPasskey>
 {
   /**
    * Factory method to create a new WebAuthnVerification instance
    */
   static create(libraries: Libraries, queries: Queries) {
-    return new SignInWebAuthnVerification(libraries, queries, {
+    return new SignInPasskeyVerification(libraries, queries, {
       id: generateStandardId(),
-      type: VerificationType.SignInWebAuthn,
+      type: VerificationType.SignInPasskey,
       verified: false,
     });
   }
 
-  readonly type = VerificationType.SignInWebAuthn;
+  readonly type = VerificationType.SignInPasskey;
   private readonly authenticationRpId?: string;
 
-  constructor(libraries: Libraries, queries: Queries, data: SignInWebAuthnVerificationRecordData) {
+  constructor(libraries: Libraries, queries: Queries, data: SignInPasskeyVerificationRecordData) {
     super(libraries, queries, data);
     this.authenticationRpId = data.authenticationRpId;
   }
@@ -379,7 +379,7 @@ export class SignInWebAuthnVerification
     return user;
   }
 
-  toJson(): SignInWebAuthnVerificationRecordData {
+  toJson(): SignInPasskeyVerificationRecordData {
     return {
       id: this.id,
       type: this.type,
@@ -393,7 +393,7 @@ export class SignInWebAuthnVerification
     };
   }
 
-  toSanitizedJson(): SanitizedSignInWebAuthnVerificationRecordData {
+  toSanitizedJson(): SanitizedSignInPasskeyVerificationRecordData {
     const { id, type, userId, verified } = this;
     return { id, type, userId, verified };
   }
