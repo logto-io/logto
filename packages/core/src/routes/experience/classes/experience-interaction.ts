@@ -553,8 +553,11 @@ export default class ExperienceInteraction {
         }
       ),
       logtoConfig: {
-        ...user.logtoConfig,
-        ...parseMfaPropertiesToUserConfig(userMfaVerifications, this.#interactionEvent),
+        ...parseMfaPropertiesToUserConfig(
+          user.logtoConfig,
+          userMfaVerifications,
+          this.#interactionEvent
+        ),
       },
       lastSignInAt: Date.now(),
     });
