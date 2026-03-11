@@ -12,6 +12,7 @@ const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
   const privateKeys = configs[LogtoOidcConfigKey.PrivateKeys].map(({ value }) =>
     crypto.createPrivateKey(value)
   );
+  const session = configs[LogtoOidcConfigKey.Session];
   const publicKeys = privateKeys.map((key) => crypto.createPublicKey(key));
   const privateJwks = await Promise.all(privateKeys.map(async (key) => exportJWK(key)));
   const publicJwks = await Promise.all(publicKeys.map(async (key) => exportJWK(key)));
@@ -27,6 +28,7 @@ const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
     publicJwks,
     jwkSigningAlg,
     localJWKSet,
+    sessionTtl: session.ttl,
     issuer,
   });
 };

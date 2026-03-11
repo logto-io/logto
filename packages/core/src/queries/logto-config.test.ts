@@ -125,15 +125,21 @@ describe('connector queries', () => {
     ];
 
     const expectSql = sql`
-      update ${table}
-      set ${fields.value} = ${sql.jsonb(targetValue)}
-      where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
-      returning *
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${LogtoOidcConfigKey.PrivateKeys}, ${sql.jsonb(targetValue)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
+          targetValue
+        )}
+        returning *
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toMatchObject([JSON.stringify(targetValue), LogtoOidcConfigKey.PrivateKeys]);
+      expect(values).toMatchObject([
+        LogtoOidcConfigKey.PrivateKeys,
+        JSON.stringify(targetValue),
+        JSON.stringify(targetValue),
+      ]);
 
       return createMockQueryResult(targetRowData);
     });

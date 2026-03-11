@@ -26,8 +26,11 @@ import {
   getJwtCustomizers,
   deleteJwtCustomizer,
   testJwtCustomizer,
+  getSessionConfig,
+  updateSessionConfig,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const defaultAdminConsoleConfig: AdminConsoleData = {
   signInExperienceCustomized: false,
@@ -302,5 +305,27 @@ describe('logto config', () => {
         status: 403,
       }
     );
+  });
+});
+
+devFeatureTest.describe('OIDC session config', () => {
+  it('should get OIDC session config successfully with default TTL value', async () => {
+    const sessionConfig = await getSessionConfig();
+
+    expect(sessionConfig).toBeTruthy();
+    expect(sessionConfig).toHaveProperty('ttl');
+    expect(sessionConfig.ttl).toBe(14 * 24 * 60 * 60); // Default TTL value in seconds (14 days)
+  });
+
+  it('should update OIDC session config successfully', async () => {
+    const newTtl = 7200;
+    const updatedSessionConfig = await updateSessionConfig({ ttl: newTtl });
+    expect(updatedSessionConfig).toBeTruthy();
+    expect(updatedSessionConfig).toHaveProperty('ttl', newTtl);
+
+    const sessionConfig = await getSessionConfig();
+    expect(sessionConfig).toHaveProperty('ttl', newTtl);
+
+    await updateSessionConfig({ ttl: 14 * 24 * 60 * 60 }); // Reset to default TTL value
   });
 });

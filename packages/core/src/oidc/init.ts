@@ -16,7 +16,7 @@ import {
   type LogtoUiCookie,
   ExtraParamsKey,
 } from '@logto/schemas';
-import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
+import { conditional, removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
 import { type KoaContextWithOIDC, Provider, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
@@ -385,7 +385,9 @@ export default function initOidc(
       /** Align with the oidc-provider default (10 minutes). */
       DeviceCode: 600 /* 10 minutes in seconds */,
       Interaction: 3600 /* 1 hour in seconds */,
-      Session: 1_209_600 /* 14 days in seconds */,
+      Session:
+        conditional(EnvSet.values.isDevFeaturesEnabled && envSet.oidc.sessionTtl) ??
+        defaults.sessionTtl /* 14 days in seconds */,
       // Set this to the longest allowed duration of the refresh token
       Grant: 180 * 3600 * 24 /* 180 days in seconds */,
     },

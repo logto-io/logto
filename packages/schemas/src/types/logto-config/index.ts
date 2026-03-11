@@ -1,4 +1,5 @@
 import { extendedIdTokenClaims } from '@logto/core-kit';
+import { type Nullable, type Optional } from '@silverhand/essentials';
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
@@ -26,6 +27,7 @@ export enum LogtoOidcConfigKeyType {
 export enum LogtoOidcConfigKey {
   PrivateKeys = 'oidc.privateKeys',
   CookieKeys = 'oidc.cookieKeys',
+  Session = 'oidc.session',
 }
 
 /**
@@ -41,19 +43,30 @@ export const oidcConfigKeyGuard = z.object({
   value: z.string(),
   createdAt: z.number(),
 });
-
 export type OidcConfigKey = z.infer<typeof oidcConfigKeyGuard>;
+
+export const oidcSessionConfigGuard = z.object({
+  ttl: z.number().optional(),
+});
+export type OidcSessionConfig = z.infer<typeof oidcSessionConfigGuard>;
 
 export type LogtoOidcConfigType = {
   [LogtoOidcConfigKey.PrivateKeys]: OidcConfigKey[];
   [LogtoOidcConfigKey.CookieKeys]: OidcConfigKey[];
+  [LogtoOidcConfigKey.Session]: OidcSessionConfig;
 };
 
 export const logtoOidcConfigGuard: Readonly<{
-  [key in LogtoOidcConfigKey]: ZodType<LogtoOidcConfigType[key]>;
+  [key in LogtoOidcConfigKey]: ZodType<
+    LogtoOidcConfigType[key],
+    z.ZodTypeDef,
+    Optional<Nullable<LogtoOidcConfigType[key]>>
+  >;
 }> = Object.freeze({
   [LogtoOidcConfigKey.PrivateKeys]: oidcConfigKeyGuard.array(),
   [LogtoOidcConfigKey.CookieKeys]: oidcConfigKeyGuard.array(),
+  // Session config is optional, if not set, it will fallback to default value in core.
+  [LogtoOidcConfigKey.Session]: oidcSessionConfigGuard.nullish().transform((data) => data ?? {}),
 });
 
 export enum LogtoJwtTokenKey {
