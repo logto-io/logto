@@ -248,6 +248,7 @@ export const webAuthnAuthenticationOptionsInteractionStorageGuard = z.object({
 export type UserMfaVerificationsData = {
   mfaEnabled?: boolean;
   mfaSkipped?: boolean;
+  additionalBindingSuggestionSkipped?: boolean;
   passkeySkipped?: boolean;
   mfaVerifications: User['mfaVerifications'];
 };

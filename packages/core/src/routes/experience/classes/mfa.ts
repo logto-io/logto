@@ -50,8 +50,8 @@ export type MfaData = {
   mfaEnabled?: boolean;
   mfaSkipped?: boolean;
   /**
-   * Whether user skipped the optional suggestion to add another MFA factor during registration.
-   * This flag lives only in the current interaction and should NOT be persisted to user profile.
+   * Whether user skipped the optional suggestion to add another MFA factor.
+   * This value is persisted to user profile and can be overridden in current interaction.
    */
   additionalBindingSuggestionSkipped?: boolean;
   passkeySkipped?: boolean;
@@ -88,7 +88,9 @@ export const sanitizedMfaDataGuard = z.object({
   backupCode: bindBackupCodeGuard.pick({ type: true }).optional(),
 }) satisfies ToZodObject<SanitizedMfaData>;
 
-const parseUserMfaData = (logtoConfig: JsonObject): { enabled?: boolean; skipped?: boolean } => {
+const parseUserMfaData = (
+  logtoConfig: JsonObject
+): { enabled?: boolean; skipped?: boolean; additionalBindingSuggestionSkipped?: boolean } => {
   const parsed = z.object({ [userMfaDataKey]: userMfaDataGuard }).safeParse(logtoConfig);
   return parsed.success ? parsed.data[userMfaDataKey] : {};
 };
@@ -98,6 +100,10 @@ const parseUserMfaData = (logtoConfig: JsonObject): { enabled?: boolean; skipped
  */
 const isMfaSkipped = (logtoConfig: JsonObject): boolean => {
   return parseUserMfaData(logtoConfig).skipped === true;
+};
+
+const isAdditionalBindingSuggestionSkipped = (logtoConfig: JsonObject): boolean => {
+  return parseUserMfaData(logtoConfig).additionalBindingSuggestionSkipped === true;
 };
 
 const isPasskeySkipped = (logtoConfig: JsonObject): boolean => {
@@ -205,6 +211,7 @@ export class Mfa {
     return {
       mfaEnabled: this.mfaEnabled,
       mfaSkipped: this.mfaSkipped,
+      additionalBindingSuggestionSkipped: this.additionalBindingSuggestionSkipped,
       passkeySkipped: this.#passkeySkipped,
       mfaVerifications: [...verificationSet],
     };
@@ -331,8 +338,7 @@ export class Mfa {
   }
 
   /**
-   * Mark the optional suggestion as skipped for this interaction.
-   * No persistence to user account.
+   * Mark the optional suggestion as skipped and persist to user config.
    */
   skipAdditionalBindingSuggestion() {
     this.#additionalBindingSuggestionSkipped = true;
@@ -526,7 +532,7 @@ export class Mfa {
     );
 
     // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
-    await this.guardAdditionalBindingSuggestion(factorsInUser, configuredFactors);
+    await this.guardAdditionalBindingSuggestion(factorsInUser, configuredFactors, identifiedUser);
 
     // Assert backup code
     assertThat(
@@ -548,9 +554,10 @@ export class Mfa {
   // eslint-disable-next-line complexity
   private async guardAdditionalBindingSuggestion(
     factorsInUser: MfaFactor[],
-    availableFactors: MfaFactor[]
+    availableFactors: MfaFactor[],
+    identifiedUser: User
   ) {
-    // Respect user's choice to skip suggestion for this interaction
+    // Respect user's choice to skip suggestion for this interaction.
     if (this.additionalBindingSuggestionSkipped) {
       return;
     }
@@ -559,6 +566,13 @@ export class Mfa {
       !EnvSet.values.isDevFeaturesEnabled &&
       this.interactionContext.getInteractionEvent() !== InteractionEvent.Register
     ) {
+      return;
+    }
+
+    const { logtoConfig, primaryEmail, primaryPhone } = identifiedUser;
+
+    // Respect user's persisted choice to skip additional MFA suggestion.
+    if (isAdditionalBindingSuggestionSkipped(logtoConfig)) {
       return;
     }
 
@@ -604,8 +618,6 @@ export class Mfa {
     ) {
       return;
     }
-
-    const { primaryEmail, primaryPhone } = await this.interactionContext.getIdentifiedUser();
 
     // Build masked identifiers for bound factors
     const maskedIdentifiers = condObject({

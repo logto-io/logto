@@ -4,6 +4,7 @@ import {
   type Mfa as MfaSettings,
   MfaPolicy,
   OrganizationRequiredMfaPolicy,
+  userMfaDataKey,
   type User,
 } from '@logto/schemas';
 
@@ -23,6 +24,7 @@ const createMfa = ({
     factors: [],
     organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
   },
+  interactionEvent = InteractionEvent.SignIn,
   user = {
     id: 'user-id',
     logtoConfig: {},
@@ -31,12 +33,13 @@ const createMfa = ({
   currentProfile = {},
 }: {
   mfaSettings?: MfaSettings;
+  interactionEvent?: InteractionEvent;
   user?: Partial<User>;
   currentProfile?: Record<string, unknown>;
 } = {}) => {
   const getIdentifiedUser = jest.fn(async () => user as User);
   const interactionContext: InteractionContext = {
-    getInteractionEvent: () => InteractionEvent.SignIn,
+    getInteractionEvent: () => interactionEvent,
     getIdentifiedUser,
     getVerificationRecordById: () => {
       throw new Error('should not be called');
@@ -166,6 +169,31 @@ describe('Mfa.assertMfaFulfilled', () => {
         availableFactors: [MfaFactor.TOTP],
       },
     });
+  });
+
+  it('skips additional MFA suggestion when user has persisted skipped flag', async () => {
+    const mandatoryMfaSettings: MfaSettings = {
+      policy: MfaPolicy.Mandatory,
+      factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+    };
+
+    const { mfa } = createMfa({
+      interactionEvent: InteractionEvent.Register,
+      mfaSettings: mandatoryMfaSettings,
+      user: {
+        id: 'user-id',
+        logtoConfig: {
+          [userMfaDataKey]: {
+            additionalBindingSuggestionSkipped: true,
+          },
+        },
+        primaryEmail: 'foo@example.com',
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
   });
 });
 

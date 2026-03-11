@@ -204,7 +204,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }
   );
 
-  // Mark optional additional MFA binding suggestion as skipped in current interaction
+  // Mark optional additional MFA binding suggestion as skipped.
   router.post(
     `${experienceRoutes.mfa}/mfa-suggestion-skipped`,
     koaGuard({ status: [204, 400, 404] }),

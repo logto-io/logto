@@ -28,6 +28,10 @@ export const userMfaDataGuard = z.object({
    */
   skipped: z.boolean().optional(),
   /**
+   * Whether the user has skipped optional additional MFA binding suggestion
+   */
+  additionalBindingSuggestionSkipped: z.boolean().optional(),
+  /**
    * Whether the user has skipped MFA verification on sign-in
    *
    * Users can manually disable MFA verification requirement for sign-in,
