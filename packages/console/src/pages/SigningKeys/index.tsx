@@ -8,6 +8,12 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 import SigningKeyFormCard from './SigningKeyFormCard';
 import styles from './index.module.scss';
 
+/**
+ *
+ * @deprecated
+ *
+ *  This page is deprecated. visit /components/OidcConfigs/index.tsx instead
+ */
 function SigningKeys() {
   const { getDocumentationUrl } = useDocumentationUrl();
 
