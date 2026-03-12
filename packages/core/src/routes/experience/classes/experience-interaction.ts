@@ -675,6 +675,18 @@ export default class ExperienceInteraction {
     };
   }
 
+  /**
+   * Convert the current interaction to the internal persisted payload stored in the OIDC session.
+   *
+   * @remarks
+   * This is intentionally separate from {@link toJson}. `toJson()` is the public interaction
+   * representation reused by response and log call sites, so it must not expose internal-only
+   * control state such as `adaptiveMfaHookTriggered`.
+   *
+   * The webhook de-duplication marker still needs to survive across requests in the same sign-in
+   * flow, so persistence cannot reuse `toJson()` without re-introducing that field into places
+   * where callers expect a public view of the interaction.
+   */
   private toStorage(): PersistedInteractionStorage {
     return {
       ...this.toJson(),
