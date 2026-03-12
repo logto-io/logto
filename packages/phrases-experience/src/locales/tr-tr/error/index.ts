@@ -15,6 +15,8 @@ const error = {
   invalid_phone: 'Telefon numarası geçersiz',
   passwords_do_not_match: 'Şifreler eşleşmiyor',
   invalid_passcode: 'Doğrulama kodu geçersiz.',
+  invalid_device_code: 'Cihaz kodu geçersiz. Lütfen tekrar deneyin.',
+  device_flow_aborted: 'Oturum açma isteği kesildi.',
   invalid_connector_auth: 'Yetki geçersiz',
   invalid_connector_request: 'Bağlayıcı veri geçersiz',
   unknown: 'Bilinmeyen hata. Lütfen daha sonra tekrar deneyiniz.',

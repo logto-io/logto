@@ -54,6 +54,12 @@ const description = {
   continue_with_more_information: 'لزيادة الأمان، يرجى استكمال تفاصيل الحساب أدناه.',
   create_your_account: 'إنشاء حسابك',
   sign_in_to_your_account: 'تسجيل الدخول إلى حسابك',
+  device_activation: 'تفعيل الجهاز',
+  device_activation_description:
+    'أدخل الرمز المعروض على جهازك. تأكد من تطابقه، ثم تابع لتسجيل الدخول إلى هذا الجهاز.',
+  device_activation_error_description: 'أدخل الرمز المعروض على جهازك.',
+  device_activation_success: 'تم توصيل جهازك!',
+  device_activation_success_description: 'عد إلى جهازك للمتابعة.',
   no_region_code_found: 'لم يتم العثور على رمز المنطقة',
   verify_email: 'تحقق من بريدك الإلكتروني',
   verify_phone: 'تحقق من رقم هاتفك',

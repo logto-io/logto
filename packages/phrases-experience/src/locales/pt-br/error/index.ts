@@ -15,6 +15,8 @@ const error = {
   invalid_phone: 'O número de telefone é inválido',
   passwords_do_not_match: 'Suas senhas não correspondem. Por favor, tente novamente.',
   invalid_passcode: 'O código de verificação é inválido.',
+  invalid_device_code: 'O código do dispositivo é inválido. Por favor, tente novamente.',
+  device_flow_aborted: 'A solicitação de login foi interrompida.',
   invalid_connector_auth: 'A autorização é inválida',
   invalid_connector_request: 'Os dados do conector são inválidos',
   unknown: 'Erro desconhecido. Por favor, tente novamente mais tarde.',

@@ -15,6 +15,8 @@ import DevelopmentTenantNotification from './containers/DevelopmentTenantNotific
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
+import Device from './pages/Device';
+import DeviceSuccess from './pages/Device/Success';
 import DirectSignIn from './pages/DirectSignIn';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
@@ -183,6 +185,17 @@ const App = () => {
 
                       {/* Consent */}
                       <Route path="consent" element={<Consent />} />
+
+                      {/* Device flow */}
+                      {isDevFeaturesEnabled && (
+                        <>
+                          <Route path={experience.routes.device} element={<Device />} />
+                          <Route
+                            path={`${experience.routes.device}/success`}
+                            element={<DeviceSuccess />}
+                          />
+                        </>
+                      )}
 
                       {/*
                        * Identifier sign-in (first screen)

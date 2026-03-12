@@ -14,6 +14,8 @@ const error = {
   invalid_phone: 'Недійсний номер телефону',
   passwords_do_not_match: 'Паролі не збігаються. Будь ласка, спробуйте ще раз.',
   invalid_passcode: 'Недійсний код підтвердження.',
+  invalid_device_code: 'Код пристрою недійсний. Будь ласка, спробуйте ще раз.',
+  device_flow_aborted: 'Запит на вхід було перервано.',
   invalid_connector_auth: 'Недійсна авторизація',
   invalid_connector_request: 'Недійсні дані конектора',
   unknown: 'Невідома помилка. Будь ласка, спробуйте пізніше.',

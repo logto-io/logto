@@ -56,6 +56,12 @@ const description = {
   continue_with_more_information: 'เพื่อความปลอดภัย กรุณากรอกรายละเอียดบัญชีด้านล่างให้ครบถ้วน',
   create_your_account: 'สร้างบัญชีของคุณ',
   sign_in_to_your_account: 'เข้าสู่บัญชีของคุณ',
+  device_activation: 'เปิดใช้งานอุปกรณ์',
+  device_activation_description:
+    'ป้อนรหัสที่แสดงบนอุปกรณ์ของคุณ ตรวจสอบให้แน่ใจว่าตรงกัน จากนั้นดำเนินการเข้าสู่ระบบบนอุปกรณ์นี้',
+  device_activation_error_description: 'ป้อนรหัสที่แสดงบนอุปกรณ์ของคุณ',
+  device_activation_success: 'อุปกรณ์ของคุณเชื่อมต่อแล้ว!',
+  device_activation_success_description: 'กลับไปที่อุปกรณ์ของคุณเพื่อดำเนินการต่อ',
   no_region_code_found: 'ไม่พบรหัสประเทศ',
   verify_email: 'ยืนยันอีเมลของคุณ',
   verify_phone: 'ยืนยันหมายเลขโทรศัพท์ของคุณ',

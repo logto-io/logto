@@ -6,6 +6,7 @@ const input = {
   confirm_password: 'Підтвердити пароль',
   search_region_code: 'Пошук коду регіону',
   backup_code: 'Резервний код',
+  code: 'Код',
   label_with_optional: "{{label}} (Необов'язково)",
 };
 

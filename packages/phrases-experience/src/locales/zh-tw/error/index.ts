@@ -14,6 +14,8 @@ const error = {
   invalid_phone: '無效的手機號',
   passwords_do_not_match: '兩次輸入的密碼不一致，請重試。',
   invalid_passcode: '無效的驗證碼。',
+  invalid_device_code: '裝置代碼無效，請重試。',
+  device_flow_aborted: '登入請求已中斷。',
   invalid_connector_auth: '登錄失敗',
   invalid_connector_request: '無效的登錄請求',
   unknown: '未知錯誤，請稍後重試。',

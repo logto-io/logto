@@ -6,6 +6,7 @@ const input = {
   confirm_password: 'Passwort bestätigen',
   search_region_code: 'Suche region code',
   backup_code: 'Backup-Code',
+  code: 'Code',
   label_with_optional: '{{label}} (Optional)',
 };
 

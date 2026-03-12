@@ -14,6 +14,8 @@ const error = {
   invalid_phone: 'رقم الهاتف غير صالح',
   passwords_do_not_match: 'كلمات المرور غير متطابقة. يرجى المحاولة مرة أخرى.',
   invalid_passcode: 'رمز التحقق غير صالح.',
+  invalid_device_code: 'رمز الجهاز غير صالح. يرجى المحاولة مرة أخرى.',
+  device_flow_aborted: 'تم مقاطعة طلب تسجيل الدخول.',
   invalid_connector_auth: 'التوثيق غير صالح',
   invalid_connector_request: 'بيانات الموصل غير صالحة',
   unknown: 'خطأ غير معروف. يرجى المحاولة مرة أخرى لاحقًا.',

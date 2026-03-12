@@ -6,6 +6,7 @@ const input = {
   confirm_password: 'ยืนยันรหัสผ่าน',
   search_region_code: 'ค้นหารหัสภูมิภาค',
   backup_code: 'รหัสสำรอง',
+  code: 'รหัส',
   label_with_optional: '{{label}} (ไม่บังคับ)',
 };
 

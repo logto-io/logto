@@ -6,6 +6,7 @@ const input = {
   confirm_password: 'パスワード確認',
   search_region_code: '地域コード検索',
   backup_code: 'バックアップコード',
+  code: 'コード',
   label_with_optional: '{{label}}（任意）',
 };
 

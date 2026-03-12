@@ -14,6 +14,8 @@ const error = {
   invalid_phone: '휴대전화번호가 유효하지 않아요.',
   passwords_do_not_match: '비밀번호가 일치하지 않아요.',
   invalid_passcode: '비밀번호가 유효하지 않아요.',
+  invalid_device_code: '기기 코드가 유효하지 않아요. 다시 시도해 주세요.',
+  device_flow_aborted: '로그인 요청이 중단되었어요.',
   invalid_connector_auth: '인증이 유효하지 않아요.',
   invalid_connector_request: '연동 정보가 유효하지 않아요.',
   unknown: '알 수 없는 오류가 발생했어요. 잠시 후에 시도해 주세요.',
