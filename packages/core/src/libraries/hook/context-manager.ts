@@ -119,22 +119,35 @@ type InteractionHookMetadata = {
 } & InteractionApiMetadata;
 
 /**
- * The interaction hook result for triggering interaction hooks by `triggerInteractionHooks`.
- * In the `koaInteractionHooks` middleware,
- * if we get an interaction hook result after the interaction is processed, related hooks will be triggered.
+ * A success-only interaction hook result.
+ *
+ * @remarks
+ * Results of this type are released only after the current request completes successfully. This
+ * remains the default interaction-hook path so existing call sites can keep using
+ * {@link assignInteractionHookResult} without opting into a custom release policy.
  */
-type InteractionHookResult = {
+type ReleaseOnSuccessInteractionHookResult = {
   userId: string;
   event?: Exclude<InteractionHookEvent, InteractionHookEvent.PostSignInAdaptiveMfaTriggered>;
 };
 
-type AdaptiveMfaTriggeredInteractionHookResult = {
+/**
+ * A release-anyway interaction hook result.
+ *
+ * @remarks
+ * Results of this type are dispatched from the middleware `finally` path because the interaction is
+ * considered to have happened even if the current request later throws. Adaptive MFA uses this path
+ * so the webhook is still sent when the request ends with `session.mfa.require_mfa_verification`.
+ */
+type ReleaseAnywayInteractionHookResult = {
   userId: string;
   event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered;
   payload: Pick<InteractionHookEventPayload, 'adaptiveMfaResult'>;
 };
 
-type InteractionHookResultUnion = InteractionHookResult | AdaptiveMfaTriggeredInteractionHookResult;
+type InteractionHookResultUnion =
+  | ReleaseOnSuccessInteractionHookResult
+  | ReleaseAnywayInteractionHookResult;
 
 export type InteractionHookDispatchContext = {
   metadata: InteractionHookMetadata;
@@ -149,8 +162,8 @@ const interactionEventToHookEvent: Record<InteractionEvent, InteractionHookEvent
 };
 
 export class InteractionHookContextManager {
-  public releaseOnSuccessInteractionHookResultArray: InteractionHookResult[] = [];
-  public releaseAnywayInteractionHookResultArray: AdaptiveMfaTriggeredInteractionHookResult[] = [];
+  public releaseOnSuccessInteractionHookResultArray: ReleaseOnSuccessInteractionHookResult[] = [];
+  public releaseAnywayInteractionHookResultArray: ReleaseAnywayInteractionHookResult[] = [];
 
   constructor(public metadata: InteractionHookMetadata) {}
 
@@ -165,11 +178,11 @@ export class InteractionHookContextManager {
     ];
   }
 
-  get releaseOnSuccessInteractionHookResults(): readonly InteractionHookResult[] {
+  get releaseOnSuccessInteractionHookResults(): readonly ReleaseOnSuccessInteractionHookResult[] {
     return this.releaseOnSuccessInteractionHookResultArray;
   }
 
-  get releaseAnywayInteractionHookResults(): readonly AdaptiveMfaTriggeredInteractionHookResult[] {
+  get releaseAnywayInteractionHookResults(): readonly ReleaseAnywayInteractionHookResult[] {
     return this.releaseAnywayInteractionHookResultArray;
   }
 
@@ -202,7 +215,7 @@ export class InteractionHookContextManager {
    * Calling it multiple times will queue multiple webhook triggers.
    * @param result The result to assign.
    */
-  assignInteractionHookResult(result: InteractionHookResult) {
+  assignInteractionHookResult(result: ReleaseOnSuccessInteractionHookResult) {
     this.assignReleaseOnSuccessInteractionHookResult(result);
   }
 
@@ -210,7 +223,7 @@ export class InteractionHookContextManager {
    * Assign an interaction hook result that should only be released after the request completes
    * successfully.
    */
-  assignReleaseOnSuccessInteractionHookResult(result: InteractionHookResult) {
+  assignReleaseOnSuccessInteractionHookResult(result: ReleaseOnSuccessInteractionHookResult) {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     this.releaseOnSuccessInteractionHookResultArray.push(result);
   }
@@ -219,7 +232,7 @@ export class InteractionHookContextManager {
    * Assign an interaction hook result that should still be released even if the current request
    * later throws.
    */
-  assignReleaseAnywayInteractionHookResult(result: AdaptiveMfaTriggeredInteractionHookResult) {
+  assignReleaseAnywayInteractionHookResult(result: ReleaseAnywayInteractionHookResult) {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     this.releaseAnywayInteractionHookResultArray.push(result);
   }
