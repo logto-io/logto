@@ -2,11 +2,12 @@ import { experience } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useContext, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { InputField } from '@/components/InputFields';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import Button from '@/shared/components/Button';
 
 import ErrorPage from '../ErrorPage';
@@ -35,10 +36,20 @@ type DeviceErrorKey =
   | (typeof deviceFlowErrorMap)[keyof typeof deviceFlowErrorMap]
   | 'error.something_went_wrong';
 
+const isDeviceFlowError = (value: string): value is keyof typeof deviceFlowErrorMap =>
+  value in deviceFlowErrorMap;
+
+const resolveServerErrorKey = (error: string): DeviceErrorKey => {
+  if (error === 'NoCodeError') {
+    return requiredDeviceCodeErrorKey;
+  }
+  return isDeviceFlowError(error) ? deviceFlowErrorMap[error] : 'error.something_went_wrong';
+};
+
 const Device = () => {
   const { t } = useTranslation();
   const { setToast } = useContext(PageContext);
-  const navigate = useNavigate();
+  const navigate = useNavigateWithPreservedSearchParams();
   const [searchParams] = useSearchParams();
   const [clientErrorKey, setClientErrorKey] = useState<DeviceErrorKey>();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,16 +79,8 @@ const Device = () => {
     return <ErrorPage title="error.something_went_wrong" />;
   }
 
-  const isDeviceFlowError = (value: string): value is keyof typeof deviceFlowErrorMap =>
-    value in deviceFlowErrorMap;
   const errorKey: DeviceErrorKey | undefined =
-    !isConfirm && error
-      ? error === 'NoCodeError'
-        ? requiredDeviceCodeErrorKey
-        : isDeviceFlowError(error)
-          ? deviceFlowErrorMap[error]
-          : 'error.something_went_wrong'
-      : undefined;
+    !isConfirm && error ? resolveServerErrorKey(error) : undefined;
   const resolvedErrorKey = clientErrorKey ?? errorKey;
   const translateKey = (key: TFuncKey, options?: Record<string, unknown>): string => {
     const translated = options ? t(key, options) : t(key);
