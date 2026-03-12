@@ -1,10 +1,12 @@
 const tenants = {
   title: '설정',
   description: '테넌트 설정을 효율적으로 관리하고 도메인을 사용자 정의합니다.',
+  oss_description: '계정 보안을 위해 여기에서 계정 설정을 변경하고 개인 정보를 관리하세요.',
   tabs: {
     settings: '설정',
     members: '멤버',
     domains: '도메인',
+    oidc_configs: 'OIDC 구성',
     subscription: '구독 및 청구',
     billing_history: '청구 내역',
   },

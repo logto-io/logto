@@ -1,10 +1,12 @@
 const tenants = {
   title: '设置',
   description: '高效管理租户设置并自定义您的域名。',
+  oss_description: '在此更改账户设置并管理您的个人信息，以确保账户安全。',
   tabs: {
     settings: '设置',
     members: '成员',
     domains: '域名管理',
+    oidc_configs: 'OIDC 配置',
     subscription: '套餐与计费',
     billing_history: '历史账单',
   },

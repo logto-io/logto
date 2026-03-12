@@ -4,12 +4,14 @@ import { Navigate, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
 import { TenantSettingsTabs } from '@/consts';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import NotFound from '@/pages/NotFound';
 
 const TenantSettings = safeLazy(async () => import('@/pages/TenantSettings'));
+const OssTenantSettings = safeLazy(async () => import('@/pages/OssTenantSettings'));
 const TenantBasicSettings = safeLazy(
   async () => import('@/pages/TenantSettings/TenantBasicSettings')
 );
@@ -23,8 +25,9 @@ const Invitations = safeLazy(
 const Members = safeLazy(async () => import('@/pages/TenantSettings/TenantMembers/Members'));
 const BillingHistory = safeLazy(async () => import('@/pages/TenantSettings/BillingHistory'));
 const Subscription = safeLazy(async () => import('@/pages/TenantSettings/Subscription'));
+const OidcConfigs = safeLazy(async () => import('@/components/OidcConfigs'));
 
-export const useTenantSettings = () => {
+const useCloudTenantSettings = () => {
   const { isDevTenant } = useContext(TenantsContext);
   const {
     currentSubscription: { quotaScope },
@@ -58,6 +61,10 @@ export const useTenantSettings = () => {
           ],
         },
         { path: TenantSettingsTabs.Domains, element: <TenantDomainSettings /> },
+        isDevFeaturesEnabled && {
+          path: TenantSettingsTabs.OidcConfigs,
+          element: <OidcConfigs />,
+        },
         !isDevTenant &&
           canManageTenant && [
             { path: TenantSettingsTabs.Subscription, element: <Subscription /> },
@@ -75,3 +82,22 @@ export const useTenantSettings = () => {
 
   return tenantSettings;
 };
+
+const ossTenantSettings: RouteObject = {
+  path: 'tenant-settings',
+  element: <OssTenantSettings />,
+  children: [
+    {
+      index: true,
+      element: <Navigate replace to={TenantSettingsTabs.OidcConfigs} />,
+    },
+    {
+      path: TenantSettingsTabs.OidcConfigs,
+      element: <OidcConfigs />,
+    },
+  ],
+};
+
+const useOssTenantSettings = () => isDevFeaturesEnabled && ossTenantSettings;
+
+export const useTenantSettings = isCloud ? useCloudTenantSettings : useOssTenantSettings;

@@ -1,10 +1,13 @@
 const tenants = {
   title: 'Paramètres',
   description: 'Gérez efficacement les paramètres du locataire et personnalisez votre domaine.',
+  oss_description:
+    "Modifiez ici les paramètres de votre compte et gérez vos informations personnelles afin d'assurer la sécurité de votre compte.",
   tabs: {
     settings: 'Paramètres',
     members: 'Membres',
     domains: 'Domaines',
+    oidc_configs: 'Configurations OIDC',
     subscription: 'Plan et facturation',
     billing_history: 'Historique de facturation',
   },
