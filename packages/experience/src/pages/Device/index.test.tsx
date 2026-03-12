@@ -1,4 +1,4 @@
-import { experience } from '@logto/schemas';
+import { experience, oidcRoutes } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -8,26 +8,20 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import Device from '.';
 import DeviceSuccess from './Success';
 
-const defaultAction = '/oidc/device/auth';
 const defaultXsrf = 'foo';
 
 const buildDeviceSearchParams = ({
-  action = defaultAction,
   xsrf = defaultXsrf,
   error,
   inputCode,
   userCode,
 }: {
-  readonly action?: string;
   readonly xsrf?: string;
   readonly error?: string;
   readonly inputCode?: string;
   readonly userCode?: string;
 }) => {
-  const searchParams = new URLSearchParams({
-    action,
-    xsrf,
-  });
+  const searchParams = new URLSearchParams({ xsrf });
 
   if (error) {
     searchParams.append('error', error);
@@ -45,7 +39,6 @@ const buildDeviceSearchParams = ({
 };
 
 const renderDevice = (options: {
-  readonly action?: string;
   readonly xsrf?: string;
   readonly error?: string;
   readonly inputCode?: string;
@@ -61,7 +54,6 @@ const renderDevice = (options: {
   );
 
 const renderDeviceRoutes = (options: {
-  readonly action?: string;
   readonly xsrf?: string;
   readonly error?: string;
   readonly inputCode?: string;
@@ -230,7 +222,7 @@ describe('<Device />', () => {
     const [requestUrl, request] = fetchMock.mock.calls[0] ?? [];
     const requestBody = String(request?.body ?? '');
 
-    expect(requestUrl).toBe(defaultAction);
+    expect(requestUrl).toBe(oidcRoutes.codeVerification);
     expect(requestBody).toContain('xsrf=foo');
     expect(requestBody).toContain('user_code=AB12-CD34');
     expect(requestBody).toContain('confirm=yes');

@@ -4,7 +4,6 @@ import type { KoaContextWithOIDC, errors } from 'oidc-provider';
 import { EnvSet } from '#src/env-set/index.js';
 
 type DeviceFlowPageUrlOptions = {
-  readonly action: string;
   readonly xsrf: string;
   readonly inputCode?: string;
   readonly userCode?: string;
@@ -37,35 +36,17 @@ const getDeviceFlowInputCode = (error?: Error | errors.OIDCProviderError): strin
 };
 
 /**
- * Device-flow submit must target the provider-owned verification endpoint, not the Experience SPA
- * route. We rely on oidc-provider's own route helper here so development proxies and mount paths
- * cannot accidentally turn the action back into a frontend-local `/device` post target.
- */
-const getDeviceFlowAction = (ctx: KoaContextWithOIDC): string => {
-  if (!ctx.oidc.urlFor) {
-    throw new TypeError('Missing oidc device flow route helper.');
-  }
-
-  return ctx.oidc.urlFor('code_verification');
-};
-
-/**
  * Device-flow source callbacks already know the structured values the Experience page needs:
- * the verification action, the session-bound xsrf secret, and the visible code/error state.
- * Passing those fields directly keeps the bridge stateless without relying on provider HTML
- * parsing or shipping raw markup through the browser URL.
+ * the session-bound xsrf secret and the visible code/error state. The submit target is now a
+ * shared OIDC route constant, so the bridge query only needs to carry user-visible state.
  */
 export const buildDeviceFlowPageUrl = ({
-  action,
   xsrf,
   inputCode,
   userCode,
   error,
 }: DeviceFlowPageUrlOptions): string => {
-  const searchParams = new URLSearchParams({
-    action,
-    xsrf,
-  });
+  const searchParams = new URLSearchParams({ xsrf });
 
   if (userCode) {
     searchParams.append('user_code', userCode);
@@ -104,19 +85,16 @@ export const deviceFlowConfig = {
     _out: unknown,
     error?: Error | errors.OIDCProviderError
   ) => {
-    /**
-     * Oidc-provider seeds `ctx.oidc.session.state.secret` immediately before invoking the
-     * device source callbacks, so Experience can bridge the xsrf value directly from ctx
-     * instead of reparsing it from provider-owned HTML.
-     */
-    const xsrf = getDeviceFlowXsrf(ctx);
-
     ctx.redirect(
       buildDeviceFlowPageUrl({
-        action: getDeviceFlowAction(ctx),
         error: error?.name,
         inputCode: getDeviceFlowInputCode(error),
-        xsrf,
+        /**
+         * Oidc-provider seeds `ctx.oidc.session.state.secret` immediately before invoking the
+         * device source callbacks, so Experience can bridge the xsrf value directly from ctx
+         * instead of reparsing it from provider-owned HTML.
+         */
+        xsrf: getDeviceFlowXsrf(ctx),
       })
     );
   },
@@ -128,13 +106,10 @@ export const deviceFlowConfig = {
     _deviceInfo: unknown,
     userCode: string
   ) => {
-    const xsrf = getDeviceFlowXsrf(ctx);
-
     ctx.redirect(
       buildDeviceFlowPageUrl({
-        action: getDeviceFlowAction(ctx),
         userCode,
-        xsrf,
+        xsrf: getDeviceFlowXsrf(ctx),
       })
     );
   },

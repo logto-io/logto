@@ -95,13 +95,12 @@ const Device = () => {
     setToast('');
 
     try {
-      const response = await submitDeviceFlowRequest({
-        action: deviceFlowContext.action,
-        body: createDeviceFlowRequestBody({
+      const response = await submitDeviceFlowRequest(
+        createDeviceFlowRequestBody({
           userCode,
           xsrf: deviceFlowContext.xsrf,
-        }),
-      });
+        })
+      );
 
       if (response.redirected) {
         navigate(toNavigateUrl(response.url), { replace: true });

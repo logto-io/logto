@@ -1,14 +1,17 @@
+import { oidcRoutes } from '@logto/schemas';
+
 /**
  * These helpers stay local to the Device page because they are tightly coupled to the
  * oidc-provider bridge query. Extracting them here keeps the page component focused on
  * state transitions and rendering, without turning them into misleading global utils.
  */
 export type DeviceFlowContext = {
-  readonly action: string;
   readonly xsrf: string;
   readonly inputCode?: string;
   readonly userCode?: string;
 };
+
+const deviceFlowSubmitPath: string = oidcRoutes.codeVerification;
 
 export const normalizeDisplayValue = (value: string) => value.toUpperCase();
 
@@ -27,15 +30,13 @@ export const toNavigateUrl = (url: string) => {
 export const parseDeviceFlowContext = (
   searchParams: URLSearchParams
 ): DeviceFlowContext | undefined => {
-  const action = searchParams.get('action');
   const xsrf = searchParams.get('xsrf');
 
-  if (!action || !xsrf) {
+  if (!xsrf) {
     return;
   }
 
   return {
-    action,
     inputCode: searchParams.get('input_code') ?? undefined,
     userCode: searchParams.get('user_code') ?? undefined,
     xsrf,
@@ -62,16 +63,11 @@ export const createDeviceFlowRequestBody = ({
 
 /**
  * Submit the structured device-flow payload through fetch so the SPA can follow provider redirects
- * without falling back to a full-page browser form post.
+ * without falling back to a full-page browser form post. The submit target is shared with Core
+ * through a schema constant, so the page does not need a bridge query just to learn a fixed path.
  */
-export const submitDeviceFlowRequest = async ({
-  action,
-  body,
-}: {
-  readonly action: string;
-  readonly body: URLSearchParams;
-}) =>
-  fetch(action, {
+export const submitDeviceFlowRequest = async (body: URLSearchParams) =>
+  fetch(deviceFlowSubmitPath, {
     body,
     credentials: 'same-origin',
     headers: {
