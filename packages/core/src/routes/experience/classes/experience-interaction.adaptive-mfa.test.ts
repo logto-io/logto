@@ -392,7 +392,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     });
   });
 
-  it('ignores persisted adaptive MFA hook state from interaction storage', async () => {
+  it('does not retrigger adaptive MFA hook when interaction storage already recorded it', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       logtoConfig: {
@@ -434,18 +434,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
     await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
-    expect(ctx.assignInteractionHookResult).toHaveBeenCalledWith({
-      event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
-      payload: {
-        adaptiveMfaResult: expect.objectContaining({
-          requiresMfa: true,
-          triggeredRules: expect.arrayContaining([
-            expect.objectContaining({ rule: 'untrusted_ip' }),
-          ]) as unknown,
-        }) as unknown,
-      },
-      userId: user.id,
-    });
+    expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
   });
 
   it('does not persist adaptive MFA hook state in interaction JSON', async () => {
@@ -492,7 +481,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     expect(experienceInteraction.toJson()).not.toHaveProperty('adaptiveMfaHookTriggered');
   });
 
-  it('does not save interaction state just because adaptive MFA hook was triggered', async () => {
+  it('persists adaptive MFA hook state when first triggered before MFA is verified', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       logtoConfig: {
@@ -528,7 +517,14 @@ describe('ExperienceInteraction adaptive MFA', () => {
       code: 'session.mfa.require_mfa_verification',
       status: 403,
     });
-    expect(tenant.provider.interactionResult).not.toHaveBeenCalled();
+    expect(tenant.provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({
+        adaptiveMfaHookTriggered: true,
+      }),
+      { mergeWithLastSubmission: true }
+    );
   });
 
   it('allows sign-in when adaptive MFA does not trigger even if skipMfaOnSignIn is false', async () => {
