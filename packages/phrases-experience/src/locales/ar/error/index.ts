@@ -15,7 +15,7 @@ const error = {
   passwords_do_not_match: 'كلمات المرور غير متطابقة. يرجى المحاولة مرة أخرى.',
   invalid_passcode: 'رمز التحقق غير صالح.',
   device_code_required: 'الرمز مطلوب.',
-  invalid_device_code: 'رمز الجهاز غير صالح. يرجى المحاولة مرة أخرى.',
+  invalid_device_code: 'رمز الجهاز غير صالح.',
   device_flow_aborted: 'تم مقاطعة طلب تسجيل الدخول.',
   invalid_connector_auth: 'التوثيق غير صالح',
   invalid_connector_request: 'بيانات الموصل غير صالحة',

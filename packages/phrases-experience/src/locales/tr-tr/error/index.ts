@@ -16,11 +16,11 @@ const error = {
   passwords_do_not_match: 'Şifreler eşleşmiyor',
   invalid_passcode: 'Doğrulama kodu geçersiz.',
   device_code_required: 'Kod gerekli.',
-  invalid_device_code: 'Cihaz kodu geçersiz. Lütfen tekrar deneyin.',
+  invalid_device_code: 'Cihaz kodu geçersiz.',
   device_flow_aborted: 'Oturum açma isteği kesildi.',
   invalid_connector_auth: 'Yetki geçersiz',
   invalid_connector_request: 'Bağlayıcı veri geçersiz',
-  unknown: 'Bilinmeyen hata. Lütfen daha sonra tekrar deneyiniz.',
+  unknown: 'Bilinmeyen hata.',
   invalid_session: 'Oturum bulunamadı. Lütfen geri dönüp tekrar giriş yapınız.',
   timeout: 'Oturum zaman aşımına uğradı. Lütfen geri dönüp tekrar giriş yapınız.',
   password_rejected,
@@ -30,8 +30,7 @@ const error = {
     'Tek kullanımlık belirtecin süresi dolmuş olabilir veya artık geçerli değil.',
   captcha_verification_failed: 'Captcha doğrulama hatası.',
   terms_acceptance_required: 'Şartların kabulü gerekli',
-  terms_acceptance_required_description:
-    'Devam etmek için şartları kabul etmelisiniz. Lütfen tekrar deneyin.',
+  terms_acceptance_required_description: 'Devam etmek için şartları kabul etmelisiniz.',
   something_went_wrong: 'Bir şeyler yanlış gitti',
   feature_not_enabled:
     'Bu özelliğe erişim izniniz yok. Yardım için lütfen yöneticinizle iletişime geçin.',

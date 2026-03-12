@@ -17,7 +17,7 @@ const error = {
   passwords_do_not_match: 'Las contraseñas no coinciden. Por favor intente de nuevo',
   invalid_passcode: 'El código de verificación no es válido.',
   device_code_required: 'Se requiere el código.',
-  invalid_device_code: 'El código del dispositivo no es válido. Por favor, inténtelo de nuevo.',
+  invalid_device_code: 'El código del dispositivo no es válido.',
   device_flow_aborted: 'La solicitud de inicio de sesión fue interrumpida.',
   invalid_connector_auth: 'La autorización no es válida',
   invalid_connector_request: 'Los datos del conector no son válidos',

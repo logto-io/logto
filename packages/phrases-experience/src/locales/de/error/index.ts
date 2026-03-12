@@ -16,7 +16,7 @@ const error = {
   passwords_do_not_match: 'Passwörter stimmen nicht überein',
   invalid_passcode: 'Der Bestätigungscode ist ungültig.',
   device_code_required: 'Code ist erforderlich.',
-  invalid_device_code: 'Der Gerätecode ist ungültig. Bitte versuche es erneut.',
+  invalid_device_code: 'Der Gerätecode ist ungültig.',
   device_flow_aborted: 'Die Anmeldeanfrage wurde unterbrochen.',
   invalid_connector_auth: 'Die Autorisierung ist ungültig',
   invalid_connector_request: 'Connector Daten sind ungültig',
@@ -30,8 +30,7 @@ const error = {
     'Dein einmaliger Token ist möglicherweise abgelaufen oder nicht mehr gültig.',
   captcha_verification_failed: 'Fehler beim Captcha-Verifizierung.',
   terms_acceptance_required: 'Zustimmung zu den Bedingungen erforderlich',
-  terms_acceptance_required_description:
-    'Du musst den Bedingungen zustimmen, um fortzufahren. Bitte versuche es erneut.',
+  terms_acceptance_required_description: 'Du musst den Bedingungen zustimmen, um fortzufahren.',
   something_went_wrong: 'Etwas ist schiefgegangen',
   feature_not_enabled:
     'Sie haben keine Berechtigung, auf diese Funktion zuzugreifen. Bitte kontaktieren Sie Ihren Administrator um Hilfe.',

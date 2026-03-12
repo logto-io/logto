@@ -17,7 +17,7 @@ const error = {
   passwords_do_not_match: 'パスワードが一致しません。もう一度お試しください。',
   invalid_passcode: '検証コードが無効です。',
   device_code_required: 'コードが必要です。',
-  invalid_device_code: 'デバイスコードが無効です。もう一度お試しください。',
+  invalid_device_code: 'デバイスコードが無効です。',
   device_flow_aborted: 'サインインリクエストが中断されました。',
   invalid_connector_auth: '認証が無効です',
   invalid_connector_request: 'コネクターデータが無効です',

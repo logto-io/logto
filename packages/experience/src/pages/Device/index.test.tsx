@@ -2,6 +2,7 @@ import { experience, oidcRoutes } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
+import ToastProvider from '@/Providers/ToastProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 
@@ -53,6 +54,23 @@ const renderDevice = (options: {
     }
   );
 
+const renderDeviceWithToast = (options: {
+  readonly xsrf?: string;
+  readonly error?: string;
+  readonly inputCode?: string;
+  readonly userCode?: string;
+}) =>
+  renderWithPageContext(
+    <SettingsProvider>
+      <ToastProvider>
+        <Device />
+      </ToastProvider>
+    </SettingsProvider>,
+    {
+      initialEntries: [`/device?${buildDeviceSearchParams(options).toString()}`],
+    }
+  );
+
 const renderDeviceRoutes = (options: {
   readonly xsrf?: string;
   readonly error?: string;
@@ -61,10 +79,12 @@ const renderDeviceRoutes = (options: {
 }) =>
   renderWithPageContext(
     <SettingsProvider>
-      <Routes>
-        <Route path={`/${experience.routes.device}`} element={<Device />} />
-        <Route path={`/${experience.routes.device}/success`} element={<DeviceSuccess />} />
-      </Routes>
+      <ToastProvider>
+        <Routes>
+          <Route path={`/${experience.routes.device}`} element={<Device />} />
+          <Route path={`/${experience.routes.device}/success`} element={<DeviceSuccess />} />
+        </Routes>
+      </ToastProvider>
     </SettingsProvider>,
     {
       initialEntries: [
@@ -76,20 +96,50 @@ const renderDeviceRoutes = (options: {
 const getVisibleInput = (container: HTMLElement) =>
   container.querySelector<HTMLInputElement>('input[name="device_user_code"]');
 
-type MockFetchResponse = Pick<Response, 'ok' | 'redirected' | 'url'>;
+type MockFetchResponse = Pick<
+  Response,
+  'clone' | 'json' | 'ok' | 'redirected' | 'status' | 'text' | 'url'
+>;
 
 const createFetchResponse = ({
   ok = true,
   redirected = false,
+  status = ok ? 200 : 400,
   url = 'http://localhost/oidc/device',
+  jsonBody,
+  textBody,
 }: {
   readonly ok?: boolean;
   readonly redirected?: boolean;
+  readonly status?: number;
   readonly url?: string;
-}) => {
+  readonly jsonBody?: {
+    readonly error?: string;
+    readonly error_description?: string;
+  };
+  readonly textBody?: string;
+}): Response => {
   const response: MockFetchResponse = {
+    clone: () =>
+      createFetchResponse({
+        jsonBody,
+        ok,
+        redirected,
+        status,
+        textBody,
+        url,
+      }),
+    json: async () => {
+      if (!jsonBody) {
+        throw new Error('No JSON body');
+      }
+
+      return jsonBody;
+    },
     ok,
     redirected,
+    status,
+    text: async () => textBody ?? '',
     url,
   };
 
@@ -177,6 +227,19 @@ describe('<Device />', () => {
     expect(getByRole('alert').textContent).toBe('error.device_code_required');
   });
 
+  it('shows an invalid session toast for InvalidRequest instead of an inline field error', async () => {
+    const { queryByRole, queryByText } = renderDeviceWithToast({
+      error: 'InvalidRequest',
+    });
+
+    await waitFor(() => {
+      expect(queryByText('error.invalid_session')).not.toBeNull();
+    });
+
+    expect(queryByText('description.device_activation_description')).not.toBeNull();
+    expect(queryByRole('alert')).toBeNull();
+  });
+
   it('renders confirm state using the query user code as the visible value', async () => {
     const { container } = renderDevice({
       userCode: 'ABCD-EFGH',
@@ -251,6 +314,61 @@ describe('<Device />', () => {
     });
 
     expect(container.querySelector('button')!.disabled).toBe(true);
+  });
+
+  it('shows an invalid session toast when the provider returns invalid_request JSON', async () => {
+    fetchMock.mockResolvedValue(
+      createFetchResponse({
+        jsonBody: {
+          error: 'invalid_request',
+          error_description: 'could not find device form details',
+        },
+        ok: false,
+        status: 400,
+      })
+    );
+
+    const { container, queryByText } = renderDeviceWithToast({});
+
+    await waitFor(() => {
+      expect(getVisibleInput(container)).not.toBeNull();
+    });
+
+    fireEvent.change(getVisibleInput(container)!, { target: { value: 'ab12-cd34' } });
+    await act(async () => {
+      fireEvent.click(container.querySelector('button')!);
+    });
+
+    await waitFor(() => {
+      expect(queryByText('error.invalid_session')).not.toBeNull();
+    });
+  });
+
+  it('follows redirected error routes and shows the session-expired toast', async () => {
+    fetchMock.mockResolvedValue(
+      createFetchResponse({
+        ok: true,
+        redirected: true,
+        url: `http://localhost/${experience.routes.device}?xsrf=next-xsrf&error=InvalidRequest`,
+      })
+    );
+
+    const { container, queryByRole, queryByText } = renderDeviceRoutes({});
+
+    await waitFor(() => {
+      expect(getVisibleInput(container)).not.toBeNull();
+    });
+
+    fireEvent.change(getVisibleInput(container)!, { target: { value: 'ab12-cd34' } });
+    await act(async () => {
+      fireEvent.click(container.querySelector('button')!);
+    });
+
+    await waitFor(() => {
+      expect(queryByText('error.invalid_session')).not.toBeNull();
+    });
+
+    expect(queryByRole('alert')).toBeNull();
   });
 
   it('falls back to the success route when the provider responds with 200 without a redirect', async () => {

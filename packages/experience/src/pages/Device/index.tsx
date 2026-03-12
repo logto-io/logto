@@ -2,12 +2,11 @@ import { experience } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useContext, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { InputField } from '@/components/InputFields';
-import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import Button from '@/shared/components/Button';
 
 import ErrorPage from '../ErrorPage';
@@ -18,6 +17,7 @@ import {
   createDeviceFlowRequestBody,
   normalizeDisplayValue,
   parseDeviceFlowContext,
+  readDeviceFlowFailureError,
   submitDeviceFlowRequest,
   toNavigateUrl,
 } from './utils';
@@ -46,10 +46,20 @@ const resolveServerErrorKey = (error: string): DeviceErrorKey => {
   return isDeviceFlowError(error) ? deviceFlowErrorMap[error] : 'error.something_went_wrong';
 };
 
+const resolveSubmitFailureErrorKey = (
+  error?: string
+): 'error.invalid_session' | 'error.something_went_wrong' =>
+  error === 'invalid_request' ? 'error.invalid_session' : 'error.something_went_wrong';
+
 const Device = () => {
   const { t } = useTranslation();
   const { setToast } = useContext(PageContext);
-  const navigate = useNavigateWithPreservedSearchParams();
+  /**
+   * Device flow is driven by provider-owned redirects rather than the interaction routes that rely
+   * on preserved `app_id` search params. Use the plain router navigate here so provider redirects
+   * like `/device?xsrf=...&error=InvalidRequest` can round-trip without pathname rewriting.
+   */
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [clientErrorKey, setClientErrorKey] = useState<DeviceErrorKey>();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,12 +85,18 @@ const Device = () => {
     setUserCode(normalizeDisplayValue(initialValue ?? ''));
   }, [deviceFlowContext, isConfirm]);
 
+  useEffect(() => {
+    if (!isConfirm && error === 'InvalidRequest') {
+      setToast(t('error.invalid_session'));
+    }
+  }, [error, isConfirm, setToast, t]);
+
   if (!deviceFlowContext) {
     return <ErrorPage title="error.something_went_wrong" />;
   }
 
   const errorKey: DeviceErrorKey | undefined =
-    !isConfirm && error ? resolveServerErrorKey(error) : undefined;
+    !isConfirm && error && error !== 'InvalidRequest' ? resolveServerErrorKey(error) : undefined;
   const resolvedErrorKey = clientErrorKey ?? errorKey;
   const translateKey = (key: TFuncKey, options?: Record<string, unknown>): string => {
     const translated = options ? t(key, options) : t(key);
@@ -115,7 +131,8 @@ const Device = () => {
         return;
       }
 
-      setToast(t('error.something_went_wrong'));
+      const failureError = await readDeviceFlowFailureError(response);
+      setToast(t(resolveSubmitFailureErrorKey(failureError)));
     } catch {
       setToast(t('error.something_went_wrong'));
     } finally {

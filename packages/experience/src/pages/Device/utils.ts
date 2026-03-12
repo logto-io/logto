@@ -1,4 +1,5 @@
 import { oidcRoutes } from '@logto/schemas';
+import type { To } from 'react-router-dom';
 
 /**
  * These helpers stay local to the Device page because they are tightly coupled to the
@@ -17,9 +18,9 @@ export const normalizeDisplayValue = (value: string) => value.toUpperCase();
 
 export const hasDeviceCodeValue = (value: string) => value.replaceAll(/\W/g, '').length > 0;
 
-export const toNavigateUrl = (url: string) => {
+export const toNavigateUrl = (url: string): To => {
   const { pathname, search, hash } = new URL(url, window.location.origin);
-  return `${pathname}${search}${hash}`;
+  return { hash, pathname, search };
 };
 
 /**
@@ -75,3 +76,25 @@ export const submitDeviceFlowRequest = async (body: URLSearchParams) =>
     },
     method: 'POST',
   });
+
+/**
+ * Unexpected provider responses can still carry useful JSON payloads such as
+ * `invalid_request`. Reading just the OAuth error code is enough for the page
+ * to distinguish stale-session failures from generic submit errors.
+ */
+export const readDeviceFlowFailureError = async (
+  response: Response
+): Promise<string | undefined> => {
+  try {
+    const body: unknown = await response.clone().json();
+
+    if (typeof body !== 'object' || body === null) {
+      return undefined;
+    }
+
+    const error: unknown = Reflect.get(body, 'error');
+    return typeof error === 'string' ? error : undefined;
+  } catch {
+    return undefined;
+  }
+};
