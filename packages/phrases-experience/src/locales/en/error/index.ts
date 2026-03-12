@@ -15,6 +15,7 @@ const error = {
   invalid_phone: 'The phone number is invalid',
   passwords_do_not_match: 'Your passwords don’t match. Please try again.',
   invalid_passcode: 'The verification code is invalid.',
+  device_code_required: 'Code is required.',
   invalid_device_code: 'The device code is invalid. Please try again.',
   device_flow_aborted: 'The sign-in request was interrupted.',
   invalid_connector_auth: 'The authorization is invalid',

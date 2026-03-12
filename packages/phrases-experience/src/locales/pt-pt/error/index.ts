@@ -16,6 +16,7 @@ const error = {
   invalid_phone: 'O número de telefone é inválido',
   passwords_do_not_match: 'As passwords não coincidem',
   invalid_passcode: 'O código de verificação é inválido.',
+  device_code_required: 'O código é necessário.',
   invalid_device_code: 'O código do dispositivo é inválido. Por favor, tente novamente.',
   device_flow_aborted: 'O pedido de início de sessão foi interrompido.',
   invalid_connector_auth: 'A autorização é inválida',

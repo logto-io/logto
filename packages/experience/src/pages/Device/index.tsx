@@ -22,15 +22,16 @@ import {
 } from './utils';
 
 const deviceSuccessPath = `/${experience.routes.device}/success`;
+const requiredDeviceCodeErrorKey = 'error.device_code_required';
 
 const deviceFlowErrorMap = {
-  NoCodeError: 'error.invalid_device_code',
   NotFoundError: 'error.invalid_device_code',
   ExpiredError: 'error.invalid_device_code',
   AlreadyUsedError: 'error.invalid_device_code',
   AbortedError: 'error.device_flow_aborted',
 } as const;
 type DeviceErrorKey =
+  | typeof requiredDeviceCodeErrorKey
   | (typeof deviceFlowErrorMap)[keyof typeof deviceFlowErrorMap]
   | 'error.something_went_wrong';
 
@@ -71,13 +72,15 @@ const Device = () => {
     value in deviceFlowErrorMap;
   const errorKey: DeviceErrorKey | undefined =
     !isConfirm && error
-      ? isDeviceFlowError(error)
-        ? deviceFlowErrorMap[error]
-        : 'error.something_went_wrong'
+      ? error === 'NoCodeError'
+        ? requiredDeviceCodeErrorKey
+        : isDeviceFlowError(error)
+          ? deviceFlowErrorMap[error]
+          : 'error.something_went_wrong'
       : undefined;
   const resolvedErrorKey = clientErrorKey ?? errorKey;
-  const translateKey = (key: TFuncKey): string => {
-    const translated = t(key);
+  const translateKey = (key: TFuncKey, options?: Record<string, unknown>): string => {
+    const translated = options ? t(key, options) : t(key);
     return typeof translated === 'string' ? translated : t('error.something_went_wrong');
   };
   const errorMessage = resolvedErrorKey ? translateKey(resolvedErrorKey) : undefined;
@@ -130,7 +133,7 @@ const Device = () => {
      * for a round-trip that would only come back as the provider's NoCodeError.
      */
     if (!hasDeviceCodeValue(userCode)) {
-      setClientErrorKey('error.invalid_device_code');
+      setClientErrorKey(requiredDeviceCodeErrorKey);
       return;
     }
 

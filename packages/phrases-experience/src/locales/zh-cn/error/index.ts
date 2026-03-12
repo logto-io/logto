@@ -14,6 +14,7 @@ const error = {
   invalid_phone: '无效的手机号',
   passwords_do_not_match: '两次输入的密码不一致，请重试。',
   invalid_passcode: '无效的验证码。',
+  device_code_required: '请输入代码。',
   invalid_device_code: '设备代码无效，请重试。',
   device_flow_aborted: '登录请求已中断。',
   invalid_connector_auth: '登录失败',

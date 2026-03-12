@@ -15,6 +15,7 @@ const error = {
   invalid_phone: 'Die Telefonnummer ist ungültig',
   passwords_do_not_match: 'Passwörter stimmen nicht überein',
   invalid_passcode: 'Der Bestätigungscode ist ungültig.',
+  device_code_required: 'Code ist erforderlich.',
   invalid_device_code: 'Der Gerätecode ist ungültig. Bitte versuche es erneut.',
   device_flow_aborted: 'Die Anmeldeanfrage wurde unterbrochen.',
   invalid_connector_auth: 'Die Autorisierung ist ungültig',

@@ -15,6 +15,7 @@ const error = {
   invalid_phone: 'Номер телефона указан неправильно',
   passwords_do_not_match: 'Пароли не совпадают. Пожалуйста, попробуйте еще раз.',
   invalid_passcode: 'Неправильный код подтверждения.',
+  device_code_required: 'Введите код.',
   invalid_device_code: 'Код устройства недействителен. Пожалуйста, попробуйте ещё раз.',
   device_flow_aborted: 'Запрос на вход был прерван.',
   invalid_connector_auth: 'Авторизация недействительна',

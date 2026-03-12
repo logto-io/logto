@@ -14,6 +14,7 @@ const error = {
   invalid_phone: 'หมายเลขโทรศัพท์ไม่ถูกต้อง',
   passwords_do_not_match: 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง',
   invalid_passcode: 'รหัสยืนยันไม่ถูกต้อง',
+  device_code_required: 'จำเป็นต้องระบุรหัส',
   invalid_device_code: 'รหัสอุปกรณ์ไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง',
   device_flow_aborted: 'คำขอเข้าสู่ระบบถูกขัดจังหวะ',
   invalid_connector_auth: 'การอนุญาตไม่ถูกต้อง',

@@ -168,7 +168,7 @@ describe('<Device />', () => {
 
     expect(fetchMock).not.toHaveBeenCalled();
     expect(queryByText('description.device_activation_error_description')).not.toBeNull();
-    expect(getByRole('alert').textContent).toBe('error.invalid_device_code');
+    expect(getByRole('alert').textContent).toBe('error.device_code_required');
   });
 
   it('renders the error state and reuses the input_code query value', async () => {
@@ -182,7 +182,7 @@ describe('<Device />', () => {
     });
 
     expect(queryByText('description.device_activation_error_description')).not.toBeNull();
-    expect(getByRole('alert').textContent).toBe('error.invalid_device_code');
+    expect(getByRole('alert').textContent).toBe('error.device_code_required');
   });
 
   it('renders confirm state using the query user code as the visible value', async () => {

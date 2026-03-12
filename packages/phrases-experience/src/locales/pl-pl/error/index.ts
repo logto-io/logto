@@ -15,6 +15,7 @@ const error = {
   invalid_phone: 'Nieprawidłowy numer telefonu',
   passwords_do_not_match: 'Hasła nie pasują do siebie. Proszę spróbuj ponownie.',
   invalid_passcode: 'Nieprawidłowy kod weryfikacyjny.',
+  device_code_required: 'Kod jest wymagany.',
   invalid_device_code: 'Kod urządzenia jest nieprawidłowy. Proszę spróbuj ponownie.',
   device_flow_aborted: 'Żądanie logowania zostało przerwane.',
   invalid_connector_auth: 'Nieprawidłowa autoryzacja',
