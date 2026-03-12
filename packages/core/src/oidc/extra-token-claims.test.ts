@@ -1,7 +1,7 @@
 import { InteractionEvent } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import Router from 'koa-router';
-import { type AccessToken, errors, type KoaContextWithOIDC } from 'oidc-provider';
+import { type AccessToken, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -190,6 +190,9 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
 
     await expect(
       callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
-    ).rejects.toBeInstanceOf(errors.AccessDenied);
+    ).rejects.toMatchObject({
+      error: 'access_denied',
+      statusCode: 403,
+    });
   });
 });

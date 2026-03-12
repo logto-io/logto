@@ -30,6 +30,11 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
 
+class JwtCustomizerAccessDenied extends errors.AccessDenied {
+  status = 403;
+  statusCode = 403;
+}
+
 /**
  * For organization API resource feature, add extra token claim `organization_id` to the
  * access token.
@@ -313,7 +318,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
 
       // Deny the token exchange request if access is denied by the custom JWT script.
       if (errorResponse && isAccessDeniedError(errorResponse.error)) {
-        throw new errors.AccessDenied(errorResponse.message);
+        throw new JwtCustomizerAccessDenied(errorResponse.message);
       }
 
       if (shouldBlockIssuanceOnError) {
