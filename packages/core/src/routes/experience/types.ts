@@ -192,17 +192,12 @@ export type InteractionStorage = {
   };
 };
 
-export type PersistedInteractionStorage = InteractionStorage & {
-  adaptiveMfaHookTriggered?: boolean;
-};
-
-export const persistedInteractionStorageGuard = z.object({
+export const interactionStorageGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
   userId: z.string().optional(),
   profile: interactionProfileGuard.optional(),
   mfa: mfaDataGuard.optional(),
   verificationRecords: verificationRecordDataGuard.array().optional(),
-  adaptiveMfaHookTriggered: z.boolean().optional(),
   signInContext: z.record(z.string(), z.string()).optional(),
   captcha: z
     .object({
@@ -210,7 +205,7 @@ export const persistedInteractionStorageGuard = z.object({
       skipped: z.boolean(),
     })
     .optional(),
-}) satisfies ToZodObject<PersistedInteractionStorage>;
+}) satisfies ToZodObject<InteractionStorage>;
 
 export type SanitizedInteractionStorageData = {
   interactionEvent: InteractionEvent;

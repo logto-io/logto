@@ -18,9 +18,8 @@ import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import {
-  persistedInteractionStorageGuard,
+  interactionStorageGuard,
   type InteractionStorage,
-  type PersistedInteractionStorage,
   type Interaction,
   type InteractionContext,
   type WithHooksAndLogsContext,
@@ -69,7 +68,6 @@ export default class ExperienceInteraction {
   private userId?: string;
   private userCache?: User;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
-  private adaptiveMfaHookTriggered = false;
 
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
@@ -125,7 +123,7 @@ export default class ExperienceInteraction {
       return;
     }
 
-    const result = persistedInteractionStorageGuard.safeParse(interactionData.result ?? {});
+    const result = interactionStorageGuard.safeParse(interactionData.result ?? {});
 
     // `interactionDetails.result` is not a valid experience interaction storage
     assertThat(
@@ -137,7 +135,6 @@ export default class ExperienceInteraction {
       verificationRecords = [],
       profile = {},
       mfa = {},
-      adaptiveMfaHookTriggered = false,
       userId,
       interactionEvent,
       captcha = {
@@ -148,7 +145,6 @@ export default class ExperienceInteraction {
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
-    this.adaptiveMfaHookTriggered = adaptiveMfaHookTriggered;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
@@ -358,7 +354,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
 
-  public async guardMfaVerificationStatus(log?: LogEntry) {
+  public async guardMfaVerificationStatus(log?: LogEntry, triggerAdaptiveMfaHook = false) {
     if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInPasskey) {
       return;
     }
@@ -373,16 +369,14 @@ export default class ExperienceInteraction {
       return;
     }
 
-    const isAdaptiveMfaHookTriggered = this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
-
     const isMfaVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
 
     if (isMfaVerified) {
       return;
     }
 
-    if (isAdaptiveMfaHookTriggered) {
-      await this.save();
+    if (triggerAdaptiveMfaHook) {
+      this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
     }
 
     const { primaryEmail, primaryPhone } = user;
@@ -444,7 +438,6 @@ export default class ExperienceInteraction {
   public async save() {
     const { provider } = this.tenant;
     const details = await provider.interactionDetails(this.ctx.req, this.ctx.res);
-    const persistedInteractionData = this.toStorage();
     const interactionData = this.toJson();
 
     // `mergeWithLastSubmission` will only merge current request's interaction results.
@@ -453,7 +446,7 @@ export default class ExperienceInteraction {
     await provider.interactionResult(
       this.ctx.req,
       this.ctx.res,
-      { ...details.result, ...persistedInteractionData },
+      { ...details.result, ...interactionData },
       { mergeWithLastSubmission: true }
     );
 
@@ -509,7 +502,7 @@ export default class ExperienceInteraction {
 
     // Verified, only SignIn requires MFA verification, for register, it does not make sense to verify MFA
     if (this.#interactionEvent === InteractionEvent.SignIn) {
-      await this.guardMfaVerificationStatus(log);
+      await this.guardMfaVerificationStatus(log, true);
     }
 
     // Revalidate the new profile data if any
@@ -675,32 +668,9 @@ export default class ExperienceInteraction {
     };
   }
 
-  /**
-   * Convert the current interaction to the internal persisted payload stored in the OIDC session.
-   *
-   * @remarks
-   * This is intentionally separate from {@link toJson}. `toJson()` is the public interaction
-   * representation reused by response and log call sites, so it must not expose internal-only
-   * control state such as `adaptiveMfaHookTriggered`.
-   *
-   * The webhook de-duplication marker still needs to survive across requests in the same sign-in
-   * flow, so persistence cannot reuse `toJson()` without re-introducing that field into places
-   * where callers expect a public view of the interaction.
-   */
-  private toStorage(): PersistedInteractionStorage {
-    return {
-      ...this.toJson(),
-      ...conditional(this.adaptiveMfaHookTriggered && { adaptiveMfaHookTriggered: true }),
-    };
-  }
-
   private assignAdaptiveMfaHookResult(userId: string, adaptiveMfaResult?: AdaptiveMfaResult) {
-    if (
-      !EnvSet.values.isDevFeaturesEnabled ||
-      !adaptiveMfaResult?.requiresMfa ||
-      this.adaptiveMfaHookTriggered
-    ) {
-      return false;
+    if (!EnvSet.values.isDevFeaturesEnabled || !adaptiveMfaResult?.requiresMfa) {
+      return;
     }
 
     this.ctx.assignInteractionHookResult({
@@ -708,9 +678,6 @@ export default class ExperienceInteraction {
       payload: { adaptiveMfaResult },
       userId,
     });
-    this.adaptiveMfaHookTriggered = true;
-
-    return true;
   }
 
   private get verificationRecordsArray() {
