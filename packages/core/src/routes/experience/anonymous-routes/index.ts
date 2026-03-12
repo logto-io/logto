@@ -2,7 +2,6 @@ import { webAuthnAuthenticationOptionsGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
@@ -49,39 +48,37 @@ export default function experienceAnonymousRoutes<T extends WithInteractionDetai
     }
   );
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.post(
-      `${experienceRoutes.prefix}/preflight/sign-in-passkey/authentication`,
-      koaGuard({
-        response: z.object({
-          authenticationOptions: webAuthnAuthenticationOptionsGuard,
-        }),
-        status: [200, 400, 404],
+  router.post(
+    `${experienceRoutes.prefix}/preflight/sign-in-passkey/authentication`,
+    koaGuard({
+      response: z.object({
+        authenticationOptions: webAuthnAuthenticationOptionsGuard,
       }),
-      async (ctx, next) => {
-        const { hostname } = ctx.URL;
-        const authenticationOptions = await generateWebAuthnAuthenticationOptions({
-          mfaVerifications: [],
-          rpId: hostname,
-          // Generate discoverable credential options on initiating passkey sign-in. The user
-          // will be resolved later by credentialId/rpId on verification.
-          allowDiscoverable: true,
-        });
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const { hostname } = ctx.URL;
+      const authenticationOptions = await generateWebAuthnAuthenticationOptions({
+        mfaVerifications: [],
+        rpId: hostname,
+        // Generate discoverable credential options on initiating passkey sign-in. The user
+        // will be resolved later by credentialId/rpId on verification.
+        allowDiscoverable: true,
+      });
 
-        const details = await provider.interactionDetails(ctx.req, ctx.res);
-        await provider.interactionResult(ctx.req, ctx.res, {
-          ...details.result,
-          signInPasskey: { authenticationOptions },
-        });
+      const details = await provider.interactionDetails(ctx.req, ctx.res);
+      await provider.interactionResult(ctx.req, ctx.res, {
+        ...details.result,
+        signInPasskey: { authenticationOptions },
+      });
 
-        ctx.body = {
-          authenticationOptions,
-        };
+      ctx.body = {
+        authenticationOptions,
+      };
 
-        ctx.status = 200;
+      ctx.status = 200;
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 }

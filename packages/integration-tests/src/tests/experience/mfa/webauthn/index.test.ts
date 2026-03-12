@@ -20,7 +20,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
-import { devFeatureTest, generateUsername, waitFor } from '#src/utils.js';
+import { generateUsername, waitFor } from '#src/utils.js';
 
 describe('MFA - WebAuthn', () => {
   beforeAll(async () => {
@@ -105,7 +105,7 @@ describe('MFA - WebAuthn', () => {
   });
 });
 
-devFeatureTest.describe('Passkey sign-in', () => {
+describe('Passkey sign-in', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
     // Enable mandatory MFA with WebAuthn so passkey is registered during registration
@@ -233,7 +233,7 @@ devFeatureTest.describe('Passkey sign-in', () => {
   });
 });
 
-devFeatureTest.describe('Passkey sign-in should be blocked for SSO users', () => {
+describe('Passkey sign-in should be blocked for SSO users', () => {
   const ssoConnectorApi = new SsoConnectorApi();
   const domain = 'sso-passkey-test.com';
   const enterpriseSsoIdentityId = generateStandardId();

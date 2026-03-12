@@ -96,21 +96,15 @@ const App = () => {
                       <Route path={experience.routes.signIn}>
                         <Route index element={<SignIn />} />
                         <Route path="password" element={<SignInPassword />} />
-                        {isDevFeaturesEnabled && (
-                          <>
-                            <Route path="passkey" element={<SignInPasskeyVerification />} />
-                            <Route
-                              path="verification-methods"
-                              element={<SignInVerificationMethods />}
-                            />
-                          </>
-                        )}
+                        <Route path="passkey" element={<SignInPasskeyVerification />} />
+                        <Route
+                          path="verification-methods"
+                          element={<SignInVerificationMethods />}
+                        />
                       </Route>
 
                       {/* Create passkey for sign-in */}
-                      {isDevFeaturesEnabled && (
-                        <Route path="create-passkey" element={<PasskeySetup />} />
-                      )}
+                      <Route path="create-passkey" element={<PasskeySetup />} />
 
                       {/* Register */}
                       <Route path={experience.routes.register}>
@@ -128,9 +122,7 @@ const App = () => {
                       <Route path=":flow/verification-code" element={<VerificationCode />} />
 
                       {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
-                      {isDevFeaturesEnabled && (
-                        <Route path="mfa-onboarding" element={<MfaOnboarding />} />
-                      )}
+                      <Route path="mfa-onboarding" element={<MfaOnboarding />} />
 
                       {/* Mfa binding */}
                       <Route path={UserMfaFlow.MfaBinding}>

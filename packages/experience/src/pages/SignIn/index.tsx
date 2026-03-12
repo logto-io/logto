@@ -11,7 +11,6 @@ import PasskeySignInButton from '@/components/Button/PasskeySignInButton';
 import Divider from '@/components/Divider';
 import GoogleOneTap from '@/components/GoogleOneTap';
 import TextLink from '@/components/TextLink';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import SocialSignInList from '@/containers/SocialSignInList';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import TermsAndPrivacyLinks from '@/containers/TermsAndPrivacyLinks';
@@ -97,9 +96,7 @@ const SignInFooters = () => {
           </>
         )
       }
-      {isDevFeaturesEnabled && passkeySignIn?.enabled && passkeySignIn.showPasskeyButton && (
-        <PasskeySignInButton />
-      )}
+      {passkeySignIn?.enabled && passkeySignIn.showPasskeyButton && <PasskeySignInButton />}
     </>
   );
 };

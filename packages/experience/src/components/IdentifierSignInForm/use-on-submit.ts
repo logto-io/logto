@@ -3,7 +3,6 @@ import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSendVerificationCode from '@/hooks/use-send-verification-code';
@@ -56,7 +55,7 @@ const useOnSubmit = (signInMethods: SignIn['methods']) => {
 
       // Try passkey sign-in first if enabled
       // If the user has no passkeys, fall back to password/verification code
-      if (isDevFeaturesEnabled && passkeySignIn?.enabled) {
+      if (passkeySignIn?.enabled) {
         const passkeySucceeded = await startIdentifierPasskeySignInProcessing({
           type: identifier,
           value,

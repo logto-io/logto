@@ -82,7 +82,6 @@
     },
     "/api/experience/profile/mfa/mfa-enabled": {
       "post": {
-        "tags": ["Dev feature"],
         "operationId": "MarkMfaEnabled",
         "summary": "Mark MFA as enabled",
         "description": "Mark the user's MFA as enabled for the current interaction and persist in DB user configs upon successful submission.",

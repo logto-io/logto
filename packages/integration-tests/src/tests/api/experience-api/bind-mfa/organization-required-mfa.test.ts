@@ -7,7 +7,6 @@ import {
 } from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import {
   identifyUserWithUsernamePassword,
@@ -222,7 +221,7 @@ describe('Organization required MFA policy', () => {
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
       await expectRejects(client.submitInteraction(), {
-        code: isDevFeaturesEnabled ? 'user.suggest_mfa' : 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
       await client.skipMfaBinding();
@@ -254,7 +253,7 @@ describe('Organization required MFA policy', () => {
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
       await expectRejects(client.submitInteraction(), {
-        code: isDevFeaturesEnabled ? 'user.suggest_mfa' : 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
       await client.skipMfaBinding();
