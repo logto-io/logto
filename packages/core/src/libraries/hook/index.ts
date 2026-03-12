@@ -98,9 +98,9 @@ export const createHookLibrary = (queries: Queries) => {
     });
 
   const fetchInteractionHookUsersById = async (
-    contextManager: InteractionHookContextManager
+    interactionHookResults: InteractionHookContextManager['interactionHookResults']
   ): Promise<Map<string, Optional<Awaited<ReturnType<typeof findUserById>>>>> => {
-    const userIds = deduplicate(contextManager.interactionHookResults.map(({ userId }) => userId));
+    const userIds = deduplicate(interactionHookResults.map(({ userId }) => userId));
 
     // Current interaction flow typically yields very few user IDs per request.
     // If this cardinality grows in the future, switch to pMap with capped concurrency.
@@ -117,9 +117,10 @@ export const createHookLibrary = (queries: Queries) => {
    */
   const triggerInteractionHooks = async (
     consoleLog: ConsoleLog,
-    contextManager: InteractionHookContextManager
+    contextManager: InteractionHookContextManager,
+    interactionHookResults = contextManager.interactionHookResults
   ) => {
-    if (contextManager.interactionHookResults.length === 0) {
+    if (interactionHookResults.length === 0) {
       return;
     }
 
@@ -134,7 +135,7 @@ export const createHookLibrary = (queries: Queries) => {
 
     const [application, usersById] = await Promise.all([
       trySafe(async () => conditional(applicationId && (await findApplicationById(applicationId)))),
-      fetchInteractionHookUsersById(contextManager),
+      fetchInteractionHookUsersById(interactionHookResults),
     ]);
 
     const webhooks: Array<{
@@ -142,7 +143,7 @@ export const createHookLibrary = (queries: Queries) => {
       payload: BetterOmit<InteractionHookEventPayload, 'hookId'>;
     }> = [];
 
-    for (const interactionHookResult of contextManager.interactionHookResults) {
+    for (const interactionHookResult of interactionHookResults) {
       const { userId, event } = interactionHookResult;
       const customPayload =
         'payload' in interactionHookResult ? interactionHookResult.payload : undefined;

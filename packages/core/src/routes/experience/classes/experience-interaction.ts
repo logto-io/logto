@@ -671,7 +671,7 @@ export default class ExperienceInteraction {
       return;
     }
 
-    this.ctx.assignInteractionHookResult({
+    this.ctx.assignReleaseAnywayInteractionHookResult({
       event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
       payload: { adaptiveMfaResult },
       userId,

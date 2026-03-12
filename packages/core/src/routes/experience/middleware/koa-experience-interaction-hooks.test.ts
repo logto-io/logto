@@ -55,6 +55,8 @@ describe('exception hooks', () => {
         result: { interactionEvent: 'SignIn' },
       } as unknown as Awaited<ReturnType<Provider['interactionDetails']>>,
       assignInteractionHookResult: notToBeCalled,
+      assignReleaseOnSuccessInteractionHookResult: notToBeCalled,
+      assignReleaseAnywayInteractionHookResult: notToBeCalled,
       appendDataHookContext: notToBeCalled,
       appendExceptionHookContext: notToBeCalled,
     };
@@ -109,12 +111,14 @@ describe('exception hooks', () => {
         result: { interactionEvent: 'SignIn' },
       } as unknown as Awaited<ReturnType<Provider['interactionDetails']>>,
       assignInteractionHookResult: notToBeCalled,
+      assignReleaseOnSuccessInteractionHookResult: notToBeCalled,
+      assignReleaseAnywayInteractionHookResult: notToBeCalled,
       appendDataHookContext: notToBeCalled,
       appendExceptionHookContext: notToBeCalled,
     };
 
     next.mockImplementation(() => {
-      ctx.assignInteractionHookResult({
+      ctx.assignReleaseAnywayInteractionHookResult({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         payload: {
           adaptiveMfaResult: {
@@ -142,8 +146,8 @@ describe('exception hooks', () => {
           sessionId?: string;
           userAgent?: string;
         };
-        interactionHookResults: Array<{ event?: InteractionHookEvent; userId: string }>;
       },
+      Array<{ event?: InteractionHookEvent; userId: string }>,
     ];
 
     expect(interactionHookCall[1].metadata).toEqual(
@@ -154,7 +158,7 @@ describe('exception hooks', () => {
         userAgent: ctx.header['user-agent'],
       })
     );
-    expect(interactionHookCall[1].interactionHookResults).toEqual(
+    expect(interactionHookCall[2]).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
@@ -182,13 +186,15 @@ describe('exception hooks', () => {
         result: { interactionEvent: 'SignIn' },
       } as unknown as Awaited<ReturnType<Provider['interactionDetails']>>,
       assignInteractionHookResult: notToBeCalled,
+      assignReleaseOnSuccessInteractionHookResult: notToBeCalled,
+      assignReleaseAnywayInteractionHookResult: notToBeCalled,
       appendDataHookContext: notToBeCalled,
       appendExceptionHookContext: notToBeCalled,
     };
 
     next.mockImplementation(() => {
       ctx.assignInteractionHookResult({ userId: 'success-only-user' });
-      ctx.assignInteractionHookResult({
+      ctx.assignReleaseAnywayInteractionHookResult({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         payload: {
           adaptiveMfaResult: {
@@ -209,12 +215,11 @@ describe('exception hooks', () => {
 
     const interactionHookCall = triggerInteractionHooks.mock.calls[0] as [
       ConsoleLog,
-      {
-        interactionHookResults: Array<{ event?: InteractionHookEvent; userId: string }>;
-      },
+      unknown,
+      Array<{ event?: InteractionHookEvent; userId: string }>,
     ];
 
-    expect(interactionHookCall[1].interactionHookResults).toEqual([
+    expect(interactionHookCall[2]).toEqual([
       expect.objectContaining({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         userId: 'adaptive-user',
@@ -239,13 +244,15 @@ describe('exception hooks', () => {
         result: { interactionEvent: 'SignIn' },
       } as unknown as Awaited<ReturnType<Provider['interactionDetails']>>,
       assignInteractionHookResult: notToBeCalled,
+      assignReleaseOnSuccessInteractionHookResult: notToBeCalled,
+      assignReleaseAnywayInteractionHookResult: notToBeCalled,
       appendDataHookContext: notToBeCalled,
       appendExceptionHookContext: notToBeCalled,
     };
 
     next.mockImplementation(() => {
       ctx.assignInteractionHookResult({ userId: 'success-only-user' });
-      ctx.assignInteractionHookResult({
+      ctx.assignReleaseAnywayInteractionHookResult({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         payload: {
           adaptiveMfaResult: {
@@ -262,10 +269,10 @@ describe('exception hooks', () => {
     ).resolves.toBeUndefined();
 
     expect(triggerInteractionHooks).toBeCalledTimes(2);
-    expect(triggerInteractionHooks.mock.calls[0]?.[1].interactionHookResults).toEqual([
+    expect(triggerInteractionHooks.mock.calls[0]?.[2]).toEqual([
       expect.objectContaining({ userId: 'success-only-user' }),
     ]);
-    expect(triggerInteractionHooks.mock.calls[1]?.[1].interactionHookResults).toEqual([
+    expect(triggerInteractionHooks.mock.calls[1]?.[2]).toEqual([
       expect.objectContaining({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         userId: 'adaptive-user',

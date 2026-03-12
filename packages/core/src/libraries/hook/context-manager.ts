@@ -143,7 +143,8 @@ const interactionEventToHookEvent: Record<InteractionEvent, InteractionHookEvent
 };
 
 export class InteractionHookContextManager {
-  public interactionHookResultArray: InteractionHookResultUnion[] = [];
+  public releaseOnSuccessInteractionHookResultArray: InteractionHookResult[] = [];
+  public releaseAnywayInteractionHookResultArray: AdaptiveMfaTriggeredInteractionHookResult[] = [];
 
   constructor(public metadata: InteractionHookMetadata) {}
 
@@ -152,16 +153,36 @@ export class InteractionHookContextManager {
   }
 
   get interactionHookResults(): readonly InteractionHookResultUnion[] {
-    return this.interactionHookResultArray;
+    return [
+      ...this.releaseOnSuccessInteractionHookResults,
+      ...this.releaseAnywayInteractionHookResults,
+    ];
+  }
+
+  get releaseOnSuccessInteractionHookResults(): readonly InteractionHookResult[] {
+    return this.releaseOnSuccessInteractionHookResultArray;
+  }
+
+  get releaseAnywayInteractionHookResults(): readonly AdaptiveMfaTriggeredInteractionHookResult[] {
+    return this.releaseAnywayInteractionHookResultArray;
   }
 
   /**
-   * Assign an interaction hook result to trigger webhook.
+   * Assign a success-only interaction hook result to trigger webhook.
    * Calling it multiple times will queue multiple webhook triggers.
    * @param result The result to assign.
    */
-  assignInteractionHookResult(result: InteractionHookResultUnion) {
+  assignInteractionHookResult(result: InteractionHookResult) {
+    this.assignReleaseOnSuccessInteractionHookResult(result);
+  }
+
+  assignReleaseOnSuccessInteractionHookResult(result: InteractionHookResult) {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    this.interactionHookResultArray.push(result);
+    this.releaseOnSuccessInteractionHookResultArray.push(result);
+  }
+
+  assignReleaseAnywayInteractionHookResult(result: AdaptiveMfaTriggeredInteractionHookResult) {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    this.releaseAnywayInteractionHookResultArray.push(result);
   }
 }

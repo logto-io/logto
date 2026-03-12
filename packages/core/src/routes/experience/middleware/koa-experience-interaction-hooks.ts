@@ -12,11 +12,6 @@ import { type WithInteractionDetailsContext } from '#src/middleware/koa-interact
 import type Libraries from '#src/tenants/Libraries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
-import {
-  createInteractionHookContext,
-  shouldReleaseInteractionHookAnyway,
-} from './interaction-hook-dispatch.js';
-
 const interactionEventGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),
 });
@@ -25,6 +20,8 @@ export type WithExperienceInteractionHooksContext<
   ContextT extends IRouterParamContext = IRouterParamContext,
 > = ContextT & {
   assignInteractionHookResult: InteractionHookContextManager['assignInteractionHookResult'];
+  assignReleaseOnSuccessInteractionHookResult: InteractionHookContextManager['assignReleaseOnSuccessInteractionHookResult'];
+  assignReleaseAnywayInteractionHookResult: InteractionHookContextManager['assignReleaseAnywayInteractionHookResult'];
   appendDataHookContext: HookContextManager['appendDataHookContext'];
   appendExceptionHookContext: HookContextManager['appendExceptionHookContext'];
 };
@@ -48,7 +45,10 @@ export function koaExperienceInteractionHooks<
 
     if (!result.success) {
       ctx.assignInteractionHookResult = noop;
+      ctx.assignReleaseOnSuccessInteractionHookResult = noop;
+      ctx.assignReleaseAnywayInteractionHookResult = noop;
       ctx.appendDataHookContext = noop;
+      ctx.appendExceptionHookContext = noop;
       return next();
     }
 
@@ -66,6 +66,12 @@ export function koaExperienceInteractionHooks<
 
     ctx.assignInteractionHookResult =
       interactionHookContext.assignInteractionHookResult.bind(interactionHookContext);
+    ctx.assignReleaseOnSuccessInteractionHookResult =
+      interactionHookContext.assignReleaseOnSuccessInteractionHookResult.bind(
+        interactionHookContext
+      );
+    ctx.assignReleaseAnywayInteractionHookResult =
+      interactionHookContext.assignReleaseAnywayInteractionHookResult.bind(interactionHookContext);
 
     const dataHookContext = new HookContextManager({
       ...interactionApiMetadata,
@@ -79,22 +85,13 @@ export function koaExperienceInteractionHooks<
     try {
       await next();
 
-      const releaseOnSuccessInteractionHookContext = createInteractionHookContext(
-        {
-          ...interactionApiMetadata,
-          userIp: ip,
-        },
-        interactionHookContext.interactionHookResults.filter(
-          (interactionHookResult) => !shouldReleaseInteractionHookAnyway(interactionHookResult)
-        )
-      );
-
-      if (releaseOnSuccessInteractionHookContext.interactionHookResults.length > 0) {
+      if (interactionHookContext.releaseOnSuccessInteractionHookResults.length > 0) {
         // Hooks should not crash the app
         void trySafe(
           triggerInteractionHooks(
             getConsoleLogFromContext(ctx),
-            releaseOnSuccessInteractionHookContext
+            interactionHookContext,
+            interactionHookContext.releaseOnSuccessInteractionHookResults
           )
         );
       }
@@ -106,25 +103,15 @@ export function koaExperienceInteractionHooks<
         void trySafe(triggerDataHooks(getConsoleLogFromContext(ctx), dataHookContext));
       }
     } finally {
-      const releaseAnywayInteractionHookContext = createInteractionHookContext(
-        {
-          ...interactionApiMetadata,
-          userIp: ip,
-        },
-        interactionHookContext.interactionHookResults.filter((interactionHookResult) =>
-          shouldReleaseInteractionHookAnyway(interactionHookResult)
-        )
-      );
-
-      if (releaseAnywayInteractionHookContext.interactionHookResults.length > 0) {
-        // Interaction hooks are queued when the corresponding interaction event is known to
-        // have happened. `PostSignInAdaptiveMfaTriggered` is assigned before the MFA
-        // challenge error is thrown, so dispatch must happen in `finally`.
+      if (interactionHookContext.releaseAnywayInteractionHookResults.length > 0) {
+        // Release-anyway hooks are queued when the corresponding interaction event is known to
+        // have happened, even if the current request later throws.
         // Hooks should not crash the app
         void trySafe(
           triggerInteractionHooks(
             getConsoleLogFromContext(ctx),
-            releaseAnywayInteractionHookContext
+            interactionHookContext,
+            interactionHookContext.releaseAnywayInteractionHookResults
           )
         );
       }

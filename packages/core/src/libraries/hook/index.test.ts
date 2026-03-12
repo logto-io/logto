@@ -154,7 +154,7 @@ describe('triggerInteractionHooks()', () => {
       sessionId: 'some_jti',
     });
 
-    interactionHookContext.assignInteractionHookResult({
+    interactionHookContext.assignReleaseAnywayInteractionHookResult({
       event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
       payload: {
         adaptiveMfaResult: {
@@ -214,7 +214,7 @@ describe('triggerInteractionHooks()', () => {
       sessionId: 'some_jti',
     });
 
-    interactionHookContext.assignInteractionHookResult({
+    interactionHookContext.assignReleaseAnywayInteractionHookResult({
       event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
       payload: {
         adaptiveMfaResult: {
