@@ -99,7 +99,10 @@ describe('triggerInteractionHooks()', () => {
       userId: '123',
     });
 
-    await triggerInteractionHooks(new ConsoleLog(), interactionHookContext);
+    await triggerInteractionHooks(
+      new ConsoleLog(),
+      interactionHookContext.getReleaseOnSuccessDispatchContext()
+    );
 
     expect(findAllHooks).toHaveBeenCalled();
     expect(findApplicationById).toHaveBeenCalledWith('some_client');
@@ -171,7 +174,11 @@ describe('triggerInteractionHooks()', () => {
       userId: '123',
     });
 
-    await triggerInteractionHooks(new ConsoleLog(), interactionHookContext);
+    await triggerInteractionHooks(new ConsoleLog(), {
+      metadata: interactionHookContext.metadata,
+      hookEvent: interactionHookContext.hookEvent,
+      interactionHookResults: interactionHookContext.interactionHookResults,
+    });
 
     expect(sendWebhookRequest).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -225,7 +232,10 @@ describe('triggerInteractionHooks()', () => {
       userId: '123',
     });
 
-    await triggerInteractionHooks(new ConsoleLog(), interactionHookContext);
+    await triggerInteractionHooks(
+      new ConsoleLog(),
+      interactionHookContext.getReleaseAnywayDispatchContext()
+    );
 
     expect(sendWebhookRequest).toHaveBeenCalledWith(
       expect.objectContaining({

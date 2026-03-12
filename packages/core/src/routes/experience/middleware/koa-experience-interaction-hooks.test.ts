@@ -146,8 +146,8 @@ describe('exception hooks', () => {
           sessionId?: string;
           userAgent?: string;
         };
+        interactionHookResults: Array<{ event?: InteractionHookEvent; userId: string }>;
       },
-      Array<{ event?: InteractionHookEvent; userId: string }>,
     ];
 
     expect(interactionHookCall[1].metadata).toEqual(
@@ -158,7 +158,7 @@ describe('exception hooks', () => {
         userAgent: ctx.header['user-agent'],
       })
     );
-    expect(interactionHookCall[2]).toEqual(
+    expect(interactionHookCall[1].interactionHookResults).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
@@ -215,11 +215,12 @@ describe('exception hooks', () => {
 
     const interactionHookCall = triggerInteractionHooks.mock.calls[0] as [
       ConsoleLog,
-      unknown,
-      Array<{ event?: InteractionHookEvent; userId: string }>,
+      {
+        interactionHookResults: Array<{ event?: InteractionHookEvent; userId: string }>;
+      },
     ];
 
-    expect(interactionHookCall[2]).toEqual([
+    expect(interactionHookCall[1].interactionHookResults).toEqual([
       expect.objectContaining({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         userId: 'adaptive-user',
@@ -269,10 +270,10 @@ describe('exception hooks', () => {
     ).resolves.toBeUndefined();
 
     expect(triggerInteractionHooks).toBeCalledTimes(2);
-    expect(triggerInteractionHooks.mock.calls[0]?.[2]).toEqual([
+    expect(triggerInteractionHooks.mock.calls[0]?.[1].interactionHookResults).toEqual([
       expect.objectContaining({ userId: 'success-only-user' }),
     ]);
-    expect(triggerInteractionHooks.mock.calls[1]?.[2]).toEqual([
+    expect(triggerInteractionHooks.mock.calls[1]?.[1].interactionHookResults).toEqual([
       expect.objectContaining({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         userId: 'adaptive-user',

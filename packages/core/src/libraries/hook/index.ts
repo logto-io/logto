@@ -19,7 +19,7 @@ import type Queries from '#src/tenants/Queries.js';
 
 import {
   type HookContextManager,
-  type InteractionHookContextManager,
+  type InteractionHookDispatchContext,
   type HookMetadata,
   type HookContext,
 } from './context-manager.js';
@@ -98,7 +98,7 @@ export const createHookLibrary = (queries: Queries) => {
     });
 
   const fetchInteractionHookUsersById = async (
-    interactionHookResults: InteractionHookContextManager['interactionHookResults']
+    interactionHookResults: InteractionHookDispatchContext['interactionHookResults']
   ): Promise<Map<string, Optional<Awaited<ReturnType<typeof findUserById>>>>> => {
     const userIds = deduplicate(interactionHookResults.map(({ userId }) => userId));
 
@@ -117,15 +117,15 @@ export const createHookLibrary = (queries: Queries) => {
    */
   const triggerInteractionHooks = async (
     consoleLog: ConsoleLog,
-    contextManager: InteractionHookContextManager,
-    interactionHookResults = contextManager.interactionHookResults
+    dispatchContext: InteractionHookDispatchContext
   ) => {
+    const { metadata, hookEvent: defaultHookEvent, interactionHookResults } = dispatchContext;
+
     if (interactionHookResults.length === 0) {
       return;
     }
 
-    const { interactionEvent, sessionId, applicationId, userIp, userAgent } =
-      contextManager.metadata;
+    const { interactionEvent, sessionId, applicationId, userIp, userAgent } = metadata;
 
     const found = await findAllHooks();
 
@@ -147,7 +147,7 @@ export const createHookLibrary = (queries: Queries) => {
       const { userId, event } = interactionHookResult;
       const customPayload =
         'payload' in interactionHookResult ? interactionHookResult.payload : undefined;
-      const hookEvent = event ?? contextManager.hookEvent;
+      const hookEvent = event ?? defaultHookEvent;
 
       const hooks = found.filter(
         ({ event, events, enabled }) =>

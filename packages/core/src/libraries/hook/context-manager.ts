@@ -136,6 +136,12 @@ type AdaptiveMfaTriggeredInteractionHookResult = {
 
 type InteractionHookResultUnion = InteractionHookResult | AdaptiveMfaTriggeredInteractionHookResult;
 
+export type InteractionHookDispatchContext = {
+  metadata: InteractionHookMetadata;
+  hookEvent: InteractionHookEvent;
+  interactionHookResults: readonly InteractionHookResultUnion[];
+};
+
 const interactionEventToHookEvent: Record<InteractionEvent, InteractionHookEvent> = {
   [InteractionEvent.Register]: InteractionHookEvent.PostRegister,
   [InteractionEvent.SignIn]: InteractionHookEvent.PostSignIn,
@@ -165,6 +171,22 @@ export class InteractionHookContextManager {
 
   get releaseAnywayInteractionHookResults(): readonly AdaptiveMfaTriggeredInteractionHookResult[] {
     return this.releaseAnywayInteractionHookResultArray;
+  }
+
+  getReleaseOnSuccessDispatchContext(): InteractionHookDispatchContext {
+    return {
+      metadata: this.metadata,
+      hookEvent: this.hookEvent,
+      interactionHookResults: this.releaseOnSuccessInteractionHookResults,
+    };
+  }
+
+  getReleaseAnywayDispatchContext(): InteractionHookDispatchContext {
+    return {
+      metadata: this.metadata,
+      hookEvent: this.hookEvent,
+      interactionHookResults: this.releaseAnywayInteractionHookResults,
+    };
   }
 
   /**

@@ -90,8 +90,7 @@ export function koaExperienceInteractionHooks<
         void trySafe(
           triggerInteractionHooks(
             getConsoleLogFromContext(ctx),
-            interactionHookContext,
-            interactionHookContext.releaseOnSuccessInteractionHookResults
+            interactionHookContext.getReleaseOnSuccessDispatchContext()
           )
         );
       }
@@ -110,8 +109,7 @@ export function koaExperienceInteractionHooks<
         void trySafe(
           triggerInteractionHooks(
             getConsoleLogFromContext(ctx),
-            interactionHookContext,
-            interactionHookContext.releaseAnywayInteractionHookResults
+            interactionHookContext.getReleaseAnywayDispatchContext()
           )
         );
       }

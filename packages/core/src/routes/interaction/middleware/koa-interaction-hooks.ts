@@ -66,7 +66,12 @@ export default function koaInteractionHooks<
 
     if (interactionHookContext.interactionHookResults.length > 0) {
       // Hooks should not crash the app
-      void trySafe(triggerInteractionHooks(getConsoleLogFromContext(ctx), interactionHookContext));
+      void trySafe(
+        triggerInteractionHooks(
+          getConsoleLogFromContext(ctx),
+          interactionHookContext.getReleaseOnSuccessDispatchContext()
+        )
+      );
     }
 
     if (dataHookContext.dataHookContextArray.length > 0) {
