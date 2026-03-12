@@ -48,7 +48,7 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /configs/jwt-customizer/:tokenTypePath': 'GetJwtCustomizer',
   'delete /configs/jwt-customizer/:tokenTypePath': 'DeleteJwtCustomizer',
   'post /configs/jwt-customizer/test': 'TestJwtCustomizer',
-  'get /configs/oidc/:keyType(private-keys|cookie-keys)': 'GetOidcKeys',
+  'get /configs/oidc/:keyType': 'GetOidcKeys',
   'delete /configs/oidc/:keyType/:keyId': 'DeleteOidcKey',
   'post /configs/oidc/:keyType/rotate': 'RotateOidcKeys',
   'get /configs/admin-console': 'GetAdminConsoleConfig',

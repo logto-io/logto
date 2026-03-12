@@ -46,8 +46,9 @@ export const oidcConfigKeyGuard = z.object({
 export type OidcConfigKey = z.infer<typeof oidcConfigKeyGuard>;
 
 export const oidcSessionConfigGuard = z.object({
-  ttl: z.number().optional(),
+  ttl: z.number().int().min(1).max(31_536_000).optional(),
 });
+
 export type OidcSessionConfig = z.infer<typeof oidcSessionConfigGuard>;
 
 export type LogtoOidcConfigType = {

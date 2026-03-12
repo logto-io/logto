@@ -32,7 +32,7 @@
         }
       }
     },
-    "/api/configs/oidc/{keyType(private-keys|cookie-keys)}": {
+    "/api/configs/oidc/{keyType}": {
       "get": {
         "summary": "Get OIDC keys",
         "description": "Get OIDC signing keys by key type. The actual key will be redacted from the result.",

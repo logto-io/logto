@@ -115,7 +115,9 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
           ttl: defaults.sessionTtl,
           ...sessionConfig,
         };
-        return next();
+
+        // Intentionally do not call next() to avoid falling through to /configs/oidc/:keyType.
+        // Running next() will trigger all the downstream middleware including the route handler for /configs/oidc/:keyType, which is not expected for this endpoint.
       }
     );
 
@@ -145,10 +147,8 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
     );
   }
 
-  const keyTypePattern = `${LogtoOidcConfigKeyType.PrivateKeys}|${LogtoOidcConfigKeyType.CookieKeys}`;
-
   router.get(
-    `/configs/oidc/:keyType(${keyTypePattern})`,
+    '/configs/oidc/:keyType',
     koaGuard({
       params: z.object({
         keyType: z.nativeEnum(LogtoOidcConfigKeyType),
