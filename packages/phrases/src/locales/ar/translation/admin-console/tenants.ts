@@ -1,10 +1,12 @@
 const tenants = {
   title: 'الإعدادات',
   description: 'إدارة إعدادات المستأجر بكفاءة وتخصيص نطاقك.',
+  oss_description: 'قم بتغيير إعدادات حسابك وإدارة معلوماتك الشخصية هنا لضمان أمان حسابك.',
   tabs: {
     settings: 'الإعدادات',
     members: 'الأعضاء',
     domains: 'النطاقات',
+    oidc_configs: 'إعدادات OIDC',
     subscription: 'الخطة والفوترة',
     billing_history: 'سجل الفوترة',
   },

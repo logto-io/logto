@@ -1,10 +1,13 @@
 const tenants = {
   title: 'Definições',
   description: 'Gerir eficientemente as configurações do inquilino e personalizar o seu domínio.',
+  oss_description:
+    'Altere as definições da sua conta e faça a gestão das suas informações pessoais aqui para garantir a segurança da sua conta.',
   tabs: {
     settings: 'Definições',
     members: 'Membros',
     domains: 'Domínios',
+    oidc_configs: 'Configurações de OIDC',
     subscription: 'Plano e faturação',
     billing_history: 'Histórico de faturação',
   },

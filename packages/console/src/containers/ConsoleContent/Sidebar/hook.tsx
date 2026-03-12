@@ -20,7 +20,7 @@ import SecurityLock from '@/assets/icons/security-lock.svg?react';
 import Security from '@/assets/icons/security.svg?react';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg?react';
 import Web from '@/assets/icons/web.svg?react';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 
 type SidebarItem = {
   Icon: FC;
@@ -132,6 +132,7 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Key,
           title: 'signing_keys',
+          isHidden: isDevFeaturesEnabled,
         },
         {
           Icon: JwtClaims,
@@ -149,7 +150,8 @@ export const useSidebarMenuItems = (): {
     },
     {
       title: 'tenant',
-      isHidden: !isCloud,
+      // TODO: remove dev features flag after tenant settings is generally available for OSS
+      isHidden: !isCloud && !isDevFeaturesEnabled,
       items: [
         {
           Icon: Gear,

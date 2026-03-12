@@ -9,6 +9,7 @@ import {
   type JwtCustomizerTestRequestBody,
   type Json,
   type IdTokenConfig,
+  type OidcSessionConfig,
 } from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
@@ -76,3 +77,15 @@ export const getIdTokenConfig = async () =>
 
 export const upsertIdTokenConfig = async (payload: IdTokenConfig) =>
   authedAdminApi.put('configs/id-token', { json: payload }).json<IdTokenConfig>();
+
+export const getSessionConfig = async () =>
+  authedAdminApi.get('configs/oidc/session').json<
+    OidcSessionConfig & {
+      ttl: number;
+    }
+  >();
+
+export const updateSessionConfig = async (payload: Partial<OidcSessionConfig>) =>
+  authedAdminApi
+    .patch('configs/oidc/session', { json: payload })
+    .json<OidcSessionConfig & { ttl: number }>();

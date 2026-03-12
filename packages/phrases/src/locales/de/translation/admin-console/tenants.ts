@@ -1,10 +1,13 @@
 const tenants = {
   title: 'Einstellungen',
   description: 'Effizientes Verwalten von Mandanteneinstellungen und Anpassen Ihrer Domain.',
+  oss_description:
+    'Ändern Sie hier Ihre Kontoeinstellungen und verwalten Sie Ihre persönlichen Informationen, um die Sicherheit Ihres Kontos zu gewährleisten.',
   tabs: {
     settings: 'Einstellungen',
     members: 'Mitglieder',
     domains: 'Domänen',
+    oidc_configs: 'OIDC-Konfigurationen',
     subscription: 'Plan und Abrechnung',
     billing_history: 'Abrechnungshistorie',
   },

@@ -105,6 +105,28 @@
         }
       }
     },
+    "/api/configs/oidc/session": {
+      "get": {
+        "tags": ["Dev feature"],
+        "summary": "Get OIDC session config",
+        "description": "Get the OIDC session configuration for the tenant. ",
+        "responses": {
+          "200": {
+            "description": "The OIDC session configuration. Returns empty object if the configuration does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Dev feature"],
+        "summary": "Update OIDC session config",
+        "description": "Update the OIDC session configuration for the tenant. This method performs a partial update. If the configuration does not exist, it will be created.",
+        "responses": {
+          "200": {
+            "description": "The updated OIDC session configuration."
+          }
+        }
+      }
+    },
     "/api/configs/jwt-customizer": {
       "get": {
         "summary": "Get all JWT customizers",

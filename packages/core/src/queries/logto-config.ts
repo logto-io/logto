@@ -7,9 +7,9 @@ import {
   type LogtoConfig,
   type LogtoConfigKey,
   type LogtoOidcConfigKey,
-  type OidcConfigKey,
   type LogtoJwtTokenKey,
   idTokenConfigGuard,
+  type LogtoOidcConfigType,
 } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
@@ -62,12 +62,15 @@ export const createLogtoConfigQueries = (
     }
   };
 
-  const updateOidcConfigsByKey = async (key: LogtoOidcConfigKey, value: OidcConfigKey[]) =>
+  const updateOidcConfigsByKey = async <T extends LogtoOidcConfigKey>(
+    key: T,
+    value: LogtoOidcConfigType[T]
+  ) =>
     pool.query(sql`
-      update ${table}
-      set ${fields.value} = ${sql.jsonb(value)}
-      where ${fields.key} = ${key}
-      returning *
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${key}, ${sql.jsonb(value)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(value)}
+        returning *
     `);
 
   // Can not narrow down the type of value if we utilize `buildInsertIntoWithPool` method.

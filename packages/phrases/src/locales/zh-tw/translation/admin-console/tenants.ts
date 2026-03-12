@@ -1,10 +1,12 @@
 const tenants = {
   title: '設置',
   description: '高效管理租戶設定並自訂您的網域。',
+  oss_description: '請在此變更帳戶設定並管理您的個人資料，以確保帳戶安全。',
   tabs: {
     settings: '設置',
     members: '成員',
     domains: '網域',
+    oidc_configs: 'OIDC 設定',
     subscription: '方案與計費',
     billing_history: '帳單歷史記錄',
   },

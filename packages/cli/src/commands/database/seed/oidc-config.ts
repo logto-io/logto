@@ -18,13 +18,20 @@ import {
 
 const isBase64FormatPrivateKey = (key: string) => !key.includes('-');
 
+// We only seed private keys and cookie keys
+// Session config is optional
+type OidcConfigKeyToSeed = Exclude<LogtoOidcConfigKey, LogtoOidcConfigKey.Session>;
+const oidcConfigKeysToSeed = Object.values(LogtoOidcConfigKey).filter(
+  (key): key is OidcConfigKeyToSeed => key !== LogtoOidcConfigKey.Session
+);
+
 export const seedOidcConfigs = async (pool: DatabaseTransactionConnection, tenantId: string) => {
   const tenantPrefix = `[${tenantId}]`;
   const configGuard = z.object({
     key: z.nativeEnum(LogtoOidcConfigKey),
     value: z.unknown(),
   });
-  const { rows } = await getRowsByKeys(pool, tenantId, Object.values(LogtoOidcConfigKey));
+  const { rows } = await getRowsByKeys(pool, tenantId, oidcConfigKeysToSeed);
   // Filter out valid keys that hold a valid value
   const result = await Promise.all(
     rows.map<Promise<LogtoOidcConfigKey | undefined>>(async (row) => {
@@ -38,7 +45,7 @@ export const seedOidcConfigs = async (pool: DatabaseTransactionConnection, tenan
   );
   const existingKeys = new Set(result.filter(Boolean));
 
-  const validOptions = Object.values(LogtoOidcConfigKey).filter((key) => {
+  const validOptions = oidcConfigKeysToSeed.filter((key) => {
     const included = existingKeys.has(key);
 
     if (included) {
@@ -72,7 +79,7 @@ export const seedOidcConfigs = async (pool: DatabaseTransactionConnection, tenan
  * 2. Generate value if #1 doesn't work
  */
 export const oidcConfigReaders: {
-  [key in LogtoOidcConfigKey]: () => Promise<{
+  [key in OidcConfigKeyToSeed]: () => Promise<{
     value: LogtoOidcConfigType[key];
     fromEnv: boolean;
   }>;
