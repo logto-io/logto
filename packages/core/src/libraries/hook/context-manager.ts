@@ -191,6 +191,14 @@ export class InteractionHookContextManager {
 
   /**
    * Assign a success-only interaction hook result to trigger webhook.
+   *
+   * @remarks
+   * This method is kept as the default entry point for backward compatibility with the existing
+   * success-only callers. It is intentionally implemented as an alias of
+   * {@link assignReleaseOnSuccessInteractionHookResult} so callers that do not need an explicit
+   * release policy can keep using the historical API, while release-anyway callers opt in via
+   * {@link assignReleaseAnywayInteractionHookResult}.
+   *
    * Calling it multiple times will queue multiple webhook triggers.
    * @param result The result to assign.
    */
@@ -198,11 +206,19 @@ export class InteractionHookContextManager {
     this.assignReleaseOnSuccessInteractionHookResult(result);
   }
 
+  /**
+   * Assign an interaction hook result that should only be released after the request completes
+   * successfully.
+   */
   assignReleaseOnSuccessInteractionHookResult(result: InteractionHookResult) {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     this.releaseOnSuccessInteractionHookResultArray.push(result);
   }
 
+  /**
+   * Assign an interaction hook result that should still be released even if the current request
+   * later throws.
+   */
   assignReleaseAnywayInteractionHookResult(result: AdaptiveMfaTriggeredInteractionHookResult) {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     this.releaseAnywayInteractionHookResultArray.push(result);
