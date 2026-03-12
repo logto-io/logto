@@ -207,6 +207,9 @@ describe('ExperienceInteraction class', () => {
         {
           id: 'uid',
           primaryEmail: mockEmail,
+          logtoConfig: {
+            mfa: { enabled: false },
+          },
         },
         { isInteractive: true, roleNames: ['user', 'default:admin'] }
       );

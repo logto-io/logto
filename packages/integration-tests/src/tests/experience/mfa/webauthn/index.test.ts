@@ -16,6 +16,7 @@ import { signInWithEnterpriseSso } from '#src/helpers/experience/index.js';
 import {
   enableMandatoryMfaWithWebAuthn,
   resetMfaSettings,
+  resetPasskeySignInSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
@@ -104,7 +105,7 @@ describe('MFA - WebAuthn', () => {
   });
 });
 
-devFeatureTest.describe('MFA - Passkey sign-in should skip MFA verification', () => {
+devFeatureTest.describe('Passkey sign-in', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
     // Enable mandatory MFA with WebAuthn so passkey is registered during registration
@@ -131,14 +132,53 @@ devFeatureTest.describe('MFA - Passkey sign-in should skip MFA verification', ()
 
   afterAll(async () => {
     await resetMfaSettings();
-    // Reset passkey sign-in settings
+    await resetPasskeySignInSettings();
+  });
+
+  it('should prompt enable MFA if new registered user has no MFA but has bound sign-in passkey', async () => {
     await updateSignInExperience({
+      mfa: {
+        factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+      },
       passkeySignIn: {
-        enabled: false,
-        showPasskeyButton: false,
+        enabled: true,
+        showPasskeyButton: true,
         allowAutofill: false,
       },
     });
+
+    const username = generateUsername();
+    const password = 'l0gt0_T3st_P@ssw0rd';
+
+    const experience = new ExpectWebAuthnExperience(await browser.newPage());
+    await experience.setupVirtualAuthenticator();
+
+    // Register with username and password
+    await experience.startWith(demoAppUrl, 'register');
+    await experience.toFillInput('identifier', username, { submit: true });
+    experience.toBeAt('register/password');
+    await experience.toFillNewPasswords(password);
+
+    // Bind a sign-in passkey during registration
+    await experience.waitForPathname('create-passkey');
+    await experience.toClickButton('Create a passkey');
+
+    // After passkey is created, user should be prompted to enable MFA since the user has no MFA factor bound but has a sign-in passkey
+    await experience.waitForPathname('mfa-onboarding');
+    await experience.toClick('button', 'Enable 2-step verification');
+
+    // SKip enabling MFA
+    await experience.toClick('div[role=button][class$=skipButton]');
+
+    await experience.page.waitForNetworkIdle();
+    const userId = await experience.getUserIdFromDemoAppPage();
+    await experience.clearVirtualAuthenticator();
+    await experience.verifyThenEnd();
+
+    await enableMandatoryMfaWithWebAuthn();
+    await resetPasskeySignInSettings();
+    await deleteUser(userId);
   });
 
   it('should sign in with passkey and skip MFA verification even when mandatory TOTP MFA is enabled', async () => {
