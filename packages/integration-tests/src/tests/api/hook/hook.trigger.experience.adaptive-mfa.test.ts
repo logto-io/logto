@@ -55,76 +55,6 @@ afterAll(async () => {
 
 describe('adaptive MFA experience hook trigger', () => {
   (isDevFeaturesEnabled ? it : it.skip)(
-    'triggers adaptive MFA interaction hook when adaptive MFA is required',
-    async () => {
-      try {
-        await updateSignInExperience({
-          mfa: {
-            factors: [MfaFactor.TOTP],
-            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
-          },
-          adaptiveMfa: { enabled: true },
-        });
-
-        await webHookApi.create({
-          name: 'adaptiveMfaInteractionHookEventListener',
-          events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],
-          config: { url: webHookMockServer.endpoint },
-        });
-
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        const user = await userApi.create({ username, password });
-        const totpVerification = await createUserMfaVerification(user.id, MfaFactor.TOTP);
-
-        if (totpVerification.type !== MfaFactor.TOTP) {
-          throw new Error('unexpected mfa type');
-        }
-
-        const client = await initExperienceClient({
-          extraHeaders: { 'x-logto-cf-bot-score': '10' },
-        });
-        await identifyUserWithUsernamePassword(client, username, password);
-        await successfullyVerifyTotp(client, {
-          code: authenticator.generate(totpVerification.secret),
-        });
-
-        const { redirectTo } = await client.submitInteraction();
-        await processSession(client, redirectTo);
-        await logoutClient(client);
-
-        const adaptiveHook = webHookApi.hooks.get('adaptiveMfaInteractionHookEventListener')!;
-
-        await assertHookLogResult(
-          adaptiveHook,
-          InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
-          {
-            hookPayload: {
-              event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
-              interactionEvent: InteractionEvent.SignIn,
-              sessionId: expect.any(String),
-              adaptiveMfaResult: expect.objectContaining({
-                requiresMfa: true,
-                triggeredRules: expect.arrayContaining([
-                  expect.objectContaining({ rule: 'untrusted_ip' }),
-                ]) as unknown,
-              }),
-              user: expect.objectContaining({ id: user.id, username }),
-            },
-          }
-        );
-      } finally {
-        await updateSignInExperience({
-          mfa: {
-            factors: [],
-            policy: MfaPolicy.PromptAtSignInAndSignUp,
-          },
-          adaptiveMfa: { enabled: false },
-        });
-      }
-    }
-  );
-
-  (isDevFeaturesEnabled ? it : it.skip)(
     'triggers adaptive MFA once per sign-in flow and keeps PostSignIn success-only',
     async () => {
       try {
@@ -195,6 +125,9 @@ describe('adaptive MFA experience hook trigger', () => {
         expect(await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(
           0
         );
+        expect(
+          await getHookLogs(adaptiveHook.id, InteractionHookEvent.PostSignInAdaptiveMfaTriggered)
+        ).toHaveLength(1);
 
         await successfullyVerifyTotp(client, {
           code: authenticator.generate(totpVerification.secret),
