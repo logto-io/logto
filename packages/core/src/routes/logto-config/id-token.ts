@@ -7,7 +7,7 @@ import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function idTokenRoutes<T extends ManagementApiRouter>(
-  ...[router, { logtoConfigs, libraries }]: RouterInitArgs<T>
+  ...[router, { logtoConfigs, libraries, queries }]: RouterInitArgs<T>
 ) {
   router.get(
     '/configs/id-token',
@@ -16,7 +16,7 @@ export default function idTokenRoutes<T extends ManagementApiRouter>(
       status: [200, 404],
     }),
     async (ctx, next) => {
-      const config = await logtoConfigs.getIdTokenConfig();
+      const config = await queries.logtoConfigs.getIdTokenConfig();
 
       if (!config) {
         throw new RequestError({ code: 'entity.not_found', status: 404 });

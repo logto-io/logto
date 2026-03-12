@@ -8,7 +8,6 @@ import {
   LogtoConfigs,
   LogtoJwtTokenKey,
   LogtoOidcConfigKey,
-  LogtoTenantConfigKey,
   cloudApiIndicator,
   cloudConnectionDataGuard,
   idTokenConfigGuard,
@@ -137,16 +136,6 @@ export const createLogtoConfigLibrary = ({
     return updatedRow.value;
   };
 
-  const getIdTokenConfig = async () => {
-    const { rows } = await getRowsByKeys([LogtoTenantConfigKey.IdToken]);
-
-    if (rows.length === 0) {
-      return;
-    }
-
-    return idTokenConfigGuard.parse(rows[0]?.value);
-  };
-
   const upsertIdTokenConfig = async (idTokenConfig: IdTokenConfig) => {
     const { value } = await queryUpsertIdTokenConfig(idTokenConfig);
     return idTokenConfigGuard.parse(value);
@@ -159,7 +148,6 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizer,
     getJwtCustomizers,
     updateJwtCustomizer,
-    getIdTokenConfig,
     upsertIdTokenConfig,
   };
 };
