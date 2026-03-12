@@ -68,7 +68,6 @@ export default class ExperienceInteraction {
   private userId?: string;
   private userCache?: User;
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
-  private adaptiveMfaHookTriggered = false;
 
   /** The captcha verification status for the current interaction. */
   private readonly captcha = {
@@ -136,7 +135,6 @@ export default class ExperienceInteraction {
       verificationRecords = [],
       profile = {},
       mfa = {},
-      adaptiveMfaHookTriggered = false,
       userId,
       interactionEvent,
       captcha = {
@@ -147,7 +145,6 @@ export default class ExperienceInteraction {
 
     this.#interactionEvent = interactionEvent;
     this.userId = userId;
-    this.adaptiveMfaHookTriggered = adaptiveMfaHookTriggered;
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
@@ -378,10 +375,6 @@ export default class ExperienceInteraction {
 
     if (isMfaVerified) {
       return;
-    }
-
-    if (this.adaptiveMfaHookTriggered) {
-      await this.save();
     }
 
     const { primaryEmail, primaryPhone } = user;
@@ -659,7 +652,6 @@ export default class ExperienceInteraction {
       profile: this.profile.data,
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
-      ...conditional(this.adaptiveMfaHookTriggered && { adaptiveMfaHookTriggered: true }),
       captcha,
       ...conditional(signInContext && { signInContext }),
     };
@@ -675,11 +667,7 @@ export default class ExperienceInteraction {
   }
 
   private assignAdaptiveMfaHookResult(userId: string, adaptiveMfaResult?: AdaptiveMfaResult) {
-    if (
-      !EnvSet.values.isDevFeaturesEnabled ||
-      !adaptiveMfaResult?.requiresMfa ||
-      this.adaptiveMfaHookTriggered
-    ) {
+    if (!EnvSet.values.isDevFeaturesEnabled || !adaptiveMfaResult?.requiresMfa) {
       return;
     }
 
@@ -688,7 +676,6 @@ export default class ExperienceInteraction {
       payload: { adaptiveMfaResult },
       userId,
     });
-    this.adaptiveMfaHookTriggered = true;
   }
 
   private get verificationRecordsArray() {
