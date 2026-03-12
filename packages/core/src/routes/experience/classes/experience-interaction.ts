@@ -354,7 +354,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
 
-  public async guardMfaVerificationStatus(log?: LogEntry, triggerAdaptiveMfaHook = false) {
+  public async guardMfaVerificationStatus(log?: LogEntry) {
     if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInPasskey) {
       return;
     }
@@ -375,9 +375,7 @@ export default class ExperienceInteraction {
       return;
     }
 
-    if (triggerAdaptiveMfaHook) {
-      this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
-    }
+    this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
 
     const { primaryEmail, primaryPhone } = user;
     const maskedIdentifiers: Record<string, string> = {
@@ -502,7 +500,7 @@ export default class ExperienceInteraction {
 
     // Verified, only SignIn requires MFA verification, for register, it does not make sense to verify MFA
     if (this.#interactionEvent === InteractionEvent.SignIn) {
-      await this.guardMfaVerificationStatus(log, true);
+      await this.guardMfaVerificationStatus(log);
     }
 
     // Revalidate the new profile data if any

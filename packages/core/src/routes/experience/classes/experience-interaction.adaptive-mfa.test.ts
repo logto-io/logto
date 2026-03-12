@@ -200,7 +200,18 @@ describe('ExperienceInteraction adaptive MFA', () => {
       )
     );
 
-    expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
+    expect(ctx.assignInteractionHookResult).toHaveBeenCalledWith({
+      event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+      payload: {
+        adaptiveMfaResult: expect.objectContaining({
+          requiresMfa: true,
+          triggeredRules: expect.arrayContaining([
+            expect.objectContaining({ rule: 'untrusted_ip' }),
+          ]) as unknown,
+        }) as unknown,
+      },
+      userId: user.id,
+    });
   });
 
   it('does not require MFA verification when adaptive MFA triggers and user has no factors', async () => {
@@ -239,7 +250,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
   });
 
-  it('does not assign adaptive MFA hook result from guardMfaVerificationStatus even when log is not provided', async () => {
+  it('assigns adaptive MFA hook result from guardMfaVerificationStatus even when log is not provided', async () => {
     const user: User = {
       ...mockUserWithMfaVerifications,
       logtoConfig: {
@@ -281,7 +292,12 @@ describe('ExperienceInteraction adaptive MFA', () => {
       )
     );
 
-    expect(ctx.assignInteractionHookResult).not.toHaveBeenCalled();
+    expect(ctx.assignInteractionHookResult).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+        userId: user.id,
+      })
+    );
   });
 
   it('allows sign-in when adaptive MFA does not trigger and skipMfaOnSignIn is true', async () => {
