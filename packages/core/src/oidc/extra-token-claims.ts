@@ -30,6 +30,11 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
 
+class JwtCustomizerAccessDenied extends errors.AccessDenied {
+  status = 403;
+  statusCode = 403;
+}
+
 /**
  * For organization API resource feature, add extra token claim `organization_id` to the
  * access token.
@@ -172,26 +177,26 @@ export const getExtraTokenClaimsForJwtCustomization = async (
   const isClientCredentialsToken = token instanceof ctx.oidc.provider.ClientCredentials;
 
   const customTokenClaimsLogEntries = new Set<LogEntry>();
+  /**
+   * It is by design to use `trySafe` here to catch the error but not log it since we do not
+   * want to insert an error log every time the OIDC provider issues a token when the JWT
+   * customizer is not configured.
+   */
+  const { script, environmentVariables, blockIssuanceOnError } =
+    (await trySafe(
+      logtoConfigs.getJwtCustomizer(
+        isClientCredentialsToken ? LogtoJwtTokenKey.ClientCredentials : LogtoJwtTokenKey.AccessToken
+      )
+    )) ?? {};
+
+  if (!script) {
+    return;
+  }
+
+  const shouldBlockIssuanceOnError =
+    EnvSet.values.isDevFeaturesEnabled && Boolean(blockIssuanceOnError);
 
   try {
-    /**
-     * It is by design to use `trySafe` here to catch the error but not log it since we do not
-     * want to insert an error log every time the OIDC provider issues a token when the JWT
-     * customizer is not configured.
-     */
-    const { script, environmentVariables } =
-      (await trySafe(
-        logtoConfigs.getJwtCustomizer(
-          isClientCredentialsToken
-            ? LogtoJwtTokenKey.ClientCredentials
-            : LogtoJwtTokenKey.AccessToken
-        )
-      )) ?? {};
-
-    if (!script) {
-      return;
-    }
-
     // Pick only the fields that will be included in the token payload based on the token type.
     const pickedFields = isClientCredentialsToken
       ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
@@ -313,10 +318,18 @@ export const getExtraTokenClaimsForJwtCustomization = async (
 
       // Deny the token exchange request if access is denied by the custom JWT script.
       if (errorResponse && isAccessDeniedError(errorResponse.error)) {
-        throw new errors.AccessDenied(errorResponse.message);
+        throw new JwtCustomizerAccessDenied(errorResponse.message);
+      }
+
+      if (shouldBlockIssuanceOnError) {
+        throw new Error(errorResponse?.message ?? 'Failed to customize token claims');
       }
     } else {
       ctx.prependAllLogEntries({ customJwtError: String(error) });
+
+      if (shouldBlockIssuanceOnError) {
+        throw new Error('Failed to customize token claims');
+      }
     }
   }
 };

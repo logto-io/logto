@@ -165,6 +165,9 @@
                   },
                   "tokenSample": {
                     "description": "The sample raw token payload for the JWT customizer script testing purpose."
+                  },
+                  "blockIssuanceOnError": {
+                    "description": "Whether to block token issuance when the JWT customizer script fails."
                   }
                 }
               }
@@ -212,6 +215,9 @@
                   },
                   "tokenSample": {
                     "description": "The sample raw token payload for the JWT customizer script testing purpose."
+                  },
+                  "blockIssuanceOnError": {
+                    "description": "Whether to block token issuance when the JWT customizer script fails."
                   }
                 }
               }

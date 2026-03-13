@@ -2,9 +2,13 @@ import { LogtoJwtTokenKeyType } from '@logto/schemas';
 import { Editor } from '@monaco-editor/react';
 import classNames from 'classnames';
 import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
+import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
+import Switch from '@/ds-components/Switch';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
   denyAccessCodeExample,
@@ -37,7 +41,7 @@ function InstructionTab({ isActive }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [expendCard, setExpendCard] = useState<CardType>();
 
-  const { watch } = useFormContext<JwtCustomizerForm>();
+  const { watch, control } = useFormContext<JwtCustomizerForm>();
   const tokenType = watch('tokenType');
 
   return (
@@ -189,6 +193,34 @@ function InstructionTab({ isActive }: Props) {
           options={sampleCodeEditorOptions}
         />
       </GuideCard>
+      {isDevFeaturesEnabled && (
+        <GuideCard
+          name={CardType.ErrorHandling}
+          isExpanded={expendCard === CardType.ErrorHandling}
+          setExpanded={(expand) => {
+            setExpendCard(expand ? CardType.ErrorHandling : undefined);
+          }}
+        >
+          <FormField title="jwt_claims.error_handling.input_field_title">
+            <Controller
+              control={control}
+              name="blockIssuanceOnError"
+              render={({ field }) => (
+                <Switch
+                  checked={field.value}
+                  description="jwt_claims.error_handling.block_issuance_switch"
+                  onChange={(event) => {
+                    field.onChange(event.currentTarget.checked);
+                  }}
+                />
+              )}
+            />
+          </FormField>
+          <InlineNotification severity="alert">
+            {t('jwt_claims.error_handling.warning')}
+          </InlineNotification>
+        </GuideCard>
+      )}
       <div className={tabContentStyles.description}>{t('jwt_claims.jwt_claims_description')}</div>
     </div>
   );

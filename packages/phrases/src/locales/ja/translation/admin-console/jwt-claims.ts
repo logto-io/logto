@@ -64,6 +64,14 @@ const jwt_claims = {
     title: 'API コンテキスト：アクセス制御',
     subtitle: '`api.denyAccess` メソッドを使用してトークンリクエストを拒否します。',
   },
+  error_handling: {
+    title: 'Error handling',
+    subtitle: 'Control whether token issuance should be blocked when the script fails.',
+    input_field_title: 'Token issuance behavior on script error',
+    block_issuance_switch: 'Block token issuance when the script errors',
+    warning:
+      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+  },
   fetch_external_data: {
     title: '外部データを取得',
     subtitle: '外部APIからデータを直接クレームに組み込みます。',

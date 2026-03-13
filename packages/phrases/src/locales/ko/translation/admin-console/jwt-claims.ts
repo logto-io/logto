@@ -63,6 +63,14 @@ const jwt_claims = {
     title: 'API 컨텍스트: 접근 제어',
     subtitle: '`api.denyAccess` 메소드를 사용하여 토큰 요청을 거절하세요.',
   },
+  error_handling: {
+    title: 'Error handling',
+    subtitle: 'Control whether token issuance should be blocked when the script fails.',
+    input_field_title: 'Token issuance behavior on script error',
+    block_issuance_switch: 'Block token issuance when the script errors',
+    warning:
+      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+  },
   fetch_external_data: {
     title: '외부 데이터 가져오기',
     subtitle: '외부 API에서 데이터 직접 클레임에 통합.',
