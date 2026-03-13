@@ -6,7 +6,7 @@ const oidc_configs = {
   session_max_ttl_in_days_tip:
     'An absolute lifetime limit from session creation. Regardless of activity, the session ends when this fixed duration elapses.',
   oss_notice:
-    'For Logto OSS, restart your instance after updating any OIDC configuration (including session settings and <keyRotationsLink>key rotations</keyRotationsLink>) for changes to take effect. To apply all OIDC configuration updates automatically without service reload, <centralCacheLink>enable central cache</centralCacheLink>.',
+    'For Logto OSS, restart your instance after updating any OIDC configuration (including session settings and <keyRotationsLink>key rotations</keyRotationsLink>) for changes to take effect. To apply all OIDC configuration updates automatically without reloading the service, <centralCacheLink>enable central cache</centralCacheLink>.',
 };
 
 export default Object.freeze(oidc_configs);
