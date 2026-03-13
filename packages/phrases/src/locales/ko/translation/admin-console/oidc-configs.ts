@@ -5,6 +5,8 @@ const oidc_configs = {
   session_max_ttl_in_days: '세션 최대 수명(TTL) (일)',
   session_max_ttl_in_days_tip:
     '세션 생성 시점부터 적용되는 절대 만료 한도입니다. 활동 여부와 관계없이 이 고정 기간이 지나면 세션이 종료됩니다.',
+  oss_notice:
+    'Logto OSS에서는 OIDC 구성(세션 구성 및 <keyRotationsLink>키 로테이션</keyRotationsLink> 포함)을 업데이트한 후 변경 사항을 적용하려면 인스턴스를 다시 시작해야 합니다. 서비스 재시작 없이 모든 OIDC 구성 업데이트를 자동으로 적용하려면 <centralCacheLink>중앙 캐시를 활성화하세요</centralCacheLink>.',
 };
 
 export default Object.freeze(oidc_configs);
