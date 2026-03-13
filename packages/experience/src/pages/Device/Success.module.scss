@@ -1,0 +1,36 @@
+@use '@/shared/scss/underscore' as _;
+
+.content {
+  flex: 1;
+  width: min(100%, 400px);
+  @include _.flex-column(center);
+  text-align: center;
+}
+
+.iconWrapper {
+  width: 80px;
+  height: 80px;
+  margin-bottom: _.unit(4);
+  border-radius: 50%;
+  background: var(--color-success-default);
+  color: var(--color-static-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+}
+
+.title {
+  margin-bottom: _.unit(2);
+  color: var(--color-type-primary);
+  font: var(--font-title-2);
+}
+
+.description {
+  color: var(--color-type-secondary);
+  font: var(--font-body-2);
+}

@@ -44,6 +44,7 @@ import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 
 import defaults from './defaults.js';
+import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
   getExtraTokenClaimsForJwtCustomization,
   getExtraTokenClaimsForOrganizationApiResource,
@@ -122,10 +123,7 @@ export default function initOidc(
       devInteractions: { enabled: false },
       clientCredentials: { enabled: true },
       backchannelLogout: { enabled: true },
-      // DEV: Device flow
-      deviceFlow: {
-        enabled: EnvSet.values.isDevFeaturesEnabled,
-      },
+      deviceFlow: deviceFlowConfig,
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
@@ -382,8 +380,7 @@ export default function initOidc(
 
         return 60 * 60; // 1 hour in seconds
       },
-      /** Align with the oidc-provider default (10 minutes). */
-      DeviceCode: 600 /* 10 minutes in seconds */,
+      DeviceCode: defaultDeviceCodeTtl,
       Interaction: 3600 /* 1 hour in seconds */,
       Session:
         conditional(EnvSet.values.isDevFeaturesEnabled && envSet.oidc.sessionTtl) ??

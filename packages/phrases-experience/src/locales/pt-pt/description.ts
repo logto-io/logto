@@ -56,6 +56,12 @@ const description = {
     'Para maior segurança, por favor complete os detalhes da conta abaixo.',
   create_your_account: 'Crie a sua conta',
   sign_in_to_your_account: 'Inicie sessão na sua conta',
+  device_activation: 'Ativação do dispositivo',
+  device_activation_description:
+    'Introduza o código apresentado no seu dispositivo. Certifique-se de que corresponde e, em seguida, continue para iniciar sessão neste dispositivo.',
+  device_activation_error_description: 'Introduza o código apresentado no seu dispositivo.',
+  device_activation_success: 'O seu dispositivo está agora ligado!',
+  device_activation_success_description: 'Regresse ao seu dispositivo para continuar.',
   no_region_code_found: 'Não foi possível encontrar o código de região do seu telefone.',
   verify_email: 'Verifique o seu email',
   verify_phone: 'Verifique o seu número de telefone',

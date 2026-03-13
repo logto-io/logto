@@ -7,6 +7,10 @@ import { inSeconds } from './date.js';
 
 export const tenantIdKey = 'tenant_id';
 
+export const oidcRoutes = Object.freeze({
+  codeVerification: '/oidc/device',
+} as const);
+
 export const customClientMetadataDefault = Object.freeze({
   idTokenTtl: inSeconds.oneHour,
   refreshTokenTtlInDays: 14,

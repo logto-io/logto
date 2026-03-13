@@ -53,6 +53,12 @@ const description = {
   continue_with_more_information: '더 나은 보안을 위해 아래 자세한 내용을 따라 주세요.',
   create_your_account: '계정 생성하기',
   sign_in_to_your_account: '계정에 로그인하세요',
+  device_activation: '기기 활성화',
+  device_activation_description:
+    '기기에 표시된 코드를 입력하세요. 코드가 일치하는지 확인한 후 이 기기에 로그인을 계속하세요.',
+  device_activation_error_description: '기기에 표시된 코드를 입력하세요.',
+  device_activation_success: '기기가 연결되었어요!',
+  device_activation_success_description: '기기로 돌아가서 계속하세요.',
   no_region_code_found: '지역 코드를 찾을 수 없습니다.',
   verify_email: '이메일 인증',
   verify_phone: '휴대전화번호 인증',
