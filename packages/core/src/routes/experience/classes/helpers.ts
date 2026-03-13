@@ -335,7 +335,7 @@ export const parseMfaPropertiesToUserConfig = (
       ...userMfaData,
       // Force cast optional value to boolean since the `enabled` field is newly introduced and legacy users may NOT have this field
       // in their config. The absence of `enabled` field will be treated as MFA not enabled after the next sign-in attempt.
-      ...conditional(userMfaData?.enabled === undefined && { enabled: mfaEnabled === true }),
+      ...conditional(mfaEnabled !== undefined && { enabled: mfaEnabled }),
       // For users who have explicitly skipped MFA, set `skipped` to true to persist the skipped status.
       ...conditional(mfaSkipped && { skipped: true }),
       // Persist optional additional MFA suggestion skipped status when user explicitly skips it.

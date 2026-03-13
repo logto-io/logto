@@ -138,6 +138,26 @@ describe('Bind MFA APIs happy path', () => {
       await enableUserControlledMfaWithTotp();
     });
 
+    it('should persist mfa.enabled as false by default right after identification during register', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.Register,
+      });
+
+      await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+      await client.updateProfile({ type: 'password', value: password });
+      await client.identifyUser();
+
+      const { userId } = await client.getInteractionData();
+      expect(userId).toBeDefined();
+
+      const config = await getUserLogtoConfig(userId!);
+      expect(config.mfa.enabled).toBe(false);
+
+      await deleteUser(userId!);
+    });
+
     it('should able to skip MFA binding on register', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       const client = await initExperienceClient({
