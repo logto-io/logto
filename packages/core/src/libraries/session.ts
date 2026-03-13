@@ -3,6 +3,7 @@ import {
   jsonObjectGuard,
   jwtCustomizerUserInteractionContextGuard,
   oidcSessionInstancePayloadGuard,
+  userApplicationGrantPayloadGuard,
 } from '@logto/schemas';
 import { conditional, deduplicate } from '@silverhand/essentials';
 import type { Context } from 'koa';
@@ -207,6 +208,29 @@ const formatSessionWithExtension = (session: SessionInstanceWithExtension) => {
   };
 };
 
+const formatApplicationGrant = (
+  grant: Awaited<
+    ReturnType<Queries['oidcModelInstances']['findUserActiveApplicationGrants']>
+  >[number]
+) => {
+  const payloadResult = userApplicationGrantPayloadGuard.safeParse(grant.payload);
+
+  if (!payloadResult.success) {
+    throw new RequestError(
+      { code: 'oidc.invalid_grant', status: 500 },
+      {
+        cause: payloadResult.error,
+      }
+    );
+  }
+
+  return {
+    id: grant.id,
+    payload: payloadResult.data,
+    expiresAt: grant.expiresAt,
+  };
+};
+
 /* ================ Session management =============== */
 
 type SessionAuthorizationDetails = {
@@ -240,6 +264,18 @@ export const createSessionLibrary = (queries: Queries) => {
     }
 
     return formatSessionWithExtension(result);
+  };
+
+  const findUserActiveApplicationGrants = async (
+    userId: string,
+    applicationType?: 'thirdParty' | 'firstParty'
+  ) => {
+    const result = await queries.oidcModelInstances.findUserActiveApplicationGrants(
+      userId,
+      applicationType
+    );
+
+    return result.map((grant) => formatApplicationGrant(grant));
   };
 
   const revokeSessionAssociatedGrants = async ({
@@ -295,6 +331,7 @@ export const createSessionLibrary = (queries: Queries) => {
   return {
     findUserActiveSessionsWithExtensions,
     findUserActiveSessionWithExtension,
+    findUserActiveApplicationGrants,
     revokeSessionAssociatedGrants,
   };
 };

@@ -13,6 +13,25 @@
         "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available."
       }
     },
+    "/api/users/{userId}/grants": {
+      "get": {
+        "tags": ["Dev feature"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "appType",
+            "description": "Application type filter. Use 'thirdParty' to list third-party app grants only, or 'firstParty' to list first-party app grants only. If omitted, grants from all applications are returned."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return non-expired grants of the user. Results are filtered by app type when `appType` is provided."
+          }
+        },
+        "summary": "Get user active grants",
+        "description": "Retrieve all non-expired grants of the user. Optionally filter by application type via `appType`; when omitted, grants from all application types are returned."
+      }
+    },
     "/api/users/{userId}/sessions/{sessionId}": {
       "get": {
         "tags": ["Dev feature"],
