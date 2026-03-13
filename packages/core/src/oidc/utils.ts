@@ -284,7 +284,7 @@ export type SharedExperienceParams = Readonly<{
  * arrays (repeated query keys) and empty strings so callers never see a 500 from
  * an object-level parser when a query key is duplicated.
  */
-const readOptionalQueryString = (value: unknown): string | undefined =>
+export const readOptionalQueryString = (value: unknown): string | undefined =>
   typeof value === 'string' && value.length > 0 ? value : undefined;
 
 export const parseSharedExperienceParams = (

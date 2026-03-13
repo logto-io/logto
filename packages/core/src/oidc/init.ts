@@ -34,6 +34,7 @@ import {
   buildConsentPromptUrl,
   buildLoginPromptUrl,
   isOriginAllowed,
+  readOptionalQueryString,
   validateCustomClientMetadata,
 } from '#src/oidc/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -213,7 +214,7 @@ export default function initOidc(
       url: (ctx, { params: { client_id: appId }, prompt }) => {
         const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
         const sharedParams = {
-          appId: typeof appId === 'string' ? appId : undefined,
+          appId: readOptionalQueryString(appId),
           organizationId: params.organization_id,
           uiLocales: params.ui_locales,
         };
