@@ -10,6 +10,7 @@ import useApi from '@ac/hooks/use-api';
 import useErrorHandler, { type ErrorHandlers } from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 
+import PasswordIdentifierInput from '../PasswordIdentifierInput';
 import SwitchVerificationMethodLink from '../SwitchVerificationMethodLink';
 
 import styles from './index.module.scss';
@@ -38,7 +39,7 @@ const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: 
         setPasswordError(error.message);
       },
     }),
-    []
+    [t]
   );
 
   const handleVerify = async (event?: FormEvent<HTMLFormElement>) => {
@@ -72,9 +73,12 @@ const PasswordVerification = ({ onBack, onSwitchMethod, hasAlternativeMethod }: 
       onBack={onBack}
     >
       <form noValidate className={styles.form} onSubmit={handleVerify}>
+        <PasswordIdentifierInput />
         <PasswordInputField
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus
+          id="current-password"
+          name="currentPassword"
           autoComplete="current-password"
           label={t('input.password')}
           value={password}
