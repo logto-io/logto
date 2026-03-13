@@ -13,10 +13,9 @@ import {
   extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
-  type LogtoUiCookie,
   ExtraParamsKey,
 } from '@logto/schemas';
-import { conditional, removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
+import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
 import { type KoaContextWithOIDC, Provider, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
@@ -31,6 +30,7 @@ import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
+  buildSharedExperienceCookie,
   buildConsentPromptUrl,
   buildLoginPromptUrl,
   isOriginAllowed,
@@ -212,19 +212,18 @@ export default function initOidc(
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
         const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
+        const sharedParams = {
+          appId: typeof appId === 'string' ? appId : undefined,
+          organizationId: params.organization_id,
+          uiLocales: params.ui_locales,
+        };
 
         // Cookies are required to apply the correct server-side rendering
-        ctx.cookies.set(
-          logtoCookieKey,
-          JSON.stringify(
-            removeUndefinedKeys({
-              appId: typeof appId === 'string' ? appId : undefined,
-              organizationId: params.organization_id,
-              uiLocales: params.ui_locales,
-            }) satisfies LogtoUiCookie
-          ),
-          { sameSite: 'lax', overwrite: true, httpOnly: false }
-        );
+        ctx.cookies.set(logtoCookieKey, JSON.stringify(buildSharedExperienceCookie(sharedParams)), {
+          sameSite: 'lax',
+          overwrite: true,
+          httpOnly: false,
+        });
 
         if (params[ExtraParamsKey.GoogleOneTapCredential]) {
           ctx.cookies.set(
@@ -241,7 +240,7 @@ export default function initOidc(
 
         switch (prompt.name) {
           case 'login': {
-            return '/' + buildLoginPromptUrl(params, appId);
+            return '/' + buildLoginPromptUrl(params, sharedParams);
           }
 
           case 'consent': {

@@ -1,7 +1,12 @@
 import path from 'node:path';
 
 import { GoogleConnector } from '@logto/connector-kit';
-import type { CustomClientMetadata, ExtraParamsObject, OidcClientMetadata } from '@logto/schemas';
+import type {
+  CustomClientMetadata,
+  ExtraParamsObject,
+  LogtoUiCookie,
+  OidcClientMetadata,
+} from '@logto/schemas';
 import {
   ApplicationType,
   customClientMetadataGuard,
@@ -10,8 +15,10 @@ import {
   FirstScreen,
   experience,
 } from '@logto/schemas';
-import { condArray, conditional, trySafe } from '@silverhand/essentials';
+import { cond, condArray, conditional, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
+import { type CamelCaseKeys } from 'camelcase-keys';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
+import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 
@@ -268,8 +275,83 @@ const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.route
   [FirstScreen.SignInDeprecated]: 'signIn',
 };
 
+const sharedExperienceParamsGuard = z
+  .object({
+    app_id: z.string(),
+    [ExtraParamsKey.OrganizationId]: z.string(),
+    [ExtraParamsKey.UiLocales]: z.string(),
+  })
+  .partial();
+
+export type SharedExperienceParams = CamelCaseKeys<z.infer<typeof sharedExperienceParamsGuard>>;
+
+export const parseSharedExperienceParams = (
+  query: Record<string, unknown>,
+  fallbackParams?: Record<string, unknown>
+): SharedExperienceParams => {
+  const {
+    app_id: appId,
+    organization_id: organizationId,
+    ui_locales: uiLocales,
+  } = sharedExperienceParamsGuard.parse(query);
+
+  const {
+    app_id: fallbackAppId,
+    organization_id: fallbackOrganizationId,
+    ui_locales: fallbackUiLocales,
+  } = sharedExperienceParamsGuard.parse(fallbackParams ?? {});
+
+  return removeUndefinedKeys({
+    appId: cond(appId ?? fallbackAppId),
+    organizationId: cond(organizationId ?? fallbackOrganizationId),
+    uiLocales: cond(uiLocales ?? fallbackUiLocales),
+  });
+};
+
+/**
+ * Only a small subset of Experience parameters is shared across multiple page families such as
+ * login and device flow: app, organization, and locale. Keep this helper intentionally narrow so
+ * login-only parameters like `identifier`, `login_hint`, or `one_time_token` stay colocated with
+ * the login prompt builder instead of being silently inherited by unrelated pages.
+ */
+export const appendSharedExperienceSearchParams = (
+  searchParams: URLSearchParams,
+  { appId, organizationId, uiLocales }: SharedExperienceParams
+) => {
+  if (appId) {
+    searchParams.append('app_id', appId);
+  }
+
+  if (organizationId) {
+    searchParams.append(ExtraParamsKey.OrganizationId, organizationId);
+  }
+
+  if (uiLocales) {
+    searchParams.append(ExtraParamsKey.UiLocales, uiLocales);
+  }
+};
+
+/**
+ * The Experience SSR middleware reads `_logto` before the client bootstraps. Reusing the same
+ * cookie payload for the shared app / organization / locale params keeps device pages aligned
+ * with login pages without broadening the cookie to route-specific prompt parameters.
+ */
+export const buildSharedExperienceCookie = ({
+  appId,
+  organizationId,
+  uiLocales,
+}: SharedExperienceParams): LogtoUiCookie =>
+  removeUndefinedKeys({
+    appId,
+    organizationId,
+    uiLocales,
+  });
+
 // eslint-disable-next-line complexity
-export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
+export const buildLoginPromptUrl = (
+  params: ExtraParamsObject,
+  sharedParams?: SharedExperienceParams
+): string => {
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
     params[ExtraParamsKey.InteractionMode] ??
@@ -292,15 +374,13 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
     }
   };
 
-  if (appId) {
-    searchParams.append('app_id', String(appId));
+  if (sharedParams) {
+    appendSharedExperienceSearchParams(searchParams, sharedParams);
   }
 
-  appendExtraParam(ExtraParamsKey.OrganizationId);
   appendExtraParam(ExtraParamsKey.OneTimeToken);
   appendExtraParam(ExtraParamsKey.LoginHint);
   appendExtraParam(ExtraParamsKey.Identifier);
-  appendExtraParam(ExtraParamsKey.UiLocales);
 
   // Reuse DirectSignIn page to handle Google One Tap credential.
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
