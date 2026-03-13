@@ -3,6 +3,7 @@ import { MfaFactor } from '@logto/schemas';
 import { authenticator } from 'otplib';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
+import { getUserMfaVerifications } from '#src/api/admin-user.js';
 import {
   addMfaVerification,
   deleteMfaVerification,
@@ -10,7 +11,6 @@ import {
   getMfaVerifications,
   replaceTotpMfaVerification,
 } from '#src/api/my-account.js';
-import { getUserMfaVerifications } from '#src/api/admin-user.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
@@ -174,7 +174,9 @@ describe('my-account (mfa - TOTP)', () => {
       });
 
       const beforeReplacement = await getUserMfaVerifications(user.id);
-      const existingTotpVerification = beforeReplacement.find(({ type }) => type === MfaFactor.TOTP);
+      const existingTotpVerification = beforeReplacement.find(
+        ({ type }) => type === MfaFactor.TOTP
+      );
 
       expect(existingTotpVerification?.type).toBe(MfaFactor.TOTP);
 
