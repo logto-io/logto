@@ -1,5 +1,4 @@
 import {
-  InteractionHookEvent,
   type CreateHook,
   type Hook,
   type HookConfig,
@@ -7,8 +6,6 @@ import {
 } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
-
 type HookCreationPayload = Pick<Hook, 'name' | 'events'> & {
   config: HookConfig;
 };
@@ -25,10 +22,7 @@ export const getHookCreationPayload = (
   },
 });
 
-export const getSupportedHookEvents = (events: HookEvent[]): HookEvent[] =>
-  isDevFeaturesEnabled
-    ? events
-    : events.filter((event) => event !== InteractionHookEvent.PostSignInAdaptiveMfaTriggered);
+export const getSupportedHookEvents = (events: HookEvent[]): HookEvent[] => events;
 
 export class WebHookApiTest {
   readonly #hooks = new Map<string, Hook>();

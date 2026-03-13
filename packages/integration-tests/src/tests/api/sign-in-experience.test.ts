@@ -22,7 +22,7 @@ import {
 } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { defaultSignInSignUpConfigs } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generatePassword } from '#src/utils.js';
+import { generatePassword } from '#src/utils.js';
 
 describe('admin console sign-in experience', () => {
   afterAll(async () => {
@@ -79,7 +79,7 @@ describe('admin console sign-in experience', () => {
     });
   });
 
-  devFeatureTest.describe('adaptive mfa', () => {
+  describe('adaptive mfa', () => {
     beforeEach(async () => {
       await updateSignInExperience({
         mfa: {
@@ -92,14 +92,14 @@ describe('admin console sign-in experience', () => {
       });
     });
 
-    devFeatureTest.it('should reject adaptive mfa enablement when mfa is disabled', async () => {
+    it('should reject adaptive mfa enablement when mfa is disabled', async () => {
       await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
         code: 'sign_in_experiences.adaptive_mfa_requires_mfa',
         status: 422,
       });
     });
 
-    devFeatureTest.it(
+    it(
       'should allow enabling adaptive mfa when mfa is already enabled',
       async () => {
         await updateSignInExperience({
@@ -122,7 +122,7 @@ describe('admin console sign-in experience', () => {
       }
     );
 
-    devFeatureTest.it(
+    it(
       'should allow enabling adaptive mfa with mfa in the same request',
       async () => {
         const adaptiveMfa = { enabled: true };
@@ -138,7 +138,7 @@ describe('admin console sign-in experience', () => {
       }
     );
 
-    devFeatureTest.it(
+    it(
       'should allow disabling mfa when adaptive mfa is already enabled',
       async () => {
         await updateSignInExperience({
@@ -161,7 +161,7 @@ describe('admin console sign-in experience', () => {
       }
     );
 
-    devFeatureTest.it('should reject adaptive mfa when mfa policy is mandatory', async () => {
+    it('should reject adaptive mfa when mfa policy is mandatory', async () => {
       await updateSignInExperience({
         mfa: {
           policy: MfaPolicy.Mandatory,
@@ -175,7 +175,7 @@ describe('admin console sign-in experience', () => {
       });
     });
 
-    devFeatureTest.it(
+    it(
       'should reject adaptive mfa when mfa policy is optional prompt policy',
       async () => {
         await updateSignInExperience({
@@ -192,7 +192,7 @@ describe('admin console sign-in experience', () => {
       }
     );
 
-    devFeatureTest.it('should reject adaptive policy when adaptive mfa is disabled', async () => {
+    it('should reject adaptive policy when adaptive mfa is disabled', async () => {
       await expectRejects(
         updateSignInExperience({
           adaptiveMfa: { enabled: false },

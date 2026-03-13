@@ -13,13 +13,12 @@ import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verificatio
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const lowBotScoreHeaders = Object.freeze({
   'x-logto-cf-bot-score': '10',
 });
 
-devFeatureTest.describe('adaptive MFA enforcement', () => {
+describe('adaptive MFA enforcement', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {
@@ -41,7 +40,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
     });
   });
 
-  devFeatureTest.describe('with MFA policy + adaptive MFA enabled', () => {
+  describe('with MFA policy + adaptive MFA enabled', () => {
     beforeAll(async () => {
       await updateSignInExperience({
         mfa: {
@@ -52,7 +51,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       });
     });
 
-    devFeatureTest.it(
+    it(
       'should require MFA verification when adaptive MFA triggers (low bot score)',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -69,7 +68,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       }
     );
 
-    devFeatureTest.it(
+    it(
       'should complete sign-in after MFA verification when adaptive MFA triggers',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -95,7 +94,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       }
     );
 
-    devFeatureTest.it(
+    it(
       'should skip MFA verification when adaptive MFA does not trigger (no risk signals)',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -111,7 +110,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
     );
   });
 
-  devFeatureTest.describe('profile update gated by adaptive MFA', () => {
+  describe('profile update gated by adaptive MFA', () => {
     beforeAll(async () => {
       await updateSignInExperience({
         mfa: {
@@ -122,7 +121,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       });
     });
 
-    devFeatureTest.it(
+    it(
       'should throw 403 on profile update when adaptive MFA triggers and MFA is not verified',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -142,7 +141,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       }
     );
 
-    devFeatureTest.it(
+    it(
       'should allow profile update when adaptive MFA does not trigger',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -158,7 +157,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
     );
   });
 
-  devFeatureTest.describe('bind MFA gated by adaptive MFA', () => {
+  describe('bind MFA gated by adaptive MFA', () => {
     beforeAll(async () => {
       await updateSignInExperience({
         mfa: {
@@ -169,7 +168,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       });
     });
 
-    devFeatureTest.it(
+    it(
       'should throw 403 on backup code bind when adaptive MFA triggers and MFA is not verified',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -188,7 +187,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
     );
   });
 
-  devFeatureTest.describe('adaptive MFA binding flow', () => {
+  describe('adaptive MFA binding flow', () => {
     beforeAll(async () => {
       await updateSignInExperience({
         mfa: {
@@ -199,7 +198,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       });
     });
 
-    devFeatureTest.it(
+    it(
       'should not allow skipping MFA binding for adaptive no-skip policies',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -220,7 +219,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       }
     );
 
-    devFeatureTest.it(
+    it(
       'should reject submit when adaptive MFA triggers and user has no MFA factors',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -236,7 +235,7 @@ devFeatureTest.describe('adaptive MFA enforcement', () => {
       }
     );
 
-    devFeatureTest.it(
+    it(
       'should reject submit when adaptive MFA triggers but user only has factors disabled in SIE',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });

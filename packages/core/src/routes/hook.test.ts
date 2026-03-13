@@ -239,7 +239,7 @@ describe('hook routes', () => {
     });
   });
 
-  it('POST /hooks should reject adaptive MFA interaction hook event when dev features disabled', async () => {
+  it('POST /hooks should support adaptive MFA interaction hook event when dev features are disabled', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockEnvSetValues.isDevFeaturesEnabled = false;
 
@@ -252,7 +252,12 @@ describe('hook routes', () => {
     };
 
     const response = await hookRequest.post('/hooks').send(payload);
-    expect(response.status).toEqual(400);
+    expect(response.status).toEqual(201);
+    expect(response.body).toMatchObject({
+      name: payload.name,
+      events: payload.events,
+      config: payload.config,
+    });
   });
 
   it('POST /hooks should fail when no events are provided', async () => {
@@ -297,7 +302,7 @@ describe('hook routes', () => {
     expect(response.status).toEqual(204);
   });
 
-  it('POST /hooks/:id/test should reject adaptive MFA event when dev features disabled', async () => {
+  it('POST /hooks/:id/test should support adaptive MFA event when dev features are disabled', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockEnvSetValues.isDevFeaturesEnabled = false;
 
@@ -307,7 +312,7 @@ describe('hook routes', () => {
       config: { url: 'https://example.com' },
     });
 
-    expect(response.status).toEqual(400);
+    expect(response.status).toEqual(204);
   });
 
   it('PATCH /hooks/:id', async () => {
@@ -342,7 +347,7 @@ describe('hook routes', () => {
     });
   });
 
-  it('PATCH /hooks/:id should reject adaptive MFA interaction hook event when dev features disabled', async () => {
+  it('PATCH /hooks/:id should support adaptive MFA interaction hook event when dev features disabled', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockEnvSetValues.isDevFeaturesEnabled = false;
 
@@ -351,7 +356,10 @@ describe('hook routes', () => {
       events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],
     });
 
-    expect(response.status).toEqual(400);
+    expect(response.status).toEqual(200);
+    expect(response.body).toMatchObject({
+      events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],
+    });
   });
 
   it('PATCH /hooks/:id should success when update a hook with the old payload format', async () => {

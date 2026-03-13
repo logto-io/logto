@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { type IncomingHttpHeaders } from 'node:http';
 
 import { InteractionEvent, type User } from '@logto/schemas';
@@ -398,7 +399,7 @@ describe('AdaptiveMfaValidator', () => {
     );
   });
 
-  it('skips recording sign-in geo context when dev features are disabled', async () => {
+  it('records sign-in geo context when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);
 
     const user: User = {
@@ -423,9 +424,50 @@ describe('AdaptiveMfaValidator', () => {
 
     await validator.recordSignInGeoContext(user, InteractionEvent.SignIn);
 
-    expect(queries.userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
-    expect(queries.userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
-    expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).not.toHaveBeenCalled();
+    expect(queries.userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+      user.id,
+      12.3,
+      45.6
+    );
+    expect(queries.userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(user.id, 'US');
+    expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).toHaveBeenCalledWith(
+      user.id,
+      adaptiveMfaNewCountryWindowDays
+    );
+  });
+
+  it('evaluates adaptive MFA rules when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+
+    const now = new Date('2024-01-02T00:00:00Z');
+
+    jest.useFakeTimers().setSystemTime(now);
+
+    const user: User = {
+      ...mockUser,
+      lastSignInAt: null,
+    };
+    const queries = createQueries();
+
+    const validator = new AdaptiveMfaValidator({
+      queries,
+      interactionContext: createInteractionContext(user),
+      signInExperienceValidator: createSignInExperienceValidator(),
+      ctx: buildMockContext({
+        ipRiskSignals: {
+          botScore: 10,
+        },
+      }),
+    });
+
+    const result = await validator.getResult();
+
+    expect(result?.requiresMfa).toBe(true);
+    expect(result?.triggeredRules).toEqual(
+      expect.arrayContaining([expect.objectContaining({ rule: 'untrusted_ip' })])
+    );
+
+    jest.useRealTimers();
   });
 
   it('records context for register interactions', async () => {
@@ -491,3 +533,4 @@ describe('AdaptiveMfaValidator', () => {
     expect(queries.userSignInCountries.pruneUserSignInCountriesByUserId).not.toHaveBeenCalled();
   });
 });
+/* eslint-enable max-lines */
