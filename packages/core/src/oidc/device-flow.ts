@@ -77,10 +77,7 @@ const getDeviceFlowInputCode = (error?: Error | errors.OIDCProviderError): strin
  * share: app, organization, and locale. Keeping that subset explicit avoids turning route-specific
  * login prompt parameters into accidental global state for the device page.
  */
-const setDeviceFlowLogtoUiCookie = (
-  ctx: KoaContextWithOIDC,
-  sharedParams: SharedExperienceParams
-) => {
+const setDeviceFlowUiCookie = (ctx: KoaContextWithOIDC, sharedParams: SharedExperienceParams) => {
   ctx.cookies.set(logtoCookieKey, JSON.stringify(buildSharedExperienceCookie(sharedParams)), {
     httpOnly: false,
     overwrite: true,
@@ -147,7 +144,7 @@ export const deviceFlowConfig = {
     const sharedParams = parseSharedExperienceParams(ctx.query);
 
     setDeviceFlowXsrfCookie(ctx);
-    setDeviceFlowLogtoUiCookie(ctx, sharedParams);
+    setDeviceFlowUiCookie(ctx, sharedParams);
     ctx.redirect(
       buildDeviceFlowPageUrl({
         sharedParams,
@@ -178,7 +175,7 @@ export const deviceFlowConfig = {
     };
 
     setDeviceFlowXsrfCookie(ctx);
-    setDeviceFlowLogtoUiCookie(ctx, sharedParams);
+    setDeviceFlowUiCookie(ctx, sharedParams);
     ctx.redirect(
       buildDeviceFlowPageUrl({
         sharedParams,
