@@ -125,7 +125,7 @@ export const validateBackupCodeFactor = (factors: MfaFactor[]): boolean => {
 
 export const buildMfaPatchPayload = (
   mfaConfigForm: MfaConfigForm
-): { mfa: MfaConfig; adaptiveMfa?: AdaptiveMfa } => {
+): { mfa: MfaConfig; adaptiveMfa: AdaptiveMfa } => {
   const mfa = convertMfaFormToConfig(mfaConfigForm);
 
   return {

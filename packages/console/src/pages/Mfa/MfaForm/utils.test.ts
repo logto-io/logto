@@ -60,19 +60,6 @@ test('builds payload with adaptive MFA regardless of dev feature flag', () => {
     },
     adaptiveMfa: { enabled: true },
   });
-
-  const disabledDevFeaturesPayload = buildMfaPatchPayload({
-    ...baseForm,
-    adaptiveMfaEnabled: true,
-  });
-
-  expect(disabledDevFeaturesPayload).toEqual({
-    mfa: {
-      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
-      factors: [MfaFactor.TOTP],
-    },
-    adaptiveMfa: { enabled: true },
-  });
 });
 
 test('filters organization-required MFA policy when adaptive MFA is enabled', () => {

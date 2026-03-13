@@ -442,32 +442,33 @@ describe('AdaptiveMfaValidator', () => {
     const now = new Date('2024-01-02T00:00:00Z');
 
     jest.useFakeTimers().setSystemTime(now);
+    try {
+      const user: User = {
+        ...mockUser,
+        lastSignInAt: null,
+      };
+      const queries = createQueries();
 
-    const user: User = {
-      ...mockUser,
-      lastSignInAt: null,
-    };
-    const queries = createQueries();
+      const validator = new AdaptiveMfaValidator({
+        queries,
+        interactionContext: createInteractionContext(user),
+        signInExperienceValidator: createSignInExperienceValidator(),
+        ctx: buildMockContext({
+          ipRiskSignals: {
+            botScore: 10,
+          },
+        }),
+      });
 
-    const validator = new AdaptiveMfaValidator({
-      queries,
-      interactionContext: createInteractionContext(user),
-      signInExperienceValidator: createSignInExperienceValidator(),
-      ctx: buildMockContext({
-        ipRiskSignals: {
-          botScore: 10,
-        },
-      }),
-    });
+      const result = await validator.getResult();
 
-    const result = await validator.getResult();
-
-    expect(result?.requiresMfa).toBe(true);
-    expect(result?.triggeredRules).toEqual(
-      expect.arrayContaining([expect.objectContaining({ rule: 'untrusted_ip' })])
-    );
-
-    jest.useRealTimers();
+      expect(result?.requiresMfa).toBe(true);
+      expect(result?.triggeredRules).toEqual(
+        expect.arrayContaining([expect.objectContaining({ rule: 'untrusted_ip' })])
+      );
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
   it('records context for register interactions', async () => {
