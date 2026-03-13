@@ -19,7 +19,7 @@ type OidcConfigFormData = {
 function OidcConfigs() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    data: { ossOidcConfigNotiveAcknowledge },
+    data: { ossOidcConfigNoticeAcknowledged },
     isLoading: isLoadingUserPreferences,
     update,
   } = useUserPreferences();
@@ -33,11 +33,11 @@ function OidcConfigs() {
 
   return (
     <div className={styles.container}>
-      {!isCloud && !isLoadingUserPreferences && !ossOidcConfigNotiveAcknowledge && (
+      {!isCloud && !isLoadingUserPreferences && !ossOidcConfigNoticeAcknowledged && (
         <InlineNotification
           action="general.got_it"
           onClick={() => {
-            void update({ ossOidcConfigNotiveAcknowledge: true });
+            void update({ ossOidcConfigNoticeAcknowledged: true });
           }}
         >
           <Trans
