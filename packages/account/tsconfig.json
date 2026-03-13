@@ -1,11 +1,7 @@
 {
   "extends": "./tsconfig.base",
-  "compilerOptions": {
-    "allowImportingTsExtensions": true
-  },
   "include": [
     "src",
-    "tests/**/*.ts",
     "*.config.ts",
     "../experience/src/include.d/**/*.d.ts",
     "../experience/src/assets/index.d.ts"
