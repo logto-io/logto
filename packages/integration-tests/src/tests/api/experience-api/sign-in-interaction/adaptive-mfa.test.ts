@@ -51,63 +51,54 @@ describe('adaptive MFA enforcement', () => {
       });
     });
 
-    it(
-      'should require MFA verification when adaptive MFA triggers (low bot score)',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        const user = await userApi.create({ username, password });
-        await createUserMfaVerification(user.id, MfaFactor.TOTP);
+    it('should require MFA verification when adaptive MFA triggers (low bot score)', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const user = await userApi.create({ username, password });
+      await createUserMfaVerification(user.id, MfaFactor.TOTP);
 
-        const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
-        await identifyUserWithUsernamePassword(client, username, password);
+      const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
+      await identifyUserWithUsernamePassword(client, username, password);
 
-        await expectRejects(client.submitInteraction(), {
-          code: 'session.mfa.require_mfa_verification',
-          status: 403,
-        });
+      await expectRejects(client.submitInteraction(), {
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+      });
+    });
+
+    it('should complete sign-in after MFA verification when adaptive MFA triggers', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const user = await userApi.create({ username, password });
+
+      const response = await createUserMfaVerification(user.id, MfaFactor.TOTP);
+      await createUserMfaVerification(user.id, MfaFactor.BackupCode);
+
+      if (response.type !== MfaFactor.TOTP) {
+        throw new Error('unexpected mfa type');
       }
-    );
 
-    it(
-      'should complete sign-in after MFA verification when adaptive MFA triggers',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        const user = await userApi.create({ username, password });
+      const { secret } = response;
 
-        const response = await createUserMfaVerification(user.id, MfaFactor.TOTP);
-        await createUserMfaVerification(user.id, MfaFactor.BackupCode);
+      const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
+      await identifyUserWithUsernamePassword(client, username, password);
 
-        if (response.type !== MfaFactor.TOTP) {
-          throw new Error('unexpected mfa type');
-        }
+      const code = authenticator.generate(secret);
+      await successfullyVerifyTotp(client, { code });
 
-        const { secret } = response;
+      const { redirectTo } = await client.submitInteraction();
+      await processSession(client, redirectTo);
+    });
 
-        const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
-        await identifyUserWithUsernamePassword(client, username, password);
+    it('should skip MFA verification when adaptive MFA does not trigger (no risk signals)', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const user = await userApi.create({ username, password });
+      await createUserMfaVerification(user.id, MfaFactor.TOTP);
+      await createUserMfaVerification(user.id, MfaFactor.BackupCode);
 
-        const code = authenticator.generate(secret);
-        await successfullyVerifyTotp(client, { code });
+      const client = await initExperienceClient();
+      await identifyUserWithUsernamePassword(client, username, password);
 
-        const { redirectTo } = await client.submitInteraction();
-        await processSession(client, redirectTo);
-      }
-    );
-
-    it(
-      'should skip MFA verification when adaptive MFA does not trigger (no risk signals)',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        const user = await userApi.create({ username, password });
-        await createUserMfaVerification(user.id, MfaFactor.TOTP);
-        await createUserMfaVerification(user.id, MfaFactor.BackupCode);
-
-        const client = await initExperienceClient();
-        await identifyUserWithUsernamePassword(client, username, password);
-
-        await expect(client.submitInteraction()).resolves.not.toThrow();
-      }
-    );
+      await expect(client.submitInteraction()).resolves.not.toThrow();
+    });
   });
 
   describe('profile update gated by adaptive MFA', () => {
@@ -121,40 +112,34 @@ describe('adaptive MFA enforcement', () => {
       });
     });
 
-    it(
-      'should throw 403 on profile update when adaptive MFA triggers and MFA is not verified',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        const user = await userApi.create({ username, password });
-        await createUserMfaVerification(user.id, MfaFactor.TOTP);
+    it('should throw 403 on profile update when adaptive MFA triggers and MFA is not verified', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const user = await userApi.create({ username, password });
+      await createUserMfaVerification(user.id, MfaFactor.TOTP);
 
-        const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
-        await identifyUserWithUsernamePassword(client, username, password);
+      const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
+      await identifyUserWithUsernamePassword(client, username, password);
 
-        await expectRejects(
-          client.updateProfile({ type: SignInIdentifier.Username, value: 'new_username' }),
-          {
-            status: 403,
-            code: 'session.mfa.require_mfa_verification',
-          }
-        );
-      }
-    );
+      await expectRejects(
+        client.updateProfile({ type: SignInIdentifier.Username, value: 'new_username' }),
+        {
+          status: 403,
+          code: 'session.mfa.require_mfa_verification',
+        }
+      );
+    });
 
-    it(
-      'should allow profile update when adaptive MFA does not trigger',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        const user = await userApi.create({ username, password });
-        await createUserMfaVerification(user.id, MfaFactor.TOTP);
-        await createUserMfaVerification(user.id, MfaFactor.BackupCode);
+    it('should allow profile update when adaptive MFA does not trigger', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const user = await userApi.create({ username, password });
+      await createUserMfaVerification(user.id, MfaFactor.TOTP);
+      await createUserMfaVerification(user.id, MfaFactor.BackupCode);
 
-        const client = await initExperienceClient();
-        await identifyUserWithUsernamePassword(client, username, password);
+      const client = await initExperienceClient();
+      await identifyUserWithUsernamePassword(client, username, password);
 
-        await expect(client.submitInteraction()).resolves.not.toThrow();
-      }
-    );
+      await expect(client.submitInteraction()).resolves.not.toThrow();
+    });
   });
 
   describe('bind MFA gated by adaptive MFA', () => {
@@ -168,23 +153,20 @@ describe('adaptive MFA enforcement', () => {
       });
     });
 
-    it(
-      'should throw 403 on backup code bind when adaptive MFA triggers and MFA is not verified',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        const user = await userApi.create({ username, password });
-        await createUserMfaVerification(user.id, MfaFactor.TOTP);
+    it('should throw 403 on backup code bind when adaptive MFA triggers and MFA is not verified', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const user = await userApi.create({ username, password });
+      await createUserMfaVerification(user.id, MfaFactor.TOTP);
 
-        const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
-        await identifyUserWithUsernamePassword(client, username, password);
-        const { verificationId } = await client.generateMfaBackupCodes();
+      const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
+      await identifyUserWithUsernamePassword(client, username, password);
+      const { verificationId } = await client.generateMfaBackupCodes();
 
-        await expectRejects(client.bindMfa(MfaFactor.BackupCode, verificationId), {
-          code: 'session.mfa.require_mfa_verification',
-          status: 403,
-        });
-      }
-    );
+      await expectRejects(client.bindMfa(MfaFactor.BackupCode, verificationId), {
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+      });
+    });
   });
 
   describe('adaptive MFA binding flow', () => {
@@ -198,69 +180,60 @@ describe('adaptive MFA enforcement', () => {
       });
     });
 
-    it(
-      'should not allow skipping MFA binding for adaptive no-skip policies',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        await userApi.create({ username, password });
+    it('should not allow skipping MFA binding for adaptive no-skip policies', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      await userApi.create({ username, password });
 
-        const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
-        await identifyUserWithUsernamePassword(client, username, password);
+      const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
+      await identifyUserWithUsernamePassword(client, username, password);
 
-        await expectRejects(client.submitInteraction(), {
-          code: 'user.missing_mfa',
-          status: 422,
-        });
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.missing_mfa',
+        status: 422,
+      });
 
-        await expectRejects(client.skipMfaBinding(), {
-          code: 'session.mfa.mfa_policy_not_user_controlled',
-          status: 422,
-        });
+      await expectRejects(client.skipMfaBinding(), {
+        code: 'session.mfa.mfa_policy_not_user_controlled',
+        status: 422,
+      });
+    });
+
+    it('should reject submit when adaptive MFA triggers and user has no MFA factors', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      await userApi.create({ username, password });
+
+      const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
+      await identifyUserWithUsernamePassword(client, username, password);
+
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.missing_mfa',
+        status: 422,
+      });
+    });
+
+    it('should reject submit when adaptive MFA triggers but user only has factors disabled in SIE', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const user = await userApi.create({ username, password });
+      await createUserMfaVerification(user.id, MfaFactor.TOTP);
+      await createUserMfaVerification(user.id, MfaFactor.BackupCode);
+
+      const mfaVerifications = await getUserMfaVerifications(user.id);
+      const totpVerification = mfaVerifications.find(({ type }) => type === MfaFactor.TOTP);
+      expect(totpVerification).toBeDefined();
+
+      if (!totpVerification) {
+        throw new Error('missing totp verification');
       }
-    );
 
-    it(
-      'should reject submit when adaptive MFA triggers and user has no MFA factors',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        await userApi.create({ username, password });
+      await deleteUserMfaVerification(user.id, totpVerification.id);
 
-        const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
-        await identifyUserWithUsernamePassword(client, username, password);
+      const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
+      await identifyUserWithUsernamePassword(client, username, password);
 
-        await expectRejects(client.submitInteraction(), {
-          code: 'user.missing_mfa',
-          status: 422,
-        });
-      }
-    );
-
-    it(
-      'should reject submit when adaptive MFA triggers but user only has factors disabled in SIE',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        const user = await userApi.create({ username, password });
-        await createUserMfaVerification(user.id, MfaFactor.TOTP);
-        await createUserMfaVerification(user.id, MfaFactor.BackupCode);
-
-        const mfaVerifications = await getUserMfaVerifications(user.id);
-        const totpVerification = mfaVerifications.find(({ type }) => type === MfaFactor.TOTP);
-        expect(totpVerification).toBeDefined();
-
-        if (!totpVerification) {
-          throw new Error('missing totp verification');
-        }
-
-        await deleteUserMfaVerification(user.id, totpVerification.id);
-
-        const client = await initExperienceClient({ extraHeaders: lowBotScoreHeaders });
-        await identifyUserWithUsernamePassword(client, username, password);
-
-        await expectRejects(client.submitInteraction(), {
-          code: 'user.missing_mfa',
-          status: 422,
-        });
-      }
-    );
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.missing_mfa',
+        status: 422,
+      });
+    });
   });
 });

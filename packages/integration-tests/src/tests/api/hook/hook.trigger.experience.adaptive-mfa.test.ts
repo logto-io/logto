@@ -100,24 +100,20 @@ describe('adaptive MFA experience hook trigger', () => {
       const adaptiveHook = webHookApi.hooks.get('adaptiveMfaFailedSubmitHookEventListener')!;
       const postSignInHook = webHookApi.hooks.get('postSignInHookEventListener')!;
 
-      await assertHookLogResult(
-        adaptiveHook,
-        InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
-        {
-          hookPayload: {
-            event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
-            interactionEvent: InteractionEvent.SignIn,
-            sessionId: expect.any(String),
-            adaptiveMfaResult: expect.objectContaining({
-              requiresMfa: true,
-              triggeredRules: expect.arrayContaining([
-                expect.objectContaining({ rule: 'untrusted_ip' }),
-              ]) as unknown,
-            }),
-            user: expect.objectContaining({ id: user.id, username }),
-          },
-        }
-      );
+      await assertHookLogResult(adaptiveHook, InteractionHookEvent.PostSignInAdaptiveMfaTriggered, {
+        hookPayload: {
+          event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+          interactionEvent: InteractionEvent.SignIn,
+          sessionId: expect.any(String),
+          adaptiveMfaResult: expect.objectContaining({
+            requiresMfa: true,
+            triggeredRules: expect.arrayContaining([
+              expect.objectContaining({ rule: 'untrusted_ip' }),
+            ]) as unknown,
+          }),
+          user: expect.objectContaining({ id: user.id, username }),
+        },
+      });
 
       expect(await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(0);
       expect(
