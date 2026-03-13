@@ -1,6 +1,6 @@
 import LogtoSignature from '@experience/shared/components/LogtoSignature';
 import { LogtoProvider, Prompt, ReservedScope, useLogto, UserScope } from '@logto/react';
-import { accountCenterApplicationId, SignInIdentifier } from '@logto/schemas';
+import { accountCenterApplicationId, ExtraParamsKey, SignInIdentifier } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -34,6 +34,7 @@ import {
   passkeySuccessRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
+import { resolveUiLocalesLanguage } from './i18n/utils';
 import BackupCodeBinding from './pages/BackupCodeBinding';
 import BackupCodeView from './pages/BackupCodeView';
 import Email from './pages/Email';
@@ -45,17 +46,22 @@ import Phone from './pages/Phone';
 import TotpBinding from './pages/TotpBinding';
 import UpdateSuccess from './pages/UpdateSuccess';
 import Username from './pages/Username';
-import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
+import {
+  accountCenterBasePath,
+  getUiLocales,
+  handleAccountCenterRoute,
+} from './utils/account-center-route';
 import '@experience/shared/scss/normalized.scss';
 
-void initI18n();
 handleAccountCenterRoute();
+void initI18n(resolveUiLocalesLanguage(getUiLocales()));
 
 const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 
 const Main = () => {
   const params = new URLSearchParams(window.location.search);
   const isInCallback = Boolean(params.get('code'));
+  const uiLocales = getUiLocales();
   const { isAuthenticated, isLoading, signIn } = useLogto();
   const { isLoadingExperience, isLoadingUserInfo, userInfo, userInfoError } =
     useContext(PageContext);
@@ -67,9 +73,10 @@ const Main = () => {
     }
 
     if (!isAuthenticated) {
-      void signIn({ redirectUri });
+      const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+      void signIn({ redirectUri, extraParams });
     }
-  }, [isAuthenticated, isInCallback, isInitialAuthLoading, signIn]);
+  }, [isAuthenticated, isInCallback, isInitialAuthLoading, signIn, uiLocales]);
 
   useEffect(() => {
     if (isInCallback || isInitialAuthLoading || !isAuthenticated || isLoadingUserInfo) {
@@ -77,7 +84,8 @@ const Main = () => {
     }
 
     if (userInfoError) {
-      void signIn({ redirectUri, prompt: Prompt.Login });
+      const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+      void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
     }
   }, [
     isAuthenticated,
@@ -85,6 +93,7 @@ const Main = () => {
     isInitialAuthLoading,
     isLoadingUserInfo,
     signIn,
+    uiLocales,
     userInfoError,
   ]);
   if (isInCallback) {

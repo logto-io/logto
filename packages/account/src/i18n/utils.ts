@@ -9,6 +9,17 @@ export { storageKey };
 export const resolveLanguage = (language?: string) =>
   language && isBuiltInLanguageTag(language) ? language : undefined;
 
+export const resolveUiLocalesLanguage = (uiLocales?: string) => {
+  if (!uiLocales) {
+    return;
+  }
+
+  return uiLocales
+    .trim()
+    .split(/\s+/)
+    .find((language) => isBuiltInLanguageTag(language));
+};
+
 export const detectLanguage = (languageSettings?: LanguageInfo) => {
   if (languageSettings?.autoDetect === false) {
     return resolveLanguage(languageSettings.fallbackLanguage) ?? 'en';
@@ -32,6 +43,14 @@ export const detectLanguage = (languageSettings?: LanguageInfo) => {
 
   return resolveLanguage(detected) ?? 'en';
 };
+
+export const getPreferredLanguage = ({
+  languageSettings,
+  uiLocales,
+}: {
+  languageSettings?: LanguageInfo;
+  uiLocales?: string;
+}) => resolveUiLocalesLanguage(uiLocales) ?? detectLanguage(languageSettings);
 
 export const changeLanguage = async (language: string) => {
   await i18next.changeLanguage(resolveLanguage(language) ?? 'en');
