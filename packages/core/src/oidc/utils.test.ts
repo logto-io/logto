@@ -15,6 +15,7 @@ import {
   getConstantClientMetadata,
   validateCustomClientMetadata,
   buildLoginPromptUrl,
+  parseSharedExperienceParams,
 } from './utils.js';
 
 describe('getConstantClientMetadata()', () => {
@@ -382,5 +383,19 @@ describe('buildLoginPromptUrl', () => {
         { appId: 'app_123', organizationId: 'org_123', uiLocales: 'fr-CA fr' }
       )
     ).toBe('sign-in?app_id=app_123&organization_id=org_123&ui_locales=fr-CA+fr');
+  });
+});
+
+describe('parseSharedExperienceParams', () => {
+  it('should ignore repeated query values instead of throwing', () => {
+    expect(
+      parseSharedExperienceParams({
+        app_id: ['app_1', 'app_2'],
+        organization_id: 'org_123',
+        ui_locales: ['zh-CN', 'en'],
+      })
+    ).toEqual({
+      organizationId: 'org_123',
+    });
   });
 });
