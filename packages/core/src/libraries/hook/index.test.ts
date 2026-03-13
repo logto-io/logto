@@ -95,7 +95,7 @@ describe('triggerInteractionHooks()', () => {
       sessionId: 'some_jti',
     });
 
-    interactionHookContext.assignInteractionHookResult({
+    interactionHookContext.assignReleaseOnSuccessInteractionHookResult({
       userId: '123',
     });
 
@@ -170,7 +170,7 @@ describe('triggerInteractionHooks()', () => {
       } as unknown as never,
       userId: '123',
     });
-    interactionHookContext.assignInteractionHookResult({
+    interactionHookContext.assignReleaseOnSuccessInteractionHookResult({
       userId: '123',
     });
 

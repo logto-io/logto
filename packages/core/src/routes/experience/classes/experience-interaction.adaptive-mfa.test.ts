@@ -170,7 +170,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -226,7 +226,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -266,7 +266,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -318,7 +318,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -355,7 +355,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -400,7 +400,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const firstSubmitContext: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -443,7 +443,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const secondSubmitContext: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -476,7 +476,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     await expect(secondSubmitInteraction.submit()).resolves.toBeUndefined();
 
-    expect(secondSubmitContext.assignInteractionHookResult).toHaveBeenCalledWith({
+    expect(secondSubmitContext.assignReleaseOnSuccessInteractionHookResult).toHaveBeenCalledWith({
       userId: user.id,
     });
     expect(secondSubmitContext.assignReleaseAnywayInteractionHookResult).not.toHaveBeenCalledWith(
@@ -497,7 +497,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -537,7 +537,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -575,7 +575,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -623,7 +623,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -664,7 +664,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -738,7 +738,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
       // @ts-expect-error -- mock test context
       const ctx: WithHooksAndLogsContext = {
-        assignInteractionHookResult: jest.fn(),
+        assignReleaseOnSuccessInteractionHookResult: jest.fn(),
         assignReleaseAnywayInteractionHookResult: jest.fn(),
         appendDataHookContext: jest.fn(),
         ...createContextWithRouteParameters({
@@ -789,7 +789,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -840,7 +840,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -885,7 +885,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -926,7 +926,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -977,7 +977,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({
@@ -1034,7 +1034,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
-      assignInteractionHookResult: jest.fn(),
+      assignReleaseOnSuccessInteractionHookResult: jest.fn(),
       assignReleaseAnywayInteractionHookResult: jest.fn(),
       appendDataHookContext: jest.fn(),
       ...createContextWithRouteParameters({

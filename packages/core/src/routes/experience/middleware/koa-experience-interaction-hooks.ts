@@ -19,7 +19,6 @@ const interactionEventGuard = z.object({
 export type WithExperienceInteractionHooksContext<
   ContextT extends IRouterParamContext = IRouterParamContext,
 > = ContextT & {
-  assignInteractionHookResult: InteractionHookContextManager['assignInteractionHookResult'];
   assignReleaseOnSuccessInteractionHookResult: InteractionHookContextManager['assignReleaseOnSuccessInteractionHookResult'];
   assignReleaseAnywayInteractionHookResult: InteractionHookContextManager['assignReleaseAnywayInteractionHookResult'];
   appendDataHookContext: HookContextManager['appendDataHookContext'];
@@ -44,7 +43,6 @@ export function koaExperienceInteractionHooks<
     const result = interactionEventGuard.safeParse(interactionDetails.result ?? {});
 
     if (!result.success) {
-      ctx.assignInteractionHookResult = noop;
       ctx.assignReleaseOnSuccessInteractionHookResult = noop;
       ctx.assignReleaseAnywayInteractionHookResult = noop;
       ctx.appendDataHookContext = noop;
@@ -64,8 +62,6 @@ export function koaExperienceInteractionHooks<
       userIp: ip,
     });
 
-    ctx.assignInteractionHookResult =
-      interactionHookContext.assignInteractionHookResult.bind(interactionHookContext);
     ctx.assignReleaseOnSuccessInteractionHookResult =
       interactionHookContext.assignReleaseOnSuccessInteractionHookResult.bind(
         interactionHookContext

@@ -15,6 +15,11 @@ import {
 
 const { jest } = import.meta;
 
+type ExperienceInteractionHooksTestContext = ParameterizedContext<
+  unknown,
+  WithExperienceInteractionHooksContext<WithInteractionDetailsContext>
+>;
+
 const notToBeCalled = () => {
   throw new Error('Should not be called');
 };
@@ -40,10 +45,7 @@ describe('exception hooks', () => {
 
   it('should trigger exception hooks on error', async () => {
     const error = new RequestError({ code: 'session.verification_blocked_too_many_attempts' });
-    const ctx: ParameterizedContext<
-      unknown,
-      WithExperienceInteractionHooksContext<WithInteractionDetailsContext>
-    > = {
+    const ctx: ExperienceInteractionHooksTestContext = {
       ...createContextWithRouteParameters(),
       header: {
         'user-agent': 'jest-test',
@@ -54,7 +56,6 @@ describe('exception hooks', () => {
         },
         result: { interactionEvent: 'SignIn' },
       } as unknown as Awaited<ReturnType<Provider['interactionDetails']>>,
-      assignInteractionHookResult: notToBeCalled,
       assignReleaseOnSuccessInteractionHookResult: notToBeCalled,
       assignReleaseAnywayInteractionHookResult: notToBeCalled,
       appendDataHookContext: notToBeCalled,
@@ -95,10 +96,7 @@ describe('exception hooks', () => {
 
   it('should trigger interaction hooks on error if results were assigned', async () => {
     const error = new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 });
-    const ctx: ParameterizedContext<
-      unknown,
-      WithExperienceInteractionHooksContext<WithInteractionDetailsContext>
-    > = {
+    const ctx: ExperienceInteractionHooksTestContext = {
       ...createContextWithRouteParameters(),
       header: {
         'user-agent': 'jest-test',
@@ -110,7 +108,6 @@ describe('exception hooks', () => {
         jti: 'some-session',
         result: { interactionEvent: 'SignIn' },
       } as unknown as Awaited<ReturnType<Provider['interactionDetails']>>,
-      assignInteractionHookResult: notToBeCalled,
       assignReleaseOnSuccessInteractionHookResult: notToBeCalled,
       assignReleaseAnywayInteractionHookResult: notToBeCalled,
       appendDataHookContext: notToBeCalled,
@@ -170,10 +167,7 @@ describe('exception hooks', () => {
 
   it('should only trigger release-anyway interaction hooks on error', async () => {
     const error = new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 });
-    const ctx: ParameterizedContext<
-      unknown,
-      WithExperienceInteractionHooksContext<WithInteractionDetailsContext>
-    > = {
+    const ctx: ExperienceInteractionHooksTestContext = {
       ...createContextWithRouteParameters(),
       header: {
         'user-agent': 'jest-test',
@@ -185,7 +179,6 @@ describe('exception hooks', () => {
         jti: 'some-session',
         result: { interactionEvent: 'SignIn' },
       } as unknown as Awaited<ReturnType<Provider['interactionDetails']>>,
-      assignInteractionHookResult: notToBeCalled,
       assignReleaseOnSuccessInteractionHookResult: notToBeCalled,
       assignReleaseAnywayInteractionHookResult: notToBeCalled,
       appendDataHookContext: notToBeCalled,
@@ -193,7 +186,7 @@ describe('exception hooks', () => {
     };
 
     next.mockImplementation(() => {
-      ctx.assignInteractionHookResult({ userId: 'success-only-user' });
+      ctx.assignReleaseOnSuccessInteractionHookResult({ userId: 'success-only-user' });
       ctx.assignReleaseAnywayInteractionHookResult({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         payload: {
@@ -229,10 +222,7 @@ describe('exception hooks', () => {
   });
 
   it('should release success-only and release-anyway interaction hooks separately on success', async () => {
-    const ctx: ParameterizedContext<
-      unknown,
-      WithExperienceInteractionHooksContext<WithInteractionDetailsContext>
-    > = {
+    const ctx: ExperienceInteractionHooksTestContext = {
       ...createContextWithRouteParameters(),
       header: {
         'user-agent': 'jest-test',
@@ -244,7 +234,6 @@ describe('exception hooks', () => {
         jti: 'some-session',
         result: { interactionEvent: 'SignIn' },
       } as unknown as Awaited<ReturnType<Provider['interactionDetails']>>,
-      assignInteractionHookResult: notToBeCalled,
       assignReleaseOnSuccessInteractionHookResult: notToBeCalled,
       assignReleaseAnywayInteractionHookResult: notToBeCalled,
       appendDataHookContext: notToBeCalled,
@@ -252,7 +241,7 @@ describe('exception hooks', () => {
     };
 
     next.mockImplementation(() => {
-      ctx.assignInteractionHookResult({ userId: 'success-only-user' });
+      ctx.assignReleaseOnSuccessInteractionHookResult({ userId: 'success-only-user' });
       ctx.assignReleaseAnywayInteractionHookResult({
         event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
         payload: {

@@ -122,9 +122,7 @@ type InteractionHookMetadata = {
  * A success-only interaction hook result.
  *
  * @remarks
- * Results of this type are released only after the current request completes successfully. This
- * remains the default interaction-hook path so existing call sites can keep using
- * {@link assignInteractionHookResult} without opting into a custom release policy.
+ * Results of this type are released only after the current request completes successfully.
  */
 type ReleaseOnSuccessInteractionHookResult = {
   userId: string;
@@ -203,25 +201,14 @@ export class InteractionHookContextManager {
   }
 
   /**
-   * Assign a success-only interaction hook result to trigger webhook.
-   *
-   * @remarks
-   * This method is kept as the default entry point for backward compatibility with the existing
-   * success-only callers. It is intentionally implemented as an alias of
-   * {@link assignReleaseOnSuccessInteractionHookResult} so callers that do not need an explicit
-   * release policy can keep using the historical API, while release-anyway callers opt in via
-   * {@link assignReleaseAnywayInteractionHookResult}.
-   *
-   * Calling it multiple times will queue multiple webhook triggers.
-   * @param result The result to assign.
-   */
-  assignInteractionHookResult(result: ReleaseOnSuccessInteractionHookResult) {
-    this.assignReleaseOnSuccessInteractionHookResult(result);
-  }
-
-  /**
    * Assign an interaction hook result that should only be released after the request completes
    * successfully.
+   *
+   * @remarks
+   * This is the explicit success-only queue for interaction hooks. Calling it multiple times will
+   * queue multiple webhook triggers.
+   *
+   * @param result The result to assign.
    */
   assignReleaseOnSuccessInteractionHookResult(result: ReleaseOnSuccessInteractionHookResult) {
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods

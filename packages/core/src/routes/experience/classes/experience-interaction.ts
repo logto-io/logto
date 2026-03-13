@@ -492,7 +492,7 @@ export default class ExperienceInteraction {
 
       await this.cleanUp();
 
-      this.ctx.assignInteractionHookResult({ userId: user.id });
+      this.ctx.assignReleaseOnSuccessInteractionHookResult({ userId: user.id });
       this.ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
       return;
@@ -626,7 +626,7 @@ export default class ExperienceInteraction {
 
     this.ctx.body = { redirectTo };
 
-    this.ctx.assignInteractionHookResult({ userId: user.id });
+    this.ctx.assignReleaseOnSuccessInteractionHookResult({ userId: user.id });
 
     if (Object.keys(this.profile.data).length > 0 || mfaVerifications.length > 0) {
       this.ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
