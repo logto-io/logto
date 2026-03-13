@@ -8,6 +8,7 @@ import {
   deleteMfaVerification,
   generateTotpSecret,
   getMfaVerifications,
+  replaceTotpMfaVerification,
 } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -150,6 +151,113 @@ describe('my-account (mfa - TOTP)', () => {
 
       const updatedMfaVerifications = await getMfaVerifications(api);
       expect(updatedMfaVerifications).toHaveLength(0);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+  });
+
+  describe('PUT /my-account/mfa-verifications/totp', () => {
+    it('should be able to replace an existing totp verification', async () => {
+      await enableAllAccountCenterFields();
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { secret: oldSecret } = await generateTotpSecret(api);
+      const addVerificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await addMfaVerification(api, addVerificationRecordId, {
+        type: MfaFactor.TOTP,
+        secret: oldSecret,
+      });
+
+      const beforeReplacement = await getMfaVerifications(api);
+      const existingTotpVerification = beforeReplacement.find(
+        ({ type }) => type === MfaFactor.TOTP
+      );
+
+      expect(existingTotpVerification?.type).toBe(MfaFactor.TOTP);
+
+      const { secret: newSecret } = await generateTotpSecret(api);
+      const replaceVerificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await replaceTotpMfaVerification(api, replaceVerificationRecordId, {
+        secret: newSecret,
+        code: authenticator.generate(newSecret),
+      });
+
+      const afterReplacement = await getMfaVerifications(api);
+      const replacedTotpVerification = afterReplacement.find(({ type }) => type === MfaFactor.TOTP);
+
+      expect(afterReplacement).toHaveLength(1);
+      expect(replacedTotpVerification).toEqual(existingTotpVerification);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should fail when the user has no existing totp verification', async () => {
+      await enableAllAccountCenterFields();
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { secret } = await generateTotpSecret(api);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await expectRejects(
+        replaceTotpMfaVerification(api, verificationRecordId, {
+          secret,
+          code: authenticator.generate(secret),
+        }),
+        {
+          code: 'verification_record.not_found',
+          status: 404,
+        }
+      );
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should fail when the new totp code is invalid', async () => {
+      await enableAllAccountCenterFields();
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { secret: oldSecret } = await generateTotpSecret(api);
+      const addVerificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await addMfaVerification(api, addVerificationRecordId, {
+        type: MfaFactor.TOTP,
+        secret: oldSecret,
+      });
+
+      const beforeReplacement = await getMfaVerifications(api);
+      const existingTotpVerification = beforeReplacement.find(
+        ({ type }) => type === MfaFactor.TOTP
+      );
+
+      const { secret: newSecret } = await generateTotpSecret(api);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await expectRejects(
+        replaceTotpMfaVerification(api, verificationRecordId, {
+          secret: newSecret,
+          code: '123456',
+        }),
+        {
+          code: 'session.mfa.invalid_totp_code',
+          status: 400,
+        }
+      );
+
+      const mfaVerifications = await getMfaVerifications(api);
+      const totpVerification = mfaVerifications.find(({ type }) => type === MfaFactor.TOTP);
+
+      expect(totpVerification).toEqual(existingTotpVerification);
 
       await deleteDefaultTenantUser(user.id);
     });
