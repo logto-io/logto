@@ -6,25 +6,9 @@ describe('webhook event visibility', () => {
     jest.clearAllMocks();
   });
 
-  it('includes adaptive MFA hook event when dev features are enabled', async () => {
-    jest.doMock('./env', () => ({
-      isDevFeaturesEnabled: true,
-    }));
-
+  it('always includes the adaptive MFA hook event', async () => {
     const { interactionHookEvents } = await import('./webhooks');
 
     expect(interactionHookEvents).toContain(InteractionHookEvent.PostSignInAdaptiveMfaTriggered);
-  });
-
-  it('hides adaptive MFA hook event when dev features are disabled', async () => {
-    jest.doMock('./env', () => ({
-      isDevFeaturesEnabled: false,
-    }));
-
-    const { interactionHookEvents } = await import('./webhooks');
-
-    expect(interactionHookEvents).not.toContain(
-      InteractionHookEvent.PostSignInAdaptiveMfaTriggered
-    );
   });
 });

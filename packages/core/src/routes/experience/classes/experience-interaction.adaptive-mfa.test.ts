@@ -956,7 +956,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     );
   });
 
-  it('falls back to policy when dev features are disabled', async () => {
+  it('still triggers adaptive MFA hook result when dev features are disabled', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockEnvSetValues.isDevFeaturesEnabled = false;
     signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
@@ -1006,10 +1006,26 @@ describe('ExperienceInteraction adaptive MFA', () => {
       )
     );
 
-    expect(ctx.assignReleaseAnywayInteractionHookResult).not.toHaveBeenCalled();
+    expect(ctx.assignReleaseAnywayInteractionHookResult).toHaveBeenCalledTimes(1);
+
+    const [hookResult] = (
+      ctx.assignReleaseAnywayInteractionHookResult as jest.MockedFunction<
+        WithHooksAndLogsContext['assignReleaseAnywayInteractionHookResult']
+      >
+    ).mock.calls[0] as [
+      {
+        event: InteractionHookEvent;
+        payload: { adaptiveMfaResult?: { requiresMfa: boolean } };
+        userId: string;
+      },
+    ];
+
+    expect(hookResult.event).toBe(InteractionHookEvent.PostSignInAdaptiveMfaTriggered);
+    expect(hookResult.payload.adaptiveMfaResult?.requiresMfa).toBe(true);
+    expect(hookResult.userId).toBe(user.id);
   });
 
-  it('allows skipMfaOnSignIn when dev features are disabled', async () => {
+  it('does not allow skipMfaOnSignIn when adaptive MFA triggers and dev features are disabled', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockEnvSetValues.isDevFeaturesEnabled = false;
     signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
@@ -1053,7 +1069,15 @@ describe('ExperienceInteraction adaptive MFA', () => {
     } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
     const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
 
-    await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
+    await expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchError(
+      new RequestError(
+        { code: 'session.mfa.require_mfa_verification', status: 403 },
+        {
+          availableFactors: [MfaFactor.TOTP],
+          maskedIdentifiers: {},
+        }
+      )
+    );
   });
 });
 

@@ -50,8 +50,8 @@ test('normalizes setup prompt to adaptive policy when adaptive MFA is enabled', 
   expect(formState.setUpPrompt).toBe(MfaPolicy.PromptAtSignInAndSignUpMandatory);
 });
 
-test('builds payload with adaptive MFA only when dev features enabled', () => {
-  const payload = buildMfaPatchPayload({ ...baseForm, adaptiveMfaEnabled: true }, true);
+test('builds payload with adaptive MFA regardless of dev feature flag', () => {
+  const payload = buildMfaPatchPayload({ ...baseForm, adaptiveMfaEnabled: true });
 
   expect(payload).toEqual({
     mfa: {
@@ -60,29 +60,14 @@ test('builds payload with adaptive MFA only when dev features enabled', () => {
     },
     adaptiveMfa: { enabled: true },
   });
-
-  const payloadWithoutAdaptiveMfa = buildMfaPatchPayload(
-    { ...baseForm, adaptiveMfaEnabled: true },
-    false
-  );
-
-  expect(payloadWithoutAdaptiveMfa).toEqual({
-    mfa: {
-      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
-      factors: [MfaFactor.TOTP],
-    },
-  });
 });
 
 test('filters organization-required MFA policy when adaptive MFA is enabled', () => {
-  const payload = buildMfaPatchPayload(
-    {
-      ...baseForm,
-      adaptiveMfaEnabled: true,
-      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
-    },
-    true
-  );
+  const payload = buildMfaPatchPayload({
+    ...baseForm,
+    adaptiveMfaEnabled: true,
+    organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+  });
 
   expect(payload).toEqual({
     mfa: {
@@ -94,15 +79,12 @@ test('filters organization-required MFA policy when adaptive MFA is enabled', ()
 });
 
 test('filters hidden prompt policies when mandatory MFA is selected', () => {
-  const payload = buildMfaPatchPayload(
-    {
-      ...baseForm,
-      isMandatory: true,
-      setUpPrompt: MfaPolicy.PromptOnlyAtSignIn,
-      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
-    },
-    true
-  );
+  const payload = buildMfaPatchPayload({
+    ...baseForm,
+    isMandatory: true,
+    setUpPrompt: MfaPolicy.PromptOnlyAtSignIn,
+    organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+  });
 
   expect(payload).toEqual({
     mfa: {
@@ -178,7 +160,7 @@ test.each([
   },
 ])('$title', ({ selectedMode, expectedPolicy, expectedAdaptiveMfaEnabled }) => {
   const nextState = getMfaRequirementState(selectedMode);
-  const payload = buildMfaPatchPayload({ ...baseForm, ...nextState }, true);
+  const payload = buildMfaPatchPayload({ ...baseForm, ...nextState });
 
   expect(payload).toEqual({
     mfa: {

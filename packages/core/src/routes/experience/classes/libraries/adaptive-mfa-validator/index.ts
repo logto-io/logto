@@ -1,7 +1,6 @@
 import { InteractionEvent, type User, type UserGeoLocation } from '@logto/schemas';
 import { conditional, type Nullable, type Optional, trySafe } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { type WithLogContext, type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
@@ -99,10 +98,6 @@ export class AdaptiveMfaValidator {
   }
 
   public getSignInContext(): Optional<Record<string, string>> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     if (!this.ctx) {
       return;
     }
@@ -121,10 +116,6 @@ export class AdaptiveMfaValidator {
   }
 
   public getCurrentContext(): Optional<AdaptiveMfaContext> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     if (this.adaptiveMfaContext) {
       return this.adaptiveMfaContext;
     }
@@ -136,10 +127,6 @@ export class AdaptiveMfaValidator {
   }
 
   private async persistContext(user: User) {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     const context = this.getCurrentContext();
     if (!context) {
       return;
@@ -220,10 +207,6 @@ export class AdaptiveMfaValidator {
   }
 
   private async isAdaptiveMfaEnabled(): Promise<Optional<boolean>> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     if (this.isAdaptiveMfaEnabledCache !== undefined) {
       return this.isAdaptiveMfaEnabledCache;
     }
