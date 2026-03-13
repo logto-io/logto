@@ -180,7 +180,7 @@ const sign_in_exp = {
         'Aby zintegrować te gotowe przepływy, ustaw powiązane uprawnienia Account API na <strong>Edytuj</strong> w ustawieniach poniżej.',
       flows_title: 'Integruj gotowe przepływy ustawień bezpieczeństwa',
       flows_description:
-        'Połącz swoją domenę ze ścieżką, aby utworzyć URL ustawień konta (np. https://auth.foo.com/account/email). Opcjonalnie dodaj parametr URL `redirect=`, aby użytkownicy mogli wrócić do Twojej aplikacji po pomyślnym zaktualizowaniu, or an `identifier=` parameter to pre-fill the identifier input field.',
+        'Połącz swoją domenę ze ścieżką, aby utworzyć URL ustawień konta (np. https://auth.foo.com/account/email). Opcjonalnie dodaj parametr URL `redirect=`, aby użytkownicy mogli wrócić do Twojej aplikacji po pomyślnym zaktualizowaniu, lub parametr `identifier=` w celu wstępnego wypełnienia pola identyfikatora.',
       tooltips: {
         email: 'Zaktualizuj swój główny adres e-mail',
         phone: 'Zaktualizuj swój główny numer telefonu',

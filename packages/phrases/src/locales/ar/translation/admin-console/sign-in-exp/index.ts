@@ -177,7 +177,7 @@ const sign_in_exp = {
         'لدمج هذه التدفقات المُعدة مسبقًا، قم بتعيين أذونات Account API ذات الصلة إلى <strong>تحرير</strong> في الإعدادات أدناه.',
       flows_title: 'دمج تدفقات إعدادات الأمان الجاهزة',
       flows_description:
-        'اتخذ نطاقك وأضفه إلى المسار لتشكل عنوان URL لإعدادات حسابك (مثل، https://auth.foo.com/account/email). بشكل اختياري، أضف معامل `redirect=` URL لإرجاع المستخدمين إلى تطبيقك بعد التحديث بنجاح, or an `identifier=` parameter to pre-fill the identifier input field.',
+        'اتخذ نطاقك وأضفه إلى المسار لتشكل عنوان URL لإعدادات حسابك (مثل، https://auth.foo.com/account/email). بشكل اختياري، أضف معامل `redirect=` URL لإرجاع المستخدمين إلى تطبيقك بعد التحديث بنجاح، أو معلمة `identifier=` لملء حقل إدخال المعرف مسبقًا.',
       tooltips: {
         email: 'قم بتحديث عنوان بريدك الإلكتروني الرئيسي',
         phone: 'قم بتحديث رقم هاتفك المحمول الرئيسي',
