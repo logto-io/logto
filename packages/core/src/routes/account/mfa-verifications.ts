@@ -233,6 +233,72 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
     }
   );
 
+  router.put(
+    `${accountApiPrefix}/mfa-verifications/totp`,
+    koaGuard({
+      body: z.object({
+        secret: z.string(),
+        code: z.string(),
+      }),
+      status: [204, 400, 401, 404],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes, identityVerified } = ctx.auth;
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
+      const { fields } = ctx.accountCenter;
+      assertThat(
+        fields.mfa === AccountCenterControlValue.Edit,
+        'account_center.field_not_editable'
+      );
+
+      assertThat(
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
+
+      const user = await findUserById(userId);
+
+      const { mfa } = await findDefaultSignInExperience();
+      assertThat(mfa.factors.includes(MfaFactor.TOTP), 'session.mfa.mfa_factor_not_enabled');
+
+      const existingTotpVerification = user.mfaVerifications.find(
+        ({ type }) => type === MfaFactor.TOTP
+      );
+      assertThat(
+        existingTotpVerification,
+        new RequestError({ code: 'verification_record.not_found', status: 404 })
+      );
+
+      const { secret, code } = ctx.guard.body;
+
+      assertThat(validateTotpSecret(secret), 'user.totp_secret_invalid');
+      assertThat(
+        validateTotpToken(secret, code),
+        new RequestError({
+          code: 'session.mfa.invalid_totp_code',
+          status: 400,
+        })
+      );
+
+      const updatedUser = await updateUserById(userId, {
+        mfaVerifications: user.mfaVerifications.map((mfaVerification) =>
+          mfaVerification.id === existingTotpVerification.id
+            ? { ...existingTotpVerification, key: secret }
+            : mfaVerification
+        ),
+      });
+
+      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
   router.post(
     `${accountApiPrefix}/mfa-verifications/totp-secret/generate`,
     koaGuard({
