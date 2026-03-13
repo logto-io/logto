@@ -170,12 +170,12 @@ export const deviceFlowConfig = {
      * DeviceCode params (the original device authorization request) carry `organization_id` and
      * `ui_locales` but never `app_id`, so only org/locale actually fall back here. `app_id` on
      * the Experience page is an explicit UI-context override supplied on the device page URL,
-     * not an alias for the OIDC `client_id`.
+     * not an alias for the OIDC `client_id`. Query params win over DeviceCode params.
      */
-    const sharedParams = parseSharedExperienceParams(
-      ctx.query,
-      ctx.oidc.entities.DeviceCode?.params
-    );
+    const sharedParams = {
+      ...parseSharedExperienceParams(ctx.oidc.entities.DeviceCode?.params ?? {}),
+      ...parseSharedExperienceParams(ctx.query),
+    };
 
     setDeviceFlowXsrfCookie(ctx);
     setDeviceFlowLogtoUiCookie(ctx, sharedParams);

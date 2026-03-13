@@ -15,10 +15,8 @@ import {
   FirstScreen,
   experience,
 } from '@logto/schemas';
-import { cond, condArray, conditional, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
-import { type CamelCaseKeys } from 'camelcase-keys';
+import { condArray, conditional, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
-import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 
@@ -275,38 +273,28 @@ const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.route
   [FirstScreen.SignInDeprecated]: 'signIn',
 };
 
-const sharedExperienceParamsGuard = z
-  .object({
-    app_id: z.string(),
-    [ExtraParamsKey.OrganizationId]: z.string(),
-    [ExtraParamsKey.UiLocales]: z.string(),
-  })
-  .partial();
+export type SharedExperienceParams = Readonly<{
+  appId?: string;
+  organizationId?: string;
+  uiLocales?: string;
+}>;
 
-export type SharedExperienceParams = CamelCaseKeys<z.infer<typeof sharedExperienceParamsGuard>>;
+/**
+ * Read a single query value as a non-empty string or `undefined`. Safely ignores
+ * arrays (repeated query keys) and empty strings so callers never see a 500 from
+ * an object-level parser when a query key is duplicated.
+ */
+const readOptionalQueryString = (value: unknown): string | undefined =>
+  typeof value === 'string' && value.length > 0 ? value : undefined;
 
 export const parseSharedExperienceParams = (
-  query: Record<string, unknown>,
-  fallbackParams?: Record<string, unknown>
-): SharedExperienceParams => {
-  const {
-    app_id: appId,
-    organization_id: organizationId,
-    ui_locales: uiLocales,
-  } = sharedExperienceParamsGuard.parse(query);
-
-  const {
-    app_id: fallbackAppId,
-    organization_id: fallbackOrganizationId,
-    ui_locales: fallbackUiLocales,
-  } = sharedExperienceParamsGuard.parse(fallbackParams ?? {});
-
-  return removeUndefinedKeys({
-    appId: cond(appId ?? fallbackAppId),
-    organizationId: cond(organizationId ?? fallbackOrganizationId),
-    uiLocales: cond(uiLocales ?? fallbackUiLocales),
+  source: Record<string, unknown>
+): SharedExperienceParams =>
+  removeUndefinedKeys({
+    appId: readOptionalQueryString(source.app_id),
+    organizationId: readOptionalQueryString(source.organization_id),
+    uiLocales: readOptionalQueryString(source.ui_locales),
   });
-};
 
 /**
  * Only a small subset of Experience parameters is shared across multiple page families such as
