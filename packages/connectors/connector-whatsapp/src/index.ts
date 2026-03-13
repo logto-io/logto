@@ -13,6 +13,7 @@ import {
   ConnectorErrorCodes,
   validateConfig,
   ConnectorType,
+  getConfigTemplateByType,
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
@@ -69,9 +70,8 @@ const sendMessage =
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, whatsappSmsConfigGuard);
 
-    const { accessToken, phoneNumberId, templates } = config;
-
-    const template = templates.find((tmpl) => tmpl.usageType === type);
+    const { accessToken, phoneNumberId } = config;
+    const template = getConfigTemplateByType(type, config);
 
     assert(
       template,
