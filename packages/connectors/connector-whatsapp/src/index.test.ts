@@ -74,7 +74,8 @@ describe('WhatsApp SMS connector', () => {
       ).resolves.not.toThrow();
     });
 
-    it('throws TemplateNotFound when template is missing for usage type', async () => {
+    it('falls back to Generic template when usage type not found', async () => {
+      mockSuccessResponse();
       const connector = await createConnector({ getConfig });
       // Use a valid config but request a type that has no matching template name
       const configWithCustomTemplates = {
@@ -86,14 +87,14 @@ describe('WhatsApp SMS connector', () => {
           { usageType: 'Generic', templateName: 'logto_generic', language: 'en' },
         ],
       };
-      // Pass an unknown type directly to bypass Zod validation
+      // Pass an unknown type directly to bypass Zod validation; should fallback to Generic
       await expect(
         connector.sendMessage(
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           { to: '+5491112345678', type: 'UnknownType' as any, payload: { code: '123456' } },
           configWithCustomTemplates
         )
-      ).rejects.toMatchObject({ code: ConnectorErrorCodes.TemplateNotFound });
+      ).resolves.not.toThrow();
     });
 
     it('throws ConnectorError with Meta error message on 401', async () => {
