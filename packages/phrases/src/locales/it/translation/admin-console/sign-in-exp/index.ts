@@ -180,7 +180,7 @@ const sign_in_exp = {
         "Per integrare questi flussi predefiniti, imposta i permessi dell'API account correlati su <strong>Modifica</strong> nelle impostazioni sottostanti.",
       flows_title: 'Integra i flussi di impostazione di sicurezza predefiniti',
       flows_description:
-        "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, `show_success=true` per mantenere visibile la pagina di successo, o `ui_locales=` per sovrascrivere la lingua predefinita.",
+        "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, `show_success=true` per mantenere visibile la pagina di successo, `ui_locales=` per sovrascrivere la lingua predefinita, o `identifier=` per precompilare il campo di input dell'identificatore.",
       tooltips: {
         email: 'Aggiorna il tuo indirizzo email principale',
         phone: 'Aggiorna il tuo numero di telefono principale',
