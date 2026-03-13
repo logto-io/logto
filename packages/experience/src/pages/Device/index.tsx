@@ -1,12 +1,12 @@
 import { experience } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
-import { useContext, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
-import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { InputField } from '@/components/InputFields';
+import useToast from '@/hooks/use-toast';
 import Button from '@/shared/components/Button';
 
 import ErrorPage from '../ErrorPage';
@@ -18,6 +18,7 @@ import {
   normalizeDisplayValue,
   parseDeviceFlowContext,
   readDeviceFlowFailureError,
+  readDeviceFlowXsrfCookie,
   submitDeviceFlowRequest,
   toNavigateUrl,
 } from './utils';
@@ -53,11 +54,11 @@ const resolveSubmitFailureErrorKey = (
 
 const Device = () => {
   const { t } = useTranslation();
-  const { setToast } = useContext(PageContext);
+  const { setToast } = useToast();
   /**
    * Device flow is driven by provider-owned redirects rather than the interaction routes that rely
    * on preserved `app_id` search params. Use the plain router navigate here so provider redirects
-   * like `/device?xsrf=...&error=InvalidRequest` can round-trip without pathname rewriting.
+   * like `/device?error=InvalidRequest` can round-trip without pathname rewriting.
    */
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -71,14 +72,11 @@ const Device = () => {
     () => parseDeviceFlowContext(new URLSearchParams(searchParamString)),
     [searchParamString]
   );
+  const deviceFlowXsrf = readDeviceFlowXsrfCookie();
 
   const [userCode, setUserCode] = useState('');
 
   useEffect(() => {
-    if (!deviceFlowContext) {
-      return;
-    }
-
     setClientErrorKey(undefined);
 
     const initialValue = isConfirm ? deviceFlowContext.userCode : deviceFlowContext.inputCode;
@@ -91,8 +89,8 @@ const Device = () => {
     }
   }, [error, isConfirm, setToast, t]);
 
-  if (!deviceFlowContext) {
-    return <ErrorPage title="error.something_went_wrong" />;
+  if (!deviceFlowXsrf) {
+    return <ErrorPage title="error.invalid_session" />;
   }
 
   const errorKey: DeviceErrorKey | undefined =
@@ -105,19 +103,18 @@ const Device = () => {
   const errorMessage = resolvedErrorKey ? translateKey(resolvedErrorKey) : undefined;
 
   /**
-   * Core now redirects the device flow back with structured query fields instead of raw provider
-   * HTML. The page rebuilds the POST body locally, which keeps the SPA flow while removing the
-   * need to inject a server-generated form into the DOM.
+   * Core now redirects the device flow back with only the user-visible state in the URL. The
+   * page rebuilds the POST body locally and reads the xsrf token from the short-lived cookie,
+   * which keeps the SPA flow without exposing the submit token in the address bar.
    */
   const handleFormSubmit = async () => {
     setIsSubmitting(true);
-    setToast('');
 
     try {
       const response = await submitDeviceFlowRequest(
         createDeviceFlowRequestBody({
           userCode,
-          xsrf: deviceFlowContext.xsrf,
+          xsrf: deviceFlowXsrf,
         })
       );
 

@@ -1,5 +1,6 @@
-import { oidcRoutes } from '@logto/schemas';
+import { deviceFlowXsrfCookieKey, oidcRoutes } from '@logto/schemas';
 import type { To } from 'react-router-dom';
+import { getCookie } from 'tiny-cookie';
 
 /**
  * These helpers stay local to the Device page because they are tightly coupled to the
@@ -7,7 +8,6 @@ import type { To } from 'react-router-dom';
  * state transitions and rendering, without turning them into misleading global utils.
  */
 export type DeviceFlowContext = {
-  readonly xsrf: string;
   readonly inputCode?: string;
   readonly userCode?: string;
 };
@@ -17,6 +17,16 @@ const deviceFlowSubmitPath: string = oidcRoutes.codeVerification;
 export const normalizeDisplayValue = (value: string) => value.toUpperCase();
 
 export const hasDeviceCodeValue = (value: string) => value.replaceAll(/\W/g, '').length > 0;
+
+/**
+ * The device-flow xsrf secret is bridged through a short-lived cookie instead of the page URL.
+ * The browser still needs the value for the direct `/oidc/device` POST, but keeping it out of
+ * the address bar avoids exposing the token through copied links or browser history.
+ */
+export const readDeviceFlowXsrfCookie = (): string | undefined => {
+  const xsrf = getCookie(String(deviceFlowXsrfCookieKey));
+  return typeof xsrf === 'string' && xsrf.length > 0 ? xsrf : undefined;
+};
 
 export const toNavigateUrl = (url: string): To => {
   const { pathname, search, hash } = new URL(url, window.location.origin);
@@ -28,21 +38,10 @@ export const toNavigateUrl = (url: string): To => {
  * mode switch. Input-mode redisplay therefore travels through `input_code`, which only seeds
  * the visible input and must not change the page mode on its own.
  */
-export const parseDeviceFlowContext = (
-  searchParams: URLSearchParams
-): DeviceFlowContext | undefined => {
-  const xsrf = searchParams.get('xsrf');
-
-  if (!xsrf) {
-    return;
-  }
-
-  return {
-    inputCode: searchParams.get('input_code') ?? undefined,
-    userCode: searchParams.get('user_code') ?? undefined,
-    xsrf,
-  };
-};
+export const parseDeviceFlowContext = (searchParams: URLSearchParams): DeviceFlowContext => ({
+  inputCode: searchParams.get('input_code') ?? undefined,
+  userCode: searchParams.get('user_code') ?? undefined,
+});
 
 /**
  * The Experience page now reconstructs the provider request body locally instead of injecting the

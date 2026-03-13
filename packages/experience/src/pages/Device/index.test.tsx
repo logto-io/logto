@@ -1,4 +1,4 @@
-import { experience, oidcRoutes } from '@logto/schemas';
+import { deviceFlowXsrfCookieKey, experience, oidcRoutes } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -12,17 +12,15 @@ import DeviceSuccess from './Success';
 const defaultXsrf = 'foo';
 
 const buildDeviceSearchParams = ({
-  xsrf = defaultXsrf,
   error,
   inputCode,
   userCode,
 }: {
-  readonly xsrf?: string;
   readonly error?: string;
   readonly inputCode?: string;
   readonly userCode?: string;
 }) => {
-  const searchParams = new URLSearchParams({ xsrf });
+  const searchParams = new URLSearchParams();
 
   if (error) {
     searchParams.append('error', error);
@@ -39,13 +37,33 @@ const buildDeviceSearchParams = ({
   return searchParams;
 };
 
+const setDeviceFlowXsrfCookie = (xsrf = defaultXsrf) => {
+  /* eslint-disable @silverhand/fp/no-mutation */
+  document.cookie = `${String(deviceFlowXsrfCookieKey)}=; Max-Age=0; path=/`;
+  document.cookie = `${String(deviceFlowXsrfCookieKey)}=${xsrf}; path=/`;
+  /* eslint-enable @silverhand/fp/no-mutation */
+};
+
+const clearDeviceFlowXsrfCookie = () => {
+  /* eslint-disable @silverhand/fp/no-mutation */
+  document.cookie = `${String(deviceFlowXsrfCookieKey)}=; Max-Age=0; path=/`;
+  /* eslint-enable @silverhand/fp/no-mutation */
+};
+
 const renderDevice = (options: {
+  readonly clearXsrfCookie?: boolean;
   readonly xsrf?: string;
   readonly error?: string;
   readonly inputCode?: string;
   readonly userCode?: string;
-}) =>
-  renderWithPageContext(
+}) => {
+  if (options.clearXsrfCookie) {
+    clearDeviceFlowXsrfCookie();
+  } else {
+    setDeviceFlowXsrfCookie(options.xsrf);
+  }
+
+  return renderWithPageContext(
     <SettingsProvider>
       <Device />
     </SettingsProvider>,
@@ -53,14 +71,22 @@ const renderDevice = (options: {
       initialEntries: [`/device?${buildDeviceSearchParams(options).toString()}`],
     }
   );
+};
 
 const renderDeviceWithToast = (options: {
+  readonly clearXsrfCookie?: boolean;
   readonly xsrf?: string;
   readonly error?: string;
   readonly inputCode?: string;
   readonly userCode?: string;
-}) =>
-  renderWithPageContext(
+}) => {
+  if (options.clearXsrfCookie) {
+    clearDeviceFlowXsrfCookie();
+  } else {
+    setDeviceFlowXsrfCookie(options.xsrf);
+  }
+
+  return renderWithPageContext(
     <SettingsProvider>
       <ToastProvider>
         <Device />
@@ -70,14 +96,22 @@ const renderDeviceWithToast = (options: {
       initialEntries: [`/device?${buildDeviceSearchParams(options).toString()}`],
     }
   );
+};
 
 const renderDeviceRoutes = (options: {
+  readonly clearXsrfCookie?: boolean;
   readonly xsrf?: string;
   readonly error?: string;
   readonly inputCode?: string;
   readonly userCode?: string;
-}) =>
-  renderWithPageContext(
+}) => {
+  if (options.clearXsrfCookie) {
+    clearDeviceFlowXsrfCookie();
+  } else {
+    setDeviceFlowXsrfCookie(options.xsrf);
+  }
+
+  return renderWithPageContext(
     <SettingsProvider>
       <ToastProvider>
         <Routes>
@@ -92,6 +126,7 @@ const renderDeviceRoutes = (options: {
       ],
     }
   );
+};
 
 const getVisibleInput = (container: HTMLElement) =>
   container.querySelector<HTMLInputElement>('input[name="device_user_code"]');
@@ -168,6 +203,7 @@ describe('<Device />', () => {
 
   afterEach(() => {
     fetchMock.mockReset();
+    clearDeviceFlowXsrfCookie();
   });
 
   afterAll(() => {
@@ -195,6 +231,12 @@ describe('<Device />', () => {
     expect(getVisibleInput(container)?.value).toBe('');
     expect(container.querySelector('button')!.disabled).toBe(false);
     expect(queryByText('description.device_activation_description')).not.toBeNull();
+  });
+
+  it('shows an invalid-session error page when the xsrf cookie is missing', () => {
+    const { queryByText } = renderDevice({ clearXsrfCookie: true });
+
+    expect(queryByText('error.invalid_session')).not.toBeNull();
   });
 
   it('shows an inline error when continue is clicked without a code', async () => {
@@ -349,7 +391,7 @@ describe('<Device />', () => {
       createFetchResponse({
         ok: true,
         redirected: true,
-        url: `http://localhost/${experience.routes.device}?xsrf=next-xsrf&error=InvalidRequest`,
+        url: `http://localhost/${experience.routes.device}?error=InvalidRequest`,
       })
     );
 

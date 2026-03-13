@@ -6,7 +6,7 @@ import {
 
 describe('buildDeviceFlowPageUrl', () => {
   it('should build a structured device-flow query from the callback state', () => {
-    expect(buildDeviceFlowPageUrl({ xsrf: 'foo' })).toBe('/device?xsrf=foo');
+    expect(buildDeviceFlowPageUrl({})).toBe('/device');
   });
 
   it('should append confirm-mode user_code and input-mode error redisplay separately', () => {
@@ -14,16 +14,14 @@ describe('buildDeviceFlowPageUrl', () => {
       buildDeviceFlowPageUrl({
         error: 'NoCodeError',
         inputCode: 'raw-code',
-        xsrf: 'foo',
       })
-    ).toBe('/device?xsrf=foo&input_code=raw-code&error=NoCodeError');
+    ).toBe('/device?input_code=raw-code&error=NoCodeError');
     expect(
       buildDeviceFlowPageUrl({
         error: 'NoCodeError',
         userCode: 'ABCD-EFGH',
-        xsrf: 'foo',
       })
-    ).toBe('/device?xsrf=foo&user_code=ABCD-EFGH&error=NoCodeError');
+    ).toBe('/device?user_code=ABCD-EFGH&error=NoCodeError');
   });
 });
 

@@ -1,10 +1,9 @@
-import { experience } from '@logto/schemas';
+import { deviceFlowXsrfCookieKey, experience } from '@logto/schemas';
 import type { KoaContextWithOIDC, errors } from 'oidc-provider';
 
 import { EnvSet } from '#src/env-set/index.js';
 
 type DeviceFlowPageUrlOptions = {
-  readonly xsrf: string;
   readonly inputCode?: string;
   readonly userCode?: string;
   readonly error?: string;
@@ -16,6 +15,7 @@ type DeviceFlowPageUrlOptions = {
  * callbacks and avoids another magic number living inside the global OIDC init file.
  */
 export const defaultDeviceCodeTtl = 10 * 60;
+const deviceFlowCookiePath = `/${experience.routes.device}`;
 
 const getDeviceFlowXsrf = (ctx: KoaContextWithOIDC): string => {
   const xsrf = ctx.oidc.session?.state?.secret;
@@ -25,6 +25,31 @@ const getDeviceFlowXsrf = (ctx: KoaContextWithOIDC): string => {
   }
 
   return xsrf;
+};
+
+/**
+ * The oidc-provider secret still lives in the server session, but the Experience SPA needs to
+ * read it before posting back to `/oidc/device`. We keep it in a short-lived cookie instead of
+ * the redirect URL so copied links, browser history, and logs do not expose the token.
+ */
+const setDeviceFlowXsrfCookie = (ctx: KoaContextWithOIDC) => {
+  ctx.cookies.set(String(deviceFlowXsrfCookieKey), getDeviceFlowXsrf(ctx), {
+    httpOnly: false,
+    maxAge: defaultDeviceCodeTtl * 1000,
+    overwrite: true,
+    path: deviceFlowCookiePath,
+    sameSite: 'lax',
+  });
+};
+
+const clearDeviceFlowXsrfCookie = (ctx: KoaContextWithOIDC) => {
+  ctx.cookies.set(String(deviceFlowXsrfCookieKey), '', {
+    httpOnly: false,
+    maxAge: 0,
+    overwrite: true,
+    path: deviceFlowCookiePath,
+    sameSite: 'lax',
+  });
 };
 
 const getDeviceFlowInputCode = (error?: Error | errors.OIDCProviderError): string | undefined => {
@@ -41,12 +66,11 @@ const getDeviceFlowInputCode = (error?: Error | errors.OIDCProviderError): strin
  * shared OIDC route constant, so the bridge query only needs to carry user-visible state.
  */
 export const buildDeviceFlowPageUrl = ({
-  xsrf,
   inputCode,
   userCode,
   error,
 }: DeviceFlowPageUrlOptions): string => {
-  const searchParams = new URLSearchParams({ xsrf });
+  const searchParams = new URLSearchParams();
 
   if (userCode) {
     searchParams.append('user_code', userCode);
@@ -63,7 +87,8 @@ export const buildDeviceFlowPageUrl = ({
     searchParams.append('error', error);
   }
 
-  return `/${experience.routes.device}?${searchParams.toString()}`;
+  const query = searchParams.toString();
+  return query ? `/${experience.routes.device}?${query}` : `/${experience.routes.device}`;
 };
 
 /**
@@ -85,16 +110,11 @@ export const deviceFlowConfig = {
     _out: unknown,
     error?: Error | errors.OIDCProviderError
   ) => {
+    setDeviceFlowXsrfCookie(ctx);
     ctx.redirect(
       buildDeviceFlowPageUrl({
         error: error?.name,
         inputCode: getDeviceFlowInputCode(error),
-        /**
-         * Oidc-provider seeds `ctx.oidc.session.state.secret` immediately before invoking the
-         * device source callbacks, so Experience can bridge the xsrf value directly from ctx
-         * instead of reparsing it from provider-owned HTML.
-         */
-        xsrf: getDeviceFlowXsrf(ctx),
       })
     );
   },
@@ -106,14 +126,15 @@ export const deviceFlowConfig = {
     _deviceInfo: unknown,
     userCode: string
   ) => {
+    setDeviceFlowXsrfCookie(ctx);
     ctx.redirect(
       buildDeviceFlowPageUrl({
         userCode,
-        xsrf: getDeviceFlowXsrf(ctx),
       })
     );
   },
   successSource: async (ctx: KoaContextWithOIDC) => {
+    clearDeviceFlowXsrfCookie(ctx);
     ctx.redirect(buildDeviceFlowSuccessPageUrl());
   },
 };
