@@ -3,7 +3,6 @@ import { MfaFactor } from '@logto/schemas';
 import { authenticator } from 'otplib';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
-import { getUser } from '#src/api/admin-user.js';
 import {
   addMfaVerification,
   deleteMfaVerification,
@@ -173,7 +172,7 @@ describe('my-account (mfa - TOTP)', () => {
         secret: oldSecret,
       });
 
-      const { mfaVerifications: beforeReplacement } = await getUser(user.id);
+      const beforeReplacement = await getMfaVerifications(api);
       const existingTotpVerification = beforeReplacement.find(
         ({ type }) => type === MfaFactor.TOTP
       );
@@ -188,15 +187,11 @@ describe('my-account (mfa - TOTP)', () => {
         code: authenticator.generate(newSecret),
       });
 
-      const { mfaVerifications: afterReplacement } = await getUser(user.id);
+      const afterReplacement = await getMfaVerifications(api);
       const replacedTotpVerification = afterReplacement.find(({ type }) => type === MfaFactor.TOTP);
 
       expect(afterReplacement).toHaveLength(1);
-      expect(replacedTotpVerification?.type).toBe(MfaFactor.TOTP);
-      expect(replacedTotpVerification).toMatchObject({
-        ...existingTotpVerification,
-        key: newSecret,
-      });
+      expect(replacedTotpVerification).toEqual(existingTotpVerification);
 
       await deleteDefaultTenantUser(user.id);
     });
@@ -240,6 +235,11 @@ describe('my-account (mfa - TOTP)', () => {
         secret: oldSecret,
       });
 
+      const beforeReplacement = await getMfaVerifications(api);
+      const existingTotpVerification = beforeReplacement.find(
+        ({ type }) => type === MfaFactor.TOTP
+      );
+
       const { secret: newSecret } = await generateTotpSecret(api);
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
@@ -254,13 +254,10 @@ describe('my-account (mfa - TOTP)', () => {
         }
       );
 
-      const { mfaVerifications } = await getUser(user.id);
+      const mfaVerifications = await getMfaVerifications(api);
       const totpVerification = mfaVerifications.find(({ type }) => type === MfaFactor.TOTP);
 
-      expect(totpVerification).toMatchObject({
-        type: MfaFactor.TOTP,
-        key: oldSecret,
-      });
+      expect(totpVerification).toEqual(existingTotpVerification);
 
       await deleteDefaultTenantUser(user.id);
     });
