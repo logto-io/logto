@@ -5,6 +5,8 @@ const oidc_configs = {
   session_max_ttl_in_days: 'Maksymalny czas życia sesji (TTL) w dniach',
   session_max_ttl_in_days_tip:
     'Bezwzględny limit czasu życia liczony od utworzenia sesji. Niezależnie od aktywności sesja kończy się po upływie tego stałego czasu.',
+  oss_notice:
+    'W Logto OSS po każdej aktualizacji konfiguracji OIDC (w tym ustawień sesji i <keyRotationsLink>rotacji kluczy</keyRotationsLink>) uruchom ponownie instancję, aby zastosować zmiany. Aby automatycznie stosować wszystkie aktualizacje konfiguracji OIDC bez restartu usługi, <centralCacheLink>włącz centralny cache</centralCacheLink>.',
 };
 
 export default Object.freeze(oidc_configs);
