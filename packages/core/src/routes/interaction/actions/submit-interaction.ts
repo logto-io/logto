@@ -189,7 +189,7 @@ async function handleSubmitRegister(
 
   await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
-  ctx.assignInteractionHookResult({ userId: id });
+  ctx.assignReleaseOnSuccessInteractionHookResult({ userId: id });
   ctx.appendDataHookContext('User.Created', { user });
 
   // JIT provisioning for email domain
@@ -250,7 +250,7 @@ async function handleSubmitSignIn(
 
   await assignInteractionResults(ctx, provider, { login: { accountId } });
 
-  ctx.assignInteractionHookResult({ userId: accountId });
+  ctx.assignReleaseOnSuccessInteractionHookResult({ userId: accountId });
   // Trigger user.updated data hook event if the user profile or mfa data is updated
   if (hasUpdatedProfile(updateUserProfile) || mfaVerifications.length > 0) {
     ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
@@ -291,7 +291,7 @@ export default async function submitInteraction(
     passwordEncrypted,
     passwordEncryptionMethod,
   });
-  ctx.assignInteractionHookResult({ userId: accountId });
+  ctx.assignReleaseOnSuccessInteractionHookResult({ userId: accountId });
   ctx.appendDataHookContext('User.Data.Updated', { user });
 
   await clearInteractionStorage(ctx, provider);

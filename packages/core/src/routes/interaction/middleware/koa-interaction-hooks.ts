@@ -15,14 +15,14 @@ import { getInteractionStorage } from '../utils/interaction.js';
 export type WithInteractionHooksContext<
   ContextT extends IRouterParamContext = IRouterParamContext,
 > = ContextT & {
-  assignInteractionHookResult: InteractionHookContextManager['assignInteractionHookResult'];
+  assignReleaseOnSuccessInteractionHookResult: InteractionHookContextManager['assignReleaseOnSuccessInteractionHookResult'];
   appendDataHookContext: HookContextManager['appendDataHookContext'];
 };
 
 /**
  * The factory to create a new interaction hook middleware function.
  * Interaction related event hooks will be triggered once we got the interaction hook result.
- * Use `assignInteractionHookResult` to assign the interaction hook result.
+ * Use `assignReleaseOnSuccessInteractionHookResult` to assign the interaction hook result.
  */
 export default function koaInteractionHooks<
   StateT,
@@ -52,8 +52,10 @@ export default function koaInteractionHooks<
       userIp: ip,
     });
 
-    ctx.assignInteractionHookResult =
-      interactionHookContext.assignInteractionHookResult.bind(interactionHookContext);
+    ctx.assignReleaseOnSuccessInteractionHookResult =
+      interactionHookContext.assignReleaseOnSuccessInteractionHookResult.bind(
+        interactionHookContext
+      );
 
     const dataHookContext = new HookContextManager({
       ...interactionApiMetadata,
@@ -66,7 +68,12 @@ export default function koaInteractionHooks<
 
     if (interactionHookContext.interactionHookResults.length > 0) {
       // Hooks should not crash the app
-      void trySafe(triggerInteractionHooks(getConsoleLogFromContext(ctx), interactionHookContext));
+      void trySafe(
+        triggerInteractionHooks(
+          getConsoleLogFromContext(ctx),
+          interactionHookContext.getReleaseOnSuccessDispatchContext()
+        )
+      );
     }
 
     if (dataHookContext.dataHookContextArray.length > 0) {
