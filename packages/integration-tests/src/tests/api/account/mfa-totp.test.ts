@@ -3,7 +3,7 @@ import { MfaFactor } from '@logto/schemas';
 import { authenticator } from 'otplib';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
-import { getUserMfaVerifications } from '#src/api/admin-user.js';
+import { getUser } from '#src/api/admin-user.js';
 import {
   addMfaVerification,
   deleteMfaVerification,
@@ -173,7 +173,7 @@ describe('my-account (mfa - TOTP)', () => {
         secret: oldSecret,
       });
 
-      const beforeReplacement = await getUserMfaVerifications(user.id);
+      const { mfaVerifications: beforeReplacement } = await getUser(user.id);
       const existingTotpVerification = beforeReplacement.find(
         ({ type }) => type === MfaFactor.TOTP
       );
@@ -188,7 +188,7 @@ describe('my-account (mfa - TOTP)', () => {
         code: authenticator.generate(newSecret),
       });
 
-      const afterReplacement = await getUserMfaVerifications(user.id);
+      const { mfaVerifications: afterReplacement } = await getUser(user.id);
       const replacedTotpVerification = afterReplacement.find(({ type }) => type === MfaFactor.TOTP);
 
       expect(afterReplacement).toHaveLength(1);
@@ -254,7 +254,7 @@ describe('my-account (mfa - TOTP)', () => {
         }
       );
 
-      const mfaVerifications = await getUserMfaVerifications(user.id);
+      const { mfaVerifications } = await getUser(user.id);
       const totpVerification = mfaVerifications.find(({ type }) => type === MfaFactor.TOTP);
 
       expect(totpVerification).toMatchObject({
