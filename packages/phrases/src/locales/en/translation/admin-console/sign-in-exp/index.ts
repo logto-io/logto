@@ -180,7 +180,7 @@ const sign_in_exp = {
         'To integrate these prebuilt flows, set the related Account API permissions to <strong>Edit</strong> in the settings below.',
       flows_title: 'Integrate out-of-the-box security setting flows',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating, or an `identifier=` parameter to pre-fill the identifier input field.',
       tooltips: {
         email: 'Update your primary email address',
         phone: 'Update your primary phone number',

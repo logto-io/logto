@@ -26,6 +26,7 @@ export const accountCenterBasePath = '/account';
 const routeStorageKey = 'account-center-route-cache';
 const redirectUrlParameter = 'redirect';
 const showSuccessParameter = 'show_success';
+const identifierParameter = 'identifier';
 
 const knownRoutePrefixes: readonly string[] = [
   emailRoute,
@@ -72,6 +73,9 @@ export const {
   getShowSuccess,
   setShowSuccess,
   clearShowSuccess,
+  getIdentifier,
+  setIdentifier,
+  clearIdentifier,
 } = sessionStorage;
 
 /**
@@ -89,6 +93,11 @@ const handleRedirectParameter = () => {
 
   if (yes(showSuccess)) {
     setShowSuccess(true);
+  }
+
+  const identifier = parameters.get(identifierParameter);
+  if (identifier) {
+    setIdentifier(identifier);
   }
 };
 
