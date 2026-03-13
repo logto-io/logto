@@ -23,6 +23,7 @@ import log_details from './log-details.js';
 import logs from './logs.js';
 import menu from './menu.js';
 import mfa from './mfa.js';
+import oidc_configs from './oidc-configs.js';
 import organization_details from './organization-details.js';
 import organization_role_details from './organization-role-details.js';
 import organization_template from './organization-template.js';
@@ -97,6 +98,7 @@ const admin_console = {
   guide,
   mfa,
   organizations,
+  oidc_configs,
   organization_details,
   protected_app,
   jwt_claims,
