@@ -1,7 +1,8 @@
 import type { CreateOidcModelInstance } from '@logto/schemas';
-import { OidcModelInstances } from '@logto/schemas';
+import { Applications, OidcModelInstances } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
+import { createMockOidcGrantInstance } from '#src/__mocks__/oidc-grant.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
@@ -24,10 +25,12 @@ const {
   consumeInstanceById,
   destroyInstanceById,
   revokeInstanceByGrantId,
+  findUserActiveApplicationGrants,
 } = createOidcModelInstanceQueries(pool);
 
 describe('oidc-model-instance query', () => {
   const { table, fields } = convertToIdentifiers(OidcModelInstances);
+  const { table: applicationTable, fields: applicationFields } = convertToIdentifiers(Applications);
   const expiresAt = Date.now();
   const instance: CreateOidcModelInstance = {
     modelName: 'access_token',
@@ -71,7 +74,7 @@ describe('oidc-model-instance query', () => {
     const expectSql = sql`
       select ${fields.payload}, ${fields.consumedAt}
       from ${table}
-      where "model_name"=$1 
+      where "model_name"=$1
       and "id"=$2
     `;
 
@@ -92,7 +95,7 @@ describe('oidc-model-instance query', () => {
     const uid_value = 'foo';
 
     // Mock a single result
-    mockQuery.mockImplementationOnce(async (sql, values) => {
+    mockQuery.mockImplementationOnce(async () => {
       // Simulate pool.any
       return createMockQueryResult([{ consumedAt: 10 }]);
     });
@@ -199,5 +202,77 @@ describe('oidc-model-instance query', () => {
     });
 
     await revokeInstanceByGrantId(instance.modelName, grantId);
+  });
+
+  it('findUserActiveApplicationGrants with thirdparty', async () => {
+    const userId = 'user-id';
+    const expectSql = sql`
+      select "oidc_model_instance"."id", "oidc_model_instance"."payload", "oidc_model_instance"."expires_at"
+      from ${table} as "oidc_model_instance"
+      inner join ${applicationTable} as "application"
+        on "oidc_model_instance"."payload"->>'clientId'="application"."id"
+      where "oidc_model_instance"."model_name"='Grant'
+        and "oidc_model_instance"."payload"->>'accountId'=${userId}
+        and "application"."is_third_party"=${true}
+        and "oidc_model_instance"."expires_at" > to_timestamp($3)
+    `;
+
+    const grant = createMockOidcGrantInstance({
+      payload: { kind: 'Grant', clientId: 'demo-app', accountId: userId },
+    });
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([userId, true, expect.any(Number)]);
+
+      return createMockQueryResult([grant as never]);
+    });
+
+    await expect(findUserActiveApplicationGrants(userId, 'thirdParty')).resolves.toEqual([grant]);
+  });
+
+  it('findUserActiveApplicationGrants with firstparty', async () => {
+    const userId = 'user-id';
+    const expectSql = sql`
+      select "oidc_model_instance"."id", "oidc_model_instance"."payload", "oidc_model_instance"."expires_at"
+      from ${table} as "oidc_model_instance"
+      inner join ${applicationTable} as "application"
+        on "oidc_model_instance"."payload"->>'clientId'="application"."id"
+      where "oidc_model_instance"."model_name"='Grant'
+        and "oidc_model_instance"."payload"->>'accountId'=${userId}
+        and "application"."is_third_party"=${false}
+        and "oidc_model_instance"."expires_at" > to_timestamp($3)
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([userId, false, expect.any(Number)]);
+
+      return createMockQueryResult([]);
+    });
+
+    await expect(findUserActiveApplicationGrants(userId, 'firstParty')).resolves.toEqual([]);
+  });
+
+  it('findUserActiveApplicationGrants with all', async () => {
+    const userId = 'user-id';
+    const expectSql = sql`
+      select "oidc_model_instance"."id", "oidc_model_instance"."payload", "oidc_model_instance"."expires_at"
+      from ${table} as "oidc_model_instance"
+      inner join ${applicationTable} as "application"
+        on "oidc_model_instance"."payload"->>'clientId'="application"."id"
+      where "oidc_model_instance"."model_name"='Grant'
+        and "oidc_model_instance"."payload"->>'accountId'=${userId}
+        and "oidc_model_instance"."expires_at" > to_timestamp($2)
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([userId, expect.any(Number)]);
+
+      return createMockQueryResult([]);
+    });
+
+    await expect(findUserActiveApplicationGrants(userId)).resolves.toEqual([]);
   });
 });

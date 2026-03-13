@@ -1,10 +1,11 @@
 import {
   SessionGrantRevokeTarget,
+  getUserApplicationGrantsResponseGuard,
   getUserSessionResponseGuard,
   getUserSessionsResponseGuard,
 } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
-import { nativeEnum, object, string } from 'zod';
+import { nativeEnum, object, string, enum as zodEnum } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -35,6 +36,32 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
 
       ctx.body = {
         sessions,
+      };
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/users/:userId/grants',
+    koaGuard({
+      params: object({ userId: string() }),
+      query: object({
+        appType: zodEnum(['firstParty', 'thirdParty']).optional(),
+      }),
+      response: getUserApplicationGrantsResponseGuard,
+      status: [200, 500],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+      } = ctx.guard;
+
+      const { appType } = ctx.guard.query;
+      const grants = await sessionLibrary.findUserActiveApplicationGrants(userId, appType);
+
+      ctx.body = {
+        grants,
       };
 
       return next();

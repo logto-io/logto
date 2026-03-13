@@ -49,3 +49,32 @@ export const getUserSessionResponseGuard = userExtendedSessionGuard;
 
 /** Response type for `GET /users/:userId/sessions/:sessionId`. */
 export type GetUserSessionResponse = z.infer<typeof getUserSessionResponseGuard>;
+
+export const userApplicationGrantPayloadGuard = z
+  .object({
+    exp: z.number(),
+    iat: z.number(),
+    jti: z.string(),
+    kind: z.literal('Grant'),
+    clientId: z.string(),
+    accountId: z.string(),
+  })
+  .catchall(z.unknown());
+
+export type UserApplicationGrantPayload = z.infer<typeof userApplicationGrantPayloadGuard>;
+
+export const userApplicationGrantGuard = z.object({
+  id: z.string(),
+  payload: userApplicationGrantPayloadGuard,
+  expiresAt: z.number(),
+});
+
+export type UserApplicationGrant = z.infer<typeof userApplicationGrantGuard>;
+
+export const getUserApplicationGrantsResponseGuard = z.object({
+  grants: z.array(userApplicationGrantGuard),
+});
+
+export type GetUserApplicationGrantsResponse = z.infer<
+  typeof getUserApplicationGrantsResponseGuard
+>;
