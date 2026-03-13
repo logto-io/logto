@@ -100,7 +100,7 @@
     "snakecase-keys": "^8.0.1",
     "tinypool": "^1.0.2",
     "ua-parser-js": "^2.0.3",
-    "zod": "3.24.3"
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@logto/cloud": "0.2.5-cbf0233",
