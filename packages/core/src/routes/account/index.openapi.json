@@ -461,18 +461,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
                 "properties": {
                   "secret": {
-                    "type": "string",
                     "description": "The new TOTP secret for the replacement authenticator app."
                   },
                   "code": {
-                    "type": "string",
                     "description": "The TOTP code generated from the new secret to confirm the replacement."
                   }
-                },
-                "required": ["secret", "code"]
+                }
               }
             }
           }
