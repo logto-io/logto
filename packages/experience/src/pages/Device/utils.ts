@@ -2,11 +2,8 @@ import { deviceFlowXsrfCookieKey, oidcRoutes } from '@logto/schemas';
 import type { To } from 'react-router-dom';
 import { getCookie } from 'tiny-cookie';
 
-/**
- * These helpers stay local to the Device page because they are tightly coupled to the
- * oidc-provider bridge query. Extracting them here keeps the page component focused on
- * state transitions and rendering, without turning them into misleading global utils.
- */
+import { searchKeys } from '@/shared/utils/search-parameters';
+
 export type DeviceFlowContext = {
   readonly inputCode?: string;
   readonly userCode?: string;
@@ -62,12 +59,34 @@ export const createDeviceFlowRequestBody = ({
   });
 
 /**
+ * Device verification errors re-enter `userCodeInputSource`, which only has access to the
+ * current provider request. Repeating the shared Experience context on the POST URL keeps
+ * app/org/locale information available for the next redirect instead of dropping it after the
+ * first invalid-code round-trip.
+ *
+ * Shared params are read from sessionStorage, which `handleSearchParametersData` populates
+ * at app startup — the same mechanism login pages use.
+ */
+const buildDeviceFlowSubmitUrl = (): string => {
+  const url = new URL(deviceFlowSubmitPath, window.location.origin);
+
+  for (const [, snakeKey] of Object.entries(searchKeys)) {
+    const value = sessionStorage.getItem(snakeKey);
+    if (value) {
+      url.searchParams.set(snakeKey, value);
+    }
+  }
+
+  return `${url.pathname}${url.search}`;
+};
+
+/**
  * Submit the structured device-flow payload through fetch so the SPA can follow provider redirects
  * without falling back to a full-page browser form post. The submit target is shared with Core
  * through a schema constant, so the page does not need a bridge query just to learn a fixed path.
  */
 export const submitDeviceFlowRequest = async (body: URLSearchParams) =>
-  fetch(deviceFlowSubmitPath, {
+  fetch(buildDeviceFlowSubmitUrl(), {
     body,
     credentials: 'same-origin',
     headers: {

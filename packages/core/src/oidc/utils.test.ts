@@ -15,6 +15,7 @@ import {
   getConstantClientMetadata,
   validateCustomClientMetadata,
   buildLoginPromptUrl,
+  parseSharedExperienceParams,
 } from './utils.js';
 
 describe('getConstantClientMetadata()', () => {
@@ -302,20 +303,20 @@ describe('isOriginAllowed', () => {
 describe('buildLoginPromptUrl', () => {
   it('should return the correct url for empty parameters', () => {
     expect(buildLoginPromptUrl({})).toBe('sign-in');
-    expect(buildLoginPromptUrl({}, 'foo')).toBe('sign-in?app_id=foo');
-    expect(buildLoginPromptUrl({}, demoAppApplicationId)).toBe(
+    expect(buildLoginPromptUrl({}, { appId: 'foo' })).toBe('sign-in?app_id=foo');
+    expect(buildLoginPromptUrl({}, { appId: demoAppApplicationId })).toBe(
       'sign-in?app_id=' + demoAppApplicationId
     );
   });
 
   it('should return the correct url for firstScreen', () => {
     expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register })).toBe('register');
-    expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register }, 'foo')).toBe(
+    expect(buildLoginPromptUrl({ first_screen: FirstScreen.Register }, { appId: 'foo' })).toBe(
       'register?app_id=foo'
     );
-    expect(buildLoginPromptUrl({ first_screen: FirstScreen.SignIn }, demoAppApplicationId)).toBe(
-      'sign-in?app_id=demo-app'
-    );
+    expect(
+      buildLoginPromptUrl({ first_screen: FirstScreen.SignIn }, { appId: demoAppApplicationId })
+    ).toBe('sign-in?app_id=demo-app');
     expect(
       buildLoginPromptUrl({ first_screen: FirstScreen.SignIn, login_hint: 'user@mail.com' })
     ).toBe('sign-in?login_hint=user%40mail.com');
@@ -342,12 +343,12 @@ describe('buildLoginPromptUrl', () => {
     expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' })).toBe(
       'direct/method/target?fallback=sign-in'
     );
-    expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' }, 'foo')).toBe(
+    expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' }, { appId: 'foo' })).toBe(
       'direct/method/target?app_id=foo&fallback=sign-in'
     );
-    expect(buildLoginPromptUrl({ direct_sign_in: 'method:target' }, demoAppApplicationId)).toBe(
-      'direct/method/target?app_id=demo-app&fallback=sign-in'
-    );
+    expect(
+      buildLoginPromptUrl({ direct_sign_in: 'method:target' }, { appId: demoAppApplicationId })
+    ).toBe('direct/method/target?app_id=demo-app&fallback=sign-in');
     expect(buildLoginPromptUrl({ direct_sign_in: 'method' })).toBe(
       'direct/method?fallback=sign-in'
     );
@@ -364,7 +365,7 @@ describe('buildLoginPromptUrl', () => {
     expect(
       buildLoginPromptUrl(
         { first_screen: FirstScreen.Register, direct_sign_in: 'method:target' },
-        demoAppApplicationId
+        { appId: demoAppApplicationId }
       )
     ).toBe('direct/method/target?app_id=demo-app&fallback=register');
   });
@@ -373,5 +374,28 @@ describe('buildLoginPromptUrl', () => {
     expect(
       buildLoginPromptUrl({ one_time_token: 'token_value', login_hint: 'user@mail.com' })
     ).toBe('sign-in?one_time_token=token_value&login_hint=user%40mail.com');
+  });
+
+  it('should append shared experience params to the url', () => {
+    expect(
+      buildLoginPromptUrl(
+        { first_screen: FirstScreen.SignIn },
+        { appId: 'app_123', organizationId: 'org_123', uiLocales: 'fr-CA fr' }
+      )
+    ).toBe('sign-in?app_id=app_123&organization_id=org_123&ui_locales=fr-CA+fr');
+  });
+});
+
+describe('parseSharedExperienceParams', () => {
+  it('should ignore repeated query values instead of throwing', () => {
+    expect(
+      parseSharedExperienceParams({
+        app_id: ['app_1', 'app_2'],
+        organization_id: 'org_123',
+        ui_locales: ['zh-CN', 'en'],
+      })
+    ).toEqual({
+      organizationId: 'org_123',
+    });
   });
 });

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { deviceFlowXsrfCookieKey, experience, oidcRoutes } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
@@ -204,6 +205,7 @@ describe('<Device />', () => {
   afterEach(() => {
     fetchMock.mockReset();
     clearDeviceFlowXsrfCookie();
+    sessionStorage.clear();
   });
 
   afterAll(() => {
@@ -303,6 +305,10 @@ describe('<Device />', () => {
       })
     );
 
+    sessionStorage.setItem('app_id', 'app_123');
+    sessionStorage.setItem('organization_id', 'org_123');
+    sessionStorage.setItem('ui_locales', 'fr-CA fr');
+
     const { container } = renderDeviceRoutes({});
 
     await waitFor(() => {
@@ -327,7 +333,9 @@ describe('<Device />', () => {
     const [requestUrl, request] = fetchMock.mock.calls[0] ?? [];
     const requestBody = String(request?.body ?? '');
 
-    expect(requestUrl).toBe(oidcRoutes.codeVerification);
+    expect(requestUrl).toBe(
+      `${oidcRoutes.codeVerification}?organization_id=org_123&app_id=app_123&ui_locales=fr-CA+fr`
+    );
     expect(requestBody).toContain('xsrf=foo');
     expect(requestBody).toContain('user_code=AB12-CD34');
     expect(requestBody).toContain('confirm=yes');
@@ -492,3 +500,4 @@ describe('<Device />', () => {
     expect(queryByText('description.device_activation_error_description')).not.toBeNull();
   });
 });
+/* eslint-enable max-lines */
