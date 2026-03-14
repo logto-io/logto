@@ -19,13 +19,58 @@ export const generateState = () => {
   return uuid;
 };
 
+/**
+ * Get a value from storage with localStorage fallback.
+ *
+ * Some in-app browsers (e.g. WeChat, Facebook) clear sessionStorage when a redirect
+ * opens a new view or window. To handle this, we also persist values in localStorage
+ * and fall back to it when sessionStorage is empty after a redirect.
+ */
+const getStorageItem = (key: string): string | null => {
+  const sessionValue = sessionStorage.getItem(key);
+
+  if (sessionValue !== null) {
+    return sessionValue;
+  }
+
+  // Fallback: try localStorage (may have been set before the redirect)
+  const localValue = localStorage.getItem(key);
+
+  if (localValue !== null) {
+    // Restore to sessionStorage for consistency and remove the fallback copy
+    sessionStorage.setItem(key, localValue);
+    localStorage.removeItem(key);
+  }
+
+  return localValue;
+};
+
+/**
+ * Set a value in both sessionStorage and localStorage.
+ *
+ * Writing to localStorage ensures data survives in in-app browsers that clear
+ * sessionStorage during cross-window redirects.
+ */
+const setStorageItem = (key: string, value: string): void => {
+  sessionStorage.setItem(key, value);
+  localStorage.setItem(key, value);
+};
+
+/**
+ * Remove a value from both sessionStorage and localStorage.
+ */
+const removeStorageItem = (key: string): void => {
+  sessionStorage.removeItem(key);
+  localStorage.removeItem(key);
+};
+
 export const storeState = (state: string, connectorId: string) => {
-  sessionStorage.setItem(`${storageStateKeyPrefix}:${connectorId}`, state);
+  setStorageItem(`${storageStateKeyPrefix}:${connectorId}`, state);
 };
 
 const deleteState = (connectorId: string) => {
   const storageKey = `${storageStateKeyPrefix}:${connectorId}`;
-  sessionStorage.removeItem(storageKey);
+  removeStorageItem(storageKey);
 };
 
 /**
@@ -38,7 +83,7 @@ export const validateState = (state: string | undefined, connectorId: string): b
   }
 
   const storageKey = `${storageStateKeyPrefix}:${connectorId}`;
-  const stateStorage = sessionStorage.getItem(storageKey);
+  const stateStorage = getStorageItem(storageKey);
   deleteState(connectorId);
 
   return stateStorage === state;
@@ -153,15 +198,15 @@ export const buildSocialLandingUri = (path: string, redirectTo: string) => {
 };
 
 export const storeCallbackLink = (connectorId: string, callbackLink: string) => {
-  sessionStorage.setItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`, callbackLink);
+  setStorageItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`, callbackLink);
 };
 
 export const getCallbackLinkFromStorage = (connectorId: string) => {
-  return sessionStorage.getItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`);
+  return getStorageItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`);
 };
 
 export const removeCallbackLinkFromStorage = (connectorId: string) => {
-  sessionStorage.removeItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`);
+  removeStorageItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`);
 };
 
 /**
