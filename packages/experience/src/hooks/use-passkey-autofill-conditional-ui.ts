@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 
 import WebAuthnContext from '@/Providers/WebAuthnContextProvider/WebAuthnContext';
 import { initInteraction, verifySignInPasskey } from '@/apis/experience';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import { toPublicKeyRequest, toAuthenticationResponseJSON } from '@/utils/webauthn';
 
 import useApi from './use-api';
@@ -36,7 +35,7 @@ const usePasskeyAutofillConditionalUI = () => {
 
   const triggerPasskeySignInViaConditionalUi = useCallback(
     async (options: WebAuthnAuthenticationOptions) => {
-      if (!isDevFeaturesEnabled || !(await browserSupportsWebAuthnAutofill())) {
+      if (!(await browserSupportsWebAuthnAutofill())) {
         return;
       }
       try {
@@ -98,12 +97,7 @@ const usePasskeyAutofillConditionalUI = () => {
   );
 
   useEffect(() => {
-    if (
-      isDevFeaturesEnabled &&
-      authenticationOptions &&
-      passkeySignIn?.enabled &&
-      passkeySignIn.allowAutofill
-    ) {
+    if (authenticationOptions && passkeySignIn?.enabled && passkeySignIn.allowAutofill) {
       void triggerPasskeySignInViaConditionalUi(authenticationOptions);
     }
   }, [
@@ -115,8 +109,7 @@ const usePasskeyAutofillConditionalUI = () => {
 
   return useMemo(
     () => ({
-      isPasskeyAutofillEnabled:
-        isDevFeaturesEnabled && passkeySignIn?.enabled && passkeySignIn.allowAutofill,
+      isPasskeyAutofillEnabled: passkeySignIn?.enabled && passkeySignIn.allowAutofill,
       triggerPasskeySignInViaConditionalUi,
       abortConditionalUI,
     }),

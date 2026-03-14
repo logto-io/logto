@@ -7,7 +7,6 @@ import {
   getUserLogtoConfig,
   updateUserLogtoConfig,
 } from '#src/api/admin-user.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import {
   identifyUserWithUsernamePassword,
@@ -27,7 +26,6 @@ import {
   enableUserControlledMfaWithTotpOnlyAtSignIn,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 describe('Bind MFA APIs happy path', () => {
   const userApi = new UserApiTest();
@@ -175,7 +173,7 @@ describe('Bind MFA APIs happy path', () => {
       await client.identifyUser({ verificationId });
 
       await expectRejects(client.submitInteraction(), {
-        code: isDevFeaturesEnabled ? 'user.suggest_mfa' : 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
 
@@ -213,7 +211,7 @@ describe('Bind MFA APIs happy path', () => {
       await client.identifyUser({ verificationId });
 
       await expectRejects(client.submitInteraction(), {
-        code: isDevFeaturesEnabled ? 'user.suggest_mfa' : 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
 
@@ -244,7 +242,7 @@ describe('Bind MFA APIs happy path', () => {
       const client2 = await initExperienceClient();
       await identifyUserWithUsernamePassword(client2, username, password);
       await expectRejects(client2.submitInteraction(), {
-        code: isDevFeaturesEnabled ? 'user.suggest_mfa' : 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
 
@@ -259,7 +257,7 @@ describe('Bind MFA APIs happy path', () => {
       await identifyUserWithUsernamePassword(client, username, password);
 
       await expectRejects(client.submitInteraction(), {
-        code: isDevFeaturesEnabled ? 'user.suggest_mfa' : 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
 
@@ -270,31 +268,28 @@ describe('Bind MFA APIs happy path', () => {
       await logoutClient(client);
     });
 
-    devFeatureTest.it(
-      'should persist mfa.enabled as true after binding any MFA factor',
-      async () => {
-        const { username, password } = generateNewUserProfile({ username: true, password: true });
-        const user = await userApi.create({ username, password });
+    it('should persist mfa.enabled as true after binding any MFA factor', async () => {
+      const { username, password } = generateNewUserProfile({ username: true, password: true });
+      const user = await userApi.create({ username, password });
 
-        const client = await initExperienceClient();
-        await identifyUserWithUsernamePassword(client, username, password);
+      const client = await initExperienceClient();
+      await identifyUserWithUsernamePassword(client, username, password);
 
-        await expectRejects(client.submitInteraction(), {
-          code: 'user.suggest_mfa',
-          status: 422,
-        });
+      await expectRejects(client.submitInteraction(), {
+        code: 'user.suggest_mfa',
+        status: 422,
+      });
 
-        const verificationId = await successfullyCreateAndVerifyTotp(client);
-        await client.bindMfa(MfaFactor.TOTP, verificationId);
+      const verificationId = await successfullyCreateAndVerifyTotp(client);
+      await client.bindMfa(MfaFactor.TOTP, verificationId);
 
-        const { redirectTo } = await client.submitInteraction();
-        await processSession(client, redirectTo);
-        await logoutClient(client);
+      const { redirectTo } = await client.submitInteraction();
+      await processSession(client, redirectTo);
+      await logoutClient(client);
 
-        const config = await getUserLogtoConfig(user.id);
-        expect(config.mfa.enabled).toBe(true);
-      }
-    );
+      const config = await getUserLogtoConfig(user.id);
+      expect(config.mfa.enabled).toBe(true);
+    });
   });
 
   describe('TOTP with policy PromptOnlyAtSignIn', () => {
@@ -331,7 +326,7 @@ describe('Bind MFA APIs happy path', () => {
       await identifyUserWithUsernamePassword(client, username, password);
 
       await expectRejects(client.submitInteraction(), {
-        code: isDevFeaturesEnabled ? 'user.suggest_mfa' : 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
 
@@ -439,7 +434,7 @@ describe('Bind MFA APIs happy path', () => {
       const client = await initExperienceClient();
       await identifyUserWithUsernamePassword(client, username, password);
       await expectRejects(client.submitInteraction(), {
-        code: isDevFeaturesEnabled ? 'user.suggest_mfa' : 'user.missing_mfa',
+        code: 'user.suggest_mfa',
         status: 422,
       });
       await client.skipMfaBinding();

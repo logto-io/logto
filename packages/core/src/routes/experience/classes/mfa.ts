@@ -26,7 +26,6 @@ import { generateStandardId, maskEmail, maskPhone } from '@logto/shared';
 import { cond, condObject, deduplicate, pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   isNoSkipMfaPolicy,
@@ -356,10 +355,8 @@ export class Mfa {
   async assertMfaFulfilled() {
     const submitMfaValidationContext = await this.buildSubmitMfaValidationContext();
 
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      // For optional MFA, prompt an MFA enrollment page in prior if user hasn't set up or skipped MFA binding yet.
-      await this.assertOptionalMfaEnablement(submitMfaValidationContext);
-    }
+    // For optional MFA, prompt an MFA enrollment page in prior if user hasn't set up or skipped MFA binding yet.
+    await this.assertOptionalMfaEnablement(submitMfaValidationContext);
 
     await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext);
   }
@@ -559,13 +556,6 @@ export class Mfa {
   ) {
     // Respect user's choice to skip suggestion for this interaction.
     if (this.additionalBindingSuggestionSkipped) {
-      return;
-    }
-
-    if (
-      !EnvSet.values.isDevFeaturesEnabled &&
-      this.interactionContext.getInteractionEvent() !== InteractionEvent.Register
-    ) {
       return;
     }
 

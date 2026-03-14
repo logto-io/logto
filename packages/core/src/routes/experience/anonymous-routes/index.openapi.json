@@ -35,7 +35,6 @@
     },
     "/api/experience/preflight/sign-in-passkey/authentication": {
       "post": {
-        "tags": ["Dev feature"],
         "operationId": "CreateSignInPasskeyAuthentication",
         "summary": "Create passkey sign-in WebAuthn authentication",
         "description": "Create WebAuthn authentication options for passkey sign-in. The user will be resolved later by the credential during verification.",
