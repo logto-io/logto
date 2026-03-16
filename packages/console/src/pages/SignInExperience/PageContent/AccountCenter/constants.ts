@@ -1,7 +1,4 @@
 import type { AdminConsoleKey } from '@logto/phrases';
-import { conditionalArray } from '@silverhand/essentials';
-
-import { isDevFeaturesEnabled } from '@/consts/env';
 
 import type { AccountCenterFieldKey } from '../../types';
 
@@ -52,21 +49,17 @@ export const accountCenterSections: AccountCenterFieldSection[] = [
           },
         ],
       },
-      ...conditionalArray(
-        isDevFeaturesEnabled && [
+      {
+        key: 'sessionManagement',
+        title:
+          'sign_in_exp.account_center.sections.account_security.groups.session_management.title',
+        items: [
           {
-            key: 'sessionManagement',
-            title:
-              'sign_in_exp.account_center.sections.account_security.groups.session_management.title',
-            items: [
-              {
-                key: 'session',
-                title: 'sign_in_exp.account_center.fields.sessions',
-              },
-            ],
-          } satisfies AccountCenterFieldGroup,
-        ]
-      ),
+            key: 'session',
+            title: 'sign_in_exp.account_center.fields.sessions',
+          },
+        ],
+      },
     ],
   },
   {
