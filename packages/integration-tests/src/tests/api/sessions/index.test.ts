@@ -19,6 +19,7 @@ import {
 } from '#src/helpers/session.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
+import { devFeatureTest } from '#src/utils.js';
 
 describe('Sessions API', () => {
   const userApi = new UserApiTest();
@@ -234,7 +235,7 @@ describe('Sessions API', () => {
     });
   });
 
-  it('should get user grants and support appType filters', async () => {
+  devFeatureTest.it('should get user grants and support appType filters', async () => {
     await enableAllPasswordSignInMethods();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
