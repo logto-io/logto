@@ -39,6 +39,7 @@ services:
       - LOGTO_SMTP_FROM_EMAIL=noreply@example.com
 
       # Bootstrap: Sign-in identifier (email-primary)
+      - LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE=true
       - LOGTO_SIGN_IN_IDENTIFIER=email
 
   postgres:

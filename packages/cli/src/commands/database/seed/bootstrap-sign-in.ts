@@ -49,7 +49,7 @@ export const bootstrapSignInExperience = async (
       ${sql.identifier(['sign_in'])} = ${JSON.stringify(signIn)}::jsonb,
       ${sql.identifier(['sign_up'])} = ${JSON.stringify(signUp)}::jsonb
     where ${sql.identifier(['tenant_id'])} = ${defaultTenantId}
-    and ${sql.identifier(['id'])} = 'default'
+    and ${sql.identifier(['id'])} = ${sql.literalValue('default')}
   `);
 
   consoleLog.succeed('Updated sign-in experience: email-primary sign-in enabled');
@@ -65,9 +65,9 @@ export const bootstrapSignInExperience = async (
   await connection.query(sql`
     update ${sql.identifier([LogtoConfigs.table])}
     set
-      ${sql.identifier(['value'])} = ${JSON.stringify({ organizationCreated: false, signInExperienceCustomized: true })}::jsonb,
+      ${sql.identifier(['value'])} = ${JSON.stringify({ organizationCreated: false, signInExperienceCustomized: true })}::jsonb
     where ${sql.identifier(['tenant_id'])} = ${defaultTenantId}
-    and ${sql.identifier(['key'])} = 'adminConsole'
+    and ${sql.identifier(['key'])} = ${sql.literalValue('adminConsole')}
   `);
 
   consoleLog.succeed('Enabled sign-in experience');
