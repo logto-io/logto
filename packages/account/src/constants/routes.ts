@@ -15,3 +15,5 @@ export const backupCodesSuccessRoute = '/backup-codes/success';
 export const passkeyAddRoute = '/passkey/add';
 export const passkeyManageRoute = '/passkey/manage';
 export const passkeySuccessRoute = '/passkey/success';
+export const profileRoute = '/profile';
+export const profileSuccessRoute = '/profile/success';

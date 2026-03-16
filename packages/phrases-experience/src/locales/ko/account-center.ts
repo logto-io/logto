@@ -2,6 +2,25 @@ const account_center = {
   home: {
     title: '페이지를 찾을 수 없음',
     description: '이 페이지는 사용할 수 없습니다.',
+    personal_info_section: 'Personal information',
+    security_section: 'Security',
+    not_set: 'Not set',
+    action_edit: 'Edit',
+    action_add: 'Add',
+    action_view: 'View',
+    manage: 'Manage',
+    field_name: 'Display name',
+    field_avatar: 'Avatar',
+    field_username: 'Username',
+    field_email: 'Email address',
+    field_phone: 'Phone number',
+    field_password: 'Password',
+    field_2fa: 'Two-factor authentication',
+    field_authenticator_app: 'Authenticator app',
+    field_passkeys: 'Passkeys',
+    field_backup_codes: 'Backup codes',
+    password_set: 'Set',
+    password_not_set: 'Not set',
   },
   verification: {
     title: '보안 인증',
@@ -167,6 +186,13 @@ const account_center = {
     name_passkey_description:
       '2단계 인증을 위해 이 기기가 성공적으로 확인되었습니다. 여러 키가 있는 경우 식별할 수 있도록 이름을 사용자 지정하세요.',
     name_input_label: '이름',
+  },
+  profile: {
+    title: 'Edit profile',
+    description: 'Update your display name and avatar.',
+    name_label: 'Display name',
+    avatar_label: 'Avatar URL',
+    saved: 'Profile updated successfully.',
   },
 };
 

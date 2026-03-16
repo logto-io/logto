@@ -2,6 +2,25 @@ const account_center = {
   home: {
     title: '找不到頁面',
     description: '此頁面無法使用。',
+    personal_info_section: 'Personal information',
+    security_section: 'Security',
+    not_set: 'Not set',
+    action_edit: 'Edit',
+    action_add: 'Add',
+    action_view: 'View',
+    manage: 'Manage',
+    field_name: 'Display name',
+    field_avatar: 'Avatar',
+    field_username: 'Username',
+    field_email: 'Email address',
+    field_phone: 'Phone number',
+    field_password: 'Password',
+    field_2fa: 'Two-factor authentication',
+    field_authenticator_app: 'Authenticator app',
+    field_passkeys: 'Passkeys',
+    field_backup_codes: 'Backup codes',
+    password_set: 'Set',
+    password_not_set: 'Not set',
   },
   verification: {
     title: '安全驗證',
@@ -163,6 +182,13 @@ const account_center = {
     name_passkey_description:
       '您已成功驗證此裝置用於兩步驗證。自訂名稱以便在擁有多個密鑰時進行識別。',
     name_input_label: '名稱',
+  },
+  profile: {
+    title: 'Edit profile',
+    description: 'Update your display name and avatar.',
+    name_label: 'Display name',
+    avatar_label: 'Avatar URL',
+    saved: 'Profile updated successfully.',
   },
 };
 

@@ -1,3 +1,5 @@
+import type { UserProfileResponse } from '@logto/schemas';
+
 import { createAuthenticatedKy } from './base-ky';
 
 export const verificationRecordIdHeader = 'logto-verification-id';
@@ -44,4 +46,15 @@ export const updatePassword = async (
     json: payload,
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
+};
+
+export const updateProfile = async (
+  accessToken: string,
+  payload: Pick<Partial<UserProfileResponse>, 'name' | 'avatar'>
+): Promise<Partial<UserProfileResponse>> => {
+  return createAuthenticatedKy(accessToken)
+    .patch('/api/my-account', {
+      json: payload,
+    })
+    .json<Partial<UserProfileResponse>>();
 };

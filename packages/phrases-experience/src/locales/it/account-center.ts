@@ -2,6 +2,25 @@ const account_center = {
   home: {
     title: 'Pagina non trovata',
     description: 'Questa pagina non è disponibile.',
+    personal_info_section: 'Personal information',
+    security_section: 'Security',
+    not_set: 'Not set',
+    action_edit: 'Edit',
+    action_add: 'Add',
+    action_view: 'View',
+    manage: 'Manage',
+    field_name: 'Display name',
+    field_avatar: 'Avatar',
+    field_username: 'Username',
+    field_email: 'Email address',
+    field_phone: 'Phone number',
+    field_password: 'Password',
+    field_2fa: 'Two-factor authentication',
+    field_authenticator_app: 'Authenticator app',
+    field_passkeys: 'Passkeys',
+    field_backup_codes: 'Backup codes',
+    password_set: 'Set',
+    password_not_set: 'Not set',
   },
   verification: {
     title: 'Verifica di sicurezza',
@@ -179,6 +198,13 @@ const account_center = {
     name_passkey_description:
       "Hai verificato con successo questo dispositivo per l'autenticazione a due fattori. Personalizza il nome per riconoscerlo se hai più chiavi.",
     name_input_label: 'Nome',
+  },
+  profile: {
+    title: 'Edit profile',
+    description: 'Update your display name and avatar.',
+    name_label: 'Display name',
+    avatar_label: 'Avatar URL',
+    saved: 'Profile updated successfully.',
   },
 };
 

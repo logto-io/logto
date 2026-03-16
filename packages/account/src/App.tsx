@@ -32,6 +32,7 @@ import {
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
+  profileRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
 import { resolveUiLocalesLanguage } from './i18n/utils';
@@ -43,6 +44,7 @@ import PasskeyBinding from './pages/PasskeyBinding';
 import PasskeyView from './pages/PasskeyView';
 import Password from './pages/Password';
 import Phone from './pages/Phone';
+import Profile from './pages/Profile';
 import TotpBinding from './pages/TotpBinding';
 import UpdateSuccess from './pages/UpdateSuccess';
 import Username from './pages/Username';
@@ -142,6 +144,7 @@ const Main = () => {
       <Route path={backupCodesManageRoute} element={<BackupCodeView />} />
       <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
       <Route path={passkeyManageRoute} element={<PasskeyView />} />
+      <Route path={profileRoute} element={<Profile />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>
