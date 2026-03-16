@@ -27,12 +27,14 @@ import {
   OrganizationRoleUserRelations,
   TenantRole,
   AccountCenters,
+  CustomProfileFields,
 } from '@logto/schemas';
 import { getTenantRole } from '@logto/schemas';
 import {
   createDefaultAccountCenter,
   createAdminTenantAccountCenter,
 } from '@logto/schemas/lib/seeds/account-center.js';
+import { createDefaultCustomProfileFields } from '@logto/schemas/lib/seeds/custom-profile-fields.js';
 import { Tenants } from '@logto/schemas/models';
 import { generateStandardId } from '@logto/shared';
 import type { DatabaseTransactionConnection } from '@silverhand/slonik';
@@ -198,7 +200,10 @@ export const seedTables = async (
     seedLegacyManagementApiUserRole(connection),
     seedTenantCloudServiceApplication(connection, defaultTenantId),
     connection.query(
-      insertInto(createDefaultAdminConsoleConfig(defaultTenantId), LogtoConfigs.table)
+      insertInto(
+        createDefaultAdminConsoleConfig(defaultTenantId, { signInExperienceCustomized: true }),
+        LogtoConfigs.table
+      )
     ),
     connection.query(
       insertInto(createDefaultAdminConsoleConfig(adminTenantId), LogtoConfigs.table)
@@ -212,6 +217,9 @@ export const seedTables = async (
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
     connection.query(insertInto(createDefaultAccountCenter(defaultTenantId), AccountCenters.table)),
     connection.query(insertInto(createAdminTenantAccountCenter(), AccountCenters.table)),
+    connection.query(
+      insertInto(createDefaultCustomProfileFields(defaultTenantId), CustomProfileFields.table)
+    ),
   ]);
 
   // The below seed data is for the Logto Cloud only. We put it here for the sake of simplicity.

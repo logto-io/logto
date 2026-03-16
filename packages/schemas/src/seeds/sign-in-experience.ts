@@ -22,7 +22,7 @@ export const createDefaultSignInExperience = (
     id: 'default',
     color: {
       primaryColor: defaultPrimaryColor,
-      isDarkModeEnabled: false,
+      isDarkModeEnabled: true,
       darkPrimaryColor: generateDarkColor(defaultPrimaryColor),
     },
     branding: {
