@@ -10,6 +10,7 @@ import { nativeEnum, object, string, enum as zodEnum } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
+import { EnvSet } from '../../env-set/index.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
 export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
@@ -42,31 +43,33 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  router.get(
-    '/users/:userId/grants',
-    koaGuard({
-      params: object({ userId: string() }),
-      query: object({
-        appType: zodEnum(['firstParty', 'thirdParty']).optional(),
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.get(
+      '/users/:userId/grants',
+      koaGuard({
+        params: object({ userId: string() }),
+        query: object({
+          appType: zodEnum(['firstParty', 'thirdParty']).optional(),
+        }),
+        response: getUserApplicationGrantsResponseGuard,
+        status: [200, 500],
       }),
-      response: getUserApplicationGrantsResponseGuard,
-      status: [200, 500],
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId },
-      } = ctx.guard;
+      async (ctx, next) => {
+        const {
+          params: { userId },
+        } = ctx.guard;
 
-      const { appType } = ctx.guard.query;
-      const grants = await sessionLibrary.findUserActiveApplicationGrants(userId, appType);
+        const { appType } = ctx.guard.query;
+        const grants = await sessionLibrary.findUserActiveApplicationGrants(userId, appType);
 
-      ctx.body = {
-        grants,
-      };
+        ctx.body = {
+          grants,
+        };
 
-      return next();
-    }
-  );
+        return next();
+      }
+    );
+  }
 
   router.get(
     '/users/:userId/sessions/:sessionId',
