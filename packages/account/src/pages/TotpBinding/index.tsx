@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import { getMfaVerifications, generateTotpSecret, addTotpMfa } from '@ac/apis/mfa';
+import { getMfaVerifications, generateTotpSecret, createOrReplaceTotpMfa } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
 import { authenticatorAppSuccessRoute } from '@ac/constants/routes';
@@ -43,7 +43,7 @@ const TotpBinding = () => {
   } = useContext(PageContext);
   const getMfaRequest = useApi(getMfaVerifications, { silent: true });
   const generateSecretRequest = useApi(generateTotpSecret, { silent: true });
-  const addTotpRequest = useApi(addTotpMfa);
+  const createOrReplaceTotpRequest = useApi(createOrReplaceTotpMfa);
   const handleError = useErrorHandler();
 
   const [secret, setSecret] = useState<string>();
@@ -73,7 +73,7 @@ const TotpBinding = () => {
 
   // Generate TOTP secret on mount
   useEffect(() => {
-    if (!verificationId || Boolean(secret) || hasTotpAlready !== false) {
+    if (!verificationId || Boolean(secret) || hasTotpAlready === undefined) {
       return;
     }
 
@@ -127,7 +127,10 @@ const TotpBinding = () => {
       setErrorMessage(undefined);
 
       const codeString = codeInput.join('');
-      const [error] = await addTotpRequest(verificationId, { secret, code: codeString });
+      const [error] = await createOrReplaceTotpRequest(verificationId, {
+        secret,
+        code: codeString,
+      });
 
       if (error) {
         await handleError(error, {
@@ -153,8 +156,8 @@ const TotpBinding = () => {
       navigate(authenticatorAppSuccessRoute, { replace: true });
     },
     [
-      addTotpRequest,
       codeInput,
+      createOrReplaceTotpRequest,
       handleError,
       loading,
       navigate,
@@ -188,15 +191,6 @@ const TotpBinding = () => {
       <ErrorPage
         titleKey="error.something_went_wrong"
         messageKey="account_center.mfa.totp_not_enabled"
-      />
-    );
-  }
-
-  if (hasTotpAlready) {
-    return (
-      <ErrorPage
-        titleKey="error.something_went_wrong"
-        messageKey="account_center.mfa.totp_already_added"
       />
     );
   }
