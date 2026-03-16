@@ -102,7 +102,7 @@ describe('account mfa verification routes', () => {
       });
     });
 
-    it('should return 404 if the user has no existing totp verification', async () => {
+    it('should create a new totp verification if the user has none', async () => {
       findUserById.mockResolvedValueOnce(mockUser);
 
       const response = await accountRequest.put('/my-account/mfa-verifications/totp').send({
@@ -110,16 +110,24 @@ describe('account mfa verification routes', () => {
         code: '123456',
       });
 
-      expect(response.status).toBe(404);
-      expect(updateUserById).not.toHaveBeenCalled();
+      expect(response.status).toBe(204);
+      expect(mockValidateTotpSecret).toHaveBeenCalledWith('new_totp_secret');
+      expect(mockValidateTotpToken).toHaveBeenCalledWith('new_totp_secret', '123456');
+      expect(updateUserById).toHaveBeenCalledWith(
+        mockUser.id,
+        expect.objectContaining({
+          mfaVerifications: [
+            expect.objectContaining({
+              type: 'Totp',
+              key: 'new_totp_secret',
+            }),
+          ],
+        })
+      );
     });
 
     it('should return 400 for an invalid totp secret', async () => {
       mockValidateTotpSecret.mockReturnValueOnce(false);
-      findUserById.mockResolvedValueOnce({
-        ...mockUser,
-        mfaVerifications: [mockUserTotpMfaVerification],
-      });
 
       const response = await accountRequest.put('/my-account/mfa-verifications/totp').send({
         secret: 'invalid_secret',
@@ -133,10 +141,6 @@ describe('account mfa verification routes', () => {
 
     it('should return 400 for an invalid totp code', async () => {
       mockValidateTotpToken.mockReturnValueOnce(false);
-      findUserById.mockResolvedValueOnce({
-        ...mockUser,
-        mfaVerifications: [mockUserTotpMfaVerification],
-      });
 
       const response = await accountRequest.put('/my-account/mfa-verifications/totp').send({
         secret: 'new_totp_secret',
