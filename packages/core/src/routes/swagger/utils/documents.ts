@@ -53,7 +53,8 @@ const managementApiIdentifiableEntityNames = Object.freeze(
     'secret',
     'email-template',
     'one-time-token',
-    'session'
+    'session',
+    'grant'
   )
 );
 
