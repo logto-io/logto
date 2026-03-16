@@ -289,7 +289,7 @@ describe('Sessions API', () => {
     ]);
   });
 
-  it('should revoke user grant by grant id', async () => {
+  devFeatureTest.it('should revoke user grant by grant id', async () => {
     await enableAllPasswordSignInMethods();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -321,7 +321,7 @@ describe('Sessions API', () => {
     await deleteApplication(app.id);
   });
 
-  it('should return 404 when revoking another user grant', async () => {
+  devFeatureTest.it('should return 404 when revoking another user grant', async () => {
     await enableAllPasswordSignInMethods();
 
     const firstUserProfile = generateNewUserProfile({ username: true, password: true });
