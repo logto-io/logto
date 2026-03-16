@@ -31,6 +31,7 @@ const userPreferencesGuard = z.object({
   rbacUpsellNoticeAcknowledged: z.boolean().optional(),
   /* === Add on feature related fields === */
   prebuiltUiPermissionNoticeAcknowledged: z.boolean().optional(),
+  ossOidcConfigNoticeAcknowledged: z.boolean().optional(),
 });
 
 type UserPreferences = z.infer<typeof userPreferencesGuard>;

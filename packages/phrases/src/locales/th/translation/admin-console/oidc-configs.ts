@@ -5,6 +5,8 @@ const oidc_configs = {
   session_max_ttl_in_days: 'อายุการใช้งานสูงสุดของเซสชัน (TTL) เป็นวัน',
   session_max_ttl_in_days_tip:
     'ขีดจำกัดอายุการใช้งานแบบตายตัวนับจากเวลาที่สร้างเซสชัน ไม่ว่ามีกิจกรรมหรือไม่ เซสชันจะสิ้นสุดเมื่อครบระยะเวลาคงที่นี้',
+  oss_notice:
+    'สำหรับ Logto OSS หลังจากอัปเดตการตั้งค่า OIDC ใดๆ (รวมถึงการตั้งค่าเซสชันและ<keyRotationsLink>การหมุนคีย์</keyRotationsLink>) จำเป็นต้องรีสตาร์ตอินสแตนซ์เพื่อให้การเปลี่ยนแปลงมีผล หากต้องการให้การอัปเดตการตั้งค่า OIDC ทั้งหมดมีผลอัตโนมัติโดยไม่ต้องรีโหลดบริการ ให้<centralCacheLink>เปิดใช้แคชส่วนกลาง</centralCacheLink>.',
 };
 
 export default Object.freeze(oidc_configs);
