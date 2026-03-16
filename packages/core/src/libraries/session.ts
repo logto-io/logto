@@ -258,7 +258,7 @@ const revokeGrantChain = async (provider: Provider, grantId: string) => {
       provider.DeviceCode,
       provider.BackchannelAuthenticationRequest,
     ]
-      .flatMap(async (model) => model.revokeByGrantId(grantId))
+      .map(async (model) => model.revokeByGrantId(grantId))
       .concat(provider.Grant.adapter.destroy(grantId))
   );
 };
