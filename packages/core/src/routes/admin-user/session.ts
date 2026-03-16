@@ -69,6 +69,55 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
         return next();
       }
     );
+
+    router.delete(
+      '/users/:userId/grants/:grantId',
+      koaGuard({
+        params: object({ userId: string(), grantId: string() }),
+        status: [204, 404, 500],
+      }),
+      async (ctx, next) => {
+        const { userId, grantId } = ctx.guard.params;
+
+        try {
+          await sessionLibrary.revokeUserGrantById({
+            provider,
+            userId,
+            grantId,
+          });
+        } catch (error: unknown) {
+          if (error instanceof RequestError) {
+            throw error;
+          }
+
+          throw new RequestError(
+            { code: 'oidc.failed_to_revoke_grant', status: 500 },
+            { cause: error }
+          );
+        }
+
+        try {
+          await sessionLibrary.removeUserSessionAuthorizationByGrantId({
+            provider,
+            userId,
+            grantId,
+          });
+        } catch (error: unknown) {
+          if (error instanceof RequestError) {
+            throw error;
+          }
+
+          throw new RequestError(
+            { code: 'oidc.failed_to_cleanup_session_authorization', status: 500 },
+            { cause: error }
+          );
+        }
+
+        ctx.status = 204;
+
+        return next();
+      }
+    );
   }
 
   router.get(

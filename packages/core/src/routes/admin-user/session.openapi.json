@@ -31,6 +31,22 @@
         "description": "Retrieve all non-expired grants of the user. Optionally filter by application type via `appType`; when omitted, grants from all application types are returned."
       }
     },
+    "/api/users/{userId}/grants/{grantId}": {
+      "delete": {
+        "tags": ["Dev feature"],
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Grant revoked successfully. If the grant already expired, this endpoint returns success without token-chain changes."
+          },
+          "404": {
+            "description": "Grant not found. This can occur if the grant ID is invalid, or the grant does not belong to the user."
+          }
+        },
+        "summary": "Revoke a user grant",
+        "description": "Revoke a specific grant and its associated token chain by grant ID. Also removes the matching session authorization entry for this grant from the related active session. The grant must belong to the user."
+      }
+    },
     "/api/users/{userId}/sessions/{sessionId}": {
       "get": {
         "parameters": [],

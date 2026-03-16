@@ -22,6 +22,8 @@ const oidc = {
   invalid_session_payload: '無効なセッションペイロード。',
   session_not_found: 'セッションが見つかりません。',
   invalid_session_account_id: 'セッションの accountId が一致しません。',
+  failed_to_revoke_grant: 'グラントの失効に失敗しました。',
+  failed_to_cleanup_session_authorization: 'セッション認可のクリーンアップに失敗しました。',
 };
 
 export default Object.freeze(oidc);

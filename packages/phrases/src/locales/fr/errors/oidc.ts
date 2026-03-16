@@ -22,6 +22,8 @@ const oidc = {
   invalid_session_payload: 'Charge utile de session invalide.',
   session_not_found: 'Session non trouvée.',
   invalid_session_account_id: "incohérence de l'accountId de session.",
+  failed_to_revoke_grant: "Échec de la révocation de l'autorisation.",
+  failed_to_cleanup_session_authorization: "Échec du nettoyage de l'autorisation de session.",
 };
 
 export default Object.freeze(oidc);

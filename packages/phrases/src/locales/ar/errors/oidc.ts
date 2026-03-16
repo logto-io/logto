@@ -21,6 +21,8 @@ const oidc = {
   invalid_session_payload: 'حمولة الجلسة غير صالحة.',
   session_not_found: 'لم يتم العثور على الجلسة.',
   invalid_session_account_id: 'عدم توافق معرف حساب الجلسة.',
+  failed_to_revoke_grant: 'فشل في إلغاء المنحة.',
+  failed_to_cleanup_session_authorization: 'فشل في تنظيف تفويض الجلسة.',
 };
 
 export default Object.freeze(oidc);

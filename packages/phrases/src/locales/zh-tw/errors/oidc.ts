@@ -21,6 +21,8 @@ const oidc = {
   invalid_session_payload: '無效的會話負載。',
   session_not_found: '未找到會話。',
   invalid_session_account_id: '會話 accountId 不匹配。',
+  failed_to_revoke_grant: '撤銷授權失敗。',
+  failed_to_cleanup_session_authorization: '清理會話授權記錄失敗。',
 };
 
 export default Object.freeze(oidc);

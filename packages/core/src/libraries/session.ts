@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   SessionGrantRevokeTarget,
   jsonObjectGuard,
@@ -216,6 +217,7 @@ const formatApplicationGrant = (
   const payloadResult = userApplicationGrantPayloadGuard.safeParse(grant.payload);
 
   if (!payloadResult.success) {
+    // Should not happen
     throw new RequestError(
       { code: 'oidc.invalid_grant', status: 500 },
       {
@@ -241,6 +243,52 @@ type SessionAuthorizations = Record<string, SessionAuthorizationDetails>;
 
 const pickGrantIds = (entries: Array<[string, SessionAuthorizationDetails]>) =>
   entries.flatMap(([, { grantId }]) => (grantId ? [grantId] : []));
+
+const isGrantExpired = (grant: { exp?: number }) =>
+  typeof grant.exp === 'number' && grant.exp <= Date.now() / 1000;
+
+const revokeGrantChain = async (provider: Provider, grantId: string) => {
+  // Align with oidc-provider revoke helper token-chain behavior:
+  // oidc-provider/lib/helpers/revoke.js
+  await Promise.all(
+    [
+      provider.AccessToken,
+      provider.RefreshToken,
+      provider.AuthorizationCode,
+      provider.DeviceCode,
+      provider.BackchannelAuthenticationRequest,
+    ]
+      .flatMap(async (model) => model.revokeByGrantId(grantId))
+      .concat(provider.Grant.adapter.destroy(grantId))
+  );
+};
+
+const revokeUserGrantById = async ({
+  provider,
+  userId,
+  grantId,
+}: {
+  provider: Provider;
+  userId: string;
+  grantId: string;
+}) => {
+  // eslint-disable-next-line unicorn/no-array-method-this-argument
+  const grant = await provider.Grant.find(grantId, { ignoreExpiration: true });
+
+  if (!grant) {
+    throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
+  }
+
+  if (grant.accountId !== userId) {
+    throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
+  }
+
+  if (!isGrantExpired(grant)) {
+    await revokeGrantChain(provider, grantId);
+    // Note: Same as session revoke in management API.
+    // No OIDC route context is available here, so `grant.revoked` cannot be emitted safely.
+  }
+};
 
 export const createSessionLibrary = (queries: Queries) => {
   const { oidcSessionExtensions } = queries;
@@ -316,11 +364,7 @@ export const createSessionLibrary = (queries: Queries) => {
 
     await Promise.all(
       uniqueGrantIds.map(async (grantId) => {
-        await Promise.all(
-          [provider.AccessToken, provider.RefreshToken, provider.AuthorizationCode]
-            .map(async (model) => model.revokeByGrantId(grantId))
-            .concat(provider.Grant.adapter.destroy(grantId))
-        );
+        await revokeGrantChain(provider, grantId);
         // Note: Unlike end_session request.
         // We do not have oidc context here so we cannot trigger the `grant.revoked` event here.
         // This is a known limitation.
@@ -328,10 +372,58 @@ export const createSessionLibrary = (queries: Queries) => {
     );
   };
 
+  const removeUserSessionAuthorizationByGrantId = async ({
+    provider,
+    userId,
+    grantId,
+  }: {
+    provider: Provider;
+    userId: string;
+    grantId: string;
+  }) => {
+    const sessionReference = await oidcSessionExtensions.findUserActiveSessionUidByGrantId(
+      userId,
+      grantId
+    );
+
+    if (!sessionReference) {
+      return;
+    }
+
+    const session = await provider.Session.findByUid(sessionReference.sessionUid);
+
+    if (!session || session.accountId !== userId || !session.authorizations) {
+      return;
+    }
+
+    // Align with oidc-provider client-scoped end-session branch:
+    // delete matched authorization entry + reset session identifier.
+    // https://github.com/panva/node-oidc-provider/blob/v7.x/lib/actions/end_session.js
+    const authorizationEntries = Object.entries(session.authorizations);
+    const filteredEntries = authorizationEntries.filter(
+      ([, authorization]) => authorization.grantId !== grantId
+    );
+
+    if (filteredEntries.length === authorizationEntries.length) {
+      return;
+    }
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    session.authorizations = Object.fromEntries(filteredEntries);
+    // `end_session` also clears `session.state`, but that state is specific to
+    // the interactive logout flow context. Management API revocation has no such
+    // OIDC route state, so we only apply authorization cleanup + identifier reset.
+    session.resetIdentifier();
+    await session.persist();
+  };
+
   return {
     findUserActiveSessionsWithExtensions,
     findUserActiveSessionWithExtension,
     findUserActiveApplicationGrants,
     revokeSessionAssociatedGrants,
+    revokeUserGrantById,
+    removeUserSessionAuthorizationByGrantId,
   };
 };
+/* eslint-enable max-lines */
