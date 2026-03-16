@@ -7,6 +7,8 @@ import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
 import { getUserInfo } from '@ac/apis/user';
 import useApi from '@ac/hooks/use-api';
+import { changeLanguage, getPreferredLanguage } from '@ac/i18n/utils';
+import { getUiLocales } from '@ac/utils/account-center-route';
 import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/theme';
 
 import type { PageContextType } from './PageContext';
@@ -97,6 +99,12 @@ const PageContextProvider = ({ children }: Props) => {
           getSignInExperienceSettings(),
           getAccountCenterSettings(),
         ]);
+        await changeLanguage(
+          getPreferredLanguage({
+            languageSettings: settings.languageInfo,
+            uiLocales: getUiLocales(),
+          })
+        );
         setExperienceSettings(settings);
         setAccountCenterSettings(accountCenter);
         setExperienceError(undefined);
