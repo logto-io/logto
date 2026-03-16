@@ -240,7 +240,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         secret: z.string(),
         code: z.string(),
       }),
-      status: [204, 400, 401, 404],
+      status: [204, 400, 401],
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
@@ -259,18 +259,10 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
 
-      const user = await findUserById(userId);
-
       const { mfa } = await findDefaultSignInExperience();
       assertThat(mfa.factors.includes(MfaFactor.TOTP), 'session.mfa.mfa_factor_not_enabled');
 
-      const existingTotpVerification = user.mfaVerifications.find(
-        ({ type }) => type === MfaFactor.TOTP
-      );
-      assertThat(
-        existingTotpVerification,
-        new RequestError({ code: 'verification_record.not_found', status: 404 })
-      );
+      const user = await findUserById(userId);
 
       const { secret, code } = ctx.guard.body;
 
@@ -283,12 +275,26 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         })
       );
 
+      const existingTotpVerification = user.mfaVerifications.find(
+        ({ type }) => type === MfaFactor.TOTP
+      );
+
       const updatedUser = await updateUserById(userId, {
-        mfaVerifications: user.mfaVerifications.map((mfaVerification) =>
-          mfaVerification.id === existingTotpVerification.id
-            ? { ...existingTotpVerification, key: secret }
-            : mfaVerification
-        ),
+        mfaVerifications: existingTotpVerification
+          ? user.mfaVerifications.map((mfaVerification) =>
+              mfaVerification.id === existingTotpVerification.id
+                ? { ...existingTotpVerification, key: secret }
+                : mfaVerification
+            )
+          : [
+              ...user.mfaVerifications,
+              {
+                id: generateStandardId(),
+                createdAt: new Date().toISOString(),
+                type: MfaFactor.TOTP,
+                key: secret,
+              },
+            ],
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
