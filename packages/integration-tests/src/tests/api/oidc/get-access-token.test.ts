@@ -24,7 +24,24 @@ import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { generateUsername, generatePassword, getAccessTokenPayload } from '#src/utils.js';
+import {
+  devFeatureDisabledTest,
+  generateUsername,
+  generatePassword,
+  getAccessTokenPayload,
+} from '#src/utils.js';
+
+const adaptiveMfaSignInContextHeaders = Object.freeze({
+  'x-logto-cf-country': 'US',
+  'x-logto-cf-bot-score': '10',
+});
+
+const adaptiveMfaSignInContextClaimScript = `const getCustomJwtClaims = async ({ context }) => {
+  return {
+    signInCountry: context?.interaction?.signInContext?.country,
+    signInBotScore: context?.interaction?.signInContext?.botScore,
+  };
+};`;
 
 describe('get access token', () => {
   const username = generateUsername();
@@ -191,4 +208,33 @@ describe('get access token', () => {
     // Allow to use the same refresh token to fetch access token within short time period
     await Promise.all([getAccessTokenByRefreshToken(), getAccessTokenByRefreshToken()]);
   });
+
+  devFeatureDisabledTest.it(
+    'includes adaptive MFA sign-in context in custom claims when issuing access tokens',
+    async () => {
+      await upsertJwtCustomizer('access-token', {
+        ...accessTokenJwtCustomizerPayload,
+        script: adaptiveMfaSignInContextClaimScript,
+      });
+
+      try {
+        const client = await initExperienceClient({
+          config: {
+            resources: [testApiResourceInfo.indicator],
+          },
+          extraHeaders: adaptiveMfaSignInContextHeaders,
+        });
+        await identifyUserWithUsernamePassword(client, guestUsername, password);
+
+        const { redirectTo } = await client.submitInteraction();
+        await processSession(client, redirectTo);
+        const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
+
+        expect(getAccessTokenPayload(accessToken)).toHaveProperty('signInCountry', 'US');
+        expect(getAccessTokenPayload(accessToken)).toHaveProperty('signInBotScore', '10');
+      } finally {
+        await deleteJwtCustomizer('access-token');
+      }
+    }
+  );
 });
