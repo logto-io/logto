@@ -2,7 +2,6 @@ import { trySafe } from '@silverhand/essentials';
 import { type JWSHeaderParameters, type FlattenedJWSInput, type KeyLike, jwtVerify } from 'jose';
 import { type Provider, errors } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -16,7 +15,7 @@ type ValidateSubjectTokenParams = {
   subjectTokenType: string;
   /** The AccessToken class from oidc-provider for opaque token lookup. */
   AccessToken: Provider['AccessToken'];
-  /** For JWT access token verification. Required when dev features are enabled. */
+  /** For JWT access token verification. */
   jwtVerificationOptions?: {
     localJWKSet: (
       protectedHeader: JWSHeaderParameters,
@@ -121,23 +120,15 @@ export const validateSubjectToken = async ({
       return validateImpersonationToken(findSubjectToken, subjectToken);
     }
 
-    // Access token exchange is enabled when:
-    // 1. Dev features are enabled (for development/testing)
-    // 2. ACCESS_TOKEN_EXCHANGE_ENABLED env is set (for enterprise customers)
-    if (EnvSet.values.isDevFeaturesEnabled || EnvSet.values.isAccessTokenExchangeEnabled) {
-      // First, try to find the token as an opaque access token
-      const opaqueResult = await validateOpaqueAccessToken(subjectToken, AccessToken);
-      if (opaqueResult) {
-        return opaqueResult;
-      }
-
-      // If not found as opaque token, try to verify as JWT
-      assertThat(jwtVerificationOptions, new InvalidGrant('JWT verification options are required'));
-      return validateJwtAccessToken(subjectToken, jwtVerificationOptions);
+    // First, try to find the token as an opaque access token
+    const opaqueResult = await validateOpaqueAccessToken(subjectToken, AccessToken);
+    if (opaqueResult) {
+      return opaqueResult;
     }
 
-    // When dev features are disabled and it's not a legacy token, reject
-    throw new InvalidGrant('unsupported subject token type');
+    // If not found as opaque token, try to verify as JWT
+    assertThat(jwtVerificationOptions, new InvalidGrant('JWT verification options are required'));
+    return validateJwtAccessToken(subjectToken, jwtVerificationOptions);
   }
 
   if (subjectTokenType === TokenExchangeTokenType.PersonalAccessToken) {
