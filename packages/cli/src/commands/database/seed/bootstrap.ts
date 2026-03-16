@@ -29,7 +29,12 @@ import { encryptPassword } from '../../../utils/password.js';
 import { consoleLog } from '../../../utils.js';
 
 import type { AdminConfig, AppConfig, SmtpConfig } from './bootstrap-config.js';
-import { getAdminConfig, getAppConfig, getSmtpConfig } from './bootstrap-config.js';
+import {
+  getAdminConfig,
+  getAppConfig,
+  getSignInIdentifier,
+  getSmtpConfig,
+} from './bootstrap-config.js';
 import type { SeedUser } from './bootstrap-users.js';
 import { loadSeedUsers } from './bootstrap-users.js';
 
@@ -230,8 +235,8 @@ const bootstrapSeedUsers = async (
         {
           tenantId: defaultTenantId,
           id: userId,
-          username: user.username,
-          primaryEmail: user.email ?? null,
+          username: user.username ?? null,
+          primaryEmail: user.email,
           passwordEncrypted,
           passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
           name: user.name ?? null,
@@ -247,21 +252,15 @@ const bootstrapSeedUsers = async (
 
 const updateSignInExperience = async (
   connection: DatabaseTransactionConnection,
-  hasSmtp: boolean,
-  hasEmailUsers: boolean
+  useEmailIdentifier: boolean,
+  hasSeededUsers: boolean
 ) => {
-  if (!hasSmtp || !hasEmailUsers) {
+  if (!useEmailIdentifier) {
     return;
   }
 
   const signIn = {
     methods: [
-      {
-        identifier: SignInIdentifier.Username,
-        password: true,
-        verificationCode: false,
-        isPasswordPrimary: true,
-      },
       {
         identifier: SignInIdentifier.Email,
         password: true,
@@ -270,18 +269,28 @@ const updateSignInExperience = async (
       },
     ],
   };
-  const signUp = { identifiers: [SignInIdentifier.Username], password: true, verify: false };
+  const signUp = {
+    identifiers: [SignInIdentifier.Email],
+    password: true,
+    verify: true,
+  };
+
+  // When users are pre-seeded, restrict to sign-in only (no self-registration)
+  const signInModeClause = hasSeededUsers
+    ? sql`, ${sql.identifier(['sign_in_mode'])} = ${SignInMode.SignIn}`
+    : sql``;
 
   await connection.query(sql`
     update ${sql.identifier([SignInExperiences.table])}
     set
       ${sql.identifier(['sign_in'])} = ${JSON.stringify(signIn)}::jsonb,
       ${sql.identifier(['sign_up'])} = ${JSON.stringify(signUp)}::jsonb
+      ${signInModeClause}
     where ${sql.identifier(['tenant_id'])} = ${defaultTenantId}
     and ${sql.identifier(['id'])} = 'default'
   `);
 
-  consoleLog.succeed('Updated sign-in experience: enabled email + password sign-in');
+  consoleLog.succeed('Updated sign-in experience: email-primary sign-in enabled');
 };
 
 /**
@@ -293,8 +302,9 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
   const appConfig = getAppConfig();
   const smtpConfig = getSmtpConfig();
   const seedUsers = await loadSeedUsers();
+  const signInIdentifier = getSignInIdentifier();
 
-  if (!adminConfig && !appConfig && !smtpConfig && seedUsers.length === 0) {
+  if (!adminConfig && !appConfig && !smtpConfig && seedUsers.length === 0 && !signInIdentifier) {
     return;
   }
 
@@ -316,11 +326,9 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
     await bootstrapSeedUsers(connection, seedUsers);
   }
 
-  await updateSignInExperience(
-    connection,
-    Boolean(smtpConfig),
-    seedUsers.some((user) => user.email)
-  );
+  // Use email-primary sign-in when: users are seeded (always email-primary) or explicitly configured
+  const useEmailIdentifier = seedUsers.length > 0 || signInIdentifier === 'email';
+  await updateSignInExperience(connection, useEmailIdentifier, seedUsers.length > 0);
 
   consoleLog.succeed('Bootstrap complete');
 };

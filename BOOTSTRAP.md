@@ -89,15 +89,15 @@ Pre-create user accounts in the default tenant from a CSV or JSON file.
 ```json
 [
   {
-    "username": "jdoe",
     "email": "jdoe@example.com",
     "password": "s3cret",
+    "username": "jdoe",
     "name": "John Doe",
     "familyName": "Doe",
     "givenName": "John"
   },
   {
-    "username": "asmith",
+    "email": "asmith@example.com",
     "password": "p@ssw0rd",
     "name": "Alice Smith",
     "familyName": "Smith"
@@ -108,32 +108,42 @@ Pre-create user accounts in the default tenant from a CSV or JSON file.
 #### CSV Format
 
 ```csv
-username,email,password,name,familyName,givenName
-jdoe,jdoe@example.com,s3cret,John Doe,Doe,John
-asmith,,p@ssw0rd,Alice Smith,Smith,
+email,password,username,name,familyName,givenName
+jdoe@example.com,s3cret,jdoe,John Doe,Doe,John
+asmith@example.com,p@ssw0rd,,Alice Smith,Smith,
 ```
 
 #### Field Reference
 
 | Field | Required | Description |
 |---|---|---|
-| `username` | Yes | User's login username |
+| `email` | Yes | User's primary email address (used as the sign-in identifier) |
 | `password` | Yes | Password (plaintext; hashed with Argon2i during seed) |
-| `email` | No | User's primary email address |
+| `username` | No | Optional username |
 | `name` | No | Display name |
 | `familyName` | No | Family name (stored in OIDC `profile.family_name` claim) |
 | `givenName` | No | Given name (stored in OIDC `profile.given_name` claim) |
 
 Users are created in the **default tenant** and can sign in through any OIDC application configured in that tenant.
 
-### Automatic Sign-In Experience Configuration
+### Sign-In Identifier Configuration
 
-When **both** the SMTP connector is configured **and** at least one seeded user has an email address, the sign-in experience for the default tenant is automatically updated to support:
+Control which identifier (email or username) is used for the default tenant's sign-in experience.
 
-- **Username + Password** sign-in (always enabled)
-- **Email + Password** sign-in (with verification code fallback)
+| Variable | Required | Description |
+|---|---|---|
+| `LOGTO_SIGN_IN_IDENTIFIER` | No | Primary sign-in identifier: `email` or `username` |
 
-This ensures seeded users with email addresses can sign in using either their username or email.
+When set to `email`, the default tenant sign-in experience is configured for:
+
+- **Sign-up**: Email + password with email verification
+- **Sign-in**: Email + password (primary), with verification code fallback
+
+When **seeded users** are present, the sign-in experience is automatically set to `email`-primary regardless of this variable, and self-registration is disabled (sign-in only mode).
+
+This variable is useful when you want email-primary sign-in without seeding users (e.g., users will self-register via email).
+
+> **Note:** SMTP must be independently configured (via `LOGTO_SMTP_*` variables or the Admin Console) for email-based sign-in to work. The bootstrap assumes SMTP is already set up.
 
 ## Docker Compose Example
 
@@ -172,6 +182,9 @@ services:
       - LOGTO_SMTP_USERNAME=noreply@example.com
       - LOGTO_SMTP_PASSWORD=smtp-password
       - LOGTO_SMTP_FROM_EMAIL=noreply@example.com
+
+      # Bootstrap: Sign-in identifier (email-primary)
+      - LOGTO_SIGN_IN_IDENTIFIER=email
 
       # Bootstrap: Seeded users (mount the file into the container)
       - LOGTO_SEED_USERS_FILE=/data/seed-users.json

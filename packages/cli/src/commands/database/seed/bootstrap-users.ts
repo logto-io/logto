@@ -6,8 +6,8 @@ import { getEnv } from '@silverhand/essentials';
 import { consoleLog } from '../../../utils.js';
 
 export type SeedUser = {
-  username: string;
-  email?: string;
+  email: string;
+  username?: string;
   password: string;
   name?: string;
   familyName?: string;
@@ -23,18 +23,18 @@ const parseCsvRow = (headers: string[], line: string): SeedUser | undefined => {
     return value && value.length > 0 ? value : undefined;
   };
 
-  const username = getValue('username');
+  const email = getValue('email');
   const password = getValue('password');
 
-  if (!username || !password) {
-    consoleLog.warn(`Skipping user row with missing username or password: ${line}`);
+  if (!email || !password) {
+    consoleLog.warn(`Skipping user row with missing email or password: ${line}`);
     return undefined;
   }
 
   return {
-    username,
+    email,
     password,
-    email: getValue('email'),
+    username: getValue('username'),
     name: getValue('name'),
     familyName: getValue('familyName'),
     givenName: getValue('givenName'),
@@ -64,16 +64,16 @@ const parseJsonUsers = (content: string): SeedUser[] => {
   }
 
   return parsed.map((entry: Record<string, unknown>, index: number) => {
-    if (!entry.username || !entry.password) {
+    if (!entry.email || !entry.password) {
       throw new Error(
-        `User at index ${index} is missing required fields "username" and/or "password"`
+        `User at index ${index} is missing required fields "email" and/or "password"`
       );
     }
 
     return {
-      username: String(entry.username),
+      email: String(entry.email),
       password: String(entry.password),
-      email: entry.email ? String(entry.email) : undefined,
+      username: entry.username ? String(entry.username) : undefined,
       name: entry.name ? String(entry.name) : undefined,
       familyName: entry.familyName ? String(entry.familyName) : undefined,
       givenName: entry.givenName ? String(entry.givenName) : undefined,

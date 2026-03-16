@@ -23,6 +23,8 @@ export type SmtpConfig = {
   secure: boolean;
 };
 
+export type SignInIdentifierConfig = 'email' | 'username';
+
 export const getAdminConfig = (): AdminConfig | undefined => {
   const username = getEnv('LOGTO_ADMIN_USERNAME');
   const password = getEnv('LOGTO_ADMIN_PASSWORD');
@@ -79,4 +81,22 @@ export const getSmtpConfig = (): SmtpConfig | undefined => {
     replyTo: getEnv('LOGTO_SMTP_REPLY_TO') || undefined,
     secure: yes(getEnv('LOGTO_SMTP_SECURE')),
   };
+};
+
+/**
+ * Read the sign-in identifier preference from `LOGTO_SIGN_IN_IDENTIFIER`.
+ * Valid values: `email`, `username`. Returns `undefined` if not set.
+ */
+export const getSignInIdentifier = (): SignInIdentifierConfig | undefined => {
+  const value = getEnv('LOGTO_SIGN_IN_IDENTIFIER').toLowerCase();
+
+  if (value === 'email') {
+    return 'email';
+  }
+
+  if (value === 'username') {
+    return 'username';
+  }
+
+  return undefined;
 };
