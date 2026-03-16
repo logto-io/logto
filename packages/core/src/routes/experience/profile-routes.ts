@@ -8,7 +8,6 @@ import { type MiddlewareType } from 'koa';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -170,23 +169,21 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }
   );
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.post(
-      `${experienceRoutes.mfa}/mfa-enabled`,
-      koaGuard({ status: [204, 400, 403, 404] }),
-      verifiedInteractionGuard(),
-      async (ctx, next) => {
-        const { experienceInteraction } = ctx;
+  router.post(
+    `${experienceRoutes.mfa}/mfa-enabled`,
+    koaGuard({ status: [204, 400, 403, 404] }),
+    verifiedInteractionGuard(),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
 
-        experienceInteraction.mfa.markMfaEnabled();
-        await experienceInteraction.save();
+      experienceInteraction.mfa.markMfaEnabled();
+      await experienceInteraction.save();
 
-        ctx.status = 204;
+      ctx.status = 204;
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 
   router.post(
     `${experienceRoutes.mfa}/mfa-skipped`,

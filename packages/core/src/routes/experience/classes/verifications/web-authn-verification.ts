@@ -142,7 +142,7 @@ abstract class BaseWebAuthnVerification {
       publicKey: isoBase64URL.fromBuffer(credentialPublicKey),
       counter,
       agent: userAgent,
-      transports: [],
+      transports: payload.response.transports ?? [],
     };
   }
 
