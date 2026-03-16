@@ -161,11 +161,9 @@ function UserSettings() {
               }}
             />
           </FormField>
-          {isDevFeaturesEnabled && (
-            <FormField title="user_details.passkey.field_name">
-              <UserSignInPasskeys userId={user.id} />
-            </FormField>
-          )}
+          <FormField title="user_details.passkey.field_name">
+            <UserSignInPasskeys userId={user.id} />
+          </FormField>
           <FormField title="user_details.mfa.field_name">
             <UserMfaVerifications userId={user.id} />
           </FormField>
