@@ -398,7 +398,7 @@ export const createSessionLibrary = (queries: Queries) => {
 
     // Align with oidc-provider client-scoped end-session branch:
     // delete matched authorization entry + reset session identifier.
-    // https://github.com/panva/node-oidc-provider/blob/v7.x/lib/actions/end_session.js
+    // oidc-provider/lib/actions/end_session.js
     const authorizationEntries = Object.entries(session.authorizations);
     const filteredEntries = authorizationEntries.filter(
       ([, authorization]) => authorization.grantId !== grantId
