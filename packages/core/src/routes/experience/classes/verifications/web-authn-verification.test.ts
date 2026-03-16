@@ -111,7 +111,11 @@ describe('WebAuthnVerification', () => {
       await verification.verifyWebAuthnRegistration(ctx, {
         id: 'id',
         rawId: 'id',
-        response: { clientDataJSON: 'a', attestationObject: 'b' },
+        response: {
+          clientDataJSON: 'a',
+          attestationObject: 'b',
+          transports: ['internal', 'hybrid'],
+        },
         clientExtensionResults: {},
       });
 
@@ -122,6 +126,7 @@ describe('WebAuthnVerification', () => {
         credentialId: 'credentialId',
         counter: 0,
         agent: 'agent-x',
+        transports: ['internal', 'hybrid'],
       });
     });
   });
