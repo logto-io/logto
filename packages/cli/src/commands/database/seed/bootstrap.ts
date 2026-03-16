@@ -6,7 +6,6 @@ import {
   OrganizationUserRelations,
   Roles,
   SignInExperiences,
-  SignInIdentifier,
   SignInMode,
   TenantRole,
   Users,
@@ -32,12 +31,18 @@ import type { AdminConfig, AppConfig, SmtpConfig } from './bootstrap-config.js';
 import {
   getAdminConfig,
   getAppConfig,
-  getSignInIdentifier,
+  getSignInExperienceConfig,
   getSmtpConfig,
 } from './bootstrap-config.js';
+import { bootstrapSignInExperience } from './bootstrap-sign-in.js';
 import type { SeedUser } from './bootstrap-users.js';
 import { loadSeedUsers } from './bootstrap-users.js';
 
+/**
+ * Default HTML email templates registered with the SMTP connector for every standard usage type
+ * (Register, SignIn, ForgotPassword, Generic). Each template renders a `{{code}}` placeholder
+ * that Logto replaces with the one-time verification code at send time.
+ */
 const defaultEmailTemplates = [
   {
     usageType: 'Register',
@@ -69,6 +74,20 @@ const defaultEmailTemplates = [
   },
 ];
 
+/**
+ * Creates the initial admin user in the admin tenant and wires up all required role and
+ * organisation memberships.
+ *
+ * Specifically:
+ * - Inserts the user row with an Argon2i-hashed password.
+ * - Assigns the `User` admin-tenant role and the default management-API admin role.
+ * - Adds the user to the default tenant's organisation with the `Admin` organisation role.
+ * - Switches the admin tenant's sign-in experience to sign-in-only mode so no further
+ *   self-registration is possible via the admin console.
+ *
+ * @param connection - Active database transaction connection.
+ * @param config - Admin user credentials and optional email from {@link getAdminConfig}.
+ */
 const bootstrapAdminUser = async (
   connection: DatabaseTransactionConnection,
   config: AdminConfig
@@ -145,6 +164,15 @@ const bootstrapAdminUser = async (
   );
 };
 
+/**
+ * Registers a Traditional (server-side) OIDC application in the default tenant.
+ *
+ * Creates both the application record and its associated `Default` application secret so the
+ * app can immediately authenticate against Logto using the configured client credentials.
+ *
+ * @param connection - Active database transaction connection.
+ * @param config - Application metadata and OAuth settings from {@link getAppConfig}.
+ */
 const bootstrapApplication = async (
   connection: DatabaseTransactionConnection,
   config: AppConfig
@@ -187,6 +215,16 @@ const bootstrapApplication = async (
   );
 };
 
+/**
+ * Registers an SMTP email connector in the default tenant using the built-in
+ * `simple-mail-transfer-protocol` connector type.
+ *
+ * The connector is pre-loaded with {@link defaultEmailTemplates} covering all standard usage
+ * types so it is immediately ready to send verification and password-reset emails.
+ *
+ * @param connection - Active database transaction connection.
+ * @param config - SMTP server details and credentials from {@link getSmtpConfig}.
+ */
 const bootstrapSmtpConnector = async (
   connection: DatabaseTransactionConnection,
   config: SmtpConfig
@@ -215,11 +253,28 @@ const bootstrapSmtpConnector = async (
   consoleLog.succeed(`Configured SMTP email connector (${config.host}:${config.port})`);
 };
 
+/**
+ * Extracts the optional name profile fields from a seed user into the flat object expected by the
+ * `profile` column.
+ *
+ * @param user - Source seed user entry.
+ * @returns A partial profile record containing only the fields that are present on the user.
+ */
 const buildUserProfile = (user: SeedUser): Record<string, string> => ({
   ...(user.familyName ? { familyName: user.familyName } : {}),
   ...(user.givenName ? { givenName: user.givenName } : {}),
 });
 
+/**
+ * Inserts pre-seeded user accounts into the default tenant in sequence.
+ *
+ * Passwords are hashed with Argon2i individually before each insert. Users are processed
+ * sequentially (not in parallel) to avoid overwhelming the database with concurrent hashing and
+ * write operations.
+ *
+ * @param connection - Active database transaction connection.
+ * @param users - List of user entries loaded from the seed file.
+ */
 const bootstrapSeedUsers = async (
   connection: DatabaseTransactionConnection,
   users: readonly SeedUser[]
@@ -250,61 +305,29 @@ const bootstrapSeedUsers = async (
   consoleLog.succeed(`Seeded ${users.length} user account(s) in the default tenant`);
 };
 
-const updateSignInExperience = async (
-  connection: DatabaseTransactionConnection,
-  useEmailIdentifier: boolean,
-  hasSeededUsers: boolean
-) => {
-  if (!useEmailIdentifier) {
-    return;
-  }
-
-  const signIn = {
-    methods: [
-      {
-        identifier: SignInIdentifier.Email,
-        password: true,
-        verificationCode: true,
-        isPasswordPrimary: true,
-      },
-    ],
-  };
-  const signUp = {
-    identifiers: [SignInIdentifier.Email],
-    password: true,
-    verify: true,
-  };
-
-  // When users are pre-seeded, restrict to sign-in only (no self-registration)
-  const signInModeClause = hasSeededUsers
-    ? sql`, ${sql.identifier(['sign_in_mode'])} = ${SignInMode.SignIn}`
-    : sql``;
-
-  await connection.query(sql`
-    update ${sql.identifier([SignInExperiences.table])}
-    set
-      ${sql.identifier(['sign_in'])} = ${JSON.stringify(signIn)}::jsonb,
-      ${sql.identifier(['sign_up'])} = ${JSON.stringify(signUp)}::jsonb
-      ${signInModeClause}
-    where ${sql.identifier(['tenant_id'])} = ${defaultTenantId}
-    and ${sql.identifier(['id'])} = 'default'
-  `);
-
-  consoleLog.succeed('Updated sign-in experience: email-primary sign-in enabled');
-};
-
 /**
- * Run the environment-based bootstrap after the standard database seed.
- * Creates admin user, OIDC application, SMTP connector, and seeded users as configured.
+ * Entry point for environment-driven bootstrap logic, intended to run once immediately after the
+ * standard Logto database seed.
+ *
+ * Each step is opt-in and gated on the presence of the relevant environment variables:
+ * - **Admin user** — `LOGTO_ADMIN_USERNAME` + `LOGTO_ADMIN_PASSWORD` (+ optional `LOGTO_ADMIN_EMAIL`)
+ * - **OIDC application** — `LOGTO_APP_CLIENT_ID` + `LOGTO_APP_CLIENT_SECRET` + `LOGTO_APP_REDIRECT_URIS`
+ * - **SMTP connector** — `LOGTO_SMTP_HOST` + `LOGTO_SMTP_PORT` + `LOGTO_SMTP_USERNAME` + `LOGTO_SMTP_PASSWORD` + `LOGTO_SMTP_FROM_EMAIL`
+ * - **Seed users** — `LOGTO_SEED_USERS_FILE` pointing to a `.json` or `.csv` file
+ * - **Sign-in experience** — always updated when seed users are present, or when `LOGTO_SIGN_IN_IDENTIFIER=email`
+ *
+ * Returns immediately without writing anything when none of the above are configured.
+ *
+ * @param connection - Active database transaction connection supplied by the seed runner.
  */
 export const runBootstrap = async (connection: DatabaseTransactionConnection): Promise<void> => {
   const adminConfig = getAdminConfig();
   const appConfig = getAppConfig();
   const smtpConfig = getSmtpConfig();
   const seedUsers = await loadSeedUsers();
-  const signInIdentifier = getSignInIdentifier();
+  const signInExpConfig = getSignInExperienceConfig();
 
-  if (!adminConfig && !appConfig && !smtpConfig && seedUsers.length === 0 && !signInIdentifier) {
+  if (!adminConfig && !appConfig && !smtpConfig && seedUsers.length === 0) {
     return;
   }
 
@@ -326,9 +349,9 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
     await bootstrapSeedUsers(connection, seedUsers);
   }
 
-  // Use email-primary sign-in when: users are seeded (always email-primary) or explicitly configured
-  const useEmailIdentifier = seedUsers.length > 0 || signInIdentifier === 'email';
-  await updateSignInExperience(connection, useEmailIdentifier, seedUsers.length > 0);
+  if (signInExpConfig.bootstrapSignInExperience) {
+    await bootstrapSignInExperience(connection, signInExpConfig.primaryIdentifier);
+  }
 
   consoleLog.succeed('Bootstrap complete');
 };

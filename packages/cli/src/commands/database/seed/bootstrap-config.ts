@@ -1,30 +1,59 @@
+import { SignInIdentifier } from '@logto/schemas';
 import { getEnv, yes } from '@silverhand/essentials';
 
+/** Credentials and identity for the initial admin user created during bootstrap. */
 export type AdminConfig = {
+  /** The admin account username, read from `LOGTO_ADMIN_USERNAME`. */
   username: string;
+  /** The admin account password, read from `LOGTO_ADMIN_PASSWORD`. */
   password: string;
+  /** Optional primary email for the admin account, read from `LOGTO_ADMIN_EMAIL`. */
   email?: string;
 };
 
+/** Configuration for the OIDC application registered in the default tenant during bootstrap. */
 export type AppConfig = {
+  /** Display name of the application, read from `LOGTO_APP_NAME`. */
   name: string;
+  /** OAuth 2.0 client ID, read from `LOGTO_APP_CLIENT_ID`. */
   clientId: string;
+  /** OAuth 2.0 client secret, read from `LOGTO_APP_CLIENT_SECRET`. */
   clientSecret: string;
+  /** Comma-separated list of allowed redirect URIs, read from `LOGTO_APP_REDIRECT_URIS`. */
   redirectUris: string[];
+  /** Comma-separated list of allowed post-logout redirect URIs, read from `LOGTO_APP_POST_LOGOUT_REDIRECT_URIS`. */
   postLogoutRedirectUris: string[];
 };
 
+/** Connection details and credentials for the SMTP email connector registered during bootstrap. */
 export type SmtpConfig = {
+  /** SMTP server hostname, read from `LOGTO_SMTP_HOST`. */
   host: string;
+  /** SMTP server port, read from `LOGTO_SMTP_PORT`. */
   port: number;
+  /** SMTP authentication credentials, read from `LOGTO_SMTP_USERNAME` and `LOGTO_SMTP_PASSWORD`. */
   auth: { user: string; pass: string };
+  /** The "From" email address for outgoing messages, read from `LOGTO_SMTP_FROM_EMAIL`. */
   fromEmail: string;
+  /** Optional reply-to address, read from `LOGTO_SMTP_REPLY_TO`. */
   replyTo?: string;
+  /** Whether to use TLS/SSL for the connection, read from `LOGTO_SMTP_SECURE`. */
   secure: boolean;
 };
 
-export type SignInIdentifierConfig = 'email' | 'username';
+export type SignInExperienceConfig = {
+  /** The preferred primary sign-in identifier for the default tenant, read from `LOGTO_SIGN_IN_IDENTIFIER`. */
+  primaryIdentifier: SignInIdentifier;
+  /** If true, will automatically set up the Sign In Experience with dark mode enabled, and automatically collecting the user's name */
+  bootstrapSignInExperience: boolean;
+};
 
+/**
+ * Reads admin user credentials from environment variables.
+ *
+ * @returns An {@link AdminConfig} when both `LOGTO_ADMIN_USERNAME` and `LOGTO_ADMIN_PASSWORD` are
+ * set, otherwise `undefined`.
+ */
 export const getAdminConfig = (): AdminConfig | undefined => {
   const username = getEnv('LOGTO_ADMIN_USERNAME');
   const password = getEnv('LOGTO_ADMIN_PASSWORD');
@@ -40,6 +69,12 @@ export const getAdminConfig = (): AdminConfig | undefined => {
   };
 };
 
+/**
+ * Reads OIDC application configuration from environment variables.
+ *
+ * @returns An {@link AppConfig} when `LOGTO_APP_CLIENT_ID`, `LOGTO_APP_CLIENT_SECRET`, and
+ * `LOGTO_APP_REDIRECT_URIS` are all set, otherwise `undefined`.
+ */
 export const getAppConfig = (): AppConfig | undefined => {
   const clientId = getEnv('LOGTO_APP_CLIENT_ID');
   const clientSecret = getEnv('LOGTO_APP_CLIENT_SECRET');
@@ -62,6 +97,12 @@ export const getAppConfig = (): AppConfig | undefined => {
   };
 };
 
+/**
+ * Reads SMTP connector configuration from environment variables.
+ *
+ * @returns An {@link SmtpConfig} when `LOGTO_SMTP_HOST`, `LOGTO_SMTP_PORT`, `LOGTO_SMTP_USERNAME`,
+ * `LOGTO_SMTP_PASSWORD`, and `LOGTO_SMTP_FROM_EMAIL` are all set, otherwise `undefined`.
+ */
 export const getSmtpConfig = (): SmtpConfig | undefined => {
   const host = getEnv('LOGTO_SMTP_HOST');
   const portRaw = getEnv('LOGTO_SMTP_PORT');
@@ -84,19 +125,19 @@ export const getSmtpConfig = (): SmtpConfig | undefined => {
 };
 
 /**
- * Read the sign-in identifier preference from `LOGTO_SIGN_IN_IDENTIFIER`.
- * Valid values: `email`, `username`. Returns `undefined` if not set.
+ * Reads the sign-in identifier preference from `LOGTO_SIGN_IN_IDENTIFIER`, as well as
+ * if it should bootstrap the sign in experience from `LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE`.
+ *
+ * @default If env vars are not set, Username will be the default sign in identifier, and the experience will not be bootstrapped
  */
-export const getSignInIdentifier = (): SignInIdentifierConfig | undefined => {
-  const value = getEnv('LOGTO_SIGN_IN_IDENTIFIER').toLowerCase();
+export const getSignInExperienceConfig = (): SignInExperienceConfig => {
+  const primarySignInId = getEnv('LOGTO_SIGN_IN_IDENTIFIER').toLowerCase();
+  const bootstrapSignInExperience =
+    getEnv('LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE').toLowerCase() === 'true';
 
-  if (value === 'email') {
-    return 'email';
-  }
-
-  if (value === 'username') {
-    return 'username';
-  }
-
-  return undefined;
+  return {
+    primaryIdentifier:
+      primarySignInId === 'email' ? SignInIdentifier.Email : SignInIdentifier.Username,
+    bootstrapSignInExperience,
+  };
 };

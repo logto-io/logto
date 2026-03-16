@@ -10,9 +10,7 @@ import { LogtoTenantConfigKey } from '../types/index.js';
 import { cloudApiIndicator } from './cloud-api.js';
 
 export const createDefaultAdminConsoleConfig = (
-  forTenantId: string,
-  /** @default false for both */
-  initialValue?: { signInExperienceCustomized?: boolean; organizationCreated?: boolean }
+  forTenantId: string
 ): Readonly<{
   tenantId: string;
   key: LogtoTenantConfigKey;
@@ -22,8 +20,8 @@ export const createDefaultAdminConsoleConfig = (
     tenantId: forTenantId,
     key: LogtoTenantConfigKey.AdminConsole,
     value: {
-      signInExperienceCustomized: initialValue?.signInExperienceCustomized ?? false,
-      organizationCreated: initialValue?.organizationCreated ?? false,
+      signInExperienceCustomized: false,
+      organizationCreated: false,
     },
   } satisfies CreateLogtoConfig);
 

@@ -29,6 +29,7 @@ Create a fully-provisioned admin user in the admin tenant with management roles 
 > **Note:** Both `LOGTO_ADMIN_USERNAME` and `LOGTO_ADMIN_PASSWORD` must be set to trigger admin user creation.
 
 The admin user is provisioned with:
+
 - `AdminTenantRole.User` role in the admin tenant
 - Legacy Management API admin role (OSS: `default:admin`)
 - Membership in the default tenant organisation with the `Admin` role
@@ -51,6 +52,7 @@ Create a Traditional (confidential) OIDC application in the default tenant with 
 > **Important:** The Client ID is stored as the application's primary key in the database, which has a `varchar(21)` constraint. Keep your Client ID to 21 characters or fewer.
 
 The created application:
+
 - Type: `Traditional` (confidential web application)
 - Supports Authorization Code Grant with `client_secret`
 - Client secret is stored both in the legacy `applications.secret` column and the `application_secrets` table
@@ -72,6 +74,7 @@ Configure the SMTP email connector in the default tenant. Default email template
 > **Note:** All five required variables must be set to trigger SMTP connector creation.
 
 Default email templates use a simple HTML format:
+
 ```html
 <p>Your verification code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>
 ```
@@ -126,22 +129,19 @@ asmith@example.com,p@ssw0rd,,Alice Smith,Smith,
 
 Users are created in the **default tenant** and can sign in through any OIDC application configured in that tenant.
 
-### Sign-In Identifier Configuration
+### Sign-In Experience Configuration
 
-Control which identifier (email or username) is used for the default tenant's sign-in experience.
+Control how the sign in experience is initially set up.
 
 | Variable | Required | Description |
 |---|---|---|
-| `LOGTO_SIGN_IN_IDENTIFIER` | No | Primary sign-in identifier: `email` or `username` |
+| `LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE` | No | If not set to `true`, the Sign In Experience will not be automatically configured |
+| `LOGTO_SIGN_IN_IDENTIFIER` | No | Primary sign-in identifier: `email` or `username`. Defaults to `username` |
 
 When set to `email`, the default tenant sign-in experience is configured for:
 
 - **Sign-up**: Email + password with email verification
 - **Sign-in**: Email + password (primary), with verification code fallback
-
-When **seeded users** are present, the sign-in experience is automatically set to `email`-primary regardless of this variable, and self-registration is disabled (sign-in only mode).
-
-This variable is useful when you want email-primary sign-in without seeding users (e.g., users will self-register via email).
 
 > **Note:** SMTP must be independently configured (via `LOGTO_SMTP_*` variables or the Admin Console) for email-based sign-in to work. The bootstrap assumes SMTP is already set up.
 
@@ -185,6 +185,7 @@ services:
 
       # Bootstrap: Sign-in identifier (email-primary)
       - LOGTO_SIGN_IN_IDENTIFIER=email
+      - LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE=true
 
       # Bootstrap: Seeded users (mount the file into the container)
       - LOGTO_SEED_USERS_FILE=/data/seed-users.json
