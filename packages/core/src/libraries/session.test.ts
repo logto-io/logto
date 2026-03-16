@@ -143,12 +143,18 @@ describe('revokeSessionAssociatedGrants', () => {
   const revokeAccessTokenByGrantId = jest.fn(async () => 'ok');
   const revokeRefreshTokenByGrantId = jest.fn(async () => 'ok');
   const revokeAuthorizationCodeByGrantId = jest.fn(async () => 'ok');
+  const revokeDeviceCodeByGrantId = jest.fn(async () => 'ok');
+  const revokeBackchannelAuthenticationRequestByGrantId = jest.fn(async () => 'ok');
   const destroyGrant = jest.fn(async () => 'ok');
 
   const provider = {
     AccessToken: { revokeByGrantId: revokeAccessTokenByGrantId },
     RefreshToken: { revokeByGrantId: revokeRefreshTokenByGrantId },
     AuthorizationCode: { revokeByGrantId: revokeAuthorizationCodeByGrantId },
+    DeviceCode: { revokeByGrantId: revokeDeviceCodeByGrantId },
+    BackchannelAuthenticationRequest: {
+      revokeByGrantId: revokeBackchannelAuthenticationRequestByGrantId,
+    },
     Grant: { adapter: { destroy: destroyGrant } },
   } as unknown as Provider;
 
@@ -186,6 +192,8 @@ describe('revokeSessionAssociatedGrants', () => {
     expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-2');
     expect(revokeRefreshTokenByGrantId).toHaveBeenCalledTimes(2);
     expect(revokeAuthorizationCodeByGrantId).toHaveBeenCalledTimes(2);
+    expect(revokeDeviceCodeByGrantId).toHaveBeenCalledTimes(2);
+    expect(revokeBackchannelAuthenticationRequestByGrantId).toHaveBeenCalledTimes(2);
     expect(destroyGrant).toHaveBeenCalledTimes(2);
   });
 
@@ -214,6 +222,8 @@ describe('revokeSessionAssociatedGrants', () => {
     expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-1');
     expect(revokeRefreshTokenByGrantId).toHaveBeenCalledTimes(1);
     expect(revokeAuthorizationCodeByGrantId).toHaveBeenCalledTimes(1);
+    expect(revokeDeviceCodeByGrantId).toHaveBeenCalledTimes(1);
+    expect(revokeBackchannelAuthenticationRequestByGrantId).toHaveBeenCalledTimes(1);
     expect(destroyGrant).toHaveBeenCalledTimes(1);
   });
 
@@ -228,6 +238,8 @@ describe('revokeSessionAssociatedGrants', () => {
     expect(revokeAccessTokenByGrantId).not.toHaveBeenCalled();
     expect(revokeRefreshTokenByGrantId).not.toHaveBeenCalled();
     expect(revokeAuthorizationCodeByGrantId).not.toHaveBeenCalled();
+    expect(revokeDeviceCodeByGrantId).not.toHaveBeenCalled();
+    expect(revokeBackchannelAuthenticationRequestByGrantId).not.toHaveBeenCalled();
     expect(destroyGrant).not.toHaveBeenCalled();
   });
 });
@@ -236,6 +248,8 @@ describe('revokeUserGrantById', () => {
   const revokeAccessTokenByGrantId = jest.fn(async () => 'ok');
   const revokeRefreshTokenByGrantId = jest.fn(async () => 'ok');
   const revokeAuthorizationCodeByGrantId = jest.fn(async () => 'ok');
+  const revokeDeviceCodeByGrantId = jest.fn(async () => 'ok');
+  const revokeBackchannelAuthenticationRequestByGrantId = jest.fn(async () => 'ok');
   const destroyGrant = jest.fn(async () => 'ok');
   const findGrant = jest.fn<
     Promise<{ accountId?: string; exp?: number } | undefined>,
@@ -245,6 +259,10 @@ describe('revokeUserGrantById', () => {
     AccessToken: { revokeByGrantId: revokeAccessTokenByGrantId },
     RefreshToken: { revokeByGrantId: revokeRefreshTokenByGrantId },
     AuthorizationCode: { revokeByGrantId: revokeAuthorizationCodeByGrantId },
+    DeviceCode: { revokeByGrantId: revokeDeviceCodeByGrantId },
+    BackchannelAuthenticationRequest: {
+      revokeByGrantId: revokeBackchannelAuthenticationRequestByGrantId,
+    },
     Grant: { find: findGrant, adapter: { destroy: destroyGrant } },
   } as unknown as Provider;
 
@@ -276,6 +294,8 @@ describe('revokeUserGrantById', () => {
     expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-id');
     expect(revokeRefreshTokenByGrantId).toHaveBeenCalledWith('grant-id');
     expect(revokeAuthorizationCodeByGrantId).toHaveBeenCalledWith('grant-id');
+    expect(revokeDeviceCodeByGrantId).toHaveBeenCalledWith('grant-id');
+    expect(revokeBackchannelAuthenticationRequestByGrantId).toHaveBeenCalledWith('grant-id');
     expect(destroyGrant).toHaveBeenCalledWith('grant-id');
   });
 
@@ -294,6 +314,8 @@ describe('revokeUserGrantById', () => {
     expect(revokeAccessTokenByGrantId).not.toHaveBeenCalled();
     expect(revokeRefreshTokenByGrantId).not.toHaveBeenCalled();
     expect(revokeAuthorizationCodeByGrantId).not.toHaveBeenCalled();
+    expect(revokeDeviceCodeByGrantId).not.toHaveBeenCalled();
+    expect(revokeBackchannelAuthenticationRequestByGrantId).not.toHaveBeenCalled();
     expect(destroyGrant).not.toHaveBeenCalled();
   });
 
