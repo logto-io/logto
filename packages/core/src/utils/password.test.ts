@@ -152,6 +152,30 @@ describe('executeLegacyHash', () => {
       new RequestError({ code: 'password.invalid_legacy_password_format' })
     );
   });
+
+  const firebaseScryptExpression = {
+    algorithm: 'firebase-scrypt',
+    args: [
+      '0ddab8a754b1d606f167', // User salt (hex)
+      '8eeaa0f895862897f8bce738725816175bde288c9e0cfa9adcc1eae79c91190a33f285f4c2d5ef54ab6cc75fe36f379403b3bf27e219a7f40561b3942c2e1211', // Signer key (hex)
+      '07', // Salt separator (hex)
+      '8', // Rounds
+      '14', // Mem_cost
+      '@',
+    ],
+    encryptedPassword:
+      '1dab31ebaa9b8d57d8a678cc45f9ba2bb4a855dfb6c357684e83a46bfd3a6ddededcf12757d290ec3261059bcb3d767b88a733f086ca7ba1ee07423ffad6a797',
+  };
+
+  it('should correctly hash with firebase-scrypt', async () => {
+    const result = await executeLegacyHash(firebaseScryptExpression, 'emaeTiegh7ahn2ai');
+    expect(result).toBe(firebaseScryptExpression.encryptedPassword);
+  });
+
+  it('should reject wrong password with firebase-scrypt', async () => {
+    const result = await executeLegacyHash(firebaseScryptExpression, 'wrong-password');
+    expect(result).not.toBe(firebaseScryptExpression.encryptedPassword);
+  });
 });
 
 describe('encryptPassword', () => {
