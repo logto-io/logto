@@ -11,17 +11,29 @@ const applicationsPathname = '/applications';
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
 
 type Props = {
-  readonly data: Pick<Application, 'id' | 'name' | 'isThirdParty' | 'type'>;
+  readonly data: Pick<
+    Application,
+    'id' | 'name' | 'isThirdParty' | 'type' | 'customClientMetadata'
+  >;
 };
 
-function ApplicationPreview({ data: { id, name, isThirdParty, type } }: Props) {
+function ApplicationPreview({
+  data: { id, name, isThirdParty, type, customClientMetadata },
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <ItemPreview
       title={name}
       subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-      icon={<ApplicationIcon className={styles.icon} type={type} isThirdParty={isThirdParty} />}
+      icon={
+        <ApplicationIcon
+          className={styles.icon}
+          type={type}
+          isThirdParty={isThirdParty}
+          isDeviceFlow={customClientMetadata.isDeviceFlow}
+        />
+      }
       to={buildDetailsPathname(id)}
     />
   );
