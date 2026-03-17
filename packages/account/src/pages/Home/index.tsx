@@ -149,27 +149,27 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.profileCard}>
-        <div className={styles.avatarWrapper}>
-          {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt={cardName ?? t('account_center.home.field_avatar')}
-              className={styles.avatar}
-            />
-          ) : (
-            <div className={styles.avatarPlaceholder}>{initials}</div>
-          )}
-        </div>
-        <div className={styles.profileMeta}>
-          {cardName && <div className={styles.profileName}>{cardName}</div>}
-          {userInfo?.primaryEmail && (
-            <div className={styles.profileEmail}>{userInfo.primaryEmail}</div>
-          )}
-        </div>
-      </div>
       {hasAnyFields ? (
         <>
+          <div className={styles.profileCard}>
+            <div className={styles.avatarWrapper}>
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={cardName ?? t('account_center.home.field_avatar')}
+                  className={styles.avatar}
+                />
+              ) : (
+                <div className={styles.avatarPlaceholder}>{initials}</div>
+              )}
+            </div>
+            <div className={styles.profileMeta}>
+              {cardName && <div className={styles.profileName}>{cardName}</div>}
+              {userInfo?.primaryEmail && (
+                <div className={styles.profileEmail}>{userInfo.primaryEmail}</div>
+              )}
+            </div>
+          </div>
           <PersonalInfoSection fields={fields} userInfo={userInfo} navigate={navigate} />
           <SecuritySection
             fields={fields}
