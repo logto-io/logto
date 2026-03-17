@@ -35,6 +35,51 @@ The admin user is provisioned with:
 - Membership in the default tenant organisation with the `Admin` role
 - The admin tenant sign-in experience is set to "sign-in only" to prevent unwanted registrations
 
+### M2M Application (Management API Client)
+
+Create a Machine-to-Machine (M2M) application in the default tenant and automatically assign it the "Logto Management API access" role. The resulting credentials can be used directly with the `client_credentials` grant to call the Management API — for example, to create users programmatically.
+
+| Variable | Required | Description |
+|---|---|---|
+| `LOGTO_M2M_CLIENT_ID` | Yes | M2M Client ID (**max 21 characters** — database constraint) |
+| `LOGTO_M2M_CLIENT_SECRET` | Yes | M2M Client Secret |
+| `LOGTO_M2M_APP_NAME` | No | Application display name (default: `"Management API Client"`) |
+
+> **Note:** Both `LOGTO_M2M_CLIENT_ID` and `LOGTO_M2M_CLIENT_SECRET` must be set to trigger M2M application creation.
+
+> **Important:** The Client ID is stored as the application's primary key in the database, which has a `varchar(21)` constraint. Keep your Client ID to 21 characters or fewer.
+
+The created application:
+
+- Type: `MachineToMachine`
+- Automatically assigned the **"Logto Management API access"** role (grants the `all` scope on the Management API resource)
+- Client secret is stored both in the legacy `applications.secret` column and the `application_secrets` table
+
+**Getting a Management API token after bootstrap:**
+
+```bash
+curl -X POST https://[your-endpoint]/oidc/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'grant_type=client_credentials' \
+  -d 'client_id=YOUR_M2M_CLIENT_ID' \
+  -d 'client_secret=YOUR_M2M_CLIENT_SECRET' \
+  -d 'resource=https://default.logto.app/api' \
+  -d 'scope=all'
+```
+
+Where `[your-endpoint]` will be the User Console URL.
+
+From here, you can use the returned `accessToken` as a HTTP Bearer Token to
+interact with the management API.
+
+Example to create a new User:
+
+```bash
+curl -X POST 'https://[your-endpoint]/api/users' \
+-H 'Authorization: Bearer <accessToken> \
+--json '{ "primaryEmail": "john3@example.com", "password": "SecurePassword123", "profile": { "givenName": "John", "familyName": "Doe" } }'
+```
+
 ### OIDC Application
 
 Create a Traditional (confidential) OIDC application in the default tenant with user-specified client credentials. Ideal for Authorization Code Grant flows with a backend application.
@@ -212,6 +257,11 @@ services:
       # Bootstrap: Admin user
       - LOGTO_ADMIN_USERNAME=admin
       - LOGTO_ADMIN_PASSWORD=MySecureP@ssword123
+
+      # Bootstrap: M2M Application (Management API client)
+      - LOGTO_M2M_APP_NAME=My Management API Client
+      - LOGTO_M2M_CLIENT_ID=my-m2m-client
+      - LOGTO_M2M_CLIENT_SECRET=my-m2m-secret-key-1234
 
       # Bootstrap: OIDC Application
       - LOGTO_APP_NAME=My Web App

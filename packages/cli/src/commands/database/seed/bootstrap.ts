@@ -4,6 +4,7 @@ import {
   AdminTenantRole,
   ApplicationType,
   Applications,
+  ApplicationsRoles,
   OrganizationRoleUserRelations,
   OrganizationUserRelations,
   Roles,
@@ -29,10 +30,11 @@ import { convertToIdentifiers } from '../../../sql.js';
 import { encryptPassword } from '../../../utils/password.js';
 import { consoleLog } from '../../../utils.js';
 
-import type { AdminConfig, AppConfig, SmtpConfig } from './bootstrap-config.js';
+import type { AdminConfig, AppConfig, M2mConfig, SmtpConfig } from './bootstrap-config.js';
 import {
   getAdminConfig,
   getAppConfig,
+  getM2mConfig,
   getMfaConfig,
   getSignInExperienceConfig,
   getSmtpConfig,
@@ -308,6 +310,72 @@ const bootstrapSeedUsers = async (
   consoleLog.succeed(`Seeded ${users.length} user account(s) in the default tenant`);
 };
 
+/**
+ * Registers a Machine-to-Machine (M2M) application in the default tenant and assigns it the
+ * pre-configured "Logto Management API access" role so it can immediately authenticate against
+ * the Management API using the client-credentials grant.
+ *
+ * @param connection - Active database transaction connection.
+ * @param config - M2M application credentials from {@link getM2mConfig}.
+ */
+const bootstrapM2mApplication = async (
+  connection: DatabaseTransactionConnection,
+  config: M2mConfig
+) => {
+  await connection.query(
+    insertInto(
+      {
+        tenantId: defaultTenantId,
+        id: config.clientId,
+        name: config.name,
+        secret: config.clientSecret,
+        description: `Bootstrapped M2M application: ${config.name}`,
+        type: ApplicationType.MachineToMachine,
+        oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
+        customClientMetadata: {},
+        isThirdParty: false,
+        customData: {},
+      },
+      Applications.table
+    )
+  );
+
+  await connection.query(
+    insertInto(
+      {
+        tenantId: defaultTenantId,
+        applicationId: config.clientId,
+        name: 'Default',
+        value: config.clientSecret,
+      },
+      'application_secrets'
+    )
+  );
+
+  const roles = convertToIdentifiers(Roles);
+  const managementApiRole = await connection.one<Role>(sql`
+    select ${roles.fields.id} from ${roles.table}
+    where ${roles.fields.tenantId} = ${defaultTenantId}
+    and ${roles.fields.name} = ${'Logto Management API access'}
+  `);
+
+  await connection.query(
+    insertInto(
+      {
+        tenantId: defaultTenantId,
+        id: generateStandardId(),
+        applicationId: config.clientId,
+        roleId: managementApiRole.id,
+      },
+      ApplicationsRoles.table
+    )
+  );
+
+  consoleLog.succeed(
+    `Created M2M application "${config.name}" (client_id: ${config.clientId}) with Management API access`
+  );
+};
+
 const bootstrapAccountCenter = async (connection: DatabaseTransactionConnection) => {
   const fields = {
     password: AccountCenterControlValue.Edit,
@@ -339,12 +407,13 @@ const bootstrapAccountCenter = async (connection: DatabaseTransactionConnection)
 export const runBootstrap = async (connection: DatabaseTransactionConnection): Promise<void> => {
   const adminConfig = getAdminConfig();
   const appConfig = getAppConfig();
+  const m2mConfig = getM2mConfig();
   const smtpConfig = getSmtpConfig();
   const seedUsers = await loadSeedUsers();
   const signInExpConfig = getSignInExperienceConfig();
   const mfaConfig = getMfaConfig();
 
-  const hasConfig = [adminConfig, appConfig, smtpConfig, mfaConfig].some(Boolean);
+  const hasConfig = [adminConfig, appConfig, m2mConfig, smtpConfig, mfaConfig].some(Boolean);
 
   if (!hasConfig) {
     return;
@@ -360,6 +429,10 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
 
   if (appConfig) {
     await bootstrapApplication(connection, appConfig);
+  }
+
+  if (m2mConfig) {
+    await bootstrapM2mApplication(connection, m2mConfig);
   }
 
   if (smtpConfig) {

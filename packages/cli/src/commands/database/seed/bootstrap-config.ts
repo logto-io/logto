@@ -3,6 +3,20 @@ import { getEnv, yes } from '@silverhand/essentials';
 
 import { consoleLog } from '../../../utils.js';
 
+/**
+ * Configuration for the M2M application registered in the default tenant during bootstrap.
+ * The application is automatically assigned the "Logto Management API access" role so it can
+ * authenticate against the Management API using the client-credentials grant.
+ */
+export type M2mConfig = {
+  /** Display name of the M2M application, read from `LOGTO_M2M_APP_NAME`. */
+  name: string;
+  /** OAuth 2.0 client ID, read from `LOGTO_M2M_CLIENT_ID`. */
+  clientId: string;
+  /** OAuth 2.0 client secret, read from `LOGTO_M2M_CLIENT_SECRET`. */
+  clientSecret: string;
+};
+
 /** Credentials and identity for the initial admin user created during bootstrap. */
 export type AdminConfig = {
   /** The admin account username, read from `LOGTO_ADMIN_USERNAME`. */
@@ -193,4 +207,25 @@ export const getMfaConfig = (): MfaConfig | undefined => {
   }
 
   return { factors };
+};
+
+/**
+ * Reads M2M application configuration from environment variables.
+ *
+ * @returns An {@link M2mConfig} when both `LOGTO_M2M_CLIENT_ID` and `LOGTO_M2M_CLIENT_SECRET` are
+ * set, otherwise `undefined`.
+ */
+export const getM2mConfig = (): M2mConfig | undefined => {
+  const clientId = getEnv('LOGTO_M2M_CLIENT_ID');
+  const clientSecret = getEnv('LOGTO_M2M_CLIENT_SECRET');
+
+  if (!clientId || !clientSecret) {
+    return undefined;
+  }
+
+  return {
+    name: getEnv('LOGTO_M2M_APP_NAME') || 'Management API Client',
+    clientId,
+    clientSecret,
+  };
 };

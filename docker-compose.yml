@@ -24,6 +24,11 @@ services:
       - LOGTO_ADMIN_USERNAME=admin
       - LOGTO_ADMIN_PASSWORD=MySecureP@ssword123
 
+      # Bootstrap: M2M Application (Management API client)
+      - LOGTO_M2M_APP_NAME=My Management API Client
+      - LOGTO_M2M_CLIENT_ID=my-m2m-client
+      - LOGTO_M2M_CLIENT_SECRET=my-m2m-secret-key-1234
+
       # Bootstrap: OIDC Application
       - LOGTO_APP_NAME=My Web App
       - LOGTO_APP_CLIENT_ID=my-web-app
