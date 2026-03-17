@@ -1,6 +1,7 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
+import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -9,6 +10,7 @@ import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
 import { applicationDataStructure, thirdPartyApp } from '@/consts';
 import { isDevFeaturesEnabled } from '@/consts/env';
+import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FlipOnRtl from '@/ds-components/FlipOnRtl';
@@ -86,6 +88,7 @@ function Settings({ data }: Props) {
     watch,
     formState: { errors },
   } = useFormContext<ApplicationForm>();
+  const { tenantEndpoint } = useContext(AppDataContext);
 
   const { type: applicationType, isThirdParty, customClientMetadata } = data;
 
@@ -133,7 +136,6 @@ function Settings({ data }: Props) {
               {t('application_details.device_flow_notification')}
             </Trans>
           </span>
-          {/* TODO: Replace with actual demo page link when available */}
           <Button
             className={styles.deviceFlowTryDemoButton}
             size="small"
@@ -143,6 +145,9 @@ function Settings({ data }: Props) {
                 <ExternalLinkIcon />
               </FlipOnRtl>
             }
+            onClick={() => {
+              window.open(new URL('/device-demo-app', tenantEndpoint), '_blank');
+            }}
           />
         </div>
       )}
