@@ -3,6 +3,13 @@ const account_center = {
     title: 'Seite nicht gefunden',
     description: 'Diese Seite ist nicht verfügbar.',
   },
+  page: {
+    title: 'Account',
+    security_title: 'Security',
+    security_description:
+      'Change your account settings here to ensure your account security.',
+    support: 'Support',
+  },
   verification: {
     title: 'Sicherheitsüberprüfung',
     description:

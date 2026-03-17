@@ -3,6 +3,13 @@ const account_center = {
     title: 'ไม่พบหน้าเว็บ',
     description: 'ไม่สามารถใช้หน้านี้ได้',
   },
+  page: {
+    title: 'Account',
+    security_title: 'Security',
+    security_description:
+      'Change your account settings here to ensure your account security.',
+    support: 'Support',
+  },
   verification: {
     title: 'การยืนยันความปลอดภัย',
     description:

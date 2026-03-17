@@ -3,6 +3,13 @@ const account_center = {
     title: 'Sayfa bulunamadı',
     description: 'Bu sayfa kullanılamıyor.',
   },
+  page: {
+    title: 'Account',
+    security_title: 'Security',
+    security_description:
+      'Change your account settings here to ensure your account security.',
+    support: 'Support',
+  },
   verification: {
     title: 'Güvenlik doğrulaması',
     description:

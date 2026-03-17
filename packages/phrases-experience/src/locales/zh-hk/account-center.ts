@@ -3,6 +3,13 @@ const account_center = {
     title: '找不到頁面',
     description: '此頁面不可用。',
   },
+  page: {
+    title: 'Account',
+    security_title: 'Security',
+    security_description:
+      'Change your account settings here to ensure your account security.',
+    support: 'Support',
+  },
   verification: {
     title: '安全驗證',
     description: '為保障帳戶安全，請確認是你本人。請選擇用於驗證身份的方法。',

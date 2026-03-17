@@ -1,11 +1,14 @@
 import LogtoSignature from '@experience/shared/components/LogtoSignature';
 import { LogtoProvider, Prompt, ReservedScope, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId, ExtraParamsKey, SignInIdentifier } from '@logto/schemas';
+import classNames from 'classnames';
 import { useContext, useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
 import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
+import PageHeader from '@ac/components/PageHeader';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 
 import styles from './App.module.scss';
 import Callback from './Callback';
@@ -151,18 +154,23 @@ const Main = () => {
 const Layout = () => {
   const { experienceSettings, theme } = useContext(PageContext);
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
+  const { pathname } = useLocation();
+  const isHomePage = isDevFeaturesEnabled && pathname === '/';
 
   return (
     <div className={styles.app}>
-      <div className={styles.layout}>
-        <div className={styles.container}>
-          <main className={styles.main}>
+      <div className={classNames(styles.layout, isHomePage && styles.fullPage)}>
+        {isHomePage && <PageHeader />}
+        <div className={classNames(styles.container, !isHomePage && styles.cardContainer)}>
+          <main className={classNames(styles.main, !isHomePage && styles.cardMain)}>
             <ErrorBoundary>
               <LogtoErrorBoundary>
                 <Main />
               </LogtoErrorBoundary>
             </ErrorBoundary>
-            {!hideLogtoBranding && <LogtoSignature className={styles.signature} theme={theme} />}
+            {!isHomePage && !hideLogtoBranding && (
+              <LogtoSignature className={styles.signature} theme={theme} />
+            )}
           </main>
         </div>
       </div>

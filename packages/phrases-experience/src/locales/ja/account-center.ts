@@ -3,6 +3,13 @@ const account_center = {
     title: 'ページが見つかりません',
     description: 'このページは利用できません。',
   },
+  page: {
+    title: 'Account',
+    security_title: 'Security',
+    security_description:
+      'Change your account settings here to ensure your account security.',
+    support: 'Support',
+  },
   verification: {
     title: 'セキュリティ確認',
     description:

@@ -59,6 +59,12 @@ const buildConfig = (mode: string): UserConfig => ({
     viteCompression({ disable: mode === 'development' }),
     viteCompression({ disable: mode === 'development', algorithm: 'brotliCompress' }),
   ],
+  define: {
+    'process.env': {
+      NODE_ENV: process.env.NODE_ENV,
+      DEV_FEATURES_ENABLED: process.env.DEV_FEATURES_ENABLED,
+    },
+  },
 });
 
 export default defineConfig(({ mode }) => mergeConfig(defaultConfig, buildConfig(mode)));

@@ -6,14 +6,36 @@
     inset: 0;
     overflow: auto;
   }
+
+  .fullPage {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
+/* --- Full-page layout (Home / Security page) --- */
+
 .container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  width: 760px;
+  display: flex;
+  flex-direction: column;
+  padding: _.unit(3) 0;
+}
+
+/* --- Card layout (sub-pages: email, phone, username, etc.) --- */
+
+.cardContainer {
   min-height: 100%;
   @include _.flex_column(center, center);
 }
 
-.main {
+.cardMain {
   @include _.flex_column;
 }
 
@@ -41,6 +63,21 @@
   }
 
   .main {
+    width: auto;
+    flex: 1;
+    padding: _.unit(4) _.unit(5);
+  }
+
+  .cardContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .cardMain {
     flex: 1;
     padding: _.unit(4) _.unit(5);
     position: relative;
@@ -53,11 +90,11 @@
 }
 
 :global(body.desktop) {
-  .container {
+  .cardContainer {
     padding: _.unit(5);
   }
 
-  .main {
+  .cardMain {
     width: 540px;
     min-height: 540px;
     position: relative;
@@ -75,8 +112,15 @@
     padding-bottom: _.unit(7);
   }
 
-  @media only screen and (max-width: 580px) {
+  @media only screen and (max-width: 800px) {
     .main {
+      width: auto;
+      padding: _.unit(3) _.unit(5);
+    }
+  }
+
+  @media only screen and (max-width: 580px) {
+    .cardMain {
       align-self: stretch;
       width: auto;
     }
