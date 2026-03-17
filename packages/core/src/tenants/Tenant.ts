@@ -191,6 +191,20 @@ export default class Tenant implements TenantContext {
           })
         )
       );
+
+      // Mount device demo app (same conditions as demo app)
+      app.use(
+        mount(
+          '/' + UserApps.DeviceDemoApp,
+          koaSpaProxy({
+            mountedApps,
+            queries,
+            packagePath: UserApps.DeviceDemoApp,
+            port: 5005,
+            prefix: UserApps.DeviceDemoApp,
+          })
+        )
+      );
     }
 
     // Mount account center for all tenants (including admin tenant for profile MFA management)
