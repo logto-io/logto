@@ -124,6 +124,38 @@ Default email templates use a simple HTML format:
 <p>Your verification code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>
 ```
 
+### SMTP SMS Connector
+
+Configure the SMTP SMS connector (custom Service Vic connector) in the default tenant. Sends SMS messages via an email-to-SMS gateway using SMTP. Default plain-text templates for Register, SignIn, ForgotPassword, and Generic verification flows are included automatically.
+
+| Variable | Required | Description |
+|---|---|---|
+| `LOGTO_SMTP_SMS_HOST` | Yes | SMTP server hostname (e.g., `smtp.example.com`) |
+| `LOGTO_SMTP_SMS_PORT` | Yes | SMTP server port (e.g., `587`, `465`, `25`) |
+| `LOGTO_SMTP_SMS_USERNAME` | Yes | SMTP authentication username |
+| `LOGTO_SMTP_SMS_PASSWORD` | Yes | SMTP authentication password |
+| `LOGTO_SMTP_SMS_FROM_EMAIL` | Yes | Sender email address |
+| `LOGTO_SMTP_SMS_TO_EMAIL_TEMPLATE` | Yes | Gateway address template (e.g., `{{phoneNumberOnly}}@txt.att.net`) |
+| `LOGTO_SMTP_SMS_SUBJECT` | No | Optional email subject line (most SMS gateways ignore this) |
+| `LOGTO_SMTP_SMS_SECURE` | No | Use TLS (`true` or `false`, default: `false`) |
+
+> **Note:** All six required variables must be set to trigger SMTP SMS connector creation.
+
+The `LOGTO_SMTP_SMS_TO_EMAIL_TEMPLATE` supports two placeholders:
+
+| Placeholder | Value | Example |
+|---|---|---|
+| `{{phoneNumberOnly}}` | Digits only (non-numeric chars stripped) | `12025551234` |
+| `{{phone}}` | Raw phone number as supplied by Logto | `+12025551234` |
+
+**Common carrier gateways (USA):**
+
+| Carrier | Template |
+|---|---|
+| AT&T | `{{phoneNumberOnly}}@txt.att.net` |
+| Verizon | `{{phoneNumberOnly}}@vtext.com` |
+| T-Mobile | `{{phoneNumberOnly}}@tmomail.net` |
+
 ### Seeded User Accounts
 
 Pre-create user accounts in the default tenant from a CSV or JSON file.
@@ -276,6 +308,14 @@ services:
       - LOGTO_SMTP_USERNAME=noreply@example.com
       - LOGTO_SMTP_PASSWORD=smtp-password
       - LOGTO_SMTP_FROM_EMAIL=noreply@example.com
+
+      # Bootstrap: SMTP SMS Connector (Service Vic custom connector)
+      - LOGTO_SMTP_SMS_HOST=smtp.example.com
+      - LOGTO_SMTP_SMS_PORT=587
+      - LOGTO_SMTP_SMS_USERNAME=noreply@example.com
+      - LOGTO_SMTP_SMS_PASSWORD=smtp-password
+      - LOGTO_SMTP_SMS_FROM_EMAIL=noreply@example.com
+      - LOGTO_SMTP_SMS_TO_EMAIL_TEMPLATE={{phoneNumberOnly}}@txt.att.net
 
       # Bootstrap: Sign-in experience (email-primary with custom profile fields)
       - LOGTO_SIGN_IN_IDENTIFIER=email

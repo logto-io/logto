@@ -57,6 +57,28 @@ export type SmtpConfig = {
   secure: boolean;
 };
 
+/** Connection details for the SMTP SMS connector registered during bootstrap. */
+export type SmtpSmsConfig = {
+  /** SMTP server hostname, read from `LOGTO_SMTP_SMS_HOST`. */
+  host: string;
+  /** SMTP server port, read from `LOGTO_SMTP_SMS_PORT`. */
+  port: number;
+  /** SMTP authentication credentials, read from `LOGTO_SMTP_SMS_USERNAME` and `LOGTO_SMTP_SMS_PASSWORD`. */
+  auth: { user: string; pass: string };
+  /** The "From" email address, read from `LOGTO_SMTP_SMS_FROM_EMAIL`. */
+  fromEmail: string;
+  /**
+   * Template for the recipient gateway email address, read from `LOGTO_SMTP_SMS_TO_EMAIL_TEMPLATE`.
+   * Use `{{phoneNumberOnly}}` for digits-only or `{{phone}}` for the raw E.164 number.
+   * Example: `{{phoneNumberOnly}}@txt.att.net`
+   */
+  toEmailTemplate: string;
+  /** Optional email subject line, read from `LOGTO_SMTP_SMS_SUBJECT`. */
+  subject?: string;
+  /** Whether to use TLS/SSL for the connection, read from `LOGTO_SMTP_SMS_SECURE`. */
+  secure: boolean;
+};
+
 export type SignInExperienceConfig = {
   /** The preferred primary sign-in identifier for the default tenant, read from `LOGTO_SIGN_IN_IDENTIFIER`. */
   primaryIdentifier: SignInIdentifier;
@@ -148,6 +170,36 @@ export const getSmtpConfig = (): SmtpConfig | undefined => {
     fromEmail,
     replyTo: getEnv('LOGTO_SMTP_REPLY_TO') || undefined,
     secure: yes(getEnv('LOGTO_SMTP_SECURE')),
+  };
+};
+
+/**
+ * Reads SMTP SMS connector configuration from environment variables.
+ *
+ * @returns An {@link SmtpSmsConfig} when `LOGTO_SMTP_SMS_HOST`, `LOGTO_SMTP_SMS_PORT`,
+ * `LOGTO_SMTP_SMS_USERNAME`, `LOGTO_SMTP_SMS_PASSWORD`, `LOGTO_SMTP_SMS_FROM_EMAIL`, and
+ * `LOGTO_SMTP_SMS_TO_EMAIL_TEMPLATE` are all set, otherwise `undefined`.
+ */
+export const getSmtpSmsConfig = (): SmtpSmsConfig | undefined => {
+  const host = getEnv('LOGTO_SMTP_SMS_HOST');
+  const portRaw = getEnv('LOGTO_SMTP_SMS_PORT');
+  const username = getEnv('LOGTO_SMTP_SMS_USERNAME');
+  const password = getEnv('LOGTO_SMTP_SMS_PASSWORD');
+  const fromEmail = getEnv('LOGTO_SMTP_SMS_FROM_EMAIL');
+  const toEmailTemplate = getEnv('LOGTO_SMTP_SMS_TO_EMAIL_TEMPLATE');
+
+  if (!host || !portRaw || !username || !password || !fromEmail || !toEmailTemplate) {
+    return undefined;
+  }
+
+  return {
+    host,
+    port: Number(portRaw),
+    auth: { user: username, pass: password },
+    fromEmail,
+    toEmailTemplate,
+    subject: getEnv('LOGTO_SMTP_SMS_SUBJECT') || undefined,
+    secure: yes(getEnv('LOGTO_SMTP_SMS_SECURE')),
   };
 };
 

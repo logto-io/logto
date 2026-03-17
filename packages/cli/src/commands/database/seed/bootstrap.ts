@@ -30,7 +30,13 @@ import { convertToIdentifiers } from '../../../sql.js';
 import { encryptPassword } from '../../../utils/password.js';
 import { consoleLog } from '../../../utils.js';
 
-import type { AdminConfig, AppConfig, M2mConfig, SmtpConfig } from './bootstrap-config.js';
+import type {
+  AdminConfig,
+  AppConfig,
+  M2mConfig,
+  SmtpConfig,
+  SmtpSmsConfig,
+} from './bootstrap-config.js';
 import {
   getAdminConfig,
   getAppConfig,
@@ -38,6 +44,7 @@ import {
   getMfaConfig,
   getSignInExperienceConfig,
   getSmtpConfig,
+  getSmtpSmsConfig,
 } from './bootstrap-config.js';
 import { bootstrapMfa, bootstrapSignInExperience } from './bootstrap-sign-in.js';
 import type { SeedUser } from './bootstrap-users.js';
@@ -259,6 +266,70 @@ const bootstrapSmtpConnector = async (
 };
 
 /**
+ * Default plain-text SMS templates registered with the SMTP SMS connector for every standard
+ * usage type (Register, SignIn, ForgotPassword, Generic). Each template renders a `{{code}}`
+ * placeholder that Logto replaces with the one-time verification code at send time.
+ */
+const defaultSmsTemplates = [
+  {
+    usageType: 'Register',
+    content: 'Your verification code is {{code}}. It expires in 10 minutes.',
+  },
+  {
+    usageType: 'SignIn',
+    content: 'Your sign-in verification code is {{code}}. It expires in 10 minutes.',
+  },
+  {
+    usageType: 'ForgotPassword',
+    content: 'Your password reset code is {{code}}. It expires in 10 minutes.',
+  },
+  {
+    usageType: 'Generic',
+    content: 'Your verification code is {{code}}. It expires in 10 minutes.',
+  },
+];
+
+/**
+ * Registers an SMTP SMS connector in the default tenant using the custom `smtp-sms` connector type.
+ *
+ * The connector is pre-loaded with {@link defaultSmsTemplates} covering all standard usage types
+ * so it is immediately ready to send SMS messages via an email-to-SMS gateway.
+ *
+ * @param connection - Active database transaction connection.
+ * @param config - SMTP server details and gateway template from {@link getSmtpSmsConfig}.
+ */
+const bootstrapSmtpSmsConnector = async (
+  connection: DatabaseTransactionConnection,
+  config: SmtpSmsConfig
+) => {
+  await connection.query(
+    insertInto(
+      {
+        tenantId: defaultTenantId,
+        id: generateStandardShortId(),
+        connectorId: 'smtp-sms',
+        config: {
+          host: config.host,
+          port: config.port,
+          auth: config.auth,
+          fromEmail: config.fromEmail,
+          toEmailTemplate: config.toEmailTemplate,
+          ...(config.subject ? { subject: config.subject } : {}),
+          secure: config.secure,
+          templates: defaultSmsTemplates,
+        },
+        metadata: {},
+      },
+      'connectors'
+    )
+  );
+
+  consoleLog.succeed(
+    `Configured SMTP SMS connector (${config.host}:${config.port} → ${config.toEmailTemplate})`
+  );
+};
+
+/**
  * Extracts the optional name profile fields from a seed user into the flat object expected by the
  * `profile` column.
  *
@@ -376,12 +447,16 @@ const bootstrapM2mApplication = async (
   );
 };
 
-const bootstrapAccountCenter = async (connection: DatabaseTransactionConnection) => {
+const bootstrapAccountCenter = async (
+  connection: DatabaseTransactionConnection,
+  includePhone: boolean
+) => {
   const fields = {
     password: AccountCenterControlValue.Edit,
     email: AccountCenterControlValue.Edit,
     profile: AccountCenterControlValue.Edit,
     mfa: AccountCenterControlValue.Edit,
+    phone: includePhone ? AccountCenterControlValue.Edit : AccountCenterControlValue.Off,
   };
 
   await connection.query(sql`
@@ -409,11 +484,14 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
   const appConfig = getAppConfig();
   const m2mConfig = getM2mConfig();
   const smtpConfig = getSmtpConfig();
+  const smtpSmsConfig = getSmtpSmsConfig();
   const seedUsers = await loadSeedUsers();
   const signInExpConfig = getSignInExperienceConfig();
   const mfaConfig = getMfaConfig();
 
-  const hasConfig = [adminConfig, appConfig, m2mConfig, smtpConfig, mfaConfig].some(Boolean);
+  const hasConfig = [adminConfig, appConfig, m2mConfig, smtpConfig, smtpSmsConfig, mfaConfig].some(
+    Boolean
+  );
 
   if (!hasConfig) {
     return;
@@ -421,7 +499,7 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
 
   consoleLog.info('Running environment-based bootstrap...');
 
-  await bootstrapAccountCenter(connection);
+  await bootstrapAccountCenter(connection, !!smtpSmsConfig);
 
   if (adminConfig) {
     await bootstrapAdminUser(connection, adminConfig);
@@ -437,6 +515,10 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
 
   if (smtpConfig) {
     await bootstrapSmtpConnector(connection, smtpConfig);
+  }
+
+  if (smtpSmsConfig) {
+    await bootstrapSmtpSmsConnector(connection, smtpSmsConfig);
   }
 
   if (signInExpConfig.bootstrapSignInExperience) {
