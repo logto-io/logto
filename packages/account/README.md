@@ -2,6 +2,8 @@
 
 The Logto account center app that allows users to manage their account settings, profile, and security options.
 
+> **BDM fork:** This package has been extended with a self-service management dashboard. See [`CUSTOMIZATIONS.md`](../../CUSTOMIZATIONS.md) at the repo root for a full description of all changes from upstream Logto.
+
 ## Authentication Behavior
 
 Account Center runs inside the same browser session as other applications. This creates a potential
