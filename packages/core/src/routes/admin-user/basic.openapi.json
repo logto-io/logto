@@ -31,14 +31,10 @@
                       "description": "List of SSO identities associated with the user. Only available when the `includeSsoIdentities` query parameter is provided with a truthy value."
                     },
                     "passwordDigest": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "The hashed password of the user. Only present when `includePasswordHash=true` is provided. `null` if the user has no password set."
+                      "description": "The hashed password of the user. Only present when `includePasswordHash` is provided with a truthy value. `null` if the user has no password set."
                     },
                     "passwordAlgorithm": {
-                      "type": "string",
-                      "nullable": true,
-                      "description": "The algorithm used to hash the password. Only present when `includePasswordHash=true` is provided. `null` if the user has no password set."
+                      "description": "The algorithm used to hash the password. Only present when `includePasswordHash` is provided with a truthy value. `null` if the user has no password set."
                     }
                   }
                 }
