@@ -7,7 +7,10 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import { type UserConditions } from '#src/queries/user.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import { adminUserProfileResponseGuard, transpileUserProfileResponse } from '../../utils/user.js';
+import {
+  adminUserProfileResponseGuard,
+  transpileAdminUserProfileResponse,
+} from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 const getQueryRelation = (
@@ -81,7 +84,7 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
 
           ctx.pagination.totalCount = count;
           ctx.body = users.map((user) =>
-            transpileUserProfileResponse(user, { includePasswordHash })
+            transpileAdminUserProfileResponse(user, { includePasswordHash })
           );
 
           return next();

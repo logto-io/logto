@@ -8,7 +8,6 @@ import {
   userMfaDataGuard,
   userPasskeySignInDataGuard,
   userProfileGuard,
-  userProfileResponseGuard,
 } from '@logto/schemas';
 import { conditional, yes } from '@silverhand/essentials';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
@@ -26,7 +25,10 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { parseLegacyPassword } from '../../utils/password.js';
 import { captureDeveloperEvent } from '../../utils/posthog.js';
-import { adminUserProfileResponseGuard, transpileUserProfileResponse } from '../../utils/user.js';
+import {
+  adminUserProfileResponseGuard,
+  transpileAdminUserProfileResponse,
+} from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
@@ -73,7 +75,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       const user = await findUserById(userId);
 
-      ctx.body = transpileUserProfileResponse(user, {
+      ctx.body = transpileAdminUserProfileResponse(user, {
         ssoIdentities: conditional(
           yes(includeSsoIdentities) && [...(await findUserSsoIdentities(userId))]
         ),
@@ -224,7 +226,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         customData: jsonObjectGuard,
         profile: userProfileGuard,
       }).partial(),
-      response: userProfileResponseGuard,
+      response: adminUserProfileResponseGuard,
       status: [200, 400, 404, 422],
     }),
     async (ctx, next) => {
@@ -287,7 +289,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         ...conditional(profile && { profile }),
       });
 
-      ctx.body = transpileUserProfileResponse(user);
+      ctx.body = transpileAdminUserProfileResponse(user);
       return next();
     }
   );
@@ -305,7 +307,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         customData: jsonObjectGuard,
         profile: userProfileGuard,
       }).partial(),
-      response: userProfileResponseGuard,
+      response: adminUserProfileResponseGuard,
       status: [200, 404, 422],
     }),
     async (ctx, next) => {
@@ -318,7 +320,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       await checkIdentifierCollision(body, userId);
 
       const updatedUser = await updateUserById(userId, body, 'replace');
-      ctx.body = transpileUserProfileResponse(updatedUser);
+      ctx.body = transpileAdminUserProfileResponse(updatedUser);
 
       return next();
     }
@@ -329,7 +331,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ password: string().min(1) }),
-      response: userProfileResponseGuard,
+      response: adminUserProfileResponseGuard,
       status: [200, 422],
     }),
     async (ctx, next) => {
@@ -347,7 +349,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         passwordEncryptionMethod,
       });
 
-      ctx.body = transpileUserProfileResponse(user);
+      ctx.body = transpileAdminUserProfileResponse(user);
 
       return next();
     }
@@ -399,7 +401,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: object({ userId: string() }),
       body: object({ isSuspended: boolean() }),
-      response: userProfileResponseGuard,
+      response: adminUserProfileResponseGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -418,7 +420,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         await signOutUser(user.id);
       }
 
-      ctx.body = transpileUserProfileResponse(user);
+      ctx.body = transpileAdminUserProfileResponse(user);
 
       return next();
     }

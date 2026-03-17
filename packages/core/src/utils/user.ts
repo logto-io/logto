@@ -3,6 +3,7 @@ import {
   Users,
   userInfoSelectFields,
   userProfileResponseGuard,
+  type UserProfileResponse,
   type UserSsoIdentity,
   type User,
   type UserMfaVerificationResponse,
@@ -42,37 +43,43 @@ export const transpileUserMfaVerifications = (
   });
 };
 
-type ExtraUserInfo = {
-  ssoIdentities?: UserSsoIdentity[];
-  includePasswordHash?: boolean;
-};
-
 /**
- * Transforms user data into a user profile response format
+ * Transforms user data into a `UserProfileResponse` for non-admin API endpoints (e.g. account
+ * profile, role user listing).
  *
- * This function is used when API endpoints return user profile information,
- * converting the internal user data model to an external user profile response format.
- *
- * Main purposes:
- *
- * 1. Selectively return user information fields
- * 2. Add additional user-related information (e.g., SSO identities)
- * 3. Handle password-related information
- *
- * @param user - Internal user data model
- * @param extraInfo - Additional user-related information, such as SSO identities
- * @returns Formatted user profile response object
+ * Password hash fields are intentionally excluded. For admin endpoints that may need to expose
+ * them, use {@link transpileAdminUserProfileResponse} instead.
  */
 export const transpileUserProfileResponse = (
   user: User,
-  extraInfo: ExtraUserInfo = {}
+  ssoIdentities?: UserSsoIdentity[]
+): UserProfileResponse => ({
+  ...pick(user, ...userInfoSelectFields),
+  hasPassword: Boolean(user.passwordEncrypted),
+  ...(ssoIdentities && { ssoIdentities }),
+});
+
+/**
+ * Transforms user data into an `AdminUserProfileResponse` for admin API endpoints.
+ *
+ * Prefer this over {@link transpileUserProfileResponse} whenever the call site is an admin route.
+ * It is a superset of `UserProfileResponse` that optionally includes `passwordDigest` and
+ * `passwordAlgorithm` when `includePasswordHash` is `true`, which is only safe to expose to
+ * privileged callers.
+ *
+ * @param extraInfo.ssoIdentities - SSO identities to include in the response.
+ * @param extraInfo.includePasswordHash - When `true`, the raw password hash and algorithm are
+ * included. Only set this from admin endpoints that explicitly support the `includePasswordHash`
+ * query parameter.
+ */
+export const transpileAdminUserProfileResponse = (
+  user: User,
+  extraInfo: { ssoIdentities?: UserSsoIdentity[]; includePasswordHash?: boolean } = {}
 ): AdminUserProfileResponse => {
   const { ssoIdentities, includePasswordHash } = extraInfo;
 
   return {
-    ...pick(user, ...userInfoSelectFields),
-    hasPassword: Boolean(user.passwordEncrypted),
-    ...(ssoIdentities && { ssoIdentities }),
+    ...transpileUserProfileResponse(user, ssoIdentities),
     ...(includePasswordHash && {
       passwordDigest: user.passwordEncrypted,
       passwordAlgorithm: user.passwordEncryptionMethod,
