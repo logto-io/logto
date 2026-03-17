@@ -44,11 +44,11 @@ export const transpileUserMfaVerifications = (
 };
 
 /**
- * Transforms user data into a `UserProfileResponse` for non-admin API endpoints (e.g. account
- * profile, role user listing).
+ * Transforms user data into a `UserProfileResponse`. Password hash fields are intentionally
+ * excluded.
  *
- * Password hash fields are intentionally excluded. For admin endpoints that may need to expose
- * them, use {@link transpileAdminUserProfileResponse} instead.
+ * For admin endpoints that support the `includePasswordHash` query parameter, use
+ * {@link transpileAdminUserProfileResponse} instead.
  */
 export const transpileUserProfileResponse = (
   user: User,
@@ -60,17 +60,15 @@ export const transpileUserProfileResponse = (
 });
 
 /**
- * Transforms user data into an `AdminUserProfileResponse` for admin API endpoints.
+ * Transforms user data into an `AdminUserProfileResponse` for admin endpoints that support the
+ * `includePasswordHash` query parameter.
  *
- * Prefer this over {@link transpileUserProfileResponse} whenever the call site is an admin route.
  * It is a superset of `UserProfileResponse` that optionally includes `passwordDigest` and
- * `passwordAlgorithm` when `includePasswordHash` is `true`, which is only safe to expose to
- * privileged callers.
+ * `passwordAlgorithm` when `includePasswordHash` is `true`.
  *
  * @param extraInfo.ssoIdentities - SSO identities to include in the response.
  * @param extraInfo.includePasswordHash - When `true`, the raw password hash and algorithm are
- * included. Only set this from admin endpoints that explicitly support the `includePasswordHash`
- * query parameter.
+ * included in the response.
  */
 export const transpileAdminUserProfileResponse = (
   user: User,
