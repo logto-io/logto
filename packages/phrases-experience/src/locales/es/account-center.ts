@@ -24,6 +24,7 @@ const account_center = {
     totp_active: 'Active',
     passkeys_count: '{{count}} passkey registered',
     passkeys_count_plural: '{{count}} passkeys registered',
+    return_to_account: 'Back to account',
     no_fields_available:
       'No user attributes are available for editing, please contact your administrator.',
   },

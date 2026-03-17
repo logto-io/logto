@@ -26,6 +26,7 @@ const account_center = {
     passkeys_count_plural: '{{count}} passkeys registered',
     no_fields_available:
       'No user attributes are available for editing, please contact your administrator.',
+    return_to_account: 'Back to account',
   },
   profile: {
     title: 'Edit profile',
