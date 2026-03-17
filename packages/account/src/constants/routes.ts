@@ -7,6 +7,7 @@ export const usernameSuccessRoute = '/username/success';
 export const passwordRoute = '/password';
 export const passwordSuccessRoute = '/password/success';
 export const authenticatorAppRoute = '/authenticator-app';
+export const authenticatorAppManageRoute = '/authenticator-app/manage';
 export const authenticatorAppSuccessRoute = '/authenticator-app/success';
 export const backupCodesGenerateRoute = '/backup-codes/generate';
 export const backupCodesRegenerateRoute = '/backup-codes/regenerate';

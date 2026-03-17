@@ -21,6 +21,11 @@ const account_center = {
     field_backup_codes: 'Backup codes',
     password_set: 'Set',
     password_not_set: 'Not set',
+    totp_active: 'Active',
+    passkeys_count: '{{count}} passkey registered',
+    passkeys_count_plural: '{{count}} passkeys registered',
+    no_fields_available:
+      'No user attributes are available for editing, please contact your administrator.',
   },
   verification: {
     title: 'セキュリティ確認',
@@ -121,6 +126,13 @@ const account_center = {
     backup_code_requires_other_mfa:
       'バックアップコードを使用するには、まず他の MFA メソッドを設定する必要があります。',
     passkey_not_enabled: 'パスキーが有効になっていません。管理者にお問い合わせください。',
+    totp_manage_title: 'Manage authenticator app',
+    totp_manage_description:
+      'Your authenticator app is currently active. Remove it to disable OTP two-factor authentication.',
+    totp_remove: 'Remove authenticator app',
+    totp_removed: 'Authenticator app removed.',
+    totp_remove_confirm_description:
+      'Are you sure you want to remove your authenticator app? You will no longer be able to use it for two-factor authentication.',
     passkey_already_registered:
       'このパスキーはすでにアカウントに登録されています。別の認証器をご使用ください。',
   },

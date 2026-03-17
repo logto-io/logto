@@ -24,6 +24,7 @@ import {
   usernameRoute,
   usernameSuccessRoute,
   authenticatorAppRoute,
+  authenticatorAppManageRoute,
   authenticatorAppSuccessRoute,
   backupCodesGenerateRoute,
   backupCodesRegenerateRoute,
@@ -46,6 +47,7 @@ import Password from './pages/Password';
 import Phone from './pages/Phone';
 import Profile from './pages/Profile';
 import TotpBinding from './pages/TotpBinding';
+import TotpManage from './pages/TotpManage';
 import UpdateSuccess from './pages/UpdateSuccess';
 import Username from './pages/Username';
 import {
@@ -139,6 +141,7 @@ const Main = () => {
       <Route path={passwordRoute} element={<Password />} />
       <Route path={usernameRoute} element={<Username />} />
       <Route path={authenticatorAppRoute} element={<TotpBinding />} />
+      <Route path={authenticatorAppManageRoute} element={<TotpManage />} />
       <Route path={backupCodesGenerateRoute} element={<BackupCodeBinding />} />
       <Route path={backupCodesRegenerateRoute} element={<BackupCodeBinding isRegenerate />} />
       <Route path={backupCodesManageRoute} element={<BackupCodeView />} />

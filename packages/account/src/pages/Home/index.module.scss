@@ -115,26 +115,13 @@
 
 .fieldAction {
   flex-shrink: 0;
+}
 
-  button {
-    all: unset;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-primary);
-    padding: _.unit(1) _.unit(2);
-    border-radius: 4px;
-    transition: background 0.15s ease;
-
-    &:hover {
-      background: var(--color-primary-light);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--color-primary);
-      outline-offset: 2px;
-    }
-  }
+.emptyState {
+  padding: _.unit(8) _.unit(4);
+  text-align: center;
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
 }
 
 :global(body.mobile) {

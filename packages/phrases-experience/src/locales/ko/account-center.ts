@@ -21,6 +21,11 @@ const account_center = {
     field_backup_codes: 'Backup codes',
     password_set: 'Set',
     password_not_set: 'Not set',
+    totp_active: 'Active',
+    passkeys_count: '{{count}} passkey registered',
+    passkeys_count_plural: '{{count}} passkeys registered',
+    no_fields_available:
+      'No user attributes are available for editing, please contact your administrator.',
   },
   verification: {
     title: '보안 인증',
@@ -117,6 +122,13 @@ const account_center = {
     backup_code_not_enabled: '백업 코드가 활성화되지 않았습니다. 관리자에게 도움을 요청하세요.',
     backup_code_requires_other_mfa: '백업 코드를 사용하려면 다른 MFA 방법을 먼저 설정해야 합니다.',
     passkey_not_enabled: '패스키가 활성화되지 않았습니다. 관리자에게 도움을 요청하세요.',
+    totp_manage_title: 'Manage authenticator app',
+    totp_manage_description:
+      'Your authenticator app is currently active. Remove it to disable OTP two-factor authentication.',
+    totp_remove: 'Remove authenticator app',
+    totp_removed: 'Authenticator app removed.',
+    totp_remove_confirm_description:
+      'Are you sure you want to remove your authenticator app? You will no longer be able to use it for two-factor authentication.',
     passkey_already_registered:
       '이 패스키는 이미 계정에 등록되어 있습니다. 다른 인증기를 사용해 주세요.',
   },

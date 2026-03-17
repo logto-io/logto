@@ -1,11 +1,19 @@
-import { AccountCenterControlValue, type AccountCenterFieldControl } from '@logto/schemas';
-import { useContext } from 'react';
+import Button from '@experience/shared/components/Button';
+import {
+  AccountCenterControlValue,
+  MfaFactor,
+  type AccountCenterFieldControl,
+} from '@logto/schemas';
+import type { TFuncKey } from 'i18next';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import type { PageContextType } from '@ac/Providers/PageContextProvider/PageContext';
+import { getMfaVerifications } from '@ac/apis/mfa';
 import {
+  authenticatorAppManageRoute,
   authenticatorAppRoute,
   backupCodesManageRoute,
   emailRoute,
@@ -15,27 +23,19 @@ import {
   profileRoute,
   usernameRoute,
 } from '@ac/constants/routes';
+import useApi from '@ac/hooks/use-api';
 
 import styles from './index.module.scss';
-
-type FieldAction = 'edit' | 'add' | 'view' | 'manage';
 
 type FieldRowProps = {
   readonly label: string;
   readonly value?: string;
-  readonly action?: FieldAction;
+  readonly actionKey?: TFuncKey;
   readonly onAction?: () => void;
 };
 
-const FieldRow = ({ label, value, action, onAction }: FieldRowProps) => {
+const FieldRow = ({ label, value, actionKey, onAction }: FieldRowProps) => {
   const { t } = useTranslation();
-
-  const actionLabel: Record<FieldAction, string> = {
-    edit: t('account_center.home.action_edit'),
-    add: t('account_center.home.action_add'),
-    view: t('account_center.home.action_view'),
-    manage: t('account_center.home.manage'),
-  };
 
   return (
     <div className={styles.fieldRow}>
@@ -43,11 +43,9 @@ const FieldRow = ({ label, value, action, onAction }: FieldRowProps) => {
       <span className={`${styles.fieldValue}${value ? '' : ` ${styles.notSet}`}`}>
         {value ?? t('account_center.home.not_set')}
       </span>
-      {action && onAction && (
+      {actionKey && onAction && (
         <div className={styles.fieldAction}>
-          <button type="button" onClick={onAction}>
-            {actionLabel[action]}
-          </button>
+          <Button title={actionKey} type="secondary" size="small" onClick={onAction} />
         </div>
       )}
     </div>
@@ -57,8 +55,12 @@ const FieldRow = ({ label, value, action, onAction }: FieldRowProps) => {
 const editAction = (
   controlValue: AccountCenterControlValue | undefined,
   hasValue: boolean
-): FieldAction | undefined =>
-  controlValue === AccountCenterControlValue.Edit ? (hasValue ? 'edit' : 'add') : undefined;
+): TFuncKey | undefined =>
+  controlValue === AccountCenterControlValue.Edit
+    ? hasValue
+      ? 'account_center.home.action_edit'
+      : 'account_center.home.action_add'
+    : undefined;
 
 type PersonalInfoSectionProps = {
   readonly fields: AccountCenterFieldControl;
@@ -94,7 +96,7 @@ const PersonalInfoSection = ({ fields, userInfo, navigate }: PersonalInfoSection
         <FieldRow
           label={t('account_center.home.field_name')}
           value={displayName}
-          action={editAction(fields.name, Boolean(displayName))}
+          actionKey={editAction(fields.name, Boolean(displayName))}
           onAction={() => {
             navigate(profileRoute);
           }}
@@ -104,7 +106,7 @@ const PersonalInfoSection = ({ fields, userInfo, navigate }: PersonalInfoSection
         <FieldRow
           label={t('account_center.home.field_avatar')}
           value={avatarUrl}
-          action={editAction(fields.avatar, Boolean(avatarUrl))}
+          actionKey={editAction(fields.avatar, Boolean(avatarUrl))}
           onAction={() => {
             navigate(profileRoute);
           }}
@@ -114,7 +116,7 @@ const PersonalInfoSection = ({ fields, userInfo, navigate }: PersonalInfoSection
         <FieldRow
           label={t('account_center.home.field_username')}
           value={username}
-          action={editAction(fields.username, Boolean(username))}
+          actionKey={editAction(fields.username, Boolean(username))}
           onAction={() => {
             navigate(usernameRoute);
           }}
@@ -124,7 +126,7 @@ const PersonalInfoSection = ({ fields, userInfo, navigate }: PersonalInfoSection
         <FieldRow
           label={t('account_center.home.field_email')}
           value={email}
-          action={editAction(fields.email, Boolean(email))}
+          actionKey={editAction(fields.email, Boolean(email))}
           onAction={() => {
             navigate(emailRoute);
           }}
@@ -134,7 +136,7 @@ const PersonalInfoSection = ({ fields, userInfo, navigate }: PersonalInfoSection
         <FieldRow
           label={t('account_center.home.field_phone')}
           value={phone}
-          action={editAction(fields.phone, Boolean(phone))}
+          actionKey={editAction(fields.phone, Boolean(phone))}
           onAction={() => {
             navigate(phoneRoute);
           }}
@@ -147,10 +149,18 @@ const PersonalInfoSection = ({ fields, userInfo, navigate }: PersonalInfoSection
 type SecuritySectionProps = {
   readonly fields: AccountCenterFieldControl;
   readonly hasPassword: boolean;
+  readonly hasTotpSetup: boolean;
+  readonly passkeyCount: number;
   readonly navigate: ReturnType<typeof useNavigate>;
 };
 
-const SecuritySection = ({ fields, hasPassword, navigate }: SecuritySectionProps) => {
+const SecuritySection = ({
+  fields,
+  hasPassword,
+  hasTotpSetup,
+  passkeyCount,
+  navigate,
+}: SecuritySectionProps) => {
   const { t } = useTranslation();
   const { Off, Edit } = AccountCenterControlValue;
 
@@ -169,7 +179,13 @@ const SecuritySection = ({ fields, hasPassword, navigate }: SecuritySectionProps
               ? t('account_center.home.password_set')
               : t('account_center.home.password_not_set')
           }
-          action={fields.password === Edit ? (hasPassword ? 'edit' : 'add') : undefined}
+          actionKey={
+            fields.password === Edit
+              ? hasPassword
+                ? 'account_center.home.action_edit'
+                : 'account_center.home.action_add'
+              : undefined
+          }
           onAction={() => {
             navigate(passwordRoute);
           }}
@@ -179,21 +195,27 @@ const SecuritySection = ({ fields, hasPassword, navigate }: SecuritySectionProps
         <>
           <FieldRow
             label={t('account_center.home.field_authenticator_app')}
-            action={fields.mfa === Edit ? 'manage' : undefined}
+            value={hasTotpSetup ? t('account_center.home.totp_active') : undefined}
+            actionKey={fields.mfa === Edit ? 'account_center.home.manage' : undefined}
             onAction={() => {
-              navigate(authenticatorAppRoute);
+              navigate(hasTotpSetup ? authenticatorAppManageRoute : authenticatorAppRoute);
             }}
           />
           <FieldRow
             label={t('account_center.home.field_passkeys')}
-            action={fields.mfa === Edit ? 'manage' : undefined}
+            value={
+              passkeyCount > 0
+                ? t('account_center.home.passkeys_count', { count: passkeyCount })
+                : undefined
+            }
+            actionKey={fields.mfa === Edit ? 'account_center.home.manage' : undefined}
             onAction={() => {
               navigate(passkeyManageRoute);
             }}
           />
           <FieldRow
             label={t('account_center.home.field_backup_codes')}
-            action={fields.mfa === Edit ? 'manage' : undefined}
+            actionKey={fields.mfa === Edit ? 'account_center.home.manage' : undefined}
             onAction={() => {
               navigate(backupCodesManageRoute);
             }}
@@ -208,8 +230,33 @@ const Home = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { accountCenterSettings, userInfo } = useContext(PageContext);
+  const getMfaRequest = useApi(getMfaVerifications, { silent: true });
+  const [hasTotpSetup, setHasTotpSetup] = useState(false);
+  const [passkeyCount, setPasskeyCount] = useState(0);
 
   const fields = accountCenterSettings?.fields ?? {};
+
+  useEffect(() => {
+    const checkMfa = async () => {
+      const [, result] = await getMfaRequest();
+      if (result) {
+        setHasTotpSetup(result.some((mfa) => mfa.type === MfaFactor.TOTP));
+        setPasskeyCount(result.filter((mfa) => mfa.type === MfaFactor.WebAuthn).length);
+      }
+    };
+    void checkMfa();
+  }, [getMfaRequest]);
+
+  const { Off } = AccountCenterControlValue;
+  const hasPersonalInfoFields =
+    fields.name !== Off ||
+    fields.avatar !== Off ||
+    fields.username !== Off ||
+    fields.email !== Off ||
+    fields.phone !== Off;
+  const hasSecurityFields = fields.password !== Off || fields.mfa !== Off;
+  const hasAnyFields = hasPersonalInfoFields || hasSecurityFields;
+
   const displayName = userInfo?.name ?? undefined;
   const avatarUrl = userInfo?.avatar ?? undefined;
 
@@ -244,12 +291,20 @@ const Home = () => {
           )}
         </div>
       </div>
-      <PersonalInfoSection fields={fields} userInfo={userInfo} navigate={navigate} />
-      <SecuritySection
-        fields={fields}
-        hasPassword={userInfo?.hasPassword ?? false}
-        navigate={navigate}
-      />
+      {hasAnyFields ? (
+        <>
+          <PersonalInfoSection fields={fields} userInfo={userInfo} navigate={navigate} />
+          <SecuritySection
+            fields={fields}
+            hasPassword={userInfo?.hasPassword ?? false}
+            hasTotpSetup={hasTotpSetup}
+            passkeyCount={passkeyCount}
+            navigate={navigate}
+          />
+        </>
+      ) : (
+        <p className={styles.emptyState}>{t('account_center.home.no_fields_available')}</p>
+      )}
     </div>
   );
 };
