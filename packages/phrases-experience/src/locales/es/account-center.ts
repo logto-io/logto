@@ -14,6 +14,8 @@ const account_center = {
     field_username: 'Username',
     field_email: 'Email address',
     field_phone: 'Phone number',
+    field_given_name: 'Given name',
+    field_family_name: 'Family name',
     field_password: 'Password',
     field_2fa: 'Two-factor authentication',
     field_authenticator_app: 'Authenticator app',
@@ -217,6 +219,8 @@ const account_center = {
     description: 'Update your display name and avatar.',
     name_label: 'Display name',
     avatar_label: 'Avatar URL',
+    given_name_label: 'Given name',
+    family_name_label: 'Family name',
     saved: 'Profile updated successfully.',
   },
 };

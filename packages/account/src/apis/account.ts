@@ -1,4 +1,4 @@
-import type { UserProfileResponse } from '@logto/schemas';
+import type { UserProfile, UserProfileResponse } from '@logto/schemas';
 
 import { createAuthenticatedKy } from './base-ky';
 
@@ -57,4 +57,13 @@ export const updateProfile = async (
       json: payload,
     })
     .json<Partial<UserProfileResponse>>();
+};
+
+export const updateProfileFields = async (
+  accessToken: string,
+  payload: Pick<UserProfile, 'givenName' | 'familyName'>
+): Promise<Pick<UserProfile, 'givenName' | 'familyName'>> => {
+  return createAuthenticatedKy(accessToken)
+    .patch('/api/my-account/profile', { json: payload })
+    .json<Pick<UserProfile, 'givenName' | 'familyName'>>();
 };

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import { updateProfile } from '@ac/apis/account';
+import { updateProfile, updateProfileFields } from '@ac/apis/account';
 import ErrorPage from '@ac/components/ErrorPage';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
@@ -19,45 +19,52 @@ const Profile = () => {
   const { loading } = useContext(LoadingContext);
   const { accountCenterSettings, userInfo, setUserInfo, setToast } = useContext(PageContext);
   const updateProfileRequest = useApi(updateProfile);
+  const updateProfileFieldsRequest = useApi(updateProfileFields);
   const handleError = useErrorHandler();
 
   const [name, setName] = useState(userInfo?.name ?? '');
   const [avatar, setAvatar] = useState(userInfo?.avatar ?? '');
+  const [givenName, setGivenName] = useState(userInfo?.profile?.givenName ?? '');
+  const [familyName, setFamilyName] = useState(userInfo?.profile?.familyName ?? '');
 
   const fields = accountCenterSettings?.fields ?? {};
   const { Off, Edit } = AccountCenterControlValue;
 
   const nameEnabled = fields.name !== Off;
   const avatarEnabled = fields.avatar !== Off;
+  const profileEnabled = fields.profile !== Off;
   const nameEditable = fields.name === Edit;
   const avatarEditable = fields.avatar === Edit;
+  const profileEditable = fields.profile === Edit;
 
-  if (!accountCenterSettings?.enabled || (!nameEnabled && !avatarEnabled)) {
+  if (!accountCenterSettings?.enabled || (!nameEnabled && !avatarEnabled && !profileEnabled)) {
     return (
       <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
     );
   }
 
-  const handleNameChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    setName(value);
-  };
-
-  const handleAvatarChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    setAvatar(value);
-  };
-
   const handleSubmit = async (event?: FormEvent) => {
     event?.preventDefault();
 
-    const payload = {
+    const mainPayload = {
       ...(nameEditable && { name: name.trim() || null }),
       ...(avatarEditable && { avatar: avatar.trim() || null }),
     };
 
-    const [error, updatedProfile] = await updateProfileRequest(payload);
+    const profilePayload = {
+      ...(profileEditable && { givenName: givenName.trim() || undefined }),
+      ...(profileEditable && { familyName: familyName.trim() || undefined }),
+    };
 
-    if (error) {
-      await handleError(error, {
+    const hasMainChanges = nameEditable || avatarEditable;
+    const hasProfileChanges = profileEditable;
+
+    const [mainError, updatedProfile] = hasMainChanges
+      ? await updateProfileRequest(mainPayload)
+      : [undefined, undefined];
+
+    if (mainError) {
+      await handleError(mainError, {
         'account_center.field_not_editable': async () => {
           setToast(t('error.something_went_wrong'));
         },
@@ -65,16 +72,38 @@ const Profile = () => {
       return;
     }
 
-    if (updatedProfile) {
-      setUserInfo((current) => ({
-        ...current,
+    const [profileError, updatedProfileFields] = hasProfileChanges
+      ? await updateProfileFieldsRequest(profilePayload)
+      : [undefined, undefined];
+
+    if (profileError) {
+      await handleError(profileError, {
+        'account_center.field_not_editable': async () => {
+          setToast(t('error.something_went_wrong'));
+        },
+      });
+      return;
+    }
+
+    setUserInfo((current) => ({
+      ...current,
+      ...(updatedProfile && {
         name: updatedProfile.name ?? current?.name,
         avatar: updatedProfile.avatar ?? current?.avatar,
-      }));
-    }
+      }),
+      ...(updatedProfileFields && {
+        profile: {
+          ...current?.profile,
+          givenName: updatedProfileFields.givenName,
+          familyName: updatedProfileFields.familyName,
+        },
+      }),
+    }));
 
     setToast(t('account_center.profile.saved'));
   };
+
+  const isAnyEditable = nameEditable || avatarEditable || profileEditable;
 
   return (
     <SecondaryPageLayout
@@ -82,13 +111,39 @@ const Profile = () => {
       description="account_center.profile.description"
     >
       <form className={styles.container} onSubmit={handleSubmit}>
+        {profileEnabled && (
+          <InputField
+            label={t('account_center.profile.given_name_label')}
+            name="givenName"
+            value={givenName}
+            isDisabled={!profileEditable}
+            onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+              setGivenName(value);
+            }}
+          />
+        )}
+
+        {profileEnabled && (
+          <InputField
+            label={t('account_center.profile.family_name_label')}
+            name="familyName"
+            value={familyName}
+            isDisabled={!profileEditable}
+            onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+              setFamilyName(value);
+            }}
+          />
+        )}
+
         {nameEnabled && (
           <InputField
             label={t('account_center.profile.name_label')}
             name="name"
             value={name}
             isDisabled={!nameEditable}
-            onChange={handleNameChange}
+            onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+              setName(value);
+            }}
           />
         )}
 
@@ -99,11 +154,13 @@ const Profile = () => {
             type="url"
             value={avatar}
             isDisabled={!avatarEditable}
-            onChange={handleAvatarChange}
+            onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+              setAvatar(value);
+            }}
           />
         )}
 
-        {(nameEditable || avatarEditable) && (
+        {isAnyEditable && (
           <Button
             className={styles.submit}
             title="action.save"

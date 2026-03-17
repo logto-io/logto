@@ -81,6 +81,21 @@
   margin-bottom: _.unit(2);
 }
 
+.sectionHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: _.unit(2);
+}
+
+.sectionHeaderTitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+}
+
 .fieldRow {
   display: flex;
   align-items: center;
