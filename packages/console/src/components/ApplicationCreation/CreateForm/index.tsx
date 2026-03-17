@@ -343,7 +343,9 @@ function CreateForm({
             {/* DEV: Device flow authorization flow selector */}
             {isDevFeaturesEnabled &&
               applicationType === ApplicationType.Native &&
-              !defaultCreateFrameworkName && <AuthorizationFlowSelector />}
+              (!defaultCreateFrameworkName || isDefaultCreateThirdParty) && (
+                <AuthorizationFlowSelector />
+              )}
             {defaultCreateType && <input hidden {...register('type')} value={defaultCreateType} />}
           </form>
         </FormProvider>
