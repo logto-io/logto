@@ -17,12 +17,10 @@ import {
 } from '@logto/schemas';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
-import { type KoaContextWithOIDC, type ResourceServer, Provider, errors } from 'oidc-provider';
+import { type KoaContextWithOIDC, Provider, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
 import snakecaseKeys from 'snakecase-keys';
 
-import { redisCache } from '#src/caches/index.js';
-import { OidcCache } from '#src/caches/oidc.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
@@ -45,7 +43,6 @@ import { i18next } from '#src/utils/i18n.js';
 
 import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
-import { getConsoleLogFromContext } from '../utils/console.js';
 
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
@@ -66,8 +63,6 @@ import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
-const requestIdFromContext = (ctx: Parameters<typeof getConsoleLogFromContext>[0]) =>
-  'requestId' in ctx && typeof ctx.requestId === 'string' ? ctx.requestId : undefined;
 
 export default function initOidc(
   tenantId: string,
@@ -91,66 +86,6 @@ export default function initOidc(
     signed: true,
     overwrite: true,
   } as const);
-
-  const oidcCache = new OidcCache(tenantId, redisCache);
-
-  const resourceServerInfoCacheTtlSeconds = 10;
-
-  const getResourceServerInfoCore = async (
-    indicator: string,
-    clientId: string | undefined,
-    userId: string | undefined,
-    organizationId: string | undefined
-  ) => {
-    const resourceServer = await findResource(queries, indicator);
-
-    if (!resourceServer) {
-      throw new errors.InvalidTarget();
-    }
-
-    const { accessTokenTtl: accessTokenTTL } = resourceServer;
-
-    const scopes = await findResourceScopes({
-      queries,
-      libraries,
-      indicator,
-      findFromOrganizations: true,
-      organizationId,
-      applicationId: clientId,
-      userId,
-    });
-
-    if (clientId && (await isThirdPartyApplication(queries, clientId))) {
-      const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
-        libraries,
-        clientId,
-        indicator,
-        scopes
-      );
-
-      return {
-        ...getSharedResourceServerData(envSet),
-        accessTokenTTL,
-        scope: filteredScopes.map(({ name }) => name).join(' '),
-      };
-    }
-
-    return {
-      ...getSharedResourceServerData(envSet),
-      accessTokenTTL,
-      scope: scopes.map(({ name }) => name).join(' '),
-    };
-  };
-
-  const getResourceServerInfoCached = oidcCache.memoize(
-    getResourceServerInfoCore,
-    [
-      'resource-server-info',
-      (indicator, clientId, userId, organizationId) =>
-        [indicator, clientId ?? '-', userId ?? '-', organizationId ?? '-'].join(':'),
-    ],
-    () => resourceServerInfoCacheTtlSeconds
-  );
 
   // Do NOT deconstruct variables from `envSet` earlier, since we might reload `envSet` on the fly,
   // and keeping the reference of the `envSet` object helps dynamically update oidc provider configs.
@@ -218,26 +153,50 @@ export default function initOidc(
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
-          const startedAt = shouldMeasure ? Date.now() : 0;
+          const resourceServer = await findResource(queries, indicator);
+
+          if (!resourceServer) {
+            throw new errors.InvalidTarget();
+          }
+
+          const { accessTokenTtl: accessTokenTTL } = resourceServer;
+
           const { client, params, session, entities } = ctx.oidc;
           const userId = session?.accountId ?? entities.Account?.accountId;
+
           const organizationId = params?.organization_id;
-
-          const result = await getResourceServerInfoCached(
+          const scopes = await findResourceScopes({
+            queries,
+            libraries,
             indicator,
-            client?.clientId,
+            findFromOrganizations: true,
+            organizationId: typeof organizationId === 'string' ? organizationId : undefined,
+            applicationId: client?.clientId,
             userId,
-            typeof organizationId === 'string' ? organizationId : undefined
-          );
-
-          logOidc(ctx, {
-            event: 'oidc.get_resource_server_info_timing',
-            status: 'success',
-            totalMs: shouldMeasure ? Date.now() - startedAt : undefined,
           });
 
-          // eslint-disable-next-line no-restricted-syntax -- The cached value is structurally compatible with ResourceServer at runtime.
-          return result as ResourceServer;
+          // Need to filter out the unsupported scopes for the third-party application.
+          if (client && (await isThirdPartyApplication(queries, client.clientId))) {
+            // Get application consent resource scopes, from RBAC roles
+            const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
+              libraries,
+              client.clientId,
+              indicator,
+              scopes
+            );
+
+            return {
+              ...getSharedResourceServerData(envSet),
+              accessTokenTTL,
+              scope: filteredScopes.map(({ name }) => name).join(' '),
+            };
+          }
+
+          return {
+            ...getSharedResourceServerData(envSet),
+            accessTokenTTL,
+            scope: scopes.map(({ name }) => name).join(' '),
+          };
         },
       },
     },
@@ -297,60 +256,24 @@ export default function initOidc(
     },
     extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
-      const startedAt = shouldMeasure ? Date.now() : 0;
-      const timings: Record<string, number> = {};
-      const measure = async <T>(step: string, callback: () => Promise<T>): Promise<T> => {
-        if (!shouldMeasure) {
-          return callback();
-        }
-
-        const stepStartedAt = Date.now();
-
-        try {
-          return await callback();
-        } finally {
-          // eslint-disable-next-line @silverhand/fp/no-mutation
-          timings[step] = Date.now() - stepStartedAt;
-        }
-      };
-
       const [tokenExchangeClaims, organizationApiResourceClaims, jwtCustomizedClaims] =
         await Promise.all([
-          measure('tokenExchangeClaimsMs', async () =>
-            getExtraTokenClaimsForTokenExchange(ctx, token)
-          ),
-          measure('organizationApiResourceClaimsMs', async () =>
-            getExtraTokenClaimsForOrganizationApiResource(ctx, token)
-          ),
-          measure('jwtCustomizedClaimsMs', async () =>
-            getExtraTokenClaimsForJwtCustomization(
-              // eslint-disable-next-line no-restricted-syntax -- see `oidc.use(koaAuditLog(queries))` below;
-              ctx as KoaContextWithOIDC & WithLogContext,
-              token,
-              {
-                envSet,
-                queries,
-                libraries,
-                logtoConfigs,
-              }
-            )
+          getExtraTokenClaimsForTokenExchange(ctx, token),
+          getExtraTokenClaimsForOrganizationApiResource(ctx, token),
+          getExtraTokenClaimsForJwtCustomization(
+            // eslint-disable-next-line no-restricted-syntax -- see `oidc.use(koaAuditLog(queries))` below;
+            ctx as KoaContextWithOIDC & WithLogContext,
+            token,
+            {
+              envSet,
+              queries,
+              libraries,
+              logtoConfigs,
+            }
           ),
         ]);
 
-      const hasTokenExchangeClaims = tokenExchangeClaims !== undefined;
-      const hasOrganizationApiResourceClaims = organizationApiResourceClaims !== undefined;
-      const hasJwtCustomizedClaims = jwtCustomizedClaims !== undefined;
-      const hasExtraClaims =
-        hasTokenExchangeClaims || hasOrganizationApiResourceClaims || hasJwtCustomizedClaims;
-
-      logOidc(ctx, {
-        event: 'oidc.extra_token_claims_timing',
-        status: hasExtraClaims ? 'success' : 'skip',
-        totalMs: shouldMeasure ? Date.now() - startedAt : undefined,
-        timings,
-      });
-
-      if (!hasExtraClaims) {
+      if (!organizationApiResourceClaims && !jwtCustomizedClaims && !tokenExchangeClaims) {
         return;
       }
 
@@ -488,23 +411,6 @@ export default function initOidc(
   addOidcEventListeners(tenantId, oidc, queries);
   registerGrants(oidc, envSet, queries);
 
-  const shouldMeasure = EnvSet.values.isDevFeaturesEnabled;
-  const logOidc = (
-    ctx: Parameters<typeof getConsoleLogFromContext>[0],
-    payload: Record<string, unknown>
-  ) => {
-    if (!shouldMeasure) {
-      return;
-    }
-
-    getConsoleLogFromContext(ctx).info(
-      JSON.stringify({
-        requestId: requestIdFromContext(ctx),
-        ...payload,
-      })
-    );
-  };
-
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));
   /**
@@ -551,27 +457,6 @@ export default function initOidc(
     }
 
     return next();
-  });
-
-  oidc.use(async (ctx, next) => {
-    if (ctx.path !== '/token') {
-      return next();
-    }
-
-    const startedAt = Date.now();
-
-    logOidc(ctx, {
-      event: 'oidc.token_request',
-      status: 'start',
-    });
-
-    await next();
-
-    logOidc(ctx, {
-      event: 'oidc.token_response',
-      status: 'finished',
-      totalMs: Date.now() - startedAt,
-    });
   });
 
   oidc.use(koaAppSecretTranspilation(queries));
