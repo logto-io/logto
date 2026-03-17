@@ -3,10 +3,12 @@ import {
   MfaFactor,
   type AccountCenterFieldControl,
 } from '@logto/schemas';
+import { useLogto } from '@logto/react';
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import Button from '@experience/shared/components/Button';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { getMfaVerifications } from '@ac/apis/mfa';
 import {
@@ -17,6 +19,7 @@ import {
   passwordRoute,
 } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
+import { accountCenterBasePath } from '@ac/utils/account-center-route';
 
 import { FieldRow } from './FieldRow';
 import PersonalInfoSection, { checkHasPersonalInfoFields } from './PersonalInfoSection';
@@ -114,6 +117,9 @@ const Home = () => {
   const getMfaRequest = useApi(getMfaVerifications, { silent: true });
   const [hasTotpSetup, setHasTotpSetup] = useState(false);
   const [passkeyCount, setPasskeyCount] = useState(0);
+  const { signOut } = useLogto();
+
+  const postLogoutRedirectUri = `${window.location.origin}${accountCenterBasePath}`;
 
   const fields = accountCenterSettings?.fields ?? {};
 
@@ -182,6 +188,15 @@ const Home = () => {
       ) : (
         <p className={styles.emptyState}>{t('account_center.home.no_fields_available')}</p>
       )}
+      <div className={styles.signOutRow}>
+        <Button
+          title="account_center.home.sign_out"
+          type="secondary"
+          onClick={() => {
+            void signOut(postLogoutRedirectUri);
+          }}
+        />
+      </div>
     </div>
   );
 };

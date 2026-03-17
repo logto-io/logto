@@ -139,6 +139,13 @@
   color: var(--color-text-secondary);
 }
 
+.signOutRow {
+  display: flex;
+  justify-content: center;
+  padding-top: _.unit(2);
+  border-top: 1px solid var(--color-divider);
+}
+
 :global(body.mobile) {
   .container {
     margin-block: _.unit(2);

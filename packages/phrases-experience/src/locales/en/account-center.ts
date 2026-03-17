@@ -29,6 +29,7 @@ const account_center = {
     no_fields_available:
       'No user attributes are available for editing, please contact your administrator.',
     return_to_account: 'Back to account',
+    sign_out: 'Sign out',
   },
   profile: {
     title: 'Edit profile',

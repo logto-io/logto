@@ -454,6 +454,7 @@ const bootstrapAccountCenter = async (
   const fields = {
     password: AccountCenterControlValue.Edit,
     email: AccountCenterControlValue.Edit,
+    name: AccountCenterControlValue.Edit,
     profile: AccountCenterControlValue.Edit,
     mfa: AccountCenterControlValue.Edit,
     phone: includePhone ? AccountCenterControlValue.Edit : AccountCenterControlValue.Off,
