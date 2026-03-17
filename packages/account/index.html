@@ -5,6 +5,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
   <title>Account Center</title>
+  <!--
+    Runtime configuration injected by the Logto server. Sets window.__logtoConfig__ with
+    server-side env vars (e.g. LOGTO_DEFAULT_PHONE_COUNTRY_CODE) before React initialises.
+    Served by Koa at /account/runtime-config.js in both development and production.
+  -->
+  <script src="/account/runtime-config.js"></script>
 </head>
 
 <body>

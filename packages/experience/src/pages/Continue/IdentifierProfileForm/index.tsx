@@ -108,6 +108,7 @@ const IdentifierProfileForm = ({
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledTypes}
+            defaultCountryCode={window.__logtoConfig__?.defaultPhoneCountryCode}
           />
         )}
       />

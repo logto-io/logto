@@ -36,6 +36,7 @@ const buildConfig = (mode: string): UserConfig => ({
     'process.env': {
       NODE_ENV: process.env.NODE_ENV,
       DEV_FEATURES_ENABLED: process.env.DEV_FEATURES_ENABLED,
+
     },
   },
   build: {

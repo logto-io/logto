@@ -10,6 +10,7 @@ import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext'
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { getRuntimeConfig } from '@ac/utils/runtime-config';
 
 import styles from './index.module.scss';
 
@@ -56,6 +57,7 @@ const IdentifierSendStep = ({
   const [localErrorMessage, setLocalErrorMessage] = useState<string>();
   const sendCodeRequest = useApi(sendCode);
   const handleError = useErrorHandler();
+  const { defaultPhoneCountryCode } = getRuntimeConfig();
 
   useEffect(() => {
     setPendingValue(value);
@@ -126,6 +128,7 @@ const IdentifierSendStep = ({
           name={name}
           label={t(labelKey)}
           defaultValue={pendingValue}
+          defaultCountryCode={defaultPhoneCountryCode}
           enabledTypes={[identifierType]}
           isDanger={Boolean(displayError)}
           errorMessage={displayError}

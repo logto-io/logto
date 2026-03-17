@@ -249,6 +249,24 @@ LOGTO_MFA_FACTORS=totp,webauthn,backupCode
 
 > **Note:** This only enables the listed factors. The MFA *policy* (whether MFA is required or optional) is left at its seeded default (`UserControlled`). Adjust the policy via the Admin Console after bootstrapping.
 
+### Phone Input Default Country Code
+
+Set the default country code pre-selected in the phone number input in the account center.
+
+| Variable | Required | Description |
+|---|---|---|
+| `LOGTO_DEFAULT_PHONE_COUNTRY_CODE` | No | ISO 3166-1 alpha-2 country code (e.g. `AU`, `US`, `GB`). Must be a valid country code recognised by `libphonenumber-js`. |
+
+When not set, the default is determined by the user's browser language (`en` → `US`, `zh` → `CN`, etc.). If set to an invalid or unrecognised code the variable is silently ignored and the language-based fallback applies.
+
+**Example — default to Australia (+61):**
+
+```
+LOGTO_DEFAULT_PHONE_COUNTRY_CODE=AU
+```
+
+> **Note:** This variable is read at **runtime** by the Logto server and injected into the account center HTML on each request as `window.__logtoConfig__`. Set it in the server/container environment — no rebuild is required. This only applies to the account center; the sign-in/sign-up experience still derives the default from the browser language.
+
 ## Automatic Configuration
 
 The following changes are applied automatically whenever the bootstrap runs (i.e. when at least one environment variable is set), regardless of which specific variables are present.

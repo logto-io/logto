@@ -20,6 +20,12 @@ declare global {
     logtoNativeSdk: LogtoNativeSdkInfo | undefined;
     logtoSsr: LogtoSsr;
 
+    /** Runtime configuration injected by the Logto server. */
+    __logtoConfig__?: {
+      /** Default phone country code (ISO 3166-1 alpha-2), e.g. "AU" for Australia. */
+      defaultPhoneCountryCode?: string;
+    };
+
     // Captcha providers
     grecaptcha?: {
       enterprise: {

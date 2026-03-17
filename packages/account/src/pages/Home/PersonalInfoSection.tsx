@@ -1,4 +1,5 @@
 import Button from '@experience/shared/components/Button';
+import { formatPhoneNumberWithCountryCallingCode } from '@experience/utils/country-code';
 import { AccountCenterControlValue, type AccountCenterFieldControl } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -76,7 +77,9 @@ const PersonalInfoSection = ({ fields, userInfo, navigate }: PersonalInfoSection
     {
       fieldKey: 'phone',
       labelKey: 'account_center.home.field_phone',
-      value: userInfo?.primaryPhone ?? undefined,
+      value: userInfo?.primaryPhone
+        ? formatPhoneNumberWithCountryCallingCode(userInfo.primaryPhone)
+        : undefined,
       route: phoneRoute,
     },
   ];
