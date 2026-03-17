@@ -55,6 +55,7 @@ import {
   getUiLocales,
   handleAccountCenterRoute,
 } from './utils/account-center-route';
+import { getAccountIndexPage } from './utils/security-route';
 import '@experience/shared/scss/normalized.scss';
 
 handleAccountCenterRoute();
@@ -112,6 +113,9 @@ const Main = () => {
     return <GlobalLoading />;
   }
 
+  const indexElement =
+    getAccountIndexPage(isDevFeaturesEnabled) === 'security' ? <Security /> : <Home />;
+
   return (
     <Routes>
       <Route
@@ -146,7 +150,7 @@ const Main = () => {
       <Route path={backupCodesManageRoute} element={<BackupCodeView />} />
       <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
       <Route path={passkeyManageRoute} element={<PasskeyView />} />
-      <Route index element={<Security />} />
+      <Route index element={indexElement} />
       <Route path="*" element={<Home />} />
     </Routes>
   );

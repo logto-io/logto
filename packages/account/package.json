@@ -13,6 +13,8 @@
     "precommit": "lint-staged",
     "start": "vite",
     "dev": "vite",
+    "test": "node --experimental-strip-types --test tests/**/*.test.ts",
+    "test:ci": "pnpm test",
     "check": "tsc --noEmit",
     "build": "vite build",
     "lint": "eslint --ext .ts --ext .tsx src",
