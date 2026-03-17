@@ -1,19 +1,6 @@
 # Logto Environment-Based Bootstrap
 
-This guide explains how to configure Logto for **zero-click setup** in ephemeral or containerised environments. By setting environment variables before the first `db seed`, you can pre-configure an admin user, OIDC application, SMTP email connector, and seed user accounts — all without touching the Admin Console.
-
-### Account Centre (always enabled)
-
-Whenever the bootstrap runs (i.e. when at least one bootstrap environment variable is set), the **Account Centre is automatically enabled** for the default tenant with the following fields set to **Edit**:
-
-| Field | Description |
-|-------|-------------|
-| `password` | Users can set or change their password |
-| `email` | Users can update their primary email address |
-| `profile` | Users can edit their name, given name, family name, and avatar |
-| `mfa` | Users can configure or remove MFA methods (TOTP, passkeys, backup codes) |
-
-This requires no additional environment variables.
+This guide explains how to configure Logto for **zero-click setup** in ephemeral or containerised environments. By setting environment variables before the first `db seed`, you can pre-configure an admin user, OIDC application, SMTP email connector, seed user accounts, sign-in experience, and MFA factors — all without touching the Admin Console.
 
 ## How It Works
 
@@ -142,21 +129,65 @@ asmith@example.com,p@ssw0rd,,Alice Smith,Smith,
 
 Users are created in the **default tenant** and can sign in through any OIDC application configured in that tenant.
 
-### Sign-In Experience Configuration
+### Sign-In Experience
 
-Control how the sign in experience is initially set up.
+Configure the default tenant's sign-in and sign-up flow.
 
 | Variable | Required | Description |
 |---|---|---|
-| `LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE` | No | If not set to `true`, the Sign In Experience will not be automatically configured |
-| `LOGTO_SIGN_IN_IDENTIFIER` | No | Primary sign-in identifier: `email` or `username`. Defaults to `username` |
+| `LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE` | No | Set to `true` to apply sign-in experience configuration |
+| `LOGTO_SIGN_IN_IDENTIFIER` | No | Primary identifier: `email` or `username` (default: `username`). Only applies when `LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE=true` |
 
-When set to `email`, the default tenant sign-in experience is configured for:
+When `LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE=true`, the default tenant sign-in experience is configured for:
 
-- **Sign-up**: Email + password with email verification
-- **Sign-in**: Email + password (primary), with verification code fallback
+- **Sign-up**: Identifier + password with verification (email requires email verification)
+- **Sign-in**: Identifier + password (primary), with verification code fallback
+- **Custom profile fields**: Given name and family name fields are added and marked as required at registration
 
-> **Note:** SMTP must be independently configured (via `LOGTO_SMTP_*` variables or the Admin Console) for email-based sign-in to work. The bootstrap assumes SMTP is already set up.
+> **Note:** SMTP must be independently configured (via `LOGTO_SMTP_*` variables or the Admin Console) for email-based sign-in or verification to work.
+
+### MFA Factors
+
+Enable one or more MFA factors in the default tenant's sign-in experience.
+
+| Variable | Required | Description |
+|---|---|---|
+| `LOGTO_MFA_FACTORS` | No | Comma-separated list of MFA factors to enable (case-insensitive) |
+
+**Accepted values:**
+
+| Token | MFA Factor |
+|-------|------------|
+| `totp` | Authenticator app (TOTP) |
+| `webauthn` | Passkeys / WebAuthn |
+| `backupCode` | Backup codes |
+| `emailVerificationCode` | Email one-time code |
+| `phoneVerificationCode` | SMS one-time code |
+
+**Example:**
+
+```
+LOGTO_MFA_FACTORS=totp,webauthn,backupCode
+```
+
+> **Note:** This only enables the listed factors. The MFA *policy* (whether MFA is required or optional) is left at its seeded default (`UserControlled`). Adjust the policy via the Admin Console after bootstrapping.
+
+## Automatic Configuration
+
+The following changes are applied automatically whenever the bootstrap runs (i.e. when at least one environment variable is set), regardless of which specific variables are present.
+
+### Account Centre
+
+The Account Centre for the default tenant is **enabled** with the following fields set to **Edit**:
+
+| Field | Description |
+|-------|-------------|
+| `password` | Users can set or change their password |
+| `email` | Users can update their primary email address |
+| `profile` | Users can edit their name, given name, family name, and avatar |
+| `mfa` | Users can configure or remove MFA methods (TOTP, passkeys, backup codes) |
+
+This allows end-users to self-manage their credentials and profile via the Account Centre SPA without further configuration.
 
 ## Docker Compose Example
 
@@ -196,9 +227,12 @@ services:
       - LOGTO_SMTP_PASSWORD=smtp-password
       - LOGTO_SMTP_FROM_EMAIL=noreply@example.com
 
-      # Bootstrap: Sign-in identifier (email-primary)
+      # Bootstrap: Sign-in experience (email-primary with custom profile fields)
       - LOGTO_SIGN_IN_IDENTIFIER=email
       - LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE=true
+
+      # Bootstrap: MFA factors
+      - LOGTO_MFA_FACTORS=totp,webauthn,backupCode
 
       # Bootstrap: Seeded users (mount the file into the container)
       - LOGTO_SEED_USERS_FILE=/data/seed-users.json
@@ -232,11 +266,11 @@ volumes:
 
 1. **Idempotent via `--swe`:** The bootstrap runs inside the `db seed` transaction. With `--swe`, seeding (and bootstrap) is skipped if the database already exists. This means bootstrap data is created once on first init.
 
-2. **Account Centre enabled automatically:** Whenever any bootstrap variable is set, the Account Centre for the default tenant is enabled with password, email, profile, and MFA editing turned on. No additional environment variable is required.
+2. **Account Centre always configured:** Whenever any bootstrap variable is set, the Account Centre for the default tenant is enabled with password, email, profile, and MFA editing turned on. No additional environment variable is required.
 
 3. **Transactional:** All bootstrap operations run within the same database transaction as the seed. If any step fails, the entire seed (including bootstrap) is rolled back.
 
-4. **No overwrite:** Bootstrap creates new records. It does not update existing applications, connectors, or users. To reconfigure, destroy and recreate the database.
+4. **Insert vs update:** Admin users, OIDC applications, SMTP connectors, and seed users are inserted as new records — running bootstrap twice (e.g. without `--swe`) will fail with a duplicate-key error. The Account Centre settings and MFA factors use `UPDATE` and will silently overwrite any existing values on repeat runs.
 
 5. **Password security:** Passwords in environment variables and seed files are hashed with Argon2i (OWASP-recommended settings) before being stored. Plaintext passwords are never persisted.
 

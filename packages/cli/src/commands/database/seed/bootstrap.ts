@@ -33,10 +33,11 @@ import type { AdminConfig, AppConfig, SmtpConfig } from './bootstrap-config.js';
 import {
   getAdminConfig,
   getAppConfig,
+  getMfaConfig,
   getSignInExperienceConfig,
   getSmtpConfig,
 } from './bootstrap-config.js';
-import { bootstrapSignInExperience } from './bootstrap-sign-in.js';
+import { bootstrapMfa, bootstrapSignInExperience } from './bootstrap-sign-in.js';
 import type { SeedUser } from './bootstrap-users.js';
 import { loadSeedUsers } from './bootstrap-users.js';
 
@@ -307,17 +308,6 @@ const bootstrapSeedUsers = async (
   consoleLog.succeed(`Seeded ${users.length} user account(s) in the default tenant`);
 };
 
-/**
- * Enables the Account Centre for the default tenant and sets the requested fields to `Edit`.
- *
- * The fields enabled are:
- * - `password` — allows users to set or change their password
- * - `email` — allows users to update their primary email address
- * - `profile` — allows editing of name, given name, family name, and avatar
- * - `mfa` — allows users to configure or remove MFA methods
- *
- * @param connection - Active database transaction connection.
- */
 const bootstrapAccountCenter = async (connection: DatabaseTransactionConnection) => {
   const fields = {
     password: AccountCenterControlValue.Edit,
@@ -344,15 +334,6 @@ const bootstrapAccountCenter = async (connection: DatabaseTransactionConnection)
  * Entry point for environment-driven bootstrap logic, intended to run once immediately after the
  * standard Logto database seed.
  *
- * Each step is opt-in and gated on the presence of the relevant environment variables:
- * - **Admin user** — `LOGTO_ADMIN_USERNAME` + `LOGTO_ADMIN_PASSWORD` (+ optional `LOGTO_ADMIN_EMAIL`)
- * - **OIDC application** — `LOGTO_APP_CLIENT_ID` + `LOGTO_APP_CLIENT_SECRET` + `LOGTO_APP_REDIRECT_URIS`
- * - **SMTP connector** — `LOGTO_SMTP_HOST` + `LOGTO_SMTP_PORT` + `LOGTO_SMTP_USERNAME` + `LOGTO_SMTP_PASSWORD` + `LOGTO_SMTP_FROM_EMAIL`
- * - **Seed users** — `LOGTO_SEED_USERS_FILE` pointing to a `.json` or `.csv` file
- * - **Sign-in experience** — always updated when seed users are present, or when `LOGTO_SIGN_IN_IDENTIFIER=email`
- *
- * Returns immediately without writing anything when none of the above are configured.
- *
  * @param connection - Active database transaction connection supplied by the seed runner.
  */
 export const runBootstrap = async (connection: DatabaseTransactionConnection): Promise<void> => {
@@ -361,12 +342,17 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
   const smtpConfig = getSmtpConfig();
   const seedUsers = await loadSeedUsers();
   const signInExpConfig = getSignInExperienceConfig();
+  const mfaConfig = getMfaConfig();
 
-  if (!adminConfig && !appConfig && !smtpConfig && seedUsers.length === 0) {
+  const hasConfig = [adminConfig, appConfig, smtpConfig, mfaConfig].some(Boolean);
+
+  if (!hasConfig) {
     return;
   }
 
   consoleLog.info('Running environment-based bootstrap...');
+
+  await bootstrapAccountCenter(connection);
 
   if (adminConfig) {
     await bootstrapAdminUser(connection, adminConfig);
@@ -380,13 +366,16 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
     await bootstrapSmtpConnector(connection, smtpConfig);
   }
 
-  if (seedUsers.length > 0) {
-    await bootstrapSeedUsers(connection, seedUsers);
+  if (signInExpConfig.bootstrapSignInExperience) {
+    await bootstrapSignInExperience(connection, signInExpConfig.primaryIdentifier);
   }
 
-  if (signInExpConfig.bootstrapSignInExperience) {
-    await bootstrapAccountCenter(connection);
-    await bootstrapSignInExperience(connection, signInExpConfig.primaryIdentifier);
+  if (mfaConfig) {
+    await bootstrapMfa(connection, mfaConfig);
+  }
+
+  if (seedUsers.length > 0) {
+    await bootstrapSeedUsers(connection, seedUsers);
   }
 
   consoleLog.succeed('Bootstrap complete');

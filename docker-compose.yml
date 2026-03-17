@@ -41,6 +41,7 @@ services:
       # Bootstrap: Sign-in identifier (email-primary)
       - LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE=true
       - LOGTO_SIGN_IN_IDENTIFIER=email
+      - LOGTO_MFA_FACTORS=totp,webauthn
 
   postgres:
     image: postgres:17-alpine

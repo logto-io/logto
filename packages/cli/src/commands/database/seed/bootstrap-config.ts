@@ -1,5 +1,7 @@
-import { SignInIdentifier } from '@logto/schemas';
+import { MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { getEnv, yes } from '@silverhand/essentials';
+
+import { consoleLog } from '../../../utils.js';
 
 /** Credentials and identity for the initial admin user created during bootstrap. */
 export type AdminConfig = {
@@ -46,6 +48,17 @@ export type SignInExperienceConfig = {
   primaryIdentifier: SignInIdentifier;
   /** If true, will automatically set up the Sign In Experience with dark mode enabled, and automatically collecting the user's name */
   bootstrapSignInExperience: boolean;
+};
+
+/**
+ * MFA factors to enable in the default tenant's sign-in experience, read from `LOGTO_MFA_FACTORS`.
+ *
+ * Accepted values (case-insensitive): `totp`, `webauthn`, `backupcode`,
+ * `emailverificationcode`, `phoneverificationcode`.
+ */
+export type MfaConfig = {
+  /** The MFA factors to enable, derived from the `LOGTO_MFA_FACTORS` comma-separated list. */
+  factors: MfaFactor[];
 };
 
 /**
@@ -140,4 +153,44 @@ export const getSignInExperienceConfig = (): SignInExperienceConfig => {
       primarySignInId === 'email' ? SignInIdentifier.Email : SignInIdentifier.Username,
     bootstrapSignInExperience,
   };
+};
+
+/** Maps lower-cased user-supplied factor tokens to their canonical {@link MfaFactor} enum values. */
+const mfaFactorAliases: Record<string, MfaFactor> = {
+  totp: MfaFactor.TOTP,
+  webauthn: MfaFactor.WebAuthn,
+  backupcode: MfaFactor.BackupCode,
+  emailverificationcode: MfaFactor.EmailVerificationCode,
+  phoneverificationcode: MfaFactor.PhoneVerificationCode,
+};
+
+/**
+ * Reads the MFA factors to enable from the `LOGTO_MFA_FACTORS` environment variable.
+ *
+ * The variable accepts a comma-separated list of factor names (case-insensitive):
+ * `totp`, `webauthn`, `backupCode`, `emailVerificationCode`, `phoneVerificationCode`.
+ *
+ * Unrecognised tokens are silently ignored.
+ *
+ * @returns An {@link MfaConfig} when `LOGTO_MFA_FACTORS` is non-empty, otherwise `undefined`.
+ */
+export const getMfaConfig = (): MfaConfig | undefined => {
+  const raw = getEnv('LOGTO_MFA_FACTORS');
+
+  if (!raw) {
+    consoleLog.info('No MFA Factors found, Skipping MFA setup');
+    return undefined;
+  }
+
+  const factors = raw
+    .split(',')
+    .map((token) => mfaFactorAliases[token.trim().toLowerCase()])
+    .filter((factor): factor is MfaFactor => factor !== undefined);
+
+  if (factors.length === 0) {
+    consoleLog.info('No valid MFA Factors found, Skipping MFA setup');
+    return undefined;
+  }
+
+  return { factors };
 };
