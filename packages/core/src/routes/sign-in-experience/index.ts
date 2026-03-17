@@ -37,11 +37,8 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
     policy
   );
 
-const { isDevFeaturesEnabled } = EnvSet.values;
 const signInExperienceResponseGuard = SignInExperiences.guard;
-const signInExperienceCreateGuard = isDevFeaturesEnabled
-  ? SignInExperiences.createGuard
-  : SignInExperiences.createGuard.omit({ adaptiveMfa: true });
+const signInExperienceCreateGuard = SignInExperiences.createGuard;
 
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -116,9 +113,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         forgotPasswordMethods,
         hideLogtoBranding,
         passkeySignIn,
-        // Guard omits adaptiveMfa when dev features are disabled; cast to handle both cases.
-        // eslint-disable-next-line no-restricted-syntax
-      } = rest as Partial<SignInExperience>;
+      } = rest;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -202,9 +197,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       // Keep backend state aligned with console semantics:
       // if MFA is disabled and adaptive MFA is omitted in request, reset adaptive MFA to false.
       const normalizedAdaptiveMfa =
-        isDevFeaturesEnabled && mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined
-          ? { enabled: false }
-          : adaptiveMfa;
+        mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined ? { enabled: false } : adaptiveMfa;
 
       if (forgotPasswordMethods) {
         const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);

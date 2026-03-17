@@ -1,6 +1,5 @@
 import {
   Hooks,
-  InteractionHookEvent,
   Logs,
   ProductEvent,
   type WebhookLogPrefix,
@@ -10,7 +9,6 @@ import {
   hookEventsGuard,
   hookResponseGuard,
   type Hook,
-  type HookEvent,
   type HookResponse,
 } from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
@@ -18,7 +16,6 @@ import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -32,27 +29,6 @@ import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 const nonemptyUniqueHookEventsGuard = hookEventsGuard
   .nonempty()
   .transform((events) => deduplicate(events));
-
-const guardAdaptiveMfaHookEvent = (events?: HookEvent[], event?: HookEvent) => {
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
-  const hasAdaptiveMfaHookEvent =
-    event === InteractionHookEvent.PostSignInAdaptiveMfaTriggered ||
-    events?.includes(InteractionHookEvent.PostSignInAdaptiveMfaTriggered);
-
-  assertThat(
-    !hasAdaptiveMfaHookEvent,
-    new RequestError(
-      { code: 'guard.invalid_input', status: 400 },
-      {
-        reason: 'hook.event_not_supported_when_dev_features_disabled',
-        event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
-      }
-    )
-  );
-};
 
 export default function hookRoutes<T extends ManagementApiRouter>(
   ...[router, { id: tenantId, queries, libraries }]: RouterInitArgs<T>
@@ -200,8 +176,6 @@ export default function hookRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { event, events, enabled, ...rest } = ctx.guard.body;
 
-      guardAdaptiveMfaHookEvent(events, event);
-
       assertThat(events ?? event, new RequestError({ code: 'hook.missing_events', status: 400 }));
 
       ctx.body = await insertHook({
@@ -233,8 +207,6 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         body: { events, config },
       } = ctx.guard;
 
-      guardAdaptiveMfaHookEvent(events);
-
       await triggerTestHook(id, events, config);
 
       ctx.status = 204;
@@ -261,9 +233,6 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         params: { id },
         body,
       } = ctx.guard;
-
-      // `body.event` could be `null`.
-      guardAdaptiveMfaHookEvent(body.events, body.event ?? undefined);
 
       ctx.body = await updateHookById(id, body, 'replace');
 
