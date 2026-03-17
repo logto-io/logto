@@ -19,7 +19,7 @@ const alteration: AlterationScript = {
     `);
   },
   down: async () => {
-    /** 'concurrently' cannot be used inside a transaction, so this up is intentionally left empty. */
+    /** 'concurrently' cannot be used inside a transaction, so this down is intentionally left empty. */
   },
 };
 

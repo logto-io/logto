@@ -13,12 +13,12 @@ export type WithConsumed<T> = T & { consumed?: boolean };
 export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
-const { table: applicationTable, fields: applicationFields } = convertToIdentifiers(Applications);
+const { table: applicationTable } = convertToIdentifiers(Applications);
 
 export type ActiveApplicationGrantInstance = Pick<
   OidcModelInstance,
   'id' | 'payload' | 'expiresAt'
-> & { modelName: 'Grant' };
+>;
 export type GrantApplicationType = 'thirdParty' | 'firstParty';
 
 /**

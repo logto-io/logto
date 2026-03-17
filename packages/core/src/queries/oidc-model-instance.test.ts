@@ -30,7 +30,7 @@ const {
 
 describe('oidc-model-instance query', () => {
   const { table, fields } = convertToIdentifiers(OidcModelInstances);
-  const { table: applicationTable, fields: applicationFields } = convertToIdentifiers(Applications);
+  const { table: applicationTable } = convertToIdentifiers(Applications);
   const expiresAt = Date.now();
   const instance: CreateOidcModelInstance = {
     modelName: 'access_token',
