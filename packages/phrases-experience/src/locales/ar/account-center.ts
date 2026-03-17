@@ -4,11 +4,10 @@ const account_center = {
     description: 'هذه الصفحة غير متاحة.',
   },
   page: {
-    title: 'Account',
-    security_title: 'Security',
-    security_description:
-      'Change your account settings here to ensure your account security.',
-    support: 'Support',
+    title: 'الحساب',
+    security_title: 'الأمان',
+    security_description: 'غيّر إعدادات حسابك هنا لضمان أمان حسابك.',
+    support: 'الدعم',
   },
   verification: {
     title: 'التحقق الأمني',

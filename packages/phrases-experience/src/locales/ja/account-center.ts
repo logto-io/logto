@@ -4,11 +4,10 @@ const account_center = {
     description: 'このページは利用できません。',
   },
   page: {
-    title: 'Account',
-    security_title: 'Security',
-    security_description:
-      'Change your account settings here to ensure your account security.',
-    support: 'Support',
+    title: 'アカウント',
+    security_title: 'セキュリティ',
+    security_description: 'アカウントの安全を確保するために、ここでアカウント設定を変更できます。',
+    support: 'サポート',
   },
   verification: {
     title: 'セキュリティ確認',

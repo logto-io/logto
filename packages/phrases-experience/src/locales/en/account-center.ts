@@ -6,8 +6,7 @@ const account_center = {
   page: {
     title: 'Account',
     security_title: 'Security',
-    security_description:
-      'Change your account settings here to ensure your account security.',
+    security_description: 'Change your account settings here to ensure your account security.',
     support: 'Support',
   },
   verification: {

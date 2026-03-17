@@ -4,11 +4,10 @@ const account_center = {
     description: 'ไม่สามารถใช้หน้านี้ได้',
   },
   page: {
-    title: 'Account',
-    security_title: 'Security',
-    security_description:
-      'Change your account settings here to ensure your account security.',
-    support: 'Support',
+    title: 'บัญชี',
+    security_title: 'ความปลอดภัย',
+    security_description: 'เปลี่ยนการตั้งค่าบัญชีของคุณที่นี่เพื่อให้บัญชีของคุณปลอดภัย',
+    support: 'ฝ่ายช่วยเหลือ',
   },
   verification: {
     title: 'การยืนยันความปลอดภัย',

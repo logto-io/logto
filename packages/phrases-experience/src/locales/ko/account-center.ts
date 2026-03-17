@@ -4,11 +4,10 @@ const account_center = {
     description: '이 페이지는 사용할 수 없습니다.',
   },
   page: {
-    title: 'Account',
-    security_title: 'Security',
-    security_description:
-      'Change your account settings here to ensure your account security.',
-    support: 'Support',
+    title: '계정',
+    security_title: '보안',
+    security_description: '계정 보안을 위해 여기에서 계정 설정을 변경하세요.',
+    support: '지원',
   },
   verification: {
     title: '보안 인증',

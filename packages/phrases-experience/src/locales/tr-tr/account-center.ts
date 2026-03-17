@@ -4,11 +4,11 @@ const account_center = {
     description: 'Bu sayfa kullanılamıyor.',
   },
   page: {
-    title: 'Account',
-    security_title: 'Security',
+    title: 'Hesap',
+    security_title: 'Güvenlik',
     security_description:
-      'Change your account settings here to ensure your account security.',
-    support: 'Support',
+      'Hesabınızın güvenliğini sağlamak için hesap ayarlarınızı burada değiştirebilirsiniz.',
+    support: 'Destek',
   },
   verification: {
     title: 'Güvenlik doğrulaması',

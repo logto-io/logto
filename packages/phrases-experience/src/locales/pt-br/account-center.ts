@@ -4,11 +4,11 @@ const account_center = {
     description: 'Esta página não está disponível.',
   },
   page: {
-    title: 'Account',
-    security_title: 'Security',
+    title: 'Conta',
+    security_title: 'Segurança',
     security_description:
-      'Change your account settings here to ensure your account security.',
-    support: 'Support',
+      'Altere as configurações da sua conta aqui para garantir a segurança dela.',
+    support: 'Suporte',
   },
   verification: {
     title: 'Verificação de segurança',

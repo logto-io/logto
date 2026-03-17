@@ -4,11 +4,10 @@ const account_center = {
     description: '此頁面無法使用。',
   },
   page: {
-    title: 'Account',
-    security_title: 'Security',
-    security_description:
-      'Change your account settings here to ensure your account security.',
-    support: 'Support',
+    title: '帳戶',
+    security_title: '安全',
+    security_description: '你可以在這裡變更帳戶設定，以確保帳戶安全。',
+    support: '支援',
   },
   verification: {
     title: '安全驗證',
