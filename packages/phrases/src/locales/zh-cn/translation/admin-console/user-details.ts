@@ -152,6 +152,19 @@ const user_details = {
     revoke_session: '撤销会话',
     revoke_session_confirmation: '如果移除此会话，用户将被迫重新进行身份验证。',
   },
+  third_party_apps: {
+    title: '第三方应用',
+    description: '使用 Logto 作为身份提供商来授权第三方应用。查看并管理该用户已授权访问的应用。',
+    field_name: '已授权第三方应用',
+    multiple_authorized: '该用户已授权多个第三方应用和服务。',
+    not_authorized: '该用户尚未授权任何第三方应用或服务。',
+    name_column: '名称',
+    app_id_column: '应用 ID',
+    access_created_at_column: '授权时间',
+    revoke_access_title: '撤销访问权限？',
+    revoke_access_description:
+      '此操作将撤销该应用在所有设备上访问此用户账户的权限。用户必须重新授权才能恢复访问。',
+  },
   connections: {
     title: '连接',
     description: '用户关联第三方账户用于社交登录、企业单点登录或资源访问。',

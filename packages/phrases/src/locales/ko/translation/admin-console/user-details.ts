@@ -159,6 +159,20 @@ const user_details = {
     revoke_session: '세션 해지',
     revoke_session_confirmation: '이 세션을 제거하면 사용자는 다시 인증해야 합니다.',
   },
+  third_party_apps: {
+    title: '서드파티 앱',
+    description:
+      'Logto를 ID 공급자로 사용해 서드파티 앱을 승인할 수 있습니다. 이 사용자가 접근 권한을 부여한 앱을 확인하고 관리하세요.',
+    field_name: '승인된 서드파티 앱',
+    multiple_authorized: '이 사용자는 여러 서드파티 앱 및 서비스를 승인했습니다.',
+    not_authorized: '이 사용자는 아직 어떤 서드파티 앱이나 서비스도 승인하지 않았습니다.',
+    name_column: '이름',
+    app_id_column: '앱 ID',
+    access_created_at_column: '접근 권한 부여 시각',
+    revoke_access_title: '접근 권한을 취소하시겠습니까?',
+    revoke_access_description:
+      '이 작업은 모든 기기에서 이 사용자의 계정에 대한 앱 접근 권한을 취소합니다. 접근 권한을 복구하려면 사용자가 다시 승인해야 합니다.',
+  },
   connections: {
     title: '연결',
     description: '사용자는 소셜 로그인, 기업 SSO 또는 리소스 접근을 위해 타사 계정을 연결합니다.',

@@ -152,6 +152,20 @@ const user_details = {
     revoke_session: '撤銷工作階段',
     revoke_session_confirmation: '如果移除此工作階段，使用者將需要重新驗證。',
   },
+  third_party_apps: {
+    title: '第三方應用程式',
+    description:
+      '使用 Logto 作為身分提供者來授權第三方應用程式。檢視並管理此使用者已授權存取的應用程式。',
+    field_name: '已授權第三方應用程式',
+    multiple_authorized: '此使用者已授權多個第三方應用程式與服務。',
+    not_authorized: '此使用者尚未授權任何第三方應用程式或服務。',
+    name_column: '名稱',
+    app_id_column: '應用程式 ID',
+    access_created_at_column: '授權建立時間',
+    revoke_access_title: '要撤銷存取權嗎？',
+    revoke_access_description:
+      '此操作會撤銷該應用程式在所有裝置上存取此使用者帳戶的權限。使用者必須重新授權才能恢復存取。',
+  },
   connections: {
     title: '連接',
     description: '用戶連結第三方帳戶以進行社交登入、企業單點登錄或資源訪問。',

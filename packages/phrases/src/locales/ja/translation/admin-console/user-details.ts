@@ -160,6 +160,20 @@ const user_details = {
     revoke_session: 'セッションを失効',
     revoke_session_confirmation: 'このセッションを削除すると、ユーザーは再認証が必要になります。',
   },
+  third_party_apps: {
+    title: 'サードパーティアプリ',
+    description:
+      'Logto を ID プロバイダーとして利用し、サードパーティアプリを認可します。このユーザーがアクセスを許可したアプリを表示して管理します。',
+    field_name: '許可済みのサードパーティアプリ',
+    multiple_authorized: 'このユーザーは複数のサードパーティアプリとサービスを許可しています。',
+    not_authorized: 'このユーザーはまだサードパーティアプリやサービスを許可していません。',
+    name_column: '名前',
+    app_id_column: 'アプリ ID',
+    access_created_at_column: 'アクセス作成日時',
+    revoke_access_title: 'アクセスを取り消しますか？',
+    revoke_access_description:
+      'この操作により、すべてのデバイスでこのユーザーのアカウントに対するアプリのアクセスが取り消されます。アクセスを復元するには、ユーザーによる再認可が必要です。',
+  },
   connections: {
     title: '接続',
     description:

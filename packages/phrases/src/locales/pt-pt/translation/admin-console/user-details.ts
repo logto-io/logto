@@ -167,6 +167,21 @@ const user_details = {
     revoke_session_confirmation:
       'Se remover esta sessão, os utilizadores terão de se autenticar novamente.',
   },
+  third_party_apps: {
+    title: 'Aplicações de terceiros',
+    description:
+      'Use o Logto como fornecedor de identidade para autorizar aplicações de terceiros. Veja e gira as aplicações às quais este utilizador concedeu acesso.',
+    field_name: 'Aplicações de terceiros autorizadas',
+    multiple_authorized: 'Este utilizador autorizou várias aplicações e serviços de terceiros.',
+    not_authorized:
+      'Este utilizador ainda não autorizou quaisquer aplicações ou serviços de terceiros.',
+    name_column: 'Nome',
+    app_id_column: 'ID da aplicação',
+    access_created_at_column: 'Acesso criado em',
+    revoke_access_title: 'Revogar acesso?',
+    revoke_access_description:
+      'Isto irá revogar o acesso da aplicação à conta deste utilizador em todos os dispositivos. O utilizador terá de autorizar novamente para restaurar o acesso.',
+  },
   connections: {
     title: 'Ligação',
     description:
