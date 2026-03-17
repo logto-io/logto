@@ -279,8 +279,10 @@ The Account Centre for the default tenant is **enabled** with the following fiel
 |-------|-------------|
 | `password` | Users can set or change their password |
 | `email` | Users can update their primary email address |
-| `profile` | Users can edit their name, given name, family name, and avatar |
+| `name` | Users can update their display name |
+| `profile` | Users can edit their given name, family name, and avatar |
 | `mfa` | Users can configure or remove MFA methods (TOTP, passkeys, backup codes) |
+| `phone` | Users can update their phone number (**only enabled when `LOGTO_SMTP_SMS_*` is configured**; set to `Off` otherwise) |
 
 This allows end-users to self-manage their credentials and profile via the Account Centre SPA without further configuration.
 

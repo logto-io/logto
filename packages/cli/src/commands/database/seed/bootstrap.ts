@@ -30,13 +30,7 @@ import { convertToIdentifiers } from '../../../sql.js';
 import { encryptPassword } from '../../../utils/password.js';
 import { consoleLog } from '../../../utils.js';
 
-import type {
-  AdminConfig,
-  AppConfig,
-  M2mConfig,
-  SmtpConfig,
-  SmtpSmsConfig,
-} from './bootstrap-config.js';
+import type { AdminConfig, AppConfig, M2mConfig } from './bootstrap-config.js';
 import {
   getAdminConfig,
   getAppConfig,
@@ -46,45 +40,10 @@ import {
   getSmtpConfig,
   getSmtpSmsConfig,
 } from './bootstrap-config.js';
+import { bootstrapSmtpConnector, bootstrapSmtpSmsConnector } from './bootstrap-connectors.js';
 import { bootstrapMfa, bootstrapSignInExperience } from './bootstrap-sign-in.js';
 import type { SeedUser } from './bootstrap-users.js';
-import { loadSeedUsers } from './bootstrap-users.js';
-
-/**
- * Default HTML email templates registered with the SMTP connector for every standard usage type
- * (Register, SignIn, ForgotPassword, Generic). Each template renders a `{{code}}` placeholder
- * that Logto replaces with the one-time verification code at send time.
- */
-const defaultEmailTemplates = [
-  {
-    usageType: 'Register',
-    contentType: 'text/html',
-    subject: 'Your verification code',
-    content:
-      '<p>Your verification code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>',
-  },
-  {
-    usageType: 'SignIn',
-    contentType: 'text/html',
-    subject: 'Your sign-in verification code',
-    content:
-      '<p>Your sign-in verification code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>',
-  },
-  {
-    usageType: 'ForgotPassword',
-    contentType: 'text/html',
-    subject: 'Reset your password',
-    content:
-      '<p>Your password reset code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>',
-  },
-  {
-    usageType: 'Generic',
-    contentType: 'text/html',
-    subject: 'Your verification code',
-    content:
-      '<p>Your verification code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>',
-  },
-];
+import { buildUserProfile, loadSeedUsers } from './bootstrap-users.js';
 
 /**
  * Creates the initial admin user in the admin tenant and wires up all required role and
@@ -226,120 +185,6 @@ const bootstrapApplication = async (
     `Created Traditional application "${config.name}" (client_id: ${config.clientId})`
   );
 };
-
-/**
- * Registers an SMTP email connector in the default tenant using the built-in
- * `simple-mail-transfer-protocol` connector type.
- *
- * The connector is pre-loaded with {@link defaultEmailTemplates} covering all standard usage
- * types so it is immediately ready to send verification and password-reset emails.
- *
- * @param connection - Active database transaction connection.
- * @param config - SMTP server details and credentials from {@link getSmtpConfig}.
- */
-const bootstrapSmtpConnector = async (
-  connection: DatabaseTransactionConnection,
-  config: SmtpConfig
-) => {
-  await connection.query(
-    insertInto(
-      {
-        tenantId: defaultTenantId,
-        id: generateStandardShortId(),
-        connectorId: 'simple-mail-transfer-protocol',
-        config: {
-          host: config.host,
-          port: config.port,
-          auth: config.auth,
-          fromEmail: config.fromEmail,
-          ...(config.replyTo ? { replyTo: config.replyTo } : {}),
-          secure: config.secure,
-          templates: defaultEmailTemplates,
-        },
-        metadata: {},
-      },
-      'connectors'
-    )
-  );
-
-  consoleLog.succeed(`Configured SMTP email connector (${config.host}:${config.port})`);
-};
-
-/**
- * Default plain-text SMS templates registered with the SMTP SMS connector for every standard
- * usage type (Register, SignIn, ForgotPassword, Generic). Each template renders a `{{code}}`
- * placeholder that Logto replaces with the one-time verification code at send time.
- */
-const defaultSmsTemplates = [
-  {
-    usageType: 'Register',
-    content: 'Your verification code is {{code}}. It expires in 10 minutes.',
-  },
-  {
-    usageType: 'SignIn',
-    content: 'Your sign-in verification code is {{code}}. It expires in 10 minutes.',
-  },
-  {
-    usageType: 'ForgotPassword',
-    content: 'Your password reset code is {{code}}. It expires in 10 minutes.',
-  },
-  {
-    usageType: 'Generic',
-    content: 'Your verification code is {{code}}. It expires in 10 minutes.',
-  },
-];
-
-/**
- * Registers an SMTP SMS connector in the default tenant using the custom `smtp-sms` connector type.
- *
- * The connector is pre-loaded with {@link defaultSmsTemplates} covering all standard usage types
- * so it is immediately ready to send SMS messages via an email-to-SMS gateway.
- *
- * @param connection - Active database transaction connection.
- * @param config - SMTP server details and gateway template from {@link getSmtpSmsConfig}.
- */
-const bootstrapSmtpSmsConnector = async (
-  connection: DatabaseTransactionConnection,
-  config: SmtpSmsConfig
-) => {
-  await connection.query(
-    insertInto(
-      {
-        tenantId: defaultTenantId,
-        id: generateStandardShortId(),
-        connectorId: 'smtp-sms',
-        config: {
-          host: config.host,
-          port: config.port,
-          auth: config.auth,
-          fromEmail: config.fromEmail,
-          toEmailTemplate: config.toEmailTemplate,
-          ...(config.subject ? { subject: config.subject } : {}),
-          secure: config.secure,
-          templates: defaultSmsTemplates,
-        },
-        metadata: {},
-      },
-      'connectors'
-    )
-  );
-
-  consoleLog.succeed(
-    `Configured SMTP SMS connector (${config.host}:${config.port} → ${config.toEmailTemplate})`
-  );
-};
-
-/**
- * Extracts the optional name profile fields from a seed user into the flat object expected by the
- * `profile` column.
- *
- * @param user - Source seed user entry.
- * @returns A partial profile record containing only the fields that are present on the user.
- */
-const buildUserProfile = (user: SeedUser): Record<string, string> => ({
-  ...(user.familyName ? { familyName: user.familyName } : {}),
-  ...(user.givenName ? { givenName: user.givenName } : {}),
-});
 
 /**
  * Inserts pre-seeded user accounts into the default tenant in sequence.
@@ -500,7 +345,7 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
 
   consoleLog.info('Running environment-based bootstrap...');
 
-  await bootstrapAccountCenter(connection, !!smtpSmsConfig);
+  await bootstrapAccountCenter(connection, Boolean(smtpSmsConfig));
 
   if (adminConfig) {
     await bootstrapAdminUser(connection, adminConfig);

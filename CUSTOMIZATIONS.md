@@ -26,6 +26,7 @@ The primary addition is a **self-service management dashboard** built into the A
 | `src/pages/Profile/index.tsx` | Extended to handle `profile.givenName` and `profile.familyName` in addition to the existing `name` and `avatar` fields. Submits two API calls when both are active: `PATCH /api/my-account` (name/avatar) and `PATCH /api/my-account/profile` (givenName/familyName). Visibility is controlled by `fields.profile` (`AccountCenterControlValue`). |
 | `src/pages/TotpBinding/index.tsx` | Now redirects to `/authenticator-app/manage` via `useEffect` when TOTP is already configured, instead of showing an error state. |
 | `src/pages/UpdateSuccess/index.tsx` | Conditionally shows a "Back to account" button (using React Router `navigate('/')`) when no external `redirectUrl` is present in session storage. External redirect flows (post-signin / onboarding) are unchanged. |
+| `src/pages/Home/index.tsx` | Added a **Sign out** button at the bottom of the dashboard using `useLogto().signOut()`. Redirects to the account center root (`accountCenterBasePath`) after sign-out. |
 
 #### New files (within existing pages)
 
@@ -64,6 +65,7 @@ New i18n keys added to `src/locales/*/account-center.ts` in all 18 supported loc
 | `totp_active` | Status label shown when a TOTP authenticator app is configured. |
 | `passkeys_count` / `passkeys_count_plural` | Status label showing number of registered passkeys (with `{{count}}` interpolation). |
 | `return_to_account` | "Back to account" button label on MFA success pages. |
+| `sign_out` | "Sign out" button label on the dashboard home page. |
 | `field_given_name` | Row label for given name field. |
 | `field_family_name` | Row label for family name field. |
 
