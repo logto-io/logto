@@ -1,4 +1,6 @@
 import {
+  AccountCenterControlValue,
+  AccountCenters,
   AdminTenantRole,
   ApplicationType,
   Applications,
@@ -306,6 +308,39 @@ const bootstrapSeedUsers = async (
 };
 
 /**
+ * Enables the Account Centre for the default tenant and sets the requested fields to `Edit`.
+ *
+ * The fields enabled are:
+ * - `password` — allows users to set or change their password
+ * - `email` — allows users to update their primary email address
+ * - `profile` — allows editing of name, given name, family name, and avatar
+ * - `mfa` — allows users to configure or remove MFA methods
+ *
+ * @param connection - Active database transaction connection.
+ */
+const bootstrapAccountCenter = async (connection: DatabaseTransactionConnection) => {
+  const fields = {
+    password: AccountCenterControlValue.Edit,
+    email: AccountCenterControlValue.Edit,
+    profile: AccountCenterControlValue.Edit,
+    mfa: AccountCenterControlValue.Edit,
+  };
+
+  await connection.query(sql`
+    update ${sql.identifier([AccountCenters.table])}
+    set
+      ${sql.identifier(['enabled'])} = true,
+      ${sql.identifier(['fields'])} = ${JSON.stringify(fields)}::jsonb
+    where ${sql.identifier(['tenant_id'])} = ${defaultTenantId}
+    and ${sql.identifier(['id'])} = ${sql.literalValue('default')}
+  `);
+
+  consoleLog.succeed(
+    'Enabled Account Centre with password, email, profile, and MFA editing for the default tenant'
+  );
+};
+
+/**
  * Entry point for environment-driven bootstrap logic, intended to run once immediately after the
  * standard Logto database seed.
  *
@@ -350,6 +385,7 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
   }
 
   if (signInExpConfig.bootstrapSignInExperience) {
+    await bootstrapAccountCenter(connection);
     await bootstrapSignInExperience(connection, signInExpConfig.primaryIdentifier);
   }
 

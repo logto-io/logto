@@ -2,6 +2,19 @@
 
 This guide explains how to configure Logto for **zero-click setup** in ephemeral or containerised environments. By setting environment variables before the first `db seed`, you can pre-configure an admin user, OIDC application, SMTP email connector, and seed user accounts — all without touching the Admin Console.
 
+### Account Centre (always enabled)
+
+Whenever the bootstrap runs (i.e. when at least one bootstrap environment variable is set), the **Account Centre is automatically enabled** for the default tenant with the following fields set to **Edit**:
+
+| Field | Description |
+|-------|-------------|
+| `password` | Users can set or change their password |
+| `email` | Users can update their primary email address |
+| `profile` | Users can edit their name, given name, family name, and avatar |
+| `mfa` | Users can configure or remove MFA methods (TOTP, passkeys, backup codes) |
+
+This requires no additional environment variables.
+
 ## How It Works
 
 The bootstrap runs automatically as part of `pnpm cli db seed` (or `npm run cli db seed`). When the `--swe` (skip-when-exists) flag is used (as in the default Docker entrypoint), the bootstrap only runs on first initialization. If no bootstrap environment variables are set, the seed process behaves exactly as before.
@@ -219,10 +232,12 @@ volumes:
 
 1. **Idempotent via `--swe`:** The bootstrap runs inside the `db seed` transaction. With `--swe`, seeding (and bootstrap) is skipped if the database already exists. This means bootstrap data is created once on first init.
 
-2. **Transactional:** All bootstrap operations run within the same database transaction as the seed. If any step fails, the entire seed (including bootstrap) is rolled back.
+2. **Account Centre enabled automatically:** Whenever any bootstrap variable is set, the Account Centre for the default tenant is enabled with password, email, profile, and MFA editing turned on. No additional environment variable is required.
 
-3. **No overwrite:** Bootstrap creates new records. It does not update existing applications, connectors, or users. To reconfigure, destroy and recreate the database.
+3. **Transactional:** All bootstrap operations run within the same database transaction as the seed. If any step fails, the entire seed (including bootstrap) is rolled back.
 
-4. **Password security:** Passwords in environment variables and seed files are hashed with Argon2i (OWASP-recommended settings) before being stored. Plaintext passwords are never persisted.
+4. **No overwrite:** Bootstrap creates new records. It does not update existing applications, connectors, or users. To reconfigure, destroy and recreate the database.
 
-5. **Client ID constraint:** The Logto database uses `varchar(21)` for application IDs. Ensure your `LOGTO_APP_CLIENT_ID` is 21 characters or fewer.
+5. **Password security:** Passwords in environment variables and seed files are hashed with Argon2i (OWASP-recommended settings) before being stored. Plaintext passwords are never persisted.
+
+6. **Client ID constraint:** The Logto database uses `varchar(21)` for application IDs. Ensure your `LOGTO_APP_CLIENT_ID` is 21 characters or fewer.
