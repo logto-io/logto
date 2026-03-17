@@ -2,9 +2,38 @@
   "paths": {
     "/api/users": {
       "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "includePasswordHash",
+            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), each user in the response will include the `passwordDigest` and `passwordAlgorithm` fields. These fields are omitted by default for security reasons."
+          }
+        ],
         "responses": {
           "200": {
-            "description": "An array of users that match the given criteria."
+            "description": "An array of users that match the given criteria.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "passwordDigest": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The hashed password of the user. Only present when `includePasswordHash=true` is provided. `null` if the user has no password set."
+                      },
+                      "passwordAlgorithm": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The algorithm used to hash the password. Only present when `includePasswordHash=true` is provided. `null` if the user has no password set."
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Get users",

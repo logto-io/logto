@@ -1,15 +1,24 @@
 import {
   MfaFactor,
+  Users,
   userInfoSelectFields,
-  type UserProfileResponse,
+  userProfileResponseGuard,
   type UserSsoIdentity,
   type User,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared/universal';
 import { pick } from '@silverhand/essentials';
+import { type z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+
+export const adminUserProfileResponseGuard = userProfileResponseGuard.extend({
+  passwordDigest: Users.guard.shape.passwordEncrypted.optional(),
+  passwordAlgorithm: Users.guard.shape.passwordEncryptionMethod.optional(),
+});
+
+type AdminUserProfileResponse = z.infer<typeof adminUserProfileResponseGuard>;
 
 export const transpileUserMfaVerifications = (
   mfaVerifications: User['mfaVerifications']
@@ -35,6 +44,7 @@ export const transpileUserMfaVerifications = (
 
 type ExtraUserInfo = {
   ssoIdentities?: UserSsoIdentity[];
+  includePasswordHash?: boolean;
 };
 
 /**
@@ -56,13 +66,17 @@ type ExtraUserInfo = {
 export const transpileUserProfileResponse = (
   user: User,
   extraInfo: ExtraUserInfo = {}
-): UserProfileResponse => {
-  const { ssoIdentities } = extraInfo;
+): AdminUserProfileResponse => {
+  const { ssoIdentities, includePasswordHash } = extraInfo;
 
   return {
     ...pick(user, ...userInfoSelectFields),
     hasPassword: Boolean(user.passwordEncrypted),
     ...(ssoIdentities && { ssoIdentities }),
+    ...(includePasswordHash && {
+      passwordDigest: user.passwordEncrypted,
+      passwordAlgorithm: user.passwordEncryptionMethod,
+    }),
   };
 };
 

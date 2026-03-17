@@ -26,7 +26,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { parseLegacyPassword } from '../../utils/password.js';
 import { captureDeveloperEvent } from '../../utils/posthog.js';
-import { transpileUserProfileResponse } from '../../utils/user.js';
+import { adminUserProfileResponseGuard, transpileUserProfileResponse } from '../../utils/user.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
@@ -58,14 +58,17 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     '/users/:userId',
     koaGuard({
       params: object({ userId: string() }),
-      query: object({ includeSsoIdentities: string().optional() }),
-      response: userProfileResponseGuard,
+      query: object({
+        includeSsoIdentities: string().optional(),
+        includePasswordHash: string().optional(),
+      }),
+      response: adminUserProfileResponseGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
       const {
         params: { userId },
-        query: { includeSsoIdentities = 'false' },
+        query: { includeSsoIdentities = 'false', includePasswordHash = 'false' },
       } = ctx.guard;
 
       const user = await findUserById(userId);
@@ -74,6 +77,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         ssoIdentities: conditional(
           yes(includeSsoIdentities) && [...(await findUserSsoIdentities(userId))]
         ),
+        includePasswordHash: yes(includePasswordHash),
       });
 
       return next();
