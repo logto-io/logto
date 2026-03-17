@@ -11,7 +11,10 @@ const applicationsPathname = '/applications';
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
 
 type Props = {
-  readonly data: Pick<Application, 'id' | 'name' | 'isThirdParty' | 'type' | 'customClientMetadata'>;
+  readonly data: Pick<
+    Application,
+    'id' | 'name' | 'isThirdParty' | 'type' | 'customClientMetadata'
+  >;
 };
 
 function ApplicationPreview({
