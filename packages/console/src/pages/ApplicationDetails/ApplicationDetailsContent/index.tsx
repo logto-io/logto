@@ -124,7 +124,13 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
   return (
     <>
       <DetailsPageHeader
-        icon={<ApplicationIcon type={data.type} isThirdParty={data.isThirdParty} />}
+        icon={
+          <ApplicationIcon
+            type={data.type}
+            isThirdParty={data.isThirdParty}
+            isDeviceFlow={data.customClientMetadata.isDeviceFlow}
+          />
+        }
         title={data.name}
         primaryTag={condArray(
           data.isThirdParty && t(`${applicationTypeI18nKey.thirdParty}.title`),

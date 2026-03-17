@@ -1,5 +1,7 @@
 import { ApplicationType } from '@logto/schemas';
 
+import DeviceFlowAppDark from '@/assets/icons/device-flow-app-dark.svg?react';
+import DeviceFlowApp from '@/assets/icons/device-flow-app.svg?react';
 import MachineToMachineDark from '@/assets/icons/machine-to-machine-dark.svg?react';
 import MachineToMachine from '@/assets/icons/machine-to-machine.svg?react';
 import NativeAppDark from '@/assets/icons/native-app-dark.svg?react';
@@ -35,3 +37,6 @@ export const darkModeApplicationIconMap: ApplicationIconMap = Object.freeze({
 export { default as thirdPartyApplicationIconDark } from '@/assets/icons/third-party-app-dark.svg?react';
 
 export { default as thirdPartyApplicationIcon } from '@/assets/icons/third-party-app.svg?react';
+
+export const deviceFlowApplicationIcon = DeviceFlowApp;
+export const deviceFlowApplicationIconDark = DeviceFlowAppDark;
