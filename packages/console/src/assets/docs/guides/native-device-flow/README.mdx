@@ -93,6 +93,8 @@ least every 5 seconds:
   --data-urlencode 'device_code=DEVICE_CODE'`}
 </Code>
 
+Replace `DEVICE_CODE` with the `device_code` value from the device authorization response in the previous step.
+
 Before the user completes verification, the endpoint returns one of these errors:
 
 - `authorization_pending` — The user hasn't completed authorization yet. Wait at least 5 seconds and try again.
@@ -147,8 +149,10 @@ token scoped to that API resource by passing the `resource` parameter during the
   --data-urlencode 'client_id=${props.app.id}' \\
   --data-urlencode 'grant_type=refresh_token' \\
   --data-urlencode 'refresh_token=REFRESH_TOKEN' \\
-  --data-urlencode 'resource=https://your-api-resource'`}
+  --data-urlencode 'resource=YOUR_API_RESOURCE_INDICATOR'`}
 </Code>
+
+Replace `YOUR_API_RESOURCE_INDICATOR` with the API resource indicator (URI) you created in Logto.
 
 Without the `resource` parameter, the refresh response returns an opaque access token. With the
 `resource` parameter, it returns a JWT access token with `aud` set to the specified resource URI.
