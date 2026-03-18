@@ -157,6 +157,26 @@ describe('validateMetadata', () => {
       }).toThrow();
     });
   });
+
+  describe('maxAllowedSessions', () => {
+    it('should not throw when it is a positive integer', () => {
+      expect(() => {
+        validateCustomClientMetadata('maxAllowedSessions', 3);
+      }).not.toThrow();
+    });
+
+    it('should throw when it is not an integer', () => {
+      expect(() => {
+        validateCustomClientMetadata('maxAllowedSessions', 3.2);
+      }).toThrow();
+    });
+
+    it('should throw when it is not a positive integer', () => {
+      expect(() => {
+        validateCustomClientMetadata('maxAllowedSessions', 0);
+      }).toThrow();
+    });
+  });
 });
 
 describe('isOriginAllowed', () => {
