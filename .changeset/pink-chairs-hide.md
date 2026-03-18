@@ -5,9 +5,9 @@
 "@logto/phrases": minor
 ---
 
-make adaptive MFA generally available across console configuration and core sign-in flows
+make adaptive MFA across console configuration and core sign-in flows
 
-This change makes adaptive MFA generally available across console configuration and core sign-in flows.
+This change makes adaptive MFA across console configuration and core sign-in flows.
 
 - In Console, the MFA settings page always exposes the adaptive MFA option and saves `adaptiveMfa` configuration in the sign-in experience payload.
 - In Core, when adaptive MFA is enabled in the sign-in experience config, the sign-in flow evaluates adaptive MFA rules against the current sign-in context and requires MFA verification when those rules are triggered.
