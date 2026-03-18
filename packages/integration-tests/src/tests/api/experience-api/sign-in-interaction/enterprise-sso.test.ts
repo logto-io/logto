@@ -136,7 +136,7 @@ describe('enterprise sso sign-in and sign-up', () => {
 
     expect(userId).toBe(user.id);
 
-    const { name, ssoIdentities } = await getUser(userId, true);
+    const { name, ssoIdentities } = await getUser(userId, { withSsoIdentities: true });
 
     expect(name).toBe('John Doe');
 

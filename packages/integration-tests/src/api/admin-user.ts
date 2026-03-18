@@ -14,10 +14,11 @@ import type {
   Role,
   SessionGrantRevokeTarget,
   User,
+  UserProfileResponse,
   UserSsoIdentity,
   UsersPasswordEncryptionMethod,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, type Nullable } from '@silverhand/essentials';
 
 import { authedAdminApi } from './api.js';
 
@@ -38,17 +39,32 @@ export const createUser = async (payload: CreateUserPayload = {}) =>
     })
     .json<User>();
 
-export const getUser = async (userId: string, withSsoIdentities = false) =>
-  authedAdminApi
-    .get(
-      `users/${userId}`,
-      conditional(
-        withSsoIdentities && { searchParams: new URLSearchParams({ includeSsoIdentities: 'true' }) }
-      )
-    )
-    .json<User & { ssoIdentities?: UserSsoIdentity[] }>();
+export type GetUserOptions = {
+  withSsoIdentities?: boolean;
+  includePasswordHash?: boolean;
+};
 
-export const getUsers = async () => authedAdminApi.get('users').json<User[]>();
+export type UserProfileResponseWithPasswordHash = UserProfileResponse & {
+  passwordDigest?: Nullable<string>;
+  passwordAlgorithm?: Nullable<UsersPasswordEncryptionMethod>;
+};
+
+export async function getUser(userId: string, options: GetUserOptions = {}) {
+  const { withSsoIdentities, includePasswordHash } = options;
+  const searchParams = new URLSearchParams({
+    ...(withSsoIdentities && { includeSsoIdentities: 'true' }),
+    ...(includePasswordHash && { includePasswordHash: 'true' }),
+  });
+
+  return authedAdminApi
+    .get(`users/${userId}`, searchParams.size > 0 ? { searchParams } : undefined)
+    .json<UserProfileResponseWithPasswordHash>();
+}
+
+export const getUsers = async (searchParams?: URLSearchParams) =>
+  authedAdminApi
+    .get('users', searchParams ? { searchParams } : undefined)
+    .json<UserProfileResponseWithPasswordHash[]>();
 
 export const updateUser = async (userId: string, payload: Partial<User>) =>
   authedAdminApi

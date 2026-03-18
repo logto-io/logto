@@ -115,6 +115,20 @@ describe('adminUserRoutes', () => {
     expect(response.body).toEqual(mockUserResponse);
   });
 
+  it('GET /users/:userId should not include passwordDigest/passwordAlgorithm by default', async () => {
+    const response = await userRequest.get('/users/foo');
+    expect(response.status).toEqual(200);
+    expect(response.body).not.toHaveProperty('passwordDigest');
+    expect(response.body).not.toHaveProperty('passwordAlgorithm');
+  });
+
+  it('GET /users/:userId with includePasswordHash=true should include passwordDigest and passwordAlgorithm', async () => {
+    const response = await userRequest.get('/users/foo?includePasswordHash=true');
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveProperty('passwordDigest', mockUser.passwordEncrypted);
+    expect(response.body).toHaveProperty('passwordAlgorithm', mockUser.passwordEncryptionMethod);
+  });
+
   it('POST /users', async () => {
     const username = 'MJAtLogto';
     const password = 'PASSWORD1234';
