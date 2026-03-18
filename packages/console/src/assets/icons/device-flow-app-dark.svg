@@ -1,9 +1,9 @@
-<svg width="40" height="38" viewBox="0 0 40 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Type=Device flow, Dark mode=on">
-<rect width="40" height="38" rx="8" fill="#F7F8F8" fill-opacity="0.12"/>
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Feature icon/Application icon">
+<rect width="40" height="40" rx="8" fill="#F7F8F8" fill-opacity="0.12"/>
 <g id="icon">
 <g id="Vector" opacity="0.8">
-<path d="M32.8571 11H7.14286C5.95939 11 5 11.9949 5 13.2222V28.7778C5 30.0051 5.95939 31 7.14286 31H32.8571C34.0406 31 35 30.0051 35 28.7778V13.2222C35 11.9949 34.0406 11 32.8571 11Z" fill="url(#paint0_linear_13189_32692)"/>
+<path d="M32.8571 11H7.14286C5.95939 11 5 11.9949 5 13.2222V28.7778C5 30.0051 5.95939 31 7.14286 31H32.8571C34.0406 31 35 30.0051 35 28.7778V13.2222C35 11.9949 34.0406 11 32.8571 11Z" fill="url(#paint0_linear_2235_10193)"/>
 <path d="M32.8571 11H7.14286C5.95939 11 5 11.9949 5 13.2222V28.7778C5 30.0051 5.95939 31 7.14286 31H32.8571C34.0406 31 35 30.0051 35 28.7778V13.2222C35 11.9949 34.0406 11 32.8571 11Z" fill="#9C85FD"/>
 </g>
 <path id="Vector_2" d="M31.9167 13H8.08333C7.48502 13 7 13.5117 7 14.1429V27.8571C7 28.4883 7.48502 29 8.08333 29H31.9167C32.515 29 33 28.4883 33 27.8571V14.1429C33 13.5117 32.515 13 31.9167 13Z" fill="#5D34F2"/>
@@ -16,7 +16,7 @@
 </g>
 </g>
 <defs>
-<linearGradient id="paint0_linear_13189_32692" x1="2.53571" y1="22.4583" x2="30.4193" y2="7.01509" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint0_linear_2235_10193" x1="2.53571" y1="22.4583" x2="30.4193" y2="7.01509" gradientUnits="userSpaceOnUse">
 <stop stop-color="#492EF3"/>
 <stop offset="1" stop-color="#CF69FF"/>
 </linearGradient>
