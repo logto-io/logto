@@ -22,6 +22,8 @@ const oidc = {
   invalid_session_payload: 'Geçersiz oturum yükü.',
   session_not_found: 'Oturum bulunamadı.',
   invalid_session_account_id: 'Oturum accountId uyumsuzluğu.',
+  failed_to_revoke_grant: 'Yetki iptal edilemedi.',
+  failed_to_cleanup_session_authorization: 'Oturum yetkilendirmesi temizlenemedi.',
 };
 
 export default Object.freeze(oidc);

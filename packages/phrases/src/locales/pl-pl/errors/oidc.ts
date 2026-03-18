@@ -22,6 +22,8 @@ const oidc = {
   invalid_session_payload: 'Nieprawidłowy ładunek sesji.',
   session_not_found: 'Nie znaleziono sesji.',
   invalid_session_account_id: 'Niezgodność ID konta sesji.',
+  failed_to_revoke_grant: 'Nie udało się unieważnić przyznania.',
+  failed_to_cleanup_session_authorization: 'Nie udało się wyczyścić autoryzacji sesji.',
 };
 
 export default Object.freeze(oidc);

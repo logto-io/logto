@@ -21,6 +21,8 @@ const oidc = {
   invalid_session_payload: '无效的会话负载。',
   session_not_found: '未找到会话。',
   invalid_session_account_id: '会话的 accountId 不匹配。',
+  failed_to_revoke_grant: '撤销授权失败。',
+  failed_to_cleanup_session_authorization: '清理会话授权记录失败。',
 };
 
 export default Object.freeze(oidc);

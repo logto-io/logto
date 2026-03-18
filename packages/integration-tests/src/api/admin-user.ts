@@ -247,6 +247,9 @@ export const getUserApplicationGrants = async (
 export const getUserSession = async (userId: string, sessionId: string) =>
   authedAdminApi.get(`users/${userId}/sessions/${sessionId}`).json<GetUserSessionResponse>();
 
+export const revokeUserGrant = async (userId: string, grantId: string) =>
+  authedAdminApi.delete(`users/${userId}/grants/${grantId}`);
+
 export const revokeUserSession = async (
   userId: string,
   sessionId: string,

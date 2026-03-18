@@ -21,6 +21,8 @@ const oidc = {
   invalid_session_payload: '유효하지 않은 세션 페이로드입니다.',
   session_not_found: '세션을 찾을 수 없습니다.',
   invalid_session_account_id: '세션 accountId가 일치하지 않습니다.',
+  failed_to_revoke_grant: '권한 철회에 실패했어요.',
+  failed_to_cleanup_session_authorization: '세션 권한 정리에 실패했어요.',
 };
 
 export default Object.freeze(oidc);

@@ -22,6 +22,8 @@ const oidc = {
   invalid_session_payload: 'Недопустимая полезная нагрузка сессии.',
   session_not_found: 'Сессия не найдена.',
   invalid_session_account_id: 'Несоответствие accountId сессии.',
+  failed_to_revoke_grant: 'Не удалось отозвать грант.',
+  failed_to_cleanup_session_authorization: 'Не удалось очистить авторизацию сессии.',
 };
 
 export default Object.freeze(oidc);
