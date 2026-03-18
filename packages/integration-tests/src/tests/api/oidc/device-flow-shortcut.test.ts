@@ -27,10 +27,14 @@ devFeatureTest.describe('device flow shortcut', () => {
   let clientId: string;
 
   beforeAll(async () => {
-    const application = await createApplication('device-flow-shortcut-' + randomString(), ApplicationType.Native, {
-      customClientMetadata: { isDeviceFlow: true },
-    });
+    const application = await createApplication(
+      'device-flow-shortcut-' + randomString(),
+      ApplicationType.Native,
+      { customClientMetadata: { isDeviceFlow: true } }
+    );
+    // eslint-disable-next-line @silverhand/fp/no-mutation
     applicationId = application.id;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
     clientId = application.id;
   });
 
