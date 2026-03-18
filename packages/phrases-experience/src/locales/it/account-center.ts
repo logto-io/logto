@@ -64,6 +64,9 @@ const account_center = {
     description: 'Il nome utente può contenere solo lettere, numeri e trattini bassi.',
     success: 'Nome utente aggiornato con successo.',
   },
+  security: {
+    change: 'Modifica',
+  },
   password: {
     title: 'Imposta password',
     description: 'Crea una nuova password per proteggere il tuo account.',

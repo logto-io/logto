@@ -60,6 +60,9 @@ const account_center = {
     description: 'Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir.',
     success: 'Kullanıcı adı başarıyla güncellendi.',
   },
+  security: {
+    change: 'Değiştir',
+  },
   password: {
     title: 'Şifreyi ayarla',
     description: 'Hesabını korumak için yeni bir şifre oluştur.',

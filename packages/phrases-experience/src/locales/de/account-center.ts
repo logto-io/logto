@@ -66,6 +66,9 @@ const account_center = {
     description: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.',
     success: 'Benutzername erfolgreich aktualisiert.',
   },
+  security: {
+    change: 'Ändern',
+  },
   password: {
     title: 'Passwort festlegen',
     description: 'Erstelle ein neues Passwort, um dein Konto zu schützen.',

@@ -59,6 +59,9 @@ const account_center = {
     description: 'يجب أن يحتوي اسم المستخدم على أحرف وأرقام وشرطات سفلية فقط.',
     success: 'تم تحديث اسم المستخدم بنجاح.',
   },
+  security: {
+    change: 'تغيير',
+  },
   password: {
     title: 'تعيين كلمة المرور',
     description: 'أنشئ كلمة مرور جديدة لحماية حسابك.',

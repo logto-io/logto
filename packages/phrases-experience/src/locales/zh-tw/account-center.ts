@@ -58,6 +58,9 @@ const account_center = {
     description: '使用者名稱只能包含字母、數字和底線。',
     success: '使用者名稱已成功更新。',
   },
+  security: {
+    change: '變更',
+  },
   password: {
     title: '設定密碼',
     description: '建立新密碼以保障您的帳戶安全。',

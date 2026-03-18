@@ -59,6 +59,9 @@ const account_center = {
     description: 'ユーザー名は英数字とアンダースコアのみ使用できます。',
     success: 'ユーザー名を更新しました。',
   },
+  security: {
+    change: '変更',
+  },
   password: {
     title: 'パスワードを設定',
     description: 'アカウントを守るために新しいパスワードを作成してください。',

@@ -62,6 +62,9 @@ const account_center = {
     description: 'O nome de usuário deve conter apenas letras, números e sublinhados.',
     success: 'Nome de usuário atualizado com sucesso.',
   },
+  security: {
+    change: 'Alterar',
+  },
   password: {
     title: 'Definir senha',
     description: 'Crie uma nova senha para proteger sua conta.',

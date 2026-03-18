@@ -58,6 +58,9 @@ const account_center = {
     description: '사용자 이름은 문자, 숫자, 밑줄(_)만 사용할 수 있습니다.',
     success: '사용자 이름이 성공적으로 업데이트되었습니다.',
   },
+  security: {
+    change: '변경',
+  },
   password: {
     title: '비밀번호 설정',
     description: '계정을 안전하게 보호할 새 비밀번호를 만들어 주세요.',

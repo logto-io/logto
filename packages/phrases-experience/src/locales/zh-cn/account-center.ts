@@ -58,6 +58,9 @@ const account_center = {
     description: '用户名只能包含字母、数字和下划线。',
     success: '用户名更新成功。',
   },
+  security: {
+    change: '更改',
+  },
   password: {
     title: '设置密码',
     description: '创建新密码以保护你的账号安全。',

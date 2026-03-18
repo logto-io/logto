@@ -60,6 +60,9 @@ const account_center = {
     description: 'Nazwa użytkownika może zawierać tylko litery, cyfry i podkreślenia.',
     success: 'Nazwa użytkownika została pomyślnie zaktualizowana.',
   },
+  security: {
+    change: 'Zmień',
+  },
   password: {
     title: 'Ustaw hasło',
     description: 'Utwórz nowe hasło, aby zabezpieczyć swoje konto.',

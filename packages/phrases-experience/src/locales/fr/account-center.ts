@@ -65,6 +65,9 @@ const account_center = {
       "Le nom d'utilisateur doit contenir uniquement des lettres, des chiffres et des tirets bas.",
     success: "Nom d'utilisateur mis à jour avec succès.",
   },
+  security: {
+    change: 'Modifier',
+  },
   password: {
     title: 'Définir le mot de passe',
     description: 'Créez un nouveau mot de passe pour sécuriser votre compte.',

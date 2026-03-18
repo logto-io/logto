@@ -4,6 +4,8 @@ import PageFooter from '@ac/components/PageFooter';
 
 import styles from '../Home/index.module.scss';
 
+import UsernameSection from './UsernameSection';
+
 const Security = () => {
   const { t } = useTranslation();
 
@@ -13,7 +15,9 @@ const Security = () => {
         <div className={styles.title}>{t('account_center.page.security_title')}</div>
         <div className={styles.description}>{t('account_center.page.security_description')}</div>
       </div>
-      <div className={styles.content}>{/* Sections will be implemented here */}</div>
+      <div className={styles.content}>
+        <UsernameSection />
+      </div>
       <PageFooter />
     </div>
   );

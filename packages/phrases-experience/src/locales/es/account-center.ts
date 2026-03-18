@@ -63,6 +63,9 @@ const account_center = {
     description: 'El nombre de usuario solo puede contener letras, números y guiones bajos.',
     success: 'Nombre de usuario actualizado correctamente.',
   },
+  security: {
+    change: 'Cambiar',
+  },
   password: {
     title: 'Establecer contraseña',
     description: 'Crea una nueva contraseña para proteger tu cuenta.',

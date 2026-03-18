@@ -60,6 +60,9 @@ const account_center = {
     description: 'Username must contain only letters, numbers, and underscores.',
     success: 'Username updated successfully.',
   },
+  security: {
+    change: 'Change',
+  },
   password: {
     title: 'Set password',
     description: 'Create a new password to secure your account.',
