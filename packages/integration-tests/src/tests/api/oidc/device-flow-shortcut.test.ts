@@ -28,7 +28,7 @@ devFeatureTest.describe('device flow shortcut', () => {
 
   beforeAll(async () => {
     const application = await createApplication(
-      'device-flow-shortcut-' + randomString(),
+      `device-flow-shortcut-${randomString()}`,
       ApplicationType.Native,
       { customClientMetadata: { isDeviceFlow: true } }
     );
