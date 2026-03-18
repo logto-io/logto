@@ -59,6 +59,8 @@ COMPOSE_UP_ARGS=(-d --wait)
 
 if [ -z "${NO_BUILD:-}" ]; then
   COMPOSE_UP_ARGS=(--build "${COMPOSE_UP_ARGS[@]}")
+else
+  echo "skipping build as NO_BUILD is set"
 fi
 
 docker compose -f "$COMPOSE_FILE" up "${COMPOSE_UP_ARGS[@]}"
