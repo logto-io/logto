@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 set -eo pipefail
 
 # Enable globstar (**) feature
@@ -17,30 +18,25 @@ if [[ "${IS_CLOUD}" != @(1|true|y|yes|yep|yeah) ]]; then
 fi
 
 # Remove files that are not needed for production
-targets=(
-  .git
-  .changeset
-  .devcontainer
-  .github
-  .husky
-  .scripts
-  .vscode
-  pnpm-*.yaml
-  *.js
-  packages/**/src
-  packages/**/*.config.js
-  packages/**/*.config.ts
-  packages/**/tsconfig*.json
-)
-
-filtered=()
-for path in "${targets[@]}"; do
-  # Some node packages use `src` as their dist folder, so ignore them from the rm list in the end
-  [[ "$path" == *node_modules* ]] && continue
-  filtered+=("$path")
-done
-
-((${#filtered[@]})) && rm -rf "${filtered[@]}"
+# Some node packages use `src` as their dist folder, so ignore them from the rm list in the end
+find . \
+  \( -path './node_modules' -o -path '*/node_modules/*' \) -prune -o \
+  \( \
+    -path './.git' -o \
+    -path './.changeset' -o \
+    -path './.devcontainer' -o \
+    -path './.github' -o \
+    -path './.husky' -o \
+    -path './.scripts' -o \
+    -path './.vscode' -o \
+    -path './packages/*/src' -o \
+    -path './packages/*/*.config.js' -o \
+    -path './packages/*/*.config.ts' -o \
+    -path './packages/*/tsconfig*.json' -o \
+    -name 'pnpm-*.yaml' -o \
+    \( -mindepth 1 -maxdepth 1 -name '*.js' -a -type f \) \
+  \) \
+  -exec rm -rf {} +
 
 # Add official connectors
 cloud_option=$( [[ "$IS_CLOUD" =~ ^(1|true|y|yes|yep|yeah)$ ]] && echo "--cloud" || echo "" )

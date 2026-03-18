@@ -20,11 +20,11 @@ RUN pnpm -r build
 
 ### Keep behavior aligned with CI packaging ###
 ENV SKIP_TAR=true
-RUN bash ./.scripts/package.sh
+RUN ./.scripts/package.sh
 
 COPY .scripts/integration/bootstrap.sh /etc/logto/bootstrap.sh
 RUN chmod +x /etc/logto/bootstrap.sh
 
 EXPOSE 3001 3002
 
-ENTRYPOINT ["sh", "/etc/logto/bootstrap.sh"]
+ENTRYPOINT ["/etc/logto/bootstrap.sh"]

@@ -81,6 +81,10 @@ export const readConnectorMessage = async (
  * Remove the connector message record for the specified connector type. This is useful for
  * cleaning up the test environment before or after tests.
  *
+ * @remarks
+ * We intentionally do not `rm` or `unlink` the file to remove the record, because it may cause
+ * issues in the docker environment where the file is mounted as a volume.
+ *
  * @param forType The type of connector to remove message from.
  * @returns A promise that resolves to void.
  */

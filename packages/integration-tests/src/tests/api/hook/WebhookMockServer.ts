@@ -20,7 +20,10 @@ const webhookHost = process.env.WEBHOOK_HOST_FOR_APP ?? '127.0.0.1';
  * await server.listen();
  */
 class WebhookMockServer {
-  public readonly endpoint = `http://${webhookHost}:${this.port}`;
+  public get endpoint() {
+    return `http://${webhookHost}:${this.port}`;
+  }
+
   private readonly server: Server;
 
   constructor(
