@@ -161,6 +161,20 @@ const user_details = {
     revoke_session_confirmation:
       'If you remove this session, users will be forced to re-authentication.',
   },
+  third_party_apps: {
+    title: 'Third-party apps',
+    description:
+      'Use Logto as your identity provider to authorize third-party apps. View and manage the apps this user has granted access to.',
+    field_name: 'Authorized third-party apps',
+    multiple_authorized: 'This user has authorized multiple third-party apps and services.',
+    not_authorized: 'This user has not authorized any third-party apps or services yet.',
+    name_column: 'Name',
+    app_id_column: 'App ID',
+    access_created_at_column: 'Access created at',
+    revoke_access_title: 'Revoke access?',
+    revoke_access_description:
+      "This will revoke the app's access to this user's account across devices. The user must reauthorize to restore access.",
+  },
   connections: {
     title: 'Connection',
     description:

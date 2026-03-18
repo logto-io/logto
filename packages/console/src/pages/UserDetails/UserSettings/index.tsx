@@ -13,6 +13,7 @@ import FormCard from '@/components/FormCard';
 import LearnMore from '@/components/LearnMore';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { profilePropertyReferenceLink, userCustomData } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
@@ -33,6 +34,7 @@ import UserMfaVerifications from './UserMfaVerifications';
 import UserPassword from './UserPassword';
 import UserSessions from './UserSessions';
 import UserSignInPasskeys from './UserSignInPasskeys';
+import UserThirdPartyApps from './UserThirdPartyApps';
 
 function UserSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -171,6 +173,7 @@ function UserSettings() {
         </FormCard>
         <UserConnections userId={user.id} />
         <UserSessions userId={user.id} />
+        {isDevFeaturesEnabled && <UserThirdPartyApps userId={user.id} />}
         <FormCard title="user_details.user_profile">
           <FormField title="user_details.field_name">
             <TextInput {...register('name')} placeholder={t('users.placeholder_name')} />
