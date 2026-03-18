@@ -3,7 +3,12 @@ import { SessionGrantRevokeTarget, SignInIdentifier, demoAppApplicationId } from
 import { assert } from '@silverhand/essentials';
 
 import { deleteApplication } from '#src/api/application.js';
-import { getUserSession, getUserSessions, revokeUserSession } from '#src/api/index.js';
+import {
+  getUserApplicationGrants,
+  getUserSession,
+  getUserSessions,
+  revokeUserSession,
+} from '#src/api/index.js';
 import { signInWithPassword } from '#src/helpers/experience/index.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
@@ -14,6 +19,7 @@ import {
 } from '#src/helpers/session.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
+import { devFeatureTest } from '#src/utils.js';
 
 describe('Sessions API', () => {
   const userApi = new UserApiTest();
@@ -227,5 +233,58 @@ describe('Sessions API', () => {
       code: 'oidc.session_not_found',
       status: 404,
     });
+  });
+
+  devFeatureTest.it('should get user grants and support appType filters', async () => {
+    await enableAllPasswordSignInMethods();
+
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const user = await userApi.create({ username, password });
+
+    const firstPartySignIn = await createAppAndSignInWithPassword({
+      username,
+      password,
+      isThirdParty: false,
+      scopes: [UserScope.Profile],
+    });
+
+    const thirdPartySignIn = await createAppAndSignInWithPassword({
+      username,
+      password,
+      isThirdParty: true,
+      scopes: [UserScope.Profile],
+    });
+
+    const { grants: allGrants } = await getUserApplicationGrants(user.id);
+    expect(allGrants.length).toBeGreaterThanOrEqual(2);
+    expect(allGrants.some((grant) => grant.payload.clientId === firstPartySignIn.app.id)).toBe(
+      true
+    );
+    expect(allGrants.some((grant) => grant.payload.clientId === thirdPartySignIn.app.id)).toBe(
+      true
+    );
+
+    const { grants: firstPartyGrants } = await getUserApplicationGrants(user.id, 'firstParty');
+    expect(firstPartyGrants.length).toBeGreaterThanOrEqual(1);
+    expect(
+      firstPartyGrants.some((grant) => grant.payload.clientId === firstPartySignIn.app.id)
+    ).toBe(true);
+    expect(
+      firstPartyGrants.some((grant) => grant.payload.clientId === thirdPartySignIn.app.id)
+    ).toBe(false);
+
+    const { grants: thirdPartyGrants } = await getUserApplicationGrants(user.id, 'thirdParty');
+    expect(thirdPartyGrants.length).toBeGreaterThanOrEqual(1);
+    expect(
+      thirdPartyGrants.some((grant) => grant.payload.clientId === thirdPartySignIn.app.id)
+    ).toBe(true);
+    expect(
+      thirdPartyGrants.some((grant) => grant.payload.clientId === firstPartySignIn.app.id)
+    ).toBe(false);
+
+    await Promise.all([
+      deleteApplication(firstPartySignIn.app.id),
+      deleteApplication(thirdPartySignIn.app.id),
+    ]);
   });
 });

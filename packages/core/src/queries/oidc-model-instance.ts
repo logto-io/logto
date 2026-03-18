@@ -1,5 +1,5 @@
 import type { OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
-import { OidcModelInstances } from '@logto/schemas';
+import { Applications, OidcModelInstances } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import type { CommonQueryMethods, ValueExpression } from '@silverhand/slonik';
@@ -13,6 +13,13 @@ export type WithConsumed<T> = T & { consumed?: boolean };
 export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
+const { table: applicationTable } = convertToIdentifiers(Applications);
+
+export type ActiveApplicationGrantInstance = Pick<
+  OidcModelInstance,
+  'id' | 'payload' | 'expiresAt'
+>;
+export type GrantApplicationType = 'thirdParty' | 'firstParty';
 
 /**
  * This interval helps to avoid concurrency issues when exchanging the rotating refresh token multiple times within a given timeframe;
@@ -136,6 +143,52 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
+  const findUserActiveApplicationGrants = async (
+    userId: string,
+    applicationType?: GrantApplicationType
+  ) => {
+    const oidcModelInstanceAlias = 'oidc_model_instance';
+    const applicationAlias = 'application';
+    const oidcModelInstanceTableIdentifier = sql.identifier([oidcModelInstanceAlias]);
+    const applicationTableIdentifier = sql.identifier([applicationAlias]);
+    const oidcModelInstanceId = sql.identifier([
+      oidcModelInstanceAlias,
+      OidcModelInstances.fields.id,
+    ]);
+    const oidcModelInstancePayload = sql.identifier([
+      oidcModelInstanceAlias,
+      OidcModelInstances.fields.payload,
+    ]);
+    const oidcModelInstanceExpiresAt = sql.identifier([
+      oidcModelInstanceAlias,
+      OidcModelInstances.fields.expiresAt,
+    ]);
+    const oidcModelInstanceModelName = sql.identifier([
+      oidcModelInstanceAlias,
+      OidcModelInstances.fields.modelName,
+    ]);
+    const applicationId = sql.identifier([applicationAlias, Applications.fields.id]);
+    const applicationIsThirdParty = sql.identifier([
+      applicationAlias,
+      Applications.fields.isThirdParty,
+    ]);
+
+    return pool.any<ActiveApplicationGrantInstance>(sql`
+      select ${oidcModelInstanceId}, ${oidcModelInstancePayload}, ${oidcModelInstanceExpiresAt}
+      from ${table} as ${oidcModelInstanceTableIdentifier}
+      inner join ${applicationTable} as ${applicationTableIdentifier}
+        on ${oidcModelInstancePayload}->>'clientId'=${applicationId}
+      where ${oidcModelInstanceModelName}='Grant'
+        and ${oidcModelInstancePayload}->>'accountId'=${userId}
+        ${
+          applicationType
+            ? sql`and ${applicationIsThirdParty}=${applicationType === 'thirdParty'}`
+            : sql``
+        }
+        and ${oidcModelInstanceExpiresAt} > ${convertToTimestamp()}
+    `);
+  };
+
   return {
     upsertInstance,
     findPayloadById,
@@ -144,5 +197,6 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     destroyInstanceById,
     revokeInstanceByGrantId,
     revokeInstanceByUserId,
+    findUserActiveApplicationGrants,
   };
 };

@@ -2,6 +2,7 @@ import type {
   CreatePersonalAccessToken,
   DesensitizedEnterpriseSsoTokenSetSecret,
   DesensitizedSocialTokenSetSecret,
+  GetUserApplicationGrantsResponse,
   GetUserSessionResponse,
   GetUserSessionsResponse,
   Identities,
@@ -230,6 +231,18 @@ export const getUserSsoIdentity = async (
 
 export const getUserSessions = async (userId: string) =>
   authedAdminApi.get(`users/${userId}/sessions`).json<GetUserSessionsResponse>();
+
+export const getUserApplicationGrants = async (
+  userId: string,
+  appType?: 'firstParty' | 'thirdParty'
+) =>
+  authedAdminApi
+    .get(`users/${userId}/grants`, {
+      searchParams: new URLSearchParams({
+        ...conditional(appType && { appType }),
+      }),
+    })
+    .json<GetUserApplicationGrantsResponse>();
 
 export const getUserSession = async (userId: string, sessionId: string) =>
   authedAdminApi.get(`users/${userId}/sessions/${sessionId}`).json<GetUserSessionResponse>();
