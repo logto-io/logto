@@ -52,7 +52,9 @@ export type GetUserSessionResponse = z.infer<typeof getUserSessionResponseGuard>
 
 export const userApplicationGrantPayloadGuard = z
   .object({
+    /** Expiration time of the grant in seconds since the epoch */
     exp: z.number(),
+    /** Issued at time of the grant in seconds since the epoch */
     iat: z.number(),
     jti: z.string(),
     kind: z.literal('Grant'),
