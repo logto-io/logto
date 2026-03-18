@@ -5,7 +5,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    image: svhd/logto:${TAG-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
     entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
     ports:
       - 3001:3001
@@ -17,6 +19,46 @@ services:
       # Or, you can leverage it for local testing.
       - ENDPOINT
       - ADMIN_ENDPOINT
+
+      # Bootstrap: Admin user
+      - LOGTO_ADMIN_USERNAME=admin
+      - LOGTO_ADMIN_PASSWORD=MySecureP@ssword123
+
+      # Bootstrap: M2M Application (Management API client)
+      - LOGTO_M2M_APP_NAME=My Management API Client
+      - LOGTO_M2M_CLIENT_ID=my-m2m-client
+      - LOGTO_M2M_CLIENT_SECRET=my-m2m-secret-key-1234
+
+      # Bootstrap: OIDC Application
+      - LOGTO_APP_NAME=My Web App
+      - LOGTO_APP_CLIENT_ID=my-web-app
+      - LOGTO_APP_CLIENT_SECRET=my-super-secret-key-1234
+      - LOGTO_APP_REDIRECT_URIS=http://localhost:8080/callback
+      - LOGTO_APP_POST_LOGOUT_REDIRECT_URIS=http://localhost:8080
+
+      # Bootstrap: SMTP Email Connector
+      - LOGTO_SMTP_HOST=mailpit
+      - LOGTO_SMTP_PORT=1025
+      - LOGTO_SMTP_USERNAME=noreply@example.com
+      - LOGTO_SMTP_PASSWORD=smtp-password
+      - LOGTO_SMTP_FROM_EMAIL=noreply@example.com
+
+      # Bootstrap: SMTP SMS Connector (Service Vic custom connector)
+      - LOGTO_SMTP_SMS_HOST=mailpit
+      - LOGTO_SMTP_SMS_PORT=1025
+      - LOGTO_SMTP_SMS_USERNAME=noreply@example.com
+      - LOGTO_SMTP_SMS_PASSWORD=smtp-password
+      - LOGTO_SMTP_SMS_FROM_EMAIL=noreply-sms@example.com
+      - LOGTO_SMTP_SMS_TO_EMAIL_TEMPLATE=sms+{{phoneNumberOnly}}@txt.telstra.com.au
+
+      # Make AU (+61) the default Phone Code
+      - LOGTO_DEFAULT_PHONE_COUNTRY_CODE=AU
+
+      # Bootstrap: Sign-in identifier (email-primary)
+      - LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE=true
+      - LOGTO_SIGN_IN_IDENTIFIER=email
+      - LOGTO_MFA_FACTORS=totp,webauthn,phoneVerificationCode
+
   postgres:
     image: postgres:17-alpine
     user: postgres
@@ -28,3 +70,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    ports:
+      - 5432:5432
+
+  mailpit:
+    image: axllent/mailpit
+    environment:
+      MP_SEND_API_AUTH_ACCEPT_ANY: true
+    ports:
+      - 8025:8025
+      - 1025:1025

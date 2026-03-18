@@ -1,6 +1,7 @@
 import { SignInIdentifier, Theme } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import successDarkIllustration from '@ac/assets/icons/success-dark.svg';
@@ -68,6 +69,7 @@ type Props = {
 
 const UpdateSuccess = ({ identifierType }: Props) => {
   const { theme } = useContext(PageContext);
+  const navigate = useNavigate();
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState<string>();
 
@@ -113,19 +115,21 @@ const UpdateSuccess = ({ identifierType }: Props) => {
     return null;
   }
 
+  const action: { titleKey: TFuncKey; onClick: () => void } = redirectUrl
+    ? { titleKey: 'action.done', onClick: handleDoneClick }
+    : {
+        titleKey: 'account_center.home.return_to_account',
+        onClick: () => {
+          navigate('/');
+        },
+      };
+
   return (
     <ErrorPage
       illustration={illustration}
       titleKey={translationKeys.titleKey}
       messageKey={translationKeys.messageKey}
-      action={
-        redirectUrl
-          ? {
-              titleKey: 'action.done',
-              onClick: handleDoneClick,
-            }
-          : undefined
-      }
+      action={action}
     />
   );
 };

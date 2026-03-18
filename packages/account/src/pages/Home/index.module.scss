@@ -1,0 +1,169 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.container {
+  @include _.full-width;
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(6);
+  margin-block: _.unit(4);
+}
+
+.profileCard {
+  display: flex;
+  align-items: center;
+  gap: _.unit(4);
+  padding: _.unit(4) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.avatarWrapper {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 24px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.profileMeta {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+  min-width: 0;
+}
+
+.profileName {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profileEmail {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sectionTitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+  margin-bottom: _.unit(2);
+}
+
+.sectionHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: _.unit(2);
+}
+
+.sectionHeaderTitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: _.unit(3);
+  padding: _.unit(3) 0;
+  border-bottom: 1px solid var(--color-divider);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.fieldLabel {
+  flex: 0 0 140px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.fieldValue {
+  flex: 1;
+  font-size: 14px;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.notSet {
+    color: var(--color-placeholder);
+    font-style: italic;
+  }
+}
+
+.fieldAction {
+  flex-shrink: 0;
+}
+
+.emptyState {
+  padding: _.unit(8) _.unit(4);
+  text-align: center;
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.signOutRow {
+  display: flex;
+  justify-content: center;
+  padding-top: _.unit(2);
+  border-top: 1px solid var(--color-divider);
+}
+
+:global(body.mobile) {
+  .container {
+    margin-block: _.unit(2);
+    gap: _.unit(4);
+  }
+
+  .fieldLabel {
+    flex: 0 0 110px;
+    font-size: 13px;
+  }
+
+  .fieldValue {
+    font-size: 13px;
+  }
+}
+
+:global(body.desktop) {
+  .container {
+    margin-block: _.unit(6);
+  }
+}

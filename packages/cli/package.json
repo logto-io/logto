@@ -52,6 +52,7 @@
     "decamelize": "^6.0.0",
     "dotenv": "^16.4.5",
     "got": "^14.0.0",
+    "hash-wasm": "^4.11.0",
     "hpagent": "^1.2.0",
     "inquirer": "^9.0.0",
     "nanoid": "^5.0.9",

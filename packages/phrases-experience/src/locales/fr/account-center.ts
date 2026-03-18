@@ -2,6 +2,34 @@ const account_center = {
   home: {
     title: 'Page introuvable',
     description: "Cette page n'est pas disponible.",
+    personal_info_section: 'Personal information',
+    security_section: 'Security',
+    not_set: 'Not set',
+    action_edit: 'Edit',
+    action_add: 'Add',
+    action_view: 'View',
+    manage: 'Manage',
+    field_name: 'Display name',
+    field_avatar: 'Avatar',
+    field_username: 'Username',
+    field_email: 'Email address',
+    field_phone: 'Phone number',
+    field_given_name: 'Given name',
+    field_family_name: 'Family name',
+    field_password: 'Password',
+    field_2fa: 'Two-factor authentication',
+    field_authenticator_app: 'Authenticator app',
+    field_passkeys: 'Passkeys',
+    field_backup_codes: 'Backup codes',
+    password_set: 'Set',
+    password_not_set: 'Not set',
+    totp_active: 'Active',
+    passkeys_count: '{{count}} passkey registered',
+    passkeys_count_plural: '{{count}} passkeys registered',
+    return_to_account: 'Back to account',
+    sign_out: 'Sign out',
+    no_fields_available:
+      'No user attributes are available for editing, please contact your administrator.',
   },
   verification: {
     title: 'Vérification de sécurité',
@@ -111,6 +139,13 @@ const account_center = {
       "Les codes de secours nécessitent qu'une autre méthode MFA soit d'abord configurée.",
     passkey_not_enabled:
       "Passkey n'est pas activé. Veuillez contacter votre administrateur pour obtenir de l'aide.",
+    totp_manage_title: 'Manage authenticator app',
+    totp_manage_description:
+      'Your authenticator app is currently active. Remove it to disable OTP two-factor authentication.',
+    totp_remove: 'Remove authenticator app',
+    totp_removed: 'Authenticator app removed.',
+    totp_remove_confirm_description:
+      'Are you sure you want to remove your authenticator app? You will no longer be able to use it for two-factor authentication.',
     passkey_already_registered:
       'Ce passkey est déjà enregistré sur votre compte. Veuillez utiliser un autre authentificateur.',
   },
@@ -181,6 +216,15 @@ const account_center = {
     name_passkey_description:
       "Vous avez vérifié cet appareil avec succès pour l'authentification en deux étapes. Personnalisez le nom pour le reconnaître si vous avez plusieurs clés.",
     name_input_label: 'Nom',
+  },
+  profile: {
+    title: 'Edit profile',
+    description: 'Update your display name and avatar.',
+    name_label: 'Display name',
+    avatar_label: 'Avatar URL',
+    given_name_label: 'Given name',
+    family_name_label: 'Family name',
+    saved: 'Profile updated successfully.',
   },
 };
 

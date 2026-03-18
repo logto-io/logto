@@ -15,7 +15,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { getMfaVerifications, generateTotpSecret, addTotpMfa } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { authenticatorAppSuccessRoute } from '@ac/constants/routes';
+import { authenticatorAppManageRoute, authenticatorAppSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -63,12 +63,18 @@ const TotpBinding = () => {
         return;
       }
 
-      const hasTotp = result?.some((mfa) => mfa.type === MfaFactor.TOTP) ?? false;
-      setHasTotpAlready(hasTotp);
+      setHasTotpAlready(result?.some((mfa) => mfa.type === MfaFactor.TOTP) ?? false);
     };
 
     void checkExistingMfa();
   }, [getMfaRequest]);
+
+  // Redirect to manage page when TOTP is already set up
+  useEffect(() => {
+    if (hasTotpAlready) {
+      navigate(authenticatorAppManageRoute, { replace: true });
+    }
+  }, [hasTotpAlready, navigate]);
 
   // Generate TOTP secret on mount
   useEffect(() => {
@@ -185,13 +191,9 @@ const TotpBinding = () => {
     );
   }
 
-  if (hasTotpAlready) {
-    return (
-      <ErrorPage
-        titleKey="error.something_went_wrong"
-        messageKey="account_center.mfa.totp_already_added"
-      />
-    );
+  // Waiting for TOTP check or redirecting to manage page
+  if (hasTotpAlready !== false) {
+    return null;
   }
 
   if (!verificationId) {

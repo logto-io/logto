@@ -44,6 +44,7 @@ import { updateDatabaseTimestamp } from '../../../queries/system.js';
 import { convertToIdentifiers } from '../../../sql.js';
 import { consoleLog, getPathInModule } from '../../../utils.js';
 
+import { runBootstrap } from './bootstrap.js';
 import { appendAdminConsoleRedirectUris, seedTenantCloudServiceApplication } from './cloud.js';
 import { seedOidcConfigs } from './oidc-config.js';
 import { seedPreConfiguredManagementApiAccessRole } from './roles.js';
@@ -224,6 +225,9 @@ export const seedTables = async (
   await updateDatabaseTimestamp(connection, latestTimestamp);
 
   consoleLog.succeed('Seed data');
+
+  // Run environment-based bootstrap (admin user, OIDC app, SMTP connector, seeded users)
+  await runBootstrap(connection);
 };
 
 export const seedCloud = async (connection: DatabaseTransactionConnection) => {

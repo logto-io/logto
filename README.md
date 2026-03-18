@@ -1,3 +1,45 @@
+# Service Victoria Custom Fork of LogTo Identity Provider OSS
+
+> [!WARNING]
+> This Repo is for internal use only, and is not actively maintained.
+>
+> The modifications made in this fork have not been validated for security purposes,
+> and should _not_ be used in production.
+>
+> Please see the official [logto.io](https://logto.io/?utm_source=github&utm_medium=readme) documentation for the official application
+
+## Modifications Background
+
+Service Victoria has need for a non-production OIDC ID Provider, to simulate some of our Production behaviours.
+
+Part of our requirements for this are:
+
+- It must run in a container
+- It must be able to have a minimum viable setup with reliant apps configured via environment variables or similar
+- Users must be able to use it to change their own details
+- It ideally should be as lightweight as possible, with minimal outside dependencies (ie no LDAP or RADIUS server requirements as an ID DB)
+
+Logto OSS meets almost all these requirements, apart from being able to set up certain things from environment variables, such as:
+
+- Admin Username and Password
+- OIDC Client App, where the ClientID and ClientSecret can be exported to AWS Secrets Manager
+- Automatic SMTP Connection setup
+- Seeding users automatically
+
+Logto unfortunately expects that admins will set up the container and click through the various admin console options to set up
+their IDP environment, which is not acceptable to our use case (a full environment with all secrets configured and wired up, ready to go).
+
+This fork seeks to add these features.
+
+> [!NOTE]
+> The modifications made in this fork have been almost entirely written by
+> Copilot, and not reviewed in-depth by humans.
+>
+> Their suitability for your own use is questionable, use at your own risk
+
+See [CUSTOMIZATIONS.md](./CUSTOMIZATIONS.md) and [BOOTSTRAP.md](./BOOTSTRAP.md) for details on what changes
+have been made, and how to configure them for yourself.
+
 <p align="center">
   <a href="https://logto.io/?utm_source=github&utm_medium=readme" target="_blank" align="center" alt="Go to Logto website">
     <picture>
