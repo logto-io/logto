@@ -1,4 +1,4 @@
-# BDM Logto Customizations
+# Logto Customizations
 
 This document describes all changes made to the upstream [Logto](https://github.com/logto-io/logto) codebase in this fork. It is intended to make rebasing, upgrading, and onboarding easier by clearly separating custom work from upstream code.
 
