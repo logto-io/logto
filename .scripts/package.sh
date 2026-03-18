@@ -16,18 +16,41 @@ if [[ "${IS_CLOUD}" != @(1|true|y|yes|yep|yeah) ]]; then
   rm -rf packages/cloud
 fi
 
-# Some node packages use `src` as their dist folder, so ignore them from the rm list in the end
-find \
-.git .changeset .devcontainer .github .husky .scripts .vscode pnpm-*.yaml *.js \
-packages/**/src \
-packages/**/*.config.js packages/**/*.config.ts packages/**/tsconfig*.json \
-! -path '**/node_modules/**' \
--prune -exec rm -rf {} +
+# Remove files that are not needed for production
+targets=(
+  .git
+  .changeset
+  .devcontainer
+  .github
+  .husky
+  .scripts
+  .vscode
+  pnpm-*.yaml
+  *.js
+  packages/**/src
+  packages/**/*.config.js
+  packages/**/*.config.ts
+  packages/**/tsconfig*.json
+)
+
+filtered=()
+for path in "${targets[@]}"; do
+  # Some node packages use `src` as their dist folder, so ignore them from the rm list in the end
+  [[ "$path" == *node_modules* ]] && continue
+  filtered+=("$path")
+done
+
+((${#filtered[@]})) && rm -rf "${filtered[@]}"
 
 # Add official connectors
 cloud_option=$( [[ "$IS_CLOUD" =~ ^(1|true|y|yes|yep|yeah)$ ]] && echo "--cloud" || echo "" )
 pnpm cli connector link $cloud_option -p .
 
-echo Tar
+if [[ "${SKIP_TAR:-}" == @(1|true|y|yes|yep|yeah) ]]; then
+  echo "Skipping tar creation"
+  exit 0
+fi
+
+echo Tar the package
 cd ..
 tar -czf /tmp/logto.tar.gz logto

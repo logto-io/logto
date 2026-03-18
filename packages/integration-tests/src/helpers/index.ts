@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { createServer, type RequestListener } from 'node:http';
+import path from 'node:path';
 
 import { mockConnectorFilePaths, type SendMessagePayload } from '@logto/connector-kit';
 import {
@@ -49,6 +49,17 @@ type ConnectorMessageRecord = {
   content?: string;
 };
 
+// eslint-disable-next-line unicorn/prevent-abbreviations
+const connectorMessageDir = process.env.MOCK_CONNECTOR_MESSAGE_DIR;
+
+const resolveMockConnectorFilePath = (defaultPath: string) => {
+  if (!connectorMessageDir) {
+    return defaultPath;
+  }
+
+  return path.join(connectorMessageDir, path.basename(defaultPath));
+};
+
 /**
  * Read the most recent connector message record from file system that is created by mock connectors.
  *
@@ -58,7 +69,7 @@ type ConnectorMessageRecord = {
 export const readConnectorMessage = async (
   forType: keyof typeof mockConnectorFilePaths
 ): Promise<ConnectorMessageRecord> => {
-  const buffer = await fs.readFile(mockConnectorFilePaths[forType]);
+  const buffer = await fs.readFile(resolveMockConnectorFilePath(mockConnectorFilePaths[forType]));
   const content = buffer.toString();
 
   // For test use only
@@ -67,7 +78,8 @@ export const readConnectorMessage = async (
 };
 
 /**
- * Remove the connector message record file from file system. If the file does not exist, do nothing.
+ * Remove the connector message record for the specified connector type. This is useful for
+ * cleaning up the test environment before or after tests.
  *
  * @param forType The type of connector to remove message from.
  * @returns A promise that resolves to void.
@@ -76,7 +88,7 @@ export const removeConnectorMessage = async (
   forType: keyof typeof mockConnectorFilePaths
 ): Promise<void> => {
   try {
-    await fs.unlink(mockConnectorFilePaths[forType]);
+    await fs.writeFile(resolveMockConnectorFilePath(mockConnectorFilePaths[forType]), '');
   } catch {
     // Do nothing
   }
@@ -101,7 +113,7 @@ export const expectRejects = async <T = unknown>(
     return expectRequestError<T>(error, expected);
   }
 
-  fail();
+  fail('Expected promise to be rejected, but it was resolved');
 };
 
 const expectRequestError = async <T = unknown>(error: unknown, expected: ExpectedErrorInfo<T>) => {
@@ -136,29 +148,4 @@ const expectRequestError = async <T = unknown>(error: unknown, expected: Expecte
   }
 
   return body.data;
-};
-
-const defaultRequestListener: RequestListener = (request, response) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation
-  response.statusCode = 204;
-  response.end();
-};
-
-export const createMockServer = (port: number, requestListener?: RequestListener) => {
-  const server = createServer(requestListener ?? defaultRequestListener);
-
-  return {
-    listen: async () =>
-      new Promise((resolve) => {
-        server.listen(port, () => {
-          resolve(true);
-        });
-      }),
-    close: async () =>
-      new Promise((resolve) => {
-        server.close(() => {
-          resolve(true);
-        });
-      }),
-  };
 };

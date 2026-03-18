@@ -35,7 +35,7 @@ describe('custom profile fields API', () => {
     const foundCustomProfileField = await findCustomProfileFieldByName(customProfileField.name);
     expect(foundCustomProfileField).toMatchObject(customProfileField);
 
-    void deleteCustomProfileFieldByName(customProfileField.name);
+    await deleteCustomProfileFieldByName(customProfileField.name);
   });
 
   it('should fail to create if field name is empty', async () => {
@@ -165,7 +165,7 @@ describe('custom profile fields API', () => {
       status: 422,
     });
 
-    void deleteCustomProfileFieldByName(nameField.name);
+    await deleteCustomProfileFieldByName(nameField.name);
   });
 
   it('should fail to create if field name is invalid format', async () => {
@@ -286,8 +286,10 @@ describe('custom profile fields API', () => {
       ...dataToUpdate,
     });
 
-    void deleteCustomProfileFieldByName(nameField.name);
-    void deleteCustomProfileFieldByName(fullnameField.name);
+    await Promise.all([
+      deleteCustomProfileFieldByName(nameField.name),
+      deleteCustomProfileFieldByName(fullnameField.name),
+    ]);
   });
 
   it('should not be able to update the name, and sieOrder', async () => {
@@ -307,7 +309,7 @@ describe('custom profile fields API', () => {
       label: 'New label',
     });
 
-    void deleteCustomProfileFieldByName(nameField.name);
+    await deleteCustomProfileFieldByName(nameField.name);
   });
 
   it('should fail to update custom profile field by non-existent name', async () => {
@@ -368,10 +370,12 @@ describe('custom profile fields API', () => {
       sieOrder: 6,
     });
 
-    void deleteCustomProfileFieldByName(websiteField.name);
-    void deleteCustomProfileFieldByName(addressField.name);
-    void deleteCustomProfileFieldByName(birthDateField.name);
-    void deleteCustomProfileFieldByName(genderField.name);
+    await Promise.all([
+      deleteCustomProfileFieldByName(websiteField.name),
+      deleteCustomProfileFieldByName(addressField.name),
+      deleteCustomProfileFieldByName(birthDateField.name),
+      deleteCustomProfileFieldByName(genderField.name),
+    ]);
   });
 
   it('should be able to batch create custom profile fields', async () => {
@@ -388,9 +392,9 @@ describe('custom profile fields API', () => {
     expect(createdFields).toHaveLength(fieldsToCreate.length);
     expect(createdFields).toMatchObject(fieldsToCreate);
 
-    for (const field of createdFields) {
-      void deleteCustomProfileFieldByName(field.name);
-    }
+    await Promise.all(
+      createdFields.map(async (field) => deleteCustomProfileFieldByName(field.name))
+    );
   });
 
   it('should fail to batch create more than 20 profile fields', async () => {

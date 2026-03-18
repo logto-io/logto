@@ -2,43 +2,39 @@ import { InteractionHookEvent, type Hook } from '@logto/schemas';
 
 import { authedAdminApi } from '#src/api/api.js';
 import { getHookCreationPayload } from '#src/helpers/hook.js';
-import { createMockServer, expectRejects } from '#src/helpers/index.js';
+import { expectRejects } from '#src/helpers/index.js';
+
+import WebhookMockServer from './WebhookMockServer.js';
 
 const responseSuccessPort = 9999;
-const responseSuccessEndpoint = `http://localhost:${responseSuccessPort}`;
-
 const responseErrorPort = 9998;
-const responseErrorEndpoint = `http://localhost:${responseErrorPort}`;
 
 describe('hook testing', () => {
-  const { listen, close } = createMockServer(responseSuccessPort);
-  const { listen: listenError, close: closeError } = createMockServer(
-    responseErrorPort,
-    (request, response) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      response.statusCode = 500;
-      response.end();
-    }
-  );
+  const successServer = new WebhookMockServer(responseSuccessPort);
+  const errorServer = new WebhookMockServer(responseErrorPort, (_, __, response) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    response.statusCode = 500;
+    response.end();
+  });
 
   beforeAll(async () => {
-    await listen();
-    await listenError();
+    await successServer.listen();
+    await errorServer.listen();
   });
 
   afterAll(async () => {
-    await close();
-    await closeError();
+    await successServer.close();
+    await errorServer.close();
   });
 
   it('should return 204 if test hook successfully', async () => {
     const payload = getHookCreationPayload(
       InteractionHookEvent.PostRegister,
-      responseSuccessEndpoint
+      successServer.endpoint
     );
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
     const response = await authedAdminApi.post(`hooks/${created.id}/test`, {
-      json: { events: [InteractionHookEvent.PostSignIn], config: { url: responseSuccessEndpoint } },
+      json: { events: [InteractionHookEvent.PostSignIn], config: { url: successServer.endpoint } },
     });
     expect(response.status).toBe(204);
 
@@ -52,7 +48,7 @@ describe('hook testing', () => {
       authedAdminApi.post(`hooks/${invalidHookId}/test`, {
         json: {
           events: [InteractionHookEvent.PostSignIn],
-          config: { url: responseSuccessEndpoint },
+          config: { url: successServer.endpoint },
         },
       }),
       {
@@ -84,7 +80,7 @@ describe('hook testing', () => {
     const created = await authedAdminApi.post('hooks', { json: payload }).json<Hook>();
     await expectRejects(
       authedAdminApi.post(`hooks/${created.id}/test`, {
-        json: { events: [InteractionHookEvent.PostSignIn], config: { url: responseErrorEndpoint } },
+        json: { events: [InteractionHookEvent.PostSignIn], config: { url: errorServer.endpoint } },
       }),
       {
         code: 'hook.endpoint_responded_with_error',

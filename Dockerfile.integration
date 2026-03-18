@@ -1,0 +1,29 @@
+FROM node:22-alpine
+WORKDIR /etc/logto
+ENV CI=true
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV INTEGRATION_TEST=true
+
+RUN npm add --location=global pnpm@^10.0.0
+RUN apk add --no-cache python3 make g++ bash rsync
+
+COPY . .
+
+RUN pnpm i
+
+### Set if dev features enabled ###
+ARG dev_features_enabled
+ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
+
+RUN pnpm -r build
+
+### Keep behavior aligned with CI packaging ###
+ENV SKIP_TAR=true
+RUN bash ./.scripts/package.sh
+
+COPY .scripts/integration/bootstrap.sh /etc/logto/bootstrap.sh
+RUN chmod +x /etc/logto/bootstrap.sh
+
+EXPOSE 3001 3002
+
+ENTRYPOINT ["sh", "/etc/logto/bootstrap.sh"]

@@ -37,3 +37,7 @@ dump.rdb
 
 # readme assets
 /assets/
+
+# Docker
+Dockerfile*
+docker-compose*.yml

@@ -113,7 +113,7 @@ describe('get access token', () => {
     expect(getAccessTokenPayload(accessToken)).toHaveProperty('scope', testApiScopeNames.join(' '));
 
     // Request for invalid resource should throw
-    void expect(client.getAccessToken('api.foo.com')).rejects.toThrow();
+    await expect(client.getAccessToken('api.foo.com')).rejects.toThrow();
   });
 
   it('can sign in and getAccessToken with guest user', async () => {
