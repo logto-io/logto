@@ -5,7 +5,7 @@ import type { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import type { IRouterParamContext } from 'koa-router';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { EnvSet, UserApps } from '#src/env-set/index.js';
 import serveStatic from '#src/middleware/koa-serve-static.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -19,6 +19,13 @@ type Properties = {
   readonly port?: number;
   readonly prefix?: string;
 };
+
+/**
+ * The path (relative to the mount prefix) at which the account center runtime config is served.
+ * The account center's index.html loads this script so that `window.__logtoConfig__` is
+ * populated before any React code runs — in both development (proxy) and production (static) mode.
+ */
+const runtimeConfigPath = '/runtime-config.js';
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>({
   mountedApps,
@@ -54,6 +61,25 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     if (!prefix && mountedApps.some((app) => app !== prefix && requestPath.startsWith(`/${app}`))) {
       return next();
     }
+
+    // Serve the runtime config as a JS file for account center and experience SPA. Intercepted
+    // before the proxy or static file server so it works in both development and production.
+    // The script sets `window.__logtoConfig__` with server-side env vars at request time.
+    if (
+      (packagePath === UserApps.AccountCenter || packagePath === 'experience') &&
+      requestPath === runtimeConfigPath
+    ) {
+      const config: Record<string, string> = {};
+      const defaultPhoneCountryCode = process.env.LOGTO_DEFAULT_PHONE_COUNTRY_CODE;
+      if (defaultPhoneCountryCode) {
+        config.defaultPhoneCountryCode = defaultPhoneCountryCode;
+      }
+      ctx.type = 'application/javascript';
+      ctx.body = `window.__logtoConfig__=${JSON.stringify(config)};` as unknown as ResponseBodyT;
+      ctx.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+      return;
+    }
+
     const { customUiAssets } = await queries.signInExperiences.findDefaultSignInExperience();
     // If user has uploaded custom UI assets, serve them instead of native experience UI
     if (customUiAssets && packagePath === 'experience') {

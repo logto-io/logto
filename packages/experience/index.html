@@ -10,6 +10,12 @@
     /* See {@link packages/schemas/src/types/ssr.ts} */
     window.logtoSsr = "__LOGTO_SSR__";
   </script>
+  <!--
+    Runtime configuration injected by the Logto server. Sets window.__logtoConfig__ with
+    server-side env vars (e.g. LOGTO_DEFAULT_PHONE_COUNTRY_CODE) before React initialises.
+    Served by Koa at /runtime-config.js in both development and production.
+  -->
+  <script src="/runtime-config.js"></script>
 </head>
 
 <body>

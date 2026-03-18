@@ -1,7 +1,10 @@
 import {
+  AccountCenterControlValue,
+  AccountCenters,
   AdminTenantRole,
   ApplicationType,
   Applications,
+  ApplicationsRoles,
   OrganizationRoleUserRelations,
   OrganizationUserRelations,
   Roles,
@@ -27,52 +30,20 @@ import { convertToIdentifiers } from '../../../sql.js';
 import { encryptPassword } from '../../../utils/password.js';
 import { consoleLog } from '../../../utils.js';
 
-import type { AdminConfig, AppConfig, SmtpConfig } from './bootstrap-config.js';
+import type { AdminConfig, AppConfig, M2mConfig } from './bootstrap-config.js';
 import {
   getAdminConfig,
   getAppConfig,
+  getM2mConfig,
+  getMfaConfig,
   getSignInExperienceConfig,
   getSmtpConfig,
+  getSmtpSmsConfig,
 } from './bootstrap-config.js';
-import { bootstrapSignInExperience } from './bootstrap-sign-in.js';
+import { bootstrapSmtpConnector, bootstrapSmtpSmsConnector } from './bootstrap-connectors.js';
+import { bootstrapMfa, bootstrapSignInExperience } from './bootstrap-sign-in.js';
 import type { SeedUser } from './bootstrap-users.js';
-import { loadSeedUsers } from './bootstrap-users.js';
-
-/**
- * Default HTML email templates registered with the SMTP connector for every standard usage type
- * (Register, SignIn, ForgotPassword, Generic). Each template renders a `{{code}}` placeholder
- * that Logto replaces with the one-time verification code at send time.
- */
-const defaultEmailTemplates = [
-  {
-    usageType: 'Register',
-    contentType: 'text/html',
-    subject: 'Your verification code',
-    content:
-      '<p>Your verification code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>',
-  },
-  {
-    usageType: 'SignIn',
-    contentType: 'text/html',
-    subject: 'Your sign-in verification code',
-    content:
-      '<p>Your sign-in verification code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>',
-  },
-  {
-    usageType: 'ForgotPassword',
-    contentType: 'text/html',
-    subject: 'Reset your password',
-    content:
-      '<p>Your password reset code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>',
-  },
-  {
-    usageType: 'Generic',
-    contentType: 'text/html',
-    subject: 'Your verification code',
-    content:
-      '<p>Your verification code is <strong>{{code}}</strong>. It expires in 10 minutes.</p>',
-  },
-];
+import { buildUserProfile, loadSeedUsers } from './bootstrap-users.js';
 
 /**
  * Creates the initial admin user in the admin tenant and wires up all required role and
@@ -216,56 +187,6 @@ const bootstrapApplication = async (
 };
 
 /**
- * Registers an SMTP email connector in the default tenant using the built-in
- * `simple-mail-transfer-protocol` connector type.
- *
- * The connector is pre-loaded with {@link defaultEmailTemplates} covering all standard usage
- * types so it is immediately ready to send verification and password-reset emails.
- *
- * @param connection - Active database transaction connection.
- * @param config - SMTP server details and credentials from {@link getSmtpConfig}.
- */
-const bootstrapSmtpConnector = async (
-  connection: DatabaseTransactionConnection,
-  config: SmtpConfig
-) => {
-  await connection.query(
-    insertInto(
-      {
-        tenantId: defaultTenantId,
-        id: generateStandardShortId(),
-        connectorId: 'simple-mail-transfer-protocol',
-        config: {
-          host: config.host,
-          port: config.port,
-          auth: config.auth,
-          fromEmail: config.fromEmail,
-          ...(config.replyTo ? { replyTo: config.replyTo } : {}),
-          secure: config.secure,
-          templates: defaultEmailTemplates,
-        },
-        metadata: {},
-      },
-      'connectors'
-    )
-  );
-
-  consoleLog.succeed(`Configured SMTP email connector (${config.host}:${config.port})`);
-};
-
-/**
- * Extracts the optional name profile fields from a seed user into the flat object expected by the
- * `profile` column.
- *
- * @param user - Source seed user entry.
- * @returns A partial profile record containing only the fields that are present on the user.
- */
-const buildUserProfile = (user: SeedUser): Record<string, string> => ({
-  ...(user.familyName ? { familyName: user.familyName } : {}),
-  ...(user.givenName ? { givenName: user.givenName } : {}),
-});
-
-/**
  * Inserts pre-seeded user accounts into the default tenant in sequence.
  *
  * Passwords are hashed with Argon2i individually before each insert. Users are processed
@@ -306,32 +227,125 @@ const bootstrapSeedUsers = async (
 };
 
 /**
+ * Registers a Machine-to-Machine (M2M) application in the default tenant and assigns it the
+ * pre-configured "Logto Management API access" role so it can immediately authenticate against
+ * the Management API using the client-credentials grant.
+ *
+ * @param connection - Active database transaction connection.
+ * @param config - M2M application credentials from {@link getM2mConfig}.
+ */
+const bootstrapM2mApplication = async (
+  connection: DatabaseTransactionConnection,
+  config: M2mConfig
+) => {
+  await connection.query(
+    insertInto(
+      {
+        tenantId: defaultTenantId,
+        id: config.clientId,
+        name: config.name,
+        secret: config.clientSecret,
+        description: `Bootstrapped M2M application: ${config.name}`,
+        type: ApplicationType.MachineToMachine,
+        oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
+        customClientMetadata: {},
+        isThirdParty: false,
+        customData: {},
+      },
+      Applications.table
+    )
+  );
+
+  await connection.query(
+    insertInto(
+      {
+        tenantId: defaultTenantId,
+        applicationId: config.clientId,
+        name: 'Default',
+        value: config.clientSecret,
+      },
+      'application_secrets'
+    )
+  );
+
+  const roles = convertToIdentifiers(Roles);
+  const managementApiRole = await connection.one<Role>(sql`
+    select ${roles.fields.id} from ${roles.table}
+    where ${roles.fields.tenantId} = ${defaultTenantId}
+    and ${roles.fields.name} = ${'Logto Management API access'}
+  `);
+
+  await connection.query(
+    insertInto(
+      {
+        tenantId: defaultTenantId,
+        id: generateStandardId(),
+        applicationId: config.clientId,
+        roleId: managementApiRole.id,
+      },
+      ApplicationsRoles.table
+    )
+  );
+
+  consoleLog.succeed(
+    `Created M2M application "${config.name}" (client_id: ${config.clientId}) with Management API access`
+  );
+};
+
+const bootstrapAccountCenter = async (
+  connection: DatabaseTransactionConnection,
+  includePhone: boolean
+) => {
+  const fields = {
+    password: AccountCenterControlValue.Edit,
+    email: AccountCenterControlValue.Edit,
+    name: AccountCenterControlValue.Edit,
+    profile: AccountCenterControlValue.Edit,
+    mfa: AccountCenterControlValue.Edit,
+    phone: includePhone ? AccountCenterControlValue.Edit : AccountCenterControlValue.Off,
+  };
+
+  await connection.query(sql`
+    update ${sql.identifier([AccountCenters.table])}
+    set
+      ${sql.identifier(['enabled'])} = true,
+      ${sql.identifier(['fields'])} = ${JSON.stringify(fields)}::jsonb
+    where ${sql.identifier(['tenant_id'])} = ${defaultTenantId}
+    and ${sql.identifier(['id'])} = ${sql.literalValue('default')}
+  `);
+
+  consoleLog.succeed(
+    'Enabled Account Centre with password, email, profile, and MFA editing for the default tenant'
+  );
+};
+
+/**
  * Entry point for environment-driven bootstrap logic, intended to run once immediately after the
  * standard Logto database seed.
- *
- * Each step is opt-in and gated on the presence of the relevant environment variables:
- * - **Admin user** — `LOGTO_ADMIN_USERNAME` + `LOGTO_ADMIN_PASSWORD` (+ optional `LOGTO_ADMIN_EMAIL`)
- * - **OIDC application** — `LOGTO_APP_CLIENT_ID` + `LOGTO_APP_CLIENT_SECRET` + `LOGTO_APP_REDIRECT_URIS`
- * - **SMTP connector** — `LOGTO_SMTP_HOST` + `LOGTO_SMTP_PORT` + `LOGTO_SMTP_USERNAME` + `LOGTO_SMTP_PASSWORD` + `LOGTO_SMTP_FROM_EMAIL`
- * - **Seed users** — `LOGTO_SEED_USERS_FILE` pointing to a `.json` or `.csv` file
- * - **Sign-in experience** — always updated when seed users are present, or when `LOGTO_SIGN_IN_IDENTIFIER=email`
- *
- * Returns immediately without writing anything when none of the above are configured.
  *
  * @param connection - Active database transaction connection supplied by the seed runner.
  */
 export const runBootstrap = async (connection: DatabaseTransactionConnection): Promise<void> => {
   const adminConfig = getAdminConfig();
   const appConfig = getAppConfig();
+  const m2mConfig = getM2mConfig();
   const smtpConfig = getSmtpConfig();
+  const smtpSmsConfig = getSmtpSmsConfig();
   const seedUsers = await loadSeedUsers();
   const signInExpConfig = getSignInExperienceConfig();
+  const mfaConfig = getMfaConfig();
 
-  if (!adminConfig && !appConfig && !smtpConfig && seedUsers.length === 0) {
+  const hasConfig = [adminConfig, appConfig, m2mConfig, smtpConfig, smtpSmsConfig, mfaConfig].some(
+    Boolean
+  );
+
+  if (!hasConfig) {
     return;
   }
 
   consoleLog.info('Running environment-based bootstrap...');
+
+  await bootstrapAccountCenter(connection, Boolean(smtpSmsConfig));
 
   if (adminConfig) {
     await bootstrapAdminUser(connection, adminConfig);
@@ -341,16 +355,28 @@ export const runBootstrap = async (connection: DatabaseTransactionConnection): P
     await bootstrapApplication(connection, appConfig);
   }
 
+  if (m2mConfig) {
+    await bootstrapM2mApplication(connection, m2mConfig);
+  }
+
   if (smtpConfig) {
     await bootstrapSmtpConnector(connection, smtpConfig);
   }
 
-  if (seedUsers.length > 0) {
-    await bootstrapSeedUsers(connection, seedUsers);
+  if (smtpSmsConfig) {
+    await bootstrapSmtpSmsConnector(connection, smtpSmsConfig);
   }
 
   if (signInExpConfig.bootstrapSignInExperience) {
     await bootstrapSignInExperience(connection, signInExpConfig.primaryIdentifier);
+  }
+
+  if (mfaConfig) {
+    await bootstrapMfa(connection, mfaConfig);
+  }
+
+  if (seedUsers.length > 0) {
+    await bootstrapSeedUsers(connection, seedUsers);
   }
 
   consoleLog.succeed('Bootstrap complete');

@@ -1,0 +1,8 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Envelope shape (SMTP) -->
+  <rect x="1" y="4" width="22" height="14" rx="2" fill="white" stroke="#1ABC9C" stroke-width="1.5"/>
+  <path d="M1.5 5L12 13L22.5 5" stroke="#1ABC9C" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- SMS speech bubble badge -->
+  <circle cx="18" cy="18" r="6" fill="#1ABC9C"/>
+  <text x="18" y="22" text-anchor="middle" font-size="7" font-family="sans-serif" font-weight="bold" fill="white">SMS</text>
+</svg>

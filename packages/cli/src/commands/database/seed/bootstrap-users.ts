@@ -22,6 +22,18 @@ export type SeedUser = {
 };
 
 /**
+ * Extracts optional name profile fields from a seed user into the flat object expected by the
+ * `profile` column.
+ *
+ * @param user - Source seed user entry.
+ * @returns A partial profile record containing only the fields that are present on the user.
+ */
+export const buildUserProfile = (user: SeedUser): Record<string, string> => ({
+  ...(user.familyName ? { familyName: user.familyName } : {}),
+  ...(user.givenName ? { givenName: user.givenName } : {}),
+});
+
+/**
  * Parses a single CSV data row into a {@link SeedUser}.
  *
  * @param headers - Column names derived from the CSV header row.

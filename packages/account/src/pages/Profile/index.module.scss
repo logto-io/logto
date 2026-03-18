@@ -1,0 +1,12 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  margin-top: _.unit(4);
+}
+
+.submit {
+  margin-top: _.unit(2);
+}

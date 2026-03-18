@@ -24,6 +24,11 @@ services:
       - LOGTO_ADMIN_USERNAME=admin
       - LOGTO_ADMIN_PASSWORD=MySecureP@ssword123
 
+      # Bootstrap: M2M Application (Management API client)
+      - LOGTO_M2M_APP_NAME=My Management API Client
+      - LOGTO_M2M_CLIENT_ID=my-m2m-client
+      - LOGTO_M2M_CLIENT_SECRET=my-m2m-secret-key-1234
+
       # Bootstrap: OIDC Application
       - LOGTO_APP_NAME=My Web App
       - LOGTO_APP_CLIENT_ID=my-web-app
@@ -38,9 +43,21 @@ services:
       - LOGTO_SMTP_PASSWORD=smtp-password
       - LOGTO_SMTP_FROM_EMAIL=noreply@example.com
 
+      # Bootstrap: SMTP SMS Connector (Service Vic custom connector)
+      - LOGTO_SMTP_SMS_HOST=mailpit
+      - LOGTO_SMTP_SMS_PORT=1025
+      - LOGTO_SMTP_SMS_USERNAME=noreply@example.com
+      - LOGTO_SMTP_SMS_PASSWORD=smtp-password
+      - LOGTO_SMTP_SMS_FROM_EMAIL=noreply-sms@example.com
+      - LOGTO_SMTP_SMS_TO_EMAIL_TEMPLATE=sms+{{phoneNumberOnly}}@txt.telstra.com.au
+
+      # Make AU (+61) the default Phone Code
+      - LOGTO_DEFAULT_PHONE_COUNTRY_CODE=AU
+
       # Bootstrap: Sign-in identifier (email-primary)
       - LOGTO_BOOTSTRAP_SIGNIN_EXPERIENCE=true
       - LOGTO_SIGN_IN_IDENTIFIER=email
+      - LOGTO_MFA_FACTORS=totp,webauthn,phoneVerificationCode
 
   postgres:
     image: postgres:17-alpine

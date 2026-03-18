@@ -12,6 +12,35 @@ import { sql } from '@silverhand/slonik';
 import { insertInto } from '../../../database.js';
 import { consoleLog } from '../../../utils.js';
 
+import type { MfaConfig } from './bootstrap-config.js';
+
+/**
+ * Enables the specified MFA factors on the default tenant's sign-in experience.
+ *
+ * Uses a `jsonb_set` update so the existing MFA policy is preserved — only the `factors`
+ * array is replaced.
+ *
+ * @param connection - Active database transaction connection.
+ * @param config - The MFA factors to enable, from {@link getMfaConfig}.
+ */
+export const bootstrapMfa = async (
+  connection: DatabaseTransactionConnection,
+  config: MfaConfig
+) => {
+  await connection.query(sql`
+    update ${sql.identifier([SignInExperiences.table])}
+    set ${sql.identifier(['mfa'])} = jsonb_set(
+      ${sql.identifier(['mfa'])},
+      ${sql.literalValue('{factors}')},
+      ${JSON.stringify(config.factors)}::jsonb
+    )
+    where ${sql.identifier(['tenant_id'])} = ${defaultTenantId}
+    and ${sql.identifier(['id'])} = ${sql.literalValue('default')}
+  `);
+
+  consoleLog.succeed(`Enabled MFA factors: ${config.factors.join(', ')}`);
+};
+
 /**
  * Configures the sign-in experience for the default tenant to use email as the primary identifier.
  *
