@@ -173,7 +173,7 @@ const user_details = {
     access_created_at_column: 'Access created at',
     revoke_access_title: 'Revoke access?',
     revoke_access_description:
-      "This will revoke the app's access to this user's account cross devices. The user must reauthorize to restore access.",
+      "This will revoke the app's access to this user's account across devices. The user must reauthorize to restore access.",
   },
   connections: {
     title: 'Connection',

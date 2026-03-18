@@ -48,9 +48,11 @@ function UserThirdPartyApps({ userId }: Props) {
       description="user_details.third_party_apps.description"
     >
       <FormField title="user_details.third_party_apps.field_name">
-        <div className={styles.description}>
-          {t(hasRows ? 'multiple_authorized' : 'not_authorized')}
-        </div>
+        {!isLoading && !error && (
+          <div className={styles.description}>
+            {t(hasRows ? 'multiple_authorized' : 'not_authorized')}
+          </div>
+        )}
         {(isLoading || hasRows || error) && (
           <Table
             hasBorder

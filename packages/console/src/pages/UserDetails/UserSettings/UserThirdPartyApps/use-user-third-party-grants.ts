@@ -21,12 +21,11 @@ function useUserThirdPartyGrants(userId: string) {
   );
 
   const rowData = useMemo<GrantedThirdPartyAppRow[]>(() => {
-    const sortedByIat = (data?.grants ?? []).toSorted(
-      (left, right) => left.payload.iat - right.payload.iat
-    );
+    const grants = data?.grants ?? [];
+
     const groupedByApplicationId = new Map<string, { iat: number; grantIds: string[] }>();
 
-    for (const grant of sortedByIat) {
+    for (const grant of grants) {
       const group = groupedByApplicationId.get(grant.payload.clientId);
 
       if (!group) {
@@ -38,7 +37,8 @@ function useUserThirdPartyGrants(userId: string) {
       }
 
       groupedByApplicationId.set(grant.payload.clientId, {
-        iat: grant.payload.iat,
+        // The createdAt of the app should be the earliest iat among its grants
+        iat: Math.min(group.iat, grant.payload.iat),
         grantIds: [...group.grantIds, grant.id],
       });
     }
