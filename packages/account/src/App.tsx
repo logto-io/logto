@@ -55,7 +55,7 @@ import {
   getUiLocales,
   handleAccountCenterRoute,
 } from './utils/account-center-route';
-import { getAccountIndexPage } from './utils/security-route';
+import { shouldShowSecurityPage } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
 
 handleAccountCenterRoute();
@@ -113,13 +113,8 @@ const Main = () => {
     return <GlobalLoading />;
   }
 
-  const indexElement =
-    getAccountIndexPage(isDevFeaturesEnabled, accountCenterSettings?.enabled === true) ===
-    'security' ? (
-      <Security />
-    ) : (
-      <Home />
-    );
+  const showsSecurityPage = shouldShowSecurityPage(isDevFeaturesEnabled, accountCenterSettings);
+  const indexElement = showsSecurityPage ? <Security /> : <Home />;
 
   return (
     <Routes>
@@ -166,9 +161,7 @@ const Layout = () => {
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
   const isHomePage =
-    pathname === '/' &&
-    getAccountIndexPage(isDevFeaturesEnabled, accountCenterSettings?.enabled === true) ===
-      'security';
+    pathname === '/' && shouldShowSecurityPage(isDevFeaturesEnabled, accountCenterSettings);
 
   return (
     <div className={styles.app}>
