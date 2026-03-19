@@ -97,7 +97,7 @@ function UserSessionDetails() {
     // `authorizations` is a clientId-keyed record map that stores all apps authorized by this session.
     // We use the keys of this record to get the authorized application IDs.
     const authorizedApplicationIds = sessionData
-      ? Object.keys(sessionData.payload.authorizations)
+      ? Object.keys(sessionData.payload.authorizations ?? {})
       : [];
 
     if (authorizedApplicationIds.length === 0) {
