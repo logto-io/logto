@@ -48,4 +48,21 @@ describe('runNamedTasksWithSummary', () => {
     expect(result.succeededNames).toEqual(['a']);
     expect(result.failedTasks).toEqual([{ name: 'b', cause: 'normalized-error' }]);
   });
+
+  it('should respect concurrency limit when provided', async () => {
+    const startedAt = Date.now();
+
+    await runNamedTasksWithSummary({
+      items: [1, 2, 3, 4, 5],
+      getName: (item) => `task-${item}` as const,
+      concurrency: 2,
+      runner: async () => {
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, 20);
+        });
+      },
+    });
+
+    expect(Date.now() - startedAt).toBeGreaterThanOrEqual(50);
+  });
 });
