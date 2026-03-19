@@ -3,7 +3,7 @@ import { LogResult, userApplicationGrantPayloadGuard } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import type { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
-import { createSessionLibrary } from '#src/libraries/session.js';
+import { createSessionLibrary } from '#src/libraries/session/index.js';
 import { type WithAppSecretContext } from '#src/middleware/koa-app-secret-transpilation.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';

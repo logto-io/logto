@@ -1,4 +1,4 @@
-import { runNamedTasksWithSummary } from './promise.js';
+import { runNamedTasksWithSummary } from './utils.js';
 
 describe('runNamedTasksWithSummary', () => {
   it('should collect succeeded and failed task names', async () => {

@@ -16,7 +16,7 @@ import { type IRouterParamContext } from 'koa-router';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
-import { consent, getMissingScopes } from '#src/libraries/session.js';
+import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';

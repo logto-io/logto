@@ -4,7 +4,7 @@ import type { Provider } from 'oidc-provider';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
-import { createSessionLibrary } from './session.js';
+import { createSessionLibrary } from './index.js';
 
 const { jest } = import.meta;
 
