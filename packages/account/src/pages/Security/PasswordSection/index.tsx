@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import PasswordIcon from '@ac/assets/icons/password.svg?react';
 import { passwordRoute } from '@ac/constants/routes';
+import { setRedirectUrl } from '@ac/utils/account-center-route';
 
 import styles from './index.module.scss';
 
@@ -48,6 +49,7 @@ const PasswordSection = () => {
               type="button"
               className={styles.changeButton}
               onClick={() => {
+                setRedirectUrl(window.location.href);
                 navigate(passwordRoute);
               }}
             >

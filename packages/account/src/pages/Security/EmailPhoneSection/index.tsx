@@ -1,4 +1,5 @@
 import { AccountCenterControlValue } from '@logto/schemas';
+import { formatToInternationalPhoneNumber } from '@logto/shared/universal';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +8,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
 import { emailRoute, phoneRoute } from '@ac/constants/routes';
+import { setRedirectUrl } from '@ac/utils/account-center-route';
 
 import styles from './index.module.scss';
 
@@ -36,7 +38,9 @@ const EmailPhoneSection = () => {
                 <EmailIcon className={styles.icon} />
                 {t('account_center.security.email')}
               </div>
-              <div className={styles.value}>{userInfo?.primaryEmail ?? '-'}</div>
+              <div className={styles.value}>
+                {userInfo?.primaryEmail ?? t('account_center.security.not_set')}
+              </div>
             </div>
             {emailControl === AccountCenterControlValue.Edit && (
               <div className={styles.actions}>
@@ -44,10 +48,13 @@ const EmailPhoneSection = () => {
                   type="button"
                   className={styles.changeButton}
                   onClick={() => {
+                    setRedirectUrl(window.location.href);
                     navigate(emailRoute);
                   }}
                 >
-                  {t('account_center.security.change')}
+                  {userInfo?.primaryEmail
+                    ? t('account_center.security.change')
+                    : t('account_center.security.add')}
                 </button>
               </div>
             )}
@@ -60,7 +67,11 @@ const EmailPhoneSection = () => {
                 <PhoneIcon className={styles.icon} />
                 {t('account_center.security.phone')}
               </div>
-              <div className={styles.value}>{userInfo?.primaryPhone ?? '-'}</div>
+              <div className={styles.value}>
+                {userInfo?.primaryPhone
+                  ? formatToInternationalPhoneNumber(userInfo.primaryPhone)
+                  : t('account_center.security.not_set')}
+              </div>
             </div>
             {phoneControl === AccountCenterControlValue.Edit && (
               <div className={styles.actions}>
@@ -68,22 +79,14 @@ const EmailPhoneSection = () => {
                   type="button"
                   className={styles.changeButton}
                   onClick={() => {
+                    setRedirectUrl(window.location.href);
                     navigate(phoneRoute);
                   }}
                 >
-                  {t('account_center.security.change')}
+                  {userInfo?.primaryPhone
+                    ? t('account_center.security.change')
+                    : t('account_center.security.add')}
                 </button>
-                {userInfo?.primaryPhone && (
-                  <button
-                    type="button"
-                    className={styles.removeButton}
-                    onClick={() => {
-                      // TODO: Implement phone removal
-                    }}
-                  >
-                    {t('account_center.security.remove')}
-                  </button>
-                )}
               </div>
             )}
           </div>

@@ -61,8 +61,10 @@ const account_center = {
     success: 'Username updated successfully.',
   },
   security: {
+    add: 'Add',
     change: 'Change',
     remove: 'Remove',
+    not_set: 'Not set',
     email_phone: 'Email / Phone',
     email: 'Email',
     phone: 'Phone',
