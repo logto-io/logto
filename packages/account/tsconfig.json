@@ -2,7 +2,6 @@
   "extends": "./tsconfig.base",
   "include": [
     "src",
-    "tests",
     "*.config.ts",
     "../experience/src/include.d/**/*.d.ts",
     "../experience/src/assets/index.d.ts"

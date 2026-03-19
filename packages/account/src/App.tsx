@@ -8,7 +8,6 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import AppBoundary from '@ac/Providers/AppBoundary';
 import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
 import PageHeader from '@ac/components/PageHeader';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 
 import styles from './App.module.scss';
 import Callback from './Callback';
@@ -55,6 +54,7 @@ import {
   getUiLocales,
   handleAccountCenterRoute,
 } from './utils/account-center-route';
+import { getIsDevFeaturesEnabled } from './utils/dev-features';
 import { shouldShowSecurityPage } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
 
@@ -62,6 +62,12 @@ handleAccountCenterRoute();
 void initI18n(resolveUiLocalesLanguage(getUiLocales()));
 
 const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
+const normalizeEnv = (value: unknown) =>
+  value === null || value === undefined ? undefined : String(value);
+const isDevFeaturesEnabled = getIsDevFeaturesEnabled(
+  import.meta.env.PROD,
+  normalizeEnv(Reflect.get(import.meta.env, 'DEV_FEATURES_ENABLED'))
+);
 
 const Main = () => {
   const params = new URLSearchParams(window.location.search);
