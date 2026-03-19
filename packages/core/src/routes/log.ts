@@ -40,6 +40,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
       const includeKeyPrefix: AuditLogPrefix[] = [
         token.Type.ExchangeTokenBy,
         token.Type.RevokeToken,
+        token.Type.RevokeGrants,
         interaction.prefix,
         jwtCustomizer.prefix,
         saml.prefix,

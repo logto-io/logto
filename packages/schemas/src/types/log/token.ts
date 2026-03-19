@@ -2,6 +2,7 @@
 export enum Type {
   ExchangeTokenBy = 'ExchangeTokenBy',
   RevokeToken = 'RevokeToken',
+  RevokeGrants = 'RevokeGrants',
 }
 
 /** Available grant token types extracted from [oidc-provider](https://github.com/panva/node-oidc-provider/blob/564b1095ee869c89381d63dfdb5875c99f870f5f/lib/helpers/revoke.js#L13). */
@@ -24,4 +25,7 @@ export enum ExchangeByType {
   DeviceCode = 'DeviceCode',
 }
 
-export type LogKey = `${Type.ExchangeTokenBy}.${ExchangeByType}` | `${Type.RevokeToken}`;
+export type LogKey =
+  | `${Type.ExchangeTokenBy}.${ExchangeByType}`
+  | `${Type.RevokeToken}`
+  | `${Type.RevokeGrants}`;
