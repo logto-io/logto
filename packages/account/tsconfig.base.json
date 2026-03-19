@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "build",
     "baseUrl": ".",
+    "allowImportingTsExtensions": true,
     "paths": {
       "@ac/*": [
         "src/*"

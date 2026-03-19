@@ -60,10 +60,8 @@ const buildConfig = (mode: string): UserConfig => ({
     viteCompression({ disable: mode === 'development', algorithm: 'brotliCompress' }),
   ],
   define: {
-    'process.env': {
-      NODE_ENV: process.env.NODE_ENV,
-      DEV_FEATURES_ENABLED: process.env.DEV_FEATURES_ENABLED,
-    },
+    __ACCOUNT_IS_PRODUCTION__: JSON.stringify(mode === 'production'),
+    __ACCOUNT_DEV_FEATURES_ENABLED__: JSON.stringify(process.env.DEV_FEATURES_ENABLED),
   },
 });
 

@@ -68,7 +68,7 @@ const Main = () => {
   const isInCallback = Boolean(params.get('code'));
   const uiLocales = getUiLocales();
   const { isAuthenticated, isLoading, signIn } = useLogto();
-  const { isLoadingExperience, isLoadingUserInfo, userInfo, userInfoError } =
+  const { accountCenterSettings, isLoadingExperience, isLoadingUserInfo, userInfo, userInfoError } =
     useContext(PageContext);
   const isInitialAuthLoading = !isAuthenticated && isLoading;
 
@@ -114,7 +114,12 @@ const Main = () => {
   }
 
   const indexElement =
-    getAccountIndexPage(isDevFeaturesEnabled) === 'security' ? <Security /> : <Home />;
+    getAccountIndexPage(isDevFeaturesEnabled, accountCenterSettings?.enabled === true) ===
+    'security' ? (
+      <Security />
+    ) : (
+      <Home />
+    );
 
   return (
     <Routes>
@@ -157,10 +162,13 @@ const Main = () => {
 };
 
 const Layout = () => {
-  const { experienceSettings, theme } = useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, theme } = useContext(PageContext);
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
-  const isHomePage = isDevFeaturesEnabled && pathname === '/';
+  const isHomePage =
+    pathname === '/' &&
+    getAccountIndexPage(isDevFeaturesEnabled, accountCenterSettings?.enabled === true) ===
+      'security';
 
   return (
     <div className={styles.app}>

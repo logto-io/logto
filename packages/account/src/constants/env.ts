@@ -1,4 +1,6 @@
-import { yes } from '@silverhand/essentials';
+import { getIsDevFeaturesEnabled } from '@ac/utils/dev-features';
 
-export const isDevFeaturesEnabled =
-  process.env.NODE_ENV !== 'production' || yes(process.env.DEV_FEATURES_ENABLED);
+export const isDevFeaturesEnabled = getIsDevFeaturesEnabled(
+  __ACCOUNT_IS_PRODUCTION__,
+  __ACCOUNT_DEV_FEATURES_ENABLED__
+);

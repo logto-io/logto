@@ -11,6 +11,7 @@ import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import { applyBoundIdentifierToUserInfo } from '@ac/utils/user-info';
 
 import IdentifierSendStep, { type IdentifierLabelKey } from './IdentifierSendStep';
 import IdentifierVerifyStep from './IdentifierVerifyStep';
@@ -83,7 +84,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, verificationId, setToast, setVerificationId } =
+  const { accountCenterSettings, verificationId, setToast, setUserInfo, setVerificationId } =
     useContext(PageContext);
   const [identifier, setIdentifier] = useState(initialValue);
   const [pendingIdentifier, setPendingIdentifier] = useState<string>();
@@ -195,6 +196,9 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
         return;
       }
 
+      setUserInfo((current) =>
+        applyBoundIdentifierToUserInfo(current, identifierType, pendingIdentifier)
+      );
       navigate(successRedirect, { replace: true });
     },
     [
@@ -205,11 +209,13 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       handleError,
       handleVerifyError,
       loading,
+      identifierType,
       navigate,
       pendingIdentifier,
       pendingVerificationRecordId,
       resetFlow,
       setToast,
+      setUserInfo,
       setVerificationId,
       successRedirect,
       t,
