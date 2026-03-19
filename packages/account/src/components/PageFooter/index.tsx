@@ -12,7 +12,9 @@ const PageFooter = () => {
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { termsOfUseUrl, privacyPolicyUrl, supportEmail, supportWebsiteUrl } =
     experienceSettings ?? {};
-  const supportLink = supportWebsiteUrl ?? (supportEmail ? `mailto:${supportEmail}` : undefined);
+  // Use `||` to treat empty string as missing so the mailto fallback works
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const supportLink = supportWebsiteUrl || (supportEmail ? `mailto:${supportEmail}` : undefined);
 
   return (
     <footer className={styles.footer}>

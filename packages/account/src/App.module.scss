@@ -113,7 +113,7 @@
   }
 
   @media only screen and (max-width: 800px) {
-    .main {
+    .main:not(.cardMain) {
       width: auto;
       padding: _.unit(3) _.unit(5);
     }
