@@ -190,7 +190,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       if (
         !EnvSet.values.isDevFeaturesEnabled &&
-        rest.customClientMetadata?.maxAllowedSessions !== undefined
+        rest.customClientMetadata?.maxAllowedGrants !== undefined
       ) {
         throw new RequestError('request.invalid_input');
       }
@@ -340,7 +340,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       if (
         !EnvSet.values.isDevFeaturesEnabled &&
-        rest.customClientMetadata?.maxAllowedSessions !== undefined
+        rest.customClientMetadata?.maxAllowedGrants !== undefined
       ) {
         throw new RequestError('request.invalid_input');
       }
