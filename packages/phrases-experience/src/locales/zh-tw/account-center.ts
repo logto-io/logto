@@ -60,6 +60,13 @@ const account_center = {
   },
   security: {
     change: '變更',
+    remove: 'Remove',
+    email_phone: 'Email / Phone',
+    email: 'Email',
+    phone: 'Phone',
+    password: 'Password',
+    configured: 'Configured',
+    not_configured: 'Not configured',
   },
   password: {
     title: '設定密碼',

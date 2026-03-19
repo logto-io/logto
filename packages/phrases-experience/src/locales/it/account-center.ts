@@ -66,6 +66,13 @@ const account_center = {
   },
   security: {
     change: 'Modifica',
+    remove: 'Remove',
+    email_phone: 'Email / Phone',
+    email: 'Email',
+    phone: 'Phone',
+    password: 'Password',
+    configured: 'Configured',
+    not_configured: 'Not configured',
   },
   password: {
     title: 'Imposta password',
