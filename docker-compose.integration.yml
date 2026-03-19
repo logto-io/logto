@@ -11,8 +11,6 @@ services:
       interval: 3s
       timeout: 3s
       retries: 20
-    ports:
-      - "5432:5432"
 
   redis:
     image: redis:6-alpine
@@ -21,8 +19,6 @@ services:
       interval: 3s
       timeout: 3s
       retries: 20
-    ports:
-      - "6379:6379"
 
   logto:
     volumes:
