@@ -32,4 +32,20 @@ describe('runNamedTasksWithSummary', () => {
     expect(result.succeededNames).toEqual(['task-1', 'task-3']);
     expect(result.failedTasks.map(({ name }) => name)).toEqual(['task-2', 'task-4']);
   });
+
+  it('should normalize cause when normalizeCause is provided', async () => {
+    const result = await runNamedTasksWithSummary({
+      items: ['a', 'b'],
+      getName: (item) => item,
+      runner: async (item) => {
+        if (item === 'b') {
+          throw new Error('failed-b');
+        }
+      },
+      normalizeCause: () => 'normalized-error',
+    });
+
+    expect(result.succeededNames).toEqual(['a']);
+    expect(result.failedTasks).toEqual([{ name: 'b', cause: 'normalized-error' }]);
+  });
 });

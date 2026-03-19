@@ -6,7 +6,8 @@ import {
   oidcSessionInstancePayloadGuard,
   userApplicationGrantPayloadGuard,
 } from '@logto/schemas';
-import { conditional, deduplicate, trySafe } from '@silverhand/essentials';
+import { normalizeError } from '@logto/shared';
+import { conditional, deduplicate, pick, trySafe } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { InteractionResults, PromptDetail, Provider } from 'oidc-provider';
 import { z } from 'zod';
@@ -248,6 +249,15 @@ const pickGrantIds = (entries: Array<[string, SessionAuthorizationDetails]>) =>
 const isGrantExpired = (grant: { exp?: number }) =>
   typeof grant.exp === 'number' && grant.exp <= Date.now() / 1000;
 
+const serializeErrorCause = (error: unknown) => {
+  if (error instanceof RequestError) {
+    /** @see RequestError.toBody */
+    return pick(error, 'code', 'data', 'details');
+  }
+
+  return normalizeError(error).message;
+};
+
 type GrantRevocationModelName =
   | 'AccessToken'
   | 'RefreshToken'
@@ -292,6 +302,7 @@ const revokeGrantChain = async (provider: Provider, grantId: string) => {
       runner: async ({ handler }) => {
         await handler();
       },
+      normalizeCause: serializeErrorCause,
     });
 
   if (failedModels.length > 0) {
@@ -478,6 +489,7 @@ export const createSessionLibrary = (queries: Queries) => {
         await revokeGrantChain(provider, grantId);
         await removeUserSessionAuthorizationByGrantIdWithErrorCatch(provider, userId, grantId);
       },
+      normalizeCause: serializeErrorCause,
     });
 
     if (failedTasks.length > 0) {

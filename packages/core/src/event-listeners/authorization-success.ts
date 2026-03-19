@@ -26,12 +26,6 @@ const getGrantIdsToRevokeForMaxAllowedGrants = ({
   >;
   maxAllowedGrants: number;
 }) => {
-  const grantsToRevokeCount = activeGrants.length - maxAllowedGrants;
-
-  if (grantsToRevokeCount <= 0) {
-    return [];
-  }
-
   const validatedGrantPayloads = activeGrants
     .map((grant) => {
       const payloadResult = userApplicationGrantPayloadGuard.safeParse(grant.payload);
@@ -44,6 +38,12 @@ const getGrantIdsToRevokeForMaxAllowedGrants = ({
       return { id: grant.id, payload: payloadResult.data };
     })
     .filter((grant) => isDefined(grant));
+
+  const grantsToRevokeCount = validatedGrantPayloads.length - maxAllowedGrants;
+
+  if (grantsToRevokeCount <= 0) {
+    return [];
+  }
 
   return validatedGrantPayloads
     .slice()
