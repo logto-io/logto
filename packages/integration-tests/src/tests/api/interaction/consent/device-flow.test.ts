@@ -9,12 +9,13 @@ import {
 import ky, { type Options } from 'ky';
 
 import { deleteUser } from '#src/api/admin-user.js';
+import { baseApi, oidcApi } from '#src/api/api.js';
 import { assignUserConsentScopes } from '#src/api/application-user-consent-scope.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { getConsentInfo } from '#src/api/interaction.js';
-import { logtoUrl } from '#src/constants.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
+import { devFeatureTest } from '#src/utils.js';
 
 type DeviceAuthorizationResponse = {
   device_code: string;
@@ -57,7 +58,7 @@ const getCookieValue = (cookieJar: string[], cookieName: string) =>
     ?.slice(cookieName.length + 1);
 
 const request = async (url: string, init: Options = {}, cookieJar: string[] = []) => {
-  const response = await ky(new URL(url, logtoUrl), {
+  const requestOptions = {
     ...init,
     headers: {
       ...(cookieJar.length > 0 ? { cookie: getCookieHeader(cookieJar) } : {}),
@@ -65,7 +66,11 @@ const request = async (url: string, init: Options = {}, cookieJar: string[] = []
     },
     redirect: 'manual',
     throwHttpErrors: false,
-  });
+  } satisfies Options;
+
+  const response = await (url.startsWith('http://') || url.startsWith('https://')
+    ? ky(url, requestOptions)
+    : baseApi(url.replace(/^\//, ''), requestOptions));
 
   return {
     cookieJar: mergeCookies(cookieJar, response),
@@ -102,7 +107,7 @@ const followRedirects = async (
   return followRedirects(location, nextCookieJar, attempts - 1);
 };
 
-describe('consent api for device flow', () => {
+devFeatureTest.describe('consent api for device flow', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
   });
@@ -124,8 +129,8 @@ describe('consent api for device flow', () => {
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
 
     try {
-      const deviceAuthorization = await ky
-        .post(new URL('/oidc/device/auth', logtoUrl), {
+      const deviceAuthorization = await oidcApi
+        .post('device/auth', {
           body: new URLSearchParams({
             client_id: application.id,
             scope: 'openid profile',
