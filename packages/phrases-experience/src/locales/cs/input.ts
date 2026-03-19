@@ -4,9 +4,10 @@ const input = {
   email: 'E-mailová adresa',
   phone_number: 'Telefonní číslo',
   confirm_password: 'Potvrď heslo',
-  search_region_code: 'Hledat PSČ',
+  search_region_code: 'Hledat telefonní předvolbu',
   backup_code: 'Záložní kód',
-  label_with_optional: '{{label}} (Optional)',
+  code: 'Kód',
+  label_with_optional: '{{label}} (Volitelné)',
 };
 
 export default Object.freeze(input);

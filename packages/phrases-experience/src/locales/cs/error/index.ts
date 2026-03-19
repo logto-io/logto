@@ -14,21 +14,24 @@ const error = {
   invalid_phone: 'Telefonní číslo je neplatné',
   passwords_do_not_match: 'Hesla se neshodují. Zkus to prosím znovu.',
   invalid_passcode: 'Ověřovací kód je neplatný.',
+  device_code_required: 'Kód je povinný.',
+  invalid_device_code: 'Kód zařízení je neplatný.',
+  device_flow_aborted: 'Požadavek na přihlášení byl přerušen.',
   invalid_connector_auth: 'Ověření je neplatné',
   invalid_connector_request: 'Zadané údaje jsou neplatné',
-  unknown: 'Neznámá chyba. Zkus to prosím později.',
-  invalid_session: 'Relace nebyla nalezena. Vrať se zpět a přihlas se znovu.',
-  timeout: 'Vypršel časový limit požadavku. Zkus to prosím později.',
+  unknown: 'Neznámá chyba.',
+  invalid_session: 'Relace nebyla nalezena. Prosím vrať se zpět a přihlas se znovu.',
+  timeout: 'Vypršel časový limit požadavku.',
   password_rejected,
   sso_not_enabled: 'Single Sign-On není povolen pro tento e-mailový účet.',
   invalid_link: 'Neplatný odkaz',
   invalid_link_description: 'Tvůj jednorázový kód mohl vypršet nebo již není platný.',
   captcha_verification_failed: 'Ověření, že nejsi robot, se nezdařilo.',
   terms_acceptance_required: 'Je nutné souhlasit s podmínkami',
-  terms_acceptance_required_description:
-    'Pro pokračování je nutné souhlasit s podmínkami. Zkus to prosím znovu.',
+  terms_acceptance_required_description: 'Pro pokračování je nutné souhlasit s podmínkami.',
   something_went_wrong: 'Něco se pokazilo.',
-  feature_not_enabled: 'Tato funkce není povolena.',
+  feature_not_enabled:
+    'Nemáš oprávnění k přístupu k této funkci. Kontaktuj prosím svého administrátora pro pomoc.',
 };
 
 export default Object.freeze(error);

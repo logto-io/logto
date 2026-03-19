@@ -1,6 +1,6 @@
 const profile = {
   name: 'Jméno',
-  avatar: 'Profilovka',
+  avatar: 'Profilový obrázek',
   givenName: 'Křestní jméno',
   familyName: 'Příjmení',
   middleName: 'Druhé jméno',

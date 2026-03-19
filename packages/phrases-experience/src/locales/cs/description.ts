@@ -5,7 +5,7 @@ const description = {
   reminder: 'Připomenutí',
   not_found: '404 Nenalezeno',
   agree_with_terms: 'Přečetl/a jsem si a souhlasím s ',
-  agree_with_terms_modal: 'Pro pokračování, prosím, souhlas s <link></link>.',
+  agree_with_terms_modal: 'Pro pokračování prosím souhlas s <link></link>.',
   terms_of_use: 'Podmínky použití',
   sign_in: 'Přihlásit se',
   privacy_policy: 'Zásady ochrany soukromí',
@@ -56,7 +56,13 @@ const description = {
   continue_with_more_information: 'Pro zvýšení bezpečnosti, prosím, vyplň níže údaje k účtu.',
   create_your_account: 'Vytvoř si účet',
   sign_in_to_your_account: 'Přihlas se ke svému účtu',
-  no_region_code_found: 'Nebylo nalezeno žádné PSČ',
+  device_activation: 'Aktivace zařízení',
+  device_activation_description:
+    'Zadej kód zobrazený na tvém zařízení. Ujisti se, že se shoduje, a poté pokračuj v přihlášení k tomuto zařízení.',
+  device_activation_error_description: 'Zadej kód zobrazený na tvém zařízení.',
+  device_activation_success: 'Tvoje zařízení je nyní připojeno!',
+  device_activation_success_description: 'Vrať se na své zařízení pro pokračování.',
+  no_region_code_found: 'Telefonní předvolba nebyla nalezena',
   verify_email: 'Ověř svůj e-mail',
   verify_phone: 'Ověř své telefonní číslo',
   password_requirements: 'Heslo {{items, list}}.',
@@ -89,8 +95,8 @@ const description = {
   authorize_organization_access: 'Povolit přístup konkrétní organizaci:',
   user_scopes: 'Osobní údaje uživatele',
   organization_scopes: 'Přístup organizace',
-  authorize_agreement: `Povolením přístupu souhlasíš s {{name}}'s <link></link>.`,
-  authorize_agreement_with_redirect: `Povolením přístupu souhlasíš s {{name}}'s <link></link> a budeš přesměrován/a na {{uri}}.`,
+  authorize_agreement: `Povolením přístupu souhlasíš s {{name}} <link></link>.`,
+  authorize_agreement_with_redirect: `Povolením přístupu souhlasíš s {{name}} <link></link> a budeš přesměrován/a na {{uri}}.`,
   not_you: 'Nejsi to ty?',
   user_id: 'ID uživatele: {{id}}',
   redirect_to: 'Budeš přesměrován/a na {{name}}.',
@@ -107,6 +113,17 @@ const description = {
   switch_account_description:
     'Pro pokračování budeš odhlášen/a z aktuálního účtu a automaticky přepnut/a na nový účet.',
   about_yourself: 'Řekni nám něco o sobě',
+  verify_identity: 'Ověř svou identitu',
+  choose_verification_method: 'Vyber, jak se chceš přihlásit',
+  verification_method: {
+    passkey: 'Přístupový klíč',
+    passkey_description: 'Ověř pomocí svého zařízení nebo USB klíče',
+    password: 'Heslo',
+    password_description: 'Zadej své heslo',
+    email_verification_code: 'Ověřovací kód e-mailem',
+    phone_verification_code: 'Ověřovací kód SMS',
+    verification_code_description: 'Odeslat na {{target}}',
+  },
 };
 
 export default Object.freeze(description);
