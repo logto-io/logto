@@ -40,6 +40,11 @@ This fork seeks to add these features.
 See [CUSTOMIZATIONS.md](./CUSTOMIZATIONS.md) and [BOOTSTRAP.md](./BOOTSTRAP.md) for details on what changes
 have been made, and how to configure them for yourself.
 
+## Container Releases
+
+New container releases will be set up and created when a new PR
+is merged to `master`.
+
 Below is the original Readme:
 
 <p align="center">
