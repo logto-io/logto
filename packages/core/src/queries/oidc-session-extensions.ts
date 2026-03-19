@@ -114,22 +114,4 @@ export class OidcSessionExtensionsQueries {
         and ${modelInstanceFields.expiresAt} > ${convertToTimestamp()}
     `);
   }
-
-  async findUserActiveSessionUidByGrantId(accountId: string, grantId: string) {
-    // A grant is expected to be associated with at most one active session authorization entry.
-    // Limit to one row for targeted cleanup without scanning all sessions.
-    return this.pool.maybeOne<{ sessionUid: string }>(sql`
-      select ${modelInstanceFields.payload} ->> 'uid' as "sessionUid"
-      from ${modelInstanceTable}
-      where ${modelInstanceFields.modelName} = ${sessionModelName}
-        and ${modelInstanceFields.payload} ->> 'accountId' = ${accountId}
-        and ${modelInstanceFields.expiresAt} > ${convertToTimestamp()}
-        and exists (
-          select 1
-          from jsonb_each(${modelInstanceFields.payload} -> 'authorizations') as authorization_entry
-          where authorization_entry.value ->> 'grantId' = ${grantId}
-        )
-      limit 1
-    `);
-  }
 }
