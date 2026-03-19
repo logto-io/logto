@@ -63,10 +63,12 @@ function parsePbkdf2Salt(salt: string): crypto.BinaryLike {
  * Vendored from https://github.com/xeewi/firebase-scrypt
  *
  * Steps:
- * 1. Decode user salt (hex) and project salt separator (hex), concatenate them
+ * 1. Decode user salt and project salt separator, concatenate them
  * 2. Run scrypt KDF with the password and combined salt
- * 3. AES-256-CTR encrypt the signer key (hex) using the derived key (zero IV)
- * 4. Return the ciphertext as hex
+ * 3. AES-256-CTR encrypt the signer key using the derived key (zero IV)
+ * 4. Return the ciphertext as base64
+ *
+ * All inputs (salt, signerKey, saltSeparator) and output are base64-encoded.
  */
 async function firebaseScryptHash(
   password: string,
@@ -78,11 +80,13 @@ async function firebaseScryptHash(
     memCost: string;
   }
 ): Promise<string> {
-  const bSalt = Buffer.concat([
-    Buffer.from(config.salt, 'hex'),
-    Buffer.from(config.saltSeparator, 'hex'),
-  ]);
-  const signerKey = Buffer.from(config.signerKey, 'hex');
+  // Firebase CLI exports use standard base64 (+, /), but the Admin SDK's listUsers
+  // uses URL-safe base64 (-, _). Normalize to standard base64 to handle both.
+  const base64Decode = (encoded: string) =>
+    Buffer.from(encoded.replaceAll('-', '+').replaceAll('_', '/'), 'base64');
+
+  const bSalt = Buffer.concat([base64Decode(config.salt), base64Decode(config.saltSeparator)]);
+  const signerKey = base64Decode(config.signerKey);
 
   const derivedKey = await new Promise<Uint8Array>((resolve, reject) => {
     crypto.scrypt(
@@ -104,7 +108,7 @@ async function firebaseScryptHash(
   // so the same (key, IV) pair is never reused.
   const iv = Buffer.alloc(16, 0);
   const cipher = crypto.createCipheriv('aes-256-ctr', derivedKey, iv);
-  return Buffer.concat([cipher.update(signerKey), cipher.final()]).toString('hex');
+  return Buffer.concat([cipher.update(signerKey), cipher.final()]).toString('base64');
 }
 
 function isLegacyPassword(value: string): [string, string[], string] | undefined {
@@ -170,7 +174,7 @@ async function executeFirebaseScryptHash(args: string[], inputPassword: string):
 
 /**
  * Execute hash calculation based on the parsed expression
- * @returns The calculated hash as a hexadecimal string
+ * @returns The calculated hash as a hexadecimal string (or base64 for firebase-scrypt)
  */
 export const executeLegacyHash = async (
   parsedExpression: LegacyPassword,

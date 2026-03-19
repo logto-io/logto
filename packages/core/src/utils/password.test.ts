@@ -156,19 +156,37 @@ describe('executeLegacyHash', () => {
   const firebaseScryptExpression = {
     algorithm: 'firebase-scrypt',
     args: [
-      '0ddab8a754b1d606f167', // User salt (hex)
-      '8eeaa0f895862897f8bce738725816175bde288c9e0cfa9adcc1eae79c91190a33f285f4c2d5ef54ab6cc75fe36f379403b3bf27e219a7f40561b3942c2e1211', // Signer key (hex)
-      '07', // Salt separator (hex)
+      '42xEC+ixf3L2lw==', // User salt (base64)
+      'jxspr8Ki0RYycVU8zykbdLGjFQ3McFUH0uiiTvC8pVMXAn210wjLNmdZJzxUECKbm0QsEmYUSDzZvpjeJ9WmXA==', // Signer key (base64)
+      'Bw==', // Salt separator (base64, 1 byte)
       '8', // Rounds
       '14', // Mem_cost
       '@',
     ],
     encryptedPassword:
-      '1dab31ebaa9b8d57d8a678cc45f9ba2bb4a855dfb6c357684e83a46bfd3a6ddededcf12757d290ec3261059bcb3d767b88a733f086ca7ba1ee07423ffad6a797',
+      'lSrfV15cpx95/sZS2W9c9Kp6i/LVgQNDNC/qzrCnh1SAyZvqmZqAjTdn3aoItz+VHjoZilo78198JAdRuid5lQ==',
   };
 
+  it('should handle long firebase-scrypt parameters', () => {
+    // Longest possible values:
+    const scryptMaxLengthExpression = {
+      algorithm: 'firebase-scrypt', // 15 chars
+      args: [
+        '0'.repeat(24), // User salt 16 bytes => 24 in base64
+        '0'.repeat(88), // Signer key 64 bytes => 88 in base64
+        '0'.repeat(4), // Salt separator 1 byte => 4 in base64
+        '0'.repeat(6), // Rounds => 6 chars (0 - 120000)
+        '0'.repeat(2), // Mem_cost => 2 chars (1 - 14)
+        '@',
+      ],
+      encryptedPassword: '0'.repeat(88), // 64 bytes => 88 in base64
+    };
+    const result = parseLegacyPassword(JSON.stringify(Object.values(scryptMaxLengthExpression))); // Total 255 chars!
+    expect(result).toEqual(scryptMaxLengthExpression);
+  });
+
   it('should correctly hash with firebase-scrypt', async () => {
-    const result = await executeLegacyHash(firebaseScryptExpression, 'emaeTiegh7ahn2ai');
+    const result = await executeLegacyHash(firebaseScryptExpression, 'user1password');
     expect(result).toBe(firebaseScryptExpression.encryptedPassword);
   });
 
