@@ -174,7 +174,7 @@ describe('.well-known api', () => {
       expect(signInExperience.customProfileFields.length).toBeGreaterThan(0);
       expect(signInExperience.customProfileFields).toContainEqual(fullnameField);
 
-      void deleteCustomProfileFieldByName(fullnameData.name);
+      await deleteCustomProfileFieldByName(fullnameData.name);
     });
   });
 
