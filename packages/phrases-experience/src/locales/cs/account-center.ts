@@ -1,7 +1,4 @@
 const account_center = {
-  header: {
-    title: 'Centrum účtu',
-  },
   home: {
     title: 'Stránka nenalezena',
     description: 'Tato stránka není k dispozici.',
@@ -54,7 +51,7 @@ const account_center = {
   username: {
     title: 'Nastavit uživatelské jméno',
     description: 'Uživatelské jméno může obsahovat pouze písmena, čísla a podtržítka.',
-    success: 'Uživatelské jméno bylo úspěšně aktualizováno.',
+    success: 'Uživatelské jméno bylo úspěšně změněno.',
   },
   password: {
     title: 'Nastavit heslo',
@@ -76,6 +73,8 @@ const account_center = {
     send: 'Odeslat ověřovací kód',
     description: 'Ověřovací kód byl odeslán na tvůj e-mail {{email}}. Zadej kód pro pokračování.',
     resend: 'Stále jsi ho neobdržel/a? <a>Odeslat kód znovu</a>',
+    not_received: 'Stále jsi ho neobdržel/a?',
+    resend_action: 'Odeslat ověřovací kód znovu',
     resend_countdown: 'Stále jsi ho neobdržel/a? Odeslat znovu za {{seconds}}s.',
     error_send_failed: 'Odeslání ověřovacího kódu se nezdařilo. Zkus to prosím později.',
     error_verify_failed: 'Ověření se nezdařilo. Prosím, zadej kód znovu.',
@@ -106,9 +105,9 @@ const account_center = {
     backup_code_requires_other_mfa:
       'Záložní kódy vyžadují nejprve nastavení jiné metody dvoufázového ověření.',
     passkey_not_enabled:
-      'Ověřovací klíč není povolen. Kontaktuj prosím administrátora pro jeho aktivaci.',
+      'Přístupový klíč není povolen. Kontaktuj prosím administrátora pro jeho aktivaci.',
     passkey_already_registered:
-      'Tento ověřovací klíč je již zaregistrován na tvém účtu. Použij prosím jiný ověřovací klíč.',
+      'Tento přístupový klíč je již zaregistrován na tvém účtu. Použij prosím jiný přístupový klíč.',
   },
   update_success: {
     default: {
@@ -132,24 +131,16 @@ const account_center = {
       description: 'Heslo tvého účtu bylo úspěšně změněno.',
     },
     totp: {
-      title: 'Autentizační aplikace přidána',
+      title: 'Autentizační aplikace přidána!',
       description: 'Tvá autentizační aplikace byla úspěšně propojena s účtem.',
     },
     backup_code: {
       title: 'Záložní kódy vygenerovány!',
-      description: 'Tvůj záložní kód byl uložen. Uchovej jej na bezpečném místě.',
-    },
-    backup_code_deleted: {
-      title: 'Záložní kódy odstraněny!',
-      description: 'Záložní kódy byly odstraněny z tvého účtu.',
+      description: 'Tvoje záložní kódy byly uloženy. Uchovej je na bezpečném místě.',
     },
     passkey: {
-      title: 'Ověřovací klíč přidán!',
-      description: 'Tvůj ověřovací klíč byl úspěšně propojen s účtem.',
-    },
-    passkey_deleted: {
-      title: 'Ověřovací klíč odstraněn!',
-      description: 'Tvůj ověřovací klíč byl odstraněn z účtu.',
+      title: 'Přístupový klíč přidán!',
+      description: 'Tvůj přístupový klíč byl úspěšně propojen s účtem.',
     },
     social: {
       title: 'Sociální účet propojen!',
@@ -163,28 +154,25 @@ const account_center = {
     copy_hint: 'Nezapomeň je zkopírovat a uložit na bezpečné místo.',
     generate_new_title: 'Vygenerovat nové záložní kódy',
     generate_new: 'Vygenerovat nové záložní kódy',
-    delete_confirmation_title: 'Odstranit záložní kódy',
-    delete_confirmation_description:
-      'Pokud tyto záložní kódy odstraníš, nebudeš je moci používat pro ověření.',
   },
   passkey: {
-    title: 'Ověřovací klíče',
+    title: 'Přístupové klíče',
     added: 'Přidáno: {{date}}',
     last_used: 'Naposledy použito: {{date}}',
     never_used: 'Nikdy',
-    unnamed: 'Nepojmenovaný ověřovací klíč',
-    renamed: 'Ověřovací klíč byl úspěšně přejmenován.',
-    deleted: 'Ověřovací klíč byl úspěšně odstraněn.',
-    add_another_title: 'Přidat další ověřovací klíč',
+    unnamed: 'Nepojmenovaný přístupový klíč',
+    renamed: 'Přístupový klíč byl úspěšně přejmenován.',
+    deleted: 'Přístupový klíč byl úspěšně odstraněn.',
+    add_another_title: 'Přidat další přístupový klíč',
     add_another_description:
-      'Zaregistruj svůj ověřovací klíč pomocí biometrie zařízení, bezpečnostních klíčů (např. YubiKey) nebo jiných dostupných metod.',
-    add_passkey: 'Přidat ověřovací klíč',
-    delete_confirmation_title: 'Odstranit ověřovací klíč',
+      'Zaregistruj svůj přístupový klíč pomocí biometrie zařízení, bezpečnostních klíčů (např. YubiKey) nebo jiných dostupných metod.',
+    add_passkey: 'Přidat přístupový klíč',
+    delete_confirmation_title: 'Odstranit přístupový klíč',
     delete_confirmation_description:
-      'Opravdu chceš odstranit "{{name}}"? Tento ověřovací klíč již nebude možné použít pro přihlášení.',
-    rename_passkey: 'Přejmenovat ověřovací klíč',
-    rename_description: 'Zadej nové jméno pro tento ověřovací klíč.',
-    name_this_passkey: 'Pojmenovat tento ověřovací klíč',
+      'Pokud tento přístupový klíč odstraníš, nebude možné ho již použít pro ověření.',
+    rename_passkey: 'Přejmenovat přístupový klíč',
+    rename_description: 'Zadej nové jméno pro tento přístupový klíč.',
+    name_this_passkey: 'Pojmenovat tento přístupový klíč',
     name_passkey_description:
       'Úspěšně jsi ověřil/a toto zařízení pro dvoufázové ověření. Přizpůsob název, abys mohl/a rozpoznat více klíčů.',
     name_input_label: 'Název',
