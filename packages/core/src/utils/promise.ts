@@ -2,6 +2,10 @@ type FailedNamedTask<TName extends string> = {
   name: TName;
   cause: unknown;
 };
+type NamedTaskSummary<TName extends string, TCause = unknown> = {
+  succeededNames: TName[];
+  failedTasks: Array<{ name: TName; cause: TCause }>;
+};
 
 /**
  * Runs a list of async tasks and returns grouped results by task name.
@@ -13,15 +17,30 @@ type FailedNamedTask<TName extends string> = {
  * - Result keeps the original input order for both succeeded and failed groups.
  * - Failures are captured as `{ name, cause }` so callers can shape domain errors.
  */
-export const runNamedTasksWithSummary = async <TName extends string, TItem>({
+export function runNamedTasksWithSummary<TName extends string, TItem>(args: {
+  items: TItem[];
+  getName: (item: TItem) => TName;
+  runner: (item: TItem) => Promise<void>;
+}): Promise<NamedTaskSummary<TName>>;
+
+export function runNamedTasksWithSummary<TName extends string, TItem, TCause>(args: {
+  items: TItem[];
+  getName: (item: TItem) => TName;
+  runner: (item: TItem) => Promise<void>;
+  normalizeCause: (cause: unknown) => TCause;
+}): Promise<NamedTaskSummary<TName, TCause>>;
+
+export async function runNamedTasksWithSummary<TName extends string, TItem, TCause>({
   items,
   getName,
   runner,
+  normalizeCause,
 }: {
   items: TItem[];
   getName: (item: TItem) => TName;
   runner: (item: TItem) => Promise<void>;
-}) => {
+  normalizeCause?: (cause: unknown) => TCause;
+}): Promise<NamedTaskSummary<TName>> {
   const settledResults = await Promise.all(
     items.map(async (item) => {
       const name = getName(item);
@@ -29,15 +48,12 @@ export const runNamedTasksWithSummary = async <TName extends string, TItem>({
         await runner(item);
         return { name };
       } catch (error: unknown) {
-        return { name, cause: error };
+        return { name, cause: normalizeCause ? normalizeCause(error) : error };
       }
     })
   );
 
-  return settledResults.reduce<{
-    succeededNames: TName[];
-    failedTasks: Array<FailedNamedTask<TName>>;
-  }>(
+  return settledResults.reduce<NamedTaskSummary<TName>>(
     (result, current) => {
       if ('cause' in current) {
         return {
@@ -53,4 +69,4 @@ export const runNamedTasksWithSummary = async <TName extends string, TItem>({
     },
     { succeededNames: [], failedTasks: [] }
   );
-};
+}
