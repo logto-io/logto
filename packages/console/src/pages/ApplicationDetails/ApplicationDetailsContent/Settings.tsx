@@ -8,7 +8,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
-import { applicationDataStructure, thirdPartyApp } from '@/consts';
+import { applicationDataStructure, deviceFlow, thirdPartyApp } from '@/consts';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
@@ -23,6 +23,7 @@ import {
 } from '@/ds-components/MultiTextInput/utils';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { isJsonObject } from '@/utils/json';
 
 import ProtectedAppSettings from './ProtectedAppSettings';
@@ -89,6 +90,7 @@ function Settings({ data }: Props) {
     formState: { errors },
   } = useFormContext<ApplicationForm>();
   const { tenantEndpoint } = useContext(AppDataContext);
+  const { getDocumentationUrl } = useDocumentationUrl();
 
   const { type: applicationType, isThirdParty, customClientMetadata } = data;
 
@@ -129,8 +131,7 @@ function Settings({ data }: Props) {
           <span>
             <Trans
               components={{
-                // TODO: Replace with actual documentation link when available
-                a: <TextLink href="" />,
+                a: <TextLink targetBlank="noopener" href={getDocumentationUrl(deviceFlow)} />,
               }}
             >
               {t('application_details.device_flow_notification')}

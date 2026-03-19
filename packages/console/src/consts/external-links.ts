@@ -44,6 +44,7 @@ export const thirdPartyApp =
 export const protectedApp = '/integrate-logto/protected-app';
 export const protectedAppLocalDev = '/integrate-logto/protected-app#local-development';
 export const protectOriginServer = '/integrate-logto/protected-app#protect-your-origin-server';
+export const deviceFlow = '/quick-starts/device-flow';
 export const backchannelLogout = '/end-user-flows/sign-out#federated-sign-out-back-channel-logout';
 export const authFlows = '/end-user-flows#authentication-flows';
 export const termsAndPrivacy = '/end-user-flows/sign-up-and-sign-in/terms-and-privacy';
