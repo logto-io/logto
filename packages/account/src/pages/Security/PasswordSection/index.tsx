@@ -3,8 +3,8 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import PasswordIcon from '@ac/assets/icons/password.svg?react';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import PasswordIcon from '@ac/assets/icons/password.svg?react';
 import { passwordRoute } from '@ac/constants/routes';
 
 import styles from './index.module.scss';

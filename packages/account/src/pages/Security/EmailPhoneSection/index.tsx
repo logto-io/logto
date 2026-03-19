@@ -3,9 +3,9 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
-import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { emailRoute, phoneRoute } from '@ac/constants/routes';
 
 import styles from './index.module.scss';
