@@ -35,6 +35,18 @@ const createMockAuthorizationSuccessContext = ({
 const createMockProvider = () => {
   const revokeByGrantId = jest.fn(async (grantId: string) => grantId);
   const destroy = jest.fn(async (grantId: string) => grantId);
+  const findByUid = jest.fn<
+    Promise<
+      | {
+          accountId?: string;
+          authorizations?: Record<string, { grantId?: string }>;
+          resetIdentifier: () => void;
+          persist: () => Promise<void>;
+        }
+      | undefined
+    >,
+    [string]
+  >();
 
   return {
     provider: {
@@ -44,10 +56,11 @@ const createMockProvider = () => {
       DeviceCode: { revokeByGrantId },
       BackchannelAuthenticationRequest: { revokeByGrantId },
       Grant: { adapter: { destroy } },
-      Session: { findByUid: jest.fn(async () => null) },
+      Session: { findByUid },
     },
     revokeByGrantId,
     destroy,
+    findByUid,
   };
 };
 
@@ -222,6 +235,60 @@ describe('createAuthorizationSuccessListener', () => {
     // @ts-expect-error Context mock is enough for unit test
     await expect(listener(context)).rejects.toThrow('Failed to revoke grant.');
 
+    expect(context.createLog).toHaveBeenCalledWith('RevokeGrants');
+    expect(context.mockAppend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        result: LogResult.Error,
+      })
+    );
+    expect(trackException).toHaveBeenCalled();
+  });
+
+  it('should append log error and throw when session cleanup fails', async () => {
+    const { provider, findByUid } = createMockProvider();
+    const findUserActiveGrantsByClientId = jest.fn(async () => [
+      {
+        id: 'grant-1',
+        payload: {
+          exp: 999_999_999,
+          iat: 10,
+          jti: 'grant-jti-1',
+          kind: 'Grant',
+          clientId: 'client-id',
+          accountId: 'user-id',
+        },
+        expiresAt: Date.now() + 1000,
+      },
+    ]);
+
+    findByUid.mockResolvedValueOnce({
+      accountId: 'user-id',
+      authorizations: { app1: { grantId: 'grant-1' } },
+      resetIdentifier: jest.fn(),
+      persist: jest.fn(async () => {
+        throw new Error('persist failed');
+      }),
+    });
+
+    const listener = createAuthorizationSuccessListener(
+      // @ts-expect-error Provider mock is enough for unit test
+      provider,
+      new MockQueries({
+        oidcModelInstances: {
+          findUserActiveGrantsByClientId,
+          findUserActiveSessionUidByGrantId: jest.fn(async () => ({ sessionUid: 'session-1' })),
+        },
+      })
+    );
+    const context = createMockAuthorizationSuccessContext({ maxAllowedGrants: 0 });
+    const trackException = jest
+      .spyOn(appInsights, 'trackException')
+      .mockImplementation(async () => {
+        await Promise.resolve();
+      });
+
+    // @ts-expect-error Context mock is enough for unit test
+    await expect(listener(context)).rejects.toThrow('Failed to revoke grant.');
     expect(context.createLog).toHaveBeenCalledWith('RevokeGrants');
     expect(context.mockAppend).toHaveBeenCalledWith(
       expect.objectContaining({

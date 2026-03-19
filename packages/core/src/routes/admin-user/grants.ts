@@ -1,6 +1,8 @@
 import { getUserApplicationGrantsResponseGuard } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import { object, string, enum as zodEnum } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import { EnvSet } from '../../env-set/index.js';
@@ -54,6 +56,17 @@ export default function adminUserGrantRoutes<T extends ManagementApiRouter>(
       const { userId, grantId } = ctx.guard.params;
 
       await sessionLibrary.revokeUserGrantById(provider, userId, grantId);
+      await trySafe(
+        async () => {
+          await sessionLibrary.removeUserSessionAuthorizationByGrantId(provider, userId, grantId);
+        },
+        (error) => {
+          throw new RequestError(
+            { code: 'oidc.failed_to_cleanup_session_authorization', status: 500 },
+            { cause: error }
+          );
+        }
+      );
 
       ctx.status = 204;
 
