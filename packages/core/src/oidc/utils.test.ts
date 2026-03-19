@@ -158,22 +158,22 @@ describe('validateMetadata', () => {
     });
   });
 
-  describe('maxAllowedSessions', () => {
+  describe('maxAllowedGrants', () => {
     it('should not throw when it is a positive integer', () => {
       expect(() => {
-        validateCustomClientMetadata('maxAllowedSessions', 3);
+        validateCustomClientMetadata('maxAllowedGrants', 3);
       }).not.toThrow();
     });
 
     it('should throw when it is not an integer', () => {
       expect(() => {
-        validateCustomClientMetadata('maxAllowedSessions', 3.2);
+        validateCustomClientMetadata('maxAllowedGrants', 3.2);
       }).toThrow();
     });
 
     it('should throw when it is not a positive integer', () => {
       expect(() => {
-        validateCustomClientMetadata('maxAllowedSessions', 0);
+        validateCustomClientMetadata('maxAllowedGrants', 0);
       }).toThrow();
     });
   });

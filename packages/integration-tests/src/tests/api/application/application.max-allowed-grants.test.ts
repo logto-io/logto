@@ -8,40 +8,40 @@ import {
 } from '#src/api/index.js';
 import { devFeatureTest, generateTestName } from '#src/utils.js';
 
-devFeatureTest.describe('application maxAllowedSessions', () => {
-  devFeatureTest.it('should create application with maxAllowedSessions and get it', async () => {
+devFeatureTest.describe('application maxAllowedGrants', () => {
+  devFeatureTest.it('should create application with maxAllowedGrants and get it', async () => {
     const application = await createApplication(generateTestName(), ApplicationType.Traditional, {
-      customClientMetadata: { maxAllowedSessions: 2 },
+      customClientMetadata: { maxAllowedGrants: 2 },
     });
 
     try {
-      expect(application.customClientMetadata.maxAllowedSessions).toBe(2);
+      expect(application.customClientMetadata.maxAllowedGrants).toBe(2);
 
       const fetched = await getApplication(application.id);
-      expect(fetched.customClientMetadata.maxAllowedSessions).toBe(2);
+      expect(fetched.customClientMetadata.maxAllowedGrants).toBe(2);
     } finally {
       await deleteApplication(application.id);
     }
   });
 
-  devFeatureTest.it('should update maxAllowedSessions and get updated value', async () => {
+  devFeatureTest.it('should update maxAllowedGrants and get updated value', async () => {
     const application = await createApplication(generateTestName(), ApplicationType.Traditional);
 
     try {
       await updateApplication(application.id, {
-        customClientMetadata: { maxAllowedSessions: 5 },
+        customClientMetadata: { maxAllowedGrants: 5 },
       });
 
       const fetched = await getApplication(application.id);
-      expect(fetched.customClientMetadata.maxAllowedSessions).toBe(5);
+      expect(fetched.customClientMetadata.maxAllowedGrants).toBe(5);
     } finally {
       await deleteApplication(application.id);
     }
   });
 
-  devFeatureTest.it('should remove maxAllowedSessions after update without the field', async () => {
+  devFeatureTest.it('should remove maxAllowedGrants after update without the field', async () => {
     const application = await createApplication(generateTestName(), ApplicationType.Traditional, {
-      customClientMetadata: { maxAllowedSessions: 4 },
+      customClientMetadata: { maxAllowedGrants: 4 },
     });
 
     try {
@@ -50,7 +50,7 @@ devFeatureTest.describe('application maxAllowedSessions', () => {
       });
 
       const fetched = await getApplication(application.id);
-      expect(fetched.customClientMetadata.maxAllowedSessions).toBeUndefined();
+      expect(fetched.customClientMetadata.maxAllowedGrants).toBeUndefined();
     } finally {
       await deleteApplication(application.id);
     }

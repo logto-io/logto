@@ -101,7 +101,7 @@ export enum CustomClientMetadataKey {
    *
    * When exceeded, old sessions should be revoked according to server policy.
    */
-  MaxAllowedSessions = 'maxAllowedSessions',
+  MaxAllowedGrants = 'maxAllowedGrants',
 }
 
 export const customClientMetadataGuard = z.object({
@@ -114,7 +114,7 @@ export const customClientMetadataGuard = z.object({
   [CustomClientMetadataKey.RotateRefreshToken]: z.boolean().optional(),
   [CustomClientMetadataKey.AllowTokenExchange]: z.boolean().optional(),
   [CustomClientMetadataKey.IsDeviceFlow]: z.boolean().optional(),
-  [CustomClientMetadataKey.MaxAllowedSessions]: z.number().int().positive().optional(),
+  [CustomClientMetadataKey.MaxAllowedGrants]: z.number().int().positive().optional(),
 } satisfies Record<CustomClientMetadataKey, z.ZodType>);
 
 /**
