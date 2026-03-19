@@ -12,7 +12,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils';
 import LearnMore from '@/components/LearnMore';
 import { pricingLink, defaultPageSize, integrateLogto, thirdPartyApp } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -210,7 +210,6 @@ function CreateForm({
       );
     }
 
-    // DEV: Device flow create form description
     if (isDefaultCreateDeviceFlow) {
       return <DynamicT forKey="applications.create_device_flow_description" />;
     }
@@ -340,9 +339,7 @@ function CreateForm({
                 placeholder={t('applications.application_description_placeholder')}
               />
             </FormField>
-            {/* DEV: Device flow authorization flow selector */}
-            {isDevFeaturesEnabled &&
-              applicationType === ApplicationType.Native &&
+            {applicationType === ApplicationType.Native &&
               (!defaultCreateFrameworkName || isDefaultCreateThirdParty) && (
                 <AuthorizationFlowSelector />
               )}

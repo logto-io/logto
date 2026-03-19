@@ -2,7 +2,6 @@ import { type Application } from '@logto/schemas';
 import { useTranslation } from 'react-i18next';
 
 import ApplicationIcon from '@/components/ApplicationIcon';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import ItemPreview from '.';
@@ -23,7 +22,7 @@ function ApplicationPreview({
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const isDeviceFlow = isDevFeaturesEnabled && customClientMetadata.isDeviceFlow;
+  const { isDeviceFlow } = customClientMetadata;
   const subtitle = [
     t(`${applicationTypeI18nKey[type]}.title`),
     isDeviceFlow && t('application_details.device_flow_tag'),

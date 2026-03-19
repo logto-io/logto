@@ -10,7 +10,6 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
-import { isDevFeaturesEnabled } from './constants/env';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
@@ -179,15 +178,11 @@ const App = () => {
                       <Route path="consent" element={<Consent />} />
 
                       {/* Device flow */}
-                      {isDevFeaturesEnabled && (
-                        <>
-                          <Route path={experience.routes.device} element={<Device />} />
-                          <Route
-                            path={`${experience.routes.device}/success`}
-                            element={<DeviceSuccess />}
-                          />
-                        </>
-                      )}
+                      <Route path={experience.routes.device} element={<Device />} />
+                      <Route
+                        path={`${experience.routes.device}/success`}
+                        element={<DeviceSuccess />}
+                      />
 
                       {/*
                        * Identifier sign-in (first screen)

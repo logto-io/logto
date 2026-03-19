@@ -1,8 +1,6 @@
 import { deviceFlowXsrfCookieKey, experience, logtoCookieKey } from '@logto/schemas';
 import type { KoaContextWithOIDC, errors } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
-
 import {
   appendSharedExperienceSearchParams,
   buildSharedExperienceCookie,
@@ -134,7 +132,7 @@ export const buildDeviceFlowSuccessPageUrl = (): string => `/${experience.routes
  * of Experience without inheriting login-only prompt parameters.
  */
 export const deviceFlowConfig = {
-  enabled: EnvSet.values.isDevFeaturesEnabled,
+  enabled: true,
   userCodeInputSource: async (
     ctx: KoaContextWithOIDC,
     _form: string,
