@@ -1,14 +1,21 @@
 import { appInsights } from '@logto/app-insights/node';
-import { userApplicationGrantPayloadGuard } from '@logto/schemas';
+import { LogResult, userApplicationGrantPayloadGuard } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import type { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
 import { createSessionLibrary } from '#src/libraries/session.js';
+import { type WithAppSecretContext } from '#src/middleware/koa-app-secret-transpilation.js';
+import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
+import { stringifyError } from '#src/utils/format.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
+import { extractInteractionContext } from './utils.js';
+
 const isDefined = <T>(value: T | undefined): value is T => value !== undefined;
+const toError = (error: unknown): Error =>
+  error instanceof Error ? error : new Error(String(error));
 
 const getGrantIdsToRevokeForMaxAllowedGrants = ({
   activeGrants,
@@ -46,7 +53,7 @@ const getGrantIdsToRevokeForMaxAllowedGrants = ({
 };
 
 const enforceMaxAllowedGrantsRevocation = async (
-  ctx: KoaContextWithOIDC,
+  ctx: KoaContextWithOIDC & WithLogContext & WithAppSecretContext,
   provider: Provider,
   queries: Queries
 ) => {
@@ -58,27 +65,37 @@ const enforceMaxAllowedGrantsRevocation = async (
     return;
   }
 
+  const sessionLibrary = createSessionLibrary(queries);
+  const activeGrants = await queries.oidcModelInstances.findUserActiveGrantsByClientId(
+    userId,
+    clientId
+  );
+  const grantIdsToRevoke = getGrantIdsToRevokeForMaxAllowedGrants({
+    activeGrants,
+    maxAllowedGrants,
+  });
+
+  if (grantIdsToRevoke.length === 0) {
+    return;
+  }
+
+  const revokeGrantsLog = ctx.createLog('RevokeGrants');
+  revokeGrantsLog.append({
+    ...extractInteractionContext(ctx),
+    revokeGrantIds: grantIdsToRevoke,
+    reason: 'maxAllowGrants reached',
+  });
+
   await trySafe(
     async () => {
-      const sessionLibrary = createSessionLibrary(queries);
-      const activeGrants = await queries.oidcModelInstances.findUserActiveGrantsByClientId(
-        userId,
-        clientId
-      );
-      const grantIdsToRevoke = getGrantIdsToRevokeForMaxAllowedGrants({
-        activeGrants,
-        maxAllowedGrants,
-      });
-
-      if (grantIdsToRevoke.length === 0) {
-        return;
-      }
-
       await sessionLibrary.revokeUserGrantsByIds(provider, userId, grantIdsToRevoke);
-
-      // TODO: Trigger a webhook event for max-allowed-grants evictions.
     },
     (error) => {
+      revokeGrantsLog.append({
+        result: LogResult.Error,
+        error: stringifyError(toError(error)),
+      });
+
       getConsoleLogFromContext(ctx).error(
         'authorization.success max-allowed-grants failed:',
         error
@@ -94,12 +111,16 @@ const enforceMaxAllowedGrantsRevocation = async (
           ...(userId ? { userId } : {}),
         },
       });
+
+      throw error;
     }
   );
+
+  // TODO: Trigger a webhook event for max-allowed-grants evictions.
 };
 
 export const createAuthorizationSuccessListener = (provider: Provider, queries: Queries) => {
-  return async (ctx: KoaContextWithOIDC) => {
+  return async (ctx: KoaContextWithOIDC & WithLogContext & WithAppSecretContext) => {
     await enforceMaxAllowedGrantsRevocation(ctx, provider, queries);
   };
 };

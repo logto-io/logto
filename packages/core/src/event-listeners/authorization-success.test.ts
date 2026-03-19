@@ -1,5 +1,7 @@
 import { appInsights } from '@logto/app-insights/node';
+import { LogResult } from '@logto/schemas';
 
+import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -17,7 +19,14 @@ const createMockAuthorizationSuccessContext = ({
   maxAllowedGrants?: number;
 }) => ({
   ...createContextWithRouteParameters(),
+  ...createMockLogContext(),
   oidc: {
+    entities: {
+      Account: { accountId: userId },
+      Client: { clientId },
+      Session: { jti: 'session-jti' },
+      Interaction: { jti: 'interaction-jti' },
+    },
     session: { accountId: userId },
     client: { clientId, metadata: () => ({ maxAllowedGrants }) },
   },
@@ -135,19 +144,26 @@ describe('createAuthorizationSuccessListener', () => {
     expect(destroy).toHaveBeenCalledTimes(2);
     expect(destroy).toHaveBeenCalledWith('grant-1');
     expect(destroy).toHaveBeenCalledWith('grant-2');
+    expect(context.createLog).toHaveBeenCalledTimes(1);
+    expect(context.createLog).toHaveBeenCalledWith('RevokeGrants');
+    expect(context.mockAppend).toHaveBeenCalledWith({
+      applicationId: 'client-id',
+      applicationSecret: undefined,
+      userId: 'user-id',
+      sessionId: 'session-jti',
+      interactionId: 'interaction-jti',
+      revokeGrantIds: ['grant-1', 'grant-2'],
+      reason: 'maxAllowGrants reached',
+      params: undefined,
+    });
   });
 
-  it('should track exception when grant query fails', async () => {
+  it('should throw when grant query fails', async () => {
     const { provider, revokeByGrantId, destroy } = createMockProvider();
     const error = new Error('query failed');
     const findUserActiveGrantsByClientId = jest.fn(async () => {
       throw error;
     });
-    const trackException = jest
-      .spyOn(appInsights, 'trackException')
-      .mockImplementation(async () => {
-        await Promise.resolve();
-      });
 
     const listener = createAuthorizationSuccessListener(
       // @ts-expect-error Provider mock is enough for unit test
@@ -162,10 +178,56 @@ describe('createAuthorizationSuccessListener', () => {
 
     const context = createMockAuthorizationSuccessContext({ maxAllowedGrants: 1 });
     // @ts-expect-error Context mock is enough for unit test
-    await listener(context);
+    await expect(listener(context)).rejects.toThrow('query failed');
 
     expect(revokeByGrantId).not.toHaveBeenCalled();
     expect(destroy).not.toHaveBeenCalled();
+  });
+
+  it('should append log error and throw when revoke fails', async () => {
+    const { provider, revokeByGrantId } = createMockProvider();
+    revokeByGrantId.mockRejectedValue(new Error('revoke failed'));
+    const findUserActiveGrantsByClientId = jest.fn(async () => [
+      {
+        id: 'grant-1',
+        payload: {
+          exp: 999_999_999,
+          iat: 10,
+          jti: 'grant-jti-1',
+          kind: 'Grant',
+          clientId: 'client-id',
+          accountId: 'user-id',
+        },
+        expiresAt: Date.now() + 1000,
+      },
+    ]);
+    const listener = createAuthorizationSuccessListener(
+      // @ts-expect-error Provider mock is enough for unit test
+      provider,
+      new MockQueries({
+        oidcModelInstances: {
+          findUserActiveGrantsByClientId,
+          findUserActiveSessionUidByGrantId: jest.fn(async () => null),
+        },
+      })
+    );
+
+    const context = createMockAuthorizationSuccessContext({ maxAllowedGrants: 0 });
+    const trackException = jest
+      .spyOn(appInsights, 'trackException')
+      .mockImplementation(async () => {
+        await Promise.resolve();
+      });
+
+    // @ts-expect-error Context mock is enough for unit test
+    await expect(listener(context)).rejects.toThrow('Failed to revoke grant.');
+
+    expect(context.createLog).toHaveBeenCalledWith('RevokeGrants');
+    expect(context.mockAppend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        result: LogResult.Error,
+      })
+    );
     expect(trackException).toHaveBeenCalled();
   });
 });
