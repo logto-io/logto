@@ -40,6 +40,8 @@ This fork seeks to add these features.
 See [CUSTOMIZATIONS.md](./CUSTOMIZATIONS.md) and [BOOTSTRAP.md](./BOOTSTRAP.md) for details on what changes
 have been made, and how to configure them for yourself.
 
+Below is the original Readme:
+
 <p align="center">
   <a href="https://logto.io/?utm_source=github&utm_medium=readme" target="_blank" align="center" alt="Go to Logto website">
     <picture>

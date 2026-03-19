@@ -11,96 +11,36 @@ concurrency:
 
 jobs:
   dockerize:
-    if: startsWith(github.ref, 'refs/tags/')
     environment: release
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: |
-            ghcr.io/logto-io/logto
-            svhd/logto
-          # https://github.com/docker/metadata-action#typesemver
+            ghcr.io/sv-oss/logto-bootstrappable
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            # Adds SHA and Edge tags to the image
+            type=sha
             type=edge
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
-          username: silverhand-bot
-          password: ${{ secrets.BOT_PAT }}
-
-      - name: Setup Depot
-        uses: depot/setup-action@v1
-
-      - name: Build and push
-        uses: depot/build-push-action@v1
-        with:
-          platforms: linux/amd64, linux/arm64
-          project: g902cp6dvv
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-  # Build and push the edge image on every master push
-  # Use official docker workflows since we only need to build amd64 images.
-  dockerize-edge:
-    if: ${{ !startsWith(github.ref, 'refs/tags/')}}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            ghcr.io/logto-io/logto
-            svhd/logto
-          tags: |
-            type=edge
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: |
-            ghcr.io
-          username: silverhand-bot
-          password: ${{ secrets.BOT_PAT }}
-
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -113,70 +53,3 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  # Publish packages and create git tags if needed
-  publish-and-tag:
-    runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTOMATION_TOKEN }}
-
-    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Set Git operations with the bot PAT since we have tag protection rule
-          token: ${{ secrets.BOT_PAT }}
-          fetch-depth: 0
-
-      - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v5
-        with:
-          pnpm-version: 10
-          node-version: ^22.14.0
-
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.BOT_GPG_KEY }}
-          passphrase: ${{ secrets.BOT_GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
-          git_tag_gpgsign: true
-
-      - name: Configure Git user
-        run: |
-          git config --global user.email bot@silverhand.io
-          git config --global user.name silverhand-bot
-
-      - name: Publish
-        run: node .scripts/publish.js
-
-  create-github-release:
-    environment: release
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v5
-        with:
-          pnpm-version: 10
-          node-version: ^22.14.0
-
-      - name: Build
-        run: pnpm -r build
-
-      - name: Package
-        run: ./.scripts/package.sh
-
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          token: ${{ secrets.BOT_PAT }}
-          body: ""
-          files: /tmp/logto.tar.gz
-          append_body: true
