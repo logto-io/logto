@@ -83,7 +83,7 @@ const enforceMaxAllowedGrantsRevocation = async (
   revokeGrantsLog.append({
     ...extractInteractionContext(ctx),
     revokeGrantIds: grantIdsToRevoke,
-    reason: 'maxAllowGrants reached',
+    reason: 'maxAllowedGrants limit reached',
   });
 
   await trySafe(

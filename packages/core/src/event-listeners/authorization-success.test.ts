@@ -153,7 +153,7 @@ describe('createAuthorizationSuccessListener', () => {
       sessionId: 'session-jti',
       interactionId: 'interaction-jti',
       revokeGrantIds: ['grant-1', 'grant-2'],
-      reason: 'maxAllowGrants reached',
+      reason: 'maxAllowedGrants limit reached',
       params: undefined,
     });
   });
