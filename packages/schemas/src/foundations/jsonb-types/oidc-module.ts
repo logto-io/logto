@@ -157,7 +157,7 @@ export const oidcSessionInstancePayloadGuard = z
     /**
      * A map of client_id to session authorization details. @see OidcSessionAuthorizationDetails
      */
-    authorizations: z.record(z.string(), oidcSessionAuthorizationDetailsGuard),
+    authorizations: z.record(z.string(), oidcSessionAuthorizationDetailsGuard).optional(),
   })
   .catchall(z.unknown());
 
