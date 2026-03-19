@@ -1,7 +1,5 @@
-type FailedNamedTask<TName extends string> = {
-  name: TName;
-  cause: unknown;
-};
+import pMap from 'p-map';
+
 type NamedTaskSummary<TName extends string, TCause = unknown> = {
   succeededNames: TName[];
   failedTasks: Array<{ name: TName; cause: TCause }>;
@@ -16,11 +14,13 @@ type NamedTaskSummary<TName extends string, TCause = unknown> = {
  * - Every task is attempted.
  * - Result keeps the original input order for both succeeded and failed groups.
  * - Failures are captured as `{ name, cause }` so callers can shape domain errors.
+ * - Supports optional concurrency limits via `concurrency`.
  */
 export function runNamedTasksWithSummary<TName extends string, TItem>(args: {
   items: TItem[];
   getName: (item: TItem) => TName;
   runner: (item: TItem) => Promise<void>;
+  concurrency?: number;
 }): Promise<NamedTaskSummary<TName>>;
 
 export function runNamedTasksWithSummary<TName extends string, TItem, TCause>(args: {
@@ -28,6 +28,7 @@ export function runNamedTasksWithSummary<TName extends string, TItem, TCause>(ar
   getName: (item: TItem) => TName;
   runner: (item: TItem) => Promise<void>;
   normalizeCause: (cause: unknown) => TCause;
+  concurrency?: number;
 }): Promise<NamedTaskSummary<TName, TCause>>;
 
 export async function runNamedTasksWithSummary<TName extends string, TItem, TCause>({
@@ -35,14 +36,17 @@ export async function runNamedTasksWithSummary<TName extends string, TItem, TCau
   getName,
   runner,
   normalizeCause,
+  concurrency,
 }: {
   items: TItem[];
   getName: (item: TItem) => TName;
   runner: (item: TItem) => Promise<void>;
   normalizeCause?: (cause: unknown) => TCause;
+  concurrency?: number;
 }): Promise<NamedTaskSummary<TName>> {
-  const settledResults = await Promise.all(
-    items.map(async (item) => {
+  const settledResults = await pMap(
+    items,
+    async (item) => {
       const name = getName(item);
       try {
         await runner(item);
@@ -50,7 +54,8 @@ export async function runNamedTasksWithSummary<TName extends string, TItem, TCau
       } catch (error: unknown) {
         return { name, cause: normalizeCause ? normalizeCause(error) : error };
       }
-    })
+    },
+    { concurrency }
   );
 
   return settledResults.reduce<NamedTaskSummary<TName>>(

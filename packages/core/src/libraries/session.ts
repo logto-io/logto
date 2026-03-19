@@ -490,6 +490,7 @@ export const createSessionLibrary = (queries: Queries) => {
         await removeUserSessionAuthorizationByGrantIdWithErrorCatch(provider, userId, grantId);
       },
       normalizeCause: serializeErrorCause,
+      concurrency: 5, // Revoke in parallel with a reasonable concurrency limit
     });
 
     if (failedTasks.length > 0) {
