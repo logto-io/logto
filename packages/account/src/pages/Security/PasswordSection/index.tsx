@@ -7,7 +7,6 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import PasswordIcon from '@ac/assets/icons/password.svg?react';
 import { passwordRoute } from '@ac/constants/routes';
 import { getRedirectUrl, setRedirectUrl } from '@ac/utils/account-center-route';
-import { getEditFlowRedirectUrl } from '@ac/utils/edit-flow-redirect';
 import { canOpenPasswordEditFlow } from '@ac/utils/security-page';
 
 import styles from './index.module.scss';
@@ -51,7 +50,7 @@ const PasswordSection = () => {
               type="button"
               className={styles.changeButton}
               onClick={() => {
-                setRedirectUrl(getEditFlowRedirectUrl(getRedirectUrl(), window.location.href));
+                setRedirectUrl(getRedirectUrl() ?? window.location.href);
                 navigate(passwordRoute);
               }}
             >

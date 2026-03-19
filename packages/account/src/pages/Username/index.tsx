@@ -24,11 +24,11 @@ const Username = () => {
   const { loading } = useContext(LoadingContext);
   const {
     accountCenterSettings,
+    refreshUserInfo,
     verificationId,
     setVerificationId,
     setToast,
     userInfo,
-    setUserInfo,
   } = useContext(PageContext);
   const defaultUsername = userInfo?.username ?? '';
   const [pendingUsername, setPendingUsername] = useState(defaultUsername);
@@ -105,7 +105,7 @@ const Username = () => {
       return;
     }
 
-    setUserInfo((current) => ({ ...current, username }));
+    await refreshUserInfo();
     navigate(usernameSuccessRoute, { replace: true });
   };
 

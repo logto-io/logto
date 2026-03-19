@@ -9,7 +9,6 @@ import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
 import { emailRoute, phoneRoute } from '@ac/constants/routes';
 import { getRedirectUrl, setRedirectUrl } from '@ac/utils/account-center-route';
-import { getEditFlowRedirectUrl } from '@ac/utils/edit-flow-redirect';
 
 import styles from './index.module.scss';
 
@@ -49,7 +48,7 @@ const EmailPhoneSection = () => {
                   type="button"
                   className={styles.changeButton}
                   onClick={() => {
-                    setRedirectUrl(getEditFlowRedirectUrl(getRedirectUrl(), window.location.href));
+                    setRedirectUrl(getRedirectUrl() ?? window.location.href);
                     navigate(emailRoute);
                   }}
                 >
@@ -80,7 +79,7 @@ const EmailPhoneSection = () => {
                   type="button"
                   className={styles.changeButton}
                   onClick={() => {
-                    setRedirectUrl(getEditFlowRedirectUrl(getRedirectUrl(), window.location.href));
+                    setRedirectUrl(getRedirectUrl() ?? window.location.href);
                     navigate(phoneRoute);
                   }}
                 >

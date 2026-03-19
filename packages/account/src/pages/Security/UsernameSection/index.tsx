@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { usernameRoute } from '@ac/constants/routes';
 import { getRedirectUrl, setRedirectUrl } from '@ac/utils/account-center-route';
-import { getEditFlowRedirectUrl } from '@ac/utils/edit-flow-redirect';
 
 import styles from './index.module.scss';
 
@@ -35,7 +34,7 @@ const UsernameSection = () => {
               type="button"
               className={styles.changeButton}
               onClick={() => {
-                setRedirectUrl(getEditFlowRedirectUrl(getRedirectUrl(), window.location.href));
+                setRedirectUrl(getRedirectUrl() ?? window.location.href);
                 navigate(usernameRoute);
               }}
             >

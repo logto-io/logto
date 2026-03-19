@@ -39,6 +39,54 @@ const PageContextProvider = ({ children }: Props) => {
   const [isLoadingExperience, setIsLoadingExperience] = useState(true);
   const [experienceError, setExperienceError] = useState<Error>();
 
+  const loadUserInfo = useCallback(
+    async ({
+      clearOnError = false,
+      showLoading = false,
+      syncError = false,
+    }: {
+      clearOnError?: boolean;
+      showLoading?: boolean;
+      syncError?: boolean;
+    } = {}) => {
+      if (showLoading) {
+        setIsLoadingUserInfo(true);
+      }
+
+      const [error, data] = await getUserInfoRequest();
+
+      if (error || !data) {
+        if (syncError) {
+          setUserInfoError(
+            error instanceof Error ? error : new Error('Failed to load user information.')
+          );
+        }
+
+        if (clearOnError) {
+          setUserInfo(undefined);
+        }
+
+        if (showLoading) {
+          setIsLoadingUserInfo(false);
+        }
+
+        return;
+      }
+
+      setUserInfo(data);
+      setUserInfoError(undefined);
+
+      if (showLoading) {
+        setIsLoadingUserInfo(false);
+      }
+    },
+    [getUserInfoRequest]
+  );
+
+  const refreshUserInfo = useCallback(async () => {
+    await loadUserInfo();
+  }, [loadUserInfo]);
+
   useEffect(() => {
     const storedVerificationId = getStoredVerificationId();
 
@@ -69,26 +117,12 @@ const PageContextProvider = ({ children }: Props) => {
       return;
     }
 
-    const fetchUserInfo = async () => {
-      setIsLoadingUserInfo(true);
-      const [error, data] = await getUserInfoRequest();
-
-      if (error || !data) {
-        setUserInfoError(
-          error instanceof Error ? error : new Error('Failed to load user information.')
-        );
-        setUserInfo(undefined);
-        setIsLoadingUserInfo(false);
-        return;
-      }
-
-      setUserInfo(data);
-      setUserInfoError(undefined);
-      setIsLoadingUserInfo(false);
-    };
-
-    void fetchUserInfo();
-  }, [getUserInfoRequest, isAuthenticated]);
+    void loadUserInfo({
+      clearOnError: true,
+      showLoading: true,
+      syncError: true,
+    });
+  }, [isAuthenticated, loadUserInfo]);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -154,7 +188,7 @@ const PageContextProvider = ({ children }: Props) => {
       accountCenterSettings,
       setAccountCenterSettings,
       userInfo,
-      setUserInfo,
+      refreshUserInfo,
       userInfoError,
       isLoadingUserInfo,
       verificationId,
@@ -168,6 +202,7 @@ const PageContextProvider = ({ children }: Props) => {
       experienceSettings,
       isLoadingExperience,
       platform,
+      refreshUserInfo,
       theme,
       toast,
       userInfo,

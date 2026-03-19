@@ -23,11 +23,6 @@ export const hasVisibleSecuritySection = (
   );
 };
 
-export const shouldShowSecurityPage = (
-  isDevFeaturesEnabled: boolean,
-  accountCenterSettings?: SecurityPageSettings
-): boolean => isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings);
-
 export const canOpenPasswordEditFlow = (
   passwordControl: AccountCenterControlValue | undefined,
   userInfo?: Partial<UserProfileResponse>

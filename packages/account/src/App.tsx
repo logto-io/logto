@@ -16,6 +16,7 @@ import LogtoErrorBoundary from './Providers/AppBoundary/LogtoErrorBoundary';
 import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
 import GlobalLoading from './components/GlobalLoading';
+import { isDevFeaturesEnabled } from './constants/env';
 import {
   emailRoute,
   emailSuccessRoute,
@@ -54,20 +55,13 @@ import {
   getUiLocales,
   handleAccountCenterRoute,
 } from './utils/account-center-route';
-import { getIsDevFeaturesEnabled } from './utils/dev-features';
-import { shouldShowSecurityPage } from './utils/security-page';
+import { hasVisibleSecuritySection } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
 
 handleAccountCenterRoute();
 void initI18n(resolveUiLocalesLanguage(getUiLocales()));
 
 const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
-const normalizeEnv = (value: unknown) =>
-  value === null || value === undefined ? undefined : String(value);
-const isDevFeaturesEnabled = getIsDevFeaturesEnabled(
-  import.meta.env.PROD,
-  normalizeEnv(Reflect.get(import.meta.env, 'DEV_FEATURES_ENABLED'))
-);
 
 const Main = () => {
   const params = new URLSearchParams(window.location.search);
@@ -119,7 +113,8 @@ const Main = () => {
     return <GlobalLoading />;
   }
 
-  const showsSecurityPage = shouldShowSecurityPage(isDevFeaturesEnabled, accountCenterSettings);
+  const showsSecurityPage =
+    isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings);
   const indexElement = showsSecurityPage ? <Security /> : <Home />;
 
   return (
@@ -167,7 +162,7 @@ const Layout = () => {
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
   const isHomePage =
-    pathname === '/' && shouldShowSecurityPage(isDevFeaturesEnabled, accountCenterSettings);
+    pathname === '/' && isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings);
 
   return (
     <div className={styles.app}>
