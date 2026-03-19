@@ -11,6 +11,8 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 
 import initOidc from './init.js';
 
+const { jest } = import.meta;
+
 const indicator = 'https://foo.logto.io/api';
 const clientId = 'client_id';
 const accountId = 'account_id';
