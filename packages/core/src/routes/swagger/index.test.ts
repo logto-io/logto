@@ -1,5 +1,7 @@
+import fs from 'node:fs/promises';
+
 import Koa from 'koa';
-import Router from 'koa-router';
+import Router, { type IRouterParamContext } from 'koa-router';
 import { type OpenAPIV3 } from 'openapi-types';
 import request from 'supertest';
 import { number, object, string } from 'zod';
@@ -9,6 +11,7 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
 
 const { default: swaggerRoutes } = await import('./index.js');
+const { assembleSwaggerDocument } = await import('./utils/documents.js');
 const { paginationParameters } = await import('./utils/parameters.js');
 
 const createSwaggerRequest = (
@@ -272,6 +275,79 @@ describe('GET /swagger.json', () => {
           responses: {
             200: { description: 'OK', content: { 'application/json': {} } },
           } satisfies OpenAPIV3.ResponsesObject,
+        },
+      },
+    });
+  });
+
+  it('should not duplicate required fields when supplementing request body schema metadata', async () => {
+    const supplement = JSON.parse(
+      await fs.readFile(new URL('../account/index.openapi.json', import.meta.url), 'utf8')
+    ) as OpenAPIV3.Document;
+
+    const data = assembleSwaggerDocument(
+      [supplement],
+      {
+        openapi: '3.0.1',
+        info: {
+          title: 'Test',
+          version: '1.0.0',
+        },
+        paths: {
+          '/api/my-account/mfa-verifications/totp': {
+            put: {
+              operationId: 'CreateOrReplaceTotpMfaVerification',
+              responses: {
+                204: {
+                  description: 'No Content',
+                },
+              },
+              requestBody: {
+                required: true,
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        secret: {
+                          type: 'string',
+                        },
+                        code: {
+                          type: 'string',
+                        },
+                      },
+                      required: ['secret', 'code'],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      {} as IRouterParamContext
+    );
+
+    const requestSchema = data.paths['/api/my-account/mfa-verifications/totp']?.put?.requestBody;
+
+    expect(requestSchema).toMatchObject({
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            required: ['secret', 'code'],
+            properties: {
+              secret: {
+                type: 'string',
+                description: 'The TOTP secret for the authenticator app.',
+              },
+              code: {
+                type: 'string',
+                description: 'The TOTP code generated from the secret to confirm the binding.',
+              },
+            },
+          },
         },
       },
     });
