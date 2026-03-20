@@ -4,7 +4,7 @@ import ky from 'ky';
 import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
 import { logtoUrl } from '#src/constants.js';
-import { devFeatureTest, randomString } from '#src/utils.js';
+import { randomString } from '#src/utils.js';
 
 type DeviceAuthorizationResponse = {
   device_code: string;
@@ -14,7 +14,7 @@ type DeviceAuthorizationResponse = {
   expires_in: number;
 };
 
-devFeatureTest.describe('device flow shortcut', () => {
+describe('device flow shortcut', () => {
   const baseApi = ky.extend({
     prefixUrl: new URL(logtoUrl),
     redirect: 'manual',

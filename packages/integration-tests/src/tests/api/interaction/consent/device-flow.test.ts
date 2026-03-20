@@ -15,7 +15,6 @@ import { createApplication, deleteApplication } from '#src/api/application.js';
 import { getConsentInfo } from '#src/api/interaction.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 type DeviceAuthorizationResponse = {
   device_code: string;
@@ -107,7 +106,7 @@ const followRedirects = async (
   return followRedirects(location, nextCookieJar, attempts - 1);
 };
 
-devFeatureTest.describe('consent api for device flow', () => {
+describe('consent api for device flow', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
   });
