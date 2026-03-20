@@ -10,6 +10,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import passwordEncryptionWorker from '../workers/password-encryption-worker.js';
 
+import { executeFirebaseScryptHash } from './firebase-scrypt.js';
 import { safeParseJson } from './json.js';
 
 type LegacyPassword = {
@@ -23,8 +24,12 @@ function isPbkdf2Algorithm(algorithm: string): boolean {
   return algorithm === 'pbkdf2Sync' || algorithm === 'pbkdf2';
 }
 
+function isFirebaseScryptAlgorithm(algorithm: string): boolean {
+  return algorithm === 'firebase-scrypt';
+}
+
 function isLegacyHashAlgorithm(algorithm: string): boolean {
-  if (isPbkdf2Algorithm(algorithm)) {
+  if (isPbkdf2Algorithm(algorithm) || isFirebaseScryptAlgorithm(algorithm)) {
     return true;
   }
 
@@ -107,13 +112,17 @@ export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyP
 
 /**
  * Execute hash calculation based on the parsed expression
- * @returns The calculated hash as a hexadecimal string
+ * @returns The calculated hash as a hexadecimal string (or base64 for firebase-scrypt)
  */
 export const executeLegacyHash = async (
   parsedExpression: LegacyPassword,
   inputPassword: string
 ): Promise<string> => {
   const { algorithm, args } = parsedExpression;
+
+  if (isFirebaseScryptAlgorithm(algorithm)) {
+    return executeFirebaseScryptHash(args, inputPassword);
+  }
 
   // Replace @ with input password
   const resolvedArgs = args.map((arg) => (arg === '@' ? inputPassword : arg));
