@@ -1,7 +1,9 @@
 import { type SubjectToken } from '@logto/schemas';
+import { ConsoleLog } from '@logto/shared';
 import { type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -36,6 +38,7 @@ const mockHandler = (tenant = mockTenant) => {
 const clientId = 'some_client_id';
 const subjectTokenId = 'some_token_id';
 const accountId = 'some_account_id';
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 type Client = InstanceType<KoaContextWithOIDC['oidc']['provider']['Client']>;
 
@@ -102,6 +105,7 @@ describe('token exchange', () => {
   afterEach(() => {
     findSubjectToken.mockClear();
     updateSubjectTokenById.mockClear();
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('should throw when client is not available', async () => {
@@ -179,6 +183,22 @@ describe('token exchange', () => {
       clientId,
       gty: 'urn:ietf:params:oauth:grant-type:token-exchange',
     });
+  });
+
+  it('should not emit timing logs during token exchange', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+
+    const ctx = createPreparedContext();
+    const contextConsole = new ConsoleLog('test');
+
+    findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
+    Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+    const infoSpy = jest.spyOn(contextConsole, 'info').mockImplementation();
+
+    Reflect.set(ctx, 'console', contextConsole);
+
+    await expect(mockHandler(mockTenant)(ctx, noop)).resolves.toBeUndefined();
+    expect(infoSpy).not.toHaveBeenCalled();
   });
 
   describe('RFC 0001 organization token', () => {
