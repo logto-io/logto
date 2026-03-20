@@ -18,6 +18,7 @@ void test('hasVisibleSecuritySection returns false when account center is disabl
         email: AccountCenterControlValue.Off,
         phone: AccountCenterControlValue.Off,
         password: AccountCenterControlValue.Off,
+        social: AccountCenterControlValue.Off,
       },
     }),
     false
@@ -33,6 +34,23 @@ void test('hasVisibleSecuritySection returns true when any supported field is vi
         email: AccountCenterControlValue.Off,
         phone: AccountCenterControlValue.Off,
         password: AccountCenterControlValue.Off,
+        social: AccountCenterControlValue.Off,
+      },
+    }),
+    true
+  );
+});
+
+void test('hasVisibleSecuritySection returns true when social field is visible', () => {
+  assert.equal(
+    hasVisibleSecuritySection({
+      enabled: true,
+      fields: {
+        username: AccountCenterControlValue.Off,
+        email: AccountCenterControlValue.Off,
+        phone: AccountCenterControlValue.Off,
+        password: AccountCenterControlValue.Off,
+        social: AccountCenterControlValue.Edit,
       },
     }),
     true

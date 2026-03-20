@@ -1,5 +1,5 @@
 import { UserScope } from '@logto/core-kit';
-import { ConnectorType } from '@logto/schemas';
+import { ConnectorType, SignInIdentifier } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
 import {
@@ -17,6 +17,7 @@ import {
   updateIdentities,
   updateSocialAccessToken,
 } from '#src/api/my-account.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import {
   createSocialVerificationRecord,
   createVerificationRecordByPassword,
@@ -274,6 +275,48 @@ describe('my-account (social)', () => {
       const updatedUserInfo = await getUserInfo(api);
       expect(updatedUserInfo.identities).not.toHaveProperty(mockSocialConnectorTarget);
 
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should reject deleting the last available sign-in method', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      const { verificationRecordId: newVerificationRecordId } =
+        await createSocialVerificationRecord(
+          api,
+          connectorIdMap.get(mockSocialConnectorId)!,
+          state,
+          redirectUri
+        );
+      await verifySocialAuthorization(api, newVerificationRecordId, {
+        code: authorizationCode,
+      });
+      await updateIdentities(api, verificationRecordId, newVerificationRecordId);
+
+      await updateSignInExperience({
+        signIn: {
+          methods: [
+            {
+              identifier: SignInIdentifier.Phone,
+              password: true,
+              verificationCode: false,
+              isPasswordPrimary: true,
+            },
+          ],
+        },
+        socialSignInConnectorTargets: [mockSocialConnectorTarget],
+      });
+
+      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
+        code: 'user.last_sign_in_method_required',
+        status: 400,
+      });
+
+      await enableAllPasswordSignInMethods();
       await deleteDefaultTenantUser(user.id);
     });
   });

@@ -12,6 +12,9 @@
       ],
       "@experience/*": [
         "../experience/src/*"
+      ],
+      "@logto/shared/universal": [
+        "../shared/src/universal.ts"
       ]
     }
   }

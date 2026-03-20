@@ -64,12 +64,21 @@ const account_center = {
     change: 'Изменить',
     remove: 'Удалить',
     not_set: 'Не задано',
+    social_sign_in: 'Социальный вход',
+    social_not_linked: 'Не привязано',
     email_phone: 'Электронная почта / Телефон',
     email: 'Электронная почта',
     phone: 'Телефон',
     password: 'Пароль',
     configured: 'Настроено',
     not_configured: 'Не настроено',
+  },
+  social: {
+    linked: '{{connector}} успешно привязан.',
+    removed: '{{connector}} успешно удален.',
+    remove_confirmation_title: 'Удалить социальный аккаунт',
+    remove_confirmation_description:
+      'Если вы удалите {{connector}}, возможно, вы не сможете входить с его помощью, пока не добавите его снова.',
   },
   password: {
     title: 'Установить пароль',

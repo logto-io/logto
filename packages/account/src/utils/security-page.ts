@@ -13,13 +13,14 @@ export const hasVisibleSecuritySection = (
     return false;
   }
 
-  const { username, email, phone, password } = accountCenterSettings.fields;
+  const { username, email, phone, password, social } = accountCenterSettings.fields;
 
   return (
     isVisibleField(username) ||
     isVisibleField(email) ||
     isVisibleField(phone) ||
-    isVisibleField(password)
+    isVisibleField(password) ||
+    isVisibleField(social)
   );
 };
 

@@ -15,5 +15,14 @@ describe('social connector form post callback', () => {
     expect(response.header.location).toBe('/callback/some_connector_id?some=data');
   });
 
+  it('should redirect account social callback form post to the same path with query string', async () => {
+    const response = await request
+      .post('/account/callback/social/some_connector_id')
+      .send({ some: 'data' });
+
+    expect(response.status).toBe(303);
+    expect(response.header.location).toBe('/account/callback/social/some_connector_id?some=data');
+  });
+
   // No counter-case here since `koa-body` has a high tolerance for invalid requests
 });
