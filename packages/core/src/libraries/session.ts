@@ -6,7 +6,8 @@ import {
   oidcSessionInstancePayloadGuard,
   userApplicationGrantPayloadGuard,
 } from '@logto/schemas';
-import { conditional, deduplicate } from '@silverhand/essentials';
+import { normalizeError } from '@logto/shared';
+import { conditional, deduplicate, pick, trySafe } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { InteractionResults, PromptDetail, Provider } from 'oidc-provider';
 import { z } from 'zod';
@@ -14,6 +15,7 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import { runNamedTasksWithSummary } from '#src/utils/promise.js';
 
 import { type SessionInstanceWithExtension } from '../queries/oidc-session-extensions.js';
 
@@ -183,6 +185,8 @@ export const consent = async ({
   return updateInteractionResult(ctx, provider, { consent: { grantId: finalGrantId } }, true);
 };
 
+/* ================ Session management =============== */
+
 const formatSessionWithExtension = (session: SessionInstanceWithExtension) => {
   const { lastSubmission, clientId, accountId, payload, ...rest } = session;
 
@@ -233,8 +237,6 @@ const formatApplicationGrant = (
   };
 };
 
-/* ================ Session management =============== */
-
 type SessionAuthorizationDetails = {
   grantId?: string;
 };
@@ -247,46 +249,72 @@ const pickGrantIds = (entries: Array<[string, SessionAuthorizationDetails]>) =>
 const isGrantExpired = (grant: { exp?: number }) =>
   typeof grant.exp === 'number' && grant.exp <= Date.now() / 1000;
 
-const revokeGrantChain = async (provider: Provider, grantId: string) => {
-  // Align with oidc-provider revoke helper token-chain behavior:
-  // oidc-provider/lib/helpers/revoke.js
-  await Promise.all(
-    [
-      provider.AccessToken,
-      provider.RefreshToken,
-      provider.AuthorizationCode,
-      provider.DeviceCode,
-      provider.BackchannelAuthenticationRequest,
-    ]
-      .map(async (model) => model.revokeByGrantId(grantId))
-      .concat(provider.Grant.adapter.destroy(grantId))
-  );
+const serializeErrorCause = (error: unknown) => {
+  if (error instanceof RequestError) {
+    /** @see RequestError.toBody */
+    return pick(error, 'code', 'data', 'details');
+  }
+
+  return normalizeError(error).message;
 };
 
-const revokeUserGrantById = async ({
-  provider,
-  userId,
-  grantId,
-}: {
-  provider: Provider;
-  userId: string;
-  grantId: string;
-}) => {
-  // eslint-disable-next-line unicorn/no-array-method-this-argument
-  const grant = await provider.Grant.find(grantId, { ignoreExpiration: true });
+type GrantRevocationModelName =
+  | 'AccessToken'
+  | 'RefreshToken'
+  | 'AuthorizationCode'
+  | 'DeviceCode'
+  | 'BackchannelAuthenticationRequest'
+  | 'Grant';
 
-  if (!grant) {
-    throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
-  }
+/**
+ * Revokes all OIDC model records associated with a grant ID.
+ *
+ * This method intentionally attempts every model revoke handler and aggregates
+ * failures, so callers get a complete error summary instead of a fail-fast error.
+ *
+ * Throws `oidc.failed_to_revoke_grant` with:
+ * - `details.succeededModels`: model names successfully revoked.
+ * - `details.failedModels`: failed model entries with `{ name, cause }`.
+ */
+const revokeGrantChain = async (provider: Provider, grantId: string) => {
+  const revokeHandlers: Array<{
+    name: GrantRevocationModelName;
+    handler: () => Promise<unknown>;
+  }> = [
+    { name: 'AccessToken', handler: async () => provider.AccessToken.revokeByGrantId(grantId) },
+    { name: 'RefreshToken', handler: async () => provider.RefreshToken.revokeByGrantId(grantId) },
+    {
+      name: 'AuthorizationCode',
+      handler: async () => provider.AuthorizationCode.revokeByGrantId(grantId),
+    },
+    { name: 'DeviceCode', handler: async () => provider.DeviceCode.revokeByGrantId(grantId) },
+    {
+      name: 'BackchannelAuthenticationRequest',
+      handler: async () => provider.BackchannelAuthenticationRequest.revokeByGrantId(grantId),
+    },
+    { name: 'Grant', handler: async () => provider.Grant.adapter.destroy(grantId) },
+  ];
 
-  if (grant.accountId !== userId) {
-    throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
-  }
+  const { succeededNames: succeededModels, failedTasks: failedModels } =
+    await runNamedTasksWithSummary({
+      items: revokeHandlers,
+      getName: ({ name }) => name,
+      runner: async ({ handler }) => {
+        await handler();
+      },
+      normalizeCause: serializeErrorCause,
+    });
 
-  if (!isGrantExpired(grant)) {
-    await revokeGrantChain(provider, grantId);
-    // Note: Same as session revoke in management API.
-    // No OIDC route context is available here, so `grant.revoked` cannot be emitted safely.
+  if (failedModels.length > 0) {
+    throw new RequestError(
+      { code: 'oidc.failed_to_revoke_grant', status: 500 },
+      {
+        details: {
+          succeededModels,
+          failedModels,
+        },
+      }
+    );
   }
 };
 
@@ -372,16 +400,12 @@ export const createSessionLibrary = (queries: Queries) => {
     );
   };
 
-  const removeUserSessionAuthorizationByGrantId = async ({
-    provider,
-    userId,
-    grantId,
-  }: {
-    provider: Provider;
-    userId: string;
-    grantId: string;
-  }) => {
-    const sessionReference = await oidcSessionExtensions.findUserActiveSessionUidByGrantId(
+  const removeUserSessionAuthorizationByGrantId = async (
+    provider: Provider,
+    userId: string,
+    grantId: string
+  ) => {
+    const sessionReference = await queries.oidcModelInstances.findUserActiveSessionUidByGrantId(
       userId,
       grantId
     );
@@ -417,12 +441,81 @@ export const createSessionLibrary = (queries: Queries) => {
     await session.persist();
   };
 
+  const removeUserSessionAuthorizationByGrantIdWithErrorCatch = async (
+    provider: Provider,
+    userId: string,
+    grantId: string
+  ) => {
+    await trySafe(
+      async () => {
+        await removeUserSessionAuthorizationByGrantId(provider, userId, grantId);
+      },
+      (error) => {
+        throw new RequestError(
+          { code: 'oidc.failed_to_cleanup_session_authorization', status: 500 },
+          { cause: error }
+        );
+      }
+    );
+  };
+
+  const revokeUserGrantById = async (provider: Provider, userId: string, grantId: string) => {
+    // eslint-disable-next-line unicorn/no-array-method-this-argument
+    const grant = await provider.Grant.find(grantId, { ignoreExpiration: true });
+
+    if (!grant) {
+      throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
+    }
+
+    if (grant.accountId !== userId) {
+      throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
+    }
+
+    if (!isGrantExpired(grant)) {
+      await revokeGrantChain(provider, grantId);
+      // Note: Same as session revoke in management API.
+      // No OIDC route context is available here, so `grant.revoked` cannot be emitted safely.
+    }
+
+    await removeUserSessionAuthorizationByGrantIdWithErrorCatch(provider, userId, grantId);
+  };
+
+  const revokeUserGrantsByIds = async (provider: Provider, userId: string, grantIds: string[]) => {
+    const uniqueGrantIds = deduplicate(grantIds);
+    const { succeededNames: succeededGrantIds, failedTasks } = await runNamedTasksWithSummary({
+      items: uniqueGrantIds,
+      getName: (grantId) => grantId,
+      runner: async (grantId) => {
+        await revokeGrantChain(provider, grantId);
+        await removeUserSessionAuthorizationByGrantIdWithErrorCatch(provider, userId, grantId);
+      },
+      normalizeCause: serializeErrorCause,
+      concurrency: 5, // Revoke in parallel with a reasonable concurrency limit
+    });
+
+    if (failedTasks.length > 0) {
+      throw new RequestError(
+        { code: 'oidc.failed_to_revoke_grant', status: 500 },
+        {
+          details: {
+            succeededGrantIds,
+            failedGrants: failedTasks.map(({ name, cause }) => ({
+              grantId: name,
+              cause,
+            })),
+          },
+        }
+      );
+    }
+  };
+
   return {
     findUserActiveSessionsWithExtensions,
     findUserActiveSessionWithExtension,
     findUserActiveApplicationGrants,
     revokeSessionAssociatedGrants,
     revokeUserGrantById,
+    revokeUserGrantsByIds,
     removeUserSessionAuthorizationByGrantId,
   };
 };
