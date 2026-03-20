@@ -319,6 +319,98 @@ describe('my-account (social)', () => {
       await enableAllPasswordSignInMethods();
       await deleteDefaultTenantUser(user.id);
     });
+
+    it('should allow deleting social identity when another identifier sign-in method remains available', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword({
+        primaryEmail: `${generateStandardId()}@example.com`,
+      });
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      const { verificationRecordId: newVerificationRecordId } =
+        await createSocialVerificationRecord(
+          api,
+          connectorIdMap.get(mockSocialConnectorId)!,
+          state,
+          redirectUri
+        );
+      await verifySocialAuthorization(api, newVerificationRecordId, {
+        code: authorizationCode,
+      });
+      await updateIdentities(api, verificationRecordId, newVerificationRecordId);
+
+      await updateSignInExperience({
+        signIn: {
+          methods: [
+            {
+              identifier: SignInIdentifier.Email,
+              password: false,
+              verificationCode: true,
+              isPasswordPrimary: false,
+            },
+          ],
+        },
+        socialSignInConnectorTargets: [mockSocialConnectorTarget],
+      });
+
+      await deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId);
+
+      const updatedUserInfo = await getUserInfo(api);
+      expect(updatedUserInfo.identities).not.toHaveProperty(mockSocialConnectorTarget);
+
+      await enableAllPasswordSignInMethods();
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should localize the last available sign-in method error message', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(
+        username,
+        password,
+        {
+          scopes: [UserScope.Profile, UserScope.Identities],
+        },
+        'fr'
+      );
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      const { verificationRecordId: newVerificationRecordId } =
+        await createSocialVerificationRecord(
+          api,
+          connectorIdMap.get(mockSocialConnectorId)!,
+          state,
+          redirectUri
+        );
+      await verifySocialAuthorization(api, newVerificationRecordId, {
+        code: authorizationCode,
+      });
+      await updateIdentities(api, verificationRecordId, newVerificationRecordId);
+
+      await updateSignInExperience({
+        signIn: {
+          methods: [
+            {
+              identifier: SignInIdentifier.Phone,
+              password: true,
+              verificationCode: false,
+              isPasswordPrimary: true,
+            },
+          ],
+        },
+        socialSignInConnectorTargets: [mockSocialConnectorTarget],
+      });
+
+      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
+        code: 'user.last_sign_in_method_required',
+        status: 400,
+        messageIncludes: 'au moins une méthode de connexion disponible',
+      });
+
+      await enableAllPasswordSignInMethods();
+      await deleteDefaultTenantUser(user.id);
+    });
   });
 
   describe('/my-account/identities/:target/access-token', () => {

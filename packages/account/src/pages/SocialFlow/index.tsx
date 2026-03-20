@@ -27,6 +27,7 @@ const generateState = () => crypto.randomUUID().replaceAll('-', '');
 
 const SocialFlow = ({ mode }: Props) => {
   const {
+    t,
     i18n: { language },
   } = useTranslation();
   const navigate = useNavigate();
@@ -60,8 +61,8 @@ const SocialFlow = ({ mode }: Props) => {
   const resetVerification = useCallback(() => {
     setStartedFlowKey(undefined);
     setVerificationId(undefined);
-    setToast('Verification expired. Please verify your identity again.');
-  }, [setToast, setVerificationId]);
+    setToast(t('account_center.verification.verification_required'));
+  }, [setToast, setVerificationId, t]);
 
   const navigateToSecurity = useCallback(() => {
     navigate('/', { replace: true });
@@ -87,9 +88,9 @@ const SocialFlow = ({ mode }: Props) => {
 
     accountStorage.socialVerification.clear(connectorId);
     await refreshUserInfo();
-    setToast(`${connectorName} linked successfully.`);
+    setToast(t('account_center.social.linked', { connector: connectorName }));
     navigateToSecurity();
-  }, [connector, connectorId, connectorName, navigateToSecurity, refreshUserInfo, setToast]);
+  }, [connector, connectorId, connectorName, navigateToSecurity, refreshUserInfo, setToast, t]);
 
   const handleRemoveSuccess = useCallback(async () => {
     if (!connectorName) {
@@ -97,9 +98,9 @@ const SocialFlow = ({ mode }: Props) => {
     }
 
     await refreshUserInfo();
-    setToast(`${connectorName} removed successfully.`);
+    setToast(t('account_center.social.removed', { connector: connectorName }));
     navigateToSecurity();
-  }, [connectorName, navigateToSecurity, refreshUserInfo, setToast]);
+  }, [connectorName, navigateToSecurity, refreshUserInfo, setToast, t]);
 
   useEffect(() => {
     if (!verificationId) {

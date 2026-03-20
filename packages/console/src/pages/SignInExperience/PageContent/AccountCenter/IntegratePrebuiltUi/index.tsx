@@ -25,6 +25,14 @@ const prebuiltRoutes = [
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.password',
   },
   {
+    path: '/account/social/:connectorId',
+    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social',
+  },
+  {
+    path: '/account/social/:connectorId/remove',
+    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social_remove',
+  },
+  {
     path: '/account/passkey/add',
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.passkey_add',
   },

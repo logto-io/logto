@@ -1,3 +1,4 @@
+import DynamicT from '@experience/shared/components/DynamicT';
 import { getLogoUrl } from '@experience/shared/utils/logo';
 import {
   AccountCenterControlValue,
@@ -67,6 +68,7 @@ const getDisplayProfile = (identity: Identity, fallbackText: string) => {
 
 const SocialSection = () => {
   const {
+    t,
     i18n: { language },
   } = useTranslation();
   const navigate = useNavigate();
@@ -111,7 +113,7 @@ const SocialSection = () => {
   return (
     <>
       <div className={styles.section}>
-        <div className={styles.sectionTitle}>Social sign-in</div>
+        <div className={styles.sectionTitle}>{t('account_center.security.social_sign_in')}</div>
         <div className={styles.card}>
           {items.map(({ connector, connectorName, identity }) => {
             const profile = identity && getDisplayProfile(identity, connectorName);
@@ -149,7 +151,9 @@ const SocialSection = () => {
                       </div>
                     </>
                   ) : (
-                    <div className={styles.notLinked}>Not linked</div>
+                    <div className={styles.notLinked}>
+                      {t('account_center.security.social_not_linked')}
+                    </div>
                   )}
                 </div>
                 {socialControl === AccountCenterControlValue.Edit && (
@@ -168,7 +172,9 @@ const SocialSection = () => {
                         navigate(getSocialAddRoute(connector.id));
                       }}
                     >
-                      {identity ? 'Remove' : 'Add'}
+                      {identity
+                        ? t('account_center.security.remove')
+                        : t('account_center.security.add')}
                     </button>
                   </div>
                 )}
@@ -191,7 +197,10 @@ const SocialSection = () => {
             setSelectedConnectorId(undefined);
           }}
         >
-          {`If you remove ${selectedConnectorName}, you may not be able to sign in with it until you add it back again.`}
+          <DynamicT
+            forKey="account_center.social.remove_confirmation_description"
+            interpolation={{ connector: selectedConnectorName }}
+          />
         </ConfirmModal>
       )}
     </>

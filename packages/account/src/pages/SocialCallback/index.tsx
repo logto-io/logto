@@ -15,6 +15,7 @@ import { getLocalizedConnectorName } from '@ac/utils/social-connector';
 
 const SocialCallback = () => {
   const {
+    t,
     i18n: { language },
   } = useTranslation();
   const navigate = useNavigate();
@@ -47,9 +48,9 @@ const SocialCallback = () => {
 
     setStartedConnectorId(undefined);
     setVerificationId(undefined);
-    setToast('Verification expired. Please verify your identity again.');
+    setToast(t('account_center.verification.verification_required'));
     navigate(getSocialAddRoute(connectorId), { replace: true });
-  }, [connectorId, navigate, setToast, setVerificationId]);
+  }, [connectorId, navigate, setToast, setVerificationId, t]);
 
   const finishLinkFlow = useCallback(async () => {
     if (!connectorId || !connectorName) {
@@ -58,9 +59,9 @@ const SocialCallback = () => {
 
     accountStorage.socialVerification.clear(connectorId);
     await refreshUserInfo();
-    setToast(`${connectorName} linked successfully.`);
+    setToast(t('account_center.social.linked', { connector: connectorName }));
     navigate('/', { replace: true });
-  }, [connectorId, connectorName, navigate, refreshUserInfo, setToast]);
+  }, [connectorId, connectorName, navigate, refreshUserInfo, setToast, t]);
 
   useEffect(() => {
     if (!connectorId || !connector || startedConnectorId === connectorId) {
@@ -72,14 +73,14 @@ const SocialCallback = () => {
     const storedSocialVerification = accountStorage.socialVerification.get(connectorId);
 
     if (!storedSocialVerification?.state) {
-      setToast('Invalid session. Please try again.');
+      setToast(t('error.invalid_session'));
       navigate('/', { replace: true });
       return;
     }
 
     if (storedSocialVerification.state !== (searchParameters.get('state') ?? undefined)) {
       accountStorage.socialVerification.clear(connectorId);
-      setToast('Invalid social sign-in response. Please try again.');
+      setToast(t('error.invalid_connector_auth'));
       navigate('/', { replace: true });
       return;
     }
@@ -147,6 +148,7 @@ const SocialCallback = () => {
     startedConnectorId,
     verificationId,
     verifySocialVerificationRequest,
+    t,
   ]);
 
   if (

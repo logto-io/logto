@@ -49,6 +49,8 @@ const user = {
   username_required: 'Benutzername ist ein erforderlicher Bezeichner, er kann nicht null sein.',
   email_or_phone_required:
     'E-Mail-Adresse oder Telefonnummer ist ein erforderlicher Bezeichner, mindestens eine ist erforderlich.',
+  last_sign_in_method_required:
+    'Sie müssen mindestens eine verfügbare Anmeldemethode in Ihrem Konto behalten.',
   email_required: 'E-Mail-Adresse ist ein erforderlicher Bezeichner, sie kann nicht null sein.',
   phone_required: 'Telefonnummer ist ein erforderlicher Bezeichner, sie kann nicht null sein.',
   enterprise_sso_identity_not_exists:
