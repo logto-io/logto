@@ -1,4 +1,8 @@
+import { normalizeError } from '@logto/shared';
+import { pick } from '@silverhand/essentials';
 import pMap from 'p-map';
+
+import RequestError from '#src/errors/RequestError/index.js';
 
 type NamedTaskSummary<TName extends string, TCause = unknown> = {
   succeededNames: TName[];
@@ -75,3 +79,12 @@ export async function runNamedTasksWithSummary<TName extends string, TItem, TCau
     { succeededNames: [], failedTasks: [] }
   );
 }
+
+export const serializeErrorCause = (error: unknown) => {
+  if (error instanceof RequestError) {
+    /** @see RequestError.toBody */
+    return pick(error, 'code', 'data', 'details');
+  }
+
+  return normalizeError(error).message;
+};

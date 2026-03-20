@@ -29,9 +29,12 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
   };
 });
 
-const { assignInteractionResults } = await mockEsmWithActual('#src/libraries/session.js', () => ({
-  assignInteractionResults: jest.fn(),
-}));
+const { assignInteractionResults } = await mockEsmWithActual(
+  '#src/libraries/session/index.js',
+  () => ({
+    assignInteractionResults: jest.fn(),
+  })
+);
 
 const { verifySignInModeSettings, verifyIdentifierSettings, verifyProfileSettings } =
   await mockEsmWithActual('./utils/sign-in-experience-validation.js', () => ({

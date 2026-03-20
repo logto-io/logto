@@ -20,7 +20,7 @@ const getLogtoConnectorById = jest
   .fn()
   .mockResolvedValue({ metadata: { target: 'logto' }, dbEntry: { syncProfile: true } });
 
-const { assignInteractionResults } = mockEsm('#src/libraries/session.js', () => ({
+const { assignInteractionResults } = mockEsm('#src/libraries/session/index.js', () => ({
   assignInteractionResults: jest.fn(),
 }));
 

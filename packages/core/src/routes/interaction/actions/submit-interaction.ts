@@ -21,7 +21,7 @@ import { generateStandardId } from '@logto/shared';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { assignInteractionResults } from '#src/libraries/session.js';
+import { assignInteractionResults } from '#src/libraries/session/index.js';
 import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
