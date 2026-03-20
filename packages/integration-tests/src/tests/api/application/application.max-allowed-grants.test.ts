@@ -145,6 +145,12 @@ devFeatureTest.describe('application maxAllowedGrants', () => {
           },
         });
 
+        // Grant `iat` is second-level precision. Ensure the next sign-in creates
+        // a strictly newer grant so oldest-grant selection stays deterministic.
+        await new Promise((resolve) => {
+          setTimeout(resolve, 1100);
+        });
+
         const { refreshToken: latestRefreshToken } = await signIn();
 
         const { grants } = await getUserApplicationGrants(user.id);
