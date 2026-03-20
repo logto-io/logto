@@ -1,5 +1,6 @@
 import { UserScope } from '@logto/core-kit';
 import {
+  ApplicationType,
   applicationSignInExperienceGuard,
   buildBuiltInApplicationDataForTenant,
   type ConsentInfoResponse,
@@ -217,21 +218,27 @@ export default function consentRoutes<T extends IRouterParamContext>(
         new InvalidClient('client must be available')
       );
 
-      assertThat(
-        redirectUri && typeof redirectUri === 'string',
-        new InvalidRedirectUri('redirect_uri must be available')
-      );
-
       const { accountId } = session;
 
       const application = isBuiltInApplicationId(clientId)
         ? buildBuiltInApplicationDataForTenant('', clientId)
         : await queries.applications.findApplicationById(clientId);
 
+      const isDeviceFlowApplication =
+        application.type === ApplicationType.Native &&
+        Boolean(application.customClientMetadata.isDeviceFlow);
+
       const applicationSignInExperience =
         await queries.applicationSignInExperiences.safeFindSignInExperienceByApplicationId(
           clientId
         );
+
+      if (!isDeviceFlowApplication) {
+        assertThat(
+          redirectUri && typeof redirectUri === 'string',
+          new InvalidRedirectUri('redirect_uri must be available')
+        );
+      }
 
       const userInfo = await queries.users.findUserById(accountId);
 
@@ -286,7 +293,8 @@ export default function consentRoutes<T extends IRouterParamContext>(
           (scope) => scope !== 'openid' && scope !== 'offline_access'
         ),
         missingResourceScopes,
-        redirectUri,
+        // Device flow consent does not require a redirect_uri.
+        redirectUri: typeof redirectUri === 'string' ? redirectUri : undefined,
       } satisfies ConsentInfoResponse;
 
       return next();
