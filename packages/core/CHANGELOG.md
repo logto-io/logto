@@ -1,5 +1,123 @@
 # Change Log
 
+## 1.38.0
+
+### Minor Changes
+
+- 43548d10a4: add `includePasswordHash` query parameter to `GET /users` and `GET /users/:userId`
+
+  When set to `true`, the response will include `passwordDigest` and `passwordAlgorithm` fields. This is intended for migration use cases where the raw password hash is needed.
+
+- 7cee48bd97: support OAuth 2.0 Device Authorization Grant (device flow)
+
+  Device flow lets users sign in on input-limited devices such as smart TVs, CLI tools, IoT gadgets, and gaming consoles by completing authentication on a separate device like a phone or laptop.
+
+  How it works:
+
+  1. The device displays a short user code and a verification URL.
+  2. The user opens the URL on another device, enters the code, and signs in.
+  3. Once approved, the original device receives tokens and completes authentication.
+
+  To create a device flow application in Console:
+
+  - Select "Input-limited app / CLI" under the Native framework list, or
+  - Create an app without framework, then choose "Device flow" as the authorization flow, or
+  - Create a third-party Native app, then choose "Device flow" as the authorization flow.
+
+  The application settings page shows a device-flow-specific guide and a built-in demo you can try immediately.
+
+- a023a97c7c: add a new MFA onboarding page for users to explicitly enable optional MFA
+
+  For users who are not required to set up MFA, we added a new page after credential verification in the sign-in flow to explicitly ask whether they want to enable optional MFA for better account security.
+
+  This is especially important when the passkey sign-in feature is available, since passkeys can be used for both sign-in and MFA verification, and users who set up a passkey for sign-in might not want to enable it as an MFA factor at the same time.
+
+- 6dbafe5f26: support access token exchange for service-to-service delegation
+
+  The standard `subject_token_type` value `urn:ietf:params:oauth:token-type:access_token` now supports access token exchange. This allows services to exchange access tokens (both opaque and JWT formats) issued by Logto for new access tokens with different audiences, enabling service-to-service delegation scenarios.
+
+  Token validation order:
+
+  1. If token starts with `sub_` prefix, treat as legacy impersonation token (backward compatibility)
+  2. Try to find as opaque access token via oidc-provider
+  3. Fallback to JWT verification using the issuer's JWK set
+
+  Access tokens are not consumption-tracked, allowing the same token to be exchanged multiple times (e.g., by different services).
+
+  Additionally, a new `urn:logto:token-type:impersonation_token` type has been added for explicit impersonation token handling.
+
+- a816cf77cb: support adaptive MFA
+
+  - In Console, the MFA settings page always exposes the adaptive MFA option and saves `adaptiveMfa` configuration in the sign-in experience payload.
+  - In Core, when adaptive MFA is enabled in the sign-in experience config, the sign-in flow evaluates adaptive MFA rules against the current sign-in context and requires MFA verification when those rules are triggered.
+  - The sign-in context is now consistently persisted into interaction data, so custom-claims scripts can read it from `context.interaction.signInContext`.
+  - The `PostSignInAdaptiveMfaTriggered` webhook event is emitted when adaptive MFA forces MFA during sign-in.
+
+- a023a97c7c: support passkey sign-in authentication method
+
+  ### Summary
+
+  Passkey sign-in provides a faster, passwordless sign-in experience that reduces friction for end users and helps improve account security. It removes repeated password entry for returning users, works with platform authenticators users already trust (for example Face ID, Touch ID, Windows Hello), and offers a smoother path from account creation to subsequent sign-ins.
+
+  #### Bind passkey for sign-in
+
+  After passkey sign-in is enabled, new users are prompted to bind a passkey during registration. Existing users who have not bound a passkey (WebAuthn) factor yet can be guided to bind one in a later sign-in flow. If a user already has a WebAuthn credential from MFA setup, that credential can be reused directly for passkey sign-in without requiring another registration step.
+
+  #### Various sign-in flows to support different user journeys and preferences
+
+  1. **Passkey sign-in button**: When **Show passkey sign-in button** is enabled, users can click **Continue with passkey** on the sign-in page to immediately trigger the browser passkey chooser and complete sign-in.
+  2. **Identifier-first flow (button hidden)**: When **Show passkey sign-in button** is disabled, sign-in follows an identifier-first flow. Users first enter an identifier (for example email or username) on the first screen. On the next step, the flow prioritizes passkey and prompts users to **Verify via passkey** before falling back to password or verification code when needed.
+  3. **Allow autofill**: When **Allow autofill** is enabled, supported browsers can show passkey suggestions directly from the identifier input on the sign-in page. Users can select a previously saved passkey from the autofill popup and sign in with minimal extra input.
+
+  Check out our [documentation](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) for more details.
+
+- 74c993a91e: introduce session management endpoints for account and management APIs, with optional grants revocation and richer session context.
+
+  Account APIs:
+
+  - List active user sessions: `GET /my-account/sessions`.
+  - Revoke a user session by ID: `DELETE /my-account/sessions/:sessionId`.
+    - Optional query param `revokeGrantsTarget`: `all` revokes grants for all apps; `firstParty` revokes only first-party app grants.
+    - When grants are revoked, previously issued opaque access tokens and refresh tokens for those grants will be invalidated.
+  - Add a new account center permission setting `session` with `off`, `readOnly`, and `edit` to control access to the session management account APIs.
+  - These endpoints are also gated by the `urn:logto:scope:sessions` user scope (`UserScope.Sessions`). Only tokens with this scope granted can access these endpoints.
+
+  Management APIs:
+
+  - List active user sessions: `GET /users/:userId/sessions`.
+  - Get a single active user session: `GET /users/:userId/sessions/:sessionId`.
+  - Revoke a user session by ID: `DELETE /users/:userId/sessions/:sessionId`.
+    - Optional query param `revokeGrantsTarget`: `all` revokes grants for all apps; `firstParty` revokes only first-party app grants.
+    - When grants are revoked, previously issued opaque access tokens and refresh tokens for those grants will be invalidated.
+
+  Session context:
+
+  - Record user IP, user agent, and GEO location (when available from injected-headers) in interaction submission data so it can be returned in `session.lastSubmission`.
+
+### Patch Changes
+
+- 413c602ed3: support `hex:`-prefixed PBKDF2 salt values in legacy password verification during user import
+- Updated dependencies [7cee48bd97]
+- Updated dependencies [74c993a91e]
+- Updated dependencies [a023a97c7c]
+- Updated dependencies [4ab0497277]
+- Updated dependencies [4e25126228]
+- Updated dependencies [a816cf77cb]
+- Updated dependencies [a023a97c7c]
+- Updated dependencies [74c993a91e]
+- Updated dependencies [4e25126228]
+  - @logto/experience@1.19.0
+  - @logto/console@1.35.0
+  - @logto/phrases@1.27.0
+  - @logto/phrases-experience@1.13.0
+  - @logto/schemas@1.38.0
+  - @logto/core-kit@2.8.0
+  - @logto/account@0.3.0
+  - @logto/connector-kit@5.0.0
+  - @logto/demo-app@1.5.0
+  - @logto/cli@1.38.0
+  - @logto/device-demo-app@0.1.0
+
 ## 1.37.1
 
 ### Patch Changes
