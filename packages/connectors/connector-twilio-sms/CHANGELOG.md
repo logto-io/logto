@@ -1,5 +1,14 @@
 # @logto/connector-twilio-sms
 
+## 1.4.2
+
+### Patch Changes
+
+- 9041f6e2e2: fix twilio sms `To` formatting by normalizing non-E.164 numbers to include a leading `+`.
+- Updated dependencies [4e25126228]
+- Updated dependencies [4e25126228]
+  - @logto/connector-kit@5.0.0
+
 ## 1.4.1
 
 ### Patch Changes

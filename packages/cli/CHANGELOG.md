@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.38.0
+
+### Patch Changes
+
+- Updated dependencies [7cee48bd97]
+- Updated dependencies [74c993a91e]
+- Updated dependencies [4e25126228]
+- Updated dependencies [4e25126228]
+  - @logto/schemas@1.38.0
+  - @logto/core-kit@2.8.0
+  - @logto/connector-kit@5.0.0
+
 ## 1.37.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-discord",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Discord connector implementation.",
   "author": "ZR3SYSTEMS. <https://github.com/FlurryNight>",
   "dependencies": {

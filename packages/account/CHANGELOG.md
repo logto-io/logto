@@ -1,5 +1,11 @@
 # @logto/account
 
+## 0.3.0
+
+### Minor Changes
+
+- 4ab0497277: support overriding the out-of-the-box account center language with the ui_locales URL parameter.
+
 ## 0.2.0
 
 ### Minor Changes
