@@ -5,6 +5,8 @@ import InputField from '@experience/shared/components/InputFields/InputField';
 import { useCallback, useState, type FormEvent, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import PasswordIdentifierInput from '../PasswordIdentifierInput';
+
 import TogglePassword from './TogglePassword';
 import styles from './index.module.scss';
 
@@ -73,8 +75,11 @@ const SetPassword = ({
   return (
     <form className={className ?? styles.form} onSubmit={handleSubmit}>
       {beforeFields}
+      <PasswordIdentifierInput />
       <InputField
         className={styles.inputField}
+        id="new-password"
+        name="newPassword"
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
         label={t('input.password')}
@@ -103,6 +108,8 @@ const SetPassword = ({
 
       <InputField
         className={styles.inputField}
+        id="confirm-password"
+        name="confirmPassword"
         type={showPassword ? 'text' : 'password'}
         autoComplete="new-password"
         label={t('input.confirm_password')}
