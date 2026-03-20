@@ -3,6 +3,12 @@ const account_center = {
     title: 'الصفحة غير موجودة',
     description: 'هذه الصفحة غير متاحة.',
   },
+  page: {
+    title: 'الحساب',
+    security_title: 'الأمان',
+    security_description: 'غيّر إعدادات حسابك هنا لضمان أمان حسابك.',
+    support: 'الدعم',
+  },
   verification: {
     title: 'التحقق الأمني',
     description:
@@ -52,6 +58,18 @@ const account_center = {
     title: 'تعيين اسم المستخدم',
     description: 'يجب أن يحتوي اسم المستخدم على أحرف وأرقام وشرطات سفلية فقط.',
     success: 'تم تحديث اسم المستخدم بنجاح.',
+  },
+  security: {
+    add: 'إضافة',
+    change: 'تغيير',
+    remove: 'إزالة',
+    not_set: 'غير محدد',
+    email_phone: 'البريد الإلكتروني / الهاتف',
+    email: 'البريد الإلكتروني',
+    phone: 'الهاتف',
+    password: 'كلمة المرور',
+    configured: 'تم الإعداد',
+    not_configured: 'غير معدّ',
   },
   password: {
     title: 'تعيين كلمة المرور',

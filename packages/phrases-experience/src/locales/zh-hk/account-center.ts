@@ -3,6 +3,12 @@ const account_center = {
     title: '找不到頁面',
     description: '此頁面不可用。',
   },
+  page: {
+    title: '帳戶',
+    security_title: '安全',
+    security_description: '你可以在這裡更改帳戶設定，以確保帳戶安全。',
+    support: '支援',
+  },
   verification: {
     title: '安全驗證',
     description: '為保障帳戶安全，請確認是你本人。請選擇用於驗證身份的方法。',
@@ -51,6 +57,18 @@ const account_center = {
     title: '設定用戶名',
     description: '用戶名只能包含字母、數字和底線。',
     success: '用戶名已成功更新。',
+  },
+  security: {
+    add: '添加',
+    change: '更改',
+    remove: '移除',
+    not_set: '未設置',
+    email_phone: '電郵 / 電話號碼',
+    email: '電郵',
+    phone: '電話號碼',
+    password: '密碼',
+    configured: '已設置',
+    not_configured: '未設置',
   },
   password: {
     title: '設定密碼',

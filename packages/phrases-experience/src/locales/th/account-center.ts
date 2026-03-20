@@ -3,6 +3,12 @@ const account_center = {
     title: 'ไม่พบหน้าเว็บ',
     description: 'ไม่สามารถใช้หน้านี้ได้',
   },
+  page: {
+    title: 'บัญชี',
+    security_title: 'ความปลอดภัย',
+    security_description: 'เปลี่ยนการตั้งค่าบัญชีของคุณที่นี่เพื่อให้บัญชีของคุณปลอดภัย',
+    support: 'ฝ่ายช่วยเหลือ',
+  },
   verification: {
     title: 'การยืนยันความปลอดภัย',
     description:
@@ -52,6 +58,18 @@ const account_center = {
     title: 'ตั้งชื่อผู้ใช้',
     description: 'ชื่อผู้ใช้ต้องมีเฉพาะตัวอักษร ตัวเลข และขีดล่างเท่านั้น',
     success: 'อัปเดตชื่อผู้ใช้เรียบร้อยแล้ว',
+  },
+  security: {
+    add: 'เพิ่ม',
+    change: 'เปลี่ยน',
+    remove: 'ลบ',
+    not_set: 'ยังไม่ได้ตั้งค่า',
+    email_phone: 'อีเมล / โทรศัพท์',
+    email: 'อีเมล',
+    phone: 'โทรศัพท์',
+    password: 'รหัสผ่าน',
+    configured: 'ตั้งค่าแล้ว',
+    not_configured: 'ยังไม่ได้ตั้งค่า',
   },
   password: {
     title: 'ตั้งรหัสผ่าน',

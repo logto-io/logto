@@ -3,6 +3,12 @@ const account_center = {
     title: '页面未找到',
     description: '此页面不可用。',
   },
+  page: {
+    title: '账户',
+    security_title: '安全',
+    security_description: '你可以在这里修改账户设置，以确保账户安全。',
+    support: '支持',
+  },
   verification: {
     title: '安全验证',
     description: '为保护账户安全，请确认是您本人。请选择验证身份的方法。',
@@ -51,6 +57,18 @@ const account_center = {
     title: '设置用户名',
     description: '用户名只能包含字母、数字和下划线。',
     success: '用户名更新成功。',
+  },
+  security: {
+    add: '添加',
+    change: '更改',
+    remove: '移除',
+    not_set: '未设置',
+    email_phone: '邮箱 / 手机号',
+    email: '邮箱',
+    phone: '手机号',
+    password: '密码',
+    configured: '已设置',
+    not_configured: '未设置',
   },
   password: {
     title: '设置密码',

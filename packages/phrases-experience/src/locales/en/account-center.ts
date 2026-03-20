@@ -3,6 +3,12 @@ const account_center = {
     title: 'Page not found',
     description: 'This page is not available.',
   },
+  page: {
+    title: 'Account',
+    security_title: 'Security',
+    security_description: 'Change your account settings here to ensure your account security.',
+    support: 'Support',
+  },
   verification: {
     title: 'Security verification',
     description:
@@ -53,6 +59,18 @@ const account_center = {
     title: 'Set username',
     description: 'Username must contain only letters, numbers, and underscores.',
     success: 'Username updated successfully.',
+  },
+  security: {
+    add: 'Add',
+    change: 'Change',
+    remove: 'Remove',
+    not_set: 'Not set',
+    email_phone: 'Email / Phone',
+    email: 'Email',
+    phone: 'Phone',
+    password: 'Password',
+    configured: 'Configured',
+    not_configured: 'Not configured',
   },
   password: {
     title: 'Set password',

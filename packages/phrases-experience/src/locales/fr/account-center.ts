@@ -3,6 +3,13 @@ const account_center = {
     title: 'Page introuvable',
     description: "Cette page n'est pas disponible.",
   },
+  page: {
+    title: 'Compte',
+    security_title: 'Sécurité',
+    security_description:
+      "Modifiez ici les paramètres de votre compte afin d'en garantir la sécurité.",
+    support: 'Assistance',
+  },
   verification: {
     title: 'Vérification de sécurité',
     description:
@@ -57,6 +64,18 @@ const account_center = {
     description:
       "Le nom d'utilisateur doit contenir uniquement des lettres, des chiffres et des tirets bas.",
     success: "Nom d'utilisateur mis à jour avec succès.",
+  },
+  security: {
+    add: 'Ajouter',
+    change: 'Modifier',
+    remove: 'Supprimer',
+    not_set: 'Non défini',
+    email_phone: 'E-mail / Téléphone',
+    email: 'E-mail',
+    phone: 'Téléphone',
+    password: 'Mot de passe',
+    configured: 'Configuré',
+    not_configured: 'Non configuré',
   },
   password: {
     title: 'Définir le mot de passe',

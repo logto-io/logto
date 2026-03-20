@@ -3,6 +3,13 @@ const account_center = {
     title: 'Sayfa bulunamadı',
     description: 'Bu sayfa kullanılamıyor.',
   },
+  page: {
+    title: 'Hesap',
+    security_title: 'Güvenlik',
+    security_description:
+      'Hesabınızın güvenliğini sağlamak için hesap ayarlarınızı burada değiştirebilirsiniz.',
+    support: 'Destek',
+  },
   verification: {
     title: 'Güvenlik doğrulaması',
     description:
@@ -52,6 +59,18 @@ const account_center = {
     title: 'Kullanıcı adını ayarla',
     description: 'Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir.',
     success: 'Kullanıcı adı başarıyla güncellendi.',
+  },
+  security: {
+    add: 'Ekle',
+    change: 'Değiştir',
+    remove: 'Kaldır',
+    not_set: 'Ayarlanmamış',
+    email_phone: 'E-posta / Telefon',
+    email: 'E-posta',
+    phone: 'Telefon',
+    password: 'Parola',
+    configured: 'Yapılandırıldı',
+    not_configured: 'Yapılandırılmadı',
   },
   password: {
     title: 'Şifreyi ayarla',
