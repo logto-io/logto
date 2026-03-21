@@ -186,6 +186,8 @@ const sign_in_exp = {
         phone: 'プライマリ電話番号を更新',
         username: 'ユーザー名を更新',
         password: '新しいパスワードを設定',
+        social: 'サインイン用にソーシャルアカウントを連携',
+        social_remove: '連携済みのソーシャルアカウントを削除',
         authenticator_app: '多要素認証のための新しい認証アプリを設定',
         passkey_add: '新しいパスキーを登録',
         passkey_manage: '既存のパスキーを管理または新しいものを追加',

@@ -178,6 +178,8 @@ const sign_in_exp = {
         phone: '更新你的主要手机号码',
         username: '更新你的用户名',
         password: '设置新密码',
+        social: '关联社交账号用于登录',
+        social_remove: '移除已关联的社交账号',
         authenticator_app: '设置新的身份验证器应用以进行多因素认证',
         passkey_add: '注册新的通行密钥',
         passkey_manage: '管理你现有的通行密钥或添加新的',

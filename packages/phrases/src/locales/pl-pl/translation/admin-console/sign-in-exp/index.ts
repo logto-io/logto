@@ -186,6 +186,8 @@ const sign_in_exp = {
         phone: 'Zaktualizuj swój główny numer telefonu',
         username: 'Zaktualizuj swoją nazwę użytkownika',
         password: 'Ustaw nowe hasło',
+        social: 'Połącz konto społecznościowe do logowania',
+        social_remove: 'Usuń połączone konto społecznościowe',
         authenticator_app:
           'Skonfiguruj nową aplikację uwierzytelniającą dla uwierzytelniania wieloskładnikowego',
         passkey_add: 'Zarejestruj nowy klucz dostępu',

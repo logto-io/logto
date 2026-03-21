@@ -185,6 +185,8 @@ const sign_in_exp = {
         phone: 'Birincil telefon numaranızı güncelleyin',
         username: 'Kullanıcı adınızı güncelleyin',
         password: 'Yeni bir parola ayarlayın',
+        social: 'Oturum açmak için bir sosyal hesap bağlayın',
+        social_remove: 'Bağlı sosyal hesabı kaldırın',
         authenticator_app:
           'Çok faktörlü kimlik doğrulama için yeni bir doğrulayıcı uygulaması ayarlayın',
         passkey_add: 'Yeni bir passkey kaydedin',
