@@ -11,7 +11,6 @@ import {
   customClientMetadataDefault,
   CustomClientMetadataKey,
   extraParamsObjectGuard,
-  GrantType,
   inSeconds,
   logtoCookieKey,
   ExtraParamsKey,
@@ -22,8 +21,6 @@ import { type KoaContextWithOIDC, Provider, type ResourceServer, errors } from '
 import getRawBody from 'raw-body';
 import snakecaseKeys from 'snakecase-keys';
 
-import { redisCache } from '#src/caches/index.js';
-import { OidcCache } from '#src/caches/oidc.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { addOidcEventListeners } from '#src/event-listeners/index.js';
 import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
@@ -90,9 +87,6 @@ export default function initOidc(
     overwrite: true,
   } as const);
 
-  const oidcCache = new OidcCache(tenantId, redisCache);
-  const resourceServerInfoCacheTtlSeconds = 10;
-
   const getResourceServerInfoCore = async (
     indicator: string,
     clientId: string | undefined,
@@ -138,16 +132,6 @@ export default function initOidc(
       scope: scopes.map(({ name }) => name).join(' '),
     };
   };
-
-  const getResourceServerInfoCached = oidcCache.memoize(
-    getResourceServerInfoCore,
-    [
-      'resource-server-info',
-      (indicator, clientId, userId, organizationId) =>
-        [indicator, clientId ?? '-', userId ?? '-', organizationId ?? '-'].join(':'),
-    ],
-    () => resourceServerInfoCacheTtlSeconds
-  );
 
   // Do NOT deconstruct variables from `envSet` earlier, since we might reload `envSet` on the fly,
   // and keeping the reference of the `envSet` object helps dynamically update oidc provider configs.
@@ -219,10 +203,6 @@ export default function initOidc(
           const userId = session?.accountId ?? entities.Account?.accountId;
           const organizationId =
             typeof params?.organization_id === 'string' ? params.organization_id : undefined;
-
-          if (params?.grant_type === GrantType.TokenExchange) {
-            return getResourceServerInfoCached(indicator, client?.clientId, userId, organizationId);
-          }
 
           return getResourceServerInfoCore(indicator, client?.clientId, userId, organizationId);
         },

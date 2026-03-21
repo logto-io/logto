@@ -4,7 +4,6 @@ import { GrantType, type Scope } from '@logto/schemas';
 import type { KoaContextWithOIDC } from 'oidc-provider';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
-import { redisCache } from '#src/caches/index.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -75,22 +74,6 @@ const createContext = (
   });
 };
 describe('oidc provider init', () => {
-  beforeEach(() => {
-    const store = new Map<string, string>();
-
-    jest.spyOn(redisCache, 'get').mockImplementation(async (key) => store.get(key));
-    jest.spyOn(redisCache, 'set').mockImplementation(async (key, value) => {
-      store.set(key, value);
-    });
-    jest.spyOn(redisCache, 'delete').mockImplementation(async (key) => {
-      store.delete(key);
-    });
-  });
-
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
-
   it('init should not throw', async () => {
     const { id, queries, libraries, logtoConfigs, subscription } = new MockTenant();
 
@@ -99,17 +82,23 @@ describe('oidc provider init', () => {
     ).not.toThrow();
   });
 
-  it('should cache resource server info for token exchange read path', async () => {
-    const findResourceByIndicator = jest.fn().mockResolvedValue({
-      indicator,
-      accessTokenTtl: 3600,
-    });
+  it('should reflect updated resource data on token exchange read path', async () => {
+    const findResourceForOidcByIndicator = jest
+      .fn()
+      .mockResolvedValueOnce({
+        indicator,
+        accessTokenTtl: 3600,
+      })
+      .mockResolvedValueOnce({
+        indicator,
+        accessTokenTtl: 7200,
+      });
     const findApplicationById = jest.fn().mockResolvedValue({ isThirdParty: false });
     const findUserScopesForResourceIndicator = jest
       .fn()
       .mockResolvedValue([buildScope('scope_1', 'read:api')]);
     const tenant = new MockTenant(undefined, {
-      resources: { findResourceByIndicator },
+      resources: { findResourceForOidcByIndicator },
       applications: { findApplicationById },
     });
 
@@ -120,15 +109,21 @@ describe('oidc provider init', () => {
     const provider = createProvider(tenant);
     const ctx = createContext(provider, GrantType.TokenExchange, 'org_1');
 
-    await getResourceServerInfo(ctx, indicator);
-    await getResourceServerInfo(ctx, indicator);
+    const result1 = await getResourceServerInfo(ctx, indicator);
+    const result2 = await getResourceServerInfo(ctx, indicator);
 
-    expect(findResourceByIndicator).toHaveBeenCalledTimes(1);
-    expect(findApplicationById).toHaveBeenCalledTimes(1);
-    expect(findUserScopesForResourceIndicator).toHaveBeenCalledTimes(1);
+    expect(result1.accessTokenTTL).toBe(3600);
+    expect(result2.accessTokenTTL).toBe(7200);
+    expect(findResourceForOidcByIndicator).toHaveBeenCalledTimes(2);
+    expect(findApplicationById).toHaveBeenCalledTimes(2);
+    expect(findUserScopesForResourceIndicator).toHaveBeenCalledTimes(2);
   });
 
   it('should not reuse cached resource server info across organizations', async () => {
+    const findResourceForOidcByIndicator = jest.fn().mockResolvedValue({
+      indicator,
+      accessTokenTtl: 3600,
+    });
     const findUserScopesForResourceIndicator = jest.fn(
       async (
         _userId: string,
@@ -142,10 +137,7 @@ describe('oidc provider init', () => {
     );
     const tenant = new MockTenant(undefined, {
       resources: {
-        findResourceByIndicator: jest.fn().mockResolvedValue({
-          indicator,
-          accessTokenTtl: 3600,
-        }),
+        findResourceForOidcByIndicator,
       },
       applications: { findApplicationById: jest.fn().mockResolvedValue({ isThirdParty: false }) },
     });
@@ -167,20 +159,27 @@ describe('oidc provider init', () => {
 
     expect(result1.scope).toBe('read:api');
     expect(result2.scope).toBe('write:api');
+    expect(findResourceForOidcByIndicator).toHaveBeenCalledTimes(2);
     expect(findUserScopesForResourceIndicator).toHaveBeenCalledTimes(2);
   });
 
-  it('should not cache resource server info outside token exchange read path', async () => {
-    const findResourceByIndicator = jest.fn().mockResolvedValue({
-      indicator,
-      accessTokenTtl: 3600,
-    });
+  it('should reflect updated resource data outside token exchange read path', async () => {
+    const findResourceForOidcByIndicator = jest
+      .fn()
+      .mockResolvedValueOnce({
+        indicator,
+        accessTokenTtl: 3600,
+      })
+      .mockResolvedValueOnce({
+        indicator,
+        accessTokenTtl: 7200,
+      });
     const findApplicationById = jest.fn().mockResolvedValue({ isThirdParty: false });
     const findUserScopesForResourceIndicator = jest
       .fn()
       .mockResolvedValue([buildScope('scope_1', 'read:api')]);
     const tenant = new MockTenant(undefined, {
-      resources: { findResourceByIndicator },
+      resources: { findResourceForOidcByIndicator },
       applications: { findApplicationById },
     });
 
@@ -191,10 +190,12 @@ describe('oidc provider init', () => {
     const provider = createProvider(tenant);
     const ctx = createContext(provider, GrantType.RefreshToken, 'org_1');
 
-    await getResourceServerInfo(ctx, indicator);
-    await getResourceServerInfo(ctx, indicator);
+    const result1 = await getResourceServerInfo(ctx, indicator);
+    const result2 = await getResourceServerInfo(ctx, indicator);
 
-    expect(findResourceByIndicator).toHaveBeenCalledTimes(2);
+    expect(result1.accessTokenTTL).toBe(3600);
+    expect(result2.accessTokenTTL).toBe(7200);
+    expect(findResourceForOidcByIndicator).toHaveBeenCalledTimes(2);
     expect(findApplicationById).toHaveBeenCalledTimes(2);
     expect(findUserScopesForResourceIndicator).toHaveBeenCalledTimes(2);
   });
