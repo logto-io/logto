@@ -3,6 +3,7 @@ import { TtlCache } from '@logto/shared';
 import { pick } from '@silverhand/essentials';
 
 import { mockConnector0 } from '#src/__mocks__/connector-base-data.js';
+import { mockResource } from '#src/__mocks__/index.js';
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 
 import { WellKnownCache } from './well-known.js';
@@ -31,6 +32,15 @@ describe('Well-known cache basics', () => {
 
     await cache.set('tenant-cache-expires-at', WellKnownCache.defaultKey, 123);
     expect(await cache.get('tenant-cache-expires-at', WellKnownCache.defaultKey)).toBe(123);
+
+    await cache.set('resource-oidc-by-indicator', 'resource', {
+      indicator: mockResource.indicator,
+      accessTokenTtl: mockResource.accessTokenTtl,
+    });
+    expect(await cache.get('resource-oidc-by-indicator', 'resource')).toStrictEqual({
+      indicator: mockResource.indicator,
+      accessTokenTtl: mockResource.accessTokenTtl,
+    });
 
     await cache.delete('sie', WellKnownCache.defaultKey);
     expect(await cache.get('sie', WellKnownCache.defaultKey)).toBe(undefined);

@@ -57,7 +57,7 @@ export default class Queries {
   logs = createLogQueries(this.pool);
   oidcModelInstances = createOidcModelInstanceQueries(this.pool);
   passcodes = createPasscodeQueries(this.pool);
-  resources = createResourceQueries(this.pool);
+  resources = createResourceQueries(this.pool, this.wellKnownCache);
   rolesScopes = createRolesScopesQueries(this.pool);
   roles = createRolesQueries(this.pool);
   scopes = createScopeQueries(this.pool);
