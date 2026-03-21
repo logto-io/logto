@@ -3,6 +3,13 @@ const account_center = {
     title: 'Seite nicht gefunden',
     description: 'Diese Seite ist nicht verfügbar.',
   },
+  page: {
+    title: 'Konto',
+    security_title: 'Sicherheit',
+    security_description:
+      'Ändern Sie hier Ihre Kontoeinstellungen, um die Sicherheit Ihres Kontos zu gewährleisten.',
+    support: 'Hilfe',
+  },
   verification: {
     title: 'Sicherheitsüberprüfung',
     description:
@@ -58,6 +65,18 @@ const account_center = {
     title: 'Benutzernamen festlegen',
     description: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.',
     success: 'Benutzername erfolgreich aktualisiert.',
+  },
+  security: {
+    add: 'Hinzufügen',
+    change: 'Ändern',
+    remove: 'Entfernen',
+    not_set: 'Nicht festgelegt',
+    email_phone: 'E-Mail / Telefon',
+    email: 'E-Mail',
+    phone: 'Telefon',
+    password: 'Passwort',
+    configured: 'Konfiguriert',
+    not_configured: 'Nicht konfiguriert',
   },
   password: {
     title: 'Passwort festlegen',

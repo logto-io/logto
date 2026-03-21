@@ -339,8 +339,6 @@ describe('consent api', () => {
   });
 
   afterAll(async () => {
-    for (const application of applications.values()) {
-      void deleteApplication(application.id);
-    }
+    await Promise.all([...applications.values()].map(async (app) => deleteApplication(app.id)));
   });
 });

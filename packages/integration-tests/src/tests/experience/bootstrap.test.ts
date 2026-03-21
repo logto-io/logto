@@ -25,7 +25,7 @@ describe('smoke testing on the demo app', () => {
 
     await experience.toMatchElement('html[lang=en][dir=ltr]');
 
-    void experience.page.close();
+    await experience.page.close();
   });
 
   it('should have html attribute "lang=ar" and "dir=rtl" for Arabic language', async () => {
@@ -38,7 +38,7 @@ describe('smoke testing on the demo app', () => {
 
     // Clean up
     await setLanguage('en', true);
-    void experience.page.close();
+    await experience.page.close();
   });
 
   it('should be able to create a new account with a credential preset', async () => {

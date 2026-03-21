@@ -3,6 +3,12 @@ const account_center = {
     title: 'ページが見つかりません',
     description: 'このページは利用できません。',
   },
+  page: {
+    title: 'アカウント',
+    security_title: 'セキュリティ',
+    security_description: 'アカウントの安全を確保するために、ここでアカウント設定を変更できます。',
+    support: 'サポート',
+  },
   verification: {
     title: 'セキュリティ確認',
     description:
@@ -52,6 +58,18 @@ const account_center = {
     title: 'ユーザー名を設定',
     description: 'ユーザー名は英数字とアンダースコアのみ使用できます。',
     success: 'ユーザー名を更新しました。',
+  },
+  security: {
+    add: '追加',
+    change: '変更',
+    remove: '削除',
+    not_set: '未設定',
+    email_phone: 'メールアドレス / 電話番号',
+    email: 'メールアドレス',
+    phone: '電話番号',
+    password: 'パスワード',
+    configured: '設定済み',
+    not_configured: '未設定',
   },
   password: {
     title: 'パスワードを設定',

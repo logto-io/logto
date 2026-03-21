@@ -1,7 +1,6 @@
 import { getUserApplicationGrantsResponseGuard } from '@logto/schemas';
 import { object, string, enum as zodEnum } from 'zod';
 
-import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import { EnvSet } from '../../env-set/index.js';
@@ -54,39 +53,7 @@ export default function adminUserGrantRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { userId, grantId } = ctx.guard.params;
 
-      try {
-        await sessionLibrary.revokeUserGrantById({
-          provider,
-          userId,
-          grantId,
-        });
-      } catch (error: unknown) {
-        if (error instanceof RequestError) {
-          throw error;
-        }
-
-        throw new RequestError(
-          { code: 'oidc.failed_to_revoke_grant', status: 500 },
-          { cause: error }
-        );
-      }
-
-      try {
-        await sessionLibrary.removeUserSessionAuthorizationByGrantId({
-          provider,
-          userId,
-          grantId,
-        });
-      } catch (error: unknown) {
-        if (error instanceof RequestError) {
-          throw error;
-        }
-
-        throw new RequestError(
-          { code: 'oidc.failed_to_cleanup_session_authorization', status: 500 },
-          { cause: error }
-        );
-      }
+      await sessionLibrary.revokeUserGrantById(provider, userId, grantId);
 
       ctx.status = 204;
 

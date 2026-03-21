@@ -96,6 +96,12 @@ export enum CustomClientMetadataKey {
    * Only applicable to native applications. Defaults to `false`.
    */
   IsDeviceFlow = 'isDeviceFlow',
+  /**
+   * The maximum number of active sessions (devices) allowed per user for this application.
+   *
+   * When exceeded, old sessions should be revoked according to server policy.
+   */
+  MaxAllowedGrants = 'maxAllowedGrants',
 }
 
 export const customClientMetadataGuard = z.object({
@@ -108,6 +114,7 @@ export const customClientMetadataGuard = z.object({
   [CustomClientMetadataKey.RotateRefreshToken]: z.boolean().optional(),
   [CustomClientMetadataKey.AllowTokenExchange]: z.boolean().optional(),
   [CustomClientMetadataKey.IsDeviceFlow]: z.boolean().optional(),
+  [CustomClientMetadataKey.MaxAllowedGrants]: z.number().int().positive().optional(),
 } satisfies Record<CustomClientMetadataKey, z.ZodType>);
 
 /**
@@ -157,7 +164,7 @@ export const oidcSessionInstancePayloadGuard = z
     /**
      * A map of client_id to session authorization details. @see OidcSessionAuthorizationDetails
      */
-    authorizations: z.record(z.string(), oidcSessionAuthorizationDetailsGuard),
+    authorizations: z.record(z.string(), oidcSessionAuthorizationDetailsGuard).optional(),
   })
   .catchall(z.unknown());
 

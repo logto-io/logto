@@ -53,7 +53,7 @@ describe('Sign-in interaction with one-time token', () => {
     expect(userId).toBe(user.id);
 
     await logoutClient(client);
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should fail to sign-in with an invalid one-time token', async () => {
@@ -96,7 +96,7 @@ describe('Sign-in interaction with one-time token', () => {
       }
     );
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should fail to sign-in with a consumed one-time token', async () => {
@@ -124,7 +124,7 @@ describe('Sign-in interaction with one-time token', () => {
       }
     );
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should fail to sign-in with a revoked one-time token', async () => {
@@ -149,7 +149,7 @@ describe('Sign-in interaction with one-time token', () => {
       }
     );
 
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should sign-in the user even if the sign-in method does not support email', async () => {
@@ -193,7 +193,7 @@ describe('Sign-in interaction with one-time token', () => {
     expect(userId).toBe(user.id);
 
     await logoutClient(client);
-    void deleteOneTimeTokenById(oneTimeToken.id);
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should bypass the captcha check when using one-time token', async () => {

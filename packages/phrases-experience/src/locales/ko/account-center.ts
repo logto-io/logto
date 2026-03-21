@@ -3,6 +3,12 @@ const account_center = {
     title: '페이지를 찾을 수 없음',
     description: '이 페이지는 사용할 수 없습니다.',
   },
+  page: {
+    title: '계정',
+    security_title: '보안',
+    security_description: '계정 보안을 위해 여기에서 계정 설정을 변경하세요.',
+    support: '지원',
+  },
   verification: {
     title: '보안 인증',
     description: '계정 보안을 위해 본인인지 확인하세요. 신원을 인증할 방법을 선택해 주세요.',
@@ -51,6 +57,18 @@ const account_center = {
     title: '사용자 이름 설정',
     description: '사용자 이름은 문자, 숫자, 밑줄(_)만 사용할 수 있습니다.',
     success: '사용자 이름이 성공적으로 업데이트되었습니다.',
+  },
+  security: {
+    add: '추가',
+    change: '변경',
+    remove: '삭제',
+    not_set: '설정되지 않음',
+    email_phone: '이메일 / 전화번호',
+    email: '이메일',
+    phone: '전화번호',
+    password: '비밀번호',
+    configured: '설정됨',
+    not_configured: '설정되지 않음',
   },
   password: {
     title: '비밀번호 설정',

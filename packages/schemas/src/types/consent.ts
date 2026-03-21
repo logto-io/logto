@@ -69,7 +69,8 @@ export const consentInfoResponseGuard = z.object({
   organizations: publicOrganizationGuard.array().optional(),
   missingOIDCScope: z.string().array().optional(),
   missingResourceScopes: missingResourceScopesGuard.array().optional(),
-  redirectUri: z.string(),
+  // Device flow consent does not require a redirect_uri.
+  redirectUri: z.string().optional(),
 });
 
 export type ConsentInfoResponse = z.infer<typeof consentInfoResponseGuard>;

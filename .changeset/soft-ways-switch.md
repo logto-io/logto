@@ -23,4 +23,4 @@ After passkey sign-in is enabled, new users are prompted to bind a passkey durin
 
 3. **Allow autofill**: When **Allow autofill** is enabled, supported browsers can show passkey suggestions directly from the identifier input on the sign-in page. Users can select a previously saved passkey from the autofill popup and sign in with minimal extra input.
 
-Check out our [documentation](https://docs.logto.io/end-user-flows/passkey-sign-in) for more details.
+Check out our [documentation](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) for more details.

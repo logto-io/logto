@@ -7,7 +7,7 @@ import type Queries from '#src/tenants/Queries.js';
 import { GrantMock, createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { consent, createSessionLibrary } from './session.js';
+import { consent, createSessionLibrary } from './index.js';
 
 const { jest } = import.meta;
 
@@ -267,10 +267,12 @@ describe('revokeUserGrantById', () => {
   } as unknown as Provider;
 
   const sessionLibrary = createSessionLibrary({
+    oidcModelInstances: {
+      findUserActiveSessionUidByGrantId: jest.fn(async () => null),
+    },
     oidcSessionExtensions: {
       findUserActiveSessionsWithExtensions: jest.fn(async () => []),
       findUserActiveSessionWithExtension: jest.fn(async () => null),
-      findUserActiveSessionUidByGrantId: jest.fn(async () => null),
     },
   } as unknown as Queries);
 
@@ -284,11 +286,7 @@ describe('revokeUserGrantById', () => {
       exp: Math.ceil(Date.now() / 1000) + 3600,
     });
 
-    await sessionLibrary.revokeUserGrantById({
-      provider,
-      userId: 'user-id',
-      grantId: 'grant-id',
-    });
+    await sessionLibrary.revokeUserGrantById(provider, 'user-id', 'grant-id');
 
     expect(findGrant).toHaveBeenCalledWith('grant-id', { ignoreExpiration: true });
     expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-id');
@@ -305,11 +303,7 @@ describe('revokeUserGrantById', () => {
       exp: Math.floor(Date.now() / 1000) - 1,
     });
 
-    await sessionLibrary.revokeUserGrantById({
-      provider,
-      userId: 'user-id',
-      grantId: 'grant-id',
-    });
+    await sessionLibrary.revokeUserGrantById(provider, 'user-id', 'grant-id');
 
     expect(revokeAccessTokenByGrantId).not.toHaveBeenCalled();
     expect(revokeRefreshTokenByGrantId).not.toHaveBeenCalled();
@@ -324,11 +318,7 @@ describe('revokeUserGrantById', () => {
     findGrant.mockResolvedValueOnce(undefined);
 
     await expect(
-      sessionLibrary.revokeUserGrantById({
-        provider,
-        userId: 'user-id',
-        grantId: 'missing-grant-id',
-      })
+      sessionLibrary.revokeUserGrantById(provider, 'user-id', 'missing-grant-id')
     ).rejects.toMatchObject({ status: 404, code: 'oidc.invalid_grant' });
   });
 
@@ -339,15 +329,10 @@ describe('revokeUserGrantById', () => {
     });
 
     await expect(
-      sessionLibrary.revokeUserGrantById({
-        provider,
-        userId: 'user-id',
-        grantId: 'grant-id',
-      })
+      sessionLibrary.revokeUserGrantById(provider, 'user-id', 'grant-id')
     ).rejects.toMatchObject({ status: 404, code: 'oidc.invalid_grant' });
   });
 });
-
 describe('removeUserSessionAuthorizationByGrantId', () => {
   const findByUid = jest.fn<
     Promise<
@@ -374,10 +359,12 @@ describe('removeUserSessionAuthorizationByGrantId', () => {
   } as unknown as Provider;
 
   const sessionLibrary = createSessionLibrary({
+    oidcModelInstances: {
+      findUserActiveSessionUidByGrantId,
+    },
     oidcSessionExtensions: {
       findUserActiveSessionsWithExtensions: jest.fn(async () => []),
       findUserActiveSessionWithExtension: jest.fn(async () => null),
-      findUserActiveSessionUidByGrantId,
     },
   } as unknown as Queries);
 
@@ -394,11 +381,7 @@ describe('removeUserSessionAuthorizationByGrantId', () => {
       persist,
     });
 
-    await sessionLibrary.removeUserSessionAuthorizationByGrantId({
-      provider,
-      userId: 'user-id',
-      grantId: 'grant-id',
-    });
+    await sessionLibrary.removeUserSessionAuthorizationByGrantId(provider, 'user-id', 'grant-id');
 
     expect(findUserActiveSessionUidByGrantId).toHaveBeenCalledWith('user-id', 'grant-id');
     expect(findByUid).toHaveBeenCalledWith('session-id');
@@ -410,11 +393,7 @@ describe('removeUserSessionAuthorizationByGrantId', () => {
     // eslint-disable-next-line unicorn/no-useless-undefined
     findUserActiveSessionUidByGrantId.mockResolvedValueOnce(undefined);
 
-    await sessionLibrary.removeUserSessionAuthorizationByGrantId({
-      provider,
-      userId: 'user-id',
-      grantId: 'grant-id',
-    });
+    await sessionLibrary.removeUserSessionAuthorizationByGrantId(provider, 'user-id', 'grant-id');
 
     expect(findByUid).not.toHaveBeenCalled();
     expect(resetIdentifier).not.toHaveBeenCalled();

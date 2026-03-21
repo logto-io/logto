@@ -9,7 +9,6 @@ import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
 import { applicationDataStructure, deviceFlow, thirdPartyApp } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import CodeEditor from '@/ds-components/CodeEditor';
@@ -94,8 +93,7 @@ function Settings({ data }: Props) {
 
   const { type: applicationType, isThirdParty, customClientMetadata } = data;
 
-  // DEV: Device flow
-  const isDeviceFlow = isDevFeaturesEnabled && Boolean(customClientMetadata.isDeviceFlow);
+  const isDeviceFlow = Boolean(customClientMetadata.isDeviceFlow);
   const isProtectedApp = applicationType === ApplicationType.Protected;
   const redirectUriValidator = createRedirectUriValidator(applicationType);
   const uriPatternRules: MultiTextInputRule = {
@@ -124,7 +122,6 @@ function Settings({ data }: Props) {
       description={`application_details.${isThirdParty ? 'third_party_' : ''}settings_description`}
       learnMoreLink={{ href: isThirdParty ? thirdPartyApp : applicationDataStructure }}
     >
-      {/* DEV: Device flow notification banner */}
       {isDeviceFlow && (
         <div className={styles.deviceFlowBanner}>
           <span className={styles.deviceFlowEmoji}>🎉</span>
