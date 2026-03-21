@@ -16,6 +16,7 @@ node_modules
 
 # production
 /packages/**/build
+/packages/**/build-integration
 /packages/**/lib
 /packages/**/dist
 

@@ -46,9 +46,6 @@ const emailPrimarySignInExperience = {
     factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
     policy: MfaPolicy.Mandatory,
   },
-  sentinelPolicy: {
-    maxAttempts: 1000, // Set high to avoid interference with tests
-  },
 };
 
 describe('Register interaction - optional additional MFA suggestion', () => {

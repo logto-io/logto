@@ -19,12 +19,18 @@ ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
 RUN pnpm -r build
 
 # Core package needs to be built separately for integration tests for instrumentation to work
-# properly
+# properly.
 RUN cd packages/core && pnpm build:integration
 
 # Keep behavior aligned with CI packaging
 ENV SKIP_TAR=true
 RUN ./.scripts/package.sh
+
+# Note: The `nyc` version used here may be different from the one used in the core package
+# because dev dependencies are pruned in `package.sh`. This should be fine since the core
+# package uses `nyc` only for instrument build and doesn't require a specific version for runtime.
+# We can consider aligning the versions in the future if it becomes a concern.
+RUN npm add -g nyc@^18.0.0
 
 COPY .scripts/integration/ /etc/logto/.scripts/integration/
 

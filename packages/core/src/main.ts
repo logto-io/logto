@@ -67,7 +67,7 @@ if (EnvSet.values.isIntegrationTest) {
   // eslint-disable-next-line @silverhand/fp/no-let
   let isExiting = false;
 
-  const gracefullyExit = async () => {
+  const gracefullyExit = () => {
     if (isExiting) {
       return;
     }

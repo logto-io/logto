@@ -13,18 +13,19 @@ npm run cli db system set cloudflareHostnameProvider '{"zoneId":"mock-zone-id","
 
 echo "[bootstrap] starting services"
 
+cd packages/core
+
 if [[ "${COVERAGE:-0}" == "1" ]]; then
   echo "[bootstrap] starting services with nyc for coverage collection"
-  cd packages/core
-  exec npx nyc \
+  exec nyc \
     --temp-dir "${COVERAGE_TEMP_DIR:-./coverage/raw}" \
     --report-dir "${COVERAGE_REPORT_DIR:-./coverage/report}" \
     --reporter=text-summary \
     --reporter=lcov \
     --all \
+    --exclude=src/__mocks__ \
     --instrument=false \
-    npm start
+    npm run start:integration
 else
-  cd packages/core
   exec npm start
 fi

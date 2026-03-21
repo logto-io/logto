@@ -63,13 +63,11 @@ trap cleanup EXIT
 mkdir -p "$MOCK_MESSAGE_DIR"
 find "$MOCK_MESSAGE_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
 
-if [ "${COVERAGE:-0}" = "1" ]; then
-  # Clean up coverage directory to ensure we start with a clean slate for coverage collection
-  # Note: We don't use `rm -rf` because we'd like to keep the directory itself for a stable mount
-  # point in the docker container.
-  mkdir -p "$COVERAGE_DIR"
-  find "$COVERAGE_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
-fi
+# Clean up coverage directory to ensure we start with a clean slate for coverage collection
+# Note: We don't use `rm -rf` because we'd like to keep the directory itself for a stable mount
+# point in the docker container.
+mkdir -p "$COVERAGE_DIR"
+find "$COVERAGE_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
 
 # Stop and remove any existing containers from previous runs to ensure a clean environment
 docker compose -f "$COMPOSE_FILE" down -v --remove-orphans
