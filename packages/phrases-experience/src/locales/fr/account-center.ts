@@ -70,12 +70,21 @@ const account_center = {
     change: 'Modifier',
     remove: 'Supprimer',
     not_set: 'Non défini',
+    social_sign_in: 'Connexion sociale',
+    social_not_linked: 'Non lié',
     email_phone: 'E-mail / Téléphone',
     email: 'E-mail',
     phone: 'Téléphone',
     password: 'Mot de passe',
     configured: 'Configuré',
     not_configured: 'Non configuré',
+  },
+  social: {
+    linked: '{{connector}} a été lié avec succès.',
+    removed: '{{connector}} a été supprimé avec succès.',
+    remove_confirmation_title: 'Supprimer le compte social',
+    remove_confirmation_description:
+      "Si vous supprimez {{connector}}, vous ne pourrez peut-être plus vous connecter avec ce compte avant de l'ajouter à nouveau.",
   },
   password: {
     title: 'Définir le mot de passe',

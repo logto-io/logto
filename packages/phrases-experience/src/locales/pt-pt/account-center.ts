@@ -68,12 +68,21 @@ const account_center = {
     change: 'Alterar',
     remove: 'Remover',
     not_set: 'Não definido',
+    social_sign_in: 'Início de sessão social',
+    social_not_linked: 'Não associada',
     email_phone: 'E-mail / Telefone',
     email: 'E-mail',
     phone: 'Telefone',
     password: 'Palavra-passe',
     configured: 'Configurado',
     not_configured: 'Não configurado',
+  },
+  social: {
+    linked: '{{connector}} associada com sucesso.',
+    removed: '{{connector}} removida com sucesso.',
+    remove_confirmation_title: 'Remover conta social',
+    remove_confirmation_description:
+      'Se remover {{connector}}, poderá deixar de conseguir iniciar sessão com esta conta até a adicionar novamente.',
   },
   password: {
     title: 'Definir palavra-passe',
