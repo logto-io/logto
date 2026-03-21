@@ -40,6 +40,7 @@ const user = {
   wrong_backup_code_format: '備份代碼格式無效。',
   username_required: '使用者名稱是必填識別符，你不能將其設為 null。',
   email_or_phone_required: '電子郵件地址或手機號碼是必填識別符，至少需要一個。',
+  last_sign_in_method_required: '你的帳戶至少需要保留一種可用的登入方式。',
   email_required: '電子郵件地址是必填識別符，你不能將其設為 null。',
   phone_required: '手機號碼是必填識別符，你不能將其設為 null。',
   enterprise_sso_identity_not_exists:

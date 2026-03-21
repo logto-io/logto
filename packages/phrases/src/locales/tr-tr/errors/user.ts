@@ -42,6 +42,8 @@ const user = {
   username_required: 'Kullanıcı adı gerekli bir tanımlayıcıdır, boş bırakılamaz.',
   email_or_phone_required:
     'E-posta adresi veya telefon numarası gerekli bir tanımlayıcıdır, en az bir tanesi gereklidir.',
+  last_sign_in_method_required:
+    'Hesabınızda kullanılabilir en az bir oturum açma yöntemi bulundurmanız gerekir.',
   email_required: 'E-posta adresi gerekli bir tanımlayıcıdır, boş bırakılamaz.',
   phone_required: 'Telefon numarası gerekli bir tanımlayıcıdır, boş bırakılamaz.',
   enterprise_sso_identity_not_exists:

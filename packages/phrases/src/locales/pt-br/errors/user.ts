@@ -44,6 +44,8 @@ const user = {
     'Nome de usuário é um identificador obrigatório, você não pode defini-lo como nulo.',
   email_or_phone_required:
     'Endereço de e-mail ou número de telefone é um identificador obrigatório, pelo menos um é necessário.',
+  last_sign_in_method_required:
+    'Você precisa manter pelo menos um método de login disponível na sua conta.',
   email_required:
     'Endereço de e-mail é um identificador obrigatório, você não pode defini-lo como nulo.',
   phone_required:
