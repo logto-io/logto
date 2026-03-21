@@ -113,6 +113,10 @@ const Main = () => {
     uiLocales,
     userInfoError,
   ]);
+  if (isSocialCallback) {
+    return <SocialCallback />;
+  }
+
   if (isAuthCallback) {
     return <Callback />;
   }
