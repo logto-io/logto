@@ -45,7 +45,7 @@ services:
       SECRET_VAULT_KEK: DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
       STATUS_API_KEY: test-status-api-key
       TRUST_PROXY_HEADER: "1"
-      COVERAGE: ${COVERAGE}
+      COVERAGE: ${COVERAGE:-0}
       COVERAGE_REPORT_DIR: /coverage/report
       COVERAGE_TEMP_DIR: /coverage/raw
     healthcheck:
