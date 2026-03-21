@@ -26,7 +26,7 @@ export const generateState = () => {
  * opens a new view or window. To handle this, we also persist values in localStorage
  * and fall back to it when sessionStorage is empty after a redirect.
  */
-const getStorageItem = (key: string): string | null => {
+const getStorageItem = (key: string) => {
   const sessionValue = sessionStorage.getItem(key);
 
   if (sessionValue !== null) {
