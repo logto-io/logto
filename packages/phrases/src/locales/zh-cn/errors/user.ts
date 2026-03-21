@@ -40,6 +40,7 @@ const user = {
   wrong_backup_code_format: '备用代码格式无效。',
   username_required: '用户名是必需的标识符，你不能将其设置为 null。',
   email_or_phone_required: '邮箱地址或手机号码是必需的标识符，至少需要一个。',
+  last_sign_in_method_required: '你的账户至少需要保留一种可用的登录方式。',
   email_required: '邮箱地址是必需的标识符，你不能将其设置为 null。',
   phone_required: '手机号码是必需的标识符，你不能将其设置为 null。',
   enterprise_sso_identity_not_exists:

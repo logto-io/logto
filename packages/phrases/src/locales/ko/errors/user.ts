@@ -42,6 +42,8 @@ const user = {
   username_required: '사용자 이름은 필수 식별자이며, null로 설정할 수 없습니다.',
   email_or_phone_required:
     '이메일 주소 또는 휴대전화번호는 필수 식별자이며, 적어도 하나는 필요합니다.',
+  last_sign_in_method_required:
+    '계정에는 사용할 수 있는 로그인 방법을 최소 하나 이상 유지해야 합니다.',
   email_required: '이메일 주소는 필수 식별자이며, null로 설정할 수 없습니다.',
   phone_required: '휴대전화번호는 필수 식별자이며, null로 설정할 수 없습니다.',
   enterprise_sso_identity_not_exists:
