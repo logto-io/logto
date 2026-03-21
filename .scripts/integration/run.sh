@@ -36,13 +36,13 @@ cleanup() {
   local exit_code=$?
 
   echo "[run] stopping services for ${TARGET} integration test with run id: ${RUN_ID}"
-  docker compose -f "$COMPOSE_FILE" stop logto
+  docker compose -f "$COMPOSE_FILE" stop logto || true
 
   echo "[run] cleaning up environment for ${TARGET} integration test with run id: ${RUN_ID}"
   echo "[run] writing logs with run id: ${RUN_ID}"
   dump_logs
 
-  docker compose -f "$COMPOSE_FILE" down -v --remove-orphans
+  docker compose -f "$COMPOSE_FILE" down -v --remove-orphans || true
 
   if [ "$exit_code" -ne 0 ]; then
     echo "[run] integration test failed"

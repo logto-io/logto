@@ -15,7 +15,7 @@ import { waitFor } from '#src/utils.js';
 
 beforeAll(async () => {
   // Clean up all existing one-time tokens before running the tests.
-  // 100 is an reasonable number here, but we can increase it if needed.
+  // 100 is a reasonable number here, but we can increase it if needed.
   const existingTokens = await getOneTimeTokens({ page: '1', page_size: '100' });
   await Promise.all(existingTokens.map(async (token) => deleteOneTimeTokenById(token.id)));
 });
