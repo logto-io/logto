@@ -63,12 +63,21 @@ const account_center = {
     change: '變更',
     remove: '移除',
     not_set: '未設定',
+    social_sign_in: '社群登入',
+    social_not_linked: '未連結',
     email_phone: '電子郵件 / 電話號碼',
     email: '電子郵件',
     phone: '電話號碼',
     password: '密碼',
     configured: '已設定',
     not_configured: '未設定',
+  },
+  social: {
+    linked: '已成功連結 {{connector}}。',
+    removed: '已成功移除 {{connector}}。',
+    remove_confirmation_title: '移除社群帳號',
+    remove_confirmation_description:
+      '如果你移除 {{connector}}，在重新加入之前，你可能無法再透過它登入。',
   },
   password: {
     title: '設定密碼',

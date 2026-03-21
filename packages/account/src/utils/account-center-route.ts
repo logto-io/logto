@@ -18,12 +18,12 @@ import {
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
+  socialRoutePrefix,
 } from '@ac/constants/routes';
 
 import { sessionStorage } from './session-storage';
 
 export const accountCenterBasePath = '/account';
-const routeStorageKey = 'account-center-route-cache';
 const redirectUrlParameter = 'redirect';
 const showSuccessParameter = 'show_success';
 const uiLocalesParameter = 'ui_locales';
@@ -46,6 +46,7 @@ const knownRoutePrefixes: readonly string[] = [
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
+  socialRoutePrefix,
 ];
 
 const isKnownRoute = (pathname?: string): pathname is string =>
@@ -123,11 +124,9 @@ export const handleAccountCenterRoute = () => {
 
   // Restore the stored route if the current path is the base path.
   if (window.location.pathname === accountCenterBasePath) {
-    const storedRoute = parseStoredRoute(
-      window.sessionStorage.getItem(routeStorageKey) ?? undefined
-    );
+    const storedRoute = parseStoredRoute(sessionStorage.getRoute());
     // Always clear the stored route to ensure one-time restoration
-    window.sessionStorage.removeItem(routeStorageKey);
+    sessionStorage.clearRoute();
 
     if (!storedRoute) {
       return;
@@ -136,6 +135,6 @@ export const handleAccountCenterRoute = () => {
     const { search, hash } = window.location;
     window.history.replaceState({}, '', `${storedRoute}${search}${hash}`);
   } else if (isKnownRoute(window.location.pathname)) {
-    window.sessionStorage.setItem(routeStorageKey, window.location.pathname);
+    sessionStorage.setRoute(window.location.pathname);
   }
 };
