@@ -1,5 +1,5 @@
 import { UserScope } from '@logto/core-kit';
-import { ConnectorType, SignInIdentifier } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
 import {
@@ -11,13 +11,11 @@ import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { getUserIdentity } from '#src/api/admin-user.js';
 import { updateConnectorConfig } from '#src/api/connector.js';
 import {
-  deleteIdentity,
   getSocialAccessToken,
   getUserInfo,
   updateIdentities,
   updateSocialAccessToken,
 } from '#src/api/my-account.js';
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import {
   createSocialVerificationRecord,
   createVerificationRecordByPassword,
@@ -36,10 +34,13 @@ import {
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 
+import {
+  socialVerificationAuthorizationCode,
+  socialVerificationRedirectUri,
+  socialVerificationState,
+} from './social-test-utils.js';
+
 describe('my-account (social)', () => {
-  const state = 'fake_state';
-  const redirectUri = 'http://localhost:3000/redirect';
-  const authorizationCode = 'fake_code';
   const connectorIdMap = new Map<string, string>();
 
   beforeAll(async () => {
@@ -123,8 +124,14 @@ describe('my-account (social)', () => {
         const api = await signInAndGetUserApi(username, password, {
           scopes: [UserScope.Profile, UserScope.Identities],
         });
+
         await expectRejects(
-          createSocialVerificationRecord(api, 'invalid-connector-id', state, redirectUri),
+          createSocialVerificationRecord(
+            api,
+            'invalid-connector-id',
+            socialVerificationState,
+            socialVerificationRedirectUri
+          ),
           {
             code: 'session.invalid_connector_id',
             status: 422,
@@ -144,8 +151,8 @@ describe('my-account (social)', () => {
           createSocialVerificationRecord(
             api,
             connectorIdMap.get(mockEmailConnectorId)!,
-            state,
-            redirectUri
+            socialVerificationState,
+            socialVerificationRedirectUri
           ),
           {
             code: 'connector.unexpected_type',
@@ -174,18 +181,18 @@ describe('my-account (social)', () => {
           await createSocialVerificationRecord(
             api,
             connectorIdMap.get(mockSocialConnectorId)!,
-            state,
-            redirectUri,
+            socialVerificationState,
+            socialVerificationRedirectUri,
             mockSocialScope
           );
 
         const authorizationUriParams = new URLSearchParams(authorizationUri.split('?')[1]);
-        expect(authorizationUriParams.get('state')).toBe(state);
-        expect(authorizationUriParams.get('redirect_uri')).toBe(redirectUri);
+        expect(authorizationUriParams.get('state')).toBe(socialVerificationState);
+        expect(authorizationUriParams.get('redirect_uri')).toBe(socialVerificationRedirectUri);
         expect(authorizationUriParams.get('scope')).toBe(mockSocialScope);
 
         await verifySocialAuthorization(api, newVerificationRecordId, {
-          code: authorizationCode,
+          code: socialVerificationAuthorizationCode,
           tokenResponse: mockTokenResponse,
         });
 
@@ -199,217 +206,6 @@ describe('my-account (social)', () => {
 
         await deleteDefaultTenantUser(user.id);
       });
-    });
-  });
-
-  describe('DELETE /my-account/identities/:target', () => {
-    it('should fail if scope is missing', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password);
-      const verificationRecordId = await createVerificationRecordByPassword(api, password);
-
-      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
-        code: 'auth.unauthorized',
-        status: 400,
-      });
-
-      await deleteDefaultTenantUser(user.id);
-    });
-
-    it('should fail if verification record is invalid', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
-        scopes: [UserScope.Profile, UserScope.Identities],
-      });
-
-      await expectRejects(
-        deleteIdentity(api, mockSocialConnectorTarget, 'invalid-verification-record-id'),
-        {
-          code: 'verification_record.permission_denied',
-          status: 401,
-        }
-      );
-
-      await deleteDefaultTenantUser(user.id);
-    });
-
-    it('should fail if identity does not exist', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
-        scopes: [UserScope.Profile, UserScope.Identities],
-      });
-      const verificationRecordId = await createVerificationRecordByPassword(api, password);
-
-      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
-        code: 'user.identity_not_exist',
-        status: 404,
-      });
-
-      await deleteDefaultTenantUser(user.id);
-    });
-
-    it('should be able to delete social identity', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
-        scopes: [UserScope.Profile, UserScope.Identities],
-      });
-      const verificationRecordId = await createVerificationRecordByPassword(api, password);
-
-      // Link social identity to the user
-      const { verificationRecordId: newVerificationRecordId } =
-        await createSocialVerificationRecord(
-          api,
-          connectorIdMap.get(mockSocialConnectorId)!,
-          state,
-          redirectUri
-        );
-      await verifySocialAuthorization(api, newVerificationRecordId, {
-        code: authorizationCode,
-      });
-      await updateIdentities(api, verificationRecordId, newVerificationRecordId);
-      const userInfo = await getUserInfo(api);
-      expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);
-
-      await deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId);
-
-      const updatedUserInfo = await getUserInfo(api);
-      expect(updatedUserInfo.identities).not.toHaveProperty(mockSocialConnectorTarget);
-
-      await deleteDefaultTenantUser(user.id);
-    });
-
-    it('should reject deleting the last available sign-in method', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
-        scopes: [UserScope.Profile, UserScope.Identities],
-      });
-      const verificationRecordId = await createVerificationRecordByPassword(api, password);
-
-      const { verificationRecordId: newVerificationRecordId } =
-        await createSocialVerificationRecord(
-          api,
-          connectorIdMap.get(mockSocialConnectorId)!,
-          state,
-          redirectUri
-        );
-      await verifySocialAuthorization(api, newVerificationRecordId, {
-        code: authorizationCode,
-      });
-      await updateIdentities(api, verificationRecordId, newVerificationRecordId);
-
-      await updateSignInExperience({
-        signIn: {
-          methods: [
-            {
-              identifier: SignInIdentifier.Phone,
-              password: true,
-              verificationCode: false,
-              isPasswordPrimary: true,
-            },
-          ],
-        },
-        socialSignInConnectorTargets: [mockSocialConnectorTarget],
-      });
-
-      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
-        code: 'user.last_sign_in_method_required',
-        status: 400,
-      });
-
-      await enableAllPasswordSignInMethods();
-      await deleteDefaultTenantUser(user.id);
-    });
-
-    it('should allow deleting social identity when another identifier sign-in method remains available', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword({
-        primaryEmail: `${generateStandardId()}@example.com`,
-      });
-      const api = await signInAndGetUserApi(username, password, {
-        scopes: [UserScope.Profile, UserScope.Identities],
-      });
-      const verificationRecordId = await createVerificationRecordByPassword(api, password);
-
-      const { verificationRecordId: newVerificationRecordId } =
-        await createSocialVerificationRecord(
-          api,
-          connectorIdMap.get(mockSocialConnectorId)!,
-          state,
-          redirectUri
-        );
-      await verifySocialAuthorization(api, newVerificationRecordId, {
-        code: authorizationCode,
-      });
-      await updateIdentities(api, verificationRecordId, newVerificationRecordId);
-
-      await updateSignInExperience({
-        signIn: {
-          methods: [
-            {
-              identifier: SignInIdentifier.Email,
-              password: false,
-              verificationCode: true,
-              isPasswordPrimary: false,
-            },
-          ],
-        },
-        socialSignInConnectorTargets: [mockSocialConnectorTarget],
-      });
-
-      await deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId);
-
-      const updatedUserInfo = await getUserInfo(api);
-      expect(updatedUserInfo.identities).not.toHaveProperty(mockSocialConnectorTarget);
-
-      await enableAllPasswordSignInMethods();
-      await deleteDefaultTenantUser(user.id);
-    });
-
-    it('should localize the last available sign-in method error message', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(
-        username,
-        password,
-        {
-          scopes: [UserScope.Profile, UserScope.Identities],
-        },
-        'fr'
-      );
-      const verificationRecordId = await createVerificationRecordByPassword(api, password);
-
-      const { verificationRecordId: newVerificationRecordId } =
-        await createSocialVerificationRecord(
-          api,
-          connectorIdMap.get(mockSocialConnectorId)!,
-          state,
-          redirectUri
-        );
-      await verifySocialAuthorization(api, newVerificationRecordId, {
-        code: authorizationCode,
-      });
-      await updateIdentities(api, verificationRecordId, newVerificationRecordId);
-
-      await updateSignInExperience({
-        signIn: {
-          methods: [
-            {
-              identifier: SignInIdentifier.Phone,
-              password: true,
-              verificationCode: false,
-              isPasswordPrimary: true,
-            },
-          ],
-        },
-        socialSignInConnectorTargets: [mockSocialConnectorTarget],
-      });
-
-      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
-        code: 'user.last_sign_in_method_required',
-        status: 400,
-        messageIncludes: 'au moins une méthode de connexion disponible',
-      });
-
-      await enableAllPasswordSignInMethods();
-      await deleteDefaultTenantUser(user.id);
     });
   });
 
@@ -433,18 +229,18 @@ describe('my-account (social)', () => {
         await createSocialVerificationRecord(
           api,
           connectorIdMap.get(mockSocialConnectorId)!,
-          state,
-          redirectUri,
+          socialVerificationState,
+          socialVerificationRedirectUri,
           mockSocialScope
         );
 
       const authorizationUriParams = new URLSearchParams(authorizationUri.split('?')[1]);
-      expect(authorizationUriParams.get('state')).toBe(state);
-      expect(authorizationUriParams.get('redirect_uri')).toBe(redirectUri);
+      expect(authorizationUriParams.get('state')).toBe(socialVerificationState);
+      expect(authorizationUriParams.get('redirect_uri')).toBe(socialVerificationRedirectUri);
       expect(authorizationUriParams.get('scope')).toBe(mockSocialScope);
 
       await verifySocialAuthorization(api, newVerificationRecordId, {
-        code: authorizationCode,
+        code: socialVerificationAuthorizationCode,
         userId: socialIdentityId,
         tokenResponse: mockTokenResponse,
       });
@@ -466,8 +262,8 @@ describe('my-account (social)', () => {
       } = await createSocialVerificationRecord(
         api,
         connectorIdMap.get(mockSocialConnectorId)!,
-        state,
-        redirectUri,
+        socialVerificationState,
+        socialVerificationRedirectUri,
         updateSocialScope
       );
       const updateAuthorizationUriParams = new URLSearchParams(
@@ -482,7 +278,7 @@ describe('my-account (social)', () => {
       };
 
       await verifySocialAuthorization(api, updateSocialVerificationRecordId, {
-        code: authorizationCode,
+        code: socialVerificationAuthorizationCode,
         userId: socialIdentityId,
         tokenResponse: updateMockTokenResponse,
       });
