@@ -34,6 +34,9 @@ describe('Register interaction with one-time token', () => {
           },
         ],
       },
+      sentinelPolicy: {
+        maxAttempts: 1000, // Set high to avoid interference with tests
+      },
     });
   });
 

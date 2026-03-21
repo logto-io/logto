@@ -13,6 +13,13 @@ import {
 import { expectRejects } from '#src/helpers/index.js';
 import { waitFor } from '#src/utils.js';
 
+beforeAll(async () => {
+  // Clean up all existing one-time tokens before running the tests.
+  // 100 is an reasonable number here, but we can increase it if needed.
+  const existingTokens = await getOneTimeTokens({ page: '1', page_size: '100' });
+  await Promise.all(existingTokens.map(async (token) => deleteOneTimeTokenById(token.id)));
+});
+
 describe('one-time tokens API', () => {
   it('should create one-time token with default 10 mins expiration time', async () => {
     const email = `foo${generateStandardId()}@bar.com`;
