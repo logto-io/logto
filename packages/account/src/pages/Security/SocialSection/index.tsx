@@ -1,11 +1,6 @@
 import DynamicT from '@experience/shared/components/DynamicT';
 import { getLogoUrl } from '@experience/shared/utils/logo';
-import {
-  AccountCenterControlValue,
-  ConnectorPlatform,
-  type ExperienceSocialConnector,
-  type Identity,
-} from '@logto/schemas';
+import { AccountCenterControlValue, type Identity } from '@logto/schemas';
 import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +9,11 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import { getSocialAddRoute, getSocialRemoveRoute } from '@ac/constants/routes';
 import { getRedirectUrl, setRedirectUrl } from '@ac/utils/account-center-route';
-import { getLocalizedConnectorName } from '@ac/utils/social-connector';
+import { hasVisibleSocialSection } from '@ac/utils/security-page';
+import {
+  getAvailableSocialConnectors,
+  getLocalizedConnectorName,
+} from '@ac/utils/social-connector';
 
 import styles from './index.module.scss';
 
@@ -28,22 +27,6 @@ const getSocialIdentityDetail = (identity: Identity, key: keyof SocialIdentityDe
   const value = identity.details?.[key];
 
   return typeof value === 'string' ? value : undefined;
-};
-
-const filterSocialConnectors = (connectors: ExperienceSocialConnector[]) => {
-  const connectorMap = new Map<string, ExperienceSocialConnector>();
-
-  for (const connector of connectors) {
-    if (connector.platform === ConnectorPlatform.Native) {
-      continue;
-    }
-
-    if (connector.platform === ConnectorPlatform.Web || !connectorMap.has(connector.target)) {
-      connectorMap.set(connector.target, connector);
-    }
-  }
-
-  return [...connectorMap.values()];
 };
 
 const truncateSocialUserId = (userId: string) =>
@@ -78,7 +61,7 @@ const SocialSection = () => {
   const socialControl = accountCenterSettings?.fields.social;
 
   const connectors = useMemo(
-    () => filterSocialConnectors(experienceSettings?.socialConnectors ?? []),
+    () => getAvailableSocialConnectors(experienceSettings?.socialConnectors ?? []),
     [experienceSettings?.socialConnectors]
   );
 
@@ -99,14 +82,7 @@ const SocialSection = () => {
   const selectedConnectorName =
     selectedConnector && getLocalizedConnectorName(selectedConnector, language);
 
-  if (
-    socialControl !== AccountCenterControlValue.Edit &&
-    socialControl !== AccountCenterControlValue.ReadOnly
-  ) {
-    return null;
-  }
-
-  if (connectors.length === 0) {
+  if (!hasVisibleSocialSection(socialControl, experienceSettings)) {
     return null;
   }
 

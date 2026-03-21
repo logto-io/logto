@@ -12,6 +12,7 @@ import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { accountStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
+import { finalizeSocialFlowFailure, finalizeSocialFlowSuccess } from '@ac/utils/social-flow';
 
 const SocialCallback = () => {
   const {
@@ -57,10 +58,13 @@ const SocialCallback = () => {
       return;
     }
 
-    accountStorage.socialVerification.clear(connectorId);
-    await refreshUserInfo();
-    setToast(t('account_center.social.linked', { connector: connectorName }));
-    navigate('/', { replace: true });
+    await finalizeSocialFlowSuccess({
+      connectorId,
+      successMessage: t('account_center.social.linked', { connector: connectorName }),
+      refreshUserInfo,
+      setToast,
+      navigate,
+    });
   }, [connectorId, connectorName, navigate, refreshUserInfo, setToast, t]);
 
   useEffect(() => {
@@ -70,18 +74,27 @@ const SocialCallback = () => {
 
     setStartedConnectorId(connectorId);
 
-    const storedSocialVerification = accountStorage.socialVerification.get(connectorId);
+    const storedSocialFlow = accountStorage.socialFlow.get(connectorId);
 
-    if (!storedSocialVerification?.state) {
-      setToast(t('error.invalid_session'));
-      navigate('/', { replace: true });
+    if (storedSocialFlow?.status !== 'pending') {
+      finalizeSocialFlowFailure({
+        connectorId,
+        clearFlowRecord: true,
+        message: t('error.invalid_session'),
+        setToast,
+        navigate,
+      });
       return;
     }
 
-    if (storedSocialVerification.state !== (searchParameters.get('state') ?? undefined)) {
-      accountStorage.socialVerification.clear(connectorId);
-      setToast(t('error.invalid_connector_auth'));
-      navigate('/', { replace: true });
+    if (storedSocialFlow.state !== (searchParameters.get('state') ?? undefined)) {
+      finalizeSocialFlowFailure({
+        connectorId,
+        clearFlowRecord: true,
+        message: t('error.invalid_connector_auth'),
+        setToast,
+        navigate,
+      });
       return;
     }
 
@@ -89,19 +102,20 @@ const SocialCallback = () => {
       await handleError(error, {
         'verification_record.permission_denied': redirectToReverify,
         global: async (requestError) => {
-          if (clearPendingVerification) {
-            accountStorage.socialVerification.clear(connectorId);
-          }
-
-          setToast(requestError.message);
-          navigate('/', { replace: true });
+          finalizeSocialFlowFailure({
+            connectorId,
+            clearFlowRecord: clearPendingVerification,
+            message: requestError.message,
+            setToast,
+            navigate,
+          });
         },
       });
     };
 
     const completeCallback = async () => {
       const [verifyError] = await verifySocialVerificationRequest({
-        verificationRecordId: storedSocialVerification.verificationRecordId,
+        verificationRecordId: storedSocialFlow.verificationRecordId,
         connectorData: Object.fromEntries(searchParameters.entries()),
       });
 
@@ -110,10 +124,9 @@ const SocialCallback = () => {
         return;
       }
 
-      accountStorage.socialVerification.set(connectorId, {
-        verificationRecordId: storedSocialVerification.verificationRecordId,
-        expiresAt: storedSocialVerification.expiresAt,
-        isVerified: true,
+      accountStorage.socialFlow.setVerified(connectorId, {
+        verificationRecordId: storedSocialFlow.verificationRecordId,
+        expiresAt: storedSocialFlow.expiresAt,
       });
 
       if (!verificationId) {
@@ -123,7 +136,7 @@ const SocialCallback = () => {
 
       const [linkError] = await linkSocialIdentityRequest(
         verificationId,
-        storedSocialVerification.verificationRecordId
+        storedSocialFlow.verificationRecordId
       );
 
       if (linkError) {

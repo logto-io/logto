@@ -181,6 +181,34 @@ describe('my-account (social delete identity)', () => {
       await deleteDefaultTenantUser(user.id);
     });
 
+    it('should allow deleting a non-sign-in social identity target', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const { verificationRecordId } = await linkSocialIdentity(
+        api,
+        password,
+        connectorIdMap.get(mockSocialConnectorId)!
+      );
+
+      await updateOnlyAvailableIdentifierSignInMethod({
+        identifier: SignInIdentifier.Phone,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: true,
+        socialConnectorTarget: 'another-social-target',
+      });
+
+      await deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId);
+
+      const updatedUserInfo = await getUserInfo(api);
+      expect(updatedUserInfo.identities).not.toHaveProperty(mockSocialConnectorTarget);
+
+      await enableAllPasswordSignInMethods();
+      await deleteDefaultTenantUser(user.id);
+    });
+
     it('should localize the last available sign-in method error message', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(

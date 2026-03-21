@@ -18,6 +18,7 @@ import useErrorHandler from '@ac/hooks/use-error-handler';
 import { accountCenterBasePath } from '@ac/utils/account-center-route';
 import { accountStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
+import { finalizeSocialFlowFailure, finalizeSocialFlowSuccess } from '@ac/utils/social-flow';
 
 type Props = {
   readonly mode: 'add' | 'remove';
@@ -52,9 +53,7 @@ const SocialFlow = ({ mode }: Props) => {
     [connectorId, experienceSettings?.socialConnectors]
   );
   const connectorName = connector ? getLocalizedConnectorName(connector, language) : undefined;
-  const storedSocialVerification = connectorId
-    ? accountStorage.socialVerification.get(connectorId)
-    : undefined;
+  const storedSocialFlow = connectorId ? accountStorage.socialFlow.get(connectorId) : undefined;
   const flowKey =
     verificationId && connectorId ? `${mode}:${connectorId}:${verificationId}` : undefined;
 
@@ -64,21 +63,20 @@ const SocialFlow = ({ mode }: Props) => {
     setToast(t('account_center.verification.verification_required'));
   }, [setToast, setVerificationId, t]);
 
-  const navigateToSecurity = useCallback(() => {
-    navigate('/', { replace: true });
-  }, [navigate]);
-
   const handleFlowError = useCallback(
     async (error: unknown) => {
       await handleError(error, {
         'verification_record.permission_denied': resetVerification,
         global: async (requestError) => {
-          setToast(requestError.message);
-          navigateToSecurity();
+          finalizeSocialFlowFailure({
+            message: requestError.message,
+            setToast,
+            navigate,
+          });
         },
       });
     },
-    [handleError, navigateToSecurity, resetVerification, setToast]
+    [handleError, navigate, resetVerification, setToast]
   );
 
   const handleLinkSuccess = useCallback(async () => {
@@ -86,21 +84,28 @@ const SocialFlow = ({ mode }: Props) => {
       return;
     }
 
-    accountStorage.socialVerification.clear(connectorId);
-    await refreshUserInfo();
-    setToast(t('account_center.social.linked', { connector: connectorName }));
-    navigateToSecurity();
-  }, [connector, connectorId, connectorName, navigateToSecurity, refreshUserInfo, setToast, t]);
+    await finalizeSocialFlowSuccess({
+      connectorId,
+      successMessage: t('account_center.social.linked', { connector: connectorName }),
+      refreshUserInfo,
+      setToast,
+      navigate,
+    });
+  }, [connector, connectorId, connectorName, navigate, refreshUserInfo, setToast, t]);
 
   const handleRemoveSuccess = useCallback(async () => {
-    if (!connectorName) {
+    if (!connectorId || !connectorName) {
       return;
     }
 
-    await refreshUserInfo();
-    setToast(t('account_center.social.removed', { connector: connectorName }));
-    navigateToSecurity();
-  }, [connectorName, navigateToSecurity, refreshUserInfo, setToast, t]);
+    await finalizeSocialFlowSuccess({
+      connectorId,
+      successMessage: t('account_center.social.removed', { connector: connectorName }),
+      refreshUserInfo,
+      setToast,
+      navigate,
+    });
+  }, [connectorId, connectorName, navigate, refreshUserInfo, setToast, t]);
 
   useEffect(() => {
     if (!verificationId) {
@@ -118,10 +123,10 @@ const SocialFlow = ({ mode }: Props) => {
     setStartedFlowKey(flowKey);
 
     const startAddFlow = async () => {
-      if (storedSocialVerification?.isVerified) {
+      if (storedSocialFlow?.status === 'verified') {
         const [error] = await linkSocialIdentityRequest(
           verificationId,
-          storedSocialVerification.verificationRecordId
+          storedSocialFlow.verificationRecordId
         );
 
         if (error) {
@@ -148,7 +153,7 @@ const SocialFlow = ({ mode }: Props) => {
         return;
       }
 
-      accountStorage.socialVerification.set(connectorId, {
+      accountStorage.socialFlow.setPending(connectorId, {
         verificationRecordId: result.verificationRecordId,
         expiresAt: result.expiresAt,
         state,
@@ -181,7 +186,7 @@ const SocialFlow = ({ mode }: Props) => {
     mode,
     flowKey,
     startedFlowKey,
-    storedSocialVerification,
+    storedSocialFlow,
     verificationId,
   ]);
 

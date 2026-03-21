@@ -1,13 +1,25 @@
+import type { SignInExperienceResponse } from '@experience/shared/types';
 import type { AccountCenter, UserProfileResponse } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
 
+import { getAvailableSocialConnectors } from './social-connector.js';
+
 type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields'>;
+type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConnectors'>;
 
 const isVisibleField = (value?: AccountCenterControlValue): boolean =>
   value !== undefined && value !== AccountCenterControlValue.Off;
 
+export const hasVisibleSocialSection = (
+  socialControl: AccountCenterControlValue | undefined,
+  experienceSettings?: SecurityPageExperienceSettings
+): boolean =>
+  isVisibleField(socialControl) &&
+  getAvailableSocialConnectors(experienceSettings?.socialConnectors ?? []).length > 0;
+
 export const hasVisibleSecuritySection = (
-  accountCenterSettings?: SecurityPageSettings
+  accountCenterSettings?: SecurityPageSettings,
+  experienceSettings?: SecurityPageExperienceSettings
 ): boolean => {
   if (!accountCenterSettings?.enabled) {
     return false;
@@ -20,7 +32,7 @@ export const hasVisibleSecuritySection = (
     isVisibleField(email) ||
     isVisibleField(phone) ||
     isVisibleField(password) ||
-    isVisibleField(social)
+    hasVisibleSocialSection(social, experienceSettings)
   );
 };
 

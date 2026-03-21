@@ -8,7 +8,7 @@ const storageKeys = Object.freeze({
   showSuccess: `${storagePrefix}show-success`,
   uiLocales: `${storagePrefix}ui-locales`,
   verificationRecord: `${storagePrefix}verification-record`,
-  socialVerification: `${storagePrefix}social-verification`,
+  socialFlow: `${storagePrefix}social-verification`,
 });
 
 export type StoredVerificationRecord = {
@@ -16,24 +16,37 @@ export type StoredVerificationRecord = {
   expiresAt: string;
 };
 
-export type StoredSocialVerificationRecord = {
-  verificationRecordId: string;
-  expiresAt: string;
-  state?: string;
-  isVerified?: boolean;
-};
+export type StoredSocialFlowRecord =
+  | {
+      status: 'pending';
+      verificationRecordId: string;
+      expiresAt: string;
+      state: string;
+    }
+  | {
+      status: 'verified';
+      verificationRecordId: string;
+      expiresAt: string;
+    };
 
-const storedVerificationRecordGuard: s.Describe<StoredVerificationRecord> = s.object({
+const storedVerificationRecordGuard = s.object({
   verificationId: s.string(),
   expiresAt: s.string(),
 });
 
-const storedSocialVerificationRecordGuard: s.Describe<StoredSocialVerificationRecord> = s.object({
-  verificationRecordId: s.string(),
-  expiresAt: s.string(),
-  state: s.optional(s.string()),
-  isVerified: s.optional(s.boolean()),
-});
+const storedSocialFlowRecordGuard = s.union([
+  s.object({
+    status: s.literal('pending'),
+    verificationRecordId: s.string(),
+    expiresAt: s.string(),
+    state: s.string(),
+  }),
+  s.object({
+    status: s.literal('verified'),
+    verificationRecordId: s.string(),
+    expiresAt: s.string(),
+  }),
+]);
 
 const getStorage = (type: 'session' | 'local'): Storage | undefined => {
   if (typeof window === 'undefined') {
@@ -57,7 +70,7 @@ const removeItem = (key: string, type: 'session' | 'local') => {
 
 const getStructuredValue = <T>(
   key: string,
-  guard: s.Describe<T>,
+  guard: s.Struct<T>,
   type: 'session' | 'local'
 ): T | undefined => {
   const raw = getString(key, type);
@@ -165,26 +178,43 @@ export const accountStorage = Object.freeze({
       removeItem(storageKeys.verificationRecord, 'local');
     },
   },
-  socialVerification: {
-    get: (connectorId: string): StoredSocialVerificationRecord | undefined => {
+  socialFlow: {
+    get: (connectorId: string): StoredSocialFlowRecord | undefined => {
       const record = getStructuredValue(
-        `${storageKeys.socialVerification}:${connectorId}`,
-        storedSocialVerificationRecordGuard,
+        `${storageKeys.socialFlow}:${connectorId}`,
+        storedSocialFlowRecordGuard,
         'session'
       );
 
       if (!record || !isNotExpired(record.expiresAt)) {
-        removeItem(`${storageKeys.socialVerification}:${connectorId}`, 'session');
+        removeItem(`${storageKeys.socialFlow}:${connectorId}`, 'session');
         return;
       }
 
       return record;
     },
-    set: (connectorId: string, record: StoredSocialVerificationRecord) => {
-      setStructuredValue(`${storageKeys.socialVerification}:${connectorId}`, record, 'session');
+    setPending: (
+      connectorId: string,
+      record: Omit<Extract<StoredSocialFlowRecord, { status: 'pending' }>, 'status'>
+    ) => {
+      setStructuredValue(
+        `${storageKeys.socialFlow}:${connectorId}`,
+        { ...record, status: 'pending' } satisfies StoredSocialFlowRecord,
+        'session'
+      );
+    },
+    setVerified: (
+      connectorId: string,
+      record: Omit<Extract<StoredSocialFlowRecord, { status: 'verified' }>, 'status'>
+    ) => {
+      setStructuredValue(
+        `${storageKeys.socialFlow}:${connectorId}`,
+        { ...record, status: 'verified' } satisfies StoredSocialFlowRecord,
+        'session'
+      );
     },
     clear: (connectorId: string) => {
-      removeItem(`${storageKeys.socialVerification}:${connectorId}`, 'session');
+      removeItem(`${storageKeys.socialFlow}:${connectorId}`, 'session');
     },
   },
 });

@@ -3,6 +3,7 @@ import { UserScope } from '@logto/core-kit';
 import {
   VerificationType,
   AccountCenterControlValue,
+  MfaFactor,
   SignInIdentifier,
   type SignIn,
   type User,
@@ -21,6 +22,24 @@ import type { UserRouter, RouterInitArgs } from '../types.js';
 import { accountApiPrefix } from './constants.js';
 
 const hasAvailablePassword = (user: User) => Boolean(user.passwordEncrypted);
+
+export const hasPasskeySignInMethod = ({
+  user,
+  isPasskeySignInEnabled,
+}: {
+  user: User;
+  isPasskeySignInEnabled: boolean;
+}) =>
+  isPasskeySignInEnabled &&
+  user.mfaVerifications.some((verification) => verification.type === MfaFactor.WebAuthn);
+
+export const hasEnterpriseSsoSignInMethod = ({
+  ssoIdentityCount,
+  isSingleSignOnEnabled,
+}: {
+  ssoIdentityCount: number;
+  isSingleSignOnEnabled: boolean;
+}) => isSingleSignOnEnabled && ssoIdentityCount > 0;
 
 const hasRemainingSocialIdentity = ({
   user,
@@ -56,18 +75,30 @@ const hasRemainingIdentifierSignInMethod = (
   }
 };
 
-const hasRemainingSignInMethod = ({
+export const canRemoveSocialIdentity = ({
   user,
   signIn,
   socialSignInConnectorTargets,
   targetToRemove,
+  hasPasskeySignIn,
+  hasEnterpriseSsoSignIn,
 }: {
   user: User;
   signIn: SignIn;
   socialSignInConnectorTargets: string[];
   targetToRemove: string;
+  hasPasskeySignIn: boolean;
+  hasEnterpriseSsoSignIn: boolean;
 }) => {
+  if (!socialSignInConnectorTargets.includes(targetToRemove)) {
+    return true;
+  }
+
   if (hasRemainingSocialIdentity({ user, socialSignInConnectorTargets, targetToRemove })) {
+    return true;
+  }
+
+  if (hasPasskeySignIn || hasEnterpriseSsoSignIn) {
     return true;
   }
 
@@ -83,7 +114,7 @@ export default function identitiesRoutes<T extends UserRouter>(
   } = queries;
 
   const {
-    users: { checkIdentifierCollision },
+    users: { checkIdentifierCollision, findUserSsoIdentities },
     socials: { upsertSocialTokenSetSecret },
   } = libraries;
 
@@ -181,7 +212,10 @@ export default function identitiesRoutes<T extends UserRouter>(
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
 
       const user = await findUserById(userId);
-      const { signIn, socialSignInConnectorTargets } = await findDefaultSignInExperience();
+      const [
+        { signIn, socialSignInConnectorTargets, passkeySignIn, singleSignOnEnabled },
+        ssoIdentities,
+      ] = await Promise.all([findDefaultSignInExperience(), findUserSsoIdentities(userId)]);
 
       assertThat(
         user.identities[target],
@@ -191,11 +225,19 @@ export default function identitiesRoutes<T extends UserRouter>(
         })
       );
       assertThat(
-        hasRemainingSignInMethod({
+        canRemoveSocialIdentity({
           user,
           signIn,
           socialSignInConnectorTargets,
           targetToRemove: target,
+          hasPasskeySignIn: hasPasskeySignInMethod({
+            user,
+            isPasskeySignInEnabled: Boolean(passkeySignIn.enabled),
+          }),
+          hasEnterpriseSsoSignIn: hasEnterpriseSsoSignInMethod({
+            ssoIdentityCount: ssoIdentities.length,
+            isSingleSignOnEnabled: Boolean(singleSignOnEnabled),
+          }),
         }),
         new RequestError({
           code: 'user.last_sign_in_method_required',
