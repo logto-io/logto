@@ -65,12 +65,21 @@ const account_center = {
     change: 'Zmień',
     remove: 'Usuń',
     not_set: 'Nie ustawiono',
+    social_sign_in: 'Logowanie społecznościowe',
+    social_not_linked: 'Niepołączone',
     email_phone: 'E-mail / Telefon',
     email: 'E-mail',
     phone: 'Telefon',
     password: 'Hasło',
     configured: 'Skonfigurowano',
     not_configured: 'Nie skonfigurowano',
+  },
+  social: {
+    linked: '{{connector}} połączono pomyślnie.',
+    removed: '{{connector}} usunięto pomyślnie.',
+    remove_confirmation_title: 'Usuń konto społecznościowe',
+    remove_confirmation_description:
+      'Jeśli usuniesz {{connector}}, możesz nie być w stanie zalogować się za jego pomocą, dopóki nie dodasz go ponownie.',
   },
   password: {
     title: 'Ustaw hasło',

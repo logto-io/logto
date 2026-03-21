@@ -179,6 +179,8 @@ const sign_in_exp = {
         phone: '更新你的主要電話號碼',
         username: '更新你的使用者名稱',
         password: '設置新密碼',
+        social: '連結社交帳號以供登入',
+        social_remove: '移除已連結的社交帳號',
         authenticator_app: '為多重驗證設置新的身份驗證器應用',
         passkey_add: '註冊新的通行金鑰',
         passkey_manage: '管理你現有的通行金鑰或添加新的',

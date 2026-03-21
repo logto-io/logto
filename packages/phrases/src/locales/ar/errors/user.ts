@@ -42,6 +42,7 @@ const user = {
   username_required: 'اسم المستخدم هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
   email_or_phone_required:
     'عنوان البريد الإلكتروني أو رقم الهاتف هو معرف مطلوب، يجب تحديد واحد على الأقل.',
+  last_sign_in_method_required: 'يجب أن تحتفظ بطريقة واحدة متاحة على الأقل لتسجيل الدخول في حسابك.',
   email_required: 'عنوان البريد الإلكتروني هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
   phone_required: 'رقم الهاتف هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
   enterprise_sso_identity_not_exists:
