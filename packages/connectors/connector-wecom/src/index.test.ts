@@ -1,15 +1,23 @@
+import { conditional, trySafe } from '@silverhand/essentials';
 import nock from 'nock';
 
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
+import { PhoneNumberParser } from '@logto/shared';
 
 import {
   accessTokenEndpoint,
   authorizationEndpointInside,
   authorizationEndpointQrcode,
+  userDetailByUserIdEndpoint,
+  userDetailByUserTicketEndpoint,
   userInfoEndpoint,
 } from './constant.js';
-import createConnector, { getAccessToken } from './index.js';
-import { mockedConfig } from './mock.js';
+import createConnector, { getAccessToken, normalizePhoneNumber } from './index.js';
+import {
+  mockedConfig,
+  mockedUserDetailByUserIdResponse,
+  mockedUserDetailByUserTicketResponse,
+} from './mock.js';
 
 const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 
@@ -127,6 +135,21 @@ describe('getAccessToken', () => {
   });
 });
 
+describe('normalizePhoneNumebr', () => {
+  it('should normalize phone number', () => {
+    expect(normalizePhoneNumber('12345678901')).toEqual('+8612345678901');
+  });
+
+  it('should return empty string if phone number is not provided', () => {
+    const mobile = undefined;
+    expect(normalizePhoneNumber(mobile)).toEqual('');
+  });
+
+  it('should return phone number if it starts with +', () => {
+    expect(normalizePhoneNumber('+12345678901')).toEqual('+12345678901');
+  });
+});
+
 const nockNoOpenIdAccessTokenResponse = () => {
   const accessTokenEndpointUrl = new URL(accessTokenEndpoint);
   nock(accessTokenEndpointUrl.origin).get(accessTokenEndpointUrl.pathname).query(true).reply(200, {
@@ -156,17 +179,34 @@ describe('getUserInfo', () => {
   });
 
   const userInfoEndpointUrl = new URL(userInfoEndpoint);
-  const parameters = new URLSearchParams({ access_token: 'access_token', code: 'code' });
+  const userInfoParams = new URLSearchParams({ access_token: 'access_token', code: 'code' });
+
+  const userDetailByUserIdEndpointUrl = new URL(userDetailByUserIdEndpoint);
+  const userDetailByUserIdParams = new URLSearchParams({
+    access_token: 'access_token',
+    userid: 'zhangsan',
+  });
+
+  const userDetailByUserTicketEndpointUrl = new URL(userDetailByUserTicketEndpoint);
+  const userDetailByUserTicketParams = new URLSearchParams({
+    access_token: 'access_token',
+  });
 
   it('should get valid SocialUserInfo', async () => {
-    const jsonResponse = Object.freeze({
-      userid: 'wecom_id',
-      foo: 'bar',
-    });
     nock(userInfoEndpointUrl.origin)
       .get(userInfoEndpointUrl.pathname)
-      .query(parameters)
-      .reply(0, jsonResponse);
+      .query(userInfoParams)
+      .reply(200, {
+        errcode: 0,
+        errmsg: 'ok',
+        userid: 'zhangsan',
+      });
+
+    nock(userDetailByUserIdEndpointUrl.origin)
+      .get(userDetailByUserIdEndpointUrl.pathname)
+      .query(userDetailByUserIdParams)
+      .reply(200, mockedUserDetailByUserIdResponse);
+
     const connector = await createConnector({ getConfig });
     const socialUserInfo = await connector.getUserInfo(
       {
@@ -175,10 +215,58 @@ describe('getUserInfo', () => {
       vi.fn()
     );
     expect(socialUserInfo).toMatchObject({
-      id: 'wecom_id',
-      avatar: '',
-      name: 'wecom_id',
-      rawData: jsonResponse,
+      id: 'zhangsan',
+      name: mockedUserDetailByUserIdResponse.name,
+      email: undefined,
+      phone: undefined,
+      rawData: mockedUserDetailByUserIdResponse,
+    });
+  });
+
+  it('should get valid SocialUserInfo with user_ticket', async () => {
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(userInfoParams)
+      .reply(200, {
+        errcode: 0,
+        errmsg: 'ok',
+        userid: 'zhangsan',
+        user_ticket: 'user_ticket',
+      });
+
+    nock(userDetailByUserIdEndpointUrl.origin)
+      .get(userDetailByUserIdEndpointUrl.pathname)
+      .query(userDetailByUserIdParams)
+      .reply(200, mockedUserDetailByUserIdResponse);
+
+    nock(userDetailByUserTicketEndpointUrl.origin)
+      .post(userDetailByUserTicketEndpointUrl.pathname, { user_ticket: 'user_ticket' })
+      .query(userDetailByUserTicketParams)
+      .reply(200, mockedUserDetailByUserTicketResponse);
+
+    const connector = await createConnector({ getConfig });
+    const socialUserInfo = await connector.getUserInfo(
+      {
+        code: 'code',
+      },
+      vi.fn()
+    );
+    const userDetail = {
+      ...mockedUserDetailByUserIdResponse,
+      ...mockedUserDetailByUserTicketResponse,
+    };
+
+    expect(socialUserInfo).toMatchObject({
+      id: 'zhangsan',
+      name: userDetail.name,
+      email: userDetail.email,
+      phone:
+        conditional(userDetail.mobile) &&
+        trySafe(
+          () => new PhoneNumberParser(normalizePhoneNumber(userDetail.mobile)).internationalNumber
+        ),
+      avatar: userDetail.avatar,
+      rawData: userDetail,
     });
   });
 
@@ -193,7 +281,7 @@ describe('getUserInfo', () => {
     nockNoOpenIdAccessTokenResponse();
     nock(userInfoEndpointUrl.origin)
       .get(userInfoEndpointUrl.pathname)
-      .query(parameters)
+      .query(userInfoParams)
       .reply(200, {
         errcode: 41_009,
         errmsg: 'missing openid',
@@ -210,7 +298,7 @@ describe('getUserInfo', () => {
   it('throws SocialAccessTokenInvalid error if errcode is 40001', async () => {
     nock(userInfoEndpointUrl.origin)
       .get(userInfoEndpointUrl.pathname)
-      .query(parameters)
+      .query(userInfoParams)
       .reply(200, { errcode: 40_001, errmsg: 'invalid credential' });
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
@@ -219,7 +307,10 @@ describe('getUserInfo', () => {
   });
 
   it('throws unrecognized error', async () => {
-    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(500);
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(userInfoParams)
+      .reply(500);
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toThrow();
   });
@@ -227,7 +318,7 @@ describe('getUserInfo', () => {
   it('throws Error if request failed and errcode is not 40001', async () => {
     nock(userInfoEndpointUrl.origin)
       .get(userInfoEndpointUrl.pathname)
-      .query(parameters)
+      .query(userInfoParams)
       .reply(200, { errcode: 40_003, errmsg: 'invalid openid' });
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
@@ -239,7 +330,10 @@ describe('getUserInfo', () => {
   });
 
   it('throws SocialAccessTokenInvalid error if response code is 401', async () => {
-    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(401);
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(userInfoParams)
+      .reply(401);
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({ code: 'code' }, vi.fn())).rejects.toStrictEqual(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
