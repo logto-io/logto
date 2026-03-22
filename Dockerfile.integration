@@ -18,10 +18,6 @@ ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
 
 RUN pnpm -r build
 
-# Core package needs to be built separately for integration tests for instrumentation to work
-# properly.
-RUN cd packages/core && pnpm build:integration
-
 # Keep behavior aligned with CI packaging
 ENV SKIP_TAR=true
 RUN ./.scripts/package.sh
