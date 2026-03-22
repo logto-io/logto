@@ -3,6 +3,7 @@ import { LogResult, userApplicationGrantPayloadGuard } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import type { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { createSessionLibrary } from '#src/libraries/session/index.js';
 import { type WithAppSecretContext } from '#src/middleware/koa-app-secret-transpilation.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -88,7 +89,31 @@ const enforceMaxAllowedGrantsRevocation = async (
 
   await trySafe(
     async () => {
-      await sessionLibrary.revokeUserGrantsByIds(provider, userId, grantIdsToRevoke);
+      const revokeResult = await sessionLibrary.revokeUserGrantsByIds(provider, grantIdsToRevoke);
+      const cleanupResult = await sessionLibrary.removeUserSessionAuthorizationsByGrantIds(
+        provider,
+        userId,
+        revokeResult.succeededNames
+      );
+      const failedRevokeGrants = revokeResult.failedTasks.map(({ name, cause }) => ({
+        grantId: name,
+        cause,
+      }));
+
+      if (failedRevokeGrants.length === 0 && cleanupResult.failedGrants.length === 0) {
+        return;
+      }
+
+      throw new RequestError(
+        { code: 'oidc.failed_to_revoke_grant', status: 500 },
+        {
+          details: {
+            revokedGrantIds: revokeResult.succeededNames,
+            failedRevokeGrants,
+            failedSessionAuthorizationRemovalGrants: cleanupResult.failedGrants,
+          },
+        }
+      );
     },
     (error) => {
       revokeGrantsLog.append({
