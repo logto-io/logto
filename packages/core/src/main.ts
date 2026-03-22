@@ -61,3 +61,26 @@ try {
     shutdownPostHog(),
   ]);
 }
+
+// MARK: Integration test handling
+if (EnvSet.values.isIntegrationTest) {
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let isExiting = false;
+
+  const gracefullyExit = () => {
+    if (isExiting) {
+      return;
+    }
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    isExiting = true;
+    // `process.exit(0)` is used to override the default behavior of Node to exit with non-zero
+    // code, which may cause `nyc` to not collect coverage information.
+    // eslint-disable-next-line unicorn/no-process-exit
+    process.exit(0);
+  };
+
+  consoleLog.info(`pid=${process.pid}`);
+  process.on('SIGINT', gracefullyExit);
+  process.on('SIGTERM', gracefullyExit);
+}

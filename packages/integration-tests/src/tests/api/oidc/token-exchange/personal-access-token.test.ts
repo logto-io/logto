@@ -184,11 +184,11 @@ describe('Token Exchange (Personal Access Token)', () => {
     const expiredToken = await createPersonalAccessToken({
       userId: testUserId,
       name: 'expired-pat',
-      expiresAt: Date.now() + 100,
+      expiresAt: Date.now() + 50,
     });
     // Wait for the token to be expired
     await new Promise((resolve) => {
-      setTimeout(resolve, 100);
+      setTimeout(resolve, 150);
     });
     await expect(
       oidcApi.post('token', {

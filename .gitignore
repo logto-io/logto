@@ -8,6 +8,8 @@ node_modules
 
 # testing
 /packages/**/coverage
+/.*coverage
+.nyc_output
 
 # report
 /report.json

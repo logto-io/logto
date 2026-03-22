@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# This script is used to set up Logto in Docker Compose and run the integration tests in a host environment.
+# It is NOT intended to run the tests inside the container.
+# To enable code coverage collection, set the `COVERAGE=1` environment variable before running this script.
+
 TARGET="${1:-api}"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd -- "${SCRIPT_DIR}/../.." && pwd)"
@@ -10,8 +14,13 @@ RUN_ID="$(date +%s)-$$"
 LOG_DIR="${REPO_ROOT}/logs"
 LOG_PREFIX="${LOG_DIR}/integration-log-${RUN_ID}"
 MOCK_MESSAGE_DIR="${REPO_ROOT}/.integration-test-tmp"
+COVERAGE_DIR="${REPO_ROOT}/.integration-test-coverage"
 
-echo "starting ${TARGET} integration test with run id: ${RUN_ID}"
+echo "[run] starting ${TARGET} integration test with run id: ${RUN_ID}"
+
+if [ "${COVERAGE:-0}" = "1" ]; then
+  echo "[run] coverage is enabled"
+fi
 
 mkdir -p "$LOG_DIR"
 
@@ -26,18 +35,21 @@ dump_logs() {
 cleanup() {
   local exit_code=$?
 
-  echo
-  echo "writing logs with run id: ${RUN_ID}"
+  echo "[run] stopping services for ${TARGET} integration test with run id: ${RUN_ID}"
+  docker compose -f "$COMPOSE_FILE" stop logto || true
+
+  echo "[run] cleaning up environment for ${TARGET} integration test with run id: ${RUN_ID}"
+  echo "[run] writing logs with run id: ${RUN_ID}"
   dump_logs
 
-  docker compose -f "$COMPOSE_FILE" down -v --remove-orphans
+  docker compose -f "$COMPOSE_FILE" down -v --remove-orphans || true
 
   if [ "$exit_code" -ne 0 ]; then
-    echo "integration test failed"
-    echo "log files:"
-    echo "  ${LOG_PREFIX}-logto.log"
-    echo "  ${LOG_PREFIX}-postgres.log"
-    echo "  ${LOG_PREFIX}-redis.log"
+    echo "[run] integration test failed"
+    echo "[run] log files:"
+    echo "[run]   ${LOG_PREFIX}-logto.log"
+    echo "[run]   ${LOG_PREFIX}-postgres.log"
+    echo "[run]   ${LOG_PREFIX}-redis.log"
   fi
 
   exit "$exit_code"
@@ -45,11 +57,17 @@ cleanup() {
 
 trap cleanup EXIT
 
-mkdir -p "$MOCK_MESSAGE_DIR"
-# Remove any existing mock message files
+# Remove any existing mock message files to ensure a clean slate for the tests
 # Note: We don't use `rm -rf` because we'd like to keep the directory itself for a stable mount
 # point in the docker container.
+mkdir -p "$MOCK_MESSAGE_DIR"
 find "$MOCK_MESSAGE_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+
+# Clean up coverage directory to ensure we start with a clean slate for coverage collection
+# Note: We don't use `rm -rf` because we'd like to keep the directory itself for a stable mount
+# point in the docker container.
+mkdir -p "$COVERAGE_DIR"
+find "$COVERAGE_DIR" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
 
 # Stop and remove any existing containers from previous runs to ensure a clean environment
 docker compose -f "$COMPOSE_FILE" down -v --remove-orphans
@@ -60,7 +78,7 @@ COMPOSE_UP_ARGS=(-d --wait)
 if [ -z "${NO_BUILD:-}" ]; then
   COMPOSE_UP_ARGS=(--build "${COMPOSE_UP_ARGS[@]}")
 else
-  echo "skipping build as NO_BUILD is set"
+  echo "[run] skipping build as NO_BUILD is set"
 fi
 
 docker compose -f "$COMPOSE_FILE" up "${COMPOSE_UP_ARGS[@]}"
