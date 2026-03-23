@@ -84,9 +84,15 @@ describe('account mfa verification routes', () => {
 
   describe('PUT /api/my-account/mfa-verifications/totp', () => {
     it('should replace the existing totp verification', async () => {
+      const existingTotpVerification = {
+        ...mockUserTotpMfaVerification,
+        createdAt: '2024-01-01T00:00:00.000Z',
+        lastUsedAt: '2024-01-02T00:00:00.000Z',
+      };
+
       findUserById.mockResolvedValueOnce({
         ...mockUser,
-        mfaVerifications: [mockUserTotpMfaVerification],
+        mfaVerifications: [existingTotpVerification],
       });
 
       const response = await accountRequest.put('/my-account/mfa-verifications/totp').send({
@@ -97,9 +103,25 @@ describe('account mfa verification routes', () => {
       expect(response.status).toBe(204);
       expect(mockValidateTotpSecret).toHaveBeenCalledWith('new_totp_secret');
       expect(mockValidateTotpToken).toHaveBeenCalledWith('new_totp_secret', '123456');
-      expect(updateUserById).toHaveBeenCalledWith(mockUser.id, {
-        mfaVerifications: [{ ...mockUserTotpMfaVerification, key: 'new_totp_secret' }],
-      });
+
+      const updatedMfaVerifications = updateUserById.mock.calls[0]?.[1].mfaVerifications;
+      const [replacedTotpVerification] = updatedMfaVerifications ?? [];
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        mockUser.id,
+        expect.objectContaining({
+          mfaVerifications: [expect.any(Object)],
+        })
+      );
+      expect(replacedTotpVerification).toEqual(
+        expect.objectContaining({
+          type: MfaFactor.TOTP,
+          key: 'new_totp_secret',
+        })
+      );
+      expect(replacedTotpVerification?.id).not.toBe(existingTotpVerification.id);
+      expect(replacedTotpVerification?.createdAt).not.toBe(existingTotpVerification.createdAt);
+      expect(replacedTotpVerification).not.toHaveProperty('lastUsedAt');
     });
 
     it('should create a new totp verification if the user has none', async () => {

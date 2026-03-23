@@ -191,7 +191,9 @@ describe('my-account (mfa - TOTP)', () => {
       const replacedTotpVerification = afterReplacement.find(({ type }) => type === MfaFactor.TOTP);
 
       expect(afterReplacement).toHaveLength(1);
-      expect(replacedTotpVerification).toEqual(existingTotpVerification);
+      expect(replacedTotpVerification?.type).toBe(MfaFactor.TOTP);
+      expect(replacedTotpVerification?.id).not.toBe(existingTotpVerification?.id);
+      expect(replacedTotpVerification?.createdAt).not.toBe(existingTotpVerification?.createdAt);
 
       await deleteDefaultTenantUser(user.id);
     });

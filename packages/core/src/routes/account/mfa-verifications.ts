@@ -275,6 +275,13 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         })
       );
 
+      const totpVerification = {
+        id: generateStandardId(),
+        createdAt: new Date().toISOString(),
+        type: MfaFactor.TOTP as const,
+        key: secret,
+      };
+
       const existingTotpVerification = user.mfaVerifications.find(
         ({ type }) => type === MfaFactor.TOTP
       );
@@ -283,18 +290,10 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         mfaVerifications: existingTotpVerification
           ? user.mfaVerifications.map((mfaVerification) =>
               mfaVerification.id === existingTotpVerification.id
-                ? { ...existingTotpVerification, key: secret }
+                ? totpVerification
                 : mfaVerification
             )
-          : [
-              ...user.mfaVerifications,
-              {
-                id: generateStandardId(),
-                createdAt: new Date().toISOString(),
-                type: MfaFactor.TOTP,
-                key: secret,
-              },
-            ],
+          : [...user.mfaVerifications, totpVerification],
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
