@@ -9,7 +9,7 @@ import { resetMfaSettings } from '#src/helpers/sign-in-experience.js';
 import ExpectMfaExperience from '#src/ui-helpers/expect-mfa-experience.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
-import { devFeatureTest, generateEmail, generateUsername } from '#src/utils.js';
+import { generateEmail, generateUsername } from '#src/utils.js';
 
 describe('Experience - suggest additional MFA after email registration', () => {
   beforeAll(async () => {
@@ -149,164 +149,161 @@ describe('Experience - suggest additional MFA after email registration', () => {
   });
 });
 
-devFeatureTest.describe(
-  'Experience - suggest additional MFA after WebAuthn binding as sign-in passkey',
-  () => {
-    beforeAll(async () => {
-      await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
-      await updateSignInExperience({
-        signUp: {
-          identifiers: [SignInIdentifier.Username],
-          password: true,
-          verify: false,
-        },
-        signIn: {
-          methods: [
-            {
-              identifier: SignInIdentifier.Username,
-              password: true,
-              verificationCode: false,
-              isPasswordPrimary: true,
-            },
-          ],
-        },
-        forgotPasswordMethods: [],
-      });
+describe('Experience - suggest additional MFA after WebAuthn binding as sign-in passkey', () => {
+  beforeAll(async () => {
+    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms, ConnectorType.Social]);
+    await updateSignInExperience({
+      signUp: {
+        identifiers: [SignInIdentifier.Username],
+        password: true,
+        verify: false,
+      },
+      signIn: {
+        methods: [
+          {
+            identifier: SignInIdentifier.Username,
+            password: true,
+            verificationCode: false,
+            isPasswordPrimary: true,
+          },
+        ],
+      },
+      forgotPasswordMethods: [],
+    });
+  });
+
+  afterEach(async () => {
+    await resetMfaSettings();
+    await updateSignInExperience({
+      passkeySignIn: {
+        enabled: false,
+        showPasskeyButton: false,
+        allowAutofill: false,
+      },
+    });
+  });
+
+  it('when WebAuthn is used as sign-in passkey, should suggest binding additional TOTP and can skip', async () => {
+    await updateSignInExperience({
+      mfa: {
+        factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
+        policy: MfaPolicy.Mandatory,
+      },
+      passkeySignIn: {
+        enabled: true,
+        showPasskeyButton: true,
+        allowAutofill: false,
+      },
     });
 
-    afterEach(async () => {
-      await resetMfaSettings();
-      await updateSignInExperience({
-        passkeySignIn: {
-          enabled: false,
-          showPasskeyButton: false,
-          allowAutofill: false,
-        },
-      });
+    const username = generateUsername();
+    const password = 'l0gt0_T3st_P@ssw0rd';
+
+    const experience = new ExpectWebAuthnExperience(await browser.newPage());
+    await experience.setupVirtualAuthenticator();
+
+    // Register with username and password
+    await experience.startWith(demoAppUrl, 'register');
+    await experience.toFillInput('identifier', username, { submit: true });
+    experience.toBeAt('register/password');
+    await experience.toFillNewPasswords(password);
+
+    await experience.waitForPathname('create-passkey');
+    await experience.toClickButton('Create a passkey');
+
+    // Should suggest binding additional MFA factor
+    await experience.waitForPathname('mfa-binding');
+    await experience.toClick('button div[class$=name]', 'Authenticator app OTP');
+    experience.toBeAt('mfa-binding/Totp');
+
+    // Skip the optional suggestion
+    await experience.toClick('div[role=button][class$=skipButton]');
+    await experience.page.waitForNetworkIdle();
+
+    const userId = await experience.getUserIdFromDemoAppPage();
+    await experience.clearVirtualAuthenticator();
+    await experience.verifyThenEnd();
+    await deleteUser(userId);
+  });
+
+  it('when WebAuthn is used as sign-in passkey, skipping TOTP suggestion requires Backup Code', async () => {
+    await updateSignInExperience({
+      mfa: {
+        factors: [MfaFactor.WebAuthn, MfaFactor.TOTP, MfaFactor.BackupCode],
+        policy: MfaPolicy.Mandatory,
+      },
+      passkeySignIn: {
+        enabled: true,
+        showPasskeyButton: true,
+        allowAutofill: false,
+      },
     });
 
-    it('when WebAuthn is used as sign-in passkey, should suggest binding additional TOTP and can skip', async () => {
-      await updateSignInExperience({
-        mfa: {
-          factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
-          policy: MfaPolicy.Mandatory,
-        },
-        passkeySignIn: {
-          enabled: true,
-          showPasskeyButton: true,
-          allowAutofill: false,
-        },
-      });
+    const username = generateUsername();
+    const password = 'l0gt0_T3st_P@ssw0rd';
 
-      const username = generateUsername();
-      const password = 'l0gt0_T3st_P@ssw0rd';
+    const experience = new ExpectWebAuthnExperience(await browser.newPage());
+    await experience.setupVirtualAuthenticator();
 
-      const experience = new ExpectWebAuthnExperience(await browser.newPage());
-      await experience.setupVirtualAuthenticator();
+    // Register with username and password
+    await experience.startWith(demoAppUrl, 'register');
+    await experience.toFillInput('identifier', username, { submit: true });
+    experience.toBeAt('register/password');
+    await experience.toFillNewPasswords(password);
 
-      // Register with username and password
-      await experience.startWith(demoAppUrl, 'register');
-      await experience.toFillInput('identifier', username, { submit: true });
-      experience.toBeAt('register/password');
-      await experience.toFillNewPasswords(password);
+    await experience.waitForPathname('create-passkey');
+    await experience.toClickButton('Create a passkey');
 
-      await experience.waitForPathname('create-passkey');
-      await experience.toClickButton('Create a passkey');
+    // After binding WebAuthn with passkey sign-in enabled, backend suggests binding additional MFA factors
+    await experience.waitForPathname('mfa-binding');
 
-      // Should suggest binding additional MFA factor
-      await experience.waitForPathname('mfa-binding');
-      await experience.toClick('button div[class$=name]', 'Authenticator app OTP');
-      experience.toBeAt('mfa-binding/Totp');
+    // Skip the TOTP suggestion; backend should require BackupCode
+    await experience.toClick('div[role=button][class$=skipButton]');
+    await experience.waitForPathname('mfa-binding/BackupCode');
 
-      // Skip the optional suggestion
-      await experience.toClick('div[role=button][class$=skipButton]');
-      await experience.page.waitForNetworkIdle();
+    // Backup codes page – retrieve codes and continue
+    await experience.retrieveBackupCodes();
+    await experience.toClick('button', 'Continue');
 
-      const userId = await experience.getUserIdFromDemoAppPage();
-      await experience.clearVirtualAuthenticator();
-      await experience.verifyThenEnd();
-      await deleteUser(userId);
+    const userId = await experience.getUserIdFromDemoAppPage();
+    await experience.clearVirtualAuthenticator();
+    await experience.verifyThenEnd();
+    await deleteUser(userId);
+  });
+
+  it('when passkey sign-in is disabled, WebAuthn factor alone satisfies MFA without additional suggestion', async () => {
+    await updateSignInExperience({
+      mfa: {
+        factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
+        policy: MfaPolicy.Mandatory,
+      },
     });
 
-    it('when WebAuthn is used as sign-in passkey, skipping TOTP suggestion requires Backup Code', async () => {
-      await updateSignInExperience({
-        mfa: {
-          factors: [MfaFactor.WebAuthn, MfaFactor.TOTP, MfaFactor.BackupCode],
-          policy: MfaPolicy.Mandatory,
-        },
-        passkeySignIn: {
-          enabled: true,
-          showPasskeyButton: true,
-          allowAutofill: false,
-        },
-      });
+    const username = generateUsername();
+    const password = 'l0gt0_T3st_P@ssw0rd';
 
-      const username = generateUsername();
-      const password = 'l0gt0_T3st_P@ssw0rd';
+    const experience = new ExpectWebAuthnExperience(await browser.newPage());
+    await experience.setupVirtualAuthenticator();
 
-      const experience = new ExpectWebAuthnExperience(await browser.newPage());
-      await experience.setupVirtualAuthenticator();
+    // Register with username and password
+    await experience.startWith(demoAppUrl, 'register');
+    await experience.toFillInput('identifier', username, { submit: true });
+    experience.toBeAt('register/password');
+    await experience.toFillNewPasswords(password);
 
-      // Register with username and password
-      await experience.startWith(demoAppUrl, 'register');
-      await experience.toFillInput('identifier', username, { submit: true });
-      experience.toBeAt('register/password');
-      await experience.toFillNewPasswords(password);
+    // Require binding MFA
+    await experience.waitForPathname('mfa-binding');
 
-      await experience.waitForPathname('create-passkey');
-      await experience.toClickButton('Create a passkey');
+    // Bind WebAuthn factor
+    await experience.toClick('button div[class$=name]', 'Passkey');
+    await experience.page.waitForNetworkIdle();
+    await experience.toCreatePasskey();
 
-      // After binding WebAuthn with passkey sign-in enabled, backend suggests binding additional MFA factors
-      await experience.waitForPathname('mfa-binding');
-
-      // Skip the TOTP suggestion; backend should require BackupCode
-      await experience.toClick('div[role=button][class$=skipButton]');
-      await experience.waitForPathname('mfa-binding/BackupCode');
-
-      // Backup codes page – retrieve codes and continue
-      await experience.retrieveBackupCodes();
-      await experience.toClick('button', 'Continue');
-
-      const userId = await experience.getUserIdFromDemoAppPage();
-      await experience.clearVirtualAuthenticator();
-      await experience.verifyThenEnd();
-      await deleteUser(userId);
-    });
-
-    it('when passkey sign-in is disabled, WebAuthn factor alone satisfies MFA without additional suggestion', async () => {
-      await updateSignInExperience({
-        mfa: {
-          factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
-          policy: MfaPolicy.Mandatory,
-        },
-      });
-
-      const username = generateUsername();
-      const password = 'l0gt0_T3st_P@ssw0rd';
-
-      const experience = new ExpectWebAuthnExperience(await browser.newPage());
-      await experience.setupVirtualAuthenticator();
-
-      // Register with username and password
-      await experience.startWith(demoAppUrl, 'register');
-      await experience.toFillInput('identifier', username, { submit: true });
-      experience.toBeAt('register/password');
-      await experience.toFillNewPasswords(password);
-
-      // Require binding MFA
-      await experience.waitForPathname('mfa-binding');
-
-      // Bind WebAuthn factor
-      await experience.toClick('button div[class$=name]', 'Passkey');
-      await experience.page.waitForNetworkIdle();
-      await experience.toCreatePasskey();
-
-      // With passkey sign-in disabled, WebAuthn alone satisfies MFA – no additional suggestion
-      // The interaction should complete and land on the demo app directly
-      const userId = await experience.getUserIdFromDemoAppPage();
-      await experience.clearVirtualAuthenticator();
-      await experience.verifyThenEnd();
-      await deleteUser(userId);
-    });
-  }
-);
+    // With passkey sign-in disabled, WebAuthn alone satisfies MFA – no additional suggestion
+    // The interaction should complete and land on the demo app directly
+    const userId = await experience.getUserIdFromDemoAppPage();
+    await experience.clearVirtualAuthenticator();
+    await experience.verifyThenEnd();
+    await deleteUser(userId);
+  });
+});

@@ -163,6 +163,21 @@ const user_details = {
     revoke_session_confirmation:
       'Jeśli usuniesz tę sesję, użytkownicy będą musieli ponownie się uwierzytelnić.',
   },
+  third_party_apps: {
+    title: 'Aplikacje zewnętrzne',
+    description:
+      'Użyj Logto jako dostawcy tożsamości, aby autoryzować aplikacje zewnętrzne. Przeglądaj i zarządzaj aplikacjami, którym ten użytkownik przyznał dostęp.',
+    field_name: 'Autoryzowane aplikacje zewnętrzne',
+    multiple_authorized: 'Ten użytkownik autoryzował wiele aplikacji i usług zewnętrznych.',
+    not_authorized:
+      'Ten użytkownik nie autoryzował jeszcze żadnych aplikacji ani usług zewnętrznych.',
+    name_column: 'Nazwa',
+    app_id_column: 'ID aplikacji',
+    access_created_at_column: 'Dostęp utworzono',
+    revoke_access_title: 'Cofnąć dostęp?',
+    revoke_access_description:
+      'Ta operacja cofnie dostęp aplikacji do konta tego użytkownika na wszystkich urządzeniach. Użytkownik musi ponownie udzielić autoryzacji, aby przywrócić dostęp.',
+  },
   connections: {
     title: 'Połączenie',
     description:

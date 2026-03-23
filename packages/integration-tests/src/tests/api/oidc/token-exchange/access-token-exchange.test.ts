@@ -8,16 +8,11 @@ import { createResource, deleteResource } from '#src/api/resource.js';
 import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import {
-  devFeatureTest,
-  generatePassword,
-  generateUsername,
-  getAccessTokenPayload,
-} from '#src/utils.js';
+import { generatePassword, generateUsername, getAccessTokenPayload } from '#src/utils.js';
 
 const subjectTokenType = 'urn:ietf:params:oauth:token-type:access_token';
 
-devFeatureTest.describe('Token Exchange (Access Token)', () => {
+describe('Token Exchange (Access Token)', () => {
   const username = generateUsername();
   const password = generatePassword();
 

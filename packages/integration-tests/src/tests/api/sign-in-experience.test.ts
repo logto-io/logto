@@ -22,7 +22,7 @@ import {
 } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { defaultSignInSignUpConfigs } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generatePassword } from '#src/utils.js';
+import { generatePassword } from '#src/utils.js';
 
 describe('admin console sign-in experience', () => {
   afterAll(async () => {
@@ -79,7 +79,7 @@ describe('admin console sign-in experience', () => {
     });
   });
 
-  devFeatureTest.describe('adaptive mfa', () => {
+  describe('adaptive mfa', () => {
     beforeEach(async () => {
       await updateSignInExperience({
         mfa: {
@@ -92,76 +92,67 @@ describe('admin console sign-in experience', () => {
       });
     });
 
-    devFeatureTest.it('should reject adaptive mfa enablement when mfa is disabled', async () => {
+    it('should reject adaptive mfa enablement when mfa is disabled', async () => {
       await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
         code: 'sign_in_experiences.adaptive_mfa_requires_mfa',
         status: 422,
       });
     });
 
-    devFeatureTest.it(
-      'should allow enabling adaptive mfa when mfa is already enabled',
-      async () => {
-        await updateSignInExperience({
-          mfa: {
-            policy: MfaPolicy.PromptAtSignInAndSignUp,
-            factors: [MfaFactor.TOTP],
-          },
-        });
+    it('should allow enabling adaptive mfa when mfa is already enabled', async () => {
+      await updateSignInExperience({
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          factors: [MfaFactor.TOTP],
+        },
+      });
 
-        const adaptiveMfa = { enabled: true };
+      const adaptiveMfa = { enabled: true };
 
-        const signInExperience = await updateSignInExperience({
-          adaptiveMfa,
-          mfa: {
-            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
-            factors: [MfaFactor.TOTP],
-          },
-        });
-        expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
-      }
-    );
-
-    devFeatureTest.it(
-      'should allow enabling adaptive mfa with mfa in the same request',
-      async () => {
-        const adaptiveMfa = { enabled: true };
-        const mfa = {
+      const signInExperience = await updateSignInExperience({
+        adaptiveMfa,
+        mfa: {
           policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
           factors: [MfaFactor.TOTP],
-        };
+        },
+      });
+      expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
+    });
 
-        const signInExperience = await updateSignInExperience({ adaptiveMfa, mfa });
+    it('should allow enabling adaptive mfa with mfa in the same request', async () => {
+      const adaptiveMfa = { enabled: true };
+      const mfa = {
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+        factors: [MfaFactor.TOTP],
+      };
 
-        expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
-        expect(signInExperience.mfa).toMatchObject(mfa);
-      }
-    );
+      const signInExperience = await updateSignInExperience({ adaptiveMfa, mfa });
 
-    devFeatureTest.it(
-      'should allow disabling mfa when adaptive mfa is already enabled',
-      async () => {
-        await updateSignInExperience({
-          adaptiveMfa: { enabled: true },
-          mfa: {
-            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
-            factors: [MfaFactor.TOTP],
-          },
-        });
+      expect(signInExperience.adaptiveMfa).toEqual(adaptiveMfa);
+      expect(signInExperience.mfa).toMatchObject(mfa);
+    });
 
-        const signInExperience = await updateSignInExperience({
-          mfa: {
-            policy: MfaPolicy.PromptAtSignInAndSignUp,
-            factors: [],
-          },
-        });
+    it('should allow disabling mfa when adaptive mfa is already enabled', async () => {
+      await updateSignInExperience({
+        adaptiveMfa: { enabled: true },
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+          factors: [MfaFactor.TOTP],
+        },
+      });
 
-        expect(signInExperience.mfa.factors).toEqual([]);
-        expect(signInExperience.adaptiveMfa).toEqual({ enabled: false });
-      }
-    );
+      const signInExperience = await updateSignInExperience({
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          factors: [],
+        },
+      });
 
-    devFeatureTest.it('should reject adaptive mfa when mfa policy is mandatory', async () => {
+      expect(signInExperience.mfa.factors).toEqual([]);
+      expect(signInExperience.adaptiveMfa).toEqual({ enabled: false });
+    });
+
+    it('should reject adaptive mfa when mfa policy is mandatory', async () => {
       await updateSignInExperience({
         mfa: {
           policy: MfaPolicy.Mandatory,
@@ -175,24 +166,21 @@ describe('admin console sign-in experience', () => {
       });
     });
 
-    devFeatureTest.it(
-      'should reject adaptive mfa when mfa policy is optional prompt policy',
-      async () => {
-        await updateSignInExperience({
-          mfa: {
-            policy: MfaPolicy.PromptAtSignInAndSignUp,
-            factors: [MfaFactor.TOTP],
-          },
-        });
+    it('should reject adaptive mfa when mfa policy is optional prompt policy', async () => {
+      await updateSignInExperience({
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          factors: [MfaFactor.TOTP],
+        },
+      });
 
-        await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
-          code: 'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
-          status: 422,
-        });
-      }
-    );
+      await expectRejects(updateSignInExperience({ adaptiveMfa: { enabled: true } }), {
+        code: 'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+        status: 422,
+      });
+    });
 
-    devFeatureTest.it('should reject adaptive policy when adaptive mfa is disabled', async () => {
+    it('should reject adaptive policy when adaptive mfa is disabled', async () => {
       await expectRejects(
         updateSignInExperience({
           adaptiveMfa: { enabled: false },

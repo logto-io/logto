@@ -180,7 +180,7 @@ const sign_in_exp = {
         'Um diese vorgefertigten Flows zu integrieren, setzen Sie die entsprechenden Account-API-Berechtigungen in den Einstellungen unten auf <strong>Bearbeiten</strong>.',
       flows_title: 'Vorgefertigte Sicherheits-Einstellungen integrieren',
       flows_description:
-        'Kombinieren Sie Ihre Domain mit der Route, um Ihre Konto-Einstellungs-URL zu bilden (z. B. https://auth.foo.com/account/email). Optional können Sie einen `redirect=` URL-Parameter hinzufügen, um Benutzer nach erfolgreicher Aktualisierung zurück zu Ihrer App zu leiten.',
+        'Kombinieren Sie Ihre Domain mit der Route, um Ihre Konto-Einstellungs-URL zu bilden (z. B. https://auth.foo.com/account/email). Optional können Sie `redirect=` hinzufügen, um Benutzer nach erfolgreicher Aktualisierung zurück zu Ihrer App zu leiten, `show_success=true`, um die Erfolgsseite sichtbar zu halten, oder `ui_locales=`, um die Standardsprache zu überschreiben.',
       tooltips: {
         email: 'Aktualisieren Sie Ihre primäre E-Mail-Adresse',
         phone: 'Aktualisieren Sie Ihre primäre Telefonnummer',

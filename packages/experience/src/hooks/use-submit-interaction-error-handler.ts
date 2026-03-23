@@ -1,7 +1,6 @@
 import { cond } from '@silverhand/essentials';
 import { useMemo } from 'react';
 
-import { isDevFeaturesEnabled } from '@/constants/env';
 import { type ContinueFlowInteractionEvent } from '@/types';
 
 import useEmailBlockedErrorHandler from './use-email-blocked-error-handler';
@@ -48,7 +47,7 @@ const useSubmitInteractionErrorHandler = (
       ...emailBlockedErrorHandler,
       ...requiredProfileErrorHandler,
       ...mfaErrorHandler,
-      ...cond(isDevFeaturesEnabled && passkeySignInErrorHandler),
+      ...cond(passkeySignInErrorHandler),
     }),
     [
       emailBlockedErrorHandler,

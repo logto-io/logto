@@ -13,6 +13,11 @@
             "in": "query",
             "name": "includeSsoIdentities",
             "description": "If it's provided with a truthy value (`true`, `1`, `yes`), each user in the response will include a `ssoIdentities` property containing a list of SSO identities associated with the user."
+          },
+          {
+            "in": "query",
+            "name": "includePasswordHash",
+            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), the response will include the `passwordDigest` and `passwordAlgorithm` fields. These fields are omitted by default for security reasons."
           }
         ],
         "responses": {
@@ -24,6 +29,12 @@
                   "properties": {
                     "ssoIdentities": {
                       "description": "List of SSO identities associated with the user. Only available when the `includeSsoIdentities` query parameter is provided with a truthy value."
+                    },
+                    "passwordDigest": {
+                      "description": "The hashed password of the user. Only present when `includePasswordHash` is provided with a truthy value. `null` if the user has no password set."
+                    },
+                    "passwordAlgorithm": {
+                      "description": "The algorithm used to hash the password. Only present when `includePasswordHash` is provided with a truthy value. `null` if the user has no password set."
                     }
                   }
                 }
@@ -203,10 +214,10 @@
                     "description": "Plain text password for the user."
                   },
                   "passwordDigest": {
-                    "description": "In case you already have the password digests and not the passwords, you can use them for the newly created user via this property. The value should be generated with one of the supported algorithms. The algorithm can be specified using the `passwordAlgorithm` property."
+                    "description": "In case you already have the password digests and not the passwords, you can use them for the newly created user via this property. The algorithm can be specified using the `passwordAlgorithm` property. For `Legacy`, pass a JSON string in the format `[algorithm, args, encryptedPassword]`, where `args` is a string array that MUST contain an `@` placeholder, which will be replaced by the plain text password at runtime. For PBKDF2 under `Legacy`, `args` is expected to be in the order `[salt, iterations, keylen, digest, '@']`. The salt supports a plain string or a `hex:`-prefixed hex string (for binary salt bytes)."
                   },
                   "passwordAlgorithm": {
-                    "description": "The hash algorithm used for the password. It should be one of the supported algorithms: argon2, md5, sha1, sha256. Should the encryption algorithm differ from argon2, it will automatically be upgraded to argon2 upon the user's next sign-in."
+                    "description": "The hash algorithm used for the password. It should be one of the supported algorithms, including `Legacy` for custom legacy expressions. Should the encryption algorithm differ from `Argon2i`, it will automatically be upgraded to `Argon2i` upon the user's next sign-in."
                   }
                 }
               }

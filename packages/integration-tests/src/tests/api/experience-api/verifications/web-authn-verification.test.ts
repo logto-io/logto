@@ -4,9 +4,6 @@ import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 /**
  * Create a mock WebAuthn authentication verification payload.

@@ -83,7 +83,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, verificationId, setToast, setVerificationId } =
+  const { accountCenterSettings, refreshUserInfo, verificationId, setToast, setVerificationId } =
     useContext(PageContext);
   const [identifier, setIdentifier] = useState(initialValue);
   const [pendingIdentifier, setPendingIdentifier] = useState<string>();
@@ -195,6 +195,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
         return;
       }
 
+      await refreshUserInfo();
       navigate(successRedirect, { replace: true });
     },
     [
@@ -204,6 +205,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       clearVerifyError,
       handleError,
       handleVerifyError,
+      refreshUserInfo,
       loading,
       navigate,
       pendingIdentifier,

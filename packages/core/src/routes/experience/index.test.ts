@@ -142,7 +142,7 @@ describe('POST /experience/submit', () => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
-  it('should skip geo context recording when dev features are disabled', async () => {
+  it('should record geo context when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
@@ -153,8 +153,12 @@ describe('POST /experience/submit', () => {
       .set('x-logto-cf-longitude', '139.6503');
 
     expect(response.status).toBe(200);
-    expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
-    expect(userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
+    expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+      mockUser.id,
+      35.6762,
+      139.6503
+    );
+    expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'JP');
   });
 
   it('should record geo location and sign-in country after successful sign-in', async () => {

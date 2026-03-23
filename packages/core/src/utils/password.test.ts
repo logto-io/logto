@@ -1,3 +1,5 @@
+import crypto from 'node:crypto';
+
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 
 import RequestError from '../errors/RequestError/index.js';
@@ -60,6 +62,22 @@ describe('parseLegacyPassword', () => {
     );
   });
 
+  it('should throw error for invalid hex: salt in PBKDF2 expression', () => {
+    const expression = JSON.stringify(['pbkdf2', ['hex:zz', '1000', '32', 'sha256', '@'], 'hash']);
+    expect(() => parseLegacyPassword(expression)).toThrow(
+      new RequestError({ code: 'password.invalid_legacy_password_format' })
+    );
+  });
+
+  it('should accept valid hex: salt in PBKDF2 expression', () => {
+    const expression = JSON.stringify([
+      'pbkdf2',
+      ['hex:80ff00414243', '1000', '32', 'sha256', '@'],
+      'hash',
+    ]);
+    expect(() => parseLegacyPassword(expression)).not.toThrow();
+  });
+
   it('should accept all OpenSSL supported hash algorithms', () => {
     const algorithms = ['md5', 'sha1', 'sha256', 'sha512', 'sha3-256', 'blake2b512'];
 
@@ -104,6 +122,35 @@ describe('executeLegacyHash', () => {
 
     const result = await executeLegacyHash(parsedExpression, inputPassword);
     expect(result).toBe(parsedExpression.encryptedPassword);
+  });
+
+  it('should decode hex-encoded PBKDF2 salt with hex: prefix', async () => {
+    const inputPassword = 'Password123!';
+    const saltHex = '80ff00414243';
+    const expectedHash = crypto
+      .pbkdf2Sync(inputPassword, Buffer.from(saltHex, 'hex'), 1000, 32, 'sha256')
+      .toString('hex');
+
+    const parsedExpression = {
+      algorithm: 'pbkdf2' as const,
+      args: [`hex:${saltHex}`, '1000', '32', 'sha256', '@'],
+      encryptedPassword: expectedHash,
+    };
+
+    const result = await executeLegacyHash(parsedExpression, inputPassword);
+    expect(result).toBe(expectedHash);
+  });
+
+  it('should throw error for invalid hex-encoded PBKDF2 salt', async () => {
+    const parsedExpression = {
+      algorithm: 'pbkdf2' as const,
+      args: ['hex:zz', '1000', '32', 'sha256', '@'],
+      encryptedPassword: 'unused',
+    };
+
+    await expect(executeLegacyHash(parsedExpression, 'Password123!')).rejects.toThrow(
+      new RequestError({ code: 'password.invalid_legacy_password_format' })
+    );
   });
 });
 

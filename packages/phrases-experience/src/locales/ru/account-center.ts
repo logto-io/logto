@@ -3,6 +3,12 @@ const account_center = {
     title: 'Страница не найдена',
     description: 'Эта страница недоступна.',
   },
+  page: {
+    title: 'Аккаунт',
+    security_title: 'Безопасность',
+    security_description: 'Измените здесь настройки аккаунта, чтобы обеспечить его безопасность.',
+    support: 'Поддержка',
+  },
   verification: {
     title: 'Проверка безопасности',
     description:
@@ -52,6 +58,18 @@ const account_center = {
     title: 'Установить имя пользователя',
     description: 'Имя пользователя может содержать только буквы, цифры и символы подчеркивания.',
     success: 'Имя пользователя успешно обновлено.',
+  },
+  security: {
+    add: 'Добавить',
+    change: 'Изменить',
+    remove: 'Удалить',
+    not_set: 'Не задано',
+    email_phone: 'Электронная почта / Телефон',
+    email: 'Электронная почта',
+    phone: 'Телефон',
+    password: 'Пароль',
+    configured: 'Настроено',
+    not_configured: 'Не настроено',
   },
   password: {
     title: 'Установить пароль',

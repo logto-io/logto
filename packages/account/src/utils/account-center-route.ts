@@ -26,6 +26,7 @@ export const accountCenterBasePath = '/account';
 const routeStorageKey = 'account-center-route-cache';
 const redirectUrlParameter = 'redirect';
 const showSuccessParameter = 'show_success';
+const uiLocalesParameter = 'ui_locales';
 
 const knownRoutePrefixes: readonly string[] = [
   emailRoute,
@@ -72,6 +73,9 @@ export const {
   getShowSuccess,
   setShowSuccess,
   clearShowSuccess,
+  getUiLocales,
+  setUiLocales,
+  clearUiLocales,
 } = sessionStorage;
 
 /**
@@ -92,6 +96,18 @@ const handleRedirectParameter = () => {
   }
 };
 
+const handleUiLocalesParameter = () => {
+  const parameters = new URLSearchParams(window.location.search);
+  const uiLocales = parameters.get(uiLocalesParameter);
+
+  if (uiLocales) {
+    setUiLocales(uiLocales);
+    return;
+  }
+
+  clearUiLocales();
+};
+
 /**
  * Handle Account Center route restoration for sign in redirect.
  */
@@ -102,6 +118,8 @@ export const handleAccountCenterRoute = () => {
   if (shouldSkipHandling(window.location.search)) {
     return;
   }
+
+  handleUiLocalesParameter();
 
   // Restore the stored route if the current path is the base path.
   if (window.location.pathname === accountCenterBasePath) {

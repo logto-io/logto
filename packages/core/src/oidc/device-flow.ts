@@ -1,13 +1,23 @@
-import { deviceFlowXsrfCookieKey, experience } from '@logto/schemas';
+import { deviceFlowXsrfCookieKey, experience, logtoCookieKey } from '@logto/schemas';
 import type { KoaContextWithOIDC, errors } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
+import {
+  appendSharedExperienceSearchParams,
+  buildSharedExperienceCookie,
+  parseSharedExperienceParams,
+  type SharedExperienceParams,
+} from './utils.js';
 
-type DeviceFlowPageUrlOptions = {
+type DeviceFlowPageState = Readonly<{
   readonly inputCode?: string;
   readonly userCode?: string;
   readonly error?: string;
-};
+}>;
+
+type DeviceFlowPageUrlOptions = Readonly<{
+  sharedParams?: SharedExperienceParams;
+  state?: DeviceFlowPageState;
+}>;
 
 /**
  * Keep the device-code artifact lifetime aligned with oidc-provider's default behavior.
@@ -61,30 +71,47 @@ const getDeviceFlowInputCode = (error?: Error | errors.OIDCProviderError): strin
 };
 
 /**
- * Device-flow source callbacks already know the structured values the Experience page needs:
- * the session-bound xsrf secret and the visible code/error state. The submit target is now a
- * shared OIDC route constant, so the bridge query only needs to carry user-visible state.
+ * Device flow only replays the subset of Experience parameters that login and device pages truly
+ * share: app, organization, and locale. Keeping that subset explicit avoids turning route-specific
+ * login prompt parameters into accidental global state for the device page.
+ */
+const setDeviceFlowUiCookie = (ctx: KoaContextWithOIDC, sharedParams: SharedExperienceParams) => {
+  ctx.cookies.set(logtoCookieKey, JSON.stringify(buildSharedExperienceCookie(sharedParams)), {
+    httpOnly: false,
+    overwrite: true,
+    sameSite: 'lax',
+  });
+};
+
+/**
+ * Device-flow source callbacks only send two buckets of state back to the Experience SPA:
+ * shared cross-page params (app / organization / locale) and device-page state (code / error).
+ * The xsrf secret is bridged separately through a short-lived cookie, so the page URL stays
+ * focused on recoverable UI state rather than submission credentials.
  */
 export const buildDeviceFlowPageUrl = ({
-  inputCode,
-  userCode,
-  error,
+  sharedParams,
+  state,
 }: DeviceFlowPageUrlOptions): string => {
   const searchParams = new URLSearchParams();
 
-  if (userCode) {
-    searchParams.append('user_code', userCode);
-  } else if (inputCode) {
+  if (sharedParams) {
+    appendSharedExperienceSearchParams(searchParams, sharedParams);
+  }
+
+  if (state?.userCode) {
+    searchParams.append('user_code', state.userCode);
+  } else if (state?.inputCode) {
     /**
      * `user_code` remains reserved for confirm mode so the Experience page can keep using its
      * presence as the confirm-state signal. Input-mode error redisplay therefore uses a separate
      * query key that only seeds the visible field value.
      */
-    searchParams.append('input_code', inputCode);
+    searchParams.append('input_code', state.inputCode);
   }
 
-  if (error) {
-    searchParams.append('error', error);
+  if (state?.error) {
+    searchParams.append('error', state.error);
   }
 
   const query = searchParams.toString();
@@ -100,21 +127,29 @@ export const buildDeviceFlowSuccessPageUrl = (): string => `/${experience.routes
 /**
  * Device flow normally renders provider-owned HTML source pages. We redirect every state back into
  * the Experience SPA with a structured bridge query so input, error, and success all stay in one
- * UI shell without shipping raw provider HTML through the browser URL.
+ * UI shell without shipping raw provider HTML through the browser URL. The same redirect also
+ * replays the shared app / organization / locale params so `/device` stays aligned with the rest
+ * of Experience without inheriting login-only prompt parameters.
  */
 export const deviceFlowConfig = {
-  enabled: EnvSet.values.isDevFeaturesEnabled,
+  enabled: true,
   userCodeInputSource: async (
     ctx: KoaContextWithOIDC,
     _form: string,
     _out: unknown,
     error?: Error | errors.OIDCProviderError
   ) => {
+    const sharedParams = parseSharedExperienceParams(ctx.query);
+
     setDeviceFlowXsrfCookie(ctx);
+    setDeviceFlowUiCookie(ctx, sharedParams);
     ctx.redirect(
       buildDeviceFlowPageUrl({
-        error: error?.name,
-        inputCode: getDeviceFlowInputCode(error),
+        sharedParams,
+        state: {
+          error: error?.name,
+          inputCode: getDeviceFlowInputCode(error),
+        },
       })
     );
   },
@@ -126,10 +161,23 @@ export const deviceFlowConfig = {
     _deviceInfo: unknown,
     userCode: string
   ) => {
+    /**
+     * DeviceCode params (the original device authorization request) carry `organization_id` and
+     * `ui_locales` but never `app_id`, so only org/locale actually fall back here. `app_id` on
+     * the Experience page is an explicit UI-context override supplied on the device page URL,
+     * not an alias for the OIDC `client_id`. Query params win over DeviceCode params.
+     */
+    const sharedParams = {
+      ...parseSharedExperienceParams(ctx.oidc.entities.DeviceCode?.params ?? {}),
+      ...parseSharedExperienceParams(ctx.query),
+    };
+
     setDeviceFlowXsrfCookie(ctx);
+    setDeviceFlowUiCookie(ctx, sharedParams);
     ctx.redirect(
       buildDeviceFlowPageUrl({
-        userCode,
+        sharedParams,
+        state: { userCode },
       })
     );
   },

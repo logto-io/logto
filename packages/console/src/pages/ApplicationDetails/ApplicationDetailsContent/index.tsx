@@ -20,7 +20,6 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import OrganizationList from '@/components/OrganizationList';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedApp } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -124,15 +123,18 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
   return (
     <>
       <DetailsPageHeader
-        icon={<ApplicationIcon type={data.type} isThirdParty={data.isThirdParty} />}
+        icon={
+          <ApplicationIcon
+            type={data.type}
+            isThirdParty={data.isThirdParty}
+            isDeviceFlow={data.customClientMetadata.isDeviceFlow}
+          />
+        }
         title={data.name}
         primaryTag={condArray(
           data.isThirdParty && t(`${applicationTypeI18nKey.thirdParty}.title`),
           t(`${applicationTypeI18nKey[data.type]}.title`),
-          // DEV: Show device flow tag
-          isDevFeaturesEnabled &&
-            data.customClientMetadata.isDeviceFlow &&
-            t('application_details.device_flow_tag')
+          data.customClientMetadata.isDeviceFlow && t('application_details.device_flow_tag')
         )}
         identifier={{ name: 'App ID', value: data.id }}
         additionalActionButton={{

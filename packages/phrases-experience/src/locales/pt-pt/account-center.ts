@@ -3,6 +3,12 @@ const account_center = {
     title: 'Página não encontrada',
     description: 'Esta página não está disponível.',
   },
+  page: {
+    title: 'Conta',
+    security_title: 'Segurança',
+    security_description: 'Altere aqui as definições da sua conta para garantir a sua segurança.',
+    support: 'Suporte',
+  },
   verification: {
     title: 'Verificação de segurança',
     description:
@@ -56,6 +62,18 @@ const account_center = {
     title: 'Definir nome de utilizador',
     description: 'O nome de utilizador deve conter apenas letras, números e sublinhados.',
     success: 'Nome de utilizador atualizado com sucesso.',
+  },
+  security: {
+    add: 'Adicionar',
+    change: 'Alterar',
+    remove: 'Remover',
+    not_set: 'Não definido',
+    email_phone: 'E-mail / Telefone',
+    email: 'E-mail',
+    phone: 'Telefone',
+    password: 'Palavra-passe',
+    configured: 'Configurado',
+    not_configured: 'Não configurado',
   },
   password: {
     title: 'Definir palavra-passe',

@@ -11,6 +11,7 @@ import {
   OrganizationInvitationStatus,
   SignInMode,
   TenantRole,
+  userMfaDataKey,
   userOnboardingDataKey,
   type User,
   type UserOnboardingData,
@@ -80,6 +81,9 @@ export class ProvisionLibrary {
         ...rest,
         ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
         ...conditional(customData && { customData }),
+        logtoConfig: {
+          [userMfaDataKey]: { enabled: false },
+        },
       },
       { roleNames: initialUserRoles, isInteractive: true }
     );

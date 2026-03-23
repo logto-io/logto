@@ -3,6 +3,12 @@ const account_center = {
     title: 'Сторінку не знайдено',
     description: 'Ця сторінка недоступна.',
   },
+  page: {
+    title: 'Акаунт',
+    security_title: 'Безпека',
+    security_description: 'Тут можна змінити налаштування акаунта, щоб забезпечити його безпеку.',
+    support: 'Підтримка',
+  },
   verification: {
     title: 'Перевірка безпеки',
     description:
@@ -54,6 +60,18 @@ const account_center = {
     title: "Встановити ім'я користувача",
     description: "Ім'я користувача може містити лише літери, цифри та символи підкреслення.",
     success: "Ім'я користувача успішно оновлено.",
+  },
+  security: {
+    add: 'Додати',
+    change: 'Змінити',
+    remove: 'Видалити',
+    not_set: 'Не встановлено',
+    email_phone: 'Електронна пошта / Телефон',
+    email: 'Електронна пошта',
+    phone: 'Телефон',
+    password: 'Пароль',
+    configured: 'Налаштовано',
+    not_configured: 'Не налаштовано',
   },
   password: {
     title: 'Встановити пароль',

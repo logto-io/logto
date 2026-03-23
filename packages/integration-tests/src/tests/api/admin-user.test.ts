@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- will fix in the next PR */
 import { UsersPasswordEncryptionMethod, ConnectorType, SignInIdentifier } from '@logto/schemas';
 import { HTTPError } from 'ky';
 
@@ -47,8 +48,34 @@ describe('admin console user management', () => {
     expect(userDetails.ssoIdentities).toBeUndefined();
 
     // `ssoIdentities` field should be array type is specified that return user info with `includeSsoIdentities`.
-    const userDetailsWithSsoIdentities = await getUser(user.id, true);
+    const userDetailsWithSsoIdentities = await getUser(user.id, { withSsoIdentities: true });
     expect(userDetailsWithSsoIdentities.ssoIdentities).toStrictEqual([]);
+  });
+
+  describe('GET /users/:userId with includePasswordHash', () => {
+    it('should not return password hash by default', async () => {
+      const user = await createUserByAdmin({ password: generatePassword() });
+      const userDetails = await getUser(user.id);
+      expect(userDetails.hasPassword).toBe(true);
+      expect(userDetails.passwordDigest).toBeUndefined();
+      expect(userDetails.passwordAlgorithm).toBeUndefined();
+    });
+
+    it('should return password hash when includePasswordHash=true', async () => {
+      const user = await createUserByAdmin({ password: generatePassword() });
+      const userDetails = await getUser(user.id, { includePasswordHash: true });
+      expect(userDetails.hasPassword).toBe(true);
+      expect(userDetails.passwordDigest).toBeTruthy();
+      expect(userDetails.passwordAlgorithm).toBe(UsersPasswordEncryptionMethod.Argon2i);
+    });
+
+    it('should return null password fields when user has no password', async () => {
+      const user = await createUserByAdmin();
+      const userDetails = await getUser(user.id, { includePasswordHash: true });
+      expect(userDetails.hasPassword).toBe(false);
+      expect(userDetails.passwordDigest).toBeNull();
+      expect(userDetails.passwordAlgorithm).toBeNull();
+    });
   });
 
   describe('create user with password digest', () => {
@@ -455,3 +482,4 @@ describe('admin console user management', () => {
     );
   });
 });
+/* eslint-enable max-lines */

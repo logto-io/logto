@@ -7,7 +7,7 @@ import type Queries from '#src/tenants/Queries.js';
 import { GrantMock, createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { consent } from './session.js';
+import { consent } from './index.js';
 
 const { jest } = import.meta;
 

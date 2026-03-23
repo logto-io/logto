@@ -16,9 +16,7 @@ import {
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectWebAuthnExperience from '#src/ui-helpers/expect-webauthn-experience.js';
 import { setupUsernameAndEmailExperience } from '#src/ui-helpers/index.js';
-import { devFeatureTest, generateUsername } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
+import { generateUsername } from '#src/utils.js';
 
 const setupSignInExperience = async (options: {
   passkeyEnabled?: boolean;
@@ -71,7 +69,7 @@ const setupSignInExperience = async (options: {
  * 2. When passkey sign-in is disabled, navigate directly to password page
  *
  * Note: Full passkey sign-in flow with users who have passkeys is tested in:
- * - mfa/webauthn/index.test.ts (uses devFeatureTest for passkey sign-in)
+ * - mfa/webauthn/index.test.ts
  */
 describe('identifier-first verification method switching', () => {
   beforeAll(async () => {

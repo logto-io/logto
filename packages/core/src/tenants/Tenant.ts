@@ -16,6 +16,7 @@ import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAutoConsent from '#src/middleware/koa-auto-consent.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
+import koaDeviceFlowShortcut from '#src/middleware/koa-device-flow-shortcut.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaExperienceSsr from '#src/middleware/koa-experience-ssr.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
@@ -123,6 +124,8 @@ export default class Tenant implements TenantContext {
 
     // Mount OIDC
     const provider = initOidc(id, envSet, queries, libraries, logtoConfigs, subscription);
+
+    app.use(koaDeviceFlowShortcut());
     app.use(mount('/oidc', provider.app));
 
     const tenantContext: TenantContext = {
@@ -188,6 +191,20 @@ export default class Tenant implements TenantContext {
             packagePath: UserApps.DemoApp,
             port: 5003,
             prefix: UserApps.DemoApp,
+          })
+        )
+      );
+
+      // Mount device demo app (same conditions as demo app)
+      app.use(
+        mount(
+          '/' + UserApps.DeviceDemoApp,
+          koaSpaProxy({
+            mountedApps,
+            queries,
+            packagePath: UserApps.DeviceDemoApp,
+            port: 5005,
+            prefix: UserApps.DeviceDemoApp,
           })
         )
       );

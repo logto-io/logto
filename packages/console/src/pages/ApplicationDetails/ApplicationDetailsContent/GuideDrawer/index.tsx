@@ -32,31 +32,45 @@ function GuideDrawer({ app, secrets, onClose }: Props) {
     [app.type]
   );
 
-  const structuredMetadata = useMemo(
-    () => getStructuredAppGuideMetadata({ categories: [appType] }),
-    [getStructuredAppGuideMetadata, appType]
-  );
+  const { isDeviceFlow } = app.customClientMetadata;
 
-  const hasSingleGuide = useMemo(() => {
+  const structuredMetadata = useMemo(() => {
+    const metadata = getStructuredAppGuideMetadata({ categories: [appType] });
+
+    // Device flow apps should only see the device flow guide;
+    // regular native apps should not see the device flow guide.
+    if (appType === ApplicationType.Native) {
+      return {
+        ...metadata,
+        [ApplicationType.Native]: metadata[ApplicationType.Native].filter((guide) =>
+          isDeviceFlow ? guide.id === 'native-device-flow' : guide.id !== 'native-device-flow'
+        ),
+      };
+    }
+
+    return metadata;
+  }, [getStructuredAppGuideMetadata, appType, isDeviceFlow]);
+
+  const isSingleGuide = useMemo(() => {
     return structuredMetadata[appType].length === 1;
   }, [appType, structuredMetadata]);
 
   useEffect(() => {
-    if (hasSingleGuide) {
+    if (isSingleGuide) {
       const guide = structuredMetadata[appType][0];
       if (guide) {
         const { id, metadata } = guide;
         setSelectedGuide({ id, metadata });
       }
     }
-  }, [hasSingleGuide, appType, structuredMetadata]);
+  }, [isSingleGuide, appType, structuredMetadata]);
 
   return (
     <div className={styles.drawerContainer}>
       <div className={styles.header}>
         {selectedGuide && (
           <>
-            {!hasSingleGuide && (
+            {!isSingleGuide && (
               <>
                 <IconButton
                   size="large"
@@ -95,9 +109,13 @@ function GuideDrawer({ app, secrets, onClose }: Props) {
           guideId={selectedGuide.id}
           app={app}
           secrets={secrets}
-          onClose={() => {
-            setSelectedGuide(undefined);
-          }}
+          onClose={
+            isSingleGuide
+              ? onClose
+              : () => {
+                  setSelectedGuide(undefined);
+                }
+          }
         />
       )}
     </div>

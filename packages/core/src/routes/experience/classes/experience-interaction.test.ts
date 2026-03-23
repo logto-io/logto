@@ -119,7 +119,8 @@ const createSignInInteraction = ({
   );
   // @ts-expect-error --mock test context
   const signInContext: WithHooksAndLogsContext = {
-    assignInteractionHookResult: jest.fn(),
+    assignReleaseOnSuccessInteractionHookResult: jest.fn(),
+    assignReleaseAnywayInteractionHookResult: jest.fn(),
     appendDataHookContext: jest.fn(),
     appendExceptionHookContext: jest.fn(),
     ...baseContext,
@@ -166,7 +167,8 @@ describe('ExperienceInteraction class', () => {
 
   // @ts-expect-error --mock test context
   const ctx: WithHooksAndLogsContext = {
-    assignInteractionHookResult: jest.fn(),
+    assignReleaseOnSuccessInteractionHookResult: jest.fn(),
+    assignReleaseAnywayInteractionHookResult: jest.fn(),
     appendDataHookContext: jest.fn(),
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
@@ -207,6 +209,9 @@ describe('ExperienceInteraction class', () => {
         {
           id: 'uid',
           primaryEmail: mockEmail,
+          logtoConfig: {
+            mfa: { enabled: false },
+          },
         },
         { isInteractive: true, roleNames: ['user', 'default:admin'] }
       );
@@ -223,15 +228,19 @@ describe('ExperienceInteraction class', () => {
   });
 
   describe('sign-in submission', () => {
-    it('should skip geo context recording when dev features are disabled', async () => {
+    it('should record geo context when dev features are disabled', async () => {
       setDevFeaturesEnabled(false);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction();
 
       await experienceInteraction.submit();
 
-      expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
-      expect(userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
+      expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+        mockUser.id,
+        37.7749,
+        -122.4194
+      );
+      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
     });
 
     it('should record geo location and sign-in country when dev features are enabled', async () => {

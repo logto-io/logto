@@ -2,7 +2,6 @@ import { type SubjectToken } from '@logto/schemas';
 import { type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -247,16 +246,6 @@ describe('token exchange', () => {
   });
 
   describe('JWT access token exchange', () => {
-    // Stub EnvSet.values to enable dev features for JWT access token exchange
-    const stub = Sinon.stub(EnvSet, 'values').value({
-      ...EnvSet.values,
-      isDevFeaturesEnabled: true,
-    });
-
-    afterAll(() => {
-      stub.restore();
-    });
-
     const jwtOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
       params: {
         // JWT tokens don't start with sub_ prefix
@@ -328,16 +317,6 @@ describe('token exchange', () => {
   });
 
   describe('opaque access token exchange', () => {
-    // Stub EnvSet.values to enable dev features for access token exchange
-    const stub = Sinon.stub(EnvSet, 'values').value({
-      ...EnvSet.values,
-      isDevFeaturesEnabled: true,
-    });
-
-    afterAll(() => {
-      stub.restore();
-    });
-
     const opaqueOidcContext: Partial<KoaContextWithOIDC['oidc']> = {
       params: {
         subject_token: 'opaque_access_token',

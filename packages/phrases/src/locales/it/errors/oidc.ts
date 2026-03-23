@@ -22,6 +22,8 @@ const oidc = {
   invalid_session_payload: 'Payload di sessione non valido.',
   session_not_found: 'Sessione non trovata.',
   invalid_session_account_id: "L'accountId della sessione non corrisponde.",
+  failed_to_revoke_grant: 'Impossibile revocare la concessione.',
+  failed_to_cleanup_session_authorization: "Impossibile ripulire l'autorizzazione della sessione.",
 };
 
 export default Object.freeze(oidc);

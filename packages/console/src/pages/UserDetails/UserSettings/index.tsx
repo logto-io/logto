@@ -34,6 +34,7 @@ import UserMfaVerifications from './UserMfaVerifications';
 import UserPassword from './UserPassword';
 import UserSessions from './UserSessions';
 import UserSignInPasskeys from './UserSignInPasskeys';
+import UserThirdPartyApps from './UserThirdPartyApps';
 
 function UserSettings() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -162,18 +163,17 @@ function UserSettings() {
               }}
             />
           </FormField>
-          {isDevFeaturesEnabled && (
-            <FormField title="user_details.passkey.field_name">
-              <UserSignInPasskeys userId={user.id} />
-            </FormField>
-          )}
+          <FormField title="user_details.passkey.field_name">
+            <UserSignInPasskeys userId={user.id} />
+          </FormField>
           <FormField title="user_details.mfa.field_name">
             <UserMfaVerifications userId={user.id} />
           </FormField>
           <PersonalAccessTokens userId={user.id} />
         </FormCard>
         <UserConnections userId={user.id} />
-        {isDevFeaturesEnabled && <UserSessions userId={user.id} />}
+        <UserSessions userId={user.id} />
+        {isDevFeaturesEnabled && <UserThirdPartyApps userId={user.id} />}
         <FormCard title="user_details.user_profile">
           <FormField title="user_details.field_name">
             <TextInput {...register('name')} placeholder={t('users.placeholder_name')} />

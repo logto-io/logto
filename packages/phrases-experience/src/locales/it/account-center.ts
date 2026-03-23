@@ -3,6 +3,13 @@ const account_center = {
     title: 'Pagina non trovata',
     description: 'Questa pagina non è disponibile.',
   },
+  page: {
+    title: 'Account utente',
+    security_title: 'Sicurezza',
+    security_description:
+      'Modifica qui le impostazioni del tuo account per garantirne la sicurezza.',
+    support: 'Supporto',
+  },
   verification: {
     title: 'Verifica di sicurezza',
     description:
@@ -56,6 +63,18 @@ const account_center = {
     title: 'Imposta nome utente',
     description: 'Il nome utente può contenere solo lettere, numeri e trattini bassi.',
     success: 'Nome utente aggiornato con successo.',
+  },
+  security: {
+    add: 'Aggiungi',
+    change: 'Modifica',
+    remove: 'Rimuovi',
+    not_set: 'Non impostato',
+    email_phone: 'Posta elettronica / Telefono',
+    email: 'Posta elettronica',
+    phone: 'Telefono',
+    password: "Parola d'accesso",
+    configured: 'Configurato',
+    not_configured: 'Non configurato',
   },
   password: {
     title: 'Imposta password',

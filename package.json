@@ -22,8 +22,9 @@
     "ci:build": "pnpm -r build",
     "ci:lint": "pnpm -r --parallel --workspace-concurrency=0 lint",
     "ci:stylelint": "pnpm -r --parallel --workspace-concurrency=0 stylelint",
+    "ci:test": "pnpm -r --parallel --workspace-concurrency=0 test:ci && pnpm test:scripts",
     "test:scripts": "node .scripts/compare-database.test.js",
-    "ci:test": "pnpm -r --parallel --workspace-concurrency=0 test:ci && pnpm test:scripts"
+    "test:integration": "./.scripts/integration/run.sh"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
@@ -47,14 +48,14 @@
       "esbuild": "^0.25.0",
       "cross-spawn@<6.0.6": "^6.0.6",
       "prismjs@<1.30.0": "^1.30.0",
-      "dompurify@<3.2.4": "^3.2.4",
+      "dompurify@<3.3.2": "^3.3.2",
       "formidable@<3.5.4": "^3.5.4",
       "playwright@<1.55.1": "^1.55.1",
       "tmp@<0.2.4": "^0.2.4",
       "nanoid@^4.0.0 <5.0.9": "^5.0.9",
       "lodash@<=4.17.22": "^4.17.23",
       "lodash-es@<=4.17.22": "^4.17.23",
-      "tar@<=7.5.3": "^7.5.4",
+      "tar@<=7.5.10": "^7.5.11",
       "diff@<4.0.4": "^4.0.4",
       "diff@>=5.0.0 <5.2.2": "^5.2.2",
       "diff@>=6.0.0 <8.0.3": "^8.0.3",
@@ -72,7 +73,10 @@
       "minimatch@>=9.0.0 <9.0.7": "^9.0.7",
       "rollup@>=4.0.0 <4.59.0": "^4.59.0",
       "basic-ftp@<5.2.0": "^5.2.0",
-      "koa@<2.16.4": "^2.16.4"
+      "koa@<2.16.4": "^2.16.4",
+      "@tootallnate/once@<3.0.1": "^3.0.1",
+      "immutable@>=4.0.0-rc.1 <4.3.8": "^4.3.8",
+      "flatted@<3.4.0": "^3.4.0"
     },
     "peerDependencyRules": {
       "allowedVersions": {

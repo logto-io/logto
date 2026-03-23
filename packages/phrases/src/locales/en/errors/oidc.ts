@@ -23,6 +23,8 @@ const oidc = {
   invalid_session_payload: 'Invalid session payload.',
   session_not_found: 'Session not found.',
   invalid_session_account_id: 'Session accountId mismatch.',
+  failed_to_revoke_grant: 'Failed to revoke grant.',
+  failed_to_cleanup_session_authorization: 'Failed to clean up session authorization.',
 };
 
 export default Object.freeze(oidc);

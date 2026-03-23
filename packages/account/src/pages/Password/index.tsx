@@ -29,7 +29,7 @@ const Password = () => {
     setVerificationId,
     setToast,
     experienceSettings,
-    setUserInfo,
+    refreshUserInfo,
   } = useContext(PageContext);
   const updatePasswordRequest = useApi(updatePassword);
   const handleError = useErrorHandler();
@@ -108,7 +108,7 @@ const Password = () => {
       return;
     }
 
-    setUserInfo((current) => ({ ...current, hasPassword: true }));
+    await refreshUserInfo();
     navigate(passwordSuccessRoute, { replace: true });
   };
 

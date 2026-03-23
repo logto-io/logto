@@ -18,6 +18,7 @@ export const adminConsoleApplicationId = 'admin-console';
 
 export const demoAppApplicationId = 'demo-app';
 export const accountCenterApplicationId = 'account-center';
+export const deviceDemoAppApplicationId = 'device-demo-app';
 
 const buildSpaApplicationData = (
   tenantId: string,
@@ -59,12 +60,50 @@ export const buildAccountCenterAppDataForTenant = (tenantId: string): Applicatio
     description: 'Placeholder application for Account Center.',
   });
 
-export type BuiltInApplicationId = typeof demoAppApplicationId | typeof accountCenterApplicationId;
+const buildNativeApplicationData = (
+  tenantId: string,
+  {
+    id,
+    name,
+    description,
+  }: {
+    id: string;
+    name: string;
+    description: string;
+  }
+): Application => ({
+  tenantId,
+  id,
+  name,
+  secret: 'N/A',
+  description,
+  type: ApplicationType.Native,
+  oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
+  customClientMetadata: { isDeviceFlow: true },
+  protectedAppMetadata: null,
+  isThirdParty: false,
+  createdAt: 0,
+  customData: {},
+});
+
+export const buildDeviceDemoAppDataForTenant = (tenantId: string): Application =>
+  buildNativeApplicationData(tenantId, {
+    id: deviceDemoAppApplicationId,
+    name: 'Device Flow Preview',
+    description: 'Preview for Device Authorization Flow.',
+  });
+
+export type BuiltInApplicationId =
+  | typeof demoAppApplicationId
+  | typeof accountCenterApplicationId
+  | typeof deviceDemoAppApplicationId;
 
 export const isBuiltInApplicationId = (
   applicationId: string
 ): applicationId is BuiltInApplicationId =>
-  applicationId === demoAppApplicationId || applicationId === accountCenterApplicationId;
+  applicationId === demoAppApplicationId ||
+  applicationId === accountCenterApplicationId ||
+  applicationId === deviceDemoAppApplicationId;
 
 export const isBuiltInClientId = isBuiltInApplicationId;
 
@@ -74,6 +113,10 @@ export const buildBuiltInApplicationDataForTenant = (
 ): Application => {
   if (applicationId === demoAppApplicationId) {
     return buildDemoAppDataForTenant(tenantId);
+  }
+
+  if (applicationId === deviceDemoAppApplicationId) {
+    return buildDeviceDemoAppDataForTenant(tenantId);
   }
 
   return buildAccountCenterAppDataForTenant(tenantId);

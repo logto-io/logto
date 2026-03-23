@@ -3,6 +3,7 @@ const storagePrefix = 'logto:account-center:';
 const storageKeys = Object.freeze({
   redirectUrl: `${storagePrefix}redirect-url`,
   showSuccess: `${storagePrefix}show-success`,
+  uiLocales: `${storagePrefix}ui-locales`,
 });
 
 export const sessionStorage = Object.freeze({
@@ -63,5 +64,29 @@ export const sessionStorage = Object.freeze({
       return;
     }
     window.sessionStorage.removeItem(storageKeys.showSuccess);
+  },
+
+  getUiLocales: (): string | undefined => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    return window.sessionStorage.getItem(storageKeys.uiLocales) ?? undefined;
+  },
+
+  setUiLocales: (value: string): void => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.sessionStorage.setItem(storageKeys.uiLocales, value);
+  },
+
+  clearUiLocales: (): void => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.sessionStorage.removeItem(storageKeys.uiLocales);
   },
 });

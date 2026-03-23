@@ -165,6 +165,22 @@ const user_details = {
     revoke_session_confirmation:
       'Bu oturumu kaldırırsanız, kullanıcıların yeniden kimlik doğrulaması gerekir.',
   },
+  third_party_apps: {
+    title: 'Üçüncü taraf uygulamalar',
+    description:
+      "Üçüncü taraf uygulamaları yetkilendirmek için Logto'yu kimlik sağlayıcınız olarak kullanın. Bu kullanıcının erişim verdiği uygulamaları görüntüleyin ve yönetin.",
+    field_name: 'Yetkili üçüncü taraf uygulamalar',
+    multiple_authorized:
+      'Bu kullanıcı birden fazla üçüncü taraf uygulama ve hizmeti yetkilendirdi.',
+    not_authorized:
+      'Bu kullanıcı henüz herhangi bir üçüncü taraf uygulama veya hizmeti yetkilendirmedi.',
+    name_column: 'Ad',
+    app_id_column: 'Uygulama Kimliği',
+    access_created_at_column: 'Erişim oluşturulma zamanı',
+    revoke_access_title: 'Erişim iptal edilsin mi?',
+    revoke_access_description:
+      'Bu işlem uygulamanın bu kullanıcının hesabına tüm cihazlardaki erişimini iptal eder. Erişimi geri yüklemek için kullanıcı yeniden yetkilendirme yapmalıdır.',
+  },
   connections: {
     title: 'Bağlantı',
     description:

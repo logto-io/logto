@@ -26,6 +26,7 @@
     "@logto/phrases-experience": "workspace:^",
     "@logto/react": "^4.0.6",
     "@logto/schemas": "workspace:^",
+    "@logto/shared": "workspace:^",
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/eslint-config-react": "6.0.2",
     "@silverhand/essentials": "^2.9.1",

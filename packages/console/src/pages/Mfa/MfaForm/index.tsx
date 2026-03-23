@@ -19,7 +19,7 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -257,7 +257,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
         return;
       }
 
-      const payload = buildMfaPatchPayload(formData, isDevFeaturesEnabled);
+      const payload = buildMfaPatchPayload(formData);
       const { mfa: updatedMfaConfig, adaptiveMfa: updatedAdaptiveMfa } = await api
         .patch('api/sign-in-exp', {
           json: payload,
@@ -373,54 +373,41 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
           description="mfa.policy_description"
           learnMoreLink={{ href: mfa }}
         >
-          {isDevFeaturesEnabled ? (
-            <FormField title="mfa.require_mfa" headlineSpacing="large">
-              <Select
-                hasSelectedOptionIndicator
-                value={mfaRequirementMode}
-                options={mfaRequirementOptions}
-                isReadOnly={isPolicySettingsDisabled}
-                onChange={(mode) => {
-                  if (!mode) {
-                    return;
-                  }
+          <FormField title="mfa.require_mfa" headlineSpacing="large">
+            <Select
+              hasSelectedOptionIndicator
+              value={mfaRequirementMode}
+              options={mfaRequirementOptions}
+              isReadOnly={isPolicySettingsDisabled}
+              onChange={(mode) => {
+                if (!mode) {
+                  return;
+                }
 
-                  const nextState = getMfaRequirementState(mode);
-                  const currentSetUpPrompt = formValues.setUpPrompt;
-                  setValue('isMandatory', nextState.isMandatory, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                  });
-                  setValue('adaptiveMfaEnabled', nextState.adaptiveMfaEnabled, {
-                    shouldDirty: true,
-                    shouldTouch: true,
-                  });
+                const nextState = getMfaRequirementState(mode);
+                const currentSetUpPrompt = formValues.setUpPrompt;
+                setValue('isMandatory', nextState.isMandatory, {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                });
+                setValue('adaptiveMfaEnabled', nextState.adaptiveMfaEnabled, {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                });
 
-                  if (mode !== MfaRequirementMode.Mandatory) {
-                    setValue(
-                      'setUpPrompt',
-                      normalizeSetUpPrompt(
-                        currentSetUpPrompt,
-                        mode === MfaRequirementMode.Adaptive
-                      ),
-                      {
-                        shouldDirty: true,
-                        shouldTouch: true,
-                      }
-                    );
-                  }
-                }}
-              />
-            </FormField>
-          ) : (
-            <FormField title="mfa.require_mfa" headlineSpacing="large">
-              <Switch
-                disabled={isPolicySettingsDisabled}
-                label={t('mfa.require_mfa_label')}
-                {...register('isMandatory')}
-              />
-            </FormField>
-          )}
+                if (mode !== MfaRequirementMode.Mandatory) {
+                  setValue(
+                    'setUpPrompt',
+                    normalizeSetUpPrompt(currentSetUpPrompt, mode === MfaRequirementMode.Adaptive),
+                    {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                    }
+                  );
+                }
+              }}
+            />
+          </FormField>
           {shouldShowSetUpPrompt && (
             <FormField title="mfa.set_up_prompt" headlineSpacing="large">
               <Controller

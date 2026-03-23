@@ -35,3 +35,6 @@ export const darkModeApplicationIconMap: ApplicationIconMap = Object.freeze({
 export { default as thirdPartyApplicationIconDark } from '@/assets/icons/third-party-app-dark.svg?react';
 
 export { default as thirdPartyApplicationIcon } from '@/assets/icons/third-party-app.svg?react';
+
+export { default as deviceFlowApplicationIcon } from '@/assets/icons/device-flow-app.svg?react';
+export { default as deviceFlowApplicationIconDark } from '@/assets/icons/device-flow-app-dark.svg?react';

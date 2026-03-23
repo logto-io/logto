@@ -32,6 +32,7 @@ cache
 .history
 fly.toml
 dump.rdb
+.*tmp
 
 # Claude local files
 .claude/
@@ -41,6 +42,3 @@ dump.rdb
 
 # console auto generated files
 /packages/console/src/consts/jwt-customizer-type-definition.ts
-
-# Temporarily ignore SAML OpenAPI spec file (will be needed later)
-packages/core/src/saml-applications/routes/index.openapi.json

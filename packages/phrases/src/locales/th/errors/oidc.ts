@@ -21,6 +21,8 @@ const oidc = {
   invalid_session_payload: 'ข้อมูลเซสชันไม่ถูกต้อง',
   session_not_found: 'ไม่พบเซสชัน',
   invalid_session_account_id: 'Session accountId ไม่ตรงกัน',
+  failed_to_revoke_grant: 'เพิกถอนสิทธิ์ไม่สำเร็จ',
+  failed_to_cleanup_session_authorization: 'ล้างข้อมูลการอนุญาตของเซสชันไม่สำเร็จ',
 };
 
 export default Object.freeze(oidc);
