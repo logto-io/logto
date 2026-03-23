@@ -89,4 +89,24 @@ describe('getExperienceLanguage', () => {
 
     expect(language).toBe('en');
   });
+
+  it('should fallback to default when configured fallback language is unsupported', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ctx: ParameterizedContext<any, any, any> = createMockContext({
+      headers: { 'accept-language': 'xx-XX' },
+    });
+
+    const language = getExperienceLanguage({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      ctx,
+      languageInfo: {
+        autoDetect: true,
+        // @ts-expect-error
+        fallbackLanguage: 'yy-YY',
+      },
+      customLanguages: [],
+    });
+
+    expect(language).toBe('en');
+  });
 });

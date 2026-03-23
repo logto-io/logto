@@ -78,5 +78,5 @@ export const getExperienceLanguage = ({
     }
   }
 
-  return findSupportedLanguageTag([], builtInLanguages, fallbackLanguage);
+  return findSupportedLanguageTag([], builtInLanguages);
 };
