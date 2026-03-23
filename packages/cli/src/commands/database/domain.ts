@@ -49,44 +49,62 @@ const getDomainStatusFromCloudflareData = (data: CloudflareData): DomainStatus =
 };
 
 const getCloudflareHostname = async (auth: CloudflareAuth, identifier: string) => {
-  const response = await got.get(buildCloudflareHostnameUrl(auth, identifier), {
-    headers: { Authorization: `Bearer ${auth.apiToken}` },
-    throwHttpErrors: false,
-  });
+  try {
+    const response = await got.get(buildCloudflareHostnameUrl(auth, identifier), {
+      headers: { Authorization: `Bearer ${auth.apiToken}` },
+      throwHttpErrors: false,
+      timeout: { request: 30000 }, // 30 second timeout
+    });
 
-  if (!response.ok) {
-    return { ok: false as const, statusCode: response.statusCode };
+    if (!response.ok) {
+      return { ok: false as const, statusCode: response.statusCode };
+    }
+
+    // Safe JSON parsing
+    let body: unknown;
+    try {
+      body = JSON.parse(response.body);
+    } catch {
+      return { ok: false as const, statusCode: 500 };
+    }
+
+    const parsed = cloudflareResponseGuard.safeParse(body);
+    if (!parsed.success || !parsed.data.success) {
+      return { ok: false as const, statusCode: response.statusCode };
+    }
+
+    const result = cloudflareDataGuard.safeParse(parsed.data.result);
+    if (!result.success) {
+      return { ok: false as const, statusCode: response.statusCode };
+    }
+
+    return { ok: true as const, data: result.data };
+  } catch {
+    return { ok: false as const, statusCode: 500 };
   }
-
-  const parsed = cloudflareResponseGuard.safeParse(JSON.parse(response.body));
-  if (!parsed.success || !parsed.data.success) {
-    return { ok: false as const, statusCode: response.statusCode };
-  }
-
-  const result = cloudflareDataGuard.safeParse(parsed.data.result);
-  if (!result.success) {
-    return { ok: false as const, statusCode: response.statusCode };
-  }
-
-  return { ok: true as const, data: result.data };
 };
 
 const deleteCloudflareHostname = async (auth: CloudflareAuth, identifier: string) => {
-  const response = await got.delete(buildCloudflareHostnameUrl(auth, identifier), {
-    headers: { Authorization: `Bearer ${auth.apiToken}` },
-    throwHttpErrors: false,
-  });
+  try {
+    const response = await got.delete(buildCloudflareHostnameUrl(auth, identifier), {
+      headers: { Authorization: `Bearer ${auth.apiToken}` },
+      throwHttpErrors: false,
+      timeout: { request: 30000 }, // 30 second timeout
+    });
 
-  // 404 means already deleted, which is fine
-  if (response.statusCode === 404) {
-    return { ok: true as const, alreadyGone: true };
+    // 404 means already deleted, which is fine
+    if (response.statusCode === 404) {
+      return { ok: true as const, alreadyGone: true };
+    }
+
+    if (!response.ok) {
+      return { ok: false as const, statusCode: response.statusCode };
+    }
+
+    return { ok: true as const, alreadyGone: false };
+  } catch {
+    return { ok: false as const, statusCode: 500 };
   }
-
-  if (!response.ok) {
-    return { ok: false as const, statusCode: response.statusCode };
-  }
-
-  return { ok: true as const, alreadyGone: false };
 };
 
 const sleep = async (ms: number) =>
@@ -164,7 +182,20 @@ const cleanupStaleDomain = async (
   auth: CloudflareAuth,
   domain: Awaited<ReturnType<typeof findAllDomainsAcrossTenants>>[number]
 ): Promise<boolean> => {
+  // Re-check domain status from Cloudflare before deleting (race condition prevention)
   if (domain.cloudflareData?.id) {
+    const currentStatus = await getCloudflareHostname(auth, domain.cloudflareData.id);
+
+    if (currentStatus.ok) {
+      const newStatus = getDomainStatusFromCloudflareData(currentStatus.data);
+      if (newStatus === DomainStatus.Active) {
+        consoleLog.info(
+          `  ${chalk.yellow('SKIP')} ${domain.domain} — domain became active since sync, not deleting`
+        );
+        return false;
+      }
+    }
+
     await sleep(100);
 
     const result = await deleteCloudflareHostname(auth, domain.cloudflareData.id);
@@ -247,6 +278,11 @@ const sync: CommandModule<unknown, { cleanup: boolean; 'stale-days': number }> =
         default: 14,
       }),
   handler: async ({ cleanup, 'stale-days': staleDays }) => {
+    // Validate stale-days parameter
+    if (!Number.isFinite(staleDays) || staleDays < 1) {
+      consoleLog.fatal('Invalid --stale-days value. Must be a positive integer >= 1.');
+    }
+
     const pool = await createPoolFromConfig();
 
     // Load Cloudflare hostname provider config from systems table
