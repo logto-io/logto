@@ -9,12 +9,13 @@ type DomainRow = {
   errorMessage?: string;
   cloudflareData?: { id: string; status: string; ssl: { status: string } };
   createdAt: string;
+  updatedAt: string;
 };
 
 export const findAllDomainsAcrossTenants = async (pool: CommonQueryMethods) =>
   pool.any<DomainRow>(sql`
     select id, tenant_id as "tenantId", domain, status, error_message as "errorMessage",
-      cloudflare_data as "cloudflareData", created_at as "createdAt"
+      cloudflare_data as "cloudflareData", created_at as "createdAt", updated_at as "updatedAt"
     from domains
     order by created_at
   `);

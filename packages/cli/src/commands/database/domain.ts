@@ -11,6 +11,7 @@ import { noop } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { got } from 'got';
 import type { CommandModule } from 'yargs';
+import { createClient } from 'redis';
 import { z } from 'zod';
 
 import { createPoolFromConfig } from '../../database.js';
@@ -112,6 +113,23 @@ const sleep = async (ms: number) =>
     setTimeout(resolve, ms);
   });
 
+const cacheKey = 'custom-domain';
+
+const clearDomainCache = async (domain: string) => {
+  const redisUrl = process.env.REDIS_URL;
+  if (!redisUrl) {
+    return;
+  }
+  try {
+    const client = createClient({ url: redisUrl });
+    await client.connect();
+    await client.del(`${cacheKey}:${domain}`);
+    await client.quit();
+  } catch {
+    // Redis errors are non-fatal - cache will expire naturally
+  }
+};
+
 const syncDomainFromCloudflare = async (
   pool: Awaited<ReturnType<typeof createPoolFromConfig>>,
   auth: CloudflareAuth,
@@ -174,6 +192,7 @@ const syncDomainFromCloudflare = async (
     errorMessage,
     cloudflareData: result.data,
   });
+  await clearDomainCache(domain.domain);
   return 'synced';
 };
 
@@ -220,6 +239,7 @@ const cleanupStaleDomain = async (
   consoleLog.info(
     `  ${chalk.green('DB_DEL')} ${domain.domain} (tenant: ${domain.tenantId}) — deleted from database`
   );
+  await clearDomainCache(domain.domain);
   return true;
 };
 
@@ -238,7 +258,8 @@ const printReport = (
   staleThreshold.setDate(staleThreshold.getDate() - staleDays);
 
   const staleDomains = updatedDomains.filter(
-    (entry) => entry.status !== DomainStatus.Active && new Date(entry.createdAt) < staleThreshold
+    (entry) =>
+      entry.status !== DomainStatus.Active && new Date(entry.updatedAt) < staleThreshold
   );
 
   consoleLog.info('');
@@ -254,7 +275,7 @@ const printReport = (
     consoleLog.info('Stale domains:');
     for (const entry of staleDomains) {
       consoleLog.info(
-        `  - ${entry.domain} (tenant: ${entry.tenantId}, status: ${entry.status}, created: ${entry.createdAt})`
+        `  - ${entry.domain} (tenant: ${entry.tenantId}, status: ${entry.status}, updated: ${entry.updatedAt})`
       );
     }
   }
