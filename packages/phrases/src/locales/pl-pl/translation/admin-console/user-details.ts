@@ -66,7 +66,6 @@ const user_details = {
     field_name: 'Wieloetapowa autoryzacja',
     field_description: 'Ten użytkownik włączył autoryzację dwuetapową.',
     name_column: 'Wieloetapowa autoryzacja',
-
     field_description_empty: 'Ten użytkownik nie włączył autoryzacji dwuetapowej.',
     deletion_confirmation:
       'Usuwasz istniejące <name/> w celu weryfikacji dwuetapowej. Czy na pewno chcesz kontynuować?',
@@ -150,7 +149,6 @@ const user_details = {
     name_column: 'Nazwa',
     session_id_column: 'Identyfikator sesji',
     location_column: 'Lokalizacja',
-
     browser_on_os: '{{browser}} na {{os}}',
     user: 'Użytkownik',
     applications: 'Aplikacje',

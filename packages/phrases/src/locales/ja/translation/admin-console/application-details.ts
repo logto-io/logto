@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: 'アプリケーションの詳細',
   back_to_applications: 'アプリケーションに戻る',
@@ -284,6 +286,7 @@ const application_details = {
     col_sp_claims: 'アプリケーションの値名',
     add_button: '別のものを追加',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

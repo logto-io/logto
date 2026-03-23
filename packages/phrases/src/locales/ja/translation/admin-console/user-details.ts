@@ -66,7 +66,6 @@ const user_details = {
     field_name: '多要素認証',
     field_description: 'このユーザーは2段階認証要素を有効にしました。',
     name_column: '多要素認証',
-
     field_description_empty: 'このユーザーは2段階認証の要因を有効にしていません。',
     deletion_confirmation: '2段階認証の既存の<name/>を削除しています。本当に続行しますか？',
   },
@@ -148,7 +147,6 @@ const user_details = {
     name_column: '名前',
     session_id_column: 'セッション ID',
     location_column: '場所',
-
     browser_on_os: '{{os}} 上の {{browser}}',
     user: 'ユーザー',
     applications: 'アプリケーション',

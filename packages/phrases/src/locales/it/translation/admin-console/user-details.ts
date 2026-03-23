@@ -69,7 +69,6 @@ const user_details = {
     field_name: 'Autenticazione a due fattori',
     field_description: 'Questo utente ha abilitato fattori di autenticazione a 2 passaggi.',
     name_column: 'Autenticazione a due fattori',
-
     field_description_empty:
       'Questo utente non ha abilitato fattori di autenticazione a due fattori.',
     deletion_confirmation:
@@ -154,7 +153,6 @@ const user_details = {
     name_column: 'Nome',
     session_id_column: 'ID sessione',
     location_column: 'Posizione',
-
     browser_on_os: '{{browser}} su {{os}}',
     user: 'Utente',
     applications: 'Applicazioni',

@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: '애플리케이션 세부 정보',
   back_to_applications: '어플리케이션으로 돌아가기',
@@ -278,6 +280,7 @@ const application_details = {
     col_sp_claims: '애플리케이션의 값 이름',
     add_button: '다른 추가',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: 'Uygulama detayları',
   back_to_applications: 'Uygulamalara geri dön',
@@ -282,6 +284,7 @@ const application_details = {
     col_sp_claims: 'Uygulamanızın değer adı',
     add_button: 'Başka bir eklenti',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

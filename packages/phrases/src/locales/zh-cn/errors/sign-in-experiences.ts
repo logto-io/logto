@@ -20,6 +20,10 @@ const sign_in_experiences = {
     '当启用了 MFA 时，电子邮件验证码无法用于登录。',
   phone_verification_code_cannot_be_used_for_sign_in: '当启用了 MFA 时，短信验证码无法用于登录。',
   adaptive_mfa_requires_mfa: '启用自适应 MFA 前必须先启用 MFA。',
+  adaptive_mfa_requires_non_skippable_policy:
+    '自适应 MFA 需要不可跳过的 MFA 提示策略。使用 PromptOnlyAtSignInMandatory 或 PromptAtSignInAndSignUpMandatory。',
+  non_adaptive_mfa_requires_skippable_policy:
+    '当禁用自适应 MFA 时，MFA 提示策略必须是可跳过的。不要使用 PromptOnlyAtSignInMandatory 或 PromptAtSignInAndSignUpMandatory。',
   duplicated_sign_up_identifiers: '检测到重复的注册标识符。',
   missing_sign_up_identifiers: '主要的注册标识符不能为空。',
   invalid_custom_email_blocklist_format:

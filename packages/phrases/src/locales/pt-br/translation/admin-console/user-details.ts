@@ -67,7 +67,6 @@ const user_details = {
     field_name: 'Autenticação de dois fatores',
     field_description: 'Este usuário habilitou fatores de autenticação de 2 etapas.',
     name_column: 'Autenticação de dois fatores',
-
     field_description_empty: 'Este usuário não habilitou fatores de autenticação em duas etapas.',
     deletion_confirmation:
       'Você está removendo o existente <name/> para a verificação em duas etapas. Tem certeza de que deseja continuar?',
@@ -152,7 +151,6 @@ const user_details = {
     name_column: 'Nome',
     session_id_column: 'ID da sessão',
     location_column: 'Localização',
-
     browser_on_os: '{{browser}} no {{os}}',
     user: 'Usuário',
     applications: 'Aplicativos',

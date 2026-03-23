@@ -69,7 +69,6 @@ const user_details = {
     field_name: 'Zwei-Faktor-Authentifizierung',
     field_description: 'Dieser Benutzer hat 2-Stufen-Authentifizierungsfaktoren aktiviert.',
     name_column: 'Zwei-Faktor',
-
     field_description_empty:
       'Dieser Benutzer hat keine zweistufigen Authentifizierungsfaktoren aktiviert.',
     deletion_confirmation:
@@ -155,7 +154,6 @@ const user_details = {
     name_column: 'Name',
     session_id_column: 'Sitzungs-ID',
     location_column: 'Standort',
-
     browser_on_os: '{{browser}} unter {{os}}',
     user: 'Benutzer',
     applications: 'Anwendungen',

@@ -67,7 +67,6 @@ const user_details = {
     field_name: 'Двухфакторная аутентификация',
     field_description: 'Этот пользователь включил двухэтапные факторы аутентификации.',
     name_column: 'Двухфакторная аутентификация',
-
     field_description_empty: 'Этот пользователь не включил двухфакторную аутентификацию.',
     deletion_confirmation:
       'Вы удаляете существующий <name/> для двухэтапной верификации. Вы уверены, что хотите продолжить?',
@@ -151,7 +150,6 @@ const user_details = {
     name_column: 'Имя',
     session_id_column: 'Идентификатор сессии',
     location_column: 'Местоположение',
-
     browser_on_os: '{{browser}} на {{os}}',
     user: 'Пользователь',
     applications: 'Приложения',
