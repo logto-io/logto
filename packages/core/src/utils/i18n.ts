@@ -1,4 +1,8 @@
-import { findSupportedLanguageTag, matchSupportedLanguageTag } from '@logto/language-kit';
+import {
+  findSupportedLanguageTag,
+  matchExactLanguageTag,
+  matchSupportedLanguageTag,
+} from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
 import { type SignInExperience } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
@@ -43,11 +47,36 @@ export const getExperienceLanguage = ({
   const acceptableLanguages = acceptableLanguageCandidates.flatMap<string>((language) =>
     Array.isArray(language) ? language : [language]
   );
-  const { match: customLanguage } = matchSupportedLanguageTag(acceptableLanguages, customLanguages);
 
-  if (customLanguage) {
-    return customLanguage;
+  for (const language of acceptableLanguages) {
+    const customExactLanguage = matchExactLanguageTag([language], customLanguages);
+
+    if (customExactLanguage) {
+      return customExactLanguage;
+    }
+
+    const builtInExactLanguage = matchExactLanguageTag([language], builtInLanguages);
+
+    if (builtInExactLanguage) {
+      return builtInExactLanguage;
+    }
+
+    const { match: builtInFallbackLanguage, matchType: builtInMatchType } =
+      matchSupportedLanguageTag([language], builtInLanguages);
+
+    if (builtInMatchType === 'base' && builtInFallbackLanguage) {
+      return builtInFallbackLanguage;
+    }
+
+    const { match: customFallbackLanguage, matchType: customMatchType } = matchSupportedLanguageTag(
+      [language],
+      customLanguages
+    );
+
+    if (customMatchType === 'base' && customFallbackLanguage) {
+      return customFallbackLanguage;
+    }
   }
 
-  return findSupportedLanguageTag(acceptableLanguages, builtInLanguages);
+  return findSupportedLanguageTag([], builtInLanguages, fallbackLanguage);
 };

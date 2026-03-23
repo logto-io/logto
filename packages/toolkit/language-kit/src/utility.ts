@@ -45,6 +45,11 @@ type SupportedLanguageEntry = {
   base: string;
 };
 
+type SupportedLanguageMatch = {
+  entry: SupportedLanguageEntry;
+  matchType: 'exact' | 'base';
+};
+
 const isNonNullable = <T>(value: T): value is NonNullable<T> =>
   value !== null && value !== undefined;
 
@@ -67,7 +72,7 @@ const toSupportedLanguageEntry = (language: string): Optional<SupportedLanguageE
 const findMatchingSupportedLanguage = (
   preferred: string[],
   supportedEntries: SupportedLanguageEntry[]
-): Optional<SupportedLanguageEntry> => {
+): Optional<SupportedLanguageMatch> => {
   for (const language of preferred) {
     const canonicalPreferred = canonicalizeLanguageTag(language)?.toLowerCase();
 
@@ -78,7 +83,10 @@ const findMatchingSupportedLanguage = (
     const directMatch = supportedEntries.find((entry) => entry.canonical === canonicalPreferred);
 
     if (directMatch) {
-      return directMatch;
+      return {
+        entry: directMatch,
+        matchType: 'exact',
+      };
     }
 
     const base = canonicalPreferred.split('-')[0] ?? canonicalPreferred;
@@ -90,7 +98,10 @@ const findMatchingSupportedLanguage = (
     const baseMatch = supportedEntries.find((entry) => entry.base === base);
 
     if (baseMatch) {
-      return baseMatch;
+      return {
+        entry: baseMatch,
+        matchType: 'base',
+      };
     }
   }
 };
@@ -99,6 +110,27 @@ const buildSupportedEntries = (supported: readonly string[]): SupportedLanguageE
   supported
     .map((language) => toSupportedLanguageEntry(language))
     .filter((entry): entry is SupportedLanguageEntry => isNonNullable(entry));
+
+export const matchExactLanguageTag = (
+  preferred: string[],
+  supported: readonly string[]
+): Optional<string> => {
+  const supportedEntries = buildSupportedEntries(supported);
+
+  for (const language of preferred) {
+    const canonicalPreferred = canonicalizeLanguageTag(language)?.toLowerCase();
+
+    if (!canonicalPreferred) {
+      continue;
+    }
+
+    const directMatch = supportedEntries.find((entry) => entry.canonical === canonicalPreferred);
+
+    if (directMatch) {
+      return directMatch.original;
+    }
+  }
+};
 
 /**
  * Matches preferred language tags against supported languages.
@@ -115,12 +147,15 @@ export const matchSupportedLanguageTag = (
 ): {
   supportedEntries: SupportedLanguageEntry[];
   match: Optional<SupportedLanguageEntry['original']>;
+  matchType: Optional<SupportedLanguageMatch['matchType']>;
 } => {
   const supportedEntries = buildSupportedEntries(supported);
+  const matched = findMatchingSupportedLanguage(preferred, supportedEntries);
 
   return {
     supportedEntries,
-    match: findMatchingSupportedLanguage(preferred, supportedEntries)?.original,
+    match: matched?.entry.original,
+    matchType: matched?.matchType,
   };
 };
 

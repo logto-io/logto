@@ -6,6 +6,7 @@ import {
   fallback,
   findSupportedLanguageTag,
   isLanguageTag,
+  matchExactLanguageTag,
   matchSupportedLanguageTag,
   languageTagGuard,
 } from './utility.js';
@@ -85,12 +86,23 @@ describe('findSupportedLanguageTag', () => {
 describe('matchSupportedLanguageTag', () => {
   const supported = ['en', 'zh-CN'];
 
+  it('should support exact-only matching without base-language fallback', () => {
+    expect(matchExactLanguageTag(['zh-CN'], supported)).toBe('zh-CN');
+    expect(matchExactLanguageTag(['zh-HK'], supported)).toBeUndefined();
+  });
+
   it('should return supported language when found', () => {
     expect(matchSupportedLanguageTag(['zh-HK'], supported).match).toBe('zh-CN');
   });
 
+  it('should expose whether a match is exact or base-language fallback', () => {
+    expect(matchSupportedLanguageTag(['zh-CN'], supported).matchType).toBe('exact');
+    expect(matchSupportedLanguageTag(['zh-HK'], supported).matchType).toBe('base');
+  });
+
   it('should return undefined when no match found', () => {
     expect(matchSupportedLanguageTag(['de'], supported).match).toBeUndefined();
+    expect(matchSupportedLanguageTag(['de'], supported).matchType).toBeUndefined();
   });
 
   it('should return specific language when provided in params', () => {

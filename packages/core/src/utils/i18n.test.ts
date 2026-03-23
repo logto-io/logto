@@ -42,6 +42,38 @@ describe('getExperienceLanguage', () => {
     expect(language).toBe('fi-FI');
   });
 
+  it('should prefer built-in exact match over custom base-language fallback', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ctx: ParameterizedContext<any, any, any> = createMockContext({
+      headers: { 'accept-language': 'zh-HK' },
+    });
+
+    const language = getExperienceLanguage({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      ctx,
+      languageInfo: baseLanguageInfo,
+      customLanguages: ['zh-TW'],
+    });
+
+    expect(language).toBe('zh-HK');
+  });
+
+  it('should prefer built-in base-language fallback over custom base-language fallback', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ctx: ParameterizedContext<any, any, any> = createMockContext({
+      headers: { 'accept-language': 'en-US' },
+    });
+
+    const language = getExperienceLanguage({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      ctx,
+      languageInfo: baseLanguageInfo,
+      customLanguages: ['en-GB'],
+    });
+
+    expect(language).toBe('en');
+  });
+
   it('should fallback to default when no match found', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ctx: ParameterizedContext<any, any, any> = createMockContext({
