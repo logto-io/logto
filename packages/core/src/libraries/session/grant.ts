@@ -1,3 +1,4 @@
+import { deduplicate } from '@silverhand/essentials';
 import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -62,4 +63,50 @@ export const revokeGrantChain = async (provider: Provider, grantId: string) => {
       }
     );
   }
+};
+
+const isGrantExpired = (grant: { exp?: number }) =>
+  typeof grant.exp === 'number' && grant.exp <= Date.now() / 1000;
+
+export const revokeUserGrantById = async (provider: Provider, userId: string, grantId: string) => {
+  // eslint-disable-next-line unicorn/no-array-method-this-argument
+  const grant = await provider.Grant.find(grantId, { ignoreExpiration: true });
+
+  if (!grant) {
+    throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
+  }
+
+  if (grant.accountId !== userId) {
+    throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
+  }
+
+  if (!isGrantExpired(grant)) {
+    await revokeGrantChain(provider, grantId);
+    // Note: Same as session revoke in management API.
+    // No OIDC route context is available here, so `grant.revoked` cannot be emitted safely.
+  }
+};
+
+/**
+ * Revokes multiple grant chains and returns a batch execution summary.
+ *
+ * This method does not throw on per-grant failures. Every unique grant ID is attempted,
+ * and failures are returned in `failedTasks` with normalized causes.
+ *
+ * Intended for upstream callers that already validated ownership and expiry, then decide
+ * how to handle partial failures based on the returned summary.
+ */
+export const revokeUserGrantsByIds = async (provider: Provider, grantIds: string[]) => {
+  const uniqueGrantIds = deduplicate(grantIds);
+  return runNamedTasksWithSummary({
+    items: uniqueGrantIds,
+    getName: (grantId) => grantId,
+    runner: async (grantId) => {
+      // Intentionally call `revokeGrantChain` directly instead of `revokeUserGrantById`.
+      // Upstream already ensures these grantIds belong to the user and are non-expired.
+      await revokeGrantChain(provider, grantId);
+    },
+    normalizeCause: serializeErrorCause,
+    concurrency: 5, // Revoke in parallel with a reasonable concurrency limit
+  });
 };

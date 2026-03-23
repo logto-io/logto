@@ -4,14 +4,14 @@ import {
   oidcSessionInstancePayloadGuard,
   userApplicationGrantPayloadGuard,
 } from '@logto/schemas';
-import { deduplicate, trySafe } from '@silverhand/essentials';
-import type { Provider } from 'oidc-provider';
+import { deduplicate } from '@silverhand/essentials';
+import type { Provider, Session } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type SessionInstanceWithExtension } from '#src/queries/oidc-session-extensions.js';
 import type Queries from '#src/tenants/Queries.js';
 
-import { revokeGrantChain } from './grant.js';
+import { revokeGrantChain, revokeUserGrantById, revokeUserGrantsByIds } from './grant.js';
 import { runNamedTasksWithSummary, serializeErrorCause } from './utils.js';
 
 export { consent, getMissingScopes } from './consent.js';
@@ -76,8 +76,36 @@ type SessionAuthorizations = Record<string, SessionAuthorizationDetails>;
 const pickGrantIds = (entries: Array<[string, SessionAuthorizationDetails]>) =>
   entries.flatMap(([, { grantId }]) => (grantId ? [grantId] : []));
 
-const isGrantExpired = (grant: { exp?: number }) =>
-  typeof grant.exp === 'number' && grant.exp <= Date.now() / 1000;
+const removeSessionAuthorizationsByGrantIds = async (
+  session: Session,
+  userId: string,
+  grantIds: string[]
+) => {
+  if (session.accountId !== userId || !session.authorizations || grantIds.length === 0) {
+    return;
+  }
+
+  // Align with oidc-provider client-scoped end-session branch:
+  // delete matched authorization entry + reset session identifier.
+  // oidc-provider/lib/actions/end_session.js
+  const grantIdSet = new Set(grantIds);
+  const authorizationEntries = Object.entries(session.authorizations);
+  const filteredEntries = authorizationEntries.filter(
+    ([, authorization]) => !authorization.grantId || !grantIdSet.has(authorization.grantId)
+  );
+
+  if (filteredEntries.length === authorizationEntries.length) {
+    return;
+  }
+
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  session.authorizations = Object.fromEntries(filteredEntries);
+  // `end_session` also clears `session.state`, but that state is specific to
+  // the interactive logout flow context. Management API revocation has no such
+  // OIDC route state, so we only apply authorization cleanup + identifier reset.
+  session.resetIdentifier();
+  await session.persist();
+};
 
 export const createSessionLibrary = (queries: Queries) => {
   const { oidcSessionExtensions } = queries;
@@ -177,97 +205,91 @@ export const createSessionLibrary = (queries: Queries) => {
 
     const session = await provider.Session.findByUid(sessionReference.sessionUid);
 
-    if (!session || session.accountId !== userId || !session.authorizations) {
+    if (!session) {
       return;
     }
 
-    // Align with oidc-provider client-scoped end-session branch:
-    // delete matched authorization entry + reset session identifier.
-    // oidc-provider/lib/actions/end_session.js
-    const authorizationEntries = Object.entries(session.authorizations);
-    const filteredEntries = authorizationEntries.filter(
-      ([, authorization]) => authorization.grantId !== grantId
-    );
-
-    if (filteredEntries.length === authorizationEntries.length) {
-      return;
-    }
-
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    session.authorizations = Object.fromEntries(filteredEntries);
-    // `end_session` also clears `session.state`, but that state is specific to
-    // the interactive logout flow context. Management API revocation has no such
-    // OIDC route state, so we only apply authorization cleanup + identifier reset.
-    session.resetIdentifier();
-    await session.persist();
+    await removeSessionAuthorizationsByGrantIds(session, userId, [grantId]);
   };
 
-  const removeUserSessionAuthorizationByGrantIdWithErrorCatch = async (
+  const removeUserSessionAuthorizationsByGrantIds = async (
     provider: Provider,
     userId: string,
-    grantId: string
+    grantIds: string[]
   ) => {
-    await trySafe(
-      async () => {
-        await removeUserSessionAuthorizationByGrantId(provider, userId, grantId);
-      },
-      (error) => {
-        throw new RequestError(
-          { code: 'oidc.failed_to_cleanup_session_authorization', status: 500 },
-          { cause: error }
-        );
-      }
-    );
-  };
-
-  const revokeUserGrantById = async (provider: Provider, userId: string, grantId: string) => {
-    // eslint-disable-next-line unicorn/no-array-method-this-argument
-    const grant = await provider.Grant.find(grantId, { ignoreExpiration: true });
-
-    if (!grant) {
-      throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
-    }
-
-    if (grant.accountId !== userId) {
-      throw new RequestError({ code: 'oidc.invalid_grant', status: 404 });
-    }
-
-    if (!isGrantExpired(grant)) {
-      await revokeGrantChain(provider, grantId);
-      // Note: Same as session revoke in management API.
-      // No OIDC route context is available here, so `grant.revoked` cannot be emitted safely.
-    }
-
-    await removeUserSessionAuthorizationByGrantIdWithErrorCatch(provider, userId, grantId);
-  };
-
-  const revokeUserGrantsByIds = async (provider: Provider, userId: string, grantIds: string[]) => {
     const uniqueGrantIds = deduplicate(grantIds);
-    const { succeededNames: succeededGrantIds, failedTasks } = await runNamedTasksWithSummary({
-      items: uniqueGrantIds,
-      getName: (grantId) => grantId,
-      runner: async (grantId) => {
-        await revokeGrantChain(provider, grantId);
-        await removeUserSessionAuthorizationByGrantIdWithErrorCatch(provider, userId, grantId);
+
+    if (uniqueGrantIds.length === 0) {
+      return { succeededGrantIds: [], failedGrants: [] };
+    }
+
+    const sessionReferences = await Promise.all(
+      uniqueGrantIds.map(async (grantId) => {
+        const sessionReference = await queries.oidcModelInstances.findUserActiveSessionUidByGrantId(
+          userId,
+          grantId
+        );
+
+        return {
+          grantId,
+          sessionUid: sessionReference?.sessionUid,
+        };
+      })
+    );
+    const grantIdsBySessionUid = new Map<string, string[]>();
+
+    for (const { sessionUid, grantId } of sessionReferences) {
+      if (!sessionUid) {
+        continue;
+      }
+
+      const sessionGrantIds = grantIdsBySessionUid.get(sessionUid);
+
+      if (!sessionGrantIds) {
+        grantIdsBySessionUid.set(sessionUid, [grantId]);
+        continue;
+      }
+
+      if (!sessionGrantIds.includes(grantId)) {
+        grantIdsBySessionUid.set(sessionUid, [...sessionGrantIds, grantId]);
+      }
+    }
+
+    const { failedTasks } = await runNamedTasksWithSummary({
+      items: Array.from(grantIdsBySessionUid.entries()),
+      getName: ([sessionUid]) => sessionUid,
+      runner: async ([sessionUid, sessionGrantIds]) => {
+        const session = await provider.Session.findByUid(sessionUid);
+
+        if (!session) {
+          return;
+        }
+
+        await removeSessionAuthorizationsByGrantIds(session, userId, sessionGrantIds);
       },
       normalizeCause: serializeErrorCause,
-      concurrency: 5, // Revoke in parallel with a reasonable concurrency limit
+      concurrency: 5,
     });
 
-    if (failedTasks.length > 0) {
-      throw new RequestError(
-        { code: 'oidc.failed_to_revoke_grant', status: 500 },
-        {
-          details: {
-            succeededGrantIds,
-            failedGrants: failedTasks.map(({ name, cause }) => ({
-              grantId: name,
-              cause,
-            })),
-          },
+    const failedGrantCauseById = new Map<string, unknown>();
+
+    for (const { name: sessionUid, cause } of failedTasks) {
+      const sessionGrantIds = grantIdsBySessionUid.get(sessionUid) ?? [];
+
+      for (const grantId of sessionGrantIds) {
+        if (!failedGrantCauseById.has(grantId)) {
+          failedGrantCauseById.set(grantId, cause);
         }
-      );
+      }
     }
+
+    return {
+      succeededGrantIds: uniqueGrantIds.filter((grantId) => !failedGrantCauseById.has(grantId)),
+      failedGrants: Array.from(failedGrantCauseById.entries()).map(([grantId, cause]) => ({
+        grantId,
+        cause,
+      })),
+    };
   };
 
   return {
@@ -278,5 +300,6 @@ export const createSessionLibrary = (queries: Queries) => {
     revokeUserGrantById,
     revokeUserGrantsByIds,
     removeUserSessionAuthorizationByGrantId,
+    removeUserSessionAuthorizationsByGrantIds,
   };
 };
