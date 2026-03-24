@@ -240,7 +240,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
               <RefreshTokenSettings data={data} />
             )}
             {data.type !== ApplicationType.MachineToMachine && <BackchannelLogout />}
-            <TokenExchangeSettings data={data} />
+            {data.type !== ApplicationType.Protected && <TokenExchangeSettings data={data} />}
             {isDevFeaturesEnabled &&
               ![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(
                 data.type
