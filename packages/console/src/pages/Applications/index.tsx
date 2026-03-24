@@ -12,7 +12,9 @@ import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
 import LearnMore from '@/components/LearnMore';
 import PageMeta from '@/components/PageMeta';
+import OssSamlLimitNotice from '@/components/Upsell/OssSamlLimitNotice';
 import { integrateLogto } from '@/consts';
+import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -165,6 +167,7 @@ function Applications({ tab }: Props) {
         </TabNavItem>
       </TabNav>
 
+      {!isCloud && !tab && <OssSamlLimitNotice />}
       {/* Guide library for my applications tab */}
       {!isLoading && !applications?.length && !isThirdPartyTab && (
         <div className={styles.guideLibraryContainer}>

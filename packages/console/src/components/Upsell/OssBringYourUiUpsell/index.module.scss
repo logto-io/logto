@@ -1,0 +1,82 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+  margin-top: _.unit(6);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+}
+
+.label {
+  font: var(--font-label-2);
+  color: var(--color-text);
+}
+
+.badge {
+  padding: 2px _.unit(2);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #5d34f2, #bd31ff);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.card {
+  border-radius: _.unit(2);
+  padding: _.unit(3) _.unit(4);
+  display: flex;
+  align-items: center;
+  gap: _.unit(3);
+  background: linear-gradient(135deg, #f5f0ff 0%, #f0ecff 100%);
+  margin-top: _.unit(1);
+
+  :global(.dark) & {
+    background: linear-gradient(135deg, rgba(93, 52, 242, 10%) 0%, rgba(93, 52, 242, 6%) 100%);
+  }
+}
+
+.iconWrapper {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(93, 52, 242, 12%);
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  color: #5d34f2;
+}
+
+.cardText {
+  flex: 1;
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.cloudLink {
+  flex-shrink: 0;
+  font: var(--font-label-2);
+  color: var(--color-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

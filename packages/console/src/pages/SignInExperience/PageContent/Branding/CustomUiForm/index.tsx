@@ -3,10 +3,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import CustomCssEditorField from '@/components/CustomCssEditorField';
+import OssBringYourUiUpsell from '@/components/Upsell/OssBringYourUiUpsell';
 import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
+import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -62,6 +64,7 @@ function CustomUiForm() {
           />
         </FormField>
       )}
+      {!isCloud && <OssBringYourUiUpsell />}
     </Card>
   );
 }

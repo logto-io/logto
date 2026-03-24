@@ -26,6 +26,9 @@ const Members = safeLazy(async () => import('@/pages/TenantSettings/TenantMember
 const BillingHistory = safeLazy(async () => import('@/pages/TenantSettings/BillingHistory'));
 const Subscription = safeLazy(async () => import('@/pages/TenantSettings/Subscription'));
 const OidcConfigs = safeLazy(async () => import('@/components/OidcConfigs'));
+const OssMembersUpsell = safeLazy(
+  async () => import('@/components/Upsell/OssMembersUpsell')
+);
 
 const useCloudTenantSettings = () => {
   const { isDevTenant } = useContext(TenantsContext);
@@ -94,6 +97,10 @@ const ossTenantSettings: RouteObject = {
     {
       path: TenantSettingsTabs.OidcConfigs,
       element: <OidcConfigs />,
+    },
+    {
+      path: 'members',
+      element: <OssMembersUpsell />,
     },
   ],
 };

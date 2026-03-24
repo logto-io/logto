@@ -1,0 +1,72 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  width: 216px;
+  margin: 0 _.unit(4);
+  padding: _.unit(4);
+  border-radius: 12px;
+  border: 1px solid var(--color-divider);
+  background: linear-gradient(180deg, #f0ecff 0%, #faf8ff 100%);
+  position: relative;
+
+  :global(.dark) & {
+    background: linear-gradient(
+      180deg,
+      rgba(93, 52, 242, 12%) 0%,
+      rgba(93, 52, 242, 4%) 100%
+    );
+  }
+}
+
+.cloudIcon {
+  width: 20px;
+  height: 20px;
+  color: #5d34f2;
+}
+
+.title {
+  font: var(--font-label-2);
+  color: var(--color-text);
+  margin-top: _.unit(2);
+}
+
+.description {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-text-secondary);
+  margin-top: _.unit(1);
+}
+
+.cta {
+  font: var(--font-label-2);
+  color: var(--color-primary);
+  margin-top: _.unit(3);
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: _.unit(2);
+  right: _.unit(2);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: _.unit(0.5);
+  font-size: 14px;
+  line-height: 1;
+  color: var(--color-text-secondary);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--color-hover);
+  }
+}

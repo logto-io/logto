@@ -1,0 +1,54 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: _.unit(4);
+  padding: _.unit(4);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-bottom: _.unit(3);
+
+  &:hover {
+    background: var(--color-hover);
+  }
+
+  .iconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+  }
+
+  .info {
+    flex: 1;
+    min-width: 0;
+
+    .title {
+      font: var(--font-label-1);
+      color: var(--color-text);
+    }
+
+    .description {
+      font: var(--font-body-2);
+      color: var(--color-text-secondary);
+      margin-top: _.unit(0.5);
+    }
+  }
+
+  .badge {
+    flex-shrink: 0;
+    padding: 2px _.unit(2);
+    border-radius: 10px;
+    background: linear-gradient(135deg, #5d34f2, #bd31ff);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 16px;
+  }
+}

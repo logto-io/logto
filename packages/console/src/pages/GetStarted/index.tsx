@@ -31,6 +31,9 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
 import useWindowResize from '@/hooks/use-window-resize';
 
+import OssDashboardBanner from '@/components/Upsell/OssDashboardBanner';
+import OssPrivateCloudCard from '@/components/Upsell/OssPrivateCloudCard';
+
 import CreateApiForm from '../ApiResources/components/CreateForm';
 import ProtectedAppModal from '../Applications/components/ProtectedAppModal';
 
@@ -126,6 +129,8 @@ function GetStarted() {
         <div className={styles.title}>{t('get_started.title')}</div>
         <div className={styles.subtitle}>{t('get_started.subtitle')}</div>
       </div>
+      {!isCloud && <OssDashboardBanner onClose={() => {}} />}
+      {!isCloud && <OssPrivateCloudCard />}
       {shouldShowConvertToProductionCard && <ConvertToProductionCard />}
       <Card className={styles.card}>
         <div className={styles.title}>

@@ -8,12 +8,15 @@ import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import { isCloud } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import modalStyles from '@/scss/modal.module.scss';
+
+import OssEmailServiceOption from '../Upsell/OssEmailServiceOption';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
@@ -157,7 +160,9 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       >
         {isLoading && <Skeleton />}
         {factoriesError?.message ?? connectorsError?.message}
-
+        {!isCloud && (type === ConnectorType.Email || type === ConnectorType.Sms) && (
+          <OssEmailServiceOption />
+        )}
         <ConnectorRadioGroup
           name="group"
           groups={defaultGroups}

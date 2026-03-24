@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.notice {
+  margin-top: _.unit(1);
+  margin-bottom: _.unit(4);
+}

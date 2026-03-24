@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
+import OssSidebarCard from '@/components/Upsell/OssSidebarCard';
+import { isCloud } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useMatchTenantPath from '@/hooks/use-tenant-pathname';
 
@@ -40,6 +42,7 @@ function Sidebar() {
           )}
         </Section>
       ))}
+      {!isCloud && <OssSidebarCard onClose={() => {}} />}
     </OverlayScrollbar>
   );
 }

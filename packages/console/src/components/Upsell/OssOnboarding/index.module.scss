@@ -1,0 +1,123 @@
+@use '@/scss/underscore' as _;
+
+.app {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-1);
+}
+
+.topbar {
+  flex: 0 0 64px;
+  width: 100%;
+  padding: 0 _.unit(6);
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: auto;
+  height: 28px;
+  color: var(--color-text);
+}
+
+.contentContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: _.unit(6);
+}
+
+.content {
+  margin: 0 auto;
+  max-width: 858px;
+  border-radius: 16px;
+  padding: _.unit(12);
+  background-color: var(--color-layer-1);
+  margin-bottom: _.unit(4);
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font: var(--font-title-1);
+  color: var(--color-text);
+}
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin-top: _.unit(2);
+  margin-bottom: _.unit(4);
+}
+
+.purposeOptions {
+  display: flex;
+  gap: _.unit(3);
+}
+
+.purposeCard {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: _.unit(2);
+  padding: _.unit(4) _.unit(2);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-layer-1);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background: var(--color-hover-variant);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background: var(--color-focused-variant);
+  }
+}
+
+.purposeIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-text-secondary);
+
+  .selected > & {
+    color: var(--color-primary);
+  }
+}
+
+.purposeLabel {
+  font: var(--font-label-2);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: flex-start;
+  gap: _.unit(2);
+  cursor: pointer;
+  user-select: none;
+  margin-top: _.unit(4);
+}
+
+.checkboxInput {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkboxLabel {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  line-height: 20px;
+}

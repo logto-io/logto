@@ -5,6 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
+import OssBrandingUpsell from '@/components/Upsell/OssBrandingUpsell';
 import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -133,6 +134,7 @@ function BrandingForm() {
           />
         </FormField>
       )}
+      {!isCloud && <OssBrandingUpsell />}
     </Card>
   );
 }

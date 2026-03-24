@@ -1,9 +1,10 @@
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { useOutletContext, useRoutes } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
-import { isDevFeaturesEnabled } from '@/consts/env';
+import OssOnboarding from '@/components/Upsell/OssOnboarding';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import Tag from '@/ds-components/Tag';
 import { useConsoleRoutes } from '@/hooks/use-console-routes';
@@ -21,6 +22,9 @@ function ConsoleContent() {
   const { scrollableContent } = useOutletContext<AppContentOutletContext>();
   const routeObjects = useConsoleRoutes();
   const routes = useRoutes(routeObjects);
+  const [showOnboarding, setShowOnboarding] = useState(
+    () => !isCloud && !localStorage.getItem('oss_onboarding_dismissed')
+  );
 
   usePlausiblePageview(routeObjects, ':tenantId');
   // Use this hook here to make sure console listens to user tenant scope changes.
@@ -28,6 +32,14 @@ function ConsoleContent() {
 
   return (
     <div className={styles.content}>
+      {showOnboarding && (
+        <OssOnboarding
+          onClose={() => {
+            localStorage.setItem('oss_onboarding_dismissed', '1');
+            setShowOnboarding(false);
+          }}
+        />
+      )}
       <Suspense fallback={<Skeleton />}>
         <Sidebar />
       </Suspense>
