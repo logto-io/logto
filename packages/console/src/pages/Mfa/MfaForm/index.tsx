@@ -197,7 +197,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
         title: t('mfa.require_mfa_adaptive'),
       },
       {
-        value: MfaRequirementMode.Mandatory,
+        value: MfaRequirementMode.Required,
         title: t('mfa.require_mfa_mandatory'),
       },
     ],
@@ -214,7 +214,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
   );
 
   useEffect(() => {
-    if (mfaRequirementMode === MfaRequirementMode.Mandatory && formValues.adaptiveMfaEnabled) {
+    if (mfaRequirementMode === MfaRequirementMode.Required && formValues.adaptiveMfaEnabled) {
       // This effect normalizes legacy state after form hydration/watch updates.
       // Older data can contain { isMandatory: true, adaptiveMfaEnabled: true },
       // but the new 3-option requirement mode treats "Mandatory" as
@@ -243,7 +243,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
     // in `convertMfaConfigToForm()` as well, so this effect will not re-dirty the form
     // after `reset()` with server data.
     if (
-      mfaRequirementMode === MfaRequirementMode.Mandatory &&
+      mfaRequirementMode === MfaRequirementMode.Required &&
       formValues.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.NoPrompt
     ) {
       setValue('organizationRequiredMfaPolicy', OrganizationRequiredMfaPolicy.NoPrompt, {
@@ -253,9 +253,8 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
     }
   }, [formValues.organizationRequiredMfaPolicy, mfaRequirementMode, setValue]);
 
-  const shouldShowSetUpPrompt = true;
   const shouldShowOrganizationRequiredMfaPolicy =
-    mfaRequirementMode !== MfaRequirementMode.Mandatory;
+    mfaRequirementMode !== MfaRequirementMode.Required;
   const setUpPromptOptions =
     mfaRequirementMode === MfaRequirementMode.Optional
       ? optionalMfaPolicyOptions
@@ -428,23 +427,21 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
               }}
             />
           </FormField>
-          {shouldShowSetUpPrompt && (
-            <FormField title="mfa.set_up_prompt" headlineSpacing="large">
-              <Controller
-                control={control}
-                name="setUpPrompt"
-                render={({ field: { onChange, value } }) => (
-                  <Select
-                    hasSelectedOptionIndicator
-                    value={value}
-                    options={setUpPromptOptions}
-                    isReadOnly={isPolicySettingsDisabled}
-                    onChange={onChange}
-                  />
-                )}
-              />
-            </FormField>
-          )}
+          <FormField title="mfa.set_up_prompt" headlineSpacing="large">
+            <Controller
+              control={control}
+              name="setUpPrompt"
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  hasSelectedOptionIndicator
+                  value={value}
+                  options={setUpPromptOptions}
+                  isReadOnly={isPolicySettingsDisabled}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </FormField>
           {shouldShowOrganizationRequiredMfaPolicy && (
             <FormField title="mfa.set_up_organization_required_mfa_prompt" headlineSpacing="large">
               <Controller

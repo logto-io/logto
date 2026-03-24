@@ -151,7 +151,7 @@ test('maps requirement mode back to form state', () => {
     isMandatory: false,
     adaptiveMfaEnabled: true,
   });
-  expect(getMfaRequirementState(MfaRequirementMode.Mandatory)).toEqual({
+  expect(getMfaRequirementState(MfaRequirementMode.Required)).toEqual({
     isMandatory: true,
     adaptiveMfaEnabled: false,
   });
@@ -174,13 +174,13 @@ test.each([
     title: 'maps legacy mandatory state to mandatory dropdown item',
     isMandatory: true,
     adaptiveMfaEnabled: false,
-    expected: MfaRequirementMode.Mandatory,
+    expected: MfaRequirementMode.Required,
   },
   {
     title: 'maps legacy mandatory+adaptive state to mandatory dropdown item',
     isMandatory: true,
     adaptiveMfaEnabled: true,
-    expected: MfaRequirementMode.Mandatory,
+    expected: MfaRequirementMode.Required,
   },
 ])('$title', ({ isMandatory, adaptiveMfaEnabled, expected }) => {
   expect(getMfaRequirementMode({ isMandatory, adaptiveMfaEnabled })).toBe(expected);
@@ -201,7 +201,7 @@ test.each([
   },
   {
     title: 'writes mandatory selection to mandatory policy and adaptive disabled payload',
-    selectedMode: MfaRequirementMode.Mandatory,
+    selectedMode: MfaRequirementMode.Required,
     expectedPolicy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     expectedAdaptiveMfaEnabled: false,
   },
@@ -223,7 +223,7 @@ test.each([
 test('writes mandatory prompt-only selection to non-skippable prompt policy', () => {
   const payload = buildMfaPatchPayload({
     ...baseForm,
-    ...getMfaRequirementState(MfaRequirementMode.Mandatory),
+    ...getMfaRequirementState(MfaRequirementMode.Required),
     setUpPrompt: MfaPolicy.PromptOnlyAtSignInMandatory,
   });
 
@@ -241,7 +241,7 @@ test('writes mandatory prompt-only selection to non-skippable prompt policy', ()
 test('does not persist organization-required mfa policy in mandatory mode', () => {
   const payload = buildMfaPatchPayload({
     ...baseForm,
-    ...getMfaRequirementState(MfaRequirementMode.Mandatory),
+    ...getMfaRequirementState(MfaRequirementMode.Required),
     organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
   });
 

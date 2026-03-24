@@ -16,7 +16,7 @@ import {
 export enum MfaRequirementMode {
   Optional = 'optional',
   Adaptive = 'adaptive',
-  Mandatory = 'mandatory',
+  Required = 'required',
 }
 
 export const getMfaRequirementMode = ({
@@ -24,7 +24,7 @@ export const getMfaRequirementMode = ({
   adaptiveMfaEnabled,
 }: Pick<MfaConfigForm, 'isMandatory' | 'adaptiveMfaEnabled'>): MfaRequirementMode => {
   if (isMandatory) {
-    return MfaRequirementMode.Mandatory;
+    return MfaRequirementMode.Required;
   }
 
   if (adaptiveMfaEnabled) {
@@ -37,7 +37,7 @@ export const getMfaRequirementMode = ({
 export const getMfaRequirementState = (
   mode: MfaRequirementMode
 ): Pick<MfaConfigForm, 'isMandatory' | 'adaptiveMfaEnabled'> => {
-  if (mode === MfaRequirementMode.Mandatory) {
+  if (mode === MfaRequirementMode.Required) {
     return {
       isMandatory: true,
       adaptiveMfaEnabled: false,
