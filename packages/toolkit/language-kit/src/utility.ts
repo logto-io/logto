@@ -60,7 +60,7 @@ const toSupportedLanguageEntry = (language: string): Optional<SupportedLanguageE
     return;
   }
 
-  const base = canonical.split('-')[0] ?? canonical;
+  const [base = canonical] = canonical.split('-');
 
   return {
     original: language,
@@ -89,11 +89,7 @@ const findMatchingSupportedLanguage = (
       };
     }
 
-    const base = canonicalPreferred.split('-')[0] ?? canonicalPreferred;
-
-    if (!base) {
-      continue;
-    }
+    const [base = canonicalPreferred] = canonicalPreferred.split('-');
 
     const baseMatch = supportedEntries.find((entry) => entry.base === base);
 
