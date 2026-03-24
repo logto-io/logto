@@ -33,11 +33,11 @@ describe('Well-known cache basics', () => {
     await cache.set('tenant-cache-expires-at', WellKnownCache.defaultKey, 123);
     expect(await cache.get('tenant-cache-expires-at', WellKnownCache.defaultKey)).toBe(123);
 
-    await cache.set('resource-oidc-by-indicator', 'resource', {
+    await cache.set('resource-by-indicator', 'resource', {
       indicator: mockResource.indicator,
       accessTokenTtl: mockResource.accessTokenTtl,
     });
-    expect(await cache.get('resource-oidc-by-indicator', 'resource')).toStrictEqual({
+    expect(await cache.get('resource-by-indicator', 'resource')).toStrictEqual({
       indicator: mockResource.indicator,
       accessTokenTtl: mockResource.accessTokenTtl,
     });

@@ -35,7 +35,7 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
         from ${table}
         where ${fields.indicator}=${indicator}
       `),
-    ['resource-oidc-by-indicator', (indicator) => indicator]
+    ['resource-by-indicator', (indicator) => indicator]
   );
 
   const findDefaultResource = async () =>
@@ -82,7 +82,7 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
     buildInsertIntoWithPool(pool)(Resources, {
       returning: true,
     }),
-    ['resource-oidc-by-indicator', ({ indicator }) => indicator]
+    ['resource-by-indicator', ({ indicator }) => indicator]
   );
 
   const updateResource = buildUpdateWhereWithPool(pool)(Resources, true);
@@ -97,7 +97,7 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
 
     void Promise.all(
       [previousResource.indicator, updatedResource.indicator].map(async (indicator) =>
-        trySafe(wellKnownCache.delete('resource-oidc-by-indicator', indicator))
+        trySafe(wellKnownCache.delete('resource-by-indicator', indicator))
       )
     );
 
@@ -115,7 +115,7 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
       throw new DeletionError(Resources.table, id);
     }
 
-    void trySafe(wellKnownCache.delete('resource-oidc-by-indicator', indicator));
+    void trySafe(wellKnownCache.delete('resource-by-indicator', indicator));
   };
 
   return {
