@@ -12,7 +12,7 @@ import type { Middleware } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { mockUser } from '#src/__mocks__/user.js';
+import { mockUser, mockUserTotpMfaVerification } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -130,6 +130,45 @@ const createRequesterWithMocks = ({
 
   return { requester, userGeoLocations, userSignInCountries, mockAppend, users };
 };
+
+const createMfaRequiredRequester = () => {
+  const user = {
+    ...mockUser,
+    mfaVerifications: [mockUserTotpMfaVerification],
+  };
+
+  return createRequesterWithMocks({
+    user,
+    mfa: {
+      policy: mockSignInExperience.mfa.policy,
+      factors: [MfaFactor.TOTP],
+    },
+  }).requester;
+};
+
+describe('POST /experience/profile', () => {
+  it('should keep MFA guard for non-social profile updates during sign-in', async () => {
+    const requester = createMfaRequiredRequester();
+    const response = await requester.post('/experience/profile').send({
+      type: SignInIdentifier.Username,
+      value: 'new-username',
+    });
+
+    expect(response.status).toBe(403);
+    expect(response.body.code).toBe('session.mfa.require_mfa_verification');
+  });
+
+  it('should bypass MFA guard for social profile staging during sign-in', async () => {
+    const requester = createMfaRequiredRequester();
+    const response = await requester.post('/experience/profile').send({
+      type: 'social',
+      verificationId: 'missing-social-verification-id',
+    });
+
+    expect(response.status).toBe(404);
+    expect(response.body.code).toBe('session.verification_session_not_found');
+  });
+});
 
 describe('POST /experience/submit', () => {
   const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
