@@ -241,9 +241,10 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
             )}
             {data.type !== ApplicationType.MachineToMachine && <BackchannelLogout />}
             <TokenExchangeSettings data={data} />
-            {isDevFeaturesEnabled && data.type !== ApplicationType.MachineToMachine && (
-              <ConcurrentDeviceLimit />
-            )}
+            {isDevFeaturesEnabled &&
+              ![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(
+                data.type
+              ) && <ConcurrentDeviceLimit />}
           </DetailsForm>
         </FormProvider>
         {tab === ApplicationDetailsTabs.Settings && (
