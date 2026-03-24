@@ -149,12 +149,14 @@ export const validateBackupCodeFactor = (factors: MfaFactor[]): boolean => {
 };
 
 export const buildMfaPatchPayload = (
-  mfaConfigForm: MfaConfigForm
+  mfaConfigForm: MfaConfigForm,
+  isDevFeaturesEnabled: boolean
 ): { mfa: MfaConfig; adaptiveMfa: AdaptiveMfa } => {
   const mfa = convertMfaFormToConfig(mfaConfigForm);
+  const legacyMfa = mfaConfigForm.isMandatory ? { ...mfa, policy: MfaPolicy.Mandatory } : mfa;
 
   return {
-    mfa,
-    adaptiveMfa: { enabled: mfaConfigForm.adaptiveMfaEnabled },
+    mfa: isDevFeaturesEnabled ? mfa : legacyMfa,
+    adaptiveMfa: { enabled: isDevFeaturesEnabled && mfaConfigForm.adaptiveMfaEnabled },
   };
 };

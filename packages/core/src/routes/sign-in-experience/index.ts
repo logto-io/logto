@@ -4,9 +4,7 @@ import {
   ConnectorType,
   SignInExperiences,
   ForgotPasswordMethod,
-  MfaPolicy,
   ProductEvent,
-  normalizeMfa,
   type SignInExperience,
 } from '@logto/schemas';
 import { conditional, type Optional, tryThat } from '@silverhand/essentials';
@@ -19,6 +17,11 @@ import {
   parseEmailBlocklistPolicy,
   isEmailBlocklistPolicyEnabled,
 } from '#src/libraries/sign-in-experience/index.js';
+import {
+  isNonSkippableMfaPromptPolicy,
+  legacyizeRequiredMfaPolicy,
+  normalizeRequiredMfaPolicy,
+} from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
@@ -32,11 +35,6 @@ import customUiAssetsRoutes from './custom-ui-assets/index.js';
 
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
-
-const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
-  [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
-    policy
-  );
 
 const signInExperienceResponseGuard = SignInExperiences.guard;
 const signInExperienceCreateGuard = SignInExperiences.createGuard;
@@ -103,6 +101,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         query: { removeUnusedDemoSocialConnector },
         body: { socialSignInConnectorTargets, emailBlocklistPolicy, ...rest },
       } = ctx.guard;
+      const { isDevFeaturesEnabled } = EnvSet.values;
       const {
         languageInfo,
         signUp,
@@ -115,7 +114,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         hideLogtoBranding,
         passkeySignIn,
       } = rest;
-      const mfa = rawMfa ? normalizeMfa(rawMfa) : undefined;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -125,6 +123,15 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         getLogtoConnectors(),
         findDefaultSignInExperience(),
       ]);
+
+      const mfa = rawMfa
+        ? {
+            ...rawMfa,
+            policy: isDevFeaturesEnabled
+              ? normalizeRequiredMfaPolicy(rawMfa.policy)
+              : legacyizeRequiredMfaPolicy(rawMfa.policy),
+          }
+        : undefined;
 
       // Remove unavailable connectors
       const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>
@@ -199,7 +206,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       // Keep backend state aligned with console semantics:
       // if MFA is disabled and adaptive MFA is omitted in request, reset adaptive MFA to false.
       const normalizedAdaptiveMfa =
-        mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined ? { enabled: false } : adaptiveMfa;
+        isDevFeaturesEnabled && mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined
+          ? { enabled: false }
+          : adaptiveMfa;
 
       if (forgotPasswordMethods) {
         const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);

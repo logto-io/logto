@@ -2,6 +2,7 @@ import { MfaPolicy, mfaGuard } from '@logto/schemas';
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
 import { mockSignInExperience } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { MockWellKnownCache } from '#src/test-utils/tenant.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
@@ -68,6 +69,10 @@ describe('sign-in-experience query', () => {
   const { mfa: _databaseMfa, ...databaseValueWithoutMfa } = databaseValue;
   const { mfa: _legacyMandatoryDatabaseMfa, ...legacyMandatoryDatabaseValueWithoutMfa } =
     legacyMandatoryDatabaseValue;
+
+  beforeEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+  });
 
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
