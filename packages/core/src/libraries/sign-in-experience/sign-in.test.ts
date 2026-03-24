@@ -191,7 +191,7 @@ describe('validate sign-in', () => {
           mockSignUp,
           enabledConnectors,
           {
-            policy: MfaPolicy.Mandatory,
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
             factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
           }
         );
@@ -218,7 +218,7 @@ describe('validate sign-in', () => {
           mockSignUp,
           enabledConnectors,
           {
-            policy: MfaPolicy.Mandatory,
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
             factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
           }
         );
@@ -245,7 +245,7 @@ describe('validate sign-in', () => {
           mockSignUp,
           enabledConnectors,
           {
-            policy: MfaPolicy.Mandatory,
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
             factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
           }
         );
@@ -268,7 +268,7 @@ describe('validate sign-in', () => {
           mockSignUp,
           enabledConnectors,
           {
-            policy: MfaPolicy.Mandatory,
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
             factors: [MfaFactor.PhoneVerificationCode, MfaFactor.TOTP],
           }
         );

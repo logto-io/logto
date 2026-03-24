@@ -32,7 +32,7 @@ describe('MFA - Multi factors', () => {
       },
       mfa: {
         factors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
     });
   });

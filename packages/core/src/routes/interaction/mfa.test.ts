@@ -261,7 +261,7 @@ describe('interaction routes (MFA verification)', () => {
       findDefaultSignInExperience.mockResolvedValue({
         ...mockSignInExperience,
         mfa: {
-          policy: MfaPolicy.Mandatory,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         },
       });
       const response = await sessionRequest.put(path).send({

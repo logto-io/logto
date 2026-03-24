@@ -71,7 +71,7 @@ const mfaRequiredCtx = {
     ...mockSignInExperience,
     mfa: {
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   },
 };
@@ -115,7 +115,7 @@ const mfaRequiredTotpOnlyCtx = {
     ...mockSignInExperience,
     mfa: {
       factors: [MfaFactor.TOTP],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   },
 };

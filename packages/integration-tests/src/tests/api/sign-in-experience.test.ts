@@ -155,7 +155,7 @@ describe('admin console sign-in experience', () => {
     it('should reject adaptive mfa when mfa policy is mandatory', async () => {
       await updateSignInExperience({
         mfa: {
-          policy: MfaPolicy.Mandatory,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
           factors: [MfaFactor.TOTP],
         },
       });
@@ -384,7 +384,7 @@ describe('MFA validation', () => {
     await expectRejects(
       updateSignInExperience({
         mfa: {
-          policy: MfaPolicy.Mandatory,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
           factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
         },
       }),
@@ -412,7 +412,7 @@ describe('MFA validation', () => {
     await expectRejects(
       updateSignInExperience({
         mfa: {
-          policy: MfaPolicy.Mandatory,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
           factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
         },
       }),
@@ -439,7 +439,7 @@ describe('MFA validation', () => {
 
     const result = await updateSignInExperience({
       mfa: {
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
       },
     });
@@ -464,7 +464,7 @@ describe('MFA validation', () => {
 
     const result = await updateSignInExperience({
       mfa: {
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         factors: [MfaFactor.PhoneVerificationCode, MfaFactor.TOTP],
       },
     });

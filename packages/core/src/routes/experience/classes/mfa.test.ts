@@ -88,7 +88,7 @@ describe('Mfa.assertMfaFulfilled', () => {
 
   it('reuses submit async context during mandatory check', async () => {
     const mandatoryMfaSettings: MfaSettings = {
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       factors: [MfaFactor.TOTP],
       organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
     };
@@ -173,7 +173,7 @@ describe('Mfa.assertMfaFulfilled', () => {
 
   it('skips additional MFA suggestion when user has persisted skipped flag', async () => {
     const mandatoryMfaSettings: MfaSettings = {
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
       organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
     };
