@@ -17,6 +17,7 @@ const oidc = {
   provider_error: 'OIDC内部エラー:{{message}}。',
   server_error: '不明なOIDCエラーが発生しました。後でもう一度お試しください。',
   provider_error_fallback: 'OIDCエラーが発生しました: {{code}}。',
+  custom_claims_script_error: 'カスタム claims スクリプトエラー: {{error_description}}。',
   key_required: '少なくとも1つのキーが必要です。',
   key_not_found: 'IDが{{id}}のキーが見つかりません。',
   invalid_session_payload: '無効なセッションペイロード。',

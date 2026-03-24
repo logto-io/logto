@@ -16,6 +16,7 @@ const oidc = {
   provider_error: 'OIDC 内部错误: {{message}}',
   server_error: '发生了未知的 OIDC 错误。请稍后再试。',
   provider_error_fallback: '发生了 OIDC 错误: {{code}}。',
+  custom_claims_script_error: '自定义 claims 脚本错误：{{error_description}}。',
   key_required: '至少需要一个密钥。',
   key_not_found: '未找到 ID 为 {{id}} 的密钥。',
   invalid_session_payload: '无效的会话负载。',

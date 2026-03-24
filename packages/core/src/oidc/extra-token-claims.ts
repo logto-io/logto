@@ -11,6 +11,7 @@ import {
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
+import type { i18n } from 'i18next';
 import {
   type AccessToken,
   errors,
@@ -26,6 +27,7 @@ import { type LogEntry, type WithLogContext } from '#src/middleware/koa-audit-lo
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/custom-jwt/index.js';
+import { i18next } from '#src/utils/i18n.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
@@ -35,8 +37,18 @@ class JwtCustomizerAccessDenied extends errors.AccessDenied {
   statusCode = 403;
 }
 
-const formatJwtCustomizerInvalidRequestDescription = (message: string) =>
-  `Custom claims script error: ${message}`;
+const hasI18n = (ctx: KoaContextWithOIDC): ctx is KoaContextWithOIDC & { i18n: i18n } =>
+  'i18n' in ctx;
+
+const formatJwtCustomizerInvalidRequestDescription = (ctx: KoaContextWithOIDC, message: string) => {
+  const requestI18n = hasI18n(ctx) ? ctx.i18n : i18next;
+
+  return String(
+    requestI18n.t('errors:oidc.custom_claims_script_error', {
+      error_description: message,
+    })
+  );
+};
 
 /**
  * For organization API resource feature, add extra token claim `organization_id` to the
@@ -327,7 +339,10 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       if (shouldBlockIssuanceOnError) {
         throw new errors.InvalidRequest(
           formatJwtCustomizerInvalidRequestDescription(
-            errorResponse?.message ?? 'Failed to customize token claims'
+            ctx,
+            typeof errorResponse?.message === 'string'
+              ? errorResponse.message
+              : 'Failed to customize token claims'
           )
         );
       }
@@ -337,6 +352,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       if (shouldBlockIssuanceOnError) {
         throw new errors.InvalidRequest(
           formatJwtCustomizerInvalidRequestDescription(
+            ctx,
             error instanceof Error && error.message
               ? error.message
               : 'Failed to customize token claims'

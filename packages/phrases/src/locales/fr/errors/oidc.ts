@@ -17,6 +17,7 @@ const oidc = {
   provider_error: "Erreur interne de l'OIDC : {{message}}.",
   server_error: "Une erreur OIDC inconnue s'est produite. Veuillez réessayer plus tard.",
   provider_error_fallback: "Une erreur OIDC s'est produite : {{code}}.",
+  custom_claims_script_error: 'Erreur du script de claims personnalisés : {{error_description}}.',
   key_required: 'Au moins une clé est requise.',
   key_not_found: "La clé avec l'ID {{id}} n'est pas trouvée.",
   invalid_session_payload: 'Charge utile de session invalide.',
