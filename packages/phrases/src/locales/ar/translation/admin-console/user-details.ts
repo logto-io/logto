@@ -65,7 +65,6 @@ const user_details = {
     field_name: 'المصادقة المتعددة العوامل',
     field_description: 'لقد قام هذا المستخدم بتمكين عوامل التحقق المتعددة للتحقق من الهوية.',
     name_column: 'عوامل التحقق المتعددة',
-
     field_description_empty: 'لم يقم هذا المستخدم بتمكين عوامل التحقق المتعددة للتحقق من الهوية.',
     deletion_confirmation:
       'أنت تقوم بإزالة <name/> الحالية للتحقق المتعدد من عوامل التحقق. هل أنت متأكد أنك تريد المتابعة؟',
@@ -148,7 +147,6 @@ const user_details = {
     name_column: 'الاسم',
     session_id_column: 'معرّف الجلسة',
     location_column: 'الموقع',
-
     browser_on_os: '{{browser}} على {{os}}',
     user: 'المستخدم',
     applications: 'التطبيقات',

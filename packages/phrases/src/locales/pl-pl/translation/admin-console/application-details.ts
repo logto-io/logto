@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: 'Szczegóły aplikacji',
   back_to_applications: 'Powrót do aplikacji',
@@ -284,6 +286,7 @@ const application_details = {
     col_sp_claims: 'Nazwa wartości w Twojej aplikacji',
     add_button: 'Dodaj kolejne',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

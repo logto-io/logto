@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: '應用程式詳情',
   back_to_applications: '返回全部應用程式',
@@ -264,6 +266,7 @@ const application_details = {
     col_sp_claims: '您的應用程式的值名稱',
     add_button: '添加另一個',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

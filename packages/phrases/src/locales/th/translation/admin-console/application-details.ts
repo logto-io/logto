@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: 'รายละเอียดแอปพลิเคชัน',
   back_to_applications: 'กลับไปยังแอปพลิเคชัน',
@@ -278,6 +280,7 @@ const application_details = {
     col_sp_claims: 'ชื่อค่าของแอปของคุณ',
     add_button: 'เพิ่มอีกหนึ่งรายการ',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

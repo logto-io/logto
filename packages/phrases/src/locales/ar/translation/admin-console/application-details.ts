@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: 'تفاصيل التطبيق',
   back_to_applications: 'العودة إلى التطبيقات',
@@ -279,6 +281,7 @@ const application_details = {
     col_sp_claims: 'اسم القيمة في تطبيقك',
     add_button: 'أضف آخر.',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);
