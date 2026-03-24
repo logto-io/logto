@@ -76,16 +76,18 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         })
       );
 
-      const shouldGuardMfaForProfileUpdate =
-        interactionEvent === InteractionEvent.SignIn && profilePayload.type !== 'social';
-
-      // We intentionally allow social profile staging before MFA verification.
-      // This endpoint only writes to the interaction session, while `submit()` is the
-      // DB commit boundary and still enforces MFA for sign-in flows.
-      // On social binding flows, to simply the front-end implementation, we allow social profile staging before MFA verification,
-      // and the final submission with `submit()` will enforce MFA verification.
-      if (shouldGuardMfaForProfileUpdate) {
-        await experienceInteraction.guardMfaVerificationStatus();
+      if (interactionEvent === InteractionEvent.SignIn) {
+        // Note:
+        // We intentionally allow social profile staging before MFA verification.
+        // This endpoint only writes to the interaction session, while `submit()` is the
+        // DB commit boundary and still enforces MFA for sign-in flows.
+        //
+        // On social linking flows, to simplify the front-end implementation, we allow social profile staging before MFA verification,
+        // and the final submission with `submit()` will enforce MFA verification.
+        // Identified user guard is still applied.
+        await (profilePayload.type === 'social'
+          ? experienceInteraction.guardIdentifiedUser()
+          : experienceInteraction.guardMfaVerificationStatus());
       }
 
       log.append({

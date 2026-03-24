@@ -158,14 +158,23 @@ describe('POST /experience/profile', () => {
     expect(response.status).toBe(403);
   });
 
-  it('should bypass MFA guard for social profile staging during sign-in', async () => {
-    const requester = createMfaRequiredRequester();
+  it('should keep identified-user guard for social profile updates during sign-in', async () => {
+    const { requester } = createRequesterWithMocks({
+      /* @ts-expect-error -- override user with empty object to simulate missing user scenario */
+      user: {},
+      mfa: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.TOTP],
+      },
+    });
+
     const response = await requester.post('/experience/profile').send({
       type: 'social',
-      verificationId: 'missing-social-verification-id',
+      verificationId: 'any-social-verification-id',
     });
 
     expect(response.status).toBe(404);
+    expect(response.text).toContain(' User identifier not found.');
   });
 });
 
