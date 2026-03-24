@@ -46,6 +46,9 @@ const formatJwtCustomizerInvalidRequestDescription = (ctx: KoaContextWithOIDC, m
   return String(
     requestI18n.t('errors:oidc.custom_claims_script_error', {
       error_description: message,
+      interpolation: {
+        escapeValue: false,
+      },
     })
   );
 };

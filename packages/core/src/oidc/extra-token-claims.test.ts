@@ -175,7 +175,7 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
   it('throws invalid request with parsed response error message when blocking is enabled', async () => {
     runScriptInLocalVm.mockRejectedValue(
       createResponseError(422, {
-        message: "'x' not exists in 'context'.",
+        message: "'abc' not exists in 'context'.",
       })
     );
 
@@ -183,7 +183,7 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
       callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
     ).rejects.toMatchObject({
       error: 'invalid_request',
-      error_description: "Custom claims script error: 'x' not exists in 'context'.",
+      error_description: "Custom claims script error: 'abc' not exists in 'context'.",
       statusCode: 400,
     });
   });
