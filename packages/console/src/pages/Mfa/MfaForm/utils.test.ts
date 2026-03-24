@@ -135,7 +135,7 @@ test('filters hidden prompt policies when mandatory MFA is selected', () => {
 
   expect(payload).toEqual({
     mfa: {
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       factors: [MfaFactor.TOTP],
     },
     adaptiveMfa: { enabled: false },
@@ -221,14 +221,11 @@ test.each([
 });
 
 test('writes mandatory prompt-only selection to non-skippable prompt policy', () => {
-  const payload = buildMfaPatchPayload(
-    {
-      ...baseForm,
-      ...getMfaRequirementState(MfaRequirementMode.Mandatory),
-      setUpPrompt: MfaPolicy.PromptOnlyAtSignInMandatory,
-    },
-    true
-  );
+  const payload = buildMfaPatchPayload({
+    ...baseForm,
+    ...getMfaRequirementState(MfaRequirementMode.Mandatory),
+    setUpPrompt: MfaPolicy.PromptOnlyAtSignInMandatory,
+  });
 
   expect(payload).toEqual({
     mfa: {
@@ -242,14 +239,11 @@ test('writes mandatory prompt-only selection to non-skippable prompt policy', ()
 });
 
 test('does not persist organization-required mfa policy in mandatory mode', () => {
-  const payload = buildMfaPatchPayload(
-    {
-      ...baseForm,
-      ...getMfaRequirementState(MfaRequirementMode.Mandatory),
-      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
-    },
-    true
-  );
+  const payload = buildMfaPatchPayload({
+    ...baseForm,
+    ...getMfaRequirementState(MfaRequirementMode.Mandatory),
+    organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+  });
 
   expect(payload.mfa).toEqual({
     policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
