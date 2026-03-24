@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import path from 'node:path';
 
 import {
@@ -10,8 +11,8 @@ import {
 import { noop } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { got } from 'got';
-import type { CommandModule } from 'yargs';
 import { createClient } from 'redis';
+import type { CommandModule } from 'yargs';
 import { z } from 'zod';
 
 import { createPoolFromConfig } from '../../database.js';
@@ -54,7 +55,7 @@ const getCloudflareHostname = async (auth: CloudflareAuth, identifier: string) =
     const response = await got.get(buildCloudflareHostnameUrl(auth, identifier), {
       headers: { Authorization: `Bearer ${auth.apiToken}` },
       throwHttpErrors: false,
-      timeout: { request: 30000 }, // 30 second timeout
+      timeout: { request: 30_000 }, // 30 second timeout
     });
 
     if (!response.ok) {
@@ -62,10 +63,14 @@ const getCloudflareHostname = async (auth: CloudflareAuth, identifier: string) =
     }
 
     // Safe JSON parsing
-    let body: unknown;
-    try {
-      body = JSON.parse(response.body);
-    } catch {
+    const body = ((): unknown => {
+      try {
+        return JSON.parse(response.body);
+      } catch {
+        return null;
+      }
+    })();
+    if (body === null) {
       return { ok: false as const, statusCode: 500 };
     }
 
@@ -90,7 +95,7 @@ const deleteCloudflareHostname = async (auth: CloudflareAuth, identifier: string
     const response = await got.delete(buildCloudflareHostnameUrl(auth, identifier), {
       headers: { Authorization: `Bearer ${auth.apiToken}` },
       throwHttpErrors: false,
-      timeout: { request: 30000 }, // 30 second timeout
+      timeout: { request: 30_000 }, // 30 second timeout
     });
 
     // 404 means already deleted, which is fine
@@ -258,8 +263,7 @@ const printReport = (
   staleThreshold.setDate(staleThreshold.getDate() - staleDays);
 
   const staleDomains = updatedDomains.filter(
-    (entry) =>
-      entry.status !== DomainStatus.Active && new Date(entry.updatedAt) < staleThreshold
+    (entry) => entry.status !== DomainStatus.Active && new Date(entry.updatedAt) < staleThreshold
   );
 
   consoleLog.info('');
@@ -392,3 +396,5 @@ const domain: CommandModule = {
 };
 
 export default domain;
+
+/* eslint-enable max-lines */
