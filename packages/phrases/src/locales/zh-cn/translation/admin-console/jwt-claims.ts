@@ -59,12 +59,12 @@ const jwt_claims = {
     subtitle: '使用 `api.denyAccess` 方法拒绝令牌请求。',
   },
   error_handling: {
-    title: 'Error handling',
-    subtitle: 'Control whether token issuance should be blocked when the script fails.',
-    input_field_title: 'Token issuance behavior on script error',
-    block_issuance_switch: 'Block token issuance when the script errors',
+    title: '错误处理',
+    subtitle: '控制当脚本执行失败时是否阻止签发令牌。',
+    input_field_title: '脚本报错时的令牌签发行为',
+    block_issuance_switch: '当脚本报错时阻止签发令牌',
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      '启用后，脚本运行时错误会以 `server_error` 拒绝令牌请求。调用 `api.denyAccess` 仍会返回 `access_denied`。',
   },
   fetch_external_data: {
     title: '获取外部数据',

@@ -64,12 +64,12 @@ const jwt_claims = {
     subtitle: 'ใช้เมธอด `api.denyAccess` เพื่อปฏิเสธคำขอรับ token',
   },
   error_handling: {
-    title: 'Error handling',
-    subtitle: 'Control whether token issuance should be blocked when the script fails.',
-    input_field_title: 'Token issuance behavior on script error',
-    block_issuance_switch: 'Block token issuance when the script errors',
+    title: 'การจัดการข้อผิดพลาด',
+    subtitle: 'กำหนดว่าจะบล็อกการออกโทเค็นหรือไม่เมื่อสคริปต์ทำงานล้มเหลว',
+    input_field_title: 'พฤติกรรมการออกโทเค็นเมื่อสคริปต์เกิดข้อผิดพลาด',
+    block_issuance_switch: 'บล็อกการออกโทเค็นเมื่อสคริปต์เกิดข้อผิดพลาด',
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      'เมื่อเปิดใช้งาน ข้อผิดพลาดขณะรันสคริปต์จะปฏิเสธคำขอโทเค็นด้วย `server_error` ส่วนการเรียก `api.denyAccess` จะยังคงคืนค่า `access_denied`',
   },
   fetch_external_data: {
     title: 'ดึงข้อมูลภายนอก',

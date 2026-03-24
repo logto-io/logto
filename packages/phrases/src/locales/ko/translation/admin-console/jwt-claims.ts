@@ -64,12 +64,12 @@ const jwt_claims = {
     subtitle: '`api.denyAccess` 메소드를 사용하여 토큰 요청을 거절하세요.',
   },
   error_handling: {
-    title: 'Error handling',
-    subtitle: 'Control whether token issuance should be blocked when the script fails.',
-    input_field_title: 'Token issuance behavior on script error',
-    block_issuance_switch: 'Block token issuance when the script errors',
+    title: '오류 처리',
+    subtitle: '스크립트 실행에 실패했을 때 토큰 발급을 차단할지 제어해요.',
+    input_field_title: '스크립트 오류 시 토큰 발급 동작',
+    block_issuance_switch: '스크립트 오류가 발생하면 토큰 발급 차단',
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      '활성화하면 스크립트 런타임 오류로 인해 토큰 요청이 `server_error` 로 거부돼요. `api.denyAccess` 호출은 계속 `access_denied` 를 반환해요.',
   },
   fetch_external_data: {
     title: '외부 데이터 가져오기',

@@ -69,12 +69,12 @@ const jwt_claims = {
     subtitle: 'Utilisez la méthode `api.denyAccess` pour rejeter la demande de jeton.',
   },
   error_handling: {
-    title: 'Error handling',
-    subtitle: 'Control whether token issuance should be blocked when the script fails.',
-    input_field_title: 'Token issuance behavior on script error',
-    block_issuance_switch: 'Block token issuance when the script errors',
+    title: 'Gestion des erreurs',
+    subtitle: "Définissez si l'émission du jeton doit être bloquée lorsque le script échoue.",
+    input_field_title: "Comportement d'émission du jeton en cas d'erreur du script",
+    block_issuance_switch: "Bloquer l'émission du jeton lorsque le script génère une erreur",
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      "Lorsqu'elle est activée, les erreurs d'exécution du script rejettent la demande de jeton avec `server_error`. Les appels à `api.denyAccess` continuent de renvoyer `access_denied`.",
   },
   fetch_external_data: {
     title: 'Récupérer des données externes',

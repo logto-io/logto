@@ -67,12 +67,13 @@ const jwt_claims = {
     subtitle: '`api.denyAccess` yöntemini kullanarak belge isteğini reddedin.',
   },
   error_handling: {
-    title: 'Error handling',
-    subtitle: 'Control whether token issuance should be blocked when the script fails.',
-    input_field_title: 'Token issuance behavior on script error',
-    block_issuance_switch: 'Block token issuance when the script errors',
+    title: 'Hata yönetimi',
+    subtitle:
+      'Betik başarısız olduğunda token verilmesinin engellenip engellenmeyeceğini kontrol eder.',
+    input_field_title: 'Betik hatasında token verme davranışı',
+    block_issuance_switch: 'Betik hata verdiğinde token verilmesini engelle',
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      'Etkinleştirildiğinde, betik çalışma zamanı hataları token isteğini `server_error` ile reddeder. `api.denyAccess` çağrıları ise hâlâ `access_denied` döndürür.',
   },
   fetch_external_data: {
     title: 'Harici veri al',

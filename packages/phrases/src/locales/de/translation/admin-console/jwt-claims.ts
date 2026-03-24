@@ -70,12 +70,13 @@ const jwt_claims = {
     subtitle: 'Verwenden Sie die Methode `api.denyAccess`, um die Token-Anfrage abzulehnen.',
   },
   error_handling: {
-    title: 'Error handling',
-    subtitle: 'Control whether token issuance should be blocked when the script fails.',
-    input_field_title: 'Token issuance behavior on script error',
-    block_issuance_switch: 'Block token issuance when the script errors',
+    title: 'Fehlerbehandlung',
+    subtitle:
+      'Steuert, ob die Token-Ausstellung blockiert werden soll, wenn das Skript fehlschlägt.',
+    input_field_title: 'Verhalten bei der Token-Ausstellung bei Skriptfehlern',
+    block_issuance_switch: 'Token-Ausstellung blockieren, wenn das Skript Fehler wirft',
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      'Wenn aktiviert, lehnen Laufzeitfehler im Skript die Token-Anfrage mit `server_error` ab. Aufrufe von `api.denyAccess` geben weiterhin `access_denied` zurück.',
   },
   fetch_external_data: {
     title: 'Externe Daten abrufen',

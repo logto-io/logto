@@ -59,12 +59,12 @@ const jwt_claims = {
     subtitle: '使用 `api.denyAccess` 方法來拒絕權杖請求。',
   },
   error_handling: {
-    title: 'Error handling',
-    subtitle: 'Control whether token issuance should be blocked when the script fails.',
-    input_field_title: 'Token issuance behavior on script error',
-    block_issuance_switch: 'Block token issuance when the script errors',
+    title: '錯誤處理',
+    subtitle: '控制當腳本執行失敗時是否阻止簽發權杖。',
+    input_field_title: '腳本報錯時的權杖簽發行為',
+    block_issuance_switch: '當腳本報錯時阻止簽發權杖',
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      '啟用後，腳本執行期錯誤會以 `server_error` 拒絕權杖請求。呼叫 `api.denyAccess` 仍會返回 `access_denied`。',
   },
   fetch_external_data: {
     title: '提取外部數據',

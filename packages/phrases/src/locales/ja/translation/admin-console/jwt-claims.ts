@@ -65,12 +65,12 @@ const jwt_claims = {
     subtitle: '`api.denyAccess` メソッドを使用してトークンリクエストを拒否します。',
   },
   error_handling: {
-    title: 'Error handling',
-    subtitle: 'Control whether token issuance should be blocked when the script fails.',
-    input_field_title: 'Token issuance behavior on script error',
-    block_issuance_switch: 'Block token issuance when the script errors',
+    title: 'エラーハンドリング',
+    subtitle: 'スクリプトが失敗したときにトークン発行をブロックするかどうかを制御します。',
+    input_field_title: 'スクリプトエラー時のトークン発行動作',
+    block_issuance_switch: 'スクリプトがエラーになった場合はトークン発行をブロックする',
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      '有効にすると、スクリプト実行時エラーによりトークンリクエストは `server_error` で拒否されます。`api.denyAccess` の呼び出しは引き続き `access_denied` を返します。',
   },
   fetch_external_data: {
     title: '外部データを取得',

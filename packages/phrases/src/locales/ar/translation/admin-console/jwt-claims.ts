@@ -64,12 +64,12 @@ const jwt_claims = {
     subtitle: 'استخدم طريقة `api.denyAccess` لرفض طلب الرمز.',
   },
   error_handling: {
-    title: 'Error handling',
-    subtitle: 'Control whether token issuance should be blocked when the script fails.',
-    input_field_title: 'Token issuance behavior on script error',
-    block_issuance_switch: 'Block token issuance when the script errors',
+    title: 'معالجة الأخطاء',
+    subtitle: 'تحكم فيما إذا كان يجب حظر إصدار الرمز عند فشل السكربت.',
+    input_field_title: 'سلوك إصدار الرمز عند حدوث خطأ في السكربت',
+    block_issuance_switch: 'حظر إصدار الرمز عندما يواجه السكربت خطأ',
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      'عند التفعيل، تؤدي أخطاء وقت تشغيل السكربت إلى رفض طلب الرمز باستخدام `server_error`. وتبقى استدعاءات `api.denyAccess` تُرجع `access_denied`.',
   },
   fetch_external_data: {
     title: 'استرجاع البيانات الخارجية',
