@@ -43,12 +43,18 @@ function useUserThirdPartyGrants(userId: string) {
       });
     }
 
-    return Array.from(groupedByApplicationId.entries()).map(([applicationId, group]) => ({
-      id: applicationId,
-      applicationId,
-      createdAt: new Date(group.iat * 1000).toLocaleString(i18n.language),
-      grantIds: group.grantIds,
-    }));
+    return Array.from(groupedByApplicationId.entries())
+      .map(([applicationId, group]) => ({
+        id: applicationId,
+        applicationId,
+        createdAt: new Date(group.iat * 1000).toLocaleString(i18n.language),
+        grantIds: group.grantIds,
+      }))
+      .slice()
+      .sort(
+        (previous, next) =>
+          new Date(next.createdAt).getTime() - new Date(previous.createdAt).getTime()
+      );
   }, [data?.grants, i18n.language]);
 
   const removeByApplication = useCallback(
