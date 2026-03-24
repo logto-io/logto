@@ -180,7 +180,7 @@ const sign_in_exp = {
         'これらのプリビルトフローを統合するには、以下の設定で関連するアカウント API の権限を<strong>編集</strong>に設定してください。',
       flows_title: 'すぐに使えるセキュリティ設定フローを統合',
       flows_description:
-        'ドメインとルートを組み合わせてアカウント設定 URL を形成します（例: https://auth.foo.com/account/email）。オプションで `redirect=` を追加して更新成功後にユーザーをアプリに戻したり、`show_success=true` で成功ページを表示し続けたり、`ui_locales=` でデフォルト言語を上書きしたりできます。',
+        'ドメインとルートを組み合わせてアカウント設定 URL を形成します（例: https://auth.foo.com/account/email）。オプションで `redirect=` を追加して更新成功後にユーザーをアプリに戻したり、`show_success=true` で成功ページを表示し続けたり、`ui_locales=` でデフォルト言語を上書きしたり、`identifier=` で識別子入力フィールドを事前入力したりできます。',
       tooltips: {
         email: 'プライマリメールアドレスを更新',
         phone: 'プライマリ電話番号を更新',

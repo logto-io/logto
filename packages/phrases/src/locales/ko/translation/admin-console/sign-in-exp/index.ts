@@ -175,7 +175,7 @@ const sign_in_exp = {
         '이 사전 구축된 흐름을 통합하려면 아래 설정에서 관련 계정 API 권한을 <strong>편집</strong>으로 설정하세요.',
       flows_title: '기본 제공 보안 설정 흐름 통합',
       flows_description:
-        '도메인과 경로를 결합하여 계정 설정 URL 을 형성하세요 (예: https://auth.foo.com/account/email). 선택적으로 `redirect=`를 추가하여 성공적인 업데이트 후 사용자를 앱으로 되돌리거나, `show_success=true`로 성공 페이지를 표시하거나, `ui_locales=`로 기본 언어를 재정의할 수 있습니다.',
+        '도메인과 경로를 결합하여 계정 설정 URL 을 형성하세요 (예: https://auth.foo.com/account/email). 선택적으로 `redirect=`를 추가하여 성공적인 업데이트 후 사용자를 앱으로 되돌리거나, `show_success=true`로 성공 페이지를 표시하거나, `ui_locales=`로 기본 언어를 재정의하거나, `identifier=`로 식별자 입력 필드를 미리 채울 수 있습니다.',
       tooltips: {
         email: '주 이메일 주소 업데이트',
         phone: '주 전화번호 업데이트',

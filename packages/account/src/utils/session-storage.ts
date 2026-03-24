@@ -4,6 +4,7 @@ const storageKeys = Object.freeze({
   redirectUrl: `${storagePrefix}redirect-url`,
   showSuccess: `${storagePrefix}show-success`,
   uiLocales: `${storagePrefix}ui-locales`,
+  identifier: `${storagePrefix}identifier`,
 });
 
 export const sessionStorage = Object.freeze({
@@ -88,5 +89,26 @@ export const sessionStorage = Object.freeze({
     }
 
     window.sessionStorage.removeItem(storageKeys.uiLocales);
+  },
+
+  getIdentifier: (): string | undefined => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    return window.sessionStorage.getItem(storageKeys.identifier) ?? undefined;
+  },
+
+  setIdentifier: (value: string): void => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    window.sessionStorage.setItem(storageKeys.identifier, value);
+  },
+
+  clearIdentifier: (): void => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    window.sessionStorage.removeItem(storageKeys.identifier);
   },
 });

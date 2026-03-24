@@ -182,7 +182,7 @@ const sign_in_exp = {
         'Para integrar estos flujos prediseñados, establezca los permisos de la API de cuenta relacionados en <strong>Editar</strong> en la configuración a continuación.',
       flows_title: 'Integra flujos de configuración de seguridad predefinidos',
       flows_description:
-        'Combina tu dominio con la ruta para formar tu URL de configuración de cuenta (por ejemplo, https://auth.foo.com/account/email). Opcionalmente, agrega `redirect=` para devolver a los usuarios a tu aplicación después de una actualización exitosa, `show_success=true` para mantener visible la página de éxito, o `ui_locales=` para anular el idioma predeterminado.',
+        'Combina tu dominio con la ruta para formar tu URL de configuración de cuenta (por ejemplo, https://auth.foo.com/account/email). Opcionalmente, agrega `redirect=` para devolver a los usuarios a tu aplicación después de una actualización exitosa, `show_success=true` para mantener visible la página de éxito, `ui_locales=` para anular el idioma predeterminado, o `identifier=` para prerellenar el campo de entrada del identificador.',
       tooltips: {
         email: 'Actualizar tu dirección de correo electrónico principal',
         phone: 'Actualizar tu número de teléfono principal',
