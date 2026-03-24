@@ -10,6 +10,7 @@ import {
 } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
 import { HTTPError } from 'ky';
+import { z } from 'zod';
 
 import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
 import { oidcApi } from '#src/api/api.js';
@@ -38,6 +39,11 @@ import {
 } from '#src/utils.js';
 
 const impersonationTokenType = 'urn:logto:token-type:impersonation_token';
+
+const oidcInvalidRequestErrorGuard = z.object({
+  error: z.literal('invalid_request'),
+  error_description: z.string(),
+});
 const legacyAccessTokenType = 'urn:ietf:params:oauth:token-type:access_token';
 
 describe('Token Exchange', () => {
@@ -523,10 +529,9 @@ describe('Token Exchange', () => {
           .catch((error: unknown) => error);
         expect(error).toBeInstanceOf(HTTPError);
         expect((error as HTTPError).response.status).toBe(400);
-        expect(await (error as HTTPError).response.json()).toMatchObject({
-          error: 'invalid_request',
-          error_description: expect.any(String),
-        });
+        expect(
+          oidcInvalidRequestErrorGuard.safeParse(await (error as HTTPError).response.json()).success
+        ).toBe(true);
 
         await deleteJwtCustomizer('access-token');
       }
