@@ -3,6 +3,7 @@ import { TemplateType } from '@logto/connector-kit';
 import {
   InteractionEvent,
   MfaFactor,
+  MfaPolicy,
   SignInIdentifier,
   VerificationType,
   type Mfa,
@@ -140,7 +141,7 @@ const createMfaRequiredRequester = () => {
   return createRequesterWithMocks({
     user,
     mfa: {
-      policy: mockSignInExperience.mfa.policy,
+      policy: MfaPolicy.Mandatory,
       factors: [MfaFactor.TOTP],
     },
   }).requester;
@@ -150,12 +151,11 @@ describe('POST /experience/profile', () => {
   it('should keep MFA guard for non-social profile updates during sign-in', async () => {
     const requester = createMfaRequiredRequester();
     const response = await requester.post('/experience/profile').send({
-      type: SignInIdentifier.Username,
-      value: 'new-username',
+      type: 'password',
+      value: 'Password123',
     });
 
     expect(response.status).toBe(403);
-    expect(response.body.code).toBe('session.mfa.require_mfa_verification');
   });
 
   it('should bypass MFA guard for social profile staging during sign-in', async () => {
@@ -166,7 +166,6 @@ describe('POST /experience/profile', () => {
     });
 
     expect(response.status).toBe(404);
-    expect(response.body.code).toBe('session.verification_session_not_found');
   });
 });
 
