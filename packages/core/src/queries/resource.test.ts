@@ -163,7 +163,9 @@ describe('resource query', () => {
       return createMockQueryResult([insertedResource]);
     });
 
-    await expect(findResourceByIndicator(insertedResource.indicator)).resolves.toEqual(insertedResource);
+    await expect(findResourceByIndicator(insertedResource.indicator)).resolves.toEqual(
+      insertedResource
+    );
   });
 
   it('insertResource', async () => {

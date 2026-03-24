@@ -4,8 +4,8 @@ import { GrantType, type Scope } from '@logto/schemas';
 import type { KoaContextWithOIDC } from 'oidc-provider';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
-import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { mockResource } from '#src/__mocks__/index.js';
+import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
