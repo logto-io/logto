@@ -210,6 +210,7 @@ const cleanupStaleDomain = async (
   if (domain.cloudflareData?.id) {
     const currentStatus = await getCloudflareHostname(auth, domain.cloudflareData.id);
 
+    // If lookup failed, abort cleanup (except 404 which means already deleted)
     if (currentStatus.ok) {
       const newStatus = getDomainStatusFromCloudflareData(currentStatus.data);
       if (newStatus === DomainStatus.Active) {
@@ -218,6 +219,16 @@ const cleanupStaleDomain = async (
         );
         return false;
       }
+      // Status is non-active, proceed with deletion
+    } else if (currentStatus.statusCode === 404) {
+      consoleLog.info(
+        `  ${chalk.gray('CF_GONE')} ${domain.domain} — already deleted in Cloudflare`
+      );
+    } else {
+      consoleLog.warn(
+        `  ${chalk.red('CF_ERROR')} ${domain.domain} — failed to re-check status (${currentStatus.statusCode}), skipping`
+      );
+      return false;
     }
 
     await sleep(100);
@@ -333,6 +344,9 @@ const sync: CommandModule<unknown, { cleanup: boolean; 'stale-days': number }> =
       return;
     }
 
+    // Determine staleness BEFORE syncing (sync updates updatedAt which would make all domains look fresh)
+    const staleDomains = printReport(domains, staleDays);
+
     // Phase 1: Sync domain statuses from Cloudflare
     consoleLog.info('Syncing domain statuses from Cloudflare...');
     const syncResults = [];
@@ -346,10 +360,6 @@ const sync: CommandModule<unknown, { cleanup: boolean; 'stale-days': number }> =
     const syncedCount = syncResults.filter((result) => result === 'synced').length;
     const syncErrorCount = syncResults.filter((result) => result === 'error').length;
     consoleLog.info(`Sync complete: ${syncedCount} updated, ${syncErrorCount} errors`);
-
-    // Re-fetch domains with updated statuses for reporting
-    const updatedDomains = await findAllDomainsAcrossTenants(pool);
-    const staleDomains = printReport(updatedDomains, staleDays);
 
     // Phase 2: Cleanup stale domains (if flag is set)
     if (!cleanup) {
