@@ -1,5 +1,5 @@
-import type { CreateSignInExperience } from '@logto/schemas';
-import { SignInExperiences } from '@logto/schemas';
+import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import { SignInExperiences, mfaGuard, normalizeMfa } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
@@ -7,6 +7,21 @@ import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js'
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 
 const id = 'default';
+
+const normalizeMfaField = (mfa: SignInExperience['mfa'] | string) => {
+  if (typeof mfa === 'string') {
+    return JSON.stringify(normalizeMfa(mfaGuard.parse(JSON.parse(mfa))));
+  }
+
+  return normalizeMfa(mfa);
+};
+
+const normalizeSignInExperience = <T extends { mfa: SignInExperience['mfa'] | string }>(
+  data: T
+): T => ({
+  ...data,
+  mfa: normalizeMfaField(data.mfa),
+});
 
 export const createSignInExperienceQueries = (
   pool: CommonQueryMethods,
@@ -17,12 +32,14 @@ export const createSignInExperienceQueries = (
 
   const updateDefaultSignInExperience = wellKnownCache.mutate(
     async (set: Partial<CreateSignInExperience>) =>
-      updateSignInExperience({ set, where: { id }, jsonbMode: 'replace' }),
+      normalizeSignInExperience(
+        await updateSignInExperience({ set, where: { id }, jsonbMode: 'replace' })
+      ),
     ['sie']
   );
 
   const findDefaultSignInExperience = wellKnownCache.memoize(
-    async () => findSignInExperienceById(id),
+    async () => normalizeSignInExperience(await findSignInExperienceById(id)),
     ['sie']
   );
 

@@ -6,6 +6,7 @@ import {
   ForgotPasswordMethod,
   MfaPolicy,
   ProductEvent,
+  normalizeMfa,
   type SignInExperience,
 } from '@logto/schemas';
 import { conditional, type Optional, tryThat } from '@silverhand/essentials';
@@ -106,7 +107,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         languageInfo,
         signUp,
         signIn,
-        mfa,
+        mfa: rawMfa,
         adaptiveMfa,
         sentinelPolicy,
         captchaPolicy,
@@ -114,6 +115,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         hideLogtoBranding,
         passkeySignIn,
       } = rest;
+      const mfa = rawMfa ? normalizeMfa(rawMfa) : undefined;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -266,6 +268,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       const payload = {
         ...rest,
+        ...conditional(mfa && { mfa }),
         ...conditional(normalizedAdaptiveMfa && { adaptiveMfa: normalizedAdaptiveMfa }),
         ...conditional(
           filteredSocialSignInConnectorTargets && {

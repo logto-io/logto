@@ -368,6 +368,31 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
+  it('should normalize legacy mandatory mfa policy in patch response', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      adaptiveMfa: {
+        enabled: false,
+      },
+      mfa: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.TOTP],
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        adaptiveMfa: {
+          enabled: false,
+        },
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+          factors: [MfaFactor.TOTP],
+        },
+      },
+    });
+  });
+
   it('should reject disabling adaptive mfa without explicit mfa policy when current policy is no-skip', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,

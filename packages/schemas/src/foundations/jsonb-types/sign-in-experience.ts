@@ -188,7 +188,7 @@ export type MfaFactors = z.infer<typeof mfaFactorsGuard>;
 export enum MfaPolicy {
   /** @deprecated, use `PromptAtSignInAndSignUp` instead */
   UserControlled = 'UserControlled',
-  /** MFA is required for all users */
+  /** @deprecated, use `PromptAtSignInAndSignUpMandatory` instead */
   Mandatory = 'Mandatory',
   /** Ask users to set up MFA on their sign-in after registration (skippable, one-time prompt, Optional MFA only) */
   PromptOnlyAtSignIn = 'PromptOnlyAtSignIn',
@@ -244,6 +244,14 @@ export const mfaGuard = z.object({
   policy: z.nativeEnum(MfaPolicy),
   organizationRequiredMfaPolicy: z.nativeEnum(OrganizationRequiredMfaPolicy).optional(),
 }) satisfies ToZodObject<Mfa>;
+
+export const normalizeMfaPolicy = (policy: MfaPolicy): MfaPolicy =>
+  policy === MfaPolicy.Mandatory ? MfaPolicy.PromptAtSignInAndSignUpMandatory : policy;
+
+export const normalizeMfa = (mfa: Mfa): Mfa => ({
+  ...mfa,
+  policy: normalizeMfaPolicy(mfa.policy),
+});
 
 /**
  * Adaptive MFA configuration for the sign-in experience.
