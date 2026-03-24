@@ -21,7 +21,7 @@ type WellKnownMap = {
   sie: SignInExperience;
   'connectors-well-known': ConnectorWellKnown[];
   'email-templates': Nullable<EmailTemplate>;
-  'resource-by-indicator': Nullable<Pick<Resource, 'indicator' | 'accessTokenTtl'>>;
+  'resource-by-indicator': Nullable<Resource>;
   'custom-phrases': Record<string, unknown>;
   'custom-phrases-tags': string[];
   'tenant-cache-expires-at': number;
@@ -62,7 +62,7 @@ function getValueGuard(type: WellKnownCacheType): ZodType<WellKnownMap[typeof ty
       return EmailTemplates.guard.nullable();
     }
     case 'resource-by-indicator': {
-      return Resources.guard.pick({ indicator: true, accessTokenTtl: true }).nullable();
+      return Resources.guard.nullable();
     }
     case 'account-center': {
       return AccountCenters.guard;

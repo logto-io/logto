@@ -25,7 +25,6 @@ const {
   findAllResources,
   findResourceById,
   findResourceByIndicator,
-  findResourceForOidcByIndicator,
   insertResource,
   updateResourceById,
   deleteResourceById,
@@ -95,9 +94,8 @@ describe('resource query', () => {
     await expect(findResourceById(id)).resolves.toEqual(mockResource);
   });
 
-  it('findResourceByIndicator', async () => {
-    const indicator = 'foo';
-
+  it('findResourceByIndicator caches the resource', async () => {
+    const { indicator } = mockResource;
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
@@ -112,41 +110,17 @@ describe('resource query', () => {
     });
 
     await expect(findResourceByIndicator(indicator)).resolves.toEqual(mockResource);
-  });
-
-  it('findResourceForOidcByIndicator caches the minimal projection', async () => {
-    const { indicator } = mockResource;
-    const expectSql = sql`
-      select ${sql.join([fields.indicator, fields.accessTokenTtl], sql`, `)}
-      from ${table}
-      where ${fields.indicator}=$1
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([indicator]);
-
-      return createMockQueryResult([{ indicator, accessTokenTtl: mockResource.accessTokenTtl }]);
-    });
-
-    await expect(findResourceForOidcByIndicator(indicator)).resolves.toEqual({
-      indicator,
-      accessTokenTtl: mockResource.accessTokenTtl,
-    });
-    await expect(findResourceForOidcByIndicator(indicator)).resolves.toEqual({
-      indicator,
-      accessTokenTtl: mockResource.accessTokenTtl,
-    });
+    await expect(findResourceByIndicator(indicator)).resolves.toEqual(mockResource);
     expect(mockQuery).toHaveBeenCalledTimes(1);
   });
 
-  it('insertResource invalidates cached null resource projection', async () => {
+  it('insertResource invalidates cached resource', async () => {
     const insertedResource = {
       ...mockResource,
       indicator: 'https://foo.dev/api',
     };
     const expectFindSql = sql`
-      select ${sql.join([fields.indicator, fields.accessTokenTtl], sql`, `)}
+      select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
       where ${fields.indicator}=$1
     `;
@@ -167,7 +141,7 @@ describe('resource query', () => {
       return createMockQueryResult([]);
     });
 
-    await expect(findResourceForOidcByIndicator(insertedResource.indicator)).resolves.toBeNull();
+    await expect(findResourceByIndicator(insertedResource.indicator)).resolves.toBeNull();
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectInsertSql.sql);
@@ -186,18 +160,10 @@ describe('resource query', () => {
       expectSqlAssert(sql, expectFindSql.sql);
       expect(values).toEqual([insertedResource.indicator]);
 
-      return createMockQueryResult([
-        {
-          indicator: insertedResource.indicator,
-          accessTokenTtl: insertedResource.accessTokenTtl,
-        },
-      ]);
+      return createMockQueryResult([insertedResource]);
     });
 
-    await expect(findResourceForOidcByIndicator(insertedResource.indicator)).resolves.toEqual({
-      indicator: insertedResource.indicator,
-      accessTokenTtl: insertedResource.accessTokenTtl,
-    });
+    await expect(findResourceByIndicator(insertedResource.indicator)).resolves.toEqual(insertedResource);
   });
 
   it('insertResource', async () => {
@@ -260,11 +226,11 @@ describe('resource query', () => {
     await expect(updateResourceById(id, { name })).resolves.toEqual(updatedResource);
   });
 
-  it('updateResourceById invalidates cached resource projection', async () => {
-    const { id } = mockResource;
+  it('updateResourceById invalidates cached resource', async () => {
+    const { id, indicator } = mockResource;
     const updatedAccessTokenTtl = 7200;
-    const expectFindProjectionSql = sql`
-      select ${sql.join([fields.indicator, fields.accessTokenTtl], sql`, `)}
+    const expectFindByIndicatorSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
       where ${fields.indicator}=$1
     `;
@@ -281,21 +247,13 @@ describe('resource query', () => {
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectFindProjectionSql.sql);
-      expect(values).toEqual([mockResource.indicator]);
+      expectSqlAssert(sql, expectFindByIndicatorSql.sql);
+      expect(values).toEqual([indicator]);
 
-      return createMockQueryResult([
-        {
-          indicator: mockResource.indicator,
-          accessTokenTtl: mockResource.accessTokenTtl,
-        },
-      ]);
+      return createMockQueryResult([mockResource]);
     });
 
-    await expect(findResourceForOidcByIndicator(mockResource.indicator)).resolves.toEqual({
-      indicator: mockResource.indicator,
-      accessTokenTtl: mockResource.accessTokenTtl,
-    });
+    await expect(findResourceByIndicator(indicator)).resolves.toEqual(mockResource);
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectFindByIdSql.sql);
@@ -314,19 +272,14 @@ describe('resource query', () => {
     await updateResourceById(id, { accessTokenTtl: updatedAccessTokenTtl });
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectFindProjectionSql.sql);
-      expect(values).toEqual([mockResource.indicator]);
+      expectSqlAssert(sql, expectFindByIndicatorSql.sql);
+      expect(values).toEqual([indicator]);
 
-      return createMockQueryResult([
-        {
-          indicator: mockResource.indicator,
-          accessTokenTtl: updatedAccessTokenTtl,
-        },
-      ]);
+      return createMockQueryResult([{ ...mockResource, accessTokenTtl: updatedAccessTokenTtl }]);
     });
 
-    await expect(findResourceForOidcByIndicator(mockResource.indicator)).resolves.toEqual({
-      indicator: mockResource.indicator,
+    await expect(findResourceByIndicator(indicator)).resolves.toEqual({
+      ...mockResource,
       accessTokenTtl: updatedAccessTokenTtl,
     });
   });
@@ -360,10 +313,10 @@ describe('resource query', () => {
     await deleteResourceById(id);
   });
 
-  it('deleteResourceById invalidates cached resource projection', async () => {
-    const { id } = mockResource;
-    const expectFindProjectionSql = sql`
-      select ${sql.join([fields.indicator, fields.accessTokenTtl], sql`, `)}
+  it('deleteResourceById invalidates cached resource', async () => {
+    const { id, indicator } = mockResource;
+    const expectFindByIndicatorSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
       where ${fields.indicator}=$1
     `;
@@ -378,18 +331,13 @@ describe('resource query', () => {
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectFindProjectionSql.sql);
-      expect(values).toEqual([mockResource.indicator]);
+      expectSqlAssert(sql, expectFindByIndicatorSql.sql);
+      expect(values).toEqual([indicator]);
 
-      return createMockQueryResult([
-        {
-          indicator: mockResource.indicator,
-          accessTokenTtl: mockResource.accessTokenTtl,
-        },
-      ]);
+      return createMockQueryResult([mockResource]);
     });
 
-    await findResourceForOidcByIndicator(mockResource.indicator);
+    await findResourceByIndicator(indicator);
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectFindByIdSql.sql);
@@ -408,13 +356,13 @@ describe('resource query', () => {
     await deleteResourceById(id);
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectFindProjectionSql.sql);
-      expect(values).toEqual([mockResource.indicator]);
+      expectSqlAssert(sql, expectFindByIndicatorSql.sql);
+      expect(values).toEqual([indicator]);
 
       return createMockQueryResult([]);
     });
 
-    await expect(findResourceForOidcByIndicator(mockResource.indicator)).resolves.toBeNull();
+    await expect(findResourceByIndicator(indicator)).resolves.toBeNull();
   });
 
   it('deleteResourceById throw error if the resource does not exist', async () => {

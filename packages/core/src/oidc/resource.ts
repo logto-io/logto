@@ -118,7 +118,7 @@ export const findResource = async (
     };
   }
 
-  return queries.resources.findResourceForOidcByIndicator(indicator);
+  return queries.resources.findResourceByIndicator(indicator);
 };
 
 export const isThirdPartyApplication = async ({ applications }: Queries, applicationId: string) => {

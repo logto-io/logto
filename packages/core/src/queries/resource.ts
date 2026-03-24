@@ -21,17 +21,10 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
 
   const findAllResources = buildFindAllEntitiesWithPool(pool)(Resources);
 
-  const findResourceByIndicator = async (indicator: string) =>
-    pool.maybeOne<Resource>(sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.indicator}=${indicator}
-    `);
-
-  const findResourceForOidcByIndicator = wellKnownCache.memoize(
+  const findResourceByIndicator = wellKnownCache.memoize(
     async (indicator: string) =>
-      pool.maybeOne<Pick<Resource, 'indicator' | 'accessTokenTtl'>>(sql`
-        select ${sql.join([fields.indicator, fields.accessTokenTtl], sql`, `)}
+      pool.maybeOne<Resource>(sql`
+        select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
         where ${fields.indicator}=${indicator}
       `),
@@ -122,7 +115,6 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
     findTotalNumberOfResources,
     findAllResources,
     findResourceByIndicator,
-    findResourceForOidcByIndicator,
     findDefaultResource,
     setDefaultResource,
     findResourceById,

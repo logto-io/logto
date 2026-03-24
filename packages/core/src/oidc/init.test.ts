@@ -5,6 +5,7 @@ import type { KoaContextWithOIDC } from 'oidc-provider';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { mockEnvSet } from '#src/test-utils/env-set.js';
+import { mockResource } from '#src/__mocks__/index.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -73,6 +74,7 @@ const createContext = (
     },
   });
 };
+
 describe('oidc provider init', () => {
   it('init should not throw', async () => {
     const { id, queries, libraries, logtoConfigs, subscription } = new MockTenant();
@@ -83,13 +85,15 @@ describe('oidc provider init', () => {
   });
 
   it('should reflect updated resource data on token exchange read path', async () => {
-    const findResourceForOidcByIndicator = jest
+    const findResourceByIndicator = jest
       .fn()
       .mockResolvedValueOnce({
+        ...mockResource,
         indicator,
         accessTokenTtl: 3600,
       })
       .mockResolvedValueOnce({
+        ...mockResource,
         indicator,
         accessTokenTtl: 7200,
       });
@@ -98,7 +102,7 @@ describe('oidc provider init', () => {
       .fn()
       .mockResolvedValue([buildScope('scope_1', 'read:api')]);
     const tenant = new MockTenant(undefined, {
-      resources: { findResourceForOidcByIndicator },
+      resources: { findResourceByIndicator },
       applications: { findApplicationById },
     });
 
@@ -114,13 +118,14 @@ describe('oidc provider init', () => {
 
     expect(result1.accessTokenTTL).toBe(3600);
     expect(result2.accessTokenTTL).toBe(7200);
-    expect(findResourceForOidcByIndicator).toHaveBeenCalledTimes(2);
+    expect(findResourceByIndicator).toHaveBeenCalledTimes(2);
     expect(findApplicationById).toHaveBeenCalledTimes(2);
     expect(findUserScopesForResourceIndicator).toHaveBeenCalledTimes(2);
   });
 
   it('should not reuse cached resource server info across organizations', async () => {
-    const findResourceForOidcByIndicator = jest.fn().mockResolvedValue({
+    const findResourceByIndicator = jest.fn().mockResolvedValue({
+      ...mockResource,
       indicator,
       accessTokenTtl: 3600,
     });
@@ -137,7 +142,7 @@ describe('oidc provider init', () => {
     );
     const tenant = new MockTenant(undefined, {
       resources: {
-        findResourceForOidcByIndicator,
+        findResourceByIndicator,
       },
       applications: { findApplicationById: jest.fn().mockResolvedValue({ isThirdParty: false }) },
     });
@@ -159,18 +164,20 @@ describe('oidc provider init', () => {
 
     expect(result1.scope).toBe('read:api');
     expect(result2.scope).toBe('write:api');
-    expect(findResourceForOidcByIndicator).toHaveBeenCalledTimes(2);
+    expect(findResourceByIndicator).toHaveBeenCalledTimes(2);
     expect(findUserScopesForResourceIndicator).toHaveBeenCalledTimes(2);
   });
 
   it('should reflect updated resource data outside token exchange read path', async () => {
-    const findResourceForOidcByIndicator = jest
+    const findResourceByIndicator = jest
       .fn()
       .mockResolvedValueOnce({
+        ...mockResource,
         indicator,
         accessTokenTtl: 3600,
       })
       .mockResolvedValueOnce({
+        ...mockResource,
         indicator,
         accessTokenTtl: 7200,
       });
@@ -179,7 +186,7 @@ describe('oidc provider init', () => {
       .fn()
       .mockResolvedValue([buildScope('scope_1', 'read:api')]);
     const tenant = new MockTenant(undefined, {
-      resources: { findResourceForOidcByIndicator },
+      resources: { findResourceByIndicator },
       applications: { findApplicationById },
     });
 
@@ -195,7 +202,7 @@ describe('oidc provider init', () => {
 
     expect(result1.accessTokenTTL).toBe(3600);
     expect(result2.accessTokenTTL).toBe(7200);
-    expect(findResourceForOidcByIndicator).toHaveBeenCalledTimes(2);
+    expect(findResourceByIndicator).toHaveBeenCalledTimes(2);
     expect(findApplicationById).toHaveBeenCalledTimes(2);
     expect(findUserScopesForResourceIndicator).toHaveBeenCalledTimes(2);
   });
