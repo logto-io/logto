@@ -35,6 +35,9 @@ class JwtCustomizerAccessDenied extends errors.AccessDenied {
   statusCode = 403;
 }
 
+const formatJwtCustomizerInvalidRequestDescription = (message: string) =>
+  `Custom claims script error: ${message}`;
+
 /**
  * For organization API resource feature, add extra token claim `organization_id` to the
  * access token.
@@ -322,13 +325,23 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       }
 
       if (shouldBlockIssuanceOnError) {
-        throw new Error(errorResponse?.message ?? 'Failed to customize token claims');
+        throw new errors.InvalidRequest(
+          formatJwtCustomizerInvalidRequestDescription(
+            errorResponse?.message ?? 'Failed to customize token claims'
+          )
+        );
       }
     } else {
       ctx.prependAllLogEntries({ customJwtError: String(error) });
 
       if (shouldBlockIssuanceOnError) {
-        throw new Error('Failed to customize token claims');
+        throw new errors.InvalidRequest(
+          formatJwtCustomizerInvalidRequestDescription(
+            error instanceof Error && error.message
+              ? error.message
+              : 'Failed to customize token claims'
+          )
+        );
       }
     }
   }

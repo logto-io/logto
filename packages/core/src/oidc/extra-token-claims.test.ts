@@ -1,7 +1,7 @@
 import { InteractionEvent } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import Router from 'koa-router';
-import { type AccessToken, type KoaContextWithOIDC } from 'oidc-provider';
+import { errors, type AccessToken, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -160,12 +160,32 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     });
   });
 
-  it('throws server error on script failure when blocking is enabled and dev features enabled', async () => {
+  it('throws invalid request with original error message on script failure when blocking is enabled', async () => {
     runScriptInLocalVm.mockRejectedValue(new Error('boom'));
 
     await expect(
       callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
-    ).rejects.toBeInstanceOf(Error);
+    ).rejects.toMatchObject({
+      error: 'invalid_request',
+      error_description: 'Custom claims script error: boom',
+      statusCode: 400,
+    });
+  });
+
+  it('throws invalid request with parsed response error message when blocking is enabled', async () => {
+    runScriptInLocalVm.mockRejectedValue(
+      createResponseError(422, {
+        message: "'x' not exists in 'context'.",
+      })
+    );
+
+    await expect(
+      callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
+    ).rejects.toMatchObject({
+      error: 'invalid_request',
+      error_description: "Custom claims script error: 'x' not exists in 'context'.",
+      statusCode: 400,
+    });
   });
 
   it('keeps fail-open on script failure when dev features are disabled', async () => {
@@ -194,5 +214,13 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
       error: 'access_denied',
       statusCode: 403,
     });
+  });
+
+  it('throws oidc invalid request error type for block-on-error failures', async () => {
+    runScriptInLocalVm.mockRejectedValue(new Error('boom'));
+
+    await expect(
+      callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
+    ).rejects.toBeInstanceOf(errors.InvalidRequest);
   });
 });

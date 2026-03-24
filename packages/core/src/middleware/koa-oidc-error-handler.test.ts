@@ -83,6 +83,18 @@ describe('koaOidcErrorHandler middleware', () => {
     });
   });
 
+  it('should expose invalid request error description', async () => {
+    const ctx = createContextWithRouteParameters();
+
+    await expectErrorResponse(
+      ctx,
+      new errors.InvalidRequest("Custom claims script error: 'x' not exists in 'context'."),
+      {
+        error_description: "Custom claims script error: 'x' not exists in 'context'.",
+      }
+    );
+  });
+
   it('should handle unrecognized oidc error', async () => {
     const unrecognizedError = { error: 'some_error', error_description: 'some error description' };
     const ctx = createContextWithRouteParameters();
