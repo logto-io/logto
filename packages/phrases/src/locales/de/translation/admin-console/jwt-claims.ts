@@ -76,7 +76,7 @@ const jwt_claims = {
     input_field_title: 'Verhalten bei der Token-Ausstellung bei Skriptfehlern',
     block_issuance_switch: 'Token-Ausstellung blockieren, wenn das Skript Fehler wirft',
     warning:
-      'Wenn aktiviert, lehnen Laufzeitfehler im Skript die Token-Anfrage mit `server_error` ab. Aufrufe von `api.denyAccess` geben weiterhin `access_denied` zurück.',
+      'Wenn aktiviert, lehnen Laufzeitfehler im Skript die Token-Anfrage mit `invalid_request` (400) und einer lokalisierten `error_description` ab. Aufrufe von `api.denyAccess` geben weiterhin `access_denied` zurück.',
   },
   fetch_external_data: {
     title: 'Externe Daten abrufen',

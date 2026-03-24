@@ -64,7 +64,7 @@ const jwt_claims = {
     input_field_title: '腳本報錯時的權杖簽發行為',
     block_issuance_switch: '當腳本報錯時阻止簽發權杖',
     warning:
-      '啟用後，腳本執行期錯誤會以 `server_error` 拒絕權杖請求。呼叫 `api.denyAccess` 仍會返回 `access_denied`。',
+      '啟用後，腳本執行期錯誤會以 `invalid_request` (400) 和本地化的 `error_description` 拒絕權杖請求。呼叫 `api.denyAccess` 仍會返回 `access_denied`。',
   },
   fetch_external_data: {
     title: '提取外部數據',

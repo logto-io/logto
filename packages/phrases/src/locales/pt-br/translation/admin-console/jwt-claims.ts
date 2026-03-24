@@ -72,7 +72,7 @@ const jwt_claims = {
     input_field_title: 'Comportamento da emissão do token em caso de erro no script',
     block_issuance_switch: 'Bloquear a emissão do token quando o script gerar erros',
     warning:
-      'Quando ativado, erros de execução do script rejeitam a solicitação de token com `server_error`. Chamadas para `api.denyAccess` ainda retornam `access_denied`.',
+      'Quando ativado, erros de execução do script rejeitam a solicitação de token com `invalid_request` (400) e um `error_description` localizado. Chamadas para `api.denyAccess` ainda retornam `access_denied`.',
   },
   fetch_external_data: {
     title: 'Buscar dados externos',

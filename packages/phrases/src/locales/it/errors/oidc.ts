@@ -18,7 +18,7 @@ const oidc = {
   server_error: 'Si è verificato un errore OIDC sconosciuto. Si prega di riprovare più tardi.',
   provider_error_fallback: 'Si è verificato un errore OIDC: {{code}}.',
   custom_claims_script_error:
-    'Errore dello script dei claims personalizzati: {{error_description}}.',
+    'Errore dello script dei claims personalizzati: {{error_description}}',
   key_required: 'È richiesta almeno una chiave.',
   key_not_found: 'Chiave con ID {{id}} non trovata.',
   invalid_session_payload: 'Payload di sessione non valido.',

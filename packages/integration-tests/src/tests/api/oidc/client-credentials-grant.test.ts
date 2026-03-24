@@ -292,7 +292,7 @@ describe('client credentials grant', () => {
   });
 
   devFeatureTest.describe('custom jwt error handling (dev features enabled)', () => {
-    it('should return server_error when script throws and blocking is enabled', async () => {
+    it('should return invalid_request when script throws and blocking is enabled', async () => {
       const resource = await createResource();
 
       await upsertJwtCustomizer('client-credentials', {
@@ -302,8 +302,9 @@ describe('client credentials grant', () => {
         blockIssuanceOnError: true,
       });
 
-      await expectError({ resource: resource.indicator }, 500, {
-        error: 'server_error',
+      await expectError({ resource: resource.indicator }, 400, {
+        error: 'invalid_request',
+        error_description: expect.any(String),
       });
     });
 

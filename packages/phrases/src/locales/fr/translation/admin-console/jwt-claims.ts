@@ -74,7 +74,7 @@ const jwt_claims = {
     input_field_title: "Comportement d'émission du jeton en cas d'erreur du script",
     block_issuance_switch: "Bloquer l'émission du jeton lorsque le script génère une erreur",
     warning:
-      "Lorsqu'elle est activée, les erreurs d'exécution du script rejettent la demande de jeton avec `server_error`. Les appels à `api.denyAccess` continuent de renvoyer `access_denied`.",
+      "Lorsqu'elle est activée, les erreurs d'exécution du script rejettent la demande de jeton avec `invalid_request` (400) et un `error_description` localisé. Les appels à `api.denyAccess` continuent de renvoyer `access_denied`.",
   },
   fetch_external_data: {
     title: 'Récupérer des données externes',

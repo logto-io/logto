@@ -73,7 +73,7 @@ const jwt_claims = {
     input_field_title: 'Betik hatasında token verme davranışı',
     block_issuance_switch: 'Betik hata verdiğinde token verilmesini engelle',
     warning:
-      'Etkinleştirildiğinde, betik çalışma zamanı hataları token isteğini `server_error` ile reddeder. `api.denyAccess` çağrıları ise hâlâ `access_denied` döndürür.',
+      'Etkinleştirildiğinde, betik çalışma zamanı hataları token isteğini `invalid_request` (400) ve yerelleştirilmiş bir `error_description` ile reddeder. `api.denyAccess` çağrıları ise hâlâ `access_denied` döndürür.',
   },
   fetch_external_data: {
     title: 'Harici veri al',

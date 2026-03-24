@@ -73,7 +73,7 @@ const jwt_claims = {
     input_field_title: 'Zachowanie wydawania tokena przy błędzie skryptu',
     block_issuance_switch: 'Blokuj wydanie tokena, gdy skrypt zgłasza błędy',
     warning:
-      'Po włączeniu błędy wykonania skryptu odrzucają żądanie tokena z `server_error`. Wywołania `api.denyAccess` nadal zwracają `access_denied`.',
+      'Po włączeniu błędy wykonania skryptu odrzucają żądanie tokena z `invalid_request` (400) i zlokalizowanym `error_description`. Wywołania `api.denyAccess` nadal zwracają `access_denied`.',
   },
   fetch_external_data: {
     title: 'Pobierz zewnętrzne dane',

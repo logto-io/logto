@@ -69,7 +69,7 @@ const jwt_claims = {
     input_field_title: '스크립트 오류 시 토큰 발급 동작',
     block_issuance_switch: '스크립트 오류가 발생하면 토큰 발급 차단',
     warning:
-      '활성화하면 스크립트 런타임 오류로 인해 토큰 요청이 `server_error` 로 거부돼요. `api.denyAccess` 호출은 계속 `access_denied` 를 반환해요.',
+      '활성화하면 스크립트 런타임 오류로 인해 토큰 요청이 `invalid_request` (400) 및 현지화된 `error_description` 와 함께 거부돼요. `api.denyAccess` 호출은 계속 `access_denied` 를 반환해요.',
   },
   fetch_external_data: {
     title: '외부 데이터 가져오기',

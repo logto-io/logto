@@ -64,7 +64,7 @@ const jwt_claims = {
     input_field_title: '脚本报错时的令牌签发行为',
     block_issuance_switch: '当脚本报错时阻止签发令牌',
     warning:
-      '启用后，脚本运行时错误会以 `server_error` 拒绝令牌请求。调用 `api.denyAccess` 仍会返回 `access_denied`。',
+      '启用后，脚本运行时错误会以 `invalid_request` (400) 和本地化的 `error_description` 拒绝令牌请求。调用 `api.denyAccess` 仍会返回 `access_denied`。',
   },
   fetch_external_data: {
     title: '获取外部数据',

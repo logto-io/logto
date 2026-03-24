@@ -70,7 +70,7 @@ const jwt_claims = {
     input_field_title: 'Token issuance behavior on script error',
     block_issuance_switch: 'Block token issuance when the script errors',
     warning:
-      'When enabled, script runtime errors reject the token request with `server_error`. Calls to `api.denyAccess` still return `access_denied`.',
+      'When enabled, script runtime errors reject the token request with `invalid_request` (400) and a localized `error_description`. Calls to `api.denyAccess` still return `access_denied`.',
   },
   fetch_external_data: {
     title: 'Fetch external data',

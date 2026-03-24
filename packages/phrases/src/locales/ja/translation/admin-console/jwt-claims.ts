@@ -70,7 +70,7 @@ const jwt_claims = {
     input_field_title: 'スクリプトエラー時のトークン発行動作',
     block_issuance_switch: 'スクリプトがエラーになった場合はトークン発行をブロックする',
     warning:
-      '有効にすると、スクリプト実行時エラーによりトークンリクエストは `server_error` で拒否されます。`api.denyAccess` の呼び出しは引き続き `access_denied` を返します。',
+      '有効にすると、スクリプト実行時エラーによりトークンリクエストは `invalid_request` (400) とローカライズされた `error_description` で拒否されます。`api.denyAccess` の呼び出しは引き続き `access_denied` を返します。',
   },
   fetch_external_data: {
     title: '外部データを取得',

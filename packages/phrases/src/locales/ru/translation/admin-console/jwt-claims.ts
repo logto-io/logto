@@ -73,7 +73,7 @@ const jwt_claims = {
     input_field_title: 'Поведение выдачи токена при ошибке скрипта',
     block_issuance_switch: 'Блокировать выдачу токена, если скрипт завершился с ошибкой',
     warning:
-      'Если включено, ошибки выполнения скрипта отклоняют запрос токена с `server_error`. Вызовы `api.denyAccess` по-прежнему возвращают `access_denied`.',
+      'Если включено, ошибки выполнения скрипта отклоняют запрос токена с `invalid_request` (400) и локализованным `error_description`. Вызовы `api.denyAccess` по-прежнему возвращают `access_denied`.',
   },
   fetch_external_data: {
     title: 'Получение внешних данных',

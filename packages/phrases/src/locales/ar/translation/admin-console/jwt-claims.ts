@@ -69,7 +69,7 @@ const jwt_claims = {
     input_field_title: 'سلوك إصدار الرمز عند حدوث خطأ في السكربت',
     block_issuance_switch: 'حظر إصدار الرمز عندما يواجه السكربت خطأ',
     warning:
-      'عند التفعيل، تؤدي أخطاء وقت تشغيل السكربت إلى رفض طلب الرمز باستخدام `server_error`. وتبقى استدعاءات `api.denyAccess` تُرجع `access_denied`.',
+      'عند التفعيل، تؤدي أخطاء وقت تشغيل السكربت إلى رفض طلب الرمز باستخدام `invalid_request` (400) مع `error_description` مترجم. وتبقى استدعاءات `api.denyAccess` تُرجع `access_denied`.',
   },
   fetch_external_data: {
     title: 'استرجاع البيانات الخارجية',

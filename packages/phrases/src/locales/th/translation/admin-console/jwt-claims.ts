@@ -69,7 +69,7 @@ const jwt_claims = {
     input_field_title: 'พฤติกรรมการออกโทเค็นเมื่อสคริปต์เกิดข้อผิดพลาด',
     block_issuance_switch: 'บล็อกการออกโทเค็นเมื่อสคริปต์เกิดข้อผิดพลาด',
     warning:
-      'เมื่อเปิดใช้งาน ข้อผิดพลาดขณะรันสคริปต์จะปฏิเสธคำขอโทเค็นด้วย `server_error` ส่วนการเรียก `api.denyAccess` จะยังคงคืนค่า `access_denied`',
+      'เมื่อเปิดใช้งาน ข้อผิดพลาดขณะรันสคริปต์จะปฏิเสธคำขอโทเค็นด้วย `invalid_request` (400) และ `error_description` ที่แปลตามภาษา ส่วนการเรียก `api.denyAccess` จะยังคงคืนค่า `access_denied`',
   },
   fetch_external_data: {
     title: 'ดึงข้อมูลภายนอก',

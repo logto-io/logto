@@ -16,7 +16,7 @@ const oidc = {
   provider_error: 'OIDC 內部錯誤: {{message}}',
   server_error: '發生未知的 OIDC 錯誤。請稍後再試。',
   provider_error_fallback: '發生了一個 OIDC 錯誤: {{code}}。',
-  custom_claims_script_error: '自訂 claims 腳本錯誤：{{error_description}}。',
+  custom_claims_script_error: '自訂 claims 腳本錯誤：{{error_description}}',
   key_required: '至少需要一個金鑰。',
   key_not_found: '未找到 ID 為 {{id}} 的金鑰。',
   invalid_session_payload: '無效的會話負載。',
