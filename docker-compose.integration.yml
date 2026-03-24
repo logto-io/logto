@@ -21,10 +21,12 @@ services:
       retries: 20
 
   logto:
+    stop_signal: SIGINT
     volumes:
       # Mount the temporary directory for storing mock connector records, which will be used by
       # the integration tests.
       - ./.integration-test-tmp:/tmp/logto
+      - ./.integration-test-coverage:/coverage
     extra_hosts:
       # Add host.docker.internal for the container to access the host machine, which is required for
       # mock web server to receive webhooks from Logto.
@@ -43,6 +45,9 @@ services:
       SECRET_VAULT_KEK: DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
       STATUS_API_KEY: test-status-api-key
       TRUST_PROXY_HEADER: "1"
+      COVERAGE: ${COVERAGE:-0}
+      COVERAGE_REPORT_DIR: /coverage/report
+      COVERAGE_TEMP_DIR: /coverage/raw
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 3001 || exit 1"]
       interval: 3s

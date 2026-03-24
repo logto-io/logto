@@ -149,6 +149,16 @@ Where `<target>` is the name of the test target defined in [packages/integration
 
 Once tests are complete, the command will automatically stop the Docker containers, but the logs will be saved in `./logs` for debugging purposes.
 
+#### Enable test coverage collection
+
+To collect test coverage for the Logto backend during integration tests, set the environment variable `COVERAGE=1` when running the test command, like:
+
+```bash
+COVERAGE=1 pnpm test:integration api
+```
+
+Currently, only `api` and `well-known` test targets support coverage collection.
+
 #### Notes
 
 - The first run may take a while since it needs to build the Docker image and start the containers. Subsequent runs will be faster if there are no changes to your source code.

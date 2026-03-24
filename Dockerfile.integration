@@ -1,4 +1,4 @@
-# Dockerfile for integration tests
+### Dockerfile for integration tests ###
 FROM node:22-alpine
 WORKDIR /etc/logto
 ENV CI=true
@@ -12,19 +12,25 @@ COPY . .
 
 RUN pnpm i
 
-### Set if dev features enabled ###
+# Set if dev features enabled
 ARG dev_features_enabled
 ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
 
 RUN pnpm -r build
 
-### Keep behavior aligned with CI packaging ###
+# Keep behavior aligned with CI packaging
 ENV SKIP_TAR=true
 RUN ./.scripts/package.sh
 
-COPY .scripts/integration/bootstrap.sh /etc/logto/bootstrap.sh
-RUN chmod +x /etc/logto/bootstrap.sh
+# Note: The `nyc` version used here should align with the one used in the `core` package's
+# `devDependencies` to avoid potential issues with instrumentation and coverage reporting.
+# However, since `package.sh` will prune dev dependencies, we need to install `nyc` globally
+# here.
+# We can consider better handling of this in the future if it becomes a maintenance burden.
+RUN npm add -g nyc@^18.0.0
+
+COPY .scripts/integration/ /etc/logto/.scripts/integration/
 
 EXPOSE 3001 3002
 
-ENTRYPOINT ["/etc/logto/bootstrap.sh"]
+ENTRYPOINT ["/etc/logto/.scripts/integration/bootstrap.sh"]
