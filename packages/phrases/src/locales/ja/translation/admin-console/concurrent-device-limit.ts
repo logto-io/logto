@@ -1,6 +1,5 @@
 const concurrent_device_limit = {
   title: '同時デバイス制限',
-  description: '各ユーザーがこのアプリでサインインできるデバイスの数を制御します。',
   enable: '同時デバイス制限を有効にする',
   enable_description:
     '有効にすると、Logto はこのアプリに対するユーザーごとの最大アクティブグラント数を制限します。',

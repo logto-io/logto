@@ -1,7 +1,5 @@
 const concurrent_device_limit = {
   title: 'Gleichzeitiges Geräte-Limit',
-  description:
-    'Steuern Sie, auf wie vielen Geräten ein Benutzer für diese App angemeldet bleiben kann.',
   enable: 'Gleichzeitiges Geräte-Limit aktivieren',
   enable_description:
     'Wenn aktiviert, erzwingt Logto die maximale Anzahl aktiver Berechtigungen pro Benutzer für diese App.',

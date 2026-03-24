@@ -1,6 +1,5 @@
 const concurrent_device_limit = {
   title: 'Concurrent device limit',
-  description: 'Control how many devices each user can stay signed in on for this app.',
   enable: 'Enable concurrent device limit',
   enable_description:
     'When enabled, Logto enforces the maximum active grants per user for this app.',

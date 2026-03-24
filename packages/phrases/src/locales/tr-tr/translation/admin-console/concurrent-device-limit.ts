@@ -1,6 +1,5 @@
 const concurrent_device_limit = {
   title: 'Eşzamanlı cihaz sınırı',
-  description: 'Her kullanıcının bu uygulamada kaç cihazda oturum açabileceğini kontrol edin.',
   enable: 'Eşzamanlı cihaz sınırını etkinleştir',
   enable_description:
     'Etkinleştirildiğinde, Logto bu uygulama için kullanıcı başına maksimum aktif izinleri zorlar.',

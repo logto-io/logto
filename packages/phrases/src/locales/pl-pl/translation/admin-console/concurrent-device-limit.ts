@@ -1,7 +1,5 @@
 const concurrent_device_limit = {
   title: 'Limit liczby jednoczesnych urządzeń',
-  description:
-    'Kontroluj, na ilu urządzeniach każdy użytkownik może być zalogowany w tej aplikacji.',
   enable: 'Włącz limit liczby jednoczesnych urządzeń',
   enable_description:
     'Po włączeniu Logto wymusza maksymalną liczbę aktywnych dostępów na użytkownika dla tej aplikacji.',

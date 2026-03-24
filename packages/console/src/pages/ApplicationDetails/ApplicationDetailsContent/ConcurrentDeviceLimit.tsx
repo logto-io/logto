@@ -6,7 +6,6 @@ import FormCard from '@/components/FormCard';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 
-import styles from './index.module.scss';
 import { type ApplicationForm } from './utils';
 
 function ConcurrentDeviceLimit() {
@@ -19,12 +18,9 @@ function ConcurrentDeviceLimit() {
   return (
     <FormCard
       title="application_details.concurrent_device_limit.title"
-      description="application_details.concurrent_device_limit.description"
+      description="application_details.concurrent_device_limit.field_description"
     >
       <FormField title="application_details.concurrent_device_limit.field">
-        <div className={styles.concurrentDeviceLimitDescription}>
-          {t('application_details.concurrent_device_limit.field_description')}
-        </div>
         <TextInput
           type="number"
           placeholder={t('application_details.concurrent_device_limit.field_placeholder')}

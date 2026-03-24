@@ -1,6 +1,5 @@
 const concurrent_device_limit = {
   title: '同時設備限制',
-  description: '控制每個用戶可以在多少設備上保持登入此應用程式。',
   enable: '啟用同時設備限制',
   enable_description: '啟用後，Logto 將對此應用程式的每位用戶強制執行最大活動授權數量。',
   field: '每個應用程式的同時設備限制',

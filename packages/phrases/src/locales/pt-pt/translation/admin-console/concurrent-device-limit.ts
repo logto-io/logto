@@ -1,7 +1,5 @@
 const concurrent_device_limit = {
   title: 'Limite de dispositivos concorrentes',
-  description:
-    'Controla quantos dispositivos cada utilizador pode manter-se conectado nesta aplicação.',
   enable: 'Ativar limite de dispositivos concorrentes',
   enable_description:
     'Quando ativada, Logto aplica o máximo de concessões ativas por utilizador para esta aplicação.',

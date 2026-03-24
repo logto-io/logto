@@ -1,6 +1,5 @@
 const concurrent_device_limit = {
   title: '동시 기기 제한',
-  description: '사용자가 이 앱에 대해 로그인할 수 있는 기기 수를 제어합니다.',
   enable: '동시 기기 제한 활성화',
   enable_description: '활성화되면 Logto 는 이 앱에 대한 사용자당 최대 활성 허용을 시행합니다.',
   field: '앱당 동시 기기 제한',

@@ -1,7 +1,5 @@
 const concurrent_device_limit = {
   title: "Limite d'appareils simultanés",
-  description:
-    "Contrôle le nombre d'appareils sur lesquels chaque utilisateur peut rester connecté pour cette application.",
   enable: "Activer la limite d'appareils simultanés",
   enable_description:
     "Lorsqu'elle est activée, Logto applique le maximum de sessions actives par utilisateur pour cette application.",
