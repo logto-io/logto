@@ -42,8 +42,7 @@ const user = {
   username_required: 'Username is a required identifier, you can not set it to null.',
   email_or_phone_required:
     'Email address or phone number is a required identifier, at least one is required.',
-  last_sign_in_method_required:
-    'You need to keep at least one available sign-in method in your account.',
+  last_sign_in_method_required: 'You need to keep at least one identifier in your account.',
   email_required: 'Email address is a required identifier, you can not set it to null.',
   phone_required: 'Phone number is a required identifier, you can not set it to null.',
   enterprise_sso_identity_not_exists:

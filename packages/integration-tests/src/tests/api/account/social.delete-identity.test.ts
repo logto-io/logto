@@ -123,7 +123,7 @@ describe('my-account (social delete identity)', () => {
       await deleteDefaultTenantUser(user.id);
     });
 
-    it('should reject deleting the last available sign-in method', async () => {
+    it('should reject deleting the last identifier', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password, {
         scopes: [UserScope.Profile, UserScope.Identities],
@@ -141,6 +141,14 @@ describe('my-account (social delete identity)', () => {
         isPasswordPrimary: true,
         socialConnectorTarget: mockSocialConnectorTarget,
       });
+      await api.patch('api/my-account', {
+        json: {
+          username: null,
+        },
+      });
+      await api.delete('api/my-account/primary-email', {
+        headers: { 'logto-verification-id': verificationRecordId },
+      });
 
       await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
         code: 'user.last_sign_in_method_required',
@@ -151,7 +159,7 @@ describe('my-account (social delete identity)', () => {
       await deleteDefaultTenantUser(user.id);
     });
 
-    it('should allow deleting social identity when another identifier sign-in method remains available', async () => {
+    it('should allow deleting social identity when another identifier remains', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword({
         primaryEmail: `${generateStandardId()}@example.com`,
       });
@@ -164,24 +172,15 @@ describe('my-account (social delete identity)', () => {
         connectorIdMap.get(mockSocialConnectorId)!
       );
 
-      await updateOnlyAvailableIdentifierSignInMethod({
-        identifier: SignInIdentifier.Email,
-        password: false,
-        verificationCode: true,
-        isPasswordPrimary: false,
-        socialConnectorTarget: mockSocialConnectorTarget,
-      });
-
       await deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId);
 
       const updatedUserInfo = await getUserInfo(api);
       expect(updatedUserInfo.identities).not.toHaveProperty(mockSocialConnectorTarget);
 
-      await enableAllPasswordSignInMethods();
       await deleteDefaultTenantUser(user.id);
     });
 
-    it('should allow deleting a non-sign-in social identity target', async () => {
+    it('should allow deleting one social identity when another social identity remains', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password, {
         scopes: [UserScope.Profile, UserScope.Identities],
@@ -191,25 +190,18 @@ describe('my-account (social delete identity)', () => {
         password,
         connectorIdMap.get(mockSocialConnectorId)!
       );
-
-      await updateOnlyAvailableIdentifierSignInMethod({
-        identifier: SignInIdentifier.Phone,
-        password: true,
-        verificationCode: false,
-        isPasswordPrimary: true,
-        socialConnectorTarget: 'another-social-target',
-      });
+      const secondSocialConnector = await setSocialConnector();
+      await linkSocialIdentity(api, password, secondSocialConnector.id);
 
       await deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId);
 
       const updatedUserInfo = await getUserInfo(api);
       expect(updatedUserInfo.identities).not.toHaveProperty(mockSocialConnectorTarget);
-
-      await enableAllPasswordSignInMethods();
+      expect(Object.keys(updatedUserInfo.identities ?? {})).not.toHaveLength(0);
       await deleteDefaultTenantUser(user.id);
     });
 
-    it('should localize the last available sign-in method error message', async () => {
+    it('should localize the last identifier error message', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(
         username,
@@ -232,13 +224,20 @@ describe('my-account (social delete identity)', () => {
         isPasswordPrimary: true,
         socialConnectorTarget: mockSocialConnectorTarget,
       });
+      await api.patch('api/my-account', {
+        json: {
+          username: null,
+        },
+      });
+      await api.delete('api/my-account/primary-email', {
+        headers: { 'logto-verification-id': verificationRecordId },
+      });
 
       await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
         code: 'user.last_sign_in_method_required',
         status: 400,
-        messageIncludes: 'au moins une méthode de connexion disponible',
+        messageIncludes: 'au moins un identifiant',
       });
-
       await enableAllPasswordSignInMethods();
       await deleteDefaultTenantUser(user.id);
     });
