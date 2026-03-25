@@ -80,6 +80,8 @@ const account_center = {
   },
   social: {
     linked: '{{connector}} collegato con successo.',
+    not_enabled:
+      'Questo metodo di accesso social non è abilitato. Contatta il tuo amministratore per assistenza.',
     removed: '{{connector}} rimosso con successo.',
     remove_confirmation_title: 'Rimuovi account social',
     remove_confirmation_description:

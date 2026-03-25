@@ -74,6 +74,7 @@ const account_center = {
   },
   social: {
     linked: '已成功連結 {{connector}}。',
+    not_enabled: '此社交登入方式尚未啟用。請聯絡管理員尋求協助。',
     removed: '已成功移除 {{connector}}。',
     remove_confirmation_title: '移除社交帳號',
     remove_confirmation_description:

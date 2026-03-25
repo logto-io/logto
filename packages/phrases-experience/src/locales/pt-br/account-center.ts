@@ -78,6 +78,8 @@ const account_center = {
   },
   social: {
     linked: '{{connector}} vinculado com sucesso.',
+    not_enabled:
+      'Este método de login social não está habilitado. Entre em contato com seu administrador para obter ajuda.',
     removed: '{{connector}} removido com sucesso.',
     remove_confirmation_title: 'Remover conta social',
     remove_confirmation_description:

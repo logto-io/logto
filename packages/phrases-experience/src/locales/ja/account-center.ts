@@ -75,6 +75,8 @@ const account_center = {
   },
   social: {
     linked: '{{connector}}の連携に成功しました。',
+    not_enabled:
+      'このソーシャルサインイン方法は有効になっていません。管理者にお問い合わせください。',
     removed: '{{connector}}の削除に成功しました。',
     remove_confirmation_title: 'ソーシャルアカウントを削除',
     remove_confirmation_description:

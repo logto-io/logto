@@ -75,6 +75,8 @@ const account_center = {
   },
   social: {
     linked: 'تم ربط {{connector}} بنجاح.',
+    not_enabled:
+      'طريقة تسجيل الدخول الاجتماعي هذه غير مفعلة. يُرجى التواصل مع المسؤول للحصول على المساعدة.',
     removed: 'تمت إزالة {{connector}} بنجاح.',
     remove_confirmation_title: 'إزالة الحساب الاجتماعي',
     remove_confirmation_description:

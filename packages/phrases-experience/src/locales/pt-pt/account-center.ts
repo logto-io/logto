@@ -79,6 +79,8 @@ const account_center = {
   },
   social: {
     linked: '{{connector}} associada com sucesso.',
+    not_enabled:
+      'Este método de início de sessão social não está ativado. Contacte o seu administrador para obter ajuda.',
     removed: '{{connector}} removida com sucesso.',
     remove_confirmation_title: 'Remover conta social',
     remove_confirmation_description:

@@ -75,6 +75,8 @@ const account_center = {
   },
   social: {
     linked: 'เชื่อมโยง {{connector}} สำเร็จแล้ว',
+    not_enabled:
+      'วิธีการเข้าสู่ระบบผ่านโซเชียลนี้ยังไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
     removed: 'นำ {{connector}} ออกสำเร็จแล้ว',
     remove_confirmation_title: 'ลบบัญชีโซเชียล',
     remove_confirmation_description:

@@ -74,6 +74,8 @@ const account_center = {
   },
   social: {
     linked: '{{connector}}이(가) 성공적으로 연결되었습니다.',
+    not_enabled:
+      '이 소셜 로그인 방법은 활성화되어 있지 않습니다. 도움이 필요하면 관리자에게 문의하세요.',
     removed: '{{connector}}이(가) 성공적으로 제거되었습니다.',
     remove_confirmation_title: '소셜 계정 제거',
     remove_confirmation_description:

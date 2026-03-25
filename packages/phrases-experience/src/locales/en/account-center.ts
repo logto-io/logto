@@ -77,6 +77,8 @@ const account_center = {
   social: {
     linked: '{{connector}} linked successfully.',
     removed: '{{connector}} removed successfully.',
+    not_enabled:
+      'This social sign-in method is not enabled. Please contact your administrator for assistance.',
     remove_confirmation_title: 'Remove social account',
     remove_confirmation_description:
       'If you remove {{connector}}, you may not be able to sign in with it until you add it back again.',

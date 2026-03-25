@@ -76,6 +76,8 @@ const account_center = {
   },
   social: {
     linked: '{{connector}} başarıyla bağlandı.',
+    not_enabled:
+      'Bu sosyal oturum açma yöntemi etkin değil. Yardım için lütfen yöneticinizle iletişime geçin.',
     removed: '{{connector}} başarıyla kaldırıldı.',
     remove_confirmation_title: 'Sosyal hesabı kaldır',
     remove_confirmation_description:

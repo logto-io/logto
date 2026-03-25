@@ -205,8 +205,17 @@ const SocialFlow = ({ mode }: Props) => {
     );
   }
 
+  if (!experienceSettings) {
+    return <GlobalLoading />;
+  }
+
   if (!connectorId || !connector) {
-    return <ErrorPage titleKey="error.something_went_wrong" />;
+    return (
+      <ErrorPage
+        titleKey="error.something_went_wrong"
+        messageKey="account_center.social.not_enabled"
+      />
+    );
   }
 
   if (!verificationId) {

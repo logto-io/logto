@@ -77,6 +77,8 @@ const account_center = {
   },
   social: {
     linked: '{{connector}} успішно прив’язано.',
+    not_enabled:
+      'Цей спосіб входу через соціальну мережу не ввімкнено. Будь ласка, зверніться до адміністратора по допомогу.',
     removed: '{{connector}} успішно видалено.',
     remove_confirmation_title: 'Видалити соціальний акаунт',
     remove_confirmation_description:

@@ -79,6 +79,8 @@ const account_center = {
   },
   social: {
     linked: 'Se vinculó {{connector}} correctamente.',
+    not_enabled:
+      'Este método de inicio de sesión social no está habilitado. Ponte en contacto con tu administrador para obtener ayuda.',
     removed: 'Se eliminó {{connector}} correctamente.',
     remove_confirmation_title: 'Eliminar cuenta social',
     remove_confirmation_description:

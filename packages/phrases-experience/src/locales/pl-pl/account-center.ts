@@ -76,6 +76,8 @@ const account_center = {
   },
   social: {
     linked: '{{connector}} połączono pomyślnie.',
+    not_enabled:
+      'Ta metoda logowania społecznościowego nie jest włączona. Skontaktuj się z administratorem, aby uzyskać pomoc.',
     removed: '{{connector}} usunięto pomyślnie.',
     remove_confirmation_title: 'Usuń konto społecznościowe',
     remove_confirmation_description:

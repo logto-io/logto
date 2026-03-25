@@ -81,6 +81,8 @@ const account_center = {
   },
   social: {
     linked: '{{connector}} a été lié avec succès.',
+    not_enabled:
+      "Cette méthode de connexion sociale n'est pas activée. Veuillez contacter votre administrateur pour obtenir de l'aide.",
     removed: '{{connector}} a été supprimé avec succès.',
     remove_confirmation_title: 'Supprimer le compte social',
     remove_confirmation_description:
