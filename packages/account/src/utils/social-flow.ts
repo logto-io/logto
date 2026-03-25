@@ -1,18 +1,14 @@
 import type { NavigateFunction } from 'react-router-dom';
 
-import {
-  clearRedirectUrl,
-  clearShowSuccess,
-  getRedirectUrl,
-  getShowSuccess,
-} from './account-center-route';
+import { socialSuccessRoute } from '@ac/constants/routes';
+
 import { accountStorage } from './session-storage';
 
 type FinalizeSocialFlowSuccessParameters = {
   connectorId: string;
-  successMessage: string;
+  successMessage?: string;
   refreshUserInfo: () => Promise<void>;
-  setToast: (message: string) => void;
+  setToast?: (message: string) => void;
   navigate: NavigateFunction;
 };
 
@@ -28,21 +24,6 @@ const navigateToSecurity = (navigate: NavigateFunction) => {
   navigate('/', { replace: true });
 };
 
-const handleSocialFlowRedirect = (navigate: NavigateFunction) => {
-  const redirectUrl = getRedirectUrl();
-  const showSuccess = getShowSuccess();
-
-  if (redirectUrl && !showSuccess) {
-    clearRedirectUrl();
-    window.location.assign(redirectUrl);
-    return;
-  }
-
-  clearRedirectUrl();
-  clearShowSuccess();
-  navigateToSecurity(navigate);
-};
-
 export const finalizeSocialFlowSuccess = async ({
   connectorId,
   successMessage,
@@ -52,8 +33,10 @@ export const finalizeSocialFlowSuccess = async ({
 }: FinalizeSocialFlowSuccessParameters) => {
   accountStorage.socialFlow.clear(connectorId);
   await refreshUserInfo();
-  setToast(successMessage);
-  handleSocialFlowRedirect(navigate);
+  if (successMessage && setToast) {
+    setToast(successMessage);
+  }
+  navigate(socialSuccessRoute, { replace: true });
 };
 
 export const finalizeSocialFlowFailure = ({

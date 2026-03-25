@@ -38,6 +38,7 @@ const SocialFlow = ({ mode }: Props) => {
     experienceSettings,
     refreshUserInfo,
     setToast,
+    userInfo,
     verificationId,
     setVerificationId,
   } = useContext(PageContext);
@@ -52,6 +53,8 @@ const SocialFlow = ({ mode }: Props) => {
       experienceSettings?.socialConnectors.find(({ id }) => id === connectorId),
     [connectorId, experienceSettings?.socialConnectors]
   );
+  const hasLinkedConnector = Boolean(connector && userInfo?.identities?.[connector.target]);
+  const duplicateBindingMessage = 'You have already associated this social account.';
   const connectorName = connector ? getLocalizedConnectorName(connector, language) : undefined;
   const storedSocialFlow = connectorId ? accountStorage.socialFlow.get(connectorId) : undefined;
   const flowKey =
@@ -67,8 +70,19 @@ const SocialFlow = ({ mode }: Props) => {
     async (error: unknown) => {
       await handleError(error, {
         'verification_record.permission_denied': resetVerification,
+        'user.social_account_exists_in_profile': async (requestError) => {
+          finalizeSocialFlowFailure({
+            connectorId,
+            clearFlowRecord: true,
+            message: requestError.message,
+            setToast,
+            navigate,
+          });
+        },
         global: async (requestError) => {
           finalizeSocialFlowFailure({
+            connectorId,
+            clearFlowRecord: true,
             message: requestError.message,
             setToast,
             navigate,
@@ -76,7 +90,7 @@ const SocialFlow = ({ mode }: Props) => {
         },
       });
     },
-    [handleError, navigate, resetVerification, setToast]
+    [connectorId, handleError, navigate, resetVerification, setToast]
   );
 
   const handleLinkSuccess = useCallback(async () => {
@@ -86,15 +100,10 @@ const SocialFlow = ({ mode }: Props) => {
 
     await finalizeSocialFlowSuccess({
       connectorId,
-      successMessage: t('account_center.social.linked', {
-        connector: connectorName,
-        defaultValue: '',
-      }),
       refreshUserInfo,
-      setToast,
       navigate,
     });
-  }, [connector, connectorId, connectorName, navigate, refreshUserInfo, setToast, t]);
+  }, [connector, connectorId, connectorName, navigate, refreshUserInfo]);
 
   const handleRemoveSuccess = useCallback(async () => {
     if (!connectorId || !connectorName) {
@@ -115,6 +124,14 @@ const SocialFlow = ({ mode }: Props) => {
 
   useEffect(() => {
     if (!verificationId) {
+      if (startedFlowKey) {
+        setStartedFlowKey(undefined);
+      }
+
+      return;
+    }
+
+    if (mode === 'add' && hasLinkedConnector) {
       if (startedFlowKey) {
         setStartedFlowKey(undefined);
       }
@@ -183,11 +200,13 @@ const SocialFlow = ({ mode }: Props) => {
   }, [
     connector,
     connectorId,
+    connectorName,
     createSocialVerificationRequest,
     deleteSocialIdentityRequest,
     handleFlowError,
     handleLinkSuccess,
     handleRemoveSuccess,
+    hasLinkedConnector,
     linkSocialIdentityRequest,
     mode,
     flowKey,
@@ -220,6 +239,21 @@ const SocialFlow = ({ mode }: Props) => {
 
   if (!verificationId) {
     return <VerificationMethodList />;
+  }
+
+  if (mode === 'add' && hasLinkedConnector) {
+    return (
+      <ErrorPage
+        titleKey="error.something_went_wrong"
+        rawMessage={duplicateBindingMessage}
+        action={{
+          titleKey: 'action.back',
+          onClick: () => {
+            navigate('/', { replace: true });
+          },
+        }}
+      />
+    );
   }
 
   return <GlobalLoading />;

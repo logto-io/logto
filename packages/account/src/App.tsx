@@ -35,6 +35,7 @@ import {
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
+  socialSuccessRoute,
   socialCallbackRoutePrefix,
   socialRoutePrefix,
 } from './constants/routes';
@@ -152,6 +153,7 @@ const Main = () => {
         element={<UpdateSuccess identifierType="backup_code" />}
       />
       <Route path={passkeySuccessRoute} element={<UpdateSuccess identifierType="passkey" />} />
+      <Route path={socialSuccessRoute} element={<UpdateSuccess identifierType="social" />} />
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />

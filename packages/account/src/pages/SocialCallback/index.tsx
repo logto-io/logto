@@ -60,15 +60,10 @@ const SocialCallback = () => {
 
     await finalizeSocialFlowSuccess({
       connectorId,
-      successMessage: t('account_center.social.linked', {
-        connector: connectorName,
-        defaultValue: '',
-      }),
       refreshUserInfo,
-      setToast,
       navigate,
     });
-  }, [connectorId, connectorName, navigate, refreshUserInfo, setToast, t]);
+  }, [connectorId, connectorName, navigate, refreshUserInfo]);
 
   useEffect(() => {
     if (!connectorId || !connector || startedConnectorId === connectorId) {
@@ -108,6 +103,15 @@ const SocialCallback = () => {
     const handleCallbackError = async (error: unknown, clearPendingVerification = true) => {
       await handleError(error, {
         'verification_record.permission_denied': redirectToReverify,
+        'user.social_account_exists_in_profile': async (requestError) => {
+          finalizeSocialFlowFailure({
+            connectorId,
+            clearFlowRecord: true,
+            message: requestError.message,
+            setToast,
+            navigate,
+          });
+        },
         global: async (requestError) => {
           finalizeSocialFlowFailure({
             connectorId,

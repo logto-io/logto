@@ -19,7 +19,8 @@ type IdentifierType =
   | 'totp'
   | 'backup_code'
   | 'backup_code_deleted'
-  | 'passkey';
+  | 'passkey'
+  | 'social';
 
 type TranslationMap = Partial<
   Record<IdentifierType, { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey }>
@@ -83,21 +84,25 @@ const UpdateSuccess = ({ identifierType }: Props) => {
 
   useEffect(() => {
     const storedRedirectUrl = getRedirectUrl();
-    const showSuccess = getShowSuccess();
 
     if (storedRedirectUrl) {
-      // If show_success is set, show the success page with a Done button
+      if (identifierType === 'social') {
+        setRedirectUrl(storedRedirectUrl);
+        return;
+      }
+
+      const showSuccess = getShowSuccess();
+
       if (showSuccess) {
         setRedirectUrl(storedRedirectUrl);
         return;
       }
 
-      // Otherwise, redirect immediately
       setIsRedirecting(true);
       clearRedirectUrl();
       window.location.assign(storedRedirectUrl);
     }
-  }, []);
+  }, [identifierType]);
 
   const handleDoneClick = () => {
     if (redirectUrl) {
