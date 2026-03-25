@@ -79,6 +79,59 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     return convertResult(result, modelName);
   };
 
+  /**
+   * This function is designed to query by indexed JSONB fields (e.g. `uid` and `userCode`)
+   *  to leverage the expression index for better performance.
+   *
+   * @see findPayloadByUid
+   * @see findPayloadByUserCode
+   */
+  const findPayloadByIndexedPayloadField = async <T extends ValueExpression>(
+    modelName: string,
+    field: 'uid' | 'userCode',
+    value: T
+  ) => {
+    const condition =
+      field === 'uid'
+        ? sql`${fields.payload}->>'uid'=${value}`
+        : sql`${fields.payload}->>'userCode'=${value}`;
+
+    // Fetch all matching records.
+    const results = await pool.any<QueryResult>(sql`
+      ${findByModel(modelName)}
+      and ${condition}
+    `);
+
+    // Rarely, duplicate UIDs can exist for different sessions.
+    // This query may throw `DataIntegrityError`.
+    // If that happens, delete all duplicates and return `null`.
+    if (results.length > 1) {
+      // Delete all duplicates.
+      await pool.query(sql`
+        delete from ${table}
+        where ${fields.modelName}=${modelName}
+          and ${condition}
+      `);
+      return;
+    }
+
+    // If there is only one record, return the result.
+    return results[0] ? convertResult(results[0], modelName) : undefined;
+  };
+
+  const findPayloadByUid = async <T extends ValueExpression>(modelName: string, value: T) =>
+    findPayloadByIndexedPayloadField(modelName, 'uid', value);
+
+  const findPayloadByUserCode = async <T extends ValueExpression>(modelName: string, value: T) =>
+    findPayloadByIndexedPayloadField(modelName, 'userCode', value);
+
+  /**
+   * @deprecated
+   * This dynamic JSONB key query shape may prevent expression-index
+   *  usage with prepared generic plans. Keep it as a backup/reference path only.
+   *
+   * Use `findPayloadByUid` or `findPayloadByUserCode` instead for indexed queries.
+   */
   const findPayloadByPayloadField = async <
     T extends ValueExpression,
     Field extends keyof OidcModelInstancePayload,
@@ -87,22 +140,21 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     field: Field,
     value: T
   ) => {
-    // Fetch all matching records
     const results = await pool.any<QueryResult>(sql`
-    ${findByModel(modelName)}
-    and ${fields.payload}->>${field}=${value}
-  `);
+      ${findByModel(modelName)}
+      and ${fields.payload}->>${field}=${value}
+    `);
 
     // Rarely, duplicate UIDs can exist for different sessions.
     // This query may throw `DataIntegrityError`.
     // If that happens, delete all duplicates and return `null`.
     if (results.length > 1) {
-      // Delete all duplicates
+      // Delete all duplicates.
       await pool.query(sql`
-      delete from ${table}
-      where ${fields.modelName}=${modelName}
-      and ${fields.payload}->>${field}=${value}
-    `);
+        delete from ${table}
+        where ${fields.modelName}=${modelName}
+          and ${fields.payload}->>${field}=${value}
+      `);
       return;
     }
 
@@ -223,6 +275,8 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     upsertInstance,
     findPayloadById,
     findPayloadByPayloadField,
+    findPayloadByUid,
+    findPayloadByUserCode,
     consumeInstanceById,
     destroyInstanceById,
     revokeInstanceByGrantId,
