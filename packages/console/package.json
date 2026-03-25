@@ -21,6 +21,8 @@
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\"",
+    "pretest": "pnpm generate",
+    "pretest:ci": "pnpm generate",
     "test:ci": "jest --coverage --silent",
     "test": "jest"
   },
