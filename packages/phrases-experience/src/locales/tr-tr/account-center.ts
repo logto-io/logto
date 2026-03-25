@@ -65,12 +65,23 @@ const account_center = {
     change: 'Değiştir',
     remove: 'Kaldır',
     not_set: 'Ayarlanmamış',
+    social_sign_in: 'Sosyal giriş',
+    social_not_linked: 'Bağlanmadı',
     email_phone: 'E-posta / Telefon',
     email: 'E-posta',
     phone: 'Telefon',
     password: 'Parola',
     configured: 'Yapılandırıldı',
     not_configured: 'Yapılandırılmadı',
+  },
+  social: {
+    linked: '{{connector}} başarıyla bağlandı.',
+    not_enabled:
+      'Bu sosyal oturum açma yöntemi etkin değil. Yardım için lütfen yöneticinizle iletişime geçin.',
+    removed: '{{connector}} başarıyla kaldırıldı.',
+    remove_confirmation_title: 'Sosyal hesabı kaldır',
+    remove_confirmation_description:
+      '{{connector}} kaldırılırsa, yeniden ekleyene kadar bu hesapla oturum açamayabilirsiniz.',
   },
   password: {
     title: 'Şifreyi ayarla',

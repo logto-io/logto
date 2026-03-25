@@ -1,114 +1,243 @@
+import * as s from 'superstruct';
+
 const storagePrefix = 'logto:account-center:';
 
 const storageKeys = Object.freeze({
+  route: `${storagePrefix}route-cache`,
   redirectUrl: `${storagePrefix}redirect-url`,
   showSuccess: `${storagePrefix}show-success`,
   uiLocales: `${storagePrefix}ui-locales`,
   identifier: `${storagePrefix}identifier`,
+  verificationRecord: `${storagePrefix}verification-record`,
+  socialFlow: `${storagePrefix}social-verification`,
+});
+
+export type StoredVerificationRecord = {
+  verificationId: string;
+  expiresAt: string;
+};
+
+export type StoredSocialFlowRecord =
+  | {
+      status: 'pending';
+      verificationRecordId: string;
+      expiresAt: string;
+      state: string;
+    }
+  | {
+      status: 'verified';
+      verificationRecordId: string;
+      expiresAt: string;
+    };
+
+const storedVerificationRecordGuard = s.object({
+  verificationId: s.string(),
+  expiresAt: s.string(),
+});
+
+const storedSocialFlowRecordGuard = s.union([
+  s.object({
+    status: s.literal('pending'),
+    verificationRecordId: s.string(),
+    expiresAt: s.string(),
+    state: s.string(),
+  }),
+  s.object({
+    status: s.literal('verified'),
+    verificationRecordId: s.string(),
+    expiresAt: s.string(),
+  }),
+]);
+
+const getStorage = (type: 'session' | 'local'): Storage | undefined => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  return type === 'session' ? window.sessionStorage : window.localStorage;
+};
+
+const getString = (key: string, type: 'session' | 'local'): string | undefined => {
+  return getStorage(type)?.getItem(key) ?? undefined;
+};
+
+const setString = (key: string, value: string, type: 'session' | 'local') => {
+  getStorage(type)?.setItem(key, value);
+};
+
+const removeItem = (key: string, type: 'session' | 'local') => {
+  getStorage(type)?.removeItem(key);
+};
+
+const getStructuredValue = <T>(
+  key: string,
+  guard: s.Struct<T>,
+  type: 'session' | 'local'
+): T | undefined => {
+  const raw = getString(key, type);
+
+  if (!raw) {
+    return;
+  }
+
+  try {
+    const [, result] = s.validate(JSON.parse(raw), guard);
+
+    if (!result) {
+      removeItem(key, type);
+      return;
+    }
+
+    return result;
+  } catch {
+    removeItem(key, type);
+  }
+};
+
+const setStructuredValue = (key: string, value: unknown, type: 'session' | 'local') => {
+  setString(key, JSON.stringify(value), type);
+};
+
+const isNotExpired = (expiresAt: string) => {
+  const expiresAtTimestamp = new Date(expiresAt).getTime();
+
+  return !Number.isNaN(expiresAtTimestamp) && expiresAtTimestamp > Date.now();
+};
+
+export const accountStorage = Object.freeze({
+  route: {
+    get: () => getString(storageKeys.route, 'session'),
+    set: (value: string) => {
+      setString(storageKeys.route, value, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.route, 'session');
+    },
+  },
+  redirectUrl: {
+    get: () => getString(storageKeys.redirectUrl, 'session'),
+    set: (url: string): boolean => {
+      try {
+        const parsed = new URL(url);
+
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+          return false;
+        }
+
+        setString(storageKeys.redirectUrl, url, 'session');
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    clear: () => {
+      removeItem(storageKeys.redirectUrl, 'session');
+    },
+  },
+  showSuccess: {
+    get: () => getString(storageKeys.showSuccess, 'session') === 'true',
+    set: (value: boolean) => {
+      if (value) {
+        setString(storageKeys.showSuccess, 'true', 'session');
+        return;
+      }
+
+      removeItem(storageKeys.showSuccess, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.showSuccess, 'session');
+    },
+  },
+  uiLocales: {
+    get: () => getString(storageKeys.uiLocales, 'session'),
+    set: (value: string) => {
+      setString(storageKeys.uiLocales, value, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.uiLocales, 'session');
+    },
+  },
+  verificationRecord: {
+    get: (): StoredVerificationRecord | undefined => {
+      const record = getStructuredValue(
+        storageKeys.verificationRecord,
+        storedVerificationRecordGuard,
+        'local'
+      );
+
+      if (!record || !isNotExpired(record.expiresAt)) {
+        removeItem(storageKeys.verificationRecord, 'local');
+        return;
+      }
+
+      return record;
+    },
+    set: (record: StoredVerificationRecord) => {
+      setStructuredValue(storageKeys.verificationRecord, record, 'local');
+    },
+    clear: () => {
+      removeItem(storageKeys.verificationRecord, 'local');
+    },
+  },
+  socialFlow: {
+    get: (connectorId: string): StoredSocialFlowRecord | undefined => {
+      const record = getStructuredValue(
+        `${storageKeys.socialFlow}:${connectorId}`,
+        storedSocialFlowRecordGuard,
+        'session'
+      );
+
+      if (!record || !isNotExpired(record.expiresAt)) {
+        removeItem(`${storageKeys.socialFlow}:${connectorId}`, 'session');
+        return;
+      }
+
+      return record;
+    },
+    setPending: (
+      connectorId: string,
+      record: Omit<Extract<StoredSocialFlowRecord, { status: 'pending' }>, 'status'>
+    ) => {
+      setStructuredValue(
+        `${storageKeys.socialFlow}:${connectorId}`,
+        { ...record, status: 'pending' } satisfies StoredSocialFlowRecord,
+        'session'
+      );
+    },
+    setVerified: (
+      connectorId: string,
+      record: Omit<Extract<StoredSocialFlowRecord, { status: 'verified' }>, 'status'>
+    ) => {
+      setStructuredValue(
+        `${storageKeys.socialFlow}:${connectorId}`,
+        { ...record, status: 'verified' } satisfies StoredSocialFlowRecord,
+        'session'
+      );
+    },
+    clear: (connectorId: string) => {
+      removeItem(`${storageKeys.socialFlow}:${connectorId}`, 'session');
+    },
+  },
 });
 
 export const sessionStorage = Object.freeze({
-  getRedirectUrl: (): string | undefined => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    return window.sessionStorage.getItem(storageKeys.redirectUrl) ?? undefined;
+  getRoute: accountStorage.route.get,
+  setRoute: accountStorage.route.set,
+  clearRoute: accountStorage.route.clear,
+  getRedirectUrl: accountStorage.redirectUrl.get,
+  setRedirectUrl: accountStorage.redirectUrl.set,
+  clearRedirectUrl: accountStorage.redirectUrl.clear,
+  getShowSuccess: accountStorage.showSuccess.get,
+  setShowSuccess: accountStorage.showSuccess.set,
+  clearShowSuccess: accountStorage.showSuccess.clear,
+  getUiLocales: accountStorage.uiLocales.get,
+  setUiLocales: accountStorage.uiLocales.set,
+  clearUiLocales: accountStorage.uiLocales.clear,
+  getIdentifier: () => getString(storageKeys.identifier, 'session'),
+  setIdentifier: (value: string) => {
+    setString(storageKeys.identifier, value, 'session');
   },
-
-  setRedirectUrl: (url: string): boolean => {
-    if (typeof window === 'undefined') {
-      return false;
-    }
-
-    try {
-      const parsed = new URL(url);
-      // Only allow http and https protocols
-      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-        return false;
-      }
-      window.sessionStorage.setItem(storageKeys.redirectUrl, url);
-      return true;
-    } catch {
-      // Invalid URL
-      return false;
-    }
-  },
-
-  clearRedirectUrl: (): void => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    window.sessionStorage.removeItem(storageKeys.redirectUrl);
-  },
-
-  getShowSuccess: (): boolean => {
-    if (typeof window === 'undefined') {
-      return false;
-    }
-    return window.sessionStorage.getItem(storageKeys.showSuccess) === 'true';
-  },
-
-  setShowSuccess: (value: boolean): void => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    if (value) {
-      window.sessionStorage.setItem(storageKeys.showSuccess, 'true');
-    } else {
-      window.sessionStorage.removeItem(storageKeys.showSuccess);
-    }
-  },
-
-  clearShowSuccess: (): void => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    window.sessionStorage.removeItem(storageKeys.showSuccess);
-  },
-
-  getUiLocales: (): string | undefined => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    return window.sessionStorage.getItem(storageKeys.uiLocales) ?? undefined;
-  },
-
-  setUiLocales: (value: string): void => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    window.sessionStorage.setItem(storageKeys.uiLocales, value);
-  },
-
-  clearUiLocales: (): void => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    window.sessionStorage.removeItem(storageKeys.uiLocales);
-  },
-
-  getIdentifier: (): string | undefined => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    return window.sessionStorage.getItem(storageKeys.identifier) ?? undefined;
-  },
-
-  setIdentifier: (value: string): void => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    window.sessionStorage.setItem(storageKeys.identifier, value);
-  },
-
-  clearIdentifier: (): void => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    window.sessionStorage.removeItem(storageKeys.identifier);
+  clearIdentifier: () => {
+    removeItem(storageKeys.identifier, 'session');
   },
 });

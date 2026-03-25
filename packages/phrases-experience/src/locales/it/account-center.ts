@@ -69,12 +69,23 @@ const account_center = {
     change: 'Modifica',
     remove: 'Rimuovi',
     not_set: 'Non impostato',
+    social_sign_in: 'Accesso social',
+    social_not_linked: 'Non collegato',
     email_phone: 'Posta elettronica / Telefono',
     email: 'Posta elettronica',
     phone: 'Telefono',
     password: "Parola d'accesso",
     configured: 'Configurato',
     not_configured: 'Non configurato',
+  },
+  social: {
+    linked: '{{connector}} collegato con successo.',
+    not_enabled:
+      'Questo metodo di accesso social non è abilitato. Contatta il tuo amministratore per assistenza.',
+    removed: '{{connector}} rimosso con successo.',
+    remove_confirmation_title: 'Rimuovi account social',
+    remove_confirmation_description:
+      'Se rimuovi {{connector}}, potresti non riuscire più ad accedere con questo account finché non lo aggiungi di nuovo.',
   },
   password: {
     title: 'Imposta password',

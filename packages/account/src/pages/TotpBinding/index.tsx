@@ -19,6 +19,7 @@ import { authenticatorAppSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from './index.module.scss';
 
@@ -100,6 +101,12 @@ const TotpBinding = () => {
 
     void generateSecret();
   }, [generateSecretRequest, handleError, hasTotpAlready, secret, userInfo, verificationId]);
+
+  useEffect(() => {
+    if (verificationId && hasTotpAlready === false) {
+      sessionStorage.clearRoute();
+    }
+  }, [hasTotpAlready, verificationId]);
 
   const copySecret = useCallback(async () => {
     if (!secret) {

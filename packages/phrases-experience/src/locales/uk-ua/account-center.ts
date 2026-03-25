@@ -66,12 +66,23 @@ const account_center = {
     change: 'Змінити',
     remove: 'Видалити',
     not_set: 'Не встановлено',
+    social_sign_in: 'Соціальний вхід',
+    social_not_linked: 'Не прив’язано',
     email_phone: 'Електронна пошта / Телефон',
     email: 'Електронна пошта',
     phone: 'Телефон',
     password: 'Пароль',
     configured: 'Налаштовано',
     not_configured: 'Не налаштовано',
+  },
+  social: {
+    linked: '{{connector}} успішно прив’язано.',
+    not_enabled:
+      'Цей спосіб входу через соціальну мережу не ввімкнено. Будь ласка, зверніться до адміністратора по допомогу.',
+    removed: '{{connector}} успішно видалено.',
+    remove_confirmation_title: 'Видалити соціальний акаунт',
+    remove_confirmation_description:
+      'Якщо ви видалите {{connector}}, можливо, ви не зможете входити через нього, доки не додасте його знову.',
   },
   password: {
     title: 'Встановити пароль',

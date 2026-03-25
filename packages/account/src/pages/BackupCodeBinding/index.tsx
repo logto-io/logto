@@ -25,6 +25,7 @@ import { backupCodesSuccessRoute, backupCodesManageRoute } from '@ac/constants/r
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from './index.module.scss';
 
@@ -90,6 +91,16 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
 
     void checkExisting();
   }, [isRegenerate, getMfaRequest, navigate]);
+
+  useEffect(() => {
+    if (
+      verificationId &&
+      hasOtherMfa === true &&
+      (hasBackupCodeAlready === false || isRegenerate)
+    ) {
+      sessionStorage.clearRoute();
+    }
+  }, [hasBackupCodeAlready, hasOtherMfa, isRegenerate, verificationId]);
 
   // Generate backup codes on mount
   useEffect(() => {

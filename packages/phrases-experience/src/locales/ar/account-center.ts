@@ -64,12 +64,23 @@ const account_center = {
     change: 'تغيير',
     remove: 'إزالة',
     not_set: 'غير محدد',
+    social_sign_in: 'تسجيل الدخول الاجتماعي',
+    social_not_linked: 'غير مرتبط',
     email_phone: 'البريد الإلكتروني / الهاتف',
     email: 'البريد الإلكتروني',
     phone: 'الهاتف',
     password: 'كلمة المرور',
     configured: 'تم الإعداد',
     not_configured: 'غير معدّ',
+  },
+  social: {
+    linked: 'تم ربط {{connector}} بنجاح.',
+    not_enabled:
+      'طريقة تسجيل الدخول الاجتماعي هذه غير مفعلة. يُرجى التواصل مع المسؤول للحصول على المساعدة.',
+    removed: 'تمت إزالة {{connector}} بنجاح.',
+    remove_confirmation_title: 'إزالة الحساب الاجتماعي',
+    remove_confirmation_description:
+      'إذا أزلت {{connector}}، فقد لا تتمكن من تسجيل الدخول به حتى تقوم بإضافته مرة أخرى.',
   },
   password: {
     title: 'تعيين كلمة المرور',

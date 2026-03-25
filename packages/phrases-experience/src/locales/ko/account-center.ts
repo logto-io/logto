@@ -63,12 +63,23 @@ const account_center = {
     change: '변경',
     remove: '삭제',
     not_set: '설정되지 않음',
+    social_sign_in: '소셜 로그인',
+    social_not_linked: '연결되지 않음',
     email_phone: '이메일 / 전화번호',
     email: '이메일',
     phone: '전화번호',
     password: '비밀번호',
     configured: '설정됨',
     not_configured: '설정되지 않음',
+  },
+  social: {
+    linked: '{{connector}}이(가) 성공적으로 연결되었습니다.',
+    not_enabled:
+      '이 소셜 로그인 방법은 활성화되어 있지 않습니다. 도움이 필요하면 관리자에게 문의하세요.',
+    removed: '{{connector}}이(가) 성공적으로 제거되었습니다.',
+    remove_confirmation_title: '소셜 계정 제거',
+    remove_confirmation_description:
+      '{{connector}}을(를) 제거하면 다시 추가하기 전까지 해당 계정으로 로그인하지 못할 수 있습니다.',
   },
   password: {
     title: '비밀번호 설정',

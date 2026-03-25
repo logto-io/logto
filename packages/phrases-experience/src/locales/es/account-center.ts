@@ -68,12 +68,23 @@ const account_center = {
     change: 'Cambiar',
     remove: 'Eliminar',
     not_set: 'No establecido',
+    social_sign_in: 'Inicio de sesión social',
+    social_not_linked: 'No vinculado',
     email_phone: 'Correo electrónico / Teléfono',
     email: 'Correo electrónico',
     phone: 'Teléfono',
     password: 'Contraseña',
     configured: 'Configurado',
     not_configured: 'No configurado',
+  },
+  social: {
+    linked: 'Se vinculó {{connector}} correctamente.',
+    not_enabled:
+      'Este método de inicio de sesión social no está habilitado. Ponte en contacto con tu administrador para obtener ayuda.',
+    removed: 'Se eliminó {{connector}} correctamente.',
+    remove_confirmation_title: 'Eliminar cuenta social',
+    remove_confirmation_description:
+      'Si eliminas {{connector}}, es posible que no puedas volver a iniciar sesión con esta cuenta hasta que la agregues de nuevo.',
   },
   password: {
     title: 'Establecer contraseña',

@@ -63,12 +63,22 @@ const account_center = {
     change: '更改',
     remove: '移除',
     not_set: '未设置',
+    social_sign_in: '社交登录',
+    social_not_linked: '未关联',
     email_phone: '邮箱 / 手机号',
     email: '邮箱',
     phone: '手机号',
     password: '密码',
     configured: '已设置',
     not_configured: '未设置',
+  },
+  social: {
+    linked: '已成功关联 {{connector}}。',
+    not_enabled: '此社交登录方式未启用。请联系管理员寻求帮助。',
+    removed: '已成功移除 {{connector}}。',
+    remove_confirmation_title: '移除社交账号',
+    remove_confirmation_description:
+      '如果你移除 {{connector}}，在重新添加之前，你可能无法再通过它登录。',
   },
   password: {
     title: '设置密码',

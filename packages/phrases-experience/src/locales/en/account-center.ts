@@ -65,12 +65,23 @@ const account_center = {
     change: 'Change',
     remove: 'Remove',
     not_set: 'Not set',
+    social_sign_in: 'Social sign-in',
+    social_not_linked: 'Not linked',
     email_phone: 'Email / Phone',
     email: 'Email',
     phone: 'Phone',
     password: 'Password',
     configured: 'Configured',
     not_configured: 'Not configured',
+  },
+  social: {
+    linked: '{{connector}} linked successfully.',
+    removed: '{{connector}} removed successfully.',
+    not_enabled:
+      'This social sign-in method is not enabled. Please contact your administrator for assistance.',
+    remove_confirmation_title: 'Remove social account',
+    remove_confirmation_description:
+      'If you remove {{connector}}, you may not be able to sign in with it until you add it back again.',
   },
   password: {
     title: 'Set password',

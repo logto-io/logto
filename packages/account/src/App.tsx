@@ -35,6 +35,9 @@ import {
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
+  socialSuccessRoute,
+  socialCallbackRoutePrefix,
+  socialRoutePrefix,
 } from './constants/routes';
 import initI18n from './i18n/init';
 import { resolveUiLocalesLanguage } from './i18n/utils';
@@ -47,6 +50,8 @@ import PasskeyView from './pages/PasskeyView';
 import Password from './pages/Password';
 import Phone from './pages/Phone';
 import Security from './pages/Security';
+import SocialCallback from './pages/SocialCallback';
+import SocialFlow from './pages/SocialFlow';
 import TotpBinding from './pages/TotpBinding';
 import UpdateSuccess from './pages/UpdateSuccess';
 import Username from './pages/Username';
@@ -65,7 +70,14 @@ const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 
 const Main = () => {
   const params = new URLSearchParams(window.location.search);
-  const isInCallback = Boolean(params.get('code'));
+  const { pathname } = window.location;
+  const isSocialCallback = pathname.startsWith(
+    `${accountCenterBasePath}${socialCallbackRoutePrefix}/`
+  );
+  const isAuthCallback =
+    Boolean(params.get('code')) &&
+    (pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`);
+  const isInCallback = isSocialCallback || isAuthCallback;
   const uiLocales = getUiLocales();
   const { isAuthenticated, isLoading, signIn } = useLogto();
   const { accountCenterSettings, isLoadingExperience, isLoadingUserInfo, userInfo, userInfoError } =
@@ -101,7 +113,7 @@ const Main = () => {
     uiLocales,
     userInfoError,
   ]);
-  if (isInCallback) {
+  if (isAuthCallback) {
     return <Callback />;
   }
 
@@ -141,6 +153,9 @@ const Main = () => {
         element={<UpdateSuccess identifierType="backup_code" />}
       />
       <Route path={passkeySuccessRoute} element={<UpdateSuccess identifierType="passkey" />} />
+      {isDevFeaturesEnabled && (
+        <Route path={socialSuccessRoute} element={<UpdateSuccess identifierType="social" />} />
+      )}
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />
@@ -151,6 +166,16 @@ const Main = () => {
       <Route path={backupCodesManageRoute} element={<BackupCodeView />} />
       <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
       <Route path={passkeyManageRoute} element={<PasskeyView />} />
+      {isDevFeaturesEnabled && (
+        <>
+          <Route path={`${socialCallbackRoutePrefix}/:connectorId`} element={<SocialCallback />} />
+          <Route path={`${socialRoutePrefix}/:connectorId`} element={<SocialFlow mode="add" />} />
+          <Route
+            path={`${socialRoutePrefix}/:connectorId/remove`}
+            element={<SocialFlow mode="remove" />}
+          />
+        </>
+      )}
       <Route index element={indexElement} />
       <Route path="*" element={<Home />} />
     </Routes>

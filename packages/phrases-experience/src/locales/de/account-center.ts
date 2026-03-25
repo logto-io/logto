@@ -71,12 +71,23 @@ const account_center = {
     change: 'Ändern',
     remove: 'Entfernen',
     not_set: 'Nicht festgelegt',
+    social_sign_in: 'Social-Login',
+    social_not_linked: 'Nicht verknüpft',
     email_phone: 'E-Mail / Telefon',
     email: 'E-Mail',
     phone: 'Telefon',
     password: 'Passwort',
     configured: 'Konfiguriert',
     not_configured: 'Nicht konfiguriert',
+  },
+  social: {
+    linked: '{{connector}} wurde erfolgreich verknüpft.',
+    not_enabled:
+      'Diese Social-Login-Methode ist nicht aktiviert. Bitte kontaktieren Sie Ihren Administrator um Hilfe.',
+    removed: '{{connector}} wurde erfolgreich entfernt.',
+    remove_confirmation_title: 'Soziales Konto entfernen',
+    remove_confirmation_description:
+      'Wenn Sie {{connector}} entfernen, können Sie sich möglicherweise nicht mehr damit anmelden, bis Sie es erneut hinzufügen.',
   },
   password: {
     title: 'Passwort festlegen',

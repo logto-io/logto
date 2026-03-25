@@ -15,3 +15,12 @@ export const backupCodesSuccessRoute = '/backup-codes/success';
 export const passkeyAddRoute = '/passkey/add';
 export const passkeyManageRoute = '/passkey/manage';
 export const passkeySuccessRoute = '/passkey/success';
+export const socialSuccessRoute = '/social/success';
+export const socialRoutePrefix = '/social';
+export const socialCallbackRoutePrefix = '/callback/social';
+
+export const getSocialAddRoute = (connectorId: string) => `${socialRoutePrefix}/${connectorId}`;
+export const getSocialRemoveRoute = (connectorId: string) =>
+  `${socialRoutePrefix}/${connectorId}/remove`;
+export const getSocialCallbackRoute = (connectorId: string) =>
+  `${socialCallbackRoutePrefix}/${connectorId}`;

@@ -64,12 +64,23 @@ const account_center = {
     change: '変更',
     remove: '削除',
     not_set: '未設定',
+    social_sign_in: 'ソーシャルサインイン',
+    social_not_linked: '未連携',
     email_phone: 'メールアドレス / 電話番号',
     email: 'メールアドレス',
     phone: '電話番号',
     password: 'パスワード',
     configured: '設定済み',
     not_configured: '未設定',
+  },
+  social: {
+    linked: '{{connector}}の連携に成功しました。',
+    not_enabled:
+      'このソーシャルサインイン方法は有効になっていません。管理者にお問い合わせください。',
+    removed: '{{connector}}の削除に成功しました。',
+    remove_confirmation_title: 'ソーシャルアカウントを削除',
+    remove_confirmation_description:
+      '{{connector}}を削除すると、再度追加するまでそのアカウントでサインインできなくなる可能性があります。',
   },
   password: {
     title: 'パスワードを設定',

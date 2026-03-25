@@ -64,12 +64,23 @@ const account_center = {
     change: 'เปลี่ยน',
     remove: 'ลบ',
     not_set: 'ยังไม่ได้ตั้งค่า',
+    social_sign_in: 'การเข้าสู่ระบบด้วยโซเชียล',
+    social_not_linked: 'ยังไม่ได้เชื่อมโยง',
     email_phone: 'อีเมล / โทรศัพท์',
     email: 'อีเมล',
     phone: 'โทรศัพท์',
     password: 'รหัสผ่าน',
     configured: 'ตั้งค่าแล้ว',
     not_configured: 'ยังไม่ได้ตั้งค่า',
+  },
+  social: {
+    linked: 'เชื่อมโยง {{connector}} สำเร็จแล้ว',
+    not_enabled:
+      'วิธีการเข้าสู่ระบบผ่านโซเชียลนี้ยังไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
+    removed: 'นำ {{connector}} ออกสำเร็จแล้ว',
+    remove_confirmation_title: 'ลบบัญชีโซเชียล',
+    remove_confirmation_description:
+      'หากคุณลบ {{connector}} คุณอาจไม่สามารถลงชื่อเข้าใช้ด้วยบัญชีนี้ได้จนกว่าจะเพิ่มอีกครั้ง',
   },
   password: {
     title: 'ตั้งรหัสผ่าน',
