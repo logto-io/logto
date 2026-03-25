@@ -26,9 +26,9 @@
   }
 
   .cardContent {
-    height: 0;
+    max-height: 0;
     overflow: hidden;
-    transition: height 0.3s ease;
+    transition: max-height 0.3s ease;
 
     // Collapsible content should be hidden by default, margin space can only be set at the child level
     > *:first-child {
@@ -50,6 +50,11 @@
   &.expanded {
     .expandButton {
       transform: rotate(180deg);
+    }
+
+    .cardContent {
+      max-height: 1000px;
+      overflow: visible;
     }
   }
 }
