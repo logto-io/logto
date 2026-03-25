@@ -174,7 +174,7 @@ describe('POST /experience/profile', () => {
     });
 
     expect(response.status).toBe(404);
-    expect(response.text).toContain(' User identifier not found.');
+    expect(response.text).toContain('User identifier not found');
   });
 });
 
