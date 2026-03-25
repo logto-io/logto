@@ -19,7 +19,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
     domains: { findAllDomains, findDomainById, findDomain },
   } = queries;
   const {
-    domains: { syncDomainStatus, addDomain, deleteDomain },
+    domains: { syncDomainStatus, addDomain, deleteDomain, cleanupDomains },
     samlApplications: { syncCustomDomainsToSamlApplicationRedirectUrls },
     quota,
   } = libraries;
@@ -110,6 +110,37 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       ctx.body = pick(syncedDomain, ...domainSelectFields);
 
       captureEvent({ tenantId, request: ctx.req }, ProductEvent.CustomDomainCreated);
+      return next();
+    }
+  );
+
+  router.post(
+    '/domains/cleanup',
+    koaGuard({
+      body: z.object({ staleDays: z.number().int().positive() }),
+      response: z.object({
+        scannedCount: z.number(),
+        staleCandidateCount: z.number(),
+        deletedCount: z.number(),
+        skippedActiveCount: z.number(),
+        failedCount: z.number(),
+      }),
+      status: 200,
+    }),
+    async (ctx, next) => {
+      const { staleDays } = ctx.guard.body;
+      const summary = await cleanupDomains(staleDays);
+
+      await trySafe(async () => {
+        const domains = await findAllDomains();
+        const syncedDomains = await Promise.all(
+          domains.map(async (domain) => syncDomainStatus(domain))
+        );
+        await syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...syncedDomains]);
+      });
+
+      ctx.status = 200;
+      ctx.body = summary;
       return next();
     }
   );

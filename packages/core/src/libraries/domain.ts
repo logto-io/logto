@@ -1,5 +1,6 @@
 import { type CloudflareData, type Domain, DomainStatus } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -15,11 +16,19 @@ import {
 import { isSubdomainOf } from '#src/utils/domain.js';
 import { clearCustomDomainCache } from '#src/utils/tenant.js';
 
+export type DomainCleanupSummary = {
+  scannedCount: number;
+  staleCandidateCount: number;
+  deletedCount: number;
+  skippedActiveCount: number;
+  failedCount: number;
+};
+
 export type DomainLibrary = ReturnType<typeof createDomainLibrary>;
 
 export const createDomainLibrary = (queries: Queries) => {
   const {
-    domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById },
+    domains: { updateDomainById, insertDomain, findAllDomains, findDomainById, deleteDomainById },
   } = queries;
 
   const syncDomainStatusFromCloudflareData = async (
@@ -39,7 +48,18 @@ export const createDomainLibrary = (queries: Queries) => {
       .filter(Boolean)
       .join('\n');
 
-    return updateDomainById(domain.id, { cloudflareData, errorMessage, status }, 'replace');
+    const nextNonActiveSince =
+      status === DomainStatus.Active
+        ? null
+        : domain.status === DomainStatus.Active || !domain.nonActiveSince
+          ? Date.now()
+          : domain.nonActiveSince;
+
+    return updateDomainById(
+      domain.id,
+      { cloudflareData, errorMessage, status, nonActiveSince: nextNonActiveSince },
+      'replace'
+    );
   };
 
   const syncDomainStatus = async (domain: Domain): Promise<Domain> => {
@@ -81,6 +101,7 @@ export const createDomainLibrary = (queries: Queries) => {
       id: generateStandardId(),
       cloudflareData,
       status: DomainStatus.PendingVerification,
+      nonActiveSince: Date.now(),
       dnsRecords: [
         {
           type: 'CNAME',
@@ -114,9 +135,52 @@ export const createDomainLibrary = (queries: Queries) => {
     await clearCustomDomainCache(domain.domain);
   };
 
+  const cleanupDomains = async (staleDays: number): Promise<DomainCleanupSummary> => {
+    const staleBefore = Date.now() - staleDays * 24 * 60 * 60 * 1000;
+    const domains = await findAllDomains();
+    const summary: DomainCleanupSummary = {
+      scannedCount: domains.length,
+      staleCandidateCount: 0,
+      deletedCount: 0,
+      skippedActiveCount: 0,
+      failedCount: 0,
+    };
+
+    for (const domain of domains) {
+      if (
+        domain.status === DomainStatus.Active ||
+        !domain.nonActiveSince ||
+        domain.nonActiveSince >= staleBefore
+      ) {
+        continue;
+      }
+
+      summary.staleCandidateCount += 1;
+
+      const syncedDomain = await syncDomainStatus(domain);
+
+      if (syncedDomain.status === DomainStatus.Active) {
+        summary.skippedActiveCount += 1;
+        continue;
+      }
+
+      const deleted = await trySafe(async () => deleteDomain(domain.id));
+
+      if (!deleted) {
+        summary.failedCount += 1;
+        continue;
+      }
+
+      summary.deletedCount += 1;
+    }
+
+    return summary;
+  };
+
   return {
     syncDomainStatus,
     addDomain,
     deleteDomain,
+    cleanupDomains,
   };
 };

@@ -7,6 +7,7 @@ create table domains (
   error_message varchar(1024),
   dns_records jsonb /* @use DomainDnsRecords */ not null default '[]'::jsonb,
   cloudflare_data jsonb /* @use CloudflareData */,
+  non_active_since timestamptz,
   updated_at timestamptz not null default(now()),
   created_at timestamptz not null default(now()),
   primary key (id),

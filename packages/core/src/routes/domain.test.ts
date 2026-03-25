@@ -39,12 +39,14 @@ const addDomain = jest.fn(
   })
 );
 const deleteDomain = jest.fn();
+const cleanupDomains = jest.fn();
 
 const mockLibraries = {
   domains: {
     syncDomainStatus,
     addDomain,
     deleteDomain,
+    cleanupDomains,
   },
   quota: createMockQuotaLibrary(),
   samlApplications: {
@@ -99,6 +101,31 @@ describe('domain routes', () => {
     expect(addDomain).toBeCalledWith('another.com');
     expect(response.status).toEqual(201);
     expect(response.body.domain).toEqual('another.com');
+  });
+
+  it('POST /domains/cleanup', async () => {
+    cleanupDomains.mockResolvedValueOnce({
+      scannedCount: 3,
+      staleCandidateCount: 1,
+      deletedCount: 1,
+      skippedActiveCount: 0,
+      failedCount: 0,
+    });
+
+    const response = await domainRequest.post('/domains/cleanup').send({ staleDays: 14 });
+
+    expect(response.status).toEqual(200);
+    expect(cleanupDomains).toHaveBeenCalledWith(14);
+    expect(
+      mockLibraries.samlApplications.syncCustomDomainsToSamlApplicationRedirectUrls
+    ).toHaveBeenCalledTimes(1);
+    expect(response.body).toEqual({
+      scannedCount: 3,
+      staleCandidateCount: 1,
+      deletedCount: 1,
+      skippedActiveCount: 0,
+      failedCount: 0,
+    });
   });
 
   it('DELETE /domains/:id', async () => {
