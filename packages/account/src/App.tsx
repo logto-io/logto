@@ -153,7 +153,9 @@ const Main = () => {
         element={<UpdateSuccess identifierType="backup_code" />}
       />
       <Route path={passkeySuccessRoute} element={<UpdateSuccess identifierType="passkey" />} />
-      <Route path={socialSuccessRoute} element={<UpdateSuccess identifierType="social" />} />
+      {isDevFeaturesEnabled && (
+        <Route path={socialSuccessRoute} element={<UpdateSuccess identifierType="social" />} />
+      )}
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />
@@ -164,12 +166,16 @@ const Main = () => {
       <Route path={backupCodesManageRoute} element={<BackupCodeView />} />
       <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
       <Route path={passkeyManageRoute} element={<PasskeyView />} />
-      <Route path={`${socialCallbackRoutePrefix}/:connectorId`} element={<SocialCallback />} />
-      <Route path={`${socialRoutePrefix}/:connectorId`} element={<SocialFlow mode="add" />} />
-      <Route
-        path={`${socialRoutePrefix}/:connectorId/remove`}
-        element={<SocialFlow mode="remove" />}
-      />
+      {isDevFeaturesEnabled && (
+        <>
+          <Route path={`${socialCallbackRoutePrefix}/:connectorId`} element={<SocialCallback />} />
+          <Route path={`${socialRoutePrefix}/:connectorId`} element={<SocialFlow mode="add" />} />
+          <Route
+            path={`${socialRoutePrefix}/:connectorId/remove`}
+            element={<SocialFlow mode="remove" />}
+          />
+        </>
+      )}
       <Route index element={indexElement} />
       <Route path="*" element={<Home />} />
     </Routes>
