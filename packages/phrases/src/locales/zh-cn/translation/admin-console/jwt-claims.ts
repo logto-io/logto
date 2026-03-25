@@ -32,6 +32,7 @@ const jwt_claims = {
   restore: '恢复默认',
   restored: '已恢复',
   data_source_tab: '数据来源',
+  error_handling_tab: '错误处理',
   test_tab: '测试上下文',
   jwt_claims_description: '默认声明会自动包含在JWT中，不能被覆盖。',
   user_data: {

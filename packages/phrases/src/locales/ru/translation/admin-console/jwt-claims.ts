@@ -36,6 +36,7 @@ const jwt_claims = {
   restore: 'Восстановить по умолчанию',
   restored: 'Восстановлено',
   data_source_tab: 'Источник данных',
+  error_handling_tab: 'Обработка ошибок',
   test_tab: 'Тестовый контекст',
   jwt_claims_description:
     'Утверждения по умолчанию автоматически включаются в JWT и не могут быть переопределены.',

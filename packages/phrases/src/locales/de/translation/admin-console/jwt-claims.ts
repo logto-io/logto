@@ -38,6 +38,7 @@ const jwt_claims = {
   restore: 'Standard wiederherstellen',
   restored: 'Wiederhergestellt',
   data_source_tab: 'Datenquelle',
+  error_handling_tab: 'Fehlerbehandlung',
   test_tab: 'Testumgebung',
   jwt_claims_description:
     'Standardansprüche werden automatisch im JWT enthalten und können nicht überschrieben werden.',

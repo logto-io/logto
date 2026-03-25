@@ -34,6 +34,7 @@ const jwt_claims = {
   restore: 'استعادة الافتراضيات',
   restored: 'تمت الاستعادة',
   data_source_tab: 'مصدر البيانات',
+  error_handling_tab: 'معالجة الأخطاء',
   test_tab: 'سياق الاختبار',
   jwt_claims_description: 'المطالبات الافتراضية مضمنة تلقائيًا في JWT ولا يمكن استبدالها.',
   user_data: {

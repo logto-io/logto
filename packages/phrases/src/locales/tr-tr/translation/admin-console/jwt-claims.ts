@@ -35,6 +35,7 @@ const jwt_claims = {
   restore: 'Varsayılanları geri yükle',
   restored: 'Geri yüklendi',
   data_source_tab: 'Veri kaynağı',
+  error_handling_tab: 'Hata yönetimi',
   test_tab: 'Test bağlamı',
   jwt_claims_description:
     "Varsayılan iddialar JWT'de otomatik olarak dahil edilir ve geçersiz kılınabilir.",

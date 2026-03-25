@@ -35,6 +35,7 @@ const jwt_claims = {
   restore: 'Restaurar padrões',
   restored: 'Restaurado',
   data_source_tab: 'Fonte de dados',
+  error_handling_tab: 'Tratamento de erros',
   test_tab: 'Contexto de teste',
   jwt_claims_description:
     'As reivindicações padrão são automaticamente incluídas no JWT e não podem ser substituídas.',

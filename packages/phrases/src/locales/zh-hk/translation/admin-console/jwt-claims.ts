@@ -32,6 +32,7 @@ const jwt_claims = {
   restore: '恢復預設值',
   restored: '已恢復',
   data_source_tab: '數據來源',
+  error_handling_tab: '錯誤處理',
   test_tab: '測試上下文',
   jwt_claims_description: '默認聲明會自動包含在 JWT 中，無法覆蓋。',
   user_data: {

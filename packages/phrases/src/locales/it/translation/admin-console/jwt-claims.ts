@@ -36,6 +36,7 @@ const jwt_claims = {
   restore: 'Ripristina predefiniti',
   restored: 'Ripristinato',
   data_source_tab: 'Sorgente dati',
+  error_handling_tab: 'Gestione degli errori',
   test_tab: 'Contesto di test',
   jwt_claims_description:
     'Le richieste predefinite sono incluse automaticamente nel JWT e non possono essere sovrascritte.',

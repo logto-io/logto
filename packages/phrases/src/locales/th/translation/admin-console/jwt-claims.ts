@@ -34,6 +34,7 @@ const jwt_claims = {
   restore: 'กู้คืนค่าเริ่มต้น',
   restored: 'กู้คืนแล้ว',
   data_source_tab: 'แหล่งข้อมูล',
+  error_handling_tab: 'การจัดการข้อผิดพลาด',
   test_tab: 'ทดสอบ context',
   jwt_claims_description: 'Default claims จะถูกเพิ่มใน token อัตโนมัติและไม่สามารถเขียนทับได้',
   user_data: {

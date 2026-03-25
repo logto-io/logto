@@ -37,6 +37,7 @@ const jwt_claims = {
   restore: 'Restaurer les paramètres par défaut',
   restored: 'Restauré',
   data_source_tab: 'Source de données',
+  error_handling_tab: 'Gestion des erreurs',
   test_tab: 'Contexte de test',
   jwt_claims_description:
     'Les revendications par défaut sont automatiquement incluses dans le JWT et ne peuvent pas être remplacées.',

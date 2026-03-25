@@ -1,0 +1,9 @@
+<svg width="17" height="17" viewBox="0 0 17 17" fill="none"
+  xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield shape -->
+  <path d="M8.5 1.16675L3.16667 3.83341V7.83341C3.16667 11.4334 5.38 14.7601 8.5 15.8334C11.62 14.7601 13.8333 11.4334 13.8333 7.83341V3.83341L8.5 1.16675ZM12.5 7.83341C12.5 10.7534 10.82 13.4267 8.5 14.4334C6.18 13.4267 4.5 10.7534 4.5 7.83341V4.70008L8.5 2.70008L12.5 4.70008V7.83341Z" fill="currentcolor"/>
+  <!-- Exclamation mark dot -->
+  <circle cx="8.5" cy="11.5" r="0.85" fill="currentcolor"/>
+  <!-- Exclamation mark line -->
+  <rect x="7.85" y="5.5" width="1.3" height="4.2" rx="0.65" fill="currentcolor"/>
+</svg>

@@ -36,6 +36,7 @@ const jwt_claims = {
   restore: 'Restaurar predefinições',
   restored: 'Restaurado',
   data_source_tab: 'Fonte de dados',
+  error_handling_tab: 'Tratamento de erros',
   test_tab: 'Contexto de teste',
   jwt_claims_description:
     'As reivindicações predefinidas são automaticamente incluídas no JWT e não podem ser substituídas.',

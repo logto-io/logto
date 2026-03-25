@@ -36,6 +36,7 @@ const jwt_claims = {
   restore: 'Przywróć domyślne',
   restored: 'Przywrócono',
   data_source_tab: 'Źródło danych',
+  error_handling_tab: 'Obsługa błędów',
   test_tab: 'Kontekst testowy',
   jwt_claims_description:
     'Domyślne roszczenia są automatycznie dołączane do JWT i nie mogą być nadpisane.',

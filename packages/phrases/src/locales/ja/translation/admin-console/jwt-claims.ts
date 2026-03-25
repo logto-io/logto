@@ -35,6 +35,7 @@ const jwt_claims = {
   restore: 'デフォルトに戻す',
   restored: '復元されました',
   data_source_tab: 'データソース',
+  error_handling_tab: 'エラーハンドリング',
   test_tab: 'コンテキストをテスト',
   jwt_claims_description: 'デフォルトクレームはJWTに自動的に含まれ、オーバーライドできません。',
   user_data: {

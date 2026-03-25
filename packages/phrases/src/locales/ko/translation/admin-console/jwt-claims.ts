@@ -34,6 +34,7 @@ const jwt_claims = {
   restore: '기본값으로 복원',
   restored: '복원됨',
   data_source_tab: '데이터 소스',
+  error_handling_tab: '오류 처리',
   test_tab: '테스트 컨텍스트',
   jwt_claims_description: '기본 클레임은 JWT에 자동으로 추가되며 재정의할 수 없습니다.',
   user_data: {
