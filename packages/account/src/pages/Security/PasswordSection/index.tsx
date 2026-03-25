@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import PasswordIcon from '@ac/assets/icons/password.svg?react';
 import { passwordRoute } from '@ac/constants/routes';
-import { getRedirectUrl, setRedirectUrl } from '@ac/utils/account-center-route';
+import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { canOpenPasswordEditFlow } from '@ac/utils/security-page';
 
 import styles from './index.module.scss';
@@ -50,7 +50,7 @@ const PasswordSection = () => {
               type="button"
               className={styles.changeButton}
               onClick={() => {
-                setRedirectUrl(getRedirectUrl() ?? window.location.href);
+                setPendingReturn(getPendingReturn() ?? window.location.href);
                 navigate(passwordRoute);
               }}
             >

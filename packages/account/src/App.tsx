@@ -59,6 +59,7 @@ import {
   accountCenterBasePath,
   getUiLocales,
   handleAccountCenterRoute,
+  setRouteRestore,
 } from './utils/account-center-route';
 import { hasVisibleSecuritySection } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
@@ -71,9 +72,7 @@ const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 const Main = () => {
   const params = new URLSearchParams(window.location.search);
   const { pathname } = window.location;
-  const isSocialCallback = pathname.startsWith(
-    `${accountCenterBasePath}${socialCallbackRoutePrefix}/`
-  );
+  const isSocialCallback = pathname.startsWith(`${socialCallbackRoutePrefix}/`);
   const isAuthCallback =
     Boolean(params.get('code')) &&
     (pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`);
@@ -97,6 +96,7 @@ const Main = () => {
 
     if (!isAuthenticated) {
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+      setRouteRestore(window.location.pathname);
       void signIn({ redirectUri, extraParams });
     }
   }, [isAuthenticated, isInCallback, isInitialAuthLoading, signIn, uiLocales]);
@@ -108,6 +108,7 @@ const Main = () => {
 
     if (userInfoError) {
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+      setRouteRestore(window.location.pathname);
       void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
     }
   }, [

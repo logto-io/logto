@@ -69,9 +69,6 @@ const shouldSkipHandling = (search: string) => {
 };
 
 export const {
-  getRedirectUrl,
-  setRedirectUrl,
-  clearRedirectUrl,
   getShowSuccess,
   setShowSuccess,
   clearShowSuccess,
@@ -93,7 +90,7 @@ const handleRedirectParameter = () => {
   const showSuccess = parameters.get(showSuccessParameter);
 
   if (redirectUrl) {
-    setRedirectUrl(redirectUrl);
+    sessionStorage.setPendingReturn(redirectUrl);
   }
 
   if (yes(showSuccess)) {
@@ -133,9 +130,9 @@ export const handleAccountCenterRoute = () => {
 
   // Restore the stored route if the current path is the base path.
   if (window.location.pathname === accountCenterBasePath) {
-    const storedRoute = parseStoredRoute(sessionStorage.getRoute());
+    const storedRoute = parseStoredRoute(sessionStorage.getRouteRestore());
     // Always clear the stored route to ensure one-time restoration
-    sessionStorage.clearRoute();
+    sessionStorage.clearRouteRestore();
 
     if (!storedRoute) {
       return;
@@ -143,7 +140,12 @@ export const handleAccountCenterRoute = () => {
 
     const { search, hash } = window.location;
     window.history.replaceState({}, '', `${storedRoute}${search}${hash}`);
-  } else if (isKnownRoute(window.location.pathname)) {
-    sessionStorage.setRoute(window.location.pathname);
+  }
+};
+
+export const { getPendingReturn, setPendingReturn, clearPendingReturn } = sessionStorage;
+export const setRouteRestore = (pathname: string) => {
+  if (isKnownRoute(pathname)) {
+    sessionStorage.setRouteRestore(pathname);
   }
 };

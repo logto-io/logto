@@ -1,20 +1,28 @@
 import * as s from 'superstruct';
 
 const storagePrefix = 'logto:account-center:';
+const pendingReturnTtl = 10 * 60 * 1000;
+const routeRestoreTtl = 10 * 60 * 1000;
 
 const storageKeys = Object.freeze({
-  route: `${storagePrefix}route-cache`,
+  routeRestore: `${storagePrefix}route-restore`,
   redirectUrl: `${storagePrefix}redirect-url`,
   showSuccess: `${storagePrefix}show-success`,
   uiLocales: `${storagePrefix}ui-locales`,
   identifier: `${storagePrefix}identifier`,
   verificationRecord: `${storagePrefix}verification-record`,
   socialFlow: `${storagePrefix}social-verification`,
+  pendingReturn: `${storagePrefix}pending-return`,
 });
 
 export type StoredVerificationRecord = {
   verificationId: string;
   expiresAt: string;
+};
+
+type StoredPathState = {
+  path: string;
+  createdAt: number;
 };
 
 export type StoredSocialFlowRecord =
@@ -33,6 +41,11 @@ export type StoredSocialFlowRecord =
 const storedVerificationRecordGuard = s.object({
   verificationId: s.string(),
   expiresAt: s.string(),
+});
+
+const storedPathStateGuard = s.object({
+  path: s.string(),
+  createdAt: s.number(),
 });
 
 const storedSocialFlowRecordGuard = s.union([
@@ -104,14 +117,45 @@ const isNotExpired = (expiresAt: string) => {
   return !Number.isNaN(expiresAtTimestamp) && expiresAtTimestamp > Date.now();
 };
 
+const isWithinTtl = (createdAt: number, ttl: number) => {
+  return Number.isFinite(createdAt) && createdAt > Date.now() - ttl;
+};
+
 export const accountStorage = Object.freeze({
-  route: {
-    get: () => getString(storageKeys.route, 'session'),
-    set: (value: string) => {
-      setString(storageKeys.route, value, 'session');
+  routeRestore: {
+    get: (): string | undefined => {
+      const record = getStructuredValue(storageKeys.routeRestore, storedPathStateGuard, 'session');
+
+      if (!record || !isWithinTtl(record.createdAt, routeRestoreTtl)) {
+        removeItem(storageKeys.routeRestore, 'session');
+        return;
+      }
+
+      return record.path;
+    },
+    set: (path: string) => {
+      setStructuredValue(storageKeys.routeRestore, { path, createdAt: Date.now() }, 'session');
     },
     clear: () => {
-      removeItem(storageKeys.route, 'session');
+      removeItem(storageKeys.routeRestore, 'session');
+    },
+  },
+  pendingReturn: {
+    get: (): string | undefined => {
+      const record = getStructuredValue(storageKeys.pendingReturn, storedPathStateGuard, 'session');
+
+      if (!record || !isWithinTtl(record.createdAt, pendingReturnTtl)) {
+        removeItem(storageKeys.pendingReturn, 'session');
+        return;
+      }
+
+      return record.path;
+    },
+    set: (path: string) => {
+      setStructuredValue(storageKeys.pendingReturn, { path, createdAt: Date.now() }, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.pendingReturn, 'session');
     },
   },
   redirectUrl: {
@@ -221,9 +265,12 @@ export const accountStorage = Object.freeze({
 });
 
 export const sessionStorage = Object.freeze({
-  getRoute: accountStorage.route.get,
-  setRoute: accountStorage.route.set,
-  clearRoute: accountStorage.route.clear,
+  getRouteRestore: accountStorage.routeRestore.get,
+  setRouteRestore: accountStorage.routeRestore.set,
+  clearRouteRestore: accountStorage.routeRestore.clear,
+  getPendingReturn: accountStorage.pendingReturn.get,
+  setPendingReturn: accountStorage.pendingReturn.set,
+  clearPendingReturn: accountStorage.pendingReturn.clear,
   getRedirectUrl: accountStorage.redirectUrl.get,
   setRedirectUrl: accountStorage.redirectUrl.set,
   clearRedirectUrl: accountStorage.redirectUrl.clear,

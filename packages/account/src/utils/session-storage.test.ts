@@ -82,3 +82,57 @@ void test('socialFlow removes expired records', () => {
 
   assert.equal(accountStorage.socialFlow.get('google'), undefined);
 });
+
+void test('routeRestore expires after ttl window', () => {
+  windowMock.sessionStorage.clear();
+
+  const originalNow = Date.now;
+  const runAt = (timestamp: number, callback: () => void) => {
+    Reflect.defineProperty(Date, 'now', {
+      value: () => timestamp,
+      configurable: true,
+    });
+    callback();
+  };
+
+  runAt(0, () => {
+    accountStorage.routeRestore.set('/account/password');
+    assert.equal(accountStorage.routeRestore.get(), '/account/password');
+  });
+
+  runAt(10 * 60 * 1000 + 1, () => {
+    assert.equal(accountStorage.routeRestore.get(), undefined);
+  });
+
+  Reflect.defineProperty(Date, 'now', {
+    value: originalNow,
+    configurable: true,
+  });
+});
+
+void test('pendingReturn expires after ttl window', () => {
+  windowMock.sessionStorage.clear();
+
+  const originalNow = Date.now;
+  const runAt = (timestamp: number, callback: () => void) => {
+    Reflect.defineProperty(Date, 'now', {
+      value: () => timestamp,
+      configurable: true,
+    });
+    callback();
+  };
+
+  runAt(0, () => {
+    accountStorage.pendingReturn.set('https://example.com/account');
+    assert.equal(accountStorage.pendingReturn.get(), 'https://example.com/account');
+  });
+
+  runAt(10 * 60 * 1000 + 1, () => {
+    assert.equal(accountStorage.pendingReturn.get(), undefined);
+  });
+
+  Reflect.defineProperty(Date, 'now', {
+    value: originalNow,
+    configurable: true,
+  });
+});

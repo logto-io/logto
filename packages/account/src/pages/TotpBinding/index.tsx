@@ -104,7 +104,7 @@ const TotpBinding = () => {
 
   useEffect(() => {
     if (verificationId && hasTotpAlready === false) {
-      sessionStorage.clearRoute();
+      sessionStorage.clearRouteRestore();
     }
   }, [hasTotpAlready, verificationId]);
 

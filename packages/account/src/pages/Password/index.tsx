@@ -65,7 +65,7 @@ const Password = () => {
 
   useEffect(() => {
     if (verificationId) {
-      sessionStorage.clearRoute();
+      sessionStorage.clearRouteRestore();
     }
   }, [verificationId]);
 

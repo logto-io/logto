@@ -47,7 +47,7 @@ const Username = () => {
 
   useEffect(() => {
     if (verificationId) {
-      sessionStorage.clearRoute();
+      sessionStorage.clearRouteRestore();
     }
   }, [verificationId]);
 

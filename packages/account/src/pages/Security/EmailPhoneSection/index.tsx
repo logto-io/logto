@@ -8,7 +8,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
 import { emailRoute, phoneRoute } from '@ac/constants/routes';
-import { getRedirectUrl, setRedirectUrl } from '@ac/utils/account-center-route';
+import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 
 import styles from './index.module.scss';
 
@@ -48,7 +48,7 @@ const EmailPhoneSection = () => {
                   type="button"
                   className={styles.changeButton}
                   onClick={() => {
-                    setRedirectUrl(getRedirectUrl() ?? window.location.href);
+                    setPendingReturn(getPendingReturn() ?? window.location.href);
                     navigate(emailRoute);
                   }}
                 >
@@ -79,7 +79,7 @@ const EmailPhoneSection = () => {
                   type="button"
                   className={styles.changeButton}
                   onClick={() => {
-                    setRedirectUrl(getRedirectUrl() ?? window.location.href);
+                    setPendingReturn(getPendingReturn() ?? window.location.href);
                     navigate(phoneRoute);
                   }}
                 >

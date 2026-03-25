@@ -7,9 +7,9 @@ import successDarkIllustration from '@ac/assets/icons/success-dark.svg';
 import successIllustration from '@ac/assets/icons/success.svg';
 import ErrorPage from '@ac/components/ErrorPage';
 import {
-  clearRedirectUrl,
+  clearPendingReturn,
   clearShowSuccess,
-  getRedirectUrl,
+  getPendingReturn,
   getShowSuccess,
 } from '@ac/utils/account-center-route';
 
@@ -83,31 +83,31 @@ const UpdateSuccess = ({ identifierType }: Props) => {
   }, [identifierType]);
 
   useEffect(() => {
-    const storedRedirectUrl = getRedirectUrl();
+    const storedPendingReturn = getPendingReturn();
 
-    if (storedRedirectUrl) {
+    if (storedPendingReturn) {
       if (identifierType === 'social') {
-        setRedirectUrl(storedRedirectUrl);
+        setRedirectUrl(() => storedPendingReturn);
         return;
       }
 
       const showSuccess = getShowSuccess();
 
       if (showSuccess) {
-        setRedirectUrl(storedRedirectUrl);
+        setRedirectUrl(() => storedPendingReturn);
         return;
       }
 
       setIsRedirecting(true);
-      clearRedirectUrl();
-      window.location.assign(storedRedirectUrl);
+      clearPendingReturn();
+      window.location.assign(storedPendingReturn);
     }
   }, [identifierType]);
 
   const handleDoneClick = () => {
     if (redirectUrl) {
       setIsRedirecting(true);
-      clearRedirectUrl();
+      clearPendingReturn();
       clearShowSuccess();
       window.location.assign(redirectUrl);
     }

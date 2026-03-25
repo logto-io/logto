@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import { getSocialAddRoute, getSocialRemoveRoute } from '@ac/constants/routes';
-import { getRedirectUrl, setRedirectUrl } from '@ac/utils/account-center-route';
+import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { hasVisibleSocialSection } from '@ac/utils/security-page';
 import {
   getAvailableSocialConnectors,
@@ -81,6 +81,7 @@ const SocialSection = () => {
   const selectedConnector = connectors.find(({ id }) => id === selectedConnectorId);
   const selectedConnectorName =
     selectedConnector && getLocalizedConnectorName(selectedConnector, language);
+  const currentPageUrl = `${window.location.origin}${window.location.pathname}`;
 
   if (!hasVisibleSocialSection(socialControl, experienceSettings)) {
     return null;
@@ -138,7 +139,7 @@ const SocialSection = () => {
                       type="button"
                       className={`${styles.actionButton} ${identity ? styles.removeButton : ''}`}
                       onClick={() => {
-                        setRedirectUrl(getRedirectUrl() ?? window.location.href);
+                        setPendingReturn(getPendingReturn() ?? currentPageUrl);
 
                         if (identity) {
                           setSelectedConnectorId(connector.id);
