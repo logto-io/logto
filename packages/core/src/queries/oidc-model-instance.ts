@@ -96,10 +96,11 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
         ? sql`${fields.payload}->>'uid'=${value}`
         : sql`${fields.payload}->>'userCode'=${value}`;
 
-    // Fetch all matching records.
+    // Fetch up to 2 matching records to detect duplicates without loading all of them.
     const results = await pool.any<QueryResult>(sql`
       ${findByModel(modelName)}
       and ${condition}
+      limit 2
     `);
 
     // Rarely, duplicate UIDs can exist for different sessions.
