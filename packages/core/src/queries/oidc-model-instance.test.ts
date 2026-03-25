@@ -154,6 +154,7 @@ describe('oidc-model-instance query', () => {
       from ${table}
       where ${fields.modelName}=$1
       and ${fields.payload}->>'uid'=$2
+      limit 2
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -175,6 +176,7 @@ describe('oidc-model-instance query', () => {
       from ${table}
       where ${fields.modelName}=$1
       and ${fields.payload}->>'uid'=$2
+      limit 2
     `;
     const deleteSql = sql`
       delete from ${table}
@@ -206,6 +208,7 @@ describe('oidc-model-instance query', () => {
       from ${table}
       where ${fields.modelName}=$1
       and ${fields.payload}->>'userCode'=$2
+      limit 2
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -227,6 +230,7 @@ describe('oidc-model-instance query', () => {
       from ${table}
       where ${fields.modelName}=$1
       and ${fields.payload}->>'userCode'=$2
+      limit 2
     `;
     const deleteSql = sql`
       delete from ${table}
