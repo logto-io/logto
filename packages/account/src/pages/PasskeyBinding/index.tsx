@@ -21,6 +21,7 @@ import { passkeySuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from './index.module.scss';
 
@@ -84,6 +85,12 @@ const PasskeyBinding = () => {
 
     void fetchRegistrationOptions();
   }, [verificationId, createRegistrationRequest]);
+
+  useEffect(() => {
+    if (verificationId && isWebAuthnSupported !== false) {
+      sessionStorage.clearRoute();
+    }
+  }, [isWebAuthnSupported, verificationId]);
 
   const handleAddPasskey = useCallback(async () => {
     if (!verificationId || loading || !registrationData) {

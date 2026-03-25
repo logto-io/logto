@@ -16,7 +16,7 @@ import { getSocialCallbackRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { accountCenterBasePath } from '@ac/utils/account-center-route';
-import { accountStorage } from '@ac/utils/session-storage';
+import { accountStorage, sessionStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
 import { finalizeSocialFlowFailure, finalizeSocialFlowSuccess } from '@ac/utils/social-flow';
 
@@ -182,6 +182,7 @@ const SocialFlow = ({ mode }: Props) => {
         state,
       });
 
+      sessionStorage.clearRoute();
       window.location.assign(result.authorizationUri);
     };
 

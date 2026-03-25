@@ -2,7 +2,7 @@ import type { NavigateFunction } from 'react-router-dom';
 
 import { socialSuccessRoute } from '@ac/constants/routes';
 
-import { accountStorage } from './session-storage';
+import { accountStorage, sessionStorage } from './session-storage';
 
 type FinalizeSocialFlowSuccessParameters = {
   connectorId: string;
@@ -32,6 +32,7 @@ export const finalizeSocialFlowSuccess = async ({
   navigate,
 }: FinalizeSocialFlowSuccessParameters) => {
   accountStorage.socialFlow.clear(connectorId);
+  sessionStorage.clearRoute();
   await refreshUserInfo();
   if (successMessage && setToast) {
     setToast(successMessage);
@@ -50,6 +51,7 @@ export const finalizeSocialFlowFailure = ({
     accountStorage.socialFlow.clear(connectorId);
   }
 
+  sessionStorage.clearRoute();
   setToast(message);
   navigateToSecurity(navigate);
 };

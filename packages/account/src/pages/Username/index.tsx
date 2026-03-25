@@ -16,6 +16,7 @@ import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useIdentifierParam from '@ac/hooks/use-identifier-param';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from '../CodeFlow/index.module.scss';
 
@@ -43,6 +44,12 @@ const Username = () => {
     setPendingUsername((current) => current || defaultUsername);
     setInputKey(defaultUsername);
   }, [defaultUsername]);
+
+  useEffect(() => {
+    if (verificationId) {
+      sessionStorage.clearRoute();
+    }
+  }, [verificationId]);
 
   if (
     !accountCenterSettings?.enabled ||
