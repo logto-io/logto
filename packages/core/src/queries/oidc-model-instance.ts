@@ -104,7 +104,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
 
     // Rarely, duplicate UIDs can exist for different sessions.
     // This query may throw `DataIntegrityError`.
-    // If that happens, delete all duplicates and return `null`.
+    // If that happens, delete all duplicates and return no result (`undefined`).
     if (results.length > 1) {
       // Delete all duplicates.
       await pool.query(sql`
