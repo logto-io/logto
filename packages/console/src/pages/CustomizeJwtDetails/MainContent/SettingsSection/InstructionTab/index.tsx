@@ -38,11 +38,12 @@ export enum InstructionTabSection {
 }
 
 type Props = {
+  readonly isActive: boolean;
   readonly section: InstructionTabSection;
 };
 
 /* Instructions and environment variable settings for the custom JWT claims script. */
-function InstructionTab({ section }: Props) {
+function InstructionTab({ isActive, section }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [expendCard, setExpendCard] = useState<CardType>();
 
@@ -56,7 +57,7 @@ function InstructionTab({ section }: Props) {
   }
 
   return (
-    <div className={classNames(tabContentStyles.tabContent, tabContentStyles.active)}>
+    <div className={classNames(tabContentStyles.tabContent, isActive && tabContentStyles.active)}>
       {isDataSourceSection && (
         <GuideCard
           name={CardType.TokenData}

@@ -192,8 +192,7 @@ describe('<SettingsSection />', () => {
         name: 'Test context',
       })
     ).toBeTruthy();
-
-    expect(screen.queryByText('Token issuance behavior on script error')).toBeNull();
+    expect(screen.getByText('Test tab content')).toBeTruthy();
 
     fireEvent.click(
       screen.getByRole('button', {

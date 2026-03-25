@@ -47,12 +47,16 @@ function SettingsSection() {
           />
         ))}
       </div>
-      {activeTab === Tab.DataSource && (
-        <InstructionTab section={InstructionTabSection.DataSource} />
-      )}
-      {activeTab === Tab.Test && <TestTab isActive />}
-      {activeTab === Tab.ErrorHandling && (
-        <InstructionTab section={InstructionTabSection.ErrorHandling} />
+      <InstructionTab
+        isActive={activeTab === Tab.DataSource}
+        section={InstructionTabSection.DataSource}
+      />
+      <TestTab isActive={activeTab === Tab.Test} />
+      {isDevFeaturesEnabled && (
+        <InstructionTab
+          isActive={activeTab === Tab.ErrorHandling}
+          section={InstructionTabSection.ErrorHandling}
+        />
       )}
     </div>
   );
