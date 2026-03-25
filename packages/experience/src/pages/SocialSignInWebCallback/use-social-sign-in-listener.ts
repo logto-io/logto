@@ -19,6 +19,7 @@ import useBindSocialRelatedUser from '@/containers/SocialLinkAccount/use-social-
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
+import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
@@ -51,6 +52,7 @@ const useSocialSignInListener = (connectorId: string) => {
   const verifySocial = useApi(verifySocialVerification);
   const asyncSignInWithSocial = useApi(identifyAndSubmitInteraction);
   const asyncInitInteraction = useApi(initInteraction);
+  const redirectTo = useGlobalRedirectTo();
 
   const accountNotExistErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
@@ -176,10 +178,16 @@ const useSocialSignInListener = (connectorId: string) => {
       }
 
       if (result?.redirectTo) {
-        window.location.replace(result.redirectTo);
+        await redirectTo(result.redirectTo);
       }
     },
-    [asyncSignInWithSocial, handleError, signInWithSocialErrorHandlers, verifySocialCallbackData]
+    [
+      asyncSignInWithSocial,
+      handleError,
+      redirectTo,
+      signInWithSocialErrorHandlers,
+      verifySocialCallbackData,
+    ]
   );
 
   // Social Sign-in Callback Handler
