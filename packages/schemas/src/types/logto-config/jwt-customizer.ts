@@ -19,6 +19,8 @@ import { userInfoGuard, type UserInfo } from '../user.js';
 import { backupCodeVerificationRecordDataGuard } from '../verification-records/backup-code-verification.js';
 import {
   emailCodeVerificationRecordDataGuard,
+  mfaEmailCodeVerificationRecordDataGuard,
+  mfaPhoneCodeVerificationRecordDataGuard,
   phoneCodeVerificationRecordDataGuard,
 } from '../verification-records/code-verification.js';
 import { enterpriseSsoVerificationRecordDataGuard } from '../verification-records/enterprise-sso-verification.js';
@@ -27,6 +29,7 @@ import { oneTimeTokenVerificationRecordDataGuard } from '../verification-records
 import { passwordVerificationRecordDataGuard } from '../verification-records/password-verification.js';
 import { socialVerificationRecordDataGuard } from '../verification-records/social-verification.js';
 import { totpVerificationRecordDataGuard } from '../verification-records/totp-verification.js';
+import type { VerificationType } from '../verification-records/verification-type.js';
 import {
   webAuthnVerificationRecordDataGuard,
   signInPasskeyVerificationRecordDataGuard,
@@ -99,6 +102,8 @@ const jwtCustomizerUserInteractionVerificationRecordGuard = z.discriminatedUnion
   passwordVerificationRecordDataGuard,
   emailCodeVerificationRecordDataGuard,
   phoneCodeVerificationRecordDataGuard,
+  mfaEmailCodeVerificationRecordDataGuard,
+  mfaPhoneCodeVerificationRecordDataGuard,
   socialVerificationRecordDataGuard.omit({
     connectorSession: true,
     encryptedTokenSet: true,
@@ -137,6 +142,18 @@ const jwtCustomizerUserInteractionVerificationRecordGuard = z.discriminatedUnion
     passwordEncryptionMethod: true,
   }),
 ]);
+
+type JwtCustomizerUserInteractionVerificationRecordType = z.infer<
+  typeof jwtCustomizerUserInteractionVerificationRecordGuard
+>['type'];
+
+// This is to ensure that all the verification types are covered in the `jwtCustomizerUserInteractionVerificationRecordGuard`.
+const _jwtCustomizerUserInteractionVerificationRecordTypeCoverage = true satisfies Exclude<
+  VerificationType,
+  JwtCustomizerUserInteractionVerificationRecordType
+> extends never
+  ? true
+  : false;
 
 export const jwtCustomizerUserInteractionContextGuard = z.object({
   interactionEvent: z.nativeEnum(InteractionEvent),

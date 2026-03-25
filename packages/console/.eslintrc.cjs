@@ -58,5 +58,11 @@ module.exports = {
         'import/no-unassigned-import': 'off',
       },
     },
+    {
+      files: ['src/consts/jwt-customizer-type-definition.ts'],
+      rules: {
+        'max-lines': 'off',
+      },
+    },
   ],
 };
