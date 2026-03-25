@@ -50,11 +50,25 @@ export const parseTimeoutEnv = (value?: string): Optional<number | 'DISABLE_TIME
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
+export const resolveIsDevFeaturesEnabled = ({
+  isProduction,
+  isIntegrationTest,
+  devFeaturesEnabled,
+}: {
+  isProduction: boolean;
+  isIntegrationTest: boolean;
+  devFeaturesEnabled: boolean;
+}) => devFeaturesEnabled || (!isProduction && !isIntegrationTest);
+
 export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';
   public readonly isIntegrationTest = yes(getEnv('INTEGRATION_TEST'));
   public readonly isUnitTest = getEnv('NODE_ENV') === 'test';
-  public readonly isDevFeaturesEnabled = !this.isProduction || yes(getEnv('DEV_FEATURES_ENABLED'));
+  public readonly isDevFeaturesEnabled = resolveIsDevFeaturesEnabled({
+    isProduction: this.isProduction,
+    isIntegrationTest: this.isIntegrationTest,
+    devFeaturesEnabled: yes(getEnv('DEV_FEATURES_ENABLED')),
+  });
 
   public readonly httpsCert = process.env.HTTPS_CERT_PATH;
   public readonly httpsKey = process.env.HTTPS_KEY_PATH;

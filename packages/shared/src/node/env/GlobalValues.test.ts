@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseTimeoutEnv } from './GlobalValues.js';
+import { parseTimeoutEnv, resolveIsDevFeaturesEnabled } from './GlobalValues.js';
 
 describe('parseTimeoutEnv', () => {
   it('returns undefined for missing, blank, or invalid values', () => {
@@ -25,5 +25,37 @@ describe('parseTimeoutEnv', () => {
   it('accepts negative and decimal values as numbers', () => {
     expect(parseTimeoutEnv('-1')).toBe(-1);
     expect(parseTimeoutEnv('1.5')).toBe(1.5);
+  });
+});
+
+describe('resolveIsDevFeaturesEnabled', () => {
+  it('defaults to enabled for non-production non-integration environments', () => {
+    expect(
+      resolveIsDevFeaturesEnabled({
+        isProduction: false,
+        isIntegrationTest: false,
+        devFeaturesEnabled: false,
+      })
+    ).toBe(true);
+  });
+
+  it('respects explicit false during integration tests', () => {
+    expect(
+      resolveIsDevFeaturesEnabled({
+        isProduction: false,
+        isIntegrationTest: true,
+        devFeaturesEnabled: false,
+      })
+    ).toBe(false);
+  });
+
+  it('respects explicit true during integration tests', () => {
+    expect(
+      resolveIsDevFeaturesEnabled({
+        isProduction: false,
+        isIntegrationTest: true,
+        devFeaturesEnabled: true,
+      })
+    ).toBe(true);
   });
 });
