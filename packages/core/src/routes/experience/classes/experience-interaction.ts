@@ -403,6 +403,15 @@ export default class ExperienceInteraction {
   }
 
   /**
+   * Guard current interaction is identified and the identified user exists.
+   *
+   * @throws {RequestError} with 404 if the user is not identified or not found
+   */
+  public async guardIdentifiedUser() {
+    await this.getIdentifiedUser();
+  }
+
+  /**
    * Verify the captcha token using current tenant's captcha provider.
    *
    * @param token The captcha token to verify.

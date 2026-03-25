@@ -76,9 +76,18 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         })
       );
 
-      //  User profile updates require MFA verification (if MFA is enabled) during the sign-in event.
       if (interactionEvent === InteractionEvent.SignIn) {
-        await experienceInteraction.guardMfaVerificationStatus();
+        // Note:
+        // We intentionally allow social profile staging before MFA verification.
+        // This endpoint only writes to the interaction session, while `submit()` is the
+        // DB commit boundary and still enforces MFA for sign-in flows.
+        //
+        // On social linking flows, to simplify the front-end implementation, we allow social profile staging before MFA verification,
+        // and the final submission with `submit()` will enforce MFA verification.
+        // Identified user guard is still applied.
+        await (profilePayload.type === 'social'
+          ? experienceInteraction.guardIdentifiedUser()
+          : experienceInteraction.guardMfaVerificationStatus());
       }
 
       log.append({
