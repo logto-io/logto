@@ -44,6 +44,7 @@ type Row = {
   icon: typeof TotpIcon;
   label: string;
   value?: string;
+  isPlainValue?: boolean;
   isConfigured: boolean;
   action?: { label: string; handler: () => void };
 };
@@ -193,6 +194,7 @@ const MfaSection = () => {
           icon: Icon,
           label: t('account_center.security.email_verification_code'),
           value: userInfo.primaryEmail,
+          isPlainValue: true,
           isConfigured: true,
           action: isEditable
             ? {
@@ -217,6 +219,7 @@ const MfaSection = () => {
           icon: Icon,
           label: t('account_center.security.phone_verification_code'),
           value: formatToInternationalPhoneNumber(userInfo.primaryPhone),
+          isPlainValue: true,
           isConfigured: true,
           action: isEditable
             ? {
@@ -260,7 +263,7 @@ const MfaSection = () => {
         {t('account_center.security.two_step_verification')}
       </div>
       <div className={styles.card}>
-        {rows.map(({ key, icon: Icon, label, value, isConfigured, action }) => (
+        {rows.map(({ key, icon: Icon, label, value, isPlainValue, isConfigured, action }) => (
           <div key={key} className={styles.row}>
             <div className={styles.info}>
               <div className={styles.name}>
@@ -269,10 +272,14 @@ const MfaSection = () => {
               </div>
               <div className={styles.value}>
                 {isConfigured ? (
-                  <span className={styles.statusTag}>
-                    <span className={styles.statusDot} />
-                    {value}
-                  </span>
+                  isPlainValue ? (
+                    <span className={styles.plainValue}>{value}</span>
+                  ) : (
+                    <span className={styles.statusTag}>
+                      <span className={styles.statusDot} />
+                      {value}
+                    </span>
+                  )
                 ) : (
                   <span className={styles.notConfigured}>
                     {t('account_center.security.not_configured')}
