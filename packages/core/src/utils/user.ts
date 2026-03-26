@@ -103,22 +103,23 @@ export const validatePhoneNumber = (phone: string): void => {
   getValidPhoneNumber(phone);
 };
 
-export const getUserIdentifierCount = (user: User): number => {
+export const getUserIdentifierCount = (user: User, ssoIdentityCount = 0): number => {
   return (
     Number(Boolean(user.username)) +
     Number(Boolean(user.primaryEmail)) +
     Number(Boolean(user.primaryPhone)) +
-    Object.keys(user.identities).length
+    Object.keys(user.identities).length +
+    ssoIdentityCount
   );
 };
 
-export const assertCanDeleteSocialIdentity = (user: User, target: string) => {
+export const assertCanDeleteSocialIdentity = (user: User, target: string, ssoIdentityCount = 0) => {
   assertThat(
     user.identities[target],
     new RequestError({ code: 'user.identity_not_exist', status: 404 })
   );
   assertThat(
-    getUserIdentifierCount(user) > 1,
+    getUserIdentifierCount(user, ssoIdentityCount) > 1,
     new RequestError('user.last_sign_in_method_required')
   );
 };

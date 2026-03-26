@@ -20,6 +20,7 @@ export default function identitiesRoutes<T extends UserRouter>(
 ) {
   const {
     users: { updateUserById, findUserById, deleteUserIdentity },
+    userSsoIdentities: { findUserSsoIdentitiesByUserId },
   } = queries;
 
   const {
@@ -120,8 +121,11 @@ export default function identitiesRoutes<T extends UserRouter>(
 
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
 
-      const user = await findUserById(userId);
-      assertCanDeleteSocialIdentity(user, target);
+      const [user, ssoIdentities] = await Promise.all([
+        findUserById(userId),
+        findUserSsoIdentitiesByUserId(userId),
+      ]);
+      assertCanDeleteSocialIdentity(user, target, ssoIdentities.length);
 
       const updatedUser = await deleteUserIdentity(userId, target);
 

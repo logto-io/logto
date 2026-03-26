@@ -42,4 +42,8 @@ describe('account social identity unlink guard', () => {
 
     expect(getUserIdentifierCount(user)).toBe(1);
   });
+
+  it('counts enterprise SSO identities as identifiers', () => {
+    expect(getUserIdentifierCount(buildUser(), 2)).toBe(3);
+  });
 });
