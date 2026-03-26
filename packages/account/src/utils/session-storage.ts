@@ -6,7 +6,6 @@ const routeRestoreTtl = 10 * 60 * 1000;
 
 const storageKeys = Object.freeze({
   routeRestore: `${storagePrefix}route-restore`,
-  redirectUrl: `${storagePrefix}redirect-url`,
   showSuccess: `${storagePrefix}show-success`,
   uiLocales: `${storagePrefix}ui-locales`,
   identifier: `${storagePrefix}identifier`,
@@ -121,63 +120,30 @@ const isWithinTtl = (createdAt: number, ttl: number) => {
   return Number.isFinite(createdAt) && createdAt > Date.now() - ttl;
 };
 
+const createTtlPathStorage = (key: string, ttl: number) => ({
+  get: (): string | undefined => {
+    const record = getStructuredValue(key, storedPathStateGuard, 'session');
+
+    if (!record || !isWithinTtl(record.createdAt, ttl)) {
+      removeItem(key, 'session');
+      return;
+    }
+
+    return record.path;
+  },
+  set: (path: string) => {
+    setStructuredValue(key, { path, createdAt: Date.now() }, 'session');
+  },
+  clear: () => {
+    removeItem(key, 'session');
+  },
+});
+
 export const accountStorage = Object.freeze({
-  routeRestore: {
-    get: (): string | undefined => {
-      const record = getStructuredValue(storageKeys.routeRestore, storedPathStateGuard, 'session');
-
-      if (!record || !isWithinTtl(record.createdAt, routeRestoreTtl)) {
-        removeItem(storageKeys.routeRestore, 'session');
-        return;
-      }
-
-      return record.path;
-    },
-    set: (path: string) => {
-      setStructuredValue(storageKeys.routeRestore, { path, createdAt: Date.now() }, 'session');
-    },
-    clear: () => {
-      removeItem(storageKeys.routeRestore, 'session');
-    },
-  },
-  pendingReturn: {
-    get: (): string | undefined => {
-      const record = getStructuredValue(storageKeys.pendingReturn, storedPathStateGuard, 'session');
-
-      if (!record || !isWithinTtl(record.createdAt, pendingReturnTtl)) {
-        removeItem(storageKeys.pendingReturn, 'session');
-        return;
-      }
-
-      return record.path;
-    },
-    set: (path: string) => {
-      setStructuredValue(storageKeys.pendingReturn, { path, createdAt: Date.now() }, 'session');
-    },
-    clear: () => {
-      removeItem(storageKeys.pendingReturn, 'session');
-    },
-  },
-  redirectUrl: {
-    get: () => getString(storageKeys.redirectUrl, 'session'),
-    set: (url: string): boolean => {
-      try {
-        const parsed = new URL(url);
-
-        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-          return false;
-        }
-
-        setString(storageKeys.redirectUrl, url, 'session');
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    clear: () => {
-      removeItem(storageKeys.redirectUrl, 'session');
-    },
-  },
+  /** Saves the in-app route before sign-in; restored after OIDC callback. TTL: 10min. */
+  routeRestore: createTtlPathStorage(storageKeys.routeRestore, routeRestoreTtl),
+  /** Saves the return URL for multi-step flows (password, social linking); used after completion. TTL: 10min. */
+  pendingReturn: createTtlPathStorage(storageKeys.pendingReturn, pendingReturnTtl),
   showSuccess: {
     get: () => getString(storageKeys.showSuccess, 'session') === 'true',
     set: (value: boolean) => {
@@ -271,9 +237,6 @@ export const sessionStorage = Object.freeze({
   getPendingReturn: accountStorage.pendingReturn.get,
   setPendingReturn: accountStorage.pendingReturn.set,
   clearPendingReturn: accountStorage.pendingReturn.clear,
-  getRedirectUrl: accountStorage.redirectUrl.get,
-  setRedirectUrl: accountStorage.redirectUrl.set,
-  clearRedirectUrl: accountStorage.redirectUrl.clear,
   getShowSuccess: accountStorage.showSuccess.get,
   setShowSuccess: accountStorage.showSuccess.set,
   clearShowSuccess: accountStorage.showSuccess.clear,

@@ -90,7 +90,14 @@ const handleRedirectParameter = () => {
   const showSuccess = parameters.get(showSuccessParameter);
 
   if (redirectUrl) {
-    sessionStorage.setPendingReturn(redirectUrl);
+    try {
+      const parsed = new URL(redirectUrl);
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        sessionStorage.setPendingReturn(redirectUrl);
+      }
+    } catch {
+      // Invalid URL — silently ignore
+    }
   }
 
   if (yes(showSuccess)) {

@@ -72,7 +72,9 @@ const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 const Main = () => {
   const params = new URLSearchParams(window.location.search);
   const { pathname } = window.location;
-  const isSocialCallback = pathname.startsWith(`${socialCallbackRoutePrefix}/`);
+  const isSocialCallback = pathname.startsWith(
+    `${accountCenterBasePath}${socialCallbackRoutePrefix}/`
+  );
   const isAuthCallback =
     Boolean(params.get('code')) &&
     (pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`);
