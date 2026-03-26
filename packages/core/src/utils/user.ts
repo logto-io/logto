@@ -13,6 +13,7 @@ import { pick } from '@silverhand/essentials';
 import { type z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import assertThat from '#src/utils/assert-that.js';
 
 export const adminUserProfileResponseGuard = userProfileResponseGuard.extend({
   passwordDigest: Users.guard.shape.passwordEncrypted.optional(),
@@ -100,4 +101,25 @@ const getValidPhoneNumber = (phone: string): string => {
 
 export const validatePhoneNumber = (phone: string): void => {
   getValidPhoneNumber(phone);
+};
+
+export const getUserIdentifierCount = (user: User, ssoIdentityCount = 0): number => {
+  return (
+    Number(Boolean(user.username)) +
+    Number(Boolean(user.primaryEmail)) +
+    Number(Boolean(user.primaryPhone)) +
+    Object.keys(user.identities).length +
+    ssoIdentityCount
+  );
+};
+
+export const assertCanDeleteSocialIdentity = (user: User, target: string, ssoIdentityCount = 0) => {
+  assertThat(
+    user.identities[target],
+    new RequestError({ code: 'user.identity_not_exist', status: 404 })
+  );
+  assertThat(
+    getUserIdentifierCount(user, ssoIdentityCount) > 1,
+    new RequestError('user.last_sign_in_method_required')
+  );
 };

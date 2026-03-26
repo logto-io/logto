@@ -9,6 +9,7 @@ import { buildVerificationRecordByIdAndType } from '#src/libraries/verification.
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
+import { assertCanDeleteSocialIdentity } from '#src/utils/user.js';
 
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
@@ -19,6 +20,7 @@ export default function identitiesRoutes<T extends UserRouter>(
 ) {
   const {
     users: { updateUserById, findUserById, deleteUserIdentity },
+    userSsoIdentities,
   } = queries;
 
   const {
@@ -119,15 +121,11 @@ export default function identitiesRoutes<T extends UserRouter>(
 
       assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
 
-      const user = await findUserById(userId);
-
-      assertThat(
-        user.identities[target],
-        new RequestError({
-          code: 'user.identity_not_exist',
-          status: 404,
-        })
-      );
+      const [user, ssoIdentities] = await Promise.all([
+        findUserById(userId),
+        userSsoIdentities.findUserSsoIdentitiesByUserId(userId),
+      ]);
+      assertCanDeleteSocialIdentity(user, target, ssoIdentities.length);
 
       const updatedUser = await deleteUserIdentity(userId, target);
 

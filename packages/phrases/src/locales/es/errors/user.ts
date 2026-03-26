@@ -46,6 +46,8 @@ const user = {
     'El nombre de usuario es un identificador requerido, no puedes establecerlo como nulo.',
   email_or_phone_required:
     'La dirección de correo electrónico o el número de teléfono es un identificador requerido, se requiere al menos uno.',
+  last_sign_in_method_required:
+    'Debes mantener al menos un método de inicio de sesión disponible en tu cuenta.',
   email_required:
     'La dirección de correo electrónico es un identificador requerido, no puedes establecerla como nula.',
   phone_required:

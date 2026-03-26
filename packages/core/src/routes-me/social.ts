@@ -161,7 +161,6 @@ export default function socialRoutes<T extends AuthedMeRouter>(
       ]);
 
       const { target } = connector.metadata;
-
       assertThat(
         has(user.identities, target),
         new RequestError({ code: 'user.identity_not_exist', status: 404 })

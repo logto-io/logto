@@ -46,6 +46,8 @@ const user = {
     "Le nom d'utilisateur est un identifiant requis, vous ne pouvez pas le définir à null.",
   email_or_phone_required:
     "L'adresse e-mail ou le numéro de téléphone est un identifiant requis, au moins un est nécessaire.",
+  last_sign_in_method_required:
+    'Vous devez conserver au moins une méthode de connexion disponible dans votre compte.',
   email_required:
     "L'adresse e-mail est un identifiant requis, vous ne pouvez pas la définir à null.",
   phone_required:
