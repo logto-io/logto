@@ -18,5 +18,23 @@ export const isPromptOnlyAtSignInPolicy = (policy: MfaPolicy): boolean =>
 export const normalizeRequiredMfaPolicy = (policy: MfaPolicy): MfaPolicy =>
   policy === MfaPolicy.Mandatory ? MfaPolicy.PromptAtSignInAndSignUpMandatory : policy;
 
-export const legacyizeRequiredMfaPolicy = (policy: MfaPolicy): MfaPolicy =>
-  isNonSkippableMfaPromptPolicy(policy) ? MfaPolicy.Mandatory : policy;
+export const transformRequiredMfaPolicy = ({
+  policy,
+  isDevFeaturesEnabled,
+  adaptiveMfaEnabled,
+}: {
+  policy: MfaPolicy;
+  isDevFeaturesEnabled: boolean;
+  adaptiveMfaEnabled?: boolean;
+}): MfaPolicy =>
+  isDevFeaturesEnabled
+    ? normalizeRequiredMfaPolicy(policy)
+    : legacyizeRequiredMfaPolicy(policy, adaptiveMfaEnabled);
+
+export const legacyizeRequiredMfaPolicy = (
+  policy: MfaPolicy,
+  adaptiveMfaEnabled?: boolean
+): MfaPolicy =>
+  adaptiveMfaEnabled !== true && isNonSkippableMfaPromptPolicy(policy)
+    ? MfaPolicy.Mandatory
+    : policy;

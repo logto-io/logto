@@ -19,8 +19,7 @@ import {
 } from '#src/libraries/sign-in-experience/index.js';
 import {
   isNonSkippableMfaPromptPolicy,
-  legacyizeRequiredMfaPolicy,
-  normalizeRequiredMfaPolicy,
+  transformRequiredMfaPolicy,
 } from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -36,8 +35,8 @@ import customUiAssetsRoutes from './custom-ui-assets/index.js';
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
 
-const signInExperienceResponseGuard = SignInExperiences.guard;
-const signInExperienceCreateGuard = SignInExperiences.createGuard;
+const { guard: signInExperienceResponseGuard, createGuard: signInExperienceCreateGuard } =
+  SignInExperiences;
 
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -127,9 +126,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       const mfa = rawMfa
         ? {
             ...rawMfa,
-            policy: isDevFeaturesEnabled
-              ? normalizeRequiredMfaPolicy(rawMfa.policy)
-              : legacyizeRequiredMfaPolicy(rawMfa.policy),
+            policy: transformRequiredMfaPolicy({
+              policy: rawMfa.policy,
+              isDevFeaturesEnabled,
+              adaptiveMfaEnabled: adaptiveMfa?.enabled ?? currentSettings.adaptiveMfa.enabled,
+            }),
           }
         : undefined;
 
@@ -179,11 +180,8 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       if (adaptiveMfa?.enabled === false) {
         const effectiveMfa = mfa ?? currentSettings.mfa;
-        const isCurrentAdaptiveMfaEnabled = currentSettings.adaptiveMfa.enabled;
-
-        // When disabling adaptive MFA without explicitly updating MFA policy,
-        // the effective mode falls back to optional MFA.
-        if (mfa === undefined && isCurrentAdaptiveMfaEnabled) {
+        // When disabling adaptive MFA without explicitly updating MFA policy, the effective mode falls back to optional MFA.
+        if (mfa === undefined && currentSettings.adaptiveMfa.enabled) {
           assertThat(
             !isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
             'sign_in_experiences.optional_mfa_requires_skippable_policy',

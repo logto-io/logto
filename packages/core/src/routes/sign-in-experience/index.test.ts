@@ -541,19 +541,24 @@ describe('sign-in experience routes with dev features disabled', () => {
     expect(response.body).toEqual(mockSignInExperience);
   });
 
-  it('should reject adaptive mfa updates with legacy mandatory policy', async () => {
+  it('should persist adaptive mfa updates with no-skip policy when adaptive mfa is enabled', async () => {
     const { requester, updateDefaultSignInExperience } = await createDevFeaturesDisabledRequester();
 
     const adaptiveMfa = { enabled: true };
     const mfa = {
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       factors: [MfaFactor.TOTP],
     };
 
     const response = await requester.patch('/sign-in-exp').send({ adaptiveMfa, mfa });
 
-    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
-    expect(response.status).toEqual(422);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ adaptiveMfa, mfa });
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockSignInExperience,
+      adaptiveMfa,
+      mfa,
+    });
   });
 });
 /* eslint-enable max-lines */

@@ -111,6 +111,30 @@ describe('sign-in-experience query', () => {
     expectNormalizedMfa(result.mfa, MfaPolicy.PromptAtSignInAndSignUpMandatory);
   });
 
+  it('findDefaultSignInExperience should keep no-skip policy when adaptive mfa is enabled in legacy mode', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+    mockQuery.mockImplementationOnce(async () =>
+      createMockQueryResult([
+        {
+          ...databaseValue,
+          mfa: JSON.stringify({
+            ...mockSignInExperience.mfa,
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+            factors: [],
+          }),
+          adaptiveMfa: JSON.stringify({
+            enabled: true,
+          }),
+        },
+      ])
+    );
+
+    const result = await findDefaultSignInExperience();
+
+    expectNormalizedMfa(result.mfa, MfaPolicy.PromptAtSignInAndSignUpMandatory);
+  });
+
   it('updateDefaultSignInExperience', async () => {
     const { termsOfUseUrl } = mockSignInExperience;
 

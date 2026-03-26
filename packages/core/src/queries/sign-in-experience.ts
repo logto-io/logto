@@ -1,5 +1,5 @@
 import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
-import { SignInExperiences, mfaGuard } from '@logto/schemas';
+import { SignInExperiences, adaptiveMfaGuard, mfaGuard } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
@@ -13,16 +13,22 @@ import {
 
 const id = 'default';
 
-const transformMfaByDevFeatures = (mfa: SignInExperience['mfa']) => ({
+const parseAdaptiveMfaField = (adaptiveMfa: SignInExperience['adaptiveMfa'] | string) =>
+  typeof adaptiveMfa === 'string' ? adaptiveMfaGuard.parse(JSON.parse(adaptiveMfa)) : adaptiveMfa;
+
+const isAdaptiveMfaEnabled = (adaptiveMfa: SignInExperience['adaptiveMfa'] | string) =>
+  parseAdaptiveMfaField(adaptiveMfa).enabled === true;
+
+const transformMfaByDevFeatures = (mfa: SignInExperience['mfa'], adaptiveMfaEnabled: boolean) => ({
   ...mfa,
   policy: EnvSet.values.isDevFeaturesEnabled
     ? normalizeRequiredMfaPolicy(mfa.policy)
-    : legacyizeRequiredMfaPolicy(mfa.policy),
+    : legacyizeRequiredMfaPolicy(mfa.policy, adaptiveMfaEnabled),
 });
 
-const normalizeMfaField = (mfa: SignInExperience['mfa'] | string) => {
+const normalizeMfaField = (mfa: SignInExperience['mfa'] | string, adaptiveMfaEnabled: boolean) => {
   const parsedMfa = typeof mfa === 'string' ? mfaGuard.parse(JSON.parse(mfa)) : mfa;
-  const transformedMfa = transformMfaByDevFeatures(parsedMfa);
+  const transformedMfa = transformMfaByDevFeatures(parsedMfa, adaptiveMfaEnabled);
 
   if (typeof mfa === 'string') {
     return JSON.stringify(transformedMfa);
@@ -40,7 +46,7 @@ const normalizeSignInExperience = <
   data: T
 ): T => ({
   ...data,
-  mfa: normalizeMfaField(data.mfa),
+  mfa: normalizeMfaField(data.mfa, isAdaptiveMfaEnabled(data.adaptiveMfa)),
 });
 
 export const createSignInExperienceQueries = (
