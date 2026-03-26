@@ -184,6 +184,15 @@ export const getMyAccountGrants = async (
     })
     .json<GetUserApplicationGrantsResponse>();
 
+export const revokeMyAccountGrant = async (
+  api: KyInstance,
+  grantId: string,
+  verificationRecordId: string
+) =>
+  api.delete(`api/my-account/grants/${grantId}`, {
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+
 export const deleteSession = async (
   api: KyInstance,
   sessionId: string,
