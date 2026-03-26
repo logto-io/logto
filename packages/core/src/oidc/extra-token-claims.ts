@@ -32,11 +32,6 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
 
-class JwtCustomizerAccessDenied extends errors.AccessDenied {
-  status = 403;
-  statusCode = 403;
-}
-
 const hasI18n = (ctx: KoaContextWithOIDC): ctx is KoaContextWithOIDC & { i18n: i18n } =>
   'i18n' in ctx;
 
@@ -51,6 +46,10 @@ const formatJwtCustomizerInvalidRequestDescription = (ctx: KoaContextWithOIDC, m
       },
     })
   );
+};
+
+const throwJwtCustomizerInvalidRequest = (ctx: KoaContextWithOIDC, message: string): never => {
+  throw new errors.InvalidRequest(formatJwtCustomizerInvalidRequestDescription(ctx, message));
 };
 
 /**
@@ -213,6 +212,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
 
   const shouldBlockIssuanceOnError =
     EnvSet.values.isDevFeaturesEnabled && Boolean(blockIssuanceOnError);
+  const defaultJwtCustomizerErrorMessage = 'Failed to customize token claims';
 
   try {
     // Pick only the fields that will be included in the token payload based on the token type.
@@ -336,32 +336,33 @@ export const getExtraTokenClaimsForJwtCustomization = async (
 
       // Deny the token exchange request if access is denied by the custom JWT script.
       if (errorResponse && isAccessDeniedError(errorResponse.error)) {
-        throw new JwtCustomizerAccessDenied(errorResponse.message);
+        // Oidc-provider defaults AccessDenied to 401; preserve the existing customizer 403 contract.
+        throw new (class extends errors.AccessDenied {
+          status = 403;
+          statusCode = 403;
+        })(errorResponse.message);
       }
 
       if (shouldBlockIssuanceOnError) {
-        throw new errors.InvalidRequest(
-          formatJwtCustomizerInvalidRequestDescription(
-            ctx,
-            typeof errorResponse?.message === 'string'
-              ? errorResponse.message
-              : 'Failed to customize token claims'
-          )
+        throwJwtCustomizerInvalidRequest(
+          ctx,
+          typeof errorResponse?.message === 'string'
+            ? errorResponse.message
+            : defaultJwtCustomizerErrorMessage
         );
       }
-    } else {
-      ctx.prependAllLogEntries({ customJwtError: String(error) });
 
-      if (shouldBlockIssuanceOnError) {
-        throw new errors.InvalidRequest(
-          formatJwtCustomizerInvalidRequestDescription(
-            ctx,
-            error instanceof Error && error.message
-              ? error.message
-              : 'Failed to customize token claims'
-          )
-        );
-      }
+      return;
+    }
+
+    const stringifiedError = String(error);
+    ctx.prependAllLogEntries({ customJwtError: stringifiedError });
+
+    if (shouldBlockIssuanceOnError) {
+      throwJwtCustomizerInvalidRequest(
+        ctx,
+        error instanceof Error && error.message ? error.message : defaultJwtCustomizerErrorMessage
+      );
     }
   }
 };
