@@ -11,16 +11,18 @@ import {
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import RequestError from '../../errors/RequestError/index.js';
-import { encryptUserPassword } from '../../libraries/user.utils.js';
-import assertThat from '../../utils/assert-that.js';
 import { PasswordValidator } from '../experience/classes/libraries/password-validator.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
 import emailAndPhoneRoutes from './email-and-phone.js';
+import accountGrantRoutes from './grants.js';
 import identitiesRoutes from './identities.js';
 import logtoConfigRoutes from './logto-config.js';
 import mfaVerificationsRoutes from './mfa-verifications.js';
@@ -288,4 +290,8 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   identitiesRoutes(...args);
   mfaVerificationsRoutes(...args);
   accountSessionRoutes(...args);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    accountGrantRoutes(...args);
+  }
 }

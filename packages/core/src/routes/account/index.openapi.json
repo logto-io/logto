@@ -588,6 +588,32 @@
         "responses": {
           "200": {
             "description": "Return a list of non-expired sessions of the user."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access session details."
+          }
+        }
+      }
+    },
+    "/api/my-account/grants": {
+      "get": {
+        "tags": ["Dev feature"],
+        "operationId": "GetGrants",
+        "summary": "Get all active grants",
+        "description": "Retrieve all active application grants for the user. A logto-verification-id in header is required for checking grant details.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "appType",
+            "description": "Optional application type filter. Use 'firstParty' to return grants from first-party applications only, or 'thirdParty' for third-party applications only."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a list of active application grants of the user."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access grant details."
           }
         }
       }
@@ -613,6 +639,9 @@
           },
           "404": {
             "description": "The session does not exist."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to revoke sessions."
           }
         }
       }
