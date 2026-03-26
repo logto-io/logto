@@ -181,6 +181,8 @@ const sign_in_exp = {
         phone: '주 전화번호 업데이트',
         username: '사용자 이름 업데이트',
         password: '새 비밀번호 설정',
+        social: '로그인용 소셜 계정 연동',
+        social_remove: '연동된 소셜 계정 제거',
         authenticator_app: '다중 요소 인증을 위한 새 인증 앱 설정',
         passkey_add: '새 패스키 등록',
         passkey_manage: '기존 패스키 관리 또는 새 패스키 추가',

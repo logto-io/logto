@@ -186,6 +186,8 @@ const sign_in_exp = {
         phone: 'Update your primary phone number',
         username: 'Update your username',
         password: 'Set a new password',
+        social: 'Link a social account for sign-in',
+        social_remove: 'Remove a linked social account',
         authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
         passkey_add: 'Register a new passkey',
         passkey_manage: 'Manage your existing passkeys or add new ones',

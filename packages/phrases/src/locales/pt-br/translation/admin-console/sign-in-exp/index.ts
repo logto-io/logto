@@ -187,6 +187,8 @@ const sign_in_exp = {
         phone: 'Atualize seu número de telefone principal',
         username: 'Atualize seu nome de usuário',
         password: 'Configure uma nova senha',
+        social: 'Vincule uma conta social para login',
+        social_remove: 'Remova uma conta social vinculada',
         authenticator_app: 'Configure um novo aplicativo autenticador para autenticação multifator',
         passkey_add: 'Registre uma nova chave de acesso',
         passkey_manage: 'Gerencie suas chaves de acesso existentes ou adicione novas',
