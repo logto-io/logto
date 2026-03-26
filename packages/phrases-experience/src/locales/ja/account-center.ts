@@ -72,30 +72,18 @@ const account_center = {
     password: 'パスワード',
     configured: '設定済み',
     not_configured: '未設定',
-    /** UNTRANSLATED */
-    two_step_verification: '2-step verification',
-    /** UNTRANSLATED */
-    authenticator_app: 'Authenticator app',
-    /** UNTRANSLATED */
-    passkeys: 'Passkeys',
-    /** UNTRANSLATED */
-    backup_codes: 'Backup codes',
-    /** UNTRANSLATED */
-    email_verification_code: 'Email verification code',
-    /** UNTRANSLATED */
-    phone_verification_code: 'Phone verification code',
-    /** UNTRANSLATED */
-    passkeys_count_one: '{{count}} passkey',
-    /** UNTRANSLATED */
-    passkeys_count_other: '{{count}} passkeys',
-    /** UNTRANSLATED */
-    backup_codes_count_one: '{{count}} code remaining',
-    /** UNTRANSLATED */
-    backup_codes_count_other: '{{count}} codes remaining',
-    /** UNTRANSLATED */
-    view: 'View',
-    /** UNTRANSLATED */
-    manage: 'Manage',
+    two_step_verification: '2段階認証',
+    authenticator_app: '認証アプリ',
+    passkeys: 'パスキー',
+    backup_codes: 'バックアップコード',
+    email_verification_code: 'メール認証コード',
+    phone_verification_code: '電話認証コード',
+    passkeys_count_one: '{{count}} 個のパスキー',
+    passkeys_count_other: '{{count}} 個のパスキー',
+    backup_codes_count_one: '{{count}} 個のコード',
+    backup_codes_count_other: '{{count}} 個のコード',
+    view: '表示',
+    manage: '管理',
   },
   social: {
     linked: '{{connector}}の連携に成功しました。',

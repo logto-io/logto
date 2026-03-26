@@ -73,30 +73,18 @@ const account_center = {
     password: 'Parola',
     configured: 'Yapılandırıldı',
     not_configured: 'Yapılandırılmadı',
-    /** UNTRANSLATED */
-    two_step_verification: '2-step verification',
-    /** UNTRANSLATED */
-    authenticator_app: 'Authenticator app',
-    /** UNTRANSLATED */
-    passkeys: 'Passkeys',
-    /** UNTRANSLATED */
-    backup_codes: 'Backup codes',
-    /** UNTRANSLATED */
-    email_verification_code: 'Email verification code',
-    /** UNTRANSLATED */
-    phone_verification_code: 'Phone verification code',
-    /** UNTRANSLATED */
+    two_step_verification: 'İki adımlı doğrulama',
+    authenticator_app: 'Kimlik doğrulama uygulaması',
+    passkeys: 'Passkeyler',
+    backup_codes: 'Yedek kodlar',
+    email_verification_code: 'E-posta doğrulama kodu',
+    phone_verification_code: 'Telefon doğrulama kodu',
     passkeys_count_one: '{{count}} passkey',
-    /** UNTRANSLATED */
-    passkeys_count_other: '{{count}} passkeys',
-    /** UNTRANSLATED */
-    backup_codes_count_one: '{{count}} code remaining',
-    /** UNTRANSLATED */
-    backup_codes_count_other: '{{count}} codes remaining',
-    /** UNTRANSLATED */
-    view: 'View',
-    /** UNTRANSLATED */
-    manage: 'Manage',
+    passkeys_count_other: '{{count}} passkey',
+    backup_codes_count_one: '{{count}} kod kaldı',
+    backup_codes_count_other: '{{count}} kod kaldı',
+    view: 'Görüntüle',
+    manage: 'Yönet',
   },
   social: {
     linked: '{{connector}} başarıyla bağlandı.',

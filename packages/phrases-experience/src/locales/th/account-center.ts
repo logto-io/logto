@@ -72,30 +72,18 @@ const account_center = {
     password: 'รหัสผ่าน',
     configured: 'ตั้งค่าแล้ว',
     not_configured: 'ยังไม่ได้ตั้งค่า',
-    /** UNTRANSLATED */
-    two_step_verification: '2-step verification',
-    /** UNTRANSLATED */
-    authenticator_app: 'Authenticator app',
-    /** UNTRANSLATED */
+    two_step_verification: 'การยืนยันแบบ 2 ขั้นตอน',
+    authenticator_app: 'แอป Authenticator',
     passkeys: 'Passkeys',
-    /** UNTRANSLATED */
-    backup_codes: 'Backup codes',
-    /** UNTRANSLATED */
-    email_verification_code: 'Email verification code',
-    /** UNTRANSLATED */
-    phone_verification_code: 'Phone verification code',
-    /** UNTRANSLATED */
+    backup_codes: 'รหัสสำรอง',
+    email_verification_code: 'รหัสยืนยันทางอีเมล',
+    phone_verification_code: 'รหัสยืนยันทางโทรศัพท์',
     passkeys_count_one: '{{count}} passkey',
-    /** UNTRANSLATED */
     passkeys_count_other: '{{count}} passkeys',
-    /** UNTRANSLATED */
-    backup_codes_count_one: '{{count}} code remaining',
-    /** UNTRANSLATED */
-    backup_codes_count_other: '{{count}} codes remaining',
-    /** UNTRANSLATED */
-    view: 'View',
-    /** UNTRANSLATED */
-    manage: 'Manage',
+    backup_codes_count_one: 'เหลือ {{count}} รหัส',
+    backup_codes_count_other: 'เหลือ {{count}} รหัส',
+    view: 'ดู',
+    manage: 'จัดการ',
   },
   social: {
     linked: 'เชื่อมโยง {{connector}} สำเร็จแล้ว',

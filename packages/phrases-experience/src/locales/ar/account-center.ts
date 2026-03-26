@@ -72,30 +72,18 @@ const account_center = {
     password: 'كلمة المرور',
     configured: 'تم الإعداد',
     not_configured: 'غير معدّ',
-    /** UNTRANSLATED */
-    two_step_verification: '2-step verification',
-    /** UNTRANSLATED */
-    authenticator_app: 'Authenticator app',
-    /** UNTRANSLATED */
-    passkeys: 'Passkeys',
-    /** UNTRANSLATED */
-    backup_codes: 'Backup codes',
-    /** UNTRANSLATED */
-    email_verification_code: 'Email verification code',
-    /** UNTRANSLATED */
-    phone_verification_code: 'Phone verification code',
-    /** UNTRANSLATED */
-    passkeys_count_one: '{{count}} passkey',
-    /** UNTRANSLATED */
-    passkeys_count_other: '{{count}} passkeys',
-    /** UNTRANSLATED */
-    backup_codes_count_one: '{{count}} code remaining',
-    /** UNTRANSLATED */
-    backup_codes_count_other: '{{count}} codes remaining',
-    /** UNTRANSLATED */
-    view: 'View',
-    /** UNTRANSLATED */
-    manage: 'Manage',
+    two_step_verification: 'التحقق بخطوتين',
+    authenticator_app: 'تطبيق المصادقة',
+    passkeys: 'مفاتيح المرور',
+    backup_codes: 'رموز النسخ الاحتياطي',
+    email_verification_code: 'رمز التحقق عبر البريد الإلكتروني',
+    phone_verification_code: 'رمز التحقق عبر الهاتف',
+    passkeys_count_one: '{{count}} مفتاح مرور',
+    passkeys_count_other: '{{count}} مفاتيح مرور',
+    backup_codes_count_one: '{{count}} رمز متبقٍ',
+    backup_codes_count_other: '{{count}} رموز متبقية',
+    view: 'عرض',
+    manage: 'إدارة',
   },
   social: {
     linked: 'تم ربط {{connector}} بنجاح.',

@@ -79,30 +79,18 @@ const account_center = {
     password: 'Passwort',
     configured: 'Konfiguriert',
     not_configured: 'Nicht konfiguriert',
-    /** UNTRANSLATED */
-    two_step_verification: '2-step verification',
-    /** UNTRANSLATED */
-    authenticator_app: 'Authenticator app',
-    /** UNTRANSLATED */
+    two_step_verification: '2-Faktor-Authentifizierung',
+    authenticator_app: 'Authenticator-App',
     passkeys: 'Passkeys',
-    /** UNTRANSLATED */
-    backup_codes: 'Backup codes',
-    /** UNTRANSLATED */
-    email_verification_code: 'Email verification code',
-    /** UNTRANSLATED */
-    phone_verification_code: 'Phone verification code',
-    /** UNTRANSLATED */
-    passkeys_count_one: '{{count}} passkey',
-    /** UNTRANSLATED */
-    passkeys_count_other: '{{count}} passkeys',
-    /** UNTRANSLATED */
-    backup_codes_count_one: '{{count}} code remaining',
-    /** UNTRANSLATED */
-    backup_codes_count_other: '{{count}} codes remaining',
-    /** UNTRANSLATED */
-    view: 'View',
-    /** UNTRANSLATED */
-    manage: 'Manage',
+    backup_codes: 'Backup-Codes',
+    email_verification_code: 'E-Mail-Bestätigungscode',
+    phone_verification_code: 'Telefon-Bestätigungscode',
+    passkeys_count_one: '{{count}} Passkey',
+    passkeys_count_other: '{{count}} Passkeys',
+    backup_codes_count_one: '{{count}} Code verbleibend',
+    backup_codes_count_other: '{{count}} Codes verbleibend',
+    view: 'Ansehen',
+    manage: 'Verwalten',
   },
   social: {
     linked: '{{connector}} wurde erfolgreich verknüpft.',

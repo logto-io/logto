@@ -71,30 +71,18 @@ const account_center = {
     password: '密碼',
     configured: '已設定',
     not_configured: '未設定',
-    /** UNTRANSLATED */
-    two_step_verification: '2-step verification',
-    /** UNTRANSLATED */
-    authenticator_app: 'Authenticator app',
-    /** UNTRANSLATED */
-    passkeys: 'Passkeys',
-    /** UNTRANSLATED */
-    backup_codes: 'Backup codes',
-    /** UNTRANSLATED */
-    email_verification_code: 'Email verification code',
-    /** UNTRANSLATED */
-    phone_verification_code: 'Phone verification code',
-    /** UNTRANSLATED */
-    passkeys_count_one: '{{count}} passkey',
-    /** UNTRANSLATED */
-    passkeys_count_other: '{{count}} passkeys',
-    /** UNTRANSLATED */
-    backup_codes_count_one: '{{count}} code remaining',
-    /** UNTRANSLATED */
-    backup_codes_count_other: '{{count}} codes remaining',
-    /** UNTRANSLATED */
-    view: 'View',
-    /** UNTRANSLATED */
-    manage: 'Manage',
+    two_step_verification: '兩步驟驗證',
+    authenticator_app: '身份驗證器應用程式',
+    passkeys: '通行密鑰',
+    backup_codes: '備用碼',
+    email_verification_code: '電郵驗證碼',
+    phone_verification_code: '電話驗證碼',
+    passkeys_count_one: '{{count}} 個通行密鑰',
+    passkeys_count_other: '{{count}} 個通行密鑰',
+    backup_codes_count_one: '{{count}} 個備用碼',
+    backup_codes_count_other: '{{count}} 個備用碼',
+    view: '檢視',
+    manage: '管理',
   },
   social: {
     linked: '已成功連結 {{connector}}。',

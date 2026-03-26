@@ -78,30 +78,18 @@ const account_center = {
     password: 'Mot de passe',
     configured: 'Configuré',
     not_configured: 'Non configuré',
-    /** UNTRANSLATED */
-    two_step_verification: '2-step verification',
-    /** UNTRANSLATED */
-    authenticator_app: 'Authenticator app',
-    /** UNTRANSLATED */
+    two_step_verification: 'Vérification en deux étapes',
+    authenticator_app: "Application d'authentification",
     passkeys: 'Passkeys',
-    /** UNTRANSLATED */
-    backup_codes: 'Backup codes',
-    /** UNTRANSLATED */
-    email_verification_code: 'Email verification code',
-    /** UNTRANSLATED */
-    phone_verification_code: 'Phone verification code',
-    /** UNTRANSLATED */
+    backup_codes: 'Codes de secours',
+    email_verification_code: 'Code de vérification par e-mail',
+    phone_verification_code: 'Code de vérification par téléphone',
     passkeys_count_one: '{{count}} passkey',
-    /** UNTRANSLATED */
     passkeys_count_other: '{{count}} passkeys',
-    /** UNTRANSLATED */
-    backup_codes_count_one: '{{count}} code remaining',
-    /** UNTRANSLATED */
-    backup_codes_count_other: '{{count}} codes remaining',
-    /** UNTRANSLATED */
-    view: 'View',
-    /** UNTRANSLATED */
-    manage: 'Manage',
+    backup_codes_count_one: '{{count}} code restant',
+    backup_codes_count_other: '{{count}} codes restants',
+    view: 'Voir',
+    manage: 'Gérer',
   },
   social: {
     linked: '{{connector}} a été lié avec succès.',

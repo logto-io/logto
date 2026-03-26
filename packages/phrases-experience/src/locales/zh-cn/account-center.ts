@@ -71,30 +71,18 @@ const account_center = {
     password: '密码',
     configured: '已设置',
     not_configured: '未设置',
-    /** UNTRANSLATED */
-    two_step_verification: '2-step verification',
-    /** UNTRANSLATED */
-    authenticator_app: 'Authenticator app',
-    /** UNTRANSLATED */
-    passkeys: 'Passkeys',
-    /** UNTRANSLATED */
-    backup_codes: 'Backup codes',
-    /** UNTRANSLATED */
-    email_verification_code: 'Email verification code',
-    /** UNTRANSLATED */
-    phone_verification_code: 'Phone verification code',
-    /** UNTRANSLATED */
-    passkeys_count_one: '{{count}} passkey',
-    /** UNTRANSLATED */
-    passkeys_count_other: '{{count}} passkeys',
-    /** UNTRANSLATED */
-    backup_codes_count_one: '{{count}} code remaining',
-    /** UNTRANSLATED */
-    backup_codes_count_other: '{{count}} codes remaining',
-    /** UNTRANSLATED */
-    view: 'View',
-    /** UNTRANSLATED */
-    manage: 'Manage',
+    two_step_verification: '两步验证',
+    authenticator_app: '身份验证器应用',
+    passkeys: '通行密钥',
+    backup_codes: '备用码',
+    email_verification_code: '邮箱验证码',
+    phone_verification_code: '手机验证码',
+    passkeys_count_one: '{{count}} 个通行密钥',
+    passkeys_count_other: '{{count}} 个通行密钥',
+    backup_codes_count_one: '{{count}} 个备用码',
+    backup_codes_count_other: '{{count}} 个备用码',
+    view: '查看',
+    manage: '管理',
   },
   social: {
     linked: '已成功关联 {{connector}}。',
