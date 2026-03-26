@@ -22,6 +22,8 @@ const {
   upsertInstance,
   findPayloadById,
   findPayloadByPayloadField,
+  findPayloadByUid,
+  findPayloadByUserCode,
   consumeInstanceById,
   destroyInstanceById,
   revokeInstanceByGrantId,
@@ -143,6 +145,114 @@ describe('oidc-model-instance query', () => {
     await expect(
       findPayloadByPayloadField(instance.modelName, uid_key, uid_value)
     ).resolves.toBeUndefined();
+  });
+
+  it('findPayloadByUid should use uid literal jsonb key', async () => {
+    const uid = 'foo';
+    const expectSql = sql`
+      select ${fields.payload}, ${fields.consumedAt}
+      from ${table}
+      where ${fields.modelName}=$1
+      and ${fields.payload}->>'uid'=$2
+      limit 2
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([instance.modelName, uid]);
+
+      return createMockQueryResult([{ consumedAt: 10 }]);
+    });
+
+    await expect(findPayloadByUid(instance.modelName, uid)).resolves.toEqual({
+      consumed: true,
+    });
+  });
+
+  it('findPayloadByUid - multiple results should delete with uid literal jsonb key', async () => {
+    const uid = 'foo';
+    const selectSql = sql`
+      select ${fields.payload}, ${fields.consumedAt}
+      from ${table}
+      where ${fields.modelName}=$1
+      and ${fields.payload}->>'uid'=$2
+      limit 2
+    `;
+    const deleteSql = sql`
+      delete from ${table}
+      where ${fields.modelName}=$1
+      and ${fields.payload}->>'uid'=$2
+    `;
+
+    mockQuery
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, selectSql.sql);
+        expect(values).toEqual([instance.modelName, uid]);
+        return createMockQueryResult([{ consumedAt: 10 }, { consumedAt: 20 }]);
+      })
+      // @ts-expect-error - mock delete query
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, deleteSql.sql);
+        expect(values).toEqual([instance.modelName, uid]);
+        return { rowCount: 2 };
+      });
+
+    await expect(findPayloadByUid(instance.modelName, uid)).resolves.toBeUndefined();
+    expect(mockQuery).toHaveBeenCalledTimes(2);
+  });
+
+  it('findPayloadByUserCode should use userCode literal jsonb key', async () => {
+    const userCode = 'code';
+    const expectSql = sql`
+      select ${fields.payload}, ${fields.consumedAt}
+      from ${table}
+      where ${fields.modelName}=$1
+      and ${fields.payload}->>'userCode'=$2
+      limit 2
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([instance.modelName, userCode]);
+
+      return createMockQueryResult([{ consumedAt: 10 }]);
+    });
+
+    await expect(findPayloadByUserCode(instance.modelName, userCode)).resolves.toEqual({
+      consumed: true,
+    });
+  });
+
+  it('findPayloadByUserCode - multiple results should delete with userCode literal jsonb key', async () => {
+    const userCode = 'code';
+    const selectSql = sql`
+      select ${fields.payload}, ${fields.consumedAt}
+      from ${table}
+      where ${fields.modelName}=$1
+      and ${fields.payload}->>'userCode'=$2
+      limit 2
+    `;
+    const deleteSql = sql`
+      delete from ${table}
+      where ${fields.modelName}=$1
+      and ${fields.payload}->>'userCode'=$2
+    `;
+
+    mockQuery
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, selectSql.sql);
+        expect(values).toEqual([instance.modelName, userCode]);
+        return createMockQueryResult([{ consumedAt: 10 }, { consumedAt: 20 }]);
+      })
+      // @ts-expect-error - mock delete query
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, deleteSql.sql);
+        expect(values).toEqual([instance.modelName, userCode]);
+        return { rowCount: 2 };
+      });
+
+    await expect(findPayloadByUserCode(instance.modelName, userCode)).resolves.toBeUndefined();
+    expect(mockQuery).toHaveBeenCalledTimes(2);
   });
 
   it('consumeInstanceById', async () => {
