@@ -12,10 +12,18 @@ import { useNavigate } from 'react-router-dom';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import { getMfaVerifications, generateTotpSecret, createOrReplaceTotpMfa } from '@ac/apis/mfa';
+import {
+  getMfaVerifications,
+  generateTotpSecret,
+  addTotpMfa,
+  createOrReplaceTotpMfa,
+} from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { authenticatorAppSuccessRoute } from '@ac/constants/routes';
+import {
+  authenticatorAppSuccessRoute,
+  authenticatorAppReplaceSuccessRoute,
+} from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -29,7 +37,11 @@ const isCodeReady = (code: string[]) => {
 
 const isTotpEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.TOTP) ?? false;
 
-const TotpBinding = () => {
+type Props = {
+  readonly isReplace?: boolean;
+};
+
+const TotpBinding = ({ isReplace }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
@@ -43,6 +55,7 @@ const TotpBinding = () => {
   } = useContext(PageContext);
   const getMfaRequest = useApi(getMfaVerifications, { silent: true });
   const generateSecretRequest = useApi(generateTotpSecret, { silent: true });
+  const addTotpRequest = useApi(addTotpMfa);
   const createOrReplaceTotpRequest = useApi(createOrReplaceTotpMfa);
   const handleError = useErrorHandler();
 
@@ -73,7 +86,12 @@ const TotpBinding = () => {
 
   // Generate TOTP secret on mount
   useEffect(() => {
-    if (!verificationId || Boolean(secret) || hasTotpAlready === undefined) {
+    if (
+      !verificationId ||
+      Boolean(secret) ||
+      hasTotpAlready === undefined ||
+      (hasTotpAlready && !isReplace)
+    ) {
       return;
     }
 
@@ -100,7 +118,15 @@ const TotpBinding = () => {
     };
 
     void generateSecret();
-  }, [generateSecretRequest, handleError, hasTotpAlready, secret, userInfo, verificationId]);
+  }, [
+    generateSecretRequest,
+    handleError,
+    hasTotpAlready,
+    isReplace,
+    secret,
+    userInfo,
+    verificationId,
+  ]);
 
   useEffect(() => {
     if (verificationId && hasTotpAlready === false) {
@@ -127,7 +153,8 @@ const TotpBinding = () => {
       setErrorMessage(undefined);
 
       const codeString = codeInput.join('');
-      const [error] = await createOrReplaceTotpRequest(verificationId, {
+      const submitRequest = isReplace ? createOrReplaceTotpRequest : addTotpRequest;
+      const [error] = await submitRequest(verificationId, {
         secret,
         code: codeString,
       });
@@ -153,12 +180,16 @@ const TotpBinding = () => {
       // (when loading state changes, handleSubmit gets recreated, which triggers the effect again)
       setCodeInput([]);
 
-      navigate(authenticatorAppSuccessRoute, { replace: true });
+      navigate(isReplace ? authenticatorAppReplaceSuccessRoute : authenticatorAppSuccessRoute, {
+        replace: true,
+      });
     },
     [
+      addTotpRequest,
       codeInput,
       createOrReplaceTotpRequest,
       handleError,
+      isReplace,
       loading,
       navigate,
       secret,
@@ -195,12 +226,24 @@ const TotpBinding = () => {
     );
   }
 
+  if (hasTotpAlready && !isReplace) {
+    return (
+      <ErrorPage
+        titleKey="error.something_went_wrong"
+        messageKey="account_center.mfa.totp_already_added"
+      />
+    );
+  }
+
   if (!verificationId) {
     return <VerificationMethodList />;
   }
 
   return (
-    <SecondaryPageLayout title="mfa.add_authenticator_app" description="">
+    <SecondaryPageLayout
+      title={isReplace ? 'mfa.replace_authenticator_app' : 'mfa.add_authenticator_app'}
+      description=""
+    >
       <div className={styles.container}>
         {/* Step 1: QR Code or Secret Key */}
         <div className={styles.step}>

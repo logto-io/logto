@@ -31,6 +31,7 @@ const mfa = {
   verify_mfa_description:
     '이 계정에 대해 2단계 인증이 활성화되었습니다. 신원을 확인하는 두 번째 방법을 선택하세요.',
   add_authenticator_app: '인증 앱 추가',
+  replace_authenticator_app: 'Replace authenticator app',
   step: '단계 {{step, number}}: {{content}}',
   scan_qr_code: '이 QR 코드 스캔',
   scan_qr_code_description:

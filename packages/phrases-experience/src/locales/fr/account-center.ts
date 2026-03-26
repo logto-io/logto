@@ -169,6 +169,10 @@ const account_center = {
       title: "Application d'authentification ajoutée !",
       description: "Votre application d'authentification a été liée avec succès à votre compte.",
     },
+    totp_replaced: {
+      title: 'Authenticator app replaced!',
+      description: 'Your authenticator app has been successfully replaced.',
+    },
     backup_code: {
       title: 'Codes de secours générés !',
       description: 'Vos codes de secours ont été enregistrés. Conservez-les en lieu sûr.',

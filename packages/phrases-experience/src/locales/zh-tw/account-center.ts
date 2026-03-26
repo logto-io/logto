@@ -150,6 +150,10 @@ const account_center = {
       title: '身份驗證器應用程式已新增！',
       description: '身份驗證器應用程式已成功連結至您的帳戶。',
     },
+    totp_replaced: {
+      title: 'Authenticator app replaced!',
+      description: 'Your authenticator app has been successfully replaced.',
+    },
     backup_code: {
       title: '備用碼已產生！',
       description: '您的備用碼已儲存。請將它們保存在安全的地方。',

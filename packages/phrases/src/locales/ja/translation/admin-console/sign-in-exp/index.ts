@@ -189,6 +189,7 @@ const sign_in_exp = {
         social: 'サインイン用にソーシャルアカウントを連携',
         social_remove: '連携済みのソーシャルアカウントを削除',
         authenticator_app: '多要素認証のための新しい認証アプリを設定',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: '新しいパスキーを登録',
         passkey_manage: '既存のパスキーを管理または新しいものを追加',
         backup_codes_generate: '新しいバックアップコード 10 セットを生成',

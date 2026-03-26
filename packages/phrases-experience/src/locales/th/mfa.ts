@@ -31,6 +31,7 @@ const mfa = {
   verify_mfa_description:
     'ได้เปิดใช้การยืนยันแบบ 2 ขั้นตอนสำหรับบัญชีนี้ โปรดเลือกวิธีที่สองในการยืนยันตัวตนของคุณ',
   add_authenticator_app: 'เพิ่มแอป Authenticator',
+  replace_authenticator_app: 'Replace authenticator app',
   step: 'ขั้นตอน {{step, number}}: {{content}}',
   scan_qr_code: 'สแกนรหัส QR นี้',
   scan_qr_code_description:

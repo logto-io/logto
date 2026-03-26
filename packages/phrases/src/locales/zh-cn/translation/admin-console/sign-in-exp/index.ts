@@ -181,6 +181,7 @@ const sign_in_exp = {
         social: '关联社交账号用于登录',
         social_remove: '移除已关联的社交账号',
         authenticator_app: '设置新的身份验证器应用以进行多因素认证',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: '注册新的通行密钥',
         passkey_manage: '管理你现有的通行密钥或添加新的',
         backup_codes_generate: '生成一组新的 10 个备用码',

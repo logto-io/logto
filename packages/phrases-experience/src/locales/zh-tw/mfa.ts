@@ -29,6 +29,7 @@ const mfa = {
   verify_mfa_factors: '兩步驗證',
   verify_mfa_description: '此帳戶已啟用兩步驗證。請選擇第二種驗證身份的方式。',
   add_authenticator_app: '添加身份驗證應用',
+  replace_authenticator_app: 'Replace authenticator app',
   step: '步驟 {{step, number}}: {{content}}',
   scan_qr_code: '掃描此 QR 碼',
   scan_qr_code_description:

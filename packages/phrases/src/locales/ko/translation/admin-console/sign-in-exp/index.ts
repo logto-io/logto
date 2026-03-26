@@ -184,6 +184,7 @@ const sign_in_exp = {
         social: '로그인용 소셜 계정 연동',
         social_remove: '연동된 소셜 계정 제거',
         authenticator_app: '다중 요소 인증을 위한 새 인증 앱 설정',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: '새 패스키 등록',
         passkey_manage: '기존 패스키 관리 또는 새 패스키 추가',
         backup_codes_generate: '새로운 10 개의 백업 코드 세트 생성',

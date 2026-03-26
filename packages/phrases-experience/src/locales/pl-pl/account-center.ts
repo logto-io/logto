@@ -163,6 +163,10 @@ const account_center = {
       title: 'Aplikacja uwierzytelniająca dodana!',
       description: 'Twoja aplikacja uwierzytelniająca została pomyślnie połączona z kontem.',
     },
+    totp_replaced: {
+      title: 'Authenticator app replaced!',
+      description: 'Your authenticator app has been successfully replaced.',
+    },
     backup_code: {
       title: 'Kody zapasowe wygenerowane!',
       description: 'Twoje kody zapasowe zostały zapisane. Przechowuj je w bezpiecznym miejscu.',
