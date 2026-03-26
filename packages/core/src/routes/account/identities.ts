@@ -20,7 +20,7 @@ export default function identitiesRoutes<T extends UserRouter>(
 ) {
   const {
     users: { updateUserById, findUserById, deleteUserIdentity },
-    userSsoIdentities: { findUserSsoIdentitiesByUserId },
+    userSsoIdentities,
   } = queries;
 
   const {
@@ -123,7 +123,7 @@ export default function identitiesRoutes<T extends UserRouter>(
 
       const [user, ssoIdentities] = await Promise.all([
         findUserById(userId),
-        findUserSsoIdentitiesByUserId(userId),
+        userSsoIdentities.findUserSsoIdentitiesByUserId(userId),
       ]);
       assertCanDeleteSocialIdentity(user, target, ssoIdentities.length);
 
