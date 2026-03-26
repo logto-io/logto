@@ -1,7 +1,9 @@
 import { UserScope } from '@logto/core-kit';
+import { AccountCenterControlValue } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
-import { enableAllAccountCenterFields } from '#src/api/account-center.js';
+import { enableAllAccountCenterFields, updateAccountCenter } from '#src/api/account-center.js';
+import { getUserApplicationGrants } from '#src/api/admin-user.js';
 import { authedAdminApi } from '#src/api/api.js';
 import { deleteApplication } from '#src/api/application.js';
 import { getMyAccountGrants, getSessions, revokeMyAccountGrant } from '#src/api/my-account.js';
@@ -133,7 +135,7 @@ devFeatureTest.describe('account center grant management', () => {
 
       const api = await signInAndGetUserApi(username, password);
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
-      const { grants } = await getMyAccountGrants(api, verificationRecordId);
+      const { grants } = await getUserApplicationGrants(user.id);
       const grant = grants.find((item) => item.payload.clientId === app.id);
       assert(grant, new Error('Grant not found for application'));
 
@@ -144,6 +146,39 @@ devFeatureTest.describe('account center grant management', () => {
 
       await deleteApplication(app.id);
       await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should fail if session field is not editable', async () => {
+      await updateAccountCenter({
+        enabled: true,
+        fields: {
+          session: AccountCenterControlValue.ReadOnly,
+        },
+      });
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const { app } = await createAppAndSignInWithPassword({
+        username,
+        password,
+        scopes: [UserScope.Profile],
+      });
+
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Sessions],
+      });
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+      const { grants } = await getUserApplicationGrants(user.id);
+      const grant = grants.find((item) => item.payload.clientId === app.id);
+      assert(grant, new Error('Grant not found for application'));
+
+      await expectRejects(revokeMyAccountGrant(api, grant.id, verificationRecordId), {
+        code: 'account_center.field_not_editable',
+        status: 400,
+      });
+
+      await deleteApplication(app.id);
+      await deleteDefaultTenantUser(user.id);
+      await enableAllAccountCenterFields(authedAdminApi);
     });
 
     it('should fail if identity is not verified', async () => {
