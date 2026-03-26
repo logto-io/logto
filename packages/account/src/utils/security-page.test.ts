@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { AccountCenterControlValue, ConnectorPlatform } from '@logto/schemas';
+import { AccountCenterControlValue, ConnectorPlatform, MfaPolicy } from '@logto/schemas';
 
 import type * as SecurityPageModule from './security-page';
 
@@ -64,6 +64,7 @@ void test('hasVisibleSecuritySection returns true when social field is visible',
             logoDark: '',
           },
         ],
+        mfa: { factors: [], policy: MfaPolicy.UserControlled },
       }
     ),
     true
@@ -84,6 +85,7 @@ void test('hasVisibleSocialSection returns false when no available social connec
           logoDark: '',
         },
       ],
+      mfa: { factors: [], policy: MfaPolicy.UserControlled },
     }),
     false
   );
