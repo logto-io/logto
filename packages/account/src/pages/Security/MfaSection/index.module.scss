@@ -1,0 +1,106 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1.5);
+}
+
+.sectionTitle {
+  padding-left: _.unit(1);
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
+.card {
+  background: var(--color-bg-body);
+  border-radius: 12px;
+  overflow: clip;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  padding: _.unit(5) _.unit(6);
+  min-height: 64px;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-line-divider);
+  }
+}
+
+.info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  min-width: 0;
+}
+
+.name {
+  flex: 1;
+  max-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: _.unit(4);
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-type-primary);
+  flex-shrink: 0;
+}
+
+.value {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.statusTag {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  padding: _.unit(0.5) _.unit(2);
+  border-radius: 14px;
+  background: rgba(78, 162, 84, 12%);
+  font: var(--font-label-3);
+  color: var(--color-type-primary);
+}
+
+.statusDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-success-default);
+}
+
+.notConfigured {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  flex-shrink: 0;
+}
+
+.actionButton {
+  font: var(--font-label-2);
+  color: var(--color-type-link);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: _.unit(0.5) 0;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

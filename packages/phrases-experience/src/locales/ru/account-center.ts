@@ -72,6 +72,30 @@ const account_center = {
     password: 'Пароль',
     configured: 'Настроено',
     not_configured: 'Не настроено',
+    /** UNTRANSLATED */
+    two_step_verification: '2-step verification',
+    /** UNTRANSLATED */
+    authenticator_app: 'Authenticator app',
+    /** UNTRANSLATED */
+    passkeys: 'Passkeys',
+    /** UNTRANSLATED */
+    backup_codes: 'Backup codes',
+    /** UNTRANSLATED */
+    email_verification_code: 'Email verification code',
+    /** UNTRANSLATED */
+    phone_verification_code: 'Phone verification code',
+    /** UNTRANSLATED */
+    passkeys_count_one: '{{count}} passkey',
+    /** UNTRANSLATED */
+    passkeys_count_other: '{{count}} passkeys',
+    /** UNTRANSLATED */
+    backup_codes_count_one: '{{count}} code remaining',
+    /** UNTRANSLATED */
+    backup_codes_count_other: '{{count}} codes remaining',
+    /** UNTRANSLATED */
+    view: 'View',
+    /** UNTRANSLATED */
+    manage: 'Manage',
   },
   social: {
     linked: '{{connector}} успешно привязан.',

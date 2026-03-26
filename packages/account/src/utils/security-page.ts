@@ -5,7 +5,7 @@ import { AccountCenterControlValue } from '@logto/schemas';
 import { getAvailableSocialConnectors } from './social-connector.js';
 
 type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields'>;
-type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConnectors'>;
+type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConnectors' | 'mfa'>;
 
 const isVisibleField = (value?: AccountCenterControlValue): boolean =>
   value !== undefined && value !== AccountCenterControlValue.Off;
@@ -17,6 +17,11 @@ export const hasVisibleSocialSection = (
   isVisibleField(socialControl) &&
   getAvailableSocialConnectors(experienceSettings?.socialConnectors ?? []).length > 0;
 
+export const hasVisibleMfaSection = (
+  mfaControl: AccountCenterControlValue | undefined,
+  experienceSettings?: SecurityPageExperienceSettings
+): boolean => isVisibleField(mfaControl) && (experienceSettings?.mfa.factors ?? []).length > 0;
+
 export const hasVisibleSecuritySection = (
   accountCenterSettings?: SecurityPageSettings,
   experienceSettings?: SecurityPageExperienceSettings
@@ -25,14 +30,15 @@ export const hasVisibleSecuritySection = (
     return false;
   }
 
-  const { username, email, phone, password, social } = accountCenterSettings.fields;
+  const { username, email, phone, password, social, mfa } = accountCenterSettings.fields;
 
   return (
     isVisibleField(username) ||
     isVisibleField(email) ||
     isVisibleField(phone) ||
     isVisibleField(password) ||
-    hasVisibleSocialSection(social, experienceSettings)
+    hasVisibleSocialSection(social, experienceSettings) ||
+    hasVisibleMfaSection(mfa, experienceSettings)
   );
 };
 

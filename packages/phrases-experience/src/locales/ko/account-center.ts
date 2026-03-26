@@ -71,6 +71,30 @@ const account_center = {
     password: '비밀번호',
     configured: '설정됨',
     not_configured: '설정되지 않음',
+    /** UNTRANSLATED */
+    two_step_verification: '2-step verification',
+    /** UNTRANSLATED */
+    authenticator_app: 'Authenticator app',
+    /** UNTRANSLATED */
+    passkeys: 'Passkeys',
+    /** UNTRANSLATED */
+    backup_codes: 'Backup codes',
+    /** UNTRANSLATED */
+    email_verification_code: 'Email verification code',
+    /** UNTRANSLATED */
+    phone_verification_code: 'Phone verification code',
+    /** UNTRANSLATED */
+    passkeys_count_one: '{{count}} passkey',
+    /** UNTRANSLATED */
+    passkeys_count_other: '{{count}} passkeys',
+    /** UNTRANSLATED */
+    backup_codes_count_one: '{{count}} code remaining',
+    /** UNTRANSLATED */
+    backup_codes_count_other: '{{count}} codes remaining',
+    /** UNTRANSLATED */
+    view: 'View',
+    /** UNTRANSLATED */
+    manage: 'Manage',
   },
   social: {
     linked: '{{connector}}이(가) 성공적으로 연결되었습니다.',
