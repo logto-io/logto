@@ -8,6 +8,7 @@ import {
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
+import { putUserIdentity } from '#src/api/admin-user.js';
 import { updateConnectorConfig } from '#src/api/connector.js';
 import { deleteIdentity, getUserInfo } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
@@ -190,8 +191,12 @@ describe('my-account (social delete identity)', () => {
         password,
         connectorIdMap.get(mockSocialConnectorId)!
       );
-      const secondSocialConnector = await setSocialConnector();
-      await linkSocialIdentity(api, password, secondSocialConnector.id);
+      // Add a second social identity via admin API (cannot create another non-standard
+      // social connector with the same connectorId)
+      await putUserIdentity(user.id, 'second-social-target', {
+        userId: 'second-social-user-id',
+        details: {},
+      });
 
       await deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId);
 
@@ -234,7 +239,7 @@ describe('my-account (social delete identity)', () => {
         await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
           code: 'user.last_sign_in_method_required',
           status: 400,
-          messageIncludes: 'au moins un identifiant',
+          messageIncludes: 'au moins une méthode de connexion',
         });
       } finally {
         await enableAllPasswordSignInMethods();
