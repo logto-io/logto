@@ -128,7 +128,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
 
   useEffect(() => {
     if (verificationId) {
-      sessionStorage.clearRoute();
+      sessionStorage.clearRouteRestore();
     }
   }, [verificationId]);
 

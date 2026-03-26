@@ -98,7 +98,7 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
       hasOtherMfa === true &&
       (hasBackupCodeAlready === false || isRegenerate)
     ) {
-      sessionStorage.clearRoute();
+      sessionStorage.clearRouteRestore();
     }
   }, [hasBackupCodeAlready, hasOtherMfa, isRegenerate, verificationId]);
 

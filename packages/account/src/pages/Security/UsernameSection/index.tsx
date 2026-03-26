@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { usernameRoute } from '@ac/constants/routes';
-import { getRedirectUrl, setRedirectUrl } from '@ac/utils/account-center-route';
+import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 
 import styles from './index.module.scss';
 
@@ -34,7 +34,7 @@ const UsernameSection = () => {
               type="button"
               className={styles.changeButton}
               onClick={() => {
-                setRedirectUrl(getRedirectUrl() ?? window.location.href);
+                setPendingReturn(getPendingReturn() ?? window.location.href);
                 navigate(usernameRoute);
               }}
             >

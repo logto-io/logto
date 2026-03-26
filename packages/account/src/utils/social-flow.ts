@@ -21,6 +21,14 @@ type FinalizeSocialFlowFailureParameters = {
 };
 
 const navigateToSecurity = (navigate: NavigateFunction) => {
+  const pendingReturn = sessionStorage.getPendingReturn();
+
+  if (pendingReturn) {
+    sessionStorage.clearPendingReturn();
+    window.location.assign(pendingReturn);
+    return;
+  }
+
   navigate('/', { replace: true });
 };
 
@@ -32,7 +40,6 @@ export const finalizeSocialFlowSuccess = async ({
   navigate,
 }: FinalizeSocialFlowSuccessParameters) => {
   accountStorage.socialFlow.clear(connectorId);
-  sessionStorage.clearRoute();
   await refreshUserInfo();
   if (successMessage && setToast) {
     setToast(successMessage);
@@ -51,7 +58,6 @@ export const finalizeSocialFlowFailure = ({
     accountStorage.socialFlow.clear(connectorId);
   }
 
-  sessionStorage.clearRoute();
   setToast(message);
   navigateToSecurity(navigate);
 };

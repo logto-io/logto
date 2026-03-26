@@ -6,6 +6,7 @@ import styles from '../Home/index.module.scss';
 
 import EmailPhoneSection from './EmailPhoneSection';
 import PasswordSection from './PasswordSection';
+import SocialSection from './SocialSection';
 import UsernameSection from './UsernameSection';
 
 const Security = () => {
@@ -21,6 +22,7 @@ const Security = () => {
         <UsernameSection />
         <EmailPhoneSection />
         <PasswordSection />
+        <SocialSection />
       </div>
       <PageFooter />
     </div>

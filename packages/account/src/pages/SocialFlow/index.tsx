@@ -106,21 +106,16 @@ const SocialFlow = ({ mode }: Props) => {
   }, [connector, connectorId, connectorName, navigate, refreshUserInfo]);
 
   const handleRemoveSuccess = useCallback(async () => {
-    if (!connectorId || !connectorName) {
+    if (!connectorId) {
       return;
     }
 
     await finalizeSocialFlowSuccess({
       connectorId,
-      successMessage: t('account_center.social.removed', {
-        connector: connectorName,
-        defaultValue: '',
-      }),
       refreshUserInfo,
-      setToast,
       navigate,
     });
-  }, [connectorId, connectorName, navigate, refreshUserInfo, setToast, t]);
+  }, [connectorId, navigate, refreshUserInfo]);
 
   useEffect(() => {
     if (!verificationId) {
@@ -182,7 +177,7 @@ const SocialFlow = ({ mode }: Props) => {
         state,
       });
 
-      sessionStorage.clearRoute();
+      sessionStorage.clearRouteRestore();
       window.location.assign(result.authorizationUri);
     };
 

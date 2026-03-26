@@ -1,20 +1,27 @@
 import * as s from 'superstruct';
 
 const storagePrefix = 'logto:account-center:';
+const pendingReturnTtl = 10 * 60 * 1000;
+const routeRestoreTtl = 10 * 60 * 1000;
 
 const storageKeys = Object.freeze({
-  route: `${storagePrefix}route-cache`,
-  redirectUrl: `${storagePrefix}redirect-url`,
+  routeRestore: `${storagePrefix}route-restore`,
   showSuccess: `${storagePrefix}show-success`,
   uiLocales: `${storagePrefix}ui-locales`,
   identifier: `${storagePrefix}identifier`,
   verificationRecord: `${storagePrefix}verification-record`,
   socialFlow: `${storagePrefix}social-verification`,
+  pendingReturn: `${storagePrefix}pending-return`,
 });
 
 export type StoredVerificationRecord = {
   verificationId: string;
   expiresAt: string;
+};
+
+type StoredPathState = {
+  path: string;
+  createdAt: number;
 };
 
 export type StoredSocialFlowRecord =
@@ -33,6 +40,11 @@ export type StoredSocialFlowRecord =
 const storedVerificationRecordGuard = s.object({
   verificationId: s.string(),
   expiresAt: s.string(),
+});
+
+const storedPathStateGuard = s.object({
+  path: s.string(),
+  createdAt: s.number(),
 });
 
 const storedSocialFlowRecordGuard = s.union([
@@ -104,36 +116,34 @@ const isNotExpired = (expiresAt: string) => {
   return !Number.isNaN(expiresAtTimestamp) && expiresAtTimestamp > Date.now();
 };
 
+const isWithinTtl = (createdAt: number, ttl: number) => {
+  return Number.isFinite(createdAt) && createdAt > Date.now() - ttl;
+};
+
+const createTtlPathStorage = (key: string, ttl: number) => ({
+  get: (): string | undefined => {
+    const record = getStructuredValue(key, storedPathStateGuard, 'session');
+
+    if (!record || !isWithinTtl(record.createdAt, ttl)) {
+      removeItem(key, 'session');
+      return;
+    }
+
+    return record.path;
+  },
+  set: (path: string) => {
+    setStructuredValue(key, { path, createdAt: Date.now() }, 'session');
+  },
+  clear: () => {
+    removeItem(key, 'session');
+  },
+});
+
 export const accountStorage = Object.freeze({
-  route: {
-    get: () => getString(storageKeys.route, 'session'),
-    set: (value: string) => {
-      setString(storageKeys.route, value, 'session');
-    },
-    clear: () => {
-      removeItem(storageKeys.route, 'session');
-    },
-  },
-  redirectUrl: {
-    get: () => getString(storageKeys.redirectUrl, 'session'),
-    set: (url: string): boolean => {
-      try {
-        const parsed = new URL(url);
-
-        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-          return false;
-        }
-
-        setString(storageKeys.redirectUrl, url, 'session');
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    clear: () => {
-      removeItem(storageKeys.redirectUrl, 'session');
-    },
-  },
+  /** Saves the in-app route before sign-in; restored after OIDC callback. TTL: 10min. */
+  routeRestore: createTtlPathStorage(storageKeys.routeRestore, routeRestoreTtl),
+  /** Saves the return URL for multi-step flows (password, social linking); used after completion. TTL: 10min. */
+  pendingReturn: createTtlPathStorage(storageKeys.pendingReturn, pendingReturnTtl),
   showSuccess: {
     get: () => getString(storageKeys.showSuccess, 'session') === 'true',
     set: (value: boolean) => {
@@ -221,12 +231,12 @@ export const accountStorage = Object.freeze({
 });
 
 export const sessionStorage = Object.freeze({
-  getRoute: accountStorage.route.get,
-  setRoute: accountStorage.route.set,
-  clearRoute: accountStorage.route.clear,
-  getRedirectUrl: accountStorage.redirectUrl.get,
-  setRedirectUrl: accountStorage.redirectUrl.set,
-  clearRedirectUrl: accountStorage.redirectUrl.clear,
+  getRouteRestore: accountStorage.routeRestore.get,
+  setRouteRestore: accountStorage.routeRestore.set,
+  clearRouteRestore: accountStorage.routeRestore.clear,
+  getPendingReturn: accountStorage.pendingReturn.get,
+  setPendingReturn: accountStorage.pendingReturn.set,
+  clearPendingReturn: accountStorage.pendingReturn.clear,
   getShowSuccess: accountStorage.showSuccess.get,
   setShowSuccess: accountStorage.showSuccess.set,
   clearShowSuccess: accountStorage.showSuccess.clear,

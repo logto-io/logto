@@ -88,7 +88,7 @@ const PasskeyBinding = () => {
 
   useEffect(() => {
     if (verificationId && isWebAuthnSupported !== false) {
-      sessionStorage.clearRoute();
+      sessionStorage.clearRouteRestore();
     }
   }, [isWebAuthnSupported, verificationId]);
 

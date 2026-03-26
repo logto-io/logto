@@ -59,6 +59,7 @@ import {
   accountCenterBasePath,
   getUiLocales,
   handleAccountCenterRoute,
+  setRouteRestore,
 } from './utils/account-center-route';
 import { hasVisibleSecuritySection } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
@@ -80,8 +81,14 @@ const Main = () => {
   const isInCallback = isSocialCallback || isAuthCallback;
   const uiLocales = getUiLocales();
   const { isAuthenticated, isLoading, signIn } = useLogto();
-  const { accountCenterSettings, isLoadingExperience, isLoadingUserInfo, userInfo, userInfoError } =
-    useContext(PageContext);
+  const {
+    accountCenterSettings,
+    experienceSettings,
+    isLoadingExperience,
+    isLoadingUserInfo,
+    userInfo,
+    userInfoError,
+  } = useContext(PageContext);
   const isInitialAuthLoading = !isAuthenticated && isLoading;
 
   useEffect(() => {
@@ -91,6 +98,7 @@ const Main = () => {
 
     if (!isAuthenticated) {
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+      setRouteRestore(window.location.pathname);
       void signIn({ redirectUri, extraParams });
     }
   }, [isAuthenticated, isInCallback, isInitialAuthLoading, signIn, uiLocales]);
@@ -102,6 +110,7 @@ const Main = () => {
 
     if (userInfoError) {
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+      setRouteRestore(window.location.pathname);
       void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
     }
   }, [
@@ -113,6 +122,10 @@ const Main = () => {
     uiLocales,
     userInfoError,
   ]);
+  if (isSocialCallback) {
+    return <SocialCallback />;
+  }
+
   if (isAuthCallback) {
     return <Callback />;
   }
@@ -126,7 +139,7 @@ const Main = () => {
   }
 
   const showsSecurityPage =
-    isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings);
+    isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
   const indexElement = showsSecurityPage ? <Security /> : <Home />;
 
   return (
@@ -187,7 +200,9 @@ const Layout = () => {
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
   const isHomePage =
-    pathname === '/' && isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings);
+    pathname === '/' &&
+    isDevFeaturesEnabled &&
+    hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
 
   return (
     <div className={styles.app}>
