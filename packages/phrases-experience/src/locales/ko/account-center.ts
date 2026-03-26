@@ -156,8 +156,8 @@ const account_center = {
       description: '인증 앱이 계정에 성공적으로 연결되었습니다.',
     },
     totp_replaced: {
-      title: 'Authenticator app replaced!',
-      description: 'Your authenticator app has been successfully replaced.',
+      title: '인증 앱이 교체되었습니다!',
+      description: '인증 앱이 성공적으로 교체되었습니다.',
     },
     backup_code: {
       title: '백업 코드가 생성되었습니다!',

@@ -151,8 +151,8 @@ const account_center = {
       description: '身份验证器应用已成功关联到你的账号。',
     },
     totp_replaced: {
-      title: 'Authenticator app replaced!',
-      description: 'Your authenticator app has been successfully replaced.',
+      title: '身份验证器应用已替换！',
+      description: '你的身份验证器应用已成功替换。',
     },
     backup_code: {
       title: '备用码已生成！',

@@ -32,7 +32,7 @@ const mfa = {
   verify_mfa_description:
     'Die 2-Schritte-Verifizierung ist für dieses Konto aktiviert. Bitte wählen Sie die zweite Methode zur Verifizierung Ihrer Identität aus.',
   add_authenticator_app: 'Authenticator-App hinzufügen',
-  replace_authenticator_app: 'Replace authenticator app',
+  replace_authenticator_app: 'Authenticator-App ersetzen',
   step: 'Schritt {{step, number}}: {{content}}',
   scan_qr_code: 'Scannen Sie diesen QR-Code',
   scan_qr_code_description:

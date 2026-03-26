@@ -168,8 +168,8 @@ const account_center = {
       description: 'La tua app di autenticazione è stata collegata con successo al tuo account.',
     },
     totp_replaced: {
-      title: 'Authenticator app replaced!',
-      description: 'Your authenticator app has been successfully replaced.',
+      title: 'App di autenticazione sostituita!',
+      description: 'La tua app di autenticazione è stata sostituita con successo.',
     },
     backup_code: {
       title: 'Codici di backup generati!',

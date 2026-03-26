@@ -31,7 +31,7 @@ const mfa = {
   verify_mfa_description:
     'Bu hesap için 2 aşamalı doğrulama etkinleştirildi. Lütfen kimliğinizi doğrulamak için ikinci yolu seçin.',
   add_authenticator_app: 'Authenticator uygulaması ekle',
-  replace_authenticator_app: 'Replace authenticator app',
+  replace_authenticator_app: 'Authenticator uygulamasını değiştir',
   step: 'Adım {{step, number}}: {{content}}',
   scan_qr_code: 'Bu QR kodunu tarayın',
   scan_qr_code_description:

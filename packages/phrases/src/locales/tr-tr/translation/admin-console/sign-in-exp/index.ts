@@ -189,7 +189,7 @@ const sign_in_exp = {
         social_remove: 'Bağlı sosyal hesabı kaldırın',
         authenticator_app:
           'Çok faktörlü kimlik doğrulama için yeni bir doğrulayıcı uygulaması ayarlayın',
-        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
+        authenticator_app_replace: 'Mevcut doğrulayıcı uygulamanızı yeni biriyle değiştirin',
         passkey_add: 'Yeni bir passkey kaydedin',
         passkey_manage: "Mevcut passkey'lerinizi yönetin veya yenilerini ekleyin",
         backup_codes_generate: 'Yeni bir 10 yedek kod seti oluşturun',

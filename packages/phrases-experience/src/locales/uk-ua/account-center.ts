@@ -164,8 +164,8 @@ const account_center = {
       description: "Ваш додаток для автентифікації успішно під'єднано до вашого акаунту.",
     },
     totp_replaced: {
-      title: 'Authenticator app replaced!',
-      description: 'Your authenticator app has been successfully replaced.',
+      title: 'Додаток для автентифікації замінено!',
+      description: 'Ваш додаток для автентифікації було успішно замінено.',
     },
     backup_code: {
       title: 'Резервні коди створено!',

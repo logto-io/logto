@@ -156,8 +156,8 @@ const account_center = {
       description: 'تم ربط تطبيق المصادقة بحسابك بنجاح.',
     },
     totp_replaced: {
-      title: 'Authenticator app replaced!',
-      description: 'Your authenticator app has been successfully replaced.',
+      title: 'تم استبدال تطبيق المصادقة!',
+      description: 'تم استبدال تطبيق المصادقة الخاص بك بنجاح.',
     },
     backup_code: {
       title: 'تم إنشاء رموز النسخ الاحتياطي!',

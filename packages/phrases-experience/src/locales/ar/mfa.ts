@@ -30,7 +30,7 @@ const mfa = {
   verify_mfa_description:
     'تم تمكين التحقق من خطوتين لهذا الحساب. يرجى تحديد الطريقة الثانية للتحقق من هويتك.',
   add_authenticator_app: 'إضافة تطبيق المصادقة',
-  replace_authenticator_app: 'Replace authenticator app',
+  replace_authenticator_app: 'استبدال تطبيق المصادقة',
   step: 'الخطوة {{step, number}}: {{content}}',
   scan_qr_code: 'مسح رمز الاستجابة السريعة هذا',
   scan_qr_code_description:

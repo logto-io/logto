@@ -160,8 +160,8 @@ const account_center = {
       description: '認証アプリがアカウントに正常にリンクされました。',
     },
     totp_replaced: {
-      title: 'Authenticator app replaced!',
-      description: 'Your authenticator app has been successfully replaced.',
+      title: '認証アプリが置き換えられました！',
+      description: '認証アプリが正常に置き換えられました。',
     },
     backup_code: {
       title: 'バックアップコードが生成されました！',

@@ -31,7 +31,7 @@ const mfa = {
   verify_mfa_description:
     'Двухфакторная аутентификация включена для этого аккаунта. Выберите второй способ подтверждения вашей личности.',
   add_authenticator_app: 'Добавить приложение для аутентификации',
-  replace_authenticator_app: 'Replace authenticator app',
+  replace_authenticator_app: 'Заменить приложение для аутентификации',
   step: 'Шаг {{step, number}}: {{content}}',
   scan_qr_code: 'Отсканируйте этот QR-код',
   scan_qr_code_description:

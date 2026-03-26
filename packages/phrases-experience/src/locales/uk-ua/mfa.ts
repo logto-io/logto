@@ -31,7 +31,7 @@ const mfa = {
   verify_mfa_description:
     'Для цього облікового запису ввімкнено двоетапну перевірку. Виберіть другий спосіб перевірки вашої особи.',
   add_authenticator_app: 'Додати програму автентифікації',
-  replace_authenticator_app: 'Replace authenticator app',
+  replace_authenticator_app: 'Замінити програму автентифікації',
   step: 'Крок {{step, number}}: {{content}}',
   scan_qr_code: 'Скануйте цей QR-код',
   scan_qr_code_description:

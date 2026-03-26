@@ -162,8 +162,8 @@ const account_center = {
       description: 'Authenticator uygulamanız hesabınıza başarıyla bağlandı.',
     },
     totp_replaced: {
-      title: 'Authenticator app replaced!',
-      description: 'Your authenticator app has been successfully replaced.',
+      title: 'Authenticator uygulaması değiştirildi!',
+      description: 'Authenticator uygulamanız başarıyla değiştirildi.',
     },
     backup_code: {
       title: 'Yedek kodlar oluşturuldu!',

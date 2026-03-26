@@ -182,7 +182,7 @@ const sign_in_exp = {
         social: '連結社交帳號以供登入',
         social_remove: '移除已連結的社交帳號',
         authenticator_app: '為多重驗證設置新的身份驗證器應用',
-        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
+        authenticator_app_replace: '用新的身份驗證器應用替換你現有的身份驗證器應用',
         passkey_add: '註冊新的通行金鑰',
         passkey_manage: '管理你現有的通行金鑰或添加新的',
         backup_codes_generate: '生成一組新的 10 個備用代碼',
