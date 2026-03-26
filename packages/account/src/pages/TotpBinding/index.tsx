@@ -12,12 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import {
-  getMfaVerifications,
-  generateTotpSecret,
-  addTotpMfa,
-  createOrReplaceTotpMfa,
-} from '@ac/apis/mfa';
+import { getMfaVerifications, generateTotpSecret, createOrReplaceTotpMfa } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
 import {
@@ -55,7 +50,6 @@ const TotpBinding = ({ isReplace }: Props) => {
   } = useContext(PageContext);
   const getMfaRequest = useApi(getMfaVerifications, { silent: true });
   const generateSecretRequest = useApi(generateTotpSecret, { silent: true });
-  const addTotpRequest = useApi(addTotpMfa);
   const createOrReplaceTotpRequest = useApi(createOrReplaceTotpMfa);
   const handleError = useErrorHandler();
 
@@ -153,8 +147,7 @@ const TotpBinding = ({ isReplace }: Props) => {
       setErrorMessage(undefined);
 
       const codeString = codeInput.join('');
-      const submitRequest = isReplace ? createOrReplaceTotpRequest : addTotpRequest;
-      const [error] = await submitRequest(verificationId, {
+      const [error] = await createOrReplaceTotpRequest(verificationId, {
         secret,
         code: codeString,
       });
@@ -185,7 +178,6 @@ const TotpBinding = ({ isReplace }: Props) => {
       });
     },
     [
-      addTotpRequest,
       codeInput,
       createOrReplaceTotpRequest,
       handleError,
