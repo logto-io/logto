@@ -318,7 +318,7 @@ describe('client credentials grant', () => {
         blockIssuanceOnError: true,
       });
 
-      await expectError({ resource: resource.indicator }, 403, {
+      await expectError({ resource: resource.indicator }, 400, {
         error: 'access_denied',
       });
     });

@@ -212,7 +212,7 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
       callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
     ).rejects.toMatchObject({
       error: 'access_denied',
-      statusCode: 403,
+      statusCode: 400,
     });
   });
 

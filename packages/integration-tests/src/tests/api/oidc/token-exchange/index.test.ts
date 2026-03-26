@@ -596,6 +596,7 @@ describe('Token Exchange', () => {
         })
         .catch((error: unknown) => error);
       expect(error).toBeInstanceOf(HTTPError);
+      expect((error as HTTPError).response.status).toBe(400);
       expect(await (error as HTTPError).response.json()).toMatchObject({
         error: 'access_denied',
       });

@@ -336,11 +336,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
 
       // Deny the token exchange request if access is denied by the custom JWT script.
       if (errorResponse && isAccessDeniedError(errorResponse.error)) {
-        const accessDeniedError = new errors.AccessDenied(errorResponse.message);
-        // Oidc-provider defaults AccessDenied to 401; preserve the existing customizer 403 contract.
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        accessDeniedError.statusCode = 403;
-        throw accessDeniedError;
+        throw new errors.AccessDenied(errorResponse.message);
       }
 
       if (shouldBlockIssuanceOnError) {
