@@ -618,6 +618,28 @@
         }
       }
     },
+    "/api/my-account/grants/{grantId}": {
+      "delete": {
+        "tags": ["Dev feature"],
+        "operationId": "DeleteGrantById",
+        "summary": "Revoke a grant by ID",
+        "description": "Revoke a specific user application grant by grant ID and remove the related session authorization. A logto-verification-id in header is required for revoking grants.",
+        "responses": {
+          "204": {
+            "description": "The grant was revoked successfully."
+          },
+          "400": {
+            "description": "The field is not editable."
+          },
+          "404": {
+            "description": "The grant does not exist."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to revoke grants."
+          }
+        }
+      }
+    },
     "/api/my-account/sessions/{sessionId}": {
       "delete": {
         "operationId": "DeleteSessionById",
