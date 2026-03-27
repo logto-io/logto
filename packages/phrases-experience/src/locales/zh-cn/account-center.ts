@@ -44,6 +44,8 @@ const account_center = {
     verification_description: '验证码已发送到你的邮箱 {{email_address}}。',
     success: '已成功关联主要邮箱。',
     verification_required: '验证已失效，请重新验证身份。',
+    remove_confirmation_description:
+      '删除您的主要邮箱不会禁用登录。请确保您已配置其他登录方式（如密码或社交账号）。',
   },
   phone: {
     title: '关联手机号',
@@ -52,6 +54,8 @@ const account_center = {
     verification_description: '验证码已发送到你的手机 {{phone_number}}。',
     success: '已成功关联主要手机号。',
     verification_required: '验证已失效，请重新验证身份。',
+    remove_confirmation_description:
+      '删除您的主要手机号不会禁用登录。请确保您已配置其他登录方式（如密码或社交账号）。',
   },
   username: {
     title: '设置用户名',

@@ -19,8 +19,10 @@ import GlobalLoading from './components/GlobalLoading';
 import { isDevFeaturesEnabled } from './constants/env';
 import {
   emailRoute,
+  emailRemoveRoute,
   emailSuccessRoute,
   phoneRoute,
+  phoneRemoveRoute,
   phoneSuccessRoute,
   passwordRoute,
   passwordSuccessRoute,
@@ -44,6 +46,7 @@ import { resolveUiLocalesLanguage } from './i18n/utils';
 import BackupCodeBinding from './pages/BackupCodeBinding';
 import BackupCodeView from './pages/BackupCodeView';
 import Email from './pages/Email';
+import EmailPhoneRemoveFlow from './pages/EmailPhoneRemoveFlow';
 import Home from './pages/Home';
 import PasskeyBinding from './pages/PasskeyBinding';
 import PasskeyView from './pages/PasskeyView';
@@ -170,7 +173,9 @@ const Main = () => {
         <Route path={socialSuccessRoute} element={<UpdateSuccess identifierType="social" />} />
       )}
       <Route path={emailRoute} element={<Email />} />
+      <Route path={emailRemoveRoute} element={<EmailPhoneRemoveFlow type="email" />} />
       <Route path={phoneRoute} element={<Phone />} />
+      <Route path={phoneRemoveRoute} element={<EmailPhoneRemoveFlow type="phone" />} />
       <Route path={passwordRoute} element={<Password />} />
       <Route path={usernameRoute} element={<Username />} />
       <Route path={authenticatorAppRoute} element={<TotpBinding />} />

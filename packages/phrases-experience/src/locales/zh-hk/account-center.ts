@@ -44,6 +44,8 @@ const account_center = {
     verification_description: '驗證碼已發送至你的電郵 {{email_address}}。',
     success: '已成功連結主要電郵。',
     verification_required: '驗證已失效，請再次驗證你的身份。',
+    remove_confirmation_description:
+      'Removing your primary email will not disable sign-in. Make sure you have another sign-in method (like password or social account) configured.',
   },
   phone: {
     title: '連結電話號碼',
@@ -52,6 +54,8 @@ const account_center = {
     verification_description: '驗證碼已發送至你的電話 {{phone_number}}。',
     success: '已成功連結主要電話。',
     verification_required: '驗證已失效，請再次驗證你的身份。',
+    remove_confirmation_description:
+      'Removing your primary phone number will not disable sign-in. Make sure you have another sign-in method (like password or social account) configured.',
   },
   username: {
     title: '設定用戶名',

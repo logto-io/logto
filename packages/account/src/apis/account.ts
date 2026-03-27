@@ -2,6 +2,24 @@ import { createAuthenticatedKy } from './base-ky';
 
 export const verificationRecordIdHeader = 'logto-verification-id';
 
+export const deletePrimaryEmail = async (
+  accessToken: string,
+  verificationRecordId: string
+) => {
+  await createAuthenticatedKy(accessToken).delete('/api/my-account/primary-email', {
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};
+
+export const deletePrimaryPhone = async (
+  accessToken: string,
+  verificationRecordId: string
+) => {
+  await createAuthenticatedKy(accessToken).delete('/api/my-account/primary-phone', {
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};
+
 export const updatePrimaryEmail = async (
   accessToken: string,
   verificationRecordId: string,

@@ -47,6 +47,8 @@ const account_center = {
       'El código de verificación se ha enviado a tu correo {{email_address}}.',
     success: 'Correo principal vinculado correctamente.',
     verification_required: 'La verificación expiró. Vuelve a comprobar tu identidad.',
+    remove_confirmation_description:
+      'Eliminar tu correo electrónico principal no deshabilitará el inicio de sesión. Asegúrate de tener otro método de inicio de sesión (como contraseña o cuenta social) configurado.',
   },
   phone: {
     title: 'Vincular número de teléfono',
@@ -57,6 +59,8 @@ const account_center = {
       'El código de verificación se ha enviado a tu teléfono {{phone_number}}.',
     success: 'Teléfono principal vinculado correctamente.',
     verification_required: 'La verificación expiró. Vuelve a comprobar tu identidad.',
+    remove_confirmation_description:
+      'Eliminar tu número de teléfono principal no deshabilitará el inicio de sesión. Asegúrate de tener otro método de inicio de sesión (como contraseña o cuenta social) configurado.',
   },
   username: {
     title: 'Establecer nombre de usuario',

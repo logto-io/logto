@@ -47,6 +47,8 @@ const account_center = {
       'O código de verificação foi enviado para o seu e-mail {{email_address}}.',
     success: 'E-mail principal associado com sucesso.',
     verification_required: 'A verificação expirou. Confirme novamente a sua identidade.',
+    remove_confirmation_description:
+      'A remoção do seu e-mail principal não desativará o início de sessão. Certifique-se de que tem outro método de início de sessão (como palavra-passe ou conta social) configurado.',
   },
   phone: {
     title: 'Associar número de telefone',
@@ -57,6 +59,8 @@ const account_center = {
       'O código de verificação foi enviado para o seu telefone {{phone_number}}.',
     success: 'Telefone principal associado com sucesso.',
     verification_required: 'A verificação expirou. Confirme novamente a sua identidade.',
+    remove_confirmation_description:
+      'A remoção do seu telefone principal não desativará o início de sessão. Certifique-se de que tem outro método de início de sessão (como palavra-passe ou conta social) configurado.',
   },
   username: {
     title: 'Definir nome de utilizador',

@@ -50,6 +50,8 @@ const account_center = {
       'Der Bestätigungscode wurde an deine E-Mail {{email_address}} gesendet.',
     success: 'Primäre E-Mail wurde erfolgreich verknüpft.',
     verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
+    remove_confirmation_description:
+      'Das Entfernen Ihrer primären E-Mail-Adresse deaktiviert die Anmeldung nicht. Stellen Sie sicher, dass Sie eine andere Anmeldemethode (z. B. Passwort oder soziales Konto) konfiguriert haben.',
   },
   phone: {
     title: 'Telefonnummer verknüpfen',
@@ -60,6 +62,8 @@ const account_center = {
       'Der Bestätigungscode wurde an dein Telefon {{phone_number}} gesendet.',
     success: 'Primäre Telefonnummer wurde erfolgreich verknüpft.',
     verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
+    remove_confirmation_description:
+      'Das Entfernen Ihrer primären Telefonnummer deaktiviert die Anmeldung nicht. Stellen Sie sicher, dass Sie eine andere Anmeldemethode (z. B. Passwort oder soziales Konto) konfiguriert haben.',
   },
   username: {
     title: 'Benutzernamen festlegen',

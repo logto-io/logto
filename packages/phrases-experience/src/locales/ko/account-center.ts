@@ -44,6 +44,8 @@ const account_center = {
     verification_description: '인증 코드가 이메일 {{email_address}}(으)로 전송되었습니다.',
     success: '기본 이메일이 연결되었습니다.',
     verification_required: '인증이 만료되었습니다. 다시 신원을 확인해주세요.',
+    remove_confirmation_description:
+      '기본 이메일을 제거해도 로그인이 비활성화되지 않습니다. 다른 로그인 방법(비밀번호 또는 소셜 계정 등)이 구성되어 있는지 확인하세요.',
   },
   phone: {
     title: '전화번호 연결',
@@ -52,6 +54,8 @@ const account_center = {
     verification_description: '인증 코드가 전화번호 {{phone_number}}(으)로 전송되었습니다.',
     success: '기본 전화번호가 연결되었습니다.',
     verification_required: '인증이 만료되었습니다. 다시 신원을 확인해주세요.',
+    remove_confirmation_description:
+      '기본 전화번호를 제거해도 로그인이 비활성화되지 않습니다. 다른 로그인 방법(비밀번호 또는 소셜 계정 등)이 구성되어 있는지 확인하세요.',
   },
   username: {
     title: '사용자 이름 설정',

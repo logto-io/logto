@@ -44,6 +44,8 @@ const account_center = {
     verification_description: '驗證碼已傳送至你的電子郵件 {{email_address}}。',
     success: '已成功連結主要電子郵件。',
     verification_required: '驗證已失效，請再次驗證您的身分。',
+    remove_confirmation_description:
+      '刪除您的主要電子郵件不會停用登入。請確保您已設定其他登入方式（如密碼或社群帳號）。',
   },
   phone: {
     title: '連結電話號碼',
@@ -52,6 +54,8 @@ const account_center = {
     verification_description: '驗證碼已傳送至你的電話 {{phone_number}}。',
     success: '已成功連結主要電話。',
     verification_required: '驗證已失效，請再次驗證您的身分。',
+    remove_confirmation_description:
+      '刪除您的主要電話號碼不會停用登入。請確保您已設定其他登入方式（如密碼或社群帳號）。',
   },
   username: {
     title: '設定使用者名稱',

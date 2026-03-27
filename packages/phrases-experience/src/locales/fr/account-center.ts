@@ -48,6 +48,8 @@ const account_center = {
       'Le code de vérification a été envoyé à votre e-mail {{email_address}}.',
     success: 'E-mail principal lié avec succès.',
     verification_required: 'La vérification a expiré. Veuillez confirmer à nouveau votre identité.',
+    remove_confirmation_description:
+      "La suppression de votre e-mail principal ne désactivera pas la connexion. Assurez-vous qu'une autre méthode de connexion (comme un mot de passe ou un compte social) est configurée.",
   },
   phone: {
     title: 'Lier le numéro de téléphone',
@@ -58,6 +60,8 @@ const account_center = {
       'Le code de vérification a été envoyé sur votre téléphone {{phone_number}}.',
     success: 'Téléphone principal lié avec succès.',
     verification_required: 'La vérification a expiré. Veuillez confirmer à nouveau votre identité.',
+    remove_confirmation_description:
+      "La suppression de votre téléphone principal ne désactivera pas la connexion. Assurez-vous qu'une autre méthode de connexion (comme un mot de passe ou un compte social) est configurée.",
   },
   username: {
     title: "Définir le nom d'utilisateur",

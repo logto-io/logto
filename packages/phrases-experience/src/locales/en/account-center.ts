@@ -46,6 +46,8 @@ const account_center = {
       'The verification code has been sent to your email {{email_address}}.',
     success: 'Primary email linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
+    remove_confirmation_description:
+      'Removing your primary email will not disable sign-in. Make sure you have another sign-in method (like password or social account) configured.',
   },
   phone: {
     title: 'Link phone number',
@@ -54,6 +56,8 @@ const account_center = {
     verification_description: 'The verification code has been sent to your phone {{phone_number}}.',
     success: 'Primary phone linked successfully.',
     verification_required: 'Verification expired. Please verify your identity again.',
+    remove_confirmation_description:
+      'Removing your primary phone number will not disable sign-in. Make sure you have another sign-in method (like password or social account) configured.',
   },
   username: {
     title: 'Set username',

@@ -48,6 +48,8 @@ const account_center = {
       'Il codice di verifica è stato inviato alla tua e-mail {{email_address}}.',
     success: 'Email principale collegata correttamente.',
     verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
+    remove_confirmation_description:
+      "Rimuovendo la tua email principale, l'accesso non verrà disabilitato. Assicurati di aver configurato un altro metodo di accesso (come password o account sociale).",
   },
   phone: {
     title: 'Collega numero di telefono',
@@ -58,6 +60,8 @@ const account_center = {
       'Il codice di verifica è stato inviato al tuo telefono {{phone_number}}.',
     success: 'Telefono principale collegato correttamente.',
     verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
+    remove_confirmation_description:
+      "Rimuovendo il tuo telefono principale, l'accesso non verrà disabilitato. Assicurati di aver configurato un altro metodo di accesso (come password o account sociale).",
   },
   username: {
     title: 'Imposta nome utente',

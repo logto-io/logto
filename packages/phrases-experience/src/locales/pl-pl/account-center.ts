@@ -46,6 +46,8 @@ const account_center = {
     verification_description: 'Kod weryfikacyjny został wysłany na Twój e-mail {{email_address}}.',
     success: 'Główny e-mail połączono pomyślnie.',
     verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
+    remove_confirmation_description:
+      'Usunięcie głównego adresu e-mail nie wyłączy logowania. Upewnij się, że masz skonfigurowaną inną metodę logowania (np. hasło lub konto społecznościowe).',
   },
   phone: {
     title: 'Połącz numer telefonu',
@@ -54,6 +56,8 @@ const account_center = {
     verification_description: 'Kod weryfikacyjny został wysłany na Twój telefon {{phone_number}}.',
     success: 'Główny telefon połączono pomyślnie.',
     verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
+    remove_confirmation_description:
+      'Usunięcie głównego numeru telefonu nie wyłączy logowania. Upewnij się, że masz skonfigurowaną inną metodę logowania (np. hasło lub konto społecznościowe).',
   },
   username: {
     title: 'Ustaw nazwę użytkownika',

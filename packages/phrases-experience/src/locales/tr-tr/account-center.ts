@@ -46,6 +46,8 @@ const account_center = {
     verification_description: 'Doğrulama kodu e-postana {{email_address}} gönderildi.',
     success: 'Birincil e-posta başarıyla bağlandı.',
     verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
+    remove_confirmation_description:
+      'Birincil e-postayı kaldırmak oturum açmayı devre dışı bırakmaz. Başka bir oturum açma yönteminin (ör. şifre veya sosyal hesap) yapılandırıldığından emin ol.',
   },
   phone: {
     title: 'Telefon numarasını bağla',
@@ -54,6 +56,8 @@ const account_center = {
     verification_description: 'Doğrulama kodu telefonuna {{phone_number}} gönderildi.',
     success: 'Birincil telefon başarıyla bağlandı.',
     verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
+    remove_confirmation_description:
+      'Birincil telefonu kaldırmak oturum açmayı devre dışı bırakmaz. Başka bir oturum açma yönteminin (ör. şifre veya sosyal hesap) yapılandırıldığından emin ol.',
   },
   username: {
     title: 'Kullanıcı adını ayarla',

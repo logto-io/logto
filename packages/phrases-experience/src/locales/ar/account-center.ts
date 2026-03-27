@@ -45,6 +45,8 @@ const account_center = {
     verification_description: 'تم إرسال رمز التحقق إلى بريدك الإلكتروني {{email_address}}.',
     success: 'تم ربط البريد الإلكتروني الأساسي بنجاح.',
     verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
+    remove_confirmation_description:
+      'Removing your primary email will not disable sign-in. Make sure you have another sign-in method (like password or social account) configured.',
   },
   phone: {
     title: 'ربط رقم الهاتف',
@@ -53,6 +55,8 @@ const account_center = {
     verification_description: 'تم إرسال رمز التحقق إلى هاتفك {{phone_number}}.',
     success: 'تم ربط الهاتف الأساسي بنجاح.',
     verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
+    remove_confirmation_description:
+      'Removing your primary email will not disable sign-in. Make sure you have another sign-in method (like password or social account) configured.',
   },
   username: {
     title: 'تعيين اسم المستخدم',

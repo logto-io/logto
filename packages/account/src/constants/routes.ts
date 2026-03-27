@@ -1,5 +1,7 @@
 export const emailRoute = '/email';
 export const phoneRoute = '/phone';
+export const emailRemoveRoute = '/email/remove';
+export const phoneRemoveRoute = '/phone/remove';
 export const emailSuccessRoute = '/email/success';
 export const phoneSuccessRoute = '/phone/success';
 export const usernameRoute = '/username';
