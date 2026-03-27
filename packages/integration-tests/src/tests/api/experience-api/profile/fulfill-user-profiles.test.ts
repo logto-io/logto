@@ -28,11 +28,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import {
-  generateEmail,
-  generateNationalPhoneNumber,
-  generatePassword,
-} from '#src/utils.js';
+import { generateEmail, generateNationalPhoneNumber, generatePassword } from '#src/utils.js';
 
 describe('Fulfill User Profiles', () => {
   const userApi = new UserApiTest();

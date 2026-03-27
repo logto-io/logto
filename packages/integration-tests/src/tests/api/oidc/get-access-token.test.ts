@@ -24,11 +24,7 @@ import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import {
-  generateUsername,
-  generatePassword,
-  getAccessTokenPayload,
-} from '#src/utils.js';
+import { generateUsername, generatePassword, getAccessTokenPayload } from '#src/utils.js';
 
 const adaptiveMfaSignInContextHeaders = Object.freeze({
   'x-logto-cf-country': 'US',
@@ -208,32 +204,29 @@ describe('get access token', () => {
     await Promise.all([getAccessTokenByRefreshToken(), getAccessTokenByRefreshToken()]);
   });
 
-  it(
-    'includes adaptive MFA sign-in context in custom claims when issuing access tokens',
-    async () => {
-      await upsertJwtCustomizer('access-token', {
-        ...accessTokenJwtCustomizerPayload,
-        script: adaptiveMfaSignInContextClaimScript,
+  it('includes adaptive MFA sign-in context in custom claims when issuing access tokens', async () => {
+    await upsertJwtCustomizer('access-token', {
+      ...accessTokenJwtCustomizerPayload,
+      script: adaptiveMfaSignInContextClaimScript,
+    });
+
+    try {
+      const client = await initExperienceClient({
+        config: {
+          resources: [testApiResourceInfo.indicator],
+        },
+        extraHeaders: adaptiveMfaSignInContextHeaders,
       });
+      await identifyUserWithUsernamePassword(client, guestUsername, password);
 
-      try {
-        const client = await initExperienceClient({
-          config: {
-            resources: [testApiResourceInfo.indicator],
-          },
-          extraHeaders: adaptiveMfaSignInContextHeaders,
-        });
-        await identifyUserWithUsernamePassword(client, guestUsername, password);
+      const { redirectTo } = await client.submitInteraction();
+      await processSession(client, redirectTo);
+      const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
 
-        const { redirectTo } = await client.submitInteraction();
-        await processSession(client, redirectTo);
-        const accessToken = await client.getAccessToken(testApiResourceInfo.indicator);
-
-        expect(getAccessTokenPayload(accessToken)).toHaveProperty('signInCountry', 'US');
-        expect(getAccessTokenPayload(accessToken)).toHaveProperty('signInBotScore', '10');
-      } finally {
-        await deleteJwtCustomizer('access-token');
-      }
+      expect(getAccessTokenPayload(accessToken)).toHaveProperty('signInCountry', 'US');
+      expect(getAccessTokenPayload(accessToken)).toHaveProperty('signInBotScore', '10');
+    } finally {
+      await deleteJwtCustomizer('access-token');
     }
-  );
+  });
 });
