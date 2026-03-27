@@ -17,7 +17,7 @@ import {
 } from '@logto/schemas';
 import { conditional, trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
-import { type KoaContextWithOIDC, Provider, errors } from 'oidc-provider';
+import { type KoaContextWithOIDC, Provider, type ResourceServer, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -87,6 +87,52 @@ export default function initOidc(
     overwrite: true,
   } as const);
 
+  const getResourceServerInfoCore = async (
+    indicator: string,
+    clientId: string | undefined,
+    userId: string | undefined,
+    organizationId: string | undefined
+  ): Promise<Pick<ResourceServer, 'accessTokenFormat' | 'jwt' | 'accessTokenTTL' | 'scope'>> => {
+    const resourceServer = await findResource(queries, indicator);
+
+    if (!resourceServer) {
+      throw new errors.InvalidTarget();
+    }
+
+    const { accessTokenTtl: accessTokenTTL } = resourceServer;
+
+    const scopes = await findResourceScopes({
+      queries,
+      libraries,
+      indicator,
+      findFromOrganizations: true,
+      organizationId,
+      applicationId: clientId,
+      userId,
+    });
+
+    if (clientId && (await isThirdPartyApplication(queries, clientId))) {
+      const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
+        libraries,
+        clientId,
+        indicator,
+        scopes
+      );
+
+      return {
+        ...getSharedResourceServerData(envSet),
+        accessTokenTTL,
+        scope: filteredScopes.map(({ name }) => name).join(' '),
+      };
+    }
+
+    return {
+      ...getSharedResourceServerData(envSet),
+      accessTokenTTL,
+      scope: scopes.map(({ name }) => name).join(' '),
+    };
+  };
+
   // Do NOT deconstruct variables from `envSet` earlier, since we might reload `envSet` on the fly,
   // and keeping the reference of the `envSet` object helps dynamically update oidc provider configs.
   const oidc = new Provider(envSet.oidc.issuer, {
@@ -153,50 +199,12 @@ export default function initOidc(
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
-          const resourceServer = await findResource(queries, indicator);
-
-          if (!resourceServer) {
-            throw new errors.InvalidTarget();
-          }
-
-          const { accessTokenTtl: accessTokenTTL } = resourceServer;
-
           const { client, params, session, entities } = ctx.oidc;
           const userId = session?.accountId ?? entities.Account?.accountId;
+          const organizationId =
+            typeof params?.organization_id === 'string' ? params.organization_id : undefined;
 
-          const organizationId = params?.organization_id;
-          const scopes = await findResourceScopes({
-            queries,
-            libraries,
-            indicator,
-            findFromOrganizations: true,
-            organizationId: typeof organizationId === 'string' ? organizationId : undefined,
-            applicationId: client?.clientId,
-            userId,
-          });
-
-          // Need to filter out the unsupported scopes for the third-party application.
-          if (client && (await isThirdPartyApplication(queries, client.clientId))) {
-            // Get application consent resource scopes, from RBAC roles
-            const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
-              libraries,
-              client.clientId,
-              indicator,
-              scopes
-            );
-
-            return {
-              ...getSharedResourceServerData(envSet),
-              accessTokenTTL,
-              scope: filteredScopes.map(({ name }) => name).join(' '),
-            };
-          }
-
-          return {
-            ...getSharedResourceServerData(envSet),
-            accessTokenTTL,
-            scope: scopes.map(({ name }) => name).join(' '),
-          };
+          return getResourceServerInfoCore(indicator, client?.clientId, userId, organizationId);
         },
       },
     },

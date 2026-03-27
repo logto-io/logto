@@ -97,7 +97,8 @@ export const handleClientCertificate = async (
 export const checkOrganizationAccess = async (
   ctx: KoaContextWithOIDC,
   queries: Queries,
-  account: Account
+  account: Account,
+  isThirdParty?: boolean
 ): Promise<{ organizationId?: string }> => {
   const { client, params } = ctx.oidc;
 
@@ -122,7 +123,7 @@ export const checkOrganizationAccess = async (
 
     // Check if the organization is granted (third-party application only) by the user
     if (
-      (await isThirdPartyApplication(queries, client.clientId)) &&
+      (isThirdParty ?? (await isThirdPartyApplication(queries, client.clientId))) &&
       !(await isOrganizationConsentedToApplication(
         queries,
         client.clientId,
