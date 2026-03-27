@@ -2842,8 +2842,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       nodemailer:
-        specifier: ^7.0.7
-        version: 7.0.11
+        specifier: ^8.0.0
+        version: 8.0.4
       snakecase-keys:
         specifier: ^8.0.1
         version: 8.0.1
@@ -12930,8 +12930,8 @@ packages:
   node-xmllint@1.0.0:
     resolution: {integrity: sha512-71UV2HRUP+djvHpdyatiuv+Y1o8hI4ZI7bMfuuoACMLR1JJCErM4WXAclNeHd6BgHXkqeqnnAk3wpDkSQWmFXw==}
 
-  nodemailer@7.0.11:
-    resolution: {integrity: sha512-gnXhNRE0FNhD7wPSCGhdNh46Hs6nm+uTyg+Kq0cZukNQiYdnCsoQjodNP9BQVG9XrcK/v6/MgpAPBUFyzh9pvw==}
+  nodemailer@8.0.4:
+    resolution: {integrity: sha512-k+jf6N8PfQJ0Fe8ZhJlgqU5qJU44Lpvp2yvidH3vp1lPnVQMgi4yEEMPXg5eJS1gFIJTVq1NHBk7Ia9ARdSBdQ==}
     engines: {node: '>=6.0.0'}
 
   nodemon@3.1.7:
@@ -26140,7 +26140,7 @@ snapshots:
 
   node-xmllint@1.0.0: {}
 
-  nodemailer@7.0.11: {}
+  nodemailer@8.0.4: {}
 
   nodemon@3.1.7:
     dependencies:
