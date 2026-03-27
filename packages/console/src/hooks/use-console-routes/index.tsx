@@ -23,7 +23,6 @@ import { webhooks } from './routes/webhooks';
 
 const Dashboard = safeLazy(async () => import('@/pages/Dashboard'));
 const GetStarted = safeLazy(async () => import('@/pages/GetStarted'));
-const SigningKeys = safeLazy(async () => import('@/pages/SigningKeys'));
 
 export const useConsoleRoutes = () => {
   const tenantSettings = useTenantSettings();
@@ -47,7 +46,6 @@ export const useConsoleRoutes = () => {
         roles,
         organizationTemplate,
         organizations,
-        { path: 'signing-keys', element: <SigningKeys /> },
         tenantSettings,
         customizeJwt
       ),
