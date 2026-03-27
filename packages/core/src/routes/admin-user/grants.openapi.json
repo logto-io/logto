@@ -2,7 +2,6 @@
   "paths": {
     "/api/users/{userId}/grants": {
       "get": {
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "query",
@@ -21,7 +20,6 @@
     },
     "/api/users/{userId}/grants/{grantId}": {
       "delete": {
-        "tags": ["Dev feature"],
         "parameters": [],
         "responses": {
           "204": {
