@@ -30,7 +30,6 @@ import {
   updateSessionConfig,
 } from '#src/api/index.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const defaultAdminConsoleConfig: AdminConsoleData = {
   signInExperienceCustomized: false,
@@ -308,7 +307,7 @@ describe('logto config', () => {
   });
 });
 
-devFeatureTest.describe('OIDC session config', () => {
+describe('OIDC session config', () => {
   it('should get OIDC session config successfully with default TTL value', async () => {
     const sessionConfig = await getSessionConfig();
 

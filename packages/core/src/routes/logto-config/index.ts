@@ -22,7 +22,6 @@ import defaults from '#src/oidc/defaults.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import idTokenRoutes from './id-token.js';
@@ -99,53 +98,51 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.get(
-      '/configs/oidc/session',
-      koaGuard({
-        response: oidcSessionConfigGuard.merge(z.object({ ttl: z.number() })),
-        status: [200],
-      }),
-      async (ctx, next) => {
-        const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
-        const sessionConfig = configs[LogtoOidcConfigKey.Session];
+  router.get(
+    '/configs/oidc/session',
+    koaGuard({
+      response: oidcSessionConfigGuard.merge(z.object({ ttl: z.number() })),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
+      const sessionConfig = configs[LogtoOidcConfigKey.Session];
 
-        ctx.body = {
-          // Add default TTL value if session config is not set.
-          ttl: defaults.sessionTtl,
-          ...sessionConfig,
-        };
+      ctx.body = {
+        // Add default TTL value if session config is not set.
+        ttl: defaults.sessionTtl,
+        ...sessionConfig,
+      };
 
-        // Intentionally do not call next() to avoid falling through to /configs/oidc/:keyType.
-        // Running next() will trigger all the downstream middleware including the route handler for /configs/oidc/:keyType, which is not expected for this endpoint.
-      }
-    );
+      // Intentionally do not call next() to avoid falling through to /configs/oidc/:keyType.
+      // Running next() will trigger all the downstream middleware including the route handler for /configs/oidc/:keyType, which is not expected for this endpoint.
+    }
+  );
 
-    router.patch(
-      '/configs/oidc/session',
-      koaGuard({
-        body: oidcSessionConfigGuard.partial(),
-        response: oidcSessionConfigGuard.merge(z.object({ ttl: z.number() })),
-        status: [200],
-      }),
-      async (ctx, next) => {
-        const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
-        const sessionConfig = configs[LogtoOidcConfigKey.Session];
+  router.patch(
+    '/configs/oidc/session',
+    koaGuard({
+      body: oidcSessionConfigGuard.partial(),
+      response: oidcSessionConfigGuard.merge(z.object({ ttl: z.number() })),
+      status: [200],
+    }),
+    async (ctx, next) => {
+      const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
+      const sessionConfig = configs[LogtoOidcConfigKey.Session];
 
-        const updatedSessionConfig = { ...sessionConfig, ...ctx.guard.body };
+      const updatedSessionConfig = { ...sessionConfig, ...ctx.guard.body };
 
-        await updateOidcConfigsByKey(LogtoOidcConfigKey.Session, updatedSessionConfig);
-        void tenant.invalidateCache();
+      await updateOidcConfigsByKey(LogtoOidcConfigKey.Session, updatedSessionConfig);
+      void tenant.invalidateCache();
 
-        ctx.body = {
-          ttl: defaults.sessionTtl,
-          ...updatedSessionConfig,
-        };
+      ctx.body = {
+        ttl: defaults.sessionTtl,
+        ...updatedSessionConfig,
+      };
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 
   router.get(
     '/configs/oidc/:keyType',

@@ -4,7 +4,7 @@ import { Navigate, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
 import { TenantSettingsTabs } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
@@ -61,10 +61,7 @@ const useCloudTenantSettings = () => {
           ],
         },
         { path: TenantSettingsTabs.Domains, element: <TenantDomainSettings /> },
-        isDevFeaturesEnabled && {
-          path: TenantSettingsTabs.OidcConfigs,
-          element: <OidcConfigs />,
-        },
+        { path: TenantSettingsTabs.OidcConfigs, element: <OidcConfigs /> },
         !isDevTenant &&
           canManageTenant && [
             { path: TenantSettingsTabs.Subscription, element: <Subscription /> },
@@ -83,7 +80,7 @@ const useCloudTenantSettings = () => {
   return tenantSettings;
 };
 
-const ossTenantSettings: RouteObject = {
+const useOssTenantSettings = (): RouteObject => ({
   path: 'tenant-settings',
   element: <OssTenantSettings />,
   children: [
@@ -96,8 +93,6 @@ const ossTenantSettings: RouteObject = {
       element: <OidcConfigs />,
     },
   ],
-};
-
-const useOssTenantSettings = () => isDevFeaturesEnabled && ossTenantSettings;
+});
 
 export const useTenantSettings = isCloud ? useCloudTenantSettings : useOssTenantSettings;
