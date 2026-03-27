@@ -11,7 +11,6 @@ import {
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -290,8 +289,5 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   identitiesRoutes(...args);
   mfaVerificationsRoutes(...args);
   accountSessionRoutes(...args);
-
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    accountGrantRoutes(...args);
-  }
+  accountGrantRoutes(...args);
 }

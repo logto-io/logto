@@ -20,9 +20,8 @@ import {
   findSessionByAppId,
 } from '#src/helpers/session.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('account center grant management', () => {
+describe('account center grant management', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await enableAllAccountCenterFields(authedAdminApi);

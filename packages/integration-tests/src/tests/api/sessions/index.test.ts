@@ -20,7 +20,6 @@ import {
 } from '#src/helpers/session.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 describe('Sessions API', () => {
   const userApi = new UserApiTest();
@@ -236,7 +235,7 @@ describe('Sessions API', () => {
     });
   });
 
-  devFeatureTest.it('should get user grants and support appType filters', async () => {
+  it('should get user grants and support appType filters', async () => {
     await enableAllPasswordSignInMethods();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -289,7 +288,7 @@ describe('Sessions API', () => {
     ]);
   });
 
-  devFeatureTest.it('should revoke user grant by grant id', async () => {
+  it('should revoke user grant by grant id', async () => {
     await enableAllPasswordSignInMethods();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
@@ -321,7 +320,7 @@ describe('Sessions API', () => {
     await deleteApplication(app.id);
   });
 
-  devFeatureTest.it('should return 404 when revoking another user grant', async () => {
+  it('should return 404 when revoking another user grant', async () => {
     await enableAllPasswordSignInMethods();
 
     const firstUserProfile = generateNewUserProfile({ username: true, password: true });
