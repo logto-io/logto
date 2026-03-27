@@ -1,7 +1,6 @@
 import { appInsights } from '@logto/app-insights/node';
 import { type Provider } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { TokenUsageType } from '#src/queries/daily-token-usage.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -32,12 +31,10 @@ export const addOidcEventListeners = (tenantId: string, provider: Provider, quer
   provider.addListener('grant.error', grantListener);
   provider.addListener('grant.revoked', grantRevocationListener);
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    provider.addListener(
-      'authorization.success',
-      createAuthorizationSuccessListener(provider, queries)
-    );
-  }
+  provider.addListener(
+    'authorization.success',
+    createAuthorizationSuccessListener(provider, queries)
+  );
 
   provider.addListener('access_token.issued', async (token) => {
     return recordActiveUsers(token, queries);
