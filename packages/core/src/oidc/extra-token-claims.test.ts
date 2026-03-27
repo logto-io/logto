@@ -15,17 +15,10 @@ jest.unstable_mockModule('#src/libraries/jwt-customizer.js', () => ({
   },
 }));
 
-const { EnvSet } = await import('#src/env-set/index.js');
 const { getExtraTokenClaimsForJwtCustomization } = await import('./extra-token-claims.js');
-
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 beforeEach(() => {
   jest.clearAllMocks();
-});
-
-afterEach(() => {
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
 });
 
 describe('getExtraTokenClaimsForJwtCustomization', () => {
@@ -103,9 +96,7 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     });
   });
 
-  it('includes adaptive MFA sign-in context in custom claims payload when dev features are disabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
+  it('includes adaptive MFA sign-in context in custom claims payload', async () => {
     const accountId = 'user-1';
     const sessionUid = 'session-1';
     const signInContext = { country: 'US', botScore: '10' };

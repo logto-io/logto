@@ -8,6 +8,7 @@ import {
 import { authenticator } from 'otplib';
 
 import { createUserMfaVerification, deleteUser, getUser } from '#src/api/admin-user.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
@@ -28,7 +29,6 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 import {
-  devFeatureDisabledTest,
   generateEmail,
   generateNationalPhoneNumber,
   generatePassword,
@@ -184,15 +184,14 @@ describe('Fulfill User Profiles', () => {
     );
   });
 
-  // When dev features are enabled, adaptive MFA may be active and changes the MFA enforcement
-  // behavior. These tests assume the legacy policy-based MFA path. See the adaptive MFA
-  // integration tests for the dev-feature-enabled equivalent.
-  devFeatureDisabledTest.describe('MFA verification status is required', () => {
+  describe('MFA verification status is required', () => {
     beforeAll(async () => {
       await enableMandatoryMfaWithTotpAndBackupCode();
+      await updateSignInExperience({ adaptiveMfa: { enabled: false } });
     });
     afterAll(async () => {
       await resetMfaSettings();
+      await updateSignInExperience({ adaptiveMfa: { enabled: false } });
     });
 
     it('should throw 422 if the mfa is enabled but not verified', async () => {

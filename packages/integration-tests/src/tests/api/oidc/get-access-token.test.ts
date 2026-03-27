@@ -25,7 +25,6 @@ import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import {
-  devFeatureDisabledTest,
   generateUsername,
   generatePassword,
   getAccessTokenPayload,
@@ -209,7 +208,7 @@ describe('get access token', () => {
     await Promise.all([getAccessTokenByRefreshToken(), getAccessTokenByRefreshToken()]);
   });
 
-  devFeatureDisabledTest.it(
+  it(
     'includes adaptive MFA sign-in context in custom claims when issuing access tokens',
     async () => {
       await upsertJwtCustomizer('access-token', {

@@ -1,6 +1,7 @@
 import { InteractionEvent, MfaFactor, SignInIdentifier } from '@logto/schemas';
 
 import { createUserMfaVerification } from '#src/api/admin-user.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { successfullyCreateAndVerifyTotp } from '#src/helpers/experience/totp-verification.js';
@@ -11,7 +12,6 @@ import {
   enableMandatoryMfaWithTotpAndBackupCode,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureDisabledTest } from '#src/utils.js';
 
 describe('Bind MFA APIs sad path', () => {
   const userApi = new UserApiTest();
@@ -106,6 +106,7 @@ describe('Bind MFA APIs sad path', () => {
   describe('Mandatory TOTP and Backup Code', () => {
     beforeAll(async () => {
       await enableMandatoryMfaWithTotpAndBackupCode();
+      await updateSignInExperience({ adaptiveMfa: { enabled: false } });
     });
 
     it('should throw if user has a TOTP in record', async () => {
@@ -133,7 +134,7 @@ describe('Bind MFA APIs sad path', () => {
       });
     });
 
-    devFeatureDisabledTest.it(
+    it(
       'should throw if the interaction is not verified, when add new backup codes',
       async () => {
         const { username, password } = generateNewUserProfile({ username: true, password: true });
