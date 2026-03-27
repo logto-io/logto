@@ -50,11 +50,11 @@ const prebuiltRoutes = [
 const devPrebuiltRoutes = [
   {
     path: '/account/social/:connectorId',
-    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social',
+    tooltip: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social',
   },
   {
     path: '/account/social/:connectorId/remove',
-    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social_remove',
+    tooltip: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social_remove',
   },
 ] as const;
 
@@ -108,11 +108,11 @@ function IntegratePrebuiltUi() {
               />
             ))}
             {isDevFeaturesEnabled &&
-              devPrebuiltRoutes.map(({ path, tooltipKey }) => (
+              devPrebuiltRoutes.map(({ path, tooltip }) => (
                 <PrebuiltUiUrlItem
                   key={path}
                   path={path}
-                  tooltip={t(tooltipKey)}
+                  tooltip={t(tooltip)}
                   tenantEndpoint={tenantEndpoint}
                 />
               ))}

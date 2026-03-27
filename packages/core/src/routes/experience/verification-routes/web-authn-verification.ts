@@ -14,7 +14,6 @@ import { generateStandardId } from '@logto/shared';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { generateWebAuthnAuthenticationOptions } from '#src/routes/interaction/utils/webauthn.js';
@@ -247,23 +246,21 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
         })
       );
 
-      await (EnvSet.values.isDevFeaturesEnabled
-        ? withSentinel(
-            {
-              ctx,
-              sentinel,
-              action: SentinelActivityAction.WebAuthn,
-              identifier: {
-                type: AdditionalIdentifier.UserId,
-                value: experienceInteraction.identifiedUserId,
-              },
-              payload: {
-                verificationId: webAuthnVerification.id,
-              },
-            },
-            webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload)
-          )
-        : webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload));
+      await withSentinel(
+        {
+          ctx,
+          sentinel,
+          action: SentinelActivityAction.WebAuthn,
+          identifier: {
+            type: AdditionalIdentifier.UserId,
+            value: experienceInteraction.identifiedUserId,
+          },
+          payload: {
+            verificationId: webAuthnVerification.id,
+          },
+        },
+        webAuthnVerification.verifyWebAuthnAuthentication(ctx, payload)
+      );
 
       await experienceInteraction.save();
 
