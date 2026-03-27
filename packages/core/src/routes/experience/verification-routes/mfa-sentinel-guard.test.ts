@@ -125,7 +125,7 @@ describe('MFA verification routes sentinel guard', () => {
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
   });
 
-  afterAll(() => {
+  afterEach(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
       originalIsDevFeaturesEnabled;
