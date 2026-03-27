@@ -8,7 +8,7 @@ import {
   type HookEvents,
   type Log,
 } from '@logto/schemas';
-import { createMockUtils, pickDefault } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 import { subDays } from 'date-fns';
 
 import {
@@ -23,17 +23,6 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsmWithActual } = createMockUtils(jest);
-
-const mockEnvSetValues = {
-  isDevFeaturesEnabled: true,
-};
-
-await mockEsmWithActual('#src/env-set/index.js', () => ({
-  EnvSet: {
-    values: mockEnvSetValues,
-  },
-}));
 
 const hooks = {
   getTotalNumberOfHooks: async (): Promise<{ count: number }> => ({ count: mockHookList.length }),
@@ -103,8 +92,6 @@ describe('hook routes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockEnvSetValues.isDevFeaturesEnabled = true;
   });
 
   it('GET /hooks', async () => {
@@ -239,27 +226,6 @@ describe('hook routes', () => {
     });
   });
 
-  it('POST /hooks should support adaptive MFA interaction hook event when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockEnvSetValues.isDevFeaturesEnabled = false;
-
-    const payload = {
-      name: 'adaptiveMfaHook',
-      events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],
-      config: {
-        url: 'https://example.com',
-      },
-    };
-
-    const response = await hookRequest.post('/hooks').send(payload);
-    expect(response.status).toEqual(201);
-    expect(response.body).toMatchObject({
-      name: payload.name,
-      events: payload.events,
-      config: payload.config,
-    });
-  });
-
   it('POST /hooks should fail when no events are provided', async () => {
     const payload: Partial<Hook> = {
       name: 'hook_name',
@@ -302,10 +268,7 @@ describe('hook routes', () => {
     expect(response.status).toEqual(204);
   });
 
-  it('POST /hooks/:id/test should support adaptive MFA event when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockEnvSetValues.isDevFeaturesEnabled = false;
-
+  it('POST /hooks/:id/test should support adaptive MFA event', async () => {
     const targetMockHook = mockHookList[0] ?? mockHook;
     const response = await hookRequest.post(`/hooks/${targetMockHook.id}/test`).send({
       events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],
@@ -347,10 +310,7 @@ describe('hook routes', () => {
     });
   });
 
-  it('PATCH /hooks/:id should support adaptive MFA interaction hook event when dev features disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockEnvSetValues.isDevFeaturesEnabled = false;
-
+  it('PATCH /hooks/:id should support adaptive MFA interaction hook event', async () => {
     const targetMockHook = mockHookList[0] ?? mockHook;
     const response = await hookRequest.patch(`/hooks/${targetMockHook.id}`).send({
       events: [InteractionHookEvent.PostSignInAdaptiveMfaTriggered],

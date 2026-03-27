@@ -6,7 +6,6 @@ import type { Context, MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 import { UAParser } from 'ua-parser-js';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
@@ -165,23 +164,19 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
         ip,
         headers: { 'user-agent': userAgent },
       } = ctx.request;
-      const { isDevFeaturesEnabled } = EnvSet.values;
-      const signInContext = conditional(
-        isDevFeaturesEnabled && getInjectedHeaderValues(ctx.request.headers)
-      );
+      const signInContext = conditional(getInjectedHeaderValues(ctx.request.headers));
       const userAgentValue: Optional<string> =
         typeof userAgent === 'string' ? userAgent : userAgent?.[0];
       const userAgentParsed: Optional<UAParser.IResult> = conditional(
-        isDevFeaturesEnabled &&
-          (() => {
-            if (!userAgentValue) {
-              return;
-            }
+        (() => {
+          if (!userAgentValue) {
+            return;
+          }
 
-            try {
-              return new UAParser(userAgentValue).getResult();
-            } catch {}
-          })()
+          try {
+            return new UAParser(userAgentValue).getResult();
+          } catch {}
+        })()
       );
       const basePayload = removeUndefinedKeys({
         ip,
