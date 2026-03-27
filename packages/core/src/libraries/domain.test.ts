@@ -1,6 +1,7 @@
 import { DomainStatus } from '@logto/schemas';
 import { addDays } from 'date-fns';
 import { createMockUtils } from '@logto/shared/esm';
+import vi from 'vitest';
 
 import {
   mockCloudflareData,
@@ -244,7 +245,7 @@ describe('cleanupDomains()', () => {
     expect(deleteCustomHostname).toHaveBeenCalledTimes(1);
     expect(deleteCustomHostname).toHaveBeenCalledWith(
       expect.anything(),
-      staleDomain.cloudflareData.id
+      mockCloudflareData.id
     );
     expect(deleteDomainById).toHaveBeenCalledWith(staleDomain.id);
   });
