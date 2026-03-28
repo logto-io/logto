@@ -80,6 +80,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'Пользовательский интерфейс',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'Пользовательский CSS',
     css_code_editor_description1: 'См. пример пользовательского CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -89,6 +90,11 @@ const sign_in_exp = {
     bring_your_ui_title: 'Создайте свой интерфейс',
     bring_your_ui_description:
       'Загрузите сжатый пакет (.zip), чтобы заменить предустановленный интерфейс Logto вашим собственным кодом. <a>Узнать больше</a>',
+    bring_your_ui_oss_description:
+      'В OSS вы можете сделать форк кода, чтобы настроить интерфейс входа.',
+    bring_your_ui_oss_card_description:
+      'Загрузите собственные ресурсы интерфейса входа в Logto Cloud без какой-либо настройки.',
+    bring_your_ui_oss_try_cloud: 'Попробовать Cloud',
     preview_with_bring_your_ui_description:
       'Ваши пользовательские ресурсы интерфейса успешно загружены и теперь доступны. Встроенное окно предварительного просмотра отключено.\nДля тестирования персонализированного интерфейса входа нажмите кнопку "Прямая трансляция" для открытия в новой вкладке браузера.',
   },

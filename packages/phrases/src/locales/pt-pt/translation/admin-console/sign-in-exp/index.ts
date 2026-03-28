@@ -79,6 +79,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'UI personalizada',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'CSS personalizado',
     css_code_editor_description1: 'Veja um exemplo de CSS personalizado.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -88,6 +89,11 @@ const sign_in_exp = {
     bring_your_ui_title: 'Traga o seu UI',
     bring_your_ui_description:
       'Carregue um pacote comprimido (.zip) para substituir o UI predefinido do Logto pelo seu próprio código. <a>Saiba mais</a>',
+    bring_your_ui_oss_description:
+      'No OSS, pode fazer fork do código para personalizar a interface de início de sessão.',
+    bring_your_ui_oss_card_description:
+      'Carregue recursos personalizados da interface de início de sessão no Logto Cloud sem qualquer configuração.',
+    bring_your_ui_oss_try_cloud: 'Experimentar Cloud',
     preview_with_bring_your_ui_description:
       'Os seus recursos de UI personalizados foram carregados com êxito e agora estão sendo servidos. Consequentemente, a janela de visualização incorporada foi desativada.\nPara testar o seu UI de início de sessão personalizado, clique no botão "Visualização ao vivo" para abri-lo num novo separador do navegador.',
   },
