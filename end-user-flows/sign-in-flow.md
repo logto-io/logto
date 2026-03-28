@@ -21,46 +21,50 @@ flowchart TD
   identified[User identified for sign-in]
 
   subgraph Identifier["Identifier sign-in"]
-    id0 --> id1{Identifier type}
+    id0 --> first_screen_password{Password input shown<br/>on first screen?}
 
-    id1 -->|username| id_captcha{Is captcha enabled?}
-    id_captcha -->|yes| id_captcha_verify[Captcha verification]
-    id_captcha_verify --> id_submit[Submit identifier]
-    id_captcha -->|no| id_submit
+    first_screen_password -->|yes| pw0_first[First screen password form]
+    first_screen_password -->|no| id1{Identifier type}
 
-    id1 -->|phone| id_captcha
-
+    id1 -->|username| id_submit[Submit identifier]
+    id1 -->|phone| id_submit
     id1 -->|email| ide1{Check whether enterprise SSO should take over}
-    ide1 -->|no| id_captcha
+    ide1 -->|no| id_submit
     ide1 -->|yes| sso_redirect[Redirect to enterprise SSO]
 
-    id_submit --> pw0
-    id_submit --> idm1{Passkey sign-in enabled}
+    id_submit --> second_step[Enter second-step verification flow<br/>preferred method can switch]
+    second_step --> method_priority{Preferred verification method}
 
-    idm1 -->|yes| pk_try[Try identifier-based passkey]
-    idm1 -->|no| idm2{Preferred local method}
+    method_priority -->|passkey first| pk_try[Try identifier-based passkey]
+    method_priority -->|verification code first| vc_captcha{Is captcha enabled?}
+    method_priority -->|password first| pw0_second[Second screen password form]
+
+    vc_captcha -->|yes| vc_captcha_verify[Captcha verification]
+    vc_captcha -->|no| vc0[Send verification code]
+    vc_captcha_verify --> vc0
 
     pk_try --> pk_has{Passkey already bound<br/>for this identifier}
     pk_has -->|yes| pk_verify1[Open browser passkey verification]
-    pk_has -->|no| idm2
+    pk_has -->|no| method_switch{Switch to another<br/>verification method?}
 
-    idm2 -->|password| pw0[Password page]
-    idm2 -->|verification code| vc0[Send verification code]
+    method_switch -->|verification code| vc_captcha
+    method_switch -->|password| pw0_second
+
+    pw0_first --> pw_captcha_first{Is captcha enabled?}
+    pw_captcha_first -->|yes| pw_captcha_first_verify[Captcha verification]
+    pw_captcha_first -->|no| pw1_first[Enter password]
+    pw_captcha_first_verify --> pw1_first
+    pw1_first --> pw2_first[Verify password]
+
+    pw0_second --> pw_captcha_second{Is captcha enabled?}
+    pw_captcha_second -->|yes| pw_captcha_second_verify[Captcha verification]
+    pw_captcha_second -->|no| pw1_second[Enter password]
+    pw_captcha_second_verify --> pw1_second
+    pw1_second --> pw2_second[Verify password]
 
     vc0 --> vc1[Verification code page]
     vc1 --> vc2{Code verified and user found}
-    vc2 -->|yes| identified_local
     vc2 -->|no| out_vc([Register path outside this sign-in flow])
-
-    pw0 --> pw_captcha{Is captcha enabled?}
-    pw_captcha -->|yes| pw_captcha_verify[Captcha verification]
-    pw_captcha_verify --> pw1[Enter password]
-    pw_captcha -->|no| pw1
-    pw1 --> pw2{Password accepted}
-    pw2 -->|yes| identified_local
-    pw2 -->|no| pw_error[Show password error and retry]
-
-    pk_verify1 --> identified_local
   end
 
   subgraph EnterpriseSSO["Enterprise SSO sign-in"]
@@ -105,7 +109,10 @@ flowchart TD
     ml2 -->|no| out_ml([Register path outside this sign-in flow])
   end
 
-  identified_local --> identified
+  pw2_first -->|yes| identified
+  pw2_second -->|yes| identified
+  vc2 -->|yes| identified
+  pk_verify1 --> identified
   identified_passkey --> identified
   identified_social --> identified
   identified_sso --> identified
