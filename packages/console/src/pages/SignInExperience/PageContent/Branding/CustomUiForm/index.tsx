@@ -1,19 +1,63 @@
+import { ConnectorPlatform } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import CustomCssEditorField from '@/components/CustomCssEditorField';
-import { isCloud } from '@/consts/env';
+import { CloudTag } from '@/components/FeatureTag';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { logtoCloud } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
+import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
+
+import styles from './index.module.scss';
+
+function OssBringYourUiCard() {
+  const { getDocumentationUrl } = useDocumentationUrl();
+
+  return (
+    <FormField
+      title={
+        <div className={styles.titleRow}>
+          <DynamicT forKey="sign_in_exp.custom_ui.bring_your_ui_title" />
+          <CloudTag>
+            <DynamicT forKey="sign_in_exp.custom_ui.cloud_tag" />
+          </CloudTag>
+        </div>
+      }
+      description="sign_in_exp.custom_ui.bring_your_ui_oss_description"
+      descriptionPosition="top"
+    >
+      <div className={styles.ossCard}>
+        <div className={styles.ossCardContent}>
+          <div className={styles.ossCardIcon}>
+            <ConnectorPlatformIcon platform={ConnectorPlatform.Universal} />
+          </div>
+          <div className={styles.ossCardDescription}>
+            <DynamicT forKey="sign_in_exp.custom_ui.bring_your_ui_oss_card_description" />
+          </div>
+        </div>
+        <TextLink
+          className={styles.tryCloudLink}
+          href={getDocumentationUrl(logtoCloud)}
+          targetBlank="noopener"
+        >
+          <DynamicT forKey="sign_in_exp.custom_ui.bring_your_ui_oss_try_cloud" />
+        </TextLink>
+      </div>
+    </FormField>
+  );
+}
 
 function CustomUiForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -21,6 +65,7 @@ function CustomUiForm() {
   const { control } = useFormContext<SignInExperienceForm>();
   const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const isBringYourUiEnabled = currentSubscriptionQuota.bringYourUiEnabled;
+  const shouldShowOssBringYourUi = !isCloud && isDevFeaturesEnabled;
 
   return (
     <Card>
@@ -62,6 +107,7 @@ function CustomUiForm() {
           />
         </FormField>
       )}
+      {shouldShowOssBringYourUi && <OssBringYourUiCard />}
     </Card>
   );
 }

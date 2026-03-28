@@ -1,5 +1,61 @@
 @use '@/scss/underscore' as _;
 
-.upsell {
-  margin-top: _.unit(3);
+.titleRow {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+}
+
+.ossCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: _.unit(4);
+  padding: _.unit(4);
+  border-radius: 16px;
+  background: var(--color-overlay-primary-hover);
+
+  .ossCardContent {
+    display: flex;
+    align-items: center;
+    gap: _.unit(3);
+    min-width: 0;
+  }
+
+  .ossCardIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: var(--color-overlay-primary-pressed);
+    color: var(--color-primary);
+
+    > svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .ossCardDescription {
+    font: var(--font-body-2);
+    color: var(--color-text-secondary);
+  }
+
+  .tryCloudLink {
+    flex-shrink: 0;
+    font: var(--font-label-2);
+  }
+
+  @media screen and (max-width: 720px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .tryCloudLink {
+      padding-left: _.unit(11);
+    }
+  }
 }
