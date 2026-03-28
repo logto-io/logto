@@ -26,7 +26,6 @@ export const mockDomain: Domain = {
   cloudflareData: null,
   updatedAt: mockCreatedAtForDomain,
   createdAt: mockCreatedAtForDomain,
-  nonActiveSince: null,
 };
 
 export const mockHostnameId = 'mock-hostname-id';

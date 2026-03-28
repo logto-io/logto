@@ -120,7 +120,6 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       body: z.object({ staleDays: z.number().int().positive() }),
       response: z.object({
         scannedCount: z.number(),
-        staleCandidateCount: z.number(),
         deletedCount: z.number(),
         skippedActiveCount: z.number(),
         failedCount: z.number(),

@@ -106,9 +106,8 @@ describe('domain routes', () => {
   it('POST /domains/cleanup', async () => {
     cleanupDomains.mockResolvedValueOnce({
       scannedCount: 3,
-      staleCandidateCount: 1,
       deletedCount: 1,
-      skippedActiveCount: 0,
+      skippedActiveCount: 2,
       failedCount: 0,
     });
 
@@ -121,9 +120,8 @@ describe('domain routes', () => {
     ).toHaveBeenCalledTimes(1);
     expect(response.body).toEqual({
       scannedCount: 3,
-      staleCandidateCount: 1,
       deletedCount: 1,
-      skippedActiveCount: 0,
+      skippedActiveCount: 2,
       failedCount: 0,
     });
   });

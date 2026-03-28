@@ -1,13 +1,10 @@
 import { DomainStatus } from '@logto/schemas';
-import { addDays } from 'date-fns';
 import { createMockUtils } from '@logto/shared/esm';
-import vi from 'vitest';
 
 import {
   mockCloudflareData,
   mockCloudflareDataActive,
   mockCloudflareDataPendingSSL,
-  mockCreatedAtForDomain,
   mockDomain,
   mockDomainWithCloudflareData,
 } from '#src/__mocks__/domain.js';
@@ -61,26 +58,21 @@ afterAll(() => {
 });
 
 afterEach(() => {
-  vi.useRealTimers();
   clearCustomDomainCache.mockClear();
   updateDomainById.mockClear();
   insertDomain.mockClear();
   findDomainById.mockClear();
   findAllDomains.mockClear();
   deleteDomainById.mockClear();
+  deleteCustomHostname.mockClear();
+  getCustomHostname.mockClear();
 });
 
 describe('addDomain()', () => {
   it('should call createCustomHostname and return cloudflare data', async () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date(mockCreatedAtForDomain));
-
     const response = await addDomain(mockDomain.domain);
     expect(createCustomHostname).toBeCalledTimes(1);
     expect(insertDomain).toBeCalledTimes(1);
-    expect(insertDomain).toHaveBeenCalledWith(
-      expect.objectContaining({ nonActiveSince: mockCreatedAtForDomain })
-    );
     expect(clearCustomDomainCache).toBeCalledTimes(1);
     expect(response.cloudflareData).toMatchObject(mockCloudflareData);
     expect(response.dnsRecords).toContainEqual({
@@ -98,62 +90,6 @@ describe('addDomain()', () => {
 });
 
 describe('syncDomainStatus()', () => {
-  it('should clear nonActiveSince when domain becomes active', async () => {
-    getCustomHostname.mockResolvedValueOnce(mockCloudflareDataActive);
-
-    const response = await syncDomainStatus({
-      ...mockDomainWithCloudflareData,
-      status: DomainStatus.PendingVerification,
-      nonActiveSince: mockCreatedAtForDomain,
-    });
-
-    expect(updateDomainById).toHaveBeenCalledWith(
-      mockDomain.id,
-      expect.objectContaining({ status: DomainStatus.Active, nonActiveSince: null }),
-      'replace'
-    );
-    expect(response.nonActiveSince).toBeNull();
-  });
-
-  it('should preserve nonActiveSince when domain stays non-active', async () => {
-    const response = await syncDomainStatus({
-      ...mockDomainWithCloudflareData,
-      status: DomainStatus.PendingVerification,
-      nonActiveSince: mockCreatedAtForDomain,
-    });
-
-    expect(updateDomainById).toHaveBeenCalledWith(
-      mockDomain.id,
-      expect.objectContaining({
-        status: DomainStatus.PendingVerification,
-        nonActiveSince: mockCreatedAtForDomain,
-      }),
-      'replace'
-    );
-    expect(response.nonActiveSince).toBe(mockCreatedAtForDomain);
-  });
-
-  it('should set nonActiveSince when domain changes from active to non-active', async () => {
-    const now = addDays(new Date(mockCreatedAtForDomain), 7);
-    vi.useFakeTimers();
-    vi.setSystemTime(now);
-
-    const response = await syncDomainStatus({
-      ...mockDomainWithCloudflareData,
-      status: DomainStatus.Active,
-      nonActiveSince: null,
-    });
-
-    expect(updateDomainById).toHaveBeenCalledWith(
-      mockDomain.id,
-      expect.objectContaining({
-        status: DomainStatus.PendingVerification,
-        nonActiveSince: now.getTime(),
-      }),
-      'replace'
-    );
-    expect(response.nonActiveSince).toBe(now.getTime());
-  });
   it('should fail if domain.cloudflareData is missing', async () => {
     await expect(syncDomainStatus(mockDomain)).rejects.toMatchError(
       new RequestError({ code: 'domain.cloudflare_data_missing' })
@@ -210,58 +146,105 @@ describe('syncDomainStatus()', () => {
 });
 
 describe('cleanupDomains()', () => {
-  it('should delete stale non-active domains and skip recovered active domains', async () => {
-    const now = addDays(new Date(mockCreatedAtForDomain), 30);
-    vi.useFakeTimers();
-    vi.setSystemTime(now);
-
-    const staleDomain = {
-      ...mockDomainWithCloudflareData,
-      id: 'stale-domain',
-      domain: 'stale.example.com',
-      status: DomainStatus.PendingVerification,
-      nonActiveSince: addDays(now, -20).getTime(),
-    };
-    const recoveredDomain = {
-      ...mockDomainWithCloudflareData,
-      id: 'recovered-domain',
-      domain: 'recovered.example.com',
-      status: DomainStatus.PendingVerification,
-      nonActiveSince: addDays(now, -20).getTime(),
-    };
-    findAllDomains.mockResolvedValueOnce([staleDomain, recoveredDomain]);
-    getCustomHostname.mockResolvedValueOnce(mockCloudflareData);
-    getCustomHostname.mockResolvedValueOnce(mockCloudflareDataActive);
+  it('should delete orphan domains without cloudflare data', async () => {
+    const orphanDomain = { ...mockDomain, id: 'orphan-domain', cloudflareData: null };
+    findAllDomains.mockResolvedValueOnce([orphanDomain]);
 
     const summary = await cleanupDomains(14);
 
     expect(summary).toEqual({
-      scannedCount: 2,
-      staleCandidateCount: 2,
+      scannedCount: 1,
       deletedCount: 1,
-      skippedActiveCount: 1,
+      skippedActiveCount: 0,
       failedCount: 0,
     });
-    expect(deleteCustomHostname).toHaveBeenCalledTimes(1);
-    expect(deleteCustomHostname).toHaveBeenCalledWith(
-      expect.anything(),
-      mockCloudflareData.id
+    expect(deleteDomainById).toHaveBeenCalledWith(orphanDomain.id);
+    expect(clearCustomDomainCache).toHaveBeenCalledWith(orphanDomain.domain);
+    expect(getCustomHostname).not.toHaveBeenCalled();
+  });
+
+  it('should delete domains already gone from Cloudflare (404)', async () => {
+    const goneDomain = { ...mockDomainWithCloudflareData, id: 'gone-domain' };
+    findAllDomains.mockResolvedValueOnce([goneDomain]);
+    getCustomHostname.mockRejectedValueOnce(
+      new RequestError({ code: 'domain.cloudflare_not_found' })
     );
+
+    const summary = await cleanupDomains(14);
+
+    expect(summary.deletedCount).toBe(1);
+    expect(deleteDomainById).toHaveBeenCalledWith(goneDomain.id);
+  });
+
+  it('should skip domains that are active in Cloudflare and sync their status', async () => {
+    const activeDomain = {
+      ...mockDomainWithCloudflareData,
+      id: 'active-domain',
+      status: DomainStatus.PendingVerification,
+    };
+    findAllDomains.mockResolvedValueOnce([activeDomain]);
+    getCustomHostname.mockResolvedValueOnce(mockCloudflareDataActive);
+
+    const summary = await cleanupDomains(14);
+
+    expect(summary.skippedActiveCount).toBe(1);
+    expect(summary.deletedCount).toBe(0);
+    expect(updateDomainById).toHaveBeenCalledWith(
+      activeDomain.id,
+      expect.objectContaining({ status: DomainStatus.Active }),
+      'replace'
+    );
+    expect(deleteDomainById).not.toHaveBeenCalled();
+  });
+
+  it('should skip non-active domains created recently (within staleDays)', async () => {
+    const recentDomain = {
+      ...mockDomainWithCloudflareData,
+      id: 'recent-domain',
+      createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000, // 5 days ago
+    };
+    findAllDomains.mockResolvedValueOnce([recentDomain]);
+    getCustomHostname.mockResolvedValueOnce(mockCloudflareData); // Non-active
+
+    const summary = await cleanupDomains(14);
+
+    expect(summary.deletedCount).toBe(0);
+    expect(summary.skippedActiveCount).toBe(0);
+    expect(deleteDomainById).not.toHaveBeenCalled();
+  });
+
+  it('should delete stale non-active domains from both Cloudflare and DB', async () => {
+    const staleDomain = {
+      ...mockDomainWithCloudflareData,
+      id: 'stale-domain',
+      domain: 'stale.example.com',
+      createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000, // 30 days ago
+    };
+    findAllDomains.mockResolvedValueOnce([staleDomain]);
+    getCustomHostname.mockResolvedValueOnce(mockCloudflareData); // Non-active
+    findDomainById.mockResolvedValueOnce(staleDomain);
+
+    const summary = await cleanupDomains(14);
+
+    expect(summary).toEqual({
+      scannedCount: 1,
+      deletedCount: 1,
+      skippedActiveCount: 0,
+      failedCount: 0,
+    });
+    expect(deleteCustomHostname).toHaveBeenCalledWith(expect.anything(), mockCloudflareData.id);
     expect(deleteDomainById).toHaveBeenCalledWith(staleDomain.id);
   });
 
   it('should tolerate cloudflare not found when deleting stale domains', async () => {
-    const now = addDays(new Date(mockCreatedAtForDomain), 30);
-    vi.useFakeTimers();
-    vi.setSystemTime(now);
-
     const staleDomain = {
       ...mockDomainWithCloudflareData,
       id: 'stale-domain',
-      nonActiveSince: addDays(now, -20).getTime(),
+      createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
     };
     findAllDomains.mockResolvedValueOnce([staleDomain]);
-    getCustomHostname.mockResolvedValueOnce(mockCloudflareData);
+    getCustomHostname.mockResolvedValueOnce(mockCloudflareData); // Non-active
+    findDomainById.mockResolvedValueOnce(staleDomain);
     deleteCustomHostname.mockRejectedValueOnce(
       new RequestError({ code: 'domain.cloudflare_not_found' })
     );
@@ -271,6 +254,24 @@ describe('cleanupDomains()', () => {
     expect(summary.deletedCount).toBe(1);
     expect(summary.failedCount).toBe(0);
     expect(deleteDomainById).toHaveBeenCalledWith(staleDomain.id);
+  });
+
+  it('should count Cloudflare API errors as failed', async () => {
+    const domain = {
+      ...mockDomainWithCloudflareData,
+      id: 'error-domain',
+      createdAt: Date.now() - 30 * 24 * 60 * 60 * 1000,
+    };
+    findAllDomains.mockResolvedValueOnce([domain]);
+    getCustomHostname.mockRejectedValueOnce(
+      new RequestError({ code: 'domain.cloudflare_unknown_error', status: 500 })
+    );
+
+    const summary = await cleanupDomains(14);
+
+    expect(summary.failedCount).toBe(1);
+    expect(summary.deletedCount).toBe(0);
+    expect(deleteDomainById).not.toHaveBeenCalled();
   });
 });
 
