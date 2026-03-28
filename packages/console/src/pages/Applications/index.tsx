@@ -14,6 +14,7 @@ import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
 import LearnMore from '@/components/LearnMore';
 import PageMeta from '@/components/PageMeta';
 import { integrateLogto } from '@/consts';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -78,11 +79,12 @@ function Applications({ tab }: Props) {
   const [selectedGuide, setSelectedGuide] = useState<Nullable<SelectedGuide>>();
 
   const isThirdPartyTab = tab === 'thirdPartyApplications';
+  const shouldFetchSamlApplicationsCount = !isCloud && isDevFeaturesEnabled && !isThirdPartyTab;
 
   const { data, error, mutate, pagination, updatePagination, paginationRecords } =
     useApplicationsData(isThirdPartyTab);
   const { data: samlApplicationsData } = useSWR<[Application[], number], RequestError>(
-    isThirdPartyTab ? null : samlApplicationsFetchUrl
+    shouldFetchSamlApplicationsCount ? samlApplicationsFetchUrl : null
   );
 
   const isLoading = !data && !error;

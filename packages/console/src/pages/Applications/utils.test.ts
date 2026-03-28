@@ -1,11 +1,15 @@
+import { ossSamlApplicationsLimit } from '@/consts/application-limits';
+
 import { shouldShowSamlAppLimitNotice, getSamlAppLimitNoticeTranslation } from './utils';
+
+const belowSamlLimit = ossSamlApplicationsLimit - 1;
 
 describe('getSamlAppLimitNoticeTranslation', () => {
   it('returns the dedicated banner i18n key and limit interpolation', () => {
     expect(getSamlAppLimitNoticeTranslation()).toEqual({
       key: 'upsell.paywall.saml_applications_oss_limit_notice',
       interpolation: {
-        limit: 3,
+        limit: ossSamlApplicationsLimit,
       },
     });
   });
@@ -18,7 +22,7 @@ describe('shouldShowSamlAppLimitNotice', () => {
         isCloud: false,
         isDevFeaturesEnabled: true,
         isThirdPartyTab: false,
-        samlAppTotalCount: 3,
+        samlAppTotalCount: ossSamlApplicationsLimit,
       })
     ).toBe(true);
   });
@@ -29,7 +33,7 @@ describe('shouldShowSamlAppLimitNotice', () => {
         isCloud: false,
         isDevFeaturesEnabled: false,
         isThirdPartyTab: false,
-        samlAppTotalCount: 3,
+        samlAppTotalCount: ossSamlApplicationsLimit,
       })
     ).toBe(false);
   });
@@ -40,7 +44,7 @@ describe('shouldShowSamlAppLimitNotice', () => {
         isCloud: false,
         isDevFeaturesEnabled: true,
         isThirdPartyTab: false,
-        samlAppTotalCount: 2,
+        samlAppTotalCount: belowSamlLimit,
       })
     ).toBe(false);
   });
@@ -51,7 +55,7 @@ describe('shouldShowSamlAppLimitNotice', () => {
         isCloud: false,
         isDevFeaturesEnabled: true,
         isThirdPartyTab: true,
-        samlAppTotalCount: 3,
+        samlAppTotalCount: ossSamlApplicationsLimit,
       })
     ).toBe(false);
   });
