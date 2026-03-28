@@ -32,8 +32,9 @@ function SamlAppLimitNotice({ isThirdPartyTab, samlAppTotalCount }: Props) {
       className={styles.notice}
       severity="info"
       action="upsell.view_plans"
-      href={pricingLink}
-      hrefTargetBlank="noopener"
+      onClick={() => {
+        window.open(pricingLink, '_blank', 'noopener,noreferrer');
+      }}
     >
       {t(translation.key, translation.interpolation)}
     </InlineNotification>
