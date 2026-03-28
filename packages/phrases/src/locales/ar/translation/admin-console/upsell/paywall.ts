@@ -43,6 +43,8 @@ const paywall = {
     'تم الوصول إلى الحد الأقصى لعدد الأذونات ({{count, number}}) لكل دور في الخطة <planName/>. قم بترقية الخطة لإضافة أدوار وأذونات إضافية. لأي مساعدة، لا تتردد في <a>الاتصال بنا</a>.',
   saml_applications_oss:
     'التطبيق الإضافي لـ SAML متاح مع خطة Logto المؤسسية. اتصل بنا إذا كنت بحاجة إلى مساعدة.',
+  saml_applications_oss_limit_notice:
+    'لقد وصلت إلى حد OSS البالغ {{limit}} تطبيقات SAML. اشترك في Logto Cloud لفتح المزيد من تطبيقات SAML.',
   logto_pricing_button_text: 'تسعير Logto Cloud',
   saml_applications:
     'التطبيق الإضافي لـ SAML متاح مع خطة Logto المؤسسية. اتصل بنا إذا كنت بحاجة إلى مساعدة.',

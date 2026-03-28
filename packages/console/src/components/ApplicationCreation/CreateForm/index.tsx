@@ -12,6 +12,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { GtagConversionId, reportToGoogle } from '@/components/Conversion/utils';
 import LearnMore from '@/components/LearnMore';
 import { pricingLink, defaultPageSize, integrateLogto, thirdPartyApp } from '@/consts';
+import { ossSamlApplicationsLimit } from '@/consts/application-limits';
 import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -40,8 +41,6 @@ import styles from './index.module.scss';
 import { AuthorizationFlow, type CreateApplicationFormData } from './types';
 
 const applicationsEndpoint = 'api/applications';
-const samlApplicationsLimit = 3;
-
 type AvailableApplicationTypeForCreation = Extract<
   ApplicationType,
   | ApplicationType.Native
@@ -259,7 +258,7 @@ function CreateForm({
           !isCloud &&
           defaultCreateType === ApplicationType.SAML &&
           typeof samlAppTotalCount === 'number' &&
-          samlAppTotalCount >= samlApplicationsLimit ? (
+          samlAppTotalCount >= ossSamlApplicationsLimit ? (
             <div className={styles.container}>
               <div className={styles.description}>{t('upsell.paywall.saml_applications_oss')}</div>
               <LinkButton

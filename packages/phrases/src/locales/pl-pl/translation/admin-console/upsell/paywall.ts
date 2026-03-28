@@ -43,6 +43,8 @@ const paywall = {
     'Osiągnięto limit {{count, number}} uprawnień na rolę w planie <planName/>. Ulepsz plan, aby dodać dodatkowe role i uprawnienia. W razie potrzeb, skontaktuj się z nami <a>tutaj</a>.',
   saml_applications_oss:
     'Dodatkowa aplikacja SAML jest dostępna w planie Logto Enterprise. Skontaktuj się z nami, jeśli potrzebujesz pomocy.',
+  saml_applications_oss_limit_notice:
+    'Osiągnięto limit OSS wynoszący {{limit}} aplikacji SAML. Zasubskrybuj Logto Cloud, aby odblokować więcej aplikacji SAML.',
   logto_pricing_button_text: 'Cennik Logto Cloud',
   saml_applications:
     'Dodatkowa aplikacja SAML jest dostępna w planie Logto Enterprise. Skontaktuj się z nami, jeśli potrzebujesz pomocy.',
