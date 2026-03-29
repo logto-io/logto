@@ -9,6 +9,8 @@ import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import ExternalLink from '@/assets/icons/external-link.svg?react';
+import LogtoEmailLogoDark from '@/assets/icons/logto-email-service-dark.svg?url';
+import LogtoEmailLogo from '@/assets/icons/logto-email-service.svg?url';
 import ConnectorLogo from '@/components/ConnectorLogo';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { pricingLink } from '@/consts/external-links';
@@ -20,8 +22,6 @@ import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import modalStyles from '@/scss/modal.module.scss';
 
-import LogtoEmailLogoDark from '../../../../connectors/connector-logto-email/logo-dark.svg?url';
-import LogtoEmailLogo from '../../../../connectors/connector-logto-email/logo.svg?url';
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
 import ConnectorRadioGroup from './ConnectorRadioGroup';
