@@ -175,12 +175,18 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: '組み込み UI を統合',
       description:
-        'すぐに使える検証フローとセキュリティ設定フローを組み込み UI で迅速に統合します。',
+        '組み込み UI を使用して、すぐに使えるアカウントセンター、セキュリティ検証、または単一のプロフィール更新フローを迅速に統合します。ドメインとルートを組み合わせるだけで、アカウントセンター URL を形成できます（例: https://auth.foo.com/account/email）。',
       permission_notice:
         'これらのプリビルトフローを統合するには、以下の設定で関連するアカウント API の権限を<strong>編集</strong>に設定してください。',
+      account_center_title: 'すぐに使えるアカウントセンターを統合',
+      account_center_description:
+        'すべての機能を備えた完全なアカウント管理ポータルにユーザーをルーティングします。',
       flows_title: 'すぐに使えるセキュリティ設定フローを統合',
+      single_task_flows_title: 'すぐに使える単一タスクフローを統合',
       flows_description:
         'ドメインとルートを組み合わせてアカウント設定 URL を形成します（例: https://auth.foo.com/account/email）。オプションで `redirect=` を追加して更新成功後にユーザーをアプリに戻したり、`show_success=true` で成功ページを表示し続けたり、`ui_locales=` でデフォルト言語を上書きしたり、`identifier=` で識別子入力フィールドを事前入力したりできます。',
+      single_task_flows_description:
+        'ユーザーを特定のフロー（例: メール連携）に直接ルーティングします。オプションで、成功した更新後にユーザーをアプリに戻すための `redirect=`、成功ページを表示し続けるための `show_success=true`、デフォルト言語を上書きするための `ui_locales=`、または識別子入力フィールドを事前入力するための `identifier=` を追加できます。',
       tooltips: {
         email: 'プライマリメールアドレスを更新',
         phone: 'プライマリ電話番号を更新',
@@ -193,6 +199,7 @@ const sign_in_exp = {
         passkey_manage: '既存のパスキーを管理または新しいものを追加',
         backup_codes_generate: '新しいバックアップコード 10 セットを生成',
         backup_codes_manage: '使用可能なバックアップコードを表示または新しいものを生成',
+        account_center: 'すべてのセキュリティ設定を備えた完全なアカウント管理ポータルにアクセス',
       },
       customize_note:
         'すぐに使えるエクスペリエンスを望まない？ 代わりに Account API でフローを完全に',

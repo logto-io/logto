@@ -58,6 +58,11 @@ const devPrebuiltRoutes = [
   },
 ] as const;
 
+const accountCenterRoute = {
+  path: '/account/security',
+  tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.account_center',
+} as const;
+
 function IntegratePrebuiltUi() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tenantEndpoint } = useContext(AppDataContext);
@@ -74,14 +79,60 @@ function IntegratePrebuiltUi() {
       learnMoreLink={{ href: 'end-user-flows/account-settings/by-account-center-ui' }}
     >
       <div className={styles.cardContent}>
+        {isDevFeaturesEnabled && !prebuiltUiPermissionNoticeAcknowledged && (
+          <InlineNotification
+            className={styles.notice}
+            action="general.got_it"
+            onClick={() => {
+              void update({ prebuiltUiPermissionNoticeAcknowledged: true });
+            }}
+          >
+            <Trans
+              components={{
+                strong: <strong />,
+              }}
+            >
+              {t('sign_in_exp.account_center.prebuilt_ui.permission_notice')}
+            </Trans>
+          </InlineNotification>
+        )}
+        {isDevFeaturesEnabled && (
+          <FormField
+            className={styles.firstFormField}
+            title="sign_in_exp.account_center.prebuilt_ui.account_center_title"
+            headlineSpacing="large"
+          >
+            <div className={styles.description}>
+              <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.account_center_description" />
+            </div>
+            <div className={styles.urlGrid}>
+              <PrebuiltUiUrlItem
+                path={accountCenterRoute.path}
+                tooltip={t(accountCenterRoute.tooltipKey)}
+                tenantEndpoint={tenantEndpoint}
+              />
+            </div>
+          </FormField>
+        )}
         <FormField
-          title="sign_in_exp.account_center.prebuilt_ui.flows_title"
+          className={isDevFeaturesEnabled ? styles.secondFormField : undefined}
+          title={
+            isDevFeaturesEnabled
+              ? 'sign_in_exp.account_center.prebuilt_ui.single_task_flows_title'
+              : 'sign_in_exp.account_center.prebuilt_ui.flows_title'
+          }
           headlineSpacing="large"
         >
           <div className={styles.description}>
-            <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.flows_description" />
+            <DynamicT
+              forKey={
+                isDevFeaturesEnabled
+                  ? 'sign_in_exp.account_center.prebuilt_ui.single_task_flows_description'
+                  : 'sign_in_exp.account_center.prebuilt_ui.flows_description'
+              }
+            />
           </div>
-          {!prebuiltUiPermissionNoticeAcknowledged && (
+          {!isDevFeaturesEnabled && !prebuiltUiPermissionNoticeAcknowledged && (
             <InlineNotification
               className={styles.notice}
               action="general.got_it"

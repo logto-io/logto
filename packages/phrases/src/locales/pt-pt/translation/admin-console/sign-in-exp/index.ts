@@ -175,12 +175,18 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: 'INTEGRAR UI PRÉ-CONSTRUÍDA',
       description:
-        'Integre rapidamente fluxos de verificação e definição de segurança prontos para uso com UI pré-construído.',
+        'Integre rapidamente o centro de conta pronto a usar, a verificação de segurança ou um único fluxo de atualização de perfil com UI pré-construída. Basta combinar o seu domínio com a rota para formar o URL do seu centro de conta (por exemplo, https://auth.foo.com/account/email).',
       permission_notice:
         'Para integrar estes fluxos pré-construídos, defina as permissões da API de conta relacionadas como <strong>Editar</strong> nas definições abaixo.',
+      account_center_title: 'Integrar o centro de conta pronto a usar',
+      account_center_description:
+        'Direcione os utilizadores para o portal completo de gestão de conta com todas as funcionalidades.',
       flows_title: 'Integrar fluxos de definição de segurança prontos para uso',
+      single_task_flows_title: 'Integrar um fluxo de tarefa única pronto a usar',
       flows_description:
         'Combine o seu domínio com a rota para formar o seu URL de definição de conta (por exemplo, https://auth.foo.com/account/email). Opcionalmente, adicione `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida, `show_success=true` para manter a página de sucesso visível, `ui_locales=` para substituir o idioma predefinido, ou `identifier=` para preencher previamente o campo de entrada do identificador.',
+      single_task_flows_description:
+        'Direcione os utilizadores diretamente para um fluxo específico (por exemplo, ligação de email). Opcionalmente, adicione `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida, `show_success=true` para manter a página de sucesso visível, `ui_locales=` para substituir o idioma predefinido, ou `identifier=` para preencher previamente o campo de entrada do identificador.',
       tooltips: {
         email: 'Atualize o seu endereço de email principal',
         phone: 'Atualize o seu número de telefone principal',
@@ -194,6 +200,8 @@ const sign_in_exp = {
         passkey_manage: 'Gira as suas passkeys existentes ou adicione novas',
         backup_codes_generate: 'Gere um novo conjunto de 10 códigos de backup',
         backup_codes_manage: 'Visualize os seus códigos de backup disponíveis ou gere novos',
+        account_center:
+          'Aceda ao portal completo de gestão de conta com todas as definições de segurança',
       },
       customize_note: 'Não quer a experiência pronta para uso? Pode sempre',
       customize_link: 'personalizar os seus fluxos com a Account API em vez disso.',

@@ -175,12 +175,18 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: 'INTEGRATE PREBUILT UI',
       description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
+        'Quickly integrate out-of-the-box account center, security verification, or a single profile update flow with prebuilt UI. Simply combine your domain with the route to form your account center URL (e.g., https://auth.foo.com/account/email).',
       permission_notice:
         'To integrate these prebuilt flows, set the related Account API permissions to <strong>Edit</strong> in the settings below.',
+      account_center_title: 'Integrate the out-of-the-box account center',
+      account_center_description:
+        'Route users to the complete account management portal with all features.',
       flows_title: 'Integrate out-of-the-box security setting flows',
+      single_task_flows_title: 'Integrate an out-of-the-box single task flow',
       flows_description:
         'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add `redirect=` to return users to your app after a successful update, `show_success=true` to keep the success page visible, `ui_locales=` to override the default language, or `identifier=` to pre-fill the identifier input field.',
+      single_task_flows_description:
+        'Route users straight into a specific flow (e.g., email linkage). Optionally add `redirect=` to return users to your app after a successful update, `show_success=true` to keep the success page visible, `ui_locales=` to override the default language, or `identifier=` to pre-fill the identifier input field.',
       tooltips: {
         email: 'Update your primary email address',
         phone: 'Update your primary phone number',
@@ -193,6 +199,7 @@ const sign_in_exp = {
         passkey_manage: 'Manage your existing passkeys or add new ones',
         backup_codes_generate: 'Generate a new set of 10 backup codes',
         backup_codes_manage: 'View your available backup codes or generate new ones',
+        account_center: 'Access the complete account management portal with all security settings',
       },
       customize_note: "Don't want the out-of-the-box experience? You can fully",
       customize_link: 'customize your flows with the Account API instead.',
