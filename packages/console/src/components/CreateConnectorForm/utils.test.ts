@@ -3,6 +3,33 @@ import { ConnectorType, ServiceConnector } from '@logto/connector-kit';
 import { getConnectorSelectionState, getEmailConnectorUpsellCopyKeys } from './utils';
 
 describe('getConnectorSelectionState', () => {
+  test('keeps the built-in email connector in cloud', () => {
+    const logtoEmailGroup = {
+      id: ServiceConnector.Email,
+      type: ConnectorType.Email,
+      target: ServiceConnector.Email,
+      name: { en: 'Logto email service' },
+      description: { en: 'Built-in email delivery.' },
+      logo: 'logto-email.svg',
+      logoDark: 'logto-email-dark.svg',
+      isStandard: false,
+      isDemo: false,
+      isTokenStorageSupported: false,
+      connectors: [{ id: ServiceConnector.Email }],
+    };
+
+    expect(
+      getConnectorSelectionState([logtoEmailGroup], {
+        type: ConnectorType.Email,
+        isCloud: true,
+        isDevFeaturesEnabled: true,
+      })
+    ).toEqual({
+      shouldShowEmailConnectorUpsellBanner: false,
+      groups: [logtoEmailGroup],
+    });
+  });
+
   test('shows the OSS email upsell banner even when the built-in email connector is absent', () => {
     const smtpGroup = {
       id: 'smtp',
@@ -30,11 +57,11 @@ describe('getConnectorSelectionState', () => {
     });
   });
 
-  test('removes the built-in email connector from the selectable groups when present', () => {
+  test('removes the built-in email connector from the selectable groups in OSS', () => {
     const logtoEmailGroup = {
       id: ServiceConnector.Email,
       type: ConnectorType.Email,
-      target: 'logto-email',
+      target: ServiceConnector.Email,
       name: { en: 'Logto email service' },
       description: { en: 'Built-in email delivery.' },
       logo: 'logto-email.svg',
@@ -68,6 +95,33 @@ describe('getConnectorSelectionState', () => {
     ).toEqual({
       shouldShowEmailConnectorUpsellBanner: true,
       groups: [smtpGroup],
+    });
+  });
+
+  test('still removes the built-in email connector in OSS when dev features are disabled', () => {
+    const logtoEmailGroup = {
+      id: ServiceConnector.Email,
+      type: ConnectorType.Email,
+      target: ServiceConnector.Email,
+      name: { en: 'Logto email service' },
+      description: { en: 'Built-in email delivery.' },
+      logo: 'logto-email.svg',
+      logoDark: 'logto-email-dark.svg',
+      isStandard: false,
+      isDemo: false,
+      isTokenStorageSupported: false,
+      connectors: [{ id: ServiceConnector.Email }],
+    };
+
+    expect(
+      getConnectorSelectionState([logtoEmailGroup], {
+        type: ConnectorType.Email,
+        isCloud: false,
+        isDevFeaturesEnabled: false,
+      })
+    ).toEqual({
+      shouldShowEmailConnectorUpsellBanner: false,
+      groups: [],
     });
   });
 });
