@@ -84,6 +84,9 @@ const account_center = {
     backup_codes_count_other: '{{count}} кодов осталось',
     view: 'Просмотр',
     manage: 'Управление',
+    account_removal: 'Удаление аккаунта',
+    delete_your_account: 'Удалите свой аккаунт',
+    delete_account: 'Удалить аккаунт',
   },
   social: {
     linked: '{{connector}} успешно привязан.',

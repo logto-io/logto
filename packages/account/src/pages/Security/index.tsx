@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
 import PageFooter from '@ac/components/PageFooter';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 
 import styles from '../Home/index.module.scss';
 
+import DeleteAccountSection from './DeleteAccountSection';
 import EmailPhoneSection from './EmailPhoneSection';
 import MfaSection from './MfaSection';
 import PasswordSection from './PasswordSection';
@@ -25,6 +27,7 @@ const Security = () => {
         <PasswordSection />
         <SocialSection />
         <MfaSection />
+        {isDevFeaturesEnabled && <DeleteAccountSection />}
       </div>
       <PageFooter />
     </div>

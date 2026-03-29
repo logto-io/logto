@@ -83,6 +83,9 @@ const account_center = {
     backup_codes_count_other: '{{count}} 个备用码',
     view: '查看',
     manage: '管理',
+    account_removal: '账号删除',
+    delete_your_account: '删除你的账号',
+    delete_account: '删除账号',
   },
   social: {
     linked: '已成功关联 {{connector}}。',

@@ -180,6 +180,9 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Añade los dominios de tus aplicaciones front-end que pueden registrar passkeys a través de la Account API.',
     webauthn_related_origins_error: 'El origen debe comenzar con https:// o http://',
+    delete_account_url: 'Eliminar cuenta',
+    delete_account_url_description:
+      'Proporciona tu propia URL de endpoint para gestionar la eliminación de cuentas con lógica personalizada.',
     prebuilt_ui: {
       title: 'INTEGRA UNA INTERFAZ DE USUARIO PRECONSTRUIDA',
       description:

@@ -85,6 +85,9 @@ const account_center = {
     backup_codes_count_other: '{{count}} kod kaldı',
     view: 'Görüntüle',
     manage: 'Yönet',
+    account_removal: 'Hesap silme',
+    delete_your_account: 'Hesabını sil',
+    delete_account: 'Hesabı sil',
   },
   social: {
     linked: '{{connector}} başarıyla bağlandı.',

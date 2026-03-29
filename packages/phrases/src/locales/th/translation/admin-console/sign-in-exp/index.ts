@@ -175,6 +175,9 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'เพิ่มโดเมนของแอปพลิเคชันส่วนหน้าที่ได้รับอนุญาตให้ลงทะเบียน passkey ผ่าน Account API.',
     webauthn_related_origins_error: 'ต้นทางต้องขึ้นต้นด้วย https:// หรือ http://',
+    delete_account_url: 'ลบบัญชี',
+    delete_account_url_description:
+      'ระบุ URL ของเอ็นด์พอยต์ของคุณเองเพื่อจัดการการลบบัญชีด้วยตรรกะแบบกำหนดเอง',
     prebuilt_ui: {
       title: 'รวมเข้ากับ UI ที่สร้างไว้ล่วงหน้า',
       description:

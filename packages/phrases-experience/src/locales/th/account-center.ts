@@ -84,6 +84,9 @@ const account_center = {
     backup_codes_count_other: 'เหลือ {{count}} รหัส',
     view: 'ดู',
     manage: 'จัดการ',
+    account_removal: 'การลบบัญชี',
+    delete_your_account: 'ลบบัญชีของคุณ',
+    delete_account: 'ลบบัญชี',
   },
   social: {
     linked: 'เชื่อมโยง {{connector}} สำเร็จแล้ว',

@@ -30,6 +30,7 @@ import {
   type SignInExperiencePageManagedData,
   type SignInExperienceForm,
   type AccountCenterFormValues,
+  normalizeDeleteAccountUrl,
   normalizeWebauthnRelatedOrigins,
 } from '../types';
 
@@ -101,6 +102,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
       const webauthnRelatedOrigins = normalizeWebauthnRelatedOrigins(
         accountCenter.webauthnRelatedOrigins
       );
+      const deleteAccountUrl = normalizeDeleteAccountUrl(accountCenter.deleteAccountUrl);
 
       const updatedData = await api
         .patch('api/sign-in-exp', {
@@ -115,6 +117,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
             // Disable all fields when account center is disabled
             fields: accountCenter.enabled ? accountCenter.fields : {},
             webauthnRelatedOrigins,
+            deleteAccountUrl,
           },
         })
         .json<AccountCenterConfig>();

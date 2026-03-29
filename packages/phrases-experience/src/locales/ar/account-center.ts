@@ -84,6 +84,9 @@ const account_center = {
     backup_codes_count_other: '{{count}} رموز متبقية',
     view: 'عرض',
     manage: 'إدارة',
+    account_removal: 'حذف الحساب',
+    delete_your_account: 'احذف حسابك',
+    delete_account: 'حذف الحساب',
   },
   social: {
     linked: 'تم ربط {{connector}} بنجاح.',

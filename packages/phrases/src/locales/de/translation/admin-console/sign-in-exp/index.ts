@@ -177,6 +177,9 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Fügen Sie die Domains Ihrer Frontend-Anwendungen hinzu, die über die Account-API Passkeys registrieren dürfen.',
     webauthn_related_origins_error: 'Der Ursprung muss mit https:// oder http:// beginnen',
+    delete_account_url: 'Konto löschen',
+    delete_account_url_description:
+      'Geben Sie Ihre eigene Endpunkt-URL an, um die Kontolöschung mit benutzerdefinierter Logik zu verarbeiten.',
     prebuilt_ui: {
       title: 'INTEGRATE PREBUILT UI',
       description:

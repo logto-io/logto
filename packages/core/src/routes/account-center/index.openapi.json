@@ -34,6 +34,9 @@
                   },
                   "webauthnRelatedOrigins": {
                     "description": "The allowed domains for webauthn."
+                  },
+                  "deleteAccountUrl": {
+                    "description": "The custom endpoint URL for account deletion."
                   }
                 }
               }

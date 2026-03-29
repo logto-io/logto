@@ -84,6 +84,9 @@ const account_center = {
     backup_codes_count_other: '{{count}} 個のコード',
     view: '表示',
     manage: '管理',
+    account_removal: 'アカウント削除',
+    delete_your_account: 'アカウントを削除',
+    delete_account: 'アカウントを削除',
   },
   social: {
     linked: '{{connector}}の連携に成功しました。',
