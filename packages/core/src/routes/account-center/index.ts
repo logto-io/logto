@@ -65,7 +65,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         webauthnRelatedOrigins: webauthnRelatedOrigins
           ? deduplicate(webauthnRelatedOrigins)
           : undefined,
-        ...(deleteAccountUrl !== undefined && { deleteAccountUrl }),
+        deleteAccountUrl: deleteAccountUrl ?? '',
       });
 
       ctx.body = updatedAccountCenter;
