@@ -86,6 +86,11 @@ const connectors = {
   create_form: {
     third_party_connectors:
       "Intégrez des fournisseurs tiers pour une connexion sociale rapide, un lien de compte social, et l'accès API. <a>En savoir plus</a>",
+    email_connector_upsell: {
+      title: "Service d'e-mail intégré de Logto",
+      description:
+        "Envoi d'e-mails sans configuration. Envoyez des codes de vérification et des liens magiques dès la sortie de la boîte.",
+    },
     standard_connectors:
       'Ou vous pouvez personnaliser votre connecteur social par un protocole standard.',
   },

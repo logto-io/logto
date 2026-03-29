@@ -8,12 +8,18 @@ import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import ExternalLink from '@/assets/icons/external-link.svg?react';
+import ConnectorLogo from '@/components/ConnectorLogo';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { pricingLink } from '@/consts/external-links';
+import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import modalStyles from '@/scss/modal.module.scss';
+import { type ConnectorGroup } from '@/types/connector';
 
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
@@ -22,13 +28,55 @@ import Footer from './Footer';
 import PlatformSelector from './PlatformSelector';
 import Skeleton from './Skeleton';
 import styles from './index.module.scss';
-import { compareConnectors, getConnectorRadioGroupSize, getModalTitle } from './utils';
+import {
+  compareConnectors,
+  getEmailConnectorUpsellCopyKeys,
+  getConnectorRadioGroupSize,
+  getConnectorSelectionState,
+  getModalTitle,
+} from './utils';
 
 type Props = {
   readonly isOpen: boolean;
   readonly type?: ConnectorType;
   readonly onClose?: (connectorId?: string) => void;
 };
+
+type EmailConnectorUpsellBannerProps = {
+  readonly group: ConnectorGroup<ConnectorFactoryResponse>;
+};
+
+function EmailConnectorUpsellBanner({ group }: EmailConnectorUpsellBannerProps) {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'admin_console',
+  });
+  const copyKeys = getEmailConnectorUpsellCopyKeys();
+
+  return (
+    <div className={styles.upsellBanner}>
+      <div className={styles.upsellInfo}>
+        <ConnectorLogo data={{ logo: group.logo, logoDark: group.logoDark }} />
+        <div className={styles.upsellContent}>
+          <div className={styles.upsellTitle}>
+            <DynamicT forKey={copyKeys.title} />
+          </div>
+          <div className={styles.upsellDescription}>
+            <DynamicT forKey={copyKeys.description} />
+          </div>
+        </div>
+      </div>
+      <Button
+        className={styles.upsellButton}
+        type="outline"
+        title={<span>{t('general.try_now')} Logto Cloud</span>}
+        trailingIcon={<ExternalLink />}
+        onClick={() => {
+          window.open(pricingLink, '_blank', 'noopener,noreferrer');
+        }}
+      />
+    </div>
+  );
+}
 
 function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const { data: existingConnectors, error: connectorsError } = useSWR<
@@ -76,21 +124,31 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       .sort(compareConnectors);
   }, [factories, type, existingConnectors]);
 
+  const { bannerGroup, groups: selectableGroups } = useMemo(
+    () =>
+      getConnectorSelectionState(groups, {
+        type,
+        isCloud,
+        isDevFeaturesEnabled,
+      }),
+    [groups, type]
+  );
+
   const activeGroup = useMemo(
-    () => groups.find(({ id }) => id === activeGroupId),
-    [activeGroupId, groups]
+    () => selectableGroups.find(({ id }) => id === activeGroupId),
+    [activeGroupId, selectableGroups]
   );
 
   const cardTitle = useMemo(() => getModalTitle(type), [type]);
   const radioGroupSize = useMemo(
-    () => getConnectorRadioGroupSize(groups.length, type),
-    [groups.length, type]
+    () => getConnectorRadioGroupSize(selectableGroups.length, type),
+    [selectableGroups.length, type]
   );
 
   const handleGroupChange = (groupId: string) => {
     setActiveGroupId(groupId);
 
-    const group = groups.find(({ id }) => id === groupId);
+    const group = selectableGroups.find(({ id }) => id === groupId);
 
     if (!group) {
       return;
@@ -102,11 +160,17 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   };
 
   const defaultGroups = useMemo(
-    () => (isCreatingSocialConnector ? groups.filter((group) => !group.isStandard) : groups),
-    [groups, isCreatingSocialConnector]
+    () =>
+      isCreatingSocialConnector
+        ? selectableGroups.filter((group) => !group.isStandard)
+        : selectableGroups,
+    [selectableGroups, isCreatingSocialConnector]
   );
 
-  const standardGroups = useMemo(() => groups.filter((group) => group.isStandard), [groups]);
+  const standardGroups = useMemo(
+    () => selectableGroups.filter((group) => group.isStandard),
+    [selectableGroups]
+  );
 
   if (!isFormOpen) {
     return null;
@@ -157,6 +221,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       >
         {isLoading && <Skeleton />}
         {factoriesError?.message ?? connectorsError?.message}
+        {bannerGroup && <EmailConnectorUpsellBanner group={bannerGroup} />}
 
         <ConnectorRadioGroup
           name="group"

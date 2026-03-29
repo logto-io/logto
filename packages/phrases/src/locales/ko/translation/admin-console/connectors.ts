@@ -80,6 +80,11 @@ const connectors = {
   create_form: {
     third_party_connectors:
       '타사 공급자를 통합하여 빠른 소셜 로그인, 소셜 계정 연결, API 액세스를 제공합니다. <a>자세히 알아보기</a>',
+    email_connector_upsell: {
+      title: 'Logto 기본 이메일 서비스',
+      description:
+        '설정 없이 바로 이메일을 보낼 수 있습니다. 인증 코드와 매직 링크를 즉시 전송하세요.',
+    },
     standard_connectors: '또는 표준 프로토콜로 사용자의 소셜 커넥터를 맞춤화할 수 있습니다.',
   },
 };

@@ -84,6 +84,11 @@ const connectors = {
   create_form: {
     third_party_connectors:
       'Hızlı sosyal oturum açma, sosyal hesap bağlama ve API erişimi için üçüncü taraf sağlayıcıları entegre edin. <a>Daha fazla bilgi edinin</a>',
+    email_connector_upsell: {
+      title: "Logto'nun yerleşik e-posta hizmeti",
+      description:
+        'Yapılandırma gerektirmeden e-posta gönderimi. Doğrulama kodlarını ve sihirli bağlantıları hemen gönderin.',
+    },
     standard_connectors: 'Veya standart bir protokolle sosyal bağlayıcınızı özelleştirebilirsiniz.',
   },
 };

@@ -83,6 +83,11 @@ const connectors = {
   create_form: {
     third_party_connectors:
       'Integrate third-party providers for quick social sign-in, social account linking, and API access. <a>Learn more</a>',
+    email_connector_upsell: {
+      title: 'Logto built-in email service',
+      description:
+        'Zero configuration email delivery. Send verification codes and magic links out of the box.',
+    },
     standard_connectors: 'Or you can customize your social connector by a standard protocol.',
   },
 };

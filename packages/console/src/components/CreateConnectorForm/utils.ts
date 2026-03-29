@@ -1,5 +1,8 @@
+import { ServiceConnector } from '@logto/connector-kit';
 import { type AdminConsoleKey } from '@logto/phrases';
 import { ConnectorType, type ConnectorResponse } from '@logto/schemas';
+
+import { type ConnectorGroup } from '@/types/connector';
 
 import { type ConnectorRadioGroupSize } from './ConnectorRadioGroup';
 import { featuredConnectorTargets } from './constants';
@@ -58,4 +61,39 @@ export const getModalTitle = (connectorType?: ConnectorType): AdminConsoleKey =>
   }
 
   return 'connectors.setup_title.social';
+};
+
+export const getEmailConnectorUpsellCopyKeys = () => ({
+  title: 'connectors.create_form.email_connector_upsell.title' as const,
+  description: 'connectors.create_form.email_connector_upsell.description' as const,
+});
+
+type ConnectorSelectionStateOptions = {
+  readonly type?: ConnectorType;
+  readonly isCloud: boolean;
+  readonly isDevFeaturesEnabled: boolean;
+};
+
+export const getConnectorSelectionState = <T extends Pick<ConnectorResponse, 'id'>>(
+  groups: Array<ConnectorGroup<T>>,
+  options: ConnectorSelectionStateOptions
+) => {
+  const { type, isCloud, isDevFeaturesEnabled } = options;
+
+  if (type !== ConnectorType.Email || isCloud || !isDevFeaturesEnabled) {
+    return { bannerGroup: undefined, groups };
+  }
+
+  const bannerGroup = groups.find(({ connectors }) =>
+    connectors.some(({ id }) => id === ServiceConnector.Email)
+  );
+
+  if (!bannerGroup) {
+    return { bannerGroup: undefined, groups };
+  }
+
+  return {
+    bannerGroup,
+    groups: groups.filter(({ id }) => id !== bannerGroup.id),
+  };
 };
