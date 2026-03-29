@@ -38,6 +38,7 @@ function AccountCenter({ isActive, data }: Props) {
   const {
     watch,
     setValue,
+    control,
     formState: { isSubmitting },
   } = useFormContext<SignInExperienceForm & { accountCenter: AccountCenterFormValues }>();
 
@@ -169,7 +170,8 @@ function AccountCenter({ isActive, data }: Props) {
         <FormField title="sign_in_exp.custom_ui.css_code_editor_title">
           <Controller
             name="accountCenter.customCss"
-            render={({ field: { onChange, value } }: { field: { onChange: (value: string) => void; value: string | undefined } }) => (
+            control={control}
+            render={({ field: { onChange, value } }) => (
               <CodeEditor
                 className={styles.cssEditor}
                 language="scss"
