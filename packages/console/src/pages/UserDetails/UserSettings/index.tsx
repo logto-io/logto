@@ -1,5 +1,5 @@
 import { emailRegEx, usernameRegEx } from '@logto/core-kit';
-import type { User } from '@logto/schemas';
+import type { SignInExperience, User } from '@logto/schemas';
 import { parsePhoneNumber } from '@logto/shared/universal';
 import { conditionalString, trySafe } from '@silverhand/essentials';
 import { parsePhoneNumberWithError } from 'libphonenumber-js/mobile';
@@ -7,6 +7,7 @@ import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
+import useSWRImmutable from 'swr/immutable';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
@@ -18,7 +19,7 @@ import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
-import useApi from '@/hooks/use-api';
+import useApi, { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { trySubmitSafe } from '@/utils/form';
@@ -43,6 +44,10 @@ function UserSettings() {
   const { user, isDeleting, onUserUpdated } = useOutletContext<UserDetailsOutletContext>();
 
   const userFormData = userDetailsParser.toLocalForm(user);
+
+  const { data: signInExperience } = useSWRImmutable<SignInExperience, RequestError>(
+    'api/sign-in-exp'
+  );
 
   const {
     handleSubmit,
@@ -163,9 +168,11 @@ function UserSettings() {
               }}
             />
           </FormField>
-          <FormField title="user_details.passkey.field_name">
-            <UserSignInPasskeys userId={user.id} />
-          </FormField>
+          {signInExperience?.passkeySignIn.enabled && (
+            <FormField title="user_details.passkey.field_name">
+              <UserSignInPasskeys userId={user.id} />
+            </FormField>
+          )}
           <FormField title="user_details.mfa.field_name">
             <UserMfaVerifications userId={user.id} />
           </FormField>
