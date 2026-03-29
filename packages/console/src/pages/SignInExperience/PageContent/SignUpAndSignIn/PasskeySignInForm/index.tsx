@@ -1,5 +1,5 @@
 import { cond } from '@silverhand/essentials';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -20,7 +20,7 @@ import styles from './index.module.scss';
 
 function PasskeySignInForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { control, register, setValue, watch } = useFormContext<SignInExperienceForm>();
+  const { control, register, watch } = useFormContext<SignInExperienceForm>();
 
   const {
     currentSubscriptionQuota,
@@ -29,13 +29,6 @@ function PasskeySignInForm() {
   const isPasskeySignInEnabled = currentSubscriptionQuota.passkeySignInEnabled || !isCloud;
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
   const watchEnableSwitch = watch('passkeySignIn.enabled');
-
-  useEffect(() => {
-    if (isPasskeySignInEnabled && watchEnableSwitch) {
-      setValue('passkeySignIn.showPasskeyButton', true);
-      setValue('passkeySignIn.allowAutofill', true);
-    }
-  }, [isPasskeySignInEnabled, watchEnableSwitch, setValue]);
 
   return (
     <Card>
