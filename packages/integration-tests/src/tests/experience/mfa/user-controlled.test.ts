@@ -11,9 +11,7 @@ import {
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import ExpectTotpExperience from '#src/ui-helpers/expect-totp-experience.js';
-import { generateUsername, devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
+import { generateUsername } from '#src/utils.js';
 
 describe('MFA - User controlled', () => {
   beforeAll(async () => {
