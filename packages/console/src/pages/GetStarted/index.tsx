@@ -17,7 +17,7 @@ import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useApiGuideMetadata, useAppGuideMetadata } from '@/components/Guide/hooks';
 import PageMeta from '@/components/PageMeta';
 import { ConnectorsTabs, convertToProductionThresholdDays } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { LinkButton } from '@/ds-components/Button';
@@ -35,6 +35,7 @@ import CreateApiForm from '../ApiResources/components/CreateForm';
 import ProtectedAppModal from '../Applications/components/ProtectedAppModal';
 
 import ConvertToProductionCard from './ConvertToProductionCard';
+import OssCloudUpsell from './OssCloudUpsell';
 import styles from './index.module.scss';
 
 const icons = {
@@ -53,6 +54,7 @@ function GetStarted() {
   const apiGuideMetadata = useApiGuideMetadata();
   const [showCreateAppForm, setShowCreateAppForm] = useState<boolean>(false);
   const [showCreateApiForm, setShowCreateApiForm] = useState<boolean>(false);
+  const [isOssCloudBannerVisible, setIsOssCloudBannerVisible] = useState(true);
   // The number of visible guide cards to show in one row per the current screen width
   const [visibleCardCount, setVisibleCardCount] = useState(4);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -119,6 +121,8 @@ function GetStarted() {
     return daysSinceCreation >= convertToProductionThresholdDays;
   }, [isDevTenant, currentTenant]);
 
+  const shouldShowOssCloudUpsell = !isCloud && isDevFeaturesEnabled;
+
   return (
     <div className={styles.container}>
       <PageMeta titleKey="get_started.page_title" />
@@ -127,6 +131,14 @@ function GetStarted() {
         <div className={styles.subtitle}>{t('get_started.subtitle')}</div>
       </div>
       {shouldShowConvertToProductionCard && <ConvertToProductionCard />}
+      {shouldShowOssCloudUpsell && (
+        <OssCloudUpsell
+          isBannerVisible={isOssCloudBannerVisible}
+          onDismissBanner={() => {
+            setIsOssCloudBannerVisible(false);
+          }}
+        />
+      )}
       <Card className={styles.card}>
         <div className={styles.title}>
           {t(`get_started.develop.title${isCloud ? '_cloud' : ''}`)}
