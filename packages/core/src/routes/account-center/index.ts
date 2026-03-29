@@ -37,13 +37,14 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         fields: accountCenterFieldControlGuard.optional(),
         webauthnRelatedOrigins: webauthnRelatedOriginsGuard.optional(),
         deleteAccountUrl: deleteAccountUrlGuard.nullable().optional(),
+        customCss: z.string().optional(),
       }),
       response: AccountCenters.guard,
       status: [200],
     }),
 
     async (ctx, next) => {
-      const { enabled, fields, webauthnRelatedOrigins, deleteAccountUrl } = ctx.guard.body;
+      const { enabled, fields, webauthnRelatedOrigins, deleteAccountUrl, customCss } = ctx.guard.body;
       const normalizedDeleteAccountUrl = deleteAccountUrl === '' ? null : deleteAccountUrl;
 
       // Make sure the account center exists
@@ -55,6 +56,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
           ? deduplicate(webauthnRelatedOrigins)
           : undefined,
         deleteAccountUrl: normalizedDeleteAccountUrl,
+        customCss,
       });
 
       ctx.body = updatedAccountCenter;

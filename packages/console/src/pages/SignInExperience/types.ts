@@ -50,6 +50,7 @@ export type AccountCenterFormValues = {
   fields: Record<AccountCenterFieldKey, AccountCenterControlValue>;
   webauthnRelatedOrigins: string[];
   deleteAccountUrl: string;
+  customCss?: string;
 };
 
 const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
@@ -77,6 +78,7 @@ export const convertAccountCenterToForm = (
   },
   webauthnRelatedOrigins: normalizeWebauthnRelatedOrigins(accountCenter?.webauthnRelatedOrigins),
   deleteAccountUrl: normalizeDeleteAccountUrl(accountCenter?.deleteAccountUrl ?? undefined),
+  customCss: accountCenter?.customCss ?? undefined,
 });
 
 /**

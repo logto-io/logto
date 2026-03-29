@@ -201,6 +201,10 @@ const sign_in_exp = {
       customize_note: '기본 제공 경험이 원치 않으시나요? 대신 계정 API 를 사용하여',
       customize_link: '흐름을 완전히 사용자화할 수 있습니다.',
     },
+    custom_css: {
+      title: '커스텀 CSS',
+      description: '커스텀 CSS를 사용하여 계정 센터의 모양을 사용자 지정합니다.',
+    },
   },
   sign_up_and_sign_in,
   content,

@@ -197,6 +197,10 @@ const sign_in_exp = {
       customize_note: '不想要开箱即用的体验？你可以完全',
       customize_link: '使用 Account API 自定义你的流程。',
     },
+    custom_css: {
+      title: '自定义 CSS',
+      description: '使用自定义 CSS 自定义账户中心的外观。',
+    },
   },
   sign_up_and_sign_in,
   content,

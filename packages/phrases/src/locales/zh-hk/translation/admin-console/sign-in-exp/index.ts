@@ -198,6 +198,10 @@ const sign_in_exp = {
       customize_note: '不想要開箱即用的體驗？你可以完全',
       customize_link: '使用 Account API 自定義你的流程。',
     },
+    custom_css: {
+      title: '自定義 CSS',
+      description: '使用自定義 CSS 自定義帳戶中心的外觀。',
+    },
   },
   sign_up_and_sign_in,
   content,

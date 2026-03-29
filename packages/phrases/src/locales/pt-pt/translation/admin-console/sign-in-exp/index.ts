@@ -208,6 +208,10 @@ const sign_in_exp = {
       customize_note: 'Não quer a experiência pronta para uso? Pode sempre',
       customize_link: 'personalizar os seus fluxos com a Account API em vez disso.',
     },
+    custom_css: {
+      title: 'CSS personalizado',
+      description: 'Personalize a aparência do centro de contas usando CSS personalizado.',
+    },
   },
   sign_up_and_sign_in,
   content,

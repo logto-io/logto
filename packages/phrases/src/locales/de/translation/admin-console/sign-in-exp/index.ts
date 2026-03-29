@@ -210,6 +210,11 @@ const sign_in_exp = {
         'Möchten Sie nicht das vorgefertigte Erlebnis? Sie können mit der Account-API stattdessen vollständig',
       customize_link: 'Ihre Flows anpassen.',
     },
+    custom_css: {
+      title: 'CSS anpassen',
+      description:
+        'Passen Sie das Erscheinungsbild des Kontocenters mit benutzerdefiniertem CSS an.',
+    },
   },
   sign_up_and_sign_in,
   content,

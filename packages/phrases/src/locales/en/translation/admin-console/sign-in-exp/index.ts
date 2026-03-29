@@ -206,6 +206,10 @@ const sign_in_exp = {
       customize_note: "Don't want the out-of-the-box experience? You can fully",
       customize_link: 'customize your flows with the Account API instead.',
     },
+    custom_css: {
+      title: 'CUSTOM CSS',
+      description: 'Customize the appearance of the account center using custom CSS.',
+    },
   },
   sign_up_and_sign_in,
   content,

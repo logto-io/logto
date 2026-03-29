@@ -207,6 +207,10 @@ const sign_in_exp = {
         'すぐに使えるエクスペリエンスを望まない？ 代わりに Account API でフローを完全に',
       customize_link: 'カスタマイズできます。',
     },
+    custom_css: {
+      title: 'カスタム CSS',
+      description: 'カスタム CSS を使用してアカウントセンターの外観をカスタマイズします。',
+    },
   },
   sign_up_and_sign_in,
   content,

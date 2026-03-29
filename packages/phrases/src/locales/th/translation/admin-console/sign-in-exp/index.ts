@@ -204,6 +204,10 @@ const sign_in_exp = {
       customize_note: 'ไม่ต้องการประสบการณ์แบบสำเร็จรูปใช่หรือไม่? คุณสามารถ',
       customize_link: 'ปรับแต่งขั้นตอนด้วย Account API แทนได้',
     },
+    custom_css: {
+      title: 'CSS ที่กำหนดเอง',
+      description: 'ปรับแต่งลักษณะของศูนย์บัญชีโดยใช้ CSS ที่กำหนดเอง',
+    },
   },
   sign_up_and_sign_in,
   content,

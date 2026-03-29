@@ -206,6 +206,10 @@ const sign_in_exp = {
       customize_note: 'Hazır deneyimi istemiyor musunuz? Bunun yerine, Akın API ile',
       customize_link: 'akışlarınızı tamamen özelleştirebilirsiniz.',
     },
+    custom_css: {
+      title: 'Özel CSS',
+      description: 'Özel CSS kullanarak hesap merkezinin görünümünü özelleştirin.',
+    },
   },
   sign_up_and_sign_in,
   content,

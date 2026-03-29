@@ -203,6 +203,10 @@ const sign_in_exp = {
       customize_note: 'لا تريد التجربة المعدة مسبقًا؟ يمكنك بالكامل',
       customize_link: 'تخصيص التدفقات الخاصة بك باستخدام واجهة Account API بدلاً من ذلك.',
     },
+    custom_css: {
+      title: 'CSS مخصص',
+      description: 'تخصيص مظهر مركز الحساب باستخدام CSS مخصص.',
+    },
   },
   sign_up_and_sign_in,
   content,

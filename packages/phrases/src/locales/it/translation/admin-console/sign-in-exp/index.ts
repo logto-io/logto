@@ -204,8 +204,12 @@ const sign_in_exp = {
         backup_codes_generate: 'Genera un nuovo set di 10 codici di backup',
         backup_codes_manage: 'Visualizza i codici di backup disponibili o genera nuovi codici',
       },
-      customize_note: "Non vuoi l'esperienza predefinita? Puoi completamente",
+      customize_note: 'Non vuoi l’esperienza predefinita? Puoi completamente',
       customize_link: 'personalizzare i tuoi flussi con l’Account API invece.',
+    },
+    custom_css: {
+      title: 'CSS personalizzato',
+      description: 'Personalizza l’aspetto del centro account utilizzando CSS personalizzato.',
     },
   },
   sign_up_and_sign_in,
