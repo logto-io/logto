@@ -76,7 +76,7 @@ export const convertAccountCenterToForm = (
     ...accountCenter?.fields,
   },
   webauthnRelatedOrigins: normalizeWebauthnRelatedOrigins(accountCenter?.webauthnRelatedOrigins),
-  deleteAccountUrl: normalizeDeleteAccountUrl(accountCenter?.deleteAccountUrl),
+  deleteAccountUrl: normalizeDeleteAccountUrl(accountCenter?.deleteAccountUrl ?? undefined),
 });
 
 /**

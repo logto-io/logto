@@ -6,7 +6,7 @@ const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
       alter table account_centers
-        add column delete_account_url varchar(2048) not null default '';
+        add column delete_account_url varchar(2048);
     `);
   },
   down: async (pool) => {
