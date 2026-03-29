@@ -94,7 +94,7 @@
 .ossCloudBannerIcon {
   width: 48px;
   height: 48px;
-  border-radius: 8px;
+  border-radius: _.unit(2);
   background: linear-gradient(135deg, #5d34f2 0%, #faabff 100%);
   color: var(--color-on-primary);
   display: flex;
