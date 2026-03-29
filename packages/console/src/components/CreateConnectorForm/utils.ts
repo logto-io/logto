@@ -1,8 +1,5 @@
-import { ServiceConnector } from '@logto/connector-kit';
 import { type AdminConsoleKey } from '@logto/phrases';
 import { ConnectorType, type ConnectorResponse } from '@logto/schemas';
-
-import { type ConnectorGroup } from '@/types/connector';
 
 import { type ConnectorRadioGroupSize } from './ConnectorRadioGroup';
 import { featuredConnectorTargets } from './constants';
@@ -74,20 +71,10 @@ type ConnectorSelectionStateOptions = {
   readonly isDevFeaturesEnabled: boolean;
 };
 
-export const getConnectorSelectionState = <T extends Pick<ConnectorResponse, 'id'>>(
-  groups: Array<ConnectorGroup<T>>,
+export const shouldShowEmailConnectorUpsellBanner = (
   options: ConnectorSelectionStateOptions
-) => {
+): boolean => {
   const { type, isCloud, isDevFeaturesEnabled } = options;
-  const shouldShowEmailConnectorUpsellBanner =
-    type === ConnectorType.Email && !isCloud && isDevFeaturesEnabled;
-  const filteredGroups =
-    type === ConnectorType.Email && !isCloud
-      ? groups.filter(({ target }) => target !== ServiceConnector.Email)
-      : groups;
 
-  return {
-    shouldShowEmailConnectorUpsellBanner,
-    groups: filteredGroups,
-  };
+  return type === ConnectorType.Email && !isCloud && isDevFeaturesEnabled;
 };

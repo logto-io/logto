@@ -33,8 +33,8 @@ import {
   compareConnectors,
   getEmailConnectorUpsellCopyKeys,
   getConnectorRadioGroupSize,
-  getConnectorSelectionState,
   getModalTitle,
+  shouldShowEmailConnectorUpsellBanner,
 } from './utils';
 
 type Props = {
@@ -121,31 +121,27 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       .sort(compareConnectors);
   }, [factories, type, existingConnectors]);
 
-  const { shouldShowEmailConnectorUpsellBanner, groups: selectableGroups } = useMemo(
-    () =>
-      getConnectorSelectionState(groups, {
-        type,
-        isCloud,
-        isDevFeaturesEnabled,
-      }),
-    [groups, type]
-  );
+  const shouldShowEmailConnectorUpsellBannerValue = shouldShowEmailConnectorUpsellBanner({
+    type,
+    isCloud,
+    isDevFeaturesEnabled,
+  });
 
   const activeGroup = useMemo(
-    () => selectableGroups.find(({ id }) => id === activeGroupId),
-    [activeGroupId, selectableGroups]
+    () => groups.find(({ id }) => id === activeGroupId),
+    [activeGroupId, groups]
   );
 
   const cardTitle = useMemo(() => getModalTitle(type), [type]);
   const radioGroupSize = useMemo(
-    () => getConnectorRadioGroupSize(selectableGroups.length, type),
-    [selectableGroups.length, type]
+    () => getConnectorRadioGroupSize(groups.length, type),
+    [groups.length, type]
   );
 
   const handleGroupChange = (groupId: string) => {
     setActiveGroupId(groupId);
 
-    const group = selectableGroups.find(({ id }) => id === groupId);
+    const group = groups.find(({ id }) => id === groupId);
 
     if (!group) {
       return;
@@ -157,17 +153,11 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   };
 
   const defaultGroups = useMemo(
-    () =>
-      isCreatingSocialConnector
-        ? selectableGroups.filter((group) => !group.isStandard)
-        : selectableGroups,
-    [selectableGroups, isCreatingSocialConnector]
+    () => (isCreatingSocialConnector ? groups.filter((group) => !group.isStandard) : groups),
+    [groups, isCreatingSocialConnector]
   );
 
-  const standardGroups = useMemo(
-    () => selectableGroups.filter((group) => group.isStandard),
-    [selectableGroups]
-  );
+  const standardGroups = useMemo(() => groups.filter((group) => group.isStandard), [groups]);
 
   if (!isFormOpen) {
     return null;
@@ -218,7 +208,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       >
         {isLoading && <Skeleton />}
         {factoriesError?.message ?? connectorsError?.message}
-        {shouldShowEmailConnectorUpsellBanner && <EmailConnectorUpsellBanner />}
+        {shouldShowEmailConnectorUpsellBannerValue && <EmailConnectorUpsellBanner />}
 
         <ConnectorRadioGroup
           name="group"
