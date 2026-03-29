@@ -3,7 +3,34 @@ import { ConnectorType, ServiceConnector } from '@logto/connector-kit';
 import { getConnectorSelectionState, getEmailConnectorUpsellCopyKeys } from './utils';
 
 describe('getConnectorSelectionState', () => {
-  test('extracts the built-in email service into an OSS upsell banner', () => {
+  test('shows the OSS email upsell banner even when the built-in email connector is absent', () => {
+    const smtpGroup = {
+      id: 'smtp',
+      type: ConnectorType.Email,
+      target: 'smtp',
+      name: { en: 'SMTP' },
+      description: { en: 'SMTP connector.' },
+      logo: 'smtp.svg',
+      logoDark: 'smtp-dark.svg',
+      isStandard: true,
+      isDemo: false,
+      isTokenStorageSupported: false,
+      connectors: [{ id: 'smtp' }],
+    };
+
+    expect(
+      getConnectorSelectionState([smtpGroup], {
+        type: ConnectorType.Email,
+        isCloud: false,
+        isDevFeaturesEnabled: true,
+      })
+    ).toEqual({
+      shouldShowEmailConnectorUpsellBanner: true,
+      groups: [smtpGroup],
+    });
+  });
+
+  test('removes the built-in email connector from the selectable groups when present', () => {
     const logtoEmailGroup = {
       id: ServiceConnector.Email,
       type: ConnectorType.Email,
@@ -39,7 +66,7 @@ describe('getConnectorSelectionState', () => {
         isDevFeaturesEnabled: true,
       })
     ).toEqual({
-      bannerGroup: logtoEmailGroup,
+      shouldShowEmailConnectorUpsellBanner: true,
       groups: [smtpGroup],
     });
   });

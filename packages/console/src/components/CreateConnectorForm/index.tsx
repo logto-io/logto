@@ -19,8 +19,9 @@ import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import modalStyles from '@/scss/modal.module.scss';
-import { type ConnectorGroup } from '@/types/connector';
 
+import LogtoEmailLogoDark from '../../../../connectors/connector-logto-email/logo-dark.svg?url';
+import LogtoEmailLogo from '../../../../connectors/connector-logto-email/logo.svg?url';
 import { getConnectorGroups } from '../../pages/Connectors/utils';
 
 import ConnectorRadioGroup from './ConnectorRadioGroup';
@@ -42,11 +43,7 @@ type Props = {
   readonly onClose?: (connectorId?: string) => void;
 };
 
-type EmailConnectorUpsellBannerProps = {
-  readonly group: ConnectorGroup<ConnectorFactoryResponse>;
-};
-
-function EmailConnectorUpsellBanner({ group }: EmailConnectorUpsellBannerProps) {
+function EmailConnectorUpsellBanner() {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
@@ -55,7 +52,7 @@ function EmailConnectorUpsellBanner({ group }: EmailConnectorUpsellBannerProps) 
   return (
     <div className={styles.upsellBanner}>
       <div className={styles.upsellInfo}>
-        <ConnectorLogo data={{ logo: group.logo, logoDark: group.logoDark }} />
+        <ConnectorLogo data={{ logo: LogtoEmailLogo, logoDark: LogtoEmailLogoDark }} />
         <div className={styles.upsellContent}>
           <div className={styles.upsellTitle}>
             <DynamicT forKey={copyKeys.title} />
@@ -124,7 +121,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       .sort(compareConnectors);
   }, [factories, type, existingConnectors]);
 
-  const { bannerGroup, groups: selectableGroups } = useMemo(
+  const { shouldShowEmailConnectorUpsellBanner, groups: selectableGroups } = useMemo(
     () =>
       getConnectorSelectionState(groups, {
         type,
@@ -221,7 +218,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       >
         {isLoading && <Skeleton />}
         {factoriesError?.message ?? connectorsError?.message}
-        {bannerGroup && <EmailConnectorUpsellBanner group={bannerGroup} />}
+        {shouldShowEmailConnectorUpsellBanner && <EmailConnectorUpsellBanner />}
 
         <ConnectorRadioGroup
           name="group"

@@ -1,4 +1,3 @@
-import { ServiceConnector } from '@logto/connector-kit';
 import { type AdminConsoleKey } from '@logto/phrases';
 import { ConnectorType, type ConnectorResponse } from '@logto/schemas';
 
@@ -68,6 +67,8 @@ export const getEmailConnectorUpsellCopyKeys = () => ({
   description: 'connectors.create_form.email_connector_upsell.description' as const,
 });
 
+const builtInEmailConnectorTarget = 'logto-email';
+
 type ConnectorSelectionStateOptions = {
   readonly type?: ConnectorType;
   readonly isCloud: boolean;
@@ -79,21 +80,15 @@ export const getConnectorSelectionState = <T extends Pick<ConnectorResponse, 'id
   options: ConnectorSelectionStateOptions
 ) => {
   const { type, isCloud, isDevFeaturesEnabled } = options;
+  const shouldShowEmailConnectorUpsellBanner =
+    type === ConnectorType.Email && !isCloud && isDevFeaturesEnabled;
 
-  if (type !== ConnectorType.Email || isCloud || !isDevFeaturesEnabled) {
-    return { bannerGroup: undefined, groups };
-  }
-
-  const bannerGroup = groups.find(({ connectors }) =>
-    connectors.some(({ id }) => id === ServiceConnector.Email)
-  );
-
-  if (!bannerGroup) {
-    return { bannerGroup: undefined, groups };
+  if (!shouldShowEmailConnectorUpsellBanner) {
+    return { shouldShowEmailConnectorUpsellBanner, groups };
   }
 
   return {
-    bannerGroup,
-    groups: groups.filter(({ id }) => id !== bannerGroup.id),
+    shouldShowEmailConnectorUpsellBanner,
+    groups: groups.filter(({ target }) => target !== builtInEmailConnectorTarget),
   };
 };
