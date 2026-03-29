@@ -29,6 +29,7 @@ import { isDevOnlyRegion } from '@/hooks/use-available-regions';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import useTheme from '@/hooks/use-theme';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import useWindowResize from '@/hooks/use-window-resize';
 
 import CreateApiForm from '../ApiResources/components/CreateForm';
@@ -54,12 +55,16 @@ function GetStarted() {
   const apiGuideMetadata = useApiGuideMetadata();
   const [showCreateAppForm, setShowCreateAppForm] = useState<boolean>(false);
   const [showCreateApiForm, setShowCreateApiForm] = useState<boolean>(false);
-  const [isOssCloudBannerVisible, setIsOssCloudBannerVisible] = useState(true);
   // The number of visible guide cards to show in one row per the current screen width
   const [visibleCardCount, setVisibleCardCount] = useState(4);
   const containerRef = useRef<HTMLDivElement>(null);
   const theme = useTheme();
   const { PreviewIcon, SocialIcon, RbacIcon } = icons[theme];
+  const {
+    data: userPreferences,
+    isLoaded: isUserPreferencesLoaded,
+    update: updateUserPreferences,
+  } = useUserPreferences();
 
   useWindowResize(() => {
     const containerWidth = containerRef.current?.clientWidth ?? 0;
@@ -122,6 +127,22 @@ function GetStarted() {
   }, [isDevTenant, currentTenant]);
 
   const shouldShowOssCloudUpsell = !isCloud && isDevFeaturesEnabled;
+  const shouldShowOssCloudBanner =
+    shouldShowOssCloudUpsell &&
+    isUserPreferencesLoaded &&
+    !userPreferences.ossGetStartedCloudUpsellDismissed;
+
+  const persistOssCloudBannerDismissal = useCallback(async () => {
+    try {
+      await updateUserPreferences({ ossGetStartedCloudUpsellDismissed: true });
+    } catch (error: unknown) {
+      void error;
+    }
+  }, [updateUserPreferences]);
+
+  const onDismissOssCloudBanner = useCallback(() => {
+    void persistOssCloudBannerDismissal();
+  }, [persistOssCloudBannerDismissal]);
 
   return (
     <div className={styles.container}>
@@ -133,10 +154,8 @@ function GetStarted() {
       {shouldShowConvertToProductionCard && <ConvertToProductionCard />}
       {shouldShowOssCloudUpsell && (
         <OssCloudUpsell
-          isBannerVisible={isOssCloudBannerVisible}
-          onDismissBanner={() => {
-            setIsOssCloudBannerVisible(false);
-          }}
+          isBannerVisible={shouldShowOssCloudBanner}
+          onDismissBanner={onDismissOssCloudBanner}
         />
       )}
       <Card className={styles.card}>
