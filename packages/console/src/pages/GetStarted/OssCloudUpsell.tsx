@@ -68,7 +68,7 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
       )}
       <Card className={styles.card}>
         <div className={styles.title}>{t('get_started.oss_cloud.private_cloud.title')}</div>
-        <div className={classNames(styles.borderBox, styles.privateCloudCard)}>
+        <div className={styles.borderBox}>
           <div className={styles.rowWrapper}>
             <div className={classNames(styles.icon, styles.privateCloudIcon)}>
               <PrivateCloudIcon />
