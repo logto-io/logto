@@ -37,7 +37,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         fields: accountCenterFieldControlGuard.optional(),
         webauthnRelatedOrigins: webauthnRelatedOriginsGuard.optional(),
         deleteAccountUrl: deleteAccountUrlGuard.nullable().optional(),
-        customCss: z.string().optional(),
+        customCss: z.string().nullish(),
       }),
       response: AccountCenters.guard,
       status: [200],
