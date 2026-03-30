@@ -137,6 +137,40 @@ void test('pendingReturn expires after ttl window', () => {
   });
 });
 
+void test('verificationRecord stores and retrieves from localStorage', () => {
+  windowMock.localStorage.clear();
+
+  const expiresAt = new Date(Date.now() + 60_000).toISOString();
+
+  accountStorage.verificationRecord.set({ verificationId: 'vrec-123', expiresAt });
+
+  assert.deepEqual(accountStorage.verificationRecord.get(), {
+    verificationId: 'vrec-123',
+    expiresAt,
+  });
+});
+
+void test('verificationRecord returns undefined and clears when expired', () => {
+  windowMock.localStorage.clear();
+
+  const expiresAt = new Date(Date.now() - 60_000).toISOString();
+
+  accountStorage.verificationRecord.set({ verificationId: 'vrec-expired', expiresAt });
+
+  assert.equal(accountStorage.verificationRecord.get(), undefined);
+});
+
+void test('verificationRecord.clear removes the record', () => {
+  windowMock.localStorage.clear();
+
+  const expiresAt = new Date(Date.now() + 60_000).toISOString();
+
+  accountStorage.verificationRecord.set({ verificationId: 'vrec-456', expiresAt });
+  accountStorage.verificationRecord.clear();
+
+  assert.equal(accountStorage.verificationRecord.get(), undefined);
+});
+
 void test('sessionVerified.consume returns false when not set', () => {
   windowMock.sessionStorage.clear();
 
