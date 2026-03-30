@@ -83,6 +83,11 @@ const connectors = {
   create_form: {
     third_party_connectors:
       'Zintegruj zewnętrznych dostawców, aby szybko zalogować się przez nich społecznościowo, połączyć konta społecznościowe i uzyskać dostęp do API. <a>Dowiedz się więcej</a>',
+    email_connector_upsell: {
+      title: 'Wbudowana usługa e-mail Logto',
+      description:
+        'Wysyłka e-maili bez konfiguracji. Od razu wysyłaj kody weryfikacyjne i magiczne linki.',
+    },
     standard_connectors:
       'Lub możesz dostosować swój łącznik społecznościowy, korzystając ze standardowego protokołu.',
   },

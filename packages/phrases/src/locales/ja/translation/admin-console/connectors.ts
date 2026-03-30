@@ -83,6 +83,11 @@ const connectors = {
   create_form: {
     third_party_connectors:
       'サードパーティ プロバイダーを統合して、迅速なソーシャル サインイン、ソーシャル アカウントのリンク、および API アクセスを提供します。<a>詳細はこちら</a>',
+    email_connector_upsell: {
+      title: 'Logto 組み込みメールサービス',
+      description:
+        '設定不要ですぐにメールを配信できます。認証コードやマジックリンクをそのまま送信できます。',
+    },
     standard_connectors: 'または標準プロトコルでソーシャルコネクタをカスタマイズできます。',
   },
 };
