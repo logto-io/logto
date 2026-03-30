@@ -13,6 +13,9 @@ const Callback = () => {
   }, [clearAllTokens]);
 
   const { error } = useHandleSignInCallback(() => {
+    // Mark that we've just completed a fresh OIDC callback, so App.tsx
+    // won't clear tokens again on the immediate redirect.
+    sessionStorage.setItem('logto:account-center:session-verified', 'true');
     window.location.replace('/account');
   });
 

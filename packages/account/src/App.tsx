@@ -2,7 +2,7 @@ import LogtoSignature from '@experience/shared/components/LogtoSignature';
 import { LogtoProvider, Prompt, ReservedScope, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId, ExtraParamsKey, SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
@@ -82,7 +82,7 @@ const Main = () => {
     (pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`);
   const isInCallback = isSocialCallback || isAuthCallback;
   const uiLocales = getUiLocales();
-  const { isAuthenticated, isLoading, signIn } = useLogto();
+  const { isAuthenticated, isLoading, signIn, clearAllTokens } = useLogto();
   const {
     accountCenterSettings,
     experienceSettings,
@@ -92,6 +92,31 @@ const Main = () => {
     userInfoError,
   } = useContext(PageContext);
   const isInitialAuthLoading = !isAuthenticated && isLoading;
+
+  // On initial page load (not callback), clear cached tokens to force a fresh
+  // OIDC authentication flow. This prevents stale tokens from a previous user
+  // from being reused when a different user has signed in.
+  // After the OIDC callback completes, Callback.tsx sets a sessionStorage flag
+  // so we skip the clear on the post-callback redirect within the same tab.
+  // The flag is consumed (removed) immediately, so the next full page load
+  // will clear tokens again, ensuring the session is always fresh.
+  const [hasCleared, setHasCleared] = useState(() => {
+    const verified = sessionStorage.getItem('logto:account-center:session-verified') === 'true';
+
+    if (verified) {
+      sessionStorage.removeItem('logto:account-center:session-verified');
+    }
+
+    return verified;
+  });
+  useEffect(() => {
+    if (isInCallback || hasCleared) {
+      return;
+    }
+
+    setHasCleared(true);
+    void clearAllTokens();
+  }, [clearAllTokens, hasCleared, isInCallback]);
 
   useEffect(() => {
     if (isInCallback || isInitialAuthLoading) {

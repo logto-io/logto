@@ -13,7 +13,6 @@ import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/th
 
 import type { PageContextType } from './PageContext';
 import PageContext from './PageContext';
-import { isSessionUserMatch } from './user-session-guard';
 import {
   clearVerificationRecord,
   getStoredVerificationId,
@@ -25,7 +24,7 @@ type Props = {
 };
 
 const PageContextProvider = ({ children }: Props) => {
-  const { isAuthenticated, getIdTokenClaims } = useLogto();
+  const { isAuthenticated } = useLogto();
   const getUserInfoRequest = useApi(getUserInfo, { silent: true });
   const [theme, setTheme] = useState(Theme.Light);
   const [toast, setToast] = useState('');
@@ -74,23 +73,6 @@ const PageContextProvider = ({ children }: Props) => {
         return;
       }
 
-      // Verify that the API response matches the cached SDK token user.
-      // When the OIDC session changes (e.g., different user signs in after logout),
-      // stale tokens in localStorage may cause a user mismatch.
-      if (data.id) {
-        const matched = await isSessionUserMatch(getIdTokenClaims, data.id);
-
-        if (!matched) {
-          setUserInfoError(new Error('Session user mismatch'));
-
-          if (showLoading) {
-            setIsLoadingUserInfo(false);
-          }
-
-          return;
-        }
-      }
-
       setUserInfo(data);
       setUserInfoError(undefined);
 
@@ -98,7 +80,7 @@ const PageContextProvider = ({ children }: Props) => {
         setIsLoadingUserInfo(false);
       }
     },
-    [getUserInfoRequest, getIdTokenClaims]
+    [getUserInfoRequest]
   );
 
   const refreshUserInfo = useCallback(async () => {
