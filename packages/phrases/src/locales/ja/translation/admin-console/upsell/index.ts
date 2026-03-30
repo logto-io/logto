@@ -5,6 +5,7 @@ import paywall from './paywall.js';
 const upsell = {
   upgrade_plan: 'プランをアップグレード',
   compare_plans: 'プラン比較',
+  try_with_product_name: '今すぐ {{productName}} を試す',
   view_plans: 'プランを見る',
   create_tenant: {
     title: 'テナントプランを選択',

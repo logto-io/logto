@@ -63,6 +63,7 @@ export const getModalTitle = (connectorType?: ConnectorType): AdminConsoleKey =>
 export const getEmailConnectorUpsellCopyKeys = () => ({
   title: 'connectors.create_form.email_connector_upsell.title' as const,
   description: 'connectors.create_form.email_connector_upsell.description' as const,
+  action: 'upsell.try_with_product_name' as const,
 });
 
 type ConnectorSelectionStateOptions = {

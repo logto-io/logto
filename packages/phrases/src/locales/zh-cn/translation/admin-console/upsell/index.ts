@@ -5,6 +5,7 @@ import paywall from './paywall.js';
 const upsell = {
   upgrade_plan: '升级计划',
   compare_plans: '比较计划',
+  try_with_product_name: '立即试用 {{productName}}',
   view_plans: '查看计划',
   create_tenant: {
     title: '选择您的租户计划',

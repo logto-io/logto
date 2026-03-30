@@ -15,6 +15,7 @@ import ConnectorLogo from '@/components/ConnectorLogo';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { pricingLink } from '@/consts/external-links';
 import Button from '@/ds-components/Button';
+import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
@@ -65,7 +66,7 @@ function EmailConnectorUpsellBanner() {
       <Button
         className={styles.upsellButton}
         type="outline"
-        title={<span>{t('general.try_now')} Logto Cloud</span>}
+        title={<DangerousRaw>{t(copyKeys.action, { productName: 'Logto Cloud' })}</DangerousRaw>}
         trailingIcon={<ExternalLink />}
         onClick={() => {
           window.open(pricingLink, '_blank', 'noopener,noreferrer');
