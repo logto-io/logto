@@ -17,7 +17,9 @@ await mockEsmWithActual('p-retry', () => ({
     }),
 }));
 
-const { createPoolWithRetry, ensurePoolReady } = await import('./create-pool.js');
+const { createPoolWithRetry, ensurePoolReady, isTransientConnectionError } = await import(
+  './create-pool.js'
+);
 
 type TestPool = Parameters<typeof ensurePoolReady>[0];
 
@@ -61,6 +63,20 @@ describe('create-pool', () => {
     expect(readyPool.end).not.toBeCalled();
   });
 
+  it('should not retry non-transient connection errors', async () => {
+    const error = new Error('password authentication failed');
+    const failedPool = createTestPool({
+      queryImplementation: jest.fn(async () => {
+        throw error;
+      }),
+    });
+    const factory = jest.fn().mockResolvedValue(failedPool);
+
+    await expect(createPoolWithRetry(factory, 1)).rejects.toThrow(error);
+    expect(factory).toBeCalledTimes(1);
+    expect(failedPool.end).toBeCalledTimes(1);
+  });
+
   it('should rethrow the last error after exhausting retries', async () => {
     const error = new Error('timeout expired');
     const firstFailedPool = createTestPool({
@@ -82,5 +98,12 @@ describe('create-pool', () => {
     expect(factory).toBeCalledTimes(2);
     expect(firstFailedPool.end).toBeCalledTimes(1);
     expect(secondFailedPool.end).toBeCalledTimes(1);
+  });
+
+  it('should identify transient connection errors by code or timeout message', () => {
+    expect(isTransientConnectionError({ code: 'ECONNREFUSED' })).toBe(true);
+    expect(isTransientConnectionError(new Error('timeout expired'))).toBe(true);
+    expect(isTransientConnectionError(new Error('password authentication failed'))).toBe(false);
+    expect(isTransientConnectionError()).toBe(false);
   });
 });

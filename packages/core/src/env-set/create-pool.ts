@@ -8,15 +8,43 @@ import {
   createInterceptorsPreset,
   type DatabasePool,
 } from '@silverhand/slonik';
-import pRetry from 'p-retry';
+import pRetry, { AbortError } from 'p-retry';
 
 const databaseConnectionRetries = 5;
+const transientConnectionErrorCodes = new Set([
+  'ETIMEDOUT',
+  'ECONNREFUSED',
+  'ECONNRESET',
+  'EHOSTUNREACH',
+  'EPIPE',
+]);
 
 type PoolLike = Pick<DatabasePool, 'query' | 'end'>;
+
+const isErrorWithConnectionMetadata = (
+  error: unknown
+): error is {
+  code?: string;
+  message?: string;
+} => typeof error === 'object' && error !== null;
 
 export const ensurePoolReady = async <T extends PoolLike>(pool: T) => {
   await pool.query(sql`select 1`);
   return pool;
+};
+
+export const isTransientConnectionError = (error?: unknown) => {
+  if (!isErrorWithConnectionMetadata(error)) {
+    return false;
+  }
+
+  const { code, message } = error;
+
+  if (code && transientConnectionErrorCodes.has(code)) {
+    return true;
+  }
+
+  return message?.toLowerCase().includes('timeout') ?? false;
 };
 
 export const createPoolWithRetry = async <T extends PoolLike>(
@@ -31,6 +59,11 @@ export const createPoolWithRetry = async <T extends PoolLike>(
         return await ensurePoolReady(pool);
       } catch (error: unknown) {
         await trySafe(pool.end());
+
+        if (!isTransientConnectionError(error)) {
+          throw new AbortError(error instanceof Error ? error : new Error(String(error)));
+        }
+
         throw error;
       }
     },
