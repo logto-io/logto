@@ -22,8 +22,12 @@ import useToast from './use-toast';
 const usePasskeyAutofillConditionalUI = () => {
   const { t } = useTranslation();
   const { setToast } = useToast();
-  const { authenticationOptions, abortConditionalUI, setConditionalUIAbortController } =
-    useContext(WebAuthnContext);
+  const {
+    authenticationOptions,
+    abortConditionalUI,
+    setConditionalUIAbortController,
+    setIsPasskeyFlowProcessing,
+  } = useContext(WebAuthnContext);
   const { passkeySignIn } = useSieMethods();
   const asyncVerifySignInPasskey = useApi(verifySignInPasskey);
   const handleError = useErrorHandler();
@@ -59,6 +63,7 @@ const usePasskeyAutofillConditionalUI = () => {
           return;
         }
 
+        setIsPasskeyFlowProcessing(true);
         await initInteraction(InteractionEvent.SignIn);
 
         const [error, result] = await asyncVerifySignInPasskey({
@@ -82,6 +87,8 @@ const usePasskeyAutofillConditionalUI = () => {
           return;
         }
         setToast(t('passkey_sign_in.trigger_conditional_ui_failed'));
+      } finally {
+        setIsPasskeyFlowProcessing(false);
       }
     },
     [
@@ -93,6 +100,7 @@ const usePasskeyAutofillConditionalUI = () => {
       t,
       abortConditionalUI,
       setConditionalUIAbortController,
+      setIsPasskeyFlowProcessing,
     ]
   );
 

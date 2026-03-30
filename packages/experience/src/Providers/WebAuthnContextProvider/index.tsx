@@ -27,6 +27,7 @@ const WebAuthnContextProvider = ({ children }: { readonly children: ReactNode })
   const [authenticationOptions, setAuthenticationOptions] =
     useState<WebAuthnAuthenticationOptions>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isPasskeyFlowProcessing, setIsPasskeyFlowProcessing] = useState(false);
   const [isConsumed, setIsConsumed] = useState(false);
   const shouldFetch =
     !!passkeySignIn?.enabled && !isPreview && (!authenticationOptions || isConsumed);
@@ -42,6 +43,7 @@ const WebAuthnContextProvider = ({ children }: { readonly children: ReactNode })
     conditionalUIAbortControllerRef.current?.abort();
     // eslint-disable-next-line @silverhand/fp/no-mutation
     conditionalUIAbortControllerRef.current = undefined;
+    setIsPasskeyFlowProcessing(false);
   }, []);
 
   const setConditionalUIAbortController = useCallback((controller: AbortController | undefined) => {
@@ -75,14 +77,18 @@ const WebAuthnContextProvider = ({ children }: { readonly children: ReactNode })
     () => ({
       authenticationOptions,
       isLoading,
+      isPasskeyFlowProcessing,
       markAuthenticationOptionsConsumed,
+      setIsPasskeyFlowProcessing,
       abortConditionalUI,
       setConditionalUIAbortController,
     }),
     [
       authenticationOptions,
       isLoading,
+      isPasskeyFlowProcessing,
       markAuthenticationOptionsConsumed,
+      setIsPasskeyFlowProcessing,
       abortConditionalUI,
       setConditionalUIAbortController,
     ]

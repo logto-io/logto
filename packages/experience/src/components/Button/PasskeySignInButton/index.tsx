@@ -21,14 +21,16 @@ const PasskeySignInButton = () => {
   const {
     authenticationOptions,
     isLoading: isPreparing,
+    isPasskeyFlowProcessing,
+    setIsPasskeyFlowProcessing,
     markAuthenticationOptionsConsumed,
     abortConditionalUI,
   } = useContext(WebAuthnContext);
   const { handleVerifyPasskey } = usePasskeySignIn();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const isLoadingActive = useDebouncedLoader(isPreparing || isSubmitting, 300);
-  const isDisabled = isPreparing || !authenticationOptions;
+  const isLoadingActive = useDebouncedLoader(isSubmitting, 300);
+  const isDisabled = isPreparing || !authenticationOptions || isPasskeyFlowProcessing;
 
   const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
     replace: true,
@@ -42,10 +44,12 @@ const PasskeySignInButton = () => {
     // to prevent `OperationError: A request is already pending`.
     abortConditionalUI();
     setIsSubmitting(true);
+    setIsPasskeyFlowProcessing(true);
     try {
       await handleVerifyPasskey(authenticationOptions, preSignInErrorHandler);
     } finally {
       markAuthenticationOptionsConsumed();
+      setIsPasskeyFlowProcessing(false);
       setIsSubmitting(false);
     }
   }, [
@@ -54,6 +58,7 @@ const PasskeySignInButton = () => {
     handleVerifyPasskey,
     markAuthenticationOptionsConsumed,
     preSignInErrorHandler,
+    setIsPasskeyFlowProcessing,
   ]);
 
   if (!browserSupportsWebAuthn()) {
