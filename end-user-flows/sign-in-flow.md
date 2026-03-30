@@ -83,13 +83,13 @@ flowchart TD
   subgraph PasskeyDirect["Direct passkey sign-in"]
     pk0 --> pk1[Ask browser for discoverable passkey]
     pk1 --> pk2[Verify passkey sign-in]
-    pk2 --> identified_passkey
+    pk2 --> identified_passkey[User identified via passkey]
   end
 
   subgraph Social["Social sign-in"]
     so0 --> so1[Verify social callback]
     so1 --> so2{Existing social identity found}
-    so2 -->|yes| identified_social
+    so2 -->|yes| identified_social[User identified via social identity]
     so2 -->|no| so3{Related user found by<br/>verified email or phone}
     so3 -->|yes| so4{Automatic account linking enabled}
     so4 -->|yes| so_linked[Bind related account<br/>and continue sign-in]
@@ -105,7 +105,7 @@ flowchart TD
   subgraph MagicLink["One-time token sign-in"]
     ml0 --> ml1[Validate token and email hint]
     ml1 --> ml2{Known user}
-    ml2 -->|yes| identified_magic_link
+    ml2 -->|yes| identified_magic_link[User identified via one-time token]
     ml2 -->|no| out_ml([Register path outside this sign-in flow])
   end
 

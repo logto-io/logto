@@ -34,7 +34,7 @@ flowchart TD
     reset3 -->|yes| reset4[Save new password]
     reset4 --> reset5[Clear cached recovery identifier]
     reset5 --> success[Show password-changed message]
-    success --> done
+    success --> done([Return to sign-in])
   end
 
   note_methods[Only email and phone recovery are supported here.<br/>Username, social, enterprise SSO, one-time token, and passkey are not part of this flow.]

@@ -30,8 +30,8 @@ flowchart TD
 
     ide2 --> id_method_ui[Resolve selected identifier method<br/>against sign-up methods exposed by current<br/>sign-in experience settings]
     idv1 --> id_method_ui
-    id_method_ui --> idv2[send verification code]
-    idv2 --> idv3[verify code]
+    id_method_ui --> idv2[Send verification code]
+    idv2 --> idv3[Verify code]
     idv3 --> reg_verified[Submit verified identifier<br/>for registration]
   end
 
@@ -39,7 +39,7 @@ flowchart TD
 
   subgraph Social["Register via social sign-in"]
     so0 --> so1[Start sign-in attempt]
-    so1 --> so2[verify social callback<br/>captcha skipped]
+    so1 --> so2[Verify social callback<br/>captcha skipped]
     so2 --> so3{Related user found by<br/>verified email or phone}
     so3 -->|no| so5[Switch to register flow<br/>with verified social identity]
     so3 -->|yes| so4[Account linking choice]
@@ -51,7 +51,7 @@ flowchart TD
 
   subgraph MagicLink["Register via one-time token"]
     ml0 --> ml1[Start sign-in attempt]
-    ml1 --> ml2[verify one-time token<br/>captcha skipped]
+    ml1 --> ml2[Verify one-time token<br/>captcha skipped]
     ml2 --> ml3{User exists}
     ml3 -->|yes| out_ml[Sign-in path outside this register flow]
     ml3 -->|no| ml4[Switch to register flow<br/>with verified one-time token]
@@ -63,7 +63,7 @@ flowchart TD
     sso_redirect --> sso1[Authenticate with enterprise IdP]
     sso0 --> sso1
     sso1 --> sso2[Return from enterprise IdP]
-    sso2 --> sso2b[verify SSO callback<br/>captcha skipped]
+    sso2 --> sso2b[Verify SSO callback<br/>captcha skipped]
     sso2b --> sso3{Existing enterprise identity found}
     sso3 -->|yes| out_sso[Direct sign-in path<br/>outside this register flow]
     sso3 -->|no| sso4{Related user found by<br/>verified email}
@@ -94,14 +94,12 @@ flowchart TD
     collect_custom_profile --> create_user
   end
 
-  note_profile[No missing-profile gate for enterprise SSO registration.<br/>Social registration may also bypass it when<br/>tenant settings allow skipping required identifiers.]
   note_captcha[Captcha is enforced on identifier entry when policy requires it.<br/>Social, enterprise SSO, and one-time token verification skip captcha.]
   note_identifier_method[The register page only exposes identifier methods allowed by the current sign-in experience.<br/>Email and phone verification-code registration therefore starts from the enabled sign-up methods on the page.]
   note_social_link[When automatic account linking is enabled,<br/>the related-user branch skips the choice page<br/>and proceeds directly to account-linking sign-in.]
   note_sso_recheck[Email registration checks enterprise SSO twice:<br/>the experience UI can redirect to SSO before sending a code,<br/>and the backend rechecks SSO-only email before local user creation.]
   note_sso_link[Enterprise SSO does not have a manual linking page here.<br/>If no direct SSO identity exists, the backend auto-falls back<br/>to a related user matched by verified email.]
 
-  note_profile -.-> profile_gate
   note_captcha -.-> idu1
   note_captcha -.-> ide2
   note_captcha -.-> idv1
@@ -139,7 +137,7 @@ flowchart TD
     mfa_missing -->|yes| mfa_bind[MFA binding or factor page]
     mfa_missing -->|no| mfa_suggestion{Suggest an additional MFA factor?}
 
-    mfa_bind --> mfa_bind2[bind authenticator app, passkey, email, or phone]
+    mfa_bind --> mfa_bind2[Bind authenticator app, passkey, email, or phone]
     mfa_bind2 --> backup_gate
 
     mfa_suggestion -->|yes| mfa_suggestion_bind[Additional MFA factor suggestion]
@@ -151,7 +149,7 @@ flowchart TD
     backup_gate -->|yes| backup[Backup code binding]
     backup_gate -->|no| submit[Submit interaction]
 
-    backup --> backup2[generate and save backup codes]
+    backup --> backup2[Generate and save backup codes]
     backup2 --> submit
   end
 
