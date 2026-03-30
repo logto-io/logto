@@ -80,19 +80,23 @@ const useCloudTenantSettings = () => {
   return tenantSettings;
 };
 
-const useOssTenantSettings = (): RouteObject => ({
-  path: 'tenant-settings',
-  element: <OssTenantSettings />,
-  children: [
-    {
-      index: true,
-      element: <Navigate replace to={TenantSettingsTabs.OidcConfigs} />,
-    },
-    {
-      path: TenantSettingsTabs.OidcConfigs,
-      element: <OidcConfigs />,
-    },
-  ],
-});
+const useOssTenantSettings = (): RouteObject =>
+  useMemo(
+    () => ({
+      path: 'tenant-settings',
+      element: <OssTenantSettings />,
+      children: [
+        {
+          index: true,
+          element: <Navigate replace to={TenantSettingsTabs.OidcConfigs} />,
+        },
+        {
+          path: TenantSettingsTabs.OidcConfigs,
+          element: <OidcConfigs />,
+        },
+      ],
+    }),
+    []
+  );
 
 export const useTenantSettings = isCloud ? useCloudTenantSettings : useOssTenantSettings;
