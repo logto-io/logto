@@ -631,7 +631,6 @@
     },
     "/api/my-account/grants": {
       "get": {
-        "tags": ["Dev feature"],
         "operationId": "GetGrants",
         "summary": "Get all active grants",
         "description": "Retrieve all active application grants for the user. A logto-verification-id in header is required for checking grant details.",
@@ -654,7 +653,6 @@
     },
     "/api/my-account/grants/{grantId}": {
       "delete": {
-        "tags": ["Dev feature"],
         "operationId": "DeleteGrantById",
         "summary": "Revoke a grant by ID",
         "description": "Revoke a specific user application grant by grant ID and remove the related session authorization. A logto-verification-id in header is required for revoking grants.",

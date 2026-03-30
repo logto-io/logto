@@ -2,7 +2,6 @@ import { getUserApplicationGrantsResponseGuard } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { object, string, enum as zodEnum } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
@@ -11,10 +10,6 @@ import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 export default function adminUserGrantRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const {
     provider,
     libraries: { session: sessionLibrary },

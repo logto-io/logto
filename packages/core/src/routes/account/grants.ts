@@ -3,7 +3,6 @@ import { AccountCenterControlValue, getUserApplicationGrantsResponseGuard } from
 import { trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -15,10 +14,6 @@ import { accountApiPrefix } from './constants.js';
 export default function accountGrantRoutes<T extends UserRouter>(
   ...[router, { provider, libraries }]: RouterInitArgs<T>
 ) {
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const { session: sessionLibrary } = libraries;
 
   router.get(
