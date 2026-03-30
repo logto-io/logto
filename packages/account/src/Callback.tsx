@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 import { clearVerificationRecord } from './Providers/PageContextProvider/verification-storage';
 import GlobalLoading from './components/GlobalLoading';
+import { accountStorage } from './utils/session-storage';
 
 const Callback = () => {
   const { clearAllTokens } = useLogto();
@@ -15,7 +16,7 @@ const Callback = () => {
   const { error } = useHandleSignInCallback(() => {
     // Mark that we've just completed a fresh OIDC callback, so App.tsx
     // won't clear tokens again on the immediate redirect.
-    sessionStorage.setItem('logto:account-center:session-verified', 'true');
+    accountStorage.sessionVerified.set();
     window.location.replace('/account');
   });
 

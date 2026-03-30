@@ -136,3 +136,18 @@ void test('pendingReturn expires after ttl window', () => {
     configurable: true,
   });
 });
+
+void test('sessionVerified.consume returns false when not set', () => {
+  windowMock.sessionStorage.clear();
+
+  assert.equal(accountStorage.sessionVerified.consume(), false);
+});
+
+void test('sessionVerified.consume returns true and removes the flag after set', () => {
+  windowMock.sessionStorage.clear();
+
+  accountStorage.sessionVerified.set();
+  assert.equal(accountStorage.sessionVerified.consume(), true);
+  // Second consume should return false (flag already removed)
+  assert.equal(accountStorage.sessionVerified.consume(), false);
+});

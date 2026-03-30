@@ -64,6 +64,7 @@ import {
   setRouteRestore,
 } from './utils/account-center-route';
 import { hasVisibleSecuritySection } from './utils/security-page';
+import { accountStorage } from './utils/session-storage';
 import '@experience/shared/scss/normalized.scss';
 
 handleAccountCenterRoute();
@@ -100,15 +101,7 @@ const Main = () => {
   // so we skip the clear on the post-callback redirect within the same tab.
   // The flag is consumed (removed) immediately, so the next full page load
   // will clear tokens again, ensuring the session is always fresh.
-  const [hasCleared, setHasCleared] = useState(() => {
-    const verified = sessionStorage.getItem('logto:account-center:session-verified') === 'true';
-
-    if (verified) {
-      sessionStorage.removeItem('logto:account-center:session-verified');
-    }
-
-    return verified;
-  });
+  const [hasCleared, setHasCleared] = useState(() => accountStorage.sessionVerified.consume());
   useEffect(() => {
     if (isInCallback || hasCleared) {
       return;

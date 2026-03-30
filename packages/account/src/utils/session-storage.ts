@@ -12,6 +12,7 @@ const storageKeys = Object.freeze({
   verificationRecord: `${storagePrefix}verification-record`,
   socialFlow: `${storagePrefix}social-verification`,
   pendingReturn: `${storagePrefix}pending-return`,
+  sessionVerified: `${storagePrefix}session-verified`,
 });
 
 export type StoredVerificationRecord = {
@@ -226,6 +227,28 @@ export const accountStorage = Object.freeze({
     },
     clear: (connectorId: string) => {
       removeItem(`${storageKeys.socialFlow}:${connectorId}`, 'session');
+    },
+  },
+  /**
+   * One-time flag set by Callback.tsx after a successful OIDC callback.
+   * App.tsx consumes (reads and removes) it on the next page load to decide
+   * whether to clear cached tokens and force a fresh OIDC flow.
+   * This prevents infinite redirect loops while ensuring stale tokens from
+   * a previous user are always cleared on initial navigation.
+   */
+  sessionVerified: {
+    /** Consume the flag: returns `true` if it was set, and removes it. */
+    consume: (): boolean => {
+      const value = getString(storageKeys.sessionVerified, 'session') === 'true';
+
+      if (value) {
+        removeItem(storageKeys.sessionVerified, 'session');
+      }
+
+      return value;
+    },
+    set: () => {
+      setString(storageKeys.sessionVerified, 'true', 'session');
     },
   },
 });
