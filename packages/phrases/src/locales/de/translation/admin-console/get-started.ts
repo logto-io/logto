@@ -50,7 +50,7 @@ const get_started = {
       badge: 'Empfohlen',
       description:
         'Erhalten Sie ein vollständig verwaltetes Logto ohne Wartungsaufwand, plus schnelle Integration mit MCP, Multi-Tenant-Unterstützung, Teamzusammenarbeit und alle Premium-Funktionen inklusive. Kostenloser Start ohne Kreditkarte.',
-      action: 'Logto Cloud ausprobieren',
+      action: 'Logto Cloud entdecken',
     },
     private_cloud: {
       title: 'Benötigen Sie Compliance oder eine individuelle Bereitstellung?',

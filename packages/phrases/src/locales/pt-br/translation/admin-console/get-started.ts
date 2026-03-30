@@ -50,7 +50,7 @@ const get_started = {
       badge: 'Recomendado',
       description:
         'Tenha um Logto totalmente gerenciado sem manutenção, além de integração rápida com MCP, suporte a múltiplos tenants, colaboração em equipe e todos os recursos premium incluídos. Comece grátis, sem cartão de crédito.',
-      action: 'Experimentar o Logto Cloud',
+      action: 'Explorar o Logto Cloud',
     },
     private_cloud: {
       title: 'Precisa de conformidade ou de uma implantação personalizada?',
