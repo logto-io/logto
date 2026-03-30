@@ -37,6 +37,9 @@ const getOidcConfigKeyDatabaseColumnName = (
     ? LogtoOidcConfigKey.PrivateKeys
     : LogtoOidcConfigKey.CookieKeys;
 
+// Keep `ttl` constraints from `oidcSessionConfigGuard` while requiring this field in API responses.
+const oidcSessionConfigResponseGuard = oidcSessionConfigGuard.required({ ttl: true });
+
 /**
  * Remove actual values of the private keys from response.
  * @param type Logto config key DB column name. Values are either `oidc.privateKeys` or `oidc.cookieKeys`.
@@ -101,7 +104,7 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   router.get(
     '/configs/oidc/session',
     koaGuard({
-      response: oidcSessionConfigGuard.merge(z.object({ ttl: z.number() })),
+      response: oidcSessionConfigResponseGuard,
       status: [200],
     }),
     async (ctx, next) => {
@@ -123,7 +126,7 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
     '/configs/oidc/session',
     koaGuard({
       body: oidcSessionConfigGuard.partial(),
-      response: oidcSessionConfigGuard.merge(z.object({ ttl: z.number() })),
+      response: oidcSessionConfigResponseGuard,
       status: [200],
     }),
     async (ctx, next) => {
