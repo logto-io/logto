@@ -18,11 +18,3 @@ export const shouldShowSamlAppLimitNotice = ({
   !isThirdPartyTab &&
   typeof samlAppTotalCount === 'number' &&
   samlAppTotalCount >= ossSamlApplicationsLimit;
-
-export const getSamlAppLimitNoticeTranslation = () =>
-  ({
-    key: 'upsell.paywall.saml_applications_oss_limit_notice',
-    interpolation: {
-      limit: ossSamlApplicationsLimit,
-    },
-  }) as const;

@@ -1,19 +1,8 @@
 import { ossSamlApplicationsLimit } from '@/consts/application-limits';
 
-import { shouldShowSamlAppLimitNotice, getSamlAppLimitNoticeTranslation } from './utils';
+import { shouldShowSamlAppLimitNotice } from './utils';
 
 const belowSamlLimit = ossSamlApplicationsLimit - 1;
-
-describe('getSamlAppLimitNoticeTranslation', () => {
-  it('returns the dedicated banner i18n key and limit interpolation', () => {
-    expect(getSamlAppLimitNoticeTranslation()).toEqual({
-      key: 'upsell.paywall.saml_applications_oss_limit_notice',
-      interpolation: {
-        limit: ossSamlApplicationsLimit,
-      },
-    });
-  });
-});
 
 describe('shouldShowSamlAppLimitNotice', () => {
   it('returns true for OSS my apps when the SAML app limit is reached and dev features are enabled', () => {

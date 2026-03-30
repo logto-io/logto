@@ -1,11 +1,9 @@
-import { useTranslation } from 'react-i18next';
-
+import SamlAppLimitBanner from '@/components/SamlAppLimitBanner';
+import { ossSamlApplicationsLimit } from '@/consts/application-limits';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { pricingLink } from '@/consts/external-links';
-import InlineNotification from '@/ds-components/InlineNotification';
 
 import styles from '../../index.module.scss';
-import { getSamlAppLimitNoticeTranslation, shouldShowSamlAppLimitNotice } from '../../utils';
+import { shouldShowSamlAppLimitNotice } from '../../utils';
 
 type Props = {
   readonly isThirdPartyTab: boolean;
@@ -13,9 +11,6 @@ type Props = {
 };
 
 function SamlAppLimitNotice({ isThirdPartyTab, samlAppTotalCount }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const translation = getSamlAppLimitNoticeTranslation();
-
   const isVisible = shouldShowSamlAppLimitNotice({
     isCloud,
     isDevFeaturesEnabled,
@@ -28,16 +23,11 @@ function SamlAppLimitNotice({ isThirdPartyTab, samlAppTotalCount }: Props) {
   }
 
   return (
-    <InlineNotification
+    <SamlAppLimitBanner
       className={styles.notice}
-      severity="info"
-      action="upsell.view_plans"
-      onClick={() => {
-        window.open(pricingLink, '_blank', 'noopener,noreferrer');
-      }}
-    >
-      {t(translation.key, translation.interpolation)}
-    </InlineNotification>
+      variant="inline"
+      limit={ossSamlApplicationsLimit}
+    />
   );
 }
 

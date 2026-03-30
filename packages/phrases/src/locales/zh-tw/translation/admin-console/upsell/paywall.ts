@@ -43,7 +43,7 @@ const paywall = {
   saml_applications_oss:
     '額外的 SAML 應用程式可在 Logto 企業版計劃中使用。如需協助，請與我們聯絡。',
   saml_applications_oss_limit_notice:
-    '您已達到開源版本 {{limit}} 個 SAML 應用程式的上限。訂閱 Logto Cloud 以解鎖更多 SAML 應用程式。',
+    '你的開源實例最多支援 {{limit}} 個 SAML 應用程式。你可以使用 Logto Cloud，或聯絡我們了解更多可選方案。',
   logto_pricing_button_text: 'Logto 雲端定價',
   saml_applications: '額外的 SAML 應用程式可在 Logto 企業版計劃中使用。如需協助，請聯絡我們。',
   saml_applications_add_on:

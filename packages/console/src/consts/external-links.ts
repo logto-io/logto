@@ -10,6 +10,8 @@ export const trustAndSecurityLink = 'https://logto.io/trust-and-security';
 export const pricingLink = 'https://logto.io/pricing';
 export const officialWebsiteContactPageLink = 'https://logto.io/contact';
 export const entityPolicyLink = 'https://docs.logto.io/logto-cloud/system-limit';
+export const logtoOssFeatureSupportLink =
+  'https://docs.logto.io/logto-oss#feature-supported-by-logto-oss';
 
 /** Docs link */
 export const organizationsFeatureLink = '/organizations';
