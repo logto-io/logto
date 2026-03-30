@@ -6,6 +6,7 @@ import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { officialWebsiteLink } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -47,7 +48,7 @@ function OssBringYourUiCard() {
               components={{
                 a: (
                   <TextLink
-                    href="https://logto.io"
+                    href={officialWebsiteLink}
                     targetBlank="noopener"
                     className={styles.highlight}
                   />
