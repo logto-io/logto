@@ -22,7 +22,6 @@ import { buildOidcClientMetadata } from '#src/oidc/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
-import { EnvSet } from '../../env-set/index.js';
 import { captureEvent } from '../../utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -188,13 +187,6 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         throw new RequestError('application.saml.use_saml_app_api');
       }
 
-      if (
-        !EnvSet.values.isDevFeaturesEnabled &&
-        rest.customClientMetadata?.maxAllowedGrants !== undefined
-      ) {
-        throw new RequestError('request.invalid_input');
-      }
-
       await Promise.all([
         rest.type === ApplicationType.MachineToMachine &&
           quota.guardTenantUsageByKey('machineToMachineLimit'),
@@ -336,13 +328,6 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       if (pendingUpdateApplication.type === ApplicationType.SAML) {
         throw new RequestError('application.saml.use_saml_app_api');
-      }
-
-      if (
-        !EnvSet.values.isDevFeaturesEnabled &&
-        rest.customClientMetadata?.maxAllowedGrants !== undefined
-      ) {
-        throw new RequestError('request.invalid_input');
       }
 
       assertThirdPartyApplicationTokenExchangeDisabled(

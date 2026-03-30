@@ -20,7 +20,6 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import OrganizationList from '@/components/OrganizationList';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedApp } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -241,10 +240,9 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
             )}
             {data.type !== ApplicationType.MachineToMachine && <BackchannelLogout />}
             {data.type !== ApplicationType.Protected && <TokenExchangeSettings data={data} />}
-            {isDevFeaturesEnabled &&
-              ![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(
-                data.type
-              ) && <ConcurrentDeviceLimit />}
+            {![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(data.type) && (
+              <ConcurrentDeviceLimit />
+            )}
           </DetailsForm>
         </FormProvider>
         {tab === ApplicationDetailsTabs.Settings && (
