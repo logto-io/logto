@@ -87,9 +87,9 @@ const sign_in_exp = {
     bring_your_ui_title: 'UI 가져오기',
     bring_your_ui_description:
       'Logto 가미리 제공하는 UI 를 나만의 코드로 대체하기 위해 압축 패키지 (.zip)를 업로드하세요. <a>더 알아보기</a>',
-    bring_your_ui_oss_description: 'OSS에서는 코드를 포크하여 로그인 UI를 맞춤 설정할 수 있습니다.',
+    bring_your_ui_oss_description: '자신의 코드로 로그인 UI를 맞춤 설정하세요.',
     bring_your_ui_oss_card_description:
-      '설정 없이 사용자 지정 로그인 UI 에셋을 Logto Cloud에 업로드하세요.',
+      '사용자 지정 로그인 UI를 <a>Logto Cloud</a>에 직접 업로드하세요. 포크하거나 다시 배포할 필요가 없습니다.',
     bring_your_ui_oss_try_cloud: 'Cloud 사용해 보기',
     preview_with_bring_your_ui_description:
       '커스텀 UI 자산이 성공적으로 업로드되어 현재 제공되고 있습니다. 따라서 기본 제공 미리보기 창이 비활성화되었습니다.\n개인화된 로그인 UI 를 테스트하려면 "실시간 미리보기" 버튼을 클릭하여 새 브라우저 탭에서 엽니다.',

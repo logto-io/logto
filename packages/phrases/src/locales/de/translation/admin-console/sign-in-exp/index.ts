@@ -90,10 +90,9 @@ const sign_in_exp = {
     bring_your_ui_title: 'Bringen Sie Ihr UI',
     bring_your_ui_description:
       'Laden Sie ein komprimiertes Paket (.zip) hoch, um die vorgefertigte Benutzeroberfläche von Logto durch Ihren eigenen Code zu ersetzen. <a>Erfahren Sie mehr</a>',
-    bring_your_ui_oss_description:
-      'In OSS können Sie den Code forken, um die Anmelde-UI anzupassen.',
+    bring_your_ui_oss_description: 'Passen Sie die Anmeldeoberfläche mit Ihrem eigenen Code an.',
     bring_your_ui_oss_card_description:
-      'Laden Sie benutzerdefinierte Anmelde-UI-Assets ohne Konfiguration in Logto Cloud hoch.',
+      'Laden Sie Ihre benutzerdefinierte Anmeldeoberfläche direkt in <a>Logto Cloud</a> hoch. Kein Fork und kein erneutes Deployment erforderlich.',
     bring_your_ui_oss_try_cloud: 'Cloud ausprobieren',
     preview_with_bring_your_ui_description:
       'Ihre benutzerdefinierten UI-Assets wurden erfolgreich hochgeladen und werden jetzt bereitgestellt. Daher wurde das eingebaute Vorschaufenster deaktiviert.\nUm Ihre personalisierte Anmelde-Benutzeroberfläche zu testen, klicken Sie auf die Schaltfläche "Live-Vorschau", um sie in einem neuen Browser-Tab zu öffnen.',

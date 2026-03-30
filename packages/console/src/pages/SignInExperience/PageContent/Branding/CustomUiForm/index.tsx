@@ -1,12 +1,11 @@
-import { ConnectorPlatform } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
+import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { logtoCloud } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -14,7 +13,6 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
 
 import type { SignInExperienceForm } from '../../../types';
@@ -23,8 +21,6 @@ import FormSectionTitle from '../../components/FormSectionTitle';
 import styles from './index.module.scss';
 
 function OssBringYourUiCard() {
-  const { getDocumentationUrl } = useDocumentationUrl();
-
   return (
     <FormField
       title={
@@ -35,25 +31,31 @@ function OssBringYourUiCard() {
           </CloudTag>
         </div>
       }
-      description="sign_in_exp.custom_ui.bring_your_ui_oss_description"
+      description={
+        <Trans i18nKey="admin_console.sign_in_exp.custom_ui.bring_your_ui_oss_description" />
+      }
       descriptionPosition="top"
     >
       <div className={styles.ossCard}>
         <div className={styles.ossCardContent}>
           <div className={styles.ossCardIcon}>
-            <ConnectorPlatformIcon platform={ConnectorPlatform.Universal} />
+            <CloudUploadIcon />
           </div>
           <div className={styles.ossCardDescription}>
-            <DynamicT forKey="sign_in_exp.custom_ui.bring_your_ui_oss_card_description" />
+            <Trans
+              i18nKey="admin_console.sign_in_exp.custom_ui.bring_your_ui_oss_card_description"
+              components={{
+                a: (
+                  <TextLink
+                    href="https://logto.io"
+                    targetBlank="noopener"
+                    className={styles.highlight}
+                  />
+                ),
+              }}
+            />
           </div>
         </div>
-        <TextLink
-          className={styles.tryCloudLink}
-          href={getDocumentationUrl(logtoCloud)}
-          targetBlank="noopener"
-        >
-          <DynamicT forKey="sign_in_exp.custom_ui.bring_your_ui_oss_try_cloud" />
-        </TextLink>
       </div>
     </FormField>
   );

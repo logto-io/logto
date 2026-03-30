@@ -90,9 +90,9 @@ const sign_in_exp = {
     bring_your_ui_description:
       'Carregue um pacote comprimido (.zip) para substituir o UI predefinido do Logto pelo seu próprio código. <a>Saiba mais</a>',
     bring_your_ui_oss_description:
-      'No OSS, pode fazer fork do código para personalizar a interface de início de sessão.',
+      'Personalize a interface de início de sessão com o seu próprio código.',
     bring_your_ui_oss_card_description:
-      'Carregue recursos personalizados da interface de início de sessão no Logto Cloud sem qualquer configuração.',
+      'Carregue a sua interface de início de sessão personalizada diretamente no <a>Logto Cloud</a>. Não é necessário fazer fork nem voltar a implementar.',
     bring_your_ui_oss_try_cloud: 'Experimentar Cloud',
     preview_with_bring_your_ui_description:
       'Os seus recursos de UI personalizados foram carregados com êxito e agora estão sendo servidos. Consequentemente, a janela de visualização incorporada foi desativada.\nPara testar o seu UI de início de sessão personalizado, clique no botão "Visualização ao vivo" para abri-lo num novo separador do navegador.',

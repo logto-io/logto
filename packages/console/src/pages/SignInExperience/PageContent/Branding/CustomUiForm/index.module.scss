@@ -10,16 +10,16 @@
 .ossCard {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: _.unit(4);
   padding: _.unit(4);
-  border-radius: 16px;
-  background: var(--color-overlay-primary-hover);
+  border: 1px solid rgba(93, 52, 242, 12%);
+  border-radius: _.unit(3);
+  background: rgba(93, 52, 242, 4%);
 
   .ossCardContent {
     display: flex;
     align-items: center;
-    gap: _.unit(3);
+    gap: _.unit(4);
     min-width: 0;
   }
 
@@ -30,11 +30,10 @@
     width: 40px;
     height: 40px;
     flex-shrink: 0;
-    border-radius: 12px;
-    background: var(--color-overlay-primary-pressed);
-    color: var(--color-primary);
+    border-radius: _.unit(2);
+    background: rgba(93, 52, 242, 8%);
 
-    > svg {
+    > img {
       width: 20px;
       height: 20px;
     }
@@ -42,20 +41,10 @@
 
   .ossCardDescription {
     font: var(--font-body-2);
-    color: var(--color-text-secondary);
+    color: var(--color-text);
   }
 
-  .tryCloudLink {
-    flex-shrink: 0;
-    font: var(--font-label-2);
-  }
-
-  @media screen and (max-width: 720px) {
-    flex-direction: column;
-    align-items: flex-start;
-
-    .tryCloudLink {
-      padding-left: _.unit(11);
-    }
+  .highlight {
+    color: var(--color-primary);
   }
 }

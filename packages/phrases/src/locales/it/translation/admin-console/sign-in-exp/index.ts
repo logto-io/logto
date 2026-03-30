@@ -90,10 +90,9 @@ const sign_in_exp = {
     bring_your_ui_title: 'Porta la tua UI',
     bring_your_ui_description:
       'Carica un pacchetto compresso (.zip) per sostituire la UI precaricata di Logto con il tuo codice. <a>Scopri di più</a>',
-    bring_your_ui_oss_description:
-      "In OSS, puoi fare il fork del codice per personalizzare l'interfaccia di accesso.",
+    bring_your_ui_oss_description: "Personalizza l'interfaccia di accesso con il tuo codice.",
     bring_your_ui_oss_card_description:
-      "Carica risorse personalizzate dell'interfaccia di accesso su Logto Cloud senza alcuna configurazione.",
+      'Carica direttamente la tua interfaccia di accesso personalizzata su <a>Logto Cloud</a>. Non serve fare un fork o ridistribuire.',
     bring_your_ui_oss_try_cloud: 'Prova Cloud',
     preview_with_bring_your_ui_description:
       'I tuoi asset della UI personalizzata sono stati caricati con successo e ora vengono serviti. Di conseguenza, la finestra di anteprima integrata è stata disabilitata.\nPer testare la tua UI di accesso personalizzata, fai clic sul pulsante "Live Preview" per aprirla in una nuova scheda del browser.',

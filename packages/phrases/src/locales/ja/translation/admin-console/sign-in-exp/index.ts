@@ -90,10 +90,9 @@ const sign_in_exp = {
     bring_your_ui_title: 'あなたの UI を持参',
     bring_your_ui_description:
       '圧縮パッケージ (.zip) をアップロードして、Logto のビルトイン UI を独自のコードで置き換えます。<a>詳しくはこちら</a>',
-    bring_your_ui_oss_description:
-      'OSS では、コードをフォークしてサインイン UI をカスタマイズできます。',
+    bring_your_ui_oss_description: '独自のコードでサインイン UI をカスタマイズします。',
     bring_your_ui_oss_card_description:
-      '設定不要で、カスタムのサインイン UI アセットを Logto Cloud にアップロードできます。',
+      'カスタムのサインイン UI を <a>Logto Cloud</a> に直接アップロードできます。フォークや再デプロイは不要です。',
     bring_your_ui_oss_try_cloud: 'Cloud を試す',
     preview_with_bring_your_ui_description:
       'カスタム UI のアセットは正常にアップロードされ、現在提供されています。したがって、組み込みのプレビューウィンドウは無効になりました。\nパーソナライズされたサインイン UI をテストするには、「ライブプレビュー」ボタンをクリックして新しいブラウザタブで開きます。',

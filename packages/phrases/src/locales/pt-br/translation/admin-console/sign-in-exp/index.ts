@@ -90,10 +90,9 @@ const sign_in_exp = {
     bring_your_ui_title: 'Traga sua UI',
     bring_your_ui_description:
       'Carregue um pacote compactado (.zip) para substituir a UI pré-construída do Logto pelo seu próprio código. <a>Saiba mais</a>',
-    bring_your_ui_oss_description:
-      'No OSS, você pode fazer um fork do código para personalizar a interface de login.',
+    bring_your_ui_oss_description: 'Personalize a interface de login com o seu próprio código.',
     bring_your_ui_oss_card_description:
-      'Envie recursos personalizados da interface de login para o Logto Cloud sem nenhuma configuração.',
+      'Envie sua interface de login personalizada diretamente para o <a>Logto Cloud</a>. Não é preciso fazer fork nem implantar novamente.',
     bring_your_ui_oss_try_cloud: 'Experimentar Cloud',
     preview_with_bring_your_ui_description:
       'Seus ativos de UI personalizados foram carregados com sucesso e agora estão sendo servidos. Consequentemente, a janela de visualização interna foi desativada.\nPara testar sua UI de login personalizada, clique no botão "Visualização em tempo real" para abri-la em uma nova aba do navegador.',
