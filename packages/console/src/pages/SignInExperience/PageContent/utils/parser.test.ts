@@ -159,8 +159,8 @@ describe('sign-in experience parser', () => {
     });
     expect(formData.passkeySignIn).toEqual({
       enabled: false,
-      showPasskeyButton: false,
-      allowAutofill: false,
+      showPasskeyButton: true,
+      allowAutofill: true,
     });
   });
 

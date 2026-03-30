@@ -145,8 +145,8 @@ export const sieFormDataParser = {
       },
       passkeySignIn: {
         enabled: false,
-        showPasskeyButton: false,
-        allowAutofill: false,
+        showPasskeyButton: true,
+        allowAutofill: true,
         ...rest.passkeySignIn,
       },
     };
