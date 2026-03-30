@@ -80,6 +80,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'Özelleştirilmiş UI',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'Özelleştirilmiş CSS',
     css_code_editor_description1: 'Özelleştirilmiş CSS örneğine bakın.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -89,6 +90,10 @@ const sign_in_exp = {
     bring_your_ui_title: "UI'nizi Getirin",
     bring_your_ui_description:
       "Logto'nun önceden oluşturulmuş UI'sini kendi kodunuzla değiştirmek için sıkıştırılmış bir paket (.zip) yükleyin. <a>Daha fazla bilgi edinin</a>",
+    bring_your_ui_oss_description: 'Oturum açma arayüzünü kendi kodunuzla özelleştirin.',
+    bring_your_ui_oss_card_description:
+      "Özel oturum açma arayüzünüzü doğrudan <a>Logto Cloud</a>'a yükleyin. Fork almanıza veya yeniden dağıtmanıza gerek yok.",
+    bring_your_ui_oss_try_cloud: "Cloud'u deneyin",
     preview_with_bring_your_ui_description:
       'Özelleştirilmiş UI varlıklarınız başarıyla yüklendi ve şimdi sunuluyor. Sonuç olarak, yerleşik önizleme penceresi devre dışı bırakıldı.\nKişiselleştirilmiş oturum açma UI\'nizi test etmek için "Canlı Önizleme" düğmesine tıklayarak yeni bir tarayıcı sekmesinde açın.',
   },

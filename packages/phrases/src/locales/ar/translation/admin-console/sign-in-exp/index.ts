@@ -78,6 +78,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'واجهة مخصصة',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'CSS مخصص',
     css_code_editor_description1: 'انظر إلى مثال لـ CSS مخصص.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -87,6 +88,10 @@ const sign_in_exp = {
     bring_your_ui_title: 'اجلب واجهتك الخاصة',
     bring_your_ui_description:
       'قم بتحميل حزمة مضغوطة (.zip) لاستبدال واجهة المستخدم المُعدة مسبقًا في Logto بالشفرة الخاصة بك. <a>تعلم المزيد</a>',
+    bring_your_ui_oss_description: 'خصّص واجهة تسجيل الدخول باستخدام الشيفرة الخاصة بك.',
+    bring_your_ui_oss_card_description:
+      'حمّل واجهة تسجيل الدخول المخصصة الخاصة بك مباشرةً إلى <a>Logto Cloud</a>. لا حاجة إلى عمل fork أو إعادة النشر.',
+    bring_your_ui_oss_try_cloud: 'جرّب Cloud',
     preview_with_bring_your_ui_description:
       'تم تحميل أصول واجهة المستخدم المخصصة الخاصة بك بنجاح ويتم تقديمها الآن. وبالتالي ، تم تعطيل نافذة المعاينة المدمجة.\nلتجربة واجهة تسجيل الدخول المخصصة الخاصة بك ، انقر فوق زر "المعاينة المباشرة" لفتحها في علامة تبويب مستعرض جديدة.',
   },

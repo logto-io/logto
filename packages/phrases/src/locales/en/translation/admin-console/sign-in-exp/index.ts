@@ -80,6 +80,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'Custom UI',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'Custom CSS',
     css_code_editor_description1: 'See the example of custom CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -89,6 +90,10 @@ const sign_in_exp = {
     bring_your_ui_title: 'Bring your UI',
     bring_your_ui_description:
       'Upload a compressed package (.zip) to replace the Logto prebuilt UI with your own code. <a>Learn more</a>',
+    bring_your_ui_oss_description: 'Customize the sign-in UI with your own code.',
+    bring_your_ui_oss_card_description:
+      'Upload your custom sign-in UI directly on <a>Logto Cloud</a>. No need to fork and redeploy.',
+    bring_your_ui_oss_try_cloud: 'Try Cloud',
     preview_with_bring_your_ui_description:
       'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',
   },

@@ -6,9 +6,10 @@ export const githubReleasesLink = 'https://github.com/logto-io/logto/releases';
 export const contactEmail = 'contact@logto.io';
 export const contactEmailLink = `mailto:${contactEmail}`;
 export const reservationLink = 'https://cal.com/logto/30min';
-export const trustAndSecurityLink = 'https://logto.io/trust-and-security';
-export const pricingLink = 'https://logto.io/pricing';
-export const officialWebsiteContactPageLink = 'https://logto.io/contact';
+export const officialWebsiteLink = 'https://logto.io';
+export const trustAndSecurityLink = `${officialWebsiteLink}/trust-and-security`;
+export const pricingLink = `${officialWebsiteLink}/pricing`;
+export const officialWebsiteContactPageLink = `${officialWebsiteLink}/contact`;
 export const entityPolicyLink = 'https://docs.logto.io/logto-cloud/system-limit';
 export const logtoOssFeatureSupportLink =
   'https://docs.logto.io/logto-oss#feature-supported-by-logto-oss';

@@ -80,6 +80,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'Niestandardowy interfejs użytkownika',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'Niestandardowy CSS',
     css_code_editor_description1: 'Zobacz przykład niestandardowego CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -89,6 +90,10 @@ const sign_in_exp = {
     bring_your_ui_title: 'Przynieś swój interfejs użytkownika',
     bring_your_ui_description:
       'Prześlij skompresowany pakiet (.zip), aby zastąpić predefiniowany interfejs użytkownika Logto swoim własnym kodem. <a>Dowiedz się więcej</a>',
+    bring_your_ui_oss_description: 'Dostosuj interfejs logowania za pomocą własnego kodu.',
+    bring_your_ui_oss_card_description:
+      'Prześlij własny interfejs logowania bezpośrednio do <a>Logto Cloud</a>. Nie musisz robić forka ani ponownie wdrażać.',
+    bring_your_ui_oss_try_cloud: 'Wypróbuj Cloud',
     preview_with_bring_your_ui_description:
       'Twoje niestandardowe zasoby interfejsu użytkownika zostały pomyślnie przesłane i są teraz dostępne. W rezultacie wbudowane okno podglądu zostało wyłączone.\nAby przetestować swoje spersonalizowane UI logowania, kliknij przycisk "Podgląd na żywo", aby otworzyć go w nowej karcie przeglądarki.',
   },
