@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { logtoCloud, TenantSettingsTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
@@ -38,11 +37,9 @@ function TenantSettings() {
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Domains}`}>
           <DynamicT forKey="tenants.tabs.domains" />
         </TabNavItem>
-        {isDevFeaturesEnabled && (
-          <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.OidcConfigs}`}>
-            <DynamicT forKey="tenants.tabs.oidc_configs" />
-          </TabNavItem>
-        )}
+        <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.OidcConfigs}`}>
+          <DynamicT forKey="tenants.tabs.oidc_configs" />
+        </TabNavItem>
         <TabNavItem href={`/tenant-settings/${TenantSettingsTabs.Members}`}>
           <DynamicT forKey="tenants.tabs.members" />
         </TabNavItem>
