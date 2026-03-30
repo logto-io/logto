@@ -77,6 +77,16 @@ describe('create-pool', () => {
     expect(failedPool.end).toBeCalledTimes(1);
   });
 
+  it('should not retry non-transient errors thrown while creating the pool', async () => {
+    const error = new Error('invalid database options');
+    const factory = jest.fn(async () => {
+      throw error;
+    });
+
+    await expect(createPoolWithRetry(factory, 1)).rejects.toThrow(error);
+    expect(factory).toBeCalledTimes(1);
+  });
+
   it('should rethrow the last error after exhausting retries', async () => {
     const error = new Error('timeout expired');
     const firstFailedPool = createTestPool({
@@ -103,6 +113,7 @@ describe('create-pool', () => {
   it('should identify transient connection errors by code or timeout message', () => {
     expect(isTransientConnectionError({ code: 'ECONNREFUSED' })).toBe(true);
     expect(isTransientConnectionError(new Error('timeout expired'))).toBe(true);
+    expect(isTransientConnectionError({ code: 500, message: 123 })).toBe(false);
     expect(isTransientConnectionError(new Error('password authentication failed'))).toBe(false);
     expect(isTransientConnectionError()).toBe(false);
   });

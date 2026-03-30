@@ -40,11 +40,11 @@ export const isTransientConnectionError = (error?: unknown) => {
 
   const { code, message } = error;
 
-  if (code && transientConnectionErrorCodes.has(code)) {
+  if (typeof code === 'string' && transientConnectionErrorCodes.has(code)) {
     return true;
   }
 
-  return message?.toLowerCase().includes('timeout') ?? false;
+  return typeof message === 'string' && message.toLowerCase().includes('timeout');
 };
 
 export const createPoolWithRetry = async <T extends PoolLike>(
@@ -53,7 +53,17 @@ export const createPoolWithRetry = async <T extends PoolLike>(
 ) =>
   pRetry(
     async () => {
-      const pool = await factory();
+      const pool = await (async () => {
+        try {
+          return await factory();
+        } catch (error: unknown) {
+          if (!isTransientConnectionError(error)) {
+            throw new AbortError(error instanceof Error ? error : new Error(String(error)));
+          }
+
+          throw error;
+        }
+      })();
 
       try {
         return await ensurePoolReady(pool);
