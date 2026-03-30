@@ -1,9 +1,8 @@
-import { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { deletePrimaryEmail, deletePrimaryPhone } from '@ac/apis/account';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import { deletePrimaryEmail, deletePrimaryPhone } from '@ac/apis/account';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
 import { emailSuccessRoute, phoneSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
@@ -15,12 +14,7 @@ type Props = {
 
 const EmailPhoneRemoveFlow = ({ type }: Props) => {
   const navigate = useNavigate();
-  const {
-    setToast,
-    refreshUserInfo,
-    verificationId,
-    setVerificationId,
-  } = useContext(PageContext);
+  const { setToast, refreshUserInfo, verificationId, setVerificationId } = useContext(PageContext);
 
   const deletePrimaryEmailRequest = useApi(deletePrimaryEmail);
   const deletePrimaryPhoneRequest = useApi(deletePrimaryPhone);
@@ -69,7 +63,8 @@ const EmailPhoneRemoveFlow = ({ type }: Props) => {
     setStartedFlowKey(flowKey);
 
     const startRemoveFlow = async () => {
-      const deleteRequest = type === 'email' ? deletePrimaryEmailRequest : deletePrimaryPhoneRequest;
+      const deleteRequest =
+        type === 'email' ? deletePrimaryEmailRequest : deletePrimaryPhoneRequest;
       const [error] = await deleteRequest(verificationId);
 
       if (error) {
@@ -81,7 +76,15 @@ const EmailPhoneRemoveFlow = ({ type }: Props) => {
     };
 
     void startRemoveFlow();
-  }, [verificationId, type, startedFlowKey, deletePrimaryEmailRequest, deletePrimaryPhoneRequest, handleErrorWithReset, handleRemoveSuccess]);
+  }, [
+    verificationId,
+    type,
+    startedFlowKey,
+    deletePrimaryEmailRequest,
+    deletePrimaryPhoneRequest,
+    handleErrorWithReset,
+    handleRemoveSuccess,
+  ]);
 
   if (!verificationId) {
     return <VerificationMethodList />;

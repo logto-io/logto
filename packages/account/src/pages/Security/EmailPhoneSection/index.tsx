@@ -5,15 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import ConfirmModal from '@ac/components/ConfirmModal';
 import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
-import {
-  emailRemoveRoute,
-  emailRoute,
-  phoneRemoveRoute,
-  phoneRoute,
-} from '@ac/constants/routes';
+import ConfirmModal from '@ac/components/ConfirmModal';
+import { emailRemoveRoute, emailRoute, phoneRemoveRoute, phoneRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 
 import styles from './index.module.scss';
