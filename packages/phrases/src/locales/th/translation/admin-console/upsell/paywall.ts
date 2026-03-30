@@ -43,6 +43,8 @@ const paywall = {
     '{{count, number}} สิทธิ์ต่อบทบาท ของ <planName/> ถึงขีดจำกัดแล้ว อัปเกรดแพ็กเกจเพื่อเพิ่มบทบาทและสิทธิ์เพิ่มเติม หากต้องการความช่วยเหลือ โปรด <a>ติดต่อเรา</a>',
   saml_applications_oss:
     'สามารถใช้งาน SAML app เพิ่มเติมได้เมื่อใช้ Logto Enterprise หากต้องการความช่วยเหลือ กรุณาติดต่อเรา',
+  saml_applications_oss_limit_notice:
+    'อินสแตนซ์โอเพนซอร์สของคุณรองรับแอป SAML ได้สูงสุด {{limit}} แอป คุณสามารถใช้ Logto Cloud หรือติดต่อเราเพื่อดูตัวเลือกเพิ่มเติม',
   logto_pricing_button_text: 'Logto Cloud ราคา',
   saml_applications:
     'สามารถใช้งาน SAML app เพิ่มเติมได้เมื่อใช้ Logto Enterprise หากต้องการความช่วยเหลือ กรุณาติดต่อเรา',

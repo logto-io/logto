@@ -22,6 +22,7 @@ const config: Config.InitialOptions = {
     '\\.(png)$': 'jest-transform-stub',
   },
   moduleNameMapper: {
+    '^@/(.*)\\.svg\\?react$': '<rootDir>/src/$1.svg',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@logto/shared/(.*)$': '<rootDir>/../shared/lib/$1',
     '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',

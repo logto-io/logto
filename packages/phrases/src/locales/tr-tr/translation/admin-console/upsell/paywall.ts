@@ -43,6 +43,8 @@ const paywall = {
     '{{count, number}} <planName/> rol başına izin sınırına ulaşıldı. İlave roller ve izinler eklemek için planı yükseltin. Yardım için ihtiyacınız olursa, <a>iletişime geçin</a>.',
   saml_applications_oss:
     'Ek SAML uygulaması, Logto Enterprise planı ile mevcuttur. Yardıma ihtiyacınız olursa, bizimle iletişime geçin.',
+  saml_applications_oss_limit_notice:
+    'Açık kaynak örneğiniz en fazla {{limit}} SAML uygulamasını destekler. Ek seçenekler için Logto Cloud’u kullanabilir veya bizimle iletişime geçebilirsiniz.',
   logto_pricing_button_text: 'Logto Bulut Fiyatlandırması',
   saml_applications:
     'Ek SAML uygulaması, Logto Enterprise planı ile mevcuttur. Yardım için bize ulaşın.',
