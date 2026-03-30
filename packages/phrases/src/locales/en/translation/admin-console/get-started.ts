@@ -42,6 +42,21 @@ const get_started = {
       "You're using a dev tenant for free testing. To go live, create or convert to a production tenant. Need something custom? <a>Contact us</a>",
     convert_button: 'Convert to production tenant',
   },
+  oss_cloud: {
+    try: {
+      title: 'Skip the ops work — try Logto Cloud free',
+      badge: 'Recommended',
+      description:
+        'Get a fully managed Logto with zero maintenance — plus MCP-powered quick integration, multi-tenant support, team collaboration, and all premium features included. Free to start, no credit card required.',
+      action: 'Try Logto Cloud',
+    },
+    private_cloud: {
+      title: 'Need compliance or custom deployment?',
+      card_title: 'Private cloud',
+      description:
+        'Get a dedicated Logto instance with full data isolation, custom domain, and SLA guarantees. Perfect for enterprises with strict data residency or compliance requirements. We handle the infrastructure so you can focus on your product.',
+    },
+  },
   view_all: 'View all →',
 };
 

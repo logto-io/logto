@@ -19,6 +19,11 @@
   margin-bottom: _.unit(-3);
 }
 
+.bodyText {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
 .header {
   display: flex;
   flex-direction: column;
@@ -64,6 +69,96 @@
   height: 16px;
 }
 
+.ossCloudBanner {
+  position: relative;
+  border: 1px solid rgba(93, 52, 242, 20%);
+  background:
+    linear-gradient(173deg, rgba(93, 52, 242, 6%) 0%, rgba(250, 171, 255, 8%) 52%, rgba(93, 52, 242, 4%) 100%),
+    var(--color-layer-1);
+}
+
+.ossCloudBannerContent {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+}
+
+.ossCloudBannerMain {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  flex: 1;
+  min-width: 0;
+}
+
+.ossCloudBannerIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: _.unit(2);
+  background: linear-gradient(135deg, #5d34f2 0%, #faabff 100%);
+  color: var(--color-on-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.ossCloudBannerTitleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+  margin-bottom: _.unit(1);
+}
+
+.bannerTitle {
+  font: var(--font-title-2);
+  color: var(--color-text);
+}
+
+.recommendedTag {
+  border-radius: 999px;
+  color: var(--color-text-link);
+  background: rgba(93, 52, 242, 10%);
+  gap: _.unit(1);
+}
+
+.recommendedTagIcon {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.ossCloudBannerActions {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.bannerActionIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.dismissButton {
+  position: absolute;
+  top: _.unit(3);
+  right: _.unit(3);
+  flex-shrink: 0;
+}
+
+.dismissIcon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-secondary);
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -98,6 +193,7 @@
   .columnWrapper {
     display: flex;
     flex-direction: column;
+    min-width: 0;
   }
 
   .grid {
@@ -124,5 +220,37 @@
       align-items: flex-end;
       gap: _.unit(4);
     }
+  }
+}
+
+.privateCloudIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+}
+
+@media screen and (max-width: 960px) {
+  .ossCloudBannerContent {
+    align-items: stretch;
+  }
+
+  .ossCloudBannerActions {
+    margin-right: _.unit(8);
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .ossCloudBannerContent,
+  .ossCloudBannerMain {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ossCloudBannerActions {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    justify-content: flex-start;
   }
 }
