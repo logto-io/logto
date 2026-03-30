@@ -109,6 +109,16 @@ export const addMfaVerification = async (
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
+export const createOrReplaceTotpMfaVerification = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  body: { secret: string; code: string }
+) =>
+  api.put('api/my-account/mfa-verifications/totp', {
+    json: body,
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+
 export const deleteMfaVerification = async (
   api: KyInstance,
   verificationId: string,

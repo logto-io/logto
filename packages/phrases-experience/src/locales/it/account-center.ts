@@ -167,6 +167,10 @@ const account_center = {
       title: 'App di autenticazione aggiunta!',
       description: 'La tua app di autenticazione è stata collegata con successo al tuo account.',
     },
+    totp_replaced: {
+      title: 'App di autenticazione sostituita!',
+      description: 'La tua app di autenticazione è stata sostituita con successo.',
+    },
     backup_code: {
       title: 'Codici di backup generati!',
       description: 'I tuoi codici di backup sono stati salvati. Conservali in un luogo sicuro.',

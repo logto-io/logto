@@ -17,6 +17,7 @@ type IdentifierType =
   | SignInIdentifier
   | 'password'
   | 'totp'
+  | 'totp_replaced'
   | 'backup_code'
   | 'backup_code_deleted'
   | 'passkey'
@@ -48,6 +49,10 @@ const translationMap: TranslationMap = {
   totp: {
     titleKey: 'account_center.update_success.totp.title',
     messageKey: 'account_center.update_success.totp.description',
+  },
+  totp_replaced: {
+    titleKey: 'account_center.update_success.totp_replaced.title',
+    messageKey: 'account_center.update_success.totp_replaced.description',
   },
   backup_code: {
     titleKey: 'account_center.update_success.backup_code.title',

@@ -67,6 +67,17 @@ export const addTotpMfa = async (
   });
 };
 
+export const createOrReplaceTotpMfa = async (
+  accessToken: string,
+  verificationRecordId: string,
+  payload: { secret: string; code: string }
+) => {
+  await createAuthenticatedKy(accessToken).put('/api/my-account/mfa-verifications/totp', {
+    json: payload,
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};
+
 export const addBackupCodeMfa = async (
   accessToken: string,
   verificationRecordId: string,

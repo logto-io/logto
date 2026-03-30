@@ -155,6 +155,10 @@ const account_center = {
       title: 'เพิ่มแอป Authenticator แล้ว!',
       description: 'แอป Authenticator ของคุณได้รับการเชื่อมต่อกับบัญชีของคุณเรียบร้อยแล้ว',
     },
+    totp_replaced: {
+      title: 'แอป Authenticator ถูกแทนที่แล้ว!',
+      description: 'แอป Authenticator ของคุณถูกแทนที่เรียบร้อยแล้ว',
+    },
     backup_code: {
       title: 'สร้างรหัสสำรองแล้ว!',
       description: 'รหัสสำรองของคุณถูกบันทึกแล้ว โปรดเก็บรักษาไว้ในที่ปลอดภัย',

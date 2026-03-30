@@ -38,6 +38,10 @@ const prebuiltRoutes = [
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.authenticator_app',
   },
   {
+    path: '/account/authenticator-app/replace',
+    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.authenticator_app_replace',
+  },
+  {
     path: '/account/backup-codes/generate',
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.backup_codes_generate',
   },

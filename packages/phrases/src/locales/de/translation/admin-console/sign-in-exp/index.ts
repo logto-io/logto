@@ -190,6 +190,7 @@ const sign_in_exp = {
         social_remove: 'Entfernen Sie ein verknüpftes Social-Konto',
         authenticator_app:
           'Richten Sie eine neue Authentifizierungs-App für die Multi-Faktor-Authentifizierung ein',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: 'Registrieren Sie einen neuen Sicherheitsschlüssel',
         passkey_manage:
           'Verwalten Sie Ihre vorhandenen Sicherheitsschlüssel oder fügen Sie neue hinzu',

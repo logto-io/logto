@@ -165,6 +165,10 @@ const account_center = {
       title: 'Authenticator app added!',
       description: 'Your authenticator app has been successfully linked to your account.',
     },
+    totp_replaced: {
+      title: 'Authenticator app replaced!',
+      description: 'Your authenticator app has been successfully replaced.',
+    },
     backup_code: {
       title: 'Backup codes generated!',
       description: 'Your backup codes have been saved. Keep them in a safe place.',

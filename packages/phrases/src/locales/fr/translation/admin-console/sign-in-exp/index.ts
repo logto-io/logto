@@ -192,6 +192,7 @@ const sign_in_exp = {
         social_remove: 'Supprimer un compte social lié',
         authenticator_app:
           "Configurer une nouvelle application d'authentification pour l'authentification multifacteur",
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: 'Enregistrer une nouvelle clé de passe',
         passkey_manage: 'Gérer vos clés de passe existantes ou en ajouter de nouvelles',
         backup_codes_generate: 'Générer un nouvel ensemble de 10 codes de sauvegarde',

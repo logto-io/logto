@@ -190,6 +190,7 @@ const sign_in_exp = {
         social_remove: 'Usuń połączone konto społecznościowe',
         authenticator_app:
           'Skonfiguruj nową aplikację uwierzytelniającą dla uwierzytelniania wieloskładnikowego',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: 'Zarejestruj nowy klucz dostępu',
         passkey_manage: 'Zarządzaj istniejącymi kluczami dostępu lub dodaj nowe',
         backup_codes_generate: 'Wygeneruj nowy zestaw 10 kodów zapasowych',

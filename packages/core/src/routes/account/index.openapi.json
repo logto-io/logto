@@ -452,6 +452,40 @@
         }
       }
     },
+    "/api/my-account/mfa-verifications/totp": {
+      "put": {
+        "operationId": "CreateOrReplaceTotpMfaVerification",
+        "summary": "Create or replace the authenticator app",
+        "description": "Create or replace the user's TOTP MFA verification with a new authenticator app binding. If the user already has a TOTP verification, it will be replaced; otherwise, a new one will be created. Requires a logto-verification-id header for sensitive permission checks, a valid TOTP secret, and a valid TOTP code generated from the secret.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "secret": {
+                    "description": "The TOTP secret for the authenticator app."
+                  },
+                  "code": {
+                    "description": "The TOTP code generated from the secret to confirm the binding."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The authenticator app was created or replaced successfully."
+          },
+          "400": {
+            "description": "The provided secret or TOTP code is invalid."
+          },
+          "401": {
+            "description": "Permission denied, identity verification is required or insufficient scope."
+          }
+        }
+      }
+    },
     "/api/my-account/mfa-verifications/totp-secret/generate": {
       "post": {
         "operationId": "GenerateTotpSecret",

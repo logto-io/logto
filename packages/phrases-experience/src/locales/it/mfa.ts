@@ -32,6 +32,7 @@ const mfa = {
   verify_mfa_description:
     'La verifica in due passaggi è stata abilitata per questo account. Seleziona il secondo modo per verificare la tua identità.',
   add_authenticator_app: 'Aggiungi app di autenticazione',
+  replace_authenticator_app: 'Sostituisci app di autenticazione',
   step: 'Passo {{step, number}}: {{content}}',
   scan_qr_code: 'Scansiona questo codice QR',
   scan_qr_code_description:

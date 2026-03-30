@@ -186,6 +186,7 @@ const sign_in_exp = {
         social: 'اربط حسابًا اجتماعيًا لتسجيل الدخول',
         social_remove: 'أزل حسابًا اجتماعيًا مرتبطًا',
         authenticator_app: 'قم بإعداد تطبيق مصادق جديد للمصادقة متعددة العوامل',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: 'تسجيل مفتاح مرور جديد',
         passkey_manage: 'إدارة مفاتيح المرور الحالية أو إضافة مفاتيح جديدة',
         backup_codes_generate: 'توليد مجموعة جديدة من 10 أكواد احتياطية',

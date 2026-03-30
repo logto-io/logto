@@ -27,7 +27,9 @@ import {
   usernameRoute,
   usernameSuccessRoute,
   authenticatorAppRoute,
+  authenticatorAppReplaceRoute,
   authenticatorAppSuccessRoute,
+  authenticatorAppReplaceSuccessRoute,
   backupCodesGenerateRoute,
   backupCodesRegenerateRoute,
   backupCodesSuccessRoute,
@@ -162,6 +164,10 @@ const Main = () => {
         element={<UpdateSuccess identifierType="totp" />}
       />
       <Route
+        path={authenticatorAppReplaceSuccessRoute}
+        element={<UpdateSuccess identifierType="totp_replaced" />}
+      />
+      <Route
         path={backupCodesSuccessRoute}
         element={<UpdateSuccess identifierType="backup_code" />}
       />
@@ -173,6 +179,7 @@ const Main = () => {
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />
       <Route path={usernameRoute} element={<Username />} />
+      <Route path={authenticatorAppReplaceRoute} element={<TotpBinding isReplace />} />
       <Route path={authenticatorAppRoute} element={<TotpBinding />} />
       <Route path={backupCodesGenerateRoute} element={<BackupCodeBinding />} />
       <Route path={backupCodesRegenerateRoute} element={<BackupCodeBinding isRegenerate />} />

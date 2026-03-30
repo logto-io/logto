@@ -31,6 +31,7 @@ const mfa = {
   verify_mfa_description:
     'このアカウントでは2段階認証が有効になっています。アイデンティティを確認するための第二の方法を選択してください。',
   add_authenticator_app: '認証アプリを追加',
+  replace_authenticator_app: '認証アプリを置き換え',
   step: 'ステップ{{step, number}}：{{content}}',
   scan_qr_code: 'このQRコードをスキャン',
   scan_qr_code_description:
