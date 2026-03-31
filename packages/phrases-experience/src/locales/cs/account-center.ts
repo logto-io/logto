@@ -84,6 +84,9 @@ const account_center = {
     backup_codes_count_other: 'zbývá {{count}} kódů',
     view: 'Zobrazit',
     manage: 'Spravovat',
+    account_removal: 'Smazání účtu',
+    delete_your_account: 'Smazat svůj účet',
+    delete_account: 'Smazat účet',
   },
   social: {
     linked: '{{connector}} byl úspěšně propojen.',
