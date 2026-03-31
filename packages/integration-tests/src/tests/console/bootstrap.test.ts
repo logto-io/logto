@@ -82,6 +82,13 @@ describe('smoke testing for console admin account creation and sign-in', () => {
 
     await expectNavigation(expect(page).toClick('button[name=submit]'));
 
+    expect(page.url()).toBe(new URL('console/onboarding', logtoConsoleUrl).href);
+
+    await expect(page).toFill('input[type=email]', 'oss-admin@example.com');
+    await expect(page).toFill('input[placeholder="Acme.co"]', 'Acme');
+    await expect(page).toClick('div[role=radio]', { text: '50-199' });
+    await expectNavigation(expect(page).toClick('button', { text: 'Next' }));
+
     expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
   });
 
