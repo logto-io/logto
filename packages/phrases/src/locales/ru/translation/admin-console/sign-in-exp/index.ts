@@ -177,6 +177,9 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Добавьте домены ваших фронтенд-приложений, которым разрешено регистрировать passkey через Account API.',
     webauthn_related_origins_error: 'Источник должен начинаться с https:// или http://',
+    delete_account_url: 'Удалить аккаунт',
+    delete_account_url_description:
+      'Укажите собственный URL конечной точки, чтобы обрабатывать удаление аккаунта с пользовательской логикой.',
     prebuilt_ui: {
       title: 'ИСПОЛЬЗОВАТЬ ГОТОВЫЙ ИНТЕРФЕЙС',
       description:

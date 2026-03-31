@@ -90,6 +90,9 @@ const account_center = {
     backup_codes_count_other: '{{count}} codes restants',
     view: 'Voir',
     manage: 'Gérer',
+    account_removal: 'Suppression du compte',
+    delete_your_account: 'Supprimez votre compte',
+    delete_account: 'Supprimer le compte',
   },
   social: {
     linked: '{{connector}} a été lié avec succès.',

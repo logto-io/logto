@@ -171,6 +171,8 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       '新增允許透過 Account API 註冊通行金鑰的前端應用程式網域。',
     webauthn_related_origins_error: '來源必須以 https:// 或 http:// 開頭',
+    delete_account_url: '刪除帳號',
+    delete_account_url_description: '提供你自己的端點 URL，以使用自訂邏輯處理帳號刪除。',
     prebuilt_ui: {
       title: '集成預構建界面',
       description: '快速整合預構建界面中的驗證和安全設置流程。',

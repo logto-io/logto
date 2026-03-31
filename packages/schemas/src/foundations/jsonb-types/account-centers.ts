@@ -32,3 +32,16 @@ export type AccountCenterFieldControl = z.infer<typeof accountCenterFieldControl
 export const webauthnRelatedOriginsGuard = z.array(z.string());
 
 export type WebauthnRelatedOrigins = z.infer<typeof webauthnRelatedOriginsGuard>;
+
+export const deleteAccountUrlGuard = z
+  .string()
+  .max(2048)
+  .refine(
+    (value) =>
+      value === '' ||
+      ((value.startsWith('https://') || value.startsWith('http://')) &&
+        z.string().url().safeParse(value).success),
+    {
+      message: 'deleteAccountUrl must be a valid http(s) URL',
+    }
+  );

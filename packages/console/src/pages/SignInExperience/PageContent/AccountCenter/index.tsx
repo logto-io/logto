@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import type { Option } from '@/ds-components/Select';
@@ -19,6 +20,7 @@ import type {
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
 import AccountCenterField from './AccountCenterField';
+import DeleteAccountUrlField from './DeleteAccountUrlField';
 import IntegratePrebuiltUi from './IntegratePrebuiltUi';
 import SecretVaultSection from './SecretVaultSection';
 import WebauthnRelatedOriginsField from './WebauthnRelatedOriginsField';
@@ -148,7 +150,12 @@ function AccountCenter({ isActive, data }: Props) {
               </FormField>
             ))}
             {section.key === 'accountSecurity' && (
-              <WebauthnRelatedOriginsField isAccountApiEnabled={isAccountApiEnabled} />
+              <>
+                <WebauthnRelatedOriginsField isAccountApiEnabled={isAccountApiEnabled} />
+                {isDevFeaturesEnabled && (
+                  <DeleteAccountUrlField isAccountApiEnabled={isAccountApiEnabled} />
+                )}
+              </>
             )}
           </div>
         </FormCard>

@@ -177,6 +177,9 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Dodaj domeny swoich aplikacji front-end, którym pozwalasz rejestrować klucze dostępu przez Account API.',
     webauthn_related_origins_error: 'Źródło musi zaczynać się od https:// lub http://',
+    delete_account_url: 'Usuń konto',
+    delete_account_url_description:
+      'Podaj własny adres URL punktu końcowego, aby obsłużyć usuwanie konta za pomocą niestandardowej logiki.',
     prebuilt_ui: {
       title: 'INTEGRUJ WSTĘPNIE ZBUDOWANY INTERFEJS',
       description:

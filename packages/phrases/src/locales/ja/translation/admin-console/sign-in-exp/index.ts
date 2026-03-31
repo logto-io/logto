@@ -177,6 +177,9 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Account API を通じてパスキーを登録できるフロントエンドアプリケーションのドメインを追加します。',
     webauthn_related_origins_error: 'オリジンは https:// または http:// で始める必要があります',
+    delete_account_url: 'アカウントを削除',
+    delete_account_url_description:
+      '独自のロジックでアカウント削除を処理するためのエンドポイント URL を指定してください。',
     prebuilt_ui: {
       title: '組み込み UI を統合',
       description:

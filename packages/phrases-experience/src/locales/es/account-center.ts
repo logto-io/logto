@@ -88,6 +88,9 @@ const account_center = {
     backup_codes_count_other: '{{count}} códigos restantes',
     view: 'Ver',
     manage: 'Gestionar',
+    account_removal: 'Eliminación de la cuenta',
+    delete_your_account: 'Elimina tu cuenta',
+    delete_account: 'Eliminar cuenta',
   },
   social: {
     linked: 'Se vinculó {{connector}} correctamente.',

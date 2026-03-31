@@ -174,6 +174,9 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'أضف نطاقات تطبيقات الواجهة الأمامية المسموح لها بتسجيل مفاتيح المرور عبر واجهة Account API.',
     webauthn_related_origins_error: 'يجب أن يبدأ الأصل بـ https:// أو http://',
+    delete_account_url: 'حذف الحساب',
+    delete_account_url_description:
+      'قدّم عنوان URL لنقطة النهاية الخاصة بك لمعالجة حذف الحساب بمنطق مخصص.',
     prebuilt_ui: {
       title: 'دمج واجهة المستخدم المُعدة مسبقًا',
       description:

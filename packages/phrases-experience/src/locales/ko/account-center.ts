@@ -83,6 +83,9 @@ const account_center = {
     backup_codes_count_other: '{{count}}개의 코드',
     view: '보기',
     manage: '관리',
+    account_removal: '계정 삭제',
+    delete_your_account: '내 계정 삭제',
+    delete_account: '계정 삭제',
   },
   social: {
     linked: '{{connector}}이(가) 성공적으로 연결되었습니다.',

@@ -1,6 +1,7 @@
 import {
   AccountCenters,
   accountCenterFieldControlGuard,
+  deleteAccountUrlGuard,
   webauthnRelatedOriginsGuard,
 } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
@@ -35,13 +36,15 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         enabled: z.boolean().optional(),
         fields: accountCenterFieldControlGuard.optional(),
         webauthnRelatedOrigins: webauthnRelatedOriginsGuard.optional(),
+        deleteAccountUrl: deleteAccountUrlGuard.nullable().optional(),
       }),
       response: AccountCenters.guard,
       status: [200],
     }),
 
     async (ctx, next) => {
-      const { enabled, fields, webauthnRelatedOrigins } = ctx.guard.body;
+      const { enabled, fields, webauthnRelatedOrigins, deleteAccountUrl } = ctx.guard.body;
+      const normalizedDeleteAccountUrl = deleteAccountUrl === '' ? null : deleteAccountUrl;
 
       // Make sure the account center exists
       await findDefaultAccountCenter();
@@ -51,6 +54,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         webauthnRelatedOrigins: webauthnRelatedOrigins
           ? deduplicate(webauthnRelatedOrigins)
           : undefined,
+        deleteAccountUrl: normalizedDeleteAccountUrl,
       });
 
       ctx.body = updatedAccountCenter;
