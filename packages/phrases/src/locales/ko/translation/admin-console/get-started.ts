@@ -54,6 +54,11 @@ const get_started = {
       description:
         '완전한 데이터 격리, 사용자 지정 도메인, SLA 보장을 갖춘 전용 Logto 인스턴스를 이용하세요. 엄격한 데이터 거주성 또는 컴플라이언스 요구사항이 있는 기업에 적합합니다. 인프라는 저희가 관리하므로 제품에 집중할 수 있습니다.',
     },
+    sidebar: {
+      title: 'Focus on building, not hosting.',
+      description: 'Let Logto Cloud handle auth infrastructure for you.',
+      action: 'Try Logto Cloud',
+    },
   },
   view_all: '모두 보기 →',
 };

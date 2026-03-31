@@ -2,9 +2,15 @@
 
 .sidebar {
   width: 248px;
-  overflow-y: auto;
-  margin-bottom: _.unit(6);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
+}
+
+.menu {
+  flex: 1;
+  min-height: 0;
 }
 
 .skeleton {

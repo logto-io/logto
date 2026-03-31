@@ -58,6 +58,11 @@ const get_started = {
       description:
         'Tam veri izolasyonu, özel alan adı ve SLA garantileri ile özel bir Logto örneği edinin. Katı veri yerleşimi veya uyumluluk gereksinimleri olan şirketler için idealdir. Siz ürününüze odaklanırken altyapıyı biz yönetiriz.',
     },
+    sidebar: {
+      title: 'Focus on building, not hosting.',
+      description: 'Let Logto Cloud handle auth infrastructure for you.',
+      action: 'Try Logto Cloud',
+    },
   },
   view_all: 'Hepsini görüntüle →',
 };

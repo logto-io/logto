@@ -57,6 +57,11 @@ const get_started = {
       description:
         'รับอินสแตนซ์ Logto แบบเฉพาะพร้อมการแยกข้อมูลอย่างสมบูรณ์ โดเมนแบบกำหนดเอง และการรับประกัน SLA เหมาะสำหรับองค์กรที่มีข้อกำหนดด้านการจัดเก็บข้อมูลหรือ compliance ที่เข้มงวด เราดูแลโครงสร้างพื้นฐานให้ คุณจึงโฟกัสกับผลิตภัณฑ์ได้เต็มที่',
     },
+    sidebar: {
+      title: 'Focus on building, not hosting.',
+      description: 'Let Logto Cloud handle auth infrastructure for you.',
+      action: 'Try Logto Cloud',
+    },
   },
   view_all: 'ดูทั้งหมด →',
 };

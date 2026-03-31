@@ -58,6 +58,11 @@ const get_started = {
       description:
         'Получите выделенный экземпляр Logto с полной изоляцией данных, собственным доменом и гарантиями SLA. Это идеальный вариант для компаний со строгими требованиями к размещению данных или соответствию нормативам. Мы берём инфраструктуру на себя, чтобы вы могли сосредоточиться на продукте.',
     },
+    sidebar: {
+      title: 'Focus on building, not hosting.',
+      description: 'Let Logto Cloud handle auth infrastructure for you.',
+      action: 'Try Logto Cloud',
+    },
   },
   view_all: 'Посмотреть все →',
 };

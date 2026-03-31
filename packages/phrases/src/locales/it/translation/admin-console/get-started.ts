@@ -59,6 +59,11 @@ const get_started = {
       description:
         'Ottieni un’istanza dedicata di Logto con isolamento completo dei dati, dominio personalizzato e garanzie SLA. Perfetto per le aziende con rigidi requisiti di residenza dei dati o compliance. Gestiamo noi l’infrastruttura così puoi concentrarti sul tuo prodotto.',
     },
+    sidebar: {
+      title: 'Focus on building, not hosting.',
+      description: 'Let Logto Cloud handle auth infrastructure for you.',
+      action: 'Try Logto Cloud',
+    },
   },
   view_all: 'Visualizza tutto →',
 };

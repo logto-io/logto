@@ -56,6 +56,11 @@ const get_started = {
       description:
         'Get a dedicated Logto instance with full data isolation, custom domain, and SLA guarantees. Perfect for enterprises with strict data residency or compliance requirements. We handle the infrastructure so you can focus on your product.',
     },
+    sidebar: {
+      title: 'Focus on building, not hosting.',
+      description: 'Let Logto Cloud handle auth infrastructure for you.',
+      action: 'Try Logto Cloud',
+    },
   },
   view_all: 'View all →',
 };
