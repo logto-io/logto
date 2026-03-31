@@ -1,4 +1,5 @@
 import { Theme } from '@logto/schemas';
+import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
@@ -50,7 +51,7 @@ function OssCloudCard() {
   };
 
   return (
-    <div className={styles.wrapper}>
+    <div className={classNames(styles.wrapper, isDevFeaturesEnabled && styles.withDevStatusOffset)}>
       <div className={styles.card}>
         <div className={styles.header}>
           <div className={styles.icon}>

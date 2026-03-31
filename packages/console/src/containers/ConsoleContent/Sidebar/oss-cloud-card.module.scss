@@ -4,11 +4,17 @@
   padding: _.unit(4) _.unit(4) 0;
 }
 
+.withDevStatusOffset {
+  // 3 is the bottom margin of the dev status badge, so we need to include this margin when considering the spacing between the card and the status badge.
+  // 5 is the height of the status badge.
+  padding-bottom: _.unit(3 + 3 + 5);
+}
+
 .card {
   display: flex;
   flex-direction: column;
   gap: _.unit(2);
-  padding: _.unit(4.25);
+  padding: _.unit(4);
   border: 1px solid rgba(93, 52, 242, 14%);
   border-radius: _.unit(3);
   background: linear-gradient(180deg, rgba(93, 52, 242, 6%) 0%, rgba(250, 171, 255, 8%) 100%);
