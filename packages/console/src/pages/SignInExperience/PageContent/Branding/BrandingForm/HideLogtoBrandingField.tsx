@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Trans } from 'react-i18next';
 
@@ -20,13 +19,7 @@ type Props = {
 };
 
 function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
-  const { register, setValue } = useFormContext<SignInExperienceForm>();
-
-  useEffect(() => {
-    if (variant === 'oss') {
-      setValue('hideLogtoBranding', false, { shouldDirty: false });
-    }
-  }, [setValue, variant]);
+  const { register } = useFormContext<SignInExperienceForm>();
 
   if (variant === 'cloud') {
     return (
@@ -58,9 +51,10 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
       }
     >
       <Switch
-        description="sign_in_exp.branding.hide_logto_branding_description"
-        {...register('hideLogtoBranding')}
         disabled
+        readOnly
+        description="sign_in_exp.branding.hide_logto_branding_description"
+        checked={false}
       />
       <div className={styles.ossNote}>
         <Trans

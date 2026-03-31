@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Close from '@/assets/icons/close.svg?react';
+import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import IconButton from '@/ds-components/IconButton';
@@ -68,7 +69,7 @@ function GuideModal({ isOpen, onClose }: Props) {
 
       await Promise.all([
         api.patch('api/sign-in-exp', {
-          json: sieFormDataParser.toSignInExperience(formData),
+          json: sieFormDataParser.toSignInExperience(formData, { isCloud }),
         }),
         updateConfigs({ signInExperienceCustomized: true }),
       ]);

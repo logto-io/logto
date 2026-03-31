@@ -5,7 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import LogoAndFavicon from '@/components/ImageInputs/LogoAndFavicon';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
@@ -24,13 +24,13 @@ function BrandingForm() {
   const {
     watch,
     register,
+    unregister,
     setValue,
     control,
     formState: { errors, isDirty },
   } = useFormContext<SignInExperienceForm>();
   const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const isHideLogtoBrandingEnabled = currentSubscriptionQuota.bringYourUiEnabled;
-  const hideLogtoBrandingVariant = isCloud ? 'cloud' : isDevFeaturesEnabled ? 'oss' : null;
 
   const isDarkModeEnabled = watch('color.isDarkModeEnabled');
   const primaryColor = watch('color.primaryColor');
@@ -54,6 +54,12 @@ function BrandingForm() {
       handleResetColor();
     }
   }, [handleResetColor, isDarkModeEnabled, isDirty]);
+
+  useEffect(() => {
+    if (!isCloud) {
+      unregister('hideLogtoBranding');
+    }
+  }, [unregister]);
 
   return (
     <Card>
@@ -119,12 +125,10 @@ function BrandingForm() {
           />
         </>
       )}
-      {hideLogtoBrandingVariant && (
-        <HideLogtoBrandingField
-          variant={hideLogtoBrandingVariant}
-          isEnabledInCloud={isHideLogtoBrandingEnabled}
-        />
-      )}
+      <HideLogtoBrandingField
+        variant={isCloud ? 'cloud' : 'oss'}
+        isEnabledInCloud={isHideLogtoBrandingEnabled}
+      />
     </Card>
   );
 }

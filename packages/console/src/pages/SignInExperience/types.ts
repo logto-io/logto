@@ -125,4 +125,9 @@ export type SignInMethodsObject = Record<
  * - Those keys should be omitted from the submitted data.
  * - Those keys should not be used in any data comparison logic.
  */
-export type SignInExperiencePageManagedData = Omit<SignInExperience, OmittedSignInExperienceKeys>;
+export type SignInExperiencePageManagedData = Omit<
+  SignInExperience,
+  OmittedSignInExperienceKeys | 'hideLogtoBranding'
+> & {
+  hideLogtoBranding?: boolean;
+};

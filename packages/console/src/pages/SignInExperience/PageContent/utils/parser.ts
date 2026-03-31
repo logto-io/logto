@@ -151,16 +151,28 @@ export const sieFormDataParser = {
       },
     };
   },
-  toSignInExperience: (formData: SignInExperienceForm): SignInExperiencePageManagedData => {
-    const { branding, createAccountEnabled, signUp, customCss, socialSignIn } = formData;
+  toSignInExperience: (
+    formData: SignInExperienceForm,
+    { isCloud = true }: { isCloud?: boolean } = {}
+  ): SignInExperiencePageManagedData => {
+    const {
+      branding,
+      createAccountEnabled,
+      signUp,
+      customCss,
+      socialSignIn,
+      hideLogtoBranding,
+      ...rest
+    } = formData;
 
     return {
-      ...formData,
+      ...rest,
       branding: removeFalsyValues(branding),
       signUp: signUpFormDataParser.toSignUp(signUp),
       socialSignIn,
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
+      ...conditional(isCloud && { hideLogtoBranding }),
     };
   },
 };
@@ -184,7 +196,8 @@ export const sieFormDataParser = {
  * - `emailBlocklistPolicy`
  */
 export const signInExperienceToUpdatedDataParser = (
-  data: SignInExperience
+  data: SignInExperience,
+  { isCloud = true }: { isCloud?: boolean } = {}
 ): SignInExperiencePageManagedData => {
   const {
     signUp,
@@ -195,6 +208,7 @@ export const signInExperienceToUpdatedDataParser = (
     captchaPolicy,
     sentinelPolicy,
     emailBlocklistPolicy,
+    hideLogtoBranding,
     // End: Remove the omitted fields from the data
     ...rest
   } = data;
@@ -205,5 +219,6 @@ export const signInExperienceToUpdatedDataParser = (
       ...signUp,
       secondaryIdentifiers: signUp.secondaryIdentifiers ?? [],
     },
+    ...conditional(isCloud && { hideLogtoBranding }),
   };
 };

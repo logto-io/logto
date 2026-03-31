@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isCloud } from '@/consts/env';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi from '@/hooks/use-api';
@@ -104,7 +105,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
 
       const updatedData = await api
         .patch('api/sign-in-exp', {
-          json: sieFormDataParser.toSignInExperience(formValues),
+          json: sieFormDataParser.toSignInExperience(formValues, { isCloud }),
         })
         .json<SignInExperience>();
 
@@ -141,8 +142,8 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
           return;
         }
 
-        const formatted = sieFormDataParser.toSignInExperience(formData);
-        const original = signInExperienceToUpdatedDataParser(data);
+        const formatted = sieFormDataParser.toSignInExperience(formData, { isCloud });
+        const original = signInExperienceToUpdatedDataParser(data, { isCloud });
 
         // Sign-in methods changed, need to show confirm modal first.
         if (!hasSignUpAndSignInConfigChanged(original, formatted)) {
