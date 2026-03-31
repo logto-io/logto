@@ -55,9 +55,9 @@ const get_started = {
         'احصل على مثيل Logto مخصص مع عزل كامل للبيانات، ونطاق مخصص، وضمانات SLA. مثالي للمؤسسات ذات متطلبات الإقامة الجغرافية للبيانات أو الامتثال الصارمة. نحن نتولى البنية التحتية لتتمكن من التركيز على منتجك.',
     },
     sidebar: {
-      title: 'Focus on building, not hosting.',
-      description: 'Let Logto Cloud handle auth infrastructure for you.',
-      action: 'Try Logto Cloud',
+      title: 'ركّز على البناء، لا على الاستضافة.',
+      description: 'دع Logto Cloud يتولى البنية التحتية للمصادقة نيابةً عنك.',
+      action: 'جرّب Logto Cloud',
     },
   },
   view_all: 'عرض الكل →',
