@@ -5,6 +5,7 @@ import PageFooter from '@ac/components/PageFooter';
 import styles from '../Home/index.module.scss';
 
 import EmailPhoneSection from './EmailPhoneSection';
+import MfaSection from './MfaSection';
 import PasswordSection from './PasswordSection';
 import SocialSection from './SocialSection';
 import UsernameSection from './UsernameSection';
@@ -23,6 +24,7 @@ const Security = () => {
         <EmailPhoneSection />
         <PasswordSection />
         <SocialSection />
+        <MfaSection />
       </div>
       <PageFooter />
     </div>
