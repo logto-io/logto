@@ -46,7 +46,7 @@ const get_started = {
       badge: '推薦',
       description:
         '取得一個無需維護的全託管 Logto，同時享有 MCP 驅動的快速整合、多租戶支援、團隊協作，以及所有進階功能。可免費開始，無需信用卡。',
-      action: '試用 Logto Cloud',
+      action: '探索 Logto Cloud',
     },
     private_cloud: {
       title: '需要合規支援或自訂部署？',

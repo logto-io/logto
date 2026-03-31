@@ -46,7 +46,7 @@ const get_started = {
       badge: '추천',
       description:
         '유지보수가 필요 없는 완전 관리형 Logto와 함께 MCP 기반 빠른 통합, 멀티 테넌트 지원, 팀 협업, 모든 프리미엄 기능을 이용할 수 있습니다. 신용카드 없이 무료로 시작하세요.',
-      action: 'Logto Cloud 사용해 보기',
+      action: 'Logto Cloud 살펴보기',
     },
     private_cloud: {
       title: '컴플라이언스 또는 맞춤형 배포가 필요하신가요?',

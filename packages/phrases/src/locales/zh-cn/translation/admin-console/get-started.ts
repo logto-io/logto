@@ -46,7 +46,7 @@ const get_started = {
       badge: '推荐',
       description:
         '获得一个无需维护的全托管 Logto，同时享受 MCP 驱动的快速集成、多租户支持、团队协作以及全部高级功能。可免费开始，无需信用卡。',
-      action: '试用 Logto Cloud',
+      action: '探索 Logto Cloud',
     },
     private_cloud: {
       title: '需要合规支持或定制部署？',

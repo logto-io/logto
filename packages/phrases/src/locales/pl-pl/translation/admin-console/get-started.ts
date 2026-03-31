@@ -49,7 +49,7 @@ const get_started = {
       badge: 'Polecane',
       description:
         'Otrzymaj w pełni zarządzane Logto bez konieczności utrzymania, a także szybkie wdrożenie z MCP, obsługę wielu tenantów, współpracę zespołową i wszystkie funkcje premium w pakiecie. Zacznij za darmo, bez karty kredytowej.',
-      action: 'Wypróbuj Logto Cloud',
+      action: 'Poznaj Logto Cloud',
     },
     private_cloud: {
       title: 'Potrzebujesz zgodności lub niestandardowego wdrożenia?',

@@ -1,17 +1,20 @@
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
+import CloudIconDark from '@/assets/icons/cloud-icon-dark.svg?react';
+import CloudIcon from '@/assets/icons/cloud-icon.svg?react';
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import LighteningIcon from '@/assets/icons/lightening.svg?react';
 import PrivateCloudIcon from '@/assets/icons/private-cloud.svg?react';
-import SparklesIcon from '@/assets/icons/sparkles.svg?react';
 import { officialWebsiteContactPageLink } from '@/consts';
 import Button, { LinkButton } from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 import Tag from '@/ds-components/Tag';
+import useTheme from '@/hooks/use-theme';
 
 import styles from './index.module.scss';
 
@@ -22,8 +25,15 @@ type Props = {
 
 const logtoCloudConsoleUrl = 'https://cloud.logto.io';
 
+const icons = {
+  [Theme.Light]: CloudIcon,
+  [Theme.Dark]: CloudIconDark,
+};
+
 function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const theme = useTheme();
+  const CloudBannerIcon = icons[theme];
 
   return (
     <>
@@ -32,7 +42,7 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
           <div className={styles.ossCloudBannerContent}>
             <div className={styles.ossCloudBannerMain}>
               <div className={styles.ossCloudBannerIcon}>
-                <SparklesIcon />
+                <CloudBannerIcon />
               </div>
               <div className={styles.columnWrapper}>
                 <div className={styles.ossCloudBannerTitleRow}>

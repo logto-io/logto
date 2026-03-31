@@ -50,7 +50,7 @@ const get_started = {
       badge: 'Önerilen',
       description:
         'Bakım gerektirmeyen tamamen yönetilen bir Logto’ya sahip olun; ayrıca MCP ile hızlı entegrasyon, çoklu kiracı desteği, ekip iş birliği ve tüm premium özellikler de dahil. Kredi kartı gerektirmeden ücretsiz başlayın.',
-      action: 'Logto Cloud’u deneyin',
+      action: 'Logto Cloud’u keşfedin',
     },
     private_cloud: {
       title: 'Uyumluluk veya özel dağıtım mı gerekiyor?',

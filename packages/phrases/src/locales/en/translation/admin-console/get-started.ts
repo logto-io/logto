@@ -48,7 +48,7 @@ const get_started = {
       badge: 'Recommended',
       description:
         'Get a fully managed Logto with zero maintenance — plus MCP-powered quick integration, multi-tenant support, team collaboration, and all premium features included. Free to start, no credit card required.',
-      action: 'Try Logto Cloud',
+      action: 'Explore Logto Cloud',
     },
     private_cloud: {
       title: 'Need compliance or custom deployment?',

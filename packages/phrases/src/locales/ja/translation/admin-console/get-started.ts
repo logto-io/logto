@@ -47,7 +47,7 @@ const get_started = {
       badge: 'おすすめ',
       description:
         '保守不要のフルマネージド Logto に加え、MCP を使った迅速な統合、マルチテナント対応、チームコラボレーション、すべてのプレミアム機能を利用できます。クレジットカード不要で無料で始められます。',
-      action: 'Logto Cloud を試す',
+      action: 'Logto Cloud を詳しく見る',
     },
     private_cloud: {
       title: 'コンプライアンスやカスタム導入が必要ですか？',
