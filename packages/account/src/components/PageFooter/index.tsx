@@ -15,9 +15,11 @@ const PageFooter = () => {
   // Use `||` to treat empty string as missing so the mailto fallback works
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const supportLink = supportWebsiteUrl || (supportEmail ? `mailto:${supportEmail}` : undefined);
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const hasLinks = termsOfUseUrl || privacyPolicyUrl || supportLink;
 
   return (
-    <footer className={styles.footer}>
+    <footer className={hasLinks ? styles.footer : styles.footerNoLinks}>
       <div className={styles.links}>
         {termsOfUseUrl && (
           <a href={termsOfUseUrl} target="_blank" rel="noopener noreferrer">

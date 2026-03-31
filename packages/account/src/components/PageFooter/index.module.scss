@@ -7,6 +7,13 @@
   padding: _.unit(1) _.unit(2);
 }
 
+.footerNoLinks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: _.unit(1) _.unit(2);
+}
+
 .links {
   display: flex;
   align-items: center;
