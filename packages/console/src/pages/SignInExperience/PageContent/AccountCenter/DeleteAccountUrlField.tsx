@@ -1,6 +1,6 @@
+import { deleteAccountUrlGuard } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -31,10 +31,7 @@ function DeleteAccountUrlField({ isAccountApiEnabled }: Props) {
         defaultValue=""
         rules={{
           validate: (value) =>
-            !value ||
-            ((value.startsWith('https://') || value.startsWith('http://')) &&
-              z.string().url().safeParse(value).success) ||
-            t('errors.invalid_uri_format'),
+            deleteAccountUrlGuard.safeParse(value).success || t('errors.invalid_uri_format'),
         }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <TextInput

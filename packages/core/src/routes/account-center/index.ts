@@ -1,6 +1,7 @@
 import {
   AccountCenters,
   accountCenterFieldControlGuard,
+  deleteAccountUrlGuard,
   webauthnRelatedOriginsGuard,
 } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
@@ -9,19 +10,6 @@ import { z } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
-
-const deleteAccountUrlGuard = z
-  .string()
-  .max(2048)
-  .refine(
-    (value) =>
-      value === '' ||
-      ((value.startsWith('https://') || value.startsWith('http://')) &&
-        z.string().url().safeParse(value).success),
-    {
-      message: 'deleteAccountUrl must be a valid http(s) URL',
-    }
-  );
 
 export default function accountCentersRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -56,12 +44,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
 
     async (ctx, next) => {
       const { enabled, fields, webauthnRelatedOrigins, deleteAccountUrl } = ctx.guard.body;
-      const normalizedDeleteAccountUrl =
-        deleteAccountUrl === undefined
-          ? undefined
-          : deleteAccountUrl === ''
-            ? null
-            : deleteAccountUrl;
+      const normalizedDeleteAccountUrl = deleteAccountUrl === '' ? null : deleteAccountUrl;
 
       // Make sure the account center exists
       await findDefaultAccountCenter();
