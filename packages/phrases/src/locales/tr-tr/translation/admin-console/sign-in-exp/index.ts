@@ -45,6 +45,8 @@ const sign_in_exp = {
     hide_logto_branding: 'Logto markasını gizle',
     hide_logto_branding_description:
       '"Powered by Logto" ibaresini kaldırın. Temiz ve profesyonel bir oturum açma deneyimiyle yalnızca kendi markanızı öne çıkarın.',
+    hide_logto_branding_oss_note:
+      'Bu özellik <a>Logto Cloud</a> içinde yerel olarak kullanılabilir.',
   },
   branding_uploads: {
     app_logo: {

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 
 import { CloudTag } from '@/components/FeatureTag';
 import { officialWebsiteLink } from '@/consts/external-links';
@@ -20,7 +20,6 @@ type Props = {
 };
 
 function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { register, setValue } = useFormContext<SignInExperienceForm>();
 
   useEffect(() => {
@@ -39,7 +38,7 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
         }}
       >
         <Switch
-          label={t('sign_in_exp.branding.hide_logto_branding_description')}
+          description="sign_in_exp.branding.hide_logto_branding_description"
           {...register('hideLogtoBranding')}
           disabled={!isEnabledInCloud}
         />
@@ -59,16 +58,23 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
       }
     >
       <Switch
-        label={t('sign_in_exp.branding.hide_logto_branding_description')}
+        description="sign_in_exp.branding.hide_logto_branding_description"
         {...register('hideLogtoBranding')}
         disabled
       />
       <div className={styles.ossNote}>
-        This feature is natively available in{' '}
-        <TextLink href={officialWebsiteLink} targetBlank="noopener" className={styles.highlight}>
-          Logto Cloud
-        </TextLink>
-        .
+        <Trans
+          i18nKey="admin_console.sign_in_exp.branding.hide_logto_branding_oss_note"
+          components={{
+            a: (
+              <TextLink
+                href={officialWebsiteLink}
+                targetBlank="noopener"
+                className={styles.highlight}
+              />
+            ),
+          }}
+        />
       </div>
     </FormField>
   );

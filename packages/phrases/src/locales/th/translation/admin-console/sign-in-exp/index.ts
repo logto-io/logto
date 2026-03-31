@@ -44,6 +44,7 @@ const sign_in_exp = {
     hide_logto_branding: 'ซ่อนแบรนด์ Logto',
     hide_logto_branding_description:
       'ลบ "Powered by Logto" เพื่อให้แบรนด์ของคุณโดดเด่นด้วยประสบการณ์ลงชื่อเข้าใช้ที่สะอาดและเป็นมืออาชีพ',
+    hide_logto_branding_oss_note: 'ฟีเจอร์นี้พร้อมใช้งานแบบเนทีฟใน <a>Logto Cloud</a>',
   },
   branding_uploads: {
     app_logo: {
