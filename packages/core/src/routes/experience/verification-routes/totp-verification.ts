@@ -8,7 +8,6 @@ import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -138,23 +137,21 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
         experienceInteraction.identifiedUserId
       );
 
-      await (EnvSet.values.isDevFeaturesEnabled
-        ? withSentinel(
-            {
-              ctx,
-              sentinel,
-              action: SentinelActivityAction.MfaTotp,
-              identifier: {
-                type: AdditionalIdentifier.UserId,
-                value: experienceInteraction.identifiedUserId,
-              },
-              payload: {
-                verificationId: totpVerificationRecord.id,
-              },
-            },
-            totpVerificationRecord.verifyUserExistingTotp(code)
-          )
-        : totpVerificationRecord.verifyUserExistingTotp(code));
+      await withSentinel(
+        {
+          ctx,
+          sentinel,
+          action: SentinelActivityAction.MfaTotp,
+          identifier: {
+            type: AdditionalIdentifier.UserId,
+            value: experienceInteraction.identifiedUserId,
+          },
+          payload: {
+            verificationId: totpVerificationRecord.id,
+          },
+        },
+        totpVerificationRecord.verifyUserExistingTotp(code)
+      );
 
       ctx.experienceInteraction.setVerificationRecord(totpVerificationRecord);
 

@@ -9,9 +9,8 @@ import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest, generateNewUserProfile } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('MFA sentinel (factor isolation)', () => {
+describe('MFA sentinel (factor isolation)', () => {
   const userApi = new UserApiTest();
   // eslint-disable-next-line @silverhand/fp/no-let
   let originalSentinelPolicy: Optional<SignInExperience['sentinelPolicy']>;
@@ -34,7 +33,7 @@ devFeatureTest.describe('MFA sentinel (factor isolation)', () => {
     await updateSignInExperience({ sentinelPolicy: originalSentinelPolicy ?? {} });
   });
 
-  devFeatureTest.it('should block repeated failed TOTP verifications', async () => {
+  it('should block repeated failed TOTP verifications', async () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const user = await userApi.create({ username, password });
 
@@ -62,7 +61,7 @@ devFeatureTest.describe('MFA sentinel (factor isolation)', () => {
     });
   });
 
-  devFeatureTest.it('should not block backup codes when TOTP is locked', async () => {
+  it('should not block backup codes when TOTP is locked', async () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const user = await userApi.create({ username, password });
 
@@ -95,7 +94,7 @@ devFeatureTest.describe('MFA sentinel (factor isolation)', () => {
     expect(verificationId).toBeTruthy();
   });
 
-  devFeatureTest.it('should not block TOTP when backup codes are locked', async () => {
+  it('should not block TOTP when backup codes are locked', async () => {
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const user = await userApi.create({ username, password });
 
