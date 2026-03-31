@@ -11,6 +11,12 @@ const tenants = {
     subscription: 'Plan i rozliczenia',
     billing_history: 'Historia rozliczeń',
   },
+  members: {
+    card_title: 'Zarządzaj tenantami bezpieczniej dzięki Logto Cloud',
+    card_description:
+      'Dodawaj administratorów lub współpracowników do swojego tenantu bez współdzielenia jednego konta administratora.',
+    card_action: 'Poznaj Logto Cloud',
+  },
   settings: {
     title: 'USTAWIENIA',
     description:

@@ -11,6 +11,12 @@ const tenants = {
     subscription: 'Plan und Abrechnung',
     billing_history: 'Abrechnungshistorie',
   },
+  members: {
+    card_title: 'Verwalten Sie Mandanten sicherer mit Logto Cloud',
+    card_description:
+      'Fügen Sie Ihrem Mandanten Admins oder Mitwirkende hinzu, ohne ein einzelnes Admin-Konto gemeinsam zu nutzen.',
+    card_action: 'Logto Cloud entdecken',
+  },
   settings: {
     title: 'EINSTELLUNGEN',
     description:

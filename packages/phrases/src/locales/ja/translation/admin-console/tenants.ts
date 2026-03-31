@@ -11,6 +11,12 @@ const tenants = {
     subscription: 'プランと請求',
     billing_history: '請求履歴',
   },
+  members: {
+    card_title: 'Logto Cloud でテナントをより安全に管理',
+    card_description:
+      '1つの管理者アカウントを共有せずに、テナントに管理者やコラボレーターを追加できます。',
+    card_action: 'Logto Cloud を見る',
+  },
   settings: {
     title: '設定',
     description: 'テナント名を設定し、ホストされているデータの地域とテナントタイプを表示します。',

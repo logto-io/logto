@@ -11,6 +11,12 @@ const tenants = {
     subscription: 'Plan ve faturalandırma',
     billing_history: 'Fatura geçmişi',
   },
+  members: {
+    card_title: 'Kiracıları Logto Cloud ile daha güvenli yönetin',
+    card_description:
+      'Tek bir yönetici hesabını paylaşmadan kiracınıza yöneticiler veya iş birlikçileri ekleyin.',
+    card_action: 'Logto Cloud’u keşfedin',
+  },
   settings: {
     title: 'AYARLAR',
     description: 'Kiracı adını ayarlayın ve verilerinizin barındırıldığı bölgeyi görüntüleyin.',
