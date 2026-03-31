@@ -69,6 +69,10 @@ const jwt_claims = {
     subtitle: '스크립트 실행에 실패했을 때 토큰 발급을 차단할지 제어해요.',
     input_field_title: '스크립트 오류 시 토큰 발급 동작',
     block_issuance_switch: '스크립트 오류가 발생하면 토큰 발급 차단',
+    default_hint_create:
+      '새 커스텀 클레임 스크립트는 스크립트가 실패하면 기본적으로 토큰 발급을 차단합니다. API가 이미 값을 제공하면 저장된 값을 대신 사용합니다.',
+    default_hint_edit:
+      '이 설정이 없는 기존 커스텀 클레임 스크립트는 값을 명시적으로 저장하기 전까지 기존 기본값인 꺼짐 상태를 유지합니다.',
     warning:
       '활성화하면 스크립트 런타임 오류로 인해 토큰 요청이 `invalid_request` (400) 및 현지화된 `error_description` 와 함께 거부돼요. `api.denyAccess` 호출은 계속 `access_denied` 를 반환해요.',
   },

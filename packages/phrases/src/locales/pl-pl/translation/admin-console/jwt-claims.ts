@@ -73,6 +73,10 @@ const jwt_claims = {
     subtitle: 'Określa, czy wydanie tokena ma zostać zablokowane, gdy skrypt zakończy się błędem.',
     input_field_title: 'Zachowanie wydawania tokena przy błędzie skryptu',
     block_issuance_switch: 'Blokuj wydanie tokena, gdy skrypt zgłasza błędy',
+    default_hint_create:
+      'Nowe skrypty niestandardowych claims domyślnie blokują wydanie tokenu, gdy skrypt zakończy się błędem. Jeśli API zwraca już wartość, zostanie użyta zapisana wartość.',
+    default_hint_edit:
+      'Istniejące skrypty niestandardowych claims bez tego ustawienia zachowują dotychczasowe domyślne wyłączenie tej opcji, dopóki nie zapiszesz jej jawnie.',
     warning:
       'Po włączeniu błędy wykonania skryptu odrzucają żądanie tokena z `invalid_request` (400) i zlokalizowanym `error_description`. Wywołania `api.denyAccess` nadal zwracają `access_denied`.',
   },

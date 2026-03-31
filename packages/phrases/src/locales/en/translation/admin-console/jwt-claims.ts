@@ -70,6 +70,10 @@ const jwt_claims = {
     subtitle: 'Control whether token issuance should be blocked when the script fails.',
     input_field_title: 'Token issuance behavior on script error',
     block_issuance_switch: 'Block token issuance when the script errors',
+    default_hint_create:
+      'New custom claims scripts default to blocking token issuance when the script fails. If the API already provides a value, the saved value is used instead.',
+    default_hint_edit:
+      'Existing custom claims scripts without this setting keep the legacy default off until you explicitly save a value.',
     warning:
       'When enabled, script runtime errors reject the token request with `invalid_request` (400) and a localized `error_description`. Calls to `api.denyAccess` still return `access_denied`.',
   },

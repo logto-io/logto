@@ -5,9 +5,10 @@ import useSWR from 'swr';
 import useApi from '@/hooks/use-api';
 import useSwrFetcher from '@/hooks/use-swr-fetcher';
 import { getApiPath } from '@/pages/CustomizeJwt/utils/path';
+import { Action } from '@/pages/CustomizeJwt/utils/type';
 import { shouldRetryOnError } from '@/utils/request';
 
-import { type Action, type JwtCustomizer } from './type';
+import { type JwtCustomizer } from './type';
 
 const useDataFetch = <T extends LogtoJwtTokenKeyType>(tokenType: T, action: Action) => {
   const apiPath = getApiPath(tokenType);
@@ -16,7 +17,7 @@ const useDataFetch = <T extends LogtoJwtTokenKeyType>(tokenType: T, action: Acti
 
   // Return undefined if action is create
   const { isLoading, data, mutate, error } = useSWR<JwtCustomizer<T>, ResponseError>(
-    action === 'create' ? undefined : apiPath,
+    action === Action.Create ? undefined : apiPath,
     {
       fetcher,
       shouldRetryOnError: shouldRetryOnError({ ignore: [404] }),

@@ -6,6 +6,7 @@ import EditIcon from '@/assets/icons/edit.svg?react';
 import Button from '@/ds-components/Button';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
+import { Action } from '@/pages/CustomizeJwt/utils/type';
 
 import styles from './index.module.scss';
 
@@ -16,7 +17,7 @@ type Props = {
 
 function CustomizerItem({ tokenType, onDelete }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const editLink = getPagePath(tokenType, 'edit');
+  const editLink = getPagePath(tokenType, Action.Edit);
   const { navigate } = useTenantPathname();
 
   return (

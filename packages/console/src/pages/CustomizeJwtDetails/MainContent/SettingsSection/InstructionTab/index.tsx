@@ -9,6 +9,7 @@ import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Switch from '@/ds-components/Switch';
+import { Action, type Action as JwtAction } from '@/pages/CustomizeJwt/utils/type';
 import { type JwtCustomizerForm } from '@/pages/CustomizeJwtDetails/type';
 import {
   denyAccessCodeExample,
@@ -40,10 +41,11 @@ export enum InstructionTabSection {
 type Props = {
   readonly isActive: boolean;
   readonly section: InstructionTabSection;
+  readonly action?: JwtAction;
 };
 
 /* Instructions and environment variable settings for the custom JWT claims script. */
-function InstructionTab({ isActive, section }: Props) {
+function InstructionTab({ isActive, section, action }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [expendCard, setExpendCard] = useState<CardType>();
 
@@ -232,6 +234,13 @@ function InstructionTab({ isActive, section }: Props) {
               )}
             />
           </FormField>
+          <InlineNotification severity="info">
+            {t(
+              action === Action.Create
+                ? 'jwt_claims.error_handling.default_hint_create'
+                : 'jwt_claims.error_handling.default_hint_edit'
+            )}
+          </InlineNotification>
           <InlineNotification severity="alert">
             {t('jwt_claims.error_handling.warning')}
           </InlineNotification>

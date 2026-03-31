@@ -6,6 +6,7 @@ import FlaskIcon from '@/assets/icons/conical-flask.svg?react';
 import ErrorHandlingIcon from '@/assets/icons/error-handling.svg?react';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
+import { type Action } from '@/pages/CustomizeJwt/utils/type';
 
 import InstructionTab, { InstructionTabSection } from './InstructionTab';
 import TestTab from './TestTab';
@@ -17,7 +18,11 @@ enum Tab {
   Test = 'test_tab',
 }
 
-function SettingsSection() {
+type Props = {
+  readonly action: Action;
+};
+
+function SettingsSection({ action }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.DataSource);
   const tabs = [
     Tab.DataSource,
@@ -56,6 +61,7 @@ function SettingsSection() {
         <InstructionTab
           isActive={activeTab === Tab.ErrorHandling}
           section={InstructionTabSection.ErrorHandling}
+          action={action}
         />
       )}
     </div>

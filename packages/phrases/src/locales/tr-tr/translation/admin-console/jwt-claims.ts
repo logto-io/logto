@@ -73,6 +73,10 @@ const jwt_claims = {
       'Betik başarısız olduğunda token verilmesinin engellenip engellenmeyeceğini kontrol eder.',
     input_field_title: 'Betik hatasında token verme davranışı',
     block_issuance_switch: 'Betik hata verdiğinde token verilmesini engelle',
+    default_hint_create:
+      "Yeni özel claim script'leri, script başarısız olduğunda varsayılan olarak token verilmesini engeller. API zaten bir değer sağlıyorsa bunun yerine kaydedilmiş değer kullanılır.",
+    default_hint_edit:
+      "Bu ayara sahip olmayan mevcut özel claim script'leri, siz açıkça bir değer kaydedene kadar bu seçeneği eski varsayılan olan kapalı durumda tutar.",
     warning:
       'Etkinleştirildiğinde, betik çalışma zamanı hataları token isteğini `invalid_request` (400) ve yerelleştirilmiş bir `error_description` ile reddeder. `api.denyAccess` çağrıları ise hâlâ `access_denied` döndürür.',
   },

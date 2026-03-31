@@ -73,6 +73,10 @@ const jwt_claims = {
     subtitle: 'Controla se a emissão do token deve ser bloqueada quando o script falha.',
     input_field_title: 'Comportamento da emissão do token em caso de erro no script',
     block_issuance_switch: 'Bloquear a emissão do token quando o script gerar erros',
+    default_hint_create:
+      'Novos scripts de claims personalizados bloqueiam por predefinição a emissão do token quando o script falha. Se a API já fornecer um valor, será usado o valor guardado.',
+    default_hint_edit:
+      'Scripts de claims personalizados existentes sem esta configuração mantêm o comportamento herdado com esta opção desativada até guardar explicitamente um valor.',
     warning:
       'Quando ativado, os erros de execução do script rejeitam o pedido de token com `invalid_request` (400) e um `error_description` localizado. As chamadas para `api.denyAccess` continuam a devolver `access_denied`.',
   },
