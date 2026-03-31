@@ -1,11 +1,88 @@
-import { assert, conditional } from '@silverhand/essentials';
+import { assert, conditional, trySafe } from '@silverhand/essentials';
 import {
   createMockPool,
   createMockQueryResult,
   createPool,
+  sql,
   parseDsn,
   createInterceptorsPreset,
+  type DatabasePool,
 } from '@silverhand/slonik';
+import pRetry, { AbortError } from 'p-retry';
+
+const databaseConnectionRetries = 5;
+const transientConnectionErrorCodes = new Set([
+  'ETIMEDOUT',
+  'ECONNREFUSED',
+  'ECONNRESET',
+  'EHOSTUNREACH',
+  'EPIPE',
+]);
+
+type PoolLike = Pick<DatabasePool, 'query' | 'end'>;
+
+const isErrorWithConnectionMetadata = (
+  error: unknown
+): error is {
+  code?: string;
+  message?: string;
+} => typeof error === 'object' && error !== null;
+
+export const ensurePoolReady = async <T extends PoolLike>(pool: T) => {
+  await pool.query(sql`select 1`);
+  return pool;
+};
+
+export const isTransientConnectionError = (error?: unknown) => {
+  if (!isErrorWithConnectionMetadata(error)) {
+    return false;
+  }
+
+  const { code, message } = error;
+
+  if (typeof code === 'string' && transientConnectionErrorCodes.has(code)) {
+    return true;
+  }
+
+  return typeof message === 'string' && message.toLowerCase().includes('timeout');
+};
+
+export const createPoolWithRetry = async <T extends PoolLike>(
+  factory: () => Promise<T> | T,
+  retries = databaseConnectionRetries
+) =>
+  pRetry(
+    async () => {
+      const pool = await (async () => {
+        try {
+          return await factory();
+        } catch (error: unknown) {
+          if (!isTransientConnectionError(error)) {
+            throw new AbortError(error instanceof Error ? error : new Error(String(error)));
+          }
+
+          throw error;
+        }
+      })();
+
+      try {
+        return await ensurePoolReady(pool);
+      } catch (error: unknown) {
+        await trySafe(pool.end());
+
+        if (!isTransientConnectionError(error)) {
+          throw new AbortError(error instanceof Error ? error : new Error(String(error)));
+        }
+
+        throw error;
+      }
+    },
+    {
+      retries,
+      minTimeout: 500,
+      maxTimeout: 5000,
+    }
+  );
 
 const createPoolByEnv = async (
   databaseDsn: string,
@@ -28,7 +105,7 @@ const createPoolByEnv = async (
     ...conditional(statementTimeout !== undefined && { statementTimeout }),
   };
 
-  return createPool(databaseDsn, poolOptions);
+  return createPoolWithRetry(async () => createPool(databaseDsn, poolOptions));
 };
 
 export default createPoolByEnv;
