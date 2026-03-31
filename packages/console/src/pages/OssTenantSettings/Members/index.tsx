@@ -1,6 +1,6 @@
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import MembersBg from '@/assets/icons/members-bg.svg?url';
-import { logtoCloudTenantSettings } from '@/consts';
+import { logtoCloudConsoleUrl } from '@/consts';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import DynamicT from '@/ds-components/DynamicT';
@@ -29,7 +29,7 @@ function Members() {
           title={copyKeys.action}
           trailingIcon={<ExternalLinkIcon />}
           onClick={() => {
-            window.open(logtoCloudTenantSettings, '_blank', 'noopener,noreferrer');
+            window.open(logtoCloudConsoleUrl, '_blank', 'noopener,noreferrer');
           }}
         />
       </div>
