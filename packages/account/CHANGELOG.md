@@ -1,5 +1,17 @@
 # @logto/account
 
+## 0.3.0
+
+### Minor Changes
+
+- 67463a9ed6: add support for replacing authenticator app via a dedicated `/authenticator-app/replace` route in Account Center, with a new PUT endpoint in Account API for idempotent TOTP replacement.
+- 343410f2b0: support `identifier` URL parameter on OOTB Account Center to pre-fill identifier input fields
+- 4ab0497277: support overriding the out-of-the-box account center language with the ui_locales URL parameter.
+
+### Patch Changes
+
+- 6eb14455a0: improve Account Center password forms for better browser autofill and password manager support
+
 ## 0.2.0
 
 ### Minor Changes
