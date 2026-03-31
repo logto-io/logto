@@ -1,5 +1,14 @@
 # @logto/connector-oidc
 
+## 1.7.1
+
+### Patch Changes
+
+- Updated dependencies [4e25126228]
+- Updated dependencies [4e25126228]
+  - @logto/connector-kit@5.0.0
+  - @logto/connector-oauth@1.7.4
+
 ## 1.7.0
 
 ### Minor Changes

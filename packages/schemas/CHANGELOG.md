@@ -1,5 +1,65 @@
 # Change Log
 
+## 1.38.0
+
+### Minor Changes
+
+- 7cee48bd97: support OAuth 2.0 Device Authorization Grant (device flow)
+
+  Device flow lets users sign in on input-limited devices such as smart TVs, CLI tools, IoT gadgets, and gaming consoles by completing authentication on a separate device like a phone or laptop.
+
+  How it works:
+
+  1. The device displays a short user code and a verification URL.
+  2. The user opens the URL on another device, enters the code, and signs in.
+  3. Once approved, the original device receives tokens and completes authentication.
+
+  To create a device flow application in Console:
+
+  - Select "Input-limited app / CLI" under the Native framework list, or
+  - Create an app without framework, then choose "Device flow" as the authorization flow, or
+  - Create a third-party Native app, then choose "Device flow" as the authorization flow.
+
+  The application settings page shows a device-flow-specific guide and a built-in demo you can try immediately.
+
+- 56cec74a00: support sentinel protection for MFA verification routes
+
+  TOTP, WebAuthn, and backup code MFA verifications now report activity to Sentinel so repeated failures can be detected and blocked consistently during multi-factor authentication.
+
+  The new MFA-specific Sentinel actions keep MFA attempts isolated from the shared primary sign-in pool, which avoids lockouts leaking across unrelated verification stages or factors.
+
+- 5b7f1cb794: introduce optional `oidc.session.ttl` config in logto-config for oidc session ttl
+
+  - Added a new optional `oidc.session.ttl` field in `logto-config`.
+  - This config allows developers to customize the OIDC provider session TTL in seconds.
+  - If `oidc.session.ttl` is not provided, the default session TTL remains `14 days`.
+  - For OSS deployments, restart the service instance after config changes so the server can pick up the latest OIDC config updates. To apply all OIDC configuration updates automatically without rebooting the service, [enable central redis cache](https://docs.logto.io/logto-oss/central-cache).
+
+- d2afe7351f: add app-level `maxAllowedGrants` config and enforce concurrent grant limits on authorization success
+
+  1. Extended application `customClientMetadata` with a new optional field `maxAllowedGrants`.
+     - Use this field to configure the max concurrent grants limit for the current app.
+     - Default is `undefined`; when not provided, no concurrent grant limit is applied.
+  2. Added a new OIDC `authorization.success` event listener.
+     - Triggered after each successful user authorization.
+     - Validates concurrent grants against the current authorization client and user.
+     - If `customClientMetadata.maxAllowedGrants` is configured, revokes the oldest grants when the active grant count exceeds the limit.
+
+### Patch Changes
+
+- Updated dependencies [7cee48bd97]
+- Updated dependencies [74c993a91e]
+- Updated dependencies [343410f2b0]
+- Updated dependencies [4e25126228]
+- Updated dependencies [a816cf77cb]
+- Updated dependencies [5ab931e7ac]
+- Updated dependencies [4e25126228]
+  - @logto/phrases@1.27.0
+  - @logto/phrases-experience@1.13.0
+  - @logto/core-kit@2.8.0
+  - @logto/connector-kit@5.0.0
+  - @logto/language-kit@1.3.0
+
 ## 1.37.1
 
 ### Patch Changes

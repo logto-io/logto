@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.3.0
+
+### Minor Changes
+
+- 5ab931e7ac: add Czech language support to sign-in experience
+
 ## 1.2.0
 
 ### Minor Changes
