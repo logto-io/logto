@@ -1,6 +1,7 @@
 import { LogtoJwtTokenKeyType } from '@logto/schemas';
 
 import { Action } from '../../CustomizeJwt/utils/type';
+import { formatResponseDataToFormData } from './format';
 
 jest.mock('./config', () => ({
   defaultAccessTokenJwtCustomizerCode: 'default-access-script',
@@ -10,8 +11,6 @@ jest.mock('./config', () => ({
   defaultM2mTokenContextData: { application: { id: 'app-id' } },
   defaultUserTokenContextData: { user: { id: 'user-id' } },
 }));
-
-import { formatResponseDataToFormData } from './format';
 
 describe('formatResponseDataToFormData', () => {
   it('defaults blockIssuanceOnError to true when creating a new access token script', () => {
@@ -33,8 +32,8 @@ describe('formatResponseDataToFormData', () => {
       LogtoJwtTokenKeyType.ClientCredentials,
       Action.Create,
       {
-      script: 'return token;',
-      blockIssuanceOnError: false,
+        script: 'return token;',
+        blockIssuanceOnError: false,
       }
     );
 
@@ -46,8 +45,8 @@ describe('formatResponseDataToFormData', () => {
       LogtoJwtTokenKeyType.ClientCredentials,
       Action.Edit,
       {
-      script: 'return token;',
-      blockIssuanceOnError: true,
+        script: 'return token;',
+        blockIssuanceOnError: true,
       }
     );
 

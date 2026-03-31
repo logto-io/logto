@@ -1,4 +1,5 @@
 import { LogtoJwtTokenKeyType, type AccessTokenJwtCustomizer, type Json } from '@logto/schemas';
+
 import { Action, type Action as JwtAction } from '@/pages/CustomizeJwt/utils/type';
 
 import { type JwtCustomizer, type JwtCustomizerForm } from '../type';
@@ -78,7 +79,7 @@ export const formatResponseDataToFormData = <T extends LogtoJwtTokenKeyType>(
   return {
     tokenType,
     script: data?.script ?? defaultValues[tokenType].script,
-    blockIssuanceOnError: data?.blockIssuanceOnError ?? (action === Action.Create),
+    blockIssuanceOnError: data?.blockIssuanceOnError ?? action === Action.Create,
     environmentVariables: formatEnvVariablesResponseToFormData(data?.environmentVariables) ?? [
       { key: '', value: '' },
     ],
