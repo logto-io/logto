@@ -7,3 +7,20 @@
   color: var(--color-text-secondary);
   margin-top: _.unit(1);
 }
+
+.titleRow {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+}
+
+.ossNote {
+  margin-top: _.unit(2);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.highlight {
+  color: var(--color-primary);
+}
