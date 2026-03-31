@@ -44,7 +44,8 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
     }),
 
     async (ctx, next) => {
-      const { enabled, fields, webauthnRelatedOrigins, deleteAccountUrl, customCss } = ctx.guard.body;
+      const { enabled, fields, webauthnRelatedOrigins, deleteAccountUrl, customCss } =
+        ctx.guard.body;
       const normalizedDeleteAccountUrl = deleteAccountUrl === '' ? null : deleteAccountUrl;
 
       // Make sure the account center exists
