@@ -1,13 +1,3 @@
-import { type PasswordRejectionCode } from '@logto/core-kit';
-
-type BreakdownKeysToObject<Key extends string> = {
-  [K in Key as K extends `${infer A}.${string}` ? A : K]: K extends `${string}.${infer B}`
-    ? BreakdownKeysToObject<B>
-    : string;
-};
-
-type RejectionPhrases = BreakdownKeysToObject<PasswordRejectionCode>;
-
 const password_rejected = {
   too_short: 'Minimální délka je {{min}} znaků.',
   too_long: 'Maximální délka je {{max}} znaků.',
@@ -21,9 +11,6 @@ const password_rejected = {
     user_info: 'tvé osobní údaje',
     words: 'slova z kontextu produktu',
   },
-} satisfies RejectionPhrases & {
-  // Use for displaying a list of restricted issues
-  restricted_found: string;
 };
 
 export default Object.freeze(password_rejected);

@@ -31,6 +31,7 @@ const mfa = {
   verify_mfa_description:
     'Dvoufázové ověření je pro tento účet zapnuté. Prosím, vyber druhý způsob ověření své identity.',
   add_authenticator_app: 'Přidat autentizační aplikaci',
+  replace_authenticator_app: 'Nahradit autentizační aplikaci',
   step: 'Krok {{step, number}}: {{content}}',
   scan_qr_code: 'Naskenuj tento QR kód',
   scan_qr_code_description:

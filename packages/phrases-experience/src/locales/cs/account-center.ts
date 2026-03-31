@@ -3,6 +3,12 @@ const account_center = {
     title: 'Stránka nenalezena',
     description: 'Tato stránka není k dispozici.',
   },
+  page: {
+    title: 'Účet',
+    security_title: 'Zabezpečení',
+    security_description: 'Zde můžeš změnit nastavení svého účtu a zajistit tak jeho bezpečnost.',
+    support: 'Podpora',
+  },
   verification: {
     title: 'Ověření bezpečnosti',
     description:
@@ -53,18 +59,51 @@ const account_center = {
     description: 'Uživatelské jméno může obsahovat pouze písmena, čísla a podtržítka.',
     success: 'Uživatelské jméno bylo úspěšně změněno.',
   },
+  security: {
+    add: 'Přidat',
+    change: 'Změnit',
+    remove: 'Odstranit',
+    not_set: 'Nenastaveno',
+    social_sign_in: 'Přihlášení přes sociální účet',
+    social_not_linked: 'Nepropojeno',
+    email_phone: 'E-mail / Telefon',
+    email: 'E-mail',
+    phone: 'Telefonní číslo',
+    password: 'Heslo',
+    configured: 'Nastaveno',
+    not_configured: 'Nenastaveno',
+    two_step_verification: 'Dvoufázové ověření',
+    authenticator_app: 'Autentizační aplikace',
+    passkeys: 'Přístupové klíče',
+    backup_codes: 'Záložní kódy',
+    email_verification_code: 'Ověřovací kód z e-mailu',
+    phone_verification_code: 'Ověřovací kód z telefonu',
+    passkeys_count_one: '{{count}} přístupový klíč',
+    passkeys_count_other: '{{count}} přístupové klíče',
+    backup_codes_count_one: 'zbývá {{count}} kód',
+    backup_codes_count_other: 'zbývá {{count}} kódů',
+    view: 'Zobrazit',
+    manage: 'Spravovat',
+  },
+  social: {
+    linked: '{{connector}} byl úspěšně propojen.',
+    removed: '{{connector}} byl úspěšně odstraněn.',
+    not_enabled:
+      'Tato metoda přihlášení přes sociální účet není povolena. Požádej prosím o pomoc svého administrátora.',
+    remove_confirmation_title: 'Odstranit sociální účet',
+    remove_confirmation_description:
+      'Pokud odstraníš {{connector}}, nebude možné se s ním přihlásit, dokud ho znovu nepropojíš.',
+  },
   password: {
     title: 'Nastavit heslo',
     description: 'Vytvoř nové heslo pro zabezpečení svého účtu.',
     success: 'Heslo bylo úspěšně změněno.',
   },
-
   code_verification: {
     send: 'Odeslat ověřovací kód',
     resend: 'Stále jsi ho neobdržel/a? <a>Odeslat kód znovu</a>',
     resend_countdown: 'Stále jsi ho neobdržel/a? Odeslat znovu za {{seconds}}s.',
   },
-
   email_verification: {
     title: 'Ověřit e-mailovou adresu',
     prepare_description:
@@ -133,6 +172,10 @@ const account_center = {
     totp: {
       title: 'Autentizační aplikace přidána!',
       description: 'Tvá autentizační aplikace byla úspěšně propojena s účtem.',
+    },
+    totp_replaced: {
+      title: 'Autentizační aplikace nahrazena!',
+      description: 'Tvá autentizační aplikace byla úspěšně nahrazena.',
     },
     backup_code: {
       title: 'Záložní kódy vygenerovány!',
