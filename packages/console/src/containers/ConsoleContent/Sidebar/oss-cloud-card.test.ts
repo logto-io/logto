@@ -1,13 +1,15 @@
 import { shouldShowOssCloudSidebarCard } from './oss-cloud-card';
 
 describe('shouldShowOssCloudSidebarCard', () => {
+  const now = 1_000_000;
+
   it('returns true for OSS consoles with dev features enabled when the card has not been dismissed', () => {
     expect(
       shouldShowOssCloudSidebarCard({
         isCloud: false,
         isDevFeaturesEnabled: true,
-        isUserPreferencesLoaded: true,
-        isDismissed: false,
+        dismissedUntil: undefined,
+        now,
       })
     ).toBe(true);
   });
@@ -17,8 +19,8 @@ describe('shouldShowOssCloudSidebarCard', () => {
       shouldShowOssCloudSidebarCard({
         isCloud: true,
         isDevFeaturesEnabled: true,
-        isUserPreferencesLoaded: true,
-        isDismissed: false,
+        dismissedUntil: undefined,
+        now,
       })
     ).toBe(false);
   });
@@ -28,31 +30,42 @@ describe('shouldShowOssCloudSidebarCard', () => {
       shouldShowOssCloudSidebarCard({
         isCloud: false,
         isDevFeaturesEnabled: false,
-        isUserPreferencesLoaded: true,
-        isDismissed: false,
+        dismissedUntil: undefined,
+        now,
       })
     ).toBe(false);
   });
 
-  it('returns false before user preferences are loaded', () => {
+  it('returns false before the dismissal expires', () => {
     expect(
       shouldShowOssCloudSidebarCard({
         isCloud: false,
         isDevFeaturesEnabled: true,
-        isUserPreferencesLoaded: false,
-        isDismissed: false,
+        dismissedUntil: now + 1,
+        now,
       })
     ).toBe(false);
   });
 
-  it('returns false after the card is dismissed', () => {
+  it('returns true after the dismissal has expired', () => {
     expect(
       shouldShowOssCloudSidebarCard({
         isCloud: false,
         isDevFeaturesEnabled: true,
-        isUserPreferencesLoaded: true,
-        isDismissed: true,
+        dismissedUntil: now - 1,
+        now,
       })
-    ).toBe(false);
+    ).toBe(true);
+  });
+
+  it('returns true when the dismissal expires exactly at the current time', () => {
+    expect(
+      shouldShowOssCloudSidebarCard({
+        isCloud: false,
+        isDevFeaturesEnabled: true,
+        dismissedUntil: now,
+        now,
+      })
+    ).toBe(true);
   });
 });

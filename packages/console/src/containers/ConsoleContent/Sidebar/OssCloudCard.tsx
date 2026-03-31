@@ -1,21 +1,25 @@
 import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
 import CloudIconDark from '@/assets/icons/cloud-icon-dark.svg?react';
 import CloudIcon from '@/assets/icons/cloud-icon.svg?react';
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
+import { storageKeys } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { logtoCloudConsoleLink } from '@/consts/external-links';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
 import useTheme from '@/hooks/use-theme';
-import useUserPreferences from '@/hooks/use-user-preferences';
 
-import { shouldShowOssCloudSidebarCard } from './oss-cloud-card';
+import {
+  ossCloudSidebarCardDismissDuration,
+  parseOssCloudSidebarCardDismissedUntil,
+  shouldShowOssCloudSidebarCard,
+} from './oss-cloud-card';
 import styles from './oss-cloud-card.module.scss';
-
-const logtoCloudConsoleUrl = 'https://cloud.logto.io';
 
 const icons = {
   [Theme.Light]: CloudIcon,
@@ -28,26 +32,33 @@ function OssCloudCard() {
   });
   const { t: tGeneral } = useTranslation(undefined, { keyPrefix: 'admin_console.general' });
   const theme = useTheme();
-  const { data: userPreferences, isLoaded, update } = useUserPreferences();
   const CloudBannerIcon = icons[theme];
+  const now = Date.now();
+  const [dismissedUntil, setDismissedUntil] = useState(() =>
+    parseOssCloudSidebarCardDismissedUntil(
+      localStorage.getItem(storageKeys.ossSidebarCloudUpsellDismissedUntil)
+    )
+  );
 
   if (
     !shouldShowOssCloudSidebarCard({
       isCloud,
       isDevFeaturesEnabled,
-      isUserPreferencesLoaded: isLoaded,
-      isDismissed: Boolean(userPreferences.ossSidebarCloudUpsellDismissed),
+      dismissedUntil,
+      now,
     })
   ) {
     return null;
   }
 
-  const onDismiss = async () => {
-    try {
-      await update({ ossSidebarCloudUpsellDismissed: true });
-    } catch (error: unknown) {
-      void error;
-    }
+  const onDismiss = () => {
+    const nextDismissedUntil = Date.now() + ossCloudSidebarCardDismissDuration;
+
+    localStorage.setItem(
+      storageKeys.ossSidebarCloudUpsellDismissedUntil,
+      String(nextDismissedUntil)
+    );
+    setDismissedUntil(nextDismissedUntil);
   };
 
   return (
@@ -62,7 +73,7 @@ function OssCloudCard() {
             aria-label={tGeneral('close')}
             className={styles.dismissButton}
             onClick={() => {
-              void onDismiss();
+              onDismiss();
             }}
           >
             <CloseIcon className={styles.dismissIcon} />
@@ -73,7 +84,7 @@ function OssCloudCard() {
         <TextLink
           isTrailingIcon
           className={styles.link}
-          href={logtoCloudConsoleUrl}
+          href={logtoCloudConsoleLink}
           icon={<ExternalLinkIcon className={styles.linkIcon} />}
           targetBlank="noopener"
         >
