@@ -1,6 +1,7 @@
 import { LogtoJwtTokenKeyType } from '@logto/schemas';
 
 import { Action } from '../../CustomizeJwt/utils/type';
+
 import { formatResponseDataToFormData } from './format';
 
 jest.mock('./config', () => ({
