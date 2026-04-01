@@ -10,15 +10,10 @@
 
 ## Ship checklist
 
-- [ ] All PRs merged
-- [ ] CI passes on main branch
-- [ ] Changeset / changelog updated
-- [ ] Database migrations applied (if any)
-- [ ] Feature flags configured (if any)
-- [ ] Monitoring / alerts in place for new code paths
-- [ ] Rollback plan tested or documented
-- [ ] Stakeholders notified (if user-facing change)
-
+- [ ] **Feature flag removal:** Remove `isDevFeaturesEnabled` guards from the new feature code
+- [ ] **Changeset:** Write changeset entry via `/logto-changeset` describing the change
+- [ ] **OpenAPI docs:** Ensure all new/modified API endpoints have complete OpenAPI documentation
+- [ ] **User-facing docs:** Add new feature description to [logto-io/docs](https://github.com/logto-io/docs)
 ---
 
 ## Exit criteria
