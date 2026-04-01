@@ -2,15 +2,15 @@
 
 **Goal:** Verify that the code matches the plan, and the code quality is production-ready.
 
-**Who:** Another engineer reviews. Agent assists with automated checks.
+**Who:** Another engineer reviews. This is a human review.
 
 **Previous:** [Stage 4: Execute](stage-4-execute.md) | **Next:** [Stage 6: Ship](stage-6-ship.md)
 
 ---
 
-## What code review checks
+Since we have a detailed plan, code review is simpler than usual: the primary job is checking whether the code matches the plan.
 
-Since we have a detailed plan, code review focuses on:
+## What to review
 
 ### Plan compliance (primary)
 
@@ -28,15 +28,18 @@ Since we have a detailed plan, code review focuses on:
 
 ---
 
-## Agent-assisted code review
+## Optional: agent pre-review
 
-- Agent reads the plan and the diff, produces a plan compliance report
-- Agent checks for common issues (N+1 queries, missing error handling, etc.)
-- Human reviews the agent's findings and adds judgment
+Before sending the PR to a human reviewer, you can ask the agent to do a first pass. This is optional but can reduce back-and-forth on mechanical issues.
 
----
+What the agent can check:
+- Plan compliance: extract plan items, cross-reference against the diff, report DONE / CHANGED / MISSING for each
+- Common code issues: N+1 queries, missing error handling, unused imports, inconsistent naming
+- Test coverage: are the test scenarios from the plan actually covered?
 
-## Review format
+The agent pre-review does NOT replace human review. It catches "you forgot to implement plan item #7" type issues, not "this abstraction will be painful to maintain."
+
+### Agent pre-review format
 
 ```
 ## Plan Compliance
@@ -48,8 +51,6 @@ Since we have a detailed plan, code review focuses on:
 ## Code Issues
 - [file:line] Description of issue
   Suggestion: ...
-
-## Verdict: APPROVED / CHANGES REQUESTED
 ```
 
 ---
