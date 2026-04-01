@@ -45,6 +45,7 @@ const sign_in_exp = {
     hide_logto_branding: 'Ukryj branding Logto',
     hide_logto_branding_description:
       'Usuń napis "Powered by Logto". Zaprezentuj wyłącznie swoją markę w czystym i profesjonalnym procesie logowania.',
+    hide_logto_branding_oss_note: 'Ta funkcja jest natywnie dostępna w <a>Logto Cloud</a>.',
   },
   branding_uploads: {
     app_logo: {

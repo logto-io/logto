@@ -42,6 +42,7 @@ const sign_in_exp = {
     hide_logto_branding: 'Logto 브랜딩 숨기기',
     hide_logto_branding_description:
       '"Powered by Logto" 문구를 제거하고 깔끔하고 전문적인 로그인 경험에서 브랜드만 돋보이게 하세요.',
+    hide_logto_branding_oss_note: '이 기능은 <a>Logto Cloud</a>에서 기본 제공됩니다.',
   },
   branding_uploads: {
     app_logo: {
