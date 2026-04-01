@@ -10,70 +10,83 @@
 
 ## How the conversation works
 
-This stage is a structured dialogue. The agent drives the conversation by asking questions one at a time, researching the codebase between questions, and challenging vague answers. The engineer provides domain knowledge, user context, and judgment.
+This stage is a **guided conversation**. The agent's job is to draw out the full picture of what the engineer needs — through questions, not code research. It should feel like brainstorming with a sharp colleague who asks the right questions and pushes for clarity.
 
-**Step 1: Engineer states the task.** Can be one sentence or a full issue description.
+**The agent's role:** Listen, ask clarifying questions, challenge vague answers, summarize understanding, and guide the engineer toward a complete problem definition. The agent does NOT need to read code at this stage — understanding the problem comes from the conversation, not the codebase.
 
-**Step 2: Agent does initial research.** Before asking anything, the agent:
-- Reads related code, traces call paths, finds usage patterns
-- Checks git history for prior changes in the affected area
-- Searches the [Experience Library](experience-library.md) for relevant entries
-- Forms an initial understanding of the problem space
+**The engineer's role:** Describe the problem, provide context, answer questions, and confirm or correct the agent's understanding.
 
-**Step 3: Agent asks diagnostic questions, one at a time.** The agent picks questions based on task type and asks them sequentially, waiting for each answer before asking the next. The agent should push for specificity — vague answers get follow-up questions.
+### Conversation flow
+
+1. **Engineer states the task.** Can be one sentence, an issue link, or a full description.
+
+2. **Agent restates and identifies gaps.** The agent's first response should:
+   - Restate its understanding of what the engineer said (so the engineer can correct misunderstandings immediately)
+   - Identify what information is missing or unclear
+   - Ask the first 1-2 most important clarifying questions — not all questions at once
+
+3. **Guided back-and-forth.** The agent leads the conversation to fill in the full picture. Each turn, the agent should:
+   - Acknowledge what the engineer just clarified
+   - Connect it to the bigger picture ("OK, so this means the scope is...")
+   - Ask the next most important question based on what is still unclear
+   - When the engineer gives a vague answer, push for specifics — don't accept "it should be better" or "some users have issues"
+
+4. **Convergence.** When the agent believes it has a complete understanding, it writes a [Premise challenge](#premise-challenge) for the engineer to confirm. Then produces the [Problem Brief](#output-problem-brief).
 
 ---
 
-## Diagnostic questions by task type
+## What the agent should cover (by task type)
+
+These are not checklists to walk through sequentially. They are the key things the agent should understand by the end of the conversation. Cover them naturally as the discussion evolves.
 
 ### Bug fix
 
-| # | Question | Push until you hear |
-|---|----------|-------------------|
-| 1 | What is the exact symptom? (error message, wrong behavior, data corruption) | A specific, reproducible description. Not "it's broken" but "clicking X returns a 500 with error Y" |
-| 2 | When did this start? What changed? | A commit, a deploy, a config change, or "it was always like this" |
-| 3 | Who is affected and how severely? | Specific user segment + impact. "All free-tier users get a blank page on login" not "some users have issues" |
-| 4 | What is the current workaround? | What users or support are doing right now. If no workaround exists, that tells you severity |
+- **Exact symptom:** A specific, reproducible description — not "it's broken" but "clicking X returns a 500 with error Y"
+- **Timeline:** When it started, what changed (a commit, a deploy, a config change, or "it was always like this")
+- **Blast radius:** Who is affected and how severely
+- **Workaround:** What users or support are doing right now. No workaround = high severity signal
 
 ### New feature
 
-| # | Question | Push until you hear |
-|---|----------|-------------------|
-| 1 | What problem does this solve for the user? | A specific user action or pain point. Not "improve the experience" but "users cannot do X without doing Y first" |
-| 2 | What is the user currently doing instead? | The status quo workflow, even if it is ugly. This reveals whether the need is real |
-| 3 | What is the smallest version of this that delivers value? | One specific behavior change. The wedge, not the platform |
-| 4 | What must NOT change? (backward compat, API contracts, existing behavior) | Specific constraints with reasons |
-| 5 | How will we know this is working? | A measurable outcome or a specific test scenario |
+- **User problem:** A specific user action or pain point — not "improve the experience" but "users cannot do X without doing Y first"
+- **Status quo:** What users are doing instead today. This reveals whether the need is real
+- **Minimum viable scope:** The smallest version that delivers value. One specific behavior change — the wedge, not the platform
+- **Constraints:** What must NOT change (backward compat, API contracts, existing behavior)
+- **Success signal:** How we know this is working — a measurable outcome or a specific test scenario
 
 ### Refactor / tech debt
 
-| # | Question | Push until you hear |
-|---|----------|-------------------|
-| 1 | What is the concrete pain this causes today? | Specific symptoms: "deploy takes 40 minutes", "every new endpoint requires changes in 5 files", "tests are flaky because of X" |
-| 2 | What triggered this now? Why not 3 months ago or 3 months from now? | The forcing function. If there is none, question the priority |
-| 3 | What does "done" look like? | A specific measurable state, not "cleaner code" |
+- **Concrete pain:** Specific symptoms — "deploy takes 40 minutes", "every new endpoint requires changes in 5 files"
+- **Forcing function:** Why now? If there is none, question the priority
+- **Definition of done:** A specific measurable state, not "cleaner code"
 
 ---
 
-## Agent proactive concerns
+## How the agent should guide the conversation
 
-After each answer, the agent should raise concerns based on:
+**One or two questions at a time.** Don't dump a list of 5 questions. Ask the most important one, wait for the answer, then ask the next based on what you learned.
 
-1. **Experience Library matches.** If a past pitfall is relevant, the agent says: _"Experience Library note: [title]. [one-sentence summary]. Should we account for this?"_
+**Challenge vague answers.** If the engineer says "some users have issues", push: "Can you narrow it down? Is this all users, free-tier only, specific browser, specific API call?"
 
-2. **Codebase patterns.** If the agent finds something during research that contradicts or complicates the engineer's answer, it says so directly: _"I found that `path/to/file.ts` already does something similar. Should we reuse or replace it?"_
+**Summarize as you go.** After a few exchanges, briefly restate the current understanding so the engineer can course-correct early: _"So far I understand: [X]. Is that right?"_
 
-3. **Hidden assumptions.** If the engineer's answer contains an unstated assumption, the agent calls it out: _"This assumes X. Is that verified, or should we check?"_
+**Dig for the "why" behind a solution.** Engineers often come with a solution, not a problem — "we need to add a config option for X." The agent should ask: _"What is the user trying to do that they can't today? What happens if we don't do this?"_ Understand the underlying need before accepting the proposed approach. The real problem may have a simpler solution, or the proposed solution may not actually address it.
+
+**Question whether it is worth doing.** Not every request deserves implementation. If the described scenario sounds like a rare edge case, the agent should probe: _"How often does this actually happen? How many users are affected? What is the cost of not doing this?"_ The goal is not to block work, but to make sure the engineer has consciously evaluated ROI before committing engineering time.
+
+**Call out hidden assumptions.** If the engineer's answer contains an unstated assumption: _"This assumes X. Is that correct?"_
+
+**Propose when you have enough context.** When the agent can form an opinion on scope or priority, propose it: _"Based on what you've described, this sounds like a [Light/Standard] scope because [reason]. Does that feel right?"_
 
 ---
 
 ## Smart routing
 
-Not every task needs all questions:
+Not every task needs a deep conversation:
 
-- **If the engineer provides a detailed issue with reproduction steps:** Skip symptom questions, start at root cause / constraints
-- **If the engineer says "just fix this typo":** Skip the conversation, go directly to Problem Brief (Light depth)
-- **If the agent's initial research already answers a question:** State the finding and ask "Does this match your understanding?" instead of asking the question cold
+- **Detailed issue with reproduction steps:** Skip the basics, jump into root cause and constraints discussion
+- **Trivial task ("fix this typo"):** Skip the conversation entirely, go straight to Problem Brief (Light depth)
+- **Agent's research already answers something:** State the finding and ask "Does this match your understanding?" instead of asking the question from scratch
 
 ---
 
