@@ -11,6 +11,12 @@ const tenants = {
     subscription: 'Plan y facturación',
     billing_history: 'Historial de facturación',
   },
+  members: {
+    card_title: 'Administra los inquilinos de forma más segura con Logto Cloud',
+    card_description:
+      'Agrega administradores o colaboradores a tu inquilino sin compartir una sola cuenta de administrador.',
+    card_action: 'Explorar Logto Cloud',
+  },
   settings: {
     title: 'CONFIGURACIONES',
     description:

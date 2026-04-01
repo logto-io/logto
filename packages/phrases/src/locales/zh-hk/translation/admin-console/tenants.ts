@@ -10,6 +10,11 @@ const tenants = {
     subscription: '方案與計費',
     billing_history: '帳單記錄',
   },
+  members: {
+    card_title: '透過 Logto Cloud 更安全地管理租戶',
+    card_description: '無需共用單一管理員帳號，也能為你的租戶新增管理員或協作者。',
+    card_action: '探索 Logto Cloud',
+  },
   settings: {
     title: '設定',
     description: '設置租戶名稱並查看您的數據托管區域和租戶類型。',

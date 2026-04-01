@@ -11,6 +11,12 @@ const tenants = {
     subscription: 'Plano e faturamento',
     billing_history: 'Histórico de faturamento',
   },
+  members: {
+    card_title: 'Gerencie tenants com mais segurança usando o Logto Cloud',
+    card_description:
+      'Adicione administradores ou colaboradores ao seu tenant sem compartilhar uma única conta de administrador.',
+    card_action: 'Explorar o Logto Cloud',
+  },
   settings: {
     title: 'CONFIGURAÇÕES',
     description:

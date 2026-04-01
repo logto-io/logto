@@ -11,6 +11,12 @@ const tenants = {
     subscription: 'План и выставление счетов',
     billing_history: 'История выставления счетов',
   },
+  members: {
+    card_title: 'Управляйте арендаторами безопаснее с Logto Cloud',
+    card_description:
+      'Добавляйте администраторов или участников в своего арендатора без совместного использования одной учетной записи администратора.',
+    card_action: 'Открыть Logto Cloud',
+  },
   settings: {
     title: 'НАСТРОЙКИ',
     description:

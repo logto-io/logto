@@ -11,6 +11,12 @@ const tenants = {
     subscription: 'Plan et facturation',
     billing_history: 'Historique de facturation',
   },
+  members: {
+    card_title: 'Gérez vos locataires plus sûrement avec Logto Cloud',
+    card_description:
+      'Ajoutez des administrateurs ou des collaborateurs à votre locataire sans partager un seul compte administrateur.',
+    card_action: 'Découvrir Logto Cloud',
+  },
   settings: {
     title: 'PARAMÈTRES',
     description:

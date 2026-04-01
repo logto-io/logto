@@ -12,6 +12,12 @@ const tenants = {
     subscription: 'Piano e fatturazione',
     billing_history: 'Storico fatturazione',
   },
+  members: {
+    card_title: 'Gestisci i tenant in modo più sicuro con Logto Cloud',
+    card_description:
+      'Aggiungi amministratori o collaboratori al tuo tenant senza condividere un unico account amministratore.',
+    card_action: 'Esplora Logto Cloud',
+  },
   settings: {
     title: 'IMPOSTAZIONI',
     description:

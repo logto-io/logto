@@ -11,6 +11,12 @@ const tenants = {
     subscription: 'Plan and billing',
     billing_history: 'Billing history',
   },
+  members: {
+    card_title: 'Manage tenants more securely with Logto Cloud',
+    card_description:
+      'Add admins or collaborators to your tenant without sharing a single admin account.',
+    card_action: 'Explore Logto Cloud',
+  },
   settings: {
     title: 'SETTINGS',
     description: 'Set the tenant name and view your data hosted region and tenant type.',

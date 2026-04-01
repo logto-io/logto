@@ -10,6 +10,12 @@ const tenants = {
     subscription: '구독 및 청구',
     billing_history: '청구 내역',
   },
+  members: {
+    card_title: 'Logto Cloud로 테넌트를 더 안전하게 관리하세요',
+    card_description:
+      '하나의 관리자 계정을 공유하지 않고도 테넌트에 관리자나 협업자를 추가할 수 있습니다.',
+    card_action: 'Logto Cloud 살펴보기',
+  },
   settings: {
     title: '설정',
     description: '테넌트 이름 설정 및 호스팅된 데이터 영역 및 테넌트 유형을 확인합니다.',

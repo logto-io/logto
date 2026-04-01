@@ -10,6 +10,11 @@ const tenants = {
     subscription: 'الخطة والفوترة',
     billing_history: 'سجل الفوترة',
   },
+  members: {
+    card_title: 'أدر المستأجرين بأمان أكبر مع Logto Cloud',
+    card_description: 'أضف مسؤولين أو متعاونين إلى المستأجر الخاص بك دون مشاركة حساب مسؤول واحد.',
+    card_action: 'استكشف Logto Cloud',
+  },
   settings: {
     title: 'الإعدادات',
     description: 'تعيين اسم المستأجر وعرض منطقة البيانات المستضيفة ونوع المستأجر.',

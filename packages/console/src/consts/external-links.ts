@@ -83,5 +83,6 @@ export const customDomainFeatureLink = '/logto-cloud/custom-domain';
 export const retrieveTokenStorage = '/secret-vault/federated-token-set#token-retrieval';
 
 export const addOnPricingExplanationLink = 'https://docs.logto.io/logto-cloud/billing-and-pricing';
+export const logtoCloudConsoleUrl = 'https://cloud.logto.io';
 
 export const dateFnsDocumentationLink = 'https://date-fns.org/v2.30.0/docs/format';
