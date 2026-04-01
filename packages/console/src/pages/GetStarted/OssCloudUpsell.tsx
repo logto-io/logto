@@ -9,6 +9,7 @@ import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import LighteningIcon from '@/assets/icons/lightening.svg?react';
 import PrivateCloudIcon from '@/assets/icons/private-cloud.svg?react';
 import { officialWebsiteContactPageLink } from '@/consts';
+import { logtoCloudConsoleLink } from '@/consts/external-links';
 import Button, { LinkButton } from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import IconButton from '@/ds-components/IconButton';
@@ -22,8 +23,6 @@ type Props = {
   readonly isBannerVisible: boolean;
   readonly onDismissBanner: () => void;
 };
-
-const logtoCloudConsoleUrl = 'https://cloud.logto.io';
 
 const icons = {
   [Theme.Light]: CloudIcon,
@@ -61,7 +60,7 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
                 title="get_started.oss_cloud.try.action"
                 trailingIcon={<ExternalLinkIcon className={styles.bannerActionIcon} />}
                 onClick={() => {
-                  window.open(logtoCloudConsoleUrl, '_blank', 'noopener,noreferrer');
+                  window.open(logtoCloudConsoleLink, '_blank', 'noopener,noreferrer');
                 }}
               />
             </div>

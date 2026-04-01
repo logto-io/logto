@@ -9,6 +9,7 @@ export const reservationLink = 'https://cal.com/logto/30min';
 export const officialWebsiteLink = 'https://logto.io';
 export const trustAndSecurityLink = `${officialWebsiteLink}/trust-and-security`;
 export const pricingLink = `${officialWebsiteLink}/pricing`;
+export const logtoCloudConsoleLink = 'https://cloud.logto.io';
 export const officialWebsiteContactPageLink = `${officialWebsiteLink}/contact`;
 export const entityPolicyLink = 'https://docs.logto.io/logto-cloud/system-limit';
 export const logtoOssFeatureSupportLink =

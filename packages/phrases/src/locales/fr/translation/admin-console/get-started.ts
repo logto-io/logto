@@ -61,6 +61,11 @@ const get_started = {
       description:
         'Obtenez une instance Logto dédiée avec isolation complète des données, domaine personnalisé et garanties SLA. Idéal pour les entreprises ayant des exigences strictes en matière de résidence des données ou de conformité. Nous gérons l’infrastructure pour que vous puissiez vous concentrer sur votre produit.',
     },
+    sidebar: {
+      title: 'Concentrez-vous sur le développement, pas sur l’hébergement.',
+      description: 'Laissez Logto Cloud gérer l’infrastructure d’authentification pour vous.',
+      action: 'Essayer Logto Cloud',
+    },
   },
   view_all: 'Tout afficher →',
 };

@@ -55,6 +55,11 @@ const get_started = {
       description:
         '完全なデータ分離、カスタムドメイン、SLA 保証を備えた専用の Logto インスタンスを利用できます。厳格なデータ所在地やコンプライアンス要件を持つ企業に最適です。インフラは私たちが管理するので、あなたは製品開発に集中できます。',
     },
+    sidebar: {
+      title: 'ホスティングではなく、開発に集中しましょう。',
+      description: '認証インフラは Logto Cloud に任せましょう。',
+      action: 'Logto Cloud を試す',
+    },
   },
   view_all: 'すべての内容を表示 →',
 };

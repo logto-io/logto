@@ -54,6 +54,11 @@ const get_started = {
       description:
         '获得一个专属的 Logto 实例，具备完整的数据隔离、自定义域名和 SLA 保障。非常适合对数据驻留或合规有严格要求的企业。基础设施由我们负责，你可以专注于产品本身。',
     },
+    sidebar: {
+      title: '专注于构建，而不是托管。',
+      description: '让 Logto Cloud 为你处理认证基础设施。',
+      action: '试用 Logto Cloud',
+    },
   },
   view_all: '查看全部 →',
 };

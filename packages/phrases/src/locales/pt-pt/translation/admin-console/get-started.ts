@@ -58,6 +58,11 @@ const get_started = {
       description:
         'Obtenha uma instância dedicada do Logto com isolamento total de dados, domínio personalizado e garantias de SLA. Ideal para empresas com requisitos rigorosos de residência de dados ou conformidade. Nós tratamos da infraestrutura para que se possa concentrar no seu produto.',
     },
+    sidebar: {
+      title: 'Concentre-se em desenvolver, não em alojar.',
+      description: 'Deixe o Logto Cloud tratar da infraestrutura de autenticação por si.',
+      action: 'Experimentar o Logto Cloud',
+    },
   },
   view_all: 'Ver tudo →',
 };

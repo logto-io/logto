@@ -54,6 +54,11 @@ const get_started = {
       description:
         '取得一個專屬的 Logto 實例，具備完整的資料隔離、自訂網域與 SLA 保證。非常適合對資料駐留或合規有嚴格要求的企業。基礎設施由我們負責，你可以專注於產品本身。',
     },
+    sidebar: {
+      title: '專注於構建，而不是託管。',
+      description: '讓 Logto Cloud 為你處理身份驗證基礎設施。',
+      action: '試用 Logto Cloud',
+    },
   },
   view_all: '查看全部 →',
 };

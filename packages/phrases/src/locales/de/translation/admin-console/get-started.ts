@@ -58,6 +58,11 @@ const get_started = {
       description:
         'Erhalten Sie eine dedizierte Logto-Instanz mit vollständiger Datenisolation, eigener Domain und SLA-Garantien. Ideal für Unternehmen mit strengen Anforderungen an Datenresidenz oder Compliance. Wir übernehmen die Infrastruktur, damit Sie sich auf Ihr Produkt konzentrieren können.',
     },
+    sidebar: {
+      title: 'Konzentrieren Sie sich aufs Entwickeln, nicht aufs Hosting.',
+      description: 'Lassen Sie Logto Cloud die Auth-Infrastruktur für Sie übernehmen.',
+      action: 'Logto Cloud ausprobieren',
+    },
   },
   view_all: 'Alle anzeigen →',
 };
