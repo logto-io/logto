@@ -55,6 +55,12 @@ export const getAvailableAlterations = async (
   );
 };
 
+/**
+ * IMPORTANT: Logto Cloud has a parallel implementation of this logic in `CoreAlterationClient`
+ * (logto-cloud repo: `packages/azure-functions/src/utils/core-alteration-client.ts`).
+ * Any changes to the alteration execution behavior here (e.g., new hooks, execution order)
+ * must be synchronized with the Cloud implementation.
+ */
 const deployAlteration = async (
   pool: DatabasePool,
   { path: filePath, filename }: AlterationFile,
