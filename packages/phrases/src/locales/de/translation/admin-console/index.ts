@@ -28,6 +28,7 @@ import organization_details from './organization-details.js';
 import organization_role_details from './organization-role-details.js';
 import organization_template from './organization-template.js';
 import organizations from './organizations.js';
+import oss_onboarding from './oss-onboarding.js';
 import permissions from './permissions.js';
 import profile from './profile.js';
 import protected_app from './protected-app.js';
@@ -98,6 +99,7 @@ const admin_console = {
   guide,
   mfa,
   organizations,
+  oss_onboarding,
   oidc_configs,
   organization_details,
   protected_app,
