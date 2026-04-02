@@ -17,6 +17,7 @@ const oidc = {
   provider_error: 'Внутренняя ошибка OIDC: {{message}}.',
   server_error: 'Произошла неизвестная ошибка OIDC. Пожалуйста, попробуйте снова позже.',
   provider_error_fallback: 'Произошла ошибка OIDC: {{code}}.',
+  custom_claims_script_error: 'Ошибка скрипта пользовательских claims: {{error_description}}',
   key_required: 'Требуется как минимум один ключ.',
   key_not_found: 'Ключ с идентификатором {{id}} не найден.',
   invalid_session_payload: 'Недопустимая полезная нагрузка сессии.',

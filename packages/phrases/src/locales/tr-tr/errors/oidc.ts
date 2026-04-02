@@ -17,6 +17,7 @@ const oidc = {
   provider_error: 'Dahili OIDC Hatası: {{message}}.',
   server_error: 'Bilinmeyen bir OIDC hatası oluştu. Lütfen daha sonra tekrar deneyin.',
   provider_error_fallback: 'Bir OIDC hatası oluştu: {{code}}.',
+  custom_claims_script_error: 'Özel claims betiği hatası: {{error_description}}',
   key_required: 'En az bir anahtar gereklidir.',
   key_not_found: "ID'si {{id}} olan anahtar bulunamadı.",
   invalid_session_payload: 'Geçersiz oturum yükü.',

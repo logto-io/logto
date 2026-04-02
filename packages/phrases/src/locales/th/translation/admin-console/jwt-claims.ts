@@ -34,6 +34,7 @@ const jwt_claims = {
   restore: 'กู้คืนค่าเริ่มต้น',
   restored: 'กู้คืนแล้ว',
   data_source_tab: 'แหล่งข้อมูล',
+  error_handling_tab: 'การจัดการข้อผิดพลาด',
   test_tab: 'ทดสอบ context',
   jwt_claims_description: 'Default claims จะถูกเพิ่มใน token อัตโนมัติและไม่สามารถเขียนทับได้',
   user_data: {
@@ -62,6 +63,18 @@ const jwt_claims = {
   api_context: {
     title: 'บริบท API: การควบคุมการเข้าถึง',
     subtitle: 'ใช้เมธอด `api.denyAccess` เพื่อปฏิเสธคำขอรับ token',
+  },
+  error_handling: {
+    title: 'การจัดการข้อผิดพลาด',
+    subtitle: 'กำหนดว่าจะบล็อกการออกโทเค็นหรือไม่เมื่อสคริปต์ทำงานล้มเหลว',
+    input_field_title: 'พฤติกรรมการออกโทเค็นเมื่อสคริปต์เกิดข้อผิดพลาด',
+    block_issuance_switch: 'บล็อกการออกโทเค็นเมื่อสคริปต์เกิดข้อผิดพลาด',
+    default_hint_create:
+      'สคริปต์ custom claims ที่สร้างใหม่จะบล็อกการออกโทเค็นเมื่อสคริปต์ล้มเหลวโดยค่าเริ่มต้น หาก API ส่งค่ากลับมาอยู่แล้ว ระบบจะใช้ค่าที่บันทึกไว้แทน',
+    default_hint_edit:
+      'สคริปต์ custom claims ที่มีอยู่เดิมและยังไม่มีการตั้งค่านี้ จะคงพฤติกรรมเดิมโดยให้ตัวเลือกนี้ปิดไว้ จนกว่าคุณจะบันทึกค่าอย่างชัดเจน',
+    warning:
+      'เมื่อเปิดใช้งาน ข้อผิดพลาดขณะรันสคริปต์จะปฏิเสธคำขอโทเค็นด้วย `invalid_request` (400) และ `error_description` ที่แปลตามภาษา ส่วนการเรียก `api.denyAccess` จะยังคงคืนค่า `access_denied`',
   },
   fetch_external_data: {
     title: 'ดึงข้อมูลภายนอก',

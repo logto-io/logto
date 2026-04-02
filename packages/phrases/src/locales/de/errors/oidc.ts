@@ -18,6 +18,7 @@ const oidc = {
   server_error:
     'Ein unbekannter OIDC Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
   provider_error_fallback: 'Ein OIDC Fehler ist aufgetreten: {{code}}.',
+  custom_claims_script_error: 'Fehler im benutzerdefinierten Claims-Skript: {{error_description}}',
   key_required: 'Mindestens ein Schlüssel ist erforderlich.',
   key_not_found: 'Der Schlüssel mit der ID {{id}} wurde nicht gefunden.',
   invalid_session_payload: 'Ungültige Sitzungsnutzlast.',

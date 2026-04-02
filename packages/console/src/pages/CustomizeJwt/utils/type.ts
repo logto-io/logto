@@ -1,1 +1,4 @@
-export type Action = 'create' | 'edit';
+export enum Action {
+  Create = 'create',
+  Edit = 'edit',
+}

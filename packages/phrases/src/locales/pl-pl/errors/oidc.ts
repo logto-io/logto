@@ -17,6 +17,7 @@ const oidc = {
   provider_error: 'Wewnętrzny błąd OIDC: {{message}}.',
   server_error: 'Wystąpił nieznany błąd OIDC. Spróbuj ponownie później.',
   provider_error_fallback: 'Wystąpił błąd OIDC: {{code}}.',
+  custom_claims_script_error: 'Błąd skryptu niestandardowych claims: {{error_description}}',
   key_required: 'Wymagany jest co najmniej jeden klucz.',
   key_not_found: 'Nie znaleziono klucza o ID {{id}}.',
   invalid_session_payload: 'Nieprawidłowy ładunek sesji.',

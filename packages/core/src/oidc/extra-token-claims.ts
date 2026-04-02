@@ -11,6 +11,7 @@ import {
 } from '@logto/schemas';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
+import type { i18n } from 'i18next';
 import {
   type AccessToken,
   errors,
@@ -26,9 +27,30 @@ import { type LogEntry, type WithLogContext } from '#src/middleware/koa-audit-lo
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/custom-jwt/index.js';
+import { i18next } from '#src/utils/i18n.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
+
+const hasI18n = (ctx: KoaContextWithOIDC): ctx is KoaContextWithOIDC & { i18n: i18n } =>
+  'i18n' in ctx;
+
+const formatJwtCustomizerInvalidRequestDescription = (ctx: KoaContextWithOIDC, message: string) => {
+  const requestI18n = hasI18n(ctx) ? ctx.i18n : i18next;
+
+  return String(
+    requestI18n.t('errors:oidc.custom_claims_script_error', {
+      error_description: message,
+      interpolation: {
+        escapeValue: false,
+      },
+    })
+  );
+};
+
+const throwJwtCustomizerInvalidRequest = (ctx: KoaContextWithOIDC, message: string): never => {
+  throw new errors.InvalidRequest(formatJwtCustomizerInvalidRequestDescription(ctx, message));
+};
 
 /**
  * For organization API resource feature, add extra token claim `organization_id` to the
@@ -172,26 +194,27 @@ export const getExtraTokenClaimsForJwtCustomization = async (
   const isClientCredentialsToken = token instanceof ctx.oidc.provider.ClientCredentials;
 
   const customTokenClaimsLogEntries = new Set<LogEntry>();
+  /**
+   * It is by design to use `trySafe` here to catch the error but not log it since we do not
+   * want to insert an error log every time the OIDC provider issues a token when the JWT
+   * customizer is not configured.
+   */
+  const { script, environmentVariables, blockIssuanceOnError } =
+    (await trySafe(
+      logtoConfigs.getJwtCustomizer(
+        isClientCredentialsToken ? LogtoJwtTokenKey.ClientCredentials : LogtoJwtTokenKey.AccessToken
+      )
+    )) ?? {};
+
+  if (!script) {
+    return;
+  }
+
+  const shouldBlockIssuanceOnError =
+    EnvSet.values.isDevFeaturesEnabled && Boolean(blockIssuanceOnError);
+  const defaultJwtCustomizerErrorMessage = 'Failed to customize token claims';
 
   try {
-    /**
-     * It is by design to use `trySafe` here to catch the error but not log it since we do not
-     * want to insert an error log every time the OIDC provider issues a token when the JWT
-     * customizer is not configured.
-     */
-    const { script, environmentVariables } =
-      (await trySafe(
-        logtoConfigs.getJwtCustomizer(
-          isClientCredentialsToken
-            ? LogtoJwtTokenKey.ClientCredentials
-            : LogtoJwtTokenKey.AccessToken
-        )
-      )) ?? {};
-
-    if (!script) {
-      return;
-    }
-
     // Pick only the fields that will be included in the token payload based on the token type.
     const pickedFields = isClientCredentialsToken
       ? ctx.oidc.provider.ClientCredentials.IN_PAYLOAD
@@ -315,8 +338,27 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       if (errorResponse && isAccessDeniedError(errorResponse.error)) {
         throw new errors.AccessDenied(errorResponse.message);
       }
-    } else {
-      ctx.prependAllLogEntries({ customJwtError: String(error) });
+
+      if (shouldBlockIssuanceOnError) {
+        throwJwtCustomizerInvalidRequest(
+          ctx,
+          typeof errorResponse?.message === 'string'
+            ? errorResponse.message
+            : defaultJwtCustomizerErrorMessage
+        );
+      }
+
+      return;
+    }
+
+    const stringifiedError = String(error);
+    ctx.prependAllLogEntries({ customJwtError: stringifiedError });
+
+    if (shouldBlockIssuanceOnError) {
+      throwJwtCustomizerInvalidRequest(
+        ctx,
+        error instanceof Error && error.message ? error.message : defaultJwtCustomizerErrorMessage
+      );
     }
   }
 };

@@ -35,6 +35,7 @@ const jwt_claims = {
   restore: 'デフォルトに戻す',
   restored: '復元されました',
   data_source_tab: 'データソース',
+  error_handling_tab: 'エラーハンドリング',
   test_tab: 'コンテキストをテスト',
   jwt_claims_description: 'デフォルトクレームはJWTに自動的に含まれ、オーバーライドできません。',
   user_data: {
@@ -63,6 +64,18 @@ const jwt_claims = {
   api_context: {
     title: 'API コンテキスト：アクセス制御',
     subtitle: '`api.denyAccess` メソッドを使用してトークンリクエストを拒否します。',
+  },
+  error_handling: {
+    title: 'エラーハンドリング',
+    subtitle: 'スクリプトが失敗したときにトークン発行をブロックするかどうかを制御します。',
+    input_field_title: 'スクリプトエラー時のトークン発行動作',
+    block_issuance_switch: 'スクリプトがエラーになった場合はトークン発行をブロックする',
+    default_hint_create:
+      '新しいカスタムクレームスクリプトでは、スクリプトが失敗した場合にトークン発行をブロックする設定がデフォルトで有効になります。API がすでに値を返している場合は、保存済みの値が優先されます。',
+    default_hint_edit:
+      'この設定を持たない既存のカスタムクレームスクリプトでは、明示的に値を保存するまで、従来どおりデフォルトで無効のままになります。',
+    warning:
+      '有効にすると、スクリプト実行時エラーによりトークンリクエストは `invalid_request` (400) とローカライズされた `error_description` で拒否されます。`api.denyAccess` の呼び出しは引き続き `access_denied` を返します。',
   },
   fetch_external_data: {
     title: '外部データを取得',

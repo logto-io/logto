@@ -9,6 +9,7 @@ import Button from '@/ds-components/Button';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { getPagePath } from '@/pages/CustomizeJwt/utils/path';
+import { Action } from '@/pages/CustomizeJwt/utils/type';
 
 type Props = {
   readonly isDisabled: boolean;
@@ -16,7 +17,7 @@ type Props = {
 };
 
 function CreateButton({ isDisabled, tokenType }: Props) {
-  const link = getPagePath(tokenType, 'create');
+  const link = getPagePath(tokenType, Action.Create);
   const { navigate } = useTenantPathname();
   const { show } = useConfirmModal();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });

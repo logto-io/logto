@@ -32,6 +32,7 @@ const jwt_claims = {
   restore: '恢復預設值',
   restored: '已恢復',
   data_source_tab: '數據來源',
+  error_handling_tab: '錯誤處理',
   test_tab: '測試上下文',
   jwt_claims_description: '默認聲明會自動包含在 JWT 中，無法覆蓋。',
   user_data: {
@@ -57,6 +58,18 @@ const jwt_claims = {
   api_context: {
     title: 'API 上下文：訪問控制',
     subtitle: '使用 `api.denyAccess` 方法來拒絕權杖請求。',
+  },
+  error_handling: {
+    title: '錯誤處理',
+    subtitle: '控制當腳本執行失敗時是否阻止簽發權杖。',
+    input_field_title: '腳本報錯時的權杖簽發行為',
+    block_issuance_switch: '當腳本報錯時阻止簽發權杖',
+    default_hint_create:
+      '新建立的自訂 claims 腳本在腳本執行失敗時，預設會阻止簽發權杖。如果 API 已經返回此值，則會優先使用已儲存的值。',
+    default_hint_edit:
+      '未包含此設定的現有自訂 claims 腳本會保持原有行為，在你明確儲存某個值之前，此選項預設仍為關閉。',
+    warning:
+      '啟用後，腳本執行期錯誤會以 `invalid_request` (400) 和本地化的 `error_description` 拒絕權杖請求。呼叫 `api.denyAccess` 仍會返回 `access_denied`。',
   },
   fetch_external_data: {
     title: '提取外部數據',

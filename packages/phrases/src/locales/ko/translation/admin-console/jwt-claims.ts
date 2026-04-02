@@ -34,6 +34,7 @@ const jwt_claims = {
   restore: '기본값으로 복원',
   restored: '복원됨',
   data_source_tab: '데이터 소스',
+  error_handling_tab: '오류 처리',
   test_tab: '테스트 컨텍스트',
   jwt_claims_description: '기본 클레임은 JWT에 자동으로 추가되며 재정의할 수 없습니다.',
   user_data: {
@@ -62,6 +63,18 @@ const jwt_claims = {
   api_context: {
     title: 'API 컨텍스트: 접근 제어',
     subtitle: '`api.denyAccess` 메소드를 사용하여 토큰 요청을 거절하세요.',
+  },
+  error_handling: {
+    title: '오류 처리',
+    subtitle: '스크립트 실행에 실패했을 때 토큰 발급을 차단할지 제어해요.',
+    input_field_title: '스크립트 오류 시 토큰 발급 동작',
+    block_issuance_switch: '스크립트 오류가 발생하면 토큰 발급 차단',
+    default_hint_create:
+      '새 커스텀 클레임 스크립트는 스크립트가 실패하면 기본적으로 토큰 발급을 차단합니다. API가 이미 값을 제공하면 저장된 값을 대신 사용합니다.',
+    default_hint_edit:
+      '이 설정이 없는 기존 커스텀 클레임 스크립트는 값을 명시적으로 저장하기 전까지 기존 기본값인 꺼짐 상태를 유지합니다.',
+    warning:
+      '활성화하면 스크립트 런타임 오류로 인해 토큰 요청이 `invalid_request` (400) 및 현지화된 `error_description` 와 함께 거부돼요. `api.denyAccess` 호출은 계속 `access_denied` 를 반환해요.',
   },
   fetch_external_data: {
     title: '외부 데이터 가져오기',

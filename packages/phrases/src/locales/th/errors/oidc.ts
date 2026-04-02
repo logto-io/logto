@@ -16,6 +16,7 @@ const oidc = {
   provider_error: 'เกิดข้อผิดพลาดภายใน OIDC: {{message}}',
   server_error: 'เกิดข้อผิดพลาด OIDC ที่ไม่ทราบสาเหตุ กรุณาลองใหม่ภายหลัง',
   provider_error_fallback: 'เกิดข้อผิดพลาด OIDC: {{code}}',
+  custom_claims_script_error: 'ข้อผิดพลาดของสคริปต์ custom claims: {{error_description}}',
   key_required: 'ต้องมีคีย์อย่างน้อยหนึ่งอัน',
   key_not_found: 'ไม่พบคีย์ที่มีรหัส {{id}}',
   invalid_session_payload: 'ข้อมูลเซสชันไม่ถูกต้อง',

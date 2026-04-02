@@ -41,6 +41,7 @@ export const jwtCustomizerGuard = z.object({
   script: z.string(),
   environmentVariables: z.record(z.string()).optional(),
   contextSample: jsonObjectGuard.optional(),
+  blockIssuanceOnError: z.boolean().optional(),
 });
 
 export enum LogtoJwtTokenKeyType {

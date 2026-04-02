@@ -16,6 +16,7 @@ const oidc = {
   provider_error: 'خطأ داخلي في OIDC: {{message}}.',
   server_error: 'حدث خطأ OIDC غير معروف. يرجى المحاولة مرة أخرى لاحقًا.',
   provider_error_fallback: 'حدث خطأ OIDC: {{code}}.',
+  custom_claims_script_error: 'خطأ في نص claims المخصص: {{error_description}}',
   key_required: 'مطلوب مفتاح واحد على الأقل.',
   key_not_found: 'لم يتم العثور على المفتاح بالمعرف {{id}}.',
   invalid_session_payload: 'حمولة الجلسة غير صالحة.',

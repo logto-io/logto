@@ -6,9 +6,20 @@ import {
   clientCredentialsJwtCustomizerGuard,
 } from './jwt-customizer.js';
 
-const allFields = ['script', 'environmentVariables', 'contextSample', 'tokenSample'] as const;
+const allFields = [
+  'script',
+  'environmentVariables',
+  'contextSample',
+  'tokenSample',
+  'blockIssuanceOnError',
+] as const;
 const requiredFields = ['script'] as const;
-const optionalFields = ['environmentVariables', 'contextSample', 'tokenSample'] as const;
+const optionalFields = [
+  'environmentVariables',
+  'contextSample',
+  'tokenSample',
+  'blockIssuanceOnError',
+] as const;
 
 const testClientCredentialsTokenPayload = {
   script: '',
@@ -20,6 +31,7 @@ const testClientCredentialsTokenPayload = {
     },
   },
   tokenSample: {},
+  blockIssuanceOnError: false,
 };
 
 const testAccessTokenPayload = {
