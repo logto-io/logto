@@ -67,3 +67,8 @@
 .notice {
   margin: _.unit(2) 0;
 }
+
+.cssEditor {
+  max-height: calc(100vh - 260px);
+  min-height: 132px; // min-height to show three lines of code
+}

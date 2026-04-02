@@ -216,6 +216,10 @@ const sign_in_exp = {
       customize_note: 'Не хотите использовать базовый опыт? Вы можете полностью',
       customize_link: 'настроить ваши потоки с помощью Account API.',
     },
+    custom_css: {
+      title: 'Пользовательский CSS',
+      description: 'Настройте внешний вид центра учетных записей с помощью пользовательского CSS.',
+    },
   },
   sign_up_and_sign_in,
   content,

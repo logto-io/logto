@@ -214,8 +214,12 @@ const sign_in_exp = {
         account_center:
           'Gestisci il tuo profilo, le impostazioni di sicurezza e le sessioni nel centro account',
       },
-      customize_note: "Non vuoi l'esperienza predefinita? Puoi completamente",
+      customize_note: 'Non vuoi l’esperienza predefinita? Puoi completamente',
       customize_link: 'personalizzare i tuoi flussi con l’Account API invece.',
+    },
+    custom_css: {
+      title: 'CSS personalizzato',
+      description: 'Personalizza l’aspetto del centro account utilizzando CSS personalizzato.',
     },
   },
   sign_up_and_sign_in,

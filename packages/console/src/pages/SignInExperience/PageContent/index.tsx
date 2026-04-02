@@ -119,6 +119,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
             fields: accountCenter.enabled ? accountCenter.fields : {},
             webauthnRelatedOrigins,
             deleteAccountUrl,
+            customCss: accountCenter.customCss?.length ? accountCenter.customCss : null,
           },
         })
         .json<AccountCenterConfig>();

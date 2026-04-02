@@ -216,6 +216,10 @@ const sign_in_exp = {
       customize_note: 'Nie chcesz korzystać z gotowego rozwiązania? Możesz całkowicie',
       customize_link: 'dostosować swoje przepływy za pomocą Account API.',
     },
+    custom_css: {
+      title: 'Niestandardowy CSS',
+      description: 'Dostosuj wygląd centrum konta za pomocą niestandardowego CSS.',
+    },
   },
   sign_up_and_sign_in,
   content,
