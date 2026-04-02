@@ -30,6 +30,8 @@ const useOssOnboardingData = (): {
 
   const update = useCallback(
     async (data: Partial<OssUserOnboardingData>) => {
+      // TODO: sync OSS onboarding submissions to a dedicated server-side endpoint for
+      // analysis and future marketing email outreach instead of relying only on user custom data.
       await updateCustomData({
         [ossUserOnboardingDataKey]: {
           ...ossOnboardingData,
