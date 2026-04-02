@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { setTimeout } from 'node:timers/promises';
 
 import { appInsights } from '@logto/app-insights/node';
 import { type Optional, conditional, yes, trySafe } from '@silverhand/essentials';
@@ -29,15 +30,20 @@ abstract class RedisCacheBase implements CacheStore {
       return undefined;
     }
 
-    const timeoutPromise = new Promise<undefined>((resolve) => {
-      setTimeout(() => {
-        // eslint-disable-next-line unicorn/no-useless-undefined
-        resolve(undefined);
-      }, redisCacheReadTimeout);
+    const timeoutAbortController = new AbortController();
+    const timeoutPromise = setTimeout(redisCacheReadTimeout, undefined, {
+      // Cache is best-effort; timeout timers should not keep the process alive.
+      ref: false,
+      signal: timeoutAbortController.signal,
     });
 
-    // Fail fast on cache read and gracefully fall back to cache miss behavior.
-    return conditional(await Promise.race([getPromise, timeoutPromise]));
+    try {
+      // Fail fast on cache read and gracefully fall back to cache miss behavior.
+      return conditional(await Promise.race([getPromise, timeoutPromise]));
+    } finally {
+      // Cancel pending timeout when Redis resolves first, preventing timer accumulation.
+      timeoutAbortController.abort();
+    }
   }
 
   async delete(key: string) {

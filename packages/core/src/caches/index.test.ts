@@ -108,7 +108,8 @@ describe('RedisCache', () => {
       mockFunction.mockImplementationOnce(
         async () =>
           new Promise<string>((resolve) => {
-            setTimeout(() => resolve('never'), 60_000);
+            // Intentionally never resolve to simulate a stuck Redis read without extra timers.
+            void resolve;
           })
       );
       const cache = new RedisCache('redis://url');
@@ -117,7 +118,9 @@ describe('RedisCache', () => {
       const beforeTimeout = Promise.race([
         pendingRead,
         new Promise<symbol>((resolve) => {
-          setTimeout(() => resolve(marker), 4999);
+          setTimeout(() => {
+            resolve(marker);
+          }, 4999);
         }),
       ]);
 
