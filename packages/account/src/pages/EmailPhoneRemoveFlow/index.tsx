@@ -1,20 +1,26 @@
+import { AccountCenterControlValue } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { deletePrimaryEmail, deletePrimaryPhone } from '@ac/apis/account';
+import ErrorPage from '@ac/components/ErrorPage';
+import GlobalLoading from '@ac/components/GlobalLoading';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { emailSuccessRoute, phoneSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import { getPendingReturn, clearPendingReturn } from '@ac/utils/account-center-route';
 
 type Props = {
   readonly type: 'email' | 'phone';
 };
 
 const EmailPhoneRemoveFlow = ({ type }: Props) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { setToast, refreshUserInfo, verificationId, setVerificationId } = useContext(PageContext);
+  const { accountCenterSettings, setToast, refreshUserInfo, verificationId, setVerificationId } =
+    useContext(PageContext);
 
   const deletePrimaryEmailRequest = useApi(deletePrimaryEmail);
   const deletePrimaryPhoneRequest = useApi(deletePrimaryPhone);
@@ -24,8 +30,20 @@ const EmailPhoneRemoveFlow = ({ type }: Props) => {
   const resetVerification = useCallback(() => {
     setStartedFlowKey(undefined);
     setVerificationId(undefined);
-    setToast('account_center.verification.verification_required');
-  }, [setToast, setVerificationId]);
+    setToast(t('account_center.verification.verification_required'));
+  }, [setToast, setVerificationId, t]);
+
+  const navigateBack = useCallback(() => {
+    const pendingReturn = getPendingReturn();
+
+    if (pendingReturn) {
+      clearPendingReturn();
+      window.location.assign(pendingReturn);
+      return;
+    }
+
+    navigate('/', { replace: true });
+  }, [navigate]);
 
   const handleErrorWithReset = useCallback(
     async (error: unknown) => {
@@ -33,18 +51,24 @@ const EmailPhoneRemoveFlow = ({ type }: Props) => {
         'verification_record.permission_denied': resetVerification,
         global: async (requestError) => {
           setToast(requestError.message);
-          navigate('/', { replace: true });
+          navigateBack();
         },
       });
     },
-    [handleError, navigate, resetVerification, setToast]
+    [handleError, navigateBack, resetVerification, setToast]
   );
 
   const handleRemoveSuccess = useCallback(async () => {
     await refreshUserInfo();
-    const successRoute = type === 'email' ? emailSuccessRoute : phoneSuccessRoute;
-    navigate(successRoute, { replace: true });
-  }, [navigate, refreshUserInfo, type]);
+    setToast(
+      t('account_center.social.removed', {
+        connector: t(
+          type === 'email' ? 'account_center.security.email' : 'account_center.security.phone'
+        ),
+      })
+    );
+    navigateBack();
+  }, [navigateBack, refreshUserInfo, setToast, t, type]);
 
   useEffect(() => {
     if (!verificationId) {
@@ -86,11 +110,20 @@ const EmailPhoneRemoveFlow = ({ type }: Props) => {
     handleRemoveSuccess,
   ]);
 
+  if (
+    !accountCenterSettings?.enabled ||
+    accountCenterSettings.fields[type] !== AccountCenterControlValue.Edit
+  ) {
+    return (
+      <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
+    );
+  }
+
   if (!verificationId) {
     return <VerificationMethodList />;
   }
 
-  return null;
+  return <GlobalLoading />;
 };
 
 export default EmailPhoneRemoveFlow;

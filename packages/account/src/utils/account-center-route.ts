@@ -1,8 +1,10 @@
 import { yes } from '@silverhand/essentials';
 
 import {
+  emailRemoveRoute,
   emailRoute,
   emailSuccessRoute,
+  phoneRemoveRoute,
   phoneRoute,
   phoneSuccessRoute,
   passwordRoute,
@@ -31,8 +33,10 @@ const identifierParameter = 'identifier';
 
 const knownRoutePrefixes: readonly string[] = [
   emailRoute,
+  emailRemoveRoute,
   emailSuccessRoute,
   phoneRoute,
+  phoneRemoveRoute,
   phoneSuccessRoute,
   passwordRoute,
   passwordSuccessRoute,

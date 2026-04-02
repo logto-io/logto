@@ -170,12 +170,14 @@ const Main = () => {
       />
       <Route path={passkeySuccessRoute} element={<UpdateSuccess identifierType="passkey" />} />
       {isDevFeaturesEnabled && (
-        <Route path={socialSuccessRoute} element={<UpdateSuccess identifierType="social" />} />
+        <>
+          <Route path={socialSuccessRoute} element={<UpdateSuccess identifierType="social" />} />
+          <Route path={emailRemoveRoute} element={<EmailPhoneRemoveFlow type="email" />} />
+          <Route path={phoneRemoveRoute} element={<EmailPhoneRemoveFlow type="phone" />} />
+        </>
       )}
       <Route path={emailRoute} element={<Email />} />
-      <Route path={emailRemoveRoute} element={<EmailPhoneRemoveFlow type="email" />} />
       <Route path={phoneRoute} element={<Phone />} />
-      <Route path={phoneRemoveRoute} element={<EmailPhoneRemoveFlow type="phone" />} />
       <Route path={passwordRoute} element={<Password />} />
       <Route path={usernameRoute} element={<Username />} />
       <Route path={authenticatorAppRoute} element={<TotpBinding />} />

@@ -25,7 +25,7 @@ const EmailPhoneSection = () => {
   const showEmail = emailControl && emailControl !== AccountCenterControlValue.Off;
   const showPhone = phoneControl && phoneControl !== AccountCenterControlValue.Off;
 
-  const currentPageUrl = `${window.location.origin}${window.location.pathname}`;
+  const currentPageUrl = window.location.href;
 
   if (!showEmail && !showPhone) {
     return null;

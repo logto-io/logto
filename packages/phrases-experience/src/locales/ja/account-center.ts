@@ -46,7 +46,7 @@ const account_center = {
     success: 'メインのメールアドレスをリンクしました。',
     verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
     remove_confirmation_description:
-      'Removing your primary email will not disable sign-in. Make sure you have another sign-in method (like password or social account) configured.',
+      'メインのメールアドレスを削除してもサインインは無効になりません。パスワードやソーシャルアカウントなど、別のサインイン方法が設定されていることを確認してください。',
   },
   phone: {
     title: '電話番号をリンク',
@@ -56,7 +56,7 @@ const account_center = {
     success: 'メインの電話番号をリンクしました。',
     verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
     remove_confirmation_description:
-      'Removing your primary phone number will not disable sign-in. Make sure you have another sign-in method (like password or social account) configured.',
+      'メインの電話番号を削除してもサインインは無効になりません。パスワードやソーシャルアカウントなど、別のサインイン方法が設定されていることを確認してください。',
   },
   username: {
     title: 'ユーザー名を設定',
