@@ -179,12 +179,18 @@ const sign_in_exp = {
       '맞춤 로직으로 계정 삭제를 처리할 자체 엔드포인트 URL을 제공하세요.',
     prebuilt_ui: {
       title: '기본 제공 UI 통합',
-      description: '기본 제공 UI 를 사용하여 즉시 검증 및 보안 설정 흐름을 빠르게 통합하세요.',
+      description:
+        '기본 제공 UI를 사용하여 즉시 제공되는 계정 센터, 보안 검증 또는 단일 프로필 업데이트 흐름을 빠르게 통합하세요. 도메인과 경로를 결합하여 계정 센터 URL을 형성하기만 하면 됩니다(예: https://auth.foo.com/account/email).',
       permission_notice:
         '이 사전 구축된 흐름을 통합하려면 아래 설정에서 관련 계정 API 권한을 <strong>편집</strong>으로 설정하세요.',
+      account_center_title: '즉시 제공되는 계정 센터 통합',
+      account_center_description: '모든 기능을 갖춘 완전한 계정 관리 포털로 사용자를 라우팅합니다.',
       flows_title: '기본 제공 보안 설정 흐름 통합',
+      single_task_flows_title: '즉시 제공되는 단일 작업 흐름 통합',
       flows_description:
         '도메인과 경로를 결합하여 계정 설정 URL 을 형성하세요 (예: https://auth.foo.com/account/email). 선택적으로 `redirect=`를 추가하여 성공적인 업데이트 후 사용자를 앱으로 되돌리거나, `show_success=true`로 성공 페이지를 표시하거나, `ui_locales=`로 기본 언어를 재정의하거나, `identifier=`로 식별자 입력 필드를 미리 채울 수 있습니다.',
+      single_task_flows_description:
+        '사용자를 특정 흐름(예: 이메일 연결)으로 바로 라우팅합니다. 선택적으로 성공적인 업데이트 후 사용자를 앱으로 되돌리기 위해 `redirect=`를, 성공 페이지를 계속 표시하기 위해 `show_success=true`를, 기본 언어를 재정의하기 위해 `ui_locales=`를, 또는 식별자 입력 필드를 미리 채우기 위해 `identifier=`를 추가할 수 있습니다.',
       tooltips: {
         email: '주 이메일 주소 업데이트',
         phone: '주 전화번호 업데이트',
@@ -198,6 +204,7 @@ const sign_in_exp = {
         passkey_manage: '기존 패스키 관리 또는 새 패스키 추가',
         backup_codes_generate: '새로운 10 개의 백업 코드 세트 생성',
         backup_codes_manage: '사용 가능한 백업 코드 보기 또는 새로 생성',
+        account_center: '모든 보안 설정을 갖춘 완전한 계정 관리 포털에 액세스',
       },
       customize_note: '기본 제공 경험이 원치 않으시나요? 대신 계정 API 를 사용하여',
       customize_link: '흐름을 완전히 사용자화할 수 있습니다.',

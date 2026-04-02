@@ -185,12 +185,18 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: 'INTEGRAZIONE UI PREDEFINITA',
       description:
-        'Integra rapidamente i flussi di verifica e impostazione di sicurezza predefiniti con una UI integrata.',
+        "Integra rapidamente flussi predefiniti per il centro account, la verifica di sicurezza o l'aggiornamento del profilo singolo.",
       permission_notice:
         "Per integrare questi flussi predefiniti, imposta i permessi dell'API account correlati su <strong>Modifica</strong> nelle impostazioni sottostanti.",
+      account_center_title: 'Integra il centro account predefinito',
+      account_center_description:
+        'Combina il tuo dominio con il percorso per formare il tuo URL del centro account (ad es., https://auth.foo.com/account). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo il logout, o `ui_locales=` per sovrascrivere la lingua predefinita.',
       flows_title: 'Integra i flussi di impostazione di sicurezza predefiniti',
+      single_task_flows_title: 'Integra i flussi di aggiornamento profilo singolo predefiniti',
       flows_description:
         "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, `show_success=true` per mantenere visibile la pagina di successo, `ui_locales=` per sovrascrivere la lingua predefinita, o `identifier=` per precompilare il campo di input dell'identificatore.",
+      single_task_flows_description:
+        'Combina il tuo dominio con il percorso per formare il tuo URL di aggiornamento del profilo (ad es., https://auth.foo.com/account/profile). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, o `ui_locales=` per sovrascrivere la lingua predefinita.',
       tooltips: {
         email: 'Aggiorna il tuo indirizzo email principale',
         phone: 'Aggiorna il tuo numero di telefono principale',
@@ -205,6 +211,8 @@ const sign_in_exp = {
         passkey_manage: 'Gestisci le passkey esistenti o aggiungi nuove passkey',
         backup_codes_generate: 'Genera un nuovo set di 10 codici di backup',
         backup_codes_manage: 'Visualizza i codici di backup disponibili o genera nuovi codici',
+        account_center:
+          'Gestisci il tuo profilo, le impostazioni di sicurezza e le sessioni nel centro account',
       },
       customize_note: "Non vuoi l'esperienza predefinita? Puoi completamente",
       customize_link: 'personalizzare i tuoi flussi con l’Account API invece.',

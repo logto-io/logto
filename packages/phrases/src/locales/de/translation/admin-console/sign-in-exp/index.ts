@@ -184,12 +184,18 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: 'INTEGRATE PREBUILT UI',
       description:
-        'Schnell vorgefertigte Verifizierungs- und Sicherheitseinstellungen mit vorgefertigter Benutzeroberfläche integrieren.',
+        'Integrieren Sie schnell vorgefertigte Kontocenter, Sicherheitsverifizierungen oder einzelne Profilaktualisierungsabläufe mit vorgefertigter Benutzeroberfläche. Kombinieren Sie einfach Ihre Domain mit der Route, um Ihre Kontocenter-URL zu bilden (z. B. https://auth.foo.com/account/email).',
       permission_notice:
         'Um diese vorgefertigten Flows zu integrieren, setzen Sie die entsprechenden Account-API-Berechtigungen in den Einstellungen unten auf <strong>Bearbeiten</strong>.',
+      account_center_title: 'Vorgefertigtes Kontocenter integrieren',
+      account_center_description:
+        'Leiten Sie Benutzer zum vollständigen Kontoverwaltungsportal mit allen Funktionen.',
       flows_title: 'Vorgefertigte Sicherheits-Einstellungen integrieren',
+      single_task_flows_title: 'Vorgefertigten Einzelaufgaben-Ablauf integrieren',
       flows_description:
         'Kombinieren Sie Ihre Domain mit der Route, um Ihre Konto-Einstellungs-URL zu bilden (z. B. https://auth.foo.com/account/email). Optional können Sie `redirect=` hinzufügen, um Benutzer nach erfolgreicher Aktualisierung zurück zu Ihrer App zu leiten, `show_success=true`, um die Erfolgsseite sichtbar zu halten, `ui_locales=`, um die Standardsprache zu überschreiben, oder `identifier=`, um das Eingabefeld für den Bezeichner vorab auszufüllen.',
+      single_task_flows_description:
+        'Leiten Sie Benutzer direkt in einen bestimmten Ablauf (z. B. E-Mail-Verknüpfung). Optional können Sie `redirect=` hinzufügen, um Benutzer nach erfolgreicher Aktualisierung zurück zu Ihrer App zu leiten, `show_success=true`, um die Erfolgsseite sichtbar zu halten, `ui_locales=`, um die Standardsprache zu überschreiben, oder `identifier=`, um das Eingabefeld für den Bezeichner vorab auszufüllen.',
       tooltips: {
         email: 'Aktualisieren Sie Ihre primäre E-Mail-Adresse',
         phone: 'Aktualisieren Sie Ihre primäre Telefonnummer',
@@ -206,6 +212,8 @@ const sign_in_exp = {
         backup_codes_generate: 'Erstellen Sie ein neues Set von 10 Backup-Codes',
         backup_codes_manage:
           'Sehen Sie sich Ihre verfügbaren Backup-Codes an oder erstellen Sie neue',
+        account_center:
+          'Greifen Sie auf das vollständige Kontoverwaltungsportal mit allen Sicherheitseinstellungen zu',
       },
       customize_note:
         'Möchten Sie nicht das vorgefertigte Erlebnis? Sie können mit der Account-API stattdessen vollständig',

@@ -187,12 +187,18 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: "INTÉGRER L'INTERFACE UTILISATEUR PRÉCONSTRUITE",
       description:
-        "Intégrez rapidement des flux de vérification et de paramètres de sécurité prêts à l'emploi avec une interface utilisateur préconstruite.",
+        "Intégrez rapidement un centre de compte, une vérification de sécurité ou un flux de mise à jour de profil unique prêts à l'emploi avec une interface utilisateur préconstruite. Combinez simplement votre domaine avec le chemin pour former l'URL de votre centre de compte (par exemple, https://auth.foo.com/account/email).",
       permission_notice:
         "Pour intégrer ces flux préconstruits, définissez les autorisations de l'API de compte associées sur <strong>Modifier</strong> dans les paramètres ci-dessous.",
+      account_center_title: "Intégrer le centre de compte prêt à l'emploi",
+      account_center_description:
+        'Dirigez les utilisateurs vers le portail de gestion de compte complet avec toutes les fonctionnalités.',
       flows_title: "Intégrer des flux de paramètres de sécurité prêts à l'emploi",
+      single_task_flows_title: "Intégrer un flux de tâche unique prêt à l'emploi",
       flows_description:
         'Combinez votre domaine avec le chemin pour former votre URL de paramètres de compte (par exemple, https://auth.foo.com/account/email). Ajoutez éventuellement `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie, `show_success=true` pour garder la page de succès visible, `ui_locales=` pour remplacer la langue par défaut, ou `identifier=` pour pré-remplir le champ de saisie de l’identifiant.',
+      single_task_flows_description:
+        "Dirigez les utilisateurs directement vers un flux spécifique (par exemple, la liaison d'email). Vous pouvez éventuellement ajouter `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie, `show_success=true` pour garder la page de succès visible, `ui_locales=` pour remplacer la langue par défaut, ou `identifier=` pour pré-remplir le champ de saisie de l'identifiant.",
       tooltips: {
         email: 'Mettre à jour votre adresse e-mail principale',
         phone: 'Mettre à jour votre numéro de téléphone principal',
@@ -207,6 +213,8 @@ const sign_in_exp = {
         passkey_manage: 'Gérer vos clés de passe existantes ou en ajouter de nouvelles',
         backup_codes_generate: 'Générer un nouvel ensemble de 10 codes de sauvegarde',
         backup_codes_manage: 'Voir vos codes de sauvegarde disponibles ou en générer de nouveaux',
+        account_center:
+          'Accédez au portail de gestion de compte complet avec tous les paramètres de sécurité',
       },
       customize_note:
         "Vous ne voulez pas d'une expérience prête à l'emploi ? Vous pouvez pleinement",

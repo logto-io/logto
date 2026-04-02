@@ -184,12 +184,18 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: 'INTEGRUJ WSTĘPNIE ZBUDOWANY INTERFEJS',
       description:
-        'Szybko zintegruj gotowe przepływy weryfikacji i ustawień bezpieczeństwa z interfejsem wstępnie zbudowanym.',
+        'Szybko zintegruj gotowe centrum konta, weryfikację bezpieczeństwa lub pojedynczy przepływ aktualizacji profilu z interfejsem wstępnie zbudowanym. Po prostu połącz swoją domenę ze ścieżką, aby utworzyć URL centrum konta (np. https://auth.foo.com/account/email).',
       permission_notice:
         'Aby zintegrować te gotowe przepływy, ustaw powiązane uprawnienia Account API na <strong>Edytuj</strong> w ustawieniach poniżej.',
+      account_center_title: 'Zintegruj gotowe centrum konta',
+      account_center_description:
+        'Kieruj użytkowników do kompletnego portalu zarządzania kontem ze wszystkimi funkcjami.',
       flows_title: 'Integruj gotowe przepływy ustawień bezpieczeństwa',
+      single_task_flows_title: 'Zintegruj gotowy przepływ pojedynczego zadania',
       flows_description:
         'Połącz swoją domenę ze ścieżką, aby utworzyć URL ustawień konta (np. https://auth.foo.com/account/email). Opcjonalnie dodaj `redirect=`, aby użytkownicy mogli wrócić do Twojej aplikacji po pomyślnej aktualizacji, `show_success=true`, aby strona sukcesu była widoczna, `ui_locales=`, aby nadpisać domyślny język, lub `identifier=`, aby wstępnie wypełnić pole identyfikatora.',
+      single_task_flows_description:
+        'Kieruj użytkowników bezpośrednio do określonego przepływu (np. łączenie emaila). Opcjonalnie dodaj `redirect=`, aby użytkownicy mogli wrócić do Twojej aplikacji po pomyślnej aktualizacji, `show_success=true`, aby strona sukcesu była widoczna, `ui_locales=`, aby nadpisać domyślny język, lub `identifier=`, aby wstępnie wypełnić pole identyfikatora.',
       tooltips: {
         email: 'Zaktualizuj swój główny adres e-mail',
         phone: 'Zaktualizuj swój główny numer telefonu',
@@ -204,6 +210,8 @@ const sign_in_exp = {
         passkey_manage: 'Zarządzaj istniejącymi kluczami dostępu lub dodaj nowe',
         backup_codes_generate: 'Wygeneruj nowy zestaw 10 kodów zapasowych',
         backup_codes_manage: 'Zobacz dostępne kody zapasowe lub wygeneruj nowe',
+        account_center:
+          'Uzyskaj dostęp do kompletnego portalu zarządzania kontem ze wszystkimi ustawieniami bezpieczeństwa',
       },
       customize_note: 'Nie chcesz korzystać z gotowego rozwiązania? Możesz całkowicie',
       customize_link: 'dostosować swoje przepływy za pomocą Account API.',

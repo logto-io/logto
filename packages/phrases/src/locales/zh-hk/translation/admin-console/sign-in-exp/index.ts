@@ -176,12 +176,18 @@ const sign_in_exp = {
     delete_account_url_description: '提供你自己的端點 URL，以使用自訂邏輯處理帳號刪除。',
     prebuilt_ui: {
       title: '整合預建 UI',
-      description: '快速整合開箱即用的驗證和安全設置流程。',
+      description: '快速整合帳戶中心、安全驗證或單一資料更新流程等開箱即用的流程。',
       permission_notice:
         '要整合這些預建流程，請在下方設定中將相關的帳戶 API 權限設為<strong>編輯</strong>。',
+      account_center_title: '整合開箱即用的帳戶中心',
+      account_center_description:
+        '結合你的域名與路徑形成你的帳戶中心 URL（例如，https://auth.foo.com/account）。可以選擇性地添加 `redirect=` 在用戶登出後返回至你的應用程式，或添加 `ui_locales=` 以覆蓋預設語言。',
       flows_title: '整合開箱即用的安全設置流程',
+      single_task_flows_title: '整合開箱即用的單一資料更新流程',
       flows_description:
         '結合你的域名與路徑形成你的帳戶設置 URL（例如，https://auth.foo.com/account/email）。可以選擇性地添加 `redirect=` 在成功更新後返回用戶至你的應用程式，添加 `show_success=true` 以保持成功頁面可見，添加 `ui_locales=` 以覆蓋預設語言，或添加 `identifier=` 以預填識別碼輸入欄位。',
+      single_task_flows_description:
+        '結合你的域名與路徑形成你的個人資料更新 URL（例如，https://auth.foo.com/account/profile）。可以選擇性地添加 `redirect=` 在成功更新後返回用戶至你的應用程式，或添加 `ui_locales=` 以覆蓋預設語言。',
       tooltips: {
         email: '更新你的主電郵地址',
         phone: '更新你的主電話號碼',
@@ -195,6 +201,7 @@ const sign_in_exp = {
         passkey_manage: '管理你現有的通行密鑰或添加新的',
         backup_codes_generate: '生成一組新的 10 個備份代碼',
         backup_codes_manage: '查看可用的備份代碼或生成新的',
+        account_center: '在帳戶中心管理你的個人資料、安全設置和會話',
       },
       customize_note: '不想要開箱即用的體驗？你可以完全',
       customize_link: '使用 Account API 自定義你的流程。',

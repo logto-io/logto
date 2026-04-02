@@ -184,12 +184,18 @@ const sign_in_exp = {
     prebuilt_ui: {
       title: 'ÖN TANIMLI ARAYÜZÜ ENTEGRE ET',
       description:
-        'Hazır doğrulama ve güvenlik ayarı akışlarını ön tanımlı arayüzle hızlıca entegre edin.',
+        'Hazır hesap merkezi, güvenlik doğrulaması veya tek bir profil güncelleme akışını ön tanımlı arayüzle hızlıca entegre edin. Hesap merkezi URL’nizi oluşturmak için alan adınızı rota ile birleştirmeniz yeterlidir (örneğin, https://auth.foo.com/account/email).',
       permission_notice:
         'Bu önceden oluşturulmuş akışları entegre etmek için aşağıdaki ayarlarda ilgili Hesap API izinlerini <strong>Düzenle</strong> olarak ayarlayın.',
+      account_center_title: 'Hazır hesap merkezini entegre et',
+      account_center_description:
+        'Kullanıcıları tüm özelliklere sahip eksiksiz hesap yönetimi portalına yönlendirin.',
       flows_title: 'Hazır güvenlik ayarı akışlarını entegre et',
+      single_task_flows_title: 'Hazır tek görev akışını entegre et',
       flows_description:
         "Hesap ayar URL'nizi oluşturmak için alan adınızı rota ile birleştirin (örneğin, https://auth.foo.com/account/email). İsteğe bağlı olarak `redirect=` ile başarılı bir güncellemeden sonra kullanıcıları uygulamanıza geri döndürebilir, `show_success=true` ile başarı sayfasını görünür tutabilir, `ui_locales=` ile varsayılan dili geçersiz kılabilir veya `identifier=` ile tanımlayıcı giriş alanını önceden doldurabilirsiniz.",
+      single_task_flows_description:
+        'Kullanıcıları doğrudan belirli bir akışa yönlendirin (örneğin, e-posta bağlama). İsteğe bağlı olarak `redirect=` ile başarılı bir güncellemeden sonra kullanıcıları uygulamanıza geri döndürebilir, `show_success=true` ile başarı sayfasını görünür tutabilir, `ui_locales=` ile varsayılan dili geçersiz kılabilir veya `identifier=` ile tanımlayıcı giriş alanını önceden doldurabilirsiniz.',
       tooltips: {
         email: 'Birincil e-posta adresinizi güncelleyin',
         phone: 'Birincil telefon numaranızı güncelleyin',
@@ -204,6 +210,7 @@ const sign_in_exp = {
         passkey_manage: "Mevcut passkey'lerinizi yönetin veya yenilerini ekleyin",
         backup_codes_generate: 'Yeni bir 10 yedek kod seti oluşturun',
         backup_codes_manage: 'Mevcut yedek kodlarınızı görüntüleyin veya yenilerini oluşturun',
+        account_center: 'Tüm güvenlik ayarlarıyla eksiksiz hesap yönetimi portalına erişin',
       },
       customize_note: 'Hazır deneyimi istemiyor musunuz? Bunun yerine, Akın API ile',
       customize_link: 'akışlarınızı tamamen özelleştirebilirsiniz.',
