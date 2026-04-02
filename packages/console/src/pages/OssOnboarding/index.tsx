@@ -44,6 +44,7 @@ function OssOnboarding() {
     watch,
   } = useForm<OssOnboardingFormData>({
     defaultValues: getOssOnboardingDefaultValues(),
+    shouldUnregister: true,
   });
   const project = watch('project');
   const isCompanyProject = shouldRequireCompanyFields(project);

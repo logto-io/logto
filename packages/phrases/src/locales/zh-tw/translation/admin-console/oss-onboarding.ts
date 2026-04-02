@@ -18,7 +18,7 @@ const oss_onboarding = {
     placeholder: 'Acme.co',
   },
   company_size: {
-    label: '你的公司規模是？',
+    label: '你的公司規模有多大？',
   },
   errors: {
     email_required: '電子郵件地址為必填項',

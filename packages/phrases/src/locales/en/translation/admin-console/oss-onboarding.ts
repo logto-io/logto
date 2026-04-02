@@ -19,7 +19,7 @@ const oss_onboarding = {
     placeholder: 'Acme.co',
   },
   company_size: {
-    label: 'How’s your company size?',
+    label: 'What’s your company size?',
   },
   errors: {
     email_required: 'Email address is required',
