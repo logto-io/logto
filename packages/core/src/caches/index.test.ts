@@ -99,4 +99,35 @@ describe('RedisCache', () => {
       stub.restore();
     }
   });
+
+  it('should fail fast when cache read hangs for more than 5 seconds', async () => {
+    jest.clearAllMocks();
+    jest.useFakeTimers();
+
+    try {
+      mockFunction.mockImplementationOnce(
+        async () =>
+          new Promise<string>((resolve) => {
+            setTimeout(() => resolve('never'), 60_000);
+          })
+      );
+      const cache = new RedisCache('redis://url');
+      const pendingRead = cache.get('foo');
+      const marker = Symbol('marker');
+      const beforeTimeout = Promise.race([
+        pendingRead,
+        new Promise<symbol>((resolve) => {
+          setTimeout(() => resolve(marker), 4999);
+        }),
+      ]);
+
+      jest.advanceTimersByTime(4999);
+      await expect(beforeTimeout).resolves.toBe(marker);
+
+      jest.advanceTimersByTime(1);
+      await expect(pendingRead).resolves.toBeUndefined();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
 });
