@@ -90,6 +90,15 @@ const account_center = {
     backup_codes_count_other: '{{count}} codes restants',
     view: 'Voir',
     manage: 'Gérer',
+    turn_on_2_step_verification: 'Activer la vérification en deux étapes',
+    turn_on_2_step_verification_description:
+      'Ajoutez une couche de sécurité supplémentaire. Vous serez invité à effectuer une deuxième étape de vérification lors de la connexion.',
+    turn_off_2_step_verification: 'Désactiver la vérification en deux étapes',
+    turn_off_2_step_verification_description:
+      'La désactivation de la vérification en deux étapes supprimera la couche de protection supplémentaire de votre compte lors de la connexion. Êtes-vous sûr de vouloir continuer ?',
+    disable_2_step_verification: 'Désactiver la vérification en deux étapes',
+    no_verification_method_warning:
+      "Vous n'avez pas ajouté de deuxième méthode de vérification. Ajoutez-en au moins une pour activer la vérification en deux étapes lors de la connexion.",
     account_removal: 'Suppression du compte',
     delete_your_account: 'Supprimez votre compte',
     delete_account: 'Supprimer le compte',

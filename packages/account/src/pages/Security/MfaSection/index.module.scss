@@ -109,3 +109,37 @@
     text-decoration: underline;
   }
 }
+
+.notification {
+  margin: 0;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  padding: _.unit(5) _.unit(6);
+}
+
+.toggleInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+  min-width: 0;
+}
+
+.toggleTitle {
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
+.toggleDescription {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+.divider {
+  height: 1px;
+  background: var(--color-line-divider);
+}

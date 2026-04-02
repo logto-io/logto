@@ -88,6 +88,15 @@ const account_center = {
     backup_codes_count_other: '{{count}} códigos restantes',
     view: 'Ver',
     manage: 'Gerir',
+    turn_on_2_step_verification: 'Ativar verificação em duas etapas',
+    turn_on_2_step_verification_description:
+      'Adicione uma camada extra de segurança. Será solicitada uma segunda etapa de verificação ao iniciar sessão.',
+    turn_off_2_step_verification: 'Desativar verificação em duas etapas',
+    turn_off_2_step_verification_description:
+      'Desativar a verificação em duas etapas irá remover a camada extra de proteção da sua conta ao iniciar sessão. Tem a certeza de que pretende continuar?',
+    disable_2_step_verification: 'Desativar verificação em duas etapas',
+    no_verification_method_warning:
+      'Não adicionou um segundo método de verificação. Adicione pelo menos um para ativar a verificação em duas etapas ao iniciar sessão.',
     account_removal: 'Eliminação da conta',
     delete_your_account: 'Elimine a sua conta',
     delete_account: 'Eliminar conta',

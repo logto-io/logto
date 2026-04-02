@@ -12,6 +12,7 @@ const storageKeys = Object.freeze({
   verificationRecord: `${storagePrefix}verification-record`,
   socialFlow: `${storagePrefix}social-verification`,
   pendingReturn: `${storagePrefix}pending-return`,
+  mfaToggleAction: `${storagePrefix}mfa-toggle-action`,
 });
 
 export type StoredVerificationRecord = {
@@ -228,6 +229,18 @@ export const accountStorage = Object.freeze({
       removeItem(`${storageKeys.socialFlow}:${connectorId}`, 'session');
     },
   },
+  mfaToggleAction: {
+    get: (): 'enable' | 'disable' | undefined => {
+      const value = getString(storageKeys.mfaToggleAction, 'session');
+      return value === 'enable' || value === 'disable' ? value : undefined;
+    },
+    set: (value: 'enable' | 'disable') => {
+      setString(storageKeys.mfaToggleAction, value, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.mfaToggleAction, 'session');
+    },
+  },
 });
 
 export const sessionStorage = Object.freeze({
@@ -243,6 +256,9 @@ export const sessionStorage = Object.freeze({
   getUiLocales: accountStorage.uiLocales.get,
   setUiLocales: accountStorage.uiLocales.set,
   clearUiLocales: accountStorage.uiLocales.clear,
+  getMfaToggleAction: accountStorage.mfaToggleAction.get,
+  setMfaToggleAction: accountStorage.mfaToggleAction.set,
+  clearMfaToggleAction: accountStorage.mfaToggleAction.clear,
   getIdentifier: () => getString(storageKeys.identifier, 'session'),
   setIdentifier: (value: string) => {
     setString(storageKeys.identifier, value, 'session');

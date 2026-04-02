@@ -1,64 +1,64 @@
+import { InlineNotification } from '@experience/components/Notification';
 import {
   AccountCenterControlValue,
-  MfaFactor,
+  MfaPolicy,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
-import { formatToInternationalPhoneNumber } from '@logto/shared/universal';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import EmailIcon from '@ac/assets/icons/email.svg?react';
-import BackupCodeIcon from '@ac/assets/icons/factor-backup-code.svg?react';
-import TotpIcon from '@ac/assets/icons/factor-totp.svg?react';
-import WebAuthnIcon from '@ac/assets/icons/factor-webauthn.svg?react';
-import PhoneIcon from '@ac/assets/icons/phone.svg?react';
-import {
-  authenticatorAppRoute,
-  backupCodesGenerateRoute,
-  backupCodesManageRoute,
-  emailRoute,
-  passkeyAddRoute,
-  passkeyManageRoute,
-  phoneRoute,
-} from '@ac/constants/routes';
+import ConfirmModal from '@ac/components/ConfirmModal';
+import ToggleSwitch from '@ac/components/ToggleSwitch';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
+import { mfaSettingsRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
-import { hasVisibleMfaSection } from '@ac/utils/security-page';
+import { sessionStorage } from '@ac/utils/session-storage';
 
-import { getMfaVerifications } from '../../../apis/mfa';
+import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../../apis/mfa';
 import useApi from '../../../hooks/use-api';
+import useErrorHandler from '../../../hooks/use-error-handler';
 
 import styles from './index.module.scss';
+import useMfaRows from './use-mfa-rows';
 
-const factorIcon = {
-  [MfaFactor.TOTP]: TotpIcon,
-  [MfaFactor.WebAuthn]: WebAuthnIcon,
-  [MfaFactor.BackupCode]: BackupCodeIcon,
-  [MfaFactor.EmailVerificationCode]: EmailIcon,
-  [MfaFactor.PhoneVerificationCode]: PhoneIcon,
-};
-
-type Row = {
-  key: string;
-  icon: typeof TotpIcon;
-  label: string;
-  value?: string;
-  isPlainValue?: boolean;
-  isConfigured: boolean;
-  action?: { label: string; handler: () => void };
-};
+/** MFA policies where users cannot skip MFA verification */
+const mandatoryMfaPolicies = new Set<MfaPolicy>([
+  MfaPolicy.Mandatory,
+  MfaPolicy.PromptAtSignInAndSignUpMandatory,
+  MfaPolicy.PromptOnlyAtSignInMandatory,
+]);
 
 const MfaSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, userInfo } = useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, verificationId, setToast } =
+    useContext(PageContext);
   const [mfaVerifications, setMfaVerifications] = useState<UserMfaVerificationResponse>();
+  const [skipMfaOnSignIn, setSkipMfaOnSignIn] = useState<boolean>();
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const handleError = useErrorHandler();
+
+  const updateMfaSettingsApi = useApi(updateMfaSettings);
 
   const mfaControl = accountCenterSettings?.fields.mfa;
-  const enabledFactors = experienceSettings?.mfa.factors ?? [];
+  const enabledFactors = useMemo(() => experienceSettings?.mfa.factors ?? [], [experienceSettings]);
+  const mfaPolicy = experienceSettings?.mfa.policy;
+  const isEditable = mfaControl === AccountCenterControlValue.Edit;
+
+  const showToggle =
+    isDevFeaturesEnabled &&
+    isEditable &&
+    mfaPolicy !== undefined &&
+    !mandatoryMfaPolicies.has(mfaPolicy) &&
+    enabledFactors.length > 0;
+
+  const isTwoStepEnabled = skipMfaOnSignIn === false;
+  const hasConfiguredMfa = (mfaVerifications?.length ?? 0) > 0;
 
   const getMfaRequest = useApi(getMfaVerifications, { silent: true });
+  const getMfaSettingsRequest = useApi(getMfaSettings, { silent: true });
 
   const fetchMfaVerifications = useCallback(async () => {
     const [error, result] = await getMfaRequest();
@@ -67,9 +67,22 @@ const MfaSection = () => {
     }
   }, [getMfaRequest]);
 
+  const fetchMfaSettings = useCallback(async () => {
+    const [error, result] = await getMfaSettingsRequest();
+    if (!error && result) {
+      setSkipMfaOnSignIn(result.skipMfaOnSignIn);
+    }
+  }, [getMfaSettingsRequest]);
+
   useEffect(() => {
     void fetchMfaVerifications();
   }, [fetchMfaVerifications]);
+
+  useEffect(() => {
+    if (showToggle) {
+      void fetchMfaSettings();
+    }
+  }, [showToggle, fetchMfaSettings]);
 
   const navigateTo = useCallback(
     (route: string) => {
@@ -79,225 +92,151 @@ const MfaSection = () => {
     [navigate]
   );
 
-  const webAuthnVerifications =
-    mfaVerifications?.filter((verification) => verification.type === MfaFactor.WebAuthn) ?? [];
-  const totpVerification = mfaVerifications?.find(
-    (verification) => verification.type === MfaFactor.TOTP
-  );
-  const backupCodeVerification = mfaVerifications?.find(
-    (verification) => verification.type === MfaFactor.BackupCode
+  const rows = useMfaRows(mfaVerifications, navigateTo);
+
+  const handleToggleChange = useCallback(
+    async (checked: boolean) => {
+      const skipMfa = !checked;
+
+      if (!checked) {
+        setIsConfirmModalOpen(true);
+        return;
+      }
+
+      if (verificationId) {
+        const [error] = await updateMfaSettingsApi(verificationId, { skipMfaOnSignIn: skipMfa });
+
+        if (error) {
+          await handleError(error, {
+            'verification_record.permission_denied': async () => {
+              setToast(t('account_center.verification.verification_required'));
+            },
+          });
+          return;
+        }
+
+        setSkipMfaOnSignIn(skipMfa);
+        return;
+      }
+
+      sessionStorage.setMfaToggleAction('enable');
+      navigateTo(mfaSettingsRoute);
+    },
+    [verificationId, updateMfaSettingsApi, handleError, setToast, t, navigateTo]
   );
 
-  const isEditable = mfaControl === AccountCenterControlValue.Edit;
+  const handleConfirmDisable = useCallback(async () => {
+    setIsConfirmModalOpen(false);
 
-  const rows = useMemo(() => {
-    if (!hasVisibleMfaSection(mfaControl, experienceSettings)) {
-      return [];
+    if (verificationId) {
+      const [error] = await updateMfaSettingsApi(verificationId, { skipMfaOnSignIn: true });
+
+      if (error) {
+        await handleError(error, {
+          'verification_record.permission_denied': async () => {
+            setToast(t('account_center.verification.verification_required'));
+          },
+        });
+        return;
+      }
+
+      setSkipMfaOnSignIn(true);
+      return;
     }
 
-    const buildWebAuthnRow = (): Row[] => {
-      if (!enabledFactors.includes(MfaFactor.WebAuthn)) {
-        return [];
-      }
-      const isConfigured = webAuthnVerifications.length > 0;
-      const Icon = factorIcon[MfaFactor.WebAuthn];
-      return [
-        {
-          key: 'webauthn',
-          icon: Icon,
-          label: t('account_center.security.passkeys'),
-          value: isConfigured
-            ? t('account_center.security.passkeys_count', {
-                count: webAuthnVerifications.length,
-              })
-            : undefined,
-          isConfigured,
-          action: isEditable
-            ? {
-                label: isConfigured
-                  ? t('account_center.security.manage')
-                  : t('account_center.security.add'),
-                handler: () => {
-                  navigateTo(isConfigured ? passkeyManageRoute : passkeyAddRoute);
-                },
-              }
-            : undefined,
-        },
-      ];
-    };
+    sessionStorage.setMfaToggleAction('disable');
+    navigateTo(mfaSettingsRoute);
+  }, [verificationId, updateMfaSettingsApi, handleError, setToast, t, navigateTo]);
 
-    const buildTotpRow = (): Row[] => {
-      if (!enabledFactors.includes(MfaFactor.TOTP)) {
-        return [];
-      }
-      const isConfigured = Boolean(totpVerification);
-      const Icon = factorIcon[MfaFactor.TOTP];
-      return [
-        {
-          key: 'totp',
-          icon: Icon,
-          label: t('account_center.security.authenticator_app'),
-          value: isConfigured ? t('account_center.security.configured') : undefined,
-          isConfigured,
-          action:
-            isEditable && !isConfigured
-              ? {
-                  label: t('account_center.security.add'),
-                  handler: () => {
-                    navigateTo(authenticatorAppRoute);
-                  },
-                }
-              : undefined,
-        },
-      ];
-    };
-
-    const buildBackupCodeRow = (): Row[] => {
-      if (!enabledFactors.includes(MfaFactor.BackupCode)) {
-        return [];
-      }
-      const isConfigured = Boolean(backupCodeVerification);
-      const Icon = factorIcon[MfaFactor.BackupCode];
-      return [
-        {
-          key: 'backup-code',
-          icon: Icon,
-          label: t('account_center.security.backup_codes'),
-          value: isConfigured
-            ? t('account_center.security.backup_codes_count', {
-                count: backupCodeVerification?.remainCodes ?? 0,
-              })
-            : undefined,
-          isConfigured,
-          action: isEditable
-            ? {
-                label: isConfigured
-                  ? t('account_center.security.manage')
-                  : t('account_center.security.add'),
-                handler: () => {
-                  navigateTo(isConfigured ? backupCodesManageRoute : backupCodesGenerateRoute);
-                },
-              }
-            : undefined,
-        },
-      ];
-    };
-
-    const buildEmailRow = (): Row[] => {
-      if (!enabledFactors.includes(MfaFactor.EmailVerificationCode) || !userInfo?.primaryEmail) {
-        return [];
-      }
-      const Icon = factorIcon[MfaFactor.EmailVerificationCode];
-      return [
-        {
-          key: 'email',
-          icon: Icon,
-          label: t('account_center.security.email_verification_code'),
-          value: userInfo.primaryEmail,
-          isPlainValue: true,
-          isConfigured: true,
-          action: isEditable
-            ? {
-                label: t('account_center.security.change'),
-                handler: () => {
-                  navigateTo(emailRoute);
-                },
-              }
-            : undefined,
-        },
-      ];
-    };
-
-    const buildPhoneRow = (): Row[] => {
-      if (!enabledFactors.includes(MfaFactor.PhoneVerificationCode) || !userInfo?.primaryPhone) {
-        return [];
-      }
-      const Icon = factorIcon[MfaFactor.PhoneVerificationCode];
-      return [
-        {
-          key: 'phone',
-          icon: Icon,
-          label: t('account_center.security.phone_verification_code'),
-          value: formatToInternationalPhoneNumber(userInfo.primaryPhone),
-          isPlainValue: true,
-          isConfigured: true,
-          action: isEditable
-            ? {
-                label: t('account_center.security.change'),
-                handler: () => {
-                  navigateTo(phoneRoute);
-                },
-              }
-            : undefined,
-        },
-      ];
-    };
-
-    return [
-      ...buildWebAuthnRow(),
-      ...buildTotpRow(),
-      ...buildBackupCodeRow(),
-      ...buildEmailRow(),
-      ...buildPhoneRow(),
-    ];
-  }, [
-    mfaControl,
-    experienceSettings,
-    enabledFactors,
-    webAuthnVerifications,
-    totpVerification,
-    backupCodeVerification,
-    userInfo,
-    isEditable,
-    t,
-    navigateTo,
-  ]);
-
-  if (rows.length === 0) {
+  if (rows.length === 0 && !showToggle) {
     return null;
   }
 
   return (
-    <div className={styles.section}>
-      <div className={styles.sectionTitle}>
-        {t('account_center.security.two_step_verification')}
-      </div>
-      <div className={styles.card}>
-        {rows.map(({ key, icon: Icon, label, value, isPlainValue, isConfigured, action }) => (
-          <div key={key} className={styles.row}>
-            <div className={styles.info}>
-              <div className={styles.name}>
-                <Icon className={styles.icon} />
-                {label}
-              </div>
-              <div className={styles.value}>
-                {isConfigured ? (
-                  isPlainValue ? (
-                    <span className={styles.plainValue}>{value}</span>
-                  ) : (
-                    <span className={styles.statusTag}>
-                      <span className={styles.statusDot} />
-                      {value}
-                    </span>
-                  )
-                ) : (
-                  <span className={styles.notConfigured}>
-                    {t('account_center.security.not_configured')}
-                  </span>
-                )}
-              </div>
-            </div>
-            {action && (
-              <div className={styles.actions}>
-                <button type="button" className={styles.actionButton} onClick={action.handler}>
-                  {action.label}
-                </button>
+    <>
+      <div className={styles.section}>
+        <div className={styles.sectionTitle}>
+          {t('account_center.security.two_step_verification')}
+        </div>
+        {showToggle && isTwoStepEnabled && !hasConfiguredMfa && (
+          <InlineNotification
+            message="account_center.security.no_verification_method_warning"
+            className={styles.notification}
+          />
+        )}
+        {(showToggle || rows.length > 0) && (
+          <div className={styles.card}>
+            {showToggle && (
+              <div className={styles.toggleRow}>
+                <div className={styles.toggleInfo}>
+                  <div className={styles.toggleTitle}>
+                    {t('account_center.security.turn_on_2_step_verification')}
+                  </div>
+                  <div className={styles.toggleDescription}>
+                    {t('account_center.security.turn_on_2_step_verification_description')}
+                  </div>
+                </div>
+                <ToggleSwitch
+                  isChecked={isTwoStepEnabled}
+                  onChange={(checked) => {
+                    void handleToggleChange(checked);
+                  }}
+                />
               </div>
             )}
+            {showToggle && rows.length > 0 && <div className={styles.divider} />}
+            {rows.map(({ key, icon: Icon, label, value, isPlainValue, isConfigured, action }) => (
+              <div key={key} className={styles.row}>
+                <div className={styles.info}>
+                  <div className={styles.name}>
+                    <Icon className={styles.icon} />
+                    {label}
+                  </div>
+                  <div className={styles.value}>
+                    {isConfigured ? (
+                      isPlainValue ? (
+                        <span className={styles.plainValue}>{value}</span>
+                      ) : (
+                        <span className={styles.statusTag}>
+                          <span className={styles.statusDot} />
+                          {value}
+                        </span>
+                      )
+                    ) : (
+                      <span className={styles.notConfigured}>
+                        {t('account_center.security.not_configured')}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {action && (
+                  <div className={styles.actions}>
+                    <button type="button" className={styles.actionButton} onClick={action.handler}>
+                      {action.label}
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
-    </div>
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        title="account_center.security.turn_off_2_step_verification"
+        confirmText="account_center.security.disable_2_step_verification"
+        confirmButtonType="danger"
+        cancelText="action.cancel"
+        onConfirm={() => {
+          void handleConfirmDisable();
+        }}
+        onCancel={() => {
+          setIsConfirmModalOpen(false);
+        }}
+      >
+        {t('account_center.security.turn_off_2_step_verification_description')}
+      </ConfirmModal>
+    </>
   );
 };
 
