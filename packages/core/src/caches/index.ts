@@ -31,6 +31,7 @@ abstract class RedisCacheBase implements CacheStore {
 
     const timeoutPromise = new Promise<undefined>((resolve) => {
       setTimeout(() => {
+        // eslint-disable-next-line unicorn/no-useless-undefined
         resolve(undefined);
       }, redisCacheReadTimeout);
     });
