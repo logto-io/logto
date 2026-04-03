@@ -18,7 +18,7 @@ import {
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
-  mfaSettingsRoute,
+  verifiedActionRoute,
   socialRoutePrefix,
 } from '@ac/constants/routes';
 
@@ -48,7 +48,7 @@ const knownRoutePrefixes: readonly string[] = [
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
-  mfaSettingsRoute,
+  verifiedActionRoute,
   socialRoutePrefix,
 ];
 

@@ -12,7 +12,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ToggleSwitch from '@ac/components/ToggleSwitch';
 import { isDevFeaturesEnabled } from '@ac/constants/env';
-import { mfaSettingsRoute } from '@ac/constants/routes';
+import { verifiedActionRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { sessionStorage } from '@ac/utils/session-storage';
 
@@ -119,8 +119,8 @@ const MfaSection = () => {
         return;
       }
 
-      sessionStorage.setMfaToggleAction('enable');
-      navigateTo(mfaSettingsRoute);
+      sessionStorage.setPendingVerifiedAction('enable-mfa');
+      navigateTo(verifiedActionRoute);
     },
     [verificationId, updateMfaSettingsApi, handleError, setToast, t, navigateTo]
   );
@@ -144,8 +144,8 @@ const MfaSection = () => {
       return;
     }
 
-    sessionStorage.setMfaToggleAction('disable');
-    navigateTo(mfaSettingsRoute);
+    sessionStorage.setPendingVerifiedAction('disable-mfa');
+    navigateTo(verifiedActionRoute);
   }, [verificationId, updateMfaSettingsApi, handleError, setToast, t, navigateTo]);
 
   if (rows.length === 0 && !showToggle) {

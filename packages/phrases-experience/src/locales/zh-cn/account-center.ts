@@ -94,6 +94,12 @@ const account_center = {
     account_removal: '账号删除',
     delete_your_account: '删除你的账号',
     delete_account: '删除账号',
+    remove_email_confirmation_title: '移除邮箱地址',
+    remove_email_confirmation_description: '移除后，你将无法再使用此邮箱地址登录。确定要继续吗？',
+    remove_phone_confirmation_title: '移除手机号',
+    remove_phone_confirmation_description: '移除后，你将无法再使用此手机号登录。确定要继续吗？',
+    email_removed: '邮箱地址已成功移除。',
+    phone_removed: '手机号已成功移除。',
   },
   social: {
     linked: '已成功关联 {{connector}}。',

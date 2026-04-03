@@ -35,6 +35,18 @@ export const updateUsername = async (
   });
 };
 
+export const deletePrimaryEmail = async (accessToken: string, verificationRecordId: string) => {
+  await createAuthenticatedKy(accessToken).delete('/api/my-account/primary-email', {
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};
+
+export const deletePrimaryPhone = async (accessToken: string, verificationRecordId: string) => {
+  await createAuthenticatedKy(accessToken).delete('/api/my-account/primary-phone', {
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};
+
 export const updatePassword = async (
   accessToken: string,
   verificationRecordId: string,

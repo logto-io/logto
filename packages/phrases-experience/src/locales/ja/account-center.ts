@@ -96,6 +96,14 @@ const account_center = {
     account_removal: 'アカウント削除',
     delete_your_account: 'アカウントを削除',
     delete_account: 'アカウントを削除',
+    remove_email_confirmation_title: 'メールアドレスを削除',
+    remove_email_confirmation_description:
+      '削除すると、このメールアドレスでサインインできなくなります。続行しますか？',
+    remove_phone_confirmation_title: '電話番号を削除',
+    remove_phone_confirmation_description:
+      '削除すると、この電話番号でサインインできなくなります。続行しますか？',
+    email_removed: 'メールアドレスが正常に削除されました。',
+    phone_removed: '電話番号が正常に削除されました。',
   },
   social: {
     linked: '{{connector}}の連携に成功しました。',

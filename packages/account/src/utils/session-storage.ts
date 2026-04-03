@@ -12,7 +12,7 @@ const storageKeys = Object.freeze({
   verificationRecord: `${storagePrefix}verification-record`,
   socialFlow: `${storagePrefix}social-verification`,
   pendingReturn: `${storagePrefix}pending-return`,
-  mfaToggleAction: `${storagePrefix}mfa-toggle-action`,
+  pendingVerifiedAction: `${storagePrefix}pending-verified-action`,
 });
 
 export type StoredVerificationRecord = {
@@ -61,6 +61,8 @@ const storedSocialFlowRecordGuard = s.union([
     expiresAt: s.string(),
   }),
 ]);
+
+export type PendingVerifiedAction = 'enable-mfa' | 'disable-mfa' | 'remove-email' | 'remove-phone';
 
 const getStorage = (type: 'session' | 'local'): Storage | undefined => {
   if (typeof window === 'undefined') {
@@ -229,16 +231,24 @@ export const accountStorage = Object.freeze({
       removeItem(`${storageKeys.socialFlow}:${connectorId}`, 'session');
     },
   },
-  mfaToggleAction: {
-    get: (): 'enable' | 'disable' | undefined => {
-      const value = getString(storageKeys.mfaToggleAction, 'session');
-      return value === 'enable' || value === 'disable' ? value : undefined;
+  pendingVerifiedAction: {
+    get: (): PendingVerifiedAction | undefined => {
+      const value = getString(storageKeys.pendingVerifiedAction, 'session');
+      if (
+        value === 'enable-mfa' ||
+        value === 'disable-mfa' ||
+        value === 'remove-email' ||
+        value === 'remove-phone'
+      ) {
+        return value;
+      }
+      return undefined;
     },
-    set: (value: 'enable' | 'disable') => {
-      setString(storageKeys.mfaToggleAction, value, 'session');
+    set: (value: PendingVerifiedAction) => {
+      setString(storageKeys.pendingVerifiedAction, value, 'session');
     },
     clear: () => {
-      removeItem(storageKeys.mfaToggleAction, 'session');
+      removeItem(storageKeys.pendingVerifiedAction, 'session');
     },
   },
 });
@@ -256,9 +266,9 @@ export const sessionStorage = Object.freeze({
   getUiLocales: accountStorage.uiLocales.get,
   setUiLocales: accountStorage.uiLocales.set,
   clearUiLocales: accountStorage.uiLocales.clear,
-  getMfaToggleAction: accountStorage.mfaToggleAction.get,
-  setMfaToggleAction: accountStorage.mfaToggleAction.set,
-  clearMfaToggleAction: accountStorage.mfaToggleAction.clear,
+  getPendingVerifiedAction: accountStorage.pendingVerifiedAction.get,
+  setPendingVerifiedAction: accountStorage.pendingVerifiedAction.set,
+  clearPendingVerifiedAction: accountStorage.pendingVerifiedAction.clear,
   getIdentifier: () => getString(storageKeys.identifier, 'session'),
   setIdentifier: (value: string) => {
     setString(storageKeys.identifier, value, 'session');
