@@ -1,5 +1,29 @@
 # Change Log
 
+## 1.39.0
+
+### Minor Changes
+
+- ab073bb65f: support blocking token issuance when custom JWT scripts fail
+
+  This update adds configurable JWT customizer error handling for access tokens and client credentials flows.
+
+  - core now preserves `api.denyAccess()` as `access_denied` and converts other blocking-mode script failures into localized `invalid_request` responses
+  - console adds a dedicated `Error handling` tab for configuring the behavior, defaults `blockIssuanceOnError` to enabled for newly created scripts, keeps existing scripts without a saved value on the legacy disabled default, and aligns the related guidance copy
+  - schemas, phrases, and integration coverage are updated to match the new blocking behavior and localized error messages
+
+### Patch Changes
+
+- Updated dependencies [ab073bb65f]
+  - @logto/console@1.36.0
+  - @logto/phrases@1.28.0
+  - @logto/schemas@1.39.0
+  - @logto/demo-app@1.5.0
+  - @logto/experience@1.19.0
+  - @logto/account@0.3.0
+  - @logto/cli@1.39.0
+  - @logto/device-demo-app@0.1.0
+
 ## 1.38.0
 
 ### Minor Changes
