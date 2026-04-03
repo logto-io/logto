@@ -1,0 +1,57 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+
+  input {
+    opacity: 0%;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: var(--color-neutral-90);
+    transition: 0.3s;
+    border-radius: 12px;
+
+    &::before {
+      position: absolute;
+      content: '';
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #fff;
+      transition: 0.3s;
+      border-radius: 50%;
+      box-shadow: 0 3px 7px rgba(0, 0, 0, 12%);
+    }
+  }
+
+  &.disabled {
+    .slider {
+      cursor: not-allowed;
+      opacity: 60%;
+    }
+  }
+
+  input:focus-visible + .slider {
+    outline: 2px solid var(--color-brand-default);
+    outline-offset: 2px;
+  }
+
+  input:checked + .slider {
+    background-color: var(--color-success-70, #68be6a);
+  }
+
+  input:checked + .slider::before {
+    transform: translateX(20px);
+  }
+}

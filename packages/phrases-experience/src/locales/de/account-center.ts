@@ -91,6 +91,15 @@ const account_center = {
     backup_codes_count_other: '{{count}} Codes verbleibend',
     view: 'Ansehen',
     manage: 'Verwalten',
+    turn_on_2_step_verification: '2-Faktor-Verifizierung aktivieren',
+    turn_on_2_step_verification_description:
+      'Fügen Sie eine zusätzliche Sicherheitsebene hinzu. Sie werden bei der Anmeldung zu einem zweiten Verifizierungsschritt aufgefordert.',
+    turn_off_2_step_verification: '2-Faktor-Verifizierung deaktivieren',
+    turn_off_2_step_verification_description:
+      'Das Deaktivieren der 2-Faktor-Verifizierung entfernt die zusätzliche Schutzebene für Ihr Konto bei der Anmeldung. Möchten Sie wirklich fortfahren?',
+    disable_2_step_verification: '2-Faktor-Verifizierung deaktivieren',
+    no_verification_method_warning:
+      'Sie haben keine zweite Verifizierungsmethode hinzugefügt. Fügen Sie mindestens eine hinzu, um die 2-Faktor-Verifizierung bei der Anmeldung zu aktivieren.',
     account_removal: 'Kontolöschung',
     delete_your_account: 'Ihr Konto löschen',
     delete_account: 'Konto löschen',

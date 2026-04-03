@@ -1,5 +1,6 @@
 import {
   type UserMfaVerificationResponse,
+  type UserMfaSettingsResponse,
   MfaFactor,
   type WebAuthnRegistrationOptions,
   type BindWebAuthnPayload,
@@ -152,4 +153,23 @@ export const updateWebAuthnName = async (
       headers: { [verificationRecordIdHeader]: verificationRecordId },
     }
   );
+};
+
+export const getMfaSettings = async (accessToken: string): Promise<UserMfaSettingsResponse> => {
+  return createAuthenticatedKy(accessToken)
+    .get('/api/my-account/mfa-settings')
+    .json<UserMfaSettingsResponse>();
+};
+
+export const updateMfaSettings = async (
+  accessToken: string,
+  verificationRecordId: string,
+  payload: { skipMfaOnSignIn: boolean }
+): Promise<UserMfaSettingsResponse> => {
+  return createAuthenticatedKy(accessToken)
+    .patch('/api/my-account/mfa-settings', {
+      json: payload,
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    })
+    .json<UserMfaSettingsResponse>();
 };

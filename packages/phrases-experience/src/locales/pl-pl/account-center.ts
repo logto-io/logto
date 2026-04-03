@@ -85,6 +85,15 @@ const account_center = {
     backup_codes_count_other: '{{count}} kody pozostałe',
     view: 'Wyświetl',
     manage: 'Zarządzaj',
+    turn_on_2_step_verification: 'Włącz weryfikację dwuetapową',
+    turn_on_2_step_verification_description:
+      'Dodaj dodatkową warstwę bezpieczeństwa. Podczas logowania zostaniesz poproszony o drugi krok weryfikacji.',
+    turn_off_2_step_verification: 'Wyłącz weryfikację dwuetapową',
+    turn_off_2_step_verification_description:
+      'Wyłączenie weryfikacji dwuetapowej usunie dodatkową warstwę ochrony z Twojego konta podczas logowania. Czy na pewno chcesz kontynuować?',
+    disable_2_step_verification: 'Wyłącz weryfikację dwuetapową',
+    no_verification_method_warning:
+      'Nie dodałeś drugiej metody weryfikacji. Dodaj co najmniej jedną, aby włączyć weryfikację dwuetapową podczas logowania.',
     account_removal: 'Usunięcie konta',
     delete_your_account: 'Usuń swoje konto',
     delete_account: 'Usuń konto',

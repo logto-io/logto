@@ -6,6 +6,7 @@ import {
   SignInIdentifier,
   userMfaDataGuard,
   userMfaDataKey,
+  userMfaSettingsResponseGuard,
   jsonObjectGuard,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -204,9 +205,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   router.get(
     `${accountApiPrefix}/mfa-settings`,
     koaGuard({
-      response: z.object({
-        skipMfaOnSignIn: z.boolean(),
-      }),
+      response: userMfaSettingsResponseGuard,
       status: [200, 400, 401],
     }),
     async (ctx, next) => {
@@ -239,9 +238,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       body: z.object({
         skipMfaOnSignIn: z.boolean(),
       }),
-      response: z.object({
-        skipMfaOnSignIn: z.boolean(),
-      }),
+      response: userMfaSettingsResponseGuard,
       status: [200, 400, 401],
     }),
     async (ctx, next) => {

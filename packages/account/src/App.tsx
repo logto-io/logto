@@ -40,6 +40,7 @@ import {
   socialSuccessRoute,
   socialCallbackRoutePrefix,
   socialRoutePrefix,
+  mfaSettingsRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
 import { resolveUiLocalesLanguage } from './i18n/utils';
@@ -47,6 +48,7 @@ import BackupCodeBinding from './pages/BackupCodeBinding';
 import BackupCodeView from './pages/BackupCodeView';
 import Email from './pages/Email';
 import Home from './pages/Home';
+import MfaSettings from './pages/MfaSettings';
 import PasskeyBinding from './pages/PasskeyBinding';
 import PasskeyView from './pages/PasskeyView';
 import Password from './pages/Password';
@@ -186,6 +188,7 @@ const Main = () => {
       <Route path={backupCodesManageRoute} element={<BackupCodeView />} />
       <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
       <Route path={passkeyManageRoute} element={<PasskeyView />} />
+      {isDevFeaturesEnabled && <Route path={mfaSettingsRoute} element={<MfaSettings />} />}
       {isDevFeaturesEnabled && (
         <>
           <Route path={`${socialCallbackRoutePrefix}/:connectorId`} element={<SocialCallback />} />

@@ -84,6 +84,15 @@ const account_center = {
     backup_codes_count_other: '{{count}} кодов осталось',
     view: 'Просмотр',
     manage: 'Управление',
+    turn_on_2_step_verification: 'Включить двухэтапную верификацию',
+    turn_on_2_step_verification_description:
+      'Добавьте дополнительный уровень безопасности. При входе вам будет предложен второй шаг верификации.',
+    turn_off_2_step_verification: 'Отключить двухэтапную верификацию',
+    turn_off_2_step_verification_description:
+      'Отключение двухэтапной верификации удалит дополнительный уровень защиты вашей учётной записи при входе. Вы уверены, что хотите продолжить?',
+    disable_2_step_verification: 'Отключить двухэтапную верификацию',
+    no_verification_method_warning:
+      'Вы не добавили второй способ верификации. Добавьте хотя бы один, чтобы включить двухэтапную верификацию при входе.',
     account_removal: 'Удаление аккаунта',
     delete_your_account: 'Удалите свой аккаунт',
     delete_account: 'Удалить аккаунт',

@@ -55,6 +55,15 @@ export const userPasskeySignInDataGuard = z.object({
 export type UserPasskeySignInData = z.infer<typeof userPasskeySignInDataGuard>;
 
 /**
+ * Schema for the MFA settings API response (GET/PATCH /api/my-account/mfa-settings)
+ */
+export const userMfaSettingsResponseGuard = z.object({
+  skipMfaOnSignIn: z.boolean(),
+});
+
+export type UserMfaSettingsResponse = z.infer<typeof userMfaSettingsResponseGuard>;
+
+/**
  * Schema for user's logto_config field
  */
 export const userLogtoConfigGuard = z.object({

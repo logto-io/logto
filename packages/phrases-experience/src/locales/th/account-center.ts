@@ -84,6 +84,15 @@ const account_center = {
     backup_codes_count_other: 'เหลือ {{count}} รหัส',
     view: 'ดู',
     manage: 'จัดการ',
+    turn_on_2_step_verification: 'เปิดการยืนยันตัวตนสองขั้นตอน',
+    turn_on_2_step_verification_description:
+      'เพิ่มชั้นความปลอดภัยเพิ่มเติม คุณจะถูกขอให้ทำการยืนยันขั้นตอนที่สองเมื่อลงชื่อเข้าใช้',
+    turn_off_2_step_verification: 'ปิดการยืนยันตัวตนสองขั้นตอน',
+    turn_off_2_step_verification_description:
+      'การปิดการยืนยันตัวตนสองขั้นตอนจะลบชั้นการป้องกันเพิ่มเติมออกจากบัญชีของคุณเมื่อลงชื่อเข้าใช้ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
+    disable_2_step_verification: 'ปิดการยืนยันตัวตนสองขั้นตอน',
+    no_verification_method_warning:
+      'คุณยังไม่ได้เพิ่มวิธีการยืนยันตัวตนที่สอง เพิ่มอย่างน้อยหนึ่งวิธีเพื่อเปิดใช้งานการยืนยันตัวตนสองขั้นตอนเมื่อลงชื่อเข้าใช้',
     account_removal: 'การลบบัญชี',
     delete_your_account: 'ลบบัญชีของคุณ',
     delete_account: 'ลบบัญชี',

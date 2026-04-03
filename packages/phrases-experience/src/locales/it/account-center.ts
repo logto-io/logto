@@ -89,6 +89,15 @@ const account_center = {
     backup_codes_count_other: '{{count}} codici rimanenti',
     view: 'Visualizza',
     manage: 'Gestisci',
+    turn_on_2_step_verification: 'Attiva la verifica in due passaggi',
+    turn_on_2_step_verification_description:
+      "Aggiungi un ulteriore livello di sicurezza. Ti verrà richiesto un secondo passaggio di verifica all'accesso.",
+    turn_off_2_step_verification: 'Disattiva la verifica in due passaggi',
+    turn_off_2_step_verification_description:
+      "La disattivazione della verifica in due passaggi rimuoverà il livello di protezione aggiuntivo dal tuo account all'accesso. Sei sicuro di voler continuare?",
+    disable_2_step_verification: 'Disattiva la verifica in due passaggi',
+    no_verification_method_warning:
+      "Non hai aggiunto un secondo metodo di verifica. Aggiungine almeno uno per attivare la verifica in due passaggi all'accesso.",
     account_removal: "Eliminazione dell'account",
     delete_your_account: 'Elimina il tuo account',
     delete_account: "Elimina l'account",

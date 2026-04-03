@@ -83,6 +83,14 @@ const account_center = {
     backup_codes_count_other: '{{count}} 個備用碼',
     view: '檢視',
     manage: '管理',
+    turn_on_2_step_verification: '開啟兩步驗證',
+    turn_on_2_step_verification_description: '增加額外的安全保護。登入時將要求進行第二步驗證。',
+    turn_off_2_step_verification: '關閉兩步驗證',
+    turn_off_2_step_verification_description:
+      '關閉兩步驗證將移除登入時帳戶的額外保護層。確定要繼續嗎？',
+    disable_2_step_verification: '關閉兩步驗證',
+    no_verification_method_warning:
+      '你尚未添加第二種驗證方式。請至少添加一種以在登入時啟用兩步驗證。',
     account_removal: '帳戶刪除',
     delete_your_account: '刪除你的帳戶',
     delete_account: '刪除帳戶',
