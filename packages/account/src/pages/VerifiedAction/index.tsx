@@ -11,10 +11,9 @@ import VerificationMethodList from '@ac/components/VerificationMethodList';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { sessionStorage } from '@ac/utils/session-storage';
+import type { PendingVerifiedAction } from '@ac/utils/session-storage';
 
-type PendingAction = 'enable' | 'disable' | 'remove-email' | 'remove-phone';
-
-const MfaSettings = () => {
+const VerifiedAction = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { accountCenterSettings, verificationId, setVerificationId, setToast, refreshUserInfo } =
@@ -23,10 +22,10 @@ const MfaSettings = () => {
   const deletePrimaryEmailApi = useApi(deletePrimaryEmail);
   const deletePrimaryPhoneApi = useApi(deletePrimaryPhone);
   const handleError = useErrorHandler();
-  const [action, setAction] = useState<PendingAction>();
+  const [action, setAction] = useState<PendingVerifiedAction>();
 
   useEffect(() => {
-    const storedAction = sessionStorage.getMfaToggleAction();
+    const storedAction = sessionStorage.getPendingVerifiedAction();
     if (storedAction) {
       setAction(storedAction);
     }
@@ -42,9 +41,9 @@ const MfaSettings = () => {
       setToast(t('account_center.verification.verification_required'));
     };
 
-    if (action === 'enable' || action === 'disable') {
+    if (action === 'enable-mfa' || action === 'disable-mfa') {
       // Enable 2-step → skipMfaOnSignIn: false; Disable 2-step → skipMfaOnSignIn: true
-      const skipMfaOnSignIn = action === 'disable';
+      const skipMfaOnSignIn = action === 'disable-mfa';
 
       const [error, result] = await updateMfaSettingsApi(verificationId, { skipMfaOnSignIn });
 
@@ -56,7 +55,7 @@ const MfaSettings = () => {
       }
 
       if (result) {
-        sessionStorage.clearMfaToggleAction();
+        sessionStorage.clearPendingVerifiedAction();
         navigate(-1);
       }
       return;
@@ -72,7 +71,7 @@ const MfaSettings = () => {
         return;
       }
 
-      sessionStorage.clearMfaToggleAction();
+      sessionStorage.clearPendingVerifiedAction();
       await refreshUserInfo();
       setToast(t('account_center.security.email_removed'));
       navigate(-1);
@@ -89,7 +88,7 @@ const MfaSettings = () => {
       return;
     }
 
-    sessionStorage.clearMfaToggleAction();
+    sessionStorage.clearPendingVerifiedAction();
     await refreshUserInfo();
     setToast(t('account_center.security.phone_removed'));
     navigate(-1);
@@ -118,7 +117,7 @@ const MfaSettings = () => {
     if (!accountCenterSettings?.enabled) {
       return false;
     }
-    if (action === 'enable' || action === 'disable') {
+    if (action === 'enable-mfa' || action === 'disable-mfa') {
       return accountCenterSettings.fields.mfa === AccountCenterControlValue.Edit;
     }
     if (action === 'remove-email') {
@@ -148,4 +147,4 @@ const MfaSettings = () => {
   return null;
 };
 
-export default MfaSettings;
+export default VerifiedAction;

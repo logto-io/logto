@@ -9,7 +9,7 @@ import { deletePrimaryEmail, deletePrimaryPhone } from '@ac/apis/account';
 import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
 import ConfirmModal from '@ac/components/ConfirmModal';
-import { emailRoute, mfaSettingsRoute, phoneRoute } from '@ac/constants/routes';
+import { emailRoute, verifiedActionRoute, phoneRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
@@ -83,10 +83,10 @@ const EmailPhoneSection = () => {
       return;
     }
 
-    sessionStorage.setMfaToggleAction(
+    sessionStorage.setPendingVerifiedAction(
       pendingRemoveType === 'email' ? 'remove-email' : 'remove-phone'
     );
-    navigateTo(mfaSettingsRoute);
+    navigateTo(verifiedActionRoute);
   }, [
     pendingRemoveType,
     verificationId,

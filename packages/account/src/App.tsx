@@ -40,7 +40,7 @@ import {
   socialSuccessRoute,
   socialCallbackRoutePrefix,
   socialRoutePrefix,
-  mfaSettingsRoute,
+  verifiedActionRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
 import { resolveUiLocalesLanguage } from './i18n/utils';
@@ -48,7 +48,6 @@ import BackupCodeBinding from './pages/BackupCodeBinding';
 import BackupCodeView from './pages/BackupCodeView';
 import Email from './pages/Email';
 import Home from './pages/Home';
-import MfaSettings from './pages/MfaSettings';
 import PasskeyBinding from './pages/PasskeyBinding';
 import PasskeyView from './pages/PasskeyView';
 import Password from './pages/Password';
@@ -59,6 +58,7 @@ import SocialFlow from './pages/SocialFlow';
 import TotpBinding from './pages/TotpBinding';
 import UpdateSuccess from './pages/UpdateSuccess';
 import Username from './pages/Username';
+import VerifiedAction from './pages/VerifiedAction';
 import {
   accountCenterBasePath,
   getUiLocales,
@@ -188,7 +188,7 @@ const Main = () => {
       <Route path={backupCodesManageRoute} element={<BackupCodeView />} />
       <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
       <Route path={passkeyManageRoute} element={<PasskeyView />} />
-      {isDevFeaturesEnabled && <Route path={mfaSettingsRoute} element={<MfaSettings />} />}
+      {isDevFeaturesEnabled && <Route path={verifiedActionRoute} element={<VerifiedAction />} />}
       {isDevFeaturesEnabled && (
         <>
           <Route path={`${socialCallbackRoutePrefix}/:connectorId`} element={<SocialCallback />} />
