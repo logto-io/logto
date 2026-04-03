@@ -1,4 +1,3 @@
-import PageContext from '@/Providers/PageContextProvider/PageContext';
 import defaultAppleTouchLogo from '@experience/shared/assets/apple-touch-icon.png';
 import defaultFavicon from '@experience/shared/assets/favicon.png';
 import { type SignInExperienceResponse } from '@experience/shared/types';
@@ -8,6 +7,8 @@ import classNames from 'classnames';
 import i18next from 'i18next';
 import { useContext } from 'react';
 import { Helmet } from 'react-helmet';
+
+import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 
 import styles from './index.module.scss';
 
@@ -31,7 +32,7 @@ const themeToFavicon = Object.freeze({
  */
 
 const AppMeta = () => {
-  const { experienceSettings, theme, platform } = useContext(PageContext);
+  const { experienceSettings, accountCenterSettings, theme, platform } = useContext(PageContext);
   const favicon =
     experienceSettings?.branding[themeToFavicon[theme]] ?? experienceSettings?.branding.favicon;
 
@@ -40,7 +41,7 @@ const AppMeta = () => {
       <html lang={i18next.language} dir={i18next.dir()} data-theme={theme} />
       <link rel="shortcut icon" href={favicon ?? defaultFavicon} />
       <link rel="apple-touch-icon" href={favicon ?? defaultAppleTouchLogo} sizes="180x180" />
-      {experienceSettings?.customCss && <style>{experienceSettings.customCss}</style>}
+      {accountCenterSettings?.customCss && <style>{accountCenterSettings.customCss}</style>}
       <body
         className={classNames(
           platform === 'mobile' ? 'mobile' : 'desktop',
