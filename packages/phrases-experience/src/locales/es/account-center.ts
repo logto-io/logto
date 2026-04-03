@@ -100,6 +100,14 @@ const account_center = {
     account_removal: 'Eliminación de la cuenta',
     delete_your_account: 'Elimina tu cuenta',
     delete_account: 'Eliminar cuenta',
+    remove_email_confirmation_title: 'Eliminar dirección de correo electrónico',
+    remove_email_confirmation_description:
+      'Una vez eliminada, ya no podrás iniciar sesión con esta dirección de correo electrónico. ¿Estás seguro de que quieres continuar?',
+    remove_phone_confirmation_title: 'Eliminar número de teléfono',
+    remove_phone_confirmation_description:
+      'Una vez eliminado, ya no podrás iniciar sesión con este número de teléfono. ¿Estás seguro de que quieres continuar?',
+    email_removed: 'Dirección de correo electrónico eliminada correctamente.',
+    phone_removed: 'Número de teléfono eliminado correctamente.',
   },
   social: {
     linked: 'Se vinculó {{connector}} correctamente.',

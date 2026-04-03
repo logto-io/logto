@@ -103,6 +103,14 @@ const account_center = {
     account_removal: 'Kontolöschung',
     delete_your_account: 'Ihr Konto löschen',
     delete_account: 'Konto löschen',
+    remove_email_confirmation_title: 'E-Mail-Adresse entfernen',
+    remove_email_confirmation_description:
+      'Nach dem Entfernen können Sie sich nicht mehr mit dieser E-Mail-Adresse anmelden. Möchten Sie wirklich fortfahren?',
+    remove_phone_confirmation_title: 'Telefonnummer entfernen',
+    remove_phone_confirmation_description:
+      'Nach dem Entfernen können Sie sich nicht mehr mit dieser Telefonnummer anmelden. Möchten Sie wirklich fortfahren?',
+    email_removed: 'E-Mail-Adresse wurde erfolgreich entfernt.',
+    phone_removed: 'Telefonnummer wurde erfolgreich entfernt.',
   },
   social: {
     linked: '{{connector}} wurde erfolgreich verknüpft.',

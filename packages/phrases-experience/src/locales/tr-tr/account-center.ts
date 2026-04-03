@@ -97,6 +97,14 @@ const account_center = {
     account_removal: 'Hesap silme',
     delete_your_account: 'Hesabını sil',
     delete_account: 'Hesabı sil',
+    remove_email_confirmation_title: 'E-posta adresini kaldır',
+    remove_email_confirmation_description:
+      'Kaldırıldığında, bu e-posta adresiyle artık oturum açamayacaksınız. Devam etmek istediğinizden emin misiniz?',
+    remove_phone_confirmation_title: 'Telefon numarasını kaldır',
+    remove_phone_confirmation_description:
+      'Kaldırıldığında, bu telefon numarasıyla artık oturum açamayacaksınız. Devam etmek istediğinizden emin misiniz?',
+    email_removed: 'E-posta adresi başarıyla kaldırıldı.',
+    phone_removed: 'Telefon numarası başarıyla kaldırıldı.',
   },
   social: {
     linked: '{{connector}} başarıyla bağlandı.',

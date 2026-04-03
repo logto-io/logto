@@ -94,6 +94,12 @@ const account_center = {
     account_removal: '帳戶刪除',
     delete_your_account: '刪除你的帳戶',
     delete_account: '刪除帳戶',
+    remove_email_confirmation_title: '移除電郵地址',
+    remove_email_confirmation_description: '移除後，你將無法再使用此電郵地址登入。確定要繼續嗎？',
+    remove_phone_confirmation_title: '移除電話號碼',
+    remove_phone_confirmation_description: '移除後，你將無法再使用此電話號碼登入。確定要繼續嗎？',
+    email_removed: '電郵地址已成功移除。',
+    phone_removed: '電話號碼已成功移除。',
   },
   social: {
     linked: '已成功連結 {{connector}}。',

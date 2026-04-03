@@ -230,11 +230,19 @@ export const accountStorage = Object.freeze({
     },
   },
   mfaToggleAction: {
-    get: (): 'enable' | 'disable' | undefined => {
+    get: (): 'enable' | 'disable' | 'remove-email' | 'remove-phone' | undefined => {
       const value = getString(storageKeys.mfaToggleAction, 'session');
-      return value === 'enable' || value === 'disable' ? value : undefined;
+      if (
+        value === 'enable' ||
+        value === 'disable' ||
+        value === 'remove-email' ||
+        value === 'remove-phone'
+      ) {
+        return value;
+      }
+      return undefined;
     },
-    set: (value: 'enable' | 'disable') => {
+    set: (value: 'enable' | 'disable' | 'remove-email' | 'remove-phone') => {
       setString(storageKeys.mfaToggleAction, value, 'session');
     },
     clear: () => {

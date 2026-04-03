@@ -96,6 +96,14 @@ const account_center = {
     account_removal: 'حذف الحساب',
     delete_your_account: 'احذف حسابك',
     delete_account: 'حذف الحساب',
+    remove_email_confirmation_title: 'إزالة عنوان البريد الإلكتروني',
+    remove_email_confirmation_description:
+      'بعد الإزالة، لن تتمكن بعد ذلك من تسجيل الدخول باستخدام عنوان البريد الإلكتروني هذا. هل أنت متأكد أنك تريد المتابعة؟',
+    remove_phone_confirmation_title: 'إزالة رقم الهاتف',
+    remove_phone_confirmation_description:
+      'بعد الإزالة، لن تتمكن بعد ذلك من تسجيل الدخول باستخدام رقم الهاتف هذا. هل أنت متأكد أنك تريد المتابعة؟',
+    email_removed: 'تمت إزالة عنوان البريد الإلكتروني بنجاح.',
+    phone_removed: 'تمت إزالة رقم الهاتف بنجاح.',
   },
   social: {
     linked: 'تم ربط {{connector}} بنجاح.',
