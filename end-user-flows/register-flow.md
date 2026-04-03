@@ -79,7 +79,10 @@ flowchart TD
     missing_required_identifier -->|no| required_password{Required password?}
     missing_required_identifier -->|yes| fulfill_missing_identifiers[Fulfill missing identifiers]
 
-    fulfill_missing_identifiers --> required_password
+    fulfill_missing_identifiers --> social_identifier_conflict{Social-linked email or phone<br/>already belongs to an existing user?}
+    social_identifier_conflict -->|yes| social_continue_link[Prompt to bind the social identity<br/>to the existing account]
+    social_identifier_conflict -->|no| required_password
+    social_continue_link --> out_social_continue_link([Bind social identity and sign in<br/>outside this register flow])
     required_password -->|yes| fulfill_password[Fulfill password]
     required_password -->|no| collect_custom_profile_enabled{Is collecting custom profile fields enabled?}
     fulfill_password -->  collect_custom_profile_enabled
