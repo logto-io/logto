@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { setTimeout } from 'node:timers/promises';
 
 import { appInsights } from '@logto/app-insights/node';
 import { type Optional, conditional, yes, trySafe } from '@silverhand/essentials';
@@ -8,6 +9,9 @@ import { EnvSet } from '#src/env-set/index.js';
 
 import { type CacheStore } from './types.js';
 import { cacheConsole } from './utils.js';
+
+// Use a strict 1s read timeout so Redis stalls fail fast and don't hold API latency.
+const redisCacheReadTimeout = 1000;
 
 abstract class RedisCacheBase implements CacheStore {
   readonly client?: RedisClientType | RedisClusterType;
@@ -19,7 +23,26 @@ abstract class RedisCacheBase implements CacheStore {
   }
 
   async get(key: string): Promise<Optional<string>> {
-    return conditional(await this.client?.get(key));
+    const getPromise = this.client?.get(key);
+
+    if (!getPromise) {
+      return undefined;
+    }
+
+    const timeoutAbortController = new AbortController();
+    const timeoutPromise = setTimeout(redisCacheReadTimeout, undefined, {
+      // Cache is best-effort; timeout timers should not keep the process alive.
+      ref: false,
+      signal: timeoutAbortController.signal,
+    });
+
+    try {
+      // Fail fast on cache read and gracefully fall back to cache miss behavior.
+      return conditional(await Promise.race([getPromise, timeoutPromise]));
+    } finally {
+      // Cancel pending timeout when Redis resolves first, preventing timer accumulation.
+      timeoutAbortController.abort();
+    }
   }
 
   async delete(key: string) {
