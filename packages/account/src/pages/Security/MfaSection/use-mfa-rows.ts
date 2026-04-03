@@ -14,6 +14,7 @@ import TotpIcon from '@ac/assets/icons/factor-totp.svg?react';
 import WebAuthnIcon from '@ac/assets/icons/factor-webauthn.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
 import {
+  authenticatorAppReplaceRoute,
   authenticatorAppRoute,
   backupCodesGenerateRoute,
   backupCodesManageRoute,
@@ -99,22 +100,24 @@ const useMfaRows = (
       if (!enabledFactors.includes(MfaFactor.TOTP)) {
         return [];
       }
+      const isConfigured = Boolean(totpVerification);
       return [
         {
           key: 'totp',
           icon: factorIcon[MfaFactor.TOTP],
           label: t('account_center.security.authenticator_app'),
           value: totpVerification ? t('account_center.security.configured') : undefined,
-          isConfigured: Boolean(totpVerification),
-          action:
-            isEditable && !totpVerification
-              ? {
-                  label: t('account_center.security.add'),
-                  handler: () => {
-                    navigateTo(authenticatorAppRoute);
-                  },
-                }
-              : undefined,
+          isConfigured,
+          action: isEditable
+            ? {
+                label: isConfigured
+                  ? t('account_center.security.change')
+                  : t('account_center.security.add'),
+                handler: () => {
+                  navigateTo(isConfigured ? authenticatorAppReplaceRoute : authenticatorAppRoute);
+                },
+              }
+            : undefined,
         },
       ];
     };
