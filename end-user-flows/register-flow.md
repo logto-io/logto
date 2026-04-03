@@ -54,9 +54,10 @@ flowchart TD
     so2b -->|no| so3{Related user found by social identity,<br/>verified email or phone}
     so3 -->|yes| so4{Automatic account linking enabled}
     so4 -->|yes| out_social_auto_link([Auto-link social identity<br/>and sign in outside this register flow])
-    so4 -->|no| so5[Account-linking choice]
-    so5 -->|Bind existing account| out_social_sign_in([Switch to sign-in flow<br/>with verified social identity])
-    so5 -->|Create another account| so6[User identified with<br/>verified social identity]
+    so4 -->|no| so5[Open account-linking page]
+    so5 --> so5_choice{Choose link or create another account}
+    so5_choice -->|Bind existing account| out_social_sign_in([Switch to sign-in flow<br/>with verified social identity])
+    so5_choice -->|Create another account| so6[User identified with<br/>verified social identity]
     so3 -->|no| so6
   end
 
@@ -92,7 +93,7 @@ flowchart TD
   idu2 --> reg_attempt
   reg_verified --> reg_attempt
   sso5 --> reg_attempt
-  so5 --> reg_attempt
+  so6 --> reg_attempt
   ml4 --> reg_attempt
 
   reg_attempt --> existing_id{Identifier already used<br/>by an existing account}
