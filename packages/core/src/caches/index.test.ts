@@ -100,7 +100,7 @@ describe('RedisCache', () => {
     }
   });
 
-  it('should fail fast when cache read hangs for more than 5 seconds', async () => {
+  it('should fail fast when cache read hangs for more than 1 second', async () => {
     jest.clearAllMocks();
     const cache = new RedisCache('redis://url');
     jest.spyOn(cache.client!, 'get').mockImplementation(
@@ -112,6 +112,6 @@ describe('RedisCache', () => {
     );
     const start = Date.now();
     await expect(cache.get('foo')).resolves.toBeUndefined();
-    expect(Date.now() - start).toBeGreaterThanOrEqual(4900);
-  }, 10_000);
+    expect(Date.now() - start).toBeGreaterThanOrEqual(900);
+  }, 4000);
 });

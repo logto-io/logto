@@ -10,9 +10,8 @@ import { EnvSet } from '#src/env-set/index.js';
 import { type CacheStore } from './types.js';
 import { cacheConsole } from './utils.js';
 
-// Keep cache read timeout aligned with node-redis default connect timeout (5s),
-// so Redis read stalls won't block API requests for too long.
-const redisCacheReadTimeout = 5000;
+// Use a strict 1s read timeout so Redis stalls fail fast and don't hold API latency.
+const redisCacheReadTimeout = 1000;
 
 abstract class RedisCacheBase implements CacheStore {
   readonly client?: RedisClientType | RedisClusterType;
