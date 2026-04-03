@@ -76,12 +76,13 @@ flowchart TD
     out_existing_id --> out_existing_id_done([Exit register flow<br/>and restart in sign-in])
     existing_id -->|no| missing_required_identifier{"Missing required sign-up identifiers?<br/>(Username, email, or phone)"}
 
-    missing_required_identifier -->|no| required_password{Required password?}
-    missing_required_identifier -->|yes| fulfill_missing_identifiers[Fulfill missing identifiers]
-
     fulfill_missing_identifiers --> social_identifier_conflict{Social-linked email or phone<br/>already belongs to an existing user?}
     social_identifier_conflict -->|yes| social_continue_link[Prompt to bind the social identity<br/>to the existing account]
     social_identifier_conflict -->|no| required_password
+
+    missing_required_identifier -->|no| required_password{Required password?}
+    missing_required_identifier -->|yes| fulfill_missing_identifiers[Fulfill missing identifiers]
+
     social_continue_link --> out_social_continue_link([Bind social identity and sign in<br/>outside this register flow])
     required_password -->|yes| fulfill_password[Fulfill password]
     required_password -->|no| collect_custom_profile_enabled{Is collecting custom profile fields enabled?}
@@ -120,7 +121,6 @@ flowchart TD
     mfa_policy{MFA mandatory now<br/>or required by organization?}
     mfa_policy -->|no| mfa_onboarding{MFA onboarding:<br/>Enable or skip?}
 
-    mfa_onboarding -->|skip| submit
     mfa_onboarding -->|enable| mfa_missing
 
     mfa_policy -->|yes| mfa_missing
@@ -138,12 +138,12 @@ flowchart TD
     mfa_suggestion_bind --> mfa_suggestion_bind2[Bind another factor or skip suggestion]
     mfa_suggestion_bind2 --> backup_gate
 
-    backup_gate -->|yes| backup[Backup code binding]
-    backup_gate -->|no| submit[Submit interaction]
-
-    backup --> backup2[Generate and save backup codes]
-    backup2 --> submit
+    backup_gate -->|yes| backup[Generate and save backup codes]
   end
+
+  mfa_onboarding -->|skip| submit[Submit interaction]
+  backup_gate -->|no| submit
+  backup --> submit
 
   submit --> done([OIDC redirect])
 ```

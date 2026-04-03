@@ -142,7 +142,6 @@ flowchart TD
 
   subgraph PasskeyBinding["Passkey sign-in handling"]
     passkey_entry --> sso_bypass{Signed in through enterprise SSO}
-    sso_bypass -->|yes| submit[Submit interaction]
     sso_bypass -->|no| passkey_enabled{Passkey sign-in enabled?}
 
     passkey_enabled -->|no| skip_passkey
@@ -152,8 +151,8 @@ flowchart TD
     passkey_bound -->|no| create_passkey[Create passkey page]
 
     create_passkey --> create_passkey2{Bind passkey now?}
+    create_passkey2 -->|skip| skip_passkey[Skip passkey binding]
     create_passkey2 -->|bind| bind_passkey[Bind passkey]
-    create_passkey2 -->|skip| skip_passkey
   end
 
   subgraph MfaFlow["MFA handling"]
@@ -164,11 +163,10 @@ flowchart TD
     mfa_policy -->|yes| mfa_missing
     mfa_policy -->|no| mfa_onboarding_needed{Optional MFA onboarding<br/>should be shown}
 
-    mfa_onboarding_needed -->|yes| mfa_on[MFA onboarding]
     mfa_onboarding_needed -->|no| mfa_missing
+    mfa_onboarding_needed -->|yes| mfa_on[MFA onboarding]
 
-    mfa_on --> mfa_on2[Enable MFA or skip]
-    mfa_on2 -->|skip| submit[Submit interaction]
+    mfa_on --> mfa_on2{Enable MFA or skip}
     mfa_on2 -->|enable| mfa_missing
 
     mfa_missing{Missing required MFA factor}
@@ -184,12 +182,12 @@ flowchart TD
     mfa_suggestion_bind --> mfa_suggestion_bind2[Bind another factor or skip suggestion]
     mfa_suggestion_bind2 --> backup_gate
 
-    backup_gate -->|yes| backup[Backup code binding]
-    backup_gate -->|no| submit
-
-    backup --> backup2[Generate and save backup codes]
-    backup2 --> submit
+    backup_gate -->|yes| backup[Generate and save backup codes]
   end
 
+  sso_bypass -->|yes| submit[Submit interaction]
+  mfa_on2 -->|skip| submit[Submit interaction]
+  backup_gate -->|no| submit
+  backup --> submit
   submit --> done([OIDC redirect])
 ```
