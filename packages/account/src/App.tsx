@@ -199,7 +199,10 @@ const Main = () => {
           />
         </>
       )}
-      {showsSecurityPage && <Route path={securityRoute} element={<Security />} />}
+      <Route
+        path={securityRoute}
+        element={showsSecurityPage ? <Security /> : <Navigate replace to=".." relative="path" />}
+      />
       <Route
         index
         element={showsSecurityPage ? <Navigate replace to={securityRoute} /> : <Home />}
