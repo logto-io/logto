@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const userOnboardingDataKey = 'onboarding';
+export const ossUserOnboardingDataKey = 'ossOnboarding';
 
 export enum Project {
   Personal = 'personal',
@@ -23,7 +24,6 @@ export enum Title {
   Others = 'others',
 }
 
-/** @deprecated */
 export enum CompanySize {
   Scale1 = '1',
   Scale2 = '2-49',
@@ -31,6 +31,7 @@ export enum CompanySize {
   Scale4 = '200-999',
   Scale5 = '1000+',
 }
+// Kept as a shared enum for OSS onboarding and existing questionnaire payloads.
 
 /** @deprecated */
 export enum Reason {
@@ -74,9 +75,26 @@ const questionnaireGuard = z.object({
 
 export type Questionnaire = z.infer<typeof questionnaireGuard>;
 
+const ossQuestionnaireGuard = z.object({
+  emailAddress: z.string().optional(),
+  newsletter: z.boolean().optional(),
+  project: z.nativeEnum(Project).optional(),
+  companyName: z.string().optional(),
+  companySize: z.nativeEnum(CompanySize).optional(),
+});
+
+export type OssQuestionnaire = z.infer<typeof ossQuestionnaireGuard>;
+
 export const userOnboardingDataGuard = z.object({
   questionnaire: questionnaireGuard.optional(),
   isOnboardingDone: z.boolean().optional(),
 });
 
 export type UserOnboardingData = z.infer<typeof userOnboardingDataGuard>;
+
+export const ossUserOnboardingDataGuard = z.object({
+  questionnaire: ossQuestionnaireGuard.optional(),
+  isOnboardingDone: z.boolean().optional(),
+});
+
+export type OssUserOnboardingData = z.infer<typeof ossUserOnboardingDataGuard>;
