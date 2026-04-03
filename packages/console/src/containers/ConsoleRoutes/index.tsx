@@ -55,7 +55,9 @@ export function ConsoleRoutes() {
           <Route element={<ProtectedRoutes />}>
             <Route path={dropLeadingSlash(GlobalRoute.Profile) + '/*'} element={<Profile />} />
             <Route element={<TenantAccess />}>
-              {!isCloud && <Route path="onboarding" element={<OssOnboarding />} />}
+              {!isCloud && isDevFeaturesEnabled && (
+                <Route path="onboarding" element={<OssOnboarding />} />
+              )}
               {isCloud && (
                 <Route
                   path={dropLeadingSlash(GlobalRoute.CheckoutSuccessCallback)}
