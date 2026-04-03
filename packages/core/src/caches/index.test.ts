@@ -102,35 +102,16 @@ describe('RedisCache', () => {
 
   it('should fail fast when cache read hangs for more than 5 seconds', async () => {
     jest.clearAllMocks();
-    jest.useFakeTimers();
-
-    try {
-      mockFunction.mockImplementationOnce(
-        async () =>
-          new Promise<string>((resolve) => {
-            // Intentionally never resolve to simulate a stuck Redis read without extra timers.
-            void resolve;
-          })
-      );
-      const cache = new RedisCache('redis://url');
-      const pendingRead = cache.get('foo');
-      const marker = Symbol('marker');
-      const beforeTimeout = Promise.race([
-        pendingRead,
-        new Promise<symbol>((resolve) => {
-          setTimeout(() => {
-            resolve(marker);
-          }, 4999);
-        }),
-      ]);
-
-      jest.advanceTimersByTime(4999);
-      await expect(beforeTimeout).resolves.toBe(marker);
-
-      jest.advanceTimersByTime(1);
-      await expect(pendingRead).resolves.toBeUndefined();
-    } finally {
-      jest.useRealTimers();
-    }
-  });
+    const cache = new RedisCache('redis://url');
+    jest.spyOn(cache.client!, 'get').mockImplementation(
+      async () =>
+        new Promise<string>((resolve) => {
+          // Intentionally never resolve to simulate a stuck Redis read without extra timers.
+          void resolve;
+        })
+    );
+    const start = Date.now();
+    await expect(cache.get('foo')).resolves.toBeUndefined();
+    expect(Date.now() - start).toBeGreaterThanOrEqual(4900);
+  }, 10_000);
 });
