@@ -1,5 +1,6 @@
 import {
   type UserMfaVerificationResponse,
+  type UserMfaSettingsResponse,
   MfaFactor,
   type WebAuthnRegistrationOptions,
   type BindWebAuthnPayload,
@@ -7,10 +8,6 @@ import {
 
 import { verificationRecordIdHeader } from './account';
 import { createAuthenticatedKy } from './base-ky';
-
-export type UserMfaSettingsResponse = {
-  skipMfaOnSignIn: boolean;
-};
 
 export type TotpSecretResponse = {
   secret: string;

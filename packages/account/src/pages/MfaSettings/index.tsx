@@ -68,7 +68,6 @@ const MfaSettings = () => {
     if (verificationId && action) {
       void handleConfirm();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verificationId, action]);
 
   if (
