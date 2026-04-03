@@ -28,7 +28,7 @@ flowchart TD
     ide1 -->|yes| sso_redirect[Redirect to enterprise SSO]
     ide1 -->|no| ide2[Start register interaction<br/>optional captcha]
 
-    ide2 --> id_method_ui[Show identifier verification methods<br/>enabled by the current sign-in experience settings]
+    ide2 --> id_method_ui[Render identifier verification options<br/>enabled for this sign-up page]
     id_method_ui --> idv2[Send verification code]
     idv2 --> idv3[Verify code]
     idv3 --> reg_verified[Submit verified identifier<br/>for registration]
