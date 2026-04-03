@@ -49,11 +49,15 @@ flowchart TD
   subgraph Social["Register via social sign-in"]
     so0 --> so1[Start sign-in attempt]
     so1 --> so2[Verify social callback<br/>captcha skipped]
-    so2 --> so3{Related user found by social identity,<br/>verified email or phone}
-    so3 -->|yes| so4[Account-linking choice]
-    so4 -->|Bind existing account| out_social_sign_in([Switch to sign-in flow<br/>with verified social identity])
-    so4 -->|Create another account| so5[User identified with<br/>verified social identity]
-    so3 -->|no| so5
+    so2 --> so2b{Existing social identity found}
+    so2b -->|yes| out_social_existing([Direct sign-in path<br/>outside this register flow])
+    so2b -->|no| so3{Related user found by social identity,<br/>verified email or phone}
+    so3 -->|yes| so4{Automatic account linking enabled}
+    so4 -->|yes| out_social_auto_link([Auto-link social identity<br/>and sign in outside this register flow])
+    so4 -->|no| so5[Account-linking choice]
+    so5 -->|Bind existing account| out_social_sign_in([Switch to sign-in flow<br/>with verified social identity])
+    so5 -->|Create another account| so6[User identified with<br/>verified social identity]
+    so3 -->|no| so6
   end
 
   subgraph MagicLink["Register via one-time token"]
