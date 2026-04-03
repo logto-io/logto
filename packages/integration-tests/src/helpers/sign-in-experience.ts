@@ -149,7 +149,7 @@ export const enableMandatoryMfaWithTotp = async () =>
   updateSignInExperience({
     mfa: {
       factors: [MfaFactor.TOTP],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   });
 
@@ -157,7 +157,7 @@ export const enableMandatoryMfaWithWebAuthn = async () =>
   updateSignInExperience({
     mfa: {
       factors: [MfaFactor.WebAuthn],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   });
 
@@ -165,7 +165,7 @@ export const enableMandatoryMfaWithTotpAndBackupCode = async () =>
   updateSignInExperience({
     mfa: {
       factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   });
 
@@ -173,7 +173,7 @@ export const enableMandatoryMfaWithEmail = async () =>
   updateSignInExperience({
     mfa: {
       factors: [MfaFactor.EmailVerificationCode],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   });
 
@@ -181,7 +181,7 @@ export const enableMandatoryMfaWithEmailAndBackupCode = async () =>
   updateSignInExperience({
     mfa: {
       factors: [MfaFactor.EmailVerificationCode, MfaFactor.BackupCode],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   });
 
@@ -189,7 +189,7 @@ export const enableMandatoryMfaWithPhone = async () =>
   updateSignInExperience({
     mfa: {
       factors: [MfaFactor.PhoneVerificationCode],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   });
 
@@ -197,7 +197,7 @@ export const enableMandatoryMfaWithPhoneAndBackupCode = async () =>
   updateSignInExperience({
     mfa: {
       factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   });
 
@@ -205,7 +205,7 @@ export const enableMandatoryMfaWithWebAuthnAndBackupCode = async () =>
   updateSignInExperience({
     mfa: {
       factors: [MfaFactor.WebAuthn, MfaFactor.BackupCode],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   });
 

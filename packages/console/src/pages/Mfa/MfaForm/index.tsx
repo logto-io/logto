@@ -19,7 +19,7 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -45,7 +45,7 @@ import {
   getMfaRequirementMode,
   getMfaRequirementState,
   MfaRequirementMode,
-  normalizeSetUpPrompt,
+  normalizeSetUpPromptByRequirementMode,
   validateBackupCodeFactor,
 } from './utils';
 
@@ -197,7 +197,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
         title: t('mfa.require_mfa_adaptive'),
       },
       {
-        value: MfaRequirementMode.Mandatory,
+        value: MfaRequirementMode.Required,
         title: t('mfa.require_mfa_mandatory'),
       },
     ],
@@ -214,7 +214,11 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
   );
 
   useEffect(() => {
-    if (mfaRequirementMode === MfaRequirementMode.Mandatory && formValues.adaptiveMfaEnabled) {
+    if (
+      isDevFeaturesEnabled &&
+      mfaRequirementMode === MfaRequirementMode.Required &&
+      formValues.adaptiveMfaEnabled
+    ) {
       // This effect normalizes legacy state after form hydration/watch updates.
       // Older data can contain { isMandatory: true, adaptiveMfaEnabled: true },
       // but the new 3-option requirement mode treats "Mandatory" as
@@ -229,15 +233,38 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
         { keepDirty: true, keepDirtyValues: true }
       );
     }
-  }, [mfaRequirementMode, formValues, reset]);
+  }, [formValues, mfaRequirementMode, reset]);
 
-  const shouldShowSetUpPrompt = mfaRequirementMode !== MfaRequirementMode.Mandatory;
-  const shouldShowOrganizationRequiredMfaPolicy =
-    mfaRequirementMode === MfaRequirementMode.Optional;
+  useEffect(() => {
+    // Mandatory mode does not expose organization-level prompt settings in the UI.
+    // If user switches from optional/adaptive (where this field is editable) to mandatory,
+    // we must actively normalize it to `NoPrompt` to keep the in-form state valid.
+    //
+    // Mark this change as dirty on purpose: this normalization is a user-triggered
+    // effective config change (switching requirement mode), not a passive hydration fix.
+    //
+    // To avoid "saved but still dirty" regressions, the post-save baseline is normalized
+    // in `convertMfaConfigToForm()` as well, so this effect will not re-dirty the form
+    // after `reset()` with server data.
+    if (
+      isDevFeaturesEnabled &&
+      mfaRequirementMode === MfaRequirementMode.Required &&
+      formValues.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.NoPrompt
+    ) {
+      setValue('organizationRequiredMfaPolicy', OrganizationRequiredMfaPolicy.NoPrompt, {
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+    }
+  }, [formValues.organizationRequiredMfaPolicy, mfaRequirementMode, setValue]);
+
+  const shouldShowOrganizationRequiredMfaPolicy = isDevFeaturesEnabled
+    ? mfaRequirementMode !== MfaRequirementMode.Required
+    : !formValues.isMandatory;
   const setUpPromptOptions =
-    mfaRequirementMode === MfaRequirementMode.Adaptive
-      ? nonSkippableMfaPromptOptions
-      : optionalMfaPolicyOptions;
+    mfaRequirementMode === MfaRequirementMode.Optional
+      ? optionalMfaPolicyOptions
+      : nonSkippableMfaPromptOptions;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -257,7 +284,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
         return;
       }
 
-      const payload = buildMfaPatchPayload(formData);
+      const payload = buildMfaPatchPayload(formData, isDevFeaturesEnabled);
       const { mfa: updatedMfaConfig, adaptiveMfa: updatedAdaptiveMfa } = await api
         .patch('api/sign-in-exp', {
           json: payload,
@@ -373,42 +400,50 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
           description="mfa.policy_description"
           learnMoreLink={{ href: mfa }}
         >
-          <FormField title="mfa.require_mfa" headlineSpacing="large">
-            <Select
-              hasSelectedOptionIndicator
-              value={mfaRequirementMode}
-              options={mfaRequirementOptions}
-              isReadOnly={isPolicySettingsDisabled}
-              onChange={(mode) => {
-                if (!mode) {
-                  return;
-                }
+          {isDevFeaturesEnabled ? (
+            <FormField title="mfa.require_mfa" headlineSpacing="large">
+              <Select
+                hasSelectedOptionIndicator
+                value={mfaRequirementMode}
+                options={mfaRequirementOptions}
+                isReadOnly={isPolicySettingsDisabled}
+                onChange={(mode) => {
+                  if (!mode) {
+                    return;
+                  }
 
-                const nextState = getMfaRequirementState(mode);
-                const currentSetUpPrompt = formValues.setUpPrompt;
-                setValue('isMandatory', nextState.isMandatory, {
-                  shouldDirty: true,
-                  shouldTouch: true,
-                });
-                setValue('adaptiveMfaEnabled', nextState.adaptiveMfaEnabled, {
-                  shouldDirty: true,
-                  shouldTouch: true,
-                });
+                  const nextState = getMfaRequirementState(mode);
+                  const currentSetUpPrompt = formValues.setUpPrompt;
+                  setValue('isMandatory', nextState.isMandatory, {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  });
+                  setValue('adaptiveMfaEnabled', nextState.adaptiveMfaEnabled, {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                  });
 
-                if (mode !== MfaRequirementMode.Mandatory) {
                   setValue(
                     'setUpPrompt',
-                    normalizeSetUpPrompt(currentSetUpPrompt, mode === MfaRequirementMode.Adaptive),
+                    normalizeSetUpPromptByRequirementMode(currentSetUpPrompt, mode),
                     {
                       shouldDirty: true,
                       shouldTouch: true,
                     }
                   );
-                }
-              }}
-            />
-          </FormField>
-          {shouldShowSetUpPrompt && (
+                }}
+              />
+            </FormField>
+          ) : (
+            <FormField title="mfa.require_mfa" headlineSpacing="large">
+              <Switch
+                disabled={isPolicySettingsDisabled}
+                label={t('mfa.require_mfa_label')}
+                {...register('isMandatory')}
+              />
+            </FormField>
+          )}
+          {(isDevFeaturesEnabled ? true : !formValues.isMandatory) && (
             <FormField title="mfa.set_up_prompt" headlineSpacing="large">
               <Controller
                 control={control}
@@ -417,7 +452,7 @@ function MfaForm({ data, adaptiveMfa, signInMethods, onMfaUpdated }: Props) {
                   <Select
                     hasSelectedOptionIndicator
                     value={value}
-                    options={setUpPromptOptions}
+                    options={isDevFeaturesEnabled ? setUpPromptOptions : optionalMfaPolicyOptions}
                     isReadOnly={isPolicySettingsDisabled}
                     onChange={onChange}
                   />

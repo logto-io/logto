@@ -44,7 +44,7 @@ const emailPrimarySignInExperience = {
   },
   mfa: {
     factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-    policy: MfaPolicy.Mandatory,
+    policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
   },
 };
 
@@ -175,7 +175,7 @@ describe('Register interaction - optional additional MFA suggestion', () => {
       },
       mfa: {
         factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
     };
 
@@ -245,7 +245,7 @@ describe('Register interaction - optional additional MFA suggestion', () => {
       },
       mfa: {
         factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
     });
 
@@ -309,7 +309,7 @@ describe('Register interaction - optional additional MFA suggestion', () => {
       },
       mfa: {
         factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode, MfaFactor.TOTP],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
     });
 

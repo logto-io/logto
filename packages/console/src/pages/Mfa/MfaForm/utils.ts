@@ -1,4 +1,9 @@
-import { type AdaptiveMfa, MfaFactor, MfaPolicy } from '@logto/schemas';
+import {
+  type AdaptiveMfa,
+  MfaFactor,
+  MfaPolicy,
+  OrganizationRequiredMfaPolicy,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
 import {
@@ -11,7 +16,7 @@ import {
 export enum MfaRequirementMode {
   Optional = 'optional',
   Adaptive = 'adaptive',
-  Mandatory = 'mandatory',
+  Required = 'required',
 }
 
 export const getMfaRequirementMode = ({
@@ -19,7 +24,7 @@ export const getMfaRequirementMode = ({
   adaptiveMfaEnabled,
 }: Pick<MfaConfigForm, 'isMandatory' | 'adaptiveMfaEnabled'>): MfaRequirementMode => {
   if (isMandatory) {
-    return MfaRequirementMode.Mandatory;
+    return MfaRequirementMode.Required;
   }
 
   if (adaptiveMfaEnabled) {
@@ -32,7 +37,7 @@ export const getMfaRequirementMode = ({
 export const getMfaRequirementState = (
   mode: MfaRequirementMode
 ): Pick<MfaConfigForm, 'isMandatory' | 'adaptiveMfaEnabled'> => {
-  if (mode === MfaRequirementMode.Mandatory) {
+  if (mode === MfaRequirementMode.Required) {
     return {
       isMandatory: true,
       adaptiveMfaEnabled: false,
@@ -62,28 +67,50 @@ const isNonSkippableMfaPrompt = (policy: MfaPolicy): policy is MfaPromptMandator
     policy
   );
 
-export const normalizeSetUpPrompt = (policy: MfaPolicy, adaptiveMfaEnabled: boolean) => {
-  if (adaptiveMfaEnabled) {
+const isMandatoryModePolicy = (policy: MfaPolicy): boolean =>
+  policy === MfaPolicy.Mandatory || isNonSkippableMfaPrompt(policy);
+
+const normalizeSetUpPrompt = (policy: MfaPolicy, requireNonSkippablePrompt: boolean) => {
+  if (requireNonSkippablePrompt) {
     return isNonSkippableMfaPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUpMandatory;
   }
 
   return isOptionalMfaPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUp;
 };
 
+export const normalizeSetUpPromptByRequirementMode = (
+  policy: MfaPolicy,
+  mode: MfaRequirementMode
+) => {
+  if (mode === MfaRequirementMode.Optional) {
+    return isOptionalMfaPrompt(policy) ? policy : MfaPolicy.NoPrompt;
+  }
+
+  return normalizeSetUpPrompt(policy, true);
+};
+
 export const convertMfaConfigToForm = (
   { policy, factors, organizationRequiredMfaPolicy }: MfaConfig,
   adaptiveMfa?: AdaptiveMfa
-): MfaConfigForm => ({
-  isMandatory: policy === MfaPolicy.Mandatory,
-  setUpPrompt: normalizeSetUpPrompt(policy, Boolean(adaptiveMfa?.enabled)),
-  totpEnabled: factors.includes(MfaFactor.TOTP),
-  webAuthnEnabled: factors.includes(MfaFactor.WebAuthn),
-  backupCodeEnabled: factors.includes(MfaFactor.BackupCode),
-  emailVerificationCodeEnabled: factors.includes(MfaFactor.EmailVerificationCode),
-  phoneVerificationCodeEnabled: factors.includes(MfaFactor.PhoneVerificationCode),
-  organizationRequiredMfaPolicy,
-  adaptiveMfaEnabled: Boolean(adaptiveMfa?.enabled),
-});
+): MfaConfigForm => {
+  const adaptiveMfaEnabled = Boolean(adaptiveMfa?.enabled);
+  const isMandatory = !adaptiveMfaEnabled && isMandatoryModePolicy(policy);
+  const normalizedOrganizationRequiredMfaPolicy = isMandatory
+    ? OrganizationRequiredMfaPolicy.NoPrompt
+    : organizationRequiredMfaPolicy;
+
+  return {
+    isMandatory,
+    setUpPrompt: normalizeSetUpPrompt(policy, adaptiveMfaEnabled || isMandatory),
+    totpEnabled: factors.includes(MfaFactor.TOTP),
+    webAuthnEnabled: factors.includes(MfaFactor.WebAuthn),
+    backupCodeEnabled: factors.includes(MfaFactor.BackupCode),
+    emailVerificationCodeEnabled: factors.includes(MfaFactor.EmailVerificationCode),
+    phoneVerificationCodeEnabled: factors.includes(MfaFactor.PhoneVerificationCode),
+    organizationRequiredMfaPolicy: normalizedOrganizationRequiredMfaPolicy,
+    adaptiveMfaEnabled,
+  };
+};
 
 export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig => {
   const {
@@ -111,9 +138,7 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
     !isMandatory && !adaptiveMfaEnabled && Boolean(organizationRequiredMfaPolicy);
 
   return {
-    policy: isMandatory
-      ? MfaPolicy.Mandatory
-      : normalizeSetUpPrompt(setUpPrompt, adaptiveMfaEnabled),
+    policy: normalizeSetUpPrompt(setUpPrompt, isMandatory || adaptiveMfaEnabled),
     factors,
     ...conditional(shouldIncludeOrganizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }),
   };
@@ -124,12 +149,14 @@ export const validateBackupCodeFactor = (factors: MfaFactor[]): boolean => {
 };
 
 export const buildMfaPatchPayload = (
-  mfaConfigForm: MfaConfigForm
+  mfaConfigForm: MfaConfigForm,
+  isDevFeaturesEnabled: boolean
 ): { mfa: MfaConfig; adaptiveMfa: AdaptiveMfa } => {
   const mfa = convertMfaFormToConfig(mfaConfigForm);
+  const legacyMfa = mfaConfigForm.isMandatory ? { ...mfa, policy: MfaPolicy.Mandatory } : mfa;
 
   return {
-    mfa,
-    adaptiveMfa: { enabled: mfaConfigForm.adaptiveMfaEnabled },
+    mfa: isDevFeaturesEnabled ? mfa : legacyMfa,
+    adaptiveMfa: { enabled: isDevFeaturesEnabled && mfaConfigForm.adaptiveMfaEnabled },
   };
 };

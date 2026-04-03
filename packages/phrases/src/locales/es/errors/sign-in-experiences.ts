@@ -29,10 +29,10 @@ const sign_in_experiences = {
   phone_verification_code_cannot_be_used_for_sign_in:
     'El código de verificación de SMS no se puede usar para el inicio de sesión cuando está habilitado para MFA.',
   adaptive_mfa_requires_mfa: 'Debes habilitar MFA antes de habilitar Adaptive MFA.',
-  adaptive_mfa_requires_non_skippable_policy:
-    'Adaptive MFA requiere una política de aviso de MFA que no se pueda omitir. Usa PromptOnlyAtSignInMandatory o PromptAtSignInAndSignUpMandatory.',
-  non_adaptive_mfa_requires_skippable_policy:
-    'Cuando el MFA adaptativo está deshabilitado, la política de aviso de MFA debe ser opcional. No uses PromptOnlyAtSignInMandatory o PromptAtSignInAndSignUpMandatory.',
+  required_mfa_requires_non_skippable_policy:
+    'La MFA adaptativa y la MFA obligatoria requieren una política de aviso de MFA no omitible. Usa PromptOnlyAtSignInMandatory o PromptAtSignInAndSignUpMandatory.',
+  optional_mfa_requires_skippable_policy:
+    'La MFA opcional requiere una política de aviso de MFA omitible. No uses PromptOnlyAtSignInMandatory ni PromptAtSignInAndSignUpMandatory.',
   duplicated_sign_up_identifiers: 'Identificadores de registro duplicados detectados.',
   missing_sign_up_identifiers: 'El identificador de registro principal no puede estar vacío.',
   invalid_custom_email_blocklist_format:
