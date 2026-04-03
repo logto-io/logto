@@ -138,7 +138,7 @@ flowchart TD
 
   subgraph PasskeyBinding["Passkey sign-in handling"]
     passkey_entry --> sso_bypass{Signed in through enterprise SSO}
-    sso_bypass -->|yes| skip_passkey[Skip passkey setup]
+    sso_bypass -->|yes| submit[Submit interaction]
     sso_bypass -->|no| passkey_enabled{Passkey sign-in enabled?}
 
     passkey_enabled -->|no| skip_passkey
