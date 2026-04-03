@@ -69,7 +69,9 @@ flowchart TD
   end
 
   subgraph RegisterBackend["Profile fulfillment and user creation"]
-    existing_id -->|yes| out_existing_id[Suggest sign-in flow<br/>with the same identifier]
+    existing_id -->|yes| existing_id_sign_in_enabled{Current verification method<br/>enabled for sign-in?}
+    existing_id_sign_in_enabled -->|yes| out_existing_id[Suggest sign-in flow<br/>with the same identifier]
+    existing_id_sign_in_enabled -->|no| out_existing_id_error([Stay on register<br/>and show identity-exists error])
     out_existing_id --> out_existing_id_done([Exit register flow<br/>and restart in sign-in])
     existing_id -->|no| missing_required_identifier{"Missing required sign-up identifiers?<br/>(Username, email, or phone)"}
 
