@@ -19,6 +19,7 @@ import {
   passkeyManageRoute,
   passkeySuccessRoute,
   mfaSettingsRoute,
+  securityRoute,
   socialRoutePrefix,
 } from '@ac/constants/routes';
 
@@ -31,6 +32,7 @@ const uiLocalesParameter = 'ui_locales';
 const identifierParameter = 'identifier';
 
 const knownRoutePrefixes: readonly string[] = [
+  securityRoute,
   emailRoute,
   emailSuccessRoute,
   phoneRoute,
