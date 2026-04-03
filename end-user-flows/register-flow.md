@@ -40,7 +40,7 @@ flowchart TD
     sso1 --> sso2[Return from enterprise IdP]
     sso2 --> sso2b[Verify SSO callback<br/>captcha skipped]
     sso2b --> sso3{Existing enterprise identity found}
-    sso3 -->|yes| out_sso([Direct sign-in path<br/>outside this register flow])
+    sso3 -->|yes| out_sso([Automatically sign in with enterprise identity<br/>outside this register flow])
     sso3 -->|no| sso4{Related user found by<br/>verified email}
     sso4 -->|yes| out_sso_link([Auto-link enterprise identity<br/>and sign in outside this register flow])
     sso4 -->|no| sso5[User identified with<br/>verified enterprise identity]
@@ -50,7 +50,7 @@ flowchart TD
     so0 --> so1[Start sign-in attempt]
     so1 --> so2[Verify social callback<br/>captcha skipped]
     so2 --> so2b{Existing social identity found}
-    so2b -->|yes| out_social_existing([Direct sign-in path<br/>outside this register flow])
+    so2b -->|yes| out_social_existing([Automatically sign in with social identity<br/>outside this register flow])
     so2b -->|no| so3{Related user found by social identity,<br/>verified email or phone}
     so3 -->|yes| so4{Automatic account linking enabled}
     so4 -->|yes| out_social_auto_link([Auto-link social identity<br/>and sign in outside this register flow])
