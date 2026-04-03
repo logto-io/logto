@@ -50,8 +50,10 @@ flowchart TD
     so0 --> so1[Start sign-in attempt]
     so1 --> so2[Verify social callback<br/>captcha skipped]
     so2 --> so3{Related user found by social identity,<br/>verified email or phone}
-    so3 -->|yes| out_social_sign_in([Switch to sign-in flow<br/>with verified social identity])
-    so3 -->|no| so5[User identified with<br/>verified social identity]
+    so3 -->|yes| so4[Account-linking choice]
+    so4 -->|Bind existing account| out_social_sign_in([Switch to sign-in flow<br/>with verified social identity])
+    so4 -->|Create another account| so5[User identified with<br/>verified social identity]
+    so3 -->|no| so5
   end
 
   subgraph MagicLink["Register via one-time token"]
