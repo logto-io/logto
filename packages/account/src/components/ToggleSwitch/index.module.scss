@@ -42,6 +42,11 @@
     }
   }
 
+  input:focus-visible + .slider {
+    outline: 2px solid var(--color-brand-default);
+    outline-offset: 2px;
+  }
+
   input:checked + .slider {
     background-color: var(--color-success-70, #68be6a);
   }

@@ -4,7 +4,7 @@ import {
   MfaPolicy,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,7 +43,7 @@ const MfaSection = () => {
   const updateMfaSettingsApi = useApi(updateMfaSettings);
 
   const mfaControl = accountCenterSettings?.fields.mfa;
-  const enabledFactors = useMemo(() => experienceSettings?.mfa.factors ?? [], [experienceSettings]);
+  const enabledFactors = experienceSettings?.mfa.factors ?? [];
   const mfaPolicy = experienceSettings?.mfa.policy;
   const isEditable = mfaControl === AccountCenterControlValue.Edit;
 
@@ -170,10 +170,18 @@ const MfaSection = () => {
               <div className={styles.toggleRow}>
                 <div className={styles.toggleInfo}>
                   <div className={styles.toggleTitle}>
-                    {t('account_center.security.turn_on_2_step_verification')}
+                    {t(
+                      isTwoStepEnabled
+                        ? 'account_center.security.turn_off_2_step_verification'
+                        : 'account_center.security.turn_on_2_step_verification'
+                    )}
                   </div>
                   <div className={styles.toggleDescription}>
-                    {t('account_center.security.turn_on_2_step_verification_description')}
+                    {t(
+                      isTwoStepEnabled
+                        ? 'account_center.security.turn_off_2_step_verification_description'
+                        : 'account_center.security.turn_on_2_step_verification_description'
+                    )}
                   </div>
                 </div>
                 <ToggleSwitch
