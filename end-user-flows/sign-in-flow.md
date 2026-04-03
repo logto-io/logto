@@ -119,11 +119,15 @@ flowchart TD
   identified_sso_linked --> identified
   identified_magic_link --> identified
 
-  identified --> mfa_verify_applies{Initial MFA verification gate applies?}
-  mfa_verify_applies -->|no| profile_gate_applies{Required profile check applies?}
-  mfa_verify_applies -->|yes| mfa_verify_gate{Existing MFA must be verified now}
-  mfa_verify_gate -->|yes| mfa_verify[MFA verification]
-  mfa_verify_gate -->|no| profile_gate_applies
+  identified --> mfa_verify_skip{Skip initial MFA verification<br/>for enterprise SSO or passkey?}
+  mfa_verify_skip -->|yes| profile_gate_applies{Required profile check applies?}
+  mfa_verify_skip -->|no| adaptive_mfa_enabled{Adaptive MFA enabled?}
+  adaptive_mfa_enabled -->|yes| adaptive_mfa_gate{Adaptive MFA requires verification<br/>and user already has MFA factors?}
+  adaptive_mfa_enabled -->|no| sie_mfa_gate{Existing MFA verification required<br/>by SIE sign-in policy?}
+  adaptive_mfa_gate -->|yes| mfa_verify[MFA verification]
+  adaptive_mfa_gate -->|no| profile_gate_applies
+  sie_mfa_gate -->|yes| mfa_verify
+  sie_mfa_gate -->|no| profile_gate_applies
   mfa_verify --> profile_gate_applies
 
   subgraph ProfileFulfillment["Profile fulfillment"]
