@@ -130,7 +130,12 @@ function MfaSection({ user, signInExperience }: Props) {
               <span>{t('profile.mfa.not_configured')}</span>
             ),
           action: hasTotp
-            ? undefined
+            ? {
+                name: 'profile.change',
+                handler: () => {
+                  navigateToAccountPage('/account/authenticator-app/replace');
+                },
+              }
             : {
                 name: 'profile.mfa.add',
                 handler: () => {
