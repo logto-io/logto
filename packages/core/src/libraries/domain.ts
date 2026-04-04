@@ -1,5 +1,6 @@
 import { type CloudflareData, type Domain, DomainStatus } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -15,11 +16,18 @@ import {
 import { isSubdomainOf } from '#src/utils/domain.js';
 import { clearCustomDomainCache } from '#src/utils/tenant.js';
 
+export type DomainCleanupSummary = {
+  scannedCount: number;
+  deletedCount: number;
+  skippedActiveCount: number;
+  failedCount: number;
+};
+
 export type DomainLibrary = ReturnType<typeof createDomainLibrary>;
 
 export const createDomainLibrary = (queries: Queries) => {
   const {
-    domains: { updateDomainById, insertDomain, findDomainById, deleteDomainById },
+    domains: { updateDomainById, insertDomain, findAllDomains, findDomainById, deleteDomainById },
   } = queries;
 
   const syncDomainStatusFromCloudflareData = async (
@@ -114,9 +122,85 @@ export const createDomainLibrary = (queries: Queries) => {
     await clearCustomDomainCache(domain.domain);
   };
 
+  const cleanupDomains = async (staleDays: number): Promise<DomainCleanupSummary> => {
+    const { hostnameProviderConfig } = SystemContext.shared;
+    assertThat(hostnameProviderConfig, 'domain.not_configured');
+
+    const staleBefore = Date.now() - staleDays * 24 * 60 * 60 * 1000;
+    const domains = await findAllDomains();
+    const summary: DomainCleanupSummary = {
+      scannedCount: domains.length,
+      deletedCount: 0,
+      skippedActiveCount: 0,
+      failedCount: 0,
+    };
+
+    // Process domains sequentially to avoid Cloudflare rate limits
+    /* eslint-disable no-await-in-loop, @silverhand/fp/no-mutation, @silverhand/fp/no-let */
+    for (const domain of domains) {
+      // Orphan record without Cloudflare data, delete from DB
+      if (!domain.cloudflareData) {
+        try {
+          await deleteDomainById(domain.id);
+          await clearCustomDomainCache(domain.domain);
+          summary.deletedCount += 1;
+        } catch {
+          summary.failedCount += 1;
+        }
+        continue;
+      }
+
+      // Check real-time status from Cloudflare (source of truth)
+      let cloudflareData: CloudflareData;
+      try {
+        cloudflareData = await getCustomHostname(hostnameProviderConfig, domain.cloudflareData.id);
+      } catch (error: unknown) {
+        // Hostname already gone from Cloudflare, clean up DB record
+        if (error instanceof RequestError && error.code === 'domain.cloudflare_not_found') {
+          try {
+            await deleteDomainById(domain.id);
+            await clearCustomDomainCache(domain.domain);
+            summary.deletedCount += 1;
+          } catch {
+            summary.failedCount += 1;
+          }
+          continue;
+        }
+        summary.failedCount += 1;
+        continue;
+      }
+
+      const status = getDomainStatusFromCloudflareData(cloudflareData);
+
+      // Active in Cloudflare, sync DB status and skip
+      if (status === DomainStatus.Active) {
+        await trySafe(async () => syncDomainStatusFromCloudflareData(domain, cloudflareData));
+        summary.skippedActiveCount += 1;
+        continue;
+      }
+
+      // Non-active but created recently, skip
+      if (domain.createdAt >= staleBefore) {
+        continue;
+      }
+
+      // Stale non-active domain, delete from both Cloudflare and DB
+      try {
+        await deleteDomain(domain.id);
+        summary.deletedCount += 1;
+      } catch {
+        summary.failedCount += 1;
+      }
+    }
+    /* eslint-enable no-await-in-loop, @silverhand/fp/no-mutation, @silverhand/fp/no-let */
+
+    return summary;
+  };
+
   return {
     syncDomainStatus,
     addDomain,
     deleteDomain,
+    cleanupDomains,
   };
 };
