@@ -96,6 +96,14 @@ const account_center = {
     account_removal: 'Удаление аккаунта',
     delete_your_account: 'Удалите свой аккаунт',
     delete_account: 'Удалить аккаунт',
+    remove_email_confirmation_title: 'Удалить адрес электронной почты',
+    remove_email_confirmation_description:
+      'После удаления вы больше не сможете входить с этим адресом электронной почты. Вы уверены, что хотите продолжить?',
+    remove_phone_confirmation_title: 'Удалить номер телефона',
+    remove_phone_confirmation_description:
+      'После удаления вы больше не сможете входить с этим номером телефона. Вы уверены, что хотите продолжить?',
+    email_removed: 'Адрес электронной почты успешно удалён.',
+    phone_removed: 'Номер телефона успешно удалён.',
   },
   social: {
     linked: '{{connector}} успешно привязан.',

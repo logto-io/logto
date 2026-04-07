@@ -98,6 +98,14 @@ const account_center = {
     account_removal: 'Видалення акаунта',
     delete_your_account: 'Видаліть свій акаунт',
     delete_account: 'Видалити акаунт',
+    remove_email_confirmation_title: 'Видалити адресу електронної пошти',
+    remove_email_confirmation_description:
+      'Після видалення ви більше не зможете входити за допомогою цієї адреси електронної пошти. Ви впевнені, що хочете продовжити?',
+    remove_phone_confirmation_title: 'Видалити номер телефону',
+    remove_phone_confirmation_description:
+      'Після видалення ви більше не зможете входити за допомогою цього номера телефону. Ви впевнені, що хочете продовжити?',
+    email_removed: 'Адресу електронної пошти успішно видалено.',
+    phone_removed: 'Номер телефону успішно видалено.',
   },
   social: {
     linked: '{{connector}} успішно прив’язано.',
