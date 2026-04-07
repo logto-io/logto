@@ -36,6 +36,7 @@ If the PR description is incomplete or missing, send it back. A well-filled temp
 - [ ] Tests actually test the right things
 - [ ] No security issues (injection, auth bypass, data leaks)
 - [ ] Performance is acceptable
+- [ ] [Coding Standards](coding-standards.md) followed — ESLint bypasses have reasons, comments are meaningful
 
 ### Ship readiness (tertiary)
 

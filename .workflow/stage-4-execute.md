@@ -94,6 +94,7 @@ If the agent encounters something the plan did not anticipate:
 - Run tests after each significant change
 - Lint passes continuously
 - Type checks pass continuously
+- Follow [Coding Standards](coding-standards.md) — especially ESLint bypass rules and comment conventions
 
 ---
 

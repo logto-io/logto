@@ -63,6 +63,7 @@ Shared references:
 | Depth Levels | [`.workflow/depth-levels.md`](.workflow/depth-levels.md) |
 | PR Description Template | [`.workflow/pr-template.md`](.workflow/pr-template.md) |
 | Experience Library | [`.workflow/experience-library.md`](.workflow/experience-library.md) |
+| Coding Standards | [`.workflow/coding-standards.md`](.workflow/coding-standards.md) |
 
 ---
 
