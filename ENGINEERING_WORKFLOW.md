@@ -61,6 +61,7 @@ Shared references:
 | Reference | File |
 |-----------|------|
 | Depth Levels | [`.workflow/depth-levels.md`](.workflow/depth-levels.md) |
+| PR Description Template | [`.workflow/pr-template.md`](.workflow/pr-template.md) |
 | Experience Library | [`.workflow/experience-library.md`](.workflow/experience-library.md) |
 
 ---

@@ -97,8 +97,16 @@ If the agent encounters something the plan did not anticipate:
 
 ---
 
+### 5. PR description
+
+When creating the PR, use the [PR Description Template](pr-template.md). The agent must fill in every applicable section — including the plan compliance table (scoped to this PR's items only) and self-check — before requesting review. This is the agent's self-review gate: if it cannot check a box, it should fix the issue first, not leave it for the reviewer.
+
+For multi-PR plans, the PR description must clearly state which part of the plan this PR covers (e.g. "PR 2/4 — API endpoint changes") and what context the reviewer needs (what was already merged, what comes next).
+
+---
+
 ## Exit criteria
 
-All plan items are marked DONE. All tests pass. All PRs are created.
+All plan items are marked DONE. All tests pass. All PRs are created with filled-in PR descriptions.
 
 **Next:** Proceed to [Stage 5: Code Review](stage-5-code-review.md)
