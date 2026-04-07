@@ -112,6 +112,11 @@ const VerifiedAction = () => {
     if (verificationId && action) {
       void handleConfirm();
     }
+    // `handleConfirm` is intentionally excluded: adding it would cause the API
+    // call to re-fire whenever unrelated callback deps (navigate, refreshUserInfo,
+    // etc.) change their reference. The effect should only trigger when
+    // `verificationId` or `action` change, and `handleConfirm` is always
+    // up-to-date by then because it has the same two values in its own deps.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verificationId, action]);
 
