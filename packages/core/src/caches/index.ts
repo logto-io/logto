@@ -26,7 +26,7 @@ abstract class RedisCacheBase implements CacheStore {
     const getPromise = this.client?.get(key);
 
     if (!getPromise) {
-      return undefined;
+      return;
     }
 
     const timeoutAbortController = new AbortController();
