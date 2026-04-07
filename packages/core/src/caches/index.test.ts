@@ -99,4 +99,19 @@ describe('RedisCache', () => {
       stub.restore();
     }
   });
+
+  it('should fail fast when cache read hangs for more than 1 second', async () => {
+    jest.clearAllMocks();
+    const cache = new RedisCache('redis://url');
+    jest.spyOn(cache.client!, 'get').mockImplementation(
+      async () =>
+        new Promise<string>((resolve) => {
+          // Intentionally never resolve to simulate a stuck Redis read without extra timers.
+          void resolve;
+        })
+    );
+    const start = Date.now();
+    await expect(cache.get('foo')).resolves.toBeUndefined();
+    expect(Date.now() - start).toBeGreaterThanOrEqual(900);
+  }, 4000);
 });
