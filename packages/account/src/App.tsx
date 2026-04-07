@@ -3,7 +3,7 @@ import { LogtoProvider, Prompt, ReservedScope, useLogto, UserScope } from '@logt
 import { accountCenterApplicationId, ExtraParamsKey, SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useEffect } from 'react';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
 import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
@@ -18,6 +18,7 @@ import PageContext from './Providers/PageContextProvider/PageContext';
 import GlobalLoading from './components/GlobalLoading';
 import { isDevFeaturesEnabled } from './constants/env';
 import {
+  securityRoute,
   emailRoute,
   emailSuccessRoute,
   phoneRoute,
@@ -144,7 +145,6 @@ const Main = () => {
 
   const showsSecurityPage =
     isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
-  const indexElement = showsSecurityPage ? <Security /> : <Home />;
 
   return (
     <Routes>
@@ -199,7 +199,14 @@ const Main = () => {
           />
         </>
       )}
-      <Route index element={indexElement} />
+      <Route
+        path={securityRoute}
+        element={showsSecurityPage ? <Security /> : <Navigate replace to=".." relative="path" />}
+      />
+      <Route
+        index
+        element={showsSecurityPage ? <Navigate replace to={securityRoute} /> : <Home />}
+      />
       <Route path="*" element={<Home />} />
     </Routes>
   );
@@ -210,7 +217,7 @@ const Layout = () => {
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
   const isHomePage =
-    pathname === '/' &&
+    pathname === securityRoute &&
     isDevFeaturesEnabled &&
     hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
 

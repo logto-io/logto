@@ -1,6 +1,6 @@
 import type { NavigateFunction } from 'react-router-dom';
 
-import { socialSuccessRoute } from '@ac/constants/routes';
+import { securityRoute, socialSuccessRoute } from '@ac/constants/routes';
 
 import { accountStorage, sessionStorage } from './session-storage';
 
@@ -29,7 +29,7 @@ const navigateToSecurity = (navigate: NavigateFunction) => {
     return;
   }
 
-  navigate('/', { replace: true });
+  navigate(securityRoute, { replace: true });
 };
 
 export const finalizeSocialFlowSuccess = async ({

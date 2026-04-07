@@ -18,6 +18,7 @@ import {
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
+  securityRoute,
   verifiedActionRoute,
   socialRoutePrefix,
 } from '@ac/constants/routes';
@@ -31,6 +32,7 @@ const uiLocalesParameter = 'ui_locales';
 const identifierParameter = 'identifier';
 
 const knownRoutePrefixes: readonly string[] = [
+  securityRoute,
   emailRoute,
   emailSuccessRoute,
   phoneRoute,
