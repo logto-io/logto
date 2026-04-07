@@ -74,7 +74,8 @@ flowchart TD
     existing_id_sign_in_enabled -->|yes| out_existing_id[Suggest sign-in flow<br/>with the same identifier]
     existing_id_sign_in_enabled -->|no| out_existing_id_error([Stay on register<br/>and show identity-exists error])
     out_existing_id --> out_existing_id_done([Exit register flow<br/>and restart in sign-in])
-    existing_id -->|no| missing_required_identifier{"Missing required sign-up identifiers?<br/>(Username, email, or phone)"}
+    existing_id -->|no| profile_skip_sso{Registered through enterprise SSO?}
+    profile_skip_sso -->|no| missing_required_identifier{"Missing required sign-up identifiers?<br/>(Username, email, or phone)"}
 
     fulfill_missing_identifiers --> social_identifier_conflict{Social-linked email or phone<br/>already belongs to an existing user?}
     social_identifier_conflict -->|yes| social_continue_link[Prompt to bind the social identity<br/>to the existing account]
@@ -89,8 +90,9 @@ flowchart TD
     fulfill_password -->  collect_custom_profile_enabled
 
     collect_custom_profile_enabled -->|yes| collect_custom_profile[Fulfill custom user profile fields]
-    collect_custom_profile_enabled -->|no| create_user[Create user from interaction data]
+    collect_custom_profile_enabled -->|no| create_user
     collect_custom_profile --> create_user
+    profile_skip_sso -->|yes| create_user[Create user from interaction data]
   end
 
   reg_attempt[Submit registration identification]
@@ -104,7 +106,6 @@ flowchart TD
 
   subgraph PasskeyBinding["Passkey sign-in handling"]
     create_user --> sso_bypass{Registered through enterprise SSO?}
-    sso_bypass -->|yes| skip_passkey
     sso_bypass -->|no| passkey_enabled{Passkey sign-in enabled?}
 
     passkey_enabled -->|no| skip_passkey
@@ -141,7 +142,8 @@ flowchart TD
     backup_gate -->|yes| backup[Generate and save backup codes]
   end
 
-  mfa_onboarding -->|skip| submit[Submit interaction]
+  sso_bypass -->|yes| submit[Submit interaction]
+  mfa_onboarding -->|skip| submit
   backup_gate -->|no| submit
   backup --> submit
 

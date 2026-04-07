@@ -119,18 +119,22 @@ flowchart TD
   identified_sso_linked --> identified
   identified_magic_link --> identified
 
-  identified --> mfa_verify_skip{Skip initial MFA verification<br/>for enterprise SSO or passkey?}
-  mfa_verify_skip -->|yes| profile_gate_applies{Required profile check applies?}
-  mfa_verify_skip -->|no| adaptive_mfa_enabled{Adaptive MFA enabled?}
+  identified --> sso_sign_in{Sign in through<br/>enterprise SSO?}
+  sso_sign_in -->|yes| submit[Submit interaction]
+  sso_sign_in -->|no| passkey_sign_in{Sign in through passkey?}
+  passkey_sign_in -->|yes| profile_skip_sso{Skip required profile check<br/>for enterprise SSO?}
+  passkey_sign_in -->|no| adaptive_mfa_enabled{Adaptive MFA enabled?}
   adaptive_mfa_enabled -->|yes| adaptive_mfa_gate{Adaptive MFA requires verification<br/>and user already has MFA factors?}
   adaptive_mfa_enabled -->|no| sie_mfa_gate{Existing MFA verification required<br/>by SIE sign-in policy?}
+  adaptive_mfa_gate -->|no| profile_skip_sso
   adaptive_mfa_gate -->|yes| mfa_verify[MFA verification]
-  adaptive_mfa_gate -->|no| profile_gate_applies
   sie_mfa_gate -->|yes| mfa_verify
-  sie_mfa_gate -->|no| profile_gate_applies
-  mfa_verify --> profile_gate_applies
+  sie_mfa_gate -->|no| profile_skip_sso
+  mfa_verify --> profile_skip_sso
 
   subgraph ProfileFulfillment["Profile fulfillment"]
+    profile_skip_sso -->|yes| passkey_entry[Profile fulfilled]
+    profile_skip_sso -->|no| profile_gate_applies{Required profile check applies?}
     profile_gate_applies -->|no| passkey_entry[Profile fulfilled]
     profile_gate_applies -->|yes| profile_gate{Missing required profile}
     profile_gate -->|yes| continue_flow[Continue pages]
@@ -141,9 +145,7 @@ flowchart TD
   end
 
   subgraph PasskeyBinding["Passkey sign-in handling"]
-    passkey_entry --> sso_bypass{Signed in through enterprise SSO}
-    sso_bypass -->|no| passkey_enabled{Passkey sign-in enabled?}
-
+    passkey_entry --> passkey_enabled{Passkey sign-in enabled?}
     passkey_enabled -->|no| skip_passkey
     passkey_enabled -->|yes| passkey_bound{"Passkey (WebAuthn) bound?"}
 
@@ -166,8 +168,8 @@ flowchart TD
     mfa_onboarding_needed -->|no| mfa_missing
     mfa_onboarding_needed -->|yes| mfa_on[MFA onboarding]
 
-    mfa_on --> mfa_on2{Enable MFA or skip}
-    mfa_on2 -->|enable| mfa_missing
+    mfa_on --> mfa_on2{Enable MFA?}
+    mfa_on2 -->|yes| mfa_missing
 
     mfa_missing{Missing required MFA factor}
     mfa_missing -->|yes| mfa_bind[MFA binding or factor page]
@@ -185,8 +187,7 @@ flowchart TD
     backup_gate -->|yes| backup[Generate and save backup codes]
   end
 
-  sso_bypass -->|yes| submit[Submit interaction]
-  mfa_on2 -->|skip| submit[Submit interaction]
+  mfa_on2 -->|no| submit[Submit interaction]
   backup_gate -->|no| submit
   backup --> submit
   submit --> done([OIDC redirect])
