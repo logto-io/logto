@@ -85,7 +85,10 @@ If the agent encounters something the plan did not anticipate:
 
 ### 3. Quality during execution
 
-- Follow [Coding Standards](coding-standards.md) and [Testing Standards](testing-standards.md)
+Engineering practices are applied here, not in the plan. Follow:
+
+- [Coding Standards](coding-standards.md) — ESLint bypass rules, comment conventions
+- [Testing Standards](testing-standards.md) — coverage by blast radius, regression tests for bug fixes
 
 ---
 

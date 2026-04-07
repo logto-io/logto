@@ -14,7 +14,7 @@ Front-load all judgment into the plan. Make the plan so detailed that execution 
 
 1. **Every task follows the same flow.** Small bug or big feature, same stages. Only the depth changes.
 2. **The plan is the central artifact.** Everything flows from it. Execution follows it. Review checks against it.
-3. **Plans must cover all details.** If it is not in the plan, the agent will not think of it.
+3. **Plans cover what and why, not how.** Engineering practices (coding standards, lint rules) live in execution, not the plan.
 4. **Agent assists, human decides.** The agent drafts the plan. You review it. The agent executes. You verify the output.
 5. **Deviations from plan must be explicit.** If execution reveals the plan was wrong, update the plan first. Then continue. Never silently drift.
 

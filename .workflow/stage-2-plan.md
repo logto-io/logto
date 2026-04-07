@@ -41,6 +41,12 @@ If the plan would touch more than 8 files or introduce more than 2 new modules/c
 
 ---
 
+## What Does NOT Belong in the Plan
+
+Engineering practices (coding standards, lint rules, comment conventions) are applied during [execution](stage-4-execute.md). Don't repeat them in the plan.
+
+---
+
 ## Plan Template
 
 ```markdown
