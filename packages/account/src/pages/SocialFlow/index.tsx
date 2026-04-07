@@ -12,7 +12,7 @@ import {
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { getSocialCallbackRoute } from '@ac/constants/routes';
+import { getSocialCallbackRoute, securityRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { accountCenterBasePath } from '@ac/utils/account-center-route';
@@ -245,7 +245,7 @@ const SocialFlow = ({ mode }: Props) => {
         action={{
           titleKey: 'action.back',
           onClick: () => {
-            navigate('/', { replace: true });
+            navigate(securityRoute, { replace: true });
           },
         }}
       />
