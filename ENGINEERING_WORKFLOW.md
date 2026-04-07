@@ -1,24 +1,12 @@
 # Engineering Delivery Workflow
 
-## Why This Exists
-
-AI coding agents are fast. That speed is a trap if you skip the thinking.
-
-The biggest risk in AI-assisted development is not writing bad code. It is writing the wrong code, fast, with confidence. An agent can produce 500 lines in minutes. If those 500 lines solve the wrong problem, or miss an edge case that corrupts data, the speed works against you.
-
-**Slow is smooth, smooth is fast.** This workflow forces the thinking to happen before the typing. The return on a good plan is 10x higher than it used to be, because agents follow plans far better than they make autonomous decisions.
-
-### The core insight
+## Core Insight
 
 ```
 Plan quality × Agent compliance = Delivery quality
 ```
 
-- Agents are excellent at generating detailed plans (low cost, high thoroughness)
-- Agents are excellent at following plans (high compliance, low drift)
-- Agents are poor at making judgment calls mid-execution (context loss, hallucination)
-
-Therefore: **front-load all judgment into the plan.** Make the plan so detailed that execution becomes mechanical. Then review becomes simple: did the code match the plan?
+Front-load all judgment into the plan. Make the plan so detailed that execution becomes mechanical.
 
 ---
 
@@ -26,10 +14,9 @@ Therefore: **front-load all judgment into the plan.** Make the plan so detailed 
 
 1. **Every task follows the same flow.** Small bug or big feature, same stages. Only the depth changes.
 2. **The plan is the central artifact.** Everything flows from it. Execution follows it. Review checks against it.
-3. **Plans must cover all details.** Edge cases, error handling, test scenarios, migration steps, rollback strategy. If it is not in the plan, the agent will not think of it.
-4. **Agent assists, human decides.** The agent drafts the plan. You review it, challenge it, refine it. The agent executes the plan. You verify the output. Responsibility is always on the human.
+3. **Plans must cover all details.** If it is not in the plan, the agent will not think of it.
+4. **Agent assists, human decides.** The agent drafts the plan. You review it. The agent executes. You verify the output.
 5. **Deviations from plan must be explicit.** If execution reveals the plan was wrong, update the plan first. Then continue. Never silently drift.
-6. **Completeness is cheap now.** AI makes the marginal cost of handling edge cases near-zero. Do the complete thing. Don't skip the last 10%.
 
 ---
 
@@ -100,20 +87,7 @@ No one reviews their own plan or code. At least 2 people are involved in every S
 
 ---
 
-## How This Becomes Agent-Native
-
-This SOP is written for humans first. The next step is to encode it into agent-consumable artifacts:
-
-1. **Plan template → Agent prompt.** The Plan Quality Checklist becomes validation constraints.
-2. **Experience Library → Agent context.** Each entry becomes a constraint injected into the planning prompt.
-3. **Review checklists → Agent review skill.** Plan compliance and code quality checks become automated.
-4. **Depth levels → Agent routing.** The agent adjusts thoroughness based on scope decision.
-
----
-
 ## Maintenance
 
 - This document and `.workflow/` live in the repo. Changes go through normal PR review.
-- Review quarterly: is the process working? What stages are being skipped? Why?
-- The Experience Library should grow steadily. If it is not growing, people are not capturing learnings.
-- When an incident happens, always ask: "Would a better plan have prevented this?" If yes, update the Experience Library.
+- When an incident happens, ask: "Would a better plan have prevented this?" If yes, update the Experience Library.

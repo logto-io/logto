@@ -12,25 +12,10 @@ Plan review is cheaper than code review. A design problem caught here saves a fu
 
 ## What to review
 
-**Scope check:**
-- Does this solve the stated problem, nothing more?
-- Can the same goal be achieved with fewer changes?
-- Are there existing abstractions or utilities we should reuse instead of building new ones?
-
-**Correctness check:**
-- Is the data flow diagram accurate?
-- Are all error paths handled?
-- Are concurrent access / race condition risks addressed?
-- Does the migration plan actually work?
-
-**Completeness check:**
-- Is any edge case missing?
-- Are all test scenarios listed?
-- Is the rollback plan realistic?
-
-**Consistency check:**
-- Do new patterns match existing codebase conventions?
-- Will this create tech debt or divergence?
+- **Scope:** Does this solve the stated problem, nothing more? Can existing abstractions be reused?
+- **Correctness:** Is the data flow diagram accurate? Does the migration plan work?
+- **Completeness:** Are all test scenarios listed? Is the rollback plan realistic?
+- **Consistency:** Do new patterns match existing codebase conventions?
 
 ---
 

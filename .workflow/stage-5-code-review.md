@@ -31,11 +31,6 @@ If the PR description is incomplete or missing, send it back. A well-filled temp
 
 ### Code quality (secondary)
 
-- [ ] No obvious bugs or logic errors
-- [ ] Error handling is correct
-- [ ] Tests actually test the right things
-- [ ] No security issues (injection, auth bypass, data leaks)
-- [ ] Performance is acceptable
 - [ ] [Coding Standards](coding-standards.md) followed — ESLint bypasses have reasons, comments are meaningful
 
 ### Ship readiness (tertiary)

@@ -33,33 +33,11 @@ Before writing any plan, the agent must answer these questions:
 
 ### What already exists?
 
-Search the codebase for code that already partially or fully solves the problem. Can we reuse existing flows, capture outputs from existing code, or extend what is already there? List findings explicitly — this becomes the "What already exists" section of the plan.
-
-### What is the minimum change?
-
-What is the smallest set of changes that achieves the goal stated in the Problem Brief? Flag anything that could be deferred without blocking the core objective. Be ruthless about scope creep.
+Search the codebase for code that already partially or fully solves the problem. List findings explicitly — this becomes the "What already exists" section of the plan.
 
 ### Complexity smell check
 
 If the plan would touch more than 8 files or introduce more than 2 new modules/classes, treat that as a smell. Challenge whether the same goal can be achieved with fewer moving parts. Present the concern to the engineer before proceeding.
-
-### Built-in check
-
-For each pattern or infrastructure the plan introduces, check: does the framework or runtime already provide this? Does the codebase already have a convention for this? If the plan rolls a custom solution where a built-in or existing pattern exists, flag it as a scope reduction opportunity.
-
----
-
-## Guiding Principles
-
-These are not checklist items. They are the instincts the agent should apply when drafting the plan:
-
-- **Boring by default.** Prefer proven patterns over clever new approaches. Only introduce new technology or patterns when the existing options are clearly inadequate.
-- **Incremental over revolutionary.** Strangler fig, not big bang. Refactor, not rewrite. Canary, not global rollout.
-- **Reversibility preference.** Prefer changes that are easy to undo — feature flags, backward-compatible migrations, incremental rollouts. Make the cost of being wrong low.
-- **Essential vs accidental complexity.** Before adding anything, ask: "Is this solving a real problem or one we created?" If the plan feels complex, the approach may be wrong.
-- **Make the change easy, then make the easy change.** If the codebase is not ready for the change, refactor first in a separate step. Never mix structural and behavioral changes.
-- **Minimal diff.** Achieve the goal with the fewest new abstractions and files touched. DRY matters, but premature abstraction is worse than repetition.
-- **Systems over heroes.** Design for a tired engineer at 3am, not your best engineer on their best day. Explicit is better than clever.
 
 ---
 
@@ -138,15 +116,9 @@ If a failure mode has no test AND no error handling AND would be silent to the u
 
 Before moving to Plan Review, verify:
 
-- [ ] **Scope:** Step 0 was done — existing code checked, minimum change identified, complexity challenged
+- [ ] **Scope:** Step 0 was done — existing code checked, complexity challenged
 - [ ] **Specificity:** Every change references a specific file and function, not "update the auth module"
-- [ ] **Completeness:** Error paths, edge cases, and empty/null states are addressed
-- [ ] **Failure modes:** Each new codepath has a realistic failure scenario documented
-- [ ] **Testability:** Every behavioral change has a corresponding test scenario
-- [ ] **Consistency:** New patterns match existing codebase conventions
-- [ ] **Reversibility:** Rollback path is clear for anything hard to undo
 - [ ] **Scope discipline:** Nothing in the plan goes beyond the Problem Brief; deferred work is in "NOT in Scope"
-- [ ] **Dependencies:** Order of changes is correct; no circular dependencies
 - [ ] **Experience:** Known pitfalls from past work are accounted for (see [Experience Library](experience-library.md))
 
 ---

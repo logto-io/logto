@@ -83,22 +83,13 @@ If the agent encounters something the plan did not anticipate:
 - Get approval if the change is significant
 - Then continue
 
-### 3. Commit discipline
+### 3. Quality during execution
 
-- Each commit does one thing
-- Commit message explains why, not what
-- Tests and implementation in the same commit (or test-first if TDD)
-
-### 4. Quality gates during execution
-
-- Run tests after each significant change
-- Lint passes continuously
-- Type checks pass continuously
-- Follow [Coding Standards](coding-standards.md) — especially ESLint bypass rules and comment conventions
+- Follow [Coding Standards](coding-standards.md) and [Testing Standards](testing-standards.md)
 
 ---
 
-### 5. PR description
+### 4. PR description
 
 When creating the PR, use the [PR Description Template](pr-template.md). The agent must fill in every applicable section — including the plan compliance table (scoped to this PR's items only) and self-check — before requesting review. This is the agent's self-review gate: if it cannot check a box, it should fix the issue first, not leave it for the reviewer.
 

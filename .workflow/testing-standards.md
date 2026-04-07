@@ -32,7 +32,7 @@ When writing a plan (Stage 2), the Test Plan section must be specific. Do not wr
 - [ ] Integration test: test the API
 ```
 
-This tells the executor nothing. It will be interpreted as "write whatever tests seem reasonable," which defeats the purpose of planning.
+This tells the executor nothing.
 
 ### Good
 
@@ -68,31 +68,9 @@ This is the strongest proof that the fix works and the bug won't recur.
 
 ---
 
-## Coverage
-
-Coverage thresholds are project-specific. However, these principles are universal:
-
-- **New code should have meaningful coverage** — not 100% line coverage for its own sake, but coverage of the important behaviors and edge cases
-- **Do not game coverage** by testing trivial getters or no-op functions. Test the logic that matters
-- **Coverage is a trailing indicator, not a goal.** A well-tested module with 70% coverage is better than a trivially-tested module with 100%
-
----
-
-## Tests During Execution (Stage 4)
-
-- Write tests alongside or before the implementation (same commit or test-first)
-- Run affected tests after each significant change — do not batch all testing to the end
-- All existing tests must pass before creating a PR
-- If a change is expected to break existing tests, update those tests as part of the same change — never leave a PR with known test failures
-
----
-
 ## Tests During Review (Stage 5)
 
 Reviewers should verify:
 
-- [ ] Every behavioral change in the diff has a corresponding test
-- [ ] Tests cover failure cases, not just the happy path
-- [ ] Test descriptions match what the test actually verifies
 - [ ] No tests are commented out or skipped without a tracked issue
 - [ ] Test plan items from Stage 2 are all accounted for — DONE, CHANGED (with reason), or MISSING (with reason)

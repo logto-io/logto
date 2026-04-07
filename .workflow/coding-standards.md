@@ -21,9 +21,7 @@ ESLint rules exist for a reason. Bypassing them is sometimes necessary, but ever
 
 ### When bypass is NOT allowed
 
-- **To silence a warning you don't understand.** If the rule is unfamiliar, read its docs first.
-- **To avoid refactoring.** If the code can be restructured to satisfy the rule, do that instead.
-- **Blanket file-level disables for convenience.** `/* eslint-disable */` (all rules) is almost never acceptable. Disable only the specific rule(s) needed.
+- **Blanket file-level disables.** `/* eslint-disable */` (all rules) is almost never acceptable. Disable only the specific rule(s) needed.
 
 ### Bypass format: always include a reason
 
@@ -70,45 +68,5 @@ const mockContext = { ... };
 
 ## Comment conventions
 
-Comments are for humans reading the code later. Every comment should earn its place — if the code already says it clearly, a comment just adds noise.
-
-### When to write comments
-
-| Write a comment when... | Example |
-|------------------------|---------|
-| The **why** is not obvious from the code | `// Skip validation for integration tests — test fixtures don't have valid email domains` |
-| Business logic has a non-obvious reason | `// SAML spec requires NameID before attributes, even though our schema doesn't enforce order` |
-| A workaround exists for a known issue | `// TODO: Re-enable COEP header when Google One Tap supports CORP header (LOG-XXXX)` |
-| An edge case is being handled deliberately | `// Empty string is a valid value here — don't coalesce to undefined` |
-| The algorithm is complex | A brief description of the approach before the implementation |
-
-### When NOT to write comments
-
-- **Restating what the code does.** If `const userId = getUserId()` needs a comment, the variable name is wrong, not the comment missing.
-- **Documenting agent reasoning or discussion process.** Comments like "After discussing with the agent, we decided to..." or "The agent suggested..." do not belong in code. The code should stand on its own — *why* the decision was made matters, not *who* or *how* it was discussed.
-- **Explaining obvious types or standard patterns.** No `// This is a string` or `// Loop through the array`.
-- **Changelog-style notes.** That's what git history is for.
-- **Commenting out code.** Delete it. Git has it if you need it back.
-
-### JSDoc
-
-Use JSDoc (`/** ... */`) for:
-- Exported functions, classes, and types that form a public API boundary (SDK, shared libraries, connector kit)
-- Non-obvious parameters or return values
-
-Do NOT use JSDoc for:
-- Internal/private functions where the signature is self-explanatory
-- Every function — only where it adds value
-
-```typescript
-// Good — exported utility with non-obvious behavior
-/**
- * Resolve the connector sessions from the interaction storage.
- * Each connector session stores the state and nonce for the social sign-in flow.
- */
-export const resolveConnectorSessions = (...) => { ... };
-
-// Bad — JSDoc that just restates the function name
-/** Gets the user by ID. */
-export const getUserById = (id: string) => { ... };
-```
+- **No agent reasoning in comments.** Comments like "After discussing with the agent, we decided to..." or "The agent suggested..." do not belong in code. The *why* matters, not *who* or *how* it was discussed.
+- Use JSDoc (`/** ... */`) for exported functions, classes, and types that form a public API boundary (SDK, shared libraries, connector kit), and for non-obvious parameters or return values.
