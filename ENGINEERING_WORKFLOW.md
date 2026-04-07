@@ -64,6 +64,7 @@ Shared references:
 | PR Description Template | [`.workflow/pr-template.md`](.workflow/pr-template.md) |
 | Experience Library | [`.workflow/experience-library.md`](.workflow/experience-library.md) |
 | Coding Standards | [`.workflow/coding-standards.md`](.workflow/coding-standards.md) |
+| Testing Standards | [`.workflow/testing-standards.md`](.workflow/testing-standards.md) |
 
 ---
 
