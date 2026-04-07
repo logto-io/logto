@@ -74,6 +74,10 @@ Scope: <!-- e.g. "PR 2/4 — API endpoint changes" or "Only PR" -->
 <!-- Author: check every box before requesting review. If a box doesn't apply, check it and write "N/A". -->
 <!-- Reviewer: a checked box means the author claims this is done. Verify the non-obvious ones. -->
 
+**Review readiness**
+
+- [ ] I have reviewed the full diff and verified every change works as intended
+
 **Correctness**
 
 - [ ] Code does what the plan/summary says — no more, no less
