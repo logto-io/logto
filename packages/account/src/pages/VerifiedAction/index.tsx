@@ -1,5 +1,5 @@
 import { AccountCenterControlValue } from '@logto/schemas';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,57 +41,59 @@ const VerifiedAction = () => {
       setToast(t('account_center.verification.verification_required'));
     };
 
-    if (action === 'enable-mfa' || action === 'disable-mfa') {
-      // Enable 2-step → skipMfaOnSignIn: false; Disable 2-step → skipMfaOnSignIn: true
-      const skipMfaOnSignIn = action === 'disable-mfa';
+    switch (action) {
+      case 'enable-mfa':
+      case 'disable-mfa': {
+        // Enable 2-step → skipMfaOnSignIn: false; Disable 2-step → skipMfaOnSignIn: true
+        const skipMfaOnSignIn = action === 'disable-mfa';
 
-      const [error, result] = await updateMfaSettingsApi(verificationId, { skipMfaOnSignIn });
+        const [error, result] = await updateMfaSettingsApi(verificationId, { skipMfaOnSignIn });
 
-      if (error) {
-        await handleError(error, {
-          'verification_record.permission_denied': onPermissionDenied,
-        });
+        if (error) {
+          await handleError(error, {
+            'verification_record.permission_denied': onPermissionDenied,
+          });
+          return;
+        }
+
+        if (result) {
+          sessionStorage.clearPendingVerifiedAction();
+          navigate(-1);
+        }
         return;
       }
+      case 'remove-email': {
+        const [error] = await deletePrimaryEmailApi(verificationId);
 
-      if (result) {
+        if (error) {
+          await handleError(error, {
+            'verification_record.permission_denied': onPermissionDenied,
+          });
+          return;
+        }
+
         sessionStorage.clearPendingVerifiedAction();
+        await refreshUserInfo();
+        setToast(t('account_center.security.email_removed'));
+        navigate(-1);
+        return;
+      }
+      case 'remove-phone': {
+        const [error] = await deletePrimaryPhoneApi(verificationId);
+
+        if (error) {
+          await handleError(error, {
+            'verification_record.permission_denied': onPermissionDenied,
+          });
+          return;
+        }
+
+        sessionStorage.clearPendingVerifiedAction();
+        await refreshUserInfo();
+        setToast(t('account_center.security.phone_removed'));
         navigate(-1);
       }
-      return;
     }
-
-    if (action === 'remove-email') {
-      const [error] = await deletePrimaryEmailApi(verificationId);
-
-      if (error) {
-        await handleError(error, {
-          'verification_record.permission_denied': onPermissionDenied,
-        });
-        return;
-      }
-
-      sessionStorage.clearPendingVerifiedAction();
-      await refreshUserInfo();
-      setToast(t('account_center.security.email_removed'));
-      navigate(-1);
-      return;
-    }
-
-    // Action === 'remove-phone'
-    const [error] = await deletePrimaryPhoneApi(verificationId);
-
-    if (error) {
-      await handleError(error, {
-        'verification_record.permission_denied': onPermissionDenied,
-      });
-      return;
-    }
-
-    sessionStorage.clearPendingVerifiedAction();
-    await refreshUserInfo();
-    setToast(t('account_center.security.phone_removed'));
-    navigate(-1);
   }, [
     action,
     deletePrimaryEmailApi,
@@ -113,21 +115,26 @@ const VerifiedAction = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verificationId, action]);
 
-  const isActionAllowed = (() => {
+  const isActionAllowed = useMemo(() => {
     if (!accountCenterSettings?.enabled) {
       return false;
     }
-    if (action === 'enable-mfa' || action === 'disable-mfa') {
-      return accountCenterSettings.fields.mfa === AccountCenterControlValue.Edit;
+    switch (action) {
+      case 'enable-mfa':
+      case 'disable-mfa': {
+        return accountCenterSettings.fields.mfa === AccountCenterControlValue.Edit;
+      }
+      case 'remove-email': {
+        return accountCenterSettings.fields.email === AccountCenterControlValue.Edit;
+      }
+      case 'remove-phone': {
+        return accountCenterSettings.fields.phone === AccountCenterControlValue.Edit;
+      }
+      default: {
+        return false;
+      }
     }
-    if (action === 'remove-email') {
-      return accountCenterSettings.fields.email === AccountCenterControlValue.Edit;
-    }
-    if (action === 'remove-phone') {
-      return accountCenterSettings.fields.phone === AccountCenterControlValue.Edit;
-    }
-    return false;
-  })();
+  }, [accountCenterSettings, action]);
 
   if (!isActionAllowed) {
     return (

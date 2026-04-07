@@ -62,7 +62,14 @@ const storedSocialFlowRecordGuard = s.union([
   }),
 ]);
 
-export type PendingVerifiedAction = 'enable-mfa' | 'disable-mfa' | 'remove-email' | 'remove-phone';
+const pendingVerifiedActions = Object.freeze([
+  'enable-mfa',
+  'disable-mfa',
+  'remove-email',
+  'remove-phone',
+] as const);
+
+export type PendingVerifiedAction = (typeof pendingVerifiedActions)[number];
 
 const getStorage = (type: 'session' | 'local'): Storage | undefined => {
   if (typeof window === 'undefined') {
@@ -234,15 +241,7 @@ export const accountStorage = Object.freeze({
   pendingVerifiedAction: {
     get: (): PendingVerifiedAction | undefined => {
       const value = getString(storageKeys.pendingVerifiedAction, 'session');
-      if (
-        value === 'enable-mfa' ||
-        value === 'disable-mfa' ||
-        value === 'remove-email' ||
-        value === 'remove-phone'
-      ) {
-        return value;
-      }
-      return undefined;
+      return pendingVerifiedActions.find((action) => action === value);
     },
     set: (value: PendingVerifiedAction) => {
       setString(storageKeys.pendingVerifiedAction, value, 'session');
