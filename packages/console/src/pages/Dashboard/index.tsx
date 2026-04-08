@@ -111,7 +111,7 @@ function Dashboard() {
               variant="plain"
             />
             <div className={styles.datePicker}>
-              <TextInput type="date" value={date} onChange={handleDateChange} />
+              <TextInput required type="date" value={date} onChange={handleDateChange} />
             </div>
             <div className={styles.curve}>
               <ResponsiveContainer>
