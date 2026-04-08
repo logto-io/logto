@@ -116,7 +116,7 @@ export const sendCode = async ({
     ...ctx.emailI18n,
     ...templateContext,
     /** The client IP address for rate limiting and fraud detection. */
-    ip: ctx.ip,
+    ...(ctx.request.ip && { ip: ctx.request.ip }),
   });
 
   // Save state
