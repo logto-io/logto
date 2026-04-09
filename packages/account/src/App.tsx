@@ -3,7 +3,7 @@ import { LogtoProvider, Prompt, ReservedScope, useLogto, UserScope } from '@logt
 import { accountCenterApplicationId, ExtraParamsKey, SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useContext, useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
 import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
@@ -199,14 +199,8 @@ const Main = () => {
           />
         </>
       )}
-      <Route
-        path={securityRoute}
-        element={showsSecurityPage ? <Security /> : <Navigate replace to=".." relative="path" />}
-      />
-      <Route
-        index
-        element={showsSecurityPage ? <Navigate replace to={securityRoute} /> : <Home />}
-      />
+      <Route path={securityRoute} element={showsSecurityPage ? <Security /> : <Home />} />
+      <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>
   );
