@@ -106,6 +106,11 @@ const PasskeyBinding = () => {
       (error) => {
         console.error('WebAuthn registration failed:', error);
 
+        // User cancelled the WebAuthn dialog, no need to show error
+        if (error instanceof DOMException && error.name === 'NotAllowedError') {
+          return;
+        }
+
         if (error instanceof WebAuthnError) {
           switch (error.code) {
             case 'ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED': {
@@ -113,7 +118,6 @@ const PasskeyBinding = () => {
               return;
             }
             case 'ERROR_CEREMONY_ABORTED': {
-              // User cancelled the operation, no need to show error
               return;
             }
             default: {
