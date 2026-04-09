@@ -1,4 +1,5 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
@@ -14,6 +15,7 @@ const isVerificationMethod = (value: VerificationMethod | false): value is Verif
 
 const VerificationMethodList = () => {
   const { userInfo } = useContext(PageContext);
+  const navigate = useNavigate();
   const [verifyingMethod, setVerifyingMethod] = useState<VerificationMethod>();
   // Track if we already auto-selected the only available method to avoid re-trigger on Back.
   const hasAutoSelectedMethod = useRef(false);
@@ -51,13 +53,21 @@ const VerificationMethodList = () => {
 
   const hasAlternativeMethod = availableMethods.length > 1;
 
+  // When auto-selected (only one method), back should navigate away instead of
+  // returning to the method list since there's nothing else to choose.
+  const handleBack = hasAlternativeMethod
+    ? () => {
+        setVerifyingMethod(undefined);
+      }
+    : () => {
+        navigate(-1);
+      };
+
   if (verifyingMethod === VerificationMethod.Password) {
     return (
       <PasswordVerification
         hasAlternativeMethod={hasAlternativeMethod}
-        onBack={() => {
-          setVerifyingMethod(undefined);
-        }}
+        onBack={handleBack}
         onSwitchMethod={() => {
           setVerifyingMethod(undefined);
         }}
@@ -69,9 +79,7 @@ const VerificationMethodList = () => {
     return (
       <EmailVerification
         hasAlternativeMethod={hasAlternativeMethod}
-        onBack={() => {
-          setVerifyingMethod(undefined);
-        }}
+        onBack={handleBack}
         onSwitchMethod={() => {
           setVerifyingMethod(undefined);
         }}
@@ -83,9 +91,7 @@ const VerificationMethodList = () => {
     return (
       <PhoneVerification
         hasAlternativeMethod={hasAlternativeMethod}
-        onBack={() => {
-          setVerifyingMethod(undefined);
-        }}
+        onBack={handleBack}
         onSwitchMethod={() => {
           setVerifyingMethod(undefined);
         }}
