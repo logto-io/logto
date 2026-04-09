@@ -43,8 +43,9 @@ const ConfirmModal = ({
       </div>
       <div className={styles.content}>{children}</div>
       <div className={styles.footer}>
-        <Button title={cancelText} type="secondary" onClick={onCancel} />
+        <Button size="small" title={cancelText} type="secondary" onClick={onCancel} />
         <Button
+          size="small"
           title={confirmText}
           type={confirmButtonType}
           isLoading={isLoading}
