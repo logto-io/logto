@@ -258,11 +258,14 @@ const TotpBinding = ({ isReplace }: Props) => {
             />
           </div>
           <div className={styles.secretContent}>
-            {isQrCodeFormat && secretQrCode && (
-              <div className={styles.qrCode}>
-                <img src={secretQrCode} alt="QR code" />
-              </div>
-            )}
+            {isQrCodeFormat &&
+              (secretQrCode ? (
+                <div className={styles.qrCode}>
+                  <img src={secretQrCode} alt="QR code" />
+                </div>
+              ) : (
+                <div className={styles.qrCodePlaceholder} />
+              ))}
             {!isQrCodeFormat && secret && (
               <div className={styles.copySecret}>
                 <div className={styles.rawSecret}>{secret}</div>
