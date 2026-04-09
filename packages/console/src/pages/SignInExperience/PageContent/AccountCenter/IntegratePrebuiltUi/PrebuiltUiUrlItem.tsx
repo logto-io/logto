@@ -15,9 +15,10 @@ type Props = {
   readonly path: string;
   readonly tooltip: string;
   readonly tenantEndpoint?: URL;
+  readonly hidePreview?: boolean;
 };
 
-function PrebuiltUiUrlItem({ path, tooltip, tenantEndpoint }: Props) {
+function PrebuiltUiUrlItem({ path, tooltip, tenantEndpoint, hidePreview }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.general' });
   const copyIconRef = useRef<HTMLButtonElement>(null);
   const [copyState, setCopyState] = useState<CopyState>('copy');
@@ -60,11 +61,13 @@ function PrebuiltUiUrlItem({ path, tooltip, tenantEndpoint }: Props) {
             <Copy className={styles.icon} />
           </IconButton>
         </Tooltip>
-        <Tooltip content={t('live_preview')}>
-          <IconButton size="small" className={styles.iconButton} onClick={handleLivePreview}>
-            <Start className={styles.icon} />
-          </IconButton>
-        </Tooltip>
+        {!hidePreview && (
+          <Tooltip content={t('live_preview')}>
+            <IconButton size="small" className={styles.iconButton} onClick={handleLivePreview}>
+              <Start className={styles.icon} />
+            </IconButton>
+          </Tooltip>
+        )}
       </div>
     </div>
   );

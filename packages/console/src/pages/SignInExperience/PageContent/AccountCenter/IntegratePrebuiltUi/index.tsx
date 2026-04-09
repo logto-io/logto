@@ -169,6 +169,7 @@ function IntegratePrebuiltUi() {
                   path={path}
                   tooltip={t(tooltipKey)}
                   tenantEndpoint={tenantEndpoint}
+                  hidePreview
                 />
               ))}
           </div>
