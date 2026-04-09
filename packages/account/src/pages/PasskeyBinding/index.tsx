@@ -118,6 +118,7 @@ const PasskeyBinding = () => {
               return;
             }
             case 'ERROR_CEREMONY_ABORTED': {
+              // User cancelled the operation, no need to show error
               return;
             }
             default: {
