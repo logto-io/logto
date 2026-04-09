@@ -189,7 +189,7 @@ const sign_in_exp = {
         'Um diese vorgefertigten Flows zu integrieren, setzen Sie die entsprechenden Account-API-Berechtigungen in den Einstellungen unten auf <strong>Bearbeiten</strong>.',
       account_center_title: 'Vorgefertigtes Kontocenter integrieren',
       account_center_description:
-        'Leiten Sie Benutzer zum vollständigen Kontoverwaltungsportal mit allen Funktionen.',
+        'Leiten Sie Benutzer zum Kontocenter, um Sicherheitseinstellungen wie E-Mail, Telefon, Benutzername, Passwort, MFA und verbundene Konten zu verwalten.',
       flows_title: 'Vorgefertigte Sicherheits-Einstellungen integrieren',
       single_task_flows_title: 'Vorgefertigten Einzelaufgaben-Ablauf integrieren',
       flows_description:
@@ -213,7 +213,7 @@ const sign_in_exp = {
         backup_codes_manage:
           'Sehen Sie sich Ihre verfügbaren Backup-Codes an oder erstellen Sie neue',
         account_center:
-          'Greifen Sie auf das vollständige Kontoverwaltungsportal mit allen Sicherheitseinstellungen zu',
+          'Greifen Sie auf das Kontocenter zu, um Sicherheitseinstellungen wie E-Mail, Telefon, Benutzername, Passwort, MFA und verbundene Konten zu verwalten',
       },
       customize_note:
         'Möchten Sie nicht das vorgefertigte Erlebnis? Sie können mit der Account-API stattdessen vollständig',
