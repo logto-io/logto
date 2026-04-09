@@ -1,8 +1,10 @@
 import { getBrandingLogoUrl } from '@experience/shared/utils/logo';
+import classNames from 'classnames';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from './index.module.scss';
 
@@ -19,7 +21,7 @@ const PageHeader = () => {
     });
 
   return (
-    <header className={styles.header}>
+    <header className={classNames(styles.header, layoutClassNames.pageHeader)}>
       <div className={styles.left}>
         {logoUrl && <img className={styles.logo} src={logoUrl} alt="logo" />}
         <div className={styles.divider} />

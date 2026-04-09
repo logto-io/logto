@@ -4,6 +4,7 @@ import {
   MfaPolicy,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
+import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ToggleSwitch from '@ac/components/ToggleSwitch';
 import { isDevFeaturesEnabled } from '@ac/constants/env';
+import { layoutClassNames } from '@ac/constants/layout';
 import { verifiedActionRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { sessionStorage } from '@ac/utils/session-storage';
@@ -154,8 +156,8 @@ const MfaSection = () => {
 
   return (
     <>
-      <div className={styles.section}>
-        <div className={styles.sectionTitle}>
+      <div className={classNames(styles.section, layoutClassNames.section)}>
+        <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
           {t('account_center.security.two_step_verification')}
         </div>
         {showToggle && isTwoStepEnabled && !hasConfiguredMfa && (
@@ -165,7 +167,7 @@ const MfaSection = () => {
           />
         )}
         {(showToggle || rows.length > 0) && (
-          <div className={styles.card}>
+          <div className={classNames(styles.card, layoutClassNames.card)}>
             {showToggle && (
               <div className={styles.toggleRow}>
                 <div className={styles.toggleInfo}>
@@ -194,7 +196,7 @@ const MfaSection = () => {
             )}
             {showToggle && rows.length > 0 && <div className={styles.divider} />}
             {rows.map(({ key, icon: Icon, label, value, isPlainValue, isConfigured, action }) => (
-              <div key={key} className={styles.row}>
+              <div key={key} className={classNames(styles.row, layoutClassNames.row)}>
                 <div className={styles.info}>
                   <div className={styles.name}>
                     <Icon className={styles.icon} />
