@@ -19,6 +19,9 @@ const account_center = {
     error_verify_failed: 'Verifica non riuscita. Inserisci di nuovo il codice.',
     verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
     try_another_method: 'Prova un altro metodo di verifica',
+    no_available_methods_title: 'No verification methods available',
+    no_available_methods_description:
+      "You don't have any verification methods set up. Please add a password, email, or phone number to your account first.",
   },
   password_verification: {
     title: 'Verifica la password',

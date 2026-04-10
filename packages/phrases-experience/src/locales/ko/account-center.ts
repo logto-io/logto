@@ -17,6 +17,9 @@ const account_center = {
     error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
     verification_required: '인증이 만료되었습니다. 다시 신원을 확인해주세요.',
     try_another_method: '다른 방법으로 인증하기',
+    no_available_methods_title: 'No verification methods available',
+    no_available_methods_description:
+      "You don't have any verification methods set up. Please add a password, email, or phone number to your account first.",
   },
   password_verification: {
     title: '비밀번호 확인',

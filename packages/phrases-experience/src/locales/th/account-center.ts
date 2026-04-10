@@ -18,6 +18,9 @@ const account_center = {
     error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
     verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
     try_another_method: 'ลองใช้วิธีอื่นเพื่อยืนยันตัวตน',
+    no_available_methods_title: 'No verification methods available',
+    no_available_methods_description:
+      "You don't have any verification methods set up. Please add a password, email, or phone number to your account first.",
   },
   password_verification: {
     title: 'ยืนยันรหัสผ่าน',

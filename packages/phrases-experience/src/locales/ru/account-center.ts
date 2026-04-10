@@ -18,6 +18,9 @@ const account_center = {
     error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
     verification_required: 'Срок действия проверки истёк. Подтвердите личность ещё раз.',
     try_another_method: 'Попробовать другой способ подтверждения',
+    no_available_methods_title: 'No verification methods available',
+    no_available_methods_description:
+      "You don't have any verification methods set up. Please add a password, email, or phone number to your account first.",
   },
   password_verification: {
     title: 'Подтвердите пароль',

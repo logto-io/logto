@@ -18,6 +18,9 @@ const account_center = {
     error_verify_failed: 'Не вдалося підтвердити. Будь ласка, введіть код ще раз.',
     verification_required: 'Термін перевірки минув. Підтвердіть свою особу ще раз.',
     try_another_method: 'Спробуйте інший спосіб підтвердження',
+    no_available_methods_title: 'No verification methods available',
+    no_available_methods_description:
+      "You don't have any verification methods set up. Please add a password, email, or phone number to your account first.",
   },
   password_verification: {
     title: 'Підтвердьте пароль',
