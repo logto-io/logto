@@ -86,6 +86,20 @@ const security = {
     custom_words_description:
       'Personalize context-specific words, case-insensitive, and one per line.',
     custom_words_placeholder: 'Your service name, company name, etc.',
+    password_expiration: 'Password expiration',
+    password_expiration_description:
+      'Require users to reset their password after a set number of days. Users signing in via SSO or passkey are not affected.',
+    enable_password_expiration: 'Enable password expiration',
+    enable_password_expiration_description:
+      'Require users to periodically reset their password. Existing users without a recorded password change date will be evaluated against their account creation date.',
+    expiration_period: 'Password valid period (days)',
+    expiration_period_description: 'Number of days a password remains valid before it expires.',
+    expiration_period_error: 'Password valid period must be at least 1 day.',
+    expiration_reminder: 'Expiration reminder (days before expiry)',
+    expiration_reminder_description:
+      'Number of days before expiry to warn users and prompt a password reset. Users can skip the reminder and proceed with sign-in.',
+    expiration_reminder_error:
+      'Expiration reminder period must be between 0 and the valid period ({{max}} days).',
   },
   sentinel_policy: {
     card_title: 'Identifier lockout',

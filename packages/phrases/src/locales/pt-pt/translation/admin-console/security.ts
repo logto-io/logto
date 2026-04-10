@@ -87,7 +87,22 @@ const security = {
     custom_words: 'Palavras personalizadas',
     custom_words_description:
       'Personalize palavras específicas do contexto, não diferenciando maiúsculas de minúsculas e uma por linha.',
-    custom_words_placeholder: 'Nome de seu serviço, nome da empresa, etc.',
+    custom_words_placeholder: 'O seu nome de serviço, nome da empresa, etc.',
+    password_expiration: 'Expiração de palavra-passe',
+    password_expiration_description:
+      'Exigir que os utilizadores redefinam a sua palavra-passe após um número definido de dias. Os utilizadores que iniciam sessão via SSO ou passkey não são afetados.',
+    enable_password_expiration: 'Ativar expiração de palavra-passe',
+    enable_password_expiration_description:
+      'Exigir que os utilizadores redefinam periodicamente a sua palavra-passe. Os utilizadores existentes sem uma data de alteração de palavra-passe registada serão avaliados em relação à data de criação da conta.',
+    expiration_period: 'Período de validade da palavra-passe (dias)',
+    expiration_period_description:
+      'Número de dias que uma palavra-passe permanece válida antes de expirar.',
+    expiration_period_error: 'O período de validade da palavra-passe deve ser de pelo menos 1 dia.',
+    expiration_reminder: 'Lembrete de expiração (dias antes da expiração)',
+    expiration_reminder_description:
+      'Número de dias antes da expiração para avisar os utilizadores e solicitar uma redefinição de palavra-passe. Os utilizadores podem ignorar o lembrete e prosseguir com o início de sessão.',
+    expiration_reminder_error:
+      'O período do lembrete de expiração deve estar entre 0 e o período de validade ({{max}} dias).',
   },
   sentinel_policy: {
     card_title: 'Bloqueio de identificador',

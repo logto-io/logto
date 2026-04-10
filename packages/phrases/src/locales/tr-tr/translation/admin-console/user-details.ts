@@ -19,6 +19,14 @@ const user_details = {
     new_password: 'Yeni şifre:',
     password: 'Şifre:',
   },
+  expire_password: {
+    button: 'Süresini doldur',
+    title: 'Bu parolanın süresini doldurmak istediğinizden emin misiniz?',
+    content:
+      'Kullanıcının bir sonraki oturum açışında parolasını sıfırlaması gerekecektir. Bu işlem geri alınamaz.',
+    success: 'Kullanıcının parolasının süresi dolmuş olarak işaretlendi.',
+    not_enabled_tooltip: 'Parola sona erme politikası etkinleştirilmemiş.',
+  },
   tab_settings: 'Ayarlar',
   tab_roles: 'Kullanıcı rolleri',
   tab_logs: 'Kullanıcı kayıtları',

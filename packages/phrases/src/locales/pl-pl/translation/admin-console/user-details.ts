@@ -19,6 +19,14 @@ const user_details = {
     new_password: 'Nowe hasło:',
     password: 'Hasło:',
   },
+  expire_password: {
+    button: 'Wygaśnięcie hasła',
+    title: 'Czy na pewno chcesz, aby to hasło wygasło?',
+    content:
+      'Użytkownik będzie musiał zresetować hasło przy następnym logowaniu. Tej akcji nie można cofnąć.',
+    success: 'Hasło użytkownika zostało oznaczone jako wygasłe.',
+    not_enabled_tooltip: 'Polityka wygasania haseł nie jest włączona.',
+  },
   tab_settings: 'Ustawienia',
   tab_roles: 'Role użytkowników',
   tab_logs: 'Logi użytkownika',

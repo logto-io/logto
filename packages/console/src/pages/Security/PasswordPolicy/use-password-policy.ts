@@ -19,18 +19,37 @@ export type PasswordPolicyFormData = PasswordPolicy & {
    * This property is only used for UI display.
    */
   isCustomWordsEnabled: boolean;
+  /** Whether password expiration is enabled. */
+  isPasswordExpirationEnabled: boolean;
+  /** Number of days a password is valid before it expires. */
+  passwordExpirationDays: number;
+  /** Number of days before expiry to warn users. 0 means no reminder. */
+  passwordReminderDays: number;
 };
 
 export const passwordPolicyFormParser = {
-  fromSignInExperience: ({ passwordPolicy }: SignInExperience): PasswordPolicyFormData => ({
+  fromSignInExperience: ({
+    passwordPolicy,
+    passwordExpiration,
+  }: SignInExperience): PasswordPolicyFormData => ({
     ...passwordPolicyGuard.parse(passwordPolicy),
     customWords: passwordPolicy.rejects?.words?.join('\n') ?? '',
     isCustomWordsEnabled: Boolean(passwordPolicy.rejects?.words?.length),
+    isPasswordExpirationEnabled: passwordExpiration.enabled ?? false,
+    passwordExpirationDays: passwordExpiration.validPeriodDays ?? 90,
+    passwordReminderDays: passwordExpiration.reminderPeriodDays ?? 0,
   }),
   toSignInExperience: (
     formData: PasswordPolicyFormData
-  ): Pick<SignInExperience, 'passwordPolicy'> => {
-    const { isCustomWordsEnabled, customWords, ...passwordPolicy } = formData;
+  ): Pick<SignInExperience, 'passwordPolicy' | 'passwordExpiration'> => {
+    const {
+      isCustomWordsEnabled,
+      customWords,
+      isPasswordExpirationEnabled,
+      passwordExpirationDays,
+      passwordReminderDays,
+      ...passwordPolicy
+    } = formData;
 
     return {
       passwordPolicy: {
@@ -39,6 +58,13 @@ export const passwordPolicyFormParser = {
           ...passwordPolicy.rejects,
           words: isCustomWordsEnabled ? customWords.split('\n').filter(Boolean) : [],
         },
+      },
+      passwordExpiration: {
+        enabled: isPasswordExpirationEnabled,
+        ...(isPasswordExpirationEnabled && {
+          validPeriodDays: passwordExpirationDays,
+          reminderPeriodDays: passwordReminderDays,
+        }),
       },
     };
   },

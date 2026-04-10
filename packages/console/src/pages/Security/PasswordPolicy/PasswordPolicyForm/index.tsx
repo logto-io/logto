@@ -22,6 +22,7 @@ import { trySubmitSafe } from '@/utils/form';
 import PasswordOption from '../PasswordOption';
 import { passwordPolicyFormParser, type PasswordPolicyFormData } from '../use-password-policy';
 
+import PasswordExpirationCard from './PasswordExpirationCard';
 import styles from './index.module.scss';
 
 type Props = {
@@ -206,6 +207,7 @@ function PasswordPolicyForm({ data }: Props) {
               )}
             </FormField>
           </FormCard>
+          <PasswordExpirationCard />
         </DetailsForm>
       </FormProvider>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
