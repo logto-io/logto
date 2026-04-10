@@ -4,6 +4,9 @@ const password = {
   rejected: 'Password rejected. Please check if your password meets the requirements.',
   invalid_legacy_password_format: 'Invalid legacy password format.',
   unsupported_legacy_hash_algorithm: 'Unsupported legacy hash algorithm: {{algorithm}}.',
+  expired: 'Your password has expired. Please reset your password to continue.',
+  expiration_reminder:
+    'Your password will expire in {{daysUntilExpiration}} day(s). Please consider resetting it.',
 };
 
 export default Object.freeze(password);

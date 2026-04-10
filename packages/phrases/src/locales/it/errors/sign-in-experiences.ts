@@ -39,6 +39,8 @@ const sign_in_experiences = {
     'Formato non valido per gli elementi della lista bloccata delle email personalizzate: {{items, list(type:conjunction)}}. Ogni elemento deve essere un indirizzo email o un dominio email valido, ad es., foo@example.com o @example.com.',
   forgot_password_method_requires_connector:
     'Il metodo di recupero della password richiede che sia configurato un connettore {{method}} corrispondente.',
+  password_expiration_not_enabled:
+    "La politica di scadenza della password non è abilitata. Abilitala nelle impostazioni dell'esperienza di accesso prima di far scadere le password.",
 };
 
 export default Object.freeze(sign_in_experiences);

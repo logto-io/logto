@@ -9,6 +9,7 @@ import useMfaErrorHandler, {
   type Options as UseMfaVerificationErrorHandlerOptions,
 } from './use-mfa-error-handler';
 import useMissingPasskeyErrorHandler from './use-missing-passkey-error-handler';
+import usePasswordExpirationErrorHandler from './use-password-expiration-error-handler';
 import useRequiredProfileErrorHandler, {
   type Options as UseRequiredProfileErrorHandlerOptions,
 } from './use-required-profile-error-handler';
@@ -41,6 +42,7 @@ const useSubmitInteractionErrorHandler = (
   const mfaErrorHandler = useMfaErrorHandler({ replace });
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler();
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
+  const passwordExpirationErrorHandler = usePasswordExpirationErrorHandler({ replace });
 
   return useMemo(
     () => ({
@@ -48,12 +50,14 @@ const useSubmitInteractionErrorHandler = (
       ...requiredProfileErrorHandler,
       ...mfaErrorHandler,
       ...cond(passkeySignInErrorHandler),
+      ...passwordExpirationErrorHandler,
     }),
     [
       emailBlockedErrorHandler,
       mfaErrorHandler,
       passkeySignInErrorHandler,
       requiredProfileErrorHandler,
+      passwordExpirationErrorHandler,
     ]
   );
 };

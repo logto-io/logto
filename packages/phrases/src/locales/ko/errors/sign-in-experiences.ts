@@ -36,6 +36,8 @@ const sign_in_experiences = {
     '잘못된 사용자 정의 이메일 차단 목록 항목: {{items, list(type:conjunction)}}. 각 항목은 유효한 이메일 주소 또는 이메일 도메인이어야 합니다. 예: foo@example.com 또는 @example.com.',
   forgot_password_method_requires_connector:
     '비밀번호 찾기 방법은 해당 {{method}} 커넥터를 구성해야 합니다.',
+  password_expiration_not_enabled:
+    '비밀번호 만료 정책이 활성화되지 않았습니다. 비밀번호를 만료시키기 전에 로그인 경험 설정에서 이를 활성화하세요.',
 };
 
 export default Object.freeze(sign_in_experiences);

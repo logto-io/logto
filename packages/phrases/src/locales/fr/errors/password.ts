@@ -6,6 +6,9 @@ const password = {
   invalid_legacy_password_format: 'Format de mot de passe hérité invalide.',
   unsupported_legacy_hash_algorithm:
     'Algorithme de hachage hérité non pris en charge : {{algorithm}}.',
+  expired: 'Votre mot de passe a expiré. Veuillez réinitialiser votre mot de passe pour continuer.',
+  expiration_reminder:
+    'Votre mot de passe expirera dans {{daysUntilExpiration}} jour(s). Veuillez envisager de le réinitialiser.',
 };
 
 export default Object.freeze(password);
