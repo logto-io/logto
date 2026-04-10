@@ -92,7 +92,10 @@ export const updateUserPassword = async (userId: string, password: string) =>
         password,
       },
     })
-    .json<User>();
+    .json<UserProfileResponse>();
+
+export const expireUserPassword = async (userId: string) =>
+  authedAdminApi.patch(`users/${userId}/password/expire`).json<UserProfileResponse>();
 
 export const deleteUserIdentity = async (userId: string, connectorTarget: string) =>
   authedAdminApi.delete(`users/${userId}/identities/${connectorTarget}`);
