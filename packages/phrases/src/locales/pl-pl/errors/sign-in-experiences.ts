@@ -38,6 +38,8 @@ const sign_in_experiences = {
     'Nieprawidłowe elementy niestandardowej listy blokowanych adresów e-mail: {{items, list(type:conjunction)}}. Każdy element musi być prawidłowym adresem e-mail lub domeną, np. foo@example.com lub @example.com.',
   forgot_password_method_requires_connector:
     'Metoda "Zapomniałem hasła" wymaga skonfigurowania odpowiedniego łącznika {{method}}.',
+  password_expiration_not_enabled:
+    'Polityka wygasania haseł nie jest włączona. Włącz ją w ustawieniach logowania przed wygaszeniem haseł.',
 };
 
 export default Object.freeze(sign_in_experiences);

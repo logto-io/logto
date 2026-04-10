@@ -27,6 +27,7 @@ export {
 } from './interaction';
 
 export * from './mfa';
+export * from './password-expiration';
 export * from './social';
 export * from './one-time-token';
 export * from './passkey-sign-in';

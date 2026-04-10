@@ -37,6 +37,7 @@ import WebAuthnVerification from './pages/MfaVerification/WebAuthnVerification';
 import OneTimeToken from './pages/OneTimeToken';
 import OneTimeTokenErrorPage from './pages/OneTimeToken/Error';
 import PasskeySetup from './pages/PasskeySetup';
+import PasswordExpirationReset from './pages/PasswordExpirationReset';
 import Register from './pages/Register';
 import RegisterPassword from './pages/RegisterPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -99,6 +100,10 @@ const App = () => {
                         <Route
                           path="verification-methods"
                           element={<SignInVerificationMethods />}
+                        />
+                        <Route
+                          path="password-expiration/reset"
+                          element={<PasswordExpirationReset />}
                         />
                       </Route>
 

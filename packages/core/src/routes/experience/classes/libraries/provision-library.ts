@@ -82,6 +82,7 @@ export class ProvisionLibrary {
         ...rest,
         ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
         ...conditional(customData && { customData }),
+        ...conditional(rest.passwordEncrypted && { passwordUpdatedAt: Date.now() }),
         logtoConfig: {
           [userMfaDataKey]: { enabled: false },
         },

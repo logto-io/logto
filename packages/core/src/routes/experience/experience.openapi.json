@@ -119,6 +119,58 @@
         }
       }
     },
+    "/api/experience/password-expiration/skip": {
+      "post": {
+        "operationId": "SkipPasswordExpirationReminder",
+        "summary": "Skip password expiration reminder",
+        "description": "Skip the current password expiration reminder for this interaction and continue with the sign-in flow.",
+        "responses": {
+          "204": {
+            "description": "The password expiration reminder has been skipped successfully."
+          },
+          "404": {
+            "description": "The interaction or identified user context was not found."
+          },
+          "422": {
+            "description": "The interaction cannot skip the password expiration reminder in the current state."
+          }
+        }
+      }
+    },
+    "/api/experience/password-expiration/reset": {
+      "put": {
+        "operationId": "ResetExpiredPassword",
+        "summary": "Reset expired password",
+        "description": "Reset an expired password during an active sign-in interaction.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "password": {
+                    "description": "The new password to set for the identified user."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The expired password has been reset successfully."
+          },
+          "400": {
+            "description": "The current interaction type does not allow password expiration reset."
+          },
+          "404": {
+            "description": "The identified user or interaction context was not found."
+          },
+          "422": {
+            "description": "The new password does not satisfy password policy validation."
+          }
+        }
+      }
+    },
     "/api/experience/interaction": {
       "get": {
         "operationId": "GetInteraction",
