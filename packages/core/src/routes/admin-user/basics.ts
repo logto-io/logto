@@ -10,6 +10,7 @@ import {
   userProfileGuard,
 } from '@logto/schemas';
 import { conditional, yes } from '@silverhand/essentials';
+import { subDays } from 'date-fns';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -229,6 +230,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       response: adminUserProfileResponseGuard,
       status: [200, 400, 404, 422],
     }),
+    // eslint-disable-next-line complexity
     async (ctx, next) => {
       const {
         primaryEmail,
@@ -271,6 +273,8 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       const id = await generateUserId();
 
+      const hasPassword = Boolean(password ?? passwordDigest);
+
       const [user] = await insertUser({
         id,
         primaryEmail,
@@ -287,6 +291,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
           }
         ),
         ...conditional(profile && { profile }),
+        ...conditional(hasPassword && { passwordUpdatedAt: Date.now() }),
       });
 
       ctx.body = transpileAdminUserProfileResponse(user);
@@ -347,7 +352,43 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       const user = await updateUserById(userId, {
         passwordEncrypted,
         passwordEncryptionMethod,
+        passwordUpdatedAt: Date.now(),
       });
+
+      ctx.body = transpileAdminUserProfileResponse(user);
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/users/:userId/password/expire',
+    koaGuard({
+      params: object({ userId: string() }),
+      response: adminUserProfileResponseGuard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+      } = ctx.guard;
+
+      const { findDefaultSignInExperience } = queries.signInExperiences;
+
+      const { passwordExpiration } = await findDefaultSignInExperience();
+
+      assertThat(
+        passwordExpiration.enabled && passwordExpiration.validPeriodDays,
+        new RequestError({
+          code: 'sign_in_experiences.password_expiration_not_enabled',
+          status: 400,
+        })
+      );
+
+      // Set passwordUpdatedAt to (now - validPeriodDays) so the next sign-in triggers expiry.
+      const expiredAt = subDays(new Date(), passwordExpiration.validPeriodDays).getTime();
+
+      const user = await updateUserById(userId, { passwordUpdatedAt: expiredAt });
 
       ctx.body = transpileAdminUserProfileResponse(user);
 

@@ -1,4 +1,9 @@
-import { defaultTenantId, MfaFactor, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import {
+  defaultTenantId,
+  MfaFactor,
+  type User,
+  UsersPasswordEncryptionMethod,
+} from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockResource, mockAdminUserRole, mockScope } from '#src/__mocks__/index.js';
@@ -230,6 +235,9 @@ describe('verifyUserPassword()', () => {
         passwordEncrypted: expect.stringContaining('argon2'),
         passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
       });
+      const lastCall = updateUserById.mock.calls.at(-1) as [string, Partial<User>] | undefined;
+      expect(lastCall).toBeDefined();
+      expect(lastCall?.[1].passwordUpdatedAt).toBeUndefined();
     });
   });
 });

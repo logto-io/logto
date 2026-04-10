@@ -192,6 +192,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       const updatedUser = await updateUserById(userId, {
         passwordEncrypted,
         passwordEncryptionMethod,
+        passwordUpdatedAt: Date.now(),
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
