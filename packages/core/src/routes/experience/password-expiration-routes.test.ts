@@ -276,4 +276,14 @@ describe('password expiration routes', () => {
 
     expect(response.status).toBe(404);
   });
+
+  it('should return 403 when resetting password expiration without expired interaction state', async () => {
+    const { requester, users } = createRequesterWithMocks();
+    const response = await requester
+      .put('/experience/password-expiration/reset')
+      .send({ password: 'Password123' });
+
+    expect(response.status).toBe(403);
+    expect(users.updateUserById).not.toHaveBeenCalled();
+  });
 });

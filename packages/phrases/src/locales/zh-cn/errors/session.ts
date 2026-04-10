@@ -42,6 +42,9 @@ const session = {
     conflict_rp_id: 'Relying Party ID 不匹配。请使用正确的客户端登录。',
     sso_users_not_allowed: 'SSO 用户无法使用 Passkey 登录选项。',
   },
+  password_expiration: {
+    reset_not_allowed: '只有在当前登录会话中的密码过期后，才允许重置密码。',
+  },
   sso_enabled: '该邮箱已开启单点登录，请使用 SSO 登录。',
   captcha_required: '需要验证码。',
   captcha_failed: '验证码验证失败。',
