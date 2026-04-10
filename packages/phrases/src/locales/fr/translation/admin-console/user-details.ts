@@ -21,6 +21,14 @@ const user_details = {
     new_password: 'Nouveau mot de passe :',
     password: 'Mot de passe :',
   },
+  expire_password: {
+    button: 'Expirer',
+    title: 'Êtes-vous sûr de vouloir faire expirer ce mot de passe ?',
+    content:
+      "L'utilisateur devra réinitialiser son mot de passe lors de sa prochaine connexion. Cette action ne peut être annulée.",
+    success: "Le mot de passe de l'utilisateur a été marqué comme expiré.",
+    not_enabled_tooltip: "La politique d'expiration du mot de passe n'est pas activée.",
+  },
   tab_settings: 'Paramètres',
   tab_roles: 'Rôles utilisateur',
   tab_logs: "Journaux de l'utilisateur",

@@ -11,6 +11,7 @@ import modalStyles from '@/scss/modal.module.scss';
 
 import ResetPasswordForm from '../../components/ResetPasswordForm';
 
+import ExpirePasswordButton from './ExpirePasswordButton';
 import styles from './index.module.scss';
 
 type Props = {
@@ -51,6 +52,7 @@ function UserPassword({ user, onResetPassword }: Props) {
               setIsResetPasswordFormOpen(true);
             }}
           />
+          {hasPassword && <ExpirePasswordButton userId={user.id} />}
         </div>
       </div>
       <ReactModal

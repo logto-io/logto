@@ -88,7 +88,23 @@ const security = {
     custom_words: 'Parole personalizzate',
     custom_words_description:
       'Personalizza parole specifiche del contesto, non case-sensitive, una per riga.',
-    custom_words_placeholder: "Nome del tuo servizio, nome dell'azienda, ecc.",
+    custom_words_placeholder: "Nome del tuo servizio, nome dell'azienda, etc.",
+    password_expiration: 'Scadenza della password',
+    password_expiration_description:
+      'Richiedi agli utenti di reimpostare la password dopo un numero stabilito di giorni. Gli utenti che accedono tramite SSO o passkey non sono interessati.',
+    enable_password_expiration: 'Abilita la scadenza della password',
+    enable_password_expiration_description:
+      'Richiedi agli utenti di reimpostare periodicamente la password. Gli utenti esistenti senza una data di modifica della password registrata verranno valutati in base alla data di creazione del loro account.',
+    expiration_period: 'Periodo di validità della password (giorni)',
+    expiration_period_description:
+      'Numero di giorni in cui una password rimane valida prima di scadere.',
+    expiration_period_error:
+      'Il periodo di validità della password deve essere di almeno 1 giorno.',
+    expiration_reminder: 'Promemoria di scadenza (giorni prima della scadenza)',
+    expiration_reminder_description:
+      "Numero di giorni prima della scadenza per avvisare gli utenti e richiedere la reimpostazione della password. Gli utenti possono saltare il promemoria e procedere con l'accesso.",
+    expiration_reminder_error:
+      'Il periodo del promemoria di scadenza deve essere compreso tra 0 e il periodo di validità ({{max}} giorni).',
   },
   sentinel_policy: {
     card_title: 'Blocco identificatore',
