@@ -151,7 +151,11 @@ export default function userRoutes<T extends AuthedMeRouter>(
       }
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
-      await updateUserById(userId, { passwordEncrypted, passwordEncryptionMethod });
+      await updateUserById(userId, {
+        passwordEncrypted,
+        passwordEncryptionMethod,
+        passwordUpdatedAt: Date.now(),
+      });
 
       ctx.status = 204;
 
