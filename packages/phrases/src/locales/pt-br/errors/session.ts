@@ -55,6 +55,10 @@ const session = {
       'O ID da Relying Party não corresponde. Use o cliente correto para fazer login.',
     sso_users_not_allowed: 'A opção de login com passkey não está disponível para usuários SSO.',
   },
+  password_expiration: {
+    reset_not_allowed:
+      'A redefinição de senha só é permitida após a senha expirar na sessão de login atual.',
+  },
   sso_enabled:
     'O login único está habilitado para este e-mail fornecido. Faça login com SSO, por favor.',
   captcha_required: 'Captcha é necessário.',

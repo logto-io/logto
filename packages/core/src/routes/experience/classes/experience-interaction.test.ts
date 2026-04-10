@@ -551,6 +551,41 @@ describe('ExperienceInteraction class', () => {
       await expect(experienceInteraction.submit()).resolves.toBeUndefined();
     });
 
+    it('throws password.expired after reminder skip when password becomes expired', async () => {
+      const now = new Date('2026-01-10T00:00:00.000Z');
+      jest.useFakeTimers().setSystemTime(now);
+      const { experienceInteraction } = createSignInInteraction({
+        user: {
+          ...mockUser,
+          passwordUpdatedAt: now.getTime() - 28 * dayInMs,
+        },
+        signInExperienceOverrides: {
+          passwordExpiration: {
+            enabled: true,
+            validPeriodDays: 30,
+            reminderPeriodDays: 5,
+          },
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchError(
+        new RequestError(
+          { code: 'password.expiration_reminder', status: 422 },
+          { daysUntilExpiration: 2 }
+        )
+      );
+
+      experienceInteraction.skipPasswordReminder();
+      jest.setSystemTime(new Date('2026-01-13T00:00:00.000Z'));
+
+      await expect(experienceInteraction.submit()).rejects.toMatchError(
+        new RequestError({ code: 'password.expired', status: 422 })
+      );
+      expect(experienceInteraction.toJson().passwordLifecycle).toEqual(
+        expect.objectContaining({ passwordExpired: true })
+      );
+    });
+
     it('falls back to createdAt when passwordUpdatedAt is not set', async () => {
       const now = new Date('2026-01-10T00:00:00.000Z');
       jest.useFakeTimers().setSystemTime(now);

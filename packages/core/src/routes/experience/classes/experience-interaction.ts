@@ -681,6 +681,10 @@ export default class ExperienceInteraction {
     this.passwordLifecycle.passwordExpired = false;
   }
 
+  public get isPasswordExpiredInInteraction() {
+    return this.passwordLifecycle.passwordExpired;
+  }
+
   async guardCaptcha() {
     if (this.captcha.verified || this.captcha.skipped) {
       return;
@@ -830,11 +834,6 @@ export default class ExperienceInteraction {
       assertThat(false, new RequestError({ code: 'password.expired', status: 422 }));
     }
 
-    // Reminder already shown and user chose to skip – proceed.
-    if (this.passwordLifecycle.reminderSkipped) {
-      return;
-    }
-
     const referenceDate = new Date(user.passwordUpdatedAt ?? user.createdAt);
     const passwordAgeDays = differenceInDays(new Date(), referenceDate);
 
@@ -844,6 +843,11 @@ export default class ExperienceInteraction {
     await this.save();
 
     assertThat(!isPasswordExpired, new RequestError({ code: 'password.expired', status: 422 }));
+
+    // Reminder skip must not bypass an expiration that happens later in the same interaction.
+    if (this.passwordLifecycle.reminderSkipped) {
+      return;
+    }
 
     const reminderPeriodDays = policy.reminderPeriodDays ?? 0;
     const reminderDaysUntilExpiration = policy.validPeriodDays - passwordAgeDays;

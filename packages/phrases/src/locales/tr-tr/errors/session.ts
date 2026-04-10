@@ -53,6 +53,10 @@ const session = {
       'Relying Party ID eşleşmiyor. Lütfen oturum açmak için doğru istemciyi kullanın.',
     sso_users_not_allowed: 'Passkey ile oturum açma seçeneği SSO kullanıcıları için kullanılamaz.',
   },
+  password_expiration: {
+    reset_not_allowed:
+      'Parola sıfırlama yalnızca geçerli oturumda parola süresi dolduktan sonra yapılabilir.',
+  },
   sso_enabled: 'Bu e-posta için tek oturum açma etkin. Lütfen SSO ile oturum açın.',
   captcha_required: 'Captcha gereklidir.',
   captcha_failed: 'Captcha doğrulaması başarısız oldu.',
