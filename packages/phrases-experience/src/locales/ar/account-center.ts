@@ -18,9 +18,9 @@ const account_center = {
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
     try_another_method: 'جرّب طريقة أخرى للتحقق',
-    no_available_methods_title: 'No verification methods available',
+    no_available_methods_title: 'لا توجد طرق تحقق متاحة',
     no_available_methods_description:
-      "You don't have any verification methods set up. Please add a password, email, or phone number to your account first.",
+      'لم تقم بإعداد أي طرق للتحقق. يرجى إضافة كلمة مرور أو بريد إلكتروني أو رقم هاتف إلى حسابك أولًا.',
   },
   password_verification: {
     title: 'التحقق من كلمة المرور',

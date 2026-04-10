@@ -18,9 +18,9 @@ const account_center = {
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
     verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
     try_another_method: '別の方法で確認する',
-    no_available_methods_title: 'No verification methods available',
+    no_available_methods_title: '利用可能な認証方法がありません',
     no_available_methods_description:
-      "You don't have any verification methods set up. Please add a password, email, or phone number to your account first.",
+      '認証方法が設定されていません。まずアカウントにパスワード、メールアドレス、または電話番号を追加してください。',
   },
   password_verification: {
     title: 'パスワードを確認',
