@@ -122,7 +122,8 @@ describe('organization user APIs', () => {
       const organization = await organizationApi.create({ name: 'test' });
       const user = await userApi.create({ username: generateTestName() });
 
-      await organizationApi.addUsers(organization.id, [user.id]);
+      const addUsersResult = await organizationApi.addUsers(organization.id, [user.id]);
+      expect(addUsersResult).toEqual({ userIds: [user.id] });
       await organizationApi.deleteUser(organization.id, user.id);
       const users = await organizationApi.getUsers(organization.id);
       expect(users).not.toContainEqual(user);
@@ -163,7 +164,12 @@ describe('organization user APIs', () => {
       );
 
       await organizationApi.addUsers(organization.id, [user.id]);
-      await organizationApi.addUserRoles(organization.id, user.id, [role1.id, role2.id]);
+      const addRolesResult = await organizationApi.addUserRoles(organization.id, user.id, [
+        role1.id,
+        role2.id,
+      ]);
+      expect(addRolesResult.organizationRoleIds).toContain(role1.id);
+      expect(addRolesResult.organizationRoleIds).toContain(role2.id);
       const roles = await organizationApi.getUserRoles(organization.id, user.id);
       expect(roles).toContainEqual(expect.objectContaining({ id: role1.id }));
       expect(roles).toContainEqual(expect.objectContaining({ id: role2.id }));
@@ -364,7 +370,14 @@ describe('organization user APIs', () => {
       ]);
 
       await organizationApi.addUsers(organization.id, [user.id]);
-      await organizationApi.addUserRoles(organization.id, user.id, [], [role1.name, role2.name]);
+      const addRolesResult = await organizationApi.addUserRoles(
+        organization.id,
+        user.id,
+        [],
+        [role1.name, role2.name]
+      );
+      expect(addRolesResult.organizationRoleIds).toContain(role1.id);
+      expect(addRolesResult.organizationRoleIds).toContain(role2.id);
       const roles = await organizationApi.getUserRoles(organization.id, user.id);
       expect(roles).toContainEqual(expect.objectContaining({ id: role1.id }));
       expect(roles).toContainEqual(expect.objectContaining({ id: role2.id }));
@@ -379,7 +392,14 @@ describe('organization user APIs', () => {
       ]);
 
       await organizationApi.addUsers(organization.id, [user.id]);
-      await organizationApi.addUserRoles(organization.id, user.id, [role1.id], [role2.name]);
+      const addRolesResult = await organizationApi.addUserRoles(
+        organization.id,
+        user.id,
+        [role1.id],
+        [role2.name]
+      );
+      expect(addRolesResult.organizationRoleIds).toContain(role1.id);
+      expect(addRolesResult.organizationRoleIds).toContain(role2.id);
       const roles = await organizationApi.getUserRoles(organization.id, user.id);
       expect(roles).toContainEqual(expect.objectContaining({ id: role1.id }));
       expect(roles).toContainEqual(expect.objectContaining({ id: role2.id }));
