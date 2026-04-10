@@ -19,6 +19,14 @@ const user_details = {
     new_password: '新しいパスワード：',
     password: 'パスワード：',
   },
+  expire_password: {
+    button: '期限切れにする',
+    title: 'このパスワードを期限切れにしてもよろしいですか？',
+    content:
+      'ユーザーは次回のサインイン時にパスワードのリセットを要求されます。この操作は取り消せません。',
+    success: 'ユーザーのパスワードが期限切れとしてマークされました。',
+    not_enabled_tooltip: 'パスワードの有効期限ポリシーが有効になっていません。',
+  },
   tab_settings: '設定',
   tab_roles: 'ユーザー役割',
   tab_logs: 'ユーザーログ',

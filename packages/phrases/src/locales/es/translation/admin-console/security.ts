@@ -88,6 +88,21 @@ const security = {
     custom_words_description:
       'Personaliza las palabras específicas del contexto, sin importar las mayúsculas y minúsculas, y una por línea.',
     custom_words_placeholder: 'Nombre de su servicio, nombre de la empresa, etc.',
+    password_expiration: 'Expiración de contraseña',
+    password_expiration_description:
+      'Requerir a los usuarios que restablezcan su contraseña después de un número determinado de días. Los usuarios que inician sesión a través de SSO o clave de acceso no se ven afectados.',
+    enable_password_expiration: 'Habilitar expiración de contraseña',
+    enable_password_expiration_description:
+      'Requerir a los usuarios que restablezcan periódicamente su contraseña. Los usuarios existentes sin una fecha de cambio de contraseña registrada serán evaluados con respecto a su fecha de creación de cuenta.',
+    expiration_period: 'Periodo de validez de la contraseña (dias)',
+    expiration_period_description:
+      'Número de días que una contraseña permanece válida antes de expirar.',
+    expiration_period_error: 'El periodo de validez de la contraseña debe ser de al menos 1 día.',
+    expiration_reminder: 'Recordatorio de expiración (días antes del vencimiento)',
+    expiration_reminder_description:
+      'Número de días antes del vencimiento para advertir a los usuarios y solicitar un restablecimiento de contraseña. Los usuarios pueden omitir el recordatorio y continuar con el inicio de sesión.',
+    expiration_reminder_error:
+      'El periodo del recordatorio de expiración debe estar entre 0 y el periodo de validez ({{max}} días).',
   },
   sentinel_policy: {
     card_title: 'Bloqueo de identificador',
