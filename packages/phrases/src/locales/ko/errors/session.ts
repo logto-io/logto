@@ -50,6 +50,10 @@ const session = {
       'Relying Party ID가 일치하지 않습니다. 올바른 클라이언트를 사용해 로그인해 주세요.',
     sso_users_not_allowed: 'SSO 사용자는 패스키 로그인 옵션을 사용할 수 없습니다.',
   },
+  password_expiration: {
+    reset_not_allowed:
+      '비밀번호 재설정은 현재 로그인 세션에서 비밀번호가 만료된 후에만 허용됩니다.',
+  },
   sso_enabled: '이 이메일로는 SSO가 활성화되어 있어요. SSO로 로그인해 주세요.',
   captcha_required: 'Captcha 가 필요해요.',
   captcha_failed: 'Captcha 인증에 실패했어요.',

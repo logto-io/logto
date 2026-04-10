@@ -46,7 +46,7 @@ export default function passwordExpirationRoutes<T extends ExperienceInteraction
     `${experienceRoutes.prefix}/password-expiration/reset`,
     koaGuard({
       body: z.object({ password: z.string().min(1) }),
-      status: [204, 400, 404, 422],
+      status: [204, 400, 403, 404, 422],
     }),
     async (ctx, next) => {
       const { experienceInteraction, guard } = ctx;
@@ -59,6 +59,10 @@ export default function passwordExpirationRoutes<T extends ExperienceInteraction
 
       const userId = experienceInteraction.identifiedUserId;
       assertThat(userId, new RequestError({ code: 'session.identifier_not_found', status: 404 }));
+      assertThat(
+        experienceInteraction.isPasswordExpiredInInteraction,
+        new RequestError({ code: 'session.password_expiration.reset_not_allowed', status: 403 })
+      );
 
       const user = await findUserById(userId);
       const signInExperience = await findDefaultSignInExperience();

@@ -59,6 +59,10 @@ const session = {
     sso_users_not_allowed:
       "L'option de connexion par passkey n'est pas disponible pour les utilisateurs SSO.",
   },
+  password_expiration: {
+    reset_not_allowed:
+      'La réinitialisation du mot de passe n’est autorisée qu’après l’expiration du mot de passe dans la session de connexion actuelle.',
+  },
   sso_enabled:
     'La connexion unique est activée pour cet e-mail donné. Veuillez vous connecter avec SSO.',
   captcha_required: 'Le captcha est requis.',
