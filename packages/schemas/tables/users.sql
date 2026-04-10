@@ -23,6 +23,7 @@ create table users (
   mfa_verifications jsonb /* @use MfaVerifications */ not null default '[]'::jsonb,
   is_suspended boolean not null default false,
   last_sign_in_at timestamptz,
+  password_updated_at timestamptz,
   created_at timestamptz not null default (now()),
   updated_at timestamptz not null default (now()),
   primary key (id),

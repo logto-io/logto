@@ -33,5 +33,6 @@ create table sign_in_experiences (
   email_blocklist_policy jsonb /* @use EmailBlocklistPolicy */ not null default '{}'::jsonb,
   forgot_password_methods jsonb /* @use ForgotPasswordMethods */ default '[]'::jsonb,
   passkey_sign_in jsonb /* @use PasskeySignIn */ not null default '{}'::jsonb,
+  password_expiration jsonb /* @use PasswordExpirationPolicy */ not null default '{}'::jsonb,
   primary key (tenant_id, id)
 );
