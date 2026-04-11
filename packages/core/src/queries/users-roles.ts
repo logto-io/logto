@@ -77,12 +77,16 @@ export const createUsersRolesQueries = (pool: CommonQueryMethods) => {
       `)
       : [];
 
-  const findUsersRolesByRoleIds = async (roleIds: string[]) =>
+  const findUsersRolesByRoleIds = async (roleIds: string[], limit = 3) =>
     roleIds.length > 0
       ? pool.any<UsersRole>(sql`
         select ${sql.join(Object.values(fields), sql`,`)}
-        from ${table}
-        where ${fields.roleId} in (${sql.join(roleIds, sql`, `)})
+        from (
+          select *, row_number() over (partition by ${fields.roleId}) as rn
+          from ${table}
+          where ${fields.roleId} in (${sql.join(roleIds, sql`, `)})
+        ) as ranked
+        where ranked.rn <= ${limit}
       `)
       : [];
 
