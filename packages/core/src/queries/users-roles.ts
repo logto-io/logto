@@ -67,11 +67,32 @@ export const createUsersRolesQueries = (pool: CommonQueryMethods) => {
     }
   };
 
+  const countUsersRolesByRoleIds = async (roleIds: string[]) =>
+    roleIds.length > 0
+      ? pool.any<{ roleId: string; count: number }>(sql`
+        select ${fields.roleId} as "roleId", count(*)
+        from ${table}
+        where ${fields.roleId} in (${sql.join(roleIds, sql`, `)})
+        group by ${fields.roleId}
+      `)
+      : [];
+
+  const findUsersRolesByRoleIds = async (roleIds: string[]) =>
+    roleIds.length > 0
+      ? pool.any<UsersRole>(sql`
+        select ${sql.join(Object.values(fields), sql`,`)}
+        from ${table}
+        where ${fields.roleId} in (${sql.join(roleIds, sql`, `)})
+      `)
+      : [];
+
   return {
     countUsersRolesByRoleId,
+    countUsersRolesByRoleIds,
     findFirstUsersRolesByRoleIdAndUserIds,
     findUsersRolesByUserId,
     findUsersRolesByRoleId,
+    findUsersRolesByRoleIds,
     insertUsersRoles,
     deleteUsersRolesByUserIdAndRoleId,
   };

@@ -75,11 +75,32 @@ export const createApplicationsRolesQueries = (pool: CommonQueryMethods) => {
     }
   };
 
+  const countApplicationsRolesByRoleIds = async (roleIds: string[]) =>
+    roleIds.length > 0
+      ? pool.any<{ roleId: string; count: number }>(sql`
+        select ${fields.roleId} as "roleId", count(*)
+        from ${table}
+        where ${fields.roleId} in (${sql.join(roleIds, sql`, `)})
+        group by ${fields.roleId}
+      `)
+      : [];
+
+  const findApplicationsRolesByRoleIds = async (roleIds: string[]) =>
+    roleIds.length > 0
+      ? pool.any<ApplicationsRole>(sql`
+        select ${sql.join(Object.values(fields), sql`,`)}
+        from ${table}
+        where ${fields.roleId} in (${sql.join(roleIds, sql`, `)})
+      `)
+      : [];
+
   return {
     findFirstApplicationsRolesByRoleIdAndApplicationIds,
     countApplicationsRolesByRoleId,
+    countApplicationsRolesByRoleIds,
     findApplicationsRolesByApplicationId,
     findApplicationsRolesByRoleId,
+    findApplicationsRolesByRoleIds,
     insertApplicationsRoles,
     deleteApplicationRole,
   };
