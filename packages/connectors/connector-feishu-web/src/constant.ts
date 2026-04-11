@@ -41,5 +41,13 @@ export const defaultMetadata: ConnectorMetadata = {
       required: true,
       placeholder: '<app-secret>',
     },
+    {
+      key: 'scope',
+      label: 'Scope',
+      type: ConnectorConfigFormItemType.Text,
+      required: false,
+      placeholder: 'user_info,email,phone',
+      description: 'Comma-separated list of scopes to request from Feishu',
+    },
   ],
 };
