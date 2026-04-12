@@ -103,7 +103,7 @@ const sign_in_exp = {
     description: 'Logto API を使用してアカウントセンターのフローをカスタマイズします。',
     enable_account_api: 'アカウントセンターと Account API を有効化',
     enable_account_api_description:
-      'エンドユーザー向けの Account API と Logto の組み込みアカウントセンターを同時に有効にします。オフにすると、両方の機能が利用できなくなります。',
+      'エンドユーザー向けの Account API と Logto のすぐに使えるアカウントセンターを同時に有効にします。オフにすると、両方の機能が利用できなくなります。',
     field_options: {
       off: 'オフ',
       edit: '編集',

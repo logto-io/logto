@@ -103,7 +103,7 @@ const sign_in_exp = {
     description: 'Personalize os fluxos do centro de conta com as APIs do Logto.',
     enable_account_api: 'Ativar o centro de conta e a Account API',
     enable_account_api_description:
-      'Ativa tanto a Account API voltada ao usuário final quanto o centro de conta pronto para uso da Logto. Quando desativado, ambos os recursos ficam indisponíveis.',
+      'Ativa tanto a Account API voltada ao usuário final quanto o centro de contas pronto para uso da Logto. Quando desativado, ambos os recursos ficam indisponíveis.',
     field_options: {
       off: 'Desativado',
       edit: 'Editar',

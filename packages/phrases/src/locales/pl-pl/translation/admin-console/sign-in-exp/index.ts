@@ -103,7 +103,7 @@ const sign_in_exp = {
     description: 'Dostosuj przepływy centrum konta z wykorzystaniem interfejsów API Logto.',
     enable_account_api: 'Włącz centrum konta i Account API',
     enable_account_api_description:
-      'Włącza zarówno Account API dla użytkowników końcowych, jak i gotowe do użycia centrum konta Logto. Po wyłączeniu obie funkcje są niedostępne.',
+      'Włącza zarówno Account API dla użytkowników końcowych, jak i gotowe centrum konta Logto. Po wyłączeniu obie funkcje są niedostępne.',
     field_options: {
       off: 'Wyłączone',
       edit: 'Edytuj',
