@@ -93,3 +93,47 @@
     text-decoration: underline;
   }
 }
+
+:global(body.mobile) {
+  .sectionTitle {
+    padding-left: 0;
+  }
+
+  .row {
+    height: auto;
+    min-height: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: _.unit(3);
+    padding: _.unit(4) _.unit(5);
+  }
+
+  .info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: _.unit(1.5);
+  }
+
+  .name {
+    flex: none;
+    max-width: none;
+    gap: _.unit(3);
+  }
+
+  .value {
+    flex: none;
+    align-items: flex-start;
+  }
+
+  .statusTag {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .changeButton {
+    align-self: flex-start;
+    padding: 0;
+    white-space: normal;
+    text-align: left;
+  }
+}
