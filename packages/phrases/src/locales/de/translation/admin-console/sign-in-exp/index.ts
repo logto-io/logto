@@ -101,9 +101,9 @@ const sign_in_exp = {
   account_center: {
     title: 'KONTOZENTRUM',
     description: 'Passen Sie Ihre Kontozentrums-Workflows mit den Logto-APIs an.',
-    enable_account_api: 'Account-API aktivieren',
+    enable_account_api: 'Kontozentrum und Account-API aktivieren',
     enable_account_api_description:
-      'Aktivieren Sie die Account-API, um ein individuelles Kontozentrum aufzubauen und Endnutzer*innen direkten API-Zugriff ohne Logto Management API zu ermöglichen.',
+      'Aktiviert sowohl die benutzerseitige Account-API als auch das sofort einsatzbereite Kontozentrum von Logto. Wenn dies deaktiviert ist, sind beide Funktionen nicht verfügbar.',
     field_options: {
       off: 'Aus',
       edit: 'Bearbeiten',

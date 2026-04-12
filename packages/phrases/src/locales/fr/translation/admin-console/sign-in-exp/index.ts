@@ -103,9 +103,9 @@ const sign_in_exp = {
   account_center: {
     title: 'CENTRE DE COMPTE',
     description: 'Personnalisez les parcours de votre centre de compte à l’aide des API Logto.',
-    enable_account_api: 'Activer l’API Account',
+    enable_account_api: 'Activer le centre de compte et l’API Account',
     enable_account_api_description:
-      'Activez l’API Account pour créer un centre de compte personnalisé et offrir aux utilisateurs finaux un accès direct à l’API sans utiliser la Logto Management API.',
+      'Active à la fois l’API Account destinée aux utilisateurs finaux et le centre de compte prêt à l’emploi de Logto. Lorsqu’elle est désactivée, ces deux fonctionnalités ne sont pas disponibles.',
     field_options: {
       off: 'Désactivé',
       edit: 'Modifier',

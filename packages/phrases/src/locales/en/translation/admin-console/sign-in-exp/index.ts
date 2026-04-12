@@ -102,9 +102,9 @@ const sign_in_exp = {
     title: 'ACCOUNT CENTER',
     description:
       'Implement your account center for end users to manage account security and profile information.',
-    enable_account_api: 'Enable account center',
+    enable_account_api: 'Enable account center and Account API',
     enable_account_api_description:
-      "Enable the user-facing Account API with configurable permissions, giving you the choice between Logto's out-of-the-box account center or a fully custom solution.",
+      "Turn on both the user-facing Account API and Logto's prebuilt account center. When off, both features are unavailable.",
     field_options: {
       off: 'Off',
       edit: 'Edit',
