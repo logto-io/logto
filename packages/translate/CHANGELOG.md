@@ -1,5 +1,12 @@
 # @logto/translate
 
+## 0.2.12
+
+### Patch Changes
+
+- Updated dependencies [ab073bb65f]
+  - @logto/phrases@1.28.0
+
 ## 0.2.11
 
 ### Patch Changes
