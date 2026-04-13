@@ -18,7 +18,7 @@ import { WebHookApiTest } from '#src/helpers/hook.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { waitFor } from '#src/utils.js';
+import { devFeatureTest, waitFor } from '#src/utils.js';
 
 import WebhookMockServer from './WebhookMockServer.js';
 import { assertHookLogResult } from './utils.js';
@@ -36,23 +36,23 @@ const getHookLogs = async (hookId: string, event: InteractionHookEvent) => {
   );
 };
 
-beforeAll(async () => {
-  await Promise.all([
-    resetPasswordlessConnectors(),
-    enableAllPasswordSignInMethods({
-      identifiers: [SignInIdentifier.Username],
-      password: true,
-      verify: false,
-    }),
-    webHookMockServer.listen(),
-  ]);
-});
+devFeatureTest.describe('adaptive MFA experience hook trigger', () => {
+  beforeAll(async () => {
+    await Promise.all([
+      resetPasswordlessConnectors(),
+      enableAllPasswordSignInMethods({
+        identifiers: [SignInIdentifier.Username],
+        password: true,
+        verify: false,
+      }),
+      webHookMockServer.listen(),
+    ]);
+  });
 
-afterAll(async () => {
-  await Promise.all([webHookApi.cleanUp(), userApi.cleanUp(), webHookMockServer.close()]);
-});
+  afterAll(async () => {
+    await Promise.all([webHookApi.cleanUp(), userApi.cleanUp(), webHookMockServer.close()]);
+  });
 
-describe('adaptive MFA experience hook trigger', () => {
   it('triggers adaptive MFA once per sign-in flow and keeps PostSignIn success-only', async () => {
     try {
       await updateSignInExperience({

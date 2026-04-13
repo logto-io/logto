@@ -1,12 +1,53 @@
-import type { CreateSignInExperience } from '@logto/schemas';
-import { SignInExperiences } from '@logto/schemas';
+import type { CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import { SignInExperiences, adaptiveMfaGuard, mfaGuard } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
+import { EnvSet } from '#src/env-set/index.js';
+import {
+  legacyizeRequiredMfaPolicy,
+  normalizeRequiredMfaPolicy,
+} from '#src/libraries/sign-in-experience/mfa-policy.js';
 
 const id = 'default';
+
+const parseAdaptiveMfaField = (adaptiveMfa: SignInExperience['adaptiveMfa'] | string) =>
+  typeof adaptiveMfa === 'string' ? adaptiveMfaGuard.parse(JSON.parse(adaptiveMfa)) : adaptiveMfa;
+
+const isAdaptiveMfaEnabled = (adaptiveMfa: SignInExperience['adaptiveMfa'] | string) =>
+  parseAdaptiveMfaField(adaptiveMfa).enabled === true;
+
+const transformMfaByDevFeatures = (mfa: SignInExperience['mfa'], adaptiveMfaEnabled: boolean) => ({
+  ...mfa,
+  policy: EnvSet.values.isDevFeaturesEnabled
+    ? normalizeRequiredMfaPolicy(mfa.policy)
+    : legacyizeRequiredMfaPolicy(mfa.policy, adaptiveMfaEnabled),
+});
+
+const normalizeMfaField = (mfa: SignInExperience['mfa'] | string, adaptiveMfaEnabled: boolean) => {
+  const parsedMfa = typeof mfa === 'string' ? mfaGuard.parse(JSON.parse(mfa)) : mfa;
+  const transformedMfa = transformMfaByDevFeatures(parsedMfa, adaptiveMfaEnabled);
+
+  if (typeof mfa === 'string') {
+    return JSON.stringify(transformedMfa);
+  }
+
+  return transformedMfa;
+};
+
+const normalizeSignInExperience = <
+  T extends {
+    mfa: SignInExperience['mfa'] | string;
+    adaptiveMfa: SignInExperience['adaptiveMfa'] | string;
+  },
+>(
+  data: T
+): T => ({
+  ...data,
+  mfa: normalizeMfaField(data.mfa, isAdaptiveMfaEnabled(data.adaptiveMfa)),
+});
 
 export const createSignInExperienceQueries = (
   pool: CommonQueryMethods,
@@ -17,12 +58,14 @@ export const createSignInExperienceQueries = (
 
   const updateDefaultSignInExperience = wellKnownCache.mutate(
     async (set: Partial<CreateSignInExperience>) =>
-      updateSignInExperience({ set, where: { id }, jsonbMode: 'replace' }),
+      normalizeSignInExperience(
+        await updateSignInExperience({ set, where: { id }, jsonbMode: 'replace' })
+      ),
     ['sie']
   );
 
   const findDefaultSignInExperience = wellKnownCache.memoize(
-    async () => findSignInExperienceById(id),
+    async () => normalizeSignInExperience(await findSignInExperienceById(id)),
     ['sie']
   );
 

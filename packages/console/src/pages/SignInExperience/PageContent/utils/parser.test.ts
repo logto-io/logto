@@ -52,7 +52,7 @@ const mockSignInExperience: SignInExperience = {
   customUiAssets: null,
   passwordPolicy: {},
   mfa: {
-    policy: MfaPolicy.Mandatory,
+    policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     factors: [MfaFactor.TOTP],
   },
   adaptiveMfa: {

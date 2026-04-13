@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import crypto from 'node:crypto';
 
 import { PasswordPolicyChecker } from '@logto/core-kit';
@@ -70,7 +71,7 @@ const mfaRequiredCtx = {
     ...mockSignInExperience,
     mfa: {
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   },
 };
@@ -86,13 +87,35 @@ const promptOnlyAtSignInCtx = {
   },
 };
 
+const promptOnlyAtSignInNoSkipCtx = {
+  ...baseCtx,
+  signInExperience: {
+    ...mockSignInExperience,
+    mfa: {
+      factors: [MfaFactor.TOTP],
+      policy: MfaPolicy.PromptOnlyAtSignInMandatory,
+    },
+  },
+};
+
+const promptAtSignInAndSignUpNoSkipCtx = {
+  ...baseCtx,
+  signInExperience: {
+    ...mockSignInExperience,
+    mfa: {
+      factors: [MfaFactor.TOTP],
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+    },
+  },
+};
+
 const mfaRequiredTotpOnlyCtx = {
   ...baseCtx,
   signInExperience: {
     ...mockSignInExperience,
     mfa: {
       factors: [MfaFactor.TOTP],
-      policy: MfaPolicy.Mandatory,
+      policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
     },
   },
 };
@@ -173,6 +196,26 @@ describe('validateMandatoryBindMfa', () => {
       ).resolves.not.toThrow();
     });
 
+    it('bindMfas missing and policy is PromptOnlyAtSignInMandatory should pass', async () => {
+      await expect(
+        validateMandatoryBindMfa(tenantContext, promptOnlyAtSignInNoSkipCtx, interaction)
+      ).resolves.not.toThrow();
+    });
+
+    it('bindMfas missing and policy is PromptAtSignInAndSignUpMandatory should throw (no skip)', async () => {
+      await expect(
+        validateMandatoryBindMfa(tenantContext, promptAtSignInAndSignUpNoSkipCtx, interaction)
+      ).rejects.toMatchError(
+        new RequestError(
+          {
+            code: 'user.missing_mfa',
+            status: 422,
+          },
+          { availableFactors: [MfaFactor.TOTP] }
+        )
+      );
+    });
+
     it('bindMfa missing and policy is PromptAtSignInAndSignUp should throw (for skip)', async () => {
       await expect(
         validateMandatoryBindMfa(tenantContext, baseCtx, {
@@ -229,6 +272,21 @@ describe('validateMandatoryBindMfa', () => {
       );
     });
 
+    it('user mfaVerifications and bindMfa missing, and policy is PromptOnlyAtSignInMandatory should throw (no skip)', async () => {
+      findUserById.mockResolvedValueOnce(mockUser);
+      await expect(
+        validateMandatoryBindMfa(tenantContext, promptOnlyAtSignInNoSkipCtx, signInInteraction)
+      ).rejects.toMatchError(
+        new RequestError(
+          {
+            code: 'user.missing_mfa',
+            status: 422,
+          },
+          { availableFactors: [MfaFactor.TOTP] }
+        )
+      );
+    });
+
     it('user mfaVerifications and bindMfa missing, mark skipped, and not required should pass', async () => {
       findUserById.mockResolvedValueOnce({
         ...mockUser,
@@ -239,6 +297,27 @@ describe('validateMandatoryBindMfa', () => {
       await expect(
         validateMandatoryBindMfa(tenantContext, baseCtx, signInInteraction)
       ).resolves.not.toThrow();
+    });
+
+    it('user mfaVerifications and bindMfa missing, mark skipped, and policy is PromptOnlyAtSignInMandatory should throw', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        logtoConfig: {
+          mfa: { skipped: true },
+        },
+      });
+
+      await expect(
+        validateMandatoryBindMfa(tenantContext, promptOnlyAtSignInNoSkipCtx, signInInteraction)
+      ).rejects.toMatchError(
+        new RequestError(
+          {
+            code: 'user.missing_mfa',
+            status: 422,
+          },
+          { availableFactors: [MfaFactor.TOTP] }
+        )
+      );
     });
 
     it('user mfaVerifications missing, bindMfas existing and required should pass', async () => {
@@ -406,3 +485,4 @@ describe('verifyMfa', () => {
     );
   });
 });
+/* eslint-enable max-lines */

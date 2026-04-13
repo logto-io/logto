@@ -4,7 +4,6 @@ import {
   ConnectorType,
   SignInExperiences,
   ForgotPasswordMethod,
-  MfaPolicy,
   ProductEvent,
   type SignInExperience,
 } from '@logto/schemas';
@@ -18,6 +17,10 @@ import {
   parseEmailBlocklistPolicy,
   isEmailBlocklistPolicyEnabled,
 } from '#src/libraries/sign-in-experience/index.js';
+import {
+  isNonSkippableMfaPromptPolicy,
+  transformRequiredMfaPolicy,
+} from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { validateMfa } from '#src/libraries/sign-in-experience/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
@@ -32,13 +35,8 @@ import customUiAssetsRoutes from './custom-ui-assets/index.js';
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
 
-const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
-  [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
-    policy
-  );
-
-const signInExperienceResponseGuard = SignInExperiences.guard;
-const signInExperienceCreateGuard = SignInExperiences.createGuard;
+const { guard: signInExperienceResponseGuard, createGuard: signInExperienceCreateGuard } =
+  SignInExperiences;
 
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -102,11 +100,12 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         query: { removeUnusedDemoSocialConnector },
         body: { socialSignInConnectorTargets, emailBlocklistPolicy, ...rest },
       } = ctx.guard;
+      const { isDevFeaturesEnabled } = EnvSet.values;
       const {
         languageInfo,
         signUp,
         signIn,
-        mfa,
+        mfa: rawMfa,
         adaptiveMfa,
         sentinelPolicy,
         captchaPolicy,
@@ -123,6 +122,17 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         getLogtoConnectors(),
         findDefaultSignInExperience(),
       ]);
+
+      const mfa = rawMfa
+        ? {
+            ...rawMfa,
+            policy: transformRequiredMfaPolicy({
+              policy: rawMfa.policy,
+              isDevFeaturesEnabled,
+              adaptiveMfaEnabled: adaptiveMfa?.enabled ?? currentSettings.adaptiveMfa.enabled,
+            }),
+          }
+        : undefined;
 
       // Remove unavailable connectors
       const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>
@@ -163,18 +173,21 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
         assertThat(
           isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
-          'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+          'sign_in_experiences.required_mfa_requires_non_skippable_policy',
           422
         );
       }
 
       if (adaptiveMfa?.enabled === false) {
         const effectiveMfa = mfa ?? currentSettings.mfa;
-        assertThat(
-          !isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
-          'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
-          422
-        );
+        // When disabling adaptive MFA without explicitly updating MFA policy, the effective mode falls back to optional MFA.
+        if (mfa === undefined && currentSettings.adaptiveMfa.enabled) {
+          assertThat(
+            !isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
+            'sign_in_experiences.optional_mfa_requires_skippable_policy',
+            422
+          );
+        }
       }
 
       if (adaptiveMfa === undefined && mfa && isMfaEnabled(mfa)) {
@@ -182,13 +195,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         if (currentAdaptiveMfa.enabled) {
           assertThat(
             isNonSkippableMfaPromptPolicy(mfa.policy),
-            'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
-            422
-          );
-        } else {
-          assertThat(
-            !isNonSkippableMfaPromptPolicy(mfa.policy),
-            'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
+            'sign_in_experiences.required_mfa_requires_non_skippable_policy',
             422
           );
         }
@@ -197,7 +204,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       // Keep backend state aligned with console semantics:
       // if MFA is disabled and adaptive MFA is omitted in request, reset adaptive MFA to false.
       const normalizedAdaptiveMfa =
-        mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined ? { enabled: false } : adaptiveMfa;
+        isDevFeaturesEnabled && mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined
+          ? { enabled: false }
+          : adaptiveMfa;
 
       if (forgotPasswordMethods) {
         const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);
@@ -266,6 +275,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       const payload = {
         ...rest,
+        ...conditional(mfa && { mfa }),
         ...conditional(normalizedAdaptiveMfa && { adaptiveMfa: normalizedAdaptiveMfa }),
         ...conditional(
           filteredSocialSignInConnectorTargets && {

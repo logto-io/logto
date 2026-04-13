@@ -82,7 +82,7 @@ describe('skipMfaOnSignIn user setting', () => {
         },
         mfa: {
           factors: [MfaFactor.TOTP],
-          policy: MfaPolicy.Mandatory,
+          policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
         },
       });
 
