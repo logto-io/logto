@@ -13,10 +13,24 @@ void test('resolveLanguage returns the best supported built-in language', () => 
   assert.equal(resolveLanguage('xx'), undefined);
 });
 
+void test('resolveLanguage resolves manually added (custom) language tags', () => {
+  // Vietnamese is not built-in but is in the language-kit catalogue
+  assert.equal(resolveLanguage('vi'), 'vi-VN');
+  assert.equal(resolveLanguage('vi-VN'), 'vi-VN');
+  // Finnish
+  assert.equal(resolveLanguage('fi'), 'fi');
+  // Still undefined for truly unknown tags
+  assert.equal(resolveLanguage('xx'), undefined);
+});
+
 void test('resolveUiLocalesLanguage returns the first supported locale with fallback support', () => {
   assert.equal(resolveUiLocalesLanguage('xx pl fr'), 'pl-PL');
   assert.equal(resolveUiLocalesLanguage('zh-HK zh'), 'zh-HK');
   assert.equal(resolveUiLocalesLanguage('xx yy'), undefined);
+});
+
+void test('resolveUiLocalesLanguage resolves custom language tags from ui_locales', () => {
+  assert.equal(resolveUiLocalesLanguage('xx vi fr'), 'vi-VN');
 });
 
 void test('getPreferredLanguage respects ui_locales fallback before language settings', () => {
@@ -29,5 +43,17 @@ void test('getPreferredLanguage respects ui_locales fallback before language set
       },
     }),
     'pl-PL'
+  );
+});
+
+void test('getPreferredLanguage resolves custom fallback language', () => {
+  assert.equal(
+    getPreferredLanguage({
+      languageSettings: {
+        autoDetect: false,
+        fallbackLanguage: 'vi-VN',
+      },
+    }),
+    'vi-VN'
   );
 });
