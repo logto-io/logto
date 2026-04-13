@@ -19,6 +19,7 @@ function EventSelector({ value, onChange, options }: Props) {
 
   return (
     <Select
+      isSearchEnabled
       isClearable
       value={value}
       options={options ?? defaultEventOptions}
