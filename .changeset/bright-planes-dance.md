@@ -1,7 +1,6 @@
 ---
 "@logto/integration-tests": patch
 "@logto/core": patch
-"@logto/api": patch
 ---
 
 return response bodies from organization user and role assignment APIs
