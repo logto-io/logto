@@ -29,8 +29,13 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
                   "properties": {
                     "userIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
                       "description": "An array of user IDs processed from the request. This may include IDs that were already members of the organization."
                     }
                   }
