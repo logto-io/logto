@@ -54,7 +54,7 @@ function PasswordExpirationCard() {
                   min={1}
                   error={errors.passwordExpirationDays && t('expiration_period_error')}
                   onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-                    onChange(value && Number(value));
+                    onChange(value === '' ? 1 : Number(value));
                   }}
                   onValueUp={() => {
                     onChange(value + 1);
