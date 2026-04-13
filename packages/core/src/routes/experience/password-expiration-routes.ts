@@ -39,8 +39,8 @@ export default function passwordExpirationRoutes<T extends ExperienceInteraction
 
   /**
    * Reset an expired password within an active sign-in interaction.
-   * The user must be identified (password.expired error already thrown during submit).
-   * After resetting, it re-submits the interaction to complete sign-in.
+   * The user must be identified and have reached either expired or reminder state during submit.
+   * After resetting, it updates the interaction state and returns 204.
    */
   router.put(
     `${experienceRoutes.prefix}/password-expiration/reset`,
@@ -60,7 +60,8 @@ export default function passwordExpirationRoutes<T extends ExperienceInteraction
       const userId = experienceInteraction.identifiedUserId;
       assertThat(userId, new RequestError({ code: 'session.identifier_not_found', status: 404 }));
       assertThat(
-        experienceInteraction.isPasswordExpiredInInteraction,
+        experienceInteraction.isPasswordExpiredInInteraction ||
+          experienceInteraction.isPasswordReminderRequiredInInteraction,
         new RequestError({ code: 'session.password_expiration.reset_not_allowed', status: 403 })
       );
 
