@@ -31,7 +31,7 @@
                 "schema": {
                   "properties": {
                     "userIds": {
-                      "description": "An array of user IDs that were added to the organization."
+                      "description": "An array of user IDs processed from the request. This may include IDs that were already members of the organization."
                     }
                   }
                 }
@@ -195,8 +195,13 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "object",
                   "properties": {
                     "organizationRoleIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
                       "description": "An array of organization role IDs that were assigned to the user, deduplicated and resolved from any provided role names."
                     }
                   }

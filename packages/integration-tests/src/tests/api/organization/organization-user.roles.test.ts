@@ -330,42 +330,44 @@ describe('organization user role APIs', () => {
       const { roleApi, scopeApi } = organizationApi;
       const userApi = new UserApiTest();
 
-      const organization = await organizationApi.create({ name: 'test' });
-      const user = await userApi.create({ username: generateTestName() });
-      await organizationApi.addUsers(organization.id, [user.id]);
+      try {
+        const organization = await organizationApi.create({ name: 'test' });
+        const user = await userApi.create({ username: generateTestName() });
+        await organizationApi.addUsers(organization.id, [user.id]);
 
-      const [role1, role2] = await Promise.all([
-        roleApi.create({ name: generateTestName() }),
-        roleApi.create({ name: generateTestName() }),
-      ]);
-      const [scope1, scope2] = await Promise.all([
-        scopeApi.create({ name: generateTestName() }),
-        scopeApi.create({ name: generateTestName() }),
-      ]);
+        const [role1, role2] = await Promise.all([
+          roleApi.create({ name: generateTestName() }),
+          roleApi.create({ name: generateTestName() }),
+        ]);
+        const [scope1, scope2] = await Promise.all([
+          scopeApi.create({ name: generateTestName() }),
+          scopeApi.create({ name: generateTestName() }),
+        ]);
 
-      // Assign scope1 and scope2 to role1
-      await roleApi.addScopes(role1.id, [scope1.id, scope2.id]);
-      // Assign scope1 to role2
-      await roleApi.addScopes(role2.id, [scope1.id]);
+        // Assign scope1 and scope2 to role1
+        await roleApi.addScopes(role1.id, [scope1.id, scope2.id]);
+        // Assign scope1 to role2
+        await roleApi.addScopes(role2.id, [scope1.id]);
 
-      // Assign role1 to user
-      await organizationApi.addUserRoles(organization.id, user.id, [role1.id]);
-      const scopes = await organizationApi.getUserOrganizationScopes(organization.id, user.id);
-      expect(
-        scopes
-          .map(({ name }) => name)
-          .slice()
-          .sort()
-      ).toEqual([scope1.name, scope2.name].slice().sort());
+        // Assign role1 to user
+        await organizationApi.addUserRoles(organization.id, user.id, [role1.id]);
+        const scopes = await organizationApi.getUserOrganizationScopes(organization.id, user.id);
+        expect(
+          scopes
+            .map(({ name }) => name)
+            .slice()
+            .sort()
+        ).toEqual([scope1.name, scope2.name].slice().sort());
 
-      // Remove role1 and assign role2 to user
-      await organizationApi.deleteUserRole(organization.id, user.id, role1.id);
-      await organizationApi.addUserRoles(organization.id, user.id, [role2.id]);
-      const newScopes = await organizationApi.getUserOrganizationScopes(organization.id, user.id);
-      expect(newScopes.map(({ name }) => name)).toEqual([scope1.name]);
-
-      // Clean up
-      await organizationApi.cleanUp();
+        // Remove role1 and assign role2 to user
+        await organizationApi.deleteUserRole(organization.id, user.id, role1.id);
+        await organizationApi.addUserRoles(organization.id, user.id, [role2.id]);
+        const newScopes = await organizationApi.getUserOrganizationScopes(organization.id, user.id);
+        expect(newScopes.map(({ name }) => name)).toEqual([scope1.name]);
+      } finally {
+        await organizationApi.cleanUp();
+        await userApi.cleanUp();
+      }
     });
   });
 });
