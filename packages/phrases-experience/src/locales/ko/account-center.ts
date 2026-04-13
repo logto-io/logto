@@ -89,7 +89,7 @@ const account_center = {
     turn_off_2_step_verification: '2단계 인증 끄기',
     turn_off_2_step_verification_description:
       '2단계 인증을 비활성화하면 로그인 시 추가 보호 계층이 제거됩니다. 계속하시겠습니까?',
-    disable_2_step_verification: '2단계 인증 비활성화',
+    disable_2_step_verification: '비활성화',
     no_verification_method_warning:
       '두 번째 인증 방법을 추가하지 않았습니다. 로그인 시 2단계 인증을 활성화하려면 최소 하나를 추가하세요.',
     account_removal: '계정 삭제',

@@ -93,7 +93,7 @@ const account_center = {
     turn_off_2_step_verification: 'Desativar verificação em duas etapas',
     turn_off_2_step_verification_description:
       'Desativar a verificação em duas etapas removerá a camada extra de proteção da sua conta ao fazer login. Tem certeza de que deseja continuar?',
-    disable_2_step_verification: 'Desativar verificação em duas etapas',
+    disable_2_step_verification: 'Desativar',
     no_verification_method_warning:
       'Você não adicionou um segundo método de verificação. Adicione pelo menos um para ativar a verificação em duas etapas ao fazer login.',
     account_removal: 'Exclusão da conta',

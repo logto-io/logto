@@ -88,7 +88,7 @@ const account_center = {
     turn_off_2_step_verification: '關閉兩步驟驗證',
     turn_off_2_step_verification_description:
       '關閉兩步驟驗證將移除登入時帳戶的額外保護層。確定要繼續嗎？',
-    disable_2_step_verification: '關閉兩步驟驗證',
+    disable_2_step_verification: '關閉',
     no_verification_method_warning:
       '你尚未新增第二種驗證方式。請至少新增一種以在登入時啟用兩步驟驗證。',
     account_removal: '帳戶刪除',

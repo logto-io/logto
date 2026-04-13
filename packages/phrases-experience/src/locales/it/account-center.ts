@@ -95,7 +95,7 @@ const account_center = {
     turn_off_2_step_verification: 'Disattiva la verifica in due passaggi',
     turn_off_2_step_verification_description:
       "La disattivazione della verifica in due passaggi rimuoverà il livello di protezione aggiuntivo dal tuo account all'accesso. Sei sicuro di voler continuare?",
-    disable_2_step_verification: 'Disattiva la verifica in due passaggi',
+    disable_2_step_verification: 'Disattiva',
     no_verification_method_warning:
       "Non hai aggiunto un secondo metodo di verifica. Aggiungine almeno uno per attivare la verifica in due passaggi all'accesso.",
     account_removal: "Eliminazione dell'account",

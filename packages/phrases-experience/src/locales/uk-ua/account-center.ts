@@ -92,7 +92,7 @@ const account_center = {
     turn_off_2_step_verification: 'Вимкнути двоетапну верифікацію',
     turn_off_2_step_verification_description:
       'Вимкнення двоетапної верифікації видалить додатковий рівень захисту вашого облікового запису при вході. Ви впевнені, що хочете продовжити?',
-    disable_2_step_verification: 'Вимкнути двоетапну верифікацію',
+    disable_2_step_verification: 'Вимкнути',
     no_verification_method_warning:
       'Ви не додали другий метод верифікації. Додайте принаймні один, щоб увімкнути двоетапну верифікацію при вході.',
     account_removal: 'Видалення акаунта',

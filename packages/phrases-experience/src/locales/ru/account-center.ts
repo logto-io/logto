@@ -90,7 +90,7 @@ const account_center = {
     turn_off_2_step_verification: 'Отключить двухэтапную верификацию',
     turn_off_2_step_verification_description:
       'Отключение двухэтапной верификации удалит дополнительный уровень защиты вашей учётной записи при входе. Вы уверены, что хотите продолжить?',
-    disable_2_step_verification: 'Отключить двухэтапную верификацию',
+    disable_2_step_verification: 'Отключить',
     no_verification_method_warning:
       'Вы не добавили второй способ верификации. Добавьте хотя бы один, чтобы включить двухэтапную верификацию при входе.',
     account_removal: 'Удаление аккаунта',
