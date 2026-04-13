@@ -85,7 +85,6 @@ const SocialSection = () => {
     selectedConnector && getLocalizedConnectorName(selectedConnector, language);
   const currentPageUrl = `${window.location.origin}${window.location.pathname}`;
 
-  if (!hasVisibleSocialSection(socialControl, experienceSettings)) {
     return null;
   }
 
@@ -101,62 +100,62 @@ const SocialSection = () => {
 
             return (
               <div key={connector.id} className={classNames(styles.row, layoutClassNames.row)}>
-                <div className={styles.connectorInfo}>
-                  <img
-                    className={styles.connectorLogo}
-                    src={getLogoUrl({
-                      theme,
-                      logoUrl: connector.logo,
-                      darkLogoUrl: connector.logoDark,
-                      isApple: connector.target === 'apple',
-                    })}
-                    alt={connectorName}
-                  />
-                  <div className={styles.connectorName}>{connectorName}</div>
-                </div>
-                <div className={styles.identityInfo}>
-                  {profile ? (
-                    <>
-                      {profile.avatar && (
-                        <img
-                          className={styles.avatar}
-                          src={profile.avatar}
-                          alt={profile.primaryText}
-                        />
-                      )}
-                      <div className={styles.textGroup}>
-                        <div className={styles.primaryText}>{profile.primaryText}</div>
-                        {profile.secondaryText && (
-                          <div className={styles.secondaryText}>{profile.secondaryText}</div>
-                        )}
-                      </div>
-                    </>
-                  ) : (
-                    <div className={styles.notLinked}>
-                      {t('account_center.security.social_not_linked')}
+                <div className={styles.topLine}>
+                  <div className={styles.iconWrap}>
+                    <img
+                      className={styles.connectorLogo}
+                      src={getLogoUrl({
+                        theme,
+                        logoUrl: connector.logo,
+                        darkLogoUrl: connector.logoDark,
+                        isApple: connector.target === 'apple',
+                      })}
+                      alt={connectorName}
+                    />
+                  </div>
+                  {socialControl === AccountCenterControlValue.Edit && (
+                    <div className={styles.actions}>
+                      <button
+                        type="button"
+                        className={classNames(styles.actionButton, identity && styles.removeButton)}
+                        onClick={() => {
+                          setPendingReturn(getPendingReturn() ?? currentPageUrl);
+
+                          if (identity) {
+                            setSelectedConnectorId(connector.id);
+                            return;
+                          }
+
+                          navigate(getSocialAddRoute(connector.id));
+                        }}
+                      >
+                        {identity
+                          ? t('account_center.security.remove')
+                          : t('account_center.security.add')}
+                      </button>
                     </div>
                   )}
                 </div>
-                {socialControl === AccountCenterControlValue.Edit && (
-                  <div className={styles.actions}>
-                    <button
-                      type="button"
-                      className={`${styles.actionButton} ${identity ? styles.removeButton : ''}`}
-                      onClick={() => {
-                        setPendingReturn(getPendingReturn() ?? currentPageUrl);
-
-                        if (identity) {
-                          setSelectedConnectorId(connector.id);
-                          return;
-                        }
-
-                        navigate(getSocialAddRoute(connector.id));
-                      }}
-                    >
-                      {identity
-                        ? t('account_center.security.remove')
-                        : t('account_center.security.add')}
-                    </button>
+                <div className={styles.connectorName}>{connectorName}</div>
+                {profile ? (
+                  <div className={styles.identityInfo}>
+                    {profile.avatar && (
+                      <img
+                        className={styles.avatar}
+                        src={profile.avatar}
+                        alt={profile.primaryText}
+                      />
+                    )}
+                    <div className={styles.textGroup}>
+                      <div className={styles.primaryText}>{profile.primaryText}</div>
+                      {profile.secondaryText && (
+                        <div className={styles.secondaryText}>{profile.secondaryText}</div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.notLinked}>
+                    {t('account_center.security.social_not_linked')}
                   </div>
                 )}
               </div>

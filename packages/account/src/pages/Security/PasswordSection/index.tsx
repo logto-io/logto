@@ -31,36 +31,36 @@ const PasswordSection = () => {
       </div>
       <div className={classNames(styles.card, layoutClassNames.card)}>
         <div className={classNames(styles.row, layoutClassNames.row)}>
-          <div className={styles.info}>
-            <div className={styles.name}>
+          <div className={styles.topLine}>
+            <div className={styles.iconWrap}>
               <PasswordIcon className={styles.icon} />
-              {t('account_center.security.password')}
             </div>
-            <div className={styles.value}>
-              {userInfo?.hasPassword ? (
-                <span className={styles.statusTag}>
-                  <span className={styles.statusDot} />
-                  {t('account_center.security.configured')}
-                </span>
-              ) : (
-                <span className={styles.notConfigured}>
-                  {t('account_center.security.not_configured')}
-                </span>
-              )}
-            </div>
+            {canOpenPasswordEditFlow(passwordControl, userInfo) && (
+              <button
+                type="button"
+                className={styles.changeButton}
+                onClick={() => {
+                  setPendingReturn(getPendingReturn() ?? window.location.href);
+                  navigate(passwordRoute);
+                }}
+              >
+                {t('account_center.security.change')}
+              </button>
+            )}
           </div>
-          {canOpenPasswordEditFlow(passwordControl, userInfo) && (
-            <button
-              type="button"
-              className={styles.changeButton}
-              onClick={() => {
-                setPendingReturn(getPendingReturn() ?? window.location.href);
-                navigate(passwordRoute);
-              }}
-            >
-              {t('account_center.security.change')}
-            </button>
-          )}
+          <div className={styles.title}>{t('account_center.security.password')}</div>
+          <div className={styles.value}>
+            {userInfo?.hasPassword ? (
+              <span className={styles.statusTag}>
+                <span className={styles.statusDot} />
+                {t('account_center.security.configured')}
+              </span>
+            ) : (
+              <span className={styles.notConfigured}>
+                {t('account_center.security.not_configured')}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

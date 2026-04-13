@@ -19,9 +19,10 @@
 }
 
 .row {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 200px) minmax(0, 1fr) auto;
+  column-gap: _.unit(4);
   align-items: center;
-  gap: _.unit(4);
   padding: _.unit(4.5) _.unit(6);
   min-height: 76px;
 
@@ -30,12 +31,16 @@
   }
 }
 
-.connectorInfo {
-  flex: 0 0 220px;
+.topLine {
+  display: contents;
+}
+
+.iconWrap {
   display: flex;
   align-items: center;
-  gap: _.unit(4);
-  min-width: 0;
+  justify-content: center;
+  grid-column: 1;
+  flex-shrink: 0;
 }
 
 .connectorLogo {
@@ -46,13 +51,14 @@
 }
 
 .connectorName {
+  grid-column: 2;
   min-width: 0;
   font: var(--font-label-2);
   color: var(--color-type-primary);
 }
 
 .identityInfo {
-  flex: 1;
+  grid-column: 3;
   display: flex;
   align-items: center;
   gap: _.unit(3);
@@ -69,31 +75,32 @@
 
 .textGroup {
   min-width: 0;
+  flex: 1;
 }
 
 .primaryText {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font: var(--font-body-2);
   color: var(--color-type-primary);
 }
 
 .secondaryText {
   margin-top: _.unit(0.5);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font: var(--font-body-3);
   color: var(--color-type-secondary);
 }
 
 .notLinked {
+  grid-column: 3;
+  min-width: 0;
   font: var(--font-body-2);
   color: var(--color-type-secondary);
 }
 
 .actions {
+  grid-column: 4;
+  display: flex;
+  align-items: center;
+  gap: _.unit(4);
   flex-shrink: 0;
 }
 
@@ -121,20 +128,33 @@
   }
 
   .row {
+    display: flex;
     min-height: 0;
     flex-direction: column;
     align-items: stretch;
-    gap: _.unit(3);
-    padding: _.unit(4) _.unit(5);
+    gap: _.unit(1);
+    padding: _.unit(4);
   }
 
-  .connectorInfo {
-    flex: none;
+  .topLine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: _.unit(3);
     width: 100%;
   }
 
-  .connectorName {
-    white-space: normal;
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .connectorName,
+  .primaryText,
+  .secondaryText,
+  .notLinked {
+    width: 100%;
     overflow-wrap: anywhere;
     word-break: break-word;
   }
@@ -142,22 +162,6 @@
   .identityInfo {
     width: 100%;
     align-items: flex-start;
-    gap: _.unit(3);
-  }
-
-  .textGroup {
-    flex: 1;
-  }
-
-  .primaryText,
-  .secondaryText {
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-
-  .actions {
-    width: 100%;
   }
 
   .actionButton {

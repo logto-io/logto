@@ -19,40 +19,42 @@
 }
 
 .row {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 200px) minmax(0, 1fr) auto;
+  column-gap: _.unit(6);
   align-items: center;
-  gap: _.unit(6);
   padding: _.unit(5) _.unit(6);
-  height: 64px;
+  min-height: 64px;
 }
 
-.info {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: _.unit(6);
-  min-width: 0;
+.topLine {
+  display: contents;
 }
 
-.name {
-  flex: 1;
-  max-width: 200px;
+.iconWrap {
   display: flex;
   align-items: center;
-  gap: _.unit(4);
-  font: var(--font-label-2);
-  color: var(--color-type-primary);
+  justify-content: center;
+  grid-column: 1;
+  flex-shrink: 0;
 }
 
 .icon {
   width: 20px;
   height: 20px;
   color: var(--color-type-primary);
-  flex-shrink: 0;
+}
+
+.title {
+  grid-column: 2;
+  min-width: 0;
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
 }
 
 .value {
-  flex: 1;
+  grid-column: 3;
+  min-width: 0;
   display: flex;
   align-items: center;
 }
@@ -81,6 +83,7 @@
 }
 
 .changeButton {
+  grid-column: 4;
   font: var(--font-label-2);
   color: var(--color-type-link);
   cursor: pointer;
@@ -100,28 +103,28 @@
   }
 
   .row {
-    height: auto;
+    display: flex;
     min-height: 0;
     flex-direction: column;
     align-items: stretch;
-    gap: _.unit(3);
-    padding: _.unit(4) _.unit(5);
+    gap: _.unit(1);
+    padding: _.unit(4);
   }
 
-  .info {
-    flex-direction: column;
-    align-items: stretch;
-    gap: _.unit(1.5);
+  .topLine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: _.unit(3);
+    width: 100%;
   }
 
-  .name {
-    flex: none;
-    max-width: none;
-    gap: _.unit(3);
+  .title,
+  .value {
+    width: 100%;
   }
 
   .value {
-    flex: none;
     align-items: flex-start;
   }
 
@@ -131,7 +134,6 @@
   }
 
   .changeButton {
-    align-self: flex-start;
     padding: 0;
     white-space: normal;
     text-align: left;

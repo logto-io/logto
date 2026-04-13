@@ -11,7 +11,7 @@ import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import { layoutClassNames } from '@ac/constants/layout';
-import { emailRoute, verifiedActionRoute, phoneRoute } from '@ac/constants/routes';
+import { emailRoute, phoneRoute, verifiedActionRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
@@ -43,6 +43,10 @@ const EmailPhoneSection = () => {
 
   const showEmail = emailControl && emailControl !== AccountCenterControlValue.Off;
   const showPhone = phoneControl && phoneControl !== AccountCenterControlValue.Off;
+  const emailValue = userInfo?.primaryEmail;
+  const phoneValue = userInfo?.primaryPhone
+    ? formatToInternationalPhoneNumber(userInfo.primaryPhone)
+    : undefined;
 
   const navigateTo = useCallback(
     (route: string) => {
@@ -115,82 +119,80 @@ const EmailPhoneSection = () => {
         <div className={classNames(styles.card, layoutClassNames.card)}>
           {showEmail && (
             <div className={classNames(styles.row, layoutClassNames.row)}>
-              <div className={styles.info}>
-                <div className={styles.name}>
+              <div className={styles.topLine}>
+                <div className={styles.iconWrap}>
                   <EmailIcon className={styles.icon} />
-                  {t('account_center.security.email')}
                 </div>
-                <div className={styles.value}>
-                  {userInfo?.primaryEmail ?? t('account_center.security.not_set')}
-                </div>
-              </div>
-              {emailControl === AccountCenterControlValue.Edit && (
-                <div className={styles.actions}>
-                  <button
-                    type="button"
-                    className={styles.changeButton}
-                    onClick={() => {
-                      navigateTo(emailRoute);
-                    }}
-                  >
-                    {userInfo?.primaryEmail
-                      ? t('account_center.security.change')
-                      : t('account_center.security.add')}
-                  </button>
-                  {userInfo?.primaryEmail && (
+                {emailControl === AccountCenterControlValue.Edit && (
+                  <div className={styles.actions}>
                     <button
                       type="button"
-                      className={styles.removeButton}
+                      className={styles.changeButton}
                       onClick={() => {
-                        setPendingRemoveType('email');
+                        navigateTo(emailRoute);
                       }}
                     >
-                      {t('account_center.security.remove')}
+                      {emailValue
+                        ? t('account_center.security.change')
+                        : t('account_center.security.add')}
                     </button>
-                  )}
-                </div>
-              )}
+                    {emailValue && (
+                      <button
+                        type="button"
+                        className={styles.removeButton}
+                        onClick={() => {
+                          setPendingRemoveType('email');
+                        }}
+                      >
+                        {t('account_center.security.remove')}
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className={styles.title}>{t('account_center.security.email')}</div>
+              <div className={classNames(styles.value, !emailValue && styles.secondaryValue)}>
+                {emailValue ?? t('account_center.security.not_set')}
+              </div>
             </div>
           )}
           {showPhone && (
             <div className={classNames(styles.row, layoutClassNames.row)}>
-              <div className={styles.info}>
-                <div className={styles.name}>
+              <div className={styles.topLine}>
+                <div className={styles.iconWrap}>
                   <PhoneIcon className={styles.icon} />
-                  {t('account_center.security.phone')}
                 </div>
-                <div className={styles.value}>
-                  {userInfo?.primaryPhone
-                    ? formatToInternationalPhoneNumber(userInfo.primaryPhone)
-                    : t('account_center.security.not_set')}
-                </div>
-              </div>
-              {phoneControl === AccountCenterControlValue.Edit && (
-                <div className={styles.actions}>
-                  <button
-                    type="button"
-                    className={styles.changeButton}
-                    onClick={() => {
-                      navigateTo(phoneRoute);
-                    }}
-                  >
-                    {userInfo?.primaryPhone
-                      ? t('account_center.security.change')
-                      : t('account_center.security.add')}
-                  </button>
-                  {userInfo?.primaryPhone && (
+                {phoneControl === AccountCenterControlValue.Edit && (
+                  <div className={styles.actions}>
                     <button
                       type="button"
-                      className={styles.removeButton}
+                      className={styles.changeButton}
                       onClick={() => {
-                        setPendingRemoveType('phone');
+                        navigateTo(phoneRoute);
                       }}
                     >
-                      {t('account_center.security.remove')}
+                      {phoneValue
+                        ? t('account_center.security.change')
+                        : t('account_center.security.add')}
                     </button>
-                  )}
-                </div>
-              )}
+                    {phoneValue && (
+                      <button
+                        type="button"
+                        className={styles.removeButton}
+                        onClick={() => {
+                          setPendingRemoveType('phone');
+                        }}
+                      >
+                        {t('account_center.security.remove')}
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className={styles.title}>{t('account_center.security.phone')}</div>
+              <div className={classNames(styles.value, !phoneValue && styles.secondaryValue)}>
+                {phoneValue ?? t('account_center.security.not_set')}
+              </div>
             </div>
           )}
         </div>

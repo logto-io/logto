@@ -72,8 +72,8 @@
     min-height: 0;
     flex-direction: column;
     align-items: stretch;
-    gap: _.unit(3);
-    padding: _.unit(4) _.unit(5);
+    gap: _.unit(1.5);
+    padding: _.unit(4);
   }
 
   .info {

@@ -29,22 +29,22 @@ const UsernameSection = () => {
       </div>
       <div className={classNames(styles.card, layoutClassNames.card)}>
         <div className={classNames(styles.row, layoutClassNames.row)}>
-          <div className={styles.info}>
+          <div className={styles.topLine}>
             <div className={styles.name}>{t('input.username')}</div>
-            <div className={styles.value}>{userInfo?.username ?? '-'}</div>
+            {usernameControl === AccountCenterControlValue.Edit && (
+              <button
+                type="button"
+                className={styles.changeButton}
+                onClick={() => {
+                  setPendingReturn(getPendingReturn() ?? window.location.href);
+                  navigate(usernameRoute);
+                }}
+              >
+                {t('account_center.security.change')}
+              </button>
+            )}
           </div>
-          {usernameControl === AccountCenterControlValue.Edit && (
-            <button
-              type="button"
-              className={styles.changeButton}
-              onClick={() => {
-                setPendingReturn(getPendingReturn() ?? window.location.href);
-                navigate(usernameRoute);
-              }}
-            >
-              {t('account_center.security.change')}
-            </button>
-          )}
+          <div className={styles.value}>{userInfo?.username ?? '-'}</div>
         </div>
       </div>
     </div>
