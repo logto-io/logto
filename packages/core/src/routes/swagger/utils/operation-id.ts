@@ -99,6 +99,8 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'delete /custom-profile-fields/:name': 'DeleteCustomProfileFieldByName',
   'post /custom-profile-fields/batch': 'CreateCustomProfileFieldsBatch',
   'post /custom-profile-fields/properties/sie-order': 'UpdateCustomProfileFieldsSieOrder',
+  // Domains
+  'post /domains/cleanup': 'CleanupDomains',
   // ID token config
   'get /configs/id-token': 'GetIdTokenConfig',
   'put /configs/id-token': 'UpsertIdTokenConfig',
