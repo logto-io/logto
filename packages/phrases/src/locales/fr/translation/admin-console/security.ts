@@ -98,7 +98,7 @@ const security = {
     expiration_period: 'Période de validité du mot de passe (jours)',
     expiration_period_description:
       "Nombre de jours pendant lesquels un mot de passe reste valide avant d'expirer.",
-    expiration_period_error: "La période de validade du mot de passe doit être d'au moins 1 jour.",
+    expiration_period_error: "La période de validité du mot de passe doit être d'au moins 1 jour.",
     expiration_reminder: "Rappel d'expiration (jours avant l'expiration)",
     expiration_reminder_description:
       "Nombre de jours avant l'expiration pour avertir les utilisateurs et les inviter à réinitialiser leur mot de passe. Les utilisateurs peuvent ignorer le rappel et poursuivre la connexion.",
