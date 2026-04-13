@@ -55,6 +55,20 @@
                     "passwordPolicy": {
                       "description": "Password policies to adjust the password strength requirements."
                     },
+                    "passwordExpiration": {
+                      "description": "Password expiration policy used to force or remind users to reset their password during sign-in. When enabled is false, the period fields are ignored.",
+                      "properties": {
+                        "enabled": {
+                          "description": "Whether password expiration is enabled."
+                        },
+                        "validPeriodDays": {
+                          "description": "Number of days a password remains valid before it expires."
+                        },
+                        "reminderPeriodDays": {
+                          "description": "Number of days before expiration when the user is reminded to reset their password."
+                        }
+                      }
+                    },
                     "mfa": {
                       "description": "MFA settings"
                     },
@@ -146,6 +160,20 @@
                   },
                   "passwordPolicy": {
                     "description": "Password policies to adjust the password strength requirements."
+                  },
+                  "passwordExpiration": {
+                    "description": "Password expiration policy used to force or remind users to reset their password during sign-in. When enabled is false, the period fields are ignored.",
+                    "properties": {
+                      "enabled": {
+                        "description": "Whether password expiration is enabled."
+                      },
+                      "validPeriodDays": {
+                        "description": "Number of days a password remains valid before it expires."
+                      },
+                      "reminderPeriodDays": {
+                        "description": "Number of days before expiration when the user is reminded to reset their password."
+                      }
+                    }
                   },
                   "mfa": {
                     "description": "MFA settings"
