@@ -1,5 +1,6 @@
 import { AccountCenterControlValue } from '@logto/schemas';
 import { formatToInternationalPhoneNumber } from '@logto/shared/universal';
+import classNames from 'classnames';
 import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { deletePrimaryEmail, deletePrimaryPhone } from '@ac/apis/account';
 import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
 import ConfirmModal from '@ac/components/ConfirmModal';
+import { layoutClassNames } from '@ac/constants/layout';
 import { emailRoute, verifiedActionRoute, phoneRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
@@ -106,11 +108,13 @@ const EmailPhoneSection = () => {
 
   return (
     <>
-      <div className={styles.section}>
-        <div className={styles.sectionTitle}>{t('account_center.security.email_phone')}</div>
-        <div className={styles.card}>
+      <div className={classNames(styles.section, layoutClassNames.section)}>
+        <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
+          {t('account_center.security.email_phone')}
+        </div>
+        <div className={classNames(styles.card, layoutClassNames.card)}>
           {showEmail && (
-            <div className={styles.row}>
+            <div className={classNames(styles.row, layoutClassNames.row)}>
               <div className={styles.info}>
                 <div className={styles.name}>
                   <EmailIcon className={styles.icon} />
@@ -149,7 +153,7 @@ const EmailPhoneSection = () => {
             </div>
           )}
           {showPhone && (
-            <div className={styles.row}>
+            <div className={classNames(styles.row, layoutClassNames.row)}>
               <div className={styles.info}>
                 <div className={styles.name}>
                   <PhoneIcon className={styles.icon} />

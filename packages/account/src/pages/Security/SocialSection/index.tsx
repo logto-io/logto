@@ -1,12 +1,14 @@
 import DynamicT from '@experience/shared/components/DynamicT';
 import { getLogoUrl } from '@experience/shared/utils/logo';
 import { AccountCenterControlValue, type Identity } from '@logto/schemas';
+import classNames from 'classnames';
 import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ConfirmModal from '@ac/components/ConfirmModal';
+import { layoutClassNames } from '@ac/constants/layout';
 import { getSocialAddRoute, getSocialRemoveRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { hasVisibleSocialSection } from '@ac/utils/security-page';
@@ -89,14 +91,16 @@ const SocialSection = () => {
 
   return (
     <>
-      <div className={styles.section}>
-        <div className={styles.sectionTitle}>{t('account_center.security.social_sign_in')}</div>
-        <div className={styles.card}>
+      <div className={classNames(styles.section, layoutClassNames.section)}>
+        <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
+          {t('account_center.security.social_sign_in')}
+        </div>
+        <div className={classNames(styles.card, layoutClassNames.card)}>
           {items.map(({ connector, connectorName, identity }) => {
             const profile = identity && getDisplayProfile(identity, connectorName);
 
             return (
-              <div key={connector.id} className={styles.row}>
+              <div key={connector.id} className={classNames(styles.row, layoutClassNames.row)}>
                 <div className={styles.connectorInfo}>
                   <img
                     className={styles.connectorLogo}

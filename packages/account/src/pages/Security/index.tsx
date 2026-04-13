@@ -1,7 +1,9 @@
+import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
 import PageFooter from '@ac/components/PageFooter';
 import { isDevFeaturesEnabled } from '@ac/constants/env';
+import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from '../Home/index.module.scss';
 
@@ -18,10 +20,14 @@ const Security = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <div className={styles.title}>{t('account_center.page.security_title')}</div>
-        <div className={styles.description}>{t('account_center.page.security_description')}</div>
+        <div className={classNames(styles.title, layoutClassNames.pageTitle)}>
+          {t('account_center.page.security_title')}
+        </div>
+        <div className={classNames(styles.description, layoutClassNames.pageDescription)}>
+          {t('account_center.page.security_description')}
+        </div>
       </div>
-      <div className={styles.content}>
+      <div className={classNames(styles.content, layoutClassNames.pageContent)}>
         <UsernameSection />
         <EmailPhoneSection />
         <PasswordSection />

@@ -1,9 +1,11 @@
 import { AccountCenterControlValue } from '@logto/schemas';
+import classNames from 'classnames';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import { layoutClassNames } from '@ac/constants/layout';
 import { usernameRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 
@@ -21,10 +23,12 @@ const UsernameSection = () => {
   }
 
   return (
-    <div className={styles.section}>
-      <div className={styles.sectionTitle}>{t('input.username')}</div>
-      <div className={styles.card}>
-        <div className={styles.row}>
+    <div className={classNames(styles.section, layoutClassNames.section)}>
+      <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
+        {t('input.username')}
+      </div>
+      <div className={classNames(styles.card, layoutClassNames.card)}>
+        <div className={classNames(styles.row, layoutClassNames.row)}>
           <div className={styles.info}>
             <div className={styles.name}>{t('input.username')}</div>
             <div className={styles.value}>{userInfo?.username ?? '-'}</div>

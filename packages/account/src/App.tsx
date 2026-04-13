@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import AppBoundary from '@ac/Providers/AppBoundary';
 import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
 import PageHeader from '@ac/components/PageHeader';
+import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from './App.module.scss';
 import Callback from './Callback';
@@ -216,18 +217,39 @@ const Layout = () => {
     hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
 
   return (
-    <div className={styles.app}>
-      <div className={classNames(styles.layout, isHomePage && styles.fullPage)}>
+    <div className={classNames(styles.app, layoutClassNames.app)}>
+      <div
+        className={classNames(
+          styles.layout,
+          isHomePage && styles.fullPage,
+          layoutClassNames.pageContainer
+        )}
+      >
         {isHomePage && <PageHeader />}
-        <div className={classNames(styles.container, !isHomePage && styles.cardContainer)}>
-          <main className={classNames(styles.main, !isHomePage && styles.cardMain)}>
+        <div
+          className={classNames(
+            styles.container,
+            !isHomePage && styles.cardContainer,
+            !isHomePage && layoutClassNames.cardContainer
+          )}
+        >
+          <main
+            className={classNames(
+              styles.main,
+              !isHomePage && styles.cardMain,
+              isHomePage ? layoutClassNames.mainContent : layoutClassNames.cardMain
+            )}
+          >
             <ErrorBoundary>
               <LogtoErrorBoundary>
                 <Main />
               </LogtoErrorBoundary>
             </ErrorBoundary>
             {!isHomePage && !hideLogtoBranding && (
-              <LogtoSignature className={styles.signature} theme={theme} />
+              <LogtoSignature
+                className={classNames(styles.signature, layoutClassNames.signature)}
+                theme={theme}
+              />
             )}
           </main>
         </div>
