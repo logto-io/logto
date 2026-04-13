@@ -74,6 +74,7 @@ export default function userRoleRelationRoutes(
         organizationRoleIds: z.string().min(1).array().optional(),
         organizationRoleNames: z.string().min(1).array().optional(),
       }),
+      response: z.object({ organizationRoleIds: z.string().min(1).array() }),
       status: [201, 422],
     }),
     async (ctx, next) => {
@@ -110,6 +111,7 @@ export default function userRoleRelationRoutes(
         }))
       );
 
+      ctx.body = { organizationRoleIds: roleIds };
       ctx.status = 201;
       return next();
     }
