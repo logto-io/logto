@@ -2,4 +2,4 @@
 "@logto/core": patch
 ---
 
-include missing client IP in verification code flow
+fix: pass request IP to connector when sending verification codes
