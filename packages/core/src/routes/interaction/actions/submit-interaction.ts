@@ -290,6 +290,7 @@ export default async function submitInteraction(
   const user = await updateUserById(accountId, {
     passwordEncrypted,
     passwordEncryptionMethod,
+    passwordUpdatedAt: Date.now(),
   });
   ctx.assignReleaseOnSuccessInteractionHookResult({ userId: accountId });
   ctx.appendDataHookContext('User.Data.Updated', { user });

@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable max-lines */
 import { DemoConnector } from '@logto/connector-kit';
 import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
@@ -36,6 +38,25 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
   [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
     policy
   );
+
+/**
+ * Password expiration policy guard
+ * - When enabled is false, only the enabled flag is accepted by the schema
+ * - When enabled is true, validPeriodDays and reminderPeriodDays are required
+ */
+const passwordExpirationPolicyGuard = z.discriminatedUnion('enabled', [
+  z.object({
+    enabled: z.literal(false),
+  }),
+  z.object({
+    enabled: z.literal(true),
+    validPeriodDays: z.number().int().min(1),
+    reminderPeriodDays: z.number().int().min(0),
+  }),
+]);
+
+const isValidPasswordExpirationPolicy = (policy: z.infer<typeof passwordExpirationPolicyGuard>) =>
+  !policy.enabled || policy.reminderPeriodDays < policy.validPeriodDays;
 
 const signInExperienceResponseGuard = SignInExperiences.guard;
 const signInExperienceCreateGuard = SignInExperiences.createGuard;
@@ -83,6 +104,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           supportEmail: true,
           supportWebsiteUrl: true,
           unknownSessionRedirectUrl: true,
+          passwordExpiration: true,
         })
         .merge(
           object({
@@ -91,6 +113,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             supportEmail: string().email().optional().nullable().or(literal('')),
             supportWebsiteUrl: string().url().optional().nullable().or(literal('')),
             unknownSessionRedirectUrl: string().url().optional().nullable().or(literal('')),
+            passwordExpiration: passwordExpirationPolicyGuard,
           })
         )
         .partial(),
@@ -114,6 +137,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         forgotPasswordMethods,
         hideLogtoBranding,
         passkeySignIn,
+        passwordExpiration,
       } = rest;
 
       const normalizedSignUpProfileFields = await normalizeSignUpProfileFields(signUpProfileFields);
@@ -220,6 +244,16 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             });
           }
         }
+      }
+
+      if (passwordExpiration) {
+        assertThat(
+          isValidPasswordExpirationPolicy(passwordExpiration),
+          new RequestError({
+            code: 'sign_in_experiences.password_expiration_invalid_period_days',
+            status: 422,
+          })
+        );
       }
 
       /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
