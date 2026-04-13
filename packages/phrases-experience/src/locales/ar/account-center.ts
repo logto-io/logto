@@ -90,7 +90,7 @@ const account_center = {
     turn_off_2_step_verification: 'إيقاف التحقق بخطوتين',
     turn_off_2_step_verification_description:
       'سيؤدي تعطيل التحقق بخطوتين إلى إزالة طبقة الحماية الإضافية من حسابك عند تسجيل الدخول. هل أنت متأكد أنك تريد المتابعة؟',
-    disable_2_step_verification: 'تعطيل التحقق بخطوتين',
+    disable_2_step_verification: 'تعطيل',
     no_verification_method_warning:
       'لم تقم بإضافة طريقة تحقق ثانية. أضف طريقة واحدة على الأقل لتفعيل التحقق بخطوتين عند تسجيل الدخول.',
     account_removal: 'حذف الحساب',
