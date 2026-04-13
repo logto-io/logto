@@ -87,6 +87,20 @@ const security = {
     custom_words_description:
       '特定の文脈に関連するワードを、大文字小文字を区別せずに、1つの行に1つずつ追加します。',
     custom_words_placeholder: 'サービス名、会社名など',
+    password_expiration: 'パスワードの有効期限',
+    password_expiration_description:
+      '設定した日数が経過した後にユーザーにパスワードのリセットを要求します。SSO またはパスキーでサインインするユーザーは影響を受けません。',
+    enable_password_expiration: 'パスワードの有効期限を有効にする',
+    enable_password_expiration_description:
+      'ユーザーに定期的なパスワードのリセットを要求します。パスワード変更日の記録がない既存のユーザーは、アカウント作成日を基準に評価されます。',
+    expiration_period: 'パスワード有効期間 (日)',
+    expiration_period_description: 'パスワードが期限切れになるまでの有効日数。',
+    expiration_period_error: 'パスワードの有効期間は 1 日以上である必要があります。',
+    expiration_reminder: '有効期限のリマインダー (期限切れの何日前か)',
+    expiration_reminder_description:
+      'ユーザーに警告し、パスワードのリセットを促す期限切れまでの日数。ユーザーはリマインダーをスキップしてサインインを続行できます。',
+    expiration_reminder_error:
+      '有効期限のリマインダー期間は、0 から有効期間 ({{max}} 日) の間である必要があります。',
   },
   sentinel_policy: {
     card_title: '識別子によるロックアウト',

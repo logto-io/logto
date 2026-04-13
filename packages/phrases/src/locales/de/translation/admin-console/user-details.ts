@@ -21,6 +21,14 @@ const user_details = {
     new_password: 'Neues Passwort:',
     password: 'Passwort:',
   },
+  expire_password: {
+    button: 'Ablaufen lassen',
+    title: 'Sind Sie sicher, dass dieses Passwort ablaufen soll?',
+    content:
+      'Der Benutzer wird aufgefordert, sein Passwort beim nächsten Login zurückzusetzen. Diese Aktion kann nicht rückgängig gemacht werden.',
+    success: 'Das Passwort des Benutzers wurde als abgelaufen markiert.',
+    not_enabled_tooltip: 'Die Passwort-Ablaufrichtlinie ist nicht aktiviert.',
+  },
   tab_settings: 'Einstellungen',
   tab_roles: 'Benutzerrollen',
   tab_logs: 'Benutzer-Logs',

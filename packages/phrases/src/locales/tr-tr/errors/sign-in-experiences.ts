@@ -38,6 +38,8 @@ const sign_in_experiences = {
     'Geçersiz özel e-posta engelleme listesi öğeleri: {{items, list(type:conjunction)}}. Her öğe, geçerli bir e-posta adresi veya e-posta alan adı olmalıdır, örneğin, foo@example.com veya @example.com.',
   forgot_password_method_requires_connector:
     'Şifremi unuttum yöntemi, yapılandırılması gereken ilgili bir {{method}} bağlayıcı gerektirir.',
+  password_expiration_not_enabled:
+    'Parola sona erme politikası etkinleştirilmemiş. Parolaların süresini doldurmadan önce oturum açma deneyimi ayarlarından etkinleştirin.',
 };
 
 export default Object.freeze(sign_in_experiences);

@@ -88,6 +88,21 @@ const security = {
     custom_words_description:
       'Personalisierte kontextspezifische Wörter, Groß-/Kleinschreibung wird nicht beachtet, ein Wort pro Zeile.',
     custom_words_placeholder: 'Name Ihres Dienstes, Firmenname, etc.',
+    password_expiration: 'Passwortablauf',
+    password_expiration_description:
+      'Benutzer müssen ihr Passwort nach einer festgelegten Anzahl von Tagen zurücksetzen. Benutzer, die sich über SSO oder Passkey anmelden, sind nicht betroffen.',
+    enable_password_expiration: 'Passwortablauf aktivieren',
+    enable_password_expiration_description:
+      'Benutzer müssen ihr Passwort regelmäßig zurücksetzen. Bestehende Benutzer ohne aufgezeichnetes Datum der Passwortänderung werden anhand ihres Erstellungsdatums bewertet.',
+    expiration_period: 'Passwort-Gültigkeitsdauer (Tage)',
+    expiration_period_description:
+      'Anzahl der Tage, die ein Passwort gültig bleibt, bevor es abläuft.',
+    expiration_period_error: 'Die Passwort-Gültigkeitsdauer muss mindestens 1 Tag betragen.',
+    expiration_reminder: 'Ablauf-Erinnerung (Tage vor Ablauf)',
+    expiration_reminder_description:
+      'Anzahl der Tage vor Ablauf, um Benutzer zu warnen und sie zum Zurücksetzen des Passworts aufzufordern. Benutzer können die Erinnerung überspringen und mit der Anmeldung fortfahren.',
+    expiration_reminder_error:
+      'Der Zeitraum für die Ablauf-Erinnerung muss zwischen 0 und der Gültigkeitsdauer ({{max}} Tage) liegen.',
   },
   sentinel_policy: {
     card_title: 'Identifier-Sperre',

@@ -1,6 +1,11 @@
 import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
-import { deleteUser, getUser } from '#src/api/admin-user.js';
+import {
+  deleteUser,
+  expireUserPassword,
+  getUser,
+  verifyUserPassword,
+} from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
@@ -14,11 +19,13 @@ import {
 } from '#src/helpers/experience/verification-code.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
+  disablePasswordExpiration,
   enableAllPasswordSignInMethods,
   enableAllVerificationCodeSignInMethods,
+  enablePasswordExpiration,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, UserApiTest } from '#src/helpers/user.js';
-import { generateEmail, generatePassword } from '#src/utils.js';
+import { generateEmail, generatePassword, generateUsername } from '#src/utils.js';
 
 const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
@@ -208,4 +215,95 @@ describe('phone number sanitisation sign-in test +61 412 345 678', () => {
       });
     }
   );
+});
+
+describe('password expiration API contract', () => {
+  const userApi = new UserApiTest();
+
+  beforeAll(async () => {
+    await enableAllPasswordSignInMethods({
+      identifiers: [SignInIdentifier.Username],
+      password: true,
+      verify: false,
+    });
+
+    await enablePasswordExpiration({});
+  });
+
+  afterAll(async () => {
+    await disablePasswordExpiration();
+  });
+
+  it('should return password.expired when submitting an interaction for expired password', async () => {
+    const username = generateUsername();
+    const password = generatePassword();
+
+    const user = await userApi.create({ username, password });
+    await expireUserPassword(user.id);
+
+    const client = await initExperienceClient();
+    await identifyUserWithUsernamePassword(client, username, password);
+
+    await expectRejects(client.submitInteraction(), {
+      code: 'password.expired',
+      status: 422,
+    });
+
+    await deleteUser(user.id);
+  });
+
+  it('should reset expired password and allow submit interaction', async () => {
+    const username = generateUsername();
+    const password = generatePassword();
+
+    const user = await userApi.create({ username, password });
+    await expireUserPassword(user.id);
+
+    const client = await initExperienceClient();
+    await identifyUserWithUsernamePassword(client, username, password);
+
+    await expectRejects(client.submitInteraction(), {
+      code: 'password.expired',
+      status: 422,
+    });
+
+    const newPassword = generatePassword();
+    const response = await client.resetExpiredPassword({ password: newPassword });
+    expect(response.status).toBe(204);
+
+    const { redirectTo } = await client.submitInteraction();
+    await processSession(client, redirectTo);
+    await logoutClient(client);
+
+    await expectRejects(verifyUserPassword(user.id, password), {
+      code: 'session.invalid_credentials',
+      status: 422,
+    });
+
+    expect(await verifyUserPassword(user.id, newPassword)).toHaveProperty('status', 204);
+
+    await deleteUser(user.id);
+  });
+
+  it('should return user.same_password when resetting to the old password', async () => {
+    const username = generateUsername();
+    const password = generatePassword();
+    const user = await userApi.create({ username, password });
+    await expireUserPassword(user.id);
+
+    const client = await initExperienceClient();
+    await identifyUserWithUsernamePassword(client, username, password);
+
+    await expectRejects(client.submitInteraction(), {
+      code: 'password.expired',
+      status: 422,
+    });
+
+    await expectRejects(client.resetExpiredPassword({ password }), {
+      code: 'user.same_password',
+      status: 422,
+    });
+
+    await deleteUser(user.id);
+  });
 });

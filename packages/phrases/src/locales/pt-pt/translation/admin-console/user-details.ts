@@ -21,6 +21,14 @@ const user_details = {
     new_password: 'Nova palavra-passe:',
     password: 'Palavra-passe:',
   },
+  expire_password: {
+    button: 'Expirar',
+    title: 'Tem a certeza de que deseja expirar esta palavra-passe?',
+    content:
+      'O utilizador será solicitado a redefinir a sua palavra-passe no próximo início de sessão. Esta ação não pode ser desfeita.',
+    success: 'A palavra-passe do utilizador foi marcada como expirada.',
+    not_enabled_tooltip: 'A política de expiração de palavra-passe não está ativada.',
+  },
   tab_settings: 'Definições',
   tab_roles: 'Funções de usuário',
   tab_logs: 'Registos do utilizador',
