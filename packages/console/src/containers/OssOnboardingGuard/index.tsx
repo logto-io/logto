@@ -9,7 +9,7 @@ import { getOssOnboardingRedirectPath } from './utils';
 function OssOnboardingGuard() {
   const { tenantId } = useParams();
   const { pathname } = useLocation();
-  const { isLoading, isOnboardingDone } = useOssOnboardingData();
+  const { error, isLoading, isOnboardingDone } = useOssOnboardingData();
 
   if (isLoading) {
     return <AppLoading />;
@@ -19,6 +19,7 @@ function OssOnboardingGuard() {
     ? getOssOnboardingRedirectPath({
         isCloud,
         isDevFeaturesEnabled,
+        hasError: Boolean(error),
         isLoading,
         isOnboardingDone,
         tenantId,

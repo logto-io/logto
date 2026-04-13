@@ -92,6 +92,8 @@ function OssOnboarding() {
       </div>
       <OverlayScrollbar className={styles.contentContainer}>
         <div className={styles.content}>
+          {/* This onboarding page currently forces light theme, and the same icon asset is used for
+           both light and dark theme variants by design. */}
           <BriefcaseIcon className={styles.heroIcon} />
           <div className={styles.title}>{t('oss_onboarding.title')}</div>
           <div className={styles.description}>{t('oss_onboarding.description')}</div>
