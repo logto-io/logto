@@ -180,7 +180,8 @@ const sign_in_exp = {
       permission_notice:
         '要集成这些预构建流程，请在下方设置中将相关的帐户 API 权限设置为<strong>编辑</strong>。',
       account_center_title: '集成开箱即用的账户中心',
-      account_center_description: '将用户路由到包含所有功能的完整账户管理门户。',
+      account_center_description:
+        '将用户路由到账户中心，以管理电子邮件、手机号、用户名、密码、MFA 和关联账号等安全设置。',
       flows_title: '集成开箱即用的安全设置流程',
       flows_description:
         '将你的域名与路由组合以形成账户设置 URL（例如 https://auth.foo.com/account/email）。可选择添加 `redirect=` 以在成功更新后将用户返回到你的应用，添加 `show_success=true` 以保持成功页面可见，添加 `ui_locales=` 以覆盖默认语言，或添加 `identifier=` 以预填标识符输入字段。',
@@ -200,7 +201,8 @@ const sign_in_exp = {
         passkey_manage: '管理你现有的通行密钥或添加新的',
         backup_codes_generate: '生成一组新的 10 个备用码',
         backup_codes_manage: '查看你可用的备用码或生成新的',
-        account_center: '访问包含所有安全设置的完整账户管理门户',
+        account_center:
+          '访问账户中心以管理电子邮件、手机号、用户名、密码、MFA 和关联账号等安全设置',
       },
       customize_note: '不想要开箱即用的体验？你可以完全',
       customize_link: '使用 Account API 自定义你的流程。',

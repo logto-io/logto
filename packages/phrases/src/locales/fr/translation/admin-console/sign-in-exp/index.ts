@@ -192,7 +192,7 @@ const sign_in_exp = {
         "Pour intégrer ces flux préconstruits, définissez les autorisations de l'API de compte associées sur <strong>Modifier</strong> dans les paramètres ci-dessous.",
       account_center_title: "Intégrer le centre de compte prêt à l'emploi",
       account_center_description:
-        'Dirigez les utilisateurs vers le portail de gestion de compte complet avec toutes les fonctionnalités.',
+        "Dirigez les utilisateurs vers le centre de compte pour gérer les paramètres de sécurité tels que l'e-mail, le téléphone, le nom d'utilisateur, le mot de passe, la MFA et les comptes connectés.",
       flows_title: "Intégrer des flux de paramètres de sécurité prêts à l'emploi",
       single_task_flows_title: "Intégrer un flux de tâche unique prêt à l'emploi",
       flows_description:
@@ -214,7 +214,7 @@ const sign_in_exp = {
         backup_codes_generate: 'Générer un nouvel ensemble de 10 codes de sauvegarde',
         backup_codes_manage: 'Voir vos codes de sauvegarde disponibles ou en générer de nouveaux',
         account_center:
-          'Accédez au portail de gestion de compte complet avec tous les paramètres de sécurité',
+          "Accédez au centre de compte pour gérer les paramètres de sécurité tels que l'e-mail, le téléphone, le nom d'utilisateur, le mot de passe, la MFA et les comptes connectés",
       },
       customize_note:
         "Vous ne voulez pas d'une expérience prête à l'emploi ? Vous pouvez pleinement",
