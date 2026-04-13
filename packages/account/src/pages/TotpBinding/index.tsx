@@ -106,8 +106,13 @@ const TotpBinding = ({ isReplace }: Props) => {
         const service = window.location.hostname;
         // Build the otpauth URI manually for QR code
         const keyUri = `otpauth://totp/${encodeURIComponent(service)}:${encodeURIComponent(displayName)}?secret=${result.secret}&issuer=${encodeURIComponent(service)}`;
-        const qrCodeDataUrl = await qrcode.toDataURL(keyUri);
-        setSecretQrCode(qrCodeDataUrl);
+        try {
+          const qrCodeDataUrl = await qrcode.toDataURL(keyUri);
+          setSecretQrCode(qrCodeDataUrl);
+        } catch (error) {
+          // QR code generation failed; fall back to raw secret display
+          console.error('Failed to generate TOTP QR code:', error);
+        }
       }
     };
 
@@ -262,6 +267,17 @@ const TotpBinding = ({ isReplace }: Props) => {
               (secretQrCode ? (
                 <div className={styles.qrCode}>
                   <img src={secretQrCode} alt="QR code" />
+                </div>
+              ) : secret ? (
+                <div className={styles.copySecret}>
+                  <div className={styles.rawSecret}>{secret}</div>
+                  <Button
+                    title="action.copy"
+                    type="secondary"
+                    onClick={() => {
+                      void copySecret();
+                    }}
+                  />
                 </div>
               ) : (
                 <div className={styles.qrCodePlaceholder} />
