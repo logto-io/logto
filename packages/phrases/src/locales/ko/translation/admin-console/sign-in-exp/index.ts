@@ -98,9 +98,9 @@ const sign_in_exp = {
   account_center: {
     title: '계정 센터',
     description: 'Logto API로 계정 센터 플로우를 사용자 지정하세요.',
-    enable_account_api: 'Account API 활성화',
+    enable_account_api: '계정 센터와 Account API 활성화',
     enable_account_api_description:
-      'Account API를 활성화하여 맞춤형 계정 센터를 구축하고, Logto 관리 API 없이도 최종 사용자에게 직접 API 접근을 제공합니다.',
+      '최종 사용자용 Account API와 Logto의 즉시 제공되는 계정 센터를 함께 활성화합니다. 끄면 두 기능 모두 사용할 수 없습니다.',
     field_options: {
       off: '끄기',
       edit: '편집',

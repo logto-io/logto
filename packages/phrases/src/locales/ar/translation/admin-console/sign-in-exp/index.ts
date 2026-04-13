@@ -99,9 +99,9 @@ const sign_in_exp = {
   account_center: {
     title: 'مركز الحساب',
     description: 'خصص تدفقات مركز الحساب لديك باستخدام واجهات برمجة تطبيقات Logto.',
-    enable_account_api: 'تفعيل واجهة Account API',
+    enable_account_api: 'تفعيل مركز الحساب وواجهة Account API',
     enable_account_api_description:
-      'فعّل واجهة Account API لبناء مركز حساب مخصص ومنح المستخدمين النهائيين وصولًا مباشرًا إلى الواجهة دون استخدام Logto Management API.',
+      'يؤدي هذا إلى تفعيل واجهة Account API الموجهة للمستخدمين النهائيين ومركز الحساب الجاهز من Logto معًا. عند إيقافه، تصبح الميزتان غير متاحتين.',
     field_options: {
       off: 'إيقاف',
       edit: 'تحرير',
