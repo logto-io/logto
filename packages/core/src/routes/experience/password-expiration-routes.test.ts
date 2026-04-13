@@ -292,6 +292,9 @@ describe('password expiration routes', () => {
       mockUser.id,
       expect.objectContaining({ passwordUpdatedAt: now.getTime() })
     );
+
+    const retryResponse = await requester.post('/experience/submit');
+    expect(retryResponse.status).toBe(200);
   });
 
   it('should return 400 when resetting password expiration outside sign-in interaction', async () => {
