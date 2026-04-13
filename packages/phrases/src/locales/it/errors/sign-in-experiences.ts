@@ -41,6 +41,8 @@ const sign_in_experiences = {
     'Il metodo di recupero della password richiede che sia configurato un connettore {{method}} corrispondente.',
   password_expiration_not_enabled:
     "La politica di scadenza della password non è abilitata. Abilitala nelle impostazioni dell'esperienza di accesso prima di far scadere le password.",
+  password_expiration_invalid_period_days:
+    'Quando la scadenza della password è abilitata, reminderPeriodDays deve essere minore di validPeriodDays.',
 };
 
 export default Object.freeze(sign_in_experiences);

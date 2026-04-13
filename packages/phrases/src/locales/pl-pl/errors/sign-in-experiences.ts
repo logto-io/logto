@@ -40,6 +40,8 @@ const sign_in_experiences = {
     'Metoda "Zapomniałem hasła" wymaga skonfigurowania odpowiedniego łącznika {{method}}.',
   password_expiration_not_enabled:
     'Polityka wygasania haseł nie jest włączona. Włącz ją w ustawieniach logowania przed wygaszeniem haseł.',
+  password_expiration_invalid_period_days:
+    'Gdy wygaśnięcie hasła jest włączone, reminderPeriodDays musi być mniejsze niż validPeriodDays.',
 };
 
 export default Object.freeze(sign_in_experiences);

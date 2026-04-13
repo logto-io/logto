@@ -41,6 +41,8 @@ const sign_in_experiences = {
     'El método de recuperación de contraseña requiere que se configure un conector {{method}} correspondiente.',
   password_expiration_not_enabled:
     'La política de expiración de contraseña no está habilitada. Habilítela en la configuración de la experiencia de inicio de sesión antes de que las contraseñas expiren.',
+  password_expiration_invalid_period_days:
+    'Cuando la expiración de contraseña está habilitada, reminderPeriodDays debe ser menor que validPeriodDays.',
 };
 
 export default Object.freeze(sign_in_experiences);

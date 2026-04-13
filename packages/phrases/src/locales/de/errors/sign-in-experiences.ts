@@ -42,6 +42,8 @@ const sign_in_experiences = {
     'Die Methode zum Zurücksetzen des Passworts erfordert einen entsprechenden {{method}} Connector.',
   password_expiration_not_enabled:
     'Die Passwort-Ablaufrichtlinie ist nicht aktiviert. Aktivieren Sie diese in den Einstellungen für das Anmeldeerlebnis, bevor Sie Passwörter ablaufen lassen.',
+  password_expiration_invalid_period_days:
+    'Wenn die Passwortablaufregel aktiviert ist, muss reminderPeriodDays kleiner als validPeriodDays sein.',
 };
 
 export default Object.freeze(sign_in_experiences);

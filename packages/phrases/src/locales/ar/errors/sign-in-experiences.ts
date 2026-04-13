@@ -38,6 +38,8 @@ const sign_in_experiences = {
     'طريقة استرداد كلمة المرور تتطلب تكوين موصل {{method}} ملائم.',
   password_expiration_not_enabled:
     'سياسة انتهاء صلاحية كلمة المرور غير مفعلة. قم بتفعيلها في إعدادات تجربة تسجيل الدخول قبل إنهاء صلاحية كلمات المرور.',
+  password_expiration_invalid_period_days:
+    'عند تفعيل انتهاء صلاحية كلمة المرور، يجب أن تكون reminderPeriodDays أقل من validPeriodDays.',
 };
 
 export default Object.freeze(sign_in_experiences);
