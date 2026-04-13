@@ -166,10 +166,10 @@ function IntegratePrebuiltUi() {
               devPrebuiltRoutes.map(({ path, tooltipKey }) => (
                 <PrebuiltUiUrlItem
                   key={path}
+                  isPreviewHidden
                   path={path}
                   tooltip={t(tooltipKey)}
                   tenantEndpoint={tenantEndpoint}
-                  hidePreview
                 />
               ))}
           </div>
