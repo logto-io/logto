@@ -162,6 +162,9 @@
           "400": {
             "description": "The current interaction type does not allow password expiration reset."
           },
+          "403": {
+            "description": "Password reset is not allowed unless the current interaction has reached password expiration or reminder state."
+          },
           "404": {
             "description": "The identified user or interaction context was not found."
           },

@@ -517,6 +517,28 @@ describe('ExperienceInteraction class', () => {
       });
     });
 
+    it('does not save interaction when lifecycle state does not change', async () => {
+      const now = new Date('2026-01-10T00:00:00.000Z');
+      jest.useFakeTimers().setSystemTime(now);
+      const { experienceInteraction } = createSignInInteraction({
+        user: {
+          ...mockUser,
+          passwordUpdatedAt: now.getTime() - 10 * dayInMs,
+        },
+        signInExperienceOverrides: {
+          passwordExpiration: {
+            enabled: true,
+            validPeriodDays: 30,
+            reminderPeriodDays: 5,
+          },
+        },
+      });
+      const saveSpy = jest.spyOn(experienceInteraction, 'save');
+
+      await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+      expect(saveSpy).not.toHaveBeenCalled();
+    });
+
     it('allows sign-in after skipping password reminder', async () => {
       const now = new Date('2026-01-10T00:00:00.000Z');
       jest.useFakeTimers().setSystemTime(now);

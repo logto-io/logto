@@ -835,32 +835,45 @@ export default class ExperienceInteraction {
 
     // Already blocked – keep throwing so the forced-reset flow is enforced.
     if (this.passwordLifecycle.passwordExpired) {
-      assertThat(false, new RequestError({ code: 'password.expired', status: 422 }));
+      throw new RequestError({ code: 'password.expired', status: 422 });
     }
 
     const referenceDate = new Date(user.passwordUpdatedAt ?? user.createdAt);
     const passwordAgeDays = differenceInDays(new Date(), referenceDate);
 
     const isPasswordExpired = passwordAgeDays >= policy.validPeriodDays;
+    const reminderDaysUntilExpiration = policy.validPeriodDays - passwordAgeDays;
+    const reminderPeriodDays = policy.reminderPeriodDays ?? 0;
+
+    const hasPendingReminder =
+      this.passwordLifecycle.reminderRequired && !this.passwordLifecycle.reminderSkipped;
+
+    const isInReminderWindow =
+      reminderPeriodDays > 0 && reminderDaysUntilExpiration <= reminderPeriodDays;
+
+    const shouldKeepPendingReminder = hasPendingReminder && isInReminderWindow;
+    const shouldTriggerNewReminder =
+      !this.passwordLifecycle.reminderSkipped && !hasPendingReminder && isInReminderWindow;
+
+    const isReminderRequired =
+      !isPasswordExpired && (shouldKeepPendingReminder || shouldTriggerNewReminder);
+
+    const hasLifecycleStateChanged =
+      this.passwordLifecycle.passwordExpired !== isPasswordExpired ||
+      this.passwordLifecycle.reminderRequired !== isReminderRequired;
 
     this.passwordLifecycle.passwordExpired = isPasswordExpired;
-    await this.save();
+    this.passwordLifecycle.reminderRequired = isReminderRequired;
+
+    if (hasLifecycleStateChanged) {
+      await this.save();
+    }
 
     assertThat(!isPasswordExpired, new RequestError({ code: 'password.expired', status: 422 }));
 
-    // Reminder skip must not bypass an expiration that happens later in the same interaction.
     if (this.passwordLifecycle.reminderSkipped) {
       return;
     }
-
-    const reminderPeriodDays = policy.reminderPeriodDays ?? 0;
-    const reminderDaysUntilExpiration = policy.validPeriodDays - passwordAgeDays;
-
-    const isReminderRequired =
-      reminderPeriodDays > 0 && reminderDaysUntilExpiration <= reminderPeriodDays;
-
-    this.passwordLifecycle.reminderRequired = isReminderRequired;
-    await this.save();
 
     assertThat(
       !isReminderRequired,
