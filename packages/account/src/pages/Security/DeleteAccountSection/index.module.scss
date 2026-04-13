@@ -61,3 +61,34 @@
     text-decoration: underline;
   }
 }
+
+:global(body.mobile) {
+  .sectionTitle {
+    padding-left: 0;
+  }
+
+  .row {
+    height: auto;
+    min-height: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: _.unit(3);
+    padding: _.unit(4) _.unit(5);
+  }
+
+  .info {
+    align-items: flex-start;
+    gap: _.unit(3);
+  }
+
+  .name {
+    overflow-wrap: anywhere;
+  }
+
+  .actionButton {
+    align-self: flex-start;
+    padding: 0;
+    white-space: normal;
+    text-align: left;
+  }
+}

@@ -95,3 +95,50 @@
     text-decoration: underline;
   }
 }
+
+:global(body.mobile) {
+  .sectionTitle {
+    padding-left: 0;
+  }
+
+  .row {
+    height: auto;
+    min-height: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: _.unit(3);
+    padding: _.unit(4) _.unit(5);
+  }
+
+  .info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: _.unit(1.5);
+  }
+
+  .name {
+    flex: none;
+    max-width: none;
+    gap: _.unit(3);
+  }
+
+  .value {
+    flex: none;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .actions {
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: _.unit(5);
+  }
+
+  .changeButton,
+  .removeButton {
+    padding: 0;
+    white-space: normal;
+    text-align: left;
+  }
+}
