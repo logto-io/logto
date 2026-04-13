@@ -199,7 +199,7 @@ const Main = () => {
           />
         </>
       )}
-      <Route path={securityRoute} element={showsSecurityPage ? <Security /> : <Home />} />
+      {showsSecurityPage && <Route path={securityRoute} element={<Security />} />}
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>
