@@ -19,6 +19,9 @@ const account_center = {
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
     verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
     try_another_method: 'Başka bir doğrulama yöntemi deneyin',
+    no_available_methods_title: 'Kullanılabilir doğrulama yöntemi yok',
+    no_available_methods_description:
+      'Ayarlanmış herhangi bir doğrulama yönteminiz yok. Lütfen önce hesabınıza bir parola, e-posta adresi veya telefon numarası ekleyin.',
   },
   password_verification: {
     title: 'Parolayı doğrula',

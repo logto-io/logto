@@ -17,6 +17,9 @@ const account_center = {
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
     verification_required: '驗證已失效，請再次驗證你的身份。',
     try_another_method: '嘗試其他驗證方式',
+    no_available_methods_title: '沒有可用的驗證方式',
+    no_available_methods_description:
+      '你尚未設定任何驗證方式。請先為你的帳戶新增密碼、電郵地址或電話號碼。',
   },
   password_verification: {
     title: '驗證密碼',

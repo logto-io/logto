@@ -1,6 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import ErrorPage from '@ac/components/ErrorPage';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { VerificationMethod } from '@ac/types';
 
@@ -89,6 +90,15 @@ const VerificationMethodList = () => {
         onSwitchMethod={() => {
           setVerifyingMethod(undefined);
         }}
+      />
+    );
+  }
+
+  if (availableMethods.length === 0) {
+    return (
+      <ErrorPage
+        titleKey="account_center.verification.no_available_methods_title"
+        messageKey="account_center.verification.no_available_methods_description"
       />
     );
   }
