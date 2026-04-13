@@ -24,6 +24,21 @@ import { mailJunkyConfigGuard, type PublicParameters } from './types.js';
 const formatFrom = (fromEmail: string, fromName?: string): string =>
   fromName ? `${fromName} <${fromEmail}>` : fromEmail;
 
+/**
+ * Derive multipart `text` from HTML templates. Repeatedly removes complete
+ * `...>` tag sequences until quiescence so stripping is not a single fragile
+ * replace (satisfies CodeQL incomplete multi-character sanitization).
+ */
+const htmlToPlainTextForEmail = (html: string): string => {
+  const tagPattern = /<[^>]*>/g;
+  const stripOnePass = (input: string): string => input.replaceAll(tagPattern, '');
+  const stripUntilStable = (input: string): string => {
+    const next = stripOnePass(input);
+    return next === input ? input : stripUntilStable(next);
+  };
+
+  return stripUntilStable(html);
+};
 type BuildMailJunkyBodyInput = {
   to: string;
   subject: string;
@@ -43,7 +58,7 @@ const buildParameters = (input: BuildMailJunkyBodyInput): PublicParameters => {
     to,
     subject: renderedSubject,
     html: renderedContent,
-    text: renderedContent.replaceAll(/<[^>]*>?/gm, ''),
+    text: htmlToPlainTextForEmail(renderedContent),
   };
 };
 
