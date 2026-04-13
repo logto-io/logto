@@ -41,6 +41,8 @@ const sign_in_experiences = {
     'O método de esquecimento de senha requer um conector {{method}} correspondente para ser configurado.',
   password_expiration_not_enabled:
     'A política de expiração de senha não está ativada. Ative-a nas configurações de experiência de login antes de expirar senhas.',
+  password_expiration_invalid_period_days:
+    'Quando a expiração de senha estiver habilitada, reminderPeriodDays deve ser menor que validPeriodDays.',
 };
 
 export default Object.freeze(sign_in_experiences);

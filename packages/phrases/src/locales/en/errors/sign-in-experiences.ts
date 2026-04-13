@@ -38,6 +38,8 @@ const sign_in_experiences = {
     'Forgot password method requires a corresponding {{method}} connector to be configured.',
   password_expiration_not_enabled:
     'Password expiration policy is not enabled. Enable it in the sign-in experience settings before expiring passwords.',
+  password_expiration_invalid_period_days:
+    'Reminder period days must be less than valid period days when password expiration is enabled.',
 };
 
 export default Object.freeze(sign_in_experiences);
