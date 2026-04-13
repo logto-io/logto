@@ -8,7 +8,7 @@
 export const layoutClassNames = Object.freeze({
   /** Root `<div>` wrapping the entire account center app. */
   app: 'logto_ac-app',
-  /** Full-page layout wrapper (used on the Security / Home page). */
+  /** Full-page layout wrapper used across account center routes. */
   pageContainer: 'logto_ac-page-container',
   /** `<main>` that holds the primary content area. */
   mainContent: 'logto_ac-main-content',
