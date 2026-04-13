@@ -10,6 +10,9 @@ type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConn
 const isVisibleField = (value?: AccountCenterControlValue): boolean =>
   value !== undefined && value !== AccountCenterControlValue.Off;
 
+export const isEditableField = (value?: AccountCenterControlValue): boolean =>
+  value === AccountCenterControlValue.Edit;
+
 export const hasVisibleSocialSection = (
   socialControl: AccountCenterControlValue | undefined,
   experienceSettings?: SecurityPageExperienceSettings
@@ -46,7 +49,7 @@ export const canOpenPasswordEditFlow = (
   passwordControl: AccountCenterControlValue | undefined,
   userInfo?: Partial<UserProfileResponse>
 ): boolean =>
-  passwordControl === AccountCenterControlValue.Edit &&
+  isEditableField(passwordControl) &&
   (Boolean(userInfo?.hasPassword) ||
     Boolean(userInfo?.primaryEmail) ||
     Boolean(userInfo?.primaryPhone));
