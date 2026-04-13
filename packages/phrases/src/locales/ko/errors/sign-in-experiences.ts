@@ -38,6 +38,8 @@ const sign_in_experiences = {
     '비밀번호 찾기 방법은 해당 {{method}} 커넥터를 구성해야 합니다.',
   password_expiration_not_enabled:
     '비밀번호 만료 정책이 활성화되지 않았습니다. 비밀번호를 만료시키기 전에 로그인 경험 설정에서 이를 활성화하세요.',
+  password_expiration_invalid_period_days:
+    '비밀번호 만료가 활성화된 경우 reminderPeriodDays는 validPeriodDays보다 작아야 합니다.',
 };
 
 export default Object.freeze(sign_in_experiences);

@@ -40,6 +40,8 @@ const sign_in_experiences = {
     'Şifremi unuttum yöntemi, yapılandırılması gereken ilgili bir {{method}} bağlayıcı gerektirir.',
   password_expiration_not_enabled:
     'Parola sona erme politikası etkinleştirilmemiş. Parolaların süresini doldurmadan önce oturum açma deneyimi ayarlarından etkinleştirin.',
+  password_expiration_invalid_period_days:
+    'Parola süresi dolma politikası etkin olduğunda, reminderPeriodDays değeri validPeriodDays değerinden küçük olmalıdır.',
 };
 
 export default Object.freeze(sign_in_experiences);

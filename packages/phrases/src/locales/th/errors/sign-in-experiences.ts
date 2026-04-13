@@ -40,6 +40,8 @@ const sign_in_experiences = {
     'วิธีกู้คืนรหัสผ่านต้องมีตัวเชื่อมต่อ {{method}} ที่เกี่ยวข้องกำหนดค่าไว้',
   password_expiration_not_enabled:
     'นโยบายการหมดอายุของรหัสผ่านไม่ได้เปิดใช้งาน โปรดเปิดใช้งานในการตั้งค่าประสบการณ์การลงชื่อเข้าใช้ก่อนที่จะกำหนดวันหมดอายุของรหัสผ่าน',
+  password_expiration_invalid_period_days:
+    'เมื่อเปิดใช้การหมดอายุรหัสผ่าน reminderPeriodDays ต้องน้อยกว่า validPeriodDays',
 };
 
 export default Object.freeze(sign_in_experiences);

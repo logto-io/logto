@@ -41,6 +41,8 @@ const sign_in_experiences = {
     'パスワード忘れの方法には、対応する {{method}} コネクタの構成が必要です。',
   password_expiration_not_enabled:
     'パスワードの有効期限ポリシーが有効になっていません。パスワードを期限切れにする前に、サインイン体験の設定で有効にしてください。',
+  password_expiration_invalid_period_days:
+    'パスワード有効期限が有効な場合、reminderPeriodDays は validPeriodDays より小さくする必要があります。',
 };
 
 export default Object.freeze(sign_in_experiences);
