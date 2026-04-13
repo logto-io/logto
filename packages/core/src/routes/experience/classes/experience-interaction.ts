@@ -685,6 +685,10 @@ export default class ExperienceInteraction {
     return this.passwordLifecycle.passwordExpired;
   }
 
+  public get isPasswordReminderRequiredInInteraction() {
+    return this.passwordLifecycle.reminderRequired;
+  }
+
   async guardCaptcha() {
     if (this.captcha.verified || this.captcha.skipped) {
       return;

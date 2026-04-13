@@ -255,6 +255,45 @@ describe('password expiration routes', () => {
     expect(retryResponse.status).toBe(200);
   });
 
+  it('should allow resetting password from password expiration reminder flow', async () => {
+    setDevFeaturesEnabled(true);
+    const now = new Date('2026-01-10T00:00:00.000Z');
+    const newPassword = 'V@lidPassword123!';
+    jest.useFakeTimers().setSystemTime(now);
+    const reminderUser = {
+      ...mockUser,
+      passwordUpdatedAt: now.getTime() - 28 * 24 * 60 * 60 * 1000,
+    };
+    const updatedUser = { ...reminderUser, passwordUpdatedAt: now.getTime() };
+    const { requester, users } = createRequesterWithMocks({
+      user: reminderUser,
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+        reminderPeriodDays: 5,
+      },
+      persistInteractionResult: true,
+    });
+    users.findUserById
+      .mockResolvedValueOnce(reminderUser)
+      .mockResolvedValueOnce(reminderUser)
+      .mockResolvedValueOnce(updatedUser);
+    users.updateUserById.mockResolvedValueOnce(updatedUser);
+
+    const submitResponse = await requester.post('/experience/submit');
+    expect(submitResponse.status).toBe(422);
+
+    const resetResponse = await requester
+      .put('/experience/password-expiration/reset')
+      .send({ password: newPassword });
+
+    expect(resetResponse.status).toBe(204);
+    expect(users.updateUserById).toHaveBeenCalledWith(
+      mockUser.id,
+      expect.objectContaining({ passwordUpdatedAt: now.getTime() })
+    );
+  });
+
   it('should return 400 when resetting password expiration outside sign-in interaction', async () => {
     const { requester } = createRequesterWithMocks({ interactionEvent: InteractionEvent.Register });
     const response = await requester

@@ -137,3 +137,18 @@ describe('socialSignInConnectorTargets', () => {
     }
   );
 });
+
+describe('password expiration policy', () => {
+  it('should fail when reminderPeriodDays is greater than or equal to validPeriodDays', async () => {
+    await expectPatchResponseStatus(
+      {
+        passwordExpiration: {
+          enabled: true,
+          validPeriodDays: 30,
+          reminderPeriodDays: 30,
+        },
+      },
+      422
+    );
+  });
+});

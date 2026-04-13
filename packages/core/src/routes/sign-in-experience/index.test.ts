@@ -359,6 +359,42 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
+  it('should reject password expiration updates when reminderPeriodDays is not less than validPeriodDays', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+        reminderPeriodDays: 30,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 422,
+    });
+  });
+
+  it('should accept password expiration updates with reminderPeriodDays as 0', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+        reminderPeriodDays: 0,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        passwordExpiration: {
+          enabled: true,
+          validPeriodDays: 30,
+          reminderPeriodDays: 0,
+        },
+      },
+    });
+  });
+
   it('should guard support email field format', async () => {
     const exception = await signInExperienceRequester
       .patch('/sign-in-exp')
