@@ -1,6 +1,6 @@
 import { OidcSigningKeyStatus } from '@logto/schemas';
 
-import { normalizeOidcPrivateKeys } from './oidc-private-key.js';
+import { getOidcProviderPrivateKeys, normalizeOidcPrivateKeys } from './oidc-private-key.js';
 
 const createPrivateKey = (id: string, createdAt: number, status?: OidcSigningKeyStatus) => ({
   id,
@@ -43,5 +43,21 @@ describe('normalizeOidcPrivateKeys', () => {
         createPrivateKey('current-b', 2, OidcSigningKeyStatus.Current),
       ])
     ).toThrow('Malformed OIDC private key status configuration');
+  });
+});
+
+describe('getOidcProviderPrivateKeys', () => {
+  it('orders private keys as Current, Next, Previous for oidc-provider signing', () => {
+    const result = getOidcProviderPrivateKeys([
+      createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('next', 1, OidcSigningKeyStatus.Next),
+    ]);
+
+    expect(result).toEqual([
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('next', 1, OidcSigningKeyStatus.Next),
+      createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
+    ]);
   });
 });
