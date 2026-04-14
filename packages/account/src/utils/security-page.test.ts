@@ -5,8 +5,12 @@ import { AccountCenterControlValue, ConnectorPlatform, MfaPolicy } from '@logto/
 
 import type * as SecurityPageModule from './security-page';
 
-const { canOpenPasswordEditFlow, hasVisibleSecuritySection, hasVisibleSocialSection } =
-  (await import(new URL('security-page.ts', import.meta.url).href)) as typeof SecurityPageModule;
+const {
+  isEditableField,
+  canOpenPasswordEditFlow,
+  hasVisibleSecuritySection,
+  hasVisibleSocialSection,
+} = (await import(new URL('security-page.ts', import.meta.url).href)) as typeof SecurityPageModule;
 
 void test('hasVisibleSecuritySection returns false when account center is disabled', () => {
   assert.equal(
@@ -89,6 +93,12 @@ void test('hasVisibleSocialSection returns false when no available social connec
     }),
     false
   );
+});
+
+void test('isEditableField returns true only for edit control', () => {
+  assert.equal(isEditableField(AccountCenterControlValue.Edit), true);
+  assert.equal(isEditableField(AccountCenterControlValue.ReadOnly), false);
+  assert.equal(isEditableField(), false);
 });
 
 void test('canOpenPasswordEditFlow requires editable password control and a usable identifier', () => {

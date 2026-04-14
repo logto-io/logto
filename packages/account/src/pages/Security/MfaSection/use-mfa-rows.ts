@@ -23,7 +23,7 @@ import {
   passkeyManageRoute,
   phoneRoute,
 } from '@ac/constants/routes';
-import { hasVisibleMfaSection } from '@ac/utils/security-page';
+import { hasVisibleMfaSection, isEditableField } from '@ac/utils/security-page';
 
 const factorIcon = {
   [MfaFactor.TOTP]: TotpIcon,
@@ -51,6 +51,8 @@ const useMfaRows = (
   const { accountCenterSettings, experienceSettings, userInfo } = useContext(PageContext);
 
   const mfaControl = accountCenterSettings?.fields.mfa;
+  const emailControl = accountCenterSettings?.fields.email;
+  const phoneControl = accountCenterSettings?.fields.phone;
   const enabledFactors = useMemo(() => experienceSettings?.mfa.factors ?? [], [experienceSettings]);
   const isEditable = mfaControl === AccountCenterControlValue.Edit;
 
@@ -164,14 +166,15 @@ const useMfaRows = (
           value: userInfo.primaryEmail,
           isPlainValue: true,
           isConfigured: true,
-          action: isEditable
-            ? {
-                label: t('account_center.security.change'),
-                handler: () => {
-                  navigateTo(emailRoute);
-                },
-              }
-            : undefined,
+          action:
+            isEditable && isEditableField(emailControl)
+              ? {
+                  label: t('account_center.security.change'),
+                  handler: () => {
+                    navigateTo(emailRoute);
+                  },
+                }
+              : undefined,
         },
       ];
     };
@@ -188,14 +191,15 @@ const useMfaRows = (
           value: formatToInternationalPhoneNumber(userInfo.primaryPhone),
           isPlainValue: true,
           isConfigured: true,
-          action: isEditable
-            ? {
-                label: t('account_center.security.change'),
-                handler: () => {
-                  navigateTo(phoneRoute);
-                },
-              }
-            : undefined,
+          action:
+            isEditable && isEditableField(phoneControl)
+              ? {
+                  label: t('account_center.security.change'),
+                  handler: () => {
+                    navigateTo(phoneRoute);
+                  },
+                }
+              : undefined,
         },
       ];
     };
@@ -209,6 +213,8 @@ const useMfaRows = (
     ];
   }, [
     mfaControl,
+    emailControl,
+    phoneControl,
     experienceSettings,
     mfaVerifications,
     enabledFactors,
