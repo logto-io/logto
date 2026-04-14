@@ -101,9 +101,9 @@ const sign_in_exp = {
   account_center: {
     title: 'CENTRUM KONTA',
     description: 'Dostosuj przepływy centrum konta z wykorzystaniem interfejsów API Logto.',
-    enable_account_api: 'Włącz Account API',
+    enable_account_api: 'Włącz centrum konta i Account API',
     enable_account_api_description:
-      'Włącz Account API, aby zbudować własne centrum konta i zapewnić użytkownikom końcowym bezpośredni dostęp do API bez użycia Logto Management API.',
+      'Włącza zarówno Account API dla użytkowników końcowych, jak i gotowe centrum konta Logto. Po wyłączeniu obie funkcje są niedostępne.',
     field_options: {
       off: 'Wyłączone',
       edit: 'Edytuj',

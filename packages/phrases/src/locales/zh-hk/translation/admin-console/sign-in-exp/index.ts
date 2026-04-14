@@ -98,9 +98,9 @@ const sign_in_exp = {
   account_center: {
     title: '帳戶中心',
     description: '使用 Logto API 自訂你的帳戶中心流程。',
-    enable_account_api: '啟用 Account API',
+    enable_account_api: '啟用帳戶中心和 Account API',
     enable_account_api_description:
-      '啟用 Account API，建立自訂帳戶中心，讓終端使用者毋須使用 Logto 管理 API 亦可直接存取 API。',
+      '同時啟用面向使用者的 Account API 和 Logto 的開箱即用帳戶中心。關閉後，這兩項功能都將不可用。',
     field_options: {
       off: '關閉',
       edit: '可編輯',

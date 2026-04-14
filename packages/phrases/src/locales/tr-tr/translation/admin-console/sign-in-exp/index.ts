@@ -102,9 +102,9 @@ const sign_in_exp = {
   account_center: {
     title: 'HESAP MERKEZİ',
     description: "Hesap merkezi akışlarını Logto API'leriyle özelleştirin.",
-    enable_account_api: "Account API'yi etkinleştir",
+    enable_account_api: "Hesap merkezi ve Account API'yi etkinleştir",
     enable_account_api_description:
-      "Account API'yi etkinleştirerek özel bir hesap merkezi oluşturun ve Logto Management API'sini kullanmadan son kullanıcılara doğrudan API erişimi sağlayın.",
+      "Son kullanıcıya yönelik Account API'yi ve Logto'nun hazır hesap merkezini birlikte etkinleştirir. Kapatıldığında bu iki özellik de kullanılamaz.",
     field_options: {
       off: 'Kapalı',
       edit: 'Düzenle',

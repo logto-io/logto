@@ -98,9 +98,9 @@ const sign_in_exp = {
   account_center: {
     title: '账户中心',
     description: '为终端用户实现账户中心，以管理账户安全和个人资料信息。',
-    enable_account_api: '启用账户中心',
+    enable_account_api: '启用账户中心和 Account API',
     enable_account_api_description:
-      '启用面向用户的 Account API，具有可配置的权限，让你可以选择使用 Logto 的开箱即用账户中心或完全自定义的解决方案。',
+      '同时启用面向用户的 Account API 和 Logto 的开箱即用账户中心。关闭后，这两个功能都将不可用。',
     field_options: {
       off: '关闭',
       edit: '可编辑',

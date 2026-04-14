@@ -101,9 +101,9 @@ const sign_in_exp = {
   account_center: {
     title: 'ЦЕНТР УЧЁТНОЙ ЗАПИСИ',
     description: 'Настройте процессы центра учётной записи с помощью API Logto.',
-    enable_account_api: 'Включить Account API',
+    enable_account_api: 'Включить центр учётной записи и Account API',
     enable_account_api_description:
-      'Включите Account API, чтобы создать собственный центр учётной записи и предоставить конечным пользователям прямой доступ к API без использования Logto Management API.',
+      'Одновременно включает Account API для конечных пользователей и готовый центр аккаунта Logto. При отключении обе функции недоступны.',
     field_options: {
       off: 'Выключено',
       edit: 'Редактировать',

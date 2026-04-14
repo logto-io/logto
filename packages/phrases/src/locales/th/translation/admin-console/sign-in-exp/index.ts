@@ -100,9 +100,9 @@ const sign_in_exp = {
   account_center: {
     title: 'ศูนย์บัญชี',
     description: 'ปรับแต่งขั้นตอนศูนย์บัญชีของคุณด้วย Logto API.',
-    enable_account_api: 'เปิดใช้งาน Account API',
+    enable_account_api: 'เปิดใช้งานศูนย์บัญชีและ Account API',
     enable_account_api_description:
-      'เปิดใช้งาน Account API เพื่อสร้างศูนย์บัญชีแบบกำหนดเอง ให้ผู้ใช้ปลายทางเข้าถึง API ได้โดยตรงโดยไม่ต้องใช้ Logto Management API.',
+      'เปิดใช้ทั้ง Account API สำหรับผู้ใช้ปลายทางและศูนย์บัญชีสำเร็จรูปของ Logto พร้อมกัน เมื่อปิดใช้งาน ฟีเจอร์ทั้งสองจะไม่พร้อมใช้งาน',
     field_options: {
       off: 'ปิด',
       edit: 'แก้ไข',
