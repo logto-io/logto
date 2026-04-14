@@ -4,7 +4,7 @@ import {
 } from '@logto/connector-kit';
 import type { RequestErrorBody } from '@logto/schemas';
 import { InteractionEvent, SignInMode, VerificationType, experience } from '@logto/schemas';
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { validate } from 'superstruct';
@@ -21,13 +21,14 @@ import type { ErrorHandlers } from '@/hooks/use-error-handler';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validation';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useToast from '@/hooks/use-toast';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
-import { getAuthValidationResult, getSessionValidationResult } from '@/utils/social-connectors';
+import { validateGoogleOneTapCredential } from '@/utils/social-connectors';
 
 import { normalizeExternalWebsiteGoogleOneTapConnectorData } from './utils';
 
@@ -38,12 +39,13 @@ const useSocialSignInListener = (connectorId: string) => {
   const { t } = useTranslation();
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
-  const { verificationIdsMap, setVerificationId } = useContext(UserInteractionContext);
-  const verificationId = verificationIdsMap[VerificationType.Social];
+  const { setVerificationId } = useContext(UserInteractionContext);
 
-  // Google One Tap will mutate the verificationId after the initial render
-  // We need to store a up to date reference of the verificationId
-  const verificationIdRef = useRef(verificationId);
+  const { verificationIdRef, validateAndRestore } = useRedirectCallbackValidation({
+    connectorId,
+    flow: 'social',
+    verificationType: VerificationType.Social,
+  });
 
   const navigate = useNavigateWithPreservedSearchParams();
   const handleError = useErrorHandler();
@@ -99,6 +101,7 @@ const useSocialSignInListener = (connectorId: string) => {
       signInMode,
       socialSignInSettings.automaticAccountLinking,
       t,
+      verificationIdRef,
     ]
   );
 
@@ -157,7 +160,14 @@ const useSocialSignInListener = (connectorId: string) => {
 
       return verificationId;
     },
-    [asyncInitInteraction, globalErrorHandler, handleError, setVerificationId, verifySocial]
+    [
+      asyncInitInteraction,
+      globalErrorHandler,
+      handleError,
+      setVerificationId,
+      verifySocial,
+      verificationIdRef,
+    ]
   );
 
   const signInWithSocialHandler = useCallback(
@@ -201,42 +211,37 @@ const useSocialSignInListener = (connectorId: string) => {
     const { state, ...rest } = parseQueryParameters(searchParameters);
     const data = normalizeExternalWebsiteGoogleOneTapConnectorData(rest);
 
-    // Google One Tap always contains the `credential`
     const isGoogleOneTap = isGoogleOneTapChecker(data);
-    // External Google One Tap always contains the `credential` and doesn't contain the `csrfToken`
-    // Experience built-in Google One Tap always contains the `csrfToken`
-    const isExternalCredential = isExternalGoogleOneTapChecker(data);
 
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
 
-    const isValidAuth = getAuthValidationResult({
-      isGoogleOneTap,
-      state,
-      connectorId,
-      isExternalCredential,
-      params: data,
-    });
+    if (isGoogleOneTap) {
+      // === Google One Tap flow ===
+      const isExternalCredential = isExternalGoogleOneTapChecker(data);
 
-    if (!isValidAuth) {
-      setToast(t('error.invalid_connector_auth'));
-      navigate('/' + experience.routes.signIn);
-      return;
+      const result = validateGoogleOneTapCredential({
+        isExternalCredential,
+        params: data,
+      });
+
+      if (!result.valid) {
+        setToast(t(`error.${result.error}`));
+        navigate('/' + experience.routes.signIn);
+        return;
+      }
+    } else {
+      // === Normal OAuth redirect flow (social) ===
+      const result = validateAndRestore(state);
+
+      if (!result.valid) {
+        setToast(t(`error.${result.error}`));
+        navigate('/' + experience.routes.signIn);
+        return;
+      }
     }
 
-    const isValidSession = getSessionValidationResult({
-      verificationId: verificationIdRef.current,
-      isGoogleOneTap,
-      isExternalCredential,
-      params: data,
-    });
-
-    if (!isValidSession) {
-      setToast(t('error.invalid_session'));
-      navigate('/' + experience.routes.signIn);
-      return;
-    }
-
+    // Common path — both Google One Tap and normal flow proceed here
     void signInWithSocialHandler(connectorId, data);
   }, [
     connectorId,
@@ -247,6 +252,7 @@ const useSocialSignInListener = (connectorId: string) => {
     setToast,
     signInWithSocialHandler,
     t,
+    validateAndRestore,
   ]);
 
   return { loading };

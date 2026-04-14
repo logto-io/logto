@@ -13,8 +13,10 @@ import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useTerms from '@/hooks/use-terms';
+import { searchKeys } from '@/shared/utils/search-parameters';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 import { generateState, storeState, buildSocialLandingUri } from '@/utils/social-connectors';
+import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
 
 const useSocial = () => {
   const { experienceSettings, theme } = useContext(PageContext);
@@ -80,6 +82,17 @@ const useSocial = () => {
       const { verificationId, authorizationUri } = result;
 
       setVerificationId(VerificationType.Social, verificationId);
+
+      // Write fallback bundle to localStorage for in-app browser session recovery
+      storeRedirectContext({
+        state,
+        flow: 'social',
+        connectorId,
+        verificationId,
+        appId: sessionStorage.getItem(searchKeys.appId) ?? undefined,
+        organizationId: sessionStorage.getItem(searchKeys.organizationId) ?? undefined,
+        uiLocales: sessionStorage.getItem(searchKeys.uiLocales) ?? undefined,
+      });
 
       // Invoke native social sign-in flow
       if (isNativeWebview()) {
