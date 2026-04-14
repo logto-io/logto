@@ -51,12 +51,33 @@ const useCurrentUser = () => {
         return;
       }
 
-      // Account API uses 'replace' mode, so we need to merge with existing customData
-      const mergedCustomData = { ...user.customData, ...customData };
-      const data = await accountApi
-        .patch('', { json: { customData: mergedCustomData } })
-        .json<UserProfileResponse>();
-      await mutate({ ...user, customData: data.customData });
+      try {
+        // Account API uses 'replace' mode, so we need to merge with existing customData
+        const mergedCustomData = { ...user.customData, ...customData };
+        const data = await accountApi
+          .patch('', { json: { customData: mergedCustomData } })
+          .json<UserProfileResponse>();
+        await mutate({ ...user, customData: data.customData });
+      } catch (error: unknown) {
+        // TODO: Move shared Account API error handling into `useAccountApi()` once we define
+        // how callers opt into the right UX (for example toast versus modal feedback).
+        if (error instanceof HTTPError) {
+          const { response } = error;
+
+          try {
+            const data = await response.clone().json<RequestErrorBody>();
+            toast.error(
+              [data.message, data.details].join('\n') || t('errors.unknown_server_error')
+            );
+          } catch {
+            toast.error(t('errors.unknown_server_error'));
+          }
+
+          return;
+        }
+
+        throw error;
+      }
     },
     [accountApi, mutate, t, user]
   );
