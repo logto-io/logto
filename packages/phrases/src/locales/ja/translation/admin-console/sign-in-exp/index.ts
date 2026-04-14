@@ -189,7 +189,7 @@ const sign_in_exp = {
         'これらのプリビルトフローを統合するには、以下の設定で関連するアカウント API の権限を<strong>編集</strong>に設定してください。',
       account_center_title: 'すぐに使えるアカウントセンターを統合',
       account_center_description:
-        'すべての機能を備えた完全なアカウント管理ポータルにユーザーをルーティングします。',
+        'ユーザーをアカウントセンターにルーティングし、メールアドレス、電話番号、ユーザー名、パスワード、MFA、接続済みアカウントなどのセキュリティ設定を管理します。',
       flows_title: 'すぐに使えるセキュリティ設定フローを統合',
       single_task_flows_title: 'すぐに使える単一タスクフローを統合',
       flows_description:
@@ -209,7 +209,8 @@ const sign_in_exp = {
         passkey_manage: '既存のパスキーを管理または新しいものを追加',
         backup_codes_generate: '新しいバックアップコード 10 セットを生成',
         backup_codes_manage: '使用可能なバックアップコードを表示または新しいものを生成',
-        account_center: 'すべてのセキュリティ設定を備えた完全なアカウント管理ポータルにアクセス',
+        account_center:
+          'アカウントセンターにアクセスして、メールアドレス、電話番号、ユーザー名、パスワード、MFA、接続済みアカウントなどのセキュリティ設定を管理',
       },
       customize_note:
         'すぐに使えるエクスペリエンスを望まない？ 代わりに Account API でフローを完全に',

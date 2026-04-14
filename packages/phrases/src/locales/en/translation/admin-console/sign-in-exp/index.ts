@@ -189,7 +189,7 @@ const sign_in_exp = {
         'To integrate these prebuilt flows, set the related Account API permissions to <strong>Edit</strong> in the settings below.',
       account_center_title: 'Integrate the out-of-the-box account center',
       account_center_description:
-        'Route users to the complete account management portal with all features.',
+        'Route users to the account center to manage security settings such as email, phone, username, password, MFA, and connected accounts.',
       flows_title: 'Integrate out-of-the-box security setting flows',
       single_task_flows_title: 'Integrate an out-of-the-box single task flow',
       flows_description:
@@ -209,7 +209,8 @@ const sign_in_exp = {
         passkey_manage: 'Manage your existing passkeys or add new ones',
         backup_codes_generate: 'Generate a new set of 10 backup codes',
         backup_codes_manage: 'View your available backup codes or generate new ones',
-        account_center: 'Access the complete account management portal with all security settings',
+        account_center:
+          'Access the account center to manage security settings such as email, phone, username, password, MFA, and connected accounts',
       },
       customize_note: "Don't want the out-of-the-box experience? You can fully",
       customize_link: 'customize your flows with the Account API instead.',

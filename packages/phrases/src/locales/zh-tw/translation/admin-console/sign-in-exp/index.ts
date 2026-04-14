@@ -181,7 +181,7 @@ const sign_in_exp = {
         '要整合這些預建流程，請在下方設定中將相關的帳戶 API 權限設為<strong>編輯</strong>。',
       account_center_title: '整合現成的帳戶中心',
       account_center_description:
-        '結合你的域名與路徑形成你的帳戶中心 URL（例如：https://auth.foo.com/account）。你可以選擇添加 `redirect=` 在使用者登出後將用戶返回到你的應用，或添加 `ui_locales=` 以覆蓋預設語言。',
+        '將用戶路由到帳戶中心，以管理電子郵件、電話號碼、使用者名稱、密碼、MFA 和關聯帳號等安全設定。',
       flows_title: '整合預構建安全設置流程',
       single_task_flows_title: '整合現成的單一資料更新流程',
       flows_description:
@@ -201,7 +201,8 @@ const sign_in_exp = {
         passkey_manage: '管理你現有的通行金鑰或添加新的',
         backup_codes_generate: '生成一組新的 10 個備用代碼',
         backup_codes_manage: '查看你的可用備用代碼或生成新的',
-        account_center: '在帳戶中心管理你的個人資料、安全設置和會話',
+        account_center:
+          '訪問帳戶中心以管理電子郵件、電話號碼、使用者名稱、密碼、MFA 和關聯帳號等安全設定',
       },
       customize_note: '不想要使用預構建體驗？你可以完全',
       customize_link: '使用帳戶 API 來自定義你的流程。',

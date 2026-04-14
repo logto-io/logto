@@ -191,7 +191,7 @@ const sign_in_exp = {
         'Para integrar estes fluxos pré-construídos, defina as permissões da API de conta relacionadas como <strong>Editar</strong> nas definições abaixo.',
       account_center_title: 'Integrar o centro de conta pronto a usar',
       account_center_description:
-        'Direcione os utilizadores para o portal completo de gestão de conta com todas as funcionalidades.',
+        'Direcione os utilizadores para o centro de conta para gerir definições de segurança como e-mail, telefone, nome de utilizador, palavra-passe, MFA e contas ligadas.',
       flows_title: 'Integrar fluxos de definição de segurança prontos para uso',
       single_task_flows_title: 'Integrar um fluxo de tarefa única pronto a usar',
       flows_description:
@@ -213,7 +213,7 @@ const sign_in_exp = {
         backup_codes_generate: 'Gere um novo conjunto de 10 códigos de backup',
         backup_codes_manage: 'Visualize os seus códigos de backup disponíveis ou gere novos',
         account_center:
-          'Aceda ao portal completo de gestão de conta com todas as definições de segurança',
+          'Aceda ao centro de conta para gerir definições de segurança como e-mail, telefone, nome de utilizador, palavra-passe, MFA e contas ligadas',
       },
       customize_note: 'Não quer a experiência pronta para uso? Pode sempre',
       customize_link: 'personalizar os seus fluxos com a Account API em vez disso.',
