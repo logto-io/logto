@@ -159,14 +159,11 @@ describe('sweepExpiredRedirectContexts', () => {
 
 describe('localStorage unavailable', () => {
   it('should not throw when localStorage operations fail', () => {
-    const originalSetItem = localStorage.setItem.bind(localStorage);
-    const originalGetItem = localStorage.getItem.bind(localStorage);
-
     // Mock localStorage to throw
-    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new Error('Storage unavailable');
     });
-    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
       throw new Error('Storage unavailable');
     });
 
@@ -186,7 +183,7 @@ describe('localStorage unavailable', () => {
     }).not.toThrow();
 
     // Restore
-    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(originalSetItem);
-    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(originalGetItem);
+    setItemSpy.mockRestore();
+    getItemSpy.mockRestore();
   });
 });
