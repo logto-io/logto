@@ -104,7 +104,13 @@ const PasskeyBinding = () => {
     const credential = await trySafe(
       async () => startRegistration(registrationOptions),
       (error) => {
-        console.error('WebAuthn registration failed:', error);
+        // User cancelled the WebAuthn dialog, no need to show error
+        if (
+          (error instanceof DOMException || error instanceof Error) &&
+          error.name === 'NotAllowedError'
+        ) {
+          return;
+        }
 
         if (error instanceof WebAuthnError) {
           switch (error.code) {
@@ -122,6 +128,7 @@ const PasskeyBinding = () => {
           }
         }
 
+        console.error('WebAuthn registration failed:', error);
         setToast(t('mfa.webauthn_failed_to_create'));
       }
     );
