@@ -79,7 +79,7 @@ const useSingleSignOnListener = (connectorId: string) => {
   const redirectTo = useGlobalRedirectTo();
   const { signInMode } = useSieMethods();
 
-  const { verificationIdRef, validateAndRestore } = useRedirectCallbackValidation({
+  const { validateAndRestore } = useRedirectCallbackValidation({
     connectorId,
     flow: 'sso',
     verificationType: VerificationType.EnterpriseSso,
