@@ -115,6 +115,8 @@ export const sendCode = async ({
   await codeVerification.sendVerificationCode({
     ...ctx.emailI18n,
     ...templateContext,
+    /** The client IP address for rate limiting and fraud detection. */
+    ...(ctx.request.ip && { ip: ctx.request.ip }),
   });
 
   // Save state
