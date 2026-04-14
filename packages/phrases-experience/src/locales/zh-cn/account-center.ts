@@ -17,6 +17,9 @@ const account_center = {
     error_verify_failed: '验证失败，请重新输入验证码。',
     verification_required: '验证已失效，请重新验证身份。',
     try_another_method: '尝试其他验证方式',
+    no_available_methods_title: '没有可用的验证方式',
+    no_available_methods_description:
+      '你尚未设置任何验证方式。请先为你的账户添加密码、邮箱或手机号。',
   },
   password_verification: {
     title: '验证密码',

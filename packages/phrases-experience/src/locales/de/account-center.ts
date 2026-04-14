@@ -20,6 +20,9 @@ const account_center = {
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
     verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
     try_another_method: 'Versuche eine andere Verifizierungsmethode',
+    no_available_methods_title: 'Keine Verifizierungsmethoden verfügbar',
+    no_available_methods_description:
+      'Du hast noch keine Verifizierungsmethoden eingerichtet. Bitte füge zuerst ein Passwort, eine E-Mail-Adresse oder eine Telefonnummer zu deinem Konto hinzu.',
   },
   password_verification: {
     title: 'Passwort bestätigen',

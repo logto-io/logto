@@ -18,6 +18,9 @@ const account_center = {
     error_verify_failed: 'Ověření se nezdařilo. Zadej kód znovu.',
     verification_required: 'Ověření vypršelo. Prosím ověř svou identitu znovu.',
     try_another_method: 'Vyzkoušej jinou metodu ověření',
+    no_available_methods_title: 'Nejsou k dispozici žádné metody ověření',
+    no_available_methods_description:
+      'Nemáš nastavenou žádnou metodu ověření. Nejprve si ke svému účtu přidej heslo, e-mail nebo telefonní číslo.',
   },
   password_verification: {
     title: 'Ověřit heslo',
