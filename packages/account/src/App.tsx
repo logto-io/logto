@@ -98,28 +98,38 @@ const Main = () => {
   const isInitialAuthLoading = !isAuthenticated && isLoading;
 
   useEffect(() => {
-    if (isInCallback || isInitialAuthLoading) {
+    if (isInCallback || isInitialAuthLoading || isLoadingExperience) {
       return;
     }
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated && accountCenterSettings?.enabled) {
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
       setRouteRestore(window.location.pathname);
       void signIn({ redirectUri, extraParams });
     }
-  }, [isAuthenticated, isInCallback, isInitialAuthLoading, signIn, uiLocales]);
+  }, [
+    isAuthenticated,
+    isInCallback,
+    isInitialAuthLoading,
+    isLoadingExperience,
+    accountCenterSettings,
+    signIn,
+    uiLocales,
+  ]);
 
   useEffect(() => {
     if (isInCallback || isInitialAuthLoading || !isAuthenticated || isLoadingUserInfo) {
       return;
     }
 
-    if (userInfoError) {
+    // Don't re-authenticate when account center is disabled - the API will always reject
+    if (userInfoError && accountCenterSettings?.enabled) {
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
       setRouteRestore(window.location.pathname);
       void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
     }
   }, [
+    accountCenterSettings,
     isAuthenticated,
     isInCallback,
     isInitialAuthLoading,
@@ -138,6 +148,15 @@ const Main = () => {
 
   if (isInitialAuthLoading || isLoadingExperience || isLoadingUserInfo) {
     return <GlobalLoading />;
+  }
+
+  // Account center is explicitly disabled - show error page for all routes
+  if (accountCenterSettings?.enabled === false) {
+    return (
+      <Routes>
+        <Route path="*" element={<Home />} />
+      </Routes>
+    );
   }
 
   if (!userInfo) {
