@@ -59,6 +59,8 @@ const useCurrentUser = () => {
           .json<UserProfileResponse>();
         await mutate({ ...user, customData: data.customData });
       } catch (error: unknown) {
+        // TODO: Move shared Account API error handling into `useAccountApi()` once we define
+        // how callers opt into the right UX (for example toast versus modal feedback).
         if (error instanceof HTTPError) {
           const { response } = error;
 
