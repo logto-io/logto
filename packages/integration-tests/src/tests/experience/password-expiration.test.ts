@@ -19,6 +19,23 @@ describe('password expiration', () => {
     password = generatePassword();
   })();
 
+  /**
+   * Build a stable reminder scenario without relying on wall-clock timing.
+   * Step 1: enable 2/1 and call `expire` to pin password age at 2 days.
+   * Step 2: switch policy to 3/1 so the same user is now 1 day from expiration.
+   * Result: the user is in the reminder window (`password.expiration_reminder`)
+   * but not yet expired (`password.expired`), which is exactly what these tests need.
+   */
+  const prepareReminderState = async () => {
+    if (!context.userId) {
+      return;
+    }
+
+    await enablePasswordExpiration({ validPeriodDays: 2, reminderPeriodDays: 1 });
+    await expireUserPassword(context.userId);
+    await enablePasswordExpiration({ validPeriodDays: 3, reminderPeriodDays: 1 });
+  };
+
   beforeAll(async () => {
     await updateSignInExperience({
       signInMode: SignInMode.SignInAndRegister,
@@ -82,7 +99,7 @@ describe('password expiration', () => {
   });
 
   it('should show the password expiration reminder modal when password is near expiration', async () => {
-    await enablePasswordExpiration({ validPeriodDays: 2, reminderPeriodDays: 2 });
+    await prepareReminderState();
 
     const experience = new ExpectExperience(await browser.newPage());
     await experience.startWith(demoAppUrl, 'sign-in');
@@ -102,7 +119,7 @@ describe('password expiration', () => {
   });
 
   it('should continue sign-in when skipping password expiration reminder', async () => {
-    await enablePasswordExpiration({ validPeriodDays: 2, reminderPeriodDays: 2 });
+    await prepareReminderState();
 
     const experience = new ExpectExperience(await browser.newPage());
     await experience.startWith(demoAppUrl, 'sign-in');
@@ -118,7 +135,7 @@ describe('password expiration', () => {
   });
 
   it('should navigate to password reset page when choosing to reset from reminder modal', async () => {
-    await enablePasswordExpiration({ validPeriodDays: 2, reminderPeriodDays: 2 });
+    await prepareReminderState();
 
     const experience = new ExpectExperience(await browser.newPage());
     await experience.startWith(demoAppUrl, 'sign-in');
