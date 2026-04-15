@@ -7,7 +7,7 @@ import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
 import { getUserInfo } from '@ac/apis/user';
 import useApi from '@ac/hooks/use-api';
-import { changeLanguage, getPreferredLanguage } from '@ac/i18n/utils';
+import { changeLanguage, getPreferredLanguageCandidates } from '@ac/i18n/utils';
 import { getUiLocales } from '@ac/utils/account-center-route';
 import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/theme';
 
@@ -134,7 +134,7 @@ const PageContextProvider = ({ children }: Props) => {
           getAccountCenterSettings(),
         ]);
         await changeLanguage(
-          getPreferredLanguage({
+          getPreferredLanguageCandidates({
             languageSettings: settings.languageInfo,
             uiLocales: getUiLocales(),
           })
