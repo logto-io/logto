@@ -87,6 +87,9 @@ const Main = () => {
   const isAuthCallback =
     Boolean(params.get('code')) &&
     (pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`);
+  const isSilentAuthFailed =
+    params.get('error') === 'login_required' &&
+    (pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`);
   const isInCallback = isSocialCallback || isAuthCallback;
   const uiLocales = getUiLocales();
   const { isAuthenticated, isLoading, signIn } = useLogto();
@@ -105,6 +108,13 @@ const Main = () => {
       return;
     }
 
+    if (isSilentAuthFailed && accountCenterSettings?.enabled) {
+      // Prompt=none failed (no valid OIDC session); fall back to an explicit login.
+      const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+      void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
+      return;
+    }
+
     if (!isAuthenticated && accountCenterSettings?.enabled) {
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
       setRouteRestore(window.location.pathname);
@@ -115,26 +125,37 @@ const Main = () => {
     isInCallback,
     isInitialAuthLoading,
     isLoadingExperience,
+    isSilentAuthFailed,
     accountCenterSettings,
     signIn,
     uiLocales,
   ]);
 
   useEffect(() => {
-    if (isInCallback || isInitialAuthLoading || !isAuthenticated || isLoadingUserInfo) {
+    if (
+      isInCallback ||
+      isSilentAuthFailed ||
+      isInitialAuthLoading ||
+      !isAuthenticated ||
+      isLoadingUserInfo
+    ) {
       return;
     }
 
-    // Don't re-authenticate when account center is disabled - the API will always reject
+    // Skip re-authentication when account center is disabled - the API will always reject.
+    // Otherwise let the OIDC provider decide: silent re-auth via the session cookie if
+    // possible, and on failure it redirects back with error=login_required so the effect
+    // above can trigger an explicit Prompt.Login.
     if (userInfoError && accountCenterSettings?.enabled) {
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
       setRouteRestore(window.location.pathname);
-      void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
+      void signIn({ redirectUri, prompt: Prompt.None, extraParams });
     }
   }, [
     accountCenterSettings,
     isAuthenticated,
     isInCallback,
+    isSilentAuthFailed,
     isInitialAuthLoading,
     isLoadingUserInfo,
     signIn,
