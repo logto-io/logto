@@ -38,7 +38,9 @@ const htmlToPlainTextForEmail = (html: string): string => {
     return next === input ? input : stripUntilStable(next);
   };
 
-  return stripUntilStable(html);
+  // Ensure no angle brackets remain even if the input contains malformed / partial tags (e.g. "<script")
+  // so downstream systems won't treat the derived text as HTML.
+  return stripUntilStable(html).replaceAll('<', '').replaceAll('>', '');
 };
 type BuildMailJunkyBodyInput = {
   to: string;
