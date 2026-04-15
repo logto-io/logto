@@ -30,6 +30,7 @@ const sessionModelName = 'Session';
  */
 // Hard-code this value since 3 seconds is a reasonable number for concurrency and no need for further configuration
 const refreshTokenReuseInterval = 3;
+const revokeInstanceBatchSize = 1000;
 
 const isConsumed = (modelName: string, consumedAt: Nullable<number>): boolean => {
   if (!consumedAt) {
@@ -181,12 +182,27 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const revokeInstanceByGrantId = async (modelName: string, grantId: string) => {
-    await pool.query(sql`
-      delete from ${table}
-      where ${fields.modelName}=${modelName}
-      and ${fields.payload} ? 'grantId'
-      and ${fields.payload}->>'grantId'=${grantId}
-    `);
+    const revokeNextBatch = async (): Promise<void> => {
+      const { rowCount } = await pool.query(sql`
+        delete from ${table}
+        where ${fields.id} in (
+          select ${fields.id}
+          from ${table}
+          where ${fields.modelName}=${modelName}
+          and ${fields.payload} ? 'grantId'
+          and ${fields.payload}->>'grantId'=${grantId}
+          limit ${revokeInstanceBatchSize}
+        )
+      `);
+
+      if (rowCount === 0) {
+        return;
+      }
+
+      await revokeNextBatch();
+    };
+
+    await revokeNextBatch();
   };
 
   const revokeInstanceByUserId = async (modelName: string, userId: string) => {
