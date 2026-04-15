@@ -18,6 +18,7 @@ import {
   replaceSendMessageHandlebars,
   validateConfig,
 } from '@logto/connector-kit';
+import { convert as htmlToText } from 'html-to-text';
 
 import { defaultMetadata, endpoint } from './constant.js';
 import { mailJunkyConfigGuard, type PublicParameters } from './types.js';
@@ -26,21 +27,24 @@ const formatFrom = (fromEmail: string, fromName?: string): string =>
   fromName ? `${fromName} <${fromEmail}>` : fromEmail;
 
 /**
- * Derive multipart `text` from HTML templates. Repeatedly removes complete
- * `...>` tag sequences until quiescence so stripping is not a single fragile
- * replace (satisfies CodeQL incomplete multi-character sanitization).
+ * Derive multipart `text` from HTML templates.
+ *
+ * Note: Keep this conversion robust for malformed HTML (e.g. "<script" without ">")
+ * and ensure the derived string cannot be interpreted as HTML downstream.
  */
 const htmlToPlainTextForEmail = (html: string): string => {
-  const tagPattern = /<[^>]*>/g;
-  const stripOnePass = (input: string): string => input.replaceAll(tagPattern, '');
-  const stripUntilStable = (input: string): string => {
-    const next = stripOnePass(input);
-    return next === input ? input : stripUntilStable(next);
-  };
+  const text = htmlToText(html, {
+    wordwrap: false,
+    // Keep output compact and stable across environments.
+    selectors: [
+      { selector: 'a', options: { hideLinkHrefIfSameAsText: true } },
+      { selector: 'img', format: 'skip' },
+    ],
+  });
 
   // Ensure no angle brackets remain even if the input contains malformed / partial tags (e.g. "<script")
   // so downstream systems won't treat the derived text as HTML.
-  return stripUntilStable(html).replaceAll('<', '').replaceAll('>', '');
+  return text.replaceAll('<', '').replaceAll('>', '');
 };
 type BuildMailJunkyBodyInput = {
   to: string;

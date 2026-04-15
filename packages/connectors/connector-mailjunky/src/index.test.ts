@@ -161,6 +161,31 @@ describe('MailJunky connector', () => {
     });
   });
 
+  it('should derive safe plain-text from malformed HTML', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Malformed',
+      content: 'Hello <script',
+      contentType: 'text/html',
+      sendFrom: 'Sender',
+    });
+
+    nockSend({
+      from: `Sender <${mockedConfig.fromEmail}>`,
+      to: toEmail,
+      subject: 'Malformed',
+      html: 'Hello <script',
+      text: 'Hello script',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: {},
+    });
+  });
+
   it('should throw when MailJunky returns HTTP error', async () => {
     nock(apiOrigin).post('/api/v1/emails/send').reply(400, { message: 'bad request' });
 
