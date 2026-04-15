@@ -3,7 +3,7 @@ import nock from 'nock';
 import { ConnectorError, TemplateType } from '@logto/connector-kit';
 
 import createConnector from './index.js';
-import { mockedConfig, mockedFrom, mockedGenericEmailParameters, toEmail } from './mock.js';
+import { mockedConfig, mockedGenericEmailParameters, toEmail } from './mock.js';
 
 const getConfig = vi.fn();
 const getI18nEmailTemplate = vi.fn().mockResolvedValue(null);
@@ -83,9 +83,9 @@ describe('MailJunky connector', () => {
 
   it('should send organization invitation email with default config', async () => {
     nockSend({
-      ...mockedGenericEmailParameters,
+      from: mockedGenericEmailParameters.from,
+      to: mockedGenericEmailParameters.to,
       subject: 'Organization invitation',
-      html: 'Your link is https://example.com',
       text: 'Your link is https://example.com',
     });
 
@@ -118,7 +118,7 @@ describe('MailJunky connector', () => {
     });
 
     nockSend({
-      from: mockedFrom,
+      from: `Test app <${mockedConfig.fromEmail}>`,
       to: toEmail,
       subject: 'Passcode 123456',
       html: '<p>Your passcode is 123456</p>',
@@ -134,6 +134,30 @@ describe('MailJunky connector', () => {
         code: '123456',
         application: { name: 'Test app' },
       },
+    });
+  });
+
+  it('should send plain-text email when custom template contentType is text/plain', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Plain {{code}}',
+      content: 'Your code is {{code}}',
+      contentType: 'text/plain',
+      sendFrom: 'Plain Sender',
+    });
+
+    nockSend({
+      from: `Plain Sender <${mockedConfig.fromEmail}>`,
+      to: toEmail,
+      subject: 'Plain 123456',
+      text: 'Your code is 123456',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
     });
   });
 

@@ -6,6 +6,7 @@ import type {
   EmailConnector,
   GetConnectorConfig,
   GetI18nEmailTemplate,
+  EmailTemplateDetails,
   SendMessageFunction,
   SendMessagePayload,
 } from '@logto/connector-kit';
@@ -43,20 +44,32 @@ type BuildMailJunkyBodyInput = {
   to: string;
   subject: string;
   content: string;
+  contentType?: 'text/html' | 'text/plain';
   payload: SendMessagePayload;
   fromEmail: string;
   fromName?: string;
 };
 
 const buildParameters = (input: BuildMailJunkyBodyInput): PublicParameters => {
-  const { to, subject, content, payload, fromEmail, fromName } = input;
+  const { to, subject, content, contentType = 'text/html', payload, fromEmail, fromName } = input;
   const renderedSubject = replaceSendMessageHandlebars(subject, payload);
   const renderedContent = replaceSendMessageHandlebars(content, payload);
 
-  return {
+  const base: PublicParameters = {
     from: formatFrom(fromEmail, fromName),
     to,
     subject: renderedSubject,
+  };
+
+  if (contentType === 'text/plain') {
+    return {
+      ...base,
+      text: renderedContent,
+    };
+  }
+
+  return {
+    ...base,
     html: renderedContent,
     text: htmlToPlainTextForEmail(renderedContent),
   };
@@ -76,19 +89,45 @@ const sendMessage =
     // 1. Try to get i18n template, fallback to connector config
     const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
     const template = getConfigTemplateByType(type, config);
-    const finalTemplate = customTemplate ?? template;
+    assert(customTemplate ?? template, new ConnectorError(ConnectorErrorCodes.TemplateNotFound));
 
-    assert(finalTemplate, new ConnectorError(ConnectorErrorCodes.TemplateNotFound));
+    const buildParametersFromCustomTemplate = (
+      details: EmailTemplateDetails,
+      fromEmail: string,
+      fromName?: string
+    ): PublicParameters => {
+      const { subject, content, contentType = 'text/html', sendFrom } = details;
+      const overriddenFromName = sendFrom
+        ? replaceSendMessageHandlebars(sendFrom, payload)
+        : fromName;
+
+      return buildParameters({
+        to,
+        subject,
+        content,
+        contentType,
+        payload,
+        fromEmail,
+        fromName: overriddenFromName,
+      });
+    };
 
     // 2. Build the MailJunky payload (includes `from` per API / SDK)
-    const parameters = buildParameters({
-      to,
-      subject: finalTemplate.subject,
-      content: finalTemplate.content,
-      payload,
-      fromEmail: config.fromEmail,
-      fromName: config.fromName,
-    });
+    const parameters = customTemplate
+      ? buildParametersFromCustomTemplate(customTemplate, config.fromEmail, config.fromName)
+      : (() => {
+          assert(template, new ConnectorError(ConnectorErrorCodes.TemplateNotFound));
+
+          return buildParameters({
+            to,
+            subject: template.subject,
+            content: template.content,
+            contentType: template.type,
+            payload,
+            fromEmail: config.fromEmail,
+            fromName: config.fromName,
+          });
+        })();
 
     try {
       return await got.post(endpoint, {

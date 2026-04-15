@@ -22,6 +22,7 @@ const requiredTemplateUsageTypes = ['Register', 'SignIn', 'ForgotPassword', 'Gen
 
 const templateGuard = z.object({
   usageType: z.string(),
+  type: z.union([z.literal('text/html'), z.literal('text/plain')]).optional(),
   subject: z.string(),
   content: z.string(), // With variable {{code}}, support HTML
 });
