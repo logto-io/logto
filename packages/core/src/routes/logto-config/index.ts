@@ -22,6 +22,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import {
   getImmediatelyRotatedOidcPrivateKeys,
   getOidcPrivateKeysAfterDeletion,
+  normalizeOidcPrivateKeys,
 } from '#src/libraries/oidc-private-key.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import defaults from '#src/oidc/defaults.js';
@@ -256,7 +257,15 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
 
       const updatedKeys =
         configKey === LogtoOidcConfigKey.PrivateKeys
-          ? getImmediatelyRotatedOidcPrivateKeys(existingKeys, newPrivateKey)
+          ? (() => {
+              const privateKeys = normalizeOidcPrivateKeys(existingKeys);
+
+              if (privateKeys.some(({ status }) => status === OidcSigningKeyStatus.Next)) {
+                throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
+              }
+
+              return getImmediatelyRotatedOidcPrivateKeys(privateKeys, newPrivateKey);
+            })()
           : [newPrivateKey, ...existingKeys].slice(0, 2);
 
       await (configKey === LogtoOidcConfigKey.PrivateKeys

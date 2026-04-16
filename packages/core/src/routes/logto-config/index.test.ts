@@ -281,4 +281,22 @@ describe('configs routes', () => {
       { ...newPrivateKey, status: OidcSigningKeyStatus.Previous },
     ]);
   });
+
+  it('rejects immediate private-key rotation when a staged Next key already exists', async () => {
+    logtoConfigLibraries.getOidcConfigs.mockResolvedValueOnce({
+      [LogtoOidcConfigKey.PrivateKeys]: [
+        { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
+        { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+        { ...previousPrivateKey, status: OidcSigningKeyStatus.Previous },
+      ],
+      [LogtoOidcConfigKey.CookieKeys]: mockCookieKeys,
+    });
+
+    await expect(routeRequester.post('/configs/oidc/private-keys/rotate')).resolves.toHaveProperty(
+      'status',
+      422
+    );
+
+    expect(logtoConfigQueries.updatePrivateSigningKeys).not.toHaveBeenCalled();
+  });
 });
