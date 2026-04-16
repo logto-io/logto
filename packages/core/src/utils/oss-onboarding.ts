@@ -1,6 +1,4 @@
-import { adminTenantId, type User } from '@logto/schemas';
-
-const ossOnboardingDataKey = 'ossOnboarding';
+import { adminTenantId, ossUserOnboardingDataKey, type User } from '@logto/schemas';
 
 export const getInitialOssOnboardingCustomData = ({
   isCloud,
@@ -16,7 +14,7 @@ export const getInitialOssOnboardingCustomData = ({
   }
 
   return {
-    [ossOnboardingDataKey]: {
+    [ossUserOnboardingDataKey]: {
       isOnboardingDone: false,
     },
   };

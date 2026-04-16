@@ -1,28 +1,14 @@
-import { CompanySize, Project } from '@logto/schemas';
+import {
+  ossUserOnboardingDataGuard,
+  ossUserOnboardingDataKey,
+  type OssUserOnboardingData,
+} from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 import { useCallback, useMemo } from 'react';
-import { z } from 'zod';
 
 import { isCloud } from '@/consts/env';
 
 import useCurrentUser from './use-current-user';
-
-const ossUserOnboardingDataKey = 'ossOnboarding';
-
-const ossQuestionnaireGuard = z.object({
-  emailAddress: z.string().optional(),
-  newsletter: z.boolean().optional(),
-  project: z.nativeEnum(Project).optional(),
-  companyName: z.string().optional(),
-  companySize: z.nativeEnum(CompanySize).optional(),
-});
-
-const ossUserOnboardingDataGuard = z.object({
-  questionnaire: ossQuestionnaireGuard.optional(),
-  isOnboardingDone: z.boolean().optional(),
-});
-
-type OssUserOnboardingData = z.infer<typeof ossUserOnboardingDataGuard>;
 
 const useOssOnboardingData = (): {
   data: OssUserOnboardingData;
