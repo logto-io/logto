@@ -296,22 +296,81 @@ describe('oidc-model-instance query', () => {
 
   it('revokeInstanceByGrantId', async () => {
     const grantId = 'grant';
+    const batchSize = 1000;
 
     const expectSql = sql`
       delete from ${table}
-      where ${fields.modelName}=$1
-      and ${fields.payload} ? 'grantId'
-      and ${fields.payload}->>'grantId'=$2
+      where ${fields.id} in (
+        select ${fields.id}
+        from ${table}
+        where ${fields.modelName}=$1
+        and ${fields.payload} ? 'grantId'
+        and ${fields.payload}->>'grantId'=$2
+        limit $3
+      )
     `;
 
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([instance.modelName, grantId]);
+    mockQuery
+      // @ts-expect-error - mock delete query
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, expectSql.sql);
+        expect(values).toEqual([instance.modelName, grantId, batchSize]);
 
-      return createMockQueryResult([]);
-    });
+        return { rowCount: 1000 };
+      })
+      // @ts-expect-error - mock delete query
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, expectSql.sql);
+        expect(values).toEqual([instance.modelName, grantId, batchSize]);
+
+        return { rowCount: 0 };
+      });
 
     await revokeInstanceByGrantId(instance.modelName, grantId);
+    expect(mockQuery).toHaveBeenCalledTimes(2);
+  });
+
+  it('revokeInstanceByGrantId should continue until no rows are deleted', async () => {
+    const grantId = 'grant';
+    const batchSize = 1000;
+
+    const expectSql = sql`
+      delete from ${table}
+      where ${fields.id} in (
+        select ${fields.id}
+        from ${table}
+        where ${fields.modelName}=$1
+        and ${fields.payload} ? 'grantId'
+        and ${fields.payload}->>'grantId'=$2
+        limit $3
+      )
+    `;
+
+    mockQuery
+      // @ts-expect-error - mock delete query
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, expectSql.sql);
+        expect(values).toEqual([instance.modelName, grantId, batchSize]);
+
+        return { rowCount: 500 };
+      })
+      // @ts-expect-error - mock delete query
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, expectSql.sql);
+        expect(values).toEqual([instance.modelName, grantId, batchSize]);
+
+        return { rowCount: 200 };
+      })
+      // @ts-expect-error - mock delete query
+      .mockImplementationOnce(async (sql, values) => {
+        expectSqlAssert(sql, expectSql.sql);
+        expect(values).toEqual([instance.modelName, grantId, batchSize]);
+
+        return { rowCount: 0 };
+      });
+
+    await revokeInstanceByGrantId(instance.modelName, grantId);
+    expect(mockQuery).toHaveBeenCalledTimes(3);
   });
 
   it('findUserActiveApplicationGrants with thirdparty', async () => {
