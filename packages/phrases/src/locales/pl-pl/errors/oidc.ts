@@ -20,7 +20,7 @@ const oidc = {
   custom_claims_script_error: 'Błąd skryptu niestandardowych claims: {{error_description}}',
   key_required: 'Wymagany jest co najmniej jeden klucz.',
   key_not_found: 'Nie znaleziono klucza o ID {{id}}.',
-  only_previous_key_can_be_deleted: 'Only a previous key can be deleted.',
+  only_previous_key_can_be_deleted: 'Można usunąć tylko poprzedni klucz.',
   invalid_session_payload: 'Nieprawidłowy ładunek sesji.',
   session_not_found: 'Nie znaleziono sesji.',
   invalid_session_account_id: 'Niezgodność ID konta sesji.',

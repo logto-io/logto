@@ -19,7 +19,7 @@ const oidc = {
   custom_claims_script_error: 'Erro no script de claims personalizados: {{error_description}}',
   key_required: 'Pelo menos uma chave é necessária.',
   key_not_found: 'A chave com ID {{id}} não foi encontrada.',
-  only_previous_key_can_be_deleted: 'Only a previous key can be deleted.',
+  only_previous_key_can_be_deleted: 'Apenas uma chave anterior pode ser eliminada.',
   invalid_session_payload: 'Carga de sessão inválida.',
   session_not_found: 'Sessão não encontrada.',
   invalid_session_account_id: 'Incompatibilidade do accountId da sessão.',
