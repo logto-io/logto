@@ -189,6 +189,8 @@ export default class GlobalValues {
   public readonly posthogPublicKey = process.env.POSTHOG_PUBLIC_KEY;
   /** The PostHog host URL for SDK to send events to. */
   public readonly posthogPublicHost = process.env.POSTHOG_PUBLIC_HOST;
+  /** Optional endpoint for relaying OSS onboarding survey submissions. */
+  public readonly ossSurveyEndpoint = getEnv('LOGTO_OSS_SURVEY_ENDPOINT').trim() || undefined;
 
   /**
    * The Redis endpoint (optional). If it's set, the central cache mechanism will be automatically enabled.

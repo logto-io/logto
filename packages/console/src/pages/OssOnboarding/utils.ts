@@ -1,4 +1,4 @@
-import { type CompanySize, Project, type JsonObject } from '@logto/schemas';
+import { type CompanySize, type OssQuestionnaire, Project } from '@logto/schemas';
 
 export type OssOnboardingFormData = {
   emailAddress: string;
@@ -18,9 +18,7 @@ export const getOssOnboardingDefaultValues = (): OssOnboardingFormData => ({
 
 export const shouldRequireCompanyFields = (project: Project) => project === Project.Company;
 
-export const getOssOnboardingSubmitPayload = (
-  data: OssOnboardingFormData
-): JsonObject & Partial<OssOnboardingFormData> => {
+export const getOssOnboardingSubmitPayload = (data: OssOnboardingFormData): OssQuestionnaire => {
   if (!shouldRequireCompanyFields(data.project)) {
     const { companyName: _companyName, companySize: _companySize, ...rest } = data;
 

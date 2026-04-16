@@ -41,6 +41,7 @@ import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config/index.js';
 import oneTimeTokenRoutes from './one-time-tokens.js';
 import organizationRoutes from './organization/index.js';
+import ossSurveyRoutes from './oss-survey/index.js';
 import publicWellKnownRoutes from './public-wellknown.js';
 import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
@@ -134,6 +135,7 @@ const createRouters = (tenant: TenantContext) => {
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
   samlApplicationAnonymousRoutes(anonymousRouter, tenant);
+  ossSurveyRoutes(anonymousRouter, tenant);
 
   wellKnownOpenApiRoutes(anonymousRouter, {
     experienceRouters: [experienceRouter],
