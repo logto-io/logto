@@ -19,6 +19,7 @@ const oidc = {
   custom_claims_script_error: 'خطأ في نص claims المخصص: {{error_description}}',
   key_required: 'مطلوب مفتاح واحد على الأقل.',
   key_not_found: 'لم يتم العثور على المفتاح بالمعرف {{id}}.',
+  only_previous_key_can_be_deleted: 'Only a previous key can be deleted.',
   invalid_session_payload: 'حمولة الجلسة غير صالحة.',
   session_not_found: 'لم يتم العثور على الجلسة.',
   invalid_session_account_id: 'عدم توافق معرف حساب الجلسة.',

@@ -21,6 +21,7 @@ const oidc = {
     'Errore dello script dei claims personalizzati: {{error_description}}',
   key_required: 'È richiesta almeno una chiave.',
   key_not_found: 'Chiave con ID {{id}} non trovata.',
+  only_previous_key_can_be_deleted: 'Only a previous key can be deleted.',
   invalid_session_payload: 'Payload di sessione non valido.',
   session_not_found: 'Sessione non trovata.',
   invalid_session_account_id: "L'accountId della sessione non corrisponde.",

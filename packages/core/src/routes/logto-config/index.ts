@@ -6,17 +6,23 @@ import {
 } from '@logto/cli/lib/commands/database/utils.js';
 import {
   LogtoOidcConfigKey,
+  OidcSigningKeyStatus,
   adminConsoleDataGuard,
   oidcConfigKeysResponseGuard,
   SupportedSigningKeyAlgorithm,
   type OidcConfigKeysResponse,
   type OidcConfigKey,
+  type OidcPrivateKey,
   LogtoOidcConfigKeyType,
   oidcSessionConfigGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  getImmediatelyRotatedOidcPrivateKeys,
+  getOidcPrivateKeysAfterDeletion,
+} from '#src/libraries/oidc-private-key.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import defaults from '#src/oidc/defaults.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
@@ -48,16 +54,17 @@ const oidcSessionConfigResponseGuard = oidcSessionConfigGuard.required({ ttl: tr
  */
 const getRedactedOidcKeyResponse = async (
   type: LogtoOidcConfigKey,
-  keys: OidcConfigKey[]
+  keys: Array<OidcConfigKey | OidcPrivateKey>
 ): Promise<OidcConfigKeysResponse[]> =>
   Promise.all(
-    keys.map(async ({ id, value, createdAt }) => {
+    keys.map(async ({ id, value, createdAt, ...rest }) => {
       if (type === LogtoOidcConfigKey.PrivateKeys) {
         const jwk = await exportJWK(crypto.createPrivateKey(value));
         const parseResult = oidcConfigKeysResponseGuard.safeParse({
           id,
           createdAt,
           signingKeyAlgorithm: jwk.kty,
+          status: 'status' in rest ? rest.status : undefined,
         });
         if (!parseResult.success) {
           throw new RequestError({ code: 'request.general', status: 422 });
@@ -191,7 +198,22 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
         throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
       }
 
-      const updatedKeys = existingKeys.filter(({ id }) => id !== keyId);
+      const updatedKeys =
+        configKey === LogtoOidcConfigKey.PrivateKeys
+          ? (() => {
+              const privateKeys = configs[LogtoOidcConfigKey.PrivateKeys];
+              const deletingKey = privateKeys.find(({ id }) => id === keyId);
+
+              if (deletingKey?.status !== OidcSigningKeyStatus.Previous) {
+                throw new RequestError({
+                  code: 'oidc.only_previous_key_can_be_deleted',
+                  status: 422,
+                });
+              }
+
+              return getOidcPrivateKeysAfterDeletion(privateKeys, keyId);
+            })()
+          : existingKeys.filter(({ id }) => id !== keyId);
 
       await updateOidcConfigsByKey(configKey, updatedKeys);
       void tenant.invalidateCache();
@@ -226,9 +248,10 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
           ? await generateOidcPrivateKey(signingKeyAlgorithm)
           : generateOidcCookieKey();
 
-      // Clamp and only keep the 2 most recent private keys.
-      // Also make sure the new key is always on top of the list.
-      const updatedKeys = [newPrivateKey, ...existingKeys].slice(0, 2);
+      const updatedKeys =
+        configKey === LogtoOidcConfigKey.PrivateKeys
+          ? getImmediatelyRotatedOidcPrivateKeys(existingKeys, newPrivateKey)
+          : [newPrivateKey, ...existingKeys].slice(0, 2);
 
       await updateOidcConfigsByKey(configKey, updatedKeys);
       void tenant.invalidateCache();

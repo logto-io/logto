@@ -20,6 +20,7 @@ const oidc = {
   custom_claims_script_error: 'Özel claims betiği hatası: {{error_description}}',
   key_required: 'En az bir anahtar gereklidir.',
   key_not_found: "ID'si {{id}} olan anahtar bulunamadı.",
+  only_previous_key_can_be_deleted: 'Only a previous key can be deleted.',
   invalid_session_payload: 'Geçersiz oturum yükü.',
   session_not_found: 'Oturum bulunamadı.',
   invalid_session_account_id: 'Oturum accountId uyumsuzluğu.',

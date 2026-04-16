@@ -5,12 +5,13 @@ import { LogtoOidcConfigKey } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { createLocalJWKSet } from 'jose';
 
+import { getOidcProviderPrivateKeys } from '#src/libraries/oidc-private-key.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
 const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
   const cookieKeys = configs[LogtoOidcConfigKey.CookieKeys].map(({ value }) => value);
-  const privateKeys = configs[LogtoOidcConfigKey.PrivateKeys].map(({ value }) =>
-    crypto.createPrivateKey(value)
+  const privateKeys = getOidcProviderPrivateKeys(configs[LogtoOidcConfigKey.PrivateKeys]).map(
+    ({ value }) => crypto.createPrivateKey(value)
   );
   const session = configs[LogtoOidcConfigKey.Session];
   const publicKeys = privateKeys.map((key) => crypto.createPublicKey(key));

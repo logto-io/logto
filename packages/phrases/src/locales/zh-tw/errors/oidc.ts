@@ -19,6 +19,7 @@ const oidc = {
   custom_claims_script_error: '自訂 claims 腳本錯誤：{{error_description}}',
   key_required: '至少需要一個金鑰。',
   key_not_found: '未找到 ID 為 {{id}} 的金鑰。',
+  only_previous_key_can_be_deleted: 'Only a previous key can be deleted.',
   invalid_session_payload: '無效的會話負載。',
   session_not_found: '未找到會話。',
   invalid_session_account_id: '會話 accountId 不匹配。',

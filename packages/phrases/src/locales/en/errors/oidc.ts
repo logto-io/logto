@@ -21,6 +21,7 @@ const oidc = {
   custom_claims_script_error: 'Custom claims script error: {{error_description}}',
   key_required: 'At least one key is required.',
   key_not_found: 'Key with ID {{id}} is not found.',
+  only_previous_key_can_be_deleted: 'Only a previous key can be deleted.',
   invalid_session_payload: 'Invalid session payload.',
   session_not_found: 'Session not found.',
   invalid_session_account_id: 'Session accountId mismatch.',
