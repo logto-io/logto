@@ -8,6 +8,7 @@ import {
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
@@ -124,11 +125,12 @@ export const sendCode = async ({
     await experienceInteraction.signInExperienceValidator.guardEmailBlocklist(codeVerification);
   }
 
-  // For forgot-password flows, check if the user actually exists.
-  // If not, we still create the passcode record in the database (so the verify step
-  // returns a consistent `code_mismatch` error instead of `not_found`, preventing
-  // account enumeration), but skip the actual message delivery to avoid spam.
+  // When dev features are enabled, forgot-password requests check whether the user
+  // actually exists. For unknown identifiers we still create the passcode record
+  // (so verification returns `code_mismatch` instead of `not_found`), but skip
+  // the actual message delivery to avoid account enumeration and spam abuse.
   const skipDelivery =
+    EnvSet.values.isDevFeaturesEnabled &&
     interactionEvent === InteractionEvent.ForgotPassword &&
     !(await hasUserWithIdentifier(queries, identifier));
 
