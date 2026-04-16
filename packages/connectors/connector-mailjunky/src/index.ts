@@ -26,6 +26,33 @@ import { mailJunkyConfigGuard, type PublicParameters } from './types.js';
 const formatFrom = (fromEmail: string, fromName?: string): string =>
   fromName ? `${fromName} <${fromEmail}>` : fromEmail;
 
+const parseSendFrom = (
+  renderedSendFrom: string,
+  fallbackEmail: string,
+  fallbackName?: string
+): { fromEmail: string; fromName?: string } => {
+  const value = renderedSendFrom.trim();
+
+  // Format: "Name <email@domain>"
+  const match = /^(.*?)<\s*([^>]+)\s*>$/.exec(value);
+  if (match) {
+    const name = match[1]?.trim();
+    const email = match[2]?.trim();
+
+    if (email) {
+      return { fromEmail: email, fromName: name?.length ? name : undefined };
+    }
+  }
+
+  // Format: "email@domain" (no display name)
+  if (value.includes('@') && !value.includes(' ')) {
+    return { fromEmail: value, fromName: undefined };
+  }
+
+  // Otherwise treat as display name only
+  return { fromEmail: fallbackEmail, fromName: value.length > 0 ? value : fallbackName };
+};
+
 /**
  * Derive multipart `text` from HTML templates.
  *
@@ -103,9 +130,12 @@ const sendMessage =
       fromName?: string
     ): PublicParameters => {
       const { subject, content, contentType = 'text/html', sendFrom } = details;
-      const overriddenFromName = sendFrom
+      const renderedSendFrom = sendFrom
         ? replaceSendMessageHandlebars(sendFrom, payload)
-        : fromName;
+        : undefined;
+      const overriddenFrom = renderedSendFrom
+        ? parseSendFrom(renderedSendFrom, fromEmail, fromName)
+        : { fromEmail, fromName };
 
       return buildParameters({
         to,
@@ -113,8 +143,8 @@ const sendMessage =
         content,
         contentType,
         payload,
-        fromEmail,
-        fromName: overriddenFromName,
+        fromEmail: overriddenFrom.fromEmail,
+        fromName: overriddenFrom.fromName,
       });
     };
 
