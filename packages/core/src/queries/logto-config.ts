@@ -79,7 +79,12 @@ export const createLogtoConfigQueries = (
     }
   };
 
-  const updateOidcConfigsByKey = async <T extends LogtoOidcConfigKey>(
+  const updatePrivateSigningKeys = async (privateKeys: OidcPrivateKey[]) =>
+    upsertPrivateSigningKeys(pool, privateKeys);
+
+  const updateOidcConfigsByKey = async <
+    T extends Exclude<LogtoOidcConfigKey, LogtoOidcConfigKey.PrivateKeys>,
+  >(
     key: T,
     value: LogtoOidcConfigType[T]
   ) =>
@@ -196,6 +201,7 @@ export const createLogtoConfigQueries = (
     updateAdminConsoleConfig,
     getCloudConnectionData,
     getRowsByKeys,
+    updatePrivateSigningKeys,
     updateOidcConfigsByKey,
     getSigningKeyRotationState,
     upsertSigningKeyRotationState,

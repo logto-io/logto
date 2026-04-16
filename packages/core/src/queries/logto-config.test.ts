@@ -31,6 +31,7 @@ const {
   getSigningKeyRotationState,
   upsertSigningKeyRotationState,
   updateAdminConsoleConfig,
+  updatePrivateSigningKeys,
   updateOidcConfigsByKey,
   updatePrivateSigningKeysAndRotationState,
 } = createLogtoConfigQueries(pool, new MockWellKnownCache());
@@ -123,8 +124,15 @@ describe('connector queries', () => {
     expect(result.rows).toEqual(rowData);
   });
 
-  test('updateOidcConfigsByKey', async () => {
-    const targetValue = [{ id: 'foo', value: 'bar', createdAt: 123_456_789 }];
+  test('updatePrivateSigningKeys', async () => {
+    const targetValue = [
+      {
+        id: 'foo',
+        value: 'bar',
+        createdAt: 123_456_789,
+        status: OidcSigningKeyStatus.Current,
+      },
+    ];
     const targetRowData = [
       { key: LogtoOidcConfigKey.PrivateKeys, value: JSON.stringify(targetValue) },
     ];
@@ -135,7 +143,7 @@ describe('connector queries', () => {
         on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
           targetValue
         )}
-        returning *
+        returning ${fields.key}, ${fields.value}
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -149,7 +157,34 @@ describe('connector queries', () => {
       return createMockQueryResult(targetRowData);
     });
 
-    void updateOidcConfigsByKey(LogtoOidcConfigKey.PrivateKeys, targetValue);
+    void updatePrivateSigningKeys(targetValue);
+  });
+
+  test('updateOidcConfigsByKey', async () => {
+    const targetValue = { ttl: 123_456_789 };
+    const targetRowData = [{ key: LogtoOidcConfigKey.Session, value: JSON.stringify(targetValue) }];
+
+    const expectSql = sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${LogtoOidcConfigKey.Session}, ${sql.jsonb(targetValue)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
+          targetValue
+        )}
+        returning *
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toMatchObject([
+        LogtoOidcConfigKey.Session,
+        JSON.stringify(targetValue),
+        JSON.stringify(targetValue),
+      ]);
+
+      return createMockQueryResult(targetRowData);
+    });
+
+    void updateOidcConfigsByKey(LogtoOidcConfigKey.Session, targetValue);
   });
 
   test('getSigningKeyRotationState', async () => {

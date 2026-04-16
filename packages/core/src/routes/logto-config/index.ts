@@ -78,8 +78,12 @@ const getRedactedOidcKeyResponse = async (
 export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
-  const { getAdminConsoleConfig, updateAdminConsoleConfig, updateOidcConfigsByKey } =
-    tenant.queries.logtoConfigs;
+  const {
+    getAdminConsoleConfig,
+    updateAdminConsoleConfig,
+    updateOidcConfigsByKey,
+    updatePrivateSigningKeys,
+  } = tenant.queries.logtoConfigs;
   const { getOidcConfigs } = tenant.logtoConfigs;
 
   router.get(
@@ -215,7 +219,9 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
             })()
           : existingKeys.filter(({ id }) => id !== keyId);
 
-      await updateOidcConfigsByKey(configKey, updatedKeys);
+      await (configKey === LogtoOidcConfigKey.PrivateKeys
+        ? updatePrivateSigningKeys(updatedKeys)
+        : updateOidcConfigsByKey(configKey, updatedKeys));
       void tenant.invalidateCache();
 
       ctx.status = 204;
@@ -253,7 +259,9 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
           ? getImmediatelyRotatedOidcPrivateKeys(existingKeys, newPrivateKey)
           : [newPrivateKey, ...existingKeys].slice(0, 2);
 
-      await updateOidcConfigsByKey(configKey, updatedKeys);
+      await (configKey === LogtoOidcConfigKey.PrivateKeys
+        ? updatePrivateSigningKeys(updatedKeys)
+        : updateOidcConfigsByKey(configKey, updatedKeys));
       void tenant.invalidateCache();
 
       // Remove actual values of the private keys from response

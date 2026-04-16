@@ -29,6 +29,20 @@ describe('normalizeOidcPrivateKeys', () => {
     ]);
   });
 
+  it('keeps loading legacy private key arrays with more than two unstamped keys', () => {
+    const result = normalizeOidcPrivateKeys([
+      createPrivateKey('current', 1),
+      createPrivateKey('previous-a', 2),
+      createPrivateKey('previous-b', 3),
+    ]);
+
+    expect(result).toEqual([
+      createPrivateKey('current', 1, OidcSigningKeyStatus.Current),
+      createPrivateKey('previous-a', 2, OidcSigningKeyStatus.Previous),
+      createPrivateKey('previous-b', 3, OidcSigningKeyStatus.Previous),
+    ]);
+  });
+
   it('preserves explicit statuses without reordering the input array', () => {
     const result = normalizeOidcPrivateKeys([
       createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
@@ -125,5 +139,21 @@ describe('getOidcPrivateKeysAfterDeletion', () => {
     );
 
     expect(result).toEqual([createPrivateKey('current', 2, OidcSigningKeyStatus.Current)]);
+  });
+
+  it('preserves Next and Current statuses when deleting Previous from a staged key set', () => {
+    const result = getOidcPrivateKeysAfterDeletion(
+      [
+        createPrivateKey('next', 3, OidcSigningKeyStatus.Next),
+        createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+        createPrivateKey('previous', 1, OidcSigningKeyStatus.Previous),
+      ],
+      'previous'
+    );
+
+    expect(result).toEqual([
+      createPrivateKey('next', 3, OidcSigningKeyStatus.Next),
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+    ]);
   });
 });

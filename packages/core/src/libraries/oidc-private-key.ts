@@ -46,9 +46,9 @@ export const normalizeOidcPrivateKeys = (
     ({ status }) => status === OidcSigningKeyStatus.Previous
   );
 
-  if (currentKeys.length !== 1 || nextKeys.length > 1 || previousKeys.length > 1) {
+  if (currentKeys.length !== 1 || nextKeys.length > 1) {
     throw new Error(
-      'Malformed OIDC private key status configuration: expected exactly one Current key and at most one Next and Previous key.'
+      'Malformed OIDC private key status configuration: expected exactly one Current key and at most one Next key.'
     );
   }
 
@@ -110,9 +110,4 @@ export const getOidcPrivateKeysAfterDeletion = (
   privateKeys: LogtoOidcConfigType['oidc.privateKeys'],
   deletedKeyId: string
 ): OidcPrivateKey[] =>
-  getCanonicalOidcPrivateKeys(privateKeys)
-    .filter(({ id }) => id !== deletedKeyId)
-    .map((privateKey, index) => ({
-      ...privateKey,
-      status: index === 0 ? OidcSigningKeyStatus.Current : OidcSigningKeyStatus.Previous,
-    }));
+  getCanonicalOidcPrivateKeys(privateKeys).filter(({ id }) => id !== deletedKeyId);
