@@ -22,7 +22,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import {
   getImmediatelyRotatedOidcPrivateKeys,
   getOidcPrivateKeysAfterDeletion,
-  normalizeOidcPrivateKeys,
 } from '#src/libraries/oidc-private-key.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import defaults from '#src/oidc/defaults.js';
@@ -83,7 +82,7 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
     updateOidcConfigsByKey,
-    updatePrivateSigningKeys,
+    updatePrivateSigningKeysWithLock,
   } = tenant.queries.logtoConfigs;
   const { getOidcConfigs } = tenant.logtoConfigs;
 
@@ -192,24 +191,20 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { keyType, keyId } = ctx.guard.params;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
-      const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
-      const existingKeys = configs[configKey];
-
-      if (existingKeys.length <= 1) {
-        throw new RequestError({ code: 'oidc.key_required', status: 422 });
-      }
-
-      if (!existingKeys.some(({ id }) => id === keyId)) {
-        throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
-      }
-
       const updatedKeys =
         configKey === LogtoOidcConfigKey.PrivateKeys
-          ? (() => {
-              const privateKeys = configs[LogtoOidcConfigKey.PrivateKeys];
+          ? await updatePrivateSigningKeysWithLock((privateKeys) => {
+              if (privateKeys.length <= 1) {
+                throw new RequestError({ code: 'oidc.key_required', status: 422 });
+              }
+
               const deletingKey = privateKeys.find(({ id }) => id === keyId);
 
-              if (deletingKey?.status !== OidcSigningKeyStatus.Previous) {
+              if (!deletingKey) {
+                throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
+              }
+
+              if (deletingKey.status !== OidcSigningKeyStatus.Previous) {
                 throw new RequestError({
                   code: 'oidc.only_previous_key_can_be_deleted',
                   status: 422,
@@ -217,12 +212,23 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
               }
 
               return getOidcPrivateKeysAfterDeletion(privateKeys, keyId);
-            })()
-          : existingKeys.filter(({ id }) => id !== keyId);
+            })
+          : await (async () => {
+              const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
+              const existingKeys = configs[configKey];
 
-      await (configKey === LogtoOidcConfigKey.PrivateKeys
-        ? updatePrivateSigningKeys(updatedKeys)
-        : updateOidcConfigsByKey(configKey, updatedKeys));
+              if (existingKeys.length <= 1) {
+                throw new RequestError({ code: 'oidc.key_required', status: 422 });
+              }
+
+              if (!existingKeys.some(({ id }) => id === keyId)) {
+                throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
+              }
+
+              const updatedKeys = existingKeys.filter(({ id }) => id !== keyId);
+              await updateOidcConfigsByKey(configKey, updatedKeys);
+              return updatedKeys;
+            })();
       void tenant.invalidateCache();
 
       ctx.status = 204;
@@ -247,8 +253,6 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
       const { keyType } = ctx.guard.params;
       const { signingKeyAlgorithm } = ctx.guard.body;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
-      const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
-      const existingKeys = configs[configKey];
 
       const newPrivateKey =
         configKey === LogtoOidcConfigKey.PrivateKeys
@@ -257,20 +261,20 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
 
       const updatedKeys =
         configKey === LogtoOidcConfigKey.PrivateKeys
-          ? (() => {
-              const privateKeys = normalizeOidcPrivateKeys(existingKeys);
-
+          ? await updatePrivateSigningKeysWithLock((privateKeys) => {
               if (privateKeys.some(({ status }) => status === OidcSigningKeyStatus.Next)) {
                 throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
               }
 
               return getImmediatelyRotatedOidcPrivateKeys(privateKeys, newPrivateKey);
-            })()
-          : [newPrivateKey, ...existingKeys].slice(0, 2);
-
-      await (configKey === LogtoOidcConfigKey.PrivateKeys
-        ? updatePrivateSigningKeys(updatedKeys)
-        : updateOidcConfigsByKey(configKey, updatedKeys));
+            })
+          : await (async () => {
+              const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
+              const existingKeys = configs[configKey];
+              const updatedKeys = [newPrivateKey, ...existingKeys].slice(0, 2);
+              await updateOidcConfigsByKey(configKey, updatedKeys);
+              return updatedKeys;
+            })();
       void tenant.invalidateCache();
 
       // Remove actual values of the private keys from response

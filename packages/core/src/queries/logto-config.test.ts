@@ -27,11 +27,13 @@ const { createLogtoConfigQueries } = await import('./logto-config.js');
 const {
   getAdminConsoleConfig,
   getCloudConnectionData,
+  getPrivateSigningKeys,
   getRowsByKeys,
   getSigningKeyRotationState,
   upsertSigningKeyRotationState,
   updateAdminConsoleConfig,
   updatePrivateSigningKeys,
+  updatePrivateSigningKeysWithLock,
   updateOidcConfigsByKey,
   updatePrivateSigningKeysAndRotationState,
 } = createLogtoConfigQueries(pool, new MockWellKnownCache());
@@ -160,6 +162,42 @@ describe('connector queries', () => {
     void updatePrivateSigningKeys(targetValue);
   });
 
+  test('getPrivateSigningKeys', async () => {
+    const rowData = [
+      {
+        key: LogtoOidcConfigKey.PrivateKeys,
+        value: [
+          {
+            id: 'foo',
+            value: 'bar',
+            createdAt: 123_456_789,
+          },
+        ],
+      },
+    ];
+    const expectSql = sql`
+      select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+        where ${fields.key} in (${sql.join([LogtoOidcConfigKey.PrivateKeys], sql`,`)})
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([LogtoOidcConfigKey.PrivateKeys]);
+
+      return createMockQueryResult(rowData as never);
+    });
+
+    const result = await getPrivateSigningKeys();
+    expect(result).toEqual([
+      {
+        id: 'foo',
+        value: 'bar',
+        createdAt: 123_456_789,
+        status: OidcSigningKeyStatus.Current,
+      },
+    ]);
+  });
+
   test('updateOidcConfigsByKey', async () => {
     const targetValue = { ttl: 123_456_789 };
     const targetRowData = [{ key: LogtoOidcConfigKey.Session, value: JSON.stringify(targetValue) }];
@@ -243,6 +281,10 @@ describe('logto config transactional queries', () => {
   const methods = createMockCommonQueryMethods();
   const transactionalQueries = createLogtoConfigQueries(methods as never, new MockWellKnownCache());
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('updatePrivateSigningKeysAndRotationState', async () => {
     const privateKeys = [
       {
@@ -279,5 +321,50 @@ describe('logto config transactional queries', () => {
       privateKeys,
       signingKeyRotationState: rotationState,
     });
+  });
+
+  test('updatePrivateSigningKeysWithLock', async () => {
+    const currentPrivateKeys = [
+      {
+        id: 'current',
+        value: 'current-value',
+        createdAt: 123_456_789,
+        status: OidcSigningKeyStatus.Current,
+      },
+    ];
+    const updatedPrivateKeys = [
+      {
+        id: 'next-current',
+        value: 'next-value',
+        createdAt: 222_222_222,
+        status: OidcSigningKeyStatus.Current,
+      },
+      {
+        id: 'current',
+        value: 'current-value',
+        createdAt: 123_456_789,
+        status: OidcSigningKeyStatus.Previous,
+      },
+    ];
+
+    methods.transaction.mockImplementation(
+      async (handler: (transaction: typeof methods) => Promise<unknown>) => handler(methods)
+    );
+    methods.query.mockResolvedValueOnce({ rows: [] }).mockResolvedValueOnce({
+      rows: [{ key: LogtoOidcConfigKey.PrivateKeys, value: currentPrivateKeys }],
+    } as never);
+    methods.one.mockResolvedValueOnce({
+      key: LogtoOidcConfigKey.PrivateKeys,
+      value: updatedPrivateKeys,
+    });
+
+    const result = await transactionalQueries.updatePrivateSigningKeysWithLock(
+      () => updatedPrivateKeys
+    );
+
+    expect(methods.transaction).toHaveBeenCalledTimes(1);
+    expect(methods.query).toHaveBeenNthCalledWith(1, expectSqlString('for update'));
+    expect(methods.one).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(updatedPrivateKeys);
   });
 });

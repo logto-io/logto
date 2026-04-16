@@ -21,6 +21,7 @@ import { type z } from 'zod';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
+import { normalizeOidcPrivateKeys } from '#src/libraries/oidc-private-key.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
@@ -81,6 +82,38 @@ export const createLogtoConfigQueries = (
 
   const updatePrivateSigningKeys = async (privateKeys: OidcPrivateKey[]) =>
     upsertPrivateSigningKeys(pool, privateKeys);
+
+  const getPrivateSigningKeys = async (): Promise<OidcPrivateKey[]> => {
+    const { rows } = await getRowsByKeys([LogtoOidcConfigKey.PrivateKeys]);
+
+    return normalizeOidcPrivateKeys(oidcPrivateKeyGuard.array().parse(rows[0]?.value));
+  };
+
+  const updatePrivateSigningKeysWithLock = async (
+    updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]
+  ): Promise<OidcPrivateKey[]> =>
+    pool.transaction(async (transaction) => {
+      await transaction.query(sql`
+        select ${fields.key}
+        from ${table}
+        where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+        for update
+      `);
+
+      const { rows } = await transaction.query<LogtoConfig>(sql`
+        select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+        where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+      `);
+
+      const privateKeys = normalizeOidcPrivateKeys(
+        oidcPrivateKeyGuard.array().parse(rows[0]?.value)
+      );
+      const updatedPrivateKeys = updater(privateKeys);
+
+      await upsertPrivateSigningKeys(transaction, updatedPrivateKeys);
+
+      return updatedPrivateKeys;
+    });
 
   const updateOidcConfigsByKey = async <
     T extends Exclude<LogtoOidcConfigKey, LogtoOidcConfigKey.PrivateKeys>,
@@ -201,7 +234,9 @@ export const createLogtoConfigQueries = (
     updateAdminConsoleConfig,
     getCloudConnectionData,
     getRowsByKeys,
+    getPrivateSigningKeys,
     updatePrivateSigningKeys,
+    updatePrivateSigningKeysWithLock,
     updateOidcConfigsByKey,
     getSigningKeyRotationState,
     upsertSigningKeyRotationState,
