@@ -161,6 +161,31 @@ describe('MailJunky connector', () => {
     });
   });
 
+  it('should allow sendFrom to override email address when formatted as mailbox', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Mailbox {{code}}',
+      content: '<p>{{code}}</p>',
+      contentType: 'text/html',
+      sendFrom: 'Foo <notice@example.com>',
+    });
+
+    nockSend({
+      from: 'Foo <notice@example.com>',
+      to: toEmail,
+      subject: 'Mailbox 123456',
+      html: '<p>123456</p>',
+      text: '123456',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+  });
+
   it('should derive safe plain-text from malformed HTML', async () => {
     getI18nEmailTemplate.mockResolvedValue({
       subject: 'Malformed',
