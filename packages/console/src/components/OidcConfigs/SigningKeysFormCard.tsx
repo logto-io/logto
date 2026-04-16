@@ -1,5 +1,6 @@
 import {
   SupportedSigningKeyAlgorithm,
+  OidcSigningKeyStatus,
   type OidcConfigKeysResponse,
   LogtoOidcConfigKeyType,
 } from '@logto/schemas';
@@ -39,6 +40,40 @@ const keyTypeTabs = [
   },
 ] as const;
 
+const getSigningKeyTagStatus = (status?: OidcSigningKeyStatus) => {
+  switch (status) {
+    case OidcSigningKeyStatus.Current: {
+      return 'success';
+    }
+    case OidcSigningKeyStatus.Next: {
+      return 'info';
+    }
+    case OidcSigningKeyStatus.Previous: {
+      return 'alert';
+    }
+    default: {
+      return 'info';
+    }
+  }
+};
+
+const getSigningKeyLabel = (status?: OidcSigningKeyStatus) => {
+  switch (status) {
+    case OidcSigningKeyStatus.Current: {
+      return 'status.current';
+    }
+    case OidcSigningKeyStatus.Next: {
+      return 'status.next';
+    }
+    case OidcSigningKeyStatus.Previous: {
+      return 'status.previous';
+    }
+    default: {
+      return 'table_column.status';
+    }
+  }
+};
+
 function SigningKeysFormCard() {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.signing_keys' });
@@ -64,25 +99,37 @@ function SigningKeysFormCard() {
   const tableColumns = useMemo(
     () => [
       {
-        title: t('table_column.id'),
+        title: String(t('table_column.id')),
         dataIndex: 'id',
         colSpan: 8,
         render: ({ id }: OidcConfigKeysResponse) => <span className={styles.idWrapper}>{id}</span>,
       },
       {
-        title: t('table_column.status'),
+        title: String(t('table_column.status')),
         dataIndex: 'status',
         colSpan: 4,
-        render: (_: OidcConfigKeysResponse, rowIndex: number) => (
-          <Tag type="state" variant="plain" status={rowIndex === 0 ? 'success' : 'alert'}>
-            {t(rowIndex === 0 ? 'status.current' : 'status.previous')}
+        render: ({ status }: OidcConfigKeysResponse, rowIndex: number) => (
+          <Tag
+            type="state"
+            variant="plain"
+            status={
+              isPrivateKey ? getSigningKeyTagStatus(status) : rowIndex === 0 ? 'success' : 'alert'
+            }
+          >
+            {t(
+              isPrivateKey
+                ? getSigningKeyLabel(status)
+                : rowIndex === 0
+                  ? 'status.current'
+                  : 'status.previous'
+            )}
           </Tag>
         ),
       },
       ...condArray(
         isPrivateKey && [
           {
-            title: t('table_column.algorithm'),
+            title: String(t('table_column.algorithm')),
             dataIndex: 'signingKeyAlgorithm',
             colSpan: 7,
             render: ({ signingKeyAlgorithm }: OidcConfigKeysResponse) => (
@@ -95,8 +142,8 @@ function SigningKeysFormCard() {
         title: '',
         dataIndex: 'action',
         colSpan: 2,
-        render: ({ id }: OidcConfigKeysResponse, rowIndex: number) =>
-          rowIndex !== 0 && (
+        render: ({ id, status }: OidcConfigKeysResponse, rowIndex: number) =>
+          (isPrivateKey ? status === OidcSigningKeyStatus.Previous : rowIndex !== 0) && (
             <div className={styles.deleteIcon}>
               <IconButton
                 onClick={() => {
@@ -170,7 +217,7 @@ function SigningKeysFormCard() {
               })
               .json<OidcConfigKeysResponse[]>();
             void mutate(keys);
-            toast.success(t('messages.rotate_key_success'));
+            toast.success(String(t('messages.rotate_key_success')));
           } finally {
             setIsRotating(false);
           }
@@ -211,7 +258,7 @@ function SigningKeysFormCard() {
           try {
             await api.delete(`api/configs/oidc/${activeTab}/${deletingKeyId}`);
             void mutate(data?.filter((key) => key.id !== deletingKeyId));
-            toast.success(t('messages.delete_key_success'));
+            toast.success(String(t('messages.delete_key_success')));
           } finally {
             setDeletingKeyId(undefined);
           }

@@ -1,6 +1,10 @@
 import type { LogtoOidcConfigType, OidcPrivateKey } from '@logto/schemas';
 import { OidcSigningKeyStatus } from '@logto/schemas';
 
+type NormalizedOidcPrivateKey = OidcPrivateKey & {
+  status: OidcSigningKeyStatus;
+};
+
 const oidcPrivateKeyStatusOrder: Record<OidcSigningKeyStatus, number> = {
   [OidcSigningKeyStatus.Next]: 0,
   [OidcSigningKeyStatus.Current]: 1,
@@ -13,12 +17,18 @@ const oidcProviderPrivateKeyOrder: Record<OidcSigningKeyStatus, number> = {
   [OidcSigningKeyStatus.Previous]: 2,
 };
 
+const sortOidcPrivateKeys = (
+  privateKeys: NormalizedOidcPrivateKey[],
+  order: Record<OidcSigningKeyStatus, number>
+): NormalizedOidcPrivateKey[] =>
+  privateKeys.toSorted((left, right) => order[left.status] - order[right.status]);
+
 /**
  * Normalize private signing keys from legacy index-based lifecycle semantics into explicit statuses.
  */
 export const normalizeOidcPrivateKeys = (
   privateKeys: LogtoOidcConfigType['oidc.privateKeys']
-): OidcPrivateKey[] => {
+): NormalizedOidcPrivateKey[] => {
   const normalizedPrivateKeys = privateKeys.map((privateKey, index) => ({
     ...privateKey,
     status:
@@ -42,23 +52,41 @@ export const normalizeOidcPrivateKeys = (
     );
   }
 
-  return normalizedPrivateKeys.toSorted(
-    (left, right) =>
-      oidcPrivateKeyStatusOrder[left.status] - oidcPrivateKeyStatusOrder[right.status]
-  );
+  return normalizedPrivateKeys;
 };
 
 /**
- * Order private signing keys the way oidc-provider should consume them for signing and publication.
+ * Order private signing keys in the canonical business-state order.
+ */
+export const getCanonicalOidcPrivateKeys = (
+  privateKeys: LogtoOidcConfigType['oidc.privateKeys']
+): OidcPrivateKey[] =>
+  sortOidcPrivateKeys(normalizeOidcPrivateKeys(privateKeys), oidcPrivateKeyStatusOrder);
+
+/**
+ * Get the effective current signing key from normalized private key state.
+ */
+export const getCurrentOidcPrivateKey = (
+  privateKeys: LogtoOidcConfigType['oidc.privateKeys']
+): OidcPrivateKey => {
+  const currentKey = normalizeOidcPrivateKeys(privateKeys).find(
+    ({ status }) => status === OidcSigningKeyStatus.Current
+  );
+
+  if (!currentKey) {
+    throw new Error('Malformed OIDC private key status configuration: missing Current key.');
+  }
+
+  return currentKey;
+};
+
+/**
+ * Order private signing keys the way oidc-provider should consume them.
  */
 export const getOidcProviderPrivateKeys = (
   privateKeys: LogtoOidcConfigType['oidc.privateKeys']
 ): OidcPrivateKey[] =>
-  normalizeOidcPrivateKeys(privateKeys).toSorted(
-    (left, right) =>
-      oidcProviderPrivateKeyOrder[left.status ?? OidcSigningKeyStatus.Previous] -
-      oidcProviderPrivateKeyOrder[right.status ?? OidcSigningKeyStatus.Previous]
-  );
+  sortOidcPrivateKeys(normalizeOidcPrivateKeys(privateKeys), oidcProviderPrivateKeyOrder);
 
 /**
  * Build the persisted private-key state for the current immediate-rotation flow.
@@ -67,14 +95,11 @@ export const getImmediatelyRotatedOidcPrivateKeys = (
   privateKeys: LogtoOidcConfigType['oidc.privateKeys'],
   newPrivateKey: OidcPrivateKey
 ): OidcPrivateKey[] => {
-  const normalizedPrivateKeys = normalizeOidcPrivateKeys(privateKeys);
-  const currentKey = normalizedPrivateKeys.find(
-    ({ status }) => status === OidcSigningKeyStatus.Current
-  );
+  const currentKey = getCurrentOidcPrivateKey(privateKeys);
 
   return [
     { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
-    ...(currentKey ? [{ ...currentKey, status: OidcSigningKeyStatus.Previous }] : []),
+    { ...currentKey, status: OidcSigningKeyStatus.Previous },
   ];
 };
 
@@ -85,7 +110,7 @@ export const getOidcPrivateKeysAfterDeletion = (
   privateKeys: LogtoOidcConfigType['oidc.privateKeys'],
   deletedKeyId: string
 ): OidcPrivateKey[] =>
-  normalizeOidcPrivateKeys(privateKeys)
+  getCanonicalOidcPrivateKeys(privateKeys)
     .filter(({ id }) => id !== deletedKeyId)
     .map((privateKey, index) => ({
       ...privateKey,

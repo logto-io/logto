@@ -1,6 +1,8 @@
 import { OidcSigningKeyStatus } from '@logto/schemas';
 
 import {
+  getCanonicalOidcPrivateKeys,
+  getCurrentOidcPrivateKey,
   getImmediatelyRotatedOidcPrivateKeys,
   getOidcPrivateKeysAfterDeletion,
   getOidcProviderPrivateKeys,
@@ -27,8 +29,33 @@ describe('normalizeOidcPrivateKeys', () => {
     ]);
   });
 
-  it('sorts explicit statuses into Next, Current, Previous order', () => {
+  it('preserves explicit statuses without reordering the input array', () => {
     const result = normalizeOidcPrivateKeys([
+      createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('next', 1, OidcSigningKeyStatus.Next),
+    ]);
+
+    expect(result).toEqual([
+      createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('next', 1, OidcSigningKeyStatus.Next),
+    ]);
+  });
+
+  it('throws for malformed status configurations', () => {
+    expect(() =>
+      normalizeOidcPrivateKeys([
+        createPrivateKey('current-a', 1, OidcSigningKeyStatus.Current),
+        createPrivateKey('current-b', 2, OidcSigningKeyStatus.Current),
+      ])
+    ).toThrow('Malformed OIDC private key status configuration');
+  });
+});
+
+describe('getCanonicalOidcPrivateKeys', () => {
+  it('orders private keys as Next, Current, Previous in canonical status order', () => {
+    const result = getCanonicalOidcPrivateKeys([
       createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
       createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
       createPrivateKey('next', 1, OidcSigningKeyStatus.Next),
@@ -40,14 +67,17 @@ describe('normalizeOidcPrivateKeys', () => {
       createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
     ]);
   });
+});
 
-  it('throws for malformed status configurations', () => {
-    expect(() =>
-      normalizeOidcPrivateKeys([
-        createPrivateKey('current-a', 1, OidcSigningKeyStatus.Current),
-        createPrivateKey('current-b', 2, OidcSigningKeyStatus.Current),
-      ])
-    ).toThrow('Malformed OIDC private key status configuration');
+describe('getCurrentOidcPrivateKey', () => {
+  it('finds the Current signing key by status instead of array index', () => {
+    const result = getCurrentOidcPrivateKey([
+      createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('next', 1, OidcSigningKeyStatus.Next),
+    ]);
+
+    expect(result).toEqual(createPrivateKey('current', 2, OidcSigningKeyStatus.Current));
   });
 });
 
