@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { TemplateType } from '@logto/connector-kit';
 import {
   adminConsoleApplicationId,
@@ -196,6 +197,75 @@ describe('ExperienceInteraction class', () => {
 
   describe('new user registration', () => {
     it('First admin user provisioning', async () => {
+      setDevFeaturesEnabled(true);
+
+      const experienceInteraction = new ExperienceInteraction(
+        ctx,
+        tenant,
+        InteractionEvent.Register
+      );
+
+      experienceInteraction.setVerificationRecord(emailVerificationRecord);
+      await experienceInteraction.createUser(emailVerificationRecord.id);
+
+      expect(userLibraries.insertUser).toHaveBeenCalledWith(
+        {
+          id: 'uid',
+          primaryEmail: mockEmail,
+          customData: {
+            ossOnboarding: {
+              isOnboardingDone: false,
+            },
+          },
+          logtoConfig: {
+            mfa: { enabled: false },
+          },
+        },
+        { isInteractive: true, roleNames: ['user', 'default:admin'] }
+      );
+
+      expect(signInExperiences.updateDefaultSignInExperience).toHaveBeenCalledWith({
+        signInMode: SignInMode.SignIn,
+      });
+
+      expect(userLibraries.provisionOrganizations).toHaveBeenCalledWith({
+        userId: 'uid',
+        email: mockEmail,
+      });
+    });
+
+    it('initializes OSS onboarding for new admin tenant registrations when dev features are enabled', async () => {
+      setDevFeaturesEnabled(true);
+
+      const experienceInteraction = new ExperienceInteraction(
+        ctx,
+        tenant,
+        InteractionEvent.Register
+      );
+
+      experienceInteraction.setVerificationRecord(emailVerificationRecord);
+      await experienceInteraction.createUser(emailVerificationRecord.id);
+
+      expect(userLibraries.insertUser).toHaveBeenCalledWith(
+        {
+          id: 'uid',
+          primaryEmail: mockEmail,
+          customData: {
+            ossOnboarding: {
+              isOnboardingDone: false,
+            },
+          },
+          logtoConfig: {
+            mfa: { enabled: false },
+          },
+        },
+        { isInteractive: true, roleNames: ['user', 'default:admin'] }
+      );
+    });
+
+    it('does not initialize OSS onboarding when dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
+
       const experienceInteraction = new ExperienceInteraction(
         ctx,
         tenant,
@@ -215,15 +285,6 @@ describe('ExperienceInteraction class', () => {
         },
         { isInteractive: true, roleNames: ['user', 'default:admin'] }
       );
-
-      expect(signInExperiences.updateDefaultSignInExperience).toHaveBeenCalledWith({
-        signInMode: SignInMode.SignIn,
-      });
-
-      expect(userLibraries.provisionOrganizations).toHaveBeenCalledWith({
-        userId: 'uid',
-        email: mockEmail,
-      });
     });
   });
 
@@ -439,3 +500,4 @@ describe('ExperienceInteraction class', () => {
     });
   });
 });
+/* eslint-enable max-lines */

@@ -1,40 +1,42 @@
 import { getOssOnboardingRedirectPath } from './utils';
 
 describe('OSS onboarding guard utils', () => {
-  test('redirects unfinished OSS users to the onboarding route', () => {
+  test('redirects users explicitly marked as requiring OSS onboarding to the onboarding route', () => {
     expect(
       getOssOnboardingRedirectPath({
         isCloud: false,
         isDevFeaturesEnabled: true,
         hasError: false,
         isLoading: false,
-        isOnboardingDone: false,
+        isOnboardingRequired: true,
         tenantId: 'console',
         pathname: '/console/get-started',
       })
     ).toBe('/console/onboarding');
   });
 
-  test('does not redirect when onboarding is already complete or when already on onboarding', () => {
+  test('does not redirect users without an explicit OSS onboarding requirement', () => {
     expect(
       getOssOnboardingRedirectPath({
         isCloud: false,
         isDevFeaturesEnabled: true,
         hasError: false,
         isLoading: false,
-        isOnboardingDone: true,
+        isOnboardingRequired: false,
         tenantId: 'console',
         pathname: '/console/get-started',
       })
     ).toBeUndefined();
+  });
 
+  test('does not redirect when already on onboarding', () => {
     expect(
       getOssOnboardingRedirectPath({
         isCloud: false,
         isDevFeaturesEnabled: true,
         hasError: false,
         isLoading: false,
-        isOnboardingDone: false,
+        isOnboardingRequired: true,
         tenantId: 'console',
         pathname: '/console/onboarding',
       })
@@ -48,7 +50,7 @@ describe('OSS onboarding guard utils', () => {
         isDevFeaturesEnabled: true,
         hasError: false,
         isLoading: false,
-        isOnboardingDone: false,
+        isOnboardingRequired: true,
         tenantId: 'console',
         pathname: '/console/get-started',
       })
@@ -62,7 +64,7 @@ describe('OSS onboarding guard utils', () => {
         isDevFeaturesEnabled: false,
         hasError: false,
         isLoading: false,
-        isOnboardingDone: false,
+        isOnboardingRequired: true,
         tenantId: 'console',
         pathname: '/console/get-started',
       })
@@ -76,7 +78,7 @@ describe('OSS onboarding guard utils', () => {
         isDevFeaturesEnabled: true,
         hasError: true,
         isLoading: false,
-        isOnboardingDone: false,
+        isOnboardingRequired: true,
         tenantId: 'console',
         pathname: '/console/get-started',
       })

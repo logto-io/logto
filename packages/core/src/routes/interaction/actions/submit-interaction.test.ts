@@ -10,6 +10,7 @@ import {
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type { Provider } from 'oidc-provider';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -70,10 +71,25 @@ const { generateUserId, insertUser } = userLibraries;
 
 const submitInteraction = await pickDefault(import('./submit-interaction.js'));
 const now = Date.now();
+const ossOnboardingCustomData = {
+  ossOnboarding: {
+    isOnboardingDone: false,
+  },
+};
 
 jest.useFakeTimers().setSystemTime(now);
 
 describe('submit action', () => {
+  const originalIsCloud = EnvSet.values.isCloud;
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+  const setCloud = (isCloud: boolean) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
+  };
+  const setDevFeaturesEnabled = (enabled: boolean) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
+  };
   const tenant = new MockTenant(
     undefined,
     { users: userQueries, signInExperiences: { updateDefaultSignInExperience: jest.fn() } },
@@ -128,6 +144,8 @@ describe('submit action', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    setCloud(originalIsCloud);
+    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
   it('register', async () => {
@@ -148,6 +166,7 @@ describe('submit action', () => {
       {
         id: 'uid',
         ...upsertProfile,
+        customData: ossOnboardingCustomData,
       },
       { isInteractive: true, roleNames: ['user'] }
     );
@@ -159,6 +178,7 @@ describe('submit action', () => {
       user: {
         id: 'uid',
         ...upsertProfile,
+        customData: ossOnboardingCustomData,
       },
     });
   });
@@ -182,6 +202,7 @@ describe('submit action', () => {
       {
         id: 'pending-account-id',
         ...upsertProfile,
+        customData: ossOnboardingCustomData,
       },
       { isInteractive: true, roleNames: ['user'] }
     );
@@ -193,6 +214,7 @@ describe('submit action', () => {
       user: {
         id: 'pending-account-id',
         ...upsertProfile,
+        customData: ossOnboardingCustomData,
       },
     });
   });
@@ -210,6 +232,7 @@ describe('submit action', () => {
       {
         id: 'uid',
         ...upsertProfile,
+        customData: ossOnboardingCustomData,
         logtoConfig: {
           [userMfaDataKey]: {
             skipped: true,
@@ -238,6 +261,7 @@ describe('submit action', () => {
       {
         id: 'uid',
         username: 'username',
+        customData: ossOnboardingCustomData,
         identities: {
           logto: { userId: userInfo.id, details: userInfo },
         },
@@ -272,6 +296,7 @@ describe('submit action', () => {
       {
         id: 'uid',
         username: 'username',
+        customData: ossOnboardingCustomData,
         identities: {
           logto: { userId: userInfo.id, details: userInfo },
         },
@@ -313,12 +338,78 @@ describe('submit action', () => {
       {
         id: 'uid',
         ...upsertProfile,
+        customData: ossOnboardingCustomData,
       },
       { isInteractive: true, roleNames: ['user', 'default:admin'] }
     );
     expect(assignInteractionResults).toBeCalledWith(adminConsoleCtx, tenant.provider, {
       login: { accountId: 'uid' },
     });
+  });
+
+  it('initializes OSS onboarding for new admin tenant registrations when dev features are enabled', async () => {
+    setCloud(false);
+    setDevFeaturesEnabled(true);
+
+    const adminConsoleCtx = {
+      ...ctx,
+      // @ts-expect-error mock interaction details
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      interactionDetails: {
+        params: {
+          client_id: adminConsoleApplicationId,
+        },
+      } as Awaited<ReturnType<Provider['interactionDetails']>>,
+    };
+
+    const interaction: VerifiedRegisterInteractionResult = {
+      event: InteractionEvent.Register,
+      profile,
+      identifiers,
+    };
+
+    await submitInteraction(interaction, adminConsoleCtx, tenant);
+
+    expect(insertUser).toBeCalledWith(
+      {
+        id: 'uid',
+        ...upsertProfile,
+        customData: ossOnboardingCustomData,
+      },
+      { isInteractive: true, roleNames: ['user'] }
+    );
+  });
+
+  it('does not initialize OSS onboarding outside the OSS admin-tenant dev-feature registration case', async () => {
+    setCloud(false);
+    setDevFeaturesEnabled(false);
+
+    const adminConsoleCtx = {
+      ...ctx,
+      // @ts-expect-error mock interaction details
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      interactionDetails: {
+        params: {
+          client_id: adminConsoleApplicationId,
+        },
+      } as Awaited<ReturnType<Provider['interactionDetails']>>,
+    };
+
+    const interaction: VerifiedRegisterInteractionResult = {
+      event: InteractionEvent.Register,
+      profile,
+      identifiers,
+    };
+
+    await submitInteraction(interaction, adminConsoleCtx, tenant);
+
+    expect(insertUser).toBeCalledWith(
+      {
+        id: 'uid',
+        ...upsertProfile,
+      },
+      { isInteractive: true, roleNames: ['user'] }
+    );
   });
 
   it('sign-in without new profile', async () => {

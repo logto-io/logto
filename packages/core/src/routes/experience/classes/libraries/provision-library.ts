@@ -21,6 +21,7 @@ import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/e
 
 import { EnvSet } from '#src/env-set/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import { getInitialOssOnboardingCustomData } from '#src/utils/oss-onboarding.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
@@ -170,7 +171,7 @@ export class ProvisionLibrary {
     /** Initial user roles for admin tenant users */
     initialUserRoles: string[];
     /** Skip onboarding flow if the new user has pending Cloud invitations */
-    customData?: { [userOnboardingDataKey]: UserOnboardingData };
+    customData?: User['customData'];
   }> {
     const {
       provider,
@@ -228,18 +229,25 @@ export class ProvisionLibrary {
     );
 
     // Skip onboarding flow if the new user has pending Cloud invitations
-    const customData = hasPendingInvitations
-      ? {
+    const customData = {
+      ...conditional(
+        hasPendingInvitations && {
           [userOnboardingDataKey]: {
             isOnboardingDone: true,
           } satisfies UserOnboardingData,
         }
-      : undefined;
+      ),
+      ...getInitialOssOnboardingCustomData({
+        isCloud,
+        isDevFeaturesEnabled: EnvSet.values.isDevFeaturesEnabled,
+        currentTenantId,
+      }),
+    };
 
     return {
       isCreatingFirstAdminUser,
       initialUserRoles,
-      customData,
+      customData: Object.keys(customData).length > 0 ? customData : undefined,
     };
   }
 

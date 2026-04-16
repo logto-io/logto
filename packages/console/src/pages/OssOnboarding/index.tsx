@@ -34,7 +34,8 @@ function OssOnboarding() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { setThemeOverride } = useContext(AppThemeContext);
   const { getTo, navigate } = useTenantPathname();
-  const { data, isLoading, isOnboardingDone, update } = useOssOnboardingData();
+  const { data, isLoading, isOnboardingDone, isOnboardingRequired, update } =
+    useOssOnboardingData();
   const {
     control,
     formState: { errors, isSubmitting },
@@ -80,7 +81,7 @@ function OssOnboarding() {
     return null;
   }
 
-  if (isOnboardingDone) {
+  if (!isOnboardingRequired || isOnboardingDone) {
     return <Navigate replace to={getTo('/get-started')} />;
   }
 
@@ -108,13 +109,13 @@ function OssOnboarding() {
                   // eslint-disable-next-line jsx-a11y/no-autofocus
                   autoFocus
                   type="email"
-                  placeholder={t('oss_onboarding.email.placeholder')}
+                  placeholder={String(t('oss_onboarding.email.placeholder'))}
                   disabled={isSubmitting}
                   error={errors.emailAddress?.message}
                   {...register('emailAddress', {
-                    required: t('oss_onboarding.errors.email_required'),
+                    required: String(t('oss_onboarding.errors.email_required')),
                     validate: (value) =>
-                      emailRegEx.test(value) || t('oss_onboarding.errors.email_invalid'),
+                      emailRegEx.test(value) || String(t('oss_onboarding.errors.email_invalid')),
                   })}
                 />
               </FormField>
@@ -125,7 +126,7 @@ function OssOnboarding() {
                   <Checkbox
                     className={styles.checkbox}
                     checked={value}
-                    label={t('oss_onboarding.newsletter')}
+                    label={String(t('oss_onboarding.newsletter'))}
                     onChange={onChange}
                   />
                 )}
@@ -164,12 +165,13 @@ function OssOnboarding() {
               <>
                 <FormField isRequired title="oss_onboarding.company_name.label">
                   <TextInput
-                    placeholder={t('oss_onboarding.company_name.placeholder')}
+                    placeholder={String(t('oss_onboarding.company_name.placeholder'))}
                     disabled={isSubmitting}
                     error={errors.companyName?.message}
                     {...register('companyName', {
                       validate: (value) =>
-                        Boolean(value.trim()) || t('oss_onboarding.errors.company_name_required'),
+                        Boolean(value.trim()) ||
+                        String(t('oss_onboarding.errors.company_name_required')),
                     })}
                   />
                 </FormField>
@@ -179,7 +181,7 @@ function OssOnboarding() {
                     control={control}
                     rules={{
                       validate: (value) =>
-                        Boolean(value) || t('oss_onboarding.errors.company_size_required'),
+                        Boolean(value) || String(t('oss_onboarding.errors.company_size_required')),
                     }}
                     render={({ field: { onChange, value, name } }) => (
                       <>

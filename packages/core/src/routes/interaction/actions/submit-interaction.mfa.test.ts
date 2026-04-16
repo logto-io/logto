@@ -60,6 +60,11 @@ const { generateUserId, insertUser } = userLibraries;
 
 const submitInteraction = await pickDefault(import('./submit-interaction.js'));
 const now = Date.now();
+const ossOnboardingCustomData = {
+  ossOnboarding: {
+    isOnboardingDone: false,
+  },
+};
 
 jest.useFakeTimers().setSystemTime(now);
 
@@ -136,6 +141,7 @@ describe('submit action', () => {
       expect(insertUser).toBeCalledWith(
         {
           id: 'uid',
+          customData: ossOnboardingCustomData,
           mfaVerifications: [
             {
               type: MfaFactor.TOTP,
@@ -166,6 +172,7 @@ describe('submit action', () => {
       expect(insertUser).toBeCalledWith(
         {
           id: 'id',
+          customData: ossOnboardingCustomData,
           mfaVerifications: [
             {
               ...mockWebAuthnBind,
@@ -194,6 +201,7 @@ describe('submit action', () => {
       expect(insertUser).toBeCalledWith(
         {
           id: 'uid',
+          customData: ossOnboardingCustomData,
           mfaVerifications: [
             {
               type: MfaFactor.BackupCode,

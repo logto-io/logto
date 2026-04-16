@@ -26,6 +26,7 @@ import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import { getInitialOssOnboardingCustomData } from '#src/utils/oss-onboarding.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
@@ -133,6 +134,21 @@ async function handleSubmitRegister(
   const hasPendingInvitations = invitations.some(
     (invitation) => invitation.status === OrganizationInvitationStatus.Pending
   );
+  const initialCustomData = {
+    ...conditional(
+      // Skip onboarding flow if the new user has pending Cloud invitations
+      hasPendingInvitations && {
+        [userOnboardingDataKey]: {
+          isOnboardingDone: true,
+        } satisfies UserOnboardingData,
+      }
+    ),
+    ...getInitialOssOnboardingCustomData({
+      isCloud,
+      isDevFeaturesEnabled: EnvSet.values.isDevFeaturesEnabled,
+      currentTenantId,
+    }),
+  };
 
   const [user] = await insertUser(
     {
@@ -144,14 +160,7 @@ async function handleSubmitRegister(
         }
       ),
       ...conditional(
-        // Skip onboarding flow if the new user has pending Cloud invitations
-        hasPendingInvitations && {
-          customData: {
-            [userOnboardingDataKey]: {
-              isOnboardingDone: true,
-            } satisfies UserOnboardingData,
-          },
-        }
+        Object.keys(initialCustomData).length > 0 && { customData: initialCustomData }
       ),
       ...conditional(
         mfaSkipped && {
