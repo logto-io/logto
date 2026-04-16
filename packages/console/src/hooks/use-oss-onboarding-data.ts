@@ -34,7 +34,7 @@ const useOssOnboardingData = (): {
 
   const update = useCallback(
     async (data: Partial<OssUserOnboardingData>) => {
-      // Note: OSS onboarding submissions currently live in user custom data only.
+      // TODO: OSS onboarding submissions currently live in user custom data only.
       await updateCustomData({
         [ossUserOnboardingDataKey]: {
           ...ossOnboardingData,
