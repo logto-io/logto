@@ -69,7 +69,26 @@ type SendCodeParams = {
   interactionEvent?: InteractionEvent;
   createVerificationRecord: () => CodeVerificationRecord;
   libraries: Libraries;
+  queries: Queries;
   ctx: ExperienceInteractionRouterContext;
+};
+
+/**
+ * Check if a user exists with the given identifier (email or phone).
+ * Used to determine whether to actually deliver verification codes
+ * in the forgot-password flow, preventing account enumeration and spam.
+ */
+const hasUserWithIdentifier = async (
+  queries: Queries,
+  identifier: VerificationCodeIdentifier
+): Promise<boolean> => {
+  const { type, value } = identifier;
+
+  if (type === SignInIdentifier.Email) {
+    return queries.users.hasUserWithEmail(value);
+  }
+
+  return queries.users.hasUserWithNormalizedPhone(value);
 };
 
 /**
@@ -81,6 +100,7 @@ export const sendCode = async ({
   interactionEvent,
   createVerificationRecord,
   libraries,
+  queries,
   ctx,
 }: SendCodeParams): Promise<{ verificationId: string }> => {
   const { experienceInteraction } = ctx;
@@ -104,6 +124,14 @@ export const sendCode = async ({
     await experienceInteraction.signInExperienceValidator.guardEmailBlocklist(codeVerification);
   }
 
+  // For forgot-password flows, check if the user actually exists.
+  // If not, we still create the passcode record in the database (so the verify step
+  // returns a consistent `code_mismatch` error instead of `not_found`, preventing
+  // account enumeration), but skip the actual message delivery to avoid spam.
+  const skipDelivery =
+    interactionEvent === InteractionEvent.ForgotPassword &&
+    !(await hasUserWithIdentifier(queries, identifier));
+
   // Build template context
   const templateContext = await buildVerificationCodeTemplateContext(
     libraries.passcodes,
@@ -112,12 +140,15 @@ export const sendCode = async ({
   );
 
   // Send verification code
-  await codeVerification.sendVerificationCode({
-    ...ctx.emailI18n,
-    ...templateContext,
-    /** The client IP address for rate limiting and fraud detection. */
-    ...(ctx.request.ip && { ip: ctx.request.ip }),
-  });
+  await codeVerification.sendVerificationCode(
+    {
+      ...ctx.emailI18n,
+      ...templateContext,
+      /** The client IP address for rate limiting and fraud detection. */
+      ...(ctx.request.ip && { ip: ctx.request.ip }),
+    },
+    { skipDelivery }
+  );
 
   // Save state
   experienceInteraction.setVerificationRecord(codeVerification);
