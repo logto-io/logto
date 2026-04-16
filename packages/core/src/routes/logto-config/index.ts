@@ -191,44 +191,44 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { keyType, keyId } = ctx.guard.params;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
-      const updatedKeys =
-        configKey === LogtoOidcConfigKey.PrivateKeys
-          ? await updatePrivateSigningKeysWithLock((privateKeys) => {
-              if (privateKeys.length <= 1) {
-                throw new RequestError({ code: 'oidc.key_required', status: 422 });
-              }
+      await (configKey === LogtoOidcConfigKey.PrivateKeys
+        ? updatePrivateSigningKeysWithLock((privateKeys) => {
+            if (privateKeys.length <= 1) {
+              throw new RequestError({ code: 'oidc.key_required', status: 422 });
+            }
 
-              const deletingKey = privateKeys.find(({ id }) => id === keyId);
+            const deletingKey = privateKeys.find(({ id }) => id === keyId);
 
-              if (!deletingKey) {
-                throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
-              }
+            if (!deletingKey) {
+              throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
+            }
 
-              if (deletingKey.status !== OidcSigningKeyStatus.Previous) {
-                throw new RequestError({
-                  code: 'oidc.only_previous_key_can_be_deleted',
-                  status: 422,
-                });
-              }
+            if (deletingKey.status !== OidcSigningKeyStatus.Previous) {
+              throw new RequestError({
+                code: 'oidc.only_previous_key_can_be_deleted',
+                status: 422,
+              });
+            }
 
-              return getOidcPrivateKeysAfterDeletion(privateKeys, keyId);
-            })
-          : await (async () => {
-              const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
-              const existingKeys = configs[configKey];
+            return getOidcPrivateKeysAfterDeletion(privateKeys, keyId);
+          })
+        : (async () => {
+            const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
+            const existingKeys = configs[configKey];
 
-              if (existingKeys.length <= 1) {
-                throw new RequestError({ code: 'oidc.key_required', status: 422 });
-              }
+            if (existingKeys.length <= 1) {
+              throw new RequestError({ code: 'oidc.key_required', status: 422 });
+            }
 
-              if (!existingKeys.some(({ id }) => id === keyId)) {
-                throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
-              }
+            if (!existingKeys.some(({ id }) => id === keyId)) {
+              throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
+            }
 
-              const updatedKeys = existingKeys.filter(({ id }) => id !== keyId);
-              await updateOidcConfigsByKey(configKey, updatedKeys);
-              return updatedKeys;
-            })();
+            await updateOidcConfigsByKey(
+              configKey,
+              existingKeys.filter(({ id }) => id !== keyId)
+            );
+          })());
       void tenant.invalidateCache();
 
       ctx.status = 204;

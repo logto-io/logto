@@ -33,9 +33,7 @@ const {
   upsertSigningKeyRotationState,
   updateAdminConsoleConfig,
   updatePrivateSigningKeys,
-  updatePrivateSigningKeysWithLock,
   updateOidcConfigsByKey,
-  updatePrivateSigningKeysAndRotationState,
 } = createLogtoConfigQueries(pool, new MockWellKnownCache());
 
 describe('connector queries', () => {
