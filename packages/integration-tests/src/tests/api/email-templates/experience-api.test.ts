@@ -9,6 +9,10 @@ import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
 import { successfullySendVerificationCode } from '#src/helpers/experience/verification-code.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
+import {
+  createDefaultTenantUserWithPassword,
+  deleteDefaultTenantUser,
+} from '#src/helpers/profile.js';
 import { generateEmail } from '#src/utils.js';
 
 const mockSignInTemplate: MockEmailTemplatePayload = {
@@ -79,30 +83,37 @@ describe('experience API with i18n email templates', () => {
     const defaultForgotPasswordTemplate = mockEmailConnectorConfig.templates.find(
       ({ usageType }) => usageType === 'ForgotPassword'
     )!;
-
-    const client = await initExperienceClient({
-      interactionEvent: InteractionEvent.ForgotPassword,
-    });
-    const { code } = await successfullySendVerificationCode(client, {
-      interactionEvent: InteractionEvent.ForgotPassword,
-      identifier: {
-        type: SignInIdentifier.Email,
-        value: mockEmail,
-      },
+    const { user } = await createDefaultTenantUserWithPassword({
+      primaryEmail: mockEmail,
     });
 
-    expect(await readConnectorMessage('Email')).toMatchObject({
-      type: TemplateType.ForgotPassword,
-      payload: {
-        code,
-        application: {
-          id: demoAppApplicationId,
-          name: 'Live Preview',
+    try {
+      const client = await initExperienceClient({
+        interactionEvent: InteractionEvent.ForgotPassword,
+      });
+      const { code } = await successfullySendVerificationCode(client, {
+        interactionEvent: InteractionEvent.ForgotPassword,
+        identifier: {
+          type: SignInIdentifier.Email,
+          value: mockEmail,
         },
-      },
-      template: defaultForgotPasswordTemplate,
-      content: defaultForgotPasswordTemplate.content.replace('{{code}}', code),
-      subject: defaultForgotPasswordTemplate.subject,
-    });
+      });
+
+      expect(await readConnectorMessage('Email')).toMatchObject({
+        type: TemplateType.ForgotPassword,
+        payload: {
+          code,
+          application: {
+            id: demoAppApplicationId,
+            name: 'Live Preview',
+          },
+        },
+        template: defaultForgotPasswordTemplate,
+        content: defaultForgotPasswordTemplate.content.replace('{{code}}', code),
+        subject: defaultForgotPasswordTemplate.subject,
+      });
+    } finally {
+      await deleteDefaultTenantUser(user.id);
+    }
   });
 });
