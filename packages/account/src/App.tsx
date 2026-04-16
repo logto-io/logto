@@ -81,9 +81,11 @@ const Main = () => {
   const isSocialCallback = pathname.startsWith(
     `${accountCenterBasePath}${socialCallbackRoutePrefix}/`
   );
-  const isAuthCallback =
-    Boolean(params.get('code')) &&
-    (pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`);
+  const isOidcRedirectPath =
+    pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`;
+  const isAuthCallback = Boolean(params.get('code')) && isOidcRedirectPath;
+  // Detect prompt=none rejection (OIDC session gone).
+  const isSilentAuthFailed = params.get('error') === 'login_required' && isOidcRedirectPath;
   const isInCallback = isSocialCallback || isAuthCallback;
   const uiLocales = getUiLocales();
   const { isAuthenticated, isLoading, signIn } = useLogto();
@@ -102,23 +104,36 @@ const Main = () => {
       return;
     }
 
-    if (!isAuthenticated && accountCenterSettings?.enabled) {
-      const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
-      setRouteRestore(window.location.pathname);
-      void signIn({ redirectUri, extraParams });
+    const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+
+    if (!isAuthenticated) {
+      if (isSilentAuthFailed) {
+        // Silent re-auth (prompt=none) was rejected — fall back to explicit login.
+        void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
+      } else if (accountCenterSettings?.enabled) {
+        setRouteRestore(window.location.pathname);
+        void signIn({ redirectUri, extraParams });
+      }
     }
   }, [
     isAuthenticated,
     isInCallback,
     isInitialAuthLoading,
     isLoadingExperience,
+    isSilentAuthFailed,
     accountCenterSettings,
     signIn,
     uiLocales,
   ]);
 
   useEffect(() => {
-    if (isInCallback || isInitialAuthLoading || !isAuthenticated || isLoadingUserInfo) {
+    if (
+      isInCallback ||
+      isSilentAuthFailed ||
+      isInitialAuthLoading ||
+      !isAuthenticated ||
+      isLoadingUserInfo
+    ) {
       return;
     }
 
@@ -126,12 +141,16 @@ const Main = () => {
     if (userInfoError && accountCenterSettings?.enabled) {
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
       setRouteRestore(window.location.pathname);
-      void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
+      // Use prompt=none to attempt silent re-auth via the OIDC session cookie.
+      // If the session is gone, the provider responds with error=login_required
+      // and the effect above falls back to Prompt.Login.
+      void signIn({ redirectUri, prompt: Prompt.None, extraParams });
     }
   }, [
     accountCenterSettings,
     isAuthenticated,
     isInCallback,
+    isSilentAuthFailed,
     isInitialAuthLoading,
     isLoadingUserInfo,
     signIn,
