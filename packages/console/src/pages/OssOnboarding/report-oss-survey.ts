@@ -8,6 +8,7 @@ export const reportOssSurvey = (payload: OssQuestionnaire): void => {
         headers: {
           'Content-Type': 'application/json',
         },
+        keepalive: true,
         body: JSON.stringify(payload),
       });
     } catch {}

@@ -37,6 +37,8 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /authn/hasura': 'GetHasuraAuth',
   'post /authn/saml/:connectorId': 'AssertSaml',
   'post /authn/single-sign-on/saml/:connectorId': 'AssertSingleSignOnSaml',
+  // OSS survey
+  'post /oss-survey/report': 'ReportOssSurvey',
   // Organization users
   'post /organizations/:id/users': 'AddOrganizationUsers',
   'post /organizations/:id/users/roles': 'AssignOrganizationRolesToUsers',

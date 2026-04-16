@@ -9,13 +9,15 @@ import { number, object, string } from 'zod';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { default: swaggerRoutes } = await import('./index.js');
 const { assembleSwaggerDocument } = await import('./utils/documents.js');
 const { paginationParameters } = await import('./utils/parameters.js');
+const { default: ossSurveyRoutes } = await import('../oss-survey/index.js');
 
 const createSwaggerRequest = (
-  allRouters: Router[],
+  allRouters: Array<Router | AnonymousRouter>,
   swaggerRouter: AnonymousRouter = new Router()
 ) => {
   swaggerRoutes(swaggerRouter, allRouters);
@@ -351,5 +353,24 @@ describe('GET /swagger.json', () => {
         },
       },
     });
+  });
+
+  it('should document OSS survey relay routes without throwing', async () => {
+    const ossSurveyRouter: AnonymousRouter = new Router();
+    ossSurveyRoutes(ossSurveyRouter, new MockTenant());
+
+    const swaggerRequest = createSwaggerRequest([ossSurveyRouter]);
+    const response = await swaggerRequest.get('/swagger.json');
+
+    expect(response.status).toEqual(200);
+    expect(response.body.paths['/api/oss-survey/report']).toMatchObject({
+      post: {
+        operationId: 'ReportOssSurvey',
+        summary: 'Report OSS onboarding survey',
+      },
+    });
+    expect(response.body.paths['/api/oss-survey/report'].post.description).toContain(
+      'configured downstream survey endpoint'
+    );
   });
 });

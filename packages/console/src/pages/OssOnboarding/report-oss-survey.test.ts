@@ -35,6 +35,7 @@ describe('reportOssSurvey', () => {
     expect(global.fetch).toHaveBeenCalledWith('/api/oss-survey/report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
       body: JSON.stringify(mockPayload),
     });
   });

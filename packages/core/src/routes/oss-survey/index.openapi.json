@@ -1,0 +1,24 @@
+{
+  "tags": [
+    {
+      "name": "Oss survey",
+      "description": "Endpoints for relaying OSS onboarding survey submissions."
+    }
+  ],
+  "paths": {
+    "/api/oss-survey/report": {
+      "post": {
+        "summary": "Report OSS onboarding survey",
+        "description": "Relays an OSS onboarding survey submission to the configured downstream survey endpoint. This endpoint is public and returns immediately after validating the payload.",
+        "responses": {
+          "204": {
+            "description": "Survey submission accepted for relay."
+          },
+          "400": {
+            "description": "Bad request. The payload is invalid."
+          }
+        }
+      }
+    }
+  }
+}
