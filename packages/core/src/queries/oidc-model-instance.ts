@@ -182,7 +182,10 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const revokeInstanceByGrantId = async (modelName: string, grantId: string) => {
-    const revokeNextBatch = async (): Promise<void> => {
+    // Keep deleting bounded batches until the revoke query no longer finds matches.
+    for (;;) {
+      // Revocation batches must run serially to keep each delete bounded.
+      // eslint-disable-next-line no-await-in-loop
       const { rowCount } = await pool.query(sql`
         delete from ${table}
         where ${fields.id} in (
@@ -198,11 +201,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
       if (rowCount === 0) {
         return;
       }
-
-      await revokeNextBatch();
-    };
-
-    await revokeNextBatch();
+    }
   };
 
   const revokeInstanceByUserId = async (modelName: string, userId: string) => {
