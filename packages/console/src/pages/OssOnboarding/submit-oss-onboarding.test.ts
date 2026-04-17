@@ -1,10 +1,6 @@
-import {
-  CompanySize,
-  Project,
-  type OssQuestionnaire,
-  type OssUserOnboardingData,
-} from '@logto/schemas';
+import { CompanySize, Project, type OssUserOnboardingData } from '@logto/schemas';
 
+import type { OssSurveyReportPayload } from './report-oss-survey';
 import { submitOssOnboarding } from './submit-oss-onboarding';
 import type { OssOnboardingFormData } from './utils';
 
@@ -18,7 +14,7 @@ const mockFormData: OssOnboardingFormData = {
 
 describe('submitOssOnboarding', () => {
   it('reports the survey payload and persists onboarding data before navigating', async () => {
-    const report = jest.fn<void, [OssQuestionnaire]>();
+    const report = jest.fn<void, [OssSurveyReportPayload]>();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
@@ -53,7 +49,7 @@ describe('submitOssOnboarding', () => {
   });
 
   it('still reports the survey payload when onboarding data persistence fails', async () => {
-    const report = jest.fn<void, [OssQuestionnaire]>();
+    const report = jest.fn<void, [OssSurveyReportPayload]>();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
@@ -80,7 +76,7 @@ describe('submitOssOnboarding', () => {
   });
 
   it('keeps the old submit flow when dev features are disabled', async () => {
-    const report = jest.fn<void, [OssQuestionnaire]>();
+    const report = jest.fn<void, [OssSurveyReportPayload]>();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 

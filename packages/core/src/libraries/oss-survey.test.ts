@@ -34,6 +34,7 @@ describe('reportOssSurvey', () => {
       configurable: true,
       value: originalEndpoint,
     });
+    post.mockRestore();
   });
 
   it('does nothing when the survey endpoint is not configured', () => {

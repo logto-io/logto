@@ -1,13 +1,13 @@
-import type { OssQuestionnaire, OssUserOnboardingData } from '@logto/schemas';
+import type { OssUserOnboardingData } from '@logto/schemas';
 
-import { reportOssSurvey } from './report-oss-survey';
+import { reportOssSurvey, type OssSurveyReportPayload } from './report-oss-survey';
 import { getOssOnboardingSubmitPayload, type OssOnboardingFormData } from './utils';
 
 type SubmitOssOnboardingOptions = {
   formData: OssOnboardingFormData;
   isDevFeaturesEnabled: boolean;
   navigate: (to: string, options: { replace: boolean }) => void;
-  report?: (payload: OssQuestionnaire) => void;
+  report?: (payload: OssSurveyReportPayload) => void;
   update: (data: Partial<OssUserOnboardingData>) => Promise<void>;
 };
 

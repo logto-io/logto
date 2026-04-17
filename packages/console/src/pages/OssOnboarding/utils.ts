@@ -1,4 +1,6 @@
-import { type CompanySize, type OssQuestionnaire, Project } from '@logto/schemas';
+import { type CompanySize, Project } from '@logto/schemas';
+
+import type { OssSurveyReportPayload } from './report-oss-survey';
 
 export type OssOnboardingFormData = {
   emailAddress: string;
@@ -18,7 +20,9 @@ export const getOssOnboardingDefaultValues = (): OssOnboardingFormData => ({
 
 export const shouldRequireCompanyFields = (project: Project) => project === Project.Company;
 
-export const getOssOnboardingSubmitPayload = (data: OssOnboardingFormData): OssQuestionnaire => {
+export const getOssOnboardingSubmitPayload = (
+  data: OssOnboardingFormData
+): OssSurveyReportPayload => {
   if (!shouldRequireCompanyFields(data.project)) {
     const { companyName: _companyName, companySize: _companySize, ...rest } = data;
 

@@ -1,6 +1,12 @@
 import type { OssQuestionnaire } from '@logto/schemas';
 
-export const reportOssSurvey = (payload: OssQuestionnaire): void => {
+type RequiredOssSurveyField = 'emailAddress' | 'project';
+
+export type OssSurveyReportPayload = Omit<OssQuestionnaire, RequiredOssSurveyField> & {
+  [Key in RequiredOssSurveyField]-?: NonNullable<OssQuestionnaire[Key]>;
+};
+
+export const reportOssSurvey = (payload: OssSurveyReportPayload): void => {
   void (async () => {
     try {
       await fetch('/api/oss-survey/report', {

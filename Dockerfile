@@ -40,8 +40,8 @@ RUN rm -rf .scripts pnpm-*.yaml packages/cloud
 ###### [STAGE] Seal ######
 FROM node:22-alpine as app
 WORKDIR /etc/logto
-ARG logto_oss_survey_endpoint=https://logto-oss-survey-dev.svhd.workers.dev
-# Keep a baked-in default for OSS Docker deployments while we wire this to GitHub repo vars.
+ARG logto_oss_survey_endpoint=
+# Default to empty so external survey relaying stays opt-in for controlled builds/environments.
 ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
 COPY --from=builder /etc/logto .
 RUN mkdir -p /etc/logto/packages/cli/alteration-scripts && chmod g+w /etc/logto/packages/cli/alteration-scripts

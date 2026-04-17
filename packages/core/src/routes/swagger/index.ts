@@ -23,15 +23,24 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   router: T,
   allRouters: R[]
 ) {
+  const routes = buildRouterObjects(allRouters, { guardCustomRoutes: true });
+  const { pathMap, tags } = groupRoutesByPath(routes);
+  const supplementDocumentsPromise = getSupplementDocuments('routes', {
+    // Exclude interaction routes as they are deprecated.
+    excludeDirectories: ['interaction'],
+  });
+  const swaggerDocumentCache = new Map<string, OpenAPIV3.Document>();
+
   router.get('/swagger.json', async (ctx, next) => {
-    const routes = buildRouterObjects(allRouters, { guardCustomRoutes: true });
-    const { pathMap, tags } = groupRoutesByPath(routes);
+    const cacheKey = ctx.request.origin;
+    const cachedDocument = swaggerDocumentCache.get(cacheKey);
 
-    const supplementDocuments = await getSupplementDocuments('routes', {
-      // Exclude interaction routes as they are deprecated.
-      excludeDirectories: ['interaction'],
-    });
+    if (cachedDocument) {
+      ctx.body = cachedDocument;
+      return next();
+    }
 
+    const supplementDocuments = await supplementDocumentsPromise;
     const baseDocument: OpenAPIV3.Document = buildManagementApiBaseDocument(
       pathMap,
       tags,
@@ -40,10 +49,12 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
 
     const data = assembleSwaggerDocument(supplementDocuments, baseDocument, ctx);
 
-    ctx.body = {
+    const swaggerDocument = {
       ...data,
       tags: data.tags?.slice().sort((tagA, tagB) => tagA.name.localeCompare(tagB.name)),
     };
+    swaggerDocumentCache.set(cacheKey, swaggerDocument);
+    ctx.body = swaggerDocument;
 
     return next();
   });

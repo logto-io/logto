@@ -1,5 +1,6 @@
 import { CompanySize, Project } from '@logto/schemas';
 
+import type { OssSurveyReportPayload } from './report-oss-survey';
 import {
   getOssOnboardingDefaultValues,
   getOssOnboardingSubmitPayload,
@@ -36,7 +37,7 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'dev@example.com',
       newsletter: true,
       project: Project.Personal,
-    });
+    } satisfies OssSurveyReportPayload);
   });
 
   test('keeps company-only values in the submit payload for company projects', () => {

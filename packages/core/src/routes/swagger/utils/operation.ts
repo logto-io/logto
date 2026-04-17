@@ -122,7 +122,7 @@ export const buildRouterObjects = <T extends UnknownRouter>(routers: T[], option
   const customRoutes = getCustomRoutes();
   /**
    * A set to store all custom routes that have been built.
-   * @see {@link customRoutes}
+   * @see {@link getCustomRoutes}
    */
   const builtCustomRoutes = new Set<string>();
 

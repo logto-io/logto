@@ -113,7 +113,7 @@ export const getCustomRoutes = (): Readonly<RouteDictionary> =>
 
 /**
  * Given a set of built custom routes, throws an error if there are any differences between the
- * built routes and the routes defined in `customRoutes`.
+ * built routes and the routes returned by `getCustomRoutes()`.
  */
 export const throwByDifference = (builtCustomRoutes: Set<string>) => {
   const customRoutes = getCustomRoutes();
@@ -172,7 +172,7 @@ const throwIfNeeded = (method: OpenAPIV3.HttpMethods, path: string) => {
  * The generated operation ID is in the format of `VerbNounNoun...` where `Verb` is translated from
  * the HTTP method and `Noun` is the path segment in PascalCase. Some exceptions:
  *
- * 1. If an override is found in `customRoutes`, it will be used instead.
+ * 1. If an override is found in `getCustomRoutes()`, it will be used instead.
  * 2. If the HTTP method is `GET` and the path does not end with a path parameter, the verb will be
  * `List`.
  * 3. If the path segment is a namespace prefix, the trailing `/` will be replaced with `-`.
@@ -183,7 +183,7 @@ const throwIfNeeded = (method: OpenAPIV3.HttpMethods, path: string) => {
  * buildOperationId('get', '/foo/:fooId/bar') // ListFooBars
  * buildOperationId('get', '/jit/foo') // GetJitFoo
  *
- * @see {@link customRoutes} for the full list of overrides.
+ * @see {@link getCustomRoutes} for the full list of overrides.
  * @see {@link methodToVerb} for the mapping of HTTP methods to verbs.
  * @see {@link namespacePrefixes} for the list of namespace prefixes.
  */
