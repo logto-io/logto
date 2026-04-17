@@ -55,7 +55,7 @@ describe('reportOssSurvey', () => {
     expect(post).toHaveBeenCalledWith('https://survey.logto.app/api/survey', {
       headers: {
         'content-type': 'application/json',
-        'user-agent': 'Logto (https://logto.io/)',
+        'user-agent': 'Logto OSS (https://logto.io/)',
       },
       json: mockPayload,
       retry: { limit: 0 },

@@ -1,11 +1,5 @@
-import { type CompanySize, type OssQuestionnaire, Project } from '@logto/schemas';
+import { type CompanySize, type OssSurveyReportPayload, Project } from '@logto/schemas';
 import type { KyInstance } from 'node_modules/ky/distribution/types/ky';
-
-type RequiredOssSurveyField = 'emailAddress' | 'project';
-
-export type OssSurveyReportPayload = Omit<OssQuestionnaire, RequiredOssSurveyField> & {
-  [Key in RequiredOssSurveyField]-?: NonNullable<OssQuestionnaire[Key]>;
-};
 
 export type OssOnboardingFormData = {
   emailAddress: string;

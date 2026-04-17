@@ -12,7 +12,7 @@
     "/api/oss-survey/report": {
       "post": {
         "summary": "Report OSS onboarding survey",
-        "description": "Relays an OSS onboarding survey submission to the configured downstream survey endpoint. This endpoint is public and returns immediately after validating the payload.",
+        "description": "Relays an OSS onboarding survey submission to the configured downstream survey endpoint. This Management API endpoint is available only when dev features are enabled and returns immediately after validating the payload.",
         "responses": {
           "204": {
             "description": "Survey submission accepted for relay."
