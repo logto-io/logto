@@ -23,12 +23,6 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   router: T,
   allRouters: R[]
 ) {
-  const routes = buildRouterObjects(allRouters, { guardCustomRoutes: true });
-  const { pathMap, tags } = groupRoutesByPath(routes);
-  const supplementDocumentsPromise = getSupplementDocuments('routes', {
-    // Exclude interaction routes as they are deprecated.
-    excludeDirectories: ['interaction'],
-  });
   const swaggerDocumentCache = new Map<string, OpenAPIV3.Document>();
 
   router.get('/swagger.json', async (ctx, next) => {
@@ -57,5 +51,12 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     ctx.body = swaggerDocument;
 
     return next();
+  });
+
+  const routes = buildRouterObjects([...allRouters, router], { guardCustomRoutes: true });
+  const { pathMap, tags } = groupRoutesByPath(routes);
+  const supplementDocumentsPromise = getSupplementDocuments('routes', {
+    // Exclude interaction routes as they are deprecated.
+    excludeDirectories: ['interaction'],
   });
 }

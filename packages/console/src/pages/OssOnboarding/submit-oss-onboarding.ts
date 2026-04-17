@@ -1,7 +1,10 @@
 import type { OssUserOnboardingData } from '@logto/schemas';
 
-import type { OssSurveyReportPayload } from './report-oss-survey';
-import { getOssOnboardingSubmitPayload, type OssOnboardingFormData } from './utils';
+import {
+  getOssOnboardingSubmitPayload,
+  type OssOnboardingFormData,
+  type OssSurveyReportPayload,
+} from './utils';
 
 type SubmitOssOnboardingOptions = {
   formData: OssOnboardingFormData;

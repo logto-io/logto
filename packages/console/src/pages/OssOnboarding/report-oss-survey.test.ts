@@ -1,7 +1,7 @@
 import { CompanySize, Project } from '@logto/schemas';
 import type { KyInstance } from 'node_modules/ky/distribution/types/ky';
 
-import { createOssSurveyReporter } from './report-oss-survey.utils';
+import { createOssSurveyReporter } from './utils';
 
 const mockPayload = {
   emailAddress: 'dev@example.com',

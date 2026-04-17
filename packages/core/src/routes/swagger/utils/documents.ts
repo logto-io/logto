@@ -68,8 +68,7 @@ const additionalTags = Object.freeze(
     'SAML applications auth flow',
     'One-time tokens',
     'Captcha provider',
-    'Custom profile fields',
-    'Swagger.json'
+    'Custom profile fields'
   )
 );
 

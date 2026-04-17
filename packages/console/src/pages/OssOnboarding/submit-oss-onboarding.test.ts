@@ -1,8 +1,7 @@
 import { CompanySize, Project, type OssUserOnboardingData } from '@logto/schemas';
 
-import type { OssSurveyReportPayload } from './report-oss-survey';
 import { submitOssOnboarding } from './submit-oss-onboarding';
-import type { OssOnboardingFormData } from './utils';
+import type { OssOnboardingFormData, OssSurveyReportPayload } from './utils';
 
 const mockFormData: OssOnboardingFormData = {
   emailAddress: 'dev@example.com',

@@ -1,11 +1,11 @@
 import { CompanySize, Project } from '@logto/schemas';
 
-import type { OssSurveyReportPayload } from './report-oss-survey';
 import {
   getOssOnboardingDefaultValues,
   getOssOnboardingSubmitPayload,
   shouldRequireCompanyFields,
   type OssOnboardingFormData,
+  type OssSurveyReportPayload,
 } from './utils';
 
 describe('OSS onboarding form utils', () => {
