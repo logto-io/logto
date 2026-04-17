@@ -118,6 +118,9 @@ const createRouters = (tenant: TenantContext) => {
   sentinelActivitiesRoutes(managementRouter, tenant);
   customProfileFieldsRoutes(managementRouter, tenant);
   secretsRoutes(managementRouter, tenant);
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    ossSurveyRoutes(managementRouter, tenant);
+  }
 
   // General anonymous router for publicly accessible APIs
   const anonymousRouter: AnonymousRouter = new Router();
@@ -135,9 +138,6 @@ const createRouters = (tenant: TenantContext) => {
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
   samlApplicationAnonymousRoutes(anonymousRouter, tenant);
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    ossSurveyRoutes(anonymousRouter, tenant);
-  }
 
   wellKnownOpenApiRoutes(anonymousRouter, {
     experienceRouters: [experienceRouter],

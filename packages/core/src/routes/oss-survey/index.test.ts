@@ -4,6 +4,7 @@ import request from 'supertest';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -13,7 +14,13 @@ const { reportOssSurvey } = await mockEsmWithActual('#src/libraries/oss-survey.j
 }));
 
 const initApis = await pickDefault(import('../init.js'));
-const createRequester = () => request(initApis(new MockTenant()).callback());
+const createApiRequester = () => request(initApis(new MockTenant()).callback());
+const createAuthedRequester = () =>
+  createRequester({
+    authedRoutes: ossSurveyRoutes,
+    tenantContext: new MockTenant(),
+  });
+const ossSurveyRoutes = await pickDefault(import('./index.js'));
 
 describe('ossSurveyRoutes', () => {
   const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
@@ -29,9 +36,25 @@ describe('ossSurveyRoutes', () => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
-  it('registers the OSS survey route when dev features are enabled', async () => {
+  it('requires management auth when dev features are enabled', async () => {
     setDevFeaturesEnabled(true);
-    const requester = createRequester();
+    const requester = createApiRequester();
+
+    const response = await requester.post('/oss-survey/report').send({
+      emailAddress: 'dev@example.com',
+      newsletter: true,
+      project: Project.Company,
+      companyName: 'Acme',
+      companySize: CompanySize.Scale3,
+    });
+
+    expect(response.status).toBe(401);
+    expect(reportOssSurvey).not.toHaveBeenCalled();
+  });
+
+  it('reports the survey payload when the management route is accessed with auth', async () => {
+    setDevFeaturesEnabled(true);
+    const requester = createAuthedRequester();
 
     const response = await requester.post('/oss-survey/report').send({
       emailAddress: 'dev@example.com',
@@ -53,7 +76,7 @@ describe('ossSurveyRoutes', () => {
 
   it('rejects invalid payloads before calling the reporter when dev features are enabled', async () => {
     setDevFeaturesEnabled(true);
-    const requester = createRequester();
+    const requester = createAuthedRequester();
     const response = await requester.post('/oss-survey/report').send({
       emailAddress: 'not-an-email',
       project: Project.Personal,
@@ -65,7 +88,7 @@ describe('ossSurveyRoutes', () => {
 
   it('keeps the old flow by not exposing the OSS survey route when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);
-    const requester = createRequester();
+    const requester = createApiRequester();
 
     const response = await requester.post('/oss-survey/report').send({
       emailAddress: 'dev@example.com',

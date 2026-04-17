@@ -1,9 +1,11 @@
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import { ossSurveyPayloadGuard, reportOssSurvey } from '../../libraries/oss-survey.js';
-import type { AnonymousRouter, RouterInitArgs } from '../types.js';
+import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-export default function ossSurveyRoutes<T extends AnonymousRouter>(...[router]: RouterInitArgs<T>) {
+export default function ossSurveyRoutes<T extends ManagementApiRouter>(
+  ...[router]: RouterInitArgs<T>
+) {
   router.post(
     '/oss-survey/report',
     koaGuard({
