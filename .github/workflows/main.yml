@@ -7,6 +7,10 @@ on:
       - "push-action/**"
   pull_request:
 
+env:
+  # TODO: Read this from GitHub repo vars once the OSS survey endpoint is managed centrally.
+  LOGTO_OSS_SURVEY_ENDPOINT: https://logto-oss-survey-dev.svhd.workers.dev
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
@@ -119,6 +123,7 @@ jobs:
           context: .
           build-args: | # Test cloud build
             additional_connector_args=--cloud
+            logto_oss_survey_endpoint=${{ env.LOGTO_OSS_SURVEY_ENDPOINT }}
 
   main-alteration:
     runs-on: ubuntu-latest

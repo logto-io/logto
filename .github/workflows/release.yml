@@ -6,6 +6,10 @@ on:
       - master
   workflow_dispatch:
 
+env:
+  # TODO: Read this from GitHub repo vars once the OSS survey endpoint is managed centrally.
+  LOGTO_OSS_SURVEY_ENDPOINT: https://logto-oss-survey-dev.svhd.workers.dev
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
 
@@ -62,6 +66,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            logto_oss_survey_endpoint=${{ env.LOGTO_OSS_SURVEY_ENDPOINT }}
 
   # Build and push the edge image on every master push
   # Use official docker workflows since we only need to build amd64 images.
@@ -112,6 +118,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            logto_oss_survey_endpoint=${{ env.LOGTO_OSS_SURVEY_ENDPOINT }}
 
   # Publish packages and create git tags if needed
   publish-and-tag:
