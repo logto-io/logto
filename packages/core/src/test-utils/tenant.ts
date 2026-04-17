@@ -63,6 +63,7 @@ export type Partial2<T> = { [key in keyof T]?: Partial<T[key]> };
 export class MockTenant implements TenantContext {
   public id = 'mock_id';
   public envSet = mockEnvSet;
+  public wellKnownCache = new MockWellKnownCache();
   public queries: Queries;
   public logtoConfigs: LogtoConfigLibrary;
   public cloudConnection: CloudConnectionLibrary;

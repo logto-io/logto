@@ -68,6 +68,10 @@ const oidcPrivateKeyLibraries = {
   deletePrivateSigningKey: jest.fn(async () => [
     { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
   ]),
+  stagePrivateSigningKeyRotation: jest.fn(async () => [
+    { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
+    { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+  ]),
   rotatePrivateSigningKeys: jest.fn(async () => [
     { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
     { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Previous },
@@ -81,6 +85,7 @@ describe('configs routes', () => {
     oidcPrivateKeys: oidcPrivateKeyLibraries,
   });
   Sinon.stub(tenantContext, 'logtoConfigs').value(logtoConfigLibraries);
+  Sinon.stub(tenantContext.libraries, 'oidcPrivateKeys').value(oidcPrivateKeyLibraries);
 
   const routeRequester = createRequester({
     authedRoutes: settingRoutes,
@@ -280,5 +285,26 @@ describe('configs routes', () => {
     );
 
     expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey);
+  });
+
+  it('POST /configs/oidc/:keyType/rotate supports staged private-key rotation', async () => {
+    exportJWK.mockResolvedValueOnce({ kty: 'RSA' });
+
+    const response = await routeRequester
+      .post('/configs/oidc/private-keys/rotate')
+      .send({ rotationGracePeriod: 60 });
+
+    expect(response.status).toEqual(200);
+    expect(oidcPrivateKeyLibraries.stagePrivateSigningKeyRotation).toHaveBeenCalledWith(
+      newPrivateKey,
+      60
+    );
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).not.toHaveBeenCalled();
+    expect(response.body[0]).toEqual({
+      id: newPrivateKey.id,
+      createdAt: newPrivateKey.createdAt,
+      signingKeyAlgorithm: 'RSA',
+      status: OidcSigningKeyStatus.Next,
+    });
   });
 });

@@ -218,13 +218,14 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
       }),
       body: z.object({
         signingKeyAlgorithm: z.nativeEnum(SupportedSigningKeyAlgorithm).optional(),
+        rotationGracePeriod: z.number().int().nonnegative().optional(),
       }),
       response: z.array(oidcConfigKeysResponseGuard),
       status: [200, 422],
     }),
     async (ctx, next) => {
       const { keyType } = ctx.guard.params;
-      const { signingKeyAlgorithm } = ctx.guard.body;
+      const { signingKeyAlgorithm, rotationGracePeriod = 0 } = ctx.guard.body;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
 
       const newPrivateKey =
@@ -234,7 +235,12 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
 
       const updatedKeys =
         configKey === LogtoOidcConfigKey.PrivateKeys
-          ? await oidcPrivateKeys.rotatePrivateSigningKeys(newPrivateKey)
+          ? rotationGracePeriod > 0
+            ? await oidcPrivateKeys.stagePrivateSigningKeyRotation(
+                newPrivateKey,
+                rotationGracePeriod
+              )
+            : await oidcPrivateKeys.rotatePrivateSigningKeys(newPrivateKey)
           : await (async () => {
               const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
               const existingKeys = configs[configKey];
@@ -242,7 +248,9 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
               await updateOidcConfigsByKey(configKey, updatedKeys);
               return updatedKeys;
             })();
-      void tenant.invalidateCache();
+      if (!(configKey === LogtoOidcConfigKey.PrivateKeys && rotationGracePeriod > 0)) {
+        void tenant.invalidateCache();
+      }
 
       // Remove actual values of the private keys from response
       ctx.body = await getRedactedOidcKeyResponse(configKey, updatedKeys);

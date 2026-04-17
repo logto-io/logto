@@ -136,6 +136,7 @@ export default class Tenant implements TenantContext {
     const tenantContext: TenantContext = {
       id,
       provider,
+      wellKnownCache: this.wellKnownCache,
       queries,
       logtoConfigs,
       cloudConnection,
