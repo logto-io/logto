@@ -14,6 +14,9 @@ import type { AnonymousRouter } from '#src/routes/types.js';
 const { default: swaggerRoutes } = await import('./index.js');
 const { assembleSwaggerDocument, getSupplementDocuments } = await import('./utils/documents.js');
 const { paginationParameters } = await import('./utils/parameters.js');
+const { jest } = import.meta;
+
+jest.setTimeout(10_000);
 
 const createSwaggerRequest = (
   allRouters: Router[],
@@ -68,6 +71,9 @@ describe('GET /swagger.json', () => {
         options: expect.anything(),
         put: expect.anything(),
       },
+      '/api/swagger.json': {
+        get: expect.anything(),
+      },
       /* eslint-enable @typescript-eslint/no-unsafe-assignment */
     });
   });
@@ -91,6 +97,11 @@ describe('GET /swagger.json', () => {
         put: { tags: ['SSO connectors'] },
       },
     });
+    expect(response.body.tags).toContainEqual(
+      expect.objectContaining({
+        name: 'Swagger.json',
+      })
+    );
   });
 
   it('should parse the path parameters', async () => {

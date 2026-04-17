@@ -1,22 +1,15 @@
-import type { OssQuestionnaire } from '@logto/schemas';
+import { useMemo } from 'react';
 
-type RequiredOssSurveyField = 'emailAddress' | 'project';
+import useApi from '@/hooks/use-api';
 
-export type OssSurveyReportPayload = Omit<OssQuestionnaire, RequiredOssSurveyField> & {
-  [Key in RequiredOssSurveyField]-?: NonNullable<OssQuestionnaire[Key]>;
+import { createOssSurveyReporter } from './report-oss-survey.utils';
+
+export type { OssSurveyReportPayload } from './report-oss-survey.utils';
+
+const useReportOssSurvey = () => {
+  const api = useApi({ hideErrorToast: true });
+
+  return useMemo(() => createOssSurveyReporter(api), [api]);
 };
 
-export const reportOssSurvey = (payload: OssSurveyReportPayload): void => {
-  void (async () => {
-    try {
-      await fetch('/api/oss-survey/report', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        keepalive: true,
-        body: JSON.stringify(payload),
-      });
-    } catch {}
-  })();
-};
+export default useReportOssSurvey;

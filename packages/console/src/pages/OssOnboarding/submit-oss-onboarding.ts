@@ -1,6 +1,6 @@
 import type { OssUserOnboardingData } from '@logto/schemas';
 
-import { reportOssSurvey, type OssSurveyReportPayload } from './report-oss-survey';
+import type { OssSurveyReportPayload } from './report-oss-survey';
 import { getOssOnboardingSubmitPayload, type OssOnboardingFormData } from './utils';
 
 type SubmitOssOnboardingOptions = {
@@ -15,13 +15,13 @@ export const submitOssOnboarding = async ({
   formData,
   isDevFeaturesEnabled,
   navigate,
-  report = reportOssSurvey,
+  report,
   update,
 }: SubmitOssOnboardingOptions) => {
   const questionnaire = getOssOnboardingSubmitPayload(formData);
 
   if (isDevFeaturesEnabled) {
-    report(questionnaire);
+    report?.(questionnaire);
   }
 
   await update({

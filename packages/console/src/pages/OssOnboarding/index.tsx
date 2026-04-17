@@ -24,6 +24,7 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
 
 import styles from './index.module.scss';
+import useReportOssSurvey from './report-oss-survey';
 import { submitOssOnboarding } from './submit-oss-onboarding';
 import {
   getOssOnboardingDefaultValues,
@@ -49,6 +50,7 @@ function OssOnboarding() {
   });
   const project = watch('project');
   const isCompanyProject = shouldRequireCompanyFields(project);
+  const reportOssSurvey = useReportOssSurvey();
 
   useEffect(() => {
     setThemeOverride(Theme.Light);
@@ -73,6 +75,7 @@ function OssOnboarding() {
         formData,
         isDevFeaturesEnabled,
         navigate,
+        report: reportOssSurvey,
         update,
       })
     )

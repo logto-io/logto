@@ -1,6 +1,7 @@
 import { CompanySize, Project } from '@logto/schemas';
+import type { KyInstance } from 'node_modules/ky/distribution/types/ky';
 
-import { reportOssSurvey } from './report-oss-survey';
+import { createOssSurveyReporter } from './report-oss-survey.utils';
 
 const mockPayload = {
   emailAddress: 'dev@example.com',
@@ -10,43 +11,29 @@ const mockPayload = {
   companySize: CompanySize.Scale3,
 } as const;
 
-/* eslint-disable @silverhand/fp/no-mutating-methods */
 describe('reportOssSurvey', () => {
-  const originalFetch = global.fetch;
+  const api = {
+    post: jest.fn<ReturnType<KyInstance['post']>, Parameters<KyInstance['post']>>(),
+  } satisfies Pick<KyInstance, 'post'>;
+
+  const reportOssSurvey = createOssSurveyReporter(api);
 
   beforeEach(() => {
-    Object.defineProperty(global, 'fetch', {
-      configurable: true,
-      value: jest.fn(async () => ({ ok: true })),
-    });
-  });
-
-  afterEach(() => {
-    Object.defineProperty(global, 'fetch', {
-      configurable: true,
-      value: originalFetch,
-    });
-    jest.clearAllMocks();
+    api.post.mockResolvedValue({} as never);
   });
 
   it('posts the survey payload to the OSS survey endpoint', () => {
     reportOssSurvey(mockPayload);
 
-    expect(global.fetch).toHaveBeenCalledWith('/api/oss-survey/report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    expect(api.post).toHaveBeenCalledWith('api/oss-survey/report', {
       keepalive: true,
-      body: JSON.stringify(mockPayload),
+      json: mockPayload,
+      retry: { limit: 0 },
     });
   });
 
   it('swallows request failures', async () => {
-    Object.defineProperty(global, 'fetch', {
-      configurable: true,
-      value: jest.fn(async () => {
-        throw new Error('network error');
-      }),
-    });
+    api.post.mockRejectedValue(new Error('network error'));
 
     expect(() => {
       reportOssSurvey(mockPayload);
@@ -54,5 +41,8 @@ describe('reportOssSurvey', () => {
 
     await Promise.resolve();
   });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 });
-/* eslint-enable @silverhand/fp/no-mutating-methods */
