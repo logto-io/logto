@@ -16,7 +16,6 @@ const useOssOnboardingData = (): {
   hasOssOnboardingRecord: boolean;
   isLoading: boolean;
   isLoaded: boolean;
-  isOnboardingDone: boolean;
   isOnboardingRequired: boolean;
   update: (data: Partial<OssUserOnboardingData>) => Promise<void>;
 } => {
@@ -51,7 +50,6 @@ const useOssOnboardingData = (): {
     hasOssOnboardingRecord,
     isLoading,
     isLoaded,
-    isOnboardingDone: isCloud || Boolean(ossOnboardingData?.isOnboardingDone),
     isOnboardingRequired,
     update,
   };

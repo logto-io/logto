@@ -34,8 +34,7 @@ function OssOnboarding() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { setThemeOverride } = useContext(AppThemeContext);
   const { getTo, navigate } = useTenantPathname();
-  const { data, isLoading, isOnboardingDone, isOnboardingRequired, update } =
-    useOssOnboardingData();
+  const { data, isLoading, isOnboardingRequired, update } = useOssOnboardingData();
   const {
     control,
     formState: { errors, isSubmitting },
@@ -81,7 +80,7 @@ function OssOnboarding() {
     return null;
   }
 
-  if (!isOnboardingRequired || isOnboardingDone) {
+  if (!isOnboardingRequired) {
     return <Navigate replace to={getTo('/get-started')} />;
   }
 

@@ -36,7 +36,6 @@ describe('useOssOnboardingData', () => {
 
     expect(result.current.hasOssOnboardingRecord).toBe(false);
     expect(result.current.isOnboardingRequired).toBe(false);
-    expect(result.current.isOnboardingDone).toBe(false);
   });
 
   it('requires onboarding only when an OSS onboarding record exists and is not done', () => {
@@ -58,6 +57,5 @@ describe('useOssOnboardingData', () => {
 
     expect(result.current.hasOssOnboardingRecord).toBe(true);
     expect(result.current.isOnboardingRequired).toBe(true);
-    expect(result.current.isOnboardingDone).toBe(false);
   });
 });
