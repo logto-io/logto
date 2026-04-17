@@ -1,6 +1,9 @@
 {
   "tags": [
     {
+      "name": "Dev feature"
+    },
+    {
       "name": "Oss survey",
       "description": "Endpoints for relaying OSS onboarding survey submissions."
     }

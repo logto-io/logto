@@ -11,6 +11,7 @@ import PizzaIcon from '@/assets/icons/pizza.svg?react';
 import Logo from '@/assets/images/logo.svg?react';
 import ActionBar from '@/components/ActionBar';
 import PageMeta from '@/components/PageMeta';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import Button from '@/ds-components/Button';
 import Checkbox from '@/ds-components/Checkbox';
@@ -70,6 +71,7 @@ function OssOnboarding() {
     trySubmitSafe(async (formData) =>
       submitOssOnboarding({
         formData,
+        isDevFeaturesEnabled,
         navigate,
         update,
       })

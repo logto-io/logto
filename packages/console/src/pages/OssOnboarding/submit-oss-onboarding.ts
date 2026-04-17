@@ -5,6 +5,7 @@ import { getOssOnboardingSubmitPayload, type OssOnboardingFormData } from './uti
 
 type SubmitOssOnboardingOptions = {
   formData: OssOnboardingFormData;
+  isDevFeaturesEnabled: boolean;
   navigate: (to: string, options: { replace: boolean }) => void;
   report?: (payload: OssQuestionnaire) => void;
   update: (data: Partial<OssUserOnboardingData>) => Promise<void>;
@@ -12,13 +13,16 @@ type SubmitOssOnboardingOptions = {
 
 export const submitOssOnboarding = async ({
   formData,
+  isDevFeaturesEnabled,
   navigate,
   report = reportOssSurvey,
   update,
 }: SubmitOssOnboardingOptions) => {
   const questionnaire = getOssOnboardingSubmitPayload(formData);
 
-  report(questionnaire);
+  if (isDevFeaturesEnabled) {
+    report(questionnaire);
+  }
 
   await update({
     questionnaire,

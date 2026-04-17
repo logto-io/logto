@@ -135,7 +135,9 @@ const createRouters = (tenant: TenantContext) => {
   statusRoutes(anonymousRouter, tenant);
   authnRoutes(anonymousRouter, tenant);
   samlApplicationAnonymousRoutes(anonymousRouter, tenant);
-  ossSurveyRoutes(anonymousRouter, tenant);
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    ossSurveyRoutes(anonymousRouter, tenant);
+  }
 
   wellKnownOpenApiRoutes(anonymousRouter, {
     experienceRouters: [experienceRouter],

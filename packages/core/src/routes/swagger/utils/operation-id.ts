@@ -30,15 +30,14 @@ type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
+  'post /oss-survey/report': 'ReportOssSurvey',
 });
 
-export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
+const baseCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Authn
   'get /authn/hasura': 'GetHasuraAuth',
   'post /authn/saml/:connectorId': 'AssertSaml',
   'post /authn/single-sign-on/saml/:connectorId': 'AssertSingleSignOnSaml',
-  // OSS survey
-  'post /oss-survey/report': 'ReportOssSurvey',
   // Organization users
   'post /organizations/:id/users': 'AddOrganizationUsers',
   'post /organizations/:id/users/roles': 'AssignOrganizationRolesToUsers',
@@ -104,17 +103,21 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // ID token config
   'get /configs/id-token': 'GetIdTokenConfig',
   'put /configs/id-token': 'UpsertIdTokenConfig',
-  // Session config
-  'get /configs/oidc/session': 'GetOidcSessionConfig',
-  'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
-  ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
+
+export const getCustomRoutes = (): Readonly<RouteDictionary> =>
+  Object.freeze({
+    ...baseCustomRoutes,
+    ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
+  });
 
 /**
  * Given a set of built custom routes, throws an error if there are any differences between the
  * built routes and the routes defined in `customRoutes`.
  */
 export const throwByDifference = (builtCustomRoutes: Set<string>) => {
+  const customRoutes = getCustomRoutes();
+
   // Unit tests are hard to cover the full list of custom routes, skip the check.
   if (EnvSet.values.isUnitTest) {
     return;
@@ -186,6 +189,7 @@ const throwIfNeeded = (method: OpenAPIV3.HttpMethods, path: string) => {
  */
 
 export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) => {
+  const customRoutes = getCustomRoutes();
   const customOperationId = customRoutes[`${method} ${path}`];
 
   if (customOperationId) {

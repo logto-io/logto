@@ -6,18 +6,17 @@ import { type OpenAPIV3 } from 'openapi-types';
 import request from 'supertest';
 import { number, object, string } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type { AnonymousRouter } from '#src/routes/types.js';
-import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { default: swaggerRoutes } = await import('./index.js');
-const { assembleSwaggerDocument } = await import('./utils/documents.js');
+const { assembleSwaggerDocument, getSupplementDocuments } = await import('./utils/documents.js');
 const { paginationParameters } = await import('./utils/parameters.js');
-const { default: ossSurveyRoutes } = await import('../oss-survey/index.js');
 
 const createSwaggerRequest = (
-  allRouters: Array<Router | AnonymousRouter>,
+  allRouters: Router[],
   swaggerRouter: AnonymousRouter = new Router()
 ) => {
   swaggerRoutes(swaggerRouter, allRouters);
@@ -355,22 +354,38 @@ describe('GET /swagger.json', () => {
     });
   });
 
-  it('should document OSS survey relay routes without throwing', async () => {
-    const ossSurveyRouter: AnonymousRouter = new Router();
-    ossSurveyRoutes(ossSurveyRouter, new MockTenant());
+  describe('dev feature supplemental documents', () => {
+    const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+    const setDevFeaturesEnabled = (enabled: boolean) => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', enabled);
+    };
 
-    const swaggerRequest = createSwaggerRequest([ossSurveyRouter]);
-    const response = await swaggerRequest.get('/swagger.json');
-
-    expect(response.status).toEqual(200);
-    expect(response.body.paths['/api/oss-survey/report']).toMatchObject({
-      post: {
-        operationId: 'ReportOssSurvey',
-        summary: 'Report OSS onboarding survey',
-      },
+    afterAll(() => {
+      setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
     });
-    expect(response.body.paths['/api/oss-survey/report'].post.description).toContain(
-      'configured downstream survey endpoint'
-    );
+
+    it('includes the OSS survey supplement only when dev features are enabled', async () => {
+      setDevFeaturesEnabled(false);
+      const disabledSupplements = await getSupplementDocuments('routes', {
+        excludeDirectories: ['interaction'],
+      });
+
+      expect(
+        disabledSupplements.some((supplement) =>
+          Boolean(supplement.paths?.['/api/oss-survey/report'])
+        )
+      ).toBe(false);
+
+      setDevFeaturesEnabled(true);
+      const enabledSupplements = await getSupplementDocuments('routes', {
+        excludeDirectories: ['interaction'],
+      });
+
+      expect(
+        enabledSupplements.some((supplement) =>
+          Boolean(supplement.paths?.['/api/oss-survey/report'])
+        )
+      ).toBe(true);
+    });
   });
 });
