@@ -197,35 +197,39 @@ const MfaSection = () => {
             {showToggle && rows.length > 0 && <div className={styles.divider} />}
             {rows.map(({ key, icon: Icon, label, value, isPlainValue, isConfigured, action }) => (
               <div key={key} className={classNames(styles.row, layoutClassNames.row)}>
-                <div className={styles.info}>
-                  <div className={styles.name}>
+                <div className={styles.topLine}>
+                  <div className={styles.iconWrap}>
                     <Icon className={styles.icon} />
-                    {label}
                   </div>
-                  <div className={styles.value}>
-                    {isConfigured ? (
-                      isPlainValue ? (
-                        <span className={styles.plainValue}>{value}</span>
-                      ) : (
-                        <span className={styles.statusTag}>
-                          <span className={styles.statusDot} />
-                          {value}
-                        </span>
-                      )
-                    ) : (
-                      <span className={styles.notConfigured}>
-                        {t('account_center.security.not_configured')}
-                      </span>
-                    )}
-                  </div>
+                  {action && (
+                    <div className={styles.actions}>
+                      <button
+                        type="button"
+                        className={styles.actionButton}
+                        onClick={action.handler}
+                      >
+                        {action.label}
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {action && (
-                  <div className={styles.actions}>
-                    <button type="button" className={styles.actionButton} onClick={action.handler}>
-                      {action.label}
-                    </button>
-                  </div>
-                )}
+                <div className={styles.title}>{label}</div>
+                <div className={styles.value}>
+                  {isConfigured ? (
+                    isPlainValue ? (
+                      <span className={styles.plainValue}>{value}</span>
+                    ) : (
+                      <span className={styles.statusTag}>
+                        <span className={styles.statusDot} />
+                        {value}
+                      </span>
+                    )
+                  ) : (
+                    <span className={styles.notConfigured}>
+                      {t('account_center.security.not_configured')}
+                    </span>
+                  )}
+                </div>
               </div>
             ))}
           </div>

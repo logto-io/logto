@@ -19,33 +19,28 @@
 }
 
 .row {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 200px) minmax(0, 1fr) auto;
+  column-gap: _.unit(6);
   align-items: center;
-  gap: _.unit(6);
   padding: _.unit(5) _.unit(6);
-  min-height: 64px;
+  min-height: 76px;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-line-divider);
   }
 }
 
-.info {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: _.unit(6);
-  min-width: 0;
+.topLine {
+  display: contents;
 }
 
-.name {
-  flex: 1;
-  max-width: 200px;
+.iconWrap {
   display: flex;
   align-items: center;
-  gap: _.unit(4);
-  font: var(--font-label-2);
-  color: var(--color-type-primary);
+  justify-content: center;
+  grid-column: 1;
+  flex-shrink: 0;
 }
 
 .icon {
@@ -55,8 +50,16 @@
   flex-shrink: 0;
 }
 
+.title {
+  grid-column: 2;
+  min-width: 0;
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
 .value {
-  flex: 1;
+  grid-column: 3;
+  min-width: 0;
   display: flex;
   align-items: center;
 }
@@ -90,9 +93,10 @@
 }
 
 .actions {
+  grid-column: 4;
   display: flex;
   align-items: center;
-  gap: _.unit(6);
+  gap: _.unit(4);
   flex-shrink: 0;
 }
 
@@ -142,4 +146,70 @@
 .divider {
   height: 1px;
   background: var(--color-line-divider);
+}
+
+:global(body.mobile) {
+  .sectionTitle {
+    padding-left: 0;
+  }
+
+  .toggleRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: _.unit(3);
+    padding: _.unit(4);
+  }
+
+  .toggleInfo {
+    width: 100%;
+    gap: _.unit(1.5);
+  }
+
+  .toggleTitle,
+  .toggleDescription,
+  .plainValue,
+  .title,
+  .notConfigured {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .row {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: _.unit(1);
+    padding: _.unit(4);
+  }
+
+  .topLine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: _.unit(3);
+    width: 100%;
+  }
+
+  .value {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .statusTag {
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .actionButton {
+    padding: 0;
+    white-space: normal;
+    text-align: left;
+  }
 }
