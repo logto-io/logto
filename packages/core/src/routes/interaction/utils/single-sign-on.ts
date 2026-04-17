@@ -24,6 +24,7 @@ import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { safeParseUnknownJson } from '#src/utils/json.js';
+import { getInitialUserCustomData } from '#src/utils/oss-onboarding.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { encryptAndSerializeTokenResponse } from '#src/utils/secret-encryption.js';
 
@@ -418,6 +419,7 @@ const signInAndLinkWithSsoAuthentication = async (
 export const registerWithSsoAuthentication = async (
   ctx: WithInteractionHooksContext<WithLogContext>,
   {
+    id: currentTenantId,
     queries: { userSsoIdentities: userSsoIdentitiesQueries },
     libraries: { users: usersLibrary },
   }: TenantContext,
@@ -433,12 +435,19 @@ export const registerWithSsoAuthentication = async (
     ...conditional(userInfo.avatar && { avatar: userInfo.avatar }),
     ...conditional(userInfo.email && { primaryEmail: userInfo.email }),
   };
+  const customData = getInitialUserCustomData({
+    isCloud: EnvSet.values.isCloud,
+    isDevFeaturesEnabled: EnvSet.values.isDevFeaturesEnabled,
+    currentTenantId,
+    hasPendingCloudInvitations: false,
+  });
 
   // Insert new user
   const [user] = await usersLibrary.insertUser(
     {
       id: await usersLibrary.generateUserId(),
       ...syncingProfile,
+      ...conditional(customData && { customData }),
       lastSignInAt: Date.now(),
     },
     { isInteractive: true }

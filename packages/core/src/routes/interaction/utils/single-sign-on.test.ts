@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { adminTenantId, ossUserOnboardingDataKey } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import type { Provider } from 'oidc-provider';
 import Sinon from 'sinon';
@@ -86,6 +87,9 @@ const {
 } = await import('./single-sign-on.js');
 
 describe('Single sign on util methods tests', () => {
+  const originalIsCloud = EnvSet.values.isCloud;
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
   const mockContext = {
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
@@ -136,6 +140,16 @@ describe('Single sign on util methods tests', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    tenant.id = 'mock_id';
   });
 
   describe('getSsoAuthorizationUrl tests', () => {
@@ -357,6 +371,33 @@ describe('Single sign on util methods tests', () => {
         issuer: mockIssuer,
         detail: mockSsoUserInfo,
       });
+    });
+
+    it('should set OSS onboarding marker for new OSS admin-tenant SSO users', async () => {
+      insertUserMock.mockResolvedValueOnce([{ id: 'foo' }, { organizations: [] }]);
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      (EnvSet.values as { isCloud: boolean }).isCloud = false;
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      tenant.id = adminTenantId;
+
+      await registerWithSsoAuthentication(mockContext, tenant, {
+        connectorId: wellConfiguredSsoConnector.id,
+        issuer: mockIssuer,
+        userInfo: mockSsoUserInfo,
+      });
+
+      expect(insertUserMock).toBeCalledWith(
+        expect.objectContaining({
+          customData: {
+            [ossUserOnboardingDataKey]: {
+              isOnboardingDone: false,
+            },
+          },
+        }),
+        { isInteractive: true }
+      );
     });
   });
 

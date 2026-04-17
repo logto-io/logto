@@ -1,6 +1,6 @@
 import { Component, CoreEvent, getEventName } from '@logto/app-insights/custom-event';
 import { appInsights } from '@logto/app-insights/node';
-import type { User, UserOnboardingData } from '@logto/schemas';
+import type { User } from '@logto/schemas';
 import {
   AdminTenantRole,
   InteractionEvent,
@@ -15,7 +15,6 @@ import {
   getTenantOrganizationId,
   getTenantRole,
   userMfaDataKey,
-  userOnboardingDataKey,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, conditionalArray } from '@silverhand/essentials';
@@ -26,7 +25,7 @@ import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
-import { getInitialOssOnboardingCustomData } from '#src/utils/oss-onboarding.js';
+import { getInitialUserCustomData } from '#src/utils/oss-onboarding.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
 import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
@@ -134,21 +133,12 @@ async function handleSubmitRegister(
   const hasPendingInvitations = invitations.some(
     (invitation) => invitation.status === OrganizationInvitationStatus.Pending
   );
-  const initialCustomData = {
-    ...conditional(
-      // Skip onboarding flow if the new user has pending Cloud invitations
-      hasPendingInvitations && {
-        [userOnboardingDataKey]: {
-          isOnboardingDone: true,
-        } satisfies UserOnboardingData,
-      }
-    ),
-    ...getInitialOssOnboardingCustomData({
-      isCloud,
-      isDevFeaturesEnabled: EnvSet.values.isDevFeaturesEnabled,
-      currentTenantId,
-    }),
-  };
+  const initialCustomData = getInitialUserCustomData({
+    isCloud,
+    isDevFeaturesEnabled: EnvSet.values.isDevFeaturesEnabled,
+    currentTenantId,
+    hasPendingCloudInvitations: hasPendingInvitations,
+  });
 
   const [user] = await insertUser(
     {
@@ -159,9 +149,7 @@ async function handleSubmitRegister(
           mfaVerifications,
         }
       ),
-      ...conditional(
-        Object.keys(initialCustomData).length > 0 && { customData: initialCustomData }
-      ),
+      ...conditional(initialCustomData && { customData: initialCustomData }),
       ...conditional(
         mfaSkipped && {
           logtoConfig: {

@@ -12,16 +12,14 @@ import {
   SignInMode,
   TenantRole,
   userMfaDataKey,
-  userOnboardingDataKey,
   type User,
-  type UserOnboardingData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
-import { getInitialOssOnboardingCustomData } from '#src/utils/oss-onboarding.js';
+import { getInitialUserCustomData } from '#src/utils/oss-onboarding.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
@@ -228,26 +226,17 @@ export class ProvisionLibrary {
       isCloud
     );
 
-    // Skip onboarding flow if the new user has pending Cloud invitations
-    const customData = {
-      ...conditional(
-        hasPendingInvitations && {
-          [userOnboardingDataKey]: {
-            isOnboardingDone: true,
-          } satisfies UserOnboardingData,
-        }
-      ),
-      ...getInitialOssOnboardingCustomData({
-        isCloud,
-        isDevFeaturesEnabled: EnvSet.values.isDevFeaturesEnabled,
-        currentTenantId,
-      }),
-    };
+    const customData = getInitialUserCustomData({
+      isCloud,
+      isDevFeaturesEnabled: EnvSet.values.isDevFeaturesEnabled,
+      currentTenantId,
+      hasPendingCloudInvitations: hasPendingInvitations,
+    });
 
     return {
       isCreatingFirstAdminUser,
       initialUserRoles,
-      customData: Object.keys(customData).length > 0 ? customData : undefined,
+      customData,
     };
   }
 
