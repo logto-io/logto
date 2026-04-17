@@ -108,6 +108,28 @@ export const getImmediatelyRotatedOidcPrivateKeys = (
 };
 
 /**
+ * Promote a staged Next key into Current and demote the previous Current to Previous.
+ * Returns the original normalized key set when no staged activation is pending.
+ */
+export const rotateOidcPrivateKeyStatuses = (
+  privateKeys: LogtoOidcConfigType['oidc.privateKeys']
+): OidcPrivateKey[] => {
+  const normalizedPrivateKeys = normalizeOidcPrivateKeys(privateKeys);
+  const nextKey = normalizedPrivateKeys.find(({ status }) => status === OidcSigningKeyStatus.Next);
+
+  if (!nextKey) {
+    return privateKeys.every(({ status }) => status) ? privateKeys : normalizedPrivateKeys;
+  }
+
+  const currentKey = getCurrentOidcPrivateKey(normalizedPrivateKeys);
+
+  return [
+    { ...nextKey, status: OidcSigningKeyStatus.Current },
+    { ...currentKey, status: OidcSigningKeyStatus.Previous },
+  ];
+};
+
+/**
  * Rebuild the immediate-flow persisted private-key state after deleting a Previous key.
  */
 export const getOidcPrivateKeysAfterDeletion = (

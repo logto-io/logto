@@ -30,9 +30,6 @@ describe('Well-known cache basics', () => {
       pick(mockConnector0, 'connectorId', 'id', 'metadata'),
     ]);
 
-    await cache.set('tenant-cache-expires-at', WellKnownCache.defaultKey, 123);
-    expect(await cache.get('tenant-cache-expires-at', WellKnownCache.defaultKey)).toBe(123);
-
     await cache.set('resource-by-indicator', 'resource', mockResource);
     expect(await cache.get('resource-by-indicator', 'resource')).toStrictEqual(mockResource);
 

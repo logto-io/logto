@@ -20,4 +20,5 @@ export default abstract class TenantContext {
   public abstract readonly libraries: Libraries;
   public abstract readonly sentinel: Sentinel;
   public abstract invalidateCache(): Promise<void>;
+  public abstract scheduleSigningKeyRotation(timestamp: number): Promise<void>;
 }

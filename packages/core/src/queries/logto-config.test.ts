@@ -28,6 +28,10 @@ const {
   getAdminConsoleConfig,
   getCloudConnectionData,
   getRowsByKeys,
+  getSigningKeyRotationState,
+  setSigningKeyRotationAt,
+  setTenantCacheExpiresAt,
+  upsertSigningKeyRotationState,
   updateAdminConsoleConfig,
   updateOidcConfigsByKey,
 } = createLogtoConfigQueries(pool, new MockWellKnownCache());
@@ -145,6 +149,115 @@ describe('connector queries', () => {
     });
 
     void updateOidcConfigsByKey(LogtoOidcConfigKey.Session, targetValue);
+  });
+
+  test('getSigningKeyRotationState', async () => {
+    const rowData = [
+      {
+        key: LogtoTenantConfigKey.SigningKeyRotationState,
+        value: { signingKeyRotationAt: 123_456_789 },
+      },
+    ];
+    const expectSql = sql`
+      select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+        where ${fields.key} = ${LogtoTenantConfigKey.SigningKeyRotationState}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([LogtoTenantConfigKey.SigningKeyRotationState]);
+
+      return createMockQueryResult(rowData as never);
+    });
+
+    const result = await getSigningKeyRotationState();
+    expect(result).toEqual({ signingKeyRotationAt: 123_456_789 });
+  });
+
+  test('upsertSigningKeyRotationState', async () => {
+    const targetValue = { tenantCacheExpiresAt: 123_456_789 };
+    const targetRowData = { value: targetValue };
+    const expectSql = sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${LogtoTenantConfigKey.SigningKeyRotationState}, ${sql.jsonb(targetValue)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update
+        set ${fields.value} = ${sql.jsonb(targetValue)}
+        returning ${fields.value}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toMatchObject([
+        LogtoTenantConfigKey.SigningKeyRotationState,
+        JSON.stringify(targetValue),
+        JSON.stringify(targetValue),
+      ]);
+
+      return createMockQueryResult([targetRowData] as never);
+    });
+
+    const result = await upsertSigningKeyRotationState(targetValue);
+    expect(result).toEqual(targetValue);
+  });
+
+  test('setTenantCacheExpiresAt', async () => {
+    const timestamp = 123_456_789;
+    const targetValue = { tenantCacheExpiresAt: timestamp, signingKeyRotationAt: 987_654_321 };
+    const expectSql = sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (
+          ${LogtoTenantConfigKey.SigningKeyRotationState},
+          ${sql.jsonb({ tenantCacheExpiresAt: timestamp })}
+        )
+        on conflict (${fields.tenantId}, ${fields.key}) do update
+        set ${fields.value} = coalesce(${fields.value}, '{}'::jsonb) || ${sql.jsonb({
+          tenantCacheExpiresAt: timestamp,
+        })}
+        returning ${fields.value}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toMatchObject([
+        LogtoTenantConfigKey.SigningKeyRotationState,
+        JSON.stringify({ tenantCacheExpiresAt: timestamp }),
+        JSON.stringify({ tenantCacheExpiresAt: timestamp }),
+      ]);
+
+      return createMockQueryResult([{ value: targetValue }] as never);
+    });
+
+    await expect(setTenantCacheExpiresAt(timestamp)).resolves.toEqual(targetValue);
+  });
+
+  test('setSigningKeyRotationAt', async () => {
+    const timestamp = 123_456_789;
+    const targetValue = { tenantCacheExpiresAt: 987_654_321, signingKeyRotationAt: timestamp };
+    const expectSql = sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (
+          ${LogtoTenantConfigKey.SigningKeyRotationState},
+          ${sql.jsonb({ signingKeyRotationAt: timestamp })}
+        )
+        on conflict (${fields.tenantId}, ${fields.key}) do update
+        set ${fields.value} = coalesce(${fields.value}, '{}'::jsonb) || ${sql.jsonb({
+          signingKeyRotationAt: timestamp,
+        })}
+        returning ${fields.value}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toMatchObject([
+        LogtoTenantConfigKey.SigningKeyRotationState,
+        JSON.stringify({ signingKeyRotationAt: timestamp }),
+        JSON.stringify({ signingKeyRotationAt: timestamp }),
+      ]);
+
+      return createMockQueryResult([{ value: targetValue }] as never);
+    });
+
+    await expect(setSigningKeyRotationAt(timestamp)).resolves.toEqual(targetValue);
   });
 });
 

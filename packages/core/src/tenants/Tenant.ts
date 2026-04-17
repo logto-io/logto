@@ -38,6 +38,11 @@ import koaConsentGuard from '../middleware/koa-consent-guard.js';
 import Libraries from './Libraries.js';
 import Queries from './Queries.js';
 import type TenantContext from './TenantContext.js';
+import {
+  getSigningKeyRotationState,
+  isTenantHealthy,
+  syncSigningKeyRotationStateCache,
+} from './signing-key-rotation-state.js';
 import { getTenantDatabaseDsn } from './utils.js';
 
 const consoleLog = new ConsoleLog('tenant');
@@ -139,6 +144,7 @@ export default class Tenant implements TenantContext {
       envSet,
       sentinel,
       invalidateCache: this.invalidateCache.bind(this),
+      scheduleSigningKeyRotation: this.scheduleSigningKeyRotation.bind(this),
     };
 
     // Sign-in experience callback via form submission
@@ -297,31 +303,37 @@ export default class Tenant implements TenantContext {
   }
 
   /**
-   * Set a expiration timestamp in redis cache, and check it before returning the tenant LRU cache. This helps
-   * determine when to invalidate the cached tenant and force a in-place rolling reload of the OIDC provider.
+   * Force the cached tenant instance to be recreated so the next bootstrap reloads OIDC config
+   * and lets the oidc-provider observe newly generated signing keys from storage.
    */
   public async invalidateCache() {
-    await this.wellKnownCache.set('tenant-cache-expires-at', WellKnownCache.defaultKey, Date.now());
+    const tenantCacheExpiresAt = Date.now();
+    const signingKeyRotationState =
+      await this.queries.logtoConfigs.setTenantCacheExpiresAt(tenantCacheExpiresAt);
+    await syncSigningKeyRotationStateCache(this.wellKnownCache, signingKeyRotationState);
   }
 
   /**
-   * Check if the tenant cache is healthy by comparing its creation timestamp with the global expiration timestamp.
+   * Schedule the delayed signing-key activation reload for a future timestamp.
    *
-   * The global tenant expiration timestamp is stored in redis and shared across all server cluster instances. It
-   * can be set by calling `invalidateCache()` method on any tenant instance.
-   *
-   * @returns Resolves `true` if the tenant cache is healthy, `false` if it should be invalidated.
+   * Unlike `invalidateCache()`, which forces the next request to rebuild the tenant immediately
+   * so newly generated keys are published to JWKS, this method records when the staged `Next` key
+   * should become active for signing. Once the scheduled time is reached, `checkHealth()` marks the
+   * cached tenant as stale and the next bootstrap promotes the signing-key statuses before loading
+   * OIDC config.
    */
-  public async checkHealth() {
-    // `tenant-cache-expires-at` is a timestamp set in redis, which indicates all existing tenant instances in LRU
-    // cache should be invalidated after this timestamp, effective for the entire server cluster.
-    const tenantCacheExpiresAt = await this.wellKnownCache.get(
-      'tenant-cache-expires-at',
-      WellKnownCache.defaultKey
-    );
+  public async scheduleSigningKeyRotation(timestamp: number) {
+    const signingKeyRotationState =
+      await this.queries.logtoConfigs.setSigningKeyRotationAt(timestamp);
+    await syncSigningKeyRotationStateCache(this.wellKnownCache, signingKeyRotationState);
+  }
 
-    // Healthy if there's no expiration timestamp, or the current LRU cached tenant instance is created after the
-    // expiration timestamp.
-    return !tenantCacheExpiresAt || tenantCacheExpiresAt < this.#createdAt;
+  public async checkHealth() {
+    const signingKeyRotationState = await getSigningKeyRotationState({
+      wellKnownCache: this.wellKnownCache,
+      queries: this.queries.logtoConfigs,
+    });
+
+    return isTenantHealthy(this.#createdAt, signingKeyRotationState);
   }
 }

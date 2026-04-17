@@ -106,7 +106,12 @@ export class MockTenant implements TenantContext {
   }
 
   public async invalidateCache() {
-    // Do nothing
+    // Test double: cache invalidation side effects are intentionally skipped.
+  }
+
+  public async scheduleSigningKeyRotation(timestamp: number) {
+    void timestamp;
+    // Test double: delayed signing-key rotation is intentionally a no-op.
   }
 
   setPartialKey<Type extends 'queries' | 'libraries', Key extends keyof this[Type]>(

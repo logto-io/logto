@@ -12,6 +12,7 @@ import {
   getOidcPrivateKeysAfterDeletion,
   getOidcProviderPrivateKeys,
   normalizeOidcPrivateKeys,
+  rotateOidcPrivateKeyStatuses,
 } from './oidc-private-key.js';
 
 const { jest } = import.meta;
@@ -118,6 +119,30 @@ describe('getImmediatelyRotatedOidcPrivateKeys', () => {
       createPrivateKey('new', 3, OidcSigningKeyStatus.Current),
       createPrivateKey('current', 2, OidcSigningKeyStatus.Previous),
     ]);
+  });
+});
+
+describe('rotateOidcPrivateKeyStatuses', () => {
+  it('promotes Next to Current and demotes Current to Previous', () => {
+    const result = rotateOidcPrivateKeyStatuses([
+      createPrivateKey('next', 3, OidcSigningKeyStatus.Next),
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('previous', 1, OidcSigningKeyStatus.Previous),
+    ]);
+
+    expect(result).toEqual([
+      createPrivateKey('next', 3, OidcSigningKeyStatus.Current),
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Previous),
+    ]);
+  });
+
+  it('returns the original normalized keys when there is no staged Next key', () => {
+    const privateKeys = [
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
+      createPrivateKey('previous', 1, OidcSigningKeyStatus.Previous),
+    ];
+
+    expect(rotateOidcPrivateKeyStatuses(privateKeys)).toBe(privateKeys);
   });
 });
 
