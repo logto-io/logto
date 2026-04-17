@@ -92,7 +92,7 @@ describe('sendCode parameter passing', () => {
         ip: SAMPLE_IP,
       }),
       expect.objectContaining({
-        skipDelivery: false,
+        validateOnly: false,
       })
     );
   });
@@ -130,7 +130,7 @@ describe('sendCode parameter passing', () => {
     );
     expect(mockSendVerificationCode).toHaveBeenCalledWith(
       expect.any(Object),
-      expect.objectContaining({ skipDelivery: true })
+      expect.objectContaining({ validateOnly: true })
     );
   });
 
@@ -167,7 +167,7 @@ describe('sendCode parameter passing', () => {
     );
     expect(mockSendVerificationCode).toHaveBeenCalledWith(
       expect.any(Object),
-      expect.objectContaining({ skipDelivery: false })
+      expect.objectContaining({ validateOnly: false })
     );
   });
 
@@ -204,7 +204,7 @@ describe('sendCode parameter passing', () => {
     expect(mockQueriesTracking.users.hasUserWithEmail).not.toHaveBeenCalled();
     expect(mockSendVerificationCode).toHaveBeenCalledWith(
       expect.any(Object),
-      expect.objectContaining({ skipDelivery: false })
+      expect.objectContaining({ validateOnly: false })
     );
   });
 
@@ -236,7 +236,7 @@ describe('sendCode parameter passing', () => {
     expect(mockQueriesTracking.users.hasUserWithEmail).not.toHaveBeenCalled();
     expect(mockSendVerificationCode).toHaveBeenCalledWith(
       expect.any(Object),
-      expect.objectContaining({ skipDelivery: false })
+      expect.objectContaining({ validateOnly: false })
     );
   });
 });
