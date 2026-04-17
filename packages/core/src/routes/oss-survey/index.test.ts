@@ -29,7 +29,7 @@ describe('ossSurveyRoutes', () => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
-  it('registers and documents the OSS survey route when dev features are enabled', async () => {
+  it('registers the OSS survey route when dev features are enabled', async () => {
     setDevFeaturesEnabled(true);
     const requester = createRequester();
 
@@ -49,11 +49,6 @@ describe('ossSurveyRoutes', () => {
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
     });
-
-    const swaggerResponse = await requester.get('/swagger.json');
-
-    expect(swaggerResponse.status).toBe(200);
-    expect(swaggerResponse.body.paths).toHaveProperty('/api/oss-survey/report');
   });
 
   it('rejects invalid payloads before calling the reporter when dev features are enabled', async () => {

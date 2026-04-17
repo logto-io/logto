@@ -23,10 +23,20 @@ describe('buildOperationId', () => {
 
   it('should only expose OSS survey custom routes when dev features are enabled', () => {
     setDevFeaturesEnabled(false);
+    expect(getCustomRoutes()).toHaveProperty('get /configs/oidc/session', 'GetOidcSessionConfig');
+    expect(getCustomRoutes()).toHaveProperty(
+      'patch /configs/oidc/session',
+      'UpdateOidcSessionConfig'
+    );
     expect(getCustomRoutes()).not.toHaveProperty('post /oss-survey/report');
     expect(() => buildOperationId(OpenAPIV3.HttpMethods.POST, '/oss-survey/report')).toThrow();
 
     setDevFeaturesEnabled(true);
+    expect(getCustomRoutes()).toHaveProperty('get /configs/oidc/session', 'GetOidcSessionConfig');
+    expect(getCustomRoutes()).toHaveProperty(
+      'patch /configs/oidc/session',
+      'UpdateOidcSessionConfig'
+    );
     expect(getCustomRoutes()).toHaveProperty('post /oss-survey/report', 'ReportOssSurvey');
     expect(buildOperationId(OpenAPIV3.HttpMethods.POST, '/oss-survey/report')).toBe(
       'ReportOssSurvey'

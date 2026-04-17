@@ -28,8 +28,6 @@ const methodToVerb = Object.freeze({
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
 const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
-  'get /configs/oidc/session': 'GetOidcSessionConfig',
-  'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
   'post /oss-survey/report': 'ReportOssSurvey',
 });
 
@@ -38,6 +36,8 @@ const baseCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /authn/hasura': 'GetHasuraAuth',
   'post /authn/saml/:connectorId': 'AssertSaml',
   'post /authn/single-sign-on/saml/:connectorId': 'AssertSingleSignOnSaml',
+  'get /configs/oidc/session': 'GetOidcSessionConfig',
+  'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
   // Organization users
   'post /organizations/:id/users': 'AddOrganizationUsers',
   'post /organizations/:id/users/roles': 'AssignOrganizationRolesToUsers',
