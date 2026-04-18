@@ -72,6 +72,7 @@ const mockSignInExperience: SignInExperience = {
     showPasskeyButton: false,
     allowAutofill: false,
   },
+  signUpProfileFields: null,
 };
 
 describe('sign-in experience parser', () => {
