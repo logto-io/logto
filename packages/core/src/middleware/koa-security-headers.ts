@@ -54,6 +54,15 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';
 
+  /**
+   * Temporary hardcoded tenant-level `connect-src` allowlist for BYO-UI customers.
+   * TODO: migrate to DB so tenants can self-manage. Review each entry for trust.
+   */
+  const customTenantConnectSourceAllowlist = [
+    // LaunchDarkly — A/B testing SDK (flag eval, streaming, events).
+    'https://*.launchdarkly.com',
+  ];
+
   // We have the following use cases:
   //
   // - We use `react-monaco-editor` for code editing in the admin console. It loads the monaco
@@ -135,6 +144,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           'https://recaptcha.net/recaptcha/',
           'https://www.gstatic.com/recaptcha/',
           'https://www.gstatic.cn/recaptcha/',
+          ...customTenantConnectSourceAllowlist,
           ...developmentOrigins,
         ],
         // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
