@@ -10,7 +10,6 @@ import CreateTenantHeaderIcon from '@/assets/icons/create-tenant-header.svg?reac
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import Region, { defaultRegionName, publicInstancesDropdownItem } from '@/components/Region';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
@@ -115,9 +114,8 @@ function CreateTenantModal({ isOpen, onClose }: Props) {
         return;
       }
 
-      // TODO: remove the dev feature guard once the enterprise subscription is ready
       // Private region production tenant creation
-      if (isDevFeaturesEnabled && instanceId !== publicInstancesDropdownItem.name) {
+      if (instanceId !== publicInstancesDropdownItem.name) {
         // Directly call the create tenant API instead of going through the plan selection modal.
         // Based on product design, private region can only have one production tenant plan,
         // and should not go through the subscription checkout flow,
