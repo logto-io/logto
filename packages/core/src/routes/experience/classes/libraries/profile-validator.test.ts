@@ -1,5 +1,6 @@
 import { consoleUserPreferenceKey } from '@logto/schemas';
 
+import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
@@ -10,9 +11,13 @@ const { jest } = import.meta;
 
 describe('ProfileValidator', () => {
   const mockFindAllCustomProfileFields = jest.fn();
+  const mockFindDefaultSignInExperience = jest.fn().mockResolvedValue(mockSignInExperience);
   const queries = new MockQueries({
     customProfileFields: {
       findAllCustomProfileFields: mockFindAllCustomProfileFields,
+    },
+    signInExperiences: {
+      findDefaultSignInExperience: mockFindDefaultSignInExperience,
     },
   });
   const profileValidator = new ProfileValidator(queries);

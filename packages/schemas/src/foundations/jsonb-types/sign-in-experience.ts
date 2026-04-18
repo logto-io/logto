@@ -344,3 +344,23 @@ export const passkeySignInGuard = z
     allowAutofill: z.boolean(),
   })
   .partial() satisfies ToZodObject<PasskeySignIn>;
+
+/**
+ * Configuration for which custom profile fields are shown on the sign-up page and in which order.
+ *
+ * The list is a pure projection over the catalog in `custom_profile_fields` — each entry references
+ * an existing field by name. Fields in the catalog but not in this list are not collected during
+ * sign-up. This enables reusing the same catalog for other surfaces (e.g. account center) without
+ * affecting sign-up.
+ */
+export type SignUpProfileFieldItem = {
+  name: string;
+};
+
+export const signUpProfileFieldItemGuard = z.object({
+  name: z.string(),
+}) satisfies ToZodObject<SignUpProfileFieldItem>;
+
+export const signUpProfileFieldsGuard = z.array(signUpProfileFieldItemGuard);
+
+export type SignUpProfileFields = z.infer<typeof signUpProfileFieldsGuard>;
