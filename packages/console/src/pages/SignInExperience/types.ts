@@ -5,6 +5,7 @@ import {
   type SignInExperience,
   type SignInIdentifier,
   type SignUpIdentifier as SignUpIdentifierMethod,
+  type SignUpProfileFields,
   type AccountCenterFieldControl,
 } from '@logto/schemas';
 /**
@@ -109,10 +110,15 @@ export type SignUpForm = Omit<SignUp, 'identifiers' | 'secondaryIdentifiers'> & 
 
 export type SignInExperienceForm = Omit<
   SignInExperience,
-  'signUp' | 'customCss' | OmittedSignInExperienceKeys
+  'signUp' | 'customCss' | 'signUpProfileFields' | OmittedSignInExperienceKeys
 > & {
   customCss?: string; // Code editor components can not properly handle null value, manually transform null to undefined instead.
   signUp: SignUpForm;
+  /**
+   * `useFieldArray` requires an array, so null from the API is normalized to an empty array when
+   * the form is initialized (see `sieFormDataParser.fromSignInExperience`).
+   */
+  signUpProfileFields: SignUpProfileFields;
   createAccountEnabled: boolean;
 };
 

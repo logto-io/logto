@@ -132,6 +132,10 @@ export const sieFormDataParser = {
     return {
       ...rest,
       signUp: signUpFormDataParser.fromSignUp(signUp),
+      // `useFieldArray` cannot handle `null`, so normalize to an empty array. Legacy tenants
+      // with `null` will see the same empty UI as new tenants; the dev-feature guard keeps the
+      // section hidden in production.
+      signUpProfileFields: rest.signUpProfileFields ?? [],
       createAccountEnabled: rest.signInMode !== SignInMode.SignIn,
       customCss: customCss ?? undefined,
       socialSignIn: {
@@ -188,6 +192,8 @@ export const sieFormDataParser = {
  * Affected fields:
  * - `signUp.secondaryIdentifiers`: This field is optional in the data schema,
  *  but through the form, we always fill it with an empty array.
+ * - `signUpProfileFields`: nullable in the data schema, normalized to an empty array
+ *  to match the form state (see `SignInExperienceForm`).
  * - `mfa`
  * - `adaptiveMfa`
  * - `passwordPolicy`
@@ -219,6 +225,7 @@ export const signInExperienceToUpdatedDataParser = (
       ...signUp,
       secondaryIdentifiers: signUp.secondaryIdentifiers ?? [],
     },
+    signUpProfileFields: rest.signUpProfileFields ?? [],
     ...conditional(isCloud && { hideLogtoBranding }),
   };
 };

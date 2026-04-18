@@ -3,6 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Card from '@/ds-components/Card';
 import Checkbox from '@/ds-components/Checkbox';
 import FormField from '@/ds-components/FormField';
@@ -12,6 +13,7 @@ import FormFieldDescription from '../../components/FormFieldDescription';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
 import SignUpIdentifiersEditBox from './SignUpIdentifiersEditBox';
+import SignUpProfileFieldsEditBox from './SignUpProfileFieldsEditBox';
 import styles from './index.module.scss';
 import useSignUpPasswordListeners from './use-sign-up-password-listeners';
 
@@ -106,6 +108,11 @@ function SignUpForm({ signInExperience }: Props) {
               />
             )}
           </div>
+        </FormField>
+      )}
+      {isDevFeaturesEnabled && (
+        <FormField title="sign_in_exp.sign_up_and_sign_in.sign_up.collect_user_profile">
+          <SignUpProfileFieldsEditBox />
         </FormField>
       )}
     </Card>
