@@ -7,13 +7,15 @@ import { isDevFeaturesEnabled } from '@/consts/env';
 import Card from '@/ds-components/Card';
 import Checkbox from '@/ds-components/Checkbox';
 import FormField from '@/ds-components/FormField';
+import TextLink from '@/ds-components/TextLink';
 
 import type { SignInExperienceForm } from '../../../types';
+import { collectUserProfilePathname } from '../../CollectUserProfile/consts';
 import FormFieldDescription from '../../components/FormFieldDescription';
 import FormSectionTitle from '../../components/FormSectionTitle';
+import ProfileFieldsEditBox from '../../components/ProfileFieldsEditBox';
 
 import SignUpIdentifiersEditBox from './SignUpIdentifiersEditBox';
-import SignUpProfileFieldsEditBox from './SignUpProfileFieldsEditBox';
 import styles from './index.module.scss';
 import useSignUpPasswordListeners from './use-sign-up-password-listeners';
 
@@ -112,7 +114,19 @@ function SignUpForm({ signInExperience }: Props) {
       )}
       {isDevFeaturesEnabled && (
         <FormField title="sign_in_exp.sign_up_and_sign_in.sign_up.collect_user_profile">
-          <SignUpProfileFieldsEditBox />
+          <ProfileFieldsEditBox<SignInExperienceForm, 'signUpProfileFields'>
+            name="signUpProfileFields"
+            addProfileFieldsButtonTitle="sign_in_exp.sign_up_and_sign_in.sign_up.add_profile_fields"
+            hint={
+              <>
+                {t('sign_in_exp.sign_up_and_sign_in.sign_up.profile_fields_hint.not_in_list')}
+                <TextLink to={collectUserProfilePathname}>
+                  {t('sign_in_exp.sign_up_and_sign_in.sign_up.profile_fields_hint.set_up')}
+                </TextLink>
+                {t('sign_in_exp.sign_up_and_sign_in.sign_up.profile_fields_hint.go_to')}
+              </>
+            }
+          />
         </FormField>
       )}
     </Card>

@@ -18,6 +18,8 @@ import type {
   AccountCenterFieldKey,
   SignInExperienceForm,
 } from '../../types';
+import { collectUserProfilePathname } from '../CollectUserProfile/consts';
+import ProfileFieldsEditBox from '../components/ProfileFieldsEditBox';
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
 import AccountCenterField from './AccountCenterField';
@@ -158,6 +160,26 @@ function AccountCenter({ isActive, data }: Props) {
                   <DeleteAccountUrlField isAccountApiEnabled={isAccountApiEnabled} />
                 )}
               </>
+            )}
+            {section.key === 'userProfile' && isDevFeaturesEnabled && (
+              <FormField title="sign_in_exp.account_center.profile_fields.title">
+                <ProfileFieldsEditBox<
+                  SignInExperienceForm & { accountCenter: AccountCenterFormValues },
+                  'accountCenter.profileFields'
+                >
+                  name="accountCenter.profileFields"
+                  addProfileFieldsButtonTitle="sign_in_exp.account_center.profile_fields.add_profile_fields"
+                  hint={
+                    <>
+                      {t('sign_in_exp.account_center.profile_fields.hint.not_in_list')}
+                      <TextLink to={collectUserProfilePathname}>
+                        {t('sign_in_exp.account_center.profile_fields.hint.set_up')}
+                      </TextLink>
+                      {t('sign_in_exp.account_center.profile_fields.hint.go_to')}
+                    </>
+                  }
+                />
+              </FormField>
             )}
           </div>
         </FormCard>

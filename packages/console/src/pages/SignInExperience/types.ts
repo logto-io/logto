@@ -1,6 +1,7 @@
 import {
   AccountCenterControlValue,
   type AccountCenter as AccountCenterConfig,
+  type AccountCenterProfileFields,
   type SignUp,
   type SignInExperience,
   type SignInIdentifier,
@@ -52,6 +53,11 @@ export type AccountCenterFormValues = {
   webauthnRelatedOrigins: string[];
   deleteAccountUrl: string;
   customCss?: string;
+  /**
+   * `useFieldArray` requires an array, so null from the API is normalized to an empty array when
+   * the form is initialized (see `convertAccountCenterToForm`).
+   */
+  profileFields: AccountCenterProfileFields;
 };
 
 const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
@@ -62,6 +68,7 @@ const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
   ) as Record<AccountCenterFieldKey, AccountCenterControlValue>,
   webauthnRelatedOrigins: [],
   deleteAccountUrl: '',
+  profileFields: [],
 });
 
 export const normalizeWebauthnRelatedOrigins = (origins?: string[]): string[] =>
@@ -80,6 +87,7 @@ export const convertAccountCenterToForm = (
   webauthnRelatedOrigins: normalizeWebauthnRelatedOrigins(accountCenter?.webauthnRelatedOrigins),
   deleteAccountUrl: normalizeDeleteAccountUrl(accountCenter?.deleteAccountUrl ?? undefined),
   customCss: accountCenter?.customCss ?? undefined,
+  profileFields: accountCenter?.profileFields ?? [],
 });
 
 /**

@@ -13,7 +13,8 @@
   color: var(--color-text-secondary);
   margin-top: _.unit(2);
 
-  .setup {
+  // Space inline links (e.g. the "Set up" TextLink) from surrounding hint text.
+  > :global(a) {
     margin: 0 _.unit(1);
   }
 }
