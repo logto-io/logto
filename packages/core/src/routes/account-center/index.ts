@@ -1,6 +1,7 @@
 import {
   AccountCenters,
   accountCenterFieldControlGuard,
+  accountCenterProfileFieldsGuard,
   deleteAccountUrlGuard,
   webauthnRelatedOriginsGuard,
 } from '@logto/schemas';
@@ -14,8 +15,9 @@ import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 export default function accountCentersRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
 ) {
-  const [router, { queries }] = args;
+  const [router, { queries, libraries }] = args;
   const { findDefaultAccountCenter, updateDefaultAccountCenter } = queries.accountCenters;
+  const { normalizeAccountCenterProfileFields } = libraries.customProfileFields;
   router.get(
     '/account-center',
     koaGuard({
@@ -38,15 +40,23 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         webauthnRelatedOrigins: webauthnRelatedOriginsGuard.optional(),
         deleteAccountUrl: deleteAccountUrlGuard.nullable().optional(),
         customCss: z.string().nullish(),
+        profileFields: accountCenterProfileFieldsGuard.nullable().optional(),
       }),
       response: AccountCenters.guard,
       status: [200],
     }),
 
     async (ctx, next) => {
-      const { enabled, fields, webauthnRelatedOrigins, deleteAccountUrl, customCss } =
-        ctx.guard.body;
+      const {
+        enabled,
+        fields,
+        webauthnRelatedOrigins,
+        deleteAccountUrl,
+        customCss,
+        profileFields,
+      } = ctx.guard.body;
       const normalizedDeleteAccountUrl = deleteAccountUrl === '' ? null : deleteAccountUrl;
+      const normalizedProfileFields = await normalizeAccountCenterProfileFields(profileFields);
 
       // Make sure the account center exists
       await findDefaultAccountCenter();
@@ -58,6 +68,9 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
           : undefined,
         deleteAccountUrl: normalizedDeleteAccountUrl,
         customCss,
+        ...(normalizedProfileFields !== undefined && {
+          profileFields: normalizedProfileFields,
+        }),
       });
 
       ctx.body = updatedAccountCenter;

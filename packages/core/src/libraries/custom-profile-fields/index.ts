@@ -1,4 +1,5 @@
 import {
+  type AccountCenter,
   type SignInExperience,
   type UpdateCustomProfileFieldData,
   type CustomProfileFieldUnion,
@@ -65,9 +66,22 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     return updateFieldOrderInSignInExperience(data);
   };
 
+  const validateProfileFieldsList = async (fields: ReadonlyArray<{ name: string }>) => {
+    const catalog = await queries.customProfileFields.findAllCustomProfileFields();
+    const validNames = new Set(catalog.map(({ name }) => name));
+    const missing = fields.map(({ name }) => name).filter((name) => !validNames.has(name));
+    assertThat(
+      missing.length === 0,
+      new RequestError({
+        code: 'custom_profile_fields.entity_not_exists_with_names',
+        names: missing.join(', '),
+      })
+    );
+    const uniqueNames = new Set(fields.map(({ name }) => name));
+    assertThat(uniqueNames.size === fields.length, 'request.invalid_input', 400);
+  };
+
   /**
-   * Validate and normalize the `signUpProfileFields` config from a Sign-in Experience patch body.
-   *
    * Returns `undefined` when the dev feature is off (the field is silently dropped) so callers can
    * conditionally spread the value into the update payload without changing legacy behavior.
    */
@@ -80,22 +94,21 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     if (!signUpProfileFields) {
       return signUpProfileFields;
     }
-
-    const catalog = await queries.customProfileFields.findAllCustomProfileFields();
-    const validNames = new Set(catalog.map(({ name }) => name));
-    const missing = signUpProfileFields
-      .map(({ name }) => name)
-      .filter((name) => !validNames.has(name));
-    assertThat(
-      missing.length === 0,
-      new RequestError({
-        code: 'custom_profile_fields.entity_not_exists_with_names',
-        names: missing.join(', '),
-      })
-    );
-    const uniqueNames = new Set(signUpProfileFields.map(({ name }) => name));
-    assertThat(uniqueNames.size === signUpProfileFields.length, 'request.invalid_input', 400);
+    await validateProfileFieldsList(signUpProfileFields);
     return signUpProfileFields;
+  };
+
+  const normalizeAccountCenterProfileFields = async (
+    profileFields: AccountCenter['profileFields'] | undefined
+  ): Promise<AccountCenter['profileFields'] | undefined> => {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return undefined;
+    }
+    if (!profileFields) {
+      return profileFields;
+    }
+    await validateProfileFieldsList(profileFields);
+    return profileFields;
   };
 
   return {
@@ -104,5 +117,6 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     updateCustomProfileField,
     updateCustomProfileFieldsSieOrder,
     normalizeSignUpProfileFields,
+    normalizeAccountCenterProfileFields,
   };
 };
