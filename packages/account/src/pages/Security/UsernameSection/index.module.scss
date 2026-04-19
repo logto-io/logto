@@ -21,6 +21,7 @@
 .row {
   display: grid;
   grid-template-columns: minmax(0, 200px) minmax(0, 1fr) auto;
+  grid-auto-flow: dense;
   column-gap: _.unit(6);
   align-items: center;
   padding: _.unit(5) _.unit(6);

@@ -20,7 +20,8 @@
 
 .row {
   display: grid;
-  grid-template-columns: auto minmax(0, 200px) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr) auto;
+  grid-auto-flow: dense;
   column-gap: _.unit(4);
   align-items: center;
   padding: _.unit(4.5) _.unit(6);
@@ -35,11 +36,14 @@
   display: contents;
 }
 
+// Icon and name share the same grid cell so the name slot stays within 200px,
+// matching the original non-grid layout. Name offsets via padding to sit after the icon.
 .iconWrap {
+  grid-column: 1;
+  grid-row: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
-  grid-column: 1;
+  justify-self: start;
   flex-shrink: 0;
 }
 
@@ -51,14 +55,16 @@
 }
 
 .connectorName {
-  grid-column: 2;
+  grid-column: 1;
+  grid-row: 1;
   min-width: 0;
+  padding-left: calc(20px + #{_.unit(4)});
   font: var(--font-label-2);
   color: var(--color-type-primary);
 }
 
 .identityInfo {
-  grid-column: 3;
+  grid-column: 2;
   display: flex;
   align-items: center;
   gap: _.unit(3);
@@ -90,14 +96,14 @@
 }
 
 .notLinked {
-  grid-column: 3;
+  grid-column: 2;
   min-width: 0;
   font: var(--font-body-2);
   color: var(--color-type-secondary);
 }
 
 .actions {
-  grid-column: 4;
+  grid-column: 3;
   display: flex;
   align-items: center;
   gap: _.unit(4);
@@ -157,6 +163,10 @@
     width: 100%;
     overflow-wrap: anywhere;
     word-break: break-word;
+  }
+
+  .connectorName {
+    padding-left: 0;
   }
 
   .identityInfo {
