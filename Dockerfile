@@ -9,9 +9,14 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true
 ### Install toolchain ###
 RUN npm add --location=global pnpm@^10.0.0
 # https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#node-gyp-alpine
-RUN apk add --no-cache python3 make g++ rsync
+RUN apk add --no-cache python3 make g++ rsync dos2unix
 
 COPY . .
+
+# Normalize line endings for shell scripts. When the repo is checked out on
+# Windows, git may convert LF -> CRLF in the working tree, which breaks
+# busybox sh inside Alpine with errors like "unexpected end of file".
+RUN find . -type f -name "*.sh" -not -path "./node_modules/*" -exec dos2unix {} +
 
 ### Install dependencies and build ###
 RUN pnpm i

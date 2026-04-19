@@ -29,9 +29,11 @@ import {
   organizationDataHookTestCases,
   organizationRoleDataHookTestCases,
   organizationScopeDataHookTestCases,
+  organizationUserRoleDataHookTestCases,
   roleDataHookTestCases,
   scopesDataHookTestCases,
   userDataHookTestCases,
+  userRoleDataHookTestCases,
 } from './test-cases.js';
 
 const mockHookResponseGuard = z.object({
@@ -174,6 +176,55 @@ describe('role data hook events', () => {
       );
       const hook = await getWebhookResult(route);
       expect(hook?.payload.event).toBe(event);
+    }
+  );
+});
+
+describe('user role data hook events', () => {
+  /* eslint-disable @silverhand/fp/no-let */
+  let userId: string;
+  let roleId: string;
+  /* eslint-enable @silverhand/fp/no-let */
+
+  beforeAll(async () => {
+    const { user } = await generateNewUser({ username: true, password: true });
+    const role = await authedAdminApi
+      .post('roles', {
+        json: {
+          name: generateName(),
+          description: 'user-role-data-hook-role',
+          type: RoleType.User,
+        },
+      })
+      .json<Role>();
+
+    /* eslint-disable @silverhand/fp/no-mutation */
+    userId = user.id;
+    roleId = role.id;
+    /* eslint-enable @silverhand/fp/no-mutation */
+  });
+
+  afterAll(async () => {
+    await authedAdminApi.delete(`users/${userId}`);
+    await authedAdminApi.delete(`roles/${roleId}`);
+  });
+
+  it.each(userRoleDataHookTestCases)(
+    'test case %#: %p',
+    async ({ route, event, method, endpoint, payload, hookPayload }) => {
+      await authedAdminApi[method](
+        endpoint.replace('{userId}', userId).replace('{roleId}', roleId),
+        {
+          json: JSON.parse(
+            JSON.stringify(payload).replace('{userId}', userId).replace('{roleId}', roleId)
+          ),
+        }
+      );
+      const hook = await getWebhookResult(route);
+      expect(hook?.payload.event).toBe(event);
+      if (hookPayload) {
+        expect(hook?.payload).toMatchObject(hookPayload);
+      }
     }
   );
 });
@@ -357,6 +408,70 @@ describe('organization role data hook events', () => {
       );
       const hook = await getWebhookResult(route);
       expect(hook?.payload.event).toBe(event);
+    }
+  );
+});
+
+describe('organization user role data hook events', () => {
+  /* eslint-disable @silverhand/fp/no-let */
+  let organizationId: string;
+  let userId: string;
+  let organizationRoleId: string;
+  /* eslint-enable @silverhand/fp/no-let */
+
+  const organizationApi = new OrganizationApiTest();
+  const userApi = new UserApiTest();
+  const roleApi = new OrganizationRoleApiTest();
+
+  beforeAll(async () => {
+    const organization = await organizationApi.create({
+      name: generateName(),
+      description: 'organization user role data hook test organization.',
+    });
+    const user = await userApi.create({ name: generateName() });
+    const organizationRole = await roleApi.create({
+      name: generateName(),
+      description: 'organization user role data hook test role.',
+    });
+
+    /* eslint-disable @silverhand/fp/no-mutation */
+    organizationId = organization.id;
+    userId = user.id;
+    organizationRoleId = organizationRole.id;
+    /* eslint-enable @silverhand/fp/no-mutation */
+
+    // Add the user as a member of the organization so role-relation endpoints pass the
+    // membership guard.
+    await authedAdminApi.post(`organizations/${organizationId}/users`, {
+      json: { userIds: [userId] },
+    });
+  });
+
+  afterAll(async () => {
+    await Promise.all([organizationApi.cleanUp(), userApi.cleanUp(), roleApi.cleanUp()]);
+  });
+
+  it.each(organizationUserRoleDataHookTestCases)(
+    'test case %#: %p',
+    async ({ route, event, method, endpoint, payload, hookPayload }) => {
+      await authedAdminApi[method](
+        endpoint
+          .replace('{organizationId}', organizationId)
+          .replace('{userId}', userId)
+          .replace('{organizationRoleId}', organizationRoleId),
+        {
+          json: JSON.parse(
+            JSON.stringify(payload)
+              .replace('{userId}', userId)
+              .replace('{organizationRoleId}', organizationRoleId)
+          ),
+        }
+      );
+      const hook = await getWebhookResult(route);
+      expect(hook?.payload.event).toBe(event);
+      if (hookPayload) {
+        expect(hook?.payload).toMatchObject(hookPayload);
+      }
     }
   );
 });

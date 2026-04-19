@@ -31,6 +31,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     originalRouter,
     {
       id: tenantId,
+      queries,
       queries: { organizations },
       libraries: { quota },
     },
@@ -107,7 +108,7 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  userRoutes(router, organizations, quota);
+  userRoutes(router, organizations, quota, queries);
   applicationRoutes(router, organizations);
   jitRoutes(router, organizations);
 

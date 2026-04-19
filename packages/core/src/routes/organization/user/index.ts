@@ -2,6 +2,7 @@ import {
   type OrganizationKeys,
   type CreateOrganization,
   type Organization,
+  OrganizationRoles,
   userWithOrganizationRolesGuard,
   Users,
 } from '@logto/schemas';
@@ -13,6 +14,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type OrganizationQueries from '#src/queries/organization/index.js';
 import { userSearchKeys } from '#src/queries/user.js';
+import type Queries from '#src/tenants/Queries.js';
 import type SchemaRouter from '#src/utils/SchemaRouter.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 
@@ -22,8 +24,12 @@ import userRoleRelationRoutes from './role-relations.js';
 export default function userRoutes(
   router: SchemaRouter<OrganizationKeys, CreateOrganization, Organization>,
   organizations: OrganizationQueries,
-  quota: QuotaLibrary
+  quota: QuotaLibrary,
+  queries: Queries
 ) {
+  const {
+    users: { findUserById },
+  } = queries;
   router.get(
     '/:id/users',
     koaPagination(),
@@ -173,9 +179,32 @@ export default function userRoutes(
       );
 
       ctx.status = 201;
+
+      // Emit one `Organization.UserRoles.Updated` event per affected user so each payload
+      // contains the full user + role set for that user in this organization.
+      await Promise.all(
+        userIds.map(async (userId) => {
+          const [user, [, organizationRoles]] = await Promise.all([
+            findUserById(userId),
+            organizations.relations.usersRoles.getEntities(OrganizationRoles, {
+              organizationId: id,
+              userId,
+            }),
+          ]);
+
+          ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+            ...buildManagementApiContext(ctx),
+            organizationId: id,
+            user,
+            organizationRoles,
+            addedOrganizationRoleIds: organizationRoleIds,
+          });
+        })
+      );
+
       return next();
     }
   );
 
-  userRoleRelationRoutes(router, organizations);
+  userRoleRelationRoutes(router, organizations, queries);
 }
