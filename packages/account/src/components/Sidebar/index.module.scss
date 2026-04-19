@@ -3,6 +3,7 @@
 .sidebar {
   width: 220px;
   flex-shrink: 0;
+  justify-self: start;
   padding: _.unit(3) _.unit(2);
 }
 

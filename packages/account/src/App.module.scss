@@ -22,9 +22,11 @@
 }
 
 .withSidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   gap: _.unit(6);
-  align-items: flex-start;
-  padding-left: _.unit(6);
+  align-items: start;
+  padding: 0 _.unit(6);
 }
 
 .main {
