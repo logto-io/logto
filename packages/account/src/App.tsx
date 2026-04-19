@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import AppBoundary from '@ac/Providers/AppBoundary';
 import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
 import PageHeader from '@ac/components/PageHeader';
+import Sidebar from '@ac/components/Sidebar';
 import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from './App.module.scss';
@@ -20,6 +21,7 @@ import GlobalLoading from './components/GlobalLoading';
 import { isDevFeaturesEnabled } from './constants/env';
 import {
   securityRoute,
+  profileRoute,
   emailRoute,
   emailSuccessRoute,
   phoneRoute,
@@ -54,6 +56,7 @@ import PasskeyBinding from './pages/PasskeyBinding';
 import PasskeyView from './pages/PasskeyView';
 import Password from './pages/Password';
 import Phone from './pages/Phone';
+import Profile from './pages/Profile';
 import Security from './pages/Security';
 import SocialCallback from './pages/SocialCallback';
 import SocialFlow from './pages/SocialFlow';
@@ -220,6 +223,7 @@ const Main = () => {
         </>
       )}
       {showsSecurityPage && <Route path={securityRoute} element={<Security />} />}
+      {isDevFeaturesEnabled && <Route path={profileRoute} element={<Profile />} />}
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>
@@ -230,33 +234,37 @@ const Layout = () => {
   const { accountCenterSettings, experienceSettings, theme } = useContext(PageContext);
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
-  const isHomePage =
-    pathname === securityRoute &&
-    isDevFeaturesEnabled &&
-    hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
+  const showsSecurityPage =
+    isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
+  const isSecurityFullPage = pathname === securityRoute && showsSecurityPage;
+  const isProfileFullPage = pathname === profileRoute && isDevFeaturesEnabled;
+  const isFullPage = isSecurityFullPage || isProfileFullPage;
+  const showsSidebar = isDevFeaturesEnabled && isFullPage;
 
   return (
     <div className={classNames(styles.app, layoutClassNames.app)}>
       <div
         className={classNames(
           styles.layout,
-          isHomePage && styles.fullPage,
+          isFullPage && styles.fullPage,
           layoutClassNames.pageContainer
         )}
       >
-        {isHomePage && <PageHeader />}
+        {isFullPage && <PageHeader />}
         <div
           className={classNames(
             styles.container,
-            !isHomePage && styles.cardContainer,
-            !isHomePage && layoutClassNames.cardContainer
+            !isFullPage && styles.cardContainer,
+            !isFullPage && layoutClassNames.cardContainer,
+            showsSidebar && styles.withSidebar
           )}
         >
+          {showsSidebar && <Sidebar hasProfile hasSecurity={showsSecurityPage} />}
           <main
             className={classNames(
               styles.main,
-              !isHomePage && styles.cardMain,
-              isHomePage ? layoutClassNames.mainContent : layoutClassNames.cardMain
+              !isFullPage && styles.cardMain,
+              isFullPage ? layoutClassNames.mainContent : layoutClassNames.cardMain
             )}
           >
             <ErrorBoundary>
@@ -264,7 +272,7 @@ const Layout = () => {
                 <Main />
               </LogtoErrorBoundary>
             </ErrorBoundary>
-            {!isHomePage && !hideLogtoBranding && (
+            {!isFullPage && !hideLogtoBranding && (
               <LogtoSignature
                 className={classNames(styles.signature, layoutClassNames.signature)}
                 theme={theme}

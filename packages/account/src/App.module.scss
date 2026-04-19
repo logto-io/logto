@@ -21,6 +21,12 @@
   justify-content: center;
 }
 
+.withSidebar {
+  gap: _.unit(6);
+  align-items: flex-start;
+  padding-left: _.unit(6);
+}
+
 .main {
   width: 760px;
   display: flex;

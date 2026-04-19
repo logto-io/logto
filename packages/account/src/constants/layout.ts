@@ -40,4 +40,8 @@ export const layoutClassNames = Object.freeze({
   secondaryPageTitle: 'logto_ac-secondary-page-title',
   /** Secondary page description. */
   secondaryPageDescription: 'logto_ac-secondary-page-description',
+  /** Sidebar navigation on the Security / Profile page. */
+  sidebar: 'logto_ac-sidebar',
+  /** A navigation item inside the sidebar. */
+  sidebarItem: 'logto_ac-sidebar-item',
 });

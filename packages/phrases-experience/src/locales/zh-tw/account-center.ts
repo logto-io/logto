@@ -7,6 +7,14 @@ const account_center = {
     title: '帳戶',
     security_title: '安全',
     security_description: '你可以在這裡變更帳戶設定，以確保帳戶安全。',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
     support: '支援',
   },
   verification: {
