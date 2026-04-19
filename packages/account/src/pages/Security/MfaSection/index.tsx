@@ -16,6 +16,7 @@ import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { layoutClassNames } from '@ac/constants/layout';
 import { verifiedActionRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
+import { hasVisibleMfaSection } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../../apis/mfa';
@@ -48,6 +49,7 @@ const MfaSection = () => {
   const enabledFactors = experienceSettings?.mfa.factors ?? [];
   const mfaPolicy = experienceSettings?.mfa.policy;
   const isEditable = mfaControl === AccountCenterControlValue.Edit;
+  const isMfaSectionVisible = hasVisibleMfaSection(mfaControl, experienceSettings);
 
   const showToggle =
     isDevFeaturesEnabled &&
@@ -77,8 +79,10 @@ const MfaSection = () => {
   }, [getMfaSettingsRequest]);
 
   useEffect(() => {
-    void fetchMfaVerifications();
-  }, [fetchMfaVerifications]);
+    if (isMfaSectionVisible) {
+      void fetchMfaVerifications();
+    }
+  }, [isMfaSectionVisible, fetchMfaVerifications]);
 
   useEffect(() => {
     if (showToggle) {
