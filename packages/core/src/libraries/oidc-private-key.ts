@@ -1,6 +1,10 @@
 import type { LogtoOidcConfigType, OidcPrivateKey } from '@logto/schemas';
 import { OidcSigningKeyStatus } from '@logto/schemas';
 
+import RequestError from '#src/errors/RequestError/index.js';
+import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
+import type Queries from '#src/tenants/Queries.js';
+
 type NormalizedOidcPrivateKey = OidcPrivateKey & {
   status: OidcSigningKeyStatus;
 };
@@ -111,3 +115,62 @@ export const getOidcPrivateKeysAfterDeletion = (
   deletedKeyId: string
 ): OidcPrivateKey[] =>
   getCanonicalOidcPrivateKeys(privateKeys).filter(({ id }) => id !== deletedKeyId);
+
+export class OidcPrivateKeyLibrary {
+  constructor(private readonly queries: Queries) {}
+
+  async deletePrivateSigningKey(keyId: string): Promise<OidcPrivateKey[]> {
+    return this.queries.pool.transaction(async (connection) => {
+      const logtoConfigQueries = createLogtoConfigQueries(connection, this.queries.wellKnownCache);
+
+      await logtoConfigQueries.lockPrivateSigningKeys();
+
+      const privateKeys = normalizeOidcPrivateKeys(
+        await logtoConfigQueries.getPrivateSigningKeys()
+      );
+
+      if (privateKeys.length <= 1) {
+        throw new RequestError({ code: 'oidc.key_required', status: 422 });
+      }
+
+      const deletingKey = privateKeys.find(({ id }) => id === keyId);
+
+      if (!deletingKey) {
+        throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
+      }
+
+      if (deletingKey.status !== OidcSigningKeyStatus.Previous) {
+        throw new RequestError({
+          code: 'oidc.only_previous_key_can_be_deleted',
+          status: 422,
+        });
+      }
+
+      const updatedPrivateKeys = getOidcPrivateKeysAfterDeletion(privateKeys, keyId);
+      await logtoConfigQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
+
+      return updatedPrivateKeys;
+    });
+  }
+
+  async rotatePrivateSigningKeys(newPrivateKey: OidcPrivateKey): Promise<OidcPrivateKey[]> {
+    return this.queries.pool.transaction(async (connection) => {
+      const logtoConfigQueries = createLogtoConfigQueries(connection, this.queries.wellKnownCache);
+
+      await logtoConfigQueries.lockPrivateSigningKeys();
+
+      const privateKeys = normalizeOidcPrivateKeys(
+        await logtoConfigQueries.getPrivateSigningKeys()
+      );
+
+      if (privateKeys.some(({ status }) => status === OidcSigningKeyStatus.Next)) {
+        throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
+      }
+
+      const updatedPrivateKeys = getImmediatelyRotatedOidcPrivateKeys(privateKeys, newPrivateKey);
+      await logtoConfigQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
+
+      return updatedPrivateKeys;
+    });
+  }
+}

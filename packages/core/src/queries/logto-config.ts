@@ -19,7 +19,6 @@ import { type z } from 'zod';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
-import { normalizeOidcPrivateKeys } from '#src/libraries/oidc-private-key.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
@@ -28,11 +27,8 @@ export const createLogtoConfigQueries = (
   pool: CommonQueryMethods,
   wellKnownCache: WellKnownCache
 ) => {
-  const upsertPrivateSigningKeys = async (
-    executor: CommonQueryMethods,
-    privateKeys: OidcPrivateKey[]
-  ) =>
-    executor.one<{ key: LogtoOidcConfigKey.PrivateKeys; value: unknown }>(sql`
+  const upsertPrivateSigningKeys = async (privateKeys: OidcPrivateKey[]) =>
+    pool.one<{ key: LogtoOidcConfigKey.PrivateKeys; value: unknown }>(sql`
       insert into ${table} (${fields.key}, ${fields.value})
         values (${LogtoOidcConfigKey.PrivateKeys}, ${sql.jsonb(privateKeys)})
         on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
@@ -78,31 +74,22 @@ export const createLogtoConfigQueries = (
     }
   };
 
-  const updatePrivateSigningKeysWithLock = async (
-    updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]
-  ): Promise<OidcPrivateKey[]> =>
-    pool.transaction(async (transaction) => {
-      await transaction.query(sql`
-        select ${fields.key}
-        from ${table}
-        where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
-        for update
-      `);
+  const lockPrivateSigningKeys = async () =>
+    pool.query(sql`
+      select ${fields.key}
+      from ${table}
+      where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+      for update
+    `);
 
-      const { rows } = await transaction.query<LogtoConfig>(sql`
-        select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
-        where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
-      `);
+  const getPrivateSigningKeys = async (): Promise<OidcPrivateKey[]> => {
+    const { rows } = await pool.query<LogtoConfig>(sql`
+      select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+      where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+    `);
 
-      const privateKeys = normalizeOidcPrivateKeys(
-        oidcPrivateKeyGuard.array().parse(rows[0]?.value)
-      );
-      const updatedPrivateKeys = updater(privateKeys);
-
-      await upsertPrivateSigningKeys(transaction, updatedPrivateKeys);
-
-      return updatedPrivateKeys;
-    });
+    return oidcPrivateKeyGuard.array().parse(rows[0]?.value);
+  };
 
   const updateOidcConfigsByKey = async <
     T extends Exclude<LogtoOidcConfigKey, LogtoOidcConfigKey.PrivateKeys>,
@@ -161,7 +148,9 @@ export const createLogtoConfigQueries = (
     updateAdminConsoleConfig,
     getCloudConnectionData,
     getRowsByKeys,
-    updatePrivateSigningKeysWithLock,
+    lockPrivateSigningKeys,
+    getPrivateSigningKeys,
+    upsertPrivateSigningKeys,
     updateOidcConfigsByKey,
     upsertJwtCustomizer,
     deleteJwtCustomizer,

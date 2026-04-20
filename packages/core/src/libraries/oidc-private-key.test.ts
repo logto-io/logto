@@ -1,6 +1,11 @@
 import { OidcSigningKeyStatus } from '@logto/schemas';
 
+import Queries from '#src/tenants/Queries.js';
+import { createMockCommonQueryMethods } from '#src/test-utils/query.js';
+import { MockWellKnownCache } from '#src/test-utils/tenant.js';
+
 import {
+  OidcPrivateKeyLibrary,
   getCanonicalOidcPrivateKeys,
   getCurrentOidcPrivateKey,
   getImmediatelyRotatedOidcPrivateKeys,
@@ -8,6 +13,8 @@ import {
   getOidcProviderPrivateKeys,
   normalizeOidcPrivateKeys,
 } from './oidc-private-key.js';
+
+const { jest } = import.meta;
 
 const createPrivateKey = (id: string, createdAt: number, status?: OidcSigningKeyStatus) => ({
   id,
@@ -141,5 +148,63 @@ describe('getOidcPrivateKeysAfterDeletion', () => {
       createPrivateKey('next', 3, OidcSigningKeyStatus.Next),
       createPrivateKey('current', 2, OidcSigningKeyStatus.Current),
     ]);
+  });
+});
+
+describe('OidcPrivateKeyLibrary', () => {
+  const methods = createMockCommonQueryMethods();
+  const queries = new Queries(methods as never, new MockWellKnownCache());
+  const library = new OidcPrivateKeyLibrary(queries);
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    methods.transaction.mockImplementation(
+      async (handler: (transaction: typeof methods) => Promise<unknown>) => handler(methods)
+    );
+  });
+
+  it('rotates private signing keys inside a locked transaction', async () => {
+    methods.query.mockResolvedValueOnce({ rows: [] } as never).mockResolvedValueOnce({
+      rows: [
+        {
+          key: 'oidc.privateKeys',
+          value: [createPrivateKey('current', 2, OidcSigningKeyStatus.Current)],
+        },
+      ],
+    } as never);
+    methods.one.mockResolvedValueOnce({
+      key: 'oidc.privateKeys',
+      value: [
+        createPrivateKey('new', 3, OidcSigningKeyStatus.Current),
+        createPrivateKey('current', 2, OidcSigningKeyStatus.Previous),
+      ],
+    } as never);
+
+    const result = await library.rotatePrivateSigningKeys(createPrivateKey('new', 3));
+
+    expect(methods.transaction).toHaveBeenCalledTimes(1);
+    expect(methods.query).toHaveBeenCalledTimes(2);
+    expect(methods.one).toHaveBeenCalledTimes(1);
+    expect(result).toEqual([
+      createPrivateKey('new', 3, OidcSigningKeyStatus.Current),
+      createPrivateKey('current', 2, OidcSigningKeyStatus.Previous),
+    ]);
+  });
+
+  it('rejects deletion when private signing keys would become empty', async () => {
+    methods.query.mockResolvedValueOnce({ rows: [] } as never).mockResolvedValueOnce({
+      rows: [
+        {
+          key: 'oidc.privateKeys',
+          value: [createPrivateKey('current', 2, OidcSigningKeyStatus.Current)],
+        },
+      ],
+    } as never);
+
+    await expect(library.deletePrivateSigningKey('current')).rejects.toMatchObject({
+      code: 'oidc.key_required',
+      status: 422,
+    });
+    expect(methods.one).not.toHaveBeenCalled();
   });
 });

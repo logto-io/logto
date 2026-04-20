@@ -6,6 +6,7 @@ import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import { OidcPrivateKeyLibrary } from '#src/libraries/oidc-private-key.js';
 import { createOneTimeTokenLibrary } from '#src/libraries/one-time-token.js';
 import { OrganizationInvitationLibrary } from '#src/libraries/organization-invitation.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
@@ -70,6 +71,8 @@ export default class Libraries {
     this.queries,
     this.connectors
   );
+
+  oidcPrivateKeys = new OidcPrivateKeyLibrary(this.queries);
 
   customProfileFields = createCustomProfileFieldsLibrary(this.queries);
 

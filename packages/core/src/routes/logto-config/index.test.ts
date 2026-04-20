@@ -1,14 +1,10 @@
-import {
-  LogtoOidcConfigKey,
-  OidcSigningKeyStatus,
-  type AdminConsoleData,
-  type OidcPrivateKey,
-} from '@logto/schemas';
+import { LogtoOidcConfigKey, OidcSigningKeyStatus, type AdminConsoleData } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import Sinon from 'sinon';
 
 import { mockAdminConsoleData, mockCookieKeys, mockPrivateKeys } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -56,10 +52,6 @@ const logtoConfigQueries = {
       ...data,
     },
   }),
-  updatePrivateSigningKeysWithLock: jest.fn(
-    async (updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]) =>
-      updater([{ ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current }])
-  ),
   updateOidcConfigsByKey: jest.fn(),
 };
 
@@ -72,10 +64,22 @@ const logtoConfigLibraries = {
   })),
 };
 
+const oidcPrivateKeyLibraries = {
+  deletePrivateSigningKey: jest.fn(async () => [
+    { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+  ]),
+  rotatePrivateSigningKeys: jest.fn(async () => [
+    { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
+    { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Previous },
+  ]),
+};
+
 const settingRoutes = await pickDefault(import('./index.js'));
 
 describe('configs routes', () => {
-  const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries });
+  const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries }, undefined, {
+    oidcPrivateKeys: oidcPrivateKeyLibraries,
+  });
   Sinon.stub(tenantContext, 'logtoConfigs').value(logtoConfigLibraries);
 
   const routeRequester = createRequester({
@@ -131,30 +135,23 @@ describe('configs routes', () => {
   });
 
   it('DELETE /configs/oidc/:keyType/:keyId will fail if there is only one key', async () => {
+    oidcPrivateKeyLibraries.deletePrivateSigningKey.mockRejectedValueOnce(
+      new RequestError({ code: 'oidc.key_required', status: 422 })
+    );
+
     await expect(
       routeRequester.delete(`/configs/oidc/private-keys/${mockPrivateKeys[0]!.id}`)
     ).resolves.toHaveProperty('status', 422);
 
-    expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).toBeCalled();
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalled();
     expect(logtoConfigQueries.updateOidcConfigsByKey).not.toBeCalled();
   });
 
   it('DELETE /configs/oidc/:keyType/:keyId', async () => {
-    logtoConfigQueries.updatePrivateSigningKeysWithLock.mockImplementationOnce(
-      async (updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]) => {
-        const privateKeys = [
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
-          { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Previous },
-        ];
-
-        expect(updater(privateKeys)).toEqual([
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
-        ]);
-
-        return [{ ...newPrivateKey, status: OidcSigningKeyStatus.Current }];
-      }
-    );
-    logtoConfigLibraries.getOidcConfigs.mockResolvedValue({
+    oidcPrivateKeyLibraries.deletePrivateSigningKey.mockResolvedValueOnce([
+      { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
+    ]);
+    logtoConfigLibraries.getOidcConfigs.mockResolvedValueOnce({
       [LogtoOidcConfigKey.PrivateKeys]: [
         { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
       ],
@@ -165,7 +162,7 @@ describe('configs routes', () => {
       routeRequester.delete(`/configs/oidc/private-keys/${mockPrivateKeys[0]!.id}`)
     ).resolves.toHaveProperty('status', 204);
 
-    expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).toBeCalled();
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalledWith(mockPrivateKeys[0]!.id);
 
     await expect(
       routeRequester.delete(`/configs/oidc/cookie-keys/${mockCookieKeys[0]!.id}`)
@@ -175,18 +172,16 @@ describe('configs routes', () => {
       LogtoOidcConfigKey.CookieKeys,
       [newCookieKey]
     );
-
-    logtoConfigLibraries.getOidcConfigs.mockRestore();
   });
 
   it('DELETE /configs/oidc/:keyType/:keyId will fail if key is not found', async () => {
-    logtoConfigQueries.updatePrivateSigningKeysWithLock.mockImplementation(
-      async (updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]) =>
-        updater([
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
-          { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Previous },
-        ])
-    );
+    oidcPrivateKeyLibraries.deletePrivateSigningKey
+      .mockRejectedValueOnce(
+        new RequestError({ code: 'oidc.key_not_found', id: 'fake_key_id', status: 404 })
+      )
+      .mockRejectedValueOnce(
+        new RequestError({ code: 'oidc.key_not_found', id: 'fake_key_id', status: 404 })
+      );
 
     await expect(
       routeRequester.delete(`/configs/oidc/private-keys/fake_key_id`)
@@ -196,57 +191,38 @@ describe('configs routes', () => {
       routeRequester.delete(`/configs/oidc/private-keys/fake_key_id`)
     ).resolves.toHaveProperty('status', 404);
 
-    expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).toBeCalled();
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalled();
     expect(logtoConfigQueries.updateOidcConfigsByKey).not.toBeCalled();
   });
 
   it('DELETE /configs/oidc/:keyType/:keyId only allows deleting Previous private keys', async () => {
-    logtoConfigQueries.updatePrivateSigningKeysWithLock.mockImplementationOnce(
-      async (updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]) =>
-        updater([
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
-          { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Previous },
-        ])
+    oidcPrivateKeyLibraries.deletePrivateSigningKey.mockRejectedValueOnce(
+      new RequestError({ code: 'oidc.only_previous_key_can_be_deleted', status: 422 })
     );
 
     await expect(
       routeRequester.delete(`/configs/oidc/private-keys/${newPrivateKey.id}`)
     ).resolves.toHaveProperty('status', 422);
 
-    expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).toBeCalled();
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalledWith(newPrivateKey.id);
     expect(logtoConfigQueries.updateOidcConfigsByKey).not.toBeCalled();
   });
 
   it('DELETE /configs/oidc/:keyType/:keyId preserves staged Next and Current private keys', async () => {
-    logtoConfigQueries.updatePrivateSigningKeysWithLock.mockImplementationOnce(
-      async (updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]) => {
-        const privateKeys = [
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
-          { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
-          { ...previousPrivateKey, status: OidcSigningKeyStatus.Previous },
-        ];
-
-        expect(updater(privateKeys)).toEqual([
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
-          { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
-        ]);
-
-        return [
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
-          { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
-        ];
-      }
-    );
+    oidcPrivateKeyLibraries.deletePrivateSigningKey.mockResolvedValueOnce([
+      { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
+      { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+    ]);
 
     await expect(
       routeRequester.delete(`/configs/oidc/private-keys/${previousPrivateKey.id}`)
     ).resolves.toHaveProperty('status', 204);
 
-    expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).toBeCalled();
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalledWith(previousPrivateKey.id);
   });
 
   it('POST /configs/oidc/:keyType/rotate', async () => {
-    logtoConfigLibraries.getOidcConfigs.mockResolvedValue({
+    logtoConfigLibraries.getOidcConfigs.mockResolvedValueOnce({
       [LogtoOidcConfigKey.PrivateKeys]: [
         { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
       ],
@@ -256,7 +232,7 @@ describe('configs routes', () => {
 
     const response = await routeRequester.post('/configs/oidc/private-keys/rotate');
     expect(response.status).toEqual(200);
-    expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).toHaveBeenCalled();
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey);
     expect(response.body[0]).toEqual({
       id: newPrivateKey.id,
       createdAt: newPrivateKey.createdAt,
@@ -274,7 +250,6 @@ describe('configs routes', () => {
       id: newCookieKey.id,
       createdAt: newCookieKey.createdAt,
     });
-    logtoConfigLibraries.getOidcConfigs.mockRestore();
   });
 
   it('keeps the immediate rotation flow at 2 private keys', async () => {
@@ -283,39 +258,20 @@ describe('configs routes', () => {
       value: '-----BEGIN PRIVATE KEY-----\nnew\nprivate\nkey\n-----END PRIVATE KEY-----\n',
       createdAt: Math.floor(Date.now() / 1000),
     };
-    logtoConfigQueries.updatePrivateSigningKeysWithLock.mockImplementationOnce(
-      async (updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]) => {
-        const privateKeys = [
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
-          { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Previous },
-        ];
-
-        expect(updater(privateKeys)).toEqual([
-          { ...newPrivateKey2, status: OidcSigningKeyStatus.Current },
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Previous },
-        ]);
-
-        return [
-          { ...newPrivateKey2, status: OidcSigningKeyStatus.Current },
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Previous },
-        ];
-      }
-    );
+    oidcPrivateKeyLibraries.rotatePrivateSigningKeys.mockResolvedValueOnce([
+      { ...newPrivateKey2, status: OidcSigningKeyStatus.Current },
+      { ...newPrivateKey, status: OidcSigningKeyStatus.Previous },
+    ]);
     generateOidcPrivateKey.mockResolvedValueOnce(newPrivateKey2);
 
     await routeRequester.post('/configs/oidc/private-keys/rotate');
 
-    expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).toHaveBeenCalled();
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey2);
   });
 
   it('rejects immediate private-key rotation when a staged Next key already exists', async () => {
-    logtoConfigQueries.updatePrivateSigningKeysWithLock.mockImplementationOnce(
-      async (updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]) =>
-        updater([
-          { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
-          { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
-          { ...previousPrivateKey, status: OidcSigningKeyStatus.Previous },
-        ])
+    oidcPrivateKeyLibraries.rotatePrivateSigningKeys.mockRejectedValueOnce(
+      new RequestError({ code: 'oidc.invalid_request', status: 422 })
     );
 
     await expect(routeRequester.post('/configs/oidc/private-keys/rotate')).resolves.toHaveProperty(
@@ -323,6 +279,6 @@ describe('configs routes', () => {
       422
     );
 
-    expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).toHaveBeenCalled();
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey);
   });
 });

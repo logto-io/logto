@@ -28,6 +28,9 @@ const {
   getAdminConsoleConfig,
   getCloudConnectionData,
   getRowsByKeys,
+  getPrivateSigningKeys,
+  lockPrivateSigningKeys,
+  upsertPrivateSigningKeys,
   updateAdminConsoleConfig,
   updateOidcConfigsByKey,
 } = createLogtoConfigQueries(pool, new MockWellKnownCache());
@@ -156,7 +159,14 @@ describe('logto config transactional queries', () => {
     jest.clearAllMocks();
   });
 
-  test('updatePrivateSigningKeysWithLock', async () => {
+  test('lockPrivateSigningKeys', async () => {
+    await transactionalQueries.lockPrivateSigningKeys();
+
+    expect(methods.query).toHaveBeenCalledTimes(1);
+    expect(methods.query).toHaveBeenCalledWith(expectSqlString('for update'));
+  });
+
+  test('getPrivateSigningKeys', async () => {
     const currentPrivateKeys = [
       {
         id: 'current',
@@ -165,6 +175,18 @@ describe('logto config transactional queries', () => {
         status: OidcSigningKeyStatus.Current,
       },
     ];
+
+    methods.query.mockResolvedValueOnce({
+      rows: [{ key: LogtoOidcConfigKey.PrivateKeys, value: currentPrivateKeys }],
+    } as never);
+
+    const result = await transactionalQueries.getPrivateSigningKeys();
+
+    expect(methods.query).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(currentPrivateKeys);
+  });
+
+  test('upsertPrivateSigningKeys', async () => {
     const updatedPrivateKeys = [
       {
         id: 'next-current',
@@ -180,24 +202,13 @@ describe('logto config transactional queries', () => {
       },
     ];
 
-    methods.transaction.mockImplementation(
-      async (handler: (transaction: typeof methods) => Promise<unknown>) => handler(methods)
-    );
-    methods.query.mockResolvedValueOnce({ rows: [] }).mockResolvedValueOnce({
-      rows: [{ key: LogtoOidcConfigKey.PrivateKeys, value: currentPrivateKeys }],
-    } as never);
     methods.one.mockResolvedValueOnce({
       key: LogtoOidcConfigKey.PrivateKeys,
       value: updatedPrivateKeys,
     });
 
-    const result = await transactionalQueries.updatePrivateSigningKeysWithLock(
-      () => updatedPrivateKeys
-    );
+    await transactionalQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
 
-    expect(methods.transaction).toHaveBeenCalledTimes(1);
-    expect(methods.query).toHaveBeenNthCalledWith(1, expectSqlString('for update'));
     expect(methods.one).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(updatedPrivateKeys);
   });
 });
