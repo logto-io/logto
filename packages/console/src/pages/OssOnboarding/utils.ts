@@ -20,26 +20,10 @@ export const getOssOnboardingDefaultValues = (): OssOnboardingFormData => ({
 
 export const shouldRequireCompanyFields = (project: Project) => project === Project.Company;
 
-const surveyReportPath = '/api/surveys';
-
-const getSurveyReportEndpoint = (ossSurveyEndpoint: string) =>
-  new URL(surveyReportPath, new URL(ossSurveyEndpoint)).toString();
-
-export const createOssSurveyReporter = (
-  api: Pick<KyInstance, 'post'>,
-  ossSurveyEndpoint?: string
-) => {
-  const surveyReportEndpoint = trySafe(() =>
-    ossSurveyEndpoint ? getSurveyReportEndpoint(ossSurveyEndpoint) : undefined
-  );
-
+export const createOssSurveyReporter = (api: Pick<KyInstance, 'post'>) => {
   return (payload: OssSurveyReportPayload): void => {
-    if (!surveyReportEndpoint) {
-      return;
-    }
-
     void trySafe(
-      api.post(surveyReportEndpoint, {
+      api.post('api/oss-survey/report', {
         keepalive: true,
         json: payload,
         retry: { limit: 0 },

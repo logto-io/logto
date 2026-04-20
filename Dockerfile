@@ -23,10 +23,6 @@ ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
 ARG applicationinsights_connection_string
 ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_string}
 
-# Pass through OSS survey endpoint to console build-time env injection.
-ARG logto_oss_survey_endpoint=
-ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
-
 RUN pnpm -r build
 
 ### Add official connectors ###
@@ -45,7 +41,7 @@ RUN rm -rf .scripts pnpm-*.yaml packages/cloud
 FROM node:22-alpine as app
 WORKDIR /etc/logto
 ARG logto_oss_survey_endpoint=
-# Keep runtime env for CSP allowlist generation and operational visibility.
+# Default to empty so external survey relaying stays opt-in for controlled builds/environments.
 ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
 COPY --from=builder /etc/logto .
 RUN mkdir -p /etc/logto/packages/cli/alteration-scripts && chmod g+w /etc/logto/packages/cli/alteration-scripts

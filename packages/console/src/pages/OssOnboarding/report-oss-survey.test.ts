@@ -16,51 +16,23 @@ describe('reportOssSurvey', () => {
     post: jest.fn<ReturnType<KyInstance['post']>, Parameters<KyInstance['post']>>(),
   } satisfies Pick<KyInstance, 'post'>;
 
+  const reportOssSurvey = createOssSurveyReporter(api);
+
   beforeEach(() => {
     api.post.mockResolvedValue({} as never);
   });
 
   it('posts the survey payload to the OSS survey endpoint', () => {
-    const reportOssSurvey = createOssSurveyReporter(api, 'https://survey.logto.app');
-
     reportOssSurvey(mockPayload);
 
-    expect(api.post).toHaveBeenCalledWith('https://survey.logto.app/api/surveys', {
+    expect(api.post).toHaveBeenCalledWith('api/oss-survey/report', {
       keepalive: true,
       json: mockPayload,
       retry: { limit: 0 },
     });
   });
 
-  it('does nothing when the OSS survey endpoint is not configured', () => {
-    const reportOssSurvey = createOssSurveyReporter(api);
-
-    reportOssSurvey(mockPayload);
-
-    expect(api.post).not.toHaveBeenCalled();
-  });
-
-  it('does nothing when the OSS survey endpoint is invalid', () => {
-    const reportOssSurvey = createOssSurveyReporter(api, 'not-a-url');
-
-    reportOssSurvey(mockPayload);
-
-    expect(api.post).not.toHaveBeenCalled();
-  });
-
-  it('handles OSS survey endpoint values with trailing slash', () => {
-    const reportOssSurvey = createOssSurveyReporter(api, 'https://survey.logto.app/');
-
-    reportOssSurvey(mockPayload);
-
-    expect(api.post).toHaveBeenCalledWith(
-      'https://survey.logto.app/api/surveys',
-      expect.any(Object)
-    );
-  });
-
   it('swallows request failures', async () => {
-    const reportOssSurvey = createOssSurveyReporter(api, 'https://survey.logto.app');
     api.post.mockRejectedValue(new Error('network error'));
 
     expect(() => {

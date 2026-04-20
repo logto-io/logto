@@ -9,7 +9,7 @@ import { isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
 import { zodTypeToSwagger } from '#src/utils/zod.js';
 
 import { buildTag, isManagementApiRouter, normalizePath } from './general.js';
-import { buildOperationId, customRoutes, throwByDifference } from './operation-id.js';
+import { buildOperationId, getCustomRoutes, throwByDifference } from './operation-id.js';
 import { buildParameters, paginationParameters, searchParameters } from './parameters.js';
 
 const anonymousPaths = new Set<string>([
@@ -119,9 +119,10 @@ type Options = {
 };
 
 export const buildRouterObjects = <T extends UnknownRouter>(routers: T[], options?: Options) => {
+  const customRoutes = getCustomRoutes();
   /**
    * A set to store all custom routes that have been built.
-   * @see {@link customRoutes}
+   * @see {@link getCustomRoutes}
    */
   const builtCustomRoutes = new Set<string>();
 

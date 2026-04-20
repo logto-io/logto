@@ -35,11 +35,18 @@ jobs:
 
       - name: Resolve image tag
         id: image_tag
+        env:
+          IMAGE_TAG_INPUT: ${{ inputs.image_tag }}
         run: |
-          IMAGE_TAG="${{ inputs.image_tag }}"
+          IMAGE_TAG="$IMAGE_TAG_INPUT"
 
           if [ -z "$IMAGE_TAG" ]; then
             IMAGE_TAG="oss-${GITHUB_SHA::7}"
+          fi
+
+          if [[ ! "$IMAGE_TAG" =~ ^[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127}$ ]]; then
+            echo "Invalid image_tag: $IMAGE_TAG"
+            exit 1
           fi
 
           echo "value=$IMAGE_TAG" >> "$GITHUB_OUTPUT"

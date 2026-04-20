@@ -26,28 +26,11 @@ const helmetPromise = async (
     });
   })();
 
-export const getOssSurveyEndpointOrigin = ({
-  isDevFeaturesEnabled,
-  ossSurveyEndpoint,
-}: {
-  isDevFeaturesEnabled: boolean;
-  ossSurveyEndpoint?: string;
-}) => {
-  if (!isDevFeaturesEnabled || !ossSurveyEndpoint) {
-    return;
-  }
-
-  try {
-    return new URL(ossSurveyEndpoint).origin;
-  } catch {}
-};
-
 export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   mountedApps: string[],
   tenantId: string
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
-  const { isProduction, isCloud, isDevFeaturesEnabled, urlSet, adminUrlSet, cloudUrlSet } =
-    EnvSet.values;
+  const { isProduction, isCloud, urlSet, adminUrlSet, cloudUrlSet } = EnvSet.values;
 
   const tenantEndpointOrigin = getTenantEndpoint(tenantId, EnvSet.values).origin;
   // Logto Cloud uses cloud service to serve the admin console; while Logto OSS uses a fixed path under the admin URL set.
@@ -68,10 +51,6 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
         'http://localhost:5174', // From local blog
       ];
   const logtoOrigin = 'https://*.logto.io';
-  const ossSurveyEndpointOrigin = getOssSurveyEndpointOrigin({
-    isDevFeaturesEnabled,
-    ossSurveyEndpoint: process.env.LOGTO_OSS_SURVEY_ENDPOINT?.trim(),
-  });
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';
 
@@ -215,14 +194,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
           ...cdnSources,
         ],
-        connectSrc: [
-          "'self'",
-          logtoOrigin,
-          ...adminOrigins,
-          ...coreOrigins,
-          ...conditionalArray(ossSurveyEndpointOrigin),
-          ...developmentOrigins,
-        ],
+        connectSrc: ["'self'", logtoOrigin, ...adminOrigins, ...coreOrigins, ...developmentOrigins],
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],
       },
     },
