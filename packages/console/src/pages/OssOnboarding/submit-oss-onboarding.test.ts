@@ -79,6 +79,36 @@ describe('submitOssOnboarding', () => {
     expect(navigate).not.toHaveBeenCalled();
   });
 
+  it('ignores report errors to keep the submit flow behavior unchanged', async () => {
+    const report = jest.fn<void, [OssSurveyReportPayload]>();
+    const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
+    const navigate = jest.fn<void, [string, { replace: boolean }]>();
+
+    report.mockImplementation(() => {
+      throw new Error('report failed');
+    });
+    update.mockResolvedValue();
+
+    await expect(
+      submitOssOnboarding({
+        formData: mockFormData,
+        isDevFeaturesEnabled: true,
+        navigate,
+        report,
+        update,
+      })
+    ).resolves.toBeUndefined();
+
+    expect(report).toHaveBeenCalledWith({
+      emailAddress: 'dev@example.com',
+      newsletter: true,
+      project: Project.Company,
+      companyName: 'Acme',
+      companySize: CompanySize.Scale3,
+    });
+    expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
+  });
+
   it('keeps the old submit flow when dev features are disabled', async () => {
     const report = jest.fn<void, [OssSurveyReportPayload]>();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();

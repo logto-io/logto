@@ -1,4 +1,5 @@
 import type { OssSurveyReportPayload, OssUserOnboardingData } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 
 import { getOssOnboardingSubmitPayload, type OssOnboardingFormData } from './utils';
 
@@ -28,7 +29,7 @@ export const submitOssOnboarding = async ({
     // Intentionally decoupled: survey reporting is best-effort telemetry and should not
     // depend on whether onboarding customData persistence succeeds.
     if (isDevFeaturesEnabled) {
-      report?.(questionnaire);
+      trySafe(() => report?.(questionnaire));
     }
   }
 
