@@ -4,17 +4,11 @@ import { type Optional, trySafe } from '@silverhand/essentials';
 import { isDevFeaturesEnabled, ossSurveyEndpoint } from '@/consts/env';
 
 const getOssSurveyUrl = (): Optional<URL> => {
-  const endpoint = ossSurveyEndpoint;
-
   if (!isDevFeaturesEnabled) {
     return;
   }
 
-  if (!endpoint) {
-    return;
-  }
-
-  const endpointUrl = trySafe(() => new URL(endpoint));
+  const endpointUrl = trySafe(() => (ossSurveyEndpoint ? new URL(ossSurveyEndpoint) : undefined));
 
   if (!endpointUrl) {
     return;

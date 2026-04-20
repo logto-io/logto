@@ -1,4 +1,4 @@
-name: OSS Docker
+name: Dockerize OSS
 
 on:
   workflow_dispatch:
