@@ -1,6 +1,6 @@
 import { emailRegEx } from '@logto/core-kit';
 import { CompanySize, Project, Theme } from '@logto/schemas';
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
@@ -11,7 +11,6 @@ import PizzaIcon from '@/assets/icons/pizza.svg?react';
 import Logo from '@/assets/images/logo.svg?react';
 import ActionBar from '@/components/ActionBar';
 import PageMeta from '@/components/PageMeta';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppThemeContext } from '@/contexts/AppThemeProvider';
 import Button from '@/ds-components/Button';
 import Checkbox from '@/ds-components/Checkbox';
@@ -19,15 +18,14 @@ import FormField from '@/ds-components/FormField';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import TextInput from '@/ds-components/TextInput';
-import useApi from '@/hooks/use-api';
 import useOssOnboardingData from '@/hooks/use-oss-onboarding-data';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
 
 import styles from './index.module.scss';
+import { reportOssSurvey } from './report-oss-survey';
 import { submitOssOnboarding } from './submit-oss-onboarding';
 import {
-  createOssSurveyReporter,
   getOssOnboardingDefaultValues,
   shouldRequireCompanyFields,
   type OssOnboardingFormData,
@@ -37,7 +35,6 @@ function OssOnboarding() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { setThemeOverride } = useContext(AppThemeContext);
   const { getTo, navigate } = useTenantPathname();
-  const api = useApi({ hideErrorToast: true });
   const { data, isLoading, isOnboardingDone, update } = useOssOnboardingData();
   const {
     control,
@@ -52,7 +49,6 @@ function OssOnboarding() {
   });
   const project = watch('project');
   const isCompanyProject = shouldRequireCompanyFields(project);
-  const reportOssSurvey = useMemo(() => createOssSurveyReporter(api), [api]);
 
   useEffect(() => {
     setThemeOverride(Theme.Light);
@@ -75,7 +71,6 @@ function OssOnboarding() {
     trySubmitSafe(async (formData) =>
       submitOssOnboarding({
         formData,
-        isDevFeaturesEnabled,
         navigate,
         report: reportOssSurvey,
         update,

@@ -5,7 +5,6 @@ import { getOssOnboardingSubmitPayload, type OssOnboardingFormData } from './uti
 
 type SubmitOssOnboardingOptions = {
   formData: OssOnboardingFormData;
-  isDevFeaturesEnabled: boolean;
   navigate: (to: string, options: { replace: boolean }) => void;
   report?: (payload: OssSurveyReportPayload) => void;
   update: (data: Partial<OssUserOnboardingData>) => Promise<void>;
@@ -13,7 +12,6 @@ type SubmitOssOnboardingOptions = {
 
 export const submitOssOnboarding = async ({
   formData,
-  isDevFeaturesEnabled,
   navigate,
   report,
   update,
@@ -26,9 +24,8 @@ export const submitOssOnboarding = async ({
 
   // Intentionally decoupled: survey reporting is best-effort telemetry and should not
   // depend on whether onboarding customData persistence succeeds.
-  if (isDevFeaturesEnabled) {
-    trySafe(() => report?.(questionnaire));
-  }
+  // The report function itself gates on isDevFeaturesEnabled and endpoint availability.
+  trySafe(() => report?.(questionnaire));
 
   if (updateError !== undefined) {
     throw updateError instanceof Error ? updateError : new Error(String(updateError));

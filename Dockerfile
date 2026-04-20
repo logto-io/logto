@@ -23,6 +23,9 @@ ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
 ARG applicationinsights_connection_string
 ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_string}
 
+ARG logto_oss_survey_endpoint=
+ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
+
 RUN pnpm -r build
 
 ### Add official connectors ###

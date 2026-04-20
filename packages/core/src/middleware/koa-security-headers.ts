@@ -54,6 +54,16 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';
 
+  // Parse the OSS survey endpoint origin for CSP connect-src allowlisting.
+  const ossSurveyOrigins: string[] = (() => {
+    try {
+      const { origin } = new URL(process.env.LOGTO_OSS_SURVEY_ENDPOINT ?? '');
+      return [origin];
+    } catch {
+      return [];
+    }
+  })();
+
   /**
    * Temporary hardcoded tenant-level `connect-src` allowlist for BYO-UI customers.
    * TODO: migrate to DB so tenants can self-manage. Review each entry for trust.
@@ -194,7 +204,14 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
           ...cdnSources,
         ],
-        connectSrc: ["'self'", logtoOrigin, ...adminOrigins, ...coreOrigins, ...developmentOrigins],
+        connectSrc: [
+          "'self'",
+          logtoOrigin,
+          ...adminOrigins,
+          ...coreOrigins,
+          ...ossSurveyOrigins,
+          ...developmentOrigins,
+        ],
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],
       },
     },

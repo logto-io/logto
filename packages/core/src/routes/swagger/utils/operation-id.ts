@@ -28,16 +28,15 @@ const methodToVerb = Object.freeze({
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
 const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
-  'post /oss-survey/report': 'ReportOssSurvey',
+  'get /configs/oidc/session': 'GetOidcSessionConfig',
+  'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
 });
 
-const baseCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
+export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Authn
   'get /authn/hasura': 'GetHasuraAuth',
   'post /authn/saml/:connectorId': 'AssertSaml',
   'post /authn/single-sign-on/saml/:connectorId': 'AssertSingleSignOnSaml',
-  'get /configs/oidc/session': 'GetOidcSessionConfig',
-  'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
   // Organization users
   'post /organizations/:id/users': 'AddOrganizationUsers',
   'post /organizations/:id/users/roles': 'AssignOrganizationRolesToUsers',
@@ -103,21 +102,17 @@ const baseCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
   // ID token config
   'get /configs/id-token': 'GetIdTokenConfig',
   'put /configs/id-token': 'UpsertIdTokenConfig',
+  // Session config
+  'get /configs/oidc/session': 'GetOidcSessionConfig',
+  'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
+  ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
-
-export const getCustomRoutes = (): Readonly<RouteDictionary> =>
-  Object.freeze({
-    ...baseCustomRoutes,
-    ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
-  });
 
 /**
  * Given a set of built custom routes, throws an error if there are any differences between the
- * built routes and the routes returned by `getCustomRoutes()`.
+ * built routes and the routes defined in `customRoutes`.
  */
 export const throwByDifference = (builtCustomRoutes: Set<string>) => {
-  const customRoutes = getCustomRoutes();
-
   // Unit tests are hard to cover the full list of custom routes, skip the check.
   if (EnvSet.values.isUnitTest) {
     return;
@@ -172,7 +167,7 @@ const throwIfNeeded = (method: OpenAPIV3.HttpMethods, path: string) => {
  * The generated operation ID is in the format of `VerbNounNoun...` where `Verb` is translated from
  * the HTTP method and `Noun` is the path segment in PascalCase. Some exceptions:
  *
- * 1. If an override is found in `getCustomRoutes()`, it will be used instead.
+ * 1. If an override is found in `customRoutes`, it will be used instead.
  * 2. If the HTTP method is `GET` and the path does not end with a path parameter, the verb will be
  * `List`.
  * 3. If the path segment is a namespace prefix, the trailing `/` will be replaced with `-`.
@@ -183,13 +178,12 @@ const throwIfNeeded = (method: OpenAPIV3.HttpMethods, path: string) => {
  * buildOperationId('get', '/foo/:fooId/bar') // ListFooBars
  * buildOperationId('get', '/jit/foo') // GetJitFoo
  *
- * @see {@link getCustomRoutes} for the full list of overrides.
+ * @see {@link customRoutes} for the full list of overrides.
  * @see {@link methodToVerb} for the mapping of HTTP methods to verbs.
  * @see {@link namespacePrefixes} for the list of namespace prefixes.
  */
 
 export const buildOperationId = (method: OpenAPIV3.HttpMethods, path: string) => {
-  const customRoutes = getCustomRoutes();
   const customOperationId = customRoutes[`${method} ${path}`];
 
   if (customOperationId) {
