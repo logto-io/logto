@@ -22,12 +22,12 @@ export const shouldRequireCompanyFields = (project: Project) => project === Proj
 
 export const createOssSurveyReporter = (api: Pick<KyInstance, 'post'>) => {
   return (payload: OssSurveyReportPayload): void => {
-    void trySafe(async () =>
-        await api.post('api/oss-survey/report', {
-          keepalive: true,
-          json: payload,
-          retry: { limit: 0 },
-        })
+    void trySafe(
+      api.post('api/oss-survey/report', {
+        keepalive: true,
+        json: payload,
+        retry: { limit: 0 },
+      })
     );
   };
 };
