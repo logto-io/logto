@@ -23,7 +23,6 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
 
 import styles from './index.module.scss';
-import { reportOssSurvey } from './report-oss-survey';
 import { submitOssOnboarding } from './submit-oss-onboarding';
 import {
   getOssOnboardingDefaultValues,
@@ -72,7 +71,6 @@ function OssOnboarding() {
       submitOssOnboarding({
         formData,
         navigate,
-        report: reportOssSurvey,
         update,
       })
     )
