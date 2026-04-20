@@ -175,19 +175,17 @@ const sendMessage =
       });
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        const { body } = error.response;
-        const message =
-          typeof body === 'string'
-            ? body
-            : Buffer.isBuffer(body)
-              ? body.toString()
-              : JSON.stringify(body);
-        throw new ConnectorError(
-          ConnectorErrorCodes.General,
-          message === '' ? error.message : message
-        );
+        // Do not surface provider-returned response bodies to avoid leaking sensitive email content.
+        const { statusCode, statusMessage } = error.response;
+        const message = `MailJunky API request failed${
+          statusCode ? ` (status: ${statusCode}${statusMessage ? ` ${statusMessage}` : ''})` : ''
+        }.`;
+        throw new ConnectorError(ConnectorErrorCodes.General, message);
       }
-      throw new ConnectorError(ConnectorErrorCodes.General, error);
+      throw new ConnectorError(
+        ConnectorErrorCodes.General,
+        error instanceof Error ? error.message : String(error)
+      );
     }
   };
 
