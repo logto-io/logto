@@ -19,6 +19,7 @@ import chalk from 'chalk';
 import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { normalizeOidcPrivateKeys } from '#src/libraries/oidc-private-key.js';
 import type Queries from '#src/tenants/Queries.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
@@ -26,7 +27,6 @@ export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
 export const createLogtoConfigLibrary = ({
   logtoConfigs: {
     getRowsByKeys,
-    getPrivateSigningKeys,
     getCloudConnectionData: queryCloudConnectionData,
     upsertJwtCustomizer: queryUpsertJwtCustomizer,
     upsertIdTokenConfig: queryUpsertIdTokenConfig,
@@ -34,17 +34,16 @@ export const createLogtoConfigLibrary = ({
 }: Pick<Queries, 'logtoConfigs'>) => {
   const getOidcConfigs = async (consoleLog: ConsoleLog): Promise<LogtoOidcConfigType> => {
     try {
-      const [{ rows }, privateKeys] = await Promise.all([
-        getRowsByKeys(Object.values(LogtoOidcConfigKey)),
-        getPrivateSigningKeys(),
-      ]);
+      const { rows } = await getRowsByKeys(Object.values(LogtoOidcConfigKey));
       const configs = z
         .object(logtoOidcConfigGuard)
         .parse(Object.fromEntries(rows.map(({ key, value }) => [key, value])));
 
       return {
         ...configs,
-        [LogtoOidcConfigKey.PrivateKeys]: privateKeys,
+        [LogtoOidcConfigKey.PrivateKeys]: normalizeOidcPrivateKeys(
+          configs[LogtoOidcConfigKey.PrivateKeys]
+        ),
       };
     } catch (error: unknown) {
       if (error instanceof ZodError) {

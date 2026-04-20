@@ -27,7 +27,6 @@ const { createLogtoConfigQueries } = await import('./logto-config.js');
 const {
   getAdminConsoleConfig,
   getCloudConnectionData,
-  getPrivateSigningKeys,
   getRowsByKeys,
   updateAdminConsoleConfig,
   updatePrivateSigningKeys,
@@ -156,42 +155,6 @@ describe('connector queries', () => {
     });
 
     void updatePrivateSigningKeys(targetValue);
-  });
-
-  test('getPrivateSigningKeys', async () => {
-    const rowData = [
-      {
-        key: LogtoOidcConfigKey.PrivateKeys,
-        value: [
-          {
-            id: 'foo',
-            value: 'bar',
-            createdAt: 123_456_789,
-          },
-        ],
-      },
-    ];
-    const expectSql = sql`
-      select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
-        where ${fields.key} in (${sql.join([LogtoOidcConfigKey.PrivateKeys], sql`,`)})
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([LogtoOidcConfigKey.PrivateKeys]);
-
-      return createMockQueryResult(rowData as never);
-    });
-
-    const result = await getPrivateSigningKeys();
-    expect(result).toEqual([
-      {
-        id: 'foo',
-        value: 'bar',
-        createdAt: 123_456_789,
-        status: OidcSigningKeyStatus.Current,
-      },
-    ]);
   });
 
   test('updateOidcConfigsByKey', async () => {
