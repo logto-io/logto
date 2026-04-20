@@ -1,7 +1,32 @@
 import { type OssSurveyReportPayload } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
+import { type Optional, trySafe } from '@silverhand/essentials';
 
 import { isDevFeaturesEnabled, ossSurveyEndpoint } from '@/consts/env';
+
+const getOssSurveyUrl = (): Optional<URL> => {
+  const endpoint = ossSurveyEndpoint;
+
+  if (!isDevFeaturesEnabled) {
+    return;
+  }
+
+  if (!endpoint) {
+    return;
+  }
+
+  const endpointUrl = trySafe(() => new URL(endpoint));
+
+  if (!endpointUrl) {
+    return;
+  }
+
+  const basePathname = endpointUrl.pathname.endsWith('/')
+    ? endpointUrl.pathname
+    : `${endpointUrl.pathname}/`;
+  const baseUrl = `${endpointUrl.origin}${basePathname}`;
+
+  return new URL('api/surveys', baseUrl);
+};
 
 /**
  * Fire-and-forget: POST the onboarding questionnaire directly to the external
@@ -9,11 +34,11 @@ import { isDevFeaturesEnabled, ossSurveyEndpoint } from '@/consts/env';
  * `LOGTO_OSS_SURVEY_ENDPOINT`.
  */
 export const reportOssSurvey = (payload: OssSurveyReportPayload): void => {
-  if (!isDevFeaturesEnabled || !ossSurveyEndpoint) {
+  const url = getOssSurveyUrl();
+
+  if (!url) {
     return;
   }
-
-  const url = new URL('api/surveys', ossSurveyEndpoint.replace(/\/?$/, '/'));
 
   void trySafe(
     fetch(url, {

@@ -81,6 +81,13 @@ describe('reportOssSurvey', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it('does not call fetch when ossSurveyEndpoint is invalid', () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    mockOssSurveyEndpoint = 'not a valid URL';
+    reportOssSurvey(mockPayload);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('swallows fetch failures', async () => {
     fetchMock.mockRejectedValue(new Error('network error'));
 

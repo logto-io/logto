@@ -17,19 +17,16 @@ export const submitOssOnboarding = async ({
   update,
 }: SubmitOssOnboardingOptions) => {
   const questionnaire = getOssOnboardingSubmitPayload(formData);
-  const updateError = await update({
-    questionnaire,
-    isOnboardingDone: true,
-  }).catch((error: unknown) => error);
+  void trySafe(async () =>
+    update({
+      questionnaire,
+      isOnboardingDone: true,
+    })
+  );
 
-  // Intentionally decoupled: survey reporting is best-effort telemetry and should not
-  // depend on whether onboarding customData persistence succeeds.
-  // The report function itself gates on isDevFeaturesEnabled and endpoint availability.
+  // Intentionally decoupled: survey reporting and onboarding customData persistence
+  // are both best-effort side effects for one-time data collection.
   trySafe(() => report?.(questionnaire));
-
-  if (updateError !== undefined) {
-    throw updateError instanceof Error ? updateError : new Error(String(updateError));
-  }
 
   navigate('/get-started', { replace: true });
 };

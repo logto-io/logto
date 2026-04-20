@@ -51,7 +51,7 @@ describe('submitOssOnboarding', () => {
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 
-  it('still reports the survey payload when onboarding data persistence fails', async () => {
+  it('still reports and navigates when onboarding data persistence fails', async () => {
     const report = jest.fn<void, [OssSurveyReportPayload]>();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
@@ -65,7 +65,7 @@ describe('submitOssOnboarding', () => {
         report,
         update,
       })
-    ).rejects.toThrow('save failed');
+    ).resolves.toBeUndefined();
 
     expect(report).toHaveBeenCalledWith({
       emailAddress: 'dev@example.com',
@@ -74,7 +74,7 @@ describe('submitOssOnboarding', () => {
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
     });
-    expect(navigate).not.toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 
   it('ignores report errors to keep the submit flow behavior unchanged', async () => {
