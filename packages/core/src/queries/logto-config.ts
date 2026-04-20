@@ -12,8 +12,6 @@ import {
   oidcPrivateKeyGuard,
   idTokenConfigGuard,
   type LogtoOidcConfigType,
-  signingKeyRotationStateGuard,
-  type SigningKeyRotationState,
 } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
@@ -128,68 +126,6 @@ export const createLogtoConfigQueries = (
         returning *
     `);
 
-  const getSigningKeyRotationState = async (): Promise<SigningKeyRotationState | undefined> => {
-    const { rows } = await getRowsByKeys([LogtoTenantConfigKey.SigningKeyRotationState]);
-
-    if (rows.length === 0) {
-      return undefined;
-    }
-
-    return signingKeyRotationStateGuard.parse(rows[0]?.value);
-  };
-
-  const upsertSigningKeyRotationState = async (
-    value: Partial<SigningKeyRotationState>
-  ): Promise<SigningKeyRotationState> => {
-    const { value: rawValue } = await pool.one<{ value: unknown }>(sql`
-      insert into ${table} (${fields.key}, ${fields.value})
-        values (${LogtoTenantConfigKey.SigningKeyRotationState}, ${sql.jsonb(value)})
-        on conflict (${fields.tenantId}, ${fields.key}) do update
-        set ${fields.value} = coalesce(${table}.${fields.value}, '{}'::jsonb) || ${sql.jsonb(value)}
-        returning ${fields.value}
-    `);
-
-    return signingKeyRotationStateGuard.parse(rawValue);
-  };
-
-  const updatePrivateSigningKeysAndRotationState = async (
-    privateKeys: OidcPrivateKey[],
-    signingKeyRotationState: Partial<SigningKeyRotationState>
-  ): Promise<{
-    privateKeys: OidcPrivateKey[];
-    signingKeyRotationState: SigningKeyRotationState;
-  }> =>
-    pool.transaction(async (transaction) => {
-      await transaction.query(sql`
-        select ${fields.key}
-        from ${table}
-        where ${fields.key} in (
-          ${LogtoOidcConfigKey.PrivateKeys},
-          ${LogtoTenantConfigKey.SigningKeyRotationState}
-        )
-        for update
-      `);
-
-      const privateKeysRow = await upsertPrivateSigningKeys(transaction, privateKeys);
-
-      const { value: rotationStateValue } = await transaction.one<{ value: unknown }>(sql`
-        insert into ${table} (${fields.key}, ${fields.value})
-          values (${LogtoTenantConfigKey.SigningKeyRotationState}, ${sql.jsonb(
-            signingKeyRotationState
-          )})
-          on conflict (${fields.tenantId}, ${fields.key}) do update
-          set ${fields.value} = coalesce(${table}.${fields.value}, '{}'::jsonb) || ${sql.jsonb(
-            signingKeyRotationState
-          )}
-          returning ${fields.value}
-      `);
-
-      return {
-        privateKeys: oidcPrivateKeyGuard.array().parse(privateKeysRow.value),
-        signingKeyRotationState: signingKeyRotationStateGuard.parse(rotationStateValue),
-      };
-    });
-
   // Can not narrow down the type of value if we utilize `buildInsertIntoWithPool` method.
   const upsertJwtCustomizer = async <T extends LogtoJwtTokenKey>(
     key: T,
@@ -238,9 +174,6 @@ export const createLogtoConfigQueries = (
     updatePrivateSigningKeys,
     updatePrivateSigningKeysWithLock,
     updateOidcConfigsByKey,
-    getSigningKeyRotationState,
-    upsertSigningKeyRotationState,
-    updatePrivateSigningKeysAndRotationState,
     upsertJwtCustomizer,
     deleteJwtCustomizer,
     getIdTokenConfig,
