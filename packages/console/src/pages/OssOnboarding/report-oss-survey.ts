@@ -1,13 +1,12 @@
+import ky from 'ky';
 import { useMemo } from 'react';
 
-import useApi from '@/hooks/use-api';
+import { ossSurveyEndpoint } from '@/consts/env';
 
 import { createOssSurveyReporter } from './utils';
 
 const useReportOssSurvey = () => {
-  const api = useApi({ hideErrorToast: true });
-
-  return useMemo(() => createOssSurveyReporter(api), [api]);
+  return useMemo(() => createOssSurveyReporter(ky, ossSurveyEndpoint), []);
 };
 
 export default useReportOssSurvey;

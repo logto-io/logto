@@ -47,6 +47,9 @@ const buildConfig = (mode: string): UserConfig => ({
     'import.meta.env.IS_CLOUD': JSON.stringify(process.env.IS_CLOUD),
     'import.meta.env.ADMIN_ENDPOINT': JSON.stringify(process.env.ADMIN_ENDPOINT),
     'import.meta.env.DEV_FEATURES_ENABLED': JSON.stringify(process.env.DEV_FEATURES_ENABLED),
+    'import.meta.env.LOGTO_OSS_SURVEY_ENDPOINT': JSON.stringify(
+      process.env.LOGTO_OSS_SURVEY_ENDPOINT
+    ),
     'import.meta.env.INTEGRATION_TEST': JSON.stringify(process.env.INTEGRATION_TEST),
     'import.meta.env.CONSOLE_EMBEDDED_PRICING_URL': JSON.stringify(
       process.env.CONSOLE_EMBEDDED_PRICING_URL

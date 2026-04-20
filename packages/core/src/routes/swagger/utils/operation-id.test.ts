@@ -1,46 +1,13 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-import { EnvSet } from '#src/env-set/index.js';
-
-import { buildOperationId, getCustomRoutes } from './operation-id.js';
+import { buildOperationId, customRoutes } from './operation-id.js';
 
 describe('buildOperationId', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const setDevFeaturesEnabled = (enabled: boolean) => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', enabled);
-  };
-
-  afterAll(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
-  });
-
   it('should return the custom operation id if it exists', () => {
-    for (const [path, operationId] of Object.entries(getCustomRoutes())) {
+    for (const [path, operationId] of Object.entries(customRoutes)) {
       const [method, pathSegments] = path.split(' ');
       expect(buildOperationId(method! as OpenAPIV3.HttpMethods, pathSegments!)).toBe(operationId);
     }
-  });
-
-  it('should only expose OSS survey custom routes when dev features are enabled', () => {
-    setDevFeaturesEnabled(false);
-    expect(getCustomRoutes()).toHaveProperty('get /configs/oidc/session', 'GetOidcSessionConfig');
-    expect(getCustomRoutes()).toHaveProperty(
-      'patch /configs/oidc/session',
-      'UpdateOidcSessionConfig'
-    );
-    expect(getCustomRoutes()).not.toHaveProperty('post /oss-survey/report');
-    expect(() => buildOperationId(OpenAPIV3.HttpMethods.POST, '/oss-survey/report')).toThrow();
-
-    setDevFeaturesEnabled(true);
-    expect(getCustomRoutes()).toHaveProperty('get /configs/oidc/session', 'GetOidcSessionConfig');
-    expect(getCustomRoutes()).toHaveProperty(
-      'patch /configs/oidc/session',
-      'UpdateOidcSessionConfig'
-    );
-    expect(getCustomRoutes()).toHaveProperty('post /oss-survey/report', 'ReportOssSurvey');
-    expect(buildOperationId(OpenAPIV3.HttpMethods.POST, '/oss-survey/report')).toBe(
-      'ReportOssSurvey'
-    );
   });
 
   it('should handle JIT APIs', () => {

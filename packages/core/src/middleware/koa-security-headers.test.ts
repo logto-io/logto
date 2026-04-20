@@ -19,7 +19,9 @@ await mockEsmWithActual('#src/env-set/index.js', () => ({
   getTenantEndpoint: () => new URL('https://tenant.example.com'),
 }));
 
-const { default: koaSecurityHeaders } = await import('./koa-security-headers.js');
+const { default: koaSecurityHeaders, getOssSurveyEndpointOrigin } = await import(
+  './koa-security-headers.js'
+);
 
 const koaNoop = noop as unknown as Koa.Next;
 
@@ -54,5 +56,42 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     await run(ctx, koaNoop);
 
     expect(getCsp(ctx)).not.toContain('launchdarkly');
+  });
+});
+
+describe('getOssSurveyEndpointOrigin', () => {
+  it('returns undefined when dev features are disabled', () => {
+    expect(
+      getOssSurveyEndpointOrigin({
+        isDevFeaturesEnabled: false,
+        ossSurveyEndpoint: 'https://survey.logto.app',
+      })
+    ).toBeUndefined();
+  });
+
+  it('returns undefined when survey endpoint is empty', () => {
+    expect(
+      getOssSurveyEndpointOrigin({
+        isDevFeaturesEnabled: true,
+      })
+    ).toBeUndefined();
+  });
+
+  it('returns undefined when survey endpoint is invalid', () => {
+    expect(
+      getOssSurveyEndpointOrigin({
+        isDevFeaturesEnabled: true,
+        ossSurveyEndpoint: 'not-a-url',
+      })
+    ).toBeUndefined();
+  });
+
+  it('returns the origin when survey endpoint is valid', () => {
+    expect(
+      getOssSurveyEndpointOrigin({
+        isDevFeaturesEnabled: true,
+        ossSurveyEndpoint: 'https://survey.logto.app/reporting/',
+      })
+    ).toBe('https://survey.logto.app');
   });
 });

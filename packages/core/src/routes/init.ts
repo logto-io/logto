@@ -41,7 +41,6 @@ import logRoutes from './log.js';
 import logtoConfigRoutes from './logto-config/index.js';
 import oneTimeTokenRoutes from './one-time-tokens.js';
 import organizationRoutes from './organization/index.js';
-import ossSurveyRoutes from './oss-survey/index.js';
 import publicWellKnownRoutes from './public-wellknown.js';
 import resourceRoutes from './resource.js';
 import resourceScopeRoutes from './resource.scope.js';
@@ -118,9 +117,6 @@ const createRouters = (tenant: TenantContext) => {
   sentinelActivitiesRoutes(managementRouter, tenant);
   customProfileFieldsRoutes(managementRouter, tenant);
   secretsRoutes(managementRouter, tenant);
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    ossSurveyRoutes(managementRouter, tenant);
-  }
 
   // General anonymous router for publicly accessible APIs
   const anonymousRouter: AnonymousRouter = new Router();
