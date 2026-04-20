@@ -1,4 +1,5 @@
 import { type CompanySize, type OssSurveyReportPayload, Project } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import type { KyInstance } from 'node_modules/ky/distribution/types/ky';
 
 export type OssOnboardingFormData = {
@@ -21,15 +22,13 @@ export const shouldRequireCompanyFields = (project: Project) => project === Proj
 
 export const createOssSurveyReporter = (api: Pick<KyInstance, 'post'>) => {
   return (payload: OssSurveyReportPayload): void => {
-    void (async () => {
-      try {
+    void trySafe(async () =>
         await api.post('api/oss-survey/report', {
           keepalive: true,
           json: payload,
           retry: { limit: 0 },
-        });
-      } catch {}
-    })();
+        })
+    );
   };
 };
 
