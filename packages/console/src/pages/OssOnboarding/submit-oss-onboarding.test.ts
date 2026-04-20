@@ -17,7 +17,7 @@ const mockFormData: OssOnboardingFormData = {
 };
 
 describe('submitOssOnboarding', () => {
-  it('reports the survey payload after onboarding data is persisted and before navigating', async () => {
+  it('reports the survey payload independently when onboarding is submitted', async () => {
     const report = jest.fn<void, [OssSurveyReportPayload]>();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
@@ -52,7 +52,7 @@ describe('submitOssOnboarding', () => {
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 
-  it('does not report the survey payload when onboarding data persistence fails', async () => {
+  it('still reports the survey payload when onboarding data persistence fails', async () => {
     const report = jest.fn<void, [OssSurveyReportPayload]>();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
@@ -69,7 +69,13 @@ describe('submitOssOnboarding', () => {
       })
     ).rejects.toThrow('save failed');
 
-    expect(report).not.toHaveBeenCalled();
+    expect(report).toHaveBeenCalledWith({
+      emailAddress: 'dev@example.com',
+      newsletter: true,
+      project: Project.Company,
+      companyName: 'Acme',
+      companySize: CompanySize.Scale3,
+    });
     expect(navigate).not.toHaveBeenCalled();
   });
 

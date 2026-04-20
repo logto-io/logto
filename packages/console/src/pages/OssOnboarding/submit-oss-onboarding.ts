@@ -19,13 +19,17 @@ export const submitOssOnboarding = async ({
 }: SubmitOssOnboardingOptions) => {
   const questionnaire = getOssOnboardingSubmitPayload(formData);
 
-  await update({
-    questionnaire,
-    isOnboardingDone: true,
-  });
-
-  if (isDevFeaturesEnabled) {
-    report?.(questionnaire);
+  try {
+    await update({
+      questionnaire,
+      isOnboardingDone: true,
+    });
+  } finally {
+    // Intentionally decoupled: survey reporting is best-effort telemetry and should not
+    // depend on whether onboarding customData persistence succeeds.
+    if (isDevFeaturesEnabled) {
+      report?.(questionnaire);
+    }
   }
 
   navigate('/get-started', { replace: true });
