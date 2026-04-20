@@ -46,13 +46,13 @@ describe('reportOssSurvey', () => {
   it('posts the survey payload with fire-and-forget request settings', () => {
     Object.defineProperty(EnvSet.values, 'ossSurveyEndpoint', {
       configurable: true,
-      value: 'https://survey.logto.app/api/survey',
+      value: 'https://survey.logto.app',
     });
     post.mockResolvedValue({} as never);
 
     reportOssSurvey(mockPayload);
 
-    expect(post).toHaveBeenCalledWith('https://survey.logto.app/api/survey', {
+    expect(post).toHaveBeenCalledWith('https://survey.logto.app/api/surveys', {
       headers: {
         'content-type': 'application/json',
         'user-agent': 'Logto OSS (https://logto.io/)',
@@ -66,7 +66,7 @@ describe('reportOssSurvey', () => {
   it('swallows outbound request failures', async () => {
     Object.defineProperty(EnvSet.values, 'ossSurveyEndpoint', {
       configurable: true,
-      value: 'https://survey.logto.app/api/survey',
+      value: 'https://survey.logto.app',
     });
     post.mockRejectedValue(new Error('network error'));
 
@@ -75,6 +75,18 @@ describe('reportOssSurvey', () => {
     }).not.toThrow();
 
     await Promise.resolve();
+  });
+
+  it('handles endpoint values with trailing slash', () => {
+    Object.defineProperty(EnvSet.values, 'ossSurveyEndpoint', {
+      configurable: true,
+      value: 'https://survey.logto.app/',
+    });
+    post.mockResolvedValue({} as never);
+
+    reportOssSurvey(mockPayload);
+
+    expect(post).toHaveBeenCalledWith('https://survey.logto.app/api/surveys', expect.any(Object));
   });
 });
 /* eslint-enable @silverhand/fp/no-mutating-methods */

@@ -1,0 +1,69 @@
+name: OSS Docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Docker image tag for OSS build
+        required: false
+        default: oss-latest
+        type: string
+      dev_features_enabled:
+        description: DEV_FEATURES_ENABLED passed to Docker build arg
+        required: false
+        default: "true"
+        type: string
+      logto_oss_survey_endpoint:
+        description: LOGTO_OSS_SURVEY_ENDPOINT passed to Docker build arg
+        required: false
+        default: https://logto-oss-survey-dev.svhd.workers.dev
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.inputs.image_tag || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  oss-dockerize:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      IMAGE: ghcr.io/${{ github.repository_owner }}/logto-oss:${{ inputs.image_tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push OSS docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE }}
+          build-args: |
+            dev_features_enabled=${{ inputs.dev_features_enabled }}
+            logto_oss_survey_endpoint=${{ inputs.logto_oss_survey_endpoint }}
+
+      - name: Export docker image tarball
+        run: |
+          docker pull $IMAGE
+          docker save $IMAGE | gzip > /tmp/logto-oss-${{ inputs.image_tag }}.tar.gz
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: logto-oss-image-${{ inputs.image_tag }}
+          path: /tmp/logto-oss-${{ inputs.image_tag }}.tar.gz
+          retention-days: 14
