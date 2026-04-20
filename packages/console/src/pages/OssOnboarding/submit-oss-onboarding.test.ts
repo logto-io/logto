@@ -9,7 +9,7 @@ import { submitOssOnboarding } from './submit-oss-onboarding';
 import type { OssOnboardingFormData } from './utils';
 
 const mockFormData: OssOnboardingFormData = {
-  emailAddress: 'dev@example.com',
+  emailAddress: 'Dev@Example.COM',
   newsletter: true,
   project: Project.Company,
   companyName: 'Acme',

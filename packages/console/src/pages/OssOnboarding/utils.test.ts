@@ -25,7 +25,7 @@ describe('OSS onboarding form utils', () => {
 
   test('drops company-only values from the submit payload for personal projects', () => {
     const payload = getOssOnboardingSubmitPayload({
-      emailAddress: 'dev@example.com',
+      emailAddress: 'Dev@Example.COM',
       newsletter: true,
       project: Project.Personal,
       companyName: 'Should be ignored',
@@ -41,7 +41,7 @@ describe('OSS onboarding form utils', () => {
 
   test('keeps company-only values in the submit payload for company projects', () => {
     const payload = getOssOnboardingSubmitPayload({
-      emailAddress: 'dev@example.com',
+      emailAddress: 'Dev@Example.COM',
       newsletter: false,
       project: Project.Company,
       companyName: 'Acme',

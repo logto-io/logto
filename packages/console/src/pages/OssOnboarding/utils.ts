@@ -36,11 +36,24 @@ export const createOssSurveyReporter = (api: Pick<KyInstance, 'post'>) => {
 export const getOssOnboardingSubmitPayload = (
   data: OssOnboardingFormData
 ): OssSurveyReportPayload => {
-  if (!shouldRequireCompanyFields(data.project)) {
-    const { companyName: _companyName, companySize: _companySize, ...rest } = data;
+  const normalizedEmailAddress = data.emailAddress.toLowerCase();
 
-    return rest;
+  if (!shouldRequireCompanyFields(data.project)) {
+    const {
+      companyName: _companyName,
+      companySize: _companySize,
+      emailAddress: _emailAddress,
+      ...rest
+    } = data;
+
+    return {
+      ...rest,
+      emailAddress: normalizedEmailAddress,
+    };
   }
 
-  return data;
+  return {
+    ...data,
+    emailAddress: normalizedEmailAddress,
+  };
 };
