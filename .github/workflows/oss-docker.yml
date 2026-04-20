@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       image_tag:
-        description: Docker image tag for OSS build
+        description: Optional docker image tag override (defaults to oss-<short-sha>)
         required: false
-        default: oss-latest
+        default: ""
         type: string
       dev_features_enabled:
         description: DEV_FEATURES_ENABLED passed to Docker build arg
         required: false
-        default: "true"
+        default: "false"
         type: string
       logto_oss_survey_endpoint:
         description: LOGTO_OSS_SURVEY_ENDPOINT passed to Docker build arg
@@ -30,11 +30,19 @@ jobs:
       contents: read
       packages: write
 
-    env:
-      IMAGE: ghcr.io/${{ github.repository_owner }}/logto-oss:${{ inputs.image_tag }}
-
     steps:
       - uses: actions/checkout@v4
+
+      - name: Resolve image tag
+        id: image_tag
+        run: |
+          IMAGE_TAG="${{ inputs.image_tag }}"
+
+          if [ -z "$IMAGE_TAG" ]; then
+            IMAGE_TAG="oss-${GITHUB_SHA::7}"
+          fi
+
+          echo "value=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -51,19 +59,20 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE }}
+          tags: ghcr.io/${{ github.repository_owner }}/logto-oss:${{ steps.image_tag.outputs.value }}
           build-args: |
             dev_features_enabled=${{ inputs.dev_features_enabled }}
             logto_oss_survey_endpoint=${{ inputs.logto_oss_survey_endpoint }}
 
       - name: Export docker image tarball
         run: |
-          docker pull $IMAGE
-          docker save $IMAGE | gzip > /tmp/logto-oss-${{ inputs.image_tag }}.tar.gz
+          IMAGE=ghcr.io/${{ github.repository_owner }}/logto-oss:${{ steps.image_tag.outputs.value }}
+          docker pull "$IMAGE"
+          docker save "$IMAGE" | gzip > /tmp/logto-oss-${{ steps.image_tag.outputs.value }}.tar.gz
 
       - name: Upload image artifact
         uses: actions/upload-artifact@v4
         with:
-          name: logto-oss-image-${{ inputs.image_tag }}
-          path: /tmp/logto-oss-${{ inputs.image_tag }}.tar.gz
+          name: logto-oss-image-${{ steps.image_tag.outputs.value }}
+          path: /tmp/logto-oss-${{ steps.image_tag.outputs.value }}.tar.gz
           retention-days: 14
