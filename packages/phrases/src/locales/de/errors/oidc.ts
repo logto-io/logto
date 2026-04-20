@@ -21,6 +21,7 @@ const oidc = {
   custom_claims_script_error: 'Fehler im benutzerdefinierten Claims-Skript: {{error_description}}',
   key_required: 'Mindestens ein Schlüssel ist erforderlich.',
   key_not_found: 'Der Schlüssel mit der ID {{id}} wurde nicht gefunden.',
+  only_previous_key_can_be_deleted: 'Nur ein vorheriger Schlüssel kann gelöscht werden.',
   invalid_session_payload: 'Ungültige Sitzungsnutzlast.',
   session_not_found: 'Sitzung nicht gefunden.',
   invalid_session_account_id: 'Sitzung accountId stimmt nicht überein.',

@@ -11,6 +11,7 @@ import {
   SupportedSigningKeyAlgorithm,
   type OidcConfigKeysResponse,
   type OidcConfigKey,
+  type OidcPrivateKey,
   LogtoOidcConfigKeyType,
   oidcSessionConfigGuard,
 } from '@logto/schemas';
@@ -48,16 +49,17 @@ const oidcSessionConfigResponseGuard = oidcSessionConfigGuard.required({ ttl: tr
  */
 const getRedactedOidcKeyResponse = async (
   type: LogtoOidcConfigKey,
-  keys: OidcConfigKey[]
+  keys: Array<OidcConfigKey | OidcPrivateKey>
 ): Promise<OidcConfigKeysResponse[]> =>
   Promise.all(
-    keys.map(async ({ id, value, createdAt }) => {
+    keys.map(async ({ id, value, createdAt, ...rest }) => {
       if (type === LogtoOidcConfigKey.PrivateKeys) {
         const jwk = await exportJWK(crypto.createPrivateKey(value));
         const parseResult = oidcConfigKeysResponseGuard.safeParse({
           id,
           createdAt,
           signingKeyAlgorithm: jwk.kty,
+          status: 'status' in rest ? rest.status : undefined,
         });
         if (!parseResult.success) {
           throw new RequestError({ code: 'request.general', status: 422 });
@@ -74,6 +76,7 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   const { getAdminConsoleConfig, updateAdminConsoleConfig, updateOidcConfigsByKey } =
     tenant.queries.logtoConfigs;
   const { getOidcConfigs } = tenant.logtoConfigs;
+  const { oidcPrivateKeys } = tenant.libraries;
 
   router.get(
     '/configs/admin-console',
@@ -180,20 +183,25 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { keyType, keyId } = ctx.guard.params;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
-      const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
-      const existingKeys = configs[configKey];
+      await (configKey === LogtoOidcConfigKey.PrivateKeys
+        ? oidcPrivateKeys.deletePrivateSigningKey(keyId)
+        : (async () => {
+            const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
+            const existingKeys = configs[configKey];
 
-      if (existingKeys.length <= 1) {
-        throw new RequestError({ code: 'oidc.key_required', status: 422 });
-      }
+            if (existingKeys.length <= 1) {
+              throw new RequestError({ code: 'oidc.key_required', status: 422 });
+            }
 
-      if (!existingKeys.some(({ id }) => id === keyId)) {
-        throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
-      }
+            if (!existingKeys.some(({ id }) => id === keyId)) {
+              throw new RequestError({ code: 'oidc.key_not_found', id: keyId, status: 404 });
+            }
 
-      const updatedKeys = existingKeys.filter(({ id }) => id !== keyId);
-
-      await updateOidcConfigsByKey(configKey, updatedKeys);
+            await updateOidcConfigsByKey(
+              configKey,
+              existingKeys.filter(({ id }) => id !== keyId)
+            );
+          })());
       void tenant.invalidateCache();
 
       ctx.status = 204;
@@ -218,19 +226,22 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
       const { keyType } = ctx.guard.params;
       const { signingKeyAlgorithm } = ctx.guard.body;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
-      const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
-      const existingKeys = configs[configKey];
 
       const newPrivateKey =
         configKey === LogtoOidcConfigKey.PrivateKeys
           ? await generateOidcPrivateKey(signingKeyAlgorithm)
           : generateOidcCookieKey();
 
-      // Clamp and only keep the 2 most recent private keys.
-      // Also make sure the new key is always on top of the list.
-      const updatedKeys = [newPrivateKey, ...existingKeys].slice(0, 2);
-
-      await updateOidcConfigsByKey(configKey, updatedKeys);
+      const updatedKeys =
+        configKey === LogtoOidcConfigKey.PrivateKeys
+          ? await oidcPrivateKeys.rotatePrivateSigningKeys(newPrivateKey)
+          : await (async () => {
+              const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
+              const existingKeys = configs[configKey];
+              const updatedKeys = [newPrivateKey, ...existingKeys].slice(0, 2);
+              await updateOidcConfigsByKey(configKey, updatedKeys);
+              return updatedKeys;
+            })();
       void tenant.invalidateCache();
 
       // Remove actual values of the private keys from response

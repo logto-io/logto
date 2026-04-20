@@ -20,6 +20,7 @@ const oidc = {
   custom_claims_script_error: 'Error del script de claims personalizados: {{error_description}}',
   key_required: 'Se requiere al menos una clave.',
   key_not_found: 'No se encuentra la clave con ID {{id}}.',
+  only_previous_key_can_be_deleted: 'Solo se puede eliminar una clave anterior.',
   invalid_session_payload: 'Carga útil de sesión no válida.',
   session_not_found: 'Sesión no encontrada.',
   invalid_session_account_id: 'Entidad de cuenta de sesión no coincide.',

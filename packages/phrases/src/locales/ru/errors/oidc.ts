@@ -20,6 +20,7 @@ const oidc = {
   custom_claims_script_error: 'Ошибка скрипта пользовательских claims: {{error_description}}',
   key_required: 'Требуется как минимум один ключ.',
   key_not_found: 'Ключ с идентификатором {{id}} не найден.',
+  only_previous_key_can_be_deleted: 'Удалить можно только предыдущий ключ.',
   invalid_session_payload: 'Недопустимая полезная нагрузка сессии.',
   session_not_found: 'Сессия не найдена.',
   invalid_session_account_id: 'Несоответствие accountId сессии.',

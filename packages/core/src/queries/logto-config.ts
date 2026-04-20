@@ -6,8 +6,10 @@ import {
   type IdTokenConfig,
   type LogtoConfig,
   type LogtoConfigKey,
-  type LogtoOidcConfigKey,
+  LogtoOidcConfigKey,
   type LogtoJwtTokenKey,
+  type OidcPrivateKey,
+  oidcPrivateKeyGuard,
   idTokenConfigGuard,
   type LogtoOidcConfigType,
 } from '@logto/schemas';
@@ -25,6 +27,16 @@ export const createLogtoConfigQueries = (
   pool: CommonQueryMethods,
   wellKnownCache: WellKnownCache
 ) => {
+  const upsertPrivateSigningKeys = async (privateKeys: OidcPrivateKey[]) =>
+    pool.one<{ key: LogtoOidcConfigKey.PrivateKeys; value: unknown }>(sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${LogtoOidcConfigKey.PrivateKeys}, ${sql.jsonb(privateKeys)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
+          privateKeys
+        )}
+        returning ${fields.key}, ${fields.value}
+    `);
+
   const getAdminConsoleConfig = async () =>
     pool.one<{ value: unknown }>(sql`
       select ${fields.value} from ${table}
@@ -62,7 +74,26 @@ export const createLogtoConfigQueries = (
     }
   };
 
-  const updateOidcConfigsByKey = async <T extends LogtoOidcConfigKey>(
+  const lockPrivateSigningKeys = async () =>
+    pool.query(sql`
+      select ${fields.key}
+      from ${table}
+      where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+      for update
+    `);
+
+  const getPrivateSigningKeys = async (): Promise<OidcPrivateKey[]> => {
+    const { rows } = await pool.query<LogtoConfig>(sql`
+      select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+      where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+    `);
+
+    return oidcPrivateKeyGuard.array().parse(rows[0]?.value);
+  };
+
+  const updateOidcConfigsByKey = async <
+    T extends Exclude<LogtoOidcConfigKey, LogtoOidcConfigKey.PrivateKeys>,
+  >(
     key: T,
     value: LogtoOidcConfigType[T]
   ) =>
@@ -117,6 +148,9 @@ export const createLogtoConfigQueries = (
     updateAdminConsoleConfig,
     getCloudConnectionData,
     getRowsByKeys,
+    lockPrivateSigningKeys,
+    getPrivateSigningKeys,
+    upsertPrivateSigningKeys,
     updateOidcConfigsByKey,
     upsertJwtCustomizer,
     deleteJwtCustomizer,

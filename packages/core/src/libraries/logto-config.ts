@@ -19,6 +19,7 @@ import chalk from 'chalk';
 import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { normalizeOidcPrivateKeys } from '#src/libraries/oidc-private-key.js';
 import type Queries from '#src/tenants/Queries.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
@@ -34,10 +35,16 @@ export const createLogtoConfigLibrary = ({
   const getOidcConfigs = async (consoleLog: ConsoleLog): Promise<LogtoOidcConfigType> => {
     try {
       const { rows } = await getRowsByKeys(Object.values(LogtoOidcConfigKey));
-
-      return z
+      const configs = z
         .object(logtoOidcConfigGuard)
         .parse(Object.fromEntries(rows.map(({ key, value }) => [key, value])));
+
+      return {
+        ...configs,
+        [LogtoOidcConfigKey.PrivateKeys]: normalizeOidcPrivateKeys(
+          configs[LogtoOidcConfigKey.PrivateKeys]
+        ),
+      };
     } catch (error: unknown) {
       if (error instanceof ZodError) {
         consoleLog.error(

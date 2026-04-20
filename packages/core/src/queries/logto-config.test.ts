@@ -3,9 +3,11 @@ import {
   LogtoConfigs,
   LogtoOidcConfigKey,
   LogtoTenantConfigKey,
+  OidcSigningKeyStatus,
 } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
 
+import { createMockCommonQueryMethods, expectSqlString } from '#src/test-utils/query.js';
 import { MockWellKnownCache } from '#src/test-utils/tenant.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 import { expectSqlAssert, type QueryType } from '#src/utils/test-utils.js';
@@ -119,14 +121,12 @@ describe('connector queries', () => {
   });
 
   test('updateOidcConfigsByKey', async () => {
-    const targetValue = [{ id: 'foo', value: 'bar', createdAt: 123_456_789 }];
-    const targetRowData = [
-      { key: LogtoOidcConfigKey.PrivateKeys, value: JSON.stringify(targetValue) },
-    ];
+    const targetValue = { ttl: 123_456_789 };
+    const targetRowData = [{ key: LogtoOidcConfigKey.Session, value: JSON.stringify(targetValue) }];
 
     const expectSql = sql`
       insert into ${table} (${fields.key}, ${fields.value})
-        values (${LogtoOidcConfigKey.PrivateKeys}, ${sql.jsonb(targetValue)})
+        values (${LogtoOidcConfigKey.Session}, ${sql.jsonb(targetValue)})
         on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
           targetValue
         )}
@@ -136,7 +136,7 @@ describe('connector queries', () => {
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
       expect(values).toMatchObject([
-        LogtoOidcConfigKey.PrivateKeys,
+        LogtoOidcConfigKey.Session,
         JSON.stringify(targetValue),
         JSON.stringify(targetValue),
       ]);
@@ -144,6 +144,68 @@ describe('connector queries', () => {
       return createMockQueryResult(targetRowData);
     });
 
-    void updateOidcConfigsByKey(LogtoOidcConfigKey.PrivateKeys, targetValue);
+    void updateOidcConfigsByKey(LogtoOidcConfigKey.Session, targetValue);
+  });
+});
+
+describe('logto config transactional queries', () => {
+  const methods = createMockCommonQueryMethods();
+  const transactionalQueries = createLogtoConfigQueries(methods as never, new MockWellKnownCache());
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('lockPrivateSigningKeys', async () => {
+    await transactionalQueries.lockPrivateSigningKeys();
+
+    expect(methods.query).toHaveBeenCalledTimes(1);
+    expect(methods.query).toHaveBeenCalledWith(expectSqlString('for update'));
+  });
+
+  test('getPrivateSigningKeys', async () => {
+    const currentPrivateKeys = [
+      {
+        id: 'current',
+        value: 'current-value',
+        createdAt: 123_456_789,
+        status: OidcSigningKeyStatus.Current,
+      },
+    ];
+
+    methods.query.mockResolvedValueOnce({
+      rows: [{ key: LogtoOidcConfigKey.PrivateKeys, value: currentPrivateKeys }],
+    } as never);
+
+    const result = await transactionalQueries.getPrivateSigningKeys();
+
+    expect(methods.query).toHaveBeenCalledTimes(1);
+    expect(result).toEqual(currentPrivateKeys);
+  });
+
+  test('upsertPrivateSigningKeys', async () => {
+    const updatedPrivateKeys = [
+      {
+        id: 'next-current',
+        value: 'next-value',
+        createdAt: 222_222_222,
+        status: OidcSigningKeyStatus.Current,
+      },
+      {
+        id: 'current',
+        value: 'current-value',
+        createdAt: 123_456_789,
+        status: OidcSigningKeyStatus.Previous,
+      },
+    ];
+
+    methods.one.mockResolvedValueOnce({
+      key: LogtoOidcConfigKey.PrivateKeys,
+      value: updatedPrivateKeys,
+    });
+
+    await transactionalQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
+
+    expect(methods.one).toHaveBeenCalledTimes(1);
   });
 });

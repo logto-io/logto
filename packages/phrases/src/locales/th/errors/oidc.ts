@@ -19,6 +19,7 @@ const oidc = {
   custom_claims_script_error: 'ข้อผิดพลาดของสคริปต์ custom claims: {{error_description}}',
   key_required: 'ต้องมีคีย์อย่างน้อยหนึ่งอัน',
   key_not_found: 'ไม่พบคีย์ที่มีรหัส {{id}}',
+  only_previous_key_can_be_deleted: 'ลบได้เฉพาะคีย์ก่อนหน้าเท่านั้น',
   invalid_session_payload: 'ข้อมูลเซสชันไม่ถูกต้อง',
   session_not_found: 'ไม่พบเซสชัน',
   invalid_session_account_id: 'Session accountId ไม่ตรงกัน',
