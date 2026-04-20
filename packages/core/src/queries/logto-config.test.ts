@@ -28,9 +28,6 @@ const {
   getAdminConsoleConfig,
   getCloudConnectionData,
   getRowsByKeys,
-  getPrivateSigningKeys,
-  lockPrivateSigningKeys,
-  upsertPrivateSigningKeys,
   updateAdminConsoleConfig,
   updateOidcConfigsByKey,
 } = createLogtoConfigQueries(pool, new MockWellKnownCache());
