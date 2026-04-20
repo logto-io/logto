@@ -1,4 +1,5 @@
 import type Router from 'koa-router';
+import { LRUCache } from 'lru-cache';
 import { type OpenAPIV3 } from 'openapi-types';
 
 import type { AnonymousRouter } from '../types.js';
@@ -23,7 +24,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   router: T,
   allRouters: R[]
 ) {
-  const swaggerDocumentCache = new Map<string, OpenAPIV3.Document>();
+  const swaggerDocumentCache = new LRUCache<string, OpenAPIV3.Document>({ max: 32 });
 
   router.get('/swagger.json', async (ctx, next) => {
     const cacheKey = ctx.request.origin;

@@ -19,14 +19,14 @@ export const submitOssOnboarding = async ({
 }: SubmitOssOnboardingOptions) => {
   const questionnaire = getOssOnboardingSubmitPayload(formData);
 
-  if (isDevFeaturesEnabled) {
-    report?.(questionnaire);
-  }
-
   await update({
     questionnaire,
     isOnboardingDone: true,
   });
+
+  if (isDevFeaturesEnabled) {
+    report?.(questionnaire);
+  }
 
   navigate('/get-started', { replace: true });
 };
