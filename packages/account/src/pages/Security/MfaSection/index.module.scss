@@ -20,7 +20,8 @@
 
 .row {
   display: grid;
-  grid-template-columns: auto minmax(0, 200px) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr) auto;
+  grid-auto-flow: dense;
   column-gap: _.unit(6);
   align-items: center;
   padding: _.unit(5) _.unit(6);
@@ -35,11 +36,14 @@
   display: contents;
 }
 
+// Icon and title share the same grid cell so the name slot stays within 200px,
+// matching the original non-grid layout. Title offsets via padding to sit after the icon.
 .iconWrap {
+  grid-column: 1;
+  grid-row: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
-  grid-column: 1;
+  justify-self: start;
   flex-shrink: 0;
 }
 
@@ -51,14 +55,16 @@
 }
 
 .title {
-  grid-column: 2;
+  grid-column: 1;
+  grid-row: 1;
   min-width: 0;
+  padding-left: calc(20px + #{_.unit(4)});
   font: var(--font-label-2);
   color: var(--color-type-primary);
 }
 
 .value {
-  grid-column: 3;
+  grid-column: 2;
   min-width: 0;
   display: flex;
   align-items: center;
@@ -93,7 +99,7 @@
 }
 
 .actions {
-  grid-column: 4;
+  grid-column: 3;
   display: flex;
   align-items: center;
   gap: _.unit(4);
@@ -188,6 +194,11 @@
     align-items: center;
     justify-content: space-between;
     gap: _.unit(3);
+    width: 100%;
+  }
+
+  .title {
+    padding-left: 0;
     width: 100%;
   }
 
