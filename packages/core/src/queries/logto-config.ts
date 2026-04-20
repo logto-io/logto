@@ -78,9 +78,6 @@ export const createLogtoConfigQueries = (
     }
   };
 
-  const updatePrivateSigningKeys = async (privateKeys: OidcPrivateKey[]) =>
-    upsertPrivateSigningKeys(pool, privateKeys);
-
   const updatePrivateSigningKeysWithLock = async (
     updater: (privateKeys: OidcPrivateKey[]) => OidcPrivateKey[]
   ): Promise<OidcPrivateKey[]> =>
@@ -164,7 +161,6 @@ export const createLogtoConfigQueries = (
     updateAdminConsoleConfig,
     getCloudConnectionData,
     getRowsByKeys,
-    updatePrivateSigningKeys,
     updatePrivateSigningKeysWithLock,
     updateOidcConfigsByKey,
     upsertJwtCustomizer,

@@ -29,7 +29,6 @@ const {
   getCloudConnectionData,
   getRowsByKeys,
   updateAdminConsoleConfig,
-  updatePrivateSigningKeys,
   updateOidcConfigsByKey,
 } = createLogtoConfigQueries(pool, new MockWellKnownCache());
 
@@ -119,42 +118,6 @@ describe('connector queries', () => {
 
     const result = await getRowsByKeys(keys);
     expect(result.rows).toEqual(rowData);
-  });
-
-  test('updatePrivateSigningKeys', async () => {
-    const targetValue = [
-      {
-        id: 'foo',
-        value: 'bar',
-        createdAt: 123_456_789,
-        status: OidcSigningKeyStatus.Current,
-      },
-    ];
-    const targetRowData = [
-      { key: LogtoOidcConfigKey.PrivateKeys, value: JSON.stringify(targetValue) },
-    ];
-
-    const expectSql = sql`
-      insert into ${table} (${fields.key}, ${fields.value})
-        values (${LogtoOidcConfigKey.PrivateKeys}, ${sql.jsonb(targetValue)})
-        on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
-          targetValue
-        )}
-        returning ${fields.key}, ${fields.value}
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toMatchObject([
-        LogtoOidcConfigKey.PrivateKeys,
-        JSON.stringify(targetValue),
-        JSON.stringify(targetValue),
-      ]);
-
-      return createMockQueryResult(targetRowData);
-    });
-
-    void updatePrivateSigningKeys(targetValue);
   });
 
   test('updateOidcConfigsByKey', async () => {
