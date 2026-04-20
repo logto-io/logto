@@ -23,6 +23,7 @@ import {
   mockPrivacyPolicyUrl,
   mockDemoSocialConnector,
 } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -98,6 +99,8 @@ const createDevFeaturesDisabledRequester = async () => {
     })
   );
 
+  const findAllCustomProfileFields = jest.fn().mockResolvedValue([]);
+
   const tenant = new MockTenant(
     undefined,
     {
@@ -106,6 +109,7 @@ const createDevFeaturesDisabledRequester = async () => {
         findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
       },
       customPhrases: { findAllCustomLanguageTags: async () => [] },
+      customProfileFields: { findAllCustomProfileFields },
     },
     { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
     { signInExperiences: { validateLanguageInfo: jest.fn() } }
@@ -117,7 +121,55 @@ const createDevFeaturesDisabledRequester = async () => {
     tenantContext: tenant,
   });
 
-  return { requester, updateDefaultSignInExperience };
+  return { requester, updateDefaultSignInExperience, findAllCustomProfileFields };
+};
+
+const createDevFeaturesEnabledRequester = async (
+  customProfileFieldsCatalog: Array<{ name: string }> = []
+) => {
+  jest.resetModules();
+
+  await mockEsmWithActual('#src/env-set/index.js', () => ({
+    EnvSet: {
+      values: {
+        isDevFeaturesEnabled: true,
+        isCloud: false,
+        isProduction: false,
+        isUnitTest: true,
+      },
+    },
+  }));
+
+  const updateDefaultSignInExperience = jest.fn(
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+      ...mockSignInExperience,
+      ...data,
+    })
+  );
+
+  const findAllCustomProfileFields = jest.fn().mockResolvedValue(customProfileFieldsCatalog);
+
+  const tenant = new MockTenant(
+    undefined,
+    {
+      signInExperiences: {
+        updateDefaultSignInExperience,
+        findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+      },
+      customPhrases: { findAllCustomLanguageTags: async () => [] },
+      customProfileFields: { findAllCustomProfileFields },
+    },
+    { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
+    { signInExperiences: { validateLanguageInfo: jest.fn() } }
+  );
+
+  const routes = await pickDefault(import('./index.js'));
+  const requester = createRequester({
+    authedRoutes: routes,
+    tenantContext: tenant,
+  });
+
+  return { requester, updateDefaultSignInExperience, findAllCustomProfileFields };
 };
 
 describe('GET /sign-in-exp', () => {
@@ -474,6 +526,81 @@ describe('sign-in experience routes with dev features disabled', () => {
       adaptiveMfa,
       mfa,
     });
+  });
+
+  it('should silently drop signUpProfileFields from the update payload', async () => {
+    const { requester, updateDefaultSignInExperience } = await createDevFeaturesDisabledRequester();
+    const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+
+    try {
+      const response = await requester.patch('/sign-in-exp').send({
+        signUpProfileFields: [{ name: 'company' }],
+      });
+
+      expect(response.status).toEqual(200);
+      expect(updateDefaultSignInExperience).toHaveBeenCalledWith({});
+      expect(updateDefaultSignInExperience.mock.calls[0]?.[0]).not.toHaveProperty(
+        'signUpProfileFields'
+      );
+    } finally {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+        originalIsDevFeaturesEnabled;
+    }
+  });
+});
+
+describe('PATCH /sign-in-exp signUpProfileFields with dev features enabled', () => {
+  it('should persist signUpProfileFields when all names exist in the catalog', async () => {
+    const { requester, updateDefaultSignInExperience } = await createDevFeaturesEnabledRequester([
+      { name: 'company' },
+      { name: 'inviteCode' },
+    ]);
+
+    const signUpProfileFields = [{ name: 'inviteCode' }, { name: 'company' }];
+
+    const response = await requester.patch('/sign-in-exp').send({ signUpProfileFields });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ signUpProfileFields });
+    expect(response.body).toMatchObject({ signUpProfileFields });
+  });
+
+  it('should reject unknown field names', async () => {
+    const { requester, updateDefaultSignInExperience } = await createDevFeaturesEnabledRequester([
+      { name: 'company' },
+    ]);
+
+    const response = await requester
+      .patch('/sign-in-exp')
+      .send({ signUpProfileFields: [{ name: 'nonExistent' }] });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+  });
+
+  it('should reject duplicate field names', async () => {
+    const { requester, updateDefaultSignInExperience } = await createDevFeaturesEnabledRequester([
+      { name: 'company' },
+    ]);
+
+    const response = await requester
+      .patch('/sign-in-exp')
+      .send({ signUpProfileFields: [{ name: 'company' }, { name: 'company' }] });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+  });
+
+  it('should accept null to clear signUpProfileFields', async () => {
+    const { requester, updateDefaultSignInExperience } = await createDevFeaturesEnabledRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({ signUpProfileFields: null });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ signUpProfileFields: null });
   });
 });
 /* eslint-enable max-lines */
