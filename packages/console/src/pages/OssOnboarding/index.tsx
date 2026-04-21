@@ -1,4 +1,3 @@
-import { emailRegEx } from '@logto/core-kit';
 import { CompanySize, Project, Theme } from '@logto/schemas';
 import { useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -26,6 +25,7 @@ import styles from './index.module.scss';
 import { submitOssOnboarding } from './submit-oss-onboarding';
 import {
   getOssOnboardingDefaultValues,
+  isValidOssOnboardingEmailAddress,
   shouldRequireCompanyFields,
   type OssOnboardingFormData,
 } from './utils';
@@ -41,13 +41,16 @@ function OssOnboarding() {
     handleSubmit,
     register,
     reset,
+    setValue,
     watch,
   } = useForm<OssOnboardingFormData>({
     defaultValues: getOssOnboardingDefaultValues(),
     shouldUnregister: true,
   });
   const project = watch('project');
+  const emailAddress = watch('emailAddress');
   const isCompanyProject = shouldRequireCompanyFields(project);
+  const hasValidEmailAddress = isValidOssOnboardingEmailAddress(emailAddress);
 
   useEffect(() => {
     setThemeOverride(Theme.Light);
@@ -65,6 +68,12 @@ function OssOnboarding() {
       });
     }
   }, [data.questionnaire, isLoading, reset]);
+
+  useEffect(() => {
+    if (!hasValidEmailAddress) {
+      setValue('newsletter', false);
+    }
+  }, [hasValidEmailAddress, setValue]);
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) =>
@@ -112,24 +121,27 @@ function OssOnboarding() {
                   disabled={isSubmitting}
                   error={errors.emailAddress?.message}
                   {...register('emailAddress', {
-                    required: t('oss_onboarding.errors.email_required'),
                     validate: (value) =>
-                      emailRegEx.test(value) || t('oss_onboarding.errors.email_invalid'),
+                      !value ||
+                      isValidOssOnboardingEmailAddress(value) ||
+                      t('oss_onboarding.errors.email_invalid'),
                   })}
                 />
               </FormField>
-              <Controller
-                name="newsletter"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <Checkbox
-                    className={styles.checkbox}
-                    checked={value}
-                    label={t('oss_onboarding.newsletter')}
-                    onChange={onChange}
-                  />
-                )}
-              />
+              {hasValidEmailAddress && (
+                <Controller
+                  name="newsletter"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <Checkbox
+                      className={styles.checkbox}
+                      checked={value}
+                      label={t('oss_onboarding.newsletter')}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              )}
             </div>
             <FormField title="oss_onboarding.project.label">
               <Controller
@@ -146,48 +158,41 @@ function OssOnboarding() {
                   >
                     <Radio
                       className={styles.projectRadio}
-                      title="oss_onboarding.project.company"
-                      value={Project.Company}
-                      icon={<BuildingIcon className={styles.projectOptionIcon} />}
-                    />
-                    <Radio
-                      className={styles.projectRadio}
                       title="oss_onboarding.project.personal"
                       value={Project.Personal}
                       icon={<PizzaIcon className={styles.projectOptionIcon} />}
+                    />
+                    <Radio
+                      className={styles.projectRadio}
+                      title="oss_onboarding.project.company"
+                      value={Project.Company}
+                      icon={<BuildingIcon className={styles.projectOptionIcon} />}
                     />
                   </RadioGroup>
                 )}
               />
             </FormField>
-            <FormField title="oss_onboarding.project_name.label">
-              <TextInput
-                maxLength={200}
-                placeholder={t('oss_onboarding.project_name.placeholder')}
-                disabled={isSubmitting}
-                error={errors.projectName?.message}
-                {...register('projectName', {
-                  maxLength: {
-                    value: 200,
-                    message: t('oss_onboarding.errors.project_name_too_long'),
-                  },
-                })}
-              />
-            </FormField>
             {isCompanyProject && (
               <>
-                <FormField title="oss_onboarding.company_name.label">
+                <FormField isRequired title="oss_onboarding.company_name.label">
                   <TextInput
                     placeholder={t('oss_onboarding.company_name.placeholder')}
                     disabled={isSubmitting}
                     error={errors.companyName?.message}
-                    {...register('companyName')}
+                    {...register('companyName', {
+                      validate: (value) =>
+                        Boolean(value.trim()) || t('oss_onboarding.errors.company_name_required'),
+                    })}
                   />
                 </FormField>
-                <FormField title="oss_onboarding.company_size.label">
+                <FormField isRequired title="oss_onboarding.company_size.label">
                   <Controller
                     name="companySize"
                     control={control}
+                    rules={{
+                      validate: (value) =>
+                        Boolean(value) || t('oss_onboarding.errors.company_size_required'),
+                    }}
                     render={({ field: { onChange, value, name } }) => (
                       <>
                         <RadioGroup
