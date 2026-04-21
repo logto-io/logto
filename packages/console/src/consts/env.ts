@@ -33,3 +33,4 @@ export const postHogHost = normalizeEnv(import.meta.env.POSTHOG_PUBLIC_HOST);
  * @see https://posthog.com/docs/libraries/js/config for more details.
  */
 export const postHogUiHost = normalizeEnv(import.meta.env.POSTHOG_PUBLIC_UI_HOST);
+export const ossSurveyEndpoint = normalizeEnv(import.meta.env.LOGTO_OSS_SURVEY_ENDPOINT);

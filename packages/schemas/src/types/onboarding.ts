@@ -85,6 +85,16 @@ const ossQuestionnaireGuard = z.object({
 
 export type OssQuestionnaire = z.infer<typeof ossQuestionnaireGuard>;
 
+export const ossSurveyReportPayloadGuard = z.object({
+  emailAddress: z.string().email().max(320),
+  newsletter: z.boolean().optional(),
+  project: z.nativeEnum(Project),
+  companyName: z.string().max(200).optional(),
+  companySize: z.nativeEnum(CompanySize).optional(),
+});
+
+export type OssSurveyReportPayload = z.infer<typeof ossSurveyReportPayloadGuard>;
+
 export const userOnboardingDataGuard = z.object({
   questionnaire: questionnaireGuard.optional(),
   isOnboardingDone: z.boolean().optional(),

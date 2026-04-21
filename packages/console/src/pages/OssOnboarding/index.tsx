@@ -23,9 +23,9 @@ import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { trySubmitSafe } from '@/utils/form';
 
 import styles from './index.module.scss';
+import { submitOssOnboarding } from './submit-oss-onboarding';
 import {
   getOssOnboardingDefaultValues,
-  getOssOnboardingSubmitPayload,
   shouldRequireCompanyFields,
   type OssOnboardingFormData,
 } from './utils';
@@ -67,13 +67,13 @@ function OssOnboarding() {
   }, [data.questionnaire, isLoading, reset]);
 
   const onSubmit = handleSubmit(
-    trySubmitSafe(async (formData) => {
-      await update({
-        questionnaire: getOssOnboardingSubmitPayload(formData),
-        isOnboardingDone: true,
-      });
-      navigate('/get-started', { replace: true });
-    })
+    trySubmitSafe(async (formData) =>
+      submitOssOnboarding({
+        formData,
+        navigate,
+        update,
+      })
+    )
   );
 
   if (isLoading) {

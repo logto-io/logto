@@ -1,5 +1,7 @@
+# syntax=docker/dockerfile:1.7
+
 ###### [STAGE] Build ######
-FROM node:22-alpine as builder
+FROM node:22-alpine AS builder
 WORKDIR /etc/logto
 ENV CI=true
 
@@ -14,7 +16,8 @@ RUN apk add --no-cache python3 make g++ rsync
 COPY . .
 
 ### Install dependencies and build ###
-RUN pnpm i
+# Reuse the pnpm store between BuildKit runs to reduce duplicate downloads/writes.
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store pnpm i
 
 ### Set if dev features enabled ###
 ARG dev_features_enabled
@@ -22,6 +25,9 @@ ENV DEV_FEATURES_ENABLED=${dev_features_enabled}
 
 ARG applicationinsights_connection_string
 ENV APPLICATIONINSIGHTS_CONNECTION_STRING=${applicationinsights_connection_string}
+
+ARG logto_oss_survey_endpoint=
+ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
 
 RUN pnpm -r build
 
@@ -31,15 +37,19 @@ ENV ADDITIONAL_CONNECTOR_ARGS=${additional_connector_args}
 RUN pnpm cli connector link $ADDITIONAL_CONNECTOR_ARGS -p .
 
 ### Prune dependencies for production ###
-RUN rm -rf node_modules packages/**/node_modules
-RUN NODE_ENV=production pnpm i
+# Keep prune + production install in one layer to avoid extra transient disk usage.
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+  rm -rf node_modules packages/**/node_modules && NODE_ENV=production pnpm i
 
 ### Clean up ###
 RUN rm -rf .scripts pnpm-*.yaml packages/cloud
 
 ###### [STAGE] Seal ######
-FROM node:22-alpine as app
+FROM node:22-alpine AS app
 WORKDIR /etc/logto
+ARG logto_oss_survey_endpoint=
+# Default to empty so external survey relaying stays opt-in for controlled builds/environments.
+ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
 COPY --from=builder /etc/logto .
 RUN mkdir -p /etc/logto/packages/cli/alteration-scripts && chmod g+w /etc/logto/packages/cli/alteration-scripts
 EXPOSE 3001
