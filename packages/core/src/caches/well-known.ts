@@ -26,6 +26,8 @@ type WellKnownMap = {
   'resource-by-indicator': Nullable<Resource>;
   'custom-phrases': Record<string, unknown>;
   'custom-phrases-tags': string[];
+  /** @deprecated Temporary rollout compatibility key for pre-blob tenant invalidation readers. */
+  'tenant-cache-expires-at': number;
   'signing-key-rotation-state': Nullable<SigningKeyRotationState>;
   // Currently, tenant type cannot be updated once created. So it's safe to cache.
   'is-development-tenant': boolean;
@@ -42,6 +44,7 @@ const valueGuards: { [Key in WellKnownCacheType]: ZodType<WellKnownMap[Key]> } =
   'resource-by-indicator': Resources.guard.nullable(),
   'custom-phrases': z.record(z.unknown()),
   'custom-phrases-tags': z.string().array(),
+  'tenant-cache-expires-at': z.number(),
   'signing-key-rotation-state': signingKeyRotationStateGuard.nullable(),
   'is-development-tenant': z.boolean(),
   'account-center': AccountCenters.guard,

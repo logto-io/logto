@@ -112,6 +112,11 @@ describe('Tenant cache health check', () => {
       WellKnownCache.defaultKey,
       expect.objectContaining({ signingKeyRotationAt: 1_234_567_890 })
     );
+    expect(tenant.wellKnownCache.set).toBeCalledWith(
+      'tenant-cache-expires-at',
+      WellKnownCache.defaultKey,
+      expect.any(Number)
+    );
   });
 
   it('should be able to check the health of tenant cache', async () => {
@@ -169,6 +174,11 @@ describe('Tenant cache health check', () => {
         signingKeyRotationAt: 1_234_567_890,
       }
     );
+    expect(tenant.wellKnownCache.set).toHaveBeenCalledWith(
+      'tenant-cache-expires-at',
+      WellKnownCache.defaultKey,
+      2_222_222_222
+    );
   });
 
   it('falls back to DB-backed rotation state when cached values are missing', async () => {
@@ -187,6 +197,11 @@ describe('Tenant cache health check', () => {
       'signing-key-rotation-state',
       WellKnownCache.defaultKey,
       { tenantCacheExpiresAt: now }
+    );
+    expect(tenant.wellKnownCache.set).toBeCalledWith(
+      'tenant-cache-expires-at',
+      WellKnownCache.defaultKey,
+      now
     );
   });
 

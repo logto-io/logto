@@ -10,11 +10,20 @@ export const syncSigningKeyRotationStateCache = async (
   wellKnownCache: WellKnownCache,
   signingKeyRotationState?: SigningKeyRotationState
 ) =>
-  wellKnownCache.set(
-    'signing-key-rotation-state',
-    WellKnownCache.defaultKey,
-    signingKeyRotationState ?? null
-  );
+  Promise.all([
+    wellKnownCache.set(
+      'signing-key-rotation-state',
+      WellKnownCache.defaultKey,
+      signingKeyRotationState ?? null
+    ),
+    signingKeyRotationState?.tenantCacheExpiresAt === undefined
+      ? Promise.resolve()
+      : wellKnownCache.set(
+          'tenant-cache-expires-at',
+          WellKnownCache.defaultKey,
+          signingKeyRotationState.tenantCacheExpiresAt
+        ),
+  ]);
 
 export const getSigningKeyRotationState = async ({
   wellKnownCache,
