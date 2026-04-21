@@ -9,7 +9,7 @@ import Tenant from './Tenant.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('tenant'));
 
-class TenantPool {
+export class TenantPool {
   protected cache = new LRUCache<string, Promise<Tenant>>({
     max: EnvSet.values.tenantPoolSize,
     dispose: async (entry) => {
@@ -17,6 +17,8 @@ class TenantPool {
       void tenant.dispose();
     },
   });
+
+  protected refreshing = new Map<string, Promise<Tenant>>();
 
   async get(tenantId: string, customDomain?: string): Promise<Tenant> {
     const cacheKey = `${tenantId}-${customDomain ?? 'default'}`;
@@ -31,11 +33,13 @@ class TenantPool {
       // Otherwise, create a new tenant instance and store in LRU cache, using the code below.
     }
 
-    consoleLog.info('Init tenant:', tenantId, 'Custom domain:', customDomain);
-    const newTenantPromise = Tenant.create({ id: tenantId, redisCache, customDomain });
-    this.cache.set(cacheKey, newTenantPromise);
+    const refreshingTenantPromise = this.refreshing.get(cacheKey);
 
-    return newTenantPromise;
+    if (refreshingTenantPromise) {
+      return refreshingTenantPromise;
+    }
+
+    return this.createTenant(cacheKey, tenantId, customDomain);
   }
 
   async endAll(): Promise<void> {
@@ -46,6 +50,26 @@ class TenantPool {
         return tenant.envSet.end();
       })
     );
+  }
+
+  protected async createTenant(cacheKey: string, tenantId: string, customDomain?: string) {
+    consoleLog.info('Init tenant:', tenantId, 'Custom domain:', customDomain);
+    const tenantPromise = Tenant.create({ id: tenantId, redisCache, customDomain });
+
+    this.refreshing.set(cacheKey, tenantPromise);
+    this.cache.set(cacheKey, tenantPromise);
+
+    void (async () => {
+      try {
+        await tenantPromise;
+      } finally {
+        if (this.refreshing.get(cacheKey) === tenantPromise) {
+          this.refreshing.delete(cacheKey);
+        }
+      }
+    })();
+
+    return tenantPromise;
   }
 }
 
