@@ -160,6 +160,13 @@ function OssOnboarding() {
                 )}
               />
             </FormField>
+            <FormField title="oss_onboarding.project_name.label">
+              <TextInput
+                placeholder={t('oss_onboarding.project_name.placeholder')}
+                disabled={isSubmitting}
+                {...register('projectName')}
+              />
+            </FormField>
             {isCompanyProject && (
               <>
                 <FormField title="oss_onboarding.company_name.label">

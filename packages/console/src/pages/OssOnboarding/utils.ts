@@ -1,9 +1,10 @@
-import { CompanySize, type OssSurveyReportPayload, Project } from '@logto/schemas';
+import { type CompanySize, type OssSurveyReportPayload, Project } from '@logto/schemas';
 
 export type OssOnboardingFormData = {
   emailAddress: string;
   newsletter: boolean;
   project: Project;
+  projectName: string;
   companyName: string;
   companySize?: CompanySize;
 };
@@ -12,31 +13,41 @@ export const getOssOnboardingDefaultValues = (): OssOnboardingFormData => ({
   emailAddress: '',
   newsletter: false,
   project: Project.Company,
+  projectName: '',
   companyName: '',
-  companySize: CompanySize.Scale3,
+  companySize: undefined,
 });
 
-export const shouldIncludeCompanyFields = (project: Project) => project === Project.Company;
+export const shouldRequireCompanyFields = (project: Project) => project === Project.Company;
 
 export const getOssOnboardingSubmitPayload = (
   data: OssOnboardingFormData
 ): OssSurveyReportPayload => {
   const normalizedEmailAddress = data.emailAddress.toLowerCase();
-  const { companyName, companySize, ...rest } = data;
+  const normalizedProjectName = data.projectName.trim();
+  const projectNamePayload = normalizedProjectName ? { projectName: normalizedProjectName } : {};
 
-  if (!shouldIncludeCompanyFields(data.project)) {
+  if (!shouldRequireCompanyFields(data.project)) {
+    const {
+      projectName: _projectName,
+      companyName: _companyName,
+      companySize: _companySize,
+      emailAddress: _emailAddress,
+      ...rest
+    } = data;
+
     return {
       ...rest,
       emailAddress: normalizedEmailAddress,
+      ...projectNamePayload,
     };
   }
 
-  const normalizedCompanyName = companyName.trim();
+  const { projectName: _projectName, ...rest } = data;
 
   return {
     ...rest,
     emailAddress: normalizedEmailAddress,
-    ...(normalizedCompanyName ? { companyName: normalizedCompanyName } : {}),
-    ...(companySize ? { companySize } : {}),
+    ...projectNamePayload,
   };
 };

@@ -3,7 +3,8 @@ import { CompanySize, Project, type OssSurveyReportPayload } from '@logto/schema
 import {
   getOssOnboardingDefaultValues,
   getOssOnboardingSubmitPayload,
-  shouldIncludeCompanyFields,
+  shouldRequireCompanyFields,
+  type OssOnboardingFormData,
 } from './utils';
 
 describe('OSS onboarding form utils', () => {
@@ -12,14 +13,15 @@ describe('OSS onboarding form utils', () => {
       emailAddress: '',
       newsletter: false,
       project: Project.Company,
+      projectName: '',
       companyName: '',
-      companySize: CompanySize.Scale3,
+      companySize: undefined,
     });
   });
 
-  test('identifies company projects for optional company fields', () => {
-    expect(shouldIncludeCompanyFields(Project.Company)).toBe(true);
-    expect(shouldIncludeCompanyFields(Project.Personal)).toBe(false);
+  test('requires company-only fields only for company projects', () => {
+    expect(shouldRequireCompanyFields(Project.Company)).toBe(true);
+    expect(shouldRequireCompanyFields(Project.Personal)).toBe(false);
   });
 
   test('drops company-only values from the submit payload for personal projects', () => {
@@ -27,6 +29,7 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'Dev@Example.COM',
       newsletter: true,
       project: Project.Personal,
+      projectName: '  My starter app  ',
       companyName: 'Should be ignored',
       companySize: CompanySize.Scale3,
     });
@@ -35,6 +38,7 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'dev@example.com',
       newsletter: true,
       project: Project.Personal,
+      projectName: 'My starter app',
     } satisfies OssSurveyReportPayload);
   });
 
@@ -43,7 +47,8 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'Dev@Example.COM',
       newsletter: false,
       project: Project.Company,
-      companyName: ' Acme ',
+      projectName: '  OSS Portal ',
+      companyName: 'Acme',
       companySize: CompanySize.Scale3,
     });
 
@@ -51,24 +56,26 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'dev@example.com',
       newsletter: false,
       project: Project.Company,
+      projectName: 'OSS Portal',
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
-    } satisfies OssSurveyReportPayload);
+    } satisfies OssOnboardingFormData);
   });
 
-  test('omits empty company fields in the submit payload for company projects', () => {
+  test('omits project name when input contains only whitespace', () => {
     const payload = getOssOnboardingSubmitPayload({
       emailAddress: 'Dev@Example.COM',
       newsletter: false,
-      project: Project.Company,
-      companyName: '   ',
+      project: Project.Personal,
+      projectName: '   ',
+      companyName: '',
       companySize: undefined,
     });
 
     expect(payload).toEqual({
       emailAddress: 'dev@example.com',
       newsletter: false,
-      project: Project.Company,
+      project: Project.Personal,
     } satisfies OssSurveyReportPayload);
   });
 });

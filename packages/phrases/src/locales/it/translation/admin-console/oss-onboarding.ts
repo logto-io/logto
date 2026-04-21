@@ -16,6 +16,10 @@ const oss_onboarding = {
     personal: 'Progetto personale',
     company: 'Progetto aziendale',
   },
+  project_name: {
+    label: 'Nome del progetto',
+    placeholder: 'Il mio progetto',
+  },
   company_name: {
     label: "Nome dell'azienda",
     placeholder: 'Acme.co',

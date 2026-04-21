@@ -79,6 +79,7 @@ const ossQuestionnaireGuard = z.object({
   emailAddress: z.string().optional(),
   newsletter: z.boolean().optional(),
   project: z.nativeEnum(Project).optional(),
+  projectName: z.string().max(200).optional(),
   companyName: z.string().optional(),
   companySize: z.nativeEnum(CompanySize).optional(),
 });
@@ -89,6 +90,7 @@ export const ossSurveyReportPayloadGuard = z.object({
   emailAddress: z.string().email().max(320),
   newsletter: z.boolean().optional(),
   project: z.nativeEnum(Project),
+  projectName: z.string().max(200).optional(),
   companyName: z.string().max(200).optional(),
   companySize: z.nativeEnum(CompanySize).optional(),
 });

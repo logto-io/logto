@@ -13,6 +13,10 @@ const oss_onboarding = {
     personal: '개인 프로젝트',
     company: '회사 프로젝트',
   },
+  project_name: {
+    label: '프로젝트 이름',
+    placeholder: '내 프로젝트',
+  },
   company_name: {
     label: '회사명',
     placeholder: 'Acme.co',
