@@ -25,8 +25,6 @@ const oss_onboarding = {
   errors: {
     email_required: 'E-posta adresi gerekli',
     email_invalid: 'Gecerli bir e-posta adresi girin',
-    company_name_required: 'Sirket adi gerekli',
-    company_size_required: 'Sirket buyuklugu gerekli',
   },
 };
 

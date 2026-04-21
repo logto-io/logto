@@ -23,8 +23,6 @@ const oss_onboarding = {
   errors: {
     email_required: 'البريد الإلكتروني مطلوب',
     email_invalid: 'أدخل بريدًا إلكترونيًا صالحًا',
-    company_name_required: 'اسم الشركة مطلوب',
-    company_size_required: 'حجم الشركة مطلوب',
   },
 };
 

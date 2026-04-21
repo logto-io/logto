@@ -24,8 +24,6 @@ const oss_onboarding = {
   errors: {
     email_required: 'จำเป็นต้องกรอกอีเมล',
     email_invalid: 'กรุณากรอกอีเมลที่ถูกต้อง',
-    company_name_required: 'จำเป็นต้องกรอกชื่อบริษัท',
-    company_size_required: 'จำเป็นต้องเลือกขนาดบริษัท',
   },
 };
 

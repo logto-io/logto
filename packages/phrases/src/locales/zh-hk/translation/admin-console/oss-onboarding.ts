@@ -23,8 +23,6 @@ const oss_onboarding = {
   errors: {
     email_required: '電郵地址為必填項',
     email_invalid: '請輸入有效的電郵地址',
-    company_name_required: '公司名稱為必填項',
-    company_size_required: '公司規模為必填項',
   },
 };
 

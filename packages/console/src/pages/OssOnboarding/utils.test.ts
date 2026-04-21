@@ -4,7 +4,6 @@ import {
   getOssOnboardingDefaultValues,
   getOssOnboardingSubmitPayload,
   shouldRequireCompanyFields,
-  type OssOnboardingFormData,
 } from './utils';
 
 describe('OSS onboarding form utils', () => {
@@ -44,7 +43,7 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'Dev@Example.COM',
       newsletter: false,
       project: Project.Company,
-      companyName: 'Acme',
+      companyName: ' Acme ',
       companySize: CompanySize.Scale3,
     });
 
@@ -54,6 +53,22 @@ describe('OSS onboarding form utils', () => {
       project: Project.Company,
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
-    } satisfies OssOnboardingFormData);
+    } satisfies OssSurveyReportPayload);
+  });
+
+  test('omits empty company fields in the submit payload for company projects', () => {
+    const payload = getOssOnboardingSubmitPayload({
+      emailAddress: 'Dev@Example.COM',
+      newsletter: false,
+      project: Project.Company,
+      companyName: '   ',
+      companySize: undefined,
+    });
+
+    expect(payload).toEqual({
+      emailAddress: 'dev@example.com',
+      newsletter: false,
+      project: Project.Company,
+    } satisfies OssSurveyReportPayload);
   });
 });

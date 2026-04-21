@@ -22,23 +22,21 @@ export const getOssOnboardingSubmitPayload = (
   data: OssOnboardingFormData
 ): OssSurveyReportPayload => {
   const normalizedEmailAddress = data.emailAddress.toLowerCase();
+  const { companyName, companySize, ...rest } = data;
 
   if (!shouldRequireCompanyFields(data.project)) {
-    const {
-      companyName: _companyName,
-      companySize: _companySize,
-      emailAddress: _emailAddress,
-      ...rest
-    } = data;
-
     return {
       ...rest,
       emailAddress: normalizedEmailAddress,
     };
   }
 
+  const normalizedCompanyName = companyName.trim();
+
   return {
-    ...data,
+    ...rest,
     emailAddress: normalizedEmailAddress,
+    ...(normalizedCompanyName ? { companyName: normalizedCompanyName } : {}),
+    ...(companySize ? { companySize } : {}),
   };
 };
