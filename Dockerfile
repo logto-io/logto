@@ -1,5 +1,7 @@
+# syntax=docker/dockerfile:1.7
+
 ###### [STAGE] Build ######
-FROM node:22-alpine as builder
+FROM node:22-alpine AS builder
 WORKDIR /etc/logto
 ENV CI=true
 
@@ -14,7 +16,8 @@ RUN apk add --no-cache python3 make g++ rsync
 COPY . .
 
 ### Install dependencies and build ###
-RUN pnpm i
+# Reuse the pnpm store between BuildKit runs to reduce duplicate downloads/writes.
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store pnpm i
 
 ### Set if dev features enabled ###
 ARG dev_features_enabled
@@ -34,14 +37,15 @@ ENV ADDITIONAL_CONNECTOR_ARGS=${additional_connector_args}
 RUN pnpm cli connector link $ADDITIONAL_CONNECTOR_ARGS -p .
 
 ### Prune dependencies for production ###
-RUN rm -rf node_modules packages/**/node_modules
-RUN NODE_ENV=production pnpm i
+# Keep prune + production install in one layer to avoid extra transient disk usage.
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+  rm -rf node_modules packages/**/node_modules && NODE_ENV=production pnpm i
 
 ### Clean up ###
 RUN rm -rf .scripts pnpm-*.yaml packages/cloud
 
 ###### [STAGE] Seal ######
-FROM node:22-alpine as app
+FROM node:22-alpine AS app
 WORKDIR /etc/logto
 ARG logto_oss_survey_endpoint=
 # Default to empty so external survey relaying stays opt-in for controlled builds/environments.
