@@ -224,7 +224,7 @@ describe('OidcPrivateKeyLibrary', () => {
     );
   });
 
-  it('rotates private signing keys inside a locked transaction', async () => {
+  it('rotates private signing keys immediately inside a locked transaction', async () => {
     methods.query.mockResolvedValueOnce({ rows: [] } as never).mockResolvedValueOnce({
       rows: [
         {
@@ -233,19 +233,23 @@ describe('OidcPrivateKeyLibrary', () => {
         },
       ],
     } as never);
-    methods.one.mockResolvedValueOnce({
-      key: 'oidc.privateKeys',
-      value: [
-        createPrivateKey('new', 3, OidcSigningKeyStatus.Current),
-        createPrivateKey('current', 2, OidcSigningKeyStatus.Previous),
-      ],
-    } as never);
+    methods.one
+      .mockResolvedValueOnce({
+        key: 'oidc.privateKeys',
+        value: [
+          createPrivateKey('new', 3, OidcSigningKeyStatus.Current),
+          createPrivateKey('current', 2, OidcSigningKeyStatus.Previous),
+        ],
+      } as never)
+      .mockResolvedValueOnce({
+        value: { tenantCacheExpiresAt: 123 },
+      } as never);
 
-    const result = await library.rotatePrivateSigningKeys(createPrivateKey('new', 3));
+    const result = await library.rotatePrivateSigningKeys(createPrivateKey('new', 3), 0);
 
     expect(methods.transaction).toHaveBeenCalledTimes(1);
     expect(methods.query).toHaveBeenCalledTimes(2);
-    expect(methods.one).toHaveBeenCalledTimes(1);
+    expect(methods.one).toHaveBeenCalledTimes(2);
     expect(result).toEqual([
       createPrivateKey('new', 3, OidcSigningKeyStatus.Current),
       createPrivateKey('current', 2, OidcSigningKeyStatus.Previous),
@@ -287,7 +291,7 @@ describe('OidcPrivateKeyLibrary', () => {
         value: { tenantCacheExpiresAt: 123, signingKeyRotationAt: 456 },
       } as never);
 
-    const result = await library.stagePrivateSigningKeyRotation(createPrivateKey('new', 3), 60);
+    const result = await library.rotatePrivateSigningKeys(createPrivateKey('new', 3), 60);
 
     expect(methods.transaction).toHaveBeenCalledTimes(1);
     expect(methods.query).toHaveBeenCalledTimes(3);

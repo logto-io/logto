@@ -56,10 +56,10 @@ const logtoConfigRoutes = await pickDefault(import('./index.js'));
 describe('configs routes staged rotation', () => {
   const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries });
   Sinon.stub(tenantContext, 'logtoConfigs').value(logtoConfigLibraries);
-  const stagePrivateSigningKeyRotation = jest.fn();
+  const rotatePrivateSigningKeys = jest.fn();
   Sinon.stub(tenantContext.libraries, 'oidcPrivateKeys').value({
     ...tenantContext.libraries.oidcPrivateKeys,
-    stagePrivateSigningKeyRotation,
+    rotatePrivateSigningKeys,
   });
 
   const routeRequester = createRequester({
@@ -72,7 +72,7 @@ describe('configs routes staged rotation', () => {
   });
 
   it('POST /configs/oidc/:keyType/rotate supports staged private-key rotation', async () => {
-    stagePrivateSigningKeyRotation.mockResolvedValueOnce([
+    rotatePrivateSigningKeys.mockResolvedValueOnce([
       { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
       { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
       { ...previousPrivateKey, status: OidcSigningKeyStatus.Previous },
@@ -83,7 +83,7 @@ describe('configs routes staged rotation', () => {
     });
 
     expect(response.status).toEqual(200);
-    expect(stagePrivateSigningKeyRotation).toHaveBeenCalledWith(newPrivateKey, 14_400);
+    expect(rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey, 14_400);
     expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).not.toHaveBeenCalled();
     expect(response.body).toEqual([
       {
@@ -114,7 +114,7 @@ describe('configs routes staged rotation', () => {
       createdAt: Math.floor(Date.now() / 1000) - 20,
       status: OidcSigningKeyStatus.Previous,
     };
-    stagePrivateSigningKeyRotation.mockResolvedValueOnce([
+    rotatePrivateSigningKeys.mockResolvedValueOnce([
       { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
       { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
       existingPreviousKey,
@@ -126,6 +126,6 @@ describe('configs routes staged rotation', () => {
       })
     ).resolves.toHaveProperty('status', 200);
 
-    expect(stagePrivateSigningKeyRotation).toHaveBeenCalledWith(newPrivateKey, 60);
+    expect(rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey, 60);
   });
 });

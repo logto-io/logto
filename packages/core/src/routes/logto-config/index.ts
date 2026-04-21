@@ -225,8 +225,12 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { keyType } = ctx.guard.params;
-      const { signingKeyAlgorithm, rotationGracePeriod = 0 } = ctx.guard.body;
+      const { signingKeyAlgorithm, rotationGracePeriod } = ctx.guard.body;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
+
+      if (configKey !== LogtoOidcConfigKey.PrivateKeys && rotationGracePeriod !== undefined) {
+        throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
+      }
 
       const newPrivateKey =
         configKey === LogtoOidcConfigKey.PrivateKeys
@@ -235,12 +239,7 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
 
       const updatedKeys =
         configKey === LogtoOidcConfigKey.PrivateKeys
-          ? rotationGracePeriod > 0
-            ? await oidcPrivateKeys.stagePrivateSigningKeyRotation(
-                newPrivateKey,
-                rotationGracePeriod
-              )
-            : await oidcPrivateKeys.rotatePrivateSigningKeys(newPrivateKey)
+          ? await oidcPrivateKeys.rotatePrivateSigningKeys(newPrivateKey, rotationGracePeriod)
           : await (async () => {
               const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
               const existingKeys = configs[configKey];
@@ -248,7 +247,7 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
               await updateOidcConfigsByKey(configKey, updatedKeys);
               return updatedKeys;
             })();
-      if (!(configKey === LogtoOidcConfigKey.PrivateKeys && rotationGracePeriod > 0)) {
+      if (configKey !== LogtoOidcConfigKey.PrivateKeys) {
         void tenant.invalidateCache();
       }
 
