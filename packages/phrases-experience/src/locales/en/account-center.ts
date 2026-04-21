@@ -7,6 +7,10 @@ const account_center = {
     title: 'Account',
     security_title: 'Security',
     security_description: 'Change your account settings here to ensure your account security.',
+    profile_title: 'Personal info',
+    profile_description: 'Change your personal information here.',
+    sidebar_personal_info: 'Personal info',
+    sidebar_security: 'Security',
     support: 'Support',
   },
   verification: {

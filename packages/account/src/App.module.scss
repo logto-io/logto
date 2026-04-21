@@ -21,6 +21,14 @@
   justify-content: center;
 }
 
+.withSidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: _.unit(6);
+  align-items: start;
+  padding: 0 _.unit(6);
+}
+
 .main {
   width: 760px;
   display: flex;

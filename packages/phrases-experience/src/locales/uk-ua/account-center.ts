@@ -7,6 +7,14 @@ const account_center = {
     title: 'Акаунт',
     security_title: 'Безпека',
     security_description: 'Тут можна змінити налаштування акаунта, щоб забезпечити його безпеку.',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
     support: 'Підтримка',
   },
   verification: {

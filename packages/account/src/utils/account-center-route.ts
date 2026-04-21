@@ -18,6 +18,7 @@ import {
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
+  profileRoute,
   securityRoute,
   verifiedActionRoute,
   socialRoutePrefix,
@@ -33,6 +34,7 @@ const identifierParameter = 'identifier';
 
 const knownRoutePrefixes: readonly string[] = [
   securityRoute,
+  profileRoute,
   emailRoute,
   emailSuccessRoute,
   phoneRoute,

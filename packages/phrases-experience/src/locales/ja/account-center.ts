@@ -7,6 +7,14 @@ const account_center = {
     title: 'アカウント',
     security_title: 'セキュリティ',
     security_description: 'アカウントの安全を確保するために、ここでアカウント設定を変更できます。',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
     support: 'サポート',
   },
   verification: {

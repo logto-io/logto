@@ -7,6 +7,14 @@ const account_center = {
     title: 'Účet',
     security_title: 'Zabezpečení',
     security_description: 'Zde můžeš změnit nastavení svého účtu a zajistit tak jeho bezpečnost.',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
     support: 'Podpora',
   },
   verification: {
