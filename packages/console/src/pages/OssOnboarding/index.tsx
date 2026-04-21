@@ -26,7 +26,7 @@ import styles from './index.module.scss';
 import { submitOssOnboarding } from './submit-oss-onboarding';
 import {
   getOssOnboardingDefaultValues,
-  shouldRequireCompanyFields,
+  shouldIncludeCompanyFields,
   type OssOnboardingFormData,
 } from './utils';
 
@@ -47,7 +47,7 @@ function OssOnboarding() {
     shouldUnregister: true,
   });
   const project = watch('project');
-  const isCompanyProject = shouldRequireCompanyFields(project);
+  const isCompanyProject = shouldIncludeCompanyFields(project);
 
   useEffect(() => {
     setThemeOverride(Theme.Light);

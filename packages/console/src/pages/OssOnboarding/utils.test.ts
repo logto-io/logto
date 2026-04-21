@@ -3,7 +3,7 @@ import { CompanySize, Project, type OssSurveyReportPayload } from '@logto/schema
 import {
   getOssOnboardingDefaultValues,
   getOssOnboardingSubmitPayload,
-  shouldRequireCompanyFields,
+  shouldIncludeCompanyFields,
 } from './utils';
 
 describe('OSS onboarding form utils', () => {
@@ -17,9 +17,9 @@ describe('OSS onboarding form utils', () => {
     });
   });
 
-  test('requires company-only fields only for company projects', () => {
-    expect(shouldRequireCompanyFields(Project.Company)).toBe(true);
-    expect(shouldRequireCompanyFields(Project.Personal)).toBe(false);
+  test('identifies company projects for optional company fields', () => {
+    expect(shouldIncludeCompanyFields(Project.Company)).toBe(true);
+    expect(shouldIncludeCompanyFields(Project.Personal)).toBe(false);
   });
 
   test('drops company-only values from the submit payload for personal projects', () => {

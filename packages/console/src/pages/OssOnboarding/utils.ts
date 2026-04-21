@@ -16,7 +16,7 @@ export const getOssOnboardingDefaultValues = (): OssOnboardingFormData => ({
   companySize: undefined,
 });
 
-export const shouldRequireCompanyFields = (project: Project) => project === Project.Company;
+export const shouldIncludeCompanyFields = (project: Project) => project === Project.Company;
 
 export const getOssOnboardingSubmitPayload = (
   data: OssOnboardingFormData
@@ -24,7 +24,7 @@ export const getOssOnboardingSubmitPayload = (
   const normalizedEmailAddress = data.emailAddress.toLowerCase();
   const { companyName, companySize, ...rest } = data;
 
-  if (!shouldRequireCompanyFields(data.project)) {
+  if (!shouldIncludeCompanyFields(data.project)) {
     return {
       ...rest,
       emailAddress: normalizedEmailAddress,
