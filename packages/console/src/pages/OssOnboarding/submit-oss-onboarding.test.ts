@@ -1,6 +1,6 @@
 import { CompanySize, Project, type OssUserOnboardingData } from '@logto/schemas';
+import type { Options } from 'ky';
 
-import { submitOssOnboarding } from './submit-oss-onboarding';
 import type { OssOnboardingFormData } from './utils';
 
 // Module-level mocks for env constants. Must be declared before importing the module under test.
@@ -8,6 +8,41 @@ import type { OssOnboardingFormData } from './utils';
 let mockIsDevFeaturesEnabled = true;
 // eslint-disable-next-line @silverhand/fp/no-let
 let mockOssSurveyEndpoint: string | undefined = 'https://survey.example.com';
+
+const mockKyPost = jest.fn<Promise<{ ok: boolean }>, [URL, Options?]>();
+const mockKyOptions: { current?: Options } = {};
+const mockKyCreate = jest.fn((options?: Options) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  mockKyOptions.current = options;
+
+  return {
+    post: async (...args: [URL, Options?]) => {
+      const retryLimit =
+        options?.retry && typeof options.retry !== 'number' ? (options.retry.limit ?? 0) : 0;
+      const retryDelay =
+        options?.retry && typeof options.retry !== 'number' ? (options.retry.delay?.(1) ?? 0) : 0;
+
+      try {
+        const response = await mockKyPost(...args);
+        return response;
+      } catch (error) {
+        if (retryLimit < 1 || retryDelay === 0) {
+          throw error;
+        }
+
+        const response = await mockKyPost(...args);
+        return response;
+      }
+    },
+  };
+});
+
+jest.mock('ky', () => ({
+  __esModule: true,
+  default: {
+    create: (...args: [Options?]) => mockKyCreate(...args),
+  },
+}));
 
 jest.mock('@/consts/env', () => ({
   get isDevFeaturesEnabled() {
@@ -26,23 +61,46 @@ const mockFormData: OssOnboardingFormData = {
   companySize: CompanySize.Scale3,
 };
 
-describe('submitOssOnboarding', () => {
-  const fetchMock = jest.fn().mockResolvedValue({ ok: true });
+const getSubmitOssOnboarding = async () => {
+  const module = await import('./submit-oss-onboarding');
+  return module.submitOssOnboarding;
+};
 
-  beforeAll(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    globalThis.fetch = fetchMock;
+describe('submitOssOnboarding', () => {
+  beforeAll(async () => {
+    await import('./submit-oss-onboarding');
   });
 
   afterEach(() => {
-    fetchMock.mockClear();
+    mockKyPost.mockReset();
+    mockKyPost.mockResolvedValue({ ok: true });
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    mockKyOptions.current = undefined;
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockIsDevFeaturesEnabled = true;
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockOssSurveyEndpoint = 'https://survey.example.com';
   });
 
+  beforeEach(() => {
+    mockKyPost.mockResolvedValue({ ok: true });
+  });
+
+  it('configures the OSS survey client with ky retry options', () => {
+    expect(mockKyCreate).toHaveBeenCalledTimes(1);
+    expect(mockKyOptions.current?.throwHttpErrors).toBe(false);
+
+    const retry = mockKyOptions.current?.retry;
+
+    expect(retry && typeof retry !== 'number' ? retry.limit : undefined).toBe(1);
+    expect(retry && typeof retry !== 'number' ? retry.methods : undefined).toEqual(['post']);
+    expect(retry && typeof retry !== 'number' ? retry.statusCodes : undefined).toEqual([]);
+    expect(retry && typeof retry !== 'number' ? retry.afterStatusCodes : undefined).toEqual([]);
+    expect(retry && typeof retry !== 'number' ? retry.delay?.(1) : undefined).toBe(1);
+  });
+
   it('updates, reports and navigates when onboarding is submitted', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
@@ -64,18 +122,16 @@ describe('submitOssOnboarding', () => {
       },
       isOnboardingDone: true,
     });
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(mockKyPost).toHaveBeenCalledWith(
       new URL('https://survey.example.com/api/surveys'),
       expect.objectContaining({
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        json: {
           emailAddress: 'dev@example.com',
           newsletter: true,
           project: Project.Company,
           companyName: 'Acme',
           companySize: CompanySize.Scale3,
-        }),
+        },
         keepalive: true,
       })
     );
@@ -83,6 +139,7 @@ describe('submitOssOnboarding', () => {
   });
 
   it('constructs the reporting URL when endpoint has trailing slash', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
@@ -96,13 +153,14 @@ describe('submitOssOnboarding', () => {
       update,
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(mockKyPost).toHaveBeenCalledWith(
       new URL('https://survey.example.com/api/surveys'),
       expect.anything()
     );
   });
 
   it('still reports and navigates when onboarding data persistence fails', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
@@ -116,15 +174,18 @@ describe('submitOssOnboarding', () => {
       })
     ).resolves.toBeUndefined();
 
-    expect(fetchMock).toHaveBeenCalled();
+    expect(mockKyPost).toHaveBeenCalled();
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 
-  it('swallows report fetch failures to keep submit flow unchanged', async () => {
+  it('retries report once after a network failure', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
-    fetchMock.mockRejectedValue(new Error('network error'));
+    mockKyPost.mockRejectedValueOnce(new TypeError('network error')).mockResolvedValueOnce({
+      ok: true,
+    });
     update.mockResolvedValue();
 
     await expect(
@@ -135,15 +196,40 @@ describe('submitOssOnboarding', () => {
       })
     ).resolves.toBeUndefined();
 
-    // Allow the promise to settle so the rejection is handled
     await new Promise<void>((resolve) => {
       setTimeout(resolve, 0);
     });
 
+    expect(mockKyPost).toHaveBeenCalledTimes(2);
+    expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
+  });
+
+  it('swallows report fetch failures after retry to keep submit flow unchanged', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
+    const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
+    const navigate = jest.fn<void, [string, { replace: boolean }]>();
+
+    mockKyPost.mockRejectedValue(new TypeError('network error'));
+    update.mockResolvedValue();
+
+    await expect(
+      submitOssOnboarding({
+        formData: mockFormData,
+        navigate,
+        update,
+      })
+    ).resolves.toBeUndefined();
+
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 0);
+    });
+
+    expect(mockKyPost).toHaveBeenCalledTimes(2);
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 
   it('does not report when isDevFeaturesEnabled is false', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
@@ -157,11 +243,12 @@ describe('submitOssOnboarding', () => {
       update,
     });
 
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(mockKyPost).not.toHaveBeenCalled();
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 
   it('does not report when ossSurveyEndpoint is undefined', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
@@ -175,11 +262,12 @@ describe('submitOssOnboarding', () => {
       update,
     });
 
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(mockKyPost).not.toHaveBeenCalled();
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 
   it('does not report when ossSurveyEndpoint is invalid', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
     const navigate = jest.fn<void, [string, { replace: boolean }]>();
 
@@ -193,7 +281,7 @@ describe('submitOssOnboarding', () => {
       update,
     });
 
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(mockKyPost).not.toHaveBeenCalled();
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 });

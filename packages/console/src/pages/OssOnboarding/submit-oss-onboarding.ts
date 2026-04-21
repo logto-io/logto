@@ -1,9 +1,31 @@
 import type { OssSurveyReportPayload, OssUserOnboardingData } from '@logto/schemas';
 import { type Optional, trySafe } from '@silverhand/essentials';
+import ky from 'ky';
 
 import { isDevFeaturesEnabled, ossSurveyEndpoint } from '@/consts/env';
 
 import { getOssOnboardingSubmitPayload, type OssOnboardingFormData } from './utils';
+
+const ossSurveyApi = ky.create({
+  throwHttpErrors: false,
+  retry: {
+    limit: 1,
+    methods: ['post'],
+    statusCodes: [],
+    afterStatusCodes: [],
+    // `ky@1.x` treats `0` as "do not retry", so use the smallest practical delay
+    // to retry immediately on transient network failures.
+    delay: () => 1,
+  },
+});
+
+const postOssSurvey = async (url: URL, payload: OssSurveyReportPayload) =>
+  ossSurveyApi.post(url, {
+    json: payload,
+    // Keep the request eligible to continue while the page is unloading so the
+    // best-effort survey report still has a chance to be delivered after submit.
+    keepalive: true,
+  });
 
 const getOssSurveyUrl = (): Optional<URL> => {
   if (!isDevFeaturesEnabled) {
@@ -31,14 +53,7 @@ const reportOssSurvey = (payload: OssSurveyReportPayload): void => {
     return;
   }
 
-  void trySafe(
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      keepalive: true,
-    })
-  );
+  void trySafe(async () => postOssSurvey(url, payload));
 };
 
 type SubmitOssOnboardingOptions = {
