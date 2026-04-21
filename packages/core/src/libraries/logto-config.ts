@@ -34,7 +34,6 @@ export const createLogtoConfigLibrary = ({
     getCloudConnectionData: queryCloudConnectionData,
     upsertJwtCustomizer: queryUpsertJwtCustomizer,
     upsertIdTokenConfig: queryUpsertIdTokenConfig,
-    getSigningKeyRotationState,
   },
   pool,
   wellKnownCache,
@@ -160,15 +159,15 @@ export const createLogtoConfigLibrary = ({
    * This function is intended to be called before accessing OIDC configs to ensure the key statuses are up-to-date.
    */
   const promoteScheduledSigningKeyRotation = async () => {
-    const rotationState = await getSigningKeyRotationState();
-
-    if (!rotationState?.signingKeyRotationAt || rotationState.signingKeyRotationAt > Date.now()) {
-      return;
-    }
-
     await pool.transaction(async (connection) => {
       const transactionalQueries = createLogtoConfigQueries(connection, wellKnownCache);
-      await transactionalQueries.lockPrivateSigningKeys();
+      await transactionalQueries.lockPrivateSigningKeysAndRotationState();
+
+      const rotationState = await transactionalQueries.getSigningKeyRotationState();
+
+      if (!rotationState?.signingKeyRotationAt || rotationState.signingKeyRotationAt > Date.now()) {
+        return;
+      }
 
       const privateKeys = await transactionalQueries.getPrivateSigningKeys();
       const updatedPrivateKeys = rotateOidcPrivateKeyStatuses(privateKeys);
