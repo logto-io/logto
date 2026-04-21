@@ -19,7 +19,11 @@ import chalk from 'chalk';
 import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { normalizeOidcPrivateKeys } from '#src/libraries/oidc-private-key.js';
+import {
+  normalizeOidcPrivateKeys,
+  rotateOidcPrivateKeyStatuses,
+} from '#src/libraries/oidc-private-key.js';
+import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import type Queries from '#src/tenants/Queries.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
@@ -30,8 +34,11 @@ export const createLogtoConfigLibrary = ({
     getCloudConnectionData: queryCloudConnectionData,
     upsertJwtCustomizer: queryUpsertJwtCustomizer,
     upsertIdTokenConfig: queryUpsertIdTokenConfig,
+    getSigningKeyRotationState,
   },
-}: Pick<Queries, 'logtoConfigs'>) => {
+  pool,
+  wellKnownCache,
+}: Pick<Queries, 'logtoConfigs' | 'pool' | 'wellKnownCache'>) => {
   const getOidcConfigs = async (consoleLog: ConsoleLog): Promise<LogtoOidcConfigType> => {
     try {
       const { rows } = await getRowsByKeys(Object.values(LogtoOidcConfigKey));
@@ -148,6 +155,33 @@ export const createLogtoConfigLibrary = ({
     return idTokenConfigGuard.parse(value);
   };
 
+  /**
+   * Rotate OIDC private signing key statuses if the scheduled rotation time has come.
+   * This function is intended to be called before accessing OIDC configs to ensure the key statuses are up-to-date.
+   */
+  const promoteScheduledSigningKeyRotation = async () => {
+    const rotationState = await getSigningKeyRotationState();
+
+    if (!rotationState?.signingKeyRotationAt || rotationState.signingKeyRotationAt > Date.now()) {
+      return;
+    }
+
+    await pool.transaction(async (connection) => {
+      const transactionalQueries = createLogtoConfigQueries(connection, wellKnownCache);
+      await transactionalQueries.lockPrivateSigningKeys();
+
+      const privateKeys = await transactionalQueries.getPrivateSigningKeys();
+      const updatedPrivateKeys = rotateOidcPrivateKeyStatuses(privateKeys);
+
+      // Skip rewriting the row when there is no staged Next key to promote.
+      if (updatedPrivateKeys === privateKeys) {
+        return;
+      }
+
+      await transactionalQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
+    });
+  };
+
   return {
     getOidcConfigs,
     getCloudConnectionData,
@@ -156,5 +190,6 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizers,
     updateJwtCustomizer,
     upsertIdTokenConfig,
+    promoteScheduledSigningKeyRotation,
   };
 };
