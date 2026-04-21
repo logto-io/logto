@@ -202,42 +202,27 @@ export class OidcPrivateKeyLibrary {
     rotationGracePeriod = 0
   ): Promise<OidcPrivateKey[]> {
     if (rotationGracePeriod === 0) {
-      const { privateKeys, signingKeyRotationState } = await this.queries.pool.transaction(
-        async (connection) => {
-          const logtoConfigQueries = createLogtoConfigQueries(
-            connection,
-            this.queries.wellKnownCache
-          );
+      return this.queries.pool.transaction(async (connection) => {
+        const logtoConfigQueries = createLogtoConfigQueries(
+          connection,
+          this.queries.wellKnownCache
+        );
 
-          await logtoConfigQueries.lockPrivateSigningKeysAndRotationState();
+        await logtoConfigQueries.lockPrivateSigningKeys();
 
-          const privateKeys = normalizeOidcPrivateKeys(
-            await logtoConfigQueries.getPrivateSigningKeys()
-          );
+        const privateKeys = normalizeOidcPrivateKeys(
+          await logtoConfigQueries.getPrivateSigningKeys()
+        );
 
-          if (privateKeys.some(({ status }) => status === OidcSigningKeyStatus.Next)) {
-            throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
-          }
-
-          const updatedPrivateKeys = getImmediatelyRotatedOidcPrivateKeys(
-            privateKeys,
-            newPrivateKey
-          );
-          await logtoConfigQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
-          const signingKeyRotationState = await logtoConfigQueries.setTenantCacheExpiresAt(
-            Date.now()
-          );
-
-          return {
-            privateKeys: updatedPrivateKeys,
-            signingKeyRotationState,
-          };
+        if (privateKeys.some(({ status }) => status === OidcSigningKeyStatus.Next)) {
+          throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
         }
-      );
 
-      void syncSigningKeyRotationStateCache(this.queries.wellKnownCache, signingKeyRotationState);
+        const updatedPrivateKeys = getImmediatelyRotatedOidcPrivateKeys(privateKeys, newPrivateKey);
+        await logtoConfigQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
 
-      return privateKeys;
+        return updatedPrivateKeys;
+      });
     }
 
     const { privateKeys, signingKeyRotationState } = await this.queries.pool.transaction(
@@ -280,11 +265,8 @@ const getSigningKeyRotationStateForStagedRotation = (
   currentRotationState: SigningKeyRotationState | undefined,
   rotationGracePeriod: number
 ): SigningKeyRotationState => {
-  const now = Date.now();
-
   return {
     ...currentRotationState,
-    tenantCacheExpiresAt: now,
-    signingKeyRotationAt: now + rotationGracePeriod * 1000,
+    signingKeyRotationAt: Date.now() + rotationGracePeriod * 1000,
   };
 };

@@ -247,9 +247,7 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
               await updateOidcConfigsByKey(configKey, updatedKeys);
               return updatedKeys;
             })();
-      if (configKey !== LogtoOidcConfigKey.PrivateKeys) {
-        void tenant.invalidateCache();
-      }
+      void tenant.invalidateCache();
 
       // Remove actual values of the private keys from response
       ctx.body = await getRedactedOidcKeyResponse(configKey, updatedKeys);

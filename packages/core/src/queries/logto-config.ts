@@ -29,8 +29,6 @@ export const createLogtoConfigQueries = (
   pool: CommonQueryMethods,
   wellKnownCache: WellKnownCache
 ) => {
-  const qualifiedValueColumn = sql.join([table, fields.value], sql`.`);
-
   const upsertPrivateSigningKeysWithExecutor = async (
     executor: CommonQueryMethods,
     privateKeys: OidcPrivateKey[]
@@ -172,7 +170,7 @@ export const createLogtoConfigQueries = (
           ${sql.jsonb({ tenantCacheExpiresAt })}
         )
         on conflict (${fields.tenantId}, ${fields.key}) do update
-        set ${fields.value} = coalesce(${qualifiedValueColumn}, '{}'::jsonb) || ${sql.jsonb({
+        set ${fields.value} = coalesce(${fields.value}, '{}'::jsonb) || ${sql.jsonb({
           tenantCacheExpiresAt,
         })}
         returning ${fields.value}
@@ -191,7 +189,7 @@ export const createLogtoConfigQueries = (
           ${sql.jsonb({ signingKeyRotationAt })}
         )
         on conflict (${fields.tenantId}, ${fields.key}) do update
-        set ${fields.value} = coalesce(${qualifiedValueColumn}, '{}'::jsonb) || ${sql.jsonb({
+        set ${fields.value} = coalesce(${fields.value}, '{}'::jsonb) || ${sql.jsonb({
           signingKeyRotationAt,
         })}
         returning ${fields.value}

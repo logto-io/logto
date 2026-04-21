@@ -38,7 +38,6 @@ const {
 
 describe('connector queries', () => {
   const { table, fields } = convertToIdentifiers(LogtoConfigs);
-  const qualifiedValueColumn = sql.join([table, fields.value], sql`.`);
 
   test('getAdminConsoleConfig', async () => {
     const rowData = { key: 'adminConsole', value: `{"signInExperienceCustomized": false}` };
@@ -211,7 +210,7 @@ describe('connector queries', () => {
           ${sql.jsonb({ tenantCacheExpiresAt: timestamp })}
         )
         on conflict (${fields.tenantId}, ${fields.key}) do update
-        set ${fields.value} = coalesce(${qualifiedValueColumn}, '{}'::jsonb) || ${sql.jsonb({
+        set ${fields.value} = coalesce(${fields.value}, '{}'::jsonb) || ${sql.jsonb({
           tenantCacheExpiresAt: timestamp,
         })}
         returning ${fields.value}
@@ -241,7 +240,7 @@ describe('connector queries', () => {
           ${sql.jsonb({ signingKeyRotationAt: timestamp })}
         )
         on conflict (${fields.tenantId}, ${fields.key}) do update
-        set ${fields.value} = coalesce(${qualifiedValueColumn}, '{}'::jsonb) || ${sql.jsonb({
+        set ${fields.value} = coalesce(${fields.value}, '{}'::jsonb) || ${sql.jsonb({
           signingKeyRotationAt: timestamp,
         })}
         returning ${fields.value}

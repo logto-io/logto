@@ -56,6 +56,7 @@ const logtoConfigRoutes = await pickDefault(import('./index.js'));
 describe('configs routes staged rotation', () => {
   const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries });
   Sinon.stub(tenantContext, 'logtoConfigs').value(logtoConfigLibraries);
+  const invalidateCache = Sinon.stub(tenantContext, 'invalidateCache').resolves();
   const rotatePrivateSigningKeys = jest.fn();
   Sinon.stub(tenantContext.libraries, 'oidcPrivateKeys').value({
     ...tenantContext.libraries.oidcPrivateKeys,
@@ -69,6 +70,7 @@ describe('configs routes staged rotation', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    invalidateCache.resetHistory();
   });
 
   it('POST /configs/oidc/:keyType/rotate supports staged private-key rotation', async () => {
@@ -85,6 +87,7 @@ describe('configs routes staged rotation', () => {
     expect(response.status).toEqual(200);
     expect(rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey, 14_400);
     expect(logtoConfigQueries.updatePrivateSigningKeysWithLock).not.toHaveBeenCalled();
+    expect(invalidateCache.calledOnce).toBe(true);
     expect(response.body).toEqual([
       {
         id: newPrivateKey.id,
