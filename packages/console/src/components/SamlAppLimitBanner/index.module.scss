@@ -40,6 +40,8 @@
   margin: 0 _.unit(-6) _.unit(-6);
   gap: _.unit(6);
   flex: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .footerAction {
