@@ -72,15 +72,22 @@
 .ossCloudBanner {
   position: relative;
   border: 1px solid rgba(93, 52, 242, 20%);
-  background:
-    linear-gradient(173deg, rgba(93, 52, 242, 6%) 0%, rgba(250, 171, 255, 8%) 52%, rgba(93, 52, 242, 4%) 100%),
-    var(--color-layer-1);
+  border-radius: 12px;
+  background-color: var(--color-layer-1);
+  background-image:
+    linear-gradient(
+      173.3deg,
+      rgba(93, 52, 242, 6%) 0%,
+      rgba(250, 171, 255, 8%) 50%,
+      rgba(93, 52, 242, 4%) 100%
+    );
 }
 
 .ossCloudBannerContent {
   display: flex;
   align-items: center;
   gap: _.unit(6);
+  min-height: 88px;
 }
 
 .ossCloudBannerMain {
@@ -121,28 +128,48 @@
 }
 
 .recommendedTag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px _.unit(2);
   border-radius: 999px;
   color: var(--color-text-link);
   background: var(--color-function-n-overlay-primary-focused);
   gap: _.unit(1);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
 }
 
 .recommendedTagIcon {
-  width: 10px;
-  height: 10px;
-  color: inherit;
+  width: 12px;
+  height: 12px;
   flex-shrink: 0;
+}
+
+.ossCloudBannerDescription {
+  max-width: 852px;
+  font: var(--font-body-2);
+  color: var(--color-text);
+  opacity: 35%;
 }
 
 .ossCloudBannerActions {
   display: flex;
   align-items: center;
   margin-left: auto;
+  margin-right: _.unit(3);
+  flex-shrink: 0;
+}
+
+.bannerActionButton {
+  border-radius: _.unit(2);
 }
 
 .bannerActionIcon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
+  opacity: 70%;
 }
 
 .dismissButton {
@@ -156,7 +183,8 @@
   display: block;
   width: 16px;
   height: 16px;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
+  opacity: 35%;
 }
 
 .card {

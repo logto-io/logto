@@ -51,13 +51,17 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
                     {t('get_started.oss_cloud.try.badge')}
                   </Tag>
                 </div>
-                <div className={styles.bodyText}>{t('get_started.oss_cloud.try.description')}</div>
+                <div className={styles.ossCloudBannerDescription}>
+                  {t('get_started.oss_cloud.try.description')}
+                </div>
               </div>
             </div>
             <div className={styles.ossCloudBannerActions}>
               <Button
                 type="primary"
+                size="large"
                 title="get_started.oss_cloud.try.action"
+                className={styles.bannerActionButton}
                 trailingIcon={<ExternalLinkIcon className={styles.bannerActionIcon} />}
                 onClick={() => {
                   window.open(logtoCloudConsoleLink, '_blank', 'noopener,noreferrer');
