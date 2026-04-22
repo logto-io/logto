@@ -1,10 +1,5 @@
 import { emailRegEx } from '@logto/core-kit';
-import {
-  CompanySize,
-  type OssQuestionnaire,
-  type OssSurveyReportPayload,
-  Project,
-} from '@logto/schemas';
+import { CompanySize, type OssSurveyReportPayload, Project } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
 export type OssOnboardingFormData = {
@@ -38,7 +33,7 @@ export const normalizeOssOnboardingEmailAddress = (emailAddress: string): Option
 export const isValidOssOnboardingEmailAddress = (emailAddress: string) =>
   Boolean(normalizeOssOnboardingEmailAddress(emailAddress));
 
-const getBaseOssOnboardingPayload = (data: OssOnboardingFormData) => {
+export const getBaseOssOnboardingPayload = (data: OssOnboardingFormData) => {
   const normalizedEmailAddress = normalizeOssOnboardingEmailAddress(data.emailAddress);
   const emailFields = normalizedEmailAddress
     ? {
@@ -62,10 +57,6 @@ const getBaseOssOnboardingPayload = (data: OssOnboardingFormData) => {
     ...emailFields,
   };
 };
-
-export const getOssOnboardingQuestionnairePayload = (
-  data: OssOnboardingFormData
-): OssQuestionnaire => getBaseOssOnboardingPayload(data);
 
 export const getOssOnboardingSurveyPayload = (
   data: OssOnboardingFormData

@@ -5,7 +5,7 @@ import ky from 'ky';
 import { isDevFeaturesEnabled, ossSurveyEndpoint } from '@/consts/env';
 
 import {
-  getOssOnboardingQuestionnairePayload,
+  getBaseOssOnboardingPayload,
   getOssOnboardingSurveyPayload,
   type OssOnboardingFormData,
 } from './utils';
@@ -71,7 +71,7 @@ export const submitOssOnboarding = async ({
   navigate,
   update,
 }: SubmitOssOnboardingOptions) => {
-  const questionnaire = getOssOnboardingQuestionnairePayload(formData);
+  const questionnaire = getBaseOssOnboardingPayload(formData);
   const surveyPayload = getOssOnboardingSurveyPayload(formData);
   void trySafe(async () =>
     update({

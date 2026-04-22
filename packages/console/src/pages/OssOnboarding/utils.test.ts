@@ -1,8 +1,8 @@
 import { CompanySize, Project, type OssSurveyReportPayload } from '@logto/schemas';
 
 import {
+  getBaseOssOnboardingPayload,
   getOssOnboardingDefaultValues,
-  getOssOnboardingQuestionnairePayload,
   getOssOnboardingSurveyPayload,
   isValidOssOnboardingEmailAddress,
   normalizeOssOnboardingEmailAddress,
@@ -36,7 +36,7 @@ describe('OSS onboarding form utils', () => {
   });
 
   test('drops company-only values from the questionnaire payload for personal projects', () => {
-    const payload = getOssOnboardingQuestionnairePayload({
+    const payload = getBaseOssOnboardingPayload({
       emailAddress: 'Dev@Example.COM',
       newsletter: true,
       project: Project.Personal,
@@ -52,7 +52,7 @@ describe('OSS onboarding form utils', () => {
   });
 
   test('omits email-related fields from the questionnaire payload when email is missing', () => {
-    const payload = getOssOnboardingQuestionnairePayload({
+    const payload = getBaseOssOnboardingPayload({
       emailAddress: '',
       newsletter: true,
       project: Project.Company,
@@ -68,7 +68,7 @@ describe('OSS onboarding form utils', () => {
   });
 
   test('keeps company-only values in the questionnaire payload for company projects', () => {
-    const payload = getOssOnboardingQuestionnairePayload({
+    const payload = getBaseOssOnboardingPayload({
       emailAddress: 'Dev@Example.COM',
       newsletter: false,
       project: Project.Company,
