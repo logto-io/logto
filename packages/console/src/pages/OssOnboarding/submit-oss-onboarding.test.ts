@@ -164,6 +164,7 @@ describe('submitOssOnboarding', () => {
         emailAddress: 'dev@example.com',
         newsletter: true,
         project: Project.Company,
+        projectName: 'OSS Starter',
       },
       isOnboardingDone: true,
     });
@@ -174,6 +175,7 @@ describe('submitOssOnboarding', () => {
           emailAddress: 'dev@example.com',
           newsletter: true,
           project: Project.Company,
+          projectName: 'OSS Starter',
         },
         keepalive: true,
       })

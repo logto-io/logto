@@ -25,29 +25,22 @@ export const getOssOnboardingSubmitPayload = (
 ): OssSurveyReportPayload => {
   const normalizedEmailAddress = data.emailAddress.toLowerCase();
   const normalizedProjectName = data.projectName.trim();
+  const normalizedCompanyName = data.companyName.trim();
   const projectNamePayload = normalizedProjectName ? { projectName: normalizedProjectName } : {};
+  const basePayload = {
+    emailAddress: normalizedEmailAddress,
+    newsletter: data.newsletter,
+    project: data.project,
+    ...projectNamePayload,
+  };
 
   if (!shouldRequireCompanyFields(data.project)) {
-    const {
-      projectName: _projectName,
-      companyName: _companyName,
-      companySize: _companySize,
-      emailAddress: _emailAddress,
-      ...rest
-    } = data;
-
-    return {
-      ...rest,
-      emailAddress: normalizedEmailAddress,
-      ...projectNamePayload,
-    };
+    return basePayload;
   }
 
-  const { projectName: _projectName, ...rest } = data;
-
   return {
-    ...rest,
-    emailAddress: normalizedEmailAddress,
-    ...projectNamePayload,
+    ...basePayload,
+    ...(normalizedCompanyName ? { companyName: normalizedCompanyName } : {}),
+    ...(data.companySize ? { companySize: data.companySize } : {}),
   };
 };
