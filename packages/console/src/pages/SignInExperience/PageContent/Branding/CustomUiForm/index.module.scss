@@ -32,8 +32,10 @@
     flex-shrink: 0;
     border-radius: _.unit(2);
     background: var(--color-overlay-primary-hover);
+    color: var(--color-text-link);
 
-    > img {
+    > img,
+    > svg {
       width: 20px;
       height: 20px;
     }
@@ -45,6 +47,6 @@
   }
 
   .highlight {
-    color: var(--color-primary);
+    color: var(--color-text-link);
   }
 }
