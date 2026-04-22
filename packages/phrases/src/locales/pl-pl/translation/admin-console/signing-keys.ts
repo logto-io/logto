@@ -21,6 +21,7 @@ const signing_keys = {
     algorithm: 'Algorytm podpisywania klucza',
   },
   status: {
+    next: 'Następny',
     current: 'Bieżący',
     previous: 'Poprzedni',
   },

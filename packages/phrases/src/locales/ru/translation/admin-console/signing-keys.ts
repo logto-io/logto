@@ -21,6 +21,7 @@ const signing_keys = {
     algorithm: 'Алгоритм подписи ключа',
   },
   status: {
+    next: 'Следующий',
     current: 'Текущий',
     previous: 'Предыдущий',
   },

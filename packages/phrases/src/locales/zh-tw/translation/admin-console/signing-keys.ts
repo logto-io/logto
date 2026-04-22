@@ -21,8 +21,9 @@ const signing_keys = {
     algorithm: '簽名演算法',
   },
   status: {
+    next: '待切換',
     current: '當前的',
-    previous: '之前的',
+    previous: '舊密鑰',
   },
   reminder: {
     rotate_private_key:
