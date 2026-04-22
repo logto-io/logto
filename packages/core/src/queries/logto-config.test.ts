@@ -276,6 +276,13 @@ describe('logto config transactional queries', () => {
     expect(methods.query).toHaveBeenCalledWith(expectSqlString('for update'));
   });
 
+  test('lockPrivateSigningKeysAndRotationState', async () => {
+    await transactionalQueries.lockPrivateSigningKeysAndRotationState();
+
+    expect(methods.query).toHaveBeenCalledTimes(1);
+    expect(methods.query).toHaveBeenCalledWith(expectSqlString('for update'));
+  });
+
   test('getPrivateSigningKeys', async () => {
     const currentPrivateKeys = [
       {

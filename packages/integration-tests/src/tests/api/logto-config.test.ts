@@ -60,21 +60,34 @@ describe('logto config', () => {
     const privateKeys = await getOidcKeys(LogtoOidcConfigKeyType.PrivateKeys);
     const cookieKeys = await getOidcKeys(LogtoOidcConfigKeyType.CookieKeys);
 
-    expect(privateKeys).toHaveLength(1);
-    expect(privateKeys[0]?.id).toEqual(expect.any(String));
-    expect(privateKeys[0]?.signingKeyAlgorithm).toBe('EC');
-    expect(privateKeys[0]?.createdAt).toEqual(expect.any(Number));
-    expect(privateKeys[0]?.status).toBe(OidcSigningKeyStatus.Current);
+    expect(privateKeys.length).toBeGreaterThanOrEqual(1);
+    expect(
+      privateKeys.filter(({ status }) => status === OidcSigningKeyStatus.Current)
+    ).toHaveLength(1);
+    expect(
+      privateKeys.filter(({ status }) => status === OidcSigningKeyStatus.Next).length
+    ).toBeLessThanOrEqual(1);
+    expect(
+      privateKeys.filter(({ status }) => status === OidcSigningKeyStatus.Previous).length
+    ).toBeLessThanOrEqual(1);
+    for (const privateKey of privateKeys) {
+      expect(privateKey.id).toEqual(expect.any(String));
+      expect(privateKey.signingKeyAlgorithm).toBeDefined();
+      expect(privateKey.createdAt).toEqual(expect.any(Number));
+      expect(privateKey.status).toBeDefined();
+    }
     expect(cookieKeys).toHaveLength(1);
     expect(cookieKeys[0]?.id).toEqual(expect.any(String));
     expect(cookieKeys[0]?.createdAt).toEqual(expect.any(Number));
   });
 
-  it('should not be able to delete the only private key', async () => {
+  it('should not allow deleting the active private signing key', async () => {
     const privateKeys = await getOidcKeys(LogtoOidcConfigKeyType.PrivateKeys);
-    expect(privateKeys).toHaveLength(1);
-    await expectRejects(deleteOidcKey(LogtoOidcConfigKeyType.PrivateKeys, privateKeys[0]!.id), {
-      code: 'oidc.key_required',
+    const currentKey = privateKeys.find(({ status }) => status === OidcSigningKeyStatus.Current);
+    expect(currentKey).toBeDefined();
+    await expectRejects(deleteOidcKey(LogtoOidcConfigKeyType.PrivateKeys, currentKey!.id), {
+      code:
+        privateKeys.length === 1 ? 'oidc.key_required' : 'oidc.only_previous_key_can_be_deleted',
       status: 422,
     });
 
@@ -167,6 +180,43 @@ describe('logto config', () => {
       id: rotatedPrivateKeys[0]!.id,
       status: OidcSigningKeyStatus.Current,
     });
+  });
+
+  it('should support staged private-key rotation with a grace period', async () => {
+    const existingPrivateKeys = await getOidcKeys(LogtoOidcConfigKeyType.PrivateKeys);
+    const currentKey = existingPrivateKeys.find(
+      ({ status }) => status === OidcSigningKeyStatus.Current
+    );
+    expect(currentKey).toBeDefined();
+
+    const stagedPrivateKeys = await rotateOidcKeys(
+      LogtoOidcConfigKeyType.PrivateKeys,
+      SupportedSigningKeyAlgorithm.RSA,
+      14_400
+    );
+
+    expect(stagedPrivateKeys.length).toBeGreaterThanOrEqual(2);
+    expect(stagedPrivateKeys.length).toBeLessThanOrEqual(3);
+    expect(stagedPrivateKeys[0]?.id).toEqual(expect.any(String));
+    expect(stagedPrivateKeys[0]?.signingKeyAlgorithm).toBe('RSA');
+    expect(stagedPrivateKeys[0]?.createdAt).toEqual(expect.any(Number));
+    expect(stagedPrivateKeys[0]?.status).toBe(OidcSigningKeyStatus.Next);
+    expect(stagedPrivateKeys[1]?.id).toEqual(currentKey?.id);
+    expect(stagedPrivateKeys[1]?.status).toBe(OidcSigningKeyStatus.Current);
+
+    const rerotatedPrivateKeys = await rotateOidcKeys(
+      LogtoOidcConfigKeyType.PrivateKeys,
+      SupportedSigningKeyAlgorithm.EC,
+      7200
+    );
+
+    expect(rerotatedPrivateKeys.length).toBeGreaterThanOrEqual(2);
+    expect(rerotatedPrivateKeys.length).toBeLessThanOrEqual(3);
+    expect(rerotatedPrivateKeys[0]?.id).not.toBe(stagedPrivateKeys[0]?.id);
+    expect(rerotatedPrivateKeys[0]?.signingKeyAlgorithm).toBe('EC');
+    expect(rerotatedPrivateKeys[0]?.status).toBe(OidcSigningKeyStatus.Next);
+    expect(rerotatedPrivateKeys[1]?.id).toEqual(currentKey?.id);
+    expect(rerotatedPrivateKeys[1]?.status).toBe(OidcSigningKeyStatus.Current);
   });
 
   it('should successfully PUT/GET/DELETE a JWT customizer (access token)', async () => {

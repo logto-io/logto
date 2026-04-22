@@ -81,6 +81,7 @@ describe('configs routes', () => {
     oidcPrivateKeys: oidcPrivateKeyLibraries,
   });
   Sinon.stub(tenantContext, 'logtoConfigs').value(logtoConfigLibraries);
+  Sinon.stub(tenantContext.libraries, 'oidcPrivateKeys').value(oidcPrivateKeyLibraries);
 
   const routeRequester = createRequester({
     authedRoutes: settingRoutes,
@@ -232,7 +233,10 @@ describe('configs routes', () => {
 
     const response = await routeRequester.post('/configs/oidc/private-keys/rotate');
     expect(response.status).toEqual(200);
-    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey);
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
+      newPrivateKey,
+      undefined
+    );
     expect(response.body[0]).toEqual({
       id: newPrivateKey.id,
       createdAt: newPrivateKey.createdAt,
@@ -266,7 +270,10 @@ describe('configs routes', () => {
 
     await routeRequester.post('/configs/oidc/private-keys/rotate');
 
-    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey2);
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
+      newPrivateKey2,
+      undefined
+    );
   });
 
   it('rejects immediate private-key rotation when a staged Next key already exists', async () => {
@@ -279,6 +286,42 @@ describe('configs routes', () => {
       422
     );
 
-    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey);
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
+      newPrivateKey,
+      undefined
+    );
+  });
+
+  it('POST /configs/oidc/:keyType/rotate supports staged private-key rotation', async () => {
+    oidcPrivateKeyLibraries.rotatePrivateSigningKeys.mockResolvedValueOnce([
+      { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
+      { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+    ]);
+    exportJWK.mockResolvedValueOnce({ kty: 'RSA' });
+
+    const response = await routeRequester
+      .post('/configs/oidc/private-keys/rotate')
+      .send({ rotationGracePeriod: 60 });
+
+    expect(response.status).toEqual(200);
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
+      newPrivateKey,
+      60
+    );
+    expect(response.body[0]).toEqual({
+      id: newPrivateKey.id,
+      createdAt: newPrivateKey.createdAt,
+      signingKeyAlgorithm: 'RSA',
+      status: OidcSigningKeyStatus.Next,
+    });
+  });
+
+  it('rejects cookie-key rotation when rotationGracePeriod is provided', async () => {
+    const response = await routeRequester
+      .post('/configs/oidc/cookie-keys/rotate')
+      .send({ rotationGracePeriod: 60 });
+
+    expect(response.status).toEqual(422);
+    expect(logtoConfigQueries.updateOidcConfigsByKey).not.toHaveBeenCalled();
   });
 });

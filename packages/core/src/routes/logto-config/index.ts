@@ -218,14 +218,19 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
       }),
       body: z.object({
         signingKeyAlgorithm: z.nativeEnum(SupportedSigningKeyAlgorithm).optional(),
+        rotationGracePeriod: z.number().int().nonnegative().optional(),
       }),
       response: z.array(oidcConfigKeysResponseGuard),
       status: [200, 422],
     }),
     async (ctx, next) => {
       const { keyType } = ctx.guard.params;
-      const { signingKeyAlgorithm } = ctx.guard.body;
+      const { signingKeyAlgorithm, rotationGracePeriod } = ctx.guard.body;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
+
+      if (configKey !== LogtoOidcConfigKey.PrivateKeys && rotationGracePeriod !== undefined) {
+        throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
+      }
 
       const newPrivateKey =
         configKey === LogtoOidcConfigKey.PrivateKeys
@@ -234,7 +239,7 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
 
       const updatedKeys =
         configKey === LogtoOidcConfigKey.PrivateKeys
-          ? await oidcPrivateKeys.rotatePrivateSigningKeys(newPrivateKey)
+          ? await oidcPrivateKeys.rotatePrivateSigningKeys(newPrivateKey, rotationGracePeriod)
           : await (async () => {
               const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
               const existingKeys = configs[configKey];

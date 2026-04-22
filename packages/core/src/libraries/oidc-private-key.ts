@@ -1,9 +1,10 @@
-import type { LogtoOidcConfigType, OidcPrivateKey } from '@logto/schemas';
+import type { LogtoOidcConfigType, OidcPrivateKey, SigningKeyRotationState } from '@logto/schemas';
 import { OidcSigningKeyStatus } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import type Queries from '#src/tenants/Queries.js';
+import { syncSigningKeyRotationStateCache } from '#src/tenants/signing-key-rotation-state.js';
 
 type NormalizedOidcPrivateKey = OidcPrivateKey & {
   status: OidcSigningKeyStatus;
@@ -108,6 +109,27 @@ export const getImmediatelyRotatedOidcPrivateKeys = (
 };
 
 /**
+ * Build the persisted private-key state for staged rotation.
+ * Replaces any existing Next key while preserving the current Current and Previous keys.
+ */
+export const getStagedRotatedOidcPrivateKeys = (
+  privateKeys: LogtoOidcConfigType['oidc.privateKeys'],
+  newPrivateKey: OidcPrivateKey
+): OidcPrivateKey[] => {
+  const normalizedPrivateKeys = normalizeOidcPrivateKeys(privateKeys);
+  const currentKey = getCurrentOidcPrivateKey(normalizedPrivateKeys);
+  const previousKey = normalizedPrivateKeys.find(
+    ({ status }) => status === OidcSigningKeyStatus.Previous
+  );
+
+  return [
+    { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
+    { ...currentKey, status: OidcSigningKeyStatus.Current },
+    ...(previousKey ? [{ ...previousKey, status: OidcSigningKeyStatus.Previous }] : []),
+  ];
+};
+
+/**
  * Promote a staged Next key into Current and demote the previous Current to Previous.
  * Returns the original normalized key set when no staged activation is pending.
  */
@@ -175,24 +197,76 @@ export class OidcPrivateKeyLibrary {
     });
   }
 
-  async rotatePrivateSigningKeys(newPrivateKey: OidcPrivateKey): Promise<OidcPrivateKey[]> {
-    return this.queries.pool.transaction(async (connection) => {
-      const logtoConfigQueries = createLogtoConfigQueries(connection, this.queries.wellKnownCache);
+  async rotatePrivateSigningKeys(
+    newPrivateKey: OidcPrivateKey,
+    rotationGracePeriod = 0
+  ): Promise<OidcPrivateKey[]> {
+    if (rotationGracePeriod === 0) {
+      return this.queries.pool.transaction(async (connection) => {
+        const logtoConfigQueries = createLogtoConfigQueries(
+          connection,
+          this.queries.wellKnownCache
+        );
 
-      await logtoConfigQueries.lockPrivateSigningKeys();
+        await logtoConfigQueries.lockPrivateSigningKeys();
 
-      const privateKeys = normalizeOidcPrivateKeys(
-        await logtoConfigQueries.getPrivateSigningKeys()
-      );
+        const privateKeys = normalizeOidcPrivateKeys(
+          await logtoConfigQueries.getPrivateSigningKeys()
+        );
 
-      if (privateKeys.some(({ status }) => status === OidcSigningKeyStatus.Next)) {
-        throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
+        if (privateKeys.some(({ status }) => status === OidcSigningKeyStatus.Next)) {
+          throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
+        }
+
+        const updatedPrivateKeys = getImmediatelyRotatedOidcPrivateKeys(privateKeys, newPrivateKey);
+        await logtoConfigQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
+
+        return updatedPrivateKeys;
+      });
+    }
+
+    const { privateKeys, signingKeyRotationState } = await this.queries.pool.transaction(
+      async (connection) => {
+        const logtoConfigQueries = createLogtoConfigQueries(
+          connection,
+          this.queries.wellKnownCache
+        );
+
+        await logtoConfigQueries.lockPrivateSigningKeysAndRotationState();
+
+        const privateKeys = normalizeOidcPrivateKeys(
+          await logtoConfigQueries.getPrivateSigningKeys()
+        );
+        const currentRotationState = await logtoConfigQueries.getSigningKeyRotationState();
+        const updatedPrivateKeys = getStagedRotatedOidcPrivateKeys(privateKeys, newPrivateKey);
+        const signingKeyRotationState = getSigningKeyRotationStateForStagedRotation(
+          currentRotationState,
+          rotationGracePeriod
+        );
+
+        await logtoConfigQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
+        const persistedRotationState =
+          await logtoConfigQueries.upsertSigningKeyRotationState(signingKeyRotationState);
+
+        return {
+          privateKeys: updatedPrivateKeys,
+          signingKeyRotationState: persistedRotationState,
+        };
       }
+    );
 
-      const updatedPrivateKeys = getImmediatelyRotatedOidcPrivateKeys(privateKeys, newPrivateKey);
-      await logtoConfigQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
+    void syncSigningKeyRotationStateCache(this.queries.wellKnownCache, signingKeyRotationState);
 
-      return updatedPrivateKeys;
-    });
+    return privateKeys;
   }
 }
+
+const getSigningKeyRotationStateForStagedRotation = (
+  currentRotationState: SigningKeyRotationState | undefined,
+  rotationGracePeriod: number
+): SigningKeyRotationState => {
+  return {
+    ...currentRotationState,
+    signingKeyRotationAt: Date.now() + rotationGracePeriod * 1000,
+  };
+};

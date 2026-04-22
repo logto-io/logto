@@ -90,6 +90,17 @@ export const createLogtoConfigQueries = (
       for update
     `);
 
+  const lockPrivateSigningKeysAndRotationState = async () =>
+    pool.query(sql`
+      select ${fields.key}
+      from ${table}
+      where ${fields.key} in (
+        ${LogtoOidcConfigKey.PrivateKeys},
+        ${LogtoTenantConfigKey.SigningKeyRotationState}
+      )
+      for update
+    `);
+
   const getSigningKeyRotationStateWithExecutor = async (
     executor: CommonQueryMethods
   ): Promise<SigningKeyRotationState | undefined> => {
@@ -232,6 +243,7 @@ export const createLogtoConfigQueries = (
     getCloudConnectionData,
     getRowsByKeys,
     lockPrivateSigningKeys,
+    lockPrivateSigningKeysAndRotationState,
     getPrivateSigningKeys,
     upsertPrivateSigningKeys,
     updateOidcConfigsByKey,
