@@ -139,11 +139,11 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     const expectType = passcode.phone ? ConnectorType.Sms : ConnectorType.Email;
     const connector = await getMessageConnector(expectType);
     const { dbEntry, metadata, sendMessage } = connector;
-    await validateMessageTemplate(templateType, dbEntry.config, contextPayload);
 
     const { ip, ...payloadContext } = contextPayload ?? {};
 
     if (options?.validateOnly) {
+      await validateMessageTemplate(templateType, dbEntry.config, contextPayload);
       return { dbEntry, metadata, response: undefined };
     }
 
