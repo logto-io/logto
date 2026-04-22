@@ -28,6 +28,7 @@ const oss_onboarding = {
   errors: {
     email_required: 'จำเป็นต้องกรอกอีเมล',
     email_invalid: 'กรุณากรอกอีเมลที่ถูกต้อง',
+    project_name_too_long: 'ชื่อโปรเจกต์ต้องมีไม่เกิน 200 ตัวอักษร',
   },
 };
 

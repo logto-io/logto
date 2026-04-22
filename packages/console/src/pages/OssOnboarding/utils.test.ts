@@ -4,7 +4,6 @@ import {
   getOssOnboardingDefaultValues,
   getOssOnboardingSubmitPayload,
   shouldRequireCompanyFields,
-  type OssOnboardingFormData,
 } from './utils';
 
 describe('OSS onboarding form utils', () => {
@@ -59,7 +58,7 @@ describe('OSS onboarding form utils', () => {
       projectName: 'OSS Portal',
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
-    } satisfies OssOnboardingFormData);
+    } satisfies OssSurveyReportPayload);
   });
 
   test('omits project name when input contains only whitespace', () => {

@@ -28,6 +28,7 @@ const oss_onboarding = {
   errors: {
     email_required: 'メールアドレスは必須です',
     email_invalid: '有効なメールアドレスを入力してください',
+    project_name_too_long: 'プロジェクト名は200文字以内で入力してください',
   },
 };
 

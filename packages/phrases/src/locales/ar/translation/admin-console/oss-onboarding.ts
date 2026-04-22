@@ -27,6 +27,7 @@ const oss_onboarding = {
   errors: {
     email_required: 'البريد الإلكتروني مطلوب',
     email_invalid: 'أدخل بريدًا إلكترونيًا صالحًا',
+    project_name_too_long: 'يجب ألا يتجاوز اسم المشروع 200 حرف',
   },
 };
 

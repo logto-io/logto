@@ -27,6 +27,7 @@ const oss_onboarding = {
   errors: {
     email_required: '이메일 주소는 필수입니다',
     email_invalid: '유효한 이메일 주소를 입력하세요',
+    project_name_too_long: '프로젝트 이름은 200자 이하여야 합니다',
   },
 };
 

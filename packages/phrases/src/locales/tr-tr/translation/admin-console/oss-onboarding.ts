@@ -29,6 +29,7 @@ const oss_onboarding = {
   errors: {
     email_required: 'E-posta adresi gerekli',
     email_invalid: 'Gecerli bir e-posta adresi girin',
+    project_name_too_long: 'Proje adi en fazla 200 karakter olabilir',
   },
 };
 

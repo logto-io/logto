@@ -27,6 +27,7 @@ const oss_onboarding = {
   errors: {
     email_required: '邮箱地址为必填项',
     email_invalid: '请输入有效的邮箱地址',
+    project_name_too_long: '项目名称不能超过 200 个字符',
   },
 };
 

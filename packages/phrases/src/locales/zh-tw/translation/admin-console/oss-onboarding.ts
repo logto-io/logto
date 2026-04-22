@@ -27,6 +27,7 @@ const oss_onboarding = {
   errors: {
     email_required: '電子郵件地址為必填項',
     email_invalid: '請輸入有效的電子郵件地址',
+    project_name_too_long: '專案名稱不能超過 200 個字元',
   },
 };
 

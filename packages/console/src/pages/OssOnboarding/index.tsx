@@ -26,7 +26,7 @@ import styles from './index.module.scss';
 import { submitOssOnboarding } from './submit-oss-onboarding';
 import {
   getOssOnboardingDefaultValues,
-  shouldIncludeCompanyFields,
+  shouldRequireCompanyFields,
   type OssOnboardingFormData,
 } from './utils';
 
@@ -47,7 +47,7 @@ function OssOnboarding() {
     shouldUnregister: true,
   });
   const project = watch('project');
-  const isCompanyProject = shouldIncludeCompanyFields(project);
+  const isCompanyProject = shouldRequireCompanyFields(project);
 
   useEffect(() => {
     setThemeOverride(Theme.Light);
@@ -162,9 +162,16 @@ function OssOnboarding() {
             </FormField>
             <FormField title="oss_onboarding.project_name.label">
               <TextInput
+                maxLength={200}
                 placeholder={t('oss_onboarding.project_name.placeholder')}
                 disabled={isSubmitting}
-                {...register('projectName')}
+                error={errors.projectName?.message}
+                {...register('projectName', {
+                  maxLength: {
+                    value: 200,
+                    message: t('oss_onboarding.errors.project_name_too_long'),
+                  },
+                })}
               />
             </FormField>
             {isCompanyProject && (

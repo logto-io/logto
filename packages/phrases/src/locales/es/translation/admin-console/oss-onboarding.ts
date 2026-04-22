@@ -29,6 +29,7 @@ const oss_onboarding = {
   errors: {
     email_required: 'El correo electrónico es obligatorio',
     email_invalid: 'Introduce un correo electrónico válido',
+    project_name_too_long: 'El nombre del proyecto debe tener como maximo 200 caracteres',
   },
 };
 

@@ -30,6 +30,7 @@ const oss_onboarding = {
   errors: {
     email_required: 'Adres e-mail jest wymagany',
     email_invalid: 'Wprowadz prawidlowy adres e-mail',
+    project_name_too_long: 'Nazwa projektu musi miec maksymalnie 200 znakow',
   },
 };
 
