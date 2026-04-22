@@ -4,7 +4,9 @@ import Sinon from 'sinon';
 
 import { RedisCache } from '#src/caches/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
+import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
+import { createMockCommonQueryMethods, expectSqlString } from '#src/test-utils/query.js';
 import { MockWellKnownCache } from '#src/test-utils/tenant.js';
 import { emptyMiddleware } from '#src/utils/test-utils.js';
 
@@ -87,6 +89,33 @@ describe('Tenant `.run()`', () => {
 });
 
 describe('Tenant cache health check', () => {
+  it('uses the qualified rotation-state update query when invalidating cache', async () => {
+    const redisCache = new RedisCache();
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache });
+    const methods = createMockCommonQueryMethods();
+    const logtoConfigQueries = createLogtoConfigQueries(methods as never, tenant.wellKnownCache);
+
+    methods.one.mockResolvedValueOnce({
+      value: {
+        tenantCacheExpiresAt: 1_234_567_890,
+        signingKeyRotationAt: 2_222_222_222,
+      },
+    } as never);
+
+    Sinon.stub(tenant.queries.logtoConfigs, 'setTenantCacheExpiresAt').value(
+      logtoConfigQueries.setTenantCacheExpiresAt
+    );
+    Sinon.stub(tenant.wellKnownCache, 'set').value(jest.fn());
+    Sinon.stub(tenant.wellKnownCache, 'delete').value(jest.fn());
+
+    await tenant.invalidateCache();
+
+    expect(methods.one).toHaveBeenCalledTimes(1);
+    expect(methods.one).toHaveBeenCalledWith(
+      expectSqlString('coalesce("logto_configs"."value", \'{}\'::jsonb)')
+    );
+  });
+
   it('should persist tenant invalidation state and mirror it to cache', async () => {
     const redisCache = new RedisCache();
     const tenant = await Tenant.create({ id: defaultTenantId, redisCache });
