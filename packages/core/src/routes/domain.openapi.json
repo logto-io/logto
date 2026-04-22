@@ -43,6 +43,30 @@
         }
       }
     },
+    "/api/domains/cleanup": {
+      "post": {
+        "summary": "Cleanup stale domains",
+        "description": "Clean up custom domains that have been inactive (not verified) for a specified number of days. This uses Cloudflare as the source of truth to determine domain activity.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "staleDays": {
+                    "description": "The number of days a domain must be inactive before it is considered stale and eligible for cleanup."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The cleanup result summary."
+          }
+        }
+      }
+    },
     "/api/domains/{id}": {
       "get": {
         "summary": "Get domain",
