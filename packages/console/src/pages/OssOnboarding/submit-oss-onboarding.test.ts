@@ -138,6 +138,46 @@ describe('submitOssOnboarding', () => {
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 
+  it('omits empty company fields in persisted and reported payload', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
+    const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
+    const navigate = jest.fn<void, [string, { replace: boolean }]>();
+    const formData: OssOnboardingFormData = {
+      ...mockFormData,
+      companyName: '   ',
+      companySize: undefined,
+    };
+
+    update.mockResolvedValue();
+
+    await submitOssOnboarding({
+      formData,
+      navigate,
+      update,
+    });
+
+    expect(update).toHaveBeenCalledWith({
+      questionnaire: {
+        emailAddress: 'dev@example.com',
+        newsletter: true,
+        project: Project.Company,
+      },
+      isOnboardingDone: true,
+    });
+    expect(mockKyPost).toHaveBeenCalledWith(
+      new URL('https://survey.example.com/api/surveys'),
+      expect.objectContaining({
+        json: {
+          emailAddress: 'dev@example.com',
+          newsletter: true,
+          project: Project.Company,
+        },
+        keepalive: true,
+      })
+    );
+    expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
+  });
+
   it('constructs the reporting URL when endpoint has trailing slash', async () => {
     const submitOssOnboarding = await getSubmitOssOnboarding();
     const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();

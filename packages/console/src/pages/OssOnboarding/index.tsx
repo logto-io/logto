@@ -26,7 +26,7 @@ import styles from './index.module.scss';
 import { submitOssOnboarding } from './submit-oss-onboarding';
 import {
   getOssOnboardingDefaultValues,
-  shouldRequireCompanyFields,
+  shouldIncludeCompanyFields,
   type OssOnboardingFormData,
 } from './utils';
 
@@ -47,7 +47,7 @@ function OssOnboarding() {
     shouldUnregister: true,
   });
   const project = watch('project');
-  const isCompanyProject = shouldRequireCompanyFields(project);
+  const isCompanyProject = shouldIncludeCompanyFields(project);
 
   useEffect(() => {
     setThemeOverride(Theme.Light);
@@ -162,25 +162,18 @@ function OssOnboarding() {
             </FormField>
             {isCompanyProject && (
               <>
-                <FormField isRequired title="oss_onboarding.company_name.label">
+                <FormField title="oss_onboarding.company_name.label">
                   <TextInput
                     placeholder={t('oss_onboarding.company_name.placeholder')}
                     disabled={isSubmitting}
                     error={errors.companyName?.message}
-                    {...register('companyName', {
-                      validate: (value) =>
-                        Boolean(value.trim()) || t('oss_onboarding.errors.company_name_required'),
-                    })}
+                    {...register('companyName')}
                   />
                 </FormField>
-                <FormField isRequired title="oss_onboarding.company_size.label">
+                <FormField title="oss_onboarding.company_size.label">
                   <Controller
                     name="companySize"
                     control={control}
-                    rules={{
-                      validate: (value) =>
-                        Boolean(value) || t('oss_onboarding.errors.company_size_required'),
-                    }}
                     render={({ field: { onChange, value, name } }) => (
                       <>
                         <RadioGroup

@@ -26,8 +26,6 @@ const oss_onboarding = {
   errors: {
     email_required: 'Электронная почта обязательна',
     email_invalid: 'Введите корректный адрес электронной почты',
-    company_name_required: 'Название компании обязательно',
-    company_size_required: 'Размер компании обязателен',
   },
 };
 

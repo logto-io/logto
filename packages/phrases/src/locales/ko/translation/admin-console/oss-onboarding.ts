@@ -23,8 +23,6 @@ const oss_onboarding = {
   errors: {
     email_required: '이메일 주소는 필수입니다',
     email_invalid: '유효한 이메일 주소를 입력하세요',
-    company_name_required: '회사명은 필수입니다',
-    company_size_required: '회사 규모는 필수입니다',
   },
 };
 

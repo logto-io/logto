@@ -16,29 +16,27 @@ export const getOssOnboardingDefaultValues = (): OssOnboardingFormData => ({
   companySize: CompanySize.Scale3,
 });
 
-export const shouldRequireCompanyFields = (project: Project) => project === Project.Company;
+export const shouldIncludeCompanyFields = (project: Project) => project === Project.Company;
 
 export const getOssOnboardingSubmitPayload = (
   data: OssOnboardingFormData
 ): OssSurveyReportPayload => {
   const normalizedEmailAddress = data.emailAddress.toLowerCase();
+  const { companyName, companySize, ...rest } = data;
 
-  if (!shouldRequireCompanyFields(data.project)) {
-    const {
-      companyName: _companyName,
-      companySize: _companySize,
-      emailAddress: _emailAddress,
-      ...rest
-    } = data;
-
+  if (!shouldIncludeCompanyFields(data.project)) {
     return {
       ...rest,
       emailAddress: normalizedEmailAddress,
     };
   }
 
+  const normalizedCompanyName = companyName.trim();
+
   return {
-    ...data,
+    ...rest,
     emailAddress: normalizedEmailAddress,
+    ...(normalizedCompanyName ? { companyName: normalizedCompanyName } : {}),
+    ...(companySize ? { companySize } : {}),
   };
 };

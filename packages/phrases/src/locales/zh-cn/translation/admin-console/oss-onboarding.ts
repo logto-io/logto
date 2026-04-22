@@ -23,8 +23,6 @@ const oss_onboarding = {
   errors: {
     email_required: '邮箱地址为必填项',
     email_invalid: '请输入有效的邮箱地址',
-    company_name_required: '公司名称为必填项',
-    company_size_required: '公司规模为必填项',
   },
 };
 

@@ -25,8 +25,6 @@ const oss_onboarding = {
   errors: {
     email_required: 'O endereco de e-mail e obrigatorio',
     email_invalid: 'Digite um endereco de e-mail valido',
-    company_name_required: 'O nome da empresa e obrigatorio',
-    company_size_required: 'O tamanho da empresa e obrigatorio',
   },
 };
 
