@@ -60,7 +60,7 @@ describe('OSS onboarding form utils', () => {
       newsletter: true,
       project: Project.Company,
       projectName: '  OSS Portal  ',
-      companyName: 'Acme',
+      companyName: '  Acme  ',
       companySize: CompanySize.Scale3,
     });
 
@@ -78,7 +78,7 @@ describe('OSS onboarding form utils', () => {
       newsletter: false,
       project: Project.Company,
       projectName: '  OSS Portal  ',
-      companyName: 'Acme',
+      companyName: '  Acme  ',
       companySize: CompanySize.Scale3,
     });
 
@@ -135,6 +135,25 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'dev@example.com',
       newsletter: false,
       project: Project.Personal,
+    });
+  });
+
+  test('omits company name when input contains only whitespace', () => {
+    const payload = getBaseOssOnboardingPayload({
+      emailAddress: 'Dev@Example.COM',
+      newsletter: true,
+      project: Project.Company,
+      projectName: ' OSS Portal ',
+      companyName: '   ',
+      companySize: CompanySize.Scale3,
+    });
+
+    expect(payload).toEqual({
+      emailAddress: 'dev@example.com',
+      newsletter: true,
+      project: Project.Company,
+      projectName: 'OSS Portal',
+      companySize: CompanySize.Scale3,
     });
   });
 });
