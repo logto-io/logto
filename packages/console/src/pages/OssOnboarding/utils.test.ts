@@ -7,7 +7,6 @@ import {
   isValidOssOnboardingEmailAddress,
   normalizeOssOnboardingEmailAddress,
   shouldRequireCompanyFields,
-  type OssOnboardingFormData,
 } from './utils';
 
 describe('OSS onboarding form utils', () => {
@@ -83,7 +82,7 @@ describe('OSS onboarding form utils', () => {
       project: Project.Company,
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
-    } satisfies OssOnboardingFormData);
+    });
   });
 
   test('builds a survey payload only when the email address is valid', () => {
