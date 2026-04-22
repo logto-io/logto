@@ -146,15 +146,15 @@ function OssOnboarding() {
                   >
                     <Radio
                       className={styles.projectRadio}
-                      title="oss_onboarding.project.personal"
-                      value={Project.Personal}
-                      icon={<PizzaIcon className={styles.projectOptionIcon} />}
-                    />
-                    <Radio
-                      className={styles.projectRadio}
                       title="oss_onboarding.project.company"
                       value={Project.Company}
                       icon={<BuildingIcon className={styles.projectOptionIcon} />}
+                    />
+                    <Radio
+                      className={styles.projectRadio}
+                      title="oss_onboarding.project.personal"
+                      value={Project.Personal}
+                      icon={<PizzaIcon className={styles.projectOptionIcon} />}
                     />
                   </RadioGroup>
                 )}
