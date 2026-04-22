@@ -174,23 +174,18 @@ function OssOnboarding() {
             </FormField>
             {isCompanyProject && (
               <>
-                <FormField isRequired title="oss_onboarding.company_name.label">
+                <FormField title="oss_onboarding.company_name.label">
                   <TextInput
                     placeholder={t('oss_onboarding.company_name.placeholder')}
                     disabled={isSubmitting}
                     error={errors.companyName?.message}
-                    {...register('companyName', {
-                      validate: (value) => Boolean(value.trim()) || t('general.required'),
-                    })}
+                    {...register('companyName')}
                   />
                 </FormField>
-                <FormField isRequired title="oss_onboarding.company_size.label">
+                <FormField title="oss_onboarding.company_size.label">
                   <Controller
                     name="companySize"
                     control={control}
-                    rules={{
-                      validate: (value) => Boolean(value) || t('general.required'),
-                    }}
                     render={({ field: { onChange, value, name } }) => (
                       <>
                         <RadioGroup
