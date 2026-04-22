@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form';
 import { Trans } from 'react-i18next';
 
 import { CloudTag } from '@/components/FeatureTag';
-import { officialWebsiteLink } from '@/consts/external-links';
+import { logtoCloudConsoleLink } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -62,7 +62,7 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
           components={{
             a: (
               <TextLink
-                href={officialWebsiteLink}
+                href={logtoCloudConsoleLink}
                 targetBlank="noopener"
                 className={styles.highlight}
               />
