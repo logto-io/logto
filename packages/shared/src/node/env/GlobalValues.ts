@@ -50,6 +50,22 @@ export const parseTimeoutEnv = (value?: string): Optional<number | 'DISABLE_TIME
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
+export const parseNonNegativeIntegerEnv = (value?: string, fallback = 0): number => {
+  if (value === undefined) {
+    return fallback;
+  }
+
+  const normalized = value.trim();
+
+  if (normalized === '') {
+    return fallback;
+  }
+
+  const parsed = Number(normalized);
+
+  return Number.isInteger(parsed) && parsed >= 0 ? parsed : fallback;
+};
+
 export default class GlobalValues {
   public readonly isProduction = getEnv('NODE_ENV') === 'production';
   public readonly isIntegrationTest = yes(getEnv('INTEGRATION_TEST'));
@@ -196,6 +212,15 @@ export default class GlobalValues {
    * You can set it to a truthy value like `true` or `1` to enable cache with the default Redis URL.
    */
   public readonly redisUrl = getEnv('REDIS_URL');
+
+  /**
+   * Default grace period for private signing key rotation, in seconds.
+   * Cloud can configure a safe platform-wide default, while OSS/self-host deployments
+   * may opt in through environment configuration.
+   */
+  public readonly privateKeyRotationGracePeriod = parseNonNegativeIntegerEnv(
+    getEnv('PRIVATE_KEY_ROTATION_GRACE_PERIOD', '0')
+  );
 
   public get dbUrl(): string {
     return this.databaseUrl;

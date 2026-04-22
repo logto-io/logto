@@ -4,6 +4,7 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import Sinon from 'sinon';
 
 import { mockAdminConsoleData, mockCookieKeys, mockPrivateKeys } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -77,6 +78,7 @@ const oidcPrivateKeyLibraries = {
 const settingRoutes = await pickDefault(import('./index.js'));
 
 describe('configs routes', () => {
+  const originalPrivateKeyRotationGracePeriod = EnvSet.values.privateKeyRotationGracePeriod;
   const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries }, undefined, {
     oidcPrivateKeys: oidcPrivateKeyLibraries,
   });
@@ -90,6 +92,11 @@ describe('configs routes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    Reflect.set(
+      EnvSet.values,
+      'privateKeyRotationGracePeriod',
+      originalPrivateKeyRotationGracePeriod
+    );
   });
 
   it('GET /configs/admin-console', async () => {
@@ -233,10 +240,7 @@ describe('configs routes', () => {
 
     const response = await routeRequester.post('/configs/oidc/private-keys/rotate');
     expect(response.status).toEqual(200);
-    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
-      newPrivateKey,
-      undefined
-    );
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey, 0);
     expect(response.body[0]).toEqual({
       id: newPrivateKey.id,
       createdAt: newPrivateKey.createdAt,
@@ -272,7 +276,7 @@ describe('configs routes', () => {
 
     expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
       newPrivateKey2,
-      undefined
+      0
     );
   });
 
@@ -286,9 +290,20 @@ describe('configs routes', () => {
       422
     );
 
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey, 0);
+  });
+
+  it('uses PRIVATE_KEY_ROTATION_GRACE_PERIOD as the default private-key rotation grace period', async () => {
+    Reflect.set(EnvSet.values, 'privateKeyRotationGracePeriod', 14_400);
+
+    await expect(routeRequester.post('/configs/oidc/private-keys/rotate')).resolves.toHaveProperty(
+      'status',
+      200
+    );
+
     expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
       newPrivateKey,
-      undefined
+      14_400
     );
   });
 

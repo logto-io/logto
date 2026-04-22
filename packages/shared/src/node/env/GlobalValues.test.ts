@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseTimeoutEnv } from './GlobalValues.js';
+import { parseNonNegativeIntegerEnv, parseTimeoutEnv } from './GlobalValues.js';
 
 describe('parseTimeoutEnv', () => {
   it('returns undefined for missing, blank, or invalid values', () => {
@@ -25,5 +25,23 @@ describe('parseTimeoutEnv', () => {
   it('accepts negative and decimal values as numbers', () => {
     expect(parseTimeoutEnv('-1')).toBe(-1);
     expect(parseTimeoutEnv('1.5')).toBe(1.5);
+  });
+});
+
+describe('parseNonNegativeIntegerEnv', () => {
+  it('returns the fallback for missing, blank, negative, decimal, or invalid values', () => {
+    expect(parseNonNegativeIntegerEnv()).toBe(0);
+    expect(parseNonNegativeIntegerEnv('')).toBe(0);
+    expect(parseNonNegativeIntegerEnv('   ')).toBe(0);
+    expect(parseNonNegativeIntegerEnv('-1')).toBe(0);
+    expect(parseNonNegativeIntegerEnv('1.5')).toBe(0);
+    expect(parseNonNegativeIntegerEnv('abc')).toBe(0);
+    expect(parseNonNegativeIntegerEnv('abc', 30)).toBe(30);
+  });
+
+  it('parses non-negative integer values', () => {
+    expect(parseNonNegativeIntegerEnv('0')).toBe(0);
+    expect(parseNonNegativeIntegerEnv('60')).toBe(60);
+    expect(parseNonNegativeIntegerEnv(' 14400 ')).toBe(14_400);
   });
 });
