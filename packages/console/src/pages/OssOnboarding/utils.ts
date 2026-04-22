@@ -6,6 +6,7 @@ export type OssOnboardingFormData = {
   emailAddress: string;
   newsletter: boolean;
   project: Project;
+  projectName: string;
   companyName: string;
   companySize?: CompanySize;
 };
@@ -14,6 +15,7 @@ export const getOssOnboardingDefaultValues = (): OssOnboardingFormData => ({
   emailAddress: '',
   newsletter: false,
   project: Project.Company,
+  projectName: '',
   companyName: '',
   companySize: CompanySize.Scale3,
 });
@@ -35,26 +37,29 @@ export const isValidOssOnboardingEmailAddress = (emailAddress: string) =>
 
 export const getBaseOssOnboardingPayload = (data: OssOnboardingFormData) => {
   const normalizedEmailAddress = normalizeOssOnboardingEmailAddress(data.emailAddress);
+  const normalizedProjectName = data.projectName.trim();
+  const projectNameFields = normalizedProjectName ? { projectName: normalizedProjectName } : {};
   const emailFields = normalizedEmailAddress
     ? {
         emailAddress: normalizedEmailAddress,
         newsletter: data.newsletter,
       }
     : {};
-  const { emailAddress: _emailAddress, newsletter: _newsletter, ...restWithoutEmail } = data;
+
+  const basePayload = {
+    project: data.project,
+    ...projectNameFields,
+    ...emailFields,
+  };
 
   if (!shouldRequireCompanyFields(data.project)) {
-    const { companyName: _companyName, companySize: _companySize, ...rest } = restWithoutEmail;
-
-    return {
-      ...rest,
-      ...emailFields,
-    };
+    return basePayload;
   }
 
   return {
-    ...restWithoutEmail,
-    ...emailFields,
+    ...basePayload,
+    companyName: data.companyName,
+    companySize: data.companySize,
   };
 };
 
@@ -62,6 +67,8 @@ export const getOssOnboardingSurveyPayload = (
   data: OssOnboardingFormData
 ): Optional<OssSurveyReportPayload> => {
   const normalizedEmailAddress = normalizeOssOnboardingEmailAddress(data.emailAddress);
+  const normalizedProjectName = data.projectName.trim();
+  const projectNameFields = normalizedProjectName ? { projectName: normalizedProjectName } : {};
 
   if (!normalizedEmailAddress) {
     return;
@@ -70,6 +77,7 @@ export const getOssOnboardingSurveyPayload = (
   if (!shouldRequireCompanyFields(data.project)) {
     return {
       project: data.project,
+      ...projectNameFields,
       emailAddress: normalizedEmailAddress,
       newsletter: data.newsletter,
     };
@@ -77,6 +85,7 @@ export const getOssOnboardingSurveyPayload = (
 
   return {
     project: data.project,
+    ...projectNameFields,
     emailAddress: normalizedEmailAddress,
     newsletter: data.newsletter,
     companyName: data.companyName,

@@ -158,18 +158,32 @@ function OssOnboarding() {
                   >
                     <Radio
                       className={styles.projectRadio}
-                      title="oss_onboarding.project.personal"
-                      value={Project.Personal}
-                      icon={<PizzaIcon className={styles.projectOptionIcon} />}
-                    />
-                    <Radio
-                      className={styles.projectRadio}
                       title="oss_onboarding.project.company"
                       value={Project.Company}
                       icon={<BuildingIcon className={styles.projectOptionIcon} />}
                     />
+                    <Radio
+                      className={styles.projectRadio}
+                      title="oss_onboarding.project.personal"
+                      value={Project.Personal}
+                      icon={<PizzaIcon className={styles.projectOptionIcon} />}
+                    />
                   </RadioGroup>
                 )}
+              />
+            </FormField>
+            <FormField title="oss_onboarding.project_name.label">
+              <TextInput
+                maxLength={200}
+                placeholder={t('oss_onboarding.project_name.placeholder')}
+                disabled={isSubmitting}
+                error={errors.projectName?.message}
+                {...register('projectName', {
+                  maxLength: {
+                    value: 200,
+                    message: t('oss_onboarding.errors.project_name_too_long'),
+                  },
+                })}
               />
             </FormField>
             {isCompanyProject && (

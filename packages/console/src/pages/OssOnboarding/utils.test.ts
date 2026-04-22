@@ -15,6 +15,7 @@ describe('OSS onboarding form utils', () => {
       emailAddress: '',
       newsletter: false,
       project: Project.Company,
+      projectName: '',
       companyName: '',
       companySize: CompanySize.Scale3,
     });
@@ -40,6 +41,7 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'Dev@Example.COM',
       newsletter: true,
       project: Project.Personal,
+      projectName: '  My starter app  ',
       companyName: 'Should be ignored',
       companySize: CompanySize.Scale3,
     });
@@ -48,6 +50,7 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'dev@example.com',
       newsletter: true,
       project: Project.Personal,
+      projectName: 'My starter app',
     });
   });
 
@@ -56,12 +59,14 @@ describe('OSS onboarding form utils', () => {
       emailAddress: '',
       newsletter: true,
       project: Project.Company,
+      projectName: '  OSS Portal  ',
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
     });
 
     expect(payload).toEqual({
       project: Project.Company,
+      projectName: 'OSS Portal',
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
     });
@@ -72,6 +77,7 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'Dev@Example.COM',
       newsletter: false,
       project: Project.Company,
+      projectName: '  OSS Portal  ',
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
     });
@@ -80,6 +86,7 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'dev@example.com',
       newsletter: false,
       project: Project.Company,
+      projectName: 'OSS Portal',
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
     });
@@ -91,6 +98,7 @@ describe('OSS onboarding form utils', () => {
         emailAddress: '',
         newsletter: true,
         project: Project.Personal,
+        projectName: '',
         companyName: '',
         companySize: undefined,
       })
@@ -101,6 +109,7 @@ describe('OSS onboarding form utils', () => {
         emailAddress: 'Dev@Example.COM',
         newsletter: false,
         project: Project.Personal,
+        projectName: '  My starter app  ',
         companyName: 'Should be ignored',
         companySize: CompanySize.Scale3,
       })
@@ -108,6 +117,24 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'dev@example.com',
       newsletter: false,
       project: Project.Personal,
+      projectName: 'My starter app',
     } satisfies OssSurveyReportPayload);
+  });
+
+  test('omits project name when input contains only whitespace', () => {
+    const payload = getBaseOssOnboardingPayload({
+      emailAddress: 'Dev@Example.COM',
+      newsletter: false,
+      project: Project.Personal,
+      projectName: '   ',
+      companyName: '',
+      companySize: undefined,
+    });
+
+    expect(payload).toEqual({
+      emailAddress: 'dev@example.com',
+      newsletter: false,
+      project: Project.Personal,
+    });
   });
 });
