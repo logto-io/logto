@@ -13,6 +13,10 @@ const oss_onboarding = {
     personal: '개인 프로젝트',
     company: '회사 프로젝트',
   },
+  project_name: {
+    label: '프로젝트 이름',
+    placeholder: '내 프로젝트',
+  },
   company_name: {
     label: '회사명',
     placeholder: 'Acme.co',
@@ -23,6 +27,7 @@ const oss_onboarding = {
   errors: {
     email_required: '이메일 주소는 필수입니다',
     email_invalid: '유효한 이메일 주소를 입력하세요',
+    project_name_too_long: '프로젝트 이름은 200자 이하여야 합니다',
   },
 };
 

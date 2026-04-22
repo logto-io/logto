@@ -16,6 +16,10 @@ const oss_onboarding = {
     personal: 'Личного проекта',
     company: 'Проекта компании',
   },
+  project_name: {
+    label: 'Название проекта',
+    placeholder: 'Мой проект',
+  },
   company_name: {
     label: 'Название компании',
     placeholder: 'Acme.co',
@@ -26,6 +30,7 @@ const oss_onboarding = {
   errors: {
     email_required: 'Электронная почта обязательна',
     email_invalid: 'Введите корректный адрес электронной почты',
+    project_name_too_long: 'Название проекта должно содержать не более 200 символов',
   },
 };
 

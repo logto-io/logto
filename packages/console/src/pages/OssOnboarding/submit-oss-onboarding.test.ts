@@ -57,6 +57,7 @@ const mockFormData: OssOnboardingFormData = {
   emailAddress: 'Dev@Example.COM',
   newsletter: true,
   project: Project.Company,
+  projectName: ' OSS Starter ',
   companyName: 'Acme',
   companySize: CompanySize.Scale3,
 };
@@ -117,6 +118,7 @@ describe('submitOssOnboarding', () => {
         emailAddress: 'dev@example.com',
         newsletter: true,
         project: Project.Company,
+        projectName: 'OSS Starter',
         companyName: 'Acme',
         companySize: CompanySize.Scale3,
       },
@@ -129,6 +131,7 @@ describe('submitOssOnboarding', () => {
           emailAddress: 'dev@example.com',
           newsletter: true,
           project: Project.Company,
+          projectName: 'OSS Starter',
           companyName: 'Acme',
           companySize: CompanySize.Scale3,
         },
@@ -161,6 +164,7 @@ describe('submitOssOnboarding', () => {
         emailAddress: 'dev@example.com',
         newsletter: true,
         project: Project.Company,
+        projectName: 'OSS Starter',
       },
       isOnboardingDone: true,
     });
@@ -171,6 +175,7 @@ describe('submitOssOnboarding', () => {
           emailAddress: 'dev@example.com',
           newsletter: true,
           project: Project.Company,
+          projectName: 'OSS Starter',
         },
         keepalive: true,
       })
@@ -322,6 +327,48 @@ describe('submitOssOnboarding', () => {
     });
 
     expect(mockKyPost).not.toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
+  });
+
+  it('omits whitespace-only project name before update and report', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
+    const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
+    const navigate = jest.fn<void, [string, { replace: boolean }]>();
+
+    update.mockResolvedValue();
+
+    await submitOssOnboarding({
+      formData: {
+        ...mockFormData,
+        projectName: '   ',
+      },
+      navigate,
+      update,
+    });
+
+    expect(update).toHaveBeenCalledWith({
+      questionnaire: {
+        emailAddress: 'dev@example.com',
+        newsletter: true,
+        project: Project.Company,
+        companyName: 'Acme',
+        companySize: CompanySize.Scale3,
+      },
+      isOnboardingDone: true,
+    });
+    expect(mockKyPost).toHaveBeenCalledWith(
+      new URL('https://survey.example.com/api/surveys'),
+      expect.objectContaining({
+        json: {
+          emailAddress: 'dev@example.com',
+          newsletter: true,
+          project: Project.Company,
+          companyName: 'Acme',
+          companySize: CompanySize.Scale3,
+        },
+        keepalive: true,
+      })
+    );
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 });

@@ -14,6 +14,10 @@ const oss_onboarding = {
     personal: '個人プロジェクト',
     company: '会社のプロジェクト',
   },
+  project_name: {
+    label: 'プロジェクト名',
+    placeholder: '私のプロジェクト',
+  },
   company_name: {
     label: '会社名',
     placeholder: 'Acme.co',
@@ -24,6 +28,7 @@ const oss_onboarding = {
   errors: {
     email_required: 'メールアドレスは必須です',
     email_invalid: '有効なメールアドレスを入力してください',
+    project_name_too_long: 'プロジェクト名は200文字以内で入力してください',
   },
 };
 
