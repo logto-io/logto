@@ -123,13 +123,14 @@
 .recommendedTag {
   border-radius: 999px;
   color: var(--color-text-link);
-  background: rgba(93, 52, 242, 10%);
+  background: var(--color-function-n-overlay-primary-focused);
   gap: _.unit(1);
 }
 
 .recommendedTagIcon {
   width: 10px;
   height: 10px;
+  color: inherit;
   flex-shrink: 0;
 }
 
