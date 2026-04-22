@@ -35,6 +35,7 @@ import {
   buildLoginPromptUrl,
   isOriginAllowed,
   readOptionalQueryString,
+  shouldForceLoginPrompt,
   validateCustomClientMetadata,
 } from '#src/oidc/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -245,6 +246,10 @@ export default function initOidc(
               maxAge: 10 * 1000, // 10s
             }
           );
+        }
+
+        if (shouldForceLoginPrompt(params, prompt.name)) {
+          return '/' + buildLoginPromptUrl(params, sharedParams);
         }
 
         switch (prompt.name) {

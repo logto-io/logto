@@ -330,6 +330,15 @@ export const buildSharedExperienceCookie = ({
     uiLocales,
   });
 
+/**
+ * A `direct_sign_in=sso:...` request is an explicit request to authenticate with the target
+ * enterprise SSO connector. If the current OIDC prompt is already `consent`, it means an earlier
+ * login session is being reused. In that case, keep routing through the login experience so the
+ * requested SSO flow actually runs instead of silently reusing the previous authentication method.
+ */
+export const shouldForceLoginPrompt = (params: ExtraParamsObject, promptName: string): boolean =>
+  promptName === 'consent' && Boolean(params[ExtraParamsKey.DirectSignIn]?.startsWith('sso:'));
+
 // eslint-disable-next-line complexity
 export const buildLoginPromptUrl = (
   params: ExtraParamsObject,

@@ -16,6 +16,7 @@ import {
   validateCustomClientMetadata,
   buildLoginPromptUrl,
   parseSharedExperienceParams,
+  shouldForceLoginPrompt,
 } from './utils.js';
 
 describe('getConstantClientMetadata()', () => {
@@ -403,6 +404,20 @@ describe('buildLoginPromptUrl', () => {
         { appId: 'app_123', organizationId: 'org_123', uiLocales: 'fr-CA fr' }
       )
     ).toBe('sign-in?app_id=app_123&organization_id=org_123&ui_locales=fr-CA+fr');
+  });
+});
+
+describe('shouldForceLoginPrompt', () => {
+  it('should force login when direct SSO sign-in is requested during consent', () => {
+    expect(shouldForceLoginPrompt({ direct_sign_in: 'sso:connector-id' }, 'consent')).toBe(true);
+  });
+
+  it('should not force login for social direct sign-in during consent', () => {
+    expect(shouldForceLoginPrompt({ direct_sign_in: 'social:google' }, 'consent')).toBe(false);
+  });
+
+  it('should not force login when the current prompt is already login', () => {
+    expect(shouldForceLoginPrompt({ direct_sign_in: 'sso:connector-id' }, 'login')).toBe(false);
   });
 });
 
