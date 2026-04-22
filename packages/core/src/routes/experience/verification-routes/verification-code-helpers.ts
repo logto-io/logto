@@ -8,6 +8,7 @@ import {
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
@@ -69,7 +70,26 @@ type SendCodeParams = {
   interactionEvent?: InteractionEvent;
   createVerificationRecord: () => CodeVerificationRecord;
   libraries: Libraries;
+  queries: Queries;
   ctx: ExperienceInteractionRouterContext;
+};
+
+/**
+ * Check if a user exists with the given identifier (email or phone).
+ * Used to determine whether to actually deliver verification codes
+ * in the forgot-password flow, preventing account enumeration and spam.
+ */
+const hasUserWithIdentifier = async (
+  queries: Queries,
+  identifier: VerificationCodeIdentifier
+): Promise<boolean> => {
+  const { type, value } = identifier;
+
+  if (type === SignInIdentifier.Email) {
+    return queries.users.hasUserWithEmail(value);
+  }
+
+  return queries.users.hasUserWithNormalizedPhone(value);
 };
 
 /**
@@ -81,6 +101,7 @@ export const sendCode = async ({
   interactionEvent,
   createVerificationRecord,
   libraries,
+  queries,
   ctx,
 }: SendCodeParams): Promise<{ verificationId: string }> => {
   const { experienceInteraction } = ctx;
@@ -104,6 +125,15 @@ export const sendCode = async ({
     await experienceInteraction.signInExperienceValidator.guardEmailBlocklist(codeVerification);
   }
 
+  // When dev features are enabled, forgot-password requests check whether the user
+  // actually exists. For unknown identifiers we still create the passcode record
+  // (so verification returns `code_mismatch` instead of `not_found`) and keep
+  // connector/template validation, but avoid the actual message delivery.
+  const validateOnly =
+    EnvSet.values.isDevFeaturesEnabled &&
+    interactionEvent === InteractionEvent.ForgotPassword &&
+    !(await hasUserWithIdentifier(queries, identifier));
+
   // Build template context
   const templateContext = await buildVerificationCodeTemplateContext(
     libraries.passcodes,
@@ -112,12 +142,15 @@ export const sendCode = async ({
   );
 
   // Send verification code
-  await codeVerification.sendVerificationCode({
-    ...ctx.emailI18n,
-    ...templateContext,
-    /** The client IP address for rate limiting and fraud detection. */
-    ...(ctx.request.ip && { ip: ctx.request.ip }),
-  });
+  await codeVerification.sendVerificationCode(
+    {
+      ...ctx.emailI18n,
+      ...templateContext,
+      /** The client IP address for rate limiting and fraud detection. */
+      ...(ctx.request.ip && { ip: ctx.request.ip }),
+    },
+    { validateOnly }
+  );
 
   // Save state
   experienceInteraction.setVerificationRecord(codeVerification);
