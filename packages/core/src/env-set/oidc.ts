@@ -1,14 +1,14 @@
 import crypto from 'node:crypto';
 
 import type { LogtoOidcConfigType } from '@logto/schemas';
-import { LogtoOidcConfigKey } from '@logto/schemas';
+import {
+  LogtoOidcConfigKey,
+  getCurrentOidcPrivateKey,
+  getOidcProviderPrivateKeys,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { createLocalJWKSet } from 'jose';
 
-import {
-  getCurrentOidcPrivateKey,
-  getOidcProviderPrivateKeys,
-} from '#src/libraries/oidc-private-key.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
 const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {

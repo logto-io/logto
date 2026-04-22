@@ -1,6 +1,13 @@
 import {
+  getSeededOidcPrivateKeys,
+  getImmediatelyRotatedOidcPrivateKeys,
+  getRotationStateForCacheInvalidation,
+  getRotationStateForStagedRotation,
+  getStagedRotatedOidcPrivateKeys,
+  getTrimmedOidcPrivateKeys,
   LogtoOidcConfigKey,
   LogtoTenantConfigKey,
+  normalizeOidcPrivateKeys,
   type SupportedSigningKeyAlgorithm,
   logtoConfigGuards,
   type OidcConfigKey,
@@ -12,24 +19,52 @@ import type { CommonQueryMethods } from '@silverhand/slonik';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config.js';
 import { consoleLog } from '../../utils.js';
 
-import {
-  getImmediatelyRotatedOidcPrivateKeys,
-  getRotationStateForCacheInvalidation,
-  getRotationStateForStagedRotation,
-  getStagedRotatedOidcPrivateKeys,
-  getTrimmedOidcPrivateKeys,
-  normalizeOidcPrivateKeys,
-} from './oidc-private-key.js';
 import { generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
 
-export const parseRotationGracePeriod = (value?: string): number => {
+type RotateConfigResult = {
+  keys: OidcPrivateKey[] | OidcConfigKey[];
+};
+
+export const parseRotationGracePeriod = (value?: string): number | undefined => {
   if (value === undefined || value.trim() === '') {
-    return 0;
+    return;
   }
 
   const parsed = Number(value);
 
-  return Number.isInteger(parsed) && parsed >= 0 ? parsed : 0;
+  if (!Number.isInteger(parsed) || parsed < 0) {
+    throw new TypeError('Invalid PRIVATE_KEY_ROTATION_GRACE_PERIOD env value');
+  }
+
+  return parsed;
+};
+
+export const getEffectiveRotationGracePeriod = ({
+  key,
+  gracePeriod,
+  envGracePeriod,
+}: {
+  key: LogtoOidcConfigKey.PrivateKeys | LogtoOidcConfigKey.CookieKeys;
+  gracePeriod?: number;
+  envGracePeriod?: string;
+}): number => {
+  if (key === LogtoOidcConfigKey.CookieKeys) {
+    if (gracePeriod !== undefined) {
+      throw new TypeError(`${LogtoOidcConfigKey.CookieKeys} does not support grace period`);
+    }
+
+    return 0;
+  }
+
+  if (gracePeriod !== undefined) {
+    if (!Number.isInteger(gracePeriod) || gracePeriod < 0) {
+      throw new TypeError('Invalid grace period provided');
+    }
+
+    return gracePeriod;
+  }
+
+  return parseRotationGracePeriod(envGracePeriod) ?? 0;
 };
 
 const getRotationStateRow = (
@@ -60,7 +95,7 @@ export const rotateConfigKey = async ({
   key: LogtoOidcConfigKey.PrivateKeys | LogtoOidcConfigKey.CookieKeys;
   privateKeyType: SupportedSigningKeyAlgorithm;
   gracePeriod: number;
-}): Promise<OidcPrivateKey[] | OidcConfigKey[]> => {
+}): Promise<RotateConfigResult> => {
   const { rows } = await getRowsByKeys(connection, tenantId, [
     key,
     LogtoTenantConfigKey.SigningKeyRotationState,
@@ -76,13 +111,15 @@ export const rotateConfigKey = async ({
     case LogtoOidcConfigKey.PrivateKeys: {
       const parsed = logtoConfigGuards[key].safeParse(configRow?.value);
       const original = parsed.success ? parsed.data : [];
+      const hasExistingPrivateKeys = original.length > 0;
       const newPrivateKey = await generateOidcPrivateKey(privateKeyType);
-      const rotatedPrivateKeys =
-        gracePeriod === 0
+      const rotatedPrivateKeys = hasExistingPrivateKeys
+        ? gracePeriod === 0
           ? getImmediatelyRotatedOidcPrivateKeys(original, newPrivateKey)
-          : getStagedRotatedOidcPrivateKeys(original, newPrivateKey);
+          : getStagedRotatedOidcPrivateKeys(original, newPrivateKey)
+        : getSeededOidcPrivateKeys([newPrivateKey]);
       const rotationState =
-        gracePeriod === 0
+        !hasExistingPrivateKeys || gracePeriod === 0
           ? getRotationStateForCacheInvalidation(currentRotationState)
           : getRotationStateForStagedRotation(currentRotationState, gracePeriod);
 
@@ -94,7 +131,7 @@ export const rotateConfigKey = async ({
         rotationState
       );
 
-      return rotatedPrivateKeys;
+      return { keys: rotatedPrivateKeys };
     }
 
     case LogtoOidcConfigKey.CookieKeys: {
@@ -111,7 +148,7 @@ export const rotateConfigKey = async ({
         rotationState
       );
 
-      return rotatedCookieKeys;
+      return { keys: rotatedCookieKeys };
     }
   }
 };
@@ -126,7 +163,7 @@ export const trimConfigKey = async ({
   tenantId: string;
   key: LogtoOidcConfigKey.PrivateKeys | LogtoOidcConfigKey.CookieKeys;
   length: number;
-}): Promise<OidcPrivateKey[] | OidcConfigKey[]> => {
+}): Promise<RotateConfigResult> => {
   const { rows } = await getRowsByKeys(connection, tenantId, [
     key,
     LogtoTenantConfigKey.SigningKeyRotationState,
@@ -142,6 +179,7 @@ export const trimConfigKey = async ({
     case LogtoOidcConfigKey.PrivateKeys: {
       const value = normalizeOidcPrivateKeys(logtoConfigGuards[key].parse(configRow.value));
       const trimmedPrivateKeys = getTrimmedOidcPrivateKeys(value, length);
+      const rotationState = getRotationStateForCacheInvalidation(currentRotationState);
 
       if (trimmedPrivateKeys.length === 0) {
         consoleLog.fatal(
@@ -154,14 +192,15 @@ export const trimConfigKey = async ({
         connection,
         tenantId,
         LogtoTenantConfigKey.SigningKeyRotationState,
-        getRotationStateForCacheInvalidation(currentRotationState)
+        rotationState
       );
 
-      return trimmedPrivateKeys;
+      return { keys: trimmedPrivateKeys };
     }
 
     case LogtoOidcConfigKey.CookieKeys: {
       const value = logtoConfigGuards[key].parse(configRow.value);
+      const rotationState = getRotationStateForCacheInvalidation(currentRotationState);
 
       if (value.length - length < 1) {
         consoleLog.fatal(
@@ -175,10 +214,10 @@ export const trimConfigKey = async ({
         connection,
         tenantId,
         LogtoTenantConfigKey.SigningKeyRotationState,
-        getRotationStateForCacheInvalidation(currentRotationState)
+        rotationState
       );
 
-      return trimmedCookieKeys;
+      return { keys: trimmedCookieKeys };
     }
   }
 };

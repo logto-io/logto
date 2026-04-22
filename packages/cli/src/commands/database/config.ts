@@ -14,7 +14,11 @@ import { createPoolFromConfig } from '../../database.js';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config.js';
 import { consoleLog } from '../../utils.js';
 
-import { parseRotationGracePeriod, rotateConfigKey, trimConfigKey } from './config-rotation.js';
+import {
+  getEffectiveRotationGracePeriod,
+  rotateConfigKey,
+  trimConfigKey,
+} from './config-rotation.js';
 
 const validKeysDisplay = chalk.green(logtoConfigKeys.join(', '));
 
@@ -191,24 +195,28 @@ const rotateConfig: CommandModule<
       }),
   handler: async ({ key, tenantId, type, gracePeriod }) => {
     const keyType = type.toUpperCase();
-    const effectiveGracePeriod =
-      gracePeriod ?? parseRotationGracePeriod(process.env.PRIVATE_KEY_ROTATION_GRACE_PERIOD);
     const privateKeyType =
       key === LogtoOidcConfigKey.PrivateKeys
         ? getValidatedPrivateKeyType(keyType)
         : SupportedSigningKeyAlgorithm.EC;
     validateRotateKey(key);
 
-    if (key === LogtoOidcConfigKey.PrivateKeys) {
-      if (!Number.isInteger(effectiveGracePeriod) || effectiveGracePeriod < 0) {
-        consoleLog.fatal('Invalid grace period provided');
+    const effectiveGracePeriod = (() => {
+      try {
+        return getEffectiveRotationGracePeriod({
+          key,
+          gracePeriod,
+          envGracePeriod: process.env.PRIVATE_KEY_ROTATION_GRACE_PERIOD,
+        });
+      } catch (error) {
+        return consoleLog.fatal(
+          error instanceof Error ? error.message : 'Invalid grace period provided'
+        );
       }
-    } else if (gracePeriod !== undefined && gracePeriod !== 0) {
-      consoleLog.fatal(`${LogtoOidcConfigKey.CookieKeys} does not support grace period`);
-    }
+    })();
 
     const pool = await createPoolFromConfig();
-    const rotated = await pool.transaction(async (connection) =>
+    const { keys: rotated } = await pool.transaction(async (connection) =>
       rotateConfigKey({
         connection,
         tenantId,
@@ -252,7 +260,7 @@ const trimConfig: CommandModule<unknown, { key: string; length: number; tenantId
     }
 
     const pool = await createPoolFromConfig();
-    const trimmed = await pool.transaction(async (connection) =>
+    const { keys: trimmed } = await pool.transaction(async (connection) =>
       trimConfigKey({
         connection,
         tenantId,

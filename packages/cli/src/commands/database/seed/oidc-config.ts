@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 
 import type { LogtoOidcConfigType } from '@logto/schemas';
-import { LogtoOidcConfigKey, logtoConfigGuards } from '@logto/schemas';
+import { LogtoOidcConfigKey, getSeededOidcPrivateKeys, logtoConfigGuards } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { getEnvAsStringArray } from '@silverhand/essentials';
 import type { DatabaseTransactionConnection } from '@silverhand/slonik';
@@ -10,7 +10,6 @@ import { z } from 'zod';
 
 import { getRowsByKeys, updateValueByKey } from '../../../queries/logto-config.js';
 import { consoleLog } from '../../../utils.js';
-import { getSeededOidcPrivateKeys } from '../oidc-private-key.js';
 import {
   buildOidcKeyFromRawString,
   generateOidcCookieKey,

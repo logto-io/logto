@@ -10,6 +10,8 @@ import {
   LogtoOidcConfigKey,
   cloudApiIndicator,
   cloudConnectionDataGuard,
+  normalizeOidcPrivateKeys,
+  rotateOidcPrivateKeyStatuses,
   idTokenConfigGuard,
   jwtCustomizerConfigGuard,
   logtoOidcConfigGuard,
@@ -19,10 +21,6 @@ import chalk from 'chalk';
 import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import {
-  normalizeOidcPrivateKeys,
-  rotateOidcPrivateKeyStatuses,
-} from '#src/libraries/oidc-private-key.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import type Queries from '#src/tenants/Queries.js';
 
