@@ -2,6 +2,11 @@
 
 .wrapper {
   padding: _.unit(4) _.unit(4) 0;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 0, var(--color-layer-1) _.unit(4));
 }
 
 .withDevStatusOffset {
