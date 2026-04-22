@@ -180,8 +180,7 @@ function OssOnboarding() {
                     disabled={isSubmitting}
                     error={errors.companyName?.message}
                     {...register('companyName', {
-                      validate: (value) =>
-                        Boolean(value.trim()) || t('oss_onboarding.errors.company_name_required'),
+                      validate: (value) => Boolean(value.trim()) || t('general.required'),
                     })}
                   />
                 </FormField>
@@ -190,8 +189,7 @@ function OssOnboarding() {
                     name="companySize"
                     control={control}
                     rules={{
-                      validate: (value) =>
-                        Boolean(value) || t('oss_onboarding.errors.company_size_required'),
+                      validate: (value) => Boolean(value) || t('general.required'),
                     }}
                     render={({ field: { onChange, value, name } }) => (
                       <>
