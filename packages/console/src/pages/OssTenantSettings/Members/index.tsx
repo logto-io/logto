@@ -25,6 +25,7 @@ function Members() {
           </div>
         </div>
         <Button
+          className={styles.action}
           type="primary"
           title={copyKeys.action}
           trailingIcon={<ExternalLinkIcon />}
