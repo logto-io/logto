@@ -41,6 +41,10 @@
   color: var(--color-text-secondary);
 }
 
+.action {
+  margin-top: _.unit(2);
+}
+
 @media screen and (max-width: 768px) {
   .card {
     padding: _.unit(6);
