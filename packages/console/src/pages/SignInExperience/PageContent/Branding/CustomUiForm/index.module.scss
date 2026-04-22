@@ -12,9 +12,9 @@
   align-items: center;
   gap: _.unit(4);
   padding: _.unit(4);
-  border: 1px solid rgba(93, 52, 242, 12%);
+  border: 1px solid var(--color-overlay-primary-pressed);
   border-radius: _.unit(3);
-  background: rgba(93, 52, 242, 4%);
+  background: var(--color-overlay-primary-subtle);
 
   .ossCardContent {
     display: flex;
@@ -31,7 +31,7 @@
     height: 40px;
     flex-shrink: 0;
     border-radius: _.unit(2);
-    background: rgba(93, 52, 242, 8%);
+    background: var(--color-overlay-primary-hover);
 
     > img {
       width: 20px;
