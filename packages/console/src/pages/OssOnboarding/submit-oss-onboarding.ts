@@ -4,7 +4,11 @@ import ky from 'ky';
 
 import { isDevFeaturesEnabled, ossSurveyEndpoint } from '@/consts/env';
 
-import { getOssOnboardingSubmitPayload, type OssOnboardingFormData } from './utils';
+import {
+  getBaseOssOnboardingPayload,
+  getOssOnboardingSurveyPayload,
+  type OssOnboardingFormData,
+} from './utils';
 
 const ossSurveyApi = ky.create({
   throwHttpErrors: false,
@@ -67,7 +71,8 @@ export const submitOssOnboarding = async ({
   navigate,
   update,
 }: SubmitOssOnboardingOptions) => {
-  const questionnaire = getOssOnboardingSubmitPayload(formData);
+  const questionnaire = getBaseOssOnboardingPayload(formData);
+  const surveyPayload = getOssOnboardingSurveyPayload(formData);
   void trySafe(async () =>
     update({
       questionnaire,
@@ -77,7 +82,9 @@ export const submitOssOnboarding = async ({
 
   // Intentionally decoupled: survey reporting and onboarding customData persistence
   // are both best-effort side effects for one-time data collection.
-  reportOssSurvey(questionnaire);
+  if (surveyPayload) {
+    reportOssSurvey(surveyPayload);
+  }
 
   navigate('/get-started', { replace: true });
 };

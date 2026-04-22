@@ -1,8 +1,11 @@
 import { CompanySize, Project, type OssSurveyReportPayload } from '@logto/schemas';
 
 import {
+  getBaseOssOnboardingPayload,
   getOssOnboardingDefaultValues,
-  getOssOnboardingSubmitPayload,
+  getOssOnboardingSurveyPayload,
+  isValidOssOnboardingEmailAddress,
+  normalizeOssOnboardingEmailAddress,
   shouldRequireCompanyFields,
 } from './utils';
 
@@ -14,7 +17,7 @@ describe('OSS onboarding form utils', () => {
       project: Project.Company,
       projectName: '',
       companyName: '',
-      companySize: undefined,
+      companySize: CompanySize.Scale3,
     });
   });
 
@@ -23,8 +26,18 @@ describe('OSS onboarding form utils', () => {
     expect(shouldRequireCompanyFields(Project.Personal)).toBe(false);
   });
 
-  test('drops company-only values from the submit payload for personal projects', () => {
-    const payload = getOssOnboardingSubmitPayload({
+  test('normalizes and validates OSS onboarding email addresses', () => {
+    expect(normalizeOssOnboardingEmailAddress(' Dev@Example.COM ')).toBe('dev@example.com');
+    expect(normalizeOssOnboardingEmailAddress('not-an-email')).toBeUndefined();
+    expect(normalizeOssOnboardingEmailAddress('')).toBeUndefined();
+
+    expect(isValidOssOnboardingEmailAddress('Dev@Example.COM')).toBe(true);
+    expect(isValidOssOnboardingEmailAddress('not-an-email')).toBe(false);
+    expect(isValidOssOnboardingEmailAddress('')).toBe(false);
+  });
+
+  test('drops company-only values from the questionnaire payload for personal projects', () => {
+    const payload = getBaseOssOnboardingPayload({
       emailAddress: 'Dev@Example.COM',
       newsletter: true,
       project: Project.Personal,
@@ -38,16 +51,34 @@ describe('OSS onboarding form utils', () => {
       newsletter: true,
       project: Project.Personal,
       projectName: 'My starter app',
-    } satisfies OssSurveyReportPayload);
+    });
   });
 
-  test('keeps company-only values in the submit payload for company projects', () => {
-    const payload = getOssOnboardingSubmitPayload({
+  test('omits email-related fields from the questionnaire payload when email is missing', () => {
+    const payload = getBaseOssOnboardingPayload({
+      emailAddress: '',
+      newsletter: true,
+      project: Project.Company,
+      projectName: '  OSS Portal  ',
+      companyName: '  Acme  ',
+      companySize: CompanySize.Scale3,
+    });
+
+    expect(payload).toEqual({
+      project: Project.Company,
+      projectName: 'OSS Portal',
+      companyName: 'Acme',
+      companySize: CompanySize.Scale3,
+    });
+  });
+
+  test('keeps company-only values in the questionnaire payload for company projects', () => {
+    const payload = getBaseOssOnboardingPayload({
       emailAddress: 'Dev@Example.COM',
       newsletter: false,
       project: Project.Company,
-      projectName: '  OSS Portal ',
-      companyName: 'Acme',
+      projectName: '  OSS Portal  ',
+      companyName: '  Acme  ',
       companySize: CompanySize.Scale3,
     });
 
@@ -58,11 +89,40 @@ describe('OSS onboarding form utils', () => {
       projectName: 'OSS Portal',
       companyName: 'Acme',
       companySize: CompanySize.Scale3,
+    });
+  });
+
+  test('builds a survey payload only when the email address is valid', () => {
+    expect(
+      getOssOnboardingSurveyPayload({
+        emailAddress: '',
+        newsletter: true,
+        project: Project.Personal,
+        projectName: '',
+        companyName: '',
+        companySize: undefined,
+      })
+    ).toBeUndefined();
+
+    expect(
+      getOssOnboardingSurveyPayload({
+        emailAddress: 'Dev@Example.COM',
+        newsletter: false,
+        project: Project.Personal,
+        projectName: '  My starter app  ',
+        companyName: 'Should be ignored',
+        companySize: CompanySize.Scale3,
+      })
+    ).toEqual({
+      emailAddress: 'dev@example.com',
+      newsletter: false,
+      project: Project.Personal,
+      projectName: 'My starter app',
     } satisfies OssSurveyReportPayload);
   });
 
   test('omits project name when input contains only whitespace', () => {
-    const payload = getOssOnboardingSubmitPayload({
+    const payload = getBaseOssOnboardingPayload({
       emailAddress: 'Dev@Example.COM',
       newsletter: false,
       project: Project.Personal,
@@ -75,6 +135,25 @@ describe('OSS onboarding form utils', () => {
       emailAddress: 'dev@example.com',
       newsletter: false,
       project: Project.Personal,
-    } satisfies OssSurveyReportPayload);
+    });
+  });
+
+  test('omits company name when input contains only whitespace', () => {
+    const payload = getBaseOssOnboardingPayload({
+      emailAddress: 'Dev@Example.COM',
+      newsletter: true,
+      project: Project.Company,
+      projectName: ' OSS Portal ',
+      companyName: '   ',
+      companySize: CompanySize.Scale3,
+    });
+
+    expect(payload).toEqual({
+      emailAddress: 'dev@example.com',
+      newsletter: true,
+      project: Project.Company,
+      projectName: 'OSS Portal',
+      companySize: CompanySize.Scale3,
+    });
   });
 });
