@@ -61,7 +61,6 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
                 type="primary"
                 size="large"
                 title="get_started.oss_cloud.try.action"
-                className={styles.bannerActionButton}
                 trailingIcon={<ExternalLinkIcon className={styles.bannerActionIcon} />}
                 onClick={() => {
                   window.open(logtoCloudConsoleLink, '_blank', 'noopener,noreferrer');

@@ -131,7 +131,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 22px;
-  padding: 2px _.unit(2);
+  padding: _.unit(0.5) _.unit(2);
   border-radius: 999px;
   color: var(--color-text-link);
   background: var(--color-function-n-overlay-primary-focused);
@@ -160,10 +160,6 @@
   margin-left: auto;
   margin-right: _.unit(3);
   flex-shrink: 0;
-}
-
-.bannerActionButton {
-  border-radius: _.unit(2);
 }
 
 .bannerActionIcon {
