@@ -2,6 +2,7 @@
 "@logto/core": patch
 ---
 
-avoid delivering forgot-password verification codes to unknown accounts when dev features are enabled
+return a unified verification_code.code_mismatch error in forgot-password flows to prevent account enumeration
 
-This keeps connector and template validation while skipping message delivery for unknown email or phone identifiers in forgot-password flows.
+Forgot-password verification no longer exposes whether an email or phone exists through differing
+error responses.
