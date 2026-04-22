@@ -14,7 +14,7 @@ describe('OSS onboarding form utils', () => {
       newsletter: false,
       project: Project.Company,
       companyName: '',
-      companySize: undefined,
+      companySize: CompanySize.Scale3,
     });
   });
 
