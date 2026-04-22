@@ -73,14 +73,14 @@
   position: relative;
   border: 1px solid rgba(93, 52, 242, 20%);
   border-radius: 12px;
-  background-color: var(--color-layer-1);
-  background-image:
+  background:
     linear-gradient(
       173.3deg,
       rgba(93, 52, 242, 6%) 0%,
       rgba(250, 171, 255, 8%) 50%,
       rgba(93, 52, 242, 4%) 100%
-    );
+    ),
+    var(--color-overlay-primary-hover);
 }
 
 .ossCloudBannerContent {
@@ -179,12 +179,17 @@
   flex-shrink: 0;
 }
 
+.dismissButtonIcon {
+  &.dismissButtonIcon > svg {
+    color: var(--color-text);
+    opacity: 35%;
+  }
+}
+
 .dismissIcon {
   display: block;
   width: 16px;
   height: 16px;
-  color: var(--color-text);
-  opacity: 35%;
 }
 
 .card {

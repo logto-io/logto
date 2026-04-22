@@ -73,6 +73,7 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
             size="small"
             aria-label={t('general.close')}
             className={styles.dismissButton}
+            iconClassName={styles.dismissButtonIcon}
             onClick={onDismissBanner}
           >
             <CloseIcon className={styles.dismissIcon} />
