@@ -6,7 +6,8 @@
   position: sticky;
   bottom: 0;
   z-index: 1;
-  background: linear-gradient(180deg, transparent 0, var(--color-layer-1) _.unit(4));
+  // Keep the fade aligned with the sidebar background instead of forcing card-like layer color.
+  background: linear-gradient(180deg, transparent 0, var(--color-base) _.unit(4));
 }
 
 .withDevStatusOffset {
