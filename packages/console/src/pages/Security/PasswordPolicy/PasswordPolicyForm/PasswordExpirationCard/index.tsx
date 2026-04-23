@@ -29,8 +29,6 @@ function PasswordExpirationCard({ hasAvailableForgotPasswordMethod }: Props) {
   const isEnabled = watch('isPasswordExpirationEnabled');
   const expirationDays = watch('passwordExpirationDays');
 
-  const isToggleDisabled = !hasAvailableForgotPasswordMethod;
-
   return (
     <FormCard
       title="security.password_policy.password_expiration"
@@ -42,7 +40,7 @@ function PasswordExpirationCard({ hasAvailableForgotPasswordMethod }: Props) {
       >
         <Switch
           label={t('enable_password_expiration_description')}
-          disabled={isToggleDisabled}
+          disabled={!hasAvailableForgotPasswordMethod && !isEnabled}
           {...register('isPasswordExpirationEnabled')}
         />
       </FormField>
