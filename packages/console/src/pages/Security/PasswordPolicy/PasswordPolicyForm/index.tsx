@@ -78,7 +78,7 @@ function PasswordPolicyForm({ data }: Props) {
     })
   );
 
-  const { hasForgotPasswordMethods } = data;
+  const { hasAvailableForgotPasswordMethod } = data;
 
   return (
     <>
@@ -209,7 +209,9 @@ function PasswordPolicyForm({ data }: Props) {
               )}
             </FormField>
           </FormCard>
-          <PasswordExpirationCard hasForgotPasswordMethods={hasForgotPasswordMethods} />
+          <PasswordExpirationCard
+            hasAvailableForgotPasswordMethod={hasAvailableForgotPasswordMethod}
+          />
         </DetailsForm>
       </FormProvider>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />

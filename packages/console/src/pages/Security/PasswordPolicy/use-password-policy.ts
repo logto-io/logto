@@ -1,9 +1,10 @@
 import { passwordPolicyGuard, type PasswordPolicy } from '@logto/core-kit';
-import { type SignInExperience } from '@logto/schemas';
+import { ConnectorType, ForgotPasswordMethod, type SignInExperience } from '@logto/schemas';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
 import { type RequestError } from '@/hooks/use-api';
+import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
 /** The parsed password policy object. All properties are required. */
 export type PasswordPolicyFormData = PasswordPolicy & {
@@ -25,23 +26,21 @@ export type PasswordPolicyFormData = PasswordPolicy & {
   passwordExpirationDays: number;
   /** Number of days before expiry to warn users. 0 means no reminder. */
   passwordReminderDays: number;
-  /** Whether forgot password methods are configured. */
-  hasForgotPasswordMethods: boolean;
+  /** Whether some forgot password method are configured. */
+  hasAvailableForgotPasswordMethod: boolean;
 };
 
 export const passwordPolicyFormParser = {
   fromSignInExperience: ({
     passwordPolicy,
     passwordExpiration,
-    forgotPasswordMethods,
-  }: SignInExperience): PasswordPolicyFormData => ({
+  }: SignInExperience): Omit<PasswordPolicyFormData, 'hasAvailableForgotPasswordMethod'> => ({
     ...passwordPolicyGuard.parse(passwordPolicy),
     customWords: passwordPolicy.rejects?.words?.join('\n') ?? '',
     isCustomWordsEnabled: Boolean(passwordPolicy.rejects?.words?.length),
     isPasswordExpirationEnabled: passwordExpiration.enabled ?? false,
     passwordExpirationDays: passwordExpiration.validPeriodDays ?? 90,
     passwordReminderDays: passwordExpiration.reminderPeriodDays ?? 0,
-    hasForgotPasswordMethods: Boolean(forgotPasswordMethods?.length),
   }),
   toSignInExperience: (
     formData: PasswordPolicyFormData
@@ -52,7 +51,7 @@ export const passwordPolicyFormParser = {
       isPasswordExpirationEnabled,
       passwordExpirationDays,
       passwordReminderDays,
-      hasForgotPasswordMethods: _,
+      hasAvailableForgotPasswordMethod: _,
       ...passwordPolicy
     } = formData;
 
@@ -80,16 +79,38 @@ const usePasswordPolicy = () => {
     'api/sign-in-exp'
   );
 
+  const { isConnectorTypeEnabled, ready: connectorsReady } = useEnabledConnectorTypes();
+
   const formData = useMemo<PasswordPolicyFormData | undefined>(() => {
     if (!data) {
       return;
     }
 
-    return passwordPolicyFormParser.fromSignInExperience(data);
-  }, [data]);
+    const { forgotPasswordMethods } = data;
+
+    const hasEmailConnector = isConnectorTypeEnabled(ConnectorType.Email);
+    const hasSmsConnector = isConnectorTypeEnabled(ConnectorType.Sms);
+
+    const hasEmailForgotPasswordMethod =
+      Boolean(forgotPasswordMethods?.includes(ForgotPasswordMethod.EmailVerificationCode)) &&
+      hasEmailConnector;
+
+    const hasSmsForgotPasswordMethod =
+      Boolean(forgotPasswordMethods?.includes(ForgotPasswordMethod.PhoneVerificationCode)) &&
+      hasSmsConnector;
+
+    const formData: PasswordPolicyFormData = {
+      ...passwordPolicyFormParser.fromSignInExperience(data),
+      hasAvailableForgotPasswordMethod: forgotPasswordMethods
+        ? hasEmailForgotPasswordMethod || hasSmsForgotPasswordMethod
+        : hasEmailConnector || hasSmsConnector,
+    };
+
+    return formData;
+  }, [data, isConnectorTypeEnabled]);
 
   return {
-    isLoading: isLoading && !error,
+    isLoading: (isLoading || !connectorsReady) && !error,
     mutate,
     error,
     data: formData,

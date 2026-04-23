@@ -11,10 +11,10 @@ import { type PasswordPolicyFormData } from '../../use-password-policy';
 import styles from '../index.module.scss';
 
 type Props = {
-  readonly hasForgotPasswordMethods: boolean;
+  readonly hasAvailableForgotPasswordMethod: boolean;
 };
 
-function PasswordExpirationCard({ hasForgotPasswordMethods }: Props) {
+function PasswordExpirationCard({ hasAvailableForgotPasswordMethod }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.security.password_policy',
   });
@@ -29,7 +29,7 @@ function PasswordExpirationCard({ hasForgotPasswordMethods }: Props) {
   const isEnabled = watch('isPasswordExpirationEnabled');
   const expirationDays = watch('passwordExpirationDays');
 
-  const isToggleDisabled = !hasForgotPasswordMethods;
+  const isToggleDisabled = !hasAvailableForgotPasswordMethod;
 
   return (
     <FormCard
