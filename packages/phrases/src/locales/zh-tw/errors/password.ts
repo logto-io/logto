@@ -5,7 +5,6 @@ const password = {
   invalid_legacy_password_format: '無效的舊密碼格式。',
   unsupported_legacy_hash_algorithm: '不支援的舊雜湊演算法：{{algorithm}}。',
   expired: '您的密碼已過期。請重置密碼以繼續。',
-  expiration_reminder: '您的密碼將在 {{daysUntilExpiration}} 天後過期。請考慮重置。',
 };
 
 export default Object.freeze(password);

@@ -105,11 +105,8 @@ const description = {
   identifier_register_description:
     'أدخل {{types, list(type: disjunction;)}} الخاص بك لإنشاء حساب جديد.',
   all_account_creation_options: 'جميع خيارات إنشاء الحساب',
-  password_expired: 'انتهت صلاحية كلمة المرور الخاصة بك',
-  password_expired_description:
-    'انتهت صلاحية كلمة المرور الخاصة بك ويجب إعادة تعيينها قبل تسجيل الدخول.',
-  password_expiration_reminder: 'صلاحية كلمة المرور الخاصة بك ستنتهي قريباً',
-  password_expiration_reminder_description:
+  password_expired: 'انتهت صلاحية كلمة المرور الخاصة بك ويجب إعادة تعيينها قبل تسجيل الدخول.',
+  password_expiration_reminder:
     'ستنتهي صلاحية كلمة المرور الخاصة بك خلال {{days}} يوم (أيام). نوصي بإعادة تعيينها الآن.',
   password_expiration_reminder_skip: 'تخطي الآن',
   password_expiration_reset: 'إعادة تعيين كلمة المرور',

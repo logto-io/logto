@@ -91,6 +91,8 @@ const security = {
     enable_password_expiration: '비밀번호 만료 활성화',
     enable_password_expiration_description:
       '사용자가 주기적으로 비밀번호를 재설정하도록 요구합니다. 비밀번호 변경 날짜가 기록되지 않은 기존 사용자는 계정 생성 날짜를 기준으로 평가됩니다.',
+    enable_password_expiration_tip:
+      '로그인 환경에서 유효한 커넥터가 연결된 비밀번호 찾기 방법을 하나 이상 구성한 후에만 비밀번호 만료를 활성화할 수 있습니다.',
     expiration_period: '비밀번호 유효 기간 (일)',
     expiration_period_description: '비밀번호가 만료되기 전까지 유효한 일수입니다.',
     expiration_period_error: '비밀번호 유효 기간은 최소 1일이어야 합니다.',

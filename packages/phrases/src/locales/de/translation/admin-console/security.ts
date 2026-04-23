@@ -94,6 +94,8 @@ const security = {
     enable_password_expiration: 'Passwortablauf aktivieren',
     enable_password_expiration_description:
       'Benutzer müssen ihr Passwort regelmäßig zurücksetzen. Bestehende Benutzer ohne aufgezeichnetes Datum der Passwortänderung werden anhand ihres Erstellungsdatums bewertet.',
+    enable_password_expiration_tip:
+      'Du kannst den Passwortablauf erst aktivieren, nachdem du in der Anmeldeerfahrung mindestens eine Methode zum Zurücksetzen des Passworts mit einem gültigen Connector konfiguriert hast.',
     expiration_period: 'Passwort-Gültigkeitsdauer (Tage)',
     expiration_period_description:
       'Anzahl der Tage, die ein Passwort gültig bleibt, bevor es abläuft.',

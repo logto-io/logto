@@ -103,11 +103,8 @@ const description = {
   identifier_register_description:
     'Yeni bir hesap oluşturmak için {{types, list(type: disjunction;)}} girin.',
   all_account_creation_options: 'Tüm hesap oluşturma seçenekleri',
-  password_expired: 'Şifrenizin süresi doldu',
-  password_expired_description:
-    'Şifrenizin süresi doldu ve giriş yapmadan önce sıfırlanması gerekiyor.',
-  password_expiration_reminder: 'Şifrenizin süresi yakında doluyor',
-  password_expiration_reminder_description:
+  password_expired: 'Şifrenizin süresi doldu ve giriş yapmadan önce sıfırlanması gerekiyor.',
+  password_expiration_reminder:
     'Şifrenizin süresi {{days}} gün içinde dolacak. Şimdi sıfırlamanızı öneririz.',
   password_expiration_reminder_skip: 'Şimdilik atla',
   password_expiration_reset: 'Şifreyi sıfırla',

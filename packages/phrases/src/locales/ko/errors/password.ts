@@ -5,8 +5,6 @@ const password = {
   invalid_legacy_password_format: '잘못된 레거시 비밀번호 형식입니다.',
   unsupported_legacy_hash_algorithm: '지원되지 않는 레거시 해시 알고리즘: {{algorithm}}.',
   expired: '비밀번호가 만료되었습니다. 계속하려면 비밀번호를 재설정하세요.',
-  expiration_reminder:
-    '비밀번호가 {{daysUntilExpiration}}일 후에 만료됩니다. 재설정을 고려해 보세요.',
 };
 
 export default Object.freeze(password);

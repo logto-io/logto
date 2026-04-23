@@ -36,6 +36,8 @@ const sign_in_experiences = {
     'Invalid custom email blocklist items: {{items, list(type:conjunction)}}. Each item must be a valid email address or email domain, e.g., foo@example.com or @example.com.',
   forgot_password_method_requires_connector:
     'Forgot password method requires a corresponding {{method}} connector to be configured.',
+  password_expiration_requires_forgot_password:
+    'Password expiration requires at least one forgot password method with a valid connector.',
   password_expiration_not_enabled:
     'Password expiration policy is not enabled. Enable it in the sign-in experience settings before expiring passwords.',
   password_expiration_invalid_period_days:

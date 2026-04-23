@@ -6,8 +6,6 @@ const password = {
   invalid_legacy_password_format: 'Ungültiges Legacy-Passwortformat.',
   unsupported_legacy_hash_algorithm: 'Nicht unterstützter Legacy-Hash-Algorithmus: {{algorithm}}.',
   expired: 'Ihr Passwort ist abgelaufen. Bitte setzen Sie Ihr Passwort zurück, um fortzufahren.',
-  expiration_reminder:
-    'Ihr Passwort läuft in {{daysUntilExpiration}} Tag(en) ab. Bitte erwägen Sie, es zurückzusetzen.',
 };
 
 export default Object.freeze(password);

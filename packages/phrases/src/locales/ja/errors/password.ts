@@ -5,8 +5,6 @@ const password = {
   invalid_legacy_password_format: '無効なレガシーパスワード形式です。',
   unsupported_legacy_hash_algorithm: '未対応のレガシーハッシュアルゴリズム：{{algorithm}}。',
   expired: 'パスワードの期限が切れました。続行するにはパスワードをリセットしてください。',
-  expiration_reminder:
-    'パスワードの期限が {{daysUntilExpiration}} 日後に切れます。リセットをご検討ください。',
 };
 
 export default Object.freeze(password);

@@ -95,6 +95,8 @@ const security = {
     enable_password_expiration: 'Abilita la scadenza della password',
     enable_password_expiration_description:
       'Richiedi agli utenti di reimpostare periodicamente la password. Gli utenti esistenti senza una data di modifica della password registrata verranno valutati in base alla data di creazione del loro account.',
+    enable_password_expiration_tip:
+      'Puoi abilitare la scadenza della password solo dopo aver configurato almeno un metodo di recupero password con un connettore valido nell’esperienza di accesso.',
     expiration_period: 'Periodo di validità della password (giorni)',
     expiration_period_description:
       'Numero di giorni in cui una password rimane valida prima di scadere.',

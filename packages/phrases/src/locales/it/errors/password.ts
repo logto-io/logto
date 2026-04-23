@@ -6,8 +6,6 @@ const password = {
   invalid_legacy_password_format: 'Formato password legacy non valido.',
   unsupported_legacy_hash_algorithm: 'Algoritmo hash legacy non supportato: {{algorithm}}.',
   expired: 'La tua password è scaduta. Reimposta la password per continuare.',
-  expiration_reminder:
-    'La tua password scadrà tra {{daysUntilExpiration}} giorno/i. Considera di reimpostarla.',
 };
 
 export default Object.freeze(password);

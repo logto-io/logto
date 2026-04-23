@@ -5,8 +5,6 @@ const password = {
   invalid_legacy_password_format: 'รูปแบบรหัสผ่านเก่าไม่ถูกต้อง',
   unsupported_legacy_hash_algorithm: 'ไม่รองรับอัลกอริทึมแฮชแบบเก่า: {{algorithm}}',
   expired: 'รหัสผ่านของคุณหมดอายุแล้ว โปรดรีเซ็ตรหัสผ่านเพื่อดำเนินการต่อ',
-  expiration_reminder:
-    'รหัสผ่านของคุณจะหมดอายุในอีก {{daysUntilExpiration}} วัน โปรดพิจารณารีเซ็ตรหัสผ่าน',
 };
 
 export default Object.freeze(password);

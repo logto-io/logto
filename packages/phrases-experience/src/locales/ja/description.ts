@@ -104,11 +104,8 @@ const description = {
   identifier_register_description:
     '{{types, list(type: disjunction;)}}を入力して新しいアカウントを作成します。',
   all_account_creation_options: 'すべてのアカウント作成オプション',
-  password_expired: 'パスワードの期限が切れました',
-  password_expired_description:
-    'パスワードの期限が切れました。サインインする前にリセットする必要があります。',
-  password_expiration_reminder: 'パスワードの期限がまもなく切れます',
-  password_expiration_reminder_description:
+  password_expired: 'パスワードの期限が切れました。サインインする前にリセットする必要があります。',
+  password_expiration_reminder:
     'パスワードの期限が {{days}} 日後に切れます。今すぐリセットすることをお勧めします。',
   password_expiration_reminder_skip: '今はスキップ',
   password_expiration_reset: 'パスワードをリセット',
