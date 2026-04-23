@@ -51,19 +51,15 @@ export const parseTimeoutEnv = (value?: string): Optional<number | 'DISABLE_TIME
 };
 
 export const parseNonNegativeIntegerEnv = (value?: string, fallback = 0): number => {
-  if (value === undefined) {
-    return fallback;
-  }
+  const normalized = value?.trim();
 
-  const normalized = value.trim();
-
-  if (normalized === '') {
+  if (!normalized) {
     return fallback;
   }
 
   const parsed = Number(normalized);
 
-  return Number.isInteger(parsed) && parsed >= 0 ? parsed : fallback;
+  return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : fallback;
 };
 
 export default class GlobalValues {

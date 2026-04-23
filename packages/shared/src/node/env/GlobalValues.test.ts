@@ -29,13 +29,14 @@ describe('parseTimeoutEnv', () => {
 });
 
 describe('parseNonNegativeIntegerEnv', () => {
-  it('returns the fallback for missing, blank, negative, decimal, or invalid values', () => {
+  it('returns the fallback for missing, blank, negative, decimal, invalid, or unsafe integer values', () => {
     expect(parseNonNegativeIntegerEnv()).toBe(0);
     expect(parseNonNegativeIntegerEnv('')).toBe(0);
     expect(parseNonNegativeIntegerEnv('   ')).toBe(0);
     expect(parseNonNegativeIntegerEnv('-1')).toBe(0);
     expect(parseNonNegativeIntegerEnv('1.5')).toBe(0);
     expect(parseNonNegativeIntegerEnv('abc')).toBe(0);
+    expect(parseNonNegativeIntegerEnv('9007199254740992')).toBe(0);
     expect(parseNonNegativeIntegerEnv('abc', 30)).toBe(30);
   });
 
