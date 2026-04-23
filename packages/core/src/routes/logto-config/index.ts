@@ -17,6 +17,7 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import defaults from '#src/oidc/defaults.js';
@@ -227,6 +228,8 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
       const { keyType } = ctx.guard.params;
       const { signingKeyAlgorithm, rotationGracePeriod } = ctx.guard.body;
       const configKey = getOidcConfigKeyDatabaseColumnName(keyType);
+      const effectiveRotationGracePeriod =
+        rotationGracePeriod ?? EnvSet.values.privateKeyRotationGracePeriod;
 
       if (configKey !== LogtoOidcConfigKey.PrivateKeys && rotationGracePeriod !== undefined) {
         throw new RequestError({ code: 'oidc.invalid_request', status: 422 });
@@ -239,7 +242,10 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
 
       const updatedKeys =
         configKey === LogtoOidcConfigKey.PrivateKeys
-          ? await oidcPrivateKeys.rotatePrivateSigningKeys(newPrivateKey, rotationGracePeriod)
+          ? await oidcPrivateKeys.rotatePrivateSigningKeys(
+              newPrivateKey,
+              effectiveRotationGracePeriod
+            )
           : await (async () => {
               const configs = await getOidcConfigs(getConsoleLogFromContext(ctx));
               const existingKeys = configs[configKey];

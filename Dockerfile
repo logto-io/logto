@@ -48,8 +48,10 @@ RUN rm -rf .scripts pnpm-*.yaml packages/cloud
 FROM node:22-alpine AS app
 WORKDIR /etc/logto
 ARG logto_oss_survey_endpoint=
+ARG private_key_rotation_grace_period=0
 # Default to empty so external survey relaying stays opt-in for controlled builds/environments.
 ENV LOGTO_OSS_SURVEY_ENDPOINT=${logto_oss_survey_endpoint}
+ENV PRIVATE_KEY_ROTATION_GRACE_PERIOD=${private_key_rotation_grace_period}
 COPY --from=builder /etc/logto .
 RUN mkdir -p /etc/logto/packages/cli/alteration-scripts && chmod g+w /etc/logto/packages/cli/alteration-scripts
 EXPOSE 3001
