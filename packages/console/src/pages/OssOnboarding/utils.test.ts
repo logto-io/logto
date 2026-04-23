@@ -54,6 +54,39 @@ describe('OSS onboarding form utils', () => {
     });
   });
 
+  test('handles missing company fields for personal project payloads', () => {
+    const payload = getBaseOssOnboardingPayload({
+      emailAddress: 'Dev@Example.COM',
+      newsletter: true,
+      project: Project.Personal,
+      projectName: '  My starter app  ',
+      companySize: CompanySize.Scale3,
+    });
+
+    expect(payload).toEqual({
+      emailAddress: 'dev@example.com',
+      newsletter: true,
+      project: Project.Personal,
+      projectName: 'My starter app',
+    });
+  });
+
+  test('handles missing project name in the questionnaire payload', () => {
+    const payload = getBaseOssOnboardingPayload({
+      emailAddress: 'Dev@Example.COM',
+      newsletter: true,
+      project: Project.Personal,
+      companyName: 'Should be ignored',
+      companySize: CompanySize.Scale3,
+    });
+
+    expect(payload).toEqual({
+      emailAddress: 'dev@example.com',
+      newsletter: true,
+      project: Project.Personal,
+    });
+  });
+
   test('omits email-related fields from the questionnaire payload when email is missing', () => {
     const payload = getBaseOssOnboardingPayload({
       emailAddress: '',
@@ -118,6 +151,39 @@ describe('OSS onboarding form utils', () => {
       newsletter: false,
       project: Project.Personal,
       projectName: 'My starter app',
+    } satisfies OssSurveyReportPayload);
+  });
+
+  test('handles missing company fields for personal survey payloads', () => {
+    const payload = getOssOnboardingSurveyPayload({
+      emailAddress: 'Dev@Example.COM',
+      newsletter: false,
+      project: Project.Personal,
+      projectName: '  My starter app  ',
+      companySize: CompanySize.Scale3,
+    });
+
+    expect(payload).toEqual({
+      emailAddress: 'dev@example.com',
+      newsletter: false,
+      project: Project.Personal,
+      projectName: 'My starter app',
+    } satisfies OssSurveyReportPayload);
+  });
+
+  test('handles missing project name in survey payloads', () => {
+    const payload = getOssOnboardingSurveyPayload({
+      emailAddress: 'Dev@Example.COM',
+      newsletter: false,
+      project: Project.Personal,
+      companyName: 'Should be ignored',
+      companySize: CompanySize.Scale3,
+    });
+
+    expect(payload).toEqual({
+      emailAddress: 'dev@example.com',
+      newsletter: false,
+      project: Project.Personal,
     } satisfies OssSurveyReportPayload);
   });
 

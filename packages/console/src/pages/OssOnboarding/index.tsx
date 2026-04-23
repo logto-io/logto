@@ -143,6 +143,20 @@ function OssOnboarding() {
                 />
               )}
             </div>
+            <FormField title="oss_onboarding.project_name.label">
+              <TextInput
+                maxLength={200}
+                placeholder={t('oss_onboarding.project_name.placeholder')}
+                disabled={isSubmitting}
+                error={errors.projectName?.message}
+                {...register('projectName', {
+                  maxLength: {
+                    value: 200,
+                    message: t('oss_onboarding.errors.project_name_too_long'),
+                  },
+                })}
+              />
+            </FormField>
             <FormField title="oss_onboarding.project.label">
               <Controller
                 name="project"
@@ -170,20 +184,6 @@ function OssOnboarding() {
                     />
                   </RadioGroup>
                 )}
-              />
-            </FormField>
-            <FormField title="oss_onboarding.project_name.label">
-              <TextInput
-                maxLength={200}
-                placeholder={t('oss_onboarding.project_name.placeholder')}
-                disabled={isSubmitting}
-                error={errors.projectName?.message}
-                {...register('projectName', {
-                  maxLength: {
-                    value: 200,
-                    message: t('oss_onboarding.errors.project_name_too_long'),
-                  },
-                })}
               />
             </FormField>
             {isCompanyProject && (
