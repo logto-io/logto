@@ -3,21 +3,19 @@ import { useTranslation } from 'react-i18next';
 
 import InfoIcon from '@/assets/icons/info.svg?react';
 import LearnMore from '@/components/LearnMore';
-import { logtoOssFeatureSupportLink } from '@/consts/external-links';
+import { pricingLink, logtoOssFeatureSupportLink } from '@/consts/external-links';
 import { LinkButton } from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
-import { type OssUpsellEntry, getCloudUpsellTargetUrl, openCloudUpsell } from '@/utils/oss-upsell';
 
 import styles from './index.module.scss';
 
 type Props = {
   readonly variant: 'inline' | 'footer';
   readonly limit: number;
-  readonly entry: OssUpsellEntry;
   readonly className?: string;
 };
 
-function SamlAppLimitBanner({ variant, limit, entry, className }: Props) {
+function SamlAppLimitBanner({ variant, limit, className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const description = t('upsell.paywall.saml_applications_oss_limit_notice', {
     limit,
@@ -39,15 +37,7 @@ function SamlAppLimitBanner({ variant, limit, entry, className }: Props) {
         <LearnMore href={logtoOssFeatureSupportLink} />
       </div>
       {variant === 'inline' ? (
-        <TextLink
-          className={styles.inlineAction}
-          href={getCloudUpsellTargetUrl()}
-          targetBlank="noopener"
-          onClick={(event) => {
-            event.preventDefault();
-            openCloudUpsell({ entry });
-          }}
-        >
+        <TextLink className={styles.inlineAction} href={pricingLink} targetBlank="noopener">
           {t('upsell.view_plans')}
         </TextLink>
       ) : (
@@ -56,12 +46,8 @@ function SamlAppLimitBanner({ variant, limit, entry, className }: Props) {
           size="large"
           type="primary"
           title="upsell.view_plans"
-          href={getCloudUpsellTargetUrl()}
+          href={pricingLink}
           targetBlank="noopener"
-          onClick={(event) => {
-            event.preventDefault();
-            openCloudUpsell({ entry });
-          }}
         />
       )}
     </div>

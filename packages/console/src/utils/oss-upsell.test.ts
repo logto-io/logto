@@ -1,10 +1,10 @@
 // Module-level mock for env constants. Must be declared before importing the module under test.
 // eslint-disable-next-line @silverhand/fp/no-let
-let mockOssUpsellTrackingEndpoint: string | undefined = 'https://analytics.example.com';
+let mockOssSurveyEndpoint: string | undefined = 'https://survey.example.com';
 
 jest.mock('@/consts/env', () => ({
-  get ossUpsellTrackingEndpoint() {
-    return mockOssUpsellTrackingEndpoint;
+  get ossSurveyEndpoint() {
+    return mockOssSurveyEndpoint;
   },
 }));
 
@@ -14,37 +14,49 @@ type GlobalWithOptionalFetch = typeof globalThis & {
   fetch?: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 };
 
+type CryptoWithOptionalRandomUuid = Crypto & {
+  randomUUID?: () => string;
+};
+
 describe('oss upsell helpers', () => {
   const mockWindowOpen = jest.fn<ReturnType<typeof window.open>, Parameters<typeof window.open>>();
   const mockSendBeacon = jest.fn<boolean, [string | URL, BodyInit | undefined]>();
   const mockFetch = jest.fn<Promise<Response>, [RequestInfo | URL, RequestInit?]>();
+  const mockRandomUuid = jest.fn(
+    (): `${string}-${string}-${string}-${string}-${string}` =>
+      '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf'
+  );
 
   beforeEach(() => {
     const navigatorWithSendBeacon: NavigatorWithOptionalSendBeacon = navigator;
     const globalWithOptionalFetch: GlobalWithOptionalFetch = globalThis;
+    const cryptoWithRandomUuid: CryptoWithOptionalRandomUuid = globalThis.crypto;
 
     jest.restoreAllMocks();
     jest.spyOn(Date, 'now').mockReturnValue(1_776_902_215_123);
-    jest.spyOn(globalThis.crypto, 'getRandomValues').mockImplementation((array) => {
-      if (array instanceof Uint8Array) {
-        array.set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
-      }
-
-      return array;
-    });
     jest.spyOn(window, 'open').mockImplementation(mockWindowOpen);
     // eslint-disable-next-line @silverhand/fp/no-mutation
     navigatorWithSendBeacon.sendBeacon = mockSendBeacon;
     // eslint-disable-next-line @silverhand/fp/no-mutation
     globalWithOptionalFetch.fetch = mockFetch;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    cryptoWithRandomUuid.randomUUID = mockRandomUuid;
 
     mockWindowOpen.mockReset();
     mockSendBeacon.mockReset();
     mockSendBeacon.mockReturnValue(true);
     mockFetch.mockReset();
     mockFetch.mockResolvedValue({ ok: true } as Response);
+    mockRandomUuid.mockClear();
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockOssUpsellTrackingEndpoint = 'https://analytics.example.com';
+    mockOssSurveyEndpoint = 'https://survey.example.com';
+  });
+
+  it('uses the built-in crypto.randomUUID() helper for click ids', async () => {
+    const { createUpsellClickId } = await import('./oss-upsell');
+
+    expect(createUpsellClickId()).toBe('01968a0d-5e94-7e6a-944a-12cc7ef3c3cf');
+    expect(mockRandomUuid).toHaveBeenCalledTimes(1);
   });
 
   it('builds a tracked cloud upsell URL with the required query parameters', async () => {
@@ -56,6 +68,10 @@ describe('oss upsell helpers', () => {
         extraQuery: {
           plan: 'pro',
         },
+        trackingData: {
+          clickId: '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf',
+          timestamp: 1_776_902_215_123,
+        },
       })
     );
 
@@ -63,25 +79,54 @@ describe('oss upsell helpers', () => {
     expect(url.pathname).toBe('/to/applications');
     expect(url.searchParams.get('plan')).toBe('pro');
     expect(url.searchParams.get('entry')).toBe('get_started_oss_cloud_banner');
-    expect(url.searchParams.get('click_id')).toBe('01020304-0506-4708-890a-0b0c0d0e0f10');
+    expect(url.searchParams.get('click_id')).toBe('01968a0d-5e94-7e6a-944a-12cc7ef3c3cf');
     expect(url.searchParams.get('ts')).toBe('1776902215123');
   });
 
-  it('reports upsell clicks with sendBeacon when the tracking endpoint is configured', async () => {
+  it('extracts and strips upsell tracking search parameters', async () => {
+    const {
+      getUpsellTrackingDataFromSearch,
+      stripUpsellTrackingSearchParameters,
+      ossUpsellEntries,
+    } = await import('./oss-upsell');
+
+    expect(
+      getUpsellTrackingDataFromSearch(
+        '?entry=get_started_oss_cloud_banner&click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf&ts=1776902215123'
+      )
+    ).toEqual({
+      entry: ossUpsellEntries.getStartedOssCloudBanner,
+      clickId: '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf',
+      ts: 1_776_902_215_123,
+    });
+
+    expect(
+      getUpsellTrackingDataFromSearch(
+        '?entry=unknown&click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf&ts=1776902215123'
+      )
+    ).toBeUndefined();
+    expect(
+      stripUpsellTrackingSearchParameters(
+        '?entry=get_started_oss_cloud_banner&click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf&ts=1776902215123&foo=bar'
+      )
+    ).toBe('?foo=bar');
+  });
+
+  it('reports upsell clicks with sendBeacon when the survey endpoint is configured', async () => {
     const { reportUpsellClick, ossUpsellEntries } = await import('./oss-upsell');
 
     reportUpsellClick({
       entry: ossUpsellEntries.ossSidebarCloudCard,
-      clickId: '01020304-0506-4708-890a-0b0c0d0e0f10',
+      clickId: '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf',
       ts: 1_776_902_215_123,
-      targetUrl: 'https://cloud.logto.io',
+      url: 'https://cloud.logto.io',
       sourcePath: '/console',
       sourceSearch: '?page=1',
     });
 
     expect(mockSendBeacon).toHaveBeenCalledTimes(1);
     expect(mockSendBeacon).toHaveBeenCalledWith(
-      'https://analytics.example.com/internal/analytics/upsell-click',
+      'https://survey.example.com/api/upsell-events',
       expect.any(Blob)
     );
     expect(mockFetch).not.toHaveBeenCalled();
@@ -91,24 +136,22 @@ describe('oss upsell helpers', () => {
     expect((blob as Blob).type).toBe('application/json');
   });
 
-  it('falls back to fetch when sendBeacon is unavailable or rejected', async () => {
-    const { reportUpsellClick, ossUpsellEntries } = await import('./oss-upsell');
-    const navigatorWithSendBeacon: NavigatorWithOptionalSendBeacon = navigator;
+  it('reports upsell landings with fetch and skips sendBeacon', async () => {
+    const { reportUpsellLanding, ossUpsellEntries } = await import('./oss-upsell');
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    navigatorWithSendBeacon.sendBeacon = undefined;
-
-    reportUpsellClick({
-      entry: ossUpsellEntries.tenantSettingsMembersOssUpsell,
-      clickId: '01020304-0506-4708-890a-0b0c0d0e0f10',
+    reportUpsellLanding({
+      entry: ossUpsellEntries.getStartedOssCloudBanner,
+      clickId: '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf',
       ts: 1_776_902_215_123,
-      targetUrl: 'https://cloud.logto.io',
+      url: 'https://cloud.logto.io?entry=get_started_oss_cloud_banner',
+      referrer: 'https://docs.logto.io',
     });
 
     await Promise.resolve();
 
+    expect(mockSendBeacon).not.toHaveBeenCalled();
     expect(mockFetch).toHaveBeenCalledWith(
-      new URL('https://analytics.example.com/internal/analytics/upsell-click'),
+      new URL('https://survey.example.com/api/upsell-events'),
       expect.objectContaining({
         method: 'POST',
         keepalive: true,
@@ -119,27 +162,54 @@ describe('oss upsell helpers', () => {
     );
   });
 
-  it('does not report upsell clicks when the tracking endpoint is missing or invalid', async () => {
+  it('falls back to fetch when sendBeacon is unavailable', async () => {
     const { reportUpsellClick, ossUpsellEntries } = await import('./oss-upsell');
+    const navigatorWithSendBeacon: NavigatorWithOptionalSendBeacon = navigator;
 
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockOssUpsellTrackingEndpoint = undefined;
+    navigatorWithSendBeacon.sendBeacon = undefined;
+
+    reportUpsellClick({
+      entry: ossUpsellEntries.tenantSettingsMembersOssUpsell,
+      clickId: '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf',
+      ts: 1_776_902_215_123,
+      url: 'https://cloud.logto.io',
+    });
+
+    await Promise.resolve();
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      new URL('https://survey.example.com/api/upsell-events'),
+      expect.objectContaining({
+        method: 'POST',
+        keepalive: true,
+      })
+    );
+  });
+
+  it('does not report upsell events when the survey endpoint is missing or invalid', async () => {
+    const { reportUpsellClick, reportUpsellLanding, ossUpsellEntries } = await import(
+      './oss-upsell'
+    );
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    mockOssSurveyEndpoint = undefined;
 
     reportUpsellClick({
       entry: ossUpsellEntries.signInExpBringYourUiOssCard,
-      clickId: '01020304-0506-4708-890a-0b0c0d0e0f10',
+      clickId: '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf',
       ts: 1_776_902_215_123,
-      targetUrl: 'https://cloud.logto.io',
+      url: 'https://cloud.logto.io',
     });
 
     // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockOssUpsellTrackingEndpoint = 'not a valid url';
+    mockOssSurveyEndpoint = 'not a valid url';
 
-    reportUpsellClick({
+    reportUpsellLanding({
       entry: ossUpsellEntries.signInExpHideLogtoBrandingOssNote,
-      clickId: '01020304-0506-4708-890a-0b0c0d0e0f10',
+      clickId: '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf',
       ts: 1_776_902_215_123,
-      targetUrl: 'https://cloud.logto.io',
+      url: 'https://cloud.logto.io',
     });
 
     expect(mockSendBeacon).not.toHaveBeenCalled();
@@ -155,6 +225,7 @@ describe('oss upsell helpers', () => {
     });
 
     expect(targetUrl).toContain('entry=get_started_oss_cloud_banner');
+    expect(targetUrl).toContain('click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf');
     expect(mockWindowOpen).toHaveBeenCalledWith(targetUrl, '_blank', 'noopener,noreferrer');
     expect(mockSendBeacon).toHaveBeenCalledTimes(1);
   });

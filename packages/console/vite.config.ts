@@ -58,9 +58,6 @@ const buildConfig = (mode: string): UserConfig => ({
     'import.meta.env.LOGTO_OSS_SURVEY_ENDPOINT': JSON.stringify(
       process.env.LOGTO_OSS_SURVEY_ENDPOINT
     ),
-    'import.meta.env.LOGTO_OSS_UPSELL_TRACKING_ENDPOINT': JSON.stringify(
-      process.env.LOGTO_OSS_UPSELL_TRACKING_ENDPOINT
-    ),
     // `@withtyped/client` needs this to be defined. We can optimize this later.
     'process.env': {},
   },

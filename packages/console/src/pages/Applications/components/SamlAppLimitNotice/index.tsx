@@ -1,7 +1,6 @@
 import SamlAppLimitBanner from '@/components/SamlAppLimitBanner';
 import { ossSamlApplicationsLimit } from '@/consts/application-limits';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { ossUpsellEntries } from '@/utils/oss-upsell';
 
 import styles from '../../index.module.scss';
 import { shouldShowSamlAppLimitNotice } from '../../utils';
@@ -28,7 +27,6 @@ function SamlAppLimitNotice({ isThirdPartyTab, samlAppTotalCount }: Props) {
       className={styles.notice}
       variant="inline"
       limit={ossSamlApplicationsLimit}
-      entry={ossUpsellEntries.samlAppApplicationsLimitNotice}
     />
   );
 }

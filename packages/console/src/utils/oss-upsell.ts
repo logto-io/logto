@@ -1,6 +1,6 @@
 import { trySafe } from '@silverhand/essentials';
 
-import { ossUpsellTrackingEndpoint } from '@/consts/env';
+import { ossSurveyEndpoint } from '@/consts/env';
 import { logtoCloudConsoleLink } from '@/consts/external-links';
 
 type QueryValue = string | number | boolean | undefined;
@@ -26,10 +26,12 @@ export type UpsellTrackingData = {
 };
 
 export type UpsellClickPayload = {
+  readonly event: 'upsell_click' | 'upsell_landing';
   readonly entry: OssUpsellEntry;
   readonly clickId: string;
   readonly ts: number;
-  readonly targetUrl: string;
+  readonly url: string;
+  readonly referrer?: string;
   readonly sourcePath?: string;
   readonly sourceSearch?: string;
 };
@@ -51,7 +53,9 @@ type OpenCloudUpsellOptions = {
   readonly target?: '_blank' | '_self';
 };
 
-const upsellClickEndpointPathname = '/internal/analytics/upsell-click';
+const upsellEventsEndpointPathname = 'api/upsell-events';
+const ossUpsellSearchParameterKeys = ['entry', 'click_id', 'ts'] as const;
+const ossUpsellEntryValues = new Set<string>(Object.values(ossUpsellEntries));
 
 const setSearchParameters = (url: URL, searchParameters?: CloudUpsellQuery) => {
   if (!searchParameters) {
@@ -67,13 +71,19 @@ const setSearchParameters = (url: URL, searchParameters?: CloudUpsellQuery) => {
   }
 };
 
-const getUpsellTrackingUrl = () =>
+const getUpsellEventsUrl = () =>
   trySafe(() => {
-    if (!ossUpsellTrackingEndpoint) {
+    if (!ossSurveyEndpoint) {
       return;
     }
 
-    return new URL(upsellClickEndpointPathname, new URL(ossUpsellTrackingEndpoint));
+    const endpointUrl = new URL(ossSurveyEndpoint);
+    const basePathname = endpointUrl.pathname.endsWith('/')
+      ? endpointUrl.pathname
+      : `${endpointUrl.pathname}/`;
+    const baseUrl = `${endpointUrl.origin}${basePathname}`;
+
+    return new URL(upsellEventsEndpointPathname, baseUrl);
   });
 
 const getCurrentLocationSnapshot = () => {
@@ -90,26 +100,7 @@ const getCurrentLocationSnapshot = () => {
 export const getCloudUpsellTargetUrl = (path?: string) =>
   new URL(path ?? '/', logtoCloudConsoleLink).toString();
 
-export const createUpsellClickId = () => {
-  const randomBytes = new Uint8Array(16);
-
-  globalThis.crypto.getRandomValues(randomBytes);
-
-  const normalizedBytes = Array.from(randomBytes, (byte, index) => {
-    if (index === 6) {
-      return 64 + (byte % 16);
-    }
-
-    if (index === 8) {
-      return 128 + (byte % 64);
-    }
-
-    return byte;
-  });
-  const hex = normalizedBytes.map((byte) => byte.toString(16).padStart(2, '0')).join('');
-
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
-};
+export const createUpsellClickId = () => globalThis.crypto.randomUUID();
 
 export const buildCloudUpsellUrl = (
   entry: OssUpsellEntry,
@@ -129,24 +120,68 @@ export const buildCloudUpsellUrl = (
   return url.toString();
 };
 
-export const reportUpsellClick = (payload: UpsellClickPayload): void => {
-  const url = getUpsellTrackingUrl();
+const isOssUpsellEntry = (value: string): value is OssUpsellEntry =>
+  ossUpsellEntryValues.has(value);
+
+export const getUpsellTrackingDataFromSearch = (search: string) => {
+  const searchParameters = new URLSearchParams(search);
+  const entry = searchParameters.get('entry');
+  const clickId = searchParameters.get('click_id');
+  const timestamp = searchParameters.get('ts');
+
+  if (!entry || !clickId || !timestamp || !isOssUpsellEntry(entry)) {
+    return;
+  }
+
+  const parsedTimestamp = Number(timestamp);
+
+  if (!Number.isFinite(parsedTimestamp)) {
+    return;
+  }
+
+  return {
+    entry,
+    clickId,
+    ts: parsedTimestamp,
+  };
+};
+
+export const stripUpsellTrackingSearchParameters = (search: string) => {
+  const searchParameters = new URLSearchParams(search);
+
+  for (const key of ossUpsellSearchParameterKeys) {
+    searchParameters.delete(key);
+  }
+
+  const normalizedSearch = searchParameters.toString();
+
+  return normalizedSearch ? `?${normalizedSearch}` : '';
+};
+
+const reportUpsellEvent = (
+  payload: UpsellClickPayload,
+  { preferBeacon = false }: { readonly preferBeacon?: boolean } = {}
+): void => {
+  const url = getUpsellEventsUrl();
 
   if (!url) {
     return;
   }
 
   const body = JSON.stringify(payload);
-  const navigatorWithSendBeacon: Partial<Pick<Navigator, 'sendBeacon'>> = navigator;
-  const isSent = trySafe(() =>
-    navigatorWithSendBeacon.sendBeacon?.(
-      url.toString(),
-      new Blob([body], { type: 'application/json' })
-    )
-  );
 
-  if (isSent) {
-    return;
+  if (preferBeacon) {
+    const navigatorWithSendBeacon: Partial<Pick<Navigator, 'sendBeacon'>> = navigator;
+    const isSent = trySafe(() =>
+      navigatorWithSendBeacon.sendBeacon?.(
+        url.toString(),
+        new Blob([body], { type: 'application/json' })
+      )
+    );
+
+    if (isSent) {
+      return;
+    }
   }
 
   void trySafe(async () =>
@@ -159,6 +194,27 @@ export const reportUpsellClick = (payload: UpsellClickPayload): void => {
       keepalive: true,
     })
   );
+};
+
+export const reportUpsellClick = (
+  payload: Omit<UpsellClickPayload, 'event' | 'referrer'>
+): void => {
+  reportUpsellEvent(
+    {
+      event: 'upsell_click',
+      ...payload,
+    },
+    { preferBeacon: true }
+  );
+};
+
+export const reportUpsellLanding = (
+  payload: Omit<UpsellClickPayload, 'event' | 'sourcePath' | 'sourceSearch'>
+): void => {
+  reportUpsellEvent({
+    event: 'upsell_landing',
+    ...payload,
+  });
 };
 
 export const openCloudUpsell = ({
@@ -177,7 +233,7 @@ export const openCloudUpsell = ({
     entry,
     clickId: trackingData.clickId,
     ts: trackingData.timestamp,
-    targetUrl,
+    url: targetUrl,
     ...getCurrentLocationSnapshot(),
   });
 
