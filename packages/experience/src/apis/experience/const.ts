@@ -7,9 +7,16 @@ export const experienceApiRoutes = Object.freeze({
   verification: `${prefix}/verification`,
   profile: `${prefix}/profile`,
   mfa: `${prefix}/profile/mfa`,
-  passwordExpiration: `${prefix}/password-expiration`,
 });
 
 export type VerificationResponse = {
   verificationId: string;
+};
+
+export type PasswordExpirationReminder = {
+  daysUntilExpiration: number;
+};
+
+export type PasswordVerificationResponse = VerificationResponse & {
+  reminder?: PasswordExpirationReminder;
 };
