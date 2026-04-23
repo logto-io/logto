@@ -2,6 +2,7 @@ import {
   SupportedSigningKeyAlgorithm,
   type OidcConfigKeysResponse,
   LogtoOidcConfigKeyType,
+  OidcSigningKeyStatus,
 } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
 import { useMemo, useState } from 'react';
@@ -20,6 +21,7 @@ import IconButton from '@/ds-components/IconButton';
 import Select from '@/ds-components/Select';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
+import type { Column } from '@/ds-components/Table/types';
 import Tag from '@/ds-components/Tag';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -38,6 +40,27 @@ const keyTypeTabs = [
     keyTypePhrase: 'cookie',
   },
 ] as const;
+
+const privateKeyStatusTagMap = {
+  [OidcSigningKeyStatus.Next]: {
+    tagStatus: 'info' as const,
+    translationKey: 'status.next' as const,
+  },
+  [OidcSigningKeyStatus.Current]: {
+    tagStatus: 'success' as const,
+    translationKey: 'status.current' as const,
+  },
+  [OidcSigningKeyStatus.Previous]: {
+    tagStatus: 'alert' as const,
+    translationKey: 'status.previous' as const,
+  },
+} satisfies Record<
+  OidcSigningKeyStatus,
+  { tagStatus: 'info' | 'success' | 'alert'; translationKey: `status.${string}` }
+>;
+
+const getPrivateKeyStatusTag = (status?: OidcSigningKeyStatus) =>
+  privateKeyStatusTagMap[status ?? OidcSigningKeyStatus.Current];
 
 function SigningKeysFormCard() {
   const api = useApi();
@@ -61,28 +84,38 @@ function SigningKeysFormCard() {
 
   const isLoadingKeys = !data && !error;
 
-  const tableColumns = useMemo(
+  const tableColumns = useMemo<Array<Column<OidcConfigKeysResponse>>>(
     () => [
       {
-        title: t('table_column.id'),
+        title: String(t('table_column.id')),
         dataIndex: 'id',
         colSpan: 8,
         render: ({ id }: OidcConfigKeysResponse) => <span className={styles.idWrapper}>{id}</span>,
       },
       {
-        title: t('table_column.status'),
+        title: String(t('table_column.status')),
         dataIndex: 'status',
         colSpan: 4,
-        render: (_: OidcConfigKeysResponse, rowIndex: number) => (
-          <Tag type="state" variant="plain" status={rowIndex === 0 ? 'success' : 'alert'}>
-            {t(rowIndex === 0 ? 'status.current' : 'status.previous')}
-          </Tag>
-        ),
+        render: ({ status }: OidcConfigKeysResponse, rowIndex: number) => {
+          const { tagStatus, translationKey } = isPrivateKey
+            ? getPrivateKeyStatusTag(status)
+            : {
+                tagStatus: rowIndex === 0 ? ('success' as const) : ('alert' as const),
+                translationKey:
+                  rowIndex === 0 ? ('status.current' as const) : ('status.previous' as const),
+              };
+
+          return (
+            <Tag type="state" variant="plain" status={tagStatus}>
+              {t(translationKey)}
+            </Tag>
+          );
+        },
       },
       ...condArray(
         isPrivateKey && [
           {
-            title: t('table_column.algorithm'),
+            title: String(t('table_column.algorithm')),
             dataIndex: 'signingKeyAlgorithm',
             colSpan: 7,
             render: ({ signingKeyAlgorithm }: OidcConfigKeysResponse) => (
@@ -95,8 +128,9 @@ function SigningKeysFormCard() {
         title: '',
         dataIndex: 'action',
         colSpan: 2,
-        render: ({ id }: OidcConfigKeysResponse, rowIndex: number) =>
-          rowIndex !== 0 && (
+        render: ({ id, status }: OidcConfigKeysResponse, rowIndex: number) =>
+          ((isPrivateKey && status === OidcSigningKeyStatus.Previous) ||
+            (!isPrivateKey && rowIndex !== 0)) && (
             <div className={styles.deleteIcon}>
               <IconButton
                 onClick={() => {
@@ -170,7 +204,7 @@ function SigningKeysFormCard() {
               })
               .json<OidcConfigKeysResponse[]>();
             void mutate(keys);
-            toast.success(t('messages.rotate_key_success'));
+            toast.success(String(t('messages.rotate_key_success')));
           } finally {
             setIsRotating(false);
           }
@@ -211,7 +245,7 @@ function SigningKeysFormCard() {
           try {
             await api.delete(`api/configs/oidc/${activeTab}/${deletingKeyId}`);
             void mutate(data?.filter((key) => key.id !== deletingKeyId));
-            toast.success(t('messages.delete_key_success'));
+            toast.success(String(t('messages.delete_key_success')));
           } finally {
             setDeletingKeyId(undefined);
           }

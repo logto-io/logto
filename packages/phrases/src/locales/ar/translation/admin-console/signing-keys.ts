@@ -21,6 +21,7 @@ const signing_keys = {
     algorithm: 'خوارزمية مفتاح التوقيع',
   },
   status: {
+    next: 'التالي',
     current: 'الحالي',
     previous: 'السابق',
   },
