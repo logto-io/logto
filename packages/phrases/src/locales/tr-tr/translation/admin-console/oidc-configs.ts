@@ -7,6 +7,8 @@ const oidc_configs = {
     'Oturum oluşturulduğu andan itibaren mutlak bir ömür sınırıdır. Etkinlikten bağımsız olarak bu sabit süre dolduğunda oturum sona erer.',
   oss_notice:
     'Logto OSS için, değişikliklerin geçerli olması amacıyla herhangi bir OIDC yapılandırmasını (oturum ayarları ve <keyRotationsLink>anahtar rotasyonu</keyRotationsLink> dahil) güncelledikten sonra örneğinizi yeniden başlatın. Tüm OIDC yapılandırma güncellemelerini hizmeti yeniden yüklemeden otomatik uygulamak için <centralCacheLink>merkezi önbelleği etkinleştirin</centralCacheLink>.',
+  cloud_private_key_rotation_notice:
+    'Logto Cloud’da özel anahtar döndürme, 4 saatlik bekleme süresinden sonra geçerli olur.',
 };
 
 export default Object.freeze(oidc_configs);

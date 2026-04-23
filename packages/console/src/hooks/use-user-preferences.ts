@@ -33,6 +33,7 @@ const userPreferencesGuard = z.object({
   /* === Add on feature related fields === */
   prebuiltUiPermissionNoticeAcknowledged: z.boolean().optional(),
   ossOidcConfigNoticeAcknowledged: z.boolean().optional(),
+  cloudOidcPrivateKeyRotationNoticeAcknowledged: z.boolean().optional(),
 });
 
 type UserPreferences = z.infer<typeof userPreferencesGuard>;

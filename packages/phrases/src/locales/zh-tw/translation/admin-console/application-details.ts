@@ -65,7 +65,7 @@ const application_details = {
   refresh_token_ttl: 'Refresh Token 有效期（天數）',
   refresh_token_ttl_tip:
     'Refresh Token 可用來獲取新的訪問令牌，失效日期之前可用。獲取訪問令牌時，該令牌的期限將被延長至此值。',
-  rotate_refresh_token: '旋轉 Refresh Token',
+  rotate_refresh_token: '輪換 Refresh Token',
   rotate_refresh_token_label:
     '啟用此配置將使 Logto 當 Refresh Token 的原始有效期剩下 70% 時或當滿足某些條件時，授予新的 Refresh Token 以獲取新的 Access Token。<a>了解更多</a>',
   rotate_refresh_token_label_for_public_clients:

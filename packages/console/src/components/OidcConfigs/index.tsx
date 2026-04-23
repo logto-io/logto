@@ -19,10 +19,14 @@ type OidcConfigFormData = {
 function OidcConfigs() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    data: { ossOidcConfigNoticeAcknowledged },
+    data: userPreferences,
     isLoading: isLoadingUserPreferences,
     update,
   } = useUserPreferences();
+  const cloudOidcPrivateKeyRotationNoticeAcknowledged = Boolean(
+    userPreferences.cloudOidcPrivateKeyRotationNoticeAcknowledged
+  );
+  const ossOidcConfigNoticeAcknowledged = Boolean(userPreferences.ossOidcConfigNoticeAcknowledged);
   const formMethods = useForm<OidcConfigFormData>();
   const { errorMessage, onSubmit } = useSessionConfigForm(formMethods);
 
@@ -58,6 +62,16 @@ function OidcConfigs() {
           >
             {t('oidc_configs.oss_notice')}
           </Trans>
+        </InlineNotification>
+      )}
+      {isCloud && !isLoadingUserPreferences && !cloudOidcPrivateKeyRotationNoticeAcknowledged && (
+        <InlineNotification
+          action="general.got_it"
+          onClick={() => {
+            void update({ cloudOidcPrivateKeyRotationNoticeAcknowledged: true });
+          }}
+        >
+          {t('oidc_configs.cloud_private_key_rotation_notice')}
         </InlineNotification>
       )}
       <FormProvider {...formMethods}>

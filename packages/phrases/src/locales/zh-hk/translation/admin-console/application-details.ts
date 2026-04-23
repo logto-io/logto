@@ -65,7 +65,7 @@ const application_details = {
   refresh_token_ttl: '刷新令牌的有效期（天）',
   refresh_token_ttl_tip:
     '刷新令牌可用於在其過期之前請求新的訪問權杖的持續時間。訪問令牌將將默認的 TTL 延長到此值。',
-  rotate_refresh_token: '旋轉刷新令牌',
+  rotate_refresh_token: '輪換刷新令牌',
   rotate_refresh_token_label:
     '啟用後，當原始 TTL 達到 70% 或滿足某些條件時就可以在令牌請求中為刷新令牌發行新的刷新令牌。 <a>了解更多。</a>',
   rotate_refresh_token_label_for_public_clients:

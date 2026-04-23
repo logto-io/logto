@@ -7,6 +7,8 @@ const oidc_configs = {
     "Un limite assoluto di durata dalla creazione della sessione. Indipendentemente dall'attività, la sessione termina allo scadere di questa durata fissa.",
   oss_notice:
     'Per Logto OSS, riavvia la tua istanza dopo ogni aggiornamento della configurazione OIDC (incluse le impostazioni della sessione e la <keyRotationsLink>rotazione delle chiavi</keyRotationsLink>) affinché le modifiche abbiano effetto. Per applicare automaticamente tutti gli aggiornamenti della configurazione OIDC senza riavviare il servizio, <centralCacheLink>abilita la cache centrale</centralCacheLink>.',
+  cloud_private_key_rotation_notice:
+    'In Logto Cloud, la rotazione delle chiavi private ha effetto dopo un periodo di grazia di 4 ore.',
 };
 
 export default Object.freeze(oidc_configs);
