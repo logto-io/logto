@@ -107,11 +107,9 @@ const description = {
   identifier_register_description:
     'Introduza o seu {{types, list(type: disjunction;)}} para criar uma nova conta.',
   all_account_creation_options: 'Todas as opções de criação de conta',
-  password_expired: 'A sua palavra-passe expirou',
-  password_expired_description:
+  password_expired:
     'A sua palavra-passe expirou e deve ser redefinida antes de poder iniciar sessão.',
-  password_expiration_reminder: 'A sua palavra-passe expira em breve',
-  password_expiration_reminder_description:
+  password_expiration_reminder:
     'A sua palavra-passe expira em {{days}} dia(s). Recomendamos que a redefina agora.',
   password_expiration_reminder_skip: 'Ignorar por agora',
   password_expiration_reset: 'Redefinir palavra-passe',

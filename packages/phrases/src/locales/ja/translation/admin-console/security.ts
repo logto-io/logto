@@ -93,6 +93,8 @@ const security = {
     enable_password_expiration: 'パスワードの有効期限を有効にする',
     enable_password_expiration_description:
       'ユーザーに定期的なパスワードのリセットを要求します。パスワード変更日の記録がない既存のユーザーは、アカウント作成日を基準に評価されます。',
+    enable_password_expiration_tip:
+      'パスワードの有効期限は、サインイン体験で有効なコネクタを持つ「パスワードを忘れた場合」方法を少なくとも 1 つ設定した後でのみ有効にできます。',
     expiration_period: 'パスワード有効期間 (日)',
     expiration_period_description: 'パスワードが期限切れになるまでの有効日数。',
     expiration_period_error: 'パスワードの有効期間は 1 日以上である必要があります。',

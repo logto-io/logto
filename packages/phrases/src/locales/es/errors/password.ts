@@ -5,8 +5,6 @@ const password = {
   invalid_legacy_password_format: 'Formato de contraseña heredada no válido.',
   unsupported_legacy_hash_algorithm: 'Algoritmo hash heredado no compatible: {{algorithm}}.',
   expired: 'Su contraseña ha expirado. Por favor, restablezca su contraseña para continuar.',
-  expiration_reminder:
-    'Su contraseña expirará en {{daysUntilExpiration}} día(s). Por favor, considere restablecerla.',
 };
 
 export default Object.freeze(password);

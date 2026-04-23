@@ -86,6 +86,8 @@ const security = {
     enable_password_expiration: '启用密码过期',
     enable_password_expiration_description:
       '要求用户定期重置密码。对于没有记录密码更改日期的现有用户，将根据其账户创建日期进行评估。',
+    enable_password_expiration_tip:
+      '只有在登录体验中配置至少一种带有有效连接器的忘记密码方式后，才能启用密码过期。',
     expiration_period: '密码有效期限（天）',
     expiration_period_description: '密码在过期前保持有效的天数。',
     expiration_period_error: '密码有效期限必须至少为 1 天。',

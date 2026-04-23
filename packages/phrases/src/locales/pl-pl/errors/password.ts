@@ -5,8 +5,6 @@ const password = {
   invalid_legacy_password_format: 'Nieprawidłowy format starego hasła.',
   unsupported_legacy_hash_algorithm: 'Nieobsługiwany stary algorytm haszowania: {{algorithm}}.',
   expired: 'Twoje hasło wygasło. Zresetuj hasło, aby kontynuować.',
-  expiration_reminder:
-    'Twoje hasło wygaśnie za {{daysUntilExpiration}} dni. Rozważ jego zresetowanie.',
 };
 
 export default Object.freeze(password);

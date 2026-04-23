@@ -95,6 +95,8 @@ const security = {
     enable_password_expiration: "Activer l'expiration du mot de passe",
     enable_password_expiration_description:
       "Exiger des utilisateurs qu'ils réinitialisent périodiquement leur mot de passe. Les utilisateurs existants sans date de changement de mot de passe enregistrée seront évalués par rapport à leur date de création de compte.",
+    enable_password_expiration_tip:
+      'Vous ne pouvez activer l’expiration du mot de passe qu’après avoir configuré au moins une méthode de mot de passe oublié avec un connecteur valide dans l’expérience de connexion.',
     expiration_period: 'Période de validité du mot de passe (jours)',
     expiration_period_description:
       "Nombre de jours pendant lesquels un mot de passe reste valide avant d'expirer.",

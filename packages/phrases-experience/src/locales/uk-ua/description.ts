@@ -110,11 +110,8 @@ const description = {
   identifier_register_description:
     'Введіть {{types, list(type: disjunction;)}} для створення нового облікового запису.',
   all_account_creation_options: 'Усі варіанти створення облікового запису',
-  password_expired: 'Термін дії вашого пароля закінчився',
-  password_expired_description:
-    'Термін дії вашого пароля закінчився, і його потрібно скинути перед входом.',
-  password_expiration_reminder: 'Термін дії вашого пароля скоро закінчиться',
-  password_expiration_reminder_description:
+  password_expired: 'Термін дії вашого пароля закінчився, і його потрібно скинути перед входом.',
+  password_expiration_reminder:
     'Ваш пароль закінчиться через {{days}} дн. Ми рекомендуємо скинути його зараз.',
   password_expiration_reminder_skip: 'Пропустити поки',
   password_expiration_reset: 'Скинути пароль',

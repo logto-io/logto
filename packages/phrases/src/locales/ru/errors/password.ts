@@ -6,8 +6,6 @@ const password = {
   unsupported_legacy_hash_algorithm:
     'Неподдерживаемый устаревший алгоритм хеширования: {{algorithm}}.',
   expired: 'Срок действия вашего пароля истек. Пожалуйста, сбросьте пароль, чтобы продолжить.',
-  expiration_reminder:
-    'Срок действия вашего пароля истечет через {{daysUntilExpiration}} дн. Пожалуйста, подумайте о его сбросе.',
 };
 
 export default Object.freeze(password);
