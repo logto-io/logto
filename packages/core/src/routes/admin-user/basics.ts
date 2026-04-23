@@ -10,7 +10,6 @@ import {
   userProfileGuard,
 } from '@logto/schemas';
 import { conditional, yes } from '@silverhand/essentials';
-import { subDays } from 'date-fns';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -291,7 +290,12 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
           }
         ),
         ...conditional(profile && { profile }),
-        ...conditional(hasPassword && { passwordUpdatedAt: Date.now() }),
+        ...conditional(
+          hasPassword && {
+            passwordUpdatedAt: Date.now(),
+            isPasswordExpired: false,
+          }
+        ),
       });
 
       ctx.body = transpileAdminUserProfileResponse(user);
@@ -353,6 +357,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         passwordEncrypted,
         passwordEncryptionMethod,
         passwordUpdatedAt: Date.now(),
+        isPasswordExpired: false,
       });
 
       ctx.body = transpileAdminUserProfileResponse(user);
@@ -385,10 +390,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         })
       );
 
-      // Set passwordUpdatedAt to (now - validPeriodDays) so the next sign-in triggers expiry.
-      const expiredAt = subDays(new Date(), passwordExpiration.validPeriodDays).getTime();
-
-      const user = await updateUserById(userId, { passwordUpdatedAt: expiredAt });
+      const user = await updateUserById(userId, { isPasswordExpired: true });
 
       ctx.body = transpileAdminUserProfileResponse(user);
 

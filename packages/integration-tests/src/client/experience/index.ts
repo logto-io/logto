@@ -61,7 +61,7 @@ export class ExperienceClient extends MockClient {
         headers: this.headers,
         json: payload,
       })
-      .json<{ verificationId: string }>();
+      .json<{ verificationId: string; reminder?: { daysUntilExpiration: number } }>();
   }
 
   public async sendVerificationCode(payload: {
@@ -250,19 +250,6 @@ export class ExperienceClient extends MockClient {
   public async skipMfaSuggestion() {
     return this.api.post(`${experienceRoutes.mfa}/mfa-suggestion-skipped`, {
       headers: this.headers,
-    });
-  }
-
-  public async skipPasswordExpirationReminder() {
-    return this.api.post(`${experienceRoutes.prefix}/password-expiration/skip`, {
-      headers: this.headers,
-    });
-  }
-
-  public async resetExpiredPassword(payload: { password: string }) {
-    return this.api.put(`${experienceRoutes.prefix}/password-expiration/reset`, {
-      headers: this.headers,
-      json: payload,
     });
   }
 

@@ -455,6 +455,7 @@ describe('submit action', () => {
       passwordEncrypted: 'passwordEncrypted',
       passwordEncryptionMethod: 'plain',
       passwordUpdatedAt: now,
+      isPasswordExpired: false,
     });
     expect(assignInteractionResults).not.toBeCalled();
     expect(ctx.appendDataHookContext).toBeCalledWith('User.Data.Updated', {
@@ -462,6 +463,7 @@ describe('submit action', () => {
         passwordEncrypted: 'passwordEncrypted',
         passwordEncryptionMethod: 'plain',
         passwordUpdatedAt: now,
+        isPasswordExpired: false,
       },
     });
   });

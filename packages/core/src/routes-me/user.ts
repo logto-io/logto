@@ -155,6 +155,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
         passwordEncrypted,
         passwordEncryptionMethod,
         passwordUpdatedAt: Date.now(),
+        isPasswordExpired: false,
       });
 
       ctx.status = 204;
