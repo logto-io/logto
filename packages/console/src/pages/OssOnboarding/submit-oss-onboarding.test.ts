@@ -71,6 +71,13 @@ const mockFormDataWithoutEmail: OssOnboardingFormData = {
   companySize: CompanySize.Scale3,
 };
 
+const mockPersonalFormDataWithoutCompanyFields: OssOnboardingFormData = {
+  emailAddress: 'Dev@Example.COM',
+  newsletter: true,
+  project: Project.Personal,
+  projectName: ' OSS Starter ',
+};
+
 const getSubmitOssOnboarding = async () => {
   const module = await import('./submit-oss-onboarding');
   return module.submitOssOnboarding;
@@ -173,6 +180,45 @@ describe('submitOssOnboarding', () => {
       isOnboardingDone: true,
     });
     expect(mockKyPost).not.toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
+  });
+
+  it('handles personal project submit when company fields are missing', async () => {
+    const submitOssOnboarding = await getSubmitOssOnboarding();
+    const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
+    const navigate = jest.fn<void, [string, { replace: boolean }]>();
+
+    update.mockResolvedValue();
+
+    await expect(
+      submitOssOnboarding({
+        formData: mockPersonalFormDataWithoutCompanyFields,
+        navigate,
+        update,
+      })
+    ).resolves.toBeUndefined();
+
+    expect(update).toHaveBeenCalledWith({
+      questionnaire: {
+        emailAddress: 'dev@example.com',
+        newsletter: true,
+        project: Project.Personal,
+        projectName: 'OSS Starter',
+      },
+      isOnboardingDone: true,
+    });
+    expect(mockKyPost).toHaveBeenCalledWith(
+      new URL('https://survey.example.com/api/surveys'),
+      expect.objectContaining({
+        json: {
+          emailAddress: 'dev@example.com',
+          newsletter: true,
+          project: Project.Personal,
+          projectName: 'OSS Starter',
+        },
+        keepalive: true,
+      })
+    );
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 

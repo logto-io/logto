@@ -7,7 +7,7 @@ export type OssOnboardingFormData = {
   newsletter: boolean;
   project: Project;
   projectName: string;
-  companyName: string;
+  companyName?: string;
   companySize?: CompanySize;
 };
 
@@ -38,7 +38,7 @@ export const isValidOssOnboardingEmailAddress = (emailAddress: string) =>
 export const getBaseOssOnboardingPayload = (data: OssOnboardingFormData) => {
   const normalizedEmailAddress = normalizeOssOnboardingEmailAddress(data.emailAddress);
   const normalizedProjectName = data.projectName.trim();
-  const normalizedCompanyName = data.companyName.trim();
+  const normalizedCompanyName = (data.companyName ?? '').trim();
   const projectNameFields = normalizedProjectName ? { projectName: normalizedProjectName } : {};
   const companyNameFields = normalizedCompanyName ? { companyName: normalizedCompanyName } : {};
   const emailFields = normalizedEmailAddress
@@ -70,7 +70,7 @@ export const getOssOnboardingSurveyPayload = (
 ): Optional<OssSurveyReportPayload> => {
   const normalizedEmailAddress = normalizeOssOnboardingEmailAddress(data.emailAddress);
   const normalizedProjectName = data.projectName.trim();
-  const normalizedCompanyName = data.companyName.trim();
+  const normalizedCompanyName = (data.companyName ?? '').trim();
   const projectNameFields = normalizedProjectName ? { projectName: normalizedProjectName } : {};
   const companyNameFields = normalizedCompanyName ? { companyName: normalizedCompanyName } : {};
 

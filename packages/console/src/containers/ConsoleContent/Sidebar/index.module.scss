@@ -19,6 +19,13 @@
   flex-direction: column;
 }
 
+.devStatusSpacer {
+  // Keep the last sidebar item clear of the floating "Dev features enabled" status badge.
+  // 3 = badge bottom offset, 3 = gap, 5 = badge height.
+  height: _.unit(3 + 3 + 5);
+  pointer-events: none;
+}
+
 .skeleton {
   width: 248px;
   height: 100%;

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useMatchTenantPath from '@/hooks/use-tenant-pathname';
 
@@ -43,6 +44,7 @@ function Sidebar() {
               )}
             </Section>
           ))}
+          {isDevFeaturesEnabled && <div aria-hidden className={styles.devStatusSpacer} />}
           <OssCloudCard />
         </div>
       </OverlayScrollbar>
