@@ -25,18 +25,18 @@ type PasswordExpirationReminder = {
   daysUntilExpiration: number;
 };
 
-type PasswordVerifySuccess = {
+type PasswordExpirationSuccess = {
   kind: 'success';
   user: User;
 };
 
-type PasswordVerifyReminder = {
+type PasswordExpirationReminderResult = {
   kind: 'reminder';
   user: User;
   reminder: PasswordExpirationReminder;
 };
 
-type PasswordVerifyResult = PasswordVerifySuccess | PasswordVerifyReminder;
+type PasswordExpirationResult = PasswordExpirationSuccess | PasswordExpirationReminderResult;
 
 export class PasswordVerification
   implements IdentifierVerificationRecord<VerificationType.Password>
@@ -80,18 +80,12 @@ export class PasswordVerification
   }
 
   /**
-   * Verifies the password against the current identifier and evaluates password expiration.
+   * Verifies the password against the current identifier and returns the authenticated user.
    *
-   * Returns:
-   * - `kind: 'success'` when the password is valid and outside the reminder window.
-   * - `kind: 'reminder'` when the password is valid but close to expiration.
-   *
-   * @throws RequestError with 400 status if sentinel policy blocks the action (failed too many times).
    * @throws RequestError with 401 status if user id suspended.
-   * @throws RequestError with 422 status if the password is already expired.
    * @throws RequestError with 422 status if the user is not found or the password is incorrect.
    */
-  async verify(password: string): Promise<PasswordVerifyResult> {
+  async verify(password: string): Promise<User> {
     const user = await findUserByIdentifier(this.queries.users, this.identifier);
 
     // Throws an 422 error if the user is not found or the password is incorrect
@@ -102,10 +96,9 @@ export class PasswordVerification
       new RequestError({ code: 'user.suspended', status: 401 })
     );
 
-    const result = await this.guardPasswordExpiration(verifiedUser);
     this.verified = true;
 
-    return result;
+    return verifiedUser;
   }
 
   async identifyUser(): Promise<User> {
@@ -147,10 +140,13 @@ export class PasswordVerification
   /**
    * Checks the password expiration policy after the password has already been verified.
    *
-   * This helper keeps the expiration decision close to the password verification logic while
-   * leaving the route responsible for persisting the interaction and reacting to reminder state.
+   * The route keeps this outside the sentinel guard so expired passwords do not count as failed
+   * credential attempts.
+   *
+   * @throws RequestError with 422 status if the password is already expired.
+   * @throws RequestError with 500 status if the expiration policy is misconfigured.
    */
-  private async guardPasswordExpiration(user: User): Promise<PasswordVerifyResult> {
+  async verifyPasswordExpiration(user: User): Promise<PasswordExpirationResult> {
     const { passwordExpiration } =
       await this.queries.signInExperiences.findDefaultSignInExperience();
 

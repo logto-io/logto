@@ -68,7 +68,7 @@ describe('PasswordVerification', () => {
     jest.useRealTimers();
   });
 
-  it('should throw password.expired when user is marked as expired', async () => {
+  it('should verify the password and then throw password.expired when user is marked as expired', async () => {
     const expiredUser = {
       ...mockUser,
       isPasswordExpired: true,
@@ -88,10 +88,11 @@ describe('PasswordVerification', () => {
 
     const verification = createVerification();
 
-    await expect(verification.verify(password)).rejects.toMatchError(
+    await expect(verification.verify(password)).resolves.toEqual(expiredUser);
+    expect(verification.isVerified).toBe(true);
+    await expect(verification.verifyPasswordExpiration(expiredUser)).rejects.toMatchError(
       new RequestError({ code: 'password.expired', status: 422 })
     );
-    expect(verification.isVerified).toBe(false);
   });
 
   it('should return reminder metadata when password is in reminder window', async () => {
@@ -113,7 +114,8 @@ describe('PasswordVerification', () => {
 
     const verification = createVerification();
 
-    await expect(verification.verify(password)).resolves.toEqual({
+    await expect(verification.verify(password)).resolves.toEqual(user);
+    await expect(verification.verifyPasswordExpiration(user)).resolves.toEqual({
       kind: 'reminder',
       user,
       reminder: {
@@ -143,7 +145,8 @@ describe('PasswordVerification', () => {
 
     const verification = createVerification();
 
-    await expect(verification.verify(password)).rejects.toMatchError(
+    await expect(verification.verify(password)).resolves.toEqual(user);
+    await expect(verification.verifyPasswordExpiration(user)).rejects.toMatchError(
       new RequestError({ code: 'password.expired', status: 422 })
     );
   });
@@ -161,7 +164,8 @@ describe('PasswordVerification', () => {
       value: mockUser.id,
     });
 
-    await expect(verification.verify(password)).rejects.toMatchError(
+    await expect(verification.verify(password)).resolves.toEqual(mockUser);
+    await expect(verification.verifyPasswordExpiration(mockUser)).rejects.toMatchError(
       new RequestError({
         code: 'sign_in_experiences.password_expiration_invalid_period_days',
         status: 500,

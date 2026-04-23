@@ -51,7 +51,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
 
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
 
-      const result = await withSentinel(
+      const verifiedUser = await withSentinel(
         {
           ctx,
           sentinel,
@@ -64,6 +64,8 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
         },
         passwordVerification.verify(password)
       );
+
+      const result = await passwordVerification.verifyPasswordExpiration(verifiedUser);
 
       experienceInteraction.setVerificationRecord(passwordVerification);
       await experienceInteraction.save();
