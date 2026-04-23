@@ -349,7 +349,7 @@ export const passkeySignInGuard = z
  * Password lifecycle policy for configuring password expiration and rotation.
  *
  * @remarks
- * This policy is evaluated server-side during sign-in (after MFA) to determine
+ * This policy is evaluated server-side during sign-in (after local password verification) to determine
  * whether the user's password has expired or is nearing expiration.
  *
  * - If the password age >= `validPeriodDays`, the sign-in is blocked and the user

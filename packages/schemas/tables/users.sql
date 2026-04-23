@@ -22,6 +22,7 @@ create table users (
   logto_config jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   mfa_verifications jsonb /* @use MfaVerifications */ not null default '[]'::jsonb,
   is_suspended boolean not null default false,
+  is_password_expired boolean not null default false,
   last_sign_in_at timestamptz,
   password_updated_at timestamptz,
   created_at timestamptz not null default (now()),
