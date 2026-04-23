@@ -24,26 +24,28 @@ function Sidebar() {
   return (
     <div className={styles.sidebar}>
       <OverlayScrollbar className={styles.menu}>
-        {sections.map(({ title, items }) => (
-          <Section key={title} title={t(title)}>
-            {items.map(
-              ({ title, Icon, isHidden, modal, externalLink, path }) =>
-                !isHidden && (
-                  <Item
-                    key={title}
-                    titleKey={title}
-                    icon={<Icon />}
-                    isActive={match('/' + (path ?? getPath(title)))}
-                    modal={modal}
-                    externalLink={externalLink}
-                    path={path}
-                  />
-                )
-            )}
-          </Section>
-        ))}
+        <div className={styles.menuContent}>
+          {sections.map(({ title, items }) => (
+            <Section key={title} title={t(title)}>
+              {items.map(
+                ({ title, Icon, isHidden, modal, externalLink, path }) =>
+                  !isHidden && (
+                    <Item
+                      key={title}
+                      titleKey={title}
+                      icon={<Icon />}
+                      isActive={match('/' + (path ?? getPath(title)))}
+                      modal={modal}
+                      externalLink={externalLink}
+                      path={path}
+                    />
+                  )
+              )}
+            </Section>
+          ))}
+          <OssCloudCard />
+        </div>
       </OverlayScrollbar>
-      <OssCloudCard />
     </div>
   );
 }
