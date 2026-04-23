@@ -1,14 +1,19 @@
 import { SignInIdentifier, experience } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, waitFor } from '@testing-library/react';
+import { HTTPError } from 'ky';
 import { act } from 'react-dom/test-utils';
 
+import ConfirmModalProvider from '@/Providers/ConfirmModalProvider';
 import SingleSignOnFormModeContextProvider from '@/Providers/SingleSignOnFormModeContextProvider';
 import UserInteractionContextProvider from '@/Providers/UserInteractionContextProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
-import { signInWithPasswordIdentifier } from '@/apis/experience';
+import {
+  continueSignInWithPasswordIdentifier,
+  signInWithPasswordIdentifier,
+} from '@/apis/experience';
 import type { SignInExperienceResponse } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -29,7 +34,8 @@ jest.mock('i18next', () => ({
 }));
 
 jest.mock('@/apis/experience', () => ({
-  signInWithPasswordIdentifier: jest.fn(async () => 0),
+  signInWithPasswordIdentifier: jest.fn(async () => ({ verificationId: 'verification-id' })),
+  continueSignInWithPasswordIdentifier: jest.fn(async () => ({ redirectTo: '/' })),
   getSsoAuthorizationUrl: (connectorId: string) => getSingleSignOnUrlMock(connectorId),
   getSsoConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
 }));
@@ -50,11 +56,13 @@ describe('UsernamePasswordSignInForm', () => {
   ) =>
     renderWithPageContext(
       <SettingsProvider settings={{ ...mockSignInExperienceSettings, ...settings }}>
-        <UserInteractionContextProvider>
-          <SingleSignOnFormModeContextProvider>
-            <PasswordSignInForm signInMethods={signInMethods} />
-          </SingleSignOnFormModeContextProvider>
-        </UserInteractionContextProvider>
+        <ConfirmModalProvider>
+          <UserInteractionContextProvider>
+            <SingleSignOnFormModeContextProvider>
+              <PasswordSignInForm signInMethods={signInMethods} />
+            </SingleSignOnFormModeContextProvider>
+          </UserInteractionContextProvider>
+        </ConfirmModalProvider>
       </SettingsProvider>
     );
 
@@ -188,6 +196,111 @@ describe('UsernamePasswordSignInForm', () => {
         undefined
       );
     });
+
+    await waitFor(() => {
+      expect(continueSignInWithPasswordIdentifier).toBeCalledWith('verification-id');
+    });
+  });
+
+  test('should show expired password alert and navigate to forgot-password only after user action', async () => {
+    (signInWithPasswordIdentifier as jest.Mock).mockRejectedValueOnce(
+      new HTTPError(
+        {
+          json: async () => ({
+            code: 'password.expired',
+            message: 'password.expired',
+          }),
+        } as Response,
+        {} as Request,
+        {} as never
+      )
+    );
+
+    const { getByText, queryByText, container } = renderPasswordSignInForm([
+      SignInIdentifier.Email,
+    ]);
+
+    const submitButton = getByText('action.sign_in');
+    const identifierInput = container.querySelector('input[name="identifier"]');
+    const passwordInput = container.querySelector('input[name="password"]');
+
+    assert(identifierInput, new Error('identifier input should exist'));
+    assert(passwordInput, new Error('password input should exist'));
+
+    fireEvent.change(identifierInput, { target: { value: 'foo@logto.io' } });
+    fireEvent.change(passwordInput, { target: { value: 'password' } });
+
+    act(() => {
+      fireEvent.submit(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(queryByText('description.password_expired')).not.toBeNull();
+      expect(queryByText('description.password_expiration_reset')).not.toBeNull();
+    });
+
+    expect(mockedNavigate).not.toHaveBeenCalled();
+    expect(continueSignInWithPasswordIdentifier).not.toHaveBeenCalled();
+
+    act(() => {
+      fireEvent.click(getByText('description.password_expiration_reset'));
+    });
+
+    await waitFor(() => {
+      expect(mockedNavigate).toHaveBeenCalledWith(
+        {
+          pathname: '/forgot-password',
+        },
+        {
+          replace: true,
+        }
+      );
+    });
+  });
+
+  test('should not show password expiration modal when forgot password is disabled', async () => {
+    (signInWithPasswordIdentifier as jest.Mock).mockRejectedValueOnce(
+      new HTTPError(
+        {
+          json: async () => ({
+            code: 'password.expired',
+            message: 'password.expired',
+          }),
+        } as Response,
+        {} as Request,
+        {} as never
+      )
+    );
+
+    const { getByText, queryByText, container } = renderPasswordSignInForm(
+      [SignInIdentifier.Email],
+      {
+        forgotPassword: { email: false, phone: false },
+      }
+    );
+
+    const submitButton = getByText('action.sign_in');
+    const identifierInput = container.querySelector('input[name="identifier"]');
+    const passwordInput = container.querySelector('input[name="password"]');
+
+    assert(identifierInput, new Error('identifier input should exist'));
+    assert(passwordInput, new Error('password input should exist'));
+
+    fireEvent.change(identifierInput, { target: { value: 'foo@logto.io' } });
+    fireEvent.change(passwordInput, { target: { value: 'password' } });
+
+    act(() => {
+      fireEvent.submit(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(signInWithPasswordIdentifier).toBeCalled();
+    });
+
+    expect(mockedNavigate).not.toHaveBeenCalled();
+    expect(continueSignInWithPasswordIdentifier).not.toHaveBeenCalled();
+    expect(queryByText('description.password_expired')).toBeNull();
+    expect(queryByText('description.password_expiration_reset')).toBeNull();
   });
 
   test('should switch to single sign on form when single sign on is enabled for a give email', async () => {
