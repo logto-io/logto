@@ -1,4 +1,5 @@
 @use '@/scss/underscore' as _;
+@use '../dev-status-spacing' as devStatusSpacing;
 
 .wrapper {
   padding: _.unit(4) _.unit(4) 0;
@@ -11,9 +12,7 @@
 }
 
 .withDevStatusOffset {
-  // 3 is the bottom margin of the dev status badge, so we need to include this margin when considering the spacing between the card and the status badge.
-  // 5 is the height of the status badge.
-  padding-bottom: _.unit(3 + 3 + 5);
+  padding-bottom: devStatusSpacing.$dev-status-reserved-space;
 }
 
 .card {
