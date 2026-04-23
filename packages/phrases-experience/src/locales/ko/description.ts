@@ -99,10 +99,8 @@ const description = {
   identifier_register_description:
     '새 계정을 만들려면 {{types, list(type: disjunction;)}}을(를) 입력하세요.',
   all_account_creation_options: '모든 계정 생성 옵션',
-  password_expired: '비밀번호가 만료되었습니다',
-  password_expired_description: '비밀번호가 만료되었습니다. 로그인하기 전에 재설정해야 합니다.',
-  password_expiration_reminder: '비밀번호가 곧 만료됩니다',
-  password_expiration_reminder_description:
+  password_expired: '비밀번호가 만료되었습니다. 로그인하기 전에 재설정해야 합니다.',
+  password_expiration_reminder:
     '비밀번호가 {{days}}일 후에 만료됩니다. 지금 재설정하는 것이 좋습니다.',
   password_expiration_reminder_skip: '지금은 건너뛰기',
   password_expiration_reset: '비밀번호 재설정',

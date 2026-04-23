@@ -109,11 +109,9 @@ const description = {
   identifier_register_description:
     'Inserisci il tuo {{types, list(type: disjunction;)}} per creare un nuovo account.',
   all_account_creation_options: 'Tutte le opzioni di creazione account',
-  password_expired: 'La tua password è scaduta',
-  password_expired_description:
+  password_expired:
     'La tua password è scaduta e deve essere reimpostata prima di poter effettuare l’accesso.',
-  password_expiration_reminder: 'La tua password sta per scadere',
-  password_expiration_reminder_description:
+  password_expiration_reminder:
     'La tua password scadrà tra {{days}} giorno/i. Ti consigliamo di reimpostarla ora.',
   password_expiration_reminder_skip: 'Ignora per ora',
   password_expiration_reset: 'Reimposta password',

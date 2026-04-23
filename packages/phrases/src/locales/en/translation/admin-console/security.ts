@@ -92,6 +92,8 @@ const security = {
     enable_password_expiration: 'Enable password expiration',
     enable_password_expiration_description:
       'Require users to periodically reset their password. Existing users without a recorded password change date will be evaluated against their account creation date.',
+    enable_password_expiration_tip:
+      'Password expiration can only be enabled after you configure at least one forgot password method with a valid connector in sign-in experience.',
     expiration_period: 'Password valid period (days)',
     expiration_period_description: 'Number of days a password remains valid before it expires.',
     expiration_period_error: 'Password valid period must be at least 1 day.',

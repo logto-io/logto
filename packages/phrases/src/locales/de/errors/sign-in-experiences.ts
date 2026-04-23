@@ -40,6 +40,8 @@ const sign_in_experiences = {
     'Ungültige benutzerdefinierte E-Mail-Sperrlistenpunkte: {{items, list(type:conjunction)}}. Jedes Element muss eine gültige E-Mail-Adresse oder Domain sein, z. B. foo@example.com oder @example.com.',
   forgot_password_method_requires_connector:
     'Die Methode zum Zurücksetzen des Passworts erfordert einen entsprechenden {{method}} Connector.',
+  password_expiration_requires_forgot_password:
+    'Der Ablauf von Passwörtern erfordert mindestens eine konfigurierte Methode zum Zurücksetzen des Passworts mit einem gültigen Connector.',
   password_expiration_not_enabled:
     'Die Passwort-Ablaufrichtlinie ist nicht aktiviert. Aktivieren Sie diese in den Einstellungen für das Anmeldeerlebnis, bevor Sie Passwörter ablaufen lassen.',
   password_expiration_invalid_period_days:
