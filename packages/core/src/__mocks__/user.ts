@@ -27,6 +27,7 @@ export const mockUser: User = {
   createdAt: 1_650_969_000_000,
   updatedAt: 1_650_969_000_000,
   isSuspended: false,
+  isPasswordExpired: false,
 };
 
 export const mockUserTotpMfaVerification = {
@@ -84,6 +85,7 @@ export const mockUserWithPassword: User = {
   createdAt: 1_650_969_000_000,
   updatedAt: 1_650_969_000_000,
   isSuspended: false,
+  isPasswordExpired: false,
 };
 
 export const mockUserList: User[] = [
@@ -108,6 +110,7 @@ export const mockUserList: User[] = [
     createdAt: 1_650_969_000_000,
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
+    isPasswordExpired: false,
   },
   {
     tenantId: 'fake_tenant',
@@ -130,6 +133,7 @@ export const mockUserList: User[] = [
     createdAt: 1_650_969_000_000,
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
+    isPasswordExpired: false,
   },
   {
     tenantId: 'fake_tenant',
@@ -152,6 +156,7 @@ export const mockUserList: User[] = [
     createdAt: 1_650_969_000_000,
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
+    isPasswordExpired: false,
   },
   {
     tenantId: 'fake_tenant',
@@ -174,6 +179,7 @@ export const mockUserList: User[] = [
     createdAt: 1_650_969_000_000,
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
+    isPasswordExpired: false,
   },
   {
     tenantId: 'fake_tenant',
@@ -196,6 +202,7 @@ export const mockUserList: User[] = [
     createdAt: 1_650_969_000_000,
     updatedAt: 1_650_969_000_000,
     isSuspended: false,
+    isPasswordExpired: false,
   },
 ];
 

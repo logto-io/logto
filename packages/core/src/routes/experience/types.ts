@@ -190,18 +190,6 @@ export type InteractionStorage = {
     verified: boolean;
     skipped: boolean;
   };
-  /**
-   * Tracks the password lifecycle status for the current sign-in interaction.
-   * Set after MFA verification when the password expiration policy is enabled.
-   */
-  passwordLifecycle?: {
-    /** The password has expired and the user must reset it before completing sign-in. */
-    passwordExpired: boolean;
-    /** The password is nearing expiration and the user should be reminded. */
-    reminderRequired: boolean;
-    /** The user has chosen to skip the reminder and proceed with sign-in. */
-    reminderSkipped: boolean;
-  };
 };
 
 export const interactionStorageGuard = z.object({
@@ -217,13 +205,6 @@ export const interactionStorageGuard = z.object({
       skipped: z.boolean(),
     })
     .optional(),
-  passwordLifecycle: z
-    .object({
-      passwordExpired: z.boolean(),
-      reminderRequired: z.boolean(),
-      reminderSkipped: z.boolean(),
-    })
-    .optional(),
 }) satisfies ToZodObject<InteractionStorage>;
 
 export type SanitizedInteractionStorageData = {
@@ -236,11 +217,6 @@ export type SanitizedInteractionStorageData = {
   captcha?: {
     verified: boolean;
     skipped: boolean;
-  };
-  passwordLifecycle?: {
-    passwordExpired: boolean;
-    reminderRequired: boolean;
-    reminderSkipped: boolean;
   };
 };
 
@@ -259,13 +235,6 @@ export const sanitizedInteractionStorageGuard = z.object({
     .object({
       verified: z.boolean(),
       skipped: z.boolean(),
-    })
-    .optional(),
-  passwordLifecycle: z
-    .object({
-      passwordExpired: z.boolean(),
-      reminderRequired: z.boolean(),
-      reminderSkipped: z.boolean(),
     })
     .optional(),
 }) satisfies ToZodObject<SanitizedInteractionStorageData>;

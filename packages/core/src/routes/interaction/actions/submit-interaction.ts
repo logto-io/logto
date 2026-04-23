@@ -291,6 +291,7 @@ export default async function submitInteraction(
     passwordEncrypted,
     passwordEncryptionMethod,
     passwordUpdatedAt: Date.now(),
+    isPasswordExpired: false,
   });
   ctx.assignReleaseOnSuccessInteractionHookResult({ userId: accountId });
   ctx.appendDataHookContext('User.Data.Updated', { user });

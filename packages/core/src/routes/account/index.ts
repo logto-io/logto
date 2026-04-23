@@ -212,6 +212,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
         passwordEncrypted,
         passwordEncryptionMethod,
         passwordUpdatedAt: Date.now(),
+        isPasswordExpired: false,
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
