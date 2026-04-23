@@ -24,6 +24,7 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
+const qualifiedValueField = sql.identifier([LogtoConfigs.table, LogtoConfigs.fields.value]);
 
 export const createLogtoConfigQueries = (
   pool: CommonQueryMethods,
@@ -170,7 +171,7 @@ export const createLogtoConfigQueries = (
           ${sql.jsonb({ tenantCacheExpiresAt })}
         )
         on conflict (${fields.tenantId}, ${fields.key}) do update
-        set ${fields.value} = coalesce(${fields.value}, '{}'::jsonb) || ${sql.jsonb({
+        set ${fields.value} = coalesce(${qualifiedValueField}, '{}'::jsonb) || ${sql.jsonb({
           tenantCacheExpiresAt,
         })}
         returning ${fields.value}
@@ -189,7 +190,7 @@ export const createLogtoConfigQueries = (
           ${sql.jsonb({ signingKeyRotationAt })}
         )
         on conflict (${fields.tenantId}, ${fields.key}) do update
-        set ${fields.value} = coalesce(${fields.value}, '{}'::jsonb) || ${sql.jsonb({
+        set ${fields.value} = coalesce(${qualifiedValueField}, '{}'::jsonb) || ${sql.jsonb({
           signingKeyRotationAt,
         })}
         returning ${fields.value}
