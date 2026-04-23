@@ -10,7 +10,11 @@ import NumericInput from '@/ds-components/TextInput/NumericInput';
 import { type PasswordPolicyFormData } from '../../use-password-policy';
 import styles from '../index.module.scss';
 
-function PasswordExpirationCard() {
+type Props = {
+  readonly hasForgotPasswordMethods: boolean;
+};
+
+function PasswordExpirationCard({ hasForgotPasswordMethods }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.security.password_policy',
   });
@@ -25,14 +29,20 @@ function PasswordExpirationCard() {
   const isEnabled = watch('isPasswordExpirationEnabled');
   const expirationDays = watch('passwordExpirationDays');
 
+  const isToggleDisabled = !hasForgotPasswordMethods;
+
   return (
     <FormCard
       title="security.password_policy.password_expiration"
       description="security.password_policy.password_expiration_description"
     >
-      <FormField title="security.password_policy.enable_password_expiration">
+      <FormField
+        title="security.password_policy.enable_password_expiration"
+        tip={t('enable_password_expiration_tip')}
+      >
         <Switch
           label={t('enable_password_expiration_description')}
+          disabled={isToggleDisabled}
           {...register('isPasswordExpirationEnabled')}
         />
       </FormField>
