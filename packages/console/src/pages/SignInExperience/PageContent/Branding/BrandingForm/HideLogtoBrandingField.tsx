@@ -2,12 +2,12 @@ import { useFormContext } from 'react-hook-form';
 import { Trans } from 'react-i18next';
 
 import { CloudTag } from '@/components/FeatureTag';
-import { logtoCloudConsoleLink } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextLink from '@/ds-components/TextLink';
+import { getCloudUpsellTargetUrl, openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
 
@@ -62,9 +62,15 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
           components={{
             a: (
               <TextLink
-                href={logtoCloudConsoleLink}
+                href={getCloudUpsellTargetUrl()}
                 targetBlank="noopener"
                 className={styles.highlight}
+                onClick={(event) => {
+                  event.preventDefault();
+                  openCloudUpsell({
+                    entry: ossUpsellEntries.signInExpHideLogtoBrandingOssNote,
+                  });
+                }}
               />
             ),
           }}

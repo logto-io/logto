@@ -6,7 +6,6 @@ import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { logtoCloudConsoleLink } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -15,6 +14,7 @@ import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
+import { getCloudUpsellTargetUrl, openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
@@ -48,9 +48,15 @@ function OssBringYourUiCard() {
               components={{
                 a: (
                   <TextLink
-                    href={logtoCloudConsoleLink}
+                    href={getCloudUpsellTargetUrl()}
                     targetBlank="noopener"
                     className={styles.highlight}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      openCloudUpsell({
+                        entry: ossUpsellEntries.signInExpBringYourUiOssCard,
+                      });
+                    }}
                   />
                 ),
               }}

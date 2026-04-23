@@ -32,6 +32,7 @@ import TypeDescription from '@/pages/Applications/components/TypeDescription';
 import modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { trySubmitSafe } from '@/utils/form';
+import { ossUpsellEntries } from '@/utils/oss-upsell';
 import { isPaidPlan } from '@/utils/subscription';
 import { buildUrl } from '@/utils/url';
 
@@ -259,7 +260,11 @@ function CreateForm({
           defaultCreateType === ApplicationType.SAML &&
           typeof samlAppTotalCount === 'number' &&
           samlAppTotalCount >= ossSamlApplicationsLimit ? (
-            <SamlAppLimitBanner variant="footer" limit={ossSamlApplicationsLimit} />
+            <SamlAppLimitBanner
+              variant="footer"
+              limit={ossSamlApplicationsLimit}
+              entry={ossUpsellEntries.samlAppCreateModalLimitBanner}
+            />
           ) : (
             <Footer
               selectedType={value}

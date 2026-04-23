@@ -3,19 +3,21 @@ import { useTranslation } from 'react-i18next';
 
 import InfoIcon from '@/assets/icons/info.svg?react';
 import LearnMore from '@/components/LearnMore';
-import { pricingLink, logtoOssFeatureSupportLink } from '@/consts/external-links';
+import { logtoOssFeatureSupportLink } from '@/consts/external-links';
 import { LinkButton } from '@/ds-components/Button';
 import TextLink from '@/ds-components/TextLink';
+import { type OssUpsellEntry, getCloudUpsellTargetUrl, openCloudUpsell } from '@/utils/oss-upsell';
 
 import styles from './index.module.scss';
 
 type Props = {
   readonly variant: 'inline' | 'footer';
   readonly limit: number;
+  readonly entry: OssUpsellEntry;
   readonly className?: string;
 };
 
-function SamlAppLimitBanner({ variant, limit, className }: Props) {
+function SamlAppLimitBanner({ variant, limit, entry, className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const description = t('upsell.paywall.saml_applications_oss_limit_notice', {
     limit,
@@ -37,7 +39,15 @@ function SamlAppLimitBanner({ variant, limit, className }: Props) {
         <LearnMore href={logtoOssFeatureSupportLink} />
       </div>
       {variant === 'inline' ? (
-        <TextLink className={styles.inlineAction} href={pricingLink} targetBlank="noopener">
+        <TextLink
+          className={styles.inlineAction}
+          href={getCloudUpsellTargetUrl()}
+          targetBlank="noopener"
+          onClick={(event) => {
+            event.preventDefault();
+            openCloudUpsell({ entry });
+          }}
+        >
           {t('upsell.view_plans')}
         </TextLink>
       ) : (
@@ -46,8 +56,12 @@ function SamlAppLimitBanner({ variant, limit, className }: Props) {
           size="large"
           type="primary"
           title="upsell.view_plans"
-          href={pricingLink}
+          href={getCloudUpsellTargetUrl()}
           targetBlank="noopener"
+          onClick={(event) => {
+            event.preventDefault();
+            openCloudUpsell({ entry });
+          }}
         />
       )}
     </div>

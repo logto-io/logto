@@ -9,13 +9,13 @@ import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import LighteningIcon from '@/assets/icons/lightening.svg?react';
 import PrivateCloudIcon from '@/assets/icons/private-cloud.svg?react';
 import { officialWebsiteContactPageLink } from '@/consts';
-import { logtoCloudConsoleLink } from '@/consts/external-links';
 import Button, { LinkButton } from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 import Tag from '@/ds-components/Tag';
 import useTheme from '@/hooks/use-theme';
+import { openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import styles from './index.module.scss';
 
@@ -63,7 +63,9 @@ function OssCloudUpsell({ isBannerVisible, onDismissBanner }: Props) {
                 title="get_started.oss_cloud.try.action"
                 trailingIcon={<ExternalLinkIcon className={styles.bannerActionIcon} />}
                 onClick={() => {
-                  window.open(logtoCloudConsoleLink, '_blank', 'noopener,noreferrer');
+                  openCloudUpsell({
+                    entry: ossUpsellEntries.getStartedOssCloudBanner,
+                  });
                 }}
               />
             </div>
