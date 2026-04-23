@@ -5,16 +5,17 @@ import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
   ConnectorType,
   SignInExperiences,
-  ForgotPasswordMethod,
   MfaPolicy,
   ProductEvent,
   type SignInExperience,
+  ForgotPasswordMethod,
 } from '@logto/schemas';
 import { conditional, type Optional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import {
+  getForgotPasswordAvailability,
   validateSignUp,
   validateSignIn,
   parseEmailBlocklistPolicy,
@@ -55,7 +56,9 @@ const passwordExpirationPolicyGuard = z.discriminatedUnion('enabled', [
   }),
 ]);
 
-const isValidPasswordExpirationPolicy = (policy: z.infer<typeof passwordExpirationPolicyGuard>) =>
+type PasswordExpirationPolicy = z.infer<typeof passwordExpirationPolicyGuard>;
+
+const isValidPasswordExpirationPolicy = (policy: PasswordExpirationPolicy) =>
   !policy.enabled || policy.reminderPeriodDays < policy.validPeriodDays;
 
 const signInExperienceResponseGuard = SignInExperiences.guard;
@@ -224,17 +227,26 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined ? { enabled: false } : adaptiveMfa;
 
       if (forgotPasswordMethods) {
-        const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);
-        const hasSmsConnector = connectors.some(({ type }) => type === ConnectorType.Sms);
+        const forgotPasswordAvailability = getForgotPasswordAvailability(
+          connectors,
+          forgotPasswordMethods
+        );
 
         for (const method of forgotPasswordMethods) {
-          if (method === ForgotPasswordMethod.EmailVerificationCode && !hasEmailConnector) {
+          if (
+            method === ForgotPasswordMethod.EmailVerificationCode &&
+            !forgotPasswordAvailability.email
+          ) {
             throw new RequestError({
               code: 'sign_in_experiences.forgot_password_method_requires_connector',
               method: 'email',
             });
           }
-          if (method === ForgotPasswordMethod.PhoneVerificationCode && !hasSmsConnector) {
+
+          if (
+            method === ForgotPasswordMethod.PhoneVerificationCode &&
+            !forgotPasswordAvailability.phone
+          ) {
             throw new RequestError({
               code: 'sign_in_experiences.forgot_password_method_requires_connector',
               method: 'sms',
@@ -243,9 +255,28 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         }
       }
 
-      if (passwordExpiration) {
+      // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/consistent-type-assertions
+      const currentPasswordExpiration = {
+        ...currentSettings.passwordExpiration,
+        ...passwordExpiration,
+      } as PasswordExpirationPolicy;
+
+      if (currentPasswordExpiration.enabled) {
+        const forgotPasswordAvailability = getForgotPasswordAvailability(
+          connectors,
+          forgotPasswordMethods ?? currentSettings.forgotPasswordMethods
+        );
+
         assertThat(
-          isValidPasswordExpirationPolicy(passwordExpiration),
+          forgotPasswordAvailability.email || forgotPasswordAvailability.phone,
+          new RequestError({
+            code: 'sign_in_experiences.password_expiration_requires_forgot_password',
+            status: 422,
+          })
+        );
+
+        assertThat(
+          isValidPasswordExpirationPolicy(currentPasswordExpiration),
           new RequestError({
             code: 'sign_in_experiences.password_expiration_invalid_period_days',
             status: 422,

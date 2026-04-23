@@ -16,6 +16,10 @@ import { experienceRoutes } from '../const.js';
 import koaExperienceVerificationsAuditLog from '../middleware/koa-experience-verifications-audit-log.js';
 import { type ExperienceInteractionRouterContext } from '../types.js';
 
+const passwordExpirationReminderGuard = z.object({
+  daysUntilExpiration: z.number(),
+});
+
 export default function passwordVerificationRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
   { libraries, queries, sentinel }: TenantContext
@@ -27,6 +31,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
       status: [200, 400, 401, 422],
       response: z.object({
         verificationId: z.string(),
+        reminder: passwordExpirationReminderGuard.optional(),
       }),
     }),
     koaExperienceVerificationsAuditLog({
@@ -46,7 +51,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
 
       const passwordVerification = PasswordVerification.create(libraries, queries, identifier);
 
-      await withSentinel(
+      const result = await withSentinel(
         {
           ctx,
           sentinel,
@@ -63,7 +68,10 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
       experienceInteraction.setVerificationRecord(passwordVerification);
       await experienceInteraction.save();
 
-      ctx.body = { verificationId: passwordVerification.id };
+      ctx.body =
+        result.kind === 'reminder'
+          ? { verificationId: passwordVerification.id, reminder: result.reminder }
+          : { verificationId: passwordVerification.id };
 
       ctx.status = 200;
 

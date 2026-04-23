@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import {
+  ForgotPasswordMethod,
   MfaFactor,
   MfaPolicy,
   type SignInExperience,
@@ -18,6 +19,7 @@ import {
   mockSignUp,
   mockSignIn,
   mockLanguageInfo,
+  mockAliyunDmConnector,
   mockAliyunSmsConnector,
   mockTermsOfUseUrl,
   mockPrivacyPolicyUrl,
@@ -136,6 +138,12 @@ describe('GET /sign-in-exp', () => {
 describe('PATCH /sign-in-exp', () => {
   afterEach(() => {
     mockDeleteConnectorById.mockClear();
+
+    mockGetLogtoConnectors.mockReset();
+    mockGetLogtoConnectors.mockImplementation(async () => logtoConnectors);
+
+    findDefaultSignInExperience.mockReset();
+    findDefaultSignInExperience.mockImplementation(async () => mockSignInExperience);
   });
 
   it('should update social connector targets in correct sorting order', async () => {
@@ -478,6 +486,116 @@ describe('PATCH /sign-in-exp', () => {
         ...mockSignInExperience,
         forgotPasswordMethods: [],
       },
+    });
+  });
+
+  it('should accept email forgot password method when email connector is available', async () => {
+    mockGetLogtoConnectors.mockResolvedValueOnce([...logtoConnectors, mockAliyunDmConnector]);
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
+      },
+    });
+  });
+
+  it('should reject email forgot password method when email connector is not available', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
+    });
+
+    expect(response).toMatchObject({
+      status: 400,
+    });
+  });
+
+  it('should accept phone forgot password method when phone connector is available', async () => {
+    mockGetLogtoConnectors.mockResolvedValueOnce([...logtoConnectors, mockAliyunSmsConnector]);
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      forgotPasswordMethods: [ForgotPasswordMethod.PhoneVerificationCode],
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        forgotPasswordMethods: [ForgotPasswordMethod.PhoneVerificationCode],
+      },
+    });
+  });
+
+  it('should reject phone forgot password method when phone connector is not available', async () => {
+    mockGetLogtoConnectors.mockResolvedValueOnce([]);
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      forgotPasswordMethods: [ForgotPasswordMethod.PhoneVerificationCode],
+    });
+
+    expect(response).toMatchObject({
+      status: 400,
+    });
+  });
+
+  it('should reject password expiration when forgot password is explicitly disabled', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      forgotPasswordMethods: [],
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+        reminderPeriodDays: 5,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 422,
+    });
+  });
+
+  it('should accept password expiration when forgot password is available', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+        reminderPeriodDays: 5,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        passwordExpiration: {
+          enabled: true,
+          validPeriodDays: 30,
+          reminderPeriodDays: 5,
+        },
+      },
+    });
+  });
+
+  it('should reject disabling forgot password methods when password expiration is already enabled', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+        reminderPeriodDays: 5,
+      },
+    });
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      forgotPasswordMethods: [],
+    });
+
+    expect(response).toMatchObject({
+      status: 422,
     });
   });
 });

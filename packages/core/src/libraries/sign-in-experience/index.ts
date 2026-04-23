@@ -2,6 +2,7 @@ import { GoogleConnector } from '@logto/connector-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
 import type {
   ConnectorMetadata,
+  ForgotPasswordMethods,
   FullSignInExperience,
   LanguageInfo,
   PartialColor,
@@ -9,7 +10,7 @@ import type {
   SsoConnectorMetadata,
 } from '@logto/schemas';
 import { adminTenantId, ConnectorType, ForgotPasswordMethod, TenantTag } from '@logto/schemas';
-import { deduplicate, trySafe } from '@silverhand/essentials';
+import { deduplicate, trySafe, type Nullable } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 
 import { type WellKnownCache } from '#src/caches/well-known.js';
@@ -22,9 +23,31 @@ import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { isKeyOfI18nPhrases } from '#src/utils/translation.js';
 
+import type { LogtoConnector } from '../../utils/connectors/types.js';
+
 export * from './sign-up.js';
 export * from './sign-in.js';
 export * from './email-blocklist-policy.js';
+
+export const getForgotPasswordAvailability = (
+  connectors: LogtoConnector[],
+  methods: Nullable<ForgotPasswordMethods>
+): FullSignInExperience['forgotPassword'] => {
+  const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);
+  const hasSmsConnector = connectors.some(({ type }) => type === ConnectorType.Sms);
+
+  if (!methods) {
+    return {
+      email: hasEmailConnector,
+      phone: hasSmsConnector,
+    };
+  }
+
+  return {
+    email: methods.includes(ForgotPasswordMethod.EmailVerificationCode) && hasEmailConnector,
+    phone: methods.includes(ForgotPasswordMethod.PhoneVerificationCode) && hasSmsConnector,
+  };
+};
 
 type SignInExperienceOverride = Partial<Omit<SignInExperience, 'color'> & { color: PartialColor }>;
 
@@ -286,30 +309,7 @@ export const createSignInExperienceLibrary = (
      *   both method inclusion and connector availability must be satisfied
      */
     const getForgotPassword = () => {
-      // Check availability of required connectors
-      const hasEmailConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Email);
-      const hasSmsConnector = logtoConnectors.some(({ type }) => type === ConnectorType.Sms);
-
-      // If forgotPasswordMethods is null (production compatibility),
-      // fall back to connector-based availability only
-      if (!signInExperience.forgotPasswordMethods) {
-        return {
-          email: hasEmailConnector,
-          phone: hasSmsConnector,
-        };
-      }
-
-      // When methods are explicitly configured, require both method inclusion and connector availability
-      return {
-        email:
-          signInExperience.forgotPasswordMethods.includes(
-            ForgotPasswordMethod.EmailVerificationCode
-          ) && hasEmailConnector,
-        phone:
-          signInExperience.forgotPasswordMethods.includes(
-            ForgotPasswordMethod.PhoneVerificationCode
-          ) && hasSmsConnector,
-      };
+      return getForgotPasswordAvailability(logtoConnectors, signInExperience.forgotPasswordMethods);
     };
 
     return {

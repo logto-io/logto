@@ -333,6 +333,7 @@ describe('adminUserRoutes', () => {
     const updateCalls = updateUserById.mock.calls as Array<[string, Partial<CreateUser>]>;
     const passwordCall = updateCalls.find(([id]) => id === mockedUserId);
     expect(typeof passwordCall?.[1].passwordUpdatedAt).toBe('number');
+    expect(passwordCall?.[1].isPasswordExpired).toBe(false);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,
@@ -340,8 +341,6 @@ describe('adminUserRoutes', () => {
   });
 
   it('PATCH /users/:userId/password/expire', async () => {
-    const now = new Date('2026-01-10T00:00:00.000Z');
-    jest.useFakeTimers().setSystemTime(now);
     mockedQueries.signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       passwordExpiration: {
@@ -353,7 +352,7 @@ describe('adminUserRoutes', () => {
     const response = await userRequest.patch('/users/foo/password/expire');
     expect(response.status).toEqual(200);
     expect(updateUserById).toHaveBeenCalledWith('foo', {
-      passwordUpdatedAt: now.getTime() - 10 * 24 * 60 * 60 * 1000,
+      isPasswordExpired: true,
     });
   });
 

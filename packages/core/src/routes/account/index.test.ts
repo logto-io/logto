@@ -110,5 +110,6 @@ describe('account routes password', () => {
 
     const [, payload] = mockedQueries.users.updateUserById.mock.calls[0] as [string, Partial<User>];
     expect(payload.passwordUpdatedAt).toBe(now.getTime());
+    expect(payload.isPasswordExpired).toBe(false);
   });
 });

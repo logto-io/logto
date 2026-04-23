@@ -268,7 +268,7 @@
           }
         },
         "summary": "Expire user password",
-        "description": "Mark the user's password as expired for the next sign-in attempt by backdating `passwordUpdatedAt` to the configured expiration threshold."
+        "description": "Mark the user's password as expired for the next sign-in attempt."
       }
     },
     "/api/users/{userId}/password/verify": {

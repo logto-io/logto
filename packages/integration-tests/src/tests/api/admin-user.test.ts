@@ -1,5 +1,10 @@
 /* eslint-disable max-lines -- will fix in the next PR */
-import { UsersPasswordEncryptionMethod, ConnectorType, SignInIdentifier } from '@logto/schemas';
+import {
+  UsersPasswordEncryptionMethod,
+  ConnectorType,
+  ForgotPasswordMethod,
+  SignInIdentifier,
+} from '@logto/schemas';
 import { HTTPError } from 'ky';
 
 import {
@@ -21,8 +26,9 @@ import {
   verifyUserPassword,
   putUserIdentity,
   updateUserProfile,
+  updateSignInExperience,
 } from '#src/api/index.js';
-import { clearConnectorsByTypes } from '#src/helpers/connector.js';
+import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { signInWithPassword, signInWithSocial } from '#src/helpers/experience/index.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import {
@@ -287,6 +293,13 @@ describe('admin console user management', () => {
       const password = generatePassword();
 
       const user = await createUserByAdmin({ username, password });
+
+      await clearConnectorsByTypes([ConnectorType.Email]);
+      await setEmailConnector();
+      await updateSignInExperience({
+        forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
+      });
+
       await enablePasswordExpiration({});
 
       const expiredUser = await expireUserPassword(user.id);

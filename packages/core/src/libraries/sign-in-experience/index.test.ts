@@ -1,6 +1,11 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
-import { CaptchaType, type CreateSignInExperience, type SignInExperience } from '@logto/schemas';
+import {
+  CaptchaType,
+  ForgotPasswordMethod,
+  type CreateSignInExperience,
+  type SignInExperience,
+} from '@logto/schemas';
 import { TtlCache } from '@logto/shared';
 
 import {
@@ -67,7 +72,7 @@ const connectorLibrary = createConnectorLibrary(queries, {
 
 const getLogtoConnectors = jest.spyOn(connectorLibrary, 'getLogtoConnectors');
 
-const { createSignInExperienceLibrary } = await import('./index.js');
+const { createSignInExperienceLibrary, getForgotPasswordAvailability } = await import('./index.js');
 const {
   validateLanguageInfo,
   removeUnavailableSocialConnectorTargets,
@@ -231,6 +236,41 @@ describe('getFullSignInExperience()', () => {
         email: false,
         phone: false,
       },
+    });
+  });
+});
+
+describe('getForgotPasswordAvailability()', () => {
+  it('should return connector-based availability when forgotPasswordMethods is null', () => {
+    expect(
+      getForgotPasswordAvailability(
+        [mockAliyunDmConnector, mockAliyunSmsConnector],
+        mockSignInExperience.forgotPasswordMethods
+      )
+    ).toEqual({
+      email: true,
+      phone: true,
+    });
+  });
+
+  it('should return unavailable methods when forgotPasswordMethods is empty', () => {
+    expect(
+      getForgotPasswordAvailability([mockAliyunDmConnector, mockAliyunSmsConnector], [])
+    ).toEqual({
+      email: false,
+      phone: false,
+    });
+  });
+
+  it('should return method-specific availability when only email is enabled', () => {
+    expect(
+      getForgotPasswordAvailability(
+        [mockAliyunDmConnector, mockAliyunSmsConnector],
+        [ForgotPasswordMethod.EmailVerificationCode]
+      )
+    ).toEqual({
+      email: true,
+      phone: false,
     });
   });
 });
