@@ -25,12 +25,15 @@ export type PasswordPolicyFormData = PasswordPolicy & {
   passwordExpirationDays: number;
   /** Number of days before expiry to warn users. 0 means no reminder. */
   passwordReminderDays: number;
+  /** Whether forgot password methods are configured. */
+  hasForgotPasswordMethods: boolean;
 };
 
 export const passwordPolicyFormParser = {
   fromSignInExperience: ({
     passwordPolicy,
     passwordExpiration,
+    forgotPasswordMethods,
   }: SignInExperience): PasswordPolicyFormData => ({
     ...passwordPolicyGuard.parse(passwordPolicy),
     customWords: passwordPolicy.rejects?.words?.join('\n') ?? '',
@@ -38,6 +41,7 @@ export const passwordPolicyFormParser = {
     isPasswordExpirationEnabled: passwordExpiration.enabled ?? false,
     passwordExpirationDays: passwordExpiration.validPeriodDays ?? 90,
     passwordReminderDays: passwordExpiration.reminderPeriodDays ?? 0,
+    hasForgotPasswordMethods: Boolean(forgotPasswordMethods?.length),
   }),
   toSignInExperience: (
     formData: PasswordPolicyFormData
@@ -48,6 +52,7 @@ export const passwordPolicyFormParser = {
       isPasswordExpirationEnabled,
       passwordExpirationDays,
       passwordReminderDays,
+      hasForgotPasswordMethods: _,
       ...passwordPolicy
     } = formData;
 
