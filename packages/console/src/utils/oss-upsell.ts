@@ -1,22 +1,15 @@
+import {
+  OssUpsellSearchParameterKey,
+  type OssUpsellEntry,
+  isOssUpsellEntry,
+  ossUpsellSearchParameterKeys,
+} from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 
 import { ossSurveyEndpoint } from '@/consts/env';
 import { logtoCloudConsoleLink } from '@/consts/external-links';
 
 type QueryValue = string | number | boolean | undefined;
-
-export const ossUpsellEntries = Object.freeze({
-  samlAppApplicationsLimitNotice: 'saml_app_applications_limit_notice',
-  samlAppCreateModalLimitBanner: 'saml_app_create_modal_limit_banner',
-  signInExpBringYourUiOssCard: 'sign_in_exp_bring_your_ui_oss_card',
-  signInExpHideLogtoBrandingOssNote: 'sign_in_exp_hide_logto_branding_oss_note',
-  getStartedOssCloudBanner: 'get_started_oss_cloud_banner',
-  ossSidebarCloudCard: 'oss_sidebar_cloud_card',
-  tenantSettingsMembersOssUpsell: 'tenant_settings_members_oss_upsell',
-  connectorEmailBuiltinUpsellBanner: 'connector_email_builtin_upsell_banner',
-});
-
-export type OssUpsellEntry = (typeof ossUpsellEntries)[keyof typeof ossUpsellEntries];
 
 export type CloudUpsellQuery = Record<string, QueryValue>;
 
@@ -36,10 +29,6 @@ export type UpsellClickPayload = {
   readonly sourceSearch?: string;
 };
 
-type NavigatorWithOptionalSendBeacon = Navigator & {
-  readonly sendBeacon?: (url: string, data?: BodyInit | undefined) => boolean;
-};
-
 type BuildCloudUpsellUrlOptions = {
   readonly path?: string;
   readonly extraQuery?: CloudUpsellQuery;
@@ -53,19 +42,7 @@ type OpenCloudUpsellOptions = {
   readonly target?: '_blank' | '_self';
 };
 
-enum OssUpsellSearchParameterKey {
-  Entry = 'entry',
-  ClickId = 'click_id',
-  Timestamp = 'ts',
-}
-
 const upsellEventsEndpointPathname = 'api/upsell-events';
-const ossUpsellSearchParameterKeys = [
-  OssUpsellSearchParameterKey.Entry,
-  OssUpsellSearchParameterKey.ClickId,
-  OssUpsellSearchParameterKey.Timestamp,
-] as const;
-const ossUpsellEntryValues = new Set<string>(Object.values(ossUpsellEntries));
 
 const setSearchParameters = (url: URL, searchParameters?: CloudUpsellQuery) => {
   if (!searchParameters) {
@@ -129,9 +106,6 @@ export const buildCloudUpsellUrl = (
 
   return url.toString();
 };
-
-const isOssUpsellEntry = (value: string): value is OssUpsellEntry =>
-  ossUpsellEntryValues.has(value);
 
 export const getUpsellTrackingDataFromSearch = (search: string) => {
   const searchParameters = new URLSearchParams(search);
@@ -260,3 +234,5 @@ export const openCloudUpsell = ({
 
   return targetUrl;
 };
+
+export { ossUpsellEntries, type OssUpsellEntry } from '@logto/schemas';

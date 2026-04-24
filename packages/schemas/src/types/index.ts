@@ -27,6 +27,7 @@ export * from './tenant-organization.js';
 export * from './mapi-proxy.js';
 export * from './consent.js';
 export * from './onboarding.js';
+export * from './oss-upsell.js';
 export * from './sign-in-experience.js';
 export * from './subject-token.js';
 export * from './ssr.js';
