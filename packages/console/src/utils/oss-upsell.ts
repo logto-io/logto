@@ -171,6 +171,8 @@ const reportUpsellEvent = (
   const body = JSON.stringify(payload);
 
   if (preferBeacon) {
+    // Prefer Beacon API for navigation-adjacent events (for example: click -> open page).
+    // It is fire-and-forget and does not block page unload, but can still fail to queue.
     const navigatorWithSendBeacon: Partial<Pick<Navigator, 'sendBeacon'>> = navigator;
     const isSent = trySafe(() =>
       navigatorWithSendBeacon.sendBeacon?.(
@@ -184,6 +186,8 @@ const reportUpsellEvent = (
     }
   }
 
+  // Fallback to fetch with keepalive for environments where beacon is unavailable
+  // or rejected, to improve best-effort delivery of telemetry events.
   void trySafe(async () =>
     fetch(url, {
       method: 'POST',
