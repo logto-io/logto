@@ -234,5 +234,3 @@ export const openCloudUpsell = ({
 
   return targetUrl;
 };
-
-export { ossUpsellEntries, type OssUpsellEntry } from '@logto/schemas';

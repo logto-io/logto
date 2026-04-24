@@ -1,9 +1,11 @@
+import { ossUpsellEntries } from '@logto/schemas';
+
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import MembersBg from '@/assets/icons/members-bg.svg?url';
 import Button from '@/ds-components/Button';
 import Card from '@/ds-components/Card';
 import DynamicT from '@/ds-components/DynamicT';
-import { openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
+import { openCloudUpsell } from '@/utils/oss-upsell';
 
 import { getOssTenantMembersUpsellCopyKeys } from '../utils';
 

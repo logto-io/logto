@@ -1,4 +1,4 @@
-import { Theme } from '@logto/schemas';
+import { Theme, ossUpsellEntries } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
 import useTheme from '@/hooks/use-theme';
-import { getCloudUpsellTargetUrl, openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
+import { getCloudUpsellTargetUrl, openCloudUpsell } from '@/utils/oss-upsell';
 
 import {
   ossCloudSidebarCardDismissDuration,

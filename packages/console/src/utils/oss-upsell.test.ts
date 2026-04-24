@@ -1,3 +1,5 @@
+import { ossUpsellEntries } from '@logto/schemas';
+
 // Module-level mock for env constants. Must be declared before importing the module under test.
 // eslint-disable-next-line @silverhand/fp/no-let
 let mockOssSurveyEndpoint: string | undefined = 'https://survey.example.com';
@@ -60,7 +62,7 @@ describe('oss upsell helpers', () => {
   });
 
   it('builds a tracked cloud upsell URL with the required query parameters', async () => {
-    const { buildCloudUpsellUrl, ossUpsellEntries } = await import('./oss-upsell');
+    const { buildCloudUpsellUrl } = await import('./oss-upsell');
 
     const url = new URL(
       buildCloudUpsellUrl(ossUpsellEntries.getStartedOssCloudBanner, {
@@ -84,11 +86,9 @@ describe('oss upsell helpers', () => {
   });
 
   it('extracts and strips upsell tracking search parameters', async () => {
-    const {
-      getUpsellTrackingDataFromSearch,
-      stripUpsellTrackingSearchParameters,
-      ossUpsellEntries,
-    } = await import('./oss-upsell');
+    const { getUpsellTrackingDataFromSearch, stripUpsellTrackingSearchParameters } = await import(
+      './oss-upsell'
+    );
 
     expect(
       getUpsellTrackingDataFromSearch(
@@ -113,7 +113,7 @@ describe('oss upsell helpers', () => {
   });
 
   it('reports upsell clicks with sendBeacon when the survey endpoint is configured', async () => {
-    const { reportUpsellClick, ossUpsellEntries } = await import('./oss-upsell');
+    const { reportUpsellClick } = await import('./oss-upsell');
 
     reportUpsellClick({
       entry: ossUpsellEntries.ossSidebarCloudCard,
@@ -137,7 +137,7 @@ describe('oss upsell helpers', () => {
   });
 
   it('reports upsell landings with fetch and skips sendBeacon', async () => {
-    const { reportUpsellLanding, ossUpsellEntries } = await import('./oss-upsell');
+    const { reportUpsellLanding } = await import('./oss-upsell');
 
     reportUpsellLanding({
       entry: ossUpsellEntries.getStartedOssCloudBanner,
@@ -163,7 +163,7 @@ describe('oss upsell helpers', () => {
   });
 
   it('falls back to fetch when sendBeacon is unavailable', async () => {
-    const { reportUpsellClick, ossUpsellEntries } = await import('./oss-upsell');
+    const { reportUpsellClick } = await import('./oss-upsell');
     const navigatorWithSendBeacon: NavigatorWithOptionalSendBeacon = navigator;
 
     // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -188,9 +188,7 @@ describe('oss upsell helpers', () => {
   });
 
   it('does not report upsell events when the survey endpoint is missing or invalid', async () => {
-    const { reportUpsellClick, reportUpsellLanding, ossUpsellEntries } = await import(
-      './oss-upsell'
-    );
+    const { reportUpsellClick, reportUpsellLanding } = await import('./oss-upsell');
 
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockOssSurveyEndpoint = undefined;
@@ -217,7 +215,7 @@ describe('oss upsell helpers', () => {
   });
 
   it('opens a tracked Cloud URL in a new tab and reports the click', async () => {
-    const { openCloudUpsell, ossUpsellEntries } = await import('./oss-upsell');
+    const { openCloudUpsell } = await import('./oss-upsell');
 
     const targetUrl = openCloudUpsell({
       entry: ossUpsellEntries.getStartedOssCloudBanner,

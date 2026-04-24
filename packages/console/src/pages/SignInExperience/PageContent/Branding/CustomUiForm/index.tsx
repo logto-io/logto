@@ -1,3 +1,4 @@
+import { ossUpsellEntries } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -14,7 +15,7 @@ import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
-import { getCloudUpsellTargetUrl, openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
+import { getCloudUpsellTargetUrl, openCloudUpsell } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';

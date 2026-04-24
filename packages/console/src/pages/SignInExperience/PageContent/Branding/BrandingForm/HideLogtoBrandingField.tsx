@@ -1,3 +1,4 @@
+import { ossUpsellEntries } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { Trans } from 'react-i18next';
 
@@ -7,7 +8,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextLink from '@/ds-components/TextLink';
-import { getCloudUpsellTargetUrl, openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
+import { getCloudUpsellTargetUrl, openCloudUpsell } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
 
