@@ -7,6 +7,8 @@ const oidc_configs = {
     'An absolute lifetime limit from session creation. Regardless of activity, the session ends when this fixed duration elapses.',
   oss_notice:
     'For Logto OSS, restart your instance after updating any OIDC configuration (including session settings and <keyRotationsLink>key rotations</keyRotationsLink>) for changes to take effect. To apply all OIDC configuration updates automatically without reloading the service, <centralCacheLink>enable central cache</centralCacheLink>.',
+  cloud_private_key_rotation_notice:
+    'In Logto Cloud, private key rotation takes effect after a 4-hour grace period.',
 };
 
 export default Object.freeze(oidc_configs);

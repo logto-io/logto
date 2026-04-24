@@ -7,6 +7,8 @@ const oidc_configs = {
     'Um limite absoluto de duração a partir da criação da sessão. Independentemente da atividade, a sessão termina quando essa duração fixa expira.',
   oss_notice:
     'No Logto OSS, reinicie sua instância após atualizar qualquer configuração OIDC (incluindo configurações de sessão e <keyRotationsLink>rotação de chaves</keyRotationsLink>) para que as alterações entrem em vigor. Para aplicar automaticamente todas as atualizações de configuração OIDC sem reiniciar o serviço, <centralCacheLink>ative o cache central</centralCacheLink>.',
+  cloud_private_key_rotation_notice:
+    'No Logto Cloud, a rotação de chaves privadas entra em vigor após um período de carência de 4 horas.',
 };
 
 export default Object.freeze(oidc_configs);

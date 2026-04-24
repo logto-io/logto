@@ -7,6 +7,8 @@ const oidc_configs = {
     'Bezwzględny limit czasu życia liczony od utworzenia sesji. Niezależnie od aktywności sesja kończy się po upływie tego stałego czasu.',
   oss_notice:
     'W Logto OSS po każdej aktualizacji konfiguracji OIDC (w tym ustawień sesji i <keyRotationsLink>rotacji kluczy</keyRotationsLink>) uruchom ponownie instancję, aby zastosować zmiany. Aby automatycznie stosować wszystkie aktualizacje konfiguracji OIDC bez restartu usługi, <centralCacheLink>włącz centralny cache</centralCacheLink>.',
+  cloud_private_key_rotation_notice:
+    'W Logto Cloud rotacja klucza prywatnego zaczyna obowiązywać po 4-godzinnym okresie karencji.',
 };
 
 export default Object.freeze(oidc_configs);

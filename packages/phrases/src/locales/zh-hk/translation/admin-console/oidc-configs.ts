@@ -7,6 +7,7 @@ const oidc_configs = {
     '從建立工作階段起計的絕對存活期限上限。無論是否有活動，工作階段都會在此固定時長屆滿後結束。',
   oss_notice:
     '對於 Logto OSS，更新任何 OIDC 設定（包括工作階段設定與<keyRotationsLink>金鑰輪替</keyRotationsLink>）後，都需要重新啟動執行個體才會生效。若要在不重新載入服務的情況下自動套用所有 OIDC 設定更新，請<centralCacheLink>啟用中央快取</centralCacheLink>。',
+  cloud_private_key_rotation_notice: '在 Logto Cloud 中，私密金鑰輪換會在 4 小時寬限期後生效。',
 };
 
 export default Object.freeze(oidc_configs);
