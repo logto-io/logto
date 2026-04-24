@@ -16,8 +16,9 @@ type GlobalWithOptionalFetch = typeof globalThis & {
   fetch?: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 };
 
-type CryptoWithOptionalRandomUuid = Crypto & {
+type MutableCrypto = {
   randomUUID?: () => string;
+  getRandomValues?: Crypto['getRandomValues'];
 };
 
 describe('oss upsell helpers', () => {
@@ -28,11 +29,19 @@ describe('oss upsell helpers', () => {
     (): `${string}-${string}-${string}-${string}-${string}` =>
       '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf'
   );
+  const mockGetRandomValues = jest.fn((array: Uint8Array) => {
+    array.set([
+      0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee,
+      0xff,
+    ]);
+
+    return array;
+  });
 
   beforeEach(() => {
     const navigatorWithSendBeacon: NavigatorWithOptionalSendBeacon = navigator;
     const globalWithOptionalFetch: GlobalWithOptionalFetch = globalThis;
-    const cryptoWithRandomUuid: CryptoWithOptionalRandomUuid = globalThis.crypto;
+    const cryptoWithRandomUuid: MutableCrypto = globalThis.crypto;
 
     jest.restoreAllMocks();
     jest.spyOn(Date, 'now').mockReturnValue(1_776_902_215_123);
@@ -43,6 +52,8 @@ describe('oss upsell helpers', () => {
     globalWithOptionalFetch.fetch = mockFetch;
     // eslint-disable-next-line @silverhand/fp/no-mutation
     cryptoWithRandomUuid.randomUUID = mockRandomUuid;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    cryptoWithRandomUuid.getRandomValues = mockGetRandomValues as Crypto['getRandomValues'];
 
     mockWindowOpen.mockReset();
     mockSendBeacon.mockReset();
@@ -50,6 +61,7 @@ describe('oss upsell helpers', () => {
     mockFetch.mockReset();
     mockFetch.mockResolvedValue({ ok: true } as Response);
     mockRandomUuid.mockClear();
+    mockGetRandomValues.mockClear();
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockOssSurveyEndpoint = 'https://survey.example.com';
   });
@@ -59,6 +71,17 @@ describe('oss upsell helpers', () => {
 
     expect(createUpsellClickId()).toBe('01968a0d-5e94-7e6a-944a-12cc7ef3c3cf');
     expect(mockRandomUuid).toHaveBeenCalledTimes(1);
+  });
+
+  it('falls back to crypto.getRandomValues() when randomUUID is unavailable', async () => {
+    const { createUpsellClickId } = await import('./oss-upsell');
+    const cryptoWithRandomUuid: MutableCrypto = globalThis.crypto;
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    cryptoWithRandomUuid.randomUUID = undefined;
+
+    expect(createUpsellClickId()).toBe('00112233-4455-4677-8899-aabbccddeeff');
+    expect(mockGetRandomValues).toHaveBeenCalledTimes(1);
   });
 
   it('builds a tracked cloud upsell URL with the required query parameters', async () => {
