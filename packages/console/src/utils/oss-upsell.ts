@@ -111,7 +111,17 @@ const formatUuidV4FromBytes = (bytes: Uint8Array) => {
   ].join('-');
 };
 
+const createNonCryptoUuidV4 = () => {
+  const pseudoRandomBytes = Array.from({ length: 16 }, () => Math.floor(Math.random() * 256));
+
+  return formatUuidV4FromBytes(Uint8Array.from(pseudoRandomBytes));
+};
+
 export const createUpsellClickId = () => {
+  // `randomUUID()` may be missing or throw in some older / constrained runtimes.
+  // In many of those cases, `getRandomValues()` still exists and can generate UUID bytes.
+  // If both are unavailable (for example, heavily mocked or legacy non-WebCrypto envs),
+  // fall back to non-crypto randomness but keep a valid UUID string format.
   const crypto = trySafe(() => globalThis.crypto);
   const randomUuid = crypto ? trySafe(() => crypto.randomUUID()) : undefined;
 
@@ -127,7 +137,7 @@ export const createUpsellClickId = () => {
     return formatUuidV4FromBytes(randomValues);
   }
 
-  return `fallback-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return createNonCryptoUuidV4();
 };
 
 export const buildCloudUpsellUrl = (

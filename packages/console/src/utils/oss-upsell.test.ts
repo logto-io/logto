@@ -84,6 +84,20 @@ describe('oss upsell helpers', () => {
     expect(mockGetRandomValues).toHaveBeenCalledTimes(1);
   });
 
+  it('falls back to a non-crypto v4 UUID when Web Crypto APIs are unavailable', async () => {
+    const { createUpsellClickId } = await import('./oss-upsell');
+    const cryptoWithRandomUuid: MutableCrypto = globalThis.crypto;
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    cryptoWithRandomUuid.randomUUID = undefined;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    cryptoWithRandomUuid.getRandomValues = undefined;
+
+    expect(createUpsellClickId()).toMatch(
+      /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i
+    );
+  });
+
   it('builds a tracked cloud upsell URL with the required query parameters', async () => {
     const { buildCloudUpsellUrl } = await import('./oss-upsell');
 
