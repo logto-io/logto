@@ -53,8 +53,18 @@ type OpenCloudUpsellOptions = {
   readonly target?: '_blank' | '_self';
 };
 
+enum OssUpsellSearchParameterKey {
+  Entry = 'entry',
+  ClickId = 'click_id',
+  Timestamp = 'ts',
+}
+
 const upsellEventsEndpointPathname = 'api/upsell-events';
-const ossUpsellSearchParameterKeys = ['entry', 'click_id', 'ts'] as const;
+const ossUpsellSearchParameterKeys = [
+  OssUpsellSearchParameterKey.Entry,
+  OssUpsellSearchParameterKey.ClickId,
+  OssUpsellSearchParameterKey.Timestamp,
+] as const;
 const ossUpsellEntryValues = new Set<string>(Object.values(ossUpsellEntries));
 
 const setSearchParameters = (url: URL, searchParameters?: CloudUpsellQuery) => {
@@ -113,9 +123,9 @@ export const buildCloudUpsellUrl = (
   };
 
   setSearchParameters(url, extraQuery);
-  url.searchParams.set('entry', entry);
-  url.searchParams.set('click_id', clickId);
-  url.searchParams.set('ts', String(timestamp));
+  url.searchParams.set(OssUpsellSearchParameterKey.Entry, entry);
+  url.searchParams.set(OssUpsellSearchParameterKey.ClickId, clickId);
+  url.searchParams.set(OssUpsellSearchParameterKey.Timestamp, String(timestamp));
 
   return url.toString();
 };
@@ -125,9 +135,9 @@ const isOssUpsellEntry = (value: string): value is OssUpsellEntry =>
 
 export const getUpsellTrackingDataFromSearch = (search: string) => {
   const searchParameters = new URLSearchParams(search);
-  const entry = searchParameters.get('entry');
-  const clickId = searchParameters.get('click_id');
-  const timestamp = searchParameters.get('ts');
+  const entry = searchParameters.get(OssUpsellSearchParameterKey.Entry);
+  const clickId = searchParameters.get(OssUpsellSearchParameterKey.ClickId);
+  const timestamp = searchParameters.get(OssUpsellSearchParameterKey.Timestamp);
 
   if (!entry || !clickId || !timestamp || !isOssUpsellEntry(entry)) {
     return;
