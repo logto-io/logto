@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 
 import type { LogtoOidcConfigType } from '@logto/schemas';
-import { LogtoOidcConfigKey, logtoConfigGuards } from '@logto/schemas';
+import { LogtoOidcConfigKey, getSeededOidcPrivateKeys, logtoConfigGuards } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { getEnvAsStringArray } from '@silverhand/essentials';
 import type { DatabaseTransactionConnection } from '@silverhand/slonik';
@@ -100,9 +100,11 @@ export const oidcConfigReaders: {
 
     if (privateKeys.length > 0) {
       return {
-        value: privateKeys.map((key) =>
-          buildOidcKeyFromRawString(
-            isBase64FormatPrivateKey(key) ? Buffer.from(key, 'base64').toString('utf8') : key
+        value: getSeededOidcPrivateKeys(
+          privateKeys.map((key) =>
+            buildOidcKeyFromRawString(
+              isBase64FormatPrivateKey(key) ? Buffer.from(key, 'base64').toString('utf8') : key
+            )
           )
         ),
         fromEnv: true,
@@ -117,13 +119,13 @@ export const oidcConfigReaders: {
         privateKeyPaths.map(async (path) => readFile(path, 'utf8'))
       );
       return {
-        value: privateKeys.map((key) => buildOidcKeyFromRawString(key)),
+        value: getSeededOidcPrivateKeys(privateKeys.map((key) => buildOidcKeyFromRawString(key))),
         fromEnv: true,
       };
     }
 
     return {
-      value: [await generateOidcPrivateKey()],
+      value: getSeededOidcPrivateKeys([await generateOidcPrivateKey()]),
       fromEnv: false,
     };
   },
