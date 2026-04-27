@@ -1,5 +1,5 @@
 import { emailRegEx } from '@logto/core-kit';
-import { CompanySize, type OssSurveyReportPayload, Project } from '@logto/schemas';
+import { type CompanySize, type OssSurveyReportPayload, Project } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
 export type OssOnboardingFormData = {
@@ -17,7 +17,6 @@ export const getOssOnboardingDefaultValues = (): OssOnboardingFormData => ({
   project: Project.Company,
   projectName: '',
   companyName: '',
-  companySize: CompanySize.Scale3,
 });
 
 export const shouldRequireCompanyFields = (project: Project) => project === Project.Company;

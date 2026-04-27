@@ -10,14 +10,13 @@ import {
 } from './utils';
 
 describe('OSS onboarding form utils', () => {
-  test('uses company project as the default selection and leaves email blank', () => {
+  test('uses company project as the default selection with no company size preselected', () => {
     expect(getOssOnboardingDefaultValues()).toEqual({
       emailAddress: '',
       newsletter: false,
       project: Project.Company,
       projectName: '',
       companyName: '',
-      companySize: CompanySize.Scale3,
     });
   });
 
