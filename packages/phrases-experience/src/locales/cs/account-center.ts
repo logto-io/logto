@@ -107,6 +107,9 @@ const account_center = {
     account_removal: 'Smazání účtu',
     delete_your_account: 'Smazat svůj účet',
     delete_account: 'Smazat účet',
+    remove_username_confirmation_title: 'Odstranit uživatelské jméno',
+    remove_username_confirmation_description:
+      'Po odstranění se již nebudete moci přihlásit pomocí tohoto uživatelského jména. Opravdu chcete pokračovat?',
     remove_email_confirmation_title: 'Odstranit e-mailovou adresu',
     remove_email_confirmation_description:
       'Po odstranění se již nebudete moci přihlásit pomocí této e-mailové adresy. Opravdu chcete pokračovat?',
@@ -115,6 +118,7 @@ const account_center = {
       'Po odstranění se již nebudete moci přihlásit pomocí tohoto telefonního čísla. Opravdu chcete pokračovat?',
     email_removed: 'E-mailová adresa byla úspěšně odstraněna.',
     phone_removed: 'Telefonní číslo bylo úspěšně odstraněno.',
+    username_removed: 'Uživatelské jméno bylo úspěšně odstraněno.',
   },
   social: {
     linked: '{{connector}} byl úspěšně propojen.',

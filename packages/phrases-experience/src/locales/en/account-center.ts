@@ -104,6 +104,9 @@ const account_center = {
     account_removal: 'Account removal',
     delete_your_account: 'Delete your account',
     delete_account: 'Delete account',
+    remove_username_confirmation_title: 'Remove username',
+    remove_username_confirmation_description:
+      'Once removed, you will no longer be able to sign in with this username. Are you sure you want to continue?',
     remove_email_confirmation_title: 'Remove email address',
     remove_email_confirmation_description:
       'Once removed, you will no longer be able to sign in with this email address. Are you sure you want to continue?',
@@ -112,6 +115,7 @@ const account_center = {
       'Once removed, you will no longer be able to sign in with this phone number. Are you sure you want to continue?',
     email_removed: 'Email address removed successfully.',
     phone_removed: 'Phone number removed successfully.',
+    username_removed: 'Username removed successfully.',
   },
   social: {
     linked: '{{connector}} linked successfully.',

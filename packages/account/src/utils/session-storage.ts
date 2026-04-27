@@ -65,6 +65,7 @@ const storedSocialFlowRecordGuard = s.union([
 const pendingVerifiedActions = Object.freeze([
   'enable-mfa',
   'disable-mfa',
+  'remove-username',
   'remove-email',
   'remove-phone',
 ] as const);

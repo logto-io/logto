@@ -1,7 +1,7 @@
 import { AccountCenterControlValue } from '@logto/schemas';
 import { formatToInternationalPhoneNumber } from '@logto/shared/universal';
 import classNames from 'classnames';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -56,17 +56,10 @@ const EmailPhoneSection = () => {
     [navigate]
   );
 
-  const handleRemoveConfirm = useCallback(async () => {
-    if (!pendingRemoveType) {
-      return;
-    }
-
-    setPendingRemoveType(undefined);
-
-    const deleteApi = pendingRemoveType === 'email' ? deletePrimaryEmailApi : deletePrimaryPhoneApi;
-
-    if (verificationId) {
-      const [error] = await deleteApi(verificationId);
+  const removeIdentifier = useCallback(
+    async (removeType: RemoveType, verifiedId: string) => {
+      const deleteApi = removeType === 'email' ? deletePrimaryEmailApi : deletePrimaryPhoneApi;
+      const [error] = await deleteApi(verifiedId);
 
       if (error) {
         await handleError(error, {
@@ -81,11 +74,32 @@ const EmailPhoneSection = () => {
       await refreshUserInfo();
       setToast(
         t(
-          pendingRemoveType === 'email'
+          removeType === 'email'
             ? 'account_center.security.email_removed'
             : 'account_center.security.phone_removed'
         )
       );
+    },
+    [
+      deletePrimaryEmailApi,
+      deletePrimaryPhoneApi,
+      handleError,
+      refreshUserInfo,
+      setToast,
+      setVerificationId,
+      t,
+    ]
+  );
+
+  const handleRemoveConfirm = useCallback(async () => {
+    if (!pendingRemoveType) {
+      return;
+    }
+
+    setPendingRemoveType(undefined);
+
+    if (verificationId) {
+      await removeIdentifier(pendingRemoveType, verificationId);
       return;
     }
 
@@ -93,18 +107,28 @@ const EmailPhoneSection = () => {
       pendingRemoveType === 'email' ? 'remove-email' : 'remove-phone'
     );
     navigateTo(verifiedActionRoute);
-  }, [
-    pendingRemoveType,
-    verificationId,
-    deletePrimaryEmailApi,
-    deletePrimaryPhoneApi,
-    handleError,
-    setVerificationId,
-    setToast,
-    t,
-    refreshUserInfo,
-    navigateTo,
-  ]);
+  }, [pendingRemoveType, verificationId, navigateTo, removeIdentifier]);
+
+  useEffect(() => {
+    if (!verificationId) {
+      return;
+    }
+
+    const pendingAction = sessionStorage.getPendingVerifiedAction();
+    const pendingRemoveType =
+      pendingAction === 'remove-email'
+        ? 'email'
+        : pendingAction === 'remove-phone'
+          ? 'phone'
+          : undefined;
+
+    if (!pendingRemoveType) {
+      return;
+    }
+
+    sessionStorage.clearPendingVerifiedAction();
+    void removeIdentifier(pendingRemoveType, verificationId);
+  }, [removeIdentifier, verificationId]);
 
   if (!showEmail && !showPhone) {
     return null;

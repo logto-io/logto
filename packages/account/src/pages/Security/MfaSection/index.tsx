@@ -100,42 +100,9 @@ const MfaSection = () => {
 
   const rows = useMfaRows(mfaVerifications, navigateTo);
 
-  const handleToggleChange = useCallback(
-    async (checked: boolean) => {
-      const skipMfa = !checked;
-
-      if (!checked) {
-        setIsConfirmModalOpen(true);
-        return;
-      }
-
-      if (verificationId) {
-        const [error] = await updateMfaSettingsApi(verificationId, { skipMfaOnSignIn: skipMfa });
-
-        if (error) {
-          await handleError(error, {
-            'verification_record.permission_denied': async () => {
-              setToast(t('account_center.verification.verification_required'));
-            },
-          });
-          return;
-        }
-
-        setSkipMfaOnSignIn(skipMfa);
-        return;
-      }
-
-      sessionStorage.setPendingVerifiedAction('enable-mfa');
-      navigateTo(verifiedActionRoute);
-    },
-    [verificationId, updateMfaSettingsApi, handleError, setToast, t, navigateTo]
-  );
-
-  const handleConfirmDisable = useCallback(async () => {
-    setIsConfirmModalOpen(false);
-
-    if (verificationId) {
-      const [error] = await updateMfaSettingsApi(verificationId, { skipMfaOnSignIn: true });
+  const updateSkipMfaOnSignIn = useCallback(
+    async (verifiedId: string, skipMfaOnSignIn: boolean) => {
+      const [error] = await updateMfaSettingsApi(verifiedId, { skipMfaOnSignIn });
 
       if (error) {
         await handleError(error, {
@@ -146,13 +113,57 @@ const MfaSection = () => {
         return;
       }
 
-      setSkipMfaOnSignIn(true);
+      setSkipMfaOnSignIn(skipMfaOnSignIn);
+    },
+    [handleError, setToast, t, updateMfaSettingsApi]
+  );
+
+  const handleToggleChange = useCallback(
+    async (checked: boolean) => {
+      const skipMfa = !checked;
+
+      if (!checked) {
+        setIsConfirmModalOpen(true);
+        return;
+      }
+
+      if (verificationId) {
+        await updateSkipMfaOnSignIn(verificationId, skipMfa);
+        return;
+      }
+
+      sessionStorage.setPendingVerifiedAction('enable-mfa');
+      navigateTo(verifiedActionRoute);
+    },
+    [navigateTo, updateSkipMfaOnSignIn, verificationId]
+  );
+
+  const handleConfirmDisable = useCallback(async () => {
+    setIsConfirmModalOpen(false);
+
+    if (verificationId) {
+      await updateSkipMfaOnSignIn(verificationId, true);
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('disable-mfa');
     navigateTo(verifiedActionRoute);
-  }, [verificationId, updateMfaSettingsApi, handleError, setToast, t, navigateTo]);
+  }, [navigateTo, updateSkipMfaOnSignIn, verificationId]);
+
+  useEffect(() => {
+    if (!verificationId) {
+      return;
+    }
+
+    const pendingAction = sessionStorage.getPendingVerifiedAction();
+
+    if (pendingAction !== 'enable-mfa' && pendingAction !== 'disable-mfa') {
+      return;
+    }
+
+    sessionStorage.clearPendingVerifiedAction();
+    void updateSkipMfaOnSignIn(verificationId, pendingAction === 'disable-mfa');
+  }, [updateSkipMfaOnSignIn, verificationId]);
 
   if (rows.length === 0 && !showToggle) {
     return null;

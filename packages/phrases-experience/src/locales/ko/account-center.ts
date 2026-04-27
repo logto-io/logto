@@ -106,6 +106,9 @@ const account_center = {
     account_removal: '계정 삭제',
     delete_your_account: '내 계정 삭제',
     delete_account: '계정 삭제',
+    remove_username_confirmation_title: '사용자 이름 제거',
+    remove_username_confirmation_description:
+      '제거하면 이 사용자 이름으로 더 이상 로그인할 수 없습니다. 계속하시겠습니까?',
     remove_email_confirmation_title: '이메일 주소 제거',
     remove_email_confirmation_description:
       '제거하면 이 이메일 주소로 더 이상 로그인할 수 없습니다. 계속하시겠습니까?',
@@ -114,6 +117,7 @@ const account_center = {
       '제거하면 이 전화번호로 더 이상 로그인할 수 없습니다. 계속하시겠습니까?',
     email_removed: '이메일 주소가 성공적으로 제거되었습니다.',
     phone_removed: '전화번호가 성공적으로 제거되었습니다.',
+    username_removed: '사용자 이름이 성공적으로 제거되었습니다.',
   },
   social: {
     linked: '{{connector}}이(가) 성공적으로 연결되었습니다.',
