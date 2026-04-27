@@ -76,6 +76,10 @@
   background: linear-gradient(180deg, rgba(93, 52, 242, 6%) 0%, rgba(250, 171, 255, 8%) 100%);
 }
 
+.card.ossCloudBanner {
+  padding: _.unit(4.5);
+}
+
 .ossCloudBannerContent {
   display: flex;
   align-items: center;
@@ -149,7 +153,7 @@
   display: flex;
   align-items: center;
   margin-left: auto;
-  margin-right: _.unit(3);
+  margin-right: _.unit(4.5);
   flex-shrink: 0;
 }
 
