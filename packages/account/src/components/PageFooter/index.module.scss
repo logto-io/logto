@@ -1,6 +1,9 @@
 @use '@experience/shared/scss/underscore' as _;
 
 .footer {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -8,6 +11,9 @@
 }
 
 .footerNoLinks {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,6 +21,7 @@
 }
 
 .links {
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: _.unit(6);
@@ -33,4 +40,19 @@
 
 .signature {
   flex-shrink: 0;
+  max-width: 100%;
+}
+
+:global(body.mobile) {
+  .footer {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: _.unit(1) _.unit(3);
+  }
+
+  .links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: _.unit(1) _.unit(4);
+  }
 }
