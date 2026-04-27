@@ -1,5 +1,5 @@
 import { AccountCenterControlValue } from '@logto/schemas';
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
@@ -16,11 +16,20 @@ const VerifiedAction = () => {
     []
   );
 
-  useEffect(() => {
-    if (verificationId && action) {
-      navigate(-1);
-    }
-  }, [action, navigate, verificationId]);
+  const verificationIdRef = useRef(verificationId);
+  // Keep the latest verification result for the unmount cleanup without making
+  // the cleanup run on every verificationId change.
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  verificationIdRef.current = verificationId;
+
+  useEffect(
+    () => () => {
+      if (!verificationIdRef.current) {
+        sessionStorage.clearPendingVerifiedAction();
+      }
+    },
+    []
+  );
 
   const isActionAllowed = useMemo(() => {
     if (!accountCenterSettings?.enabled) {
@@ -45,6 +54,12 @@ const VerifiedAction = () => {
       }
     }
   }, [accountCenterSettings, action]);
+
+  useEffect(() => {
+    if (verificationId && action && accountCenterSettings && isActionAllowed) {
+      navigate(-1);
+    }
+  }, [accountCenterSettings, action, isActionAllowed, navigate, verificationId]);
 
   if (!action) {
     return <ErrorPage titleKey="error.something_went_wrong" messageKey="error.invalid_session" />;

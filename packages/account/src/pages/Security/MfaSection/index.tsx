@@ -36,7 +36,7 @@ const mandatoryMfaPolicies = new Set<MfaPolicy>([
 const MfaSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, verificationId, setToast } =
+  const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
     useContext(PageContext);
   const [mfaVerifications, setMfaVerifications] = useState<UserMfaVerificationResponse>();
   const [skipMfaOnSignIn, setSkipMfaOnSignIn] = useState<boolean>();
@@ -107,6 +107,7 @@ const MfaSection = () => {
       if (error) {
         await handleError(error, {
           'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
             setToast(t('account_center.verification.verification_required'));
           },
         });
@@ -115,7 +116,7 @@ const MfaSection = () => {
 
       setSkipMfaOnSignIn(skipMfaOnSignIn);
     },
-    [handleError, setToast, t, updateMfaSettingsApi]
+    [handleError, setToast, setVerificationId, t, updateMfaSettingsApi]
   );
 
   const handleToggleChange = useCallback(

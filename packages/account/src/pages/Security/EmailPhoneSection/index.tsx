@@ -115,19 +115,19 @@ const EmailPhoneSection = () => {
     }
 
     const pendingAction = sessionStorage.getPendingVerifiedAction();
-    const pendingRemoveType =
+    const pendingActionRemoveType =
       pendingAction === 'remove-email'
         ? 'email'
         : pendingAction === 'remove-phone'
           ? 'phone'
           : undefined;
 
-    if (!pendingRemoveType) {
+    if (!pendingActionRemoveType) {
       return;
     }
 
     sessionStorage.clearPendingVerifiedAction();
-    void removeIdentifier(pendingRemoveType, verificationId);
+    void removeIdentifier(pendingActionRemoveType, verificationId);
   }, [removeIdentifier, verificationId]);
 
   if (!showEmail && !showPhone) {
