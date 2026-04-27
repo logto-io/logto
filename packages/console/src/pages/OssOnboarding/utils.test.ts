@@ -30,10 +30,12 @@ describe('OSS onboarding form utils', () => {
     expect(normalizeOssOnboardingEmailAddress(' Dev@Example.COM ')).toBe('dev@example.com');
     expect(normalizeOssOnboardingEmailAddress('not-an-email')).toBeUndefined();
     expect(normalizeOssOnboardingEmailAddress('')).toBeUndefined();
+    expect(normalizeOssOnboardingEmailAddress()).toBeUndefined();
 
     expect(isValidOssOnboardingEmailAddress('Dev@Example.COM')).toBe(true);
     expect(isValidOssOnboardingEmailAddress('not-an-email')).toBe(false);
     expect(isValidOssOnboardingEmailAddress('')).toBe(false);
+    expect(isValidOssOnboardingEmailAddress()).toBe(false);
   });
 
   test('drops company-only values from the questionnaire payload for personal projects', () => {
