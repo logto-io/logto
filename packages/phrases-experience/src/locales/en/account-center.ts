@@ -95,8 +95,6 @@ const account_center = {
     turn_on_2_step_verification: 'Turn on 2-step verification',
     turn_on_2_step_verification_description:
       "Add an extra layer of security. You'll be prompted for a second verification step at sign-in.",
-    two_step_verification_description:
-      "Add an extra layer of security. You'll be prompted for a second verification step at sign-in.",
     turn_off_2_step_verification: 'Turn off 2-step verification',
     turn_off_2_step_verification_description:
       'Disabling 2-step verification will remove the extra layer of protection from your account at sign-in. Are you sure you want to continue?',

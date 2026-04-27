@@ -102,8 +102,6 @@ const account_center = {
     turn_on_2_step_verification: 'Ativar verificação em duas etapas',
     turn_on_2_step_verification_description:
       'Adicione uma camada extra de segurança. Será solicitada uma segunda etapa de verificação ao iniciar sessão.',
-    two_step_verification_description:
-      'Adicione uma camada extra de segurança. Será solicitada uma segunda etapa de verificação ao iniciar sessão.',
     turn_off_2_step_verification: 'Desativar verificação em duas etapas',
     turn_off_2_step_verification_description:
       'Desativar a verificação em duas etapas irá remover a camada extra de proteção da sua conta ao iniciar sessão. Tem a certeza de que pretende continuar?',

@@ -98,8 +98,6 @@ const account_center = {
     turn_on_2_step_verification: '2段階認証を有効にする',
     turn_on_2_step_verification_description:
       'セキュリティを強化します。サインイン時に2段階目の認証が求められます。',
-    two_step_verification_description:
-      'セキュリティを強化します。サインイン時に2段階目の認証が求められます。',
     turn_off_2_step_verification: '2段階認証を無効にする',
     turn_off_2_step_verification_description:
       '2段階認証を無効にすると、サインイン時の追加の保護レイヤーが削除されます。続行してもよろしいですか？',

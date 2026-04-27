@@ -97,8 +97,6 @@ const account_center = {
     turn_on_2_step_verification: '2단계 인증 켜기',
     turn_on_2_step_verification_description:
       '추가 보안 계층을 추가합니다. 로그인 시 두 번째 인증 단계가 요청됩니다.',
-    two_step_verification_description:
-      '추가 보안 계층을 추가합니다. 로그인 시 두 번째 인증 단계가 요청됩니다.',
     turn_off_2_step_verification: '2단계 인증 끄기',
     turn_off_2_step_verification_description:
       '2단계 인증을 비활성화하면 로그인 시 추가 보호 계층이 제거됩니다. 계속하시겠습니까?',

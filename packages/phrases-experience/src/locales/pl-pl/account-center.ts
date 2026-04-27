@@ -99,8 +99,6 @@ const account_center = {
     turn_on_2_step_verification: 'Włącz weryfikację dwuetapową',
     turn_on_2_step_verification_description:
       'Dodaj dodatkową warstwę bezpieczeństwa. Podczas logowania zostaniesz poproszony o drugi krok weryfikacji.',
-    two_step_verification_description:
-      'Dodaj dodatkową warstwę bezpieczeństwa. Podczas logowania zostaniesz poproszony o drugi krok weryfikacji.',
     turn_off_2_step_verification: 'Wyłącz weryfikację dwuetapową',
     turn_off_2_step_verification_description:
       'Wyłączenie weryfikacji dwuetapowej usunie dodatkową warstwę ochrony z Twojego konta podczas logowania. Czy na pewno chcesz kontynuować?',

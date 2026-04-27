@@ -183,7 +183,7 @@ const MfaSection = () => {
                     )}
                   </div>
                   <div className={styles.toggleDescription}>
-                    {t('account_center.security.two_step_verification_description')}
+                    {t('account_center.security.turn_on_2_step_verification_description')}
                   </div>
                 </div>
                 <ToggleSwitch

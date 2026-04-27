@@ -98,8 +98,6 @@ const account_center = {
     turn_on_2_step_verification: 'Zapnout dvoufázové ověření',
     turn_on_2_step_verification_description:
       'Přidejte další vrstvu zabezpečení. Při přihlášení budete vyzváni k druhému ověřovacímu kroku.',
-    two_step_verification_description:
-      'Přidejte další vrstvu zabezpečení. Při přihlášení budete vyzváni k druhému ověřovacímu kroku.',
     turn_off_2_step_verification: 'Vypnout dvoufázové ověření',
     turn_off_2_step_verification_description:
       'Vypnutí dvoufázového ověření odstraní další vrstvu ochrany vašeho účtu při přihlášení. Opravdu chcete pokračovat?',

@@ -103,8 +103,6 @@ const account_center = {
     turn_on_2_step_verification: 'Attiva la verifica in due passaggi',
     turn_on_2_step_verification_description:
       "Aggiungi un ulteriore livello di sicurezza. Ti verrà richiesto un secondo passaggio di verifica all'accesso.",
-    two_step_verification_description:
-      "Aggiungi un ulteriore livello di sicurezza. Ti verrà richiesto un secondo passaggio di verifica all'accesso.",
     turn_off_2_step_verification: 'Disattiva la verifica in due passaggi',
     turn_off_2_step_verification_description:
       "La disattivazione della verifica in due passaggi rimuoverà il livello di protezione aggiuntivo dal tuo account all'accesso. Sei sicuro di voler continuare?",

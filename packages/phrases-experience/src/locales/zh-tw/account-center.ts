@@ -96,7 +96,6 @@ const account_center = {
     manage: '管理',
     turn_on_2_step_verification: '開啟兩步驟驗證',
     turn_on_2_step_verification_description: '增加額外的安全保護。登入時將要求進行第二步驟驗證。',
-    two_step_verification_description: '增加額外的安全保護。登入時將要求進行第二步驟驗證。',
     turn_off_2_step_verification: '關閉兩步驟驗證',
     turn_off_2_step_verification_description:
       '關閉兩步驟驗證將移除登入時帳戶的額外保護層。確定要繼續嗎？',
