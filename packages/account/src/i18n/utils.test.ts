@@ -49,8 +49,8 @@ void test('getPreferredLanguage uses the shared SIE language source when auto de
     },
   };
   const navigator = {
-    languages: ['en-US'],
-    language: 'en-US',
+    languages: ['fr'],
+    language: 'fr',
   };
 
   Reflect.defineProperty(globalThis, 'navigator', {
