@@ -1,0 +1,37 @@
+:root {
+  color-scheme: light;
+  --color-base: #ecebf6;
+  --color-text: #191c1d;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --color-base: #191c1d;
+    --color-text: #f7f8f8;
+  }
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-base: #ecebf6;
+  --color-text: #191c1d;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-base: #191c1d;
+  --color-text: #f7f8f8;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+  background: var(--color-base);
+  color: var(--color-text);
+}
+
+body {
+  margin: 0;
+}
