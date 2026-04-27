@@ -1,6 +1,6 @@
 import { Theme, ossUpsellEntries } from '@logto/schemas';
 import classNames from 'classnames';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
@@ -39,13 +39,28 @@ function OssCloudCard() {
       localStorage.getItem(storageKeys.ossSidebarCloudUpsellDismissedUntil)
     )
   );
-  const cloudUpsellLink = useMemo(
-    () =>
-      createTrackedCloudUpsellLink({
-        entry: ossUpsellEntries.ossSidebarCloudCard,
-      }),
-    []
+  const [cloudUpsellLink, setCloudUpsellLink] = useState(() =>
+    createTrackedCloudUpsellLink({
+      entry: ossUpsellEntries.ossSidebarCloudCard,
+    })
   );
+
+  const refreshCloudUpsellLink = () => {
+    const nextLink = createTrackedCloudUpsellLink({
+      entry: ossUpsellEntries.ossSidebarCloudCard,
+    });
+
+    setCloudUpsellLink(nextLink);
+
+    return nextLink;
+  };
+
+  const openFreshCloudUpsellLink = () => {
+    const trackedLink = refreshCloudUpsellLink();
+
+    reportTrackedCloudUpsellClick(ossUpsellEntries.ossSidebarCloudCard, trackedLink);
+    window.open(trackedLink.href, '_blank', 'noopener,noreferrer');
+  };
 
   if (
     !shouldShowOssCloudSidebarCard({
@@ -94,8 +109,28 @@ function OssCloudCard() {
           href={cloudUpsellLink.href}
           icon={<ExternalLinkIcon className={styles.linkIcon} />}
           targetBlank="noopener"
-          onClick={() => {
-            reportTrackedCloudUpsellClick(ossUpsellEntries.ossSidebarCloudCard, cloudUpsellLink);
+          onMouseEnter={() => {
+            refreshCloudUpsellLink();
+          }}
+          onFocus={() => {
+            refreshCloudUpsellLink();
+          }}
+          onContextMenu={() => {
+            refreshCloudUpsellLink();
+          }}
+          onClick={(event) => {
+            event.preventDefault();
+
+            openFreshCloudUpsellLink();
+          }}
+          onAuxClick={(event) => {
+            if (event.button !== 1) {
+              return;
+            }
+
+            event.preventDefault();
+
+            openFreshCloudUpsellLink();
           }}
         >
           {tSidebar('action')}

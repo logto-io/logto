@@ -5,6 +5,7 @@ import { isCloud } from '@/consts/env';
 import {
   getUpsellTrackingDataFromSearch,
   reportUpsellLanding,
+  sanitizeUpsellTelemetryUrl,
   stripUpsellTrackingSearchParameters,
 } from '@/utils/oss-upsell';
 
@@ -23,10 +24,15 @@ function useOssUpsellLanding() {
       return;
     }
 
+    const sanitizedCurrentUrl =
+      sanitizeUpsellTelemetryUrl(window.location.href) ??
+      `${window.location.origin}${window.location.pathname}`;
+    const sanitizedReferrer = sanitizeUpsellTelemetryUrl(document.referrer);
+
     reportUpsellLanding({
       ...trackingData,
-      url: window.location.href,
-      referrer: document.referrer || undefined,
+      url: sanitizedCurrentUrl,
+      referrer: sanitizedReferrer,
     });
 
     const cleanedSearch = stripUpsellTrackingSearchParameters(location.search);

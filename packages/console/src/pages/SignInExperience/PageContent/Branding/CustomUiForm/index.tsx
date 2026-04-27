@@ -1,5 +1,5 @@
 import { ossUpsellEntries } from '@logto/schemas';
-import { useContext, useMemo } from 'react';
+import { useContext, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -23,13 +23,28 @@ import FormSectionTitle from '../../components/FormSectionTitle';
 import styles from './index.module.scss';
 
 function OssBringYourUiCard() {
-  const cloudUpsellLink = useMemo(
-    () =>
-      createTrackedCloudUpsellLink({
-        entry: ossUpsellEntries.signInExpBringYourUiOssCard,
-      }),
-    []
+  const [cloudUpsellLink, setCloudUpsellLink] = useState(() =>
+    createTrackedCloudUpsellLink({
+      entry: ossUpsellEntries.signInExpBringYourUiOssCard,
+    })
   );
+
+  const refreshCloudUpsellLink = () => {
+    const nextLink = createTrackedCloudUpsellLink({
+      entry: ossUpsellEntries.signInExpBringYourUiOssCard,
+    });
+
+    setCloudUpsellLink(nextLink);
+
+    return nextLink;
+  };
+
+  const openFreshCloudUpsellLink = () => {
+    const trackedLink = refreshCloudUpsellLink();
+
+    reportTrackedCloudUpsellClick(ossUpsellEntries.signInExpBringYourUiOssCard, trackedLink);
+    window.open(trackedLink.href, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <FormField
@@ -60,11 +75,28 @@ function OssBringYourUiCard() {
                     href={cloudUpsellLink.href}
                     targetBlank="noopener"
                     className={styles.highlight}
-                    onClick={() => {
-                      reportTrackedCloudUpsellClick(
-                        ossUpsellEntries.signInExpBringYourUiOssCard,
-                        cloudUpsellLink
-                      );
+                    onMouseEnter={() => {
+                      refreshCloudUpsellLink();
+                    }}
+                    onFocus={() => {
+                      refreshCloudUpsellLink();
+                    }}
+                    onContextMenu={() => {
+                      refreshCloudUpsellLink();
+                    }}
+                    onClick={(event) => {
+                      event.preventDefault();
+
+                      openFreshCloudUpsellLink();
+                    }}
+                    onAuxClick={(event) => {
+                      if (event.button !== 1) {
+                        return;
+                      }
+
+                      event.preventDefault();
+
+                      openFreshCloudUpsellLink();
                     }}
                   />
                 ),

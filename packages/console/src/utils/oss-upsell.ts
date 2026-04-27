@@ -217,6 +217,20 @@ export const stripUpsellTrackingSearchParameters = (search: string) => {
   return normalizedSearch ? `?${normalizedSearch}` : '';
 };
 
+export const sanitizeUpsellTelemetryUrl = (rawUrl?: string) => {
+  if (!rawUrl) {
+    return;
+  }
+
+  const parsedUrl = trySafe(() => new URL(rawUrl));
+
+  if (!parsedUrl) {
+    return;
+  }
+
+  return `${parsedUrl.origin}${parsedUrl.pathname}`;
+};
+
 const reportUpsellEvent = (
   payload: UpsellClickPayload,
   { preferBeacon = false }: { readonly preferBeacon?: boolean } = {}

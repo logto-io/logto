@@ -151,6 +151,18 @@ describe('oss upsell helpers', () => {
     ).toBe('?foo=bar');
   });
 
+  it('sanitizes telemetry URLs by dropping credentials, query strings, and hash', async () => {
+    const { sanitizeUpsellTelemetryUrl } = await import('./oss-upsell');
+
+    expect(
+      sanitizeUpsellTelemetryUrl(
+        'https://darcy:secret@cloud.logto.io/console?code=abc123&state=foo#id_token=bar'
+      )
+    ).toBe('https://cloud.logto.io/console');
+    expect(sanitizeUpsellTelemetryUrl('not a valid url')).toBeUndefined();
+    expect(sanitizeUpsellTelemetryUrl()).toBeUndefined();
+  });
+
   it('reports upsell clicks with sendBeacon when the survey endpoint is configured', async () => {
     const { reportUpsellClick } = await import('./oss-upsell');
 
