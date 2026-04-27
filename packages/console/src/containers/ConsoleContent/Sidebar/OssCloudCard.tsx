@@ -12,7 +12,7 @@ import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
 import useTheme from '@/hooks/use-theme';
-import { createTrackedCloudUpsellLink, reportTrackedCloudUpsellClick } from '@/utils/oss-upsell';
+import useTrackedCloudUpsellLink from '@/hooks/use-tracked-cloud-upsell-link';
 
 import {
   ossCloudSidebarCardDismissDuration,
@@ -39,28 +39,7 @@ function OssCloudCard() {
       localStorage.getItem(storageKeys.ossSidebarCloudUpsellDismissedUntil)
     )
   );
-  const [cloudUpsellLink, setCloudUpsellLink] = useState(() =>
-    createTrackedCloudUpsellLink({
-      entry: ossUpsellEntries.ossSidebarCloudCard,
-    })
-  );
-
-  const refreshCloudUpsellLink = () => {
-    const nextLink = createTrackedCloudUpsellLink({
-      entry: ossUpsellEntries.ossSidebarCloudCard,
-    });
-
-    setCloudUpsellLink(nextLink);
-
-    return nextLink;
-  };
-
-  const openFreshCloudUpsellLink = () => {
-    const trackedLink = refreshCloudUpsellLink();
-
-    reportTrackedCloudUpsellClick(ossUpsellEntries.ossSidebarCloudCard, trackedLink);
-    window.open(trackedLink.href, '_blank', 'noopener,noreferrer');
-  };
+  const cloudUpsellLink = useTrackedCloudUpsellLink(ossUpsellEntries.ossSidebarCloudCard);
 
   if (
     !shouldShowOssCloudSidebarCard({
@@ -106,32 +85,9 @@ function OssCloudCard() {
         <TextLink
           isTrailingIcon
           className={styles.link}
-          href={cloudUpsellLink.href}
           icon={<ExternalLinkIcon className={styles.linkIcon} />}
           targetBlank="noopener"
-          onMouseEnter={() => {
-            refreshCloudUpsellLink();
-          }}
-          onFocus={() => {
-            refreshCloudUpsellLink();
-          }}
-          onContextMenu={() => {
-            refreshCloudUpsellLink();
-          }}
-          onClick={(event) => {
-            event.preventDefault();
-
-            openFreshCloudUpsellLink();
-          }}
-          onAuxClick={(event) => {
-            if (event.button !== 1) {
-              return;
-            }
-
-            event.preventDefault();
-
-            openFreshCloudUpsellLink();
-          }}
+          {...cloudUpsellLink}
         >
           {tSidebar('action')}
         </TextLink>

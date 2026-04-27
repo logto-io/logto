@@ -1,5 +1,4 @@
 import { ossUpsellEntries } from '@logto/schemas';
-import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Trans } from 'react-i18next';
 
@@ -9,7 +8,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextLink from '@/ds-components/TextLink';
-import { createTrackedCloudUpsellLink, reportTrackedCloudUpsellClick } from '@/utils/oss-upsell';
+import useTrackedCloudUpsellLink from '@/hooks/use-tracked-cloud-upsell-link';
 
 import type { SignInExperienceForm } from '../../../types';
 
@@ -22,28 +21,9 @@ type Props = {
 
 function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
   const { register } = useFormContext<SignInExperienceForm>();
-  const [cloudUpsellLink, setCloudUpsellLink] = useState(() =>
-    createTrackedCloudUpsellLink({
-      entry: ossUpsellEntries.signInExpHideLogtoBrandingOssNote,
-    })
+  const cloudUpsellLink = useTrackedCloudUpsellLink(
+    ossUpsellEntries.signInExpHideLogtoBrandingOssNote
   );
-
-  const refreshCloudUpsellLink = () => {
-    const nextLink = createTrackedCloudUpsellLink({
-      entry: ossUpsellEntries.signInExpHideLogtoBrandingOssNote,
-    });
-
-    setCloudUpsellLink(nextLink);
-
-    return nextLink;
-  };
-
-  const openFreshCloudUpsellLink = () => {
-    const trackedLink = refreshCloudUpsellLink();
-
-    reportTrackedCloudUpsellClick(ossUpsellEntries.signInExpHideLogtoBrandingOssNote, trackedLink);
-    window.open(trackedLink.href, '_blank', 'noopener,noreferrer');
-  };
 
   if (variant === 'cloud') {
     return (
@@ -85,34 +65,7 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
           i18nKey="admin_console.sign_in_exp.branding.hide_logto_branding_oss_note"
           components={{
             a: (
-              <TextLink
-                href={cloudUpsellLink.href}
-                targetBlank="noopener"
-                className={styles.highlight}
-                onMouseEnter={() => {
-                  refreshCloudUpsellLink();
-                }}
-                onFocus={() => {
-                  refreshCloudUpsellLink();
-                }}
-                onContextMenu={() => {
-                  refreshCloudUpsellLink();
-                }}
-                onClick={(event) => {
-                  event.preventDefault();
-
-                  openFreshCloudUpsellLink();
-                }}
-                onAuxClick={(event) => {
-                  if (event.button !== 1) {
-                    return;
-                  }
-
-                  event.preventDefault();
-
-                  openFreshCloudUpsellLink();
-                }}
-              />
+              <TextLink targetBlank="noopener" className={styles.highlight} {...cloudUpsellLink} />
             ),
           }}
         />
