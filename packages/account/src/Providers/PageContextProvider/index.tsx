@@ -26,7 +26,7 @@ type Props = {
 const PageContextProvider = ({ children }: Props) => {
   const { isAuthenticated } = useLogto();
   const getUserInfoRequest = useApi(getUserInfo, { silent: true });
-  const [theme, setTheme] = useState(Theme.Light);
+  const [theme, setTheme] = useState(getThemeBySystemPreference);
   const [toast, setToast] = useState('');
   const [experienceSettings, setExperienceSettings] =
     useState<PageContextType['experienceSettings']>(undefined);
