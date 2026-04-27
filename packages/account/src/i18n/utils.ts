@@ -4,8 +4,7 @@ import type { LanguageInfo } from '@logto/schemas';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
-const storageKey = 'i18nextAccountCenterLng';
-export { storageKey };
+const storageKey = 'i18nextLogtoUiLng';
 
 export const resolveLanguage = (language?: string): BuiltInLanguageTag | undefined =>
   language
@@ -27,11 +26,7 @@ export const resolveUiLocalesLanguage = (uiLocales?: string) => {
     .find(Boolean);
 };
 
-export const detectLanguage = (languageSettings?: LanguageInfo) => {
-  if (languageSettings?.autoDetect === false) {
-    return resolveLanguage(languageSettings.fallbackLanguage) ?? 'en';
-  }
-
+const detectLanguages = () => {
   const languageDetector = new LanguageDetector();
   languageDetector.init(
     { languageUtils: {} },
@@ -44,10 +39,18 @@ export const detectLanguage = (languageSettings?: LanguageInfo) => {
   const detected = languageDetector.detect();
 
   if (Array.isArray(detected)) {
-    return matchSupportedLanguageTag(detected, builtInLanguages).match ?? 'en';
+    return detected;
   }
 
-  return resolveLanguage(detected) ?? 'en';
+  return detected ? [detected] : [];
+};
+
+export const detectLanguage = (languageSettings?: LanguageInfo) => {
+  if (languageSettings?.autoDetect === false) {
+    return resolveLanguage(languageSettings.fallbackLanguage) ?? 'en';
+  }
+
+  return matchSupportedLanguageTag(detectLanguages(), builtInLanguages).match ?? 'en';
 };
 
 export const getPreferredLanguage = ({

@@ -1,12 +1,11 @@
 import type { LanguageTag } from '@logto/language-kit';
 import resources from '@logto/phrases-experience';
 import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
-import { resolveLanguage, storageKey } from '@ac/i18n/utils';
+import { resolveLanguage } from '@ac/i18n/utils';
 
-i18next.use(initReactI18next).use(LanguageDetector);
+i18next.use(initReactI18next);
 
 const initI18n = async (initialLanguage?: LanguageTag) => {
   const normalizedLanguage =
@@ -16,10 +15,6 @@ const initI18n = async (initialLanguage?: LanguageTag) => {
     resources: {},
     fallbackLng: 'en',
     lng: normalizedLanguage,
-    detection: {
-      lookupLocalStorage: storageKey,
-      lookupSessionStorage: storageKey,
-    },
     interpolation: {
       escapeValue: false,
     },
