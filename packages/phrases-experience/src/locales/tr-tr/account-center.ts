@@ -101,7 +101,7 @@ const account_center = {
       'Ekstra bir güvenlik katmanı ekleyin. Oturum açarken ikinci bir doğrulama adımı istenecektir.',
     turn_off_2_step_verification: '2 adımlı doğrulamayı kapat',
     turn_off_2_step_verification_description:
-      '2 adımlı doğrulamayı devre dışı bırakmak, oturum açarken hesabınızdaki ek koruma katmanını kaldıracaktır. Devam etmek istediğinizden emin misiniz?',
+      'Ekstra bir güvenlik katmanı ekleyin. Oturum açarken ikinci bir doğrulama adımı istenecektir.',
     disable_2_step_verification: 'Devre dışı bırak',
     no_verification_method_warning:
       'İkinci bir doğrulama yöntemi eklemediniz. Oturum açarken 2 adımlı doğrulamayı etkinleştirmek için en az bir tane ekleyin.',

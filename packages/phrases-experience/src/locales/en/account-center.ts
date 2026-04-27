@@ -97,7 +97,7 @@ const account_center = {
       "Add an extra layer of security. You'll be prompted for a second verification step at sign-in.",
     turn_off_2_step_verification: 'Turn off 2-step verification',
     turn_off_2_step_verification_description:
-      'Disabling 2-step verification will remove the extra layer of protection from your account at sign-in. Are you sure you want to continue?',
+      "Add an extra layer of security. You'll be prompted for a second verification step at sign-in.",
     disable_2_step_verification: 'Disable',
     no_verification_method_warning:
       "You haven't added a second verification method. Add at least one to enable 2-step verification at sign-in.",

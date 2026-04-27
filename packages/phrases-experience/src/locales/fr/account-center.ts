@@ -106,7 +106,7 @@ const account_center = {
       'Ajoutez une couche de sécurité supplémentaire. Vous serez invité à effectuer une deuxième étape de vérification lors de la connexion.',
     turn_off_2_step_verification: 'Désactiver la vérification en deux étapes',
     turn_off_2_step_verification_description:
-      'La désactivation de la vérification en deux étapes supprimera la couche de protection supplémentaire de votre compte lors de la connexion. Êtes-vous sûr de vouloir continuer ?',
+      'Ajoutez une couche de sécurité supplémentaire. Vous serez invité à effectuer une deuxième étape de vérification lors de la connexion.',
     disable_2_step_verification: 'Désactiver',
     no_verification_method_warning:
       "Vous n'avez pas ajouté de deuxième méthode de vérification. Ajoutez-en au moins une pour activer la vérification en deux étapes lors de la connexion.",
