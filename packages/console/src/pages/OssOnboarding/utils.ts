@@ -3,7 +3,7 @@ import { type CompanySize, type OssSurveyReportPayload, Project } from '@logto/s
 import { type Optional } from '@silverhand/essentials';
 
 export type OssOnboardingFormData = {
-  emailAddress: string;
+  emailAddress?: string;
   newsletter: boolean;
   project: Project;
   projectName?: string;
@@ -21,8 +21,8 @@ export const getOssOnboardingDefaultValues = (): OssOnboardingFormData => ({
 
 export const shouldRequireCompanyFields = (project: Project) => project === Project.Company;
 
-export const normalizeOssOnboardingEmailAddress = (emailAddress: string): Optional<string> => {
-  const normalizedEmailAddress = emailAddress.trim().toLowerCase();
+export const normalizeOssOnboardingEmailAddress = (emailAddress?: string): Optional<string> => {
+  const normalizedEmailAddress = (emailAddress ?? '').trim().toLowerCase();
 
   if (!normalizedEmailAddress || !emailRegEx.test(normalizedEmailAddress)) {
     return;
@@ -31,7 +31,7 @@ export const normalizeOssOnboardingEmailAddress = (emailAddress: string): Option
   return normalizedEmailAddress;
 };
 
-export const isValidOssOnboardingEmailAddress = (emailAddress: string) =>
+export const isValidOssOnboardingEmailAddress = (emailAddress?: string) =>
   Boolean(normalizeOssOnboardingEmailAddress(emailAddress));
 
 export const getBaseOssOnboardingPayload = (data: OssOnboardingFormData) => {
