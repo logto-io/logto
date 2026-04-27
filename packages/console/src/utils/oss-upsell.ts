@@ -42,6 +42,18 @@ type OpenCloudUpsellOptions = {
   readonly target?: '_blank' | '_self';
 };
 
+type CreateTrackedCloudUpsellLinkOptions = {
+  readonly entry: OssUpsellEntry;
+  readonly path?: string;
+  readonly extraQuery?: CloudUpsellQuery;
+  readonly trackingData?: UpsellTrackingData;
+};
+
+export type TrackedCloudUpsellLink = {
+  readonly href: string;
+  readonly trackingData: UpsellTrackingData;
+};
+
 const upsellEventsEndpointPathname = 'api/upsell-events';
 const byteToHex = (value: number) => value.toString(16).padStart(2, '0');
 
@@ -140,15 +152,17 @@ export const createUpsellClickId = () => {
   return createNonCryptoUuidV4();
 };
 
+const createUpsellTrackingData = (): UpsellTrackingData => ({
+  clickId: createUpsellClickId(),
+  timestamp: Date.now(),
+});
+
 export const buildCloudUpsellUrl = (
   entry: OssUpsellEntry,
   { path, extraQuery, trackingData }: BuildCloudUpsellUrlOptions = {}
 ) => {
   const url = new URL(path ?? '/', logtoCloudConsoleLink);
-  const { clickId, timestamp } = trackingData ?? {
-    clickId: createUpsellClickId(),
-    timestamp: Date.now(),
-  };
+  const { clickId, timestamp } = trackingData ?? createUpsellTrackingData();
 
   setSearchParameters(url, extraQuery);
   url.searchParams.set(OssUpsellSearchParameterKey.Entry, entry);
@@ -157,6 +171,16 @@ export const buildCloudUpsellUrl = (
 
   return url.toString();
 };
+
+export const createTrackedCloudUpsellLink = ({
+  entry,
+  path,
+  extraQuery,
+  trackingData = createUpsellTrackingData(),
+}: CreateTrackedCloudUpsellLinkOptions): TrackedCloudUpsellLink => ({
+  href: buildCloudUpsellUrl(entry, { path, extraQuery, trackingData }),
+  trackingData,
+});
 
 export const getUpsellTrackingDataFromSearch = (search: string) => {
   const searchParameters = new URLSearchParams(search);
@@ -246,6 +270,19 @@ export const reportUpsellClick = (
   );
 };
 
+export const reportTrackedCloudUpsellClick = (
+  entry: OssUpsellEntry,
+  trackedLink: TrackedCloudUpsellLink
+): void => {
+  reportUpsellClick({
+    entry,
+    clickId: trackedLink.trackingData.clickId,
+    ts: trackedLink.trackingData.timestamp,
+    url: trackedLink.href,
+    ...getCurrentLocationSnapshot(),
+  });
+};
+
 export const reportUpsellLanding = (
   payload: Omit<UpsellClickPayload, 'event' | 'sourcePath' | 'sourceSearch'>
 ): void => {
@@ -261,19 +298,10 @@ export const openCloudUpsell = ({
   extraQuery,
   target = '_blank',
 }: OpenCloudUpsellOptions) => {
-  const trackingData = {
-    clickId: createUpsellClickId(),
-    timestamp: Date.now(),
-  };
-  const targetUrl = buildCloudUpsellUrl(entry, { path, extraQuery, trackingData });
+  const trackedLink = createTrackedCloudUpsellLink({ entry, path, extraQuery });
+  const targetUrl = trackedLink.href;
 
-  reportUpsellClick({
-    entry,
-    clickId: trackingData.clickId,
-    ts: trackingData.timestamp,
-    url: targetUrl,
-    ...getCurrentLocationSnapshot(),
-  });
+  reportTrackedCloudUpsellClick(entry, trackedLink);
 
   const currentWindow = trySafe(() => window);
 

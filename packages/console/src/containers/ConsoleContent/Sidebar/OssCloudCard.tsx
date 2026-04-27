@@ -1,6 +1,6 @@
 import { Theme, ossUpsellEntries } from '@logto/schemas';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
@@ -12,7 +12,7 @@ import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
 import useTheme from '@/hooks/use-theme';
-import { getCloudUpsellTargetUrl, openCloudUpsell } from '@/utils/oss-upsell';
+import { createTrackedCloudUpsellLink, reportTrackedCloudUpsellClick } from '@/utils/oss-upsell';
 
 import {
   ossCloudSidebarCardDismissDuration,
@@ -38,6 +38,13 @@ function OssCloudCard() {
     parseOssCloudSidebarCardDismissedUntil(
       localStorage.getItem(storageKeys.ossSidebarCloudUpsellDismissedUntil)
     )
+  );
+  const cloudUpsellLink = useMemo(
+    () =>
+      createTrackedCloudUpsellLink({
+        entry: ossUpsellEntries.ossSidebarCloudCard,
+      }),
+    []
   );
 
   if (
@@ -84,14 +91,11 @@ function OssCloudCard() {
         <TextLink
           isTrailingIcon
           className={styles.link}
-          href={getCloudUpsellTargetUrl()}
+          href={cloudUpsellLink.href}
           icon={<ExternalLinkIcon className={styles.linkIcon} />}
           targetBlank="noopener"
-          onClick={(event) => {
-            event.preventDefault();
-            openCloudUpsell({
-              entry: ossUpsellEntries.ossSidebarCloudCard,
-            });
+          onClick={() => {
+            reportTrackedCloudUpsellClick(ossUpsellEntries.ossSidebarCloudCard, cloudUpsellLink);
           }}
         >
           {tSidebar('action')}

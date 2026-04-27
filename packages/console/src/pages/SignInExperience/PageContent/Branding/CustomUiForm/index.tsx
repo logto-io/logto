@@ -1,5 +1,5 @@
 import { ossUpsellEntries } from '@logto/schemas';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -15,7 +15,7 @@ import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
-import { getCloudUpsellTargetUrl, openCloudUpsell } from '@/utils/oss-upsell';
+import { createTrackedCloudUpsellLink, reportTrackedCloudUpsellClick } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
@@ -23,6 +23,14 @@ import FormSectionTitle from '../../components/FormSectionTitle';
 import styles from './index.module.scss';
 
 function OssBringYourUiCard() {
+  const cloudUpsellLink = useMemo(
+    () =>
+      createTrackedCloudUpsellLink({
+        entry: ossUpsellEntries.signInExpBringYourUiOssCard,
+      }),
+    []
+  );
+
   return (
     <FormField
       title={
@@ -49,14 +57,14 @@ function OssBringYourUiCard() {
               components={{
                 a: (
                   <TextLink
-                    href={getCloudUpsellTargetUrl()}
+                    href={cloudUpsellLink.href}
                     targetBlank="noopener"
                     className={styles.highlight}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      openCloudUpsell({
-                        entry: ossUpsellEntries.signInExpBringYourUiOssCard,
-                      });
+                    onClick={() => {
+                      reportTrackedCloudUpsellClick(
+                        ossUpsellEntries.signInExpBringYourUiOssCard,
+                        cloudUpsellLink
+                      );
                     }}
                   />
                 ),

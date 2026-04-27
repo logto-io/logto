@@ -117,9 +117,11 @@ describe('oss upsell helpers', () => {
     expect(url.origin).toBe('https://cloud.logto.io');
     expect(url.pathname).toBe('/to/applications');
     expect(url.searchParams.get('plan')).toBe('pro');
-    expect(url.searchParams.get('entry')).toBe('get_started_oss_cloud_banner');
-    expect(url.searchParams.get('click_id')).toBe('01968a0d-5e94-7e6a-944a-12cc7ef3c3cf');
-    expect(url.searchParams.get('ts')).toBe('1776902215123');
+    expect(url.searchParams.get('logto_upsell_entry')).toBe('get_started_oss_cloud_banner');
+    expect(url.searchParams.get('logto_upsell_click_id')).toBe(
+      '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf'
+    );
+    expect(url.searchParams.get('logto_upsell_ts')).toBe('1776902215123');
   });
 
   it('extracts and strips upsell tracking search parameters', async () => {
@@ -129,7 +131,7 @@ describe('oss upsell helpers', () => {
 
     expect(
       getUpsellTrackingDataFromSearch(
-        '?entry=get_started_oss_cloud_banner&click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf&ts=1776902215123'
+        '?logto_upsell_entry=get_started_oss_cloud_banner&logto_upsell_click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf&logto_upsell_ts=1776902215123'
       )
     ).toEqual({
       entry: ossUpsellEntries.getStartedOssCloudBanner,
@@ -139,12 +141,12 @@ describe('oss upsell helpers', () => {
 
     expect(
       getUpsellTrackingDataFromSearch(
-        '?entry=unknown&click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf&ts=1776902215123'
+        '?logto_upsell_entry=unknown&logto_upsell_click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf&logto_upsell_ts=1776902215123'
       )
     ).toBeUndefined();
     expect(
       stripUpsellTrackingSearchParameters(
-        '?entry=get_started_oss_cloud_banner&click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf&ts=1776902215123&foo=bar'
+        '?logto_upsell_entry=get_started_oss_cloud_banner&logto_upsell_click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf&logto_upsell_ts=1776902215123&foo=bar'
       )
     ).toBe('?foo=bar');
   });
@@ -180,7 +182,7 @@ describe('oss upsell helpers', () => {
       entry: ossUpsellEntries.getStartedOssCloudBanner,
       clickId: '01968a0d-5e94-7e6a-944a-12cc7ef3c3cf',
       ts: 1_776_902_215_123,
-      url: 'https://cloud.logto.io?entry=get_started_oss_cloud_banner',
+      url: 'https://cloud.logto.io?logto_upsell_entry=get_started_oss_cloud_banner',
       referrer: 'https://docs.logto.io',
     });
 
@@ -259,8 +261,8 @@ describe('oss upsell helpers', () => {
       path: '/to/applications',
     });
 
-    expect(targetUrl).toContain('entry=get_started_oss_cloud_banner');
-    expect(targetUrl).toContain('click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf');
+    expect(targetUrl).toContain('logto_upsell_entry=get_started_oss_cloud_banner');
+    expect(targetUrl).toContain('logto_upsell_click_id=01968a0d-5e94-7e6a-944a-12cc7ef3c3cf');
     expect(mockWindowOpen).toHaveBeenCalledWith(targetUrl, '_blank', 'noopener,noreferrer');
     expect(mockSendBeacon).toHaveBeenCalledTimes(1);
   });

@@ -12,9 +12,9 @@ export const ossUpsellEntries = Object.freeze({
 export type OssUpsellEntry = (typeof ossUpsellEntries)[keyof typeof ossUpsellEntries];
 
 export enum OssUpsellSearchParameterKey {
-  Entry = 'entry',
-  ClickId = 'click_id',
-  Timestamp = 'ts',
+  Entry = 'logto_upsell_entry',
+  ClickId = 'logto_upsell_click_id',
+  Timestamp = 'logto_upsell_ts',
 }
 
 export const ossUpsellSearchParameterKeys = [
