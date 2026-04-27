@@ -29,5 +29,8 @@ export const getAccountCenterInternalRoute = (
     }
 
     return `${pathname.slice(accountCenterBasePath.length) || '/'}${search}${hash}`;
-  } catch {}
+  } catch {
+    // Invalid URL — ignore and return undefined
+    return;
+  }
 };
