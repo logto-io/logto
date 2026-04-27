@@ -105,9 +105,11 @@ const account_center = {
     turn_on_2_step_verification: '2-Faktor-Verifizierung aktivieren',
     turn_on_2_step_verification_description:
       'Fügen Sie eine zusätzliche Sicherheitsebene hinzu. Sie werden bei der Anmeldung zu einem zweiten Verifizierungsschritt aufgefordert.',
+    two_step_verification_description:
+      'Fügen Sie eine zusätzliche Sicherheitsebene hinzu. Sie werden bei der Anmeldung zu einem zweiten Verifizierungsschritt aufgefordert.',
     turn_off_2_step_verification: '2-Faktor-Verifizierung deaktivieren',
     turn_off_2_step_verification_description:
-      'Fügen Sie eine zusätzliche Sicherheitsebene hinzu. Sie werden bei der Anmeldung zu einem zweiten Verifizierungsschritt aufgefordert.',
+      'Das Deaktivieren der 2-Faktor-Verifizierung entfernt die zusätzliche Schutzebene für Ihr Konto bei der Anmeldung. Möchten Sie wirklich fortfahren?',
     disable_2_step_verification: 'Deaktivieren',
     no_verification_method_warning:
       'Sie haben keine zweite Verifizierungsmethode hinzugefügt. Fügen Sie mindestens eine hinzu, um die 2-Faktor-Verifizierung bei der Anmeldung zu aktivieren.',

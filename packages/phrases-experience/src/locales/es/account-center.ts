@@ -102,9 +102,11 @@ const account_center = {
     turn_on_2_step_verification: 'Activar verificación en dos pasos',
     turn_on_2_step_verification_description:
       'Añade una capa extra de seguridad. Se te pedirá un segundo paso de verificación al iniciar sesión.',
+    two_step_verification_description:
+      'Añade una capa extra de seguridad. Se te pedirá un segundo paso de verificación al iniciar sesión.',
     turn_off_2_step_verification: 'Desactivar verificación en dos pasos',
     turn_off_2_step_verification_description:
-      'Añade una capa extra de seguridad. Se te pedirá un segundo paso de verificación al iniciar sesión.',
+      'Desactivar la verificación en dos pasos eliminará la capa extra de protección de tu cuenta al iniciar sesión. ¿Estás seguro de que quieres continuar?',
     disable_2_step_verification: 'Desactivar',
     no_verification_method_warning:
       'No has añadido un segundo método de verificación. Añade al menos uno para activar la verificación en dos pasos al iniciar sesión.',

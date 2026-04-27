@@ -98,9 +98,11 @@ const account_center = {
     turn_on_2_step_verification: 'تفعيل التحقق بخطوتين',
     turn_on_2_step_verification_description:
       'أضف طبقة أمان إضافية. ستتم مطالبتك بخطوة تحقق ثانية عند تسجيل الدخول.',
+    two_step_verification_description:
+      'أضف طبقة أمان إضافية. ستتم مطالبتك بخطوة تحقق ثانية عند تسجيل الدخول.',
     turn_off_2_step_verification: 'إيقاف التحقق بخطوتين',
     turn_off_2_step_verification_description:
-      'أضف طبقة أمان إضافية. ستتم مطالبتك بخطوة تحقق ثانية عند تسجيل الدخول.',
+      'سيؤدي تعطيل التحقق بخطوتين إلى إزالة طبقة الحماية الإضافية من حسابك عند تسجيل الدخول. هل أنت متأكد أنك تريد المتابعة؟',
     disable_2_step_verification: 'تعطيل',
     no_verification_method_warning:
       'لم تقم بإضافة طريقة تحقق ثانية. أضف طريقة واحدة على الأقل لتفعيل التحقق بخطوتين عند تسجيل الدخول.',
