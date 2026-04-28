@@ -31,3 +31,66 @@ void test('getPreferredLanguage respects ui_locales fallback before language set
     'pl-PL'
   );
 });
+
+void test('getPreferredLanguage uses the shared SIE language source when auto detecting', () => {
+  const navigatorDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  const windowDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'window');
+  const storage = new Map([
+    ['i18nextAccountCenterLng', 'zh-CN'],
+    ['i18nextLogtoUiLng', 'en-US'],
+  ]);
+  const localStorage = {
+    getItem: (key: string) => storage.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      storage.set(key, value);
+    },
+    removeItem: (key: string) => {
+      storage.delete(key);
+    },
+  };
+  const navigator = {
+    languages: ['fr'],
+    language: 'fr',
+  };
+
+  Reflect.defineProperty(globalThis, 'navigator', {
+    value: navigator,
+    configurable: true,
+  });
+  Reflect.defineProperty(globalThis, 'window', {
+    value: {
+      location: {
+        hash: '',
+        search: '',
+      },
+      localStorage,
+      sessionStorage: localStorage,
+      navigator,
+    },
+    configurable: true,
+  });
+
+  try {
+    assert.equal(
+      getPreferredLanguage({
+        languageSettings: {
+          autoDetect: true,
+          fallbackLanguage: 'fr',
+        },
+      }),
+      'en'
+    );
+  } finally {
+    if (navigatorDescriptor) {
+      Reflect.defineProperty(globalThis, 'navigator', navigatorDescriptor);
+    } else {
+      Reflect.deleteProperty(globalThis, 'navigator');
+    }
+
+    if (windowDescriptor) {
+      Reflect.defineProperty(globalThis, 'window', windowDescriptor);
+    } else {
+      Reflect.deleteProperty(globalThis, 'window');
+    }
+  }
+});
