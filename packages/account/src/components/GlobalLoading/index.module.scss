@@ -8,12 +8,12 @@
   align-items: center;
   justify-content: center;
   gap: _.unit(6);
-  background: var(--color-bg-body-base, #eff1f1);
+  background: var(--color-bg-body-base);
 }
 
 :global(body.mobile) {
   .container {
-    background: var(--color-bg-body, #fff);
+    background: var(--color-bg-body);
   }
 }
 
@@ -24,7 +24,7 @@
 }
 
 .spinner {
-  color: var(--color-type-primary, #191c1d);
+  color: var(--color-type-primary);
   animation: rotating 1s steps(12, end) infinite;
 }
 
