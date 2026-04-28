@@ -50,6 +50,29 @@ export const getUserSessionResponseGuard = userExtendedSessionGuard;
 /** Response type for `GET /users/:userId/sessions/:sessionId`. */
 export type GetUserSessionResponse = z.infer<typeof getUserSessionResponseGuard>;
 
+/**
+ * Account-API-specific extension of `userExtendedSessionGuard`.
+ *
+ * Adds `isCurrent` so a caller that has its own OIDC session uid (i.e. the Account API)
+ * can mark which entry in the list is the session backing the request. Kept separate
+ * from `userExtendedSessionGuard` because the management/admin endpoints have no
+ * "current session" concept and shouldn't surface this field in their contracts.
+ */
+export const accountUserExtendedSessionGuard = userExtendedSessionGuard.extend({
+  /**
+   * `true` for the entry whose `payload.uid` matches the calling session, `false` for
+   * the others. Omitted entirely when the caller has no session context.
+   */
+  isCurrent: z.boolean().optional(),
+});
+
+export const getAccountUserSessionsResponseGuard = z.object({
+  sessions: z.array(accountUserExtendedSessionGuard),
+});
+
+/** Response type for `GET /api/my-account/sessions`. */
+export type GetAccountUserSessionsResponse = z.infer<typeof getAccountUserSessionsResponseGuard>;
+
 export const userApplicationGrantPayloadGuard = z
   .object({
     /** Expiration time of the grant in seconds since the epoch */

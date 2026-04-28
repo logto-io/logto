@@ -2,10 +2,11 @@ import { UserScope } from '@logto/core-kit';
 import {
   AccountCenterControlValue,
   SessionGrantRevokeTarget,
-  getUserSessionsResponseGuard,
+  getAccountUserSessionsResponseGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -23,10 +24,10 @@ export default function accountSessionRoutes<T extends UserRouter>(
     `${accountApiPrefix}/sessions`,
     koaGuard({
       status: [200, 400, 401, 500],
-      response: getUserSessionsResponseGuard,
+      response: getAccountUserSessionsResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, sessionUid } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
       assertThat(
@@ -48,7 +49,12 @@ export default function accountSessionRoutes<T extends UserRouter>(
       const sessions = await sessionLibrary.findUserActiveSessionsWithExtensions(userId);
 
       ctx.body = {
-        sessions,
+        sessions: EnvSet.values.isDevFeaturesEnabled
+          ? sessions.map((session) => ({
+              ...session,
+              isCurrent: session.payload.uid === sessionUid,
+            }))
+          : sessions,
       };
 
       return next();

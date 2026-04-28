@@ -30,7 +30,7 @@ type CreateAppAndSignInOptions = {
 
 type UserSession = GetUserSessionsResponse['sessions'][number];
 
-export const findSessionByAppId = (sessions: UserSession[], appId: string) =>
+export const findSessionByAppId = <T extends UserSession>(sessions: T[], appId: string) =>
   sessions.find((session) => session.payload.authorizations?.[appId]);
 
 const tokenEndpoint = `${defaultConfig.endpoint}/oidc/token`;
