@@ -9,10 +9,10 @@ import CloudIcon from '@/assets/icons/cloud-icon.svg?react';
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import { storageKeys } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { logtoCloudConsoleLink } from '@/consts/external-links';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
 import useTheme from '@/hooks/use-theme';
+import { buildCloudUpsellUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import {
   ossCloudSidebarCardDismissDuration,
@@ -39,6 +39,7 @@ function OssCloudCard() {
       localStorage.getItem(storageKeys.ossSidebarCloudUpsellDismissedUntil)
     )
   );
+  const cloudUpsellUrl = buildCloudUpsellUrl(ossUpsellEntries.ossSidebarCloudCard);
 
   if (
     !shouldShowOssCloudSidebarCard({
@@ -84,7 +85,7 @@ function OssCloudCard() {
         <TextLink
           isTrailingIcon
           className={styles.link}
-          href={logtoCloudConsoleLink}
+          href={cloudUpsellUrl}
           icon={<ExternalLinkIcon className={styles.linkIcon} />}
           targetBlank="noopener"
         >

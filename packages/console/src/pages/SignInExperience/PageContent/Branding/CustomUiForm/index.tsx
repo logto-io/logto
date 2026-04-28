@@ -6,7 +6,6 @@ import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
-import { logtoCloudConsoleLink } from '@/consts/external-links';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -15,6 +14,7 @@ import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
+import { buildCloudUpsellUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
@@ -22,6 +22,8 @@ import FormSectionTitle from '../../components/FormSectionTitle';
 import styles from './index.module.scss';
 
 function OssBringYourUiCard() {
+  const cloudUpsellUrl = buildCloudUpsellUrl(ossUpsellEntries.signInExpBringYourUiOssCard);
+
   return (
     <FormField
       title={
@@ -48,7 +50,7 @@ function OssBringYourUiCard() {
               components={{
                 a: (
                   <TextLink
-                    href={logtoCloudConsoleLink}
+                    href={cloudUpsellUrl}
                     targetBlank="noopener"
                     className={styles.highlight}
                   />
