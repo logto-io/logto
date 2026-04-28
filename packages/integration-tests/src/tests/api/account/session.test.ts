@@ -20,6 +20,7 @@ import {
   findSessionByAppId,
 } from '#src/helpers/session.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { devFeatureTest } from '#src/utils.js';
 
 describe('account center session management', () => {
   beforeAll(async () => {
@@ -68,6 +69,92 @@ describe('account center session management', () => {
 
       await deleteDefaultTenantUser(user.id);
     });
+
+    devFeatureTest.it(
+      'marks exactly one session as `isCurrent: true` for a single sign-in',
+      async () => {
+        const { user, username, password } = await createDefaultTenantUserWithPassword();
+        const api = await signInAndGetUserApi(username, password, {
+          scopes: [UserScope.Sessions],
+        });
+
+        const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+        const response = await getSessions(api, verificationRecordId);
+        const currentSessions = response.sessions.filter((session) => session.isCurrent);
+        expect(currentSessions).toHaveLength(1);
+
+        await deleteDefaultTenantUser(user.id);
+      }
+    );
+
+    devFeatureTest.it(
+      'marks only the caller session as current when another session exists',
+      async () => {
+        const { user, username, password } = await createDefaultTenantUserWithPassword();
+
+        const { app: otherApp } = await createAppAndSignInWithPassword({
+          username,
+          password,
+          isThirdParty: false,
+          scopes: [UserScope.Profile],
+        });
+
+        const api = await signInAndGetUserApi(username, password, {
+          scopes: [UserScope.Sessions],
+        });
+
+        const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+        const response = await getSessions(api, verificationRecordId);
+        expect(response.sessions.length).toBeGreaterThanOrEqual(2);
+
+        const currentSessions = response.sessions.filter((session) => session.isCurrent);
+        expect(currentSessions).toHaveLength(1);
+
+        const otherSession = findSessionByAppId(response.sessions, otherApp.id);
+        expect(otherSession?.isCurrent).toBe(false);
+
+        await deleteApplication(otherApp.id);
+        await deleteDefaultTenantUser(user.id);
+      }
+    );
+
+    devFeatureTest.it(
+      'keeps the caller session tagged after another session is revoked',
+      async () => {
+        const { user, username, password } = await createDefaultTenantUserWithPassword();
+
+        const { app: otherApp } = await createAppAndSignInWithPassword({
+          username,
+          password,
+          isThirdParty: false,
+          scopes: [UserScope.Profile],
+        });
+
+        const api = await signInAndGetUserApi(username, password, {
+          scopes: [UserScope.Sessions],
+        });
+
+        const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+        const before = await getSessions(api, verificationRecordId);
+        const otherSession = findSessionByAppId(before.sessions, otherApp.id);
+        assert(otherSession, new Error('Other-app session not found'));
+
+        await deleteSession(api, otherSession.payload.uid, verificationRecordId);
+
+        const after = await getSessions(api, verificationRecordId);
+        const currentSessions = after.sessions.filter((session) => session.isCurrent);
+        expect(currentSessions).toHaveLength(1);
+        expect(after.sessions.map((session) => session.payload.uid)).not.toContain(
+          otherSession.payload.uid
+        );
+
+        await deleteApplication(otherApp.id);
+        await deleteDefaultTenantUser(user.id);
+      }
+    );
   });
 
   describe('DELETE /account-center/sessions/:sessionId', () => {
