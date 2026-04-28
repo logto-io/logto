@@ -27,7 +27,7 @@ export const ossUpsellEntries = Object.freeze({
 
 type OssUpsellEntry = (typeof ossUpsellEntries)[keyof typeof ossUpsellEntries];
 
-export const utmParameters = Object.freeze({
+const utmParameters = Object.freeze({
   source: 'logto_oss',
   medium: 'console',
   campaign: 'cloud_upsell',
@@ -69,6 +69,10 @@ export const openCloudUpsell = ({
   target = '_blank',
 }: OpenCloudUpsellOptions) => {
   const targetUrl = buildCloudUpsellUrl(entry, { path, extraQuery });
+
+  if (typeof window === 'undefined') {
+    return targetUrl;
+  }
 
   if (target === '_self') {
     window.location.assign(targetUrl);
