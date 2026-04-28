@@ -128,7 +128,7 @@ function SigningKeysFormCard() {
             dataIndex: 'effectiveAt',
             colSpan: 5,
             render: ({ effectiveAt }: OidcConfigKeysResponse) => (
-              <span>{effectiveAt ? format(effectiveAt, 'Ppp') : '-'}</span>
+              <span>{effectiveAt ? format(effectiveAt, 'P HH:mm:ss') : '-'}</span>
             ),
           },
         ]
