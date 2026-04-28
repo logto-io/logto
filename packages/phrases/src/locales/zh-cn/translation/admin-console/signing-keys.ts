@@ -19,6 +19,7 @@ const signing_keys = {
     id: 'ID',
     status: '状态',
     algorithm: '签名密钥算法',
+    created_at: '创建时间',
   },
   status: {
     next: '待切换',

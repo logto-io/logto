@@ -19,6 +19,7 @@ const signing_keys = {
     id: 'ID',
     status: 'สถานะ',
     algorithm: 'อัลกอริทึมของคีย์ลงนาม',
+    created_at: 'สร้างเมื่อ',
   },
   status: {
     next: 'ถัดไป',

@@ -5,6 +5,7 @@ import {
   OidcSigningKeyStatus,
 } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
+import { format } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -117,9 +118,17 @@ function SigningKeysFormCard() {
           {
             title: String(t('table_column.algorithm')),
             dataIndex: 'signingKeyAlgorithm',
-            colSpan: 7,
+            colSpan: 5,
             render: ({ signingKeyAlgorithm }: OidcConfigKeysResponse) => (
               <span>{signingKeyAlgorithm}</span>
+            ),
+          },
+          {
+            title: String(t('table_column.created_at')),
+            dataIndex: 'createdAt',
+            colSpan: 5,
+            render: ({ createdAt }: OidcConfigKeysResponse) => (
+              <span>{format(createdAt, 'Pp')}</span>
             ),
           },
         ]

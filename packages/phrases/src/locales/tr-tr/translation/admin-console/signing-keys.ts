@@ -20,6 +20,7 @@ const signing_keys = {
     id: 'Kimlik',
     status: 'Durum',
     algorithm: 'İmzalama anahtar algoritması',
+    created_at: 'Oluşturulma zamanı',
   },
   status: {
     next: 'Sonraki',
