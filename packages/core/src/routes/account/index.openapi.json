@@ -20,7 +20,7 @@
       "patch": {
         "operationId": "UpdateProfile",
         "summary": "Update profile",
-        "description": "Update profile for the user, only the fields that are passed in will be updated.",
+        "description": "Update profile for the user, only the fields that are passed in will be updated. Updating or deleting username requires a logto-verification-id header for checking sensitive permissions. Deleting username is rejected if it would remove the user's last identifier.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -50,6 +50,9 @@
           },
           "400": {
             "description": "The request body is invalid."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid."
           },
           "422": {
             "description": "The username is already in use."
@@ -274,10 +277,16 @@
       "delete": {
         "operationId": "DeletePrimaryEmail",
         "summary": "Delete primary email",
-        "description": "Delete primary email for the user, a verification-record-id in header is required for checking sensitive permissions.",
+        "description": "Delete primary email for the user, a logto-verification-id header is required for checking sensitive permissions. The request is rejected if it would remove the user's last identifier.",
         "responses": {
           "204": {
             "description": "The primary email was deleted successfully."
+          },
+          "400": {
+            "description": "The request would remove the user's last identifier."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid."
           }
         }
       }
@@ -318,10 +327,16 @@
       "delete": {
         "operationId": "DeletePrimaryPhone",
         "summary": "Delete primary phone",
-        "description": "Delete primary phone for the user, a verification-record-id in header is required for checking sensitive permissions.",
+        "description": "Delete primary phone for the user, a logto-verification-id header is required for checking sensitive permissions. The request is rejected if it would remove the user's last identifier.",
         "responses": {
           "204": {
             "description": "The primary phone was deleted successfully."
+          },
+          "400": {
+            "description": "The request would remove the user's last identifier."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid."
           }
         }
       }
@@ -355,13 +370,16 @@
       "delete": {
         "operationId": "DeleteIdentity",
         "summary": "Delete a user identity",
-        "description": "Delete an identity (social identity) from the user, a logto-verification-id in header is required for checking sensitive permissions.",
+        "description": "Delete an identity (social identity) from the user, a logto-verification-id in header is required for checking sensitive permissions. The request is rejected if it would remove the user's last identifier.",
         "responses": {
           "204": {
             "description": "The identity was deleted successfully."
           },
           "400": {
-            "description": "The verification record is invalid."
+            "description": "The request would remove the user's last identifier."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid."
           },
           "404": {
             "description": "The identity does not exist."

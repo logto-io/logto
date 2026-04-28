@@ -113,13 +113,27 @@ export const getUserIdentifierCount = (user: User, ssoIdentityCount = 0): number
   );
 };
 
+type UserIdentifierUpdate = Partial<
+  Pick<User, 'username' | 'primaryEmail' | 'primaryPhone' | 'identities'>
+>;
+
+export const assertUserHasRemainingIdentifier = (
+  user: User,
+  identifierUpdate: UserIdentifierUpdate,
+  ssoIdentityCount = 0
+) => {
+  assertThat(
+    getUserIdentifierCount({ ...user, ...identifierUpdate }, ssoIdentityCount) > 0,
+    new RequestError('user.last_sign_in_method_required')
+  );
+};
+
 export const assertCanDeleteSocialIdentity = (user: User, target: string, ssoIdentityCount = 0) => {
   assertThat(
     user.identities[target],
     new RequestError({ code: 'user.identity_not_exist', status: 404 })
   );
-  assertThat(
-    getUserIdentifierCount(user, ssoIdentityCount) > 1,
-    new RequestError('user.last_sign_in_method_required')
-  );
+
+  const { [target]: _deletedIdentity, ...identities } = user.identities;
+  assertUserHasRemainingIdentifier(user, { identities }, ssoIdentityCount);
 };

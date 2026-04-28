@@ -10,7 +10,7 @@ import {
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { putUserIdentity } from '#src/api/admin-user.js';
 import { updateConnectorConfig } from '#src/api/connector.js';
-import { deleteIdentity, getUserInfo } from '#src/api/my-account.js';
+import { deleteIdentity, getUserInfo, updateUser } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import {
   clearConnectorsByTypes,
@@ -143,11 +143,7 @@ describe('my-account (social delete identity)', () => {
           isPasswordPrimary: true,
           socialConnectorTarget: mockSocialConnectorTarget,
         });
-        await api.patch('api/my-account', {
-          json: {
-            username: null,
-          },
-        });
+        await updateUser(api, { username: null }, verificationRecordId);
 
         await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
           code: 'user.last_sign_in_method_required',
@@ -230,11 +226,7 @@ describe('my-account (social delete identity)', () => {
           isPasswordPrimary: true,
           socialConnectorTarget: mockSocialConnectorTarget,
         });
-        await api.patch('api/my-account', {
-          json: {
-            username: null,
-          },
-        });
+        await updateUser(api, { username: null }, verificationRecordId);
 
         await expectRejects(deleteIdentity(api, mockSocialConnectorTarget, verificationRecordId), {
           code: 'user.last_sign_in_method_required',
