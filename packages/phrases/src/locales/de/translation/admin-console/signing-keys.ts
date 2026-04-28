@@ -20,7 +20,7 @@ const signing_keys = {
     id: 'ID',
     status: 'Status',
     algorithm: 'Signierungsschlüssel Algorithmus',
-    created_at: 'Erstellt am',
+    effective_at: 'Wirksam ab',
   },
   status: {
     next: 'Nächster',

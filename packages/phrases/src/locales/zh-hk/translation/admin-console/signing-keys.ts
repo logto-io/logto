@@ -19,7 +19,7 @@ const signing_keys = {
     id: 'ID',
     status: '狀態',
     algorithm: '簽署金鑰算法',
-    created_at: '建立時間',
+    effective_at: '生效時間',
   },
   status: {
     next: '待切換',

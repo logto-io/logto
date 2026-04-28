@@ -19,7 +19,7 @@ const signing_keys = {
     id: 'المعرف',
     status: 'الحالة',
     algorithm: 'خوارزمية مفتاح التوقيع',
-    created_at: 'تاريخ الإنشاء',
+    effective_at: 'يسري في',
   },
   status: {
     next: 'التالي',

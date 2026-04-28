@@ -19,7 +19,7 @@ const signing_keys = {
     id: 'ID',
     status: 'Статус',
     algorithm: 'Алгоритм подписи ключа',
-    created_at: 'Создано',
+    effective_at: 'Вступает в силу',
   },
   status: {
     next: 'Следующий',

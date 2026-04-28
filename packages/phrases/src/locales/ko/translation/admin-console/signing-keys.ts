@@ -19,7 +19,7 @@ const signing_keys = {
     id: 'ID',
     status: '상태',
     algorithm: '서명 키 알고리즘',
-    created_at: '생성일',
+    effective_at: '적용 시간',
   },
   status: {
     next: '다음',
