@@ -126,6 +126,7 @@ describe('configs routes', () => {
         ({ id, createdAt, status }) => ({
           id,
           createdAt,
+          effectiveAt: createdAt * 1000,
           signingKeyAlgorithm: 'EC',
           status,
         })
@@ -244,6 +245,7 @@ describe('configs routes', () => {
     expect(response.body[0]).toEqual({
       id: newPrivateKey.id,
       createdAt: newPrivateKey.createdAt,
+      effectiveAt: newPrivateKey.createdAt * 1000,
       signingKeyAlgorithm: 'RSA',
       status: OidcSigningKeyStatus.Current,
     });
@@ -326,6 +328,7 @@ describe('configs routes', () => {
     expect(response.body[0]).toEqual({
       id: newPrivateKey.id,
       createdAt: newPrivateKey.createdAt,
+      effectiveAt: (newPrivateKey.createdAt + 60) * 1000,
       signingKeyAlgorithm: 'RSA',
       status: OidcSigningKeyStatus.Next,
     });

@@ -5,28 +5,9 @@ import { storageKeys } from './storage';
 const normalizeEnv = (value: unknown) =>
   value === null || value === undefined ? undefined : String(value);
 
-const parseNonNegativeIntegerEnv = (value: unknown) => {
-  const normalizedValue = normalizeEnv(value);
-
-  if (!normalizedValue) {
-    return 0;
-  }
-
-  const parsedValue = Number(normalizedValue);
-
-  if (!Number.isSafeInteger(parsedValue) || parsedValue < 0) {
-    throw new TypeError('Invalid PRIVATE_KEY_ROTATION_GRACE_PERIOD env value');
-  }
-
-  return parsedValue;
-};
-
 const isProduction = import.meta.env.PROD;
 export const isCloud = yes(normalizeEnv(import.meta.env.IS_CLOUD));
 export const adminEndpoint = normalizeEnv(import.meta.env.ADMIN_ENDPOINT);
-export const privateKeyRotationGracePeriod = parseNonNegativeIntegerEnv(
-  import.meta.env.PRIVATE_KEY_ROTATION_GRACE_PERIOD
-);
 
 export const isDevFeaturesEnabled =
   !isProduction ||

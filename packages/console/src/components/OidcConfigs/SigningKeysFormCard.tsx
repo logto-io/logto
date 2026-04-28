@@ -14,7 +14,6 @@ import useSWR from 'swr';
 import Delete from '@/assets/icons/delete.svg?react';
 import FormCard from '@/components/FormCard';
 import { signingKeysLink } from '@/consts';
-import { privateKeyRotationGracePeriod } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DangerConfirmModal from '@/ds-components/DeleteConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
@@ -63,8 +62,6 @@ const privateKeyStatusTagMap = {
 
 const getPrivateKeyStatusTag = (status?: OidcSigningKeyStatus) =>
   privateKeyStatusTagMap[status ?? OidcSigningKeyStatus.Current];
-
-const privateKeyRotationGracePeriodInMilliseconds = privateKeyRotationGracePeriod * 1000;
 
 function SigningKeysFormCard() {
   const api = useApi();
@@ -130,8 +127,8 @@ function SigningKeysFormCard() {
             title: String(t('table_column.effective_at')),
             dataIndex: 'effectiveAt',
             colSpan: 5,
-            render: ({ createdAt }: OidcConfigKeysResponse) => (
-              <span>{format(createdAt + privateKeyRotationGracePeriodInMilliseconds, 'Pp')}</span>
+            render: ({ effectiveAt }: OidcConfigKeysResponse) => (
+              <span>{effectiveAt ? format(effectiveAt, 'Ppp') : '-'}</span>
             ),
           },
         ]

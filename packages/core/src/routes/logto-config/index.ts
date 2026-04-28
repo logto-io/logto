@@ -50,7 +50,8 @@ const oidcSessionConfigResponseGuard = oidcSessionConfigGuard.required({ ttl: tr
  */
 const getRedactedOidcKeyResponse = async (
   type: LogtoOidcConfigKey,
-  keys: Array<OidcConfigKey | OidcPrivateKey>
+  keys: Array<OidcConfigKey | OidcPrivateKey>,
+  privateKeyRotationGracePeriod = EnvSet.values.privateKeyRotationGracePeriod
 ): Promise<OidcConfigKeysResponse[]> =>
   Promise.all(
     keys.map(async ({ id, value, createdAt, ...rest }) => {
@@ -59,6 +60,7 @@ const getRedactedOidcKeyResponse = async (
         const parseResult = oidcConfigKeysResponseGuard.safeParse({
           id,
           createdAt,
+          effectiveAt: (createdAt + privateKeyRotationGracePeriod) * 1000,
           signingKeyAlgorithm: jwk.kty,
           status: 'status' in rest ? rest.status : undefined,
         });
@@ -256,7 +258,11 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
       void tenant.invalidateCache();
 
       // Remove actual values of the private keys from response
-      ctx.body = await getRedactedOidcKeyResponse(configKey, updatedKeys);
+      ctx.body = await getRedactedOidcKeyResponse(
+        configKey,
+        updatedKeys,
+        effectiveRotationGracePeriod
+      );
 
       return next();
     }

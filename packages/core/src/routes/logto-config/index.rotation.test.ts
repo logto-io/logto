@@ -92,18 +92,21 @@ describe('configs routes staged rotation', () => {
       {
         id: newPrivateKey.id,
         createdAt: newPrivateKey.createdAt,
+        effectiveAt: (newPrivateKey.createdAt + 14_400) * 1000,
         signingKeyAlgorithm: 'EC',
         status: OidcSigningKeyStatus.Next,
       },
       {
         id: mockPrivateKeys[0]!.id,
         createdAt: mockPrivateKeys[0]!.createdAt,
+        effectiveAt: (mockPrivateKeys[0]!.createdAt + 14_400) * 1000,
         signingKeyAlgorithm: 'EC',
         status: OidcSigningKeyStatus.Current,
       },
       {
         id: previousPrivateKey.id,
         createdAt: previousPrivateKey.createdAt,
+        effectiveAt: (previousPrivateKey.createdAt + 14_400) * 1000,
         signingKeyAlgorithm: 'EC',
         status: OidcSigningKeyStatus.Previous,
       },
