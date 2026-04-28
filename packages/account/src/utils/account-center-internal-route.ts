@@ -8,6 +8,14 @@ const getCurrentOrigin = () => {
   return window.location.origin;
 };
 
+const tryParseUrl = (url: string, base?: string) => {
+  try {
+    return new URL(url, base);
+  } catch {
+    return null;
+  }
+};
+
 export const getAccountCenterInternalRoute = (
   returnUrl: string,
   currentOrigin = getCurrentOrigin()
@@ -16,21 +24,26 @@ export const getAccountCenterInternalRoute = (
     return;
   }
 
-  try {
-    const { origin } = new URL(currentOrigin);
-    const parsedUrl = new URL(returnUrl, origin);
-    const { pathname, search, hash } = parsedUrl;
+  const currentUrl = tryParseUrl(currentOrigin);
 
-    if (
-      parsedUrl.origin !== origin ||
-      (pathname !== accountCenterBasePath && !pathname.startsWith(`${accountCenterBasePath}/`))
-    ) {
-      return;
-    }
-
-    return `${pathname.slice(accountCenterBasePath.length) || '/'}${search}${hash}`;
-  } catch {
-    // Invalid URL — ignore and return undefined
+  if (!currentUrl) {
     return;
   }
+
+  const parsedUrl = tryParseUrl(returnUrl, currentUrl.origin);
+
+  if (!parsedUrl) {
+    return;
+  }
+
+  const { pathname, search, hash } = parsedUrl;
+
+  if (
+    parsedUrl.origin !== currentUrl.origin ||
+    (pathname !== accountCenterBasePath && !pathname.startsWith(`${accountCenterBasePath}/`))
+  ) {
+    return;
+  }
+
+  return `${pathname.slice(accountCenterBasePath.length) || '/'}${search}${hash}`;
 };
