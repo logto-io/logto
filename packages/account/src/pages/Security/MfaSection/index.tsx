@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ToggleSwitch from '@ac/components/ToggleSwitch';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { layoutClassNames } from '@ac/constants/layout';
 import { verifiedActionRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
@@ -52,7 +51,6 @@ const MfaSection = () => {
   const isMfaSectionVisible = hasVisibleMfaSection(mfaControl, experienceSettings);
 
   const showToggle =
-    isDevFeaturesEnabled &&
     isEditable &&
     mfaPolicy !== undefined &&
     !mandatoryMfaPolicies.has(mfaPolicy) &&
