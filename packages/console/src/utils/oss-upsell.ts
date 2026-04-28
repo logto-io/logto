@@ -1,15 +1,6 @@
 import { logtoCloudConsoleLink } from '@/consts/external-links';
 
-type QueryValue = string | number | boolean | undefined;
-
-type CloudUpsellQuery = Record<string, QueryValue>;
-
-type BuildCloudUpsellUrlOptions = {
-  readonly path?: string;
-  readonly extraQuery?: CloudUpsellQuery;
-};
-
-type OpenCloudUpsellOptions = BuildCloudUpsellUrlOptions & {
+type OpenCloudUpsellOptions = {
   readonly entry: OssUpsellEntry;
   readonly target?: '_blank' | '_self';
 };
@@ -33,27 +24,9 @@ const utmParameters = Object.freeze({
   campaign: 'cloud_upsell',
 });
 
-const setSearchParameters = (url: URL, searchParameters?: CloudUpsellQuery) => {
-  if (!searchParameters) {
-    return;
-  }
+export const buildCloudUpsellUrl = (entry: OssUpsellEntry) => {
+  const url = new URL('/', logtoCloudConsoleLink);
 
-  for (const [key, value] of Object.entries(searchParameters)) {
-    if (value === undefined) {
-      continue;
-    }
-
-    url.searchParams.set(key, String(value));
-  }
-};
-
-export const buildCloudUpsellUrl = (
-  entry: OssUpsellEntry,
-  { path, extraQuery }: BuildCloudUpsellUrlOptions = {}
-) => {
-  const url = new URL(path ?? '/', logtoCloudConsoleLink);
-
-  setSearchParameters(url, extraQuery);
   url.searchParams.set('utm_source', utmParameters.source);
   url.searchParams.set('utm_medium', utmParameters.medium);
   url.searchParams.set('utm_campaign', utmParameters.campaign);
@@ -62,13 +35,8 @@ export const buildCloudUpsellUrl = (
   return url.toString();
 };
 
-export const openCloudUpsell = ({
-  entry,
-  path,
-  extraQuery,
-  target = '_blank',
-}: OpenCloudUpsellOptions) => {
-  const targetUrl = buildCloudUpsellUrl(entry, { path, extraQuery });
+export const openCloudUpsell = ({ entry, target = '_blank' }: OpenCloudUpsellOptions) => {
+  const targetUrl = buildCloudUpsellUrl(entry);
 
   if (typeof window === 'undefined') {
     return targetUrl;
