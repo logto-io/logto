@@ -32,7 +32,6 @@ const userPreferencesGuard = z.object({
   ossGetStartedCloudUpsellDismissed: z.boolean().optional(),
   /* === Add on feature related fields === */
   prebuiltUiPermissionNoticeAcknowledged: z.boolean().optional(),
-  ossOidcConfigNoticeAcknowledged: z.boolean().optional(),
   cloudOidcPrivateKeyRotationNoticeAcknowledged: z.boolean().optional(),
 });
 
