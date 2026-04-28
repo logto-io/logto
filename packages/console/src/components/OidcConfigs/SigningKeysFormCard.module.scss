@@ -13,6 +13,10 @@
   padding: 0 _.unit(2);
   border-radius: 6px;
   background-color: var(--color-bg-info-tag);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .deleteIcon {

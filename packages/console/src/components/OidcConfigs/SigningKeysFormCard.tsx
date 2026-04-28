@@ -91,7 +91,7 @@ function SigningKeysFormCard() {
         title: String(t('table_column.id')),
         dataIndex: 'id',
         colSpan: 8,
-        render: ({ id }: OidcConfigKeysResponse) => <span className={styles.idWrapper}>{id}</span>,
+        render: ({ id }: OidcConfigKeysResponse) => <div className={styles.idWrapper}>{id}</div>,
       },
       {
         title: String(t('table_column.status')),
