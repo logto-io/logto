@@ -1,4 +1,4 @@
-import { Theme, ossUpsellEntries } from '@logto/schemas';
+import { Theme } from '@logto/schemas';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +15,7 @@ import IconButton from '@/ds-components/IconButton';
 import Spacer from '@/ds-components/Spacer';
 import Tag from '@/ds-components/Tag';
 import useTheme from '@/hooks/use-theme';
-import { openCloudUpsell } from '@/utils/oss-upsell';
+import { openCloudUpsell, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import styles from './index.module.scss';
 

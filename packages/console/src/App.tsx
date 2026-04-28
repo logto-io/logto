@@ -36,7 +36,6 @@ import { AppThemeProvider } from './contexts/AppThemeProvider';
 import TenantsProvider, { TenantsContext } from './contexts/TenantsProvider';
 import Toast from './ds-components/Toast';
 import useCurrentUser from './hooks/use-current-user';
-import useOssUpsellLanding from './hooks/use-oss-upsell-landing';
 import initI18n from './i18n/init';
 
 void initI18n();
@@ -148,8 +147,6 @@ function Content() {
   const { isAuthenticated } = useLogto();
   const { currentTenantId, currentTenant } = useContext(TenantsContext);
   const postHog = usePostHog();
-
-  useOssUpsellLanding();
 
   useEffect(() => {
     if (isLoaded) {

@@ -1,4 +1,3 @@
-import { ossUpsellEntries } from '@logto/schemas';
 import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -14,8 +13,8 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import useTrackedCloudUpsellLink from '@/hooks/use-tracked-cloud-upsell-link';
 import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUiAssetsUploader';
+import { buildCloudUpsellUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
@@ -23,7 +22,7 @@ import FormSectionTitle from '../../components/FormSectionTitle';
 import styles from './index.module.scss';
 
 function OssBringYourUiCard() {
-  const cloudUpsellLink = useTrackedCloudUpsellLink(ossUpsellEntries.signInExpBringYourUiOssCard);
+  const cloudUpsellUrl = buildCloudUpsellUrl(ossUpsellEntries.signInExpBringYourUiOssCard);
 
   return (
     <FormField
@@ -51,9 +50,9 @@ function OssBringYourUiCard() {
               components={{
                 a: (
                   <TextLink
+                    href={cloudUpsellUrl}
                     targetBlank="noopener"
                     className={styles.highlight}
-                    {...cloudUpsellLink}
                   />
                 ),
               }}

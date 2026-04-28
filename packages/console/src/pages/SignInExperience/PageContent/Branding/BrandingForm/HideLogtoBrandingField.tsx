@@ -1,4 +1,3 @@
-import { ossUpsellEntries } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { Trans } from 'react-i18next';
 
@@ -8,7 +7,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
 import TextLink from '@/ds-components/TextLink';
-import useTrackedCloudUpsellLink from '@/hooks/use-tracked-cloud-upsell-link';
+import { buildCloudUpsellUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
 
@@ -21,9 +20,7 @@ type Props = {
 
 function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
   const { register } = useFormContext<SignInExperienceForm>();
-  const cloudUpsellLink = useTrackedCloudUpsellLink(
-    ossUpsellEntries.signInExpHideLogtoBrandingOssNote
-  );
+  const cloudUpsellUrl = buildCloudUpsellUrl(ossUpsellEntries.signInExpHideLogtoBrandingOssNote);
 
   if (variant === 'cloud') {
     return (
@@ -65,7 +62,7 @@ function HideLogtoBrandingField({ variant, isEnabledInCloud }: Props) {
           i18nKey="admin_console.sign_in_exp.branding.hide_logto_branding_oss_note"
           components={{
             a: (
-              <TextLink targetBlank="noopener" className={styles.highlight} {...cloudUpsellLink} />
+              <TextLink href={cloudUpsellUrl} targetBlank="noopener" className={styles.highlight} />
             ),
           }}
         />
