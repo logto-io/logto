@@ -157,6 +157,7 @@ jobs:
             -e EXPECTED_LOGTO_OSS_SURVEY_ENDPOINT="$LOGTO_OSS_SURVEY_ENDPOINT" \
             "$OSS_VALIDATION_IMAGE" \
             -lc '
+              set -e
               test "$LOGTO_OSS_SURVEY_ENDPOINT" = "$EXPECTED_LOGTO_OSS_SURVEY_ENDPOINT"
               grep -R -F -- "$LOGTO_OSS_SURVEY_ENDPOINT" /etc/logto/packages/console/dist >/dev/null
             '
