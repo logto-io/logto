@@ -36,7 +36,7 @@ const mandatoryMfaPolicies = new Set<MfaPolicy>([
 const MfaSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, verificationId, setToast } =
+  const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
     useContext(PageContext);
   const [mfaVerifications, setMfaVerifications] = useState<UserMfaVerificationResponse>();
   const [skipMfaOnSignIn, setSkipMfaOnSignIn] = useState<boolean>();
@@ -100,6 +100,25 @@ const MfaSection = () => {
 
   const rows = useMfaRows(mfaVerifications, navigateTo);
 
+  const updateSkipMfaOnSignIn = useCallback(
+    async (verifiedId: string, skipMfaOnSignIn: boolean) => {
+      const [error] = await updateMfaSettingsApi(verifiedId, { skipMfaOnSignIn });
+
+      if (error) {
+        await handleError(error, {
+          'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
+            setToast(t('account_center.verification.verification_required'));
+          },
+        });
+        return;
+      }
+
+      setSkipMfaOnSignIn(skipMfaOnSignIn);
+    },
+    [handleError, setToast, setVerificationId, t, updateMfaSettingsApi]
+  );
+
   const handleToggleChange = useCallback(
     async (checked: boolean) => {
       const skipMfa = !checked;
@@ -110,49 +129,42 @@ const MfaSection = () => {
       }
 
       if (verificationId) {
-        const [error] = await updateMfaSettingsApi(verificationId, { skipMfaOnSignIn: skipMfa });
-
-        if (error) {
-          await handleError(error, {
-            'verification_record.permission_denied': async () => {
-              setToast(t('account_center.verification.verification_required'));
-            },
-          });
-          return;
-        }
-
-        setSkipMfaOnSignIn(skipMfa);
+        await updateSkipMfaOnSignIn(verificationId, skipMfa);
         return;
       }
 
       sessionStorage.setPendingVerifiedAction('enable-mfa');
       navigateTo(verifiedActionRoute);
     },
-    [verificationId, updateMfaSettingsApi, handleError, setToast, t, navigateTo]
+    [navigateTo, updateSkipMfaOnSignIn, verificationId]
   );
 
   const handleConfirmDisable = useCallback(async () => {
     setIsConfirmModalOpen(false);
 
     if (verificationId) {
-      const [error] = await updateMfaSettingsApi(verificationId, { skipMfaOnSignIn: true });
-
-      if (error) {
-        await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
-        return;
-      }
-
-      setSkipMfaOnSignIn(true);
+      await updateSkipMfaOnSignIn(verificationId, true);
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('disable-mfa');
     navigateTo(verifiedActionRoute);
-  }, [verificationId, updateMfaSettingsApi, handleError, setToast, t, navigateTo]);
+  }, [navigateTo, updateSkipMfaOnSignIn, verificationId]);
+
+  useEffect(() => {
+    if (!verificationId) {
+      return;
+    }
+
+    const pendingAction = sessionStorage.getPendingVerifiedAction();
+
+    if (pendingAction !== 'enable-mfa' && pendingAction !== 'disable-mfa') {
+      return;
+    }
+
+    sessionStorage.clearPendingVerifiedAction();
+    void updateSkipMfaOnSignIn(verificationId, pendingAction === 'disable-mfa');
+  }, [updateSkipMfaOnSignIn, verificationId]);
 
   if (rows.length === 0 && !showToggle) {
     return null;

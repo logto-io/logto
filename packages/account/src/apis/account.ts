@@ -35,6 +35,13 @@ export const updateUsername = async (
   });
 };
 
+export const deleteUsername = async (accessToken: string, verificationRecordId: string) => {
+  await createAuthenticatedKy(accessToken).patch('/api/my-account', {
+    json: { username: null },
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};
+
 export const deletePrimaryEmail = async (accessToken: string, verificationRecordId: string) => {
   await createAuthenticatedKy(accessToken).delete('/api/my-account/primary-email', {
     headers: { [verificationRecordIdHeader]: verificationRecordId },
