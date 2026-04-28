@@ -636,10 +636,10 @@
       "get": {
         "operationId": "GetSessions",
         "summary": "Get all active sessions",
-        "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available. A logto-verification-id in header is required for checking sensitive session details.",
+        "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available. A logto-verification-id in header is required for checking sensitive session details. Each entry includes an `isCurrent` boolean: `true` for the entry whose OIDC session backs the calling access token, `false` for the others. Use this to mark the \"This device\" entry in session-management UIs and to avoid revoking the caller's own session. At most one entry is `true` per response. Zero entries are tagged when the calling access token has no matching session uid — for example, the caller has revoked its own session but the token has not yet expired, or the token was issued from a non-session-backed grant.",
         "responses": {
           "200": {
-            "description": "Return a list of non-expired sessions of the user."
+            "description": "Return a list of non-expired sessions of the user. At most one entry has `isCurrent: true` per request."
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access session details."
