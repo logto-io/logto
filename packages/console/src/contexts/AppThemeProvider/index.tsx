@@ -1,7 +1,7 @@
 import { Theme } from '@logto/schemas';
 import { condArray, noop, trySafe } from '@silverhand/essentials';
 import type { ReactNode } from 'react';
-import { useEffect, useLayoutEffect, useMemo, useState, createContext } from 'react';
+import { useEffect, useMemo, useState, createContext } from 'react';
 
 import { storageKeys } from '@/consts';
 import type { AppearanceMode } from '@/types/appearance-mode';
@@ -77,11 +77,9 @@ export function AppThemeProvider({ children }: Props) {
   }, [mode, themeOverride]);
 
   // Set Theme Mode
-  useLayoutEffect(() => {
+  useEffect(() => {
     document.body.classList.remove(...condArray(styles.light, styles.dark));
     document.body.classList.add(...condArray(styles[theme]));
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    document.documentElement.dataset.theme = theme;
   }, [theme]);
 
   const context = useMemo<Context>(
