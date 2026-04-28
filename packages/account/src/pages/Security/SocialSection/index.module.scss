@@ -32,19 +32,12 @@
   }
 }
 
-.topLine {
-  display: contents;
-}
-
-// Icon and name share the same grid cell so the name slot stays within 200px,
-// matching the original non-grid layout. Name offsets via padding to sit after the icon.
-.iconWrap {
+.connectorInfo {
   grid-column: 1;
-  grid-row: 1;
   display: flex;
   align-items: center;
-  justify-self: start;
-  flex-shrink: 0;
+  gap: _.unit(4);
+  min-width: 0;
 }
 
 .connectorLogo {
@@ -55,12 +48,12 @@
 }
 
 .connectorName {
-  grid-column: 1;
-  grid-row: 1;
   min-width: 0;
-  padding-left: calc(20px + #{_.unit(4)});
   font: var(--font-label-2);
   color: var(--color-type-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .identityInfo {
@@ -142,14 +135,6 @@
     padding: _.unit(4);
   }
 
-  .topLine {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: _.unit(3);
-    width: 100%;
-  }
-
   .actions {
     display: flex;
     flex-wrap: wrap;
@@ -163,10 +148,11 @@
     width: 100%;
     overflow-wrap: anywhere;
     word-break: break-word;
+    white-space: normal;
   }
 
-  .connectorName {
-    padding-left: 0;
+  .connectorInfo {
+    width: 100%;
   }
 
   .identityInfo {
