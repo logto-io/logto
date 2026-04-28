@@ -28,22 +28,6 @@
   animation: rotating 1s steps(12, end) infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  .container {
-    background: var(--color-bg-body-base, #000);
-  }
-
-  :global(body.mobile) {
-    .container {
-      background: var(--color-bg-body, #191c1d);
-    }
-  }
-
-  .spinner {
-    color: var(--color-type-primary, #f7f8f8);
-  }
-}
-
 @keyframes rotating {
   from {
     transform: rotate(0deg);
