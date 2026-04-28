@@ -24,9 +24,14 @@ import {
   socialRoutePrefix,
 } from '@ac/constants/routes';
 
+import { accountCenterBasePath } from './account-center-internal-route';
 import { sessionStorage } from './session-storage';
 
-export const accountCenterBasePath = '/account';
+export {
+  accountCenterBasePath,
+  getAccountCenterInternalRoute,
+} from './account-center-internal-route';
+
 const redirectUrlParameter = 'redirect';
 const showSuccessParameter = 'show_success';
 const uiLocalesParameter = 'ui_locales';
