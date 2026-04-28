@@ -4,12 +4,13 @@ import { useParams } from 'react-router-dom';
 
 import DetailsPage from '@/components/DetailsPage';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import { type Action } from '@/pages/CustomizeJwt/utils/type';
 
 import { CodeEditorLoadingContext } from './CodeEditorLoadingContext';
 import MainContent from './MainContent';
 import PageLoadingSkeleton from './PageLoadingSkeleton';
 import styles from './index.module.scss';
-import { pageParamsGuard, type Action } from './type';
+import { pageParamsGuard } from './type';
 import useDataFetch from './use-data-fetch';
 
 type Props = {

@@ -2,7 +2,6 @@
   "paths": {
     "/api/users/{userId}/sessions": {
       "get": {
-        "tags": ["Dev feature"],
         "parameters": [],
         "responses": {
           "200": {
@@ -15,7 +14,6 @@
     },
     "/api/users/{userId}/sessions/{sessionId}": {
       "get": {
-        "tags": ["Dev feature"],
         "parameters": [],
         "responses": {
           "200": {
@@ -26,12 +24,11 @@
         "description": "Retrieve a non-expired session for the user by session ID, including session metadata and interaction details when available."
       },
       "delete": {
-        "tags": ["Dev feature"],
         "parameters": [
           {
             "in": "query",
-            "name": "revokeGrants",
-            "description": "Whether to revoke all associated grants and tokens along with the session."
+            "name": "revokeGrantsTarget",
+            "description": "Optional target for revoking associated grants and tokens. 'all' revokes grants for every application authorized by this session. 'firstParty' revokes only first-party app grants; third-party app grants remain active. If omitted, grants remain active when the session authorizations include offline_access; otherwise they are revoked."
           }
         ],
         "responses": {
@@ -40,7 +37,7 @@
           }
         },
         "summary": "Revoke a user session",
-        "description": "Revoke a specific user session by its ID, optionally revoking all associated grants and tokens."
+        "description": "Revoke a specific user session by its ID, optionally revoking associated target grants and tokens."
       }
     }
   }

@@ -7,10 +7,6 @@ import {
   type SignUpIdentifier as SignUpIdentifierMethod,
   type AccountCenterFieldControl,
 } from '@logto/schemas';
-import { conditionalArray } from '@silverhand/essentials';
-
-import { isDevFeaturesEnabled } from '@/consts/env';
-
 /**
  * Omit the `mfa`, `adaptiveMfa`, `captchaPolicy`, `passwordPolicy`, `sentinelPolicy` and `emailBlocklistPolicy` fields from the sign-in experience.
  * Since those fields are not managed by the sign-in experience page.
@@ -44,7 +40,7 @@ const accountCenterFieldKeys: Array<keyof AccountCenterFieldControl> = [
   'avatar',
   'profile',
   'customData',
-  ...conditionalArray(isDevFeaturesEnabled && (['session'] as const)),
+  'session',
 ] as const;
 
 export type AccountCenterFieldKey = (typeof accountCenterFieldKeys)[number];
@@ -53,6 +49,8 @@ export type AccountCenterFormValues = {
   enabled: boolean;
   fields: Record<AccountCenterFieldKey, AccountCenterControlValue>;
   webauthnRelatedOrigins: string[];
+  deleteAccountUrl: string;
+  customCss?: string;
 };
 
 const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
@@ -62,10 +60,13 @@ const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
     accountCenterFieldKeys.map((key) => [key, AccountCenterControlValue.Off])
   ) as Record<AccountCenterFieldKey, AccountCenterControlValue>,
   webauthnRelatedOrigins: [],
+  deleteAccountUrl: '',
 });
 
 export const normalizeWebauthnRelatedOrigins = (origins?: string[]): string[] =>
   origins?.map((origin) => origin.trim()).filter(Boolean) ?? [];
+
+export const normalizeDeleteAccountUrl = (url?: string): string => url?.trim() ?? '';
 
 export const convertAccountCenterToForm = (
   accountCenter?: AccountCenterConfig
@@ -76,6 +77,8 @@ export const convertAccountCenterToForm = (
     ...accountCenter?.fields,
   },
   webauthnRelatedOrigins: normalizeWebauthnRelatedOrigins(accountCenter?.webauthnRelatedOrigins),
+  deleteAccountUrl: normalizeDeleteAccountUrl(accountCenter?.deleteAccountUrl ?? undefined),
+  customCss: accountCenter?.customCss ?? undefined,
 });
 
 /**
@@ -129,4 +132,9 @@ export type SignInMethodsObject = Record<
  * - Those keys should be omitted from the submitted data.
  * - Those keys should not be used in any data comparison logic.
  */
-export type SignInExperiencePageManagedData = Omit<SignInExperience, OmittedSignInExperienceKeys>;
+export type SignInExperiencePageManagedData = Omit<
+  SignInExperience,
+  OmittedSignInExperienceKeys | 'hideLogtoBranding'
+> & {
+  hideLogtoBranding?: boolean;
+};

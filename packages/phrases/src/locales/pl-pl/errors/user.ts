@@ -31,6 +31,7 @@ const user = {
   missing_profile: 'Musisz podać dodatkowe informacje przed zalogowaniem.',
   role_exists: 'Identyfikator roli {{roleId}} jest już dodany do tego użytkownika',
   invalid_role_type: 'Nieprawidłowy typ roli, nie można przypisać roli maszynowej do użytkownika.',
+  suggest_mfa: 'Dla lepszego bezpieczeństwa konta zalecamy podłączenie MFA do Twojego konta.',
   missing_mfa: 'Musisz podłączyć dodatkowe MFA przed zalogowaniem.',
   totp_already_in_use: 'TOTP jest już w użyciu.',
   backup_code_already_in_use: 'Kod zapasowy jest już w użyciu.',
@@ -44,6 +45,8 @@ const user = {
     'Nazwa użytkownika jest wymagana jako identyfikator, nie możesz ustawić jej jako null.',
   email_or_phone_required:
     'Adres email lub numer telefonu jest wymaganym identyfikatorem, co najmniej jeden z nich jest wymagany.',
+  last_sign_in_method_required:
+    'Musisz zachować na swoim koncie co najmniej jedną dostępną metodę logowania.',
   email_required: 'Adres email jest wymaganym identyfikatorem, nie możesz ustawić go jako null.',
   phone_required: 'Numer telefonu jest wymaganym identyfikatorem, nie możesz ustawić go jako null.',
   enterprise_sso_identity_not_exists:

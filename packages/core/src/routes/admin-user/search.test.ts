@@ -83,6 +83,28 @@ describe('adminUserRoutes', () => {
     expect(response.header).toHaveProperty('total-number', `${mockUserList.length}`);
   });
 
+  it('GET /users should not include passwordDigest/passwordAlgorithm by default', async () => {
+    const response = await userRequest.get('/users');
+    expect(response.status).toEqual(200);
+    for (const user of response.body as unknown[]) {
+      expect(user).not.toHaveProperty('passwordDigest');
+      expect(user).not.toHaveProperty('passwordAlgorithm');
+    }
+  });
+
+  it('GET /users with includePasswordHash=true should include passwordDigest and passwordAlgorithm for each user', async () => {
+    const response = await userRequest.get('/users?includePasswordHash=true');
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveLength(mockUserList.length);
+    for (const [index, user] of (response.body as unknown[]).entries()) {
+      expect(user).toHaveProperty('passwordDigest', mockUserList[index]!.passwordEncrypted);
+      expect(user).toHaveProperty(
+        'passwordAlgorithm',
+        mockUserList[index]!.passwordEncryptionMethod
+      );
+    }
+  });
+
   it('GET /users should return matched data', async () => {
     const search = 'foo';
     const response = await userRequest.get('/users').send({ search });

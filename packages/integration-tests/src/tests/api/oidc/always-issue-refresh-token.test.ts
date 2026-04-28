@@ -1,10 +1,10 @@
 import { Prompt } from '@logto/node';
-import { ApplicationType, InteractionEvent } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 
-import { createApplication, deleteApplication, putInteraction } from '#src/api/index.js';
-import MockClient from '#src/client/index.js';
+import { createApplication, deleteApplication } from '#src/api/index.js';
 import { demoAppRedirectUri } from '#src/constants.js';
-import { processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
+import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateUsername, generatePassword } from '#src/utils.js';
@@ -14,15 +14,14 @@ describe('always issue Refresh Token config', () => {
   const password = generatePassword();
 
   const validateRefreshToken = async (appId: string, redirectUri: string, expectToken: boolean) => {
-    const client = new MockClient({
-      appId,
-      prompt: Prompt.Login,
+    const client = await initExperienceClient({
+      config: {
+        appId,
+        prompt: Prompt.Login,
+      },
+      redirectUri,
     });
-    await client.initSession(redirectUri);
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
-    });
+    await identifyUserWithUsernamePassword(client, username, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
 

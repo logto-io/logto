@@ -44,6 +44,8 @@ const sign_in_exp = {
     hide_logto_branding: 'Ocultar a marca Logto',
     hide_logto_branding_description:
       'Remova "Powered by Logto". Destaque apenas a sua marca com uma experiência de início de sessão limpa e profissional.',
+    hide_logto_branding_oss_note:
+      'Esta funcionalidade está disponível nativamente no <a>Logto Cloud</a>.',
   },
   branding_uploads: {
     app_logo: {
@@ -79,6 +81,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'UI personalizada',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'CSS personalizado',
     css_code_editor_description1: 'Veja um exemplo de CSS personalizado.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -88,15 +91,20 @@ const sign_in_exp = {
     bring_your_ui_title: 'Traga o seu UI',
     bring_your_ui_description:
       'Carregue um pacote comprimido (.zip) para substituir o UI predefinido do Logto pelo seu próprio código. <a>Saiba mais</a>',
+    bring_your_ui_oss_description:
+      'Personalize a interface de início de sessão com o seu próprio código.',
+    bring_your_ui_oss_card_description:
+      'Carregue a sua interface de início de sessão personalizada diretamente no <a>Logto Cloud</a>. Não é necessário fazer fork nem voltar a implementar.',
+    bring_your_ui_oss_try_cloud: 'Experimentar Cloud',
     preview_with_bring_your_ui_description:
       'Os seus recursos de UI personalizados foram carregados com êxito e agora estão sendo servidos. Consequentemente, a janela de visualização incorporada foi desativada.\nPara testar o seu UI de início de sessão personalizado, clique no botão "Visualização ao vivo" para abri-lo num novo separador do navegador.',
   },
   account_center: {
     title: 'CENTRO DE CONTA',
     description: 'Personalize os fluxos do centro de conta com as APIs da Logto.',
-    enable_account_api: 'Ativar a Account API',
+    enable_account_api: 'Ativar o centro de conta e a Account API',
     enable_account_api_description:
-      'Ative a Account API para criar um centro de conta personalizado, dando aos utilizadores finais acesso direto à API sem utilizar a Logto Management API.',
+      'Ativa tanto a Account API destinada aos utilizadores finais como o centro de conta pronto a usar da Logto. Quando desativado, ambas as funcionalidades ficam indisponíveis.',
     field_options: {
       off: 'Desligado',
       edit: 'Editar',
@@ -172,29 +180,47 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Adicione os domínios das suas aplicações front-end autorizados a registar passkeys através da Account API.',
     webauthn_related_origins_error: 'A origem deve começar com https:// ou http://',
+    delete_account_url: 'Eliminar conta',
+    delete_account_url_description:
+      'Forneça o seu próprio URL de endpoint para processar a eliminação da conta com lógica personalizada.',
     prebuilt_ui: {
       title: 'INTEGRAR UI PRÉ-CONSTRUÍDA',
       description:
-        'Integre rapidamente fluxos de verificação e definição de segurança prontos para uso com UI pré-construído.',
+        'Integre rapidamente o centro de conta pronto a usar, a verificação de segurança ou um único fluxo de atualização de perfil com UI pré-construída. Basta combinar o seu domínio com a rota para formar o URL do seu centro de conta (por exemplo, https://auth.foo.com/account/email).',
       permission_notice:
         'Para integrar estes fluxos pré-construídos, defina as permissões da API de conta relacionadas como <strong>Editar</strong> nas definições abaixo.',
+      account_center_title: 'Integrar o centro de conta pronto a usar',
+      account_center_description:
+        'Direcione os utilizadores para o centro de conta para gerir definições de segurança como e-mail, telefone, nome de utilizador, palavra-passe, MFA e contas ligadas.',
       flows_title: 'Integrar fluxos de definição de segurança prontos para uso',
+      single_task_flows_title: 'Integrar um fluxo de tarefa única pronto a usar',
       flows_description:
-        'Combine o seu domínio com a rota para formar o seu URL de definição de conta (por exemplo, https://auth.foo.com/account/email). Opcionalmente, adicione um parâmetro de URL `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida.',
+        'Combine o seu domínio com a rota para formar o seu URL de definição de conta (por exemplo, https://auth.foo.com/account/email). Opcionalmente, adicione `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida, `show_success=true` para manter a página de sucesso visível, `ui_locales=` para substituir o idioma predefinido, ou `identifier=` para preencher previamente o campo de entrada do identificador.',
+      single_task_flows_description:
+        'Direcione os utilizadores diretamente para um fluxo específico (por exemplo, ligação de email). Opcionalmente, adicione `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida, `show_success=true` para manter a página de sucesso visível, `ui_locales=` para substituir o idioma predefinido, ou `identifier=` para preencher previamente o campo de entrada do identificador.',
       tooltips: {
         email: 'Atualize o seu endereço de email principal',
         phone: 'Atualize o seu número de telefone principal',
         username: 'Atualize seu nome de utilizador',
         password: 'Defina uma nova palavra-passe',
+        social: 'Ligue uma conta social para iniciar sessão',
+        social_remove: 'Remova uma conta social ligada',
         authenticator_app:
           'Configure um novo aplicativo autenticador para a autenticação multifator',
+        authenticator_app_replace: 'Substitua o seu aplicativo autenticador existente por um novo',
         passkey_add: 'Registe uma nova passkey',
         passkey_manage: 'Gira as suas passkeys existentes ou adicione novas',
         backup_codes_generate: 'Gere um novo conjunto de 10 códigos de backup',
         backup_codes_manage: 'Visualize os seus códigos de backup disponíveis ou gere novos',
+        account_center:
+          'Aceda ao centro de conta para gerir definições de segurança como e-mail, telefone, nome de utilizador, palavra-passe, MFA e contas ligadas',
       },
       customize_note: 'Não quer a experiência pronta para uso? Pode sempre',
       customize_link: 'personalizar os seus fluxos com a Account API em vez disso.',
+    },
+    custom_css: {
+      title: 'CSS personalizado',
+      description: 'Personalize a aparência do centro de contas usando CSS personalizado.',
     },
   },
   sign_up_and_sign_in,

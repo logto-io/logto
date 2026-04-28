@@ -1,6 +1,5 @@
 import {
   MfaFactor,
-  MfaPolicy,
   VerificationType,
   userMfaDataGuard,
   userMfaDataKey,
@@ -8,6 +7,8 @@ import {
   type User,
 } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
+
+import { isNoSkipMfaPolicy } from '#src/libraries/sign-in-experience/mfa-policy.js';
 
 import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
@@ -112,15 +113,22 @@ export class MfaValidator {
     const hasUserFactors = this.userEnabledMfaVerifications.length > 0;
 
     if (this.adaptiveMfaResult !== undefined) {
-      // Verification guard only applies when the user already has MFA factors.
-      // If adaptive MFA requires MFA but no factors are available, submit flow will enforce binding.
+      // Verification guard only applies when the user already has MFA factors
+      // enabled in the current sign-in experience.
       return this.adaptiveMfaResult.requiresMfa && hasUserFactors;
     }
 
     const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
+    const isMfaEnabled = mfaData.success ? mfaData.data.enabled : undefined;
 
-    if (skipMfaOnSignIn && this.mfaSettings.policy !== MfaPolicy.Mandatory) {
+    // If `isMfaEnabled` is undefined, it means the user exists before the `enabled` flag is introduced,
+    // we should still enforce MFA for them if they have MFA factors. Only skip the check if mfa is explicitly
+    // disabled, or skipped on sign-in.
+    if (
+      (isMfaEnabled === false || skipMfaOnSignIn) &&
+      !isNoSkipMfaPolicy(this.mfaSettings.policy)
+    ) {
       return false;
     }
 

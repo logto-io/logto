@@ -8,10 +8,11 @@ import { isKeyInObject, removeUndefinedKeys } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import ky, { HTTPError } from 'ky';
 
-import { putInteraction } from '#src/api/index.js';
-import MockClient, { defaultConfig } from '#src/client/index.js';
+import { ExperienceClient } from '#src/client/experience/index.js';
+import { defaultConfig } from '#src/client/index.js';
 import { demoAppRedirectUri } from '#src/constants.js';
 import { processSession } from '#src/helpers/client.js';
+import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest } from '#src/helpers/user.js';
@@ -45,7 +46,7 @@ const accessDeniedError = grantErrorContaining(
 
 const issuer = defaultConfig.endpoint + '/oidc';
 
-class MockOrganizationClient extends MockClient {
+class MockOrganizationClient extends ExperienceClient {
   /** Perform the organization token grant. It may be replaced once our SDK supports it. */
   async fetchOrganizationToken(organizationId?: string, scopes?: string[]) {
     const refreshToken = await this.getRefreshToken();
@@ -100,10 +101,8 @@ describe('`refresh_token` grant (for organization tokens)', () => {
       ...configOverrides,
     });
     await client.initSession(demoAppRedirectUri);
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
-    });
+    await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+    await identifyUserWithUsernamePassword(client, username, password);
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     return client;

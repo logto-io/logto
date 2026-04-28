@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-patreon",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Patreon web connector implementation.",
   "author": "DevTekVE <devtekve@gmail.com> & Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
@@ -28,7 +28,8 @@
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },

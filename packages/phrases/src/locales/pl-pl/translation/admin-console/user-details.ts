@@ -66,10 +66,15 @@ const user_details = {
     field_name: 'Wieloetapowa autoryzacja',
     field_description: 'Ten użytkownik włączył autoryzację dwuetapową.',
     name_column: 'Wieloetapowa autoryzacja',
-
     field_description_empty: 'Ten użytkownik nie włączył autoryzacji dwuetapowej.',
     deletion_confirmation:
       'Usuwasz istniejące <name/> w celu weryfikacji dwuetapowej. Czy na pewno chcesz kontynuować?',
+  },
+  passkey: {
+    field_name: 'Klucze dostępu',
+    field_description_empty: 'Ten użytkownik nie włączył logowania za pomocą klucza dostępu.',
+    deletion_confirmation:
+      'Usuwasz istniejący <name/> do logowania za pomocą klucza dostępu. Czy na pewno chcesz kontynuować?',
   },
   suspended: 'Zawieszony',
   suspend_user: 'Zawieś użytkownika',
@@ -144,7 +149,6 @@ const user_details = {
     name_column: 'Nazwa',
     session_id_column: 'Identyfikator sesji',
     location_column: 'Lokalizacja',
-
     browser_on_os: '{{browser}} na {{os}}',
     user: 'Użytkownik',
     applications: 'Aplikacje',
@@ -156,6 +160,21 @@ const user_details = {
     revoke_session: 'Unieważnij sesję',
     revoke_session_confirmation:
       'Jeśli usuniesz tę sesję, użytkownicy będą musieli ponownie się uwierzytelnić.',
+  },
+  third_party_apps: {
+    title: 'Aplikacje zewnętrzne',
+    description:
+      'Użyj Logto jako dostawcy tożsamości, aby autoryzować aplikacje zewnętrzne. Przeglądaj i zarządzaj aplikacjami, którym ten użytkownik przyznał dostęp.',
+    field_name: 'Autoryzowane aplikacje zewnętrzne',
+    multiple_authorized: 'Ten użytkownik autoryzował wiele aplikacji i usług zewnętrznych.',
+    not_authorized:
+      'Ten użytkownik nie autoryzował jeszcze żadnych aplikacji ani usług zewnętrznych.',
+    name_column: 'Nazwa',
+    app_id_column: 'ID aplikacji',
+    access_created_at_column: 'Dostęp utworzono',
+    revoke_access_title: 'Cofnąć dostęp?',
+    revoke_access_description:
+      'Ta operacja cofnie dostęp aplikacji do konta tego użytkownika na wszystkich urządzeniach. Użytkownik musi ponownie udzielić autoryzacji, aby przywrócić dostęp.',
   },
   connections: {
     title: 'Połączenie',

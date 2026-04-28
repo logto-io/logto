@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: 'Szczegóły aplikacji',
   back_to_applications: 'Powrót do aplikacji',
@@ -85,6 +87,10 @@ const application_details = {
     'Pozwól tej aplikacji inicjować żądania wymiany tokenów. Jest to wymagane dla <impersonationLink>podszywania się pod użytkownika</impersonationLink> i <patLink>osobistych tokenów dostępu</patLink>.',
   allow_token_exchange_public_client_warning:
     'Włączanie wymiany tokenów dla klientów publicznych (aplikacja jednostronicowa / aplikacja natywna) nie jest zalecane. Klienci publiczni nie mogą bezpiecznie przechowywać poświadczeń, co może narazić aplikację na ryzyko podszywania się pod tokeny.',
+  device_flow_tag: 'Przepływ urządzenia',
+  device_flow_notification:
+    'Ta aplikacja umożliwia przepływ autoryzacji urządzenia OAuth 2.0 (Device Authorization Flow) dla urządzeń z ograniczonym wprowadzaniem danych lub aplikacji bezinterfejsowych (np. telewizory, CLI). Użytkownicy kończą logowanie na oddzielnym urządzeniu, wprowadzając kod urządzenia lub skanując kod QR. <a>Dowiedz się więcej</a>',
+  device_flow_try_demo: 'Wypróbuj demo',
   delete_description:
     'Ta operacja nie może zostać cofnięta. Spowoduje trwałe usunięcie aplikacji. Aby potwierdzić, wpisz nazwę aplikacji <span>{{name}}</span>.',
   enter_your_application_name: 'Wpisz nazwę swojej aplikacji',
@@ -280,6 +286,7 @@ const application_details = {
     col_sp_claims: 'Nazwa wartości w Twojej aplikacji',
     add_button: 'Dodaj kolejne',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

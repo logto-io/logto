@@ -1,16 +1,16 @@
 import { ReservedResource, UserScope } from '@logto/core-kit';
-import { type Application, InteractionEvent, ApplicationType } from '@logto/schemas';
+import { type Application, ApplicationType, SignInIdentifier } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { assignUserConsentScopes } from '#src/api/application-user-consent-scope.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
-import { consent, getConsentInfo, putInteraction } from '#src/api/interaction.js';
+import { consent, getConsentInfo } from '#src/api/interaction.js';
 import { OrganizationScopeApi } from '#src/api/organization-scope.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
 import { createScope } from '#src/api/scope.js';
-import { initClient } from '#src/helpers/client.js';
+import { initExperienceClient } from '#src/helpers/client.js';
 import { OrganizationApiTest, OrganizationRoleApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
@@ -27,6 +27,33 @@ describe('consent api', () => {
   const thirdPartyApplicationName = 'consent-third-party-app';
   const firstPartyApplicationName = 'consent-first-party-app';
   const redirectUri = 'http://example.com';
+
+  const initClientAndSignIn = async (
+    application: Application,
+    userProfile: { username: string; password: string },
+    config: { scopes?: string[]; resources?: string[] } = {}
+  ) => {
+    const client = await initExperienceClient({
+      config: {
+        appId: application.id,
+        appSecret: application.secret,
+        ...config,
+      },
+      redirectUri,
+    });
+
+    const { verificationId } = await client.verifyPassword({
+      identifier: {
+        type: SignInIdentifier.Username,
+        value: userProfile.username,
+      },
+      password: userProfile.password,
+    });
+
+    await client.identifyUser({ verificationId });
+
+    return client;
+  };
 
   const bootStrapApplication = async () => {
     const thirdPartyApplication = await createApplication(
@@ -71,21 +98,7 @@ describe('consent api', () => {
 
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
 
-    const client = await initClient(
-      {
-        appId: application.id,
-        appSecret: application.secret,
-      },
-      redirectUri
-    );
-
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: {
-        username: userProfile.username,
-        password: userProfile.password,
-      },
-    });
+    const client = await initClientAndSignIn(application, userProfile);
 
     const { redirectTo } = await client.submitInteraction();
 
@@ -118,21 +131,8 @@ describe('consent api', () => {
 
     const { userProfile, user } = await generateNewUser({ username: true, password: true });
 
-    const client = await initClient(
-      {
-        appId: application.id,
-        appSecret: application.secret,
-        scopes: [UserScope.Organizations, UserScope.Profile, organizationScope.name],
-      },
-      redirectUri
-    );
-
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: {
-        username: userProfile.username,
-        password: userProfile.password,
-      },
+    const client = await initClientAndSignIn(application, userProfile, {
+      scopes: [UserScope.Organizations, UserScope.Profile, organizationScope.name],
     });
 
     const { redirectTo } = await client.submitInteraction();
@@ -179,22 +179,9 @@ describe('consent api', () => {
         userScopes: [UserScope.Organizations],
       });
 
-      const client = await initClient(
-        {
-          appId: application.id,
-          appSecret: application.secret,
-          scopes: [UserScope.Organizations, UserScope.Profile, scope.name, scope2.name],
-          resources: [resource.indicator],
-        },
-        redirectUri
-      );
-
-      await client.successSend(putInteraction, {
-        event: InteractionEvent.SignIn,
-        identifier: {
-          username: userProfile.username,
-          password: userProfile.password,
-        },
+      const client = await initClientAndSignIn(application, userProfile, {
+        scopes: [UserScope.Organizations, UserScope.Profile, scope.name, scope2.name],
+        resources: [resource.indicator],
       });
 
       const { redirectTo } = await client.submitInteraction();
@@ -232,22 +219,9 @@ describe('consent api', () => {
         userScopes: [UserScope.Organizations],
       });
 
-      const client = await initClient(
-        {
-          appId: application.id,
-          appSecret: application.secret,
-          scopes: [UserScope.Organizations, UserScope.Profile, scope.name],
-          resources: [resource.indicator],
-        },
-        redirectUri
-      );
-
-      await client.successSend(putInteraction, {
-        event: InteractionEvent.SignIn,
-        identifier: {
-          username: userProfile.username,
-          password: userProfile.password,
-        },
+      const client = await initClientAndSignIn(application, userProfile, {
+        scopes: [UserScope.Organizations, UserScope.Profile, scope.name],
+        resources: [resource.indicator],
       });
 
       const { redirectTo } = await client.submitInteraction();
@@ -276,23 +250,10 @@ describe('consent api', () => {
       const role = await createRole({ name: generateRoleName(), scopeIds: [scope.id] });
       await assignUsersToRole([user.id], role.id);
 
-      const client = await initClient(
-        {
-          appId: application.id,
-          appSecret: application.secret,
-          // First party app should block the scope, even though it is not assigned to the app
-          scopes: [UserScope.Profile, scope.name],
-          resources: [resource.indicator],
-        },
-        redirectUri
-      );
-
-      await client.successSend(putInteraction, {
-        event: InteractionEvent.SignIn,
-        identifier: {
-          username: userProfile.username,
-          password: userProfile.password,
-        },
+      const client = await initClientAndSignIn(application, userProfile, {
+        // First party app should block the scope, even though it is not assigned to the app
+        scopes: [UserScope.Profile, scope.name],
+        resources: [resource.indicator],
       });
 
       const { redirectTo } = await client.submitInteraction();
@@ -310,21 +271,7 @@ describe('consent api', () => {
 
       const { userProfile, user } = await generateNewUser({ username: true, password: true });
 
-      const client = await initClient(
-        {
-          appId: application.id,
-          appSecret: application.secret,
-        },
-        redirectUri
-      );
-
-      await client.successSend(putInteraction, {
-        event: InteractionEvent.SignIn,
-        identifier: {
-          username: userProfile.username,
-          password: userProfile.password,
-        },
-      });
+      const client = await initClientAndSignIn(application, userProfile);
 
       const { redirectTo } = await client.submitInteraction();
 
@@ -366,22 +313,9 @@ describe('consent api', () => {
         userScopes: [UserScope.Organizations],
       });
 
-      const client = await initClient(
-        {
-          appId: application.id,
-          appSecret: application.secret,
-          scopes: [UserScope.Organizations, UserScope.Profile, scope.name, scope2.name],
-          resources: [resource.indicator],
-        },
-        redirectUri
-      );
-
-      await client.successSend(putInteraction, {
-        event: InteractionEvent.SignIn,
-        identifier: {
-          username: userProfile.username,
-          password: userProfile.password,
-        },
+      const client = await initClientAndSignIn(application, userProfile, {
+        scopes: [UserScope.Organizations, UserScope.Profile, scope.name, scope2.name],
+        resources: [resource.indicator],
       });
 
       const { redirectTo } = await client.submitInteraction();
@@ -405,8 +339,6 @@ describe('consent api', () => {
   });
 
   afterAll(async () => {
-    for (const application of applications.values()) {
-      void deleteApplication(application.id);
-    }
+    await Promise.all([...applications.values()].map(async (app) => deleteApplication(app.id)));
   });
 });

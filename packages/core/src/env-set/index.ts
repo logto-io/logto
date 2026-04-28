@@ -18,6 +18,7 @@ export enum UserApps {
   Api = 'api',
   Oidc = 'oidc',
   DemoApp = 'demo-app',
+  DeviceDemoApp = 'device-demo-app',
   AccountCenter = 'account',
   WellKnown = '.well-known',
 }
@@ -90,12 +91,16 @@ export class EnvSet {
     this.#pool = pool;
 
     const consoleLog = new ConsoleLog(chalk.magenta('env-set'));
-    const { getOidcConfigs } = createLogtoConfigLibrary({
-      logtoConfigs: createLogtoConfigQueries(
-        pool,
-        new WellKnownCache(this.tenantId, new TtlCache(60_000))
-      ),
+    const wellKnownCache = new WellKnownCache(this.tenantId, new TtlCache(60_000));
+    const logtoConfigQueries = createLogtoConfigQueries(pool, wellKnownCache);
+
+    const { getOidcConfigs, promoteScheduledSigningKeyRotation } = createLogtoConfigLibrary({
+      logtoConfigs: logtoConfigQueries,
+      pool,
+      wellKnownCache,
     });
+
+    await promoteScheduledSigningKeyRotation();
 
     const oidcConfigs = await getOidcConfigs(consoleLog);
     this.#endpoint = customDomain

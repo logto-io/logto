@@ -16,11 +16,15 @@ const oidc = {
   provider_error: 'OIDC 내부 오류: {{message}}.',
   server_error: '알 수 없는 OIDC 오류가 발생했어요. 나중에 다시 시도해주세요.',
   provider_error_fallback: 'OIDC 오류가 발생했어요: {{code}}.',
+  custom_claims_script_error: '커스텀 claims 스크립트 오류: {{error_description}}',
   key_required: '최소한 하나의 키가 필요해요.',
   key_not_found: 'ID가 {{id}}인 키를 찾을 수 없어요.',
+  only_previous_key_can_be_deleted: '이전 키만 삭제할 수 있습니다.',
   invalid_session_payload: '유효하지 않은 세션 페이로드입니다.',
   session_not_found: '세션을 찾을 수 없습니다.',
   invalid_session_account_id: '세션 accountId가 일치하지 않습니다.',
+  failed_to_revoke_grant: '권한 철회에 실패했어요.',
+  failed_to_cleanup_session_authorization: '세션 권한 정리에 실패했어요.',
 };
 
 export default Object.freeze(oidc);

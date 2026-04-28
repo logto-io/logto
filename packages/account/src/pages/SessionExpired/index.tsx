@@ -1,7 +1,7 @@
 import { useLogto } from '@logto/react';
 
 import ErrorPage from '@ac/components/ErrorPage';
-import { accountCenterBasePath } from '@ac/utils/account-center-route';
+import { accountCenterBasePath, setRouteRestore } from '@ac/utils/account-center-route';
 
 const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 
@@ -15,6 +15,7 @@ const SessionExpired = () => {
       action={{
         titleKey: 'action.sign_in',
         onClick: () => {
+          setRouteRestore(window.location.pathname);
           void signIn({ redirectUri });
         },
       }}

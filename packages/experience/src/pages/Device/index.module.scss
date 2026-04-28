@@ -1,0 +1,15 @@
+@use '@/shared/scss/underscore' as _;
+
+.content {
+  width: min(100%, 400px);
+}
+
+.description {
+  margin-bottom: _.unit(4);
+  color: var(--color-type-secondary);
+  font: var(--font-body-2);
+}
+
+.inputField {
+  margin-bottom: _.unit(4);
+}

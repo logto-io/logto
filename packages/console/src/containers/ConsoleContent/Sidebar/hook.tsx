@@ -9,7 +9,6 @@ import Connection from '@/assets/icons/connection.svg?react';
 import Gear from '@/assets/icons/gear.svg?react';
 import Hook from '@/assets/icons/hook.svg?react';
 import JwtClaims from '@/assets/icons/jwt-claims.svg?react';
-import Key from '@/assets/icons/key.svg?react';
 import List from '@/assets/icons/list.svg?react';
 import OrganizationTemplate from '@/assets/icons/organization-template-feature.svg?react';
 import Organization from '@/assets/icons/organization.svg?react';
@@ -20,7 +19,6 @@ import SecurityLock from '@/assets/icons/security-lock.svg?react';
 import Security from '@/assets/icons/security.svg?react';
 import EnterpriseSso from '@/assets/icons/single-sign-on.svg?react';
 import Web from '@/assets/icons/web.svg?react';
-import { isCloud } from '@/consts/env';
 
 type SidebarItem = {
   Icon: FC;
@@ -130,10 +128,6 @@ export const useSidebarMenuItems = (): {
       title: 'developer',
       items: [
         {
-          Icon: Key,
-          title: 'signing_keys',
-        },
-        {
           Icon: JwtClaims,
           title: 'customize_jwt',
         },
@@ -149,7 +143,6 @@ export const useSidebarMenuItems = (): {
     },
     {
       title: 'tenant',
-      isHidden: !isCloud,
       items: [
         {
           Icon: Gear,

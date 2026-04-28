@@ -7,6 +7,7 @@ const get_started = {
     title_cloud: 'Entwicklung: Integrieren Sie Ihre App in Minuten sicher',
     subtitle_cloud:
       'Oder nehmen Sie 5 Minuten Zeit, um Ihre App mit unseren vorgefertigten SDKs und Tutorials zu integrieren.',
+    try_mcp: 'Einfach-Prompt-Integration mit MCP ausprobieren',
   },
   customize: {
     title: 'Anpassen: Liefern Sie ein großartiges Anmeldeerlebnis',
@@ -42,6 +43,26 @@ const get_started = {
     subtitle:
       'Du benutzt einen Entwicklermandanten zum kostenlosen Testen. Um live zu gehen, erstelle oder konvertiere zu einem Produktionsmandanten. Brauchst du etwas Eigenes? <a>Kontaktiere uns</a>',
     convert_button: 'In Produktionsmandanten umwandeln',
+  },
+  oss_cloud: {
+    try: {
+      title: 'Sparen Sie sich den Betriebsaufwand und testen Sie Logto Cloud kostenlos',
+      badge: 'Empfohlen',
+      description:
+        'Erhalten Sie ein vollständig verwaltetes Logto ohne Wartungsaufwand, plus schnelle Integration mit MCP, Multi-Tenant-Unterstützung, Teamzusammenarbeit und alle Premium-Funktionen inklusive. Kostenloser Start ohne Kreditkarte.',
+      action: 'Logto Cloud entdecken',
+    },
+    private_cloud: {
+      title: 'Benötigen Sie Compliance oder eine individuelle Bereitstellung?',
+      card_title: 'Private Cloud',
+      description:
+        'Erhalten Sie eine dedizierte Logto-Instanz mit vollständiger Datenisolation, eigener Domain und SLA-Garantien. Ideal für Unternehmen mit strengen Anforderungen an Datenresidenz oder Compliance. Wir übernehmen die Infrastruktur, damit Sie sich auf Ihr Produkt konzentrieren können.',
+    },
+    sidebar: {
+      title: 'Konzentrieren Sie sich aufs Entwickeln, nicht aufs Hosting.',
+      description: 'Lassen Sie Logto Cloud die Auth-Infrastruktur für Sie übernehmen.',
+      action: 'Logto Cloud ausprobieren',
+    },
   },
   view_all: 'Alle anzeigen →',
 };

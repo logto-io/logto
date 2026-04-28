@@ -3,6 +3,20 @@ const account_center = {
     title: 'ページが見つかりません',
     description: 'このページは利用できません。',
   },
+  page: {
+    title: 'アカウント',
+    security_title: 'セキュリティ',
+    security_description: 'アカウントの安全を確保するために、ここでアカウント設定を変更できます。',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
+    support: 'サポート',
+  },
   verification: {
     title: 'セキュリティ確認',
     description:
@@ -12,6 +26,9 @@ const account_center = {
     error_verify_failed: '認証に失敗しました。もう一度コードを入力してください。',
     verification_required: '認証の有効期限が切れました。もう一度本人確認を行ってください。',
     try_another_method: '別の方法で確認する',
+    no_available_methods_title: '利用可能な認証方法がありません',
+    no_available_methods_description:
+      '認証方法が設定されていません。まずアカウントにパスワード、メールアドレス、または電話番号を追加してください。',
   },
   password_verification: {
     title: 'パスワードを確認',
@@ -52,6 +69,61 @@ const account_center = {
     title: 'ユーザー名を設定',
     description: 'ユーザー名は英数字とアンダースコアのみ使用できます。',
     success: 'ユーザー名を更新しました。',
+  },
+  security: {
+    add: '追加',
+    change: '変更',
+    remove: '削除',
+    not_set: '未設定',
+    social_sign_in: 'ソーシャルサインイン',
+    social_not_linked: '未連携',
+    email_phone: 'メールアドレス / 電話番号',
+    email: 'メールアドレス',
+    phone: '電話番号',
+    password: 'パスワード',
+    configured: '設定済み',
+    not_configured: '未設定',
+    two_step_verification: '2段階認証',
+    authenticator_app: '認証アプリ',
+    passkeys: 'パスキー',
+    backup_codes: 'バックアップコード',
+    email_verification_code: 'メール認証コード',
+    phone_verification_code: '電話認証コード',
+    passkeys_count_one: '{{count}} 個のパスキー',
+    passkeys_count_other: '{{count}} 個のパスキー',
+    backup_codes_count_one: '{{count}} 個のコード',
+    backup_codes_count_other: '{{count}} 個のコード',
+    view: '表示',
+    manage: '管理',
+    turn_on_2_step_verification: '2段階認証を有効にする',
+    turn_on_2_step_verification_description:
+      'セキュリティを強化します。サインイン時に2段階目の認証が求められます。',
+    turn_off_2_step_verification: '2段階認証を無効にする',
+    turn_off_2_step_verification_description:
+      '2段階認証を無効にすると、サインイン時の追加の保護レイヤーが削除されます。続行してもよろしいですか？',
+    disable_2_step_verification: '無効にする',
+    no_verification_method_warning:
+      '2つ目の認証方法が追加されていません。サインイン時の2段階認証を有効にするには、少なくとも1つ追加してください。',
+    account_removal: 'アカウント削除',
+    delete_your_account: 'アカウントを削除',
+    delete_account: 'アカウントを削除',
+    remove_email_confirmation_title: 'メールアドレスを削除',
+    remove_email_confirmation_description:
+      '削除すると、このメールアドレスでサインインできなくなります。続行しますか？',
+    remove_phone_confirmation_title: '電話番号を削除',
+    remove_phone_confirmation_description:
+      '削除すると、この電話番号でサインインできなくなります。続行しますか？',
+    email_removed: 'メールアドレスが正常に削除されました。',
+    phone_removed: '電話番号が正常に削除されました。',
+  },
+  social: {
+    linked: '{{connector}}の連携に成功しました。',
+    not_enabled:
+      'このソーシャルサインイン方法は有効になっていません。管理者にお問い合わせください。',
+    removed: '{{connector}}の削除に成功しました。',
+    remove_confirmation_title: 'ソーシャルアカウントを削除',
+    remove_confirmation_description:
+      '{{connector}}を削除すると、再度追加するまでそのアカウントでサインインできなくなる可能性があります。',
   },
   password: {
     title: 'パスワードを設定',
@@ -129,6 +201,10 @@ const account_center = {
     totp: {
       title: '認証アプリを追加しました！',
       description: '認証アプリがアカウントに正常にリンクされました。',
+    },
+    totp_replaced: {
+      title: '認証アプリが置き換えられました！',
+      description: '認証アプリが正常に置き換えられました。',
     },
     backup_code: {
       title: 'バックアップコードが生成されました！',

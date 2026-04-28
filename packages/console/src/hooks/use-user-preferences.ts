@@ -29,8 +29,11 @@ const userPreferencesGuard = z.object({
   samlAppsUpsellNoticeAcknowledged: z.boolean().optional(),
   thirdPartyAppsUpsellNoticeAcknowledged: z.boolean().optional(),
   rbacUpsellNoticeAcknowledged: z.boolean().optional(),
+  ossGetStartedCloudUpsellDismissed: z.boolean().optional(),
   /* === Add on feature related fields === */
   prebuiltUiPermissionNoticeAcknowledged: z.boolean().optional(),
+  ossOidcConfigNoticeAcknowledged: z.boolean().optional(),
+  cloudOidcPrivateKeyRotationNoticeAcknowledged: z.boolean().optional(),
 });
 
 type UserPreferences = z.infer<typeof userPreferencesGuard>;

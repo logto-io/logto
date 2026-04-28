@@ -3,6 +3,20 @@ const account_center = {
     title: 'Сторінку не знайдено',
     description: 'Ця сторінка недоступна.',
   },
+  page: {
+    title: 'Акаунт',
+    security_title: 'Безпека',
+    security_description: 'Тут можна змінити налаштування акаунта, щоб забезпечити його безпеку.',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
+    support: 'Підтримка',
+  },
   verification: {
     title: 'Перевірка безпеки',
     description:
@@ -12,6 +26,9 @@ const account_center = {
     error_verify_failed: 'Не вдалося підтвердити. Будь ласка, введіть код ще раз.',
     verification_required: 'Термін перевірки минув. Підтвердіть свою особу ще раз.',
     try_another_method: 'Спробуйте інший спосіб підтвердження',
+    no_available_methods_title: 'Немає доступних способів підтвердження',
+    no_available_methods_description:
+      'У вас не налаштовано жодного способу підтвердження. Спочатку додайте до свого облікового запису пароль, email або номер телефону.',
   },
   password_verification: {
     title: 'Підтвердьте пароль',
@@ -54,6 +71,61 @@ const account_center = {
     title: "Встановити ім'я користувача",
     description: "Ім'я користувача може містити лише літери, цифри та символи підкреслення.",
     success: "Ім'я користувача успішно оновлено.",
+  },
+  security: {
+    add: 'Додати',
+    change: 'Змінити',
+    remove: 'Видалити',
+    not_set: 'Не встановлено',
+    social_sign_in: 'Соціальний вхід',
+    social_not_linked: 'Не прив’язано',
+    email_phone: 'Електронна пошта / Телефон',
+    email: 'Електронна пошта',
+    phone: 'Телефон',
+    password: 'Пароль',
+    configured: 'Налаштовано',
+    not_configured: 'Не налаштовано',
+    two_step_verification: 'Двоетапна перевірка',
+    authenticator_app: 'Додаток для автентифікації',
+    passkeys: 'Passkeys',
+    backup_codes: 'Резервні коди',
+    email_verification_code: 'Код підтвердження електронної пошти',
+    phone_verification_code: 'Код підтвердження телефону',
+    passkeys_count_one: '{{count}} passkey',
+    passkeys_count_other: '{{count}} passkeys',
+    backup_codes_count_one: '{{count}} код залишився',
+    backup_codes_count_other: '{{count}} кодів залишилось',
+    view: 'Перегляд',
+    manage: 'Керування',
+    turn_on_2_step_verification: 'Увімкнути двоетапну верифікацію',
+    turn_on_2_step_verification_description:
+      'Додайте додатковий рівень безпеки. При вході вам буде запропоновано другий крок верифікації.',
+    turn_off_2_step_verification: 'Вимкнути двоетапну верифікацію',
+    turn_off_2_step_verification_description:
+      'Вимкнення двоетапної верифікації видалить додатковий рівень захисту вашого облікового запису при вході. Ви впевнені, що хочете продовжити?',
+    disable_2_step_verification: 'Вимкнути',
+    no_verification_method_warning:
+      'Ви не додали другий метод верифікації. Додайте принаймні один, щоб увімкнути двоетапну верифікацію при вході.',
+    account_removal: 'Видалення акаунта',
+    delete_your_account: 'Видаліть свій акаунт',
+    delete_account: 'Видалити акаунт',
+    remove_email_confirmation_title: 'Видалити адресу електронної пошти',
+    remove_email_confirmation_description:
+      'Після видалення ви більше не зможете входити за допомогою цієї адреси електронної пошти. Ви впевнені, що хочете продовжити?',
+    remove_phone_confirmation_title: 'Видалити номер телефону',
+    remove_phone_confirmation_description:
+      'Після видалення ви більше не зможете входити за допомогою цього номера телефону. Ви впевнені, що хочете продовжити?',
+    email_removed: 'Адресу електронної пошти успішно видалено.',
+    phone_removed: 'Номер телефону успішно видалено.',
+  },
+  social: {
+    linked: '{{connector}} успішно прив’язано.',
+    not_enabled:
+      'Цей спосіб входу через соціальну мережу не ввімкнено. Будь ласка, зверніться до адміністратора по допомогу.',
+    removed: '{{connector}} успішно видалено.',
+    remove_confirmation_title: 'Видалити соціальний акаунт',
+    remove_confirmation_description:
+      'Якщо ви видалите {{connector}}, можливо, ви не зможете входити через нього, доки не додасте його знову.',
   },
   password: {
     title: 'Встановити пароль',
@@ -133,6 +205,10 @@ const account_center = {
     totp: {
       title: 'Додаток для автентифікації додано!',
       description: "Ваш додаток для автентифікації успішно під'єднано до вашого акаунту.",
+    },
+    totp_replaced: {
+      title: 'Додаток для автентифікації замінено!',
+      description: 'Ваш додаток для автентифікації було успішно замінено.',
     },
     backup_code: {
       title: 'Резервні коди створено!',

@@ -7,6 +7,7 @@ import {
   type MfaVerifications,
   type WebAuthnVerificationPayload,
   type VerifyMfaResult,
+  webAuthnAuthenticationOptionsTimeout,
 } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared';
 import {
@@ -21,7 +22,6 @@ import {
 } from '@simplewebauthn/server';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 type GenerateWebAuthnRegistrationOptionsParameters = {
@@ -31,8 +31,6 @@ type GenerateWebAuthnRegistrationOptionsParameters = {
     'id' | 'name' | 'username' | 'primaryEmail' | 'primaryPhone' | 'mfaVerifications'
   >;
 };
-
-const { isDevFeaturesEnabled } = EnvSet.values;
 
 export const generateWebAuthnRegistrationOptions = async ({
   rpId,
@@ -47,7 +45,7 @@ export const generateWebAuthnRegistrationOptions = async ({
     userName: getUserDisplayName({ username, primaryEmail, primaryPhone }) ?? 'Unnamed User',
     userDisplayName:
       getUserDisplayName({ name, username, primaryEmail, primaryPhone }) ?? 'Unnamed User',
-    timeout: 60_000,
+    timeout: webAuthnAuthenticationOptionsTimeout,
     attestationType: 'none',
     excludeCredentials: mfaVerifications
       .filter(
@@ -59,17 +57,12 @@ export const generateWebAuthnRegistrationOptions = async ({
         type: 'public-key',
         transports,
       })),
-    authenticatorSelection: isDevFeaturesEnabled
-      ? {
-          // Set to `required` so newly generated credentials are discoverable and can be used
-          // for passkey sign-in.
-          residentKey: 'required',
-          requireResidentKey: true,
-          userVerification: 'required',
-        }
-      : {
-          residentKey: 'discouraged',
-        },
+    // Generate discoverable credentials so they can be used for passkey sign-in.
+    authenticatorSelection: {
+      residentKey: 'required',
+      requireResidentKey: true,
+      userVerification: 'required',
+    },
     // Values for COSEALG.ES256, COSEALG.RS256, Node.js don't have those enums
     supportedAlgorithmIDs: [-7, -257],
   };
@@ -89,8 +82,8 @@ export const verifyWebAuthnRegistration = async (
     },
     expectedChallenge: challenge,
     expectedOrigin: origins,
-    // Enforce verification to align with passkey sign-in requirements
-    requireUserVerification: isDevFeaturesEnabled,
+    // Enforce verification to align with passkey sign-in requirements.
+    requireUserVerification: true,
   };
 
   try {
@@ -123,7 +116,7 @@ export const generateWebAuthnAuthenticationOptions = async ({
   }
 
   const options: GenerateAuthenticationOptionsOpts = {
-    timeout: 60_000,
+    timeout: webAuthnAuthenticationOptionsTimeout,
     allowCredentials: webAuthnVerifications.map(({ credentialId, transports }) => ({
       id: credentialId,
       type: 'public-key',

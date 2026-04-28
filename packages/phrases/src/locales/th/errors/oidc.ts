@@ -16,11 +16,15 @@ const oidc = {
   provider_error: 'เกิดข้อผิดพลาดภายใน OIDC: {{message}}',
   server_error: 'เกิดข้อผิดพลาด OIDC ที่ไม่ทราบสาเหตุ กรุณาลองใหม่ภายหลัง',
   provider_error_fallback: 'เกิดข้อผิดพลาด OIDC: {{code}}',
+  custom_claims_script_error: 'ข้อผิดพลาดของสคริปต์ custom claims: {{error_description}}',
   key_required: 'ต้องมีคีย์อย่างน้อยหนึ่งอัน',
   key_not_found: 'ไม่พบคีย์ที่มีรหัส {{id}}',
+  only_previous_key_can_be_deleted: 'ลบได้เฉพาะคีย์ก่อนหน้าเท่านั้น',
   invalid_session_payload: 'ข้อมูลเซสชันไม่ถูกต้อง',
   session_not_found: 'ไม่พบเซสชัน',
   invalid_session_account_id: 'Session accountId ไม่ตรงกัน',
+  failed_to_revoke_grant: 'เพิกถอนสิทธิ์ไม่สำเร็จ',
+  failed_to_cleanup_session_authorization: 'ล้างข้อมูลการอนุญาตของเซสชันไม่สำเร็จ',
 };
 
 export default Object.freeze(oidc);

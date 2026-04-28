@@ -49,22 +49,22 @@ export const sanitizedWebAuthnVerificationRecordDataGuard =
     authenticationChallenge: true,
   }) satisfies ToZodObject<SanitizedWebAuthnVerificationRecordData>;
 
-export type SignInWebAuthnVerificationRecordData = BaseWebAuthnVerificationRecordData & {
-  type: VerificationType.SignInWebAuthn;
+export type SignInPasskeyVerificationRecordData = BaseWebAuthnVerificationRecordData & {
+  type: VerificationType.SignInPasskey;
   userId?: string;
   /** The rpId used when generating the authentication options */
   authenticationRpId?: string;
 };
 
-export const signInWebAuthnVerificationRecordDataGuard =
+export const signInPasskeyVerificationRecordDataGuard =
   baseWebAuthnVerificationRecordDataGuard.extend({
-    type: z.literal(VerificationType.SignInWebAuthn),
+    type: z.literal(VerificationType.SignInPasskey),
     userId: z.string().optional(),
     authenticationRpId: z.string().optional(),
-  }) satisfies ToZodObject<SignInWebAuthnVerificationRecordData>;
+  }) satisfies ToZodObject<SignInPasskeyVerificationRecordData>;
 
-export type SanitizedSignInWebAuthnVerificationRecordData = Omit<
-  SignInWebAuthnVerificationRecordData,
+export type SanitizedSignInPasskeyVerificationRecordData = Omit<
+  SignInPasskeyVerificationRecordData,
   | 'registrationInfo'
   | 'registrationChallenge'
   | 'registrationRpId'
@@ -72,11 +72,11 @@ export type SanitizedSignInWebAuthnVerificationRecordData = Omit<
   | 'authenticationRpId'
 >;
 
-export const sanitizedSignInWebAuthnVerificationRecordDataGuard =
-  signInWebAuthnVerificationRecordDataGuard.omit({
+export const sanitizedSignInPasskeyVerificationRecordDataGuard =
+  signInPasskeyVerificationRecordDataGuard.omit({
     registrationInfo: true,
     registrationChallenge: true,
     registrationRpId: true,
     authenticationChallenge: true,
     authenticationRpId: true,
-  }) satisfies ToZodObject<SanitizedSignInWebAuthnVerificationRecordData>;
+  }) satisfies ToZodObject<SanitizedSignInPasskeyVerificationRecordData>;

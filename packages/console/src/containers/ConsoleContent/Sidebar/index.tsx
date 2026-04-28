@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useMatchTenantPath from '@/hooks/use-tenant-pathname';
 
+import OssCloudCard from './OssCloudCard';
 import Item from './components/Item';
 import Section from './components/Section';
 import { useSidebarMenuItems } from './hook';
@@ -21,26 +23,32 @@ function Sidebar() {
   const { match } = useMatchTenantPath();
 
   return (
-    <OverlayScrollbar className={styles.sidebar}>
-      {sections.map(({ title, items }) => (
-        <Section key={title} title={t(title)}>
-          {items.map(
-            ({ title, Icon, isHidden, modal, externalLink, path }) =>
-              !isHidden && (
-                <Item
-                  key={title}
-                  titleKey={title}
-                  icon={<Icon />}
-                  isActive={match('/' + (path ?? getPath(title)))}
-                  modal={modal}
-                  externalLink={externalLink}
-                  path={path}
-                />
-              )
-          )}
-        </Section>
-      ))}
-    </OverlayScrollbar>
+    <div className={styles.sidebar}>
+      <OverlayScrollbar className={styles.menu}>
+        <div className={styles.menuContent}>
+          {sections.map(({ title, items }) => (
+            <Section key={title} title={t(title)}>
+              {items.map(
+                ({ title, Icon, isHidden, modal, externalLink, path }) =>
+                  !isHidden && (
+                    <Item
+                      key={title}
+                      titleKey={title}
+                      icon={<Icon />}
+                      isActive={match('/' + (path ?? getPath(title)))}
+                      modal={modal}
+                      externalLink={externalLink}
+                      path={path}
+                    />
+                  )
+              )}
+            </Section>
+          ))}
+          {isDevFeaturesEnabled && <div aria-hidden className={styles.devStatusSpacer} />}
+          <OssCloudCard />
+        </div>
+      </OverlayScrollbar>
+    </div>
   );
 }
 

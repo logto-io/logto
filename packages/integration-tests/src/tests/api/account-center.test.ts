@@ -29,4 +29,18 @@ describe('account center', () => {
     const updatedAccountCenter = await updateAccountCenter(accountCenter);
     expect(updatedAccountCenter).toMatchObject(accountCenter);
   });
+
+  it('should clear delete account url with empty string', async () => {
+    const updatedAccountCenter = await updateAccountCenter({
+      deleteAccountUrl: 'https://example.com/delete-account',
+    });
+
+    expect(updatedAccountCenter.deleteAccountUrl).toBe('https://example.com/delete-account');
+
+    const clearedAccountCenter = await updateAccountCenter({
+      deleteAccountUrl: '',
+    });
+
+    expect(clearedAccountCenter.deleteAccountUrl).toBeNull();
+  });
 });

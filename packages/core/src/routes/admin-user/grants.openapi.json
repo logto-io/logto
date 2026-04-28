@@ -1,0 +1,37 @@
+{
+  "paths": {
+    "/api/users/{userId}/grants": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "appType",
+            "description": "Application type filter. Use 'thirdParty' to list third-party app grants only, or 'firstParty' to list first-party app grants only. If omitted, grants from all applications are returned."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return non-expired grants of the user. Results are filtered by app type when `appType` is provided."
+          }
+        },
+        "summary": "Get user active grants",
+        "description": "Retrieve all non-expired grants of the user. Optionally filter by application type via `appType`; when omitted, grants from all application types are returned."
+      }
+    },
+    "/api/users/{userId}/grants/{grantId}": {
+      "delete": {
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Grant revoked successfully. If the grant already expired, this endpoint returns success without token-chain changes."
+          },
+          "404": {
+            "description": "Grant not found. This can occur if the grant ID is invalid, or the grant does not belong to the user."
+          }
+        },
+        "summary": "Revoke a user grant",
+        "description": "Revoke a specific grant and its associated token chain by grant ID. Also removes the matching session authorization entry for this grant from the related active session. The grant must belong to the user."
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@ const get_started = {
     title_cloud: 'Desarrollar: Integra tu aplicación de forma segura en minutos',
     subtitle_cloud:
       'O toma 5 minutos para integrar tu aplicación con nuestros SDKs y tutoriales preconstruidos.',
+    try_mcp: 'Prueba la integración con un solo prompt usando MCP',
   },
   customize: {
     title: 'Personalizar: Ofrece una excelente experiencia de inicio de sesión',
@@ -42,6 +43,27 @@ const get_started = {
     subtitle:
       'Estás usando un inquilino de desarrollo para pruebas gratuitas. Para salir en vivo, crea o convierte a un inquilino de producción. ¿Necesitas algo personalizado? <a>Contáctanos</a>',
     convert_button: 'Convertir a inquilino de producción',
+  },
+  oss_cloud: {
+    try: {
+      title: 'Evita el trabajo operativo y prueba Logto Cloud gratis',
+      badge: 'Recomendado',
+      description:
+        'Obtén un Logto totalmente administrado sin mantenimiento, además de integración rápida con MCP, soporte multiinquilino, colaboración en equipo y todas las funciones premium incluidas. Empieza gratis, sin tarjeta de crédito.',
+      action: 'Explorar Logto Cloud',
+    },
+    private_cloud: {
+      title: '¿Necesitas cumplimiento o un despliegue personalizado?',
+      card_title: 'Nube privada',
+      description:
+        'Obtén una instancia dedicada de Logto con aislamiento total de datos, dominio personalizado y garantías de SLA. Ideal para empresas con estrictos requisitos de residencia de datos o cumplimiento normativo. Nosotros gestionamos la infraestructura para que puedas centrarte en tu producto.',
+    },
+    sidebar: {
+      title: 'Concéntrate en crear, no en alojar.',
+      description:
+        'Deja que Logto Cloud se encargue de la infraestructura de autenticación por ti.',
+      action: 'Probar Logto Cloud',
+    },
   },
   view_all: 'Ver todo →',
 };

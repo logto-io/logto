@@ -3,6 +3,8 @@ const applications = {
   title: 'แอปพลิเคชัน',
   subtitle: 'สร้างและจัดการแอปพลิเคชันสำหรับการรับรองความถูกต้อง OIDC',
   subtitle_with_app_type: 'ตั้งค่าการยืนยันตัวตน Logto สำหรับแอปพลิเคชัน {{name}} ของคุณ',
+  create_device_flow_description:
+    'สร้างแอปพลิเคชันเนทีฟที่ใช้ OAuth 2.0 Device Authorization Grant สำหรับอุปกรณ์ที่มีการป้อนข้อมูลจำกัดหรือแอปแบบ headless',
   create: 'สร้างแอปพลิเคชัน',
   create_third_party: 'สร้างแอปพลิเคชันของบุคคลที่สาม',
   create_thrid_party_modal_title: 'สร้างแอปของบุคคลที่สาม ({{type}})',
@@ -22,7 +24,7 @@ const applications = {
     native: {
       title: 'แอปเนทีฟ',
       subtitle: 'แอปที่ทำงานในสภาพแวดล้อมเนทีฟ',
-      description: 'เช่น แอป iOS , แอป Android',
+      description: 'เช่น แอป iOS, แอป Android, แอปเดสก์ท็อป, ทีวี, CLI',
     },
     spa: {
       title: 'แอปหน้าเดียว',
@@ -53,6 +55,20 @@ const applications = {
       title: 'แอปของบุคคลที่สาม',
       subtitle: 'แอปที่ใช้เป็นตัวเชื่อมต่อ IdP ของบุคคลที่สาม',
       description: 'เช่น OIDC',
+    },
+  },
+  authorization_flow: {
+    title: 'โฟลว์การอนุญาต',
+    tooltip: 'เลือกโฟลว์การอนุญาตสำหรับแอปพลิเคชันของคุณ เมื่อตั้งค่าแล้วจะไม่สามารถเปลี่ยนแปลงได้',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'ประเภทการอนุญาตเริ่มต้นและพบบ่อยที่สุด ผู้ใช้จะถูกเปลี่ยนเส้นทางไปยังหน้าลงชื่อเข้าใช้เพื่ออนุญาตการเข้าถึงโดยตรง',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'สำหรับอุปกรณ์ที่มีข้อจำกัดในการป้อนข้อมูลหรือแอปแบบ headless (เช่น ทีวี, CLI) ผู้ใช้จะทำการเข้าสู่ระบบบนอุปกรณ์อื่นโดยการป้อนรหัสอุปกรณ์หรือสแกน QR โค้ด',
     },
   },
   placeholder_title: 'เลือกประเภทแอปพลิเคชันเพื่อดำเนินการต่อ',

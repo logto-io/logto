@@ -76,9 +76,18 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         })
       );
 
-      //  User profile updates require MFA verification (if MFA is enabled) during the sign-in event.
       if (interactionEvent === InteractionEvent.SignIn) {
-        await experienceInteraction.guardMfaVerificationStatus();
+        // Note:
+        // We intentionally allow social profile staging before MFA verification.
+        // This endpoint only writes to the interaction session, while `submit()` is the
+        // DB commit boundary and still enforces MFA for sign-in flows.
+        //
+        // On social linking flows, to simplify the front-end implementation, we allow social profile staging before MFA verification,
+        // and the final submission with `submit()` will enforce MFA verification.
+        // Identified user guard is still applied.
+        await (profilePayload.type === 'social'
+          ? experienceInteraction.guardIdentifiedUser()
+          : experienceInteraction.guardMfaVerificationStatus());
       }
 
       log.append({
@@ -170,6 +179,22 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
   );
 
   router.post(
+    `${experienceRoutes.mfa}/mfa-enabled`,
+    koaGuard({ status: [204, 400, 403, 404] }),
+    verifiedInteractionGuard(),
+    async (ctx, next) => {
+      const { experienceInteraction } = ctx;
+
+      experienceInteraction.mfa.markMfaEnabled();
+      await experienceInteraction.save();
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
     `${experienceRoutes.mfa}/mfa-skipped`,
     koaGuard({ status: [204, 400, 403, 404, 422] }),
     verifiedInteractionGuard(),
@@ -185,7 +210,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }
   );
 
-  // Mark optional additional MFA binding suggestion as skipped in current interaction
+  // Mark optional additional MFA binding suggestion as skipped.
   router.post(
     `${experienceRoutes.mfa}/mfa-suggestion-skipped`,
     koaGuard({ status: [204, 400, 404] }),
@@ -232,7 +257,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       const { verificationId } = guard.body;
 
       const log = ctx.createLog(
-        `Interaction.${experienceInteraction.interactionEvent}.BindMfa.${MfaFactor.WebAuthn}.Submit`
+        `Interaction.${experienceInteraction.interactionEvent}.SignInPasskey.Submit`
       );
 
       log.append({
@@ -331,6 +356,8 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           break;
         }
       }
+
+      experienceInteraction.mfa.markMfaEnabled();
 
       await experienceInteraction.save();
 

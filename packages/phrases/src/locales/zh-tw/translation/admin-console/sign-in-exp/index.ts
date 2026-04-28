@@ -42,6 +42,7 @@ const sign_in_exp = {
     hide_logto_branding: '隱藏 Logto 品牌',
     hide_logto_branding_description:
       '移除「Powered by Logto」。以乾淨、專業的登入體驗讓你的品牌成為焦點。',
+    hide_logto_branding_oss_note: '此功能原生支援於 <a>Logto Cloud</a>。',
   },
   branding_uploads: {
     app_logo: {
@@ -77,6 +78,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: '自定義界面',
+    cloud_tag: 'Cloud',
     css_code_editor_title: '自定義 CSS',
     css_code_editor_description1: '查看自定義 CSS 範例。',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -86,15 +88,19 @@ const sign_in_exp = {
     bring_your_ui_title: '帶上你的界面',
     bring_your_ui_description:
       '上傳壓縮包 (.zip) 來用你的代碼替換 Logto 的預構建界面。<a>了解更多</a>',
+    bring_your_ui_oss_description: '用你的程式碼自訂登入介面。',
+    bring_your_ui_oss_card_description:
+      '將你的自訂登入介面直接上傳到 <a>Logto Cloud</a>。無需 fork 和重新部署。',
+    bring_your_ui_oss_try_cloud: '試用 Cloud',
     preview_with_bring_your_ui_description:
       '你的自定義界面資源已成功上傳並正在服務。因此，內置預覽窗口已被禁用。\n若要測試你的個性化登錄界面，請點擊「實時預覽」按鈕在新瀏覽器標籤頁中打開。',
   },
   account_center: {
     title: '帳號中心',
     description: '使用 Logto API 自訂你的帳號中心流程。',
-    enable_account_api: '啟用 Account API',
+    enable_account_api: '啟用帳號中心和 Account API',
     enable_account_api_description:
-      '啟用 Account API，打造自訂帳號中心，讓終端使用者無需使用 Logto 管理 API 也能直接存取 API。',
+      '同時啟用面向使用者的 Account API 和 Logto 的開箱即用帳號中心。關閉後，這兩項功能都將不可用。',
     field_options: {
       off: '關閉',
       edit: '可編輯',
@@ -166,27 +172,44 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       '新增允許透過 Account API 註冊通行金鑰的前端應用程式網域。',
     webauthn_related_origins_error: '來源必須以 https:// 或 http:// 開頭',
+    delete_account_url: '刪除帳號',
+    delete_account_url_description: '提供你自己的端點 URL，以使用自訂邏輯處理帳號刪除。',
     prebuilt_ui: {
       title: '集成預構建界面',
-      description: '快速整合預構建界面中的驗證和安全設置流程。',
+      description: '快速整合帳戶中心、安全驗證或單一資料更新流程等現成的流程。',
       permission_notice:
         '要整合這些預建流程，請在下方設定中將相關的帳戶 API 權限設為<strong>編輯</strong>。',
+      account_center_title: '整合現成的帳戶中心',
+      account_center_description:
+        '將用戶路由到帳戶中心，以管理電子郵件、電話號碼、使用者名稱、密碼、MFA 和關聯帳號等安全設定。',
       flows_title: '整合預構建安全設置流程',
+      single_task_flows_title: '整合現成的單一資料更新流程',
       flows_description:
-        '結合你的域名與路徑形成你的帳戶設置 URL（例如：https://auth.foo.com/account/email）。你可以選擇添加一個 `redirect=` URL 參數，在成功更新後將用戶返回到你的應用。',
+        '結合你的域名與路徑形成你的帳戶設置 URL（例如：https://auth.foo.com/account/email）。你可以選擇添加 `redirect=` 在成功更新後將用戶返回到你的應用，添加 `show_success=true` 以保持成功頁面可見，添加 `ui_locales=` 以覆蓋預設語言，或添加 `identifier=` 以預填識別碼輸入欄位。',
+      single_task_flows_description:
+        '結合你的域名與路徑形成你的個人資料更新 URL（例如：https://auth.foo.com/account/profile）。你可以選擇添加 `redirect=` 在成功更新後將用戶返回到你的應用，或添加 `ui_locales=` 以覆蓋預設語言。',
       tooltips: {
         email: '更新你的主要電子郵件地址',
         phone: '更新你的主要電話號碼',
         username: '更新你的使用者名稱',
         password: '設置新密碼',
+        social: '連結社交帳號以供登入',
+        social_remove: '移除已連結的社交帳號',
         authenticator_app: '為多重驗證設置新的身份驗證器應用',
+        authenticator_app_replace: '用新的身份驗證器應用替換你現有的身份驗證器應用',
         passkey_add: '註冊新的通行金鑰',
         passkey_manage: '管理你現有的通行金鑰或添加新的',
         backup_codes_generate: '生成一組新的 10 個備用代碼',
         backup_codes_manage: '查看你的可用備用代碼或生成新的',
+        account_center:
+          '訪問帳戶中心以管理電子郵件、電話號碼、使用者名稱、密碼、MFA 和關聯帳號等安全設定',
       },
       customize_note: '不想要使用預構建體驗？你可以完全',
       customize_link: '使用帳戶 API 來自定義你的流程。',
+    },
+    custom_css: {
+      title: '自定義 CSS',
+      description: '使用自定義 CSS 自定義帳戶中心的外觀。',
     },
   },
   sign_up_and_sign_in,

@@ -6,10 +6,14 @@ import {
   type IdTokenConfig,
   type LogtoConfig,
   type LogtoConfigKey,
-  type LogtoOidcConfigKey,
-  type OidcConfigKey,
+  LogtoOidcConfigKey,
   type LogtoJwtTokenKey,
+  type OidcPrivateKey,
+  oidcPrivateKeyGuard,
   idTokenConfigGuard,
+  type LogtoOidcConfigType,
+  signingKeyRotationStateGuard,
+  type SigningKeyRotationState,
 } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
@@ -20,19 +24,36 @@ import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
+const qualifiedValueField = sql.identifier([LogtoConfigs.table, LogtoConfigs.fields.value]);
 
 export const createLogtoConfigQueries = (
   pool: CommonQueryMethods,
   wellKnownCache: WellKnownCache
 ) => {
+  const upsertPrivateSigningKeysWithExecutor = async (
+    executor: CommonQueryMethods,
+    privateKeys: OidcPrivateKey[]
+  ) =>
+    executor.one<{ key: LogtoOidcConfigKey.PrivateKeys; value: unknown }>(sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${LogtoOidcConfigKey.PrivateKeys}, ${sql.jsonb(privateKeys)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
+          privateKeys
+        )}
+        returning ${fields.key}, ${fields.value}
+    `);
+
+  const upsertPrivateSigningKeys = async (privateKeys: OidcPrivateKey[]) =>
+    upsertPrivateSigningKeysWithExecutor(pool, privateKeys);
+
   const getAdminConsoleConfig = async () =>
-    pool.one<Record<string, unknown>>(sql`
+    pool.one<{ value: unknown }>(sql`
       select ${fields.value} from ${table}
       where ${fields.key} = ${LogtoTenantConfigKey.AdminConsole}
     `);
 
   const updateAdminConsoleConfig = async (value: Partial<AdminConsoleData>) =>
-    pool.one<Record<string, unknown>>(sql`
+    pool.one<{ value: unknown }>(sql`
       update ${table}
       set ${fields.value} = coalesce(${fields.value},'{}'::jsonb) || ${sql.jsonb(value)}
       where ${fields.key} = ${LogtoTenantConfigKey.AdminConsole}
@@ -40,7 +61,7 @@ export const createLogtoConfigQueries = (
     `);
 
   const getCloudConnectionData = async () =>
-    pool.one<Record<string, unknown>>(sql`
+    pool.one<{ value: unknown }>(sql`
       select ${fields.value} from ${table}
       where ${fields.key} = ${LogtoTenantConfigKey.CloudConnection}
     `);
@@ -62,13 +83,121 @@ export const createLogtoConfigQueries = (
     }
   };
 
-  const updateOidcConfigsByKey = async (key: LogtoOidcConfigKey, value: OidcConfigKey[]) =>
+  const lockPrivateSigningKeys = async () =>
     pool.query(sql`
-      update ${table}
-      set ${fields.value} = ${sql.jsonb(value)}
-      where ${fields.key} = ${key}
-      returning *
+      select ${fields.key}
+      from ${table}
+      where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+      for update
     `);
+
+  const lockPrivateSigningKeysAndRotationState = async () =>
+    pool.query(sql`
+      select ${fields.key}
+      from ${table}
+      where ${fields.key} in (
+        ${LogtoOidcConfigKey.PrivateKeys},
+        ${LogtoTenantConfigKey.SigningKeyRotationState}
+      )
+      for update
+    `);
+
+  const getSigningKeyRotationStateWithExecutor = async (
+    executor: CommonQueryMethods
+  ): Promise<SigningKeyRotationState | undefined> => {
+    const { rows } = await executor.query<LogtoConfig>(sql`
+      select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+        where ${fields.key} = ${LogtoTenantConfigKey.SigningKeyRotationState}
+    `);
+
+    if (rows.length === 0) {
+      return undefined;
+    }
+
+    return signingKeyRotationStateGuard.parse(rows[0]?.value);
+  };
+  const upsertSigningKeyRotationStateWithExecutor = async (
+    executor: CommonQueryMethods,
+    value: SigningKeyRotationState
+  ) =>
+    executor.one<{ value: SigningKeyRotationState }>(sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${LogtoTenantConfigKey.SigningKeyRotationState}, ${sql.jsonb(value)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update
+        set ${fields.value} = ${sql.jsonb(value)}
+        returning ${fields.value}
+    `);
+
+  const getPrivateSigningKeys = async (): Promise<OidcPrivateKey[]> => {
+    const { rows } = await pool.query<LogtoConfig>(sql`
+      select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+      where ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+    `);
+
+    return oidcPrivateKeyGuard.array().parse(rows[0]?.value);
+  };
+
+  const updateOidcConfigsByKey = async <
+    T extends Exclude<LogtoOidcConfigKey, LogtoOidcConfigKey.PrivateKeys>,
+  >(
+    key: T,
+    value: LogtoOidcConfigType[T]
+  ) =>
+    pool.query(sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${key}, ${sql.jsonb(value)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(value)}
+        returning *
+    `);
+
+  const getSigningKeyRotationState = async (): Promise<SigningKeyRotationState | undefined> =>
+    getSigningKeyRotationStateWithExecutor(pool);
+
+  const upsertSigningKeyRotationState = async (
+    value: SigningKeyRotationState
+  ): Promise<SigningKeyRotationState> => {
+    const { value: rawValue } = await upsertSigningKeyRotationStateWithExecutor(pool, value);
+
+    return signingKeyRotationStateGuard.parse(rawValue);
+  };
+
+  const setTenantCacheExpiresAt = async (
+    tenantCacheExpiresAt: number
+  ): Promise<SigningKeyRotationState> => {
+    const { value: rawValue } = await pool.one<{ value: SigningKeyRotationState }>(sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (
+          ${LogtoTenantConfigKey.SigningKeyRotationState},
+          ${sql.jsonb({ tenantCacheExpiresAt })}
+        )
+        on conflict (${fields.tenantId}, ${fields.key}) do update
+        set ${fields.value} = coalesce(${qualifiedValueField}, '{}'::jsonb) || ${sql.jsonb({
+          tenantCacheExpiresAt,
+        })}
+        returning ${fields.value}
+    `);
+
+    return signingKeyRotationStateGuard.parse(rawValue);
+  };
+
+  const setSigningKeyRotationAt = async (
+    signingKeyRotationAt: number
+  ): Promise<SigningKeyRotationState> => {
+    const { value: rawValue } = await pool.one<{ value: SigningKeyRotationState }>(sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (
+          ${LogtoTenantConfigKey.SigningKeyRotationState},
+          ${sql.jsonb({ signingKeyRotationAt })}
+        )
+        on conflict (${fields.tenantId}, ${fields.key}) do update
+        set ${fields.value} = coalesce(${qualifiedValueField}, '{}'::jsonb) || ${sql.jsonb({
+          signingKeyRotationAt,
+        })}
+        returning ${fields.value}
+    `);
+
+    return signingKeyRotationStateGuard.parse(rawValue);
+  };
 
   // Can not narrow down the type of value if we utilize `buildInsertIntoWithPool` method.
   const upsertJwtCustomizer = async <T extends LogtoJwtTokenKey>(
@@ -100,7 +229,7 @@ export const createLogtoConfigQueries = (
 
   const upsertIdTokenConfig = wellKnownCache.mutate(
     async (value: IdTokenConfig) =>
-      pool.one<Record<string, unknown>>(sql`
+      pool.one<{ value: unknown }>(sql`
         insert into ${table} (${fields.key}, ${fields.value})
           values (${LogtoTenantConfigKey.IdToken}, ${sql.jsonb(value)})
           on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(value)}
@@ -114,7 +243,15 @@ export const createLogtoConfigQueries = (
     updateAdminConsoleConfig,
     getCloudConnectionData,
     getRowsByKeys,
+    lockPrivateSigningKeys,
+    lockPrivateSigningKeysAndRotationState,
+    getPrivateSigningKeys,
+    upsertPrivateSigningKeys,
     updateOidcConfigsByKey,
+    getSigningKeyRotationState,
+    upsertSigningKeyRotationState,
+    setTenantCacheExpiresAt,
+    setSigningKeyRotationAt,
     upsertJwtCustomizer,
     deleteJwtCustomizer,
     getIdTokenConfig,

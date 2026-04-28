@@ -5,6 +5,7 @@ import { isMobile } from 'react-device-detect';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
+const noopAsync = async (): Promise<void> => undefined;
 
 export type PageContextType = {
   theme: Theme;
@@ -17,7 +18,7 @@ export type PageContextType = {
   accountCenterSettings?: AccountCenter;
   setAccountCenterSettings: React.Dispatch<React.SetStateAction<AccountCenter | undefined>>;
   userInfo?: Partial<UserProfileResponse>;
-  setUserInfo: React.Dispatch<React.SetStateAction<Partial<UserProfileResponse> | undefined>>;
+  refreshUserInfo: () => Promise<void>;
   userInfoError?: Error;
   isLoadingUserInfo: boolean;
   verificationId?: string;
@@ -37,7 +38,7 @@ const PageContext = createContext<PageContextType>({
   accountCenterSettings: undefined,
   setAccountCenterSettings: noop,
   userInfo: undefined,
-  setUserInfo: noop,
+  refreshUserInfo: noopAsync,
   userInfoError: undefined,
   isLoadingUserInfo: false,
   verificationId: undefined,

@@ -1,12 +1,19 @@
 const tenants = {
   title: '設置',
   description: '高效管理租戶設置並自訂您的域名。',
+  oss_description: '請在此更改帳戶設定並管理您的個人資料，以確保帳戶安全。',
   tabs: {
     settings: '設定',
     members: '成員',
     domains: '網域',
+    oidc_configs: 'OIDC 設定',
     subscription: '方案與計費',
     billing_history: '帳單記錄',
+  },
+  members: {
+    card_title: '透過 Logto Cloud 更安全地管理租戶',
+    card_description: '無需共用單一管理員帳號，也能為你的租戶新增管理員或協作者。',
+    card_action: '探索 Logto Cloud',
   },
   settings: {
     title: '設定',

@@ -4,6 +4,8 @@ const applications = {
   subtitle:
     'Skonfiguruj uwierzytelnianie Logto dla Twojej aplikacji natywnej, jednostronicowej, komunikującej się bezpośrednio z zasobami lub tradycyjnej',
   subtitle_with_app_type: 'Skonfiguruj uwierzytelnianie Logto dla twojej aplikacji {{name}}',
+  create_device_flow_description:
+    'Utwórz natywną aplikację wykorzystującą OAuth 2.0 Device Authorization Grant dla urządzeń o ograniczonym wprowadzaniu danych lub aplikacji headless.',
   create: 'Utwórz aplikację',
   create_third_party: 'Utwórz aplikację stron trzecich',
   create_thrid_party_modal_title: 'Utwórz aplikację stron trzecich ({{type}})',
@@ -23,7 +25,8 @@ const applications = {
     native: {
       title: 'Aplikacja natywna',
       subtitle: 'Aplikacja uruchamiana w środowisku natywnym',
-      description: 'Na przykład aplikacja na iOS, aplikacja na Androida',
+      description:
+        'Na przykład aplikacja na iOS, aplikacja na Androida, aplikacja desktopowa, TV, CLI',
     },
     spa: {
       title: 'Aplikacja jednostronicowa',
@@ -55,6 +58,21 @@ const applications = {
       title: 'Aplikacja stron trzecich',
       subtitle: 'Aplikacja używana jako łącznik do dostawcy tożsamości stron trzecich',
       description: 'Np. OIDC, SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Przepływ autoryzacji',
+    tooltip:
+      'Wybierz przepływ autoryzacji dla swojej aplikacji. Po ustawieniu nie można go zmienić.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'Domyślny i najczęściej stosowany typ autoryzacji. Użytkownicy są przekierowywani na stronę logowania, aby bezpośrednio autoryzować dostęp.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'Dla urządzeń z ograniczonym wprowadzaniem danych lub aplikacji bezinterfejsowych (np. telewizory, CLI). Użytkownicy kończą logowanie na oddzielnym urządzeniu, wprowadzając kod urządzenia lub skanując kod QR.',
     },
   },
   placeholder_title: 'Wybierz typ aplikacji, aby kontynuować',

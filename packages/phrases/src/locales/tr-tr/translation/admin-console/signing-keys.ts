@@ -22,6 +22,7 @@ const signing_keys = {
     algorithm: 'İmzalama anahtar algoritması',
   },
   status: {
+    next: 'Sonraki',
     current: 'Geçerli',
     previous: 'Önceki',
   },

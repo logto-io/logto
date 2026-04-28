@@ -3,6 +3,7 @@ import {
   type ApplicationResponse,
   type SnakeCaseOidcConfig,
 } from '@logto/schemas';
+import { condArray } from '@silverhand/essentials';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -34,6 +35,7 @@ import Branding from '../components/Branding';
 import Permissions from '../components/Permissions';
 
 import BackchannelLogout from './BackchannelLogout';
+import ConcurrentDeviceLimit from './ConcurrentDeviceLimit';
 import EndpointsAndCredentials, { type ApplicationSecretRow } from './EndpointsAndCredentials';
 import GuideDrawer from './GuideDrawer';
 import MachineLogs from './MachineLogs';
@@ -122,16 +124,19 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
   return (
     <>
       <DetailsPageHeader
-        icon={<ApplicationIcon type={data.type} isThirdParty={data.isThirdParty} />}
-        title={data.name}
-        primaryTag={
-          data.isThirdParty
-            ? [
-                t(`${applicationTypeI18nKey.thirdParty}.title`),
-                t(`${applicationTypeI18nKey[data.type]}.title`),
-              ]
-            : t(`${applicationTypeI18nKey[data.type]}.title`)
+        icon={
+          <ApplicationIcon
+            type={data.type}
+            isThirdParty={data.isThirdParty}
+            isDeviceFlow={data.customClientMetadata.isDeviceFlow}
+          />
         }
+        title={data.name}
+        primaryTag={condArray(
+          data.isThirdParty && t(`${applicationTypeI18nKey.thirdParty}.title`),
+          t(`${applicationTypeI18nKey[data.type]}.title`),
+          data.customClientMetadata.isDeviceFlow && t('application_details.device_flow_tag')
+        )}
         identifier={{ name: 'App ID', value: data.id }}
         additionalActionButton={{
           title: 'application_details.check_guide',
@@ -234,7 +239,10 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
               <RefreshTokenSettings data={data} />
             )}
             {data.type !== ApplicationType.MachineToMachine && <BackchannelLogout />}
-            <TokenExchangeSettings data={data} />
+            {data.type !== ApplicationType.Protected && <TokenExchangeSettings data={data} />}
+            {![ApplicationType.MachineToMachine, ApplicationType.Protected].includes(data.type) && (
+              <ConcurrentDeviceLimit />
+            )}
           </DetailsForm>
         </FormProvider>
         {tab === ApplicationDetailsTabs.Settings && (

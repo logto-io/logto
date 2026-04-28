@@ -57,11 +57,19 @@ function Select<T extends string>({
   const anchorRef = useRef<HTMLInputElement>(null);
   const current = options.find((option) => value && option.value === value);
   const filteredOptions = useMemo(() => {
-    return searchInputValue
-      ? options.filter(({ value }) =>
-          value.toLocaleLowerCase().includes(searchInputValue.toLocaleLowerCase())
-        )
-      : options;
+    const query = searchInputValue.trim().toLocaleLowerCase();
+    if (!query) {
+      return options;
+    }
+    return options.filter(({ value, title }) => {
+      if (value.toLocaleLowerCase().includes(query)) {
+        return true;
+      }
+      if (typeof title === 'string' && title.toLocaleLowerCase().includes(query)) {
+        return true;
+      }
+      return false;
+    });
   }, [searchInputValue, options]);
 
   const handleSelect = (value: T) => {

@@ -15,7 +15,10 @@ process.env.NODE_ENV = 'test';
 
 /* Mock for EnvSet */
 mockEsm('#src/libraries/logto-config.js', () => ({
-  createLogtoConfigLibrary: () => ({ getOidcConfigs: () => ({}) }),
+  createLogtoConfigLibrary: () => ({
+    getOidcConfigs: () => ({}),
+    promoteScheduledSigningKeyRotation: async () => Promise.resolve(),
+  }),
 }));
 
 mockEsm('#src/env-set/preconditions.js', () => ({

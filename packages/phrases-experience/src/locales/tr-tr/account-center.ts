@@ -3,6 +3,21 @@ const account_center = {
     title: 'Sayfa bulunamadı',
     description: 'Bu sayfa kullanılamıyor.',
   },
+  page: {
+    title: 'Hesap',
+    security_title: 'Güvenlik',
+    security_description:
+      'Hesabınızın güvenliğini sağlamak için hesap ayarlarınızı burada değiştirebilirsiniz.',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
+    support: 'Destek',
+  },
   verification: {
     title: 'Güvenlik doğrulaması',
     description:
@@ -12,6 +27,9 @@ const account_center = {
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
     verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
     try_another_method: 'Başka bir doğrulama yöntemi deneyin',
+    no_available_methods_title: 'Kullanılabilir doğrulama yöntemi yok',
+    no_available_methods_description:
+      'Ayarlanmış herhangi bir doğrulama yönteminiz yok. Lütfen önce hesabınıza bir parola, e-posta adresi veya telefon numarası ekleyin.',
   },
   password_verification: {
     title: 'Parolayı doğrula',
@@ -52,6 +70,61 @@ const account_center = {
     title: 'Kullanıcı adını ayarla',
     description: 'Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir.',
     success: 'Kullanıcı adı başarıyla güncellendi.',
+  },
+  security: {
+    add: 'Ekle',
+    change: 'Değiştir',
+    remove: 'Kaldır',
+    not_set: 'Ayarlanmamış',
+    social_sign_in: 'Sosyal giriş',
+    social_not_linked: 'Bağlanmadı',
+    email_phone: 'E-posta / Telefon',
+    email: 'E-posta',
+    phone: 'Telefon',
+    password: 'Parola',
+    configured: 'Yapılandırıldı',
+    not_configured: 'Yapılandırılmadı',
+    two_step_verification: 'İki adımlı doğrulama',
+    authenticator_app: 'Kimlik doğrulama uygulaması',
+    passkeys: 'Passkeyler',
+    backup_codes: 'Yedek kodlar',
+    email_verification_code: 'E-posta doğrulama kodu',
+    phone_verification_code: 'Telefon doğrulama kodu',
+    passkeys_count_one: '{{count}} passkey',
+    passkeys_count_other: '{{count}} passkey',
+    backup_codes_count_one: '{{count}} kod kaldı',
+    backup_codes_count_other: '{{count}} kod kaldı',
+    view: 'Görüntüle',
+    manage: 'Yönet',
+    turn_on_2_step_verification: '2 adımlı doğrulamayı aç',
+    turn_on_2_step_verification_description:
+      'Ekstra bir güvenlik katmanı ekleyin. Oturum açarken ikinci bir doğrulama adımı istenecektir.',
+    turn_off_2_step_verification: '2 adımlı doğrulamayı kapat',
+    turn_off_2_step_verification_description:
+      '2 adımlı doğrulamayı devre dışı bırakmak, oturum açarken hesabınızdaki ek koruma katmanını kaldıracaktır. Devam etmek istediğinizden emin misiniz?',
+    disable_2_step_verification: 'Devre dışı bırak',
+    no_verification_method_warning:
+      'İkinci bir doğrulama yöntemi eklemediniz. Oturum açarken 2 adımlı doğrulamayı etkinleştirmek için en az bir tane ekleyin.',
+    account_removal: 'Hesap silme',
+    delete_your_account: 'Hesabını sil',
+    delete_account: 'Hesabı sil',
+    remove_email_confirmation_title: 'E-posta adresini kaldır',
+    remove_email_confirmation_description:
+      'Kaldırıldığında, bu e-posta adresiyle artık oturum açamayacaksınız. Devam etmek istediğinizden emin misiniz?',
+    remove_phone_confirmation_title: 'Telefon numarasını kaldır',
+    remove_phone_confirmation_description:
+      'Kaldırıldığında, bu telefon numarasıyla artık oturum açamayacaksınız. Devam etmek istediğinizden emin misiniz?',
+    email_removed: 'E-posta adresi başarıyla kaldırıldı.',
+    phone_removed: 'Telefon numarası başarıyla kaldırıldı.',
+  },
+  social: {
+    linked: '{{connector}} başarıyla bağlandı.',
+    not_enabled:
+      'Bu sosyal oturum açma yöntemi etkin değil. Yardım için lütfen yöneticinizle iletişime geçin.',
+    removed: '{{connector}} başarıyla kaldırıldı.',
+    remove_confirmation_title: 'Sosyal hesabı kaldır',
+    remove_confirmation_description:
+      '{{connector}} kaldırılırsa, yeniden ekleyene kadar bu hesapla oturum açamayabilirsiniz.',
   },
   password: {
     title: 'Şifreyi ayarla',
@@ -130,6 +203,10 @@ const account_center = {
     totp: {
       title: 'Authenticator uygulaması eklendi!',
       description: 'Authenticator uygulamanız hesabınıza başarıyla bağlandı.',
+    },
+    totp_replaced: {
+      title: 'Authenticator uygulaması değiştirildi!',
+      description: 'Authenticator uygulamanız başarıyla değiştirildi.',
     },
     backup_code: {
       title: 'Yedek kodlar oluşturuldu!',

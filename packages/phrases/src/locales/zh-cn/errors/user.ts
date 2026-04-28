@@ -29,6 +29,7 @@ const user = {
   missing_profile: '请于登录时提供必要的用户补充信息。',
   role_exists: '角色 ID {{roleId}} 已添加到此用户',
   invalid_role_type: '无效的角色类型，无法将机器到机器角色分配给用户。',
+  suggest_mfa: '为提升账户安全性，我们建议你将 MFA 绑定到你的账户。',
   missing_mfa: '你需要在登录之前绑定额外的 MFA。',
   totp_already_in_use: 'TOTP 已在使用中。',
   backup_code_already_in_use: '备用代码已在使用中。',
@@ -39,6 +40,7 @@ const user = {
   wrong_backup_code_format: '备用代码格式无效。',
   username_required: '用户名是必需的标识符，你不能将其设置为 null。',
   email_or_phone_required: '邮箱地址或手机号码是必需的标识符，至少需要一个。',
+  last_sign_in_method_required: '你的账户至少需要保留一种可用的登录方式。',
   email_required: '邮箱地址是必需的标识符，你不能将其设置为 null。',
   phone_required: '手机号码是必需的标识符，你不能将其设置为 null。',
   enterprise_sso_identity_not_exists:

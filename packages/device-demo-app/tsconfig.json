@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.base",
+  "include": [
+    "src",
+    "*.config.ts"
+  ]
+}

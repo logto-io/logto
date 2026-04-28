@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-aws-ses",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Logto Connector for Amazon SES",
   "author": "Jeff <admin@breadth.app>",
   "dependencies": {
@@ -30,7 +30,8 @@
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },

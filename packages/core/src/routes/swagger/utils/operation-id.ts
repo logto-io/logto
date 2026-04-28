@@ -27,6 +27,11 @@ const methodToVerb = Object.freeze({
 
 type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 
+const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
+  'get /configs/oidc/session': 'GetOidcSessionConfig',
+  'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
+});
+
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Authn
   'get /authn/hasura': 'GetHasuraAuth',
@@ -94,9 +99,15 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'delete /custom-profile-fields/:name': 'DeleteCustomProfileFieldByName',
   'post /custom-profile-fields/batch': 'CreateCustomProfileFieldsBatch',
   'post /custom-profile-fields/properties/sie-order': 'UpdateCustomProfileFieldsSieOrder',
+  // Domains
+  'post /domains/cleanup': 'CleanupDomains',
   // ID token config
   'get /configs/id-token': 'GetIdTokenConfig',
   'put /configs/id-token': 'UpsertIdTokenConfig',
+  // Session config
+  'get /configs/oidc/session': 'GetOidcSessionConfig',
+  'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
+  ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 
 /**

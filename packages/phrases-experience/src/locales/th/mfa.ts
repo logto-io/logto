@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: 'กรอกรหัสที่ส่งไปยังโทรศัพท์ของคุณ',
   send_to_email: 'ส่งไปที่ {{identifier}}',
   send_to_phone: 'ส่งไปที่ {{identifier}}',
+  onboarding: 'เปิดการยืนยันแบบ 2 ขั้นตอน',
+  onboarding_description:
+    'ปกป้องบัญชีของคุณด้วยการยืนยันแบบ 2 ขั้นตอน เลือกหนึ่งวิธีหรือมากกว่า: พาสคีย์ แอปยืนยันตัวตน (OTP) รหัสยืนยัน SMS หรือรหัสสำรอง',
+  enable_mfa: 'เปิดใช้งานการยืนยันแบบ 2 ขั้นตอน',
   add_mfa_factors: 'เพิ่มการยืนยันแบบ 2 ขั้นตอน',
   add_mfa_description:
     'การตรวจสอบสองปัจจัยเปิดใช้งานอยู่ เลือกวิธีการตรวจสอบตัวตนที่สองของคุณสำหรับการเข้าสู่ระบบที่ปลอดภัย',
@@ -27,6 +31,7 @@ const mfa = {
   verify_mfa_description:
     'ได้เปิดใช้การยืนยันแบบ 2 ขั้นตอนสำหรับบัญชีนี้ โปรดเลือกวิธีที่สองในการยืนยันตัวตนของคุณ',
   add_authenticator_app: 'เพิ่มแอป Authenticator',
+  replace_authenticator_app: 'แทนที่แอป Authenticator',
   step: 'ขั้นตอน {{step, number}}: {{content}}',
   scan_qr_code: 'สแกนรหัส QR นี้',
   scan_qr_code_description:

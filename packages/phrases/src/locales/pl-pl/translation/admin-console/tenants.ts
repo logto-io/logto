@@ -1,12 +1,21 @@
 const tenants = {
   title: 'Ustawienia',
   description: 'Skuteczne zarządzanie ustawieniami najemcy i dostosowywanie domeny.',
+  oss_description:
+    'Zmień tutaj ustawienia konta i zarządzaj swoimi danymi osobowymi, aby zapewnić bezpieczeństwo konta.',
   tabs: {
     settings: 'Ustawienia',
     members: 'Członkowie',
     domains: 'Domeny',
+    oidc_configs: 'Konfiguracje OIDC',
     subscription: 'Plan i rozliczenia',
     billing_history: 'Historia rozliczeń',
+  },
+  members: {
+    card_title: 'Zarządzaj tenantami bezpieczniej dzięki Logto Cloud',
+    card_description:
+      'Dodawaj administratorów lub współpracowników do swojego tenantu bez współdzielenia jednego konta administratora.',
+    card_action: 'Poznaj Logto Cloud',
   },
   settings: {
     title: 'USTAWIENIA',

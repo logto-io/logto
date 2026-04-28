@@ -95,11 +95,14 @@ describe('triggerInteractionHooks()', () => {
       sessionId: 'some_jti',
     });
 
-    interactionHookContext.assignInteractionHookResult({
+    interactionHookContext.assignReleaseOnSuccessInteractionHookResult({
       userId: '123',
     });
 
-    await triggerInteractionHooks(new ConsoleLog(), interactionHookContext);
+    await triggerInteractionHooks(
+      new ConsoleLog(),
+      interactionHookContext.getReleaseOnSuccessDispatchContext()
+    );
 
     expect(findAllHooks).toHaveBeenCalled();
     expect(findApplicationById).toHaveBeenCalledWith('some_client');
@@ -154,7 +157,7 @@ describe('triggerInteractionHooks()', () => {
       sessionId: 'some_jti',
     });
 
-    interactionHookContext.assignInteractionHookResult({
+    interactionHookContext.assignReleaseAnywayInteractionHookResult({
       event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
       payload: {
         adaptiveMfaResult: {
@@ -167,11 +170,15 @@ describe('triggerInteractionHooks()', () => {
       } as unknown as never,
       userId: '123',
     });
-    interactionHookContext.assignInteractionHookResult({
+    interactionHookContext.assignReleaseOnSuccessInteractionHookResult({
       userId: '123',
     });
 
-    await triggerInteractionHooks(new ConsoleLog(), interactionHookContext);
+    await triggerInteractionHooks(new ConsoleLog(), {
+      metadata: interactionHookContext.metadata,
+      hookEvent: interactionHookContext.hookEvent,
+      interactionHookResults: interactionHookContext.interactionHookResults,
+    });
 
     expect(sendWebhookRequest).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -214,7 +221,7 @@ describe('triggerInteractionHooks()', () => {
       sessionId: 'some_jti',
     });
 
-    interactionHookContext.assignInteractionHookResult({
+    interactionHookContext.assignReleaseAnywayInteractionHookResult({
       event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
       payload: {
         adaptiveMfaResult: {
@@ -225,7 +232,10 @@ describe('triggerInteractionHooks()', () => {
       userId: '123',
     });
 
-    await triggerInteractionHooks(new ConsoleLog(), interactionHookContext);
+    await triggerInteractionHooks(
+      new ConsoleLog(),
+      interactionHookContext.getReleaseAnywayDispatchContext()
+    );
 
     expect(sendWebhookRequest).toHaveBeenCalledWith(
       expect.objectContaining({

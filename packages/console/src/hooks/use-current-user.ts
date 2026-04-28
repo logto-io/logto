@@ -1,22 +1,41 @@
 import { useLogto } from '@logto/react';
-import type { JsonObject, UserProfileResponse } from '@logto/schemas';
+import type { JsonObject, RequestErrorBody, UserProfileResponse } from '@logto/schemas';
+import { HTTPError } from 'ky';
 import { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import useAccountApi from './use-account-api';
-import type { RequestError } from './use-api';
+import { RequestError } from './use-api';
+import useRedirectUri from './use-redirect-uri';
+import useSignOut from './use-sign-out';
 
 const useCurrentUser = () => {
   const { isAuthenticated } = useLogto();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { signOut } = useSignOut();
+  const postSignOutRedirectUri = useRedirectUri('signOut');
 
   const accountApi = useAccountApi();
-  const accountApiFetcher = useCallback(
-    async () => accountApi.get('').json<UserProfileResponse>(),
-    [accountApi]
-  );
+  const accountApiFetcher = useCallback(async () => {
+    try {
+      return await accountApi.get('').json<UserProfileResponse>();
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        const { response } = error;
+        const data = await response.clone().json<RequestErrorBody>();
+
+        if (response.status === 401 && data.code === 'auth.unauthorized') {
+          await signOut(postSignOutRedirectUri.href);
+        } else {
+          throw new RequestError(response.status, data);
+        }
+      }
+
+      throw error;
+    }
+  }, [accountApi, postSignOutRedirectUri.href, signOut]);
 
   const {
     data: user,
@@ -32,12 +51,33 @@ const useCurrentUser = () => {
         return;
       }
 
-      // Account API uses 'replace' mode, so we need to merge with existing customData
-      const mergedCustomData = { ...user.customData, ...customData };
-      const data = await accountApi
-        .patch('', { json: { customData: mergedCustomData } })
-        .json<UserProfileResponse>();
-      await mutate({ ...user, customData: data.customData });
+      try {
+        // Account API uses 'replace' mode, so we need to merge with existing customData
+        const mergedCustomData = { ...user.customData, ...customData };
+        const data = await accountApi
+          .patch('', { json: { customData: mergedCustomData } })
+          .json<UserProfileResponse>();
+        await mutate({ ...user, customData: data.customData });
+      } catch (error: unknown) {
+        // TODO: Move shared Account API error handling into `useAccountApi()` once we define
+        // how callers opt into the right UX (for example toast versus modal feedback).
+        if (error instanceof HTTPError) {
+          const { response } = error;
+
+          try {
+            const data = await response.clone().json<RequestErrorBody>();
+            toast.error(
+              [data.message, data.details].join('\n') || t('errors.unknown_server_error')
+            );
+          } catch {
+            toast.error(t('errors.unknown_server_error'));
+          }
+
+          return;
+        }
+
+        throw error;
+      }
     },
     [accountApi, mutate, t, user]
   );

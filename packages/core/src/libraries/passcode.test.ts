@@ -40,11 +40,12 @@ const {
 } = passcodeQueries;
 
 const getMessageConnector = jest.fn();
+const getI18nEmailTemplate = jest.fn();
 
 const { createPasscode, sendPasscode, verifyPasscode } = createPasscodeLibrary(
   new MockQueries({ passcodes: passcodeQueries }),
   // @ts-expect-error
-  { getMessageConnector }
+  { getI18nEmailTemplate, getMessageConnector }
 );
 
 beforeAll(() => {
@@ -174,6 +175,9 @@ describe('sendPasscode', () => {
       dbEntry: {
         ...mockConnector,
         id: 'id0',
+        config: {
+          templates: [{ usageType: TemplateType.SignIn, content: 'code {{code}}' }],
+        },
       },
       metadata: {
         ...mockMetadata,
@@ -213,6 +217,9 @@ describe('sendPasscode', () => {
       dbEntry: {
         ...mockConnector,
         id: 'id0',
+        config: {
+          templates: [{ usageType: TemplateType.SignIn, content: 'code {{code}}' }],
+        },
       },
       metadata: {
         ...mockMetadata,

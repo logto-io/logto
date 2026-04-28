@@ -1,6 +1,7 @@
 import { type Sentinel } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 
+import type { WellKnownCache } from '#src/caches/well-known.js';
 import type { EnvSet } from '#src/env-set/index.js';
 import type { CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
@@ -13,6 +14,7 @@ export default abstract class TenantContext {
   public abstract readonly id: string;
   public abstract readonly envSet: EnvSet;
   public abstract readonly provider: Provider;
+  public abstract readonly wellKnownCache: WellKnownCache;
   public abstract readonly queries: Queries;
   public abstract readonly logtoConfigs: LogtoConfigLibrary;
   public abstract readonly cloudConnection: CloudConnectionLibrary;
@@ -20,4 +22,5 @@ export default abstract class TenantContext {
   public abstract readonly libraries: Libraries;
   public abstract readonly sentinel: Sentinel;
   public abstract invalidateCache(): Promise<void>;
+  public abstract scheduleSigningKeyRotation(timestamp: number): Promise<void>;
 }

@@ -6,10 +6,14 @@ export const githubReleasesLink = 'https://github.com/logto-io/logto/releases';
 export const contactEmail = 'contact@logto.io';
 export const contactEmailLink = `mailto:${contactEmail}`;
 export const reservationLink = 'https://cal.com/logto/30min';
-export const trustAndSecurityLink = 'https://logto.io/trust-and-security';
-export const pricingLink = 'https://logto.io/pricing';
-export const officialWebsiteContactPageLink = 'https://logto.io/contact';
+export const officialWebsiteLink = 'https://logto.io';
+export const trustAndSecurityLink = `${officialWebsiteLink}/trust-and-security`;
+export const pricingLink = `${officialWebsiteLink}/pricing`;
+export const logtoCloudConsoleLink = 'https://cloud.logto.io';
+export const officialWebsiteContactPageLink = `${officialWebsiteLink}/contact`;
 export const entityPolicyLink = 'https://docs.logto.io/logto-cloud/system-limit';
+export const logtoOssFeatureSupportLink =
+  'https://docs.logto.io/logto-oss#feature-supported-by-logto-oss';
 
 /** Docs link */
 export const organizationsFeatureLink = '/organizations';
@@ -44,6 +48,7 @@ export const thirdPartyApp =
 export const protectedApp = '/integrate-logto/protected-app';
 export const protectedAppLocalDev = '/integrate-logto/protected-app#local-development';
 export const protectOriginServer = '/integrate-logto/protected-app#protect-your-origin-server';
+export const deviceFlow = '/quick-starts/device-flow';
 export const backchannelLogout = '/end-user-flows/sign-out#federated-sign-out-back-channel-logout';
 export const authFlows = '/end-user-flows#authentication-flows';
 export const termsAndPrivacy = '/end-user-flows/sign-up-and-sign-in/terms-and-privacy';
@@ -78,5 +83,6 @@ export const customDomainFeatureLink = '/logto-cloud/custom-domain';
 export const retrieveTokenStorage = '/secret-vault/federated-token-set#token-retrieval';
 
 export const addOnPricingExplanationLink = 'https://docs.logto.io/logto-cloud/billing-and-pricing';
+export const logtoCloudConsoleUrl = 'https://cloud.logto.io';
 
 export const dateFnsDocumentationLink = 'https://date-fns.org/v2.30.0/docs/format';

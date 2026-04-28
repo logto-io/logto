@@ -10,6 +10,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import passwordEncryptionWorker from '../workers/password-encryption-worker.js';
 
+import { executeFirebaseScryptHash } from './firebase-scrypt.js';
 import { safeParseJson } from './json.js';
 
 type LegacyPassword = {
@@ -23,8 +24,12 @@ function isPbkdf2Algorithm(algorithm: string): boolean {
   return algorithm === 'pbkdf2Sync' || algorithm === 'pbkdf2';
 }
 
+function isFirebaseScryptAlgorithm(algorithm: string): boolean {
+  return algorithm === 'firebase-scrypt';
+}
+
 function isLegacyHashAlgorithm(algorithm: string): boolean {
-  if (isPbkdf2Algorithm(algorithm)) {
+  if (isPbkdf2Algorithm(algorithm) || isFirebaseScryptAlgorithm(algorithm)) {
     return true;
   }
 
@@ -34,6 +39,22 @@ function isLegacyHashAlgorithm(algorithm: string): boolean {
   } catch {
     return false;
   }
+}
+
+function parsePbkdf2Salt(salt: string): crypto.BinaryLike {
+  if (!salt.startsWith('hex:')) {
+    return salt;
+  }
+
+  const hexSalt = salt.slice(4);
+  const isHexSaltValid =
+    hexSalt.length > 0 && hexSalt.length % 2 === 0 && /^[\da-f]+$/iu.test(hexSalt);
+
+  if (!isHexSaltValid) {
+    throw new RequestError({ code: 'password.invalid_legacy_password_format' });
+  }
+
+  return Buffer.from(hexSalt, 'hex');
 }
 
 function isLegacyPassword(value: string): [string, string[], string] | undefined {
@@ -77,6 +98,11 @@ export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyP
     new RequestError({ code: 'password.unsupported_legacy_hash_algorithm', algorithm })
   );
 
+  // Validate PBKDF2 salt format early to surface errors at user creation time
+  if (isPbkdf2Algorithm(algorithm) && args[0] !== undefined) {
+    parsePbkdf2Salt(args[0]);
+  }
+
   return {
     algorithm,
     args,
@@ -86,13 +112,17 @@ export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyP
 
 /**
  * Execute hash calculation based on the parsed expression
- * @returns The calculated hash as a hexadecimal string
+ * @returns The calculated hash as a hexadecimal string (or base64 for firebase-scrypt)
  */
 export const executeLegacyHash = async (
   parsedExpression: LegacyPassword,
   inputPassword: string
 ): Promise<string> => {
   const { algorithm, args } = parsedExpression;
+
+  if (isFirebaseScryptAlgorithm(algorithm)) {
+    return executeFirebaseScryptHash(args, inputPassword);
+  }
 
   // Replace @ with input password
   const resolvedArgs = args.map((arg) => (arg === '@' ? inputPassword : arg));
@@ -107,7 +137,7 @@ export const executeLegacyHash = async (
     return crypto
       .pbkdf2Sync(
         inputPassword,
-        salt,
+        parsePbkdf2Salt(salt),
         Number.parseInt(`${iterations}`, 10),
         Number.parseInt(`${keylen}`, 10),
         digest

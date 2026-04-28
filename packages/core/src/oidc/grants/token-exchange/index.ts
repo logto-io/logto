@@ -6,6 +6,7 @@
 
 import { buildOrganizationUrn } from '@logto/core-kit';
 import { GrantType } from '@logto/schemas';
+import { nanoid } from 'nanoid';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import resolveResource from 'oidc-provider/lib/helpers/resolve_resource.js';
@@ -16,7 +17,11 @@ import { type EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { getSharedResourceServerData, reversedResourceAccessTokenTtl } from '../../resource.js';
+import {
+  getSharedResourceServerData,
+  isThirdPartyApplication,
+  reversedResourceAccessTokenTtl,
+} from '../../resource.js';
 import { handleClientCertificate, handleDPoP, checkOrganizationAccess } from '../utils.js';
 
 import { validateSubjectToken } from './account.js';
@@ -59,6 +64,8 @@ export const buildHandler: (
   assertThat(params, new InvalidGrant('parameters must be available'));
   assertThat(client, new InvalidClient('client must be available'));
 
+  const isThirdParty = await isThirdPartyApplication(queries, client.clientId);
+
   validatePresence(ctx, ...requiredParameters);
 
   const providerInstance = instance(provider);
@@ -86,19 +93,24 @@ export const buildHandler: (
 
   ctx.oidc.entity('Account', account);
 
+  // Pre-generate grant ID to avoid a separate DB write just to obtain it.
+  // oidc-provider's BaseModel.save() skips ID generation when jti is already set.
+  const grantId = nanoid();
+  // eslint-disable-next-line no-restricted-syntax -- jti is accepted by BaseModel constructor at runtime but not in Grant typings
   const grant = new Grant({
+    jti: grantId,
     accountId: account.accountId,
     clientId: client.clientId,
-  });
+  } as ConstructorParameters<typeof Grant>[0]);
 
-  const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
+  const { organizationId } = await checkOrganizationAccess(ctx, queries, account, isThirdParty);
 
   const accessToken = new AccessToken({
     accountId: account.accountId,
     clientId: client.clientId,
     gty: GrantType.TokenExchange,
     client,
-    grantId: await grant.save(),
+    grantId,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     scope: undefined!,
     extra: {
@@ -180,9 +192,9 @@ export const buildHandler: (
   // Handle the actor token
   const { actorId } = await handleActorToken(ctx);
   if (actorId) {
+    // @see https://github.com/panva/node-oidc-provider/blob/main/lib/models/formats/jwt.js#L118
     // The JWT generator in node-oidc-provider only recognizes a fixed list of claims,
     // to add other claims to JWT, the only way is to return them in `extraTokenClaims` function.
-    // @see https://github.com/panva/node-oidc-provider/blob/main/lib/models/formats/jwt.js#L118
     // We save the `act` data in the `extra` field temporarily,
     // so that we can get this context it in the `extraTokenClaims` function and add it to the JWT.
     accessToken.extra = {

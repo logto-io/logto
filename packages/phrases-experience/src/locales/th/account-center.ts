@@ -3,6 +3,20 @@ const account_center = {
     title: 'ไม่พบหน้าเว็บ',
     description: 'ไม่สามารถใช้หน้านี้ได้',
   },
+  page: {
+    title: 'บัญชี',
+    security_title: 'ความปลอดภัย',
+    security_description: 'เปลี่ยนการตั้งค่าบัญชีของคุณที่นี่เพื่อให้บัญชีของคุณปลอดภัย',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
+    support: 'ฝ่ายช่วยเหลือ',
+  },
   verification: {
     title: 'การยืนยันความปลอดภัย',
     description:
@@ -12,6 +26,9 @@ const account_center = {
     error_verify_failed: 'ยืนยันไม่สำเร็จ กรุณากรอกรหัสอีกครั้ง',
     verification_required: 'การยืนยันหมดอายุ โปรดยืนยันตัวตนอีกครั้ง',
     try_another_method: 'ลองใช้วิธีอื่นเพื่อยืนยันตัวตน',
+    no_available_methods_title: 'ไม่มีวิธีการยืนยันตัวตนที่พร้อมใช้งาน',
+    no_available_methods_description:
+      'คุณยังไม่ได้ตั้งค่าวิธีการยืนยันตัวตน กรุณาเพิ่มรหัสผ่าน อีเมล หรือหมายเลขโทรศัพท์ให้กับบัญชีของคุณก่อน',
   },
   password_verification: {
     title: 'ยืนยันรหัสผ่าน',
@@ -52,6 +69,61 @@ const account_center = {
     title: 'ตั้งชื่อผู้ใช้',
     description: 'ชื่อผู้ใช้ต้องมีเฉพาะตัวอักษร ตัวเลข และขีดล่างเท่านั้น',
     success: 'อัปเดตชื่อผู้ใช้เรียบร้อยแล้ว',
+  },
+  security: {
+    add: 'เพิ่ม',
+    change: 'เปลี่ยน',
+    remove: 'ลบ',
+    not_set: 'ยังไม่ได้ตั้งค่า',
+    social_sign_in: 'การเข้าสู่ระบบด้วยโซเชียล',
+    social_not_linked: 'ยังไม่ได้เชื่อมโยง',
+    email_phone: 'อีเมล / โทรศัพท์',
+    email: 'อีเมล',
+    phone: 'โทรศัพท์',
+    password: 'รหัสผ่าน',
+    configured: 'ตั้งค่าแล้ว',
+    not_configured: 'ยังไม่ได้ตั้งค่า',
+    two_step_verification: 'การยืนยันแบบ 2 ขั้นตอน',
+    authenticator_app: 'แอป Authenticator',
+    passkeys: 'Passkeys',
+    backup_codes: 'รหัสสำรอง',
+    email_verification_code: 'รหัสยืนยันทางอีเมล',
+    phone_verification_code: 'รหัสยืนยันทางโทรศัพท์',
+    passkeys_count_one: '{{count}} passkey',
+    passkeys_count_other: '{{count}} passkeys',
+    backup_codes_count_one: 'เหลือ {{count}} รหัส',
+    backup_codes_count_other: 'เหลือ {{count}} รหัส',
+    view: 'ดู',
+    manage: 'จัดการ',
+    turn_on_2_step_verification: 'เปิดการยืนยันตัวตนสองขั้นตอน',
+    turn_on_2_step_verification_description:
+      'เพิ่มชั้นความปลอดภัยเพิ่มเติม คุณจะถูกขอให้ทำการยืนยันขั้นตอนที่สองเมื่อลงชื่อเข้าใช้',
+    turn_off_2_step_verification: 'ปิดการยืนยันตัวตนสองขั้นตอน',
+    turn_off_2_step_verification_description:
+      'การปิดการยืนยันตัวตนสองขั้นตอนจะลบชั้นการป้องกันเพิ่มเติมออกจากบัญชีของคุณเมื่อลงชื่อเข้าใช้ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
+    disable_2_step_verification: 'ปิด',
+    no_verification_method_warning:
+      'คุณยังไม่ได้เพิ่มวิธีการยืนยันตัวตนที่สอง เพิ่มอย่างน้อยหนึ่งวิธีเพื่อเปิดใช้งานการยืนยันตัวตนสองขั้นตอนเมื่อลงชื่อเข้าใช้',
+    account_removal: 'การลบบัญชี',
+    delete_your_account: 'ลบบัญชีของคุณ',
+    delete_account: 'ลบบัญชี',
+    remove_email_confirmation_title: 'ลบที่อยู่อีเมล',
+    remove_email_confirmation_description:
+      'เมื่อลบแล้ว คุณจะไม่สามารถลงชื่อเข้าใช้ด้วยที่อยู่อีเมลนี้ได้อีก คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
+    remove_phone_confirmation_title: 'ลบหมายเลขโทรศัพท์',
+    remove_phone_confirmation_description:
+      'เมื่อลบแล้ว คุณจะไม่สามารถลงชื่อเข้าใช้ด้วยหมายเลขโทรศัพท์นี้ได้อีก คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
+    email_removed: 'ลบที่อยู่อีเมลเรียบร้อยแล้ว',
+    phone_removed: 'ลบหมายเลขโทรศัพท์เรียบร้อยแล้ว',
+  },
+  social: {
+    linked: 'เชื่อมโยง {{connector}} สำเร็จแล้ว',
+    not_enabled:
+      'วิธีการเข้าสู่ระบบผ่านโซเชียลนี้ยังไม่ได้เปิดใช้งาน โปรดติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
+    removed: 'นำ {{connector}} ออกสำเร็จแล้ว',
+    remove_confirmation_title: 'ลบบัญชีโซเชียล',
+    remove_confirmation_description:
+      'หากคุณลบ {{connector}} คุณอาจไม่สามารถลงชื่อเข้าใช้ด้วยบัญชีนี้ได้จนกว่าจะเพิ่มอีกครั้ง',
   },
   password: {
     title: 'ตั้งรหัสผ่าน',
@@ -125,6 +197,10 @@ const account_center = {
     totp: {
       title: 'เพิ่มแอป Authenticator แล้ว!',
       description: 'แอป Authenticator ของคุณได้รับการเชื่อมต่อกับบัญชีของคุณเรียบร้อยแล้ว',
+    },
+    totp_replaced: {
+      title: 'แอป Authenticator ถูกแทนที่แล้ว!',
+      description: 'แอป Authenticator ของคุณถูกแทนที่เรียบร้อยแล้ว',
     },
     backup_code: {
       title: 'สร้างรหัสสำรองแล้ว!',

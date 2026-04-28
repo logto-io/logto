@@ -8,9 +8,10 @@ import {
   LogtoConfigs,
   LogtoJwtTokenKey,
   LogtoOidcConfigKey,
-  LogtoTenantConfigKey,
   cloudApiIndicator,
   cloudConnectionDataGuard,
+  normalizeOidcPrivateKeys,
+  rotateOidcPrivateKeyStatuses,
   idTokenConfigGuard,
   jwtCustomizerConfigGuard,
   logtoOidcConfigGuard,
@@ -20,6 +21,7 @@ import chalk from 'chalk';
 import { ZodError, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import type Queries from '#src/tenants/Queries.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
@@ -31,14 +33,22 @@ export const createLogtoConfigLibrary = ({
     upsertJwtCustomizer: queryUpsertJwtCustomizer,
     upsertIdTokenConfig: queryUpsertIdTokenConfig,
   },
-}: Pick<Queries, 'logtoConfigs'>) => {
+  pool,
+  wellKnownCache,
+}: Pick<Queries, 'logtoConfigs' | 'pool' | 'wellKnownCache'>) => {
   const getOidcConfigs = async (consoleLog: ConsoleLog): Promise<LogtoOidcConfigType> => {
     try {
       const { rows } = await getRowsByKeys(Object.values(LogtoOidcConfigKey));
-
-      return z
+      const configs = z
         .object(logtoOidcConfigGuard)
         .parse(Object.fromEntries(rows.map(({ key, value }) => [key, value])));
+
+      return {
+        ...configs,
+        [LogtoOidcConfigKey.PrivateKeys]: normalizeOidcPrivateKeys(
+          configs[LogtoOidcConfigKey.PrivateKeys]
+        ),
+      };
     } catch (error: unknown) {
       if (error instanceof ZodError) {
         consoleLog.error(
@@ -137,19 +147,36 @@ export const createLogtoConfigLibrary = ({
     return updatedRow.value;
   };
 
-  const getIdTokenConfig = async () => {
-    const { rows } = await getRowsByKeys([LogtoTenantConfigKey.IdToken]);
-
-    if (rows.length === 0) {
-      return;
-    }
-
-    return idTokenConfigGuard.parse(rows[0]?.value);
-  };
-
   const upsertIdTokenConfig = async (idTokenConfig: IdTokenConfig) => {
     const { value } = await queryUpsertIdTokenConfig(idTokenConfig);
     return idTokenConfigGuard.parse(value);
+  };
+
+  /**
+   * Rotate OIDC private signing key statuses if the scheduled rotation time has come.
+   * This function is intended to be called before accessing OIDC configs to ensure the key statuses are up-to-date.
+   */
+  const promoteScheduledSigningKeyRotation = async () => {
+    await pool.transaction(async (connection) => {
+      const transactionalQueries = createLogtoConfigQueries(connection, wellKnownCache);
+      await transactionalQueries.lockPrivateSigningKeysAndRotationState();
+
+      const rotationState = await transactionalQueries.getSigningKeyRotationState();
+
+      if (!rotationState?.signingKeyRotationAt || rotationState.signingKeyRotationAt > Date.now()) {
+        return;
+      }
+
+      const privateKeys = await transactionalQueries.getPrivateSigningKeys();
+      const updatedPrivateKeys = rotateOidcPrivateKeyStatuses(privateKeys);
+
+      // Skip rewriting the row when there is no staged Next key to promote.
+      if (updatedPrivateKeys === privateKeys) {
+        return;
+      }
+
+      await transactionalQueries.upsertPrivateSigningKeys(updatedPrivateKeys);
+    });
   };
 
   return {
@@ -159,7 +186,7 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizer,
     getJwtCustomizers,
     updateJwtCustomizer,
-    getIdTokenConfig,
     upsertIdTokenConfig,
+    promoteScheduledSigningKeyRotation,
   };
 };

@@ -280,23 +280,23 @@ export class ExperienceClient extends MockClient {
       .json<SanitizedInteractionStorageData>();
   }
 
-  public async createSignInWebAuthnAuthentication(payload: {
+  public async createSignInPasskeyAuthentication(payload: {
     identifier: { type: SignInIdentifier; value: string };
   }) {
     return this.api
-      .post(`${experienceRoutes.verification}/sign-in-web-authn/authentication`, {
+      .post(`${experienceRoutes.verification}/sign-in-passkey/authentication`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
       })
       .json<{ verificationId: string; authenticationOptions: WebAuthnAuthenticationOptions }>();
   }
 
-  public async verifySignInWebAuthnAuthentication(payload: {
+  public async verifySignInPasskeyAuthentication(payload: {
     verificationId?: string;
     payload: Omit<WebAuthnVerificationPayload, 'type'>;
   }) {
     return this.api
-      .post(`${experienceRoutes.verification}/sign-in-web-authn/authentication/verify`, {
+      .post(`${experienceRoutes.verification}/sign-in-passkey/authentication/verify`, {
         headers: { cookie: this.interactionCookie },
         json: payload,
       })

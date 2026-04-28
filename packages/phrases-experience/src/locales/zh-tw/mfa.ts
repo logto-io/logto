@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: '輸入發送至您手機的驗證碼',
   send_to_email: '發送至 {{identifier}}',
   send_to_phone: '發送至 {{identifier}}',
+  onboarding: '開啟兩步驗證',
+  onboarding_description:
+    '使用兩步驗證保護您的帳戶。選擇一種或多種方式：通行密碼、身份驗證器（OTP）、簡訊驗證碼或備用碼。',
+  enable_mfa: '啟用兩步驗證',
   add_mfa_factors: '添加兩步驗證',
   add_mfa_description: '已啟用兩步驗證。選擇第二種驗證方法進行安全登錄。',
   add_another_mfa_factor: '新增另一個兩步驟驗證',
@@ -25,6 +29,7 @@ const mfa = {
   verify_mfa_factors: '兩步驗證',
   verify_mfa_description: '此帳戶已啟用兩步驗證。請選擇第二種驗證身份的方式。',
   add_authenticator_app: '添加身份驗證應用',
+  replace_authenticator_app: '替換身份驗證應用',
   step: '步驟 {{step, number}}: {{content}}',
   scan_qr_code: '掃描此 QR 碼',
   scan_qr_code_description:

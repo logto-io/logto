@@ -1,4 +1,9 @@
-import { isBuiltInLanguageTag } from '@logto/phrases-experience';
+import {
+  findSupportedLanguageTag,
+  matchExactLanguageTag,
+  matchSupportedLanguageTag,
+} from '@logto/language-kit';
+import { builtInLanguages } from '@logto/phrases-experience';
 import { type SignInExperience } from '@logto/schemas';
 import { conditionalArray } from '@silverhand/essentials';
 import type { i18n } from 'i18next';
@@ -34,13 +39,44 @@ export const getExperienceLanguage = ({
   customLanguages,
   lng,
 }: GetExperienceLanguage) => {
-  const acceptableLanguages = conditionalArray<string | string[]>(
+  const acceptableLanguageCandidates = conditionalArray<string | string[]>(
     lng?.split(/\s+/).filter(Boolean),
     autoDetect && detectLanguage(ctx),
     fallbackLanguage
   );
-  const language =
-    acceptableLanguages.find((tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)) ??
-    'en';
-  return language;
+  const acceptableLanguages = acceptableLanguageCandidates.flatMap<string>((language) =>
+    Array.isArray(language) ? language : [language]
+  );
+
+  for (const language of acceptableLanguages) {
+    const customExactLanguage = matchExactLanguageTag([language], customLanguages);
+
+    if (customExactLanguage) {
+      return customExactLanguage;
+    }
+
+    const builtInExactLanguage = matchExactLanguageTag([language], builtInLanguages);
+
+    if (builtInExactLanguage) {
+      return builtInExactLanguage;
+    }
+
+    const { match: builtInFallbackLanguage, matchType: builtInMatchType } =
+      matchSupportedLanguageTag([language], builtInLanguages);
+
+    if (builtInMatchType === 'base' && builtInFallbackLanguage) {
+      return builtInFallbackLanguage;
+    }
+
+    const { match: customFallbackLanguage, matchType: customMatchType } = matchSupportedLanguageTag(
+      [language],
+      customLanguages
+    );
+
+    if (customMatchType === 'base' && customFallbackLanguage) {
+      return customFallbackLanguage;
+    }
+  }
+
+  return findSupportedLanguageTag([], builtInLanguages);
 };

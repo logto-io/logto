@@ -2,7 +2,7 @@ import usePasswordErrorMessage from '@experience/shared/hooks/use-password-error
 import { PasswordPolicyChecker, passwordPolicyGuard } from '@logto/core-kit';
 import { AccountCenterControlValue } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ import { passwordSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from '../CodeFlow/index.module.scss';
 
@@ -29,7 +30,7 @@ const Password = () => {
     setVerificationId,
     setToast,
     experienceSettings,
-    setUserInfo,
+    refreshUserInfo,
   } = useContext(PageContext);
   const updatePasswordRequest = useApi(updatePassword);
   const handleError = useErrorHandler();
@@ -61,6 +62,12 @@ const Password = () => {
 
     return items.length === 0 ? undefined : t('description.password_requirements', { items, max });
   }, [passwordPolicy, t]);
+
+  useEffect(() => {
+    if (verificationId) {
+      sessionStorage.clearRouteRestore();
+    }
+  }, [verificationId]);
 
   if (
     !accountCenterSettings?.enabled ||
@@ -108,7 +115,7 @@ const Password = () => {
       return;
     }
 
-    setUserInfo((current) => ({ ...current, hasPassword: true }));
+    await refreshUserInfo();
     navigate(passwordSuccessRoute, { replace: true });
   };
 

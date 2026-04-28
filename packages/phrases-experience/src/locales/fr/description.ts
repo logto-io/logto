@@ -59,6 +59,12 @@ const description = {
     'Pour une sécurité accrue, veuillez compléter les détails du compte ci-dessous.',
   create_your_account: 'Créer votre compte',
   sign_in_to_your_account: 'Connectez-vous à votre compte',
+  device_activation: "Activation de l'appareil",
+  device_activation_description:
+    "Entrez le code affiché sur votre appareil. Assurez-vous qu'il correspond, puis continuez pour vous connecter à cet appareil.",
+  device_activation_error_description: 'Entrez le code affiché sur votre appareil.',
+  device_activation_success: 'Votre appareil est maintenant connecté !',
+  device_activation_success_description: 'Retournez sur votre appareil pour continuer.',
   no_region_code_found: 'Aucun code de région trouvé',
   verify_email: 'Vérifiez votre e-mail',
   verify_phone: 'Vérifiez votre numéro de téléphone',

@@ -59,6 +59,12 @@ const description = {
     '以下にアカウントの詳細を入力して、セキュリティを高めてください。',
   create_your_account: 'アカウントを作成する',
   sign_in_to_your_account: 'アカウントにサインインする',
+  device_activation: 'デバイスの有効化',
+  device_activation_description:
+    'デバイスに表示されているコードを入力してください。コードが一致していることを確認し、このデバイスへのサインインを続けてください。',
+  device_activation_error_description: 'デバイスに表示されているコードを入力してください。',
+  device_activation_success: 'デバイスが接続されました！',
+  device_activation_success_description: 'デバイスに戻って続行してください。',
   no_region_code_found: '地域コードが見つかりません',
   verify_email: 'Eメールを確認する',
   verify_phone: '電話番号を確認する',

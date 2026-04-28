@@ -1,7 +1,10 @@
 import { UserScope } from '@logto/core-kit';
+import { SessionGrantRevokeTarget } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { authedAdminApi } from '#src/api/api.js';
+import { deleteApplication } from '#src/api/application.js';
 import { deleteSession, getSessions } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { expectRejects } from '#src/helpers/index.js';
@@ -10,10 +13,15 @@ import {
   deleteDefaultTenantUser,
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
+import {
+  assertRefreshTokenInvalidGrant,
+  assertRefreshTokenValid,
+  createAppAndSignInWithPassword,
+  findSessionByAppId,
+} from '#src/helpers/session.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('account center session management', () => {
+describe('account center session management', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await enableAllAccountCenterFields(authedAdminApi);
@@ -111,6 +119,83 @@ devFeatureTest.describe('account center session management', () => {
         expect(sessionIds).not.toContain(sessionIdToDelete);
       }
 
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should delete session successfully with first-party grants option', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+
+      const { app: firstPartyApp, refreshToken } = await createAppAndSignInWithPassword({
+        username,
+        password,
+        isThirdParty: false,
+        scopes: [UserScope.Profile],
+      });
+
+      assert(refreshToken, new Error('No refresh token found'));
+
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Sessions],
+      });
+
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      const sessionsResponse = await getSessions(api, verificationRecordId);
+      const firstPartySession = findSessionByAppId(sessionsResponse.sessions, firstPartyApp.id);
+      const sessionIdToDelete = firstPartySession?.payload.uid;
+
+      assert(sessionIdToDelete, new Error('First-party session not found'));
+
+      await deleteSession(api, sessionIdToDelete, verificationRecordId, {
+        revokeGrantsTarget: SessionGrantRevokeTarget.FirstParty,
+      });
+
+      const sessionsAfterDeletion = await getSessions(api, verificationRecordId);
+      const sessionIds = sessionsAfterDeletion.sessions.map((session) => session.payload.uid);
+      expect(sessionIds).not.toContain(sessionIdToDelete);
+
+      await assertRefreshTokenInvalidGrant({
+        clientId: firstPartyApp.id,
+        refreshToken,
+      });
+
+      await deleteApplication(firstPartyApp.id);
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should keep third-party grants active when revoke target is first-party', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+
+      const { app: thirdPartyApp, refreshToken } = await createAppAndSignInWithPassword({
+        username,
+        password,
+        isThirdParty: true,
+        scopes: [UserScope.Profile],
+      });
+
+      assert(refreshToken, new Error('No refresh token found'));
+
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Sessions],
+      });
+
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      const sessionsResponse = await getSessions(api, verificationRecordId);
+      const thirdPartySession = findSessionByAppId(sessionsResponse.sessions, thirdPartyApp.id);
+
+      assert(thirdPartySession, new Error('Third-party session not found'));
+
+      await deleteSession(api, thirdPartySession.payload.uid, verificationRecordId, {
+        revokeGrantsTarget: SessionGrantRevokeTarget.FirstParty,
+      });
+
+      await assertRefreshTokenValid({
+        clientId: thirdPartyApp.id,
+        refreshToken,
+      });
+
+      await deleteApplication(thirdPartyApp.id);
       await deleteDefaultTenantUser(user.id);
     });
   });

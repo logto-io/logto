@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.37.1",
+  "version": "1.38.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "type": "module",
@@ -32,7 +32,8 @@
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepublishOnly": "! ls alterations/next-*",
     "prepack": "pnpm build",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {

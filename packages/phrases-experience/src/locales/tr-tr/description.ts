@@ -56,6 +56,12 @@ const description = {
     'Daha fazla güvenlik için lütfen aşağıdaki hesap ayrıntılarını tamamlayın.',
   create_your_account: 'Hesabını oluştur',
   sign_in_to_your_account: 'Hesabına giriş yap',
+  device_activation: 'Cihaz etkinleştirme',
+  device_activation_description:
+    'Cihazınızda gösterilen kodu girin. Eşleştiğinden emin olun ve bu cihazda oturum açmaya devam edin.',
+  device_activation_error_description: 'Cihazınızda görüntülenen kodu girin.',
+  device_activation_success: 'Cihazınız bağlandı!',
+  device_activation_success_description: 'Devam etmek için cihazınıza dönün.',
   no_region_code_found: 'Bölge kodu bulunamadı',
   verify_email: 'E-postanızın doğrulanması',
   verify_phone: 'Telefon numaranızın doğrulanması',

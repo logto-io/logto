@@ -5,7 +5,6 @@ import type { Nullable, Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
 import ky, { type KyInstance } from 'ky';
 
-import { submitInteraction } from '#src/api/index.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 
 import { MemoryStorage } from './storage.js';
@@ -202,7 +201,9 @@ export default class MockClient {
   }
 
   public async submitInteraction() {
-    return submitInteraction(this.api, this.interactionCookie);
+    return this.api
+      .post('experience/submit', { headers: { cookie: this.interactionCookie } })
+      .json<{ redirectTo: string }>();
   }
 
   private readonly consent = async () => {

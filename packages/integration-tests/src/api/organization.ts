@@ -46,8 +46,10 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     });
   }
 
-  async addUsers(id: string, userIds: string[]): Promise<void> {
-    await authedAdminApi.post(`${this.path}/${id}/users`, { json: { userIds } });
+  async addUsers(id: string, userIds: string[]): Promise<{ userIds: string[] }> {
+    return authedAdminApi
+      .post(`${this.path}/${id}/users`, { json: { userIds } })
+      .json<{ userIds: string[] }>();
   }
 
   async replaceUsers(id: string, userIds: string[]): Promise<void> {
@@ -71,10 +73,12 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
     userId: string,
     organizationRoleIds: string[],
     organizationRoleNames?: string[]
-  ): Promise<void> {
-    await authedAdminApi.post(`${this.path}/${id}/users/${userId}/roles`, {
-      json: { organizationRoleIds, organizationRoleNames },
-    });
+  ): Promise<{ organizationRoleIds: string[] }> {
+    return authedAdminApi
+      .post(`${this.path}/${id}/users/${userId}/roles`, {
+        json: { organizationRoleIds, organizationRoleNames },
+      })
+      .json<{ organizationRoleIds: string[] }>();
   }
 
   async replaceUserRoles(

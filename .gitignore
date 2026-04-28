@@ -8,6 +8,8 @@ node_modules
 
 # testing
 /packages/**/coverage
+/.*coverage
+.nyc_output
 
 # report
 /report.json
@@ -32,6 +34,7 @@ cache
 .history
 fly.toml
 dump.rdb
+.*tmp
 
 # Claude local files
 .claude/
@@ -41,6 +44,4 @@ dump.rdb
 
 # console auto generated files
 /packages/console/src/consts/jwt-customizer-type-definition.ts
-
-# Temporarily ignore SAML OpenAPI spec file (will be needed later)
-packages/core/src/saml-applications/routes/index.openapi.json
+packages/connectors/connector-whatsapp/test-send.mjs

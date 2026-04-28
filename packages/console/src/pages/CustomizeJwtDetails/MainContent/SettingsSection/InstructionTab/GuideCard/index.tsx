@@ -16,6 +16,7 @@ export enum CardType {
   FetchExternalData = 'fetch_external_data',
   EnvironmentVariables = 'environment_variables',
   ApiContext = 'api_context',
+  ErrorHandling = 'error_handling',
 }
 
 type GuardCardProps = {

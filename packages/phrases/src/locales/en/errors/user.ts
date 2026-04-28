@@ -30,6 +30,7 @@ const user = {
   missing_profile: 'You need to provide additional info before signing-in.',
   role_exists: 'The role id {{roleId}} is already been added to this user',
   invalid_role_type: 'Invalid role type, can not assign machine-to-machine role to user.',
+  suggest_mfa: 'For better account security, we recommend binding MFA to your account.',
   missing_mfa: 'You need to bind additional MFA before signing-in.',
   totp_already_in_use: 'TOTP is already in use.',
   backup_code_already_in_use: 'Backup code is already in use.',
@@ -41,6 +42,7 @@ const user = {
   username_required: 'Username is a required identifier, you can not set it to null.',
   email_or_phone_required:
     'Email address or phone number is a required identifier, at least one is required.',
+  last_sign_in_method_required: 'You need to keep at least one identifier in your account.',
   email_required: 'Email address is a required identifier, you can not set it to null.',
   phone_required: 'Phone number is a required identifier, you can not set it to null.',
   enterprise_sso_identity_not_exists:

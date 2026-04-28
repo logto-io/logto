@@ -82,7 +82,22 @@ describe('smoke testing for console admin account creation and sign-in', () => {
 
     await expectNavigation(expect(page).toClick('button[name=submit]'));
 
-    expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
+    const expectedPathname = isDevFeaturesEnabled ? 'console/onboarding' : 'console/get-started';
+    expect(page.url()).toBe(new URL(expectedPathname, logtoConsoleUrl).href);
+
+    if (isDevFeaturesEnabled) {
+      await expect(page).toFill('input[type=email]', 'oss-admin@example.com');
+      await expect(page).toFill('input[placeholder="Acme.co"]', 'Acme');
+      await expect(page).toClick('div[role=radio]', { text: '50-199' });
+      await expect(page).toClick('button', { text: 'Next' });
+      await page.waitForFunction(
+        (expectedUrl) => window.location.href === expectedUrl,
+        {},
+        new URL('console/get-started', logtoConsoleUrl).href
+      );
+
+      expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
+    }
   });
 
   it('should have html attributes "lang=en" and "dir=ltr" by default', async () => {

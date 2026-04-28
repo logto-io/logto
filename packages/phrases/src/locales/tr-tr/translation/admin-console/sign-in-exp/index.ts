@@ -45,6 +45,8 @@ const sign_in_exp = {
     hide_logto_branding: 'Logto markasını gizle',
     hide_logto_branding_description:
       '"Powered by Logto" ibaresini kaldırın. Temiz ve profesyonel bir oturum açma deneyimiyle yalnızca kendi markanızı öne çıkarın.',
+    hide_logto_branding_oss_note:
+      'Bu özellik <a>Logto Cloud</a> içinde yerel olarak kullanılabilir.',
   },
   branding_uploads: {
     app_logo: {
@@ -80,6 +82,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'Özelleştirilmiş UI',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'Özelleştirilmiş CSS',
     css_code_editor_description1: 'Özelleştirilmiş CSS örneğine bakın.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -89,15 +92,19 @@ const sign_in_exp = {
     bring_your_ui_title: "UI'nizi Getirin",
     bring_your_ui_description:
       "Logto'nun önceden oluşturulmuş UI'sini kendi kodunuzla değiştirmek için sıkıştırılmış bir paket (.zip) yükleyin. <a>Daha fazla bilgi edinin</a>",
+    bring_your_ui_oss_description: 'Oturum açma arayüzünü kendi kodunuzla özelleştirin.',
+    bring_your_ui_oss_card_description:
+      "Özel oturum açma arayüzünüzü doğrudan <a>Logto Cloud</a>'a yükleyin. Fork almanıza veya yeniden dağıtmanıza gerek yok.",
+    bring_your_ui_oss_try_cloud: "Cloud'u deneyin",
     preview_with_bring_your_ui_description:
       'Özelleştirilmiş UI varlıklarınız başarıyla yüklendi ve şimdi sunuluyor. Sonuç olarak, yerleşik önizleme penceresi devre dışı bırakıldı.\nKişiselleştirilmiş oturum açma UI\'nizi test etmek için "Canlı Önizleme" düğmesine tıklayarak yeni bir tarayıcı sekmesinde açın.',
   },
   account_center: {
     title: 'HESAP MERKEZİ',
     description: "Hesap merkezi akışlarını Logto API'leriyle özelleştirin.",
-    enable_account_api: "Account API'yi etkinleştir",
+    enable_account_api: "Hesap merkezi ve Account API'yi etkinleştir",
     enable_account_api_description:
-      "Account API'yi etkinleştirerek özel bir hesap merkezi oluşturun ve Logto Management API'sini kullanmadan son kullanıcılara doğrudan API erişimi sağlayın.",
+      "Son kullanıcıya yönelik Account API'yi ve Logto'nun hazır hesap merkezini birlikte etkinleştirir. Kapatıldığında bu iki özellik de kullanılamaz.",
     field_options: {
       off: 'Kapalı',
       edit: 'Düzenle',
@@ -171,29 +178,47 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Account API aracılığıyla passkey kaydedilmesine izin verilen ön uç uygulamalarınızın alan adlarını ekleyin.',
     webauthn_related_origins_error: 'Kaynak https:// veya http:// ile başlamalıdır',
+    delete_account_url: 'Hesabı sil',
+    delete_account_url_description:
+      'Hesap silme işlemini özel mantıkla yönetmek için kendi uç nokta URL’nizi sağlayın.',
     prebuilt_ui: {
       title: 'ÖN TANIMLI ARAYÜZÜ ENTEGRE ET',
       description:
-        'Hazır doğrulama ve güvenlik ayarı akışlarını ön tanımlı arayüzle hızlıca entegre edin.',
+        'Hazır hesap merkezi, güvenlik doğrulaması veya tek bir profil güncelleme akışını ön tanımlı arayüzle hızlıca entegre edin. Hesap merkezi URL’nizi oluşturmak için alan adınızı rota ile birleştirmeniz yeterlidir (örneğin, https://auth.foo.com/account/email).',
       permission_notice:
         'Bu önceden oluşturulmuş akışları entegre etmek için aşağıdaki ayarlarda ilgili Hesap API izinlerini <strong>Düzenle</strong> olarak ayarlayın.',
+      account_center_title: 'Hazır hesap merkezini entegre et',
+      account_center_description:
+        'Kullanıcıları hesap merkezine yönlendirerek e-posta, telefon, kullanıcı adı, parola, MFA ve bağlı hesaplar gibi güvenlik ayarlarını yönetmelerini sağlayın.',
       flows_title: 'Hazır güvenlik ayarı akışlarını entegre et',
+      single_task_flows_title: 'Hazır tek görev akışını entegre et',
       flows_description:
-        "Hesap ayar URL'nizi oluşturmak için alan adınızı rota ile birleştirin (örneğin, https://auth.foo.com/account/email). Başarılı bir güncellemeden sonra kullanıcıları uygulamanıza geri döndürmek için isteğe bağlı olarak bir `redirect=` URL parametresi ekleyin.",
+        "Hesap ayar URL'nizi oluşturmak için alan adınızı rota ile birleştirin (örneğin, https://auth.foo.com/account/email). İsteğe bağlı olarak `redirect=` ile başarılı bir güncellemeden sonra kullanıcıları uygulamanıza geri döndürebilir, `show_success=true` ile başarı sayfasını görünür tutabilir, `ui_locales=` ile varsayılan dili geçersiz kılabilir veya `identifier=` ile tanımlayıcı giriş alanını önceden doldurabilirsiniz.",
+      single_task_flows_description:
+        'Kullanıcıları doğrudan belirli bir akışa yönlendirin (örneğin, e-posta bağlama). İsteğe bağlı olarak `redirect=` ile başarılı bir güncellemeden sonra kullanıcıları uygulamanıza geri döndürebilir, `show_success=true` ile başarı sayfasını görünür tutabilir, `ui_locales=` ile varsayılan dili geçersiz kılabilir veya `identifier=` ile tanımlayıcı giriş alanını önceden doldurabilirsiniz.',
       tooltips: {
         email: 'Birincil e-posta adresinizi güncelleyin',
         phone: 'Birincil telefon numaranızı güncelleyin',
         username: 'Kullanıcı adınızı güncelleyin',
         password: 'Yeni bir parola ayarlayın',
+        social: 'Oturum açmak için bir sosyal hesap bağlayın',
+        social_remove: 'Bağlı sosyal hesabı kaldırın',
         authenticator_app:
           'Çok faktörlü kimlik doğrulama için yeni bir doğrulayıcı uygulaması ayarlayın',
+        authenticator_app_replace: 'Mevcut doğrulayıcı uygulamanızı yeni biriyle değiştirin',
         passkey_add: 'Yeni bir passkey kaydedin',
         passkey_manage: "Mevcut passkey'lerinizi yönetin veya yenilerini ekleyin",
         backup_codes_generate: 'Yeni bir 10 yedek kod seti oluşturun',
         backup_codes_manage: 'Mevcut yedek kodlarınızı görüntüleyin veya yenilerini oluşturun',
+        account_center:
+          'E-posta, telefon, kullanıcı adı, parola, MFA ve bağlı hesaplar gibi güvenlik ayarlarını yönetmek için hesap merkezine erişin',
       },
       customize_note: 'Hazır deneyimi istemiyor musunuz? Bunun yerine, Akın API ile',
       customize_link: 'akışlarınızı tamamen özelleştirebilirsiniz.',
+    },
+    custom_css: {
+      title: 'Özel CSS',
+      description: 'Özel CSS kullanarak hesap merkezinin görünümünü özelleştirin.',
     },
   },
   sign_up_and_sign_in,

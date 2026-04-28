@@ -12,7 +12,7 @@ import {
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { mockUser } from '#src/__mocks__/user.js';
+import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
@@ -23,6 +23,7 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
 
 import { EmailCodeVerification } from './verifications/code-verification.js';
+import { SignInPasskeyVerification } from './verifications/web-authn-verification.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -118,7 +119,8 @@ const createSignInInteraction = ({
   );
   // @ts-expect-error --mock test context
   const signInContext: WithHooksAndLogsContext = {
-    assignInteractionHookResult: jest.fn(),
+    assignReleaseOnSuccessInteractionHookResult: jest.fn(),
+    assignReleaseAnywayInteractionHookResult: jest.fn(),
     appendDataHookContext: jest.fn(),
     appendExceptionHookContext: jest.fn(),
     ...baseContext,
@@ -165,7 +167,8 @@ describe('ExperienceInteraction class', () => {
 
   // @ts-expect-error --mock test context
   const ctx: WithHooksAndLogsContext = {
-    assignInteractionHookResult: jest.fn(),
+    assignReleaseOnSuccessInteractionHookResult: jest.fn(),
+    assignReleaseAnywayInteractionHookResult: jest.fn(),
     appendDataHookContext: jest.fn(),
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
@@ -206,6 +209,9 @@ describe('ExperienceInteraction class', () => {
         {
           id: 'uid',
           primaryEmail: mockEmail,
+          logtoConfig: {
+            mfa: { enabled: false },
+          },
         },
         { isInteractive: true, roleNames: ['user', 'default:admin'] }
       );
@@ -222,15 +228,19 @@ describe('ExperienceInteraction class', () => {
   });
 
   describe('sign-in submission', () => {
-    it('should skip geo context recording when dev features are disabled', async () => {
+    it('should record geo context when dev features are disabled', async () => {
       setDevFeaturesEnabled(false);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction();
 
       await experienceInteraction.submit();
 
-      expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
-      expect(userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
+      expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+        mockUser.id,
+        37.7749,
+        -122.4194
+      );
+      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
     });
 
     it('should record geo location and sign-in country when dev features are enabled', async () => {
@@ -389,15 +399,43 @@ describe('ExperienceInteraction class', () => {
       expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
     });
 
-    it('should skip recording for non-sign-in interactions', async () => {
+    it('should record geo context for register interactions', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction({ interactionEvent: InteractionEvent.Register });
 
       await experienceInteraction.submit();
 
-      expect(userGeoLocations.upsertUserGeoLocation).not.toHaveBeenCalled();
-      expect(userSignInCountries.upsertUserSignInCountry).not.toHaveBeenCalled();
+      expect(userGeoLocations.upsertUserGeoLocation).toHaveBeenCalledWith(
+        mockUser.id,
+        37.7749,
+        -122.4194
+      );
+      expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
+    });
+  });
+
+  describe('guardMfaVerificationStatus', () => {
+    it('skips MFA verification check when sign-in passkey is already verified', async () => {
+      const { libraries, queries } = tenant;
+      const interactionDetails = {
+        result: {
+          interactionEvent: InteractionEvent.SignIn,
+          userId: mockUserWithMfaVerifications.id,
+        },
+      } as unknown as Interaction;
+      const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+
+      experienceInteraction.setVerificationRecord(
+        new SignInPasskeyVerification(libraries, queries, {
+          id: 'mock-sign-in-passkey-verification-id',
+          type: VerificationType.SignInPasskey,
+          verified: true,
+          userId: mockUserWithMfaVerifications.id,
+        })
+      );
+
+      await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.not.toThrow();
     });
   });
 });

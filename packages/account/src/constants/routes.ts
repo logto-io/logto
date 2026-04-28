@@ -1,3 +1,5 @@
+export const securityRoute = '/security';
+export const profileRoute = '/profile';
 export const emailRoute = '/email';
 export const phoneRoute = '/phone';
 export const emailSuccessRoute = '/email/success';
@@ -7,7 +9,9 @@ export const usernameSuccessRoute = '/username/success';
 export const passwordRoute = '/password';
 export const passwordSuccessRoute = '/password/success';
 export const authenticatorAppRoute = '/authenticator-app';
+export const authenticatorAppReplaceRoute = '/authenticator-app/replace';
 export const authenticatorAppSuccessRoute = '/authenticator-app/success';
+export const authenticatorAppReplaceSuccessRoute = '/authenticator-app/replace/success';
 export const backupCodesGenerateRoute = '/backup-codes/generate';
 export const backupCodesRegenerateRoute = '/backup-codes/regenerate';
 export const backupCodesManageRoute = '/backup-codes/manage';
@@ -15,3 +19,13 @@ export const backupCodesSuccessRoute = '/backup-codes/success';
 export const passkeyAddRoute = '/passkey/add';
 export const passkeyManageRoute = '/passkey/manage';
 export const passkeySuccessRoute = '/passkey/success';
+export const verifiedActionRoute = '/verified-action';
+export const socialSuccessRoute = '/social/success';
+export const socialRoutePrefix = '/social';
+export const socialCallbackRoutePrefix = '/callback/social';
+
+export const getSocialAddRoute = (connectorId: string) => `${socialRoutePrefix}/${connectorId}`;
+export const getSocialRemoveRoute = (connectorId: string) =>
+  `${socialRoutePrefix}/${connectorId}/remove`;
+export const getSocialCallbackRoute = (connectorId: string) =>
+  `${socialCallbackRoutePrefix}/${connectorId}`;

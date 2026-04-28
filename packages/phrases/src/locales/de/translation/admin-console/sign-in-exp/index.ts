@@ -45,6 +45,7 @@ const sign_in_exp = {
     hide_logto_branding: 'Logto-Branding ausblenden',
     hide_logto_branding_description:
       'Entferne "Powered by Logto". Präsentiere deine Marke exklusiv mit einer klaren, professionellen Anmeldeerfahrung.',
+    hide_logto_branding_oss_note: 'Diese Funktion ist nativ in <a>Logto Cloud</a> verfügbar.',
   },
   branding_uploads: {
     app_logo: {
@@ -80,6 +81,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'Benutzerdefinierte UI',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'Benutzerdefiniertes CSS',
     css_code_editor_description1: 'Siehe das Beispiel für benutzerdefiniertes CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -89,15 +91,19 @@ const sign_in_exp = {
     bring_your_ui_title: 'Bringen Sie Ihr UI',
     bring_your_ui_description:
       'Laden Sie ein komprimiertes Paket (.zip) hoch, um die vorgefertigte Benutzeroberfläche von Logto durch Ihren eigenen Code zu ersetzen. <a>Erfahren Sie mehr</a>',
+    bring_your_ui_oss_description: 'Passen Sie die Anmeldeoberfläche mit Ihrem eigenen Code an.',
+    bring_your_ui_oss_card_description:
+      'Laden Sie Ihre benutzerdefinierte Anmeldeoberfläche direkt in <a>Logto Cloud</a> hoch. Kein Fork und kein erneutes Deployment erforderlich.',
+    bring_your_ui_oss_try_cloud: 'Cloud ausprobieren',
     preview_with_bring_your_ui_description:
       'Ihre benutzerdefinierten UI-Assets wurden erfolgreich hochgeladen und werden jetzt bereitgestellt. Daher wurde das eingebaute Vorschaufenster deaktiviert.\nUm Ihre personalisierte Anmelde-Benutzeroberfläche zu testen, klicken Sie auf die Schaltfläche "Live-Vorschau", um sie in einem neuen Browser-Tab zu öffnen.',
   },
   account_center: {
     title: 'KONTOZENTRUM',
     description: 'Passen Sie Ihre Kontozentrums-Workflows mit den Logto-APIs an.',
-    enable_account_api: 'Account-API aktivieren',
+    enable_account_api: 'Kontozentrum und Account-API aktivieren',
     enable_account_api_description:
-      'Aktivieren Sie die Account-API, um ein individuelles Kontozentrum aufzubauen und Endnutzer*innen direkten API-Zugriff ohne Logto Management API zu ermöglichen.',
+      'Aktiviert sowohl die benutzerseitige Account-API als auch das vorgefertigte Kontocenter von Logto. Wenn dies deaktiviert ist, sind beide Funktionen nicht verfügbar.',
     field_options: {
       off: 'Aus',
       edit: 'Bearbeiten',
@@ -172,32 +178,51 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Fügen Sie die Domains Ihrer Frontend-Anwendungen hinzu, die über die Account-API Passkeys registrieren dürfen.',
     webauthn_related_origins_error: 'Der Ursprung muss mit https:// oder http:// beginnen',
+    delete_account_url: 'Konto löschen',
+    delete_account_url_description:
+      'Geben Sie Ihre eigene Endpunkt-URL an, um die Kontolöschung mit benutzerdefinierter Logik zu verarbeiten.',
     prebuilt_ui: {
       title: 'INTEGRATE PREBUILT UI',
       description:
-        'Schnell vorgefertigte Verifizierungs- und Sicherheitseinstellungen mit vorgefertigter Benutzeroberfläche integrieren.',
+        'Integrieren Sie schnell vorgefertigte Kontocenter, Sicherheitsverifizierungen oder einzelne Profilaktualisierungsabläufe mit vorgefertigter Benutzeroberfläche. Kombinieren Sie einfach Ihre Domain mit der Route, um Ihre Kontocenter-URL zu bilden (z. B. https://auth.foo.com/account/email).',
       permission_notice:
         'Um diese vorgefertigten Flows zu integrieren, setzen Sie die entsprechenden Account-API-Berechtigungen in den Einstellungen unten auf <strong>Bearbeiten</strong>.',
+      account_center_title: 'Vorgefertigtes Kontocenter integrieren',
+      account_center_description:
+        'Leiten Sie Benutzer zum Kontocenter, um Sicherheitseinstellungen wie E-Mail, Telefon, Benutzername, Passwort, MFA und verbundene Konten zu verwalten.',
       flows_title: 'Vorgefertigte Sicherheits-Einstellungen integrieren',
+      single_task_flows_title: 'Vorgefertigten Einzelaufgaben-Ablauf integrieren',
       flows_description:
-        'Kombinieren Sie Ihre Domain mit der Route, um Ihre Konto-Einstellungs-URL zu bilden (z. B. https://auth.foo.com/account/email). Optional können Sie einen `redirect=` URL-Parameter hinzufügen, um Benutzer nach erfolgreicher Aktualisierung zurück zu Ihrer App zu leiten.',
+        'Kombinieren Sie Ihre Domain mit der Route, um Ihre Konto-Einstellungs-URL zu bilden (z. B. https://auth.foo.com/account/email). Optional können Sie `redirect=` hinzufügen, um Benutzer nach erfolgreicher Aktualisierung zurück zu Ihrer App zu leiten, `show_success=true`, um die Erfolgsseite sichtbar zu halten, `ui_locales=`, um die Standardsprache zu überschreiben, oder `identifier=`, um das Eingabefeld für den Bezeichner vorab auszufüllen.',
+      single_task_flows_description:
+        'Leiten Sie Benutzer direkt in einen bestimmten Ablauf (z. B. E-Mail-Verknüpfung). Optional können Sie `redirect=` hinzufügen, um Benutzer nach erfolgreicher Aktualisierung zurück zu Ihrer App zu leiten, `show_success=true`, um die Erfolgsseite sichtbar zu halten, `ui_locales=`, um die Standardsprache zu überschreiben, oder `identifier=`, um das Eingabefeld für den Bezeichner vorab auszufüllen.',
       tooltips: {
         email: 'Aktualisieren Sie Ihre primäre E-Mail-Adresse',
         phone: 'Aktualisieren Sie Ihre primäre Telefonnummer',
         username: 'Aktualisieren Sie Ihren Benutzernamen',
         password: 'Setzen Sie ein neues Passwort',
+        social: 'Verknüpfen Sie ein Social-Konto für die Anmeldung',
+        social_remove: 'Entfernen Sie ein verknüpftes Social-Konto',
         authenticator_app:
           'Richten Sie eine neue Authentifizierungs-App für die Multi-Faktor-Authentifizierung ein',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: 'Registrieren Sie einen neuen Sicherheitsschlüssel',
         passkey_manage:
           'Verwalten Sie Ihre vorhandenen Sicherheitsschlüssel oder fügen Sie neue hinzu',
         backup_codes_generate: 'Erstellen Sie ein neues Set von 10 Backup-Codes',
         backup_codes_manage:
           'Sehen Sie sich Ihre verfügbaren Backup-Codes an oder erstellen Sie neue',
+        account_center:
+          'Greifen Sie auf das Kontocenter zu, um Sicherheitseinstellungen wie E-Mail, Telefon, Benutzername, Passwort, MFA und verbundene Konten zu verwalten',
       },
       customize_note:
         'Möchten Sie nicht das vorgefertigte Erlebnis? Sie können mit der Account-API stattdessen vollständig',
       customize_link: 'Ihre Flows anpassen.',
+    },
+    custom_css: {
+      title: 'CSS anpassen',
+      description:
+        'Passen Sie das Erscheinungsbild des Kontocenters mit benutzerdefiniertem CSS an.',
     },
   },
   sign_up_and_sign_in,

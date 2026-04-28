@@ -1,10 +1,12 @@
 import { AccountCenterControlValue, type SignInExperience } from '@logto/schemas';
 import { useCallback, useMemo, type ChangeEvent } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
+import { isDevFeaturesEnabled } from '@/consts/env';
+import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import type { Option } from '@/ds-components/Select';
@@ -19,6 +21,7 @@ import type {
 import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper';
 
 import AccountCenterField from './AccountCenterField';
+import DeleteAccountUrlField from './DeleteAccountUrlField';
 import IntegratePrebuiltUi from './IntegratePrebuiltUi';
 import SecretVaultSection from './SecretVaultSection';
 import WebauthnRelatedOriginsField from './WebauthnRelatedOriginsField';
@@ -35,6 +38,7 @@ function AccountCenter({ isActive, data }: Props) {
   const {
     watch,
     setValue,
+    control,
     formState: { isSubmitting },
   } = useFormContext<SignInExperienceForm & { accountCenter: AccountCenterFormValues }>();
 
@@ -148,12 +152,37 @@ function AccountCenter({ isActive, data }: Props) {
               </FormField>
             ))}
             {section.key === 'accountSecurity' && (
-              <WebauthnRelatedOriginsField isAccountApiEnabled={isAccountApiEnabled} />
+              <>
+                <WebauthnRelatedOriginsField isAccountApiEnabled={isAccountApiEnabled} />
+                {isDevFeaturesEnabled && (
+                  <DeleteAccountUrlField isAccountApiEnabled={isAccountApiEnabled} />
+                )}
+              </>
             )}
           </div>
         </FormCard>
       ))}
       <SecretVaultSection isAccountApiEnabled={isAccountApiEnabled} />
+      <FormCard
+        title="sign_in_exp.account_center.custom_css.title"
+        description="sign_in_exp.account_center.custom_css.description"
+      >
+        <FormField title="sign_in_exp.custom_ui.css_code_editor_title">
+          <Controller
+            name="accountCenter.customCss"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <CodeEditor
+                className={styles.cssEditor}
+                language="scss"
+                value={value ?? undefined}
+                placeholder={t('sign_in_exp.custom_ui.css_code_editor_content_placeholder')}
+                onChange={onChange}
+              />
+            )}
+          />
+        </FormField>
+      </FormCard>
     </SignInExperienceTabWrapper>
   );
 }

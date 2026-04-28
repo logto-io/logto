@@ -1,5 +1,6 @@
 import {
   type UserMfaVerificationResponse,
+  type UserMfaSettingsResponse,
   MfaFactor,
   type WebAuthnRegistrationOptions,
   type BindWebAuthnPayload,
@@ -63,6 +64,17 @@ export const addTotpMfa = async (
 ) => {
   await createAuthenticatedKy(accessToken).post('/api/my-account/mfa-verifications', {
     json: { type: MfaFactor.TOTP, ...payload },
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};
+
+export const createOrReplaceTotpMfa = async (
+  accessToken: string,
+  verificationRecordId: string,
+  payload: { secret: string; code: string }
+) => {
+  await createAuthenticatedKy(accessToken).put('/api/my-account/mfa-verifications/totp', {
+    json: payload,
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 };
@@ -141,4 +153,23 @@ export const updateWebAuthnName = async (
       headers: { [verificationRecordIdHeader]: verificationRecordId },
     }
   );
+};
+
+export const getMfaSettings = async (accessToken: string): Promise<UserMfaSettingsResponse> => {
+  return createAuthenticatedKy(accessToken)
+    .get('/api/my-account/mfa-settings')
+    .json<UserMfaSettingsResponse>();
+};
+
+export const updateMfaSettings = async (
+  accessToken: string,
+  verificationRecordId: string,
+  payload: { skipMfaOnSignIn: boolean }
+): Promise<UserMfaSettingsResponse> => {
+  return createAuthenticatedKy(accessToken)
+    .patch('/api/my-account/mfa-settings', {
+      json: payload,
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    })
+    .json<UserMfaSettingsResponse>();
 };

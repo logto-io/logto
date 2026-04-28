@@ -26,6 +26,8 @@ const oidcModelInstances = {
   upsertInstance: jest.fn(),
   findPayloadById: jest.fn(),
   findPayloadByPayloadField: jest.fn(),
+  findPayloadByUid: jest.fn(),
+  findPayloadByUserCode: jest.fn(),
   consumeInstanceById: jest.fn(),
   destroyInstanceById: jest.fn(),
   revokeInstanceByGrantId: jest.fn(),
@@ -34,7 +36,8 @@ const {
   consumeInstanceById,
   destroyInstanceById,
   findPayloadById,
-  findPayloadByPayloadField,
+  findPayloadByUid,
+  findPayloadByUserCode,
   revokeInstanceByGrantId,
   upsertInstance,
 } = oidcModelInstances;
@@ -107,12 +110,12 @@ describe('postgres Adapter', () => {
     expect(findPayloadById).toBeCalledWith(modelName, id);
 
     await adapter.findByUserCode(userCode);
-    expect(findPayloadByPayloadField).toBeCalledWith(modelName, 'userCode', userCode);
+    expect(findPayloadByUserCode).toBeCalledWith(modelName, userCode);
 
     jest.clearAllMocks();
 
     await adapter.findByUid(uid);
-    expect(findPayloadByPayloadField).toBeCalledWith(modelName, 'uid', uid);
+    expect(findPayloadByUid).toBeCalledWith(modelName, uid);
 
     await adapter.consume(id);
     expect(consumeInstanceById).toBeCalledWith(modelName, id);

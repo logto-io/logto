@@ -1,12 +1,21 @@
 const tenants = {
   title: '設定',
   description: 'テナントの設定を効率的に管理し、ドメインをカスタマイズします。',
+  oss_description:
+    'こちらでアカウント設定を変更し、個人情報を管理して、アカウントの安全性を確保してください。',
   tabs: {
     settings: '設定',
     members: 'メンバー',
     domains: 'ドメイン',
+    oidc_configs: 'OIDC 設定',
     subscription: 'プランと請求',
     billing_history: '請求履歴',
+  },
+  members: {
+    card_title: 'Logto Cloud でテナントをより安全に管理',
+    card_description:
+      '1つの管理者アカウントを共有せずに、テナントに管理者やコラボレーターを追加できます。',
+    card_action: 'Logto Cloud を見る',
   },
   settings: {
     title: '設定',

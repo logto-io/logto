@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import InlineUpsell from '@/components/InlineUpsell';
 import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
@@ -27,6 +28,7 @@ function PasskeySignInForm() {
   } = useContext(SubscriptionDataContext);
   const isPasskeySignInEnabled = currentSubscriptionQuota.passkeySignInEnabled || !isCloud;
   const isPaidTenant = isPaidPlan(planId, isEnterprisePlan);
+  const watchEnableSwitch = watch('passkeySignIn.enabled');
 
   return (
     <Card>
@@ -48,7 +50,7 @@ function PasskeySignInForm() {
           )}
         />
       </FormField>
-      {watch('passkeySignIn.enabled') && (
+      {watchEnableSwitch && (
         <FormField title="sign_in_exp.sign_up_and_sign_in.passkey_sign_in.prompts">
           <div className={styles.checkboxes}>
             <Controller
@@ -80,6 +82,13 @@ function PasskeySignInForm() {
             />
           </div>
         </FormField>
+      )}
+      {!isPasskeySignInEnabled && (
+        <InlineUpsell
+          for="passkey_sign_in"
+          actionButtonText="upsell.view_plans"
+          className={styles.inlineNote}
+        />
       )}
     </Card>
   );

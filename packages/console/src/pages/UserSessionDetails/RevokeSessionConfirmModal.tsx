@@ -1,3 +1,4 @@
+import { SessionGrantRevokeTarget } from '@logto/schemas';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -31,9 +32,10 @@ function RevokeSessionConfirmModal({
     setIsLoading(true);
 
     try {
+      // Product requirement: console-initiated revokes only invalidate first-party app grants.
       await api.delete(`api/users/${userId}/sessions/${sessionId}`, {
         searchParams: new URLSearchParams({
-          revokeGrants: 'true',
+          revokeGrantsTarget: SessionGrantRevokeTarget.FirstParty,
         }),
       });
     } finally {

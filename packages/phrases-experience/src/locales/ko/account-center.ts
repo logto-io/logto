@@ -3,6 +3,20 @@ const account_center = {
     title: '페이지를 찾을 수 없음',
     description: '이 페이지는 사용할 수 없습니다.',
   },
+  page: {
+    title: '계정',
+    security_title: '보안',
+    security_description: '계정 보안을 위해 여기에서 계정 설정을 변경하세요.',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
+    support: '지원',
+  },
   verification: {
     title: '보안 인증',
     description: '계정 보안을 위해 본인인지 확인하세요. 신원을 인증할 방법을 선택해 주세요.',
@@ -11,6 +25,9 @@ const account_center = {
     error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
     verification_required: '인증이 만료되었습니다. 다시 신원을 확인해주세요.',
     try_another_method: '다른 방법으로 인증하기',
+    no_available_methods_title: '사용 가능한 인증 방법이 없습니다',
+    no_available_methods_description:
+      '설정된 인증 방법이 없습니다. 먼저 계정에 비밀번호, 이메일 또는 전화번호를 추가해 주세요.',
   },
   password_verification: {
     title: '비밀번호 확인',
@@ -51,6 +68,61 @@ const account_center = {
     title: '사용자 이름 설정',
     description: '사용자 이름은 문자, 숫자, 밑줄(_)만 사용할 수 있습니다.',
     success: '사용자 이름이 성공적으로 업데이트되었습니다.',
+  },
+  security: {
+    add: '추가',
+    change: '변경',
+    remove: '삭제',
+    not_set: '설정되지 않음',
+    social_sign_in: '소셜 로그인',
+    social_not_linked: '연결되지 않음',
+    email_phone: '이메일 / 전화번호',
+    email: '이메일',
+    phone: '전화번호',
+    password: '비밀번호',
+    configured: '설정됨',
+    not_configured: '설정되지 않음',
+    two_step_verification: '2단계 인증',
+    authenticator_app: '인증 앱',
+    passkeys: '패스키',
+    backup_codes: '백업 코드',
+    email_verification_code: '이메일 인증 코드',
+    phone_verification_code: '전화 인증 코드',
+    passkeys_count_one: '{{count}}개의 패스키',
+    passkeys_count_other: '{{count}}개의 패스키',
+    backup_codes_count_one: '{{count}}개의 코드',
+    backup_codes_count_other: '{{count}}개의 코드',
+    view: '보기',
+    manage: '관리',
+    turn_on_2_step_verification: '2단계 인증 켜기',
+    turn_on_2_step_verification_description:
+      '추가 보안 계층을 추가합니다. 로그인 시 두 번째 인증 단계가 요청됩니다.',
+    turn_off_2_step_verification: '2단계 인증 끄기',
+    turn_off_2_step_verification_description:
+      '2단계 인증을 비활성화하면 로그인 시 추가 보호 계층이 제거됩니다. 계속하시겠습니까?',
+    disable_2_step_verification: '비활성화',
+    no_verification_method_warning:
+      '두 번째 인증 방법을 추가하지 않았습니다. 로그인 시 2단계 인증을 활성화하려면 최소 하나를 추가하세요.',
+    account_removal: '계정 삭제',
+    delete_your_account: '내 계정 삭제',
+    delete_account: '계정 삭제',
+    remove_email_confirmation_title: '이메일 주소 제거',
+    remove_email_confirmation_description:
+      '제거하면 이 이메일 주소로 더 이상 로그인할 수 없습니다. 계속하시겠습니까?',
+    remove_phone_confirmation_title: '전화번호 제거',
+    remove_phone_confirmation_description:
+      '제거하면 이 전화번호로 더 이상 로그인할 수 없습니다. 계속하시겠습니까?',
+    email_removed: '이메일 주소가 성공적으로 제거되었습니다.',
+    phone_removed: '전화번호가 성공적으로 제거되었습니다.',
+  },
+  social: {
+    linked: '{{connector}}이(가) 성공적으로 연결되었습니다.',
+    not_enabled:
+      '이 소셜 로그인 방법은 활성화되어 있지 않습니다. 도움이 필요하면 관리자에게 문의하세요.',
+    removed: '{{connector}}이(가) 성공적으로 제거되었습니다.',
+    remove_confirmation_title: '소셜 계정 제거',
+    remove_confirmation_description:
+      '{{connector}}을(를) 제거하면 다시 추가하기 전까지 해당 계정으로 로그인하지 못할 수 있습니다.',
   },
   password: {
     title: '비밀번호 설정',
@@ -125,6 +197,10 @@ const account_center = {
     totp: {
       title: '인증 앱 추가됨!',
       description: '인증 앱이 계정에 성공적으로 연결되었습니다.',
+    },
+    totp_replaced: {
+      title: '인증 앱이 교체되었습니다!',
+      description: '인증 앱이 성공적으로 교체되었습니다.',
     },
     backup_code: {
       title: '백업 코드가 생성되었습니다!',

@@ -1,8 +1,11 @@
 import DynamicT from '@experience/shared/components/DynamicT';
 import NavBar from '@experience/shared/components/NavBar';
 import PageMeta from '@experience/shared/components/PageMeta';
+import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
 import { type ReactElement } from 'react';
+
+import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from './index.module.scss';
 
@@ -30,17 +33,19 @@ const SecondaryPageLayout = ({
   children,
 }: Props) => {
   return (
-    <div className={styles.wrapper}>
+    <div className={classNames(styles.wrapper, layoutClassNames.secondaryPageWrapper)}>
       <PageMeta titleKey={title} />
       <NavBar isHidden={isNavBarHidden} onSkip={onSkip} onClose={onBack} />
       <div className={styles.container}>
         {notification}
         <div className={styles.header}>
-          <div className={styles.title}>
+          <div className={classNames(styles.title, layoutClassNames.secondaryPageTitle)}>
             <DynamicT forKey={title} interpolation={titleProps} />
           </div>
           {description && (
-            <div className={styles.description}>
+            <div
+              className={classNames(styles.description, layoutClassNames.secondaryPageDescription)}
+            >
               {typeof description === 'string' ? (
                 <DynamicT forKey={description} interpolation={descriptionProps} />
               ) : (

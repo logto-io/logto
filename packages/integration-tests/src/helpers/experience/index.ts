@@ -76,7 +76,6 @@ export const signInWithVerificationCode = async (identifier: VerificationCodeIde
   await processSession(client, redirectTo);
   await logoutClient(client);
 };
-
 /**
  * This helper function will create a password verification record and identify the user using the verification record.
  *
@@ -143,7 +142,6 @@ export const registerNewUserWithVerificationCode = async (
 
   return userId;
 };
-
 export const identifyUserWithEmailVerificationCode = async (
   client: ExperienceClient,
   email: string

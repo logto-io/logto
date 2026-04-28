@@ -3,6 +3,16 @@ const account_center = {
     title: 'Page not found',
     description: 'This page is not available.',
   },
+  page: {
+    title: 'Account',
+    security_title: 'Security',
+    security_description: 'Change your account settings here to ensure your account security.',
+    profile_title: 'Personal info',
+    profile_description: 'Change your personal information here.',
+    sidebar_personal_info: 'Personal info',
+    sidebar_security: 'Security',
+    support: 'Support',
+  },
   verification: {
     title: 'Security verification',
     description:
@@ -12,6 +22,9 @@ const account_center = {
     error_verify_failed: 'Verification failed. Please enter the code again.',
     verification_required: 'Verification expired. Please verify your identity again.',
     try_another_method: 'Try another method to verify',
+    no_available_methods_title: 'No verification methods available',
+    no_available_methods_description:
+      "You don't have any verification methods set up. Please add a password, email, or phone number to your account first.",
   },
   password_verification: {
     title: 'Verify password',
@@ -53,6 +66,61 @@ const account_center = {
     title: 'Set username',
     description: 'Username must contain only letters, numbers, and underscores.',
     success: 'Username updated successfully.',
+  },
+  security: {
+    add: 'Add',
+    change: 'Change',
+    remove: 'Remove',
+    not_set: 'Not set',
+    social_sign_in: 'Social sign-in',
+    social_not_linked: 'Not linked',
+    email_phone: 'Email / Phone',
+    email: 'Email',
+    phone: 'Phone',
+    password: 'Password',
+    configured: 'Configured',
+    not_configured: 'Not configured',
+    two_step_verification: '2-step verification',
+    authenticator_app: 'Authenticator app',
+    passkeys: 'Passkeys',
+    backup_codes: 'Backup codes',
+    email_verification_code: 'Email verification code',
+    phone_verification_code: 'Phone verification code',
+    passkeys_count_one: '{{count}} passkey',
+    passkeys_count_other: '{{count}} passkeys',
+    backup_codes_count_one: '{{count}} code remaining',
+    backup_codes_count_other: '{{count}} codes remaining',
+    view: 'View',
+    manage: 'Manage',
+    turn_on_2_step_verification: 'Turn on 2-step verification',
+    turn_on_2_step_verification_description:
+      "Add an extra layer of security. You'll be prompted for a second verification step at sign-in.",
+    turn_off_2_step_verification: 'Turn off 2-step verification',
+    turn_off_2_step_verification_description:
+      'Disabling 2-step verification will remove the extra layer of protection from your account at sign-in. Are you sure you want to continue?',
+    disable_2_step_verification: 'Disable',
+    no_verification_method_warning:
+      "You haven't added a second verification method. Add at least one to enable 2-step verification at sign-in.",
+    account_removal: 'Account removal',
+    delete_your_account: 'Delete your account',
+    delete_account: 'Delete account',
+    remove_email_confirmation_title: 'Remove email address',
+    remove_email_confirmation_description:
+      'Once removed, you will no longer be able to sign in with this email address. Are you sure you want to continue?',
+    remove_phone_confirmation_title: 'Remove phone number',
+    remove_phone_confirmation_description:
+      'Once removed, you will no longer be able to sign in with this phone number. Are you sure you want to continue?',
+    email_removed: 'Email address removed successfully.',
+    phone_removed: 'Phone number removed successfully.',
+  },
+  social: {
+    linked: '{{connector}} linked successfully.',
+    removed: '{{connector}} removed successfully.',
+    not_enabled:
+      'This social sign-in method is not enabled. Please contact your administrator for assistance.',
+    remove_confirmation_title: 'Remove social account',
+    remove_confirmation_description:
+      'If you remove {{connector}}, you may not be able to sign in with it until you add it back again.',
   },
   password: {
     title: 'Set password',
@@ -135,6 +203,10 @@ const account_center = {
     totp: {
       title: 'Authenticator app added!',
       description: 'Your authenticator app has been successfully linked to your account.',
+    },
+    totp_replaced: {
+      title: 'Authenticator app replaced!',
+      description: 'Your authenticator app has been successfully replaced.',
     },
     backup_code: {
       title: 'Backup codes generated!',

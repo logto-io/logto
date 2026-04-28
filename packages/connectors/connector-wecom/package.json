@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-wecom",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Wecom connector implementation.",
   "author": "Dove<dove@feegr.cc> fork from Wechat Web connector",
   "dependencies": {
@@ -28,7 +28,8 @@
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },

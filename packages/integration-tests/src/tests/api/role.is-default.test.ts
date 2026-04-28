@@ -8,11 +8,11 @@ import {
 import { noop } from '@silverhand/essentials';
 
 import { createUser, deleteUser, getUserRoles } from '#src/api/admin-user.js';
-import { putInteraction, updateSignInExperience } from '#src/api/index.js';
+import { updateSignInExperience } from '#src/api/index.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { assignScopesToRole, createRole, deleteRole } from '#src/api/role.js';
 import { createScope } from '#src/api/scope.js';
-import { initClient, processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generatePassword, generateUsername } from '#src/utils.js';
 
@@ -79,14 +79,16 @@ describe('default roles', () => {
     const password = generatePassword();
 
     // Process the sign-in flow
-    const client = await initClient({
-      resources: [context.resource!.indicator],
-      scopes: context.scopes.map((scope) => scope.name),
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+      config: {
+        resources: [context.resource!.indicator],
+        scopes: context.scopes.map((scope) => scope.name),
+      },
     });
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.Register,
-      profile: { username, password },
-    });
+    await client.updateProfile({ type: SignInIdentifier.Username, value: username });
+    await client.updateProfile({ type: 'password', value: password });
+    await client.identifyUser();
     const { redirectTo } = await client.submitInteraction();
     const userId = await processSession(client, redirectTo);
 

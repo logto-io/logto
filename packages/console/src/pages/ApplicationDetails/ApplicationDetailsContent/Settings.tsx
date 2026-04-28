@@ -1,13 +1,18 @@
 import { validateRedirectUrl } from '@logto/core-kit';
 import type { Application } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
+import { useContext } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
+import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
-import { applicationDataStructure, thirdPartyApp } from '@/consts';
+import { applicationDataStructure, deviceFlow, thirdPartyApp } from '@/consts';
+import { AppDataContext } from '@/contexts/AppDataProvider';
+import Button from '@/ds-components/Button';
 import CodeEditor from '@/ds-components/CodeEditor';
+import FlipOnRtl from '@/ds-components/FlipOnRtl';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import type { MultiTextInputRule } from '@/ds-components/MultiTextInput/types';
@@ -17,6 +22,7 @@ import {
 } from '@/ds-components/MultiTextInput/utils';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import { isJsonObject } from '@/utils/json';
 
 import ProtectedAppSettings from './ProtectedAppSettings';
@@ -82,9 +88,12 @@ function Settings({ data }: Props) {
     watch,
     formState: { errors },
   } = useFormContext<ApplicationForm>();
+  const { tenantEndpoint } = useContext(AppDataContext);
+  const { getDocumentationUrl } = useDocumentationUrl();
 
-  const { type: applicationType, isThirdParty } = data;
+  const { type: applicationType, isThirdParty, customClientMetadata } = data;
 
+  const isDeviceFlow = Boolean(customClientMetadata.isDeviceFlow);
   const isProtectedApp = applicationType === ApplicationType.Protected;
   const redirectUriValidator = createRedirectUriValidator(applicationType);
   const uriPatternRules: MultiTextInputRule = {
@@ -113,6 +122,33 @@ function Settings({ data }: Props) {
       description={`application_details.${isThirdParty ? 'third_party_' : ''}settings_description`}
       learnMoreLink={{ href: isThirdParty ? thirdPartyApp : applicationDataStructure }}
     >
+      {isDeviceFlow && (
+        <div className={styles.deviceFlowBanner}>
+          <span className={styles.deviceFlowEmoji}>🎉</span>
+          <span>
+            <Trans
+              components={{
+                a: <TextLink targetBlank="noopener" href={getDocumentationUrl(deviceFlow)} />,
+              }}
+            >
+              {t('application_details.device_flow_notification')}
+            </Trans>
+          </span>
+          <Button
+            className={styles.deviceFlowTryDemoButton}
+            size="small"
+            title="application_details.device_flow_try_demo"
+            trailingIcon={
+              <FlipOnRtl>
+                <ExternalLinkIcon />
+              </FlipOnRtl>
+            }
+            onClick={() => {
+              window.open(new URL('/device-demo-app', tenantEndpoint), '_blank');
+            }}
+          />
+        </div>
+      )}
       <FormField isRequired title="application_details.application_name">
         <TextInput
           {...register('name', { required: true })}
@@ -126,7 +162,7 @@ function Settings({ data }: Props) {
           placeholder={t('application_details.description_placeholder')}
         />
       </FormField>
-      {applicationType !== ApplicationType.MachineToMachine && (
+      {applicationType !== ApplicationType.MachineToMachine && !isDeviceFlow && (
         <Controller
           name="oidcClientMetadata.redirectUris"
           control={control}
@@ -168,9 +204,9 @@ function Settings({ data }: Props) {
           )}
         />
       )}
-      {showRedirectUriWildcardWarning && <WildcardUriWarning />}
-      {showRedirectUriMixedWarning && <MixedUriWarning />}
-      {applicationType !== ApplicationType.MachineToMachine && (
+      {showRedirectUriWildcardWarning && !isDeviceFlow && <WildcardUriWarning />}
+      {showRedirectUriMixedWarning && !isDeviceFlow && <MixedUriWarning />}
+      {applicationType !== ApplicationType.MachineToMachine && !isDeviceFlow && (
         <Controller
           name="oidcClientMetadata.postLogoutRedirectUris"
           control={control}
@@ -190,9 +226,9 @@ function Settings({ data }: Props) {
           )}
         />
       )}
-      {showPostLogoutUriWildcardWarning && <WildcardUriWarning />}
-      {showPostLogoutUriMixedWarning && <MixedUriWarning />}
-      {applicationType !== ApplicationType.MachineToMachine && (
+      {showPostLogoutUriWildcardWarning && !isDeviceFlow && <WildcardUriWarning />}
+      {showPostLogoutUriMixedWarning && !isDeviceFlow && <MixedUriWarning />}
+      {applicationType !== ApplicationType.MachineToMachine && !isDeviceFlow && (
         <Controller
           name="customClientMetadata.corsAllowedOrigins"
           control={control}

@@ -1,11 +1,15 @@
-import { InteractionEvent, MfaFactor, type WebAuthnAuthenticationOptions } from '@logto/schemas';
+import {
+  InteractionEvent,
+  MfaFactor,
+  webAuthnAuthenticationOptionsTimeout,
+  type WebAuthnAuthenticationOptions,
+} from '@logto/schemas';
 import { browserSupportsWebAuthnAutofill } from '@simplewebauthn/browser';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import WebAuthnContext from '@/Providers/WebAuthnContextProvider/WebAuthnContext';
-import { initInteraction, verifySignInWebAuthn } from '@/apis/experience';
-import { isDevFeaturesEnabled } from '@/constants/env';
+import { initInteraction, verifySignInPasskey } from '@/apis/experience';
 import { toPublicKeyRequest, toAuthenticationResponseJSON } from '@/utils/webauthn';
 
 import useApi from './use-api';
@@ -18,10 +22,14 @@ import useToast from './use-toast';
 const usePasskeyAutofillConditionalUI = () => {
   const { t } = useTranslation();
   const { setToast } = useToast();
-  const { authenticationOptions, abortConditionalUI, setConditionalUIAbortController } =
-    useContext(WebAuthnContext);
+  const {
+    authenticationOptions,
+    abortConditionalUI,
+    setConditionalUIAbortController,
+    setIsPasskeyFlowProcessing,
+  } = useContext(WebAuthnContext);
   const { passkeySignIn } = useSieMethods();
-  const asyncVerifySignInWebAuthn = useApi(verifySignInWebAuthn);
+  const asyncVerifySignInPasskey = useApi(verifySignInPasskey);
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
 
@@ -31,7 +39,7 @@ const usePasskeyAutofillConditionalUI = () => {
 
   const triggerPasskeySignInViaConditionalUi = useCallback(
     async (options: WebAuthnAuthenticationOptions) => {
-      if (!isDevFeaturesEnabled || !(await browserSupportsWebAuthnAutofill())) {
+      if (!(await browserSupportsWebAuthnAutofill())) {
         return;
       }
       try {
@@ -43,7 +51,7 @@ const usePasskeyAutofillConditionalUI = () => {
 
         window.setTimeout(() => {
           abortController.abort();
-        }, 60_000);
+        }, webAuthnAuthenticationOptionsTimeout);
 
         const credential = await navigator.credentials.get({
           mediation: 'conditional',
@@ -55,9 +63,10 @@ const usePasskeyAutofillConditionalUI = () => {
           return;
         }
 
+        setIsPasskeyFlowProcessing(true);
         await initInteraction(InteractionEvent.SignIn);
 
-        const [error, result] = await asyncVerifySignInWebAuthn({
+        const [error, result] = await asyncVerifySignInPasskey({
           ...toAuthenticationResponseJSON(credential),
           type: MfaFactor.WebAuthn,
         });
@@ -78,10 +87,12 @@ const usePasskeyAutofillConditionalUI = () => {
           return;
         }
         setToast(t('passkey_sign_in.trigger_conditional_ui_failed'));
+      } finally {
+        setIsPasskeyFlowProcessing(false);
       }
     },
     [
-      asyncVerifySignInWebAuthn,
+      asyncVerifySignInPasskey,
       handleError,
       preSignInErrorHandlers,
       redirectTo,
@@ -89,16 +100,12 @@ const usePasskeyAutofillConditionalUI = () => {
       t,
       abortConditionalUI,
       setConditionalUIAbortController,
+      setIsPasskeyFlowProcessing,
     ]
   );
 
   useEffect(() => {
-    if (
-      isDevFeaturesEnabled &&
-      authenticationOptions &&
-      passkeySignIn?.enabled &&
-      passkeySignIn.allowAutofill
-    ) {
+    if (authenticationOptions && passkeySignIn?.enabled && passkeySignIn.allowAutofill) {
       void triggerPasskeySignInViaConditionalUi(authenticationOptions);
     }
   }, [
@@ -110,11 +117,16 @@ const usePasskeyAutofillConditionalUI = () => {
 
   return useMemo(
     () => ({
-      isPasskeyAutofillEnabled:
-        isDevFeaturesEnabled && passkeySignIn?.enabled && passkeySignIn.allowAutofill,
+      isPasskeyAutofillEnabled: passkeySignIn?.enabled && passkeySignIn.allowAutofill,
       triggerPasskeySignInViaConditionalUi,
+      abortConditionalUI,
     }),
-    [passkeySignIn?.enabled, passkeySignIn?.allowAutofill, triggerPasskeySignInViaConditionalUi]
+    [
+      passkeySignIn?.enabled,
+      passkeySignIn?.allowAutofill,
+      triggerPasskeySignInViaConditionalUi,
+      abortConditionalUI,
+    ]
   );
 };
 

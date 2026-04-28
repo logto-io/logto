@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: '應用程式詳情',
   back_to_applications: '返回全部應用程式',
@@ -63,7 +65,7 @@ const application_details = {
   refresh_token_ttl: '刷新令牌的有效期（天）',
   refresh_token_ttl_tip:
     '刷新令牌可用於在其過期之前請求新的訪問權杖的持續時間。訪問令牌將將默認的 TTL 延長到此值。',
-  rotate_refresh_token: '旋轉刷新令牌',
+  rotate_refresh_token: '輪換刷新令牌',
   rotate_refresh_token_label:
     '啟用後，當原始 TTL 達到 70% 或滿足某些條件時就可以在令牌請求中為刷新令牌發行新的刷新令牌。 <a>了解更多。</a>',
   rotate_refresh_token_label_for_public_clients:
@@ -81,6 +83,10 @@ const application_details = {
     '允許此應用程式發起權杖交換請求。這是 <impersonationLink>使用者冒充</impersonationLink> 與 <patLink>個人存取權杖</patLink> 所必需的。',
   allow_token_exchange_public_client_warning:
     '不建議為公開用戶端（單頁應用／原生應用）啟用權杖交換。公開用戶端無法安全儲存憑證，可能使你的應用暴露於權杖冒充風險。',
+  device_flow_tag: '裝置流程',
+  device_flow_notification:
+    '此應用程式啟用了 OAuth 2.0 Device Authorization Flow，適用於輸入受限的裝置或無介面應用程式（如電視、CLI）。使用者在另一台裝置上透過輸入裝置碼或掃描 QR 碼完成登入。<a>瞭解更多</a>',
+  device_flow_try_demo: '試用示範',
   delete_description: '本操作會永久性地刪除該應用，且不可撤銷。輸入 <span>{{name}}</span> 確認。',
   enter_your_application_name: '輸入你的應用程式名稱',
   application_deleted: '應用 {{name}} 成功刪除。',
@@ -260,6 +266,7 @@ const application_details = {
     col_sp_claims: '您的應用程式的值名稱',
     add_button: '添加另一個',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

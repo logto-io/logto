@@ -13,12 +13,11 @@ import {
   extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
-  type LogtoUiCookie,
   ExtraParamsKey,
 } from '@logto/schemas';
-import { removeUndefinedKeys, trySafe, tryThat } from '@silverhand/essentials';
+import { trySafe, tryThat } from '@silverhand/essentials';
 import { type i18n } from 'i18next';
-import { type KoaContextWithOIDC, Provider, errors } from 'oidc-provider';
+import { type KoaContextWithOIDC, Provider, type ResourceServer, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -31,9 +30,11 @@ import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
+  buildSharedExperienceCookie,
   buildConsentPromptUrl,
   buildLoginPromptUrl,
   isOriginAllowed,
+  readOptionalQueryString,
   validateCustomClientMetadata,
 } from '#src/oidc/utils.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -44,6 +45,7 @@ import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 
 import defaults from './defaults.js';
+import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
   getExtraTokenClaimsForJwtCustomization,
   getExtraTokenClaimsForOrganizationApiResource,
@@ -85,6 +87,52 @@ export default function initOidc(
     overwrite: true,
   } as const);
 
+  const getResourceServerInfoCore = async (
+    indicator: string,
+    clientId: string | undefined,
+    userId: string | undefined,
+    organizationId: string | undefined
+  ): Promise<Pick<ResourceServer, 'accessTokenFormat' | 'jwt' | 'accessTokenTTL' | 'scope'>> => {
+    const resourceServer = await findResource(queries, indicator);
+
+    if (!resourceServer) {
+      throw new errors.InvalidTarget();
+    }
+
+    const { accessTokenTtl: accessTokenTTL } = resourceServer;
+
+    const scopes = await findResourceScopes({
+      queries,
+      libraries,
+      indicator,
+      findFromOrganizations: true,
+      organizationId,
+      applicationId: clientId,
+      userId,
+    });
+
+    if (clientId && (await isThirdPartyApplication(queries, clientId))) {
+      const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
+        libraries,
+        clientId,
+        indicator,
+        scopes
+      );
+
+      return {
+        ...getSharedResourceServerData(envSet),
+        accessTokenTTL,
+        scope: filteredScopes.map(({ name }) => name).join(' '),
+      };
+    }
+
+    return {
+      ...getSharedResourceServerData(envSet),
+      accessTokenTTL,
+      scope: scopes.map(({ name }) => name).join(' '),
+    };
+  };
+
   // Do NOT deconstruct variables from `envSet` earlier, since we might reload `envSet` on the fly,
   // and keeping the reference of the `envSet` object helps dynamically update oidc provider configs.
   const oidc = new Provider(envSet.oidc.issuer, {
@@ -122,6 +170,7 @@ export default function initOidc(
       devInteractions: { enabled: false },
       clientCredentials: { enabled: true },
       backchannelLogout: { enabled: true },
+      deviceFlow: deviceFlowConfig,
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
@@ -150,50 +199,12 @@ export default function initOidc(
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
-          const resourceServer = await findResource(queries, indicator);
-
-          if (!resourceServer) {
-            throw new errors.InvalidTarget();
-          }
-
-          const { accessTokenTtl: accessTokenTTL } = resourceServer;
-
           const { client, params, session, entities } = ctx.oidc;
           const userId = session?.accountId ?? entities.Account?.accountId;
+          const organizationId =
+            typeof params?.organization_id === 'string' ? params.organization_id : undefined;
 
-          const organizationId = params?.organization_id;
-          const scopes = await findResourceScopes({
-            queries,
-            libraries,
-            indicator,
-            findFromOrganizations: true,
-            organizationId: typeof organizationId === 'string' ? organizationId : undefined,
-            applicationId: client?.clientId,
-            userId,
-          });
-
-          // Need to filter out the unsupported scopes for the third-party application.
-          if (client && (await isThirdPartyApplication(queries, client.clientId))) {
-            // Get application consent resource scopes, from RBAC roles
-            const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
-              libraries,
-              client.clientId,
-              indicator,
-              scopes
-            );
-
-            return {
-              ...getSharedResourceServerData(envSet),
-              accessTokenTTL,
-              scope: filteredScopes.map(({ name }) => name).join(' '),
-            };
-          }
-
-          return {
-            ...getSharedResourceServerData(envSet),
-            accessTokenTTL,
-            scope: scopes.map(({ name }) => name).join(' '),
-          };
+          return getResourceServerInfoCore(indicator, client?.clientId, userId, organizationId);
         },
       },
     },
@@ -210,19 +221,18 @@ export default function initOidc(
     interactions: {
       url: (ctx, { params: { client_id: appId }, prompt }) => {
         const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
+        const sharedParams = {
+          appId: readOptionalQueryString(appId),
+          organizationId: params.organization_id,
+          uiLocales: params.ui_locales,
+        };
 
         // Cookies are required to apply the correct server-side rendering
-        ctx.cookies.set(
-          logtoCookieKey,
-          JSON.stringify(
-            removeUndefinedKeys({
-              appId: typeof appId === 'string' ? appId : undefined,
-              organizationId: params.organization_id,
-              uiLocales: params.ui_locales,
-            }) satisfies LogtoUiCookie
-          ),
-          { sameSite: 'lax', overwrite: true, httpOnly: false }
-        );
+        ctx.cookies.set(logtoCookieKey, JSON.stringify(buildSharedExperienceCookie(sharedParams)), {
+          sameSite: 'lax',
+          overwrite: true,
+          httpOnly: false,
+        });
 
         if (params[ExtraParamsKey.GoogleOneTapCredential]) {
           ctx.cookies.set(
@@ -239,7 +249,7 @@ export default function initOidc(
 
         switch (prompt.name) {
           case 'login': {
-            return '/' + buildLoginPromptUrl(params, appId);
+            return '/' + buildLoginPromptUrl(params, sharedParams);
           }
 
           case 'consent': {
@@ -378,8 +388,9 @@ export default function initOidc(
 
         return 60 * 60; // 1 hour in seconds
       },
+      DeviceCode: defaultDeviceCodeTtl,
       Interaction: 3600 /* 1 hour in seconds */,
-      Session: 1_209_600 /* 14 days in seconds */,
+      Session: envSet.oidc.sessionTtl ?? defaults.sessionTtl /* 14 days in seconds */,
       // Set this to the longest allowed duration of the refresh token
       Grant: 180 * 3600 * 24 /* 180 days in seconds */,
     },

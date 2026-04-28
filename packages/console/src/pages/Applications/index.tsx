@@ -3,6 +3,7 @@ import { type Nullable, joinPath, cond } from '@silverhand/essentials';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import useSWR from 'swr';
 
 import { guides } from '@/assets/docs/guides';
 import Plus from '@/assets/icons/plus.svg?react';
@@ -13,12 +14,14 @@ import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
 import LearnMore from '@/components/LearnMore';
 import PageMeta from '@/components/PageMeta';
 import { integrateLogto } from '@/consts';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Table from '@/ds-components/Table';
+import { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import pageLayout from '@/scss/page-layout.module.scss';
 import { buildUrl } from '@/utils/url';
@@ -26,6 +29,7 @@ import { buildUrl } from '@/utils/url';
 import GuideLibrary from './components/GuideLibrary';
 import GuideLibraryModal from './components/GuideLibraryModal';
 import ProtectedAppModal from './components/ProtectedAppModal';
+import SamlAppLimitNotice from './components/SamlAppLimitNotice';
 import ThirdPartyAppGuideLibrary from './components/ThirdPartyAppGuideLibrary';
 import ThirdPartyApplicationEmptyDataPlaceHolder from './components/ThirdPartyApplicationEmptyDataPlaceHolder';
 import useApplicationsData from './hooks/use-application-data';
@@ -38,6 +42,12 @@ const tabs = Object.freeze({
 const applicationsPathname = '/applications';
 const createApplicationPathname = `${applicationsPathname}/create`;
 const buildDetailsPathname = (id: string) => `${applicationsPathname}/${id}`;
+const samlApplicationsFetchUrl = buildUrl('api/applications', [
+  ['page', '1'],
+  ['page_size', '1'],
+  ['isThirdParty', 'false'],
+  ['types', ApplicationType.SAML],
+]);
 
 // Build the path with pagination query param for the tabs
 const buildTabPathWithPagePagination = (page: number, tab?: keyof typeof tabs) => {
@@ -69,12 +79,17 @@ function Applications({ tab }: Props) {
   const [selectedGuide, setSelectedGuide] = useState<Nullable<SelectedGuide>>();
 
   const isThirdPartyTab = tab === 'thirdPartyApplications';
+  const shouldFetchSamlApplicationsCount = !isCloud && isDevFeaturesEnabled && !isThirdPartyTab;
 
   const { data, error, mutate, pagination, updatePagination, paginationRecords } =
     useApplicationsData(isThirdPartyTab);
+  const { data: samlApplicationsData } = useSWR<[Application[], number], RequestError>(
+    shouldFetchSamlApplicationsCount ? samlApplicationsFetchUrl : null
+  );
 
   const isLoading = !data && !error;
   const [applications, totalCount] = data ?? [];
+  const samlAppTotalCount = samlApplicationsData?.[1];
 
   const onAppCreationCompleted = useCallback(
     (newApp?: Application) => {
@@ -164,6 +179,7 @@ function Applications({ tab }: Props) {
           {t('applications.tab.third_party_applications')}
         </TabNavItem>
       </TabNav>
+      <SamlAppLimitNotice isThirdPartyTab={isThirdPartyTab} samlAppTotalCount={samlAppTotalCount} />
 
       {/* Guide library for my applications tab */}
       {!isLoading && !applications?.length && !isThirdPartyTab && (
@@ -231,6 +247,7 @@ function Applications({ tab }: Props) {
           )}
           defaultCreateFrameworkName={selectedGuide?.metadata.name ?? undefined}
           isDefaultCreateThirdParty={selectedGuide?.metadata.isThirdParty ?? undefined}
+          isDefaultCreateDeviceFlow={selectedGuide?.id === 'native-device-flow'}
           onCompleted={onAppCreationCompleted}
         />
       )}

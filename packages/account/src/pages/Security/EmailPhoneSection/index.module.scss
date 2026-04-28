@@ -1,0 +1,158 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1.5);
+}
+
+.sectionTitle {
+  padding-left: _.unit(1);
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
+.card {
+  background: var(--color-bg-body);
+  border-radius: 12px;
+  overflow: clip;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr) auto;
+  grid-auto-flow: dense;
+  column-gap: _.unit(6);
+  align-items: center;
+  padding: _.unit(5) _.unit(6);
+  min-height: 64px;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-line-divider);
+  }
+}
+
+.topLine {
+  display: contents;
+}
+
+// Icon and title share the same grid cell so the name slot stays within 200px,
+// matching the original non-grid layout. Title offsets via padding to sit after the icon.
+.iconWrap {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-self: start;
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-type-primary);
+}
+
+.title {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  padding-left: calc(20px + #{_.unit(4)});
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
+.value {
+  grid-column: 2;
+  min-width: 0;
+  font: var(--font-body-2);
+  color: var(--color-type-primary);
+}
+
+.secondaryValue {
+  color: var(--color-type-secondary);
+}
+
+.actions {
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  flex-shrink: 0;
+}
+
+.changeButton {
+  font: var(--font-label-2);
+  color: var(--color-type-link);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: _.unit(0.5) 0;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.removeButton {
+  font: var(--font-label-2);
+  color: var(--color-danger-default);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: _.unit(0.5) 0;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+:global(body.mobile) {
+  .sectionTitle {
+    padding-left: 0;
+  }
+
+  .row {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: _.unit(1);
+    padding: _.unit(4);
+  }
+
+  .topLine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: _.unit(3);
+    width: 100%;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: _.unit(4);
+  }
+
+  .title,
+  .value {
+    width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .title {
+    padding-left: 0;
+  }
+
+  .changeButton,
+  .removeButton {
+    padding: 0;
+    white-space: normal;
+    text-align: left;
+  }
+}

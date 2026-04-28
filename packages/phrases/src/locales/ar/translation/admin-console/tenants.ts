@@ -1,12 +1,19 @@
 const tenants = {
   title: 'الإعدادات',
   description: 'إدارة إعدادات المستأجر بكفاءة وتخصيص نطاقك.',
+  oss_description: 'قم بتغيير إعدادات حسابك وإدارة معلوماتك الشخصية هنا لضمان أمان حسابك.',
   tabs: {
     settings: 'الإعدادات',
     members: 'الأعضاء',
     domains: 'النطاقات',
+    oidc_configs: 'إعدادات OIDC',
     subscription: 'الخطة والفوترة',
     billing_history: 'سجل الفوترة',
+  },
+  members: {
+    card_title: 'أدر المستأجرين بأمان أكبر مع Logto Cloud',
+    card_description: 'أضف مسؤولين أو متعاونين إلى المستأجر الخاص بك دون مشاركة حساب مسؤول واحد.',
+    card_action: 'استكشف Logto Cloud',
   },
   settings: {
     title: 'الإعدادات',

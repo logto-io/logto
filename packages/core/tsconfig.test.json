@@ -3,6 +3,7 @@
   "compilerOptions": {
     "isolatedModules": false,
     "allowJs": true,
+    "sourceMap": true,
   },
   "include": [
     "src/"

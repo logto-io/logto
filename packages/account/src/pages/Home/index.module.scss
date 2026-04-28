@@ -1,0 +1,47 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  margin-bottom: _.unit(5);
+}
+
+.title {
+  font: var(--font-title-1);
+  color: var(--color-type-primary);
+}
+
+.description {
+  margin-top: _.unit(1);
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(5);
+}
+
+:global(body.mobile) {
+  .header {
+    margin-bottom: _.unit(4);
+  }
+
+  .title {
+    font: var(--font-title-1);
+  }
+
+  .description {
+    margin-top: _.unit(1.5);
+  }
+
+  .content {
+    gap: _.unit(4);
+  }
+}

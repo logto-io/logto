@@ -1,8 +1,16 @@
 import { createHmac } from 'node:crypto';
-import { createServer, type RequestListener, type Server } from 'node:http';
+import {
+  createServer,
+  type IncomingMessage,
+  type ServerResponse,
+  type RequestListener,
+  type Server,
+} from 'node:http';
 
 import { hookEventGuard } from '@logto/schemas';
 import { z } from 'zod';
+
+const webhookHost = process.env.WEBHOOK_HOST_FOR_APP ?? '127.0.0.1';
 
 /**
  * A mock server that listens for incoming requests and responds with the request body.
@@ -12,14 +20,17 @@ import { z } from 'zod';
  * await server.listen();
  */
 class WebhookMockServer {
-  public readonly endpoint = `http://localhost:${this.port}`;
+  public get endpoint() {
+    return `http://${webhookHost}:${this.port}`;
+  }
+
   private readonly server: Server;
 
   constructor(
     /** The port number to listen on. */
     private readonly port: number,
     /** A callback that is called with the request body when a request is received. */
-    requestCallback?: (body: string) => void
+    requestCallback?: (body: string, request: IncomingMessage, response: ServerResponse) => void
   ) {
     const requestListener: RequestListener = (request, response) => {
       const data: Uint8Array[] = [];
@@ -30,8 +41,6 @@ class WebhookMockServer {
       });
 
       request.on('end', () => {
-        response.writeHead(200, { 'Content-Type': 'application/json' });
-
         // Keep the raw payload for signature verification
         const rawPayload = Buffer.concat(data).toString();
         const payload: unknown = JSON.parse(rawPayload);
@@ -42,9 +51,15 @@ class WebhookMockServer {
           rawPayload,
         });
 
-        requestCallback?.(body);
+        requestCallback?.(body, request, response);
 
-        response.end(body);
+        if (!response.headersSent) {
+          response.writeHead(200, { 'Content-Type': 'application/json' });
+        }
+
+        if (!response.writableEnded) {
+          response.end(body);
+        }
       });
     };
 

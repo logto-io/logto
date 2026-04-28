@@ -5,8 +5,10 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import { getSsoAuthorizationUrl } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
+import { searchKeys } from '@/shared/utils/search-parameters';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 import { buildSocialLandingUri, generateState, storeState } from '@/utils/social-connectors';
+import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
 
 import useGlobalRedirectTo from './use-global-redirect-to';
 
@@ -66,6 +68,17 @@ const useSingleSignOn = () => {
       const { authorizationUri, verificationId } = result;
 
       setVerificationId(VerificationType.EnterpriseSso, verificationId);
+
+      // Write fallback bundle to localStorage for in-app browser session recovery
+      storeRedirectContext({
+        state,
+        flow: 'sso',
+        connectorId,
+        verificationId,
+        appId: sessionStorage.getItem(searchKeys.appId) ?? undefined,
+        organizationId: sessionStorage.getItem(searchKeys.organizationId) ?? undefined,
+        uiLocales: sessionStorage.getItem(searchKeys.uiLocales) ?? undefined,
+      });
 
       // Invoke Native Sign In flow
       if (isNativeWebview()) {

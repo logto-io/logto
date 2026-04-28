@@ -6,8 +6,8 @@ import { authedAdminTenantApi } from './lib/api/api.js';
 // eslint-disable-next-line @silverhand/fp/no-mutation
 globalThis.require = createRequire(import.meta.url);
 
-// We need to update this before tests otherwise Logto will update SignInMode for admin tenant
-// The update logic should be
+// Reset the sign-in experience settings to default before each test suite, to avoid unexpected
+// side effects from other test suites. Add more configurations here if needed.
 await authedAdminTenantApi.patch('sign-in-exp', {
-  json: { signInMode: 'SignInAndRegister' },
+  json: { signInMode: 'SignInAndRegister', sentinelPolicy: {} },
 });

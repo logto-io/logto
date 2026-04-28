@@ -14,7 +14,9 @@ import VerificationMethodList from '@ac/components/VerificationMethodList';
 import { usernameSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useIdentifierParam from '@ac/hooks/use-identifier-param';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from '../CodeFlow/index.module.scss';
 
@@ -24,13 +26,14 @@ const Username = () => {
   const { loading } = useContext(LoadingContext);
   const {
     accountCenterSettings,
+    refreshUserInfo,
     verificationId,
     setVerificationId,
     setToast,
     userInfo,
-    setUserInfo,
   } = useContext(PageContext);
-  const defaultUsername = userInfo?.username ?? '';
+  const identifierParam = useIdentifierParam();
+  const defaultUsername = identifierParam ?? userInfo?.username ?? '';
   const [pendingUsername, setPendingUsername] = useState(defaultUsername);
   const [inputKey, setInputKey] = useState(defaultUsername);
   const [usernameError, setUsernameError] = useState<string>();
@@ -41,6 +44,12 @@ const Username = () => {
     setPendingUsername((current) => current || defaultUsername);
     setInputKey(defaultUsername);
   }, [defaultUsername]);
+
+  useEffect(() => {
+    if (verificationId) {
+      sessionStorage.clearRouteRestore();
+    }
+  }, [verificationId]);
 
   if (
     !accountCenterSettings?.enabled ||
@@ -105,7 +114,7 @@ const Username = () => {
       return;
     }
 
-    setUserInfo((current) => ({ ...current, username }));
+    await refreshUserInfo();
     navigate(usernameSuccessRoute, { replace: true });
   };
 

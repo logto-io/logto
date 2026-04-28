@@ -15,7 +15,6 @@ import {
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { UserApiTest } from '#src/helpers/user.js';
-import { devFeatureDisabledTest } from '#src/utils.js';
 
 describe('skipMfaOnSignIn user setting', () => {
   const userApi = new UserApiTest();
@@ -63,7 +62,7 @@ describe('skipMfaOnSignIn user setting', () => {
     });
   });
 
-  devFeatureDisabledTest.describe('Mandatory MFA policy override', () => {
+  describe('Mandatory MFA policy override', () => {
     it('should ignore user setting when MFA policy is Mandatory', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
 
@@ -78,6 +77,9 @@ describe('skipMfaOnSignIn user setting', () => {
 
       // Now set MFA policy to Mandatory (this should override the user setting)
       await updateSignInExperience({
+        adaptiveMfa: {
+          enabled: false,
+        },
         mfa: {
           factors: [MfaFactor.TOTP],
           policy: MfaPolicy.Mandatory,

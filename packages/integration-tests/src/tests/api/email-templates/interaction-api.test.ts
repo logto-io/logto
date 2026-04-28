@@ -1,10 +1,9 @@
 import { TemplateType } from '@logto/connector-kit';
-import { demoAppApplicationId, InteractionEvent } from '@logto/schemas';
+import { demoAppApplicationId, InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import { mockEmailConnectorConfig } from '#src/__mocks__/connectors-mock.js';
 import { type MockEmailTemplatePayload } from '#src/__mocks__/email-templates.js';
-import { putInteraction, sendVerificationCode } from '#src/api/interaction.js';
-import { initClient } from '#src/helpers/client.js';
+import { initExperienceClient } from '#src/helpers/client.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
 import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
 import { readConnectorMessage } from '#src/helpers/index.js';
@@ -44,18 +43,16 @@ describe('interaction API with i18n email templates', () => {
       name: 'test org',
     });
 
-    const client = await initClient(undefined, undefined, {
-      extraParams: {
-        organization_id: organization.id,
+    const client = await initExperienceClient({
+      options: {
+        extraParams: {
+          organization_id: organization.id,
+        },
       },
     });
-
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-    });
-
-    await client.successSend(sendVerificationCode, {
-      email: mockEmail,
+    await client.sendVerificationCode({
+      identifier: { type: SignInIdentifier.Email, value: mockEmail },
+      interactionEvent: InteractionEvent.SignIn,
     });
 
     expect(await readConnectorMessage('Email')).toMatchObject({
@@ -80,14 +77,13 @@ describe('interaction API with i18n email templates', () => {
       ({ usageType }) => usageType === 'Register'
     )!;
 
-    const client = await initClient();
-
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.Register,
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
     });
 
-    await client.successSend(sendVerificationCode, {
-      email: mockEmail,
+    await client.sendVerificationCode({
+      identifier: { type: SignInIdentifier.Email, value: mockEmail },
+      interactionEvent: InteractionEvent.Register,
     });
 
     expect(await readConnectorMessage('Email')).toMatchObject({

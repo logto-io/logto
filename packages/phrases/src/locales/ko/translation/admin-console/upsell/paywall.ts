@@ -43,6 +43,8 @@ const paywall = {
     '<planName/>의 {{count, number}}개 역할 당 권한 한도에 도달했습니다. 플랜을 업그레이드하여 추가 역할과 권한을 추가하세요. 도움이 필요하면 <a>문의하기</a>로 연락 주세요.',
   saml_applications_oss:
     '추가 SAML 앱은 Logto 엔터프라이즈 플랜에서 사용할 수 있습니다. 도움이 필요하면 문의하세요.',
+  saml_applications_oss_limit_notice:
+    '오픈 소스 인스턴스는 최대 {{limit}}개의 SAML 애플리케이션을 지원합니다. 추가 옵션이 필요하면 Logto Cloud를 사용하거나 문의해 주세요.',
   logto_pricing_button_text: 'Logto 클라우드 가격',
   saml_applications:
     '추가 SAML 앱은 Logto 엔터프라이즈 플랜에서 사용할 수 있습니다. 도움이 필요하면 <a>문의하세요</a>.',

@@ -275,7 +275,7 @@ describe('username as secondary identifier', () => {
         password,
       });
 
-      void deleteUser(userId);
+      await deleteUser(userId);
     }
   );
 });

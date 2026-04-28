@@ -9,14 +9,15 @@ import {
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { authedAdminApi } from '#src/api/api.js';
+import { registerNewUserUsernamePassword } from '#src/helpers/experience/index.js';
 import { getHookCreationPayload } from '#src/helpers/hook.js';
-import { createMockServer } from '#src/helpers/index.js';
-import { registerNewUser } from '#src/helpers/interactions.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
 
+import WebhookMockServer from './WebhookMockServer.js';
+
 describe('hook logs', () => {
-  const { listen, close } = createMockServer(9999);
+  const mockServer = new WebhookMockServer(9999);
 
   beforeAll(async () => {
     await enableAllPasswordSignInMethods({
@@ -24,22 +25,22 @@ describe('hook logs', () => {
       password: true,
       verify: false,
     });
-    await listen();
+    await mockServer.listen();
   });
 
   afterAll(async () => {
-    await close();
+    await mockServer.close();
   });
 
   it('should get recent hook logs correctly', async () => {
     const createdHook = await authedAdminApi
       .post('hooks', {
-        json: getHookCreationPayload(InteractionHookEvent.PostRegister, 'http://localhost:9999'),
+        json: getHookCreationPayload(InteractionHookEvent.PostRegister, mockServer.endpoint),
       })
       .json<Hook>();
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const userId = await registerNewUser(username, password);
+    const userId = await registerNewUserUsernamePassword(username, password);
 
     const logs = await authedAdminApi
       .get(`hooks/${createdHook.id}/recent-logs?page_size=100`)
@@ -59,7 +60,7 @@ describe('hook logs', () => {
   it('should get hook execution stats correctly', async () => {
     const createdHook = await authedAdminApi
       .post('hooks', {
-        json: getHookCreationPayload(InteractionHookEvent.PostRegister, 'http://localhost:9999'),
+        json: getHookCreationPayload(InteractionHookEvent.PostRegister, mockServer.endpoint),
       })
       .json<Hook>();
 
@@ -72,7 +73,7 @@ describe('hook logs', () => {
     }
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
-    const userId = await registerNewUser(username, password);
+    const userId = await registerNewUserUsernamePassword(username, password);
 
     const hookWithExecutionStats = await authedAdminApi
       .get(`hooks/${createdHook.id}?includeExecutionStats=true`)

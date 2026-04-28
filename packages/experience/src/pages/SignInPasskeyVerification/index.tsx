@@ -35,7 +35,7 @@ const SignInPasskeyVerification = () => {
   const { state } = useLocation();
   const [, passkeyState] = validate(state, identifierPasskeyStateGuard);
   const { verificationIdsMap, identifierInputValue } = useContext(UserInteractionContext);
-  const verificationId = verificationIdsMap[VerificationType.SignInWebAuthn];
+  const verificationId = verificationIdsMap[VerificationType.SignInPasskey];
   const { signInMethods } = useSieMethods();
 
   const handleVerify = useIdentifierPasskeySignInVerification();

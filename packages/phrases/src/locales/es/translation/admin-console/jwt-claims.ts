@@ -36,6 +36,7 @@ const jwt_claims = {
   restore: 'Restaurar valores predeterminados',
   restored: 'Restaurado',
   data_source_tab: 'Fuente de datos',
+  error_handling_tab: 'Manejo de errores',
   test_tab: 'Contexto de prueba',
   jwt_claims_description:
     'Los reclamos predeterminados se incluyen automáticamente en el JWT y no se pueden anular.',
@@ -67,6 +68,18 @@ const jwt_claims = {
   api_context: {
     title: 'Contexto de la API: control de acceso',
     subtitle: 'Utilice el método `api.denyAccess` para rechazar la solicitud de token.',
+  },
+  error_handling: {
+    title: 'Manejo de errores',
+    subtitle: 'Controla si la emisión del token debe bloquearse cuando el script falla.',
+    input_field_title: 'Comportamiento de emisión del token cuando el script falla',
+    block_issuance_switch: 'Bloquear la emisión del token cuando el script produce errores',
+    default_hint_create:
+      'Los scripts nuevos de claims personalizados bloquean por defecto la emisión del token cuando el script falla. Si la API ya devuelve un valor, se usará ese valor guardado.',
+    default_hint_edit:
+      'Los scripts existentes de claims personalizados sin esta configuración mantienen el comportamiento heredado con esta opción desactivada hasta que guardes un valor explícitamente.',
+    warning:
+      'Cuando está habilitado, los errores de ejecución del script rechazan la solicitud de token con `invalid_request` (400) y un `error_description` localizado. Las llamadas a `api.denyAccess` siguen devolviendo `access_denied`.',
   },
   fetch_external_data: {
     title: 'Obtener datos externos',

@@ -2,14 +2,14 @@ import {
   mfaEmailCodeVerificationRecordDataGuard,
   mfaPhoneCodeVerificationRecordDataGuard,
   type WebAuthnVerificationRecordData,
-  type SignInWebAuthnVerificationRecordData,
+  type SignInPasskeyVerificationRecordData,
   type SanitizedWebAuthnVerificationRecordData,
   sanitizedWebAuthnVerificationRecordDataGuard,
-  type SanitizedSignInWebAuthnVerificationRecordData,
-  sanitizedSignInWebAuthnVerificationRecordDataGuard,
+  type SanitizedSignInPasskeyVerificationRecordData,
+  sanitizedSignInPasskeyVerificationRecordDataGuard,
   VerificationType,
   webAuthnVerificationRecordDataGuard,
-  signInWebAuthnVerificationRecordDataGuard,
+  signInPasskeyVerificationRecordDataGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -71,7 +71,7 @@ import {
   type SanitizedTotpVerificationRecordData,
 } from './totp-verification.js';
 import { type VerificationRecord as GenericVerificationRecord } from './verification-record.js';
-import { WebAuthnVerification, SignInWebAuthnVerification } from './web-authn-verification.js';
+import { WebAuthnVerification, SignInPasskeyVerification } from './web-authn-verification.js';
 
 export type VerificationRecordData =
   | PasswordVerificationRecordData
@@ -84,7 +84,7 @@ export type VerificationRecordData =
   | TotpVerificationRecordData
   | BackupCodeVerificationRecordData
   | WebAuthnVerificationRecordData
-  | SignInWebAuthnVerificationRecordData
+  | SignInPasskeyVerificationRecordData
   | NewPasswordIdentityVerificationRecordData
   | OneTimeTokenVerificationRecordData;
 
@@ -99,7 +99,7 @@ export type SanitizedVerificationRecordData =
   | SanitizedTotpVerificationRecordData
   | SanitizedBackupCodeVerificationRecordData
   | SanitizedWebAuthnVerificationRecordData
-  | SanitizedSignInWebAuthnVerificationRecordData
+  | SanitizedSignInPasskeyVerificationRecordData
   | SanitizedNewPasswordIdentityVerificationRecordData
   | OneTimeTokenVerificationRecordData;
 
@@ -120,7 +120,7 @@ export type VerificationRecordMap = AssertVerificationMap<{
   [VerificationType.TOTP]: TotpVerification;
   [VerificationType.BackupCode]: BackupCodeVerification;
   [VerificationType.WebAuthn]: WebAuthnVerification;
-  [VerificationType.SignInWebAuthn]: SignInWebAuthnVerification;
+  [VerificationType.SignInPasskey]: SignInPasskeyVerification;
   [VerificationType.NewPasswordIdentity]: NewPasswordIdentityVerification;
   [VerificationType.OneTimeToken]: OneTimeTokenVerification;
 }>;
@@ -147,7 +147,7 @@ export const verificationRecordDataGuard = z.discriminatedUnion('type', [
   totpVerificationRecordDataGuard,
   backupCodeVerificationRecordDataGuard,
   webAuthnVerificationRecordDataGuard,
-  signInWebAuthnVerificationRecordDataGuard,
+  signInPasskeyVerificationRecordDataGuard,
   newPasswordIdentityVerificationRecordDataGuard,
   oneTimeTokenVerificationRecordDataGuard,
 ]);
@@ -163,7 +163,7 @@ export const publicVerificationRecordDataGuard = z.discriminatedUnion('type', [
   sanitizedTotpVerificationRecordDataGuard,
   sanitizedBackupCodeVerificationRecordDataGuard,
   sanitizedWebAuthnVerificationRecordDataGuard,
-  sanitizedSignInWebAuthnVerificationRecordDataGuard,
+  sanitizedSignInPasskeyVerificationRecordDataGuard,
   sanitizedNewPasswordIdentityVerificationRecordDataGuard,
   oneTimeTokenVerificationRecordDataGuard,
 ]);
@@ -208,8 +208,8 @@ export const buildVerificationRecord = (
     case VerificationType.WebAuthn: {
       return new WebAuthnVerification(libraries, queries, data);
     }
-    case VerificationType.SignInWebAuthn: {
-      return new SignInWebAuthnVerification(libraries, queries, data);
+    case VerificationType.SignInPasskey: {
+      return new SignInPasskeyVerification(libraries, queries, data);
     }
     case VerificationType.NewPasswordIdentity: {
       return new NewPasswordIdentityVerification(libraries, queries, data);

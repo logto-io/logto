@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: 'Saisissez le code envoyé à votre téléphone',
   send_to_email: 'Envoyer à {{identifier}}',
   send_to_phone: 'Envoyer à {{identifier}}',
+  onboarding: 'Activer la vérification en deux étapes',
+  onboarding_description:
+    "Protégez votre compte avec la vérification en deux étapes. Choisissez une ou plusieurs méthodes : Passkey, application d'authentification (OTP), code de vérification SMS ou codes de secours.",
+  enable_mfa: 'Activer la vérification en deux étapes',
   add_mfa_factors: 'Ajouter la vérification en deux étapes',
   add_mfa_description:
     'La vérification en deux étapes est activée. Sélectionnez votre deuxième méthode de vérification pour une connexion sécurisée.',
@@ -28,6 +32,7 @@ const mfa = {
   verify_mfa_description:
     'La vérification en deux étapes a été activée pour ce compte. Veuillez sélectionner la deuxième façon de vérifier votre identité.',
   add_authenticator_app: "Ajouter une application d'authentification",
+  replace_authenticator_app: "Remplacer l'application d'authentification",
   step: 'Étape {{step, number}} : {{content}}',
   scan_qr_code: 'Scannez ce code QR',
   scan_qr_code_description:

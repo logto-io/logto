@@ -42,6 +42,7 @@ const sign_in_exp = {
     hide_logto_branding: 'Logto 브랜딩 숨기기',
     hide_logto_branding_description:
       '"Powered by Logto" 문구를 제거하고 깔끔하고 전문적인 로그인 경험에서 브랜드만 돋보이게 하세요.',
+    hide_logto_branding_oss_note: '이 기능은 <a>Logto Cloud</a>에서 기본 제공됩니다.',
   },
   branding_uploads: {
     app_logo: {
@@ -77,6 +78,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: '커스텀 UI',
+    cloud_tag: 'Cloud',
     css_code_editor_title: '커스텀 CSS',
     css_code_editor_description1: '커스텀 CSS 예제를 확인하세요.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -86,15 +88,19 @@ const sign_in_exp = {
     bring_your_ui_title: 'UI 가져오기',
     bring_your_ui_description:
       'Logto 가미리 제공하는 UI 를 나만의 코드로 대체하기 위해 압축 패키지 (.zip)를 업로드하세요. <a>더 알아보기</a>',
+    bring_your_ui_oss_description: '자신의 코드로 로그인 UI를 맞춤 설정하세요.',
+    bring_your_ui_oss_card_description:
+      '사용자 지정 로그인 UI를 <a>Logto Cloud</a>에 직접 업로드하세요. 포크하거나 다시 배포할 필요가 없습니다.',
+    bring_your_ui_oss_try_cloud: 'Cloud 사용해 보기',
     preview_with_bring_your_ui_description:
       '커스텀 UI 자산이 성공적으로 업로드되어 현재 제공되고 있습니다. 따라서 기본 제공 미리보기 창이 비활성화되었습니다.\n개인화된 로그인 UI 를 테스트하려면 "실시간 미리보기" 버튼을 클릭하여 새 브라우저 탭에서 엽니다.',
   },
   account_center: {
     title: '계정 센터',
     description: 'Logto API로 계정 센터 플로우를 사용자 지정하세요.',
-    enable_account_api: 'Account API 활성화',
+    enable_account_api: '계정 센터와 Account API 활성화',
     enable_account_api_description:
-      'Account API를 활성화하여 맞춤형 계정 센터를 구축하고, Logto 관리 API 없이도 최종 사용자에게 직접 API 접근을 제공합니다.',
+      '최종 사용자용 Account API와 Logto의 즉시 제공되는 계정 센터를 함께 활성화합니다. 끄면 두 기능 모두 사용할 수 없습니다.',
     field_options: {
       off: '끄기',
       edit: '편집',
@@ -168,27 +174,46 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Account API를 통해 패스키를 등록할 수 있도록 허용된 프런트엔드 애플리케이션 도메인을 추가하세요.',
     webauthn_related_origins_error: '오리진은 https:// 또는 http:// 로 시작해야 합니다',
+    delete_account_url: '계정 삭제',
+    delete_account_url_description:
+      '맞춤 로직으로 계정 삭제를 처리할 자체 엔드포인트 URL을 제공하세요.',
     prebuilt_ui: {
       title: '기본 제공 UI 통합',
-      description: '기본 제공 UI 를 사용하여 즉시 검증 및 보안 설정 흐름을 빠르게 통합하세요.',
+      description:
+        '기본 제공 UI를 사용하여 즉시 제공되는 계정 센터, 보안 검증 또는 단일 프로필 업데이트 흐름을 빠르게 통합하세요. 도메인과 경로를 결합하여 계정 센터 URL을 형성하기만 하면 됩니다(예: https://auth.foo.com/account/email).',
       permission_notice:
         '이 사전 구축된 흐름을 통합하려면 아래 설정에서 관련 계정 API 권한을 <strong>편집</strong>으로 설정하세요.',
+      account_center_title: '즉시 제공되는 계정 센터 통합',
+      account_center_description:
+        '사용자를 계정 센터로 라우팅하여 이메일, 전화번호, 사용자 이름, 비밀번호, MFA 및 연결된 계정 등 보안 설정을 관리합니다.',
       flows_title: '기본 제공 보안 설정 흐름 통합',
+      single_task_flows_title: '즉시 제공되는 단일 작업 흐름 통합',
       flows_description:
-        '도메인과 경로를 결합하여 계정 설정 URL 을 형성하세요 (예: https://auth.foo.com/account/email). 성공적으로 업데이트 후 사용자를 앱으로 되돌리려면 `redirect=` URL 매개변수를 선택적으로 추가하세요.',
+        '도메인과 경로를 결합하여 계정 설정 URL 을 형성하세요 (예: https://auth.foo.com/account/email). 선택적으로 `redirect=`를 추가하여 성공적인 업데이트 후 사용자를 앱으로 되돌리거나, `show_success=true`로 성공 페이지를 표시하거나, `ui_locales=`로 기본 언어를 재정의하거나, `identifier=`로 식별자 입력 필드를 미리 채울 수 있습니다.',
+      single_task_flows_description:
+        '사용자를 특정 흐름(예: 이메일 연결)으로 바로 라우팅합니다. 선택적으로 성공적인 업데이트 후 사용자를 앱으로 되돌리기 위해 `redirect=`를, 성공 페이지를 계속 표시하기 위해 `show_success=true`를, 기본 언어를 재정의하기 위해 `ui_locales=`를, 또는 식별자 입력 필드를 미리 채우기 위해 `identifier=`를 추가할 수 있습니다.',
       tooltips: {
         email: '주 이메일 주소 업데이트',
         phone: '주 전화번호 업데이트',
         username: '사용자 이름 업데이트',
         password: '새 비밀번호 설정',
+        social: '로그인용 소셜 계정 연동',
+        social_remove: '연동된 소셜 계정 제거',
         authenticator_app: '다중 요소 인증을 위한 새 인증 앱 설정',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: '새 패스키 등록',
         passkey_manage: '기존 패스키 관리 또는 새 패스키 추가',
         backup_codes_generate: '새로운 10 개의 백업 코드 세트 생성',
         backup_codes_manage: '사용 가능한 백업 코드 보기 또는 새로 생성',
+        account_center:
+          '계정 센터에 액세스하여 이메일, 전화번호, 사용자 이름, 비밀번호, MFA 및 연결된 계정 등 보안 설정 관리',
       },
       customize_note: '기본 제공 경험이 원치 않으시나요? 대신 계정 API 를 사용하여',
       customize_link: '흐름을 완전히 사용자화할 수 있습니다.',
+    },
+    custom_css: {
+      title: '커스텀 CSS',
+      description: '커스텀 CSS를 사용하여 계정 센터의 모양을 사용자 지정합니다.',
     },
   },
   sign_up_and_sign_in,

@@ -31,6 +31,7 @@ const user = {
   role_exists: 'O id da função {{roleId}} já foi adicionado a este utilizador.',
   invalid_role_type:
     'Tipo de função inválido, não é possível atribuir uma função máquina a máquina ao utilizador.',
+  suggest_mfa: 'Para maior segurança da conta, recomendamos que vincules MFA à tua conta.',
   missing_mfa: 'Precisas de vincular MFA adicional antes de iniciares sessão.',
   totp_already_in_use: 'TOTP já está em uso.',
   backup_code_already_in_use: 'Código de backup já está em uso.',
@@ -43,6 +44,8 @@ const user = {
     'Nome de utilizador é um identificador obrigatório, não podes defini-lo como nulo.',
   email_or_phone_required:
     'Endereço de email ou número de telefone é um identificador obrigatório, pelo menos um é necessário.',
+  last_sign_in_method_required:
+    'Tens de manter pelo menos um método de início de sessão disponível na tua conta.',
   email_required:
     'Endereço de email é um identificador obrigatório, não podes defini-lo como nulo.',
   phone_required:

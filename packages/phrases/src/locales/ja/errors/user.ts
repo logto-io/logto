@@ -31,6 +31,8 @@ const user = {
   role_exists: 'このユーザーには既に役割ID {{roleId}}が追加されています。',
   invalid_role_type:
     '役割タイプが無効です。ユーザーにはマシン対マシンの役割を割り当てることはできません。',
+  suggest_mfa:
+    'アカウントのセキュリティ向上のため、MFAをアカウントに連携することをおすすめします。',
   missing_mfa: 'MFAを追加してからサインインしてください。',
   totp_already_in_use: 'TOTPはすでに使用されています。',
   backup_code_already_in_use: 'バックアップコードはすでに使用されています。',
@@ -42,6 +44,8 @@ const user = {
   username_required: 'ユーザー名は必須の識別子ですので、null に設定することはできません。',
   email_or_phone_required:
     'メールアドレスまたは電話番号は必須の識別子であり、少なくとも1つが必要です。',
+  last_sign_in_method_required:
+    'アカウントには少なくとも1つの利用可能なサインイン方法を残す必要があります。',
   email_required: 'メールアドレスは必須の識別子ですので、null に設定することはできません。',
   phone_required: '電話番号は必須の識別子ですので、null に設定することはできません。',
   enterprise_sso_identity_not_exists:

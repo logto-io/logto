@@ -3,6 +3,20 @@ const account_center = {
     title: '页面未找到',
     description: '此页面不可用。',
   },
+  page: {
+    title: '账户',
+    security_title: '安全',
+    security_description: '你可以在这里修改账户设置，以确保账户安全。',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
+    support: '支持',
+  },
   verification: {
     title: '安全验证',
     description: '为保护账户安全，请确认是您本人。请选择验证身份的方法。',
@@ -11,6 +25,9 @@ const account_center = {
     error_verify_failed: '验证失败，请重新输入验证码。',
     verification_required: '验证已失效，请重新验证身份。',
     try_another_method: '尝试其他验证方式',
+    no_available_methods_title: '没有可用的验证方式',
+    no_available_methods_description:
+      '你尚未设置任何验证方式。请先为你的账户添加密码、邮箱或手机号。',
   },
   password_verification: {
     title: '验证密码',
@@ -51,6 +68,57 @@ const account_center = {
     title: '设置用户名',
     description: '用户名只能包含字母、数字和下划线。',
     success: '用户名更新成功。',
+  },
+  security: {
+    add: '添加',
+    change: '更改',
+    remove: '移除',
+    not_set: '未设置',
+    social_sign_in: '社交登录',
+    social_not_linked: '未关联',
+    email_phone: '邮箱 / 手机号',
+    email: '邮箱',
+    phone: '手机号',
+    password: '密码',
+    configured: '已设置',
+    not_configured: '未设置',
+    two_step_verification: '两步验证',
+    authenticator_app: '身份验证器应用',
+    passkeys: '通行密钥',
+    backup_codes: '备用码',
+    email_verification_code: '邮箱验证码',
+    phone_verification_code: '手机验证码',
+    passkeys_count_one: '{{count}} 个通行密钥',
+    passkeys_count_other: '{{count}} 个通行密钥',
+    backup_codes_count_one: '{{count}} 个备用码',
+    backup_codes_count_other: '{{count}} 个备用码',
+    view: '查看',
+    manage: '管理',
+    turn_on_2_step_verification: '开启两步验证',
+    turn_on_2_step_verification_description: '增加一层额外的安全保护。登录时将要求进行第二步验证。',
+    turn_off_2_step_verification: '关闭两步验证',
+    turn_off_2_step_verification_description:
+      '关闭两步验证将移除登录时账户的额外保护层。确定要继续吗？',
+    disable_2_step_verification: '关闭',
+    no_verification_method_warning:
+      '你尚未添加第二种验证方式。请至少添加一种以在登录时启用两步验证。',
+    account_removal: '账号删除',
+    delete_your_account: '删除你的账号',
+    delete_account: '删除账号',
+    remove_email_confirmation_title: '移除邮箱地址',
+    remove_email_confirmation_description: '移除后，你将无法再使用此邮箱地址登录。确定要继续吗？',
+    remove_phone_confirmation_title: '移除手机号',
+    remove_phone_confirmation_description: '移除后，你将无法再使用此手机号登录。确定要继续吗？',
+    email_removed: '邮箱地址已成功移除。',
+    phone_removed: '手机号已成功移除。',
+  },
+  social: {
+    linked: '已成功关联 {{connector}}。',
+    not_enabled: '此社交登录方式未启用。请联系管理员寻求帮助。',
+    removed: '已成功移除 {{connector}}。',
+    remove_confirmation_title: '移除社交账号',
+    remove_confirmation_description:
+      '如果你移除 {{connector}}，在重新添加之前，你可能无法再通过它登录。',
   },
   password: {
     title: '设置密码',
@@ -121,6 +189,10 @@ const account_center = {
     totp: {
       title: '身份验证器应用已添加！',
       description: '身份验证器应用已成功关联到你的账号。',
+    },
+    totp_replaced: {
+      title: '身份验证器应用已替换！',
+      description: '你的身份验证器应用已成功替换。',
     },
     backup_code: {
       title: '备用码已生成！',

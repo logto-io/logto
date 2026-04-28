@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-oidc",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "OIDC standard connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
@@ -31,7 +31,8 @@
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },

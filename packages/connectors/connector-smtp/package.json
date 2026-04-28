@@ -1,13 +1,13 @@
 {
   "name": "@logto/connector-smtp",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "SMTP connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
-    "nodemailer": "^7.0.7",
+    "nodemailer": "^8.0.4",
     "snakecase-keys": "^8.0.1",
     "zod": "3.24.3"
   },
@@ -45,7 +45,8 @@
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },

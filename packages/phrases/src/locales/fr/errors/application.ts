@@ -12,6 +12,9 @@ const application = {
   user_consent_scopes_not_found: 'Portées de consentement utilisateur invalides.',
   consent_management_api_scopes_not_allowed:
     "Les scopes de l'API de gestion ne sont pas autorisés.",
+  device_flow_native_only: "Le flux d'appareil n'est disponible que pour les applications natives.",
+  device_flow_not_changeable:
+    "Le flux d'appareil ne peut pas être modifié après la création de l'application.",
   protected_app_metadata_is_required: "Les métadonnées de l'application protégée sont requises.",
   protected_app_not_configured:
     "Le fournisseur d'application protégée n'est pas configuré. Cette fonctionnalité n'est pas disponible dans la version open source.",

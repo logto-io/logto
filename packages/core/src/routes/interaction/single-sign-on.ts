@@ -4,7 +4,7 @@ import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { assignInteractionResults } from '#src/libraries/session.js';
+import { assignInteractionResults } from '#src/libraries/session/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
@@ -86,7 +86,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     }),
     koaInteractionHooks(libraries),
     async (ctx, next) => {
-      const { guard, interactionDetails, assignInteractionHookResult } = ctx;
+      const { guard, interactionDetails, assignReleaseOnSuccessInteractionHookResult } = ctx;
 
       // Check SSO interaction exists
       const { event } = getInteractionStorage(interactionDetails.result);
@@ -112,7 +112,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       );
 
       await assignInteractionResults(ctx, provider, { login: { accountId } });
-      assignInteractionHookResult({ userId: accountId });
+      assignReleaseOnSuccessInteractionHookResult({ userId: accountId });
 
       return next();
     }
@@ -134,7 +134,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
     koaInteractionHooks(libraries),
     async (ctx, next) => {
       const {
-        assignInteractionHookResult,
+        assignReleaseOnSuccessInteractionHookResult,
         appendDataHookContext,
         guard: { params },
       } = ctx;
@@ -160,7 +160,7 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
       await assignInteractionResults(ctx, provider, { login: { accountId } });
 
       // Trigger webhooks
-      assignInteractionHookResult({ userId: accountId });
+      assignReleaseOnSuccessInteractionHookResult({ userId: accountId });
       appendDataHookContext('User.Created', { user });
 
       return next();

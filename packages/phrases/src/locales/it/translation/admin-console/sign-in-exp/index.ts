@@ -45,6 +45,8 @@ const sign_in_exp = {
     hide_logto_branding: 'Nascondi il branding Logto',
     hide_logto_branding_description:
       'Rimuovi "Powered by Logto". Metti in risalto solo il tuo brand con un\'esperienza di accesso pulita e professionale.',
+    hide_logto_branding_oss_note:
+      'Questa funzione è disponibile in modo nativo su <a>Logto Cloud</a>.',
   },
   branding_uploads: {
     app_logo: {
@@ -80,6 +82,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'UI personalizzata',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'CSS personalizzato',
     css_code_editor_description1: "Vedi l'esempio di CSS personalizzato.",
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -89,15 +92,19 @@ const sign_in_exp = {
     bring_your_ui_title: 'Porta la tua UI',
     bring_your_ui_description:
       'Carica un pacchetto compresso (.zip) per sostituire la UI precaricata di Logto con il tuo codice. <a>Scopri di più</a>',
+    bring_your_ui_oss_description: "Personalizza l'interfaccia di accesso con il tuo codice.",
+    bring_your_ui_oss_card_description:
+      'Carica direttamente la tua interfaccia di accesso personalizzata su <a>Logto Cloud</a>. Non serve fare un fork o ridistribuire.',
+    bring_your_ui_oss_try_cloud: 'Prova Cloud',
     preview_with_bring_your_ui_description:
       'I tuoi asset della UI personalizzata sono stati caricati con successo e ora vengono serviti. Di conseguenza, la finestra di anteprima integrata è stata disabilitata.\nPer testare la tua UI di accesso personalizzata, fai clic sul pulsante "Live Preview" per aprirla in una nuova scheda del browser.',
   },
   account_center: {
     title: 'CENTRO ACCOUNT',
     description: 'Personalizza i flussi del centro account con le API Logto.',
-    enable_account_api: 'Abilita l’Account API',
+    enable_account_api: 'Abilita il centro account e l’Account API',
     enable_account_api_description:
-      'Abilita l’Account API per creare un centro account personalizzato e offrire agli utenti finali l’accesso diretto all’API senza utilizzare la Logto Management API.',
+      'Abilita insieme l’Account API per gli utenti finali e il centro account predefinito di Logto. Se disattivato, entrambe le funzionalità non sono disponibili.',
     field_options: {
       off: 'Disattivato',
       edit: 'Modifica',
@@ -172,29 +179,47 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Aggiungi i domini delle applicazioni front-end autorizzate a registrare passkey tramite l’Account API.',
     webauthn_related_origins_error: "L'origine deve iniziare con https:// o http://",
+    delete_account_url: "Elimina l'account",
+    delete_account_url_description:
+      'Fornisci il tuo URL endpoint per gestire l’eliminazione dell’account con logica personalizzata.',
     prebuilt_ui: {
       title: 'INTEGRAZIONE UI PREDEFINITA',
       description:
-        'Integra rapidamente i flussi di verifica e impostazione di sicurezza predefiniti con una UI integrata.',
+        "Integra rapidamente flussi predefiniti per il centro account, la verifica di sicurezza o l'aggiornamento del profilo singolo.",
       permission_notice:
         "Per integrare questi flussi predefiniti, imposta i permessi dell'API account correlati su <strong>Modifica</strong> nelle impostazioni sottostanti.",
+      account_center_title: 'Integra il centro account predefinito',
+      account_center_description:
+        'Indirizza gli utenti al centro account per gestire le impostazioni di sicurezza come email, telefono, nome utente, password, MFA e account collegati.',
       flows_title: 'Integra i flussi di impostazione di sicurezza predefiniti',
+      single_task_flows_title: 'Integra i flussi di aggiornamento profilo singolo predefiniti',
       flows_description:
-        "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi un parametro URL `redirect=` per riportare gli utenti alla tua app dopo l'aggiornamento avvenuto con successo.",
+        "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, `show_success=true` per mantenere visibile la pagina di successo, `ui_locales=` per sovrascrivere la lingua predefinita, o `identifier=` per precompilare il campo di input dell'identificatore.",
+      single_task_flows_description:
+        'Combina il tuo dominio con il percorso per formare il tuo URL di aggiornamento del profilo (ad es., https://auth.foo.com/account/profile). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, o `ui_locales=` per sovrascrivere la lingua predefinita.',
       tooltips: {
         email: 'Aggiorna il tuo indirizzo email principale',
         phone: 'Aggiorna il tuo numero di telefono principale',
         username: 'Aggiorna il tuo nome utente',
         password: 'Imposta una nuova password',
+        social: 'Collega un account social per l’accesso',
+        social_remove: 'Rimuovi un account social collegato',
         authenticator_app:
           "Configura una nuova app di autenticazione per l'autenticazione multifattore",
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: 'Registra una nuova passkey',
         passkey_manage: 'Gestisci le passkey esistenti o aggiungi nuove passkey',
         backup_codes_generate: 'Genera un nuovo set di 10 codici di backup',
         backup_codes_manage: 'Visualizza i codici di backup disponibili o genera nuovi codici',
+        account_center:
+          'Accedi al centro account per gestire le impostazioni di sicurezza come email, telefono, nome utente, password, MFA e account collegati',
       },
-      customize_note: "Non vuoi l'esperienza predefinita? Puoi completamente",
+      customize_note: 'Non vuoi l’esperienza predefinita? Puoi completamente',
       customize_link: 'personalizzare i tuoi flussi con l’Account API invece.',
+    },
+    custom_css: {
+      title: 'CSS personalizzato',
+      description: 'Personalizza l’aspetto del centro account utilizzando CSS personalizzato.',
     },
   },
   sign_up_and_sign_in,

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-aliyun-sms",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Aliyun SMS connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
@@ -27,7 +27,8 @@
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },

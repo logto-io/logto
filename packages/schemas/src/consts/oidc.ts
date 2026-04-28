@@ -7,6 +7,10 @@ import { inSeconds } from './date.js';
 
 export const tenantIdKey = 'tenant_id';
 
+export const oidcRoutes = Object.freeze({
+  codeVerification: '/oidc/device',
+} as const);
+
 export const customClientMetadataDefault = Object.freeze({
   idTokenTtl: inSeconds.oneHour,
   refreshTokenTtlInDays: 14,
@@ -77,6 +81,12 @@ export enum ExtraParamsKey {
    * Custom back URL for the close button to redirect to.
    */
   BackUrl = 'back_url',
+  /**
+   * Force the sign-in experience theme (`light` or `dark`), overriding the
+   * user's system `prefers-color-scheme`. Lets the calling app keep its own
+   * theme toggle in sync with the auth screen.
+   */
+  Theme = 'theme',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -108,6 +118,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.OneTimeToken]: z.string(),
     [ExtraParamsKey.GoogleOneTapCredential]: z.string(),
     [ExtraParamsKey.BackUrl]: z.string(),
+    [ExtraParamsKey.Theme]: z.string(),
   })
   .partial() satisfies ToZodObject<ExtraParamsObject>;
 
@@ -122,4 +133,5 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.OneTimeToken]: string;
   [ExtraParamsKey.GoogleOneTapCredential]: string;
   [ExtraParamsKey.BackUrl]: string;
+  [ExtraParamsKey.Theme]: string;
 }>;

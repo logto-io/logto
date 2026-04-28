@@ -178,7 +178,7 @@
       "get": {
         "operationId": "GetLogtoConfig",
         "summary": "Get logto config",
-        "description": "Retrieve the exposed portion of the current user's logto config. This endpoint currently includes only the MFA skip state.",
+        "description": "Retrieve the exposed portion of the current user's logto config. This includes MFA states (enabled, skipped, skipMfaOnSignIn) and passkey sign-in binding states (skipped). Passkey is a WebAuthn MFA factor and shares the same account center field access control as MFA.",
         "responses": {
           "200": {
             "description": "The exposed logto config fields were retrieved successfully."
@@ -194,7 +194,7 @@
       "patch": {
         "operationId": "UpdateLogtoConfig",
         "summary": "Update logto config",
-        "description": "Update the exposed portion of the current user's logto config. This endpoint currently allows updating only the MFA skip state.",
+        "description": "Update the exposed portion of the current user's logto config. Supports updating MFA states (enabled, skipped, skipMfaOnSignIn) and passkey sign-in binding states (skipped). Passkey is a WebAuthn MFA factor and shares the same account center field access control as MFA.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -202,8 +202,21 @@
                 "properties": {
                   "mfa": {
                     "properties": {
+                      "enabled": {
+                        "description": "Set whether MFA is enabled for the user."
+                      },
                       "skipped": {
                         "description": "Set whether the user is marked as having skipped MFA binding."
+                      },
+                      "skipMfaOnSignIn": {
+                        "description": "Set whether the user has opted to skip MFA verification on sign-in. This is ignored when the MFA policy is mandatory."
+                      }
+                    }
+                  },
+                  "passkeySignIn": {
+                    "properties": {
+                      "skipped": {
+                        "description": "Set whether the user has persistently skipped binding a passkey for sign-in."
                       }
                     }
                   }
@@ -439,6 +452,40 @@
         }
       }
     },
+    "/api/my-account/mfa-verifications/totp": {
+      "put": {
+        "operationId": "CreateOrReplaceTotpMfaVerification",
+        "summary": "Create or replace the authenticator app",
+        "description": "Create or replace the user's TOTP MFA verification with a new authenticator app binding. If the user already has a TOTP verification, it will be replaced; otherwise, a new one will be created. Requires a logto-verification-id header for sensitive permission checks, a valid TOTP secret, and a valid TOTP code generated from the secret.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "secret": {
+                    "description": "The TOTP secret for the authenticator app."
+                  },
+                  "code": {
+                    "description": "The TOTP code generated from the secret to confirm the binding."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The authenticator app was created or replaced successfully."
+          },
+          "400": {
+            "description": "The provided secret or TOTP code is invalid."
+          },
+          "401": {
+            "description": "Permission denied, identity verification is required or insufficient scope."
+          }
+        }
+      }
+    },
     "/api/my-account/mfa-verifications/totp-secret/generate": {
       "post": {
         "operationId": "GenerateTotpSecret",
@@ -569,28 +616,72 @@
     },
     "/api/my-account/sessions": {
       "get": {
-        "tags": ["Dev feature"],
         "operationId": "GetSessions",
         "summary": "Get all active sessions",
         "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available. A logto-verification-id in header is required for checking sensitive session details.",
         "responses": {
           "200": {
             "description": "Return a list of non-expired sessions of the user."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access session details."
+          }
+        }
+      }
+    },
+    "/api/my-account/grants": {
+      "get": {
+        "operationId": "GetGrants",
+        "summary": "Get all active grants",
+        "description": "Retrieve all active application grants for the user. A logto-verification-id in header is required for checking grant details.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "appType",
+            "description": "Optional application type filter. Use 'firstParty' to return grants from first-party applications only, or 'thirdParty' for third-party applications only."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a list of active application grants of the user."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access grant details."
+          }
+        }
+      }
+    },
+    "/api/my-account/grants/{grantId}": {
+      "delete": {
+        "operationId": "DeleteGrantById",
+        "summary": "Revoke a grant by ID",
+        "description": "Revoke a specific user application grant by grant ID and remove the related session authorization. A logto-verification-id in header is required for revoking grants.",
+        "responses": {
+          "204": {
+            "description": "The grant was revoked successfully."
+          },
+          "400": {
+            "description": "The field is not editable."
+          },
+          "404": {
+            "description": "The grant does not exist."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to revoke grants."
           }
         }
       }
     },
     "/api/my-account/sessions/{sessionId}": {
       "delete": {
-        "tags": ["Dev feature"],
         "operationId": "DeleteSessionById",
         "summary": "Revoke a session by ID",
-        "description": "Revoke a specific user session by its ID, optionally revoking all associated grants and tokens.  A logto-verification-id in header is required for revoking sessions.",
+        "description": "Revoke a specific user session by its ID, optionally revoking target associated grants and tokens.  A logto-verification-id in header is required for revoking sessions.",
         "parameters": [
           {
             "in": "query",
-            "name": "revokeGrants",
-            "description": "Whether to revoke all associated grants and tokens along with the session."
+            "name": "revokeGrantsTarget",
+            "description": "Optional target for revoking associated grants and tokens. 'all' revokes grants for every application authorized by this session. 'firstParty' revokes only first-party app grants; third-party app grants remain active. If omitted, grants remain active when the session authorizations include offline_access; otherwise they are revoked."
           }
         ],
         "responses": {
@@ -602,6 +693,9 @@
           },
           "404": {
             "description": "The session does not exist."
+          },
+          "401": {
+            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to revoke sessions."
           }
         }
       }

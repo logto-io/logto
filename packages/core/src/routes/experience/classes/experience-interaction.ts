@@ -6,13 +6,10 @@ import {
   MfaFactor,
   VerificationType,
   type User,
-  userPasskeySignInDataKey,
-  userMfaDataKey,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -32,8 +29,10 @@ import {
   getNewUserProfileFromVerificationRecord,
   identifyUserByVerificationRecord,
   mergeUserMfaVerifications,
+  parseMfaPropertiesToUserConfig,
 } from './helpers.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
+import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator } from './libraries/mfa-validator.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
@@ -355,7 +354,7 @@ export default class ExperienceInteraction {
    */
 
   public async guardMfaVerificationStatus(log?: LogEntry) {
-    if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInWebAuthn) {
+    if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInPasskey) {
       return;
     }
 
@@ -369,13 +368,13 @@ export default class ExperienceInteraction {
       return;
     }
 
-    if (EnvSet.values.isDevFeaturesEnabled && adaptiveMfaResult?.requiresMfa) {
-      this.ctx.assignInteractionHookResult({
-        event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
-        payload: { adaptiveMfaResult },
-        userId: user.id,
-      });
+    const isMfaVerified = mfaValidator.isMfaVerified(this.verificationRecordsArray);
+
+    if (isMfaVerified) {
+      return;
     }
+
+    this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
 
     const { primaryEmail, primaryPhone } = user;
     const maskedIdentifiers: Record<string, string> = {
@@ -392,7 +391,7 @@ export default class ExperienceInteraction {
     };
 
     assertThat(
-      mfaValidator.isMfaVerified(this.verificationRecordsArray),
+      isMfaVerified,
       new RequestError(
         { code: 'session.mfa.require_mfa_verification', status: 403 },
         {
@@ -401,6 +400,15 @@ export default class ExperienceInteraction {
         }
       )
     );
+  }
+
+  /**
+   * Guard current interaction is identified and the identified user exists.
+   *
+   * @throws {RequestError} with 404 if the user is not identified or not found
+   */
+  public async guardIdentifiedUser() {
+    await this.getIdentifiedUser();
   }
 
   /**
@@ -492,7 +500,7 @@ export default class ExperienceInteraction {
 
       await this.cleanUp();
 
-      this.ctx.assignInteractionHookResult({ userId: user.id });
+      this.ctx.assignReleaseOnSuccessInteractionHookResult({ userId: user.id });
       this.ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
       return;
@@ -512,7 +520,7 @@ export default class ExperienceInteraction {
       hasVerifiedSsoIdentity: this.hasVerifiedSsoIdentity,
     });
 
-    if (EnvSet.values.isDevFeaturesEnabled && !this.hasVerifiedSsoIdentity) {
+    if (!this.hasVerifiedSsoIdentity) {
       // Check if passkey sign-in is enabled in the sign-in experience, if yes, check if user has `WebAuthn`
       // type of MFA verification record in `users.mfaVerifications`. Suggest user to add a passkey if not.
       await this.mfa.assertPasskeySignInFulfilled();
@@ -521,23 +529,8 @@ export default class ExperienceInteraction {
     // Revalidate the new MFA data if any
     await this.mfa.checkAvailability();
 
-    // MFA fulfilled
-    const isSignInEvent = this.#interactionEvent === InteractionEvent.SignIn;
-
-    // Skip mandatory MFA fulfillment validation if the user
-    // - signIn/register via SSO verification method
-    // - signIn via Passkey verification method
-    const shouldSkipSubmitMfaFulfillment =
-      this.hasVerifiedSsoIdentity || (isSignInEvent && this.hasVerifiedSignInWebAuthn);
-
-    if (!shouldSkipSubmitMfaFulfillment) {
-      const adaptiveMfaResult = isSignInEvent
-        ? await this.adaptiveMfaValidator.getResult(log)
-        : undefined;
-
-      await this.mfa.assertMfaFulfilled({
-        adaptiveMfaResult,
-      });
+    if (!this.hasVerifiedSsoIdentity) {
+      await this.mfa.assertMfaFulfilled();
     }
 
     const {
@@ -549,7 +542,8 @@ export default class ExperienceInteraction {
       enterpriseSsoConnectorTokenSetSecret,
       ...rest
     } = this.profile.data;
-    const { mfaSkipped, passkeySkipped, mfaVerifications } = this.mfa.toUserMfaVerifications();
+    const userMfaVerifications = this.mfa.toUserMfaVerifications();
+    const { mfaVerifications } = userMfaVerifications;
 
     // Update user profile
     const updatedUser = await userQueries.updateUserById(user.id, {
@@ -567,28 +561,13 @@ export default class ExperienceInteraction {
           mfaVerifications: mergeUserMfaVerifications(user.mfaVerifications, mfaVerifications),
         }
       ),
-      ...conditional(
-        mfaSkipped && {
-          logtoConfig: {
-            ...user.logtoConfig,
-            [userMfaDataKey]: {
-              skipped: true,
-            },
-          },
-        }
-      ),
-      ...conditional(
-        // Only persist passkey skipped status on sign-in event
-        passkeySkipped &&
-          this.#interactionEvent === InteractionEvent.SignIn && {
-            logtoConfig: {
-              ...user.logtoConfig,
-              [userPasskeySignInDataKey]: {
-                skipped: true,
-              },
-            },
-          }
-      ),
+      logtoConfig: {
+        ...parseMfaPropertiesToUserConfig(
+          user.logtoConfig,
+          userMfaVerifications,
+          this.#interactionEvent
+        ),
+      },
       lastSignInAt: Date.now(),
     });
 
@@ -644,18 +623,16 @@ export default class ExperienceInteraction {
 
     // The geo context is only recorded when the `submit()` function succeeds.
     // The recorded geo context will affect the evaluation results of the adaptive MFA afterwards.
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      void trySafe(
-        async () => this.adaptiveMfaValidator.recordSignInGeoContext(user, this.#interactionEvent),
-        (error) => {
-          void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
-        }
-      );
-    }
+    void trySafe(
+      async () => this.adaptiveMfaValidator.recordSignInGeoContext(user, this.#interactionEvent),
+      (error) => {
+        void appInsights.trackException(error, buildAppInsightsTelemetry(this.ctx));
+      }
+    );
 
     this.ctx.body = { redirectTo };
 
-    this.ctx.assignInteractionHookResult({ userId: user.id });
+    this.ctx.assignReleaseOnSuccessInteractionHookResult({ userId: user.id });
 
     if (Object.keys(this.profile.data).length > 0 || mfaVerifications.length > 0) {
       this.ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
@@ -693,6 +670,18 @@ export default class ExperienceInteraction {
       mfa: this.mfa.sanitizedData,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
     };
+  }
+
+  private assignAdaptiveMfaHookResult(userId: string, adaptiveMfaResult?: AdaptiveMfaResult) {
+    if (!adaptiveMfaResult?.requiresMfa) {
+      return;
+    }
+
+    this.ctx.assignReleaseAnywayInteractionHookResult({
+      event: InteractionHookEvent.PostSignInAdaptiveMfaTriggered,
+      payload: { adaptiveMfaResult },
+      userId,
+    });
   }
 
   private get verificationRecordsArray() {
@@ -754,10 +743,8 @@ export default class ExperienceInteraction {
     return Boolean(socialVerificationRecord?.isVerified);
   }
 
-  private get hasVerifiedSignInWebAuthn() {
-    const webAuthnVerificationRecord = this.verificationRecords.get(
-      VerificationType.SignInWebAuthn
-    );
+  private get hasVerifiedSignInPasskey() {
+    const webAuthnVerificationRecord = this.verificationRecords.get(VerificationType.SignInPasskey);
     return Boolean(webAuthnVerificationRecord?.isVerified);
   }
 

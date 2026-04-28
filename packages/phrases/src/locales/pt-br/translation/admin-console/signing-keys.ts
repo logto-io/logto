@@ -21,6 +21,7 @@ const signing_keys = {
     algorithm: 'Algoritmo de assinatura',
   },
   status: {
+    next: 'Próximo',
     current: 'Atual',
     previous: 'Anterior',
   },

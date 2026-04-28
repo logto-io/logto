@@ -77,6 +77,10 @@ const connectors = {
   create_form: {
     third_party_connectors:
       '集成第三方提供商以快速社交登錄、社交帳戶鏈接和 API 訪問。<a>了解更多</a>',
+    email_connector_upsell: {
+      title: 'Logto 內置電郵服務',
+      description: '零配置電郵傳送，開箱即用即可發送驗證碼和魔法連結。',
+    },
     standard_connectors: '或者，你可以通過標準協議自定義你的社交連接器。',
   },
 };

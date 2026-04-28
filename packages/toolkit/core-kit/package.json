@@ -1,6 +1,6 @@
 {
   "name": "@logto/core-kit",
-  "version": "2.7.1",
+  "version": "2.8.0",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/toolkit#readme",
   "repository": {
@@ -38,7 +38,8 @@
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
     "stylelint": "stylelint \"scss/**/*.scss\"",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {

@@ -62,8 +62,14 @@
 .description {
   font: var(--font-body-2);
   color: var(--color-text-secondary);
+  margin-bottom: _.unit(1);
 }
 
 .notice {
   margin: _.unit(2) 0;
+}
+
+.cssEditor {
+  max-height: calc(100vh - 260px);
+  min-height: 132px; // min-height to show three lines of code
 }

@@ -26,14 +26,14 @@ export class MockWellKnownCache extends WellKnownCache {
 }
 
 export class MockQueries extends Queries {
-  constructor(queriesOverride?: Partial2<Queries>) {
+  constructor(queriesOverride?: Partial2<Queries>, wellKnownCache = new MockWellKnownCache()) {
     super(
       createMockPool({
         query: async (sql, values) => {
           return createMockQueryResult([]);
         },
       }),
-      new MockWellKnownCache()
+      wellKnownCache
     );
 
     if (!queriesOverride) {
@@ -63,6 +63,7 @@ export type Partial2<T> = { [key in keyof T]?: Partial<T[key]> };
 export class MockTenant implements TenantContext {
   public id = 'mock_id';
   public envSet = mockEnvSet;
+  public wellKnownCache: MockWellKnownCache;
   public queries: Queries;
   public logtoConfigs: LogtoConfigLibrary;
   public cloudConnection: CloudConnectionLibrary;
@@ -79,7 +80,8 @@ export class MockTenant implements TenantContext {
     librariesOverride?: Partial2<Libraries>,
     logtoConfigsOverride?: Partial<LogtoConfigLibrary>
   ) {
-    this.queries = new MockQueries(queriesOverride);
+    this.wellKnownCache = new MockWellKnownCache();
+    this.queries = new MockQueries(queriesOverride, this.wellKnownCache);
 
     this.logtoConfigs = { ...createLogtoConfigLibrary(this.queries), ...logtoConfigsOverride };
     this.cloudConnection = createCloudConnectionLibrary(this.logtoConfigs);
@@ -106,7 +108,12 @@ export class MockTenant implements TenantContext {
   }
 
   public async invalidateCache() {
-    // Do nothing
+    // Test double: cache invalidation side effects are intentionally skipped.
+  }
+
+  public async scheduleSigningKeyRotation(timestamp: number) {
+    void timestamp;
+    // Test double: delayed signing-key rotation is intentionally a no-op.
   }
 
   setPartialKey<Type extends 'queries' | 'libraries', Key extends keyof this[Type]>(

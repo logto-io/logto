@@ -1,12 +1,21 @@
 const tenants = {
   title: 'Ayarlar',
   description: 'Kiracı ayarlarını verimli bir şekilde yönetin ve alan adınızı özelleştirin.',
+  oss_description:
+    'Hesap güvenliğinizi sağlamak için hesap ayarlarınızı burada değiştirin ve kişisel bilgilerinizi yönetin.',
   tabs: {
     settings: 'Ayarlar',
     members: 'Üyeler',
     domains: 'Alan adları',
+    oidc_configs: 'OIDC yapılandırmaları',
     subscription: 'Plan ve faturalandırma',
     billing_history: 'Fatura geçmişi',
+  },
+  members: {
+    card_title: 'Kiracıları Logto Cloud ile daha güvenli yönetin',
+    card_description:
+      'Tek bir yönetici hesabını paylaşmadan kiracınıza yöneticiler veya iş birlikçileri ekleyin.',
+    card_action: 'Logto Cloud’u keşfedin',
   },
   settings: {
     title: 'AYARLAR',

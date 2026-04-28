@@ -1,10 +1,12 @@
-import type { Role, User } from '@logto/schemas';
+import { UsersPasswordEncryptionMethod, type Role, type User } from '@logto/schemas';
 
+import { type UserProfileResponseWithPasswordHash } from '#src/api/admin-user.js';
 import { assignRolesToUser, authedAdminApi, createUser, deleteUser } from '#src/api/index.js';
 import { createRole, deleteRole } from '#src/api/role.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
+import { generatePassword } from '#src/utils.js';
 
 const getUsers = async <T>(
   init: string[][] | Record<string, string> | URLSearchParams
@@ -363,5 +365,47 @@ describe('admin console user search params - excludeOrganizationId', () => {
     expect(json).toHaveLength(2);
     expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[0]!.id }));
     expect(json).toContainEqual(expect.objectContaining({ id: userApi.users[1]!.id }));
+  });
+});
+
+describe('admin console user search params - includePasswordHash', () => {
+  const userPrefix = `search_password_hash_`;
+  const userApi = new UserApiTest();
+
+  beforeAll(async () => {
+    await Promise.all([
+      userApi.create({ username: userPrefix + '1', password: generatePassword() }),
+      userApi.create({ username: userPrefix + '2' }),
+    ]);
+  });
+
+  afterAll(async () => {
+    await userApi.cleanUp();
+  });
+
+  it('should not return password hash by default', async () => {
+    const { json } = await getUsers<UserProfileResponseWithPasswordHash[]>([
+      ['search.username', userPrefix + '%'],
+    ]);
+    expect(json.length).toBeGreaterThan(0);
+    expect(json.every((user) => user.passwordDigest === undefined)).toBe(true);
+    expect(json.every((user) => user.passwordAlgorithm === undefined)).toBe(true);
+  });
+
+  it('should return password hash when includePasswordHash=true', async () => {
+    const { json } = await getUsers<UserProfileResponseWithPasswordHash[]>([
+      ['search.username', userPrefix + '%'],
+      ['includePasswordHash', 'true'],
+    ]);
+
+    expect(json.length).toBeGreaterThan(0);
+
+    const userWithPassword = json.find((user) => user.username === userPrefix + '1');
+    expect(userWithPassword?.passwordDigest).toBeTruthy();
+    expect(userWithPassword?.passwordAlgorithm).toBe(UsersPasswordEncryptionMethod.Argon2i);
+
+    const userWithoutPassword = json.find((user) => user.username === userPrefix + '2');
+    expect(userWithoutPassword?.passwordDigest).toBeNull();
+    expect(userWithoutPassword?.passwordAlgorithm).toBeNull();
   });
 });

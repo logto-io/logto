@@ -31,19 +31,24 @@
   gap: _.unit(4);
   margin-top: _.unit(2);
 
-  .qrCode {
+  .qrCode,
+  .qrCodePlaceholder {
     border: 1px solid var(--color-line-divider);
     border-radius: var(--radius);
     overflow: hidden;
     height: 136px;
     width: 136px;
+  }
 
-    > img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      @include _.image-align-center;
-    }
+  .qrCode > img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    @include _.image-align-center;
+  }
+
+  .qrCodePlaceholder {
+    background-color: var(--color-bg-light);
   }
 
   .rawSecret {

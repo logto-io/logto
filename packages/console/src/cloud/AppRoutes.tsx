@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import { EnterpriseSubscriptionTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -51,23 +50,20 @@ function AppRoutes() {
             />
             <Route path={GlobalRoute.Onboarding + '/*'} element={<OnboardingApp />} />
             <Route index element={<Main />} />
-            {/* TODO: Remove dev features flag check when enterprise subscription is generally available */}
-            {isDevFeaturesEnabled && (
+            <Route
+              path={`${GlobalRoute.EnterpriseSubscription}/:logtoEnterpriseId`}
+              element={<EnterpriseSubscription />}
+            >
               <Route
-                path={`${GlobalRoute.EnterpriseSubscription}/:logtoEnterpriseId`}
-                element={<EnterpriseSubscription />}
-              >
-                <Route
-                  index
-                  element={<Navigate replace to={EnterpriseSubscriptionTabs.Subscription} />}
-                />
-                <Route path={EnterpriseSubscriptionTabs.Subscription} element={<Subscription />} />
-                <Route
-                  path={EnterpriseSubscriptionTabs.BillingHistory}
-                  element={<BillingHistory />}
-                />
-              </Route>
-            )}
+                index
+                element={<Navigate replace to={EnterpriseSubscriptionTabs.Subscription} />}
+              />
+              <Route path={EnterpriseSubscriptionTabs.Subscription} element={<Subscription />} />
+              <Route
+                path={EnterpriseSubscriptionTabs.BillingHistory}
+                element={<BillingHistory />}
+              />
+            </Route>
           </Route>
         </Routes>
       </Suspense>

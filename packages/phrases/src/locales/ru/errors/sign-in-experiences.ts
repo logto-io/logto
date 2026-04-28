@@ -29,6 +29,10 @@ const sign_in_experiences = {
   phone_verification_code_cannot_be_used_for_sign_in:
     'Код подтверждения SMS не может быть использован для входа в систему, когда он включен для MFA.',
   adaptive_mfa_requires_mfa: 'Перед включением адаптивной MFA необходимо включить MFA.',
+  adaptive_mfa_requires_non_skippable_policy:
+    'Адаптивная MFA требует политики, не допускающей пропуска. Используйте PromptOnlyAtSignInMandatory или PromptAtSignInAndSignUpMandatory.',
+  non_adaptive_mfa_requires_skippable_policy:
+    'Когда адаптивная MFA отключена, политика запроса MFA должна допускать пропуск. Не используйте PromptOnlyAtSignInMandatory или PromptAtSignInAndSignUpMandatory.',
   duplicated_sign_up_identifiers: 'Обнаружены дублирующие идентификаторы создания учетной записи.',
   missing_sign_up_identifiers:
     'Основной идентификатор создания учетной записи не может быть пустым.',

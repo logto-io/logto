@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
 import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
 
 import MfaFactorName from '@/components/MfaFactorName';
 import MfaFactorTitle from '@/components/MfaFactorTitle';
@@ -30,7 +31,9 @@ function UserMfaVerifications({ userId }: Props) {
     mutate,
   } = useSWR<UserMfaVerificationResponse, RequestError>(`api/users/${userId}/mfa-verifications`);
 
-  const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
+  const { data: signInExperience } = useSWRImmutable<SignInExperience, RequestError>(
+    'api/sign-in-exp'
+  );
 
   const api = useApi();
   const { show: showConfirm } = useConfirmModal();
@@ -146,7 +149,9 @@ function UserMfaVerifications({ userId }: Props) {
               render: (mfaVerification) => {
                 if (
                   mfaVerification.id === 'email-factor' ||
-                  mfaVerification.id === 'phone-factor'
+                  mfaVerification.id === 'phone-factor' ||
+                  (mfaVerification.type === MfaFactor.WebAuthn &&
+                    signInExperience?.passkeySignIn.enabled)
                 ) {
                   return null;
                 }

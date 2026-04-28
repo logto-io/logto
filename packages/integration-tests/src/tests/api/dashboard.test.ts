@@ -2,8 +2,11 @@ import { SignInIdentifier } from '@logto/schemas';
 
 import type { StatisticsData } from '#src/api/index.js';
 import { api, getTotalUsersCount, getNewUsersData, getActiveUsersData } from '#src/api/index.js';
+import {
+  registerNewUserUsernamePassword,
+  signInWithPassword,
+} from '#src/helpers/experience/index.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
-import { registerNewUser, signInWithPassword } from '#src/helpers/interactions.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateUsername, generatePassword } from '#src/utils.js';
 
@@ -46,7 +49,7 @@ describe('admin console dashboard', () => {
   it('should get new user statistics successfully', async () => {
     const originUserStatistics = await getNewUsersData();
 
-    await registerNewUser(generateUsername(), generatePassword());
+    await registerNewUserUsernamePassword(generateUsername(), generatePassword());
 
     const newUserStatistics = await getNewUsersData();
 
@@ -65,7 +68,10 @@ describe('admin console dashboard', () => {
     const username = generateUsername();
     await createUserByAdmin({ username, password });
 
-    await signInWithPassword({ username, password });
+    await signInWithPassword({
+      identifier: { type: SignInIdentifier.Username, value: username },
+      password,
+    });
 
     const newActiveUserStatistics = await getActiveUsersData();
 

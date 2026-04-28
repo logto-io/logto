@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: 'Wprowadź kod wysłany na twój telefon',
   send_to_email: 'Wyślij do {{identifier}}',
   send_to_phone: 'Wyślij do {{identifier}}',
+  onboarding: 'Włącz weryfikację dwuetapową',
+  onboarding_description:
+    'Chroń swoje konto za pomocą weryfikacji dwuetapowej. Wybierz jedną lub więcej metod: klucz dostępu, aplikacja uwierzytelniająca (OTP), kod weryfikacyjny SMS lub kody zapasowe.',
+  enable_mfa: 'Włącz weryfikację dwuetapową',
   add_mfa_factors: 'Dodaj weryfikację dwuetapową',
   add_mfa_description:
     'Weryfikacja dwuetapowa jest włączona. Wybierz swój drugi sposób weryfikacji dla bezpiecznego logowania.',
@@ -28,6 +32,7 @@ const mfa = {
   verify_mfa_description:
     'Włączono weryfikację dwuetapową dla tego konta. Proszę wybrać drugi sposób weryfikacji swojej tożsamości.',
   add_authenticator_app: 'Dodaj aplikację autentykacyjną',
+  replace_authenticator_app: 'Zamień aplikację autentykacyjną',
   step: 'Krok {{step, number}}: {{content}}',
   scan_qr_code: 'Zeskanuj ten kod QR',
   scan_qr_code_description:

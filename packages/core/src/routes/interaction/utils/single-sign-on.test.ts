@@ -91,7 +91,7 @@ describe('Single sign on util methods tests', () => {
     ...createMockLogContext(),
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     interactionDetails: { jti: 'foo' } as Awaited<ReturnType<Provider['interactionDetails']>>,
-    assignInteractionHookResult: jest.fn(),
+    assignReleaseOnSuccessInteractionHookResult: jest.fn(),
     appendDataHookContext: jest.fn(),
   } satisfies WithInteractionHooksContext<WithLogContext<WithInteractionDetailsContext>>;
 

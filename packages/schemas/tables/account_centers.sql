@@ -7,5 +7,9 @@ create table account_centers (
   /** Control each fields */
   fields jsonb /* @use AccountCenterFieldControl */ not null default '{}'::jsonb,
   webauthn_related_origins jsonb /* @use WebauthnRelatedOrigins */ not null default '[]'::jsonb,
+  /** URL for custom account deletion endpoint */
+  delete_account_url varchar(2048),
+  /** User-defined custom CSS for the account center */
+  custom_css text,
   primary key (tenant_id, id)
 );

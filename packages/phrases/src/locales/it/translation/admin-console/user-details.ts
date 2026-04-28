@@ -69,11 +69,16 @@ const user_details = {
     field_name: 'Autenticazione a due fattori',
     field_description: 'Questo utente ha abilitato fattori di autenticazione a 2 passaggi.',
     name_column: 'Autenticazione a due fattori',
-
     field_description_empty:
       'Questo utente non ha abilitato fattori di autenticazione a due fattori.',
     deletion_confirmation:
       "Stai rimuovendo l'esistente <name/> per la verifica in due passaggi. Sei sicuro di voler continuare?",
+  },
+  passkey: {
+    field_name: 'Passkeys',
+    field_description_empty: "Questo utente non ha abilitato l'accesso con passkey.",
+    deletion_confirmation:
+      "Stai rimuovendo il passkey esistente <name/> per l'accesso. Sei sicuro di voler continuare?",
   },
   suspended: 'Sospeso',
   suspend_user: 'Sospendi utente',
@@ -148,7 +153,6 @@ const user_details = {
     name_column: 'Nome',
     session_id_column: 'ID sessione',
     location_column: 'Posizione',
-
     browser_on_os: '{{browser}} su {{os}}',
     user: 'Utente',
     applications: 'Applicazioni',
@@ -160,6 +164,20 @@ const user_details = {
     revoke_session: 'Revoca sessione',
     revoke_session_confirmation:
       'Se rimuovi questa sessione, gli utenti dovranno autenticarsi nuovamente.',
+  },
+  third_party_apps: {
+    title: 'App di terze parti',
+    description:
+      "Usa Logto come provider di identità per autorizzare app di terze parti. Visualizza e gestisci le app a cui questo utente ha concesso l'accesso.",
+    field_name: 'App di terze parti autorizzate',
+    multiple_authorized: 'Questo utente ha autorizzato più app e servizi di terze parti.',
+    not_authorized: 'Questo utente non ha ancora autorizzato app o servizi di terze parti.',
+    name_column: 'Nome',
+    app_id_column: 'ID app',
+    access_created_at_column: 'Accesso creato il',
+    revoke_access_title: 'Revocare accesso?',
+    revoke_access_description:
+      "Questa azione revoca l'accesso dell'app all'account di questo utente su tutti i dispositivi. L'utente dovrà autorizzarla di nuovo per ripristinare l'accesso.",
   },
   connections: {
     title: 'Connessione',

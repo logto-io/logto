@@ -6,6 +6,7 @@ const input = {
   confirm_password: '確認密碼',
   search_region_code: '搜索區域碼',
   backup_code: '備用碼',
+  code: '代碼',
   label_with_optional: '{{label}}（可選）',
 };
 

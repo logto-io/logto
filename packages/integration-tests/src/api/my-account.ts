@@ -1,9 +1,12 @@
-import {
-  type GetUserSessionsResponse,
-  type GetThirdPartyAccessTokenResponse,
-  type UserMfaVerificationResponse,
-  type UserProfileResponse,
+import type {
+  GetUserApplicationGrantsResponse,
+  GetUserSessionsResponse,
+  GetThirdPartyAccessTokenResponse,
+  SessionGrantRevokeTarget,
+  UserMfaVerificationResponse,
+  UserProfileResponse,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { type KyInstance } from 'ky';
 
 const verificationRecordIdHeader = 'logto-verification-id';
@@ -106,6 +109,16 @@ export const addMfaVerification = async (
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
+export const createOrReplaceTotpMfaVerification = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  body: { secret: string; code: string }
+) =>
+  api.put('api/my-account/mfa-verifications/totp', {
+    json: body,
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+
 export const deleteMfaVerification = async (
   api: KyInstance,
   verificationId: string,
@@ -167,11 +180,42 @@ export const getSessions = async (api: KyInstance, verificationRecordId: string)
     })
     .json<GetUserSessionsResponse>();
 
+export const getMyAccountGrants = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  appType?: 'firstParty' | 'thirdParty'
+) =>
+  api
+    .get('api/my-account/grants', {
+      searchParams: new URLSearchParams({
+        ...conditional(appType && { appType }),
+      }),
+      headers: { [verificationRecordIdHeader]: verificationRecordId },
+    })
+    .json<GetUserApplicationGrantsResponse>();
+
+export const revokeMyAccountGrant = async (
+  api: KyInstance,
+  grantId: string,
+  verificationRecordId: string
+) =>
+  api.delete(`api/my-account/grants/${grantId}`, {
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+
 export const deleteSession = async (
   api: KyInstance,
   sessionId: string,
-  verificationRecordId: string
+  verificationRecordId: string,
+  options?: {
+    revokeGrantsTarget?: SessionGrantRevokeTarget;
+  }
 ) =>
   api.delete(`api/my-account/sessions/${sessionId}`, {
+    searchParams: new URLSearchParams({
+      ...conditional(
+        options?.revokeGrantsTarget && { revokeGrantsTarget: options.revokeGrantsTarget }
+      ),
+    }),
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });

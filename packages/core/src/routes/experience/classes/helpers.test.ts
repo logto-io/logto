@@ -1,4 +1,11 @@
-import { MfaFactor, MfaPolicy, type Mfa, type User } from '@logto/schemas';
+import {
+  InteractionEvent,
+  MfaFactor,
+  MfaPolicy,
+  type Mfa,
+  type User,
+  userMfaDataKey,
+} from '@logto/schemas';
 
 import {
   mockUser,
@@ -10,6 +17,7 @@ import {
 import {
   getAllUserEnabledMfaVerifications,
   getProfileMfaFactors,
+  parseMfaPropertiesToUserConfig,
   sortMfaFactors,
 } from './helpers.js';
 
@@ -79,5 +87,48 @@ describe('sortMfaFactors', () => {
       MfaFactor.EmailVerificationCode,
       MfaFactor.BackupCode,
     ]);
+  });
+});
+
+describe('parseMfaPropertiesToUserConfig', () => {
+  it('preserves existing mfa.enabled from db on subsequent interaction submit', () => {
+    const existingLogtoConfig = {
+      [userMfaDataKey]: {
+        enabled: true,
+      },
+    };
+
+    const parsed = parseMfaPropertiesToUserConfig(
+      existingLogtoConfig,
+      {
+        mfaVerifications: [],
+      },
+      InteractionEvent.SignIn
+    );
+
+    expect(parsed).toEqual({
+      [userMfaDataKey]: {
+        enabled: true,
+      },
+    });
+  });
+
+  it('persists additionalBindingSuggestionSkipped to user mfa config', () => {
+    expect(
+      parseMfaPropertiesToUserConfig(
+        {},
+        {
+          mfaEnabled: true,
+          additionalBindingSuggestionSkipped: true,
+          mfaVerifications: [],
+        },
+        InteractionEvent.SignIn
+      )
+    ).toEqual({
+      [userMfaDataKey]: {
+        enabled: true,
+        additionalBindingSuggestionSkipped: true,
+      },
+    });
   });
 });

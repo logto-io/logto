@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -37,6 +38,10 @@ const prebuiltRoutes = [
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.authenticator_app',
   },
   {
+    path: '/account/authenticator-app/replace',
+    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.authenticator_app_replace',
+  },
+  {
     path: '/account/backup-codes/generate',
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.backup_codes_generate',
   },
@@ -45,6 +50,22 @@ const prebuiltRoutes = [
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.backup_codes_manage',
   },
 ] as const;
+
+const devPrebuiltRoutes = [
+  {
+    path: '/account/social/:connectorId',
+    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social',
+  },
+  {
+    path: '/account/social/:connectorId/remove',
+    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social_remove',
+  },
+] as const;
+
+const accountCenterRoute = {
+  path: '/account/security',
+  tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.account_center',
+} as const;
 
 function IntegratePrebuiltUi() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -62,14 +83,60 @@ function IntegratePrebuiltUi() {
       learnMoreLink={{ href: 'end-user-flows/account-settings/by-account-center-ui' }}
     >
       <div className={styles.cardContent}>
+        {isDevFeaturesEnabled && !prebuiltUiPermissionNoticeAcknowledged && (
+          <InlineNotification
+            className={styles.notice}
+            action="general.got_it"
+            onClick={() => {
+              void update({ prebuiltUiPermissionNoticeAcknowledged: true });
+            }}
+          >
+            <Trans
+              components={{
+                strong: <strong />,
+              }}
+            >
+              {t('sign_in_exp.account_center.prebuilt_ui.permission_notice')}
+            </Trans>
+          </InlineNotification>
+        )}
+        {isDevFeaturesEnabled && (
+          <FormField
+            className={styles.firstFormField}
+            title="sign_in_exp.account_center.prebuilt_ui.account_center_title"
+            headlineSpacing="large"
+          >
+            <div className={styles.description}>
+              <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.account_center_description" />
+            </div>
+            <div className={styles.urlGrid}>
+              <PrebuiltUiUrlItem
+                path={accountCenterRoute.path}
+                tooltip={t(accountCenterRoute.tooltipKey)}
+                tenantEndpoint={tenantEndpoint}
+              />
+            </div>
+          </FormField>
+        )}
         <FormField
-          title="sign_in_exp.account_center.prebuilt_ui.flows_title"
+          className={isDevFeaturesEnabled ? styles.secondFormField : undefined}
+          title={
+            isDevFeaturesEnabled
+              ? 'sign_in_exp.account_center.prebuilt_ui.single_task_flows_title'
+              : 'sign_in_exp.account_center.prebuilt_ui.flows_title'
+          }
           headlineSpacing="large"
         >
           <div className={styles.description}>
-            <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.flows_description" />
+            <DynamicT
+              forKey={
+                isDevFeaturesEnabled
+                  ? 'sign_in_exp.account_center.prebuilt_ui.single_task_flows_description'
+                  : 'sign_in_exp.account_center.prebuilt_ui.flows_description'
+              }
+            />
           </div>
-          {!prebuiltUiPermissionNoticeAcknowledged && (
+          {!isDevFeaturesEnabled && !prebuiltUiPermissionNoticeAcknowledged && (
             <InlineNotification
               className={styles.notice}
               action="general.got_it"
@@ -95,6 +162,16 @@ function IntegratePrebuiltUi() {
                 tenantEndpoint={tenantEndpoint}
               />
             ))}
+            {isDevFeaturesEnabled &&
+              devPrebuiltRoutes.map(({ path, tooltipKey }) => (
+                <PrebuiltUiUrlItem
+                  key={path}
+                  isPreviewHidden
+                  path={path}
+                  tooltip={t(tooltipKey)}
+                  tenantEndpoint={tenantEndpoint}
+                />
+              ))}
           </div>
         </FormField>
         <div className={styles.customizeNote}>

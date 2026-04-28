@@ -65,10 +65,15 @@ const user_details = {
     field_name: 'المصادقة المتعددة العوامل',
     field_description: 'لقد قام هذا المستخدم بتمكين عوامل التحقق المتعددة للتحقق من الهوية.',
     name_column: 'عوامل التحقق المتعددة',
-
     field_description_empty: 'لم يقم هذا المستخدم بتمكين عوامل التحقق المتعددة للتحقق من الهوية.',
     deletion_confirmation:
       'أنت تقوم بإزالة <name/> الحالية للتحقق المتعدد من عوامل التحقق. هل أنت متأكد أنك تريد المتابعة؟',
+  },
+  passkey: {
+    field_name: 'مفاتيح المرور',
+    field_description_empty: 'لم يقم هذا المستخدم بتمكين تسجيل الدخول بمفاتيح المرور.',
+    deletion_confirmation:
+      'أنت تقوم بإزالة <name/> الحالية لتسجيل الدخول بمفاتيح المرور. هل أنت متأكد أنك تريد المتابعة؟',
   },
   suspended: 'موقوف',
   suspend_user: 'تعليق المستخدم',
@@ -142,7 +147,6 @@ const user_details = {
     name_column: 'الاسم',
     session_id_column: 'معرّف الجلسة',
     location_column: 'الموقع',
-
     browser_on_os: '{{browser}} على {{os}}',
     user: 'المستخدم',
     applications: 'التطبيقات',
@@ -153,6 +157,20 @@ const user_details = {
     device_model: 'طراز الجهاز',
     revoke_session: 'إبطال الجلسة',
     revoke_session_confirmation: 'إذا أزلت هذه الجلسة، فسيُطلب من المستخدمين إعادة المصادقة.',
+  },
+  third_party_apps: {
+    title: 'تطبيقات الطرف الثالث',
+    description:
+      'استخدم Logto كمزوّد هوية لتفويض تطبيقات الطرف الثالث. اعرض التطبيقات التي منحها هذا المستخدم صلاحية الوصول وأدرها.',
+    field_name: 'تطبيقات الطرف الثالث المصرح بها',
+    multiple_authorized: 'قام هذا المستخدم بتفويض عدة تطبيقات وخدمات تابعة لجهات خارجية.',
+    not_authorized: 'لم يفوض هذا المستخدم أي تطبيقات أو خدمات تابعة لجهات خارجية بعد.',
+    name_column: 'الاسم',
+    app_id_column: 'معرّف التطبيق',
+    access_created_at_column: 'تاريخ إنشاء الوصول',
+    revoke_access_title: 'إلغاء الوصول؟',
+    revoke_access_description:
+      'سيؤدي هذا إلى إلغاء وصول التطبيق إلى حساب هذا المستخدم عبر جميع الأجهزة. يجب على المستخدم إعادة التفويض لاستعادة الوصول.',
   },
   connections: {
     title: 'الاتصال',

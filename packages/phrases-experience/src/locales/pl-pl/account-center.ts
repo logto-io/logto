@@ -3,6 +3,21 @@ const account_center = {
     title: 'Nie znaleziono strony',
     description: 'Ta strona jest niedostępna.',
   },
+  page: {
+    title: 'Konto',
+    security_title: 'Bezpieczeństwo',
+    security_description:
+      'Tutaj możesz zmienić ustawienia konta, aby zadbać o jego bezpieczeństwo.',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
+    support: 'Pomoc',
+  },
   verification: {
     title: 'Weryfikacja bezpieczeństwa',
     description:
@@ -12,6 +27,9 @@ const account_center = {
     error_verify_failed: 'Weryfikacja nie powiodła się. Wprowadź kod ponownie.',
     verification_required: 'Weryfikacja wygasła. Zweryfikuj swoją tożsamość ponownie.',
     try_another_method: 'Wypróbuj inny sposób weryfikacji',
+    no_available_methods_title: 'Brak dostępnych metod weryfikacji',
+    no_available_methods_description:
+      'Nie masz skonfigurowanych żadnych metod weryfikacji. Najpierw dodaj do swojego konta hasło, adres e-mail lub numer telefonu.',
   },
   password_verification: {
     title: 'Zweryfikuj hasło',
@@ -52,6 +70,61 @@ const account_center = {
     title: 'Ustaw nazwę użytkownika',
     description: 'Nazwa użytkownika może zawierać tylko litery, cyfry i podkreślenia.',
     success: 'Nazwa użytkownika została pomyślnie zaktualizowana.',
+  },
+  security: {
+    add: 'Dodaj',
+    change: 'Zmień',
+    remove: 'Usuń',
+    not_set: 'Nie ustawiono',
+    social_sign_in: 'Logowanie społecznościowe',
+    social_not_linked: 'Niepołączone',
+    email_phone: 'E-mail / Telefon',
+    email: 'E-mail',
+    phone: 'Telefon',
+    password: 'Hasło',
+    configured: 'Skonfigurowano',
+    not_configured: 'Nie skonfigurowano',
+    two_step_verification: 'Weryfikacja dwuetapowa',
+    authenticator_app: 'Aplikacja uwierzytelniająca',
+    passkeys: 'Passkeys',
+    backup_codes: 'Kody zapasowe',
+    email_verification_code: 'Kod weryfikacyjny e-mail',
+    phone_verification_code: 'Kod weryfikacyjny telefoniczny',
+    passkeys_count_one: '{{count}} passkey',
+    passkeys_count_other: '{{count}} passkeys',
+    backup_codes_count_one: '{{count}} kod pozostały',
+    backup_codes_count_other: '{{count}} kody pozostałe',
+    view: 'Wyświetl',
+    manage: 'Zarządzaj',
+    turn_on_2_step_verification: 'Włącz weryfikację dwuetapową',
+    turn_on_2_step_verification_description:
+      'Dodaj dodatkową warstwę bezpieczeństwa. Podczas logowania zostaniesz poproszony o drugi krok weryfikacji.',
+    turn_off_2_step_verification: 'Wyłącz weryfikację dwuetapową',
+    turn_off_2_step_verification_description:
+      'Wyłączenie weryfikacji dwuetapowej usunie dodatkową warstwę ochrony z Twojego konta podczas logowania. Czy na pewno chcesz kontynuować?',
+    disable_2_step_verification: 'Wyłącz',
+    no_verification_method_warning:
+      'Nie dodałeś drugiej metody weryfikacji. Dodaj co najmniej jedną, aby włączyć weryfikację dwuetapową podczas logowania.',
+    account_removal: 'Usunięcie konta',
+    delete_your_account: 'Usuń swoje konto',
+    delete_account: 'Usuń konto',
+    remove_email_confirmation_title: 'Usuń adres e-mail',
+    remove_email_confirmation_description:
+      'Po usunięciu nie będziesz mógł logować się za pomocą tego adresu e-mail. Czy na pewno chcesz kontynuować?',
+    remove_phone_confirmation_title: 'Usuń numer telefonu',
+    remove_phone_confirmation_description:
+      'Po usunięciu nie będziesz mógł logować się za pomocą tego numeru telefonu. Czy na pewno chcesz kontynuować?',
+    email_removed: 'Adres e-mail został pomyślnie usunięty.',
+    phone_removed: 'Numer telefonu został pomyślnie usunięty.',
+  },
+  social: {
+    linked: '{{connector}} połączono pomyślnie.',
+    not_enabled:
+      'Ta metoda logowania społecznościowego nie jest włączona. Skontaktuj się z administratorem, aby uzyskać pomoc.',
+    removed: '{{connector}} usunięto pomyślnie.',
+    remove_confirmation_title: 'Usuń konto społecznościowe',
+    remove_confirmation_description:
+      'Jeśli usuniesz {{connector}}, możesz nie być w stanie zalogować się za jego pomocą, dopóki nie dodasz go ponownie.',
   },
   password: {
     title: 'Ustaw hasło',
@@ -132,6 +205,10 @@ const account_center = {
     totp: {
       title: 'Aplikacja uwierzytelniająca dodana!',
       description: 'Twoja aplikacja uwierzytelniająca została pomyślnie połączona z kontem.',
+    },
+    totp_replaced: {
+      title: 'Aplikacja autentykacyjna została zamieniona!',
+      description: 'Twoja aplikacja autentykacyjna została pomyślnie zamieniona.',
     },
     backup_code: {
       title: 'Kody zapasowe wygenerowane!',

@@ -1,5 +1,97 @@
 # Change Log
 
+## 1.35.0
+
+### Minor Changes
+
+- 7cee48bd97: support OAuth 2.0 Device Authorization Grant (device flow)
+
+  Device flow lets users sign in on input-limited devices such as smart TVs, CLI tools, IoT gadgets, and gaming consoles by completing authentication on a separate device like a phone or laptop.
+
+  How it works:
+
+  1. The device displays a short user code and a verification URL.
+  2. The user opens the URL on another device, enters the code, and signs in.
+  3. Once approved, the original device receives tokens and completes authentication.
+
+  To create a device flow application in Console:
+
+  - Select "Input-limited app / CLI" under the Native framework list, or
+  - Create an app without framework, then choose "Device flow" as the authorization flow, or
+  - Create a third-party Native app, then choose "Device flow" as the authorization flow.
+
+  The application settings page shows a device-flow-specific guide and a built-in demo you can try immediately.
+
+- d189d8f5aa: introduce an "Authorized third-party apps" section on the user details page
+
+  - Added a new section under user details to list active third-party application authorizations for a user.
+  - Displayed app name, app ID, and access creation time for each authorized app.
+  - Added revoke action with confirmation modal.
+  - Revoking an app removes all active third-party grants associated with that app for the user.
+
+- a023a97c7c: add a new MFA onboarding page for users to explicitly enable optional MFA
+
+  For users who are not required to set up MFA, we added a new page after credential verification in the sign-in flow to explicitly ask whether they want to enable optional MFA for better account security.
+
+  This is especially important when the passkey sign-in feature is available, since passkeys can be used for both sign-in and MFA verification, and users who set up a passkey for sign-in might not want to enable it as an MFA factor at the same time.
+
+- d2afe7351f: add app-level concurrent device limit configuration in application details
+
+  - Added a new **Concurrent device limit** section to the Application details page.
+  - Developers can configure the max number of concurrent active grants (devices) per user for the current app.
+  - When configured, on each successful authorization, Logto checks the total active grants for the user in the current app and revokes the oldest grants if the limit is exceeded.
+
+- a816cf77cb: support adaptive MFA
+
+  - In Console, the MFA settings page always exposes the adaptive MFA option and saves `adaptiveMfa` configuration in the sign-in experience payload.
+  - In Core, when adaptive MFA is enabled in the sign-in experience config, the sign-in flow evaluates adaptive MFA rules against the current sign-in context and requires MFA verification when those rules are triggered.
+  - The sign-in context is now consistently persisted into interaction data, so custom-claims scripts can read it from `context.interaction.signInContext`.
+  - The `PostSignInAdaptiveMfaTriggered` webhook event is emitted when adaptive MFA forces MFA during sign-in.
+
+- 5b7f1cb794: introduce tenant settings page and migrate signing key configs to oidc settings
+
+  - Added a new tenant-level **Settings** page in OSS, accessible from the left menu: **Tenant -> Settings**.
+  - Deprecated and removed the original **Signing keys** page.
+  - Added a new **OIDC settings** tab under **Tenant -> Settings** for managing tenant-level OIDC configurations.
+  - Migrated signing key configurations from the old page to **Settings -> OIDC settings**.
+  - Added a new **Session maximum time to live** field to configure tenant-level session TTL in days (default: `14`).
+  - Note: this console field uses days for input/display, while the underlying OIDC session TTL config/API uses seconds.
+
+- a023a97c7c: support passkey sign-in authentication method
+
+  ### Summary
+
+  Passkey sign-in provides a faster, passwordless sign-in experience that reduces friction for end users and helps improve account security. It removes repeated password entry for returning users, works with platform authenticators users already trust (for example Face ID, Touch ID, Windows Hello), and offers a smoother path from account creation to subsequent sign-ins.
+
+  #### Bind passkey for sign-in
+
+  After passkey sign-in is enabled, new users are prompted to bind a passkey during registration. Existing users who have not bound a passkey (WebAuthn) factor yet can be guided to bind one in a later sign-in flow. If a user already has a WebAuthn credential from MFA setup, that credential can be reused directly for passkey sign-in without requiring another registration step.
+
+  #### Various sign-in flows to support different user journeys and preferences
+
+  1. **Passkey sign-in button**: When **Show passkey sign-in button** is enabled, users can click **Continue with passkey** on the sign-in page to immediately trigger the browser passkey chooser and complete sign-in.
+  2. **Identifier-first flow (button hidden)**: When **Show passkey sign-in button** is disabled, sign-in follows an identifier-first flow. Users first enter an identifier (for example email or username) on the first screen. On the next step, the flow prioritizes passkey and prompts users to **Verify via passkey** before falling back to password or verification code when needed.
+  3. **Allow autofill**: When **Allow autofill** is enabled, supported browsers can show passkey suggestions directly from the identifier input on the sign-in page. Users can select a previously saved passkey from the autofill popup and sign in with minimal extra input.
+
+  Check out our [documentation](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) for more details.
+
+- 74c993a91e: introduce user session management in Console.
+
+  Account center settings:
+
+  - Added a new `session` permission control for account API access, with `off`, `readOnly`, and `edit` options.
+
+  User sessions page:
+
+  - Added an Active sessions section on the user details page, listing the user's active sessions.
+  - Allow navigation to session details from the `Manage` button or a session entry.
+
+  User session details page:
+
+  - Added a session details page with a revoke action in the top bar.
+  - Revoking the session removes the sign-in session and revokes associated first-party app grants.
+  - Previously issued opaque access tokens and refresh tokens for those apps become invalid, and new auth requests require reauthentication.
+
 ## 1.34.0
 
 ### Minor Changes

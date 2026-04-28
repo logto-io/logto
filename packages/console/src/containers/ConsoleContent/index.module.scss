@@ -1,4 +1,5 @@
 @use '@/scss/underscore' as _;
+@use './dev-status-spacing' as devStatusSpacing;
 
 .content {
   flex-grow: 1;
@@ -29,7 +30,7 @@
 .devStatus {
   color: var(--color-text-secondary);
   position: absolute;
-  bottom: _.unit(3);
+  bottom: devStatusSpacing.$dev-status-bottom-offset;
   inset-inline-start: _.unit(4);
 }
 

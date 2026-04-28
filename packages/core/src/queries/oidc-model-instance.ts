@@ -1,5 +1,5 @@
 import type { OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
-import { OidcModelInstances } from '@logto/schemas';
+import { Applications, OidcModelInstances } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import type { CommonQueryMethods, ValueExpression } from '@silverhand/slonik';
@@ -13,6 +13,14 @@ export type WithConsumed<T> = T & { consumed?: boolean };
 export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
+const { table: applicationTable } = convertToIdentifiers(Applications);
+
+export type ActiveApplicationGrantInstance = Pick<
+  OidcModelInstance,
+  'id' | 'payload' | 'expiresAt'
+>;
+export type GrantApplicationType = 'thirdParty' | 'firstParty';
+const sessionModelName = 'Session';
 
 /**
  * This interval helps to avoid concurrency issues when exchanging the rotating refresh token multiple times within a given timeframe;
@@ -22,6 +30,7 @@ const { table, fields } = convertToIdentifiers(OidcModelInstances);
  */
 // Hard-code this value since 3 seconds is a reasonable number for concurrency and no need for further configuration
 const refreshTokenReuseInterval = 3;
+const revokeInstanceBatchSize = 1000;
 
 const isConsumed = (modelName: string, consumedAt: Nullable<number>): boolean => {
   if (!consumedAt) {
@@ -71,6 +80,60 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     return convertResult(result, modelName);
   };
 
+  /**
+   * This function is designed to query by indexed JSONB fields (e.g. `uid` and `userCode`)
+   *  to leverage the expression index for better performance.
+   *
+   * @see findPayloadByUid
+   * @see findPayloadByUserCode
+   */
+  const findPayloadByIndexedPayloadField = async <T extends ValueExpression>(
+    modelName: string,
+    field: 'uid' | 'userCode',
+    value: T
+  ) => {
+    const condition =
+      field === 'uid'
+        ? sql`${fields.payload}->>'uid'=${value}`
+        : sql`${fields.payload}->>'userCode'=${value}`;
+
+    // Fetch up to 2 matching records to detect duplicates without loading all of them.
+    const results = await pool.any<QueryResult>(sql`
+      ${findByModel(modelName)}
+      and ${condition}
+      limit 2
+    `);
+
+    // Rarely, duplicate UIDs can exist for different sessions.
+    // This query may throw `DataIntegrityError`.
+    // If that happens, delete all duplicates and return no result (`undefined`).
+    if (results.length > 1) {
+      // Delete all duplicates.
+      await pool.query(sql`
+        delete from ${table}
+        where ${fields.modelName}=${modelName}
+          and ${condition}
+      `);
+      return;
+    }
+
+    // If there is only one record, return the result.
+    return results[0] ? convertResult(results[0], modelName) : undefined;
+  };
+
+  const findPayloadByUid = async <T extends ValueExpression>(modelName: string, value: T) =>
+    findPayloadByIndexedPayloadField(modelName, 'uid', value);
+
+  const findPayloadByUserCode = async <T extends ValueExpression>(modelName: string, value: T) =>
+    findPayloadByIndexedPayloadField(modelName, 'userCode', value);
+
+  /**
+   * @deprecated
+   * This dynamic JSONB key query shape may prevent expression-index
+   *  usage with prepared generic plans. Keep it as a backup/reference path only.
+   *
+   * Use `findPayloadByUid` or `findPayloadByUserCode` instead for indexed queries.
+   */
   const findPayloadByPayloadField = async <
     T extends ValueExpression,
     Field extends keyof OidcModelInstancePayload,
@@ -79,22 +142,21 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     field: Field,
     value: T
   ) => {
-    // Fetch all matching records
     const results = await pool.any<QueryResult>(sql`
-    ${findByModel(modelName)}
-    and ${fields.payload}->>${field}=${value}
-  `);
+      ${findByModel(modelName)}
+      and ${fields.payload}->>${field}=${value}
+    `);
 
     // Rarely, duplicate UIDs can exist for different sessions.
     // This query may throw `DataIntegrityError`.
     // If that happens, delete all duplicates and return `null`.
     if (results.length > 1) {
-      // Delete all duplicates
+      // Delete all duplicates.
       await pool.query(sql`
-      delete from ${table}
-      where ${fields.modelName}=${modelName}
-      and ${fields.payload}->>${field}=${value}
-    `);
+        delete from ${table}
+        where ${fields.modelName}=${modelName}
+          and ${fields.payload}->>${field}=${value}
+      `);
       return;
     }
 
@@ -120,11 +182,26 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const revokeInstanceByGrantId = async (modelName: string, grantId: string) => {
-    await pool.query(sql`
-      delete from ${table}
-      where ${fields.modelName}=${modelName}
-      and ${fields.payload}->>'grantId'=${grantId}
-    `);
+    // Keep deleting bounded batches until the revoke query no longer finds matches.
+    for (;;) {
+      // Revocation batches must run serially to keep each delete bounded.
+      // eslint-disable-next-line no-await-in-loop
+      const { rowCount } = await pool.query(sql`
+        delete from ${table}
+        where ${fields.id} in (
+          select ${fields.id}
+          from ${table}
+          where ${fields.modelName}=${modelName}
+          and ${fields.payload} ? 'grantId'
+          and ${fields.payload}->>'grantId'=${grantId}
+          limit ${revokeInstanceBatchSize}
+        )
+      `);
+
+      if (rowCount === 0) {
+        return;
+      }
+    }
   };
 
   const revokeInstanceByUserId = async (modelName: string, userId: string) => {
@@ -135,13 +212,93 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     `);
   };
 
+  const findUserActiveApplicationGrants = async (
+    userId: string,
+    applicationType?: GrantApplicationType
+  ) => {
+    const oidcModelInstanceAlias = 'oidc_model_instance';
+    const applicationAlias = 'application';
+    const oidcModelInstanceTableIdentifier = sql.identifier([oidcModelInstanceAlias]);
+    const applicationTableIdentifier = sql.identifier([applicationAlias]);
+    const oidcModelInstanceId = sql.identifier([
+      oidcModelInstanceAlias,
+      OidcModelInstances.fields.id,
+    ]);
+    const oidcModelInstancePayload = sql.identifier([
+      oidcModelInstanceAlias,
+      OidcModelInstances.fields.payload,
+    ]);
+    const oidcModelInstanceExpiresAt = sql.identifier([
+      oidcModelInstanceAlias,
+      OidcModelInstances.fields.expiresAt,
+    ]);
+    const oidcModelInstanceModelName = sql.identifier([
+      oidcModelInstanceAlias,
+      OidcModelInstances.fields.modelName,
+    ]);
+    const applicationId = sql.identifier([applicationAlias, Applications.fields.id]);
+    const applicationIsThirdParty = sql.identifier([
+      applicationAlias,
+      Applications.fields.isThirdParty,
+    ]);
+
+    return pool.any<ActiveApplicationGrantInstance>(sql`
+      select ${oidcModelInstanceId}, ${oidcModelInstancePayload}, ${oidcModelInstanceExpiresAt}
+      from ${table} as ${oidcModelInstanceTableIdentifier}
+      inner join ${applicationTable} as ${applicationTableIdentifier}
+        on ${oidcModelInstancePayload}->>'clientId'=${applicationId}
+      where ${oidcModelInstanceModelName}='Grant'
+        and ${oidcModelInstancePayload}->>'accountId'=${userId}
+        ${
+          applicationType
+            ? sql`and ${applicationIsThirdParty}=${applicationType === 'thirdParty'}`
+            : sql``
+        }
+        and ${oidcModelInstanceExpiresAt} > ${convertToTimestamp()}
+    `);
+  };
+
+  const findUserActiveGrantsByClientId = async (userId: string, clientId: string) => {
+    return pool.any<ActiveApplicationGrantInstance>(sql`
+      select ${fields.id}, ${fields.payload}, ${fields.expiresAt}
+      from ${table}
+      where ${fields.modelName}='Grant'
+        and ${fields.payload}->>'accountId'=${userId}
+        and ${fields.payload}->>'clientId'=${clientId}
+        and ${fields.expiresAt} > ${convertToTimestamp()}
+    `);
+  };
+
+  const findUserActiveSessionUidByGrantId = async (accountId: string, grantId: string) => {
+    // A grant is expected to be associated with at most one active session authorization entry.
+    // Limit to one row for targeted cleanup without scanning all sessions.
+    return pool.maybeOne<{ sessionUid: string }>(sql`
+      select ${fields.payload} ->> 'uid' as "sessionUid"
+      from ${table}
+      where ${fields.modelName} = ${sessionModelName}
+        and ${fields.payload} ->> 'accountId' = ${accountId}
+        and ${fields.expiresAt} > ${convertToTimestamp()}
+        and exists (
+          select 1
+          from jsonb_each(${fields.payload} -> 'authorizations') as authorization_entry
+          where authorization_entry.value ->> 'grantId' = ${grantId}
+        )
+      limit 1
+    `);
+  };
+
   return {
     upsertInstance,
     findPayloadById,
     findPayloadByPayloadField,
+    findPayloadByUid,
+    findPayloadByUserCode,
     consumeInstanceById,
     destroyInstanceById,
     revokeInstanceByGrantId,
     revokeInstanceByUserId,
+    findUserActiveApplicationGrants,
+    findUserActiveGrantsByClientId,
+    findUserActiveSessionUidByGrantId,
   };
 };

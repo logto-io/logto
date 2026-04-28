@@ -35,6 +35,7 @@ const jwt_claims = {
   restore: 'Restaurar padrões',
   restored: 'Restaurado',
   data_source_tab: 'Fonte de dados',
+  error_handling_tab: 'Tratamento de erros',
   test_tab: 'Contexto de teste',
   jwt_claims_description:
     'As reivindicações padrão são automaticamente incluídas no JWT e não podem ser substituídas.',
@@ -65,6 +66,18 @@ const jwt_claims = {
   api_context: {
     title: 'Contexto da API: controle de acesso',
     subtitle: 'Use o método `api.denyAccess` para rejeitar a solicitação de token.',
+  },
+  error_handling: {
+    title: 'Tratamento de erros',
+    subtitle: 'Controla se a emissão do token deve ser bloqueada quando o script falhar.',
+    input_field_title: 'Comportamento da emissão do token em caso de erro no script',
+    block_issuance_switch: 'Bloquear a emissão do token quando o script gerar erros',
+    default_hint_create:
+      'Novos scripts de claims personalizados bloqueiam por padrão a emissão do token quando o script falha. Se a API já fornecer um valor, o valor salvo será usado.',
+    default_hint_edit:
+      'Scripts de claims personalizados existentes sem essa configuração mantêm o comportamento legado com essa opção desativada até que você salve um valor explicitamente.',
+    warning:
+      'Quando ativado, erros de execução do script rejeitam a solicitação de token com `invalid_request` (400) e um `error_description` localizado. Chamadas para `api.denyAccess` ainda retornam `access_denied`.',
   },
   fetch_external_data: {
     title: 'Buscar dados externos',

@@ -4,7 +4,7 @@ import { type IRouterParamContext } from 'koa-router';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
-import { consent, getMissingScopes } from '#src/libraries/session.js';
+import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 

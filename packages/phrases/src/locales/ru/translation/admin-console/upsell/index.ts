@@ -5,6 +5,7 @@ import paywall from './paywall.js';
 const upsell = {
   upgrade_plan: 'Повысить план',
   compare_plans: 'Сравнить планы',
+  try_with_product_name: 'Попробуйте {{productName}} сейчас',
   view_plans: 'Просмотреть планы',
   create_tenant: {
     title: 'Выберите план арендатора',

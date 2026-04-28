@@ -1,9 +1,11 @@
-import { LogtoOidcConfigKey, type AdminConsoleData } from '@logto/schemas';
+import { LogtoOidcConfigKey, OidcSigningKeyStatus, type AdminConsoleData } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import Sinon from 'sinon';
 
 import { mockAdminConsoleData, mockCookieKeys, mockPrivateKeys } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -20,6 +22,11 @@ const newCookieKey = {
   id: generateStandardId(),
   value: 'abcdefg',
   createdAt: Math.floor(Date.now() / 1000),
+};
+const previousPrivateKey = {
+  id: generateStandardId(),
+  value: '-----BEGIN PRIVATE KEY-----\nlegacy\nprevious\nkey\n-----END PRIVATE KEY-----\n',
+  createdAt: Math.floor(Date.now() / 1000) - 10,
 };
 
 const { exportJWK } = await mockEsmWithActual('#src/utils/jwks.js', () => ({
@@ -51,16 +58,32 @@ const logtoConfigQueries = {
 
 const logtoConfigLibraries = {
   getOidcConfigs: jest.fn(async () => ({
-    [LogtoOidcConfigKey.PrivateKeys]: mockPrivateKeys,
+    [LogtoOidcConfigKey.PrivateKeys]: [
+      { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+    ],
     [LogtoOidcConfigKey.CookieKeys]: mockCookieKeys,
   })),
+};
+
+const oidcPrivateKeyLibraries = {
+  deletePrivateSigningKey: jest.fn(async () => [
+    { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+  ]),
+  rotatePrivateSigningKeys: jest.fn(async () => [
+    { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
+    { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Previous },
+  ]),
 };
 
 const settingRoutes = await pickDefault(import('./index.js'));
 
 describe('configs routes', () => {
-  const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries });
+  const originalPrivateKeyRotationGracePeriod = EnvSet.values.privateKeyRotationGracePeriod;
+  const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries }, undefined, {
+    oidcPrivateKeys: oidcPrivateKeyLibraries,
+  });
   Sinon.stub(tenantContext, 'logtoConfigs').value(logtoConfigLibraries);
+  Sinon.stub(tenantContext.libraries, 'oidcPrivateKeys').value(oidcPrivateKeyLibraries);
 
   const routeRequester = createRequester({
     authedRoutes: settingRoutes,
@@ -69,6 +92,11 @@ describe('configs routes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    Reflect.set(
+      EnvSet.values,
+      'privateKeyRotationGracePeriod',
+      originalPrivateKeyRotationGracePeriod
+    );
   });
 
   it('GET /configs/admin-console', async () => {
@@ -94,11 +122,14 @@ describe('configs routes', () => {
     const response = await routeRequester.get('/configs/oidc/private-keys');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(
-      mockPrivateKeys.map(({ id, createdAt }) => ({
-        id,
-        createdAt,
-        signingKeyAlgorithm: 'EC',
-      }))
+      [{ ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current }].map(
+        ({ id, createdAt, status }) => ({
+          id,
+          createdAt,
+          signingKeyAlgorithm: 'EC',
+          status,
+        })
+      )
     );
 
     const response2 = await routeRequester.get('/configs/oidc/cookie-keys');
@@ -112,16 +143,26 @@ describe('configs routes', () => {
   });
 
   it('DELETE /configs/oidc/:keyType/:keyId will fail if there is only one key', async () => {
+    oidcPrivateKeyLibraries.deletePrivateSigningKey.mockRejectedValueOnce(
+      new RequestError({ code: 'oidc.key_required', status: 422 })
+    );
+
     await expect(
       routeRequester.delete(`/configs/oidc/private-keys/${mockPrivateKeys[0]!.id}`)
     ).resolves.toHaveProperty('status', 422);
 
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalled();
     expect(logtoConfigQueries.updateOidcConfigsByKey).not.toBeCalled();
   });
 
   it('DELETE /configs/oidc/:keyType/:keyId', async () => {
-    logtoConfigLibraries.getOidcConfigs.mockResolvedValue({
-      [LogtoOidcConfigKey.PrivateKeys]: [newPrivateKey, ...mockPrivateKeys],
+    oidcPrivateKeyLibraries.deletePrivateSigningKey.mockResolvedValueOnce([
+      { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
+    ]);
+    logtoConfigLibraries.getOidcConfigs.mockResolvedValueOnce({
+      [LogtoOidcConfigKey.PrivateKeys]: [
+        { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
+      ],
       [LogtoOidcConfigKey.CookieKeys]: [newCookieKey, ...mockCookieKeys],
     });
 
@@ -129,10 +170,7 @@ describe('configs routes', () => {
       routeRequester.delete(`/configs/oidc/private-keys/${mockPrivateKeys[0]!.id}`)
     ).resolves.toHaveProperty('status', 204);
 
-    expect(logtoConfigQueries.updateOidcConfigsByKey).toBeCalledWith(
-      LogtoOidcConfigKey.PrivateKeys,
-      [newPrivateKey]
-    );
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalledWith(mockPrivateKeys[0]!.id);
 
     await expect(
       routeRequester.delete(`/configs/oidc/cookie-keys/${mockCookieKeys[0]!.id}`)
@@ -142,15 +180,16 @@ describe('configs routes', () => {
       LogtoOidcConfigKey.CookieKeys,
       [newCookieKey]
     );
-
-    logtoConfigLibraries.getOidcConfigs.mockRestore();
   });
 
   it('DELETE /configs/oidc/:keyType/:keyId will fail if key is not found', async () => {
-    logtoConfigLibraries.getOidcConfigs.mockResolvedValue({
-      [LogtoOidcConfigKey.PrivateKeys]: [newPrivateKey, ...mockPrivateKeys],
-      [LogtoOidcConfigKey.CookieKeys]: [newCookieKey, ...mockCookieKeys],
-    });
+    oidcPrivateKeyLibraries.deletePrivateSigningKey
+      .mockRejectedValueOnce(
+        new RequestError({ code: 'oidc.key_not_found', id: 'fake_key_id', status: 404 })
+      )
+      .mockRejectedValueOnce(
+        new RequestError({ code: 'oidc.key_not_found', id: 'fake_key_id', status: 404 })
+      );
 
     await expect(
       routeRequester.delete(`/configs/oidc/private-keys/fake_key_id`)
@@ -160,27 +199,53 @@ describe('configs routes', () => {
       routeRequester.delete(`/configs/oidc/private-keys/fake_key_id`)
     ).resolves.toHaveProperty('status', 404);
 
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalled();
     expect(logtoConfigQueries.updateOidcConfigsByKey).not.toBeCalled();
-    logtoConfigLibraries.getOidcConfigs.mockRestore();
+  });
+
+  it('DELETE /configs/oidc/:keyType/:keyId only allows deleting Previous private keys', async () => {
+    oidcPrivateKeyLibraries.deletePrivateSigningKey.mockRejectedValueOnce(
+      new RequestError({ code: 'oidc.only_previous_key_can_be_deleted', status: 422 })
+    );
+
+    await expect(
+      routeRequester.delete(`/configs/oidc/private-keys/${newPrivateKey.id}`)
+    ).resolves.toHaveProperty('status', 422);
+
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalledWith(newPrivateKey.id);
+    expect(logtoConfigQueries.updateOidcConfigsByKey).not.toBeCalled();
+  });
+
+  it('DELETE /configs/oidc/:keyType/:keyId preserves staged Next and Current private keys', async () => {
+    oidcPrivateKeyLibraries.deletePrivateSigningKey.mockResolvedValueOnce([
+      { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
+      { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+    ]);
+
+    await expect(
+      routeRequester.delete(`/configs/oidc/private-keys/${previousPrivateKey.id}`)
+    ).resolves.toHaveProperty('status', 204);
+
+    expect(oidcPrivateKeyLibraries.deletePrivateSigningKey).toBeCalledWith(previousPrivateKey.id);
   });
 
   it('POST /configs/oidc/:keyType/rotate', async () => {
-    logtoConfigLibraries.getOidcConfigs.mockResolvedValue({
-      [LogtoOidcConfigKey.PrivateKeys]: mockPrivateKeys,
+    logtoConfigLibraries.getOidcConfigs.mockResolvedValueOnce({
+      [LogtoOidcConfigKey.PrivateKeys]: [
+        { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+      ],
       [LogtoOidcConfigKey.CookieKeys]: mockCookieKeys,
     });
     exportJWK.mockResolvedValueOnce({ kty: 'RSA' });
 
     const response = await routeRequester.post('/configs/oidc/private-keys/rotate');
     expect(response.status).toEqual(200);
-    expect(logtoConfigQueries.updateOidcConfigsByKey).toHaveBeenCalledWith(
-      LogtoOidcConfigKey.PrivateKeys,
-      [newPrivateKey, ...mockPrivateKeys]
-    );
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey, 0);
     expect(response.body[0]).toEqual({
       id: newPrivateKey.id,
       createdAt: newPrivateKey.createdAt,
       signingKeyAlgorithm: 'RSA',
+      status: OidcSigningKeyStatus.Current,
     });
 
     const response2 = await routeRequester.post('/configs/oidc/cookie-keys/rotate');
@@ -193,28 +258,85 @@ describe('configs routes', () => {
       id: newCookieKey.id,
       createdAt: newCookieKey.createdAt,
     });
-    logtoConfigLibraries.getOidcConfigs.mockRestore();
   });
 
-  it('keeps only the last 2 recent private keys when rotating', async () => {
-    logtoConfigLibraries.getOidcConfigs.mockResolvedValueOnce({
-      [LogtoOidcConfigKey.PrivateKeys]: [newPrivateKey, ...mockPrivateKeys],
-      [LogtoOidcConfigKey.CookieKeys]: [newCookieKey, ...mockCookieKeys],
-    });
-
+  it('keeps the immediate rotation flow at 2 private keys', async () => {
     const newPrivateKey2 = {
       id: generateStandardId(),
       value: '-----BEGIN PRIVATE KEY-----\nnew\nprivate\nkey\n-----END PRIVATE KEY-----\n',
       createdAt: Math.floor(Date.now() / 1000),
     };
+    oidcPrivateKeyLibraries.rotatePrivateSigningKeys.mockResolvedValueOnce([
+      { ...newPrivateKey2, status: OidcSigningKeyStatus.Current },
+      { ...newPrivateKey, status: OidcSigningKeyStatus.Previous },
+    ]);
     generateOidcPrivateKey.mockResolvedValueOnce(newPrivateKey2);
 
     await routeRequester.post('/configs/oidc/private-keys/rotate');
 
-    // Only has two keys and the original mocked private keys are clamped off
-    expect(logtoConfigQueries.updateOidcConfigsByKey).toHaveBeenCalledWith(
-      LogtoOidcConfigKey.PrivateKeys,
-      [newPrivateKey2, newPrivateKey]
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
+      newPrivateKey2,
+      0
     );
+  });
+
+  it('rejects immediate private-key rotation when a staged Next key already exists', async () => {
+    oidcPrivateKeyLibraries.rotatePrivateSigningKeys.mockRejectedValueOnce(
+      new RequestError({ code: 'oidc.invalid_request', status: 422 })
+    );
+
+    await expect(routeRequester.post('/configs/oidc/private-keys/rotate')).resolves.toHaveProperty(
+      'status',
+      422
+    );
+
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(newPrivateKey, 0);
+  });
+
+  it('uses PRIVATE_KEY_ROTATION_GRACE_PERIOD as the default private-key rotation grace period', async () => {
+    Reflect.set(EnvSet.values, 'privateKeyRotationGracePeriod', 14_400);
+
+    await expect(routeRequester.post('/configs/oidc/private-keys/rotate')).resolves.toHaveProperty(
+      'status',
+      200
+    );
+
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
+      newPrivateKey,
+      14_400
+    );
+  });
+
+  it('POST /configs/oidc/:keyType/rotate supports staged private-key rotation', async () => {
+    oidcPrivateKeyLibraries.rotatePrivateSigningKeys.mockResolvedValueOnce([
+      { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
+      { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+    ]);
+    exportJWK.mockResolvedValueOnce({ kty: 'RSA' });
+
+    const response = await routeRequester
+      .post('/configs/oidc/private-keys/rotate')
+      .send({ rotationGracePeriod: 60 });
+
+    expect(response.status).toEqual(200);
+    expect(oidcPrivateKeyLibraries.rotatePrivateSigningKeys).toHaveBeenCalledWith(
+      newPrivateKey,
+      60
+    );
+    expect(response.body[0]).toEqual({
+      id: newPrivateKey.id,
+      createdAt: newPrivateKey.createdAt,
+      signingKeyAlgorithm: 'RSA',
+      status: OidcSigningKeyStatus.Next,
+    });
+  });
+
+  it('rejects cookie-key rotation when rotationGracePeriod is provided', async () => {
+    const response = await routeRequester
+      .post('/configs/oidc/cookie-keys/rotate')
+      .send({ rotationGracePeriod: 60 });
+
+    expect(response.status).toEqual(422);
+    expect(logtoConfigQueries.updateOidcConfigsByKey).not.toHaveBeenCalled();
   });
 });

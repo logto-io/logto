@@ -48,6 +48,7 @@ describe('logRoutes', () => {
         includeKeyPrefix: [
           token.Type.ExchangeTokenBy,
           token.Type.RevokeToken,
+          token.Type.RevokeGrants,
           interaction.prefix,
           jwtCustomizer.prefix,
           saml.prefix,
@@ -60,6 +61,7 @@ describe('logRoutes', () => {
         includeKeyPrefix: [
           token.Type.ExchangeTokenBy,
           token.Type.RevokeToken,
+          token.Type.RevokeGrants,
           interaction.prefix,
           jwtCustomizer.prefix,
           saml.prefix,

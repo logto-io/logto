@@ -38,6 +38,7 @@ const jwt_claims = {
   restore: 'Standard wiederherstellen',
   restored: 'Wiederhergestellt',
   data_source_tab: 'Datenquelle',
+  error_handling_tab: 'Fehlerbehandlung',
   test_tab: 'Testumgebung',
   jwt_claims_description:
     'Standardansprüche werden automatisch im JWT enthalten und können nicht überschrieben werden.',
@@ -68,6 +69,19 @@ const jwt_claims = {
   api_context: {
     title: 'API-Kontext: Zugriffskontrolle',
     subtitle: 'Verwenden Sie die Methode `api.denyAccess`, um die Token-Anfrage abzulehnen.',
+  },
+  error_handling: {
+    title: 'Fehlerbehandlung',
+    subtitle:
+      'Steuert, ob die Token-Ausstellung blockiert werden soll, wenn das Skript fehlschlägt.',
+    input_field_title: 'Verhalten bei der Token-Ausstellung bei Skriptfehlern',
+    block_issuance_switch: 'Token-Ausstellung blockieren, wenn das Skript Fehler wirft',
+    default_hint_create:
+      'Neue Skripte für benutzerdefinierte Claims blockieren standardmäßig die Token-Ausgabe, wenn das Skript fehlschlägt. Wenn die API bereits einen Wert liefert, wird stattdessen der gespeicherte Wert verwendet.',
+    default_hint_edit:
+      'Bestehende Skripte für benutzerdefinierte Claims ohne diese Einstellung behalten den bisherigen Standardwert "aus", bis Sie ausdrücklich einen Wert speichern.',
+    warning:
+      'Wenn aktiviert, lehnen Laufzeitfehler im Skript die Token-Anfrage mit `invalid_request` (400) und einer lokalisierten `error_description` ab. Aufrufe von `api.denyAccess` geben weiterhin `access_denied` zurück.',
   },
   fetch_external_data: {
     title: 'Externe Daten abrufen',

@@ -71,6 +71,12 @@ const user_details = {
     deletion_confirmation:
       'You are removing the existing <name/> for the 2-step verification. Are you sure you want to continue?',
   },
+  passkey: {
+    field_name: 'Passkeys',
+    field_description_empty: 'This user has not enabled passkey sign-in.',
+    deletion_confirmation:
+      'You are removing the existing <name/> for passkey sign-in. Are you sure you want to continue?',
+  },
   suspended: 'Suspended',
   suspend_user: 'Suspend user',
   suspend_user_reminder:
@@ -154,6 +160,20 @@ const user_details = {
     revoke_session: 'Revoke session',
     revoke_session_confirmation:
       'If you remove this session, users will be forced to re-authentication.',
+  },
+  third_party_apps: {
+    title: 'Third-party apps',
+    description:
+      'Use Logto as your identity provider to authorize third-party apps. View and manage the apps this user has granted access to.',
+    field_name: 'Authorized third-party apps',
+    multiple_authorized: 'This user has authorized multiple third-party apps and services.',
+    not_authorized: 'This user has not authorized any third-party apps or services yet.',
+    name_column: 'Name',
+    app_id_column: 'App ID',
+    access_created_at_column: 'Access created at',
+    revoke_access_title: 'Revoke access?',
+    revoke_access_description:
+      "This will revoke the app's access to this user's account across devices. The user must reauthorize to restore access.",
   },
   connections: {
     title: 'Connection',

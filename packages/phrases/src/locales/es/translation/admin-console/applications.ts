@@ -4,6 +4,8 @@ const applications = {
   subtitle:
     'Configura la autenticación de Logto para tu aplicación nativa, de página única, de máquina a máquina o tradicional',
   subtitle_with_app_type: 'Configura la autenticación de Logto para tu aplicación {{name}}',
+  create_device_flow_description:
+    'Crea una aplicación nativa que utiliza la concesión de autorización de dispositivo OAuth 2.0 para dispositivos con entrada limitada o aplicaciones headless.',
   create: 'Crear aplicación',
   create_third_party: 'Crear aplicación de terceros',
   create_thrid_party_modal_title: 'Crear una app de terceros ({{type}})',
@@ -23,7 +25,7 @@ const applications = {
     native: {
       title: 'App nativa',
       subtitle: 'Una aplicación que se ejecuta en un entorno nativo',
-      description: 'Por ejemplo, una app de iOS, una app de Android',
+      description: 'Por ejemplo, una app de iOS, una app de Android, app de escritorio, TVs, CLI',
     },
     spa: {
       title: 'App de página única',
@@ -55,6 +57,21 @@ const applications = {
       title: 'App de terceros',
       subtitle: 'Una aplicación que se utiliza como conector de proveedor de identidad de terceros',
       description: 'Ej.: OIDC, SAML',
+    },
+  },
+  authorization_flow: {
+    title: 'Flujo de autorización',
+    tooltip:
+      'Seleccione el flujo de autorización para su aplicación. Una vez configurado, no se puede cambiar.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        'El tipo de autorización predeterminado y más común. Los usuarios son redirigidos a una página de inicio de sesión para autorizar el acceso directamente.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        'Para dispositivos con entrada limitada o aplicaciones sin interfaz (p. ej., televisores, CLI). Los usuarios completan el inicio de sesión en un dispositivo separado ingresando un código de dispositivo o escaneando un código QR.',
     },
   },
   placeholder_title: 'Selecciona un tipo de aplicación para continuar',

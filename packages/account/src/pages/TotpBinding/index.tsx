@@ -4,6 +4,7 @@ import VerificationCodeInput, {
   defaultLength,
 } from '@experience/shared/components/VerificationCode';
 import { AccountCenterControlValue, MfaFactor, type Mfa } from '@logto/schemas';
+import type { TFuncKey } from 'i18next';
 import qrcode from 'qrcode';
 import { useCallback, useContext, useEffect, useState, type FormEvent } from 'react';
 import { isMobile } from 'react-device-detect';
@@ -12,23 +13,49 @@ import { useNavigate } from 'react-router-dom';
 
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import { getMfaVerifications, generateTotpSecret, addTotpMfa } from '@ac/apis/mfa';
+import { getMfaVerifications, generateTotpSecret, createOrReplaceTotpMfa } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { authenticatorAppSuccessRoute } from '@ac/constants/routes';
+import {
+  authenticatorAppSuccessRoute,
+  authenticatorAppReplaceSuccessRoute,
+} from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from './index.module.scss';
 
-const isCodeReady = (code: string[]) => {
-  return code.length === defaultLength && code.every(Boolean);
+const isCodeReady = (code: string[]) => code.length === defaultLength && code.every(Boolean);
+const isTotpEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.TOTP) ?? false;
+const errorPage = (messageKey: TFuncKey) => (
+  <ErrorPage titleKey="error.something_went_wrong" messageKey={messageKey} />
+);
+const CopySecretButton = ({
+  secret,
+  onCopy,
+}: {
+  readonly secret: string;
+  readonly onCopy: () => void;
+}) => (
+  <div className={styles.copySecret}>
+    <div className={styles.rawSecret}>{secret}</div>
+    <Button
+      title="action.copy"
+      type="secondary"
+      onClick={() => {
+        onCopy();
+      }}
+    />
+  </div>
+);
+
+type Props = {
+  readonly isReplace?: boolean;
 };
 
-const isTotpEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.TOTP) ?? false;
-
-const TotpBinding = () => {
+const TotpBinding = ({ isReplace }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
@@ -42,7 +69,7 @@ const TotpBinding = () => {
   } = useContext(PageContext);
   const getMfaRequest = useApi(getMfaVerifications, { silent: true });
   const generateSecretRequest = useApi(generateTotpSecret, { silent: true });
-  const addTotpRequest = useApi(addTotpMfa);
+  const createOrReplaceTotpRequest = useApi(createOrReplaceTotpMfa);
   const handleError = useErrorHandler();
 
   const [secret, setSecret] = useState<string>();
@@ -51,34 +78,28 @@ const TotpBinding = () => {
   const [codeInput, setCodeInput] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [hasTotpAlready, setHasTotpAlready] = useState<boolean>();
-
-  // Check if TOTP already exists on mount
   useEffect(() => {
     const checkExistingMfa = async () => {
       const [error, result] = await getMfaRequest();
-
       if (error) {
-        // If there's an error, we'll let the user continue and the backend will validate
         setHasTotpAlready(false);
         return;
       }
-
-      const hasTotp = result?.some((mfa) => mfa.type === MfaFactor.TOTP) ?? false;
-      setHasTotpAlready(hasTotp);
+      setHasTotpAlready(result?.some((mfa) => mfa.type === MfaFactor.TOTP) ?? false);
     };
-
     void checkExistingMfa();
   }, [getMfaRequest]);
-
-  // Generate TOTP secret on mount
   useEffect(() => {
-    if (!verificationId || Boolean(secret) || hasTotpAlready !== false) {
+    if (
+      !verificationId ||
+      Boolean(secret) ||
+      hasTotpAlready === undefined ||
+      (hasTotpAlready && !isReplace)
+    ) {
       return;
     }
-
     const generateSecret = async () => {
       const [error, result] = await generateSecretRequest();
-
       if (error) {
         await handleError(error);
         return;
@@ -86,26 +107,36 @@ const TotpBinding = () => {
 
       if (result) {
         setSecret(result.secret);
-
-        // Generate QR code locally
         const displayName =
           userInfo?.username ?? userInfo?.primaryEmail ?? userInfo?.primaryPhone ?? 'User';
         const service = window.location.hostname;
-        // Build the otpauth URI manually for QR code
         const keyUri = `otpauth://totp/${encodeURIComponent(service)}:${encodeURIComponent(displayName)}?secret=${result.secret}&issuer=${encodeURIComponent(service)}`;
-        const qrCodeDataUrl = await qrcode.toDataURL(keyUri);
-        setSecretQrCode(qrCodeDataUrl);
+        try {
+          setSecretQrCode(await qrcode.toDataURL(keyUri));
+        } catch (error) {
+          console.error('Failed to generate TOTP QR code:', error);
+        }
       }
     };
-
     void generateSecret();
-  }, [generateSecretRequest, handleError, hasTotpAlready, secret, userInfo, verificationId]);
-
+  }, [
+    generateSecretRequest,
+    handleError,
+    hasTotpAlready,
+    isReplace,
+    secret,
+    userInfo,
+    verificationId,
+  ]);
+  useEffect(() => {
+    if (verificationId && hasTotpAlready === false) {
+      sessionStorage.clearRouteRestore();
+    }
+  }, [hasTotpAlready, verificationId]);
   const copySecret = useCallback(async () => {
     if (!secret) {
       return;
     }
-
     await navigator.clipboard.writeText(secret);
     setToast(t('mfa.secret_key_copied'));
   }, [secret, setToast, t]);
@@ -116,11 +147,12 @@ const TotpBinding = () => {
       if (!verificationId || !secret || loading || !isCodeReady(codeInput)) {
         return;
       }
-
       setErrorMessage(undefined);
-
       const codeString = codeInput.join('');
-      const [error] = await addTotpRequest(verificationId, { secret, code: codeString });
+      const [error] = await createOrReplaceTotpRequest(verificationId, {
+        secret,
+        code: codeString,
+      });
 
       if (error) {
         await handleError(error, {
@@ -139,16 +171,18 @@ const TotpBinding = () => {
         return;
       }
 
-      // Clear code input to prevent duplicate submission from the auto-submit useEffect
-      // (when loading state changes, handleSubmit gets recreated, which triggers the effect again)
+      // Clear code input to prevent duplicate submission
       setCodeInput([]);
 
-      navigate(authenticatorAppSuccessRoute, { replace: true });
+      navigate(isReplace ? authenticatorAppReplaceSuccessRoute : authenticatorAppSuccessRoute, {
+        replace: true,
+      });
     },
     [
-      addTotpRequest,
       codeInput,
+      createOrReplaceTotpRequest,
       handleError,
+      isReplace,
       loading,
       navigate,
       secret,
@@ -166,40 +200,27 @@ const TotpBinding = () => {
     }
     void handleSubmit();
   }, [codeInput, handleSubmit]);
-
   if (
     !accountCenterSettings?.enabled ||
     accountCenterSettings.fields.mfa !== AccountCenterControlValue.Edit
   ) {
-    return (
-      <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
-    );
+    return errorPage('error.feature_not_enabled');
   }
-
   if (!isTotpEnabled(experienceSettings?.mfa)) {
-    return (
-      <ErrorPage
-        titleKey="error.something_went_wrong"
-        messageKey="account_center.mfa.totp_not_enabled"
-      />
-    );
+    return errorPage('account_center.mfa.totp_not_enabled');
   }
-
-  if (hasTotpAlready) {
-    return (
-      <ErrorPage
-        titleKey="error.something_went_wrong"
-        messageKey="account_center.mfa.totp_already_added"
-      />
-    );
+  if (hasTotpAlready && !isReplace) {
+    return errorPage('account_center.mfa.totp_already_added');
   }
-
   if (!verificationId) {
     return <VerificationMethodList />;
   }
 
   return (
-    <SecondaryPageLayout title="mfa.add_authenticator_app" description="">
+    <SecondaryPageLayout
+      title={isReplace ? 'mfa.replace_authenticator_app' : 'mfa.add_authenticator_app'}
+      description=""
+    >
       <div className={styles.container}>
         {/* Step 1: QR Code or Secret Key */}
         <div className={styles.step}>
@@ -222,23 +243,17 @@ const TotpBinding = () => {
             />
           </div>
           <div className={styles.secretContent}>
-            {isQrCodeFormat && secretQrCode && (
-              <div className={styles.qrCode}>
-                <img src={secretQrCode} alt="QR code" />
-              </div>
-            )}
-            {!isQrCodeFormat && secret && (
-              <div className={styles.copySecret}>
-                <div className={styles.rawSecret}>{secret}</div>
-                <Button
-                  title="action.copy"
-                  type="secondary"
-                  onClick={() => {
-                    void copySecret();
-                  }}
-                />
-              </div>
-            )}
+            {isQrCodeFormat &&
+              (secretQrCode ? (
+                <div className={styles.qrCode}>
+                  <img src={secretQrCode} alt="QR code" />
+                </div>
+              ) : secret ? (
+                <CopySecretButton secret={secret} onCopy={copySecret} />
+              ) : (
+                <div className={styles.qrCodePlaceholder} />
+              ))}
+            {!isQrCodeFormat && secret && <CopySecretButton secret={secret} onCopy={copySecret} />}
             <button
               type="button"
               className={styles.switchLink}
@@ -259,10 +274,7 @@ const TotpBinding = () => {
           <div className={styles.stepTitle}>
             <DynamicT
               forKey="mfa.step"
-              interpolation={{
-                step: 2,
-                content: t('mfa.enter_one_time_code'),
-              }}
+              interpolation={{ step: 2, content: t('mfa.enter_one_time_code') }}
             />
           </div>
           <div className={styles.stepDescription}>
@@ -273,9 +285,7 @@ const TotpBinding = () => {
             className={styles.codeInput}
             value={codeInput}
             error={errorMessage}
-            onChange={(code) => {
-              setCodeInput(code);
-            }}
+            onChange={setCodeInput}
           />
           <Button
             title="action.continue"

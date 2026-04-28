@@ -40,6 +40,13 @@ const rotateRefreshToken = (ctx: KoaContextWithOIDC) => {
   return refreshToken.ttlPercentagePassed() >= 70;
 };
 
-const defaults = { refreshTokenTtl, rotateRefreshToken };
+const sessionTtl = 14 * 24 * 60 * 60;
+
+const defaults = {
+  refreshTokenTtl,
+  rotateRefreshToken,
+  /** 14 days in seconds */
+  sessionTtl,
+};
 
 export default defaults;

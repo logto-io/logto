@@ -10,15 +10,15 @@ import {
   getManagementApiResourceIndicator,
   adminConsoleApplicationId,
   InteractionEvent,
+  SignInIdentifier,
   type Role,
   type User,
   RoleType,
 } from '@logto/schemas';
 
 import { authedAdminTenantApi as api, adminTenantApi } from '#src/api/api.js';
-import type { InteractionPayload } from '#src/api/interaction.js';
 import { adminConsoleRedirectUri, logtoConsoleUrl } from '#src/constants.js';
-import { initClient, initExperienceClient, processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { generatePassword, generateUsername } from '#src/utils.js';
 
 import {
@@ -69,16 +69,6 @@ export const deleteUser = async (id: string) => {
   await api.delete(`users/${id}`);
 };
 
-export const putInteraction = async (cookie: string, payload: InteractionPayload) =>
-  adminTenantApi
-    .put('interaction', {
-      headers: { cookie },
-      json: payload,
-      redirect: 'manual',
-      throwHttpErrors: false,
-    })
-    .json();
-
 export const initAdminExperienceClient = async (config?: Partial<LogtoConfig>) =>
   initExperienceClient({
     interactionEvent: InteractionEvent.SignIn,
@@ -92,21 +82,26 @@ export const initClientAndSignIn = async (
   password: string,
   config?: Partial<LogtoConfig>
 ) => {
-  const client = await initClient(
-    {
+  const client = await initExperienceClient({
+    config: {
       endpoint: logtoConsoleUrl,
       appId: adminConsoleApplicationId,
       ...config,
     },
-    adminConsoleRedirectUri
-  );
-  await client.successSend(putInteraction, {
-    event: InteractionEvent.SignIn,
-    identifier: {
-      username,
-      password,
-    },
+    redirectUri: adminConsoleRedirectUri,
+    api: adminTenantApi,
   });
+
+  const { verificationId } = await client.verifyPassword({
+    identifier: {
+      type: SignInIdentifier.Username,
+      value: username,
+    },
+    password,
+  });
+
+  await client.identifyUser({ verificationId });
+
   const { redirectTo } = await client.submitInteraction();
   await client.processSession(redirectTo);
 

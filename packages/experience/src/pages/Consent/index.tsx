@@ -80,6 +80,10 @@ const Consent = () => {
 
   const applicationName = displayName ?? name;
   const showTerms = Boolean(termsOfUseUrl ?? privacyPolicyUrl);
+  const { redirectUri } = consentData;
+  const redirectUriOrigin = consentData.redirectUri
+    ? getRedirectUriOrigin(consentData.redirectUri)
+    : undefined;
 
   return (
     <LandingPageLayout
@@ -110,21 +114,23 @@ const Consent = () => {
         />
       )}
       <div className={styles.footerButton}>
-        <Button
-          title="action.cancel"
-          type="secondary"
-          onClick={() => {
-            window.location.replace(consentData.redirectUri);
-          }}
-        />
+        {redirectUri && (
+          <Button
+            title="action.cancel"
+            type="secondary"
+            onClick={() => {
+              window.location.replace(redirectUri);
+            }}
+          />
+        )}
         <Button title="action.authorize" isLoading={isConsentLoading} onClick={consentHandler} />
       </div>
-      {!showTerms && (
+      {!showTerms && redirectUriOrigin && (
         <div className={styles.redirectUri}>
-          {t('description.redirect_to', { name: getRedirectUriOrigin(consentData.redirectUri) })}
+          {t('description.redirect_to', { name: redirectUriOrigin })}
         </div>
       )}
-      {showTerms && (
+      {showTerms && redirectUriOrigin && (
         <div className={styles.terms}>
           <Trans
             components={{
@@ -139,7 +145,26 @@ const Consent = () => {
           >
             {t('description.authorize_agreement_with_redirect', {
               name,
-              uri: getRedirectUriOrigin(consentData.redirectUri),
+              uri: redirectUriOrigin,
+            })}
+          </Trans>
+        </div>
+      )}
+      {showTerms && !redirectUriOrigin && (
+        <div className={styles.terms}>
+          <Trans
+            components={{
+              link: (
+                <TermsLinks
+                  inline
+                  termsOfUseUrl={termsOfUseUrl ?? ''}
+                  privacyPolicyUrl={privacyPolicyUrl ?? ''}
+                />
+              ),
+            }}
+          >
+            {t('description.authorize_agreement', {
+              name,
             })}
           </Trans>
         </div>

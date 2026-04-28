@@ -3,6 +3,8 @@ const applications = {
   title: '全部应用',
   subtitle: '创建一个移动、单页、machine-to-machine 或传统 web 应用程序，并通过 Logto 进行身份验证',
   subtitle_with_app_type: '为你的 {{name}} 应用程序设置 Logto 身份验证',
+  create_device_flow_description:
+    '创建一个使用 OAuth 2.0 设备授权许可的原生应用，适用于输入受限设备或无头应用。',
   create: '创建应用',
   create_third_party: '创建第三方应用',
   create_thrid_party_modal_title: '创建第三方应用（{{type}}）',
@@ -22,7 +24,7 @@ const applications = {
     native: {
       title: '原生应用',
       subtitle: '在原生环境中运行的应用程序',
-      description: '例如 iOS 应用程序，Android 应用程序',
+      description: '例如 iOS 应用程序、Android 应用程序、桌面应用程序、电视、CLI',
     },
     spa: {
       title: '单页应用',
@@ -53,6 +55,19 @@ const applications = {
       title: '第三方应用',
       subtitle: '用作第三方 IdP 连接器的应用程序',
       description: '例如，OIDC，SAML',
+    },
+  },
+  authorization_flow: {
+    title: '授权流程',
+    tooltip: '选择应用的授权流程。一旦设置，将无法更改。',
+    authorization_code: {
+      title: 'Authorization code',
+      description: '默认且最常见的授权类型。用户将被重定向到登录页面以直接授权访问。',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        '适用于输入受限的设备或无界面应用（如电视、CLI）。用户在另一台设备上通过输入设备码或扫描二维码完成登录。',
     },
   },
   placeholder_title: '选择应用程序类型以继续',

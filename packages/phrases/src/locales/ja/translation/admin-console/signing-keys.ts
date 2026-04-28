@@ -21,6 +21,7 @@ const signing_keys = {
     algorithm: '署名キーアルゴリズム',
   },
   status: {
+    next: '次の',
     current: '現在の',
     previous: '以前の',
   },

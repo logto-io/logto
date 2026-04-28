@@ -10,11 +10,12 @@ import LoadingLayerProvider from './Providers/LoadingLayerProvider';
 import PageContextProvider from './Providers/PageContextProvider';
 import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
-import { isDevFeaturesEnabled } from './constants/env';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
+import Device from './pages/Device';
+import DeviceSuccess from './pages/Device/Success';
 import DirectSignIn from './pages/DirectSignIn';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
@@ -26,6 +27,7 @@ import EmailMfaBinding from './pages/MfaBinding/EmailMfaBinding';
 import PhoneMfaBinding from './pages/MfaBinding/PhoneMfaBinding';
 import TotpBinding from './pages/MfaBinding/TotpBinding';
 import WebAuthnBinding from './pages/MfaBinding/WebAuthnBinding';
+import MfaOnboarding from './pages/MfaOnboarding';
 import MfaVerification from './pages/MfaVerification';
 import BackupCodeVerification from './pages/MfaVerification/BackupCodeVerification';
 import EmailVerificationCode from './pages/MfaVerification/EmailVerificationCode';
@@ -93,21 +95,15 @@ const App = () => {
                       <Route path={experience.routes.signIn}>
                         <Route index element={<SignIn />} />
                         <Route path="password" element={<SignInPassword />} />
-                        {isDevFeaturesEnabled && (
-                          <>
-                            <Route path="passkey" element={<SignInPasskeyVerification />} />
-                            <Route
-                              path="verification-methods"
-                              element={<SignInVerificationMethods />}
-                            />
-                          </>
-                        )}
+                        <Route path="passkey" element={<SignInPasskeyVerification />} />
+                        <Route
+                          path="verification-methods"
+                          element={<SignInVerificationMethods />}
+                        />
                       </Route>
 
                       {/* Create passkey for sign-in */}
-                      {isDevFeaturesEnabled && (
-                        <Route path="create-passkey" element={<PasskeySetup />} />
-                      )}
+                      <Route path="create-passkey" element={<PasskeySetup />} />
 
                       {/* Register */}
                       <Route path={experience.routes.register}>
@@ -123,6 +119,9 @@ const App = () => {
 
                       {/* Passwordless verification code */}
                       <Route path=":flow/verification-code" element={<VerificationCode />} />
+
+                      {/* Mfa onboarding page. Prompt users to turn on 2-step verification. */}
+                      <Route path="mfa-onboarding" element={<MfaOnboarding />} />
 
                       {/* Mfa binding */}
                       <Route path={UserMfaFlow.MfaBinding}>
@@ -177,6 +176,13 @@ const App = () => {
 
                       {/* Consent */}
                       <Route path="consent" element={<Consent />} />
+
+                      {/* Device flow */}
+                      <Route path={experience.routes.device} element={<Device />} />
+                      <Route
+                        path={`${experience.routes.device}/success`}
+                        element={<DeviceSuccess />}
+                      />
 
                       {/*
                        * Identifier sign-in (first screen)

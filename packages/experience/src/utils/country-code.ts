@@ -8,6 +8,8 @@ export const fallbackCountryCode = 'US';
 export const countryCallingCodeMap: Record<string, CountryCode> = {
   zh: 'CN',
   en: 'US',
+  ja: 'JP',
+  ko: 'KR',
 };
 
 export const isValidCountryCode = (countryCode: string): countryCode is CountryCode => {

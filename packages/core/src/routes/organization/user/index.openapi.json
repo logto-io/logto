@@ -25,7 +25,23 @@
         },
         "responses": {
           "201": {
-            "description": "Users were added to the organization successfully."
+            "description": "Users were added to the organization successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "An array of user IDs processed from the request. This may include IDs that were already members of the organization."
+                    }
+                  }
+                }
+              }
+            }
           },
           "422": {
             "description": "At least one of the IDs provided is not valid. For example, the organization ID or user ID does not exist."
@@ -180,7 +196,23 @@
         },
         "responses": {
           "201": {
-            "description": "Roles were assigned to the user successfully."
+            "description": "Roles were assigned to the user successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "organizationRoleIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "An array of organization role IDs that were assigned to the user, deduplicated and resolved from any provided role names."
+                    }
+                  }
+                }
+              }
+            }
           },
           "422": {
             "description": "The user is not a member of the organization; or at least one of the IDs provided is not valid. For example, the organization ID or organization role ID does not exist; or at least one of the role names provided is not valid. For example, the organization role name does not exist."

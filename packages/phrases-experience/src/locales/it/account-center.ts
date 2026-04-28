@@ -3,6 +3,21 @@ const account_center = {
     title: 'Pagina non trovata',
     description: 'Questa pagina non è disponibile.',
   },
+  page: {
+    title: 'Account utente',
+    security_title: 'Sicurezza',
+    security_description:
+      'Modifica qui le impostazioni del tuo account per garantirne la sicurezza.',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
+    support: 'Supporto',
+  },
   verification: {
     title: 'Verifica di sicurezza',
     description:
@@ -12,6 +27,9 @@ const account_center = {
     error_verify_failed: 'Verifica non riuscita. Inserisci di nuovo il codice.',
     verification_required: 'Verifica scaduta. Conferma di nuovo la tua identità.',
     try_another_method: 'Prova un altro metodo di verifica',
+    no_available_methods_title: 'Nessun metodo di verifica disponibile',
+    no_available_methods_description:
+      'Non hai configurato alcun metodo di verifica. Aggiungi prima una password, un indirizzo e-mail o un numero di telefono al tuo account.',
   },
   password_verification: {
     title: 'Verifica la password',
@@ -56,6 +74,61 @@ const account_center = {
     title: 'Imposta nome utente',
     description: 'Il nome utente può contenere solo lettere, numeri e trattini bassi.',
     success: 'Nome utente aggiornato con successo.',
+  },
+  security: {
+    add: 'Aggiungi',
+    change: 'Modifica',
+    remove: 'Rimuovi',
+    not_set: 'Non impostato',
+    social_sign_in: 'Accesso social',
+    social_not_linked: 'Non collegato',
+    email_phone: 'Posta elettronica / Telefono',
+    email: 'Posta elettronica',
+    phone: 'Telefono',
+    password: "Parola d'accesso",
+    configured: 'Configurato',
+    not_configured: 'Non configurato',
+    two_step_verification: 'Verifica in due passaggi',
+    authenticator_app: 'App di autenticazione',
+    passkeys: 'Passkeys',
+    backup_codes: 'Codici di backup',
+    email_verification_code: 'Codice di verifica e-mail',
+    phone_verification_code: 'Codice di verifica telefonico',
+    passkeys_count_one: '{{count}} passkey',
+    passkeys_count_other: '{{count}} passkeys',
+    backup_codes_count_one: '{{count}} codice rimanente',
+    backup_codes_count_other: '{{count}} codici rimanenti',
+    view: 'Visualizza',
+    manage: 'Gestisci',
+    turn_on_2_step_verification: 'Attiva la verifica in due passaggi',
+    turn_on_2_step_verification_description:
+      "Aggiungi un ulteriore livello di sicurezza. Ti verrà richiesto un secondo passaggio di verifica all'accesso.",
+    turn_off_2_step_verification: 'Disattiva la verifica in due passaggi',
+    turn_off_2_step_verification_description:
+      "La disattivazione della verifica in due passaggi rimuoverà il livello di protezione aggiuntivo dal tuo account all'accesso. Sei sicuro di voler continuare?",
+    disable_2_step_verification: 'Disattiva',
+    no_verification_method_warning:
+      "Non hai aggiunto un secondo metodo di verifica. Aggiungine almeno uno per attivare la verifica in due passaggi all'accesso.",
+    account_removal: "Eliminazione dell'account",
+    delete_your_account: 'Elimina il tuo account',
+    delete_account: "Elimina l'account",
+    remove_email_confirmation_title: "Rimuovi l'indirizzo email",
+    remove_email_confirmation_description:
+      'Una volta rimosso, non potrai più accedere con questo indirizzo email. Sei sicuro di voler continuare?',
+    remove_phone_confirmation_title: 'Rimuovi il numero di telefono',
+    remove_phone_confirmation_description:
+      'Una volta rimosso, non potrai più accedere con questo numero di telefono. Sei sicuro di voler continuare?',
+    email_removed: "L'indirizzo email è stato rimosso con successo.",
+    phone_removed: 'Il numero di telefono è stato rimosso con successo.',
+  },
+  social: {
+    linked: '{{connector}} collegato con successo.',
+    not_enabled:
+      'Questo metodo di accesso social non è abilitato. Contatta il tuo amministratore per assistenza.',
+    removed: '{{connector}} rimosso con successo.',
+    remove_confirmation_title: 'Rimuovi account social',
+    remove_confirmation_description:
+      'Se rimuovi {{connector}}, potresti non riuscire più ad accedere con questo account finché non lo aggiungi di nuovo.',
   },
   password: {
     title: 'Imposta password',
@@ -136,6 +209,10 @@ const account_center = {
     totp: {
       title: 'App di autenticazione aggiunta!',
       description: 'La tua app di autenticazione è stata collegata con successo al tuo account.',
+    },
+    totp_replaced: {
+      title: 'App di autenticazione sostituita!',
+      description: 'La tua app di autenticazione è stata sostituita con successo.',
     },
     backup_code: {
       title: 'Codici di backup generati!',

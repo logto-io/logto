@@ -26,6 +26,15 @@ const helmetPromise = async (
     });
   })();
 
+const getOssServerOrigins = (): string[] => {
+  try {
+    const { origin } = new URL(process.env.LOGTO_OSS_SURVEY_ENDPOINT ?? '');
+    return [origin];
+  } catch {
+    return [];
+  }
+};
+
 export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   mountedApps: string[],
   tenantId: string
@@ -53,6 +62,18 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
   const logtoOrigin = 'https://*.logto.io';
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';
+
+  // Parse the OSS survey endpoint origin for CSP connect-src allowlisting.
+  const ossSurveyOrigins = getOssServerOrigins();
+
+  /**
+   * Temporary hardcoded tenant-level `connect-src` allowlist for BYO-UI customers.
+   * TODO: migrate to DB so tenants can self-manage. Review each entry for trust.
+   */
+  const customTenantConnectSourceAllowlist = [
+    // LaunchDarkly — A/B testing SDK (flag eval, streaming, events).
+    'https://*.launchdarkly.com',
+  ];
 
   // We have the following use cases:
   //
@@ -135,6 +156,7 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           'https://recaptcha.net/recaptcha/',
           'https://www.gstatic.com/recaptcha/',
           'https://www.gstatic.cn/recaptcha/',
+          ...customTenantConnectSourceAllowlist,
           ...developmentOrigins,
         ],
         // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
@@ -184,7 +206,14 @@ export default function koaSecurityHeaders<StateT, ContextT, ResponseBodyT>(
           ...conditionalArray(!isProduction && ["'unsafe-eval'", "'unsafe-inline'"]),
           ...cdnSources,
         ],
-        connectSrc: ["'self'", logtoOrigin, ...adminOrigins, ...coreOrigins, ...developmentOrigins],
+        connectSrc: [
+          "'self'",
+          logtoOrigin,
+          ...adminOrigins,
+          ...coreOrigins,
+          ...ossSurveyOrigins,
+          ...developmentOrigins,
+        ],
         frameSrc: ["'self'", ...adminOrigins, ...coreOrigins],
       },
     },

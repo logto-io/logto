@@ -8,6 +8,14 @@ import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import ExternalLink from '@/assets/icons/external-link.svg?react';
+import LogtoEmailLogoDark from '@/assets/icons/logto-email-service-dark.svg?url';
+import LogtoEmailLogo from '@/assets/icons/logto-email-service.svg?url';
+import ConnectorLogo from '@/components/ConnectorLogo';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { pricingLink } from '@/consts/external-links';
+import Button from '@/ds-components/Button';
+import DangerousRaw from '@/ds-components/DangerousRaw';
 import DynamicT from '@/ds-components/DynamicT';
 import ModalLayout from '@/ds-components/ModalLayout';
 import TextLink from '@/ds-components/TextLink';
@@ -22,13 +30,51 @@ import Footer from './Footer';
 import PlatformSelector from './PlatformSelector';
 import Skeleton from './Skeleton';
 import styles from './index.module.scss';
-import { compareConnectors, getConnectorRadioGroupSize, getModalTitle } from './utils';
+import {
+  compareConnectors,
+  getEmailConnectorUpsellCopyKeys,
+  getConnectorRadioGroupSize,
+  getModalTitle,
+  shouldShowEmailConnectorUpsellBanner,
+} from './utils';
 
 type Props = {
   readonly isOpen: boolean;
   readonly type?: ConnectorType;
   readonly onClose?: (connectorId?: string) => void;
 };
+
+function EmailConnectorUpsellBanner() {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'admin_console',
+  });
+  const copyKeys = getEmailConnectorUpsellCopyKeys();
+
+  return (
+    <div className={styles.upsellBanner}>
+      <div className={styles.upsellInfo}>
+        <ConnectorLogo data={{ logo: LogtoEmailLogo, logoDark: LogtoEmailLogoDark }} />
+        <div className={styles.upsellContent}>
+          <div className={styles.upsellTitle}>
+            <DynamicT forKey={copyKeys.title} />
+          </div>
+          <div className={styles.upsellDescription}>
+            <DynamicT forKey={copyKeys.description} />
+          </div>
+        </div>
+      </div>
+      <Button
+        className={styles.upsellButton}
+        type="outline"
+        title={<DangerousRaw>{t(copyKeys.action, { productName: 'Logto Cloud' })}</DangerousRaw>}
+        trailingIcon={<ExternalLink />}
+        onClick={() => {
+          window.open(pricingLink, '_blank', 'noopener,noreferrer');
+        }}
+      />
+    </div>
+  );
+}
 
 function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const { data: existingConnectors, error: connectorsError } = useSWR<
@@ -75,6 +121,12 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       .slice()
       .sort(compareConnectors);
   }, [factories, type, existingConnectors]);
+
+  const shouldShowEmailConnectorUpsellBannerValue = shouldShowEmailConnectorUpsellBanner({
+    type,
+    isCloud,
+    isDevFeaturesEnabled,
+  });
 
   const activeGroup = useMemo(
     () => groups.find(({ id }) => id === activeGroupId),
@@ -157,6 +209,7 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
       >
         {isLoading && <Skeleton />}
         {factoriesError?.message ?? connectorsError?.message}
+        {shouldShowEmailConnectorUpsellBannerValue && <EmailConnectorUpsellBanner />}
 
         <ConnectorRadioGroup
           name="group"

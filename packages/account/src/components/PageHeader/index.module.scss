@@ -1,0 +1,31 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: _.unit(5) _.unit(6);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: _.unit(4);
+}
+
+.logo {
+  display: block;
+  height: 24px;
+}
+
+.divider {
+  width: 1px;
+  height: 16px;
+  background: var(--color-line-divider);
+}
+
+.appName {
+  font: var(--font-title-1);
+  color: var(--color-type-primary);
+  white-space: nowrap;
+}

@@ -1,7 +1,12 @@
 import path from 'node:path';
 
 import { GoogleConnector } from '@logto/connector-kit';
-import type { CustomClientMetadata, ExtraParamsObject, OidcClientMetadata } from '@logto/schemas';
+import type {
+  CustomClientMetadata,
+  ExtraParamsObject,
+  LogtoUiCookie,
+  OidcClientMetadata,
+} from '@logto/schemas';
 import {
   ApplicationType,
   customClientMetadataGuard,
@@ -10,10 +15,10 @@ import {
   FirstScreen,
   experience,
 } from '@logto/schemas';
-import { condArray, conditional, trySafe } from '@silverhand/essentials';
+import { condArray, conditional, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { type AllClientMetadata, type ClientAuthMethod, errors } from 'oidc-provider';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import type { EnvSet } from '#src/env-set/index.js';
 
 /**
  * Build constant client metadata for an application based on its type and optional flags.
@@ -28,40 +33,67 @@ import { type EnvSet } from '#src/env-set/index.js';
 export const getConstantClientMetadata = (
   envSet: EnvSet,
   type: ApplicationType,
-  options?: { allowTokenExchange?: boolean }
+  options?: Pick<CustomClientMetadata, 'allowTokenExchange' | 'isDeviceFlow'>
 ): AllClientMetadata => {
   const { jwkSigningAlg } = envSet.oidc;
 
-  const getTokenEndpointAuthMethod = (): ClientAuthMethod => {
-    switch (type) {
-      case ApplicationType.Native:
-      case ApplicationType.SPA: {
-        return 'none';
-      }
+  const optionalGrantTypes = condArray(options?.allowTokenExchange && GrantType.TokenExchange);
 
-      default: {
-        return 'client_secret_basic';
-      }
-    }
-  };
+  const applicationType: AllClientMetadata['application_type'] =
+    type === ApplicationType.Native ? 'native' : 'web';
 
-  const grantTypes = [
-    ...(type === ApplicationType.MachineToMachine
-      ? [GrantType.ClientCredentials]
-      : [GrantType.AuthorizationCode, GrantType.RefreshToken]),
-    ...condArray(options?.allowTokenExchange && GrantType.TokenExchange),
-  ];
+  /**
+   * Native and SPA clients are public clients, so they do not authenticate at the token endpoint.
+   * Traditional web apps and M2M apps are confidential clients and use client secret based auth.
+   */
+  const tokenEndpointAuthMethod: ClientAuthMethod =
+    type === ApplicationType.Native || type === ApplicationType.SPA
+      ? 'none'
+      : 'client_secret_basic';
 
-  return {
-    application_type: type === ApplicationType.Native ? 'native' : 'web',
-    grant_types: grantTypes,
-    token_endpoint_auth_method: getTokenEndpointAuthMethod(),
-    response_types: conditional(type === ApplicationType.MachineToMachine && []),
+  const constantMetadata = {
+    application_type: applicationType,
+    token_endpoint_auth_method: tokenEndpointAuthMethod,
     // https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use
     authorization_signed_response_alg: jwkSigningAlg,
     userinfo_signed_response_alg: jwkSigningAlg,
     id_token_signed_response_alg: jwkSigningAlg,
     introspection_signed_response_alg: jwkSigningAlg,
+  };
+
+  /**
+   * Device flow is a native-app-only variant. It skips authorization code
+   * response handling and only allows device_code + refresh_token grants.
+   *
+   * `response_types` is set to an empty array on purpose to override oidc-provider's default
+   * value, because device authorization does not use the `/authorize` response contract.
+   */
+  if (type === ApplicationType.Native && options?.isDeviceFlow) {
+    return {
+      ...constantMetadata,
+      grant_types: [GrantType.DeviceCode, GrantType.RefreshToken, ...optionalGrantTypes],
+      response_types: [],
+    };
+  }
+
+  /**
+   * M2M clients can only use client credentials and never participate in front-channel auth flows.
+   *
+   * As with device flow, we must override the default response type. Otherwise the
+   * client would be treated as an authorization client and be forced to provide redirect URIs.
+   */
+  if (type === ApplicationType.MachineToMachine) {
+    return {
+      ...constantMetadata,
+      grant_types: [GrantType.ClientCredentials, ...optionalGrantTypes],
+      response_types: [],
+    };
+  }
+
+  // Interactive applications intentionally inherit oidc-provider's default `response_types`.
+  return {
+    ...constantMetadata,
+    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken, ...optionalGrantTypes],
   };
 };
 
@@ -236,8 +268,73 @@ const firstScreenRouteMapping: Record<FirstScreen, keyof typeof experience.route
   [FirstScreen.SignInDeprecated]: 'signIn',
 };
 
+export type SharedExperienceParams = Readonly<{
+  appId?: string;
+  organizationId?: string;
+  uiLocales?: string;
+}>;
+
+/**
+ * Read a single query value as a non-empty string or `undefined`. Safely ignores
+ * arrays (repeated query keys) and empty strings so callers never see a 500 from
+ * an object-level parser when a query key is duplicated.
+ */
+export const readOptionalQueryString = (value: unknown): string | undefined =>
+  typeof value === 'string' && value.length > 0 ? value : undefined;
+
+export const parseSharedExperienceParams = (
+  source: Record<string, unknown>
+): SharedExperienceParams =>
+  removeUndefinedKeys({
+    appId: readOptionalQueryString(source.app_id),
+    organizationId: readOptionalQueryString(source.organization_id),
+    uiLocales: readOptionalQueryString(source.ui_locales),
+  });
+
+/**
+ * Only a small subset of Experience parameters is shared across multiple page families such as
+ * login and device flow: app, organization, and locale. Keep this helper intentionally narrow so
+ * login-only parameters like `identifier`, `login_hint`, or `one_time_token` stay colocated with
+ * the login prompt builder instead of being silently inherited by unrelated pages.
+ */
+export const appendSharedExperienceSearchParams = (
+  searchParams: URLSearchParams,
+  { appId, organizationId, uiLocales }: SharedExperienceParams
+) => {
+  if (appId) {
+    searchParams.append('app_id', appId);
+  }
+
+  if (organizationId) {
+    searchParams.append(ExtraParamsKey.OrganizationId, organizationId);
+  }
+
+  if (uiLocales) {
+    searchParams.append(ExtraParamsKey.UiLocales, uiLocales);
+  }
+};
+
+/**
+ * The Experience SSR middleware reads `_logto` before the client bootstraps. Reusing the same
+ * cookie payload for the shared app / organization / locale params keeps device pages aligned
+ * with login pages without broadening the cookie to route-specific prompt parameters.
+ */
+export const buildSharedExperienceCookie = ({
+  appId,
+  organizationId,
+  uiLocales,
+}: SharedExperienceParams): LogtoUiCookie =>
+  removeUndefinedKeys({
+    appId,
+    organizationId,
+    uiLocales,
+  });
+
 // eslint-disable-next-line complexity
-export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown): string => {
+export const buildLoginPromptUrl = (
+  params: ExtraParamsObject,
+  sharedParams?: SharedExperienceParams
+): string => {
   const firstScreenKey =
     params[ExtraParamsKey.FirstScreen] ??
     params[ExtraParamsKey.InteractionMode] ??
@@ -260,16 +357,16 @@ export const buildLoginPromptUrl = (params: ExtraParamsObject, appId?: unknown):
     }
   };
 
-  if (appId) {
-    searchParams.append('app_id', String(appId));
+  if (sharedParams) {
+    appendSharedExperienceSearchParams(searchParams, sharedParams);
   }
 
-  appendExtraParam(ExtraParamsKey.OrganizationId);
   appendExtraParam(ExtraParamsKey.OneTimeToken);
   appendExtraParam(ExtraParamsKey.LoginHint);
   appendExtraParam(ExtraParamsKey.Identifier);
   appendExtraParam(ExtraParamsKey.UiLocales);
   appendExtraParam(ExtraParamsKey.BackUrl);
+  appendExtraParam(ExtraParamsKey.Theme);
 
   // Reuse DirectSignIn page to handle Google One Tap credential.
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing

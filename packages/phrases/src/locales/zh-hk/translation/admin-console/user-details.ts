@@ -63,9 +63,13 @@ const user_details = {
     field_name: '多重因素驗證',
     field_description: '這個使用者已啟用 2 步驗證因素。',
     name_column: '多重因素驗證',
-
     field_description_empty: '此用戶尚未啟用兩步驟身份驗證因素。',
     deletion_confirmation: '你正在刪除現有的雙步驗證中的 <name/>。你確定要繼續嗎？',
+  },
+  passkey: {
+    field_name: '通行密鑰',
+    field_description_empty: '此用戶尚未啟用通行密鑰登錄。',
+    deletion_confirmation: '你正在刪除用於通行密鑰登錄的現有 <name/>。你確定要繼續嗎？',
   },
   suspended: '已禁用',
   suspend_user: '禁用用戶',
@@ -135,7 +139,6 @@ const user_details = {
     name_column: '名稱',
     session_id_column: '會話 ID',
     location_column: '位置',
-
     browser_on_os: '在 {{os}} 上的 {{browser}}',
     user: '使用者',
     applications: '應用程式',
@@ -146,6 +149,20 @@ const user_details = {
     device_model: '裝置型號',
     revoke_session: '撤銷工作階段',
     revoke_session_confirmation: '如果移除此工作階段，使用者將需要重新驗證。',
+  },
+  third_party_apps: {
+    title: '第三方應用程式',
+    description:
+      '使用 Logto 作為身分提供者來授權第三方應用程式。檢視並管理此使用者已授權存取的應用程式。',
+    field_name: '已授權第三方應用程式',
+    multiple_authorized: '此使用者已授權多個第三方應用程式與服務。',
+    not_authorized: '此使用者尚未授權任何第三方應用程式或服務。',
+    name_column: '名稱',
+    app_id_column: '應用程式 ID',
+    access_created_at_column: '授權建立時間',
+    revoke_access_title: '要撤銷存取權嗎？',
+    revoke_access_description:
+      '此操作會撤銷該應用程式在所有裝置上存取此使用者帳戶的權限。使用者必須重新授權才能恢復存取。',
   },
   connections: {
     title: '連接',

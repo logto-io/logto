@@ -7,9 +7,9 @@ import successDarkIllustration from '@ac/assets/icons/success-dark.svg';
 import successIllustration from '@ac/assets/icons/success.svg';
 import ErrorPage from '@ac/components/ErrorPage';
 import {
-  clearRedirectUrl,
+  clearPendingReturn,
   clearShowSuccess,
-  getRedirectUrl,
+  getPendingReturn,
   getShowSuccess,
 } from '@ac/utils/account-center-route';
 
@@ -17,9 +17,11 @@ type IdentifierType =
   | SignInIdentifier
   | 'password'
   | 'totp'
+  | 'totp_replaced'
   | 'backup_code'
   | 'backup_code_deleted'
-  | 'passkey';
+  | 'passkey'
+  | 'social';
 
 type TranslationMap = Partial<
   Record<IdentifierType, { readonly titleKey: TFuncKey; readonly messageKey: TFuncKey }>
@@ -47,6 +49,10 @@ const translationMap: TranslationMap = {
   totp: {
     titleKey: 'account_center.update_success.totp.title',
     messageKey: 'account_center.update_success.totp.description',
+  },
+  totp_replaced: {
+    titleKey: 'account_center.update_success.totp_replaced.title',
+    messageKey: 'account_center.update_success.totp_replaced.description',
   },
   backup_code: {
     titleKey: 'account_center.update_success.backup_code.title',
@@ -82,27 +88,31 @@ const UpdateSuccess = ({ identifierType }: Props) => {
   }, [identifierType]);
 
   useEffect(() => {
-    const storedRedirectUrl = getRedirectUrl();
-    const showSuccess = getShowSuccess();
+    const storedPendingReturn = getPendingReturn();
 
-    if (storedRedirectUrl) {
-      // If show_success is set, show the success page with a Done button
-      if (showSuccess) {
-        setRedirectUrl(storedRedirectUrl);
+    if (storedPendingReturn) {
+      if (identifierType === 'social') {
+        setRedirectUrl(() => storedPendingReturn);
         return;
       }
 
-      // Otherwise, redirect immediately
+      const showSuccess = getShowSuccess();
+
+      if (showSuccess) {
+        setRedirectUrl(() => storedPendingReturn);
+        return;
+      }
+
       setIsRedirecting(true);
-      clearRedirectUrl();
-      window.location.assign(storedRedirectUrl);
+      clearPendingReturn();
+      window.location.assign(storedPendingReturn);
     }
-  }, []);
+  }, [identifierType]);
 
   const handleDoneClick = () => {
     if (redirectUrl) {
       setIsRedirecting(true);
-      clearRedirectUrl();
+      clearPendingReturn();
       clearShowSuccess();
       window.location.assign(redirectUrl);
     }

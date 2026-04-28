@@ -1,5 +1,4 @@
 # This compose file is for demonstration only, do not use in prod.
-version: "3.9"
 services:
   app:
     depends_on:
@@ -13,6 +12,9 @@ services:
     environment:
       - TRUST_PROXY_HEADER=1
       - DB_URL=postgres://postgres:p0stgr3s@postgres:5432/logto
+      # Optional default grace period, in seconds, for OIDC private key rotation when the API
+      # request omits `rotationGracePeriod`.
+      - PRIVATE_KEY_ROTATION_GRACE_PERIOD
       # Mandatory for GitPod to map host env to the container, thus GitPod can dynamically configure the public URL of Logto;
       # Or, you can leverage it for local testing.
       - ENDPOINT

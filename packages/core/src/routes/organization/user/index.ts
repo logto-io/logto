@@ -54,6 +54,7 @@ export default function userRoutes(
     koaGuard({
       params: z.object({ id: z.string().min(1) }),
       body: z.object({ userIds: z.string().min(1).array().nonempty() }),
+      response: z.object({ userIds: z.string().min(1).array() }),
       status: [201, 403, 422],
     }),
     async (ctx, next) => {
@@ -72,6 +73,7 @@ export default function userRoutes(
         ...userIds.map((userId) => ({ organizationId: id, userId }))
       );
 
+      ctx.body = { userIds };
       ctx.status = 201;
 
       // Trigger hook event

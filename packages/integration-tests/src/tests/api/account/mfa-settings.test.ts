@@ -201,13 +201,19 @@ describe('my-account (mfa-settings)', () => {
       });
 
       const response = await updateMyLogtoConfig(api, { mfa: { skipped: true } });
-      expect(response).toEqual({ mfa: { skipped: true } });
+      expect(response).toEqual({
+        mfa: { skipped: true, skipMfaOnSignIn: false },
+        passkeySignIn: { skipped: false },
+      });
 
       const updatedConfig = await getMyLogtoConfig(api);
       expect(updatedConfig.mfa.skipped).toBe(true);
 
       const response2 = await updateMyLogtoConfig(api, { mfa: { skipped: false } });
-      expect(response2).toEqual({ mfa: { skipped: false } });
+      expect(response2).toEqual({
+        mfa: { skipped: false, skipMfaOnSignIn: false },
+        passkeySignIn: { skipped: false },
+      });
 
       const updatedConfig2 = await getMyLogtoConfig(api);
       expect(updatedConfig2.mfa.skipped).toBe(false);

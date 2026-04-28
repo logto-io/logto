@@ -1,5 +1,6 @@
 import { assert } from '@silverhand/essentials';
 import fs from 'node:fs/promises';
+import path from 'node:path';
 
 import type {
   GetConnectorConfig,
@@ -36,8 +37,10 @@ const sendMessage =
       )
     );
 
+    const filePath = mockConnectorFilePaths.Email;
+    await fs.mkdir(path.dirname(filePath), { recursive: true });
     await fs.writeFile(
-      mockConnectorFilePaths.Email,
+      filePath,
       JSON.stringify({ address: to, code: payload.code, type, payload }) + '\n'
     );
 

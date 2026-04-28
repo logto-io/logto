@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-yunpian-sms",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "云片网 SMS connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
@@ -27,7 +27,8 @@
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },

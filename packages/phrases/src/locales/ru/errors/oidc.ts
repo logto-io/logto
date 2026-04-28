@@ -17,11 +17,15 @@ const oidc = {
   provider_error: 'Внутренняя ошибка OIDC: {{message}}.',
   server_error: 'Произошла неизвестная ошибка OIDC. Пожалуйста, попробуйте снова позже.',
   provider_error_fallback: 'Произошла ошибка OIDC: {{code}}.',
+  custom_claims_script_error: 'Ошибка скрипта пользовательских claims: {{error_description}}',
   key_required: 'Требуется как минимум один ключ.',
   key_not_found: 'Ключ с идентификатором {{id}} не найден.',
+  only_previous_key_can_be_deleted: 'Удалить можно только предыдущий ключ.',
   invalid_session_payload: 'Недопустимая полезная нагрузка сессии.',
   session_not_found: 'Сессия не найдена.',
   invalid_session_account_id: 'Несоответствие accountId сессии.',
+  failed_to_revoke_grant: 'Не удалось отозвать грант.',
+  failed_to_cleanup_session_authorization: 'Не удалось очистить авторизацию сессии.',
 };
 
 export default Object.freeze(oidc);

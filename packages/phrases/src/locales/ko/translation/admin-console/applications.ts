@@ -4,6 +4,8 @@ const applications = {
   subtitle:
     '인증에 Logto를 사용할 모바일, 단일 페이지, Machine-to-Machine 또는 기존 어플리케이션을 설정할 수 있어요.',
   subtitle_with_app_type: '내 {{name}} 어플리케이션에 대한 Logto 인증 설정',
+  create_device_flow_description:
+    'OAuth 2.0 디바이스 인증 부여를 사용하는 네이티브 애플리케이션을 생성합니다. 입력이 제한된 디바이스 또는 헤드리스 앱용입니다.',
   create: '어플리케이션 생성',
   create_third_party: '서드파티 어플리케이션 생성',
   create_thrid_party_modal_title: '서드파티 앱 생성 ({{type}})',
@@ -23,7 +25,7 @@ const applications = {
     native: {
       title: '네이티브 앱',
       subtitle: '네이티브 환경에서 작동하는 어플리케이션',
-      description: '예) iOS, Android 앱',
+      description: '예) iOS, Android, 데스크톱 앱, TV, CLI',
     },
     spa: {
       title: '싱글 페이지 앱',
@@ -54,6 +56,20 @@ const applications = {
       title: '서드파티 앱',
       subtitle: '서드파티 IdP 커넥터로 사용되는 앱',
       description: '예: OIDC, SAML',
+    },
+  },
+  authorization_flow: {
+    title: '인증 플로우',
+    tooltip: '애플리케이션의 인증 플로우를 선택하세요. 한 번 설정하면 변경할 수 없습니다.',
+    authorization_code: {
+      title: 'Authorization code',
+      description:
+        '가장 기본적이고 일반적인 인증 유형입니다. 사용자가 로그인 페이지로 리디렉션되어 직접 액세스를 인증합니다.',
+    },
+    device_flow: {
+      title: 'Device flow',
+      description:
+        '입력이 제한된 장치나 헤드리스 앱(예: TV, CLI)을 위한 방식입니다. 사용자는 디바이스 코드를 입력하거나 QR 코드를 스캔하여 별도의 장치에서 로그인을 완료합니다.',
     },
   },
   placeholder_title: '어플리케이션 유형을 선택하여 계속하세요',

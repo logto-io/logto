@@ -18,11 +18,16 @@ const oidc = {
   server_error:
     'Ein unbekannter OIDC Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
   provider_error_fallback: 'Ein OIDC Fehler ist aufgetreten: {{code}}.',
+  custom_claims_script_error: 'Fehler im benutzerdefinierten Claims-Skript: {{error_description}}',
   key_required: 'Mindestens ein Schlüssel ist erforderlich.',
   key_not_found: 'Der Schlüssel mit der ID {{id}} wurde nicht gefunden.',
+  only_previous_key_can_be_deleted: 'Nur ein vorheriger Schlüssel kann gelöscht werden.',
   invalid_session_payload: 'Ungültige Sitzungsnutzlast.',
   session_not_found: 'Sitzung nicht gefunden.',
   invalid_session_account_id: 'Sitzung accountId stimmt nicht überein.',
+  failed_to_revoke_grant: 'Die Berechtigung konnte nicht widerrufen werden.',
+  failed_to_cleanup_session_authorization:
+    'Die Sitzungsautorisierung konnte nicht bereinigt werden.',
 };
 
 export default Object.freeze(oidc);

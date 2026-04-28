@@ -1,24 +1,18 @@
-import { ApplicationType, GrantType, InteractionEvent, type Resource } from '@logto/schemas';
+import { ApplicationType, GrantType, SignInIdentifier, type Resource } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
-import { putInteraction } from '#src/api/interaction.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
-import { initClient, processSession } from '#src/helpers/client.js';
+import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import {
-  devFeatureTest,
-  generatePassword,
-  generateUsername,
-  getAccessTokenPayload,
-} from '#src/utils.js';
+import { generatePassword, generateUsername, getAccessTokenPayload } from '#src/utils.js';
 
 const subjectTokenType = 'urn:ietf:params:oauth:token-type:access_token';
 
-devFeatureTest.describe('Token Exchange (Access Token)', () => {
+describe('Token Exchange (Access Token)', () => {
   const username = generateUsername();
   const password = generatePassword();
 
@@ -65,13 +59,16 @@ devFeatureTest.describe('Token Exchange (Access Token)', () => {
     testUserId = id;
 
     // Sign in and get an access token (JWT format when resource is specified)
-    const client = await initClient({
-      resources: [testApiResourceInfo.indicator],
+    const client = await initExperienceClient({
+      config: {
+        resources: [testApiResourceInfo.indicator],
+      },
     });
-    await client.successSend(putInteraction, {
-      event: InteractionEvent.SignIn,
-      identifier: { username, password },
+    const { verificationId } = await client.verifyPassword({
+      identifier: { type: SignInIdentifier.Username, value: username },
+      password,
     });
+    await client.identifyUser({ verificationId });
     const { redirectTo } = await client.submitInteraction();
     await processSession(client, redirectTo);
     accessToken = await client.getAccessToken(testApiResourceInfo.indicator);

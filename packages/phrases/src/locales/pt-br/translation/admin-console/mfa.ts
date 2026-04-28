@@ -51,9 +51,13 @@ const mfa = {
     'Pedir aos usuários para configurar MFA durante o registro (pode ser ignorado, prompt único)',
   prompt_only_at_sign_in:
     'Pedir aos usuários para configurar o MFA na próxima tentativa de login após o registro (pode ser ignorado, prompt único)',
+  prompt_at_sign_in_and_sign_up_mandatory:
+    'Peça aos usuários para configurar MFA durante o registro. (não pode ser ignorado)',
+  prompt_only_at_sign_in_mandatory:
+    'Peça aos usuários para configurar MFA na próxima tentativa de login após o registro. (não pode ser ignorado)',
   set_up_organization_required_mfa_prompt:
     'Avisar os usuários para configurar o MFA após a organização ativar o MFA',
-  prompt_at_sign_in_no_skip:
+  prompt_at_sign_in_non_skippable:
     'Solicitar que os usuários configurem MFA na próxima tentativa de login (não pode ser ignorado)',
   email_primary_method_tip:
     'O código de verificação do e-mail já é seu principal método de login. Para manter a segurança, ele não pode ser reutilizado para MFA.',

@@ -5,13 +5,24 @@
  * we have moved some of the standalone functions into this file.
  */
 
-import { MfaFactor, VerificationType, type User, type Mfa } from '@logto/schemas';
+import {
+  MfaFactor,
+  VerificationType,
+  type User,
+  type Mfa,
+  InteractionEvent,
+  type UserLogtoConfig,
+  userMfaDataKey,
+  userPasskeySignInDataKey,
+  type JsonObject,
+  userLogtoConfigGuard,
+} from '@logto/schemas';
 import { conditional, type Nullable } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { InteractionProfile } from '../types.js';
+import type { InteractionProfile, UserMfaVerificationsData } from '../types.js';
 
 import { type VerificationRecord } from './verifications/index.js';
 
@@ -120,7 +131,7 @@ export const identifyUserByVerificationRecord = async (
     case VerificationType.PhoneVerificationCode:
     case VerificationType.MfaEmailVerificationCode:
     case VerificationType.MfaPhoneVerificationCode:
-    case VerificationType.SignInWebAuthn: {
+    case VerificationType.SignInPasskey: {
       return {
         user: await verificationRecord.identifyUser(),
       };
@@ -294,4 +305,53 @@ export const getAllUserEnabledMfaVerifications = (
     }
     return 0;
   });
+};
+
+/**
+ * Format the MFA verifications data to be updated in the user account
+ * @param mfaVerificationData - The data of MFA verifications to be updated, including the enabled status, skipped status and the MFAverifications array.
+ * @returns An object containing the formatted MFA data to be updated in the user account.
+ * @remarks
+ * - The `enabled` field is determined by the presence of any MFA verifications. If there are MFA verifications, it will be set to true;
+ *   otherwise, it will be false. This is because the `enabled` field is newly introduced and legacy users may not have this field in their config.
+ *   The absence of `enabled` field will be treated as MFA not enabled after the next sign-in attempt.
+ * - The `skipped` field is only set when the user has explicitly skipped MFA. This is to persist the skipped status for users who have chosen to skip MFA.
+ * - The `additionalBindingSuggestionSkipped` field is only set when user has explicitly skipped the optional additional MFA suggestion.
+ * - The `passkeySkipped` status is only persisted during sign-in event. This is to allow users who skipped binding passkey during registration to be prompted
+ *   again during the first sign-in attempt.
+ * - The returned object is structured to be directly used for updating the user account with the new MFA settings.
+ */
+export const parseMfaPropertiesToUserConfig = (
+  logtoConfig: JsonObject,
+  mfaVerificationData: UserMfaVerificationsData,
+  interactionEvent: InteractionEvent
+): UserLogtoConfig => {
+  const { mfaEnabled, mfaSkipped, additionalBindingSuggestionSkipped, passkeySkipped } =
+    mfaVerificationData;
+  const userMfaData = userLogtoConfigGuard.safeParse(logtoConfig).data?.[userMfaDataKey];
+  return {
+    ...logtoConfig,
+    [userMfaDataKey]: {
+      ...userMfaData,
+      // Force cast optional value to boolean since the `enabled` field is newly introduced and legacy users may NOT have this field
+      // in their config. The absence of `enabled` field will be treated as MFA not enabled after the next sign-in attempt.
+      ...conditional(mfaEnabled !== undefined && { enabled: mfaEnabled }),
+      // For users who have explicitly skipped MFA, set `skipped` to true to persist the skipped status.
+      ...conditional(mfaSkipped && { skipped: true }),
+      // Persist optional additional MFA suggestion skipped status when user explicitly skips it.
+      ...conditional(
+        additionalBindingSuggestionSkipped && { additionalBindingSuggestionSkipped: true }
+      ),
+    },
+    ...conditional(
+      // Only persist passkey skipped status on sign-in event. So users who skipped binding passkey during registration will be prompted
+      // again during the first sign-in attempt.
+      passkeySkipped &&
+        interactionEvent === InteractionEvent.SignIn && {
+          [userPasskeySignInDataKey]: {
+            skipped: true,
+          },
+        }
+    ),
+  };
 };

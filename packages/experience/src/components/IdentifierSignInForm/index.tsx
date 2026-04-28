@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import WebAuthnContext from '@/Providers/WebAuthnContextProvider/WebAuthnContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
 import { SmartInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
@@ -36,6 +37,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit(signInMethods);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
+  const { isPasskeyFlowProcessing } = useContext(WebAuthnContext);
 
   const enabledSignInMethods = useMemo(
     () => signInMethods.map(({ identifier }) => identifier),
@@ -71,6 +73,10 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
+      if (isPasskeyFlowProcessing) {
+        return;
+      }
+
       clearErrorMessage();
 
       void handleSubmit(async ({ identifier: { type, value } }) => {
@@ -102,6 +108,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
       setIdentifierInputValue,
       showSingleSignOnForm,
       termsValidation,
+      isPasskeyFlowProcessing,
     ]
   );
 
@@ -162,7 +169,7 @@ const IdentifierSignInForm = ({ className, autoFocus, signInMethods }: Props) =>
         title={showSingleSignOnForm ? 'action.single_sign_on' : 'action.sign_in'}
         icon={showSingleSignOnForm ? <LockIcon /> : undefined}
         htmlType="submit"
-        isLoading={isSubmitting}
+        isLoading={isSubmitting || isPasskeyFlowProcessing}
       />
 
       <input hidden type="submit" />

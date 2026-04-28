@@ -1,7 +1,6 @@
 import {
   InteractionEvent,
   MfaFactor,
-  MfaPolicy,
   bindMfaPayloadGuard,
   verifyMfaPayloadGuard,
 } from '@logto/schemas';
@@ -10,6 +9,7 @@ import { type IRouterParamContext } from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { isNoSkipMfaPolicy } from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
@@ -171,7 +171,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
       } = ctx;
 
       assertThat(
-        policy !== MfaPolicy.Mandatory,
+        !isNoSkipMfaPolicy(policy),
         new RequestError({
           code: 'session.mfa.mfa_policy_not_user_controlled',
           status: 422,

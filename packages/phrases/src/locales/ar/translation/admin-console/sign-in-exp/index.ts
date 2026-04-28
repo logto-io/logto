@@ -43,6 +43,7 @@ const sign_in_exp = {
     hide_logto_branding: 'إخفاء علامة Logto التجارية',
     hide_logto_branding_description:
       'أزل عبارة "مدعوم من Logto". سلّط الضوء على علامتك فقط مع تجربة تسجيل دخول نظيفة واحترافية.',
+    hide_logto_branding_oss_note: 'هذه الميزة متاحة بشكل أصلي في <a>Logto Cloud</a>.',
   },
   branding_uploads: {
     app_logo: {
@@ -78,6 +79,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'واجهة مخصصة',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'CSS مخصص',
     css_code_editor_description1: 'انظر إلى مثال لـ CSS مخصص.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -87,15 +89,19 @@ const sign_in_exp = {
     bring_your_ui_title: 'اجلب واجهتك الخاصة',
     bring_your_ui_description:
       'قم بتحميل حزمة مضغوطة (.zip) لاستبدال واجهة المستخدم المُعدة مسبقًا في Logto بالشفرة الخاصة بك. <a>تعلم المزيد</a>',
+    bring_your_ui_oss_description: 'خصّص واجهة تسجيل الدخول باستخدام الشيفرة الخاصة بك.',
+    bring_your_ui_oss_card_description:
+      'حمّل واجهة تسجيل الدخول المخصصة الخاصة بك مباشرةً إلى <a>Logto Cloud</a>. لا حاجة إلى عمل fork أو إعادة النشر.',
+    bring_your_ui_oss_try_cloud: 'جرّب Cloud',
     preview_with_bring_your_ui_description:
       'تم تحميل أصول واجهة المستخدم المخصصة الخاصة بك بنجاح ويتم تقديمها الآن. وبالتالي ، تم تعطيل نافذة المعاينة المدمجة.\nلتجربة واجهة تسجيل الدخول المخصصة الخاصة بك ، انقر فوق زر "المعاينة المباشرة" لفتحها في علامة تبويب مستعرض جديدة.',
   },
   account_center: {
     title: 'مركز الحساب',
     description: 'خصص تدفقات مركز الحساب لديك باستخدام واجهات برمجة تطبيقات Logto.',
-    enable_account_api: 'تفعيل واجهة Account API',
+    enable_account_api: 'تفعيل مركز الحساب وواجهة Account API',
     enable_account_api_description:
-      'فعّل واجهة Account API لبناء مركز حساب مخصص ومنح المستخدمين النهائيين وصولًا مباشرًا إلى الواجهة دون استخدام Logto Management API.',
+      'يؤدي هذا إلى تفعيل واجهة Account API الموجهة للمستخدمين النهائيين ومركز الحساب الجاهز من Logto معًا. عند إيقافه، تصبح الميزتان غير متاحتين.',
     field_options: {
       off: 'إيقاف',
       edit: 'تحرير',
@@ -169,28 +175,46 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'أضف نطاقات تطبيقات الواجهة الأمامية المسموح لها بتسجيل مفاتيح المرور عبر واجهة Account API.',
     webauthn_related_origins_error: 'يجب أن يبدأ الأصل بـ https:// أو http://',
+    delete_account_url: 'حذف الحساب',
+    delete_account_url_description:
+      'قدّم عنوان URL لنقطة النهاية الخاصة بك لمعالجة حذف الحساب بمنطق مخصص.',
     prebuilt_ui: {
       title: 'دمج واجهة المستخدم المُعدة مسبقًا',
       description:
-        'دمج سريع لتدفقات التحقق وإعدادات الأمان الجاهزة مع واجهة المستخدم المُعدة مسبقًا.',
+        'ادمج بسرعة مركز الحساب الجاهز أو التحقق الأمني أو تدفق تحديث ملف شخصي واحد باستخدام واجهة مستخدم مُعدة مسبقًا. ما عليك سوى دمج نطاقك مع المسار لتكوين عنوان URL لمركز الحساب (على سبيل المثال: https://auth.foo.com/account/email).',
       permission_notice:
         'لدمج هذه التدفقات المُعدة مسبقًا، قم بتعيين أذونات Account API ذات الصلة إلى <strong>تحرير</strong> في الإعدادات أدناه.',
+      account_center_title: 'دمج مركز الحساب الجاهز',
+      account_center_description:
+        'وجّه المستخدمين إلى مركز الحساب لإدارة إعدادات الأمان مثل البريد الإلكتروني والهاتف واسم المستخدم وكلمة المرور والمصادقة متعددة العوامل والحسابات المتصلة.',
       flows_title: 'دمج تدفقات إعدادات الأمان الجاهزة',
+      single_task_flows_title: 'دمج تدفق مهمة واحدة جاهز',
       flows_description:
-        'اتخذ نطاقك وأضفه إلى المسار لتشكل عنوان URL لإعدادات حسابك (مثل، https://auth.foo.com/account/email). بشكل اختياري، أضف معامل `redirect=` URL لإرجاع المستخدمين إلى تطبيقك بعد التحديث بنجاح.',
+        'اتخذ نطاقك وأضفه إلى المسار لتشكل عنوان URL لإعدادات حسابك (مثل، https://auth.foo.com/account/email). بشكل اختياري، أضف `redirect=` لإرجاع المستخدمين إلى تطبيقك بعد التحديث بنجاح، أو `show_success=true` لإبقاء صفحة النجاح مرئية، أو `ui_locales=` لتجاوز اللغة الافتراضية، أو `identifier=` لملء حقل إدخال المعرّف مسبقًا.',
+      single_task_flows_description:
+        'وجّه المستخدمين مباشرةً إلى تدفق محدد (مثل ربط البريد الإلكتروني). بشكل اختياري، أضف `redirect=` لإرجاع المستخدمين إلى تطبيقك بعد التحديث بنجاح، أو `show_success=true` لإبقاء صفحة النجاح مرئية، أو `ui_locales=` لتجاوز اللغة الافتراضية، أو `identifier=` لملء حقل إدخال المعرّف مسبقًا.',
       tooltips: {
         email: 'قم بتحديث عنوان بريدك الإلكتروني الرئيسي',
         phone: 'قم بتحديث رقم هاتفك المحمول الرئيسي',
         username: 'قم بتحديث اسم المستخدم الخاص بك',
         password: 'عين كلمة مرور جديدة',
+        social: 'اربط حسابًا اجتماعيًا لتسجيل الدخول',
+        social_remove: 'أزل حسابًا اجتماعيًا مرتبطًا',
         authenticator_app: 'قم بإعداد تطبيق مصادق جديد للمصادقة متعددة العوامل',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: 'تسجيل مفتاح مرور جديد',
         passkey_manage: 'إدارة مفاتيح المرور الحالية أو إضافة مفاتيح جديدة',
         backup_codes_generate: 'توليد مجموعة جديدة من 10 أكواد احتياطية',
         backup_codes_manage: 'عرض الأكواد الاحتياطية المتاحة أو توليد أكواد جديدة',
+        account_center:
+          'الوصول إلى مركز الحساب لإدارة إعدادات الأمان مثل البريد الإلكتروني والهاتف واسم المستخدم وكلمة المرور والمصادقة متعددة العوامل والحسابات المتصلة',
       },
       customize_note: 'لا تريد التجربة المعدة مسبقًا؟ يمكنك بالكامل',
       customize_link: 'تخصيص التدفقات الخاصة بك باستخدام واجهة Account API بدلاً من ذلك.',
+    },
+    custom_css: {
+      title: 'CSS مخصص',
+      description: 'تخصيص مظهر مركز الحساب باستخدام CSS مخصص.',
     },
   },
   sign_up_and_sign_in,

@@ -1,7 +1,7 @@
 import type { AccountCenter, SignInIdentifier } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import IdentifierSendStep, { type IdentifierLabelKey } from './IdentifierSendStep';
 import IdentifierVerifyStep from './IdentifierVerifyStep';
@@ -83,7 +84,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, verificationId, setToast, setVerificationId } =
+  const { accountCenterSettings, refreshUserInfo, verificationId, setToast, setVerificationId } =
     useContext(PageContext);
   const [identifier, setIdentifier] = useState(initialValue);
   const [pendingIdentifier, setPendingIdentifier] = useState<string>();
@@ -124,6 +125,12 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   );
 
   const resetFlowErrorCodes = useMemo(() => ['verification_record.not_found'], []);
+
+  useEffect(() => {
+    if (verificationId) {
+      sessionStorage.clearRouteRestore();
+    }
+  }, [verificationId]);
 
   const handleVerifyError = useCallback(
     async (error: unknown) => {
@@ -195,6 +202,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
         return;
       }
 
+      await refreshUserInfo();
       navigate(successRedirect, { replace: true });
     },
     [
@@ -204,6 +212,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       clearVerifyError,
       handleError,
       handleVerifyError,
+      refreshUserInfo,
       loading,
       navigate,
       pendingIdentifier,

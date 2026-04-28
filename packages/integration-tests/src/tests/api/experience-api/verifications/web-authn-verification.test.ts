@@ -4,9 +4,6 @@ import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
-
-const { describe, it } = devFeatureTest;
 
 /**
  * Create a mock WebAuthn authentication verification payload.
@@ -52,7 +49,7 @@ describe('identifier-first passkey sign-in verification', () => {
     await userApi.cleanUp();
   });
 
-  describe('POST /experience/verification/sign-in-web-authn/authentication', () => {
+  describe('POST /experience/verification/sign-in-passkey/authentication', () => {
     it('should return 400 if user has no WebAuthn credentials', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       await userApi.create({ username, password });
@@ -61,7 +58,7 @@ describe('identifier-first passkey sign-in verification', () => {
 
       // User exists but has no WebAuthn credentials registered
       await expectRejects(
-        client.createSignInWebAuthnAuthentication({
+        client.createSignInPasskeyAuthentication({
           identifier: {
             type: SignInIdentifier.Username,
             value: username,
@@ -75,12 +72,12 @@ describe('identifier-first passkey sign-in verification', () => {
     });
   });
 
-  describe('POST /experience/verification/sign-in-web-authn/authentication/verify', () => {
+  describe('POST /experience/verification/sign-in-passkey/authentication/verify', () => {
     it('should return error if verification record not found for given verificationId', async () => {
       const client = await initExperienceClient();
 
       await expectRejects(
-        client.verifySignInWebAuthnAuthentication({
+        client.verifySignInPasskeyAuthentication({
           verificationId: 'non-existent-verification-id',
           payload: createMockWebAuthnAuthenticationPayload(),
         }),
@@ -97,7 +94,7 @@ describe('identifier-first passkey sign-in verification', () => {
       // When no verificationId is provided and no preflight challenge exists in the interaction,
       // the server should fail to find the authentication challenge
       await expectRejects(
-        client.verifySignInWebAuthnAuthentication({
+        client.verifySignInPasskeyAuthentication({
           payload: createMockWebAuthnAuthenticationPayload(),
         }),
         {

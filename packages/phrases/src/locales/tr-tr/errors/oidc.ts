@@ -17,11 +17,15 @@ const oidc = {
   provider_error: 'Dahili OIDC Hatası: {{message}}.',
   server_error: 'Bilinmeyen bir OIDC hatası oluştu. Lütfen daha sonra tekrar deneyin.',
   provider_error_fallback: 'Bir OIDC hatası oluştu: {{code}}.',
+  custom_claims_script_error: 'Özel claims betiği hatası: {{error_description}}',
   key_required: 'En az bir anahtar gereklidir.',
   key_not_found: "ID'si {{id}} olan anahtar bulunamadı.",
+  only_previous_key_can_be_deleted: 'Yalnızca önceki bir anahtar silinebilir.',
   invalid_session_payload: 'Geçersiz oturum yükü.',
   session_not_found: 'Oturum bulunamadı.',
   invalid_session_account_id: 'Oturum accountId uyumsuzluğu.',
+  failed_to_revoke_grant: 'Yetki iptal edilemedi.',
+  failed_to_cleanup_session_authorization: 'Oturum yetkilendirmesi temizlenemedi.',
 };
 
 export default Object.freeze(oidc);

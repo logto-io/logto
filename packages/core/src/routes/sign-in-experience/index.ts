@@ -32,11 +32,13 @@ import customUiAssetsRoutes from './custom-ui-assets/index.js';
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
 
-const { isDevFeaturesEnabled } = EnvSet.values;
+const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
+  [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
+    policy
+  );
+
 const signInExperienceResponseGuard = SignInExperiences.guard;
-const signInExperienceCreateGuard = isDevFeaturesEnabled
-  ? SignInExperiences.createGuard
-  : SignInExperiences.createGuard.omit({ adaptiveMfa: true });
+const signInExperienceCreateGuard = SignInExperiences.createGuard;
 
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -111,9 +113,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         forgotPasswordMethods,
         hideLogtoBranding,
         passkeySignIn,
-        // Guard omits adaptiveMfa when dev features are disabled; cast to handle both cases.
-        // eslint-disable-next-line no-restricted-syntax
-      } = rest as Partial<SignInExperience>;
+      } = rest;
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -161,15 +161,43 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           422
         );
 
-        assertThat(effectiveMfa.policy !== MfaPolicy.Mandatory, 'request.invalid_input', 422);
+        assertThat(
+          isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
+          'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+          422
+        );
+      }
+
+      if (adaptiveMfa?.enabled === false) {
+        const effectiveMfa = mfa ?? currentSettings.mfa;
+        assertThat(
+          !isNonSkippableMfaPromptPolicy(effectiveMfa.policy),
+          'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
+          422
+        );
+      }
+
+      if (adaptiveMfa === undefined && mfa && isMfaEnabled(mfa)) {
+        const { adaptiveMfa: currentAdaptiveMfa } = currentSettings;
+        if (currentAdaptiveMfa.enabled) {
+          assertThat(
+            isNonSkippableMfaPromptPolicy(mfa.policy),
+            'sign_in_experiences.adaptive_mfa_requires_non_skippable_policy',
+            422
+          );
+        } else {
+          assertThat(
+            !isNonSkippableMfaPromptPolicy(mfa.policy),
+            'sign_in_experiences.non_adaptive_mfa_requires_skippable_policy',
+            422
+          );
+        }
       }
 
       // Keep backend state aligned with console semantics:
       // if MFA is disabled and adaptive MFA is omitted in request, reset adaptive MFA to false.
       const normalizedAdaptiveMfa =
-        isDevFeaturesEnabled && mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined
-          ? { enabled: false }
-          : adaptiveMfa;
+        mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined ? { enabled: false } : adaptiveMfa;
 
       if (forgotPasswordMethods) {
         const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);
@@ -232,7 +260,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         );
         await quota.guardTenantUsageByKey('bringYourUiEnabled');
       }
-      if (passkeySignIn) {
+      if (passkeySignIn?.enabled) {
         await quota.guardTenantUsageByKey('passkeySignInEnabled');
       }
 

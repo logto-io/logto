@@ -11,7 +11,6 @@ import { type TenantSettingsResponse } from '@/cloud/types/router';
 import PageMeta from '@/components/PageMeta';
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
@@ -107,9 +106,7 @@ function TenantBasicSettings() {
   );
 
   const onClickDeletionButton = async () => {
-    const isSharedEnterpriseSubscription =
-      // TODO: remove the dev feature guard once the enterprise subscription is ready
-      isDevFeaturesEnabled && currentTenant?.subscription.quotaScope === 'shared';
+    const isSharedEnterpriseSubscription = currentTenant?.subscription.quotaScope === 'shared';
 
     if (
       !isDevTenant &&

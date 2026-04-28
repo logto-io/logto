@@ -31,6 +31,8 @@ const user = {
   role_exists: "L'ID de rôle {{roleId}} a déjà été ajouté à cet utilisateur",
   invalid_role_type:
     'Le type de rôle est invalide, il est impossible d\'assigner un rôle "machine-to-machine" à un utilisateur.',
+  suggest_mfa:
+    'Pour une meilleure sécurité du compte, nous vous recommandons de lier la MFA à votre compte.',
   missing_mfa: 'Vous devez lier un MFA supplémentaire avant de vous connecter.',
   totp_already_in_use: 'TOTP est déjà utilisé.',
   backup_code_already_in_use: 'Le code de sauvegarde est déjà utilisé.',
@@ -44,6 +46,8 @@ const user = {
     "Le nom d'utilisateur est un identifiant requis, vous ne pouvez pas le définir à null.",
   email_or_phone_required:
     "L'adresse e-mail ou le numéro de téléphone est un identifiant requis, au moins un est nécessaire.",
+  last_sign_in_method_required:
+    'Vous devez conserver au moins une méthode de connexion disponible dans votre compte.',
   email_required:
     "L'adresse e-mail est un identifiant requis, vous ne pouvez pas la définir à null.",
   phone_required:

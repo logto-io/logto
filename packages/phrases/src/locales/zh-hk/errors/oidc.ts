@@ -16,11 +16,15 @@ const oidc = {
   provider_error: 'OIDC 內部錯誤: {{message}}',
   server_error: '發生了未知的 OIDC 錯誤。請稍後重試。',
   provider_error_fallback: '發生了 OIDC 錯誤: {{code}}.',
+  custom_claims_script_error: '自訂 claims 腳本錯誤：{{error_description}}',
   key_required: '至少需要一個金鑰。',
   key_not_found: '未找到 ID 為 {{id}} 的金鑰。',
+  only_previous_key_can_be_deleted: '僅可刪除上一個金鑰。',
   invalid_session_payload: '無效的會話有效載荷。',
   session_not_found: '未找到會話。',
   invalid_session_account_id: '會話帳戶 ID 不匹配。',
+  failed_to_revoke_grant: '撤銷授權失敗。',
+  failed_to_cleanup_session_authorization: '清理會話授權記錄失敗。',
 };
 
 export default Object.freeze(oidc);

@@ -53,7 +53,8 @@ const managementApiIdentifiableEntityNames = Object.freeze(
     'secret',
     'email-template',
     'one-time-token',
-    'session'
+    'session',
+    'grant'
   )
 );
 
@@ -175,6 +176,7 @@ const userApiIdentifiableEntityNames = Object.freeze([
   'verification',
   'connector',
   'session',
+  'grant',
 ]);
 
 export const buildUserApiBaseDocument = (

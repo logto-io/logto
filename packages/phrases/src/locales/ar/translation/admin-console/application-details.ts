@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: 'تفاصيل التطبيق',
   back_to_applications: 'العودة إلى التطبيقات',
@@ -84,6 +86,10 @@ const application_details = {
     'اسمح لهذا التطبيق ببدء طلبات تبادل الرموز المميّزة. هذا مطلوب لـ <impersonationLink>انتحال هوية المستخدم</impersonationLink> و <patLink>رموز الوصول الشخصية</patLink>.',
   allow_token_exchange_public_client_warning:
     'لا يُنصح بتمكين تبادل الرموز المميّزة للعملاء العموميين (تطبيق صفحة واحدة / تطبيق أصلي). لا يمكن للعملاء العموميين تخزين بيانات الاعتماد بشكل آمن، مما قد يعرّض تطبيقك لمخاطر انتحال الرموز المميّزة.',
+  device_flow_tag: 'تدفق الجهاز',
+  device_flow_notification:
+    'يُفعّل هذا التطبيق تدفق تفويض الجهاز OAuth 2.0 (Device Authorization Flow) للأجهزة ذات الإدخال المحدود أو التطبيقات بدون واجهة (مثل أجهزة التلفزيون، CLI). يُكمل المستخدمون تسجيل الدخول على جهاز منفصل عن طريق إدخال رمز الجهاز أو مسح رمز QR. <a>معرفة المزيد</a>',
+  device_flow_try_demo: 'تجربة العرض التوضيحي',
   delete_description:
     'لا يمكن التراجع عن هذا الإجراء. سيتم حذف التطبيق بشكل دائم. يرجى إدخال اسم التطبيق <span>{{name}}</span> للتأكيد.',
   enter_your_application_name: 'أدخل اسم التطبيق الخاص بك',
@@ -275,6 +281,7 @@ const application_details = {
     col_sp_claims: 'اسم القيمة في تطبيقك',
     add_button: 'أضف آخر.',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

@@ -3,6 +3,20 @@ const account_center = {
     title: '找不到頁面',
     description: '此頁面不可用。',
   },
+  page: {
+    title: '帳戶',
+    security_title: '安全',
+    security_description: '你可以在這裡更改帳戶設定，以確保帳戶安全。',
+    /** UNTRANSLATED */
+    profile_title: 'Personal info',
+    /** UNTRANSLATED */
+    profile_description: 'Change your personal information here.',
+    /** UNTRANSLATED */
+    sidebar_personal_info: 'Personal info',
+    /** UNTRANSLATED */
+    sidebar_security: 'Security',
+    support: '支援',
+  },
   verification: {
     title: '安全驗證',
     description: '為保障帳戶安全，請確認是你本人。請選擇用於驗證身份的方法。',
@@ -11,6 +25,9 @@ const account_center = {
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
     verification_required: '驗證已失效，請再次驗證你的身份。',
     try_another_method: '嘗試其他驗證方式',
+    no_available_methods_title: '沒有可用的驗證方式',
+    no_available_methods_description:
+      '你尚未設定任何驗證方式。請先為你的帳戶新增密碼、電郵地址或電話號碼。',
   },
   password_verification: {
     title: '驗證密碼',
@@ -51,6 +68,57 @@ const account_center = {
     title: '設定用戶名',
     description: '用戶名只能包含字母、數字和底線。',
     success: '用戶名已成功更新。',
+  },
+  security: {
+    add: '添加',
+    change: '更改',
+    remove: '移除',
+    not_set: '未設置',
+    social_sign_in: '社交登入',
+    social_not_linked: '未連結',
+    email_phone: '電郵 / 電話號碼',
+    email: '電郵',
+    phone: '電話號碼',
+    password: '密碼',
+    configured: '已設置',
+    not_configured: '未設置',
+    two_step_verification: '兩步驟驗證',
+    authenticator_app: '身份驗證器應用程式',
+    passkeys: '通行密鑰',
+    backup_codes: '備用碼',
+    email_verification_code: '電子郵件驗證碼',
+    phone_verification_code: '電話驗證碼',
+    passkeys_count_one: '{{count}} 個通行密鑰',
+    passkeys_count_other: '{{count}} 個通行密鑰',
+    backup_codes_count_one: '{{count}} 個備用碼',
+    backup_codes_count_other: '{{count}} 個備用碼',
+    view: '檢視',
+    manage: '管理',
+    turn_on_2_step_verification: '開啟兩步驗證',
+    turn_on_2_step_verification_description: '增加額外的安全保護。登入時將要求進行第二步驗證。',
+    turn_off_2_step_verification: '關閉兩步驗證',
+    turn_off_2_step_verification_description:
+      '關閉兩步驗證將移除登入時帳戶的額外保護層。確定要繼續嗎？',
+    disable_2_step_verification: '關閉',
+    no_verification_method_warning:
+      '你尚未添加第二種驗證方式。請至少添加一種以在登入時啟用兩步驗證。',
+    account_removal: '帳戶刪除',
+    delete_your_account: '刪除你的帳戶',
+    delete_account: '刪除帳戶',
+    remove_email_confirmation_title: '移除電郵地址',
+    remove_email_confirmation_description: '移除後，你將無法再使用此電郵地址登入。確定要繼續嗎？',
+    remove_phone_confirmation_title: '移除電話號碼',
+    remove_phone_confirmation_description: '移除後，你將無法再使用此電話號碼登入。確定要繼續嗎？',
+    email_removed: '電郵地址已成功移除。',
+    phone_removed: '電話號碼已成功移除。',
+  },
+  social: {
+    linked: '已成功連結 {{connector}}。',
+    not_enabled: '此社交登入方式尚未啟用。請聯絡管理員尋求協助。',
+    removed: '已成功移除 {{connector}}。',
+    remove_confirmation_title: '移除社交帳號',
+    remove_confirmation_description:
+      '如果你移除 {{connector}}，在重新加入之前，你可能無法再透過它登入。',
   },
   password: {
     title: '設定密碼',
@@ -121,6 +189,10 @@ const account_center = {
     totp: {
       title: '身份驗證器應用程式已添加！',
       description: '身份驗證器應用程式已成功連結到你的帳戶。',
+    },
+    totp_replaced: {
+      title: '身份驗證器應用程式已替換！',
+      description: '你的身份驗證器應用程式已成功替換。',
     },
     backup_code: {
       title: '備用碼已產生！',

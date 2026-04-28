@@ -7,6 +7,7 @@ const get_started = {
     title_cloud: 'Sviluppa: Integra in modo sicuro la tua app in pochi minuti',
     subtitle_cloud:
       'Oppure impiega 5 minuti per integrare la tua app con i nostri SDK predefiniti e i tutorial.',
+    try_mcp: "Prova l'integrazione con un solo prompt con MCP",
   },
   customize: {
     title: "Personalizza: Offri un'ottima esperienza di accesso",
@@ -43,6 +44,26 @@ const get_started = {
     subtitle:
       'Stai usando un tenant di sviluppo per il test gratuito. Per andare in diretta, crea o converti a un tenant di produzione. Hai bisogno di qualcosa di personalizzato? <a>Contattaci</a>',
     convert_button: 'Converti a tenant di produzione',
+  },
+  oss_cloud: {
+    try: {
+      title: 'Evita il lavoro operativo e prova Logto Cloud gratis',
+      badge: 'Consigliato',
+      description:
+        'Ottieni un Logto completamente gestito senza manutenzione, oltre a integrazione rapida con MCP, supporto multi-tenant, collaborazione del team e tutte le funzionalità premium incluse. Inizia gratis, senza carta di credito.',
+      action: 'Esplora Logto Cloud',
+    },
+    private_cloud: {
+      title: 'Hai bisogno di compliance o di un deployment personalizzato?',
+      card_title: 'Cloud privato',
+      description:
+        'Ottieni un’istanza dedicata di Logto con isolamento completo dei dati, dominio personalizzato e garanzie SLA. Perfetto per le aziende con rigidi requisiti di residenza dei dati o compliance. Gestiamo noi l’infrastruttura così puoi concentrarti sul tuo prodotto.',
+    },
+    sidebar: {
+      title: 'Concentrati sullo sviluppo, non sull’hosting.',
+      description: 'Lascia che Logto Cloud gestisca per te l’infrastruttura di autenticazione.',
+      action: 'Prova Logto Cloud',
+    },
   },
   view_all: 'Visualizza tutto →',
 };

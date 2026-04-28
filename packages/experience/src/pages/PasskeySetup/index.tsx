@@ -6,7 +6,7 @@ import { validate } from 'superstruct';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
-import { createSignInWebAuthnRegistrationOptions, skipPasskeyBinding } from '@/apis/experience';
+import { createSignInPasskeyRegistrationOptions, skipPasskeyBinding } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -29,10 +29,9 @@ const PasskeySetup = () => {
   const [, continueFlowState] = validate(state, continueFlowStateGuard);
 
   const { handleBindPasskey } = usePasskeySignIn();
-  const asyncCreateRegistrationOptions = useApi(createSignInWebAuthnRegistrationOptions);
+  const asyncCreateRegistrationOptions = useApi(createSignInPasskeyRegistrationOptions);
 
   const [registrationResult, setRegistrationResult] = useState<RegistrationState>();
-  const [isPreparing, setIsPreparing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleError = useErrorHandler();
@@ -51,9 +50,7 @@ const PasskeySetup = () => {
     }
 
     (async () => {
-      setIsPreparing(true);
       const [error, result] = await asyncCreateRegistrationOptions();
-      setIsPreparing(false);
 
       if (error) {
         await handleError(error);
@@ -106,8 +103,8 @@ const PasskeySetup = () => {
         <Button
           className={styles.button}
           title="passkey_sign_in.setup_page.subtitle"
-          isLoading={isSubmitting || isPreparing}
-          disabled={isPreparing && !registrationResult}
+          isLoading={isSubmitting}
+          disabled={!registrationResult}
           onClick={onCreatePasskey}
         />
       </SectionLayout>

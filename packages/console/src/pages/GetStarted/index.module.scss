@@ -19,10 +19,168 @@
   margin-bottom: _.unit(-3);
 }
 
+.bodyText {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
 .header {
   display: flex;
   flex-direction: column;
   gap: _.unit(1);
+}
+
+.developActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: _.unit(4);
+}
+
+.mcpTag {
+  padding: 0;
+  border-radius: 999px;
+  background: var(--color-overlay-primary-hover);
+}
+
+.mcpLink {
+  display: inline-flex;
+  align-items: center;
+  padding: _.unit(1.5) _.unit(3);
+  border-radius: inherit;
+  font: var(--font-label-2);
+  color: var(--color-text-link);
+
+  &:active {
+    background: var(--color-overlay-primary-pressed);
+    color: var(--color-text-link);
+  }
+
+  &:not(:disabled):hover {
+    color: var(--color-text-link);
+    text-decoration: none;
+  }
+}
+
+.mcpLinkIcon {
+  display: block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.ossCloudBanner {
+  position: relative;
+  border: 1px solid rgba(93, 52, 242, 20%);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(93, 52, 242, 6%) 0%, rgba(250, 171, 255, 8%) 100%);
+}
+
+.card.ossCloudBanner {
+  padding: _.unit(4.5);
+}
+
+.ossCloudBannerContent {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  min-height: 88px;
+}
+
+.ossCloudBannerMain {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+  flex: 1;
+  min-width: 0;
+}
+
+.ossCloudBannerIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: _.unit(2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  :global(svg) {
+    display: block;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.ossCloudBannerTitleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+  margin-bottom: _.unit(1);
+}
+
+.bannerTitle {
+  font: var(--font-title-2);
+  color: var(--color-text);
+}
+
+.recommendedTag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: _.unit(0.5) _.unit(2);
+  border-radius: 999px;
+  color: var(--color-text-link);
+  background: var(--color-function-n-overlay-primary-focused);
+  gap: _.unit(1);
+  font: var(--font-label-3);
+}
+
+.recommendedTagIcon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.ossCloudBannerDescription {
+  max-width: 852px;
+  font: var(--font-body-2);
+  color: var(--color-text);
+  opacity: 35%;
+}
+
+.ossCloudBannerActions {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: _.unit(4.5);
+  flex-shrink: 0;
+}
+
+.bannerActionIcon {
+  width: 20px;
+  height: 20px;
+  opacity: 70%;
+}
+
+.dismissButton {
+  position: absolute;
+  top: _.unit(3);
+  right: _.unit(3);
+  flex-shrink: 0;
+}
+
+.dismissButtonIcon {
+  &.dismissButtonIcon > svg {
+    color: var(--color-text);
+    opacity: 35%;
+  }
+}
+
+.dismissIcon {
+  display: block;
+  width: 16px;
+  height: 16px;
 }
 
 .card {
@@ -59,6 +217,7 @@
   .columnWrapper {
     display: flex;
     flex-direction: column;
+    min-width: 0;
   }
 
   .grid {
@@ -85,5 +244,37 @@
       align-items: flex-end;
       gap: _.unit(4);
     }
+  }
+}
+
+.privateCloudIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+}
+
+@media screen and (max-width: 960px) {
+  .ossCloudBannerContent {
+    align-items: stretch;
+  }
+
+  .ossCloudBannerActions {
+    margin-right: _.unit(8);
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .ossCloudBannerContent,
+  .ossCloudBannerMain {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ossCloudBannerActions {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    justify-content: flex-start;
   }
 }

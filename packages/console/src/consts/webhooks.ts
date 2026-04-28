@@ -6,8 +6,6 @@ import {
   type DataHookEvent,
 } from '@logto/schemas';
 
-import { isDevFeaturesEnabled } from './env';
-
 export const dataHookEventsLabel = Object.freeze({
   [DataHookSchema.User]: 'webhooks.schemas.user',
   [DataHookSchema.Organization]: 'webhooks.schemas.organization',
@@ -17,9 +15,7 @@ export const dataHookEventsLabel = Object.freeze({
   [DataHookSchema.OrganizationScope]: 'webhooks.schemas.organization_scope',
 } satisfies Record<DataHookSchema, AdminConsoleKey>);
 
-export const interactionHookEvents = Object.values(InteractionHookEvent).filter(
-  (event) => isDevFeaturesEnabled || event !== InteractionHookEvent.PostSignInAdaptiveMfaTriggered
-);
+export const interactionHookEvents = Object.values(InteractionHookEvent);
 
 const dataHookEvents: DataHookEvent[] = hookEvents.filter(
   // eslint-disable-next-line no-restricted-syntax

@@ -17,11 +17,15 @@ const oidc = {
   provider_error: 'OIDC内部エラー:{{message}}。',
   server_error: '不明なOIDCエラーが発生しました。後でもう一度お試しください。',
   provider_error_fallback: 'OIDCエラーが発生しました: {{code}}。',
+  custom_claims_script_error: 'カスタム claims スクリプトエラー: {{error_description}}',
   key_required: '少なくとも1つのキーが必要です。',
   key_not_found: 'IDが{{id}}のキーが見つかりません。',
+  only_previous_key_can_be_deleted: '削除できるのは Previous キーのみです。',
   invalid_session_payload: '無効なセッションペイロード。',
   session_not_found: 'セッションが見つかりません。',
   invalid_session_account_id: 'セッションの accountId が一致しません。',
+  failed_to_revoke_grant: 'グラントの失効に失敗しました。',
+  failed_to_cleanup_session_authorization: 'セッション認可のクリーンアップに失敗しました。',
 };
 
 export default Object.freeze(oidc);

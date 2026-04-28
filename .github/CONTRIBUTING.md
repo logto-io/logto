@@ -67,6 +67,7 @@ You'll need these installed to proceed:
 - [Node.js](https://nodejs.org/) `^18.12.0`
 - [pnpm](https://pnpm.io/) `^9.0`
 - A [Postgres](https://postgresql.org/) `^14.0` instance
+- [Docker](https://www.docker.com/) and Docker Compose, if you want to run integration tests locally
 
 ### Clone and install dependencies
 
@@ -111,6 +112,60 @@ pnpm dev
 ```
 
 The command will watch the changes in most of the packages and restart services when needed.
+
+## Run tests
+
+### Unit tests
+
+Most of the packages have their own unit tests and you can run them in the package directory with `pnpm test`. There's also a command `pnpm ci:test` in the project root to run all unit tests in the monorepo, which is usually used in CI.
+
+### Integration tests
+
+#### How integration tests run locally
+
+For day-to-day development, you can run Logto directly on your host with `pnpm dev`, then execute the test cases in `packages/integration-tests` with `pnpm test`.
+
+However, we recommend using the Docker-based setup for a more consistent environment. This keeps the backend environment closer to CI and avoids having to manually prepare Postgres, Redis, and other required environment variables before each run.
+
+The local integration test uses Docker Compose to:
+
+1. Start fresh Postgres and Redis containers.
+2. Build a Logto Docker image from the current source tree.
+3. Start Logto in Docker with integration test settings and seeded test data.
+4. Run the integration test suite from the host machine.
+
+> [!Note]
+> Regular development is still easier with `pnpm dev`.
+
+#### Run a test target
+
+You can run the integration tests with the command below in the project root:
+
+```bash
+pnpm test:integration [target]
+```
+
+Where `<target>` is the name of the test target defined in [packages/integration-tests/package.json](../packages/integration-tests/package.json). For example, `pnpm test:integration experience` will run the experience-related test cases. By default, it runs API tests (equal to `pnpm test:integration api`).
+
+Once tests are complete, the command will automatically stop the Docker containers, but the logs will be saved in `./logs` for debugging purposes.
+
+#### Enable test coverage collection
+
+To collect test coverage for the Logto backend during integration tests, set the environment variable `COVERAGE=1` when running the test command, like:
+
+```bash
+COVERAGE=1 pnpm test:integration api
+```
+
+Currently, only `api` and `well-known` test targets support coverage collection.
+
+#### Notes
+
+- The first run may take a while since it needs to build the Docker image and start the containers. Subsequent runs will be faster if there are no changes to your source code.
+- If you only update the integration test code and don't want to build the Docker image again, you can set the environment variable `NO_BUILD=1` to skip the build step, like `NO_BUILD=1 pnpm test:integration api`.
+- Some test helpers rely on shared files created by mock connectors. These files are written by the container and exposed to the host through a mounted directory. See `volumes` in [docker-compose.integration.yml](../docker-compose.integration.yml) for details.
+- Some webhook-related tests start mock servers on the host machine. In those cases, the Logto container connects back to the host through a container-reachable hostname instead of `localhost`. See `extra_hosts` in [docker-compose.integration.yml](../docker-compose.integration.yml) for details.
+- If an integration test fails, check the generated container logs first.
 
 ## Make changes
 

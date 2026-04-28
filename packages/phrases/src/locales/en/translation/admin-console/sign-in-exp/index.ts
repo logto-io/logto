@@ -45,6 +45,7 @@ const sign_in_exp = {
     hide_logto_branding: 'Hide Logto branding',
     hide_logto_branding_description:
       'Remove "Powered by Logto". Spotlight your brand exclusively with a clean, professional sign-in experience.',
+    hide_logto_branding_oss_note: 'This feature is natively available in <a>Logto Cloud</a>.',
   },
   branding_uploads: {
     app_logo: {
@@ -80,6 +81,7 @@ const sign_in_exp = {
   },
   custom_ui: {
     title: 'Custom UI',
+    cloud_tag: 'Cloud',
     css_code_editor_title: 'Custom CSS',
     css_code_editor_description1: 'See the example of custom CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
@@ -89,6 +91,10 @@ const sign_in_exp = {
     bring_your_ui_title: 'Bring your UI',
     bring_your_ui_description:
       'Upload a compressed package (.zip) to replace the Logto prebuilt UI with your own code. <a>Learn more</a>',
+    bring_your_ui_oss_description: 'Customize the sign-in UI with your own code.',
+    bring_your_ui_oss_card_description:
+      'Upload your custom sign-in UI directly on <a>Logto Cloud</a>. No need to fork and redeploy.',
+    bring_your_ui_oss_try_cloud: 'Try Cloud',
     preview_with_bring_your_ui_description:
       'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',
   },
@@ -96,9 +102,9 @@ const sign_in_exp = {
     title: 'ACCOUNT CENTER',
     description:
       'Implement your account center for end users to manage account security and profile information.',
-    enable_account_api: 'Enable account center',
+    enable_account_api: 'Enable account center and Account API',
     enable_account_api_description:
-      "Enable the user-facing Account API with configurable permissions, giving you the choice between Logto's out-of-the-box account center or a fully custom solution.",
+      "Turn on both the user-facing Account API and Logto's out-of-the-box account center. When off, both features are unavailable.",
     field_options: {
       off: 'Off',
       edit: 'Edit',
@@ -172,28 +178,46 @@ const sign_in_exp = {
     webauthn_related_origins_description:
       'Add the domains of your front-end applications that are allowed to register passkeys via the Account API.',
     webauthn_related_origins_error: 'Origin must start with https:// or http://',
+    delete_account_url: 'Delete account',
+    delete_account_url_description:
+      'Provide your own endpoint URL to handle account deletion with custom logic.',
     prebuilt_ui: {
       title: 'INTEGRATE PREBUILT UI',
       description:
-        'Quickly integrate out-of-the-box verification and security setting flows with prebuilt UI.',
+        'Quickly integrate out-of-the-box account center, security verification, or a single profile update flow with prebuilt UI. Simply combine your domain with the route to form your account center URL (e.g., https://auth.foo.com/account/email).',
       permission_notice:
         'To integrate these prebuilt flows, set the related Account API permissions to <strong>Edit</strong> in the settings below.',
+      account_center_title: 'Integrate the out-of-the-box account center',
+      account_center_description:
+        'Route users to the account center to manage security settings such as email, phone, username, password, MFA, and connected accounts.',
       flows_title: 'Integrate out-of-the-box security setting flows',
+      single_task_flows_title: 'Integrate an out-of-the-box single task flow',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add a `redirect=` URL parameter to return users to your app after successfully updating.',
+        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add `redirect=` to return users to your app after a successful update, `show_success=true` to keep the success page visible, `ui_locales=` to override the default language, or `identifier=` to pre-fill the identifier input field.',
+      single_task_flows_description:
+        'Route users straight into a specific flow (e.g., email linkage). Optionally add `redirect=` to return users to your app after a successful update, `show_success=true` to keep the success page visible, `ui_locales=` to override the default language, or `identifier=` to pre-fill the identifier input field.',
       tooltips: {
         email: 'Update your primary email address',
         phone: 'Update your primary phone number',
         username: 'Update your username',
         password: 'Set a new password',
+        social: 'Link a social account for sign-in',
+        social_remove: 'Remove a linked social account',
         authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
+        authenticator_app_replace: 'Replace your existing authenticator app with a new one',
         passkey_add: 'Register a new passkey',
         passkey_manage: 'Manage your existing passkeys or add new ones',
         backup_codes_generate: 'Generate a new set of 10 backup codes',
         backup_codes_manage: 'View your available backup codes or generate new ones',
+        account_center:
+          'Access the account center to manage security settings such as email, phone, username, password, MFA, and connected accounts',
       },
       customize_note: "Don't want the out-of-the-box experience? You can fully",
       customize_link: 'customize your flows with the Account API instead.',
+    },
+    custom_css: {
+      title: 'CUSTOM CSS',
+      description: 'Customize the appearance of the account center using custom CSS.',
     },
   },
   sign_up_and_sign_in,

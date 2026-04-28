@@ -26,6 +26,10 @@ const sign_in_experiences = {
   phone_verification_code_cannot_be_used_for_sign_in:
     'SMS 확인 코드는 MFA 에 활성화된 경우 로그인에 사용할 수 없습니다.',
   adaptive_mfa_requires_mfa: 'Adaptive MFA를 활성화하려면 먼저 MFA를 활성화해야 합니다.',
+  adaptive_mfa_requires_non_skippable_policy:
+    'Adaptive MFA 를 활성화하려면 건너뛸 수 없는 MFA 프롬프트 정책이 필요합니다. PromptOnlyAtSignInMandatory 또는 PromptAtSignInAndSignUpMandatory 를 사용하세요.',
+  non_adaptive_mfa_requires_skippable_policy:
+    'Adaptive MFA 가 비활성화된 경우, MFA 프롬프트 정책은 건너뛸 수 있어야 합니다. PromptOnlyAtSignInMandatory 또는 PromptAtSignInAndSignUpMandatory 를 사용하지 마세요.',
   duplicated_sign_up_identifiers: '중복된 회원가입 식별자가 감지되었습니다.',
   missing_sign_up_identifiers: '기본 회원가입 식별자는 비워 둘 수 없습니다.',
   invalid_custom_email_blocklist_format:

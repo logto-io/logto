@@ -4,7 +4,7 @@ import type Router from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { assignInteractionResults } from '#src/libraries/session.js';
+import { assignInteractionResults } from '#src/libraries/session/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';

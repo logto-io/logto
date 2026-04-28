@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: "Détails de l'application",
   back_to_applications: 'Retour aux applications',
@@ -85,6 +87,10 @@ const application_details = {
     'Autorisez cette application à initier des requêtes d’échange de jetons. Ceci est nécessaire pour <impersonationLink>l’usurpation d’utilisateur</impersonationLink> et les <patLink>jetons d’accès personnels</patLink>.',
   allow_token_exchange_public_client_warning:
     'Activer l’échange de jetons pour les clients publics (application monopage / application native) n’est pas recommandé. Les clients publics ne peuvent pas stocker les identifiants de manière sécurisée, ce qui peut exposer votre application à des risques d’usurpation de jeton.',
+  device_flow_tag: "Flux d'appareil",
+  device_flow_notification:
+    "Cette application active le flux d'autorisation d'appareil OAuth 2.0 (Device Authorization Flow) pour les appareils à saisie limitée ou les applications sans interface (par ex., téléviseurs, CLI). Les utilisateurs complètent la connexion sur un appareil séparé en saisissant un code d'appareil ou en scannant un QR code. <a>En savoir plus</a>",
+  device_flow_try_demo: 'Essayer la démo',
   delete_description:
     "Cette action ne peut être annulée. Elle supprimera définitivement l'application. Veuillez entrer le nom de l'application <span>{{nom}}</span> pour confirmer.",
   enter_your_application_name: 'Entrez le nom de votre application',
@@ -282,6 +288,7 @@ const application_details = {
     col_sp_claims: 'Nom de la valeur de votre application',
     add_button: 'Ajouter un autre',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

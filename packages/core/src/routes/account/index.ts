@@ -6,22 +6,23 @@ import {
   SignInIdentifier,
   userMfaDataGuard,
   userMfaDataKey,
+  userMfaSettingsResponseGuard,
   jsonObjectGuard,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
 
-import RequestError from '../../errors/RequestError/index.js';
-import { encryptUserPassword } from '../../libraries/user.utils.js';
-import assertThat from '../../utils/assert-that.js';
 import { PasswordValidator } from '../experience/classes/libraries/password-validator.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
 import emailAndPhoneRoutes from './email-and-phone.js';
+import accountGrantRoutes from './grants.js';
 import identitiesRoutes from './identities.js';
 import logtoConfigRoutes from './logto-config.js';
 import mfaVerificationsRoutes from './mfa-verifications.js';
@@ -204,9 +205,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   router.get(
     `${accountApiPrefix}/mfa-settings`,
     koaGuard({
-      response: z.object({
-        skipMfaOnSignIn: z.boolean(),
-      }),
+      response: userMfaSettingsResponseGuard,
       status: [200, 400, 401],
     }),
     async (ctx, next) => {
@@ -239,9 +238,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       body: z.object({
         skipMfaOnSignIn: z.boolean(),
       }),
-      response: z.object({
-        skipMfaOnSignIn: z.boolean(),
-      }),
+      response: userMfaSettingsResponseGuard,
       status: [200, 400, 401],
     }),
     async (ctx, next) => {
@@ -288,8 +285,6 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   emailAndPhoneRoutes(...args);
   identitiesRoutes(...args);
   mfaVerificationsRoutes(...args);
-
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    accountSessionRoutes(...args);
-  }
+  accountSessionRoutes(...args);
+  accountGrantRoutes(...args);
 }

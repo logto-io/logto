@@ -69,10 +69,16 @@ const user_details = {
     field_name: 'Autenticación de dos factores',
     field_description: 'Este usuario ha habilitado factores de autenticación de 2 pasos.',
     name_column: 'Autenticación de dos factores',
-
     field_description_empty: 'Este usuario no ha habilitado factores de autenticación de 2 pasos.',
     deletion_confirmation:
       'Estás eliminando la existente <name/> para la verificación en dos pasos. ¿Estás seguro/a de que deseas continuar?',
+  },
+  passkey: {
+    field_name: 'Claves de acceso',
+    field_description_empty:
+      'Este usuario no ha habilitado el inicio de sesión con clave de acceso.',
+    deletion_confirmation:
+      'Estás eliminando el/la existente <name/> para el inicio de sesión con clave de acceso. ¿Estás seguro/a de que deseas continuar?',
   },
   suspended: 'Suspendido',
   suspend_user: 'Suspender usuario',
@@ -148,7 +154,6 @@ const user_details = {
     name_column: 'Nombre',
     session_id_column: 'ID de sesión',
     location_column: 'Ubicación',
-
     browser_on_os: '{{browser}} en {{os}}',
     user: 'Usuario',
     applications: 'Aplicaciones',
@@ -160,6 +165,20 @@ const user_details = {
     revoke_session: 'Revocar sesión',
     revoke_session_confirmation:
       'Si eliminas esta sesión, los usuarios tendrán que volver a autenticarse.',
+  },
+  third_party_apps: {
+    title: 'Aplicaciones de terceros',
+    description:
+      'Usa Logto como proveedor de identidad para autorizar aplicaciones de terceros. Consulta y gestiona las aplicaciones a las que este usuario ha concedido acceso.',
+    field_name: 'Aplicaciones de terceros autorizadas',
+    multiple_authorized: 'Este usuario ha autorizado varias aplicaciones y servicios de terceros.',
+    not_authorized: 'Este usuario aún no ha autorizado ninguna aplicación o servicio de terceros.',
+    name_column: 'Nombre',
+    app_id_column: 'ID de la aplicación',
+    access_created_at_column: 'Acceso creado el',
+    revoke_access_title: '¿Revocar acceso?',
+    revoke_access_description:
+      'Esto revocará el acceso de la aplicación a la cuenta de este usuario en todos los dispositivos. El usuario deberá volver a autorizarla para recuperar el acceso.',
   },
   connections: {
     title: 'Conexión',

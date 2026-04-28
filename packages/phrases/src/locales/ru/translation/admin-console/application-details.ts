@@ -1,3 +1,5 @@
+import concurrent_device_limit from './concurrent-device-limit.js';
+
 const application_details = {
   page_title: 'Детали приложения',
   back_to_applications: 'Вернуться к приложениям',
@@ -85,6 +87,10 @@ const application_details = {
     'Разрешите этому приложению инициировать запросы на обмен токенов. Это необходимо для <impersonationLink>подмены пользователя</impersonationLink> и <patLink>персональных токенов доступа</patLink>.',
   allow_token_exchange_public_client_warning:
     'Включать обмен токенов для публичных клиентов (SPA / нативное приложение) не рекомендуется. Публичные клиенты не могут безопасно хранить учетные данные, что может подвергнуть ваше приложение рискам подмены токенов.',
+  device_flow_tag: 'Поток устройства',
+  device_flow_notification:
+    'Это приложение использует OAuth 2.0 Device Authorization Flow для устройств с ограниченным вводом или безголовых приложений (например, телевизоров, CLI). Пользователи завершают вход на отдельном устройстве, вводя код устройства или сканируя QR-код. <a>Узнать больше</a>',
+  device_flow_try_demo: 'Попробовать демо',
   delete_description:
     'Это действие нельзя отменить. Оно навсегда удалит приложение. Введите название приложения <span> {{name}} </span>, чтобы подтвердить.',
   enter_your_application_name: 'Введите название своего приложения',
@@ -281,6 +287,7 @@ const application_details = {
     col_sp_claims: 'Название значения вашего приложения',
     add_button: 'Добавить еще',
   },
+  concurrent_device_limit,
 };
 
 export default Object.freeze(application_details);

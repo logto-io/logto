@@ -1,0 +1,75 @@
+@use '@/scss/underscore' as _;
+@use '../dev-status-spacing' as devStatusSpacing;
+
+.wrapper {
+  padding: _.unit(4) _.unit(4) 0;
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  // Keep the fade aligned with the sidebar background instead of forcing card-like layer color.
+  background: linear-gradient(180deg, transparent 0, var(--color-base) _.unit(4));
+}
+
+.withDevStatusOffset {
+  padding-bottom: devStatusSpacing.$dev-status-reserved-space;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+  padding: _.unit(4);
+  border: 1px solid rgba(93, 52, 242, 14%);
+  border-radius: _.unit(3);
+  background: linear-gradient(180deg, rgba(93, 52, 242, 6%) 0%, rgba(250, 171, 255, 8%) 100%);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.icon {
+  width: _.unit(12);
+  height: _.unit(12);
+
+  :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.dismissButton {
+  margin-top: _.unit(-1);
+  margin-right: _.unit(-1);
+}
+
+.dismissIcon {
+  width: _.unit(4);
+  height: _.unit(4);
+  color: var(--color-text-secondary);
+}
+
+.title {
+  font: var(--font-label-2);
+  color: var(--color-text);
+}
+
+.description {
+  font: var(--font-body-3);
+  color: var(--color-text-secondary);
+}
+
+.link {
+  width: fit-content;
+  font: var(--font-body-3);
+  color: var(--color-text-link);
+}
+
+.linkIcon {
+  width: _.unit(4);
+  height: _.unit(4);
+}

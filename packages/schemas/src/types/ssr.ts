@@ -11,6 +11,7 @@ export type SsrData = {
     organizationId?: string;
     uiLocales?: string;
     backUrl?: string;
+    theme?: string;
     data: FullSignInExperience;
   };
   phrases: {

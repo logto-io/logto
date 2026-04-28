@@ -1,0 +1,36 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: _.unit(1) _.unit(2);
+}
+
+.footerNoLinks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: _.unit(1) _.unit(2);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: _.unit(6);
+
+  a {
+    font: var(--font-label-2);
+    color: var(--color-type-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--color-type-primary);
+    }
+  }
+}
+
+.signature {
+  flex-shrink: 0;
+}

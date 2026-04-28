@@ -30,6 +30,7 @@ const user = {
   missing_profile: 'يجب عليك تقديم معلومات إضافية قبل تسجيل الدخول.',
   role_exists: 'تمت إضافة معرف الدور {{roleId}} بالفعل لهذا المستخدم.',
   invalid_role_type: 'نوع الدور غير صالح، لا يمكن تعيين دور آلة إلى المستخدم.',
+  suggest_mfa: 'لتحسين أمان الحساب، نوصي بربط MFA بحسابك.',
   missing_mfa: 'يجب عليك ربط MFA الإضافي قبل تسجيل الدخول.',
   totp_already_in_use: 'تم استخدام TOTP بالفعل.',
   backup_code_already_in_use: 'تم استخدام رمز النسخ الاحتياطي بالفعل.',
@@ -41,6 +42,7 @@ const user = {
   username_required: 'اسم المستخدم هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
   email_or_phone_required:
     'عنوان البريد الإلكتروني أو رقم الهاتف هو معرف مطلوب، يجب تحديد واحد على الأقل.',
+  last_sign_in_method_required: 'يجب أن تحتفظ بطريقة واحدة متاحة على الأقل لتسجيل الدخول في حسابك.',
   email_required: 'عنوان البريد الإلكتروني هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
   phone_required: 'رقم الهاتف هو معرف مطلوب، لا يمكنك تعيينه ليكون null.',
   enterprise_sso_identity_not_exists:

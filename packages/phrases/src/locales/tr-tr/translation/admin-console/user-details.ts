@@ -67,11 +67,16 @@ const user_details = {
     field_name: 'Çok faktörlü kimlik doğrulama',
     field_description: 'Bu kullanıcı 2 adımlı kimlik doğrulama faktörlerini etkinleştirdi.',
     name_column: 'Çok Faktörlü Kimlik Doğrulama',
-
     field_description_empty:
       'Bu kullanıcı 2 aşamalı kimlik doğrulama faktörlerini etkinleştirmedi.',
     deletion_confirmation:
       'Varolan 2 aşamalı doğrulama için <name/> kaldırıyorsunuz. Devam etmek istediğinizden emin misiniz?',
+  },
+  passkey: {
+    field_name: "Passkey'ler",
+    field_description_empty: 'Bu kullanıcı passkey girişini etkinleştirmedi.',
+    deletion_confirmation:
+      'Passkey girişi için mevcut <name/> kaldırıyorsunuz. Devam etmek istediğinizden emin misiniz?',
   },
   suspended: 'Askıya alınmış',
   suspend_user: 'Kullanıcıyı Askıya Al',
@@ -146,7 +151,6 @@ const user_details = {
     name_column: 'İsim',
     session_id_column: 'Oturum Kimliği',
     location_column: 'Konum',
-
     browser_on_os: '{{os}} üzerinde {{browser}}',
     user: 'Kullanıcı',
     applications: 'Uygulamalar',
@@ -158,6 +162,22 @@ const user_details = {
     revoke_session: 'Oturumu iptal et',
     revoke_session_confirmation:
       'Bu oturumu kaldırırsanız, kullanıcıların yeniden kimlik doğrulaması gerekir.',
+  },
+  third_party_apps: {
+    title: 'Üçüncü taraf uygulamalar',
+    description:
+      "Üçüncü taraf uygulamaları yetkilendirmek için Logto'yu kimlik sağlayıcınız olarak kullanın. Bu kullanıcının erişim verdiği uygulamaları görüntüleyin ve yönetin.",
+    field_name: 'Yetkili üçüncü taraf uygulamalar',
+    multiple_authorized:
+      'Bu kullanıcı birden fazla üçüncü taraf uygulama ve hizmeti yetkilendirdi.',
+    not_authorized:
+      'Bu kullanıcı henüz herhangi bir üçüncü taraf uygulama veya hizmeti yetkilendirmedi.',
+    name_column: 'Ad',
+    app_id_column: 'Uygulama Kimliği',
+    access_created_at_column: 'Erişim oluşturulma zamanı',
+    revoke_access_title: 'Erişim iptal edilsin mi?',
+    revoke_access_description:
+      'Bu işlem uygulamanın bu kullanıcının hesabına tüm cihazlardaki erişimini iptal eder. Erişimi geri yüklemek için kullanıcı yeniden yetkilendirme yapmalıdır.',
   },
   connections: {
     title: 'Bağlantı',

@@ -66,9 +66,14 @@ const user_details = {
     field_name: '多要素認証',
     field_description: 'このユーザーは2段階認証要素を有効にしました。',
     name_column: '多要素認証',
-
     field_description_empty: 'このユーザーは2段階認証の要因を有効にしていません。',
     deletion_confirmation: '2段階認証の既存の<name/>を削除しています。本当に続行しますか？',
+  },
+  passkey: {
+    field_name: 'パスキー',
+    field_description_empty: 'このユーザーはパスキーサインインを有効にしていません。',
+    deletion_confirmation:
+      'パスキーサインインのために既存の<name/>を削除しています。本当に続行しますか？',
   },
   suspended: '停止中',
   suspend_user: 'ユーザーを一時停止',
@@ -142,7 +147,6 @@ const user_details = {
     name_column: '名前',
     session_id_column: 'セッション ID',
     location_column: '場所',
-
     browser_on_os: '{{os}} 上の {{browser}}',
     user: 'ユーザー',
     applications: 'アプリケーション',
@@ -153,6 +157,20 @@ const user_details = {
     device_model: 'デバイスモデル',
     revoke_session: 'セッションを失効',
     revoke_session_confirmation: 'このセッションを削除すると、ユーザーは再認証が必要になります。',
+  },
+  third_party_apps: {
+    title: 'サードパーティアプリ',
+    description:
+      'Logto を ID プロバイダーとして利用し、サードパーティアプリを認可します。このユーザーがアクセスを許可したアプリを表示して管理します。',
+    field_name: '許可済みのサードパーティアプリ',
+    multiple_authorized: 'このユーザーは複数のサードパーティアプリとサービスを許可しています。',
+    not_authorized: 'このユーザーはまだサードパーティアプリやサービスを許可していません。',
+    name_column: '名前',
+    app_id_column: 'アプリ ID',
+    access_created_at_column: 'アクセス作成日時',
+    revoke_access_title: 'アクセスを取り消しますか？',
+    revoke_access_description:
+      'この操作により、すべてのデバイスでこのユーザーのアカウントに対するアプリのアクセスが取り消されます。アクセスを復元するには、ユーザーによる再認可が必要です。',
   },
   connections: {
     title: '接続',

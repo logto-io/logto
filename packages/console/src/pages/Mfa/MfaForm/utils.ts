@@ -1,7 +1,12 @@
 import { type AdaptiveMfa, MfaFactor, MfaPolicy } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { type SignInPrompt, type MfaConfig, type MfaConfigForm } from '../types';
+import {
+  type MfaPromptMandatory,
+  type OptionalMfaPrompt,
+  type MfaConfig,
+  type MfaConfigForm,
+} from '../types';
 
 export enum MfaRequirementMode {
   Optional = 'optional',
@@ -47,17 +52,30 @@ export const getMfaRequirementState = (
   };
 };
 
-const isSignInPrompt = (policy: MfaPolicy): policy is SignInPrompt =>
+const isOptionalMfaPrompt = (policy: MfaPolicy): policy is OptionalMfaPrompt =>
   [MfaPolicy.NoPrompt, MfaPolicy.PromptAtSignInAndSignUp, MfaPolicy.PromptOnlyAtSignIn].includes(
     policy
   );
+
+const isNonSkippableMfaPrompt = (policy: MfaPolicy): policy is MfaPromptMandatory =>
+  [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
+    policy
+  );
+
+export const normalizeSetUpPrompt = (policy: MfaPolicy, adaptiveMfaEnabled: boolean) => {
+  if (adaptiveMfaEnabled) {
+    return isNonSkippableMfaPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUpMandatory;
+  }
+
+  return isOptionalMfaPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUp;
+};
 
 export const convertMfaConfigToForm = (
   { policy, factors, organizationRequiredMfaPolicy }: MfaConfig,
   adaptiveMfa?: AdaptiveMfa
 ): MfaConfigForm => ({
   isMandatory: policy === MfaPolicy.Mandatory,
-  setUpPrompt: isSignInPrompt(policy) ? policy : MfaPolicy.PromptAtSignInAndSignUp,
+  setUpPrompt: normalizeSetUpPrompt(policy, Boolean(adaptiveMfa?.enabled)),
   totpEnabled: factors.includes(MfaFactor.TOTP),
   webAuthnEnabled: factors.includes(MfaFactor.WebAuthn),
   backupCodeEnabled: factors.includes(MfaFactor.BackupCode),
@@ -70,6 +88,7 @@ export const convertMfaConfigToForm = (
 export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig => {
   const {
     isMandatory,
+    adaptiveMfaEnabled,
     setUpPrompt,
     totpEnabled,
     webAuthnEnabled,
@@ -88,10 +107,15 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
     // eslint-disable-next-line unicorn/prefer-native-coercion-functions
   ].filter((factor): factor is MfaFactor => Boolean(factor));
 
+  const shouldIncludeOrganizationRequiredMfaPolicy =
+    !isMandatory && !adaptiveMfaEnabled && Boolean(organizationRequiredMfaPolicy);
+
   return {
-    policy: isMandatory ? MfaPolicy.Mandatory : setUpPrompt,
+    policy: isMandatory
+      ? MfaPolicy.Mandatory
+      : normalizeSetUpPrompt(setUpPrompt, adaptiveMfaEnabled),
     factors,
-    ...conditional(organizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }),
+    ...conditional(shouldIncludeOrganizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }),
   };
 };
 
@@ -100,15 +124,12 @@ export const validateBackupCodeFactor = (factors: MfaFactor[]): boolean => {
 };
 
 export const buildMfaPatchPayload = (
-  mfaConfigForm: MfaConfigForm,
-  isDevFeaturesEnabled: boolean
-): { mfa: MfaConfig; adaptiveMfa?: AdaptiveMfa } => {
+  mfaConfigForm: MfaConfigForm
+): { mfa: MfaConfig; adaptiveMfa: AdaptiveMfa } => {
   const mfa = convertMfaFormToConfig(mfaConfigForm);
 
   return {
     mfa,
-    ...conditional(
-      isDevFeaturesEnabled && { adaptiveMfa: { enabled: mfaConfigForm.adaptiveMfaEnabled } }
-    ),
+    adaptiveMfa: { enabled: mfaConfigForm.adaptiveMfaEnabled },
   };
 };

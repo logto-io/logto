@@ -1,5 +1,52 @@
 @use '@/scss/underscore' as _;
 
-.upsell {
-  margin-top: _.unit(3);
+.titleRow {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+}
+
+.ossCard {
+  display: flex;
+  align-items: center;
+  gap: _.unit(4);
+  padding: _.unit(4);
+  border: 1px solid var(--color-overlay-primary-pressed);
+  border-radius: _.unit(3);
+  background: var(--color-overlay-primary-subtle);
+
+  .ossCardContent {
+    display: flex;
+    align-items: center;
+    gap: _.unit(4);
+    min-width: 0;
+  }
+
+  .ossCardIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: _.unit(2);
+    background: var(--color-overlay-primary-hover);
+    color: var(--color-text-link);
+
+    > img,
+    > svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .ossCardDescription {
+    font: var(--font-body-2);
+    color: var(--color-text);
+  }
+
+  .highlight {
+    color: var(--color-text-link);
+  }
 }

@@ -21,6 +21,7 @@ const signing_keys = {
     algorithm: '서명 키 알고리즘',
   },
   status: {
+    next: '다음',
     current: '현재',
     previous: '이전',
   },

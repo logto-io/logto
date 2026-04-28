@@ -16,7 +16,7 @@ import {
 } from '#src/api/index.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { newOidcSsoConnectorPayload } from '#src/constants.js';
-import { devFeatureTest, generateSsoConnectorName } from '#src/utils.js';
+import { generateSsoConnectorName } from '#src/utils.js';
 
 describe('.well-known api', () => {
   it('should return tenant endpoint URL for any given tenant id', async () => {
@@ -164,8 +164,8 @@ describe('.well-known api', () => {
     });
   });
 
-  devFeatureTest.describe('custom profile fields', () => {
-    devFeatureTest.it('should get the custom profile fields in sign-in experience', async () => {
+  describe('custom profile fields', () => {
+    it('should get the custom profile fields in sign-in experience', async () => {
       const fullnameField = await createCustomProfileField(fullnameData);
       const signInExperience = await api
         .get('.well-known/sign-in-exp')
@@ -174,12 +174,12 @@ describe('.well-known api', () => {
       expect(signInExperience.customProfileFields.length).toBeGreaterThan(0);
       expect(signInExperience.customProfileFields).toContainEqual(fullnameField);
 
-      void deleteCustomProfileFieldByName(fullnameData.name);
+      await deleteCustomProfileFieldByName(fullnameData.name);
     });
   });
 
-  devFeatureTest.describe('account center', () => {
-    devFeatureTest.it('get /.well-known/account-center', async () => {
+  describe('account center', () => {
+    it('get /.well-known/account-center', async () => {
       const response = await api.get('.well-known/account-center').json<AccountCenter>();
       expect(response.enabled).toEqual(expect.any(Boolean));
       expect(response.fields).toEqual(expect.any(Object));

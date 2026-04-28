@@ -1,0 +1,54 @@
+import { AccountCenterControlValue } from '@logto/schemas';
+import classNames from 'classnames';
+import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+
+import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import { layoutClassNames } from '@ac/constants/layout';
+import { usernameRoute } from '@ac/constants/routes';
+import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
+
+import styles from './index.module.scss';
+
+const UsernameSection = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { userInfo, accountCenterSettings } = useContext(PageContext);
+
+  const usernameControl = accountCenterSettings?.fields.username;
+
+  if (!usernameControl || usernameControl === AccountCenterControlValue.Off) {
+    return null;
+  }
+
+  return (
+    <div className={classNames(styles.section, layoutClassNames.section)}>
+      <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
+        {t('input.username')}
+      </div>
+      <div className={classNames(styles.card, layoutClassNames.card)}>
+        <div className={classNames(styles.row, layoutClassNames.row)}>
+          <div className={styles.topLine}>
+            <div className={styles.name}>{t('input.username')}</div>
+            {usernameControl === AccountCenterControlValue.Edit && (
+              <button
+                type="button"
+                className={styles.changeButton}
+                onClick={() => {
+                  setPendingReturn(getPendingReturn() ?? window.location.href);
+                  navigate(usernameRoute);
+                }}
+              >
+                {t('account_center.security.change')}
+              </button>
+            )}
+          </div>
+          <div className={styles.value}>{userInfo?.username ?? '-'}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UsernameSection;

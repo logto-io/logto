@@ -2,12 +2,21 @@ const tenants = {
   title: 'Impostazioni',
   description:
     "Gestisci efficacemente le impostazioni dell'inquilino e personalizza il tuo dominio.",
+  oss_description:
+    'Modifica qui le impostazioni del tuo account e gestisci le tue informazioni personali per garantire la sicurezza del tuo account.',
   tabs: {
     settings: 'Impostazioni',
     members: 'Membri',
     domains: 'Domini',
+    oidc_configs: 'Configurazioni OIDC',
     subscription: 'Piano e fatturazione',
     billing_history: 'Storico fatturazione',
+  },
+  members: {
+    card_title: 'Gestisci i tenant in modo più sicuro con Logto Cloud',
+    card_description:
+      'Aggiungi amministratori o collaboratori al tuo tenant senza condividere un unico account amministratore.',
+    card_action: 'Esplora Logto Cloud',
   },
   settings: {
     title: 'IMPOSTAZIONI',

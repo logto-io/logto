@@ -6,6 +6,7 @@ import { createDomainLibrary } from '#src/libraries/domain.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import { OidcPrivateKeyLibrary } from '#src/libraries/oidc-private-key.js';
 import { createOneTimeTokenLibrary } from '#src/libraries/one-time-token.js';
 import { OrganizationInvitationLibrary } from '#src/libraries/organization-invitation.js';
 import { createPasscodeLibrary } from '#src/libraries/passcode.js';
@@ -15,7 +16,7 @@ import { QuotaLibrary } from '#src/libraries/quota.js';
 import { createRoleScopeLibrary } from '#src/libraries/role-scope.js';
 import { createSamlApplicationsLibrary } from '#src/libraries/saml-application/saml-applications.js';
 import { createScopeLibrary } from '#src/libraries/scope.js';
-import { createSessionLibrary } from '#src/libraries/session.js';
+import { createSessionLibrary } from '#src/libraries/session/index.js';
 import { createSignInExperienceLibrary } from '#src/libraries/sign-in-experience/index.js';
 import { createSocialLibrary } from '#src/libraries/social.js';
 import { createSsoConnectorLibrary } from '#src/libraries/sso-connector.js';
@@ -70,6 +71,8 @@ export default class Libraries {
     this.queries,
     this.connectors
   );
+
+  oidcPrivateKeys = new OidcPrivateKeyLibrary(this.queries);
 
   customProfileFields = createCustomProfileFieldsLibrary(this.queries);
 

@@ -18,6 +18,10 @@ const mfa = {
   verify_phone_verification_code_description: '電話に送信されたコードを入力',
   send_to_email: '{{identifier}} に送信',
   send_to_phone: '{{identifier}} に送信',
+  onboarding: '2段階認証を有効にする',
+  onboarding_description:
+    '2段階認証でアカウントを保護します。パスキー、認証アプリ（OTP）、SMS確認コード、バックアップコードの中から1つ以上を選択してください。',
+  enable_mfa: '2段階認証を有効にする',
   add_mfa_factors: '2段階認証を追加',
   add_mfa_description:
     '2段階認証が有効になっています。安全なサインインのために第二の認証方法を選択してください。',
@@ -27,6 +31,7 @@ const mfa = {
   verify_mfa_description:
     'このアカウントでは2段階認証が有効になっています。アイデンティティを確認するための第二の方法を選択してください。',
   add_authenticator_app: '認証アプリを追加',
+  replace_authenticator_app: '認証アプリを置き換え',
   step: 'ステップ{{step, number}}：{{content}}',
   scan_qr_code: 'このQRコードをスキャン',
   scan_qr_code_description:

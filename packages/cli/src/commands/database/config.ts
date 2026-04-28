@@ -14,7 +14,11 @@ import { createPoolFromConfig } from '../../database.js';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config.js';
 import { consoleLog } from '../../utils.js';
 
-import { generateOidcCookieKey, generateOidcPrivateKey } from './utils.js';
+import {
+  getEffectiveRotationGracePeriod,
+  rotateConfigKey,
+  trimConfigKey,
+} from './config-rotation.js';
 
 const validKeysDisplay = chalk.green(logtoConfigKeys.join(', '));
 
@@ -73,6 +77,12 @@ const validatePrivateKeyType: ValidatePrivateKeyTypeFunction = (key) => {
       )} found, expected one of ${validPrivateKeyTypes.join(', ')}`
     );
   }
+};
+
+const getValidatedPrivateKeyType = (key: string): SupportedSigningKeyAlgorithm => {
+  validatePrivateKeyType(key);
+
+  return key;
 };
 
 const getConfig: CommandModule<unknown, { key: string; keys: string[]; tenantId: string }> = {
@@ -153,10 +163,13 @@ const setConfig: CommandModule<unknown, { key: string; value: string; tenantId: 
   },
 };
 
-const rotateConfig: CommandModule<unknown, { key: string; tenantId: string; type: string }> = {
+const rotateConfig: CommandModule<
+  unknown,
+  { key: string; tenantId: string; type: string; gracePeriod?: number }
+> = {
   command: 'rotate <key>',
   describe:
-    'Generate a new private or secret key for the given config key and prepend to the key array',
+    'Generate a new private or secret key for the given config key and update the key state',
   builder: (yargs) =>
     yargs
       .positional('key', {
@@ -175,36 +188,43 @@ const rotateConfig: CommandModule<unknown, { key: string; tenantId: string; type
         }, one of ${validPrivateKeyTypes.join(', ')}`,
         type: 'string',
         default: 'ec',
+      })
+      .option('gracePeriod', {
+        describe: `Grace period in seconds for ${LogtoOidcConfigKey.PrivateKeys} staged rotation`,
+        type: 'number',
       }),
-  handler: async ({ key, tenantId, type }) => {
+  handler: async ({ key, tenantId, type, gracePeriod }) => {
     const keyType = type.toUpperCase();
+    const privateKeyType =
+      key === LogtoOidcConfigKey.PrivateKeys
+        ? getValidatedPrivateKeyType(keyType)
+        : SupportedSigningKeyAlgorithm.EC;
     validateRotateKey(key);
-    validatePrivateKeyType(keyType);
+
+    const effectiveGracePeriod = (() => {
+      try {
+        return getEffectiveRotationGracePeriod({
+          key,
+          gracePeriod,
+          envGracePeriod: process.env.PRIVATE_KEY_ROTATION_GRACE_PERIOD,
+        });
+      } catch (error) {
+        return consoleLog.fatal(
+          error instanceof Error ? error.message : 'Invalid grace period provided'
+        );
+      }
+    })();
 
     const pool = await createPoolFromConfig();
-    const { rows } = await getRowsByKeys(pool, tenantId, [key]);
-
-    if (!rows[0]) {
-      consoleLog.warn('No key found, create a new one');
-    }
-
-    const getValue = async () => {
-      const parsed = logtoConfigGuards[key].safeParse(rows[0]?.value);
-      const original = parsed.success ? parsed.data : [];
-
-      // No need for default. It's already exhaustive
-      switch (key) {
-        case LogtoOidcConfigKey.PrivateKeys: {
-          return [await generateOidcPrivateKey(keyType), ...original];
-        }
-
-        case LogtoOidcConfigKey.CookieKeys: {
-          return [generateOidcCookieKey(), ...original];
-        }
-      }
-    };
-    const rotated = await getValue();
-    await updateValueByKey(pool, tenantId, key, rotated);
+    const { keys: rotated } = await pool.transaction(async (connection) =>
+      rotateConfigKey({
+        connection,
+        tenantId,
+        key,
+        privateKeyType,
+        gracePeriod: effectiveGracePeriod,
+      })
+    );
     await pool.end();
 
     consoleLog.info(`Rotate ${chalk.green(key)} succeeded, now it has ${rotated.length} keys`);
@@ -240,26 +260,14 @@ const trimConfig: CommandModule<unknown, { key: string; length: number; tenantId
     }
 
     const pool = await createPoolFromConfig();
-    const { rows } = await getRowsByKeys(pool, tenantId, [key]);
-
-    if (!rows[0]) {
-      consoleLog.warn('No key found, create a new one');
-    }
-
-    const getValue = async () => {
-      const value = logtoConfigGuards[key].parse(rows[0]?.value);
-
-      if (value.length - length < 1) {
-        await pool.end();
-        consoleLog.fatal(
-          `You should keep at least one key in the array, current length=${value.length}`
-        );
-      }
-
-      return value.slice(0, -length);
-    };
-    const trimmed = await getValue();
-    await updateValueByKey(pool, tenantId, key, trimmed);
+    const { keys: trimmed } = await pool.transaction(async (connection) =>
+      trimConfigKey({
+        connection,
+        tenantId,
+        key,
+        length,
+      })
+    );
     await pool.end();
 
     consoleLog.info(`Trim ${chalk.green(key)} succeeded, now it has ${trimmed.length} keys`);
