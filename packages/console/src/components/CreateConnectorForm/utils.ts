@@ -69,13 +69,12 @@ export const getEmailConnectorUpsellCopyKeys = () => ({
 type ConnectorSelectionStateOptions = {
   readonly type?: ConnectorType;
   readonly isCloud: boolean;
-  readonly isDevFeaturesEnabled: boolean;
 };
 
 export const shouldShowEmailConnectorUpsellBanner = (
   options: ConnectorSelectionStateOptions
 ): boolean => {
-  const { type, isCloud, isDevFeaturesEnabled } = options;
+  const { type, isCloud } = options;
 
-  return type === ConnectorType.Email && !isCloud && isDevFeaturesEnabled;
+  return type === ConnectorType.Email && !isCloud;
 };

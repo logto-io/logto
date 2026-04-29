@@ -1,6 +1,6 @@
 import SamlAppLimitBanner from '@/components/SamlAppLimitBanner';
 import { ossSamlApplicationsLimit } from '@/consts/application-limits';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 
 import styles from '../../index.module.scss';
 import { shouldShowSamlAppLimitNotice } from '../../utils';
@@ -13,7 +13,6 @@ type Props = {
 function SamlAppLimitNotice({ isThirdPartyTab, samlAppTotalCount }: Props) {
   const isVisible = shouldShowSamlAppLimitNotice({
     isCloud,
-    isDevFeaturesEnabled,
     isThirdPartyTab,
     samlAppTotalCount,
   });

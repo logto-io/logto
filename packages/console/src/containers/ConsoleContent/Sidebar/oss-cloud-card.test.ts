@@ -3,11 +3,10 @@ import { shouldShowOssCloudSidebarCard } from './oss-cloud-card';
 describe('shouldShowOssCloudSidebarCard', () => {
   const now = 1_000_000;
 
-  it('returns true for OSS consoles with dev features enabled when the card has not been dismissed', () => {
+  it('returns true for OSS consoles when the card has not been dismissed', () => {
     expect(
       shouldShowOssCloudSidebarCard({
         isCloud: false,
-        isDevFeaturesEnabled: true,
         dismissedUntil: undefined,
         now,
       })
@@ -18,18 +17,6 @@ describe('shouldShowOssCloudSidebarCard', () => {
     expect(
       shouldShowOssCloudSidebarCard({
         isCloud: true,
-        isDevFeaturesEnabled: true,
-        dismissedUntil: undefined,
-        now,
-      })
-    ).toBe(false);
-  });
-
-  it('returns false when dev features are disabled', () => {
-    expect(
-      shouldShowOssCloudSidebarCard({
-        isCloud: false,
-        isDevFeaturesEnabled: false,
         dismissedUntil: undefined,
         now,
       })
@@ -40,7 +27,6 @@ describe('shouldShowOssCloudSidebarCard', () => {
     expect(
       shouldShowOssCloudSidebarCard({
         isCloud: false,
-        isDevFeaturesEnabled: true,
         dismissedUntil: now + 1,
         now,
       })
@@ -51,7 +37,6 @@ describe('shouldShowOssCloudSidebarCard', () => {
     expect(
       shouldShowOssCloudSidebarCard({
         isCloud: false,
-        isDevFeaturesEnabled: true,
         dismissedUntil: now - 1,
         now,
       })
@@ -62,7 +47,6 @@ describe('shouldShowOssCloudSidebarCard', () => {
     expect(
       shouldShowOssCloudSidebarCard({
         isCloud: false,
-        isDevFeaturesEnabled: true,
         dismissedUntil: now,
         now,
       })
