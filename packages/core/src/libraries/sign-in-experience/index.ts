@@ -313,9 +313,9 @@ export const createSignInExperienceLibrary = (
       };
     };
 
-    // When the dev feature is enabled and the tenant has an explicit sign-up profile field config,
-    // only expose (and order) the fields selected for sign-up. Otherwise expose the full catalog
-    // (ordered by `sie_order`) — preserving the legacy behavior.
+    // Resolve helper owns the dev-feature and null/undefined fallback logic. Explicit arrays
+    // expose and order only the selected sign-up fields; otherwise the full `sie_order` catalog
+    // is preserved for legacy behavior.
     const signUpCustomProfileFields = resolveSignUpCustomProfileFields(
       customProfileFields,
       signInExperience.signUpProfileFields

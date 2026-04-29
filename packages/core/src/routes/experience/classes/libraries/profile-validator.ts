@@ -24,7 +24,7 @@ import type { SignInExperienceValidator } from './sign-in-experience-validator.j
 export class ProfileValidator {
   constructor(
     private readonly queries: Queries,
-    private readonly signInExperienceValidator?: SignInExperienceValidator
+    private readonly signInExperienceValidator: SignInExperienceValidator
   ) {}
 
   public async guardProfileUniquenessAcrossUsers(profile: InteractionProfile = {}) {
@@ -215,11 +215,11 @@ export class ProfileValidator {
   public async hasMissingExtraProfileFields(profile: InteractionProfile, user?: User) {
     const [allCustomProfileFields, signInExperience] = await Promise.all([
       this.queries.customProfileFields.findAllCustomProfileFields(),
-      this.findSignInExperience(),
+      this.signInExperienceValidator.getSignInExperienceData(),
     ]);
 
-    // Resolve which fields are relevant for sign-up. Under the dev feature, the sign-in experience
-    // can narrow the catalog down to an explicit sign-up subset; otherwise the full catalog is used.
+    // Resolve which fields are relevant for sign-up. The helper owns the dev-feature and
+    // null/undefined fallback logic; explicit arrays narrow the catalog to a sign-up subset.
     const customProfileFields = resolveSignUpCustomProfileFields(
       allCustomProfileFields,
       signInExperience.signUpProfileFields
@@ -311,16 +311,6 @@ export class ProfileValidator {
     );
 
     return { name, avatar, profile, customData };
-  }
-
-  private async findSignInExperience() {
-    if (this.signInExperienceValidator) {
-      const signInExperience = await this.signInExperienceValidator.getSignInExperienceData();
-      return signInExperience;
-    }
-
-    const signInExperience = await this.queries.signInExperiences.findDefaultSignInExperience();
-    return signInExperience;
   }
 
   private hasField(object: unknown, field: string): boolean {

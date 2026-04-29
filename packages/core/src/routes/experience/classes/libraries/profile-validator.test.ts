@@ -14,6 +14,7 @@ const { jest } = import.meta;
 describe('ProfileValidator', () => {
   const mockFindAllCustomProfileFields = jest.fn();
   const mockFindDefaultSignInExperience = jest.fn().mockResolvedValue(mockSignInExperience);
+  const mockGetSignInExperienceData = jest.fn().mockResolvedValue(mockSignInExperience);
   const queries = new MockQueries({
     customProfileFields: {
       findAllCustomProfileFields: mockFindAllCustomProfileFields,
@@ -22,7 +23,10 @@ describe('ProfileValidator', () => {
       findDefaultSignInExperience: mockFindDefaultSignInExperience,
     },
   });
-  const profileValidator = new ProfileValidator(queries);
+  const signInExperienceValidator = {
+    getSignInExperienceData: mockGetSignInExperienceData,
+  } as unknown as SignInExperienceValidator;
+  const profileValidator = new ProfileValidator(queries, signInExperienceValidator);
 
   describe('validateAndParseCustomProfile', () => {
     it('should parse and split profile data into built-in and custom fields', () => {
@@ -233,14 +237,12 @@ describe('ProfileValidator', () => {
       expect(await profileValidator.hasMissingExtraProfileFields({})).toBe(false);
     });
 
-    it('should reuse the injected sign-in experience validator cache when provided', async () => {
-      const getSignInExperienceData = jest.fn().mockResolvedValue({
+    it('should reuse the sign-in experience validator cache', async () => {
+      mockGetSignInExperienceData.mockClear();
+      mockGetSignInExperienceData.mockResolvedValueOnce({
         ...mockSignInExperience,
         signUpProfileFields: [{ name: 'company' }],
       });
-      const cachedProfileValidator = new ProfileValidator(queries, {
-        getSignInExperienceData,
-      } as unknown as SignInExperienceValidator);
 
       mockFindDefaultSignInExperience.mockClear();
       mockFindAllCustomProfileFields.mockResolvedValue([
@@ -248,11 +250,11 @@ describe('ProfileValidator', () => {
       ]);
 
       expect(
-        await cachedProfileValidator.hasMissingExtraProfileFields({
+        await profileValidator.hasMissingExtraProfileFields({
           customData: { company: 'Logto' },
         })
       ).toBe(false);
-      expect(getSignInExperienceData).toHaveBeenCalledTimes(1);
+      expect(mockGetSignInExperienceData).toHaveBeenCalledTimes(1);
       expect(mockFindDefaultSignInExperience).not.toHaveBeenCalled();
     });
 
@@ -265,7 +267,7 @@ describe('ProfileValidator', () => {
 
       afterEach(() => {
         setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
-        mockFindDefaultSignInExperience.mockResolvedValue(mockSignInExperience);
+        mockGetSignInExperienceData.mockResolvedValue(mockSignInExperience);
       });
 
       it('should only enforce configured fields when dev features are enabled', async () => {
@@ -274,7 +276,7 @@ describe('ProfileValidator', () => {
           { type: 'Text', name: 'company', required: true },
           { type: 'Text', name: 'inviteCode', required: true },
         ]);
-        mockFindDefaultSignInExperience.mockResolvedValue({
+        mockGetSignInExperienceData.mockResolvedValue({
           ...mockSignInExperience,
           signUpProfileFields: [{ name: 'company' }],
         });
@@ -295,7 +297,7 @@ describe('ProfileValidator', () => {
           { type: 'Text', name: 'company', required: true },
           { type: 'Text', name: 'inviteCode', required: true },
         ]);
-        mockFindDefaultSignInExperience.mockResolvedValue({
+        mockGetSignInExperienceData.mockResolvedValue({
           ...mockSignInExperience,
           signUpProfileFields: [{ name: 'company' }],
         });
@@ -314,7 +316,7 @@ describe('ProfileValidator', () => {
           { type: 'Text', name: 'company', required: true },
           { type: 'Text', name: 'inviteCode', required: true },
         ]);
-        mockFindDefaultSignInExperience.mockResolvedValue({
+        mockGetSignInExperienceData.mockResolvedValue({
           ...mockSignInExperience,
           signUpProfileFields: null,
         });

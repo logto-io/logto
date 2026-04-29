@@ -66,8 +66,8 @@ export class NewPasswordIdentityVerification
     this.identifier = identifier;
     this.passwordEncrypted = passwordEncrypted;
     this.passwordEncryptionMethod = passwordEncryptionMethod;
-    this.profileValidator = new ProfileValidator(queries);
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
+    this.profileValidator = new ProfileValidator(queries, this.signInExperienceValidator);
   }
 
   get isVerified() {
