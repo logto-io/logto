@@ -72,8 +72,19 @@ export const deleteIdentity = async (
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
-export const updateUser = async (api: KyInstance, body: Record<string, unknown>) =>
-  api.patch('api/my-account', { json: body }).json<Partial<UserProfileResponse>>();
+export const updateUser = async (
+  api: KyInstance,
+  body: Record<string, unknown>,
+  verificationRecordId?: string
+) =>
+  api
+    .patch('api/my-account', {
+      json: body,
+      ...conditional(
+        verificationRecordId && { headers: { [verificationRecordIdHeader]: verificationRecordId } }
+      ),
+    })
+    .json<Partial<UserProfileResponse>>();
 
 export const updateOtherProfile = async (api: KyInstance, body: Record<string, unknown>) =>
   api

@@ -1,5 +1,5 @@
 import { UserScope } from '@logto/core-kit';
-import { hookEvents, SignInIdentifier } from '@logto/schemas';
+import { hookEvents } from '@logto/schemas';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
 import { authedAdminApi } from '#src/api/api.js';
@@ -21,7 +21,7 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { generatePassword, generateUsername } from '#src/utils.js';
+import { generateEmail, generatePassword, generateUsername } from '#src/utils.js';
 
 import WebhookMockServer from '../hook/WebhookMockServer.js';
 import { assertHookLogResult } from '../hook/utils.js';
@@ -171,8 +171,9 @@ describe('account', () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
       const newUsername = generateUsername();
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
-      const response = await updateUser(api, { username: newUsername });
+      const response = await updateUser(api, { username: newUsername }, verificationRecordId);
       expect(response).toMatchObject({ username: newUsername });
 
       // Sign in with new username
@@ -181,23 +182,44 @@ describe('account', () => {
       await deleteDefaultTenantUser(user.id);
     });
 
-    it('should be able to update username to null', async () => {
+    it('should fail to update username without identity verification', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
 
-      await updateSignInExperience({
-        signUp: {
-          identifiers: [SignInIdentifier.Email],
-          password: true,
-          verify: true,
-        },
+      await expectRejects(updateUser(api, { username: generateUsername() }), {
+        code: 'verification_record.permission_denied',
+        status: 401,
       });
-      const response = await updateUser(api, { username: null });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should be able to update username to null when another identifier remains', async () => {
+      const primaryEmail = generateEmail();
+      const { user, username, password } = await createDefaultTenantUserWithPassword({
+        primaryEmail,
+      });
+      const api = await signInAndGetUserApi(username, password);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      const response = await updateUser(api, { username: null }, verificationRecordId);
       expect(response).toMatchObject({ username: null });
-      await enableAllPasswordSignInMethods();
 
       const userInfo = await getUserInfo(api);
       expect(userInfo).toHaveProperty('username', null);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should reject deleting the last identifier', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+      await expectRejects(updateUser(api, { username: null }, verificationRecordId), {
+        code: 'user.last_sign_in_method_required',
+        status: 400,
+      });
 
       await deleteDefaultTenantUser(user.id);
     });
@@ -206,8 +228,9 @@ describe('account', () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const { user: user2, username: username2 } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password);
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
-      await expectRejects(updateUser(api, { username: username2 }), {
+      await expectRejects(updateUser(api, { username: username2 }, verificationRecordId), {
         code: 'user.username_already_in_use',
         status: 422,
       });
