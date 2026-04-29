@@ -20,11 +20,13 @@ const signing_keys = {
     id: 'Kimlik',
     status: 'Durum',
     algorithm: 'İmzalama anahtar algoritması',
+    effective_at: 'Geçerlilik zamanı',
   },
   status: {
     next: 'Sonraki',
     current: 'Geçerli',
     previous: 'Önceki',
+    effective_in: '{{time}} içinde geçerli',
   },
   reminder: {
     rotate_private_key:

@@ -19,11 +19,13 @@ const signing_keys = {
     id: 'ID',
     status: '狀態',
     algorithm: '簽署金鑰算法',
+    effective_at: '生效時間',
   },
   status: {
     next: '待切換',
     current: '當前',
     previous: '舊金鑰',
+    effective_in: '將於 {{time}} 後生效',
   },
   reminder: {
     rotate_private_key:

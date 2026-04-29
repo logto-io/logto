@@ -19,11 +19,13 @@ const signing_keys = {
     id: 'المعرف',
     status: 'الحالة',
     algorithm: 'خوارزمية مفتاح التوقيع',
+    effective_at: 'يسري في',
   },
   status: {
     next: 'التالي',
     current: 'الحالي',
     previous: 'السابق',
+    effective_in: 'يسري خلال {{time}}',
   },
   reminder: {
     rotate_private_key:

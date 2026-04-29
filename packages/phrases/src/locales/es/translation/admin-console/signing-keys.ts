@@ -19,11 +19,13 @@ const signing_keys = {
     id: 'ID',
     status: 'Estado',
     algorithm: 'Algoritmo de clave de firma',
+    effective_at: 'Vigente desde',
   },
   status: {
     next: 'Siguiente',
     current: 'Actual',
     previous: 'Anterior',
+    effective_in: 'Vigente en {{time}}',
   },
   reminder: {
     rotate_private_key:

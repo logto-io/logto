@@ -19,11 +19,13 @@ const signing_keys = {
     id: 'ID',
     status: 'ステータス',
     algorithm: '署名キーアルゴリズム',
+    effective_at: '有効日時',
   },
   status: {
     next: '次の',
     current: '現在の',
     previous: '以前の',
+    effective_in: '{{time}} 後に有効',
   },
   reminder: {
     rotate_private_key:

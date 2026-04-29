@@ -10,6 +10,7 @@ const { jest } = import.meta;
 export const mockLogtoConfigsLibrary: jest.Mocked<LogtoConfigLibrary> = {
   getCloudConnectionData: jest.fn(),
   getOidcConfigs: jest.fn(),
+  getRedactedOidcKeyResponse: jest.fn(),
   promoteScheduledSigningKeyRotation: jest.fn(),
   upsertJwtCustomizer: jest.fn(),
   getJwtCustomizer: jest.fn(),

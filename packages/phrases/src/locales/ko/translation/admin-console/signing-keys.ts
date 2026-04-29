@@ -19,11 +19,13 @@ const signing_keys = {
     id: 'ID',
     status: '상태',
     algorithm: '서명 키 알고리즘',
+    effective_at: '적용 시간',
   },
   status: {
     next: '다음',
     current: '현재',
     previous: '이전',
+    effective_in: '{{time}} 후 적용',
   },
   reminder: {
     rotate_private_key:

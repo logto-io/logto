@@ -213,6 +213,7 @@ export const oidcConfigKeysResponseGuard = oidcConfigKeyGuard.omit({ value: true
   z.object({
     signingKeyAlgorithm: z.nativeEnum(SupportedSigningKeyAlgorithm).optional(),
     status: z.nativeEnum(OidcSigningKeyStatus).optional(),
+    effectiveAt: z.number().optional(),
   })
 );
 

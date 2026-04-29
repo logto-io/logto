@@ -28,6 +28,7 @@ const previousPrivateKey = {
   value: '-----BEGIN PRIVATE KEY-----\nlegacy\nprevious\nkey\n-----END PRIVATE KEY-----\n',
   createdAt: Math.floor(Date.now() / 1000) - 10,
 };
+const signingKeyRotationAt = 1_777_777_777_000;
 
 const { exportJWK } = await mockEsmWithActual('#src/utils/jwks.js', () => ({
   exportJWK: jest.fn(async () => ({ kty: 'EC' })),
@@ -54,6 +55,7 @@ const logtoConfigQueries = {
     },
   }),
   updateOidcConfigsByKey: jest.fn(),
+  getSigningKeyRotationState: jest.fn(),
 };
 
 const logtoConfigLibraries = {
@@ -62,7 +64,42 @@ const logtoConfigLibraries = {
       { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
     ],
     [LogtoOidcConfigKey.CookieKeys]: mockCookieKeys,
+    [LogtoOidcConfigKey.Session]: {},
   })),
+  getRedactedOidcKeyResponse: jest.fn(
+    async (
+      type: LogtoOidcConfigKey,
+      keys: Array<{ id: string; value: string; createdAt: number }>
+    ) => {
+      const signingKeyRotationState = (await (type === LogtoOidcConfigKey.PrivateKeys
+        ? logtoConfigQueries.getSigningKeyRotationState()
+        : undefined)) as { signingKeyRotationAt?: number } | undefined;
+
+      return Promise.all(
+        keys.map(async ({ id, value, createdAt, ...rest }) => {
+          if (type === LogtoOidcConfigKey.PrivateKeys) {
+            const jwk = await (exportJWK as (key: unknown) => Promise<{ kty: string }>)(value);
+            const status = ('status' in rest ? rest.status : undefined) as
+              | OidcSigningKeyStatus
+              | undefined;
+
+            return {
+              id,
+              createdAt,
+              effectiveAt:
+                status === OidcSigningKeyStatus.Next
+                  ? signingKeyRotationState?.signingKeyRotationAt
+                  : undefined,
+              signingKeyAlgorithm: jwk.kty,
+              status,
+            };
+          }
+
+          return { id, createdAt };
+        })
+      );
+    }
+  ),
 };
 
 const oidcPrivateKeyLibraries = {
@@ -82,7 +119,11 @@ describe('configs routes', () => {
   const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries }, undefined, {
     oidcPrivateKeys: oidcPrivateKeyLibraries,
   });
-  Sinon.stub(tenantContext, 'logtoConfigs').value(logtoConfigLibraries);
+  Sinon.stub(tenantContext, 'logtoConfigs').value({
+    ...tenantContext.logtoConfigs,
+    getOidcConfigs: logtoConfigLibraries.getOidcConfigs,
+    getRedactedOidcKeyResponse: logtoConfigLibraries.getRedactedOidcKeyResponse,
+  });
   Sinon.stub(tenantContext.libraries, 'oidcPrivateKeys').value(oidcPrivateKeyLibraries);
 
   const routeRequester = createRequester({
@@ -119,18 +160,35 @@ describe('configs routes', () => {
   });
 
   it('GET /configs/oidc/:keyType', async () => {
+    logtoConfigLibraries.getOidcConfigs.mockResolvedValueOnce({
+      [LogtoOidcConfigKey.PrivateKeys]: [
+        { ...newPrivateKey, status: OidcSigningKeyStatus.Next },
+        { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
+      ],
+      [LogtoOidcConfigKey.CookieKeys]: mockCookieKeys,
+      [LogtoOidcConfigKey.Session]: {},
+    });
+    logtoConfigQueries.getSigningKeyRotationState.mockResolvedValueOnce({
+      signingKeyRotationAt,
+    });
+
     const response = await routeRequester.get('/configs/oidc/private-keys');
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual(
-      [{ ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current }].map(
-        ({ id, createdAt, status }) => ({
-          id,
-          createdAt,
-          signingKeyAlgorithm: 'EC',
-          status,
-        })
-      )
-    );
+    expect(response.body).toEqual([
+      {
+        id: newPrivateKey.id,
+        createdAt: newPrivateKey.createdAt,
+        effectiveAt: signingKeyRotationAt,
+        signingKeyAlgorithm: 'EC',
+        status: OidcSigningKeyStatus.Next,
+      },
+      {
+        id: mockPrivateKeys[0]!.id,
+        createdAt: mockPrivateKeys[0]!.createdAt,
+        signingKeyAlgorithm: 'EC',
+        status: OidcSigningKeyStatus.Current,
+      },
+    ]);
 
     const response2 = await routeRequester.get('/configs/oidc/cookie-keys');
     expect(response2.status).toEqual(200);
@@ -140,6 +198,7 @@ describe('configs routes', () => {
         createdAt,
       }))
     );
+    expect(logtoConfigQueries.getSigningKeyRotationState).toHaveBeenCalledTimes(1);
   });
 
   it('DELETE /configs/oidc/:keyType/:keyId will fail if there is only one key', async () => {
@@ -164,6 +223,7 @@ describe('configs routes', () => {
         { ...newPrivateKey, status: OidcSigningKeyStatus.Current },
       ],
       [LogtoOidcConfigKey.CookieKeys]: [newCookieKey, ...mockCookieKeys],
+      [LogtoOidcConfigKey.Session]: {},
     });
 
     await expect(
@@ -235,6 +295,7 @@ describe('configs routes', () => {
         { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
       ],
       [LogtoOidcConfigKey.CookieKeys]: mockCookieKeys,
+      [LogtoOidcConfigKey.Session]: {},
     });
     exportJWK.mockResolvedValueOnce({ kty: 'RSA' });
 
@@ -313,6 +374,9 @@ describe('configs routes', () => {
       { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
     ]);
     exportJWK.mockResolvedValueOnce({ kty: 'RSA' });
+    logtoConfigQueries.getSigningKeyRotationState.mockResolvedValueOnce({
+      signingKeyRotationAt,
+    });
 
     const response = await routeRequester
       .post('/configs/oidc/private-keys/rotate')
@@ -326,6 +390,7 @@ describe('configs routes', () => {
     expect(response.body[0]).toEqual({
       id: newPrivateKey.id,
       createdAt: newPrivateKey.createdAt,
+      effectiveAt: signingKeyRotationAt,
       signingKeyAlgorithm: 'RSA',
       status: OidcSigningKeyStatus.Next,
     });

@@ -19,11 +19,13 @@ const signing_keys = {
     id: 'ID',
     status: 'สถานะ',
     algorithm: 'อัลกอริทึมของคีย์ลงนาม',
+    effective_at: 'มีผลเมื่อ',
   },
   status: {
     next: 'ถัดไป',
     current: 'ปัจจุบัน',
     previous: 'ก่อนหน้า',
+    effective_in: 'มีผลใน {{time}}',
   },
   reminder: {
     rotate_private_key:
