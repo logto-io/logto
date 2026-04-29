@@ -12,7 +12,7 @@ import ExternalLink from '@/assets/icons/external-link.svg?react';
 import LogtoEmailLogoDark from '@/assets/icons/logto-email-service-dark.svg?url';
 import LogtoEmailLogo from '@/assets/icons/logto-email-service.svg?url';
 import ConnectorLogo from '@/components/ConnectorLogo';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { pricingLink } from '@/consts/external-links';
 import Button from '@/ds-components/Button';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -125,7 +125,6 @@ function CreateConnectorForm({ onClose, isOpen: isFormOpen, type }: Props) {
   const shouldShowEmailConnectorUpsellBannerValue = shouldShowEmailConnectorUpsellBanner({
     type,
     isCloud,
-    isDevFeaturesEnabled,
   });
 
   const activeGroup = useMemo(

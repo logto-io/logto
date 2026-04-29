@@ -4,7 +4,7 @@ import { Navigate, type RouteObject } from 'react-router-dom';
 import { safeLazy } from 'react-safe-lazy';
 
 import { TenantSettingsTabs } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
@@ -84,10 +84,7 @@ const useCloudTenantSettings = () => {
 
 const useOssTenantSettings = (): RouteObject =>
   useMemo(() => {
-    const shouldShowMembersTab = shouldShowOssTenantMembersTab({
-      isCloud: false,
-      isDevFeaturesEnabled,
-    });
+    const shouldShowMembersTab = shouldShowOssTenantMembersTab({ isCloud: false });
 
     return {
       path: 'tenant-settings',

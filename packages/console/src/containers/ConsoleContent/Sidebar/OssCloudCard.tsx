@@ -44,7 +44,6 @@ function OssCloudCard() {
   if (
     !shouldShowOssCloudSidebarCard({
       isCloud,
-      isDevFeaturesEnabled,
       dismissedUntil,
       now,
     })

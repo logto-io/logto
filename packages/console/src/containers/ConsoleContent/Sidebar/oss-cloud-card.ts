@@ -2,7 +2,6 @@ import { conditional, type Nullable, type Optional } from '@silverhand/essential
 
 type ShouldShowOssCloudSidebarCardOptions = {
   readonly isCloud: boolean;
-  readonly isDevFeaturesEnabled: boolean;
   readonly dismissedUntil?: number;
   readonly now: number;
 };
@@ -19,8 +18,7 @@ export const parseOssCloudSidebarCardDismissedUntil = (
 
 export const shouldShowOssCloudSidebarCard = ({
   isCloud,
-  isDevFeaturesEnabled,
   dismissedUntil,
   now,
 }: ShouldShowOssCloudSidebarCardOptions): boolean =>
-  !isCloud && isDevFeaturesEnabled && (dismissedUntil === undefined || dismissedUntil <= now);
+  !isCloud && (dismissedUntil === undefined || dismissedUntil <= now);

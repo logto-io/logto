@@ -14,7 +14,7 @@ import ApplicationPreview from '@/components/ItemPreview/ApplicationPreview';
 import LearnMore from '@/components/LearnMore';
 import PageMeta from '@/components/PageMeta';
 import { integrateLogto } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -79,7 +79,7 @@ function Applications({ tab }: Props) {
   const [selectedGuide, setSelectedGuide] = useState<Nullable<SelectedGuide>>();
 
   const isThirdPartyTab = tab === 'thirdPartyApplications';
-  const shouldFetchSamlApplicationsCount = !isCloud && isDevFeaturesEnabled && !isThirdPartyTab;
+  const shouldFetchSamlApplicationsCount = !isCloud && !isThirdPartyTab;
 
   const { data, error, mutate, pagination, updatePagination, paginationRecords } =
     useApplicationsData(isThirdPartyTab);

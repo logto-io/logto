@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
 import { TenantSettingsTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -10,10 +9,7 @@ import styles from './index.module.scss';
 import { shouldShowOssTenantMembersTab } from './utils';
 
 function OssTenantSettings() {
-  const shouldShowMembersTab = shouldShowOssTenantMembersTab({
-    isCloud: false,
-    isDevFeaturesEnabled,
-  });
+  const shouldShowMembersTab = shouldShowOssTenantMembersTab({ isCloud: false });
 
   return (
     <div className={styles.container}>
