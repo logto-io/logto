@@ -48,20 +48,22 @@ const users = {
 const { findUsersByIds } = users;
 
 const usersRoles = {
-  countUsersRolesByRoleId: jest.fn(),
-  findUsersRolesByRoleId: jest.fn(),
+  countUsersRolesByRoleIds: jest.fn(),
+  findUsersRolesByRoleIds: jest.fn(),
+  findUsersRolesByUserId: jest.fn(async () => []),
   deleteUsersRolesByUserIdAndRoleId: jest.fn(),
 };
-const { findUsersRolesByRoleId, countUsersRolesByRoleId } = usersRoles;
+const { findUsersRolesByRoleIds, countUsersRolesByRoleIds } = usersRoles;
 
 const applications = { findApplicationsByIds: jest.fn() };
 const { findApplicationsByIds } = applications;
 
 const applicationsRoles = {
-  countApplicationsRolesByRoleId: jest.fn(),
-  findApplicationsRolesByRoleId: jest.fn(),
+  countApplicationsRolesByRoleIds: jest.fn(),
+  findApplicationsRolesByRoleIds: jest.fn(),
+  findApplicationsRolesByApplicationId: jest.fn(async () => []),
 };
-const { countApplicationsRolesByRoleId, findApplicationsRolesByRoleId } = applicationsRoles;
+const { countApplicationsRolesByRoleIds, findApplicationsRolesByRoleIds } = applicationsRoles;
 
 const rolesScopesLibrary = {
   validateRoleScopeAssignment: jest.fn(),
@@ -89,11 +91,13 @@ describe('role routes', () => {
   const roleRequester = createRequester({ authedRoutes: roleRoutes, tenantContext });
 
   it('GET /roles', async () => {
-    countUsersRolesByRoleId.mockResolvedValueOnce({ count: 1 });
+    countUsersRolesByRoleIds.mockResolvedValueOnce([{ roleId: mockAdminUserRole.id, count: 1 }]);
+    findUsersRolesByRoleIds.mockResolvedValueOnce([
+      { roleId: mockAdminUserRole.id, userId: mockUser.id },
+    ]);
     findUsersByIds.mockResolvedValueOnce([mockUser]);
-    findUsersRolesByRoleId.mockResolvedValueOnce([]);
-    countApplicationsRolesByRoleId.mockResolvedValueOnce({ count: 0 });
-    findApplicationsRolesByRoleId.mockResolvedValueOnce([]);
+    countApplicationsRolesByRoleIds.mockResolvedValueOnce([]);
+    findApplicationsRolesByRoleIds.mockResolvedValueOnce([]);
     findApplicationsByIds.mockResolvedValueOnce([]);
     const response = await roleRequester.get('/roles');
     expect(response.status).toEqual(200);
