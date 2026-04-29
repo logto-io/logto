@@ -101,7 +101,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
    */
   async sendVerificationCode(
     payload?: SendPasscodeContextPayload,
-    options?: { skipDelivery?: boolean; validateOnly?: boolean }
+    options?: { skipDelivery?: boolean }
   ) {
     const { createPasscode, sendPasscode } = this.libraries.passcodes;
 
@@ -115,7 +115,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
       return;
     }
 
-    await sendPasscode(verificationCode, payload, options);
+    await sendPasscode(verificationCode, payload);
   }
 
   /**
