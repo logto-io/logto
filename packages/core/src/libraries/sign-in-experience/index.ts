@@ -16,6 +16,7 @@ import { type WellKnownCache } from '#src/caches/well-known.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
+import { resolveSignUpCustomProfileFields } from '#src/libraries/custom-profile-fields/utils.js';
 import type { SsoConnectorLibrary } from '#src/libraries/sso-connector.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -312,6 +313,14 @@ export const createSignInExperienceLibrary = (
       };
     };
 
+    // Resolve helper owns the dev-feature and null/undefined fallback logic. Explicit arrays
+    // expose and order only the selected sign-up fields; otherwise the full `sie_order` catalog
+    // is preserved for legacy behavior.
+    const signUpCustomProfileFields = resolveSignUpCustomProfileFields(
+      customProfileFields,
+      signInExperience.signUpProfileFields
+    );
+
     return {
       ...deepmerge<SignInExperience, SignInExperienceOverride>(
         deepmerge<SignInExperience, SignInExperienceOverride>(
@@ -326,7 +335,7 @@ export const createSignInExperienceLibrary = (
       isDevelopmentTenant,
       googleOneTap: getGoogleOneTap(),
       captchaConfig: await getCaptchaConfig(),
-      customProfileFields,
+      customProfileFields: signUpCustomProfileFields,
     };
   };
 

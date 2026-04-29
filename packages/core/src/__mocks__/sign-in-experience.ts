@@ -116,4 +116,5 @@ export const mockSignInExperience: SignInExperience = {
     showPasskeyButton: false,
     allowAutofill: false,
   },
+  signUpProfileFields: null,
 };

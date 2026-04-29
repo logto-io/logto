@@ -13,13 +13,19 @@ import {
 } from '@logto/schemas';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { resolveSignUpCustomProfileFields } from '#src/libraries/custom-profile-fields/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { InteractionProfile } from '../../types.js';
 
+import type { SignInExperienceValidator } from './sign-in-experience-validator.js';
+
 export class ProfileValidator {
-  constructor(private readonly queries: Queries) {}
+  constructor(
+    private readonly queries: Queries,
+    private readonly signInExperienceValidator: SignInExperienceValidator
+  ) {}
 
   public async guardProfileUniquenessAcrossUsers(profile: InteractionProfile = {}) {
     const { hasUser, hasUserWithEmail, hasUserWithNormalizedPhone, hasUserWithIdentity } =
@@ -207,9 +213,19 @@ export class ProfileValidator {
    *   When true, only required fields are enforced; optional fields can be skipped.
    */
   public async hasMissingExtraProfileFields(profile: InteractionProfile, user?: User) {
-    const customProfileFields = await this.queries.customProfileFields.findAllCustomProfileFields();
+    const [allCustomProfileFields, signInExperience] = await Promise.all([
+      this.queries.customProfileFields.findAllCustomProfileFields(),
+      this.signInExperienceValidator.getSignInExperienceData(),
+    ]);
 
-    // Return false early if there are no custom profile fields defined
+    // Resolve which fields are relevant for sign-up. The helper owns the dev-feature and
+    // null/undefined fallback logic; explicit arrays narrow the catalog to a sign-up subset.
+    const customProfileFields = resolveSignUpCustomProfileFields(
+      allCustomProfileFields,
+      signInExperience.signUpProfileFields
+    );
+
+    // Return false early if there are no custom profile fields to collect
     if (customProfileFields.length === 0) {
       return false;
     }

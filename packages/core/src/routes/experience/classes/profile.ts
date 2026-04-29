@@ -41,7 +41,7 @@ export class Profile {
     private readonly interactionContext: InteractionContext
   ) {
     this.signInExperienceValidator = new SignInExperienceValidator(libraries, queries);
-    this.profileValidator = new ProfileValidator(queries);
+    this.profileValidator = new ProfileValidator(queries, this.signInExperienceValidator);
     this.#data = data;
   }
 

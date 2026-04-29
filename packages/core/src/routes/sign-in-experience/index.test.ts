@@ -120,6 +120,43 @@ const createDevFeaturesDisabledRequester = async () => {
   return { requester, updateDefaultSignInExperience };
 };
 
+const createSignUpProfileFieldsRequester = (
+  normalizeSignUpProfileFields = jest.fn(
+    async (signUpProfileFields: SignInExperience['signUpProfileFields'] | undefined) =>
+      signUpProfileFields
+  )
+) => {
+  const updateDefaultSignInExperience = jest.fn(
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+      ...mockSignInExperience,
+      ...data,
+    })
+  );
+
+  const tenant = new MockTenant(
+    undefined,
+    {
+      signInExperiences: {
+        updateDefaultSignInExperience,
+        findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+      },
+      customPhrases: { findAllCustomLanguageTags: async () => [] },
+    },
+    { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
+    {
+      signInExperiences: { validateLanguageInfo: jest.fn() },
+      customProfileFields: { normalizeSignUpProfileFields },
+    }
+  );
+
+  const requester = createRequester({
+    authedRoutes: signInExperiencesRoutes,
+    tenantContext: tenant,
+  });
+
+  return { requester, updateDefaultSignInExperience, normalizeSignUpProfileFields };
+};
+
 describe('GET /sign-in-exp', () => {
   afterAll(() => {
     jest.clearAllMocks();
@@ -474,6 +511,63 @@ describe('sign-in experience routes with dev features disabled', () => {
       adaptiveMfa,
       mfa,
     });
+  });
+});
+
+describe('PATCH /sign-in-exp signUpProfileFields', () => {
+  it('should omit signUpProfileFields when the normalized value is absent', async () => {
+    const { requester, updateDefaultSignInExperience, normalizeSignUpProfileFields } =
+      createSignUpProfileFieldsRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({});
+
+    expect(normalizeSignUpProfileFields).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({});
+    expect(updateDefaultSignInExperience.mock.calls[0]?.[0]).not.toHaveProperty(
+      'signUpProfileFields'
+    );
+  });
+
+  it('should persist normalized signUpProfileFields', async () => {
+    const signUpProfileFields = [{ name: 'company' }];
+    const normalizedSignUpProfileFields = [{ name: 'inviteCode' }];
+    const normalizeSignUpProfileFields = jest.fn(
+      async (_signUpProfileFields: SignInExperience['signUpProfileFields'] | undefined) =>
+        normalizedSignUpProfileFields
+    );
+    const { requester, updateDefaultSignInExperience } = createSignUpProfileFieldsRequester(
+      normalizeSignUpProfileFields
+    );
+
+    const response = await requester.patch('/sign-in-exp').send({ signUpProfileFields });
+
+    expect(normalizeSignUpProfileFields).toHaveBeenCalledWith(signUpProfileFields);
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({
+      signUpProfileFields: normalizedSignUpProfileFields,
+    });
+    expect(response.body).toMatchObject({ signUpProfileFields: normalizedSignUpProfileFields });
+  });
+
+  it('should accept an empty list to collect no custom profile fields during sign-up', async () => {
+    const { requester, updateDefaultSignInExperience } = createSignUpProfileFieldsRequester();
+
+    const signUpProfileFields: Array<{ name: string }> = [];
+    const response = await requester.patch('/sign-in-exp').send({ signUpProfileFields });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ signUpProfileFields });
+    expect(response.body).toMatchObject({ signUpProfileFields });
+  });
+
+  it('should accept null to clear signUpProfileFields', async () => {
+    const { requester, updateDefaultSignInExperience } = createSignUpProfileFieldsRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({ signUpProfileFields: null });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ signUpProfileFields: null });
   });
 });
 /* eslint-enable max-lines */

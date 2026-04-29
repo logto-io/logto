@@ -47,6 +47,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
   const { deleteConnectorById } = queries.connectors;
   const { findUserById } = queries.users;
+  const { normalizeSignUpProfileFields } = libraries.customProfileFields;
   const {
     signInExperiences: { validateLanguageInfo },
     quota,
@@ -100,7 +101,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
-        body: { socialSignInConnectorTargets, emailBlocklistPolicy, ...rest },
+        body: { socialSignInConnectorTargets, emailBlocklistPolicy, signUpProfileFields, ...rest },
       } = ctx.guard;
       const {
         languageInfo,
@@ -114,6 +115,8 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         hideLogtoBranding,
         passkeySignIn,
       } = rest;
+
+      const normalizedSignUpProfileFields = await normalizeSignUpProfileFields(signUpProfileFields);
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -275,6 +278,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         ...conditional(
           emailBlocklistPolicy && {
             emailBlocklistPolicy: parseEmailBlocklistPolicy(emailBlocklistPolicy),
+          }
+        ),
+        ...conditional(
+          normalizedSignUpProfileFields !== undefined && {
+            signUpProfileFields: normalizedSignUpProfileFields,
           }
         ),
       };
