@@ -1,20 +1,14 @@
 import { appInsights } from '@logto/app-insights/node';
 import type { SendMessagePayload, TemplateType } from '@logto/connector-kit';
-import {
-  templateTypeGuard,
-  ConnectorError,
-  ConnectorErrorCodes,
-  getConfigTemplateByType,
-} from '@logto/connector-kit';
+import { templateTypeGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import {
   buildBuiltInApplicationDataForTenant,
   isBuiltInApplicationId,
   type Passcode,
   type User,
 } from '@logto/schemas';
-import { conditional, trySafe } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import { customAlphabet, nanoid } from 'nanoid';
-import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
@@ -42,14 +36,6 @@ export type SendPasscodeContextPayload = Pick<SendMessagePayload, 'locale' | 'ui
     ip?: string;
   };
 
-type SendPasscodeOptions = {
-  validateOnly?: boolean;
-};
-
-const templateTypeConfigGuard = z.object({
-  templates: z.array(z.object({ usageType: z.string() })).optional(),
-});
-
 const resolveTemplateType = (type: string) => {
   const messageTypeResult = templateTypeGuard.safeParse(type);
 
@@ -71,7 +57,7 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     increasePasscodeTryCount,
     insertPasscode,
   } = queries.passcodes;
-  const { getI18nEmailTemplate, getMessageConnector } = connectorLibrary;
+  const { getMessageConnector } = connectorLibrary;
 
   const createPasscode = async (
     jti: string | undefined,
@@ -103,32 +89,7 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
    * @param {Passcode} passcode The passcode object being sent.
    * @param {SendPasscodeContextPayload} contextPayload The extra context information for the verification code email template.
    */
-  const validateMessageTemplate = async (
-    type: TemplateType,
-    config: unknown,
-    contextPayload?: SendPasscodeContextPayload
-  ) => {
-    const customTemplate = await trySafe(async () =>
-      getI18nEmailTemplate(type, contextPayload?.locale)
-    );
-    const templateConfig = templateTypeConfigGuard.safeParse(config);
-    const template =
-      customTemplate ??
-      getConfigTemplateByType(type, templateConfig.success ? templateConfig.data : {});
-
-    if (!template) {
-      throw new ConnectorError(
-        ConnectorErrorCodes.TemplateNotFound,
-        `Template not found for type: ${type}`
-      );
-    }
-  };
-
-  const sendPasscode = async (
-    passcode: Passcode,
-    contextPayload?: SendPasscodeContextPayload,
-    options?: SendPasscodeOptions
-  ) => {
+  const sendPasscode = async (passcode: Passcode, contextPayload?: SendPasscodeContextPayload) => {
     const emailOrPhone = passcode.email ?? passcode.phone;
 
     if (!emailOrPhone) {
@@ -141,11 +102,6 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     const { dbEntry, metadata, sendMessage } = connector;
 
     const { ip, ...payloadContext } = contextPayload ?? {};
-
-    if (options?.validateOnly) {
-      await validateMessageTemplate(templateType, dbEntry.config, contextPayload);
-      return { dbEntry, metadata, response: undefined };
-    }
 
     const response = await sendMessage({
       to: emailOrPhone,

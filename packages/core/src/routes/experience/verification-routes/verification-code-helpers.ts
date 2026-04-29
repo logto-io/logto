@@ -125,29 +125,23 @@ export const sendCode = async ({
   }
 
   // For forgot-password requests, unknown identifiers still create the passcode record
-  // (so verification returns `code_mismatch` instead of `not_found`) and keep
-  // connector/template validation, but avoid the actual message delivery.
-  const validateOnly =
+  // (so verification returns `code_mismatch` instead of `not_found`), but skip
+  // delivery and connector/template validation to avoid leaking configuration errors.
+  const skipDelivery =
     interactionEvent === InteractionEvent.ForgotPassword &&
     !(await hasUserWithIdentifier(queries, identifier));
 
-  // Build template context
-  const templateContext = await buildVerificationCodeTemplateContext(
-    libraries.passcodes,
-    ctx,
-    identifier
-  );
+  const payload = skipDelivery
+    ? undefined
+    : {
+        ...ctx.emailI18n,
+        ...(await buildVerificationCodeTemplateContext(libraries.passcodes, ctx, identifier)),
+        /** The client IP address for rate limiting and fraud detection. */
+        ...(ctx.request.ip && { ip: ctx.request.ip }),
+      };
 
   // Send verification code
-  await codeVerification.sendVerificationCode(
-    {
-      ...ctx.emailI18n,
-      ...templateContext,
-      /** The client IP address for rate limiting and fraud detection. */
-      ...(ctx.request.ip && { ip: ctx.request.ip }),
-    },
-    { validateOnly }
-  );
+  await codeVerification.sendVerificationCode(payload, { skipDelivery });
 
   // Save state
   experienceInteraction.setVerificationRecord(codeVerification);
