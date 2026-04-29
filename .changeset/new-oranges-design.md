@@ -1,5 +1,5 @@
 ---
-"@logto/core-kit": patch
+"@logto/core-kit": minor
 ---
 
 add subtle primary overlay color token for console themes
