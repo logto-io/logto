@@ -215,8 +215,7 @@ export class ProfileValidator {
   public async hasMissingExtraProfileFields(profile: InteractionProfile, user?: User) {
     const [allCustomProfileFields, signInExperience] = await Promise.all([
       this.queries.customProfileFields.findAllCustomProfileFields(),
-      this.signInExperienceValidator?.getSignInExperienceData() ??
-        this.queries.signInExperiences.findDefaultSignInExperience(),
+      this.findSignInExperience(),
     ]);
 
     // Resolve which fields are relevant for sign-up. Under the dev feature, the sign-in experience
@@ -312,6 +311,16 @@ export class ProfileValidator {
     );
 
     return { name, avatar, profile, customData };
+  }
+
+  private async findSignInExperience() {
+    if (this.signInExperienceValidator) {
+      const signInExperience = await this.signInExperienceValidator.getSignInExperienceData();
+      return signInExperience;
+    }
+
+    const signInExperience = await this.queries.signInExperiences.findDefaultSignInExperience();
+    return signInExperience;
   }
 
   private hasField(object: unknown, field: string): boolean {
