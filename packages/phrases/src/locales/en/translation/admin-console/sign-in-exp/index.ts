@@ -174,6 +174,15 @@ const sign_in_exp = {
       custom_data_description: 'Control access to custom JSON data stored on the user.',
       sessions: 'Sessions',
     },
+    profile_fields: {
+      title: 'Profile fields for prebuilt account center',
+      add_profile_fields: 'Add profile fields',
+      hint: {
+        not_in_list: 'Not in the list?',
+        set_up: 'Set up',
+        go_to: 'other profile fields now.',
+      },
+    },
     webauthn_related_origins: 'WebAuthn Related Origins',
     webauthn_related_origins_description:
       'Add the domains of your front-end applications that are allowed to register passkeys via the Account API.',
