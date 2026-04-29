@@ -73,6 +73,7 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Users
   'post /users/:userId/roles': 'AssignUserRoles',
   'post /users/:userId/password/verify': 'VerifyUserPassword',
+  'patch /users/:userId/password/expire': 'ExpireUserPassword',
   'post /users/:userId/personal-access-tokens/delete': 'DeletePersonalAccessTokenByName',
   'patch /users/:userId/personal-access-tokens': 'UpdatePersonalAccessTokenByName',
   // Dashboard

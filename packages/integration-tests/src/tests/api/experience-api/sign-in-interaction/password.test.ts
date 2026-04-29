@@ -1,6 +1,6 @@
 import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
-import { deleteUser, getUser } from '#src/api/admin-user.js';
+import { deleteUser, expireUserPassword, getUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { setEmailConnector, setSmsConnector } from '#src/helpers/connector.js';
@@ -14,11 +14,13 @@ import {
 } from '#src/helpers/experience/verification-code.js';
 import { expectRejects } from '#src/helpers/index.js';
 import {
+  disablePasswordExpiration,
   enableAllPasswordSignInMethods,
   enableAllVerificationCodeSignInMethods,
+  enablePasswordExpiration,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, UserApiTest } from '#src/helpers/user.js';
-import { generateEmail, generatePassword } from '#src/utils.js';
+import { generateEmail, generatePassword, generateUsername } from '#src/utils.js';
 
 const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
@@ -208,4 +210,47 @@ describe('phone number sanitisation sign-in test +61 412 345 678', () => {
       });
     }
   );
+});
+
+describe('password expiration API contract', () => {
+  const userApi = new UserApiTest();
+
+  beforeAll(async () => {
+    await enableAllPasswordSignInMethods({
+      identifiers: [SignInIdentifier.Username],
+      password: true,
+      verify: false,
+    });
+
+    await enablePasswordExpiration({});
+  });
+
+  afterAll(async () => {
+    await disablePasswordExpiration();
+  });
+
+  it('should return password.expired when verifying an expired password', async () => {
+    const username = generateUsername();
+    const password = generatePassword();
+
+    const user = await userApi.create({ username, password });
+    await expireUserPassword(user.id);
+
+    const client = await initExperienceClient();
+    await expectRejects(
+      client.verifyPassword({
+        identifier: {
+          type: SignInIdentifier.Username,
+          value: username,
+        },
+        password,
+      }),
+      {
+        code: 'password.expired',
+        status: 422,
+      }
+    );
+
+    await deleteUser(user.id);
+  });
 });

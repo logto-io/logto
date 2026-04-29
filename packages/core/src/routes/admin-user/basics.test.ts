@@ -1,9 +1,10 @@
+/* eslint-disable max-lines */
 import type { CreateUser, Role, SignInExperience, User } from '@logto/schemas';
 import { RoleType, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
-import { mockUser, mockUserResponse } from '#src/__mocks__/index.js';
+import { mockSignInExperience, mockUser, mockUserResponse } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
@@ -107,6 +108,7 @@ describe('adminUserRoutes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    jest.useRealTimers();
   });
 
   it('GET /users/:userId', async () => {
@@ -145,6 +147,9 @@ describe('adminUserRoutes', () => {
       username,
       name,
     });
+
+    const [insertedUser] = usersLibraries.insertUser.mock.calls[0] as [CreateUser];
+    expect(insertedUser.passwordUpdatedAt).toBeDefined();
   });
 
   it('POST /users should be ok with simple passwords', async () => {
@@ -325,10 +330,43 @@ describe('adminUserRoutes', () => {
     const response = await userRequest.patch(`/users/${mockedUserId}/password`).send({ password });
     expect(encryptUserPassword).toHaveBeenCalledWith(password);
     expect(findUserById).toHaveBeenCalledTimes(1);
+    const updateCalls = updateUserById.mock.calls as Array<[string, Partial<CreateUser>]>;
+    const passwordCall = updateCalls.find(([id]) => id === mockedUserId);
+    expect(typeof passwordCall?.[1].passwordUpdatedAt).toBe('number');
+    expect(passwordCall?.[1].isPasswordExpired).toBe(false);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,
     });
+  });
+
+  it('PATCH /users/:userId/password/expire', async () => {
+    mockedQueries.signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 10,
+      },
+    });
+
+    const response = await userRequest.patch('/users/foo/password/expire');
+    expect(response.status).toEqual(200);
+    expect(updateUserById).toHaveBeenCalledWith('foo', {
+      isPasswordExpired: true,
+    });
+  });
+
+  it('PATCH /users/:userId/password/expire should return 400 when expiration is disabled', async () => {
+    mockedQueries.signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      passwordExpiration: {
+        enabled: false,
+      },
+    });
+
+    const response = await userRequest.patch('/users/foo/password/expire');
+    expect(response.status).toEqual(400);
+    expect(updateUserById).not.toHaveBeenCalled();
   });
 
   it('PATCH /users/:userId/password should throw if user cannot be found', async () => {
@@ -437,3 +475,4 @@ describe('adminUserRoutes', () => {
     );
   });
 });
+/* eslint-enable max-lines */

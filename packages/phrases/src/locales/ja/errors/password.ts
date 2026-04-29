@@ -4,6 +4,7 @@ const password = {
   rejected: 'パスワードが拒否されました。パスワードが要件を満たしているか確認してください。',
   invalid_legacy_password_format: '無効なレガシーパスワード形式です。',
   unsupported_legacy_hash_algorithm: '未対応のレガシーハッシュアルゴリズム：{{algorithm}}。',
+  expired: 'パスワードの期限が切れました。続行するにはパスワードをリセットしてください。',
 };
 
 export default Object.freeze(password);

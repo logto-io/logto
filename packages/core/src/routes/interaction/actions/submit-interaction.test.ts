@@ -454,12 +454,16 @@ describe('submit action', () => {
     expect(updateUserById).toBeCalledWith('foo', {
       passwordEncrypted: 'passwordEncrypted',
       passwordEncryptionMethod: 'plain',
+      passwordUpdatedAt: now,
+      isPasswordExpired: false,
     });
     expect(assignInteractionResults).not.toBeCalled();
     expect(ctx.appendDataHookContext).toBeCalledWith('User.Data.Updated', {
       user: {
         passwordEncrypted: 'passwordEncrypted',
         passwordEncryptionMethod: 'plain',
+        passwordUpdatedAt: now,
+        isPasswordExpired: false,
       },
     });
   });

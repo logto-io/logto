@@ -4,6 +4,7 @@ const password = {
   rejected: 'Senha rejeitada. Por favor, verifique se sua senha atende aos requisitos.',
   invalid_legacy_password_format: 'Formato de senha legada inválido.',
   unsupported_legacy_hash_algorithm: 'Algoritmo de hash legado não suportado: {{algorithm}}.',
+  expired: 'Sua senha expirou. Por favor, redefina sua senha para continuar.',
 };
 
 export default Object.freeze(password);

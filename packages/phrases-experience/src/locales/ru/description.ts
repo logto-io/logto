@@ -109,6 +109,11 @@ const description = {
   identifier_register_description:
     'Введите свои {{types, list(type: disjunction;)}} чтобы создать новую учётную запись.',
   all_account_creation_options: 'Все варианты создания учётной записи',
+  password_expired: 'Срок действия вашего пароля истек, и его необходимо сбросить перед входом.',
+  password_expiration_reminder:
+    'Ваш пароль истечет через {{days}} дн. Мы рекомендуем сбросить его сейчас.',
+  password_expiration_reminder_skip: 'Пропустить пока',
+  password_expiration_reset: 'Сбросить пароль',
   back_to_sign_in: 'Вернуться ко входу',
   support_email: 'Поддержка по электронной почте: <link></link>',
   support_website: 'Сайт поддержки: <link></link>',

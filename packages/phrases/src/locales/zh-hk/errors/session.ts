@@ -42,6 +42,9 @@ const session = {
     conflict_rp_id: 'Relying Party ID 不相符。請使用正確的用戶端登入。',
     sso_users_not_allowed: 'SSO 用戶無法使用 Passkey 登入選項。',
   },
+  password_expiration: {
+    reset_not_allowed: '只有在目前登入階段的密碼已過期後，才允許重設密碼。',
+  },
   sso_enabled: '該郵箱已開啟單點登錄，請使用 SSO 登錄。',
   captcha_required: '需要 Captcha。',
   captcha_failed: 'Captcha 驗證失敗。',

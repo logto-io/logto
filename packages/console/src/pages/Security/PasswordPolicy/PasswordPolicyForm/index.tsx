@@ -22,6 +22,7 @@ import { trySubmitSafe } from '@/utils/form';
 import PasswordOption from '../PasswordOption';
 import { passwordPolicyFormParser, type PasswordPolicyFormData } from '../use-password-policy';
 
+import PasswordExpirationCard from './PasswordExpirationCard';
 import styles from './index.module.scss';
 
 type Props = {
@@ -76,6 +77,8 @@ function PasswordPolicyForm({ data }: Props) {
       toast.success(globalT('general.saved'));
     })
   );
+
+  const { hasAvailableForgotPasswordMethod } = data;
 
   return (
     <>
@@ -206,6 +209,9 @@ function PasswordPolicyForm({ data }: Props) {
               )}
             </FormField>
           </FormCard>
+          <PasswordExpirationCard
+            hasAvailableForgotPasswordMethod={hasAvailableForgotPasswordMethod}
+          />
         </DetailsForm>
       </FormProvider>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />

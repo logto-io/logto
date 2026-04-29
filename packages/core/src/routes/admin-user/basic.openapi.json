@@ -257,6 +257,20 @@
         "description": "Update user password for the given ID."
       }
     },
+    "/api/users/{userId}/password/expire": {
+      "patch": {
+        "responses": {
+          "200": {
+            "description": "User password has been marked as expired successfully."
+          },
+          "400": {
+            "description": "Password expiration policy is not enabled in the sign-in experience settings."
+          }
+        },
+        "summary": "Expire user password",
+        "description": "Mark the user's password as expired for the next sign-in attempt."
+      }
+    },
     "/api/users/{userId}/password/verify": {
       "post": {
         "requestBody": {

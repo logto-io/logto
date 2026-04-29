@@ -61,7 +61,7 @@ export class ExperienceClient extends MockClient {
         headers: this.headers,
         json: payload,
       })
-      .json<{ verificationId: string }>();
+      .json<{ verificationId: string; reminder?: { daysUntilExpiration: number } }>();
   }
 
   public async sendVerificationCode(payload: {

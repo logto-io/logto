@@ -47,6 +47,7 @@ const createRequesterWithMocks = ({
   user = mockUser,
   mfa = mockSignInExperience.mfa,
   singleSignOnEnabled = mockSignInExperience.singleSignOnEnabled,
+  passwordExpiration = { enabled: false },
   interactionResult = {},
   persistInteractionResult = false,
 }: {
@@ -55,6 +56,7 @@ const createRequesterWithMocks = ({
   user?: typeof mockUser;
   mfa?: Mfa;
   singleSignOnEnabled?: boolean;
+  passwordExpiration?: { enabled: boolean; validPeriodDays?: number; reminderPeriodDays?: number };
   interactionResult?: Record<string, unknown>;
   persistInteractionResult?: boolean;
 } = {}) => {
@@ -112,6 +114,7 @@ const createRequesterWithMocks = ({
       adaptiveMfa: { enabled: adaptiveMfaEnabled },
       mfa,
       singleSignOnEnabled,
+      passwordExpiration,
     }),
   };
 
@@ -187,6 +190,7 @@ describe('POST /experience/submit', () => {
 
   afterEach(() => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+    jest.useRealTimers();
   });
 
   it('should record geo context when dev features are disabled', async () => {

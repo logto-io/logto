@@ -51,6 +51,10 @@ const session = {
     conflict_rp_id: 'Relying Party ID does not match. Please use the correct client to sign in.',
     sso_users_not_allowed: 'Passkey sign-in option is not eligible for SSO users.',
   },
+  password_expiration: {
+    reset_not_allowed:
+      'Password reset is only allowed after the password has expired in the current sign-in session.',
+  },
   sso_enabled: 'Single sign on is enabled for this given email. Please sign in with SSO.',
   captcha_required: 'Captcha is required.',
   captcha_failed: 'Captcha verification failed.',

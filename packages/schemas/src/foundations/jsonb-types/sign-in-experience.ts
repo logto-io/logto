@@ -344,3 +344,43 @@ export const passkeySignInGuard = z
     allowAutofill: z.boolean(),
   })
   .partial() satisfies ToZodObject<PasskeySignIn>;
+
+/**
+ * Password lifecycle policy for configuring password expiration and rotation.
+ *
+ * @remarks
+ * This policy is evaluated server-side during sign-in (after local password verification) to determine
+ * whether the user's password has expired or is nearing expiration.
+ *
+ * - If the password age >= `validPeriodDays`, the sign-in is blocked and the user
+ *   must reset their password before continuing.
+ * - If the password age is within `reminderPeriodDays` of expiration, the user is
+ *   shown a skip-able prompt to reset their password.
+ *
+ * @remarks
+ * For users without a `passwordUpdatedAt` value (legacy accounts), the
+ * `createdAt` timestamp is used as a fallback to determine password age.
+ */
+export type PasswordExpirationPolicy = {
+  /**
+   * Whether the password expiration policy is enabled.
+   * @default false
+   */
+  enabled?: boolean;
+  /**
+   * Number of days a password is valid before it expires and the user is
+   * forced to reset it on sign-in.
+   */
+  validPeriodDays?: number;
+  /**
+   * Number of days before expiration at which the user will be reminded to
+   * reset their password. The reminder is skip-able.
+   */
+  reminderPeriodDays?: number;
+};
+
+export const passwordExpirationPolicyGuard = z.object({
+  enabled: z.boolean().default(false),
+  validPeriodDays: z.number().int().min(1).optional(),
+  reminderPeriodDays: z.number().int().min(0).optional(),
+}) satisfies ToZodObject<PasswordExpirationPolicy>;

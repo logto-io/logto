@@ -89,6 +89,23 @@ const security = {
     custom_words_description:
       'Personnalisez les mots spécifiques au contexte, sans distinction de casse, un par ligne.',
     custom_words_placeholder: 'Nom de votre service, nom de votre entreprise, etc.',
+    password_expiration: 'Expiration du mot de passe',
+    password_expiration_description:
+      "Exiger des utilisateurs qu'ils réinitialisent leur mot de passe après un nombre de jours défini. Les utilisateurs se connectant via SSO ou passkey ne sont pas affectés.",
+    enable_password_expiration: "Activer l'expiration du mot de passe",
+    enable_password_expiration_description:
+      "Exiger des utilisateurs qu'ils réinitialisent périodiquement leur mot de passe. Les utilisateurs existants sans date de changement de mot de passe enregistrée seront évalués par rapport à leur date de création de compte.",
+    enable_password_expiration_tip:
+      'Vous ne pouvez activer l’expiration du mot de passe qu’après avoir configuré au moins une méthode de mot de passe oublié avec un connecteur valide dans l’expérience de connexion.',
+    expiration_period: 'Période de validité du mot de passe (jours)',
+    expiration_period_description:
+      "Nombre de jours pendant lesquels un mot de passe reste valide avant d'expirer.",
+    expiration_period_error: "La période de validité du mot de passe doit être d'au moins 1 jour.",
+    expiration_reminder: "Rappel d'expiration (jours avant l'expiration)",
+    expiration_reminder_description:
+      "Nombre de jours avant l'expiration pour avertir les utilisateurs et les inviter à réinitialiser leur mot de passe. Les utilisateurs peuvent ignorer le rappel et poursuivre la connexion.",
+    expiration_reminder_error:
+      "La période de rappel d'expiration doit être comprise entre 0 et la période de validité ({{max}} jours).",
   },
   sentinel_policy: {
     card_title: 'Verrouillage des identifiants',

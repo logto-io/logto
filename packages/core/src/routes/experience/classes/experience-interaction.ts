@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+
 import { appInsights } from '@logto/app-insights/node';
 import {
   InteractionEvent,
@@ -147,7 +148,6 @@ export default class ExperienceInteraction {
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
-
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
       this.verificationRecords.setValue(instance);
@@ -496,6 +496,8 @@ export default class ExperienceInteraction {
       const updatedUser = await userQueries.updateUserById(user.id, {
         passwordEncrypted,
         passwordEncryptionMethod,
+        passwordUpdatedAt: Date.now(),
+        isPasswordExpired: false,
       });
 
       await this.cleanUp();
@@ -569,6 +571,12 @@ export default class ExperienceInteraction {
         ),
       },
       lastSignInAt: Date.now(),
+      ...conditional(
+        rest.passwordEncrypted && {
+          passwordUpdatedAt: Date.now(),
+          isPasswordExpired: false,
+        }
+      ),
     });
 
     // Sync SSO identity

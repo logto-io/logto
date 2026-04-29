@@ -30,6 +30,11 @@ const sign_in_experiences = {
   invalid_custom_email_blocklist_format:
     '無效的自訂電子郵件封鎖清單項目：{{items, list(type:conjunction)}}。每個項目必須是有效的電子郵件地址或電子郵件域，例如：foo@example.com 或 @example.com。',
   forgot_password_method_requires_connector: '忘記密碼方法需要配置對應的 {{method}} 連接器。',
+  password_expiration_requires_forgot_password:
+    '密碼過期需要至少配置一種帶有有效連接器的忘記密碼方式。',
+  password_expiration_not_enabled: '密碼過期策略未啟用。在過期密碼前，請在登錄體驗設置中啟用它。',
+  password_expiration_invalid_period_days:
+    '啟用密碼到期策略時，reminderPeriodDays 必須小於 validPeriodDays。',
 };
 
 export default Object.freeze(sign_in_experiences);

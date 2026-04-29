@@ -110,6 +110,12 @@ const description = {
   identifier_register_description:
     'Geben Sie Ihre {{types, list(type: disjunction;)}} ein, um ein neues Konto zu erstellen.',
   all_account_creation_options: 'Alle Kontoerstellungsoptionen',
+  password_expired:
+    'Ihr Passwort ist abgelaufen und muss zurückgesetzt werden, bevor Sie sich anmelden können.',
+  password_expiration_reminder:
+    'Ihr Passwort läuft in {{days}} Tag(en) ab. Wir empfehlen, es jetzt zurückzusetzen.',
+  password_expiration_reminder_skip: 'Vorerst überspringen',
+  password_expiration_reset: 'Passwort zurücksetzen',
   back_to_sign_in: 'Zurück zur Anmeldung',
   support_email: 'Support-E-Mail: <link></link>',
   support_website: 'Support-Website: <link></link>',

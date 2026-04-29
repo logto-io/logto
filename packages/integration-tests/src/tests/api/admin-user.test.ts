@@ -1,5 +1,10 @@
 /* eslint-disable max-lines -- will fix in the next PR */
-import { UsersPasswordEncryptionMethod, ConnectorType, SignInIdentifier } from '@logto/schemas';
+import {
+  UsersPasswordEncryptionMethod,
+  ConnectorType,
+  ForgotPasswordMethod,
+  SignInIdentifier,
+} from '@logto/schemas';
 import { HTTPError } from 'ky';
 
 import {
@@ -11,6 +16,7 @@ import {
   getUser,
   updateUser,
   deleteUser,
+  expireUserPassword,
   updateUserPassword,
   deleteUserIdentity,
   postConnector,
@@ -20,11 +26,16 @@ import {
   verifyUserPassword,
   putUserIdentity,
   updateUserProfile,
+  updateSignInExperience,
 } from '#src/api/index.js';
-import { clearConnectorsByTypes } from '#src/helpers/connector.js';
+import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { signInWithPassword, signInWithSocial } from '#src/helpers/experience/index.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
-import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import {
+  disablePasswordExpiration,
+  enableAllPasswordSignInMethods,
+  enablePasswordExpiration,
+} from '#src/helpers/sign-in-experience.js';
 import {
   generateUsername,
   generateEmail,
@@ -270,6 +281,62 @@ describe('admin console user management', () => {
       hasPassword: true,
     });
     expect(userEntity.updatedAt).toBeGreaterThan(updatedAt);
+  });
+
+  describe('PATCH /users/:userId/password/expire', () => {
+    afterAll(async () => {
+      await disablePasswordExpiration();
+    });
+
+    it('should expire password when password expiration policy is enabled', async () => {
+      const username = generateUsername();
+      const password = generatePassword();
+
+      const user = await createUserByAdmin({ username, password });
+
+      await clearConnectorsByTypes([ConnectorType.Email]);
+      await setEmailConnector();
+      await updateSignInExperience({
+        forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
+      });
+
+      await enablePasswordExpiration({});
+
+      const expiredUser = await expireUserPassword(user.id);
+
+      expect(expiredUser.id).toBe(user.id);
+      expect(expiredUser.hasPassword).toBe(true);
+      expect(expiredUser.updatedAt).toBeGreaterThanOrEqual(user.updatedAt);
+
+      await expectRejects(
+        signInWithPassword({
+          identifier: {
+            type: SignInIdentifier.Username,
+            value: username,
+          },
+          password,
+        }),
+        {
+          code: 'password.expired',
+          status: 422,
+        }
+      );
+
+      await deleteUser(user.id);
+    });
+
+    it('should return 400 when password expiration policy is disabled', async () => {
+      const user = await createUserByAdmin({ password: generatePassword() });
+
+      await disablePasswordExpiration();
+
+      await expectRejects(expireUserPassword(user.id), {
+        code: 'sign_in_experiences.password_expiration_not_enabled',
+        status: 400,
+      });
+
+      await deleteUser(user.id);
+    });
   });
 
   it('should link social identity successfully', async () => {

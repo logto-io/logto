@@ -105,6 +105,11 @@ const description = {
   identifier_register_description:
     'Digite seu {{types, list(type: disjunction;)}} para criar uma nova conta.',
   all_account_creation_options: 'Todas as opções de criação de conta',
+  password_expired: 'Sua senha expirou e deve ser redefinida antes que você possa fazer login.',
+  password_expiration_reminder:
+    'Sua senha expirará em {{days}} dia(s). Recomendamos redefini-la agora.',
+  password_expiration_reminder_skip: 'Pular por enquanto',
+  password_expiration_reset: 'Redefinir senha',
   back_to_sign_in: 'Voltar para o login',
   support_email: 'E-mail de suporte: <link></link>',
   support_website: 'Site de suporte: <link></link>',

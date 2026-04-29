@@ -5,6 +5,7 @@ import {
   type PasswordVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { differenceInDays } from 'date-fns';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -19,6 +20,23 @@ export {
   type PasswordVerificationRecordData,
   passwordVerificationRecordDataGuard,
 } from '@logto/schemas';
+
+type PasswordExpirationReminder = {
+  daysUntilExpiration: number;
+};
+
+type PasswordExpirationSuccess = {
+  kind: 'success';
+  user: User;
+};
+
+type PasswordExpirationReminderResult = {
+  kind: 'reminder';
+  user: User;
+  reminder: PasswordExpirationReminder;
+};
+
+type PasswordExpirationResult = PasswordExpirationSuccess | PasswordExpirationReminderResult;
 
 export class PasswordVerification
   implements IdentifierVerificationRecord<VerificationType.Password>
@@ -62,23 +80,25 @@ export class PasswordVerification
   }
 
   /**
-   * Verifies if the password matches the record in database with the current identifier.
-   * `userId` will be set if the password can be verified.
+   * Verifies the password against the current identifier and returns the authenticated user.
    *
-   * @throws RequestError with 400 status if sentinel policy blocks the action (failed too many times).
    * @throws RequestError with 401 status if user id suspended.
    * @throws RequestError with 422 status if the user is not found or the password is incorrect.
    */
-  async verify(password: string) {
+  async verify(password: string): Promise<User> {
     const user = await findUserByIdentifier(this.queries.users, this.identifier);
 
     // Throws an 422 error if the user is not found or the password is incorrect
-    const { isSuspended } = await this.libraries.users.verifyUserPassword(user, password);
-    assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+    const verifiedUser = await this.libraries.users.verifyUserPassword(user, password);
+
+    assertThat(
+      !verifiedUser.isSuspended,
+      new RequestError({ code: 'user.suspended', status: 401 })
+    );
 
     this.verified = true;
 
-    return user;
+    return verifiedUser;
   }
 
   async identifyUser(): Promise<User> {
@@ -115,5 +135,63 @@ export class PasswordVerification
 
   toSanitizedJson(): PasswordVerificationRecordData {
     return this.toJson();
+  }
+
+  /**
+   * Checks the password expiration policy after the password has already been verified.
+   *
+   * The route keeps this outside the sentinel guard so expired passwords do not count as failed
+   * credential attempts.
+   *
+   * @throws RequestError with 422 status if the password is already expired.
+   * @throws RequestError with 500 status if the expiration policy is misconfigured.
+   */
+  async verifyPasswordExpiration(user: User): Promise<PasswordExpirationResult> {
+    const { passwordExpiration } =
+      await this.queries.signInExperiences.findDefaultSignInExperience();
+
+    if (!passwordExpiration.enabled) {
+      return {
+        kind: 'success',
+        user,
+      };
+    }
+
+    assertThat(
+      passwordExpiration.validPeriodDays,
+      new RequestError({
+        code: 'sign_in_experiences.password_expiration_invalid_period_days',
+        status: 500,
+      })
+    );
+
+    const referenceDate = new Date(user.passwordUpdatedAt ?? user.createdAt);
+    const passwordAgeInDays = differenceInDays(new Date(), referenceDate);
+
+    const isPasswordExpired =
+      user.isPasswordExpired || passwordAgeInDays >= passwordExpiration.validPeriodDays;
+
+    assertThat(!isPasswordExpired, new RequestError({ code: 'password.expired', status: 422 }));
+
+    const reminderPeriodDays = passwordExpiration.reminderPeriodDays ?? 0;
+    const reminderDaysUntilExpiration = passwordExpiration.validPeriodDays - passwordAgeInDays;
+
+    const isInReminderWindow =
+      reminderPeriodDays > 0 && reminderDaysUntilExpiration <= reminderPeriodDays;
+
+    if (!isInReminderWindow) {
+      return {
+        kind: 'success',
+        user,
+      };
+    }
+
+    return {
+      kind: 'reminder',
+      user,
+      reminder: {
+        daysUntilExpiration: reminderDaysUntilExpiration,
+      },
+    };
   }
 }

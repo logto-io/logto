@@ -55,6 +55,10 @@ const session = {
     sso_users_not_allowed:
       'Opcja logowania za pomocą passkey nie jest dostępna dla użytkowników SSO.',
   },
+  password_expiration: {
+    reset_not_allowed:
+      'Reset hasła jest dozwolony dopiero po wygaśnięciu hasła w bieżącej sesji logowania.',
+  },
   sso_enabled: 'Single sign on jest włączony dla tego adresu e-mail. Zaloguj się za pomocą SSO.',
   captcha_required: 'Wymagana jest captcha.',
   captcha_failed: 'Weryfikacja captchy nie powiodła się.',

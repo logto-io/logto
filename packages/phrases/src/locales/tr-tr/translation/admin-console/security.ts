@@ -86,6 +86,22 @@ const security = {
     custom_words_description:
       'Bağlamla ilgili kelimeleri kişiselleştirin, küçük/büyük harf duyarsız ve satır başına bir kelime olacak şekilde.',
     custom_words_placeholder: 'Servis adınız, şirket adınız, vb.',
+    password_expiration: 'Parola sona erme',
+    password_expiration_description:
+      'Kullanıcıların belirli bir gün sayısından sonra parolalarını sıfırlamasını gerektirir. SSO veya geçiş anahtarı (passkey) ile oturum açan kullanıcılar etkilenmez.',
+    enable_password_expiration: 'Parola sona ermeyi etkinleştir',
+    enable_password_expiration_description:
+      'Kullanıcıların parolalarını periyodik olarak sıfırlamasını gerektirir. Kayıtlı bir parola değiştirme tarihi olmayan mevcut kullanıcılar, hesap oluşturma tarihlerine göre değerlendirilecektir.',
+    enable_password_expiration_tip:
+      'Parola sona ermesini yalnızca oturum açma deneyiminde geçerli bir bağlayıcıya sahip en az bir şifremi unuttum yöntemi yapılandırdıktan sonra etkinleştirebilirsiniz.',
+    expiration_period: 'Parola geçerlilik süresi (gün)',
+    expiration_period_description: 'Bir parolanın süresi dolmadan önce geçerli kaldığı gün sayısı.',
+    expiration_period_error: 'Parola geçerlilik süresi en az 1 gün olmalıdır.',
+    expiration_reminder: 'Sona erme hatırlatıcısı (sona ermeden önceki gün sayısı)',
+    expiration_reminder_description:
+      'Kullanıcıları uyarmak ve parola sıfırlamaya yönlendirmek için sona ermeden önceki gün sayısı. Kullanıcılar hatırlatıcıyı atlayabilir ve oturum açmaya devam edebilir.',
+    expiration_reminder_error:
+      'Sona erme hatırlatıcı süresi 0 ile geçerlilik süresi ({{max}} gün) arasında olmalıdır.',
   },
   sentinel_policy: {
     card_title: 'Kimlik kilitleme',

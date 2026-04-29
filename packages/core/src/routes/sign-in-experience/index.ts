@@ -1,18 +1,21 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable max-lines */
 import { DemoConnector } from '@logto/connector-kit';
 import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
   ConnectorType,
   SignInExperiences,
-  ForgotPasswordMethod,
   MfaPolicy,
   ProductEvent,
   type SignInExperience,
+  ForgotPasswordMethod,
 } from '@logto/schemas';
 import { conditional, type Optional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import {
+  getForgotPasswordAvailability,
   validateSignUp,
   validateSignIn,
   parseEmailBlocklistPolicy,
@@ -36,6 +39,27 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
   [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
     policy
   );
+
+/**
+ * Password expiration policy guard
+ * - When enabled is false, only the enabled flag is accepted by the schema
+ * - When enabled is true, validPeriodDays and reminderPeriodDays are required
+ */
+const passwordExpirationPolicyGuard = z.discriminatedUnion('enabled', [
+  z.object({
+    enabled: z.literal(false),
+  }),
+  z.object({
+    enabled: z.literal(true),
+    validPeriodDays: z.number().int().min(1),
+    reminderPeriodDays: z.number().int().min(0),
+  }),
+]);
+
+type PasswordExpirationPolicy = z.infer<typeof passwordExpirationPolicyGuard>;
+
+const isValidPasswordExpirationPolicy = (policy: PasswordExpirationPolicy) =>
+  !policy.enabled || policy.reminderPeriodDays < policy.validPeriodDays;
 
 const signInExperienceResponseGuard = SignInExperiences.guard;
 const signInExperienceCreateGuard = SignInExperiences.createGuard;
@@ -82,6 +106,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           supportEmail: true,
           supportWebsiteUrl: true,
           unknownSessionRedirectUrl: true,
+          passwordExpiration: true,
         })
         .merge(
           object({
@@ -90,6 +115,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             supportEmail: string().email().optional().nullable().or(literal('')),
             supportWebsiteUrl: string().url().optional().nullable().or(literal('')),
             unknownSessionRedirectUrl: string().url().optional().nullable().or(literal('')),
+            passwordExpiration: passwordExpirationPolicyGuard,
           })
         )
         .partial(),
@@ -113,6 +139,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         forgotPasswordMethods,
         hideLogtoBranding,
         passkeySignIn,
+        passwordExpiration,
       } = rest;
 
       if (languageInfo) {
@@ -200,23 +227,61 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined ? { enabled: false } : adaptiveMfa;
 
       if (forgotPasswordMethods) {
-        const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);
-        const hasSmsConnector = connectors.some(({ type }) => type === ConnectorType.Sms);
+        const forgotPasswordAvailability = getForgotPasswordAvailability(
+          connectors,
+          forgotPasswordMethods
+        );
 
         for (const method of forgotPasswordMethods) {
-          if (method === ForgotPasswordMethod.EmailVerificationCode && !hasEmailConnector) {
+          if (
+            method === ForgotPasswordMethod.EmailVerificationCode &&
+            !forgotPasswordAvailability.email
+          ) {
             throw new RequestError({
               code: 'sign_in_experiences.forgot_password_method_requires_connector',
               method: 'email',
             });
           }
-          if (method === ForgotPasswordMethod.PhoneVerificationCode && !hasSmsConnector) {
+
+          if (
+            method === ForgotPasswordMethod.PhoneVerificationCode &&
+            !forgotPasswordAvailability.phone
+          ) {
             throw new RequestError({
               code: 'sign_in_experiences.forgot_password_method_requires_connector',
               method: 'sms',
             });
           }
         }
+      }
+
+      // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/consistent-type-assertions
+      const currentPasswordExpiration = {
+        ...currentSettings.passwordExpiration,
+        ...passwordExpiration,
+      } as PasswordExpirationPolicy;
+
+      if (currentPasswordExpiration.enabled) {
+        const forgotPasswordAvailability = getForgotPasswordAvailability(
+          connectors,
+          forgotPasswordMethods ?? currentSettings.forgotPasswordMethods
+        );
+
+        assertThat(
+          forgotPasswordAvailability.email || forgotPasswordAvailability.phone,
+          new RequestError({
+            code: 'sign_in_experiences.password_expiration_requires_forgot_password',
+            status: 422,
+          })
+        );
+
+        assertThat(
+          isValidPasswordExpirationPolicy(currentPasswordExpiration),
+          new RequestError({
+            code: 'sign_in_experiences.password_expiration_invalid_period_days',
+            status: 422,
+          })
+        );
       }
 
       /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */

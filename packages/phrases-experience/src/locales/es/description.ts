@@ -111,6 +111,12 @@ const description = {
   identifier_register_description:
     'Ingrese su {{types, list(type: disjunction;)}} para crear una nueva cuenta.',
   all_account_creation_options: 'Todas las opciones de creación de cuenta',
+  password_expired:
+    'Tu contraseña ha caducado y debe ser restablecida antes de que puedas iniciar sesión.',
+  password_expiration_reminder:
+    'Tu contraseña caducará en {{days}} día(s). Recomendamos restablecerla ahora.',
+  password_expiration_reminder_skip: 'Omitir por ahora',
+  password_expiration_reset: 'Restablecer contraseña',
   back_to_sign_in: 'Volver a iniciar sesión',
   support_email: 'Correo electrónico de soporte: <link></link>',
   support_website: 'Sitio web de soporte: <link></link>',

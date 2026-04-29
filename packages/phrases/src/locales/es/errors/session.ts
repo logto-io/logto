@@ -58,6 +58,10 @@ const session = {
     sso_users_not_allowed:
       'La opción de inicio de sesión con passkey no está disponible para usuarios SSO.',
   },
+  password_expiration: {
+    reset_not_allowed:
+      'El restablecimiento de contraseña solo se permite después de que la contraseña haya expirado en la sesión de inicio de sesión actual.',
+  },
   sso_enabled:
     'El inicio de sesión único está habilitado para este correo electrónico dado. Inicie sesión con SSO, por favor.',
   captcha_required: 'Se requiere captcha.',

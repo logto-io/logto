@@ -5,6 +5,7 @@ const password = {
   invalid_legacy_password_format: 'Неверный формат устаревшего пароля.',
   unsupported_legacy_hash_algorithm:
     'Неподдерживаемый устаревший алгоритм хеширования: {{algorithm}}.',
+  expired: 'Срок действия вашего пароля истек. Пожалуйста, сбросьте пароль, чтобы продолжить.',
 };
 
 export default Object.freeze(password);
