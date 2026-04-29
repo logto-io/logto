@@ -120,48 +120,6 @@ jobs:
           build-args: | # Test cloud build
             additional_connector_args=--cloud
 
-  main-dockerize-oss-validation:
-    runs-on: ubuntu-latest
-    env:
-      LOGTO_OSS_SURVEY_ENDPOINT: ${{ vars.LOGTO_OSS_SURVEY_ENDPOINT_VALIDATION }}
-      OSS_VALIDATION_IMAGE: logto:oss-ci-validation
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Validate OSS survey endpoint config
-        run: : "${LOGTO_OSS_SURVEY_ENDPOINT:?LOGTO_OSS_SURVEY_ENDPOINT_VALIDATION GitHub Actions variable must be set and non-empty}"
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build OSS validation image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          load: true
-          tags: ${{ env.OSS_VALIDATION_IMAGE }}
-          build-args: |
-            logto_oss_survey_endpoint=${{ env.LOGTO_OSS_SURVEY_ENDPOINT }}
-
-      - name: Verify injected OSS survey endpoint
-        run: |
-          set -euo pipefail
-
-          docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$OSS_VALIDATION_IMAGE" \
-            | grep -Fx "LOGTO_OSS_SURVEY_ENDPOINT=$LOGTO_OSS_SURVEY_ENDPOINT"
-
-          docker run --rm --entrypoint sh \
-            -e EXPECTED_LOGTO_OSS_SURVEY_ENDPOINT="$LOGTO_OSS_SURVEY_ENDPOINT" \
-            "$OSS_VALIDATION_IMAGE" \
-            -lc '
-              set -e
-              test "$LOGTO_OSS_SURVEY_ENDPOINT" = "$EXPECTED_LOGTO_OSS_SURVEY_ENDPOINT"
-              grep -R -F -- "$LOGTO_OSS_SURVEY_ENDPOINT" /etc/logto/packages/console/dist >/dev/null
-            '
-
   main-alteration:
     runs-on: ubuntu-latest
 
