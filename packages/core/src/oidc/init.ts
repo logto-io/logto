@@ -27,6 +27,7 @@ import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAppSecretTranspilation from '#src/middleware/koa-app-secret-transpilation.js';
 import koaAuditLog, { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
+import koaJwksCacheControl from '#src/middleware/koa-jwks-cache-control.js';
 import koaResourceParam from '#src/middleware/koa-resource-param.js';
 import postgresAdapter from '#src/oidc/adapter.js';
 import {
@@ -466,6 +467,7 @@ export default function initOidc(
   });
 
   oidc.use(koaAppSecretTranspilation(queries));
+  oidc.use(koaJwksCacheControl());
   oidc.use(koaBodyEtag());
 
   if (EnvSet.values.isCloud) {
