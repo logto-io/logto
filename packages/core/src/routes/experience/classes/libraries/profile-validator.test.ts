@@ -7,6 +7,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
 import { ProfileValidator } from './profile-validator.js';
+import type { SignInExperienceValidator } from './sign-in-experience-validator.js';
 
 const { jest } = import.meta;
 
@@ -230,6 +231,29 @@ describe('ProfileValidator', () => {
     it('should return false when no custom profile fields are defined', async () => {
       mockFindAllCustomProfileFields.mockResolvedValue([]);
       expect(await profileValidator.hasMissingExtraProfileFields({})).toBe(false);
+    });
+
+    it('should reuse the injected sign-in experience validator cache when provided', async () => {
+      const getSignInExperienceData = jest.fn().mockResolvedValue({
+        ...mockSignInExperience,
+        signUpProfileFields: [{ name: 'company' }],
+      });
+      const cachedProfileValidator = new ProfileValidator(queries, {
+        getSignInExperienceData,
+      } as unknown as SignInExperienceValidator);
+
+      mockFindDefaultSignInExperience.mockClear();
+      mockFindAllCustomProfileFields.mockResolvedValue([
+        { type: 'Text', name: 'company', required: true },
+      ]);
+
+      expect(
+        await cachedProfileValidator.hasMissingExtraProfileFields({
+          customData: { company: 'Logto' },
+        })
+      ).toBe(false);
+      expect(getSignInExperienceData).toHaveBeenCalledTimes(1);
+      expect(mockFindDefaultSignInExperience).not.toHaveBeenCalled();
     });
 
     describe('with signUpProfileFields subset', () => {

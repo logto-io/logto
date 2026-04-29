@@ -33,6 +33,7 @@ create table sign_in_experiences (
   email_blocklist_policy jsonb /* @use EmailBlocklistPolicy */ not null default '{}'::jsonb,
   forgot_password_methods jsonb /* @use ForgotPasswordMethods */ default '[]'::jsonb,
   passkey_sign_in jsonb /* @use PasskeySignIn */ not null default '{}'::jsonb,
+  /** Nullable by design: null keeps legacy full-catalog behavior and [] collects no custom profile fields. */
   sign_up_profile_fields jsonb /* @use SignUpProfileFields */,
   primary key (tenant_id, id)
 );

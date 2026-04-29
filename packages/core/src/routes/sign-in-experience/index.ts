@@ -280,9 +280,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             emailBlocklistPolicy: parseEmailBlocklistPolicy(emailBlocklistPolicy),
           }
         ),
-        ...(normalizedSignUpProfileFields !== undefined && {
-          signUpProfileFields: normalizedSignUpProfileFields,
-        }),
+        ...conditional(
+          normalizedSignUpProfileFields !== undefined && {
+            signUpProfileFields: normalizedSignUpProfileFields,
+          }
+        ),
       };
 
       ctx.body = await updateDefaultSignInExperience(payload);

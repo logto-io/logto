@@ -82,10 +82,9 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     }
 
     const catalog = await queries.customProfileFields.findAllCustomProfileFields();
+    const names = signUpProfileFields.map(({ name }) => name);
     const validNames = new Set(catalog.map(({ name }) => name));
-    const missing = signUpProfileFields
-      .map(({ name }) => name)
-      .filter((name) => !validNames.has(name));
+    const missing = [...new Set(names.filter((name) => !validNames.has(name)))];
     assertThat(
       missing.length === 0,
       new RequestError({
@@ -93,8 +92,21 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
         names: missing.join(', '),
       })
     );
-    const uniqueNames = new Set(signUpProfileFields.map(({ name }) => name));
-    assertThat(uniqueNames.size === signUpProfileFields.length, 'request.invalid_input', 400);
+
+    const duplicateNames = [
+      ...new Set(names.filter((name, index) => names.indexOf(name) !== index)),
+    ];
+    assertThat(
+      duplicateNames.length === 0,
+      new RequestError(
+        {
+          code: 'request.invalid_input',
+          details: `Duplicate sign-up profile field names: ${duplicateNames.join(', ')}`,
+        },
+        { duplicateNames }
+      )
+    );
+
     return signUpProfileFields;
   };
 

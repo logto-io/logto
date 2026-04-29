@@ -19,8 +19,13 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { InteractionProfile } from '../../types.js';
 
+import type { SignInExperienceValidator } from './sign-in-experience-validator.js';
+
 export class ProfileValidator {
-  constructor(private readonly queries: Queries) {}
+  constructor(
+    private readonly queries: Queries,
+    private readonly signInExperienceValidator?: SignInExperienceValidator
+  ) {}
 
   public async guardProfileUniquenessAcrossUsers(profile: InteractionProfile = {}) {
     const { hasUser, hasUserWithEmail, hasUserWithNormalizedPhone, hasUserWithIdentity } =
@@ -210,7 +215,8 @@ export class ProfileValidator {
   public async hasMissingExtraProfileFields(profile: InteractionProfile, user?: User) {
     const [allCustomProfileFields, signInExperience] = await Promise.all([
       this.queries.customProfileFields.findAllCustomProfileFields(),
-      this.queries.signInExperiences.findDefaultSignInExperience(),
+      this.signInExperienceValidator?.getSignInExperienceData() ??
+        this.queries.signInExperiences.findDefaultSignInExperience(),
     ]);
 
     // Resolve which fields are relevant for sign-up. Under the dev feature, the sign-in experience
