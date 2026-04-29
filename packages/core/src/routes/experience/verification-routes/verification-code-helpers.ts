@@ -131,23 +131,17 @@ export const sendCode = async ({
     interactionEvent === InteractionEvent.ForgotPassword &&
     !(await hasUserWithIdentifier(queries, identifier));
 
-  // Build template context
-  const templateContext = await buildVerificationCodeTemplateContext(
-    libraries.passcodes,
-    ctx,
-    identifier
-  );
+  const payload = skipDelivery
+    ? undefined
+    : {
+        ...ctx.emailI18n,
+        ...(await buildVerificationCodeTemplateContext(libraries.passcodes, ctx, identifier)),
+        /** The client IP address for rate limiting and fraud detection. */
+        ...(ctx.request.ip && { ip: ctx.request.ip }),
+      };
 
   // Send verification code
-  await codeVerification.sendVerificationCode(
-    {
-      ...ctx.emailI18n,
-      ...templateContext,
-      /** The client IP address for rate limiting and fraud detection. */
-      ...(ctx.request.ip && { ip: ctx.request.ip }),
-    },
-    { skipDelivery }
-  );
+  await codeVerification.sendVerificationCode(payload, { skipDelivery });
 
   // Save state
   experienceInteraction.setVerificationRecord(codeVerification);

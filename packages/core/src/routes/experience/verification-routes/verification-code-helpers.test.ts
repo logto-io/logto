@@ -121,8 +121,9 @@ describe('sendCode parameter passing', () => {
     expect(mockQueriesNoUser.users.hasUserWithEmail).toHaveBeenCalledWith(
       'nonexistent@example.com'
     );
+    expect(mockBuildVerificationCodeContext).not.toHaveBeenCalled();
     expect(mockSendVerificationCode).toHaveBeenCalledWith(
-      expect.any(Object),
+      undefined,
       expect.objectContaining({ skipDelivery: true })
     );
   });
