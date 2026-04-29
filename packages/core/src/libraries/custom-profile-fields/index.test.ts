@@ -1,3 +1,5 @@
+import type { SignInExperience } from '@logto/schemas';
+
 import { EnvSet } from '#src/env-set/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -27,6 +29,38 @@ describe('createCustomProfileFieldsLibrary', () => {
 
   afterAll(() => {
     setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+  });
+
+  it('should drop signUpProfileFields when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+
+    await expect(normalizeSignUpProfileFields([{ name: 'company' }])).resolves.toBeUndefined();
+    expect(findAllCustomProfileFields).not.toHaveBeenCalled();
+  });
+
+  it('should return null signUpProfileFields without reading the catalog', async () => {
+    await expect(normalizeSignUpProfileFields(null)).resolves.toBeNull();
+    expect(findAllCustomProfileFields).not.toHaveBeenCalled();
+  });
+
+  it('should return undefined signUpProfileFields without reading the catalog', async () => {
+    const signUpProfileFieldsContainer: {
+      signUpProfileFields?: SignInExperience['signUpProfileFields'];
+    } = {};
+    const { signUpProfileFields } = signUpProfileFieldsContainer;
+
+    await expect(normalizeSignUpProfileFields(signUpProfileFields)).resolves.toBeUndefined();
+    expect(findAllCustomProfileFields).not.toHaveBeenCalled();
+  });
+
+  it('should return signUpProfileFields when all names exist in the catalog', async () => {
+    findAllCustomProfileFields.mockResolvedValue([{ name: 'company' }, { name: 'inviteCode' }]);
+
+    const signUpProfileFields = [{ name: 'inviteCode' }, { name: 'company' }];
+
+    await expect(normalizeSignUpProfileFields(signUpProfileFields)).resolves.toBe(
+      signUpProfileFields
+    );
   });
 
   it('should deduplicate missing names in the validation error', async () => {

@@ -98,12 +98,6 @@ const createDevFeaturesDisabledRequester = async () => {
     })
   );
 
-  const findAllCustomProfileFields = jest.fn().mockResolvedValue([]);
-  const normalizeSignUpProfileFields = jest.fn(
-    async (signUpProfileFields: SignInExperience['signUpProfileFields'] | undefined) =>
-      signUpProfileFields === undefined ? signUpProfileFields : undefined
-  );
-
   const tenant = new MockTenant(
     undefined,
     {
@@ -112,58 +106,6 @@ const createDevFeaturesDisabledRequester = async () => {
         findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
       },
       customPhrases: { findAllCustomLanguageTags: async () => [] },
-      customProfileFields: { findAllCustomProfileFields },
-    },
-    { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
-    {
-      signInExperiences: { validateLanguageInfo: jest.fn() },
-      customProfileFields: { normalizeSignUpProfileFields },
-    }
-  );
-
-  const routes = await pickDefault(import('./index.js'));
-  const requester = createRequester({
-    authedRoutes: routes,
-    tenantContext: tenant,
-  });
-
-  return { requester, updateDefaultSignInExperience, findAllCustomProfileFields };
-};
-
-const createDevFeaturesEnabledRequester = async (
-  customProfileFieldsCatalog: Array<{ name: string }> = []
-) => {
-  jest.resetModules();
-
-  await mockEsmWithActual('#src/env-set/index.js', () => ({
-    EnvSet: {
-      values: {
-        isDevFeaturesEnabled: true,
-        isCloud: false,
-        isProduction: false,
-        isUnitTest: true,
-      },
-    },
-  }));
-
-  const updateDefaultSignInExperience = jest.fn(
-    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
-      ...mockSignInExperience,
-      ...data,
-    })
-  );
-
-  const findAllCustomProfileFields = jest.fn().mockResolvedValue(customProfileFieldsCatalog);
-
-  const tenant = new MockTenant(
-    undefined,
-    {
-      signInExperiences: {
-        updateDefaultSignInExperience,
-        findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
-      },
-      customPhrases: { findAllCustomLanguageTags: async () => [] },
-      customProfileFields: { findAllCustomProfileFields },
     },
     { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
     { signInExperiences: { validateLanguageInfo: jest.fn() } }
@@ -175,7 +117,44 @@ const createDevFeaturesEnabledRequester = async (
     tenantContext: tenant,
   });
 
-  return { requester, updateDefaultSignInExperience, findAllCustomProfileFields };
+  return { requester, updateDefaultSignInExperience };
+};
+
+const createSignUpProfileFieldsRequester = (
+  normalizeSignUpProfileFields = jest.fn(
+    async (signUpProfileFields: SignInExperience['signUpProfileFields'] | undefined) =>
+      signUpProfileFields
+  )
+) => {
+  const updateDefaultSignInExperience = jest.fn(
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+      ...mockSignInExperience,
+      ...data,
+    })
+  );
+
+  const tenant = new MockTenant(
+    undefined,
+    {
+      signInExperiences: {
+        updateDefaultSignInExperience,
+        findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+      },
+      customPhrases: { findAllCustomLanguageTags: async () => [] },
+    },
+    { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
+    {
+      signInExperiences: { validateLanguageInfo: jest.fn() },
+      customProfileFields: { normalizeSignUpProfileFields },
+    }
+  );
+
+  const requester = createRequester({
+    authedRoutes: signInExperiencesRoutes,
+    tenantContext: tenant,
+  });
+
+  return { requester, updateDefaultSignInExperience, normalizeSignUpProfileFields };
 };
 
 describe('GET /sign-in-exp', () => {
@@ -533,72 +512,46 @@ describe('sign-in experience routes with dev features disabled', () => {
       mfa,
     });
   });
+});
 
-  it('should silently drop signUpProfileFields from the update payload', async () => {
-    const { requester, updateDefaultSignInExperience } = await createDevFeaturesDisabledRequester();
+describe('PATCH /sign-in-exp signUpProfileFields', () => {
+  it('should omit signUpProfileFields when the normalized value is absent', async () => {
+    const { requester, updateDefaultSignInExperience, normalizeSignUpProfileFields } =
+      createSignUpProfileFieldsRequester();
 
-    const response = await requester.patch('/sign-in-exp').send({
-      signUpProfileFields: [{ name: 'company' }],
-    });
+    const response = await requester.patch('/sign-in-exp').send({});
 
+    expect(normalizeSignUpProfileFields).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(updateDefaultSignInExperience).toHaveBeenCalledWith({});
     expect(updateDefaultSignInExperience.mock.calls[0]?.[0]).not.toHaveProperty(
       'signUpProfileFields'
     );
   });
-});
 
-describe('PATCH /sign-in-exp signUpProfileFields with dev features enabled', () => {
-  it('should persist signUpProfileFields when all names exist in the catalog', async () => {
-    const { requester, updateDefaultSignInExperience } = await createDevFeaturesEnabledRequester([
-      { name: 'company' },
-      { name: 'inviteCode' },
-    ]);
-
-    const signUpProfileFields = [{ name: 'inviteCode' }, { name: 'company' }];
+  it('should persist normalized signUpProfileFields', async () => {
+    const signUpProfileFields = [{ name: 'company' }];
+    const normalizedSignUpProfileFields = [{ name: 'inviteCode' }];
+    const normalizeSignUpProfileFields = jest.fn(
+      async (_signUpProfileFields: SignInExperience['signUpProfileFields'] | undefined) =>
+        normalizedSignUpProfileFields
+    );
+    const { requester, updateDefaultSignInExperience } = createSignUpProfileFieldsRequester(
+      normalizeSignUpProfileFields
+    );
 
     const response = await requester.patch('/sign-in-exp').send({ signUpProfileFields });
 
+    expect(normalizeSignUpProfileFields).toHaveBeenCalledWith(signUpProfileFields);
     expect(response.status).toEqual(200);
-    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ signUpProfileFields });
-    expect(response.body).toMatchObject({ signUpProfileFields });
-  });
-
-  it('should reject unknown field names', async () => {
-    const { requester, updateDefaultSignInExperience } = await createDevFeaturesEnabledRequester([
-      { name: 'company' },
-    ]);
-
-    const response = await requester
-      .patch('/sign-in-exp')
-      .send({ signUpProfileFields: [{ name: 'nonExistent' }, { name: 'nonExistent' }] });
-
-    expect(response.status).toEqual(400);
-    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
-  });
-
-  it('should reject duplicate field names', async () => {
-    const { requester, updateDefaultSignInExperience } = await createDevFeaturesEnabledRequester([
-      { name: 'company' },
-      { name: 'inviteCode' },
-    ]);
-
-    const response = await requester.patch('/sign-in-exp').send({
-      signUpProfileFields: [
-        { name: 'company' },
-        { name: 'inviteCode' },
-        { name: 'company' },
-        { name: 'inviteCode' },
-      ],
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({
+      signUpProfileFields: normalizedSignUpProfileFields,
     });
-
-    expect(response.status).toEqual(400);
-    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+    expect(response.body).toMatchObject({ signUpProfileFields: normalizedSignUpProfileFields });
   });
 
   it('should accept an empty list to collect no custom profile fields during sign-up', async () => {
-    const { requester, updateDefaultSignInExperience } = await createDevFeaturesEnabledRequester();
+    const { requester, updateDefaultSignInExperience } = createSignUpProfileFieldsRequester();
 
     const signUpProfileFields: Array<{ name: string }> = [];
     const response = await requester.patch('/sign-in-exp').send({ signUpProfileFields });
@@ -609,7 +562,7 @@ describe('PATCH /sign-in-exp signUpProfileFields with dev features enabled', () 
   });
 
   it('should accept null to clear signUpProfileFields', async () => {
-    const { requester, updateDefaultSignInExperience } = await createDevFeaturesEnabledRequester();
+    const { requester, updateDefaultSignInExperience } = createSignUpProfileFieldsRequester();
 
     const response = await requester.patch('/sign-in-exp').send({ signUpProfileFields: null });
 
