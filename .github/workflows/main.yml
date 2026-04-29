@@ -132,7 +132,7 @@ jobs:
           fetch-depth: 0
 
       - name: Validate OSS survey endpoint config
-        run: test -n "$LOGTO_OSS_SURVEY_ENDPOINT"
+        run: : "${LOGTO_OSS_SURVEY_ENDPOINT:?LOGTO_OSS_SURVEY_ENDPOINT_VALIDATION GitHub Actions variable must be set and non-empty}"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

@@ -56,7 +56,7 @@ jobs:
         uses: depot/setup-action@v1
 
       - name: Validate OSS survey endpoint config
-        run: test -n "$LOGTO_OSS_SURVEY_ENDPOINT"
+        run: : "${LOGTO_OSS_SURVEY_ENDPOINT:?LOGTO_OSS_SURVEY_ENDPOINT is required for release builds}"
 
       - name: Build and push
         uses: depot/build-push-action@v1
