@@ -3,7 +3,6 @@ import { demoAppApplicationId, InteractionEvent, SignInIdentifier } from '@logto
 
 import { mockEmailConnectorConfig } from '#src/__mocks__/connectors-mock.js';
 import { type MockEmailTemplatePayload } from '#src/__mocks__/email-templates.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { setEmailConnector } from '#src/helpers/connector.js';
 import { EmailTemplatesApiTest } from '#src/helpers/email-templates.js';
@@ -14,7 +13,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
 } from '#src/helpers/profile.js';
-import { devFeatureDisabledTest, devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 const mockSignInTemplate: MockEmailTemplatePayload = {
   languageTag: 'en',
@@ -123,71 +122,35 @@ describe('experience API with i18n email templates', () => {
     }
   });
 
-  devFeatureTest.it(
-    'should not deliver forgot-password verification code for a non-existing user when dev features are enabled',
-    async () => {
-      const nonExistingEmail = generateEmail();
-      const client = await initExperienceClient({
-        interactionEvent: InteractionEvent.ForgotPassword,
-      });
+  it('should not deliver forgot-password verification code for a non-existing user', async () => {
+    const nonExistingEmail = generateEmail();
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.ForgotPassword,
+    });
 
-      const { verificationId } = await client.sendVerificationCode({
-        interactionEvent: InteractionEvent.ForgotPassword,
+    const { verificationId } = await client.sendVerificationCode({
+      interactionEvent: InteractionEvent.ForgotPassword,
+      identifier: {
+        type: SignInIdentifier.Email,
+        value: nonExistingEmail,
+      },
+    });
+
+    expect(verificationId).toBeTruthy();
+    await expect(readConnectorMessage('Email')).rejects.toThrow();
+    await expectRejects(
+      client.verifyVerificationCode({
         identifier: {
           type: SignInIdentifier.Email,
           value: nonExistingEmail,
         },
-      });
-
-      expect(verificationId).toBeTruthy();
-      await expect(readConnectorMessage('Email')).rejects.toThrow();
-      await expectRejects(
-        client.verifyVerificationCode({
-          identifier: {
-            type: SignInIdentifier.Email,
-            value: nonExistingEmail,
-          },
-          verificationId,
-          code: '111111',
-        }),
-        {
-          code: 'verification_code.code_mismatch',
-          status: 400,
-        }
-      );
-    }
-  );
-
-  devFeatureDisabledTest.it(
-    'should keep delivering forgot-password verification code for a non-existing user when dev features are disabled',
-    async () => {
-      const defaultForgotPasswordTemplate = mockEmailConnectorConfig.templates.find(
-        ({ usageType }) => usageType === 'ForgotPassword'
-      )!;
-      const nonExistingEmail = generateEmail();
-      const client = await initExperienceClient({
-        interactionEvent: InteractionEvent.ForgotPassword,
-      });
-
-      const { verificationId } = await client.sendVerificationCode({
-        interactionEvent: InteractionEvent.ForgotPassword,
-        identifier: {
-          type: SignInIdentifier.Email,
-          value: nonExistingEmail,
-        },
-      });
-
-      const { code, address, type, template, content, subject } =
-        await readConnectorMessage('Email');
-
-      expect(isDevFeaturesEnabled).toBe(false);
-      expect(verificationId).toBeTruthy();
-      expect(code).toBeTruthy();
-      expect(address).toBe(nonExistingEmail);
-      expect(type).toBe(TemplateType.ForgotPassword);
-      expect(template).toMatchObject(defaultForgotPasswordTemplate);
-      expect(content).toBe(defaultForgotPasswordTemplate.content.replace('{{code}}', code));
-      expect(subject).toBe(defaultForgotPasswordTemplate.subject);
-    }
-  );
+        verificationId,
+        code: '111111',
+      }),
+      {
+        code: 'verification_code.code_mismatch',
+        status: 400,
+      }
+    );
+  });
 });

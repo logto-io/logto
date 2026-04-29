@@ -1,6 +1,5 @@
 import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
-import { EnvSet } from '#src/env-set/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -25,7 +24,6 @@ async function resolveVoid(): Promise<void> {
 const { sendCode } = await import('./verification-code-helpers.js');
 
 describe('sendCode parameter passing', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
   // To make a void callable function/method
   const mockSendVerificationCode = jest.fn().mockImplementation(resolveVoid);
 
@@ -57,14 +55,9 @@ describe('sendCode parameter passing', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     mockSendVerificationCode.mockImplementation(resolveVoid);
     mockExperienceInteraction.save.mockImplementation(resolveVoid);
     mockBuildVerificationCodeContext.mockResolvedValue({});
-  });
-
-  afterAll(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('should pass ctx.request.ip to sendVerificationCode', async () => {
@@ -165,43 +158,6 @@ describe('sendCode parameter passing', () => {
     expect(mockQueriesWithUser.users.hasUserWithNormalizedPhone).toHaveBeenCalledWith(
       '+8613123456789'
     );
-    expect(mockSendVerificationCode).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.objectContaining({ validateOnly: false })
-    );
-  });
-
-  it('should keep the old forgot-password delivery behavior when dev features are disabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    const mockQueriesTracking = {
-      users: {
-        hasUserWithEmail: jest.fn().mockResolvedValue(false),
-        hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
-      },
-    } as unknown as Queries;
-
-    const ctx = {
-      request: { ip: '127.0.0.1' },
-      createLog: jest.fn(() => ({ append: jest.fn().mockImplementation(resolveVoid) })),
-      experienceInteraction: {
-        ...mockExperienceInteraction,
-        interactionEvent: InteractionEvent.ForgotPassword,
-      },
-      emailI18n: {},
-    };
-
-    const libraries = { passcodes: mockPasscodeLibrary } as unknown as Partial<Libraries>;
-    await sendCode({
-      identifier: { type: SignInIdentifier.Email, value: 'nonexistent@example.com' },
-      interactionEvent: InteractionEvent.ForgotPassword,
-      createVerificationRecord: () => mockCodeVerification,
-      libraries: libraries as unknown as Libraries,
-      queries: mockQueriesTracking,
-      ctx: ctx as unknown as ExperienceInteractionRouterContext,
-    });
-
-    expect(mockQueriesTracking.users.hasUserWithEmail).not.toHaveBeenCalled();
     expect(mockSendVerificationCode).toHaveBeenCalledWith(
       expect.any(Object),
       expect.objectContaining({ validateOnly: false })
