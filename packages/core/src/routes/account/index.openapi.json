@@ -20,7 +20,7 @@
       "patch": {
         "operationId": "UpdateProfile",
         "summary": "Update profile",
-        "description": "Update profile for the user, only the fields that are passed in will be updated. Updating or deleting username requires a logto-verification-id header for checking sensitive permissions. Deleting username is rejected if it would remove the user's last identifier.",
+        "description": "Update profile for the user, only the fields that are passed in will be updated. Updating or deleting username requires a logto-verification-id header for checking sensitive permissions. Removing any sign-in identifier, including username, is rejected if it would remove the user's last identifier.",
         "requestBody": {
           "content": {
             "application/json": {
