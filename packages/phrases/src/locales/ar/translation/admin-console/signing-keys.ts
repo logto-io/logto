@@ -25,6 +25,7 @@ const signing_keys = {
     next: 'التالي',
     current: 'الحالي',
     previous: 'السابق',
+    effective_in: 'يسري خلال {{time}}',
   },
   reminder: {
     rotate_private_key:

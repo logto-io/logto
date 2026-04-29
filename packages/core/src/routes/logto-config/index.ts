@@ -1,5 +1,3 @@
-import crypto from 'node:crypto';
-
 import {
   generateOidcCookieKey,
   generateOidcPrivateKey,
@@ -9,9 +7,6 @@ import {
   adminConsoleDataGuard,
   oidcConfigKeysResponseGuard,
   SupportedSigningKeyAlgorithm,
-  type OidcConfigKeysResponse,
-  type OidcConfigKey,
-  type OidcPrivateKey,
   LogtoOidcConfigKeyType,
   oidcSessionConfigGuard,
 } from '@logto/schemas';
@@ -22,7 +17,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import defaults from '#src/oidc/defaults.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
-import { exportJWK } from '#src/utils/jwks.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
@@ -42,43 +36,12 @@ const getOidcConfigKeyDatabaseColumnName = (
 // Keep `ttl` constraints from `oidcSessionConfigGuard` while requiring this field in API responses.
 const oidcSessionConfigResponseGuard = oidcSessionConfigGuard.required({ ttl: true });
 
-/**
- * Remove actual values of the private keys from response.
- * @param type Logto config key DB column name. Values are either `oidc.privateKeys` or `oidc.cookieKeys`.
- * @param keys Logto OIDC private keys.
- * @returns Redacted Logto OIDC private keys without actual private key value.
- */
-const getRedactedOidcKeyResponse = async (
-  type: LogtoOidcConfigKey,
-  keys: Array<OidcConfigKey | OidcPrivateKey>,
-  privateKeyRotationGracePeriod = EnvSet.values.privateKeyRotationGracePeriod
-): Promise<OidcConfigKeysResponse[]> =>
-  Promise.all(
-    keys.map(async ({ id, value, createdAt, ...rest }) => {
-      if (type === LogtoOidcConfigKey.PrivateKeys) {
-        const jwk = await exportJWK(crypto.createPrivateKey(value));
-        const parseResult = oidcConfigKeysResponseGuard.safeParse({
-          id,
-          createdAt,
-          effectiveAt: (createdAt + privateKeyRotationGracePeriod) * 1000,
-          signingKeyAlgorithm: jwk.kty,
-          status: 'status' in rest ? rest.status : undefined,
-        });
-        if (!parseResult.success) {
-          throw new RequestError({ code: 'request.general', status: 422 });
-        }
-        return parseResult.data;
-      }
-      return { id, createdAt };
-    })
-  );
-
 export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   const { getAdminConsoleConfig, updateAdminConsoleConfig, updateOidcConfigsByKey } =
     tenant.queries.logtoConfigs;
-  const { getOidcConfigs } = tenant.logtoConfigs;
+  const { getOidcConfigs, getRedactedOidcKeyResponse } = tenant.logtoConfigs;
   const { oidcPrivateKeys } = tenant.libraries;
 
   router.get(
@@ -258,11 +221,7 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
       void tenant.invalidateCache();
 
       // Remove actual values of the private keys from response
-      ctx.body = await getRedactedOidcKeyResponse(
-        configKey,
-        updatedKeys,
-        effectiveRotationGracePeriod
-      );
+      ctx.body = await getRedactedOidcKeyResponse(configKey, updatedKeys);
 
       return next();
     }

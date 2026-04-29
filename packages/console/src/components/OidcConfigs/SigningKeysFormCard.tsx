@@ -5,8 +5,7 @@ import {
   OidcSigningKeyStatus,
 } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
-import { format } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -63,6 +62,15 @@ const privateKeyStatusTagMap = {
 const getPrivateKeyStatusTag = (status?: OidcSigningKeyStatus) =>
   privateKeyStatusTagMap[status ?? OidcSigningKeyStatus.Current];
 
+const formatRemainingTime = (remainingMilliseconds: number) => {
+  const totalSeconds = Math.max(0, Math.ceil(remainingMilliseconds / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return [hours, minutes, seconds].map((value) => String(value).padStart(2, '0')).join(':');
+};
+
 function SigningKeysFormCard() {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.signing_keys' });
@@ -82,8 +90,27 @@ function SigningKeysFormCard() {
   const [rotateKeyAlgorithm, setRotateKeyAlgorithm] = useState<SupportedSigningKeyAlgorithm>(
     SupportedSigningKeyAlgorithm.EC
   );
+  const nextKeyEffectiveAt = data?.find(
+    ({ status }) => status === OidcSigningKeyStatus.Next
+  )?.effectiveAt;
+  const [now, setNow] = useState(Date.now());
 
   const isLoadingKeys = !data && !error;
+
+  useEffect(() => {
+    if (!nextKeyEffectiveAt || nextKeyEffectiveAt <= Date.now()) {
+      return;
+    }
+
+    setNow(Date.now());
+    const interval = setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [nextKeyEffectiveAt]);
 
   const tableColumns = useMemo<Array<Column<OidcConfigKeysResponse>>>(
     () => [
@@ -92,26 +119,6 @@ function SigningKeysFormCard() {
         dataIndex: 'id',
         colSpan: 8,
         render: ({ id }: OidcConfigKeysResponse) => <div className={styles.idWrapper}>{id}</div>,
-      },
-      {
-        title: String(t('table_column.status')),
-        dataIndex: 'status',
-        colSpan: 4,
-        render: ({ status }: OidcConfigKeysResponse, rowIndex: number) => {
-          const { tagStatus, translationKey } = isPrivateKey
-            ? getPrivateKeyStatusTag(status)
-            : {
-                tagStatus: rowIndex === 0 ? ('success' as const) : ('alert' as const),
-                translationKey:
-                  rowIndex === 0 ? ('status.current' as const) : ('status.previous' as const),
-              };
-
-          return (
-            <Tag type="state" variant="plain" status={tagStatus}>
-              {t(translationKey)}
-            </Tag>
-          );
-        },
       },
       ...condArray(
         isPrivateKey && [
@@ -123,16 +130,37 @@ function SigningKeysFormCard() {
               <span>{signingKeyAlgorithm}</span>
             ),
           },
-          {
-            title: String(t('table_column.effective_at')),
-            dataIndex: 'effectiveAt',
-            colSpan: 5,
-            render: ({ effectiveAt }: OidcConfigKeysResponse) => (
-              <span>{effectiveAt ? format(effectiveAt, 'P HH:mm:ss') : '-'}</span>
-            ),
-          },
         ]
       ),
+      {
+        title: String(t('table_column.status')),
+        dataIndex: 'status',
+        colSpan: isPrivateKey ? 9 : 4,
+        render: ({ status, effectiveAt }: OidcConfigKeysResponse, rowIndex: number) => {
+          const { tagStatus, translationKey } = isPrivateKey
+            ? getPrivateKeyStatusTag(status)
+            : {
+                tagStatus: rowIndex === 0 ? ('success' as const) : ('alert' as const),
+                translationKey:
+                  rowIndex === 0 ? ('status.current' as const) : ('status.previous' as const),
+              };
+
+          return (
+            <div className={styles.status}>
+              <Tag type="state" variant="plain" status={tagStatus}>
+                {t(translationKey)}
+              </Tag>
+              {status === OidcSigningKeyStatus.Next && effectiveAt && (
+                <span className={styles.effectiveIn}>
+                  {t('status.effective_in', {
+                    time: formatRemainingTime(effectiveAt - now),
+                  })}
+                </span>
+              )}
+            </div>
+          );
+        },
+      },
       {
         title: '',
         dataIndex: 'action',
@@ -152,7 +180,7 @@ function SigningKeysFormCard() {
           ),
       },
     ],
-    [isPrivateKey, t]
+    [isPrivateKey, now, t]
   );
 
   return (

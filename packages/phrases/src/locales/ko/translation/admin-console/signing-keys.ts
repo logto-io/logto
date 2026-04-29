@@ -25,6 +25,7 @@ const signing_keys = {
     next: '다음',
     current: '현재',
     previous: '이전',
+    effective_in: '{{time}} 후 적용',
   },
   reminder: {
     rotate_private_key:

@@ -25,6 +25,7 @@ const signing_keys = {
     next: 'Siguiente',
     current: 'Actual',
     previous: 'Anterior',
+    effective_in: 'Vigente en {{time}}',
   },
   reminder: {
     rotate_private_key:

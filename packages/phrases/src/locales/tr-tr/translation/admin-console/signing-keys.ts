@@ -26,6 +26,7 @@ const signing_keys = {
     next: 'Sonraki',
     current: 'Geçerli',
     previous: 'Önceki',
+    effective_in: '{{time}} içinde geçerli',
   },
   reminder: {
     rotate_private_key:

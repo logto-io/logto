@@ -21,8 +21,9 @@ const previousPrivateKey = {
   value: '-----BEGIN PRIVATE KEY-----\nlegacy\nprevious\nkey\n-----END PRIVATE KEY-----\n',
   createdAt: Math.floor(Date.now() / 1000) - 10,
 };
+const signingKeyRotationAt = 1_777_777_777_000;
 
-await mockEsmWithActual('#src/utils/jwks.js', () => ({
+const { exportJWK } = await mockEsmWithActual('#src/utils/jwks.js', () => ({
   exportJWK: jest.fn(async () => ({ kty: 'EC' })),
 }));
 
@@ -40,6 +41,7 @@ const logtoConfigQueries = {
   updateAdminConsoleConfig: async () => ({ value: mockAdminConsoleData }),
   updatePrivateSigningKeysWithLock: jest.fn(),
   updateOidcConfigsByKey: jest.fn(),
+  getSigningKeyRotationState: jest.fn(),
 };
 
 const logtoConfigLibraries = {
@@ -48,14 +50,53 @@ const logtoConfigLibraries = {
       { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
     ],
     [LogtoOidcConfigKey.CookieKeys]: mockCookieKeys,
+    [LogtoOidcConfigKey.Session]: {},
   })),
+  getRedactedOidcKeyResponse: jest.fn(
+    async (
+      type: LogtoOidcConfigKey,
+      keys: Array<{ id: string; value: string; createdAt: number }>
+    ) => {
+      const signingKeyRotationState = (await (type === LogtoOidcConfigKey.PrivateKeys
+        ? logtoConfigQueries.getSigningKeyRotationState()
+        : undefined)) as { signingKeyRotationAt?: number } | undefined;
+
+      return Promise.all(
+        keys.map(async ({ id, value, createdAt, ...rest }) => {
+          if (type === LogtoOidcConfigKey.PrivateKeys) {
+            const jwk = await (exportJWK as (key: unknown) => Promise<{ kty: string }>)(value);
+            const status = ('status' in rest ? rest.status : undefined) as
+              | OidcSigningKeyStatus
+              | undefined;
+
+            return {
+              id,
+              createdAt,
+              effectiveAt:
+                status === OidcSigningKeyStatus.Next
+                  ? signingKeyRotationState?.signingKeyRotationAt
+                  : undefined,
+              signingKeyAlgorithm: jwk.kty,
+              status,
+            };
+          }
+
+          return { id, createdAt };
+        })
+      );
+    }
+  ),
 };
 
 const logtoConfigRoutes = await pickDefault(import('./index.js'));
 
 describe('configs routes staged rotation', () => {
   const tenantContext = new MockTenant(undefined, { logtoConfigs: logtoConfigQueries });
-  Sinon.stub(tenantContext, 'logtoConfigs').value(logtoConfigLibraries);
+  Sinon.stub(tenantContext, 'logtoConfigs').value({
+    ...tenantContext.logtoConfigs,
+    getOidcConfigs: logtoConfigLibraries.getOidcConfigs,
+    getRedactedOidcKeyResponse: logtoConfigLibraries.getRedactedOidcKeyResponse,
+  });
   const invalidateCache = Sinon.stub(tenantContext, 'invalidateCache').resolves();
   const rotatePrivateSigningKeys = jest.fn();
   Sinon.stub(tenantContext.libraries, 'oidcPrivateKeys').value({
@@ -79,6 +120,9 @@ describe('configs routes staged rotation', () => {
       { ...mockPrivateKeys[0]!, status: OidcSigningKeyStatus.Current },
       { ...previousPrivateKey, status: OidcSigningKeyStatus.Previous },
     ]);
+    logtoConfigQueries.getSigningKeyRotationState.mockResolvedValueOnce({
+      signingKeyRotationAt,
+    });
 
     const response = await routeRequester.post('/configs/oidc/private-keys/rotate').send({
       rotationGracePeriod: 14_400,
@@ -92,21 +136,19 @@ describe('configs routes staged rotation', () => {
       {
         id: newPrivateKey.id,
         createdAt: newPrivateKey.createdAt,
-        effectiveAt: (newPrivateKey.createdAt + 14_400) * 1000,
+        effectiveAt: signingKeyRotationAt,
         signingKeyAlgorithm: 'EC',
         status: OidcSigningKeyStatus.Next,
       },
       {
         id: mockPrivateKeys[0]!.id,
         createdAt: mockPrivateKeys[0]!.createdAt,
-        effectiveAt: (mockPrivateKeys[0]!.createdAt + 14_400) * 1000,
         signingKeyAlgorithm: 'EC',
         status: OidcSigningKeyStatus.Current,
       },
       {
         id: previousPrivateKey.id,
         createdAt: previousPrivateKey.createdAt,
-        effectiveAt: (previousPrivateKey.createdAt + 14_400) * 1000,
         signingKeyAlgorithm: 'EC',
         status: OidcSigningKeyStatus.Previous,
       },

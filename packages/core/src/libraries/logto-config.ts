@@ -1,16 +1,23 @@
+import crypto from 'node:crypto';
+
 import type {
   CloudConnectionData,
   IdTokenConfig,
   JwtCustomizerType,
   LogtoOidcConfigType,
+  OidcConfigKey,
+  OidcConfigKeysResponse,
+  OidcPrivateKey,
 } from '@logto/schemas';
 import {
   LogtoConfigs,
   LogtoJwtTokenKey,
   LogtoOidcConfigKey,
+  OidcSigningKeyStatus,
   cloudApiIndicator,
   cloudConnectionDataGuard,
   normalizeOidcPrivateKeys,
+  oidcConfigKeysResponseGuard,
   rotateOidcPrivateKeyStatuses,
   idTokenConfigGuard,
   jwtCustomizerConfigGuard,
@@ -23,6 +30,7 @@ import { ZodError, z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import type Queries from '#src/tenants/Queries.js';
+import { exportJWK } from '#src/utils/jwks.js';
 
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
 
@@ -32,6 +40,7 @@ export const createLogtoConfigLibrary = ({
     getCloudConnectionData: queryCloudConnectionData,
     upsertJwtCustomizer: queryUpsertJwtCustomizer,
     upsertIdTokenConfig: queryUpsertIdTokenConfig,
+    getSigningKeyRotationState,
   },
   pool,
   wellKnownCache,
@@ -153,6 +162,46 @@ export const createLogtoConfigLibrary = ({
   };
 
   /**
+   * Remove key material before returning OIDC keys through the management API.
+   * For private signing keys, also attach the scheduled effective time from the
+   * persisted rotation state to the staged Next key.
+   */
+  const getRedactedOidcKeyResponse = async (
+    type: LogtoOidcConfigKey,
+    keys: Array<OidcConfigKey | OidcPrivateKey>
+  ): Promise<OidcConfigKeysResponse[]> => {
+    const signingKeyRotationState =
+      type === LogtoOidcConfigKey.PrivateKeys ? await getSigningKeyRotationState() : undefined;
+
+    return Promise.all(
+      keys.map(async ({ id, value, createdAt, ...rest }) => {
+        if (type === LogtoOidcConfigKey.PrivateKeys) {
+          const jwk = await exportJWK(crypto.createPrivateKey(value));
+          const status = 'status' in rest ? rest.status : undefined;
+          const parseResult = oidcConfigKeysResponseGuard.safeParse({
+            id,
+            createdAt,
+            effectiveAt:
+              status === OidcSigningKeyStatus.Next
+                ? signingKeyRotationState?.signingKeyRotationAt
+                : undefined,
+            signingKeyAlgorithm: jwk.kty,
+            status,
+          });
+
+          if (!parseResult.success) {
+            throw new RequestError({ code: 'request.general', status: 422 });
+          }
+
+          return parseResult.data;
+        }
+
+        return { id, createdAt };
+      })
+    );
+  };
+
+  /**
    * Rotate OIDC private signing key statuses if the scheduled rotation time has come.
    * This function is intended to be called before accessing OIDC configs to ensure the key statuses are up-to-date.
    */
@@ -187,6 +236,7 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizers,
     updateJwtCustomizer,
     upsertIdTokenConfig,
+    getRedactedOidcKeyResponse,
     promoteScheduledSigningKeyRotation,
   };
 };

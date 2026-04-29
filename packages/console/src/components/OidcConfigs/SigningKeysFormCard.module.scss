@@ -25,6 +25,18 @@
   justify-content: flex-end;
 }
 
+.status {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  white-space: nowrap;
+}
+
+.effectiveIn {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
 .rotateKey {
   display: flex;
   align-items: center;

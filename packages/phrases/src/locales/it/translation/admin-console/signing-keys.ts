@@ -25,6 +25,7 @@ const signing_keys = {
     next: 'Successivo',
     current: 'Attuale',
     previous: 'Precedente',
+    effective_in: 'Effettivo tra {{time}}',
   },
   reminder: {
     rotate_private_key:

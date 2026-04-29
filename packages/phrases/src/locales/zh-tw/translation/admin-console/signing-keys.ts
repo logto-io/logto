@@ -25,6 +25,7 @@ const signing_keys = {
     next: '待切換',
     current: '當前的',
     previous: '舊密鑰',
+    effective_in: '將於 {{time}} 後生效',
   },
   reminder: {
     rotate_private_key:
