@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.profileFieldItem {
+  display: flex;
+  align-items: center;
+  margin: _.unit(2) 0;
+  gap: _.unit(2);
+}
+
+.profileField {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  width: 100%;
+  padding: _.unit(3) _.unit(2);
+  background-color: var(--color-layer-2);
+  border-radius: 8px;
+  cursor: move;
+  gap: _.unit(1);
+  color: var(--color-text);
+  font: var(--font-label-2);
+
+  .draggableIcon {
+    color: var(--color-text-secondary);
+  }
+}

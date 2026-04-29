@@ -111,6 +111,10 @@ export const signUpFormDataParser = {
   },
 };
 
+const normalizeSignUpProfileFields = (
+  signUpProfileFields: SignInExperience['signUpProfileFields']
+): NonNullable<SignInExperience['signUpProfileFields']> => signUpProfileFields ?? [];
+
 export const sieFormDataParser = {
   fromSignInExperience: (data: SignInExperience): SignInExperienceForm => {
     const {
@@ -132,6 +136,8 @@ export const sieFormDataParser = {
     return {
       ...rest,
       signUp: signUpFormDataParser.fromSignUp(signUp),
+      signUpProfileFields: normalizeSignUpProfileFields(rest.signUpProfileFields),
+      hasConfiguredSignUpProfileFields: rest.signUpProfileFields !== null,
       createAccountEnabled: rest.signInMode !== SignInMode.SignIn,
       customCss: customCss ?? undefined,
       socialSignIn: {
@@ -160,6 +166,7 @@ export const sieFormDataParser = {
       createAccountEnabled,
       signUp,
       customCss,
+      hasConfiguredSignUpProfileFields,
       socialSignIn,
       hideLogtoBranding,
       ...rest
@@ -169,6 +176,10 @@ export const sieFormDataParser = {
       ...rest,
       branding: removeFalsyValues(branding),
       signUp: signUpFormDataParser.toSignUp(signUp),
+      signUpProfileFields:
+        hasConfiguredSignUpProfileFields || rest.signUpProfileFields.length > 0
+          ? rest.signUpProfileFields
+          : null,
       socialSignIn,
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
@@ -188,6 +199,8 @@ export const sieFormDataParser = {
  * Affected fields:
  * - `signUp.secondaryIdentifiers`: This field is optional in the data schema,
  *  but through the form, we always fill it with an empty array.
+ * - `signUpProfileFields`: nullable in the data schema, but `null` and `[]` carry different
+ *  runtime semantics and must stay distinct in compare payloads.
  * - `mfa`
  * - `adaptiveMfa`
  * - `passwordPolicy`
@@ -219,6 +232,7 @@ export const signInExperienceToUpdatedDataParser = (
       ...signUp,
       secondaryIdentifiers: signUp.secondaryIdentifiers ?? [],
     },
+    signUpProfileFields: rest.signUpProfileFields,
     ...conditional(isCloud && { hideLogtoBranding }),
   };
 };

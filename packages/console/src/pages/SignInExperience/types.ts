@@ -5,6 +5,7 @@ import {
   type SignInExperience,
   type SignInIdentifier,
   type SignUpIdentifier as SignUpIdentifierMethod,
+  type SignUpProfileFields,
   type AccountCenterFieldControl,
 } from '@logto/schemas';
 /**
@@ -109,10 +110,20 @@ export type SignUpForm = Omit<SignUp, 'identifiers' | 'secondaryIdentifiers'> & 
 
 export type SignInExperienceForm = Omit<
   SignInExperience,
-  'signUp' | 'customCss' | OmittedSignInExperienceKeys
+  'signUp' | 'customCss' | 'signUpProfileFields' | OmittedSignInExperienceKeys
 > & {
   customCss?: string; // Code editor components can not properly handle null value, manually transform null to undefined instead.
   signUp: SignUpForm;
+  /**
+   * `useFieldArray` requires an array, so the form always stores this as an array.
+   */
+  signUpProfileFields: SignUpProfileFields;
+  /**
+   * Legacy tenants may still store `null`, which means "use the default catalog behavior".
+   * Keep tracking whether the original value was already explicitly configured so saving unrelated
+   * settings does not silently change `null` into `[]`.
+   */
+  hasConfiguredSignUpProfileFields: boolean;
   createAccountEnabled: boolean;
 };
 

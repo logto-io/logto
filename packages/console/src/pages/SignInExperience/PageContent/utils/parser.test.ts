@@ -112,6 +112,31 @@ describe('sign-in experience parser', () => {
     expect(registerPayload.customCss).toBe('body { color: red; }');
   });
 
+  it('should preserve legacy null sign-up profile fields until explicitly configured', () => {
+    const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
+
+    expect(formData.signUpProfileFields).toEqual([]);
+    expect(formData.hasConfiguredSignUpProfileFields).toBe(false);
+    expect(sieFormDataParser.toSignInExperience(formData).signUpProfileFields).toBeNull();
+
+    expect(
+      sieFormDataParser.toSignInExperience({
+        ...formData,
+        hasConfiguredSignUpProfileFields: true,
+      }).signUpProfileFields
+    ).toEqual([]);
+  });
+
+  it('should keep explicitly configured empty sign-up profile fields as an empty array', () => {
+    const formData = sieFormDataParser.fromSignInExperience({
+      ...mockSignInExperience,
+      signUpProfileFields: [],
+    });
+
+    expect(formData.hasConfiguredSignUpProfileFields).toBe(true);
+    expect(sieFormDataParser.toSignInExperience(formData).signUpProfileFields).toEqual([]);
+  });
+
   it('should omit hideLogtoBranding from OSS payloads', () => {
     const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
 
@@ -153,6 +178,18 @@ describe('sign-in experience parser', () => {
     });
 
     expect(comparePayload.signUp.secondaryIdentifiers).toEqual([]);
+  });
+
+  it('should keep null and empty sign-up profile fields distinct in compare payloads', () => {
+    expect(
+      signInExperienceToUpdatedDataParser(mockSignInExperience).signUpProfileFields
+    ).toBeNull();
+    expect(
+      signInExperienceToUpdatedDataParser({
+        ...mockSignInExperience,
+        signUpProfileFields: [],
+      }).signUpProfileFields
+    ).toEqual([]);
   });
 
   it('should omit hideLogtoBranding from OSS compare payloads', () => {
