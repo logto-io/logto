@@ -125,9 +125,9 @@ export const sendCode = async ({
   }
 
   // For forgot-password requests, unknown identifiers still create the passcode record
-  // (so verification returns `code_mismatch` instead of `not_found`) and keep
-  // connector/template validation, but avoid the actual message delivery.
-  const validateOnly =
+  // (so verification returns `code_mismatch` instead of `not_found`), but skip
+  // delivery and connector/template validation to avoid leaking configuration errors.
+  const skipDelivery =
     interactionEvent === InteractionEvent.ForgotPassword &&
     !(await hasUserWithIdentifier(queries, identifier));
 
@@ -146,7 +146,7 @@ export const sendCode = async ({
       /** The client IP address for rate limiting and fraud detection. */
       ...(ctx.request.ip && { ip: ctx.request.ip }),
     },
-    { validateOnly }
+    { skipDelivery }
   );
 
   // Save state
