@@ -1,5 +1,18 @@
 # Change Log
 
+## 2.9.0
+
+### Minor Changes
+
+- 93523a1ae0: add subtle primary overlay color token for console themes
+
+  This adds the missing `--color-overlay-primary-subtle` token for both light and dark console themes.
+
+### Patch Changes
+
+- Updated dependencies [3350b13ec8]
+  - @logto/shared@3.4.0
+
 ## 2.8.0
 
 ### Minor Changes

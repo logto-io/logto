@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-whatsapp-sms",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "WhatsApp connector implementation using Meta Cloud API.",
   "author": "MrMardel",
   "dependencies": {
