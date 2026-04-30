@@ -47,11 +47,17 @@ export const hasVisibleSecuritySection = (
   );
 };
 
+export const hasAvailableSecurityVerificationMethod = (
+  userInfo?: Partial<UserProfileResponse>
+): boolean =>
+  Boolean(userInfo?.hasPassword) ||
+  Boolean(userInfo?.primaryEmail) ||
+  Boolean(userInfo?.primaryPhone);
+
 export const canOpenPasswordEditFlow = (
   passwordControl: AccountCenterControlValue | undefined,
   userInfo?: Partial<UserProfileResponse>
 ): boolean =>
   isEditableField(passwordControl) &&
-  (Boolean(userInfo?.hasPassword) ||
-    Boolean(userInfo?.primaryEmail) ||
-    Boolean(userInfo?.primaryPhone));
+  userInfo !== undefined &&
+  (hasAvailableSecurityVerificationMethod(userInfo) || !userInfo.hasPassword);

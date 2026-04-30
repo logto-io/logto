@@ -16,6 +16,7 @@ import { passwordSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import { hasAvailableSecurityVerificationMethod } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from '../CodeFlow/index.module.scss';
@@ -30,6 +31,7 @@ const Password = () => {
     setVerificationId,
     setToast,
     experienceSettings,
+    userInfo,
     refreshUserInfo,
   } = useContext(PageContext);
   const updatePasswordRequest = useApi(updatePassword);
@@ -78,7 +80,11 @@ const Password = () => {
     );
   }
 
-  if (!verificationId) {
+  const hasAvailableVerificationMethod = hasAvailableSecurityVerificationMethod(userInfo);
+  const canSetInitialPasswordWithoutVerification =
+    userInfo !== undefined && !hasAvailableVerificationMethod;
+
+  if (!verificationId && hasAvailableVerificationMethod) {
     return <VerificationMethodList />;
   }
 
@@ -93,7 +99,7 @@ const Password = () => {
       return;
     }
 
-    if (!verificationId || loading) {
+    if ((!verificationId && !canSetInitialPasswordWithoutVerification) || loading) {
       return;
     }
 
