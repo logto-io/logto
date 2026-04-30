@@ -16,6 +16,7 @@ void test('hasVisibleSecuritySection returns false when account center is disabl
   assert.equal(
     hasVisibleSecuritySection({
       enabled: false,
+      deleteAccountUrl: null,
       fields: {
         username: AccountCenterControlValue.Edit,
         email: AccountCenterControlValue.Off,
@@ -32,6 +33,7 @@ void test('hasVisibleSecuritySection returns true when any supported field is vi
   assert.equal(
     hasVisibleSecuritySection({
       enabled: true,
+      deleteAccountUrl: null,
       fields: {
         username: AccountCenterControlValue.ReadOnly,
         email: AccountCenterControlValue.Off,
@@ -49,6 +51,7 @@ void test('hasVisibleSecuritySection returns true when social field is visible',
     hasVisibleSecuritySection(
       {
         enabled: true,
+        deleteAccountUrl: null,
         fields: {
           username: AccountCenterControlValue.Off,
           email: AccountCenterControlValue.Off,
@@ -71,6 +74,24 @@ void test('hasVisibleSecuritySection returns true when social field is visible',
         mfa: { factors: [], policy: MfaPolicy.UserControlled },
       }
     ),
+    true
+  );
+});
+
+void test('hasVisibleSecuritySection returns true when delete account URL is configured', () => {
+  assert.equal(
+    hasVisibleSecuritySection({
+      enabled: true,
+      deleteAccountUrl: 'https://example.com/delete-account',
+      fields: {
+        username: AccountCenterControlValue.Off,
+        email: AccountCenterControlValue.Off,
+        phone: AccountCenterControlValue.Off,
+        password: AccountCenterControlValue.Off,
+        social: AccountCenterControlValue.Off,
+        mfa: AccountCenterControlValue.Off,
+      },
+    }),
     true
   );
 });
