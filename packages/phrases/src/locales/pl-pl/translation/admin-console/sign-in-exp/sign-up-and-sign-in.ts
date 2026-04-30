@@ -19,6 +19,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: 'Utwórz hasło',
     verify_at_sign_up_option: 'Weryfikuj podczas rejestracji',
     social_only_creation_description: '(Stosuje się tylko do tworzenia kont społecznościowych)',
+    collect_user_profile: 'Zbieraj profil użytkownika',
+    add_profile_fields: 'Dodaj pola profilu',
+    profile_fields_hint: {
+      not_in_list: 'Nie ma na liście?',
+      set_up: 'Skonfiguruj',
+      go_to: 'inne pola profilu teraz.',
+    },
   },
   sign_in: {
     title: 'LOGOWANIE',

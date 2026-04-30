@@ -17,6 +17,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: '비밀번호 생성',
     verify_at_sign_up_option: '회원가입 인증',
     social_only_creation_description: '(이것은 소셜 전용 계정 생성에 적용돼요.)',
+    collect_user_profile: '사용자 프로필 수집',
+    add_profile_fields: '프로필 필드 추가',
+    profile_fields_hint: {
+      not_in_list: '목록에 없나요?',
+      set_up: '설정',
+      go_to: '다른 프로필 필드로 이동하세요.',
+    },
   },
   sign_in: {
     title: '로그인',

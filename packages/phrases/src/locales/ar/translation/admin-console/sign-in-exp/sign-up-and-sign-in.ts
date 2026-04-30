@@ -17,6 +17,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: 'إنشاء كلمة المرور الخاصة بك',
     verify_at_sign_up_option: 'التحقق عند التسجيل',
     social_only_creation_description: '(ينطبق هذا على إنشاء الحساب الاجتماعي فقط)',
+    collect_user_profile: 'جمع ملف تعريف المستخدم',
+    add_profile_fields: 'إضافة حقول الملف الشخصي',
+    profile_fields_hint: {
+      not_in_list: 'غير موجود في القائمة؟',
+      set_up: 'إعداد',
+      go_to: 'حقول الملف الشخصي الأخرى الآن.',
+    },
   },
   sign_in: {
     title: 'تسجيل الدخول',

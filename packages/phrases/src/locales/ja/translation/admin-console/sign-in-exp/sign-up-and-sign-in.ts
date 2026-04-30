@@ -19,6 +19,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: 'パスワードの設定',
     verify_at_sign_up_option: 'サインアップ時に確認する',
     social_only_creation_description: '（これはソーシャルアカウント作成に適用されます）',
+    collect_user_profile: 'ユーザープロフィールを収集',
+    add_profile_fields: 'プロフィールフィールドを追加',
+    profile_fields_hint: {
+      not_in_list: '一覧にない場合は?',
+      set_up: '設定',
+      go_to: '他のプロフィールフィールドに移動します。',
+    },
   },
   sign_in: {
     title: 'サインイン',
