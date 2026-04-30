@@ -1,5 +1,11 @@
 # @logto/connector-patreon
 
+## 1.2.5
+
+### Patch Changes
+
+- @logto/connector-oauth@1.7.5
+
 ## 1.2.4
 
 ### Patch Changes

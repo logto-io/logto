@@ -1,5 +1,11 @@
 # @logto/connector-kook
 
+## 0.4.5
+
+### Patch Changes
+
+- @logto/connector-oauth@1.7.5
+
 ## 0.4.4
 
 ### Patch Changes

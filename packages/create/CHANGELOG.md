@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.39.0
+
+### Patch Changes
+
+- Updated dependencies [3350b13ec8]
+  - @logto/cli@1.39.0
+
 ## 1.38.0
 
 ### Patch Changes
