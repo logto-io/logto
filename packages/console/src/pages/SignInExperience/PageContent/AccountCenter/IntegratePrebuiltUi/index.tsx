@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -13,6 +12,12 @@ import useUserPreferences from '@/hooks/use-user-preferences';
 
 import PrebuiltUiUrlItem from './PrebuiltUiUrlItem';
 import styles from './index.module.scss';
+
+type PrebuiltRoute = {
+  path: string;
+  tooltipKey: string;
+  isPreviewHidden?: boolean;
+};
 
 const prebuiltRoutes = [
   { path: '/account/email', tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.email' },
@@ -49,18 +54,17 @@ const prebuiltRoutes = [
     path: '/account/backup-codes/manage',
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.backup_codes_manage',
   },
-] as const;
-
-const devPrebuiltRoutes = [
   {
     path: '/account/social/:connectorId',
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social',
+    isPreviewHidden: true,
   },
   {
     path: '/account/social/:connectorId/remove',
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social_remove',
+    isPreviewHidden: true,
   },
-] as const;
+] as const satisfies readonly PrebuiltRoute[];
 
 const accountCenterRoute = {
   path: '/account/security',
@@ -83,7 +87,7 @@ function IntegratePrebuiltUi() {
       learnMoreLink={{ href: 'end-user-flows/account-settings/by-account-center-ui' }}
     >
       <div className={styles.cardContent}>
-        {isDevFeaturesEnabled && !prebuiltUiPermissionNoticeAcknowledged && (
+        {!prebuiltUiPermissionNoticeAcknowledged && (
           <InlineNotification
             className={styles.notice}
             action="general.got_it"
@@ -100,78 +104,40 @@ function IntegratePrebuiltUi() {
             </Trans>
           </InlineNotification>
         )}
-        {isDevFeaturesEnabled && (
-          <FormField
-            className={styles.firstFormField}
-            title="sign_in_exp.account_center.prebuilt_ui.account_center_title"
-            headlineSpacing="large"
-          >
-            <div className={styles.description}>
-              <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.account_center_description" />
-            </div>
-            <div className={styles.urlGrid}>
-              <PrebuiltUiUrlItem
-                path={accountCenterRoute.path}
-                tooltip={t(accountCenterRoute.tooltipKey)}
-                tenantEndpoint={tenantEndpoint}
-              />
-            </div>
-          </FormField>
-        )}
         <FormField
-          className={isDevFeaturesEnabled ? styles.secondFormField : undefined}
-          title={
-            isDevFeaturesEnabled
-              ? 'sign_in_exp.account_center.prebuilt_ui.single_task_flows_title'
-              : 'sign_in_exp.account_center.prebuilt_ui.flows_title'
-          }
+          className={styles.firstFormField}
+          title="sign_in_exp.account_center.prebuilt_ui.account_center_title"
           headlineSpacing="large"
         >
           <div className={styles.description}>
-            <DynamicT
-              forKey={
-                isDevFeaturesEnabled
-                  ? 'sign_in_exp.account_center.prebuilt_ui.single_task_flows_description'
-                  : 'sign_in_exp.account_center.prebuilt_ui.flows_description'
-              }
+            <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.account_center_description" />
+          </div>
+          <div className={styles.urlGrid}>
+            <PrebuiltUiUrlItem
+              path={accountCenterRoute.path}
+              tooltip={t(accountCenterRoute.tooltipKey)}
+              tenantEndpoint={tenantEndpoint}
             />
           </div>
-          {!isDevFeaturesEnabled && !prebuiltUiPermissionNoticeAcknowledged && (
-            <InlineNotification
-              className={styles.notice}
-              action="general.got_it"
-              onClick={() => {
-                void update({ prebuiltUiPermissionNoticeAcknowledged: true });
-              }}
-            >
-              <Trans
-                components={{
-                  strong: <strong />,
-                }}
-              >
-                {t('sign_in_exp.account_center.prebuilt_ui.permission_notice')}
-              </Trans>
-            </InlineNotification>
-          )}
+        </FormField>
+        <FormField
+          className={styles.secondFormField}
+          title="sign_in_exp.account_center.prebuilt_ui.single_task_flows_title"
+          headlineSpacing="large"
+        >
+          <div className={styles.description}>
+            <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.single_task_flows_description" />
+          </div>
           <div className={styles.urlGrid}>
-            {prebuiltRoutes.map(({ path, tooltipKey }) => (
+            {prebuiltRoutes.map((route) => (
               <PrebuiltUiUrlItem
-                key={path}
-                path={path}
-                tooltip={t(tooltipKey)}
+                key={route.path}
+                isPreviewHidden={'isPreviewHidden' in route ? route.isPreviewHidden : false}
+                path={route.path}
+                tooltip={t(route.tooltipKey)}
                 tenantEndpoint={tenantEndpoint}
               />
             ))}
-            {isDevFeaturesEnabled &&
-              devPrebuiltRoutes.map(({ path, tooltipKey }) => (
-                <PrebuiltUiUrlItem
-                  key={path}
-                  isPreviewHidden
-                  path={path}
-                  tooltip={t(tooltipKey)}
-                  tenantEndpoint={tenantEndpoint}
-                />
-              ))}
           </div>
         </FormField>
         <div className={styles.customizeNote}>

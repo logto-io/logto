@@ -20,6 +20,13 @@ const sign_up_and_sign_in = {
     verify_at_sign_up_option: "Vérifier lors de l'inscription",
     social_only_creation_description:
       "(Ceci s'applique à la création de compte uniquement via un réseau social)",
+    collect_user_profile: 'Collecter le profil utilisateur',
+    add_profile_fields: 'Ajouter des champs de profil',
+    profile_fields_hint: {
+      not_in_list: 'Pas dans la liste ?',
+      set_up: 'Configurer',
+      go_to: "d'autres champs de profil maintenant.",
+    },
   },
   sign_in: {
     title: 'CONNEXION',

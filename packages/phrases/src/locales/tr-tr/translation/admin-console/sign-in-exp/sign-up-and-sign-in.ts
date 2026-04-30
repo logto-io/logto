@@ -19,6 +19,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: 'Şifrenizi oluşturun',
     verify_at_sign_up_option: 'Kaydolduğunuzda doğrulayın',
     social_only_creation_description: '(Bu sadece sosyal hesap yaratımı için geçerlidir)',
+    collect_user_profile: 'Kullanıcı profili topla',
+    add_profile_fields: 'Profil alanları ekle',
+    profile_fields_hint: {
+      not_in_list: 'Listede yok mu?',
+      set_up: 'Ayarla',
+      go_to: 'diğer profil alanlarını şimdi.',
+    },
   },
   sign_in: {
     title: 'OTURUM AÇIN',

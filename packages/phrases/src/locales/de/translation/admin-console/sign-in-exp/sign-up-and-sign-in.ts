@@ -19,6 +19,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: 'Erstellen Sie Ihr Passwort',
     verify_at_sign_up_option: 'Bei Anmeldung überprüfen',
     social_only_creation_description: '(Dies gilt nur für die Erstellung von Social-Accounts)',
+    collect_user_profile: 'Benutzerprofil sammeln',
+    add_profile_fields: 'Profilfelder hinzufügen',
+    profile_fields_hint: {
+      not_in_list: 'Nicht in der Liste?',
+      set_up: 'Einrichten',
+      go_to: 'weitere Profilfelder jetzt.',
+    },
   },
   sign_in: {
     title: 'ANMELDEN',

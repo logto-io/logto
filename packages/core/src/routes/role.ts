@@ -41,11 +41,11 @@ export default function roleRoutes<T extends ManagementApiRouter>(
       updateRoleById,
     },
     users: { findUsersByIds },
-    usersRoles: { countUsersRolesByRoleId, findUsersRolesByRoleId, findUsersRolesByUserId },
+    usersRoles: { countUsersRolesByRoleIds, findUsersRolesByRoleIds, findUsersRolesByUserId },
     applications: { findApplicationsByIds },
     applicationsRoles: {
-      countApplicationsRolesByRoleId,
-      findApplicationsRolesByRoleId,
+      countApplicationsRolesByRoleIds,
+      findApplicationsRolesByRoleIds,
       findApplicationsRolesByApplicationId,
     },
   } = queries;
@@ -101,27 +101,66 @@ export default function roleRoutes<T extends ManagementApiRouter>(
             findRoles(search, limit, offset, { excludeRoleIds, type }),
           ]);
 
-          const rolesResponse: RoleResponse[] = await Promise.all(
-            roles.map(async (role) => {
-              const { count: usersCount } = await countUsersRolesByRoleId(role.id);
-              const usersRoles = await findUsersRolesByRoleId(role.id, 3);
-              const users = await findUsersByIds(usersRoles.map(({ userId }) => userId));
+          const roleIds = roles.map(({ id }) => id);
 
-              const { count: applicationsCount } = await countApplicationsRolesByRoleId(role.id);
-              const applicationsRoles = await findApplicationsRolesByRoleId(role.id, 3);
-              const applications = await findApplicationsByIds(
-                applicationsRoles.map(({ applicationId }) => applicationId)
-              );
+          const [usersCountsByRole, allUsersRoles, appsCountsByRole, allAppsRoles] =
+            await Promise.all([
+              countUsersRolesByRoleIds(roleIds),
+              findUsersRolesByRoleIds(roleIds),
+              countApplicationsRolesByRoleIds(roleIds),
+              findApplicationsRolesByRoleIds(roleIds),
+            ]);
 
-              return {
-                ...role,
-                usersCount,
-                featuredUsers: users.map(pickState('id', 'avatar', 'name')),
-                applicationsCount,
-                featuredApplications: applications.map(pickState('id', 'name', 'type')),
-              };
-            })
+          // Group featured relations by role; the query layer already caps at 3 per role
+          const usersRolesByRoleId = new Map<string, string[]>();
+          for (const { roleId, userId } of allUsersRoles) {
+            const existing = usersRolesByRoleId.get(roleId) ?? [];
+            usersRolesByRoleId.set(roleId, [...existing, userId]);
+          }
+
+          const appsRolesByRoleId = new Map<string, string[]>();
+          for (const { roleId, applicationId } of allAppsRoles) {
+            const existing = appsRolesByRoleId.get(roleId) ?? [];
+            appsRolesByRoleId.set(roleId, [...existing, applicationId]);
+          }
+
+          // Collect all unique user and application IDs, then batch-fetch
+          const allUserIds = [...new Set([...usersRolesByRoleId.values()].flat())];
+          const allAppIds = [...new Set([...appsRolesByRoleId.values()].flat())];
+
+          const [allUsers, allApps] = await Promise.all([
+            findUsersByIds(allUserIds),
+            findApplicationsByIds(allAppIds),
+          ]);
+
+          const usersById = new Map(allUsers.map((user) => [user.id, user]));
+          const appsById = new Map(allApps.map((app) => [app.id, app]));
+
+          const usersCountMap = new Map(
+            usersCountsByRole.map(({ roleId, count }) => [roleId, count])
           );
+          const appsCountMap = new Map(
+            appsCountsByRole.map(({ roleId, count }) => [roleId, count])
+          );
+
+          const rolesResponse: RoleResponse[] = roles.map((role) => {
+            const featuredUserIds = usersRolesByRoleId.get(role.id) ?? [];
+            const featuredAppIds = appsRolesByRoleId.get(role.id) ?? [];
+
+            return {
+              ...role,
+              usersCount: usersCountMap.get(role.id) ?? 0,
+              featuredUsers: featuredUserIds
+                .map((id) => usersById.get(id))
+                .filter(Boolean)
+                .map(pickState('id', 'avatar', 'name')),
+              applicationsCount: appsCountMap.get(role.id) ?? 0,
+              featuredApplications: featuredAppIds
+                .map((id) => appsById.get(id))
+                .filter(Boolean)
+                .map(pickState('id', 'name', 'type')),
+            };
+          });
 
           // Return totalCount to pagination middleware
           ctx.pagination.totalCount = count;

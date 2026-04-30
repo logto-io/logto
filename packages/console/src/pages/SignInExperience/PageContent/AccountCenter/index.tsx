@@ -156,9 +156,7 @@ function AccountCenter({ isActive, data }: Props) {
             {section.key === 'accountSecurity' && (
               <>
                 <WebauthnRelatedOriginsField isAccountApiEnabled={isAccountApiEnabled} />
-                {isDevFeaturesEnabled && (
-                  <DeleteAccountUrlField isAccountApiEnabled={isAccountApiEnabled} />
-                )}
+                <DeleteAccountUrlField isAccountApiEnabled={isAccountApiEnabled} />
               </>
             )}
             {section.key === 'userProfile' && isDevFeaturesEnabled && (

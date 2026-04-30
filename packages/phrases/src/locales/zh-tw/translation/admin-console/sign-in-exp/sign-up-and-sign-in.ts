@@ -16,6 +16,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: '建立密碼',
     verify_at_sign_up_option: '驗證身分',
     social_only_creation_description: '（僅適用於社交註冊使用者）',
+    collect_user_profile: '收集用戶資料',
+    add_profile_fields: '新增個人資料欄位',
+    profile_fields_hint: {
+      not_in_list: '沒有你想要的欄位？',
+      set_up: '立即設定',
+      go_to: '其他個人資料欄位。',
+    },
   },
   sign_in: {
     title: '登入',

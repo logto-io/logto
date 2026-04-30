@@ -166,8 +166,7 @@ const Main = () => {
     return <GlobalLoading />;
   }
 
-  const showsSecurityPage =
-    isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
+  const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
 
   return (
     <Routes>
@@ -197,9 +196,7 @@ const Main = () => {
         element={<UpdateSuccess identifierType="backup_code" />}
       />
       <Route path={passkeySuccessRoute} element={<UpdateSuccess identifierType="passkey" />} />
-      {isDevFeaturesEnabled && (
-        <Route path={socialSuccessRoute} element={<UpdateSuccess identifierType="social" />} />
-      )}
+      <Route path={socialSuccessRoute} element={<UpdateSuccess identifierType="social" />} />
       <Route path={emailRoute} element={<Email />} />
       <Route path={phoneRoute} element={<Phone />} />
       <Route path={passwordRoute} element={<Password />} />
@@ -211,17 +208,13 @@ const Main = () => {
       <Route path={backupCodesManageRoute} element={<BackupCodeView />} />
       <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
       <Route path={passkeyManageRoute} element={<PasskeyView />} />
-      {isDevFeaturesEnabled && <Route path={verifiedActionRoute} element={<VerifiedAction />} />}
-      {isDevFeaturesEnabled && (
-        <>
-          <Route path={`${socialCallbackRoutePrefix}/:connectorId`} element={<SocialCallback />} />
-          <Route path={`${socialRoutePrefix}/:connectorId`} element={<SocialFlow mode="add" />} />
-          <Route
-            path={`${socialRoutePrefix}/:connectorId/remove`}
-            element={<SocialFlow mode="remove" />}
-          />
-        </>
-      )}
+      <Route path={verifiedActionRoute} element={<VerifiedAction />} />
+      <Route path={`${socialCallbackRoutePrefix}/:connectorId`} element={<SocialCallback />} />
+      <Route path={`${socialRoutePrefix}/:connectorId`} element={<SocialFlow mode="add" />} />
+      <Route
+        path={`${socialRoutePrefix}/:connectorId/remove`}
+        element={<SocialFlow mode="remove" />}
+      />
       {showsSecurityPage && <Route path={securityRoute} element={<Security />} />}
       {isDevFeaturesEnabled && <Route path={profileRoute} element={<Profile />} />}
       <Route index element={<Home />} />
@@ -234,8 +227,7 @@ const Layout = () => {
   const { accountCenterSettings, experienceSettings, theme } = useContext(PageContext);
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
-  const showsSecurityPage =
-    isDevFeaturesEnabled && hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
+  const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
   const isSecurityFullPage = pathname === securityRoute && showsSecurityPage;
   const isProfileFullPage = pathname === profileRoute && isDevFeaturesEnabled;
   const isFullPage = isSecurityFullPage || isProfileFullPage;

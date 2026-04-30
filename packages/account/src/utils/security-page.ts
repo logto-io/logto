@@ -4,7 +4,7 @@ import { AccountCenterControlValue } from '@logto/schemas';
 
 import { getAvailableSocialConnectors } from './social-connector.js';
 
-type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields'>;
+type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'deleteAccountUrl'>;
 type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConnectors' | 'mfa'>;
 
 const isVisibleField = (value?: AccountCenterControlValue): boolean =>
@@ -34,12 +34,14 @@ export const hasVisibleSecuritySection = (
   }
 
   const { username, email, phone, password, social, mfa } = accountCenterSettings.fields;
+  const hasDeleteAccountUrl = Boolean(accountCenterSettings.deleteAccountUrl?.trim());
 
   return (
     isVisibleField(username) ||
     isVisibleField(email) ||
     isVisibleField(phone) ||
     isVisibleField(password) ||
+    hasDeleteAccountUrl ||
     hasVisibleSocialSection(social, experienceSettings) ||
     hasVisibleMfaSection(mfa, experienceSettings)
   );

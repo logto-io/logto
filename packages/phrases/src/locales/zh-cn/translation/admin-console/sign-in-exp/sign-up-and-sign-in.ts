@@ -16,6 +16,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: '创建密码',
     verify_at_sign_up_option: '注册时验证身份',
     social_only_creation_description: '（仅对社交注册用户适用）',
+    collect_user_profile: '收集用户资料',
+    add_profile_fields: '添加资料字段',
+    profile_fields_hint: {
+      not_in_list: '没有你想要的字段？',
+      set_up: '立即设置',
+      go_to: '其他资料字段。',
+    },
   },
   sign_in: {
     title: '登录',
