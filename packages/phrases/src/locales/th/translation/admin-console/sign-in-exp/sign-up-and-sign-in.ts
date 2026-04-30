@@ -18,6 +18,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: 'สร้างรหัสผ่านของคุณ',
     verify_at_sign_up_option: 'ยืนยันตัวตนในขั้นตอนสมัครสมาชิก',
     social_only_creation_description: '(ใช้สำหรับการสร้างบัญชีด้วยโซเชียลเท่านั้น)',
+    collect_user_profile: 'เก็บข้อมูลโปรไฟล์ผู้ใช้',
+    add_profile_fields: 'เพิ่มฟิลด์โปรไฟล์',
+    profile_fields_hint: {
+      not_in_list: 'ไม่มีในรายการ?',
+      set_up: 'ตั้งค่า',
+      go_to: 'ฟิลด์โปรไฟล์อื่นตอนนี้',
+    },
   },
   sign_in: {
     title: 'เข้าสู่ระบบ',

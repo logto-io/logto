@@ -20,6 +20,13 @@ const sign_up_and_sign_in = {
     verify_at_sign_up_option: 'Подтвердить при регистрации',
     social_only_creation_description:
       '(Применяется только к созданию учетной записи в социальных сетях)',
+    collect_user_profile: 'Сбор профиля пользователя',
+    add_profile_fields: 'Добавить поля профиля',
+    profile_fields_hint: {
+      not_in_list: 'Нет в списке?',
+      set_up: 'Настройте',
+      go_to: 'другие поля профиля сейчас.',
+    },
   },
   sign_in: {
     title: 'ВХОД',

@@ -19,6 +19,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: 'Create your password',
     verify_at_sign_up_option: 'Verify at sign-up',
     social_only_creation_description: '(This apply to social only account creation)',
+    collect_user_profile: 'Collect user profile',
+    add_profile_fields: 'Add profile fields',
+    profile_fields_hint: {
+      not_in_list: 'Not in the list?',
+      set_up: 'Set up',
+      go_to: 'other profile fields now.',
+    },
   },
   sign_in: {
     title: 'SIGN IN',

@@ -19,6 +19,13 @@ const sign_up_and_sign_in = {
     set_a_password_option: 'Crie sua senha',
     verify_at_sign_up_option: 'Visualize na inscrição',
     social_only_creation_description: '(Isso se aplica apenas à criação de contas sociais)',
+    collect_user_profile: 'Coletar perfil do usuário',
+    add_profile_fields: 'Adicionar campos de perfil',
+    profile_fields_hint: {
+      not_in_list: 'Não está na lista?',
+      set_up: 'Configure',
+      go_to: 'outros campos de perfil agora.',
+    },
   },
   sign_in: {
     title: 'ENTRAR',
