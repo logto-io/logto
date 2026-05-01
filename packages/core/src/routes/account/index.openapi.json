@@ -122,7 +122,7 @@
       "post": {
         "operationId": "UpdatePassword",
         "summary": "Update password",
-        "description": "Update password for the user, a logto-verification-id in header is required for checking sensitive permissions.",
+        "description": "Update password for the user. A logto-verification-id header is required when the user has at least one security verification method: password, primary email, or primary phone. The header can be omitted only when the user has none of these methods and is setting the first password.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -140,8 +140,8 @@
           "204": {
             "description": "The password was updated successfully."
           },
-          "403": {
-            "description": "Permission denied, the verification record is invalid."
+          "401": {
+            "description": "Permission denied, verification is required or the verification record is invalid."
           }
         }
       }
