@@ -36,6 +36,7 @@ export const userExtendedSessionGuard = z.object({
   clientId: z.string().nullable(),
   accountId: z.string().nullable(),
   expiresAt: z.number(),
+  lastActiveAt: z.string().nullable(),
 });
 
 export const getUserSessionsResponseGuard = z.object({
