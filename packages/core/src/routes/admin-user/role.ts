@@ -4,6 +4,7 @@ import { tryThat } from '@silverhand/essentials';
 import { array, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.js';
@@ -20,6 +21,18 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
     users: { findUserById },
     usersRoles: { deleteUsersRolesByUserIdAndRoleId, findUsersRolesByUserId, insertUsersRoles },
   } = queries;
+
+  // Fetch the full user and the current role set so downstream webhooks receive rich payloads.
+  const buildUserRolesHookContext = async (userId: string) => {
+    const [user, usersRoles] = await Promise.all([
+      findUserById(userId),
+      findUsersRolesByUserId(userId),
+    ]);
+    const roleIds = usersRoles.map(({ roleId }) => roleId);
+    const roles = roleIds.length > 0 ? await findRolesByRoleIds(roleIds) : [];
+
+    return { user, roles };
+  };
 
   router.use('/users/:userId/roles(/.*)?', koaRoleRlsErrorHandler());
 
@@ -48,7 +61,6 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
             findRoles(search, limit, offset, { roleIds, type: RoleType.User }),
           ]);
 
-          // Return totalCount to pagination middleware
           ctx.pagination.totalCount = count;
           ctx.body = roles;
 
@@ -87,7 +99,7 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
       await findUserById(userId);
       const usersRoles = await findUsersRolesByUserId(userId);
       const existingRoleIds = new Set(usersRoles.map(({ roleId }) => roleId));
-      const roleIdsToAdd = roleIds.filter((id) => !existingRoleIds.has(id)); // ignore existing roles.
+      const roleIdsToAdd = roleIds.filter((id) => !existingRoleIds.has(id));
       const roles = await findRolesByRoleIds(roleIdsToAdd);
 
       for (const role of roles) {
@@ -106,6 +118,14 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
 
       ctx.body = { roleIds, addedRoleIds: roleIdsToAdd };
       ctx.status = 201;
+
+      const { user, roles: currentRoles } = await buildUserRolesHookContext(userId);
+      ctx.appendDataHookContext('User.Roles.Updated', {
+        ...buildManagementApiContext(ctx),
+        user,
+        roles: currentRoles,
+        addedRoleIds: roleIdsToAdd,
+      });
 
       return next();
     }
@@ -128,11 +148,9 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
       await findUserById(userId);
       const usersRoles = await findUsersRolesByUserId(userId);
 
-      // Only add the ones that doesn't exist
       const roleIdsToAdd = roleIds.filter(
         (roleId) => !usersRoles.some(({ roleId: _roleId }) => _roleId === roleId)
       );
-      // Remove existing roles that isn't wanted by user anymore
       const roleIdsToRemove = usersRoles
         .filter(({ roleId }) => !roleIds.includes(roleId))
         .map(({ roleId }) => roleId);
@@ -147,6 +165,15 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
 
       ctx.body = { roleIds: [...new Set(roleIds)] };
       ctx.status = 200;
+
+      const { user, roles: currentRoles } = await buildUserRolesHookContext(userId);
+      ctx.appendDataHookContext('User.Roles.Updated', {
+        ...buildManagementApiContext(ctx),
+        user,
+        roles: currentRoles,
+        addedRoleIds: roleIdsToAdd,
+        removedRoleIds: roleIdsToRemove,
+      });
 
       return next();
     }
@@ -166,6 +193,14 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
       await deleteUsersRolesByUserIdAndRoleId(userId, roleId);
 
       ctx.status = 204;
+
+      const { user, roles: currentRoles } = await buildUserRolesHookContext(userId);
+      ctx.appendDataHookContext('User.Roles.Updated', {
+        ...buildManagementApiContext(ctx),
+        user,
+        roles: currentRoles,
+        removedRoleIds: [roleId],
+      });
 
       return next();
     }

@@ -41,8 +41,10 @@ type BasicDataHookEvent = `${DataHookSchema}.${DataHookBasicMutationType}`;
 type CustomDataHookMutableSchema =
   | `${DataHookSchema}.Data`
   | `${DataHookSchema.User}.SuspensionStatus`
+  | `${DataHookSchema.User}.Roles`
   | `${DataHookSchema.Role}.Scopes`
   | `${DataHookSchema.Organization}.Membership`
+  | `${DataHookSchema.Organization}.UserRoles`
   | `${DataHookSchema.OrganizationRole}.Scopes`;
 
 type DataHookPropertyUpdateEvent =
@@ -62,6 +64,7 @@ export const hookEvents = Object.freeze([
   'User.Deleted',
   'User.Data.Updated',
   'User.SuspensionStatus.Updated',
+  'User.Roles.Updated',
   'Role.Created',
   'Role.Deleted',
   'Role.Data.Updated',
@@ -73,6 +76,7 @@ export const hookEvents = Object.freeze([
   'Organization.Deleted',
   'Organization.Data.Updated',
   'Organization.Membership.Updated',
+  'Organization.UserRoles.Updated',
   'OrganizationRole.Created',
   'OrganizationRole.Deleted',
   'OrganizationRole.Data.Updated',
@@ -129,6 +133,8 @@ export const managementApiHooksRegistration = Object.freeze({
   'PATCH /users/:userId/profile': 'User.Data.Updated',
   'PATCH /users/:userId/password': 'User.Data.Updated',
   'PATCH /users/:userId/is-suspended': 'User.SuspensionStatus.Updated',
+  // `User.Roles.Updated` is triggered manually in each user-role route so the
+  // payload can include the affected user and the resulting roles.
   'POST /roles': 'Role.Created',
   'DELETE /roles/:id': 'Role.Deleted',
   'PATCH /roles/:id': 'Role.Data.Updated',
@@ -140,6 +146,8 @@ export const managementApiHooksRegistration = Object.freeze({
   'POST /organizations': 'Organization.Created',
   'DELETE /organizations/:id': 'Organization.Deleted',
   'PATCH /organizations/:id': 'Organization.Data.Updated',
+  // `Organization.UserRoles.Updated` is triggered manually in each org-user-role route so the
+  // payload can include the affected user and the resulting organization roles.
   'POST /organization-roles': 'OrganizationRole.Created',
   'DELETE /organization-roles/:id': 'OrganizationRole.Deleted',
   'PATCH /organization-roles/:id': 'OrganizationRole.Data.Updated',

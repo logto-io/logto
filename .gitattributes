@@ -1,0 +1,6 @@
+# Ensure shell scripts always check out with LF endings, even on Windows.
+# Without this, Docker builds on Alpine fail with "unexpected end of file"
+# because busybox sh cannot parse CRLF line endings.
+*.sh           text eol=lf
+Dockerfile*    text eol=lf
+docker-compose*.yml text eol=lf
