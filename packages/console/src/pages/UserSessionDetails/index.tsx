@@ -144,6 +144,15 @@ function UserSessionDetails() {
         value: signedInAt,
       },
       {
+        key: 'last-active-at',
+        labelKey: 'user_details.sessions.last_active_at',
+        value: !sessionData.lastActiveAt
+          ? '-'
+          : sessionData.lastActiveAt === 'now'
+          ? t('user_details.sessions.active_now')
+          : new Date(sessionData.lastActiveAt).toLocaleString(),
+      },
+      {
         key: 'ip',
         labelKey: 'user_details.sessions.ip',
         value: sessionInfo?.ip ?? '-',

@@ -160,6 +160,8 @@ const user_details = {
     revoke_session: 'Revoke session',
     revoke_session_confirmation:
       'If you remove this session, users will be forced to re-authentication.',
+    last_active: 'Last active',
+    active_now: 'Active now',
   },
   third_party_apps: {
     title: 'Third-party apps',
