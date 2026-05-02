@@ -54,13 +54,13 @@ function UserSessions({ userId }: Props) {
             errorMessage={error?.body?.message ?? error?.message}
             columns={[
               {
-                title: t('user_details.sessions.name_column'),
+                title: String(t('user_details.sessions.name_column')),
                 dataIndex: 'name',
-                colSpan: 6,
+                colSpan: 4,
                 render: ({ name }) => name ?? '-',
               },
               {
-                title: t('user_details.sessions.session_id_column'),
+                title: String(t('user_details.sessions.session_id_column')),
                 dataIndex: 'sessionId',
                 colSpan: 5,
                 render: ({ sessionId }) => (
@@ -71,10 +71,26 @@ function UserSessions({ userId }: Props) {
                 ),
               },
               {
-                title: t('user_details.sessions.location_column'),
+                title: String(t('user_details.sessions.location_column')),
                 dataIndex: 'location',
-                colSpan: 5,
+                colSpan: 3,
                 render: ({ location }) => location ?? '-',
+              },
+              {
+                title: String(t('user_details.sessions.last_active')),
+                dataIndex: 'lastActiveAt',
+                colSpan: 4,
+                render: ({ lastActiveAt }) => {
+                  if (lastActiveAt === undefined) {
+                    return '-';
+                  }
+
+                  if (lastActiveAt === 'now') {
+                    return String(t('user_details.sessions.active_now'));
+                  }
+
+                  return new Date(lastActiveAt).toLocaleString();
+                },
               },
               {
                 title: null,
