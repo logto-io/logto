@@ -91,8 +91,9 @@ export const sendMessagePayloadGuard = z
   })
   .catchall(z.unknown()) satisfies z.ZodType<SendMessagePayload>;
 
+/** Matches HTTP(S) URLs or www.-prefixed hostnames only — avoids dotted abbreviations (e.g. p.s.a.). */
 export const urlRegEx =
-  /(https?:\/\/)?(?:www\.)?[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b[\w#%&()+./:=?@~-]*/;
+  /(https?:\/\/|www\.)[\w#%+.:=@~-]{1,256}\.[\d()a-z]{1,6}\b[\w#%&()+./:=?@~-]*/i;
 
 export const emailServiceBrandingGuard = z
   .object({
