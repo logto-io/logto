@@ -145,7 +145,7 @@ function UserSessionDetails() {
       },
       {
         key: 'last-active-at',
-        labelKey: 'user_details.sessions.last_active_at',
+        labelKey: 'user_details.sessions.last_active',
         value: !sessionData.lastActiveAt
           ? '-'
           : sessionData.lastActiveAt === 'now'
