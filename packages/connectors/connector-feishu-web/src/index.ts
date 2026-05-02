@@ -34,7 +34,8 @@ import {
 export function buildAuthorizationUri(
   clientId: string,
   redirectUri: string,
-  state: string
+  state: string,
+  scope?: string
 ): string {
   const queryParameters = new URLSearchParams({
     client_id: clientId,
@@ -42,6 +43,12 @@ export function buildAuthorizationUri(
     response_type: 'code',
     state,
   });
+
+  if (scope) {
+    // Convert comma-separated scope to space-separated as per OAuth 2.0 standard
+    const normalizedScope = scope.replace(/,/g, ' ').trim();
+    queryParameters.append('scope', normalizedScope);
+  }
 
   return `${codeEndpoint}?${queryParameters.toString()}`;
 }
@@ -51,9 +58,9 @@ export function getAuthorizationUri(getConfig: GetConnectorConfig): GetAuthoriza
     const config = await getConfig(defaultMetadata.id);
     validateConfig(config, feishuConfigGuard);
 
-    const { appId } = config;
+    const { appId, scope } = config;
 
-    return buildAuthorizationUri(appId, redirectUri, state);
+    return buildAuthorizationUri(appId, redirectUri, state, scope);
   };
 }
 
