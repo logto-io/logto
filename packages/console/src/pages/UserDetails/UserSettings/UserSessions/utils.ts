@@ -10,6 +10,7 @@ type UserSessionTableRow = {
   name?: string;
   sessionId: string;
   location?: string;
+  lastActiveAt?: string;
 };
 
 type SessionWithLastSubmission = Pick<GetUserSessionResponse, 'lastSubmission'>;
@@ -104,6 +105,7 @@ export const normalizeSessionRows = (
       name: normalized.name,
       sessionId: session.payload.uid,
       location: normalized.location,
+      lastActiveAt: session.lastActiveAt ?? undefined,
     };
   });
 };

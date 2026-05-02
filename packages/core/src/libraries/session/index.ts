@@ -4,7 +4,7 @@ import {
   oidcSessionInstancePayloadGuard,
   userApplicationGrantPayloadGuard,
 } from '@logto/schemas';
-import { deduplicate } from '@silverhand/essentials';
+import { deduplicate, type Nullable } from '@silverhand/essentials';
 import type { Provider, Session } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -17,8 +17,25 @@ import { runNamedTasksWithSummary, serializeErrorCause } from './utils.js';
 export { consent, getMissingScopes } from './consent.js';
 export { assignInteractionResults } from './interaction.js';
 
+/**
+ * Converts a raw DB lastActiveAt timestamp (ms epoch, or null) to the API string value.
+ * - null  → null (no heartbeat ever received)
+ * - < 60s ago → "now" (session is actively heartbeating)
+ * - otherwise → ISO 8601 string
+ *
+ * The 60-second threshold is 2× the 30-second client heartbeat interval, giving
+ * enough headroom for network latency and timer jitter.
+ */
+const toLastActiveAtString = (lastActiveAt: Nullable<number>): Nullable<string> => {
+  if (lastActiveAt === null) {
+    return null;
+  }
+  const ageMs = Date.now() - lastActiveAt;
+  return ageMs < 60_000 ? 'now' : new Date(lastActiveAt).toISOString();
+};
+
 const formatSessionWithExtension = (session: SessionInstanceWithExtension) => {
-  const { lastSubmission, clientId, accountId, payload, ...rest } = session;
+  const { lastSubmission, clientId, accountId, lastActiveAt, payload, ...rest } = session;
 
   const interactionContextResult =
     jwtCustomizerUserInteractionContextGuard.safeParse(lastSubmission);
@@ -40,6 +57,7 @@ const formatSessionWithExtension = (session: SessionInstanceWithExtension) => {
     lastSubmission: interactionContextResult.success ? interactionContextResult.data : null,
     clientId,
     accountId,
+    lastActiveAt: toLastActiveAtString(lastActiveAt),
   };
 };
 

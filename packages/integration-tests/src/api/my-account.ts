@@ -1,6 +1,6 @@
 import type {
+  GetAccountUserSessionsResponse,
   GetUserApplicationGrantsResponse,
-  GetUserSessionsResponse,
   GetThirdPartyAccessTokenResponse,
   SessionGrantRevokeTarget,
   UserMfaVerificationResponse,
@@ -189,7 +189,7 @@ export const getSessions = async (api: KyInstance, verificationRecordId: string)
     .get('api/my-account/sessions', {
       headers: { [verificationRecordIdHeader]: verificationRecordId },
     })
-    .json<GetUserSessionsResponse>();
+    .json<GetAccountUserSessionsResponse>();
 
 export const getMyAccountGrants = async (
   api: KyInstance,

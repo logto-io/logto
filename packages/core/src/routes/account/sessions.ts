@@ -2,7 +2,7 @@ import { UserScope } from '@logto/core-kit';
 import {
   AccountCenterControlValue,
   SessionGrantRevokeTarget,
-  getUserSessionsResponseGuard,
+  getAccountUserSessionsResponseGuard,
 } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -23,10 +23,10 @@ export default function accountSessionRoutes<T extends UserRouter>(
     `${accountApiPrefix}/sessions`,
     koaGuard({
       status: [200, 400, 401, 500],
-      response: getUserSessionsResponseGuard,
+      response: getAccountUserSessionsResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, identityVerified, sessionUid } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
       assertThat(
@@ -48,7 +48,10 @@ export default function accountSessionRoutes<T extends UserRouter>(
       const sessions = await sessionLibrary.findUserActiveSessionsWithExtensions(userId);
 
       ctx.body = {
-        sessions,
+        sessions: sessions.map((session) => ({
+          ...session,
+          isCurrent: session.payload.uid === sessionUid,
+        })),
       };
 
       return next();

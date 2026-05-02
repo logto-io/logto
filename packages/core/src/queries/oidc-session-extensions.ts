@@ -22,7 +22,7 @@ type NullablePick<T, K extends keyof T> = {
   [P in K]: Nullable<T[P]>;
 };
 export type SessionInstanceWithExtension = SessionInstance &
-  NullablePick<OidcSessionExtension, 'lastSubmission' | 'clientId' | 'accountId'>;
+  NullablePick<OidcSessionExtension, 'lastSubmission' | 'clientId' | 'accountId' | 'lastActiveAt'>;
 
 export class OidcSessionExtensionsQueries {
   public readonly insert = buildInsertIntoWithPool(this.pool)(OidcSessionExtensions, {
@@ -75,6 +75,7 @@ export class OidcSessionExtensionsQueries {
           fields.lastSubmission,
           fields.clientId,
           fields.accountId,
+          fields.lastActiveAt,
         ],
         sql`, `
       )}
@@ -101,6 +102,7 @@ export class OidcSessionExtensionsQueries {
           fields.lastSubmission,
           fields.clientId,
           fields.accountId,
+          fields.lastActiveAt,
         ],
         sql`, `
       )}
@@ -113,5 +115,23 @@ export class OidcSessionExtensionsQueries {
         and ${modelInstanceFields.payload} ->> 'uid' = ${sessionUid}
         and ${modelInstanceFields.expiresAt} > ${convertToTimestamp()}
     `);
+  }
+
+  /**
+   * Upserts last_active_at for the given session.
+   * The WHERE clause enforces a 25-second minimum interval — if last_active_at is
+   * less than 25 s old the DO UPDATE branch is skipped (rowCount === 0).
+   * Returns true if the timestamp was written, false if rate-limited.
+   */
+  async updateLastActiveAt(sessionUid: string, accountId: string): Promise<boolean> {
+    const result = await this.pool.query(sql`
+      insert into ${table} (${fields.sessionUid}, ${fields.accountId}, ${fields.lastActiveAt})
+      values (${sessionUid}, ${accountId}, ${convertToTimestamp()})
+      on conflict (${fields.tenantId}, ${fields.sessionUid}) do update
+        set ${fields.lastActiveAt} = ${convertToTimestamp()}
+        where ${table}.${fields.lastActiveAt} is null
+           or ${table}.${fields.lastActiveAt} < ${convertToTimestamp(new Date(Date.now() - 25_000))}
+    `);
+    return result.rowCount > 0;
   }
 }
