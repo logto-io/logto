@@ -65,7 +65,7 @@
     "@vitest/coverage-v8": "^3.1.1",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
-    "postcss": "^8.4.31",
+    "postcss": "^8.5.10",
     "prettier": "^3.5.3",
     "stylelint": "^15.0.0",
     "typescript": "^5.5.3",

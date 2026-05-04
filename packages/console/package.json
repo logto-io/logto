@@ -89,7 +89,7 @@
     "nanoid": "^5.0.9",
     "overlayscrollbars": "^2.0.2",
     "overlayscrollbars-react": "^0.5.0",
-    "postcss": "^8.4.39",
+    "postcss": "^8.5.10",
     "postcss-modules": "^6.0.0",
     "posthog-js": "^1.268.6",
     "prettier": "^3.5.3",
