@@ -13,12 +13,13 @@ import { successfullyVerifyTotp } from '#src/helpers/experience/totp-verificatio
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const lowBotScoreHeaders = Object.freeze({
   'x-logto-cf-bot-score': '10',
 });
 
-describe('adaptive MFA enforcement', () => {
+devFeatureTest.describe('adaptive MFA enforcement', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {

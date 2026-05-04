@@ -47,7 +47,7 @@ describe('Experience - suggest additional MFA after email registration', () => {
     await updateSignInExperience({
       mfa: {
         factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
     });
 
@@ -81,7 +81,7 @@ describe('Experience - suggest additional MFA after email registration', () => {
     await updateSignInExperience({
       mfa: {
         factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
     });
     const email = generateEmail();
@@ -114,7 +114,7 @@ describe('Experience - suggest additional MFA after email registration', () => {
     await updateSignInExperience({
       mfa: {
         factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP, MfaFactor.BackupCode],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
     });
 
@@ -187,7 +187,7 @@ describe('Experience - suggest additional MFA after WebAuthn binding as sign-in 
     await updateSignInExperience({
       mfa: {
         factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
       passkeySignIn: {
         enabled: true,
@@ -233,7 +233,7 @@ describe('Experience - suggest additional MFA after WebAuthn binding as sign-in 
     await updateSignInExperience({
       mfa: {
         factors: [MfaFactor.WebAuthn, MfaFactor.TOTP, MfaFactor.BackupCode],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
       passkeySignIn: {
         enabled: true,
@@ -281,7 +281,7 @@ describe('Experience - suggest additional MFA after WebAuthn binding as sign-in 
     await updateSignInExperience({
       mfa: {
         factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
     });
 

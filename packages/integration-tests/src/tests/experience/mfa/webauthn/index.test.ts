@@ -203,7 +203,7 @@ describe('Passkey sign-in', () => {
     await updateSignInExperience({
       mfa: {
         factors: [MfaFactor.TOTP],
-        policy: MfaPolicy.Mandatory,
+        policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
       },
       passkeySignIn: {
         enabled: true,

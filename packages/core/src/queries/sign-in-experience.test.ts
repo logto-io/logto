@@ -1,6 +1,8 @@
+import { MfaPolicy, mfaGuard } from '@logto/schemas';
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
 import { mockSignInExperience } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { MockWellKnownCache } from '#src/test-utils/tenant.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
@@ -45,6 +47,34 @@ describe('sign-in-experience query', () => {
     signUpProfileFields: JSON.stringify(mockSignInExperience.signUpProfileFields),
   };
 
+  const legacyMandatoryDatabaseValue = {
+    ...databaseValue,
+    mfa: JSON.stringify({
+      ...mockSignInExperience.mfa,
+      policy: MfaPolicy.Mandatory,
+    }),
+  };
+
+  const expectNormalizedMfa = (
+    value: string | (typeof mockSignInExperience)['mfa'],
+    policy: MfaPolicy = mockSignInExperience.mfa.policy
+  ) => {
+    const parsedValue = typeof value === 'string' ? mfaGuard.parse(JSON.parse(value)) : value;
+
+    expect(parsedValue).toEqual({
+      ...mockSignInExperience.mfa,
+      policy,
+    });
+  };
+
+  const { mfa: _databaseMfa, ...databaseValueWithoutMfa } = databaseValue;
+  const { mfa: _legacyMandatoryDatabaseMfa, ...legacyMandatoryDatabaseValueWithoutMfa } =
+    legacyMandatoryDatabaseValue;
+
+  beforeEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+  });
+
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
@@ -61,7 +91,49 @@ describe('sign-in-experience query', () => {
       return createMockQueryResult([databaseValue]);
     });
 
-    await expect(findDefaultSignInExperience()).resolves.toEqual(databaseValue);
+    const result = await findDefaultSignInExperience();
+
+    expect(result).toMatchObject({
+      ...databaseValueWithoutMfa,
+    });
+    expectNormalizedMfa(result.mfa);
+  });
+
+  it('findDefaultSignInExperience should normalize legacy mandatory mfa policy', async () => {
+    mockQuery.mockImplementationOnce(async () =>
+      createMockQueryResult([legacyMandatoryDatabaseValue])
+    );
+
+    const result = await findDefaultSignInExperience();
+
+    expect(result).toMatchObject({
+      ...legacyMandatoryDatabaseValueWithoutMfa,
+    });
+    expectNormalizedMfa(result.mfa, MfaPolicy.PromptAtSignInAndSignUpMandatory);
+  });
+
+  it('findDefaultSignInExperience should keep no-skip policy when adaptive mfa is enabled in legacy mode', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+    mockQuery.mockImplementationOnce(async () =>
+      createMockQueryResult([
+        {
+          ...databaseValue,
+          mfa: JSON.stringify({
+            ...mockSignInExperience.mfa,
+            policy: MfaPolicy.PromptAtSignInAndSignUpMandatory,
+            factors: [],
+          }),
+          adaptiveMfa: JSON.stringify({
+            enabled: true,
+          }),
+        },
+      ])
+    );
+
+    const result = await findDefaultSignInExperience();
+
+    expectNormalizedMfa(result.mfa, MfaPolicy.PromptAtSignInAndSignUpMandatory);
   });
 
   it('updateDefaultSignInExperience', async () => {
@@ -83,6 +155,29 @@ describe('sign-in-experience query', () => {
       return createMockQueryResult([databaseValue]);
     });
 
-    await expect(updateDefaultSignInExperience({ termsOfUseUrl })).resolves.toEqual(databaseValue);
+    const result = await updateDefaultSignInExperience({ termsOfUseUrl });
+
+    expect(result).toMatchObject({
+      ...databaseValueWithoutMfa,
+    });
+    expectNormalizedMfa(result.mfa);
+  });
+
+  it('updateDefaultSignInExperience should normalize legacy mandatory mfa policy in response', async () => {
+    mockQuery.mockImplementationOnce(async () =>
+      createMockQueryResult([legacyMandatoryDatabaseValue])
+    );
+
+    const result = await updateDefaultSignInExperience({
+      mfa: {
+        ...mockSignInExperience.mfa,
+        policy: MfaPolicy.Mandatory,
+      },
+    });
+
+    expect(result).toMatchObject({
+      ...legacyMandatoryDatabaseValueWithoutMfa,
+    });
+    expectNormalizedMfa(result.mfa, MfaPolicy.PromptAtSignInAndSignUpMandatory);
   });
 });
