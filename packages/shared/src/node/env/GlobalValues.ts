@@ -3,6 +3,7 @@ import {
   getEnv,
   getEnvAsStringArray,
   tryThat,
+  trySafe,
   yes,
   type Optional,
 } from '@silverhand/essentials';
@@ -158,6 +159,21 @@ export default class GlobalValues {
    * can operate with multiple custom domains across both development and production tenants.
    */
   public readonly isMultipleCustomDomainsEnabled = yes(getEnv('MULTIPLE_CUSTOM_DOMAINS_ENABLED'));
+
+  /**
+   * Additional domain endpoints for multi-domain OSS deployments (without Cloudflare).
+   *
+   * Comma-separated list of full URLs, e.g. `https://logto.example.eu,https://logto.example.pl`.
+   * Each domain will act as an independent OIDC issuer for the default tenant, served by a
+   * reverse proxy (e.g. Apache). SSL is managed externally; no Cloudflare required.
+   *
+   * Controlled by the `ADDITIONAL_ENDPOINTS` environment variable.
+   */
+  public readonly additionalEndpoints: URL[] = (getEnv('ADDITIONAL_ENDPOINTS') ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .flatMap((s) => trySafe(() => [new URL(s)]) ?? []);
 
   // eslint-disable-next-line unicorn/consistent-function-scoping
   public readonly databaseUrl = tryThat(() => assertEnv('DB_URL'), throwErrorWithDsnMessage);

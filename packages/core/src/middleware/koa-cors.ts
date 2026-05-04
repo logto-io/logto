@@ -93,7 +93,7 @@ export default function koaCors<StateT, ContextT, ResponseBodyT>(
         return origin ?? '';
       }
 
-      if (
+      const matchesUrlSet =
         origin &&
         urlSets.some((set) => {
           const deduplicated = set.deduplicated();
@@ -110,8 +110,13 @@ export default function koaCors<StateT, ContextT, ResponseBodyT>(
               // Disable localhost CORS in production since it's unsafe
               !(EnvSet.values.isProduction && url.hostname === 'localhost')
           );
-        })
-      ) {
+        });
+
+      const matchesAdditionalEndpoint =
+        origin &&
+        EnvSet.values.additionalEndpoints.some((ep) => ep.origin === origin);
+
+      if (matchesUrlSet || matchesAdditionalEndpoint) {
         return origin;
       }
 

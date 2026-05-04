@@ -10,6 +10,8 @@ export type SsrData = {
     appId?: string;
     organizationId?: string;
     uiLocales?: string;
+    backUrl?: string;
+    theme?: string;
     data: FullSignInExperience;
   };
   phrases: {

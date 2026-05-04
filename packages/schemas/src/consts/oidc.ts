@@ -77,6 +77,16 @@ export enum ExtraParamsKey {
    * The Google One Tap credential JWT token for external website integration.
    */
   GoogleOneTapCredential = 'google_one_tap_credential',
+  /**
+   * Custom back URL for the close button to redirect to.
+   */
+  BackUrl = 'back_url',
+  /**
+   * Force the sign-in experience theme (`light` or `dark`), overriding the
+   * user's system `prefers-color-scheme`. Lets the calling app keep its own
+   * theme toggle in sync with the auth screen.
+   */
+  Theme = 'theme',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -107,6 +117,8 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.Identifier]: z.string(),
     [ExtraParamsKey.OneTimeToken]: z.string(),
     [ExtraParamsKey.GoogleOneTapCredential]: z.string(),
+    [ExtraParamsKey.BackUrl]: z.string(),
+    [ExtraParamsKey.Theme]: z.string(),
   })
   .partial() satisfies ToZodObject<ExtraParamsObject>;
 
@@ -120,4 +132,6 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.Identifier]: string;
   [ExtraParamsKey.OneTimeToken]: string;
   [ExtraParamsKey.GoogleOneTapCredential]: string;
+  [ExtraParamsKey.BackUrl]: string;
+  [ExtraParamsKey.Theme]: string;
 }>;

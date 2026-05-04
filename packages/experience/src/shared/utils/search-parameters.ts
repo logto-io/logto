@@ -1,6 +1,12 @@
 import { condString } from '@silverhand/essentials';
 
-export const searchKeysCamelCase = Object.freeze(['organizationId', 'appId', 'uiLocales'] as const);
+export const searchKeysCamelCase = Object.freeze([
+  'organizationId',
+  'appId',
+  'uiLocales',
+  'backUrl',
+  'theme',
+] as const);
 
 type SearchKeysCamelCase = (typeof searchKeysCamelCase)[number];
 
@@ -18,6 +24,15 @@ export const searchKeys = Object.freeze({
    * E.g. `en` or `en-US` or `en-US en`.
    */
   uiLocales: 'ui_locales',
+  /**
+   * Custom back URL for the close button to redirect to.
+   */
+  backUrl: 'back_url',
+  /**
+   * Force the sign-in experience theme (`light` or `dark`), overriding the
+   * user's system `prefers-color-scheme`.
+   */
+  theme: 'theme',
 } satisfies Record<SearchKeysCamelCase, string>);
 
 export const handleSearchParametersData = () => {
@@ -39,7 +54,8 @@ export const handleSearchParametersData = () => {
         // Keep app_id in the URL for resuming sessions
         parameters.delete(key);
       }
-    } else if (key !== searchKeys.appId) {
+    } else if (key !== searchKeys.appId && key !== searchKeys.backUrl && key !== searchKeys.theme) {
+      // Don't remove back_url or theme from sessionStorage on refresh (when not in URL params)
       sessionStorage.removeItem(key);
     }
   }

@@ -364,6 +364,9 @@ export const buildLoginPromptUrl = (
   appendExtraParam(ExtraParamsKey.OneTimeToken);
   appendExtraParam(ExtraParamsKey.LoginHint);
   appendExtraParam(ExtraParamsKey.Identifier);
+  appendExtraParam(ExtraParamsKey.UiLocales);
+  appendExtraParam(ExtraParamsKey.BackUrl);
+  appendExtraParam(ExtraParamsKey.Theme);
 
   // Reuse DirectSignIn page to handle Google One Tap credential.
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
