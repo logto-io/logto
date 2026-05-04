@@ -120,6 +120,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
             webauthnRelatedOrigins,
             deleteAccountUrl,
             customCss: accountCenter.customCss?.length ? accountCenter.customCss : null,
+            profileFields: accountCenter.profileFields,
           },
         })
         .json<AccountCenterConfig>();
