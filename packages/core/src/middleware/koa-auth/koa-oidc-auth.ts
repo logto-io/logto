@@ -64,7 +64,7 @@ export default function koaOidcAuth<StateT, ContextT extends IRouterParamContext
 
     assertThat(accessToken, new RequestError({ code: 'auth.unauthorized', status: 401 }));
 
-    const { accountId, scopes, clientId } = accessToken;
+    const { accountId, scopes, clientId, sessionUid } = accessToken;
     assertThat(accountId, new RequestError({ code: 'auth.unauthorized', status: 401 }));
     assertThat(scopes.has('openid'), new RequestError({ code: 'auth.forbidden', status: 403 }));
 
@@ -85,6 +85,7 @@ export default function koaOidcAuth<StateT, ContextT extends IRouterParamContext
       scopes,
       clientId,
       identityVerified,
+      sessionUid,
     };
 
     return next();
