@@ -1,4 +1,9 @@
-import { AccountCenterControlValue, type SignInExperience } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  type CustomProfileField,
+  type SignInExperience,
+  userProfileKeys,
+} from '@logto/schemas';
 import { useCallback, useMemo, type ChangeEvent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -87,6 +92,48 @@ function AccountCenter({ isActive, data }: Props) {
     [setValue]
   );
 
+  const userProfileKeySet = useMemo(() => new Set<string>(userProfileKeys), []);
+
+  const getProfileFieldControlKey = useCallback(
+    (fieldName: string): AccountCenterFieldKey => {
+      if (fieldName === 'name' || fieldName === 'avatar') {
+        return fieldName;
+      }
+      if (userProfileKeySet.has(fieldName)) {
+        return 'profile';
+      }
+      return 'customData';
+    },
+    [userProfileKeySet]
+  );
+
+  const getProfileFieldDisabledReason = useCallback(
+    (field: CustomProfileField): string | undefined => {
+      const controlKey = getProfileFieldControlKey(field.name);
+      const controlValue = fields[controlKey];
+
+      if (controlValue !== AccountCenterControlValue.Off) {
+        return undefined;
+      }
+
+      switch (controlKey) {
+        case 'name': {
+          return t('sign_in_exp.account_center.profile_fields.disabled_hint.name');
+        }
+        case 'avatar': {
+          return t('sign_in_exp.account_center.profile_fields.disabled_hint.avatar');
+        }
+        case 'profile': {
+          return t('sign_in_exp.account_center.profile_fields.disabled_hint.profile');
+        }
+        default: {
+          return t('sign_in_exp.account_center.profile_fields.disabled_hint.custom_data');
+        }
+      }
+    },
+    [fields, getProfileFieldControlKey, t]
+  );
+
   return (
     <SignInExperienceTabWrapper isActive={isActive}>
       {isActive && (
@@ -167,6 +214,7 @@ function AccountCenter({ isActive, data }: Props) {
                 >
                   name="accountCenter.profileFields"
                   addProfileFieldsButtonTitle="sign_in_exp.account_center.profile_fields.add_profile_fields"
+                  getFieldDisabledReason={getProfileFieldDisabledReason}
                   hint={
                     <>
                       {t('sign_in_exp.account_center.profile_fields.hint.not_in_list')}

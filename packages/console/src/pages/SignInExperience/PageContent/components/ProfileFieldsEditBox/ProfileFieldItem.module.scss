@@ -24,3 +24,17 @@
     color: var(--color-text-secondary);
   }
 }
+
+.disabled {
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+
+  .draggableIcon {
+    pointer-events: none;
+  }
+}
+
+.tooltipAnchor {
+  display: block;
+  width: 100%;
+}

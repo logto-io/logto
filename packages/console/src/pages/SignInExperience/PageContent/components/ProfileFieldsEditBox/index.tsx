@@ -34,12 +34,24 @@ type Props<TFieldValues extends FieldValues, TName extends FieldArrayPath<TField
   /** Optional hint rendered below the editor (e.g. a link back to the catalog setup page). */
   readonly hint?: React.ReactNode;
   readonly onFieldsChange?: () => void;
+  /**
+   * Returns a localized hint string when the given catalog field is currently not allowed, or
+   * `undefined` when the field is allowed. Disabled fields stay visible but cannot be added or
+   * removed; if already added, the row is shown in a disabled state with a tooltip.
+   */
+  readonly getFieldDisabledReason?: (field: CustomProfileField) => string | undefined;
 };
 
 function ProfileFieldsEditBox<
   TFieldValues extends FieldValues,
   TName extends FieldArrayPath<TFieldValues>,
->({ name, addProfileFieldsButtonTitle, hint, onFieldsChange }: Props<TFieldValues, TName>) {
+>({
+  name,
+  addProfileFieldsButtonTitle,
+  hint,
+  onFieldsChange,
+  getFieldDisabledReason,
+}: Props<TFieldValues, TName>) {
   const { control } = useFormContext<TFieldValues>();
   const getI18nLabel = useI18nFieldLabel();
 
@@ -56,6 +68,14 @@ function ProfileFieldsEditBox<
   /* eslint-enable no-restricted-syntax */
 
   const { fields, swap, remove, append } = useFieldArray({ control, name });
+
+  const fieldByName = useMemo(() => {
+    const map = new Map<string, CustomProfileField>();
+    for (const field of catalog ?? []) {
+      map.set(field.name, field);
+    }
+    return map;
+  }, [catalog]);
 
   const availableFields = useMemo(() => {
     if (!catalog) {
@@ -110,9 +130,15 @@ function ProfileFieldsEditBox<
               render={({ field: { value } }) => {
                 // eslint-disable-next-line no-restricted-syntax -- Controller's value type is generic based on FieldPath which can't narrow to our known shape
                 const fieldName = (value as { name: string }).name;
+                const catalogField = fieldByName.get(fieldName);
+                const disabledReason = catalogField
+                  ? getFieldDisabledReason?.(catalogField)
+                  : undefined;
                 return (
                   <ProfileFieldItem
                     label={fieldLabelByName.get(fieldName) ?? fieldName}
+                    isDisabled={Boolean(disabledReason)}
+                    disabledHint={disabledReason}
                     onDelete={() => {
                       onFieldsChange?.();
                       remove(index);
@@ -130,18 +156,24 @@ function ProfileFieldsEditBox<
           dropdownHorizontalAlign="start"
           dropdownClassName={styles.addProfileFieldsDropdown}
         >
-          {availableFields.map(({ name, label }) => (
-            <DropdownItem
-              key={name}
-              onClick={() => {
-                onFieldsChange?.();
-                // eslint-disable-next-line no-restricted-syntax -- the runtime shape matches the caller's array element
-                append({ name } as never);
-              }}
-            >
-              {label || getI18nLabel(name)}
-            </DropdownItem>
-          ))}
+          {availableFields.map((field) => {
+            const { name: fieldName, label } = field;
+            const disabledReason = getFieldDisabledReason?.(field);
+            return (
+              <DropdownItem
+                key={fieldName}
+                isDisabled={Boolean(disabledReason)}
+                tooltip={disabledReason}
+                onClick={() => {
+                  onFieldsChange?.();
+                  // eslint-disable-next-line no-restricted-syntax -- the runtime shape matches the caller's array element
+                  append({ name: fieldName } as never);
+                }}
+              >
+                {label || getI18nLabel(fieldName)}
+              </DropdownItem>
+            );
+          })}
         </ActionMenu>
       )}
       {hint && <div className={styles.setUpHint}>{hint}</div>}
