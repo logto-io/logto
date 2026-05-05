@@ -175,6 +175,24 @@ const sign_in_exp = {
         'Controlla l’accesso ai dati JSON personalizzati archiviati sull’utente.',
       sessions: 'Sessioni',
     },
+    profile_fields: {
+      title: 'Campi del profilo per il centro account predefinito',
+      add_profile_fields: 'Aggiungi campi del profilo',
+      hint: {
+        not_in_list: 'Non è nella lista?',
+        set_up: 'Configura',
+        go_to: 'altri campi del profilo ora.',
+      },
+      disabled_hint: {
+        name: 'Per aggiungere questo campo, imposta prima il permesso "Nome" su "Modifica/Sola lettura" nei Dati del profilo sopra.',
+        avatar:
+          'Per aggiungere questo campo, imposta prima il permesso "Avatar" su "Modifica/Sola lettura" nei Dati del profilo sopra.',
+        profile:
+          'Per aggiungere questo campo, imposta prima il permesso "Profilo" su "Modifica/Sola lettura" nei Dati del profilo sopra.',
+        custom_data:
+          'Per aggiungere questo campo, imposta prima il permesso "Dati personalizzati" su "Modifica/Sola lettura" nei Dati del profilo sopra.',
+      },
+    },
     webauthn_related_origins: 'Origini correlate a WebAuthn',
     webauthn_related_origins_description:
       'Aggiungi i domini delle applicazioni front-end autorizzate a registrare passkey tramite l’Account API.',

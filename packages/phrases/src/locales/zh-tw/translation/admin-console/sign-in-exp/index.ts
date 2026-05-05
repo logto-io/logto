@@ -168,6 +168,21 @@ const sign_in_exp = {
       custom_data_description: '控制對儲存在使用者上的自訂 JSON 資料的存取。',
       sessions: '會話',
     },
+    profile_fields: {
+      title: '預建帳戶中心的檔案欄位',
+      add_profile_fields: '新增檔案欄位',
+      hint: {
+        not_in_list: '沒有你想要的？',
+        set_up: '立即設定',
+        go_to: '其他檔案欄位。',
+      },
+      disabled_hint: {
+        name: '若要新增此欄位，請先在上方檔案資料中將「姓名」權限設為「可編輯/唯讀」。',
+        avatar: '若要新增此欄位，請先在上方檔案資料中將「大頭貼」權限設為「可編輯/唯讀」。',
+        profile: '若要新增此欄位，請先在上方檔案資料中將「檔案」權限設為「可編輯/唯讀」。',
+        custom_data: '若要新增此欄位，請先在上方檔案資料中將「自訂資料」權限設為「可編輯/唯讀」。',
+      },
+    },
     webauthn_related_origins: 'WebAuthn 相關來源',
     webauthn_related_origins_description:
       '新增允許透過 Account API 註冊通行金鑰的前端應用程式網域。',

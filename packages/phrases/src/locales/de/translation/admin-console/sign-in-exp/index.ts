@@ -174,6 +174,24 @@ const sign_in_exp = {
         'Steuern Sie den Zugriff auf benutzerdefinierte JSON-Daten, die beim Benutzer gespeichert sind.',
       sessions: 'Sitzungen',
     },
+    profile_fields: {
+      title: 'Profilfelder für vorgefertigtes Konto-Center',
+      add_profile_fields: 'Profilfelder hinzufügen',
+      hint: {
+        not_in_list: 'Nicht in der Liste?',
+        set_up: 'Jetzt einrichten',
+        go_to: 'andere Profilfelder.',
+      },
+      disabled_hint: {
+        name: 'Um dieses Feld hinzuzufügen, setze zuerst die Berechtigung „Name“ im obigen Bereich „Profildaten“ auf „Bearbeiten/Nur lesen“.',
+        avatar:
+          'Um dieses Feld hinzuzufügen, setze zuerst die Berechtigung „Avatar“ im obigen Bereich „Profildaten“ auf „Bearbeiten/Nur lesen“.',
+        profile:
+          'Um dieses Feld hinzuzufügen, setze zuerst die Berechtigung „Profil“ im obigen Bereich „Profildaten“ auf „Bearbeiten/Nur lesen“.',
+        custom_data:
+          'Um dieses Feld hinzuzufügen, setze zuerst die Berechtigung „Benutzerdefinierte Daten“ im obigen Bereich „Profildaten“ auf „Bearbeiten/Nur lesen“.',
+      },
+    },
     webauthn_related_origins: 'WebAuthn-bezogene Ursprünge',
     webauthn_related_origins_description:
       'Fügen Sie die Domains Ihrer Frontend-Anwendungen hinzu, die über die Account-API Passkeys registrieren dürfen.',

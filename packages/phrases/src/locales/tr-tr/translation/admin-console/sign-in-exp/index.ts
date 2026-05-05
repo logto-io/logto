@@ -174,6 +174,24 @@ const sign_in_exp = {
       custom_data_description: 'Kullanıcıda saklanan özel JSON verilerine erişimi kontrol edin.',
       sessions: 'Oturumlar',
     },
+    profile_fields: {
+      title: 'Önceden oluşturulmuş hesap merkezi için profil alanları',
+      add_profile_fields: 'Profil alanları ekle',
+      hint: {
+        not_in_list: 'Listede yok mu?',
+        set_up: 'Şimdi kur',
+        go_to: 'diğer profil alanları.',
+      },
+      disabled_hint: {
+        name: 'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Ad" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+        avatar:
+          'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Avatar" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+        profile:
+          'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Profil" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+        custom_data:
+          'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Özel veriler" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+      },
+    },
     webauthn_related_origins: 'WebAuthn İlgili Kaynaklar',
     webauthn_related_origins_description:
       'Account API aracılığıyla passkey kaydedilmesine izin verilen ön uç uygulamalarınızın alan adlarını ekleyin.',

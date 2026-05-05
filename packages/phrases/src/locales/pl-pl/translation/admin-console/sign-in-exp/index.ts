@@ -174,6 +174,24 @@ const sign_in_exp = {
         'Kontroluj dostęp do niestandardowych danych JSON przechowywanych przy użytkowniku.',
       sessions: 'Sesje',
     },
+    profile_fields: {
+      title: 'Pola profilu dla gotowego centrum konta',
+      add_profile_fields: 'Dodaj pola profilu',
+      hint: {
+        not_in_list: 'Nie ma na liście?',
+        set_up: 'Skonfiguruj',
+        go_to: 'inne pola profilu teraz.',
+      },
+      disabled_hint: {
+        name: 'Aby dodać to pole, najpierw ustaw uprawnienie „Imię i nazwisko” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+        avatar:
+          'Aby dodać to pole, najpierw ustaw uprawnienie „Awatar” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+        profile:
+          'Aby dodać to pole, najpierw ustaw uprawnienie „Profil” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+        custom_data:
+          'Aby dodać to pole, najpierw ustaw uprawnienie „Dane niestandardowe” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+      },
+    },
     webauthn_related_origins: 'Powiązane źródła WebAuthn',
     webauthn_related_origins_description:
       'Dodaj domeny swoich aplikacji front-end, którym pozwalasz rejestrować klucze dostępu przez Account API.',

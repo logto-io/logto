@@ -168,6 +168,21 @@ const sign_in_exp = {
       custom_data_description: '控制对存储在用户上的自定义 JSON 数据的访问。',
       sessions: '会话',
     },
+    profile_fields: {
+      title: '预构建账户中心的资料字段',
+      add_profile_fields: '添加资料字段',
+      hint: {
+        not_in_list: '没有你想要的？',
+        set_up: '立即设置',
+        go_to: '其他资料字段。',
+      },
+      disabled_hint: {
+        name: '要添加此字段，请先在上方资料数据中将“姓名”权限设置为“可编辑/只读”。',
+        avatar: '要添加此字段，请先在上方资料数据中将“头像”权限设置为“可编辑/只读”。',
+        profile: '要添加此字段，请先在上方资料数据中将“资料”权限设置为“可编辑/只读”。',
+        custom_data: '要添加此字段，请先在上方资料数据中将“自定义数据”权限设置为“可编辑/只读”。',
+      },
+    },
     webauthn_related_origins: 'WebAuthn 关联来源',
     webauthn_related_origins_description: '添加允许通过 Account API 注册通行密钥的前端应用域名。',
     webauthn_related_origins_error: '来源必须以 https:// 或 http:// 开头',

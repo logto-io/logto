@@ -170,6 +170,24 @@ const sign_in_exp = {
       custom_data_description: '사용자에 저장된 사용자 정의 JSON 데이터에 대한 접근을 제어합니다.',
       sessions: '세션',
     },
+    profile_fields: {
+      title: '사전 구축된 계정 센터의 프로필 필드',
+      add_profile_fields: '프로필 필드 추가',
+      hint: {
+        not_in_list: '목록에 없나요?',
+        set_up: '지금 설정',
+        go_to: '다른 프로필 필드.',
+      },
+      disabled_hint: {
+        name: "이 필드를 추가하려면 먼저 위의 프로필 데이터에서 '이름' 권한을 '편집/읽기 전용'으로 설정하세요.",
+        avatar:
+          "이 필드를 추가하려면 먼저 위의 프로필 데이터에서 '아바타' 권한을 '편집/읽기 전용'으로 설정하세요.",
+        profile:
+          "이 필드를 추가하려면 먼저 위의 프로필 데이터에서 '프로필' 권한을 '편집/읽기 전용'으로 설정하세요.",
+        custom_data:
+          "이 필드를 추가하려면 먼저 위의 프로필 데이터에서 '사용자 정의 데이터' 권한을 '편집/읽기 전용'으로 설정하세요.",
+      },
+    },
     webauthn_related_origins: 'WebAuthn 관련 오리진',
     webauthn_related_origins_description:
       'Account API를 통해 패스키를 등록할 수 있도록 허용된 프런트엔드 애플리케이션 도메인을 추가하세요.',
