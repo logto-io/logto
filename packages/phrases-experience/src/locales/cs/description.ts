@@ -106,6 +106,14 @@ const description = {
   identifier_register_description:
     'Zadej své {{types, list(type: disjunction;)}} pro vytvoření nového účtu.',
   all_account_creation_options: 'Všechny možnosti vytvoření účtu',
+  password_expired: 'Platnost vašeho hesla vypršela',
+  password_expired_description:
+    'Platnost vašeho hesla vypršela a před přihlášením musí být resetováno.',
+  password_expiration_reminder: 'Platnost vašeho hesla brzy vyprší',
+  password_expiration_reminder_description:
+    'Platnost vašeho hesla vyprší za {{days}} dní. Doporučujeme jej resetovat nyní.',
+  password_expiration_reminder_skip: 'Zatím přeskočit',
+  password_expiration_reset: 'Resetovat heslo',
   back_to_sign_in: 'Zpět k přihlášení',
   support_email: 'E-mail podpory: <link></link>',
   support_website: 'Webová stránka podpory: <link></link>',

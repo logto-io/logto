@@ -40,6 +40,8 @@ const sign_in_experiences = {
     'Неверный формат пользовательского списка блокировки электронной почты: {{items, list(type:conjunction)}}. Каждый элемент должен быть действительным адресом электронной почты или доменом, например, foo@example.com или @example.com.',
   forgot_password_method_requires_connector:
     'Метод восстановления пароля требует настройки соответствующего коннектора {{method}}.',
+  password_expiration_not_enabled:
+    'Политика истечения срока действия пароля не включена. Включите ее в настройках входа в систему перед истечением срока действия паролей.',
 };
 
 export default Object.freeze(sign_in_experiences);

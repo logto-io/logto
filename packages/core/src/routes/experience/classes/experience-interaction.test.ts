@@ -4,6 +4,7 @@ import {
   adminTenantId,
   type CreateUser,
   InteractionEvent,
+  type SignInExperience,
   SignInIdentifier,
   SignInMode,
   type User,
@@ -14,6 +15,7 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -71,10 +73,16 @@ const createSignInInteraction = ({
   headers,
   interactionEvent = InteractionEvent.SignIn,
   adaptiveMfaEnabled = false,
+  user = mockUser,
+  interactionResult = {},
+  signInExperienceOverrides = {},
 }: {
   headers?: Record<string, string>;
   interactionEvent?: InteractionEvent;
   adaptiveMfaEnabled?: boolean;
+  user?: User;
+  interactionResult?: Record<string, unknown>;
+  signInExperienceOverrides?: Partial<SignInExperience>;
 } = {}) => {
   const userGeoLocations = {
     upsertUserGeoLocation: jest.fn().mockResolvedValue(null),
@@ -87,12 +95,16 @@ const createSignInInteraction = ({
     findDefaultSignInExperience: jest.fn().mockResolvedValue({
       ...mockSignInExperience,
       adaptiveMfa: { enabled: adaptiveMfaEnabled },
+      passwordExpiration: {
+        enabled: false,
+      },
+      ...signInExperienceOverrides,
     }),
   };
   const signInUserQueries = {
     ...userQueries,
-    findUserById: jest.fn().mockResolvedValue(mockUser),
-    updateUserById: jest.fn().mockResolvedValue(mockUser),
+    findUserById: jest.fn().mockResolvedValue(user),
+    updateUserById: jest.fn().mockResolvedValue(user),
   };
   const signInTenant = new MockTenant(
     createMockProvider(),
@@ -129,7 +141,8 @@ const createSignInInteraction = ({
   const interactionDetails = {
     result: {
       interactionEvent,
-      userId: mockUser.id,
+      userId: user.id,
+      ...interactionResult,
     },
   } as unknown as Interaction;
 
@@ -436,6 +449,129 @@ describe('ExperienceInteraction class', () => {
       );
 
       await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.not.toThrow();
+    });
+  });
+
+  describe('guardPasswordLifecycle', () => {
+    const dayInMs = 24 * 60 * 60 * 1000;
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('throws password.expired when password age reaches validPeriodDays', async () => {
+      const now = new Date('2026-01-10T00:00:00.000Z');
+      jest.useFakeTimers().setSystemTime(now);
+      const { experienceInteraction } = createSignInInteraction({
+        user: {
+          // eslint-disable-next-line max-lines
+          ...mockUser,
+          passwordUpdatedAt: now.getTime() - 30 * dayInMs,
+        },
+        signInExperienceOverrides: {
+          passwordExpiration: {
+            enabled: true,
+            validPeriodDays: 30,
+            reminderPeriodDays: 5,
+          },
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchError(
+        new RequestError({ code: 'password.expired', status: 422 })
+      );
+      expect(experienceInteraction.toJson().passwordLifecycle).toEqual({
+        passwordExpired: true,
+        reminderRequired: false,
+        reminderSkipped: false,
+      });
+    });
+
+    it('throws password.expiration_reminder within reminder window', async () => {
+      const now = new Date('2026-01-10T00:00:00.000Z');
+      jest.useFakeTimers().setSystemTime(now);
+      const { experienceInteraction } = createSignInInteraction({
+        user: {
+          ...mockUser,
+          passwordUpdatedAt: now.getTime() - 28 * dayInMs,
+        },
+        signInExperienceOverrides: {
+          passwordExpiration: {
+            enabled: true,
+            validPeriodDays: 30,
+            reminderPeriodDays: 5,
+          },
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchError(
+        new RequestError(
+          { code: 'password.expiration_reminder', status: 422 },
+          { daysUntilExpiration: 2 }
+        )
+      );
+      expect(experienceInteraction.toJson().passwordLifecycle).toEqual({
+        passwordExpired: false,
+        reminderRequired: true,
+        reminderSkipped: false,
+      });
+    });
+
+    it('allows sign-in after skipping password reminder', async () => {
+      const now = new Date('2026-01-10T00:00:00.000Z');
+      jest.useFakeTimers().setSystemTime(now);
+      const { experienceInteraction } = createSignInInteraction({
+        user: {
+          ...mockUser,
+          passwordUpdatedAt: now.getTime() - 28 * dayInMs,
+        },
+        signInExperienceOverrides: {
+          passwordExpiration: {
+            enabled: true,
+            validPeriodDays: 30,
+            reminderPeriodDays: 5,
+          },
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchError(
+        new RequestError(
+          { code: 'password.expiration_reminder', status: 422 },
+          { daysUntilExpiration: 2 }
+        )
+      );
+
+      experienceInteraction.skipPasswordReminder();
+      expect(experienceInteraction.toJson().passwordLifecycle).toEqual({
+        passwordExpired: false,
+        reminderRequired: true,
+        reminderSkipped: true,
+      });
+
+      await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+    });
+
+    it('falls back to createdAt when passwordUpdatedAt is not set', async () => {
+      const now = new Date('2026-01-10T00:00:00.000Z');
+      jest.useFakeTimers().setSystemTime(now);
+      const { experienceInteraction } = createSignInInteraction({
+        user: {
+          ...mockUser,
+          passwordUpdatedAt: null,
+          createdAt: now.getTime() - 30 * dayInMs,
+        },
+        signInExperienceOverrides: {
+          passwordExpiration: {
+            enabled: true,
+            validPeriodDays: 30,
+            reminderPeriodDays: 5,
+          },
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchError(
+        new RequestError({ code: 'password.expired', status: 422 })
+      );
     });
   });
 });

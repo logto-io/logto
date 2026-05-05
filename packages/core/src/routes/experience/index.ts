@@ -27,6 +27,7 @@ import { experienceRoutes } from './const.js';
 import koaExperienceAuditLog from './middleware/koa-experience-audit-log.js';
 import { koaExperienceInteractionHooks } from './middleware/koa-experience-interaction-hooks.js';
 import koaExperienceInteraction from './middleware/koa-experience-interaction.js';
+import passwordExpirationRoutes from './password-expiration-routes.js';
 import profileRoutes from './profile-routes.js';
 import {
   sanitizedInteractionStorageGuard,
@@ -208,6 +209,7 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }
   );
 
+  passwordExpirationRoutes(experienceRouter, tenant);
   passwordVerificationRoutes(experienceRouter, tenant);
   verificationCodeRoutes(experienceRouter, tenant);
   socialVerificationRoutes(experienceRouter, tenant);

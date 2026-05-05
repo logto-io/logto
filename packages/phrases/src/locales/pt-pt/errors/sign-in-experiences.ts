@@ -39,6 +39,8 @@ const sign_in_experiences = {
     'Itens da lista de bloqueio de email personalizada inválidos: {{items, list(type:conjunction)}}. Cada item deve ser um endereço de email ou domínio de email válido, ex.: foo@example.com ou @example.com.',
   forgot_password_method_requires_connector:
     'O método de recuperação de senha requer um conector {{method}} correspondente a ser configurado.',
+  password_expiration_not_enabled:
+    'A política de expiração de palavra-passe não está ativada. Ative-a nas definições de experiência de início de sessão antes de expirar palavras-passe.',
 };
 
 export default Object.freeze(sign_in_experiences);

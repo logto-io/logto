@@ -41,6 +41,8 @@ const sign_in_experiences = {
     "Articles non valides de la liste de blocage d'e-mails personnalisés : {{items, list(type:conjunction)}}. Chaque élément doit être une adresse e-mail ou un domaine de messagerie valide, par exemple, foo@example.com ou @example.com.",
   forgot_password_method_requires_connector:
     "La méthode de mot de passe oublié nécessite qu'un connecteur {{method}} correspondant soit configuré.",
+  password_expiration_not_enabled:
+    "La politique d'expiration du mot de passe n'est pas activée. Activez-la dans les paramètres de l'expérience de connexion avant de faire expirer les mots de passe.",
 };
 
 export default Object.freeze(sign_in_experiences);

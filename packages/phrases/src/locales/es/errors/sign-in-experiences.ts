@@ -39,6 +39,8 @@ const sign_in_experiences = {
     'Elementos no válidos de la lista de bloqueo de correos electrónicos personalizados: {{items, list(type:conjunction)}}. Cada elemento debe ser una dirección de correo electrónico o dominio de correo electrónico válido, por ejemplo, foo@ejemplo.com o @ejemplo.com.',
   forgot_password_method_requires_connector:
     'El método de recuperación de contraseña requiere que se configure un conector {{method}} correspondiente.',
+  password_expiration_not_enabled:
+    'La política de expiración de contraseña no está habilitada. Habilítela en la configuración de la experiencia de inicio de sesión antes de que las contraseñas expiren.',
 };
 
 export default Object.freeze(sign_in_experiences);

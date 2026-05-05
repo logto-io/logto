@@ -108,6 +108,9 @@ export const mockSignInExperience: SignInExperience = {
   agreeToTermsPolicy: AgreeToTermsPolicy.ManualRegistrationOnly,
   customUiAssets: null,
   passwordPolicy: {},
+  passwordExpiration: {
+    enabled: false,
+  },
   mfa: {
     policy: MfaPolicy.PromptAtSignInAndSignUp,
     factors: [],
@@ -154,6 +157,9 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   agreeToTermsPolicy: mockSignInExperience.agreeToTermsPolicy,
   customUiAssets: null,
   passwordPolicy: {},
+  passwordExpiration: {
+    enabled: false,
+  },
   mfa: {
     policy: MfaPolicy.PromptAtSignInAndSignUp,
     factors: [],

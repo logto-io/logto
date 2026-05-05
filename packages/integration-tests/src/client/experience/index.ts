@@ -253,6 +253,19 @@ export class ExperienceClient extends MockClient {
     });
   }
 
+  public async skipPasswordExpirationReminder() {
+    return this.api.post(`${experienceRoutes.prefix}/password-expiration/skip`, {
+      headers: this.headers,
+    });
+  }
+
+  public async resetExpiredPassword(payload: { password: string }) {
+    return this.api.put(`${experienceRoutes.prefix}/password-expiration/reset`, {
+      headers: this.headers,
+      json: payload,
+    });
+  }
+
   public async bindMfa(type: MfaFactor, verificationId: string) {
     return this.api.post(`${experienceRoutes.mfa}`, {
       headers: this.headers,

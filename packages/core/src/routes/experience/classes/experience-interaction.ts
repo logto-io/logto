@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+
 import { appInsights } from '@logto/app-insights/node';
 import {
   InteractionEvent,
@@ -9,6 +10,7 @@ import {
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
+import { differenceInDays } from 'date-fns';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -72,6 +74,13 @@ export default class ExperienceInteraction {
   private readonly captcha = {
     verified: false,
     skipped: false,
+  };
+
+  /** The password lifecycle status for the current interaction. */
+  private readonly passwordLifecycle = {
+    passwordExpired: false,
+    reminderRequired: false,
+    reminderSkipped: false,
   };
 
   /** The interaction event for the current interaction. */
@@ -140,6 +149,11 @@ export default class ExperienceInteraction {
         verified: false,
         skipped: false,
       },
+      passwordLifecycle = {
+        passwordExpired: false,
+        reminderRequired: false,
+        reminderSkipped: false,
+      },
     } = result.data;
 
     this.#interactionEvent = interactionEvent;
@@ -147,6 +161,7 @@ export default class ExperienceInteraction {
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
+    this.passwordLifecycle = passwordLifecycle;
 
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
@@ -496,6 +511,7 @@ export default class ExperienceInteraction {
       const updatedUser = await userQueries.updateUserById(user.id, {
         passwordEncrypted,
         passwordEncryptionMethod,
+        passwordUpdatedAt: Date.now(),
       });
 
       await this.cleanUp();
@@ -509,6 +525,7 @@ export default class ExperienceInteraction {
     // Verified, only SignIn requires MFA verification, for register, it does not make sense to verify MFA
     if (this.#interactionEvent === InteractionEvent.SignIn) {
       await this.guardMfaVerificationStatus(log);
+      await this.guardPasswordLifecycle();
     }
 
     // Revalidate the new profile data if any
@@ -569,6 +586,8 @@ export default class ExperienceInteraction {
         ),
       },
       lastSignInAt: Date.now(),
+      // Track when the password was set/changed so the lifecycle policy can evaluate its age.
+      ...conditional(rest.passwordEncrypted && { passwordUpdatedAt: Date.now() }),
     });
 
     // Sync SSO identity
@@ -639,6 +658,29 @@ export default class ExperienceInteraction {
     }
   }
 
+  /**
+   * Skip the password lifecycle reminder for the current interaction.
+   * Allows the user to proceed with sign-in without resetting their password.
+   *
+   * @throws {RequestError} with 422 if the password has expired and cannot be skipped
+   */
+  public skipPasswordReminder() {
+    assertThat(
+      !this.passwordLifecycle.passwordExpired,
+      new RequestError({ code: 'password.expired', status: 422 })
+    );
+
+    if (!this.passwordLifecycle.reminderRequired) {
+      return;
+    }
+
+    this.passwordLifecycle.reminderSkipped = true;
+  }
+
+  public markPasswordNotExpired() {
+    this.passwordLifecycle.passwordExpired = false;
+  }
+
   async guardCaptcha() {
     if (this.captcha.verified || this.captcha.skipped) {
       return;
@@ -649,7 +691,7 @@ export default class ExperienceInteraction {
 
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   public toJson(): InteractionStorage {
-    const { interactionEvent, userId, captcha } = this;
+    const { interactionEvent, userId, captcha, passwordLifecycle } = this;
     const signInContext = this.adaptiveMfaValidator.getSignInContext();
 
     return {
@@ -659,6 +701,7 @@ export default class ExperienceInteraction {
       mfa: this.mfa.data,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toJson()),
       captcha,
+      passwordLifecycle,
       ...conditional(signInContext && { signInContext }),
     };
   }
@@ -746,6 +789,78 @@ export default class ExperienceInteraction {
   private get hasVerifiedSignInPasskey() {
     const webAuthnVerificationRecord = this.verificationRecords.get(VerificationType.SignInPasskey);
     return Boolean(webAuthnVerificationRecord?.isVerified);
+  }
+
+  /**
+   * Guard the password lifecycle policy for sign-in interactions.
+   *
+   * Skipped automatically for SSO and passkey sign-ins.
+   * Evaluates the password age against the configured `PasswordExpirationPolicy`.
+   * Uses `passwordUpdatedAt` with a fallback to `createdAt` for legacy users.
+   *
+   * - If expired: throws a 422 `password.expired` error to block sign-in.
+   * - If nearing expiration: sets `reminderRequired` on the interaction state
+   *   and throws a 422 `password.expiration_reminder` error so the frontend
+   *   can prompt the user to reset or skip.
+   *
+   * Both errors are idempotent: if the user has already been blocked/reminded in
+   * this session (state already set), the guard is a no-op so that the frontend
+   * can re-call submit after the user acts.
+   */
+  // eslint-disable-next-line complexity
+  private async guardPasswordLifecycle() {
+    if (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInPasskey) {
+      return;
+    }
+
+    const user = await this.getIdentifiedUser();
+
+    if (!user.passwordEncrypted || !user.passwordEncryptionMethod) {
+      return;
+    }
+
+    const policy = await this.signInExperienceValidator.getPasswordExpirationPolicy();
+
+    if (!policy.enabled || !policy.validPeriodDays) {
+      return;
+    }
+
+    // Already blocked – keep throwing so the forced-reset flow is enforced.
+    if (this.passwordLifecycle.passwordExpired) {
+      assertThat(false, new RequestError({ code: 'password.expired', status: 422 }));
+    }
+
+    // Reminder already shown and user chose to skip – proceed.
+    if (this.passwordLifecycle.reminderSkipped) {
+      return;
+    }
+
+    const referenceDate = new Date(user.passwordUpdatedAt ?? user.createdAt);
+    const passwordAgeDays = differenceInDays(new Date(), referenceDate);
+
+    const isPasswordExpired = passwordAgeDays >= policy.validPeriodDays;
+
+    this.passwordLifecycle.passwordExpired = isPasswordExpired;
+    await this.save();
+
+    assertThat(!isPasswordExpired, new RequestError({ code: 'password.expired', status: 422 }));
+
+    const reminderPeriodDays = policy.reminderPeriodDays ?? 0;
+    const reminderDaysUntilExpiration = policy.validPeriodDays - passwordAgeDays;
+
+    const isReminderRequired =
+      reminderPeriodDays > 0 && reminderDaysUntilExpiration <= reminderPeriodDays;
+
+    this.passwordLifecycle.reminderRequired = isReminderRequired;
+    await this.save();
+
+    assertThat(
+      !isReminderRequired,
+      new RequestError(
+        { code: 'password.expiration_reminder', status: 422 },
+        { daysUntilExpiration: reminderDaysUntilExpiration }
+      )
+    );
   }
 
   /**
