@@ -35,5 +35,6 @@ create table sign_in_experiences (
   passkey_sign_in jsonb /* @use PasskeySignIn */ not null default '{}'::jsonb,
   /** Nullable by design: null keeps legacy full-catalog behavior and [] collects no custom profile fields. */
   sign_up_profile_fields jsonb /* @use SignUpProfileFields */,
+  password_expiration jsonb /* @use PasswordExpirationPolicy */ not null default '{}'::jsonb,
   primary key (tenant_id, id)
 );
