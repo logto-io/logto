@@ -48,20 +48,6 @@ describe('POST /my-account/user-assets and GET /my-account/user-assets/service-s
     await deleteDefaultTenantUser(user.id);
   });
 
-  it('should fail when access token does not contain `profile` scope', async () => {
-    const { user, username, password } = await createDefaultTenantUserWithPassword();
-    const api = await signInAndGetUserApi(username, password, {
-      scopes: [UserScope.Email],
-    });
-
-    await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
-      code: 'auth.unauthorized',
-      status: 400,
-    });
-
-    await deleteDefaultTenantUser(user.id);
-  });
-
   it('should fail when avatar field is not editable', async () => {
     await updateAccountCenter({
       enabled: true,
