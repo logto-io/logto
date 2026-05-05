@@ -203,6 +203,7 @@ const sign_in_exp = {
         backup_codes_manage: '查看你可用的备用码或生成新的',
         account_center:
           '访问账户中心以管理电子邮件、手机号、用户名、密码、MFA 和关联账号等安全设置',
+        profile: '管理个人信息（如姓名、头像）的中心枢纽',
       },
       customize_note: '不想要开箱即用的体验？你可以完全',
       customize_link: '使用 Account API 自定义你的流程。',

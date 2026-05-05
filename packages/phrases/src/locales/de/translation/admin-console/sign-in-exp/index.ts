@@ -214,6 +214,8 @@ const sign_in_exp = {
           'Sehen Sie sich Ihre verfügbaren Backup-Codes an oder erstellen Sie neue',
         account_center:
           'Greifen Sie auf das Kontocenter zu, um Sicherheitseinstellungen wie E-Mail, Telefon, Benutzername, Passwort, MFA und verbundene Konten zu verwalten',
+        profile:
+          'Die zentrale Anlaufstelle zur Verwaltung Ihrer persönlichen Informationen (z. B. Name, Avatar)',
       },
       customize_note:
         'Möchten Sie nicht das vorgefertigte Erlebnis? Sie können mit der Account-API stattdessen vollständig',

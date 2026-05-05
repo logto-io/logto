@@ -211,6 +211,7 @@ const sign_in_exp = {
         backup_codes_manage: 'View your available backup codes or generate new ones',
         account_center:
           'Access the account center to manage security settings such as email, phone, username, password, MFA, and connected accounts',
+        profile: 'The central hub for managing your personal information (e.g., name, avatar)',
       },
       customize_note: "Don't want the out-of-the-box experience? You can fully",
       customize_link: 'customize your flows with the Account API instead.',

@@ -212,6 +212,7 @@ const sign_in_exp = {
         backup_codes_manage: 'Mevcut yedek kodlarınızı görüntüleyin veya yenilerini oluşturun',
         account_center:
           'E-posta, telefon, kullanıcı adı, parola, MFA ve bağlı hesaplar gibi güvenlik ayarlarını yönetmek için hesap merkezine erişin',
+        profile: 'Kişisel bilgilerinizi (örneğin, ad, avatar) yönetmek için merkezi merkez',
       },
       customize_note: 'Hazır deneyimi istemiyor musunuz? Bunun yerine, Akın API ile',
       customize_link: 'akışlarınızı tamamen özelleştirebilirsiniz.',
