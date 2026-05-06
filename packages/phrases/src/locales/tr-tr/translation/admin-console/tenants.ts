@@ -12,10 +12,10 @@ const tenants = {
     billing_history: 'Fatura geçmişi',
   },
   members: {
-    card_title: 'Kiracıları Logto Cloud ile daha güvenli yönetin',
+    card_title: '',
     card_description:
       'Tek bir yönetici hesabını paylaşmadan kiracınıza yöneticiler veya iş birlikçileri ekleyin.',
-    card_action: 'Logto Cloud’u keşfedin',
+    card_action: '',
   },
   settings: {
     title: 'AYARLAR',
@@ -23,8 +23,7 @@ const tenants = {
     tenant_id: 'Kiracı Kimliği',
     tenant_name: 'Kiracı Adı',
     tenant_instance: 'Örnek seçin',
-    tenant_instance_description:
-      "Kiracınızın nerede barındırılacağını seçin. Genel paylaşımlı altyapı için Logto Cloud'u veya özel kaynaklar için özel bir örneği seçin.",
+    tenant_instance_description: '',
     tenant_region: 'Veriler barındırılan bölge',
     tenant_region_description:
       'Kiracı kaynaklarınızın (kullanıcılar, uygulamalar vb.) barındırıldığı fiziksel konum. Bu, oluşturulduktan sonra değiştirilemez.',
@@ -42,8 +41,7 @@ const tenants = {
     tenant_mfa_description:
       'Üyelerinizin bu kiracıya erişmek için çok faktörlü kimlik doğrulamayı yapılandırmasını zorunlu kılın.',
     enterprise_sso: 'Enterprise SSO',
-    enterprise_sso_description:
-      'Ücretli planlarda kullanılabilir. Tüm üyelerin kuruluşunuzun kimlik sağlayıcısını kullanarak Logto Cloud Konsoluna giriş yapabilmesi için Enterprise SSO etkinleştirmek üzere bizimle iletişime geçin.',
+    enterprise_sso_description: '',
   },
   full_env_tag: {
     development: 'Geliştirme',

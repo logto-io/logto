@@ -59,8 +59,7 @@ const profile = {
         'Sorunları çözdükten sonra hesabını silebilirsin. Yardıma ihtiyacın olursa bizimle iletişime geçmekten çekinme.',
       check_information:
         'Hesabını silmek istediğini duyduğumuza üzüldük. Devam etmeden önce lütfen aşağıdaki bilgileri dikkatlice kontrol et.',
-      remove_all_data:
-        "Hesabını silmek, Logto Cloud'daki tüm verilerini kalıcı olarak silecektir. Bu yüzden devam etmeden önce önemli verilerini yedeklediğinden emin ol.",
+      remove_all_data: '',
       confirm_information:
         'Yukarıdaki bilgilerin beklediğin gibi olduğunu onayla. Hesabını sildiğinde, onu geri getiremeyeceğiz.',
       has_admin_role:

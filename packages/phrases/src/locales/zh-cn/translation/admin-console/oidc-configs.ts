@@ -5,7 +5,7 @@ const oidc_configs = {
   session_max_ttl_in_days: '会话最大生存时间（TTL，天）',
   session_max_ttl_in_days_tip:
     '从会话创建时开始计算的绝对生命周期上限。无论是否有活动，会话都会在该固定时长到期后结束。',
-  cloud_private_key_rotation_notice: '在 Logto Cloud 中，私钥轮换会在 4 小时的宽限期后生效。',
+  cloud_private_key_rotation_notice: '',
 };
 
 export default Object.freeze(oidc_configs);

@@ -12,10 +12,10 @@ const tenants = {
     billing_history: 'Historia rozliczeń',
   },
   members: {
-    card_title: 'Zarządzaj tenantami bezpieczniej dzięki Logto Cloud',
+    card_title: '',
     card_description:
       'Dodawaj administratorów lub współpracowników do swojego tenantu bez współdzielenia jednego konta administratora.',
-    card_action: 'Poznaj Logto Cloud',
+    card_action: '',
   },
   settings: {
     title: 'USTAWIENIA',
@@ -24,8 +24,7 @@ const tenants = {
     tenant_id: 'ID Najemcy',
     tenant_name: 'Nazwa Najemcy',
     tenant_instance: 'Wybierz swoją instancję',
-    tenant_instance_description:
-      'Wybierz, gdzie będzie hostowany twój najemca. Wybierz Logto Cloud dla publicznej, współdzielonej infrastruktury, lub prywatną instancję dla dedykowanych zasobów.',
+    tenant_instance_description: '',
     tenant_region: 'Region hostowania danych',
     tenant_region_description:
       'Fizyczna lokalizacja, w której hostowane są zasoby twojego najemcy (użytkownicy, aplikacje itp.). Tego nie można zmienić po utworzeniu.',
@@ -43,8 +42,7 @@ const tenants = {
     tenant_mfa_description:
       'Wymagaj od członków skonfigurowania uwierzytelniania wieloskładnikowego, aby uzyskać dostęp do tego najemcy.',
     enterprise_sso: 'Enterprise SSO',
-    enterprise_sso_description:
-      'Dostępne w płatnych planach. Skontaktuj się z nami, aby włączyć Enterprise SSO, dzięki czemu wszyscy członkowie będą mogli logować się do konsoli Logto Cloud za pomocą dostawcy tożsamości Twojej organizacji.',
+    enterprise_sso_description: '',
   },
   full_env_tag: {
     development: 'Development',

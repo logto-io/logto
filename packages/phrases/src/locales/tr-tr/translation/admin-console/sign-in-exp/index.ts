@@ -45,8 +45,7 @@ const sign_in_exp = {
     hide_logto_branding: 'Logto markasını gizle',
     hide_logto_branding_description:
       '"Powered by Logto" ibaresini kaldırın. Temiz ve profesyonel bir oturum açma deneyimiyle yalnızca kendi markanızı öne çıkarın.',
-    hide_logto_branding_oss_note:
-      'Bu özellik <a>Logto Cloud</a> içinde yerel olarak kullanılabilir.',
+    hide_logto_branding_oss_note: '',
   },
   branding_uploads: {
     app_logo: {
@@ -93,9 +92,8 @@ const sign_in_exp = {
     bring_your_ui_description:
       "Logto'nun önceden oluşturulmuş UI'sini kendi kodunuzla değiştirmek için sıkıştırılmış bir paket (.zip) yükleyin. <a>Daha fazla bilgi edinin</a>",
     bring_your_ui_oss_description: 'Oturum açma arayüzünü kendi kodunuzla özelleştirin.',
-    bring_your_ui_oss_card_description:
-      "Özel oturum açma arayüzünüzü doğrudan <a>Logto Cloud</a>'a yükleyin. Fork almanıza veya yeniden dağıtmanıza gerek yok.",
-    bring_your_ui_oss_try_cloud: "Cloud'u deneyin",
+    bring_your_ui_oss_card_description: '',
+    bring_your_ui_oss_try_cloud: '',
     preview_with_bring_your_ui_description:
       'Özelleştirilmiş UI varlıklarınız başarıyla yüklendi ve şimdi sunuluyor. Sonuç olarak, yerleşik önizleme penceresi devre dışı bırakıldı.\nKişiselleştirilmiş oturum açma UI\'nizi test etmek için "Canlı Önizleme" düğmesine tıklayarak yeni bir tarayıcı sekmesinde açın.',
   },

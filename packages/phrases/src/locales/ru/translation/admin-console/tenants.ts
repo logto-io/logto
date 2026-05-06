@@ -12,10 +12,10 @@ const tenants = {
     billing_history: 'История выставления счетов',
   },
   members: {
-    card_title: 'Управляйте арендаторами безопаснее с Logto Cloud',
+    card_title: '',
     card_description:
       'Добавляйте администраторов или участников в своего арендатора без совместного использования одной учетной записи администратора.',
-    card_action: 'Открыть Logto Cloud',
+    card_action: '',
   },
   settings: {
     title: 'НАСТРОЙКИ',
@@ -24,8 +24,7 @@ const tenants = {
     tenant_id: 'ID арендатора',
     tenant_name: 'Имя арендатора',
     tenant_instance: 'Выберите ваш экземпляр',
-    tenant_instance_description:
-      'Выберите, где будет размещен ваш арендатор. Выберите Logto Cloud для общей публичной инфраструктуры или частный экземпляр для выделенных ресурсов.',
+    tenant_instance_description: '',
     tenant_region: 'Регион размещения данных',
     tenant_region_description:
       'Физическое местоположение, где размещены ваши ресурсы арендатора (пользователи, приложения и т. д.). Это нельзя изменить после создания.',
@@ -42,8 +41,7 @@ const tenants = {
     tenant_mfa_description:
       'Требуйте от участников настроить многофакторную аутентификацию для доступа к этому арендатору.',
     enterprise_sso: 'Enterprise SSO',
-    enterprise_sso_description:
-      'Доступно в платных планах. Свяжитесь с нами, чтобы включить Enterprise SSO, чтобы все участники могли входить в консоль Logto Cloud, используя поставщика идентификации вашей организации.',
+    enterprise_sso_description: '',
   },
   full_env_tag: {
     development: 'Разработка',

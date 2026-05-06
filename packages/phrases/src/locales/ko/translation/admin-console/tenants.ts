@@ -11,10 +11,10 @@ const tenants = {
     billing_history: '청구 내역',
   },
   members: {
-    card_title: 'Logto Cloud로 테넌트를 더 안전하게 관리하세요',
+    card_title: '',
     card_description:
       '하나의 관리자 계정을 공유하지 않고도 테넌트에 관리자나 협업자를 추가할 수 있습니다.',
-    card_action: 'Logto Cloud 살펴보기',
+    card_action: '',
   },
   settings: {
     title: '설정',
@@ -22,8 +22,7 @@ const tenants = {
     tenant_id: '테넌트 ID',
     tenant_name: '테넌트 이름',
     tenant_instance: '인스턴스를 선택하세요',
-    tenant_instance_description:
-      '테넌트가 호스팅될 위치를 선택하세요. 공용 공유 인프라를 위해 Logto Cloud 를 선택하거나, 전용 리소스를 위한 개별 인스턴스를 선택하세요.',
+    tenant_instance_description: '',
     tenant_region: '데이터 호스팅 영역',
     tenant_region_description:
       '테넌트 리소스 (사용자, 앱 등) 가 호스팅되는 물리적 위치입니다. 생성 후에는 변경할 수 없습니다.',
@@ -39,8 +38,7 @@ const tenants = {
     tenant_mfa: '다단계 인증',
     tenant_mfa_description: '이 테넌트에 접근하려면 구성원이 다단계 인증을 설정해야 합니다.',
     enterprise_sso: '엔터프라이즈 SSO',
-    enterprise_sso_description:
-      '유료 플랜에서 사용 가능합니다. 엔터프라이즈 SSO를 활성화하여 모든 구성원이 조직의 ID 공급자를 사용하여 Logto Cloud 콘솔에 로그인할 수 있도록 하려면 문의해 주세요.',
+    enterprise_sso_description: '',
   },
   full_env_tag: {
     development: '개발',

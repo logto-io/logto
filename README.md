@@ -8,110 +8,203 @@
   </a>
 </p>
 
-[![discord](https://img.shields.io/discord/965845662535147551?color=5865f2&label=discord)](https://discord.gg/vRvwuwgpVX)
-[![checks](https://img.shields.io/github/checks-status/logto-io/logto/master)](https://github.com/logto-io/logto/actions?query=branch%3Amaster)
-[![release](https://img.shields.io/github/v/release/logto-io/logto?color=3a3c3f)](https://github.com/logto-io/logto/releases)
-[![core coverage](https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage)](https://app.codecov.io/gh/logto-io/logto)
-[![cloud](https://img.shields.io/badge/cloud-available-7958ff)](https://cloud.logto.io/?sign_up=true&utm_source=github&utm_medium=repo_logto)
-[![gitpod](https://img.shields.io/badge/gitpod-available-f09439)](https://gitpod.io/#https://github.com/logto-io/demo)
-[![render](https://img.shields.io/badge/render-deploy-5364e9)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
+# Logto Blacktop
 
-# Logto
+[Logto](https://github.com/logto-io/logto) is an amazing platform. Seriously. Modern auth, OIDC/OAuth 2.1/SAML, multi-tenancy, enterprise SSO, RBAC, all out of the box. We love it.
 
-**Logto is the modern, open-source auth infrastructure for SaaS and AI apps.**
+We wanted more features. So we added them here.
 
-It takes the pain out of OIDC and OAuth 2.1 and makes it easy to build secure, production-ready auth with multi-tenancy, enterprise SSO, and RBAC.
+Everything added in this fork gets submitted back to upstream Logto as a PR. They merge it if they want to. If they do not? Welp. Their thing. The feature is available here regardless.
 
-<p align="center">
-  <a href="https://logto.io/">website</a> •
-  <a href="https://cloud.logto.io/">cloud</a> •
-  <a href="https://docs.logto.io">docs</a> •
-  <a href="https://openapi.logto.io/">api</a> •
-  <a href="https://blog.logto.io/">blog</a> •
-  <a href="https://auth-wiki.logto.io/">auth wiki</a> •
-  <a href="https://logto.io/subscribe">newsletter</a>
-</p>
+### Why Blacktop?
 
-![Logto features](./assets/logto-features.png)
+The Toyota 4A-GE Blacktop is a cool motor. That is all.
 
-## Why Logto?
+---
 
-Built for teams scaling SaaS, AI, and agent-based platforms without the usual auth headaches.
+## Database Migrations
 
-With Logto, you get:
+Because this fork cherry-picks features from different branches, some alterations reference columns that do not exist yet in your database. The Logto CLI tracks deployments by timestamp and will skip any alteration older than the current state, even if the column is missing.
 
-- **Multi-tenancy, enterprise SSO, and RBAC**: ready to use, no workarounds.
-- **Pre-built sign-in flows**, customizable UIs, and SDKs for 30+ frameworks.
-- **Full support for OIDC, OAuth 2.1, and SAML** without the protocol pain.
-- **Works out-of-the-box for Model Context Protocol and agent-based AI architectures**.
+**You must run the alteration deploy command after every rebuild:**
 
-[🗺️ See all features →](https://docs.logto.io/?ref=readme)
+```bash
+docker compose run --rm --entrypoint "" logto npx @logto/cli db alteration deploy latest
+```
 
-## Get started
+If the CLI says "Found 0 alteration to deploy" but Logto crashes with a "column does not exist" error, check which columns are missing and apply them manually:
 
-Pick your path:
+```bash
+docker compose exec postgres psql -U postgres -d logto -c "\d users"
+docker compose exec postgres psql -U postgres -d logto -c "\d sign_in_experiences"
+docker compose exec postgres psql -U postgres -d logto -c "\d oidc_session_extensions"
+```
 
-- [**Logto Cloud**](https://cloud.logto.io/?sign_up=true&ref=readme): The fastest way to try Logto. Fully managed, zero setup.
-- [**Launch Logto in GitPod**](https://gitpod.io/#https://github.com/logto-io/demo): Start Logto OSS in seconds.
+You can also list what the CLI thinks is pending:
 
-  Wait for the message `App is running at https://3002-...gitpod.io`, then click the URL starting with `https://3002-` to continue.
+```bash
+docker compose run --rm --entrypoint "" logto npx @logto/cli db alteration list latest
+docker compose run --rm --entrypoint "" logto npx @logto/cli db alteration list next
+```
 
-- **Local development:**  
+The SQL for each Blacktop alteration is in `packages/schemas/alterations/`. Each file is a plain TypeScript module with an `up` function containing the exact SQL. Read the file, run the SQL manually if needed, then restart.
 
-  ```bash
-  # Using Docker Compose(requires Docker Desktop)
-  curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/docker-compose.yml | \
-  docker compose -p logto -f - up
-  
-  # Using Node.js (requires PostgreSQL)
-  npm init @logto
-  ```
+```bash
+docker compose restart logto
+```
 
-[📚 Full OSS installation guide →](https://docs.logto.io/logto-oss/get-started-with-oss?ref=readme)
+---
 
-## Integrate anywhere
+## Merged PRs (not yet in official Logto)
 
-Logto supports all your apps, APIs, and services with industry-standard protocols.
+These are PRs submitted to `logto-io/logto` by community members. They have been reviewed, approved (or close to it), but not merged into `master`. They are merged into Logto Blacktop and ready to use.
 
-- **SDKs for 30+ frameworks**: React, Next.js, Angular, Vue, Flutter, Go, Python, and more.
-- **Connect to any IdP**: Google, Facebook, Azure AD, Okta, and more.
-- **Flexible integration**: SPAs, web apps, mobile apps, APIs, M2M, CLI tools.
-- **Ready for Model Context Protocol and agent-based architectures**.
+### [#8728](https://github.com/logto-io/logto/pull/8728), [#8729](https://github.com/logto-io/logto/pull/8729), [#8731](https://github.com/logto-io/logto/pull/8731) - `isCurrent` flag on session listings
 
-[🚀 Explore quick starts →](https://docs.logto.io/quick-starts?ref=readme)
+by [@simeng-li](https://github.com/simeng-li)
 
-[🔌 See all connectors →](https://docs.logto.io/integrations?ref=readme)
+Three stacked PRs that together add an `isCurrent` boolean to the `GET /api/my-account/sessions` response, so clients can tell which session in the list is the one making the request (i.e. "this device").
 
-## Showcase
+- **#8728** plumbs the OIDC session UID from the access token through `koaOidcAuth` into `ctx.auth.sessionUid`. Small groundwork change, no consumer yet.
+- **#8729** uses that `sessionUid` to tag the matching entry in `GET /api/my-account/sessions` with `isCurrent: true` (others get `false`). Initially behind a dev-features flag.
+- **#8731** removes the dev-features gate and ships `isCurrent` unconditionally to production. Also updates the OpenAPI docs.
 
-**Developer-first SDKs**: Install in minutes with clear guides.
+> The feature below is built on top of these three PRs.
 
-![Logto auth SDK showcase](./assets/showcase-logto-auth-sdks.gif)
+### [#8752](https://github.com/logto-io/logto/pull/8752) - `userIds` in organization membership webhooks
 
-**User-friendly auth flows**: Sign-up, sign-in, social login, Google One Tap, MFA, SSO.
+by [@chiche84](https://github.com/chiche84)
 
-![Logto sign-in experience showcase](./assets/showcase-logto-sign-in-exeperience.gif)
+When users are added to or removed from an organization, the `Organization.Membership.Updated` webhook payload now includes a `userIds` array. Previously the payload only contained the organization object, forcing consumers to make a follow-up API call to find out who was affected. Two lines of code, zero risk.
 
-**Multi-tenancy & organizations**: Organization RBAC, member invites, just-in-time provisioning, and more.
+### [#8747](https://github.com/logto-io/logto/pull/8747) - Email connector URL detection fix
 
-![Logto multi-tenancy showcase](./assets/showcase-logto-multi-tenancy.gif)
+by [@aayushbaluni](https://github.com/aayushbaluni)
 
-## Support Logto
+The URL validation regex in the email connector was flagging company names like `Company p.s.a.` as URLs, blocking valid `companyInformation` config values. The fix requires an explicit `https://` scheme or a `www.` prefix before treating a string as a URL. Dotted abbreviations no longer trigger false positives.
 
-If you find Logto helpful, here's how you can support us:
+### [#8643](https://github.com/logto-io/logto/pull/8643) - Password expiration
 
-- ⭐ **Star this repo** to show your support!
-- 💬 [Join our Discord](https://discord.gg/vRvwuwgpVX) for live discussions.
-- 📢 Share Logto on [Twitter](https://twitter.com/intent/tweet?text=Hey%20devs%21%20Need%20a%20better%20auth%20solution%3F%20Check%20out%20%40logto_io%20%E2%80%94%20it%E2%80%99s%20like%20Auth0%2FCognito%2FFirebase%20but%20open-source%2C%20modern%2C%20and%20way%20easier%20to%20use%21%20Supports%20OIDC%2C%20OAuth%202.0%2C%20SAML%2C%20and%20also%20works%20perfectly%20for%20SaaS%20apps.%20%E2%9C%A8%20https%3A%2F%2Flogto.io%20%23Auth%20%23Identity%20%23OpenSource%20%23DevTools), [LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Flogto.io), [Reddit](https://reddit.com/submit?url=https%3A%2F%2Flogto.io&title=Tired%20of%20Auth0%2FCognito%2FFirebase%3F%20Logto%20is%20the%20open-source%20auth%20alternative%20you%E2%80%99ve%20been%20missing%21%20Supports%20OIDC%2C%20OAuth%202.0%2C%20SAML%2C%20and%20works%20like%20magic%20for%20modern%20apps%20and%20SaaS%20products.), [Telegram](https://t.me/share/url?url=https%3A%2F%2Flogto.io&text=Check%20out%20Logto%20%E2%80%94%20the%20better%20auth%20and%20identity%20infrastructure%21%20Open-source%2FCloud%20alternative%20to%20Auth0%2C%20Cognito%2C%20and%20Firebase.%20Supports%20all%20the%20standards%20%28OIDC%2C%20OAuth%2C%20SAML%29%20and%20is%20perfect%20for%20modern%20apps%20or%20SaaS%20products.%20https%3A%2F%2Flogto.io), [WhatsApp](https://api.whatsapp.com/send?text=Hey%21%20%F0%9F%91%8B%20Found%20this%20awesome%20auth%20tool%20called%20%2ALogto%2A%20%E2%80%94%20it%E2%80%99s%20open-source%2C%20way%20simpler%20than%20Auth0%2FCognito%2FFirebase%2C%20and%20supports%20OIDC%2FOAuth%2FSAML.%20Perfect%20for%20building%20CIAM%20system%20without%20the%20hassle.%20You%20gotta%20try%20it%3A%20https%3A%2F%2Flogto.io).
-- 🏆 Write a review or tutorial on [dev.to](https://dev.to/logto), [Medium](https://medium.com/@logto), [G2](https://www.g2.com/products/logto/reviewer_verification) or your blog.
-- 💬 [Share your use case](mailto:contact@logto.io?subject=[Share%20Logto%20User%20Story]) with us and get featured on the [Logto website](https://logto.io/).
-- 🙋 [Open an issue](https://github.com/logto-io/logto/issues/new) to report bugs or suggest features.
-- 💻 [Contribute to Logto](https://github.com/logto-io/logto/blob/master/.github/CONTRIBUTING.md) - we'd love your help! Check out [Logto awesome](https://github.com/logto-io/logto/blob/master/AWESOME.md) of community-contributed resources.
+by [@tevass](https://github.com/tevass)
 
-## Licensing
+Full end-to-end password expiration feature. Configure a maximum password age and an optional reminder window in the Admin Console. When a user's password is close to expiring, the sign-in experience shows a reminder modal with the option to reset now or continue. When expired, it blocks sign-in and forces a reset.
 
-[MPL-2.0](LICENSE).
+- Admin Console controls under Security > Password Policy: enable expiration, set validity period in days, set reminder period in days
+- "Expire password" button on the user detail page to manually force a reset on next sign-in
+- New API: `PATCH /admin/users/:userId` accepts `isPasswordExpired: true`
+- DB: `password_expiration` policy column on `sign_in_experiences`, `is_password_expired` flag on `users`, `password_updated_at` on `users`
+- i18n in 20 languages (ar, cs, de, en, es, fr, it, ja, ko, pl, pt-br, pt-pt, ru, th, tr, uk, zh-cn, zh-hk, zh-tw)
+- All review comments addressed. gao-sun and wangsijie reacted with hearts on the PR.
 
-<p align="right">
-⬆️ <a href="#logto">Back to top</a>
-</p>
+---
+
+## Original Features
+
+> **Note:** The feature below is built on top of PRs #8728, #8729, and #8731.
+
+### Session Last Active Tracking + Heartbeat API
+
+An original feature built for this fork.
+
+Adds a `last_active_at` timestamp to each session and keeps it up to date automatically:
+
+- New `last_active_at` column in `oidc_session_extensions`, with database migration
+- `POST /api/my-account/sessions/heartbeat` endpoint, call this to mark a session alive
+- `lastActiveAt` is exposed in the sessions API response and typed in schemas
+- Admin Console sessions table now has a "Last Active" column
+- i18n keys included
+
+Combined with `isCurrent`, this gives you a full picture of user sessions: which one is current, when each was last active, and the ability to revoke any of them.
+
+#### Client integration (Next.js)
+
+The heartbeat is wired up in three pieces. The server action calls the Logto endpoint. Using a Server Action rather than a fetch to an API route keeps the correct Next.js cookie context:
+
+```ts
+// logto-kit/logic/actions/heartbeat.ts
+'use server';
+
+import { makeRequest } from './request';
+
+export async function recordHeartbeat(): Promise<void> {
+  try {
+    await makeRequest('/api/my-account/sessions/heartbeat', { method: 'POST' });
+  } catch {
+    // Best-effort, silently absorb all errors.
+  }
+}
+```
+
+The client component calls that action every 30 seconds while the tab is visible, and immediately when the user switches back to the tab:
+
+```tsx
+// logto-kit/components/handlers/session-heartbeat.tsx
+'use client';
+
+import { useEffect, useRef } from 'react';
+import { recordHeartbeat } from '../../logic/actions/heartbeat';
+
+const PING_INTERVAL_MS = 30_000;
+const DEBOUNCE_MS = 10_000;
+
+export default function SessionHeartbeat() {
+  const lastPingRef = useRef<number>(0);
+
+  useEffect(() => {
+    const ping = () => {
+      if (document.visibilityState !== 'visible') return;
+      const now = Date.now();
+      if (now - lastPingRef.current < DEBOUNCE_MS) return;
+      lastPingRef.current = now;
+      recordHeartbeat().catch(() => {});
+    };
+
+    ping(); // fire on mount
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') ping();
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    const intervalId = setInterval(ping, PING_INTERVAL_MS);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  return null;
+}
+```
+
+Drop it in the root layout and it runs on every page with no further wiring needed:
+
+```tsx
+// app/layout.tsx
+import SessionHeartbeat from './logto-kit/components/handlers/session-heartbeat';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <SessionHeartbeat />
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+---
+
+## License
+
+[MPL-2.0](LICENSE) - same as upstream Logto.
+
+## Other Changes from Upstream
+
+### Cloud upsell content removed
+
+All "Try Cloud", "Explore Logto Cloud", "Logto Cloud Pricing", and similar SaaS upsell messaging has been stripped from the Admin Console across all 17 locales. The i18n keys are preserved with empty or neutral self-hosted values so nothing breaks at runtime. The `oss-upsell` utility now returns `#` instead of building `cloud.logto.io` URLs, and `openCloudUpsell` is a no-op.
+
+This is a self-hosted fork. You already chose to self-host. You do not need to be sold on the cloud version every time you open the console.

@@ -6,7 +6,7 @@ const oidc_configs = {
   session_max_ttl_in_days_tip:
     'Bezwzględny limit czasu życia liczony od utworzenia sesji. Niezależnie od aktywności sesja kończy się po upływie tego stałego czasu.',
   cloud_private_key_rotation_notice:
-    'W Logto Cloud rotacja klucza prywatnego zaczyna obowiązywać po 4-godzinnym okresie karencji.',
+    'Rotacja klucza prywatnego zaczyna obowiązywać po 4-godzinnym okresie karencji.',
 };
 
 export default Object.freeze(oidc_configs);

@@ -10,7 +10,7 @@ const tenant_members = {
   inviter: 'Davet eden',
   expiration_date: 'Son kullanma tarihi',
   invite_modal: {
-    title: "Logto Cloud'e Kişileri Davet Et",
+    title: '',
     subtitle: 'Bir kuruluşa üye davet etmek için daveti kabul etmeleri gerekmektedir.',
     to: 'Kime',
     added_as: 'Şu rollerle eklendi',

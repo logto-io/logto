@@ -1,5 +1,3 @@
-import { logtoCloudConsoleLink } from '@/consts/external-links';
-
 type OpenCloudUpsellOptions = {
   readonly entry: OssUpsellEntry;
   readonly target?: '_blank' | '_self';
@@ -18,36 +16,10 @@ export const ossUpsellEntries = Object.freeze({
 
 type OssUpsellEntry = (typeof ossUpsellEntries)[keyof typeof ossUpsellEntries];
 
-const utmParameters = Object.freeze({
-  source: 'logto_oss',
-  medium: 'console',
-  campaign: 'cloud_upsell',
-});
+// Cloud upsell disabled in self-hosted fork
+export const buildCloudUpsellUrl = (_entry: OssUpsellEntry) => '#';
 
-export const buildCloudUpsellUrl = (entry: OssUpsellEntry) => {
-  const url = new URL('/', logtoCloudConsoleLink);
-
-  url.searchParams.set('utm_source', utmParameters.source);
-  url.searchParams.set('utm_medium', utmParameters.medium);
-  url.searchParams.set('utm_campaign', utmParameters.campaign);
-  url.searchParams.set('utm_content', entry);
-
-  return url.toString();
-};
-
-export const openCloudUpsell = ({ entry, target = '_blank' }: OpenCloudUpsellOptions) => {
-  const targetUrl = buildCloudUpsellUrl(entry);
-
-  if (typeof window === 'undefined') {
-    return targetUrl;
-  }
-
-  if (target === '_self') {
-    window.location.assign(targetUrl);
-    return targetUrl;
-  }
-
-  window.open(targetUrl, target, 'noopener,noreferrer');
-
-  return targetUrl;
+// Cloud upsell disabled in self-hosted fork
+export const openCloudUpsell = ({ entry: _entry, target: _target = '_blank' }: OpenCloudUpsellOptions) => {
+  return '#';
 };

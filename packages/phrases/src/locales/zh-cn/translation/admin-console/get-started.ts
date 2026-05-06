@@ -42,22 +42,20 @@ const get_started = {
   },
   oss_cloud: {
     try: {
-      title: '跳过运维工作，免费试用 Logto Cloud',
-      badge: '推荐',
-      description:
-        '获得一个无需维护的全托管 Logto，同时享受 MCP 驱动的快速集成、多租户支持、团队协作以及全部高级功能。可免费开始，无需信用卡。',
-      action: '探索 Logto Cloud',
+      title: '',
+      badge: '',
+      description: '',
+      action: '',
     },
     private_cloud: {
-      title: '需要合规支持或定制部署？',
-      card_title: '私有云',
-      description:
-        '获得一个专属的 Logto 实例，具备完整的数据隔离、自定义域名和 SLA 保障。非常适合对数据驻留或合规有严格要求的企业。基础设施由我们负责，你可以专注于产品本身。',
+      title: '',
+      card_title: '',
+      description: '',
     },
     sidebar: {
-      title: '专注于构建，而不是托管。',
-      description: '让 Logto Cloud 为你处理认证基础设施。',
-      action: '试用 Logto Cloud',
+      title: '',
+      description: '',
+      action: '',
     },
   },
   view_all: '查看全部 →',

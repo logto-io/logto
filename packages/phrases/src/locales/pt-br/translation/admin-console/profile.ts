@@ -59,7 +59,7 @@ const profile = {
       check_information:
         'Lamentamos saber que você deseja excluir sua conta. Por favor, verifique as seguintes informações com cuidado antes de prosseguir.',
       remove_all_data:
-        'Excluir sua conta removerá permanentemente todos os dados sobre você na Logto Cloud. Portanto, certifique-se de fazer backup de quaisquer dados importantes antes de prosseguir.',
+        'Excluir sua conta removerá permanentemente todos os dados sobre você. Portanto, certifique-se de fazer backup de quaisquer dados importantes antes de prosseguir.',
       confirm_information:
         'Por favor, confirme que as informações acima são o que você esperava. Depois de excluir sua conta, não poderemos recuperá-la.',
       has_admin_role:

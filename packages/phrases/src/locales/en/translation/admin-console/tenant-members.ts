@@ -10,7 +10,7 @@ const tenant_members = {
   inviter: 'Inviter',
   expiration_date: 'Expiration date',
   invite_modal: {
-    title: 'Invite people to Logto Cloud',
+    title: 'Invite people',
     subtitle: 'To invite members to an organization, they must accept the invitation.',
     to: 'To',
     added_as: 'Added as roles',

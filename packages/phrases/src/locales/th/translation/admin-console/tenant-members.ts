@@ -10,7 +10,7 @@ const tenant_members = {
   inviter: 'ผู้เชิญ',
   expiration_date: 'วันที่หมดอายุ',
   invite_modal: {
-    title: 'เชิญคนเข้าร่วม Logto Cloud',
+    title: '',
     subtitle: 'เพื่อเชิญสมาชิกเข้าร่วมองค์กร จำเป็นต้องให้พวกเขายอมรับคำเชิญนี้',
     to: 'ถึง',
     added_as: 'เพิ่มเป็นบทบาท',

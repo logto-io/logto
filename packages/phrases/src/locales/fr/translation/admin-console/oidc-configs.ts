@@ -6,7 +6,7 @@ const oidc_configs = {
   session_max_ttl_in_days_tip:
     "Une limite de durée de vie absolue à partir de la création de la session. Quelle que soit l'activité, la session se termine à l'expiration de cette durée fixe.",
   cloud_private_key_rotation_notice:
-    'Dans Logto Cloud, la rotation des clés privées prend effet après une période de grâce de 4 heures.',
+    'La rotation des clés privées prend effet après une période de grâce de 4 heures.',
 };
 
 export default Object.freeze(oidc_configs);

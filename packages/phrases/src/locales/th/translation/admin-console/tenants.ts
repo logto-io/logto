@@ -12,10 +12,10 @@ const tenants = {
     billing_history: 'ประวัติการเรียกเก็บเงิน',
   },
   members: {
-    card_title: 'จัดการเทนแนนต์ได้อย่างปลอดภัยยิ่งขึ้นด้วย Logto Cloud',
+    card_title: '',
     card_description:
       'เพิ่มผู้ดูแลระบบหรือผู้ทำงานร่วมกันให้กับเทนแนนต์ของคุณได้โดยไม่ต้องแชร์บัญชีผู้ดูแลระบบเพียงบัญชีเดียว',
-    card_action: 'สำรวจ Logto Cloud',
+    card_action: '',
   },
   settings: {
     title: 'การตั้งค่า',
@@ -23,8 +23,7 @@ const tenants = {
     tenant_id: 'รหัสผู้เช่า',
     tenant_name: 'ชื่อผู้เช่า',
     tenant_instance: 'เลือกอินสแตนซ์ของคุณ',
-    tenant_instance_description:
-      'เลือกสถานที่โฮสต์สำหรับผู้เช่าของคุณ เลือก Logto Cloud สำหรับโครงสร้างพื้นฐานที่ใช้ร่วมกันสาธารณะ หรืออินสแตนซ์ส่วนตัวสำหรับทรัพยากรเฉพาะ',
+    tenant_instance_description: '',
     tenant_region: 'ภูมิภาคข้อมูล',
     tenant_region_description:
       'ตำแหน่งทางกายภาพที่ทรัพยากรผู้เช่าของคุณ (ผู้ใช้, แอปพลิเคชัน ฯลฯ) ถูกโฮสต์ ไม่สามารถเปลี่ยนแปลงได้หลังจากสร้างแล้ว',
@@ -41,8 +40,7 @@ const tenants = {
     tenant_mfa_description:
       'กำหนดให้สมาชิกของคุณตั้งค่าการยืนยันตัวตนหลายปัจจัยเพื่อเข้าถึงผู้เช่านี้',
     enterprise_sso: 'Enterprise SSO',
-    enterprise_sso_description:
-      'มีให้บริการในแผนชำระเงิน ติดต่อเราเพื่อเปิดใช้งาน Enterprise SSO เพื่อให้สมาชิกทุกคนสามารถลงชื่อเข้าใช้คอนโซล Logto Cloud โดยใช้ผู้ให้บริการตัวตนขององค์กรของคุณ',
+    enterprise_sso_description: '',
   },
   full_env_tag: {
     development: 'ทดสอบ',

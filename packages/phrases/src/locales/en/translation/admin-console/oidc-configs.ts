@@ -6,7 +6,7 @@ const oidc_configs = {
   session_max_ttl_in_days_tip:
     'An absolute lifetime limit from session creation. Regardless of activity, the session ends when this fixed duration elapses.',
   cloud_private_key_rotation_notice:
-    'In Logto Cloud, private key rotation takes effect after a 4-hour grace period.',
+    'Private key rotation takes effect after a 4-hour grace period.',
 };
 
 export default Object.freeze(oidc_configs);

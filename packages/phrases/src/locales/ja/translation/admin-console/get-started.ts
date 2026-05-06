@@ -43,22 +43,20 @@ const get_started = {
   },
   oss_cloud: {
     try: {
-      title: '運用作業を省いて Logto Cloud を無料で試す',
-      badge: 'おすすめ',
-      description:
-        '保守不要のフルマネージド Logto に加え、MCP を使った迅速な統合、マルチテナント対応、チームコラボレーション、すべてのプレミアム機能を利用できます。クレジットカード不要で無料で始められます。',
-      action: 'Logto Cloud を詳しく見る',
+      title: '',
+      badge: '',
+      description: '',
+      action: '',
     },
     private_cloud: {
-      title: 'コンプライアンスやカスタム導入が必要ですか？',
-      card_title: 'プライベートクラウド',
-      description:
-        '完全なデータ分離、カスタムドメイン、SLA 保証を備えた専用の Logto インスタンスを利用できます。厳格なデータ所在地やコンプライアンス要件を持つ企業に最適です。インフラは私たちが管理するので、あなたは製品開発に集中できます。',
+      title: '',
+      card_title: '',
+      description: '',
     },
     sidebar: {
-      title: 'ホスティングではなく、開発に集中しましょう。',
-      description: '認証インフラは Logto Cloud に任せましょう。',
-      action: 'Logto Cloud を試す',
+      title: '',
+      description: '',
+      action: '',
     },
   },
   view_all: 'すべての内容を表示 →',

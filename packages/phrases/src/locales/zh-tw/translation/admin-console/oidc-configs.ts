@@ -5,7 +5,7 @@ const oidc_configs = {
   session_max_ttl_in_days: '工作階段最長存活時間（TTL，以天計）',
   session_max_ttl_in_days_tip:
     '自建立工作階段起算的絕對存活期限上限。無論是否有活動，工作階段都會在此固定時長到期後結束。',
-  cloud_private_key_rotation_notice: '在 Logto Cloud 中，私鑰輪換會在 4 小時的寬限期後生效。',
+  cloud_private_key_rotation_notice: '私鑰輪換會在 4 小時的寬限期後生效。',
 };
 
 export default Object.freeze(oidc_configs);

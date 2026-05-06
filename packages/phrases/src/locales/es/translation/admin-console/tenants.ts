@@ -12,10 +12,10 @@ const tenants = {
     billing_history: 'Historial de facturación',
   },
   members: {
-    card_title: 'Administra los inquilinos de forma más segura con Logto Cloud',
+    card_title: '',
     card_description:
       'Agrega administradores o colaboradores a tu inquilino sin compartir una sola cuenta de administrador.',
-    card_action: 'Explorar Logto Cloud',
+    card_action: '',
   },
   settings: {
     title: 'CONFIGURACIONES',
@@ -24,8 +24,7 @@ const tenants = {
     tenant_id: 'ID del inquilino',
     tenant_name: 'Nombre del inquilino',
     tenant_instance: 'Selecciona tu instancia',
-    tenant_instance_description:
-      'Selecciona dónde se alojará tu inquilino. Elige Logto Cloud para infraestructura compartida pública o una instancia privada para recursos dedicados.',
+    tenant_instance_description: '',
     tenant_region: 'Región de alojamiento de datos',
     tenant_region_description:
       'La ubicación física donde se alojan sus recursos de inquilino (usuarios, aplicaciones, etc.). Esto no se puede cambiar después de la creación.',
@@ -43,8 +42,7 @@ const tenants = {
     tenant_mfa_description:
       'Requiere que tus miembros configuren la autenticación multifactor para acceder a este inquilino.',
     enterprise_sso: 'Enterprise SSO',
-    enterprise_sso_description:
-      'Disponible en planes de pago. Contáctenos para habilitar Enterprise SSO para que todos los miembros puedan iniciar sesión en Logto Cloud Console usando el proveedor de identidad de su organización.',
+    enterprise_sso_description: '',
   },
   full_env_tag: {
     development: 'Desarrollo',

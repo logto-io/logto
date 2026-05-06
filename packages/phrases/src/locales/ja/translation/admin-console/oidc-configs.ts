@@ -6,7 +6,7 @@ const oidc_configs = {
   session_max_ttl_in_days_tip:
     'セッション作成時点からの絶対的な有効期限です。アクティビティの有無にかかわらず、この固定期間が経過するとセッションは終了します。',
   cloud_private_key_rotation_notice:
-    'Logto Cloud では、プライベートキーのローテーションは 4 時間の猶予期間後に有効になります。',
+    'プライベートキーのローテーションは 4 時間の猶予期間後に有効になります。',
 };
 
 export default Object.freeze(oidc_configs);

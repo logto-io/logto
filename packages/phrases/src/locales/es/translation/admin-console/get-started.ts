@@ -46,23 +46,20 @@ const get_started = {
   },
   oss_cloud: {
     try: {
-      title: 'Evita el trabajo operativo y prueba Logto Cloud gratis',
-      badge: 'Recomendado',
-      description:
-        'Obtén un Logto totalmente administrado sin mantenimiento, además de integración rápida con MCP, soporte multiinquilino, colaboración en equipo y todas las funciones premium incluidas. Empieza gratis, sin tarjeta de crédito.',
-      action: 'Explorar Logto Cloud',
+      title: '',
+      badge: '',
+      description: '',
+      action: '',
     },
     private_cloud: {
-      title: '¿Necesitas cumplimiento o un despliegue personalizado?',
-      card_title: 'Nube privada',
-      description:
-        'Obtén una instancia dedicada de Logto con aislamiento total de datos, dominio personalizado y garantías de SLA. Ideal para empresas con estrictos requisitos de residencia de datos o cumplimiento normativo. Nosotros gestionamos la infraestructura para que puedas centrarte en tu producto.',
+      title: '',
+      card_title: '',
+      description: '',
     },
     sidebar: {
-      title: 'Concéntrate en crear, no en alojar.',
-      description:
-        'Deja que Logto Cloud se encargue de la infraestructura de autenticación por ti.',
-      action: 'Probar Logto Cloud',
+      title: '',
+      description: '',
+      action: '',
     },
   },
   view_all: 'Ver todo →',

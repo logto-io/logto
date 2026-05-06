@@ -46,8 +46,7 @@ const sign_in_exp = {
     hide_logto_branding: 'Masquer la marque Logto',
     hide_logto_branding_description:
       'Supprimez "Powered by Logto". Mettez uniquement votre marque en avant avec une expérience de connexion claire et professionnelle.',
-    hide_logto_branding_oss_note:
-      'Cette fonctionnalité est disponible nativement dans <a>Logto Cloud</a>.',
+    hide_logto_branding_oss_note: '',
   },
   branding_uploads: {
     app_logo: {
@@ -94,9 +93,8 @@ const sign_in_exp = {
     bring_your_ui_description:
       "Téléchargez un package compressé (.zip) pour remplacer l'UI préconstruite de Logto par votre propre code. <a>En savoir plus</a>",
     bring_your_ui_oss_description: 'Personnalisez l’interface de connexion avec votre propre code.',
-    bring_your_ui_oss_card_description:
-      'Téléchargez directement votre interface de connexion personnalisée sur <a>Logto Cloud</a>. Aucun fork ni redéploiement nécessaires.',
-    bring_your_ui_oss_try_cloud: 'Essayer Cloud',
+    bring_your_ui_oss_card_description: '',
+    bring_your_ui_oss_try_cloud: '',
     preview_with_bring_your_ui_description:
       'Vos ressources UI personnalisées ont été téléchargées avec succès et sont maintenant servies. En conséquence, la fenêtre de prévisualisation intégrée a été désactivée.\nPour tester votre UI de connexion personnalisée, cliquez sur le bouton "Aperçu en direct" pour l\'ouvrir dans un nouvel onglet du navigateur.',
   },

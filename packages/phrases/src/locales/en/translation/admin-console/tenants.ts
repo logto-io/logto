@@ -12,10 +12,10 @@ const tenants = {
     billing_history: 'Billing history',
   },
   members: {
-    card_title: 'Manage tenants more securely with Logto Cloud',
+    card_title: 'Manage tenants more securely',
     card_description:
       'Add admins or collaborators to your tenant without sharing a single admin account.',
-    card_action: 'Explore Logto Cloud',
+    card_action: '',
   },
   settings: {
     title: 'SETTINGS',
@@ -24,7 +24,7 @@ const tenants = {
     tenant_name: 'Tenant name',
     tenant_instance: 'Select your instance',
     tenant_instance_description:
-      'Select where your tenant will be hosted. Choose Logto Cloud for public shared infrastructure, or a private instance for dedicated resources.',
+      'Select where your tenant will be hosted. Choose a public shared infrastructure, or a private instance for dedicated resources.',
     tenant_region: 'Data region',
     tenant_region_description:
       'The physical location where your tenant resources (users, apps, etc.) are hosted. This cannot be changed after creation.',
@@ -42,7 +42,7 @@ const tenants = {
       'Require your members to set up multi-factor authentication to access this tenant.',
     enterprise_sso: 'Enterprise SSO',
     enterprise_sso_description:
-      "Available on paid plans. Contact us to enable enterprise SSO so all members can sign in to the Logto Cloud Console using your organization's identity provider.",
+      "Available on paid plans. Contact us to enable enterprise SSO so all members can sign in using your organization's identity provider.",
   },
   full_env_tag: {
     development: 'Development',

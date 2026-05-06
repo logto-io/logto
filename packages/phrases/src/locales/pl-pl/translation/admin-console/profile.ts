@@ -59,7 +59,7 @@ const profile = {
       check_information:
         'Przykro nam, że chcesz usunąć swoje konto. Proszę dokładnie sprawdzić poniższe informacje przed kontynuowaniem.',
       remove_all_data:
-        'Usunięcie konta spowoduje trwałe usunięcie wszystkich danych o Tobie w Logto Cloud. Upewnij się, że masz kopię zapasową ważnych danych przed kontynuowaniem.',
+        'Usunięcie konta spowoduje trwałe usunięcie wszystkich danych o Tobie. Upewnij się, że masz kopię zapasową ważnych danych przed kontynuowaniem.',
       confirm_information:
         'Proszę potwierdzić, że powyższe informacje są zgodne z Twoimi oczekiwaniami. Po usunięciu konta nie będziemy mogli go odzyskać.',
       has_admin_role:

@@ -44,24 +44,22 @@ const get_started = {
       'Ücretsiz test için bir geliştirici kiracısı kullanıyorsunuz. Yayına geçmek için bir üretim kiracısı oluşturun veya dönüştürün. Özel bir şeye mi ihtiyacınız var? <a>Bizimle iletişime geçin</a>',
     convert_button: 'Üretim kiracısına dönüştür',
   },
-  oss_cloud: {
+oss_cloud: {
     try: {
-      title: 'Operasyon yükünü atlayın, Logto Cloud’u ücretsiz deneyin',
-      badge: 'Önerilen',
-      description:
-        'Bakım gerektirmeyen tamamen yönetilen bir Logto’ya sahip olun; ayrıca MCP ile hızlı entegrasyon, çoklu kiracı desteği, ekip iş birliği ve tüm premium özellikler de dahil. Kredi kartı gerektirmeden ücretsiz başlayın.',
-      action: 'Logto Cloud’u keşfedin',
+      title: '',
+      badge: '',
+      description: '',
+      action: '',
     },
     private_cloud: {
-      title: 'Uyumluluk veya özel dağıtım mı gerekiyor?',
-      card_title: 'Özel bulut',
-      description:
-        'Tam veri izolasyonu, özel alan adı ve SLA garantileri ile özel bir Logto örneği edinin. Katı veri yerleşimi veya uyumluluk gereksinimleri olan şirketler için idealdir. Siz ürününüze odaklanırken altyapıyı biz yönetiriz.',
+      title: '',
+      card_title: '',
+      description: '',
     },
     sidebar: {
-      title: 'Barındırmaya değil, geliştirmeye odaklanın.',
-      description: 'Kimlik doğrulama altyapısını sizin için Logto Cloud yönetsin.',
-      action: "Logto Cloud'u deneyin",
+      title: '',
+      description: '',
+      action: '',
     },
   },
   view_all: 'Hepsini görüntüle →',

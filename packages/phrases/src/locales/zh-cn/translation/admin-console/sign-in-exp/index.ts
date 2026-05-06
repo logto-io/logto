@@ -42,7 +42,7 @@ const sign_in_exp = {
     hide_logto_branding: '隐藏 Logto 品牌',
     hide_logto_branding_description:
       '移除“Powered by Logto”。以干净、专业的登录体验专属呈现你的品牌。',
-    hide_logto_branding_oss_note: '此功能原生支持于 <a>Logto Cloud</a>。',
+    hide_logto_branding_oss_note: '',
   },
   branding_uploads: {
     app_logo: {
@@ -89,9 +89,8 @@ const sign_in_exp = {
     bring_your_ui_description:
       '上传一个压缩包 (.zip) 以使用你自己的代码替换 Logto 预构建的 UI。<a>了解更多</a>',
     bring_your_ui_oss_description: '用你的代码自定义登录 UI。',
-    bring_your_ui_oss_card_description:
-      '将你的自定义登录 UI 直接上传到 <a>Logto Cloud</a>。无需 fork 和重新部署。',
-    bring_your_ui_oss_try_cloud: '试用 Cloud',
+    bring_your_ui_oss_card_description: '',
+    bring_your_ui_oss_try_cloud: '',
     preview_with_bring_your_ui_description:
       '你自定义的 UI 资源已经成功上传，现在正在提供服务。因此，内置预览窗口已被禁用。\n要测试你个性化的登录 UI，请单击“实时预览”按钮在新的浏览器标签中打开它。',
   },

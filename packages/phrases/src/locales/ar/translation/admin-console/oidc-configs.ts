@@ -5,8 +5,7 @@ const oidc_configs = {
   session_max_ttl_in_days: 'الحد الأقصى لمدة صلاحية الجلسة (TTL) بالأيام',
   session_max_ttl_in_days_tip:
     'حد زمني مطلق لعمر الجلسة يبدأ من وقت إنشائها. بغض النظر عن النشاط، تنتهي الجلسة عند انقضاء هذه المدة الثابتة.',
-  cloud_private_key_rotation_notice:
-    'في Logto Cloud، تصبح عملية تدوير المفتاح الخاص فعالة بعد فترة سماح مدتها 4 ساعات.',
+  cloud_private_key_rotation_notice: '',
 };
 
 export default Object.freeze(oidc_configs);

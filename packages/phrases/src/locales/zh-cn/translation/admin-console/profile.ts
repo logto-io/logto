@@ -51,8 +51,7 @@ const profile = {
       has_issue: '很遗憾听到你想要删除账户。在删除账户之前，你需要解决以下问题。',
       after_resolved: '解决问题后，你可以删除账户。如需任何帮助，请随时联系我们。',
       check_information: '很遗憾听到你想要删除账户。请在继续操作前仔细检查以下信息。',
-      remove_all_data:
-        '删除账户将永久删除在 Logto Cloud 中的所有个人数据。因此，请确保在操作前备份任何重要数据。',
+      remove_all_data: '',
       confirm_information: '请确认以上信息符合你的预期。删除账户后，我们将无法恢复它。',
       has_admin_role: '由于你在以下租户中拥有管理员角色，该租户将与你的账户一起被删除：',
       has_admin_role_other: '由于你在以下租户中拥有管理员角色，它们将与你的账户一起被删除：',

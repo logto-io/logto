@@ -44,22 +44,20 @@ const get_started = {
   },
   oss_cloud: {
     try: {
-      title: 'Skip the ops work — try Logto Cloud free',
-      badge: 'Recommended',
-      description:
-        'Get a fully managed Logto with zero maintenance — plus MCP-powered quick integration, multi-tenant support, team collaboration, and all premium features included. Free to start, no credit card required.',
-      action: 'Explore Logto Cloud',
+      title: '',
+      badge: '',
+      description: '',
+      action: '',
     },
     private_cloud: {
-      title: 'Need compliance or custom deployment?',
-      card_title: 'Private cloud',
-      description:
-        'Get a dedicated Logto instance with full data isolation, custom domain, and SLA guarantees. Perfect for enterprises with strict data residency or compliance requirements. We handle the infrastructure so you can focus on your product.',
+      title: '',
+      card_title: '',
+      description: '',
     },
     sidebar: {
-      title: 'Focus on building, not hosting.',
-      description: 'Let Logto Cloud handle auth infrastructure for you.',
-      action: 'Try Logto Cloud',
+      title: '',
+      description: '',
+      action: '',
     },
   },
   view_all: 'View all →',

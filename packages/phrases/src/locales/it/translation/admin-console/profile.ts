@@ -59,7 +59,7 @@ const profile = {
       check_information:
         'Siamo spiacenti di sapere che vuoi eliminare il tuo account. Per favore controlla attentamente le seguenti informazioni prima di procedere.',
       remove_all_data:
-        'Eliminando il tuo account, verranno permanentemente rimossi tutti i dati su di te in Logto Cloud. Per favore assicurati di fare un backup dei dati importanti prima di procedere.',
+        'Eliminando il tuo account, verranno permanentemente rimossi tutti i dati su di te. Per favore assicurati di fare un backup dei dati importanti prima di procedere.',
       confirm_information:
         'Per favore conferma che le informazioni sopra sono quelle che ti aspettavi. Una volta eliminato il tuo account, non saremo in grado di recuperarlo.',
       has_admin_role:

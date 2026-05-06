@@ -60,7 +60,7 @@ const profile = {
       check_information:
         'Lamentamos saber que você deseja apagar a sua conta. Verifique a seguinte informação cuidadosamente antes de continuar.',
       remove_all_data:
-        'Apagar a sua conta irá remover permanentemente todos os dados sobre você na Logto Cloud. Por isso, assegure-se de fazer backup de quaisquer dados importantes antes de continuar.',
+        'Apagar a sua conta irá remover permanentemente todos os dados sobre si. Por isso, assegure-se de fazer backup de quaisquer dados importantes antes de continuar.',
       confirm_information:
         'Por favor confirme que a informação acima é o que esperava. Após apagar a sua conta, não poderemos recuperá-la.',
       has_admin_role:

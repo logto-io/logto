@@ -6,7 +6,7 @@ const oidc_configs = {
   session_max_ttl_in_days_tip:
     'Um limite absoluto de duração a partir da criação da sessão. Independentemente da atividade, a sessão termina quando essa duração fixa expira.',
   cloud_private_key_rotation_notice:
-    'No Logto Cloud, a rotação de chaves privadas entra em vigor após um período de carência de 4 horas.',
+    'A rotação de chaves privadas entra em vigor após um período de carência de 4 horas.',
 };
 
 export default Object.freeze(oidc_configs);

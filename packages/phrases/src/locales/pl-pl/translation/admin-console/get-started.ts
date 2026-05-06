@@ -45,22 +45,20 @@ const get_started = {
   },
   oss_cloud: {
     try: {
-      title: 'Pomiń pracę operacyjną i wypróbuj Logto Cloud za darmo',
-      badge: 'Polecane',
-      description:
-        'Otrzymaj w pełni zarządzane Logto bez konieczności utrzymania, a także szybkie wdrożenie z MCP, obsługę wielu tenantów, współpracę zespołową i wszystkie funkcje premium w pakiecie. Zacznij za darmo, bez karty kredytowej.',
-      action: 'Poznaj Logto Cloud',
+      title: '',
+      badge: '',
+      description: '',
+      action: '',
     },
     private_cloud: {
-      title: 'Potrzebujesz zgodności lub niestandardowego wdrożenia?',
-      card_title: 'Chmura prywatna',
-      description:
-        'Uzyskaj dedykowaną instancję Logto z pełną izolacją danych, własną domeną i gwarancjami SLA. To idealne rozwiązanie dla firm z rygorystycznymi wymaganiami dotyczącymi rezydencji danych lub zgodności. My zajmiemy się infrastrukturą, abyś mógł skupić się na swoim produkcie.',
+      title: '',
+      card_title: '',
+      description: '',
     },
     sidebar: {
-      title: 'Skup się na budowaniu, nie na hostowaniu.',
-      description: 'Pozwól, aby Logto Cloud zajęło się za Ciebie infrastrukturą uwierzytelniania.',
-      action: 'Wypróbuj Logto Cloud',
+      title: '',
+      description: '',
+      action: '',
     },
   },
   view_all: 'Zobacz wszystkie →',

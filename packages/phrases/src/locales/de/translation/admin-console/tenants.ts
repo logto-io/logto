@@ -12,10 +12,10 @@ const tenants = {
     billing_history: 'Abrechnungshistorie',
   },
   members: {
-    card_title: 'Verwalten Sie Mandanten sicherer mit Logto Cloud',
+    card_title: '',
     card_description:
       'Fügen Sie Ihrem Mandanten Admins oder Mitwirkende hinzu, ohne ein einzelnes Admin-Konto gemeinsam zu nutzen.',
-    card_action: 'Logto Cloud entdecken',
+    card_action: '',
   },
   settings: {
     title: 'EINSTELLUNGEN',
@@ -24,8 +24,7 @@ const tenants = {
     tenant_id: 'Mieter-ID',
     tenant_name: 'Mietername',
     tenant_instance: 'Wähle deine Instanz aus',
-    tenant_instance_description:
-      'Wählen Sie, wo Ihr Mandant gehostet wird. Wählen Sie Logto Cloud für eine öffentliche geteilte Infrastruktur oder eine private Instanz für dedizierte Ressourcen.',
+    tenant_instance_description: '',
     tenant_region: 'Gehostete Region der Daten',
     tenant_region_description:
       'Der physische Ort, an dem Ihre Mandantenressourcen (Benutzer, Apps, usw.) gehostet werden. Dies kann nach Erstellung nicht mehr geändert werden.',
@@ -43,8 +42,7 @@ const tenants = {
     tenant_mfa_description:
       'Verlangen Sie von Ihren Mitgliedern, dass sie die Multi-Faktor-Authentifizierung einrichten, um auf diesen Mandanten zuzugreifen.',
     enterprise_sso: 'Enterprise SSO',
-    enterprise_sso_description:
-      'Verfügbar in kostenpflichtigen Plänen. Kontaktieren Sie uns, um Enterprise SSO zu aktivieren, damit alle Mitglieder sich mit dem Identitätsanbieter Ihrer Organisation bei der Logto Cloud Console anmelden können.',
+    enterprise_sso_description: '',
   },
   full_env_tag: {
     development: 'Entwicklung',

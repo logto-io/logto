@@ -12,10 +12,10 @@ const tenants = {
     billing_history: '請求履歴',
   },
   members: {
-    card_title: 'Logto Cloud でテナントをより安全に管理',
+    card_title: 'テナントをより安全に管理',
     card_description:
       '1つの管理者アカウントを共有せずに、テナントに管理者やコラボレーターを追加できます。',
-    card_action: 'Logto Cloud を見る',
+    card_action: '',
   },
   settings: {
     title: '設定',
@@ -24,7 +24,7 @@ const tenants = {
     tenant_name: 'テナント名',
     tenant_instance: 'インスタンスを選択してください',
     tenant_instance_description:
-      'テナントをホストする場所を選択してください。パブリック共有インフラストラクチャの Logto Cloud を選択するか、専用リソース用のプライベートインスタンスを選択します。',
+      'テナントをホストする場所を選択してください。専用リソース用のプライベートインスタンスを選択します。',
     tenant_region: 'データがホストされている地域',
     tenant_region_description:
       'テナントリソース（ユーザー、アプリなど）がホストされている物理的な場所です。作成後に変更することはできません。',
@@ -42,7 +42,7 @@ const tenants = {
       'メンバーがこのテナントにアクセスするために多要素認証を設定することを要求します。',
     enterprise_sso: 'エンタープライズ SSO',
     enterprise_sso_description:
-      '有料プランで利用可能です。お問い合わせいただくと、すべてのメンバーが組織のアイデンティティプロバイダーを使用して Logto Cloud コンソールにサインインできるようになります。',
+      '有料プランで利用可能です。お問い合わせいただくと、すべてのメンバーが組織のアイデンティティプロバイダーを使用してコンソールにサインインできるようになります。',
   },
   full_env_tag: {
     development: '開発',

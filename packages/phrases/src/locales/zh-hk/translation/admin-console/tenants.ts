@@ -11,9 +11,9 @@ const tenants = {
     billing_history: '帳單記錄',
   },
   members: {
-    card_title: '透過 Logto Cloud 更安全地管理租戶',
+    card_title: '',
     card_description: '無需共用單一管理員帳號，也能為你的租戶新增管理員或協作者。',
-    card_action: '探索 Logto Cloud',
+    card_action: '',
   },
   settings: {
     title: '設定',
@@ -21,8 +21,7 @@ const tenants = {
     tenant_id: '租戶ID',
     tenant_name: '租戶名稱',
     tenant_instance: '選擇你的實例',
-    tenant_instance_description:
-      '選擇你的租戶將在哪裡托管。選擇公用共享基礎設施的 Logto Cloud，或者選擇專用資源的私人實例。',
+    tenant_instance_description: '',
     tenant_region: '數據托管區域',
     tenant_region_description: '您的租戶資源（用戶、應用等）所在的實際位置。這無法在創建後更改。',
     tenant_region_tip: '您的租戶資源托管在{{region}}。 <a>了解更多</a>',
@@ -36,8 +35,7 @@ const tenants = {
     tenant_mfa: '多因素認證',
     tenant_mfa_description: '要求成員設置多因素認證才能訪問此租戶。',
     enterprise_sso: '企業 SSO',
-    enterprise_sso_description:
-      '僅限付費計劃。聯繫我們啟用企業 SSO，讓所有成員可以使用您組織的身份提供商登錄 Logto Cloud 控制台。',
+    enterprise_sso_description: '',
   },
   full_env_tag: {
     development: '開發',

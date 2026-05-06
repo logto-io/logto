@@ -5,8 +5,7 @@ const oidc_configs = {
   session_max_ttl_in_days: 'Tiempo de vida máximo de la sesión (TTL) en días',
   session_max_ttl_in_days_tip:
     'Un límite de vida útil absoluto desde la creación de la sesión. Independientemente de la actividad, la sesión termina cuando transcurre esta duración fija.',
-  cloud_private_key_rotation_notice:
-    'En Logto Cloud, la rotación de claves privadas surte efecto después de un período de gracia de 4 horas.',
+  cloud_private_key_rotation_notice: '',
 };
 
 export default Object.freeze(oidc_configs);

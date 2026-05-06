@@ -11,9 +11,9 @@ const tenants = {
     billing_history: 'سجل الفوترة',
   },
   members: {
-    card_title: 'أدر المستأجرين بأمان أكبر مع Logto Cloud',
+    card_title: '',
     card_description: 'أضف مسؤولين أو متعاونين إلى المستأجر الخاص بك دون مشاركة حساب مسؤول واحد.',
-    card_action: 'استكشف Logto Cloud',
+    card_action: '',
   },
   settings: {
     title: 'الإعدادات',
@@ -21,8 +21,7 @@ const tenants = {
     tenant_id: 'معرف المستأجر',
     tenant_name: 'اسم المستأجر',
     tenant_instance: 'اختر مثيلك',
-    tenant_instance_description:
-      'اختر المكان الذي سيتم استضافة المستأجر الخاص بك فيه. اختر Logto Cloud للبنية التحتية العامة المشتركة ، أو مثيل خاص للحصول على موارد مخصصة.',
+    tenant_instance_description: '',
     tenant_region: 'منطقة البيانات',
     tenant_region_description:
       'الموقع الفعلي الذي يتم استضافة موارد المستأجر الخاصة بك (المستخدمين ، التطبيقات ، إلخ). لا يمكن تغييره بعد الإنشاء.',
@@ -38,8 +37,7 @@ const tenants = {
     tenant_mfa: 'المصادقة متعددة العوامل',
     tenant_mfa_description: 'اطلب من أعضائك إعداد المصادقة متعددة العوامل للوصول إلى هذا المستأجر.',
     enterprise_sso: 'Enterprise SSO',
-    enterprise_sso_description:
-      'متاح في الخطط المدفوعة. اتصل بنا لتمكين Enterprise SSO حتى يتمكن جميع الأعضاء من تسجيل الدخول إلى Logto Cloud Console باستخدام موفر هوية مؤسستك.',
+    enterprise_sso_description: '',
   },
   full_env_tag: {
     development: 'تطوير',
