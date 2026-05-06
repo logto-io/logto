@@ -148,6 +148,7 @@ export default function userRoutes(
       ctx.appendDataHookContext('Organization.Membership.Updated', {
         ...buildManagementApiContext(ctx),
         organizationId: id,
+        userIds: [userId],
       });
 
       return next();

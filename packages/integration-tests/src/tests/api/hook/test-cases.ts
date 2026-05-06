@@ -111,7 +111,7 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'post',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
-    hookPayload: { organizationId: expect.any(String) },
+    hookPayload: { organizationId: expect.any(String), userIds: expect.any(Array) },
   },
   {
     route: 'PUT /organizations/:id/users',
@@ -119,7 +119,7 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'put',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
-    hookPayload: { organizationId: expect.any(String) },
+    hookPayload: { organizationId: expect.any(String), userIds: expect.any(Array) },
   },
   {
     route: 'DELETE /organizations/:id/users/:userId',
@@ -127,7 +127,7 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'delete',
     endpoint: `organizations/{organizationId}/users/{userId}`,
     payload: {},
-    hookPayload: { organizationId: expect.any(String) },
+    hookPayload: { organizationId: expect.any(String), userIds: expect.any(Array) },
   },
   {
     route: 'POST /organizations/:id/applications',
