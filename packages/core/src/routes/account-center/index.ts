@@ -17,7 +17,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
 ) {
   const [router, { queries, libraries }] = args;
   const { findDefaultAccountCenter, updateDefaultAccountCenter } = queries.accountCenters;
-  const { normalizeAccountCenterProfileFields } = libraries.customProfileFields;
+  const { normalizeProfileFields } = libraries.customProfileFields;
   router.get(
     '/account-center',
     koaGuard({
@@ -56,7 +56,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         profileFields,
       } = ctx.guard.body;
       const normalizedDeleteAccountUrl = deleteAccountUrl === '' ? null : deleteAccountUrl;
-      const normalizedProfileFields = await normalizeAccountCenterProfileFields(profileFields);
+      const normalizedProfileFields = await normalizeProfileFields(profileFields);
 
       // Make sure the account center exists
       await findDefaultAccountCenter();
