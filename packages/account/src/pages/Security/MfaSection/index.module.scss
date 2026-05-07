@@ -154,6 +154,30 @@
   background: var(--color-line-divider);
 }
 
+.loadingMask {
+  min-height: 152px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-type-primary);
+}
+
+.loadingIcon {
+  width: 20px;
+  height: 20px;
+  animation: rotating 1s steps(12, end) infinite;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 :global(body.mobile) {
   .sectionTitle {
     padding-left: 0;
@@ -213,6 +237,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+  }
+
+  .loadingMask {
+    min-height: 96px;
   }
 
   .actionButton {
