@@ -155,6 +155,65 @@ describe('account center session management', () => {
         await deleteDefaultTenantUser(user.id);
       }
     );
+
+    devFeatureTest.it(
+      'returns zero `isCurrent: true` entries after the caller revokes its own session',
+      async () => {
+        const { user, username, password } = await createDefaultTenantUserWithPassword();
+        const api = await signInAndGetUserApi(username, password, {
+          scopes: [UserScope.Sessions],
+        });
+
+        const verificationRecordId = await createVerificationRecordByPassword(api, password);
+
+        const before = await getSessions(api, verificationRecordId);
+        const ownSession = before.sessions.find((session) => session.isCurrent);
+        assert(ownSession, new Error('Caller session not tagged before revoke'));
+
+        await deleteSession(api, ownSession.payload.uid, verificationRecordId);
+
+        const after = await getSessions(api, verificationRecordId);
+        const currentSessions = after.sessions.filter((session) => session.isCurrent);
+        expect(currentSessions).toHaveLength(0);
+        expect(after.sessions.map((session) => session.payload.uid)).not.toContain(
+          ownSession.payload.uid
+        );
+
+        await deleteDefaultTenantUser(user.id);
+      }
+    );
+
+    devFeatureTest.it(
+      'tags the calling session from each caller perspective when two sessions exist',
+      async () => {
+        const { user, username, password } = await createDefaultTenantUserWithPassword();
+
+        const apiA = await signInAndGetUserApi(username, password, {
+          scopes: [UserScope.Sessions],
+        });
+        const apiB = await signInAndGetUserApi(username, password, {
+          scopes: [UserScope.Sessions],
+        });
+
+        const verificationRecordIdA = await createVerificationRecordByPassword(apiA, password);
+        const verificationRecordIdB = await createVerificationRecordByPassword(apiB, password);
+
+        const responseA = await getSessions(apiA, verificationRecordIdA);
+        const responseB = await getSessions(apiB, verificationRecordIdB);
+
+        const currentA = responseA.sessions.find((session) => session.isCurrent);
+        const currentB = responseB.sessions.find((session) => session.isCurrent);
+
+        assert(currentA, new Error('A session not tagged from A perspective'));
+        assert(currentB, new Error('B session not tagged from B perspective'));
+
+        expect(responseA.sessions.filter((session) => session.isCurrent)).toHaveLength(1);
+        expect(responseB.sessions.filter((session) => session.isCurrent)).toHaveLength(1);
+        expect(currentA.payload.uid).not.toBe(currentB.payload.uid);
+
+        await deleteDefaultTenantUser(user.id);
+      }
+    );
   });
 
   describe('DELETE /account-center/sessions/:sessionId', () => {
