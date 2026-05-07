@@ -2,4 +2,4 @@
 "@logto/core": patch
 ---
 
-allow Account API users without a password, primary email, or primary phone to set their initial password without a verification record.
+allow users who have no password, no primary email, and no primary phone to set their initial password without a verification record through Account API.

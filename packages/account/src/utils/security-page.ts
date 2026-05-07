@@ -54,10 +54,15 @@ export const hasAvailableSecurityVerificationMethod = (
   Boolean(userInfo?.primaryEmail) ||
   Boolean(userInfo?.primaryPhone);
 
+export const canSetInitialPasswordWithoutVerification = (
+  userInfo?: Partial<UserProfileResponse>
+): boolean => userInfo?.hasPassword === false && !userInfo.primaryEmail && !userInfo.primaryPhone;
+
 export const canOpenPasswordEditFlow = (
   passwordControl: AccountCenterControlValue | undefined,
   userInfo?: Partial<UserProfileResponse>
 ): boolean =>
   isEditableField(passwordControl) &&
   userInfo !== undefined &&
-  (hasAvailableSecurityVerificationMethod(userInfo) || !userInfo.hasPassword);
+  (hasAvailableSecurityVerificationMethod(userInfo) ||
+    canSetInitialPasswordWithoutVerification(userInfo));

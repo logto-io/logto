@@ -16,7 +16,10 @@ import { passwordSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
-import { hasAvailableSecurityVerificationMethod } from '@ac/utils/security-page';
+import {
+  canSetInitialPasswordWithoutVerification,
+  hasAvailableSecurityVerificationMethod,
+} from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from '../CodeFlow/index.module.scss';
@@ -81,8 +84,7 @@ const Password = () => {
   }
 
   const hasAvailableVerificationMethod = hasAvailableSecurityVerificationMethod(userInfo);
-  const canSetInitialPasswordWithoutVerification =
-    userInfo !== undefined && !hasAvailableVerificationMethod;
+  const canSkipVerification = canSetInitialPasswordWithoutVerification(userInfo);
 
   if (!verificationId && hasAvailableVerificationMethod) {
     return <VerificationMethodList />;
@@ -99,7 +101,7 @@ const Password = () => {
       return;
     }
 
-    if ((!verificationId && !canSetInitialPasswordWithoutVerification) || loading) {
+    if ((!verificationId && !canSkipVerification) || loading) {
       return;
     }
 

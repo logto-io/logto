@@ -6,6 +6,7 @@ import { AccountCenterControlValue, ConnectorPlatform, MfaPolicy } from '@logto/
 import type * as SecurityPageModule from './security-page';
 
 const {
+  canSetInitialPasswordWithoutVerification,
   isEditableField,
   canOpenPasswordEditFlow,
   hasAvailableSecurityVerificationMethod,
@@ -131,6 +132,30 @@ void test('hasAvailableSecurityVerificationMethod returns true for password, pri
   assert.equal(hasAvailableSecurityVerificationMethod(), false);
 });
 
+void test('canSetInitialPasswordWithoutVerification requires explicit no-password user info', () => {
+  assert.equal(
+    canSetInitialPasswordWithoutVerification({
+      hasPassword: false,
+    }),
+    true
+  );
+  assert.equal(canSetInitialPasswordWithoutVerification({}), false);
+  assert.equal(
+    canSetInitialPasswordWithoutVerification({
+      hasPassword: false,
+      primaryEmail: 'foo@example.com',
+    }),
+    false
+  );
+  assert.equal(
+    canSetInitialPasswordWithoutVerification({
+      hasPassword: false,
+      primaryPhone: '+15555555555',
+    }),
+    false
+  );
+});
+
 void test('canOpenPasswordEditFlow supports verified update and initial password setup paths', () => {
   assert.equal(
     canOpenPasswordEditFlow(AccountCenterControlValue.Edit, {
@@ -145,6 +170,7 @@ void test('canOpenPasswordEditFlow supports verified update and initial password
     }),
     true
   );
+  assert.equal(canOpenPasswordEditFlow(AccountCenterControlValue.Edit, {}), false);
   assert.equal(
     canOpenPasswordEditFlow(AccountCenterControlValue.Edit, {
       hasPassword: true,
