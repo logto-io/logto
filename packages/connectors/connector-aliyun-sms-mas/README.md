@@ -22,6 +22,10 @@ The official Logto connector for Aliyun Message Authentication Service.
 
 ## Get started
 
+> **Note: Transport-layer only**
+>
+> This connector uses Aliyun Message Authentication Service **as a delivery channel only**. It passes Logto-generated verification codes via `TemplateParam` and does **not** integrate the Aliyun-managed verification flow (where Aliyun generates, validates, and manages the verification code lifecycle). This is a deliberate design choice to preserve Logto's existing "generate and validate" architecture. Users should not expect MAS-managed verification semantics when using this connector.
+
 Aliyun Message Authentication Service is a specialized service for verification code scenarios. Unlike the standard SMS service, it provides:
 
 - System-provided signatures and templates (no application required)
@@ -56,13 +60,6 @@ If you need to send SMS to international numbers or regions outside mainland Chi
 4. Go to "AccessKey Management" from your avatar menu and create an AccessKey pair.
 
 ## Compose the connector JSON
-
-### Phone number format in Logto and MAS
-
-- Logto internal phone value is a digits-only international number (typically with country code, e.g., `8613012345678`).
-- Aliyun MAS `SendSmsVerifyCode` expects local mainland number in `PhoneNumber` (e.g., `13012345678`) and country info via `CountryCode`.
-- This connector automatically normalizes `+86` / `0086` / `86` prefixes when sending SMS requests.
-- Recommended: keep phone identifiers in Logto as international digits with country code (e.g., `86...`) to avoid ambiguous display/formatting in other flows.
 
 1. Fill out the `accessKeyId` and `accessKeySecret` with your AccessKey pair.
 2. Select a `signName` from the system-provided options:
@@ -123,15 +120,17 @@ Example configuration:
 
 ---
 
-# 阿里云短信认证连接器
+# 阿里云短信认证服务连接器
+
+> **注意：仅作为短信发送通道**
+>
+> 本连接器仅将阿里云短信认证服务用作短信发送通道。通过 `TemplateParam` 传入 Logto 生成的验证码，不集成阿里云的验证码生成、校验及生命周期管理功能。这是为保持 Logto 现有"生成并校验"架构而做出的设计选择。使用本连接器时，不应期望获得阿里云管理的验证码语义。
 
 阿里云短信认证服务是专门为验证码场景设计的服务。与标准短信服务不同，它提供：
 
 - 系统赠送的签名和模板（无需申请）
 - 内置的防欺诈保护和频控机制
 - 针对验证码场景的简化集成
-
-## 与短信服务的区别和限制
 
 ### 与短信服务的区别
 
@@ -146,7 +145,7 @@ Example configuration:
 ⚠️ **重要提示**：短信认证服务有以下限制：
 
 - **仅限中国大陆手机号**：目前仅支持中国移动、中国联通和中国电信的手机号码（中国大陆）
-- **不支持国际及港澳台**：**不支持**中国台湾、中国香港、中国澳门及海外地区使用
+- **不支持国际及港澳台**：不支持中国台湾、中国香港、中国澳门及海外地区使用
 - **不支持自定义签名**：自2025年11月12日起，阿里云发布[公告](https://help.aliyun.com/zh/pnvs/product-overview/sms-service-does-not-support-custom-signatures)称"因运营商签名实名制政策管控要求，即日起号码认证产品下所有使用短信验证码触达的认证方式，均不支持使用自定义签名下发短信，具体恢复时间另行通知。"
 
 如果您需要向国际号码或中国大陆以外的地区发送短信，请改用[阿里云短信服务连接器](../connector-aliyun-sms/)。

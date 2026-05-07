@@ -50,11 +50,11 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Aliyun Message Authentication Service provides simplified verification code SMS with system-provided signatures and templates, no enterprise qualification required.',
-    'zh-CN': '阿里云短信认证服务提供简化的验证码短信，使用指定的签名和模板，无需企业资质。',
+    en: 'Uses Aliyun Message Authentication Service as a delivery channel only. Sends Logto-generated verification codes via Aliyun system-provided signatures and templates. Does not use Aliyun-managed verification or lifecycle features. Mainland China numbers only.',
+    'zh-CN': '仅将阿里云短信认证服务用作短信发送通道，通过阿里云系统赠送的签名和模板发送 Logto 生成的验证码。不使用阿里云的验证码生成、校验及生命周期管理功能。仅支持中国大陆手机号。',
     'tr-TR':
-      "Aliyun Mesaj Doğrulama Hizmeti, sistem tarafından sağlanan imzalar ve şablonlarla basitleştirilmiş doğrulama kodu SMS'leri sunar, kurumsal nitelik gerektirmez.",
-    ko: 'Aliyun 메시지 인증 서비스는 시스템 제공 서명과 템플릿을 사용하여 간소화된 인증 코드 SMS를 제공하며, 기업 자격이 필요하지 않습니다.',
+      "Aliyun Mesaj Doğrulama Hizmeti yalnızca bir teslimat kanalı olarak kullanılır. Logto tarafından oluşturulan doğrulama kodları, Aliyun sistem tarafından sağlanan imzalar ve şablonlar üzerinden gönderilir. Aliyun tarafından yönetilen doğrulama veya yaşam döngüsü özellikleri kullanılmaz. Yalnızca Çin anakara numaraları desteklenir.",
+    ko: 'Aliyun 메시지 인증 서비스는 전달 채널로만 사용됩니다. Logto에서 생성한 인증 코드를 Aliyun 시스템 제공 서명과 템플릿으로 전송합니다. Aliyun 관리 인증 또는 수명 주기 기능은 사용하지 않습니다. 중국 본토 번호만 지원됩니다.',
   },
   readme: './README.md',
   formItems: [
@@ -129,15 +129,6 @@ export const defaultMetadata: ConnectorMetadata = {
       ],
       description:
         'Use system-provided template codes: 100001 (SignIn/Register/Generic), 100002 (Change Phone), 100003 (Reset Password), 100004 (Bind Phone), 100005 (Verify Phone).',
-    },
-    {
-      key: 'strictPhoneRegionNumberCheck',
-      label: 'Strict phone region check',
-      type: ConnectorConfigFormItemType.Switch,
-      required: false,
-      defaultValue: true,
-      description:
-        'When enabled, only China mainland mobile numbers are accepted (13012345678, 8613012345678, +8613012345678, 008613012345678). Keep this enabled by default since Aliyun Message Authentication Service currently supports China mainland numbers only.',
     },
   ],
 };

@@ -4,6 +4,7 @@
   "description": "Aliyun Message Authentication Service (MAS) connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
+    "@logto/shared": "workspace:^",
     "@silverhand/essentials": "^2.9.1",
     "got": "^14.0.0",
     "zod": "^3.24.3"
@@ -26,7 +27,8 @@
     "dev": "tsup --watch",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "test": "vitest src",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
     "test:ci": "pnpm run test --silent --coverage",
     "prepublishOnly": "pnpm build"
   },
@@ -40,6 +42,7 @@
         "@silverhand/essentials",
         "got",
         "nock",
+        "snakecase-keys",
         "zod"
       ]
     }

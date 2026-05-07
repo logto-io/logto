@@ -59,7 +59,7 @@ describe('sendMessage()', () => {
   it('should call sendSmsVerifyCode() with correct parameters', async () => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
-      to: phoneTest,
+      to: `86${phoneTest}`,
       type: TemplateType.SignIn,
       payload: { code: codeTest, locale: 'zh-CN' },
     });
@@ -92,7 +92,7 @@ describe('sendMessage()', () => {
   ])('should use correct template code for %s', async (type, expectedTemplateCode) => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
-      to: phoneTest,
+      to: `86${phoneTest}`,
       type,
       payload: { code: codeTest },
     });
@@ -103,10 +103,10 @@ describe('sendMessage()', () => {
     });
   });
 
-  it('should strip country code prefix before sending to MAS API', async () => {
+  it('should strip country code and send national number to MAS API', async () => {
     const connector = await createConnector({ getConfig });
     await connector.sendMessage({
-      to: `86${phoneTest}`,
+      to: `+86${phoneTest}`,
       type: TemplateType.SignIn,
       payload: { code: codeTest },
     });
@@ -116,6 +116,53 @@ describe('sendMessage()', () => {
       CountryCode: '86',
       PhoneNumber: phoneTest,
     });
+  });
+});
+
+describe('sendMessage() phone number validation', () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should reject non-China phone numbers (US)', async () => {
+    const connector = await createConnector({ getConfig });
+    await expect(
+      connector.sendMessage({
+        to: '16502530000',
+        type: TemplateType.SignIn,
+        payload: { code: codeTest },
+      })
+    ).rejects.toMatchObject({
+      code: 'invalid_request_parameters',
+    });
+
+    expect(sendSmsVerifyCode).not.toHaveBeenCalled();
+  });
+
+  it('should reject invalid phone numbers', async () => {
+    const connector = await createConnector({ getConfig });
+    await expect(
+      connector.sendMessage({
+        to: 'abc',
+        type: TemplateType.SignIn,
+        payload: { code: codeTest },
+      })
+    ).rejects.toMatchObject({
+      code: 'invalid_request_parameters',
+    });
+
+    expect(sendSmsVerifyCode).not.toHaveBeenCalled();
+  });
+
+  it('should accept valid China phone number with 86 prefix', async () => {
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: `86${phoneTest}`,
+      type: TemplateType.SignIn,
+      payload: { code: codeTest },
+    });
+
+    expect(sendSmsVerifyCode).toHaveBeenCalled();
   });
 });
 
@@ -140,7 +187,7 @@ describe('sendMessage() with API errors', () => {
     const connector = await createConnector({ getConfig });
     await expect(
       connector.sendMessage({
-        to: phoneTest,
+        to: `86${phoneTest}`,
         type: TemplateType.SignIn,
         payload: { code: codeTest },
       })
@@ -150,9 +197,34 @@ describe('sendMessage() with API errors', () => {
   });
 
   /**
-   * Test that general API error throws General error
+   * Test that FREQUENCY_FAIL error throws RateLimitExceeded
    */
-  it('should throw General error for other API errors', async () => {
+  it('should throw RateLimitExceeded for FREQUENCY_FAIL error', async () => {
+    sendSmsVerifyCode.mockResolvedValueOnce({
+      body: JSON.stringify({
+        Code: 'FREQUENCY_FAIL',
+        Message: 'Check frequency fail.',
+        RequestId: 'request-id',
+      }),
+      statusCode: 200,
+    });
+
+    const connector = await createConnector({ getConfig });
+    await expect(
+      connector.sendMessage({
+        to: `86${phoneTest}`,
+        type: TemplateType.SignIn,
+        payload: { code: codeTest },
+      })
+    ).rejects.toMatchObject({
+      code: 'rate_limit_exceeded',
+    });
+  });
+
+  /**
+   * Test that MOBILE_NUMBER_ILLEGAL error throws InvalidRequestParameters
+   */
+  it('should throw InvalidRequestParameters for MOBILE_NUMBER_ILLEGAL error', async () => {
     sendSmsVerifyCode.mockResolvedValueOnce({
       body: JSON.stringify({
         Code: 'MOBILE_NUMBER_ILLEGAL',
@@ -165,61 +237,37 @@ describe('sendMessage() with API errors', () => {
     const connector = await createConnector({ getConfig });
     await expect(
       connector.sendMessage({
-        to: phoneTest,
+        to: `86${phoneTest}`,
+        type: TemplateType.SignIn,
+        payload: { code: codeTest },
+      })
+    ).rejects.toMatchObject({
+      code: 'invalid_request_parameters',
+    });
+  });
+
+  /**
+   * Test that general API error throws General error
+   */
+  it('should throw General error for other API errors', async () => {
+    sendSmsVerifyCode.mockResolvedValueOnce({
+      body: JSON.stringify({
+        Code: 'FUNCTION_NOT_OPENED',
+        Message: 'You have not opened this function.',
+        RequestId: 'request-id',
+      }),
+      statusCode: 200,
+    });
+
+    const connector = await createConnector({ getConfig });
+    await expect(
+      connector.sendMessage({
+        to: `86${phoneTest}`,
         type: TemplateType.SignIn,
         payload: { code: codeTest },
       })
     ).rejects.toMatchObject({
       code: 'general',
-    });
-  });
-});
-
-describe('sendMessage() with strictPhoneRegionNumberCheck', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('should throw invalid_request_parameters for non-mainland number in strict mode', async () => {
-    const connector = await createConnector({ getConfig });
-    await expect(
-      connector.sendMessage(
-        {
-          to: '+1123123123',
-          type: TemplateType.SignIn,
-          payload: { code: codeTest },
-        },
-        {
-          ...mockedConnectorConfig,
-          strictPhoneRegionNumberCheck: true,
-        }
-      )
-    ).rejects.toMatchObject({
-      code: 'invalid_request_parameters',
-    });
-
-    expect(sendSmsVerifyCode).not.toHaveBeenCalled();
-  });
-
-  it('should allow mainland number in strict mode', async () => {
-    const connector = await createConnector({ getConfig });
-    await connector.sendMessage(
-      {
-        to: `+86${phoneTest}`,
-        type: TemplateType.SignIn,
-        payload: { code: codeTest },
-      },
-      {
-        ...mockedConnectorConfig,
-        strictPhoneRegionNumberCheck: true,
-      }
-    );
-
-    const [sendRequest] = sendSmsVerifyCode.mock.calls[0] ?? [];
-
-    expect(sendRequest).toMatchObject({
-      CountryCode: '86',
-      PhoneNumber: phoneTest,
     });
   });
 });

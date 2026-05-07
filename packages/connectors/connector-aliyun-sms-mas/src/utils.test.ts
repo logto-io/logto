@@ -1,13 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import {
-  escaper,
-  getSignature,
-  isMainlandChinaPhoneNumber,
-  mainlandChinaCountryCode,
-  normalizeMainlandChinaPhoneNumber,
-  request,
-} from './utils.js';
+import { escaper, getSignature, mainlandChinaCountryCode, request } from './utils.js';
 
 describe('escaper()', () => {
   it('should encode special characters according to Aliyun rules', () => {
@@ -109,46 +102,8 @@ describe('request()', () => {
   // The request function is tested indirectly through index.test.ts
 });
 
-describe('normalizeMainlandChinaPhoneNumber()', () => {
-  it('should keep mainland China national number unchanged', () => {
-    expect(normalizeMainlandChinaPhoneNumber('13012345678')).toBe('13012345678');
-  });
-
-  it('should normalize 86 prefix', () => {
-    expect(normalizeMainlandChinaPhoneNumber('8613012345678')).toBe('13012345678');
-  });
-
-  it('should normalize +86 prefix', () => {
-    expect(normalizeMainlandChinaPhoneNumber('+8613012345678')).toBe('13012345678');
-  });
-
-  it('should normalize 0086 prefix', () => {
-    expect(normalizeMainlandChinaPhoneNumber('008613012345678')).toBe('13012345678');
-  });
-
-  it('should return original value for non-mainland format', () => {
-    expect(normalizeMainlandChinaPhoneNumber('18888888888')).toBe('18888888888');
-  });
-});
-
 describe('mainlandChinaCountryCode', () => {
   it('should be 86', () => {
     expect(mainlandChinaCountryCode).toBe('86');
   });
-});
-
-describe('isMainlandChinaPhoneNumber()', () => {
-  it.each(['13012345678', '8613012345678', '+8613012345678', '008613012345678'])(
-    'should return true for valid format: %s',
-    (value) => {
-      expect(isMainlandChinaPhoneNumber(value)).toBe(true);
-    }
-  );
-
-  it.each(['+1123123123', 'abc', '123456'])(
-    'should return false for invalid format: %s',
-    (value) => {
-      expect(isMainlandChinaPhoneNumber(value)).toBe(false);
-    }
-  );
 });

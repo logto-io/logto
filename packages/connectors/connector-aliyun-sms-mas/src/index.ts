@@ -1,5 +1,6 @@
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
+import { PhoneNumberParser } from '@logto/shared';
 
 import type {
   GetConnectorConfig,
@@ -20,11 +21,7 @@ import { defaultMetadata } from './constant.js';
 import { sendSmsVerifyCode } from './send-verify-code.js';
 import type { Template } from './types.js';
 import { aliyunSmsMasConfigGuard, sendSmsVerifyCodeResponseGuard } from './types.js';
-import {
-  isMainlandChinaPhoneNumber,
-  mainlandChinaCountryCode,
-  normalizeMainlandChinaPhoneNumber,
-} from './utils.js';
+import { mainlandChinaCountryCode } from './utils.js';
 
 const getTemplateCode = ({ templateCode }: Template) => templateCode;
 
@@ -42,13 +39,38 @@ const parseVerifyCodeResponseString = (response: string) => {
 };
 
 /**
+ * Parse and validate a phone number as mainland China number.
+ * Uses PhoneNumberParser (libphonenumber-js) for robust validation.
+ * Throws InvalidRequestParameters if the number is not a valid +86 number.
+ * Returns the national number (e.g., "13012345678") for MAS API.
+ */
+const parseMainlandChinaPhoneNumber = (phone: string): string => {
+  const parser = new PhoneNumberParser(phone);
+
+  if (!parser.isValid || parser.countryCode !== mainlandChinaCountryCode) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidRequestParameters, {
+      errorDescription:
+        'Phone number must be a valid China mainland mobile number with country code +86.',
+      phoneNumber: phone,
+    });
+  }
+
+  if (!parser.nationalNumber) {
+    throw new ConnectorError(ConnectorErrorCodes.General, {
+      errorDescription: 'Failed to parse national number from phone number.',
+      phoneNumber: phone,
+    });
+  }
+
+  return parser.nationalNumber;
+};
+
+/**
  * Send SMS verification code
  *
- * Note: This connector only supports China mainland mobile numbers.
- * It accepts both:
- * - international digits from Logto (e.g., "8613012345678")
- * - local mainland number (e.g., "13012345678")
- * and normalizes to MAS API format automatically.
+ * This connector only supports China mainland mobile numbers.
+ * Phone validation uses libphonenumber-js via PhoneNumberParser to ensure
+ * the number is a valid +86 number before sending the request.
  *
  * Logto uses a fixed 10-minute verification code expiration time:
  * @see https://docs.logto.io/zh-CN/connectors/sms-connectors/sms-templates
@@ -59,7 +81,7 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, aliyunSmsMasConfigGuard);
-    const { accessKeyId, accessKeySecret, signName, strictPhoneRegionNumberCheck } = config;
+    const { accessKeyId, accessKeySecret, signName } = config;
 
     const template = getConfigTemplateByType(type, config);
     assert(
@@ -70,6 +92,9 @@ const sendMessage =
       )
     );
 
+    // Validate and parse phone number as mainland China number
+    const nationalNumber = parseMainlandChinaPhoneNumber(to);
+
     // Remove locale from payload as it's not needed for MAS API
     const { locale, ...filteredPayload } = payload;
 
@@ -77,22 +102,12 @@ const sendMessage =
     // min parameter is used in template: "您的验证码是${code}，有效期${min}分钟，请勿告诉他人。"
     const masPayload = { ...filteredPayload, min: '10' };
 
-    if (strictPhoneRegionNumberCheck && !isMainlandChinaPhoneNumber(to)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidRequestParameters, {
-        errorDescription:
-          'Phone number must be a China mainland mobile number. Accepted formats: 13012345678, 8613012345678, +8613012345678, 008613012345678.',
-        phoneNumber: to,
-      });
-    }
-
-    const normalizedPhoneNumber = normalizeMainlandChinaPhoneNumber(to);
-
     try {
       const httpResponse = await sendSmsVerifyCode(
         {
           AccessKeyId: accessKeyId,
           CountryCode: mainlandChinaCountryCode,
-          PhoneNumber: normalizedPhoneNumber,
+          PhoneNumber: nationalNumber,
           SignName: signName,
           TemplateCode: getTemplateCode(template),
           TemplateParam: JSON.stringify(masPayload),
@@ -104,9 +119,11 @@ const sendMessage =
       assert(
         Code === 'OK',
         new ConnectorError(
-          Code === 'BUSINESS_LIMIT_CONTROL'
+          Code === 'BUSINESS_LIMIT_CONTROL' || Code === 'FREQUENCY_FAIL'
             ? ConnectorErrorCodes.RateLimitExceeded
-            : ConnectorErrorCodes.General,
+            : Code === 'MOBILE_NUMBER_ILLEGAL'
+              ? ConnectorErrorCodes.InvalidRequestParameters
+              : ConnectorErrorCodes.General,
           { errorDescription: Message, Code, ...rest }
         )
       );
