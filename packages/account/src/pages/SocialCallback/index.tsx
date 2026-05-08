@@ -171,8 +171,12 @@ const SocialCallback = () => {
     t,
   ]);
 
-  if (isLoadingExperience || !accountCenterSettings || !experienceSettings) {
+  if (isLoadingExperience) {
     return <GlobalLoading />;
+  }
+
+  if (!accountCenterSettings || !experienceSettings) {
+    return <ErrorPage titleKey="error.something_went_wrong" />;
   }
 
   if (
