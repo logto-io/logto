@@ -1,5 +1,28 @@
 @use '@experience/shared/scss/underscore' as _;
 
+@mixin skeleton-block($radius: 8px) {
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius;
+  background: var(--color-bg-state-disabled);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0%),
+        rgba(255, 255, 255, 20%),
+        rgba(255, 255, 255, 45%),
+        rgba(255, 255, 255, 0%)
+      );
+    animation: shimmer 2s infinite;
+  }
+}
+
 .section {
   display: flex;
   flex-direction: column;
@@ -154,27 +177,67 @@
   background: var(--color-line-divider);
 }
 
-.loadingMask {
-  min-height: 152px;
+.skeletonContent {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-type-primary);
+  flex-direction: column;
 }
 
-.loadingIcon {
+.skeletonBlock {
+  @include skeleton-block;
+}
+
+.skeletonIcon {
   width: 20px;
   height: 20px;
-  animation: rotating 1s steps(12, end) infinite;
+  border-radius: 50%;
 }
 
-@keyframes rotating {
-  from {
-    transform: rotate(0deg);
-  }
+.skeletonTitleWrap {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  padding-left: calc(20px + #{_.unit(4)});
+}
 
-  to {
-    transform: rotate(360deg);
+.skeletonTitle {
+  width: 120px;
+  max-width: 100%;
+  height: 16px;
+}
+
+.skeletonValue {
+  width: 160px;
+  max-width: 70%;
+  height: 24px;
+}
+
+.skeletonAction {
+  width: 56px;
+  height: 16px;
+}
+
+.skeletonToggleTitle {
+  width: 200px;
+  max-width: 60%;
+  height: 16px;
+}
+
+.skeletonToggleDescription {
+  width: 360px;
+  max-width: 100%;
+  height: 14px;
+}
+
+.skeletonSwitch {
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 12px;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }
 
@@ -239,13 +302,28 @@
     justify-content: flex-end;
   }
 
-  .loadingMask {
-    min-height: 96px;
-  }
-
   .actionButton {
     padding: 0;
     white-space: normal;
     text-align: left;
+  }
+
+  .skeletonTitleWrap {
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .skeletonTitle {
+    width: 140px;
+  }
+
+  .skeletonValue {
+    width: 180px;
+    max-width: 100%;
+  }
+
+  .skeletonToggleTitle,
+  .skeletonToggleDescription {
+    max-width: 100%;
   }
 }

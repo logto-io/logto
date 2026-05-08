@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import LoadingIcon from '@ac/assets/icons/loading-icon.svg?react';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ToggleSwitch from '@ac/components/ToggleSwitch';
 import { layoutClassNames } from '@ac/constants/layout';
@@ -23,6 +22,7 @@ import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../..
 import useApi from '../../../hooks/use-api';
 import useErrorHandler from '../../../hooks/use-error-handler';
 
+import MfaSkeleton from './MfaSkeleton';
 import styles from './index.module.scss';
 import useMfaRows from './use-mfa-rows';
 
@@ -95,13 +95,13 @@ const MfaContent = ({
   if (isLoading) {
     return (
       <div
-        className={styles.loadingMask}
+        className={styles.skeletonContent}
         role="status"
         aria-live="polite"
         aria-busy="true"
         aria-label={t('account_center.security.two_step_verification')}
       >
-        <LoadingIcon className={styles.loadingIcon} aria-hidden="true" focusable="false" />
+        <MfaSkeleton hasToggle={hasToggle} rows={rows} />
       </div>
     );
   }
@@ -214,6 +214,7 @@ const MfaSection = () => {
   );
 
   const rows = useMfaRows(mfaVerifications, navigateTo);
+  const shouldShowMfaCard = showToggle || rows.length > 0;
 
   const updateSkipMfaOnSignIn = useCallback(
     async (verifiedId: string, skipMfaOnSignIn: boolean) => {
@@ -281,7 +282,7 @@ const MfaSection = () => {
     void updateSkipMfaOnSignIn(verificationId, pendingAction === 'disable-mfa');
   }, [updateSkipMfaOnSignIn, verificationId]);
 
-  if (!isMfaSectionLoading && rows.length === 0 && !showToggle) {
+  if (!shouldShowMfaCard) {
     return null;
   }
 
@@ -297,17 +298,15 @@ const MfaSection = () => {
             className={styles.notification}
           />
         )}
-        {(isMfaSectionLoading || showToggle || rows.length > 0) && (
-          <div className={classNames(styles.card, layoutClassNames.card)}>
-            <MfaContent
-              isLoading={isMfaSectionLoading}
-              hasToggle={showToggle}
-              isTwoStepEnabled={isTwoStepEnabled}
-              rows={rows}
-              onToggleChange={handleToggleChange}
-            />
-          </div>
-        )}
+        <div className={classNames(styles.card, layoutClassNames.card)}>
+          <MfaContent
+            isLoading={isMfaSectionLoading}
+            hasToggle={showToggle}
+            isTwoStepEnabled={isTwoStepEnabled}
+            rows={rows}
+            onToggleChange={handleToggleChange}
+          />
+        </div>
       </div>
       <ConfirmModal
         isOpen={isConfirmModalOpen}
