@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { type ConnectorFactory } from '@logto/cli/lib/connector/index.js';
 import type router from '@logto/cloud/routes';
 import { demoConnectorIds, validateConfig } from '@logto/connector-kit';
@@ -16,6 +17,7 @@ import { string, object } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type QuotaLibrary } from '#src/libraries/quota.js';
+import { getForgotPasswordAvailability } from '#src/libraries/sign-in-experience/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildExtraInfo } from '#src/utils/connectors/extra-information.js';
@@ -61,6 +63,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
     quota,
     signInExperiences: { removeUnavailableSocialConnectorTargets },
   } = tenant.libraries;
+  const { findDefaultSignInExperience } = tenant.queries.signInExperiences;
 
   router.post(
     '/connectors',
@@ -370,9 +373,8 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
   );
 
   router.delete(
-    // eslint-disable-next-line max-lines -- refactor later
     '/connectors/:id',
-    koaGuard({ params: object({ id: string().min(1) }), status: [204, 404] }),
+    koaGuard({ params: object({ id: string().min(1) }), status: [204, 404, 422] }),
     async (ctx, next) => {
       const {
         params: { id },
@@ -384,6 +386,27 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
       const connectorFactory = connectorFactories.find(
         ({ metadata }) => metadata.id === connectorId
       );
+
+      if (connectorFactory && passwordlessConnector.has(connectorFactory.type)) {
+        const { passwordExpiration, forgotPasswordMethods } = await findDefaultSignInExperience();
+
+        if (passwordExpiration.enabled) {
+          const logtoConnectors = await getLogtoConnectors();
+          const remainingConnectors = logtoConnectors.filter(({ dbEntry }) => dbEntry.id !== id);
+          const forgotPasswordAvailability = getForgotPasswordAvailability(
+            remainingConnectors,
+            forgotPasswordMethods
+          );
+
+          assertThat(
+            forgotPasswordAvailability.email || forgotPasswordAvailability.phone,
+            new RequestError({
+              code: 'sign_in_experiences.password_expiration_requires_forgot_password',
+              status: 422,
+            })
+          );
+        }
+      }
 
       await deleteConnectorById(id);
 
@@ -406,3 +429,4 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
   connectorAuthorizationUriRoutes(router, tenant);
   connectorFactoryRoutes(router, tenant);
 }
+/* eslint-enable max-lines */

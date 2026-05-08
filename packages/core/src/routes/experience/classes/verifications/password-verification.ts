@@ -5,9 +5,12 @@ import {
   type PasswordVerificationRecordData,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { differenceInDays } from 'date-fns';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  type PasswordExpirationResult,
+  verifyPasswordExpirationPolicy,
+} from '#src/libraries/password-expiration.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -20,23 +23,6 @@ export {
   type PasswordVerificationRecordData,
   passwordVerificationRecordDataGuard,
 } from '@logto/schemas';
-
-type PasswordExpirationReminder = {
-  daysUntilExpiration: number;
-};
-
-type PasswordExpirationSuccess = {
-  kind: 'success';
-  user: User;
-};
-
-type PasswordExpirationReminderResult = {
-  kind: 'reminder';
-  user: User;
-  reminder: PasswordExpirationReminder;
-};
-
-type PasswordExpirationResult = PasswordExpirationSuccess | PasswordExpirationReminderResult;
 
 export class PasswordVerification
   implements IdentifierVerificationRecord<VerificationType.Password>
@@ -150,48 +136,6 @@ export class PasswordVerification
     const { passwordExpiration } =
       await this.queries.signInExperiences.findDefaultSignInExperience();
 
-    if (!passwordExpiration.enabled) {
-      return {
-        kind: 'success',
-        user,
-      };
-    }
-
-    assertThat(
-      passwordExpiration.validPeriodDays,
-      new RequestError({
-        code: 'sign_in_experiences.password_expiration_invalid_period_days',
-        status: 500,
-      })
-    );
-
-    const referenceDate = new Date(user.passwordUpdatedAt ?? user.createdAt);
-    const passwordAgeInDays = differenceInDays(new Date(), referenceDate);
-
-    const isPasswordExpired =
-      user.isPasswordExpired || passwordAgeInDays >= passwordExpiration.validPeriodDays;
-
-    assertThat(!isPasswordExpired, new RequestError({ code: 'password.expired', status: 422 }));
-
-    const reminderPeriodDays = passwordExpiration.reminderPeriodDays ?? 0;
-    const reminderDaysUntilExpiration = passwordExpiration.validPeriodDays - passwordAgeInDays;
-
-    const isInReminderWindow =
-      reminderPeriodDays > 0 && reminderDaysUntilExpiration <= reminderPeriodDays;
-
-    if (!isInReminderWindow) {
-      return {
-        kind: 'success',
-        user,
-      };
-    }
-
-    return {
-      kind: 'reminder',
-      user,
-      reminder: {
-        daysUntilExpiration: reminderDaysUntilExpiration,
-      },
-    };
+    return verifyPasswordExpirationPolicy(passwordExpiration, user);
   }
 }
