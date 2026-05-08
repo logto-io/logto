@@ -140,6 +140,7 @@ void test('canSetInitialPasswordWithoutVerification requires explicit no-passwor
     true
   );
   assert.equal(canSetInitialPasswordWithoutVerification({}), false);
+  assert.equal(canSetInitialPasswordWithoutVerification(), false);
   assert.equal(
     canSetInitialPasswordWithoutVerification({
       hasPassword: false,
@@ -152,6 +153,34 @@ void test('canSetInitialPasswordWithoutVerification requires explicit no-passwor
       hasPassword: false,
       primaryPhone: '+15555555555',
     }),
+    false
+  );
+});
+
+void test('canSetInitialPasswordWithoutVerification rejects when email or phone fields are hidden', () => {
+  const readableFields = {
+    username: AccountCenterControlValue.Edit,
+    email: AccountCenterControlValue.ReadOnly,
+    phone: AccountCenterControlValue.ReadOnly,
+    password: AccountCenterControlValue.Edit,
+    social: AccountCenterControlValue.Off,
+  };
+  assert.equal(
+    canSetInitialPasswordWithoutVerification({ hasPassword: false }, readableFields),
+    true
+  );
+  assert.equal(
+    canSetInitialPasswordWithoutVerification(
+      { hasPassword: false },
+      { ...readableFields, email: AccountCenterControlValue.Off }
+    ),
+    false
+  );
+  assert.equal(
+    canSetInitialPasswordWithoutVerification(
+      { hasPassword: false },
+      { ...readableFields, phone: AccountCenterControlValue.Off }
+    ),
     false
   );
 });

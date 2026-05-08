@@ -84,7 +84,10 @@ const Password = () => {
   }
 
   const hasAvailableVerificationMethod = hasAvailableSecurityVerificationMethod(userInfo);
-  const canSkipVerification = canSetInitialPasswordWithoutVerification(userInfo);
+  const canSkipVerification = canSetInitialPasswordWithoutVerification(
+    userInfo,
+    accountCenterSettings.fields
+  );
 
   if (!verificationId && hasAvailableVerificationMethod) {
     return <VerificationMethodList />;

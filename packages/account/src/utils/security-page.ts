@@ -10,6 +10,9 @@ type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConn
 const isVisibleField = (value?: AccountCenterControlValue): boolean =>
   value !== undefined && value !== AccountCenterControlValue.Off;
 
+const isReadableField = (value?: AccountCenterControlValue): boolean =>
+  value === AccountCenterControlValue.ReadOnly || value === AccountCenterControlValue.Edit;
+
 export const isEditableField = (value?: AccountCenterControlValue): boolean =>
   value === AccountCenterControlValue.Edit;
 
@@ -55,14 +58,30 @@ export const hasAvailableSecurityVerificationMethod = (
   Boolean(userInfo?.primaryPhone);
 
 export const canSetInitialPasswordWithoutVerification = (
-  userInfo?: Partial<UserProfileResponse>
-): boolean => userInfo?.hasPassword === false && !userInfo.primaryEmail && !userInfo.primaryPhone;
+  userInfo?: Partial<UserProfileResponse>,
+  accountCenterFields?: AccountCenter['fields']
+): boolean => {
+  if (userInfo?.hasPassword !== false) {
+    return false;
+  }
+  if (Boolean(userInfo.primaryEmail) || Boolean(userInfo.primaryPhone)) {
+    return false;
+  }
+  if (
+    accountCenterFields !== undefined &&
+    (!isReadableField(accountCenterFields.email) || !isReadableField(accountCenterFields.phone))
+  ) {
+    return false;
+  }
+  return true;
+};
 
 export const canOpenPasswordEditFlow = (
   passwordControl: AccountCenterControlValue | undefined,
-  userInfo?: Partial<UserProfileResponse>
+  userInfo?: Partial<UserProfileResponse>,
+  accountCenterFields?: AccountCenter['fields']
 ): boolean =>
   isEditableField(passwordControl) &&
   userInfo !== undefined &&
   (hasAvailableSecurityVerificationMethod(userInfo) ||
-    canSetInitialPasswordWithoutVerification(userInfo));
+    canSetInitialPasswordWithoutVerification(userInfo, accountCenterFields));

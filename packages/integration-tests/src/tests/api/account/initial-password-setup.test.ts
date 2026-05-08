@@ -15,7 +15,13 @@ import { createSubjectToken } from '#src/api/subject-token.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { initClientAndSignInForDefaultTenant } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { generateEmail, generateName, generatePassword, generateUsername } from '#src/utils.js';
+import {
+  generateEmail,
+  generateName,
+  generatePassword,
+  generatePhone,
+  generateUsername,
+} from '#src/utils.js';
 
 const impersonationTokenType = 'urn:logto:token-type:impersonation_token';
 
@@ -51,12 +57,14 @@ const createAccountApi = async (userId: string) => {
 const createAccountApiUser = async ({
   password,
   primaryEmail,
+  primaryPhone,
 }: {
   password?: string;
   primaryEmail?: string;
+  primaryPhone?: string;
 } = {}) => {
   const username = generateUsername();
-  const user = await createUser({ username, password, primaryEmail });
+  const user = await createUser({ username, password, primaryEmail, primaryPhone });
   const api = await createAccountApi(user.id);
 
   return { api, user, username };
@@ -145,6 +153,19 @@ describe('account initial password setup', () => {
 
   it('should require verification for a user with primary email but no password', async () => {
     const { api, user } = await createAccountApiUser({ primaryEmail: generateEmail() });
+
+    try {
+      await expectRejects(updatePassword(api, undefined, generatePassword()), {
+        code: 'verification_record.permission_denied',
+        status: 401,
+      });
+    } finally {
+      await deleteUser(user.id);
+    }
+  });
+
+  it('should require verification for a user with primary phone but no password', async () => {
+    const { api, user } = await createAccountApiUser({ primaryPhone: generatePhone(true) });
 
     try {
       await expectRejects(updatePassword(api, undefined, generatePassword()), {

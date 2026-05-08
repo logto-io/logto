@@ -35,7 +35,7 @@ const PasswordSection = () => {
             <div className={styles.iconWrap}>
               <PasswordIcon className={styles.icon} />
             </div>
-            {canOpenPasswordEditFlow(passwordControl, userInfo) && (
+            {canOpenPasswordEditFlow(passwordControl, userInfo, accountCenterSettings.fields) && (
               <button
                 type="button"
                 className={styles.changeButton}
