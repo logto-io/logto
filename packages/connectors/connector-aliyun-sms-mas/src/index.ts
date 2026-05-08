@@ -27,15 +27,13 @@ const getTemplateCode = ({ templateCode }: Template) => templateCode;
 
 /**
  * Parse the JSON response string from SendSmsVerifyCode API
- * Extracts Model fields into the top level for easier access
  */
 const parseVerifyCodeResponseString = (response: string) => {
   const result = sendSmsVerifyCodeResponseGuard.safeParse(parseJson(response));
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
   }
-  const { Model, ...rest } = result.data;
-  return { ...rest, ...Model };
+  return result.data;
 };
 
 /**

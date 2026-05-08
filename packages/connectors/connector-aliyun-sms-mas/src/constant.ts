@@ -50,11 +50,12 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Uses Aliyun Message Authentication Service as a delivery channel only. Sends Logto-generated verification codes via Aliyun system-provided signatures and templates. Does not use Aliyun-managed verification or lifecycle features. Mainland China numbers only.',
-    'zh-CN': '仅将阿里云短信认证服务用作短信发送通道，通过阿里云系统赠送的签名和模板发送 Logto 生成的验证码。不使用阿里云的验证码生成、校验及生命周期管理功能。仅支持中国大陆手机号。',
+    en: 'Uses Aliyun Message Authentication Service as a delivery channel. Sends verification codes via Aliyun system-provided signatures and templates. Mainland China numbers only.',
+    'zh-CN':
+      '将阿里云短信认证服务用作短信发送通道，通过阿里云系统赠送的签名和模板发送验证码。仅支持中国大陆手机号。',
     'tr-TR':
-      "Aliyun Mesaj Doğrulama Hizmeti yalnızca bir teslimat kanalı olarak kullanılır. Logto tarafından oluşturulan doğrulama kodları, Aliyun sistem tarafından sağlanan imzalar ve şablonlar üzerinden gönderilir. Aliyun tarafından yönetilen doğrulama veya yaşam döngüsü özellikleri kullanılmaz. Yalnızca Çin anakara numaraları desteklenir.",
-    ko: 'Aliyun 메시지 인증 서비스는 전달 채널로만 사용됩니다. Logto에서 생성한 인증 코드를 Aliyun 시스템 제공 서명과 템플릿으로 전송합니다. Aliyun 관리 인증 또는 수명 주기 기능은 사용하지 않습니다. 중국 본토 번호만 지원됩니다.',
+      'Aliyun Mesaj Doğrulama Hizmetini teslimat kanalı olarak kullanır. Aliyun sistem tarafından sağlanan imzalar ve şablonlar aracılığıyla doğrulama kodları gönderir. Sadece Çin ana karası numaraları desteklenir.',
+    ko: 'Aliyun 메시지 인증 서비스를 전달 채널로 사용합니다. Aliyun 시스템에서 제공하는 서명과 템플릿을 통해 인증 코드를 보냅니다. 중국 본토 번호만 지원됩니다.',
   },
   readme: './README.md',
   formItems: [
