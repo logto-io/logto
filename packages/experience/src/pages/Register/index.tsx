@@ -124,7 +124,7 @@ const Register = () => {
           Use hardcoded string below as a fallback in the meantime.
         */}
         {/* {t('description.use_work_email_hint', { credits: 100 })} */}
-        Use your work email for the best experience and get <b>100</b> additional credits
+        Get <b>300</b> credits to start — plus an extra <b>100</b> when you use your work email
       </div>
       <GoogleOneTap context="signup" />
       <SingleSignOnFormModeContextProvider>
