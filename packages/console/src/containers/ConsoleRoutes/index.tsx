@@ -55,7 +55,7 @@ export function ConsoleRoutes() {
           <Route element={<ProtectedRoutes />}>
             <Route path={dropLeadingSlash(GlobalRoute.Profile) + '/*'} element={<Profile />} />
             <Route element={<TenantAccess />}>
-              {!isCloud && (isProduction || isDevFeaturesEnabled) && (
+              {!isCloud && isProduction && (
                 <Route path="onboarding" element={<OssOnboarding />} />
               )}
               {isCloud && (
