@@ -94,8 +94,14 @@ const MfaContent = ({
 
   if (isLoading) {
     return (
-      <div className={styles.loadingMask} aria-busy="true">
-        <LoadingIcon className={styles.loadingIcon} />
+      <div
+        className={styles.loadingMask}
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label={t('account_center.security.two_step_verification')}
+      >
+        <LoadingIcon className={styles.loadingIcon} aria-hidden="true" focusable="false" />
       </div>
     );
   }
