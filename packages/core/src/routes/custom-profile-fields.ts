@@ -21,14 +21,14 @@ const batchItemsLimit = 20;
 export default function customProfileFieldsRoutes<T extends ManagementApiRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
 ) {
-  const {
-    findAllCustomProfileFields,
-    findCustomProfileFieldByName,
-    deleteCustomProfileFieldsByName,
-  } = queries.customProfileFields;
+  const { findAllCustomProfileFields, findCustomProfileFieldByName } = queries.customProfileFields;
 
-  const { createCustomProfileField, updateCustomProfileField, updateCustomProfileFieldsSieOrder } =
-    libraries.customProfileFields;
+  const {
+    createCustomProfileField,
+    updateCustomProfileField,
+    updateCustomProfileFieldsSieOrder,
+    deleteCustomProfileField,
+  } = libraries.customProfileFields;
 
   router.get(
     '/custom-profile-fields',
@@ -132,7 +132,7 @@ export default function customProfileFieldsRoutes<T extends ManagementApiRouter>
     async (ctx, next) => {
       const { params } = ctx.guard;
 
-      await deleteCustomProfileFieldsByName(params.name);
+      await deleteCustomProfileField(params.name);
 
       ctx.status = 204;
       return next();

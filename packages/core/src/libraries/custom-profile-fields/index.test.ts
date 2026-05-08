@@ -1,4 +1,4 @@
-import type { SignInExperience } from '@logto/schemas';
+import type { AccountCenterProfileFields, SignInExperience } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
@@ -11,13 +11,27 @@ describe('createCustomProfileFieldsLibrary', () => {
   const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
   const findCustomProfileFieldsByNames = jest.fn();
   const updateFieldOrderInSignInExperience = jest.fn();
+  const deleteCustomProfileFieldsByName = jest.fn();
+  const findDefaultSignInExperience = jest.fn();
+  const updateDefaultSignInExperience = jest.fn();
+  const findDefaultAccountCenter = jest.fn();
+  const updateDefaultAccountCenter = jest.fn();
   const queries = new MockQueries({
     customProfileFields: {
       findCustomProfileFieldsByNames,
       updateFieldOrderInSignInExperience,
+      deleteCustomProfileFieldsByName,
+    },
+    signInExperiences: {
+      findDefaultSignInExperience,
+      updateDefaultSignInExperience,
+    },
+    accountCenters: {
+      findDefaultAccountCenter,
+      updateDefaultAccountCenter,
     },
   });
-  const { normalizeProfileFields, updateCustomProfileFieldsSieOrder } =
+  const { deleteCustomProfileField, normalizeProfileFields, updateCustomProfileFieldsSieOrder } =
     createCustomProfileFieldsLibrary(queries);
 
   const setDevFeaturesEnabled = (enabled: boolean) => {
@@ -29,6 +43,11 @@ describe('createCustomProfileFieldsLibrary', () => {
     setDevFeaturesEnabled(true);
     findCustomProfileFieldsByNames.mockReset();
     updateFieldOrderInSignInExperience.mockReset();
+    deleteCustomProfileFieldsByName.mockReset();
+    findDefaultSignInExperience.mockReset();
+    updateDefaultSignInExperience.mockReset();
+    findDefaultAccountCenter.mockReset();
+    updateDefaultAccountCenter.mockReset();
   });
 
   afterAll(() => {
@@ -115,5 +134,39 @@ describe('createCustomProfileFieldsLibrary', () => {
     await expect(updateCustomProfileFieldsSieOrder(order)).resolves.toBe(order);
     expect(findCustomProfileFieldsByNames).toHaveBeenCalledWith(['company', 'inviteCode']);
     expect(updateFieldOrderInSignInExperience).toHaveBeenCalledWith(order);
+  });
+
+  it('should remove deleted profile field references from SIE and account center configs', async () => {
+    const signUpProfileFields: SignInExperience['signUpProfileFields'] = [
+      { name: 'company' },
+      { name: 'inviteCode' },
+    ];
+    const accountCenterProfileFields: AccountCenterProfileFields = [
+      { name: 'company' },
+      { name: 'favoriteColor' },
+    ];
+    findDefaultSignInExperience.mockResolvedValue({ signUpProfileFields });
+    findDefaultAccountCenter.mockResolvedValue({ profileFields: accountCenterProfileFields });
+
+    await deleteCustomProfileField('company');
+
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({
+      signUpProfileFields: [{ name: 'inviteCode' }],
+    });
+    expect(updateDefaultAccountCenter).toHaveBeenCalledWith({
+      profileFields: [{ name: 'favoriteColor' }],
+    });
+    expect(deleteCustomProfileFieldsByName).toHaveBeenCalledWith('company');
+  });
+
+  it('should skip config updates when deleting an unreferenced profile field', async () => {
+    findDefaultSignInExperience.mockResolvedValue({ signUpProfileFields: null });
+    findDefaultAccountCenter.mockResolvedValue({ profileFields: [{ name: 'favoriteColor' }] });
+
+    await deleteCustomProfileField('company');
+
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+    expect(updateDefaultAccountCenter).not.toHaveBeenCalled();
+    expect(deleteCustomProfileFieldsByName).toHaveBeenCalledWith('company');
   });
 });

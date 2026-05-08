@@ -1,5 +1,5 @@
 import {
-  type AccountCenter,
+  type AccountCenterProfileFields,
   type SignInExperience,
   type UpdateCustomProfileFieldData,
   type CustomProfileFieldUnion,
@@ -17,8 +17,28 @@ import { validateCustomProfileFieldData } from './utils.js';
 type ProfileFieldsList = ReadonlyArray<{ name: string }>;
 type NormalizableProfileFields =
   | SignInExperience['signUpProfileFields']
-  | AccountCenter['profileFields']
+  | AccountCenterProfileFields
   | undefined;
+type RemovableProfileFields = SignInExperience['signUpProfileFields'] | AccountCenterProfileFields;
+
+function removeProfileFieldByName(
+  profileFields: SignInExperience['signUpProfileFields'],
+  name: string
+): SignInExperience['signUpProfileFields'];
+function removeProfileFieldByName(
+  profileFields: AccountCenterProfileFields,
+  name: string
+): AccountCenterProfileFields;
+function removeProfileFieldByName(
+  profileFields: RemovableProfileFields,
+  name: string
+): RemovableProfileFields {
+  if (!profileFields) {
+    return profileFields;
+  }
+
+  return profileFields.filter(({ name: fieldName }) => fieldName !== name);
+}
 
 export const createCustomProfileFieldsLibrary = (queries: Queries) => {
   const {
@@ -27,6 +47,7 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     updateCustomProfileFieldsByName,
     updateFieldOrderInSignInExperience,
     bulkInsertCustomProfileFields,
+    deleteCustomProfileFieldsByName,
   } = queries.customProfileFields;
 
   const createCustomProfileField = async (data: CustomProfileFieldUnion) => {
@@ -93,6 +114,38 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     return updateFieldOrderInSignInExperience(data);
   };
 
+  const deleteCustomProfileField = async (name: string) => {
+    const [signInExperience, accountCenter] = await Promise.all([
+      queries.signInExperiences.findDefaultSignInExperience(),
+      queries.accountCenters.findDefaultAccountCenter(),
+    ]);
+    const signUpProfileFields = removeProfileFieldByName(
+      signInExperience.signUpProfileFields,
+      name
+    );
+    const accountCenterProfileFields = removeProfileFieldByName(accountCenter.profileFields, name);
+
+    if (
+      signInExperience.signUpProfileFields &&
+      signUpProfileFields &&
+      signUpProfileFields.length !== signInExperience.signUpProfileFields.length
+    ) {
+      await queries.signInExperiences.updateDefaultSignInExperience({ signUpProfileFields });
+    }
+
+    if (
+      accountCenter.profileFields &&
+      accountCenterProfileFields &&
+      accountCenterProfileFields.length !== accountCenter.profileFields.length
+    ) {
+      await queries.accountCenters.updateDefaultAccountCenter({
+        profileFields: accountCenterProfileFields,
+      });
+    }
+
+    return deleteCustomProfileFieldsByName(name);
+  };
+
   /**
    * Returns `undefined` when the dev feature is off (the field is silently dropped) so callers can
    * conditionally spread the value into the update payload without changing legacy behavior.
@@ -116,6 +169,7 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     createCustomProfileFieldsBatch,
     updateCustomProfileField,
     updateCustomProfileFieldsSieOrder,
+    deleteCustomProfileField,
     normalizeProfileFields,
   };
 };
