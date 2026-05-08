@@ -68,13 +68,14 @@ describe('appInsights', () => {
     vi.unstubAllEnvs();
   });
 
-  it('should add forwarded host to auto-collected request telemetry properties', async () => {
+  it('should add forwarded headers to auto-collected request telemetry properties', async () => {
     const processor = await setupAppInsights();
     const envelope = createRequestEnvelope();
 
     processor(envelope, {
       'http.ServerRequest': {
         headers: {
+          'x-forwarded-for': '192.0.2.1',
           'x-forwarded-host': 'tenant.logto.app',
         },
       },
@@ -84,18 +85,20 @@ describe('appInsights', () => {
       url: 'http://azure-service.local/api/callback?foo=bar',
       properties: {
         existing: 'value',
+        xForwardedFor: '192.0.2.1',
         xForwardedHost: 'tenant.logto.app',
       },
     });
   });
 
-  it('should use the first forwarded host value', async () => {
+  it('should use the first forwarded header value', async () => {
     const processor = await setupAppInsights();
     const envelope = createRequestEnvelope();
 
     processor(envelope, {
       'http.ServerRequest': {
         headers: {
+          'x-forwarded-for': '192.0.2.1, 198.51.100.1',
           'x-forwarded-host': 'tenant.logto.app, azure-service.local',
         },
       },
@@ -103,7 +106,26 @@ describe('appInsights', () => {
 
     expect(envelope.data.baseData.properties).toStrictEqual({
       existing: 'value',
+      xForwardedFor: '192.0.2.1',
       xForwardedHost: 'tenant.logto.app',
+    });
+  });
+
+  it('should add forwarded for without forwarded host', async () => {
+    const processor = await setupAppInsights();
+    const envelope = createRequestEnvelope();
+
+    processor(envelope, {
+      'http.ServerRequest': {
+        headers: {
+          'x-forwarded-for': '192.0.2.1',
+        },
+      },
+    });
+
+    expect(envelope.data.baseData.properties).toStrictEqual({
+      existing: 'value',
+      xForwardedFor: '192.0.2.1',
     });
   });
 });

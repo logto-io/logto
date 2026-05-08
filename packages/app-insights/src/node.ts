@@ -15,6 +15,7 @@ type RequestTelemetryEnvelope = EnvelopeTelemetry & {
 
 type ServerRequestContext = {
   headers?: {
+    'x-forwarded-for'?: string | string[];
     'x-forwarded-host'?: string | string[];
   };
 };
@@ -24,20 +25,29 @@ type RequestContext = Record<string, ServerRequestContext>;
 const getFirstForwardedHeaderValue = (value?: string | string[]) =>
   (Array.isArray(value) ? value[0] : value)?.split(',')[0]?.trim();
 
-const appendForwardedHostToRequestTelemetry = (
+const appendForwardedHeadersToRequestTelemetry = (
   envelope: RequestTelemetryEnvelope,
   { 'http.ServerRequest': request }: RequestContext = {}
 ) => {
+  const xForwardedFor = getFirstForwardedHeaderValue(request?.headers?.['x-forwarded-for']);
   const xForwardedHost = getFirstForwardedHeaderValue(request?.headers?.['x-forwarded-host']);
+  const forwardedProperties = {
+    ...(xForwardedFor && { xForwardedFor }),
+    ...(xForwardedHost && { xForwardedHost }),
+  };
 
-  if (envelope.data.baseType !== 'RequestData' || !envelope.data.baseData || !xForwardedHost) {
+  if (
+    envelope.data.baseType !== 'RequestData' ||
+    !envelope.data.baseData ||
+    Object.keys(forwardedProperties).length === 0
+  ) {
     return true;
   }
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
   envelope.data.baseData.properties = {
     ...envelope.data.baseData.properties,
-    xForwardedHost,
+    ...forwardedProperties,
   };
 
   return true;
@@ -64,7 +74,7 @@ class AppInsights {
 
     this.client = applicationinsights.defaultClient;
     this.client.context.tags[this.client.context.keys.cloudRole] = cloudRole;
-    this.client.addTelemetryProcessor(appendForwardedHostToRequestTelemetry);
+    this.client.addTelemetryProcessor(appendForwardedHeadersToRequestTelemetry);
     applicationinsights.start();
 
     return true;
