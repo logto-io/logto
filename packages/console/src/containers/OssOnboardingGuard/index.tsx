@@ -1,7 +1,7 @@
 import { useParams, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud, isProduction } from '@/consts/env';
 import useOssOnboardingData from '@/hooks/use-oss-onboarding-data';
 
 import { getOssOnboardingRedirectPath } from './utils';
@@ -18,7 +18,7 @@ function OssOnboardingGuard() {
   const redirectPath = tenantId
     ? getOssOnboardingRedirectPath({
         isCloud,
-        isDevFeaturesEnabled,
+        isProduction,
         hasError: Boolean(error),
         isLoading,
         isOnboardingDone,
