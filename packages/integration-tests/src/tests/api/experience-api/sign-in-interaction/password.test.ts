@@ -1,4 +1,4 @@
-import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import { ForgotPasswordMethod, InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser, expireUserPassword, getUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -222,6 +222,10 @@ describe('password expiration API contract', () => {
       verify: false,
     });
 
+    await setEmailConnector();
+    await updateSignInExperience({
+      forgotPasswordMethods: [ForgotPasswordMethod.EmailVerificationCode],
+    });
     await enablePasswordExpiration({});
   });
 
