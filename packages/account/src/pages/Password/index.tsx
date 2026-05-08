@@ -93,6 +93,15 @@ const Password = () => {
     return <VerificationMethodList />;
   }
 
+  if (!verificationId && !canSkipVerification) {
+    return (
+      <ErrorPage
+        titleKey="account_center.verification.no_available_methods_title"
+        messageKey="account_center.verification.no_available_methods_description"
+      />
+    );
+  }
+
   const handleSubmit = async (password: string) => {
     clearErrorMessage();
 

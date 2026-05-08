@@ -165,7 +165,7 @@ describe('account initial password setup', () => {
   });
 
   it('should require verification for a user with primary phone but no password', async () => {
-    const { api, user } = await createAccountApiUser({ primaryPhone: generatePhone(true) });
+    const { api, user } = await createAccountApiUser({ primaryPhone: generatePhone() });
 
     try {
       await expectRejects(updatePassword(api, undefined, generatePassword()), {
