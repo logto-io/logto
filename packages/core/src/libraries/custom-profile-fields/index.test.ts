@@ -1,36 +1,49 @@
 import type { AccountCenterProfileFields, SignInExperience } from '@logto/schemas';
+import { createMockUtils } from '@logto/shared/esm';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
-
-import { createCustomProfileFieldsLibrary } from './index.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
+
+const findCustomProfileFieldsByNames = jest.fn();
+const updateFieldOrderInSignInExperience = jest.fn();
+const deleteCustomProfileFieldsByName = jest.fn();
+const findDefaultSignInExperience = jest.fn();
+const updateDefaultSignInExperience = jest.fn();
+const findDefaultAccountCenter = jest.fn();
+const updateDefaultAccountCenter = jest.fn();
+
+const signInExperienceQueriesMock = {
+  findDefaultSignInExperience,
+  updateDefaultSignInExperience,
+};
+const accountCenterQueriesMock = {
+  findDefaultAccountCenter,
+  updateDefaultAccountCenter,
+};
+const customProfileFieldsQueriesMock = {
+  findCustomProfileFieldsByNames,
+  updateFieldOrderInSignInExperience,
+  deleteCustomProfileFieldsByName,
+};
+
+mockEsm('#src/queries/sign-in-experience.js', () => ({
+  createSignInExperienceQueries: () => signInExperienceQueriesMock,
+}));
+mockEsm('#src/queries/account-center.js', () => ({
+  AccountCenterQueries: jest.fn().mockImplementation(() => accountCenterQueriesMock),
+}));
+mockEsm('#src/queries/custom-profile-fields.js', () => ({
+  createCustomProfileFieldsQueries: () => customProfileFieldsQueriesMock,
+}));
+
+const { MockQueries } = await import('#src/test-utils/tenant.js');
+const { createCustomProfileFieldsLibrary } = await import('./index.js');
 
 describe('createCustomProfileFieldsLibrary', () => {
   const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const findCustomProfileFieldsByNames = jest.fn();
-  const updateFieldOrderInSignInExperience = jest.fn();
-  const deleteCustomProfileFieldsByName = jest.fn();
-  const findDefaultSignInExperience = jest.fn();
-  const updateDefaultSignInExperience = jest.fn();
-  const findDefaultAccountCenter = jest.fn();
-  const updateDefaultAccountCenter = jest.fn();
-  const queries = new MockQueries({
-    customProfileFields: {
-      findCustomProfileFieldsByNames,
-      updateFieldOrderInSignInExperience,
-      deleteCustomProfileFieldsByName,
-    },
-    signInExperiences: {
-      findDefaultSignInExperience,
-      updateDefaultSignInExperience,
-    },
-    accountCenters: {
-      findDefaultAccountCenter,
-      updateDefaultAccountCenter,
-    },
-  });
+  const queries = new MockQueries();
   const { deleteCustomProfileField, normalizeProfileFields, updateCustomProfileFieldsSieOrder } =
     createCustomProfileFieldsLibrary(queries);
 

@@ -9,6 +9,9 @@ import { generateStandardId } from '@logto/shared';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { AccountCenterQueries } from '#src/queries/account-center.js';
+import { createCustomProfileFieldsQueries } from '#src/queries/custom-profile-fields.js';
+import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -47,7 +50,6 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     updateCustomProfileFieldsByName,
     updateFieldOrderInSignInExperience,
     bulkInsertCustomProfileFields,
-    deleteCustomProfileFieldsByName,
   } = queries.customProfileFields;
 
   const createCustomProfileField = async (data: CustomProfileFieldUnion) => {
@@ -125,25 +127,34 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     );
     const accountCenterProfileFields = removeProfileFieldByName(accountCenter.profileFields, name);
 
-    if (
-      signInExperience.signUpProfileFields &&
-      signUpProfileFields &&
-      signUpProfileFields.length !== signInExperience.signUpProfileFields.length
-    ) {
-      await queries.signInExperiences.updateDefaultSignInExperience({ signUpProfileFields });
-    }
+    return queries.pool.transaction(async (connection) => {
+      const signInExperienceQueries = createSignInExperienceQueries(
+        connection,
+        queries.wellKnownCache
+      );
+      const accountCenterQueries = new AccountCenterQueries(connection, queries.wellKnownCache);
+      const customProfileFieldsQueries = createCustomProfileFieldsQueries(connection);
 
-    if (
-      accountCenter.profileFields &&
-      accountCenterProfileFields &&
-      accountCenterProfileFields.length !== accountCenter.profileFields.length
-    ) {
-      await queries.accountCenters.updateDefaultAccountCenter({
-        profileFields: accountCenterProfileFields,
-      });
-    }
+      if (
+        signInExperience.signUpProfileFields &&
+        signUpProfileFields &&
+        signUpProfileFields.length !== signInExperience.signUpProfileFields.length
+      ) {
+        await signInExperienceQueries.updateDefaultSignInExperience({ signUpProfileFields });
+      }
 
-    return deleteCustomProfileFieldsByName(name);
+      if (
+        accountCenter.profileFields &&
+        accountCenterProfileFields &&
+        accountCenterProfileFields.length !== accountCenter.profileFields.length
+      ) {
+        await accountCenterQueries.updateDefaultAccountCenter({
+          profileFields: accountCenterProfileFields,
+        });
+      }
+
+      return customProfileFieldsQueries.deleteCustomProfileFieldsByName(name);
+    });
   };
 
   /**
