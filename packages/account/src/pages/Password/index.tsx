@@ -16,6 +16,10 @@ import { passwordSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
+import {
+  canSetInitialPasswordWithoutVerification,
+  hasAvailableSecurityVerificationMethod,
+} from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from '../CodeFlow/index.module.scss';
@@ -30,6 +34,7 @@ const Password = () => {
     setVerificationId,
     setToast,
     experienceSettings,
+    userInfo,
     refreshUserInfo,
   } = useContext(PageContext);
   const updatePasswordRequest = useApi(updatePassword);
@@ -78,8 +83,23 @@ const Password = () => {
     );
   }
 
-  if (!verificationId) {
+  const hasAvailableVerificationMethod = hasAvailableSecurityVerificationMethod(userInfo);
+  const canSkipVerification = canSetInitialPasswordWithoutVerification(
+    userInfo,
+    accountCenterSettings.fields
+  );
+
+  if (!verificationId && hasAvailableVerificationMethod) {
     return <VerificationMethodList />;
+  }
+
+  if (!verificationId && !canSkipVerification) {
+    return (
+      <ErrorPage
+        titleKey="account_center.verification.no_available_methods_title"
+        messageKey="account_center.verification.no_available_methods_description"
+      />
+    );
   }
 
   const handleSubmit = async (password: string) => {
@@ -93,7 +113,7 @@ const Password = () => {
       return;
     }
 
-    if (!verificationId || loading) {
+    if ((!verificationId && !canSkipVerification) || loading) {
       return;
     }
 

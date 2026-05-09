@@ -2,6 +2,7 @@
 import {
   MfaFactor,
   MfaPolicy,
+  type AccountCenter,
   type SignInExperience,
   type CreateSignInExperience,
 } from '@logto/schemas';
@@ -28,6 +29,15 @@ import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
+
+type NormalizableProfileFields =
+  | SignInExperience['signUpProfileFields']
+  | AccountCenter['profileFields']
+  | undefined;
+type NormalizeProfileFields = <ProfileFields extends NormalizableProfileFields>(
+  profileFields: ProfileFields
+) => Promise<ProfileFields | undefined>;
+type NormalizeProfileFieldsMock = jest.MockedFunction<NormalizeProfileFields>;
 
 const logtoConnectors = [
   mockFacebookConnector,
@@ -121,10 +131,10 @@ const createDevFeaturesDisabledRequester = async () => {
 };
 
 const createSignUpProfileFieldsRequester = (
-  normalizeSignUpProfileFields = jest.fn(
-    async (signUpProfileFields: SignInExperience['signUpProfileFields'] | undefined) =>
-      signUpProfileFields
-  )
+  normalizeProfileFields: NormalizeProfileFieldsMock = jest.fn(
+    async <ProfileFields extends NormalizableProfileFields>(profileFields: ProfileFields) =>
+      profileFields
+  ) as NormalizeProfileFieldsMock
 ) => {
   const updateDefaultSignInExperience = jest.fn(
     async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
@@ -145,7 +155,7 @@ const createSignUpProfileFieldsRequester = (
     { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
     {
       signInExperiences: { validateLanguageInfo: jest.fn() },
-      customProfileFields: { normalizeSignUpProfileFields },
+      customProfileFields: { normalizeProfileFields },
     }
   );
 
@@ -154,7 +164,7 @@ const createSignUpProfileFieldsRequester = (
     tenantContext: tenant,
   });
 
-  return { requester, updateDefaultSignInExperience, normalizeSignUpProfileFields };
+  return { requester, updateDefaultSignInExperience, normalizeProfileFields };
 };
 
 describe('GET /sign-in-exp', () => {
@@ -516,12 +526,12 @@ describe('sign-in experience routes with dev features disabled', () => {
 
 describe('PATCH /sign-in-exp signUpProfileFields', () => {
   it('should omit signUpProfileFields when the normalized value is absent', async () => {
-    const { requester, updateDefaultSignInExperience, normalizeSignUpProfileFields } =
+    const { requester, updateDefaultSignInExperience, normalizeProfileFields } =
       createSignUpProfileFieldsRequester();
 
     const response = await requester.patch('/sign-in-exp').send({});
 
-    expect(normalizeSignUpProfileFields).toHaveBeenCalledTimes(1);
+    expect(normalizeProfileFields).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(updateDefaultSignInExperience).toHaveBeenCalledWith({});
     expect(updateDefaultSignInExperience.mock.calls[0]?.[0]).not.toHaveProperty(
@@ -532,17 +542,16 @@ describe('PATCH /sign-in-exp signUpProfileFields', () => {
   it('should persist normalized signUpProfileFields', async () => {
     const signUpProfileFields = [{ name: 'company' }];
     const normalizedSignUpProfileFields = [{ name: 'inviteCode' }];
-    const normalizeSignUpProfileFields = jest.fn(
-      async (_signUpProfileFields: SignInExperience['signUpProfileFields'] | undefined) =>
-        normalizedSignUpProfileFields
-    );
-    const { requester, updateDefaultSignInExperience } = createSignUpProfileFieldsRequester(
-      normalizeSignUpProfileFields
-    );
+    const normalizeProfileFields = jest.fn(
+      async <ProfileFields extends NormalizableProfileFields>(_profileFields: ProfileFields) =>
+        normalizedSignUpProfileFields as ProfileFields
+    ) as NormalizeProfileFieldsMock;
+    const { requester, updateDefaultSignInExperience } =
+      createSignUpProfileFieldsRequester(normalizeProfileFields);
 
     const response = await requester.patch('/sign-in-exp').send({ signUpProfileFields });
 
-    expect(normalizeSignUpProfileFields).toHaveBeenCalledWith(signUpProfileFields);
+    expect(normalizeProfileFields).toHaveBeenCalledWith(signUpProfileFields);
     expect(response.status).toEqual(200);
     expect(updateDefaultSignInExperience).toHaveBeenCalledWith({
       signUpProfileFields: normalizedSignUpProfileFields,

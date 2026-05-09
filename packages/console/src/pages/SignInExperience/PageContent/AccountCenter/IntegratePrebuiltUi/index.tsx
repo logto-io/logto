@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -66,10 +67,20 @@ const prebuiltRoutes = [
   },
 ] as const satisfies readonly PrebuiltRoute[];
 
-const accountCenterRoute = {
-  path: '/account/security',
-  tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.account_center',
-} as const;
+const accountCenterRoutes = [
+  {
+    path: '/account/security',
+    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.account_center',
+  },
+  ...(isDevFeaturesEnabled
+    ? ([
+        {
+          path: '/account/profile',
+          tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.profile',
+        },
+      ] as const)
+    : []),
+] as const satisfies ReadonlyArray<{ path: string; tooltipKey: string }>;
 
 function IntegratePrebuiltUi() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -113,11 +124,14 @@ function IntegratePrebuiltUi() {
             <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.account_center_description" />
           </div>
           <div className={styles.urlGrid}>
-            <PrebuiltUiUrlItem
-              path={accountCenterRoute.path}
-              tooltip={t(accountCenterRoute.tooltipKey)}
-              tenantEndpoint={tenantEndpoint}
-            />
+            {accountCenterRoutes.map((route) => (
+              <PrebuiltUiUrlItem
+                key={route.path}
+                path={route.path}
+                tooltip={t(route.tooltipKey)}
+                tenantEndpoint={tenantEndpoint}
+              />
+            ))}
           </div>
         </FormField>
         <FormField

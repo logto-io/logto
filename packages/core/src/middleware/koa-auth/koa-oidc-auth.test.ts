@@ -81,6 +81,29 @@ describe('koaOidcAuth middleware', () => {
       scopes: new Set(['openid']),
       identityVerified: false,
       clientId: mockAccessToken.clientId,
+      sessionUid: undefined,
+    });
+  });
+
+  it('should propagate sessionUid from the access token to ctx.auth', async () => {
+    ctx.request = {
+      ...ctx.request,
+      headers: {
+        authorization: 'Bearer access_token',
+      },
+    };
+    Sinon.stub(provider.AccessToken, 'find').resolves({
+      ...mockAccessToken,
+      sessionUid: 'fooSessionUid',
+    });
+    await koaOidcAuth(tenantContext)(ctx, next);
+    expect(ctx.auth).toEqual({
+      type: 'user',
+      id: 'fooUser',
+      scopes: new Set(['openid']),
+      identityVerified: false,
+      clientId: mockAccessToken.clientId,
+      sessionUid: 'fooSessionUid',
     });
   });
 

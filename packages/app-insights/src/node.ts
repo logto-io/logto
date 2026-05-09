@@ -1,10 +1,60 @@
 import { trySafe } from '@silverhand/essentials';
 import type { TelemetryClient } from 'applicationinsights';
-import { type ExceptionTelemetry } from 'applicationinsights/out/Declarations/Contracts/index.js';
+import {
+  type EnvelopeTelemetry,
+  type ExceptionTelemetry,
+} from 'applicationinsights/out/Declarations/Contracts/index.js';
 
 import { normalizeError } from './normalize-error.js';
 
 export { type ExceptionTelemetry } from 'applicationinsights/out/Declarations/Contracts/index.js';
+
+type RequestTelemetryEnvelope = EnvelopeTelemetry & {
+  data: { baseData?: { properties?: Record<string, string | undefined> } };
+};
+
+type ServerRequestContext = {
+  headers?: {
+    'x-forwarded-for'?: string | string[];
+    'x-forwarded-host'?: string | string[];
+    'x-forwarded-proto'?: string | string[];
+  };
+};
+
+type RequestContext = Record<string, ServerRequestContext>;
+
+const getFirstForwardedHeaderValue = (value?: string | string[]) =>
+  (Array.isArray(value) ? value[0] : value)?.split(',')[0]?.trim();
+
+const appendForwardedHeadersToRequestTelemetry = (
+  envelope: RequestTelemetryEnvelope,
+  { 'http.ServerRequest': request }: RequestContext = {}
+) => {
+  const xForwardedFor = getFirstForwardedHeaderValue(request?.headers?.['x-forwarded-for']);
+  const xForwardedHost = getFirstForwardedHeaderValue(request?.headers?.['x-forwarded-host']);
+  const xForwardedProto = getFirstForwardedHeaderValue(request?.headers?.['x-forwarded-proto']);
+  const forwardedProperties = {
+    ...(xForwardedFor && { xForwardedFor }),
+    ...(xForwardedHost && { xForwardedHost }),
+    ...(xForwardedProto && { xForwardedProto }),
+  };
+
+  if (
+    envelope.data.baseType !== 'RequestData' ||
+    !envelope.data.baseData ||
+    Object.keys(forwardedProperties).length === 0
+  ) {
+    return true;
+  }
+
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  envelope.data.baseData.properties = {
+    ...envelope.data.baseData.properties,
+    ...forwardedProperties,
+  };
+
+  return true;
+};
 
 class AppInsights {
   client?: TelemetryClient;
@@ -27,6 +77,7 @@ class AppInsights {
 
     this.client = applicationinsights.defaultClient;
     this.client.context.tags[this.client.context.keys.cloudRole] = cloudRole;
+    this.client.addTelemetryProcessor(appendForwardedHeadersToRequestTelemetry);
     applicationinsights.start();
 
     return true;

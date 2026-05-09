@@ -1,6 +1,6 @@
 import type {
+  GetAccountUserSessionsResponse,
   GetUserApplicationGrantsResponse,
-  GetUserSessionsResponse,
   GetThirdPartyAccessTokenResponse,
   SessionGrantRevokeTarget,
   UserMfaVerificationResponse,
@@ -13,12 +13,14 @@ const verificationRecordIdHeader = 'logto-verification-id';
 
 export const updatePassword = async (
   api: KyInstance,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   password: string
 ) =>
   api.post('api/my-account/password', {
     json: { password },
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    ...conditional(
+      verificationRecordId && { headers: { [verificationRecordIdHeader]: verificationRecordId } }
+    ),
   });
 
 export const updatePrimaryEmail = async (
@@ -189,7 +191,7 @@ export const getSessions = async (api: KyInstance, verificationRecordId: string)
     .get('api/my-account/sessions', {
       headers: { [verificationRecordIdHeader]: verificationRecordId },
     })
-    .json<GetUserSessionsResponse>();
+    .json<GetAccountUserSessionsResponse>();
 
 export const getMyAccountGrants = async (
   api: KyInstance,

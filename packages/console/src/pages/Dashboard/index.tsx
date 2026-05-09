@@ -69,7 +69,7 @@ function Dashboard() {
   const isLoading = (!totalData || !newData || !activeData) && !error;
 
   const handleDateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setDate(event.target.value);
+    setDate(event.target.value || format(Date.now(), 'yyyy-MM-dd'));
   };
 
   return (

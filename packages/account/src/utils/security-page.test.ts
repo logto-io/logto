@@ -6,8 +6,10 @@ import { AccountCenterControlValue, ConnectorPlatform, MfaPolicy } from '@logto/
 import type * as SecurityPageModule from './security-page';
 
 const {
+  canSetInitialPasswordWithoutVerification,
   isEditableField,
   canOpenPasswordEditFlow,
+  hasAvailableSecurityVerificationMethod,
   hasVisibleSecuritySection,
   hasVisibleSocialSection,
 } = (await import(new URL('security-page.ts', import.meta.url).href)) as typeof SecurityPageModule;
@@ -122,7 +124,68 @@ void test('isEditableField returns true only for edit control', () => {
   assert.equal(isEditableField(), false);
 });
 
-void test('canOpenPasswordEditFlow requires editable password control and a usable identifier', () => {
+void test('hasAvailableSecurityVerificationMethod returns true for password, primary email, or primary phone', () => {
+  assert.equal(hasAvailableSecurityVerificationMethod({ hasPassword: true }), true);
+  assert.equal(hasAvailableSecurityVerificationMethod({ primaryEmail: 'foo@example.com' }), true);
+  assert.equal(hasAvailableSecurityVerificationMethod({ primaryPhone: '+15555555555' }), true);
+  assert.equal(hasAvailableSecurityVerificationMethod({ hasPassword: false }), false);
+  assert.equal(hasAvailableSecurityVerificationMethod(), false);
+});
+
+void test('canSetInitialPasswordWithoutVerification requires explicit no-password user info', () => {
+  assert.equal(
+    canSetInitialPasswordWithoutVerification({
+      hasPassword: false,
+    }),
+    true
+  );
+  assert.equal(canSetInitialPasswordWithoutVerification({}), false);
+  assert.equal(canSetInitialPasswordWithoutVerification(), false);
+  assert.equal(
+    canSetInitialPasswordWithoutVerification({
+      hasPassword: false,
+      primaryEmail: 'foo@example.com',
+    }),
+    false
+  );
+  assert.equal(
+    canSetInitialPasswordWithoutVerification({
+      hasPassword: false,
+      primaryPhone: '+15555555555',
+    }),
+    false
+  );
+});
+
+void test('canSetInitialPasswordWithoutVerification rejects when email or phone fields are hidden', () => {
+  const readableFields = {
+    username: AccountCenterControlValue.Edit,
+    email: AccountCenterControlValue.ReadOnly,
+    phone: AccountCenterControlValue.ReadOnly,
+    password: AccountCenterControlValue.Edit,
+    social: AccountCenterControlValue.Off,
+  };
+  assert.equal(
+    canSetInitialPasswordWithoutVerification({ hasPassword: false }, readableFields),
+    true
+  );
+  assert.equal(
+    canSetInitialPasswordWithoutVerification(
+      { hasPassword: false },
+      { ...readableFields, email: AccountCenterControlValue.Off }
+    ),
+    false
+  );
+  assert.equal(
+    canSetInitialPasswordWithoutVerification(
+      { hasPassword: false },
+      { ...readableFields, phone: AccountCenterControlValue.Off }
+    ),
+    false
+  );
+});
+
+void test('canOpenPasswordEditFlow supports verified update and initial password setup paths', () => {
   assert.equal(
     canOpenPasswordEditFlow(AccountCenterControlValue.Edit, {
       hasPassword: false,
@@ -134,7 +197,14 @@ void test('canOpenPasswordEditFlow requires editable password control and a usab
     canOpenPasswordEditFlow(AccountCenterControlValue.Edit, {
       hasPassword: false,
     }),
-    false
+    true
+  );
+  assert.equal(canOpenPasswordEditFlow(AccountCenterControlValue.Edit, {}), false);
+  assert.equal(
+    canOpenPasswordEditFlow(AccountCenterControlValue.Edit, {
+      hasPassword: true,
+    }),
+    true
   );
   assert.equal(
     canOpenPasswordEditFlow(AccountCenterControlValue.ReadOnly, {
@@ -142,4 +212,5 @@ void test('canOpenPasswordEditFlow requires editable password control and a usab
     }),
     false
   );
+  assert.equal(canOpenPasswordEditFlow(AccountCenterControlValue.Edit), false);
 });

@@ -47,7 +47,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
   const { deleteConnectorById } = queries.connectors;
   const { findUserById } = queries.users;
-  const { normalizeSignUpProfileFields } = libraries.customProfileFields;
+  const { normalizeProfileFields } = libraries.customProfileFields;
   const {
     signInExperiences: { validateLanguageInfo },
     quota,
@@ -116,7 +116,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         passkeySignIn,
       } = rest;
 
-      const normalizedSignUpProfileFields = await normalizeSignUpProfileFields(signUpProfileFields);
+      const normalizedSignUpProfileFields = await normalizeProfileFields(signUpProfileFields);
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
