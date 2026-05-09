@@ -40,7 +40,10 @@ function DropdownItem({
       onKeyDown={
         isDisabled
           ? (event) => {
-              event.stopPropagation();
+              if ([' ', 'Enter'].includes(event.key)) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
             }
           : onKeyDownHandler(onClick)
       }
