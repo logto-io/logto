@@ -35,11 +35,11 @@ type Props<TFieldValues extends FieldValues, TName extends FieldArrayPath<TField
   readonly hint?: React.ReactNode;
   readonly onFieldsChange?: () => void;
   /**
-   * Returns a localized hint string when the given catalog field is currently not allowed, or
+   * Returns a localized hint string when the given field name is currently not allowed, or
    * `undefined` when the field is allowed. Disabled fields stay visible but cannot be added or
    * removed; if already added, the row is shown in a disabled state with a tooltip.
    */
-  readonly getFieldDisabledReason?: (field: CustomProfileField) => string | undefined;
+  readonly getFieldDisabledReason?: (fieldName: string) => string | undefined;
 };
 
 function ProfileFieldsEditBox<
@@ -68,14 +68,6 @@ function ProfileFieldsEditBox<
   /* eslint-enable no-restricted-syntax */
 
   const { fields, swap, remove, append } = useFieldArray({ control, name });
-
-  const fieldByName = useMemo(() => {
-    const map = new Map<string, CustomProfileField>();
-    for (const field of catalog ?? []) {
-      map.set(field.name, field);
-    }
-    return map;
-  }, [catalog]);
 
   const availableFields = useMemo(() => {
     if (!catalog) {
@@ -115,8 +107,9 @@ function ProfileFieldsEditBox<
         {fields.map(({ id }, index) => {
           const fieldValue = selectedValue?.[index];
           const currentFieldName = fieldValue?.name;
-          const catalogField = currentFieldName ? fieldByName.get(currentFieldName) : undefined;
-          const disabledReason = catalogField ? getFieldDisabledReason?.(catalogField) : undefined;
+          const disabledReason = currentFieldName
+            ? getFieldDisabledReason?.(currentFieldName)
+            : undefined;
           const isDisabled = Boolean(disabledReason);
           return (
             <DraggableItem
@@ -162,7 +155,7 @@ function ProfileFieldsEditBox<
         >
           {availableFields.map((field) => {
             const { name: fieldName, label } = field;
-            const disabledReason = getFieldDisabledReason?.(field);
+            const disabledReason = getFieldDisabledReason?.(fieldName);
             return (
               <DropdownItem
                 key={fieldName}

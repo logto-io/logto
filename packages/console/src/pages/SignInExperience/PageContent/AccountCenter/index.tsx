@@ -1,9 +1,4 @@
-import {
-  AccountCenterControlValue,
-  type CustomProfileField,
-  type SignInExperience,
-  userProfileKeys,
-} from '@logto/schemas';
+import { AccountCenterControlValue, type SignInExperience, userProfileKeys } from '@logto/schemas';
 import { useCallback, useMemo, type ChangeEvent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
@@ -108,8 +103,8 @@ function AccountCenter({ isActive, data }: Props) {
   );
 
   const getProfileFieldDisabledReason = useCallback(
-    (field: CustomProfileField): string | undefined => {
-      const controlKey = getProfileFieldControlKey(field.name);
+    (fieldName: string): string | undefined => {
+      const controlKey = getProfileFieldControlKey(fieldName);
       const controlValue = fields[controlKey];
 
       if (controlValue !== AccountCenterControlValue.Off) {
