@@ -28,10 +28,6 @@
 .disabled {
   color: var(--color-text-secondary);
   cursor: not-allowed;
-
-  .draggableIcon {
-    pointer-events: none;
-  }
 }
 
 .tooltipAnchor {

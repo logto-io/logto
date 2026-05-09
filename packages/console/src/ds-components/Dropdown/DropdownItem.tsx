@@ -32,7 +32,7 @@ function DropdownItem({
     <div
       className={classNames(styles.item, styles[type], isDisabled && styles.disabled, className)}
       role="menuitem"
-      tabIndex={isDisabled ? -1 : 0}
+      tabIndex={0}
       aria-disabled={isDisabled}
       onMouseDown={(event) => {
         event.preventDefault();
@@ -47,7 +47,7 @@ function DropdownItem({
 
   if (isDisabled && tooltip) {
     return (
-      <Tooltip placement="right" content={tooltip}>
+      <Tooltip anchorClassName={styles.tooltipAnchor} placement="right" content={tooltip}>
         {item}
       </Tooltip>
     );

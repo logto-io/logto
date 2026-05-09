@@ -92,19 +92,22 @@ function AccountCenter({ isActive, data }: Props) {
     [setValue]
   );
 
-  const userProfileKeySet = useMemo(() => new Set<string>(userProfileKeys), []);
+  const profileFieldKeySet = useMemo(
+    () => new Set<string>([...userProfileKeys, 'fullname']),
+    []
+  );
 
   const getProfileFieldControlKey = useCallback(
     (fieldName: string): AccountCenterFieldKey => {
       if (fieldName === 'name' || fieldName === 'avatar') {
         return fieldName;
       }
-      if (userProfileKeySet.has(fieldName)) {
+      if (profileFieldKeySet.has(fieldName)) {
         return 'profile';
       }
       return 'customData';
     },
-    [userProfileKeySet]
+    [profileFieldKeySet]
   );
 
   const getProfileFieldDisabledReason = useCallback(

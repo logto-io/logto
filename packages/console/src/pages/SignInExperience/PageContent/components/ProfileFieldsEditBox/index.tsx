@@ -112,43 +112,47 @@ function ProfileFieldsEditBox<
   return (
     <div>
       <DragDropProvider>
-        {fields.map(({ id }, index) => (
-          <DraggableItem
-            key={id}
-            id={id}
-            sortIndex={index}
-            moveItem={(from, to) => {
-              onFieldsChange?.();
-              swap(from, to);
-            }}
-            className={styles.draggleItemContainer}
-          >
-            <Controller
-              control={control}
-              // eslint-disable-next-line no-restricted-syntax -- indexing into a FieldArrayPath is not representable with the FieldPath type
-              name={`${name}.${index}` as never}
-              render={({ field: { value } }) => {
-                // eslint-disable-next-line no-restricted-syntax -- Controller's value type is generic based on FieldPath which can't narrow to our known shape
-                const fieldName = (value as { name: string }).name;
-                const catalogField = fieldByName.get(fieldName);
-                const disabledReason = catalogField
-                  ? getFieldDisabledReason?.(catalogField)
-                  : undefined;
-                return (
-                  <ProfileFieldItem
-                    label={fieldLabelByName.get(fieldName) ?? fieldName}
-                    isDisabled={Boolean(disabledReason)}
-                    disabledHint={disabledReason}
-                    onDelete={() => {
-                      onFieldsChange?.();
-                      remove(index);
-                    }}
-                  />
-                );
+        {fields.map(({ id }, index) => {
+          const fieldValue = selectedValue?.[index];
+          const currentFieldName = fieldValue?.name;
+          const catalogField = currentFieldName ? fieldByName.get(currentFieldName) : undefined;
+          const disabledReason = catalogField ? getFieldDisabledReason?.(catalogField) : undefined;
+          const isDisabled = Boolean(disabledReason);
+          return (
+            <DraggableItem
+              key={id}
+              id={id}
+              sortIndex={index}
+              isDragDisabled={isDisabled}
+              moveItem={(from, to) => {
+                onFieldsChange?.();
+                swap(from, to);
               }}
-            />
-          </DraggableItem>
-        ))}
+              className={styles.draggleItemContainer}
+            >
+              <Controller
+                control={control}
+                // eslint-disable-next-line no-restricted-syntax -- indexing into a FieldArrayPath is not representable with the FieldPath type
+                name={`${name}.${index}` as never}
+                render={({ field: { value } }) => {
+                  // eslint-disable-next-line no-restricted-syntax -- Controller's value type is generic based on FieldPath which can't narrow to our known shape
+                  const fieldName = (value as { name: string }).name;
+                  return (
+                    <ProfileFieldItem
+                      label={fieldLabelByName.get(fieldName) ?? fieldName}
+                      isDisabled={isDisabled}
+                      disabledHint={disabledReason}
+                      onDelete={() => {
+                        onFieldsChange?.();
+                        remove(index);
+                      }}
+                    />
+                  );
+                }}
+              />
+            </DraggableItem>
+          );
+        })}
       </DragDropProvider>
       {availableFields.length > 0 && (
         <ActionMenu
