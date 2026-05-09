@@ -43,7 +43,7 @@ function DraggableItem({
       };
     },
     hover(item: DragItemProps, monitor) {
-      if (!ref.current || isDragDisabled) {
+      if (!ref.current) {
         return;
       }
       const dragIndex = item.sortIndex;
