@@ -21,7 +21,9 @@ import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaExperienceSsr from '#src/middleware/koa-experience-ssr.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import koaOidcErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
-import koaSecurityHeaders from '#src/middleware/koa-security-headers.js';
+import koaSecurityHeaders, {
+  koaExperienceSecurityHeaders,
+} from '#src/middleware/koa-security-headers.js';
 import koaSlonikErrorHandler from '#src/middleware/koa-slonik-error-handler.js';
 import koaSpaProxy from '#src/middleware/koa-spa-proxy.js';
 import koaSpaSessionGuard from '#src/middleware/koa-spa-session-guard.js';
@@ -234,6 +236,7 @@ export default class Tenant implements TenantContext {
     // Mount experience app
     app.use(
       compose([
+        koaExperienceSecurityHeaders(id, queries, mountedApps),
         koaExperienceSsr(libraries, queries),
         koaSpaSessionGuard(provider, queries),
         mount(
