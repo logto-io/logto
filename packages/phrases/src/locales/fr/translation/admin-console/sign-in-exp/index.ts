@@ -215,6 +215,8 @@ const sign_in_exp = {
         backup_codes_manage: 'Voir vos codes de sauvegarde disponibles ou en générer de nouveaux',
         account_center:
           "Accédez au centre de compte pour gérer les paramètres de sécurité tels que l'e-mail, le téléphone, le nom d'utilisateur, le mot de passe, la MFA et les comptes connectés",
+        profile:
+          'Le centre névralgique pour gérer vos informations personnelles (par exemple, nom, avatar)',
       },
       customize_note:
         "Vous ne voulez pas d'une expérience prête à l'emploi ? Vous pouvez pleinement",

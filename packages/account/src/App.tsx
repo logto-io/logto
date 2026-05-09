@@ -142,7 +142,11 @@ const Main = () => {
     userInfoError,
   ]);
   if (isSocialCallback) {
-    return <SocialCallback />;
+    return (
+      <Routes>
+        <Route path={`${socialCallbackRoutePrefix}/:connectorId`} element={<SocialCallback />} />
+      </Routes>
+    );
   }
 
   if (isAuthCallback) {
@@ -209,7 +213,6 @@ const Main = () => {
       <Route path={passkeyAddRoute} element={<PasskeyBinding />} />
       <Route path={passkeyManageRoute} element={<PasskeyView />} />
       <Route path={verifiedActionRoute} element={<VerifiedAction />} />
-      <Route path={`${socialCallbackRoutePrefix}/:connectorId`} element={<SocialCallback />} />
       <Route path={`${socialRoutePrefix}/:connectorId`} element={<SocialFlow mode="add" />} />
       <Route
         path={`${socialRoutePrefix}/:connectorId/remove`}

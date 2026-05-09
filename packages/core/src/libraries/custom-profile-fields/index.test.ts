@@ -1,4 +1,4 @@
-import type { AccountCenterProfileFields, SignInExperience } from '@logto/schemas';
+import type { AccountCenter, SignInExperience } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -45,7 +45,12 @@ const { createCustomProfileFieldsLibrary } = await import('./index.js');
 
 describe('createCustomProfileFieldsLibrary', () => {
   const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const queries = new MockQueries();
+  const queries = new MockQueries({
+    customProfileFields: {
+      findCustomProfileFieldsByNames,
+      updateFieldOrderInSignInExperience,
+    },
+  });
   const { deleteCustomProfileField, normalizeProfileFields, updateCustomProfileFieldsSieOrder } =
     createCustomProfileFieldsLibrary(queries);
 
@@ -156,7 +161,7 @@ describe('createCustomProfileFieldsLibrary', () => {
       { name: 'company' },
       { name: 'inviteCode' },
     ];
-    const accountCenterProfileFields: AccountCenterProfileFields = [
+    const accountCenterProfileFields: AccountCenter['profileFields'] = [
       { name: 'company' },
       { name: 'favoriteColor' },
     ];

@@ -1,6 +1,5 @@
 import {
   type AccountCenter,
-  type AccountCenterProfileFields,
   AccountCenters,
   type SignInExperience,
   SignInExperiences,
@@ -31,18 +30,20 @@ const accountCenterIdentifiers = convertToIdentifiers(AccountCenters);
 type ProfileFieldsList = ReadonlyArray<{ name: string }>;
 type NormalizableProfileFields =
   | SignInExperience['signUpProfileFields']
-  | AccountCenterProfileFields
+  | AccountCenter['profileFields']
   | undefined;
-type RemovableProfileFields = SignInExperience['signUpProfileFields'] | AccountCenterProfileFields;
+type RemovableProfileFields =
+  | SignInExperience['signUpProfileFields']
+  | AccountCenter['profileFields'];
 
 function removeProfileFieldByName(
   profileFields: SignInExperience['signUpProfileFields'],
   name: string
 ): SignInExperience['signUpProfileFields'];
 function removeProfileFieldByName(
-  profileFields: AccountCenterProfileFields,
+  profileFields: AccountCenter['profileFields'],
   name: string
-): AccountCenterProfileFields;
+): AccountCenter['profileFields'];
 function removeProfileFieldByName(
   profileFields: RemovableProfileFields,
   name: string

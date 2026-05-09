@@ -8,6 +8,11 @@ type Auth = {
   identityVerified?: boolean;
   /** Client ID of the OIDC access token */
   clientId?: string;
+  /**
+   * OIDC session uid that backs the current access token, when the token was minted from an
+   * interactive (session-backed) flow. Absent for client-credentials tokens.
+   */
+  sessionUid?: string;
 };
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =

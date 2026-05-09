@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { useLayoutEffect, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark as a11yDarkTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -38,17 +38,44 @@ function CodeEditor({
 }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
+  const [editorWidth, setEditorWidth] = useState(0);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  useLayoutEffect(() => {
-    // Update textarea width according to its scroll width
+  const updateEditorWidth = useCallback(() => {
     const { current } = textareaRef;
 
-    if (current && current.style.width !== `${current.scrollWidth}px`) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      current.style.width = `${current.scrollWidth}px`;
+    if (!current || current.scrollWidth === 0) {
+      return;
     }
-  }, [value]);
+
+    const width = current.scrollWidth;
+
+    // Update textarea width according to its scroll width
+    if (current.style.width !== `${width}px`) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      current.style.width = `${width}px`;
+    }
+    setEditorWidth((currentWidth) => (currentWidth === width ? currentWidth : width));
+  }, []);
+
+  useLayoutEffect(() => {
+    updateEditorWidth();
+  }, [updateEditorWidth, value]);
+
+  useLayoutEffect(() => {
+    const { current } = editorRef;
+
+    if (!current || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(updateEditorWidth);
+    resizeObserver.observe(current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [updateEditorWidth]);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.currentTarget;
@@ -123,7 +150,7 @@ function CodeEditor({
           <SyntaxHighlighter
             showInlineLineNumbers
             showLineNumbers={!isShowingPlaceholder && showLineNumbers}
-            width={textareaRef.current?.scrollWidth ?? 0}
+            width={editorWidth}
             lineNumberContainerStyle={lineNumberContainerStyle()}
             lineNumberStyle={lineNumberStyle(maxLineNumberDigits)}
             codeTagProps={{
@@ -131,7 +158,7 @@ function CodeEditor({
                 fontFamily: "'Roboto Mono', monospace", // Override default font-family of <code>
               },
             }}
-            customStyle={customStyle(textareaRef.current?.scrollWidth)}
+            customStyle={customStyle(editorWidth)}
             language={language}
             style={a11yDarkTheme}
           >

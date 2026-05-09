@@ -203,6 +203,7 @@ const sign_in_exp = {
         backup_codes_manage: '查看可用的備份代碼或生成新的',
         account_center:
           '訪問帳戶中心以管理電郵地址、電話號碼、使用者名稱、密碼、MFA 和關聯帳號等安全設定',
+        profile: '管理個人資料（如姓名、頭像）的中心樞紐',
       },
       customize_note: '不想要開箱即用的體驗？你可以完全',
       customize_link: '使用 Account API 自定義你的流程。',

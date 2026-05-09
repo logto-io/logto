@@ -122,7 +122,7 @@
       "post": {
         "operationId": "UpdatePassword",
         "summary": "Update password",
-        "description": "Update password for the user, a logto-verification-id in header is required for checking sensitive permissions.",
+        "description": "Update password for the user. A logto-verification-id header is required when the user has at least one security verification method: password, primary email, or primary phone. The header can be omitted only when the user has none of these methods and is setting the first password.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -140,8 +140,8 @@
           "204": {
             "description": "The password was updated successfully."
           },
-          "403": {
-            "description": "Permission denied, the verification record is invalid."
+          "401": {
+            "description": "Permission denied, verification is required or the verification record is invalid."
           }
         }
       }
@@ -636,10 +636,10 @@
       "get": {
         "operationId": "GetSessions",
         "summary": "Get all active sessions",
-        "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available. A logto-verification-id in header is required for checking sensitive session details.",
+        "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available. A logto-verification-id in header is required for checking sensitive session details. Each entry includes an `isCurrent` boolean: `true` for the entry whose OIDC session backs the calling access token, `false` for the others. Use this to mark the \"This device\" entry in session-management UIs and to avoid revoking the caller's own session. At most one entry is `true` per response. Zero entries are tagged when the calling access token has no matching session uid — for example, the caller has revoked its own session but the token has not yet expired, or the token was issued from a non-session-backed grant.",
         "responses": {
           "200": {
-            "description": "Return a list of non-expired sessions of the user."
+            "description": "Return a list of non-expired sessions of the user. At most one entry has `isCurrent: true` per request."
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access session details."

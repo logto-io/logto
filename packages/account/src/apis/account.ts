@@ -1,3 +1,5 @@
+import { conditional } from '@silverhand/essentials';
+
 import { createAuthenticatedKy } from './base-ky';
 
 export const verificationRecordIdHeader = 'logto-verification-id';
@@ -56,11 +58,13 @@ export const deletePrimaryPhone = async (accessToken: string, verificationRecord
 
 export const updatePassword = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   payload: { password: string }
 ) => {
   await createAuthenticatedKy(accessToken).post('/api/my-account/password', {
     json: payload,
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    ...conditional(
+      verificationRecordId && { headers: { [verificationRecordIdHeader]: verificationRecordId } }
+    ),
   });
 };

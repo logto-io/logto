@@ -214,6 +214,8 @@ const sign_in_exp = {
         backup_codes_manage: 'Visualize os seus códigos de backup disponíveis ou gere novos',
         account_center:
           'Aceda ao centro de conta para gerir definições de segurança como e-mail, telefone, nome de utilizador, palavra-passe, MFA e contas ligadas',
+        profile:
+          'O centro principal para gerir as suas informações pessoais (por exemplo, nome, avatar)',
       },
       customize_note: 'Não quer a experiência pronta para uso? Pode sempre',
       customize_link: 'personalizar os seus fluxos com a Account API em vez disso.',

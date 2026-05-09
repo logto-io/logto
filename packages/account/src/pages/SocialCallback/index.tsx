@@ -7,9 +7,10 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { linkSocialIdentity, verifySocialVerification } from '@ac/apis/social';
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
-import { getSocialAddRoute } from '@ac/constants/routes';
+import { getSocialAddRoute, getSocialCallbackRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import { accountCenterBasePath } from '@ac/utils/account-center-route';
 import { accountStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
 import { finalizeSocialFlowFailure, finalizeSocialFlowSuccess } from '@ac/utils/social-flow';
@@ -25,6 +26,7 @@ const SocialCallback = () => {
   const {
     accountCenterSettings,
     experienceSettings,
+    isLoadingExperience,
     refreshUserInfo,
     setToast,
     verificationId,
@@ -125,9 +127,15 @@ const SocialCallback = () => {
     };
 
     const completeCallback = async () => {
+      const redirectUri = `${window.location.origin}${accountCenterBasePath}${getSocialCallbackRoute(
+        connectorId
+      )}`;
       const [verifyError] = await verifySocialVerificationRequest({
         verificationRecordId: storedSocialFlow.verificationRecordId,
-        connectorData: Object.fromEntries(searchParameters.entries()),
+        connectorData: {
+          ...Object.fromEntries(searchParameters.entries()),
+          redirectUri,
+        },
       });
 
       if (verifyError) {
@@ -170,17 +178,21 @@ const SocialCallback = () => {
     t,
   ]);
 
+  if (isLoadingExperience) {
+    return <GlobalLoading />;
+  }
+
+  if (!accountCenterSettings || !experienceSettings) {
+    return <ErrorPage titleKey="error.something_went_wrong" />;
+  }
+
   if (
-    !accountCenterSettings?.enabled ||
+    !accountCenterSettings.enabled ||
     accountCenterSettings.fields.social !== AccountCenterControlValue.Edit
   ) {
     return (
       <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
     );
-  }
-
-  if (!experienceSettings) {
-    return <GlobalLoading />;
   }
 
   if (!connectorId || !connector) {
