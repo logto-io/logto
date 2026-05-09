@@ -49,7 +49,11 @@ type UserContext = {
  * A map of data hook event to its context type for better type hinting.
  */
 type DataHookContextMap = {
-  'Organization.Membership.Updated': { organizationId: string; userIds?: string[] };
+  'Organization.Membership.Updated': {
+    organizationId: string;
+    addedUserIds?: string[] | undefined;
+    removedUserIds?: string[] | undefined;
+  };
   'User.Created': UserContext;
   'User.Data.Updated': UserContext;
   'User.Deleted': UserContext;

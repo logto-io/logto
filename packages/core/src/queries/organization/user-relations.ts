@@ -25,6 +25,51 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
     super(pool, OrganizationUserRelations.table, Organizations, Users);
   }
 
+  /**
+   * Returns all user IDs that are members of the given organization, reading only the
+   * relation table (no join to the users table).
+   */
+  async getUserIdsByOrganizationId(
+    organizationId: string
+  ): Promise<[totalCount: number, userIds: string[]]> {
+    const { fields } = convertToIdentifiers(OrganizationUserRelations, true);
+
+    const [{ count }, rows] = await Promise.all([
+      this.pool.one<{ count: string }>(sql`
+        select count(*)
+        from ${this.table}
+        where ${fields.organizationId} = ${organizationId}
+      `),
+      this.pool.any<{ userId: string }>(sql`
+        select ${fields.userId}
+        from ${this.table}
+        where ${fields.organizationId} = ${organizationId}
+      `),
+    ]);
+
+    return [Number(count), rows.map((row) => row.userId)];
+  }
+
+  /**
+   * Returns the subset of `userIds` that are already members of the given organization.
+   */
+  async getExistingUserIds(organizationId: string, userIds: string[]): Promise<string[]> {
+    if (userIds.length === 0) {
+      return [];
+    }
+
+    const { fields } = convertToIdentifiers(OrganizationUserRelations, true);
+
+    const rows = await this.pool.any<{ userId: string }>(sql`
+      select ${fields.userId}
+      from ${this.table}
+      where ${fields.organizationId} = ${organizationId}
+        and ${fields.userId} = any(${sql.array(userIds, 'varchar')})
+    `);
+
+    return rows.map((row) => row.userId);
+  }
+
   async isMember(organizationId: string, email: string): Promise<boolean> {
     const users = convertToIdentifiers(Users, true);
     const relations = convertToIdentifiers(OrganizationUserRelations, true);

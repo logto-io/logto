@@ -1,5 +1,11 @@
 import { generateName } from '#src/utils.js';
 
+type PlaceholderIds = {
+  userId?: string;
+  applicationId?: string;
+  organizationId?: string;
+};
+
 type TestCase = {
   route: string;
   event: string;
@@ -7,9 +13,11 @@ type TestCase = {
   endpoint: string;
   /** The payload that should be sent to the route. */
   payload: Record<string, unknown>;
-  /** The payload that should be sent to the webhook. */
-  hookPayload?: Record<string, unknown>;
+  /** The payload that should be sent to the webhook. Can be a function to access resolved IDs. */
+  hookPayload?: Record<string, unknown> | ((ids: PlaceholderIds) => Record<string, unknown>);
 };
+
+export type { PlaceholderIds, TestCase };
 
 export const userDataHookTestCases: TestCase[] = [
   {
@@ -111,7 +119,11 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'post',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
-    hookPayload: { organizationId: expect.any(String), userIds: expect.any(Array) },
+    hookPayload: ({ userId }) => ({
+      organizationId: expect.any(String),
+      addedUserIds: [userId],
+      removedUserIds: [],
+    }),
   },
   {
     route: 'PUT /organizations/:id/users',
@@ -119,7 +131,12 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'put',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
-    hookPayload: { organizationId: expect.any(String), userIds: expect.any(Array) },
+    // User was already added by POST above, so no membership change
+    hookPayload: ({ userId: _userId }) => ({
+      organizationId: expect.any(String),
+      addedUserIds: [],
+      removedUserIds: [],
+    }),
   },
   {
     route: 'DELETE /organizations/:id/users/:userId',
@@ -127,7 +144,11 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'delete',
     endpoint: `organizations/{organizationId}/users/{userId}`,
     payload: {},
-    hookPayload: { organizationId: expect.any(String), userIds: expect.any(Array) },
+    hookPayload: ({ userId }) => ({
+      organizationId: expect.any(String),
+      addedUserIds: [],
+      removedUserIds: [userId],
+    }),
   },
   {
     route: 'POST /organizations/:id/applications',

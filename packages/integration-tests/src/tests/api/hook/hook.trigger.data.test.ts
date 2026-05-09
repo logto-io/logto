@@ -32,6 +32,7 @@ import {
   roleDataHookTestCases,
   scopesDataHookTestCases,
   userDataHookTestCases,
+  type PlaceholderIds,
 } from './test-cases.js';
 
 const mockHookResponseGuard = z.object({
@@ -272,7 +273,9 @@ describe('organization data hook events', () => {
       const hook = await getWebhookResult(route);
       expect(hook?.payload.event).toBe(event);
       if (hookPayload) {
-        expect(hook?.payload).toMatchObject(hookPayload);
+        const ids: PlaceholderIds = { userId, organizationId, applicationId };
+        const resolvedPayload = typeof hookPayload === 'function' ? hookPayload(ids) : hookPayload;
+        expect(hook?.payload).toMatchObject(resolvedPayload);
       }
     }
   );
