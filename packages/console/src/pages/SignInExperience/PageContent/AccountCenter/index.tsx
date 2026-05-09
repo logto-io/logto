@@ -92,10 +92,7 @@ function AccountCenter({ isActive, data }: Props) {
     [setValue]
   );
 
-  const profileFieldKeySet = useMemo(
-    () => new Set<string>([...userProfileKeys, 'fullname']),
-    []
-  );
+  const profileFieldKeySet = useMemo(() => new Set<string>([...userProfileKeys, 'fullname']), []);
 
   const getProfileFieldControlKey = useCallback(
     (fieldName: string): AccountCenterFieldKey => {

@@ -37,8 +37,20 @@ function DropdownItem({
       onMouseDown={(event) => {
         event.preventDefault();
       }}
-      onKeyDown={isDisabled ? undefined : onKeyDownHandler(onClick)}
-      onClick={isDisabled ? undefined : onClick}
+      onKeyDown={
+        isDisabled
+          ? (event) => {
+              event.stopPropagation();
+            }
+          : onKeyDownHandler(onClick)
+      }
+      onClick={
+        isDisabled
+          ? (event) => {
+              event.stopPropagation();
+            }
+          : onClick
+      }
     >
       {icon && <span className={classNames(styles.icon, iconClassName)}>{icon}</span>}
       {children}
