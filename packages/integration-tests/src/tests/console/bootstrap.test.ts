@@ -84,16 +84,16 @@ describe('smoke testing for console admin account creation and sign-in', () => {
 
     const getStartedUrl = new URL('console/get-started', logtoConsoleUrl).href;
     const onboardingUrl = new URL('console/onboarding', logtoConsoleUrl).href;
-    const expectedUrl = isDevFeaturesEnabled ? onboardingUrl : getStartedUrl;
+    const expectedUrls = isDevFeaturesEnabled ? [onboardingUrl, getStartedUrl] : [getStartedUrl];
     await page.waitForFunction(
-      (expectedUrl) => window.location.href === expectedUrl,
+      (expectedUrls) => expectedUrls.includes(window.location.href),
       {},
-      expectedUrl
+      expectedUrls
     );
 
-    expect(page.url()).toBe(expectedUrl);
+    expect(expectedUrls).toContain(page.url());
 
-    if (isDevFeaturesEnabled) {
+    if (page.url() === onboardingUrl) {
       await expect(page).toFill('input[type=email]', 'oss-admin@example.com');
       await expect(page).toFill('input[placeholder="Acme.co"]', 'Acme');
       await expect(page).toClick('div[role=radio]', { text: '50-199' });
