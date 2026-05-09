@@ -1,21 +1,32 @@
 import {
+  type AccountCenter,
   type AccountCenterProfileFields,
+  AccountCenters,
   type SignInExperience,
+  SignInExperiences,
   type UpdateCustomProfileFieldData,
   type CustomProfileFieldUnion,
   type UpdateCustomProfileFieldSieOrder,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { trySafe } from '@silverhand/essentials';
+import { sql } from '@silverhand/slonik';
 
+import { BaseCache } from '#src/caches/base-cache.js';
+import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
+import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { AccountCenterQueries } from '#src/queries/account-center.js';
 import { createCustomProfileFieldsQueries } from '#src/queries/custom-profile-fields.js';
-import { createSignInExperienceQueries } from '#src/queries/sign-in-experience.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 import { validateCustomProfileFieldData } from './utils.js';
+
+const defaultId = 'default';
+const signInExperienceIdentifiers = convertToIdentifiers(SignInExperiences);
+const accountCenterIdentifiers = convertToIdentifiers(AccountCenters);
 
 type ProfileFieldsList = ReadonlyArray<{ name: string }>;
 type NormalizableProfileFields =
@@ -117,44 +128,95 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
   };
 
   const deleteCustomProfileField = async (name: string) => {
-    const [signInExperience, accountCenter] = await Promise.all([
-      queries.signInExperiences.findDefaultSignInExperience(),
-      queries.accountCenters.findDefaultAccountCenter(),
-    ]);
-    const signUpProfileFields = removeProfileFieldByName(
-      signInExperience.signUpProfileFields,
-      name
-    );
-    const accountCenterProfileFields = removeProfileFieldByName(accountCenter.profileFields, name);
+    const { result, didUpdateSignInExperience, didUpdateAccountCenter } =
+      await queries.pool.transaction(async (connection) => {
+        const findSignInExperienceById = buildFindEntityByIdWithPool(connection)(SignInExperiences);
+        const updateSignInExperience = buildUpdateWhereWithPool(connection)(
+          SignInExperiences,
+          true
+        );
+        const findAccountCenterById = buildFindEntityByIdWithPool(connection)(AccountCenters);
+        const updateAccountCenter = buildUpdateWhereWithPool(connection)(AccountCenters, true);
+        const customProfileFieldsQueries = createCustomProfileFieldsQueries(connection);
 
-    return queries.pool.transaction(async (connection) => {
-      const signInExperienceQueries = createSignInExperienceQueries(
-        connection,
-        queries.wellKnownCache
-      );
-      const accountCenterQueries = new AccountCenterQueries(connection, queries.wellKnownCache);
-      const customProfileFieldsQueries = createCustomProfileFieldsQueries(connection);
+        // Lock the default rows so concurrent updates serialize on this transaction and prevent
+        // lost updates when rewriting the full profile field arrays.
+        await connection.query(sql`
+          select ${signInExperienceIdentifiers.fields.id}
+          from ${signInExperienceIdentifiers.table}
+          where ${signInExperienceIdentifiers.fields.id} = ${defaultId}
+          for update
+        `);
+        await connection.query(sql`
+          select ${accountCenterIdentifiers.fields.id}
+          from ${accountCenterIdentifiers.table}
+          where ${accountCenterIdentifiers.fields.id} = ${defaultId}
+          for update
+        `);
 
-      if (
-        signInExperience.signUpProfileFields &&
-        signUpProfileFields &&
-        signUpProfileFields.length !== signInExperience.signUpProfileFields.length
-      ) {
-        await signInExperienceQueries.updateDefaultSignInExperience({ signUpProfileFields });
-      }
+        const [signInExperience, accountCenter] = await Promise.all([
+          findSignInExperienceById(defaultId),
+          findAccountCenterById(defaultId),
+        ]);
 
-      if (
-        accountCenter.profileFields &&
-        accountCenterProfileFields &&
-        accountCenterProfileFields.length !== accountCenter.profileFields.length
-      ) {
-        await accountCenterQueries.updateDefaultAccountCenter({
-          profileFields: accountCenterProfileFields,
-        });
-      }
+        const signUpProfileFields = removeProfileFieldByName(
+          signInExperience.signUpProfileFields,
+          name
+        );
+        const accountCenterProfileFields = removeProfileFieldByName(
+          accountCenter.profileFields,
+          name
+        );
 
-      return customProfileFieldsQueries.deleteCustomProfileFieldsByName(name);
-    });
+        const shouldUpdateSignInExperience = Boolean(
+          signInExperience.signUpProfileFields &&
+            signUpProfileFields &&
+            signUpProfileFields.length !== signInExperience.signUpProfileFields.length
+        );
+        const shouldUpdateAccountCenter = Boolean(
+          accountCenter.profileFields &&
+            accountCenterProfileFields &&
+            accountCenterProfileFields.length !== accountCenter.profileFields.length
+        );
+
+        if (shouldUpdateSignInExperience) {
+          await updateSignInExperience({
+            set: { signUpProfileFields } satisfies Partial<SignInExperience>,
+            where: { id: defaultId },
+            jsonbMode: 'replace',
+          });
+        }
+
+        if (shouldUpdateAccountCenter) {
+          await updateAccountCenter({
+            set: { profileFields: accountCenterProfileFields } satisfies Partial<AccountCenter>,
+            where: { id: defaultId },
+            jsonbMode: 'replace',
+          });
+        }
+
+        const deleted = await customProfileFieldsQueries.deleteCustomProfileFieldsByName(name);
+
+        return {
+          result: deleted,
+          didUpdateSignInExperience: shouldUpdateSignInExperience,
+          didUpdateAccountCenter: shouldUpdateAccountCenter,
+        };
+      });
+
+    // Invalidate caches only after the transaction commits, so concurrent readers cannot
+    // repopulate them with pre-commit data during the cache delete window.
+    const invalidations = [
+      didUpdateSignInExperience && queries.wellKnownCache.delete('sie', BaseCache.defaultKey),
+      didUpdateAccountCenter &&
+        queries.wellKnownCache.delete('account-center', BaseCache.defaultKey),
+    ].filter((value): value is Promise<void> => value !== false);
+
+    if (invalidations.length > 0) {
+      await Promise.all(invalidations.map(async (promise) => trySafe(promise)));
+    }
+
+    return result;
   };
 
   /**
