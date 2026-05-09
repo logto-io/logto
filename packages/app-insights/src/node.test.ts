@@ -77,6 +77,7 @@ describe('appInsights', () => {
         headers: {
           'x-forwarded-for': '192.0.2.1',
           'x-forwarded-host': 'tenant.logto.app',
+          'x-forwarded-proto': 'https',
         },
       },
     });
@@ -87,6 +88,7 @@ describe('appInsights', () => {
         existing: 'value',
         xForwardedFor: '192.0.2.1',
         xForwardedHost: 'tenant.logto.app',
+        xForwardedProto: 'https',
       },
     });
   });
@@ -100,6 +102,7 @@ describe('appInsights', () => {
         headers: {
           'x-forwarded-for': '192.0.2.1, 198.51.100.1',
           'x-forwarded-host': 'tenant.logto.app, azure-service.local',
+          'x-forwarded-proto': 'https, http',
         },
       },
     });
@@ -108,10 +111,11 @@ describe('appInsights', () => {
       existing: 'value',
       xForwardedFor: '192.0.2.1',
       xForwardedHost: 'tenant.logto.app',
+      xForwardedProto: 'https',
     });
   });
 
-  it('should add forwarded for without forwarded host', async () => {
+  it('should add partial forwarded headers', async () => {
     const processor = await setupAppInsights();
     const envelope = createRequestEnvelope();
 
@@ -119,6 +123,7 @@ describe('appInsights', () => {
       'http.ServerRequest': {
         headers: {
           'x-forwarded-for': '192.0.2.1',
+          'x-forwarded-proto': 'https',
         },
       },
     });
@@ -126,6 +131,7 @@ describe('appInsights', () => {
     expect(envelope.data.baseData.properties).toStrictEqual({
       existing: 'value',
       xForwardedFor: '192.0.2.1',
+      xForwardedProto: 'https',
     });
   });
 });

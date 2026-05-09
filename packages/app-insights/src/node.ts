@@ -17,6 +17,7 @@ type ServerRequestContext = {
   headers?: {
     'x-forwarded-for'?: string | string[];
     'x-forwarded-host'?: string | string[];
+    'x-forwarded-proto'?: string | string[];
   };
 };
 
@@ -31,9 +32,11 @@ const appendForwardedHeadersToRequestTelemetry = (
 ) => {
   const xForwardedFor = getFirstForwardedHeaderValue(request?.headers?.['x-forwarded-for']);
   const xForwardedHost = getFirstForwardedHeaderValue(request?.headers?.['x-forwarded-host']);
+  const xForwardedProto = getFirstForwardedHeaderValue(request?.headers?.['x-forwarded-proto']);
   const forwardedProperties = {
     ...(xForwardedFor && { xForwardedFor }),
     ...(xForwardedHost && { xForwardedHost }),
+    ...(xForwardedProto && { xForwardedProto }),
   };
 
   if (
