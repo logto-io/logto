@@ -10,6 +10,7 @@ import {
   buildBatchInsertIntoWithPool,
 } from '#src/database/insert-into.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(CustomProfileFields);
@@ -51,10 +52,14 @@ export const createCustomProfileFieldsQueries = (pool: CommonQueryMethods) => {
   const updateCustomProfileFieldsByName = buildUpdateWhereWithPool(pool)(CustomProfileFields, true);
 
   const deleteCustomProfileFieldsByName = async (name: string) => {
-    return pool.any(sql`
+    const { rowCount } = await pool.query(sql`
       delete from ${table}
       where ${fields.name} = ${name}
     `);
+
+    if (rowCount < 1) {
+      throw new DeletionError(CustomProfileFields.table, name);
+    }
   };
 
   /**

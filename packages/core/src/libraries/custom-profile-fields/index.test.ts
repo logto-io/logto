@@ -1,7 +1,8 @@
-import type { AccountCenter, SignInExperience } from '@logto/schemas';
+import { type AccountCenter, CustomProfileFields, type SignInExperience } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -188,6 +189,22 @@ describe('createCustomProfileFieldsLibrary', () => {
     findAccountCenterById.mockResolvedValue({ profileFields: [{ name: 'favoriteColor' }] });
 
     await deleteCustomProfileField('company');
+
+    expect(updateSignInExperience).not.toHaveBeenCalled();
+    expect(updateAccountCenter).not.toHaveBeenCalled();
+    expect(deleteCustomProfileFieldsByName).toHaveBeenCalledWith('company');
+  });
+
+  it('should throw a deletion error when deleting a nonexistent profile field', async () => {
+    findSignInExperienceById.mockResolvedValue({ signUpProfileFields: null });
+    findAccountCenterById.mockResolvedValue({ profileFields: [{ name: 'favoriteColor' }] });
+    deleteCustomProfileFieldsByName.mockRejectedValue(
+      new DeletionError(CustomProfileFields.table, 'company')
+    );
+
+    await expect(deleteCustomProfileField('company')).rejects.toMatchError(
+      new DeletionError(CustomProfileFields.table, 'company')
+    );
 
     expect(updateSignInExperience).not.toHaveBeenCalled();
     expect(updateAccountCenter).not.toHaveBeenCalled();

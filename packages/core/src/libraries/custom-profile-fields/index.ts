@@ -129,8 +129,8 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
   };
 
   const deleteCustomProfileField = async (name: string) => {
-    const { result, didUpdateSignInExperience, didUpdateAccountCenter } =
-      await queries.pool.transaction(async (connection) => {
+    const { didUpdateSignInExperience, didUpdateAccountCenter } = await queries.pool.transaction(
+      async (connection) => {
         const findSignInExperienceById = buildFindEntityByIdWithPool(connection)(SignInExperiences);
         const updateSignInExperience = buildUpdateWhereWithPool(connection)(
           SignInExperiences,
@@ -196,14 +196,14 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
           });
         }
 
-        const deleted = await customProfileFieldsQueries.deleteCustomProfileFieldsByName(name);
+        await customProfileFieldsQueries.deleteCustomProfileFieldsByName(name);
 
         return {
-          result: deleted,
           didUpdateSignInExperience: shouldUpdateSignInExperience,
           didUpdateAccountCenter: shouldUpdateAccountCenter,
         };
-      });
+      }
+    );
 
     // Invalidate caches only after the transaction commits, so concurrent readers cannot
     // repopulate them with pre-commit data during the cache delete window.
@@ -216,8 +216,6 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     if (invalidations.length > 0) {
       await Promise.all(invalidations.map(async (promise) => trySafe(promise)));
     }
-
-    return result;
   };
 
   /**
