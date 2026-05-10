@@ -38,6 +38,7 @@ export const mockAccountCenterSettings = {
     mfa: AccountCenterControlValue.Edit,
     session: AccountCenterControlValue.Edit,
   },
+  profileFields: [],
   webauthnRelatedOrigins: [],
   deleteAccountUrl: null,
   customCss: null,
@@ -138,6 +139,7 @@ export const mockUserInfo = {
 } satisfies Partial<UserProfileResponse>;
 
 const noopAsync = async (): Promise<void> => undefined;
+const clone = <T,>(value: T): T => structuredClone(value);
 
 export const createMockPageContext = (
   overrides: Partial<PageContextType> = {}
@@ -147,11 +149,11 @@ export const createMockPageContext = (
   platform: 'web',
   setTheme: noop,
   setToast: noop,
-  experienceSettings: mockSignInExperienceSettings,
+  experienceSettings: clone(mockSignInExperienceSettings),
   setExperienceSettings: noop,
-  accountCenterSettings: mockAccountCenterSettings,
+  accountCenterSettings: clone(mockAccountCenterSettings),
   setAccountCenterSettings: noop,
-  userInfo: mockUserInfo,
+  userInfo: clone(mockUserInfo),
   refreshUserInfo: noopAsync,
   userInfoError: undefined,
   isLoadingUserInfo: false,
