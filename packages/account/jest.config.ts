@@ -29,7 +29,7 @@ const config: Config.InitialOptions = {
     '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     '^@ac/([^?]*)(\\?.*)?$': '<rootDir>/src/$1',
     '^@experience/([^?]*)(\\?.*)?$': '<rootDir>/../experience/src/$1',
-    '^@/([^?]*)(\\?.*)?$': '<rootDir>/../experience/src/$1',
+    '^@/([^?]*)(\\?.*)?$': '<rootDir>/src/$1',
     '^@logto/shared/universal$': '<rootDir>/../shared/lib/universal.js',
     '^@logto/shared/(.*)$': '<rootDir>/../shared/lib/$1',
     '^(\\.{1,2}/.*)\\.js$': '$1',
