@@ -41,6 +41,7 @@ export const mockAccountCenterSettings = {
   webauthnRelatedOrigins: [],
   deleteAccountUrl: null,
   customCss: null,
+  profileFields: null,
 } satisfies AccountCenter;
 
 export const mockSignInExperienceSettings = {
