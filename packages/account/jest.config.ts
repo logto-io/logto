@@ -8,19 +8,7 @@ const config: Config.InitialOptions = {
   coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/', '/src/include.d/'],
   coverageReporters: ['text-summary', 'lcov'],
   transform: {
-    '^.+\\.(t|j)sx?$': [
-      '@swc/jest',
-      {
-        sourceMaps: true,
-        jsc: {
-          transform: {
-            react: {
-              runtime: 'automatic',
-            },
-          },
-        },
-      },
-    ],
+    '^.+\\.(t|j)sx?$': '<rootDir>/jest.transform.cjs',
     '\\.(svg)$': 'jest-transformer-svg',
     '\\.(png)$': 'jest-transform-stub',
   },
