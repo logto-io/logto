@@ -4,7 +4,7 @@
 
 When creating PRs:
 
-- If creating a branch, start it with the git author name, followed by lowercase kebab-case words, with no `/`.
+- If creating a branch, start it with the author's GitHub username (or another stable branch-safe identifier if unavailable), normalized to lowercase kebab-case, followed by lowercase kebab-case words, with no `/`.
 - Follow the repository PR template when available instead of duplicating it in instructions.
 - Do not describe feature flag details such as `isDevFeaturesEnabled` in the PR description.
 - In the `Testing` section, write `Tested locally`, `Unit tests`, `Integration tests`, or `N/A` as appropriate.
