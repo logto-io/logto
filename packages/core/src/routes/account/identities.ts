@@ -144,7 +144,10 @@ export default function identitiesRoutes<T extends UserRouter>(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
       );
-      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
+      assertThat(
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
 
       await linkSocialIdentityCore({
         userId,
