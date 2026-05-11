@@ -34,7 +34,7 @@ type ProfileFieldRow = {
   value?: React.ReactNode;
 };
 
-const profileFieldKeySet = new Set<string>([...userProfileKeys, 'fullname']);
+const profileFieldKeySet = new Set<string>(userProfileKeys);
 const fullnameKeySet = new Set<string>(fullnameKeys);
 const addressKeySet = new Set<string>(userProfileAddressKeys);
 
@@ -51,6 +51,9 @@ const getAccountCenterProfileFields = (settings?: AccountCenter): AccountCenterP
 const isCompositeProfileField = (field?: CustomProfileField): boolean =>
   field?.type === CustomProfileFieldType.Fullname || field?.type === CustomProfileFieldType.Address;
 
+const isBuiltInProfileField = (fieldName: string, field?: CustomProfileField): boolean =>
+  profileFieldKeySet.has(fieldName) || (fieldName === 'fullname' && field === undefined);
+
 const getProfileFieldControlKey = (
   fieldName: string,
   field?: CustomProfileField
@@ -59,7 +62,7 @@ const getProfileFieldControlKey = (
     return fieldName;
   }
 
-  if (profileFieldKeySet.has(fieldName) || isCompositeProfileField(field)) {
+  if (isBuiltInProfileField(fieldName, field) || isCompositeProfileField(field)) {
     return 'profile';
   }
 
@@ -204,7 +207,7 @@ const getProfileFieldValue = (
     return getCompositeFieldValue(userInfo, field);
   }
 
-  if (profileFieldKeySet.has(fieldName)) {
+  if (isBuiltInProfileField(fieldName, field)) {
     return getBuiltInProfileFieldValue(userInfo?.profile, fieldName);
   }
 
