@@ -188,11 +188,16 @@ const getCompositeFieldValue = (
 const getProfileFieldValue = (
   userInfo: Partial<UserProfileResponse> | undefined,
   fieldName: string,
+  fieldLabel: string,
   field?: CustomProfileField
 ): React.ReactNode | undefined => {
   if (fieldName === 'avatar') {
     return userInfo?.avatar ? (
-      <img className={styles.avatar} src={userInfo.avatar} alt="" />
+      <img
+        className={styles.avatar}
+        src={userInfo.avatar}
+        alt={getPrimitiveValue(userInfo.name) ?? fieldLabel}
+      />
     ) : undefined;
   }
 
@@ -209,6 +214,14 @@ const getProfileFieldValue = (
 
   if (isBuiltInProfileField(fieldName, field)) {
     return getBuiltInProfileFieldValue(userInfo?.profile, fieldName);
+  }
+
+  if (field?.type === CustomProfileFieldType.Select) {
+    const value = getPrimitiveValue(userInfo?.customData?.[fieldName]);
+
+    return value === undefined
+      ? undefined
+      : (field.config.options?.find((option) => option.value === value)?.label ?? value);
   }
 
   return getPrimitiveValue(userInfo?.customData?.[fieldName]);
@@ -249,7 +262,7 @@ const Profile = () => {
               ? t(`profile.gender_options.${userInfo.profile.gender}`, {
                   defaultValue: userInfo.profile.gender,
                 })
-              : getProfileFieldValue(userInfo, name, field),
+              : getProfileFieldValue(userInfo, name, label, field),
         },
       ];
     }, []);
