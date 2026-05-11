@@ -108,13 +108,10 @@ export default function identitiesRoutes<T extends UserRouter>(
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
       );
       assertThat(
-        scopes.has(UserScope.Identities),
-        new RequestError({ code: 'auth.unauthorized', status: 401 })
-      );
-      assertThat(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
       );
+      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
 
       await linkSocialIdentityCore({
         userId,
@@ -144,13 +141,10 @@ export default function identitiesRoutes<T extends UserRouter>(
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
       );
       assertThat(
-        scopes.has(UserScope.Identities),
-        new RequestError({ code: 'auth.unauthorized', status: 401 })
-      );
-      assertThat(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
       );
+      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
 
       await linkSocialIdentityCore({
         userId,
@@ -184,10 +178,7 @@ export default function identitiesRoutes<T extends UserRouter>(
         'account_center.field_not_editable'
       );
 
-      assertThat(
-        scopes.has(UserScope.Identities),
-        new RequestError({ code: 'auth.unauthorized', status: 401 })
-      );
+      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
 
       const [user, ssoIdentities] = await Promise.all([
         findUserById(userId),
