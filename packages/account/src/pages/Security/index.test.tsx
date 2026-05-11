@@ -1,4 +1,4 @@
-import { AccountCenterControlValue, MfaPolicy } from '@logto/schemas';
+import { AccountCenterControlValue } from '@logto/schemas';
 import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext, {
@@ -42,10 +42,6 @@ describe('<Security />', () => {
           experienceSettings: {
             ...mockSignInExperienceSettings,
             socialConnectors: [],
-            mfa: {
-              policy: MfaPolicy.UserControlled,
-              factors: [],
-            },
           },
         },
       }
