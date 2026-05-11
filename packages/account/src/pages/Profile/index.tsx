@@ -48,12 +48,18 @@ const profileLabelKeys: Record<string, string> = {
 const getAccountCenterProfileFields = (settings?: AccountCenter): AccountCenterProfileFields =>
   settings?.profileFields ?? [];
 
-const getProfileFieldControlKey = (fieldName: string): ProfileFieldControlKey => {
+const isCompositeProfileField = (field?: CustomProfileField): boolean =>
+  field?.type === CustomProfileFieldType.Fullname || field?.type === CustomProfileFieldType.Address;
+
+const getProfileFieldControlKey = (
+  fieldName: string,
+  field?: CustomProfileField
+): ProfileFieldControlKey => {
   if (fieldName === 'name' || fieldName === 'avatar') {
     return fieldName;
   }
 
-  if (profileFieldKeySet.has(fieldName)) {
+  if (profileFieldKeySet.has(fieldName) || isCompositeProfileField(field)) {
     return 'profile';
   }
 
@@ -146,10 +152,12 @@ const getCompositeFieldValue = (
   field: CustomProfileField
 ): string | undefined => {
   const { profile } = userInfo ?? {};
-  const enabledParts = field.config.parts?.filter(({ enabled }) => enabled) ?? [];
 
   if (field.type === CustomProfileFieldType.Fullname) {
-    const partNames = enabledParts.length > 0 ? enabledParts.map(({ name }) => name) : fullnameKeys;
+    const partNames =
+      field.config.parts === undefined
+        ? fullnameKeys
+        : field.config.parts.filter(({ enabled }) => enabled).map(({ name }) => name);
 
     return joinValues(
       partNames
@@ -161,7 +169,9 @@ const getCompositeFieldValue = (
   if (field.type === CustomProfileFieldType.Address) {
     const address = profile?.address;
     const partNames =
-      enabledParts.length > 0 ? enabledParts.map(({ name }) => name) : userProfileAddressKeys;
+      field.config.parts === undefined
+        ? userProfileAddressKeys
+        : field.config.parts.filter(({ enabled }) => enabled).map(({ name }) => name);
 
     return joinValues(
       partNames
@@ -211,7 +221,8 @@ const Profile = () => {
     const customProfileFieldMap = new Map(customProfileFields.map((field) => [field.name, field]));
 
     return profileFields.reduce<ProfileFieldRow[]>((rows, { name }) => {
-      const controlKey = getProfileFieldControlKey(name);
+      const field = customProfileFieldMap.get(name);
+      const controlKey = getProfileFieldControlKey(name, field);
 
       const controlValue = accountCenterSettings?.fields[controlKey];
 
@@ -219,7 +230,6 @@ const Profile = () => {
         return rows;
       }
 
-      const field = customProfileFieldMap.get(name);
       const labelKey = profileLabelKeys[name] ?? `profile.${name}`;
       const label =
         field?.label === undefined || field.label === ''
