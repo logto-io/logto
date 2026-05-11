@@ -220,7 +220,7 @@ const sign_in_exp = {
         username: 'ユーザー名を更新',
         password: '新しいパスワードを設定',
         social: 'サインイン用にソーシャルアカウントを連携',
-        social_change: 'Change to another linked social account',
+        social_change: '別の連携済みソーシャルアカウントに変更',
         social_remove: '連携済みのソーシャルアカウントを削除',
         authenticator_app: '多要素認証のための新しい認証アプリを設定',
         authenticator_app_replace: 'Replace your existing authenticator app with a new one',

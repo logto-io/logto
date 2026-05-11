@@ -220,7 +220,7 @@ const sign_in_exp = {
         username: 'Zaktualizuj swoją nazwę użytkownika',
         password: 'Ustaw nowe hasło',
         social: 'Połącz konto społecznościowe do logowania',
-        social_change: 'Change to another linked social account',
+        social_change: 'Przełącz na inne połączone konto społecznościowe',
         social_remove: 'Usuń połączone konto społecznościowe',
         authenticator_app:
           'Skonfiguruj nową aplikację uwierzytelniającą dla uwierzytelniania wieloskładnikowego',

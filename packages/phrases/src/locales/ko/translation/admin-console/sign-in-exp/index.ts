@@ -216,7 +216,7 @@ const sign_in_exp = {
         username: '사용자 이름 업데이트',
         password: '새 비밀번호 설정',
         social: '로그인용 소셜 계정 연동',
-        social_change: 'Change to another linked social account',
+        social_change: '다른 연동된 소셜 계정으로 변경',
         social_remove: '연동된 소셜 계정 제거',
         authenticator_app: '다중 요소 인증을 위한 새 인증 앱 설정',
         authenticator_app_replace: 'Replace your existing authenticator app with a new one',

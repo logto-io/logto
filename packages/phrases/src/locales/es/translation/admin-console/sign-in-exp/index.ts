@@ -224,7 +224,7 @@ const sign_in_exp = {
         username: 'Actualizar tu nombre de usuario',
         password: 'Establecer una nueva contraseña',
         social: 'Vincula una cuenta social para iniciar sesión',
-        social_change: 'Change to another linked social account',
+        social_change: 'Cambia a otra cuenta social vinculada',
         social_remove: 'Elimina una cuenta social vinculada',
         authenticator_app:
           'Configura una nueva aplicación de autenticación para la autenticación multifactorial',

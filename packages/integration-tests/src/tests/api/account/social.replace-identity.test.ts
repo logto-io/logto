@@ -69,7 +69,7 @@ describe('my-account (social replace identity)', () => {
         replaceIdentity(api, verificationRecordId, 'new-verification-record-id'),
         {
           code: 'auth.unauthorized',
-          status: 400,
+          status: 401,
         }
       );
 

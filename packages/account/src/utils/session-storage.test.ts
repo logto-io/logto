@@ -53,6 +53,27 @@ describe('accountStorage', () => {
     expect(accountStorage.socialFlow.get('google')).toBeUndefined();
   });
 
+  it('socialFlow defaults legacy records without mode to add', () => {
+    const expiresAt = new Date(Date.now() + 60_000).toISOString();
+    sessionStorage.setItem(
+      'logto:account-center:social-verification:google',
+      JSON.stringify({
+        status: 'pending',
+        verificationRecordId: 'legacy-pending-id',
+        expiresAt,
+        state: 'state-123',
+      })
+    );
+
+    expect(accountStorage.socialFlow.get('google')).toEqual({
+      status: 'pending',
+      verificationRecordId: 'legacy-pending-id',
+      expiresAt,
+      state: 'state-123',
+      mode: 'add',
+    });
+  });
+
   it('routeRestore expires after ttl window', () => {
     const dateNowSpy = jest.spyOn(Date, 'now').mockReturnValue(0);
     accountStorage.routeRestore.set('/account/password');
