@@ -169,7 +169,7 @@ const SocialCallback = () => {
         );
 
         if (error) {
-          await handleCallbackError(error, false);
+          await handleCallbackError(error);
           return;
         }
       } else {
