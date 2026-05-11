@@ -212,16 +212,18 @@ const getProfileFieldValue = (
     return getCompositeFieldValue(userInfo, field);
   }
 
-  if (isBuiltInProfileField(fieldName, field)) {
-    return getBuiltInProfileFieldValue(userInfo?.profile, fieldName);
-  }
-
   if (field?.type === CustomProfileFieldType.Select) {
-    const value = getPrimitiveValue(userInfo?.customData?.[fieldName]);
+    const value = isBuiltInProfileField(fieldName, field)
+      ? getBuiltInProfileFieldValue(userInfo?.profile, fieldName)
+      : getPrimitiveValue(userInfo?.customData?.[fieldName]);
 
     return value === undefined
       ? undefined
       : (field.config.options?.find((option) => option.value === value)?.label ?? value);
+  }
+
+  if (isBuiltInProfileField(fieldName, field)) {
+    return getBuiltInProfileFieldValue(userInfo?.profile, fieldName);
   }
 
   return getPrimitiveValue(userInfo?.customData?.[fieldName]);
@@ -257,12 +259,7 @@ const Profile = () => {
         {
           name,
           label,
-          value:
-            name === 'gender' && userInfo?.profile?.gender
-              ? t(`profile.gender_options.${userInfo.profile.gender}`, {
-                  defaultValue: userInfo.profile.gender,
-                })
-              : getProfileFieldValue(userInfo, name, label, field),
+          value: getProfileFieldValue(userInfo, name, label, field),
         },
       ];
     }, []);
