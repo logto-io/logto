@@ -21,6 +21,7 @@ create table sign_in_experiences (
   custom_css text,
   custom_content jsonb /* @use CustomContent */ not null default '{}'::jsonb,
   custom_ui_assets jsonb /* @use CustomUiAssets */,
+  custom_ui_csp jsonb /* @use CustomUiCsp */ not null default '{}'::jsonb,
   password_policy jsonb /* @use PartialPasswordPolicy */ not null default '{}'::jsonb,
   mfa jsonb /* @use Mfa */ not null default '{}'::jsonb,
   adaptive_mfa jsonb /* @use AdaptiveMfa */ not null default '{}'::jsonb,

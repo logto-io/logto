@@ -4,6 +4,9 @@ describe('accountStorage', () => {
   beforeEach(() => {
     sessionStorage.clear();
     localStorage.clear();
+  });
+
+  afterEach(() => {
     jest.restoreAllMocks();
   });
 

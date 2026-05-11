@@ -38,10 +38,10 @@ export const mockAccountCenterSettings = {
     mfa: AccountCenterControlValue.Edit,
     session: AccountCenterControlValue.Edit,
   },
+  profileFields: [],
   webauthnRelatedOrigins: [],
   deleteAccountUrl: null,
   customCss: null,
-  profileFields: null,
 } satisfies AccountCenter;
 
 export const mockSignInExperienceSettings = {
@@ -101,6 +101,7 @@ export const mockSignInExperienceSettings = {
   customCss: null,
   customContent: {},
   customUiAssets: null,
+  customUiCsp: {},
   passwordPolicy: {},
   mfa: {
     policy: MfaPolicy.PromptAtSignInAndSignUp,
@@ -139,6 +140,15 @@ export const mockUserInfo = {
 } satisfies Partial<UserProfileResponse>;
 
 const noopAsync = async (): Promise<void> => undefined;
+const clone = <T,>(value: T): T => {
+  if (typeof structuredClone === 'function') {
+    return structuredClone(value);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const clonedValue: T = JSON.parse(JSON.stringify(value));
+  return clonedValue;
+};
 
 export const createMockPageContext = (
   overrides: Partial<PageContextType> = {}
@@ -148,11 +158,11 @@ export const createMockPageContext = (
   platform: 'web',
   setTheme: noop,
   setToast: noop,
-  experienceSettings: mockSignInExperienceSettings,
+  experienceSettings: clone(mockSignInExperienceSettings),
   setExperienceSettings: noop,
-  accountCenterSettings: mockAccountCenterSettings,
+  accountCenterSettings: clone(mockAccountCenterSettings),
   setAccountCenterSettings: noop,
-  userInfo: mockUserInfo,
+  userInfo: clone(mockUserInfo),
   refreshUserInfo: noopAsync,
   userInfoError: undefined,
   isLoadingUserInfo: false,

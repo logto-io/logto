@@ -24,6 +24,7 @@ import {
   mockPrivacyPolicyUrl,
   mockDemoSocialConnector,
 } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -86,6 +87,9 @@ const signInExperienceRequester = createRequester({
   authedRoutes: signInExperiencesRoutes,
   tenantContext,
 });
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+const originalIsCloud = EnvSet.values.isCloud;
+const originalIsProduction = EnvSet.values.isProduction;
 
 const createDevFeaturesDisabledRequester = async () => {
   jest.resetModules();
@@ -165,6 +169,52 @@ const createSignUpProfileFieldsRequester = (
   });
 
   return { requester, updateDefaultSignInExperience, normalizeProfileFields };
+};
+
+const createCustomUiCspRequester = async ({
+  isDevFeaturesEnabled = true,
+  isCloud = true,
+  isProduction = false,
+} = {}) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
+  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
+  (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
+  (EnvSet.values as { isProduction: boolean }).isProduction = isProduction;
+
+  const updateDefaultSignInExperience = jest.fn(
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+      ...mockSignInExperience,
+      ...data,
+    })
+  );
+  const guardTenantUsageByKey = jest.fn(async () => {
+    await Promise.resolve();
+  });
+  const reportSubscriptionUpdatesUsage = jest.fn(async () => {
+    await Promise.resolve();
+  });
+  const requester = createRequester({
+    authedRoutes: signInExperiencesRoutes,
+    tenantContext: new MockTenant(
+      undefined,
+      {
+        signInExperiences: {
+          updateDefaultSignInExperience,
+          findDefaultSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+        },
+        customPhrases: { findAllCustomLanguageTags: async () => [] },
+      },
+      { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
+      {
+        signInExperiences: { validateLanguageInfo: jest.fn() },
+        quota: { guardTenantUsageByKey, reportSubscriptionUpdatesUsage },
+      }
+    ),
+  });
+
+  return { requester, updateDefaultSignInExperience, guardTenantUsageByKey };
 };
 
 describe('GET /sign-in-exp', () => {
@@ -577,6 +627,155 @@ describe('PATCH /sign-in-exp signUpProfileFields', () => {
 
     expect(response.status).toEqual(200);
     expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ signUpProfileFields: null });
+  });
+});
+
+describe('PATCH /sign-in-exp customUiCsp', () => {
+  afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isProduction: boolean }).isProduction = originalIsProduction;
+  });
+
+  it('should normalize and persist valid Custom UI CSP config', async () => {
+    const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
+      await createCustomUiCspRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({
+      customUiCsp: {
+        scriptSrc: [' https://EXAMPLE.com ', 'https://example.com', 'https://*.example.com/path/'],
+        connectSrc: ['wss://api.example.com', 'https://api.example.com'],
+      },
+    });
+
+    const customUiCsp = {
+      scriptSrc: ['https://example.com', 'https://*.example.com/path/'],
+      connectSrc: ['wss://api.example.com', 'https://api.example.com'],
+    };
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ customUiCsp });
+    expect(response.body).toMatchObject({ customUiCsp });
+    expect(guardTenantUsageByKey).toHaveBeenCalledWith('bringYourUiEnabled');
+  });
+
+  it('should guard Bring Your Own UI quota once when updating branding and Custom UI CSP', async () => {
+    const { requester, guardTenantUsageByKey } = await createCustomUiCspRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({
+      hideLogtoBranding: true,
+      customUiCsp: {
+        scriptSrc: ['https://example.com'],
+      },
+    });
+
+    expect(response.status).toEqual(200);
+    expect(guardTenantUsageByKey).toHaveBeenCalledTimes(1);
+    expect(guardTenantUsageByKey).toHaveBeenCalledWith('bringYourUiEnabled');
+  });
+
+  it.each([
+    {
+      customUiCsp: { scriptSrc: ["'unsafe-inline'"] },
+      title: 'CSP keyword',
+    },
+    {
+      customUiCsp: { scriptSrc: ['https://example.com; report-uri https://evil.test'] },
+      title: 'semicolon',
+    },
+    {
+      customUiCsp: { scriptSrc: ['http://example.com'] },
+      title: 'unsupported scheme',
+    },
+    {
+      customUiCsp: { connectSrc: ['https://*.*.example.com'] },
+      title: 'malformed wildcard host',
+    },
+    {
+      customUiCsp: { imgSrc: ['https://example.com'] },
+      title: 'unsupported directive',
+    },
+  ])('should reject invalid Custom UI CSP config: $title', async ({ customUiCsp }) => {
+    const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
+      await createCustomUiCspRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({ customUiCsp });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+    expect(guardTenantUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('should reject non-empty Custom UI CSP updates when dev features are disabled', async () => {
+    const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
+      await createCustomUiCspRequester({ isDevFeaturesEnabled: false });
+
+    const response = await requester.patch('/sign-in-exp').send({
+      customUiCsp: {
+        scriptSrc: ['https://example.com'],
+      },
+    });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+    expect(guardTenantUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('should reject non-empty Custom UI CSP updates outside Cloud', async () => {
+    const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
+      await createCustomUiCspRequester({ isCloud: false });
+
+    const response = await requester.patch('/sign-in-exp').send({
+      customUiCsp: {
+        scriptSrc: ['https://example.com'],
+      },
+    });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+    expect(guardTenantUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('should allow clearing Custom UI CSP config without checking quota', async () => {
+    const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
+      await createCustomUiCspRequester({ isDevFeaturesEnabled: false });
+
+    const response = await requester.patch('/sign-in-exp').send({
+      customUiCsp: {
+        scriptSrc: [],
+        connectSrc: [],
+      },
+    });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ customUiCsp: {} });
+    expect(guardTenantUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('should allow localhost HTTP source only outside production', async () => {
+    const { requester } = await createCustomUiCspRequester();
+
+    await expect(
+      requester.patch('/sign-in-exp').send({
+        customUiCsp: {
+          scriptSrc: ['http://localhost:3000'],
+        },
+      })
+    ).resolves.toMatchObject({ status: 200 });
+
+    const productionRequester = await createCustomUiCspRequester({ isProduction: true });
+
+    await expect(
+      productionRequester.requester.patch('/sign-in-exp').send({
+        customUiCsp: {
+          scriptSrc: ['http://localhost:3000'],
+        },
+      })
+    ).resolves.toMatchObject({ status: 400 });
   });
 });
 /* eslint-enable max-lines */

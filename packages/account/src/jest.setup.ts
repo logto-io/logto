@@ -24,7 +24,7 @@ jest.mock('@simplewebauthn/browser', () => ({
     abort() {}
   },
   WebAuthnError: class WebAuthnError extends Error {},
-  base64URLStringToBuffer: (value: string) => new Uint8Array(Buffer.from(value)),
+  base64URLStringToBuffer: (value: string) => new Uint8Array(Buffer.from(value, 'base64url')),
   bufferToBase64URLString: (value: ArrayBuffer | Uint8Array) =>
     Buffer.from(new Uint8Array(value)).toString('base64url'),
   browserSupportsWebAuthn: () => true,

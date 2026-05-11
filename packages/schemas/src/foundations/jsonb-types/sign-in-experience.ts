@@ -273,6 +273,18 @@ export const customUiAssetsGuard = z.object({
 
 export type CustomUiAssets = z.infer<typeof customUiAssetsGuard>;
 
+export type CustomUiCsp = {
+  scriptSrc?: string[];
+  connectSrc?: string[];
+};
+
+export const customUiCspGuard = z
+  .object({
+    scriptSrc: z.string().array().optional(),
+    connectSrc: z.string().array().optional(),
+  })
+  .strict() satisfies ToZodObject<CustomUiCsp>;
+
 export const captchaPolicyGuard = z.object({
   enabled: z.boolean().optional(),
 });
