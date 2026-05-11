@@ -101,6 +101,7 @@ export const mockSignInExperienceSettings = {
   customCss: null,
   customContent: {},
   customUiAssets: null,
+  customUiCsp: {},
   passwordPolicy: {},
   mfa: {
     policy: MfaPolicy.PromptAtSignInAndSignUp,

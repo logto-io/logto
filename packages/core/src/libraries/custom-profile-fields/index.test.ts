@@ -1,23 +1,58 @@
-import type { SignInExperience } from '@logto/schemas';
+import { type AccountCenter, CustomProfileFields, type SignInExperience } from '@logto/schemas';
+import { createMockUtils } from '@logto/shared/esm';
 
 import { EnvSet } from '#src/env-set/index.js';
-import { MockQueries } from '#src/test-utils/tenant.js';
-
-import { createCustomProfileFieldsLibrary } from './index.js';
+import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
+
+const findCustomProfileFieldsByNames = jest.fn();
+const updateFieldOrderInSignInExperience = jest.fn();
+const deleteCustomProfileFieldsByName = jest.fn();
+const findSignInExperienceById = jest.fn();
+const updateSignInExperience = jest.fn();
+const findAccountCenterById = jest.fn();
+const updateAccountCenter = jest.fn();
+
+const customProfileFieldsQueriesMock = {
+  findCustomProfileFieldsByNames,
+  updateFieldOrderInSignInExperience,
+  deleteCustomProfileFieldsByName,
+};
+
+const resolveFindBySchema = (schema: { table: string }) =>
+  schema.table === 'sign_in_experiences' ? findSignInExperienceById : findAccountCenterById;
+
+const resolveUpdateBySchema = (schema: { table: string }) =>
+  schema.table === 'sign_in_experiences' ? updateSignInExperience : updateAccountCenter;
+
+const findEntitiesByIdsStub = jest.fn();
+const buildFindEntitiesByIdsStub = () => findEntitiesByIdsStub;
+
+mockEsm('#src/database/find-entity-by-id.js', () => ({
+  buildFindEntityByIdWithPool: () => resolveFindBySchema,
+  buildFindEntitiesByIdsWithPool: () => buildFindEntitiesByIdsStub,
+}));
+mockEsm('#src/database/update-where.js', () => ({
+  buildUpdateWhereWithPool: () => resolveUpdateBySchema,
+}));
+mockEsm('#src/queries/custom-profile-fields.js', () => ({
+  createCustomProfileFieldsQueries: () => customProfileFieldsQueriesMock,
+}));
+
+const { MockQueries } = await import('#src/test-utils/tenant.js');
+const { createCustomProfileFieldsLibrary } = await import('./index.js');
 
 describe('createCustomProfileFieldsLibrary', () => {
   const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const findCustomProfileFieldsByNames = jest.fn();
-  const updateFieldOrderInSignInExperience = jest.fn();
   const queries = new MockQueries({
     customProfileFields: {
       findCustomProfileFieldsByNames,
       updateFieldOrderInSignInExperience,
     },
   });
-  const { normalizeProfileFields, updateCustomProfileFieldsSieOrder } =
+  const { deleteCustomProfileField, normalizeProfileFields, updateCustomProfileFieldsSieOrder } =
     createCustomProfileFieldsLibrary(queries);
 
   const setDevFeaturesEnabled = (enabled: boolean) => {
@@ -29,6 +64,11 @@ describe('createCustomProfileFieldsLibrary', () => {
     setDevFeaturesEnabled(true);
     findCustomProfileFieldsByNames.mockReset();
     updateFieldOrderInSignInExperience.mockReset();
+    deleteCustomProfileFieldsByName.mockReset();
+    findSignInExperienceById.mockReset();
+    updateSignInExperience.mockReset();
+    findAccountCenterById.mockReset();
+    updateAccountCenter.mockReset();
   });
 
   afterAll(() => {
@@ -115,5 +155,59 @@ describe('createCustomProfileFieldsLibrary', () => {
     await expect(updateCustomProfileFieldsSieOrder(order)).resolves.toBe(order);
     expect(findCustomProfileFieldsByNames).toHaveBeenCalledWith(['company', 'inviteCode']);
     expect(updateFieldOrderInSignInExperience).toHaveBeenCalledWith(order);
+  });
+
+  it('should remove deleted profile field references from SIE and account center configs', async () => {
+    const signUpProfileFields: SignInExperience['signUpProfileFields'] = [
+      { name: 'company' },
+      { name: 'inviteCode' },
+    ];
+    const accountCenterProfileFields: AccountCenter['profileFields'] = [
+      { name: 'company' },
+      { name: 'favoriteColor' },
+    ];
+    findSignInExperienceById.mockResolvedValue({ signUpProfileFields });
+    findAccountCenterById.mockResolvedValue({ profileFields: accountCenterProfileFields });
+
+    await deleteCustomProfileField('company');
+
+    expect(updateSignInExperience).toHaveBeenCalledWith({
+      set: { signUpProfileFields: [{ name: 'inviteCode' }] },
+      where: { id: 'default' },
+      jsonbMode: 'replace',
+    });
+    expect(updateAccountCenter).toHaveBeenCalledWith({
+      set: { profileFields: [{ name: 'favoriteColor' }] },
+      where: { id: 'default' },
+      jsonbMode: 'replace',
+    });
+    expect(deleteCustomProfileFieldsByName).toHaveBeenCalledWith('company');
+  });
+
+  it('should skip config updates when deleting an unreferenced profile field', async () => {
+    findSignInExperienceById.mockResolvedValue({ signUpProfileFields: null });
+    findAccountCenterById.mockResolvedValue({ profileFields: [{ name: 'favoriteColor' }] });
+
+    await deleteCustomProfileField('company');
+
+    expect(updateSignInExperience).not.toHaveBeenCalled();
+    expect(updateAccountCenter).not.toHaveBeenCalled();
+    expect(deleteCustomProfileFieldsByName).toHaveBeenCalledWith('company');
+  });
+
+  it('should throw a deletion error when deleting a nonexistent profile field', async () => {
+    findSignInExperienceById.mockResolvedValue({ signUpProfileFields: null });
+    findAccountCenterById.mockResolvedValue({ profileFields: [{ name: 'favoriteColor' }] });
+    deleteCustomProfileFieldsByName.mockRejectedValue(
+      new DeletionError(CustomProfileFields.table, 'company')
+    );
+
+    await expect(deleteCustomProfileField('company')).rejects.toMatchError(
+      new DeletionError(CustomProfileFields.table, 'company')
+    );
+
+    expect(updateSignInExperience).not.toHaveBeenCalled();
+    expect(updateAccountCenter).not.toHaveBeenCalled();
+    expect(deleteCustomProfileFieldsByName).toHaveBeenCalledWith('company');
   });
 });

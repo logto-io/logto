@@ -8,19 +8,7 @@ const config: Config.InitialOptions = {
   coveragePathIgnorePatterns: ['/node_modules/', '/src/__mocks__/', '/src/include.d/'],
   coverageReporters: ['text-summary', 'lcov'],
   transform: {
-    '^.+\\.(t|j)sx?$': [
-      '@swc/jest',
-      {
-        sourceMaps: true,
-        jsc: {
-          transform: {
-            react: {
-              runtime: 'automatic',
-            },
-          },
-        },
-      },
-    ],
+    '^.+\\.(t|j)sx?$': '<rootDir>/jest.transform.cjs',
     '\\.(svg)$': 'jest-transformer-svg',
     '\\.(png)$': 'jest-transform-stub',
   },
@@ -29,7 +17,7 @@ const config: Config.InitialOptions = {
     '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     '^@ac/([^?]*)(\\?.*)?$': '<rootDir>/src/$1',
     '^@experience/([^?]*)(\\?.*)?$': '<rootDir>/../experience/src/$1',
-    '^@/([^?]*)(\\?.*)?$': '<rootDir>/../experience/src/$1',
+    '^@/([^?]*)(\\?.*)?$': '<rootDir>/src/$1',
     '^@logto/shared/universal$': '<rootDir>/../shared/lib/universal.js',
     '^@logto/shared/(.*)$': '<rootDir>/../shared/lib/$1',
     '^(\\.{1,2}/.*)\\.js$': '$1',
