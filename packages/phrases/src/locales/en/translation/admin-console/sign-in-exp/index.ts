@@ -220,6 +220,7 @@ const sign_in_exp = {
         username: 'Update your username',
         password: 'Set a new password',
         social: 'Link a social account for sign-in',
+        social_change: 'Change to another linked social account',
         social_remove: 'Remove a linked social account',
         authenticator_app: 'Set up a new authenticator app for multi-factor authentication',
         authenticator_app_replace: 'Replace your existing authenticator app with a new one',

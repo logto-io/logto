@@ -209,6 +209,7 @@ const sign_in_exp = {
         username: '更新你的用户名',
         password: '设置新密码',
         social: '关联社交账号用于登录',
+        social_change: 'Change to another linked social account',
         social_remove: '移除已关联的社交账号',
         authenticator_app: '设置新的身份验证器应用以进行多因素认证',
         authenticator_app_replace: '用新的身份验证器应用替换你现有的身份验证器应用',

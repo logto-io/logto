@@ -28,6 +28,71 @@ export default function identitiesRoutes<T extends UserRouter>(
     socials: { upsertSocialTokenSetSecret },
   } = libraries;
 
+  type LinkSocialIdentityCoreParams = {
+    userId: string;
+    newIdentifierVerificationRecordId: string;
+    allowReplace: boolean;
+    appendDataHookContext: (event: string, context: Record<string, unknown>) => void;
+    getAppInsightsContext: () => Partial<Record<string, unknown>>;
+  };
+
+  /**
+   * Core logic for linking a new social identity that is shared between the
+   * POST (add) and PUT (replace) endpoints. Auth & permissions are checked
+   * by the callers before invoking this function.
+   */
+  const linkSocialIdentityCore = async ({
+    userId,
+    newIdentifierVerificationRecordId,
+    allowReplace,
+    appendDataHookContext,
+    getAppInsightsContext,
+  }: LinkSocialIdentityCoreParams) => {
+    const newVerificationRecord = await buildVerificationRecordByIdAndType({
+      type: VerificationType.Social,
+      id: newIdentifierVerificationRecordId,
+      queries,
+      libraries,
+    });
+    assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
+
+    const {
+      socialIdentity: { target, userInfo },
+    } = await newVerificationRecord.toUserProfile();
+
+    await checkIdentifierCollision({ identity: { target, id: userInfo.id } }, userId);
+
+    const user = await findUserById(userId);
+
+    if (!allowReplace) {
+      assertThat(!user.identities[target], 'user.identity_already_in_use');
+    }
+
+    const updatedUser = await updateUserById(userId, {
+      identities: {
+        ...user.identities,
+        [target]: {
+          userId: userInfo.id,
+          details: userInfo,
+        },
+      },
+    });
+
+    appendDataHookContext('User.Data.Updated', { user: updatedUser });
+
+    const tokenSetSecret = await newVerificationRecord.getTokenSetSecret();
+
+    if (tokenSetSecret) {
+      // Upsert token set secret should not break the normal social link flow
+      await trySafe(
+        async () => upsertSocialTokenSetSecret(user.id, tokenSetSecret),
+        (error) => {
+          void appInsights.trackException(error, getAppInsightsContext());
+        }
+      );
+    }
+  };
+
   router.post(
     `${accountApiPrefix}/identities`,
     koaGuard({
@@ -42,60 +107,60 @@ export default function identitiesRoutes<T extends UserRouter>(
         identityVerified,
         new RequestError({ code: 'verification_record.permission_denied', status: 401 })
       );
-      const { newIdentifierVerificationRecordId } = ctx.guard.body;
-      const { fields } = ctx.accountCenter;
       assertThat(
-        fields.social === AccountCenterControlValue.Edit,
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
+      assertThat(
+        ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
       );
 
-      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
-
-      // Check new identifier
-      const newVerificationRecord = await buildVerificationRecordByIdAndType({
-        type: VerificationType.Social,
-        id: newIdentifierVerificationRecordId,
-        queries,
-        libraries,
+      await linkSocialIdentityCore({
+        userId,
+        newIdentifierVerificationRecordId: ctx.guard.body.newIdentifierVerificationRecordId,
+        allowReplace: false,
+        // @ts-expect-error - `appendDataHookContext` has a complex generic signature
+        appendDataHookContext: ctx.appendDataHookContext,
+        getAppInsightsContext: () => buildAppInsightsTelemetry(ctx),
       });
-      assertThat(newVerificationRecord.isVerified, 'verification_record.not_found');
-
-      const {
-        socialIdentity: { target, userInfo },
-      } = await newVerificationRecord.toUserProfile();
-
-      await checkIdentifierCollision({ identity: { target, id: userInfo.id } }, userId);
-
-      const user = await findUserById(userId);
-
-      assertThat(!user.identities[target], 'user.identity_already_in_use');
-
-      const updatedUser = await updateUserById(userId, {
-        identities: {
-          ...user.identities,
-          [target]: {
-            userId: userInfo.id,
-            details: userInfo,
-          },
-        },
-      });
-
-      ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
-
-      const tokenSetSecret = await newVerificationRecord.getTokenSetSecret();
-
-      if (tokenSetSecret) {
-        // Upsert token set secret should not break the normal social link flow
-        await trySafe(
-          async () => upsertSocialTokenSetSecret(user.id, tokenSetSecret),
-          (error) => {
-            void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
-          }
-        );
-      }
-
       ctx.status = 204;
+      return next();
+    }
+  );
 
+  router.put(
+    `${accountApiPrefix}/identities`,
+    koaGuard({
+      body: z.object({
+        newIdentifierVerificationRecordId: z.string(),
+      }),
+      status: [204, 400, 401],
+    }),
+    async (ctx, next) => {
+      const { id: userId, scopes, identityVerified } = ctx.auth;
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
+      assertThat(
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
+      assertThat(
+        ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
+        'account_center.field_not_editable'
+      );
+
+      await linkSocialIdentityCore({
+        userId,
+        newIdentifierVerificationRecordId: ctx.guard.body.newIdentifierVerificationRecordId,
+        allowReplace: true,
+        // @ts-expect-error - `appendDataHookContext` has a complex generic signature
+        appendDataHookContext: ctx.appendDataHookContext,
+        getAppInsightsContext: () => buildAppInsightsTelemetry(ctx),
+      });
+      ctx.status = 204;
       return next();
     }
   );
@@ -119,7 +184,10 @@ export default function identitiesRoutes<T extends UserRouter>(
         'account_center.field_not_editable'
       );
 
-      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
+      assertThat(
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
 
       const [user, ssoIdentities] = await Promise.all([
         findUserById(userId),

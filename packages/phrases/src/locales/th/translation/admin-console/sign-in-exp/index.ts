@@ -218,6 +218,7 @@ const sign_in_exp = {
         username: 'อัปเดตชื่อผู้ใช้ของคุณ',
         password: 'ตั้งรหัสผ่านใหม่',
         social: 'เชื่อมโยงบัญชีโซเชียลเพื่อใช้ลงชื่อเข้าใช้',
+        social_change: 'Change to another linked social account',
         social_remove: 'ลบบัญชีโซเชียลที่เชื่อมโยงแล้ว',
         authenticator_app: 'ตั้งค่าแอปยืนยันตัวตนใหม่สำหรับการยืนยันตัวตนหลายปัจจัย',
         authenticator_app_replace: 'แทนที่แอปยืนยันตัวตนที่มีอยู่ของคุณด้วยแอปใหม่',

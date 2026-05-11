@@ -364,6 +364,29 @@
             "description": "The identity was added successfully."
           }
         }
+      },
+      "put": {
+        "operationId": "ReplaceUserIdentity",
+        "summary": "Replace a user identity",
+        "description": "Replace (upsert) an identity (social identity) for the user. Unlike POST, this allows replacing an existing identity for the same social target. A logto-verification-id header is required for checking sensitive permissions, and a verification record for the social identity is required.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "newIdentifierVerificationRecordId": {
+                    "description": "The identifier verification record ID for the new social identity ownership verification."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The identity was replaced successfully."
+          }
+        }
       }
     },
     "/api/my-account/identities/{target}": {

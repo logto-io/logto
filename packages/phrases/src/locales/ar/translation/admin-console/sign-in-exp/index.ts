@@ -217,6 +217,7 @@ const sign_in_exp = {
         username: 'قم بتحديث اسم المستخدم الخاص بك',
         password: 'عين كلمة مرور جديدة',
         social: 'اربط حسابًا اجتماعيًا لتسجيل الدخول',
+        social_change: 'Change to another linked social account',
         social_remove: 'أزل حسابًا اجتماعيًا مرتبطًا',
         authenticator_app: 'قم بإعداد تطبيق مصادق جديد للمصادقة متعددة العوامل',
         authenticator_app_replace: 'Replace your existing authenticator app with a new one',

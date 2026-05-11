@@ -215,6 +215,10 @@ const Main = () => {
       <Route path={verifiedActionRoute} element={<VerifiedAction />} />
       <Route path={`${socialRoutePrefix}/:connectorId`} element={<SocialFlow mode="add" />} />
       <Route
+        path={`${socialRoutePrefix}/:connectorId/change`}
+        element={<SocialFlow mode="change" />}
+      />
+      <Route
         path={`${socialRoutePrefix}/:connectorId/remove`}
         element={<SocialFlow mode="remove" />}
       />

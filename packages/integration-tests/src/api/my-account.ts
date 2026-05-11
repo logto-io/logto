@@ -65,6 +65,16 @@ export const updateIdentities = async (
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
 
+export const replaceIdentity = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  newIdentifierVerificationRecordId: string
+) =>
+  api.put('api/my-account/identities', {
+    json: { newIdentifierVerificationRecordId },
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+
 export const deleteIdentity = async (
   api: KyInstance,
   target: string,

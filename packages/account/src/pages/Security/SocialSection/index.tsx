@@ -9,7 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import { layoutClassNames } from '@ac/constants/layout';
-import { getSocialAddRoute, getSocialRemoveRoute } from '@ac/constants/routes';
+import {
+  getSocialAddRoute,
+  getSocialChangeRoute,
+  getSocialRemoveRoute,
+} from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { hasVisibleSocialSection } from '@ac/utils/security-page';
 import {
@@ -139,24 +143,41 @@ const SocialSection = () => {
                 </div>
                 {socialControl === AccountCenterControlValue.Edit && (
                   <div className={styles.actions}>
-                    <button
-                      type="button"
-                      className={`${styles.actionButton} ${identity ? styles.removeButton : ''}`}
-                      onClick={() => {
-                        setPendingReturn(getPendingReturn() ?? currentPageUrl);
-
-                        if (identity) {
-                          setSelectedConnectorId(connector.id);
-                          return;
-                        }
-
-                        navigate(getSocialAddRoute(connector.id));
-                      }}
-                    >
-                      {identity
-                        ? t('account_center.security.remove')
-                        : t('account_center.security.add')}
-                    </button>
+                    {identity ? (
+                      <>
+                        <button
+                          type="button"
+                          className={styles.actionButton}
+                          onClick={() => {
+                            setPendingReturn(getPendingReturn() ?? currentPageUrl);
+                            navigate(getSocialChangeRoute(connector.id));
+                          }}
+                        >
+                          {t('account_center.security.change')}
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.actionButton} ${styles.removeButton}`}
+                          onClick={() => {
+                            setPendingReturn(getPendingReturn() ?? currentPageUrl);
+                            setSelectedConnectorId(connector.id);
+                          }}
+                        >
+                          {t('account_center.security.remove')}
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        className={styles.actionButton}
+                        onClick={() => {
+                          setPendingReturn(getPendingReturn() ?? currentPageUrl);
+                          navigate(getSocialAddRoute(connector.id));
+                        }}
+                      >
+                        {t('account_center.security.add')}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

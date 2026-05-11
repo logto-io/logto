@@ -4,10 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import { linkSocialIdentity, verifySocialVerification } from '@ac/apis/social';
+import {
+  linkSocialIdentity,
+  replaceSocialIdentity,
+  verifySocialVerification,
+} from '@ac/apis/social';
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
-import { getSocialAddRoute, getSocialCallbackRoute } from '@ac/constants/routes';
+import {
+  getSocialAddRoute,
+  getSocialCallbackRoute,
+  getSocialChangeRoute,
+} from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { accountCenterBasePath } from '@ac/utils/account-center-route';
@@ -34,6 +42,7 @@ const SocialCallback = () => {
   } = useContext(PageContext);
   const verifySocialVerificationRequest = useApi(verifySocialVerification);
   const linkSocialIdentityRequest = useApi(linkSocialIdentity);
+  const replaceSocialIdentityRequest = useApi(replaceSocialIdentity);
   const handleError = useErrorHandler();
   const [startedConnectorId, setStartedConnectorId] = useState<string>();
 
@@ -43,6 +52,7 @@ const SocialCallback = () => {
     [connectorId, experienceSettings?.socialConnectors]
   );
   const connectorName = connector ? getLocalizedConnectorName(connector, language) : undefined;
+  const storedSocialFlow = connectorId ? accountStorage.socialFlow.get(connectorId) : undefined;
 
   const redirectToReverify = useCallback(() => {
     if (!connectorId) {
@@ -52,8 +62,13 @@ const SocialCallback = () => {
     setStartedConnectorId(undefined);
     setVerificationId(undefined);
     setToast(t('account_center.verification.verification_required'));
-    navigate(getSocialAddRoute(connectorId), { replace: true });
-  }, [connectorId, navigate, setToast, setVerificationId, t]);
+    navigate(
+      storedSocialFlow?.mode === 'change'
+        ? getSocialChangeRoute(connectorId)
+        : getSocialAddRoute(connectorId),
+      { replace: true }
+    );
+  }, [connectorId, navigate, setToast, setVerificationId, storedSocialFlow?.mode, t]);
 
   const finishLinkFlow = useCallback(async () => {
     if (!connectorId || !connectorName) {
@@ -77,8 +92,6 @@ const SocialCallback = () => {
     }
 
     setStartedConnectorId(connectorId);
-
-    const storedSocialFlow = accountStorage.socialFlow.get(connectorId);
 
     if (storedSocialFlow?.status !== 'pending') {
       finalizeSocialFlowFailure({
@@ -146,16 +159,29 @@ const SocialCallback = () => {
       accountStorage.socialFlow.setVerified(connectorId, {
         verificationRecordId: storedSocialFlow.verificationRecordId,
         expiresAt: storedSocialFlow.expiresAt,
+        mode: storedSocialFlow.mode,
       });
 
-      const [linkError] = await linkSocialIdentityRequest(
-        verificationId,
-        storedSocialFlow.verificationRecordId
-      );
+      if (storedSocialFlow.mode === 'change') {
+        const [error] = await replaceSocialIdentityRequest(
+          verificationId,
+          storedSocialFlow.verificationRecordId
+        );
 
-      if (linkError) {
-        await handleCallbackError(linkError, false);
-        return;
+        if (error) {
+          await handleCallbackError(error, false);
+          return;
+        }
+      } else {
+        const [error] = await linkSocialIdentityRequest(
+          verificationId,
+          storedSocialFlow.verificationRecordId
+        );
+
+        if (error) {
+          await handleCallbackError(error, false);
+          return;
+        }
       }
 
       await finishLinkFlow();
@@ -168,11 +194,13 @@ const SocialCallback = () => {
     finishLinkFlow,
     handleError,
     linkSocialIdentityRequest,
+    replaceSocialIdentityRequest,
     navigate,
     redirectToReverify,
     searchParameters,
     setToast,
     startedConnectorId,
+    storedSocialFlow,
     verificationId,
     verifySocialVerificationRequest,
     t,

@@ -220,6 +220,7 @@ const sign_in_exp = {
         username: 'Обновите ваше имя пользователя',
         password: 'Установите новый пароль',
         social: 'Подключите социальный аккаунт для входа',
+        social_change: 'Change to another linked social account',
         social_remove: 'Удалите подключенный социальный аккаунт',
         authenticator_app:
           'Настройте новое приложение-аутентификатор для многофакторной аутентификации',

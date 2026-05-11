@@ -31,11 +31,13 @@ export type StoredSocialFlowRecord =
       verificationRecordId: string;
       expiresAt: string;
       state: string;
+      mode: 'add' | 'change';
     }
   | {
       status: 'verified';
       verificationRecordId: string;
       expiresAt: string;
+      mode: 'add' | 'change';
     };
 
 const storedVerificationRecordGuard = s.object({
@@ -54,11 +56,13 @@ const storedSocialFlowRecordGuard = s.union([
     verificationRecordId: s.string(),
     expiresAt: s.string(),
     state: s.string(),
+    mode: s.union([s.literal('add'), s.literal('change')]),
   }),
   s.object({
     status: s.literal('verified'),
     verificationRecordId: s.string(),
     expiresAt: s.string(),
+    mode: s.union([s.literal('add'), s.literal('change')]),
   }),
 ]);
 

@@ -17,6 +17,7 @@ describe('accountStorage', () => {
       verificationRecordId: 'pending-id',
       expiresAt,
       state: 'state-123',
+      mode: 'add',
     });
 
     expect(accountStorage.socialFlow.get('google')).toEqual({
@@ -24,17 +25,20 @@ describe('accountStorage', () => {
       verificationRecordId: 'pending-id',
       expiresAt,
       state: 'state-123',
+      mode: 'add',
     });
 
     accountStorage.socialFlow.setVerified('google', {
       verificationRecordId: 'verified-id',
       expiresAt,
+      mode: 'add',
     });
 
     expect(accountStorage.socialFlow.get('google')).toEqual({
       status: 'verified',
       verificationRecordId: 'verified-id',
       expiresAt,
+      mode: 'add',
     });
   });
 
@@ -43,6 +47,7 @@ describe('accountStorage', () => {
       verificationRecordId: 'expired-id',
       expiresAt: new Date(Date.now() - 60_000).toISOString(),
       state: 'expired-state',
+      mode: 'add',
     });
 
     expect(accountStorage.socialFlow.get('google')).toBeUndefined();

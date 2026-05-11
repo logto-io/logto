@@ -221,6 +221,7 @@ const sign_in_exp = {
         username: 'Aggiorna il tuo nome utente',
         password: 'Imposta una nuova password',
         social: 'Collega un account social per l’accesso',
+        social_change: 'Change to another linked social account',
         social_remove: 'Rimuovi un account social collegato',
         authenticator_app:
           "Configura una nuova app di autenticazione per l'autenticazione multifattore",
