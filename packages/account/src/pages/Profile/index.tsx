@@ -100,37 +100,37 @@ const getBuiltInProfileFieldValue = (
       return getFullnameValue(profile);
     }
     case 'familyName': {
-      return profile?.familyName;
+      return getPrimitiveValue(profile?.familyName);
     }
     case 'givenName': {
-      return profile?.givenName;
+      return getPrimitiveValue(profile?.givenName);
     }
     case 'middleName': {
-      return profile?.middleName;
+      return getPrimitiveValue(profile?.middleName);
     }
     case 'nickname': {
-      return profile?.nickname;
+      return getPrimitiveValue(profile?.nickname);
     }
     case 'preferredUsername': {
-      return profile?.preferredUsername;
+      return getPrimitiveValue(profile?.preferredUsername);
     }
     case 'profile': {
-      return profile?.profile;
+      return getPrimitiveValue(profile?.profile);
     }
     case 'website': {
-      return profile?.website;
+      return getPrimitiveValue(profile?.website);
     }
     case 'gender': {
-      return profile?.gender;
+      return getPrimitiveValue(profile?.gender);
     }
     case 'birthdate': {
-      return profile?.birthdate;
+      return getPrimitiveValue(profile?.birthdate);
     }
     case 'zoneinfo': {
-      return profile?.zoneinfo;
+      return getPrimitiveValue(profile?.zoneinfo);
     }
     case 'locale': {
-      return profile?.locale;
+      return getPrimitiveValue(profile?.locale);
     }
     case 'address': {
       return getAddressValue(profile?.address);
@@ -179,12 +179,12 @@ const getProfileFieldValue = (
 ): React.ReactNode | undefined => {
   if (fieldName === 'avatar') {
     return userInfo?.avatar ? (
-      <img className={styles.avatar} src={userInfo.avatar} alt={fieldName} />
+      <img className={styles.avatar} src={userInfo.avatar} alt="" />
     ) : undefined;
   }
 
   if (fieldName === 'name') {
-    return userInfo?.name;
+    return getPrimitiveValue(userInfo?.name);
   }
 
   if (
