@@ -368,7 +368,7 @@
       "put": {
         "operationId": "ReplaceMyAccountIdentity",
         "summary": "Replace a user identity",
-        "description": "Replace (upsert) an identity (social identity) for the user. Unlike POST, this allows replacing an existing identity for the same social target. A logto-verification-id header is required for checking sensitive permissions, and a verification record for the social identity is required.",
+        "description": "Replace (upsert) an identity (social identity) for the user. Creates the identity if absent, replaces it otherwise. Idempotent. Unlike POST, this allows replacing an existing identity for the same social target. When replacing with a different social user ID, previously stored third-party tokens for the old identity are cleared. A logto-verification-id header is required for checking sensitive permissions, and a verification record for the social identity is required.",
         "requestBody": {
           "content": {
             "application/json": {

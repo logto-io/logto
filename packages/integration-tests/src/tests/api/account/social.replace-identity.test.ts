@@ -7,6 +7,7 @@ import {
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
+import { getUserIdentity } from '#src/api/admin-user.js';
 import { updateConnectorConfig } from '#src/api/connector.js';
 import { getUserInfo, replaceIdentity, updateIdentities } from '#src/api/my-account.js';
 import {
@@ -160,6 +161,69 @@ describe('my-account (social replace identity)', () => {
         'different-social-user-id'
       );
       expect(updatedUserInfo.identities?.[mockSocialConnectorTarget]?.userId).not.toBe(firstUserId);
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
+    it('should remove stored tokens for the old identity after replacing it', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const firstTokenResponse = {
+        access_token: 'first_access_token',
+        expires_in: 3600,
+        scope: 'profile',
+      };
+
+      const { verificationRecordId: firstSocialVerificationId } =
+        await createSocialVerificationRecord(
+          api,
+          connectorIdMap.get(mockSocialConnectorId)!,
+          socialVerificationState,
+          socialVerificationRedirectUri,
+          firstTokenResponse.scope
+        );
+
+      await verifySocialAuthorization(api, firstSocialVerificationId, {
+        code: socialVerificationAuthorizationCode,
+        userId: 'first-social-user-id',
+        tokenResponse: firstTokenResponse,
+      });
+
+      const passwordVerificationId = await createVerificationRecordByPassword(api, password);
+      await updateIdentities(api, passwordVerificationId, firstSocialVerificationId);
+
+      const { tokenSecret } = await getUserIdentity(user.id, mockSocialConnectorTarget);
+      expect(tokenSecret?.identityId).toBe('first-social-user-id');
+      expect(tokenSecret?.metadata.scope).toBe(firstTokenResponse.scope);
+
+      const { verificationRecordId: secondSocialVerificationId } =
+        await createSocialVerificationRecord(
+          api,
+          connectorIdMap.get(mockSocialConnectorId)!,
+          socialVerificationState,
+          socialVerificationRedirectUri
+        );
+
+      await verifySocialAuthorization(api, secondSocialVerificationId, {
+        code: socialVerificationAuthorizationCode,
+        userId: 'second-social-user-id',
+      });
+
+      const replacePasswordVerificationId = await createVerificationRecordByPassword(api, password);
+      await replaceIdentity(api, replacePasswordVerificationId, secondSocialVerificationId);
+
+      const updatedUserInfo = await getUserInfo(api);
+      expect(updatedUserInfo.identities?.[mockSocialConnectorTarget]?.userId).toBe(
+        'second-social-user-id'
+      );
+
+      const { tokenSecret: updatedTokenSecret } = await getUserIdentity(
+        user.id,
+        mockSocialConnectorTarget
+      );
+      expect(updatedTokenSecret).toBeUndefined();
 
       await deleteDefaultTenantUser(user.id);
     });

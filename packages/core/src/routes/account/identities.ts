@@ -5,6 +5,7 @@ import { trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import type { HookContextManager } from '#src/libraries/hook/context-manager.js';
 import { buildVerificationRecordByIdAndType } from '#src/libraries/verification.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -32,7 +33,7 @@ export default function identitiesRoutes<T extends UserRouter>(
     userId: string;
     newIdentifierVerificationRecordId: string;
     allowReplace: boolean;
-    appendDataHookContext: (event: string, context: Record<string, unknown>) => void;
+    appendDataHookContext: HookContextManager['appendDataHookContext'];
     getAppInsightsContext: () => Partial<Record<string, unknown>>;
   };
 
@@ -99,7 +100,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       body: z.object({
         newIdentifierVerificationRecordId: z.string(),
       }),
-      status: [204, 400, 401],
+      status: [204, 400, 401, 422],
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
@@ -111,13 +112,15 @@ export default function identitiesRoutes<T extends UserRouter>(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
       );
-      assertThat(scopes.has(UserScope.Identities), 'auth.unauthorized');
+      assertThat(
+        scopes.has(UserScope.Identities),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
 
       await linkSocialIdentityCore({
         userId,
         newIdentifierVerificationRecordId: ctx.guard.body.newIdentifierVerificationRecordId,
         allowReplace: false,
-        // @ts-expect-error - `appendDataHookContext` has a complex generic signature
         appendDataHookContext: ctx.appendDataHookContext,
         getAppInsightsContext: () => buildAppInsightsTelemetry(ctx),
       });
@@ -153,7 +156,6 @@ export default function identitiesRoutes<T extends UserRouter>(
         userId,
         newIdentifierVerificationRecordId: ctx.guard.body.newIdentifierVerificationRecordId,
         allowReplace: true,
-        // @ts-expect-error - `appendDataHookContext` has a complex generic signature
         appendDataHookContext: ctx.appendDataHookContext,
         getAppInsightsContext: () => buildAppInsightsTelemetry(ctx),
       });
