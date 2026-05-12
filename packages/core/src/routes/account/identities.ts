@@ -21,7 +21,6 @@ export default function identitiesRoutes<T extends UserRouter>(
 ) {
   const {
     users: { updateUserById, findUserById, deleteUserIdentity },
-    secrets: { deleteSocialTokenSetSecretByUserIdAndTarget },
     userSsoIdentities,
   } = queries;
 
@@ -93,7 +92,7 @@ export default function identitiesRoutes<T extends UserRouter>(
         }
       );
     } else if (allowReplace) {
-      await deleteSocialTokenSetSecretByUserIdAndTarget(user.id, target);
+      await queries.secrets.deleteSocialTokenSetSecretByUserIdAndTarget(user.id, target);
     }
   };
 
