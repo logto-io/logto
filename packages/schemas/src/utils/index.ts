@@ -3,3 +3,4 @@ export * from './role.js';
 export * from './management-api.js';
 export * from './domain.js';
 export * from './oidc-private-key.js';
+export * from './custom-ui-csp.js';

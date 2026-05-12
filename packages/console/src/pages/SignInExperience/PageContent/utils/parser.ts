@@ -14,6 +14,7 @@ import {
   type SignInExperiencePageManagedData,
   type SignInExperienceForm,
   type SignUpForm,
+  type CustomUiCspForm,
 } from '../../types';
 
 /**
@@ -115,11 +116,53 @@ const normalizeSignUpProfileFields = (
   signUpProfileFields: SignInExperience['signUpProfileFields']
 ): NonNullable<SignInExperience['signUpProfileFields']> => signUpProfileFields ?? [];
 
+const customUiCspDirectives = Object.freeze(['scriptSrc', 'connectSrc'] as const);
+
+const createDefaultCustomUiCspForm = (): CustomUiCspForm => ({
+  scriptSrc: [],
+  connectSrc: [],
+});
+
+const normalizeCustomUiCspSources = (sources?: string[]): string[] =>
+  sources?.map((source) => source.trim()).filter(Boolean) ?? [];
+
+const normalizeCustomUiCspForForm = (
+  customUiCsp?: SignInExperience['customUiCsp']
+): CustomUiCspForm => ({
+  ...createDefaultCustomUiCspForm(),
+  ...Object.fromEntries(
+    customUiCspDirectives.map((directive) => [
+      directive,
+      normalizeCustomUiCspSources(customUiCsp?.[directive]),
+    ])
+  ),
+});
+
+const normalizeCustomUiCspForSubmit = (
+  customUiCsp?: SignInExperienceForm['customUiCsp']
+): SignInExperiencePageManagedData['customUiCsp'] =>
+  customUiCspDirectives.reduce<SignInExperiencePageManagedData['customUiCsp']>(
+    (normalizedCustomUiCsp, directive) => {
+      const sources = normalizeCustomUiCspSources(customUiCsp?.[directive]);
+
+      if (sources.length === 0) {
+        return normalizedCustomUiCsp;
+      }
+
+      return {
+        ...normalizedCustomUiCsp,
+        [directive]: sources,
+      };
+    },
+    {}
+  );
+
 export const sieFormDataParser = {
   fromSignInExperience: (data: SignInExperience): SignInExperienceForm => {
     const {
       signUp,
       customCss,
+      customUiCsp,
       branding,
       // Start: Remove the omitted fields from the data
       passwordPolicy,
@@ -140,6 +183,7 @@ export const sieFormDataParser = {
       hasConfiguredSignUpProfileFields: rest.signUpProfileFields !== null,
       createAccountEnabled: rest.signInMode !== SignInMode.SignIn,
       customCss: customCss ?? undefined,
+      customUiCsp: normalizeCustomUiCspForForm(customUiCsp),
       socialSignIn: {
         automaticAccountLinking: false,
         skipRequiredIdentifiers: false,
@@ -159,13 +203,17 @@ export const sieFormDataParser = {
   },
   toSignInExperience: (
     formData: SignInExperienceForm,
-    { isCloud = true }: { isCloud?: boolean } = {}
+    {
+      isCloud = true,
+      isCustomUiCspEnabled = false,
+    }: { isCloud?: boolean; isCustomUiCspEnabled?: boolean } = {}
   ): SignInExperiencePageManagedData => {
     const {
       branding,
       createAccountEnabled,
       signUp,
       customCss,
+      customUiCsp,
       hasConfiguredSignUpProfileFields,
       socialSignIn,
       hideLogtoBranding,
@@ -183,6 +231,11 @@ export const sieFormDataParser = {
       socialSignIn,
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
       customCss: customCss?.length ? customCss : null,
+      ...conditional(
+        isCustomUiCspEnabled && {
+          customUiCsp: normalizeCustomUiCspForSubmit(customUiCsp),
+        }
+      ),
       ...conditional(isCloud && { hideLogtoBranding }),
     };
   },
@@ -210,10 +263,14 @@ export const sieFormDataParser = {
  */
 export const signInExperienceToUpdatedDataParser = (
   data: SignInExperience,
-  { isCloud = true }: { isCloud?: boolean } = {}
+  {
+    isCloud = true,
+    isCustomUiCspEnabled = false,
+  }: { isCloud?: boolean; isCustomUiCspEnabled?: boolean } = {}
 ): SignInExperiencePageManagedData => {
   const {
     signUp,
+    customUiCsp,
     // Start: Remove the omitted fields from the data
     mfa,
     adaptiveMfa,
@@ -233,6 +290,11 @@ export const signInExperienceToUpdatedDataParser = (
       secondaryIdentifiers: signUp.secondaryIdentifiers ?? [],
     },
     signUpProfileFields: rest.signUpProfileFields,
+    ...conditional(
+      isCustomUiCspEnabled && {
+        customUiCsp: normalizeCustomUiCspForSubmit(normalizeCustomUiCspForForm(customUiCsp)),
+      }
+    ),
     ...conditional(isCloud && { hideLogtoBranding }),
   };
 };
