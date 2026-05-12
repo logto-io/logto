@@ -94,7 +94,13 @@ export default function identitiesRoutes<T extends UserRouter>(
         }
       );
     } else if (allowReplace && existingIdentity && existingIdentity.userId !== userInfo.id) {
-      await queries.secrets.deleteSocialTokenSetSecretByUserIdAndTarget(user.id, target);
+      // Delete token set secret should not break the normal social link flow
+      await trySafe(
+        async () => queries.secrets.deleteSocialTokenSetSecretByUserIdAndTarget(user.id, target),
+        (error) => {
+          void appInsights.trackException(error, getAppInsightsContext());
+        }
+      );
     }
   };
 

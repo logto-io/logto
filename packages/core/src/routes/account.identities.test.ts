@@ -158,6 +158,24 @@ describe('account social identity replacement', () => {
     expect(upsertSocialTokenSetSecret).not.toHaveBeenCalled();
   });
 
+  it('does not fail identity replacement when clearing the stored token secret fails', async () => {
+    const {
+      accountIdentitiesRequest,
+      deleteSocialTokenSetSecretByUserIdAndTarget,
+      upsertSocialTokenSetSecret,
+    } = createAccountIdentitiesRequester();
+    deleteSocialTokenSetSecretByUserIdAndTarget.mockRejectedValue(new Error('database error'));
+
+    await expect(
+      accountIdentitiesRequest
+        .put('/my-account/identities')
+        .send({ newIdentifierVerificationRecordId: 'verification-record-id' })
+    ).resolves.toHaveProperty('status', 204);
+
+    expect(deleteSocialTokenSetSecretByUserIdAndTarget).toHaveBeenCalledWith('foo', 'github');
+    expect(upsertSocialTokenSetSecret).not.toHaveBeenCalled();
+  });
+
   it('keeps the stored token secret when relinking the same social user and the verification has no tokens', async () => {
     const {
       accountIdentitiesRequest,
