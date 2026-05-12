@@ -34,20 +34,14 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
   ): Promise<[totalCount: number, userIds: string[]]> {
     const { fields } = convertToIdentifiers(OrganizationUserRelations, true);
 
-    const [{ count }, rows] = await Promise.all([
-      this.pool.one<{ count: string }>(sql`
-        select count(*)
-        from ${this.table}
-        where ${fields.organizationId} = ${organizationId}
-      `),
-      this.pool.any<{ userId: string }>(sql`
-        select ${fields.userId}
-        from ${this.table}
-        where ${fields.organizationId} = ${organizationId}
-      `),
-    ]);
+    const rows = await this.pool.any<{ userId: string }>(sql`
+      select ${fields.userId}
+      from ${this.table}
+      where ${fields.organizationId} = ${organizationId}
+    `);
 
-    return [Number(count), rows.map((row) => row.userId)];
+    const userIds = rows.map((row) => row.userId);
+    return [userIds.length, userIds];
   }
 
   /**

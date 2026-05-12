@@ -131,10 +131,9 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'put',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
-    // User was already added by POST above, so no membership change
-    hookPayload: ({ userId: _userId }) => ({
+    hookPayload: ({ userId }) => ({
       organizationId: expect.any(String),
-      addedUserIds: [],
+      addedUserIds: [userId],
       removedUserIds: [],
     }),
   },

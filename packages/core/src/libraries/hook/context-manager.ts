@@ -51,8 +51,8 @@ type UserContext = {
 type DataHookContextMap = {
   'Organization.Membership.Updated': {
     organizationId: string;
-    addedUserIds?: string[] | undefined;
-    removedUserIds?: string[] | undefined;
+    addedUserIds?: string[];
+    removedUserIds?: string[];
   };
   'User.Created': UserContext;
   'User.Data.Updated': UserContext;

@@ -59,8 +59,12 @@ export default function userRoutes(
     async (ctx, next) => {
       const {
         params: { id },
-        body: { userIds },
+        body: { userIds: rawUserIds },
       } = ctx.guard;
+
+      // Deduplicate up-front to avoid over-consuming quota and emitting duplicate
+      // IDs in the webhook context.
+      const userIds = [...new Set<string>(rawUserIds)];
 
       // Determine which of the requested users are not yet members so quota and
       // the webhook delta only reflect truly-new additions.
@@ -130,7 +134,11 @@ export default function userRoutes(
 
       ctx.status = 204;
 
-      const addedUserIds = userIds.filter((userId) => !currentUserIds.has(userId));
+      // For a PUT (replace) operation the caller is explicitly declaring the full desired
+      // membership set, so all users in the new set are reported as added regardless of
+      // whether they were already members. Only users removed from the previous set are
+      // reported as removed.
+      const addedUserIds = userIds;
       const removedUserIds = [...currentUserIds].filter((userId) => !nextUserIds.has(userId));
 
       // Trigger hook event
