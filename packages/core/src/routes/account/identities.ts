@@ -65,8 +65,10 @@ export default function identitiesRoutes<T extends UserRouter>(
 
     const user = await findUserById(userId);
 
+    const existingIdentity = user.identities[target];
+
     if (!allowReplace) {
-      assertThat(!user.identities[target], 'user.identity_already_in_use');
+      assertThat(!existingIdentity, 'user.identity_already_in_use');
     }
 
     const updatedUser = await updateUserById(userId, {
@@ -91,7 +93,7 @@ export default function identitiesRoutes<T extends UserRouter>(
           void appInsights.trackException(error, getAppInsightsContext());
         }
       );
-    } else if (allowReplace) {
+    } else if (allowReplace && existingIdentity && existingIdentity.userId !== userInfo.id) {
       await queries.secrets.deleteSocialTokenSetSecretByUserIdAndTarget(user.id, target);
     }
   };

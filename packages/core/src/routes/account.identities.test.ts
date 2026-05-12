@@ -32,14 +32,14 @@ const buildUser = () => ({
   mfaVerifications: [],
 });
 
-const createAccountIdentitiesRequester = () => {
+const createAccountIdentitiesRequester = (socialUserInfoId = 'new-github-user') => {
   const findActiveVerificationRecordById = jest.fn(async (id: string) => ({
     id,
     userId: null,
     data: {
       type: VerificationType.Social,
       connectorId: 'github',
-      socialUserInfo: { id: 'new-github-user' },
+      socialUserInfo: { id: socialUserInfoId },
     },
     expiresAt: Date.now() + 60_000,
   }));
@@ -141,7 +141,7 @@ describe('account social identity unlink guard', () => {
 });
 
 describe('account social identity replacement', () => {
-  it('clears the stored token secret when the replacement verification has no tokens', async () => {
+  it('clears the stored token secret when replacing with a different social user and the verification has no tokens', async () => {
     const {
       accountIdentitiesRequest,
       deleteSocialTokenSetSecretByUserIdAndTarget,
@@ -155,6 +155,23 @@ describe('account social identity replacement', () => {
     ).resolves.toHaveProperty('status', 204);
 
     expect(deleteSocialTokenSetSecretByUserIdAndTarget).toHaveBeenCalledWith('foo', 'github');
+    expect(upsertSocialTokenSetSecret).not.toHaveBeenCalled();
+  });
+
+  it('keeps the stored token secret when relinking the same social user and the verification has no tokens', async () => {
+    const {
+      accountIdentitiesRequest,
+      deleteSocialTokenSetSecretByUserIdAndTarget,
+      upsertSocialTokenSetSecret,
+    } = createAccountIdentitiesRequester('github-user');
+
+    await expect(
+      accountIdentitiesRequest
+        .put('/my-account/identities')
+        .send({ newIdentifierVerificationRecordId: 'verification-record-id' })
+    ).resolves.toHaveProperty('status', 204);
+
+    expect(deleteSocialTokenSetSecretByUserIdAndTarget).not.toHaveBeenCalled();
     expect(upsertSocialTokenSetSecret).not.toHaveBeenCalled();
   });
 });
