@@ -108,15 +108,12 @@ const Main = () => {
       return;
     }
 
+    const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+
     if (isSilentAuthFailed && accountCenterSettings?.enabled) {
       // Prompt=none failed (no valid OIDC session); fall back to an explicit login.
-      const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
       void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
-      return;
-    }
-
-    if (!isAuthenticated && accountCenterSettings?.enabled) {
-      const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
+    } else if (!isAuthenticated && accountCenterSettings?.enabled) {
       setRouteRestore(window.location.pathname);
       void signIn({ redirectUri, extraParams });
     }
@@ -132,13 +129,10 @@ const Main = () => {
   ]);
 
   useEffect(() => {
-    if (
-      isInCallback ||
-      isSilentAuthFailed ||
-      isInitialAuthLoading ||
-      !isAuthenticated ||
-      isLoadingUserInfo
-    ) {
+    if (isInCallback || isSilentAuthFailed) {
+      return;
+    }
+    if (isInitialAuthLoading || !isAuthenticated || isLoadingUserInfo) {
       return;
     }
 
