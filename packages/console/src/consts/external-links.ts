@@ -62,6 +62,7 @@ export const security = '/security';
 export const captcha = '/security/captcha';
 export const recaptchaEnterpriseBringYourUi =
   '/security/captcha/recaptcha-enterprise#bring-your-ui';
+export const turnstileBringYourUi = '/security/captcha/turnstile#bring-your-ui';
 export const sentinel = '/security/identifier-lockout';
 export const emailBlocklist = '/security/blocklist';
 export const passwordPolicy = '/security/password-policy';

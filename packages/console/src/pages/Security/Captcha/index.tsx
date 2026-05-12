@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { z } from 'zod';
 
 import { FormCardSkeleton } from '@/components/FormCard';
-import { recaptchaEnterpriseBringYourUi } from '@/consts/external-links';
+import { recaptchaEnterpriseBringYourUi, turnstileBringYourUi } from '@/consts/external-links';
 import InlineNotification from '@/ds-components/InlineNotification';
 import TextLink from '@/ds-components/TextLink';
 import { type RequestError } from '@/hooks/use-api';
@@ -31,6 +31,10 @@ function Captcha() {
   const guideType = z.nativeEnum(CaptchaType).safeParse(guideId);
   const navigate = useNavigate();
   const shouldShowCustomUiCaptchaNotice = Boolean(signInExpData?.customUiAssets);
+  const customUiCaptchaGuideLink =
+    data?.config.type === CaptchaType.Turnstile
+      ? turnstileBringYourUi
+      : recaptchaEnterpriseBringYourUi;
 
   if (guideType.success) {
     return (
@@ -53,7 +57,7 @@ function Captcha() {
             components={{
               a: (
                 <TextLink
-                  href={getDocumentationUrl(recaptchaEnterpriseBringYourUi)}
+                  href={getDocumentationUrl(customUiCaptchaGuideLink)}
                   targetBlank="noopener"
                 />
               ),
