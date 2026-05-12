@@ -21,6 +21,7 @@ export default function identitiesRoutes<T extends UserRouter>(
 ) {
   const {
     users: { updateUserById, findUserById, deleteUserIdentity },
+    secrets: { deleteSocialTokenSetSecretByUserIdAndTarget },
     userSsoIdentities,
   } = queries;
 
@@ -91,6 +92,8 @@ export default function identitiesRoutes<T extends UserRouter>(
           void appInsights.trackException(error, getAppInsightsContext());
         }
       );
+    } else if (allowReplace) {
+      await deleteSocialTokenSetSecretByUserIdAndTarget(user.id, target);
     }
   };
 
