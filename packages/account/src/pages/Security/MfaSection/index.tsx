@@ -112,11 +112,7 @@ const MfaContent = ({
         <div className={styles.toggleRow}>
           <div className={styles.toggleInfo}>
             <div className={styles.toggleTitle}>
-              {t(
-                isTwoStepEnabled
-                  ? 'account_center.security.turn_off_2_step_verification'
-                  : 'account_center.security.turn_on_2_step_verification'
-              )}
+              {t('account_center.security.two_step_verification')}
             </div>
             <div className={styles.toggleDescription}>
               {t('account_center.security.turn_on_2_step_verification_description')}
