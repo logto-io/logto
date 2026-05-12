@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  CustomUiCspSourceValidationErrorCode,
   hasCustomUiCspSources,
   normalizeCustomUiCsp,
   normalizeCustomUiCspSourceExpression,
@@ -20,26 +21,38 @@ describe('normalizeCustomUiCspSourceExpression()', () => {
   });
 
   it.each([
-    ['scriptSrc', 'wss://events.example.com', 'Unsupported scheme'],
-    ['connectSrc', 'http://example.com', 'Unsupported scheme'],
-    ['scriptSrc', 'https://example.com; report-uri /csp', 'Semicolons are not allowed'],
-    ['scriptSrc', "'unsafe-inline'", 'CSP keywords are not supported'],
+    [
+      'scriptSrc',
+      'wss://events.example.com',
+      CustomUiCspSourceValidationErrorCode.UnsupportedScheme,
+    ],
+    ['connectSrc', 'http://example.com', CustomUiCspSourceValidationErrorCode.UnsupportedScheme],
+    [
+      'scriptSrc',
+      'https://example.com; report-uri /csp',
+      CustomUiCspSourceValidationErrorCode.SemicolonNotAllowed,
+    ],
+    ['scriptSrc', "'unsafe-inline'", CustomUiCspSourceValidationErrorCode.CspKeywordNotSupported],
     [
       'scriptSrc',
       'https://user@example.com',
-      'Credentials, query strings, and fragments are not allowed',
+      CustomUiCspSourceValidationErrorCode.DisallowedUrlParts,
     ],
     [
       'scriptSrc',
       'https://example.com?foo=bar',
-      'Credentials, query strings, and fragments are not allowed',
+      CustomUiCspSourceValidationErrorCode.DisallowedUrlParts,
     ],
-    ['connectSrc', 'https://*.*.example.com', 'Malformed wildcard host'],
-    ['connectSrc', 'https://example', 'Malformed host'],
-  ] as const)('rejects %s source %s', (directive, source, reason) => {
+    [
+      'connectSrc',
+      'https://*.*.example.com',
+      CustomUiCspSourceValidationErrorCode.MalformedWildcardHost,
+    ],
+    ['connectSrc', 'https://example', CustomUiCspSourceValidationErrorCode.MalformedHost],
+  ] as const)('rejects %s source %s', (directive, source, code) => {
     expect(normalizeCustomUiCspSourceExpression(directive, source)).toEqual({
       isValid: false,
-      reason,
+      code,
     });
   });
 
@@ -55,7 +68,7 @@ describe('normalizeCustomUiCspSourceExpression()', () => {
       })
     ).toEqual({
       isValid: false,
-      reason: 'Unsupported scheme',
+      code: CustomUiCspSourceValidationErrorCode.UnsupportedScheme,
     });
   });
 });
@@ -87,12 +100,12 @@ describe('normalizeCustomUiCsp()', () => {
         {
           directive: 'scriptSrc',
           source: "'unsafe-inline'",
-          reason: 'CSP keywords are not supported',
+          code: CustomUiCspSourceValidationErrorCode.CspKeywordNotSupported,
         },
         {
           directive: 'connectSrc',
           source: 'https://example',
-          reason: 'Malformed host',
+          code: CustomUiCspSourceValidationErrorCode.MalformedHost,
         },
       ],
     });
