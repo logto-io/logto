@@ -37,6 +37,11 @@ export default function assetsServeRoutes<T extends AnonymousRouter>(
     const storage = buildUploadFile(storageProviderConfig);
     const objectKey = `${adminTenantId}/${userId}/${filename}`;
 
+    if (!storage.downloadFile) {
+      ctx.status = 500;
+      return next();
+    }
+
     try {
       const result = await storage.downloadFile(objectKey);
 
@@ -46,6 +51,7 @@ export default function assetsServeRoutes<T extends AnonymousRouter>(
       }
       ctx.set('Cache-Control', 'public, max-age=31536000, immutable');
       ctx.set('Cross-Origin-Resource-Policy', 'cross-origin');
+      ctx.set('X-Content-Type-Options', 'nosniff');
       ctx.status = 200;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
       ctx.body = Readable.fromWeb(result.body as any);
