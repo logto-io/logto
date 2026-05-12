@@ -39,6 +39,11 @@ type NormalizedDirectiveSources = {
   readonly errors: CustomUiCspSourceValidationError[];
 };
 
+type SourceNormalizationResult = {
+  readonly source: string;
+  readonly result: CustomUiCspSourceValidationResult;
+};
+
 export type NormalizeCustomUiCspResult = {
   readonly customUiCsp: CustomUiCsp;
   readonly errors: CustomUiCspSourceValidationError[];
@@ -157,32 +162,19 @@ const normalizeDirectiveSources = (
   directive: CustomUiCspDirective,
   sources: string[],
   options?: CustomUiCspValidationOptions
-): NormalizedDirectiveSources =>
-  sources.reduce<NormalizedDirectiveSources>(
-    ({ sources, errors }, source) => {
-      const result = normalizeCustomUiCspSourceExpression(directive, source, options);
+): NormalizedDirectiveSources => {
+  const results = sources.map<SourceNormalizationResult>((source) => ({
+    source,
+    result: normalizeCustomUiCspSourceExpression(directive, source, options),
+  }));
 
-      if (!result.isValid) {
-        return {
-          sources,
-          errors: [
-            ...errors,
-            {
-              directive,
-              source,
-              reason: result.reason,
-            },
-          ],
-        };
-      }
-
-      return {
-        sources: sources.includes(result.value) ? sources : [...sources, result.value],
-        errors,
-      };
-    },
-    { sources: [], errors: [] }
-  );
+  return {
+    sources: [...new Set(results.flatMap(({ result }) => (result.isValid ? [result.value] : [])))],
+    errors: results.flatMap(({ source, result }) =>
+      result.isValid ? [] : [{ directive, source, reason: result.reason }]
+    ),
+  };
+};
 
 export const normalizeCustomUiCsp = (
   customUiCsp: CustomUiCsp,
