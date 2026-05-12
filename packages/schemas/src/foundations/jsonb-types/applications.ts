@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import { z } from 'zod';
 
 import { cloudflareDataGuard, domainDnsRecordsGuard, domainStatusGuard } from './custom-domain.js';
@@ -32,6 +33,8 @@ export const protectedAppMetadataGuard = z.object({
       path: z.string(),
     })
   ),
+  /* Additional scopes requested by protected app sign-in */
+  additionalScopes: z.array(z.nativeEnum(UserScope)).optional(),
   /* Custom domain */
   customDomains: customDomainsGuard.optional(),
 });

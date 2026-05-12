@@ -36,6 +36,7 @@ import CustomDomain from '@/pages/TenantSettings/TenantDomainSettings/CustomDoma
 import EndpointsAndCredentials from '../EndpointsAndCredentials';
 import { type ApplicationForm } from '../utils';
 
+import AdditionalScopesForm from './components/AdditionalScopesForm';
 import SessionForm from './components/SessionForm';
 import styles from './index.module.scss';
 
@@ -292,6 +293,7 @@ function ProtectedAppSettings({ data }: Props) {
         </FormField>
       </FormCard>
       <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} onApplicationUpdated={mutate} />
+      <AdditionalScopesForm />
       <SessionForm data={data} />
     </>
   );

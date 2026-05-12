@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import type { Application, CreateApplication } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
@@ -233,15 +234,20 @@ describe('application route', () => {
     const name = 'FooApplication';
     const description = 'FooDescription';
     const origin = 'https://example.com';
+    const additionalScopes = [UserScope.CustomData];
 
     const response = await applicationRequest
       .patch('/applications/foo')
-      .send({ name, description, protectedAppMetadata: { origin } });
+      .send({ name, description, protectedAppMetadata: { origin, additionalScopes } });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({ ...mockApplication, name, description });
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith('foo');
     expect(updateApplicationById).toHaveBeenNthCalledWith(1, 'foo', {
-      protectedAppMetadata: { ...mockProtectedApplication.protectedAppMetadata, origin },
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        origin,
+        additionalScopes,
+      },
     });
   });
 

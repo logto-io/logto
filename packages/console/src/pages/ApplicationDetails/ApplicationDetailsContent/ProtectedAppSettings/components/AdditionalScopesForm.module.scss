@@ -1,0 +1,19 @@
+@use '@/scss/underscore' as _;
+
+.scopeGroups {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+}
+
+.scopeGroup {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
+.claims {
+  margin-inline-start: _.unit(6);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}

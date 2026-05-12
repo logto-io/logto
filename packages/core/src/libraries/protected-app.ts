@@ -93,6 +93,7 @@ const buildProtectedAppData = async ({
       origin,
       sessionDuration: defaultProtectedAppSessionDuration,
       pageRules: defaultProtectedAppPageRules,
+      additionalScopes: [],
     },
     oidcClientMetadata: {
       redirectUris: [`https://${host}/${protectedAppSignInCallbackUrl}`],

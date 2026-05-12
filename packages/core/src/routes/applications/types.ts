@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import {
   applicationCreateGuard as originalApplicationCreateGuard,
   applicationPatchGuard as originalApplicationPatchGuard,
@@ -34,6 +35,7 @@ export const applicationPatchGuard = originalApplicationPatchGuard
             })
           )
           .optional(),
+        additionalScopes: z.array(z.nativeEnum(UserScope)).optional(),
       })
       .nullish(),
   });

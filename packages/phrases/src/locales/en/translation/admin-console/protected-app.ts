@@ -35,6 +35,15 @@ const protected_app = {
         'Please expose your local server to the internet first. Learn more about <a>local development</a>.',
     },
   },
+  id_token_claims: {
+    card_title: 'ID token claims',
+    card_description:
+      'Request additional user scopes during Protected App sign-in to include enabled extended claims in the forwarded ID token.',
+    field_title: 'Additional scopes',
+    field_description:
+      'Claims are included only when they are enabled in Custom JWT > ID token and the matching scope is requested here.',
+    claims_label: 'Claims: {{claims}}',
+  },
   success_message:
     '🎉 App authentication successfully enabled! Explore the new experience of your website.',
 };
