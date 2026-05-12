@@ -121,7 +121,10 @@ export default function hookRoutes<T extends ManagementApiRouter>(
     koaPagination(),
     koaGuard({
       params: z.object({ id: z.string() }),
-      query: z.object({ logKey: z.string().optional() }),
+      query: z.object({
+        logKey: z.string().optional(),
+        enableCap: z.string().optional(),
+      }),
       response: Logs.guard.omit({ tenantId: true }).array(),
       status: 200,
     }),
@@ -130,19 +133,22 @@ export default function hookRoutes<T extends ManagementApiRouter>(
 
       const {
         params: { id },
-        query: { logKey },
+        query: { logKey, enableCap },
       } = ctx.guard;
 
       const includeKeyPrefix: WebhookLogPrefix[] = [hook.Type.TriggerHook];
       const startTimeExclusive = subDays(new Date(), 1).getTime();
 
-      const [{ count }, logs] = await Promise.all([
-        countLogs({
-          logKey,
-          payload: { hookId: id },
-          startTimeExclusive,
-          includeKeyPrefix,
-        }),
+      const [{ count, isCapped }, logs] = await Promise.all([
+        countLogs(
+          {
+            logKey,
+            payload: { hookId: id },
+            startTimeExclusive,
+            includeKeyPrefix,
+          },
+          { capped: yes(enableCap) }
+        ),
         findLogs(limit, offset, {
           logKey,
           payload: { hookId: id },
@@ -152,6 +158,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       ]);
 
       ctx.pagination.totalCount = count;
+      ctx.pagination.totalCountIsCapped = isCapped;
       ctx.body = logs;
 
       return next();

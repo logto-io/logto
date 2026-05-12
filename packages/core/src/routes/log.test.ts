@@ -42,19 +42,22 @@ describe('logRoutes', () => {
       await logRequest.get(
         `/logs?userId=${userId}&applicationId=${applicationId}&logKey=${logKey}&page=${page}&page_size=${pageSize}`
       );
-      expect(countLogs).toHaveBeenCalledWith({
-        payload: { userId, applicationId },
-        logKey,
-        includeKeyPrefix: [
-          token.Type.ExchangeTokenBy,
-          token.Type.RevokeToken,
-          token.Type.RevokeGrants,
-          interaction.prefix,
-          jwtCustomizer.prefix,
-          saml.prefix,
-          LogKeyUnknown,
-        ],
-      });
+      expect(countLogs).toHaveBeenCalledWith(
+        {
+          payload: { userId, applicationId },
+          logKey,
+          includeKeyPrefix: [
+            token.Type.ExchangeTokenBy,
+            token.Type.RevokeToken,
+            token.Type.RevokeGrants,
+            interaction.prefix,
+            jwtCustomizer.prefix,
+            saml.prefix,
+            LogKeyUnknown,
+          ],
+        },
+        { capped: false }
+      );
       expect(findLogs).toHaveBeenCalledWith(5, 0, {
         payload: { userId, applicationId },
         logKey,
@@ -75,6 +78,28 @@ describe('logRoutes', () => {
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(mockLogs);
       expect(response.header).toHaveProperty('total-number', `${mockLogs.length}`);
+      expect(response.header).not.toHaveProperty('total-number-is-capped');
+    });
+
+    describe('enableCap query param', () => {
+      afterEach(() => {
+        countLogs.mockResolvedValue({ count: mockLogs.length });
+      });
+
+      it('passes capped=true to countLogs when enableCap=true', async () => {
+        countLogs.mockResolvedValueOnce({ count: 10_001, isCapped: true });
+
+        const response = await logRequest.get(`/logs?enableCap=true`);
+        expect(response.status).toEqual(200);
+        expect(countLogs).toHaveBeenCalledWith(expect.any(Object), { capped: true });
+        expect(response.header).toHaveProperty('total-number', '10001');
+        expect(response.header).toHaveProperty('total-number-is-capped', 'true');
+      });
+
+      it('passes capped=false to countLogs when enableCap is omitted', async () => {
+        await logRequest.get(`/logs`);
+        expect(countLogs).toHaveBeenCalledWith(expect.any(Object), { capped: false });
+      });
     });
   });
 

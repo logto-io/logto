@@ -147,12 +147,15 @@ describe('hook routes', () => {
     await hookRequest.get(
       `/hooks/${hookId}/recent-logs?logKey=${logKey}&page=${page}&page_size=${pageSize}`
     );
-    expect(countLogs).toHaveBeenCalledWith({
-      payload: { hookId },
-      logKey,
-      startTimeExclusive,
-      includeKeyPrefix: [hook.Type.TriggerHook],
-    });
+    expect(countLogs).toHaveBeenCalledWith(
+      {
+        payload: { hookId },
+        logKey,
+        startTimeExclusive,
+        includeKeyPrefix: [hook.Type.TriggerHook],
+      },
+      { capped: false }
+    );
     expect(findLogs).toHaveBeenCalledWith(5, 0, {
       payload: { hookId },
       logKey,
@@ -161,6 +164,31 @@ describe('hook routes', () => {
     });
 
     jest.useRealTimers();
+  });
+
+  describe('GET /hooks/:id/recent-logs enableCap query param', () => {
+    afterEach(() => {
+      countLogs.mockResolvedValue({ count: 1 });
+    });
+
+    it('passes capped=true to countLogs and emits Total-Number-Is-Capped when enableCap=true', async () => {
+      countLogs.mockResolvedValueOnce({ count: 10_001, isCapped: true });
+
+      const response = await hookRequest.get(`/hooks/foo/recent-logs?enableCap=true`);
+      expect(response.status).toEqual(200);
+      expect(countLogs).toHaveBeenCalledWith(expect.any(Object), { capped: true });
+      expect(response.header).toHaveProperty('total-number', '10001');
+      expect(response.header).toHaveProperty('total-number-is-capped', 'true');
+      // Capped responses omit both `last` and `next` link rels.
+      const linkHeader = String(response.header.link ?? '');
+      expect(linkHeader).not.toContain('rel="last"');
+      expect(linkHeader).not.toContain('rel="next"');
+    });
+
+    it('passes capped=false to countLogs when enableCap is omitted', async () => {
+      await hookRequest.get(`/hooks/foo/recent-logs`);
+      expect(countLogs).toHaveBeenCalledWith(expect.any(Object), { capped: false });
+    });
   });
 
   it('POST /hooks', async () => {

@@ -25,6 +25,19 @@ type LogCondition = {
   includeKeyPrefix?: AllowedKeyPrefix[];
 };
 
+/**
+ * Bounds the rows counted to avoid a full `count(*)` traversal on tenants with
+ * very large `logs` tables. When the inner row count reaches `LOGS_COUNT_CAP + 1`,
+ * the outer aggregate stops and reports the sentinel value, sharply reducing the
+ * chance of hitting `statement_timeout`.
+ */
+const LOGS_COUNT_CAP = 10_000;
+
+type CountLogsResult = {
+  count: number;
+  isCapped?: boolean;
+};
+
 const buildLogConditionSql = (logCondition: LogCondition) =>
   conditionalSql(logCondition, ({ logKey, payload, startTimeExclusive, includeKeyPrefix = [] }) => {
     const keyPrefixFilter = conditional(
@@ -56,12 +69,33 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
 export const createLogQueries = (pool: CommonQueryMethods) => {
   const insertLog = buildInsertIntoWithPool(pool)(Logs);
 
-  const countLogs = async (condition: LogCondition) =>
-    pool.one<{ count: number }>(sql`
+  const countLogs = async (
+    condition: LogCondition,
+    options?: { capped?: boolean }
+  ): Promise<CountLogsResult> => {
+    if (!options?.capped) {
+      // Postgres returns a bigint for count(*), which Slonik surfaces as a string.
+      const { count } = await pool.one<{ count: string }>(sql`
+        select count(*)
+        from ${table}
+        ${buildLogConditionSql(condition)}
+      `);
+      return { count: Number(count) };
+    }
+
+    const cappedLimit = LOGS_COUNT_CAP + 1;
+    const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
-      from ${table}
-      ${buildLogConditionSql(condition)}
+      from (
+        select 1
+        from ${table}
+        ${buildLogConditionSql(condition)}
+        limit ${cappedLimit}
+      ) s
     `);
+    const numericCount = Number(count);
+    return { count: numericCount, isCapped: numericCount > LOGS_COUNT_CAP };
+  };
 
   const findLogs = async (limit: number, offset: number, logCondition: LogCondition) =>
     pool.any<Log>(sql`

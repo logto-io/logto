@@ -7,6 +7,7 @@ import {
   saml,
   type AuditLogPrefix,
 } from '@logto/schemas';
+import { yes } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -27,6 +28,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
         userId: string().optional(),
         applicationId: string().optional(),
         logKey: string().optional(),
+        enableCap: string().optional(),
       }),
       response: Logs.guard.array(),
       status: 200,
@@ -34,7 +36,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
       const {
-        query: { userId, applicationId, logKey },
+        query: { userId, applicationId, logKey, enableCap },
       } = ctx.guard;
 
       const includeKeyPrefix: AuditLogPrefix[] = [
@@ -48,12 +50,15 @@ export default function logRoutes<T extends ManagementApiRouter>(
       ];
 
       // TODO: @Gao refactor like user search
-      const [{ count }, logs] = await Promise.all([
-        countLogs({
-          logKey,
-          payload: { applicationId, userId },
-          includeKeyPrefix,
-        }),
+      const [{ count, isCapped }, logs] = await Promise.all([
+        countLogs(
+          {
+            logKey,
+            payload: { applicationId, userId },
+            includeKeyPrefix,
+          },
+          { capped: yes(enableCap) }
+        ),
         findLogs(limit, offset, {
           logKey,
           payload: { userId, applicationId },
@@ -63,6 +68,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
 
       // Return totalCount to pagination middleware
       ctx.pagination.totalCount = count;
+      ctx.pagination.totalCountIsCapped = isCapped;
       ctx.body = logs;
 
       return next();
