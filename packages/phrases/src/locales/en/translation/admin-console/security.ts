@@ -21,6 +21,8 @@ const security = {
     enable_captcha: 'Enable CAPTCHA',
     enable_captcha_description:
       'Enable CAPTCHA verification for sign-up, sign-in, and password recovery flows.',
+    custom_ui_captcha_notice:
+      'You are using Bring your UI. After enabling CAPTCHA, your custom UI must load the CAPTCHA script, run verification, and send the resulting token as <code>captchaToken</code> in <code>PUT /api/experience</code>. <a>View setup guide</a>.',
   },
   create_captcha: {
     setup_captcha: 'Setup CAPTCHA',

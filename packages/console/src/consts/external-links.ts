@@ -60,6 +60,8 @@ export const emailConnectors = '/connectors/email-connectors';
 export const enterpriseSso = '/connectors/enterprise-connectors';
 export const security = '/security';
 export const captcha = '/security/captcha';
+export const recaptchaEnterpriseBringYourUi =
+  '/security/captcha/recaptcha-enterprise#bring-your-ui';
 export const sentinel = '/security/identifier-lockout';
 export const emailBlocklist = '/security/blocklist';
 export const passwordPolicy = '/security/password-policy';
