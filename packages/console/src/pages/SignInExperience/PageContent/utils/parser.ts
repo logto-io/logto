@@ -4,6 +4,7 @@ import {
   SignInMode,
   type SignInExperience,
   type SignUp,
+  customUiCspDirectives,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -115,8 +116,6 @@ export const signUpFormDataParser = {
 const normalizeSignUpProfileFields = (
   signUpProfileFields: SignInExperience['signUpProfileFields']
 ): NonNullable<SignInExperience['signUpProfileFields']> => signUpProfileFields ?? [];
-
-const customUiCspDirectives = Object.freeze(['scriptSrc', 'connectSrc'] as const);
 
 const createDefaultCustomUiCspForm = (): CustomUiCspForm => ({
   scriptSrc: [],
