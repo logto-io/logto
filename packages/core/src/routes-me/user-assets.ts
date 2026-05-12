@@ -10,8 +10,6 @@ import {
   adminTenantId,
   uploadFileGuard,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
-import { format } from 'date-fns';
 import { object } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -76,14 +74,11 @@ export default function userAssetsRoutes<T extends AuthedMeRouter>(...[router]: 
       assertThat(storageProviderConfig, 'storage.not_configured');
 
       const userId = ctx.auth.id;
-      const uploadFile = buildUploadFile(storageProviderConfig);
-      const objectKey = `${adminTenantId}/${userId}/${format(
-        new Date(),
-        'yyyy/MM/dd'
-      )}/${generateStandardId(8)}/${file.originalFilename}`;
+      const storage = buildUploadFile(storageProviderConfig);
+      const objectKey = `${adminTenantId}/${userId}/${file.originalFilename}`;
 
       try {
-        const { url } = await uploadFile(await readFile(file.filepath), objectKey, {
+        const { url } = await storage.uploadFile(await readFile(file.filepath), objectKey, {
           contentType: file.mimetype,
           publicUrl: storageProviderConfig.publicUrl,
         });

@@ -57,3 +57,21 @@ export const mimeTypeToFileExtensionMappings: MimeTypeToFileExtensionMappings = 
   'image/bmp': ['bmp'],
   'application/zip': ['zip'],
 } as const);
+
+/** Avatar-specific allowed MIME types (subset of allowUploadMimeTypes, no zip/svg/ico/tiff) */
+export const allowAvatarMimeTypes = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/bmp',
+] as const;
+
+/** Map magic-byte MIME to file extension */
+export const imageExtensionMap: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+  'image/bmp': 'bmp',
+};

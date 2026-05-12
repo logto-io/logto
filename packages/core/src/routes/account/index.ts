@@ -22,6 +22,7 @@ import { PasswordValidator } from '../experience/classes/libraries/password-vali
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
+import avatarRoutes from './avatar.js';
 import emailAndPhoneRoutes from './email-and-phone.js';
 import accountGrantRoutes from './grants.js';
 import identitiesRoutes from './identities.js';
@@ -52,6 +53,8 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   } = libraries;
 
   router.use(koaAccountCenter(queries));
+
+  avatarRoutes(...args);
 
   router.get(
     `${accountApiPrefix}`,

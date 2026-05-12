@@ -1,4 +1,12 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+  HeadObjectCommand,
+  ListObjectsV2Command,
+  GetObjectCommand,
+  CopyObjectCommand,
+} from '@aws-sdk/client-s3';
 
 import type { UploadFile } from './types.js';
 
@@ -86,5 +94,86 @@ export const buildS3Storage = ({
     };
   };
 
-  return { uploadFile };
+  const deleteFile = async (objectKey: string): Promise<void> => {
+    try {
+      await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: objectKey }));
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'NotFound') {
+        return;
+      }
+      throw error;
+    }
+  };
+
+  const isFileExisted = async (objectKey: string): Promise<boolean> => {
+    try {
+      await client.send(new HeadObjectCommand({ Bucket: bucket, Key: objectKey }));
+      return true;
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'NotFound') {
+        return false;
+      }
+      throw error;
+    }
+  };
+
+  const listFiles = async (prefix: string): Promise<string[]> => {
+    const keys: string[] = [];
+    let continuationToken: string | undefined;
+
+    do {
+      try {
+        const result = await client.send(
+          new ListObjectsV2Command({
+            Bucket: bucket,
+            Prefix: prefix,
+            ...(continuationToken ? { ContinuationToken: continuationToken } : {}),
+          })
+        );
+
+        if (result.Contents) {
+          for (const item of result.Contents) {
+            if (item.Key) {
+              keys.push(item.Key);
+            }
+          }
+        }
+
+        continuationToken = result.IsTruncated ? result.NextContinuationToken : undefined;
+      } catch (error: unknown) {
+        // fast-xml-parser < 5.8 can't parse RustFS/MinIO XML entity refs like &#xD;
+        if (error instanceof Error && error.message.includes('Invalid character')) {
+          break;
+        }
+        throw error;
+      }
+    } while (continuationToken);
+
+    return keys;
+  };
+
+  const downloadFile = async (
+    objectKey: string
+  ): Promise<{ body: ReadableStream; contentType?: string; contentLength?: number }> => {
+    const result = await client.send(new GetObjectCommand({ Bucket: bucket, Key: objectKey }));
+
+    return {
+      body: result.Body!.transformToWebStream(),
+      contentType: result.ContentType,
+      contentLength: result.ContentLength,
+    };
+  };
+
+  const copyFile = async (sourceKey: string, destKey: string): Promise<void> => {
+    await client.send(
+      new CopyObjectCommand({
+        Bucket: bucket,
+        CopySource: `${bucket}/${sourceKey}`,
+        Key: destKey,
+        ACL: 'public-read',
+      })
+    );
+  };
+
+  return { uploadFile, deleteFile, isFileExisted, listFiles, downloadFile, copyFile };
 };
