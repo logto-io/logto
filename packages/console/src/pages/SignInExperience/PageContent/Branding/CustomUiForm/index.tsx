@@ -17,6 +17,7 @@ import CustomUiAssetsUploader from '@/pages/SignInExperience/components/CustomUi
 import { buildCloudUpsellUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 
 import type { SignInExperienceForm } from '../../../types';
+import FormSectionTitle from '../../components/FormSectionTitle';
 
 import CustomUiCspForm from './CustomUiCspForm';
 import styles from './index.module.scss';
@@ -75,9 +76,11 @@ function CustomUiForm() {
   return (
     <>
       <Card>
+        <FormSectionTitle title="custom_ui.css_code_editor_title" />
         <CustomCssEditorField />
       </Card>
       <Card>
+        <FormSectionTitle title="custom_ui.bring_your_ui_title" />
         {isCloud && (
           <FormField
             title="sign_in_exp.custom_ui.bring_your_ui_title"
