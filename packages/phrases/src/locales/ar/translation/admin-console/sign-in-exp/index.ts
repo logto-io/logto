@@ -95,6 +95,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'جرّب Cloud',
     preview_with_bring_your_ui_description:
       'تم تحميل أصول واجهة المستخدم المخصصة الخاصة بك بنجاح ويتم تقديمها الآن. وبالتالي ، تم تعطيل نافذة المعاينة المدمجة.\nلتجربة واجهة تسجيل الدخول المخصصة الخاصة بك ، انقر فوق زر "المعاينة المباشرة" لفتحها في علامة تبويب مستعرض جديدة.',
+    csp_description:
+      'اسمح بتعبيرات مصادر إضافية لواجهة تسجيل الدخول المخصصة الخاصة بك. تُطبّق هذه القيم فقط عند تقديم أصول واجهة المستخدم المخصصة.',
+    csp_script_src: 'مصادر script-src',
+    csp_script_src_tip:
+      'اسمح بتعبيرات مصادر HTTPS للبرامج النصية التي تحمّلها واجهتك المخصصة، مثل https://scripts.example.com أو https://*.example.com.',
+    csp_connect_src: 'مصادر connect-src',
+    csp_connect_src_tip:
+      'اسمح بتعبيرات مصادر HTTPS أو WSS لطلبات الشبكة التي ترسلها واجهتك المخصصة، مثل https://api.example.com أو wss://events.example.com.',
+    csp_source_invalid_error:
+      'أدخل تعبير مصدر صالحًا. استخدم عناوين URL من نوع https://؛ كما يدعم connect-src ‏wss://. كلمات CSP المفتاحية والفواصل المنقوطة غير مدعومة.',
+    csp_source_duplicate_error: 'تعبير المصدر هذا موجود بالفعل في القائمة.',
   },
   account_center: {
     title: 'مركز الحساب',

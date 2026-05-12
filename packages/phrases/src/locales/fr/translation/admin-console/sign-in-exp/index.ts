@@ -99,6 +99,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Essayer Cloud',
     preview_with_bring_your_ui_description:
       'Vos ressources UI personnalisées ont été téléchargées avec succès et sont maintenant servies. En conséquence, la fenêtre de prévisualisation intégrée a été désactivée.\nPour tester votre UI de connexion personnalisée, cliquez sur le bouton "Aperçu en direct" pour l\'ouvrir dans un nouvel onglet du navigateur.',
+    csp_description:
+      'Autorisez des expressions de source supplémentaires pour votre interface de connexion personnalisée. Ces valeurs ne sont appliquées que lorsque les ressources UI personnalisées sont servies.',
+    csp_script_src: 'Sources script-src',
+    csp_script_src_tip:
+      'Autorisez les expressions de source HTTPS pour les scripts chargés par votre UI personnalisée, comme https://scripts.example.com ou https://*.example.com.',
+    csp_connect_src: 'Sources connect-src',
+    csp_connect_src_tip:
+      'Autorisez les expressions de source HTTPS ou WSS pour les requêtes réseau effectuées par votre UI personnalisée, comme https://api.example.com ou wss://events.example.com.',
+    csp_source_invalid_error:
+      'Saisissez une expression de source valide. Utilisez des URL https:// ; connect-src prend également en charge wss://. Les mots-clés CSP et les points-virgules ne sont pas pris en charge.',
+    csp_source_duplicate_error: 'Cette expression de source figure déjà dans la liste.',
   },
   account_center: {
     title: 'CENTRE DE COMPTE',

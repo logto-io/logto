@@ -98,6 +98,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: "Cloud'u deneyin",
     preview_with_bring_your_ui_description:
       'Özelleştirilmiş UI varlıklarınız başarıyla yüklendi ve şimdi sunuluyor. Sonuç olarak, yerleşik önizleme penceresi devre dışı bırakıldı.\nKişiselleştirilmiş oturum açma UI\'nizi test etmek için "Canlı Önizleme" düğmesine tıklayarak yeni bir tarayıcı sekmesinde açın.',
+    csp_description:
+      'Özel oturum açma UI’niz için ek kaynak ifadelerine izin verin. Bu değerler yalnızca özel UI varlıkları sunulduğunda uygulanır.',
+    csp_script_src: 'script-src kaynakları',
+    csp_script_src_tip:
+      'Özel UI’niz tarafından yüklenen betikler için https://scripts.example.com veya https://*.example.com gibi HTTPS kaynak ifadelerine izin verin.',
+    csp_connect_src: 'connect-src kaynakları',
+    csp_connect_src_tip:
+      'Özel UI’nizin yaptığı ağ istekleri için https://api.example.com veya wss://events.example.com gibi HTTPS ya da WSS kaynak ifadelerine izin verin.',
+    csp_source_invalid_error:
+      'Geçerli bir kaynak ifadesi girin. https:// URL’leri kullanın; connect-src ayrıca wss:// desteği sunar. CSP anahtar kelimeleri ve noktalı virgüller desteklenmez.',
+    csp_source_duplicate_error: 'Bu kaynak ifadesi zaten listede.',
   },
   account_center: {
     title: 'HESAP MERKEZİ',

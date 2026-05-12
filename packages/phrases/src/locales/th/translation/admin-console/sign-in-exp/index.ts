@@ -96,6 +96,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'ลองใช้ Cloud',
     preview_with_bring_your_ui_description:
       'ไฟล์ UI ที่คุณกำหนดเองถูกอัปโหลดเรียบร้อยแล้วและกำลังใช้งานอยู่ ดังนั้นหน้าต่างตัวอย่างแบบฝังจึงถูกปิดใช้งาน\nหากต้องการทดสอบหน้าเข้าสู่ระบบแบบกำหนดเอง ให้คลิกปุ่ม "แสดงตัวอย่างสด" เพื่อเปิดในแท็บใหม่',
+    csp_description:
+      'อนุญาต source expression เพิ่มเติมสำหรับ UI เข้าสู่ระบบแบบกำหนดเองของคุณ ค่านี้จะใช้เฉพาะเมื่อมีการให้บริการไฟล์ UI แบบกำหนดเองเท่านั้น',
+    csp_script_src: 'แหล่งที่มา script-src',
+    csp_script_src_tip:
+      'อนุญาต source expression แบบ HTTPS สำหรับสคริปต์ที่โหลดโดย UI แบบกำหนดเองของคุณ เช่น https://scripts.example.com หรือ https://*.example.com',
+    csp_connect_src: 'แหล่งที่มา connect-src',
+    csp_connect_src_tip:
+      'อนุญาต source expression แบบ HTTPS หรือ WSS สำหรับคำขอเครือข่ายที่ส่งจาก UI แบบกำหนดเองของคุณ เช่น https://api.example.com หรือ wss://events.example.com',
+    csp_source_invalid_error:
+      'ป้อน source expression ที่ถูกต้อง ใช้ URL แบบ https://; connect-src รองรับ wss:// ด้วย ไม่รองรับคีย์เวิร์ด CSP และเครื่องหมายอัฒภาค',
+    csp_source_duplicate_error: 'source expression นี้อยู่ในรายการแล้ว',
   },
   account_center: {
     title: 'ศูนย์บัญชี',

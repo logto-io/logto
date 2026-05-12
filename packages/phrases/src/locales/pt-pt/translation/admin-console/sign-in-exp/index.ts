@@ -98,6 +98,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Experimentar Cloud',
     preview_with_bring_your_ui_description:
       'Os seus recursos de UI personalizados foram carregados com êxito e agora estão sendo servidos. Consequentemente, a janela de visualização incorporada foi desativada.\nPara testar o seu UI de início de sessão personalizado, clique no botão "Visualização ao vivo" para abri-lo num novo separador do navegador.',
+    csp_description:
+      'Permita expressões de origem adicionais para a sua interface de início de sessão personalizada. Estes valores são aplicados apenas quando os recursos de UI personalizados são servidos.',
+    csp_script_src: 'Origens script-src',
+    csp_script_src_tip:
+      'Permita expressões de origem HTTPS para scripts carregados pelo seu UI personalizado, como https://scripts.example.com ou https://*.example.com.',
+    csp_connect_src: 'Origens connect-src',
+    csp_connect_src_tip:
+      'Permita expressões de origem HTTPS ou WSS para pedidos de rede feitos pelo seu UI personalizado, como https://api.example.com ou wss://events.example.com.',
+    csp_source_invalid_error:
+      'Introduza uma expressão de origem válida. Use URLs https://; connect-src também suporta wss://. Palavras-chave CSP e pontos e vírgulas não são suportados.',
+    csp_source_duplicate_error: 'Esta expressão de origem já está listada.',
   },
   account_center: {
     title: 'CENTRO DE CONTA',

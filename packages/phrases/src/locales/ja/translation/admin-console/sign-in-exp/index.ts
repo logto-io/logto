@@ -97,6 +97,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Cloud を試す',
     preview_with_bring_your_ui_description:
       'カスタム UI のアセットは正常にアップロードされ、現在提供されています。したがって、組み込みのプレビューウィンドウは無効になりました。\nパーソナライズされたサインイン UI をテストするには、「ライブプレビュー」ボタンをクリックして新しいブラウザタブで開きます。',
+    csp_description:
+      'カスタムサインイン UI に追加のソース式を許可します。これらの値は、カスタム UI アセットが提供される場合にのみ適用されます。',
+    csp_script_src: 'script-src ソース',
+    csp_script_src_tip:
+      'カスタム UI が読み込むスクリプトに対して、https://scripts.example.com や https://*.example.com などの HTTPS ソース式を許可します。',
+    csp_connect_src: 'connect-src ソース',
+    csp_connect_src_tip:
+      'カスタム UI が行うネットワークリクエストに対して、https://api.example.com や wss://events.example.com などの HTTPS または WSS ソース式を許可します。',
+    csp_source_invalid_error:
+      '有効なソース式を入力してください。https:// URL を使用してください。connect-src では wss:// もサポートされています。CSP キーワードとセミコロンはサポートされていません。',
+    csp_source_duplicate_error: 'このソース式はすでに一覧に含まれています。',
   },
   account_center: {
     title: 'アカウントセンター',

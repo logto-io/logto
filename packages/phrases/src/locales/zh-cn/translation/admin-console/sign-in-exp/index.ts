@@ -94,6 +94,16 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: '试用 Cloud',
     preview_with_bring_your_ui_description:
       '你自定义的 UI 资源已经成功上传，现在正在提供服务。因此，内置预览窗口已被禁用。\n要测试你个性化的登录 UI，请单击“实时预览”按钮在新的浏览器标签中打开它。',
+    csp_description: '为你的自定义登录 UI 允许额外的源表达式。这些值仅在提供自定义 UI 资源时生效。',
+    csp_script_src: 'script-src 源',
+    csp_script_src_tip:
+      '允许你的自定义 UI 加载脚本时使用的 HTTPS 源表达式，例如 https://scripts.example.com 或 https://*.example.com。',
+    csp_connect_src: 'connect-src 源',
+    csp_connect_src_tip:
+      '允许你的自定义 UI 发起网络请求时使用的 HTTPS 或 WSS 源表达式，例如 https://api.example.com 或 wss://events.example.com。',
+    csp_source_invalid_error:
+      '请输入有效的源表达式。请使用 https:// URL；connect-src 也支持 wss://。不支持 CSP 关键字和分号。',
+    csp_source_duplicate_error: '此源表达式已在列表中。',
   },
   account_center: {
     title: '账户中心',

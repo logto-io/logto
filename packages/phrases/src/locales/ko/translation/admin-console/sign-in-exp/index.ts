@@ -94,6 +94,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Cloud 사용해 보기',
     preview_with_bring_your_ui_description:
       '커스텀 UI 자산이 성공적으로 업로드되어 현재 제공되고 있습니다. 따라서 기본 제공 미리보기 창이 비활성화되었습니다.\n개인화된 로그인 UI 를 테스트하려면 "실시간 미리보기" 버튼을 클릭하여 새 브라우저 탭에서 엽니다.',
+    csp_description:
+      '커스텀 로그인 UI에 추가 소스 표현식을 허용하세요. 이 값은 커스텀 UI 자산이 제공될 때만 적용됩니다.',
+    csp_script_src: 'script-src 소스',
+    csp_script_src_tip:
+      '커스텀 UI가 로드하는 스크립트에 대해 https://scripts.example.com 또는 https://*.example.com 같은 HTTPS 소스 표현식을 허용하세요.',
+    csp_connect_src: 'connect-src 소스',
+    csp_connect_src_tip:
+      '커스텀 UI가 보내는 네트워크 요청에 대해 https://api.example.com 또는 wss://events.example.com 같은 HTTPS 또는 WSS 소스 표현식을 허용하세요.',
+    csp_source_invalid_error:
+      '유효한 소스 표현식을 입력하세요. https:// URL을 사용하세요. connect-src는 wss://도 지원합니다. CSP 키워드와 세미콜론은 지원되지 않습니다.',
+    csp_source_duplicate_error: '이 소스 표현식은 이미 목록에 있습니다.',
   },
   account_center: {
     title: '계정 센터',

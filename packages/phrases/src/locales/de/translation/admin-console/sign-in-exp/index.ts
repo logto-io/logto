@@ -97,6 +97,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Cloud ausprobieren',
     preview_with_bring_your_ui_description:
       'Ihre benutzerdefinierten UI-Assets wurden erfolgreich hochgeladen und werden jetzt bereitgestellt. Daher wurde das eingebaute Vorschaufenster deaktiviert.\nUm Ihre personalisierte Anmelde-Benutzeroberfläche zu testen, klicken Sie auf die Schaltfläche "Live-Vorschau", um sie in einem neuen Browser-Tab zu öffnen.',
+    csp_description:
+      'Erlauben Sie zusätzliche Quellausdrücke für Ihre benutzerdefinierte Anmeldeoberfläche. Diese Werte werden nur angewendet, wenn benutzerdefinierte UI-Assets bereitgestellt werden.',
+    csp_script_src: 'script-src-Quellen',
+    csp_script_src_tip:
+      'Erlauben Sie HTTPS-Quellausdrücke für Skripte, die von Ihrer benutzerdefinierten UI geladen werden, z. B. https://scripts.example.com oder https://*.example.com.',
+    csp_connect_src: 'connect-src-Quellen',
+    csp_connect_src_tip:
+      'Erlauben Sie HTTPS- oder WSS-Quellausdrücke für Netzwerkanfragen Ihrer benutzerdefinierten UI, z. B. https://api.example.com oder wss://events.example.com.',
+    csp_source_invalid_error:
+      'Geben Sie einen gültigen Quellausdruck ein. Verwenden Sie https://-URLs; connect-src unterstützt auch wss://. CSP-Schlüsselwörter und Semikolons werden nicht unterstützt.',
+    csp_source_duplicate_error: 'Dieser Quellausdruck ist bereits aufgeführt.',
   },
   account_center: {
     title: 'KONTOZENTRUM',

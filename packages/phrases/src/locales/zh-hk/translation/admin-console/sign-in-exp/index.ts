@@ -94,6 +94,16 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: '試用 Cloud',
     preview_with_bring_your_ui_description:
       '你的自定義 UI 資源已成功上傳，現在正在提供服務。因此，內建預覽窗口已被禁用。\n要測試你的個性化登錄 UI，請點擊“實時預覽”按鈕在新瀏覽器標籤頁中打開。',
+    csp_description: '為你的自訂登入 UI 允許額外的來源表達式。這些值只會在提供自訂 UI 資源時套用。',
+    csp_script_src: 'script-src 來源',
+    csp_script_src_tip:
+      '允許你的自訂 UI 載入腳本時使用的 HTTPS 來源表達式，例如 https://scripts.example.com 或 https://*.example.com。',
+    csp_connect_src: 'connect-src 來源',
+    csp_connect_src_tip:
+      '允許你的自訂 UI 發送網絡請求時使用的 HTTPS 或 WSS 來源表達式，例如 https://api.example.com 或 wss://events.example.com。',
+    csp_source_invalid_error:
+      '請輸入有效的來源表達式。請使用 https:// URL；connect-src 亦支援 wss://。不支援 CSP 關鍵字和分號。',
+    csp_source_duplicate_error: '此來源表達式已在列表中。',
   },
   account_center: {
     title: '帳戶中心',

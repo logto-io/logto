@@ -97,6 +97,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Wypróbuj Cloud',
     preview_with_bring_your_ui_description:
       'Twoje niestandardowe zasoby interfejsu użytkownika zostały pomyślnie przesłane i są teraz dostępne. W rezultacie wbudowane okno podglądu zostało wyłączone.\nAby przetestować swoje spersonalizowane UI logowania, kliknij przycisk "Podgląd na żywo", aby otworzyć go w nowej karcie przeglądarki.',
+    csp_description:
+      'Zezwól na dodatkowe wyrażenia źródeł dla własnego interfejsu logowania. Te wartości są stosowane tylko wtedy, gdy serwowane są niestandardowe zasoby UI.',
+    csp_script_src: 'Źródła script-src',
+    csp_script_src_tip:
+      'Zezwól na wyrażenia źródeł HTTPS dla skryptów ładowanych przez własny interfejs UI, takie jak https://scripts.example.com lub https://*.example.com.',
+    csp_connect_src: 'Źródła connect-src',
+    csp_connect_src_tip:
+      'Zezwól na wyrażenia źródeł HTTPS lub WSS dla żądań sieciowych wykonywanych przez własny interfejs UI, takie jak https://api.example.com lub wss://events.example.com.',
+    csp_source_invalid_error:
+      'Wprowadź prawidłowe wyrażenie źródła. Użyj adresów URL https://; connect-src obsługuje także wss://. Słowa kluczowe CSP i średniki nie są obsługiwane.',
+    csp_source_duplicate_error: 'To wyrażenie źródła jest już na liście.',
   },
   account_center: {
     title: 'CENTRUM KONTA',

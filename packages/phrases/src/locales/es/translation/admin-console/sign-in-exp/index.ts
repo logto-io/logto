@@ -100,6 +100,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Probar Cloud',
     preview_with_bring_your_ui_description:
       'Tus activos de la interfaz de usuario personalizada se han subido con éxito y ahora se están sirviendo. En consecuencia, la ventana de vista previa incorporada se ha deshabilitado.\nPara probar tu interfaz de inicio de sesión personalizada, haz clic en el botón "Vista previa en vivo" para abrirla en una nueva pestaña del navegador.',
+    csp_description:
+      'Permite expresiones de origen adicionales para tu interfaz de inicio de sesión personalizada. Estos valores se aplican solo cuando se sirven los activos de la UI personalizada.',
+    csp_script_src: 'Orígenes de script-src',
+    csp_script_src_tip:
+      'Permite expresiones de origen HTTPS para los scripts cargados por tu UI personalizada, como https://scripts.example.com o https://*.example.com.',
+    csp_connect_src: 'Orígenes de connect-src',
+    csp_connect_src_tip:
+      'Permite expresiones de origen HTTPS o WSS para las solicitudes de red realizadas por tu UI personalizada, como https://api.example.com o wss://events.example.com.',
+    csp_source_invalid_error:
+      'Introduce una expresión de origen válida. Usa URLs https://; connect-src también admite wss://. Las palabras clave de CSP y los puntos y coma no son compatibles.',
+    csp_source_duplicate_error: 'Esta expresión de origen ya está en la lista.',
   },
   account_center: {
     title: 'CENTRO DE CUENTAS',
