@@ -273,18 +273,6 @@ export const customUiAssetsGuard = z.object({
 
 export type CustomUiAssets = z.infer<typeof customUiAssetsGuard>;
 
-export type CustomUiCsp = {
-  scriptSrc?: string[];
-  connectSrc?: string[];
-};
-
-export const customUiCspGuard = z
-  .object({
-    scriptSrc: z.string().array().optional(),
-    connectSrc: z.string().array().optional(),
-  })
-  .strict() satisfies ToZodObject<CustomUiCsp>;
-
 export const captchaPolicyGuard = z.object({
   enabled: z.boolean().optional(),
 });
@@ -376,3 +364,5 @@ export const signUpProfileFieldItemGuard = z.object({
 export const signUpProfileFieldsGuard = z.array(signUpProfileFieldItemGuard);
 
 export type SignUpProfileFields = z.infer<typeof signUpProfileFieldsGuard>;
+
+export { customUiCspGuard, type CustomUiCsp } from '@logto/core-kit';
