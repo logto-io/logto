@@ -7,6 +7,7 @@ import useSWR from 'swr';
 import ApplicationName from '@/components/ApplicationName';
 import UserName from '@/components/UserName';
 import { auditLogEventTitle, defaultPageSize } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Table from '@/ds-components/Table';
 import type { Column } from '@/ds-components/Table/types';
 import type { RequestError } from '@/hooks/use-api';
@@ -57,12 +58,13 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     ...conditional(event && { logKey: event }),
     ...conditional(searchApplicationId && { applicationId: searchApplicationId }),
     ...conditional(userId && { userId }),
+    ...conditional(isDevFeaturesEnabled && { enableCap: 'true' }),
   });
 
-  const { data, error, mutate } = useSWR<[Log[], number], RequestError>(url);
+  const { data, error, mutate } = useSWR<[Log[], number, boolean], RequestError>(url);
   const isLoading = !data && !error;
   const { navigate } = useTenantPathname();
-  const [logs, totalCount] = data ?? [];
+  const [logs, totalCount, isTotalCountCapped] = data ?? [];
   const isUserColumnVisible =
     !userId && specifiedApplication?.type !== ApplicationType.MachineToMachine;
 
@@ -149,6 +151,7 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
       pagination={{
         page,
         totalCount,
+        isTotalCountCapped,
         pageSize,
         onChange: (page) => {
           updateSearchParameters({ page });
