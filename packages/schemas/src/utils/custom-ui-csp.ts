@@ -4,20 +4,21 @@ export const customUiCspDirectives = Object.freeze(['scriptSrc', 'connectSrc'] a
 
 export type CustomUiCspDirective = (typeof customUiCspDirectives)[number];
 
-export type CustomUiCspSourceValidationErrorReason =
-  | 'Empty source'
-  | 'Semicolons are not allowed'
-  | 'CSP keywords are not supported'
-  | 'Malformed URL'
-  | 'Credentials, query strings, and fragments are not allowed'
-  | 'Unsupported scheme'
-  | 'Malformed wildcard host'
-  | 'Malformed host';
+export enum CustomUiCspSourceValidationErrorCode {
+  EmptySource = 'empty_source',
+  SemicolonNotAllowed = 'semicolon_not_allowed',
+  CspKeywordNotSupported = 'csp_keyword_not_supported',
+  MalformedUrl = 'malformed_url',
+  DisallowedUrlParts = 'disallowed_url_parts',
+  UnsupportedScheme = 'unsupported_scheme',
+  MalformedWildcardHost = 'malformed_wildcard_host',
+  MalformedHost = 'malformed_host',
+}
 
 export type CustomUiCspSourceValidationError = {
   readonly directive: CustomUiCspDirective;
   readonly source: string;
-  readonly reason: CustomUiCspSourceValidationErrorReason;
+  readonly code: CustomUiCspSourceValidationErrorCode;
 };
 
 export type CustomUiCspSourceValidationResult =
@@ -27,7 +28,7 @@ export type CustomUiCspSourceValidationResult =
     }
   | {
       readonly isValid: false;
-      readonly reason: CustomUiCspSourceValidationErrorReason;
+      readonly code: CustomUiCspSourceValidationErrorCode;
     };
 
 type CustomUiCspValidationOptions = {
@@ -53,7 +54,7 @@ const validHostLabelRegEx = /^[\da-z](?:[\da-z-]{0,61}[\da-z])?$/;
 
 const isValidHostLabel = (label: string) => validHostLabelRegEx.test(label);
 
-const validateHostname = (hostname: string): CustomUiCspSourceValidationErrorReason | undefined => {
+const validateHostname = (hostname: string): CustomUiCspSourceValidationErrorCode | undefined => {
   if (hostname === 'localhost') {
     return;
   }
@@ -67,19 +68,19 @@ const validateHostname = (hostname: string): CustomUiCspSourceValidationErrorRea
       labels.length >= 3 &&
       labels.slice(1).every((label) => isValidHostLabel(label))
       ? undefined
-      : 'Malformed wildcard host';
+      : CustomUiCspSourceValidationErrorCode.MalformedWildcardHost;
   }
 
   return labels.length >= 2 && labels.every((label) => isValidHostLabel(label))
     ? undefined
-    : 'Malformed host';
+    : CustomUiCspSourceValidationErrorCode.MalformedHost;
 };
 
 const validateScheme = (
   directive: CustomUiCspDirective,
   url: URL,
   { isProduction = false }: CustomUiCspValidationOptions
-): CustomUiCspSourceValidationErrorReason | undefined => {
+): CustomUiCspSourceValidationErrorCode | undefined => {
   const isLocalhostHttpSource =
     !isProduction && url.protocol === 'http:' && url.hostname === 'localhost' && url.port;
 
@@ -89,21 +90,25 @@ const validateScheme = (
 
   const allowedSchemes = directive === 'connectSrc' ? ['https:', 'wss:'] : ['https:'];
 
-  return allowedSchemes.includes(url.protocol) ? undefined : 'Unsupported scheme';
+  return allowedSchemes.includes(url.protocol)
+    ? undefined
+    : CustomUiCspSourceValidationErrorCode.UnsupportedScheme;
 };
 
-const getInvalidPlainSourceReason = (
+const getInvalidPlainSourceCode = (
   source: string
-): CustomUiCspSourceValidationErrorReason | undefined => {
+): CustomUiCspSourceValidationErrorCode | undefined => {
   if (!source) {
-    return 'Empty source';
+    return CustomUiCspSourceValidationErrorCode.EmptySource;
   }
 
   if (source.includes(';')) {
-    return 'Semicolons are not allowed';
+    return CustomUiCspSourceValidationErrorCode.SemicolonNotAllowed;
   }
 
-  return source.includes("'") ? 'CSP keywords are not supported' : undefined;
+  return source.includes("'")
+    ? CustomUiCspSourceValidationErrorCode.CspKeywordNotSupported
+    : undefined;
 };
 
 const hasDisallowedUrlParts = (url: URL) =>
@@ -117,20 +122,20 @@ const normalizeParsedSourceExpression = (
   if (hasDisallowedUrlParts(url)) {
     return {
       isValid: false,
-      reason: 'Credentials, query strings, and fragments are not allowed',
+      code: CustomUiCspSourceValidationErrorCode.DisallowedUrlParts,
     };
   }
 
   const invalidSchemeReason = validateScheme(directive, url, options ?? {});
 
   if (invalidSchemeReason) {
-    return { isValid: false, reason: invalidSchemeReason };
+    return { isValid: false, code: invalidSchemeReason };
   }
 
   const invalidHostReason = validateHostname(url.hostname);
 
   if (invalidHostReason) {
-    return { isValid: false, reason: invalidHostReason };
+    return { isValid: false, code: invalidHostReason };
   }
 
   return {
@@ -145,16 +150,16 @@ export const normalizeCustomUiCspSourceExpression = (
   options?: CustomUiCspValidationOptions
 ): CustomUiCspSourceValidationResult => {
   const source = rawSource.trim();
-  const invalidSourceReason = getInvalidPlainSourceReason(source);
+  const invalidSourceCode = getInvalidPlainSourceCode(source);
 
-  if (invalidSourceReason) {
-    return { isValid: false, reason: invalidSourceReason };
+  if (invalidSourceCode) {
+    return { isValid: false, code: invalidSourceCode };
   }
 
   try {
     return normalizeParsedSourceExpression(directive, new URL(source), options);
   } catch {
-    return { isValid: false, reason: 'Malformed URL' };
+    return { isValid: false, code: CustomUiCspSourceValidationErrorCode.MalformedUrl };
   }
 };
 
@@ -171,7 +176,7 @@ const normalizeDirectiveSources = (
   return {
     sources: [...new Set(results.flatMap(({ result }) => (result.isValid ? [result.value] : [])))],
     errors: results.flatMap(({ source, result }) =>
-      result.isValid ? [] : [{ directive, source, reason: result.reason }]
+      result.isValid ? [] : [{ directive, source, code: result.code }]
     ),
   };
 };
