@@ -96,7 +96,6 @@ const account_center = {
     backup_codes_count_other: '{{count}} kody pozostałe',
     view: 'Wyświetl',
     manage: 'Zarządzaj',
-    turn_on_2_step_verification: 'Włącz weryfikację dwuetapową',
     turn_on_2_step_verification_description:
       'Dodaj dodatkową warstwę bezpieczeństwa. Podczas logowania zostaniesz poproszony o drugi krok weryfikacji.',
     turn_off_2_step_verification: 'Wyłącz weryfikację dwuetapową',

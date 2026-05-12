@@ -94,7 +94,6 @@ const account_center = {
     backup_codes_count_other: '{{count}} 個備用碼',
     view: '檢視',
     manage: '管理',
-    turn_on_2_step_verification: '開啟兩步驗證',
     turn_on_2_step_verification_description: '增加額外的安全保護。登入時將要求進行第二步驗證。',
     turn_off_2_step_verification: '關閉兩步驗證',
     turn_off_2_step_verification_description:

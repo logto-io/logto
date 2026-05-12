@@ -95,7 +95,6 @@ const account_center = {
     backup_codes_count_other: 'zbývá {{count}} kódů',
     view: 'Zobrazit',
     manage: 'Spravovat',
-    turn_on_2_step_verification: 'Zapnout dvoufázové ověření',
     turn_on_2_step_verification_description:
       'Přidejte další vrstvu zabezpečení. Při přihlášení budete vyzváni k druhému ověřovacímu kroku.',
     turn_off_2_step_verification: 'Vypnout dvoufázové ověření',

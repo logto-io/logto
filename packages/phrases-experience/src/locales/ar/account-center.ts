@@ -95,7 +95,6 @@ const account_center = {
     backup_codes_count_other: '{{count}} رموز متبقية',
     view: 'عرض',
     manage: 'إدارة',
-    turn_on_2_step_verification: 'تفعيل التحقق بخطوتين',
     turn_on_2_step_verification_description:
       'أضف طبقة أمان إضافية. ستتم مطالبتك بخطوة تحقق ثانية عند تسجيل الدخول.',
     turn_off_2_step_verification: 'إيقاف التحقق بخطوتين',

@@ -92,7 +92,6 @@ const account_center = {
     backup_codes_count_other: '{{count}} codes remaining',
     view: 'View',
     manage: 'Manage',
-    turn_on_2_step_verification: 'Turn on 2-step verification',
     turn_on_2_step_verification_description:
       "Add an extra layer of security. You'll be prompted for a second verification step at sign-in.",
     turn_off_2_step_verification: 'Turn off 2-step verification',
