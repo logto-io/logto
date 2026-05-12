@@ -97,6 +97,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Try Cloud',
     preview_with_bring_your_ui_description:
       'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',
+    csp_description:
+      'Allow additional source expressions for your custom sign-in UI. These values are applied only when custom UI assets are served.',
+    csp_script_src: 'script-src sources',
+    csp_script_src_tip:
+      'Allow HTTPS source expressions for scripts loaded by your custom UI, such as https://scripts.example.com or https://*.example.com.',
+    csp_connect_src: 'connect-src sources',
+    csp_connect_src_tip:
+      'Allow HTTPS or WSS source expressions for network requests made by your custom UI, such as https://api.example.com or wss://events.example.com.',
+    csp_source_invalid_error:
+      'Enter a valid source expression. Use https:// URLs; connect-src also supports wss://. CSP keywords and semicolons are not supported.',
+    csp_source_duplicate_error: 'This source expression is already listed.',
   },
   account_center: {
     title: 'ACCOUNT CENTER',

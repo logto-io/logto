@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -19,6 +19,7 @@ import { buildCloudUpsellUrl, ossUpsellEntries } from '@/utils/oss-upsell';
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
+import CustomUiCspForm from './CustomUiCspForm';
 import styles from './index.module.scss';
 
 function OssBringYourUiCard() {
@@ -112,6 +113,7 @@ function CustomUiForm() {
           />
         </FormField>
       )}
+      {isCloud && isDevFeaturesEnabled && <CustomUiCspForm isDisabled={!isBringYourUiEnabled} />}
       {shouldShowOssBringYourUi && <OssBringYourUiCard />}
     </Card>
   );

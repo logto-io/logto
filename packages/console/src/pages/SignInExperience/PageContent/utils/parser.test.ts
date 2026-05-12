@@ -77,6 +77,81 @@ const mockSignInExperience: SignInExperience = {
 };
 
 describe('sign-in experience parser', () => {
+  it('normalizes missing Custom UI CSP into stable form defaults', () => {
+    const formData = sieFormDataParser.fromSignInExperience({
+      ...mockSignInExperience,
+      customUiCsp: undefined as never,
+    });
+
+    expect(formData.customUiCsp).toEqual({
+      scriptSrc: [],
+      connectSrc: [],
+    });
+  });
+
+  it('strips empty Custom UI CSP directive arrays before submit', () => {
+    const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
+
+    const payload = sieFormDataParser.toSignInExperience(
+      {
+        ...formData,
+        customUiCsp: {
+          scriptSrc: [' ', ' https://scripts.example.com '],
+          connectSrc: [''],
+        },
+      },
+      { isCustomUiCspEnabled: true }
+    );
+
+    expect(payload.customUiCsp).toEqual({
+      scriptSrc: ['https://scripts.example.com'],
+    });
+  });
+
+  it('omits Custom UI CSP when the feature is not enabled for the current tenant', () => {
+    const formData = sieFormDataParser.fromSignInExperience({
+      ...mockSignInExperience,
+      customUiCsp: {
+        scriptSrc: ['https://scripts.example.com'],
+      },
+    });
+
+    const submitPayload = sieFormDataParser.toSignInExperience(formData, {
+      isCustomUiCspEnabled: false,
+    });
+    const comparePayload = signInExperienceToUpdatedDataParser(mockSignInExperience, {
+      isCustomUiCspEnabled: false,
+    });
+
+    expect(submitPayload).not.toHaveProperty('customUiCsp');
+    expect(comparePayload).not.toHaveProperty('customUiCsp');
+  });
+
+  it('round-trips Custom UI CSP values through form and compare payloads', () => {
+    const customUiCsp = {
+      scriptSrc: ['https://scripts.example.com'],
+      connectSrc: ['https://api.example.com', 'wss://events.example.com'],
+    };
+    const formData = sieFormDataParser.fromSignInExperience({
+      ...mockSignInExperience,
+      customUiCsp,
+    });
+
+    expect(formData.customUiCsp).toEqual(customUiCsp);
+    expect(
+      sieFormDataParser.toSignInExperience(formData, { isCustomUiCspEnabled: true }).customUiCsp
+    ).toEqual(customUiCsp);
+    expect(
+      signInExperienceToUpdatedDataParser(
+        {
+          ...mockSignInExperience,
+          customUiCsp,
+        },
+        { isCustomUiCspEnabled: true }
+      ).customUiCsp
+    ).toEqual(customUiCsp);
+  });
+
   it('should omit adaptive mfa from sign-up and sign-in page data', () => {
     const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
 

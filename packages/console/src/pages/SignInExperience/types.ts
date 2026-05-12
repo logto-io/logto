@@ -2,6 +2,7 @@ import {
   AccountCenterControlValue,
   type AccountCenter as AccountCenterConfig,
   type AccountCenterProfileFields,
+  type CustomUiCsp,
   type SignUp,
   type SignInExperience,
   type SignInIdentifier,
@@ -116,11 +117,14 @@ export type SignUpForm = Omit<SignUp, 'identifiers' | 'secondaryIdentifiers'> & 
   }>;
 };
 
+export type CustomUiCspForm = Required<Record<keyof CustomUiCsp, string[]>>;
+
 export type SignInExperienceForm = Omit<
   SignInExperience,
-  'signUp' | 'customCss' | 'signUpProfileFields' | OmittedSignInExperienceKeys
+  'signUp' | 'customCss' | 'customUiCsp' | 'signUpProfileFields' | OmittedSignInExperienceKeys
 > & {
   customCss?: string; // Code editor components can not properly handle null value, manually transform null to undefined instead.
+  customUiCsp: CustomUiCspForm;
   signUp: SignUpForm;
   /**
    * `useFieldArray` requires an array, so the form always stores this as an array.
@@ -153,7 +157,8 @@ export type SignInMethodsObject = Record<
  */
 export type SignInExperiencePageManagedData = Omit<
   SignInExperience,
-  OmittedSignInExperienceKeys | 'hideLogtoBranding'
+  OmittedSignInExperienceKeys | 'customUiCsp' | 'hideLogtoBranding'
 > & {
+  customUiCsp?: CustomUiCsp;
   hideLogtoBranding?: boolean;
 };

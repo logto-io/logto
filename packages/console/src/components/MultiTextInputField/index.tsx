@@ -8,7 +8,7 @@ import MultiTextInput from '@/ds-components/MultiTextInput';
 import styles from './index.module.scss';
 
 type Props = MultiTextInputProps &
-  Pick<FormFieldProps, 'isRequired' | 'tip'> & {
+  Pick<FormFieldProps, 'isRequired' | 'tip' | 'featureTag'> & {
     readonly formFieldClassName?: FormFieldProps['className'];
   };
 
@@ -16,6 +16,7 @@ function MultiTextInputField({
   title,
   isRequired,
   tip,
+  featureTag,
   formFieldClassName,
   value,
   ...rest
@@ -25,6 +26,7 @@ function MultiTextInputField({
       title={title}
       isRequired={isRequired}
       tip={tip}
+      featureTag={featureTag}
       className={formFieldClassName}
       headlineClassName={conditional(value && value.length > 1 && styles.headlineWithMultiInputs)}
     >
