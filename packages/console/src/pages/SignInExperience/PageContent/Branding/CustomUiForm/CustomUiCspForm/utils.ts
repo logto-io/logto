@@ -1,7 +1,7 @@
 import {
   normalizeCustomUiCspSourceExpression as normalizeCustomUiCspSourceExpressionBase,
   type CustomUiCspDirective,
-} from '@logto/schemas';
+} from '@logto/core-kit';
 
 type ValidationOptions = {
   readonly isProductionEnv?: boolean;

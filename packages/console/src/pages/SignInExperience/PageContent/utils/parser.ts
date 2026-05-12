@@ -1,10 +1,10 @@
+import { customUiCspDirectives } from '@logto/core-kit';
 import {
   AlternativeSignUpIdentifier,
   SignInIdentifier,
   SignInMode,
   type SignInExperience,
   type SignUp,
-  customUiCspDirectives,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
