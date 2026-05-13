@@ -48,6 +48,7 @@
     },
     "/api/experience/profile/avatar": {
       "post": {
+        "tags": ["Dev feature"],
         "operationId": "UploadAvatar",
         "summary": "Upload avatar during register flow",
         "description": "Upload an image (e.g. avatar) during the `Register` experience interaction and return the public URL of the uploaded asset. The user account may not have been created yet at this point; the upload is scoped to the current interaction session. The returned URL can then be submitted as a profile field value via `POST /api/experience/profile`.",
