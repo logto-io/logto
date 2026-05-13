@@ -1,6 +1,7 @@
 import {
   DomainStatus,
   type Application,
+  type ProtectedAppConfigProviderData,
   type ProtectedAppMetadata,
   type CustomDomain,
 } from '@logto/schemas';
@@ -29,8 +30,24 @@ import { isSubdomainOf } from '#src/utils/domain.js';
 
 export type ProtectedAppLibrary = ReturnType<typeof createProtectedAppLibrary>;
 
+const localProtectedAppConfigProviderConfig: ProtectedAppConfigProviderData = {
+  accountIdentifier: 'local',
+  namespaceIdentifier: 'local',
+  keyName: 'local',
+  domain: 'protected-app.localhost',
+  apiToken: 'local',
+};
+
 const getProviderConfig = async () => {
   const { protectedAppConfigProviderConfig } = SystemContext.shared;
+  if (protectedAppConfigProviderConfig) {
+    return protectedAppConfigProviderConfig;
+  }
+
+  if (EnvSet.values.isProtectedAppLocalDevEnabled) {
+    return localProtectedAppConfigProviderConfig;
+  }
+
   assertThat(protectedAppConfigProviderConfig, 'application.protected_app_not_configured', 501);
 
   return protectedAppConfigProviderConfig;
@@ -44,7 +61,7 @@ const getHostnameProviderConfig = async () => {
 };
 
 const deleteRemoteAppConfigs = async (host: string): Promise<void> => {
-  if (EnvSet.values.isIntegrationTest) {
+  if (EnvSet.values.isIntegrationTest || EnvSet.values.isProtectedAppLocalDevEnabled) {
     return;
   }
 
@@ -108,6 +125,16 @@ const buildProtectedAppData = async ({
 const addDomainToRemote = async (
   hostname: string
 ): Promise<NonNullable<ProtectedAppMetadata['customDomains']>[number]> => {
+  if (EnvSet.values.isProtectedAppLocalDevEnabled) {
+    return {
+      domain: hostname,
+      cloudflareData: null,
+      status: DomainStatus.Active,
+      errorMessage: null,
+      dnsRecords: [],
+    };
+  }
+
   const hostnameProviderConfig = await getHostnameProviderConfig();
   const { blockedDomains } = hostnameProviderConfig;
   assertThat(
@@ -142,6 +169,10 @@ const addDomainToRemote = async (
  * Call Cloudflare API to delete the domain (custom hostname)
  */
 const deleteDomainFromRemote = async (id: string) => {
+  if (EnvSet.values.isProtectedAppLocalDevEnabled) {
+    return;
+  }
+
   const hostnameProviderConfig = await getHostnameProviderConfig();
   await deleteCustomHostname(hostnameProviderConfig, id);
 };
@@ -153,7 +184,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
 
   const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
     // Skip for integration test, we don't do third party call in integration test
-    if (EnvSet.values.isIntegrationTest) {
+    if (EnvSet.values.isIntegrationTest || EnvSet.values.isProtectedAppLocalDevEnabled) {
       return;
     }
 
@@ -205,12 +236,19 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       protectedAppMetadata: NonNullable<Application['protectedAppMetadata']>;
     }
   > => {
-    const { protectedAppHostnameProviderConfig } = SystemContext.shared;
-    assertThat(protectedAppHostnameProviderConfig, 'domain.not_configured', 501);
-
     const application = await findApplicationById(applicationId);
     const { protectedAppMetadata } = application;
     assertThat(protectedAppMetadata, 'application.protected_app_not_configured', 501);
+
+    if (EnvSet.values.isProtectedAppLocalDevEnabled) {
+      return {
+        ...application,
+        protectedAppMetadata,
+      };
+    }
+
+    const { protectedAppHostnameProviderConfig } = SystemContext.shared;
+    assertThat(protectedAppHostnameProviderConfig, 'domain.not_configured', 501);
 
     if (!protectedAppMetadata.customDomains || protectedAppMetadata.customDomains.length === 0) {
       return {

@@ -8,7 +8,7 @@ import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import { type SelectedGuide } from '@/components/Guide/GuideCard';
 import GuideCardGroup from '@/components/Guide/GuideCardGroup';
 import { useAppGuideMetadata } from '@/components/Guide/hooks';
-import { isCloud } from '@/consts/env';
+import { isProtectedAppEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
@@ -97,7 +97,7 @@ function GuideLibrary({ className, hasCardBorder, hasCardButton, onSelectGuide }
                   <CheckboxGroup
                     className={styles.checkboxGroup}
                     options={allAppGuideCategories
-                      .filter((category) => isCloud || category !== 'Protected')
+                      .filter((category) => isProtectedAppEnabled || category !== 'Protected')
                       .map((category) => ({
                         title: `guide.categories.${category}`,
                         value: category,
