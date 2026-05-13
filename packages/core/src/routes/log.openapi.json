@@ -9,7 +9,7 @@
     "/api/logs": {
       "get": {
         "summary": "Get logs",
-        "description": "Get logs that match the given query with pagination.",
+        "description": "Get logs that match the given query with pagination.\n\n### Pagination on large result sets\n\nFor tenants with very large log volumes, the default exact `count(*)` may exceed Postgres `statement_timeout`. Pass `enableCap=true` to short-circuit the count query: any tenant with more than 10,000 matching logs saturates `Total-Number` at the sentinel value `10001` and the response includes `Total-Number-Is-Capped: true`. In capped responses the `Link` header omits `rel=\"last\"` and `rel=\"next\"`; walk forward by incrementing `page` and stop on an empty response.",
         "parameters": [
           {
             "name": "userId",
@@ -25,11 +25,30 @@
             "name": "logKey",
             "in": "query",
             "description": "Filter logs by log key."
+          },
+          {
+            "name": "enableCap",
+            "in": "query",
+            "description": "When `true`, short-circuits the underlying `count(*)` query: any tenant with more than 10,000 matching logs saturates `Total-Number` at the sentinel value `10001` and the response emits `Total-Number-Is-Capped: true`. The `Link` header then omits `rel=\"last\"` and `rel=\"next\"` because the real total is unknown. Default `false`; recommended `true` for any client whose tenant volume may exceed 10,000 matching logs to avoid `statement_timeout`."
           }
         ],
         "responses": {
           "200": {
-            "description": "An array of logs that match the given query."
+            "description": "An array of logs that match the given query.",
+            "headers": {
+              "Total-Number": {
+                "description": "When `enableCap=false`: exact match count. When `enableCap=true`: either the exact count (≤ 10,000) or the saturation sentinel `10001`; inspect `Total-Number-Is-Capped` to distinguish.",
+                "schema": { "type": "integer" }
+              },
+              "Total-Number-Is-Capped": {
+                "description": "Present and set to `true` only when `enableCap=true` and the result has more than 10,000 matching logs (in which case `Total-Number` is `10001`). Consumers should treat `Total-Number` as `> 10,000` when this header is present.",
+                "schema": { "type": "string", "enum": ["true"] }
+              },
+              "Link": {
+                "description": "Pagination links per RFC 5988. `rel=\"first\"` and `rel=\"prev\"` are emitted as usual. When the response is capped (`Total-Number-Is-Capped: true`), `rel=\"last\"` and `rel=\"next\"` are omitted because the saturated count makes the derived page count unreliable — clients should walk forward by incrementing `page` and stop on an empty response.",
+                "schema": { "type": "string" }
+              }
+            }
           }
         }
       }

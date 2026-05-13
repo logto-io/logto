@@ -7,7 +7,6 @@ import useSWR from 'swr';
 import ApplicationName from '@/components/ApplicationName';
 import UserName from '@/components/UserName';
 import { auditLogEventTitle, defaultPageSize } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Table from '@/ds-components/Table';
 import type { Column } from '@/ds-components/Table/types';
 import type { RequestError } from '@/hooks/use-api';
@@ -55,10 +54,10 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
   const url = buildUrl('api/logs', {
     page: String(page),
     page_size: String(pageSize),
+    enableCap: 'true',
     ...conditional(event && { logKey: event }),
     ...conditional(searchApplicationId && { applicationId: searchApplicationId }),
     ...conditional(userId && { userId }),
-    ...conditional(isDevFeaturesEnabled && { enableCap: 'true' }),
   });
 
   const { data, error, mutate } = useSWR<[Log[], number, boolean], RequestError>(url);
