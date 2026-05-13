@@ -1,4 +1,4 @@
-import { Applications, ApplicationSecrets, internalPrefix } from '@logto/schemas';
+import { Applications, ApplicationSecrets, ApplicationType, internalPrefix } from '@logto/schemas';
 import { generateStandardSecret } from '@logto/shared';
 import { z } from 'zod';
 
@@ -11,8 +11,22 @@ import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 export const generateInternalSecret = () => internalPrefix + generateStandardSecret();
 
 export default function applicationSecretRoutes<T extends ManagementApiRouter>(
-  ...[router, { queries }]: RouterInitArgs<T>
+  ...[
+    router,
+    {
+      queries,
+      libraries: { protectedApps },
+    },
+  ]: RouterInitArgs<T>
 ) {
+  const syncProtectedAppConfigsToRemote = async (appId: string) => {
+    const application = await queries.applications.findApplicationById(appId);
+
+    if (application.type === ApplicationType.Protected) {
+      await protectedApps.syncAppConfigsToRemote(appId);
+    }
+  };
+
   // See OpenAPI description for the rationale of this endpoint.
   router.delete(
     '/applications/:id/legacy-secret',
@@ -81,6 +95,7 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         applicationId: appId,
         value: generateStandardSecret(),
       });
+      await syncProtectedAppConfigsToRemote(appId);
       ctx.status = 201;
 
       return next();
@@ -99,6 +114,7 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
       } = ctx.guard;
 
       await queries.applicationSecrets.deleteByName(appId, name);
+      await syncProtectedAppConfigsToRemote(appId);
       ctx.status = 204;
 
       return next();
@@ -124,6 +140,7 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         set: body,
         jsonbMode: 'replace',
       });
+      await syncProtectedAppConfigsToRemote(appId);
       return next();
     }
   );

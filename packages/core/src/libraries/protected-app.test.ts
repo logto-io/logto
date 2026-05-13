@@ -1,4 +1,4 @@
-import { type Application } from '@logto/schemas';
+import { type Application, type ApplicationSecret } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import {
@@ -32,7 +32,16 @@ const { updateProtectedAppSiteConfigs, deleteCustomHostname } = await mockEsmWit
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createProtectedAppLibrary } = await import('./protected-app.js');
 
+const mockApplicationSecret: ApplicationSecret = {
+  tenantId: 'mock_tenant_id',
+  applicationId: mockProtectedApplication.id,
+  name: 'Default secret',
+  value: 'app_secret',
+  createdAt: Date.now(),
+  expiresAt: null,
+};
 const findApplicationById = jest.fn(async (): Promise<Application> => mockProtectedApplication);
+const findActiveSecretByApplicationId = jest.fn(async () => mockApplicationSecret);
 const updateApplicationById = jest.fn(async (id: string, data: Partial<Application>) => ({
   ...mockProtectedApplication,
   ...data,
@@ -48,6 +57,9 @@ const {
     applications: {
       findApplicationById,
       updateApplicationById,
+    },
+    applicationSecrets: {
+      findActiveSecretByApplicationId,
     },
   })
 );
@@ -93,7 +105,7 @@ describe('syncAppConfigsToRemote()', () => {
   it('should sync configs to remote', async () => {
     findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
     await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
-    const { protectedAppMetadata, id, secret } = mockProtectedApplication;
+    const { protectedAppMetadata, id } = mockProtectedApplication;
     expect(updateProtectedAppSiteConfigs).toHaveBeenCalledWith(
       mockProtectedAppConfigProviderConfig,
       protectedAppMetadata.host,
@@ -101,7 +113,7 @@ describe('syncAppConfigsToRemote()', () => {
         ...protectedAppMetadata,
         sdkConfig: {
           appId: id,
-          appSecret: secret,
+          appSecret: mockApplicationSecret.value,
           // Avoid mocking envset
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           endpoint: expect.anything(),
@@ -119,7 +131,7 @@ describe('syncAppConfigsToRemote()', () => {
       },
     });
     await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
-    const { protectedAppMetadata, id, secret } = mockProtectedApplication;
+    const { protectedAppMetadata, id } = mockProtectedApplication;
     expect(updateProtectedAppSiteConfigs).toHaveBeenLastCalledWith(
       protectedAppConfigProviderConfig,
       mockCustomDomain.domain,
@@ -128,7 +140,7 @@ describe('syncAppConfigsToRemote()', () => {
         host: mockCustomDomain.domain,
         sdkConfig: {
           appId: id,
-          appSecret: secret,
+          appSecret: mockApplicationSecret.value,
           // Avoid mocking envset
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           endpoint: expect.anything(),

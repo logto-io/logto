@@ -149,6 +149,7 @@ const deleteDomainFromRemote = async (id: string) => {
 export const createProtectedAppLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById, updateApplicationById },
+    applicationSecrets: { findActiveSecretByApplicationId },
   } = queries;
 
   const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
@@ -159,10 +160,13 @@ export const createProtectedAppLibrary = (queries: Queries) => {
 
     const protectedAppConfigProviderConfig = await getProviderConfig();
 
-    const { protectedAppMetadata, id, secret, tenantId } = await findApplicationById(applicationId);
+    const { protectedAppMetadata, id, tenantId } = await findApplicationById(applicationId);
     if (!protectedAppMetadata) {
       return;
     }
+
+    const applicationSecret = await findActiveSecretByApplicationId(applicationId);
+    assertThat(applicationSecret, new RequestError({ code: 'entity.not_found', status: 404 }));
 
     const { customDomains, ...rest } = protectedAppMetadata;
 
@@ -170,7 +174,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       ...rest,
       sdkConfig: {
         appId: id,
-        appSecret: secret,
+        appSecret: applicationSecret.value,
         endpoint: getTenantEndpoint(tenantId, EnvSet.values).origin,
       },
     };

@@ -14,6 +14,8 @@ type ApplicationCredentials = ApplicationSecret & {
 
 const { table, fields } = convertToIdentifiers(ApplicationSecrets);
 
+export const defaultApplicationSecretName = 'Default secret';
+
 export class ApplicationSecretQueries {
   public readonly insert = buildInsertIntoWithPool(this.pool)(ApplicationSecrets, {
     returning: true,
@@ -43,6 +45,19 @@ export class ApplicationSecretQueries {
       select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
         where ${fields.applicationId} = ${appId}
+    `);
+  }
+
+  async findActiveSecretByApplicationId(appId: string) {
+    return this.pool.maybeOne<ApplicationSecret>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.applicationId} = ${appId}
+        and (${fields.expiresAt} is null or ${fields.expiresAt} > now())
+        order by
+          case when ${fields.name} = ${defaultApplicationSecretName} then 0 else 1 end,
+          ${fields.createdAt} asc
+        limit 1
     `);
   }
 

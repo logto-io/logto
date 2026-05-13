@@ -19,6 +19,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
+import { defaultApplicationSecretName } from '#src/queries/application-secrets.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
@@ -234,7 +235,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       if (hasSecrets(application.type)) {
         await queries.applicationSecrets.insert({
-          name: 'Default secret',
+          name: defaultApplicationSecretName,
           applicationId: application.id,
           value: generateStandardSecret(),
         });
