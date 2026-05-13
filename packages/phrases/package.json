@@ -51,7 +51,17 @@
     "extends": "@silverhand",
     "rules": {
       "no-template-curly-in-string": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "src/locales/**/*.ts"
+        ],
+        "rules": {
+          "max-lines": "off"
+        }
+      }
+    ]
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }
