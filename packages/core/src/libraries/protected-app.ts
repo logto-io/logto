@@ -149,7 +149,6 @@ const deleteDomainFromRemote = async (id: string) => {
 export const createProtectedAppLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById, updateApplicationById },
-    applicationSecrets: { findActiveSecretByApplicationId },
   } = queries;
 
   const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
@@ -165,15 +164,13 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       return;
     }
 
-    const applicationSecret = await findActiveSecretByApplicationId(applicationId);
-
     const { customDomains, ...rest } = protectedAppMetadata;
 
     const siteConfigs = {
       ...rest,
       sdkConfig: {
         appId: id,
-        appSecret: applicationSecret?.value ?? secret,
+        appSecret: secret,
         endpoint: getTenantEndpoint(tenantId, EnvSet.values).origin,
       },
     };
