@@ -17,6 +17,7 @@ import { type MiddlewareType } from 'koa';
 import type Router from 'koa-router';
 import { object, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -151,69 +152,72 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }
   );
 
-  router.post(
-    `${experienceRoutes.profile}/avatar`,
-    koaGuard({
-      files: object({
-        file: uploadFileGuard.array().min(1),
+  // TODO: Remove this dev feature gate when avatar upload is ready for production.
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.post(
+      `${experienceRoutes.profile}/avatar`,
+      koaGuard({
+        files: object({
+          file: uploadFileGuard.array().min(1),
+        }),
+        response: userAssetsGuard,
+        status: [200, 400, 403, 404, 500],
       }),
-      response: userAssetsGuard,
-      status: [200, 400, 403, 404, 500],
-    }),
-    async (ctx, next) => {
-      const { experienceInteraction } = ctx;
+      async (ctx, next) => {
+        const { experienceInteraction } = ctx;
 
-      // Only allow uploading during the register flow. Existing users should use
-      // `POST /api/my-account/user-assets` to update their avatar.
-      assertThat(
-        experienceInteraction.interactionEvent === InteractionEvent.Register,
-        new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
-      );
+        // Only allow uploading during the register flow. Existing users should use
+        // `POST /api/my-account/user-assets` to update their avatar.
+        assertThat(
+          experienceInteraction.interactionEvent === InteractionEvent.Register,
+          new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
+        );
 
-      const file = ctx.guard.files.file[0];
-      assertThat(file, 'guard.invalid_input');
-      assertThat(file.size <= maxUploadFileSize, 'guard.file_size_exceeded');
-      assertThat(
-        allowUploadMimeTypes.map(String).includes(file.mimetype),
-        'guard.mime_type_not_allowed'
-      );
+        const file = ctx.guard.files.file[0];
+        assertThat(file, 'guard.invalid_input');
+        assertThat(file.size <= maxUploadFileSize, 'guard.file_size_exceeded');
+        assertThat(
+          allowUploadMimeTypes.map(String).includes(file.mimetype),
+          'guard.mime_type_not_allowed'
+        );
 
-      const [tenantId] = await getTenantId(ctx.URL);
-      assertThat(tenantId, 'guard.can_not_get_tenant_id');
+        const [tenantId] = await getTenantId(ctx.URL);
+        assertThat(tenantId, 'guard.can_not_get_tenant_id');
 
-      const { storageProviderConfig } = SystemContext.shared;
-      assertThat(storageProviderConfig, 'storage.not_configured');
+        const { storageProviderConfig } = SystemContext.shared;
+        assertThat(storageProviderConfig, 'storage.not_configured');
 
-      // The user may not yet be created at this point (typical for register flow with
-      // mandatory extra profile fields). Use the interaction id as the key prefix in that
-      // case so uploads remain scoped per interaction session.
-      const userIdOrPending =
-        experienceInteraction.identifiedUserId ?? `_pending/${ctx.interactionDetails.jti}`;
+        // The user may not yet be created at this point (typical for register flow with
+        // mandatory extra profile fields). Use the interaction id as the key prefix in that
+        // case so uploads remain scoped per interaction session.
+        const userIdOrPending =
+          experienceInteraction.identifiedUserId ?? `_pending/${ctx.interactionDetails.jti}`;
 
-      const uploadFile = buildUploadFile(storageProviderConfig);
-      const objectKey = `${tenantId}/${userIdOrPending}/${format(
-        new Date(),
-        'yyyy/MM/dd'
-      )}/${generateStandardId(8)}/${file.originalFilename}`;
+        const uploadFile = buildUploadFile(storageProviderConfig);
+        const objectKey = `${tenantId}/${userIdOrPending}/${format(
+          new Date(),
+          'yyyy/MM/dd'
+        )}/${generateStandardId(8)}/${file.originalFilename}`;
 
-      try {
-        const { url } = await uploadFile(await readFile(file.filepath), objectKey, {
-          contentType: file.mimetype,
-          publicUrl: storageProviderConfig.publicUrl,
-        });
+        try {
+          const { url } = await uploadFile(await readFile(file.filepath), objectKey, {
+            contentType: file.mimetype,
+            publicUrl: storageProviderConfig.publicUrl,
+          });
 
-        ctx.body = { url };
-      } catch (error: unknown) {
-        getConsoleLogFromContext(ctx).error(error);
-        throw new RequestError({
-          code: 'storage.upload_error',
-          status: 500,
-        });
+          ctx.body = { url };
+        } catch (error: unknown) {
+          getConsoleLogFromContext(ctx).error(error);
+          throw new RequestError({
+            code: 'storage.upload_error',
+            status: 500,
+          });
+        }
+
+        return next();
       }
-
-      return next();
-    }
-  );
+    );
+  }
 
   router.put(
     `${experienceRoutes.profile}/password`,

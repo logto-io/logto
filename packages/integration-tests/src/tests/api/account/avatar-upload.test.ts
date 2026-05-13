@@ -9,6 +9,7 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const buildPngFormData = () => {
   const formData = new FormData();
@@ -21,86 +22,89 @@ const buildPngFormData = () => {
   return formData;
 };
 
-describe('POST /my-account/user-assets and GET /my-account/user-assets/service-status', () => {
-  beforeAll(async () => {
-    await enableAllPasswordSignInMethods();
-    await updateAccountCenter({
-      enabled: true,
-      fields: {
-        avatar: AccountCenterControlValue.Edit,
-      },
-    });
-  });
-
-  it('should be able to query service status', async () => {
-    const { user, username, password } = await createDefaultTenantUserWithPassword();
-    const api = await signInAndGetUserApi(username, password, {
-      scopes: [UserScope.Profile],
+devFeatureTest.describe(
+  'POST /my-account/user-assets and GET /my-account/user-assets/service-status',
+  () => {
+    beforeAll(async () => {
+      await enableAllPasswordSignInMethods();
+      await updateAccountCenter({
+        enabled: true,
+        fields: {
+          avatar: AccountCenterControlValue.Edit,
+        },
+      });
     });
 
-    const response = await api
-      .get('api/my-account/user-assets/service-status')
-      .json<{ status: string }>();
-    // CI does not configure a storage provider, so the expected status is `not_configured`.
-    // Both responses are acceptable shapes.
-    expect(['ready', 'not_configured']).toContain(response.status);
+    it('should be able to query service status', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile],
+      });
 
-    await deleteDefaultTenantUser(user.id);
-  });
+      const response = await api
+        .get('api/my-account/user-assets/service-status')
+        .json<{ status: string }>();
+      // CI does not configure a storage provider, so the expected status is `not_configured`.
+      // Both responses are acceptable shapes.
+      expect(['ready', 'not_configured']).toContain(response.status);
 
-  it('should fail when avatar field is not editable', async () => {
-    await updateAccountCenter({
-      enabled: true,
-      fields: {
-        avatar: AccountCenterControlValue.ReadOnly,
-      },
+      await deleteDefaultTenantUser(user.id);
     });
 
-    const { user, username, password } = await createDefaultTenantUserWithPassword();
-    const api = await signInAndGetUserApi(username, password, {
-      scopes: [UserScope.Profile],
-    });
+    it('should fail when avatar field is not editable', async () => {
+      await updateAccountCenter({
+        enabled: true,
+        fields: {
+          avatar: AccountCenterControlValue.ReadOnly,
+        },
+      });
 
-    await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
-      code: 'account_center.field_not_editable',
-      status: 400,
-    });
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile],
+      });
 
-    await deleteDefaultTenantUser(user.id);
-
-    // Restore for subsequent tests
-    await updateAccountCenter({
-      enabled: true,
-      fields: {
-        avatar: AccountCenterControlValue.Edit,
-      },
-    });
-  });
-
-  it('should fail when storage is not configured (or succeed when configured)', async () => {
-    const { user, username, password } = await createDefaultTenantUserWithPassword();
-    const api = await signInAndGetUserApi(username, password, {
-      scopes: [UserScope.Profile],
-    });
-
-    const { status } = await api
-      .get('api/my-account/user-assets/service-status')
-      .json<{ status: 'ready' | 'not_configured' }>();
-
-    if (status === 'not_configured') {
-      // CI typically does not configure a storage provider; expect a `storage.not_configured` error.
       await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
-        code: 'storage.not_configured',
+        code: 'account_center.field_not_editable',
         status: 400,
       });
-    } else {
-      const response = await api
-        .post('api/my-account/user-assets', { body: buildPngFormData() })
-        .json<{ url: string }>();
-      expect(typeof response.url).toBe('string');
-      expect(response.url.length).toBeGreaterThan(0);
-    }
 
-    await deleteDefaultTenantUser(user.id);
-  });
-});
+      await deleteDefaultTenantUser(user.id);
+
+      // Restore for subsequent tests
+      await updateAccountCenter({
+        enabled: true,
+        fields: {
+          avatar: AccountCenterControlValue.Edit,
+        },
+      });
+    });
+
+    it('should fail when storage is not configured (or succeed when configured)', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile],
+      });
+
+      const { status } = await api
+        .get('api/my-account/user-assets/service-status')
+        .json<{ status: 'ready' | 'not_configured' }>();
+
+      if (status === 'not_configured') {
+        // CI typically does not configure a storage provider; expect a `storage.not_configured` error.
+        await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
+          code: 'storage.not_configured',
+          status: 400,
+        });
+      } else {
+        const response = await api
+          .post('api/my-account/user-assets', { body: buildPngFormData() })
+          .json<{ url: string }>();
+        expect(typeof response.url).toBe('string');
+        expect(response.url.length).toBeGreaterThan(0);
+      }
+
+      await deleteDefaultTenantUser(user.id);
+    });
+  }
+);

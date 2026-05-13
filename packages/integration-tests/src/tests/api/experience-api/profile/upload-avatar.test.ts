@@ -3,6 +3,7 @@ import { InteractionEvent } from '@logto/schemas';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { devFeatureTest } from '#src/utils.js';
 
 const buildPngFormData = () => {
   const formData = new FormData();
@@ -21,7 +22,7 @@ const buildTextFormData = () => {
   return formData;
 };
 
-describe('POST /experience/profile/avatar', () => {
+devFeatureTest.describe('POST /experience/profile/avatar', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
   });
