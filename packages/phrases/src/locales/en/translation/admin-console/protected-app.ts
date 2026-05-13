@@ -41,8 +41,11 @@ const protected_app = {
       'Request additional user scopes during Protected App sign-in to include enabled extended claims in the forwarded ID token.',
     field_title: 'Additional scopes',
     field_description:
-      'Claims are included only when they are enabled in Custom JWT > ID token and the matching scope is requested here.',
-    claims_label: 'Claims: {{claims}}',
+      'Claims are included only when they are enabled in <a>Custom JWT > ID token</a> and the matching scope is requested here.',
+    table_column_scope: 'Scope',
+    table_column_claims_forwarded: 'Claims forwarded',
+    disabled_claims_hint:
+      'Greyed out claims are not yet forwarded. Enable them in <a>Custom JWT > ID token</a> to include them in the ID token.',
   },
   success_message:
     '🎉 App authentication successfully enabled! Explore the new experience of your website.',

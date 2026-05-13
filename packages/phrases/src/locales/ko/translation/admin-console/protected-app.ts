@@ -33,6 +33,18 @@ const protected_app = {
         '로컬 서버를 먼저 인터넷에 노출시켜야 합니다. <a>로컬 개발</a>에 대해 더 알아보기.',
     },
   },
+  id_token_claims: {
+    card_title: 'ID token 클레임',
+    card_description:
+      '보호된 앱 로그인 중에 추가 사용자 scope를 요청하여, 활성화된 확장 클레임을 전달되는 ID token에 포함시킵니다.',
+    field_title: '추가 scope',
+    field_description:
+      '클레임은 <a>Custom JWT > ID token</a>에서 활성화되어 있고 해당 scope가 여기서 요청된 경우에만 포함됩니다.',
+    table_column_scope: 'Scope',
+    table_column_claims_forwarded: '전달되는 클레임',
+    disabled_claims_hint:
+      '회색으로 표시된 클레임은 아직 전달되지 않습니다. <a>Custom JWT > ID token</a>에서 활성화하여 ID token에 포함시키세요.',
+  },
   success_message: '🎉 앱 인증이 성공적으로 활성화되었습니다! 새로운 웹 사이트 경험을 탐색하세요.',
 };
 

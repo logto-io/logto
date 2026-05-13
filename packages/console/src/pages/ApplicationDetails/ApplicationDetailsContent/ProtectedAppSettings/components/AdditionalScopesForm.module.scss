@@ -1,19 +1,99 @@
 @use '@/scss/underscore' as _;
 
-.scopeGroups {
-  display: flex;
-  flex-direction: column;
-  gap: _.unit(4);
+.fieldHeader {
+  margin-bottom: _.unit(3);
 }
 
-.scopeGroup {
+.fieldTitle {
+  font: var(--font-label-2);
+  color: var(--color-text);
+}
+
+.fieldDescription {
+  margin-top: _.unit(1);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.table {
+  overflow: hidden;
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
+}
+
+.headerRow,
+.scopeRow {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(260px, 1.4fr);
+  align-items: center;
+  column-gap: _.unit(4);
+}
+
+.headerRow {
+  padding: _.unit(3) _.unit(4);
+  background: var(--color-layer-2);
+  font: var(--font-section-head-2);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.scopeRow {
+  min-height: 56px;
+  padding: _.unit(3) _.unit(4);
+  border-top: 1px solid var(--color-divider);
+}
+
+.scopeCell {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: _.unit(2);
+  min-width: 0;
+}
+
+.scopeLabel {
+  flex: 1;
+  min-width: 0;
+  font: var(--font-body-2);
+  font-family: 'Roboto Mono', monospace;
+  color: var(--color-text);
+  word-break: break-all;
+}
+
+.claimsCell {
+  display: flex;
+  flex-wrap: wrap;
   gap: _.unit(1);
 }
 
-.claims {
-  margin-inline-start: _.unit(6);
+.claimTag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 6px;
+  padding: _.unit(0.5) _.unit(2);
   font: var(--font-body-2);
+  font-family: 'Roboto Mono', monospace;
+  color: var(--color-text-secondary);
+  background: var(--color-neutral-variant-90);
+  gap: _.unit(1);
+
+  &::before {
+    content: '×';
+  }
+
+  &.enabled {
+    color: var(--color-on-success-container);
+    background: var(--color-success-container);
+
+    &::before {
+      content: '✓';
+    }
+  }
+}
+
+.tableFootnote {
+  margin-top: _.unit(2);
+  font: var(--font-body-3);
   color: var(--color-text-secondary);
 }

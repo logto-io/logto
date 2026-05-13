@@ -37,6 +37,18 @@ const protected_app = {
         "Veuillez exposer votre serveur local à Internet d'abord. En savoir plus sur le <a>développement local</a>.",
     },
   },
+  id_token_claims: {
+    card_title: "Claims de l'ID token",
+    card_description:
+      "Demandez des scopes utilisateur supplémentaires lors de la connexion à l'application protégée pour inclure les claims étendus activés dans l'ID token transmis.",
+    field_title: 'Scopes supplémentaires',
+    field_description:
+      "Les claims ne sont inclus que lorsqu'ils sont activés dans <a>Custom JWT > ID token</a> et que le scope correspondant est demandé ici.",
+    table_column_scope: 'Scope',
+    table_column_claims_forwarded: 'Claims transmis',
+    disabled_claims_hint:
+      "Les claims grisés ne sont pas encore transmis. Activez-les dans <a>Custom JWT > ID token</a> pour les inclure dans l'ID token.",
+  },
   success_message:
     "🎉 Authentification de l'application activée avec succès ! Découvrez la nouvelle expérience de votre site web.",
 };

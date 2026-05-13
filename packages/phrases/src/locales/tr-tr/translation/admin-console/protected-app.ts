@@ -35,6 +35,18 @@ const protected_app = {
         'Lütfen önce yerel sunucunuzu internete açın. <a>Yerel geliştirme</a> hakkında daha fazla bilgi edinin.',
     },
   },
+  id_token_claims: {
+    card_title: 'ID token claimleri',
+    card_description:
+      "Korumalı uygulamada oturum açarken etkinleştirilen genişletilmiş claimleri iletilen ID token'a dahil etmek için ek kullanıcı scope'larını isteyin.",
+    field_title: "Ek scope'lar",
+    field_description:
+      "Claimler yalnızca <a>Custom JWT > ID token</a> üzerinde etkinleştirildiğinde ve burada eşleşen scope'un istenmesi durumunda dahil edilir.",
+    table_column_scope: 'Scope',
+    table_column_claims_forwarded: 'İletilen claimler',
+    disabled_claims_hint:
+      "Gri renkli claimler henüz iletilmiyor. ID token'a dahil etmek için <a>Custom JWT > ID token</a> üzerinde etkinleştirin.",
+  },
   success_message:
     '🎉 Uygulama kimlik doğrulaması başarıyla etkinleştirildi! Web sitenizin yeni deneyimini keşfedin.',
 };
