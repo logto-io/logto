@@ -166,7 +166,9 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     }
 
     const applicationSecret = await findActiveSecretByApplicationId(applicationId);
-    assertThat(applicationSecret, new RequestError({ code: 'entity.not_found', status: 404 }));
+    if (!applicationSecret) {
+      return;
+    }
 
     const { customDomains, ...rest } = protectedAppMetadata;
 

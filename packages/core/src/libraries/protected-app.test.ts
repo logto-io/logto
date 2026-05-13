@@ -102,6 +102,13 @@ describe('syncAppConfigsToRemote()', () => {
     expect(updateProtectedAppSiteConfigs).not.toBeCalled();
   });
 
+  it('should skip if active application secret is missing', async () => {
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
+    findActiveSecretByApplicationId.mockResolvedValueOnce(null as never);
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
+    expect(updateProtectedAppSiteConfigs).not.toBeCalled();
+  });
+
   it('should sync configs to remote', async () => {
     findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
     await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
