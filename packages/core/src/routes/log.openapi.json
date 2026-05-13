@@ -27,12 +27,25 @@
             "description": "Filter logs by log key."
           },
           {
+            "name": "start_time",
+            "in": "query",
+            "description": "Exclusive lower bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt > start_time`. Recommended for clients paginating across very large log ranges to keep query latency consistent."
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "description": "Exclusive upper bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt < end_time`. Returns `400` if `start_time >= end_time` when both are present."
+          },
+          {
             "name": "enableCap",
             "in": "query",
             "description": "When `true`, short-circuits the underlying `count(*)` query: any tenant with more than 10,000 matching logs saturates `Total-Number` at the sentinel value `10001` and the response emits `Total-Number-Is-Capped: true`. The `Link` header then omits `rel=\"last\"` and `rel=\"next\"` because the real total is unknown. Default `false`; recommended `true` for any client whose tenant volume may exceed 10,000 matching logs to avoid `statement_timeout`."
           }
         ],
         "responses": {
+          "400": {
+            "description": "Returned when `start_time` or `end_time` is not a finite number, or when `start_time >= end_time`."
+          },
           "200": {
             "description": "An array of logs that match the given query.",
             "headers": {

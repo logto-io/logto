@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- hook route tests cover hooks CRUD + recent-logs + executions; splitting fragments the shared mock setup. */
 import {
   InteractionHookEvent,
   LogResult,
@@ -142,7 +143,7 @@ describe('hook routes', () => {
     const page = 1;
     const pageSize = 5;
 
-    const startTimeExclusive = subDays(new Date(100_000), 1).getTime();
+    const startTime = subDays(new Date(100_000), 1).getTime();
 
     await hookRequest.get(
       `/hooks/${hookId}/recent-logs?logKey=${logKey}&page=${page}&page_size=${pageSize}`
@@ -151,7 +152,7 @@ describe('hook routes', () => {
       {
         payload: { hookId },
         logKey,
-        startTimeExclusive,
+        startTime,
         includeKeyPrefix: [hook.Type.TriggerHook],
       },
       { capped: false }
@@ -159,7 +160,7 @@ describe('hook routes', () => {
     expect(findLogs).toHaveBeenCalledWith(5, 0, {
       payload: { hookId },
       logKey,
-      startTimeExclusive,
+      startTime,
       includeKeyPrefix: [hook.Type.TriggerHook],
     });
 
@@ -188,6 +189,81 @@ describe('hook routes', () => {
     it('passes capped=false to countLogs when enableCap is omitted', async () => {
       await hookRequest.get(`/hooks/foo/recent-logs`);
       expect(countLogs).toHaveBeenCalledWith(expect.any(Object), { capped: false });
+    });
+  });
+
+  describe('GET /hooks/:id/recent-logs start_time / end_time params', () => {
+    const now = 100_000_000;
+    const internalFloor = subDays(new Date(now), 1).getTime();
+
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(now);
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('uses the 24h default when no time params are supplied', async () => {
+      await hookRequest.get(`/hooks/foo/recent-logs`);
+      expect(countLogs).toHaveBeenCalledWith(
+        expect.objectContaining({
+          startTime: internalFloor,
+          endTime: undefined,
+        }),
+        expect.any(Object)
+      );
+    });
+
+    it('skips the 24h default and honors start_time as-is', async () => {
+      // 48 hours ago — older than the default 24h, but the user's value wins
+      // because they supplied an explicit window.
+      const userStart = now - 48 * 60 * 60 * 1000;
+      await hookRequest.get(`/hooks/foo/recent-logs?start_time=${userStart}`);
+      expect(countLogs).toHaveBeenCalledWith(
+        expect.objectContaining({
+          startTime: userStart,
+          endTime: undefined,
+        }),
+        expect.any(Object)
+      );
+    });
+
+    it('skips the 24h default when only end_time is supplied', async () => {
+      const userEnd = now - 60_000;
+      await hookRequest.get(`/hooks/foo/recent-logs?end_time=${userEnd}`);
+      expect(countLogs).toHaveBeenCalledWith(
+        expect.objectContaining({
+          startTime: undefined,
+          endTime: userEnd,
+        }),
+        expect.any(Object)
+      );
+    });
+
+    it('honors both start_time and end_time when supplied', async () => {
+      const userStart = now - 60 * 60 * 1000;
+      const userEnd = now - 60_000;
+      await hookRequest.get(`/hooks/foo/recent-logs?start_time=${userStart}&end_time=${userEnd}`);
+      expect(countLogs).toHaveBeenCalledWith(
+        expect.objectContaining({
+          startTime: userStart,
+          endTime: userEnd,
+        }),
+        expect.any(Object)
+      );
+    });
+
+    it('returns 400 when start_time >= end_time', async () => {
+      const response = await hookRequest.get(
+        `/hooks/foo/recent-logs?start_time=2000&end_time=1000`
+      );
+      expect(response.status).toEqual(400);
+    });
+
+    it('returns 400 when start_time is not a finite number', async () => {
+      const response = await hookRequest.get(`/hooks/foo/recent-logs?start_time=oops`);
+      expect(response.status).toEqual(400);
     });
   });
 
@@ -412,3 +488,4 @@ describe('hook routes', () => {
     );
   });
 });
+/* eslint-enable max-lines */

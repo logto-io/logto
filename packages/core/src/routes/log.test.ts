@@ -101,6 +101,63 @@ describe('logRoutes', () => {
         expect(countLogs).toHaveBeenCalledWith(expect.any(Object), { capped: false });
       });
     });
+
+    describe('start_time / end_time query params', () => {
+      it('passes startTime to countLogs and findLogs when start_time is set', async () => {
+        await logRequest.get(`/logs?start_time=1000`);
+        expect(countLogs).toHaveBeenCalledWith(
+          expect.objectContaining({ startTime: 1000, endTime: undefined }),
+          expect.any(Object)
+        );
+        expect(findLogs).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          expect.objectContaining({ startTime: 1000, endTime: undefined })
+        );
+      });
+
+      it('passes endTime to countLogs and findLogs when end_time is set', async () => {
+        await logRequest.get(`/logs?end_time=2000`);
+        expect(countLogs).toHaveBeenCalledWith(
+          expect.objectContaining({ startTime: undefined, endTime: 2000 }),
+          expect.any(Object)
+        );
+        expect(findLogs).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          expect.objectContaining({ startTime: undefined, endTime: 2000 })
+        );
+      });
+
+      it('passes both bounds when start_time and end_time are set', async () => {
+        await logRequest.get(`/logs?start_time=1000&end_time=2000`);
+        expect(countLogs).toHaveBeenCalledWith(
+          expect.objectContaining({ startTime: 1000, endTime: 2000 }),
+          expect.any(Object)
+        );
+      });
+
+      it('returns 400 when start_time >= end_time', async () => {
+        const response = await logRequest.get(`/logs?start_time=2000&end_time=1000`);
+        expect(response.status).toEqual(400);
+        expect(countLogs).not.toHaveBeenCalled();
+      });
+
+      it('returns 400 when start_time equals end_time', async () => {
+        const response = await logRequest.get(`/logs?start_time=1000&end_time=1000`);
+        expect(response.status).toEqual(400);
+      });
+
+      it('returns 400 when start_time is not a finite number', async () => {
+        const response = await logRequest.get(`/logs?start_time=abc`);
+        expect(response.status).toEqual(400);
+      });
+
+      it('returns 400 when end_time is not a finite number', async () => {
+        const response = await logRequest.get(`/logs?end_time=NaN`);
+        expect(response.status).toEqual(400);
+      });
+    });
   });
 
   describe('GET /logs/:id', () => {

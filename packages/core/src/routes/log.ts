@@ -12,6 +12,7 @@ import { object, string } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
@@ -29,15 +30,21 @@ export default function logRoutes<T extends ManagementApiRouter>(
         applicationId: string().optional(),
         logKey: string().optional(),
         enableCap: string().optional(),
+        start_time: string().optional(),
+        end_time: string().optional(),
       }),
       response: Logs.guard.array(),
-      status: 200,
+      status: [200, 400],
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
       const {
-        query: { userId, applicationId, logKey, enableCap },
+        query: { userId, applicationId, logKey, enableCap, start_time, end_time },
       } = ctx.guard;
+
+      const startTime = parseTimestampParam(start_time, 'start_time');
+      const endTime = parseTimestampParam(end_time, 'end_time');
+      validateTimeWindow(startTime, endTime);
 
       const includeKeyPrefix: AuditLogPrefix[] = [
         token.Type.ExchangeTokenBy,
@@ -55,6 +62,8 @@ export default function logRoutes<T extends ManagementApiRouter>(
           {
             logKey,
             payload: { applicationId, userId },
+            startTime,
+            endTime,
             includeKeyPrefix,
           },
           { capped: yes(enableCap) }
@@ -62,6 +71,8 @@ export default function logRoutes<T extends ManagementApiRouter>(
         findLogs(limit, offset, {
           logKey,
           payload: { userId, applicationId },
+          startTime,
+          endTime,
           includeKeyPrefix,
         }),
       ]);

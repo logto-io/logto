@@ -136,12 +136,25 @@
             "description": "The log key to filter logs."
           },
           {
+            "name": "start_time",
+            "in": "query",
+            "description": "Exclusive lower bound on `createdAt`, in unix milliseconds. Supplying either `start_time` or `end_time` replaces the endpoint's default 24-hour lower bound, so callers can query an arbitrary historical window. Returns `400` if `start_time >= end_time` when both are present."
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "description": "Exclusive upper bound on `createdAt`, in unix milliseconds. Supplying either `start_time` or `end_time` replaces the endpoint's default 24-hour lower bound."
+          },
+          {
             "name": "enableCap",
             "in": "query",
             "description": "When `true`, short-circuits the underlying `count(*)` query: results with more than 10,000 matching logs saturate `Total-Number` at the sentinel `10001` and emit `Total-Number-Is-Capped: true`; the `Link` header omits `rel=\"last\"` and `rel=\"next\"`. Default `false`. (This endpoint is already scoped to a single hook over the last 24 hours, so the cap rarely triggers in practice.)"
           }
         ],
         "responses": {
+          "400": {
+            "description": "Returned when `start_time` or `end_time` is not a finite number, or when `start_time >= end_time`."
+          },
           "200": {
             "description": "A list of recent logs for the hook.",
             "headers": {
