@@ -102,11 +102,25 @@ describe('syncAppConfigsToRemote()', () => {
     expect(updateProtectedAppSiteConfigs).not.toBeCalled();
   });
 
-  it('should skip if active application secret is missing', async () => {
+  it('should fall back to legacy secret if active application secret is missing', async () => {
     findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
     findActiveSecretByApplicationId.mockResolvedValueOnce(null as never);
     await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
-    expect(updateProtectedAppSiteConfigs).not.toBeCalled();
+    const { protectedAppMetadata, id, secret } = mockProtectedApplication;
+    expect(updateProtectedAppSiteConfigs).toHaveBeenCalledWith(
+      mockProtectedAppConfigProviderConfig,
+      protectedAppMetadata.host,
+      {
+        ...protectedAppMetadata,
+        sdkConfig: {
+          appId: id,
+          appSecret: secret,
+          // Avoid mocking envset
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          endpoint: expect.anything(),
+        },
+      }
+    );
   });
 
   it('should sync configs to remote', async () => {

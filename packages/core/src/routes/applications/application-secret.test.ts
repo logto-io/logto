@@ -73,6 +73,17 @@ describe('application secret routes', () => {
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
   });
 
+  it('POST /applications/:id/secrets should succeed if protected app config resync fails', async () => {
+    syncAppConfigsToRemote.mockRejectedValueOnce(new Error('sync failed'));
+
+    const response = await applicationSecretRequest
+      .post(`/applications/${mockProtectedApplication.id}/secrets`)
+      .send({ name: 'New secret' });
+
+    expect(response.status).toEqual(201);
+    expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
+  });
+
   it('DELETE /applications/:id/secrets/:name should resync protected app configs', async () => {
     const response = await applicationSecretRequest.delete(
       `/applications/${mockProtectedApplication.id}/secrets/${encodeURIComponent(
@@ -84,7 +95,35 @@ describe('application secret routes', () => {
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
   });
 
+  it('DELETE /applications/:id/secrets/:name should succeed if protected app config resync fails', async () => {
+    syncAppConfigsToRemote.mockRejectedValueOnce(new Error('sync failed'));
+
+    const response = await applicationSecretRequest.delete(
+      `/applications/${mockProtectedApplication.id}/secrets/${encodeURIComponent(
+        mockApplicationSecret.name
+      )}`
+    );
+
+    expect(response.status).toEqual(204);
+    expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
+  });
+
   it('PATCH /applications/:id/secrets/:name should resync protected app configs', async () => {
+    const response = await applicationSecretRequest
+      .patch(
+        `/applications/${mockProtectedApplication.id}/secrets/${encodeURIComponent(
+          mockApplicationSecret.name
+        )}`
+      )
+      .send({ name: 'Renamed secret' });
+
+    expect(response.status).toEqual(200);
+    expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
+  });
+
+  it('PATCH /applications/:id/secrets/:name should succeed if protected app config resync fails', async () => {
+    syncAppConfigsToRemote.mockRejectedValueOnce(new Error('sync failed'));
+
     const response = await applicationSecretRequest
       .patch(
         `/applications/${mockProtectedApplication.id}/secrets/${encodeURIComponent(

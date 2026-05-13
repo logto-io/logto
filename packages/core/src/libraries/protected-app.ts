@@ -160,15 +160,12 @@ export const createProtectedAppLibrary = (queries: Queries) => {
 
     const protectedAppConfigProviderConfig = await getProviderConfig();
 
-    const { protectedAppMetadata, id, tenantId } = await findApplicationById(applicationId);
+    const { protectedAppMetadata, id, secret, tenantId } = await findApplicationById(applicationId);
     if (!protectedAppMetadata) {
       return;
     }
 
     const applicationSecret = await findActiveSecretByApplicationId(applicationId);
-    if (!applicationSecret) {
-      return;
-    }
 
     const { customDomains, ...rest } = protectedAppMetadata;
 
@@ -176,7 +173,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       ...rest,
       sdkConfig: {
         appId: id,
-        appSecret: applicationSecret.value,
+        appSecret: applicationSecret?.value ?? secret,
         endpoint: getTenantEndpoint(tenantId, EnvSet.values).origin,
       },
     };
