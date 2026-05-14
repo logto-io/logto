@@ -6,6 +6,7 @@ import {
   Applications,
   ApplicationType,
   buildBuiltInApplicationDataForTenant,
+  defaultApplicationSecretName,
   hasSecrets,
   InternalRole,
   ProductEvent,
@@ -19,7 +20,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { buildOidcClientMetadata } from '#src/oidc/utils.js';
-import { defaultApplicationSecretName } from '#src/queries/application-secrets.js';
 import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 

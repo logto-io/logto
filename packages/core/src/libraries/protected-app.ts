@@ -1,6 +1,7 @@
 import {
   DomainStatus,
   type Application,
+  ApplicationSecrets,
   type ProtectedAppMetadata,
   type CustomDomain,
 } from '@logto/schemas';
@@ -149,6 +150,7 @@ const deleteDomainFromRemote = async (id: string) => {
 export const createProtectedAppLibrary = (queries: Queries) => {
   const {
     applications: { findApplicationById, updateApplicationById },
+    applicationSecrets: { findActiveSecretByApplicationId },
   } = queries;
 
   const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
@@ -159,18 +161,27 @@ export const createProtectedAppLibrary = (queries: Queries) => {
 
     const protectedAppConfigProviderConfig = await getProviderConfig();
 
-    const { protectedAppMetadata, id, secret, tenantId } = await findApplicationById(applicationId);
+    const { protectedAppMetadata, id, tenantId } = await findApplicationById(applicationId);
     if (!protectedAppMetadata) {
       return;
     }
 
+    const activeSecret = await findActiveSecretByApplicationId(applicationId);
+    assertThat(
+      activeSecret,
+      new RequestError({
+        code: 'entity.not_exists',
+        status: 500,
+        name: ApplicationSecrets.table,
+      })
+    );
     const { customDomains, ...rest } = protectedAppMetadata;
 
     const siteConfigs = {
       ...rest,
       sdkConfig: {
         appId: id,
-        appSecret: secret,
+        appSecret: activeSecret.value,
         endpoint: getTenantEndpoint(tenantId, EnvSet.values).origin,
       },
     };

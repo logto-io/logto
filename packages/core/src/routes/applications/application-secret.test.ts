@@ -21,7 +21,7 @@ const insert = jest.fn(async (data: Partial<ApplicationSecret>) => ({
   ...mockApplicationSecret,
   ...data,
 }));
-const deleteByName = jest.fn();
+const deleteByName = jest.fn(async () => mockApplicationSecret);
 const update = jest.fn(async ({ set }: { set: Partial<ApplicationSecret> }) => ({
   ...mockApplicationSecret,
   ...set,
@@ -73,15 +73,16 @@ describe('application secret routes', () => {
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
   });
 
-  it('POST /applications/:id/secrets should succeed if protected app config resync fails', async () => {
+  it('POST /applications/:id/secrets should roll back if protected app config resync fails', async () => {
     syncAppConfigsToRemote.mockRejectedValueOnce(new Error('sync failed'));
 
     const response = await applicationSecretRequest
       .post(`/applications/${mockProtectedApplication.id}/secrets`)
       .send({ name: 'New secret' });
 
-    expect(response.status).toEqual(201);
+    expect(response.status).toEqual(500);
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
+    expect(deleteByName).toHaveBeenCalledWith(mockProtectedApplication.id, 'New secret');
   });
 
   it('DELETE /applications/:id/secrets/:name should resync protected app configs', async () => {
@@ -95,7 +96,7 @@ describe('application secret routes', () => {
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
   });
 
-  it('DELETE /applications/:id/secrets/:name should succeed if protected app config resync fails', async () => {
+  it('DELETE /applications/:id/secrets/:name should roll back if protected app config resync fails', async () => {
     syncAppConfigsToRemote.mockRejectedValueOnce(new Error('sync failed'));
 
     const response = await applicationSecretRequest.delete(
@@ -104,8 +105,14 @@ describe('application secret routes', () => {
       )}`
     );
 
-    expect(response.status).toEqual(204);
+    expect(response.status).toEqual(500);
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
+    expect(insert).toHaveBeenCalledWith({
+      applicationId: mockProtectedApplication.id,
+      name: mockApplicationSecret.name,
+      value: mockApplicationSecret.value,
+      expiresAt: mockApplicationSecret.expiresAt,
+    });
   });
 
   it('PATCH /applications/:id/secrets/:name should resync protected app configs', async () => {
@@ -121,7 +128,7 @@ describe('application secret routes', () => {
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
   });
 
-  it('PATCH /applications/:id/secrets/:name should succeed if protected app config resync fails', async () => {
+  it('PATCH /applications/:id/secrets/:name should roll back if protected app config resync fails', async () => {
     syncAppConfigsToRemote.mockRejectedValueOnce(new Error('sync failed'));
 
     const response = await applicationSecretRequest
@@ -132,8 +139,13 @@ describe('application secret routes', () => {
       )
       .send({ name: 'Renamed secret' });
 
-    expect(response.status).toEqual(200);
+    expect(response.status).toEqual(500);
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
+    expect(update).toHaveBeenLastCalledWith({
+      where: { applicationId: mockProtectedApplication.id, name: 'Renamed secret' },
+      set: { name: mockApplicationSecret.name },
+      jsonbMode: 'replace',
+    });
   });
 
   it('should skip resync for non-protected apps', async () => {

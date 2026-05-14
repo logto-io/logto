@@ -1,4 +1,9 @@
-import { Applications, type ApplicationSecret, ApplicationSecrets } from '@logto/schemas';
+import {
+  Applications,
+  type ApplicationSecret,
+  ApplicationSecrets,
+  defaultApplicationSecretName,
+} from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
@@ -13,8 +18,6 @@ type ApplicationCredentials = ApplicationSecret & {
 };
 
 const { table, fields } = convertToIdentifiers(ApplicationSecrets);
-
-export const defaultApplicationSecretName = 'Default secret';
 
 export class ApplicationSecretQueries {
   public readonly insert = buildInsertIntoWithPool(this.pool)(ApplicationSecrets, {
@@ -62,13 +65,19 @@ export class ApplicationSecretQueries {
   }
 
   async deleteByName(appId: string, name: string) {
-    const { rowCount } = await this.pool.query(sql`
+    const {
+      rowCount,
+      rows: [deletedSecret],
+    } = await this.pool.query<ApplicationSecret>(sql`
       delete from ${table}
         where ${fields.applicationId} = ${appId}
         and ${fields.name} = ${name}
+      returning ${sql.join(Object.values(fields), sql`, `)}
     `);
-    if (rowCount < 1) {
+    if (rowCount < 1 || !deletedSecret) {
       throw new DeletionError(ApplicationSecrets.table, name);
     }
+
+    return deletedSecret;
   }
 }

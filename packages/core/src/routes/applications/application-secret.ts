@@ -5,7 +5,6 @@ import { z } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
-import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
@@ -20,22 +19,8 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  const syncProtectedAppConfigsToRemote = async (
-    appId: string,
-    context: Parameters<typeof getConsoleLogFromContext>[0]
-  ) => {
-    const application = await queries.applications.findApplicationById(appId);
-
-    if (application.type === ApplicationType.Protected) {
-      try {
-        await protectedApps.syncAppConfigsToRemote(appId);
-      } catch (error: unknown) {
-        getConsoleLogFromContext(context).warn(
-          `Failed to sync protected app configs after secret mutation for application ${appId}.`,
-          error instanceof Error ? error.message : String(error)
-        );
-      }
-    }
+  const syncProtectedAppConfigsToRemote = async (appId: string) => {
+    await protectedApps.syncAppConfigsToRemote(appId);
   };
 
   // See OpenAPI description for the rationale of this endpoint.
@@ -101,12 +86,23 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         })
       );
 
-      ctx.body = await queries.applicationSecrets.insert({
+      const application = await queries.applications.findApplicationById(appId);
+      const createdSecret = await queries.applicationSecrets.insert({
         ...body,
         applicationId: appId,
         value: generateStandardSecret(),
       });
-      await syncProtectedAppConfigsToRemote(appId, ctx);
+      ctx.body = createdSecret;
+
+      try {
+        if (application.type === ApplicationType.Protected) {
+          await syncProtectedAppConfigsToRemote(appId);
+        }
+      } catch (error: unknown) {
+        await queries.applicationSecrets.deleteByName(appId, createdSecret.name);
+        throw error;
+      }
+
       ctx.status = 201;
 
       return next();
@@ -124,8 +120,23 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         params: { id: appId, name },
       } = ctx.guard;
 
-      await queries.applicationSecrets.deleteByName(appId, name);
-      await syncProtectedAppConfigsToRemote(appId, ctx);
+      const application = await queries.applications.findApplicationById(appId);
+      const deletedSecret = await queries.applicationSecrets.deleteByName(appId, name);
+
+      try {
+        if (application.type === ApplicationType.Protected) {
+          await syncProtectedAppConfigsToRemote(appId);
+        }
+      } catch (error: unknown) {
+        await queries.applicationSecrets.insert({
+          applicationId: appId,
+          name: deletedSecret.name,
+          value: deletedSecret.value,
+          expiresAt: deletedSecret.expiresAt,
+        });
+        throw error;
+      }
+
       ctx.status = 204;
 
       return next();
@@ -146,12 +157,27 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         body,
       } = ctx.guard;
 
-      ctx.body = await queries.applicationSecrets.update({
+      const application = await queries.applications.findApplicationById(appId);
+      const updatedSecret = await queries.applicationSecrets.update({
         where: { applicationId: appId, name },
         set: body,
         jsonbMode: 'replace',
       });
-      await syncProtectedAppConfigsToRemote(appId, ctx);
+      ctx.body = updatedSecret;
+
+      try {
+        if (application.type === ApplicationType.Protected) {
+          await syncProtectedAppConfigsToRemote(appId);
+        }
+      } catch (error: unknown) {
+        await queries.applicationSecrets.update({
+          where: { applicationId: appId, name: updatedSecret.name },
+          set: { name },
+          jsonbMode: 'replace',
+        });
+        throw error;
+      }
+
       return next();
     }
   );
