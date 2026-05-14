@@ -5,6 +5,15 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
+const protectedAppAdditionalScopes = [
+  UserScope.CustomData,
+  UserScope.Identities,
+  UserScope.Roles,
+  UserScope.Organizations,
+  UserScope.OrganizationRoles,
+] as const;
+const protectedAppAdditionalScopeGuard = z.enum(protectedAppAdditionalScopes);
+
 export const applicationCreateGuard = originalApplicationCreateGuard
   .omit({
     protectedAppMetadata: true,
@@ -35,7 +44,7 @@ export const applicationPatchGuard = originalApplicationPatchGuard
             })
           )
           .optional(),
-        additionalScopes: z.array(z.nativeEnum(UserScope)).optional(),
+        additionalScopes: z.array(protectedAppAdditionalScopeGuard).optional(),
       })
       .nullish(),
   });

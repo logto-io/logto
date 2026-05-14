@@ -251,6 +251,14 @@ describe('application route', () => {
     });
   });
 
+  it('PATCH /applications/:applicationId for protected app rejects additional scopes without extended ID token claims', async () => {
+    const response = await applicationRequest
+      .patch('/applications/foo')
+      .send({ protectedAppMetadata: { additionalScopes: [UserScope.Sessions] } });
+
+    expect(response.status).toEqual(400);
+  });
+
   it('PATCH /applications/:applicationId expect to throw with invalid properties', async () => {
     await expect(
       applicationRequest.patch('/applications/doo').send({

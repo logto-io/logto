@@ -11,7 +11,13 @@ import { type ApplicationForm } from '../../utils';
 
 import styles from './AdditionalScopesForm.module.scss';
 
-const scopes = Object.values(UserScope).filter((scope) => extendedIdTokenClaimsByScope[scope]);
+const scopes = [
+  UserScope.CustomData,
+  UserScope.Identities,
+  UserScope.Roles,
+  UserScope.Organizations,
+  UserScope.OrganizationRoles,
+] as const;
 
 function AdditionalScopesForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -60,6 +66,7 @@ function AdditionalScopesForm() {
                   <div key={scope} className={styles.scopeRow}>
                     <div className={styles.scopeCell}>
                       <Checkbox
+                        label={<span className={styles.scopeLabel}>{scope}</span>}
                         checked={checked}
                         onChange={() => {
                           onChange(
@@ -67,7 +74,6 @@ function AdditionalScopesForm() {
                           );
                         }}
                       />
-                      <span className={styles.scopeLabel}>{scope}</span>
                     </div>
                     <div className={styles.claimsCell}>
                       {isLoading && (

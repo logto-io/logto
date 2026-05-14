@@ -3,6 +3,15 @@ import { z } from 'zod';
 
 import { cloudflareDataGuard, domainDnsRecordsGuard, domainStatusGuard } from './custom-domain.js';
 
+const protectedAppAdditionalScopes = [
+  UserScope.CustomData,
+  UserScope.Identities,
+  UserScope.Roles,
+  UserScope.Organizations,
+  UserScope.OrganizationRoles,
+] as const;
+const protectedAppAdditionalScopeGuard = z.enum(protectedAppAdditionalScopes);
+
 export const customDomainGuard = z.object({
   /* The domain name, e.g app.example.com */
   domain: z.string(),
@@ -34,7 +43,7 @@ export const protectedAppMetadataGuard = z.object({
     })
   ),
   /* Additional scopes requested by protected app sign-in */
-  additionalScopes: z.array(z.nativeEnum(UserScope)).optional(),
+  additionalScopes: z.array(protectedAppAdditionalScopeGuard).optional(),
   /* Custom domain */
   customDomains: customDomainsGuard.optional(),
 });
