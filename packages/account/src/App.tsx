@@ -78,7 +78,7 @@ void initI18n(resolveUiLocalesLanguage(getUiLocales()));
 
 const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 
-const Main = () => {
+export const Main = () => {
   const params = new URLSearchParams(window.location.search);
   const { pathname } = window.location;
   const isSocialCallback = pathname.startsWith(
