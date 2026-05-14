@@ -20,7 +20,7 @@ export const defaultMetadata: ConnectorMetadata = {
   description: {
     en: 'MailJunky is a communication platform for transactional and marketing email.',
     'zh-CN': 'MailJunky 是一个面向消费者的邮件通讯平台。',
-    'tr-TR': 'MailJunky, operasyonel ve pazarlama e- postaları için bir iletişim platformudur.',
+    'tr-TR': 'MailJunky, operasyonel ve pazarlama e-postaları için bir iletişim platformudur.',
     ko: 'MailJunky는 마케팅 및 이메일을 전송할 수 있는 플랫폼 입니다.',
   },
   readme: './README.md',

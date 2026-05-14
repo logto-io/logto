@@ -31,19 +31,18 @@ export const mailJunkyConfigGuard = z.object({
   apiKey: z.string(),
   fromEmail: z.string(),
   fromName: z.string().optional(),
-  templates: z.array(templateGuard).refine(
-    (templates) =>
-      requiredTemplateUsageTypes.every((requiredType) =>
-        templates.map((template) => template.usageType).includes(requiredType)
-      ),
-    (templates) => ({
-      message: `Template with UsageType (${requiredTemplateUsageTypes
-        .filter(
-          (requiredType) => !templates.map((template) => template.usageType).includes(requiredType)
-        )
-        .join(', ')}) should be provided!`,
-    })
-  ),
+  templates: z.array(templateGuard).superRefine((templates, ctx) => {
+    const usageTypes = new Set(templates.map((template) => template.usageType));
+    const missing = requiredTemplateUsageTypes.filter(
+      (requiredType) => !usageTypes.has(requiredType)
+    );
+    if (missing.length > 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Missing required templates for usageType: ${missing.join(', ')}`,
+      });
+    }
+  }),
 });
 
 export type MailJunkyConfig = z.infer<typeof mailJunkyConfigGuard>;

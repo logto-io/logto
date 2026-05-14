@@ -28,12 +28,12 @@ API reference: [MailJunky documentation](https://www.mailjunky.ai/docs).
 
 ## Configure your connector
 
-| Field       | Description |
-|------------|-------------|
-| `apiKey`   | MailJunky API key (`mj_live_...` or `mj_test_...`). |
-| `fromEmail`| Verified sender email address. |
-| `fromName` | Optional display name for the `From` header. |
-| `templates`| JSON array of templates (see below). |
+| Field        | Description                                           |
+| ------------ | ----------------------------------------------------- |
+| `apiKey`     | MailJunky API key (`mj_live_...` or `mj_test_...`). |
+| `fromEmail`  | Verified sender email address.                      |
+| `fromName`   | Optional display name for the `From` header.        |
+| `templates`  | JSON array of templates (see below).                |
 
 At minimum, templates with `usageType` **`Register`**, **`SignIn`**, **`ForgotPassword`**, and **`Generic`** are required.
 
@@ -41,11 +41,11 @@ At minimum, templates with `usageType` **`Register`**, **`SignIn`**, **`ForgotPa
 
 Each template object supports:
 
-| Property    | Description |
-|------------|-------------|
-| `usageType`| One of Logto template types, e.g. `SignIn`, `Register`, `ForgotPassword`, `Generic`, `OrganizationInvitation`, … |
-| `subject`  | Email subject; supports Handlebars (e.g. `{{code}}`, `{{link}}`). |
-| `content`  | Body; HTML or plain text; supports Handlebars placeholders. |
+| Property     | Description                                                                                                      |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `usageType`  | One of Logto template types, e.g. `SignIn`, `Register`, `ForgotPassword`, `Generic`, `OrganizationInvitation`, … |
+| `subject`    | Email subject; supports Handlebars (e.g. `{{code}}`, `{{link}}`).                                                |
+| `content`    | Body; HTML or plain text; supports Handlebars placeholders.                                                      |
 
 If no template exists for a given flow, Logto falls back to the **`Generic`** template.
 
@@ -84,15 +84,15 @@ Use the **Send** test in the connector detail page with a real inbox you can acc
 
 ## Config types
 
-| Name        | Type |
-|-------------|------|
-| `apiKey`    | string |
-| `fromEmail` | string |
+| Name        | Type              |
+| ----------- | ----------------- |
+| `apiKey`    | string            |
+| `fromEmail` | string            |
 | `fromName`  | string (optional) |
-| `templates` | `Template[]` |
+| `templates` | `Template[]`      |
 
 | Template properties | Type   |
-|---------------------|--------|
+| ------------------- | ------ |
 | `usageType`         | string |
 | `subject`           | string |
 | `content`           | string |
