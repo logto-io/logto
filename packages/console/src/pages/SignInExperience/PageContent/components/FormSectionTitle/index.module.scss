@@ -3,4 +3,8 @@
 .title {
   @include _.section-head-1;
   color: var(--color-neutral-variant-60);
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  white-space: nowrap;
 }

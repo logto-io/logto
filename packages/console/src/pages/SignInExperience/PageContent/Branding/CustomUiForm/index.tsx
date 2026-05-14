@@ -80,7 +80,10 @@ function CustomUiForm() {
         <CustomCssEditorField />
       </Card>
       <Card>
-        <FormSectionTitle title="custom_ui.bring_your_ui_title" />
+        <FormSectionTitle
+          title="custom_ui.bring_your_ui_title"
+          featureTag={{ isVisible: !isBringYourUiEnabled, plan: latestProPlanId }}
+        />
         {isCloud && (
           <FormField
             title="sign_in_exp.custom_ui.bring_your_ui_upload_title"
@@ -99,10 +102,6 @@ function CustomUiForm() {
               </Trans>
             }
             descriptionPosition="top"
-            featureTag={{
-              isVisible: !isBringYourUiEnabled,
-              plan: latestProPlanId,
-            }}
           >
             <Controller
               name="customUiAssets"
