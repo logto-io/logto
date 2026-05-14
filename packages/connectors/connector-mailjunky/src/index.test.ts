@@ -51,6 +51,25 @@ describe('MailJunky connector', () => {
     });
   });
 
+  it('strips control characters and angle brackets from the From display name', async () => {
+    const maliciousName = 'Evil\r\n<\n>Suffix';
+    nockSend({
+      ...mockedGenericEmailParameters,
+      from: `EvilSuffix <${mockedConfig.fromEmail}>`,
+    });
+
+    getConfig.mockResolvedValue({
+      ...mockedConfig,
+      fromName: maliciousName,
+    });
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+  });
+
   it('should fall back to generic template if usage-specific template not found', async () => {
     nockSend(mockedGenericEmailParameters);
     getConfig.mockResolvedValue(mockedConfig);

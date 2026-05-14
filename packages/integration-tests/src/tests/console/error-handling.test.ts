@@ -22,6 +22,14 @@ describe('error handling', () => {
 
     const expectedPathname = new URL(path.href).pathname.replace(/\/$/, '') || '/';
 
+    const resolveTracePathname = (rawUrl: string): string => {
+      try {
+        return new URL(rawUrl, path.origin).pathname.replace(/\/$/, '') || '/';
+      } catch {
+        return '';
+      }
+    };
+
     await trace.stop();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
@@ -45,12 +53,12 @@ describe('error handling', () => {
         return false;
       }
 
-      try {
-        const pathname = new URL(url).pathname.replace(/\/$/, '') || '/';
-        return pathname === expectedPathname || pathname.endsWith('/__internal__/import-error');
-      } catch {
-        return url === path.href;
+      const pathname = resolveTracePathname(url);
+      if (pathname.length === 0) {
+        return false;
       }
+
+      return pathname === expectedPathname || pathname.endsWith('/__internal__/import-error');
     });
 
     // Initial navigation plus one automatic reload after the lazy chunk fails (Vite / browser).

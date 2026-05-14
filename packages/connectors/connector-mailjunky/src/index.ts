@@ -1,4 +1,5 @@
 import { assert, trySafe } from '@silverhand/essentials';
+// Got@14 exposes both `default` and named `got`; named import matches other Logto connectors.
 import { got, HTTPError } from 'got';
 
 import type {
@@ -23,8 +24,31 @@ import { convert as htmlToText } from 'html-to-text';
 import { defaultMetadata, endpoint } from './constant.js';
 import { mailJunkyConfigGuard, type PublicParameters } from './types.js';
 
-const formatFrom = (fromEmail: string, fromName?: string): string =>
-  fromName ? `${fromName} <${fromEmail}>` : fromEmail;
+/** Strip ASCII control characters that must not appear in SMTP header fields (RFC 5322). */
+const stripHeaderControlChars = (value: string): string =>
+  [...value]
+    .filter((character) => {
+      const code = character.codePointAt(0);
+      return code !== undefined && code > 31 && code !== 127;
+    })
+    .join('');
+
+/**
+ * Sanitize a display name for `From: Name <addr>` so CR/LF cannot inject extra headers and
+ * angle brackets cannot break the mailbox token.
+ */
+const sanitizeMailboxDisplayName = (name: string): string =>
+  stripHeaderControlChars(name).replaceAll('<', '').replaceAll('>', '').trim();
+
+const formatFrom = (fromEmail: string, fromName?: string): string => {
+  const email = stripHeaderControlChars(fromEmail).trim();
+  if (!fromName) {
+    return email;
+  }
+
+  const safeName = sanitizeMailboxDisplayName(fromName);
+  return safeName.length > 0 ? `${safeName} <${email}>` : email;
+};
 
 const parseSendFrom = (
   renderedSendFrom: string,
@@ -40,17 +64,26 @@ const parseSendFrom = (
     const email = match[2]?.trim();
 
     if (email) {
-      return { fromEmail: email, fromName: name?.length ? name : undefined };
+      return {
+        fromEmail: stripHeaderControlChars(email).trim(),
+        fromName: name?.length ? sanitizeMailboxDisplayName(name) : undefined,
+      };
     }
   }
 
   // Format: "email@domain" (no display name)
   if (value.includes('@') && !value.includes(' ')) {
-    return { fromEmail: value, fromName: undefined };
+    return { fromEmail: stripHeaderControlChars(value).trim(), fromName: undefined };
   }
 
   // Otherwise treat as display name only
-  return { fromEmail: fallbackEmail, fromName: value.length > 0 ? value : fallbackName };
+  const rawDisplay = value.length > 0 ? value : fallbackName;
+  if (!rawDisplay) {
+    return { fromEmail: fallbackEmail, fromName: undefined };
+  }
+
+  const safeName = sanitizeMailboxDisplayName(rawDisplay);
+  return { fromEmail: fallbackEmail, fromName: safeName.length > 0 ? safeName : undefined };
 };
 
 /**
