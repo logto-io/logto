@@ -1,0 +1,387 @@
+# GitLab CI/CD pipeline migrated from .github/workflows/*.yml
+#
+# Source workflows:
+#   - .github/workflows/main.yml        -> stages: build, check, lint, test, alteration, dockerize
+#   - .github/workflows/release.yml     -> stages: release-docker, release-package (runs on tags)
+#   - .github/workflows/changesets.yml  -> see TODO at the bottom (not migrated 1:1)
+#
+# Required GitLab CI/CD variables to configure (Settings > CI/CD > Variables):
+#   - CI_JOB_TOKEN                provided by GitLab automatically (replaces GITHUB_TOKEN for most uses)
+#   - GITLAB_RELEASE_TOKEN        (masked, protected) - optional, only if release-cli needs a custom token
+#
+# GitLab provides these automatically for the built-in Container Registry
+# (no manual configuration needed):
+#   - CI_REGISTRY                 e.g. registry.gitlab.com
+#   - CI_REGISTRY_IMAGE           e.g. registry.gitlab.com/<group>/<project>
+#   - CI_REGISTRY_USER            ephemeral user for `docker login`
+#   - CI_REGISTRY_PASSWORD        ephemeral password for `docker login`
+#
+# Note: GitHub `concurrency` ~= GitLab `interruptible: true` + workflow:auto-cancel rules.
+
+# Stages are sequenced intentionally (one job per stage) so the self-hosted
+# runner is not saturated by parallel jobs sharing CPU/memory.
+stages:
+  - build
+  - check
+  - lint
+  - test
+  - alteration
+  - dockerize
+  - release-package
+  - release-dockerize
+  - release-publish
+
+# Cancel redundant pipelines on the same branch / MR (mirrors GitHub `cancel-in-progress`).
+workflow:
+  auto_cancel:
+    on_new_commit: interruptible
+  rules:
+    # Run for merge requests
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    # Run for pushes to master and push-action/** branches
+    - if: $CI_COMMIT_BRANCH == "master"
+    - if: $CI_COMMIT_BRANCH =~ /^push-action\//
+    # Run for tag pushes (release pipeline)
+    - if: $CI_COMMIT_TAG
+    # Manual dispatch
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+# ---------------------------------------------------------------------------
+# Shared Node.js / pnpm setup (replaces silverhand-io/actions-node-pnpm-run-steps@v5)
+# ---------------------------------------------------------------------------
+.node-pnpm:
+  # node:22 image matches the engines.node ^22.14.0 in package.json
+  image: node:22
+  interruptible: true
+  variables:
+    # Disable husky install during CI (the prepare script already checks $CI)
+    CI: "true"
+    PNPM_HOME: "/root/.local/share/pnpm"
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store/
+    policy: pull-push
+  before_script:
+    # rsync is required by packages/core build to copy OpenAPI files.
+    - apt-get update
+    - apt-get install -y --no-install-recommends rsync
+    - rm -rf /var/lib/apt/lists/*
+    # Export PATH in the shell so `$PATH` expands correctly at runtime
+    # (GitLab does not reliably interpolate $PATH inside `variables:`).
+    - export PNPM_HOME="/root/.local/share/pnpm"
+    - export PATH="$PNPM_HOME:$PATH"
+    - corepack enable
+    - corepack prepare pnpm@10 --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm install --frozen-lockfile
+
+# ---------------------------------------------------------------------------
+# main-build (from main.yml)
+# ---------------------------------------------------------------------------
+build:
+  extends: .node-pnpm
+  stage: build
+  script:
+    - pnpm ci:build
+
+# ---------------------------------------------------------------------------
+# main-check (from main.yml)
+# ---------------------------------------------------------------------------
+check:
+  extends: .node-pnpm
+  stage: check
+  script:
+    - pnpm prepack
+    - pnpm -r check
+
+# ---------------------------------------------------------------------------
+# main-lint (from main.yml) - lint + stylelint
+# ---------------------------------------------------------------------------
+lint:
+  extends: .node-pnpm
+  stage: lint
+  script:
+    - pnpm prepack
+    - pnpm ci:lint
+    - pnpm ci:stylelint
+
+# ---------------------------------------------------------------------------
+# main-test (from main.yml)
+#
+# Memory tuning: the root `ci:test` script runs `pnpm -r --parallel
+# --workspace-concurrency=0 test:ci`, which parallelizes every workspace
+# without limits. On constrained runners that combination OOM-kills the
+# container (exit 137) because each package's Jest also spawns one worker
+# per CPU. We instead run workspaces serially (`--workspace-concurrency=1`)
+# and cap Jest to 2 workers per package, then run `test:scripts` afterwards
+# to preserve the same coverage as `ci:test`.
+# ---------------------------------------------------------------------------
+test:
+  extends: .node-pnpm
+  stage: test
+  variables:
+    # Playwright needs these for browser downloads
+    PLAYWRIGHT_BROWSERS_PATH: "$CI_PROJECT_DIR/.playwright"
+    # Cap each Node test worker's heap to keep memory bounded.
+    NODE_OPTIONS: "--max-old-space-size=2048"
+  script:
+    - pnpm -r build:test
+    - cd packages/elements && pnpm exec playwright install --with-deps && cd ../..
+    # Replaces `pnpm ci:test`: workspaces run serially with at most 2 Jest
+    # workers each, instead of the unlimited parallelism in the root script.
+    - pnpm -r --workspace-concurrency=1 test:ci -- --maxWorkers=2
+    - pnpm test:scripts
+
+# ---------------------------------------------------------------------------
+# main-dockerize (from main.yml) - build only, no push
+# ---------------------------------------------------------------------------
+# IMPORTANT: This job uses Docker-in-Docker (`docker:dind`) + `docker buildx`.
+# The GitLab Runner executing this job MUST be configured with
+# `privileged = true` in its config.toml (executor: docker), otherwise both
+# the `docker:dind` service and BuildKit/buildx will fail to start.
+# GitLab.com Shared Runners support this out of the box.
+dockerize:
+  stage: dockerize
+  image: docker:27
+  # Kubernetes executor: service containers share the pod's network namespace
+  # with the build container, so DinD is reached via localhost (not the alias).
+  services:
+    - name: docker:27-dind
+      alias: docker
+      command: ["--tls=false"]
+  variables:
+    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_BUILDKIT: "1"
+  before_script:
+    - until docker info; do sleep 2; done
+    - docker buildx create --use --name builder || docker buildx use builder
+  script:
+    - docker buildx build --build-arg additional_connector_args=--cloud --load -t logto:ci .
+  rules:
+    # Skip in tag pipelines (release pipeline handles dockerize with push)
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: on_success
+
+# ---------------------------------------------------------------------------
+# main-alteration (from main.yml)
+# Replaces ikalnytskyi/action-setup-postgres with a Postgres service.
+# ---------------------------------------------------------------------------
+alteration:
+  stage: alteration
+  image: node:22
+  services:
+    - name: postgres:16
+      alias: postgres
+  variables:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_HOST_AUTH_METHOD: trust
+    GIT_DEPTH: "0" # equivalent to fetch-depth: 0
+  before_script:
+    # rsync is required by packages/core build (copies OpenAPI files) when this
+    # job re-runs `pnpm prepack` / builds on the cloned repo copies below.
+    - apt-get update
+    - apt-get install -y --no-install-recommends postgresql-client rsync
+    - rm -rf /var/lib/apt/lists/*
+    - corepack enable
+    - corepack prepare pnpm@10 --activate
+  script:
+    # Mirror of the GitHub job: clone the repo into ./fresh, look up the
+    # latest @logto/core@* tag, then check out that tag into ./alteration
+    # and run the alteration sequence between the two.
+    - rm -rf fresh alteration
+    - git clone --no-single-branch "$CI_REPOSITORY_URL" fresh
+    - cd fresh
+    - git fetch --tags --force
+    - |
+      current_tag="$(git describe --match "@logto/core@*" --abbrev=0 2>/dev/null || true)"
+      if [ -z "$current_tag" ]; then
+        echo "No @logto/core@* tag found; skipping alteration historical checks."
+        exit 0
+      fi
+      echo "Found tag: $current_tag"
+      version="${current_tag##*@}"
+      echo "CURRENT_TAG=$current_tag" > ../alteration.env
+      echo "VERSION=$version" >> ../alteration.env
+      cd ..
+      git clone "$CI_REPOSITORY_URL" alteration
+      cd alteration && git checkout "$current_tag" && cd ..
+      cp ./fresh/pnpm-lock.yaml ./
+      # Prepack both copies (each copy installs its own deps because they may
+      # be at different commits with different lockfiles; do not skip).
+      (cd fresh && pnpm i && pnpm prepack)
+      (cd alteration && pnpm i && pnpm prepack)
+      # Wait for postgres
+      until pg_isready -h postgres -U postgres; do sleep 1; done
+      # Ensure the target databases exist before running seeds
+      export PGPASSWORD=postgres
+      createdb -h postgres -U postgres fresh || true
+      createdb -h postgres -U postgres alteration || true
+      createdb -h postgres -U postgres old || true
+      # Setup fresh database
+      (cd fresh && DB_URL="postgres://postgres:postgres@postgres:5432/fresh" pnpm cli db seed --test)
+      # Setup alteration database
+      (cd alteration/packages/cli && DB_URL="postgres://postgres:postgres@postgres:5432/alteration" pnpm start db seed --test)
+      # Run alteration scripts
+      (cd fresh && ALTERATION_TEST=true DB_URL="postgres://postgres:postgres@postgres:5432/alteration" pnpm cli db alt deploy next)
+      # Compare databases
+      (cd fresh && node .scripts/compare-database.js fresh alteration)
+      # Setup old database
+      (cd alteration/packages/cli && DB_URL="postgres://postgres:postgres@postgres:5432/old" pnpm start db seed --test)
+      # Revert fresh database to old
+      (cd fresh && ALTERATION_TEST=true DB_URL="postgres://postgres:postgres@postgres:5432/fresh" pnpm cli db alt r "v$version")
+      # Compare manifests
+      (cd fresh && node .scripts/compare-database.js fresh old)
+      # Check alteration sequence
+      (cd fresh && node .scripts/check-alterations-sequence.js)
+
+# ---------------------------------------------------------------------------
+# RELEASE PIPELINE (from release.yml) - triggered on tag pushes
+# ---------------------------------------------------------------------------
+
+# Build and push multi-platform image to the GitLab Container Registry on tag push.
+# IMPORTANT: Same Docker-in-Docker requirement as the `dockerize` job above —
+# the GitLab Runner must run in privileged mode (`privileged = true` in
+# config.toml) for `docker:dind` and multi-arch `buildx` to work.
+release-dockerize:
+  stage: release-dockerize
+  image: docker:27
+  # Kubernetes executor: service containers share the pod's network namespace
+  # with the build container, so DinD is reached via localhost (not the alias).
+  services:
+    - name: docker:27-dind
+      alias: docker
+      command: ["--tls=false"]
+  variables:
+    DOCKER_HOST: tcp://localhost:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_BUILDKIT: "1"
+  before_script:
+    - apk add --no-cache bash
+    - until docker info; do sleep 2; done
+    - docker buildx create --use --name builder --driver docker-container || docker buildx use builder
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - |
+      bash -c '
+        ref_name="${CI_COMMIT_TAG}"
+        raw_version="${ref_name#v}"
+        release_version="${raw_version%%-bytars.*}"
+        if [[ ! "$release_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "Tag $ref_name does not contain a valid release version." >&2
+          exit 1
+        fi
+        IFS="." read -r major minor patch <<< "$release_version"
+        tags=(
+          "$CI_REGISTRY_IMAGE:$release_version"
+          "$CI_REGISTRY_IMAGE:$major.$minor"
+          "$CI_REGISTRY_IMAGE:$major"
+          "$CI_REGISTRY_IMAGE:$ref_name"
+        )
+        tag_args=()
+        for t in "${tags[@]}"; do tag_args+=(-t "$t"); done
+        docker buildx build --platform linux/amd64,linux/arm64 --push "${tag_args[@]}" .
+      '
+  rules:
+    - if: $CI_COMMIT_TAG
+  # TODO: GitHub `environment: release` (with approval/secrets scoping) maps to
+  # GitLab "protected environments". Configure under Settings > CI/CD > Protected
+  # environments and reference with `environment: release` if you want approvals.
+  environment:
+    name: release
+
+# Build packages, run .scripts/package.sh and upload the tarball to the
+# GitLab Generic Package Registry so the Release can link to a stable URL.
+release-package:
+  extends: .node-pnpm
+  stage: release-package
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - pnpm -r build
+    - ./.scripts/package.sh
+    - mkdir -p artifacts && cp /tmp/logto.tar.gz artifacts/
+    # Ensure curl is available (node:22 ships with it, but be defensive).
+    - command -v curl >/dev/null 2>&1 || (apt-get update && apt-get install -y --no-install-recommends curl)
+    # Publish to Generic Package Registry under package "logto", version = tag.
+    # Stable URL: $CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/logto/$CI_COMMIT_TAG/logto.tar.gz
+    - |
+      curl --fail --show-error --silent \
+        --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+        --upload-file artifacts/logto.tar.gz \
+        "$CI_API_V4_URL/projects/$CI_PROJECT_ID/packages/generic/logto/$CI_COMMIT_TAG/logto.tar.gz"
+  artifacts:
+    name: "logto-$CI_COMMIT_TAG"
+    paths:
+      - artifacts/logto.tar.gz
+    expire_in: never
+  rules:
+    - if: $CI_COMMIT_TAG
+  environment:
+    name: release
+
+# Create the GitLab Release entry pointing at the package above
+# (replacement for softprops/action-gh-release@v2).
+release-publish:
+  stage: release-publish
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - echo "Publishing GitLab Release for $CI_COMMIT_TAG"
+  release:
+    name: "Release $CI_COMMIT_TAG"
+    tag_name: "$CI_COMMIT_TAG"
+    description: "This publish pipeline was triggered by the tag $CI_COMMIT_TAG. The release artifacts are available in the 'release-package' job of this pipeline."
+    assets:
+      links:
+        - name: "logto.tar.gz"
+          # Stable web URL served by the GitLab Generic Package Registry.
+          url: "$CI_PROJECT_URL/-/packages/generic/logto/$CI_COMMIT_TAG/logto.tar.gz"
+          link_type: "package"
+
+# ---------------------------------------------------------------------------
+# TODO: changesets.yml migration (NOT YET IMPLEMENTED)
+# ---------------------------------------------------------------------------
+# The original GitHub workflow `.github/workflows/changesets.yml` relied on
+# `changesets/action@v1`, which automatically opens (and keeps up to date) a
+# "release: version packages" Pull Request on every push to master.
+#
+# GitLab CI/CD has NO native equivalent for changesets/action@v1. You have to
+# implement the Merge Request creation/update flow yourself. Two viable paths:
+#
+#   1. `glab` CLI inside the CI job:
+#        - https://gitlab.com/gitlab-org/cli
+#        - Authenticate with $CHANGESETS_GITLAB_TOKEN (`glab auth login --token`)
+#        - `glab mr create` / `glab mr update` against a `changeset-release/master`
+#          branch after running `node .scripts/version.js && pnpm -r version`.
+#
+#   2. GitLab REST API directly with `curl`:
+#        - POST  $CI_API_V4_URL/projects/$CI_PROJECT_ID/merge_requests
+#        - PUT   ... to update an existing MR if one already exists
+#        - Header: `PRIVATE-TOKEN: $CHANGESETS_GITLAB_TOKEN`
+#
+# Required variable to add when you implement this:
+#   - CHANGESETS_GITLAB_TOKEN  Project (or Group) Access Token with the
+#     `api` and `write_repository` scopes. Mark masked + protected and scope
+#     it to the `master` branch only.
+#
+# Skeleton (commented out — enable and fill in once the token is configured):
+#
+# changesets:
+#   extends: .node-pnpm
+#   stage: build
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"
+#   script:
+#     - git config --global user.email "gitlab-ci@users.noreply.gitlab.com"
+#     - git config --global user.name "gitlab-ci"
+#     - node .scripts/version.js
+#     - pnpm -r version
+#     - # TODO: push the `changeset-release/master` branch and open/update the
+#     - #       MR using `glab` or `curl` with $CHANGESETS_GITLAB_TOKEN.
