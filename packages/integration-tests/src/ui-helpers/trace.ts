@@ -20,7 +20,16 @@ export class Trace {
 
     const traceDirectory = await fs.mkdtemp(path.join(os.tmpdir(), 'trace-'));
     this.tracePath = path.join(traceDirectory, 'trace.json');
-    await this.page.tracing.start({ path: this.tracePath, categories: ['devtools.timeline'] });
+    // Include default-disabled categories so `ResourceSendRequest` / document loads are still
+    // emitted in newer Chromium (e.g. Chrome 131 used by Puppeteer in CI).
+    await this.page.tracing.start({
+      path: this.tracePath,
+      categories: [
+        'devtools.timeline',
+        'disabled-by-default-devtools.timeline',
+        'disabled-by-default-devtools.loading',
+      ],
+    });
   }
 
   async stop() {
