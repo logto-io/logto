@@ -20,13 +20,32 @@ describe('error handling', () => {
     await trace.start();
     await expectConsole.navigateTo(path);
 
-    const expectedPathname = new URL(path.href).pathname.replace(/\/$/, '') || '/';
+    const expectedUrl = new URL(path.href);
+    const expectedOrigin = expectedUrl.origin;
+    const expectedPathname = expectedUrl.pathname.replace(/\/$/, '') || '/';
 
-    const resolveTracePathname = (rawUrl: string): string => {
+    const matchesExpectedDocumentPathname = (pathname: string): boolean => {
+      const normalized = pathname.replace(/\/$/, '') || '/';
+      if (normalized === expectedPathname) {
+        return true;
+      }
+      // Allow prefixed console deployments (extra path segments before the console path),
+      // but require the same terminal path as the navigation target and a `/` boundary so
+      // unrelated routes cannot match on a short shared suffix alone.
+      if (!normalized.endsWith(expectedPathname)) {
+        return false;
+      }
+      if (normalized.length === expectedPathname.length) {
+        return true;
+      }
+      return normalized[normalized.length - expectedPathname.length - 1] === '/';
+    };
+
+    const resolveTraceUrl = (rawUrl: string): URL | undefined => {
       try {
-        return new URL(rawUrl, path.origin).pathname.replace(/\/$/, '') || '/';
+        return new URL(rawUrl, expectedOrigin);
       } catch {
-        return '';
+        return undefined;
       }
     };
 
@@ -53,12 +72,13 @@ describe('error handling', () => {
         return false;
       }
 
-      const pathname = resolveTracePathname(url);
-      if (pathname.length === 0) {
+      const resolved = resolveTraceUrl(url);
+      if (!resolved || resolved.origin !== expectedOrigin) {
         return false;
       }
 
-      return pathname === expectedPathname || pathname.endsWith('/__internal__/import-error');
+      const { pathname } = resolved;
+      return matchesExpectedDocumentPathname(pathname);
     });
 
     // Initial navigation plus one automatic reload after the lazy chunk fails (Vite / browser).

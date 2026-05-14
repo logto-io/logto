@@ -113,7 +113,7 @@ describe('MailJunky connector', () => {
       templates: [
         ...mockedConfig.templates,
         {
-          usageType: 'OrganizationInvitation',
+          usageType: TemplateType.OrganizationInvitation,
           type: 'text/plain',
           subject: 'Organization invitation',
           content: 'Your link is {{link}}',
@@ -190,6 +190,107 @@ describe('MailJunky connector', () => {
 
     nockSend({
       from: 'Foo <notice@example.com>',
+      to: toEmail,
+      subject: 'Mailbox 123456',
+      html: '<p>123456</p>',
+      text: '123456',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+  });
+
+  it('strips angle brackets from sendFrom mailbox address so From stays a single token', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Mailbox {{code}}',
+      content: '<p>{{code}}</p>',
+      contentType: 'text/html',
+      // One closing `>` so the mailbox form matches; inner `<` in the addr must not break `Name <addr>`.
+      sendFrom: 'Brand <bad<addr@example.com>',
+    });
+
+    nockSend({
+      from: 'Brand <badaddr@example.com>',
+      to: toEmail,
+      subject: 'Mailbox 123456',
+      html: '<p>123456</p>',
+      text: '123456',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+  });
+
+  it('strips SMTP header control characters from sendFrom mailbox display name', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Mailbox {{code}}',
+      content: '<p>{{code}}</p>',
+      contentType: 'text/html',
+      sendFrom: 'Legit\r\nBcc: evil@example.com <notice@example.com>',
+    });
+
+    nockSend({
+      from: 'LegitBcc: evil@example.com <notice@example.com>',
+      to: toEmail,
+      subject: 'Mailbox 123456',
+      html: '<p>123456</p>',
+      text: '123456',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+  });
+
+  it('strips control characters from sendFrom when treated as display name with fallback address', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Mailbox {{code}}',
+      content: '<p>{{code}}</p>',
+      contentType: 'text/html',
+      sendFrom: 'Display\r\nX-Evil: 1',
+    });
+
+    nockSend({
+      from: `DisplayX-Evil: 1 <${mockedConfig.fromEmail}>`,
+      to: toEmail,
+      subject: 'Mailbox 123456',
+      html: '<p>123456</p>',
+      text: '123456',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+  });
+
+  it('normalizes sendFrom email-only form that contains CR/LF before the domain', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Mailbox {{code}}',
+      content: '<p>{{code}}</p>',
+      contentType: 'text/html',
+      sendFrom: 'notice\r\n@example.com',
+    });
+
+    nockSend({
+      from: 'notice@example.com',
       to: toEmail,
       subject: 'Mailbox 123456',
       html: '<p>123456</p>',

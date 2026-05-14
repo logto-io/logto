@@ -39,8 +39,12 @@ const stripHeaderControlChars = (value: string): string =>
 const sanitizeMailboxDisplayName = (name: string): string =>
   stripHeaderControlChars(name).replaceAll('<', '').replaceAll('>', '').trim();
 
+/** Local-part angle brackets from malformed `Name <…>` input must not break the outer mailbox token. */
+const sanitizeMailboxAddress = (address: string): string =>
+  stripHeaderControlChars(address).replaceAll('<', '').replaceAll('>', '').trim();
+
 const formatFrom = (fromEmail: string, fromName?: string): string => {
-  const email = stripHeaderControlChars(fromEmail).trim();
+  const email = sanitizeMailboxAddress(fromEmail);
   if (!fromName) {
     return email;
   }
@@ -54,7 +58,9 @@ const parseSendFrom = (
   fallbackEmail: string,
   fallbackName?: string
 ): { fromEmail: string; fromName?: string } => {
-  const value = renderedSendFrom.trim();
+  // Normalize SMTP header control characters first so mailbox parsing cannot be bypassed by
+  // embedding CR/LF before `<` (the `.` token in the mailbox regex does not match line breaks).
+  const value = stripHeaderControlChars(renderedSendFrom).trim();
 
   // Format: "Name <email@domain>"
   const match = /^(.*?)<\s*([^>]+)\s*>$/.exec(value);
@@ -64,7 +70,7 @@ const parseSendFrom = (
 
     if (email) {
       return {
-        fromEmail: stripHeaderControlChars(email).trim(),
+        fromEmail: sanitizeMailboxAddress(email),
         fromName: name?.length ? sanitizeMailboxDisplayName(name) : undefined,
       };
     }
@@ -72,17 +78,20 @@ const parseSendFrom = (
 
   // Format: "email@domain" (no display name)
   if (value.includes('@') && !value.includes(' ')) {
-    return { fromEmail: stripHeaderControlChars(value).trim(), fromName: undefined };
+    return { fromEmail: sanitizeMailboxAddress(value), fromName: undefined };
   }
 
   // Otherwise treat as display name only
   const rawDisplay = value.length > 0 ? value : fallbackName;
   if (!rawDisplay) {
-    return { fromEmail: fallbackEmail, fromName: undefined };
+    return { fromEmail: sanitizeMailboxAddress(fallbackEmail), fromName: undefined };
   }
 
   const safeName = sanitizeMailboxDisplayName(rawDisplay);
-  return { fromEmail: fallbackEmail, fromName: safeName.length > 0 ? safeName : undefined };
+  return {
+    fromEmail: sanitizeMailboxAddress(fallbackEmail),
+    fromName: safeName.length > 0 ? safeName : undefined,
+  };
 };
 
 /**

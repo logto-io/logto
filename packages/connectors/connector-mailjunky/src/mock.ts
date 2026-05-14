@@ -1,3 +1,5 @@
+import { TemplateType } from '@logto/connector-kit';
+
 import type { MailJunkyConfig, PublicParameters } from './types.js';
 
 export const toEmail = 'foo@logto.io';
@@ -22,25 +24,25 @@ export const mockedConfig: MailJunkyConfig = {
   fromName,
   templates: [
     {
-      usageType: 'SignIn',
+      usageType: TemplateType.SignIn,
       subject: 'Logto SignIn Template',
       content:
         'Your Logto sign-in verification code is {{code}}. The code will remain active for 10 minutes.',
     },
     {
-      usageType: 'Register',
+      usageType: TemplateType.Register,
       subject: 'Logto Register Template',
       content:
         'Your Logto sign-up verification code is {{code}}. The code will remain active for 10 minutes.',
     },
     {
-      usageType: 'ForgotPassword',
+      usageType: TemplateType.ForgotPassword,
       subject: 'Logto ForgotPassword Template',
       content:
         'Your Logto password change verification code is {{code}}. The code will remain active for 10 minutes.',
     },
     {
-      usageType: 'Generic',
+      usageType: TemplateType.Generic,
       subject: 'Logto Generic Template',
       content:
         'Your Logto verification code is {{code}}. The code will remain active for 10 minutes.',

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { templateTypeGuard, TemplateType } from '@logto/connector-kit';
+
 /**
  * MailJunky API Request Body
  * @doc https://www.mailjunky.ai/docs
@@ -15,13 +17,18 @@ export type PublicParameters = {
 };
 
 /**
- * UsageType here is used to specify the use case of the template, can be either
- * 'Register', 'SignIn', 'ForgotPassword', 'Generic'.
+ * Required template keys for connector config. Additional {@link TemplateType} entries are allowed
+ * for optional flows (e.g. organization invitation).
  */
-const requiredTemplateUsageTypes = ['Register', 'SignIn', 'ForgotPassword', 'Generic'];
+const requiredTemplateUsageTypes = [
+  TemplateType.Register,
+  TemplateType.SignIn,
+  TemplateType.ForgotPassword,
+  TemplateType.Generic,
+];
 
 const templateGuard = z.object({
-  usageType: z.string(),
+  usageType: templateTypeGuard,
   type: z.union([z.literal('text/html'), z.literal('text/plain')]).optional(),
   subject: z.string(),
   content: z.string(), // With variable {{code}}, support HTML
