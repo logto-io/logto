@@ -29,7 +29,7 @@ function OssBringYourUiCard() {
     <FormField
       title={
         <div className={styles.titleRow}>
-          <DynamicT forKey="sign_in_exp.custom_ui.bring_your_ui_title" />
+          <DynamicT forKey="sign_in_exp.custom_ui.bring_your_ui_upload_title" />
           <CloudTag>
             <DynamicT forKey="sign_in_exp.custom_ui.cloud_tag" />
           </CloudTag>
@@ -83,7 +83,7 @@ function CustomUiForm() {
         <FormSectionTitle title="custom_ui.bring_your_ui_title" />
         {isCloud && (
           <FormField
-            title="sign_in_exp.custom_ui.bring_your_ui_title"
+            title="sign_in_exp.custom_ui.bring_your_ui_upload_title"
             description={
               <Trans
                 components={{

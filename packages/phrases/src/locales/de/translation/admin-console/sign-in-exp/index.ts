@@ -83,12 +83,14 @@ const sign_in_exp = {
     title: 'Benutzerdefinierte UI',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'Benutzerdefiniertes CSS',
+    css_code_editor_field_title: 'CSS-Override',
     css_code_editor_description1: 'Siehe das Beispiel für benutzerdefiniertes CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Erfahre mehr',
     css_code_editor_content_placeholder:
-      'Geben Sie Ihr benutzerdefiniertes CSS ein, um die Stile nach Ihren exakten Spezifikationen anzupassen. Drücken Sie Ihre Kreativität aus und heben Sie Ihre Benutzeroberfläche hervor.',
+      'Geben Sie hier Ihre CSS-Overrides ein, um die Stile beliebiger Elemente genau an Ihre Anforderungen anzupassen. Zeigen Sie Ihre Kreativität und lassen Sie Ihre UI hervorstechen.',
     bring_your_ui_title: 'Bringen Sie Ihr UI',
+    bring_your_ui_upload_title: 'Benutzerdefinierte UI-Assets hochladen',
     bring_your_ui_description:
       'Laden Sie ein komprimiertes Paket (.zip) hoch, um die vorgefertigte Benutzeroberfläche von Logto durch Ihren eigenen Code zu ersetzen. <a>Erfahren Sie mehr</a>',
     bring_your_ui_oss_description: 'Passen Sie die Anmeldeoberfläche mit Ihrem eigenen Code an.',
@@ -99,10 +101,10 @@ const sign_in_exp = {
       'Ihre benutzerdefinierten UI-Assets wurden erfolgreich hochgeladen und werden jetzt bereitgestellt. Daher wurde das eingebaute Vorschaufenster deaktiviert.\nUm Ihre personalisierte Anmelde-Benutzeroberfläche zu testen, klicken Sie auf die Schaltfläche "Live-Vorschau", um sie in einem neuen Browser-Tab zu öffnen.',
     csp_description:
       'Erlauben Sie zusätzliche Quellausdrücke für Ihre benutzerdefinierte Anmeldeoberfläche. Diese Werte werden nur angewendet, wenn benutzerdefinierte UI-Assets bereitgestellt werden.',
-    csp_script_src: 'script-src-Quellen',
+    csp_script_src: 'Erlaubte script-src',
     csp_script_src_tip:
       'Erlauben Sie HTTPS-Quellausdrücke für Skripte, die von Ihrer benutzerdefinierten UI geladen werden, z. B. https://scripts.example.com oder https://*.example.com.',
-    csp_connect_src: 'connect-src-Quellen',
+    csp_connect_src: 'Erlaubte connect-src',
     csp_connect_src_tip:
       'Erlauben Sie HTTPS- oder WSS-Quellausdrücke für Netzwerkanfragen Ihrer benutzerdefinierten UI, z. B. https://api.example.com oder wss://events.example.com.',
     csp_source_invalid_error:

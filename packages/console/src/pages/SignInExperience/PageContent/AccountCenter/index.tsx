@@ -230,7 +230,7 @@ function AccountCenter({ isActive, data }: Props) {
         title="sign_in_exp.account_center.custom_css.title"
         description="sign_in_exp.account_center.custom_css.description"
       >
-        <FormField title="sign_in_exp.custom_ui.css_code_editor_title">
+        <FormField title="sign_in_exp.custom_ui.css_code_editor_field_title">
           <Controller
             name="accountCenter.customCss"
             control={control}
