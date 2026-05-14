@@ -133,28 +133,28 @@ const getUserDetail = async ({
   errorResponseHandler(userDetailByUserIdResult.data);
 
   if (userTicket) {
-    const userDetailByUserTicketResponse = await got.post(userDetailByUserTicketEndpoint, {
-      searchParams: { access_token: accessToken },
-      json: { user_ticket: userTicket },
-      timeout: { request: defaultTimeout },
-    });
-    const userDetailByUserTicketResult = userDetailResponseGuard.safeParse(
-      parseJson(userDetailByUserTicketResponse.body)
-    );
-
-    if (!userDetailByUserTicketResult.success) {
-      throw new ConnectorError(
-        ConnectorErrorCodes.InvalidResponse,
-        userDetailByUserTicketResult.error
+    const userDetailByUserTicketResult = await trySafe(async () => {
+      const userDetailByUserTicketResponse = await got.post(userDetailByUserTicketEndpoint, {
+        searchParams: { access_token: accessToken },
+        json: { user_ticket: userTicket },
+        timeout: { request: defaultTimeout },
+      });
+      const result = userDetailResponseGuard.safeParse(
+        parseJson(userDetailByUserTicketResponse.body)
       );
+      if (!result.success) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
+      }
+      errorResponseHandler(result.data);
+      return result.data;
+    });
+
+    if (userDetailByUserTicketResult) {
+      return {
+        ...userDetailByUserIdResult.data,
+        ...userDetailByUserTicketResult,
+      };
     }
-
-    errorResponseHandler(userDetailByUserTicketResult.data);
-
-    return {
-      ...userDetailByUserIdResult.data,
-      ...userDetailByUserTicketResult.data,
-    };
   }
 
   return userDetailByUserIdResult.data;

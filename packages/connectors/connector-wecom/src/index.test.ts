@@ -270,6 +270,82 @@ describe('getUserInfo', () => {
     });
   });
 
+  it('should fall back to userDetailByUserIdResult when userDetailByUserTicket request fails', async () => {
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(userInfoParams)
+      .reply(200, {
+        errcode: 0,
+        errmsg: 'ok',
+        userid: 'zhangsan',
+        user_ticket: 'user_ticket',
+      });
+
+    nock(userDetailByUserIdEndpointUrl.origin)
+      .get(userDetailByUserIdEndpointUrl.pathname)
+      .query(userDetailByUserIdParams)
+      .reply(200, mockedUserDetailByUserIdResponse);
+
+    nock(userDetailByUserTicketEndpointUrl.origin)
+      .post(userDetailByUserTicketEndpointUrl.pathname, { user_ticket: 'user_ticket' })
+      .query(userDetailByUserTicketParams)
+      .reply(200, { errcode: 40_001, errmsg: 'invalid credential' });
+
+    const connector = await createConnector({ getConfig });
+    const socialUserInfo = await connector.getUserInfo(
+      {
+        code: 'code',
+      },
+      vi.fn()
+    );
+
+    expect(socialUserInfo).toMatchObject({
+      id: 'zhangsan',
+      name: mockedUserDetailByUserIdResponse.name,
+      email: undefined,
+      phone: undefined,
+      rawData: mockedUserDetailByUserIdResponse,
+    });
+  });
+
+  it('should fall back to userDetailByUserIdResult when userDetailByUserTicket request throws network error', async () => {
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(userInfoParams)
+      .reply(200, {
+        errcode: 0,
+        errmsg: 'ok',
+        userid: 'zhangsan',
+        user_ticket: 'user_ticket',
+      });
+
+    nock(userDetailByUserIdEndpointUrl.origin)
+      .get(userDetailByUserIdEndpointUrl.pathname)
+      .query(userDetailByUserIdParams)
+      .reply(200, mockedUserDetailByUserIdResponse);
+
+    nock(userDetailByUserTicketEndpointUrl.origin)
+      .post(userDetailByUserTicketEndpointUrl.pathname, { user_ticket: 'user_ticket' })
+      .query(userDetailByUserTicketParams)
+      .replyWithError('network error');
+
+    const connector = await createConnector({ getConfig });
+    const socialUserInfo = await connector.getUserInfo(
+      {
+        code: 'code',
+      },
+      vi.fn()
+    );
+
+    expect(socialUserInfo).toMatchObject({
+      id: 'zhangsan',
+      name: mockedUserDetailByUserIdResponse.name,
+      email: undefined,
+      phone: undefined,
+      rawData: mockedUserDetailByUserIdResponse,
+    });
+  });
+
   it('throws General error if code not provided in input', async () => {
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({}, vi.fn())).rejects.toStrictEqual(
