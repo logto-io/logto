@@ -1,6 +1,5 @@
 import { assert, trySafe } from '@silverhand/essentials';
-// Got@14 exposes both `default` and named `got`; named import matches other Logto connectors.
-import { got, HTTPError } from 'got';
+import got, { HTTPError } from 'got';
 
 import type {
   CreateConnector,
