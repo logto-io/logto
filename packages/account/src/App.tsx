@@ -1,8 +1,8 @@
 import LogtoSignature from '@experience/shared/components/LogtoSignature';
-import { LogtoProvider, Prompt, ReservedScope, useLogto, UserScope } from '@logto/react';
-import { accountCenterApplicationId, ExtraParamsKey, SignInIdentifier } from '@logto/schemas';
+import { LogtoProvider, ReservedScope, useLogto, UserScope } from '@logto/react';
+import { accountCenterApplicationId, SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
@@ -64,19 +64,17 @@ import TotpBinding from './pages/TotpBinding';
 import UpdateSuccess from './pages/UpdateSuccess';
 import Username from './pages/Username';
 import VerifiedAction from './pages/VerifiedAction';
+import { useAuthRedirect } from './use-auth-redirect';
 import {
   accountCenterBasePath,
   getUiLocales,
   handleAccountCenterRoute,
-  setRouteRestore,
 } from './utils/account-center-route';
 import { hasVisibleSecuritySection } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
 
 handleAccountCenterRoute();
 void initI18n(resolveUiLocalesLanguage(getUiLocales()));
-
-const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 
 export const Main = () => {
   const params = new URLSearchParams(window.location.search);
@@ -91,71 +89,18 @@ export const Main = () => {
     params.get('error') === 'login_required' &&
     (pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`);
   const isInCallback = isSocialCallback || isAuthCallback;
-  const uiLocales = getUiLocales();
-  const { isAuthenticated, isLoading, signIn } = useLogto();
+  const { isAuthenticated, isLoading } = useLogto();
   const {
     accountCenterSettings,
     experienceSettings,
     isLoadingExperience,
     isLoadingUserInfo,
     userInfo,
-    userInfoError,
   } = useContext(PageContext);
   const isInitialAuthLoading = !isAuthenticated && isLoading;
 
-  useEffect(() => {
-    if (isInCallback || isInitialAuthLoading || isLoadingExperience) {
-      return;
-    }
+  useAuthRedirect({ isInCallback, isSilentAuthFailed });
 
-    const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
-
-    if (isSilentAuthFailed && accountCenterSettings?.enabled) {
-      // Prompt=none failed (no valid OIDC session); fall back to an explicit login.
-      void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
-    } else if (!isAuthenticated && accountCenterSettings?.enabled) {
-      setRouteRestore(window.location.pathname);
-      void signIn({ redirectUri, extraParams });
-    }
-  }, [
-    isAuthenticated,
-    isInCallback,
-    isInitialAuthLoading,
-    isLoadingExperience,
-    isSilentAuthFailed,
-    accountCenterSettings,
-    signIn,
-    uiLocales,
-  ]);
-
-  useEffect(() => {
-    if (isInCallback || isSilentAuthFailed) {
-      return;
-    }
-    if (isInitialAuthLoading || !isAuthenticated || isLoadingUserInfo) {
-      return;
-    }
-
-    // Skip re-authentication when account center is disabled - the API will always reject.
-    // Otherwise let the OIDC provider decide: silent re-auth via the session cookie if
-    // possible, and on failure it redirects back with error=login_required so the effect
-    // above can trigger an explicit Prompt.Login.
-    if (userInfoError && accountCenterSettings?.enabled) {
-      const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
-      setRouteRestore(window.location.pathname);
-      void signIn({ redirectUri, prompt: Prompt.None, extraParams });
-    }
-  }, [
-    accountCenterSettings,
-    isAuthenticated,
-    isInCallback,
-    isSilentAuthFailed,
-    isInitialAuthLoading,
-    isLoadingUserInfo,
-    signIn,
-    uiLocales,
-    userInfoError,
-  ]);
   if (isSocialCallback) {
     return (
       <Routes>
