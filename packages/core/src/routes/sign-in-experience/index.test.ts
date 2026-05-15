@@ -710,7 +710,7 @@ describe('PATCH /sign-in-exp customUiCsp', () => {
     expect(guardTenantUsageByKey).not.toHaveBeenCalled();
   });
 
-  it('should reject non-empty Custom UI CSP updates when dev features are disabled', async () => {
+  it('should allow non-empty Custom UI CSP updates when dev features are disabled', async () => {
     const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
       await createCustomUiCspRequester({ isDevFeaturesEnabled: false });
 
@@ -720,9 +720,13 @@ describe('PATCH /sign-in-exp customUiCsp', () => {
       },
     });
 
-    expect(response.status).toEqual(400);
-    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
-    expect(guardTenantUsageByKey).not.toHaveBeenCalled();
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({
+      customUiCsp: {
+        scriptSrc: ['https://example.com'],
+      },
+    });
+    expect(guardTenantUsageByKey).toHaveBeenCalledWith('bringYourUiEnabled');
   });
 
   it('should reject non-empty Custom UI CSP updates outside Cloud', async () => {

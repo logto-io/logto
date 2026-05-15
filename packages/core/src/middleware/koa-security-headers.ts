@@ -50,8 +50,7 @@ const appendCustomSources = (sources: string[], customSources: string[] = []) =>
 ];
 
 const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings => {
-  const { isProduction, isCloud, isDevFeaturesEnabled, urlSet, adminUrlSet, cloudUrlSet } =
-    EnvSet.values;
+  const { isProduction, isCloud, urlSet, adminUrlSet, cloudUrlSet } = EnvSet.values;
 
   const tenantEndpointOrigin = getTenantEndpoint(tenantId, EnvSet.values).origin;
   // Logto Cloud uses cloud service to serve the admin console; while Logto OSS uses a fixed path under the admin URL set.
@@ -77,17 +76,6 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
 
   // Parse the OSS survey endpoint origin for CSP connect-src allowlisting.
   const ossSurveyOrigins = getOssServerOrigins();
-
-  /**
-   * Temporary hardcoded tenant-level `connect-src` allowlist for BYO-UI customers.
-   * Keep it until Custom UI CSP is generally available and customers have migrated.
-   */
-  const customTenantConnectSourceAllowlist = conditionalArray(
-    !isDevFeaturesEnabled && [
-      // LaunchDarkly — A/B testing SDK (flag eval, streaming, events).
-      'https://*.launchdarkly.com',
-    ]
-  );
 
   // We have the following use cases:
   //
@@ -156,7 +144,6 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
     'https://recaptcha.net/recaptcha/',
     'https://www.gstatic.com/recaptcha/',
     'https://www.gstatic.cn/recaptcha/',
-    ...customTenantConnectSourceAllowlist,
     ...developmentOrigins,
   ];
 
