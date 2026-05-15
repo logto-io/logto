@@ -133,5 +133,77 @@ describe('organization user APIs', () => {
       assert(response instanceof HTTPError);
       expect(response.response.status).toBe(404);
     });
+
+    it('should dedup duplicate user IDs in the POST body and only insert one membership', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+
+      // Three copies of the same user ID in the request body should produce a single
+      // membership row, not three quota-consuming inserts. The response echoes the raw
+      // request body unchanged (the dedup is internal-only).
+      const result = await organizationApi.addUsers(organization.id, [user.id, user.id, user.id]);
+      expect(result.userIds).toEqual([user.id, user.id, user.id]);
+
+      const [users, totalCount] = await organizationApi.getUsers(organization.id);
+      expect(totalCount).toBe(1);
+      expect(users.map(({ id }) => id)).toEqual([user.id]);
+    });
+
+    it('should not consume quota for existing members when POST mixes duplicates and new IDs', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const existingUser = await userApi.create({ username: generateTestName() });
+      const newUser = await userApi.create({ username: generateTestName() });
+
+      await organizationApi.addUsers(organization.id, [existingUser.id]);
+
+      // Realistic mis-behaving-client shape: duplicates of the existing member alongside
+      // a genuinely new ID. Only `newUser` should be charged against quota; the rest
+      // collapse to a no-op insert via ON CONFLICT DO NOTHING.
+      const result = await organizationApi.addUsers(organization.id, [
+        existingUser.id,
+        existingUser.id,
+        newUser.id,
+        newUser.id,
+      ]);
+      expect(result.userIds).toEqual([existingUser.id, existingUser.id, newUser.id, newUser.id]);
+
+      const [users, totalCount] = await organizationApi.getUsers(organization.id);
+      expect(totalCount).toBe(2);
+      expect(
+        users
+          .map(({ id }) => id)
+          .slice()
+          .sort()
+      ).toEqual([existingUser.id, newUser.id].slice().sort());
+    });
+
+    it('should accept POST of an already-member user without error', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+
+      // First add succeeds.
+      await organizationApi.addUsers(organization.id, [user.id]);
+      // Re-adding the same user must not throw 403 or surface a quota error: no new
+      // row would be inserted (ON CONFLICT DO NOTHING) so no quota should be consumed.
+      const result = await organizationApi.addUsers(organization.id, [user.id]);
+      expect(result.userIds).toEqual([user.id]);
+
+      const [, totalCount] = await organizationApi.getUsers(organization.id);
+      expect(totalCount).toBe(1);
+    });
+
+    it('should dedup duplicate user IDs in the PUT body without a primary-key collision', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const user = await userApi.create({ username: generateTestName() });
+
+      // PUT with duplicate IDs would otherwise hit a primary-key collision inside
+      // `replace()` and inflate the quota delta. After dedup, replace sees a single
+      // user and the org has exactly one member.
+      await organizationApi.replaceUsers(organization.id, [user.id, user.id, user.id]);
+
+      const [users, totalCount] = await organizationApi.getUsers(organization.id);
+      expect(totalCount).toBe(1);
+      expect(users.map(({ id }) => id)).toEqual([user.id]);
+    });
   });
 });

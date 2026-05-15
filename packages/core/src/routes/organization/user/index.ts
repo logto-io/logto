@@ -60,20 +60,33 @@ export default function userRoutes(
     async (ctx, next) => {
       const {
         params: { id },
-        body: { userIds },
+        body: { userIds: rawUserIds },
       } = ctx.guard;
 
-      // Check quota limit before adding users
-      await quota.guardTenantUsageByKey('usersPerOrganizationLimit', {
-        entityId: id,
-        consumeUsageCount: userIds.length,
-      });
+      // Dedup the request body and filter against current members so the quota check
+      // consumes against the truly-new additions. Without this, duplicates in the body
+      // or re-adds of existing members would over-count (`insert` uses ON CONFLICT
+      // DO NOTHING, so they do not produce extra rows).
+      const userIds = [...new Set(rawUserIds)];
+      const existingUserIds = new Set(
+        await organizations.relations.users.getExistingUserIds(id, userIds)
+      );
+      const newUserIds = userIds.filter((userId) => !existingUserIds.has(userId));
+
+      if (newUserIds.length > 0) {
+        await quota.guardTenantUsageByKey('usersPerOrganizationLimit', {
+          entityId: id,
+          consumeUsageCount: newUserIds.length,
+        });
+      }
 
       await organizations.relations.users.insert(
         ...userIds.map((userId) => ({ organizationId: id, userId }))
       );
 
-      ctx.body = { userIds };
+      // Echo the raw request body in the response to preserve master's response shape.
+      // The dedup/filter above is purely an internal correctness fix for the quota math.
+      ctx.body = { userIds: rawUserIds };
       ctx.status = 201;
 
       // Trigger hook event
@@ -96,11 +109,16 @@ export default function userRoutes(
     async (ctx, next) => {
       const {
         params: { id },
-        body: { userIds },
+        body: { userIds: rawUserIds },
       } = ctx.guard;
 
-      // For replace operation, calculate the delta (new count - current count)
-      // Only check quota if we're adding more users than currently exist
+      // Dedup the request body before computing the quota delta and before passing to
+      // `replace()`. Duplicates would otherwise inflate the delta and cause
+      // `replace()` to attempt a primary-key collision on the same (org, user) pair.
+      const userIds = [...new Set(rawUserIds)];
+
+      // For replace operation, calculate the delta (new count - current count).
+      // Only check quota if we're adding more users than currently exist.
       const [currentCount] = await organizations.relations.users.getEntities(Users, {
         organizationId: id,
       });
