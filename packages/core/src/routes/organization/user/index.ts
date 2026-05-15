@@ -113,7 +113,8 @@ export default function userRoutes(
         });
       }
 
-      await organizations.relations.users.replace(id, userIds);
+      // Membership can grow large; use the delta variant to avoid rewriting all rows.
+      await organizations.relations.users.replaceWithDelta(id, userIds);
 
       ctx.status = 204;
 
