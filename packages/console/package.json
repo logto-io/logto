@@ -101,6 +101,7 @@
     "react-animate-height": "^3.0.4",
     "react-color-palette": "^7.2.1",
     "react-confetti": "^6.1.0",
+    "react-day-picker": "^8.10.2",
     "react-dnd": "^16.0.0",
     "react-dnd-html5-backend": "^16.0.0",
     "react-dom": "^18.3.1",

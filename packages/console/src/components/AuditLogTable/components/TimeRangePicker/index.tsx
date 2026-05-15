@@ -1,12 +1,11 @@
-import { format } from 'date-fns';
-import type { ChangeEventHandler } from 'react';
+import { format, isValid, parseISO, startOfDay } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
+import DatePicker from '@/ds-components/DatePicker';
 import Select from '@/ds-components/Select';
-import TextInput from '@/ds-components/TextInput';
 
 import styles from './index.module.scss';
-import { type PresetRange, customRange, isPresetRange } from './preset';
+import { type PresetRange, customRange, isDateInputValue, isPresetRange } from './preset';
 
 type Props = {
   /** Either a preset name (`'7d'`) or `'custom'` when a custom range is active. */
@@ -17,11 +16,21 @@ type Props = {
   readonly onCustomDatesChange: (next: { startDate?: string; endDate?: string }) => void;
 };
 
+/** URL ↔ `Date` conversion. The `DatePicker` ds-component speaks only `Date`. */
+const parseDateInputValue = (raw?: string): Date | undefined => {
+  if (!raw || !isDateInputValue(raw)) {
+    return undefined;
+  }
+  const parsed = parseISO(raw);
+  return isValid(parsed) ? parsed : undefined;
+};
+
+const toDateInputValue = (date: Date | undefined): string | undefined =>
+  date ? format(startOfDay(date), 'yyyy-MM-dd') : undefined;
+
 /**
- * Time-range picker for the Audit Logs page. Renders a preset dropdown with an
- * optional pair of date inputs when the custom-range option is selected. URL
- * state ownership belongs to the parent — this component is purely a
- * controlled view over the `range` / `start_time` / `end_time` query params.
+ * Audit Logs time-range picker. Controlled view over the `range` /
+ * `start_time` / `end_time` query params — URL state lives in the parent.
  */
 function TimeRangePicker({
   value,
@@ -54,14 +63,21 @@ function TimeRangePicker({
     }
   };
 
-  const today = format(Date.now(), 'yyyy-MM-dd');
+  // Recompute every render. A `useMemo([])` here would freeze `today` on the
+  // mount day, and the Audit Logs tab is commonly left open for days —
+  // freezing would lock out the actual current day until remount.
+  // `react-day-picker` matches dates by value rather than identity, so
+  // identity churn is harmless.
+  const today = startOfDay(new Date());
+  const startDate = parseDateInputValue(customStartDate);
+  const endDate = parseDateInputValue(customEndDate);
 
-  const handleStartDateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    onCustomDatesChange({ startDate: event.target.value || undefined });
+  const handleStartDateChange = (next: Date | undefined) => {
+    onCustomDatesChange({ startDate: toDateInputValue(next) });
   };
 
-  const handleEndDateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    onCustomDatesChange({ endDate: event.target.value || undefined });
+  const handleEndDateChange = (next: Date | undefined) => {
+    onCustomDatesChange({ endDate: toDateInputValue(next) });
   };
 
   return (
@@ -76,24 +92,34 @@ function TimeRangePicker({
       </div>
       {value === customRange && (
         <div className={styles.customRange}>
-          <label className={styles.dateField}>
+          <div className={styles.dateField}>
             <span className={styles.dateLabel}>{t('logs.from')}</span>
-            <TextInput
-              type="date"
-              max={today}
-              value={customStartDate ?? ''}
+            <DatePicker
+              ariaLabel={t('logs.from')}
+              value={startDate}
+              // Cap the start date by the (already-picked) end date so the
+              // user can't choose a window where end < start. `endDate` is
+              // itself capped at today, so this also covers the future-day
+              // case when no end date is set yet.
+              max={endDate ?? today}
+              todayLabel={t('general.today')}
+              clearLabel={t('general.clear')}
               onChange={handleStartDateChange}
             />
-          </label>
-          <label className={styles.dateField}>
+          </div>
+          <div className={styles.dateField}>
             <span className={styles.dateLabel}>{t('logs.to')}</span>
-            <TextInput
-              type="date"
+            <DatePicker
+              ariaLabel={t('logs.to')}
+              value={endDate}
+              // Floor the end date at the (already-picked) start date.
+              min={startDate}
               max={today}
-              value={customEndDate ?? ''}
+              todayLabel={t('general.today')}
+              clearLabel={t('general.clear')}
               onChange={handleEndDateChange}
             />
-          </label>
+          </div>
         </div>
       )}
     </div>

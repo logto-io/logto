@@ -20,6 +20,8 @@ import '@fontsource/roboto-mono';
 // eslint-disable-next-line import/no-unassigned-import
 import 'react-color-palette/css';
 
+import 'react-day-picker/dist/style.css';
+
 import CloudAppRoutes from '@/cloud/AppRoutes';
 import AppLoading from '@/components/AppLoading';
 import { isCloud, postHogHost, postHogUiHost, postHogKey } from '@/consts/env';

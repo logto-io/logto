@@ -23,4 +23,18 @@
   .timeRangePicker {
     margin-inline-start: _.unit(2);
   }
+
+  // When the time-range picker is part of the filter row (especially in its
+  // custom-range state, which adds two date inputs), the row gets very wide.
+  // Shrink the upstream selectors a bit so the whole bar still fits without
+  // wrapping or pushing the table layout around.
+  &:has(.timeRangePicker) {
+    .eventSelector {
+      width: _.unit(60);
+    }
+
+    .applicationSelector {
+      width: _.unit(50);
+    }
+  }
 }
