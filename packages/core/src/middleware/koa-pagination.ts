@@ -9,6 +9,8 @@ type Pagination = {
   offset: number;
   limit: number;
   totalCount?: number;
+  /** When `true`, `totalCount` is a lower bound; middleware signals the saturation downstream. */
+  totalCountIsCapped?: boolean;
   disabled?: false;
 };
 
@@ -95,23 +97,32 @@ function koaPagination<StateT, ContextT, ResponseBodyT, IsOptional extends boole
       throw new Error('missing totalCount');
     }
 
-    const { limit, offset, totalCount } = ctx.pagination;
+    const { limit, offset, totalCount, totalCountIsCapped } = ctx.pagination;
     const totalPage = Math.ceil(totalCount / limit) || 1; // Minimum page number is 1
 
     // Our custom response header: Total-Number
     ctx.set('Total-Number', String(totalCount));
+    if (totalCountIsCapped) {
+      ctx.set('Total-Number-Is-Capped', 'true');
+    }
 
     // Response header's `Link`: https://datatracker.ietf.org/doc/html/rfc5988
     const page = Math.floor(offset / limit) + 1; // Start from 1
     ctx.append('Link', buildLink(ctx.request, 1, 'first'));
-    ctx.append('Link', buildLink(ctx.request, totalPage, 'last'));
 
     if (page > 1) {
       ctx.append('Link', buildLink(ctx.request, page - 1, 'prev'));
     }
 
-    if (page < totalPage) {
-      ctx.append('Link', buildLink(ctx.request, page + 1, 'next'));
+    // When capped, `totalPage` is derived from a saturated count and is no
+    // longer accurate, so neither `last` nor `next` can be emitted honestly.
+    // Clients should construct `?page=N+1` URLs themselves and stop on an
+    // empty response.
+    if (!totalCountIsCapped) {
+      ctx.append('Link', buildLink(ctx.request, totalPage, 'last'));
+      if (page < totalPage) {
+        ctx.append('Link', buildLink(ctx.request, page + 1, 'next'));
+      }
     }
   };
 

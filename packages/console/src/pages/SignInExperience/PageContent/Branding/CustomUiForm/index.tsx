@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -29,7 +29,7 @@ function OssBringYourUiCard() {
     <FormField
       title={
         <div className={styles.titleRow}>
-          <DynamicT forKey="sign_in_exp.custom_ui.bring_your_ui_title" />
+          <DynamicT forKey="sign_in_exp.custom_ui.bring_your_ui_upload_title" />
           <CloudTag>
             <DynamicT forKey="sign_in_exp.custom_ui.cloud_tag" />
           </CloudTag>
@@ -80,10 +80,13 @@ function CustomUiForm() {
         <CustomCssEditorField />
       </Card>
       <Card>
-        <FormSectionTitle title="custom_ui.bring_your_ui_title" />
+        <FormSectionTitle
+          title="custom_ui.bring_your_ui_title"
+          featureTag={{ isVisible: !isBringYourUiEnabled, plan: latestProPlanId }}
+        />
         {isCloud && (
           <FormField
-            title="sign_in_exp.custom_ui.bring_your_ui_title"
+            title="sign_in_exp.custom_ui.bring_your_ui_upload_title"
             description={
               <Trans
                 components={{
@@ -99,10 +102,6 @@ function CustomUiForm() {
               </Trans>
             }
             descriptionPosition="top"
-            featureTag={{
-              isVisible: !isBringYourUiEnabled,
-              plan: latestProPlanId,
-            }}
           >
             <Controller
               name="customUiAssets"
@@ -117,7 +116,7 @@ function CustomUiForm() {
             />
           </FormField>
         )}
-        {isCloud && isDevFeaturesEnabled && <CustomUiCspForm isDisabled={!isBringYourUiEnabled} />}
+        {isCloud && <CustomUiCspForm isDisabled={!isBringYourUiEnabled} />}
         {shouldShowOssBringYourUi && <OssBringYourUiCard />}
       </Card>
     </>

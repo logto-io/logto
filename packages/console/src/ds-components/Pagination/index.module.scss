@@ -10,6 +10,25 @@
     color: var(--color-text-secondary);
   }
 
+  .cappedNav {
+    display: flex;
+    gap: _.unit(2);
+
+    .button {
+      display: block;
+      border-radius: 6px;
+      min-width: 28px;
+      padding: 0 6px;
+      height: 28px;
+      border: 1px solid var(--color-border);
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
   .pagination {
     display: flex;
     justify-content: right;
