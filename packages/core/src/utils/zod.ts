@@ -321,17 +321,15 @@ export const zodTypeToSwagger = (
   }
 
   if (config instanceof ZodEffects) {
-    if (config._def.effect.type === 'transform') {
+    if (config._def.effect.type === 'preprocess' || config._def.effect.type === 'transform') {
       return zodTypeToSwagger(config._def.schema);
     }
 
     // TO-DO: Improve swagger output for zod schema with refinement (validate through JS functions)
-    if (config._def.effect.type === 'refinement') {
-      return {
-        type: 'object',
-        description: 'Validator function',
-      };
-    }
+    return {
+      type: 'object',
+      description: 'Validator function',
+    };
   }
 
   if (config instanceof ZodDefault) {
