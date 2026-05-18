@@ -1,4 +1,5 @@
 import { Prompt, useLogto } from '@logto/react';
+import { type ReactNode } from 'react';
 
 import { Main } from './App';
 import renderWithPageContext, {
@@ -10,17 +11,23 @@ jest.mock('./constants/env', () => ({
   isDevFeaturesEnabled: false,
 }));
 
+// Note: jest.requireActual('@logto/react') can't be used here, as it pulls in
+// @logto/client → @logto/js, which fails to resolve under the monorepo's
+// pnpm/jest module layout. Prompt/ReservedScope/UserScope are OIDC/OAuth
+// spec-defined string constants, so the literal values below are stable.
 jest.mock('@logto/react', () => ({
   __esModule: true,
-  Prompt: { Login: 'login', None: 'none' },
-  ReservedScope: { OpenId: 'openid' },
+  Prompt: { None: 'none', Login: 'login', Consent: 'consent', SelectAccount: 'select_account' },
+  ReservedScope: { OpenId: 'openid', OfflineAccess: 'offline_access' },
   UserScope: {
     Profile: 'profile',
     Email: 'email',
     Phone: 'phone',
+    Address: 'address',
+    CustomData: 'custom_data',
     Identities: 'identities',
   },
-  LogtoProvider: ({ children }: { readonly children: React.ReactNode }) => children,
+  LogtoProvider: ({ children }: { readonly children: ReactNode }) => children,
   useLogto: jest.fn(),
   useHandleSignInCallback: jest.fn(() => ({ error: undefined })),
 }));

@@ -1,6 +1,6 @@
 import { Prompt, useLogto } from '@logto/react';
 import { ExtraParamsKey } from '@logto/schemas';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 
 import PageContext from './Providers/PageContextProvider/PageContext';
 import { accountCenterBasePath, getUiLocales, setRouteRestore } from './utils/account-center-route';
@@ -23,7 +23,10 @@ type UseAuthRedirectProps = {
  *   `isSilentAuthFailed`) → fall back to an explicit `Prompt.Login`.
  *
  * All branches are gated on `accountCenterSettings?.enabled` to preserve the
- * disabled-tenant short-circuit added in #8637.
+ * disabled-tenant short-circuit added in #8637. When disabled, both effects
+ * are no-ops and `App.tsx` renders the disabled UI; the `?error=login_required`
+ * query param is left in the URL in that case, which is harmless because no
+ * further redirect is issued.
  */
 export const useAuthRedirect = ({
   isInCallback,
@@ -34,6 +37,7 @@ export const useAuthRedirect = ({
   const { accountCenterSettings, isLoadingExperience, isLoadingUserInfo, userInfoError } =
     useContext(PageContext);
   const isInitialAuthLoading = !isAuthenticated && isLoading;
+  const hasAttemptedSilentReauth = useRef(false);
 
   useEffect(() => {
     if (isInCallback || isInitialAuthLoading || isLoadingExperience) {
@@ -72,7 +76,13 @@ export const useAuthRedirect = ({
     // Otherwise let the OIDC provider decide: silent re-auth via the session cookie if
     // possible, and on failure it redirects back with error=login_required so the effect
     // above can trigger an explicit Prompt.Login.
-    if (userInfoError && accountCenterSettings?.enabled) {
+    //
+    // Guard with a ref so this fires at most once per page load: userInfoError
+    // stays truthy until navigation, so without the guard every dependency
+    // change would re-dispatch signIn and keep overwriting the saved route.
+    if (userInfoError && accountCenterSettings?.enabled && !hasAttemptedSilentReauth.current) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      hasAttemptedSilentReauth.current = true;
       const extraParams = uiLocales ? { [ExtraParamsKey.UiLocales]: uiLocales } : undefined;
       setRouteRestore(window.location.pathname);
       void signIn({ redirectUri, prompt: Prompt.None, extraParams });
