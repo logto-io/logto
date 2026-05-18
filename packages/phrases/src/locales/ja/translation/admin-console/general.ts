@@ -9,6 +9,8 @@ const general = {
   search: '検索',
   search_placeholder: '検索',
   clear_result: '検索結果をクリアする',
+  today: '今日',
+  clear: 'クリア',
   save: '保存',
   save_changes: '変更を保存する',
   saved: '保存しました',
