@@ -21,10 +21,22 @@ export default function domainRoutes<T extends ManagementApiRouter>(
   const {
     domains: { syncDomainStatus, addDomain, deleteDomain, cleanupDomains },
     samlApplications: { syncCustomDomainsToSamlApplicationRedirectUrls },
+    protectedApps: { syncAllAppConfigsToRemote },
     quota,
   } = libraries;
 
   const isPrivateRegionFeature = EnvSet.values.isMultipleCustomDomainsEnabled;
+  const syncCustomDomainDependentConfigs = async (
+    domains: Awaited<ReturnType<typeof findAllDomains>>
+  ) => {
+    await trySafe(async () =>
+      syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...domains])
+    );
+
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      await trySafe(async () => syncAllAppConfigsToRemote());
+    }
+  };
 
   router.get(
     '/domains',
@@ -35,9 +47,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
         domains.map(async (domain) => syncDomainStatus(domain))
       );
 
-      void trySafe(async () =>
-        syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...syncedDomains])
-      );
+      void syncCustomDomainDependentConfigs(syncedDomains);
 
       ctx.body = syncedDomains.map((domain) => pick(domain, ...domainSelectFields));
 
@@ -65,7 +75,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
         const syncedDomains = await Promise.all(
           domains.map(async (domain) => syncDomainStatus(domain))
         );
-        await syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...syncedDomains]);
+        await syncCustomDomainDependentConfigs(syncedDomains);
       });
 
       ctx.body = pick(syncedDomain, ...domainSelectFields);
@@ -135,7 +145,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
         const syncedDomains = await Promise.all(
           domains.map(async (domain) => syncDomainStatus(domain))
         );
-        await syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...syncedDomains]);
+        await syncCustomDomainDependentConfigs(syncedDomains);
       });
 
       ctx.status = 200;
@@ -160,7 +170,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
         const syncedDomains = await Promise.all(
           domains.map(async (domain) => syncDomainStatus(domain))
         );
-        await syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...syncedDomains]);
+        await syncCustomDomainDependentConfigs(syncedDomains);
       });
 
       ctx.status = 204;

@@ -1,5 +1,7 @@
 import {
+  ApplicationType,
   DomainStatus,
+  SearchJointMode,
   type Application,
   type ProtectedAppMetadata,
   type CustomDomain,
@@ -148,8 +150,27 @@ const deleteDomainFromRemote = async (id: string) => {
 
 export const createProtectedAppLibrary = (queries: Queries) => {
   const {
-    applications: { findApplicationById, updateApplicationById },
+    applications: { findApplications, findApplicationById, updateApplicationById },
+    domains: { findAllDomains },
   } = queries;
+
+  const getSdkEndpoint = async (tenantId: string) => {
+    const defaultEndpoint = getTenantEndpoint(tenantId, EnvSet.values).origin;
+
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return defaultEndpoint;
+    }
+
+    const domains = await findAllDomains();
+    const activeCustomDomain = domains
+      .filter(({ status }) => status === DomainStatus.Active)
+      .slice()
+      .sort((left, right) => right.createdAt - left.createdAt)[0];
+
+    return activeCustomDomain
+      ? new URL(`https://${activeCustomDomain.domain}`).origin
+      : defaultEndpoint;
+  };
 
   const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
     // Skip for integration test, we don't do third party call in integration test
@@ -165,13 +186,14 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     }
 
     const { customDomains, ...rest } = protectedAppMetadata;
+    const sdkEndpoint = await getSdkEndpoint(tenantId);
 
     const siteConfigs = {
       ...rest,
       sdkConfig: {
         appId: id,
         appSecret: secret,
-        endpoint: getTenantEndpoint(tenantId, EnvSet.values).origin,
+        endpoint: sdkEndpoint,
       },
     };
 
@@ -193,6 +215,19 @@ export const createProtectedAppLibrary = (queries: Queries) => {
         })
       );
     }
+  };
+
+  const syncAllAppConfigsToRemote = async (): Promise<void> => {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    const protectedApplications = await findApplications({
+      search: { matches: [], joint: SearchJointMode.Or, isCaseSensitive: false },
+      types: [ApplicationType.Protected],
+    });
+
+    await Promise.all(protectedApplications.map(async ({ id }) => syncAppConfigsToRemote(id)));
   };
 
   /**
@@ -276,5 +311,6 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     addDomainToRemote,
     syncAppCustomDomainStatus,
     deleteDomainFromRemote,
+    syncAllAppConfigsToRemote,
   };
 };

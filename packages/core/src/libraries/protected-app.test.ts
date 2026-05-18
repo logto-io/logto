@@ -1,6 +1,7 @@
-import { type Application } from '@logto/schemas';
+import { DomainStatus, type Application, type Domain } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
+import { mockDomain } from '#src/__mocks__/domain.js';
 import {
   mockProtectedAppConfigProviderConfig,
   mockCloudflareData,
@@ -8,6 +9,7 @@ import {
   mockProtectedApplication,
 } from '#src/__mocks__/index.js';
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   defaultProtectedAppPageRules,
@@ -32,13 +34,16 @@ const { updateProtectedAppSiteConfigs, deleteCustomHostname } = await mockEsmWit
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createProtectedAppLibrary } = await import('./protected-app.js');
 
+const findApplications = jest.fn(async (): Promise<Application[]> => [mockProtectedApplication]);
 const findApplicationById = jest.fn(async (): Promise<Application> => mockProtectedApplication);
 const updateApplicationById = jest.fn(async (id: string, data: Partial<Application>) => ({
   ...mockProtectedApplication,
   ...data,
 }));
+const findAllDomains = jest.fn(async (): Promise<Domain[]> => []);
 const {
   syncAppConfigsToRemote,
+  syncAllAppConfigsToRemote,
   buildProtectedAppData,
   syncAppCustomDomainStatus,
   getDefaultDomain,
@@ -46,11 +51,16 @@ const {
 } = createProtectedAppLibrary(
   new MockQueries({
     applications: {
+      findApplications,
       findApplicationById,
       updateApplicationById,
     },
+    domains: {
+      findAllDomains,
+    },
   })
 );
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const protectedAppConfigProviderConfig = {
   accountIdentifier: 'fake_account_id',
@@ -78,6 +88,10 @@ afterAll(() => {
 
 afterEach(() => {
   updateProtectedAppSiteConfigs.mockClear();
+  findApplications.mockClear();
+  findAllDomains.mockReset();
+  findAllDomains.mockResolvedValue([]);
+  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
 });
 
 describe('syncAppConfigsToRemote()', () => {
@@ -135,6 +149,90 @@ describe('syncAppConfigsToRemote()', () => {
         },
       }
     );
+  });
+
+  it('should use active tenant custom domain as SDK endpoint when dev features are enabled', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    const activeDomain = {
+      ...mockDomain,
+      domain: 'secure.example.com',
+      status: DomainStatus.Active,
+    };
+    findAllDomains.mockResolvedValueOnce([activeDomain]);
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        customDomains: [mockCustomDomain],
+      },
+    });
+
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
+
+    const { id, secret } = mockProtectedApplication;
+    expect(updateProtectedAppSiteConfigs).toHaveBeenNthCalledWith(
+      1,
+      protectedAppConfigProviderConfig,
+      mockProtectedApplication.protectedAppMetadata.host,
+      expect.objectContaining({
+        sdkConfig: {
+          appId: id,
+          appSecret: secret,
+          endpoint: 'https://secure.example.com',
+        },
+      })
+    );
+    expect(updateProtectedAppSiteConfigs).toHaveBeenLastCalledWith(
+      protectedAppConfigProviderConfig,
+      mockCustomDomain.domain,
+      expect.objectContaining({
+        host: mockCustomDomain.domain,
+        sdkConfig: {
+          appId: id,
+          appSecret: secret,
+          endpoint: 'https://secure.example.com',
+        },
+      })
+    );
+  });
+
+  it('should keep the default SDK endpoint when dev features are disabled', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    findAllDomains.mockResolvedValueOnce([
+      {
+        ...mockDomain,
+        domain: 'secure.example.com',
+        status: DomainStatus.Active,
+      },
+    ]);
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
+
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
+
+    const { id, secret, tenantId } = mockProtectedApplication;
+    expect(findAllDomains).not.toHaveBeenCalled();
+    expect(updateProtectedAppSiteConfigs).toHaveBeenCalledWith(
+      protectedAppConfigProviderConfig,
+      mockProtectedApplication.protectedAppMetadata.host,
+      expect.objectContaining({
+        sdkConfig: {
+          appId: id,
+          appSecret: secret,
+          endpoint: getTenantEndpoint(tenantId, EnvSet.values).origin,
+        },
+      })
+    );
+  });
+});
+
+describe('syncAllAppConfigsToRemote()', () => {
+  it('should skip syncing all protected app configs when dev features are disabled', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+    await expect(syncAllAppConfigsToRemote()).resolves.not.toThrow();
+
+    expect(findApplications).not.toHaveBeenCalled();
+    expect(updateProtectedAppSiteConfigs).not.toHaveBeenCalled();
   });
 });
 
