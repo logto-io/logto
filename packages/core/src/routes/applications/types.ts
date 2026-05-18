@@ -5,6 +5,8 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+
 const protectedAppAdditionalScopes = [
   UserScope.CustomData,
   UserScope.Identities,
@@ -44,7 +46,10 @@ export const applicationPatchGuard = originalApplicationPatchGuard
             })
           )
           .optional(),
-        additionalScopes: z.array(protectedAppAdditionalScopeGuard).optional(),
+        additionalScopes: z.preprocess(
+          (value) => (EnvSet.values.isDevFeaturesEnabled ? value : undefined),
+          z.array(protectedAppAdditionalScopeGuard).optional()
+        ),
       })
       .nullish(),
   });

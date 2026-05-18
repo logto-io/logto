@@ -18,7 +18,7 @@ import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
 import OpenExternalLink from '@/components/OpenExternalLink';
 import { protectedApp, protectedAppLocalDev, protectOriginServer } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -293,7 +293,7 @@ function ProtectedAppSettings({ data }: Props) {
         </FormField>
       </FormCard>
       <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} onApplicationUpdated={mutate} />
-      <AdditionalScopesForm />
+      {isDevFeaturesEnabled && <AdditionalScopesForm />}
       <SessionForm data={data} />
     </>
   );
