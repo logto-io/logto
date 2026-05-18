@@ -1,4 +1,4 @@
-import { UserScope } from '@logto/core-kit';
+import { protectedAppAdditionalScopes } from '@logto/core-kit';
 import {
   applicationCreateGuard as originalApplicationCreateGuard,
   applicationPatchGuard as originalApplicationPatchGuard,
@@ -7,13 +7,6 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 
-const protectedAppAdditionalScopes = [
-  UserScope.CustomData,
-  UserScope.Identities,
-  UserScope.Roles,
-  UserScope.Organizations,
-  UserScope.OrganizationRoles,
-] as const;
 const protectedAppAdditionalScopeGuard = z.enum(protectedAppAdditionalScopes);
 
 export const applicationCreateGuard = originalApplicationCreateGuard

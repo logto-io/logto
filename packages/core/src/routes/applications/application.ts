@@ -72,15 +72,16 @@ const hideProtectedAppMetadataDevFeatures = (application: Application): Applicat
 };
 
 const normalizeProtectedAppMetadataPatch = (
-  protectedAppMetadata: ProtectedAppMetadata
-): ProtectedAppMetadata => {
+  protectedAppMetadata: Partial<ProtectedAppMetadata>
+): Partial<ProtectedAppMetadata> => {
   if (EnvSet.values.isDevFeaturesEnabled) {
     return protectedAppMetadata;
   }
 
-  const { additionalScopes, ...rest } = protectedAppMetadata;
+  const { additionalScopes: _additionalScopes, ...protectedAppMetadataPatch } =
+    protectedAppMetadata;
 
-  return additionalScopes === undefined ? protectedAppMetadata : rest;
+  return protectedAppMetadataPatch;
 };
 
 const hideOidcClientMetadataForSamlApp = (application: Application) => {
@@ -426,11 +427,13 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
             status: 422,
           })
         );
+        const normalizedProtectedAppMetadataPatch =
+          normalizeProtectedAppMetadataPatch(protectedAppMetadata);
         await queries.applications.updateApplicationById(id, {
-          protectedAppMetadata: normalizeProtectedAppMetadataPatch({
+          protectedAppMetadata: {
             ...originProtectedAppMetadata,
-            ...protectedAppMetadata,
-          }),
+            ...normalizedProtectedAppMetadataPatch,
+          },
         });
         try {
           await protectedApps.syncAppConfigsToRemote(id);

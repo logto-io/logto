@@ -83,6 +83,12 @@
     content: '×';
   }
 
+  &.loading {
+    &::before {
+      content: none;
+    }
+  }
+
   &.enabled {
     color: var(--color-on-success-container);
     background: var(--color-success-container);

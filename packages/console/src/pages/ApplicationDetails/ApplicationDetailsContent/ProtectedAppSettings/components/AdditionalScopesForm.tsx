@@ -1,4 +1,4 @@
-import { extendedIdTokenClaimsByScope, UserScope } from '@logto/core-kit';
+import { extendedIdTokenClaimsByScope, protectedAppAdditionalScopes } from '@logto/core-kit';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -10,14 +10,6 @@ import useIdTokenConfig from '@/pages/CustomizeJwt/use-id-token-config';
 import { type ApplicationForm } from '../../utils';
 
 import styles from './AdditionalScopesForm.module.scss';
-
-const scopes = [
-  UserScope.CustomData,
-  UserScope.Identities,
-  UserScope.Roles,
-  UserScope.Organizations,
-  UserScope.OrganizationRoles,
-] as const;
 
 function AdditionalScopesForm() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -49,7 +41,7 @@ function AdditionalScopesForm() {
           control={control}
           render={({ field: { value = [], onChange } }) => (
             <>
-              {scopes.map((scope) => {
+              {protectedAppAdditionalScopes.map((scope) => {
                 const claims = extendedIdTokenClaimsByScope[scope];
 
                 if (!claims) {
@@ -79,7 +71,7 @@ function AdditionalScopesForm() {
                       {isLoading && (
                         <>
                           {claims.map((claim) => (
-                            <span key={claim} className={styles.claimTag}>
+                            <span key={claim} className={`${styles.claimTag} ${styles.loading}`}>
                               {claim}
                             </span>
                           ))}

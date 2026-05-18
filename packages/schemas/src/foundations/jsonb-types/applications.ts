@@ -1,15 +1,8 @@
-import { UserScope } from '@logto/core-kit';
+import { protectedAppAdditionalScopes } from '@logto/core-kit';
 import { z } from 'zod';
 
 import { cloudflareDataGuard, domainDnsRecordsGuard, domainStatusGuard } from './custom-domain.js';
 
-const protectedAppAdditionalScopes = [
-  UserScope.CustomData,
-  UserScope.Identities,
-  UserScope.Roles,
-  UserScope.Organizations,
-  UserScope.OrganizationRoles,
-] as const;
 const protectedAppAdditionalScopeGuard = z.enum(protectedAppAdditionalScopes);
 
 export const customDomainGuard = z.object({

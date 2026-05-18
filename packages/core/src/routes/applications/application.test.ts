@@ -1,5 +1,5 @@
 import { UserScope } from '@logto/core-kit';
-import type { Application, CreateApplication } from '@logto/schemas';
+import type { Application, CreateApplication, ProtectedAppMetadata } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
@@ -275,13 +275,17 @@ describe('application route', () => {
     });
   });
 
-  it('PATCH /applications/:applicationId ignores additional scopes when dev features are disabled', async () => {
+  it('PATCH /applications/:applicationId preserves existing additional scopes when dev features are disabled', async () => {
     setDevFeaturesEnabled(false);
-    findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
+    const existingProtectedAppMetadata: ProtectedAppMetadata = {
+      ...mockProtectedApplication.protectedAppMetadata,
+      additionalScopes: [UserScope.CustomData],
+    };
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: existingProtectedAppMetadata,
+    });
     const origin = 'https://example.com';
-    const { additionalScopes, ...protectedAppMetadata } =
-      mockProtectedApplication.protectedAppMetadata;
-    expect(additionalScopes).toEqual([]);
 
     const response = await applicationRequest.patch('/applications/foo').send({
       protectedAppMetadata: {
@@ -294,7 +298,7 @@ describe('application route', () => {
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith('foo');
     expect(updateApplicationById).toHaveBeenNthCalledWith(1, 'foo', {
       protectedAppMetadata: {
-        ...protectedAppMetadata,
+        ...existingProtectedAppMetadata,
         origin,
       },
     });
