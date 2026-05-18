@@ -1,10 +1,15 @@
+/* eslint-disable max-lines */
 import type { SignInExperienceResponse } from '@experience/shared/types';
 import {
   AccountCenterControlValue,
   ConnectorPlatform,
+  MfaFactor,
+  MfaPolicy,
   type AccountCenter,
+  type UserMfaVerificationResponse,
   type UserProfileResponse,
 } from '@logto/schemas';
+import { waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext, {
@@ -14,12 +19,22 @@ import renderWithPageContext, {
 } from '@ac/__mocks__/RenderWithPageContext';
 import { securityRoute } from '@ac/constants/routes';
 
+import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../apis/mfa';
+
 import Security from '.';
+
+const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
-    getAccessToken: jest.fn().mockResolvedValue('access-token'),
+    getAccessToken: mockGetAccessToken,
   }),
+}));
+
+jest.mock('../../apis/mfa', () => ({
+  getMfaSettings: jest.fn(),
+  getMfaVerifications: jest.fn(),
+  updateMfaSettings: jest.fn(),
 }));
 
 type SecurityRenderOptions = {
@@ -46,6 +61,31 @@ const googleNativeConnector = {
   id: 'google-native',
   platform: ConnectorPlatform.Native,
 };
+
+const mockGetMfaSettings = getMfaSettings as jest.MockedFunction<typeof getMfaSettings>;
+const mockGetMfaVerifications = getMfaVerifications as jest.MockedFunction<
+  typeof getMfaVerifications
+>;
+const mockUpdateMfaSettings = updateMfaSettings as jest.MockedFunction<typeof updateMfaSettings>;
+
+const configuredMfaVerifications = [
+  {
+    id: 'totp-verification-id',
+    createdAt: '2026-05-13T00:00:00.000Z',
+    type: MfaFactor.TOTP,
+  },
+  {
+    id: 'passkey-verification-id',
+    createdAt: '2026-05-13T00:00:00.000Z',
+    type: MfaFactor.WebAuthn,
+  },
+  {
+    id: 'backup-code-verification-id',
+    createdAt: '2026-05-13T00:00:00.000Z',
+    type: MfaFactor.BackupCode,
+    remainCodes: 8,
+  },
+] satisfies UserMfaVerificationResponse;
 
 const renderSecurity = ({
   accountCenterSettings,
@@ -99,6 +139,14 @@ const renderSecurity = ({
 };
 
 describe('<Security />', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockGetAccessToken.mockResolvedValue('access-token');
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    mockGetMfaVerifications.mockResolvedValue([]);
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+  });
+
   it('renders editable fields with expected sections and edit entries', () => {
     const { queryAllByText, queryByText } = renderSecurity();
 
@@ -266,4 +314,175 @@ describe('<Security />', () => {
         ?.getAttribute('href')
     ).toBe(deleteAccountUrl);
   });
+
+  it('renders MFA loading mask without leaking incomplete content', async () => {
+    const pendingMfaVerifications = new Promise<UserMfaVerificationResponse>(() => {
+      // Keep the request pending to assert the loading state.
+    });
+
+    mockGetMfaVerifications.mockImplementationOnce(async () => pendingMfaVerifications);
+
+    const { queryByRole, queryByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
+          policy: MfaPolicy.Mandatory,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(queryByRole('status')).not.toBeNull();
+    });
+    await waitFor(() => {
+      expect(mockGetMfaVerifications).toHaveBeenCalledTimes(1);
+    });
+
+    const status = queryByRole('status');
+
+    expect(status?.getAttribute('aria-live')).toBe('polite');
+    expect(status?.getAttribute('aria-busy')).toBe('true');
+    expect(status?.getAttribute('aria-label')).toBe(
+      'account_center.security.two_step_verification'
+    );
+    expect(queryByText('account_center.security.authenticator_app')).toBeNull();
+    expect(queryByText('account_center.security.passkeys')).toBeNull();
+    expect(queryByText('account_center.security.backup_codes')).toBeNull();
+    expect(queryByText('account_center.security.not_configured')).toBeNull();
+  });
+
+  it('renders configured MFA method rows from mocked API data', async () => {
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaVerifications.mockResolvedValue(configuredMfaVerifications);
+
+    const { queryAllByText, queryByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
+          policy: MfaPolicy.Mandatory,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(queryByText('account_center.security.authenticator_app')).not.toBeNull();
+    });
+
+    expect(queryByText('account_center.security.two_step_verification')).not.toBeNull();
+    expect(queryByText('account_center.security.passkeys')).not.toBeNull();
+    expect(queryByText('account_center.security.passkeys_count')).not.toBeNull();
+    expect(queryByText('account_center.security.authenticator_app')).not.toBeNull();
+    expect(queryByText('account_center.security.configured')).not.toBeNull();
+    expect(queryByText('account_center.security.backup_codes')).not.toBeNull();
+    expect(queryByText('account_center.security.backup_codes_count')).not.toBeNull();
+    expect(queryByText('account_center.security.not_configured')).toBeNull();
+    expect(queryAllByText('account_center.security.manage')).toHaveLength(2);
+    expect(queryByText('account_center.security.change')).not.toBeNull();
+    expect(mockGetMfaSettings).not.toHaveBeenCalled();
+    expect(mockGetMfaVerifications).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders not-configured state for unconfigured MFA methods', async () => {
+    const { queryAllByText, queryByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
+          policy: MfaPolicy.Mandatory,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(queryByText('account_center.security.authenticator_app')).not.toBeNull();
+    });
+
+    expect(queryByText('account_center.security.passkeys')).not.toBeNull();
+    expect(queryByText('account_center.security.authenticator_app')).not.toBeNull();
+    expect(queryByText('account_center.security.backup_codes')).not.toBeNull();
+    expect(queryAllByText('account_center.security.not_configured')).toHaveLength(3);
+    expect(queryByText('account_center.security.configured')).toBeNull();
+    expect(queryAllByText('account_center.security.add')).toHaveLength(3);
+  });
+
+  it('hides MFA section when disabled by Account Center settings or experience settings', () => {
+    const { queryByText, unmount } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Off,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+        },
+      },
+    });
+
+    expect(queryByText('account_center.security.two_step_verification')).toBeNull();
+    expect(mockGetMfaSettings).not.toHaveBeenCalled();
+    expect(mockGetMfaVerifications).not.toHaveBeenCalled();
+
+    unmount();
+    jest.clearAllMocks();
+
+    const hiddenMfaSection = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [],
+        },
+      },
+    });
+
+    expect(
+      hiddenMfaSection.queryByText('account_center.security.two_step_verification')
+    ).toBeNull();
+    expect(mockGetMfaSettings).not.toHaveBeenCalled();
+    expect(mockGetMfaVerifications).not.toHaveBeenCalled();
+  });
 });
+/* eslint-enable max-lines */
