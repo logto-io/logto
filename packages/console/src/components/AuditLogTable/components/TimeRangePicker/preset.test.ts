@@ -47,15 +47,36 @@ describe('preset', () => {
     const fixedNow = new Date('2026-05-13T00:00:00Z').getTime();
     const now = () => fixedNow;
 
-    it('returns a rolling lower bound for a known preset and no upper bound', () => {
-      const window = resolveTimeWindow('7d', '', '', now);
-      expect(window.startTime).toBe(fixedNow - 7 * 24 * 60 * 60 * 1000);
+    it('keeps 1h time-labelled preset rolling (LOG-13478: no startOfDay snap)', () => {
+      const window = resolveTimeWindow('1h', '', '', now);
+      expect(window.startTime).toBe(fixedNow - 60 * 60 * 1000);
       expect(window.endTime).toBeUndefined();
     });
 
-    it('falls back to the default preset for an unknown range value', () => {
+    it('keeps 1d (24h) time-labelled preset rolling', () => {
+      const window = resolveTimeWindow('1d', '', '', now);
+      expect(window.startTime).toBe(fixedNow - 24 * 60 * 60 * 1000);
+      expect(window.endTime).toBeUndefined();
+    });
+
+    it('snaps 7d to start-of-day so day-labelled presets match the custom picker (LOG-13478)', () => {
+      const window = resolveTimeWindow('7d', '', '', now);
+      const rolledBack = fixedNow - 7 * 24 * 60 * 60 * 1000;
+      expect(window.startTime).toBe(startOfDay(rolledBack).getTime() - 1);
+      expect(window.endTime).toBeUndefined();
+    });
+
+    it('snaps 30d to start-of-day', () => {
+      const window = resolveTimeWindow('30d', '', '', now);
+      const rolledBack = fixedNow - 30 * 24 * 60 * 60 * 1000;
+      expect(window.startTime).toBe(startOfDay(rolledBack).getTime() - 1);
+      expect(window.endTime).toBeUndefined();
+    });
+
+    it('falls back to the default preset (7d, snapped) for an unknown range value', () => {
       const window = resolveTimeWindow('bogus', '', '', now);
-      expect(window.startTime).toBe(fixedNow - 7 * 24 * 60 * 60 * 1000);
+      const rolledBack = fixedNow - 7 * 24 * 60 * 60 * 1000;
+      expect(window.startTime).toBe(startOfDay(rolledBack).getTime() - 1);
       expect(window.endTime).toBeUndefined();
     });
 

@@ -1,11 +1,6 @@
 import { addDays, isValid, parseISO, startOfDay } from 'date-fns';
 
-/**
- * Canonical preset names persisted in the URL (`?range=…`). Stable across
- * sessions and bookmarkable: `Date.now() - parsePresetMs('7d')` is always
- * "7 days before _now_" rather than a frozen window from the moment the link
- * was saved.
- */
+/** Canonical preset names persisted in the URL (`?range=…`). */
 export const presetRanges = ['1h', '1d', '7d', '30d'] as const;
 
 export type PresetRange = (typeof presetRanges)[number];
@@ -23,34 +18,29 @@ const presetMs: Record<PresetRange, number> = {
   '30d': 30 * 24 * 60 * 60 * 1000,
 };
 
+/** Day-labelled presets that snap to start-of-day, in calendar-day units. */
+const dayBoundaryPresetDays: Partial<Record<PresetRange, number>> = {
+  '7d': 7,
+  '30d': 30,
+};
+
 export const isPresetRange = (value: string): value is PresetRange =>
   Object.hasOwn(presetMs, value);
 
-/**
- * Translate a preset name (e.g. `'7d'`) into a millisecond offset suitable for
- * `Date.now() - parsePresetMs(range)`. Returns `undefined` for unknown inputs
- * so the caller can fall back to the default preset.
- */
+/** Translate a preset name into a millisecond offset, or `undefined` if unknown. */
 export const parsePresetMs = (value: string): number | undefined =>
   isPresetRange(value) ? presetMs[value] : undefined;
 
 /** Native `<input type="date">` shape — shared by the URL → input and URL → API paths. */
 const dateInputShape = /^\d{4}-\d{2}-\d{2}$/;
 
-/**
- * Whether `raw` is a calendar-date string in the `yyyy-MM-dd` shape the picker
- * emits and the URL persists. Centralized so the URL → input check and the
- * URL → API filter cannot disagree (which would leave the input blank while
- * the table is still filtered by a parsed timestamp).
- */
+/** Whether `raw` is a `yyyy-MM-dd` calendar-date string. */
 export const isDateInputValue = (raw: string): boolean => dateInputShape.test(raw);
 
 /**
- * Parse a `yyyy-MM-dd` calendar-date string (as emitted by a native
- * `<input type="date">`) and apply the supplied transform in the local
- * timezone. Returns `undefined` for empty, shape-mismatched, or unparseable
- * strings — guarding against stray query params that survive a manual URL
- * edit (e.g. a full ISO timestamp `parseISO` would otherwise accept).
+ * Parse a `yyyy-MM-dd` value and apply `transform` in local time. Returns
+ * `undefined` for empty / malformed input — keeps stray URL edits (full ISO
+ * timestamps, garbage strings) from leaking into the filter.
  */
 const parseDateAndTransform = (
   raw: string,
@@ -64,21 +54,10 @@ const parseDateAndTransform = (
 };
 
 /**
- * Resolve URL state (`range` / `start_time` / `end_time`) into the absolute
- * window the API expects. Custom-range values are stored as `yyyy-MM-dd`
- * strings (matching the date input value); we widen them to whole-day local
- * boundaries here. Presets return a rolling lower bound and no upper bound.
- *
- * The API treats both bounds as exclusive (`createdAt > start_time AND
- * createdAt < end_time`). To honor the "include all events on the picked
- * date" expectation:
- *   * `start_time` is `(startOfDay - 1ms)` so `>` includes midnight itself.
- *   * `end_time` is `startOfDay` of the day _after_ the picked end date so
- *     `<` includes events up to `23:59:59.999` of the picked end date.
- *
- * Callers are expected to memoize the result — the preset path snapshots
- * `Date.now()` and would otherwise re-evaluate on every render and thrash any
- * URL-keyed cache (e.g. SWR).
+ * Resolve URL state into the absolute window the API expects. Bounds are
+ * exclusive (`createdAt > start_time AND createdAt < end_time`); the `±1ms`
+ * / next-day biases below ensure the picked day is included. Callers should
+ * memoize — the preset path snapshots `Date.now()` per call.
  */
 export const resolveTimeWindow = (
   range: string,
@@ -95,9 +74,13 @@ export const resolveTimeWindow = (
       endTime: parseDateAndTransform(rawEndTime, (date) => startOfDay(addDays(date, 1))),
     };
   }
-  const presetOffset = parsePresetMs(range) ?? parsePresetMs(defaultPresetRange);
-  return {
-    startTime: presetOffset === undefined ? undefined : now() - presetOffset,
-    endTime: undefined,
-  };
+  const presetRange: PresetRange = isPresetRange(range) ? range : defaultPresetRange;
+  const daysBack = dayBoundaryPresetDays[presetRange];
+  // `addDays` is calendar-aware so the snap stays on the right calendar day
+  // across DST transitions.
+  const startTime =
+    daysBack === undefined
+      ? now() - presetMs[presetRange]
+      : startOfDay(addDays(now(), -daysBack)).getTime() - 1;
+  return { startTime, endTime: undefined };
 };
