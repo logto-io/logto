@@ -53,14 +53,3 @@ export const mailJunkyConfigGuard = z.object({
 });
 
 export type MailJunkyConfig = z.infer<typeof mailJunkyConfigGuard>;
-
-/**
- * MailJunky API Error Response
- */
-
-export const mailJunkyErrorResponseGuard = z.object({
-  error: z.string().optional(),
-  message: z.string().optional(),
-});
-
-export type MailJunkyErrorResponse = z.infer<typeof mailJunkyErrorResponseGuard>;
