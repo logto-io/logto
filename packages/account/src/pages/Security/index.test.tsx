@@ -18,6 +18,7 @@ import renderWithPageContext, {
   mockUserInfo,
 } from '@ac/__mocks__/RenderWithPageContext';
 import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../apis/mfa';
 
@@ -492,6 +493,7 @@ describe('<Security />', () => {
     fireEvent.click(getByLabelText('Toggle switch'));
 
     expect(getByText('verified action page')).not.toBeNull();
+    expect(sessionStorage.getPendingVerifiedAction()).toBe('enable-mfa');
     expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
   });
 
@@ -532,7 +534,7 @@ describe('<Security />', () => {
     expect((getByLabelText('Toggle switch') as HTMLInputElement).checked).toBe(true);
   });
 
-  it('opens confirmation modal when disabling MFA', async () => {
+  it('navigates to verified action after confirming disable without verification ID', async () => {
     mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
 
     const { getByLabelText, getByText } = renderSecurity({
@@ -562,6 +564,11 @@ describe('<Security />', () => {
 
     expect(getByText('account_center.security.turn_off_2_step_verification')).not.toBeNull();
     expect(getByText('account_center.security.disable_2_step_verification')).not.toBeNull();
+
+    fireEvent.click(getByText('account_center.security.disable_2_step_verification'));
+
+    expect(getByText('verified action page')).not.toBeNull();
+    expect(sessionStorage.getPendingVerifiedAction()).toBe('disable-mfa');
     expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
   });
 
