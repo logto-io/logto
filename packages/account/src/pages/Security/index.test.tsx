@@ -9,7 +9,7 @@ import {
   type UserMfaVerificationResponse,
   type UserProfileResponse,
 } from '@logto/schemas';
-import { waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext, {
@@ -17,7 +17,7 @@ import renderWithPageContext, {
   mockSignInExperienceSettings,
   mockUserInfo,
 } from '@ac/__mocks__/RenderWithPageContext';
-import { securityRoute } from '@ac/constants/routes';
+import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
 
 import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../apis/mfa';
 
@@ -45,6 +45,7 @@ type SecurityRenderOptions = {
     readonly mfa?: Partial<SignInExperienceResponse['mfa']>;
   };
   readonly userInfo?: Partial<UserProfileResponse>;
+  readonly verificationId?: string;
 };
 
 const googleWebConnector = {
@@ -91,6 +92,7 @@ const renderSecurity = ({
   accountCenterSettings,
   experienceSettings,
   userInfo,
+  verificationId,
 }: SecurityRenderOptions = {}) => {
   const { fields, ...accountCenterSettingsOverrides } = accountCenterSettings ?? {};
   const { mfa, ...experienceSettingsOverrides } = experienceSettings ?? {};
@@ -98,6 +100,7 @@ const renderSecurity = ({
   return renderWithPageContext(
     <Routes>
       <Route path={securityRoute} element={<Security />} />
+      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
     </Routes>,
     {
       initialEntries: [securityRoute],
@@ -133,6 +136,7 @@ const renderSecurity = ({
           ...mockUserInfo,
           ...userInfo,
         },
+        verificationId,
       },
     }
   );
@@ -145,6 +149,7 @@ describe('<Security />', () => {
     mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
     mockGetMfaVerifications.mockResolvedValue([]);
     mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    window.sessionStorage.clear();
   });
 
   it('renders editable fields with expected sections and edit entries', () => {
@@ -400,6 +405,203 @@ describe('<Security />', () => {
     expect(queryByText('account_center.security.change')).not.toBeNull();
     expect(mockGetMfaSettings).not.toHaveBeenCalled();
     expect(mockGetMfaVerifications).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders two-step verification toggle for user-controlled MFA policy', async () => {
+    const { getByLabelText, queryByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+
+    expect(
+      queryByText('account_center.security.turn_on_2_step_verification_description')
+    ).not.toBeNull();
+    expect(mockGetMfaSettings).toHaveBeenCalledTimes(1);
+  });
+
+  it('hides two-step verification toggle for mandatory MFA policies', async () => {
+    const { queryByLabelText, queryByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+          policy: MfaPolicy.Mandatory,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(queryByText('account_center.security.authenticator_app')).not.toBeNull();
+    });
+
+    expect(queryByLabelText('Toggle switch')).toBeNull();
+    expect(mockGetMfaSettings).not.toHaveBeenCalled();
+  });
+
+  it('navigates to verified action when enabling MFA without verification ID', async () => {
+    const { getByLabelText, getByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+
+    fireEvent.click(getByLabelText('Toggle switch'));
+
+    expect(getByText('verified action page')).not.toBeNull();
+    expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
+  });
+
+  it('updates MFA settings when enabling MFA with verification ID', async () => {
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+
+    const { getByLabelText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
+      },
+      verificationId: 'verification-record-id',
+    });
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+
+    fireEvent.click(getByLabelText('Toggle switch'));
+
+    await waitFor(() => {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', 'verification-record-id', {
+        skipMfaOnSignIn: false,
+      });
+    });
+    expect((getByLabelText('Toggle switch') as HTMLInputElement).checked).toBe(true);
+  });
+
+  it('opens confirmation modal when disabling MFA', async () => {
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+
+    const { getByLabelText, getByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect((getByLabelText('Toggle switch') as HTMLInputElement).checked).toBe(true);
+    });
+
+    fireEvent.click(getByLabelText('Toggle switch'));
+
+    expect(getByText('account_center.security.turn_off_2_step_verification')).not.toBeNull();
+    expect(getByText('account_center.security.disable_2_step_verification')).not.toBeNull();
+    expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
+  });
+
+  it('updates MFA settings and UI state after confirming disable', async () => {
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+
+    const { getByLabelText, getByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
+      },
+      verificationId: 'verification-record-id',
+    });
+
+    await waitFor(() => {
+      expect((getByLabelText('Toggle switch') as HTMLInputElement).checked).toBe(true);
+    });
+
+    fireEvent.click(getByLabelText('Toggle switch'));
+    fireEvent.click(getByText('account_center.security.disable_2_step_verification'));
+
+    await waitFor(() => {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', 'verification-record-id', {
+        skipMfaOnSignIn: true,
+      });
+    });
+    expect((getByLabelText('Toggle switch') as HTMLInputElement).checked).toBe(false);
   });
 
   it('renders not-configured state for unconfigured MFA methods', async () => {
