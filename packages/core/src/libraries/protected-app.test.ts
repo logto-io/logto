@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import { type Application } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
@@ -8,6 +9,7 @@ import {
   mockProtectedApplication,
 } from '#src/__mocks__/index.js';
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   defaultProtectedAppPageRules,
@@ -31,6 +33,11 @@ const { updateProtectedAppSiteConfigs, deleteCustomHostname } = await mockEsmWit
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createProtectedAppLibrary } = await import('./protected-app.js');
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
+};
 
 const findApplicationById = jest.fn(async (): Promise<Application> => mockProtectedApplication);
 const updateApplicationById = jest.fn(async (id: string, data: Partial<Application>) => ({
@@ -77,6 +84,7 @@ afterAll(() => {
 });
 
 afterEach(() => {
+  setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   updateProtectedAppSiteConfigs.mockClear();
 });
 
@@ -136,6 +144,26 @@ describe('syncAppConfigsToRemote()', () => {
       }
     );
   });
+
+  it('should omit additional scopes when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        additionalScopes: [UserScope.CustomData],
+      },
+    });
+
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
+
+    expect(updateProtectedAppSiteConfigs).toHaveBeenCalledWith(
+      mockProtectedAppConfigProviderConfig,
+      mockProtectedApplication.protectedAppMetadata.host,
+      expect.any(Object)
+    );
+    expect(updateProtectedAppSiteConfigs.mock.calls[0]?.[2]).not.toHaveProperty('additionalScopes');
+  });
 });
 
 describe('buildProtectedAppData()', () => {
@@ -153,6 +181,26 @@ describe('buildProtectedAppData()', () => {
   it('should return data if subdomain is available', async () => {
     const subDomain = 'a';
     const host = `${subDomain}.${mockProtectedAppConfigProviderConfig.domain}`;
+    await expect(buildProtectedAppData({ subDomain, origin })).resolves.toEqual({
+      protectedAppMetadata: {
+        host,
+        origin,
+        sessionDuration: defaultProtectedAppSessionDuration,
+        pageRules: defaultProtectedAppPageRules,
+        additionalScopes: [],
+      },
+      oidcClientMetadata: {
+        redirectUris: [`https://${host}/${protectedAppSignInCallbackUrl}`],
+        postLogoutRedirectUris: [`https://${host}`],
+      },
+    });
+  });
+
+  it('should omit additional scopes when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    const subDomain = 'a';
+    const host = `${subDomain}.${mockProtectedAppConfigProviderConfig.domain}`;
+
     await expect(buildProtectedAppData({ subDomain, origin })).resolves.toEqual({
       protectedAppMetadata: {
         host,
