@@ -43,6 +43,7 @@ import {
   generatePassword,
   randomString,
   generateNationalPhoneNumber,
+  devFeatureTest,
 } from '#src/utils.js';
 
 describe('admin console user management', () => {
@@ -283,7 +284,7 @@ describe('admin console user management', () => {
     expect(userEntity.updatedAt).toBeGreaterThan(updatedAt);
   });
 
-  describe('PATCH /users/:userId/password/expire', () => {
+  devFeatureTest.describe('PATCH /users/:userId/password/expiration', () => {
     afterAll(async () => {
       await disablePasswordExpiration();
     });

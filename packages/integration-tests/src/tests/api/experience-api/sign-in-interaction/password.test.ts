@@ -20,7 +20,7 @@ import {
   enablePasswordExpiration,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser, UserApiTest } from '#src/helpers/user.js';
-import { generateEmail, generatePassword, generateUsername } from '#src/utils.js';
+import { devFeatureTest, generateEmail, generatePassword, generateUsername } from '#src/utils.js';
 
 const identifiersTypeToUserProfile = Object.freeze({
   username: 'username',
@@ -212,7 +212,7 @@ describe('phone number sanitisation sign-in test +61 412 345 678', () => {
   );
 });
 
-describe('password expiration API contract', () => {
+devFeatureTest.describe('password expiration API contract', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {
