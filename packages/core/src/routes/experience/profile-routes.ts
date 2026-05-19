@@ -19,7 +19,6 @@ import SystemContext from '#src/tenants/SystemContext.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
-import { getTenantId } from '#src/utils/tenant.js';
 
 import { uploadAvatar } from '../avatar-upload.js';
 
@@ -106,7 +105,7 @@ function verifiedInteractionGuard<
 
 export default function interactionProfileRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
-  { libraries, queries }: TenantContext
+  { id: tenantId, libraries, queries }: TenantContext
 ) {
   router.post(
     `${experienceRoutes.profile}`,
@@ -217,9 +216,6 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         );
 
         assertAvatarUploadRateLimit(ctx.interactionDetails.jti, ctx.ip, ctx.i18n.languages);
-
-        const [tenantId] = await getTenantId(ctx.URL);
-        assertThat(tenantId, 'guard.can_not_get_tenant_id');
 
         const { storageProviderConfig } = SystemContext.shared;
         assertThat(storageProviderConfig, 'storage.not_configured');

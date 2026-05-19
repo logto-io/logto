@@ -7,7 +7,6 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
-import { getTenantId } from '#src/utils/tenant.js';
 
 import { uploadAvatar } from '../avatar-upload.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
@@ -15,7 +14,7 @@ import type { UserRouter, RouterInitArgs } from '../types.js';
 import { accountApiPrefix } from './constants.js';
 
 export default function accountUserAssetsRoutes<T extends UserRouter>(
-  ...[router]: RouterInitArgs<T>
+  ...[router, { id: tenantId }]: RouterInitArgs<T>
 ) {
   // TODO: Remove this dev feature gate when avatar upload is ready for production.
   if (!EnvSet.values.isDevFeaturesEnabled) {
@@ -42,9 +41,6 @@ export default function accountUserAssetsRoutes<T extends UserRouter>(
       );
 
       const { file: bodyFiles } = ctx.guard.files;
-
-      const [tenantId] = await getTenantId(ctx.URL);
-      assertThat(tenantId, 'guard.can_not_get_tenant_id');
 
       const { storageProviderConfig } = SystemContext.shared;
       assertThat(storageProviderConfig, 'storage.not_configured');
