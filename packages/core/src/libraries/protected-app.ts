@@ -1,7 +1,6 @@
 import {
   DomainStatus,
   type Application,
-  ApplicationSecrets,
   type ProtectedAppMetadata,
   type CustomDomain,
 } from '@logto/schemas';
@@ -167,14 +166,6 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     }
 
     const activeSecret = await findActiveSecretByApplicationId(applicationId);
-    assertThat(
-      activeSecret,
-      new RequestError({
-        code: 'entity.not_exists',
-        status: 500,
-        name: ApplicationSecrets.table,
-      })
-    );
     const { customDomains, ...rest } = protectedAppMetadata;
 
     const siteConfigs = {

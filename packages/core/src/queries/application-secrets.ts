@@ -52,7 +52,7 @@ export class ApplicationSecretQueries {
   }
 
   async findActiveSecretByApplicationId(appId: string) {
-    return this.pool.maybeOne<ApplicationSecret>(sql`
+    return this.pool.one<ApplicationSecret>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
         where ${fields.applicationId} = ${appId}

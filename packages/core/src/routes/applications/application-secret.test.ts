@@ -2,6 +2,8 @@ import { type Application, type ApplicationSecret, ApplicationType } from '@logt
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockApplication, mockProtectedApplication } from '#src/__mocks__/index.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -53,6 +55,7 @@ const applicationSecretRoutes = await pickDefault(import('./application-secret.j
 describe('application secret routes', () => {
   const applicationSecretRequest = createRequester({
     authedRoutes: applicationSecretRoutes,
+    middlewares: [koaI18next(), koaErrorHandler()],
     tenantContext,
   });
 
@@ -81,6 +84,10 @@ describe('application secret routes', () => {
       .send({ name: 'New secret' });
 
     expect(response.status).toEqual(500);
+    expect(response.body).toMatchObject({
+      code: 'application.sync_application_secret_failed',
+      message: 'Sync application secret failed.',
+    });
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
     expect(deleteByName).toHaveBeenCalledWith(mockProtectedApplication.id, 'New secret');
   });

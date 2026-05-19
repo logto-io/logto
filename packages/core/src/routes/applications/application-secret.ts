@@ -70,7 +70,7 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
       params: z.object({ id: z.string() }),
       body: ApplicationSecrets.createGuard.pick({ name: true, expiresAt: true }),
       response: ApplicationSecrets.guard,
-      status: [201, 400],
+      status: [201, 400, 500],
     }),
     async (ctx, next) => {
       const {
@@ -98,9 +98,12 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         if (application.type === ApplicationType.Protected) {
           await syncProtectedAppConfigsToRemote(appId);
         }
-      } catch (error: unknown) {
+      } catch {
         await queries.applicationSecrets.deleteByName(appId, createdSecret.name);
-        throw error;
+        throw new RequestError({
+          code: 'application.sync_application_secret_failed',
+          status: 500,
+        });
       }
 
       ctx.status = 201;
