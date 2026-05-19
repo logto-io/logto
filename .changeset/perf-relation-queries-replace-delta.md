@@ -1,5 +1,5 @@
 ---
-"@logto/core": minor
+"@logto/core": patch
 ---
 
 add `TwoRelationsQueries.replaceWithDelta()` for high-cardinality relation tables; switch `PUT /organizations/:id/users` to use it
