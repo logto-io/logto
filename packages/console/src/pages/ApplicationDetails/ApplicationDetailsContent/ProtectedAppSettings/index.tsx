@@ -18,7 +18,11 @@ import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
 import OpenExternalLink from '@/components/OpenExternalLink';
 import { protectedApp, protectedAppLocalDev, protectOriginServer } from '@/consts';
-import { isProtectedAppEnabled, isProtectedAppLocalDevEnabled } from '@/consts/env';
+import {
+  isDevFeaturesEnabled,
+  isProtectedAppEnabled,
+  isProtectedAppLocalDevEnabled,
+} from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -36,6 +40,7 @@ import CustomDomain from '@/pages/TenantSettings/TenantDomainSettings/CustomDoma
 import EndpointsAndCredentials from '../EndpointsAndCredentials';
 import { type ApplicationForm } from '../utils';
 
+import AdditionalScopesForm from './components/AdditionalScopesForm';
 import SessionForm from './components/SessionForm';
 import styles from './index.module.scss';
 
@@ -295,6 +300,7 @@ function ProtectedAppSettings({ data }: Props) {
         </FormField>
       </FormCard>
       <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} onApplicationUpdated={mutate} />
+      {isDevFeaturesEnabled && <AdditionalScopesForm />}
       <SessionForm data={data} />
     </>
   );

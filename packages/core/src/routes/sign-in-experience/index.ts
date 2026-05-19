@@ -274,7 +274,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       }
       if (hasCustomUiCsp) {
         assertThat(
-          EnvSet.values.isCloud && EnvSet.values.isDevFeaturesEnabled,
+          EnvSet.values.isCloud,
           new RequestError({
             code: 'request.invalid_input',
             details: 'Custom UI CSP configuration is not available',

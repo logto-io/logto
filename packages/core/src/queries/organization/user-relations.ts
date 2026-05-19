@@ -25,6 +25,29 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
     super(pool, OrganizationUserRelations.table, Organizations, Users);
   }
 
+  /**
+   * Given a candidate set of user IDs, return the subset that already have a
+   * row in `organization_user_relations` for the organization.
+   *
+   * Bounded by `userIds.length` (always the request body). Uses the
+   * `(organization_id, user_id)` primary-key index.
+   */
+  async getExistingUserIds(organizationId: string, userIds: string[]): Promise<string[]> {
+    if (userIds.length === 0) {
+      return [];
+    }
+
+    const { fields } = convertToIdentifiers(OrganizationUserRelations, true);
+    const rows = await this.pool.any<{ userId: string }>(sql`
+      select ${fields.userId}
+      from ${this.table}
+      where ${fields.organizationId} = ${organizationId}
+        and ${fields.userId} = any(${sql.array(userIds, 'varchar')})
+    `);
+
+    return rows.map((row) => row.userId);
+  }
+
   async isMember(organizationId: string, email: string): Promise<boolean> {
     const users = convertToIdentifiers(Users, true);
     const relations = convertToIdentifiers(OrganizationUserRelations, true);

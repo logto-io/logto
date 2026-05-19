@@ -83,12 +83,14 @@ const sign_in_exp = {
     title: 'UI personalizado',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'CSS personalizado',
+    css_code_editor_field_title: 'Substituição de CSS',
     css_code_editor_description1: 'Veja o exemplo de CSS personalizado.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Saiba mais',
     css_code_editor_content_placeholder:
-      'Insira seu CSS personalizado para ajustar os estilos de qualquer coisa conforme suas especificações exatas. Expresse sua criatividade e faça sua UI se destacar.',
+      'Insira aqui suas substituições de CSS para ajustar os estilos de qualquer elemento exatamente às suas necessidades. Expresse sua criatividade e faça sua UI se destacar.',
     bring_your_ui_title: 'Traga sua UI',
+    bring_your_ui_upload_title: 'Enviar recursos de UI personalizados',
     bring_your_ui_description:
       'Carregue um pacote compactado (.zip) para substituir a UI pré-construída do Logto pelo seu próprio código. <a>Saiba mais</a>',
     bring_your_ui_oss_description: 'Personalize a interface de login com o seu próprio código.',
@@ -99,10 +101,10 @@ const sign_in_exp = {
       'Seus ativos de UI personalizados foram carregados com sucesso e agora estão sendo servidos. Consequentemente, a janela de visualização interna foi desativada.\nPara testar sua UI de login personalizada, clique no botão "Visualização em tempo real" para abri-la em uma nova aba do navegador.',
     csp_description:
       'Permita expressões de origem adicionais para sua interface de login personalizada. Esses valores são aplicados somente quando os ativos de UI personalizados são servidos.',
-    csp_script_src: 'Origens script-src',
+    csp_script_src: 'script-src permitido',
     csp_script_src_tip:
       'Permita expressões de origem HTTPS para scripts carregados pela sua UI personalizada, como https://scripts.example.com ou https://*.example.com.',
-    csp_connect_src: 'Origens connect-src',
+    csp_connect_src: 'connect-src permitido',
     csp_connect_src_tip:
       'Permita expressões de origem HTTPS ou WSS para solicitações de rede feitas pela sua UI personalizada, como https://api.example.com ou wss://events.example.com.',
     csp_source_invalid_error:

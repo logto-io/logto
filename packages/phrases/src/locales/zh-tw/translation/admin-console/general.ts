@@ -9,6 +9,8 @@ const general = {
   search: '搜索',
   search_placeholder: '搜索',
   clear_result: '清除結果',
+  today: '今天',
+  clear: '清除',
   save: '儲存',
   save_changes: '儲存更改',
   saved: '儲存成功',

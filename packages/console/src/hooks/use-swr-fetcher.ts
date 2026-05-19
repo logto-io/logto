@@ -8,7 +8,7 @@ import { RequestError } from './use-api';
 
 type KyInstance = typeof ky;
 
-type WithTotalNumber<T> = Array<Awaited<T> | number>;
+type WithTotalNumber<T> = Array<Awaited<T> | number | boolean>;
 
 type UseSwrFetcherHook = {
   <T>(api: KyInstance): Fetcher<T>;
@@ -35,7 +35,11 @@ const useSwrFetcher: UseSwrFetcherHook = <T>(api: KyInstance) => {
               throw new Error(t('errors.missing_total_number'));
             }
 
-            return [data, Number(number)];
+            // Optional 3rd element signals that the server short-circuited the
+            // count query at a cap (see `Total-Number-Is-Capped` on /api/logs).
+            // Consumers that don't care keep destructuring [data, total].
+            const isCapped = response.headers.get('Total-Number-Is-Capped') === 'true';
+            return [data, Number(number), isCapped];
           }
         }
 

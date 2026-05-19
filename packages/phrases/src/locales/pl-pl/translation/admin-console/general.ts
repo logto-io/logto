@@ -9,6 +9,8 @@ const general = {
   search: 'Szukaj',
   search_placeholder: 'Szukaj',
   clear_result: 'Wyczyść Wyniki',
+  today: 'Dzisiaj',
+  clear: 'Wyczyść',
   save: 'Zapisz',
   save_changes: 'Zapisz zmiany',
   saved: 'Zapisane',

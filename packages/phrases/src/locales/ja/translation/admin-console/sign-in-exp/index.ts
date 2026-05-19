@@ -83,12 +83,14 @@ const sign_in_exp = {
     title: 'カスタム UI',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'カスタム CSS',
+    css_code_editor_field_title: 'CSS オーバーライド',
     css_code_editor_description1: 'カスタム CSS の例をご覧ください。',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: '詳しくはこちら',
     css_code_editor_content_placeholder:
-      'カスタム CSS を入力して、あらゆるスタイルを精確に調整してください。創造性を発揮して、あなたの UI を際立たせましょう。',
+      'ここに CSS オーバーライドを入力して、あらゆる要素のスタイルを思いどおりに調整できます。創造性を表現し、UI を際立たせましょう。',
     bring_your_ui_title: 'あなたの UI を持参',
+    bring_your_ui_upload_title: 'カスタム UI アセットをアップロード',
     bring_your_ui_description:
       '圧縮パッケージ (.zip) をアップロードして、Logto のビルトイン UI を独自のコードで置き換えます。<a>詳しくはこちら</a>',
     bring_your_ui_oss_description: '独自のコードでサインイン UI をカスタマイズします。',
@@ -99,10 +101,10 @@ const sign_in_exp = {
       'カスタム UI のアセットは正常にアップロードされ、現在提供されています。したがって、組み込みのプレビューウィンドウは無効になりました。\nパーソナライズされたサインイン UI をテストするには、「ライブプレビュー」ボタンをクリックして新しいブラウザタブで開きます。',
     csp_description:
       'カスタムサインイン UI に追加のソース式を許可します。これらの値は、カスタム UI アセットが提供される場合にのみ適用されます。',
-    csp_script_src: 'script-src ソース',
+    csp_script_src: '許可された script-src',
     csp_script_src_tip:
       'カスタム UI が読み込むスクリプトに対して、https://scripts.example.com や https://*.example.com などの HTTPS ソース式を許可します。',
-    csp_connect_src: 'connect-src ソース',
+    csp_connect_src: '許可された connect-src',
     csp_connect_src_tip:
       'カスタム UI が行うネットワークリクエストに対して、https://api.example.com や wss://events.example.com などの HTTPS または WSS ソース式を許可します。',
     csp_source_invalid_error:

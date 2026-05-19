@@ -9,12 +9,10 @@ import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-contex
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const getIsDevFeaturesEnabled = jest.fn(() => false);
-
 await mockEsmWithActual('#src/env-set/index.js', () => ({
   EnvSet: {
     get values() {
-      return { ...new GlobalValues(), isDevFeaturesEnabled: getIsDevFeaturesEnabled() };
+      return new GlobalValues();
     },
   },
   AdminApps: { Console: 'console', Welcome: 'welcome' },
@@ -58,34 +56,6 @@ const getCspDirective = (ctx: Koa.Context, directiveName: string): string | unde
     .find((directive) => directive.startsWith(`${directiveName} `));
 
 describe('koaSecurityHeaders() middleware — experience CSP', () => {
-  beforeEach(() => {
-    getIsDevFeaturesEnabled.mockReturnValue(false);
-  });
-
-  it('includes the hardcoded custom tenant allowlist (e.g. LaunchDarkly) in connect-src', async () => {
-    const run = koaSecurityHeaders([], 'default');
-    // Any path that isn't an admin app / user app / mounted app falls through
-    // to the experience CSP settings.
-    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
-
-    await run(ctx, koaNoop);
-
-    const connectSource = getCspDirective(ctx, 'connect-src');
-
-    expect(connectSource).toBeDefined();
-    expect(connectSource).toContain('https://*.launchdarkly.com');
-  });
-
-  it('skips the hardcoded LaunchDarkly allowlist when dev features are enabled', async () => {
-    getIsDevFeaturesEnabled.mockReturnValue(true);
-    const run = koaSecurityHeaders([], 'default');
-    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
-
-    await run(ctx, koaNoop);
-
-    expect(getCspDirective(ctx, 'connect-src')).not.toContain('https://*.launchdarkly.com');
-  });
-
   it('adds Custom UI CSP sources to the matching experience directives', async () => {
     const run = koaExperienceSecurityHeaders(
       'default',

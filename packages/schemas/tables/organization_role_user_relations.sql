@@ -16,3 +16,6 @@ create table organization_role_user_relations (
   constraint organization_role_user_relations__role_type
     check (check_organization_role_type(organization_role_id, 'User'))
 );
+
+create index organization_role_user_relations__tenant_id_org_id_user_id
+  on organization_role_user_relations (tenant_id, organization_id, user_id);

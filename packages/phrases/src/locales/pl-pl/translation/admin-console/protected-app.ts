@@ -36,6 +36,18 @@ const protected_app = {
         'Najpierw wystaw swój lokalny serwer do internetu. Dowiedz się więcej o <a>lokalnym rozwoju</a>.',
     },
   },
+  id_token_claims: {
+    card_title: 'Claims ID tokena',
+    card_description:
+      'Żądaj dodatkowych scope użytkownika podczas logowania do chronionej aplikacji, aby uwzględnić włączone rozszerzone claims w przesyłanym ID tokenie.',
+    field_title: 'Dodatkowe scope',
+    field_description:
+      'Claims są uwzględniane tylko wtedy, gdy są włączone w <a>Custom JWT > ID token</a> i odpowiadający scope został tutaj zażądany.',
+    table_column_scope: 'Scope',
+    table_column_claims_forwarded: 'Przesyłane claims',
+    disabled_claims_hint:
+      'Wyszarzone claims nie są jeszcze przesyłane. Włącz je w <a>Custom JWT > ID token</a>, aby uwzględnić je w ID tokenie.',
+  },
   success_message:
     '🎉 Uwierzytelnienie aplikacji pomyślnie włączone! Odkryj nowe doświadczenia Twojej strony internetowej.',
 };

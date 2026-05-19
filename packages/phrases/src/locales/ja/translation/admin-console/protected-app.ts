@@ -34,6 +34,18 @@ const protected_app = {
         'まずローカルサーバーをインターネットに公開してください。<a>ローカル開発についてさらに詳しく</a>。',
     },
   },
+  id_token_claims: {
+    card_title: 'ID token クレーム',
+    card_description:
+      '保護されたアプリのサインイン時に追加のユーザー scope を要求し、有効化された拡張クレームを転送される ID token に含めます。',
+    field_title: '追加の scope',
+    field_description:
+      'クレームは、<a>Custom JWT > ID token</a> で有効化され、かつここで該当する scope がリクエストされている場合にのみ含まれます。',
+    table_column_scope: 'Scope',
+    table_column_claims_forwarded: '転送されるクレーム',
+    disabled_claims_hint:
+      'グレーアウトされたクレームはまだ転送されていません。<a>Custom JWT > ID token</a> で有効化して ID token に含めてください。',
+  },
   success_message:
     '🎉 アプリ認証が正常に有効化されました！Webサイトの新しいエクスペリエンスをご覧ください。',
 };
