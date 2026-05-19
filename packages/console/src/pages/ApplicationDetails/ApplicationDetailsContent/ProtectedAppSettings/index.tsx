@@ -18,7 +18,11 @@ import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
 import OpenExternalLink from '@/components/OpenExternalLink';
 import { protectedApp, protectedAppLocalDev, protectOriginServer } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import {
+  isDevFeaturesEnabled,
+  isProtectedAppEnabled,
+  isProtectedAppLocalDevEnabled,
+} from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -46,6 +50,9 @@ type Props = {
 
 const routes = Object.freeze(['/register', '/sign-in', '/sign-in-callback', '/sign-out']);
 
+const shouldRejectLocalhostOrigin = (origin: string) =>
+  !isProtectedAppLocalDevEnabled && isLocalhost(origin);
+
 function ProtectedAppSettings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -60,7 +67,7 @@ function ProtectedAppSettings({ data }: Props) {
     `api/applications/${data.id}/protected-app-metadata/custom-domains`
   );
   const { data: systemDomainData } = useSWRImmutable<ProtectedAppsDomainConfig>(
-    isCloud && 'api/systems/application'
+    isProtectedAppEnabled && 'api/systems/application'
   );
   const api = useApi();
   const [isDeletingCustomDomain, setIsDeletingCustomDomain] = useState(false);
@@ -144,7 +151,7 @@ function ProtectedAppSettings({ data }: Props) {
                   return t('protected_app.form.errors.invalid_url');
                 }
 
-                if (isLocalhost(value)) {
+                if (shouldRejectLocalhostOrigin(value)) {
                   return t('protected_app.form.errors.localhost');
                 }
 
