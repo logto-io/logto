@@ -13,7 +13,7 @@ import useSWRImmutable from 'swr/immutable';
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
 import SkuName from '@/components/SkuName';
-import { isCloud } from '@/consts/env';
+import { isProtectedAppEnabled, isProtectedAppLocalDevEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button, { type Props as ButtonProps } from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
@@ -24,6 +24,9 @@ import useApplicationsUsage from '@/hooks/use-applications-usage';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 
 import styles from './index.module.scss';
+
+const shouldRejectLocalhostOrigin = (origin: string) =>
+  !isProtectedAppLocalDevEnabled && isLocalhost(origin);
 
 type Props = {
   readonly className?: string;
@@ -45,7 +48,9 @@ function ProtectedAppForm({
   hasRequiredLabel,
   onCreateSuccess,
 }: Props) {
-  const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(isCloud && 'api/systems/application');
+  const { data } = useSWRImmutable<ProtectedAppsDomainConfig>(
+    isProtectedAppEnabled && 'api/systems/application'
+  );
   const {
     currentSubscriptionQuota,
     currentSubscription: { planId },
@@ -131,7 +136,7 @@ function ProtectedAppForm({
                   return t('protected_app.form.errors.invalid_url');
                 }
 
-                if (isLocalhost(value)) {
+                if (shouldRejectLocalhostOrigin(value)) {
                   return t('protected_app.form.errors.localhost');
                 }
 

@@ -34,6 +34,7 @@ const { updateProtectedAppSiteConfigs, deleteCustomHostname } = await mockEsmWit
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createProtectedAppLibrary } = await import('./protected-app.js');
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+const originalIsProtectedAppLocalDevEnabled = EnvSet.values.isProtectedAppLocalDevEnabled;
 const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
   // eslint-disable-next-line @silverhand/fp/no-mutation
   (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
@@ -67,6 +68,10 @@ const protectedAppConfigProviderConfig = {
   domain: 'protected.app',
 };
 
+const setProtectedAppLocalDevEnabled = (value: boolean) => {
+  Reflect.set(EnvSet.values, 'isProtectedAppLocalDevEnabled', value);
+};
+
 beforeAll(() => {
   // eslint-disable-next-line @silverhand/fp/no-mutation
   SystemContext.shared.protectedAppConfigProviderConfig = protectedAppConfigProviderConfig;
@@ -85,6 +90,15 @@ afterAll(() => {
 
 afterEach(() => {
   setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+  setProtectedAppLocalDevEnabled(originalIsProtectedAppLocalDevEnabled);
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  SystemContext.shared.protectedAppConfigProviderConfig = protectedAppConfigProviderConfig;
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  SystemContext.shared.protectedAppHostnameProviderConfig = {
+    zoneId: 'fake_zone_id',
+    apiToken: '',
+    blockedDomains: ['blocked.com'],
+  };
   updateProtectedAppSiteConfigs.mockClear();
 });
 
@@ -143,6 +157,16 @@ describe('syncAppConfigsToRemote()', () => {
         },
       }
     );
+  });
+
+  it('should skip remote sync in protected app local dev mode', async () => {
+    setProtectedAppLocalDevEnabled(true);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    SystemContext.shared.protectedAppConfigProviderConfig = undefined;
+
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
+
+    expect(updateProtectedAppSiteConfigs).not.toHaveBeenCalled();
   });
 
   it('should omit additional scopes when dev features are disabled', async () => {
@@ -220,6 +244,14 @@ describe('getDefaultDomain()', () => {
   it('should get default domain', async () => {
     await expect(getDefaultDomain()).resolves.toBe(mockProtectedAppConfigProviderConfig.domain);
   });
+
+  it('should get local default domain in protected app local dev mode', async () => {
+    setProtectedAppLocalDevEnabled(true);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    SystemContext.shared.protectedAppConfigProviderConfig = undefined;
+
+    await expect(getDefaultDomain()).resolves.toBe('protected-app.localhost');
+  });
 });
 
 describe('syncAppCustomDomainStatus()', () => {
@@ -257,6 +289,26 @@ describe('syncAppCustomDomainStatus()', () => {
       },
     });
     await syncAppCustomDomainStatus(mockProtectedApplication.id);
+    expect(updateApplicationById).not.toHaveBeenCalled();
+  });
+
+  it('should skip domain status sync in protected app local dev mode', async () => {
+    setProtectedAppLocalDevEnabled(true);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    SystemContext.shared.protectedAppHostnameProviderConfig = undefined;
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        customDomains: [mockCustomDomain],
+      },
+    });
+
+    await expect(syncAppCustomDomainStatus(mockProtectedApplication.id)).resolves.toMatchObject({
+      protectedAppMetadata: {
+        customDomains: [mockCustomDomain],
+      },
+    });
     expect(updateApplicationById).not.toHaveBeenCalled();
   });
 });
