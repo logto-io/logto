@@ -3,7 +3,7 @@
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
  */
 
-import { assert, conditional, trySafe } from '@silverhand/essentials';
+import { assert, trySafe } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -21,7 +21,7 @@ import {
   parseJson,
   parseJsonObject,
 } from '@logto/connector-kit';
-import { parsePhoneNumber, PhoneNumberParser } from '@logto/shared';
+import { PhoneNumberParser } from '@logto/shared';
 
 import {
   authorizationEndpointInside,
@@ -99,10 +99,7 @@ export const getAccessToken = async (config: WecomConfig): Promise<{ accessToken
   return { accessToken };
 };
 
-export const normalizePhoneNumber = (mobile?: string) => {
-  if (!mobile) {
-    return '';
-  }
+export const normalizePhoneNumber = (mobile: string): string => {
   if (mobile.startsWith('+')) {
     return mobile;
   }
@@ -191,21 +188,20 @@ const getUserInfo =
         throw new Error('Both userid and openid are undefined or null.');
       }
 
-      const userDetail = await getUserDetail({ accessToken, userId: id, userTicket: user_ticket });
+      const userDetail = await trySafe(
+        getUserDetail({ accessToken, userId: id, userTicket: user_ticket })
+      );
+      const mobile = userDetail?.mobile;
 
       return {
         id,
-        avatar: userDetail.avatar,
-        email: userDetail.email,
-        name: userDetail.name,
-        phone:
-          conditional(userDetail.mobile) &&
-          trySafe(
-            () =>
-              new PhoneNumberParser(parsePhoneNumber(normalizePhoneNumber(userDetail.mobile)))
-                .internationalNumber
-          ),
-        rawData: parseJsonObject(JSON.stringify({ ...rawData, ...userDetail })),
+        avatar: userDetail?.avatar,
+        email: userDetail?.email,
+        name: userDetail?.name ?? id,
+        phone: mobile
+          ? trySafe(() => new PhoneNumberParser(normalizePhoneNumber(mobile)).internationalNumber)
+          : undefined,
+        rawData: { ...rawData, ...userDetail },
       };
     } catch (error: unknown) {
       return getUserInfoErrorHandler(error);

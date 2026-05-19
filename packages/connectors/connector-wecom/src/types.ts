@@ -50,8 +50,8 @@ export const userDetailResponseGuard = z
     order: z.array(z.number()),
     position: z.string(),
     external_position: z.string(),
-    external_profile: z.record(z.string(), z.unknown()),
-    extattr: z.record(z.string(), z.unknown()),
+    external_profile: z.record(z.string(), z.any()),
+    extattr: z.record(z.string(), z.any()),
     avatar: z.string(),
     thumb_avatar: z.string(),
     gender: z.string(),
@@ -63,7 +63,5 @@ export const userDetailResponseGuard = z
   .partial();
 
 export type UserDetailResponse = z.infer<typeof userDetailResponseGuard>;
-
-export type UserDetailResponseMessageParser = (userDetail: Partial<UserDetailResponse>) => void;
 
 export const authResponseGuard = z.object({ code: z.string() });

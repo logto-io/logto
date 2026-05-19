@@ -135,14 +135,13 @@ describe('getAccessToken', () => {
   });
 });
 
-describe('normalizePhoneNumebr', () => {
+describe('normalizePhoneNumber', () => {
   it('should normalize phone number', () => {
     expect(normalizePhoneNumber('12345678901')).toEqual('+8612345678901');
   });
 
-  it('should return empty string if phone number is not provided', () => {
-    const mobile = undefined;
-    expect(normalizePhoneNumber(mobile)).toEqual('');
+  it('should normalize phone number without country code to +86 prefix', () => {
+    expect(normalizePhoneNumber('13800000000')).toEqual('+8613800000000');
   });
 
   it('should return phone number if it starts with +', () => {
