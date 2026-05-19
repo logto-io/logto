@@ -26,6 +26,31 @@ export class ApplicationRelationQueries extends TwoRelationsQueries<
     super(pool, OrganizationApplicationRelations.table, Organizations, Applications);
   }
 
+  /**
+   * Given a candidate set of application IDs, return the subset that already have a
+   * row in `organization_application_relations` for the organization. Bounded by
+   * `applicationIds.length`. `tenant_id` is auto-injected by the tenant-scoped pool;
+   * the `(tenant_id, organization_id, application_id)` PK serves this lookup.
+   */
+  async getExistingApplicationIds(
+    organizationId: string,
+    applicationIds: string[]
+  ): Promise<string[]> {
+    if (applicationIds.length === 0) {
+      return [];
+    }
+
+    const { fields } = convertToIdentifiers(OrganizationApplicationRelations, true);
+    const rows = await this.pool.any<{ applicationId: string }>(sql`
+      select ${fields.applicationId}
+      from ${this.table}
+      where ${fields.organizationId} = ${organizationId}
+        and ${fields.applicationId} = any(${sql.array(applicationIds, 'varchar')})
+    `);
+
+    return rows.map((row) => row.applicationId);
+  }
+
   async getOrganizationsByApplicationId(
     applicationId: string,
     options?: GetEntitiesOptions

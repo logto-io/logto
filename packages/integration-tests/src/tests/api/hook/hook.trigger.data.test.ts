@@ -253,11 +253,6 @@ describe('organization data hook events', () => {
   it.each(organizationDataHookTestCases)(
     'test case %#: %p',
     async ({ route, event, method, endpoint, payload, hookPayload, setup }) => {
-      // TODO: Remove this check
-      if (route.includes('applications') && !isDevFeaturesEnabled) {
-        return;
-      }
-
       if (setup) {
         const setupContext: SetupContext = {
           organizationApi,

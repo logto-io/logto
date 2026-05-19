@@ -188,7 +188,18 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'post',
     endpoint: `organizations/{organizationId}/applications`,
     payload: { applicationIds: ['{applicationId}'] },
-    hookPayload: { organizationId: expect.any(String) },
+    setup: async ({ organizationApi, organizationId, applicationId }) => {
+      if (!organizationApi || !organizationId || !applicationId) {
+        return;
+      }
+      await trySafe(organizationApi.applications.delete(organizationId, applicationId));
+    },
+    hookPayload: ({ applicationId, isDevFeaturesEnabled }) => ({
+      organizationId: expect.any(String),
+      ...(isDevFeaturesEnabled && {
+        addedApplicationIds: [applicationId],
+      }),
+    }),
   },
   {
     route: 'PUT /organizations/:id/applications',
@@ -196,6 +207,13 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'put',
     endpoint: `organizations/{organizationId}/applications`,
     payload: { applicationIds: ['{applicationId}'] },
+    setup: async ({ organizationApi, organizationId, applicationId }) => {
+      if (!organizationApi || !organizationId || !applicationId) {
+        return;
+      }
+      await trySafe(organizationApi.applications.add(organizationId, [applicationId]));
+    },
+    // No-op delta: helper omits both empty arrays, payload matches legacy shape.
     hookPayload: { organizationId: expect.any(String) },
   },
   {
@@ -204,7 +222,18 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'delete',
     endpoint: `organizations/{organizationId}/applications/{applicationId}`,
     payload: {},
-    hookPayload: { organizationId: expect.any(String) },
+    setup: async ({ organizationApi, organizationId, applicationId }) => {
+      if (!organizationApi || !organizationId || !applicationId) {
+        return;
+      }
+      await trySafe(organizationApi.applications.add(organizationId, [applicationId]));
+    },
+    hookPayload: ({ applicationId, isDevFeaturesEnabled }) => ({
+      organizationId: expect.any(String),
+      ...(isDevFeaturesEnabled && {
+        removedApplicationIds: [applicationId],
+      }),
+    }),
   },
   {
     route: 'DELETE /organizations/:id',
