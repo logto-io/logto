@@ -7,7 +7,6 @@ import {
   maxUploadFileSize,
   uploadFileGuard,
   userAssetsGuard,
-  userAssetsServiceStatusGuard,
   type UserAssets,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
@@ -34,28 +33,6 @@ export default function accountUserAssetsRoutes<T extends UserRouter>(
   if (!EnvSet.values.isDevFeaturesEnabled) {
     return;
   }
-
-  router.get(
-    `${accountApiPrefix}/user-assets/service-status`,
-    koaGuard({
-      response: userAssetsServiceStatusGuard,
-      status: [200],
-    }),
-    async (ctx, next) => {
-      const { storageProviderConfig } = SystemContext.shared;
-      ctx.body = storageProviderConfig
-        ? {
-            status: 'ready',
-            allowUploadMimeTypes,
-            maxUploadFileSize,
-          }
-        : {
-            status: 'not_configured',
-          };
-
-      return next();
-    }
-  );
 
   router.post(
     `${accountApiPrefix}/user-assets`,

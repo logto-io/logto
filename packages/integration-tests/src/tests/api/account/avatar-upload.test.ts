@@ -22,73 +22,56 @@ const buildPngFormData = () => {
   return formData;
 };
 
-devFeatureTest.describe(
-  'POST /my-account/user-assets and GET /my-account/user-assets/service-status',
-  () => {
-    beforeAll(async () => {
-      await enableAllPasswordSignInMethods();
-      await updateAccountCenter({
-        enabled: true,
-        fields: {
-          avatar: AccountCenterControlValue.Edit,
-        },
-      });
+devFeatureTest.describe('POST /my-account/user-assets', () => {
+  beforeAll(async () => {
+    await enableAllPasswordSignInMethods();
+    await updateAccountCenter({
+      enabled: true,
+      fields: {
+        avatar: AccountCenterControlValue.Edit,
+      },
+    });
+  });
+
+  it('should fail when avatar field is not editable', async () => {
+    await updateAccountCenter({
+      enabled: true,
+      fields: {
+        avatar: AccountCenterControlValue.ReadOnly,
+      },
     });
 
-    it('should be able to query service status', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
-        scopes: [UserScope.Profile],
-      });
-
-      const response = await api
-        .get('api/my-account/user-assets/service-status')
-        .json<{ status: string }>();
-      expect(['ready', 'not_configured']).toContain(response.status);
-
-      await deleteDefaultTenantUser(user.id);
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile],
     });
 
-    it('should fail when avatar field is not editable', async () => {
-      await updateAccountCenter({
-        enabled: true,
-        fields: {
-          avatar: AccountCenterControlValue.ReadOnly,
-        },
-      });
-
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
-        scopes: [UserScope.Profile],
-      });
-
-      await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
-        code: 'account_center.field_not_editable',
-        status: 400,
-      });
-
-      await deleteDefaultTenantUser(user.id);
-
-      await updateAccountCenter({
-        enabled: true,
-        fields: {
-          avatar: AccountCenterControlValue.Edit,
-        },
-      });
+    await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
+      code: 'account_center.field_not_editable',
+      status: 400,
     });
 
-    it('should fail when storage is not configured', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
-        scopes: [UserScope.Profile],
-      });
+    await deleteDefaultTenantUser(user.id);
 
-      await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
-        code: 'storage.not_configured',
-        status: 400,
-      });
-
-      await deleteDefaultTenantUser(user.id);
+    await updateAccountCenter({
+      enabled: true,
+      fields: {
+        avatar: AccountCenterControlValue.Edit,
+      },
     });
-  }
-);
+  });
+
+  it('should fail when storage is not configured', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile],
+    });
+
+    await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
+      code: 'storage.not_configured',
+      status: 400,
+    });
+
+    await deleteDefaultTenantUser(user.id);
+  });
+});

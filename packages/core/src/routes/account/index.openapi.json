@@ -750,19 +750,6 @@
         }
       }
     },
-    "/api/my-account/user-assets/service-status": {
-      "get": {
-        "tags": ["Dev feature"],
-        "operationId": "GetUserAssetsServiceStatus",
-        "summary": "Get user assets service status",
-        "description": "Check whether the user assets (file uploading) service is configured and ready for the current tenant. When ready, the response also includes the allowed MIME types and the maximum upload file size.",
-        "responses": {
-          "200": {
-            "description": "The user assets service status was retrieved successfully."
-          }
-        }
-      }
-    },
     "/api/my-account/user-assets": {
       "post": {
         "tags": ["Dev feature"],
