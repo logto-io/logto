@@ -16,7 +16,12 @@ mockEsm('#src/utils/sign.js', () => ({
   sign: () => mockSignature,
 }));
 
-const { generateHookTestPayload, sendWebhookRequest } = await import('./utils.js');
+const {
+  generateHookTestPayload,
+  sendWebhookRequest,
+  truncateMembershipDelta,
+  MEMBERSHIP_DELTA_CAP,
+} = await import('./utils.js');
 
 describe('sendWebhookRequest', () => {
   it('should call got.post with correct values', async () => {
@@ -46,5 +51,34 @@ describe('sendWebhookRequest', () => {
       retry: { limit: 3 },
       timeout: 10_000,
     });
+  });
+});
+
+describe('truncateMembershipDelta', () => {
+  it('passes non-empty arrays at or below cap through unchanged', () => {
+    const out = truncateMembershipDelta({ addedUserIds: ['u1', 'u2'] });
+    expect(out).toEqual({ addedUserIds: ['u1', 'u2'] });
+  });
+
+  it('omits empty and absent fields so empty-delta operations carry no marker', () => {
+    expect(truncateMembershipDelta({ addedUserIds: ['u1'], removedUserIds: [] })).toEqual({
+      addedUserIds: ['u1'],
+    });
+    expect(truncateMembershipDelta({ addedUserIds: [], removedUserIds: [] })).toEqual({});
+    expect(truncateMembershipDelta({})).toEqual({});
+  });
+
+  it('caps each oversized array independently across all four fields', () => {
+    const oversized = Array.from({ length: MEMBERSHIP_DELTA_CAP + 100 }, (_, index) => `u${index}`);
+    const out = truncateMembershipDelta({
+      addedUserIds: oversized,
+      removedUserIds: ['u1'],
+      addedApplicationIds: oversized,
+      removedApplicationIds: oversized,
+    });
+    expect(out.addedUserIds).toHaveLength(MEMBERSHIP_DELTA_CAP);
+    expect(out.addedApplicationIds).toHaveLength(MEMBERSHIP_DELTA_CAP);
+    expect(out.removedApplicationIds).toHaveLength(MEMBERSHIP_DELTA_CAP);
+    expect(out.removedUserIds).toEqual(['u1']);
   });
 });

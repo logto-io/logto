@@ -32,6 +32,8 @@ import {
   roleDataHookTestCases,
   scopesDataHookTestCases,
   userDataHookTestCases,
+  type HookPayloadArgs,
+  type SetupContext,
 } from './test-cases.js';
 
 const mockHookResponseGuard = z.object({
@@ -250,10 +252,20 @@ describe('organization data hook events', () => {
 
   it.each(organizationDataHookTestCases)(
     'test case %#: %p',
-    async ({ route, event, method, endpoint, payload, hookPayload }) => {
+    async ({ route, event, method, endpoint, payload, hookPayload, setup }) => {
       // TODO: Remove this check
       if (route.includes('applications') && !isDevFeaturesEnabled) {
         return;
+      }
+
+      if (setup) {
+        const setupContext: SetupContext = {
+          organizationApi,
+          organizationId,
+          userId,
+          applicationId,
+        };
+        await setup(setupContext);
       }
 
       await authedAdminApi[method](
@@ -272,7 +284,29 @@ describe('organization data hook events', () => {
       const hook = await getWebhookResult(route);
       expect(hook?.payload.event).toBe(event);
       if (hookPayload) {
-        expect(hook?.payload).toMatchObject(hookPayload);
+        const resolved =
+          typeof hookPayload === 'function'
+            ? hookPayload({
+                userId,
+                organizationId,
+                applicationId,
+                isDevFeaturesEnabled,
+              } satisfies HookPayloadArgs)
+            : hookPayload;
+        expect(hook?.payload).toMatchObject(resolved);
+        // `toMatchObject` is partial-match; assert absence of every delta field
+        // a case did not declare so the dev-features gate and the omit-empty
+        // contract are regression-protected end-to-end.
+        for (const field of [
+          'addedUserIds',
+          'removedUserIds',
+          'addedApplicationIds',
+          'removedApplicationIds',
+        ]) {
+          if (!(field in resolved)) {
+            expect(hook?.payload).not.toHaveProperty(field);
+          }
+        }
       }
     }
   );

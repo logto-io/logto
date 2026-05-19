@@ -1,15 +1,39 @@
+import { trySafe } from '@silverhand/essentials';
+
+import { type OrganizationApiTest } from '#src/helpers/organization.js';
 import { generateName } from '#src/utils.js';
+
+type PlaceholderIds = {
+  userId?: string;
+  applicationId?: string;
+  organizationId?: string;
+  organizationRoleId?: string;
+};
+
+type HookPayloadArgs = PlaceholderIds & {
+  isDevFeaturesEnabled: boolean;
+};
+
+type SetupContext = {
+  organizationApi?: OrganizationApiTest;
+  organizationId?: string;
+  userId?: string;
+  applicationId?: string;
+  organizationRoleId?: string;
+};
 
 type TestCase = {
   route: string;
   event: string;
   method: 'patch' | 'post' | 'delete' | 'put';
   endpoint: string;
-  /** The payload that should be sent to the route. */
   payload: Record<string, unknown>;
-  /** The payload that should be sent to the webhook. */
-  hookPayload?: Record<string, unknown>;
+  hookPayload?: Record<string, unknown> | ((args: HookPayloadArgs) => Record<string, unknown>);
+  /** Idempotent precondition; runs before the route is hit. */
+  setup?: (ctx: SetupContext) => Promise<void>;
 };
+
+export type { PlaceholderIds, HookPayloadArgs, SetupContext, TestCase };
 
 export const userDataHookTestCases: TestCase[] = [
   {
@@ -111,7 +135,18 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'post',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
-    hookPayload: { organizationId: expect.any(String) },
+    setup: async ({ organizationApi, organizationId, userId }) => {
+      if (!organizationApi || !organizationId || !userId) {
+        return;
+      }
+      await trySafe(organizationApi.deleteUser(organizationId, userId));
+    },
+    hookPayload: ({ userId, isDevFeaturesEnabled }) => ({
+      organizationId: expect.any(String),
+      ...(isDevFeaturesEnabled && {
+        addedUserIds: [userId],
+      }),
+    }),
   },
   {
     route: 'PUT /organizations/:id/users',
@@ -119,6 +154,13 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'put',
     endpoint: `organizations/{organizationId}/users`,
     payload: { userIds: ['{userId}'] },
+    setup: async ({ organizationApi, organizationId, userId }) => {
+      if (!organizationApi || !organizationId || !userId) {
+        return;
+      }
+      await trySafe(organizationApi.addUsers(organizationId, [userId]));
+    },
+    // No-op delta: helper omits both empty arrays, payload matches legacy shape.
     hookPayload: { organizationId: expect.any(String) },
   },
   {
@@ -127,7 +169,18 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'delete',
     endpoint: `organizations/{organizationId}/users/{userId}`,
     payload: {},
-    hookPayload: { organizationId: expect.any(String) },
+    setup: async ({ organizationApi, organizationId, userId }) => {
+      if (!organizationApi || !organizationId || !userId) {
+        return;
+      }
+      await trySafe(organizationApi.addUsers(organizationId, [userId]));
+    },
+    hookPayload: ({ userId, isDevFeaturesEnabled }) => ({
+      organizationId: expect.any(String),
+      ...(isDevFeaturesEnabled && {
+        removedUserIds: [userId],
+      }),
+    }),
   },
   {
     route: 'POST /organizations/:id/applications',
