@@ -53,6 +53,18 @@ const mockApplicationSecret: ApplicationSecret = {
   expiresAt: null,
 };
 const findActiveSecretByApplicationId = jest.fn(async () => mockApplicationSecret);
+const applicationSecrets = {
+  async findActiveSecretByApplicationId(
+    this: unknown,
+    ...args: Parameters<typeof findActiveSecretByApplicationId>
+  ) {
+    if (!this) {
+      throw new TypeError('findActiveSecretByApplicationId should be called with its query object');
+    }
+
+    return findActiveSecretByApplicationId(...args);
+  },
+};
 const {
   syncAppConfigsToRemote,
   buildProtectedAppData,
@@ -65,9 +77,7 @@ const {
       findApplicationById,
       updateApplicationById,
     },
-    applicationSecrets: {
-      findActiveSecretByApplicationId,
-    },
+    applicationSecrets,
   })
 );
 
