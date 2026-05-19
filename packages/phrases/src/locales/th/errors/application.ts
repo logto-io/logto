@@ -23,6 +23,7 @@ const application = {
   should_delete_custom_domains_first: 'โปรดลบโดเมนแบบกำหนดเองออกก่อน',
   no_legacy_secret_found: 'แอปพลิเคชันนี้ไม่มี secret แบบเดิม',
   secret_name_exists: 'ชื่อ secret นี้มีอยู่แล้ว',
+  sync_application_secret_failed: 'ซิงค์ application secret ล้มเหลว',
   saml: {
     use_saml_app_api: 'ใช้ `[METHOD] /saml-applications(/.*)?` API เพื่อใช้งาน SAML app',
     saml_application_only: 'API นี้ใช้ได้กับแอป SAML เท่านั้น',

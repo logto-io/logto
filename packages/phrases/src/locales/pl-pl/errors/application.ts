@@ -23,6 +23,7 @@ const application = {
   should_delete_custom_domains_first: 'Należy najpierw usunąć niestandardowe domeny.',
   no_legacy_secret_found: 'Aplikacja nie ma starszego sekretu.',
   secret_name_exists: 'Nazwa sekretu już istnieje.',
+  sync_application_secret_failed: 'Nie udało się zsynchronizować sekretu aplikacji.',
   saml: {
     use_saml_app_api:
       'Użyj interfejsu API `[METHOD] /saml-applications(/.*)?` aby obsługiwać aplikację SAML.',

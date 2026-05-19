@@ -25,6 +25,7 @@ const application = {
   should_delete_custom_domains_first: 'まずカスタムドメインを削除する必要があります。',
   no_legacy_secret_found: 'アプリケーションにレガシーシークレットがありません。',
   secret_name_exists: 'シークレット名はすでに存在します。',
+  sync_application_secret_failed: 'アプリケーションシークレットの同期に失敗しました。',
   saml: {
     use_saml_app_api:
       'SAML アプリを操作するには、`[METHOD] /saml-applications(/.*)?` API を使用します。',

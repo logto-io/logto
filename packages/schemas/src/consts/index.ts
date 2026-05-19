@@ -7,3 +7,4 @@ export * from './subscriptions.js';
 export * from './experience.js';
 export * from './sentinel.js';
 export * from './product-event.js';
+export * from './application.js';

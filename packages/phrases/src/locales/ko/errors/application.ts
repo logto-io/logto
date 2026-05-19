@@ -24,6 +24,7 @@ const application = {
   should_delete_custom_domains_first: '먼저 사용자 정의 도메인을 삭제해야 합니다.',
   no_legacy_secret_found: '응용 프로그램에 레거시 비밀이 없습니다.',
   secret_name_exists: '비밀 이름이 이미 존재합니다.',
+  sync_application_secret_failed: '애플리케이션 비밀 동기화에 실패했습니다.',
   saml: {
     use_saml_app_api:
       'SAML 앱을 운영하려면 `[METHOD] /saml-applications(/.*)?` API 를 사용하십시오.',
