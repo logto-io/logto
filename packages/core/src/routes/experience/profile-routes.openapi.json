@@ -46,12 +46,25 @@
         }
       }
     },
+    "/api/experience/profile/avatar/service-status": {
+      "get": {
+        "tags": ["Dev feature"],
+        "operationId": "GetAvatarUploadServiceStatus",
+        "summary": "Get avatar upload service status",
+        "description": "Check whether the avatar upload service is configured and ready for the current tenant. When ready, the response also includes the allowed MIME types and the maximum upload file size.",
+        "responses": {
+          "200": {
+            "description": "The avatar upload service status was retrieved successfully."
+          }
+        }
+      }
+    },
     "/api/experience/profile/avatar": {
       "post": {
         "tags": ["Dev feature"],
         "operationId": "UploadAvatar",
-        "summary": "Upload avatar during register flow",
-        "description": "Upload an image (e.g. avatar) during the `Register` experience interaction and return the public URL of the uploaded asset. The user account may not have been created yet at this point; the upload is scoped to the current interaction session. The returned URL can then be submitted as a profile field value via `POST /api/experience/profile`.",
+        "summary": "Upload avatar during an experience interaction",
+        "description": "Upload an image (e.g. avatar) during the `Register` or `SignIn` experience interaction and return the public URL of the uploaded asset. The user account may not have been created or identified yet at this point; the upload is scoped to the current interaction session when no user is identified. The returned URL can then be submitted as a profile field value via `POST /api/experience/profile`.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -70,13 +83,16 @@
             "description": "The asset was uploaded successfully."
           },
           "400": {
-            "description": "Invalid request. <br/>- The current interaction event is not `Register`. <br/>- The file is invalid, exceeds the maximum size, or has a disallowed MIME type."
+            "description": "Invalid request. <br/>- The current interaction event is `ForgotPassword`. <br/>- The file is invalid, exceeds the maximum size, or has a disallowed MIME type."
           },
           "403": {
             "description": "Permission denied for the current interaction state."
           },
           "404": {
             "description": "Entity not found related to the current interaction."
+          },
+          "500": {
+            "description": "Failed to upload the file to the storage provider."
           }
         }
       }

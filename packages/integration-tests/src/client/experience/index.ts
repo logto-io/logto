@@ -248,6 +248,12 @@ export class ExperienceClient extends MockClient {
     });
   }
 
+  public async getAvatarUploadServiceStatus() {
+    return this.api.get(`${experienceRoutes.profile}/avatar/service-status`, {
+      headers: this.headers,
+    });
+  }
+
   public async skipMfaBinding() {
     return this.api.post(`${experienceRoutes.mfa}/mfa-skipped`, {
       headers: this.headers,

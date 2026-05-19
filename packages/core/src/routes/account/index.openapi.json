@@ -791,6 +791,12 @@
           },
           "401": {
             "description": "Permission denied, the access token does not include the `profile` scope."
+          },
+          "403": {
+            "description": "Permission denied for the current account center state."
+          },
+          "500": {
+            "description": "Failed to upload the file to the storage provider."
           }
         }
       }
