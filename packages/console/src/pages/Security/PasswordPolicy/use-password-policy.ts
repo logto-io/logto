@@ -1,8 +1,10 @@
 import { passwordPolicyGuard, type PasswordPolicy } from '@logto/core-kit';
 import { ConnectorType, ForgotPasswordMethod, type SignInExperience } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { type RequestError } from '@/hooks/use-api';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
@@ -44,7 +46,8 @@ export const passwordPolicyFormParser = {
   }),
   toSignInExperience: (
     formData: PasswordPolicyFormData
-  ): Pick<SignInExperience, 'passwordPolicy' | 'passwordExpiration'> => {
+  ): Pick<SignInExperience, 'passwordPolicy'> &
+    Partial<Pick<SignInExperience, 'passwordExpiration'>> => {
     const {
       isCustomWordsEnabled,
       customWords,
@@ -63,13 +66,17 @@ export const passwordPolicyFormParser = {
           words: isCustomWordsEnabled ? customWords.split('\n').filter(Boolean) : [],
         },
       },
-      passwordExpiration: {
-        enabled: isPasswordExpirationEnabled,
-        ...(isPasswordExpirationEnabled && {
-          validPeriodDays: passwordExpirationDays,
-          reminderPeriodDays: passwordReminderDays,
-        }),
-      },
+      ...conditional(
+        isDevFeaturesEnabled && {
+          passwordExpiration: {
+            enabled: isPasswordExpirationEnabled,
+            ...(isPasswordExpirationEnabled && {
+              validPeriodDays: passwordExpirationDays,
+              reminderPeriodDays: passwordReminderDays,
+            }),
+          },
+        }
+      ),
     };
   },
 };

@@ -14,6 +14,7 @@ import {
   signInWithPasswordIdentifier,
 } from '@/apis/experience';
 import type { PasswordVerificationResponse } from '@/apis/experience/const';
+import { isDevFeaturesEnabled } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
@@ -62,20 +63,21 @@ const usePasswordSignIn = () => {
         setErrorMessage(error.message);
       },
       ...conditional(
-        isForgotPasswordEnabled && {
-          'password.expired': () => {
-            show({
-              type: 'alert',
-              ModalContent: t('description.password_expired'),
-              cancelText: 'description.password_expiration_reset',
-              shouldCloseOnEsc: false,
-              shouldCloseOnOverlayClick: false,
-              onCancel: () => {
-                handleRedirectToForgotPassword();
-              },
-            });
-          },
-        }
+        isDevFeaturesEnabled &&
+          isForgotPasswordEnabled && {
+            'password.expired': () => {
+              show({
+                type: 'alert',
+                ModalContent: t('description.password_expired'),
+                cancelText: 'description.password_expiration_reset',
+                shouldCloseOnEsc: false,
+                shouldCloseOnOverlayClick: false,
+                onCancel: () => {
+                  handleRedirectToForgotPassword();
+                },
+              });
+            },
+          }
       ),
     }),
     [handleRedirectToForgotPassword, isForgotPasswordEnabled, show, t]
@@ -102,7 +104,7 @@ const usePasswordSignIn = () => {
     async (response: PasswordVerificationResponse) => {
       const { verificationId, reminder } = response;
 
-      if (!reminder || !isForgotPasswordEnabled) {
+      if (!isDevFeaturesEnabled || !reminder || !isForgotPasswordEnabled) {
         await continueSignIn(verificationId);
 
         return;

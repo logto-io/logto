@@ -5,6 +5,7 @@ import ReactModal from 'react-modal';
 
 import Key from '@/assets/icons/key.svg?react';
 import UserAccountInformation from '@/components/UserAccountInformation';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import modalStyles from '@/scss/modal.module.scss';
@@ -52,7 +53,7 @@ function UserPassword({ user, onResetPassword }: Props) {
               setIsResetPasswordFormOpen(true);
             }}
           />
-          {hasPassword && <ExpirePasswordButton userId={user.id} />}
+          {hasPassword && isDevFeaturesEnabled && <ExpirePasswordButton userId={user.id} />}
         </div>
       </div>
       <ReactModal

@@ -31,7 +31,11 @@ function ExpirePasswordButton({ userId }: Props) {
   const onConfirm = async () => {
     setIsLoading(true);
     try {
-      await api.patch(`api/users/${userId}/password/expire`);
+      await api.patch(`api/users/${userId}/password/expiration`, {
+        json: {
+          isExpired: true,
+        },
+      });
       toast.success(t('success'));
       setIsModalOpen(false);
     } finally {

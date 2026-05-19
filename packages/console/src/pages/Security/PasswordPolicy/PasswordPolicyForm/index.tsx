@@ -11,6 +11,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { passwordPolicy } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
@@ -209,9 +210,11 @@ function PasswordPolicyForm({ data }: Props) {
               )}
             </FormField>
           </FormCard>
-          <PasswordExpirationCard
-            hasAvailableForgotPasswordMethod={hasAvailableForgotPasswordMethod}
-          />
+          {isDevFeaturesEnabled && (
+            <PasswordExpirationCard
+              hasAvailableForgotPasswordMethod={hasAvailableForgotPasswordMethod}
+            />
+          )}
         </DetailsForm>
       </FormProvider>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
