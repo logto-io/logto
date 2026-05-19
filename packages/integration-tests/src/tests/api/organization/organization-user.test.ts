@@ -268,4 +268,124 @@ describe('organization user APIs', () => {
       expect(usersById.get(zeroRoleUser.id)!.organizationRoles).toEqual([]);
     });
   });
+
+  describe('PUT /organizations/:id/users delta semantics', () => {
+    const organizationApi = new OrganizationApiTest();
+    const userApi = new UserApiTest();
+
+    afterEach(async () => {
+      await Promise.all([organizationApi.cleanUp(), userApi.cleanUp()]);
+    });
+
+    it('should make zero changes when PUT body matches the current membership exactly', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const [userA, userB] = await Promise.all([
+        userApi.create({ username: generateTestName() }),
+        userApi.create({ username: generateTestName() }),
+      ]);
+
+      await organizationApi.addUsers(organization.id, [userA.id, userB.id]);
+      const [usersBefore, totalBefore] = await organizationApi.getUsers(organization.id);
+      const idsBefore = usersBefore
+        .map(({ id }) => id)
+        .slice()
+        .sort();
+
+      // A no-op PUT must still succeed and must not change the membership.
+      await organizationApi.replaceUsers(organization.id, [userA.id, userB.id]);
+
+      const [usersAfter, totalAfter] = await organizationApi.getUsers(organization.id);
+      expect(totalAfter).toBe(totalBefore);
+      expect(
+        usersAfter
+          .map(({ id }) => id)
+          .slice()
+          .sort()
+      ).toEqual(idsBefore);
+    });
+
+    it('should add only new members and remove only departing members on a partial-overlap PUT', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const [userKeep, userDrop, userAdd] = await Promise.all([
+        userApi.create({ username: generateTestName() }),
+        userApi.create({ username: generateTestName() }),
+        userApi.create({ username: generateTestName() }),
+      ]);
+
+      // Initial membership: { userKeep, userDrop }.
+      await organizationApi.addUsers(organization.id, [userKeep.id, userDrop.id]);
+
+      // Target membership: { userKeep, userAdd }. So userDrop leaves, userAdd joins, userKeep stays.
+      await organizationApi.replaceUsers(organization.id, [userKeep.id, userAdd.id]);
+
+      const [users, totalCount] = await organizationApi.getUsers(organization.id);
+      expect(totalCount).toBe(2);
+      expect(
+        users
+          .map(({ id }) => id)
+          .slice()
+          .sort()
+      ).toEqual([userKeep.id, userAdd.id].slice().sort());
+    });
+
+    it('should remove all members when PUT body is empty', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const [userA, userB] = await Promise.all([
+        userApi.create({ username: generateTestName() }),
+        userApi.create({ username: generateTestName() }),
+      ]);
+      await organizationApi.addUsers(organization.id, [userA.id, userB.id]);
+
+      await organizationApi.replaceUsers(organization.id, []);
+
+      const [users, totalCount] = await organizationApi.getUsers(organization.id);
+      expect(totalCount).toBe(0);
+      expect(users).toEqual([]);
+    });
+
+    it('should add all members when PUT body has no overlap with current membership', async () => {
+      const organization = await organizationApi.create({ name: 'test' });
+      const [userA, userB] = await Promise.all([
+        userApi.create({ username: generateTestName() }),
+        userApi.create({ username: generateTestName() }),
+      ]);
+      // Start with an empty membership; PUT in two new users.
+      await organizationApi.replaceUsers(organization.id, [userA.id, userB.id]);
+
+      const [users, totalCount] = await organizationApi.getUsers(organization.id);
+      expect(totalCount).toBe(2);
+      expect(
+        users
+          .map(({ id }) => id)
+          .slice()
+          .sort()
+      ).toEqual([userA.id, userB.id].slice().sort());
+    });
+
+    it('should preserve role assignments of members whose membership survives a PUT', async () => {
+      // This is the cascade-correctness regression test. Master's full-rewrite `replace()`
+      // ran `DELETE WHERE org_id = X` which cascaded to `organization_role_user_relations`,
+      // dropping every member's roles on every PUT — even no-op PUTs. `replaceWithDelta()`
+      // only deletes rows for members actually leaving, so surviving members keep their roles.
+      const organization = await organizationApi.create({ name: 'test' });
+      const [userKeep, userDrop] = await Promise.all([
+        userApi.create({ username: generateTestName() }),
+        userApi.create({ username: generateTestName() }),
+      ]);
+      const role = await organizationApi.roleApi.create({ name: generateTestName() });
+
+      await organizationApi.addUsers(organization.id, [userKeep.id, userDrop.id]);
+      await organizationApi.addUserRoles(organization.id, userKeep.id, [role.id]);
+
+      // Sanity-check the role was assigned.
+      const rolesBefore = await organizationApi.getUserRoles(organization.id, userKeep.id);
+      expect(rolesBefore.map(({ id }) => id)).toEqual([role.id]);
+
+      // PUT that drops userDrop but keeps userKeep. userKeep's role assignment must survive.
+      await organizationApi.replaceUsers(organization.id, [userKeep.id]);
+
+      const rolesAfter = await organizationApi.getUserRoles(organization.id, userKeep.id);
+      expect(rolesAfter.map(({ id }) => id)).toEqual([role.id]);
+    });
+  });
 });
