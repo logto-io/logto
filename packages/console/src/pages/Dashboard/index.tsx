@@ -1,5 +1,4 @@
-import { format } from 'date-fns';
-import type { ChangeEventHandler } from 'react';
+import { format, startOfDay } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,7 +15,7 @@ import useSWR from 'swr';
 import AppError from '@/components/AppError';
 import PageMeta from '@/components/PageMeta';
 import Card from '@/ds-components/Card';
-import TextInput from '@/ds-components/TextInput';
+import DatePicker from '@/ds-components/DatePicker';
 import type { RequestError } from '@/hooks/use-api';
 
 import Block from './components/Block';
@@ -37,7 +36,8 @@ const tickFormatter = new Intl.NumberFormat('en-US', {
 });
 
 function Dashboard() {
-  const [date, setDate] = useState<string>(format(Date.now(), 'yyyy-MM-dd'));
+  const [date, setDate] = useState<Date>(() => startOfDay(new Date()));
+  const dateString = format(date, 'yyyy-MM-dd');
   const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(
     'api/dashboard/users/total'
   );
@@ -45,7 +45,7 @@ function Dashboard() {
     'api/dashboard/users/new'
   );
   const { data: activeData, error: activeError } = useSWR<ActiveUsersResponse, RequestError>(
-    `api/dashboard/users/active?date=${date}`
+    `api/dashboard/users/active?date=${dateString}`
   );
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const isRtl = i18n.dir() === 'rtl';
@@ -68,8 +68,10 @@ function Dashboard() {
   const error = totalError ?? newError ?? activeError;
   const isLoading = (!totalData || !newData || !activeData) && !error;
 
-  const handleDateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setDate(event.target.value || format(Date.now(), 'yyyy-MM-dd'));
+  const handleDateChange = (next: Date | undefined) => {
+    // Mirror the previous native-input behavior: clearing the field falls
+    // back to today so the chart always has a date to query.
+    setDate(startOfDay(next ?? new Date()));
   };
 
   return (
@@ -111,7 +113,12 @@ function Dashboard() {
               variant="plain"
             />
             <div className={styles.datePicker}>
-              <TextInput type="date" value={date} onChange={handleDateChange} />
+              <DatePicker
+                value={date}
+                max={startOfDay(new Date())}
+                todayLabel={t('general.today')}
+                onChange={handleDateChange}
+              />
             </div>
             <div className={styles.curve}>
               <ResponsiveContainer>

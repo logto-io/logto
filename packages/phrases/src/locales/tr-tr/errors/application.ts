@@ -23,6 +23,7 @@ const application = {
   should_delete_custom_domains_first: 'Özel domainleri önce silmelisiniz.',
   no_legacy_secret_found: 'Uygulamanın eski bir gizli anahtarı yok.',
   secret_name_exists: 'Gizli isim zaten mevcut.',
+  sync_application_secret_failed: 'Uygulama gizli anahtarı senkronize edilemedi.',
   saml: {
     use_saml_app_api:
       "`[METHOD] /saml-applications(/.*)?` API'sini SAML uygulamasını çalıştırmak için kullanın.",

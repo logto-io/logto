@@ -6,6 +6,7 @@ import {
   Applications,
   ApplicationType,
   buildBuiltInApplicationDataForTenant,
+  defaultApplicationSecretName,
   hasSecrets,
   InternalRole,
   ProductEvent,
@@ -265,7 +266,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       if (hasSecrets(application.type)) {
         await queries.applicationSecrets.insert({
-          name: 'Default secret',
+          name: defaultApplicationSecretName,
           applicationId: application.id,
           value: generateStandardSecret(),
         });

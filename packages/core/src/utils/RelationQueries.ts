@@ -318,4 +318,76 @@ export class TwoRelationsQueries<
       `);
     });
   }
+
+  /**
+   * Opt-in alternative to {@link TwoRelationsQueries.replace} that writes only the rows
+   * that actually change and returns the added / removed ids. Picked over `replace()`
+   * when the membership set may be large, or when callers need the delta for downstream
+   * use (e.g. webhook payloads).
+   *
+   * Differs from `replace()` for cascade-bearing tables: only truly-departing rows are
+   * deleted, so FK cascades fire for those rows alone. `replace()` cascades for every
+   * current row on every call. Tables without downstream cascades see no behavior delta.
+   * The `select ... for update` Schema1 row lock matches `replace()`; concurrent
+   * `insert()` calls are not serialized (same race as `replace()`).
+   *
+   * @param schema1Id The id of the `Schema1` entity.
+   * @param schema2Ids Desired final set of Schema2 ids. Empty deletes all relations.
+   * Duplicates are collapsed by `ON CONFLICT DO NOTHING`.
+   * @returns `{ added, removed }` — the Schema2 ids that gained and lost a row.
+   */
+  async replaceWithDelta(
+    schema1Id: string,
+    schema2Ids: readonly string[]
+  ): Promise<{ added: readonly string[]; removed: readonly string[] }> {
+    return this.pool.transaction(async (transaction) => {
+      // Lock schema1 row.
+      await transaction.query(sql`
+        select id
+        from ${sql.identifier([this.schemas[0].table])}
+        where id = ${schema1Id}
+        for update
+      `);
+
+      const schema1IdField = sql.identifier([this.schemas[0].tableSingular + '_id']);
+      const schema2IdField = sql.identifier([this.schemas[1].tableSingular + '_id']);
+      const nextIds = sql.array(schema2Ids, 'varchar');
+
+      const row = await transaction.one<{
+        added: readonly string[];
+        removed: readonly string[];
+      }>(sql`
+        with
+          next_set as (
+            select unnest(${nextIds}) as id
+          ),
+          existing as (
+            select ${schema2IdField} as id from ${this.table}
+            where ${schema1IdField} = ${schema1Id}
+          ),
+          inserted as (
+            insert into ${this.table} (${schema1IdField}, ${schema2IdField})
+            select ${schema1Id}, next_set.id
+            from next_set
+            left join existing on existing.id = next_set.id
+            where existing.id is null
+            on conflict do nothing
+            returning ${schema2IdField} as id
+          ),
+          deleted as (
+            delete from ${this.table}
+            where ${schema1IdField} = ${schema1Id}
+              and not exists (
+                select 1 from next_set where next_set.id = ${schema2IdField}
+              )
+            returning ${schema2IdField} as id
+          )
+        select
+          coalesce((select array_agg(id) from inserted), array[]::varchar[]) as added,
+          coalesce((select array_agg(id) from deleted), array[]::varchar[]) as removed
+      `);
+
+      return { added: row.added, removed: row.removed };
+    });
+  }
 }

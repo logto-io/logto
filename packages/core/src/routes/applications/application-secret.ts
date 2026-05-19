@@ -1,4 +1,4 @@
-import { Applications, ApplicationSecrets, internalPrefix } from '@logto/schemas';
+import { Applications, ApplicationSecrets, ApplicationType, internalPrefix } from '@logto/schemas';
 import { generateStandardSecret } from '@logto/shared';
 import { z } from 'zod';
 
@@ -11,8 +11,18 @@ import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 export const generateInternalSecret = () => internalPrefix + generateStandardSecret();
 
 export default function applicationSecretRoutes<T extends ManagementApiRouter>(
-  ...[router, { queries }]: RouterInitArgs<T>
+  ...[
+    router,
+    {
+      queries,
+      libraries: { protectedApps },
+    },
+  ]: RouterInitArgs<T>
 ) {
+  const syncProtectedAppConfigsToRemote = async (appId: string) => {
+    await protectedApps.syncAppConfigsToRemote(appId);
+  };
+
   // See OpenAPI description for the rationale of this endpoint.
   router.delete(
     '/applications/:id/legacy-secret',
@@ -60,7 +70,7 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
       params: z.object({ id: z.string() }),
       body: ApplicationSecrets.createGuard.pick({ name: true, expiresAt: true }),
       response: ApplicationSecrets.guard,
-      status: [201, 400],
+      status: [201, 400, 500],
     }),
     async (ctx, next) => {
       const {
@@ -76,11 +86,26 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         })
       );
 
-      ctx.body = await queries.applicationSecrets.insert({
+      const application = await queries.applications.findApplicationById(appId);
+      const createdSecret = await queries.applicationSecrets.insert({
         ...body,
         applicationId: appId,
         value: generateStandardSecret(),
       });
+      ctx.body = createdSecret;
+
+      try {
+        if (application.type === ApplicationType.Protected) {
+          await syncProtectedAppConfigsToRemote(appId);
+        }
+      } catch {
+        await queries.applicationSecrets.deleteByName(appId, createdSecret.name);
+        throw new RequestError({
+          code: 'application.sync_application_secret_failed',
+          status: 500,
+        });
+      }
+
       ctx.status = 201;
 
       return next();
@@ -91,14 +116,28 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
     '/applications/:id/secrets/:name',
     koaGuard({
       params: z.object({ id: z.string(), name: z.string() }),
-      status: [204, 404],
+      status: [204, 404, 500],
     }),
     async (ctx, next) => {
       const {
         params: { id: appId, name },
       } = ctx.guard;
 
-      await queries.applicationSecrets.deleteByName(appId, name);
+      const application = await queries.applications.findApplicationById(appId);
+      const deletedSecret = await queries.applicationSecrets.deleteByName(appId, name);
+
+      try {
+        if (application.type === ApplicationType.Protected) {
+          await syncProtectedAppConfigsToRemote(appId);
+        }
+      } catch {
+        await queries.applicationSecrets.insert(deletedSecret);
+        throw new RequestError({
+          code: 'application.sync_application_secret_failed',
+          status: 500,
+        });
+      }
+
       ctx.status = 204;
 
       return next();
@@ -111,7 +150,7 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
       params: z.object({ id: z.string(), name: z.string() }),
       body: ApplicationSecrets.updateGuard.pick({ name: true }).required(),
       response: ApplicationSecrets.guard,
-      status: [200, 400, 404],
+      status: [200, 400, 404, 500],
     }),
     async (ctx, next) => {
       const {
@@ -119,11 +158,30 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         body,
       } = ctx.guard;
 
-      ctx.body = await queries.applicationSecrets.update({
+      const application = await queries.applications.findApplicationById(appId);
+      const updatedSecret = await queries.applicationSecrets.update({
         where: { applicationId: appId, name },
         set: body,
         jsonbMode: 'replace',
       });
+      ctx.body = updatedSecret;
+
+      try {
+        if (application.type === ApplicationType.Protected) {
+          await syncProtectedAppConfigsToRemote(appId);
+        }
+      } catch {
+        await queries.applicationSecrets.update({
+          where: { applicationId: appId, name: updatedSecret.name },
+          set: { name },
+          jsonbMode: 'replace',
+        });
+        throw new RequestError({
+          code: 'application.sync_application_secret_failed',
+          status: 500,
+        });
+      }
+
       return next();
     }
   );
