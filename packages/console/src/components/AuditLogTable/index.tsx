@@ -7,7 +7,6 @@ import useSWR from 'swr';
 import ApplicationName from '@/components/ApplicationName';
 import UserName from '@/components/UserName';
 import { auditLogEventTitle, defaultPageSize } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Table from '@/ds-components/Table';
 import type { Column } from '@/ds-components/Table/types';
 import type { RequestError } from '@/hooks/use-api';
@@ -84,10 +83,8 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     ...conditional(event && { logKey: event }),
     ...conditional(searchApplicationId && { applicationId: searchApplicationId }),
     ...conditional(userId && { userId }),
-    ...conditional(
-      isDevFeaturesEnabled && startTime !== undefined && { start_time: String(startTime) }
-    ),
-    ...conditional(isDevFeaturesEnabled && endTime !== undefined && { end_time: String(endTime) }),
+    ...conditional(startTime !== undefined && { start_time: String(startTime) }),
+    ...conditional(endTime !== undefined && { end_time: String(endTime) }),
   });
 
   const { data, error, mutate } = useSWR<[Log[], number, boolean], RequestError>(url);
@@ -174,17 +171,15 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
               />
             </div>
           )}
-          {isDevFeaturesEnabled && (
-            <div className={styles.timeRangePicker}>
-              <TimeRangePicker
-                value={pickerRangeValue}
-                customStartDate={customStartDate}
-                customEndDate={customEndDate}
-                onChange={handleRangeChange}
-                onCustomDatesChange={handleCustomDatesChange}
-              />
-            </div>
-          )}
+          <div className={styles.timeRangePicker}>
+            <TimeRangePicker
+              value={pickerRangeValue}
+              customStartDate={customStartDate}
+              customEndDate={customEndDate}
+              onChange={handleRangeChange}
+              onCustomDatesChange={handleCustomDatesChange}
+            />
+          </div>
         </div>
       }
       placeholder={<EmptyDataPlaceholder />}
