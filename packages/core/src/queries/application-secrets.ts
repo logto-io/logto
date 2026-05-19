@@ -7,6 +7,7 @@ import {
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
@@ -52,7 +53,7 @@ export class ApplicationSecretQueries {
   }
 
   async findActiveSecretByApplicationId(appId: string) {
-    return this.pool.one<ApplicationSecret>(sql`
+    const activeSecret = await this.pool.maybeOne<ApplicationSecret>(sql`
       select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
         where ${fields.applicationId} = ${appId}
@@ -62,6 +63,15 @@ export class ApplicationSecretQueries {
           ${fields.createdAt} asc
         limit 1
     `);
+
+    if (!activeSecret) {
+      throw new RequestError({
+        code: 'application.protected_application_misconfigured',
+        status: 422,
+      });
+    }
+
+    return activeSecret;
   }
 
   async deleteByName(appId: string, name: string) {

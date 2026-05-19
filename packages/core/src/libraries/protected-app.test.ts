@@ -125,6 +125,24 @@ describe('syncAppConfigsToRemote()', () => {
     );
   });
 
+  it('should throw a clear error if no active secret is found', async () => {
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
+    findActiveSecretByApplicationId.mockRejectedValueOnce(
+      new RequestError({
+        code: 'application.protected_application_misconfigured',
+        status: 422,
+      })
+    );
+
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).rejects.toThrow(
+      new RequestError({
+        code: 'application.protected_application_misconfigured',
+        status: 422,
+      })
+    );
+    expect(updateProtectedAppSiteConfigs).not.toBeCalled();
+  });
+
   it('should sync custom domains configs to remote', async () => {
     findApplicationById.mockResolvedValueOnce({
       ...mockProtectedApplication,

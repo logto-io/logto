@@ -21,6 +21,7 @@ const application = {
   should_delete_custom_domains_first: '應先刪除自訂域名。',
   no_legacy_secret_found: '該應用程式沒有傳統秘鑰。',
   secret_name_exists: '秘鑰名稱已存在。',
+  sync_application_secret_failed: '同步應用程式秘鑰失敗。',
   saml: {
     use_saml_app_api: '使用 `[METHOD] /saml-applications(/.*)?` API 操作 SAML 應用程式。',
     saml_application_only: '該 API 僅適用於 SAML 應用程式。',

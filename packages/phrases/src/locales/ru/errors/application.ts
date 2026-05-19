@@ -25,6 +25,7 @@ const application = {
   should_delete_custom_domains_first: 'Сначала следует удалить пользоватские домены.',
   no_legacy_secret_found: 'Приложение не имеет устаревшего секрета.',
   secret_name_exists: 'Имя секрета уже существует.',
+  sync_application_secret_failed: 'Не удалось синхронизировать секрет приложения.',
   saml: {
     use_saml_app_api:
       'Используйте API `[METHOD] /saml-applications(/.*)?`, чтобы управлять приложением SAML.',

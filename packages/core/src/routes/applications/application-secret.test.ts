@@ -113,13 +113,12 @@ describe('application secret routes', () => {
     );
 
     expect(response.status).toEqual(500);
-    expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
-    expect(insert).toHaveBeenCalledWith({
-      applicationId: mockProtectedApplication.id,
-      name: mockApplicationSecret.name,
-      value: mockApplicationSecret.value,
-      expiresAt: mockApplicationSecret.expiresAt,
+    expect(response.body).toMatchObject({
+      code: 'application.sync_application_secret_failed',
+      message: 'Sync application secret failed.',
     });
+    expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
+    expect(insert).toHaveBeenCalledWith(mockApplicationSecret);
   });
 
   it('PATCH /applications/:id/secrets/:name should resync protected app configs', async () => {
@@ -147,6 +146,10 @@ describe('application secret routes', () => {
       .send({ name: 'Renamed secret' });
 
     expect(response.status).toEqual(500);
+    expect(response.body).toMatchObject({
+      code: 'application.sync_application_secret_failed',
+      message: 'Sync application secret failed.',
+    });
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith(mockProtectedApplication.id);
     expect(update).toHaveBeenLastCalledWith({
       where: { applicationId: mockProtectedApplication.id, name: 'Renamed secret' },

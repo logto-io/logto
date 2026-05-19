@@ -116,7 +116,7 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
     '/applications/:id/secrets/:name',
     koaGuard({
       params: z.object({ id: z.string(), name: z.string() }),
-      status: [204, 404],
+      status: [204, 404, 500],
     }),
     async (ctx, next) => {
       const {
@@ -130,14 +130,12 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         if (application.type === ApplicationType.Protected) {
           await syncProtectedAppConfigsToRemote(appId);
         }
-      } catch (error: unknown) {
-        await queries.applicationSecrets.insert({
-          applicationId: appId,
-          name: deletedSecret.name,
-          value: deletedSecret.value,
-          expiresAt: deletedSecret.expiresAt,
+      } catch {
+        await queries.applicationSecrets.insert(deletedSecret);
+        throw new RequestError({
+          code: 'application.sync_application_secret_failed',
+          status: 500,
         });
-        throw error;
       }
 
       ctx.status = 204;
@@ -152,7 +150,7 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
       params: z.object({ id: z.string(), name: z.string() }),
       body: ApplicationSecrets.updateGuard.pick({ name: true }).required(),
       response: ApplicationSecrets.guard,
-      status: [200, 400, 404],
+      status: [200, 400, 404, 500],
     }),
     async (ctx, next) => {
       const {
@@ -172,13 +170,16 @@ export default function applicationSecretRoutes<T extends ManagementApiRouter>(
         if (application.type === ApplicationType.Protected) {
           await syncProtectedAppConfigsToRemote(appId);
         }
-      } catch (error: unknown) {
+      } catch {
         await queries.applicationSecrets.update({
           where: { applicationId: appId, name: updatedSecret.name },
           set: { name },
           jsonbMode: 'replace',
         });
-        throw error;
+        throw new RequestError({
+          code: 'application.sync_application_secret_failed',
+          status: 500,
+        });
       }
 
       return next();
