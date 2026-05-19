@@ -10,7 +10,6 @@ import {
   updateProfileApiPayloadGuard,
   uploadFileGuard,
   userAssetsGuard,
-  userAssetsServiceStatusGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { format } from 'date-fns';
@@ -155,28 +154,6 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
 
   // TODO: Remove this dev feature gate when avatar upload is ready for production.
   if (EnvSet.values.isDevFeaturesEnabled) {
-    router.get(
-      `${experienceRoutes.profile}/avatar/service-status`,
-      koaGuard({
-        response: userAssetsServiceStatusGuard,
-        status: [200],
-      }),
-      async (ctx, next) => {
-        const { storageProviderConfig } = SystemContext.shared;
-        ctx.body = storageProviderConfig
-          ? {
-              status: 'ready',
-              allowUploadMimeTypes,
-              maxUploadFileSize,
-            }
-          : {
-              status: 'not_configured',
-            };
-
-        return next();
-      }
-    );
-
     router.post(
       `${experienceRoutes.profile}/avatar`,
       koaGuard({
@@ -193,6 +170,10 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         assertThat(
           interactionEvent !== InteractionEvent.ForgotPassword,
           new RequestError({ code: 'session.not_supported_for_forgot_password', status: 400 })
+        );
+        assertThat(
+          interactionEvent === InteractionEvent.Register,
+          new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
         );
 
         const file = ctx.guard.files.file[0];

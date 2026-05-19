@@ -27,17 +27,6 @@ devFeatureTest.describe('POST /experience/profile/avatar', () => {
     await enableAllPasswordSignInMethods();
   });
 
-  it('should be able to query service status', async () => {
-    const client = await initExperienceClient({
-      interactionEvent: InteractionEvent.Register,
-    });
-
-    const serviceStatusResponse = await client.getAvatarUploadServiceStatus();
-    const response = await serviceStatusResponse.json<{ status: 'ready' | 'not_configured' }>();
-
-    expect(['ready', 'not_configured']).toContain(response.status);
-  });
-
   it('should reject when interaction event is ForgotPassword', async () => {
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.ForgotPassword,
@@ -75,14 +64,14 @@ devFeatureTest.describe('POST /experience/profile/avatar', () => {
     });
   });
 
-  it('should pass guards and reach the storage layer under SignIn', async () => {
+  it('should reject when interaction event is SignIn', async () => {
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.SignIn,
     });
 
     await expectRejects(client.uploadAvatar(buildPngFormData()), {
-      code: 'storage.not_configured',
       status: 400,
+      code: 'session.invalid_interaction_type',
     });
   });
 });

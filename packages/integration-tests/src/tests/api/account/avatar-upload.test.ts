@@ -44,8 +44,6 @@ devFeatureTest.describe(
       const response = await api
         .get('api/my-account/user-assets/service-status')
         .json<{ status: string }>();
-      // CI does not configure a storage provider, so the expected status is `not_configured`.
-      // Both responses are acceptable shapes.
       expect(['ready', 'not_configured']).toContain(response.status);
 
       await deleteDefaultTenantUser(user.id);
@@ -71,7 +69,6 @@ devFeatureTest.describe(
 
       await deleteDefaultTenantUser(user.id);
 
-      // Restore for subsequent tests
       await updateAccountCenter({
         enabled: true,
         fields: {
@@ -80,29 +77,16 @@ devFeatureTest.describe(
       });
     });
 
-    it('should fail when storage is not configured (or succeed when configured)', async () => {
+    it('should fail when storage is not configured', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password, {
         scopes: [UserScope.Profile],
       });
 
-      const { status } = await api
-        .get('api/my-account/user-assets/service-status')
-        .json<{ status: 'ready' | 'not_configured' }>();
-
-      if (status === 'not_configured') {
-        // CI typically does not configure a storage provider; expect a `storage.not_configured` error.
-        await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
-          code: 'storage.not_configured',
-          status: 400,
-        });
-      } else {
-        const response = await api
-          .post('api/my-account/user-assets', { body: buildPngFormData() })
-          .json<{ url: string }>();
-        expect(typeof response.url).toBe('string');
-        expect(response.url.length).toBeGreaterThan(0);
-      }
+      await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
+        code: 'storage.not_configured',
+        status: 400,
+      });
 
       await deleteDefaultTenantUser(user.id);
     });
