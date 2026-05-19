@@ -52,6 +52,9 @@ const mockLibraries = {
   samlApplications: {
     syncCustomDomainsToSamlApplicationRedirectUrls: jest.fn(),
   },
+  protectedApps: {
+    syncAllAppConfigsToRemote: jest.fn(),
+  },
 };
 
 const tenantContext = new MockTenant(undefined, { domains }, undefined, mockLibraries);
@@ -118,6 +121,7 @@ describe('domain routes', () => {
     expect(
       mockLibraries.samlApplications.syncCustomDomainsToSamlApplicationRedirectUrls
     ).toHaveBeenCalledTimes(1);
+    expect(mockLibraries.protectedApps.syncAllAppConfigsToRemote).toHaveBeenCalledTimes(1);
     expect(response.body).toEqual({
       scannedCount: 3,
       deletedCount: 1,

@@ -1,5 +1,7 @@
 import {
+  ApplicationType,
   DomainStatus,
+  SearchJointMode,
   type Application,
   type ProtectedAppConfigProviderData,
   type ProtectedAppMetadata,
@@ -181,10 +183,32 @@ const deleteDomainFromRemote = async (id: string) => {
 
 export const createProtectedAppLibrary = (queries: Queries) => {
   const {
-    applications: { findApplicationById, updateApplicationById },
+    applications: { findApplications, findApplicationById, updateApplicationById },
+    domains: { findAllDomains },
   } = queries;
 
-  const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
+  const getSdkEndpoint = async (tenantId: string) => {
+    const defaultEndpoint = getTenantEndpoint(tenantId, EnvSet.values).origin;
+
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return defaultEndpoint;
+    }
+
+    const domains = await findAllDomains();
+    const activeCustomDomain = domains
+      .filter(({ status }) => status === DomainStatus.Active)
+      .slice()
+      .sort((left, right) => right.createdAt - left.createdAt)[0];
+
+    return activeCustomDomain
+      ? new URL(`https://${activeCustomDomain.domain}`).origin
+      : defaultEndpoint;
+  };
+
+  const syncAppConfigsToRemote = async (
+    applicationId: string,
+    sdkEndpointOverride?: string
+  ): Promise<void> => {
     // Skip for integration test, we don't do third party call in integration test
     if (EnvSet.values.isIntegrationTest || EnvSet.values.isProtectedAppLocalDevEnabled) {
       return;
@@ -200,6 +224,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     const activeSecret =
       await queries.applicationSecrets.findActiveSecretByApplicationId(applicationId);
     const { customDomains, additionalScopes, ...rest } = protectedAppMetadata;
+    const sdkEndpoint = sdkEndpointOverride ?? (await getSdkEndpoint(tenantId));
 
     const siteConfigs = {
       ...rest,
@@ -209,7 +234,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       sdkConfig: {
         appId: id,
         appSecret: activeSecret.value,
-        endpoint: getTenantEndpoint(tenantId, EnvSet.values).origin,
+        endpoint: sdkEndpoint,
       },
     };
 
@@ -231,6 +256,31 @@ export const createProtectedAppLibrary = (queries: Queries) => {
         })
       );
     }
+  };
+
+  const syncAllAppConfigsToRemote = async (): Promise<void> => {
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return;
+    }
+
+    const protectedApplications = await findApplications({
+      search: { matches: [], joint: SearchJointMode.Or, isCaseSensitive: false },
+      types: [ApplicationType.Protected],
+    });
+
+    const [firstProtectedApplication] = protectedApplications;
+
+    if (!firstProtectedApplication) {
+      return;
+    }
+
+    const sdkEndpoint = await getSdkEndpoint(firstProtectedApplication.tenantId);
+
+    /* eslint-disable no-await-in-loop */
+    for (const { id } of protectedApplications) {
+      await syncAppConfigsToRemote(id, sdkEndpoint);
+    }
+    /* eslint-enable no-await-in-loop */
   };
 
   /**
@@ -321,5 +371,6 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     addDomainToRemote,
     syncAppCustomDomainStatus,
     deleteDomainFromRemote,
+    syncAllAppConfigsToRemote,
   };
 };

@@ -1,7 +1,17 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair -- max-lines applies to whole file
+/* eslint-disable max-lines */
 import { UserScope } from '@logto/core-kit';
-import { type Application, type ApplicationSecret } from '@logto/schemas';
+import {
+  ApplicationType,
+  DomainStatus,
+  SearchJointMode,
+  type Application,
+  type ApplicationSecret,
+  type Domain,
+} from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
+import { mockDomain } from '#src/__mocks__/domain.js';
 import {
   mockProtectedAppConfigProviderConfig,
   mockCloudflareData,
@@ -9,7 +19,7 @@ import {
   mockProtectedApplication,
 } from '#src/__mocks__/index.js';
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
-import { EnvSet } from '#src/env-set/index.js';
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   defaultProtectedAppPageRules,
@@ -40,11 +50,13 @@ const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
   (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
 };
 
+const findApplications = jest.fn(async (): Promise<Application[]> => [mockProtectedApplication]);
 const findApplicationById = jest.fn(async (): Promise<Application> => mockProtectedApplication);
 const updateApplicationById = jest.fn(async (id: string, data: Partial<Application>) => ({
   ...mockProtectedApplication,
   ...data,
 }));
+const findAllDomains = jest.fn(async (): Promise<Domain[]> => []);
 const mockApplicationSecret: ApplicationSecret = {
   tenantId: mockProtectedApplication.tenantId,
   applicationId: mockProtectedApplication.id,
@@ -68,6 +80,7 @@ const applicationSecrets = {
 };
 const {
   syncAppConfigsToRemote,
+  syncAllAppConfigsToRemote,
   buildProtectedAppData,
   syncAppCustomDomainStatus,
   getDefaultDomain,
@@ -75,8 +88,12 @@ const {
 } = createProtectedAppLibrary(
   new MockQueries({
     applications: {
+      findApplications,
       findApplicationById,
       updateApplicationById,
+    },
+    domains: {
+      findAllDomains,
     },
     applicationSecrets,
   })
@@ -89,6 +106,19 @@ const protectedAppConfigProviderConfig = {
   apiToken: '',
   domain: 'protected.app',
 };
+const activeDomain = { ...mockDomain, domain: 'secure.example.com', status: DomainStatus.Active };
+const mockProtectedApplicationWithCustomDomain = {
+  ...mockProtectedApplication,
+  protectedAppMetadata: {
+    ...mockProtectedApplication.protectedAppMetadata,
+    customDomains: [mockCustomDomain],
+  },
+};
+const getSdkConfig = ({ id }: Application, endpoint: string) => ({
+  appId: id,
+  appSecret: mockApplicationSecret.value,
+  endpoint,
+});
 
 const setProtectedAppLocalDevEnabled = (value: boolean) => {
   Reflect.set(EnvSet.values, 'isProtectedAppLocalDevEnabled', value);
@@ -122,6 +152,10 @@ afterEach(() => {
     blockedDomains: ['blocked.com'],
   };
   updateProtectedAppSiteConfigs.mockClear();
+  findApplications.mockClear();
+  findApplicationById.mockClear();
+  findAllDomains.mockReset();
+  findAllDomains.mockResolvedValue([]);
   findActiveSecretByApplicationId.mockClear();
 });
 
@@ -176,13 +210,7 @@ describe('syncAppConfigsToRemote()', () => {
   });
 
   it('should sync custom domains configs to remote', async () => {
-    findApplicationById.mockResolvedValueOnce({
-      ...mockProtectedApplication,
-      protectedAppMetadata: {
-        ...mockProtectedApplication.protectedAppMetadata,
-        customDomains: [mockCustomDomain],
-      },
-    });
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplicationWithCustomDomain);
     await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
     const { protectedAppMetadata, id } = mockProtectedApplication;
     expect(updateProtectedAppSiteConfigs).toHaveBeenLastCalledWith(
@@ -199,6 +227,51 @@ describe('syncAppConfigsToRemote()', () => {
           endpoint: expect.anything(),
         },
       }
+    );
+  });
+
+  it('should use active tenant custom domain as SDK endpoint when dev features are enabled', async () => {
+    setDevFeaturesEnabled(true);
+    findAllDomains.mockResolvedValueOnce([activeDomain]);
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplicationWithCustomDomain);
+
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
+
+    expect(updateProtectedAppSiteConfigs).toHaveBeenNthCalledWith(
+      1,
+      protectedAppConfigProviderConfig,
+      mockProtectedApplication.protectedAppMetadata.host,
+      expect.objectContaining({
+        sdkConfig: getSdkConfig(mockProtectedApplication, 'https://secure.example.com'),
+      })
+    );
+    expect(updateProtectedAppSiteConfigs).toHaveBeenLastCalledWith(
+      protectedAppConfigProviderConfig,
+      mockCustomDomain.domain,
+      expect.objectContaining({
+        host: mockCustomDomain.domain,
+        sdkConfig: getSdkConfig(mockProtectedApplication, 'https://secure.example.com'),
+      })
+    );
+  });
+
+  it('should keep the default SDK endpoint when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    findAllDomains.mockResolvedValueOnce([activeDomain]);
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
+
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
+
+    expect(findAllDomains).not.toHaveBeenCalled();
+    expect(updateProtectedAppSiteConfigs).toHaveBeenCalledWith(
+      protectedAppConfigProviderConfig,
+      mockProtectedApplication.protectedAppMetadata.host,
+      expect.objectContaining({
+        sdkConfig: getSdkConfig(
+          mockProtectedApplication,
+          getTenantEndpoint(mockProtectedApplication.tenantId, EnvSet.values).origin
+        ),
+      })
     );
   });
 
@@ -230,6 +303,61 @@ describe('syncAppConfigsToRemote()', () => {
       expect.any(Object)
     );
     expect(updateProtectedAppSiteConfigs.mock.calls[0]?.[2]).not.toHaveProperty('additionalScopes');
+  });
+});
+
+describe('syncAllAppConfigsToRemote()', () => {
+  it('should skip syncing all protected app configs when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+
+    await expect(syncAllAppConfigsToRemote()).resolves.not.toThrow();
+
+    expect(findApplications).not.toHaveBeenCalled();
+    expect(updateProtectedAppSiteConfigs).not.toHaveBeenCalled();
+  });
+
+  it('should sync all protected app configs when dev features are enabled', async () => {
+    setDevFeaturesEnabled(true);
+    const anotherProtectedApplication = {
+      ...mockProtectedApplication,
+      id: 'protected-app-id-2',
+      secret: 'secret-2',
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        host: 'app-2.protected.app',
+      },
+    };
+    findAllDomains.mockResolvedValueOnce([activeDomain]);
+    findApplications.mockResolvedValueOnce([mockProtectedApplication, anotherProtectedApplication]);
+    findApplicationById
+      .mockResolvedValueOnce(mockProtectedApplication)
+      .mockResolvedValueOnce(anotherProtectedApplication);
+
+    await expect(syncAllAppConfigsToRemote()).resolves.not.toThrow();
+
+    expect(findApplications).toHaveBeenCalledWith({
+      search: { matches: [], joint: SearchJointMode.Or, isCaseSensitive: false },
+      types: [ApplicationType.Protected],
+    });
+    expect(findAllDomains).toHaveBeenCalledTimes(1);
+    expect(findApplicationById).toHaveBeenNthCalledWith(1, mockProtectedApplication.id);
+    expect(findApplicationById).toHaveBeenNthCalledWith(2, anotherProtectedApplication.id);
+    expect(updateProtectedAppSiteConfigs).toHaveBeenNthCalledWith(
+      1,
+      protectedAppConfigProviderConfig,
+      mockProtectedApplication.protectedAppMetadata.host,
+      expect.objectContaining({
+        sdkConfig: getSdkConfig(mockProtectedApplication, 'https://secure.example.com'),
+      })
+    );
+    expect(updateProtectedAppSiteConfigs).toHaveBeenNthCalledWith(
+      2,
+      protectedAppConfigProviderConfig,
+      anotherProtectedApplication.protectedAppMetadata.host,
+      expect.objectContaining({
+        sdkConfig: getSdkConfig(anotherProtectedApplication, 'https://secure.example.com'),
+      })
+    );
   });
 });
 
@@ -303,13 +431,7 @@ describe('syncAppCustomDomainStatus()', () => {
   });
 
   it('should return application with synced domains', async () => {
-    findApplicationById.mockResolvedValueOnce({
-      ...mockProtectedApplication,
-      protectedAppMetadata: {
-        ...mockProtectedApplication.protectedAppMetadata,
-        customDomains: [mockCustomDomain],
-      },
-    });
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplicationWithCustomDomain);
     await expect(syncAppCustomDomainStatus(mockProtectedApplication.id)).resolves.toMatchObject({
       protectedAppMetadata: {
         customDomains: [
@@ -339,13 +461,7 @@ describe('syncAppCustomDomainStatus()', () => {
     setProtectedAppLocalDevEnabled(true);
     // eslint-disable-next-line @silverhand/fp/no-mutation
     SystemContext.shared.protectedAppHostnameProviderConfig = undefined;
-    findApplicationById.mockResolvedValueOnce({
-      ...mockProtectedApplication,
-      protectedAppMetadata: {
-        ...mockProtectedApplication.protectedAppMetadata,
-        customDomains: [mockCustomDomain],
-      },
-    });
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplicationWithCustomDomain);
 
     await expect(syncAppCustomDomainStatus(mockProtectedApplication.id)).resolves.toMatchObject({
       protectedAppMetadata: {
