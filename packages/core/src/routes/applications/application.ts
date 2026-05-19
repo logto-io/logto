@@ -1,6 +1,6 @@
 // TODO: @darcyYe refactor this file later to remove disable max line comment
 /* eslint-disable max-lines */
-import type { Role, Application } from '@logto/schemas';
+import type { Role, Application, ProtectedAppMetadata } from '@logto/schemas';
 import {
   adminTenantId,
   Applications,
@@ -16,6 +16,7 @@ import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -54,15 +55,45 @@ const assertThirdPartyApplicationTokenExchangeDisabled = (
   }
 };
 
-const hideOidcClientMetadataForSamlApp = (application: Application) => {
+const hideProtectedAppMetadataDevFeatures = (application: Application): Application => {
+  if (EnvSet.values.isDevFeaturesEnabled || !application.protectedAppMetadata) {
+    return application;
+  }
+
+  const { additionalScopes, ...protectedAppMetadata } = application.protectedAppMetadata;
+
+  if (additionalScopes === undefined) {
+    return application;
+  }
+
   return {
+    ...application,
+    protectedAppMetadata,
+  };
+};
+
+const normalizeProtectedAppMetadataPatch = (
+  protectedAppMetadata: Partial<ProtectedAppMetadata>
+): Partial<ProtectedAppMetadata> => {
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    return protectedAppMetadata;
+  }
+
+  const { additionalScopes: _additionalScopes, ...protectedAppMetadataPatch } =
+    protectedAppMetadata;
+
+  return protectedAppMetadataPatch;
+};
+
+const hideOidcClientMetadataForSamlApp = (application: Application) => {
+  return hideProtectedAppMetadataDevFeatures({
     ...application,
     ...conditional(
       application.type === ApplicationType.SAML && {
         oidcClientMetadata: buildOidcClientMetadata(),
       }
     ),
-  };
+  });
 };
 
 const hideOidcClientMetadataForSamlApps = (applications: readonly Application[]) => {
@@ -251,7 +282,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         }
       }
 
-      ctx.body = application;
+      ctx.body = hideProtectedAppMetadataDevFeatures(application);
 
       if (rest.type === ApplicationType.MachineToMachine) {
         void quota.reportSubscriptionUpdatesUsage('machineToMachineLimit');
@@ -397,10 +428,12 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
             status: 422,
           })
         );
+        const normalizedProtectedAppMetadataPatch =
+          normalizeProtectedAppMetadataPatch(protectedAppMetadata);
         await queries.applications.updateApplicationById(id, {
           protectedAppMetadata: {
             ...originProtectedAppMetadata,
-            ...protectedAppMetadata,
+            ...normalizedProtectedAppMetadataPatch,
           },
         });
         try {
@@ -414,10 +447,12 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         }
       }
 
-      ctx.body =
+      const updatedApplication =
         Object.keys(rest).length > 0
           ? await queries.applications.updateApplicationById(id, rest, 'replace')
           : pendingUpdateApplication;
+
+      ctx.body = hideProtectedAppMetadataDevFeatures(updatedApplication);
 
       return next();
     }

@@ -35,6 +35,18 @@ const protected_app = {
         'กรุณาเปิดเผยเซิร์ฟเวอร์ local ของคุณสู่ภายนอกก่อน ดูข้อมูลเพิ่มเติมเกี่ยวกับ <a>การพัฒนาแบบ local</a>',
     },
   },
+  id_token_claims: {
+    card_title: 'Claims ของ ID token',
+    card_description:
+      'ขอ user scope เพิ่มเติมในระหว่างการลงชื่อเข้าใช้แอปที่ได้รับการปกป้อง เพื่อรวม claims ที่ขยายและถูกเปิดใช้งานไว้ใน ID token ที่ถูกส่งต่อ',
+    field_title: 'Scopes เพิ่มเติม',
+    field_description:
+      'Claims จะถูกรวมก็ต่อเมื่อถูกเปิดใช้งานใน <a>Custom JWT > ID token</a> และมีการขอ scope ที่ตรงกันที่นี่',
+    table_column_scope: 'Scope',
+    table_column_claims_forwarded: 'Claims ที่ส่งต่อ',
+    disabled_claims_hint:
+      'Claims ที่เป็นสีเทายังไม่ถูกส่งต่อ เปิดใช้งานใน <a>Custom JWT > ID token</a> เพื่อรวมไว้ใน ID token',
+  },
   success_message: '🎉 เปิดใช้ระบบยืนยันตัวตนของแอปสำเร็จแล้ว! สนุกกับประสบการณ์ใหม่ของเว็บไซต์คุณ',
 };
 

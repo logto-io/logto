@@ -21,6 +21,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { koaReportSubscriptionUpdates, koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.js';
 
 import { captureEvent } from '../utils/posthog.js';
 
@@ -121,37 +122,57 @@ export default function hookRoutes<T extends ManagementApiRouter>(
     koaPagination(),
     koaGuard({
       params: z.object({ id: z.string() }),
-      query: z.object({ logKey: z.string().optional() }),
+      query: z.object({
+        logKey: z.string().optional(),
+        enableCap: z.string().optional(),
+        start_time: z.string().optional(),
+        end_time: z.string().optional(),
+      }),
       response: Logs.guard.omit({ tenantId: true }).array(),
-      status: 200,
+      status: [200, 400],
     }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
 
       const {
         params: { id },
-        query: { logKey },
+        query: { logKey, enableCap, start_time, end_time },
       } = ctx.guard;
 
-      const includeKeyPrefix: WebhookLogPrefix[] = [hook.Type.TriggerHook];
-      const startTimeExclusive = subDays(new Date(), 1).getTime();
+      const userStart = parseTimestampParam(start_time, 'start_time');
+      const userEnd = parseTimestampParam(end_time, 'end_time');
+      validateTimeWindow(userStart, userEnd);
 
-      const [{ count }, logs] = await Promise.all([
-        countLogs({
-          logKey,
-          payload: { hookId: id },
-          startTimeExclusive,
-          includeKeyPrefix,
-        }),
+      const includeKeyPrefix: WebhookLogPrefix[] = [hook.Type.TriggerHook];
+      // Backward compat: when neither time param is supplied, fall back to the
+      // historical 24h lower bound. When the caller supplies either bound,
+      // honor their window as-is and skip the default.
+      const hasExplicitWindow = userStart !== undefined || userEnd !== undefined;
+      const startTime = hasExplicitWindow ? userStart : subDays(new Date(), 1).getTime();
+      const endTime = userEnd;
+
+      const [{ count, isCapped }, logs] = await Promise.all([
+        countLogs(
+          {
+            logKey,
+            payload: { hookId: id },
+            startTime,
+            endTime,
+            includeKeyPrefix,
+          },
+          { capped: yes(enableCap) }
+        ),
         findLogs(limit, offset, {
           logKey,
           payload: { hookId: id },
-          startTimeExclusive,
+          startTime,
+          endTime,
           includeKeyPrefix,
         }),
       ]);
 
       ctx.pagination.totalCount = count;
+      ctx.pagination.totalCountIsCapped = isCapped;
       ctx.body = logs;
 
       return next();

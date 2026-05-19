@@ -1,6 +1,7 @@
 import { customClientMetadataDefault, type ApplicationResponse } from '@logto/schemas';
 import { cond, conditional, type DeepPartial } from '@silverhand/essentials';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { isJsonObject } from '@/utils/json';
 
 type ProtectedAppMetadataType = ApplicationResponse['protectedAppMetadata'];
@@ -21,6 +22,30 @@ const mapToUriFormatArrays = (value?: string[]) =>
 
 const mapToUriOriginFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(uri.replace(/\/*$/, '')));
+
+const parseProtectedAppMetadataFromResponse = (
+  protectedAppMetadata: NonNullable<ProtectedAppMetadataType>
+): ApplicationForm['protectedAppMetadata'] => {
+  const { additionalScopes, ...rest } = protectedAppMetadata;
+
+  return {
+    ...rest,
+    ...conditional(isDevFeaturesEnabled && { additionalScopes }),
+    sessionDuration: protectedAppMetadata.sessionDuration / 3600 / 24,
+  };
+};
+
+const parseProtectedAppMetadataToPayload = (
+  protectedAppMetadata: NonNullable<ApplicationForm['protectedAppMetadata']>
+): NonNullable<DeepPartial<ApplicationResponse>['protectedAppMetadata']> => {
+  const { additionalScopes, ...rest } = protectedAppMetadata;
+
+  return {
+    ...rest,
+    ...conditional(isDevFeaturesEnabled && { additionalScopes }),
+    sessionDuration: protectedAppMetadata.sessionDuration * 3600 * 24,
+  };
+};
 
 export const applicationFormDataParser = {
   fromResponse: (data: ApplicationResponse): ApplicationForm => {
@@ -51,10 +76,7 @@ export const applicationFormDataParser = {
       ),
       ...cond(
         protectedAppMetadata && {
-          protectedAppMetadata: {
-            ...protectedAppMetadata,
-            sessionDuration: protectedAppMetadata.sessionDuration / 3600 / 24,
-          },
+          protectedAppMetadata: parseProtectedAppMetadataFromResponse(protectedAppMetadata),
         }
       ),
     };
@@ -100,10 +122,7 @@ export const applicationFormDataParser = {
       ),
       ...cond(
         protectedAppMetadata && {
-          protectedAppMetadata: {
-            ...protectedAppMetadata,
-            sessionDuration: protectedAppMetadata.sessionDuration * 3600 * 24,
-          },
+          protectedAppMetadata: parseProtectedAppMetadataToPayload(protectedAppMetadata),
         }
       ),
     };

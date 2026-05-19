@@ -1,6 +1,9 @@
+import { protectedAppAdditionalScopes } from '@logto/core-kit';
 import { z } from 'zod';
 
 import { cloudflareDataGuard, domainDnsRecordsGuard, domainStatusGuard } from './custom-domain.js';
+
+const protectedAppAdditionalScopeGuard = z.enum(protectedAppAdditionalScopes);
 
 export const customDomainGuard = z.object({
   /* The domain name, e.g app.example.com */
@@ -32,6 +35,8 @@ export const protectedAppMetadataGuard = z.object({
       path: z.string(),
     })
   ),
+  /* Additional scopes requested by protected app sign-in */
+  additionalScopes: z.array(protectedAppAdditionalScopeGuard).optional(),
   /* Custom domain */
   customDomains: customDomainsGuard.optional(),
 });

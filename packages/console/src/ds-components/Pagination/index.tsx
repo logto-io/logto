@@ -19,9 +19,22 @@ export type Props = {
   readonly className?: string;
   readonly mode?: 'normal' | 'pico';
   readonly onChange?: (pageIndex: number) => void;
+  /**
+   * When `true`, `totalCount` is a lower bound (server short-circuited at a cap).
+   * Renders Prev/Next only — the numbered jumper and position label are hidden.
+   */
+  readonly isTotalCountCapped?: boolean;
 };
 
-function Pagination({ page, totalCount, pageSize, className, mode = 'normal', onChange }: Props) {
+function Pagination({
+  page,
+  totalCount,
+  pageSize,
+  className,
+  mode = 'normal',
+  onChange,
+  isTotalCountCapped,
+}: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   /**
@@ -30,6 +43,46 @@ function Pagination({ page, totalCount, pageSize, className, mode = 'normal', on
    * Cache `totalCount` to solve this problem.
    */
   const cachedTotalCount = useCacheValue(totalCount) ?? 0;
+  const cachedIsTotalCountCapped = useCacheValue(isTotalCountCapped) ?? false;
+  const isPicoMode = mode === 'pico';
+
+  if (cachedIsTotalCountCapped) {
+    // Pico mode is intentionally not applied here — the `.pico` overrides
+    // target `.pagination` (ReactPaginate), which the capped path doesn't use.
+    return (
+      <div className={classNames(styles.container, className)}>
+        <div className={styles.cappedNav}>
+          <Button
+            className={styles.button}
+            size="small"
+            icon={
+              <FlipOnRtl>
+                <ArrowLeft />
+              </FlipOnRtl>
+            }
+            aria-label={t('general.back')}
+            disabled={page === 1}
+            onClick={() => {
+              onChange?.(page - 1);
+            }}
+          />
+          <Button
+            className={styles.button}
+            size="small"
+            icon={
+              <FlipOnRtl>
+                <ArrowRight />
+              </FlipOnRtl>
+            }
+            aria-label={t('general.next')}
+            onClick={() => {
+              onChange?.(page + 1);
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   const pageCount = Math.ceil(cachedTotalCount / pageSize);
 
@@ -39,7 +92,6 @@ function Pagination({ page, totalCount, pageSize, className, mode = 'normal', on
 
   const min = (page - 1) * pageSize + 1;
   const max = Math.min(page * pageSize, cachedTotalCount);
-  const isPicoMode = mode === 'pico';
 
   return (
     <div className={classNames(styles.container, isPicoMode && styles.pico, className)}>

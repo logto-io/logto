@@ -21,12 +21,28 @@ type AllowedKeyPrefix = AuditLogPrefix | WebhookLogPrefix;
 type LogCondition = {
   logKey?: string;
   payload?: { applicationId?: string; userId?: string; hookId?: string };
-  startTimeExclusive?: number;
+  /** Exclusive lower bound on `createdAt`, in unix milliseconds. */
+  startTime?: number;
+  /** Exclusive upper bound on `createdAt`, in unix milliseconds. */
+  endTime?: number;
   includeKeyPrefix?: AllowedKeyPrefix[];
 };
 
+/**
+ * Bounds the rows counted to avoid a full `count(*)` traversal on tenants with
+ * very large `logs` tables. The inner subquery walks `logs__created_at_id`
+ * newest-first and stops at `LOGS_COUNT_CAP + 1` matches, sharply reducing the
+ * chance of hitting `statement_timeout`.
+ */
+const LOGS_COUNT_CAP = 10_000;
+
+type CountLogsResult = {
+  count: number;
+  isCapped?: boolean;
+};
+
 const buildLogConditionSql = (logCondition: LogCondition) =>
-  conditionalSql(logCondition, ({ logKey, payload, startTimeExclusive, includeKeyPrefix = [] }) => {
+  conditionalSql(logCondition, ({ logKey, payload, startTime, endTime, includeKeyPrefix = [] }) => {
     const keyPrefixFilter = conditional(
       includeKeyPrefix.length > 0 &&
         includeKeyPrefix.map((prefix) => sql`${fields.key} like ${`${prefix}%`}`)
@@ -43,11 +59,15 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
           )
       ),
       conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
-      conditionalSql(
-        startTimeExclusive,
-        (startTimeExclusive) =>
-          sql`${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)`
-      ),
+      // Use `!== undefined` (not `conditionalSql`) so a legitimate `start_time=0`
+      // or `end_time=0` window still applies — `conditionalSql` treats `0` as
+      // falsy and would silently drop the filter.
+      startTime === undefined
+        ? sql``
+        : sql`${fields.createdAt} > to_timestamp(${startTime}::double precision / 1000)`,
+      endTime === undefined
+        ? sql``
+        : sql`${fields.createdAt} < to_timestamp(${endTime}::double precision / 1000)`,
     ].filter(({ sql }) => sql);
 
     return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;
@@ -56,12 +76,37 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
 export const createLogQueries = (pool: CommonQueryMethods) => {
   const insertLog = buildInsertIntoWithPool(pool)(Logs);
 
-  const countLogs = async (condition: LogCondition) =>
-    pool.one<{ count: number }>(sql`
+  const countLogs = async (
+    condition: LogCondition,
+    options?: { capped?: boolean }
+  ): Promise<CountLogsResult> => {
+    if (!options?.capped) {
+      // Postgres returns a bigint for count(*), which Slonik surfaces as a string.
+      const { count } = await pool.one<{ count: string }>(sql`
+        select count(*)
+        from ${table}
+        ${buildLogConditionSql(condition)}
+      `);
+      return { count: Number(count) };
+    }
+
+    const cappedLimit = LOGS_COUNT_CAP + 1;
+    // `order by created_at desc` lets Postgres use `logs__created_at_id` so
+    // `LIMIT` acts as a true scan boundary even when the residual filter is
+    // sparse. Matches the order `findLogs` returns rows in.
+    const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
-      from ${table}
-      ${buildLogConditionSql(condition)}
+      from (
+        select 1
+        from ${table}
+        ${buildLogConditionSql(condition)}
+        order by ${fields.createdAt} desc
+        limit ${cappedLimit}
+      ) s
     `);
+    const numericCount = Number(count);
+    return { count: numericCount, isCapped: numericCount > LOGS_COUNT_CAP };
+  };
 
   const findLogs = async (limit: number, offset: number, logCondition: LogCondition) =>
     pool.any<Log>(sql`

@@ -83,12 +83,14 @@ const sign_in_exp = {
     title: 'Custom UI',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'Custom CSS',
+    css_code_editor_field_title: 'CSS overrides',
     css_code_editor_description1: 'See the example of custom CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Learn more',
     css_code_editor_content_placeholder:
-      'Enter your custom CSS to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.',
+      'Enter your CSS overrides here to tailor the styles of anything to your exact specifications. Express your creativity and make your UI stand out.',
     bring_your_ui_title: 'Bring your UI',
+    bring_your_ui_upload_title: 'Upload custom UI assets',
     bring_your_ui_description:
       'Upload a compressed package (.zip) to replace the Logto prebuilt UI with your own code. <a>Learn more</a>',
     bring_your_ui_oss_description: 'Customize the sign-in UI with your own code.',
@@ -99,10 +101,10 @@ const sign_in_exp = {
       'Your custom UI assets have been successfully uploaded and are now being served. Consequently, the built-in preview window has been disabled.\nTo test your personalized sign-in UI, click the "Live Preview" button to open it in a new browser tab.',
     csp_description:
       'Allow additional source expressions for your custom sign-in UI. These values are applied only when custom UI assets are served.',
-    csp_script_src: 'script-src sources',
+    csp_script_src: 'Allowed script-src',
     csp_script_src_tip:
       'Allow HTTPS source expressions for scripts loaded by your custom UI, such as https://scripts.example.com or https://*.example.com.',
-    csp_connect_src: 'connect-src sources',
+    csp_connect_src: 'Allowed connect-src',
     csp_connect_src_tip:
       'Allow HTTPS or WSS source expressions for network requests made by your custom UI, such as https://api.example.com or wss://events.example.com.',
     csp_source_invalid_error:

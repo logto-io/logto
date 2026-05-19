@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom';
 
 import SubmitFormChangesActionBar from '@/components/SubmitFormChangesActionBar';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
@@ -73,8 +73,7 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
   const { isUploading, cancelUpload } = useContext(SignInExperienceContext);
   const { currentSubscriptionQuota } = useContext(SubscriptionDataContext);
   const { isConnectorTypeEnabled, ready: isConnectorsReady } = useEnabledConnectorTypes();
-  const isCustomUiCspEnabled =
-    isCloud && isDevFeaturesEnabled && currentSubscriptionQuota.bringYourUiEnabled;
+  const isCustomUiCspEnabled = isCloud && currentSubscriptionQuota.bringYourUiEnabled;
 
   const [dataToCompare, setDataToCompare] = useState<SignInExperiencePageManagedData>();
 

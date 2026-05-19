@@ -7,6 +7,7 @@ import useSWR from 'swr';
 import ApplicationName from '@/components/ApplicationName';
 import UserName from '@/components/UserName';
 import { auditLogEventTitle, defaultPageSize } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Table from '@/ds-components/Table';
 import type { Column } from '@/ds-components/Table/types';
 import type { RequestError } from '@/hooks/use-api';
@@ -19,6 +20,9 @@ import EmptyDataPlaceholder from '../EmptyDataPlaceholder';
 import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';
 import EventSelector from './components/EventSelector';
+import TimeRangePicker from './components/TimeRangePicker';
+import { defaultPresetRange } from './components/TimeRangePicker/preset';
+import useAuditLogTimeWindow from './components/TimeRangePicker/use-audit-log-time-window';
 import styles from './index.module.scss';
 
 const auditLogEventOptions = Object.entries(auditLogEventTitle).map(([value, title]) => ({
@@ -36,13 +40,20 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const pageSize = defaultPageSize;
 
-  const [{ page, event, applicationId: applicationIdFromSearch }, updateSearchParameters] =
-    useSearchParametersWatcher({
-      page: 1,
-      event: '',
-      // If `applicationId` not specified when init this component, then search parameter of `applicationId` can be accepted.
-      ...conditional(!applicationId && { applicationId: '' }),
-    });
+  // URL values are untyped; validated downstream via `isPresetRange`.
+  const initialRange: string = defaultPresetRange;
+  const [
+    { page, event, applicationId: applicationIdFromSearch, range, start_time, end_time },
+    updateSearchParameters,
+  ] = useSearchParametersWatcher({
+    page: 1,
+    event: '',
+    range: initialRange,
+    start_time: '',
+    end_time: '',
+    // If `applicationId` not specified when init this component, then search parameter of `applicationId` can be accepted.
+    ...conditional(!applicationId && { applicationId: '' }),
+  });
 
   // TODO: LOG-7135, revisit this fallback logic and see whether this should be done outside of this component.
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -51,18 +62,38 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
     applicationId && `api/applications/${applicationId}`
   );
 
+  const {
+    startTime,
+    endTime,
+    pickerRangeValue,
+    customStartDate,
+    customEndDate,
+    handleRangeChange,
+    handleCustomDatesChange,
+  } = useAuditLogTimeWindow({
+    range,
+    startTimeRaw: start_time,
+    endTimeRaw: end_time,
+    updateSearchParameters,
+  });
+
   const url = buildUrl('api/logs', {
     page: String(page),
     page_size: String(pageSize),
+    enableCap: 'true',
     ...conditional(event && { logKey: event }),
     ...conditional(searchApplicationId && { applicationId: searchApplicationId }),
     ...conditional(userId && { userId }),
+    ...conditional(
+      isDevFeaturesEnabled && startTime !== undefined && { start_time: String(startTime) }
+    ),
+    ...conditional(isDevFeaturesEnabled && endTime !== undefined && { end_time: String(endTime) }),
   });
 
-  const { data, error, mutate } = useSWR<[Log[], number], RequestError>(url);
+  const { data, error, mutate } = useSWR<[Log[], number, boolean], RequestError>(url);
   const isLoading = !data && !error;
   const { navigate } = useTenantPathname();
-  const [logs, totalCount] = data ?? [];
+  const [logs, totalCount, isTotalCountCapped] = data ?? [];
   const isUserColumnVisible =
     !userId && specifiedApplication?.type !== ApplicationType.MachineToMachine;
 
@@ -143,12 +174,24 @@ function AuditLogTable({ applicationId, userId, className }: Props) {
               />
             </div>
           )}
+          {isDevFeaturesEnabled && (
+            <div className={styles.timeRangePicker}>
+              <TimeRangePicker
+                value={pickerRangeValue}
+                customStartDate={customStartDate}
+                customEndDate={customEndDate}
+                onChange={handleRangeChange}
+                onCustomDatesChange={handleCustomDatesChange}
+              />
+            </div>
+          )}
         </div>
       }
       placeholder={<EmptyDataPlaceholder />}
       pagination={{
         page,
         totalCount,
+        isTotalCountCapped,
         pageSize,
         onChange: (page) => {
           updateSearchParameters({ page });
