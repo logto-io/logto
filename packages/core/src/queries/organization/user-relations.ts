@@ -141,24 +141,40 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
         where ${fields.organizationId} = ${organizationId}
         ${buildSearchSql(Users, search, sql`and `)}
       `),
+      // Aggregate roles via LATERAL so the per-user role lookup runs at most `limit` times
+      // instead of once over the full join. `order by` is explicit because the prior
+      // GROUP BY's ordering was incidental (Postgres does not guarantee GROUP BY ordering)
+      // and the rewrite removes the implementation accident that made it appear stable.
       this.pool.any<UserWithOrganizationRoles>(sql`
         select
           ${sql.join(
             userInfoSelectFields.map((field) => users.fields[field]),
             sql`, `
           )},
-          ${aggregateRoles()}
+          user_roles.${sql.identifier(['organizationRoles'])}
         from ${this.table}
         left join ${users.table}
           on ${fields.userId} = ${users.fields.id}
-        left join ${relations.table}
-          on ${relations.fields.userId} = ${users.fields.id}
-          and ${fields.organizationId} = ${relations.fields.organizationId}
-        left join ${roles.table}
-          on ${relations.fields.organizationRoleId} = ${roles.fields.id}
+        left join lateral (
+          select coalesce(
+            json_agg(
+              json_build_object(
+                'id', ${roles.fields.id},
+                'name', ${roles.fields.name}
+              )
+              order by ${roles.fields.name}
+            ),
+            '[]'::json
+          ) as ${sql.identifier(['organizationRoles'])}
+          from ${relations.table}
+          join ${roles.table}
+            on ${relations.fields.organizationRoleId} = ${roles.fields.id}
+          where ${relations.fields.organizationId} = ${organizationId}
+            and ${relations.fields.userId} = ${users.fields.id}
+        ) as user_roles on true
         where ${fields.organizationId} = ${organizationId}
         ${buildSearchSql(Users, search, sql`and `)}
-        group by ${users.fields.id}
+        order by ${fields.userId}
         limit ${limit}
         offset ${offset}
       `),
