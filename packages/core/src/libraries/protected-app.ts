@@ -172,7 +172,10 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       : defaultEndpoint;
   };
 
-  const syncAppConfigsToRemote = async (applicationId: string): Promise<void> => {
+  const syncAppConfigsToRemote = async (
+    applicationId: string,
+    sdkEndpointOverride?: string
+  ): Promise<void> => {
     // Skip for integration test, we don't do third party call in integration test
     if (EnvSet.values.isIntegrationTest) {
       return;
@@ -186,7 +189,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
     }
 
     const { customDomains, ...rest } = protectedAppMetadata;
-    const sdkEndpoint = await getSdkEndpoint(tenantId);
+    const sdkEndpoint = sdkEndpointOverride ?? (await getSdkEndpoint(tenantId));
 
     const siteConfigs = {
       ...rest,
@@ -227,7 +230,19 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       types: [ApplicationType.Protected],
     });
 
-    await Promise.all(protectedApplications.map(async ({ id }) => syncAppConfigsToRemote(id)));
+    const [firstProtectedApplication] = protectedApplications;
+
+    if (!firstProtectedApplication) {
+      return;
+    }
+
+    const sdkEndpoint = await getSdkEndpoint(firstProtectedApplication.tenantId);
+
+    /* eslint-disable no-await-in-loop */
+    for (const { id } of protectedApplications) {
+      await syncAppConfigsToRemote(id, sdkEndpoint);
+    }
+    /* eslint-enable no-await-in-loop */
   };
 
   /**

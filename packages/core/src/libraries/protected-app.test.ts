@@ -1,4 +1,10 @@
-import { DomainStatus, type Application, type Domain } from '@logto/schemas';
+import {
+  ApplicationType,
+  DomainStatus,
+  SearchJointMode,
+  type Application,
+  type Domain,
+} from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockDomain } from '#src/__mocks__/domain.js';
@@ -89,6 +95,7 @@ afterAll(() => {
 afterEach(() => {
   updateProtectedAppSiteConfigs.mockClear();
   findApplications.mockClear();
+  findApplicationById.mockClear();
   findAllDomains.mockReset();
   findAllDomains.mockResolvedValue([]);
   Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
@@ -233,6 +240,63 @@ describe('syncAllAppConfigsToRemote()', () => {
 
     expect(findApplications).not.toHaveBeenCalled();
     expect(updateProtectedAppSiteConfigs).not.toHaveBeenCalled();
+  });
+
+  it('should sync all protected app configs when dev features are enabled', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    const activeDomain = {
+      ...mockDomain,
+      domain: 'secure.example.com',
+      status: DomainStatus.Active,
+    };
+    const anotherProtectedApplication = {
+      ...mockProtectedApplication,
+      id: 'protected-app-id-2',
+      secret: 'secret-2',
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        host: 'app-2.protected.app',
+      },
+    };
+    findAllDomains.mockResolvedValueOnce([activeDomain]);
+    findApplications.mockResolvedValueOnce([mockProtectedApplication, anotherProtectedApplication]);
+    findApplicationById
+      .mockResolvedValueOnce(mockProtectedApplication)
+      .mockResolvedValueOnce(anotherProtectedApplication);
+
+    await expect(syncAllAppConfigsToRemote()).resolves.not.toThrow();
+
+    expect(findApplications).toHaveBeenCalledWith({
+      search: { matches: [], joint: SearchJointMode.Or, isCaseSensitive: false },
+      types: [ApplicationType.Protected],
+    });
+    expect(findAllDomains).toHaveBeenCalledTimes(1);
+    expect(findApplicationById).toHaveBeenNthCalledWith(1, mockProtectedApplication.id);
+    expect(findApplicationById).toHaveBeenNthCalledWith(2, anotherProtectedApplication.id);
+    expect(updateProtectedAppSiteConfigs).toHaveBeenNthCalledWith(
+      1,
+      protectedAppConfigProviderConfig,
+      mockProtectedApplication.protectedAppMetadata.host,
+      expect.objectContaining({
+        sdkConfig: {
+          appId: mockProtectedApplication.id,
+          appSecret: mockProtectedApplication.secret,
+          endpoint: 'https://secure.example.com',
+        },
+      })
+    );
+    expect(updateProtectedAppSiteConfigs).toHaveBeenNthCalledWith(
+      2,
+      protectedAppConfigProviderConfig,
+      anotherProtectedApplication.protectedAppMetadata.host,
+      expect.objectContaining({
+        sdkConfig: {
+          appId: anotherProtectedApplication.id,
+          appSecret: anotherProtectedApplication.secret,
+          endpoint: 'https://secure.example.com',
+        },
+      })
+    );
   });
 });
 
