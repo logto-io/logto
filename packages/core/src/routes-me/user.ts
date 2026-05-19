@@ -4,7 +4,7 @@ import { condArray, conditional, pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { encryptUserPassword } from '#src/libraries/user.utils.js';
+import { buildPasswordResetPayload } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -150,13 +150,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
         throw new RequestError('password.rejected', { issues });
       }
 
-      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
-      await updateUserById(userId, {
-        passwordEncrypted,
-        passwordEncryptionMethod,
-        passwordUpdatedAt: Date.now(),
-        isPasswordExpired: false,
-      });
+      await updateUserById(userId, await buildPasswordResetPayload(password));
 
       ctx.status = 204;
 

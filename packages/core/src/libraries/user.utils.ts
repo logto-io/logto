@@ -16,6 +16,16 @@ export const encryptUserPassword = async (
   return { passwordEncrypted, passwordEncryptionMethod };
 };
 
+export const buildPasswordMetadataPayload = () => ({
+  passwordUpdatedAt: Date.now(),
+  isPasswordExpired: false,
+});
+
+export const buildPasswordResetPayload = async (password: string) => ({
+  ...(await encryptUserPassword(password)),
+  ...buildPasswordMetadataPayload(),
+});
+
 /**
  * Convert bindMfa to mfaVerification, add common fields like "id" and "createdAt"
  * and transpile formats like "codes" to "code" for backup code

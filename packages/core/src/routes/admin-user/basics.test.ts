@@ -5,6 +5,7 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
 import { mockSignInExperience, mockUser, mockUserResponse } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
@@ -95,6 +96,7 @@ const usersLibraries = {
 } satisfies Partial<Libraries['users']>;
 
 const adminUserRoutes = await pickDefault(import('./basics.js'));
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 describe('adminUserRoutes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
@@ -109,6 +111,9 @@ describe('adminUserRoutes', () => {
   afterEach(() => {
     jest.clearAllMocks();
     jest.useRealTimers();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
   });
 
   it('GET /users/:userId', async () => {
@@ -328,10 +333,11 @@ describe('adminUserRoutes', () => {
     const mockedUserId = 'foo';
     const password = '1234asd$';
     const response = await userRequest.patch(`/users/${mockedUserId}/password`).send({ password });
-    expect(encryptUserPassword).toHaveBeenCalledWith(password);
     expect(findUserById).toHaveBeenCalledTimes(1);
     const updateCalls = updateUserById.mock.calls as Array<[string, Partial<CreateUser>]>;
     const passwordCall = updateCalls.find(([id]) => id === mockedUserId);
+    expect(typeof passwordCall?.[1].passwordEncrypted).toBe('string');
+    expect(passwordCall?.[1].passwordEncryptionMethod).toBe(UsersPasswordEncryptionMethod.Argon2i);
     expect(typeof passwordCall?.[1].passwordUpdatedAt).toBe('number');
     expect(passwordCall?.[1].isPasswordExpired).toBe(false);
     expect(response.status).toEqual(200);
@@ -340,7 +346,7 @@ describe('adminUserRoutes', () => {
     });
   });
 
-  it('PATCH /users/:userId/password/expire', async () => {
+  it('PATCH /users/:userId/password/expiration', async () => {
     mockedQueries.signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       passwordExpiration: {
@@ -349,14 +355,16 @@ describe('adminUserRoutes', () => {
       },
     });
 
-    const response = await userRequest.patch('/users/foo/password/expire');
+    const response = await userRequest
+      .patch('/users/foo/password/expiration')
+      .send({ isExpired: true });
     expect(response.status).toEqual(200);
     expect(updateUserById).toHaveBeenCalledWith('foo', {
       isPasswordExpired: true,
     });
   });
 
-  it('PATCH /users/:userId/password/expire should return 400 when expiration is disabled', async () => {
+  it('PATCH /users/:userId/password/expiration should return 400 when expiration is disabled', async () => {
     mockedQueries.signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       passwordExpiration: {
@@ -364,8 +372,27 @@ describe('adminUserRoutes', () => {
       },
     });
 
-    const response = await userRequest.patch('/users/foo/password/expire');
+    const response = await userRequest
+      .patch('/users/foo/password/expiration')
+      .send({ isExpired: true });
     expect(response.status).toEqual(400);
+    expect(updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('PATCH /users/:userId/password/expiration should return 404 when dev features are disabled', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+    const userRequest = createRequester({
+      middlewares: [koaManagementApiHooks(tenantContext.libraries.hooks)],
+      authedRoutes: adminUserRoutes,
+      tenantContext,
+    });
+
+    const response = await userRequest
+      .patch('/users/foo/password/expiration')
+      .send({ isExpired: true });
+    expect(response.status).toEqual(404);
+    expect(mockedQueries.signInExperiences.findDefaultSignInExperience).not.toHaveBeenCalled();
     expect(updateUserById).not.toHaveBeenCalled();
   });
 

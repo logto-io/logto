@@ -1,6 +1,6 @@
 import { type SignInExperience, type User } from '@logto/schemas';
-import { differenceInDays } from 'date-fns';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -21,11 +21,13 @@ type PasswordExpirationReminderResult = {
 
 export type PasswordExpirationResult = PasswordExpirationSuccess | PasswordExpirationReminderResult;
 
+const dayInMs = 24 * 60 * 60 * 1000;
+
 export const verifyPasswordExpirationPolicy = (
   passwordExpiration: SignInExperience['passwordExpiration'],
   user: User
 ): PasswordExpirationResult => {
-  if (!passwordExpiration.enabled) {
+  if (!EnvSet.values.isDevFeaturesEnabled || !passwordExpiration.enabled) {
     return {
       kind: 'success',
       user,
@@ -40,16 +42,15 @@ export const verifyPasswordExpirationPolicy = (
     })
   );
 
-  const referenceDate = new Date(user.passwordUpdatedAt ?? user.createdAt);
-  const passwordAgeInDays = differenceInDays(new Date(), referenceDate);
+  const referenceTime = user.passwordUpdatedAt ?? user.createdAt;
+  const expiresAt = referenceTime + passwordExpiration.validPeriodDays * dayInMs;
 
-  const isPasswordExpired =
-    user.isPasswordExpired || passwordAgeInDays >= passwordExpiration.validPeriodDays;
+  const isPasswordExpired = user.isPasswordExpired || Date.now() >= expiresAt;
 
   assertThat(!isPasswordExpired, new RequestError({ code: 'password.expired', status: 422 }));
 
   const reminderPeriodDays = passwordExpiration.reminderPeriodDays ?? 0;
-  const reminderDaysUntilExpiration = passwordExpiration.validPeriodDays - passwordAgeInDays;
+  const reminderDaysUntilExpiration = Math.ceil((expiresAt - Date.now()) / dayInMs);
 
   const isInReminderWindow =
     reminderPeriodDays > 0 && reminderDaysUntilExpiration <= reminderPeriodDays;

@@ -12,6 +12,7 @@ import {
 import { conditional, yes } from '@silverhand/essentials';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import {
@@ -19,7 +20,11 @@ import {
   buildUserLogtoConfigResponse,
   userLogtoConfigResponseGuard,
 } from '#src/libraries/user-logto-config.js';
-import { encryptUserPassword } from '#src/libraries/user.utils.js';
+import {
+  buildPasswordMetadataPayload,
+  buildPasswordResetPayload,
+  encryptUserPassword,
+} from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -292,8 +297,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         ...conditional(profile && { profile }),
         ...conditional(
           hasPassword && {
-            passwordUpdatedAt: Date.now(),
-            isPasswordExpired: false,
+            ...buildPasswordMetadataPayload(),
           }
         ),
       });
@@ -351,14 +355,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       await findUserById(userId);
 
-      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
-
-      const user = await updateUserById(userId, {
-        passwordEncrypted,
-        passwordEncryptionMethod,
-        passwordUpdatedAt: Date.now(),
-        isPasswordExpired: false,
-      });
+      const user = await updateUserById(userId, await buildPasswordResetPayload(password));
 
       ctx.body = transpileAdminUserProfileResponse(user);
 
@@ -366,37 +363,41 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  router.patch(
-    '/users/:userId/password/expire',
-    koaGuard({
-      params: object({ userId: string() }),
-      response: adminUserProfileResponseGuard,
-      status: [200, 400, 404],
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId },
-      } = ctx.guard;
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.patch(
+      '/users/:userId/password/expiration',
+      koaGuard({
+        params: object({ userId: string() }),
+        body: object({ isExpired: boolean() }),
+        response: adminUserProfileResponseGuard,
+        status: [200, 400, 404],
+      }),
+      async (ctx, next) => {
+        const {
+          params: { userId },
+          body: { isExpired },
+        } = ctx.guard;
 
-      const { findDefaultSignInExperience } = queries.signInExperiences;
+        const { findDefaultSignInExperience } = queries.signInExperiences;
 
-      const { passwordExpiration } = await findDefaultSignInExperience();
+        const { passwordExpiration } = await findDefaultSignInExperience();
 
-      assertThat(
-        passwordExpiration.enabled && passwordExpiration.validPeriodDays,
-        new RequestError({
-          code: 'sign_in_experiences.password_expiration_not_enabled',
-          status: 400,
-        })
-      );
+        assertThat(
+          !isExpired || (passwordExpiration.enabled && passwordExpiration.validPeriodDays),
+          new RequestError({
+            code: 'sign_in_experiences.password_expiration_not_enabled',
+            status: 400,
+          })
+        );
 
-      const user = await updateUserById(userId, { isPasswordExpired: true });
+        const user = await updateUserById(userId, { isPasswordExpired: isExpired });
 
-      ctx.body = transpileAdminUserProfileResponse(user);
+        ctx.body = transpileAdminUserProfileResponse(user);
 
-      return next();
-    }
-  );
+        return next();
+      }
+    );
+  }
 
   router.post(
     '/users/:userId/password/verify',

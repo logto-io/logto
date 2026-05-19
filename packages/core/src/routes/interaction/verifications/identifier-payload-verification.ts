@@ -11,6 +11,7 @@ import {
 import { type Optional, isKeyInObject } from '@silverhand/essentials';
 import { sha256 } from 'hash-wasm';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { verifyPasswordExpirationPolicy } from '#src/libraries/password-expiration.js';
 import { verifySsoOnlyEmailIdentifier } from '#src/libraries/verification-helpers/single-sign-on-guard.js';
@@ -214,6 +215,10 @@ const guardPasswordExpiration = async (
     !isPasswordIdentifier(identifierPayload) ||
     verifiedIdentifier?.key !== 'accountId'
   ) {
+    return;
+  }
+
+  if (!EnvSet.values.isDevFeaturesEnabled) {
     return;
   }
 

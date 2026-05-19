@@ -153,6 +153,16 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       const normalizedCustomUiCsp = conditional(customUiCsp && normalizeCustomUiCsp(customUiCsp));
       const hasCustomUiCsp = hasCustomUiCspSources(normalizedCustomUiCsp);
 
+      if (passwordExpiration) {
+        assertThat(
+          EnvSet.values.isDevFeaturesEnabled,
+          new RequestError({
+            code: 'request.invalid_input',
+            details: 'Password expiration is not available',
+          })
+        );
+      }
+
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
       }
@@ -272,7 +282,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         ...passwordExpiration,
       } as PasswordExpirationPolicy;
 
-      if (currentPasswordExpiration.enabled) {
+      if (EnvSet.values.isDevFeaturesEnabled && currentPasswordExpiration.enabled) {
         const forgotPasswordAvailability = getForgotPasswordAvailability(
           connectors,
           forgotPasswordMethods ?? currentSettings.forgotPasswordMethods

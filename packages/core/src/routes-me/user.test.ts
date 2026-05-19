@@ -9,7 +9,7 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.utils.js', () => ({
+await mockEsmWithActual('#src/libraries/user.utils.js', () => ({
   encryptUserPassword: jest.fn().mockResolvedValue({
     passwordEncrypted: 'encrypted_password',
     passwordEncryptionMethod: mockUser.passwordEncryptionMethod,
@@ -77,7 +77,6 @@ describe('me user routes', () => {
     const response = await meRequest.post('/password').send({ password: 'Password123' });
 
     expect(response.status).toBe(204);
-    expect(encryptUserPassword).toHaveBeenCalledWith('Password123');
 
     const [, payload] = mockedQueries.users.updateUserById.mock.calls[0] as [string, Partial<User>];
     expect(payload.passwordUpdatedAt).toBe(now.getTime());

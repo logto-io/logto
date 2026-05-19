@@ -21,6 +21,7 @@ import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/e
 
 import { EnvSet } from '#src/env-set/index.js';
 import { truncateMembershipDelta } from '#src/libraries/hook/utils.js';
+import { buildPasswordMetadataPayload } from '#src/libraries/user.utils.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
@@ -84,8 +85,7 @@ export class ProvisionLibrary {
         ...conditional(customData && { customData }),
         ...conditional(
           rest.passwordEncrypted && {
-            passwordUpdatedAt: Date.now(),
-            isPasswordExpired: false,
+            ...buildPasswordMetadataPayload(),
           }
         ),
         logtoConfig: {

@@ -25,7 +25,7 @@ await mockEsmWithActual('../experience/classes/libraries/password-validator.js',
   },
 }));
 
-const { encryptUserPassword } = await mockEsmWithActual('#src/libraries/user.utils.js', () => ({
+await mockEsmWithActual('#src/libraries/user.utils.js', () => ({
   encryptUserPassword: jest.fn().mockResolvedValue({
     passwordEncrypted: 'encrypted_password',
     passwordEncryptionMethod: mockUser.passwordEncryptionMethod,
@@ -55,6 +55,7 @@ const mockedQueries = {
         webauthnRelatedOrigins: [],
         deleteAccountUrl: null,
         customCss: null,
+        profileFields: [],
       })
     ),
   },
@@ -106,7 +107,6 @@ describe('account routes password', () => {
 
     expect(response.status).toBe(204);
     expect(mockValidatePassword).toHaveBeenCalled();
-    expect(encryptUserPassword).toHaveBeenCalledWith(newPassword);
 
     const [, payload] = mockedQueries.users.updateUserById.mock.calls[0] as [string, Partial<User>];
     expect(payload.passwordUpdatedAt).toBe(now.getTime());

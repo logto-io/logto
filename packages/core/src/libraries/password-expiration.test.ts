@@ -1,11 +1,13 @@
 import { type SignInExperience, type User } from '@logto/schemas';
 
 import { mockUser } from '#src/__mocks__/user.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 import { verifyPasswordExpirationPolicy } from './password-expiration.js';
 
 const { jest } = import.meta;
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 describe('verifyPasswordExpirationPolicy()', () => {
   const now = new Date('2026-01-10T00:00:00.000Z');
@@ -23,6 +25,9 @@ describe('verifyPasswordExpirationPolicy()', () => {
 
   afterEach(() => {
     jest.useRealTimers();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
   });
 
   it('returns success when password expiration is disabled', () => {
@@ -42,6 +47,22 @@ describe('verifyPasswordExpirationPolicy()', () => {
     expect(() => {
       verifyPasswordExpirationPolicy(enabledPolicy, user);
     }).toThrow(new RequestError({ code: 'password.expired', status: 422 }));
+  });
+
+  it('returns success when dev features are disabled', () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+
+    const user = {
+      ...mockUser,
+      isPasswordExpired: true,
+      passwordUpdatedAt: now.getTime(),
+    } satisfies User;
+
+    expect(verifyPasswordExpirationPolicy(enabledPolicy, user)).toEqual({
+      kind: 'success',
+      user,
+    });
   });
 
   it('throws password.expired when password age reaches the valid period', () => {

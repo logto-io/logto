@@ -12,6 +12,7 @@ import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildPasswordMetadataPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -496,8 +497,7 @@ export default class ExperienceInteraction {
       const updatedUser = await userQueries.updateUserById(user.id, {
         passwordEncrypted,
         passwordEncryptionMethod,
-        passwordUpdatedAt: Date.now(),
-        isPasswordExpired: false,
+        ...buildPasswordMetadataPayload(),
       });
 
       await this.cleanUp();
@@ -573,8 +573,7 @@ export default class ExperienceInteraction {
       lastSignInAt: Date.now(),
       ...conditional(
         rest.passwordEncrypted && {
-          passwordUpdatedAt: Date.now(),
-          isPasswordExpired: false,
+          ...buildPasswordMetadataPayload(),
         }
       ),
     });
