@@ -5,14 +5,13 @@ import {
   userProfileAddressKeys,
   userProfileKeys,
   type AccountCenter,
-  type AccountCenterFieldControl,
   type AccountCenterProfileFields,
   type CustomProfileField,
   type UserProfile,
   type UserProfileResponse,
 } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
@@ -21,18 +20,10 @@ import { layoutClassNames } from '@ac/constants/layout';
 
 import homeStyles from '../Home/index.module.scss';
 
+import EditProfileFieldModal from './EditProfileFieldModal';
 import styles from './index.module.scss';
-
-type ProfileFieldControlKey = Extract<
-  keyof AccountCenterFieldControl,
-  'name' | 'avatar' | 'profile' | 'customData'
->;
-
-type ProfileFieldRow = {
-  name: string;
-  label: string;
-  value?: React.ReactNode;
-};
+import { getSelectOptionLabel } from './select-options';
+import type { ProfileFieldControlKey, ProfileFieldRow } from './types';
 
 const profileFieldKeySet = new Set<string>(userProfileKeys);
 const fullnameKeySet = new Set<string>(fullnameKeys);
@@ -187,8 +178,8 @@ const getCompositeFieldValue = (
 
 const getProfileFieldValue = (
   userInfo: Partial<UserProfileResponse> | undefined,
-  fieldName: string,
-  fieldLabel: string,
+  { name: fieldName, label: fieldLabel }: { readonly name: string; readonly label: string },
+  translate: (key: string) => string,
   field?: CustomProfileField
 ): React.ReactNode | undefined => {
   if (fieldName === 'avatar') {
@@ -217,13 +208,17 @@ const getProfileFieldValue = (
       ? getBuiltInProfileFieldValue(userInfo?.profile, fieldName)
       : getPrimitiveValue(userInfo?.customData?.[fieldName]);
 
-    return value === undefined
-      ? undefined
-      : (field.config.options?.find((option) => option.value === value)?.label ?? value);
+    const option = field.config.options?.find((option) => option.value === value);
+
+    return value === undefined ? undefined : getSelectOptionLabel(value, option?.label, translate);
   }
 
   if (isBuiltInProfileField(fieldName, field)) {
-    return getBuiltInProfileFieldValue(userInfo?.profile, fieldName);
+    const value = getBuiltInProfileFieldValue(userInfo?.profile, fieldName);
+
+    return fieldName === 'gender' && value
+      ? getSelectOptionLabel(value, undefined, translate)
+      : value;
   }
 
   return getPrimitiveValue(userInfo?.customData?.[fieldName]);
@@ -231,8 +226,10 @@ const getProfileFieldValue = (
 
 const Profile = () => {
   const { t } = useTranslation();
-  const { accountCenterSettings, experienceSettings, userInfo } = useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, userInfo, refreshUserInfo, setToast } =
+    useContext(PageContext);
   const profileFields = getAccountCenterProfileFields(accountCenterSettings);
+  const [editingField, setEditingField] = useState<ProfileFieldRow>();
 
   const fieldRows = useMemo(() => {
     const customProfileFields = experienceSettings?.customProfileFields ?? [];
@@ -259,7 +256,10 @@ const Profile = () => {
         {
           name,
           label,
-          value: getProfileFieldValue(userInfo, name, label, field),
+          value: getProfileFieldValue(userInfo, { name, label }, t, field),
+          controlKey,
+          controlValue,
+          field,
         },
       ];
     }, []);
@@ -271,34 +271,68 @@ const Profile = () => {
     userInfo,
   ]);
 
+  const handleUpdated = useCallback(async () => {
+    await refreshUserInfo();
+    setToast(t('account_center.update_success.default.description'));
+  }, [refreshUserInfo, setToast, t]);
+
   return (
-    <div className={homeStyles.container}>
-      <div className={homeStyles.header}>
-        <div className={classNames(homeStyles.title, layoutClassNames.pageTitle)}>
-          {t('account_center.page.profile_title')}
-        </div>
-        <div className={classNames(homeStyles.description, layoutClassNames.pageDescription)}>
-          {t('account_center.page.profile_description')}
-        </div>
-      </div>
-      <div className={classNames(homeStyles.content, layoutClassNames.pageContent)}>
-        {fieldRows.length > 0 && (
-          <div className={classNames(styles.section, layoutClassNames.section)}>
-            <div className={classNames(styles.card, layoutClassNames.card)}>
-              {fieldRows.map(({ name, label, value }) => (
-                <div key={name} className={classNames(styles.row, layoutClassNames.row)}>
-                  <div className={styles.name}>{label}</div>
-                  <div className={classNames(styles.value, !value && styles.secondaryValue)}>
-                    {value ?? t('account_center.security.not_set')}
-                  </div>
-                </div>
-              ))}
-            </div>
+    <>
+      <div className={homeStyles.container}>
+        <div className={homeStyles.header}>
+          <div className={classNames(homeStyles.title, layoutClassNames.pageTitle)}>
+            {t('account_center.page.profile_title')}
           </div>
-        )}
+          <div className={classNames(homeStyles.description, layoutClassNames.pageDescription)}>
+            {t('account_center.page.profile_description')}
+          </div>
+        </div>
+        <div className={classNames(homeStyles.content, layoutClassNames.pageContent)}>
+          {fieldRows.length > 0 && (
+            <div className={classNames(styles.section, layoutClassNames.section)}>
+              <div className={classNames(styles.card, layoutClassNames.card)}>
+                {fieldRows.map((fieldRow) => {
+                  const { name, label, value, controlValue } = fieldRow;
+
+                  return (
+                    <div key={name} className={classNames(styles.row, layoutClassNames.row)}>
+                      <div className={styles.topLine}>
+                        <div className={styles.name}>{label}</div>
+                        {name !== 'avatar' && controlValue === AccountCenterControlValue.Edit && (
+                          <div className={styles.actions}>
+                            <button
+                              type="button"
+                              className={styles.changeButton}
+                              onClick={() => {
+                                setEditingField(fieldRow);
+                              }}
+                            >
+                              {t('account_center.security.change')}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                      <div className={classNames(styles.value, !value && styles.secondaryValue)}>
+                        {value ?? t('account_center.security.not_set')}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+        <PageFooter />
       </div>
-      <PageFooter />
-    </div>
+      <EditProfileFieldModal
+        field={editingField}
+        userInfo={userInfo}
+        onUpdated={handleUpdated}
+        onClose={() => {
+          setEditingField(undefined);
+        }}
+      />
+    </>
   );
 };
 
