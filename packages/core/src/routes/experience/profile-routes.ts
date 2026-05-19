@@ -1,18 +1,12 @@
 /* eslint-disable max-lines */
-import { readFile } from 'node:fs/promises';
-
 import {
-  allowUploadMimeTypes,
   InteractionEvent,
-  maxUploadFileSize,
   MfaFactor,
   SignInIdentifier,
   updateProfileApiPayloadGuard,
   uploadFileGuard,
   userAssetsGuard,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
-import { format } from 'date-fns';
 import { type MiddlewareType } from 'koa';
 import type Router from 'koa-router';
 import { object, z } from 'zod';
@@ -25,12 +19,58 @@ import SystemContext from '#src/tenants/SystemContext.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
-import { buildUploadFile } from '#src/utils/storage/index.js';
 import { getTenantId } from '#src/utils/tenant.js';
+
+import { uploadAvatar } from '../avatar-upload.js';
 
 import { createNewMfaCodeVerificationRecord } from './classes/verifications/code-verification.js';
 import { experienceRoutes } from './const.js';
 import { type ExperienceInteractionRouterContext } from './types.js';
+
+const avatarUploadRateLimitMaxAttempts = 10;
+const avatarUploadRateLimitWindow = 10 * 60 * 1000;
+
+const avatarUploadRateLimitRecords = new Map<string, { count: number; resetAt: number }>();
+
+const buildAvatarUploadRateLimitKey = (jti: string, ip: string) => `${jti}:${ip}`;
+
+const clearExpiredAvatarUploadRateLimitRecords = (now: number) => {
+  for (const [key, { resetAt }] of avatarUploadRateLimitRecords.entries()) {
+    if (resetAt <= now) {
+      avatarUploadRateLimitRecords.delete(key);
+    }
+  }
+};
+
+const assertAvatarUploadRateLimit = (jti: string, ip: string, languages: readonly string[]) => {
+  const now = Date.now();
+  clearExpiredAvatarUploadRateLimitRecords(now);
+
+  const key = buildAvatarUploadRateLimitKey(jti, ip);
+  const record = avatarUploadRateLimitRecords.get(key);
+
+  if (!record) {
+    avatarUploadRateLimitRecords.set(key, {
+      count: 1,
+      resetAt: now + avatarUploadRateLimitWindow,
+    });
+    return;
+  }
+
+  if (record.count >= avatarUploadRateLimitMaxAttempts) {
+    const rtf = new Intl.RelativeTimeFormat([...languages]);
+    throw new RequestError({
+      code: 'session.verification_blocked_too_many_attempts',
+      relativeTime: rtf.format(Math.ceil((record.resetAt - now) / 1000 / 60), 'minute'),
+      status: 429,
+    });
+  }
+
+  avatarUploadRateLimitRecords.set(key, {
+    ...record,
+    count: record.count + 1,
+  });
+};
 
 /**
  * This middleware is guards the current interaction status is MFA verified (if MFA is enabled)
@@ -155,7 +195,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
   // TODO: Remove this dev feature gate when avatar upload is ready for production.
   if (EnvSet.values.isDevFeaturesEnabled) {
     router.post(
-      `${experienceRoutes.profile}/avatar`,
+      `${experienceRoutes.prefix}/user-assets/avatar`,
       koaGuard({
         files: object({
           file: uploadFileGuard.array().min(1),
@@ -176,13 +216,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
         );
 
-        const file = ctx.guard.files.file[0];
-        assertThat(file, 'guard.invalid_input');
-        assertThat(file.size <= maxUploadFileSize, 'guard.file_size_exceeded');
-        assertThat(
-          allowUploadMimeTypes.map(String).includes(file.mimetype),
-          'guard.mime_type_not_allowed'
-        );
+        assertAvatarUploadRateLimit(ctx.interactionDetails.jti, ctx.ip, ctx.i18n.languages);
 
         const [tenantId] = await getTenantId(ctx.URL);
         assertThat(tenantId, 'guard.can_not_get_tenant_id');
@@ -190,32 +224,18 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         const { storageProviderConfig } = SystemContext.shared;
         assertThat(storageProviderConfig, 'storage.not_configured');
 
-        // The user may not yet be created at this point (typical for register flow with
-        // mandatory extra profile fields). Use the interaction id as the key prefix in that
-        // case so uploads remain scoped per interaction session.
-        const userIdOrPending =
-          experienceInteraction.identifiedUserId ?? `_pending/${ctx.interactionDetails.jti}`;
+        const objectKeyPrefix = experienceInteraction.identifiedUserId
+          ? `${tenantId}/${experienceInteraction.identifiedUserId}`
+          : `${tenantId}/_pending/avatar/${ctx.interactionDetails.jti}`;
 
-        const uploadFile = buildUploadFile(storageProviderConfig);
-        const objectKey = `${tenantId}/${userIdOrPending}/${format(
-          new Date(),
-          'yyyy/MM/dd'
-        )}/${generateStandardId(8)}/${file.originalFilename}`;
-
-        try {
-          const { url } = await uploadFile(await readFile(file.filepath), objectKey, {
-            contentType: file.mimetype,
-            publicUrl: storageProviderConfig.publicUrl,
-          });
-
-          ctx.body = { url };
-        } catch (error: unknown) {
-          getConsoleLogFromContext(ctx).error(error);
-          throw new RequestError({
-            code: 'storage.upload_error',
-            status: 500,
-          });
-        }
+        ctx.body = await uploadAvatar({
+          file: ctx.guard.files.file[0],
+          storageProviderConfig,
+          objectKeyPrefix,
+          logError: (error) => {
+            getConsoleLogFromContext(ctx).error(error);
+          },
+        });
 
         return next();
       }

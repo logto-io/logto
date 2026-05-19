@@ -46,11 +46,11 @@
         }
       }
     },
-    "/api/experience/profile/avatar": {
+    "/api/experience/user-assets/avatar": {
       "post": {
         "tags": ["Dev feature"],
-        "operationId": "UploadAvatar",
-        "summary": "Upload avatar during an experience interaction",
+        "operationId": "UploadExperienceAvatar",
+        "summary": "Upload avatar during register interaction",
         "description": "Upload an image (e.g. avatar) during the `Register` experience interaction and return the public URL of the uploaded asset. The user account may not have been created yet at this point; the upload is scoped to the current interaction session. The returned URL can then be submitted as a profile field value via `POST /api/experience/profile`.",
         "requestBody": {
           "content": {
@@ -58,7 +58,7 @@
               "schema": {
                 "properties": {
                   "file": {
-                    "description": "The file to upload. Must be one of the allowed MIME types and not exceed the maximum upload file size."
+                    "description": "The avatar image file to upload. Must be an allowed image type and not exceed the maximum upload file size."
                   }
                 }
               }
@@ -70,7 +70,7 @@
             "description": "The asset was uploaded successfully."
           },
           "400": {
-            "description": "Invalid request. <br/>- The current interaction event is not `Register`. <br/>- The file is invalid, exceeds the maximum size, or has a disallowed MIME type."
+            "description": "Invalid request. <br/>- The current interaction event is not `Register`. <br/>- The file is invalid, exceeds the maximum size, has a disallowed image type, or storage is not configured."
           },
           "403": {
             "description": "Permission denied for the current interaction state."

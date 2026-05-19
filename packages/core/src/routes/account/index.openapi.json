@@ -750,19 +750,19 @@
         }
       }
     },
-    "/api/my-account/user-assets": {
+    "/api/my-account/user-assets/avatar": {
       "post": {
         "tags": ["Dev feature"],
-        "operationId": "UploadUserAsset",
-        "summary": "Upload a user asset",
-        "description": "Upload a single file (e.g. avatar image) to the configured storage provider and return the public URL of the uploaded asset. Requires the `profile` scope and the `avatar` field to be editable in the account center configuration. The returned URL can then be used as the value for the avatar field via `PATCH /api/my-account`.",
+        "operationId": "UploadAccountAvatar",
+        "summary": "Upload account avatar",
+        "description": "Upload a single avatar image to the configured storage provider and return the public URL of the uploaded asset. Requires the `profile` scope and the `avatar` field to be editable in the account center configuration. The returned URL can then be used as the value for the avatar field via `PATCH /api/my-account`.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
                 "properties": {
                   "file": {
-                    "description": "The file to upload. Must be one of the allowed MIME types and not exceed the maximum upload file size."
+                    "description": "The avatar image file to upload. Must be an allowed image type and not exceed the maximum upload file size."
                   }
                 }
               }
@@ -774,7 +774,7 @@
             "description": "The asset was uploaded successfully."
           },
           "400": {
-            "description": "The request is invalid (e.g. file too large, MIME type not allowed, or the avatar field is not editable)."
+            "description": "The request is invalid (e.g. file too large, image type not allowed, storage is not configured, or the avatar field is not editable)."
           },
           "401": {
             "description": "Permission denied, the access token does not include the `profile` scope."

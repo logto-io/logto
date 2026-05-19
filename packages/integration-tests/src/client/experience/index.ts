@@ -242,7 +242,7 @@ export class ExperienceClient extends MockClient {
   }
 
   public async uploadAvatar(formData: FormData) {
-    return this.api.post(`${experienceRoutes.profile}/avatar`, {
+    return this.api.post(`${experienceRoutes.prefix}/user-assets/avatar`, {
       headers: this.headers,
       body: formData,
     });

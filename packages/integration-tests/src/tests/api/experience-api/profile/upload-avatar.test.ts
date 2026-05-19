@@ -18,11 +18,13 @@ const buildPngFormData = () => {
 
 const buildTextFormData = () => {
   const formData = new FormData();
-  formData.append('file', new Blob(['hello'], { type: 'text/plain' }), 'note.txt');
+  formData.append('file', new Blob(['hello'], { type: 'image/png' }), 'avatar.png');
   return formData;
 };
 
-devFeatureTest.describe('POST /experience/profile/avatar', () => {
+const avatarUploadRateLimitMaxAttempts = 10;
+
+devFeatureTest.describe('POST /experience/user-assets/avatar', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
   });
@@ -38,7 +40,7 @@ devFeatureTest.describe('POST /experience/profile/avatar', () => {
     });
   });
 
-  it('should reject disallowed mime types under Register', async () => {
+  it('should reject files whose content is not a supported image under Register', async () => {
     const client = await initExperienceClient({
       interactionEvent: InteractionEvent.Register,
     });
@@ -72,6 +74,26 @@ devFeatureTest.describe('POST /experience/profile/avatar', () => {
     await expectRejects(client.uploadAvatar(buildPngFormData()), {
       status: 400,
       code: 'session.invalid_interaction_type',
+    });
+  });
+
+  it('should rate limit per register interaction and client IP', async () => {
+    const client = await initExperienceClient({
+      interactionEvent: InteractionEvent.Register,
+    });
+
+    await Promise.all(
+      Array.from({ length: avatarUploadRateLimitMaxAttempts }, async () =>
+        expectRejects(client.uploadAvatar(buildPngFormData()), {
+          code: 'storage.not_configured',
+          status: 400,
+        })
+      )
+    );
+
+    await expectRejects(client.uploadAvatar(buildPngFormData()), {
+      code: 'session.verification_blocked_too_many_attempts',
+      status: 429,
     });
   });
 });

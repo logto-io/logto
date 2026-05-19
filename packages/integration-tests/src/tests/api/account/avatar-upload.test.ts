@@ -22,7 +22,13 @@ const buildPngFormData = () => {
   return formData;
 };
 
-devFeatureTest.describe('POST /my-account/user-assets', () => {
+const buildFakePngFormData = () => {
+  const formData = new FormData();
+  formData.append('file', new Blob(['hello'], { type: 'image/png' }), 'avatar.png');
+  return formData;
+};
+
+devFeatureTest.describe('POST /my-account/user-assets/avatar', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await updateAccountCenter({
@@ -46,10 +52,13 @@ devFeatureTest.describe('POST /my-account/user-assets', () => {
       scopes: [UserScope.Profile],
     });
 
-    await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
-      code: 'account_center.field_not_editable',
-      status: 400,
-    });
+    await expectRejects(
+      api.post('api/my-account/user-assets/avatar', { body: buildPngFormData() }),
+      {
+        code: 'account_center.field_not_editable',
+        status: 400,
+      }
+    );
 
     await deleteDefaultTenantUser(user.id);
 
@@ -67,10 +76,30 @@ devFeatureTest.describe('POST /my-account/user-assets', () => {
       scopes: [UserScope.Profile],
     });
 
-    await expectRejects(api.post('api/my-account/user-assets', { body: buildPngFormData() }), {
-      code: 'storage.not_configured',
-      status: 400,
+    await expectRejects(
+      api.post('api/my-account/user-assets/avatar', { body: buildPngFormData() }),
+      {
+        code: 'storage.not_configured',
+        status: 400,
+      }
+    );
+
+    await deleteDefaultTenantUser(user.id);
+  });
+
+  it('should reject files whose content is not a supported image', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile],
     });
+
+    await expectRejects(
+      api.post('api/my-account/user-assets/avatar', { body: buildFakePngFormData() }),
+      {
+        code: 'guard.mime_type_not_allowed',
+        status: 400,
+      }
+    );
 
     await deleteDefaultTenantUser(user.id);
   });
