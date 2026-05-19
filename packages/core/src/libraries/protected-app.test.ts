@@ -1,3 +1,4 @@
+import { UserScope } from '@logto/core-kit';
 import {
   ApplicationType,
   DomainStatus,
@@ -39,6 +40,11 @@ const { updateProtectedAppSiteConfigs, deleteCustomHostname } = await mockEsmWit
 
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createProtectedAppLibrary } = await import('./protected-app.js');
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
+};
 
 const findApplications = jest.fn(async (): Promise<Application[]> => [mockProtectedApplication]);
 const findApplicationById = jest.fn(async (): Promise<Application> => mockProtectedApplication);
@@ -66,7 +72,6 @@ const {
     },
   })
 );
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 const protectedAppConfigProviderConfig = {
   accountIdentifier: 'fake_account_id',
@@ -93,12 +98,12 @@ afterAll(() => {
 });
 
 afterEach(() => {
+  setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   updateProtectedAppSiteConfigs.mockClear();
   findApplications.mockClear();
   findApplicationById.mockClear();
   findAllDomains.mockReset();
   findAllDomains.mockResolvedValue([]);
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
 });
 
 describe('syncAppConfigsToRemote()', () => {
@@ -159,7 +164,7 @@ describe('syncAppConfigsToRemote()', () => {
   });
 
   it('should use active tenant custom domain as SDK endpoint when dev features are enabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    setDevFeaturesEnabled(true);
     const activeDomain = {
       ...mockDomain,
       domain: 'secure.example.com',
@@ -204,7 +209,7 @@ describe('syncAppConfigsToRemote()', () => {
   });
 
   it('should keep the default SDK endpoint when dev features are disabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    setDevFeaturesEnabled(false);
     findAllDomains.mockResolvedValueOnce([
       {
         ...mockDomain,
@@ -230,11 +235,31 @@ describe('syncAppConfigsToRemote()', () => {
       })
     );
   });
+
+  it('should omit additional scopes when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        additionalScopes: [UserScope.CustomData],
+      },
+    });
+
+    await expect(syncAppConfigsToRemote(mockProtectedApplication.id)).resolves.not.toThrow();
+
+    expect(updateProtectedAppSiteConfigs).toHaveBeenCalledWith(
+      mockProtectedAppConfigProviderConfig,
+      mockProtectedApplication.protectedAppMetadata.host,
+      expect.any(Object)
+    );
+    expect(updateProtectedAppSiteConfigs.mock.calls[0]?.[2]).not.toHaveProperty('additionalScopes');
+  });
 });
 
 describe('syncAllAppConfigsToRemote()', () => {
   it('should skip syncing all protected app configs when dev features are disabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    setDevFeaturesEnabled(false);
 
     await expect(syncAllAppConfigsToRemote()).resolves.not.toThrow();
 
@@ -243,7 +268,7 @@ describe('syncAllAppConfigsToRemote()', () => {
   });
 
   it('should sync all protected app configs when dev features are enabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    setDevFeaturesEnabled(true);
     const activeDomain = {
       ...mockDomain,
       domain: 'secure.example.com',
@@ -315,6 +340,26 @@ describe('buildProtectedAppData()', () => {
   it('should return data if subdomain is available', async () => {
     const subDomain = 'a';
     const host = `${subDomain}.${mockProtectedAppConfigProviderConfig.domain}`;
+    await expect(buildProtectedAppData({ subDomain, origin })).resolves.toEqual({
+      protectedAppMetadata: {
+        host,
+        origin,
+        sessionDuration: defaultProtectedAppSessionDuration,
+        pageRules: defaultProtectedAppPageRules,
+        additionalScopes: [],
+      },
+      oidcClientMetadata: {
+        redirectUris: [`https://${host}/${protectedAppSignInCallbackUrl}`],
+        postLogoutRedirectUris: [`https://${host}`],
+      },
+    });
+  });
+
+  it('should omit additional scopes when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    const subDomain = 'a';
+    const host = `${subDomain}.${mockProtectedAppConfigProviderConfig.domain}`;
+
     await expect(buildProtectedAppData({ subDomain, origin })).resolves.toEqual({
       protectedAppMetadata: {
         host,

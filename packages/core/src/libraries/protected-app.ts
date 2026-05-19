@@ -7,6 +7,7 @@ import {
   type CustomDomain,
 } from '@logto/schemas';
 import { isValidSubdomain } from '@logto/shared';
+import { conditional } from '@silverhand/essentials';
 
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
@@ -95,6 +96,7 @@ const buildProtectedAppData = async ({
       origin,
       sessionDuration: defaultProtectedAppSessionDuration,
       pageRules: defaultProtectedAppPageRules,
+      ...conditional(EnvSet.values.isDevFeaturesEnabled && { additionalScopes: [] }),
     },
     oidcClientMetadata: {
       redirectUris: [`https://${host}/${protectedAppSignInCallbackUrl}`],
@@ -188,11 +190,14 @@ export const createProtectedAppLibrary = (queries: Queries) => {
       return;
     }
 
-    const { customDomains, ...rest } = protectedAppMetadata;
+    const { customDomains, additionalScopes, ...rest } = protectedAppMetadata;
     const sdkEndpoint = sdkEndpointOverride ?? (await getSdkEndpoint(tenantId));
 
     const siteConfigs = {
       ...rest,
+      ...conditional(
+        EnvSet.values.isDevFeaturesEnabled && additionalScopes !== undefined && { additionalScopes }
+      ),
       sdkConfig: {
         appId: id,
         appSecret: secret,
