@@ -18,10 +18,13 @@ import { parseSearchOptions } from '#src/utils/search.js';
 import applicationRoleRelationRoutes from './role-relations.js';
 
 /**
- * Mounts the org-application membership routes. Dev-features-off keeps master's
- * generic `addRelationRoutes` path (legacy `{ organizationId }`-only webhook payload).
- * Dev-features-on mounts custom POST/PUT/DELETE handlers that compute and emit the
- * `addedApplicationIds` / `removedApplicationIds` delta.
+ * Org-application membership endpoints. When `isDevFeaturesEnabled` is off we fall
+ * back to the generic `addRelationRoutes` mount, which only emits `{ organizationId }`
+ * on the membership webhook. When it is on, we own POST/PUT/DELETE so we can include
+ * the `addedApplicationIds` / `removedApplicationIds` delta in the payload.
+ *
+ * The dev-features branch and the legacy fallback should be collapsed once the
+ * delta payload graduates to GA (LOG-13467).
  */
 const mountMembershipRoutes = (
   router: SchemaRouter<OrganizationKeys, CreateOrganization, Organization>,
@@ -90,7 +93,6 @@ const mountMembershipRoutes = (
 
       const applicationIds = [...new Set(rawApplicationIds)];
 
-      // Delta is used only for the webhook payload.
       const { added, removed } = await organizations.relations.apps.replaceWithDelta(
         id,
         applicationIds

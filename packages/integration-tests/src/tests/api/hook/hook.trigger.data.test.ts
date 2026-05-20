@@ -7,7 +7,7 @@ import {
   managementApiHooksRegistration,
   type Role,
 } from '@logto/schemas';
-import { assert } from '@silverhand/essentials';
+import { assert, noop } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { authedAdminApi } from '#src/api/api.js';
@@ -221,6 +221,7 @@ describe('organization data hook events', () => {
   let organizationId: string;
   let userId: string;
   let applicationId: string;
+  let applicationIdB: string;
   /* eslint-enable @silverhand/fp/no-let */
 
   const organizationApi = new OrganizationApiTest();
@@ -234,11 +235,13 @@ describe('organization data hook events', () => {
 
     const user = await userApi.create({ name: generateName() });
     const application = await createApplication(generateName(), ApplicationType.MachineToMachine);
+    const applicationB = await createApplication(generateName(), ApplicationType.MachineToMachine);
 
     /* eslint-disable @silverhand/fp/no-mutation */
     organizationId = organization.id;
     userId = user.id;
     applicationId = application.id;
+    applicationIdB = applicationB.id;
     /* eslint-enable @silverhand/fp/no-mutation */
 
     const organizationCreateHook = await getWebhookResult('POST /organizations');
@@ -246,8 +249,11 @@ describe('organization data hook events', () => {
   });
 
   afterAll(async () => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    await Promise.all([userApi.cleanUp(), deleteApplication(applicationId).catch(() => {})]);
+    await Promise.all([
+      userApi.cleanUp(),
+      deleteApplication(applicationId).catch(noop),
+      deleteApplication(applicationIdB).catch(noop),
+    ]);
   });
 
   it.each(organizationDataHookTestCases)(
@@ -259,6 +265,7 @@ describe('organization data hook events', () => {
           organizationId,
           userId,
           applicationId,
+          applicationIdB,
         };
         await setup(setupContext);
       }
@@ -267,11 +274,13 @@ describe('organization data hook events', () => {
         endpoint
           .replace('{organizationId}', organizationId)
           .replace('{userId}', userId)
+          .replace('{applicationIdB}', applicationIdB)
           .replace('{applicationId}', applicationId),
         {
           json: JSON.parse(
             JSON.stringify(payload)
               .replace('{userId}', userId)
+              .replace('{applicationIdB}', applicationIdB)
               .replace('{applicationId}', applicationId)
           ),
         }
@@ -285,6 +294,7 @@ describe('organization data hook events', () => {
                 userId,
                 organizationId,
                 applicationId,
+                applicationIdB,
                 isDevFeaturesEnabled,
               } satisfies HookPayloadArgs)
             : hookPayload;
