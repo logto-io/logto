@@ -9,9 +9,11 @@ import { deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type OrganizationQueries from '#src/queries/organization/index.js';
+import type Queries from '#src/tenants/Queries.js';
 import type SchemaRouter from '#src/utils/SchemaRouter.js';
 
 // Manually add these routes since I don't want to over-engineer the `SchemaRouter`.
@@ -19,8 +21,30 @@ import type SchemaRouter from '#src/utils/SchemaRouter.js';
 // extracting the common logic to a class once we have one more relation like this.
 export default function userRoleRelationRoutes(
   router: SchemaRouter<OrganizationKeys, CreateOrganization, Organization>,
-  organizations: OrganizationQueries
+  organizations: OrganizationQueries,
+  queries: Queries
 ) {
+  const {
+    users: { findUserById },
+  } = queries;
+
+  // Resolves the user and their current organization roles so role-mutation webhooks
+  // ship a rich, self-contained payload.
+  const buildOrganizationUserRolesHookContext = async (
+    organizationId: string,
+    userId: string
+  ) => {
+    const [user, [, organizationRoles]] = await Promise.all([
+      findUserById(userId),
+      organizations.relations.usersRoles.getEntities(OrganizationRoles, {
+        organizationId,
+        userId,
+      }),
+    ]);
+
+    return { user, organizationRoles };
+  };
+
   const params = Object.freeze({ id: z.string().min(1), userId: z.string().min(1) } as const);
   const pathname = '/:id/users/:userId/roles';
 
@@ -113,6 +137,16 @@ export default function userRoleRelationRoutes(
 
       ctx.body = { organizationRoleIds: roleIds };
       ctx.status = 201;
+
+      const { user, organizationRoles } = await buildOrganizationUserRolesHookContext(id, userId);
+      ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+        ...buildManagementApiContext(ctx),
+        organizationId: id,
+        user,
+        organizationRoles,
+        addedOrganizationRoleIds: roleIds,
+      });
+
       return next();
     }
   );
@@ -153,9 +187,29 @@ export default function userRoleRelationRoutes(
         ...organizationRoleIdsFromNames.map(({ id }) => id),
       ]);
 
+      const [, previousRoles] = await organizations.relations.usersRoles.getEntities(
+        OrganizationRoles,
+        { organizationId: id, userId }
+      );
+      const previousRoleIds = new Set(previousRoles.map(({ id: roleId }) => roleId));
+      const nextRoleIds = new Set(roleIds);
+
       await organizations.relations.usersRoles.replace(id, userId, roleIds);
 
       ctx.status = 204;
+
+      const { user, organizationRoles } = await buildOrganizationUserRolesHookContext(id, userId);
+      ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+        ...buildManagementApiContext(ctx),
+        organizationId: id,
+        user,
+        organizationRoles,
+        addedOrganizationRoleIds: roleIds.filter((roleId) => !previousRoleIds.has(roleId)),
+        removedOrganizationRoleIds: [...previousRoleIds].filter(
+          (roleId) => !nextRoleIds.has(roleId)
+        ),
+      });
+
       return next();
     }
   );
@@ -176,6 +230,16 @@ export default function userRoleRelationRoutes(
       });
 
       ctx.status = 204;
+
+      const { user, organizationRoles } = await buildOrganizationUserRolesHookContext(id, userId);
+      ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+        ...buildManagementApiContext(ctx),
+        organizationId: id,
+        user,
+        organizationRoles,
+        removedOrganizationRoleIds: [organizationRoleId],
+      });
+
       return next();
     }
   );

@@ -3,6 +3,8 @@ import {
   InteractionHookEvent,
   type InteractionHookEventPayload,
   type User,
+  type Role,
+  type OrganizationRole,
   managementApiHooksRegistration,
   type DataHookEvent,
   type InteractionApiMetadata,
@@ -50,9 +52,18 @@ type UserContext = {
  */
 type DataHookContextMap = {
   'Organization.Membership.Updated': { organizationId: string };
+  'Organization.UserRoles.Updated': UserContext & {
+    organizationId: string;
+    /** The organization roles currently assigned to the user after the mutation. */
+    organizationRoles: OrganizationRole[];
+  };
   'User.Created': UserContext;
   'User.Data.Updated': UserContext;
   'User.Deleted': UserContext;
+  'User.Roles.Updated': UserContext & {
+    /** The roles currently assigned to the user after the mutation. */
+    roles: Role[];
+  };
 };
 
 export class HookContextManager {

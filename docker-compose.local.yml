@@ -1,0 +1,49 @@
+# Local development compose file.
+# Builds the Logto image from the local source tree (including any uncommitted
+# changes) instead of pulling the published `svhd/logto` image.
+#
+# Usage (from the repo root):
+#   docker compose -f docker-compose.local.yml up --build
+#
+# Then open:
+#   http://localhost:3001  -> Logto core / auth endpoint
+#   http://localhost:3002  -> Admin Console (Webhooks UI, etc.)
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Enable in-development features (useful while iterating locally).
+        dev_features_enabled: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    ports:
+      - "3001:3001"
+      - "3002:3002"
+    environment:
+      TRUST_PROXY_HEADER: "1"
+      DB_URL: postgres://postgres:p0stgr3s@postgres:5432/logto
+      ENDPOINT: http://localhost:3001
+      ADMIN_ENDPOINT: http://localhost:3002
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    user: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p0stgr3s
+    volumes:
+      - logto-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  logto-postgres-data:

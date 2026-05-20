@@ -4,6 +4,7 @@ import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { type UserConditions } from '#src/queries/user.js';
@@ -17,14 +18,26 @@ export default function roleUserRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
   const {
-    roles: { findRoleById },
+    roles: { findRoleById, findRolesByRoleIds },
     users: { findUserById, countUsers, findUsers },
     usersRoles: {
       deleteUsersRolesByUserIdAndRoleId,
       findFirstUsersRolesByRoleIdAndUserIds,
+      findUsersRolesByUserId,
       insertUsersRoles,
     },
   } = queries;
+
+  const buildUserRolesHookContext = async (userId: string) => {
+    const [user, usersRoles] = await Promise.all([
+      findUserById(userId),
+      findUsersRolesByUserId(userId),
+    ]);
+    const roleIds = usersRoles.map(({ roleId }) => roleId);
+    const roles = roleIds.length > 0 ? await findRolesByRoleIds(roleIds) : [];
+
+    return { user, roles };
+  };
 
   router.get(
     '/roles/:id/users',
@@ -108,6 +121,20 @@ export default function roleUserRoutes<T extends ManagementApiRouter>(
       );
       ctx.status = 201;
 
+      // Emit one `User.Roles.Updated` event per affected user so each webhook payload
+      // describes the full user + role set rather than the bulk operation.
+      await Promise.all(
+        userIds.map(async (userId) => {
+          const { user, roles } = await buildUserRolesHookContext(userId);
+          ctx.appendDataHookContext('User.Roles.Updated', {
+            ...buildManagementApiContext(ctx),
+            user,
+            roles,
+            addedRoleIds: [id],
+          });
+        })
+      );
+
       return next();
     }
   );
@@ -124,6 +151,14 @@ export default function roleUserRoutes<T extends ManagementApiRouter>(
       } = ctx.guard;
       await deleteUsersRolesByUserIdAndRoleId(userId, id);
       ctx.status = 204;
+
+      const { user, roles } = await buildUserRolesHookContext(userId);
+      ctx.appendDataHookContext('User.Roles.Updated', {
+        ...buildManagementApiContext(ctx),
+        user,
+        roles,
+        removedRoleIds: [id],
+      });
 
       return next();
     }

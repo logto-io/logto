@@ -49,6 +49,66 @@ export const userDataHookTestCases: TestCase[] = [
   },
 ];
 
+export const userRoleDataHookTestCases: TestCase[] = [
+  {
+    route: 'POST /users/:userId/roles',
+    event: 'User.Roles.Updated',
+    method: 'post',
+    endpoint: `users/{userId}/roles`,
+    payload: { roleIds: ['{roleId}'] },
+    hookPayload: {
+      data: expect.objectContaining({ id: expect.any(String) }),
+      roles: expect.arrayContaining([expect.objectContaining({ id: expect.any(String) })]),
+      addedRoleIds: expect.arrayContaining([expect.any(String)]),
+    },
+  },
+  {
+    route: 'PUT /users/:userId/roles',
+    event: 'User.Roles.Updated',
+    method: 'put',
+    endpoint: `users/{userId}/roles`,
+    payload: { roleIds: ['{roleId}'] },
+    hookPayload: {
+      data: expect.objectContaining({ id: expect.any(String) }),
+      roles: expect.any(Array),
+    },
+  },
+  {
+    route: 'DELETE /users/:userId/roles/:roleId',
+    event: 'User.Roles.Updated',
+    method: 'delete',
+    endpoint: `users/{userId}/roles/{roleId}`,
+    payload: {},
+    hookPayload: {
+      data: expect.objectContaining({ id: expect.any(String) }),
+      removedRoleIds: expect.arrayContaining([expect.any(String)]),
+    },
+  },
+  {
+    route: 'POST /roles/:id/users',
+    event: 'User.Roles.Updated',
+    method: 'post',
+    endpoint: `roles/{roleId}/users`,
+    payload: { userIds: ['{userId}'] },
+    hookPayload: {
+      data: expect.objectContaining({ id: expect.any(String) }),
+      roles: expect.any(Array),
+      addedRoleIds: expect.arrayContaining([expect.any(String)]),
+    },
+  },
+  {
+    route: 'DELETE /roles/:id/users/:userId',
+    event: 'User.Roles.Updated',
+    method: 'delete',
+    endpoint: `roles/{roleId}/users/{userId}`,
+    payload: {},
+    hookPayload: {
+      data: expect.objectContaining({ id: expect.any(String) }),
+      removedRoleIds: expect.arrayContaining([expect.any(String)]),
+    },
+  },
+];
+
 export const roleDataHookTestCases: TestCase[] = [
   {
     route: 'PATCH /roles/:id',
@@ -159,6 +219,66 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'delete',
     endpoint: `organizations/{organizationId}`,
     payload: {},
+  },
+];
+
+export const organizationUserRoleDataHookTestCases: TestCase[] = [
+  {
+    route: 'POST /organizations/:id/users/:userId/roles',
+    event: 'Organization.UserRoles.Updated',
+    method: 'post',
+    endpoint: `organizations/{organizationId}/users/{userId}/roles`,
+    payload: { organizationRoleIds: ['{organizationRoleId}'] },
+    hookPayload: {
+      organizationId: expect.any(String),
+      data: expect.objectContaining({ id: expect.any(String) }),
+      organizationRoles: expect.arrayContaining([
+        expect.objectContaining({ id: expect.any(String) }),
+      ]),
+      addedOrganizationRoleIds: expect.arrayContaining([expect.any(String)]),
+    },
+  },
+  {
+    route: 'PUT /organizations/:id/users/:userId/roles',
+    event: 'Organization.UserRoles.Updated',
+    method: 'put',
+    endpoint: `organizations/{organizationId}/users/{userId}/roles`,
+    payload: { organizationRoleIds: ['{organizationRoleId}'] },
+    hookPayload: {
+      organizationId: expect.any(String),
+      data: expect.objectContaining({ id: expect.any(String) }),
+      organizationRoles: expect.any(Array),
+    },
+  },
+  {
+    route: 'DELETE /organizations/:id/users/:userId/roles/:organizationRoleId',
+    event: 'Organization.UserRoles.Updated',
+    method: 'delete',
+    endpoint: `organizations/{organizationId}/users/{userId}/roles/{organizationRoleId}`,
+    payload: {},
+    hookPayload: {
+      organizationId: expect.any(String),
+      data: expect.objectContaining({ id: expect.any(String) }),
+      removedOrganizationRoleIds: expect.arrayContaining([expect.any(String)]),
+    },
+  },
+  {
+    route: 'POST /organizations/:id/users/roles',
+    event: 'Organization.UserRoles.Updated',
+    method: 'post',
+    endpoint: `organizations/{organizationId}/users/roles`,
+    payload: {
+      userIds: ['{userId}'],
+      organizationRoleIds: ['{organizationRoleId}'],
+    },
+    hookPayload: {
+      organizationId: expect.any(String),
+      data: expect.objectContaining({ id: expect.any(String) }),
+      organizationRoles: expect.arrayContaining([
+        expect.objectContaining({ id: expect.any(String) }),
+      ]),
+      addedOrganizationRoleIds: expect.arrayContaining([expect.any(String)]),
+    },
   },
 ];
 
