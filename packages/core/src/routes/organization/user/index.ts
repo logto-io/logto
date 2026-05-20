@@ -7,7 +7,8 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
+import { EnvSet } from '#src/env-set/index.js';
+import { buildManagementApiContext, truncateMembershipDelta } from '#src/libraries/hook/utils.js';
 import { type QuotaLibrary } from '#src/libraries/quota.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -89,10 +90,11 @@ export default function userRoutes(
       ctx.body = { userIds: rawUserIds };
       ctx.status = 201;
 
-      // Trigger hook event
       ctx.appendDataHookContext('Organization.Membership.Updated', {
         ...buildManagementApiContext(ctx),
         organizationId: id,
+        ...(EnvSet.values.isDevFeaturesEnabled &&
+          truncateMembershipDelta({ addedUserIds: newUserIds })),
       });
 
       return next();
@@ -131,15 +133,20 @@ export default function userRoutes(
         });
       }
 
-      // Membership can grow large; use the delta variant to avoid rewriting all rows.
-      await organizations.relations.users.replaceWithDelta(id, userIds);
+      // Delta is used only for the webhook payload; the pre-write quota guard
+      // above (computed from the requested set size) remains authoritative.
+      const { added, removed } = await organizations.relations.users.replaceWithDelta(id, userIds);
 
       ctx.status = 204;
 
-      // Trigger hook event
       ctx.appendDataHookContext('Organization.Membership.Updated', {
         ...buildManagementApiContext(ctx),
         organizationId: id,
+        ...(EnvSet.values.isDevFeaturesEnabled &&
+          truncateMembershipDelta({
+            addedUserIds: added,
+            removedUserIds: removed,
+          })),
       });
 
       return next();
@@ -161,10 +168,11 @@ export default function userRoutes(
 
       ctx.status = 204;
 
-      // Trigger hook event
       ctx.appendDataHookContext('Organization.Membership.Updated', {
         ...buildManagementApiContext(ctx),
         organizationId: id,
+        ...(EnvSet.values.isDevFeaturesEnabled &&
+          truncateMembershipDelta({ removedUserIds: [userId] })),
       });
 
       return next();
