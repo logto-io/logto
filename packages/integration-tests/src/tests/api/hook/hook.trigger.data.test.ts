@@ -1,108 +1,29 @@
-import {
-  ApplicationType,
-  RoleType,
-  hookEventGuard,
-  hookEvents,
-  jsonGuard,
-  managementApiHooksRegistration,
-  type Role,
-} from '@logto/schemas';
-import { assert, noop } from '@silverhand/essentials';
-import { z } from 'zod';
+import { RoleType, type Role } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 
 import { authedAdminApi } from '#src/api/api.js';
-import { createApplication, deleteApplication } from '#src/api/application.js';
 import { createResource } from '#src/api/resource.js';
 import { createScope } from '#src/api/scope.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
-import { getSupportedHookEvents, WebHookApiTest } from '#src/helpers/hook.js';
-import {
-  OrganizationApiTest,
-  OrganizationRoleApiTest,
-  OrganizationScopeApiTest,
-} from '#src/helpers/organization.js';
-import { UserApiTest, generateNewUser } from '#src/helpers/user.js';
-import { generateName, waitFor } from '#src/utils.js';
+import { generateNewUser } from '#src/helpers/user.js';
+import { generateName } from '#src/utils.js';
 
-import WebhookMockServer, { verifySignature } from './WebhookMockServer.js';
+import { verifySignature } from './WebhookMockServer.js';
 import {
-  organizationDataHookTestCases,
-  organizationRoleDataHookTestCases,
-  organizationScopeDataHookTestCases,
   roleDataHookTestCases,
   scopesDataHookTestCases,
   userDataHookTestCases,
-  type HookPayloadArgs,
-  type SetupContext,
 } from './test-cases.js';
+import { createDataHookFixture, partitionManagementApiHookKeys } from './webhook-fixtures.js';
 
-const mockHookResponseGuard = z.object({
-  signature: z.string(),
-  payload: z
-    .object({
-      event: hookEventGuard,
-      createdAt: z.string(),
-      hookId: z.string(),
-      data: jsonGuard.optional(),
-      method: z
-        .string()
-        .optional()
-        .transform((value) => value?.toUpperCase()),
-      matchedRoute: z.string().optional(),
-      status: z.number().optional(),
-    })
-    .catchall(z.any()),
-  // Keep the raw payload for signature verification
-  rawPayload: z.string(),
-});
-
-type MockHookResponse = z.infer<typeof mockHookResponseGuard>;
-
-const hookName = 'management-api-hook';
-const webhookResults = new Map<string, MockHookResponse>();
-const webHookApi = new WebHookApiTest();
-
-// Record the hook response to the webhookResults map.
-// Compare the webhookResults map with the managementApiHooksRegistration to verify all hook is triggered.
-const webhookResponseHandler = (response: string) => {
-  const result = mockHookResponseGuard.parse(JSON.parse(response));
-  const { payload } = result;
-
-  // Use matchedRoute as the key
-  if (payload.matchedRoute) {
-    webhookResults.set(`${payload.method} ${payload.matchedRoute}`, result);
-  }
-};
-
-/**
- * Get the webhook result by the key.
- *
- * @remark Since the webhook request is async, we need to wait for a while
- * to ensure the webhook response is received.
- */
-const getWebhookResult = async (key: string) => {
-  await waitFor(100);
-
-  return webhookResults.get(key);
-};
-
-const webhookServer = new WebhookMockServer(9999, webhookResponseHandler);
+const fixture = createDataHookFixture(9999, 'management-api-hook');
+const { webHookApi, hookName, getWebhookResult } = fixture;
 
 beforeAll(async () => {
-  await webhookServer.listen();
-
-  await webHookApi.create({
-    name: hookName,
-    events: getSupportedHookEvents([...hookEvents]),
-    config: {
-      url: webhookServer.endpoint,
-    },
-  });
+  await fixture.start();
 });
 
 afterAll(async () => {
-  await webHookApi.cleanUp();
-  await webhookServer.close();
+  await fixture.cleanup();
 });
 
 describe('user data hook events', () => {
@@ -216,194 +137,10 @@ describe('scope data hook events', () => {
   );
 });
 
-describe('organization data hook events', () => {
-  /* eslint-disable @silverhand/fp/no-let */
-  let organizationId: string;
-  let userId: string;
-  let applicationId: string;
-  let applicationIdB: string;
-  /* eslint-enable @silverhand/fp/no-let */
+describe('non-organization data hook events coverage and signature verification', () => {
+  const { nonOrganizationKeys } = partitionManagementApiHookKeys();
 
-  const organizationApi = new OrganizationApiTest();
-  const userApi = new UserApiTest();
-
-  beforeAll(async () => {
-    const organization = await organizationApi.create({
-      name: generateName(),
-      description: 'organization data hook test organization.',
-    });
-
-    const user = await userApi.create({ name: generateName() });
-    const application = await createApplication(generateName(), ApplicationType.MachineToMachine);
-    const applicationB = await createApplication(generateName(), ApplicationType.MachineToMachine);
-
-    /* eslint-disable @silverhand/fp/no-mutation */
-    organizationId = organization.id;
-    userId = user.id;
-    applicationId = application.id;
-    applicationIdB = applicationB.id;
-    /* eslint-enable @silverhand/fp/no-mutation */
-
-    const organizationCreateHook = await getWebhookResult('POST /organizations');
-    expect(organizationCreateHook?.payload.event).toBe('Organization.Created');
-  });
-
-  afterAll(async () => {
-    await Promise.all([
-      userApi.cleanUp(),
-      deleteApplication(applicationId).catch(noop),
-      deleteApplication(applicationIdB).catch(noop),
-    ]);
-  });
-
-  it.each(organizationDataHookTestCases)(
-    'test case %#: %p',
-    async ({ route, event, method, endpoint, payload, hookPayload, setup }) => {
-      if (setup) {
-        const setupContext: SetupContext = {
-          organizationApi,
-          organizationId,
-          userId,
-          applicationId,
-          applicationIdB,
-        };
-        await setup(setupContext);
-      }
-
-      await authedAdminApi[method](
-        endpoint
-          .replace('{organizationId}', organizationId)
-          .replace('{userId}', userId)
-          .replace('{applicationIdB}', applicationIdB)
-          .replace('{applicationId}', applicationId),
-        {
-          json: JSON.parse(
-            JSON.stringify(payload)
-              .replace('{userId}', userId)
-              .replace('{applicationIdB}', applicationIdB)
-              .replace('{applicationId}', applicationId)
-          ),
-        }
-      );
-      const hook = await getWebhookResult(route);
-      expect(hook?.payload.event).toBe(event);
-      if (hookPayload) {
-        const resolved =
-          typeof hookPayload === 'function'
-            ? hookPayload({
-                userId,
-                organizationId,
-                applicationId,
-                applicationIdB,
-                isDevFeaturesEnabled,
-              } satisfies HookPayloadArgs)
-            : hookPayload;
-        expect(hook?.payload).toMatchObject(resolved);
-        // `toMatchObject` is partial-match; assert absence of every delta field
-        // a case did not declare so the dev-features gate and the omit-empty
-        // contract are regression-protected end-to-end.
-        for (const field of [
-          'addedUserIds',
-          'removedUserIds',
-          'addedApplicationIds',
-          'removedApplicationIds',
-        ]) {
-          if (!(field in resolved)) {
-            expect(hook?.payload).not.toHaveProperty(field);
-          }
-        }
-      }
-    }
-  );
-});
-
-describe('organization scope data hook events', () => {
-  /* eslint-disable @silverhand/fp/no-let */
-  let scopeId: string;
-  /* eslint-enable @silverhand/fp/no-let */
-
-  const organizationScopeApi = new OrganizationScopeApiTest();
-
-  beforeAll(async () => {
-    const scope = await organizationScopeApi.create({
-      name: generateName(),
-      description: 'organization scope data hook test scope.',
-    });
-
-    /* eslint-disable @silverhand/fp/no-mutation */
-    scopeId = scope.id;
-    /* eslint-enable @silverhand/fp/no-mutation */
-
-    const organizationScopeCreateHook = await getWebhookResult('POST /organization-scopes');
-    expect(organizationScopeCreateHook?.payload.event).toBe('OrganizationScope.Created');
-  });
-
-  afterAll(async () => {
-    await organizationScopeApi.cleanUp();
-  });
-
-  it.each(organizationScopeDataHookTestCases)(
-    'test case %#: %p',
-    async ({ route, event, method, endpoint, payload }) => {
-      await authedAdminApi[method](endpoint.replace('{organizationScopeId}', scopeId), {
-        json: payload,
-      });
-      const hook = await getWebhookResult(route);
-      expect(hook?.payload.event).toBe(event);
-    }
-  );
-});
-
-describe('organization role data hook events', () => {
-  /* eslint-disable @silverhand/fp/no-let */
-  let roleId: string;
-  let scopeId: string;
-  /* eslint-enable @silverhand/fp/no-let */
-
-  const organizationScopeApi = new OrganizationScopeApiTest();
-  const roleApi = new OrganizationRoleApiTest();
-
-  beforeAll(async () => {
-    const role = await roleApi.create({
-      name: generateName(),
-      description: 'organization role data hook test role.',
-    });
-
-    const scope = await organizationScopeApi.create({
-      name: generateName(),
-      description: 'organization role data hook test scope.',
-    });
-
-    /* eslint-disable @silverhand/fp/no-mutation */
-    roleId = role.id;
-    scopeId = scope.id;
-    /* eslint-enable @silverhand/fp/no-mutation */
-
-    const organizationRoleCreateHook = await getWebhookResult('POST /organization-roles');
-    expect(organizationRoleCreateHook?.payload.event).toBe('OrganizationRole.Created');
-  });
-
-  afterAll(async () => {
-    await Promise.all([organizationScopeApi.cleanUp(), roleApi.cleanUp()]);
-  });
-
-  it.each(organizationRoleDataHookTestCases)(
-    'test case %#: %p',
-    async ({ route, event, method, endpoint, payload }) => {
-      await authedAdminApi[method](
-        endpoint.replace('{organizationRoleId}', roleId).replace('{scopeId}', scopeId),
-        { json: JSON.parse(JSON.stringify(payload).replace('{scopeId}', scopeId)) }
-      );
-      const hook = await getWebhookResult(route);
-      expect(hook?.payload.event).toBe(event);
-    }
-  );
-});
-
-describe('data hook events coverage and signature verification', () => {
-  const keys = Object.keys(managementApiHooksRegistration);
-
-  it.each(keys)('should have test case for %s', async (key) => {
+  it.each(nonOrganizationKeys)('should have test case for %s', async (key) => {
     const webhook = webHookApi.hooks.get(hookName)!;
 
     const webhookResult = await getWebhookResult(key);
