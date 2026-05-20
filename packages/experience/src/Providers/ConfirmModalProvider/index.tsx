@@ -74,6 +74,13 @@ const ConfirmModalProvider = ({ children }: Props) => {
   const handleShowPromise = useCallback(
     async ({ type = 'confirm', ...props }: PromiseConfirmModalProps) => {
       resolver.current?.([false]);
+      /**
+       * Clear any stale callbacks left by a previous callback-based modal, so confirming or
+       * cancelling this promise-based modal won't accidentally invoke them. This also makes it
+       * safe to open a promise-based modal from within a callback-based modal's handler.
+       */
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      callbackRef.current = {};
 
       setModalState({
         isOpen: true,
