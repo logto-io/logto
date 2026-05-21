@@ -1,6 +1,5 @@
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
-import { PhoneNumberParser } from '@logto/shared';
 
 import type {
   GetConnectorConfig,
@@ -16,6 +15,7 @@ import {
   parseJson,
   getConfigTemplateByType,
 } from '@logto/connector-kit';
+import { PhoneNumberParser } from '@logto/shared';
 
 import { defaultMetadata } from './constant.js';
 import { sendSmsVerifyCode } from './send-verify-code.js';
