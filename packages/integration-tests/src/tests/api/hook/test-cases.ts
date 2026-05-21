@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- flat fixture file; splitting by domain would fragment related cases across imports for no readability benefit */
 import { trySafe } from '@silverhand/essentials';
 
 import { type OrganizationApiTest } from '#src/helpers/organization.js';
@@ -6,6 +7,8 @@ import { generateName } from '#src/utils.js';
 type PlaceholderIds = {
   userId?: string;
   applicationId?: string;
+  /** Second application fixture; used by cases that exercise a two-sided PUT delta. */
+  applicationIdB?: string;
   organizationId?: string;
   organizationRoleId?: string;
 };
@@ -19,6 +22,7 @@ type SetupContext = {
   organizationId?: string;
   userId?: string;
   applicationId?: string;
+  applicationIdB?: string;
   organizationRoleId?: string;
 };
 
@@ -188,6 +192,37 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'post',
     endpoint: `organizations/{organizationId}/applications`,
     payload: { applicationIds: ['{applicationId}'] },
+    setup: async ({ organizationApi, organizationId, applicationId }) => {
+      if (!organizationApi || !organizationId || !applicationId) {
+        return;
+      }
+      await trySafe(organizationApi.applications.delete(organizationId, applicationId));
+    },
+    hookPayload: ({ applicationId, isDevFeaturesEnabled }) => ({
+      organizationId: expect.any(String),
+      ...(isDevFeaturesEnabled && {
+        addedApplicationIds: [applicationId],
+      }),
+    }),
+  },
+  {
+    // Re-POST of an already-member exercises the `getExistingApplicationIds` filter:
+    // the request body is a known-member, so `newApplicationIds` is empty and the
+    // helper omits `addedApplicationIds` from the payload. The setup uses `replace`
+    // (PUT route) rather than `add` (POST route) so the precondition does not
+    // overwrite the shared `POST /organizations/:id/applications` entry in the
+    // webhook-results map between the previous POST case and this one.
+    route: 'POST /organizations/:id/applications',
+    event: 'Organization.Membership.Updated',
+    method: 'post',
+    endpoint: `organizations/{organizationId}/applications`,
+    payload: { applicationIds: ['{applicationId}'] },
+    setup: async ({ organizationApi, organizationId, applicationId }) => {
+      if (!organizationApi || !organizationId || !applicationId) {
+        return;
+      }
+      await trySafe(organizationApi.applications.replace(organizationId, [applicationId]));
+    },
     hookPayload: { organizationId: expect.any(String) },
   },
   {
@@ -196,7 +231,39 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'put',
     endpoint: `organizations/{organizationId}/applications`,
     payload: { applicationIds: ['{applicationId}'] },
+    setup: async ({ organizationApi, organizationId, applicationId }) => {
+      if (!organizationApi || !organizationId || !applicationId) {
+        return;
+      }
+      await trySafe(organizationApi.applications.add(organizationId, [applicationId]));
+    },
+    // No-op delta: helper omits both empty arrays, payload matches legacy shape.
     hookPayload: { organizationId: expect.any(String) },
+  },
+  {
+    // Replace A with B exercises the `replaceWithDelta` plumbing end-to-end:
+    // both `added` and `removed` are non-empty, so both delta fields must be
+    // present in the payload (under the dev gate).
+    route: 'PUT /organizations/:id/applications',
+    event: 'Organization.Membership.Updated',
+    method: 'put',
+    endpoint: `organizations/{organizationId}/applications`,
+    payload: { applicationIds: ['{applicationIdB}'] },
+    setup: async ({ organizationApi, organizationId, applicationId, applicationIdB }) => {
+      if (!organizationApi || !organizationId || !applicationId || !applicationIdB) {
+        return;
+      }
+      // Ensure A is the sole pre-existing member; B is absent.
+      await trySafe(organizationApi.applications.add(organizationId, [applicationId]));
+      await trySafe(organizationApi.applications.delete(organizationId, applicationIdB));
+    },
+    hookPayload: ({ applicationId, applicationIdB, isDevFeaturesEnabled }) => ({
+      organizationId: expect.any(String),
+      ...(isDevFeaturesEnabled && {
+        addedApplicationIds: [applicationIdB],
+        removedApplicationIds: [applicationId],
+      }),
+    }),
   },
   {
     route: 'DELETE /organizations/:id/applications/:applicationId',
@@ -204,7 +271,18 @@ export const organizationDataHookTestCases: TestCase[] = [
     method: 'delete',
     endpoint: `organizations/{organizationId}/applications/{applicationId}`,
     payload: {},
-    hookPayload: { organizationId: expect.any(String) },
+    setup: async ({ organizationApi, organizationId, applicationId }) => {
+      if (!organizationApi || !organizationId || !applicationId) {
+        return;
+      }
+      await trySafe(organizationApi.applications.add(organizationId, [applicationId]));
+    },
+    hookPayload: ({ applicationId, isDevFeaturesEnabled }) => ({
+      organizationId: expect.any(String),
+      ...(isDevFeaturesEnabled && {
+        removedApplicationIds: [applicationId],
+      }),
+    }),
   },
   {
     route: 'DELETE /organizations/:id',
@@ -269,3 +347,4 @@ export const organizationRoleDataHookTestCases: TestCase[] = [
     payload: {},
   },
 ];
+/* eslint-enable max-lines */
