@@ -430,12 +430,16 @@ describe('<VerificationCode />', () => {
         </SettingsProvider>
       );
 
-    it('prompts the terms agreement before creating the account under `ManualRegistrationOnly`', async () => {
+    /**
+     * Drive the flow up to the terms agreement dialog: fail the sign-in with `user_not_exist`,
+     * fill the code, confirm the "account does not exist" modal, and return the terms dialog.
+     */
+    const reachTermsDialog = async (identifier: VerificationCodeIdentifier) => {
       (identifyWithVerificationCode as jest.Mock).mockRejectedValueOnce(
         createRequestError('user.user_not_exist')
       );
 
-      const { container, findByText } = renderSignInToRegister(emailIdentifier);
+      const { container, findByText } = renderSignInToRegister(identifier);
 
       fillVerificationCode(container);
 
@@ -446,7 +450,6 @@ describe('<VerificationCode />', () => {
       const modalContent = await findByText('description.sign_in_id_does_not_exist');
       const dialog = modalContent.closest('[role="dialog"]');
       assert(dialog, new Error('confirmation dialog not found'));
-      expect(registerWithVerifiedIdentifier).not.toBeCalled();
 
       await act(async () => {
         fireEvent.click(within(dialog as HTMLElement).getByText('action.continue'));
@@ -457,6 +460,12 @@ describe('<VerificationCode />', () => {
       const termsDialog = termsContent.closest('[role="dialog"]');
       assert(termsDialog, new Error('terms agreement dialog not found'));
       expect(registerWithVerifiedIdentifier).not.toBeCalled();
+
+      return termsDialog as HTMLElement;
+    };
+
+    it('prompts the terms agreement before creating the account under `ManualRegistrationOnly`', async () => {
+      const termsDialog = await reachTermsDialog(emailIdentifier);
 
       /**
        * The dialog contains an icon-only close button, a cancel button, and the confirm (agree)
@@ -478,6 +487,30 @@ describe('<VerificationCode />', () => {
       await waitFor(() => {
         expect(window.location.replace).toBeCalledWith(redirectTo);
       });
+
+      /**
+       * Agreeing rebuilds the submission callback; the already-consumed code must not be
+       * auto-submitted again, which would fail with `verification_code.not_found`.
+       */
+      expect(identifyWithVerificationCode).toHaveBeenCalledTimes(1);
+    });
+
+    it('navigates back without creating the account when the terms agreement is declined', async () => {
+      const termsDialog = await reachTermsDialog(emailIdentifier);
+
+      await act(async () => {
+        fireEvent.click(within(termsDialog).getByText('action.cancel'));
+      });
+
+      /**
+       * Declining the terms must not submit the registration. The verification code is already
+       * consumed, so the user is navigated back instead of being left on a page where retrying
+       * would fail with `verification_code.not_found`.
+       */
+      await waitFor(() => {
+        expect(mockedNavigate).toBeCalledWith(-1);
+      });
+      expect(registerWithVerifiedIdentifier).not.toBeCalled();
     });
   });
 });
