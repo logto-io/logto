@@ -24,11 +24,9 @@ export const organizationDataHookTestCases: TestCase[] = [
       }
       await trySafe(organizationApi.deleteUser(organizationId, userId));
     },
-    hookPayload: ({ userId, isDevFeaturesEnabled }) => ({
+    hookPayload: ({ userId }) => ({
       organizationId: expect.any(String),
-      ...(isDevFeaturesEnabled && {
-        addedUserIds: [userId],
-      }),
+      addedUserIds: [userId],
     }),
   },
   {
@@ -58,11 +56,9 @@ export const organizationDataHookTestCases: TestCase[] = [
       }
       await trySafe(organizationApi.addUsers(organizationId, [userId]));
     },
-    hookPayload: ({ userId, isDevFeaturesEnabled }) => ({
+    hookPayload: ({ userId }) => ({
       organizationId: expect.any(String),
-      ...(isDevFeaturesEnabled && {
-        removedUserIds: [userId],
-      }),
+      removedUserIds: [userId],
     }),
   },
   {
@@ -77,11 +73,9 @@ export const organizationDataHookTestCases: TestCase[] = [
       }
       await trySafe(organizationApi.applications.delete(organizationId, applicationId));
     },
-    hookPayload: ({ applicationId, isDevFeaturesEnabled }) => ({
+    hookPayload: ({ applicationId }) => ({
       organizationId: expect.any(String),
-      ...(isDevFeaturesEnabled && {
-        addedApplicationIds: [applicationId],
-      }),
+      addedApplicationIds: [applicationId],
     }),
   },
   {
@@ -121,8 +115,8 @@ export const organizationDataHookTestCases: TestCase[] = [
   },
   {
     // Replace A with B exercises the `replaceWithDelta` plumbing end-to-end:
-    // both `added` and `removed` are non-empty, so both delta fields must be
-    // present in the payload (under the dev gate).
+    // both `added` and `removed` are non-empty, so both delta fields appear
+    // in the payload.
     route: 'PUT /organizations/:id/applications',
     event: 'Organization.Membership.Updated',
     method: 'put',
@@ -136,12 +130,10 @@ export const organizationDataHookTestCases: TestCase[] = [
       await trySafe(organizationApi.applications.add(organizationId, [applicationId]));
       await trySafe(organizationApi.applications.delete(organizationId, applicationIdB));
     },
-    hookPayload: ({ applicationId, applicationIdB, isDevFeaturesEnabled }) => ({
+    hookPayload: ({ applicationId, applicationIdB }) => ({
       organizationId: expect.any(String),
-      ...(isDevFeaturesEnabled && {
-        addedApplicationIds: [applicationIdB],
-        removedApplicationIds: [applicationId],
-      }),
+      addedApplicationIds: [applicationIdB],
+      removedApplicationIds: [applicationId],
     }),
   },
   {
@@ -156,11 +148,9 @@ export const organizationDataHookTestCases: TestCase[] = [
       }
       await trySafe(organizationApi.applications.add(organizationId, [applicationId]));
     },
-    hookPayload: ({ applicationId, isDevFeaturesEnabled }) => ({
+    hookPayload: ({ applicationId }) => ({
       organizationId: expect.any(String),
-      ...(isDevFeaturesEnabled && {
-        removedApplicationIds: [applicationId],
-      }),
+      removedApplicationIds: [applicationId],
     }),
   },
   {

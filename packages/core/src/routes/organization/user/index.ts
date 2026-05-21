@@ -7,7 +7,6 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { buildManagementApiContext, truncateMembershipDelta } from '#src/libraries/hook/utils.js';
 import { type QuotaLibrary } from '#src/libraries/quota.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -93,8 +92,7 @@ export default function userRoutes(
       ctx.appendDataHookContext('Organization.Membership.Updated', {
         ...buildManagementApiContext(ctx),
         organizationId: id,
-        ...(EnvSet.values.isDevFeaturesEnabled &&
-          truncateMembershipDelta({ addedUserIds: newUserIds })),
+        ...truncateMembershipDelta({ addedUserIds: newUserIds }),
       });
 
       return next();
@@ -142,11 +140,10 @@ export default function userRoutes(
       ctx.appendDataHookContext('Organization.Membership.Updated', {
         ...buildManagementApiContext(ctx),
         organizationId: id,
-        ...(EnvSet.values.isDevFeaturesEnabled &&
-          truncateMembershipDelta({
-            addedUserIds: added,
-            removedUserIds: removed,
-          })),
+        ...truncateMembershipDelta({
+          addedUserIds: added,
+          removedUserIds: removed,
+        }),
       });
 
       return next();
@@ -171,8 +168,7 @@ export default function userRoutes(
       ctx.appendDataHookContext('Organization.Membership.Updated', {
         ...buildManagementApiContext(ctx),
         organizationId: id,
-        ...(EnvSet.values.isDevFeaturesEnabled &&
-          truncateMembershipDelta({ removedUserIds: [userId] })),
+        ...truncateMembershipDelta({ removedUserIds: [userId] }),
       });
 
       return next();

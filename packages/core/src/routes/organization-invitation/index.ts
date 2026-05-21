@@ -6,7 +6,6 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext, truncateMembershipDelta } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -160,24 +159,15 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
         })
       );
 
-      // Snapshot pre-existing membership only when dev features are on. In production
-      // (dev-OFF) the webhook payload is the legacy `{ organizationId }`-only shape,
-      // so the snapshot would be unused DB work. The snapshot must run before
-      // `updateStatus` — the underlying insert uses ON CONFLICT DO NOTHING, so after
-      // it runs we cannot distinguish a real addition from a re-accept of an existing
-      // member. Returns the accurate `addedUserIds` for the webhook payload:
-      // `[acceptedUserId]` on a real addition, `[]` on a re-accept.
-      const addedUserIds = await (async (): Promise<string[]> => {
-        if (!EnvSet.values.isDevFeaturesEnabled) {
-          return [];
-        }
-        const invitation = await queries.organizations.invitations.findById(id);
-        const existingUserIds = await queries.organizations.relations.users.getExistingUserIds(
-          invitation.organizationId,
-          [acceptedUserId]
-        );
-        return existingUserIds.length > 0 ? [] : [acceptedUserId];
-      })();
+      // Snapshot pre-existing membership before `updateStatus` runs the insert (which
+      // uses ON CONFLICT DO NOTHING); afterwards the row is always present and we cannot
+      // distinguish a real addition from a re-accept of an existing member.
+      const invitation = await queries.organizations.invitations.findById(id);
+      const existingUserIds = await queries.organizations.relations.users.getExistingUserIds(
+        invitation.organizationId,
+        [acceptedUserId]
+      );
+      const addedUserIds = existingUserIds.length > 0 ? [] : [acceptedUserId];
 
       const result = await organizationInvitations.updateStatus(id, status, acceptedUserId);
 
@@ -186,15 +176,14 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
       // koa-default 404 in the webhook payload.
       ctx.status = 200;
 
-      // Always emit, matching every other Organization.Membership.Updated trigger in
-      // this project: the dev-features gate lives inside the spread, and
-      // `truncateMembershipDelta` omits empty arrays so a re-accept (no real change)
-      // produces the legacy `{ organizationId }`-only shape, identical to dev-OFF.
+      // Always emit, matching every other Organization.Membership.Updated trigger. The
+      // helper omits empty arrays, so a re-accept (no real change) reduces to the legacy
+      // `{ organizationId }`-only shape.
       const { organizationId } = result;
       ctx.appendDataHookContext('Organization.Membership.Updated', {
         ...buildManagementApiContext(ctx),
         organizationId,
-        ...(EnvSet.values.isDevFeaturesEnabled && truncateMembershipDelta({ addedUserIds })),
+        ...truncateMembershipDelta({ addedUserIds }),
       });
 
       return next();

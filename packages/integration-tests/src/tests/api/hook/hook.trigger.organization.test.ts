@@ -3,7 +3,6 @@ import { assert, noop } from '@silverhand/essentials';
 
 import { authedAdminApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 import {
   OrganizationApiTest,
   OrganizationInvitationApiTest,
@@ -112,13 +111,12 @@ describe('organization data hook events', () => {
                 organizationId,
                 applicationId,
                 applicationIdB,
-                isDevFeaturesEnabled,
               } satisfies HookPayloadArgs)
             : hookPayload;
         expect(hook?.payload).toMatchObject(resolved);
         // `toMatchObject` is partial-match; assert absence of every delta field
-        // a case did not declare so the dev-features gate and the omit-empty
-        // contract are regression-protected end-to-end.
+        // a case did not declare so the omit-empty contract is regression-protected
+        // end-to-end.
         for (const field of [
           'addedUserIds',
           'removedUserIds',
@@ -237,15 +235,10 @@ describe('organization invitation membership webhook', () => {
 
     const hook = await getWebhookResult('PUT /organization-invitations/:id/status');
     expect(hook?.payload.event).toBe('Organization.Membership.Updated');
-    if (isDevFeaturesEnabled) {
-      expect(hook?.payload).toMatchObject({
-        organizationId: organization.id,
-        addedUserIds: [user.id],
-      });
-    } else {
-      expect(hook?.payload).toMatchObject({ organizationId: organization.id });
-      expect(hook?.payload).not.toHaveProperty('addedUserIds');
-    }
+    expect(hook?.payload).toMatchObject({
+      organizationId: organization.id,
+      addedUserIds: [user.id],
+    });
     expect(hook?.payload).not.toHaveProperty('removedUserIds');
   });
 
@@ -269,7 +262,6 @@ describe('organization invitation membership webhook', () => {
     // Re-accept of an already-member still emits (matches the project-wide
     // "no-op still emits" contract used by every other Organization.Membership.Updated
     // trigger), but with no delta fields because there was no real membership change.
-    // The shape is therefore identical in dev-on and dev-off modes.
     const hook = await getWebhookResult('PUT /organization-invitations/:id/status');
     expect(hook?.payload.event).toBe('Organization.Membership.Updated');
     expect(hook?.payload).toMatchObject({ organizationId: organization.id });
