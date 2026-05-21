@@ -49,7 +49,6 @@ const getSelectOptions = (
 type SubmitFieldUpdateParams = {
   readonly field: ProfileFieldRow;
   readonly fields: readonly EditableField[];
-  readonly firstField?: EditableField;
   readonly userInfo?: Partial<UserProfileResponse>;
   readonly values: Readonly<Record<string, EditableValue>>;
   readonly updateNameRequest: (payload: {
@@ -66,7 +65,6 @@ type SubmitFieldUpdateParams = {
 const submitFieldUpdate = async ({
   field,
   fields,
-  firstField,
   userInfo,
   values,
   updateNameRequest,
@@ -77,10 +75,16 @@ const submitFieldUpdate = async ({
     return updateNameRequest({ name: getProfileValue(values.name ?? '').trim() || null });
   }
 
-  if (field.controlKey === 'customData' && firstField) {
+  if (field.controlKey === 'customData') {
+    const [customField] = fields;
+
+    if (!customField) {
+      throw new TypeError('Expected a custom data field to edit');
+    }
+
     return updateCustomDataRequest({
       ...userInfo?.customData,
-      [field.name]: getCustomDataValue(firstField, values[field.name] ?? ''),
+      [field.name]: getCustomDataValue(customField, values[field.name] ?? ''),
     } satisfies JsonObject);
   }
 
@@ -132,11 +136,9 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
       return;
     }
 
-    const [firstField] = fields;
     const [error] = await submitFieldUpdate({
       field,
       fields,
-      firstField,
       userInfo,
       values,
       updateNameRequest,

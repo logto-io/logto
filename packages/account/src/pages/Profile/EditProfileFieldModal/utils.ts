@@ -299,6 +299,7 @@ export const buildAddressProfileValue = (
     return address;
   }
 
+  // Match sign-up AddressSubForm: formatted is derived from enabled parts only.
   return {
     ...address,
     formatted: fields

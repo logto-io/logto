@@ -107,6 +107,7 @@ const DateField = ({
         {formatConfig.parts.map((part, index) => (
           <div key={`${name}-${part}`} className={styles.part}>
             <input
+              name={`${name}.${part}`}
               aria-label={`${label} ${part}`}
               value={dateParts[index] ?? ''}
               placeholder={part.toUpperCase()}
@@ -116,7 +117,13 @@ const DateField = ({
               onFocus={() => {
                 setIsFocused(true);
               }}
-              onBlur={() => {
+              onBlur={({ currentTarget, relatedTarget }) => {
+                const wrapper = currentTarget.closest(`.${styles.dateInputWrapper}`);
+
+                if (wrapper?.contains(relatedTarget)) {
+                  return;
+                }
+
                 setIsFocused(false);
               }}
               onChange={({ currentTarget }) => {
