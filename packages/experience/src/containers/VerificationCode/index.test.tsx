@@ -1,14 +1,21 @@
 import resource from '@logto/phrases-experience';
 import {
+  AgreeToTermsPolicy,
   InteractionEvent,
   SignInIdentifier,
   type VerificationCodeIdentifier,
 } from '@logto/schemas';
-import { act, fireEvent, waitFor } from '@testing-library/react';
+import { assert } from '@silverhand/essentials';
+import { act, fireEvent, waitFor, within } from '@testing-library/react';
+import { HTTPError } from 'ky';
 
+import ConfirmModalProvider from '@/Providers/ConfirmModalProvider';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import {
   identifyWithVerificationCode,
+  registerWithVerifiedIdentifier,
   updateProfileWithVerificationCode,
   sendVerificationCode,
 } from '@/apis/experience';
@@ -39,8 +46,32 @@ jest.mock('@/apis/utils', () => ({
 jest.mock('@/apis/experience', () => ({
   sendVerificationCode: jest.fn(),
   identifyWithVerificationCode: jest.fn().mockResolvedValue({ redirectTo: '/redirect' }),
+  registerWithVerifiedIdentifier: jest.fn().mockResolvedValue({ redirectTo: '/redirect' }),
   updateProfileWithVerificationCode: jest.fn().mockResolvedValue({ redirectTo: '/redirect' }),
 }));
+
+/**
+ * Build a ky `HTTPError` carrying a Logto error code, so it is recognized by `useErrorHandler`
+ * (which reads `error.response.json()`). A minimal fake response is enough here, since the
+ * handler only relies on `instanceof HTTPError` and `response.json()`.
+ */
+const createRequestError = (code: string) => {
+  const response = {
+    status: 404,
+    statusText: 'Not Found',
+    json: async () => ({ code, message: code }),
+  } as unknown as Response;
+
+  return new HTTPError(response, {} as Request, {} as never);
+};
+
+const fillVerificationCode = (container: HTMLElement) => {
+  for (const input of container.querySelectorAll('input')) {
+    act(() => {
+      fireEvent.input(input, { target: { value: '1' } });
+    });
+  }
+};
 
 describe('<VerificationCode />', () => {
   const redirectTo = '/redirect';
@@ -371,6 +402,81 @@ describe('<VerificationCode />', () => {
 
       await waitFor(() => {
         expect(window.location.replace).toBeCalledWith('/redirect');
+      });
+    });
+  });
+
+  describe('sign-in flow with an unregistered identifier', () => {
+    const renderSignInToRegister = (identifier: VerificationCodeIdentifier) =>
+      renderWithPageContext(
+        <SettingsProvider
+          settings={{
+            ...mockSignInExperienceSettings,
+            signUp: {
+              ...mockSignInExperienceSettings.signUp,
+              identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone],
+            },
+            // Require the agreement checkbox on registration only.
+            agreeToTermsPolicy: AgreeToTermsPolicy.ManualRegistrationOnly,
+          }}
+        >
+          <ConfirmModalProvider>
+            <VerificationCode
+              flow={UserFlow.SignIn}
+              identifier={identifier}
+              verificationId={verificationId}
+            />
+          </ConfirmModalProvider>
+        </SettingsProvider>
+      );
+
+    it('prompts the terms agreement before creating the account under `ManualRegistrationOnly`', async () => {
+      (identifyWithVerificationCode as jest.Mock).mockRejectedValueOnce(
+        createRequestError('user.user_not_exist')
+      );
+
+      const { container, findByText } = renderSignInToRegister(emailIdentifier);
+
+      fillVerificationCode(container);
+
+      /**
+       * The "account does not exist, create one?" confirmation modal shows up. Scope the lookup
+       * to the dialog, since the page itself also renders an `action.continue` button.
+       */
+      const modalContent = await findByText('description.sign_in_id_does_not_exist');
+      const dialog = modalContent.closest('[role="dialog"]');
+      assert(dialog, new Error('confirmation dialog not found'));
+      expect(registerWithVerifiedIdentifier).not.toBeCalled();
+
+      await act(async () => {
+        fireEvent.click(within(dialog as HTMLElement).getByText('action.continue'));
+      });
+
+      // The terms agreement modal must be shown before the account is created.
+      const termsContent = await findByText('description.agree_with_terms_modal');
+      const termsDialog = termsContent.closest('[role="dialog"]');
+      assert(termsDialog, new Error('terms agreement dialog not found'));
+      expect(registerWithVerifiedIdentifier).not.toBeCalled();
+
+      /**
+       * The dialog contains an icon-only close button, a cancel button, and the confirm (agree)
+       * button. Select the confirm button by excluding the icon-only and cancel buttons, so the
+       * test does not depend on button ordering.
+       */
+      const agreeButton = Array.from(termsDialog.querySelectorAll('button')).find(
+        (button) => button.textContent && button.textContent !== 'action.cancel'
+      );
+      assert(agreeButton, new Error('agree button not found'));
+      await act(async () => {
+        fireEvent.click(agreeButton);
+      });
+
+      await waitFor(() => {
+        expect(registerWithVerifiedIdentifier).toBeCalledWith(verificationId);
+      });
+
+      await waitFor(() => {
+        expect(window.location.replace).toBeCalledWith(redirectTo);
       });
     });
   });
