@@ -13,14 +13,15 @@ import useErrorHandler from '@ac/hooks/use-error-handler';
 
 import DateField from './EditProfileFieldModal/DateField';
 import {
+  buildAddressProfileValue,
   buildEditableFields,
   getCustomDataValue,
   getDateFormat,
   getProfileValue,
-  getValidationError,
   type EditableField,
   type EditableValue,
 } from './EditProfileFieldModal/utils';
+import { getValidationError } from './EditProfileFieldModal/validation';
 import styles from './EditProfileFieldModal.module.scss';
 import { getSelectOptionLabel } from './select-options';
 import type { ProfileFieldRow } from './types';
@@ -88,12 +89,7 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
               ...userInfo?.profile,
               ...(field.name === 'address' || field.field?.type === CustomProfileFieldType.Address
                 ? {
-                    address: {
-                      ...userInfo?.profile?.address,
-                      ...Object.fromEntries(
-                        fields.map(({ name }) => [name, getProfileValue(values[name] ?? '')])
-                      ),
-                    },
+                    address: buildAddressProfileValue(userInfo?.profile?.address, fields, values),
                   }
                 : Object.fromEntries(
                     fields.map(({ name }) => [name, getProfileValue(values[name] ?? '')])

@@ -1,4 +1,3 @@
-import { isValidUrl } from '@logto/core-kit';
 import {
   CustomProfileFieldType,
   Gender,
@@ -11,7 +10,6 @@ import {
   type UserProfile,
   type UserProfileResponse,
 } from '@logto/schemas';
-import { format, isValid, parse } from 'date-fns';
 
 import type { ProfileFieldRow } from '../types';
 
@@ -53,6 +51,12 @@ const getStringValue = (value: unknown): string => {
   return '';
 };
 
+const getCheckboxDefaultValue = ({
+  config,
+}: {
+  readonly config?: CustomProfileField['config'];
+}): boolean => config?.defaultValue === 'true';
+
 const getCustomFieldValue = (
   userInfo: Partial<UserProfileResponse> | undefined,
   field: CustomProfileField | undefined,
@@ -61,7 +65,15 @@ const getCustomFieldValue = (
   const value = userInfo?.customData?.[fieldName];
 
   if (field?.type === CustomProfileFieldType.Checkbox) {
-    return typeof value === 'boolean' ? value : field.config.defaultValue === 'true';
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    if (value === 'true' || value === 'false') {
+      return value === 'true';
+    }
+
+    return getCheckboxDefaultValue(field);
   }
 
   return getStringValue(value);
@@ -157,21 +169,6 @@ const getBuiltInFieldConfig = (
   }
 };
 
-const isValidDate = (value: string, config?: CustomProfileFieldBaseConfig): boolean => {
-  const dateFormat = getDateFormat(config);
-
-  if (!dateFormat) {
-    return true;
-  }
-
-  const parsedDate = parse(value, dateFormat, new Date(), {
-    useAdditionalDayOfYearTokens: true,
-    useAdditionalWeekYearTokens: true,
-  });
-
-  return isValid(parsedDate) && format(parsedDate, dateFormat) === value;
-};
-
 export const buildEditableFields = (
   field: ProfileFieldRow | undefined,
   userInfo: Partial<UserProfileResponse> | undefined,
@@ -255,82 +252,6 @@ export const buildEditableFields = (
   ];
 };
 
-const getNumberValidationError = (
-  value: string,
-  config: CustomProfileFieldBaseConfig,
-  invalidMessage: string,
-  translate: Translate
-): string | undefined => {
-  const numberValue = Number(value);
-
-  if (Number.isNaN(numberValue)) {
-    return invalidMessage;
-  }
-
-  if (
-    (config.minValue !== undefined && numberValue < config.minValue) ||
-    (config.maxValue !== undefined && numberValue > config.maxValue)
-  ) {
-    return translate('error.invalid_min_max_input', {
-      minValue: config.minValue,
-      maxValue: config.maxValue,
-    });
-  }
-};
-
-const getTextValidationError = (
-  value: string,
-  config: CustomProfileFieldBaseConfig,
-  translate: Translate
-): string | undefined => {
-  if (
-    (config.minLength !== undefined && value.length < config.minLength) ||
-    (config.maxLength !== undefined && value.length > config.maxLength)
-  ) {
-    return translate('error.invalid_min_max_length', {
-      minLength: config.minLength,
-      maxLength: config.maxLength,
-    });
-  }
-};
-
-export const getValidationError = (
-  value: EditableValue,
-  field: EditableField,
-  translate: Translate
-): string | undefined => {
-  if (field.required && (value === '' || value === false)) {
-    return translate('error.general_required', { types: [field.label] });
-  }
-
-  if (value === '' || typeof value === 'boolean') {
-    return;
-  }
-
-  const { config = {}, type } = field;
-  const invalidMessage = translate('error.general_invalid', { types: [field.label] });
-
-  if (type === CustomProfileFieldType.Date) {
-    return isValidDate(value, config) ? undefined : invalidMessage;
-  }
-
-  if (type === CustomProfileFieldType.Regex && config.format) {
-    return new RegExp(config.format).test(value) ? undefined : invalidMessage;
-  }
-
-  if (type === CustomProfileFieldType.Url) {
-    return isValidUrl(value) ? undefined : invalidMessage;
-  }
-
-  if (type === CustomProfileFieldType.Number) {
-    return getNumberValidationError(value, config, invalidMessage, translate);
-  }
-
-  if (type === CustomProfileFieldType.Text) {
-    return getTextValidationError(value, config, translate);
-  }
-};
-
 export const getCustomDataValue = ({ type }: EditableField, value: EditableValue) => {
   if (type === CustomProfileFieldType.Checkbox) {
     return Boolean(value);
@@ -345,3 +266,44 @@ export const getCustomDataValue = ({ type }: EditableField, value: EditableValue
 
 export const getProfileValue = (value: EditableValue): string =>
   typeof value === 'boolean' ? '' : value;
+
+type UserProfileAddress = NonNullable<UserProfile['address']>;
+
+const userProfileAddressKeySet = new Set<string>(userProfileAddressKeys);
+
+const isUserProfileAddressKey = (key: string): key is keyof UserProfileAddress =>
+  userProfileAddressKeySet.has(key);
+
+export const buildAddressProfileValue = (
+  currentAddress: UserProfile['address'] | undefined,
+  fields: readonly EditableField[],
+  values: Readonly<Record<string, EditableValue>>
+): UserProfileAddress => {
+  const editedAddress = fields.reduce<UserProfileAddress>((address, { name }) => {
+    if (!isUserProfileAddressKey(name)) {
+      return address;
+    }
+
+    return {
+      ...address,
+      [name]: getProfileValue(values[name] ?? ''),
+    };
+  }, {});
+
+  const address = {
+    ...currentAddress,
+    ...editedAddress,
+  };
+
+  if (fields.some(({ name }) => name === 'formatted')) {
+    return address;
+  }
+
+  return {
+    ...address,
+    formatted: fields
+      .map(({ name }) => (isUserProfileAddressKey(name) ? address[name] : undefined))
+      .filter(Boolean)
+      .join(', '),
+  };
+};
