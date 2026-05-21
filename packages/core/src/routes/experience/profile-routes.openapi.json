@@ -78,9 +78,6 @@
           "404": {
             "description": "Entity not found related to the current interaction."
           },
-          "429": {
-            "description": "Too many avatar upload attempts for the current interaction. <br/>- `session.verification_blocked_too_many_attempts:` Retry after the indicated relative time."
-          },
           "500": {
             "description": "Failed to upload the file to the storage provider."
           }

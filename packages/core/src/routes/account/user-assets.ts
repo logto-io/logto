@@ -18,46 +18,46 @@ export default function accountUserAssetsRoutes<T extends UserRouter>(
   ...[router, { id: tenantId }]: RouterInitArgs<T>
 ) {
   // TODO: Remove this dev feature gate when avatar upload is ready for production.
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
-  router.post(
-    `${accountApiPrefix}/user-assets/avatar`,
-    koaGuard({
-      files: object({
-        file: uploadFileGuard.array().min(1),
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.post(
+      `${accountApiPrefix}/user-assets/avatar`,
+      koaGuard({
+        files: object({
+          file: uploadFileGuard.array().min(1),
+        }),
+        response: userAssetsGuard,
+        status: [200, 400, 401, 403, 500],
       }),
-      response: userAssetsGuard,
-      status: [200, 400, 401, 403, 500],
-    }),
-    async (ctx, next) => {
-      const { id: userId, scopes } = ctx.auth;
-      const { fields } = ctx.accountCenter;
+      async (ctx, next) => {
+        const { id: userId, scopes } = ctx.auth;
+        const { fields } = ctx.accountCenter;
 
-      assertThat(
-        scopes.has(UserScope.Profile),
-        new RequestError({ code: 'auth.unauthorized', status: 401 })
-      );
-      assertThat(
-        fields.avatar === AccountCenterControlValue.Edit,
-        'account_center.field_not_editable'
-      );
+        assertThat(
+          scopes.has(UserScope.Profile),
+          new RequestError({ code: 'auth.unauthorized', status: 401 })
+        );
+        assertThat(
+          fields.avatar === AccountCenterControlValue.Edit,
+          'account_center.field_not_editable'
+        );
 
-      const { file: bodyFiles } = ctx.guard.files;
+        const [file] = ctx.guard.files.file;
 
-      const { storageProviderConfig } = SystemContext.shared;
+        assertThat(file, 'guard.invalid_input');
 
-      ctx.body = await uploadAvatar({
-        file: bodyFiles[0],
-        storageProviderConfig,
-        objectKeyPrefix: `${tenantId}/${userId}`,
-        logError: (error) => {
-          getConsoleLogFromContext(ctx).error(error);
-        },
-      });
+        const { storageProviderConfig } = SystemContext.shared;
 
-      return next();
-    }
-  );
+        ctx.body = await uploadAvatar({
+          file,
+          storageProviderConfig,
+          objectKeyPrefix: `${tenantId}/${userId}`,
+          logError: (error) => {
+            getConsoleLogFromContext(ctx).error(error);
+          },
+        });
+
+        return next();
+      }
+    );
+  }
 }

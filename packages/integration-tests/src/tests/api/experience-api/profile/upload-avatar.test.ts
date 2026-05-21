@@ -22,8 +22,6 @@ const buildTextFormData = () => {
   return formData;
 };
 
-const avatarUploadRateLimitMaxAttempts = 10;
-
 devFeatureTest.describe('POST /experience/user-assets/avatar', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
@@ -74,26 +72,6 @@ devFeatureTest.describe('POST /experience/user-assets/avatar', () => {
     await expectRejects(client.uploadAvatar(buildPngFormData()), {
       status: 400,
       code: 'session.invalid_interaction_type',
-    });
-  });
-
-  it('should rate limit per register interaction and client IP', async () => {
-    const client = await initExperienceClient({
-      interactionEvent: InteractionEvent.Register,
-    });
-
-    await Promise.all(
-      Array.from({ length: avatarUploadRateLimitMaxAttempts }, async () =>
-        expectRejects(client.uploadAvatar(buildPngFormData()), {
-          code: 'storage.not_configured',
-          status: 400,
-        })
-      )
-    );
-
-    await expectRejects(client.uploadAvatar(buildPngFormData()), {
-      code: 'session.verification_blocked_too_many_attempts',
-      status: 429,
     });
   });
 });
