@@ -24,6 +24,7 @@ const application = {
   should_delete_custom_domains_first: 'يجب حذف النطاقات المخصصة أولاً.',
   no_legacy_secret_found: 'لا يحتوي التطبيق على سر تراثي.',
   secret_name_exists: 'اسم السر موجود بالفعل.',
+  sync_application_secret_failed: 'فشلت مزامنة سر التطبيق.',
   saml: {
     use_saml_app_api:
       'استخدم واجهة برمجة التطبيقات `[METHOD] /saml-applications(/.*)?` لتشغيل تطبيق SAML.',

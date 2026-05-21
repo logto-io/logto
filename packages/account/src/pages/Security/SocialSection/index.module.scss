@@ -121,23 +121,24 @@
   color: var(--color-danger-default);
 }
 
-:global(body.mobile) {
+@mixin mobile-layout {
   .sectionTitle {
     padding-left: 0;
   }
 
   .row {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     min-height: 0;
-    flex-direction: column;
-    align-items: stretch;
-    gap: _.unit(1);
+    align-items: center;
+    gap: _.unit(2) _.unit(3);
     padding: _.unit(4);
   }
 
   .actions {
-    display: flex;
-    flex-wrap: wrap;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
     justify-content: flex-end;
   }
 
@@ -152,10 +153,22 @@
   }
 
   .connectorInfo {
-    width: 100%;
+    display: contents;
+  }
+
+  .connectorLogo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .connectorName {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 
   .identityInfo {
+    grid-column: 1 / -1;
+    grid-row: 3;
     width: 100%;
     align-items: flex-start;
   }
@@ -164,5 +177,15 @@
     padding: 0;
     white-space: normal;
     text-align: left;
+  }
+}
+
+:global(body.mobile) {
+  @include mobile-layout;
+}
+
+:global(body.desktop) {
+  @media only screen and (max-width: 800px) {
+    @include mobile-layout;
   }
 }

@@ -81,12 +81,14 @@ const sign_in_exp = {
     title: 'واجهة مخصصة',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'CSS مخصص',
+    css_code_editor_field_title: 'تجاوز CSS',
     css_code_editor_description1: 'انظر إلى مثال لـ CSS مخصص.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'تعلم المزيد',
     css_code_editor_content_placeholder:
-      'أدخل CSS المخصص الخاص بك لتخصيص أنماط أي شيء وفقًا لمواصفاتك الدقيقة. اعبر عن إبداعك واجعل واجهة المستخدم الخاصة بك تبرز.',
+      'أدخل تعديلات CSS الخاصة بك هنا لتخصيص أنماط أي عنصر وفقًا لمتطلباتك الدقيقة. عبّر عن إبداعك واجعل واجهتك مميزة.',
     bring_your_ui_title: 'اجلب واجهتك الخاصة',
+    bring_your_ui_upload_title: 'تحميل أصول واجهة المستخدم المخصصة',
     bring_your_ui_description:
       'قم بتحميل حزمة مضغوطة (.zip) لاستبدال واجهة المستخدم المُعدة مسبقًا في Logto بالشفرة الخاصة بك. <a>تعلم المزيد</a>',
     bring_your_ui_oss_description: 'خصّص واجهة تسجيل الدخول باستخدام الشيفرة الخاصة بك.',
@@ -95,6 +97,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'جرّب Cloud',
     preview_with_bring_your_ui_description:
       'تم تحميل أصول واجهة المستخدم المخصصة الخاصة بك بنجاح ويتم تقديمها الآن. وبالتالي ، تم تعطيل نافذة المعاينة المدمجة.\nلتجربة واجهة تسجيل الدخول المخصصة الخاصة بك ، انقر فوق زر "المعاينة المباشرة" لفتحها في علامة تبويب مستعرض جديدة.',
+    csp_description:
+      'اسمح بتعبيرات مصادر إضافية لواجهة تسجيل الدخول المخصصة الخاصة بك. تُطبّق هذه القيم فقط عند تقديم أصول واجهة المستخدم المخصصة.',
+    csp_script_src: 'script-src المسموح بها',
+    csp_script_src_tip:
+      'اسمح بتعبيرات مصادر HTTPS للبرامج النصية التي تحمّلها واجهتك المخصصة، مثل https://scripts.example.com أو https://*.example.com.',
+    csp_connect_src: 'connect-src المسموح بها',
+    csp_connect_src_tip:
+      'اسمح بتعبيرات مصادر HTTPS أو WSS لطلبات الشبكة التي ترسلها واجهتك المخصصة، مثل https://api.example.com أو wss://events.example.com.',
+    csp_source_invalid_error:
+      'أدخل تعبير مصدر صالحًا. استخدم عناوين URL من نوع https://؛ كما يدعم connect-src ‏wss://. كلمات CSP المفتاحية والفواصل المنقوطة غير مدعومة.',
+    csp_source_duplicate_error: 'تعبير المصدر هذا موجود بالفعل في القائمة.',
   },
   account_center: {
     title: 'مركز الحساب',
@@ -171,6 +184,24 @@ const sign_in_exp = {
       custom_data_description: 'تحكم في الوصول إلى بيانات JSON المخصصة المخزنة للمستخدم.',
       sessions: 'إدارة الجلسات',
     },
+    profile_fields: {
+      title: 'حقول الملف الشخصي لمركز الحساب الجاهز',
+      add_profile_fields: 'إضافة حقول الملف الشخصي',
+      hint: {
+        not_in_list: 'غير موجود في القائمة؟',
+        set_up: 'الإعداد',
+        go_to: 'حقول الملف الشخصي الأخرى الآن.',
+      },
+      disabled_hint: {
+        name: 'لإضافة هذا الحقل، عيّن أولاً صلاحية "الاسم" إلى "تحرير/للقراءة فقط" في بيانات الملف الشخصي أعلاه.',
+        avatar:
+          'لإضافة هذا الحقل، عيّن أولاً صلاحية "الصورة الرمزية" إلى "تحرير/للقراءة فقط" في بيانات الملف الشخصي أعلاه.',
+        profile:
+          'لإضافة هذا الحقل، عيّن أولاً صلاحية "الملف الشخصي" إلى "تحرير/للقراءة فقط" في بيانات الملف الشخصي أعلاه.',
+        custom_data:
+          'لإضافة هذا الحقل، عيّن أولاً صلاحية "بيانات مخصصة" إلى "تحرير/للقراءة فقط" في بيانات الملف الشخصي أعلاه.',
+      },
+    },
     webauthn_related_origins: 'أصول WebAuthn ذات الصلة',
     webauthn_related_origins_description:
       'أضف نطاقات تطبيقات الواجهة الأمامية المسموح لها بتسجيل مفاتيح المرور عبر واجهة Account API.',
@@ -199,6 +230,7 @@ const sign_in_exp = {
         username: 'قم بتحديث اسم المستخدم الخاص بك',
         password: 'عين كلمة مرور جديدة',
         social: 'اربط حسابًا اجتماعيًا لتسجيل الدخول',
+        social_change: 'التبديل إلى حساب اجتماعي مرتبط آخر',
         social_remove: 'أزل حسابًا اجتماعيًا مرتبطًا',
         authenticator_app: 'قم بإعداد تطبيق مصادق جديد للمصادقة متعددة العوامل',
         authenticator_app_replace: 'Replace your existing authenticator app with a new one',

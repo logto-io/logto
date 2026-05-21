@@ -37,6 +37,18 @@ const protected_app = {
         'Bitte belichten Sie zunächst Ihren lokalen Server im Internet. Erfahren Sie mehr über die <a> lokale Entwicklung </a>.',
     },
   },
+  id_token_claims: {
+    card_title: 'ID-Token-Claims',
+    card_description:
+      'Fordern Sie beim Anmelden in der geschützten App zusätzliche Benutzer-Scopes an, um aktivierte erweiterte Claims in das weitergeleitete ID-Token aufzunehmen.',
+    field_title: 'Zusätzliche Scopes',
+    field_description:
+      'Claims werden nur einbezogen, wenn sie in <a>Custom JWT > ID token</a> aktiviert sind und der entsprechende Scope hier angefordert wird.',
+    table_column_scope: 'Scope',
+    table_column_claims_forwarded: 'Weitergeleitete Claims',
+    disabled_claims_hint:
+      'Ausgegraute Claims werden noch nicht weitergeleitet. Aktivieren Sie sie in <a>Custom JWT > ID token</a>, um sie in das ID-Token aufzunehmen.',
+  },
   success_message:
     '🎉 App-Authentifizierung erfolgreich aktiviert! Entdecken Sie die neue Erfahrung Ihrer Webseite.',
 };

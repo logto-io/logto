@@ -85,12 +85,14 @@ const sign_in_exp = {
     title: 'UI personnalisée',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'CSS personnalisé',
+    css_code_editor_field_title: 'Surcharge CSS',
     css_code_editor_description1: "Voir l'exemple de CSS personnalisé.",
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'En savoir plus',
     css_code_editor_content_placeholder:
-      'Entrez votre CSS personnalisé pour adapter les styles de tout à vos spécifications exactes. Exprimez votre créativité et faites ressortir votre interface utilisateur.',
+      "Saisissez ici vos surcharges CSS pour adapter les styles de n'importe quel élément exactement à vos besoins. Exprimez votre créativité et démarquez votre UI.",
     bring_your_ui_title: 'Apportez votre UI',
+    bring_your_ui_upload_title: 'Téléverser des ressources UI personnalisées',
     bring_your_ui_description:
       "Téléchargez un package compressé (.zip) pour remplacer l'UI préconstruite de Logto par votre propre code. <a>En savoir plus</a>",
     bring_your_ui_oss_description: 'Personnalisez l’interface de connexion avec votre propre code.',
@@ -99,6 +101,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Essayer Cloud',
     preview_with_bring_your_ui_description:
       'Vos ressources UI personnalisées ont été téléchargées avec succès et sont maintenant servies. En conséquence, la fenêtre de prévisualisation intégrée a été désactivée.\nPour tester votre UI de connexion personnalisée, cliquez sur le bouton "Aperçu en direct" pour l\'ouvrir dans un nouvel onglet du navigateur.',
+    csp_description:
+      'Autorisez des expressions de source supplémentaires pour votre interface de connexion personnalisée. Ces valeurs ne sont appliquées que lorsque les ressources UI personnalisées sont servies.',
+    csp_script_src: 'script-src autorisé',
+    csp_script_src_tip:
+      'Autorisez les expressions de source HTTPS pour les scripts chargés par votre UI personnalisée, comme https://scripts.example.com ou https://*.example.com.',
+    csp_connect_src: 'connect-src autorisé',
+    csp_connect_src_tip:
+      'Autorisez les expressions de source HTTPS ou WSS pour les requêtes réseau effectuées par votre UI personnalisée, comme https://api.example.com ou wss://events.example.com.',
+    csp_source_invalid_error:
+      'Saisissez une expression de source valide. Utilisez des URL https:// ; connect-src prend également en charge wss://. Les mots-clés CSP et les points-virgules ne sont pas pris en charge.',
+    csp_source_duplicate_error: 'Cette expression de source figure déjà dans la liste.',
   },
   account_center: {
     title: 'CENTRE DE COMPTE',
@@ -177,6 +190,24 @@ const sign_in_exp = {
         'Contrôlez l’accès aux données JSON personnalisées stockées sur l’utilisateur.',
       sessions: 'Sessions',
     },
+    profile_fields: {
+      title: 'Champs de profil pour le centre de compte prédéfini',
+      add_profile_fields: 'Ajouter des champs de profil',
+      hint: {
+        not_in_list: 'Pas dans la liste ?',
+        set_up: 'Configurer',
+        go_to: "d'autres champs de profil maintenant.",
+      },
+      disabled_hint: {
+        name: "Pour ajouter ce champ, définissez d'abord l'autorisation « Nom » sur « Modifier/Lecture seule » dans Données de profil ci-dessus.",
+        avatar:
+          "Pour ajouter ce champ, définissez d'abord l'autorisation « Avatar » sur « Modifier/Lecture seule » dans Données de profil ci-dessus.",
+        profile:
+          "Pour ajouter ce champ, définissez d'abord l'autorisation « Profil » sur « Modifier/Lecture seule » dans Données de profil ci-dessus.",
+        custom_data:
+          "Pour ajouter ce champ, définissez d'abord l'autorisation « Données personnalisées » sur « Modifier/Lecture seule » dans Données de profil ci-dessus.",
+      },
+    },
     webauthn_related_origins: 'Origines associées à WebAuthn',
     webauthn_related_origins_description:
       'Ajoutez les domaines de vos applications front-end autorisés à enregistrer des passkeys via l’API Account.',
@@ -205,6 +236,7 @@ const sign_in_exp = {
         username: "Mettre à jour votre nom d'utilisateur",
         password: 'Définir un nouveau mot de passe',
         social: 'Lier un compte social pour la connexion',
+        social_change: 'Passer à un autre compte social lié',
         social_remove: 'Supprimer un compte social lié',
         authenticator_app:
           "Configurer une nouvelle application d'authentification pour l'authentification multifacteur",

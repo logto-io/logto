@@ -83,12 +83,14 @@ const sign_in_exp = {
     title: 'カスタム UI',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'カスタム CSS',
+    css_code_editor_field_title: 'CSS オーバーライド',
     css_code_editor_description1: 'カスタム CSS の例をご覧ください。',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: '詳しくはこちら',
     css_code_editor_content_placeholder:
-      'カスタム CSS を入力して、あらゆるスタイルを精確に調整してください。創造性を発揮して、あなたの UI を際立たせましょう。',
+      'ここに CSS オーバーライドを入力して、あらゆる要素のスタイルを思いどおりに調整できます。創造性を表現し、UI を際立たせましょう。',
     bring_your_ui_title: 'あなたの UI を持参',
+    bring_your_ui_upload_title: 'カスタム UI アセットをアップロード',
     bring_your_ui_description:
       '圧縮パッケージ (.zip) をアップロードして、Logto のビルトイン UI を独自のコードで置き換えます。<a>詳しくはこちら</a>',
     bring_your_ui_oss_description: '独自のコードでサインイン UI をカスタマイズします。',
@@ -97,6 +99,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Cloud を試す',
     preview_with_bring_your_ui_description:
       'カスタム UI のアセットは正常にアップロードされ、現在提供されています。したがって、組み込みのプレビューウィンドウは無効になりました。\nパーソナライズされたサインイン UI をテストするには、「ライブプレビュー」ボタンをクリックして新しいブラウザタブで開きます。',
+    csp_description:
+      'カスタムサインイン UI に追加のソース式を許可します。これらの値は、カスタム UI アセットが提供される場合にのみ適用されます。',
+    csp_script_src: '許可された script-src',
+    csp_script_src_tip:
+      'カスタム UI が読み込むスクリプトに対して、https://scripts.example.com や https://*.example.com などの HTTPS ソース式を許可します。',
+    csp_connect_src: '許可された connect-src',
+    csp_connect_src_tip:
+      'カスタム UI が行うネットワークリクエストに対して、https://api.example.com や wss://events.example.com などの HTTPS または WSS ソース式を許可します。',
+    csp_source_invalid_error:
+      '有効なソース式を入力してください。https:// URL を使用してください。connect-src では wss:// もサポートされています。CSP キーワードとセミコロンはサポートされていません。',
+    csp_source_duplicate_error: 'このソース式はすでに一覧に含まれています。',
   },
   account_center: {
     title: 'アカウントセンター',
@@ -174,6 +187,24 @@ const sign_in_exp = {
         'ユーザーに保存されているカスタム JSON データへのアクセスを制御します。',
       sessions: 'セッション',
     },
+    profile_fields: {
+      title: 'ビルトインアカウントセンターのプロフィールフィールド',
+      add_profile_fields: 'プロフィールフィールドを追加',
+      hint: {
+        not_in_list: 'リストにない？',
+        set_up: '設定する',
+        go_to: '他のプロフィールフィールドを今すぐ。',
+      },
+      disabled_hint: {
+        name: 'このフィールドを追加するには、上記のプロフィールデータで「名前」の権限を「編集/閲覧のみ」に設定してください。',
+        avatar:
+          'このフィールドを追加するには、上記のプロフィールデータで「アバター」の権限を「編集/閲覧のみ」に設定してください。',
+        profile:
+          'このフィールドを追加するには、上記のプロフィールデータで「プロフィール」の権限を「編集/閲覧のみ」に設定してください。',
+        custom_data:
+          'このフィールドを追加するには、上記のプロフィールデータで「カスタムデータ」の権限を「編集/閲覧のみ」に設定してください。',
+      },
+    },
     webauthn_related_origins: 'WebAuthn 関連オリジン',
     webauthn_related_origins_description:
       'Account API を通じてパスキーを登録できるフロントエンドアプリケーションのドメインを追加します。',
@@ -202,6 +233,7 @@ const sign_in_exp = {
         username: 'ユーザー名を更新',
         password: '新しいパスワードを設定',
         social: 'サインイン用にソーシャルアカウントを連携',
+        social_change: '別の連携済みソーシャルアカウントに変更',
         social_remove: '連携済みのソーシャルアカウントを削除',
         authenticator_app: '多要素認証のための新しい認証アプリを設定',
         authenticator_app_replace: 'Replace your existing authenticator app with a new one',

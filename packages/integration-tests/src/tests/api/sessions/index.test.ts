@@ -20,7 +20,6 @@ import {
 } from '#src/helpers/session.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 describe('Sessions API', () => {
   const userApi = new UserApiTest();
@@ -77,29 +76,26 @@ describe('Sessions API', () => {
     expect(sessionsAfterRevoke[0]!.payload.uid).toBe(sessions[1]!.payload.uid);
   });
 
-  devFeatureTest.it(
-    'admin sessions response does not include the account-only `isCurrent` field',
-    async () => {
-      await enableAllPasswordSignInMethods();
+  it('admin sessions response does not include the account-only `isCurrent` field', async () => {
+    await enableAllPasswordSignInMethods();
 
-      const { username, password } = generateNewUserProfile({ username: true, password: true });
-      const user = await userApi.create({ username, password });
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const user = await userApi.create({ username, password });
 
-      await signInWithPassword({
-        identifier: {
-          type: SignInIdentifier.Username,
-          value: username,
-        },
-        password,
-      });
+    await signInWithPassword({
+      identifier: {
+        type: SignInIdentifier.Username,
+        value: username,
+      },
+      password,
+    });
 
-      const { sessions } = await getUserSessions(user.id);
-      expect(sessions.length).toBeGreaterThan(0);
-      for (const session of sessions) {
-        expect(session).not.toHaveProperty('isCurrent');
-      }
+    const { sessions } = await getUserSessions(user.id);
+    expect(sessions.length).toBeGreaterThan(0);
+    for (const session of sessions) {
+      expect(session).not.toHaveProperty('isCurrent');
     }
-  );
+  });
 
   it('should get a single user session by session id', async () => {
     await enableAllPasswordSignInMethods();

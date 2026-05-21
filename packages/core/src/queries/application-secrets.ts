@@ -1,7 +1,13 @@
-import { Applications, type ApplicationSecret, ApplicationSecrets } from '@logto/schemas';
+import {
+  Applications,
+  type ApplicationSecret,
+  ApplicationSecrets,
+  defaultApplicationSecretName,
+} from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { convertToIdentifiers } from '#src/utils/sql.js';
 
@@ -46,14 +52,42 @@ export class ApplicationSecretQueries {
     `);
   }
 
+  async findActiveSecretByApplicationId(appId: string) {
+    const activeSecret = await this.pool.maybeOne<ApplicationSecret>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+        from ${table}
+        where ${fields.applicationId} = ${appId}
+        and (${fields.expiresAt} is null or ${fields.expiresAt} > now())
+        order by
+          case when ${fields.name} = ${defaultApplicationSecretName} then 0 else 1 end,
+          ${fields.createdAt} asc
+        limit 1
+    `);
+
+    if (!activeSecret) {
+      throw new RequestError({
+        code: 'application.protected_application_misconfigured',
+        status: 422,
+      });
+    }
+
+    return activeSecret;
+  }
+
   async deleteByName(appId: string, name: string) {
-    const { rowCount } = await this.pool.query(sql`
+    const {
+      rowCount,
+      rows: [deletedSecret],
+    } = await this.pool.query<ApplicationSecret>(sql`
       delete from ${table}
         where ${fields.applicationId} = ${appId}
         and ${fields.name} = ${name}
+      returning ${sql.join(Object.values(fields), sql`, `)}
     `);
-    if (rowCount < 1) {
+    if (rowCount < 1 || !deletedSecret) {
       throw new DeletionError(ApplicationSecrets.table, name);
     }
+
+    return deletedSecret;
   }
 }

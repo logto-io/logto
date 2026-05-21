@@ -63,3 +63,18 @@ export const deleteSocialIdentity = async (
     },
   });
 };
+
+export const replaceSocialIdentity = async (
+  accessToken: string,
+  verificationRecordId: string,
+  socialVerificationRecordId: string
+): Promise<void> => {
+  await createAuthenticatedKy(accessToken).put('/api/my-account/identities', {
+    json: {
+      newIdentifierVerificationRecordId: socialVerificationRecordId,
+    },
+    headers: {
+      [verificationRecordIdHeader]: verificationRecordId,
+    },
+  });
+};

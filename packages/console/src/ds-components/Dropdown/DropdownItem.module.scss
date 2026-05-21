@@ -18,8 +18,22 @@
     color: var(--color-error);
   }
 
+  &.disabled {
+    color: var(--color-text-secondary);
+    cursor: not-allowed;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+
   .icon {
     display: flex;
     align-items: center;
   }
+}
+
+.tooltipAnchor {
+  display: block;
+  width: 100%;
 }

@@ -80,12 +80,14 @@ const sign_in_exp = {
     title: '커스텀 UI',
     cloud_tag: 'Cloud',
     css_code_editor_title: '커스텀 CSS',
+    css_code_editor_field_title: 'CSS 오버라이드',
     css_code_editor_description1: '커스텀 CSS 예제를 확인하세요.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: '더 알아보기',
     css_code_editor_content_placeholder:
-      '커스텀 CSS 를 입력하여 스타일을 정확한 사양에 맞게 조정하세요. 창의력을 발휘하여 UI 를 돋보이게 만드세요.',
+      '여기에 CSS 오버라이드를 입력해 모든 요소의 스타일을 원하는 사양에 맞게 조정하세요. 창의성을 표현하고 UI를 돋보이게 하세요.',
     bring_your_ui_title: 'UI 가져오기',
+    bring_your_ui_upload_title: '커스텀 UI 자산 업로드',
     bring_your_ui_description:
       'Logto 가미리 제공하는 UI 를 나만의 코드로 대체하기 위해 압축 패키지 (.zip)를 업로드하세요. <a>더 알아보기</a>',
     bring_your_ui_oss_description: '자신의 코드로 로그인 UI를 맞춤 설정하세요.',
@@ -94,6 +96,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Cloud 사용해 보기',
     preview_with_bring_your_ui_description:
       '커스텀 UI 자산이 성공적으로 업로드되어 현재 제공되고 있습니다. 따라서 기본 제공 미리보기 창이 비활성화되었습니다.\n개인화된 로그인 UI 를 테스트하려면 "실시간 미리보기" 버튼을 클릭하여 새 브라우저 탭에서 엽니다.',
+    csp_description:
+      '커스텀 로그인 UI에 추가 소스 표현식을 허용하세요. 이 값은 커스텀 UI 자산이 제공될 때만 적용됩니다.',
+    csp_script_src: '허용된 script-src',
+    csp_script_src_tip:
+      '커스텀 UI가 로드하는 스크립트에 대해 https://scripts.example.com 또는 https://*.example.com 같은 HTTPS 소스 표현식을 허용하세요.',
+    csp_connect_src: '허용된 connect-src',
+    csp_connect_src_tip:
+      '커스텀 UI가 보내는 네트워크 요청에 대해 https://api.example.com 또는 wss://events.example.com 같은 HTTPS 또는 WSS 소스 표현식을 허용하세요.',
+    csp_source_invalid_error:
+      '유효한 소스 표현식을 입력하세요. https:// URL을 사용하세요. connect-src는 wss://도 지원합니다. CSP 키워드와 세미콜론은 지원되지 않습니다.',
+    csp_source_duplicate_error: '이 소스 표현식은 이미 목록에 있습니다.',
   },
   account_center: {
     title: '계정 센터',
@@ -170,6 +183,24 @@ const sign_in_exp = {
       custom_data_description: '사용자에 저장된 사용자 정의 JSON 데이터에 대한 접근을 제어합니다.',
       sessions: '세션',
     },
+    profile_fields: {
+      title: '사전 구축된 계정 센터의 프로필 필드',
+      add_profile_fields: '프로필 필드 추가',
+      hint: {
+        not_in_list: '목록에 없나요?',
+        set_up: '지금 설정',
+        go_to: '다른 프로필 필드.',
+      },
+      disabled_hint: {
+        name: "이 필드를 추가하려면 먼저 위의 프로필 데이터에서 '이름' 권한을 '편집/읽기 전용'으로 설정하세요.",
+        avatar:
+          "이 필드를 추가하려면 먼저 위의 프로필 데이터에서 '아바타' 권한을 '편집/읽기 전용'으로 설정하세요.",
+        profile:
+          "이 필드를 추가하려면 먼저 위의 프로필 데이터에서 '프로필' 권한을 '편집/읽기 전용'으로 설정하세요.",
+        custom_data:
+          "이 필드를 추가하려면 먼저 위의 프로필 데이터에서 '사용자 정의 데이터' 권한을 '편집/읽기 전용'으로 설정하세요.",
+      },
+    },
     webauthn_related_origins: 'WebAuthn 관련 오리진',
     webauthn_related_origins_description:
       'Account API를 통해 패스키를 등록할 수 있도록 허용된 프런트엔드 애플리케이션 도메인을 추가하세요.',
@@ -198,6 +229,7 @@ const sign_in_exp = {
         username: '사용자 이름 업데이트',
         password: '새 비밀번호 설정',
         social: '로그인용 소셜 계정 연동',
+        social_change: '다른 연동된 소셜 계정으로 변경',
         social_remove: '연동된 소셜 계정 제거',
         authenticator_app: '다중 요소 인증을 위한 새 인증 앱 설정',
         authenticator_app_replace: 'Replace your existing authenticator app with a new one',

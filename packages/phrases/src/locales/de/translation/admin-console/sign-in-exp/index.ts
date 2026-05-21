@@ -83,12 +83,14 @@ const sign_in_exp = {
     title: 'Benutzerdefinierte UI',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'Benutzerdefiniertes CSS',
+    css_code_editor_field_title: 'CSS-Override',
     css_code_editor_description1: 'Siehe das Beispiel für benutzerdefiniertes CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Erfahre mehr',
     css_code_editor_content_placeholder:
-      'Geben Sie Ihr benutzerdefiniertes CSS ein, um die Stile nach Ihren exakten Spezifikationen anzupassen. Drücken Sie Ihre Kreativität aus und heben Sie Ihre Benutzeroberfläche hervor.',
+      'Geben Sie hier Ihre CSS-Overrides ein, um die Stile beliebiger Elemente genau an Ihre Anforderungen anzupassen. Zeigen Sie Ihre Kreativität und lassen Sie Ihre UI hervorstechen.',
     bring_your_ui_title: 'Bringen Sie Ihr UI',
+    bring_your_ui_upload_title: 'Benutzerdefinierte UI-Assets hochladen',
     bring_your_ui_description:
       'Laden Sie ein komprimiertes Paket (.zip) hoch, um die vorgefertigte Benutzeroberfläche von Logto durch Ihren eigenen Code zu ersetzen. <a>Erfahren Sie mehr</a>',
     bring_your_ui_oss_description: 'Passen Sie die Anmeldeoberfläche mit Ihrem eigenen Code an.',
@@ -97,6 +99,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Cloud ausprobieren',
     preview_with_bring_your_ui_description:
       'Ihre benutzerdefinierten UI-Assets wurden erfolgreich hochgeladen und werden jetzt bereitgestellt. Daher wurde das eingebaute Vorschaufenster deaktiviert.\nUm Ihre personalisierte Anmelde-Benutzeroberfläche zu testen, klicken Sie auf die Schaltfläche "Live-Vorschau", um sie in einem neuen Browser-Tab zu öffnen.',
+    csp_description:
+      'Erlauben Sie zusätzliche Quellausdrücke für Ihre benutzerdefinierte Anmeldeoberfläche. Diese Werte werden nur angewendet, wenn benutzerdefinierte UI-Assets bereitgestellt werden.',
+    csp_script_src: 'Erlaubte script-src',
+    csp_script_src_tip:
+      'Erlauben Sie HTTPS-Quellausdrücke für Skripte, die von Ihrer benutzerdefinierten UI geladen werden, z. B. https://scripts.example.com oder https://*.example.com.',
+    csp_connect_src: 'Erlaubte connect-src',
+    csp_connect_src_tip:
+      'Erlauben Sie HTTPS- oder WSS-Quellausdrücke für Netzwerkanfragen Ihrer benutzerdefinierten UI, z. B. https://api.example.com oder wss://events.example.com.',
+    csp_source_invalid_error:
+      'Geben Sie einen gültigen Quellausdruck ein. Verwenden Sie https://-URLs; connect-src unterstützt auch wss://. CSP-Schlüsselwörter und Semikolons werden nicht unterstützt.',
+    csp_source_duplicate_error: 'Dieser Quellausdruck ist bereits aufgeführt.',
   },
   account_center: {
     title: 'KONTOZENTRUM',
@@ -174,6 +187,24 @@ const sign_in_exp = {
         'Steuern Sie den Zugriff auf benutzerdefinierte JSON-Daten, die beim Benutzer gespeichert sind.',
       sessions: 'Sitzungen',
     },
+    profile_fields: {
+      title: 'Profilfelder für vorgefertigtes Konto-Center',
+      add_profile_fields: 'Profilfelder hinzufügen',
+      hint: {
+        not_in_list: 'Nicht in der Liste?',
+        set_up: 'Jetzt einrichten',
+        go_to: 'andere Profilfelder.',
+      },
+      disabled_hint: {
+        name: 'Um dieses Feld hinzuzufügen, setze zuerst die Berechtigung „Name“ im obigen Bereich „Profildaten“ auf „Bearbeiten/Nur lesen“.',
+        avatar:
+          'Um dieses Feld hinzuzufügen, setze zuerst die Berechtigung „Avatar“ im obigen Bereich „Profildaten“ auf „Bearbeiten/Nur lesen“.',
+        profile:
+          'Um dieses Feld hinzuzufügen, setze zuerst die Berechtigung „Profil“ im obigen Bereich „Profildaten“ auf „Bearbeiten/Nur lesen“.',
+        custom_data:
+          'Um dieses Feld hinzuzufügen, setze zuerst die Berechtigung „Benutzerdefinierte Daten“ im obigen Bereich „Profildaten“ auf „Bearbeiten/Nur lesen“.',
+      },
+    },
     webauthn_related_origins: 'WebAuthn-bezogene Ursprünge',
     webauthn_related_origins_description:
       'Fügen Sie die Domains Ihrer Frontend-Anwendungen hinzu, die über die Account-API Passkeys registrieren dürfen.',
@@ -202,6 +233,7 @@ const sign_in_exp = {
         username: 'Aktualisieren Sie Ihren Benutzernamen',
         password: 'Setzen Sie ein neues Passwort',
         social: 'Verknüpfen Sie ein Social-Konto für die Anmeldung',
+        social_change: 'Zu einem anderen verknüpften Social-Konto wechseln',
         social_remove: 'Entfernen Sie ein verknüpftes Social-Konto',
         authenticator_app:
           'Richten Sie eine neue Authentifizierungs-App für die Multi-Faktor-Authentifizierung ein',

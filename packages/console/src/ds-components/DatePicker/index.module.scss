@@ -1,0 +1,121 @@
+@use '@/scss/underscore' as _;
+
+.trigger {
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  outline: 3px solid transparent;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  padding: _.unit(1.5) _.unit(3);
+  font: var(--font-body-2);
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  min-width: 140px;
+  cursor: pointer;
+  background: var(--color-layer-1);
+  color: var(--color-text);
+
+  &:focus,
+  &.highlight {
+    border-color: var(--color-primary);
+    outline-color: var(--color-focused-variant);
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+.value {
+  flex: 1;
+  color: var(--color-text);
+}
+
+.placeholder {
+  color: var(--color-placeholder);
+}
+
+/* stylelint-disable selector-class-pattern -- third-party library class names. */
+.calendar {
+  background: var(--color-layer-1);
+  color: var(--color-text);
+  // Anchor font-family: the calendar renders inside a `react-modal` portal
+  // under <body>, which falls back to generic `sans-serif`.
+  font-family: var(--font-family);
+  padding: _.unit(2);
+  border-radius: 8px;
+
+  // react-day-picker re-declares `--rdp-*` on `.rdp` itself, so overrides
+  // must live at that same scope to win the cascade.
+  :global(.rdp) {
+    --rdp-accent-color: var(--color-primary);
+    --rdp-background-color: var(--color-hover-variant);
+    --rdp-accent-color-dark: var(--color-primary);
+    --rdp-background-color-dark: var(--color-hover-variant);
+    --rdp-outline: 2px solid var(--color-focused-variant);
+    --rdp-outline-selected: 2px solid var(--color-primary);
+    --rdp-selected-color: var(--color-static-white);
+    margin: 0;
+  }
+
+  // Chrome bits not driven by `--rdp-*` need explicit theme-aware colors.
+  :global(.rdp-caption_label),
+  :global(.rdp-head_cell) {
+    color: var(--color-text);
+  }
+
+  :global(.rdp-nav_button) {
+    color: var(--color-text-secondary);
+    border-radius: 6px;
+
+    &:hover:not([disabled]) {
+      background: var(--color-hover-variant);
+      color: var(--color-text);
+    }
+  }
+
+  :global(.rdp-day) {
+    border-radius: 50%;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+  }
+
+  :global(.rdp-day_today:not(.rdp-day_selected)) {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  :global(.rdp-day_disabled) {
+    color: var(--color-placeholder);
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: _.unit(2);
+  padding: _.unit(2) _.unit(3) _.unit(1);
+}
+
+.footerButton {
+  appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: _.unit(1) _.unit(2);
+  border-radius: 6px;
+  color: var(--color-primary);
+  font: var(--font-label-2);
+  font-family: var(--font-family);
+
+  &:hover {
+    background: var(--color-hover-variant);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focused-variant);
+    outline-offset: 1px;
+  }
+}

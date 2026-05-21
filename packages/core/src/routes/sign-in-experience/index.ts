@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- This route module already hosts several Sign-in Experience endpoints; keep this API change colocated with the existing update flow. */
 import { DemoConnector } from '@logto/connector-kit';
 import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
@@ -28,6 +29,7 @@ import { captureEvent } from '../../utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import customUiAssetsRoutes from './custom-ui-assets/index.js';
+import { hasCustomUiCspSources, normalizeCustomUiCsp } from './custom-ui-csp.js';
 
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
@@ -47,7 +49,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const { findDefaultSignInExperience, updateDefaultSignInExperience } = queries.signInExperiences;
   const { deleteConnectorById } = queries.connectors;
   const { findUserById } = queries.users;
-  const { normalizeSignUpProfileFields } = libraries.customProfileFields;
+  const { normalizeProfileFields } = libraries.customProfileFields;
   const {
     signInExperiences: { validateLanguageInfo },
     quota,
@@ -101,7 +103,13 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const {
         query: { removeUnusedDemoSocialConnector },
-        body: { socialSignInConnectorTargets, emailBlocklistPolicy, signUpProfileFields, ...rest },
+        body: {
+          socialSignInConnectorTargets,
+          emailBlocklistPolicy,
+          signUpProfileFields,
+          customUiCsp,
+          ...rest
+        },
       } = ctx.guard;
       const {
         languageInfo,
@@ -116,7 +124,9 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         passkeySignIn,
       } = rest;
 
-      const normalizedSignUpProfileFields = await normalizeSignUpProfileFields(signUpProfileFields);
+      const normalizedSignUpProfileFields = await normalizeProfileFields(signUpProfileFields);
+      const normalizedCustomUiCsp = conditional(customUiCsp && normalizeCustomUiCsp(customUiCsp));
+      const hasCustomUiCsp = hasCustomUiCspSources(normalizedCustomUiCsp);
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -261,6 +271,17 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             details: 'Hide Logto branding is not supported in this environment',
           })
         );
+      }
+      if (hasCustomUiCsp) {
+        assertThat(
+          EnvSet.values.isCloud,
+          new RequestError({
+            code: 'request.invalid_input',
+            details: 'Custom UI CSP configuration is not available',
+          })
+        );
+      }
+      if (hideLogtoBranding === true || hasCustomUiCsp) {
         await quota.guardTenantUsageByKey('bringYourUiEnabled');
       }
       if (passkeySignIn?.enabled) {
@@ -283,6 +304,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         ...conditional(
           normalizedSignUpProfileFields !== undefined && {
             signUpProfileFields: normalizedSignUpProfileFields,
+          }
+        ),
+        ...conditional(
+          normalizedCustomUiCsp !== undefined && {
+            customUiCsp: normalizedCustomUiCsp,
           }
         ),
       };
@@ -354,3 +380,4 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
   customUiAssetsRoutes(...args);
 }
+/* eslint-enable max-lines */

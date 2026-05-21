@@ -49,7 +49,14 @@ type UserContext = {
  * A map of data hook event to its context type for better type hinting.
  */
 type DataHookContextMap = {
-  'Organization.Membership.Updated': { organizationId: string };
+  /** Delta fields are omitted when empty (consumers must treat absence as "no change") and each capped at 5000 entries — see truncateMembershipDelta. */
+  'Organization.Membership.Updated': {
+    organizationId: string;
+    addedUserIds?: readonly string[];
+    removedUserIds?: readonly string[];
+    addedApplicationIds?: readonly string[];
+    removedApplicationIds?: readonly string[];
+  };
   'User.Created': UserContext;
   'User.Data.Updated': UserContext;
   'User.Deleted': UserContext;

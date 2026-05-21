@@ -56,12 +56,18 @@ export const hasSignUpAndSignInConfigChanged = (
 export const getBrandingErrorCount = (
   errors: FieldErrorsImpl<DeepRequired<SignInExperienceForm>>
 ) => {
-  const { color, branding, customCss } = errors;
+  const { color, branding, customCss, customUiCsp } = errors;
   const colorFormErrorCount = color ? Object.keys(color).length : 0;
   const brandingFormErrorCount = branding ? Object.keys(branding).length : 0;
   const customCssFormErrorCount = customCss ? 1 : 0;
+  const customUiCspFormErrorCount = customUiCsp ? Object.keys(customUiCsp).length : 0;
 
-  return colorFormErrorCount + brandingFormErrorCount + customCssFormErrorCount;
+  return (
+    colorFormErrorCount +
+    brandingFormErrorCount +
+    customCssFormErrorCount +
+    customUiCspFormErrorCount
+  );
 };
 
 export const getSignUpAndSignInErrorCount = (

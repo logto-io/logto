@@ -73,7 +73,7 @@
   .main {
     width: auto;
     flex: 1;
-    padding: _.unit(4) _.unit(5);
+    padding: _.unit(4);
     background: var(--color-bg-float-base);
   }
 
@@ -124,7 +124,7 @@
   @media only screen and (max-width: 800px) {
     .main:not(.cardMain) {
       width: auto;
-      padding: _.unit(3) _.unit(5);
+      padding: _.unit(4);
     }
   }
 

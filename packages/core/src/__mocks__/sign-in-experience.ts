@@ -94,6 +94,7 @@ export const mockSignInExperience: SignInExperience = {
   customContent: {},
   agreeToTermsPolicy: AgreeToTermsPolicy.Automatic,
   customUiAssets: null,
+  customUiCsp: {},
   passwordPolicy: {},
   mfa: {
     policy: MfaPolicy.PromptAtSignInAndSignUp,

@@ -13,3 +13,6 @@ create table organization_user_relations (
     foreign key (tenant_id, user_id)
       references users (tenant_id, id) on update cascade on delete cascade
 );
+
+create index organization_user_relations__tenant_id_user_id
+  on organization_user_relations (tenant_id, user_id);

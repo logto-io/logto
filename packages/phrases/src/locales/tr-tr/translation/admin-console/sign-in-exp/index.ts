@@ -84,12 +84,14 @@ const sign_in_exp = {
     title: 'Özelleştirilmiş UI',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'Özelleştirilmiş CSS',
+    css_code_editor_field_title: 'CSS geçersiz kılma',
     css_code_editor_description1: 'Özelleştirilmiş CSS örneğine bakın.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Daha fazla bilgi edinin',
     css_code_editor_content_placeholder:
-      "Tam olarak istediğiniz özelliklere göre stilleri uyarlamak için özelleştirilmiş CSS'inizi girin. Yaratıcılığınızı ifade edin ve UI'nizi öne çıkarın.",
+      "İstediğiniz özelliklere göre herhangi bir öğenin stillerini uyarlamak için CSS geçersiz kılmalarınızı buraya girin. Yaratıcılığınızı ifade edin ve UI'nizi öne çıkarın.",
     bring_your_ui_title: "UI'nizi Getirin",
+    bring_your_ui_upload_title: 'Özel UI varlıklarını yükle',
     bring_your_ui_description:
       "Logto'nun önceden oluşturulmuş UI'sini kendi kodunuzla değiştirmek için sıkıştırılmış bir paket (.zip) yükleyin. <a>Daha fazla bilgi edinin</a>",
     bring_your_ui_oss_description: 'Oturum açma arayüzünü kendi kodunuzla özelleştirin.',
@@ -98,6 +100,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: "Cloud'u deneyin",
     preview_with_bring_your_ui_description:
       'Özelleştirilmiş UI varlıklarınız başarıyla yüklendi ve şimdi sunuluyor. Sonuç olarak, yerleşik önizleme penceresi devre dışı bırakıldı.\nKişiselleştirilmiş oturum açma UI\'nizi test etmek için "Canlı Önizleme" düğmesine tıklayarak yeni bir tarayıcı sekmesinde açın.',
+    csp_description:
+      'Özel oturum açma UI’niz için ek kaynak ifadelerine izin verin. Bu değerler yalnızca özel UI varlıkları sunulduğunda uygulanır.',
+    csp_script_src: 'İzin verilen script-src',
+    csp_script_src_tip:
+      'Özel UI’niz tarafından yüklenen betikler için https://scripts.example.com veya https://*.example.com gibi HTTPS kaynak ifadelerine izin verin.',
+    csp_connect_src: 'İzin verilen connect-src',
+    csp_connect_src_tip:
+      'Özel UI’nizin yaptığı ağ istekleri için https://api.example.com veya wss://events.example.com gibi HTTPS ya da WSS kaynak ifadelerine izin verin.',
+    csp_source_invalid_error:
+      'Geçerli bir kaynak ifadesi girin. https:// URL’leri kullanın; connect-src ayrıca wss:// desteği sunar. CSP anahtar kelimeleri ve noktalı virgüller desteklenmez.',
+    csp_source_duplicate_error: 'Bu kaynak ifadesi zaten listede.',
   },
   account_center: {
     title: 'HESAP MERKEZİ',
@@ -174,6 +187,24 @@ const sign_in_exp = {
       custom_data_description: 'Kullanıcıda saklanan özel JSON verilerine erişimi kontrol edin.',
       sessions: 'Oturumlar',
     },
+    profile_fields: {
+      title: 'Önceden oluşturulmuş hesap merkezi için profil alanları',
+      add_profile_fields: 'Profil alanları ekle',
+      hint: {
+        not_in_list: 'Listede yok mu?',
+        set_up: 'Şimdi kur',
+        go_to: 'diğer profil alanları.',
+      },
+      disabled_hint: {
+        name: 'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Ad" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+        avatar:
+          'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Avatar" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+        profile:
+          'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Profil" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+        custom_data:
+          'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Özel veriler" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+      },
+    },
     webauthn_related_origins: 'WebAuthn İlgili Kaynaklar',
     webauthn_related_origins_description:
       'Account API aracılığıyla passkey kaydedilmesine izin verilen ön uç uygulamalarınızın alan adlarını ekleyin.',
@@ -202,6 +233,7 @@ const sign_in_exp = {
         username: 'Kullanıcı adınızı güncelleyin',
         password: 'Yeni bir parola ayarlayın',
         social: 'Oturum açmak için bir sosyal hesap bağlayın',
+        social_change: 'Başka bir bağlı sosyal hesaba geçin',
         social_remove: 'Bağlı sosyal hesabı kaldırın',
         authenticator_app:
           'Çok faktörlü kimlik doğrulama için yeni bir doğrulayıcı uygulaması ayarlayın',

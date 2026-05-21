@@ -129,32 +129,36 @@ describe('admin console application management (roles)', () => {
 
   // This case tests GET operation on applications and filter by `types` parameter and `search` parameter.
   it('search applications with specified keyword, types and other parameters', async () => {
-    await createApplication('test-m2m-app-001', ApplicationType.MachineToMachine);
-    const m2mApp002 = await createApplication('test-m2m-app-002', ApplicationType.MachineToMachine);
-    await createApplication('test-spa-app-001', ApplicationType.SPA);
-    await createApplication('test-spa-app-002', ApplicationType.SPA);
-    await createApplication('test-native-app-001', ApplicationType.Native);
-    await createApplication('test-native-app-002', ApplicationType.Native);
+    const applicationNamePrefix = `test-app-${generateStandardId(4)}`;
+    const m2mAppName002 = `${applicationNamePrefix}-002-m2m`;
+    const spaAppName002 = `${applicationNamePrefix}-002-spa`;
+
+    await createApplication(`${applicationNamePrefix}-001-m2m`, ApplicationType.MachineToMachine);
+    const m2mApp002 = await createApplication(m2mAppName002, ApplicationType.MachineToMachine);
+    await createApplication(`${applicationNamePrefix}-001-spa`, ApplicationType.SPA);
+    await createApplication(spaAppName002, ApplicationType.SPA);
+    await createApplication(`${applicationNamePrefix}-001-native`, ApplicationType.Native);
+    await createApplication(`${applicationNamePrefix}-002-native`, ApplicationType.Native);
 
     // Search applications with `types` and `search` parameters
     const spaAndM2mAppsWithKeyword = await getApplications(
       [ApplicationType.SPA, ApplicationType.MachineToMachine],
-      { search: '%002%' }
+      { search: `%${applicationNamePrefix}-002%` }
     );
     expect(spaAndM2mAppsWithKeyword.length).toBe(2);
-    expect(spaAndM2mAppsWithKeyword.find(({ name }) => name === 'test-m2m-app-002')).toBeTruthy();
-    expect(spaAndM2mAppsWithKeyword.find(({ name }) => name === 'test-spa-app-002')).toBeTruthy();
+    expect(spaAndM2mAppsWithKeyword.find(({ name }) => name === m2mAppName002)).toBeTruthy();
+    expect(spaAndM2mAppsWithKeyword.find(({ name }) => name === spaAppName002)).toBeTruthy();
 
     // Search applications with `types`, `search` and `excludeRoleId` parameters
     const m2mRole = await createRole({ type: RoleType.MachineToMachine });
     await assignApplicationsToRole([m2mApp002.id], m2mRole.id);
     const applications = await getApplications(
       [ApplicationType.SPA, ApplicationType.MachineToMachine],
-      { search: '%002%', excludeRoleId: m2mRole.id }
+      { search: `%${applicationNamePrefix}-002%`, excludeRoleId: m2mRole.id }
     );
     expect(applications.length).toBe(1);
-    expect(applications.find(({ name }) => name === 'test-m2m-app-002')).toBeFalsy();
-    expect(applications.find(({ name }) => name === 'test-spa-app-002')).toBeTruthy();
+    expect(applications.find(({ name }) => name === m2mAppName002)).toBeFalsy();
+    expect(applications.find(({ name }) => name === spaAppName002)).toBeTruthy();
   });
 
   it('test m2m application client credentials grant type with custom JWT', async () => {

@@ -3,6 +3,8 @@ import type { MouseEvent, KeyboardEvent, ReactNode } from 'react';
 
 import { onKeyDownHandler } from '@/utils/a11y';
 
+import Tooltip from '../Tip/Tooltip';
+
 import styles from './DropdownItem.module.scss';
 
 export type Props = {
@@ -12,6 +14,8 @@ export type Props = {
   readonly icon?: ReactNode;
   readonly iconClassName?: string;
   readonly type?: 'default' | 'danger';
+  readonly isDisabled?: boolean;
+  readonly tooltip?: ReactNode;
 };
 
 function DropdownItem({
@@ -21,22 +25,50 @@ function DropdownItem({
   icon,
   iconClassName,
   type = 'default',
+  isDisabled = false,
+  tooltip,
 }: Props) {
-  return (
+  const item = (
     <div
-      className={classNames(styles.item, styles[type], className)}
+      className={classNames(styles.item, styles[type], isDisabled && styles.disabled, className)}
       role="menuitem"
       tabIndex={0}
+      aria-disabled={isDisabled}
       onMouseDown={(event) => {
         event.preventDefault();
       }}
-      onKeyDown={onKeyDownHandler(onClick)}
-      onClick={onClick}
+      onKeyDown={
+        isDisabled
+          ? (event) => {
+              if ([' ', 'Enter'].includes(event.key)) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            }
+          : onKeyDownHandler(onClick)
+      }
+      onClick={
+        isDisabled
+          ? (event) => {
+              event.stopPropagation();
+            }
+          : onClick
+      }
     >
       {icon && <span className={classNames(styles.icon, iconClassName)}>{icon}</span>}
       {children}
     </div>
   );
+
+  if (isDisabled && tooltip) {
+    return (
+      <Tooltip anchorClassName={styles.tooltipAnchor} placement="right" content={tooltip}>
+        {item}
+      </Tooltip>
+    );
+  }
+
+  return item;
 }
 
 export default DropdownItem;

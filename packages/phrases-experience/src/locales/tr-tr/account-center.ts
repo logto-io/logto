@@ -96,7 +96,6 @@ const account_center = {
     backup_codes_count_other: '{{count}} kod kaldı',
     view: 'Görüntüle',
     manage: 'Yönet',
-    turn_on_2_step_verification: '2 adımlı doğrulamayı aç',
     turn_on_2_step_verification_description:
       'Ekstra bir güvenlik katmanı ekleyin. Oturum açarken ikinci bir doğrulama adımı istenecektir.',
     turn_off_2_step_verification: '2 adımlı doğrulamayı kapat',

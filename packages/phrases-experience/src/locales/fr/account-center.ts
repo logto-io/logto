@@ -101,7 +101,6 @@ const account_center = {
     backup_codes_count_other: '{{count}} codes restants',
     view: 'Voir',
     manage: 'Gérer',
-    turn_on_2_step_verification: 'Activer la vérification en deux étapes',
     turn_on_2_step_verification_description:
       'Ajoutez une couche de sécurité supplémentaire. Vous serez invité à effectuer une deuxième étape de vérification lors de la connexion.',
     turn_off_2_step_verification: 'Désactiver la vérification en deux étapes',

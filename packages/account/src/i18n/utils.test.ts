@@ -1,96 +1,49 @@
-import assert from 'node:assert/strict';
-import test from 'node:test';
+import { getPreferredLanguage, resolveLanguage, resolveUiLocalesLanguage } from './utils';
 
-import type * as I18nUtilsModule from './utils';
-
-const { resolveLanguage, resolveUiLocalesLanguage, getPreferredLanguage } = (await import(
-  new URL('utils.ts', import.meta.url).href
-)) as typeof I18nUtilsModule;
-
-void test('resolveLanguage returns the best supported built-in language', () => {
-  assert.equal(resolveLanguage('pl'), 'pl-PL');
-  assert.equal(resolveLanguage('zh-HK'), 'zh-HK');
-  assert.equal(resolveLanguage('xx'), undefined);
-});
-
-void test('resolveUiLocalesLanguage returns the first supported locale with fallback support', () => {
-  assert.equal(resolveUiLocalesLanguage('xx pl fr'), 'pl-PL');
-  assert.equal(resolveUiLocalesLanguage('zh-HK zh'), 'zh-HK');
-  assert.equal(resolveUiLocalesLanguage('xx yy'), undefined);
-});
-
-void test('getPreferredLanguage respects ui_locales fallback before language settings', () => {
-  assert.equal(
-    getPreferredLanguage({
-      uiLocales: 'xx pl',
-      languageSettings: {
-        autoDetect: false,
-        fallbackLanguage: 'fr',
-      },
-    }),
-    'pl-PL'
-  );
-});
-
-void test('getPreferredLanguage uses the shared SIE language source when auto detecting', () => {
-  const navigatorDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
-  const windowDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'window');
-  const storage = new Map([
-    ['i18nextAccountCenterLng', 'zh-CN'],
-    ['i18nextLogtoUiLng', 'en-US'],
-  ]);
-  const localStorage = {
-    getItem: (key: string) => storage.get(key) ?? null,
-    setItem: (key: string, value: string) => {
-      storage.set(key, value);
-    },
-    removeItem: (key: string) => {
-      storage.delete(key);
-    },
-  };
-  const navigator = {
-    languages: ['fr'],
-    language: 'fr',
-  };
-
-  Reflect.defineProperty(globalThis, 'navigator', {
-    value: navigator,
-    configurable: true,
-  });
-  Reflect.defineProperty(globalThis, 'window', {
-    value: {
-      location: {
-        hash: '',
-        search: '',
-      },
-      localStorage,
-      sessionStorage: localStorage,
-      navigator,
-    },
-    configurable: true,
+describe('i18n utils', () => {
+  afterEach(() => {
+    localStorage.clear();
+    jest.restoreAllMocks();
   });
 
-  try {
-    assert.equal(
+  it('resolveLanguage returns the best supported built-in language', () => {
+    expect(resolveLanguage('pl')).toBe('pl-PL');
+    expect(resolveLanguage('zh-HK')).toBe('zh-HK');
+    expect(resolveLanguage('xx')).toBeUndefined();
+  });
+
+  it('resolveUiLocalesLanguage returns the first supported locale with fallback support', () => {
+    expect(resolveUiLocalesLanguage('xx pl fr')).toBe('pl-PL');
+    expect(resolveUiLocalesLanguage('zh-HK zh')).toBe('zh-HK');
+    expect(resolveUiLocalesLanguage('xx yy')).toBeUndefined();
+  });
+
+  it('getPreferredLanguage respects ui_locales fallback before language settings', () => {
+    expect(
+      getPreferredLanguage({
+        uiLocales: 'xx pl',
+        languageSettings: {
+          autoDetect: false,
+          fallbackLanguage: 'fr',
+        },
+      })
+    ).toBe('pl-PL');
+  });
+
+  it('getPreferredLanguage uses the shared SIE language source when auto detecting', () => {
+    jest.spyOn(navigator, 'languages', 'get').mockReturnValue(['fr']);
+    jest.spyOn(navigator, 'language', 'get').mockReturnValue('fr');
+
+    localStorage.setItem('i18nextAccountCenterLng', 'zh-CN');
+    localStorage.setItem('i18nextLogtoUiLng', 'en-US');
+
+    expect(
       getPreferredLanguage({
         languageSettings: {
           autoDetect: true,
           fallbackLanguage: 'fr',
         },
-      }),
-      'en'
-    );
-  } finally {
-    if (navigatorDescriptor) {
-      Reflect.defineProperty(globalThis, 'navigator', navigatorDescriptor);
-    } else {
-      Reflect.deleteProperty(globalThis, 'navigator');
-    }
-
-    if (windowDescriptor) {
-      Reflect.defineProperty(globalThis, 'window', windowDescriptor);
-    } else {
-      Reflect.deleteProperty(globalThis, 'window');
-    }
-  }
+      })
+    ).toBe('en');
+  });
 });

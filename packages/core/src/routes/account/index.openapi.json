@@ -122,7 +122,7 @@
       "post": {
         "operationId": "UpdatePassword",
         "summary": "Update password",
-        "description": "Update password for the user, a logto-verification-id in header is required for checking sensitive permissions.",
+        "description": "Update password for the user. A logto-verification-id header is required when the user has at least one security verification method: password, primary email, or primary phone. The header can be omitted only when the user has none of these methods and is setting the first password.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -140,8 +140,8 @@
           "204": {
             "description": "The password was updated successfully."
           },
-          "403": {
-            "description": "Permission denied, the verification record is invalid."
+          "401": {
+            "description": "Permission denied, verification is required or the verification record is invalid."
           }
         }
       }
@@ -362,6 +362,38 @@
         "responses": {
           "204": {
             "description": "The identity was added successfully."
+          }
+        }
+      },
+      "put": {
+        "operationId": "ReplaceMyAccountIdentity",
+        "summary": "Replace a user identity",
+        "description": "Replace (upsert) an identity (social identity) for the user. Creates the identity if absent, replaces it otherwise. Idempotent. Unlike POST, this allows replacing an existing identity for the same social target. When replacing with a different social user ID, previously stored third-party tokens for the old identity are cleared. A logto-verification-id header is required for checking sensitive permissions, and a verification record for the social identity is required.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "newIdentifierVerificationRecordId": {
+                    "description": "The identifier verification record ID for the new social identity ownership verification."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The identity was replaced successfully."
+          },
+          "400": {
+            "description": "The request body is invalid or the social identity field is not editable."
+          },
+          "401": {
+            "description": "Permission denied, identity verification is required or insufficient scope."
+          },
+          "422": {
+            "description": "The new verification record is invalid or the identity is already in use."
           }
         }
       }
@@ -636,10 +668,10 @@
       "get": {
         "operationId": "GetSessions",
         "summary": "Get all active sessions",
-        "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available. A logto-verification-id in header is required for checking sensitive session details.",
+        "description": "Retrieve all non-expired sessions for the user, including session metadata and interaction details when available. A logto-verification-id in header is required for checking sensitive session details. Each entry includes an `isCurrent` boolean: `true` for the entry whose OIDC session backs the calling access token, `false` for the others. Use this to mark the \"This device\" entry in session-management UIs and to avoid revoking the caller's own session. At most one entry is `true` per response. Zero entries are tagged when the calling access token has no matching session uid — for example, the caller has revoked its own session but the token has not yet expired, or the token was issued from a non-session-backed grant.",
         "responses": {
           "200": {
-            "description": "Return a list of non-expired sessions of the user."
+            "description": "Return a list of non-expired sessions of the user. At most one entry has `isCurrent: true` per request."
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access session details."

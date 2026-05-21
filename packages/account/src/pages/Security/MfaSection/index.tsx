@@ -22,6 +22,7 @@ import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../..
 import useApi from '../../../hooks/use-api';
 import useErrorHandler from '../../../hooks/use-error-handler';
 
+import MfaSkeleton from './MfaSkeleton';
 import styles from './index.module.scss';
 import useMfaRows from './use-mfa-rows';
 
@@ -32,6 +33,105 @@ const mandatoryMfaPolicies = new Set<MfaPolicy>([
   MfaPolicy.PromptOnlyAtSignInMandatory,
 ]);
 
+type MfaRowsProps = {
+  readonly rows: ReturnType<typeof useMfaRows>;
+};
+
+const MfaRows = ({ rows }: MfaRowsProps) => {
+  const { t } = useTranslation();
+
+  return rows.map(({ key, icon: Icon, label, value, isPlainValue, isConfigured, action }) => (
+    <div key={key} className={classNames(styles.row, layoutClassNames.row)}>
+      <div className={styles.topLine}>
+        <div className={styles.iconWrap}>
+          <Icon className={styles.icon} />
+        </div>
+        {action && (
+          <div className={styles.actions}>
+            <button type="button" className={styles.actionButton} onClick={action.handler}>
+              {action.label}
+            </button>
+          </div>
+        )}
+      </div>
+      <div className={styles.title}>{label}</div>
+      <div className={styles.value}>
+        {isConfigured ? (
+          isPlainValue ? (
+            <span className={styles.plainValue}>{value}</span>
+          ) : (
+            <span className={styles.statusTag}>
+              <span className={styles.statusDot} />
+              {value}
+            </span>
+          )
+        ) : (
+          <span className={styles.notConfigured}>
+            {t('account_center.security.not_configured')}
+          </span>
+        )}
+      </div>
+    </div>
+  ));
+};
+
+type MfaContentProps = {
+  readonly isLoading: boolean;
+  readonly hasToggle: boolean;
+  readonly isTwoStepEnabled: boolean;
+  readonly rows: ReturnType<typeof useMfaRows>;
+  readonly onToggleChange: (checked: boolean) => Promise<void>;
+};
+
+const MfaContent = ({
+  isLoading,
+  hasToggle,
+  isTwoStepEnabled,
+  rows,
+  onToggleChange,
+}: MfaContentProps) => {
+  const { t } = useTranslation();
+
+  if (isLoading) {
+    return (
+      <div
+        className={styles.skeletonContent}
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label={t('account_center.security.two_step_verification')}
+      >
+        <MfaSkeleton hasToggle={hasToggle} rows={rows} />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {hasToggle && (
+        <div className={styles.toggleRow}>
+          <div className={styles.toggleInfo}>
+            <div className={styles.toggleTitle}>
+              {t('account_center.security.two_step_verification')}
+            </div>
+            <div className={styles.toggleDescription}>
+              {t('account_center.security.turn_on_2_step_verification_description')}
+            </div>
+          </div>
+          <ToggleSwitch
+            isChecked={isTwoStepEnabled}
+            onChange={(checked) => {
+              void onToggleChange(checked);
+            }}
+          />
+        </div>
+      )}
+      {hasToggle && rows.length > 0 && <div className={styles.divider} />}
+      <MfaRows rows={rows} />
+    </>
+  );
+};
+
 const MfaSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -39,6 +139,10 @@ const MfaSection = () => {
     useContext(PageContext);
   const [mfaVerifications, setMfaVerifications] = useState<UserMfaVerificationResponse>();
   const [skipMfaOnSignIn, setSkipMfaOnSignIn] = useState<boolean>();
+  const [hasLoadedMfaVerifications, setHasLoadedMfaVerifications] = useState(false);
+  const [isLoadingMfaVerifications, setIsLoadingMfaVerifications] = useState(false);
+  const [hasLoadedMfaSettings, setHasLoadedMfaSettings] = useState(false);
+  const [isLoadingMfaSettings, setIsLoadingMfaSettings] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const handleError = useErrorHandler();
 
@@ -58,22 +162,31 @@ const MfaSection = () => {
 
   const isTwoStepEnabled = skipMfaOnSignIn === false;
   const hasConfiguredMfa = (mfaVerifications?.length ?? 0) > 0;
+  const isMfaSectionLoading =
+    (isMfaSectionVisible && (!hasLoadedMfaVerifications || isLoadingMfaVerifications)) ||
+    (showToggle && (!hasLoadedMfaSettings || isLoadingMfaSettings));
 
   const getMfaRequest = useApi(getMfaVerifications, { silent: true });
   const getMfaSettingsRequest = useApi(getMfaSettings, { silent: true });
 
   const fetchMfaVerifications = useCallback(async () => {
+    setIsLoadingMfaVerifications(true);
     const [error, result] = await getMfaRequest();
     if (!error && result) {
       setMfaVerifications(result);
     }
+    setHasLoadedMfaVerifications(true);
+    setIsLoadingMfaVerifications(false);
   }, [getMfaRequest]);
 
   const fetchMfaSettings = useCallback(async () => {
+    setIsLoadingMfaSettings(true);
     const [error, result] = await getMfaSettingsRequest();
     if (!error && result) {
       setSkipMfaOnSignIn(result.skipMfaOnSignIn);
     }
+    setHasLoadedMfaSettings(true);
+    setIsLoadingMfaSettings(false);
   }, [getMfaSettingsRequest]);
 
   useEffect(() => {
@@ -97,6 +210,7 @@ const MfaSection = () => {
   );
 
   const rows = useMfaRows(mfaVerifications, navigateTo);
+  const shouldShowMfaCard = showToggle || rows.length > 0;
 
   const updateSkipMfaOnSignIn = useCallback(
     async (verifiedId: string, skipMfaOnSignIn: boolean) => {
@@ -164,7 +278,7 @@ const MfaSection = () => {
     void updateSkipMfaOnSignIn(verificationId, pendingAction === 'disable-mfa');
   }, [updateSkipMfaOnSignIn, verificationId]);
 
-  if (rows.length === 0 && !showToggle) {
+  if (!shouldShowMfaCard) {
     return null;
   }
 
@@ -174,76 +288,21 @@ const MfaSection = () => {
         <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
           {t('account_center.security.two_step_verification')}
         </div>
-        {showToggle && isTwoStepEnabled && !hasConfiguredMfa && (
+        {!isMfaSectionLoading && showToggle && isTwoStepEnabled && !hasConfiguredMfa && (
           <InlineNotification
             message="account_center.security.no_verification_method_warning"
             className={styles.notification}
           />
         )}
-        {(showToggle || rows.length > 0) && (
-          <div className={classNames(styles.card, layoutClassNames.card)}>
-            {showToggle && (
-              <div className={styles.toggleRow}>
-                <div className={styles.toggleInfo}>
-                  <div className={styles.toggleTitle}>
-                    {t(
-                      isTwoStepEnabled
-                        ? 'account_center.security.turn_off_2_step_verification'
-                        : 'account_center.security.turn_on_2_step_verification'
-                    )}
-                  </div>
-                  <div className={styles.toggleDescription}>
-                    {t('account_center.security.turn_on_2_step_verification_description')}
-                  </div>
-                </div>
-                <ToggleSwitch
-                  isChecked={isTwoStepEnabled}
-                  onChange={(checked) => {
-                    void handleToggleChange(checked);
-                  }}
-                />
-              </div>
-            )}
-            {showToggle && rows.length > 0 && <div className={styles.divider} />}
-            {rows.map(({ key, icon: Icon, label, value, isPlainValue, isConfigured, action }) => (
-              <div key={key} className={classNames(styles.row, layoutClassNames.row)}>
-                <div className={styles.topLine}>
-                  <div className={styles.iconWrap}>
-                    <Icon className={styles.icon} />
-                  </div>
-                  {action && (
-                    <div className={styles.actions}>
-                      <button
-                        type="button"
-                        className={styles.actionButton}
-                        onClick={action.handler}
-                      >
-                        {action.label}
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className={styles.title}>{label}</div>
-                <div className={styles.value}>
-                  {isConfigured ? (
-                    isPlainValue ? (
-                      <span className={styles.plainValue}>{value}</span>
-                    ) : (
-                      <span className={styles.statusTag}>
-                        <span className={styles.statusDot} />
-                        {value}
-                      </span>
-                    )
-                  ) : (
-                    <span className={styles.notConfigured}>
-                      {t('account_center.security.not_configured')}
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className={classNames(styles.card, layoutClassNames.card)}>
+          <MfaContent
+            isLoading={isMfaSectionLoading}
+            hasToggle={showToggle}
+            isTwoStepEnabled={isTwoStepEnabled}
+            rows={rows}
+            onToggleChange={handleToggleChange}
+          />
+        </div>
       </div>
       <ConfirmModal
         isOpen={isConfirmModalOpen}

@@ -83,12 +83,14 @@ const sign_in_exp = {
     title: 'Niestandardowy interfejs użytkownika',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'Niestandardowy CSS',
+    css_code_editor_field_title: 'Nadpisanie CSS',
     css_code_editor_description1: 'Zobacz przykład niestandardowego CSS.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Dowiedz się więcej',
     css_code_editor_content_placeholder:
-      'Wpisz swój niestandardowy CSS, aby dostosować style wszystkiego do swoich specyfikacji. Wyraź swoją kreatywność i spraw, by Twój interfejs użytkownika był wyjątkowy.',
+      'Wpisz tutaj swoje nadpisania CSS, aby dostosować style dowolnych elementów dokładnie do swoich wymagań. Wyraź swoją kreatywność i wyróżnij swój UI.',
     bring_your_ui_title: 'Przynieś swój interfejs użytkownika',
+    bring_your_ui_upload_title: 'Prześlij niestandardowe zasoby UI',
     bring_your_ui_description:
       'Prześlij skompresowany pakiet (.zip), aby zastąpić predefiniowany interfejs użytkownika Logto swoim własnym kodem. <a>Dowiedz się więcej</a>',
     bring_your_ui_oss_description: 'Dostosuj interfejs logowania za pomocą własnego kodu.',
@@ -97,6 +99,17 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: 'Wypróbuj Cloud',
     preview_with_bring_your_ui_description:
       'Twoje niestandardowe zasoby interfejsu użytkownika zostały pomyślnie przesłane i są teraz dostępne. W rezultacie wbudowane okno podglądu zostało wyłączone.\nAby przetestować swoje spersonalizowane UI logowania, kliknij przycisk "Podgląd na żywo", aby otworzyć go w nowej karcie przeglądarki.',
+    csp_description:
+      'Zezwól na dodatkowe wyrażenia źródeł dla własnego interfejsu logowania. Te wartości są stosowane tylko wtedy, gdy serwowane są niestandardowe zasoby UI.',
+    csp_script_src: 'Dozwolone script-src',
+    csp_script_src_tip:
+      'Zezwól na wyrażenia źródeł HTTPS dla skryptów ładowanych przez własny interfejs UI, takie jak https://scripts.example.com lub https://*.example.com.',
+    csp_connect_src: 'Dozwolone connect-src',
+    csp_connect_src_tip:
+      'Zezwól na wyrażenia źródeł HTTPS lub WSS dla żądań sieciowych wykonywanych przez własny interfejs UI, takie jak https://api.example.com lub wss://events.example.com.',
+    csp_source_invalid_error:
+      'Wprowadź prawidłowe wyrażenie źródła. Użyj adresów URL https://; connect-src obsługuje także wss://. Słowa kluczowe CSP i średniki nie są obsługiwane.',
+    csp_source_duplicate_error: 'To wyrażenie źródła jest już na liście.',
   },
   account_center: {
     title: 'CENTRUM KONTA',
@@ -174,6 +187,24 @@ const sign_in_exp = {
         'Kontroluj dostęp do niestandardowych danych JSON przechowywanych przy użytkowniku.',
       sessions: 'Sesje',
     },
+    profile_fields: {
+      title: 'Pola profilu dla gotowego centrum konta',
+      add_profile_fields: 'Dodaj pola profilu',
+      hint: {
+        not_in_list: 'Nie ma na liście?',
+        set_up: 'Skonfiguruj',
+        go_to: 'inne pola profilu teraz.',
+      },
+      disabled_hint: {
+        name: 'Aby dodać to pole, najpierw ustaw uprawnienie „Imię i nazwisko” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+        avatar:
+          'Aby dodać to pole, najpierw ustaw uprawnienie „Awatar” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+        profile:
+          'Aby dodać to pole, najpierw ustaw uprawnienie „Profil” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+        custom_data:
+          'Aby dodać to pole, najpierw ustaw uprawnienie „Dane niestandardowe” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+      },
+    },
     webauthn_related_origins: 'Powiązane źródła WebAuthn',
     webauthn_related_origins_description:
       'Dodaj domeny swoich aplikacji front-end, którym pozwalasz rejestrować klucze dostępu przez Account API.',
@@ -202,6 +233,7 @@ const sign_in_exp = {
         username: 'Zaktualizuj swoją nazwę użytkownika',
         password: 'Ustaw nowe hasło',
         social: 'Połącz konto społecznościowe do logowania',
+        social_change: 'Przełącz na inne połączone konto społecznościowe',
         social_remove: 'Usuń połączone konto społecznościowe',
         authenticator_app:
           'Skonfiguruj nową aplikację uwierzytelniającą dla uwierzytelniania wieloskładnikowego',

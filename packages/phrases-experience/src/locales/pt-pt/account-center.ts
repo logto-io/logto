@@ -99,7 +99,6 @@ const account_center = {
     backup_codes_count_other: '{{count}} códigos restantes',
     view: 'Ver',
     manage: 'Gerir',
-    turn_on_2_step_verification: 'Ativar verificação em duas etapas',
     turn_on_2_step_verification_description:
       'Adicione uma camada extra de segurança. Será solicitada uma segunda etapa de verificação ao iniciar sessão.',
     turn_off_2_step_verification: 'Desativar verificação em duas etapas',

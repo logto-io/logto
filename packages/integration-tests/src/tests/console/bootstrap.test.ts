@@ -82,10 +82,18 @@ describe('smoke testing for console admin account creation and sign-in', () => {
 
     await expectNavigation(expect(page).toClick('button[name=submit]'));
 
-    const expectedPathname = isDevFeaturesEnabled ? 'console/onboarding' : 'console/get-started';
-    expect(page.url()).toBe(new URL(expectedPathname, logtoConsoleUrl).href);
+    const getStartedUrl = new URL('console/get-started', logtoConsoleUrl).href;
+    const onboardingUrl = new URL('console/onboarding', logtoConsoleUrl).href;
+    const expectedUrls = isDevFeaturesEnabled ? [onboardingUrl, getStartedUrl] : [getStartedUrl];
+    await page.waitForFunction(
+      (expectedUrls) => expectedUrls.includes(window.location.href),
+      {},
+      expectedUrls
+    );
 
-    if (isDevFeaturesEnabled) {
+    expect(expectedUrls).toContain(page.url());
+
+    if (page.url() === onboardingUrl) {
       await expect(page).toFill('input[type=email]', 'oss-admin@example.com');
       await expect(page).toFill('input[placeholder="Acme.co"]', 'Acme');
       await expect(page).toClick('div[role=radio]', { text: '50-199' });
@@ -93,10 +101,10 @@ describe('smoke testing for console admin account creation and sign-in', () => {
       await page.waitForFunction(
         (expectedUrl) => window.location.href === expectedUrl,
         {},
-        new URL('console/get-started', logtoConsoleUrl).href
+        getStartedUrl
       );
 
-      expect(page.url()).toBe(new URL('console/get-started', logtoConsoleUrl).href);
+      expect(page.url()).toBe(getStartedUrl);
     }
   });
 

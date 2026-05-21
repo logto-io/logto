@@ -80,12 +80,14 @@ const sign_in_exp = {
     title: '自定義界面',
     cloud_tag: 'Cloud',
     css_code_editor_title: '自定義 CSS',
+    css_code_editor_field_title: 'CSS 覆寫',
     css_code_editor_description1: '查看自定義 CSS 範例。',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: '了解更多',
     css_code_editor_content_placeholder:
-      '輸入你的自定義 CSS，以完全符合你的規格定制樣式。展現你的創意，讓你的界面脫穎而出。',
+      '在此輸入你的 CSS 覆寫規則，以依照你的具體需求調整任何內容的樣式。展現你的創意，讓你的 UI 脫穎而出。',
     bring_your_ui_title: '帶上你的界面',
+    bring_your_ui_upload_title: '上傳自訂 UI 資源',
     bring_your_ui_description:
       '上傳壓縮包 (.zip) 來用你的代碼替換 Logto 的預構建界面。<a>了解更多</a>',
     bring_your_ui_oss_description: '用你的程式碼自訂登入介面。',
@@ -94,6 +96,16 @@ const sign_in_exp = {
     bring_your_ui_oss_try_cloud: '試用 Cloud',
     preview_with_bring_your_ui_description:
       '你的自定義界面資源已成功上傳並正在服務。因此，內置預覽窗口已被禁用。\n若要測試你的個性化登錄界面，請點擊「實時預覽」按鈕在新瀏覽器標籤頁中打開。',
+    csp_description: '為你的自訂登入介面允許額外的來源表達式。這些值只會在提供自訂 UI 資源時套用。',
+    csp_script_src: '允許的 script-src',
+    csp_script_src_tip:
+      '允許你的自訂 UI 載入腳本時使用的 HTTPS 來源表達式，例如 https://scripts.example.com 或 https://*.example.com。',
+    csp_connect_src: '允許的 connect-src',
+    csp_connect_src_tip:
+      '允許你的自訂 UI 發出網路請求時使用的 HTTPS 或 WSS 來源表達式，例如 https://api.example.com 或 wss://events.example.com。',
+    csp_source_invalid_error:
+      '請輸入有效的來源表達式。請使用 https:// URL；connect-src 也支援 wss://。不支援 CSP 關鍵字和分號。',
+    csp_source_duplicate_error: '此來源表達式已在清單中。',
   },
   account_center: {
     title: '帳號中心',
@@ -168,6 +180,21 @@ const sign_in_exp = {
       custom_data_description: '控制對儲存在使用者上的自訂 JSON 資料的存取。',
       sessions: '會話',
     },
+    profile_fields: {
+      title: '預建帳戶中心的檔案欄位',
+      add_profile_fields: '新增檔案欄位',
+      hint: {
+        not_in_list: '沒有你想要的？',
+        set_up: '立即設定',
+        go_to: '其他檔案欄位。',
+      },
+      disabled_hint: {
+        name: '若要新增此欄位，請先在上方檔案資料中將「姓名」權限設為「可編輯/唯讀」。',
+        avatar: '若要新增此欄位，請先在上方檔案資料中將「大頭貼」權限設為「可編輯/唯讀」。',
+        profile: '若要新增此欄位，請先在上方檔案資料中將「檔案」權限設為「可編輯/唯讀」。',
+        custom_data: '若要新增此欄位，請先在上方檔案資料中將「自訂資料」權限設為「可編輯/唯讀」。',
+      },
+    },
     webauthn_related_origins: 'WebAuthn 相關來源',
     webauthn_related_origins_description:
       '新增允許透過 Account API 註冊通行金鑰的前端應用程式網域。',
@@ -194,6 +221,7 @@ const sign_in_exp = {
         username: '更新你的使用者名稱',
         password: '設置新密碼',
         social: '連結社交帳號以供登入',
+        social_change: '切換至另一個已連結的社交帳號',
         social_remove: '移除已連結的社交帳號',
         authenticator_app: '為多重驗證設置新的身份驗證器應用',
         authenticator_app_replace: '用新的身份驗證器應用替換你現有的身份驗證器應用',

@@ -15,7 +15,7 @@ function CustomCssEditorField() {
 
   return (
     <FormField
-      title="sign_in_exp.custom_ui.css_code_editor_title"
+      title="sign_in_exp.custom_ui.css_code_editor_field_title"
       tip={(closeTipHandler) => (
         <>
           <div>{t('sign_in_exp.custom_ui.css_code_editor_description1')}</div>

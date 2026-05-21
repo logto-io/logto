@@ -7,6 +7,18 @@
   gap: _.unit(2);
 }
 
+.cspConfig {
+  display: flex;
+  flex-direction: column;
+  margin-top: _.unit(6);
+}
+
+.cspDescription {
+  margin-top: _.unit(2);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
 .ossCard {
   display: flex;
   align-items: center;

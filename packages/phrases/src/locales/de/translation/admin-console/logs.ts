@@ -8,6 +8,13 @@ const logs = {
   application: 'Anwendung',
   time: 'Zeit',
   filter_by: 'Filter nach',
+  last_1_hour: 'Letzte Stunde',
+  last_24_hours: 'Letzte 24 Stunden',
+  last_7_days: 'Letzte 7 Tage',
+  last_30_days: 'Letzte 30 Tage',
+  custom_range: 'Benutzerdefiniert',
+  from: 'Von',
+  to: 'Bis',
 };
 
 export default Object.freeze(logs);

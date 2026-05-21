@@ -5,7 +5,7 @@ import { safeLazy } from 'react-safe-lazy';
 import { SWRConfig } from 'swr';
 
 import AppLoading from '@/components/AppLoading';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled, isProduction } from '@/consts/env';
 import AppBoundary from '@/containers/AppBoundary';
 import AppContent, { RedirectToFirstItem } from '@/containers/AppContent';
 import ConsoleContent from '@/containers/ConsoleContent';
@@ -55,7 +55,7 @@ export function ConsoleRoutes() {
           <Route element={<ProtectedRoutes />}>
             <Route path={dropLeadingSlash(GlobalRoute.Profile) + '/*'} element={<Profile />} />
             <Route element={<TenantAccess />}>
-              {!isCloud && isDevFeaturesEnabled && (
+              {!isCloud && isProduction && isDevFeaturesEnabled && (
                 <Route path="onboarding" element={<OssOnboarding />} />
               )}
               {isCloud && (

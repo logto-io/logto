@@ -24,3 +24,13 @@
     color: var(--color-text-secondary);
   }
 }
+
+.disabled {
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}
+
+.tooltipAnchor {
+  display: block;
+  width: 100%;
+}

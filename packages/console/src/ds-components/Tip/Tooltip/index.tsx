@@ -94,10 +94,14 @@ function Tooltip({
 
     dom.addEventListener('mouseenter', enterHandler);
     dom.addEventListener('mouseleave', leaveHandler);
+    dom.addEventListener('focusin', enterHandler);
+    dom.addEventListener('focusout', leaveHandler);
 
     return () => {
       dom.removeEventListener('mouseenter', enterHandler);
       dom.removeEventListener('mouseleave', leaveHandler);
+      dom.removeEventListener('focusin', enterHandler);
+      dom.removeEventListener('focusout', leaveHandler);
     };
   }, [anchorRef, isVisible, isKeepOpen]);
 

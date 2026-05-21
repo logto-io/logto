@@ -149,6 +149,10 @@ export default class GlobalValues {
   /** If the env explicitly indicates it's in the cloud environment. */
   public readonly isCloud = yes(getEnv('IS_CLOUD'));
 
+  /** Enables protected app local development without Cloud-only behavior. */
+  public readonly isProtectedAppLocalDevEnabled =
+    !this.isProduction && yes(getEnv('PROTECTED_APP_LOCAL_DEV'));
+
   /**
    * Indicates whether this Logto instance supports multiple custom domains.
    *

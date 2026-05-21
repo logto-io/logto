@@ -61,9 +61,12 @@ export type GetUserSessionResponse = z.infer<typeof getUserSessionResponseGuard>
 export const accountUserExtendedSessionGuard = userExtendedSessionGuard.extend({
   /**
    * `true` for the entry whose `payload.uid` matches the calling session, `false` for
-   * the others. Omitted entirely when the caller has no session context.
+   * the others. At most one entry is `true` per response. Zero entries are tagged when
+   * the calling access token has no matching session uid — for example, the caller has
+   * revoked its own session but the token has not yet expired, or the token was issued
+   * from a non-session-backed grant.
    */
-  isCurrent: z.boolean().optional(),
+  isCurrent: z.boolean(),
 });
 
 export const getAccountUserSessionsResponseGuard = z.object({

@@ -364,3 +364,5 @@ export const signUpProfileFieldItemGuard = z.object({
 export const signUpProfileFieldsGuard = z.array(signUpProfileFieldItemGuard);
 
 export type SignUpProfileFields = z.infer<typeof signUpProfileFieldsGuard>;
+
+export { customUiCspGuard, type CustomUiCsp } from '@logto/core-kit';

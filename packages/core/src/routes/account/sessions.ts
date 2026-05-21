@@ -6,7 +6,6 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -49,12 +48,10 @@ export default function accountSessionRoutes<T extends UserRouter>(
       const sessions = await sessionLibrary.findUserActiveSessionsWithExtensions(userId);
 
       ctx.body = {
-        sessions: EnvSet.values.isDevFeaturesEnabled
-          ? sessions.map((session) => ({
-              ...session,
-              isCurrent: session.payload.uid === sessionUid,
-            }))
-          : sessions,
+        sessions: sessions.map((session) => ({
+          ...session,
+          isCurrent: session.payload.uid === sessionUid,
+        })),
       };
 
       return next();

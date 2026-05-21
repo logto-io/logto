@@ -1,15 +1,40 @@
+import { type OrganizationApiTest } from '#src/helpers/organization.js';
 import { generateName } from '#src/utils.js';
+
+type PlaceholderIds = {
+  userId?: string;
+  applicationId?: string;
+  /** Second application fixture; used by cases that exercise a two-sided PUT delta. */
+  applicationIdB?: string;
+  organizationId?: string;
+  organizationRoleId?: string;
+};
+
+type HookPayloadArgs = PlaceholderIds & {
+  isDevFeaturesEnabled: boolean;
+};
+
+type SetupContext = {
+  organizationApi?: OrganizationApiTest;
+  organizationId?: string;
+  userId?: string;
+  applicationId?: string;
+  applicationIdB?: string;
+  organizationRoleId?: string;
+};
 
 type TestCase = {
   route: string;
   event: string;
   method: 'patch' | 'post' | 'delete' | 'put';
   endpoint: string;
-  /** The payload that should be sent to the route. */
   payload: Record<string, unknown>;
-  /** The payload that should be sent to the webhook. */
-  hookPayload?: Record<string, unknown>;
+  hookPayload?: Record<string, unknown> | ((args: HookPayloadArgs) => Record<string, unknown>);
+  /** Idempotent precondition; runs before the route is hit. */
+  setup?: (ctx: SetupContext) => Promise<void>;
 };
+
+export type { PlaceholderIds, HookPayloadArgs, SetupContext, TestCase };
 
 export const userDataHookTestCases: TestCase[] = [
   {
@@ -93,126 +118,6 @@ export const scopesDataHookTestCases: TestCase[] = [
     event: 'Scope.Deleted',
     method: 'delete',
     endpoint: `resources/{resourceId}/scopes/{scopeId}`,
-    payload: {},
-  },
-];
-
-export const organizationDataHookTestCases: TestCase[] = [
-  {
-    route: 'PATCH /organizations/:id',
-    event: 'Organization.Data.Updated',
-    method: 'patch',
-    endpoint: `organizations/{organizationId}`,
-    payload: { description: 'new org description' },
-  },
-  {
-    route: 'POST /organizations/:id/users',
-    event: 'Organization.Membership.Updated',
-    method: 'post',
-    endpoint: `organizations/{organizationId}/users`,
-    payload: { userIds: ['{userId}'] },
-    hookPayload: { organizationId: expect.any(String) },
-  },
-  {
-    route: 'PUT /organizations/:id/users',
-    event: 'Organization.Membership.Updated',
-    method: 'put',
-    endpoint: `organizations/{organizationId}/users`,
-    payload: { userIds: ['{userId}'] },
-    hookPayload: { organizationId: expect.any(String) },
-  },
-  {
-    route: 'DELETE /organizations/:id/users/:userId',
-    event: 'Organization.Membership.Updated',
-    method: 'delete',
-    endpoint: `organizations/{organizationId}/users/{userId}`,
-    payload: {},
-    hookPayload: { organizationId: expect.any(String) },
-  },
-  {
-    route: 'POST /organizations/:id/applications',
-    event: 'Organization.Membership.Updated',
-    method: 'post',
-    endpoint: `organizations/{organizationId}/applications`,
-    payload: { applicationIds: ['{applicationId}'] },
-    hookPayload: { organizationId: expect.any(String) },
-  },
-  {
-    route: 'PUT /organizations/:id/applications',
-    event: 'Organization.Membership.Updated',
-    method: 'put',
-    endpoint: `organizations/{organizationId}/applications`,
-    payload: { applicationIds: ['{applicationId}'] },
-    hookPayload: { organizationId: expect.any(String) },
-  },
-  {
-    route: 'DELETE /organizations/:id/applications/:applicationId',
-    event: 'Organization.Membership.Updated',
-    method: 'delete',
-    endpoint: `organizations/{organizationId}/applications/{applicationId}`,
-    payload: {},
-    hookPayload: { organizationId: expect.any(String) },
-  },
-  {
-    route: 'DELETE /organizations/:id',
-    event: 'Organization.Deleted',
-    method: 'delete',
-    endpoint: `organizations/{organizationId}`,
-    payload: {},
-  },
-];
-
-export const organizationScopeDataHookTestCases: TestCase[] = [
-  {
-    route: 'PATCH /organization-scopes/:id',
-    event: 'OrganizationScope.Data.Updated',
-    method: 'patch',
-    endpoint: `organization-scopes/{organizationScopeId}`,
-    payload: { description: 'new org scope description' },
-  },
-  {
-    route: 'DELETE /organization-scopes/:id',
-    event: 'OrganizationScope.Deleted',
-    method: 'delete',
-    endpoint: `organization-scopes/{organizationScopeId}`,
-    payload: {},
-  },
-];
-
-export const organizationRoleDataHookTestCases: TestCase[] = [
-  {
-    route: 'PATCH /organization-roles/:id',
-    event: 'OrganizationRole.Data.Updated',
-    method: 'patch',
-    endpoint: `organization-roles/{organizationRoleId}`,
-    payload: { name: generateName() },
-  },
-  {
-    route: 'POST /organization-roles/:id/scopes',
-    event: 'OrganizationRole.Scopes.Updated',
-    method: 'post',
-    endpoint: `organization-roles/{organizationRoleId}/scopes`,
-    payload: { organizationScopeIds: ['{scopeId}'] },
-  },
-  {
-    route: 'PUT /organization-roles/:id/scopes',
-    event: 'OrganizationRole.Scopes.Updated',
-    method: 'put',
-    endpoint: `organization-roles/{organizationRoleId}/scopes`,
-    payload: { organizationScopeIds: ['{scopeId}'] },
-  },
-  {
-    route: 'DELETE /organization-roles/:id/scopes/:organizationScopeId',
-    event: 'OrganizationRole.Scopes.Updated',
-    method: 'delete',
-    endpoint: `organization-roles/{organizationRoleId}/scopes/{scopeId}`,
-    payload: {},
-  },
-  {
-    route: 'DELETE /organization-roles/:id',
-    event: 'OrganizationRole.Deleted',
-    method: 'delete',
-    endpoint: `organization-roles/{organizationRoleId}`,
     payload: {},
   },
 ];

@@ -24,6 +24,7 @@ const application = {
   should_delete_custom_domains_first: 'Should delete custom domains first.',
   no_legacy_secret_found: 'The application does not have a legacy secret.',
   secret_name_exists: 'Secret name already exists.',
+  sync_application_secret_failed: 'Sync application secret failed.',
   saml: {
     use_saml_app_api: 'Use `[METHOD] /saml-applications(/.*)?` API to operate SAML app.',
     saml_application_only: 'The API is only available for SAML applications.',

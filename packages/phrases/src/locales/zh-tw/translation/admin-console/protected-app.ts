@@ -28,6 +28,18 @@ const protected_app = {
       localhost: '請先將您的本地服務器暴露到互聯網上。了解有關<a>本地開發</a>的更多信息。',
     },
   },
+  id_token_claims: {
+    card_title: 'ID token 宣告',
+    card_description:
+      '在受保護應用程式登入過程中請求額外的使用者 scope，將已啟用的擴充宣告包含在轉發的 ID token 中。',
+    field_title: '附加 scope',
+    field_description:
+      '宣告僅在 <a>Custom JWT > ID token</a> 中啟用且此處請求了對應 scope 時才會被包含。',
+    table_column_scope: 'Scope',
+    table_column_claims_forwarded: '轉發的宣告',
+    disabled_claims_hint:
+      '灰色的宣告尚未被轉發。請在 <a>Custom JWT > ID token</a> 中啟用它們，使其包含在 ID token 中。',
+  },
   success_message: '🎉 應用程式身份驗證已成功啟用！探索您的網站的新體驗。',
 };
 

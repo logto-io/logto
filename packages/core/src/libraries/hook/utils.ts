@@ -139,3 +139,32 @@ export const buildManagementApiContext = (
     matchedRoute: matchedRoute && String(matchedRoute),
   };
 };
+
+/** Per-array cap. 5000 × ~21-char IDs + JSON overhead ≈ 117KB per array; up to four such arrays per payload. LOG-13492. */
+export const MEMBERSHIP_DELTA_CAP = 5000;
+
+const membershipDeltaFields = [
+  'addedUserIds',
+  'removedUserIds',
+  'addedApplicationIds',
+  'removedApplicationIds',
+] as const;
+
+type MembershipDeltaInput = Partial<
+  Record<(typeof membershipDeltaFields)[number], readonly string[]>
+>;
+
+/** Caps non-empty arrays at {@link MEMBERSHIP_DELTA_CAP}; empty/absent fields are omitted. */
+export const truncateMembershipDelta = (input: MembershipDeltaInput): MembershipDeltaInput => {
+  const result: MembershipDeltaInput = {};
+  for (const key of membershipDeltaFields) {
+    const value = input[key];
+    if (!value || value.length === 0) {
+      continue;
+    }
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    result[key] =
+      value.length > MEMBERSHIP_DELTA_CAP ? value.slice(0, MEMBERSHIP_DELTA_CAP) : value;
+  }
+  return result;
+};

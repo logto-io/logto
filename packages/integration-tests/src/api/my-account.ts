@@ -13,12 +13,14 @@ const verificationRecordIdHeader = 'logto-verification-id';
 
 export const updatePassword = async (
   api: KyInstance,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   password: string
 ) =>
   api.post('api/my-account/password', {
     json: { password },
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    ...conditional(
+      verificationRecordId && { headers: { [verificationRecordIdHeader]: verificationRecordId } }
+    ),
   });
 
 export const updatePrimaryEmail = async (
@@ -59,6 +61,16 @@ export const updateIdentities = async (
   newIdentifierVerificationRecordId: string
 ) =>
   api.post('api/my-account/identities', {
+    json: { newIdentifierVerificationRecordId },
+    headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+
+export const replaceIdentity = async (
+  api: KyInstance,
+  verificationRecordId: string,
+  newIdentifierVerificationRecordId: string
+) =>
+  api.put('api/my-account/identities', {
     json: { newIdentifierVerificationRecordId },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
   });
