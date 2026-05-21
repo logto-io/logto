@@ -3,6 +3,7 @@ import { AccountCenterControlValue, uploadFileGuard, userAssetsGuard } from '@lo
 import { object } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -34,7 +35,10 @@ export default function accountUserAssetsRoutes<T extends UserRouter>(
       const { id: userId, scopes } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
-      assertThat(scopes.has(UserScope.Profile), 'auth.unauthorized');
+      assertThat(
+        scopes.has(UserScope.Profile),
+        new RequestError({ code: 'auth.unauthorized', status: 401 })
+      );
       assertThat(
         fields.avatar === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
@@ -43,7 +47,6 @@ export default function accountUserAssetsRoutes<T extends UserRouter>(
       const { file: bodyFiles } = ctx.guard.files;
 
       const { storageProviderConfig } = SystemContext.shared;
-      assertThat(storageProviderConfig, 'storage.not_configured');
 
       ctx.body = await uploadAvatar({
         file: bodyFiles[0],

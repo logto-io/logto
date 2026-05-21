@@ -18,7 +18,10 @@ import { buildUploadFile } from '#src/utils/storage/index.js';
 
 type UploadedFile = z.infer<typeof uploadFileGuard>;
 
-type AvatarMimeType = Exclude<keyof typeof mimeTypeToFileExtensionMappings, 'application/zip'>;
+type AvatarMimeType = Exclude<
+  keyof typeof mimeTypeToFileExtensionMappings,
+  'application/zip' | 'image/svg+xml'
+>;
 
 const allowedAvatarMimeTypes = new Set<AvatarMimeType>([
   'image/jpeg',
@@ -26,7 +29,6 @@ const allowedAvatarMimeTypes = new Set<AvatarMimeType>([
   'image/gif',
   'image/vnd.microsoft.icon',
   'image/x-icon',
-  'image/svg+xml',
   'image/tiff',
   'image/webp',
   'image/bmp',
@@ -65,7 +67,7 @@ const binaryAvatarMimeTypeDetectors: ReadonlyArray<{
   },
 ];
 
-const detectAvatarMimeType = (buffer: Uint8Array): AvatarMimeType | undefined => {
+const detectAvatarMimeType = (buffer: Uint8Array): AvatarMimeType | 'image/svg+xml' | undefined => {
   const detector = binaryAvatarMimeTypeDetectors.find(({ matches }) => matches(buffer));
 
   if (detector) {
@@ -78,6 +80,11 @@ const detectAvatarMimeType = (buffer: Uint8Array): AvatarMimeType | undefined =>
     return 'image/svg+xml';
   }
 };
+
+const isAllowedAvatarMimeType = (
+  mimeType: AvatarMimeType | 'image/svg+xml' | undefined
+): mimeType is AvatarMimeType =>
+  Boolean(mimeType && mimeType !== 'image/svg+xml' && allowedAvatarMimeTypes.has(mimeType));
 
 const sanitizeFilename = (filename: string, mimeType: AvatarMimeType) => {
   const extension = mimeTypeToFileExtensionMappings[mimeType][0];
@@ -95,7 +102,7 @@ export const uploadAvatar = async ({
   logError,
 }: {
   file: UploadedFile | undefined;
-  storageProviderConfig: StorageProviderData;
+  storageProviderConfig?: StorageProviderData;
   objectKeyPrefix: string;
   logError: (error: unknown) => void;
 }): Promise<UserAssets> => {
@@ -104,17 +111,19 @@ export const uploadAvatar = async ({
 
   const fileContent = await readFile(file.filepath);
   const contentType = detectAvatarMimeType(fileContent);
+  const avatarMimeType = isAllowedAvatarMimeType(contentType) ? contentType : undefined;
 
-  assertThat(contentType && allowedAvatarMimeTypes.has(contentType), 'guard.mime_type_not_allowed');
+  assertThat(avatarMimeType, 'guard.mime_type_not_allowed');
+  assertThat(storageProviderConfig, 'storage.not_configured');
 
   const uploadFile = buildUploadFile(storageProviderConfig);
   const objectKey = `${objectKeyPrefix}/${format(new Date(), 'yyyy/MM/dd')}/${generateStandardId(
     8
-  )}-${sanitizeFilename(file.originalFilename, contentType)}`;
+  )}-${sanitizeFilename(file.originalFilename, avatarMimeType)}`;
 
   try {
     return await uploadFile(fileContent, objectKey, {
-      contentType,
+      contentType: avatarMimeType,
       publicUrl: storageProviderConfig.publicUrl,
     });
   } catch (error: unknown) {

@@ -7,6 +7,7 @@ import {
   uploadFileGuard,
   userAssetsGuard,
 } from '@logto/schemas';
+import { addDays, format } from 'date-fns';
 import { type MiddlewareType } from 'koa';
 import type Router from 'koa-router';
 import { object, z } from 'zod';
@@ -28,10 +29,13 @@ import { type ExperienceInteractionRouterContext } from './types.js';
 
 const avatarUploadRateLimitMaxAttempts = 10;
 const avatarUploadRateLimitWindow = 10 * 60 * 1000;
+const avatarUploadRateLimitMaxRecords = 10_000;
+const pendingAvatarUploadExpiresInDays = 1;
 
 const avatarUploadRateLimitRecords = new Map<string, { count: number; resetAt: number }>();
 
-const buildAvatarUploadRateLimitKey = (jti: string, ip: string) => `${jti}:${ip}`;
+const buildAvatarUploadRateLimitKey = (tenantId: string, jti: string, ip: string) =>
+  `${tenantId}:${jti}:${ip}`;
 
 const clearExpiredAvatarUploadRateLimitRecords = (now: number) => {
   for (const [key, { resetAt }] of avatarUploadRateLimitRecords.entries()) {
@@ -41,14 +45,38 @@ const clearExpiredAvatarUploadRateLimitRecords = (now: number) => {
   }
 };
 
-const assertAvatarUploadRateLimit = (jti: string, ip: string, languages: readonly string[]) => {
+const pruneAvatarUploadRateLimitRecord = () => {
+  const [firstEntry, ...restEntries] = [...avatarUploadRateLimitRecords.entries()];
+
+  if (!firstEntry) {
+    return;
+  }
+
+  const earliest = restEntries.reduce(
+    (result, [key, { resetAt }]) => (resetAt < result.resetAt ? { key, resetAt } : result),
+    { key: firstEntry[0], resetAt: firstEntry[1].resetAt }
+  );
+
+  avatarUploadRateLimitRecords.delete(earliest.key);
+};
+
+const assertAvatarUploadRateLimit = (
+  tenantId: string,
+  jti: string,
+  ip: string,
+  languages: readonly string[]
+) => {
   const now = Date.now();
   clearExpiredAvatarUploadRateLimitRecords(now);
 
-  const key = buildAvatarUploadRateLimitKey(jti, ip);
+  const key = buildAvatarUploadRateLimitKey(tenantId, jti, ip);
   const record = avatarUploadRateLimitRecords.get(key);
 
   if (!record) {
+    if (avatarUploadRateLimitRecords.size >= avatarUploadRateLimitMaxRecords) {
+      pruneAvatarUploadRateLimitRecord();
+    }
+
     avatarUploadRateLimitRecords.set(key, {
       count: 1,
       resetAt: now + avatarUploadRateLimitWindow,
@@ -69,6 +97,12 @@ const assertAvatarUploadRateLimit = (jti: string, ip: string, languages: readonl
     ...record,
     count: record.count + 1,
   });
+};
+
+const buildPendingAvatarUploadObjectKeyPrefix = (tenantId: string, jti: string) => {
+  const expiresAt = format(addDays(new Date(), pendingAvatarUploadExpiresInDays), 'yyyy-MM-dd');
+
+  return `${tenantId}/_pending/avatar/expires-${expiresAt}/${jti}`;
 };
 
 /**
@@ -200,7 +234,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           file: uploadFileGuard.array().min(1),
         }),
         response: userAssetsGuard,
-        status: [200, 400, 403, 404, 500],
+        status: [200, 400, 403, 404, 429, 500],
       }),
       async (ctx, next) => {
         const { experienceInteraction } = ctx;
@@ -215,14 +249,18 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
         );
 
-        assertAvatarUploadRateLimit(ctx.interactionDetails.jti, ctx.ip, ctx.i18n.languages);
+        assertAvatarUploadRateLimit(
+          tenantId,
+          ctx.interactionDetails.jti,
+          ctx.ip,
+          ctx.i18n.languages
+        );
 
         const { storageProviderConfig } = SystemContext.shared;
-        assertThat(storageProviderConfig, 'storage.not_configured');
 
         const objectKeyPrefix = experienceInteraction.identifiedUserId
           ? `${tenantId}/${experienceInteraction.identifiedUserId}`
-          : `${tenantId}/_pending/avatar/${ctx.interactionDetails.jti}`;
+          : buildPendingAvatarUploadObjectKeyPrefix(tenantId, ctx.interactionDetails.jti);
 
         ctx.body = await uploadAvatar({
           file: ctx.guard.files.file[0],
