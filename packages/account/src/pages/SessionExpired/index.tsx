@@ -1,5 +1,5 @@
 import { useLogto } from '@logto/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
@@ -8,27 +8,28 @@ import { accountCenterBasePath, setRouteRestore } from '@ac/utils/account-center
 const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 
 const SessionExpired = () => {
-  const { signIn } = useLogto();
+  const { signIn, error } = useLogto();
+  const initialSignInErrorRef = useRef(error);
   const [hasSignInError, setHasSignInError] = useState(false);
+  const [hasTriedSignIn, setHasTriedSignIn] = useState(false);
 
   const redirectToSignIn = useCallback(() => {
     setHasSignInError(false);
+    setHasTriedSignIn(true);
     setRouteRestore(window.location.pathname);
 
-    const run = async () => {
-      try {
-        await signIn({ redirectUri });
-      } catch {
-        setHasSignInError(true);
-      }
-    };
-
-    void run();
+    void signIn({ redirectUri });
   }, [signIn]);
 
   useEffect(() => {
     redirectToSignIn();
   }, [redirectToSignIn]);
+
+  useEffect(() => {
+    if (hasTriedSignIn && error && error !== initialSignInErrorRef.current) {
+      setHasSignInError(true);
+    }
+  }, [error, hasTriedSignIn]);
 
   if (!hasSignInError) {
     return <GlobalLoading />;
