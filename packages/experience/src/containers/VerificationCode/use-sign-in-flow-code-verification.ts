@@ -77,8 +77,14 @@ const useSignInFlowCodeVerification = (
      * agreement on registration (`Manual` and `ManualRegistrationOnly`) are still enforced on
      * this path. `termsValidation` is a no-op when the policy is `Automatic`, the terms are not
      * configured, or the user has already agreed.
+     *
+     * If the user declines the terms, navigate back to the identifier page (same as cancelling
+     * the confirmation above). The verification code has already been consumed by the failed
+     * sign-in attempt, so keeping the user on this page would only let them retry with a dead
+     * code and hit a confusing `verification_code.not_found` error.
      */
     if (!(await termsValidation())) {
+      navigate(-1);
       return;
     }
 
