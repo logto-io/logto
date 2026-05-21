@@ -44,6 +44,19 @@ type ProfileRenderOptions = {
   readonly setToast?: PageContextType['setToast'];
 };
 
+const requiredNicknameField = {
+  tenantId: 'default',
+  id: 'nickname',
+  name: 'nickname',
+  type: CustomProfileFieldType.Text,
+  label: 'Nickname',
+  description: null,
+  required: true,
+  config: {},
+  createdAt: 0,
+  sieOrder: 0,
+} satisfies CustomProfileField;
+
 const favoriteColorField = {
   tenantId: 'default',
   id: 'favoriteColor',
@@ -202,6 +215,86 @@ describe('<Profile />', () => {
       expect(updateProfile).toHaveBeenCalledWith('access-token', {
         birthdate: '2024-01-02',
       });
+    });
+  });
+
+  it('keeps the modal open and reports errors when the update API fails', async () => {
+    const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
+    const setToast = jest.fn();
+    jest.mocked(updateName).mockRejectedValue(new Error('network error'));
+
+    const { getByDisplayValue, getByText, queryAllByText } = renderProfile({
+      refreshUserInfo,
+      setToast,
+    });
+
+    fireEvent.click(queryAllByText('account_center.security.change')[0]!);
+    fireEvent.change(getByDisplayValue('Alex'), { target: { value: 'Alex Changed' } });
+    fireEvent.click(getByText('action.save'));
+
+    await waitFor(() => {
+      expect(setToast).toHaveBeenCalledWith('error.unknown');
+    });
+    expect(refreshUserInfo).not.toHaveBeenCalled();
+    expect(getByText('action.save')).toBeTruthy();
+  });
+
+  it('blocks submit for required fields and does not call the update API', async () => {
+    const { getByText, queryAllByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [{ name: 'nickname' }],
+      },
+      experienceSettings: {
+        customProfileFields: [requiredNicknameField],
+      },
+      userInfo: {
+        profile: {
+          nickname: 'Alex',
+        },
+      },
+    });
+
+    fireEvent.click(queryAllByText('account_center.security.change')[0]!);
+    fireEvent.change(document.querySelector('input[name="nickname"]')!, {
+      target: { value: '' },
+    });
+    fireEvent.click(getByText('action.save'));
+
+    await waitFor(() => {
+      expect(getByText('error.general_required')).toBeTruthy();
+    });
+    expect(updateProfile).not.toHaveBeenCalled();
+  });
+
+  it('shows a validation error for invalid birthdate input', async () => {
+    const { getByText, queryAllByText } = renderProfile();
+
+    fireEvent.click(queryAllByText('account_center.security.change')[1]!);
+
+    const [yearInput, monthInput, dayInput] = document.querySelectorAll(
+      'input[inputmode="numeric"]'
+    );
+
+    fireEvent.change(yearInput!, { target: { value: '2024' } });
+    fireEvent.change(monthInput!, { target: { value: '13' } });
+    fireEvent.change(dayInput!, { target: { value: '01' } });
+    fireEvent.click(getByText('action.save'));
+
+    await waitFor(() => {
+      expect(getByText('error.general_invalid')).toBeTruthy();
+    });
+    expect(updateProfile).not.toHaveBeenCalled();
+  });
+
+  it('clears the name field by sending null to the update API', async () => {
+    const { getByDisplayValue, getByText, queryAllByText } = renderProfile();
+
+    fireEvent.click(queryAllByText('account_center.security.change')[0]!);
+    fireEvent.change(getByDisplayValue('Alex'), { target: { value: '' } });
+    fireEvent.click(getByText('action.save'));
+
+    await waitFor(() => {
+      expect(updateName).toHaveBeenCalledWith('access-token', { name: null });
     });
   });
 

@@ -13,12 +13,16 @@ const isValidDate = (value: string, config?: CustomProfileFieldBaseConfig): bool
     return true;
   }
 
-  const parsedDate = parse(value, dateFormat, new Date(), {
-    useAdditionalDayOfYearTokens: true,
-    useAdditionalWeekYearTokens: true,
-  });
+  try {
+    const parsedDate = parse(value, dateFormat, new Date(), {
+      useAdditionalDayOfYearTokens: true,
+      useAdditionalWeekYearTokens: true,
+    });
 
-  return isValid(parsedDate) && format(parsedDate, dateFormat) === value;
+    return isValid(parsedDate) && format(parsedDate, dateFormat) === value;
+  } catch {
+    return false;
+  }
 };
 
 const getNumberValidationError = (

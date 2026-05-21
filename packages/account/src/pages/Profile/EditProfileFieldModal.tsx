@@ -3,6 +3,7 @@ import CloseIcon from '@experience/shared/assets/icons/nav-close.svg?react';
 import Button from '@experience/shared/components/Button';
 import InputField from '@experience/shared/components/InputFields/InputField';
 import { CustomProfileFieldType, type JsonObject, type UserProfileResponse } from '@logto/schemas';
+import type { Nullable } from '@silverhand/essentials';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -45,6 +46,54 @@ const getSelectOptions = (
   })) ?? []),
 ];
 
+type SubmitFieldUpdateParams = {
+  readonly field: ProfileFieldRow;
+  readonly fields: readonly EditableField[];
+  readonly firstField?: EditableField;
+  readonly userInfo?: Partial<UserProfileResponse>;
+  readonly values: Readonly<Record<string, EditableValue>>;
+  readonly updateNameRequest: (payload: {
+    name: Nullable<string>;
+  }) => Promise<readonly [Nullable<unknown>, void?]>;
+  readonly updateCustomDataRequest: (
+    payload: JsonObject
+  ) => Promise<readonly [Nullable<unknown>, void?]>;
+  readonly updateProfileRequest: (
+    payload: Parameters<typeof updateProfile>[1]
+  ) => Promise<readonly [Nullable<unknown>, void?]>;
+};
+
+const submitFieldUpdate = async ({
+  field,
+  fields,
+  firstField,
+  userInfo,
+  values,
+  updateNameRequest,
+  updateCustomDataRequest,
+  updateProfileRequest,
+}: SubmitFieldUpdateParams) => {
+  if (field.controlKey === 'name') {
+    return updateNameRequest({ name: getProfileValue(values.name ?? '').trim() || null });
+  }
+
+  if (field.controlKey === 'customData' && firstField) {
+    return updateCustomDataRequest({
+      ...userInfo?.customData,
+      [field.name]: getCustomDataValue(firstField, values[field.name] ?? ''),
+    } satisfies JsonObject);
+  }
+
+  return updateProfileRequest({
+    ...userInfo?.profile,
+    ...(field.name === 'address' || field.field?.type === CustomProfileFieldType.Address
+      ? {
+          address: buildAddressProfileValue(userInfo?.profile?.address, fields, values),
+        }
+      : Object.fromEntries(fields.map(({ name }) => [name, getProfileValue(values[name] ?? '')]))),
+  });
+};
+
 const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) => {
   const { t } = useTranslation();
   const updateNameRequest = useApi(updateName);
@@ -58,9 +107,16 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
 
   useEffect(() => {
-    setValues(Object.fromEntries(fields.map(({ name, value }) => [name, value])));
+    if (!field) {
+      return;
+    }
+
+    const initialFields = buildEditableFields(field, userInfo, t);
+    setValues(Object.fromEntries(initialFields.map(({ name, value }) => [name, value])));
     setErrors({});
-  }, [fields]);
+    // Only reset when switching fields; ignore background userInfo refreshes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [field?.name]);
 
   const validate = useCallback(() => {
     const nextErrors = Object.fromEntries(
@@ -77,24 +133,16 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
     }
 
     const [firstField] = fields;
-    const [error] =
-      field.controlKey === 'name'
-        ? await updateNameRequest({ name: getProfileValue(values.name ?? '').trim() || null })
-        : field.controlKey === 'customData' && firstField
-          ? await updateCustomDataRequest({
-              ...userInfo?.customData,
-              [field.name]: getCustomDataValue(firstField, values[field.name] ?? ''),
-            } satisfies JsonObject)
-          : await updateProfileRequest({
-              ...userInfo?.profile,
-              ...(field.name === 'address' || field.field?.type === CustomProfileFieldType.Address
-                ? {
-                    address: buildAddressProfileValue(userInfo?.profile?.address, fields, values),
-                  }
-                : Object.fromEntries(
-                    fields.map(({ name }) => [name, getProfileValue(values[name] ?? '')])
-                  )),
-            });
+    const [error] = await submitFieldUpdate({
+      field,
+      fields,
+      firstField,
+      userInfo,
+      values,
+      updateNameRequest,
+      updateCustomDataRequest,
+      updateProfileRequest,
+    });
 
     if (error) {
       await handleError(error);

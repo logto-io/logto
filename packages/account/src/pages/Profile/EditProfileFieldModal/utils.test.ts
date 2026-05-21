@@ -1,6 +1,7 @@
 import {
   AccountCenterControlValue,
   CustomProfileFieldType,
+  SupportedDateFormat,
   type CustomProfileField,
 } from '@logto/schemas';
 
@@ -60,6 +61,22 @@ describe('EditProfileFieldModal utils', () => {
     const [editableField] = buildEditableFields(getProfileFieldRow(field), {}, translate);
 
     expect(editableField?.value).toBe(false);
+  });
+
+  it('returns a validation error instead of throwing for invalid date format config', () => {
+    const field = {
+      name: 'startDate',
+      label: 'Start date',
+      value: '2024-01-01',
+      type: CustomProfileFieldType.Date,
+      required: false,
+      config: {
+        format: SupportedDateFormat.Custom,
+        customFormat: 'invalid-format-token',
+      },
+    } satisfies EditableField;
+
+    expect(getValidationError('2024-01-01', field, translate)).toBe('error.general_invalid');
   });
 
   it('returns a validation error instead of throwing for invalid regex config', () => {
