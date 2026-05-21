@@ -42,7 +42,7 @@ export const uploadFileGuard = z.object({
 });
 
 type MimeTypeToFileExtensionMappings = {
-  [key in AllowedUploadMimeType]: readonly string[];
+  [key in AllowedUploadMimeType]: readonly [string, ...string[]];
 };
 
 export const mimeTypeToFileExtensionMappings: MimeTypeToFileExtensionMappings = Object.freeze({

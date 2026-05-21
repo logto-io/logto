@@ -118,11 +118,17 @@ const hasValidAvatarEndMarker = (buffer: Uint8Array, mimeType: AvatarMimeType) =
 export const isAllowedAvatarMimeType = (
   mimeType: AvatarMimeType | 'image/svg+xml' | undefined
 ): mimeType is AvatarMimeType => {
-  if (mimeType === undefined || mimeType === 'image/svg+xml') {
+  if (mimeType === undefined) {
     return false;
   }
 
-  return allowedAvatarMimeTypes.has(mimeType);
+  for (const allowed of allowedAvatarMimeTypes) {
+    if (allowed === mimeType) {
+      return true;
+    }
+  }
+
+  return false;
 };
 
 export const sanitizeFilename = (filename: string, mimeType: AvatarMimeType) => {
