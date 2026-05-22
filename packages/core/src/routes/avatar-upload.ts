@@ -18,12 +18,7 @@ import { buildUploadFile } from '#src/utils/storage/index.js';
 
 type UploadedFile = z.infer<typeof uploadFileGuard>;
 
-type AllowedAvatarMimeType =
-  | 'image/jpeg'
-  | 'image/png'
-  | 'image/gif'
-  | 'image/webp'
-  | 'image/bmp';
+type AllowedAvatarMimeType = 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp' | 'image/bmp';
 
 const allowedAvatarMimeTypes = new Set<AllowedAvatarMimeType>([
   'image/jpeg',
