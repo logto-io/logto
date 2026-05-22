@@ -1,0 +1,106 @@
+import { UserScope } from '@logto/core-kit';
+import { AccountCenterControlValue } from '@logto/schemas';
+
+import { updateAccountCenter } from '#src/api/account-center.js';
+import { expectRejects } from '#src/helpers/index.js';
+import {
+  createDefaultTenantUserWithPassword,
+  deleteDefaultTenantUser,
+  signInAndGetUserApi,
+} from '#src/helpers/profile.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { devFeatureTest } from '#src/utils.js';
+
+const buildPngFormData = () => {
+  const formData = new FormData();
+  // 1x1 transparent PNG
+  const png = Buffer.from(
+    '89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000D4944415478DA63FCFFFFFF1F00040501FE6F1B5F570000000049454E44AE426082',
+    'hex'
+  );
+  formData.append('file', new Blob([png], { type: 'image/png' }), 'avatar.png');
+  return formData;
+};
+
+const buildFakePngFormData = () => {
+  const formData = new FormData();
+  formData.append('file', new Blob(['hello'], { type: 'image/png' }), 'avatar.png');
+  return formData;
+};
+
+devFeatureTest.describe('POST /my-account/user-assets/avatar', () => {
+  beforeAll(async () => {
+    await enableAllPasswordSignInMethods();
+    await updateAccountCenter({
+      enabled: true,
+      fields: {
+        avatar: AccountCenterControlValue.Edit,
+      },
+    });
+  });
+
+  it('should fail when avatar field is not editable', async () => {
+    await updateAccountCenter({
+      enabled: true,
+      fields: {
+        avatar: AccountCenterControlValue.ReadOnly,
+      },
+    });
+
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile],
+    });
+
+    await expectRejects(
+      api.post('api/my-account/user-assets/avatar', { body: buildPngFormData() }),
+      {
+        code: 'account_center.field_not_editable',
+        status: 400,
+      }
+    );
+
+    await deleteDefaultTenantUser(user.id);
+
+    await updateAccountCenter({
+      enabled: true,
+      fields: {
+        avatar: AccountCenterControlValue.Edit,
+      },
+    });
+  });
+
+  it('should fail when storage is not configured', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile],
+    });
+
+    await expectRejects(
+      api.post('api/my-account/user-assets/avatar', { body: buildPngFormData() }),
+      {
+        code: 'storage.not_configured',
+        status: 400,
+      }
+    );
+
+    await deleteDefaultTenantUser(user.id);
+  });
+
+  it('should reject files whose content is not a supported image', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile],
+    });
+
+    await expectRejects(
+      api.post('api/my-account/user-assets/avatar', { body: buildFakePngFormData() }),
+      {
+        code: 'guard.mime_type_not_allowed',
+        status: 400,
+      }
+    );
+
+    await deleteDefaultTenantUser(user.id);
+  });
+});

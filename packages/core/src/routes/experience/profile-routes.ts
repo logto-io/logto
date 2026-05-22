@@ -1,22 +1,39 @@
+/* eslint-disable max-lines */
 import {
   InteractionEvent,
   MfaFactor,
   SignInIdentifier,
   updateProfileApiPayloadGuard,
+  uploadFileGuard,
+  userAssetsGuard,
 } from '@logto/schemas';
+import { addDays, format } from 'date-fns';
 import { type MiddlewareType } from 'koa';
 import type Router from 'koa-router';
-import { z } from 'zod';
+import { object, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import SystemContext from '#src/tenants/SystemContext.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { getConsoleLogFromContext } from '#src/utils/console.js';
+
+import { uploadAvatar } from '../avatar-upload.js';
 
 import { createNewMfaCodeVerificationRecord } from './classes/verifications/code-verification.js';
 import { experienceRoutes } from './const.js';
 import { type ExperienceInteractionRouterContext } from './types.js';
+
+const pendingAvatarUploadExpiresInDays = 1;
+
+const buildPendingAvatarUploadObjectKeyPrefix = (tenantId: string, jti: string) => {
+  const expiresAt = format(addDays(new Date(), pendingAvatarUploadExpiresInDays), 'yyyy-MM-dd');
+
+  return `${tenantId}/_pending/${expiresAt}/avatar/${jti}`;
+};
 
 /**
  * This middleware is guards the current interaction status is MFA verified (if MFA is enabled)
@@ -52,7 +69,7 @@ function verifiedInteractionGuard<
 
 export default function interactionProfileRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
-  { libraries, queries }: TenantContext
+  { id: tenantId, libraries, queries }: TenantContext
 ) {
   router.post(
     `${experienceRoutes.profile}`,
@@ -137,6 +154,54 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       return next();
     }
   );
+
+  // TODO: Remove this dev feature gate when avatar upload is ready for production.
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.post(
+      `${experienceRoutes.prefix}/user-assets/avatar`,
+      koaGuard({
+        files: object({
+          file: uploadFileGuard.array().min(1),
+        }),
+        response: userAssetsGuard,
+        status: [200, 400, 403, 404, 500],
+      }),
+      async (ctx, next) => {
+        const { experienceInteraction } = ctx;
+        const { interactionEvent } = experienceInteraction;
+
+        assertThat(
+          interactionEvent !== InteractionEvent.ForgotPassword,
+          new RequestError({ code: 'session.not_supported_for_forgot_password', status: 400 })
+        );
+        assertThat(
+          interactionEvent === InteractionEvent.Register,
+          new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
+        );
+
+        const { storageProviderConfig } = SystemContext.shared;
+
+        const objectKeyPrefix = experienceInteraction.identifiedUserId
+          ? `${tenantId}/${experienceInteraction.identifiedUserId}`
+          : buildPendingAvatarUploadObjectKeyPrefix(tenantId, ctx.interactionDetails.jti);
+
+        const [file] = ctx.guard.files.file;
+
+        assertThat(file, 'guard.invalid_input');
+
+        ctx.body = await uploadAvatar({
+          file,
+          storageProviderConfig,
+          objectKeyPrefix,
+          logError: (error) => {
+            getConsoleLogFromContext(ctx).error(error);
+          },
+        });
+
+        return next();
+      }
+    );
+  }
 
   router.put(
     `${experienceRoutes.profile}/password`,
@@ -367,3 +432,4 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     }
   );
 }
+/* eslint-enable max-lines */
