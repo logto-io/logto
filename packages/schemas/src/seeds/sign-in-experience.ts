@@ -66,7 +66,9 @@ export const createDefaultSignInExperience = (
 /** @deprecated Use `createDefaultSignInExperience()` instead. */
 export const defaultSignInExperience = createDefaultSignInExperience(defaultTenantId, false);
 
-export const createAdminTenantSignInExperience = (): Readonly<CreateSignInExperience> =>
+export const createAdminTenantSignInExperience = (
+  options: { disablePwnedPasswordCheck?: boolean } = {}
+): Readonly<CreateSignInExperience> =>
   Object.freeze({
     ...defaultSignInExperience,
     tenantId: adminTenantId,
@@ -79,6 +81,9 @@ export const createAdminTenantSignInExperience = (): Readonly<CreateSignInExperi
       logoUrl: 'https://logto.io/logo.svg',
       darkLogoUrl: 'https://logto.io/logo-dark.svg',
     },
+    passwordPolicy: options.disablePwnedPasswordCheck
+      ? { rejects: { pwned: false } }
+      : defaultSignInExperience.passwordPolicy,
     mfa: {
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
       policy: MfaPolicy.NoPrompt,
