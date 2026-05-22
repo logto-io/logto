@@ -151,7 +151,8 @@ export const createTables = async (
 export const seedTables = async (
   connection: DatabaseTransactionConnection,
   latestTimestamp: number,
-  isCloud: boolean
+  isCloud: boolean,
+  options: { disablePwnedPasswordCheck?: boolean } = {}
 ) => {
   await createTenant(connection, defaultTenantId);
   await seedOidcConfigs(connection, defaultTenantId);
@@ -207,7 +208,9 @@ export const seedTables = async (
     connection.query(
       insertInto(createDefaultSignInExperience(defaultTenantId, isCloud), SignInExperiences.table)
     ),
-    connection.query(insertInto(createAdminTenantSignInExperience(), SignInExperiences.table)),
+    connection.query(
+      insertInto(createAdminTenantSignInExperience(options), SignInExperiences.table)
+    ),
     connection.query(insertInto(createDefaultAdminConsoleApplication(), Applications.table)),
     connection.query(insertInto(createDefaultAccountCenter(defaultTenantId), AccountCenters.table)),
     connection.query(insertInto(createAdminTenantAccountCenter(), AccountCenters.table)),
