@@ -16,6 +16,7 @@ import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { boolean, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -26,6 +27,7 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 import { captureEvent } from '../../utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
+import applicationAccessControlRoutes from './application-access-control.js';
 import applicationCustomDataRoutes from './application-custom-data.js';
 import { generateInternalSecret } from './application-secret.js';
 import { applicationCreateGuard, applicationPatchGuard } from './types.js';
@@ -469,5 +471,9 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
   );
 
   applicationCustomDataRoutes(router, tenant);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    applicationAccessControlRoutes(router, tenant);
+  }
 }
 /* eslint-enable max-lines */
