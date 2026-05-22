@@ -70,7 +70,7 @@ const seed: CommandModule<
     test?: boolean;
     'legacy-test-data'?: boolean;
     'encrypt-base-role'?: boolean;
-    dapc?: boolean;
+    'disable-admin-pwned-password-check'?: boolean;
   }
 > = {
   command: 'seed [type]',
@@ -99,18 +99,25 @@ const seed: CommandModule<
         describe: 'Seed base role with password',
         type: 'boolean',
       })
-      .option('dapc', {
+      .option('disable-admin-pwned-password-check', {
         describe:
-          "Seed the admin tenant's sign-in experience with the HaveIBeenPwned (HIBP) " +
+          "Seed the admin tenant's sign-in experience with the Have I Been Pwned (HIBP) " +
           'password breach check disabled. Use this for air-gapped or offline OSS deployments ' +
           'where api.pwnedpasswords.com is unreachable, otherwise creating the first admin ' +
           'user from the Welcome page will hang on the breach check. Scope: admin tenant only ' +
           "— the default tenant's password policy is unaffected and stays admin-controlled " +
           'via the Admin Console.',
-        alias: 'disable-admin-pwned-password-check',
+        alias: 'dapc',
         type: 'boolean',
       }),
-  handler: async ({ swe, cloud, test, legacyTestData, encryptBaseRole, dapc }) => {
+  handler: async ({
+    swe,
+    cloud,
+    test,
+    legacyTestData,
+    encryptBaseRole,
+    disableAdminPwnedPasswordCheck,
+  }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (legacyTestData) {
@@ -134,7 +141,12 @@ const seed: CommandModule<
     }
 
     try {
-      await seedByPool(pool, { cloud, test, encryptBaseRole, disablePwnedPasswordCheck: dapc });
+      await seedByPool(pool, {
+        cloud,
+        test,
+        encryptBaseRole,
+        disablePwnedPasswordCheck: disableAdminPwnedPasswordCheck,
+      });
     } catch (error: unknown) {
       consoleLog.error(error);
       consoleLog.error(
