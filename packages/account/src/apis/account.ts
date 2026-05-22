@@ -1,4 +1,5 @@
-import { conditional } from '@silverhand/essentials';
+import type { JsonObject, UserProfile } from '@logto/schemas';
+import { conditional, type Nullable } from '@silverhand/essentials';
 
 import { createAuthenticatedKy } from './base-ky';
 
@@ -41,6 +42,24 @@ export const deleteUsername = async (accessToken: string, verificationRecordId: 
   await createAuthenticatedKy(accessToken).patch('/api/my-account', {
     json: { username: null },
     headers: { [verificationRecordIdHeader]: verificationRecordId },
+  });
+};
+
+export const updateName = async (accessToken: string, payload: { name: Nullable<string> }) => {
+  await createAuthenticatedKy(accessToken).patch('/api/my-account', {
+    json: payload,
+  });
+};
+
+export const updateProfile = async (accessToken: string, payload: UserProfile) => {
+  await createAuthenticatedKy(accessToken).patch('/api/my-account/profile', {
+    json: payload,
+  });
+};
+
+export const updateCustomData = async (accessToken: string, payload: JsonObject) => {
+  await createAuthenticatedKy(accessToken).patch('/api/my-account', {
+    json: { customData: payload },
   });
 };
 

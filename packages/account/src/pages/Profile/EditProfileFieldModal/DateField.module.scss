@@ -1,0 +1,85 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.dateFieldContainer {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
+.dateInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: _.unit(1.5);
+  height: 44px;
+  padding: 0 _.unit(4);
+  border: 1px solid var(--color-line-border);
+  border-radius: var(--radius);
+  background: inherit;
+  color: var(--color-type-primary);
+
+  &.active {
+    border-color: var(--color-brand-default);
+    box-shadow: 0 0 0 3px var(--color-overlay-brand-focused);
+  }
+
+  &.danger {
+    border-color: var(--color-danger-default);
+    box-shadow: 0 0 0 3px var(--color-overlay-danger-focused);
+  }
+}
+
+.label {
+  position: absolute;
+  inset-inline-start: _.unit(3);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0 _.unit(1);
+  background: var(--color-bg-float);
+  color: var(--color-type-secondary);
+  font: var(--font-body-2);
+  pointer-events: none;
+
+  &.active {
+    top: 0;
+    color: var(--color-type-link);
+    font: var(--font-body-3);
+  }
+}
+
+.part {
+  display: flex;
+  align-items: center;
+  gap: _.unit(1.5);
+
+  input {
+    width: auto;
+    min-width: 2ch;
+    max-width: 5ch;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: inherit;
+    color: var(--color-type-primary);
+    font: var(--font-body-2);
+
+    &::placeholder {
+      color: var(--color-type-secondary);
+    }
+  }
+}
+
+.separator {
+  color: var(--color-line-border);
+  font: var(--font-body-2);
+}
+
+.description,
+.errorMessage {
+  margin-inline-start: _.unit(0.5);
+  @include _.text-hint;
+}
+
+.errorMessage {
+  color: var(--color-danger-default);
+}

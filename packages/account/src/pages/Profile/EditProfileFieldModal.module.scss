@@ -1,0 +1,82 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-bg-mask);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--color-bg-float);
+  border-radius: _.unit(4);
+  padding: _.unit(6);
+  max-width: 600px;
+  width: calc(100% - _.unit(8));
+  box-shadow: var(--shadow-2);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: _.unit(4);
+  margin-bottom: _.unit(6);
+}
+
+.title {
+  flex: 1;
+  font: var(--font-title-2);
+  color: var(--color-type-primary);
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: _.unit(6);
+  height: _.unit(6);
+  padding: 0;
+  border: none;
+  color: var(--color-type-secondary);
+  background: none;
+  cursor: pointer;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  margin-bottom: _.unit(6);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: _.unit(3);
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+  font: var(--font-body-2);
+  color: var(--color-type-primary);
+  cursor: pointer;
+
+  input {
+    cursor: pointer;
+  }
+}
+
+.description,
+.errorMessage {
+  margin-inline-start: _.unit(0.5);
+  @include _.text-hint;
+}
+
+.errorMessage {
+  color: var(--color-danger-default);
+}
