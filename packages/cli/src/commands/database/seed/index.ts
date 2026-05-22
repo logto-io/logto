@@ -13,7 +13,8 @@ export const seedByPool = async (
   pool: DatabasePool,
   cloud = false,
   test = false,
-  encryptBaseRole = false
+  encryptBaseRole = false,
+  disablePwnedPasswordCheck = false
 ) => {
   await pool.transaction(async (connection) => {
     // Check alteration scripts available in order to insert correct timestamp
@@ -34,7 +35,7 @@ export const seedByPool = async (
       consoleLog.info('base role password:', tableInfo.password);
     }
 
-    await seedTables(connection, latestTimestamp, cloud);
+    await seedTables(connection, latestTimestamp, cloud, { disablePwnedPasswordCheck });
 
     if (cloud) {
       await seedCloud(connection);
@@ -60,6 +61,7 @@ const seed: CommandModule<
     test?: boolean;
     'legacy-test-data'?: boolean;
     'encrypt-base-role'?: boolean;
+    dapc?: boolean;
   }
 > = {
   command: 'seed [type]',
@@ -87,8 +89,19 @@ const seed: CommandModule<
       .option('encrypt-base-role', {
         describe: 'Seed base role with password',
         type: 'boolean',
+      })
+      .option('dapc', {
+        describe:
+          "Seed the admin tenant's sign-in experience with the HaveIBeenPwned (HIBP) " +
+          'password breach check disabled. Use this for air-gapped or offline OSS deployments ' +
+          'where api.pwnedpasswords.com is unreachable, otherwise creating the first admin ' +
+          'user from the Welcome page will hang on the breach check. Scope: admin tenant only ' +
+          "— the default tenant's password policy is unaffected and stays admin-controlled " +
+          'via the Admin Console.',
+        alias: 'disable-admin-pwned-password-check',
+        type: 'boolean',
       }),
-  handler: async ({ swe, cloud, test, legacyTestData, encryptBaseRole }) => {
+  handler: async ({ swe, cloud, test, legacyTestData, encryptBaseRole, dapc }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (legacyTestData) {
@@ -112,7 +125,7 @@ const seed: CommandModule<
     }
 
     try {
-      await seedByPool(pool, cloud, test, encryptBaseRole);
+      await seedByPool(pool, cloud, test, encryptBaseRole, dapc);
     } catch (error: unknown) {
       consoleLog.error(error);
       consoleLog.error(

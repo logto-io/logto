@@ -11,6 +11,7 @@ import {
   createMeApiInAdminTenant,
   createDefaultSignInExperience,
   createAdminTenantSignInExperience,
+  type AdminSignInExperienceSeedOptions,
   createDefaultAdminConsoleApplication,
   createCloudApi,
   createTenantApplicationRole,
@@ -152,7 +153,7 @@ export const seedTables = async (
   connection: DatabaseTransactionConnection,
   latestTimestamp: number,
   isCloud: boolean,
-  options: { disablePwnedPasswordCheck?: boolean } = {}
+  options: AdminSignInExperienceSeedOptions = {}
 ) => {
   await createTenant(connection, defaultTenantId);
   await seedOidcConfigs(connection, defaultTenantId);
