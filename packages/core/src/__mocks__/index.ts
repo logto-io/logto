@@ -51,6 +51,7 @@ export const mockApplication: Application = {
   },
   protectedAppMetadata: null,
   isThirdParty: false,
+  appLevelAccessControlEnabled: false,
   createdAt: 1_645_334_775_356,
   customData: {},
 };
@@ -81,6 +82,7 @@ export const mockProtectedApplication: Omit<Application, 'protectedAppMetadata'>
     additionalScopes: [],
   },
   isThirdParty: false,
+  appLevelAccessControlEnabled: false,
   createdAt: 1_645_334_775_356,
   customData: {},
 };
