@@ -113,7 +113,7 @@ const buildProtectedAppData = async ({
       origin,
       sessionDuration: defaultProtectedAppSessionDuration,
       pageRules: defaultProtectedAppPageRules,
-      ...conditional(EnvSet.values.isDevFeaturesEnabled && { additionalScopes: [] }),
+      additionalScopes: [],
     },
     oidcClientMetadata: {
       redirectUris: [`https://${host}/${protectedAppSignInCallbackUrl}`],
@@ -190,10 +190,6 @@ export const createProtectedAppLibrary = (queries: Queries) => {
   const getSdkEndpoint = async (tenantId: string) => {
     const defaultEndpoint = getTenantEndpoint(tenantId, EnvSet.values).origin;
 
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return defaultEndpoint;
-    }
-
     const domains = await findAllDomains();
     const activeCustomDomain = domains
       .filter(({ status }) => status === DomainStatus.Active)
@@ -228,9 +224,7 @@ export const createProtectedAppLibrary = (queries: Queries) => {
 
     const siteConfigs = {
       ...rest,
-      ...conditional(
-        EnvSet.values.isDevFeaturesEnabled && additionalScopes !== undefined && { additionalScopes }
-      ),
+      ...conditional(additionalScopes !== undefined && { additionalScopes }),
       sdkConfig: {
         appId: id,
         appSecret: activeSecret.value,
@@ -259,10 +253,6 @@ export const createProtectedAppLibrary = (queries: Queries) => {
   };
 
   const syncAllAppConfigsToRemote = async (): Promise<void> => {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     const protectedApplications = await findApplications({
       search: { matches: [], joint: SearchJointMode.Or, isCaseSensitive: false },
       types: [ApplicationType.Protected],

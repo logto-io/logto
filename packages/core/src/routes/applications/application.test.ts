@@ -10,7 +10,6 @@ import {
   mockProtectedApplication,
 } from '#src/__mocks__/index.js';
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -75,11 +74,6 @@ const tenantContext = new MockTenant(
 
 const { createRequester } = await import('#src/utils/test-utils.js');
 const applicationRoutes = await pickDefault(import('./application.js'));
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
-};
 
 const customClientMetadata = {
   corsAllowedOrigins: [
@@ -94,7 +88,6 @@ const customClientMetadata = {
 
 describe('application route', () => {
   afterEach(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
     updateApplicationById.mockClear();
     syncAppConfigsToRemote.mockClear();
     deleteRemoteAppConfigs.mockClear();
@@ -225,23 +218,6 @@ describe('application route', () => {
     });
   });
 
-  it('GET /applications/:id hides additional scopes when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-    findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
-    const { additionalScopes, ...protectedAppMetadata } =
-      mockProtectedApplication.protectedAppMetadata;
-    expect(additionalScopes).toEqual([]);
-
-    const response = await applicationRequest.get('/applications/foo');
-
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      ...mockProtectedApplication,
-      protectedAppMetadata,
-      isAdmin: false,
-    });
-  });
-
   it('PATCH /applications/:applicationId', async () => {
     const name = 'FooApplication';
     const description = 'FooDescription';
@@ -275,8 +251,7 @@ describe('application route', () => {
     });
   });
 
-  it('PATCH /applications/:applicationId preserves existing additional scopes when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
+  it('PATCH /applications/:applicationId updates additional scopes for protected app', async () => {
     const existingProtectedAppMetadata: ProtectedAppMetadata = {
       ...mockProtectedApplication.protectedAppMetadata,
       additionalScopes: [UserScope.CustomData],
@@ -286,11 +261,12 @@ describe('application route', () => {
       protectedAppMetadata: existingProtectedAppMetadata,
     });
     const origin = 'https://example.com';
+    const additionalScopes = [UserScope.CustomData, UserScope.Roles];
 
     const response = await applicationRequest.patch('/applications/foo').send({
       protectedAppMetadata: {
         origin,
-        additionalScopes: [UserScope.CustomData, UserScope.Sessions],
+        additionalScopes,
       },
     });
 
@@ -300,6 +276,7 @@ describe('application route', () => {
       protectedAppMetadata: {
         ...existingProtectedAppMetadata,
         origin,
+        additionalScopes,
       },
     });
   });
