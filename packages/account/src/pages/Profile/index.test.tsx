@@ -288,7 +288,7 @@ describe('<Profile />', () => {
   });
 
   it('renders avatar image when available and not_set placeholder when missing', () => {
-    const { queryByAltText, queryByText, unmount } = renderProfile();
+    const { queryByAltText, unmount } = renderProfile();
 
     expect(queryByAltText('Alex')).not.toBeNull();
 
