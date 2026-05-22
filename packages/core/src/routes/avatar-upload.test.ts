@@ -37,6 +37,16 @@ describe('avatar-upload validation', () => {
     expect(isAllowedAvatarMimeType(detectAvatarMimeType(svg))).toBe(false);
   });
 
+  it('rejects tiff and ico content', () => {
+    const tiff = Buffer.from([0x49, 0x49, 0x2a, 0x00, 0x08, 0x00, 0x00, 0x00]);
+    const ico = Buffer.from([0x00, 0x00, 0x01, 0x00, 0x01, 0x00]);
+
+    expect(detectAvatarMimeType(tiff)).toBeUndefined();
+    expect(detectAvatarMimeType(ico)).toBeUndefined();
+    expect(isAllowedAvatarMimeType(detectAvatarMimeType(tiff))).toBe(false);
+    expect(isAllowedAvatarMimeType(detectAvatarMimeType(ico))).toBe(false);
+  });
+
   it('sanitizes unsafe filenames and falls back when empty', () => {
     expect(sanitizeFilename('../../evil.png', 'image/png')).toBe('evil.png');
     expect(sanitizeFilename('!!!', 'image/png')).toBe('---');

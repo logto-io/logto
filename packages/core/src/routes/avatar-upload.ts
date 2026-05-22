@@ -18,18 +18,17 @@ import { buildUploadFile } from '#src/utils/storage/index.js';
 
 type UploadedFile = z.infer<typeof uploadFileGuard>;
 
-type AvatarMimeType = Exclude<
-  keyof typeof mimeTypeToFileExtensionMappings,
-  'application/zip' | 'image/svg+xml'
->;
+type AllowedAvatarMimeType =
+  | 'image/jpeg'
+  | 'image/png'
+  | 'image/gif'
+  | 'image/webp'
+  | 'image/bmp';
 
-const allowedAvatarMimeTypes = new Set<AvatarMimeType>([
+const allowedAvatarMimeTypes = new Set<AllowedAvatarMimeType>([
   'image/jpeg',
   'image/png',
   'image/gif',
-  'image/vnd.microsoft.icon',
-  'image/x-icon',
-  'image/tiff',
   'image/webp',
   'image/bmp',
 ]);
@@ -46,7 +45,7 @@ const readUint32Le = (buffer: Uint8Array, offset: number) =>
   new DataView(buffer.buffer, buffer.byteOffset, buffer.byteLength).getUint32(offset, true);
 
 const binaryAvatarMimeTypeDetectors: ReadonlyArray<{
-  mimeType: AvatarMimeType;
+  mimeType: AllowedAvatarMimeType;
   matches: (buffer: Uint8Array) => boolean;
 }> = [
   { mimeType: 'image/jpeg', matches: (buffer) => startsWith(buffer, [0xff, 0xd8, 0xff]) },
@@ -57,12 +56,6 @@ const binaryAvatarMimeTypeDetectors: ReadonlyArray<{
   { mimeType: 'image/gif', matches: (buffer) => startsWith(buffer, [0x47, 0x49, 0x46, 0x38]) },
   { mimeType: 'image/bmp', matches: (buffer) => startsWith(buffer, [0x42, 0x4d]) },
   {
-    mimeType: 'image/tiff',
-    matches: (buffer) =>
-      startsWith(buffer, [0x49, 0x49, 0x2a, 0x00]) || startsWith(buffer, [0x4d, 0x4d, 0x00, 0x2a]),
-  },
-  { mimeType: 'image/x-icon', matches: (buffer) => startsWith(buffer, [0x00, 0x00, 0x01, 0x00]) },
-  {
     mimeType: 'image/webp',
     matches: (buffer) =>
       startsWith(buffer, [0x52, 0x49, 0x46, 0x46]) &&
@@ -72,7 +65,7 @@ const binaryAvatarMimeTypeDetectors: ReadonlyArray<{
 
 export const detectAvatarMimeType = (
   buffer: Uint8Array
-): AvatarMimeType | 'image/svg+xml' | undefined => {
+): AllowedAvatarMimeType | 'image/svg+xml' | undefined => {
   const detector = binaryAvatarMimeTypeDetectors.find(({ matches }) => matches(buffer));
 
   if (detector) {
@@ -101,23 +94,20 @@ const hasValidWebpEndMarker = (buffer: Uint8Array) =>
 const hasValidBmpEndMarker = (buffer: Uint8Array) =>
   buffer.length >= 6 && buffer.length === readUint32Le(buffer, 2);
 
-const avatarEndMarkerValidators: Record<AvatarMimeType, (buffer: Uint8Array) => boolean> = {
+const avatarEndMarkerValidators: Record<AllowedAvatarMimeType, (buffer: Uint8Array) => boolean> = {
   'image/jpeg': hasValidJpegEndMarker,
   'image/png': hasValidPngEndMarker,
   'image/gif': hasValidGifEndMarker,
   'image/webp': hasValidWebpEndMarker,
   'image/bmp': hasValidBmpEndMarker,
-  'image/tiff': () => true,
-  'image/vnd.microsoft.icon': () => true,
-  'image/x-icon': () => true,
 };
 
-const hasValidAvatarEndMarker = (buffer: Uint8Array, mimeType: AvatarMimeType) =>
+const hasValidAvatarEndMarker = (buffer: Uint8Array, mimeType: AllowedAvatarMimeType) =>
   buffer.length > 0 && avatarEndMarkerValidators[mimeType](buffer);
 
 export const isAllowedAvatarMimeType = (
-  mimeType: AvatarMimeType | 'image/svg+xml' | undefined
-): mimeType is AvatarMimeType => {
+  mimeType: AllowedAvatarMimeType | 'image/svg+xml' | undefined
+): mimeType is AllowedAvatarMimeType => {
   if (mimeType === undefined) {
     return false;
   }
@@ -131,7 +121,7 @@ export const isAllowedAvatarMimeType = (
   return false;
 };
 
-export const sanitizeFilename = (filename: string, mimeType: AvatarMimeType) => {
+export const sanitizeFilename = (filename: string, mimeType: AllowedAvatarMimeType) => {
   const [extension] = mimeTypeToFileExtensionMappings[mimeType];
   const fallbackFilename = `${generateStandardId(8)}.${extension}`;
   const basename = path.basename(filename).replaceAll(/[^\w.-]/g, '-');
