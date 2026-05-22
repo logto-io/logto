@@ -9,12 +9,21 @@ import { getAlterationDirectory } from '../alteration/utils.js';
 
 import { createTables, seedCloud, seedTables, seedTest } from './tables.js';
 
+type SeedByPoolOptions = {
+  cloud?: boolean;
+  test?: boolean;
+  encryptBaseRole?: boolean;
+  disablePwnedPasswordCheck?: boolean;
+};
+
 export const seedByPool = async (
   pool: DatabasePool,
-  cloud = false,
-  test = false,
-  encryptBaseRole = false,
-  disablePwnedPasswordCheck = false
+  {
+    cloud = false,
+    test = false,
+    encryptBaseRole = false,
+    disablePwnedPasswordCheck = false,
+  }: SeedByPoolOptions = {}
 ) => {
   await pool.transaction(async (connection) => {
     // Check alteration scripts available in order to insert correct timestamp
@@ -125,7 +134,7 @@ const seed: CommandModule<
     }
 
     try {
-      await seedByPool(pool, cloud, test, encryptBaseRole, dapc);
+      await seedByPool(pool, { cloud, test, encryptBaseRole, disablePwnedPasswordCheck: dapc });
     } catch (error: unknown) {
       consoleLog.error(error);
       consoleLog.error(
