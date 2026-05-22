@@ -95,7 +95,13 @@ export const createAdminTenantSignInExperience = (
       darkLogoUrl: 'https://logto.io/logo-dark.svg',
     },
     passwordPolicy: options.disablePwnedPasswordCheck
-      ? { rejects: { pwned: false } }
+      ? {
+          ...defaultSignInExperience.passwordPolicy,
+          rejects: {
+            ...defaultSignInExperience.passwordPolicy?.rejects,
+            pwned: false,
+          },
+        }
       : defaultSignInExperience.passwordPolicy,
     mfa: {
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn, MfaFactor.BackupCode],
