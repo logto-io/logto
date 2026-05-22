@@ -80,12 +80,14 @@ const sign_in_exp = {
     title: '自定義 UI',
     cloud_tag: 'Cloud',
     css_code_editor_title: '自定義 CSS',
+    css_code_editor_field_title: 'CSS 覆寫',
     css_code_editor_description1: '查看自定義 CSS 示例。',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: '了解更多',
     css_code_editor_content_placeholder:
-      '輸入你的自定義 CSS 來精確調整任何東西的樣式。發揮你的創意，讓你的 UI 脫穎而出。',
+      '在此輸入你的 CSS 覆寫規則，以按你的具體要求調整任何內容的樣式。發揮你的創意，讓你的 UI 脫穎而出。',
     bring_your_ui_title: '帶上你的 UI',
+    bring_your_ui_upload_title: '上傳自訂 UI 資源',
     bring_your_ui_description:
       '上傳壓縮包 (.zip) 以用自己的代碼替換 Logto 預建的 UI。<a>了解更多</a>',
     bring_your_ui_oss_description: '用你的代碼自訂登入 UI。',
@@ -95,10 +97,10 @@ const sign_in_exp = {
     preview_with_bring_your_ui_description:
       '你的自定義 UI 資源已成功上傳，現在正在提供服務。因此，內建預覽窗口已被禁用。\n要測試你的個性化登錄 UI，請點擊“實時預覽”按鈕在新瀏覽器標籤頁中打開。',
     csp_description: '為你的自訂登入 UI 允許額外的來源表達式。這些值只會在提供自訂 UI 資源時套用。',
-    csp_script_src: 'script-src 來源',
+    csp_script_src: '允許的 script-src',
     csp_script_src_tip:
       '允許你的自訂 UI 載入腳本時使用的 HTTPS 來源表達式，例如 https://scripts.example.com 或 https://*.example.com。',
-    csp_connect_src: 'connect-src 來源',
+    csp_connect_src: '允許的 connect-src',
     csp_connect_src_tip:
       '允許你的自訂 UI 發送網絡請求時使用的 HTTPS 或 WSS 來源表達式，例如 https://api.example.com 或 wss://events.example.com。',
     csp_source_invalid_error:

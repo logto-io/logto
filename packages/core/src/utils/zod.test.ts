@@ -5,7 +5,17 @@ import {
   translationGuard,
   customContentGuard,
 } from '@logto/schemas';
-import { string, boolean, number, object, nativeEnum, unknown, literal, union } from 'zod';
+import {
+  string,
+  boolean,
+  number,
+  object,
+  nativeEnum,
+  unknown,
+  literal,
+  union,
+  preprocess,
+} from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
@@ -138,6 +148,10 @@ describe('zodTypeToSwagger', () => {
 
   it('optional type', () => {
     expect(zodTypeToSwagger(string().optional())).toEqual({ type: 'string' });
+  });
+
+  it('preprocess type', () => {
+    expect(zodTypeToSwagger(preprocess(String, string()))).toEqual({ type: 'string' });
   });
 
   it('nullable type', () => {

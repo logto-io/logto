@@ -148,3 +148,49 @@ describe('response', () => {
     });
   });
 });
+
+describe('capped totalCount', () => {
+  it('emits `Total-Number-Is-Capped: true` and omits both `last` and `next` when capped', async () => {
+    // Stripe-style: when the count is capped, the saturated `totalPage` is a
+    // lie, so neither `last` nor `next` can be answered honestly. Both are
+    // dropped together; clients walk by URL construction and stop on empty.
+    const ctx = createContext({});
+    await koaPagination({ defaultPageSize: 20 })(ctx, async () => {
+      ctx.pagination.totalCount = 10_001;
+      ctx.pagination.totalCountIsCapped = true;
+    });
+    expect(setHeader).toHaveBeenCalledWith('Total-Number', '10001');
+    expect(setHeader).toHaveBeenCalledWith('Total-Number-Is-Capped', 'true');
+    expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
+    expect([...links].some((link) => link.includes('rel="last"'))).toBeFalsy();
+    expect([...links].some((link) => link.includes('rel="next"'))).toBeFalsy();
+  });
+
+  it('still emits `prev` when capped and not on the first page', async () => {
+    const ctx = createContext({ page: '3' });
+    await koaPagination({ defaultPageSize: 20 })(ctx, async () => {
+      ctx.pagination.totalCount = 10_001;
+      ctx.pagination.totalCountIsCapped = true;
+    });
+    expect(links.has('<?page=2>; rel="prev"')).toBeTruthy();
+  });
+
+  it('keeps full Link set when totalCountIsCapped is false', async () => {
+    const ctx = createContext({});
+    await koaPagination({ defaultPageSize: 20 })(ctx, async () => {
+      ctx.pagination.totalCount = 30;
+      ctx.pagination.totalCountIsCapped = false;
+    });
+    expect(setHeader).not.toHaveBeenCalledWith('Total-Number-Is-Capped', 'true');
+    expect(links.has('<?page=2>; rel="last"')).toBeTruthy();
+  });
+
+  it('keeps full Link set when totalCountIsCapped is undefined', async () => {
+    const ctx = createContext({});
+    await koaPagination({ defaultPageSize: 20 })(ctx, async () => {
+      ctx.pagination.totalCount = 30;
+    });
+    expect(setHeader).not.toHaveBeenCalledWith('Total-Number-Is-Capped', 'true');
+    expect(links.has('<?page=2>; rel="last"')).toBeTruthy();
+  });
+});

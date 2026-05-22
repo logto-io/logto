@@ -9,6 +9,8 @@ const general = {
   search: 'Ara',
   search_placeholder: 'Ara',
   clear_result: 'Sonuçları Temizle',
+  today: 'Bugün',
+  clear: 'Temizle',
   save: 'Kaydet',
   save_changes: 'Değişiklikleri Kaydet',
   saved: 'Kaydedildi',

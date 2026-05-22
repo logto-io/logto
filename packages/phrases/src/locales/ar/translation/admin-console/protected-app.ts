@@ -34,6 +34,18 @@ const protected_app = {
         'يرجى تعريض خادمك المحلي للإنترنت أولاً. تعرف على المزيد حول <a>التطوير المحلي</a>.',
     },
   },
+  id_token_claims: {
+    card_title: 'مطالبات ID token',
+    card_description:
+      'اطلب نطاقات (scope) مستخدم إضافية أثناء تسجيل الدخول للتطبيق المحمي لتضمين المطالبات الموسعة المفعلة في ID token الذي يتم تمريره.',
+    field_title: 'نطاقات إضافية',
+    field_description:
+      'يتم تضمين المطالبات فقط عند تمكينها في <a>Custom JWT > ID token</a> وعند طلب النطاق المطابق هنا.',
+    table_column_scope: 'النطاق',
+    table_column_claims_forwarded: 'المطالبات المُمررة',
+    disabled_claims_hint:
+      'المطالبات الرمادية غير مُمررة بعد. قم بتمكينها في <a>Custom JWT > ID token</a> لتضمينها في ID token.',
+  },
   success_message: '🎉 تم تمكين المصادقة على التطبيق بنجاح! استكشف تجربة موقع الويب الجديدة.',
 };
 

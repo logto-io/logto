@@ -3,8 +3,13 @@ import { conditionalString } from '@silverhand/essentials';
 
 import { authedAdminApi } from './api.js';
 
-export const getAuditLogs = async (params?: URLSearchParams) =>
-  authedAdminApi.get('logs?' + conditionalString(params?.toString())).json<Log[]>();
+export const getAuditLogsResponse = async (params?: URLSearchParams) =>
+  authedAdminApi.get('logs?' + conditionalString(params?.toString()));
+
+export const getAuditLogs = async (params?: URLSearchParams) => {
+  const response = await getAuditLogsResponse(params);
+  return response.json<Log[]>();
+};
 
 export const getWebhookRecentLogs = async (hookId: string, params?: URLSearchParams) =>
   authedAdminApi

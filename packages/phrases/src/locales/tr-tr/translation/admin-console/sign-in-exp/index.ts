@@ -84,12 +84,14 @@ const sign_in_exp = {
     title: 'Özelleştirilmiş UI',
     cloud_tag: 'Cloud',
     css_code_editor_title: 'Özelleştirilmiş CSS',
+    css_code_editor_field_title: 'CSS geçersiz kılma',
     css_code_editor_description1: 'Özelleştirilmiş CSS örneğine bakın.',
     css_code_editor_description2: '<a>{{link}}</a>',
     css_code_editor_description_link_content: 'Daha fazla bilgi edinin',
     css_code_editor_content_placeholder:
-      "Tam olarak istediğiniz özelliklere göre stilleri uyarlamak için özelleştirilmiş CSS'inizi girin. Yaratıcılığınızı ifade edin ve UI'nizi öne çıkarın.",
+      "İstediğiniz özelliklere göre herhangi bir öğenin stillerini uyarlamak için CSS geçersiz kılmalarınızı buraya girin. Yaratıcılığınızı ifade edin ve UI'nizi öne çıkarın.",
     bring_your_ui_title: "UI'nizi Getirin",
+    bring_your_ui_upload_title: 'Özel UI varlıklarını yükle',
     bring_your_ui_description:
       "Logto'nun önceden oluşturulmuş UI'sini kendi kodunuzla değiştirmek için sıkıştırılmış bir paket (.zip) yükleyin. <a>Daha fazla bilgi edinin</a>",
     bring_your_ui_oss_description: 'Oturum açma arayüzünü kendi kodunuzla özelleştirin.',
@@ -100,10 +102,10 @@ const sign_in_exp = {
       'Özelleştirilmiş UI varlıklarınız başarıyla yüklendi ve şimdi sunuluyor. Sonuç olarak, yerleşik önizleme penceresi devre dışı bırakıldı.\nKişiselleştirilmiş oturum açma UI\'nizi test etmek için "Canlı Önizleme" düğmesine tıklayarak yeni bir tarayıcı sekmesinde açın.',
     csp_description:
       'Özel oturum açma UI’niz için ek kaynak ifadelerine izin verin. Bu değerler yalnızca özel UI varlıkları sunulduğunda uygulanır.',
-    csp_script_src: 'script-src kaynakları',
+    csp_script_src: 'İzin verilen script-src',
     csp_script_src_tip:
       'Özel UI’niz tarafından yüklenen betikler için https://scripts.example.com veya https://*.example.com gibi HTTPS kaynak ifadelerine izin verin.',
-    csp_connect_src: 'connect-src kaynakları',
+    csp_connect_src: 'İzin verilen connect-src',
     csp_connect_src_tip:
       'Özel UI’nizin yaptığı ağ istekleri için https://api.example.com veya wss://events.example.com gibi HTTPS ya da WSS kaynak ifadelerine izin verin.',
     csp_source_invalid_error:

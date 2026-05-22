@@ -15,6 +15,7 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     // Ensure CSS modules are stubbed before applying path aliases.
     '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
+    '\\.(css|sass|scss)$': 'identity-obj-proxy',
     '^@ac/([^?]*)(\\?.*)?$': '<rootDir>/src/$1',
     '^@experience/([^?]*)(\\?.*)?$': '<rootDir>/../experience/src/$1',
     '^@/([^?]*)(\\?.*)?$': '<rootDir>/src/$1',

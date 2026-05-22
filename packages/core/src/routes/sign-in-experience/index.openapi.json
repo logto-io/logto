@@ -52,6 +52,17 @@
                     "customContent": {
                       "description": "Custom content to display on experience flow pages. the page pathname will be the config key, the content will be the config value."
                     },
+                    "customUiCsp": {
+                      "description": "Cloud only. Additional Content Security Policy source expressions for Custom UI assets. These values are applied to the hosted sign-in page only when Custom UI assets are configured.",
+                      "properties": {
+                        "scriptSrc": {
+                          "description": "Additional source expressions appended to the `script-src` directive for scripts loaded by Custom UI assets. HTTPS sources are supported. HTTP localhost sources are allowed only outside production."
+                        },
+                        "connectSrc": {
+                          "description": "Additional source expressions appended to the `connect-src` directive for network requests made by Custom UI assets. HTTPS and WSS sources are supported. HTTP localhost sources are allowed only outside production."
+                        }
+                      }
+                    },
                     "passwordPolicy": {
                       "description": "Password policies to adjust the password strength requirements."
                     },
@@ -143,6 +154,17 @@
                   },
                   "customContent": {
                     "description": "Custom content to display on experience flow pages. the page pathname will be the config key, the content will be the config value."
+                  },
+                  "customUiCsp": {
+                    "description": "Cloud only. Configure additional Content Security Policy source expressions for Custom UI assets. These values are applied to the hosted sign-in page only when Custom UI assets are configured.",
+                    "properties": {
+                      "scriptSrc": {
+                        "description": "Additional source expressions to append to the `script-src` directive for scripts loaded by Custom UI assets. Use HTTPS sources; HTTP localhost sources are allowed only outside production."
+                      },
+                      "connectSrc": {
+                        "description": "Additional source expressions to append to the `connect-src` directive for network requests made by Custom UI assets. Use HTTPS or WSS sources; HTTP localhost sources are allowed only outside production."
+                      }
+                    }
                   },
                   "passwordPolicy": {
                     "description": "Password policies to adjust the password strength requirements."

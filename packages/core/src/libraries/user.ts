@@ -308,7 +308,9 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   // TODO: If the user's email is not verified, we should not provision the user into any organization.
   /**
    * Provision the user with JIT organizations and roles based on the user's email domain and the
-   * enterprise SSO connector.
+   * enterprise SSO connector. When `isDevFeaturesEnabled` is on, returns only the JIT orgs where
+   * the user was newly added (so the caller emits accurate `addedUserIds`); otherwise returns
+   * every JIT org, preserving master's webhook behavior.
    */
   const provisionOrganizations = async ({
     userId,
@@ -328,11 +330,20 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
       return [];
     }
 
+    // Snapshot pre-existing memberships before the insert; afterwards
+    // `getExistingOrganizationIds` cannot distinguish pre-existing from newly-added
+    // rows. Gated behind dev-features because the snapshot is only consulted by the
+    // dev-features branch of the return below; in production (dev-OFF) we return
+    // every JIT org unfiltered, so the snapshot would be unused DB work.
+    const jitOrganizationIds = jitOrganizations.map(({ organizationId }) => organizationId);
+    const existingOrganizationIds = EnvSet.values.isDevFeaturesEnabled
+      ? new Set(
+          await organizations.relations.users.getExistingOrganizationIds(userId, jitOrganizationIds)
+        )
+      : new Set<string>();
+
     await organizations.relations.users.insert(
-      ...jitOrganizations.map(({ organizationId }) => ({
-        organizationId,
-        userId,
-      }))
+      ...jitOrganizationIds.map((organizationId) => ({ organizationId, userId }))
     );
 
     const data = jitOrganizations.flatMap(({ organizationId, organizationRoleIds }) =>
@@ -346,7 +357,11 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
       await organizations.relations.usersRoles.insert(...data);
     }
 
-    return jitOrganizations;
+    return EnvSet.values.isDevFeaturesEnabled
+      ? jitOrganizations.filter(
+          ({ organizationId }) => !existingOrganizationIds.has(organizationId)
+        )
+      : jitOrganizations;
   };
 
   return {

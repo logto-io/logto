@@ -1,4 +1,5 @@
-import type { Application, CreateApplication } from '@logto/schemas';
+import { UserScope } from '@logto/core-kit';
+import type { Application, CreateApplication, ProtectedAppMetadata } from '@logto/schemas';
 import { ApplicationType } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
@@ -9,6 +10,7 @@ import {
   mockProtectedApplication,
 } from '#src/__mocks__/index.js';
 import { protectedAppSignInCallbackUrl } from '#src/constants/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -73,6 +75,11 @@ const tenantContext = new MockTenant(
 
 const { createRequester } = await import('#src/utils/test-utils.js');
 const applicationRoutes = await pickDefault(import('./application.js'));
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
+};
 
 const customClientMetadata = {
   corsAllowedOrigins: [
@@ -87,6 +94,7 @@ const customClientMetadata = {
 
 describe('application route', () => {
   afterEach(() => {
+    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
     updateApplicationById.mockClear();
     syncAppConfigsToRemote.mockClear();
     deleteRemoteAppConfigs.mockClear();
@@ -217,6 +225,23 @@ describe('application route', () => {
     });
   });
 
+  it('GET /applications/:id hides additional scopes when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    findApplicationById.mockResolvedValueOnce(mockProtectedApplication);
+    const { additionalScopes, ...protectedAppMetadata } =
+      mockProtectedApplication.protectedAppMetadata;
+    expect(additionalScopes).toEqual([]);
+
+    const response = await applicationRequest.get('/applications/foo');
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockProtectedApplication,
+      protectedAppMetadata,
+      isAdmin: false,
+    });
+  });
+
   it('PATCH /applications/:applicationId', async () => {
     const name = 'FooApplication';
     const description = 'FooDescription';
@@ -233,16 +258,58 @@ describe('application route', () => {
     const name = 'FooApplication';
     const description = 'FooDescription';
     const origin = 'https://example.com';
+    const additionalScopes = [UserScope.CustomData];
 
     const response = await applicationRequest
       .patch('/applications/foo')
-      .send({ name, description, protectedAppMetadata: { origin } });
+      .send({ name, description, protectedAppMetadata: { origin, additionalScopes } });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({ ...mockApplication, name, description });
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith('foo');
     expect(updateApplicationById).toHaveBeenNthCalledWith(1, 'foo', {
-      protectedAppMetadata: { ...mockProtectedApplication.protectedAppMetadata, origin },
+      protectedAppMetadata: {
+        ...mockProtectedApplication.protectedAppMetadata,
+        origin,
+        additionalScopes,
+      },
     });
+  });
+
+  it('PATCH /applications/:applicationId preserves existing additional scopes when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    const existingProtectedAppMetadata: ProtectedAppMetadata = {
+      ...mockProtectedApplication.protectedAppMetadata,
+      additionalScopes: [UserScope.CustomData],
+    };
+    findApplicationById.mockResolvedValueOnce({
+      ...mockProtectedApplication,
+      protectedAppMetadata: existingProtectedAppMetadata,
+    });
+    const origin = 'https://example.com';
+
+    const response = await applicationRequest.patch('/applications/foo').send({
+      protectedAppMetadata: {
+        origin,
+        additionalScopes: [UserScope.CustomData, UserScope.Sessions],
+      },
+    });
+
+    expect(response.status).toEqual(200);
+    expect(syncAppConfigsToRemote).toHaveBeenCalledWith('foo');
+    expect(updateApplicationById).toHaveBeenNthCalledWith(1, 'foo', {
+      protectedAppMetadata: {
+        ...existingProtectedAppMetadata,
+        origin,
+      },
+    });
+  });
+
+  it('PATCH /applications/:applicationId for protected app rejects additional scopes without extended ID token claims', async () => {
+    const response = await applicationRequest
+      .patch('/applications/foo')
+      .send({ protectedAppMetadata: { additionalScopes: [UserScope.Sessions] } });
+
+    expect(response.status).toEqual(400);
   });
 
   it('PATCH /applications/:applicationId expect to throw with invalid properties', async () => {

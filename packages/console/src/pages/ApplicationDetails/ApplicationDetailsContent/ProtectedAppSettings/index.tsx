@@ -18,7 +18,11 @@ import DomainStatusTag from '@/components/DomainStatusTag';
 import FormCard from '@/components/FormCard';
 import OpenExternalLink from '@/components/OpenExternalLink';
 import { protectedApp, protectedAppLocalDev, protectOriginServer } from '@/consts';
-import { isCloud } from '@/consts/env';
+import {
+  isDevFeaturesEnabled,
+  isProtectedAppEnabled,
+  isProtectedAppLocalDevEnabled,
+} from '@/consts/env';
 import { openIdProviderConfigPath } from '@/consts/oidc';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -36,6 +40,7 @@ import CustomDomain from '@/pages/TenantSettings/TenantDomainSettings/CustomDoma
 import EndpointsAndCredentials from '../EndpointsAndCredentials';
 import { type ApplicationForm } from '../utils';
 
+import AdditionalScopesForm from './components/AdditionalScopesForm';
 import SessionForm from './components/SessionForm';
 import styles from './index.module.scss';
 
@@ -44,6 +49,9 @@ type Props = {
 };
 
 const routes = Object.freeze(['/register', '/sign-in', '/sign-in-callback', '/sign-out']);
+
+const shouldRejectLocalhostOrigin = (origin: string) =>
+  !isProtectedAppLocalDevEnabled && isLocalhost(origin);
 
 function ProtectedAppSettings({ data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -59,7 +67,7 @@ function ProtectedAppSettings({ data }: Props) {
     `api/applications/${data.id}/protected-app-metadata/custom-domains`
   );
   const { data: systemDomainData } = useSWRImmutable<ProtectedAppsDomainConfig>(
-    isCloud && 'api/systems/application'
+    isProtectedAppEnabled && 'api/systems/application'
   );
   const api = useApi();
   const [isDeletingCustomDomain, setIsDeletingCustomDomain] = useState(false);
@@ -143,7 +151,7 @@ function ProtectedAppSettings({ data }: Props) {
                   return t('protected_app.form.errors.invalid_url');
                 }
 
-                if (isLocalhost(value)) {
+                if (shouldRejectLocalhostOrigin(value)) {
                   return t('protected_app.form.errors.localhost');
                 }
 
@@ -292,6 +300,7 @@ function ProtectedAppSettings({ data }: Props) {
         </FormField>
       </FormCard>
       <EndpointsAndCredentials app={data} oidcConfig={oidcConfig} onApplicationUpdated={mutate} />
+      {isDevFeaturesEnabled && <AdditionalScopesForm />}
       <SessionForm data={data} />
     </>
   );

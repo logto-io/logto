@@ -206,6 +206,14 @@ export const extendedIdTokenClaimsByScope: Readonly<
   [UserScope.OrganizationRoles]: ['organization_roles'],
 });
 
+export const protectedAppAdditionalScopes = [
+  UserScope.CustomData,
+  UserScope.Identities,
+  UserScope.Roles,
+  UserScope.Organizations,
+  UserScope.OrganizationRoles,
+] as const satisfies ReadonlyArray<keyof typeof extendedIdTokenClaimsByScope>;
+
 /**
  * All possible claims for each scope, combining base ID token claims and extended claims.
  *

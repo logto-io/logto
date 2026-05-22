@@ -7,6 +7,9 @@ const normalizeEnv = (value: unknown) =>
 
 export const isProduction = import.meta.env.PROD;
 export const isCloud = yes(normalizeEnv(import.meta.env.IS_CLOUD));
+export const isProtectedAppLocalDevEnabled =
+  !isProduction && yes(normalizeEnv(import.meta.env.PROTECTED_APP_LOCAL_DEV));
+export const isProtectedAppEnabled = isCloud || isProtectedAppLocalDevEnabled;
 export const adminEndpoint = normalizeEnv(import.meta.env.ADMIN_ENDPOINT);
 
 export const isDevFeaturesEnabled =
