@@ -66,8 +66,21 @@ export const createDefaultSignInExperience = (
 /** @deprecated Use `createDefaultSignInExperience()` instead. */
 export const defaultSignInExperience = createDefaultSignInExperience(defaultTenantId, false);
 
+export type AdminSignInExperienceSeedOptions = {
+  /**
+   * When true, the seeded admin-tenant `passwordPolicy` explicitly disables the
+   * HaveIBeenPwned (HIBP) breach check by setting `rejects.pwned = false`. Intended
+   * for air-gapped or offline OSS deployments where `api.pwnedpasswords.com` is
+   * unreachable; otherwise the first admin sign-up will hang on the breach check.
+   *
+   * Defaults to `false`, which preserves the historical seeded value (`{}`) and lets
+   * the runtime fall back to the default policy (HIBP check enabled).
+   */
+  disablePwnedPasswordCheck?: boolean;
+};
+
 export const createAdminTenantSignInExperience = (
-  options: { disablePwnedPasswordCheck?: boolean } = {}
+  options: AdminSignInExperienceSeedOptions = {}
 ): Readonly<CreateSignInExperience> =>
   Object.freeze({
     ...defaultSignInExperience,
