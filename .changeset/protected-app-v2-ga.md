@@ -3,6 +3,6 @@
 "@logto/core": minor
 ---
 
-general availability for protected app v2 features validated in bug bash
+add protected app ID token claim scopes and tenant custom domain SDK endpoint support
 
-Protected App settings now expose ID token claim scopes in Console, sync them to remote config, and use the tenant custom domain for the SDK endpoint when one is active. Application secret rotation and custom domain behavior from the bug bash are now available without dev features enabled.
+Protected App settings in Console let you choose which ID token claims (such as `roles`, `custom_data`, and `organizations`) are forwarded to your origin via the `Logto-ID-Token` header. When a tenant custom domain is active, Protected App remote config uses that domain as the SDK endpoint.
