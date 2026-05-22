@@ -308,8 +308,9 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   // TODO: If the user's email is not verified, we should not provision the user into any organization.
   /**
    * Provision the user with JIT organizations and roles based on the user's email domain and the
-   * enterprise SSO connector. Returns only the JIT orgs where the user was newly added — callers
-   * use this to emit accurate `addedUserIds` on `Organization.Membership.Updated`.
+   * enterprise SSO connector. Returns only the JIT orgs the user was newly added to (i.e. orgs
+   * the user was not already a member of) so callers can decide whether to emit
+   * `Organization.Membership.Updated` for each org and what `addedUserIds` to include.
    */
   const provisionOrganizations = async ({
     userId,

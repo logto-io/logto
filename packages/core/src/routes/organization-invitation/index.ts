@@ -162,7 +162,7 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
       // Snapshot pre-existing membership before `updateStatus` runs the insert (which
       // uses ON CONFLICT DO NOTHING); afterwards the row is always present and we cannot
       // distinguish a real addition from a re-accept of an existing member.
-      const invitation = await queries.organizations.invitations.findById(id);
+      const invitation = await invitations.findById(id);
       const existingUserIds = await queries.organizations.relations.users.getExistingUserIds(
         invitation.organizationId,
         [acceptedUserId]
