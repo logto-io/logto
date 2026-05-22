@@ -43,12 +43,13 @@ const parseVerifyCodeResponseString = (response: string) => {
  * Returns the national number (e.g., "13012345678") for MAS API.
  */
 const parseMainlandChinaPhoneNumber = (phone: string): string => {
-  const parser = new PhoneNumberParser(phone);
+  const normalizedPhone = phone.startsWith('00') ? `+${phone.slice(2)}` : phone;
+  const parser = new PhoneNumberParser(normalizedPhone);
 
   if (!parser.isValid || parser.countryCode !== mainlandChinaCountryCode) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidRequestParameters, {
       errorDescription:
-        'Phone number must be a valid China mainland mobile number with country code +86.',
+        'Phone number must be a valid China mainland mobile number with country code 86 (+86).',
       phoneNumber: phone,
     });
   }
@@ -139,11 +140,7 @@ const sendMessage =
             `Invalid response raw body type: ${typeof rawBody}`
           )
         );
-        const result = sendSmsVerifyCodeResponseGuard.safeParse(parseJson(rawBody));
-        if (!result.success) {
-          throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error);
-        }
-        const { Message, ...rest } = result.data;
+        const { Message, ...rest } = parseVerifyCodeResponseString(rawBody);
         throw new ConnectorError(ConnectorErrorCodes.General, {
           errorDescription: Message,
           ...rest,

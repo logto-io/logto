@@ -164,6 +164,21 @@ describe('sendMessage() phone number validation', () => {
 
     expect(sendSmsVerifyCode).toHaveBeenCalled();
   });
+
+  it('should accept valid China phone number with 0086 international dialing prefix', async () => {
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: `0086${phoneTest}`,
+      type: TemplateType.SignIn,
+      payload: { code: codeTest },
+    });
+    const [sendRequest] = sendSmsVerifyCode.mock.calls[0] ?? [];
+
+    expect(sendRequest).toMatchObject({
+      CountryCode: '86',
+      PhoneNumber: phoneTest,
+    });
+  });
 });
 
 describe('sendMessage() with API errors', () => {

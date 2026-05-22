@@ -83,7 +83,7 @@ export const defaultMetadata: ConnectorMetadata = {
         title: name,
       })),
       description:
-        'Select a system-provided signature. These signatures are provided by Aliyun and do not require application.',
+        'Select a system-provided signature. These signatures are provided by Aliyun and do not require a separate signature application.',
     },
     {
       key: 'templates',
