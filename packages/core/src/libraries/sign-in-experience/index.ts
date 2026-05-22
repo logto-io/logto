@@ -336,6 +336,7 @@ export const createSignInExperienceLibrary = (
       googleOneTap: getGoogleOneTap(),
       captchaConfig: await getCaptchaConfig(),
       customProfileFields: signUpCustomProfileFields,
+      customProfileFieldCatalog: customProfileFields,
     };
   };
 
