@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { SignInExperienceResponse } from '@experience/shared/types';
 import {
   AccountCenterControlValue,
@@ -75,6 +76,66 @@ const favoriteColorField = {
   sieOrder: 0,
 } satisfies CustomProfileField;
 
+const fullnameField = {
+  tenantId: 'default',
+  id: 'fullname',
+  name: 'fullname',
+  type: CustomProfileFieldType.Fullname,
+  label: 'Full name',
+  description: null,
+  required: false,
+  config: {
+    parts: [
+      {
+        name: 'givenName',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Given name',
+        required: false,
+      },
+      {
+        name: 'familyName',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Family name',
+        required: false,
+      },
+    ],
+  },
+  createdAt: 0,
+  sieOrder: 0,
+} satisfies CustomProfileField;
+
+const addressField = {
+  tenantId: 'default',
+  id: 'address',
+  name: 'address',
+  type: CustomProfileFieldType.Address,
+  label: 'Address',
+  description: null,
+  required: false,
+  config: {
+    parts: [
+      {
+        name: 'streetAddress',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Street address',
+        required: false,
+      },
+      {
+        name: 'country',
+        enabled: true,
+        type: CustomProfileFieldType.Text,
+        label: 'Country',
+        required: false,
+      },
+    ],
+  },
+  createdAt: 0,
+  sieOrder: 0,
+} satisfies CustomProfileField;
+
 const renderProfile = ({
   accountCenterSettings,
   experienceSettings,
@@ -141,10 +202,107 @@ describe('<Profile />', () => {
     jest.mocked(updateProfile).mockResolvedValue(undefined);
   });
 
-  it('renders change actions for editable non-avatar fields', () => {
-    const { queryAllByText } = renderProfile();
+  it('renders editable profile fields with expected sections and edit entries', () => {
+    const { queryAllByText, queryByAltText, queryByText } = renderProfile();
+
+    expect(queryByText('account_center.page.profile_title')).not.toBeNull();
+    expect(queryByText('account_center.page.profile_description')).not.toBeNull();
+
+    expect(queryByText('name')).not.toBeNull();
+    expect(queryByText('Alex')).not.toBeNull();
+
+    expect(queryByText('avatar')).not.toBeNull();
+    expect(queryByAltText('Alex')).not.toBeNull();
+
+    expect(queryByText('birthdate')).not.toBeNull();
+    expect(queryByText('2023-08-20')).not.toBeNull();
+
+    expect(queryByText('Favorite color')).not.toBeNull();
+    expect(queryByText('Red')).not.toBeNull();
 
     expect(queryAllByText('account_center.security.change')).toHaveLength(3);
+  });
+
+  it('renders read-only profile fields in display-only state', () => {
+    const { queryByAltText, queryByText } = renderProfile({
+      accountCenterSettings: {
+        fields: {
+          name: AccountCenterControlValue.ReadOnly,
+          avatar: AccountCenterControlValue.ReadOnly,
+          profile: AccountCenterControlValue.ReadOnly,
+          customData: AccountCenterControlValue.ReadOnly,
+        },
+      },
+    });
+
+    expect(queryByText('Alex')).not.toBeNull();
+    expect(queryByAltText('Alex')).not.toBeNull();
+    expect(queryByText('2023-08-20')).not.toBeNull();
+    expect(queryByText('Red')).not.toBeNull();
+    expect(queryByText('account_center.security.change')).toBeNull();
+  });
+
+  it('hides off and unavailable profile fields', () => {
+    const { queryByText } = renderProfile({
+      accountCenterSettings: {
+        fields: {
+          name: AccountCenterControlValue.Off,
+          avatar: AccountCenterControlValue.Off,
+          profile: AccountCenterControlValue.Off,
+          customData: AccountCenterControlValue.Off,
+        },
+      },
+    });
+
+    expect(queryByText('name')).toBeNull();
+    expect(queryByText('avatar')).toBeNull();
+    expect(queryByText('birthdate')).toBeNull();
+    expect(queryByText('Favorite color')).toBeNull();
+    expect(queryByText('account_center.security.change')).toBeNull();
+  });
+
+  it('renders only fields configured in profileFields', () => {
+    const { queryByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [{ name: 'name' }],
+      },
+    });
+
+    expect(queryByText('name')).not.toBeNull();
+    expect(queryByText('Alex')).not.toBeNull();
+    expect(queryByText('avatar')).toBeNull();
+    expect(queryByText('birthdate')).toBeNull();
+    expect(queryByText('Favorite color')).toBeNull();
+  });
+
+  it('does not render profile card when profileFields is empty', () => {
+    const { queryByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [],
+      },
+    });
+
+    expect(queryByText('account_center.page.profile_title')).not.toBeNull();
+    expect(queryByText('name')).toBeNull();
+    expect(queryByText('account_center.security.change')).toBeNull();
+  });
+
+  it('renders avatar image when available and not_set placeholder when missing', () => {
+    const { queryByAltText, unmount } = renderProfile();
+
+    expect(queryByAltText('Alex')).not.toBeNull();
+
+    unmount();
+
+    const { queryByAltText: queryMissingAvatarAltText, queryByText: queryMissingAvatarText } =
+      renderProfile({
+        userInfo: {
+          avatar: null,
+        },
+      });
+
+    expect(queryMissingAvatarAltText('Alex')).toBeNull();
+    expect(queryMissingAvatarText('account_center.security.not_set')).not.toBeNull();
   });
 
   it('updates the name field from the edit modal', async () => {
@@ -195,6 +353,69 @@ describe('<Profile />', () => {
     });
 
     expect(getByText('profile.gender_options.male')).toBeTruthy();
+  });
+
+  it('updates fullname composite field via profile API', async () => {
+    const { getByDisplayValue, getByText, queryAllByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [{ name: 'fullname' }],
+      },
+      experienceSettings: {
+        customProfileFields: [fullnameField],
+      },
+      userInfo: {
+        profile: {
+          givenName: 'Alex',
+          familyName: 'Smith',
+        },
+      },
+    });
+
+    fireEvent.click(queryAllByText('account_center.security.change')[0]!);
+    fireEvent.change(getByDisplayValue('Alex'), { target: { value: 'Jane' } });
+    fireEvent.change(getByDisplayValue('Smith'), { target: { value: 'Doe' } });
+    fireEvent.click(getByText('action.save'));
+
+    await waitFor(() => {
+      expect(updateProfile).toHaveBeenCalledWith('access-token', {
+        givenName: 'Jane',
+        familyName: 'Doe',
+      });
+    });
+  });
+
+  it('updates address composite field via profile API', async () => {
+    const { getByDisplayValue, getByText, queryAllByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [{ name: 'address' }],
+      },
+      experienceSettings: {
+        customProfileFields: [addressField],
+      },
+      userInfo: {
+        profile: {
+          address: {
+            streetAddress: '123 Main St',
+            country: 'US',
+          },
+        },
+      },
+    });
+
+    fireEvent.click(queryAllByText('account_center.security.change')[0]!);
+    fireEvent.change(getByDisplayValue('123 Main St'), { target: { value: '456 Oak Ave' } });
+    fireEvent.change(getByDisplayValue('US'), { target: { value: 'CA' } });
+    fireEvent.click(getByText('action.save'));
+
+    await waitFor(() => {
+      expect(updateProfile).toHaveBeenCalledWith('access-token', {
+        address: {
+          formatted: '456 Oak Ave, CA',
+          streetAddress: '456 Oak Ave',
+          country: 'CA',
+        },
+      });
+    });
   });
 
   it('edits birthdate with segmented date inputs', async () => {
@@ -313,3 +534,4 @@ describe('<Profile />', () => {
     expect(queryByText('account_center.security.change')).toBeNull();
   });
 });
+/* eslint-enable max-lines */
