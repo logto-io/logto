@@ -170,11 +170,11 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
 
   const handleVerifyAndBind = useCallback(
     async (code: string) => {
-      clearVerifyError();
-
       if (!pendingIdentifier || !pendingVerificationRecordId || loading || !verificationId) {
         return;
       }
+
+      clearVerifyError();
 
       const [verifyError, verifyResult] = await verifyCodeRequest(
         buildVerifyPayload(pendingIdentifier, pendingVerificationRecordId, code)
@@ -281,9 +281,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       onResendFailed={(message) => {
         setErrorState((current) => ({ ...current, verifyError: message }));
       }}
-      onSubmit={(value) => {
-        void handleVerifyAndBind(value);
-      }}
+      onSubmit={handleVerifyAndBind}
       onBack={() => {
         resetFlow(true);
       }}
