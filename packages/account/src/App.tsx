@@ -2,7 +2,7 @@ import LogtoSignature from '@experience/shared/components/LogtoSignature';
 import { LogtoProvider, ReservedScope, useLogto, UserScope } from '@logto/react';
 import { accountCenterApplicationId, SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
@@ -10,6 +10,7 @@ import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
 import MobileTabNav from '@ac/components/MobileTabNav';
 import PageHeader from '@ac/components/PageHeader';
 import Sidebar from '@ac/components/Sidebar';
+import { buildAccountNavItems } from '@ac/components/account-nav-items';
 import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from './App.module.scss';
@@ -200,8 +201,13 @@ const Layout = () => {
   const isSecurityFullPage = pathname === securityRoute && showsSecurityPage;
   const isProfileFullPage = pathname === profileRoute && hasProfilePage;
   const isFullPage = isSecurityFullPage || isProfileFullPage;
-  const showsAccountNav = isFullPage && (hasProfilePage || showsSecurityPage);
-  const showsMobileTabNav = platform === 'mobile' && showsAccountNav;
+  const accountNavItems = useMemo(
+    () => buildAccountNavItems({ hasProfile: hasProfilePage, hasSecurity: showsSecurityPage }),
+    [hasProfilePage, showsSecurityPage]
+  );
+  const showsMultiPageNav = isFullPage && accountNavItems.length > 1;
+  const showsMobileTabNav = platform === 'mobile' && showsMultiPageNav;
+  const showsSidebar = platform !== 'mobile' && showsMultiPageNav;
 
   return (
     <div className={classNames(styles.app, layoutClassNames.app)}>
@@ -209,25 +215,22 @@ const Layout = () => {
         className={classNames(
           styles.layout,
           isFullPage && styles.fullPage,
+          showsMultiPageNav && layoutClassNames.withTabNav,
           layoutClassNames.pageContainer
         )}
       >
         {isFullPage && <PageHeader />}
-        {showsMobileTabNav && (
-          <MobileTabNav hasProfile={hasProfilePage} hasSecurity={showsSecurityPage} />
-        )}
+        {showsMobileTabNav && <MobileTabNav items={accountNavItems} />}
         <div
           className={classNames(
             styles.container,
             !isFullPage && styles.cardContainer,
             !isFullPage && layoutClassNames.cardContainer,
-            showsAccountNav && styles.withSidebar,
+            showsSidebar && styles.withSidebar,
             showsMobileTabNav && styles.withMobileTabNav
           )}
         >
-          {showsAccountNav && platform !== 'mobile' && (
-            <Sidebar hasProfile={hasProfilePage} hasSecurity={showsSecurityPage} />
-          )}
+          {showsSidebar && <Sidebar items={accountNavItems} />}
           <main
             className={classNames(
               styles.main,

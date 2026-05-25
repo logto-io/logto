@@ -1,13 +1,17 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { buildAccountNavItems } from '../account-nav-items';
+
 import MobileTabNav from '.';
 
 describe('<MobileTabNav />', () => {
   it('renders profile and security tabs when both are enabled', () => {
+    const items = buildAccountNavItems({ hasProfile: true, hasSecurity: true });
+
     render(
       <MemoryRouter>
-        <MobileTabNav hasProfile hasSecurity />
+        <MobileTabNav items={items} />
       </MemoryRouter>
     );
 
@@ -16,9 +20,10 @@ describe('<MobileTabNav />', () => {
   });
 
   it('renders nothing when only security is available', () => {
+    const items = buildAccountNavItems({ hasProfile: false, hasSecurity: true });
     const { container } = render(
       <MemoryRouter>
-        <MobileTabNav hasSecurity hasProfile={false} />
+        <MobileTabNav items={items} />
       </MemoryRouter>
     );
 
@@ -29,7 +34,7 @@ describe('<MobileTabNav />', () => {
   it('renders nothing when only one nav item is available', () => {
     const { container } = render(
       <MemoryRouter>
-        <MobileTabNav hasProfile={false} hasSecurity={false} />
+        <MobileTabNav items={[]} />
       </MemoryRouter>
     );
 

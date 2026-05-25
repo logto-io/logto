@@ -4,18 +4,16 @@ import { NavLink } from 'react-router-dom';
 
 import { layoutClassNames } from '@ac/constants/layout';
 
-import { buildAccountNavItems } from '../account-nav-items';
+import type { AccountNavItem } from '../account-nav-items';
 
 import styles from './index.module.scss';
 
 type Props = {
-  readonly hasProfile: boolean;
-  readonly hasSecurity: boolean;
+  readonly items: readonly AccountNavItem[];
 };
 
-const MobileTabNav = ({ hasProfile, hasSecurity }: Props) => {
+const MobileTabNav = ({ items }: Props) => {
   const { t } = useTranslation();
-  const items = buildAccountNavItems({ hasProfile, hasSecurity });
 
   if (items.length <= 1) {
     return null;
