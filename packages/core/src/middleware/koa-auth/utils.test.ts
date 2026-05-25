@@ -49,15 +49,17 @@ const getPublicJwk = async ({ value }: ReturnType<typeof createPrivateKey>) =>
 
 const setEnvValues = ({
   isCloud = false,
+  isMultiTenancy = false,
   adminUrlSet = createAdminUrlSet(),
 }: {
   isCloud?: boolean;
+  isMultiTenancy?: boolean;
   adminUrlSet?: ReturnType<typeof createAdminUrlSet>;
 } = {}) =>
   Sinon.stub(EnvSet, 'values').value({
     ...EnvSet.values,
     isCloud,
-    isMultiTenancy: false,
+    isMultiTenancy,
     adminUrlSet,
   });
 
@@ -153,6 +155,18 @@ describe('getAdminTenantTokenValidationSet', () => {
     expect(methods.one).toHaveBeenCalledTimes(2);
     expect(firstResult.keys).toEqual([await getPublicJwk(firstKey)]);
     expect(secondResult.keys).toEqual([await getPublicJwk(secondKey)]);
+  });
+
+  it('derives the issuer through getTenantEndpoint when multi-tenancy is enabled', async () => {
+    setEnvValues({ isMultiTenancy: true });
+    const privateKey = createPrivateKey('current', OidcSigningKeyStatus.Current);
+    methods.one.mockResolvedValueOnce({
+      value: [privateKey],
+    } as never);
+
+    const result = await getAdminTenantTokenValidationSet();
+
+    expect(result.issuer).toEqual(['https://admin.example.com/oidc']);
   });
 
   it('returns an empty set when admin tenant validation is unnecessary', async () => {
