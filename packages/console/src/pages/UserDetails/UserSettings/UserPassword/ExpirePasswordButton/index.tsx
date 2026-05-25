@@ -6,7 +6,6 @@ import useSWR from 'swr';
 
 import Button from '@/ds-components/Button';
 import ConfirmModal from '@/ds-components/ConfirmModal';
-import DangerousRaw from '@/ds-components/DangerousRaw';
 import Tooltip from '@/ds-components/Tip/Tooltip';
 import useApi, { type RequestError } from '@/hooks/use-api';
 
@@ -23,10 +22,8 @@ function ExpirePasswordButton({ userId }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const { data: signInExperience } = useSWR<SignInExperience, RequestError>('api/sign-in-exp');
-  const isEnabled = Boolean(
-    signInExperience?.passwordExpiration.enabled &&
-      signInExperience.passwordExpiration.validPeriodDays
-  );
+  const passwordExpiration = signInExperience?.passwordExpiration;
+  const isEnabled = Boolean(passwordExpiration?.enabled && passwordExpiration.validPeriodDays);
 
   const onConfirm = async () => {
     setIsLoading(true);
@@ -47,7 +44,7 @@ function ExpirePasswordButton({ userId }: Props) {
     <>
       <Tooltip content={isEnabled ? undefined : t('not_enabled_tooltip')}>
         <Button
-          title={<DangerousRaw>{t('button')}</DangerousRaw>}
+          title="user_details.expire_password.button"
           type="text"
           size="small"
           disabled={!isEnabled}
