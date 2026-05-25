@@ -161,10 +161,18 @@ export const decompress = async (toPath: string, tarPath: string) => {
   );
 };
 
-export const seedDatabase = async (instancePath: string, cloud: boolean) => {
+type SeedDatabaseOptions = {
+  cloud: boolean;
+  disablePwnedPasswordCheck?: boolean;
+};
+
+export const seedDatabase = async (
+  instancePath: string,
+  { cloud, disablePwnedPasswordCheck }: SeedDatabaseOptions
+) => {
   try {
     const pool = await createPoolAndDatabaseIfNeeded();
-    await seedByPool(pool, { cloud });
+    await seedByPool(pool, { cloud, disablePwnedPasswordCheck });
     await pool.end();
   } catch (error: unknown) {
     consoleLog.error(error);

@@ -21,9 +21,16 @@ export type InstallArgs = {
   skipSeed: boolean;
   cloud: boolean;
   downloadUrl?: string;
+  disableAdminPwnedPasswordCheck?: boolean;
 };
 
-const installLogto = async ({ path, skipSeed, downloadUrl, cloud }: InstallArgs) => {
+const installLogto = async ({
+  path,
+  skipSeed,
+  downloadUrl,
+  cloud,
+  disableAdminPwnedPasswordCheck,
+}: InstallArgs) => {
   validateNodeVersion();
 
   // Get install location path
@@ -45,7 +52,10 @@ const installLogto = async ({ path, skipSeed, downloadUrl, cloud }: InstallArgs)
       )} command to seed database when ready.\n`
     );
   } else {
-    await seedDatabase(installPath, cloud);
+    await seedDatabase(installPath, {
+      cloud,
+      disablePwnedPasswordCheck: disableAdminPwnedPasswordCheck,
+    });
   }
 
   // Save to dot env
@@ -62,6 +72,7 @@ const install: CommandModule<
     ss: boolean;
     cloud: boolean;
     du?: string;
+    'disable-admin-pwned-password-check'?: boolean;
   }
 > = {
   command: ['init', 'i', 'install'],
@@ -91,9 +102,27 @@ const install: CommandModule<
         type: 'string',
         hidden: true,
       },
+      'disable-admin-pwned-password-check': {
+        describe:
+          "Seed the admin tenant's sign-in experience with the Have I Been Pwned (HIBP) " +
+          'password breach check disabled. Use this for air-gapped or offline OSS deployments ' +
+          'where api.pwnedpasswords.com is unreachable, otherwise creating the first admin ' +
+          'user from the Welcome page will hang on the breach check. Scope: admin tenant only ' +
+          "— the default tenant's password policy is unaffected and stays admin-controlled " +
+          'via the Admin Console.',
+        alias: 'dapc',
+        type: 'boolean',
+        default: false,
+      },
     }),
-  handler: async ({ p, ss, cloud, du }) => {
-    await installLogto({ path: p, skipSeed: ss, cloud, downloadUrl: du });
+  handler: async ({ p, ss, cloud, du, disableAdminPwnedPasswordCheck }) => {
+    await installLogto({
+      path: p,
+      skipSeed: ss,
+      cloud,
+      downloadUrl: du,
+      disableAdminPwnedPasswordCheck,
+    });
   },
 };
 
