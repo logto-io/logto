@@ -45,7 +45,7 @@ export default function domainRoutes<T extends ManagementApiRouter>(
       syncCustomDomainsToSamlApplicationRedirectUrls(tenantId, [...domains])
     );
 
-    if (shouldSyncProtectedAppConfigs && EnvSet.values.isDevFeaturesEnabled) {
+    if (shouldSyncProtectedAppConfigs) {
       await trySafe(async () => syncAllAppConfigsToRemote());
     }
   };

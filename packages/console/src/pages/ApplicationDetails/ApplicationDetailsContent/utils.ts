@@ -1,7 +1,6 @@
 import { customClientMetadataDefault, type ApplicationResponse } from '@logto/schemas';
 import { cond, conditional, type DeepPartial } from '@silverhand/essentials';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { isJsonObject } from '@/utils/json';
 
 type ProtectedAppMetadataType = ApplicationResponse['protectedAppMetadata'];
@@ -26,11 +25,8 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 const parseProtectedAppMetadataFromResponse = (
   protectedAppMetadata: NonNullable<ProtectedAppMetadataType>
 ): ApplicationForm['protectedAppMetadata'] => {
-  const { additionalScopes, ...rest } = protectedAppMetadata;
-
   return {
-    ...rest,
-    ...conditional(isDevFeaturesEnabled && { additionalScopes }),
+    ...protectedAppMetadata,
     sessionDuration: protectedAppMetadata.sessionDuration / 3600 / 24,
   };
 };
@@ -38,11 +34,8 @@ const parseProtectedAppMetadataFromResponse = (
 const parseProtectedAppMetadataToPayload = (
   protectedAppMetadata: NonNullable<ApplicationForm['protectedAppMetadata']>
 ): NonNullable<DeepPartial<ApplicationResponse>['protectedAppMetadata']> => {
-  const { additionalScopes, ...rest } = protectedAppMetadata;
-
   return {
-    ...rest,
-    ...conditional(isDevFeaturesEnabled && { additionalScopes }),
+    ...protectedAppMetadata,
     sessionDuration: protectedAppMetadata.sessionDuration * 3600 * 24,
   };
 };

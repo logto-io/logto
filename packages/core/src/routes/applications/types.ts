@@ -5,8 +5,6 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
-
 const protectedAppAdditionalScopeGuard = z.enum(protectedAppAdditionalScopes);
 
 export const applicationCreateGuard = originalApplicationCreateGuard
@@ -39,10 +37,7 @@ export const applicationPatchGuard = originalApplicationPatchGuard
             })
           )
           .optional(),
-        additionalScopes: z.preprocess(
-          (value) => (EnvSet.values.isDevFeaturesEnabled ? value : undefined),
-          z.array(protectedAppAdditionalScopeGuard).optional()
-        ),
+        additionalScopes: z.array(protectedAppAdditionalScopeGuard).optional(),
       })
       .nullish(),
   });
