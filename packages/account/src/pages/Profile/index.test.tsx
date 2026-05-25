@@ -76,6 +76,19 @@ const favoriteColorField = {
   sieOrder: 0,
 } satisfies CustomProfileField;
 
+const newsletterField = {
+  tenantId: 'default',
+  id: 'newsletter',
+  name: 'newsletter',
+  type: CustomProfileFieldType.Checkbox,
+  label: 'Newsletter',
+  description: null,
+  required: false,
+  config: { defaultValue: 'false' },
+  createdAt: 0,
+  sieOrder: 0,
+} satisfies CustomProfileField;
+
 const fullnameField = {
   tenantId: 'default',
   id: 'fullname',
@@ -324,6 +337,76 @@ describe('<Profile />', () => {
     expect(setToast).toHaveBeenCalledWith('account_center.update_success.default.description');
   });
 
+  it('renders custom data checkbox fields with yes/no labels', () => {
+    const { getByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [{ name: 'newsletter' }],
+      },
+      experienceSettings: {
+        customProfileFields: [newsletterField],
+      },
+      userInfo: {
+        customData: {
+          newsletter: true,
+        },
+      },
+    });
+
+    expect(getByText('Yes')).toBeTruthy();
+  });
+
+  it('renders built-in checkbox fields from profile data', () => {
+    const { getByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [{ name: 'nickname' }],
+      },
+      experienceSettings: {
+        customProfileFieldCatalog: [
+          {
+            ...requiredNicknameField,
+            type: CustomProfileFieldType.Checkbox,
+            config: { defaultValue: 'false' },
+          },
+        ],
+      },
+      userInfo: {
+        profile: {
+          nickname: 'true',
+        },
+      },
+    });
+
+    expect(getByText('Yes')).toBeTruthy();
+  });
+
+  it('updates custom data checkbox fields', async () => {
+    const { getByText, queryAllByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [{ name: 'newsletter' }],
+      },
+      experienceSettings: {
+        customProfileFields: [newsletterField],
+      },
+      userInfo: {
+        customData: {
+          newsletter: false,
+          retained: 'value',
+        },
+      },
+    });
+
+    fireEvent.click(queryAllByText('account_center.security.change')[0]!);
+    fireEvent.click(document.querySelector('input[type="checkbox"]')!);
+    fireEvent.click(getByText('action.save'));
+
+    await waitFor(() => {
+      expect(updateCustomData).toHaveBeenCalledWith('access-token', {
+        newsletter: true,
+        retained: 'value',
+      });
+    });
+  });
+
   it('updates custom data fields without dropping existing custom data', async () => {
     const { getByText, queryAllByText } = renderProfile();
 
@@ -458,6 +541,28 @@ describe('<Profile />', () => {
     });
     expect(refreshUserInfo).not.toHaveBeenCalled();
     expect(getByText('action.save')).toBeTruthy();
+  });
+
+  it('does not mark required custom data fields as optional in the edit modal', () => {
+    const { queryByText, queryAllByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [{ name: 'employeeId' }],
+      },
+      experienceSettings: {
+        customProfileFields: [],
+        customProfileFieldCatalog: [
+          {
+            ...requiredNicknameField,
+            name: 'employeeId',
+            label: 'Employee ID',
+          },
+        ],
+      },
+    });
+
+    fireEvent.click(queryAllByText('account_center.security.change')[0]!);
+
+    expect(queryByText('(Optional)')).toBeNull();
   });
 
   it('blocks submit for required fields and does not call the update API', async () => {

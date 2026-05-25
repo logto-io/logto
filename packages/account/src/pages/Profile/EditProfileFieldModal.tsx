@@ -246,7 +246,13 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
                   autoFocus={fields[0]?.name === editableField.name}
                   name={editableField.name}
                   label={editableField.label}
-                  type={editableField.type === CustomProfileFieldType.Number ? 'number' : 'text'}
+                  type={
+                    editableField.type === CustomProfileFieldType.Number
+                      ? 'number'
+                      : editableField.type === CustomProfileFieldType.Url
+                        ? 'url'
+                        : 'text'
+                  }
                   required={editableField.required}
                   value={getProfileValue(value)}
                   description={editableField.description}

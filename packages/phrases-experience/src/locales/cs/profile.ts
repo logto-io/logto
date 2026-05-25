@@ -26,6 +26,10 @@ const profile = {
     male: 'Muž',
     prefer_not_to_say: 'Nechci uvádět',
   },
+  checkbox_value: {
+    checked: 'Ano',
+    unchecked: 'Ne',
+  },
 };
 
 export default Object.freeze(profile);

@@ -183,6 +183,7 @@ describe('getFullSignInExperience()', () => {
       googleOneTap: undefined,
       captchaConfig: undefined,
       customProfileFields: mockCustomProfileFields,
+      customProfileFieldCatalog: mockCustomProfileFields,
       forgotPassword: {
         email: false,
         phone: false,
@@ -228,6 +229,7 @@ describe('getFullSignInExperience()', () => {
       },
       captchaConfig: undefined,
       customProfileFields: mockCustomProfileFields,
+      customProfileFieldCatalog: mockCustomProfileFields,
       forgotPassword: {
         email: false,
         phone: false,
@@ -254,6 +256,7 @@ describe('getFullSignInExperience()', () => {
       const fullSignInExperience = await getFullSignInExperience({ locale: 'en' });
 
       expect(fullSignInExperience.customProfileFields).toStrictEqual(mockCustomProfileFields);
+      expect(fullSignInExperience.customProfileFieldCatalog).toStrictEqual(mockCustomProfileFields);
     } finally {
       // eslint-disable-next-line @silverhand/fp/no-mutation
       (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =

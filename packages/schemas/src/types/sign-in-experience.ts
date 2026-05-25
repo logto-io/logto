@@ -51,7 +51,15 @@ export type FullSignInExperience = Omit<SignInExperience, 'forgotPasswordMethods
     domain?: string;
     mode?: RecaptchaEnterpriseMode;
   };
+  /**
+   * Custom profile fields selected for the sign-up (Collect user profile) flow.
+   */
   customProfileFields?: Readonly<CustomProfileField[]>;
+  /**
+   * Full custom profile field catalog used to resolve field metadata (for example `required`
+   * and `type`) outside the sign-up field list, such as the account center profile page.
+   */
+  customProfileFieldCatalog?: Readonly<CustomProfileField[]>;
 };
 
 export const fullSignInExperienceGuard = SignInExperiences.guard
@@ -81,4 +89,5 @@ export const fullSignInExperienceGuard = SignInExperiences.guard
       })
       .optional(),
     customProfileFields: CustomProfileFields.guard.array(),
+    customProfileFieldCatalog: CustomProfileFields.guard.array().optional(),
   }) satisfies ToZodObject<FullSignInExperience>;

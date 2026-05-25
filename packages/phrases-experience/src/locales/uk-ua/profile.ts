@@ -26,6 +26,10 @@ const profile = {
     male: 'Чоловіча',
     prefer_not_to_say: 'Волію не говорити',
   },
+  checkbox_value: {
+    checked: 'Так',
+    unchecked: 'Ні',
+  },
 };
 
 export default Object.freeze(profile);

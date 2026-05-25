@@ -1,15 +1,4 @@
-import {
-  AccountCenterControlValue,
-  CustomProfileFieldType,
-  fullnameKeys,
-  userProfileAddressKeys,
-  userProfileKeys,
-  type AccountCenter,
-  type AccountCenterProfileFields,
-  type CustomProfileField,
-  type UserProfile,
-  type UserProfileResponse,
-} from '@logto/schemas';
+import { AccountCenterControlValue, type CustomProfileField } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,206 +11,18 @@ import homeStyles from '../Home/index.module.scss';
 
 import EditProfileFieldModal from './EditProfileFieldModal';
 import styles from './index.module.scss';
-import { getSelectOptionLabel } from './select-options';
-import type { ProfileFieldControlKey, ProfileFieldRow } from './types';
-
-const profileFieldKeySet = new Set<string>(userProfileKeys);
-const fullnameKeySet = new Set<string>(fullnameKeys);
-const addressKeySet = new Set<string>(userProfileAddressKeys);
+import {
+  getAccountCenterProfileFields,
+  getProfileFieldControlKey,
+  getProfileFieldValue,
+} from './profile-field-values';
+import type { ProfileFieldRow } from './types';
 
 const profileLabelKeys: Record<string, string> = {
   name: 'profile.name',
   avatar: 'profile.avatar',
   fullname: 'profile.fullname',
   address: 'profile.address.formatted',
-};
-
-const getAccountCenterProfileFields = (settings?: AccountCenter): AccountCenterProfileFields =>
-  settings?.profileFields ?? [];
-
-const isCompositeProfileField = (field?: CustomProfileField): boolean =>
-  field?.type === CustomProfileFieldType.Fullname || field?.type === CustomProfileFieldType.Address;
-
-const isBuiltInProfileField = (fieldName: string, field?: CustomProfileField): boolean =>
-  profileFieldKeySet.has(fieldName) || (fieldName === 'fullname' && field === undefined);
-
-const getProfileFieldControlKey = (
-  fieldName: string,
-  field?: CustomProfileField
-): ProfileFieldControlKey => {
-  if (fieldName === 'name' || fieldName === 'avatar') {
-    return fieldName;
-  }
-
-  if (isBuiltInProfileField(fieldName, field) || isCompositeProfileField(field)) {
-    return 'profile';
-  }
-
-  return 'customData';
-};
-
-const joinValues = (values: Array<string | undefined>, separator = ' '): string | undefined => {
-  const value = values.filter(Boolean).join(separator);
-
-  return value || undefined;
-};
-
-const getPrimitiveValue = (value: unknown): string | undefined => {
-  if (value === undefined || value === null || value === '') {
-    return;
-  }
-
-  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-    return String(value);
-  }
-};
-
-const getFullnameValue = (profile?: UserProfile): string | undefined =>
-  joinValues(fullnameKeys.map((name) => profile?.[name]));
-
-const getAddressValue = (address?: UserProfile['address']): string | undefined =>
-  joinValues(
-    userProfileAddressKeys.map((name) => address?.[name]),
-    ', '
-  );
-
-const isFullnameKey = (name: string): name is (typeof fullnameKeys)[number] =>
-  fullnameKeySet.has(name);
-
-const isAddressKey = (name: string): name is (typeof userProfileAddressKeys)[number] =>
-  addressKeySet.has(name);
-
-const getBuiltInProfileFieldValue = (
-  profile: UserProfile | undefined,
-  fieldName: string
-): string | undefined => {
-  switch (fieldName) {
-    case 'fullname': {
-      return getFullnameValue(profile);
-    }
-    case 'familyName': {
-      return getPrimitiveValue(profile?.familyName);
-    }
-    case 'givenName': {
-      return getPrimitiveValue(profile?.givenName);
-    }
-    case 'middleName': {
-      return getPrimitiveValue(profile?.middleName);
-    }
-    case 'nickname': {
-      return getPrimitiveValue(profile?.nickname);
-    }
-    case 'preferredUsername': {
-      return getPrimitiveValue(profile?.preferredUsername);
-    }
-    case 'profile': {
-      return getPrimitiveValue(profile?.profile);
-    }
-    case 'website': {
-      return getPrimitiveValue(profile?.website);
-    }
-    case 'gender': {
-      return getPrimitiveValue(profile?.gender);
-    }
-    case 'birthdate': {
-      return getPrimitiveValue(profile?.birthdate);
-    }
-    case 'zoneinfo': {
-      return getPrimitiveValue(profile?.zoneinfo);
-    }
-    case 'locale': {
-      return getPrimitiveValue(profile?.locale);
-    }
-    case 'address': {
-      return getAddressValue(profile?.address);
-    }
-    default: {
-      return undefined;
-    }
-  }
-};
-
-const getCompositeFieldValue = (
-  userInfo: Partial<UserProfileResponse> | undefined,
-  field: CustomProfileField
-): string | undefined => {
-  const { profile } = userInfo ?? {};
-
-  if (field.type === CustomProfileFieldType.Fullname) {
-    const partNames =
-      field.config.parts === undefined
-        ? fullnameKeys
-        : field.config.parts.filter(({ enabled }) => enabled).map(({ name }) => name);
-
-    return joinValues(
-      partNames
-        .filter((name): name is (typeof fullnameKeys)[number] => isFullnameKey(name))
-        .map((name) => profile?.[name])
-    );
-  }
-
-  if (field.type === CustomProfileFieldType.Address) {
-    const address = profile?.address;
-    const partNames =
-      field.config.parts === undefined
-        ? userProfileAddressKeys
-        : field.config.parts.filter(({ enabled }) => enabled).map(({ name }) => name);
-
-    return joinValues(
-      partNames
-        .filter((name): name is (typeof userProfileAddressKeys)[number] => isAddressKey(name))
-        .map((name) => address?.[name]),
-      ', '
-    );
-  }
-};
-
-const getProfileFieldValue = (
-  userInfo: Partial<UserProfileResponse> | undefined,
-  { name: fieldName, label: fieldLabel }: { readonly name: string; readonly label: string },
-  translate: (key: string) => string,
-  field?: CustomProfileField
-): React.ReactNode | undefined => {
-  if (fieldName === 'avatar') {
-    return userInfo?.avatar ? (
-      <img
-        className={styles.avatar}
-        src={userInfo.avatar}
-        alt={getPrimitiveValue(userInfo.name) ?? fieldLabel}
-      />
-    ) : undefined;
-  }
-
-  if (fieldName === 'name') {
-    return getPrimitiveValue(userInfo?.name);
-  }
-
-  if (
-    field?.type === CustomProfileFieldType.Fullname ||
-    field?.type === CustomProfileFieldType.Address
-  ) {
-    return getCompositeFieldValue(userInfo, field);
-  }
-
-  if (field?.type === CustomProfileFieldType.Select) {
-    const value = isBuiltInProfileField(fieldName, field)
-      ? getBuiltInProfileFieldValue(userInfo?.profile, fieldName)
-      : getPrimitiveValue(userInfo?.customData?.[fieldName]);
-
-    const option = field.config.options?.find((option) => option.value === value);
-
-    return value === undefined ? undefined : getSelectOptionLabel(value, option?.label, translate);
-  }
-
-  if (isBuiltInProfileField(fieldName, field)) {
-    const value = getBuiltInProfileFieldValue(userInfo?.profile, fieldName);
-
-    return fieldName === 'gender' && value
-      ? getSelectOptionLabel(value, undefined, translate)
-      : value;
-  }
-
-  return getPrimitiveValue(userInfo?.customData?.[fieldName]);
 };
 
 const Profile = () => {
@@ -232,8 +33,13 @@ const Profile = () => {
   const [editingField, setEditingField] = useState<ProfileFieldRow>();
 
   const fieldRows = useMemo(() => {
-    const customProfileFields = experienceSettings?.customProfileFields ?? [];
-    const customProfileFieldMap = new Map(customProfileFields.map((field) => [field.name, field]));
+    const customProfileFieldCatalog =
+      experienceSettings?.customProfileFieldCatalog ??
+      experienceSettings?.customProfileFields ??
+      [];
+    const customProfileFieldMap = new Map(
+      customProfileFieldCatalog.map((field: CustomProfileField) => [field.name, field])
+    );
 
     return profileFields.reduce<ProfileFieldRow[]>((rows, { name }) => {
       const field = customProfileFieldMap.get(name);
@@ -256,7 +62,7 @@ const Profile = () => {
         {
           name,
           label,
-          value: getProfileFieldValue(userInfo, { name, label }, t, field),
+          value: getProfileFieldValue(userInfo, { name, label }, t, field, styles.avatar),
           controlKey,
           controlValue,
           field,
@@ -265,6 +71,7 @@ const Profile = () => {
     }, []);
   }, [
     accountCenterSettings?.fields,
+    experienceSettings?.customProfileFieldCatalog,
     experienceSettings?.customProfileFields,
     profileFields,
     t,

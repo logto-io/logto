@@ -26,6 +26,10 @@ const profile = {
     male: 'Erkek',
     prefer_not_to_say: 'Söylememeyi tercih ederim',
   },
+  checkbox_value: {
+    checked: 'Evet',
+    unchecked: 'Hayır',
+  },
 };
 
 export default Object.freeze(profile);
