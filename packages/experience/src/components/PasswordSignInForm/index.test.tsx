@@ -10,10 +10,7 @@ import UserInteractionContextProvider from '@/Providers/UserInteractionContextPr
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings, mockSsoConnectors } from '@/__mocks__/logto';
-import {
-  continueSignInWithPasswordIdentifier,
-  signInWithPasswordIdentifier,
-} from '@/apis/experience';
+import { signInWithPasswordIdentifier } from '@/apis/experience';
 import type { SignInExperienceResponse } from '@/types';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
@@ -34,8 +31,7 @@ jest.mock('i18next', () => ({
 }));
 
 jest.mock('@/apis/experience', () => ({
-  signInWithPasswordIdentifier: jest.fn(async () => ({ verificationId: 'verification-id' })),
-  continueSignInWithPasswordIdentifier: jest.fn(async () => ({ redirectTo: '/' })),
+  signInWithPasswordIdentifier: jest.fn(async () => ({ redirectTo: '/' })),
   getSsoAuthorizationUrl: (connectorId: string) => getSingleSignOnUrlMock(connectorId),
   getSsoConnectors: (email: string) => getSingleSignOnConnectorsMock(email),
 }));
@@ -197,9 +193,7 @@ describe('UsernamePasswordSignInForm', () => {
       );
     });
 
-    await waitFor(() => {
-      expect(continueSignInWithPasswordIdentifier).toBeCalledWith('verification-id');
-    });
+    expect(signInWithPasswordIdentifier).toBeCalled();
   });
 
   test('should show expired password alert and navigate to forgot-password only after user action', async () => {
@@ -240,7 +234,6 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     expect(mockedNavigate).not.toHaveBeenCalled();
-    expect(continueSignInWithPasswordIdentifier).not.toHaveBeenCalled();
 
     act(() => {
       fireEvent.click(getByText('description.password_expiration_reset'));
@@ -298,7 +291,6 @@ describe('UsernamePasswordSignInForm', () => {
     });
 
     expect(mockedNavigate).not.toHaveBeenCalled();
-    expect(continueSignInWithPasswordIdentifier).not.toHaveBeenCalled();
     expect(queryByText('description.password_expired')).toBeNull();
     expect(queryByText('description.password_expiration_reset')).toBeNull();
   });

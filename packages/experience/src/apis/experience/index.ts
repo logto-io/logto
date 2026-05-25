@@ -74,15 +74,14 @@ export const signInWithPasswordIdentifier = async (
 ) => {
   await initInteraction(InteractionEvent.SignIn, captchaToken);
 
-  return api
+  const { verificationId } = await api
     .post(`${experienceApiRoutes.verification}/password`, {
       json: payload,
     })
     .json<PasswordVerificationResponse>();
-};
 
-export const continueSignInWithPasswordIdentifier = async (verificationId: string) =>
-  identifyAndSubmitInteraction({ verificationId });
+  return identifyAndSubmitInteraction({ verificationId });
+};
 
 export const registerWithUsername = async (username: string, captchaToken?: string) => {
   await initInteraction(InteractionEvent.Register, captchaToken);

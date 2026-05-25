@@ -7,7 +7,6 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import {
-  continueSignInWithPasswordIdentifier,
   signInWithPasswordIdentifier,
   initInteraction,
   sendVerificationCode,
@@ -17,8 +16,7 @@ import { UserFlow } from '@/types';
 import PasswordForm from '.';
 
 jest.mock('@/apis/experience', () => ({
-  signInWithPasswordIdentifier: jest.fn(() => ({ verificationId: 'verification-id' })),
-  continueSignInWithPasswordIdentifier: jest.fn(() => ({ redirectTo: '/' })),
+  signInWithPasswordIdentifier: jest.fn(() => ({ redirectTo: '/' })),
   sendVerificationCode: jest.fn(() => ({ success: true })),
   initInteraction: jest.fn(() => ({ success: true })),
 }));
@@ -105,10 +103,6 @@ describe('PasswordSignInForm', () => {
         );
       });
 
-      await waitFor(() => {
-        expect(continueSignInWithPasswordIdentifier).toBeCalledWith('verification-id');
-      });
-
       if (isVerificationCodeEnabled) {
         const sendVerificationCodeLink = getByText('action.sign_in_via_passcode');
 
@@ -138,9 +132,9 @@ describe('PasswordSignInForm', () => {
     }
   );
 
-  test('should show reminder modal and continue sign-in only after skip action', async () => {
+  test('should ignore password expiration reminder and continue sign-in', async () => {
     (signInWithPasswordIdentifier as jest.Mock).mockResolvedValueOnce({
-      verificationId: 'verification-id',
+      redirectTo: '/',
       reminder: {
         daysUntilExpiration: 1,
       },
@@ -169,71 +163,10 @@ describe('PasswordSignInForm', () => {
     });
 
     await waitFor(() => {
-      expect(queryByText('description.password_expiration_reminder')).not.toBeNull();
-      expect(queryByText('description.password_expiration_reminder_skip')).not.toBeNull();
-      expect(queryByText('description.password_expiration_reset')).not.toBeNull();
+      expect(signInWithPasswordIdentifier).toBeCalled();
     });
 
-    expect(continueSignInWithPasswordIdentifier).not.toHaveBeenCalled();
-
-    act(() => {
-      fireEvent.click(getByText('description.password_expiration_reminder_skip'));
-    });
-
-    await waitFor(() => {
-      expect(continueSignInWithPasswordIdentifier).toBeCalledWith('verification-id');
-    });
-  });
-
-  test('should navigate to forgot-password when choosing reset from reminder modal', async () => {
-    (signInWithPasswordIdentifier as jest.Mock).mockResolvedValueOnce({
-      verificationId: 'verification-id',
-      reminder: {
-        daysUntilExpiration: 1,
-      },
-    });
-
-    const { getByText, queryByText, container } = renderPasswordForm(
-      {
-        identifier: SignInIdentifier.Email,
-        value: email,
-        isVerificationCodeEnabled: true,
-      },
-      {
-        forgotPassword: { email: true, phone: false },
-      }
-    );
-
-    const submitButton = getByText('action.continue');
-    const passwordInput = container.querySelector('input[name="password"]');
-
-    if (passwordInput) {
-      fireEvent.change(passwordInput, { target: { value: password } });
-    }
-
-    act(() => {
-      fireEvent.submit(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(queryByText('description.password_expiration_reminder')).not.toBeNull();
-    });
-
-    act(() => {
-      fireEvent.click(getByText('description.password_expiration_reset'));
-    });
-
-    await waitFor(() => {
-      expect(mockedNavigate).toBeCalledWith(
-        {
-          pathname: '/forgot-password',
-        },
-        {
-          replace: true,
-        }
-      );
-    });
-
-    expect(continueSignInWithPasswordIdentifier).not.toHaveBeenCalled();
+    expect(queryByText('description.password_expiration_reminder')).toBeNull();
+    expect(queryByText('description.password_expiration_reminder_skip')).toBeNull();
   });
 });
