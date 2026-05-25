@@ -42,6 +42,7 @@ const buildSpaApplicationData = (
   customClientMetadata: {},
   protectedAppMetadata: null,
   isThirdParty: false,
+  appLevelAccessControlEnabled: false,
   createdAt: 0,
   customData: {},
 });
@@ -82,6 +83,7 @@ const buildNativeApplicationData = (
   customClientMetadata: { isDeviceFlow: true },
   protectedAppMetadata: null,
   isThirdParty: false,
+  appLevelAccessControlEnabled: false,
   createdAt: 0,
   customData: {},
 });
