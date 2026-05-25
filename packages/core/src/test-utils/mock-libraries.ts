@@ -17,6 +17,7 @@ export const mockLogtoConfigsLibrary: jest.Mocked<LogtoConfigLibrary> = {
   getJwtCustomizers: jest.fn(),
   updateJwtCustomizer: jest.fn(),
   upsertIdTokenConfig: jest.fn(),
+  getAdminTenantTokenValidationSet: jest.fn(),
 };
 
 export const mockCloudClient = new Client<typeof router>({ baseUrl: 'http://localhost:3001' });

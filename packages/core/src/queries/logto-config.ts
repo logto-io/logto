@@ -2,6 +2,7 @@ import {
   type jwtCustomizerConfigGuard,
   LogtoConfigs,
   LogtoTenantConfigKey,
+  adminTenantId,
   type AdminConsoleData,
   type IdTokenConfig,
   type LogtoConfig,
@@ -25,6 +26,25 @@ import { convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 const qualifiedValueField = sql.identifier([LogtoConfigs.table, LogtoConfigs.fields.value]);
+
+/**
+ * Read the admin tenant's private signing keys with an explicit tenant filter.
+ *
+ * Unlike the per-tenant `getPrivateSigningKeys` returned by `createLogtoConfigQueries`,
+ * this query is cross-tenant by nature: callers pass the shared pool so user tenants can
+ * resolve the admin tenant's keys when validating Management API tokens.
+ */
+export const getAdminTenantPrivateSigningKeys = async (
+  pool: CommonQueryMethods
+): Promise<OidcPrivateKey[]> => {
+  const { rows } = await pool.query<LogtoConfig>(sql`
+    select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
+      where ${fields.tenantId} = ${adminTenantId}
+      and ${fields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+  `);
+
+  return oidcPrivateKeyGuard.array().parse(rows[0]?.value);
+};
 
 export const createLogtoConfigQueries = (
   pool: CommonQueryMethods,

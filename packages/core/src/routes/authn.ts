@@ -27,7 +27,10 @@ import type { AnonymousRouter, RouterInitArgs } from './types.js';
  * This router will have a route `/authn` to authenticate tokens with a general manner.
  */
 export default function authnRoutes<T extends AnonymousRouter>(
-  ...[router, { envSet, provider, libraries, id: tenantId, queries }]: RouterInitArgs<T>
+  ...[
+    router,
+    { envSet, provider, libraries, id: tenantId, queries, logtoConfigs },
+  ]: RouterInitArgs<T>
 ) {
   const {
     users: { findUserRoles },
@@ -55,7 +58,12 @@ export default function authnRoutes<T extends AnonymousRouter>(
 
       const verifyToken = async (expectedResource?: string) => {
         try {
-          return await verifyBearerTokenFromRequest(envSet, ctx.request, expectedResource);
+          return await verifyBearerTokenFromRequest(
+            envSet,
+            ctx.request,
+            expectedResource,
+            logtoConfigs
+          );
         } catch {
           return {
             sub: undefined,

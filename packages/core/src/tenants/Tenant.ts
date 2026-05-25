@@ -91,7 +91,13 @@ export default class Tenant implements TenantContext {
     public readonly id: string,
     public readonly wellKnownCache: WellKnownCache,
     public readonly queries = new Queries(envSet.pool, wellKnownCache),
-    public readonly logtoConfigs = createLogtoConfigLibrary(queries),
+    public readonly logtoConfigs = createLogtoConfigLibrary({
+      logtoConfigs: queries.logtoConfigs,
+      pool: queries.pool,
+      wellKnownCache: queries.wellKnownCache,
+      adminSharedPool: EnvSet.sharedPool,
+      envValues: EnvSet.values,
+    }),
     public readonly cloudConnection = createCloudConnectionLibrary(logtoConfigs),
     public readonly connectors = createConnectorLibrary(queries, cloudConnection),
     public readonly subscription = new SubscriptionLibrary(

@@ -14,8 +14,10 @@ import {
   LogtoJwtTokenKey,
   LogtoOidcConfigKey,
   OidcSigningKeyStatus,
+  adminTenantId,
   cloudApiIndicator,
   cloudConnectionDataGuard,
+  getOidcProviderPrivateKeys,
   normalizeOidcPrivateKeys,
   oidcConfigKeysResponseGuard,
   rotateOidcPrivateKeyStatuses,
@@ -23,16 +25,37 @@ import {
   jwtCustomizerConfigGuard,
   logtoOidcConfigGuard,
 } from '@logto/schemas';
-import { type ConsoleLog } from '@logto/shared';
+import { type ConsoleLog, type GlobalValues, TtlCache } from '@logto/shared';
+import { appendPath, isKeyInObject } from '@silverhand/essentials';
+import { type DatabasePool } from '@silverhand/slonik';
 import chalk from 'chalk';
+import { type JWK } from 'jose';
+import ky from 'ky';
 import { ZodError, z } from 'zod';
 
+import { getTenantEndpoint } from '#src/env-set/utils.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
+import {
+  createLogtoConfigQueries,
+  getAdminTenantPrivateSigningKeys,
+} from '#src/queries/logto-config.js';
 import type Queries from '#src/tenants/Queries.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
+const adminTenantJwksCache = new TtlCache<string, JWK[]>(60 * 60 * 1000); // 1 hour
+
 export type LogtoConfigLibrary = ReturnType<typeof createLogtoConfigLibrary>;
+
+type CreateLogtoConfigLibraryArgs = Pick<Queries, 'logtoConfigs' | 'pool' | 'wellKnownCache'> & {
+  /**
+   * Process-wide shared pool used for cross-tenant reads (currently: the admin tenant's
+   * OIDC keys). Injected here so this library doesn't statically depend on `EnvSet`,
+   * which would create an `env-set <-> libraries/logto-config` import cycle.
+   */
+  adminSharedPool: Promise<DatabasePool>;
+  /** Snapshot of global env values; used to decide deployment mode and resolve URLs. */
+  envValues: GlobalValues;
+};
 
 export const createLogtoConfigLibrary = ({
   logtoConfigs: {
@@ -44,7 +67,9 @@ export const createLogtoConfigLibrary = ({
   },
   pool,
   wellKnownCache,
-}: Pick<Queries, 'logtoConfigs' | 'pool' | 'wellKnownCache'>) => {
+  adminSharedPool,
+  envValues,
+}: CreateLogtoConfigLibraryArgs) => {
   const getOidcConfigs = async (consoleLog: ConsoleLog): Promise<LogtoOidcConfigType> => {
     try {
       const { rows } = await getRowsByKeys(Object.values(LogtoOidcConfigKey));
@@ -228,6 +253,75 @@ export const createLogtoConfigLibrary = ({
     });
   };
 
+  /**
+   * Resolve the admin tenant's public signing keys and issuer so user tenants can validate
+   * access tokens issued by the admin tenant.
+   *
+   * - In single-tenant (OSS) deployments, read `oidc.privateKeys` from `logto_configs`
+   *   directly and derive public JWKs locally. This avoids a self-HTTP request to
+   *   `<admin>/oidc/.well-known/openid-configuration`, which breaks behind reverse proxies
+   *   that don't resolve the admin endpoint from inside the container (#6048), and
+   *   propagates signing key rotations to user tenants without waiting for the HTTP cache.
+   * - In multi-tenant deployments, fall back to OIDC discovery + the public JWKS endpoint
+   *   (cached per-process for one hour), since user tenants may not share a database
+   *   connection with the admin tenant.
+   *
+   * The DB-read path returns the canonical `[Current, Next, Previous]` key set, matching
+   * what the admin tenant's `/oidc/jwks` endpoint exposes during staged rotation.
+   */
+  const getAdminTenantTokenValidationSet = async (): Promise<{
+    keys: JWK[];
+    issuer: string[];
+  }> => {
+    const { isMultiTenancy, adminUrlSet } = envValues;
+
+    if (!isMultiTenancy && adminUrlSet.deduplicated().length === 0) {
+      return { keys: [], issuer: [] };
+    }
+
+    const issuer = appendPath(
+      isMultiTenancy ? getTenantEndpoint(adminTenantId, envValues) : adminUrlSet.endpoint,
+      '/oidc'
+    );
+
+    if (!isMultiTenancy) {
+      const adminPool = await adminSharedPool;
+      const privateKeys = getOidcProviderPrivateKeys(
+        await getAdminTenantPrivateSigningKeys(adminPool)
+      ).map(({ value }) => crypto.createPrivateKey(value));
+      const publicKeys = privateKeys.map((key) => crypto.createPublicKey(key));
+
+      return {
+        keys: await Promise.all(publicKeys.map(async (key) => exportJWK(key))),
+        issuer: [issuer.href],
+      };
+    }
+
+    const cached = adminTenantJwksCache.get(issuer.href);
+
+    if (cached) {
+      return { keys: cached, issuer: [issuer.href] };
+    }
+
+    const configuration = await ky
+      .get(appendPath(issuer, '/.well-known/openid-configuration'))
+      .json();
+
+    if (!isKeyInObject(configuration, 'jwks_uri')) {
+      return { keys: [], issuer: [] };
+    }
+
+    const jwks = await ky.get(String(configuration.jwks_uri)).json<{ keys: JWK[] }>();
+
+    if (!isKeyInObject(jwks, 'keys') || !Array.isArray(jwks.keys)) {
+      return { keys: [], issuer: [] };
+    }
+
+    adminTenantJwksCache.set(issuer.href, jwks.keys);
+
+    return { keys: jwks.keys, issuer: [issuer.href] };
+  };
+
   return {
     getOidcConfigs,
     getCloudConnectionData,
@@ -238,5 +332,6 @@ export const createLogtoConfigLibrary = ({
     upsertIdTokenConfig,
     getRedactedOidcKeyResponse,
     promoteScheduledSigningKeyRotation,
+    getAdminTenantTokenValidationSet,
   };
 };

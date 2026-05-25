@@ -24,7 +24,11 @@ export default function initMeApis(tenant: TenantContext): Koa {
   const meRouter = new Router<unknown, WithAuthContext & WithI18nContext>();
 
   meRouter.use(
-    koaAuth(tenant.envSet, getManagementApiResourceIndicator(adminTenantId, 'me')),
+    koaAuth(
+      tenant.envSet,
+      getManagementApiResourceIndicator(adminTenantId, 'me'),
+      tenant.logtoConfigs
+    ),
     async (ctx, next) => {
       assertThat(
         ctx.auth.type === 'user',

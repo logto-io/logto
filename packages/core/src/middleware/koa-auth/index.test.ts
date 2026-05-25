@@ -6,17 +6,14 @@ import Sinon from 'sinon';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import type { WithAuthContext } from './index.js';
 
 const { jest } = import.meta;
-const { mockEsmWithActual, mockEsm } = createMockUtils(jest);
-
-await mockEsmWithActual('./utils.js', () => ({
-  getAdminTenantTokenValidationSet: jest.fn().mockResolvedValue({ keys: [], issuer: [] }),
-}));
+const { mockEsm } = createMockUtils(jest);
 
 const { jwtVerify } = mockEsm('jose', () => ({
   createLocalJWKSet: jest.fn(),
@@ -27,6 +24,10 @@ const { jwtVerify } = mockEsm('jose', () => ({
     },
   }),
 }));
+
+const mockLogtoConfigs = {
+  getAdminTenantTokenValidationSet: jest.fn().mockResolvedValue({ keys: [], issuer: [] }),
+} as unknown as LogtoConfigLibrary;
 
 const audience = defaultManagementApi.resource.indicator;
 const koaAuth = await pickDefault(import('./index.js'));
@@ -75,7 +76,7 @@ describe('koaAuth middleware', () => {
       developmentUserId: 'foo',
     });
 
-    await koaAuth(mockEnvSet, audience)(ctx, next);
+    await koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'user', id: 'foo', scopes: new Set(['all']) });
 
     stub.restore();
@@ -90,7 +91,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await koaAuth(mockEnvSet, audience)(mockCtx, next);
+    await koaAuth(mockEnvSet, audience, mockLogtoConfigs)(mockCtx, next);
     expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo', scopes: new Set(['all']) });
   });
 
@@ -102,7 +103,7 @@ describe('koaAuth middleware', () => {
       isIntegrationTest: true,
     });
 
-    await koaAuth(mockEnvSet, audience)(ctx, next);
+    await koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'user', id: 'foo', scopes: new Set(['all']) });
 
     stub.restore();
@@ -123,7 +124,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await koaAuth(mockEnvSet, audience)(mockCtx, next);
+    await koaAuth(mockEnvSet, audience, mockLogtoConfigs)(mockCtx, next);
     expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo', scopes: new Set(['all']) });
 
     stub.restore();
@@ -136,12 +137,12 @@ describe('koaAuth middleware', () => {
         authorization: 'Bearer access_token',
       },
     };
-    await koaAuth(mockEnvSet, audience)(ctx, next);
+    await koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'user', id: 'fooUser', scopes: new Set(['all']) });
   });
 
   it('expect to throw if authorization header is missing', async () => {
-    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(
+    await expect(koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next)).rejects.toMatchError(
       authHeaderMissingError
     );
   });
@@ -154,7 +155,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(
+    await expect(koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next)).rejects.toMatchError(
       tokenNotSupportedError
     );
   });
@@ -169,7 +170,9 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(jwtSubMissingError);
+    await expect(koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next)).rejects.toMatchError(
+      jwtSubMissingError
+    );
   });
 
   it('expect to have `client` type per jwt verify result', async () => {
@@ -184,7 +187,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await koaAuth(mockEnvSet, audience)(ctx, next);
+    await koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next);
     expect(ctx.auth).toEqual({ type: 'app', id: 'bar', scopes: new Set(['all']) });
   });
 
@@ -198,7 +201,9 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(forbiddenError);
+    await expect(koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next)).rejects.toMatchError(
+      forbiddenError
+    );
   });
 
   it('expect to throw if jwt scope does not include management resource scope', async () => {
@@ -213,7 +218,9 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(forbiddenError);
+    await expect(koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next)).rejects.toMatchError(
+      forbiddenError
+    );
   });
 
   it('expect to throw unauthorized error if unknown error occurs', async () => {
@@ -227,7 +234,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(mockEnvSet, audience)(ctx, next)).rejects.toMatchError(
+    await expect(koaAuth(mockEnvSet, audience, mockLogtoConfigs)(ctx, next)).rejects.toMatchError(
       new RequestError({ code: 'auth.unauthorized', status: 401 }, new Error('unknown error'))
     );
   });

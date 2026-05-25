@@ -98,6 +98,8 @@ export class EnvSet {
       logtoConfigs: logtoConfigQueries,
       pool,
       wellKnownCache,
+      adminSharedPool: EnvSet.sharedPool,
+      envValues: EnvSet.values,
     });
 
     await promoteScheduledSigningKeyRotation();

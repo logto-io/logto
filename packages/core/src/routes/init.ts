@@ -74,7 +74,9 @@ const createRouters = (tenant: TenantContext) => {
   experienceApiRoutes(experienceRouter, tenant);
 
   const managementRouter: ManagementApiRouter = new Router();
-  managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
+  managementRouter.use(
+    koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id), tenant.logtoConfigs)
+  );
   managementRouter.use(koaTenantGuard(tenant.id, tenant.queries));
   managementRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
 

@@ -9,11 +9,12 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import assertThat from '#src/utils/assert-that.js';
 import { devConsole } from '#src/utils/console.js';
 
 import { type WithAuthContext, type TokenInfo } from './types.js';
-import { extractBearerTokenFromHeaders, getAdminTenantTokenValidationSet } from './utils.js';
+import { extractBearerTokenFromHeaders } from './utils.js';
 
 export * from './types.js';
 export * from './constants.js';
@@ -21,7 +22,8 @@ export * from './constants.js';
 export const verifyBearerTokenFromRequest = async (
   envSet: EnvSet,
   request: Request,
-  audience: Optional<string>
+  audience: Optional<string>,
+  logtoConfigs: LogtoConfigLibrary
 ): Promise<TokenInfo> => {
   const { isProduction, isIntegrationTest, developmentUserId } = EnvSet.values;
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
@@ -46,7 +48,7 @@ export const verifyBearerTokenFromRequest = async (
       return [publicJwks, [issuer]];
     }
 
-    const adminSet = await getAdminTenantTokenValidationSet();
+    const adminSet = await logtoConfigs.getAdminTenantTokenValidationSet();
 
     return [
       [...publicJwks, ...adminSet.keys],
@@ -94,7 +96,8 @@ export const isKoaAuthMiddleware = <Type extends IMiddleware>(function_: Type) =
 
 export default function koaAuth<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
   envSet: EnvSet,
-  audience: string
+  audience: string,
+  logtoConfigs: LogtoConfigLibrary
 ): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   const authMiddleware: MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> = async (
     ctx,
@@ -103,7 +106,8 @@ export default function koaAuth<StateT, ContextT extends IRouterParamContext, Re
     const { sub, clientId, scopes } = await verifyBearerTokenFromRequest(
       envSet,
       ctx.request,
-      audience
+      audience,
+      logtoConfigs
     );
 
     assertThat(
