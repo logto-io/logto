@@ -4,7 +4,9 @@ import { profileRoute, securityRoute } from '@ac/constants/routes';
 
 export type AccountNavItem = {
   readonly to: string;
-  readonly labelKey: 'account_center.page.sidebar_personal_info' | 'account_center.page.sidebar_security';
+  readonly labelKey:
+    | 'account_center.page.sidebar_personal_info'
+    | 'account_center.page.sidebar_security';
   readonly Icon: SvgComponent;
 };
 

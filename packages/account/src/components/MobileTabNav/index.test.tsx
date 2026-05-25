@@ -18,7 +18,7 @@ describe('<MobileTabNav />', () => {
   it('renders nothing when only security is available', () => {
     const { container } = render(
       <MemoryRouter>
-        <MobileTabNav hasProfile={false} hasSecurity />
+        <MobileTabNav hasSecurity hasProfile={false} />
       </MemoryRouter>
     );
 
