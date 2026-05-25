@@ -218,7 +218,11 @@ export const getProfileFieldValue = (
   }
 
   if (field?.type === CustomProfileFieldType.Checkbox) {
-    return getCheckboxDisplayValue(userInfo?.customData?.[fieldName], translate);
+    const value = isBuiltInProfileField(fieldName, field)
+      ? getBuiltInProfileFieldValue(userInfo?.profile, fieldName)
+      : userInfo?.customData?.[fieldName];
+
+    return getCheckboxDisplayValue(value, translate);
   }
 
   if (isBuiltInProfileField(fieldName, field)) {

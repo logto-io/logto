@@ -355,6 +355,30 @@ describe('<Profile />', () => {
     expect(getByText('Yes')).toBeTruthy();
   });
 
+  it('renders built-in checkbox fields from profile data', () => {
+    const { getByText } = renderProfile({
+      accountCenterSettings: {
+        profileFields: [{ name: 'nickname' }],
+      },
+      experienceSettings: {
+        customProfileFieldCatalog: [
+          {
+            ...requiredNicknameField,
+            type: CustomProfileFieldType.Checkbox,
+            config: { defaultValue: 'false' },
+          },
+        ],
+      },
+      userInfo: {
+        profile: {
+          nickname: 'true',
+        },
+      },
+    });
+
+    expect(getByText('Yes')).toBeTruthy();
+  });
+
   it('updates custom data checkbox fields', async () => {
     const { getByText, queryAllByText } = renderProfile({
       accountCenterSettings: {

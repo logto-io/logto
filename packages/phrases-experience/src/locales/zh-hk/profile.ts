@@ -26,6 +26,10 @@ const profile = {
     male: '男性',
     prefer_not_to_say: '不願透露',
   },
+  checkbox_value: {
+    checked: '是',
+    unchecked: '否',
+  },
 };
 
 export default Object.freeze(profile);

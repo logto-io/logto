@@ -26,6 +26,10 @@ const profile = {
     male: 'Homme',
     prefer_not_to_say: 'Préfère ne pas dire',
   },
+  checkbox_value: {
+    checked: 'Oui',
+    unchecked: 'Non',
+  },
 };
 
 export default Object.freeze(profile);

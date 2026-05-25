@@ -26,6 +26,10 @@ const profile = {
     male: 'ชาย',
     prefer_not_to_say: 'ไม่ระบุ',
   },
+  checkbox_value: {
+    checked: 'ใช่',
+    unchecked: 'ไม่',
+  },
 };
 
 export default Object.freeze(profile);
