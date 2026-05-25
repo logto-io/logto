@@ -14,10 +14,10 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN': '短信宝短信服务',
     zh: '短信宝短信服务',
   },
-  logo: './logo.svg',
+  logo: './logo.png',
   logoDark: null,
   description: {
-    en: 'SMSBao is a SMS service provider.',
+    en: 'SMSBao is an SMS service provider.',
     'zh-CN': '短信宝是一家短信服务提供商。',
     zh: '短信宝是一家短信服务提供商。',
   },
@@ -47,7 +47,7 @@ export const defaultMetadata: ConnectorMetadata = {
     },
     {
       key: 'templates',
-      label: 'SMS Template',
+      label: 'SMS Templates',
       type: ConnectorConfigFormItemType.Json,
       required: true,
       defaultValue: [

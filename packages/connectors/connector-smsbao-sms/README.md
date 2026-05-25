@@ -4,7 +4,7 @@ The official Logto connector for SMSBao SMS service. [中文文档](https://gith
 
 ## Get started
 
-SMSBao is a SMS service provider. This connector integrates Logto with SMSBao's domestic SMS API so end-users can receive verification codes for sign-in, registration, password reset, and other SMS verification flows.
+SMSBao is an SMS service provider. This connector integrates Logto with SMSBao's domestic SMS API so end-users can receive verification codes for sign-in, registration, password reset, and other SMS verification flows.
 
 ## Set up SMS service in SMSBao
 

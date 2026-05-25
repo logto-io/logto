@@ -7,16 +7,18 @@ import createConnector from './index.js';
 import { mockedConfig } from './mock.js';
 
 const getConfig = vi.fn().mockResolvedValue(mockedConfig);
+const createSendMessage = async () => {
+  const connector = await createConnector({ getConfig });
+
+  return connector.sendMessage;
+};
 
 describe('SMSBao SMS connector', () => {
   it('init without throwing errors', async () => {
     await expect(createConnector({ getConfig })).resolves.not.toThrow();
   });
 
-  describe('sendMessage()', async () => {
-    const connector = await createConnector({ getConfig });
-    const { sendMessage } = connector;
-
+  describe('sendMessage()', () => {
     beforeAll(() => {
       nock.disableNetConnect();
     });
@@ -31,6 +33,7 @@ describe('SMSBao SMS connector', () => {
     });
 
     it('should send message successfully', async () => {
+      const sendMessage = await createSendMessage();
       const scope = nock(endpoint)
         .get('')
         .query({
@@ -54,6 +57,7 @@ describe('SMSBao SMS connector', () => {
     });
 
     it('should omit product ID when goodsId is not configured', async () => {
+      const sendMessage = await createSendMessage();
       const config = {
         ...mockedConfig,
         goodsId: undefined,
@@ -89,6 +93,8 @@ describe('SMSBao SMS connector', () => {
     });
 
     it('should throw TemplateNotFound when template is not configured', async () => {
+      const sendMessage = await createSendMessage();
+
       await expect(
         sendMessage(
           {
@@ -114,6 +120,8 @@ describe('SMSBao SMS connector', () => {
     });
 
     it('should throw general error for SMSBao error response', async () => {
+      const sendMessage = await createSendMessage();
+
       nock(endpoint).get('').query(true).reply(200, '41');
 
       await expect(

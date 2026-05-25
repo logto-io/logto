@@ -1,3 +1,5 @@
+import { TemplateType } from '@logto/connector-kit';
+
 import type { SmsbaoSmsConfig } from './types.js';
 
 export const mockedConfig: SmsbaoSmsConfig = {
@@ -6,19 +8,19 @@ export const mockedConfig: SmsbaoSmsConfig = {
   goodsId: '123456',
   templates: [
     {
-      usageType: 'Generic',
+      usageType: TemplateType.Generic,
       content: '您的验证码是 {{code}}。如非本人操作，请忽略本短信',
     },
     {
-      usageType: 'SignIn',
+      usageType: TemplateType.SignIn,
       content: '您的登录验证码是 {{code}}。如非本人操作，请忽略本短信',
     },
     {
-      usageType: 'Register',
+      usageType: TemplateType.Register,
       content: '您的注册验证码是 {{code}}。如非本人操作，请忽略本短信',
     },
     {
-      usageType: 'ForgotPassword',
+      usageType: TemplateType.ForgotPassword,
       content: '您的重置密码验证码是 {{code}}。如非本人操作，请忽略本短信',
     },
   ],
