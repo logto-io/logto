@@ -61,6 +61,16 @@
     flex-direction: column;
   }
 
+  .fullPage {
+    background: var(--color-bg-float-base);
+  }
+
+  .withMobileTabNav {
+    .main {
+      padding-top: _.unit(4);
+    }
+  }
+
   .container {
     flex: 1;
     display: flex;
@@ -70,10 +80,15 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
+  .withSidebar {
+    padding: 0;
+    gap: 0;
+  }
+
   .main {
     width: auto;
     flex: 1;
-    padding: _.unit(4);
+    padding: _.unit(4) _.unit(5);
     background: var(--color-bg-float-base);
   }
 

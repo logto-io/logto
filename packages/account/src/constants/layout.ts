@@ -44,4 +44,8 @@ export const layoutClassNames = Object.freeze({
   sidebar: 'logto_ac-sidebar',
   /** A navigation item inside the sidebar. */
   sidebarItem: 'logto_ac-sidebar-item',
+  /** Mobile top tab navigation on the Security / Profile page. */
+  mobileTabNav: 'logto_ac-mobile-tab-nav',
+  /** A tab item inside the mobile tab navigation. */
+  mobileTabNavItem: 'logto_ac-mobile-tab-nav-item',
 });

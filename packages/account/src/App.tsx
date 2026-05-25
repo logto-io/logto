@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import AppBoundary from '@ac/Providers/AppBoundary';
 import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
+import MobileTabNav from '@ac/components/MobileTabNav';
 import PageHeader from '@ac/components/PageHeader';
 import Sidebar from '@ac/components/Sidebar';
 import { layoutClassNames } from '@ac/constants/layout';
@@ -191,14 +192,16 @@ export const Main = () => {
 };
 
 const Layout = () => {
-  const { accountCenterSettings, experienceSettings, theme } = useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, theme, platform } = useContext(PageContext);
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
   const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
+  const hasProfilePage = isDevFeaturesEnabled;
   const isSecurityFullPage = pathname === securityRoute && showsSecurityPage;
-  const isProfileFullPage = pathname === profileRoute && isDevFeaturesEnabled;
+  const isProfileFullPage = pathname === profileRoute && hasProfilePage;
   const isFullPage = isSecurityFullPage || isProfileFullPage;
-  const showsSidebar = isDevFeaturesEnabled && isFullPage;
+  const showsAccountNav = isFullPage && (hasProfilePage || showsSecurityPage);
+  const showsMobileTabNav = platform === 'mobile' && showsAccountNav;
 
   return (
     <div className={classNames(styles.app, layoutClassNames.app)}>
@@ -210,15 +213,21 @@ const Layout = () => {
         )}
       >
         {isFullPage && <PageHeader />}
+        {showsMobileTabNav && (
+          <MobileTabNav hasProfile={hasProfilePage} hasSecurity={showsSecurityPage} />
+        )}
         <div
           className={classNames(
             styles.container,
             !isFullPage && styles.cardContainer,
             !isFullPage && layoutClassNames.cardContainer,
-            showsSidebar && styles.withSidebar
+            showsAccountNav && styles.withSidebar,
+            showsMobileTabNav && styles.withMobileTabNav
           )}
         >
-          {showsSidebar && <Sidebar hasProfile hasSecurity={showsSecurityPage} />}
+          {showsAccountNav && platform !== 'mobile' && (
+            <Sidebar hasProfile={hasProfilePage} hasSecurity={showsSecurityPage} />
+          )}
           <main
             className={classNames(
               styles.main,

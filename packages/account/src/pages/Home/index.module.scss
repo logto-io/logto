@@ -30,15 +30,7 @@
 
 :global(body.mobile) {
   .header {
-    margin-bottom: _.unit(4);
-  }
-
-  .title {
-    font: var(--font-title-1);
-  }
-
-  .description {
-    margin-top: _.unit(1.5);
+    display: none;
   }
 
   .content {
