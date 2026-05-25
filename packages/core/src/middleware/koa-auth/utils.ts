@@ -7,32 +7,25 @@ import { type JWK } from 'jose';
 import ky from 'ky';
 
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
+import { getOidcProviderPublicJwks } from '#src/libraries/oidc-private-key.js';
+import { getAdminTenantPrivateSigningKeys } from '#src/tenants/utils.js';
 
 import RequestError from '../../errors/RequestError/index.js';
 import assertThat from '../../utils/assert-that.js';
 
 const jwksCache = new TtlCache<string, JWK[]>(60 * 60 * 1000); // 1 hour
 
-/**
- * This function is to fetch OIDC public signing keys and the issuer from the admin tenant
- * in order to let user tenants recognize Access Tokens issued by the admin tenant.
- *
- * Usually you don't mean to call this function.
- */
-export const getAdminTenantTokenValidationSet = async (): Promise<{
-  keys: JWK[];
-  issuer: string[];
-}> => {
-  const { isMultiTenancy, adminUrlSet } = EnvSet.values;
-
-  if (!isMultiTenancy && adminUrlSet.deduplicated().length === 0) {
-    return { keys: [], issuer: [] };
-  }
-
-  const issuer = appendPath(
-    isMultiTenancy ? getTenantEndpoint(adminTenantId, EnvSet.values) : adminUrlSet.endpoint,
+const getAdminTenantIssuer = () =>
+  appendPath(
+    EnvSet.values.isMultiTenancy
+      ? getTenantEndpoint(adminTenantId, EnvSet.values)
+      : EnvSet.values.adminUrlSet.endpoint,
     '/oidc'
   );
+
+const getCloudAdminTenantTokenValidationSet = async (
+  issuer: URL
+): Promise<{ keys: JWK[]; issuer: string[] }> => {
   const cached = jwksCache.get(issuer.href);
 
   if (cached) {
@@ -62,6 +55,42 @@ export const getAdminTenantTokenValidationSet = async (): Promise<{
     keys: jwks.keys,
     issuer: [issuer.href],
   };
+};
+
+const getOssAdminTenantTokenValidationSet = async (
+  issuer: URL
+): Promise<{ keys: JWK[]; issuer: string[] }> => {
+  const privateKeys = await getAdminTenantPrivateSigningKeys();
+
+  return {
+    keys: await getOidcProviderPublicJwks(privateKeys),
+    issuer: [issuer.href],
+  };
+};
+
+/**
+ * This function is to fetch OIDC public signing keys and the issuer from the admin tenant
+ * in order to let user tenants recognize Access Tokens issued by the admin tenant.
+ *
+ * Usually you don't mean to call this function.
+ */
+export const getAdminTenantTokenValidationSet = async (): Promise<{
+  keys: JWK[];
+  issuer: string[];
+}> => {
+  const { isMultiTenancy, adminUrlSet } = EnvSet.values;
+
+  if (!isMultiTenancy && adminUrlSet.deduplicated().length === 0) {
+    return { keys: [], issuer: [] };
+  }
+
+  const issuer = getAdminTenantIssuer();
+
+  if (EnvSet.values.isCloud) {
+    return getCloudAdminTenantTokenValidationSet(issuer);
+  }
+
+  return getOssAdminTenantTokenValidationSet(issuer);
 };
 
 const bearerTokenIdentifier = 'Bearer';
