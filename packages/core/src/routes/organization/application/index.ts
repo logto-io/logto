@@ -6,7 +6,6 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { buildManagementApiContext, truncateMembershipDelta } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -18,26 +17,14 @@ import { parseSearchOptions } from '#src/utils/search.js';
 import applicationRoleRelationRoutes from './role-relations.js';
 
 /**
- * Org-application membership endpoints. When `isDevFeaturesEnabled` is off we fall
- * back to the generic `addRelationRoutes` mount, which only emits `{ organizationId }`
- * on the membership webhook. When it is on, we own POST/PUT/DELETE so we can include
- * the `addedApplicationIds` / `removedApplicationIds` delta in the payload.
- *
- * The dev-features branch and the legacy fallback should be collapsed once the
- * delta payload graduates to GA (LOG-13467).
+ * Org-application membership endpoints. POST/PUT/DELETE own their own handlers so the
+ * `Organization.Membership.Updated` webhook payload carries an accurate
+ * `addedApplicationIds` / `removedApplicationIds` delta.
  */
 const mountMembershipRoutes = (
   router: SchemaRouter<OrganizationKeys, CreateOrganization, Organization>,
   organizations: OrganizationQueries
 ) => {
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    router.addRelationRoutes(organizations.relations.apps, undefined, {
-      disabled: { get: true },
-      hookEvent: 'Organization.Membership.Updated',
-    });
-    return;
-  }
-
   router.post(
     '/:id/applications',
     koaGuard({

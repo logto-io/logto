@@ -308,9 +308,9 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   // TODO: If the user's email is not verified, we should not provision the user into any organization.
   /**
    * Provision the user with JIT organizations and roles based on the user's email domain and the
-   * enterprise SSO connector. When `isDevFeaturesEnabled` is on, returns only the JIT orgs where
-   * the user was newly added (so the caller emits accurate `addedUserIds`); otherwise returns
-   * every JIT org, preserving master's webhook behavior.
+   * enterprise SSO connector. Returns only the JIT orgs the user was newly added to (i.e. orgs
+   * the user was not already a member of) so callers can decide whether to emit
+   * `Organization.Membership.Updated` for each org and what `addedUserIds` to include.
    */
   const provisionOrganizations = async ({
     userId,
@@ -331,16 +331,11 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     }
 
     // Snapshot pre-existing memberships before the insert; afterwards
-    // `getExistingOrganizationIds` cannot distinguish pre-existing from newly-added
-    // rows. Gated behind dev-features because the snapshot is only consulted by the
-    // dev-features branch of the return below; in production (dev-OFF) we return
-    // every JIT org unfiltered, so the snapshot would be unused DB work.
+    // `getExistingOrganizationIds` cannot distinguish pre-existing from newly-added rows.
     const jitOrganizationIds = jitOrganizations.map(({ organizationId }) => organizationId);
-    const existingOrganizationIds = EnvSet.values.isDevFeaturesEnabled
-      ? new Set(
-          await organizations.relations.users.getExistingOrganizationIds(userId, jitOrganizationIds)
-        )
-      : new Set<string>();
+    const existingOrganizationIds = new Set(
+      await organizations.relations.users.getExistingOrganizationIds(userId, jitOrganizationIds)
+    );
 
     await organizations.relations.users.insert(
       ...jitOrganizationIds.map((organizationId) => ({ organizationId, userId }))
@@ -357,11 +352,9 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
       await organizations.relations.usersRoles.insert(...data);
     }
 
-    return EnvSet.values.isDevFeaturesEnabled
-      ? jitOrganizations.filter(
-          ({ organizationId }) => !existingOrganizationIds.has(organizationId)
-        )
-      : jitOrganizations;
+    return jitOrganizations.filter(
+      ({ organizationId }) => !existingOrganizationIds.has(organizationId)
+    );
   };
 
   return {

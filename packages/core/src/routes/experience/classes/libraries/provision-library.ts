@@ -155,8 +155,7 @@ export class ProvisionLibrary {
     for (const { organizationId } of provisionedOrganizations) {
       this.ctx.appendDataHookContext('Organization.Membership.Updated', {
         organizationId,
-        ...(EnvSet.values.isDevFeaturesEnabled &&
-          truncateMembershipDelta({ addedUserIds: [payload.userId] })),
+        ...truncateMembershipDelta({ addedUserIds: [payload.userId] }),
       });
     }
 

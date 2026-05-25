@@ -10,9 +10,7 @@ type PlaceholderIds = {
   organizationRoleId?: string;
 };
 
-type HookPayloadArgs = PlaceholderIds & {
-  isDevFeaturesEnabled: boolean;
-};
+type HookPayloadArgs = PlaceholderIds;
 
 type SetupContext = {
   organizationApi?: OrganizationApiTest;
