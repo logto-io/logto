@@ -30,6 +30,13 @@ mockEsm('redis', () => ({
 }));
 
 const { RedisCache, RedisClusterCache, redisCacheFactory } = await import('./index.js');
+const { cacheConsole } = await import('./utils.js');
+
+// Intentionally never resolve to simulate a stuck Redis command without extra timers.
+const hang = async () =>
+  new Promise<never>((resolve) => {
+    void resolve;
+  });
 
 describe('RedisCache', () => {
   it('should successfully construct with no REDIS_URL', async () => {
@@ -114,4 +121,34 @@ describe('RedisCache', () => {
     await expect(cache.get('foo')).resolves.toBeUndefined();
     expect(Date.now() - start).toBeGreaterThanOrEqual(900);
   }, 4000);
+
+  it('should fail fast when cache set/delete hang past the write timeout', async () => {
+    jest.clearAllMocks();
+    const cache = new RedisCache('redis://url');
+    jest.spyOn(cache.client!, 'set').mockImplementation(hang);
+    jest.spyOn(cache.client!, 'del').mockImplementation(hang);
+    // Capture timeout warnings — both to keep test output clean and to assert observability.
+    const warnSpy = jest.spyOn(cacheConsole, 'warn').mockReturnValue();
+
+    try {
+      const start = Date.now();
+      // Run set and delete in parallel so the suite only waits one write-timeout window.
+      await Promise.all([
+        expect(cache.set('foo', 'bar')).resolves.toBeUndefined(),
+        expect(cache.delete('foo')).resolves.toBeUndefined(),
+      ]);
+      const elapsed = Date.now() - start;
+
+      // Lower bound proves the 5s timeout fired; upper bound (with generous CI jitter headroom)
+      // catches regressions where the constant is accidentally bumped higher.
+      expect(elapsed).toBeGreaterThanOrEqual(4900);
+      expect(elapsed).toBeLessThan(7000);
+
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Redis SET on key "foo"'));
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Redis DEL on key "foo"'));
+    } finally {
+      // Restore in finally so the spy never leaks into later tests on assertion failure.
+      warnSpy.mockRestore();
+    }
+  }, 8000);
 });
