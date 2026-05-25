@@ -21,8 +21,8 @@ import {
   userLogtoConfigResponseGuard,
 } from '#src/libraries/user-logto-config.js';
 import {
-  buildPasswordMetadataPayload,
-  buildPasswordResetPayload,
+  buildUserPasswordPayload,
+  buildUserPasswordPayloadFromPassword,
   encryptUserPassword,
 } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -276,8 +276,14 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       }
 
       const id = await generateUserId();
-
-      const hasPassword = Boolean(password ?? passwordDigest);
+      const passwordPayload = password
+        ? buildUserPasswordPayload(await encryptUserPassword(password))
+        : passwordDigest && passwordAlgorithm
+          ? buildUserPasswordPayload({
+              passwordEncrypted: passwordDigest,
+              passwordEncryptionMethod: passwordAlgorithm,
+            })
+          : undefined;
 
       const [user] = await insertUser({
         id,
@@ -287,19 +293,8 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         name,
         avatar,
         ...conditional(customData && { customData }),
-        ...conditional(password && (await encryptUserPassword(password))),
-        ...conditional(
-          passwordDigest && {
-            passwordEncrypted: passwordDigest,
-            passwordEncryptionMethod: passwordAlgorithm,
-          }
-        ),
+        ...conditional(passwordPayload),
         ...conditional(profile && { profile }),
-        ...conditional(
-          hasPassword && {
-            ...buildPasswordMetadataPayload(),
-          }
-        ),
       });
 
       ctx.body = transpileAdminUserProfileResponse(user);
@@ -355,7 +350,10 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
       await findUserById(userId);
 
-      const user = await updateUserById(userId, await buildPasswordResetPayload(password));
+      const user = await updateUserById(
+        userId,
+        await buildUserPasswordPayloadFromPassword(password)
+      );
 
       ctx.body = transpileAdminUserProfileResponse(user);
 

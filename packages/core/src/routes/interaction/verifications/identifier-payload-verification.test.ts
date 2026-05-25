@@ -1,12 +1,10 @@
 import crypto from 'node:crypto';
 
 import { PasswordPolicyChecker } from '@logto/core-kit';
-import { InteractionEvent, type SignInExperience, type User } from '@logto/schemas';
+import { InteractionEvent } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
-import { mockUser } from '#src/__mocks__/user.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -49,25 +47,12 @@ const identifierPayloadVerification = await pickDefault(
 );
 
 const verifyUserPassword = jest.fn();
-const findUserById = jest.fn();
-const findDefaultSignInExperience = jest.fn();
 const logContext = createMockLogContext();
-const tenant = new MockTenant(
-  undefined,
-  {
-    users: { findUserById },
-    signInExperiences: { findDefaultSignInExperience },
-  },
-  undefined,
-  {
-    users: { verifyUserPassword },
-  }
-);
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+const tenant = new MockTenant(undefined, {}, undefined, {
+  users: { verifyUserPassword },
+});
 
 describe('identifier verification', () => {
-  const now = new Date('2026-01-10T00:00:00.000Z');
-  const dayInMs = 24 * 60 * 60 * 1000;
   const baseCtx = {
     ...createContextWithRouteParameters(),
     ...logContext,
@@ -80,19 +65,8 @@ describe('identifier verification', () => {
 
   const interactionStorage = { event: InteractionEvent.SignIn };
 
-  beforeEach(() => {
-    findUserById.mockResolvedValue(mockUser);
-    findDefaultSignInExperience.mockResolvedValue(mockSignInExperience);
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for password expiration feature-gate tests.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-  });
-
   afterEach(() => {
-    jest.useRealTimers();
     jest.clearAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after password expiration feature-gate tests.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
   });
 
   it('username password user not found', async () => {
@@ -165,93 +139,6 @@ describe('identifier verification', () => {
     expect(findUserByIdentifier).toBeCalledWith(tenant, { phone: 'phone' });
     expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
     expect(result).toEqual({ key: 'accountId', value: 'foo' });
-  });
-
-  it('should throw password.expired for password sign-in when the user is manually expired', async () => {
-    const expiredUser = {
-      ...mockUser,
-      isPasswordExpired: true,
-    } satisfies User;
-
-    findUserByIdentifier.mockResolvedValueOnce({ id: 'foo' });
-    verifyUserPassword.mockResolvedValueOnce({ id: 'foo', isSuspended: false });
-    findUserById.mockResolvedValueOnce(expiredUser);
-    findDefaultSignInExperience.mockResolvedValueOnce({
-      ...mockSignInExperience,
-      passwordExpiration: {
-        enabled: true,
-        validPeriodDays: 30,
-        reminderPeriodDays: 5,
-      },
-    } satisfies SignInExperience);
-
-    const identifier = {
-      email: 'email',
-      password: 'password',
-    };
-
-    await expect(
-      identifierPayloadVerification(baseCtx, tenant, identifier, interactionStorage)
-    ).rejects.toMatchError(new RequestError({ code: 'password.expired', status: 422 }));
-
-    expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
-    expect(findUserById).toHaveBeenCalledWith('foo');
-  });
-
-  it('should ignore password expiration for password sign-in when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-    findUserByIdentifier.mockResolvedValueOnce({ id: 'foo' });
-    verifyUserPassword.mockResolvedValueOnce({ id: 'foo', isSuspended: false });
-
-    const identifier = {
-      email: 'email',
-      password: 'password',
-    };
-
-    const result = await identifierPayloadVerification(
-      baseCtx,
-      tenant,
-      identifier,
-      interactionStorage
-    );
-
-    expect(result).toEqual({ key: 'accountId', value: 'foo' });
-    expect(findDefaultSignInExperience).not.toHaveBeenCalled();
-    expect(findUserById).not.toHaveBeenCalled();
-  });
-
-  it('should throw password.expired for password sign-in when password age exceeds the policy', async () => {
-    jest.useFakeTimers().setSystemTime(now);
-
-    const expiredUser = {
-      ...mockUser,
-      passwordUpdatedAt: now.getTime() - 30 * dayInMs,
-    } satisfies User;
-
-    findUserByIdentifier.mockResolvedValueOnce({ id: 'foo' });
-    verifyUserPassword.mockResolvedValueOnce({ id: 'foo', isSuspended: false });
-    findUserById.mockResolvedValueOnce(expiredUser);
-    findDefaultSignInExperience.mockResolvedValueOnce({
-      ...mockSignInExperience,
-      passwordExpiration: {
-        enabled: true,
-        validPeriodDays: 30,
-        reminderPeriodDays: 5,
-      },
-    } satisfies SignInExperience);
-
-    const identifier = {
-      email: 'email',
-      password: 'password',
-    };
-
-    await expect(
-      identifierPayloadVerification(baseCtx, tenant, identifier, interactionStorage)
-    ).rejects.toMatchError(new RequestError({ code: 'password.expired', status: 422 }));
-
-    expect(verifyUserPassword).toBeCalledWith({ id: 'foo' }, 'password');
-    expect(findUserById).toHaveBeenCalledWith('foo');
   });
 
   it('email verificationCode', async () => {

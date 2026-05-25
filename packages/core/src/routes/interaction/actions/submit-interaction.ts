@@ -22,7 +22,7 @@ import { conditional, conditionalArray } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { assignInteractionResults } from '#src/libraries/session/index.js';
-import { buildPasswordResetPayload } from '#src/libraries/user.utils.js';
+import { encryptUserPassword } from '#src/libraries/user.utils.js';
 import type { LogEntry, WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -283,7 +283,13 @@ export default async function submitInteraction(
   }
 
   // Forgot Password
-  const user = await updateUserById(accountId, await buildPasswordResetPayload(profile.password));
+  const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(
+    profile.password
+  );
+  const user = await updateUserById(accountId, {
+    passwordEncrypted,
+    passwordEncryptionMethod,
+  });
   ctx.assignReleaseOnSuccessInteractionHookResult({ userId: accountId });
   ctx.appendDataHookContext('User.Data.Updated', { user });
 

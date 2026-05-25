@@ -29,12 +29,6 @@ mockEsm('#src/libraries/user.utils.js', () => ({
     passwordEncrypted: 'passwordEncrypted',
     passwordEncryptionMethod: 'plain',
   }),
-  buildPasswordResetPayload: jest.fn(async () => ({
-    passwordEncrypted: 'passwordEncrypted',
-    passwordEncryptionMethod: 'plain',
-    passwordUpdatedAt: Date.now(),
-    isPasswordExpired: false,
-  })),
 }));
 
 mockEsm('@logto/shared', () => ({

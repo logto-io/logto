@@ -11,9 +11,7 @@ import {
 import { type Optional, isKeyInObject } from '@silverhand/essentials';
 import { sha256 } from 'hash-wasm';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { verifyPasswordExpirationPolicy } from '#src/libraries/password-expiration.js';
 import { verifySsoOnlyEmailIdentifier } from '#src/libraries/verification-helpers/single-sign-on-guard.js';
 import { verifySocialIdentity } from '#src/libraries/verification-helpers/social-verification.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -204,44 +202,6 @@ const getUserIdentifier = (payload: IdentifierPayload): Optional<string> => {
   }
 };
 
-const guardPasswordExpiration = async (
-  tenant: TenantContext,
-  identifierPayload: IdentifierPayload,
-  interactionStorage: AnonymousInteractionResult,
-  verifiedIdentifier?: Identifier
-) => {
-  if (
-    interactionStorage.event !== InteractionEvent.SignIn ||
-    !isPasswordIdentifier(identifierPayload) ||
-    verifiedIdentifier?.key !== 'accountId'
-  ) {
-    return;
-  }
-
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
-  const { passwordExpiration } =
-    await tenant.queries.signInExperiences.findDefaultSignInExperience();
-
-  if (!passwordExpiration.enabled) {
-    return;
-  }
-
-  const user = await tenant.queries.users.findUserById(verifiedIdentifier.value);
-
-  assertThat(
-    user,
-    new RequestError(
-      { code: 'user.user_not_exist', status: 404 },
-      { userId: verifiedIdentifier.value }
-    )
-  );
-
-  verifyPasswordExpirationPolicy(passwordExpiration, user);
-};
-
 /**
  * Verify the identifier payload, and report the activity to this sentinel. The sentinel
  * will decide whether to block the user or not.
@@ -314,8 +274,6 @@ const verifyIdentifierPayload: typeof identifierPayloadVerification = async (
   if (error) {
     throw error;
   }
-
-  await guardPasswordExpiration(tenant, identifierPayload, interactionStorage, result);
 
   return result;
 };

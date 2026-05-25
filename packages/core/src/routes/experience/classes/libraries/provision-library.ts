@@ -21,7 +21,7 @@ import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/e
 
 import { EnvSet } from '#src/env-set/index.js';
 import { truncateMembershipDelta } from '#src/libraries/hook/utils.js';
-import { buildPasswordMetadataPayload } from '#src/libraries/user.utils.js';
+import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
@@ -71,6 +71,8 @@ export class ProvisionLibrary {
       jitOrganizationIds,
       socialConnectorTokenSetSecret,
       enterpriseSsoConnectorTokenSetSecret,
+      passwordEncrypted,
+      passwordEncryptionMethod,
       ...rest
     } = profile;
 
@@ -81,13 +83,16 @@ export class ProvisionLibrary {
       {
         id: await generateUserId(),
         ...rest,
+        ...conditional(
+          passwordEncrypted &&
+            passwordEncryptionMethod &&
+            buildUserPasswordPayload({
+              passwordEncrypted,
+              passwordEncryptionMethod,
+            })
+        ),
         ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
         ...conditional(customData && { customData }),
-        ...conditional(
-          rest.passwordEncrypted && {
-            ...buildPasswordMetadataPayload(),
-          }
-        ),
         logtoConfig: {
           [userMfaDataKey]: { enabled: false },
         },

@@ -33,21 +33,12 @@ const { assignInteractionResults } = mockEsm('#src/libraries/session/index.js', 
   assignInteractionResults: jest.fn(),
 }));
 
-const { encryptUserPassword, buildPasswordResetPayload } = mockEsm(
-  '#src/libraries/user.utils.js',
-  () => ({
-    encryptUserPassword: jest.fn().mockResolvedValue({
-      passwordEncrypted: 'passwordEncrypted',
-      passwordEncryptionMethod: 'plain',
-    }),
-    buildPasswordResetPayload: jest.fn(async () => ({
-      passwordEncrypted: 'passwordEncrypted',
-      passwordEncryptionMethod: 'plain',
-      passwordUpdatedAt: Date.now(),
-      isPasswordExpired: false,
-    })),
-  })
-);
+const { encryptUserPassword } = mockEsm('#src/libraries/user.utils.js', () => ({
+  encryptUserPassword: jest.fn().mockResolvedValue({
+    passwordEncrypted: 'passwordEncrypted',
+    passwordEncryptionMethod: 'plain',
+  }),
+}));
 
 mockEsm('@logto/shared', () => ({
   generateStandardId: jest.fn().mockReturnValue('uid'),
@@ -459,20 +450,16 @@ describe('submit action', () => {
     };
     await submitInteraction(interaction, ctx, tenant);
 
-    expect(buildPasswordResetPayload).toBeCalledWith('password');
+    expect(encryptUserPassword).toBeCalledWith('password');
     expect(updateUserById).toBeCalledWith('foo', {
       passwordEncrypted: 'passwordEncrypted',
       passwordEncryptionMethod: 'plain',
-      passwordUpdatedAt: now,
-      isPasswordExpired: false,
     });
     expect(assignInteractionResults).not.toBeCalled();
     expect(ctx.appendDataHookContext).toBeCalledWith('User.Data.Updated', {
       user: {
         passwordEncrypted: 'passwordEncrypted',
         passwordEncryptionMethod: 'plain',
-        passwordUpdatedAt: now,
-        isPasswordExpired: false,
       },
     });
   });

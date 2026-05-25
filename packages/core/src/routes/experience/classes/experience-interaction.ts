@@ -12,7 +12,7 @@ import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { buildPasswordMetadataPayload } from '#src/libraries/user.utils.js';
+import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -495,9 +495,10 @@ export default class ExperienceInteraction {
       );
 
       const updatedUser = await userQueries.updateUserById(user.id, {
-        passwordEncrypted,
-        passwordEncryptionMethod,
-        ...buildPasswordMetadataPayload(),
+        ...buildUserPasswordPayload({
+          passwordEncrypted,
+          passwordEncryptionMethod,
+        }),
       });
 
       await this.cleanUp();
@@ -542,6 +543,8 @@ export default class ExperienceInteraction {
       jitOrganizationIds,
       socialConnectorTokenSetSecret,
       enterpriseSsoConnectorTokenSetSecret,
+      passwordEncrypted,
+      passwordEncryptionMethod,
       ...rest
     } = this.profile.data;
     const userMfaVerifications = this.mfa.toUserMfaVerifications();
@@ -550,6 +553,14 @@ export default class ExperienceInteraction {
     // Update user profile
     const updatedUser = await userQueries.updateUserById(user.id, {
       ...rest,
+      ...conditional(
+        passwordEncrypted &&
+          passwordEncryptionMethod &&
+          buildUserPasswordPayload({
+            passwordEncrypted,
+            passwordEncryptionMethod,
+          })
+      ),
       ...conditional(
         socialIdentity && {
           identities: {
@@ -571,11 +582,6 @@ export default class ExperienceInteraction {
         ),
       },
       lastSignInAt: Date.now(),
-      ...conditional(
-        rest.passwordEncrypted && {
-          ...buildPasswordMetadataPayload(),
-        }
-      ),
     });
 
     // Sync SSO identity
