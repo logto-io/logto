@@ -137,5 +137,43 @@ describe('SMSBao SMS connector', () => {
         },
       });
     });
+
+    it('should throw general error for SMSBao HTTP error response', async () => {
+      const sendMessage = await createSendMessage();
+
+      nock(endpoint).get('').query(true).times(3).reply(500, 'server error');
+
+      await expect(
+        sendMessage({
+          to: '13800138000',
+          type: TemplateType.SignIn,
+          payload: { code: '1234' },
+        })
+      ).rejects.toMatchObject({
+        code: ConnectorErrorCodes.General,
+        data: {
+          message: 'server error',
+        },
+      });
+    });
+
+    it('should throw general error for unknown send error', async () => {
+      const sendMessage = await createSendMessage();
+
+      nock(endpoint).get('').query(true).replyWithError('network down');
+
+      await expect(
+        sendMessage({
+          to: '13800138000',
+          type: TemplateType.SignIn,
+          payload: { code: '1234' },
+        })
+      ).rejects.toMatchObject({
+        code: ConnectorErrorCodes.General,
+        data: {
+          message: 'network down',
+        },
+      });
+    });
   });
 });

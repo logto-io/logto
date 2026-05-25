@@ -1,5 +1,5 @@
 import { assert } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
+import got, { HTTPError } from 'got';
 
 import type {
   CreateConnector,
@@ -17,6 +17,7 @@ import {
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
+import type { SmsbaoSmsConfig } from './types.js';
 import { smsbaoSmsConfigGuard } from './types.js';
 
 const errorMessages: Partial<Record<string, string>> = {
@@ -33,12 +34,17 @@ const errorMessages: Partial<Record<string, string>> = {
 
 const getErrorMessage = (code: string) => errorMessages[code] ?? `SMSBao SMS send failed: ${code}`;
 
+const getValidatedConfig = (rawConfig: unknown): SmsbaoSmsConfig => {
+  validateConfig(rawConfig, smsbaoSmsConfigGuard);
+
+  return rawConfig;
+};
+
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
   async (data, inputConfig) => {
     const { to, type, payload } = data;
-    const config = inputConfig ?? (await getConfig(defaultMetadata.id));
-    validateConfig(config, smsbaoSmsConfigGuard);
+    const config = getValidatedConfig(inputConfig ?? (await getConfig(defaultMetadata.id)));
     const { username, passwordOrApiKey, goodsId } = config;
 
     const template = getConfigTemplateByType(type, config);
