@@ -10,43 +10,69 @@ import { EnvSet } from '#src/env-set/index.js';
 import { type CacheStore } from './types.js';
 import { cacheConsole } from './utils.js';
 
-// Use a strict 1s read timeout so Redis stalls fail fast and don't hold API latency.
+// Reads are best-effort and short-circuit to a miss when Redis stalls.
 const redisCacheReadTimeout = 1000;
+// Writes are allowed more headroom but still bounded so a Redis stall can never hold a request.
+const redisCacheWriteTimeout = 5000;
+
+const timeoutSentinel = Symbol('redis-cache-timeout');
+
+/**
+ * Race a Redis command against a deadline so cache I/O can never block a request indefinitely.
+ * On timeout, logs a warning and resolves to `undefined` so callers degrade to a cache miss.
+ * Errors from the underlying Redis command are not caught here — they still reject as usual,
+ * and call sites wrap writes in `trySafe` to swallow them.
+ */
+const raceWithTimeout = async <T>(
+  operation: 'GET' | 'SET' | 'DEL',
+  key: string,
+  promise: Promise<T> | undefined,
+  timeoutMs: number
+): Promise<T | undefined> => {
+  if (!promise) {
+    return;
+  }
+
+  const abortController = new AbortController();
+  const timeoutPromise = setTimeout(timeoutMs, timeoutSentinel, {
+    // Cache is best-effort; timeout timers should not keep the process alive.
+    ref: false,
+    signal: abortController.signal,
+  });
+
+  try {
+    const result = await Promise.race([promise, timeoutPromise]);
+    if (result === timeoutSentinel) {
+      cacheConsole.warn(`Redis ${operation} on key "${key}" timed out after ${timeoutMs}ms`);
+      return;
+    }
+    return result;
+  } finally {
+    // Cancel pending timeout when Redis resolves first, preventing timer accumulation.
+    abortController.abort();
+  }
+};
 
 abstract class RedisCacheBase implements CacheStore {
   readonly client?: RedisClientType | RedisClusterType;
 
   async set(key: string, value: string, expire: number = 30 * 60) {
-    await this.client?.set(key, value, {
-      EX: expire,
-    });
+    await raceWithTimeout(
+      'SET',
+      key,
+      this.client?.set(key, value, { EX: expire }),
+      redisCacheWriteTimeout
+    );
   }
 
   async get(key: string): Promise<Optional<string>> {
-    const getPromise = this.client?.get(key);
-
-    if (!getPromise) {
-      return;
-    }
-
-    const timeoutAbortController = new AbortController();
-    const timeoutPromise = setTimeout(redisCacheReadTimeout, undefined, {
-      // Cache is best-effort; timeout timers should not keep the process alive.
-      ref: false,
-      signal: timeoutAbortController.signal,
-    });
-
-    try {
-      // Fail fast on cache read and gracefully fall back to cache miss behavior.
-      return conditional(await Promise.race([getPromise, timeoutPromise]));
-    } finally {
-      // Cancel pending timeout when Redis resolves first, preventing timer accumulation.
-      timeoutAbortController.abort();
-    }
+    return conditional(
+      await raceWithTimeout('GET', key, this.client?.get(key), redisCacheReadTimeout)
+    );
   }
 
   async delete(key: string) {
-    await this.client?.del(key);
+    await raceWithTimeout('DEL', key, this.client?.del(key), redisCacheWriteTimeout);
   }
 
   async connect() {
