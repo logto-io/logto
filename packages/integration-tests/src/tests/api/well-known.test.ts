@@ -9,13 +9,16 @@ import { HTTPError } from 'ky';
 
 import { fullnameData } from '#src/__mocks__/profile-fields-mock.js';
 import api, { adminTenantApi, authedAdminApi } from '#src/api/api.js';
+import { createOrUpdateCustomPhrase, deleteCustomPhrase } from '#src/api/custom-phrase.js';
 import {
   createCustomProfileField,
   deleteCustomProfileFieldByName,
+  getSignInExperience,
   updateSignInExperience,
 } from '#src/api/index.js';
 import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
 import { newOidcSsoConnectorPayload } from '#src/constants.js';
+import { setLanguage } from '#src/helpers/sign-in-experience.js';
 import { generateSsoConnectorName } from '#src/utils.js';
 
 describe('.well-known api', () => {
@@ -72,6 +75,49 @@ describe('.well-known api', () => {
       .get('.well-known/phrases?lng=en')
       .json<{ translation: Translation }>();
     expect(updated.translation.list).toHaveProperty('and', and);
+  });
+
+  describe('manual language phrases', () => {
+    const manualLanguageTag = 'vi-VN';
+    const customConfirmLabel = 'integration-test-vi-VN-confirm';
+
+    it('should resolve manual language from lng query and fallback language settings', async () => {
+      const { languageInfo: originalLanguageInfo } = await getSignInExperience();
+
+      try {
+        await createOrUpdateCustomPhrase(manualLanguageTag, {
+          action: { confirm: customConfirmLabel },
+        });
+        await setLanguage(manualLanguageTag, false);
+
+        const explicitLanguageResponse = await api.get(
+          `.well-known/phrases?lng=${manualLanguageTag}`
+        );
+        expect(explicitLanguageResponse.headers.get('content-language')).toBe(manualLanguageTag);
+
+        const explicitLanguagePhrases = await explicitLanguageResponse.json<{
+          translation: Translation;
+        }>();
+        expect(explicitLanguagePhrases.translation).toMatchObject({
+          action: { confirm: customConfirmLabel },
+        });
+
+        const fallbackLanguageResponse = await api.get('.well-known/phrases');
+        expect(fallbackLanguageResponse.headers.get('content-language')).toBe(manualLanguageTag);
+
+        const fallbackLanguagePhrases = await fallbackLanguageResponse.json<{
+          translation: Translation;
+        }>();
+        expect(fallbackLanguagePhrases.translation).toMatchObject({
+          action: { confirm: customConfirmLabel },
+        });
+      } finally {
+        await deleteCustomPhrase(manualLanguageTag).catch(() => {
+          // Ignore cleanup errors when the phrase was never created.
+        });
+        await updateSignInExperience({ languageInfo: originalLanguageInfo });
+      }
+    });
   });
 
   describe('sso connectors in sign-in experience', () => {
