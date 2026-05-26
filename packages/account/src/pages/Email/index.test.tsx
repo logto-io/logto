@@ -8,10 +8,7 @@ import renderWithPageContext, {
   mockAccountCenterSettings,
 } from '@ac/__mocks__/RenderWithPageContext';
 import { updatePrimaryEmail } from '@ac/apis/account';
-import {
-  sendEmailVerificationCode,
-  verifyEmailVerificationCode,
-} from '@ac/apis/verification';
+import { sendEmailVerificationCode, verifyEmailVerificationCode } from '@ac/apis/verification';
 import { emailRoute, emailSuccessRoute } from '@ac/constants/routes';
 
 import Email from '.';
@@ -67,10 +64,7 @@ const renderEmail = ({ pageContext, initialEntries = [emailRoute] }: EmailRender
   renderWithPageContext(
     <Routes>
       <Route path={emailRoute} element={<Email />} />
-      <Route
-        path={emailSuccessRoute}
-        element={<div>Email success page</div>}
-      />
+      <Route path={emailSuccessRoute} element={<div>Email success page</div>} />
     </Routes>,
     {
       initialEntries,
