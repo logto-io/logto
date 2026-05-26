@@ -18,7 +18,19 @@ describe('i18n utils', () => {
     expect(resolveUiLocalesLanguage('xx yy')).toBeUndefined();
   });
 
-  it('getPreferredLanguage respects ui_locales fallback before language settings', () => {
+  it('getPreferredLanguage returns raw ui_locales for server-side resolution', () => {
+    expect(
+      getPreferredLanguage({
+        uiLocales: 'vi-VN',
+        languageSettings: {
+          autoDetect: false,
+          fallbackLanguage: 'fr',
+        },
+      })
+    ).toBe('vi-VN');
+  });
+
+  it('getPreferredLanguage respects ui_locales before language settings', () => {
     expect(
       getPreferredLanguage({
         uiLocales: 'xx pl',
@@ -27,7 +39,18 @@ describe('i18n utils', () => {
           fallbackLanguage: 'fr',
         },
       })
-    ).toBe('pl-PL');
+    ).toBe('xx pl');
+  });
+
+  it('getPreferredLanguage uses fallback language when auto-detect is disabled', () => {
+    expect(
+      getPreferredLanguage({
+        languageSettings: {
+          autoDetect: false,
+          fallbackLanguage: 'vi-VN',
+        },
+      })
+    ).toBe('vi-VN');
   });
 
   it('getPreferredLanguage uses the shared SIE language source when auto detecting', () => {

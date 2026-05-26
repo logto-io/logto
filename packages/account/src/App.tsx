@@ -47,7 +47,6 @@ import {
   verifiedActionRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
-import { resolveUiLocalesLanguage } from './i18n/utils';
 import BackupCodeBinding from './pages/BackupCodeBinding';
 import BackupCodeView from './pages/BackupCodeView';
 import Email from './pages/Email';
@@ -74,7 +73,7 @@ import { hasVisibleSecuritySection } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
 
 handleAccountCenterRoute();
-void initI18n(resolveUiLocalesLanguage(getUiLocales()));
+void initI18n(getUiLocales());
 
 export const Main = () => {
   const params = new URLSearchParams(window.location.search);

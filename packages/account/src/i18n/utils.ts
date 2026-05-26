@@ -1,8 +1,16 @@
 import { matchSupportedLanguageTag } from '@logto/language-kit';
-import { builtInLanguages, type BuiltInLanguageTag } from '@logto/phrases-experience';
+import resource, {
+  builtInLanguages,
+  type BuiltInLanguageTag,
+  type LocalePhrase,
+} from '@logto/phrases-experience';
 import type { LanguageInfo } from '@logto/schemas';
+import type { Resource } from 'i18next';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+
+import { getPhrases as getPhrasesApi } from '@ac/apis/phrases';
+import { getUiLocales } from '@ac/utils/account-center-route';
 
 const storageKey = 'i18nextLogtoUiLng';
 
@@ -47,7 +55,7 @@ const detectLanguages = () => {
 
 export const detectLanguage = (languageSettings?: LanguageInfo) => {
   if (languageSettings?.autoDetect === false) {
-    return resolveLanguage(languageSettings.fallbackLanguage) ?? 'en';
+    return languageSettings.fallbackLanguage;
   }
 
   return matchSupportedLanguageTag(detectLanguages(), builtInLanguages).match ?? 'en';
@@ -59,8 +67,59 @@ export const getPreferredLanguage = ({
 }: {
   languageSettings?: LanguageInfo;
   uiLocales?: string;
-}) => resolveUiLocalesLanguage(uiLocales) ?? detectLanguage(languageSettings);
+}) => {
+  const normalizedUiLocales = uiLocales?.trim();
+
+  if (normalizedUiLocales) {
+    return normalizedUiLocales;
+  }
+
+  return detectLanguage(languageSettings);
+};
+
+const getPhrases = async (language?: string) => {
+  const uiLocales = getUiLocales();
+  const preferredLanguage = language ?? uiLocales;
+  const detectedLanguage = detectLanguage();
+  const response = await getPhrasesApi({
+    localLanguage: Array.isArray(detectedLanguage) ? detectedLanguage.join(' ') : detectedLanguage,
+    language: preferredLanguage,
+  });
+
+  const remotePhrases = await response.json<LocalePhrase>();
+  const lng = response.headers.get('Content-Language');
+
+  if (!lng) {
+    throw new Error('lng not found');
+  }
+
+  return { phrases: remotePhrases, lng };
+};
+
+export const getI18nResource = async (
+  language?: string
+): Promise<{ resources: Resource; lng: string }> => {
+  try {
+    const { phrases, lng } = await getPhrases(language);
+
+    return {
+      resources: { [lng]: phrases },
+      lng,
+    };
+  } catch {
+    return {
+      resources: { en: resource.en },
+      lng: 'en',
+    };
+  }
+};
 
 export const changeLanguage = async (language: string) => {
-  await i18next.changeLanguage(resolveLanguage(language) ?? 'en');
+  const { resources, lng } = await getI18nResource(language);
+
+  for (const [namespace, resource] of Object.entries(resources[lng] ?? {})) {
+    i18next.addResourceBundle(lng, namespace, resource);
+  }
+
+  await i18next.changeLanguage(lng);
 };

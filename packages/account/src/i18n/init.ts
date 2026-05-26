@@ -1,28 +1,21 @@
-import type { LanguageTag } from '@logto/language-kit';
-import resources from '@logto/phrases-experience';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { resolveLanguage } from '@ac/i18n/utils';
+import { getI18nResource } from '@ac/i18n/utils';
 
 i18next.use(initReactI18next);
 
-const initI18n = async (initialLanguage?: LanguageTag) => {
-  const normalizedLanguage =
-    typeof initialLanguage === 'string' ? resolveLanguage(initialLanguage) : undefined;
+const initI18n = async (initialLanguage?: string) => {
+  const { resources, lng } = await getI18nResource(initialLanguage);
 
   await i18next.init({
-    resources: {},
+    resources,
+    lng,
     fallbackLng: 'en',
-    lng: normalizedLanguage,
     interpolation: {
       escapeValue: false,
     },
   });
-
-  for (const [language, value] of Object.entries(resources)) {
-    i18next.addResourceBundle(language, 'translation', value.translation, true);
-  }
 };
 
 export default initI18n;
