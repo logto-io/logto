@@ -31,3 +31,37 @@ Never bypass commit hooks.
 Many packages in this project depend on each other through built artifacts. When checks fail because local package outputs are stale or missing, run `pnpm prepack` to rebuild them before retrying.
 
 If a hook cannot be fixed safely within the current task, stop and report the blocker with the failed command, relevant output, why it is out of scope, and what decision is needed.
+
+## Cursor Cloud specific instructions
+
+### Services overview
+
+| Service | Port | Purpose |
+|---------|------|---------|
+| PostgreSQL | 5432 | Primary data store (required) |
+| Logto Core | 3001 (user), 3002 (admin) | Backend: OIDC provider + Management API |
+| Console (Vite) | 5002 | Admin dashboard SPA |
+| Experience (Vite) | 5001 | Sign-in experience SPA |
+
+### Starting the development environment
+
+1. Start Docker daemon: `sudo dockerd &>/tmp/dockerd.log &` then `sudo chmod 666 /var/run/docker.sock`
+2. Start PostgreSQL: `docker run -d --name logto-postgres -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=p0stgr3s -e POSTGRES_DB=logto postgres:17-alpine`
+3. Set env: `export DB_URL="postgres://postgres:p0stgr3s@localhost:5432/logto"`
+4. If first run (empty database): `pnpm cli db seed` and `pnpm cli connector link -p .`
+5. Start dev: `pnpm start:dev` (skip `pnpm dev` which re-runs prepack; prepack is already done by the update script)
+
+### Key caveats
+
+- `rsync` must be installed (needed by `@logto/core` for `copy:apidocs`). Install with `sudo apt-get install -y rsync` if missing.
+- Connector load errors at startup are expected in dev mode — connectors are not built by default (`pnpm start:dev` excludes them).
+- `@logto/core` unit tests require `pnpm build:test` in `packages/core` before running `pnpm test:only`, because Jest reads from `./build` (the tsup dev bundle doesn't include test files).
+- `@logto/elements` tests require Playwright browsers: run `pnpm exec playwright install chromium --with-deps` inside `packages/elements`.
+- The pre-commit hook runs `lint-staged` on changed packages; if it fails due to stale outputs, run `pnpm prepack` first.
+
+### Running tests and lint
+
+- Lint: `pnpm ci:lint` (ESLint) and `pnpm ci:stylelint` (Stylelint) from repo root.
+- Unit tests: `pnpm ci:test` from repo root runs all package tests in parallel.
+- Individual package tests: `pnpm test` inside the package directory.
+- See `.github/CONTRIBUTING.md` for integration test instructions (Docker-based).
