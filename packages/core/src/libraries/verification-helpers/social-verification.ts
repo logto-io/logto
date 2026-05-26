@@ -16,7 +16,12 @@ import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import type { SocialAuthorizationUrlPayload } from '../types/index.js';
+type SocialAuthorizationUrlPayload = {
+  connectorId: string;
+  state: string;
+  redirectUri: string;
+  scope?: string;
+};
 
 export const createSocialAuthorizationUrl = async (
   ctx: WithLogContext,

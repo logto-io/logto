@@ -9,21 +9,21 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
-import koaGuard from '#src/middleware/koa-guard.js';
-
-import RequestError from '../../errors/RequestError/index.js';
-import { buildVerificationRecordByIdAndType } from '../../libraries/verification.js';
-import assertThat from '../../utils/assert-that.js';
-import { transpileUserMfaVerifications } from '../../utils/user.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import {
   generateBackupCodes,
   validateBackupCodes,
-} from '../interaction/utils/backup-code-validation.js';
+} from '#src/libraries/verification-helpers/backup-code-validation.js';
 import {
   generateTotpSecret,
   validateTotpSecret,
   validateTotpToken,
-} from '../interaction/utils/totp-validation.js';
+} from '#src/libraries/verification-helpers/totp-validation.js';
+import { buildVerificationRecordByIdAndType } from '#src/libraries/verification.js';
+import koaGuard from '#src/middleware/koa-guard.js';
+import assertThat from '#src/utils/assert-that.js';
+import { transpileUserMfaVerifications } from '#src/utils/user.js';
+
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';

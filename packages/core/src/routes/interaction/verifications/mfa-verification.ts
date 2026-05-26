@@ -16,6 +16,7 @@ import {
   isNoSkipMfaPolicy,
   isPromptOnlyAtSignInPolicy,
 } from '#src/libraries/sign-in-experience/mfa-policy.js';
+import { generateBackupCodes } from '#src/libraries/verification-helpers/backup-code-validation.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -27,7 +28,6 @@ import {
   type VerifiedRegisterInteractionResult,
   type VerifiedSignInInteractionResult,
 } from '../types/index.js';
-import { generateBackupCodes } from '../utils/backup-code-validation.js';
 import { storeInteractionResult } from '../utils/interaction.js';
 
 export const verifyBindMfa = async (

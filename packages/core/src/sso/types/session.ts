@@ -40,7 +40,7 @@ export type CreateSingleSignOnSession = (storage: SingleSignOnConnectorSession) 
 /**
  * Single sign on interaction identifier result
  *
- * @remark this session data  is used to store the authentication result from the identity provider. {@link /packages/core/src/routes/interaction/utils/single-sign-on.ts}
+ * @remark this session data  is used to store the authentication result from the identity provider. {@link /packages/core/src/libraries/verification-helpers/single-sign-on.ts}
  * This is needed because we need to split the authentication process into sign in and sign up two parts.
  * If the SSO identity is found in DB we will directly sign in the user.
  * If the SSO identity is not found in DB we will throw an error and let the client to create a new user.

@@ -44,7 +44,7 @@ const { getInteractionStorage, storeInteractionResult } = await mockEsmWithActua
   })
 );
 
-await mockEsmWithActual('./utils/totp-validation.js', () => ({
+await mockEsmWithActual('#src/libraries/verification-helpers/totp-validation.js', () => ({
   generateTotpSecret: jest.fn().mockReturnValue('secret'),
 }));
 
@@ -56,7 +56,7 @@ const { sendVerificationCodeToIdentifier } = await mockEsmWithActual(
 );
 
 const { generateWebAuthnRegistrationOptions, generateWebAuthnAuthenticationOptions } =
-  await mockEsmWithActual('./utils/webauthn.js', () => ({
+  await mockEsmWithActual('#src/libraries/verification-helpers/webauthn.js', () => ({
     generateWebAuthnRegistrationOptions: jest
       .fn()
       .mockResolvedValue(mockWebAuthnRegistrationOptions),

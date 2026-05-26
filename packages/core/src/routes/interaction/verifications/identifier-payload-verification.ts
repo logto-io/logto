@@ -12,6 +12,8 @@ import { type Optional, isKeyInObject } from '@silverhand/essentials';
 import { sha256 } from 'hash-wasm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { verifySsoOnlyEmailIdentifier } from '#src/libraries/verification-helpers/single-sign-on-guard.js';
+import { verifySocialIdentity } from '#src/libraries/verification-helpers/social-verification.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -34,8 +36,6 @@ import {
   isPasswordIdentifier,
   isSocialIdentifier,
 } from '../utils/index.js';
-import { verifySsoOnlyEmailIdentifier } from '../utils/single-sign-on-guard.js';
-import { verifySocialIdentity } from '../utils/social-verification.js';
 import { verifyIdentifierByVerificationCode } from '../utils/verification-code-validation.js';
 
 const verifyPasswordIdentifier = async (

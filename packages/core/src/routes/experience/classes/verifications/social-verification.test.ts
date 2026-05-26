@@ -34,7 +34,7 @@ jest.mock('#src/env-set/index.js', () => ({
 const mockVerifySocialIdentity = jest
   .fn()
   .mockResolvedValue({ id: 'foo', email: 'test@example.com' });
-jest.mock('#src/routes/interaction/utils/social-verification.js', () => ({
+jest.mock('#src/libraries/verification-helpers/social-verification.js', () => ({
   verifySocialIdentity: mockVerifySocialIdentity,
 }));
 

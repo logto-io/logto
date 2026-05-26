@@ -8,21 +8,20 @@ import {
   wellConfiguredSsoConnector,
   mockSamlSsoConnector,
 } from '#src/__mocks__/sso.js';
+import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
 import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type HookContextManager } from '#src/libraries/hook/context-manager.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import { OidcSsoConnector } from '#src/sso/OidcSsoConnector/index.js';
+import { SamlSsoConnector } from '#src/sso/SamlSsoConnector/index.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import { type SingleSignOnConnectorData } from '#src/sso/types/connector.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
-
-import { idpInitiatedSamlSsoSessionCookieName } from '../../../constants/index.js';
-import { SamlSsoConnector } from '../../../sso/SamlSsoConnector/index.js';
-import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
 
 const { jest } = import.meta;
 const { mockEsm, mockEsmWithActual } = createMockUtils(jest);
@@ -53,10 +52,6 @@ class MockSamlSsoConnector extends SamlSsoConnector {
   override getIssuer = getIssuerMock;
   override getUserInfo = getUserInfoMock;
 }
-
-mockEsm('./interaction.js', () => ({
-  storeInteractionResult: jest.fn(),
-}));
 
 const {
   assignSingleSignOnSessionResult: assignSingleSignOnSessionResultMock,
@@ -91,9 +86,10 @@ describe('Single sign on util methods tests', () => {
     ...createMockLogContext(),
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     interactionDetails: { jti: 'foo' } as Awaited<ReturnType<Provider['interactionDetails']>>,
-    assignReleaseOnSuccessInteractionHookResult: jest.fn(),
     appendDataHookContext: jest.fn(),
-  } satisfies WithInteractionHooksContext<WithLogContext<WithInteractionDetailsContext>>;
+  } satisfies WithLogContext<WithInteractionDetailsContext> & {
+    appendDataHookContext: HookContextManager['appendDataHookContext'];
+  };
 
   const mockProvider = createMockProvider();
 

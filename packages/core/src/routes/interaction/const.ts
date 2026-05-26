@@ -1,3 +1,3 @@
 export const interactionPrefix = '/interaction';
 export const verificationPath = 'verification';
-export const ssoPath = 'single-sign-on';
+export { ssoPath } from '#src/constants/index.js';

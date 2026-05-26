@@ -8,7 +8,7 @@ import {
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
-import { generateBackupCodes } from '#src/routes/interaction/utils/backup-code-validation.js';
+import { generateBackupCodes } from '#src/libraries/verification-helpers/backup-code-validation.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';

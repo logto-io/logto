@@ -12,11 +12,11 @@ import { generateStandardId, getUserDisplayName } from '@logto/shared';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
   generateTotpSecret,
   validateTotpToken,
-} from '#src/routes/interaction/utils/totp-validation.js';
+} from '#src/libraries/verification-helpers/totp-validation.js';
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';

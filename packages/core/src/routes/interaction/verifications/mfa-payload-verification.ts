@@ -21,13 +21,16 @@ import {
 import { pick } from '@silverhand/essentials';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
+import { validateTotpToken } from '#src/libraries/verification-helpers/totp-validation.js';
+import {
+  verifyWebAuthnAuthentication,
+  verifyWebAuthnRegistration,
+} from '#src/libraries/verification-helpers/webauthn.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousInteractionResult } from '../types/index.js';
-import { validateTotpToken } from '../utils/totp-validation.js';
-import { verifyWebAuthnAuthentication, verifyWebAuthnRegistration } from '../utils/webauthn.js';
 
 const verifyBindTotp = async (
   interactionStorage: AnonymousInteractionResult,

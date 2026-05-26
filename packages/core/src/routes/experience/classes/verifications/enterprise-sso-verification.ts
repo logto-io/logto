@@ -15,11 +15,11 @@ import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
   getSsoAuthorizationUrl,
   verifySsoIdentity,
-} from '#src/routes/interaction/utils/single-sign-on.js';
+} from '#src/libraries/verification-helpers/single-sign-on.js';
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import { type ExtendedSocialUserInfo } from '#src/sso/types/saml.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -95,7 +95,7 @@ export class EnterpriseSsoVerification
    * Create the authorization URL for the enterprise SSO connector.
    *
    * @remarks
-   * Refers to thr {@link getSsoAuthorizationUrl} function in the interaction/utils/single-sign-on.ts file.
+   * Refers to the {@link getSsoAuthorizationUrl} function in the libraries/verification-helpers/single-sign-on.ts file.
    * Currently, all the intermediate connector session results are stored in the provider's interactionDetails separately,
    * apart from the new verification record.
    * For compatibility reasons, we keep using the old {@link getSsoAuthorizationUrl} method here as a single source of truth.
@@ -116,7 +116,7 @@ export class EnterpriseSsoVerification
    * Verify the enterprise SSO identity and store the enterprise SSO identity in the verification record.
    *
    * @remarks
-   * Refers to the {@link verifySsoIdentity} function in the interaction/utils/single-sign-on.ts file.
+   * Refers to the {@link verifySsoIdentity} function in the libraries/verification-helpers/single-sign-on.ts file.
    * For compatibility reasons, we keep using the old {@link verifySsoIdentity} method here as a single source of truth.
    * See the above {@link createAuthorizationUrl} method for more details.
    */

@@ -25,11 +25,11 @@ import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
   createSocialAuthorizationUrl,
   getConnectorSessionResult,
-} from '#src/routes/interaction/utils/social-verification.js';
+} from '#src/libraries/verification-helpers/social-verification.js';
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -103,7 +103,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    *
    * @remarks
    * For the experience API:
-   * This method directly calls the {@link createSocialAuthorizationUrl} method in the interaction/utils/social-verification.ts file.
+   * This method directly calls the {@link createSocialAuthorizationUrl} method in the libraries/verification-helpers/social-verification.ts file.
    * All the intermediate connector session results are stored in the provider's interactionDetails separately, apart from the new verification record.
    * For compatibility reasons, we keep using the old {@link createSocialAuthorizationUrl} method here as a single source of truth.
    * Especially for the SAML connectors,
@@ -146,7 +146,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    *
    * @remarks
    * For the experience API:
-   * This method directly calls the {@link verifySocialIdentity} method in the interaction/utils/social-verification.ts file.
+   * This method directly calls the {@link verifySocialIdentity} method in the libraries/verification-helpers/social-verification.ts file.
    * Fetch the connector session result from the provider's interactionDetails and verify the social identity.
    * For compatibility reasons, we keep using the old {@link verifySocialIdentity} method here as a single source of truth.
    * See the above {@link createAuthorizationUrl} method for more details.
@@ -366,7 +366,7 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    * Internal method to create a social authorization session.
    *
    * @remarks
-   * This method is a alternative to the {@link createSocialAuthorizationUrl} method in the interaction/utils/social-verification.ts file.
+   * This method is an alternative to the {@link createSocialAuthorizationUrl} method in the libraries/verification-helpers/social-verification.ts file.
    * Generate the social authorization URL and store the connector session result in the current verification record directly.
    * This social connector session result will be used to verify the social response later.
    * This method can be used for both experience and profile APIs, w/o OIDC interaction context.

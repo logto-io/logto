@@ -8,7 +8,7 @@ import { HTTPError, got } from 'got';
 import * as saml from 'samlify';
 import { z, ZodError } from 'zod';
 
-import { ssoPath } from '#src/routes/interaction/const.js';
+import { ssoPath } from '#src/constants/index.js';
 
 import {
   SsoConnectorConfigErrorCodes,

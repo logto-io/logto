@@ -31,10 +31,10 @@ const mockedQueries = {
 
 const { findUserById, updateUserById } = mockedQueries.users;
 
-await mockEsmWithActual('../interaction/utils/totp-validation.js', () => ({
+await mockEsmWithActual('#src/libraries/verification-helpers/totp-validation.js', () => ({
   generateTotpSecret: jest.fn().mockReturnValue('totp_secret'),
 }));
-await mockEsmWithActual('../interaction/utils/backup-code-validation.js', () => ({
+await mockEsmWithActual('#src/libraries/verification-helpers/backup-code-validation.js', () => ({
   generateBackupCodes: jest.fn().mockReturnValue(['code']),
 }));
 

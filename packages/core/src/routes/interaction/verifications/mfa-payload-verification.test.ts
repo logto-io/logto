@@ -31,12 +31,15 @@ const tenantContext = new MockTenant(undefined, {
   },
 });
 
-const { validateTotpToken } = mockEsm('../utils/totp-validation.js', () => ({
-  validateTotpToken: jest.fn().mockReturnValue(true),
-}));
+const { validateTotpToken } = mockEsm(
+  '#src/libraries/verification-helpers/totp-validation.js',
+  () => ({
+    validateTotpToken: jest.fn().mockReturnValue(true),
+  })
+);
 
 const { verifyWebAuthnAuthentication, verifyWebAuthnRegistration } = mockEsm(
-  '../utils/webauthn.js',
+  '#src/libraries/verification-helpers/webauthn.js',
   () => ({
     verifyWebAuthnAuthentication: jest.fn(),
     verifyWebAuthnRegistration: jest.fn().mockResolvedValue({
