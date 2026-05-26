@@ -1,0 +1,64 @@
+{
+  "paths": {
+    "/api/applications/{applicationId}/access-control": {
+      "get": {
+        "tags": ["Dev feature"],
+        "summary": "Get application access-control rules",
+        "description": "Get the app-level access-control rule configuration for the specified application.",
+        "responses": {
+          "200": {
+            "description": "The app-level access-control rule configuration."
+          },
+          "404": {
+            "description": "The application was not found, or app-level access control is unavailable."
+          }
+        }
+      },
+      "put": {
+        "tags": ["Dev feature"],
+        "summary": "Replace application access-control rules",
+        "description": "Replace the app-level access-control rule configuration for the specified application.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "userIds": {
+                    "description": "An array of user IDs that can access the application."
+                  },
+                  "userRoleIds": {
+                    "description": "An array of user role IDs whose assigned users can access the application."
+                  },
+                  "organizationIds": {
+                    "description": "An array of organization IDs whose members can access the application."
+                  },
+                  "organizationRoleRules": {
+                    "description": "An array of organization-role rule groups. Each group contains an organization ID and the organization role IDs that can access the application in that organization.",
+                    "items": {
+                      "properties": {
+                        "organizationRoleIds": {
+                          "minItems": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The app-level access-control rule configuration was replaced successfully."
+          },
+          "404": {
+            "description": "The application or referenced entities were not found, or app-level access control is unavailable."
+          },
+          "422": {
+            "description": "The access-control rule payload contains invalid role types or empty organization-role groups."
+          }
+        }
+      }
+    }
+  }
+}
