@@ -152,6 +152,7 @@ export const zodTypeToSwagger = (
     return {
       type: 'object',
       description: 'arbitrary',
+      additionalProperties: true,
     };
   }
 
@@ -162,6 +163,7 @@ export const zodTypeToSwagger = (
         {
           type: 'object',
           description: 'arbitrary JSON object',
+          additionalProperties: true,
         },
         {
           type: 'array',
@@ -178,6 +180,7 @@ export const zodTypeToSwagger = (
               {
                 type: 'object',
                 description: 'arbitrary JSON object',
+                additionalProperties: true,
               },
             ],
           },
@@ -329,6 +332,7 @@ export const zodTypeToSwagger = (
     return {
       type: 'object',
       description: 'Validator function',
+      additionalProperties: true,
     };
   }
 

@@ -20,4 +20,23 @@ describe('.well-known openapi.json endpoints', () => {
     expect(result.errors).toEqual([]);
     await expect(SwaggerParser.default.validate(json)).resolves.not.toThrow();
   });
+
+  // Arbitrary JSON object fields must declare `additionalProperties` so that
+  // openapi-typescript emits `{ [k: string]: unknown }` instead of
+  // `Record<string, never>`, which would forbid all properties at the type level.
+  it('emits arbitrary-object fields as open objects', async () => {
+    const response = await adminTenantApi.get('.well-known/management.openapi.json');
+    const json = await response.json<OpenAPIV3.Document>();
+
+    const requestBody = json.paths['/api/organizations']?.post?.requestBody as
+      | OpenAPIV3.RequestBodyObject
+      | undefined;
+    const bodySchema = requestBody?.content['application/json']?.schema as
+      | OpenAPIV3.SchemaObject
+      | undefined;
+    const customData = bodySchema?.properties?.customData as OpenAPIV3.SchemaObject | undefined;
+
+    expect(customData?.type).toBe('object');
+    expect(customData?.additionalProperties).toBe(true);
+  });
 });
