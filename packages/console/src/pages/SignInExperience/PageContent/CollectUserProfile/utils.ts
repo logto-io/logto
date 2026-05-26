@@ -25,6 +25,8 @@ export const isBuiltInCustomProfileFieldKey = (
 ): key is (typeof builtInCustomProfileFieldKeys)[number] =>
   key !== undefined && builtInKeySet.has(key);
 
+export const isAvatarProfileField = (name?: string): boolean => name === 'avatar';
+
 export const getProfileFieldTypeByName = (name: string): CustomProfileFieldType => {
   switch (name) {
     case 'avatar':
