@@ -8,7 +8,7 @@ SMSBao is an SMS service provider. This connector integrates Logto with SMSBao's
 
 ## Set up SMS service in SMSBao
 
-### Create a SMSBao account
+### Create an SMSBao account
 
 Visit [SMSBao](https://www.smsbao.com/) to register an account and complete the required account setup.
 
@@ -17,7 +17,7 @@ Visit [SMSBao](https://www.smsbao.com/) to register an account and complete the 
 Prepare the following values from SMSBao:
 
 - Username: your SMSBao account username.
-- API Key or MD5 password: use a SMSBao API Key, or the MD5 value of your SMSBao login password.
+- API Key or MD5 password: use an SMSBao API Key, or the MD5 value of your SMSBao login password.
 - Product ID: optional. Configure it only when you use a dedicated SMSBao channel product.
 
 This connector sends the API Key or MD5 password value as-is. It does not hash the value in Logto.

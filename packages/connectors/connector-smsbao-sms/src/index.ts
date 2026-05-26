@@ -1,5 +1,5 @@
 import { assert } from '@silverhand/essentials';
-import got, { HTTPError } from 'got';
+import got, { HTTPError, RequestError } from 'got';
 
 import type {
   CreateConnector,
@@ -61,6 +61,9 @@ const sendMessage =
 
     try {
       const { body } = await got.get(endpoint, {
+        retry: {
+          limit: 0,
+        },
         searchParams: {
           u: username,
           p: passwordOrApiKey,
@@ -82,6 +85,10 @@ const sendMessage =
 
       if (error instanceof HTTPError) {
         throw new ConnectorError(ConnectorErrorCodes.General, String(error.response.body));
+      }
+
+      if (error instanceof RequestError) {
+        throw new ConnectorError(ConnectorErrorCodes.General, 'SMSBao request failed');
       }
 
       throw new ConnectorError(

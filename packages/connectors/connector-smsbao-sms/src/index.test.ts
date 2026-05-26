@@ -1,3 +1,4 @@
+import got from 'got';
 import nock from 'nock';
 
 import { ConnectorErrorCodes, TemplateType } from '@logto/connector-kit';
@@ -141,7 +142,7 @@ describe('SMSBao SMS connector', () => {
     it('should throw general error for SMSBao HTTP error response', async () => {
       const sendMessage = await createSendMessage();
 
-      nock(endpoint).get('').query(true).times(3).reply(500, 'server error');
+      const scope = nock(endpoint).get('').query(true).reply(500, 'server error');
 
       await expect(
         sendMessage({
@@ -155,9 +156,10 @@ describe('SMSBao SMS connector', () => {
           message: 'server error',
         },
       });
+      expect(scope.isDone()).toBeTruthy();
     });
 
-    it('should throw general error for unknown send error', async () => {
+    it('should throw sanitized general error for request error', async () => {
       const sendMessage = await createSendMessage();
 
       nock(endpoint).get('').query(true).replyWithError('network down');
@@ -171,7 +173,27 @@ describe('SMSBao SMS connector', () => {
       ).rejects.toMatchObject({
         code: ConnectorErrorCodes.General,
         data: {
-          message: 'network down',
+          message: 'SMSBao request failed',
+        },
+      });
+    });
+
+    it('should throw general error for unknown send error', async () => {
+      const sendMessage = await createSendMessage();
+      const error = new Error('unknown error');
+
+      vi.spyOn(got, 'get').mockRejectedValueOnce(error);
+
+      await expect(
+        sendMessage({
+          to: '13800138000',
+          type: TemplateType.SignIn,
+          payload: { code: '1234' },
+        })
+      ).rejects.toMatchObject({
+        code: ConnectorErrorCodes.General,
+        data: {
+          message: 'unknown error',
         },
       });
     });
