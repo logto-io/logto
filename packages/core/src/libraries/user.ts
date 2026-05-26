@@ -8,37 +8,7 @@ import {
 import { generateStandardShortId, generateStandardId } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
 import { deduplicateByKey, condArray } from '@silverhand/essentials';
-import { argon2Verify, argon2id, bcryptVerify, md5, sha1, sha256 } from 'hash-wasm';
 import pRetry from 'p-retry';
-
-/**
- * Static decoy Argon2id hash used to neutralize timing-based user
- * enumeration: when an authentication attempt is made for an unknown user (or
- * a user that has no password configured), the verification path runs an
- * argon2 verify against this hash and discards the result. The cost factors
- * mirror the defaults used by `encryptUserPassword` so the wall-clock cost is
- * the same as the real path.
- *
- * Computed lazily on first use; the cleartext used to derive the hash is
- * never honored as a real password.
- */
-let dummyArgonHashCache: string | undefined;
-const getDummyArgonHash = () => {
-  if (dummyArgonHashCache) {
-    return dummyArgonHashCache;
-  }
-  // Synchronous derivation is unavailable; for first-time callers we fall
-  // back to a precomputed Argon2id hash of the literal string
-  // 'logto-decoy-do-not-use'. The hash matches the default cost factors used
-  // by `encryptUserPassword` (memorySize=19456 KiB, iterations=2,
-  // parallelism=1) so verification time is comparable to the real path.
-  dummyArgonHashCache =
-    '$argon2id$v=19$m=19456,t=2,p=1$bG9ndG8tZGVjb3ktc2FsdA$DOq3kfx5kfQwI8hMzRgXIJsUygUhBL+B6P8Pk0fUxYM';
-  return dummyArgonHashCache;
-};
-// Reference `argon2id` so importers do not strip it; we keep the import
-// available for future callers wanting to pre-warm the decoy hash on boot.
-void argon2id;
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -46,11 +16,11 @@ import { type JitOrganization } from '#src/queries/organization/email-domains.js
 import { createUsersRolesQueries } from '#src/queries/users-roles.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
-import { legacyVerify } from '#src/utils/password.js';
 import type { OmitAutoSetFields } from '#src/utils/sql.js';
 
 import { captureDeveloperEvent } from '../utils/posthog.js';
 
+import { isPasswordValid, rejectInvalidCredentials } from './user-password-verification.js';
 import { convertBindMfaToMfaVerification, encryptUserPassword } from './user.utils.js';
 
 export type InsertUserResult = [User];
@@ -227,62 +197,19 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   };
 
   const verifyUserPassword = async (user: Nullable<User>, password: string): Promise<User> => {
-    // Constant-time decoy when the user does not exist or has no password
-    // configured: run an Argon2id verification against a static hash so that
-    // the response budget is the same as for a real user with a real
-    // password. This closes the timing-based user-enumeration channel
-    // (LOGTO-002 / CWE-208).
     if (!user?.passwordEncrypted || !user.passwordEncryptionMethod) {
-      // Discard the result; the only purpose is to consume CPU.
-      // The dummy hash is computed once at module load and reused.
-      await argon2Verify({ password, hash: getDummyArgonHash() }).catch(() => false);
-      throw new RequestError({ code: 'session.invalid_credentials', status: 422 });
+      return rejectInvalidCredentials(password);
     }
-    const { passwordEncrypted, passwordEncryptionMethod, id } = user;
 
-    switch (passwordEncryptionMethod) {
-      // Argon2i, Argon2id, Argon2d shares the same verify function
-      case UsersPasswordEncryptionMethod.Argon2i:
-      case UsersPasswordEncryptionMethod.Argon2id:
-      case UsersPasswordEncryptionMethod.Argon2d: {
-        const result = await argon2Verify({ password, hash: passwordEncrypted });
-        assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
-        break;
-      }
-      case UsersPasswordEncryptionMethod.MD5: {
-        const expectedEncrypted = await md5(password);
-        assertThat(
-          expectedEncrypted === passwordEncrypted,
-          new RequestError({ code: 'session.invalid_credentials', status: 422 })
-        );
-        break;
-      }
-      case UsersPasswordEncryptionMethod.SHA1: {
-        const expectedEncrypted = await sha1(password);
-        assertThat(
-          expectedEncrypted === passwordEncrypted,
-          new RequestError({ code: 'session.invalid_credentials', status: 422 })
-        );
-        break;
-      }
-      case UsersPasswordEncryptionMethod.SHA256: {
-        const expectedEncrypted = await sha256(password);
-        assertThat(
-          expectedEncrypted === passwordEncrypted,
-          new RequestError({ code: 'session.invalid_credentials', status: 422 })
-        );
-        break;
-      }
-      case UsersPasswordEncryptionMethod.Bcrypt: {
-        const result = await bcryptVerify({ password, hash: passwordEncrypted });
-        assertThat(result, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
-        break;
-      }
-      case UsersPasswordEncryptionMethod.Legacy: {
-        const isValid = await legacyVerify(passwordEncrypted, password);
-        assertThat(isValid, new RequestError({ code: 'session.invalid_credentials', status: 422 }));
-        break;
-      }
+    const { passwordEncrypted, passwordEncryptionMethod, id } = user;
+    const isValid = await isPasswordValid({
+      password,
+      passwordEncrypted,
+      passwordEncryptionMethod,
+    });
+
+    if (!isValid) {
+      return rejectInvalidCredentials(password, passwordEncryptionMethod);
     }
 
     // Migrate password to default algorithm: argon2i
