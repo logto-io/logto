@@ -60,10 +60,32 @@ const getCloudAdminTenantTokenValidationSet = async (
 const getOssAdminTenantTokenValidationSet = async (
   issuer: URL
 ): Promise<{ keys: JWK[]; issuer: string[] }> => {
+  const cached = jwksCache.get(issuer.href);
+
+  if (cached) {
+    return {
+      keys: cached,
+      issuer: [issuer.href],
+    };
+  }
+
   const privateKeys = await getAdminTenantPrivateSigningKeys();
 
+  if (privateKeys.length === 0) {
+    jwksCache.set(issuer.href, []);
+
+    return {
+      keys: [],
+      issuer: [issuer.href],
+    };
+  }
+
+  const keys = await getOidcProviderPublicJwks(privateKeys);
+
+  jwksCache.set(issuer.href, keys);
+
   return {
-    keys: await getOidcProviderPublicJwks(privateKeys),
+    keys,
     issuer: [issuer.href],
   };
 };

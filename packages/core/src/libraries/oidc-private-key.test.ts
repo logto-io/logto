@@ -29,7 +29,7 @@ const createPrivateKey = (id: string, createdAt: number, status?: OidcSigningKey
   status,
 });
 
-const createPemPrivateKey = (id: string, status: OidcSigningKeyStatus, createdAt: number) => {
+const createPemPrivateKey = (id: string, status: OidcSigningKeyStatus) => {
   const { privateKey } = generateKeyPairSync('ec', {
     namedCurve: 'P-384',
     privateKeyEncoding: {
@@ -45,7 +45,7 @@ const createPemPrivateKey = (id: string, status: OidcSigningKeyStatus, createdAt
   return {
     id,
     value: privateKey,
-    createdAt,
+    createdAt: Date.now(),
     status,
   };
 };
@@ -133,9 +133,9 @@ describe('getOidcProviderPrivateKeys', () => {
 
 describe('getOidcProviderPublicJwks', () => {
   it('exports public JWKS in oidc-provider key order', async () => {
-    const currentKey = createPemPrivateKey('current', OidcSigningKeyStatus.Current, 1);
-    const nextKey = createPemPrivateKey('next', OidcSigningKeyStatus.Next, 2);
-    const previousKey = createPemPrivateKey('previous', OidcSigningKeyStatus.Previous, 3);
+    const currentKey = createPemPrivateKey('current', OidcSigningKeyStatus.Current);
+    const nextKey = createPemPrivateKey('next', OidcSigningKeyStatus.Next);
+    const previousKey = createPemPrivateKey('previous', OidcSigningKeyStatus.Previous);
     const expectedKeys = await Promise.all(
       [currentKey, nextKey, previousKey].map(async ({ value }) => exportJWK(createPublicKey(value)))
     );

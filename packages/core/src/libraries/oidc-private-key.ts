@@ -49,11 +49,13 @@ export const rotateOidcPrivateKeyStatuses = (privateKeys: OidcPrivateKey[]): Oid
   ];
 };
 
+/**
+ * Export public JWKS from private signing keys in oidc-provider key order.
+ */
 export const getOidcProviderPublicJwks = async (privateKeys: OidcPrivateKey[]): Promise<JWK[]> => {
-  const providerPrivateKeys = getOidcProviderPrivateKeys(privateKeys).map(({ value }) =>
-    crypto.createPrivateKey(value)
+  const publicKeys = getOidcProviderPrivateKeys(privateKeys).map(({ value }) =>
+    crypto.createPublicKey(value)
   );
-  const publicKeys = providerPrivateKeys.map((key) => crypto.createPublicKey(key));
 
   return Promise.all(publicKeys.map(async (key) => exportJWK(key)));
 };
