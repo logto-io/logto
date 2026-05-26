@@ -169,14 +169,25 @@ describe('getAdminTenantTokenValidationSet', () => {
 
   it('returns empty keys with issuer when OSS private keys are empty', async () => {
     setEnvValues({ adminUrlSet: createAdminUrlSet('https://empty.example.com') });
-    methods.one.mockResolvedValueOnce({
-      value: [],
-    } as never);
+    const key = createPrivateKey('recovered', OidcSigningKeyStatus.Current);
+    methods.one
+      .mockResolvedValueOnce({
+        value: [],
+      } as never)
+      .mockResolvedValueOnce({
+        value: [key],
+      } as never);
 
     await expect(getAdminTenantTokenValidationSet()).resolves.toEqual({
       keys: [],
       issuer: ['https://empty.example.com/oidc'],
     });
+
+    await expect(getAdminTenantTokenValidationSet()).resolves.toEqual({
+      keys: [await getPublicJwk(key)],
+      issuer: ['https://empty.example.com/oidc'],
+    });
+    expect(methods.one).toHaveBeenCalledTimes(2);
   });
 
   it('throws when OSS private keys are malformed', async () => {

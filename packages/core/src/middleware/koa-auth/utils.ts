@@ -72,8 +72,6 @@ const getOssAdminTenantTokenValidationSet = async (
   const privateKeys = await getAdminTenantPrivateSigningKeys();
 
   if (privateKeys.length === 0) {
-    jwksCache.set(issuer.href, []);
-
     return {
       keys: [],
       issuer: [issuer.href],
