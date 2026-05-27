@@ -97,7 +97,7 @@ export const defaultMetadata: ConnectorMetadata = {
    * This is the email address that will be used as the sender of the email, should align with
    * the `fromEmail` of emailServiceProvider stored in cloud.systems table.
    */
-  fromEmail: 'no-reply@logto.email',
+  fromEmail: 'no-reply@logtoemailservice.com',
 };
 
 export const scope = ['send:email'];
