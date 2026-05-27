@@ -1,16 +1,19 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import { getI18nResource } from '@ac/i18n/utils';
-
 i18next.use(initReactI18next);
 
-const initI18n = async (initialLanguage?: string) => {
-  const { resources, lng } = await getI18nResource(initialLanguage);
+/**
+ * Initialize i18next without fetching phrase bundles.
+ * Remote phrases are loaded once in PageContextProvider via changeLanguage().
+ */
+const initI18n = async () => {
+  if (i18next.isInitialized) {
+    return;
+  }
 
   await i18next.init({
-    resources,
-    lng,
+    resources: {},
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
