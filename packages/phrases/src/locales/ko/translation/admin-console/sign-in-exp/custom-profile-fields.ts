@@ -38,8 +38,10 @@ const custom_profile_fields = {
     type_required: '속성 유형을 선택해주세요',
     create_button: '프로필 필드 생성',
     avatar: {
-      description: '회원가입 중 프로필 사진을 업로드하고 자를 수 있습니다. 업로드된 이미지 URL이 사용자 avatar로 저장됩니다.',
-      storage_not_configured: 'Avatar 업로드에는 구성된 storage provider가 필요합니다. 이 필드를 추가하기 전에 storage를 구성하세요.',
+      description:
+        '회원가입 중 프로필 사진을 업로드하고 자를 수 있습니다. 업로드된 이미지 URL이 사용자 avatar로 저장됩니다.',
+      storage_not_configured:
+        'Avatar 업로드에는 구성된 storage provider가 필요합니다. 이 필드를 추가하기 전에 storage를 구성하세요.',
     },
   },
   details: {
@@ -96,7 +98,8 @@ const custom_profile_fields = {
     required: '필수',
     required_description:
       '활성화하면 사용자가 이 필드를 반드시 입력해야 합니다. 비활성화하면 이 필드는 선택 사항입니다.',
-    avatar_upload_description: '최종 사용자는 회원가입 중 avatar를 업로드하고 자릅니다. 저장되는 값은 업로드된 이미지 URL입니다.',
+    avatar_upload_description:
+      '최종 사용자는 회원가입 중 avatar를 업로드하고 자릅니다. 저장되는 값은 업로드된 이미지 URL입니다.',
   },
 };
 

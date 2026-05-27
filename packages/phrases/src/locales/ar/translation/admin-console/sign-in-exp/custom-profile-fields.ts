@@ -36,8 +36,10 @@ const custom_profile_fields = {
     type_required: 'الرجاء تحديد نوع الخاصية',
     create_button: 'إنشاء حقل الملف الشخصي',
     avatar: {
-      description: 'يتيح للمستخدمين تحميل صورة الملف الشخصي وقصها أثناء التسجيل. يتم تخزين URL الصورة المرفوعة كـ avatar للمستخدم.',
-      storage_not_configured: 'يتطلب تحميل avatar وجود مزوّد تخزين مُعد. قم بإعداد storage قبل إضافة هذا الحقل.',
+      description:
+        'يتيح للمستخدمين تحميل صورة الملف الشخصي وقصها أثناء التسجيل. يتم تخزين URL الصورة المرفوعة كـ avatar للمستخدم.',
+      storage_not_configured:
+        'يتطلب تحميل avatar وجود مزوّد تخزين مُعد. قم بإعداد storage قبل إضافة هذا الحقل.',
     },
   },
   details: {
@@ -94,7 +96,8 @@ const custom_profile_fields = {
     required: 'مطلوب',
     required_description:
       'عند التمكين، يجب على المستخدمين ملء هذا الحقل. عند التعطيل، يكون هذا الحقل اختياريًا.',
-    avatar_upload_description: 'يقوم المستخدمون النهائيون بتحميل avatar وقصه أثناء التسجيل. القيمة المخزنة هي URL الصورة المرفوعة.',
+    avatar_upload_description:
+      'يقوم المستخدمون النهائيون بتحميل avatar وقصه أثناء التسجيل. القيمة المخزنة هي URL الصورة المرفوعة.',
   },
 };
 

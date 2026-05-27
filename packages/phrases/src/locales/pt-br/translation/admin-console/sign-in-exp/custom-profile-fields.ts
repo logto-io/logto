@@ -40,8 +40,10 @@ const custom_profile_fields = {
     type_required: 'Selecione um tipo de propriedade',
     create_button: 'Criar campo de perfil',
     avatar: {
-      description: 'Permite que os usuários façam upload e recortem a foto de perfil durante o cadastro. A URL da imagem enviada é armazenada como avatar do usuário.',
-      storage_not_configured: 'O upload de avatar requer um provedor de storage configurado. Configure o storage antes de adicionar este campo.',
+      description:
+        'Permite que os usuários façam upload e recortem a foto de perfil durante o cadastro. A URL da imagem enviada é armazenada como avatar do usuário.',
+      storage_not_configured:
+        'O upload de avatar requer um provedor de storage configurado. Configure o storage antes de adicionar este campo.',
     },
   },
   details: {
@@ -100,7 +102,8 @@ const custom_profile_fields = {
     required: 'Obrigatório',
     required_description:
       'Quando ativado, este campo deve ser preenchido pelos usuários. Quando desativado, este campo é opcional.',
-    avatar_upload_description: 'Os usuários finais fazem upload e recortam o avatar durante o cadastro. O valor armazenado é a URL da imagem enviada.',
+    avatar_upload_description:
+      'Os usuários finais fazem upload e recortam o avatar durante o cadastro. O valor armazenado é a URL da imagem enviada.',
   },
 };
 

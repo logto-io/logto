@@ -118,7 +118,9 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   );
 
   const isAvatarSelected = selectedField === avatarBuiltInFieldKey;
-  const isAvatarBlocked =
+  const isAvatarCreateBlocked =
+    isAvatarSelected && (isUserAssetsServiceLoading || !isUserAssetsServiceReady);
+  const shouldShowAvatarStorageWarning =
     isAvatarSelected && !isUserAssetsServiceLoading && !isUserAssetsServiceReady;
 
   const onSubmit = async () => {
@@ -133,7 +135,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
       setFieldNameInputError(errorT('custom_profile_fields.name_required'));
       return;
     }
-    if (isAvatarBlocked) {
+    if (isAvatarCreateBlocked) {
       return;
     }
     const fieldName = selectedField === 'custom' ? customDataFieldName : selectedField;
@@ -236,9 +238,8 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
             />
           </FormField>
         )}
-        {/* TODO: Replace placeholder storage warning once end-user avatar upload UI is implemented. */}
-        {isAvatarBlocked && (
-          <InlineNotification hasIcon variant="error">
+        {shouldShowAvatarStorageWarning && (
+          <InlineNotification hasIcon severity="error">
             {t('sign_in_exp.custom_profile_fields.modal.avatar.storage_not_configured')}
           </InlineNotification>
         )}
@@ -261,7 +262,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
               type="primary"
               title="sign_in_exp.custom_profile_fields.modal.create_button"
               isLoading={isSubmitting}
-              disabled={isAvatarBlocked}
+              disabled={isAvatarCreateBlocked}
               onClick={onSubmit}
             />
           </div>
