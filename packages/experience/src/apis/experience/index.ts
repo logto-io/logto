@@ -26,6 +26,7 @@ export {
   identifyAndSubmitInteraction,
 } from './interaction';
 
+export * from './avatar';
 export * from './mfa';
 export * from './social';
 export * from './one-time-token';

@@ -1,0 +1,66 @@
+@use '@/shared/scss/underscore' as _;
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(2);
+}
+
+.label {
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
+.description {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: _.unit(3);
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.placeholder {
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  background: var(--color-bg-neutral);
+  color: var(--color-type-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: _.unit(3);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.uploadButton {
+  cursor: pointer;
+  font: var(--font-label-2);
+  color: var(--color-brand-default);
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 50%;
+  }
+}

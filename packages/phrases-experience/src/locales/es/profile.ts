@@ -30,6 +30,15 @@ const profile = {
     checked: 'Sí',
     unchecked: 'No',
   },
+  avatar_upload: {
+    upload: 'Upload photo',
+    replace: 'Replace photo',
+    remove: 'Remove',
+    uploading: 'Uploading...',
+    error_file_type: 'File type must be {{extensions}}.',
+    error_file_size: 'File size must not exceed {{limit}}.',
+    error_upload: 'Failed to upload photo. Please try again.',
+  },
 };
 
 export default Object.freeze(profile);

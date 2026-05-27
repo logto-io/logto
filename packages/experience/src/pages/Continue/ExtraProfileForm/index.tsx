@@ -3,6 +3,7 @@ import { condString } from '@silverhand/essentials';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import * as s from 'superstruct';
 
+import AvatarUploadField from '@/components/InputFields/AvatarUploadField';
 import PrimitiveProfileInputField from '@/components/InputFields/PrimitiveProfileInputField';
 import Button from '@/shared/components/Button';
 
@@ -56,6 +57,23 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
               render={({ field: { onBlur, onChange, value } }) => {
                 if (type === CustomProfileFieldType.Address) {
                   return <AddressSubForm field={field} />;
+                }
+
+                if (name === 'avatar' && type === CustomProfileFieldType.Url) {
+                  s.assert(value, s.optional(s.string()));
+
+                  return (
+                    <AvatarUploadField
+                      name={name}
+                      label={label || getFieldLabel(name)}
+                      description={condString(description)}
+                      isRequired={required}
+                      value={value}
+                      errorMessage={errors[name]?.message}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                    />
+                  );
                 }
 
                 s.assert(value, s.optional(s.string()));
