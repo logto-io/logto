@@ -27,6 +27,7 @@ describe('zodTypeToSwagger', () => {
     expect(zodTypeToSwagger(jsonObjectGuard)).toEqual({
       type: 'object',
       description: 'arbitrary',
+      additionalProperties: true,
     });
   });
 
@@ -152,6 +153,14 @@ describe('zodTypeToSwagger', () => {
 
   it('preprocess type', () => {
     expect(zodTypeToSwagger(preprocess(String, string()))).toEqual({ type: 'string' });
+  });
+
+  it('refinement type', () => {
+    expect(zodTypeToSwagger(string().refine(() => true))).toEqual({
+      type: 'object',
+      description: 'Validator function',
+      additionalProperties: true,
+    });
   });
 
   it('nullable type', () => {
