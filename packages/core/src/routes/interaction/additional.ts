@@ -13,12 +13,18 @@ import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import { z } from 'zod';
 
-import type { WithInteractionDetailsContext } from '#src//middleware/koa-interaction-details.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
+import { createSocialAuthorizationUrl } from '#src/libraries/verification-helpers/social-verification.js';
+import { generateTotpSecret } from '#src/libraries/verification-helpers/totp-validation.js';
+import {
+  generateWebAuthnAuthenticationOptions,
+  generateWebAuthnRegistrationOptions,
+} from '#src/libraries/verification-helpers/webauthn.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { type WithI18nContext } from '#src/middleware/koa-i18next.js';
+import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getLogtoCookie } from '#src/utils/cookie.js';
@@ -32,13 +38,7 @@ import {
   isSignInInteractionResult,
   storeInteractionResult,
 } from './utils/interaction.js';
-import { createSocialAuthorizationUrl } from './utils/social-verification.js';
-import { generateTotpSecret } from './utils/totp-validation.js';
 import { sendVerificationCodeToIdentifier } from './utils/verification-code-validation.js';
-import {
-  generateWebAuthnAuthenticationOptions,
-  generateWebAuthnRegistrationOptions,
-} from './utils/webauthn.js';
 import { verifyIdentifier } from './verifications/index.js';
 import verifyProfile from './verifications/profile-verification.js';
 

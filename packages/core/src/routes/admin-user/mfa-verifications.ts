@@ -5,15 +5,18 @@ import qrcode from 'qrcode';
 import { object, string, z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  generateBackupCodes,
+  validateBackupCodes,
+} from '#src/libraries/verification-helpers/backup-code-validation.js';
+import {
+  generateTotpSecret,
+  validateTotpSecret,
+} from '#src/libraries/verification-helpers/totp-validation.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { transpileUserMfaVerifications } from '#src/utils/user.js';
 
-import {
-  generateBackupCodes,
-  validateBackupCodes,
-} from '../interaction/utils/backup-code-validation.js';
-import { generateTotpSecret, validateTotpSecret } from '../interaction/utils/totp-validation.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 export default function adminUserMfaVerificationsRoutes<T extends ManagementApiRouter>(

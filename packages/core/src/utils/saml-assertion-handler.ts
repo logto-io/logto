@@ -6,7 +6,7 @@ import { z } from 'zod';
 import {
   getInteractionFromProviderByJti,
   assignResultToInteraction,
-} from '#src/routes/interaction/utils/interaction.js';
+} from '#src/oidc/interaction.js';
 import {
   type SingleSignOnConnectorSession,
   singleSignOnConnectorSessionGuard,

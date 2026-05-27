@@ -16,6 +16,7 @@ import { z } from 'zod';
 import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type HookContextManager } from '#src/libraries/hook/context-manager.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import OidcConnector from '#src/sso/OidcConnector/index.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
@@ -27,13 +28,15 @@ import { safeParseUnknownJson } from '#src/utils/json.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { encryptAndSerializeTokenResponse } from '#src/utils/secret-encryption.js';
 
-import { type WithInteractionHooksContext } from '../middleware/koa-interaction-hooks.js';
-
 import {
   assignSingleSignOnAuthenticationResult,
   assignSingleSignOnSessionResult,
   getSingleSignOnSessionResult,
 } from './single-sign-on-session.js';
+
+type WithAppendDataHookContext = WithLogContext & {
+  appendDataHookContext: HookContextManager['appendDataHookContext'];
+};
 
 export const authorizationUrlPayloadGuard = z.object({
   state: z.string().min(1),
@@ -223,7 +226,7 @@ export const verifySsoIdentity = async (
 
 /** Verify the SSO identity and assign the authentication result to the interaction result */
 export const getSsoAuthentication = async (
-  ctx: WithInteractionHooksContext<WithLogContext>,
+  ctx: WithAppendDataHookContext,
   tenantContext: TenantContext,
   connectorData: SupportedSsoConnector,
   data: Record<string, unknown>
@@ -244,7 +247,7 @@ export const getSsoAuthentication = async (
 
 // Handle the SSO authentication result and return the user id
 export const handleSsoAuthentication = async (
-  ctx: WithInteractionHooksContext<WithLogContext>,
+  ctx: WithAppendDataHookContext,
   tenant: TenantContext,
   connectorData: SupportedSsoConnector,
   ssoAuthentication: SsoAuthenticationResult
@@ -289,7 +292,7 @@ export const handleSsoAuthentication = async (
 };
 
 const signInWithSsoAuthentication = async (
-  ctx: WithInteractionHooksContext<WithLogContext>,
+  ctx: WithAppendDataHookContext,
   { queries: { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries } }: TenantContext,
   {
     connectorData: { id: connectorId, syncProfile },
@@ -343,7 +346,7 @@ const signInWithSsoAuthentication = async (
 };
 
 const signInAndLinkWithSsoAuthentication = async (
-  ctx: WithInteractionHooksContext<WithLogContext>,
+  ctx: WithAppendDataHookContext,
   {
     queries: { userSsoIdentities: userSsoIdentitiesQueries, users: usersQueries },
     libraries: { users: usersLibrary },
@@ -416,7 +419,7 @@ const signInAndLinkWithSsoAuthentication = async (
 };
 
 export const registerWithSsoAuthentication = async (
-  ctx: WithInteractionHooksContext<WithLogContext>,
+  ctx: WithAppendDataHookContext,
   {
     queries: { userSsoIdentities: userSsoIdentitiesQueries },
     libraries: { users: usersLibrary },

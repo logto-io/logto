@@ -36,7 +36,7 @@ const tenantContext = new MockTenant(undefined, {
 });
 
 const mockBackupCodes = ['foo'];
-await mockEsmWithActual('../utils/backup-code-validation.js', () => ({
+await mockEsmWithActual('#src/libraries/verification-helpers/backup-code-validation.js', () => ({
   generateBackupCodes: jest.fn().mockReturnValue(mockBackupCodes),
 }));
 const { storeInteractionResult } = await mockEsmWithActual('../utils/interaction.js', () => ({

@@ -5,6 +5,14 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults } from '#src/libraries/session/index.js';
+import { getSingleSignOnAuthenticationResult } from '#src/libraries/verification-helpers/single-sign-on-session.js';
+import {
+  authorizationUrlPayloadGuard,
+  getSsoAuthentication,
+  getSsoAuthorizationUrl,
+  handleSsoAuthentication,
+  registerWithSsoAuthentication,
+} from '#src/libraries/verification-helpers/single-sign-on.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
@@ -15,14 +23,6 @@ import { interactionPrefix, ssoPath } from './const.js';
 import koaInteractionHooks from './middleware/koa-interaction-hooks.js';
 import koaInteractionSie from './middleware/koa-interaction-sie.js';
 import { getInteractionStorage, storeInteractionResult } from './utils/interaction.js';
-import { getSingleSignOnAuthenticationResult } from './utils/single-sign-on-session.js';
-import {
-  authorizationUrlPayloadGuard,
-  getSsoAuthentication,
-  getSsoAuthorizationUrl,
-  handleSsoAuthentication,
-  registerWithSsoAuthentication,
-} from './utils/single-sign-on.js';
 
 export default function singleSignOnRoutes<T extends IRouterParamContext>(
   router: Router<unknown, WithInteractionDetailsContext<WithLogContext<T>>>,
