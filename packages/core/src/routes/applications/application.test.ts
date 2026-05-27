@@ -271,6 +271,11 @@ describe('application route', () => {
     });
 
     expect(response.status).toEqual(200);
+    expect(response.body.protectedAppMetadata).toEqual({
+      ...existingProtectedAppMetadata,
+      origin,
+      additionalScopes,
+    });
     expect(syncAppConfigsToRemote).toHaveBeenCalledWith('foo');
     expect(updateApplicationById).toHaveBeenNthCalledWith(1, 'foo', {
       protectedAppMetadata: {

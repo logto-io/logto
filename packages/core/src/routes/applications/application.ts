@@ -387,7 +387,11 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
         }
       }
 
-      if (protectedAppMetadata) {
+      const updatedProtectedApplication = await (async () => {
+        if (!protectedAppMetadata) {
+          return;
+        }
+
         const { type, protectedAppMetadata: originProtectedAppMetadata } = pendingUpdateApplication;
         assertThat(type === ApplicationType.Protected, 'application.protected_application_only');
         assertThat(
@@ -397,7 +401,7 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
             status: 422,
           })
         );
-        await queries.applications.updateApplicationById(id, {
+        const updatedApplication = await queries.applications.updateApplicationById(id, {
           protectedAppMetadata: {
             ...originProtectedAppMetadata,
             ...protectedAppMetadata,
@@ -412,12 +416,13 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
           });
           throw error;
         }
-      }
+        return updatedApplication;
+      })();
 
       const updatedApplication =
         Object.keys(rest).length > 0
           ? await queries.applications.updateApplicationById(id, rest, 'replace')
-          : pendingUpdateApplication;
+          : (updatedProtectedApplication ?? pendingUpdateApplication);
 
       ctx.body = updatedApplication;
 
