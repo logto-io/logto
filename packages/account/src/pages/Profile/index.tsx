@@ -4,6 +4,7 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import AccountPageHeader from '@ac/components/AccountPageHeader';
 import PageFooter from '@ac/components/PageFooter';
 import { layoutClassNames } from '@ac/constants/layout';
 
@@ -86,14 +87,10 @@ const Profile = () => {
   return (
     <>
       <div className={homeStyles.container}>
-        <div className={homeStyles.header}>
-          <div className={classNames(homeStyles.title, layoutClassNames.pageTitle)}>
-            {t('account_center.page.profile_title')}
-          </div>
-          <div className={classNames(homeStyles.description, layoutClassNames.pageDescription)}>
-            {t('account_center.page.profile_description')}
-          </div>
-        </div>
+        <AccountPageHeader
+          titleKey="account_center.page.profile_title"
+          descriptionKey="account_center.page.profile_description"
+        />
         <div className={classNames(homeStyles.content, layoutClassNames.pageContent)}>
           {fieldRows.length > 0 && (
             <div className={classNames(styles.section, layoutClassNames.section)}>

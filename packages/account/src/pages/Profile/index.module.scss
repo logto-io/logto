@@ -101,11 +101,15 @@
   .name,
   .value {
     width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
+    gap: _.unit(4);
   }
 
   .changeButton {

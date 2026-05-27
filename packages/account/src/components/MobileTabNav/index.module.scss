@@ -1,0 +1,44 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.tabNav {
+  display: none;
+}
+
+:global(body.mobile) {
+  .tabNav {
+    display: flex;
+    align-items: flex-end;
+    gap: _.unit(6);
+    padding: 0 _.unit(5);
+    border-bottom: 1px solid var(--color-line-divider);
+    background: var(--color-bg-float-base);
+  }
+
+  .tab {
+    position: relative;
+    padding: _.unit(3) 0;
+    font: var(--font-label-2);
+    color: var(--color-type-primary);
+    text-decoration: none;
+    white-space: nowrap;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      border-radius: 2px 2px 0 0;
+      background: transparent;
+    }
+
+    &.active {
+      color: var(--color-type-link);
+
+      &::after {
+        background: var(--color-type-link);
+      }
+    }
+  }
+}
