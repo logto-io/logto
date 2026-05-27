@@ -3,6 +3,7 @@ import {
   type Application,
   type ApplicationSecret,
   type CreateApplication,
+  type ApplicationAccessControl,
   type CreateApplicationSecret,
   type OidcClientMetadata,
   type OrganizationWithRoles,
@@ -69,6 +70,16 @@ export const updateApplication = async (
       },
     })
     .json<Application>();
+
+export const replaceApplicationAccessControl = async (
+  applicationId: string,
+  accessControl: ApplicationAccessControl
+) =>
+  authedAdminApi
+    .put(`applications/${applicationId}/access-control`, {
+      json: accessControl,
+    })
+    .json<ApplicationAccessControl>();
 
 export const deleteApplication = async (applicationId: string) =>
   authedAdminApi.delete(`applications/${applicationId}`);

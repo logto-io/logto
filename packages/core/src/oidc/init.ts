@@ -45,6 +45,7 @@ import { i18next } from '#src/utils/i18n.js';
 import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 
+import { assertUserHasApplicationAccessForOidc } from './application-access-control.js';
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
@@ -263,6 +264,22 @@ export default function initOidc(
         }
       },
     },
+    loadExistingGrant: async (ctx) => {
+      const { account, client, provider, result, session } = ctx.oidc;
+      const grantId = result?.consent?.grantId ?? (client && session?.grantIdFor(client.clientId));
+
+      if (grantId && account && client) {
+        await assertUserHasApplicationAccessForOidc(
+          libraries.applicationAccessControl,
+          client.clientId,
+          account.accountId
+        );
+      }
+
+      if (grantId) {
+        return provider.Grant.find(String(grantId));
+      }
+    },
     extraParams: Object.values(ExtraParamsKey),
     extraTokenClaims: async (ctx, token) => {
       const [tokenExchangeClaims, organizationApiResourceClaims, jwtCustomizedClaims] =
@@ -416,7 +433,7 @@ export default function initOidc(
   });
 
   addOidcEventListeners(tenantId, oidc, queries);
-  registerGrants(oidc, envSet, queries);
+  registerGrants(oidc, envSet, queries, libraries);
 
   // Provide audit log context for event listeners
   oidc.use(koaAuditLog(queries));

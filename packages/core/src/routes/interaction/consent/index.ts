@@ -179,6 +179,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const redirectTo = await consent({
         ctx,
+        applicationAccessControl: libraries.applicationAccessControl,
         provider,
         queries,
         interactionDetails,

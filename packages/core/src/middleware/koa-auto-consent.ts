@@ -1,10 +1,11 @@
 import { buildBuiltInApplicationDataForTenant, isBuiltInApplicationId } from '@logto/schemas';
 import { type MiddlewareType } from 'koa';
-import { type IRouterParamContext } from 'koa-router';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { consent, getMissingScopes } from '#src/libraries/session/index.js';
+import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -12,12 +13,17 @@ import assertThat from '#src/utils/assert-that.js';
  * Automatically consent for the first party apps.
  */
 
-export default function koaAutoConsent<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
+export default function koaAutoConsent<
+  StateT,
+  ContextT extends WithInteractionDetailsContext,
+  ResponseBodyT,
+>(
   provider: Provider,
-  query: Queries
+  query: Queries,
+  libraries: Libraries
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
-    const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
+    const { interactionDetails } = ctx;
     const {
       params: { client_id: clientId },
       prompt,
@@ -44,6 +50,7 @@ export default function koaAutoConsent<StateT, ContextT extends IRouterParamCont
 
       const redirectTo = await consent({
         ctx,
+        applicationAccessControl: libraries.applicationAccessControl,
         provider,
         queries: query,
         interactionDetails,

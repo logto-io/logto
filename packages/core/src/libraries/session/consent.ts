@@ -2,8 +2,10 @@ import { jsonObjectGuard } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { PromptDetail, Provider } from 'oidc-provider';
+import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
+import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -85,6 +87,7 @@ const saveInteractionLastSubmissionToSession = async (
 
 export const consent = async ({
   ctx,
+  applicationAccessControl,
   provider,
   queries,
   interactionDetails,
@@ -93,6 +96,7 @@ export const consent = async ({
   resourceScopesToReject = {},
 }: {
   ctx: Context;
+  applicationAccessControl: Libraries['applicationAccessControl'];
   provider: Provider;
   queries: Queries;
   interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>;
@@ -103,19 +107,25 @@ export const consent = async ({
   const {
     session,
     grantId,
-    params: { client_id },
+    params: { client_id: clientId },
   } = interactionDetails;
 
   assertThat(session, 'session.not_found');
+  assertThat(
+    clientId && typeof clientId === 'string',
+    new errors.InvalidClient('client must be available')
+  );
 
   const { accountId } = session;
 
+  await applicationAccessControl.assertUserHasApplicationAccess(clientId, accountId);
+
   const grant =
     conditional(grantId && (await provider.Grant.find(grantId))) ??
-    new provider.Grant({ accountId, clientId: String(client_id) });
+    new provider.Grant({ accountId, clientId });
 
   await Promise.all([
-    saveUserFirstConsentedAppId(queries, accountId, String(client_id)),
+    saveUserFirstConsentedAppId(queries, accountId, clientId),
     saveInteractionLastSubmissionToSession(queries, interactionDetails),
   ]);
 

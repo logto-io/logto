@@ -13,6 +13,7 @@ import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaAutoConsent from '#src/middleware/koa-auto-consent.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
@@ -20,6 +21,7 @@ import koaDeviceFlowShortcut from '#src/middleware/koa-device-flow-shortcut.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaExperienceSsr from '#src/middleware/koa-experience-ssr.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
+import koaInteractionDetails from '#src/middleware/koa-interaction-details.js';
 import koaOidcErrorHandler from '#src/middleware/koa-oidc-error-handler.js';
 import koaSecurityHeaders, {
   koaExperienceSecurityHeaders,
@@ -242,8 +244,10 @@ export default class Tenant implements TenantContext {
         mount(
           `/${experience.routes.consent}`,
           compose([
-            koaConsentGuard(provider, libraries, queries),
-            koaAutoConsent(provider, queries),
+            koaInteractionDetails(provider),
+            koaConsentGuard(libraries, queries),
+            koaAutoConsent(provider, queries, libraries),
+            koaAppAccessControl(libraries),
           ])
         ),
         koaSpaProxy({ mountedApps, queries }),

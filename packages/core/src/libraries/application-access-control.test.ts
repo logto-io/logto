@@ -1,4 +1,5 @@
 import {
+  accountCenterApplicationId,
   createDefaultApplicationAccessControl,
   type Application,
   type ApplicationAccessControl,
@@ -80,6 +81,15 @@ describe('assertUserHasApplicationAccess()', () => {
 
     await expect(
       createLibrary().assertUserHasApplicationAccess(applicationId, userId)
+    ).resolves.not.toThrow();
+
+    expect(findApplicationById).not.toHaveBeenCalled();
+    expect(findApplicationAccessControl).not.toHaveBeenCalled();
+  });
+
+  it('allows built-in applications without querying the application', async () => {
+    await expect(
+      createLibrary().assertUserHasApplicationAccess(accountCenterApplicationId, userId)
     ).resolves.not.toThrow();
 
     expect(findApplicationById).not.toHaveBeenCalled();

@@ -3,6 +3,7 @@ import { type KoaContextWithOIDC, errors, type Adapter } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import { mockApplication } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -12,9 +13,12 @@ const { jest } = import.meta;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = async () => {};
+const assertUserHasApplicationAccess = jest.fn(async () => {
+  await Promise.resolve();
+});
 
 const mockHandler = (tenant = new MockTenant()) => {
-  return buildHandler(tenant.envSet, tenant.queries);
+  return buildHandler(tenant.envSet, tenant.queries, { assertUserHasApplicationAccess });
 };
 
 const clientId = 'some_client_id';
@@ -159,6 +163,10 @@ afterAll(() => {
 // check and basic token validation. Comprehensive token validation should be done in
 // integration tests.
 describe('refresh token grant', () => {
+  afterEach(() => {
+    assertUserHasApplicationAccess.mockClear();
+  });
+
   it('should throw when client is not available', async () => {
     const ctx = createOidcContext({ ...validOidcContext, client: undefined });
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidClient);
@@ -261,6 +269,17 @@ describe('refresh token grant', () => {
     stubGrant(ctx);
     stubAccount(ctx);
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
+  });
+
+  it('should throw before refresh token rotation when the user has no application access', async () => {
+    const ctx = createPreparedContext();
+    const tenant = new MockTenant();
+    const accessError = new RequestError('oidc.access_denied');
+    assertUserHasApplicationAccess.mockRejectedValueOnce(accessError);
+
+    await expect(mockHandler(tenant)(ctx, noop)).rejects.toThrow(errors.AccessDenied);
+
+    expect(validRefreshToken.consume).not.toHaveBeenCalled();
   });
 
   it('should throw if the user is not a member of the organization', async () => {
