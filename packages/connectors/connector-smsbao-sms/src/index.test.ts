@@ -28,9 +28,14 @@ describe('SMSBao SMS connector', () => {
       nock.enableNetConnect();
     });
 
+    beforeEach(() => {
+      getConfig.mockReset();
+      getConfig.mockResolvedValue(mockedConfig);
+    });
+
     afterEach(() => {
       nock.cleanAll();
-      vi.clearAllMocks();
+      vi.restoreAllMocks();
     });
 
     it('should send message successfully', async () => {

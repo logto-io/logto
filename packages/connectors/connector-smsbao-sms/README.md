@@ -1,6 +1,6 @@
 # SMSBao SMS connector
 
-The official Logto connector for SMSBao SMS service. [中文文档](https://github.com/logto-io/logto/tree/master/packages/connectors/connector-smsbao-sms/README.zh-CN.md)
+The official Logto connector for SMSBao SMS service. [中文文档](./README.zh-CN.md)
 
 ## Get started
 

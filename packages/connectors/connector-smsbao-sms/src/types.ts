@@ -4,14 +4,14 @@ import { templateTypeGuard } from '@logto/connector-kit';
 
 const templateGuard = z.object({
   usageType: templateTypeGuard,
-  content: z.string(),
+  content: z.string().min(1),
 });
 
 export const smsbaoSmsConfigGuard = z.object({
-  username: z.string(),
-  passwordOrApiKey: z.string(),
-  goodsId: z.string().optional(),
-  templates: z.array(templateGuard),
+  username: z.string().min(1),
+  passwordOrApiKey: z.string().min(1),
+  goodsId: z.string().min(1).optional(),
+  templates: z.array(templateGuard).min(1),
 });
 
 export type SmsbaoSmsConfig = z.infer<typeof smsbaoSmsConfigGuard>;
