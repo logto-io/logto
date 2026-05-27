@@ -38,7 +38,7 @@ export const verifyPasswordExpirationPolicy = (
     passwordExpiration.validPeriodDays,
     new RequestError({
       code: 'sign_in_experiences.password_expiration_invalid_period_days',
-      status: 500,
+      status: 422,
     })
   );
 
@@ -49,7 +49,7 @@ export const verifyPasswordExpirationPolicy = (
 
   assertThat(!isPasswordExpired, new RequestError({ code: 'password.expired', status: 422 }));
 
-  const reminderPeriodDays = passwordExpiration.reminderPeriodDays ?? 0;
+  const { reminderPeriodDays } = passwordExpiration;
   const reminderDaysUntilExpiration = Math.ceil((expiresAt - Date.now()) / dayInMs);
 
   const isInReminderWindow =

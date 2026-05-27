@@ -148,7 +148,7 @@ describe('password expiration policy', () => {
           reminderPeriodDays: 30,
         },
       },
-      422
+      400
     );
   });
 });

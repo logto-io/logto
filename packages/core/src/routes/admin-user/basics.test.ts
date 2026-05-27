@@ -352,6 +352,7 @@ describe('adminUserRoutes', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 10,
+        reminderPeriodDays: 0,
       },
     });
 
@@ -376,6 +377,20 @@ describe('adminUserRoutes', () => {
       .patch('/users/foo/password/expiration')
       .send({ isExpired: true });
     expect(response.status).toEqual(400);
+    expect(updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('PATCH /users/:userId/password/expiration should return 404 when user does not exist', async () => {
+    findUserById.mockRejectedValueOnce(
+      new RequestError({ code: 'user.user_not_exist', status: 404 })
+    );
+
+    const response = await userRequest
+      .patch('/users/foo/password/expiration')
+      .send({ isExpired: true });
+
+    expect(response.status).toEqual(404);
+    expect(mockedQueries.signInExperiences.findDefaultSignInExperience).not.toHaveBeenCalled();
     expect(updateUserById).not.toHaveBeenCalled();
   });
 

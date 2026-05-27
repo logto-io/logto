@@ -117,11 +117,12 @@ describe('verifyPasswordExpirationPolicy()', () => {
 
   it('throws when password expiration is enabled without validPeriodDays', () => {
     expect(() => {
+      // @ts-expect-error intentionally testing a persisted malformed policy.
       verifyPasswordExpirationPolicy({ enabled: true }, mockUser);
     }).toThrow(
       new RequestError({
         code: 'sign_in_experiences.password_expiration_invalid_period_days',
-        status: 500,
+        status: 422,
       })
     );
   });

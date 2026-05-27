@@ -8,6 +8,7 @@ import {
   ProductEvent,
   type SignInExperience,
   ForgotPasswordMethod,
+  passwordExpirationPolicyGuard,
 } from '@logto/schemas';
 import { conditional, type Optional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
@@ -39,27 +40,6 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
   [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
     policy
   );
-
-/**
- * Password expiration policy guard
- * - When enabled is false, only the enabled flag is accepted by the schema
- * - When enabled is true, validPeriodDays and reminderPeriodDays are required
- */
-const passwordExpirationPolicyGuard = z.discriminatedUnion('enabled', [
-  z.object({
-    enabled: z.literal(false),
-  }),
-  z.object({
-    enabled: z.literal(true),
-    validPeriodDays: z.number().int().min(1),
-    reminderPeriodDays: z.number().int().min(0),
-  }),
-]);
-
-type PasswordExpirationPolicy = z.infer<typeof passwordExpirationPolicyGuard>;
-
-const isValidPasswordExpirationPolicy = (policy: PasswordExpirationPolicy) =>
-  !policy.enabled || policy.reminderPeriodDays < policy.validPeriodDays;
 
 const signInExperienceResponseGuard = SignInExperiences.guard;
 const signInExperienceCreateGuard = SignInExperiences.createGuard;
@@ -276,13 +256,33 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         }
       }
 
-      // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/consistent-type-assertions
-      const currentPasswordExpiration = {
-        ...currentSettings.passwordExpiration,
-        ...passwordExpiration,
-      } as PasswordExpirationPolicy;
+      const passwordExpirationPayload =
+        passwordExpiration?.enabled === false
+          ? { enabled: false }
+          : {
+              ...currentSettings.passwordExpiration,
+              ...passwordExpiration,
+            };
 
-      if (EnvSet.values.isDevFeaturesEnabled && currentPasswordExpiration.enabled) {
+      const passwordExpirationResult = conditional(
+        EnvSet.values.isDevFeaturesEnabled &&
+          passwordExpirationPolicyGuard.safeParse(passwordExpirationPayload)
+      );
+
+      if (passwordExpirationResult) {
+        assertThat(
+          passwordExpirationResult.success,
+          new RequestError({
+            code: 'sign_in_experiences.password_expiration_invalid_period_days',
+            status: 422,
+          })
+        );
+      }
+
+      const currentPasswordExpiration =
+        passwordExpirationResult?.success === true ? passwordExpirationResult.data : undefined;
+
+      if (currentPasswordExpiration?.enabled) {
         const forgotPasswordAvailability = getForgotPasswordAvailability(
           connectors,
           forgotPasswordMethods ?? currentSettings.forgotPasswordMethods
@@ -292,14 +292,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           forgotPasswordAvailability.email || forgotPasswordAvailability.phone,
           new RequestError({
             code: 'sign_in_experiences.password_expiration_requires_forgot_password',
-            status: 422,
-          })
-        );
-
-        assertThat(
-          isValidPasswordExpirationPolicy(currentPasswordExpiration),
-          new RequestError({
-            code: 'sign_in_experiences.password_expiration_invalid_period_days',
             status: 422,
           })
         );
@@ -383,6 +375,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           normalizedCustomUiCsp !== undefined && {
             customUiCsp: normalizedCustomUiCsp,
           }
+        ),
+        ...conditional(
+          EnvSet.values.isDevFeaturesEnabled &&
+            passwordExpiration &&
+            currentPasswordExpiration && { passwordExpiration: currentPasswordExpiration }
         ),
       };
 

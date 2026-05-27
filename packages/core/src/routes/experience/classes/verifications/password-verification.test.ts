@@ -151,9 +151,10 @@ describe('PasswordVerification', () => {
     );
   });
 
-  it('should throw 500 when password expiration is enabled without validPeriodDays', async () => {
+  it('should throw 422 when password expiration is enabled without validPeriodDays', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
+      // @ts-expect-error intentionally testing a persisted malformed policy.
       passwordExpiration: {
         enabled: true,
       },
@@ -168,7 +169,7 @@ describe('PasswordVerification', () => {
     await expect(verification.verifyPasswordExpiration(mockUser)).rejects.toMatchError(
       new RequestError({
         code: 'sign_in_experiences.password_expiration_invalid_period_days',
-        status: 500,
+        status: 422,
       })
     );
     expect(findUserById).toHaveBeenCalledWith(mockUser.id);

@@ -378,6 +378,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
         const { findDefaultSignInExperience } = queries.signInExperiences;
 
+        await findUserById(userId);
         const { passwordExpiration } = await findDefaultSignInExperience();
 
         assertThat(

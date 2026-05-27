@@ -477,7 +477,7 @@ describe('PATCH /sign-in-exp', () => {
     });
 
     expect(response).toMatchObject({
-      status: 422,
+      status: 400,
     });
   });
 
@@ -498,6 +498,33 @@ describe('PATCH /sign-in-exp', () => {
           enabled: true,
           validPeriodDays: 30,
           reminderPeriodDays: 0,
+        },
+      },
+    });
+  });
+
+  it('should normalize disabled password expiration updates', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+        reminderPeriodDays: 5,
+      },
+    });
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      passwordExpiration: {
+        enabled: false,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        passwordExpiration: {
+          enabled: false,
         },
       },
     });
