@@ -36,6 +36,12 @@ const custom_profile_fields = {
     },
     type_required: 'Please select a property type',
     create_button: 'Create profile field',
+    avatar: {
+      description:
+        'Let users upload and crop their profile picture during sign-up. The uploaded image URL is stored as the user avatar.',
+      storage_not_configured:
+        'Avatar upload requires a configured storage provider. Configure storage before adding this field.',
+    },
   },
   details: {
     page_title: 'Profile field details',
@@ -92,6 +98,8 @@ const custom_profile_fields = {
     required: 'Required',
     required_description:
       'When enabled, this field must be filled out by users. When disabled, this field is optional.',
+    avatar_upload_description:
+      'End users upload and crop their avatar during sign-up. The stored value is the uploaded image URL.',
   },
 };
 

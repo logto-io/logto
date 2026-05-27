@@ -5,6 +5,8 @@ import {
   userProfileAddressKeys,
 } from '@logto/schemas';
 
+import { avatarBuiltInFieldKey } from './consts';
+
 const addressComponentKeySet = Object.freeze(new Set<string>(userProfileAddressKeys));
 
 export const isBuiltInAddressComponentKey = (
@@ -25,9 +27,13 @@ export const isBuiltInCustomProfileFieldKey = (
 ): key is (typeof builtInCustomProfileFieldKeys)[number] =>
   key !== undefined && builtInKeySet.has(key);
 
+// TODO: Remove placeholder avatar field helpers once Experience and Account Center avatar upload is implemented.
+export const isAvatarProfileField = (name?: string): boolean => name === avatarBuiltInFieldKey;
+
 export const getProfileFieldTypeByName = (name: string): CustomProfileFieldType => {
   switch (name) {
-    case 'avatar':
+    // TODO: Placeholder mapping until end-user avatar upload UI is implemented.
+    case avatarBuiltInFieldKey:
     case 'profile':
     case 'website': {
       return CustomProfileFieldType.Url;

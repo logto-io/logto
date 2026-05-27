@@ -11,19 +11,21 @@ import Modal from 'react-modal';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import ModalLayout from '@/ds-components/ModalLayout';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import useApi from '@/hooks/use-api';
+import useUserAssetsService from '@/hooks/use-user-assets-service';
 import modalStyles from '@/scss/modal.module.scss';
 import { isPaidPlan } from '@/utils/subscription';
 
 import CustomDataProfileNameField from '../../components/CustomDataProfileNameField';
-import { userAvailableBuiltInFieldKeys } from '../consts';
+import { avatarBuiltInFieldKey, getUserAvailableBuiltInFieldKeys } from '../consts';
 import { getInitialRequestPayloadByFieldName } from '../data-parser';
 
 import styles from './index.module.scss';
@@ -46,6 +48,8 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { t: errorT } = useTranslation('errors');
   const api = useApi();
+  const { isReady: isUserAssetsServiceReady, isLoading: isUserAssetsServiceLoading } =
+    useUserAssetsService();
 
   const [selectedField, setSelectedField] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -97,17 +101,27 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
     return true;
   }, [customDataFieldName, errorT, existingFieldNames]);
 
+  // TODO: Remove placeholder avatar field picker UI once Experience and Account Center avatar upload is implemented.
   const builtInFields = useMemo(
     () =>
-      userAvailableBuiltInFieldKeys
+      getUserAvailableBuiltInFieldKeys(isDevFeaturesEnabled)
         .map((name) => ({
           name,
           label: t(`profile.fields.${name === 'address' ? 'address.formatted' : name}`),
-          description: t(`profile.fields.${name}_description`),
+          description:
+            name === avatarBuiltInFieldKey
+              ? t('sign_in_exp.custom_profile_fields.modal.avatar.description')
+              : t(`profile.fields.${name}_description`),
         }))
         .filter(({ name }) => !existingFieldNames.includes(name)),
     [t, existingFieldNames]
   );
+
+  const isAvatarSelected = selectedField === avatarBuiltInFieldKey;
+  const isAvatarCreateBlocked =
+    isAvatarSelected && (isUserAssetsServiceLoading || !isUserAssetsServiceReady);
+  const shouldShowAvatarStorageWarning =
+    isAvatarSelected && !isUserAssetsServiceLoading && !isUserAssetsServiceReady;
 
   const onSubmit = async () => {
     if (!selectedField) {
@@ -119,6 +133,9 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
     }
     if (selectedField === 'custom' && !customDataFieldName) {
       setFieldNameInputError(errorT('custom_profile_fields.name_required'));
+      return;
+    }
+    if (isAvatarCreateBlocked) {
       return;
     }
     const fieldName = selectedField === 'custom' ? customDataFieldName : selectedField;
@@ -161,7 +178,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
               {t('sign_in_exp.custom_profile_fields.modal.built_in_properties')}
             </div>
             <RadioGroup
-              className={styles.group}
+              className={styles.groupBuiltIn}
               type="card"
               name="fieldName"
               value={selectedField}
@@ -221,6 +238,11 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
             />
           </FormField>
         )}
+        {shouldShowAvatarStorageWarning && (
+          <InlineNotification hasIcon severity="error">
+            {t('sign_in_exp.custom_profile_fields.modal.avatar.storage_not_configured')}
+          </InlineNotification>
+        )}
         {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
         {!collectUserProfileEnabled && isCloud && (
           <QuotaGuardFooter>
@@ -240,6 +262,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
               type="primary"
               title="sign_in_exp.custom_profile_fields.modal.create_button"
               isLoading={isSubmitting}
+              disabled={isAvatarCreateBlocked}
               onClick={onSubmit}
             />
           </div>
