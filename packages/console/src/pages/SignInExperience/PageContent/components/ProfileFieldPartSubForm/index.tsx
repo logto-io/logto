@@ -82,6 +82,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
           }}
         />
       </FormField>
+      {/* TODO: Placeholder field layout until end-user avatar upload UI is implemented. */}
       {!isAvatarField && (
         <FormField title="sign_in_exp.custom_profile_fields.details.field_type">
           <Controller
@@ -149,6 +150,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
           }}
         />
       </FormField>
+      {/* TODO: Replace placeholder avatar help text once Experience and Account Center avatar upload is implemented. */}
       {isAvatarField && (
         <InlineNotification hasIcon variant="plain">
           {t('sign_in_exp.custom_profile_fields.details.avatar_upload_description')}

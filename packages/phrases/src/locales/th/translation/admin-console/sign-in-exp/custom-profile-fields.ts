@@ -36,6 +36,10 @@ const custom_profile_fields = {
     },
     type_required: 'โปรดเลือกประเภทคุณสมบัติ',
     create_button: 'สร้างฟิลด์โปรไฟล์',
+    avatar: {
+      description: 'ผู้ใช้สามารถอัปโหลดและครอบตัดรูปโปรไฟล์ระหว่างสมัครได้ URL ของรูปที่อัปโหลดจะถูกเก็บเป็น avatar ของผู้ใช้',
+      storage_not_configured: 'การอัปโหลด avatar ต้องมี storage provider ที่ตั้งค่าแล้ว โปรดตั้งค่า storage ก่อนเพิ่มฟิลด์นี้',
+    },
   },
   details: {
     page_title: 'รายละเอียดฟิลด์โปรไฟล์',
@@ -90,6 +94,7 @@ const custom_profile_fields = {
     checkbox_unchecked: 'ไม่เช็ค (เท็จ)',
     required: 'ต้องกรอก',
     required_description: 'เมื่อเปิดใช้งาน ฟิลด์นี้จะต้องให้ผู้ใช้กรอก หากปิดจะเป็นตัวเลือกเสริม',
+    avatar_upload_description: 'ผู้ใช้งานปลายทางอัปโหลดและครอบตัด avatar ระหว่างสมัคร ค่าที่เก็บคือ URL ของรูปที่อัปโหลด',
   },
 };
 

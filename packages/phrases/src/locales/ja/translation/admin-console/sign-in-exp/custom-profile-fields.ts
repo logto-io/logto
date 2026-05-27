@@ -37,6 +37,10 @@ const custom_profile_fields = {
     },
     type_required: 'プロパティタイプを選択してください',
     create_button: 'プロフィールフィールドを作成',
+    avatar: {
+      description: 'サインアップ中にプロフィール写真をアップロードして切り抜けるようにします。アップロードされた画像 URL はユーザー avatar として保存されます。',
+      storage_not_configured: 'Avatar アップロードには storage provider の設定が必要です。このフィールドを追加する前に storage を設定してください。',
+    },
   },
   details: {
     page_title: 'プロフィールフィールドの詳細',
@@ -93,6 +97,7 @@ const custom_profile_fields = {
     required: '必須',
     required_description:
       '有効にすると、このフィールドはユーザーによって入力される必要があります。無効にすると、このフィールドはオプションです。',
+    avatar_upload_description: 'エンドユーザーはサインアップ中に avatar をアップロードして切り抜きます。保存される値はアップロードされた画像 URL です。',
   },
 };
 

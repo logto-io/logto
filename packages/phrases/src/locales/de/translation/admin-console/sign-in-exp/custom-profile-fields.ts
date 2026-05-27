@@ -39,6 +39,10 @@ const custom_profile_fields = {
     },
     type_required: 'Bitte wählen Sie einen Eigenschaftstyp aus',
     create_button: 'Profilfeld erstellen',
+    avatar: {
+      description: 'Ermöglicht Benutzern, beim Registrieren ein Profilbild hochzuladen und zuzuschneiden. Die URL des hochgeladenen Bildes wird als Benutzer-Avatar gespeichert.',
+      storage_not_configured: 'Der Avatar-Upload erfordert einen konfigurierten Storage-Anbieter. Konfigurieren Sie den Storage, bevor Sie dieses Feld hinzufügen.',
+    },
   },
   details: {
     page_title: 'Profilfeld-Details',
@@ -97,6 +101,7 @@ const custom_profile_fields = {
     required: 'Erforderlich',
     required_description:
       'Wenn aktiviert, muss dieses Feld von Benutzern ausgefüllt werden. Wenn deaktiviert, ist dieses Feld optional.',
+    avatar_upload_description: 'Endbenutzer laden beim Registrieren einen Avatar hoch und schneiden ihn zu. Der gespeicherte Wert ist die URL des hochgeladenen Bildes.',
   },
 };
 

@@ -101,6 +101,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
     return true;
   }, [customDataFieldName, errorT, existingFieldNames]);
 
+  // TODO: Remove placeholder avatar field picker UI once Experience and Account Center avatar upload is implemented.
   const builtInFields = useMemo(
     () =>
       getUserAvailableBuiltInFieldKeys(isDevFeaturesEnabled)
@@ -235,6 +236,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
             />
           </FormField>
         )}
+        {/* TODO: Replace placeholder storage warning once end-user avatar upload UI is implemented. */}
         {isAvatarBlocked && (
           <InlineNotification hasIcon variant="error">
             {t('sign_in_exp.custom_profile_fields.modal.avatar.storage_not_configured')}

@@ -35,6 +35,10 @@ const custom_profile_fields = {
     },
     type_required: '請選擇屬性類型',
     create_button: '建立個人資料欄位',
+    avatar: {
+      description: '讓用戶在註冊時上傳並裁剪頭像，上傳後的圖片 URL 將儲存為用戶 avatar。',
+      storage_not_configured: 'Avatar 上傳需要先設定儲存服務，請先設定 storage 後再新增此欄位。',
+    },
   },
   details: {
     page_title: '個人資料欄位詳情',
@@ -87,6 +91,7 @@ const custom_profile_fields = {
     checkbox_unchecked: '未選取 (False)',
     required: '必填',
     required_description: '啟用時，用戶必須填寫此欄位。停用時，此欄位為選填。',
+    avatar_upload_description: '終端用戶在註冊時上傳並裁剪頭像，儲存的值為上傳後的圖片 URL。',
   },
 };
 
