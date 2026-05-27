@@ -1,5 +1,10 @@
 import { passwordPolicyGuard, type PasswordPolicy } from '@logto/core-kit';
-import { ConnectorType, ForgotPasswordMethod, type SignInExperience } from '@logto/schemas';
+import {
+  ConnectorType,
+  ForgotPasswordMethod,
+  type SignInExperience,
+  type PasswordExpirationPolicy,
+} from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import useSWR from 'swr';
@@ -41,8 +46,8 @@ export const passwordPolicyFormParser = {
     customWords: passwordPolicy.rejects?.words?.join('\n') ?? '',
     isCustomWordsEnabled: Boolean(passwordPolicy.rejects?.words?.length),
     isPasswordExpirationEnabled: passwordExpiration.enabled ?? false,
-    passwordExpirationDays: passwordExpiration.validPeriodDays ?? 90,
-    passwordReminderDays: passwordExpiration.reminderPeriodDays ?? 0,
+    passwordExpirationDays: passwordExpiration.enabled ? passwordExpiration.validPeriodDays : 90,
+    passwordReminderDays: passwordExpiration.enabled ? passwordExpiration.reminderPeriodDays : 0,
   }),
   toSignInExperience: (
     formData: PasswordPolicyFormData
@@ -57,6 +62,15 @@ export const passwordPolicyFormParser = {
       hasAvailableForgotPasswordMethod: _,
       ...passwordPolicy
     } = formData;
+    const passwordExpiration: PasswordExpirationPolicy = isPasswordExpirationEnabled
+      ? {
+          enabled: true,
+          validPeriodDays: passwordExpirationDays,
+          reminderPeriodDays: passwordReminderDays,
+        }
+      : {
+          enabled: false,
+        };
 
     return {
       passwordPolicy: {
@@ -66,17 +80,7 @@ export const passwordPolicyFormParser = {
           words: isCustomWordsEnabled ? customWords.split('\n').filter(Boolean) : [],
         },
       },
-      ...conditional(
-        isDevFeaturesEnabled && {
-          passwordExpiration: {
-            enabled: isPasswordExpirationEnabled,
-            ...(isPasswordExpirationEnabled && {
-              validPeriodDays: passwordExpirationDays,
-              reminderPeriodDays: passwordReminderDays,
-            }),
-          },
-        }
-      ),
+      ...conditional(isDevFeaturesEnabled && { passwordExpiration }),
     };
   },
 };
