@@ -83,6 +83,7 @@ export const storageProviderGuard: Readonly<{
 // Email service provider
 export enum EmailServiceProvider {
   SendGrid = 'SendGrid',
+  Cloudflare = 'Cloudflare',
 }
 
 export const sendgridEmailServiceConfigGuard = z.object({
@@ -95,8 +96,19 @@ export const sendgridEmailServiceConfigGuard = z.object({
 
 export type SendgridEmailServiceConfig = z.infer<typeof sendgridEmailServiceConfigGuard>;
 
+export const cloudflareEmailServiceConfigGuard = z.object({
+  provider: z.literal(EmailServiceProvider.Cloudflare),
+  apiKey: z.string(),
+  accountId: z.string(),
+  fromName: z.string(),
+  fromEmail: z.string(),
+});
+
+export type CloudflareEmailServiceConfig = z.infer<typeof cloudflareEmailServiceConfigGuard>;
+
 export const emailServiceConfigGuard = z.discriminatedUnion('provider', [
   sendgridEmailServiceConfigGuard,
+  cloudflareEmailServiceConfigGuard,
 ]);
 
 export type EmailServiceConfig = z.infer<typeof emailServiceConfigGuard>;
