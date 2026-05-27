@@ -7,7 +7,7 @@ export const mockedParameters = {
   AddressType: '1',
   Format: 'XML',
   HtmlBody: '4',
-  RegionId: 'cn-hangzhou',
+  RegionId: 'cn-hangzhou' as const,
   ReplyToAddress: 'true',
   SignatureMethod: 'HMAC-SHA1',
   SignatureVersion: '1.0',

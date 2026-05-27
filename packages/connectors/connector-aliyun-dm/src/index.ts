@@ -18,7 +18,7 @@ import {
   getConfigTemplateByType,
 } from '@logto/connector-kit';
 
-import { defaultMetadata } from './constant.js';
+import { defaultMetadata, defaultRegionId } from './constant.js';
 import { singleSendMail } from './single-send-mail.js';
 import {
   aliyunDmConfigGuard,
@@ -35,7 +35,13 @@ const sendMessage =
     const { to, type, payload } = data;
     const config = inputConfig ?? (await getConfig(defaultMetadata.id));
     validateConfig(config, aliyunDmConfigGuard);
-    const { accessKeyId, accessKeySecret, accountName, fromAlias } = config;
+    const {
+      accessKeyId,
+      accessKeySecret,
+      accountName,
+      fromAlias,
+      regionId = defaultRegionId,
+    } = config;
 
     const customTemplate = await trySafe(async () => getI18nEmailTemplate?.(type, payload.locale));
 
@@ -53,6 +59,7 @@ const sendMessage =
       const httpResponse = await singleSendMail(
         {
           AccessKeyId: accessKeyId,
+          RegionId: regionId,
           AccountName: accountName,
           ReplyToAddress: 'false',
           AddressType: '1',
