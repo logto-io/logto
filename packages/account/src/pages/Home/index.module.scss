@@ -45,10 +45,3 @@
     gap: _.unit(4);
   }
 }
-
-/* stylelint-disable-next-line selector-class-pattern -- stable layout class from layoutClassNames.withTabNav */
-:global(body.mobile:has(.logto_ac-with-tab-nav)) {
-  .header {
-    display: none;
-  }
-}

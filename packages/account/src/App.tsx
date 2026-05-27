@@ -15,6 +15,7 @@ import { layoutClassNames } from '@ac/constants/layout';
 
 import styles from './App.module.scss';
 import Callback from './Callback';
+import { AccountLayoutProvider } from './Providers/AccountLayoutContext';
 import ErrorBoundary from './Providers/AppBoundary/ErrorBoundary';
 import LogtoErrorBoundary from './Providers/AppBoundary/LogtoErrorBoundary';
 import PageContextProvider from './Providers/PageContextProvider';
@@ -231,25 +232,32 @@ const Layout = () => {
           )}
         >
           {showsSidebar && <Sidebar items={accountNavItems} />}
-          <main
-            className={classNames(
-              styles.main,
-              !isFullPage && styles.cardMain,
-              isFullPage ? layoutClassNames.mainContent : layoutClassNames.cardMain
-            )}
+          <AccountLayoutProvider
+            value={{
+              showsMultiPageNav,
+              showsMobileTabNav,
+            }}
           >
-            <ErrorBoundary>
-              <LogtoErrorBoundary>
-                <Main />
-              </LogtoErrorBoundary>
-            </ErrorBoundary>
-            {!isFullPage && !hideLogtoBranding && (
-              <LogtoSignature
-                className={classNames(styles.signature, layoutClassNames.signature)}
-                theme={theme}
-              />
-            )}
-          </main>
+            <main
+              className={classNames(
+                styles.main,
+                !isFullPage && styles.cardMain,
+                isFullPage ? layoutClassNames.mainContent : layoutClassNames.cardMain
+              )}
+            >
+              <ErrorBoundary>
+                <LogtoErrorBoundary>
+                  <Main />
+                </LogtoErrorBoundary>
+              </ErrorBoundary>
+              {!isFullPage && !hideLogtoBranding && (
+                <LogtoSignature
+                  className={classNames(styles.signature, layoutClassNames.signature)}
+                  theme={theme}
+                />
+              )}
+            </main>
+          </AccountLayoutProvider>
         </div>
       </div>
     </div>
