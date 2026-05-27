@@ -14,7 +14,13 @@ const userAvailableBuiltInFieldKeys = Object.freeze([
   'address',
 ] as const);
 
-export const getUserAvailableBuiltInFieldKeys = (includeAvatar: boolean) =>
+type UserAvailableBuiltInFieldKey =
+  | (typeof userAvailableBuiltInFieldKeys)[number]
+  | typeof avatarBuiltInFieldKey;
+
+export const getUserAvailableBuiltInFieldKeys = (
+  includeAvatar: boolean
+): readonly UserAvailableBuiltInFieldKey[] =>
   includeAvatar
     ? [...userAvailableBuiltInFieldKeys, avatarBuiltInFieldKey]
-    : [...userAvailableBuiltInFieldKeys];
+    : userAvailableBuiltInFieldKeys;
