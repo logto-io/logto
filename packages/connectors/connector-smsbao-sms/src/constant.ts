@@ -3,6 +3,8 @@ import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
 export const endpoint = 'https://api.smsbao.com/sms';
 
+export const defaultTimeout = 5000;
+
 const defaultTemplateContent = '您的验证码是 {{code}}。如非本人操作，请忽略本短信';
 
 export const defaultMetadata: ConnectorMetadata = {
@@ -35,6 +37,7 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'API Key or MD5 Password',
       type: ConnectorConfigFormItemType.Text,
       required: true,
+      isConfidential: true,
       placeholder: '<api-key-or-md5-password>',
     },
     {
