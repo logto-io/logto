@@ -1,5 +1,6 @@
+import DynamicT from '@experience/shared/components/DynamicT';
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
+import type { TFuncKey } from 'i18next';
 
 import { useAccountLayout } from '@ac/Providers/AccountLayoutContext';
 import { layoutClassNames } from '@ac/constants/layout';
@@ -7,12 +8,11 @@ import { layoutClassNames } from '@ac/constants/layout';
 import styles from '../../pages/Home/index.module.scss';
 
 type Props = {
-  readonly titleKey: string;
-  readonly descriptionKey: string;
+  readonly titleKey: TFuncKey;
+  readonly descriptionKey: TFuncKey;
 };
 
 const AccountPageHeader = ({ titleKey, descriptionKey }: Props) => {
-  const { t } = useTranslation();
   const { showsMobileTabNav } = useAccountLayout();
 
   if (showsMobileTabNav) {
@@ -21,9 +21,11 @@ const AccountPageHeader = ({ titleKey, descriptionKey }: Props) => {
 
   return (
     <div className={styles.header}>
-      <div className={classNames(styles.title, layoutClassNames.pageTitle)}>{t(titleKey)}</div>
+      <div className={classNames(styles.title, layoutClassNames.pageTitle)}>
+        <DynamicT forKey={titleKey} />
+      </div>
       <div className={classNames(styles.description, layoutClassNames.pageDescription)}>
-        {t(descriptionKey)}
+        <DynamicT forKey={descriptionKey} />
       </div>
     </div>
   );
