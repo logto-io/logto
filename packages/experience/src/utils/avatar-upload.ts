@@ -14,8 +14,10 @@ export const avatarFileAccept = [...allowedAvatarMimeTypes].join(',');
 
 export const avatarFileExtensions = 'JPEG, PNG, GIF, WebP, BMP';
 
+const allowedAvatarMimeTypeSet = new Set<string>(allowedAvatarMimeTypes);
+
 export const isAllowedAvatarMimeType = (mimeType: string): mimeType is AllowedAvatarMimeType =>
-  allowedAvatarMimeTypes.includes(mimeType);
+  allowedAvatarMimeTypeSet.has(mimeType);
 
 export const validateAvatarFile = (file: File): 'file_size_exceeded' | 'file_type' | undefined => {
   if (file.size > maxUploadFileSize) {

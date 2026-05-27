@@ -48,9 +48,13 @@ describe('AvatarUploadField', () => {
     fireEvent.change(input, { target: { files: [file] } });
 
     await waitFor(() => {
-      expect(uploadAvatar).toHaveBeenCalledWith(file, expect.objectContaining({ signal: expect.any(AbortSignal) }));
-      expect(onChange).toHaveBeenCalledWith('https://example.com/avatar.png');
+      expect(uploadAvatar).toHaveBeenCalledTimes(1);
     });
+
+    const [uploadedFile, options] = jest.mocked(uploadAvatar).mock.calls[0] ?? [];
+    expect(uploadedFile).toBe(file);
+    expect(options?.signal).toBeInstanceOf(AbortSignal);
+    expect(onChange).toHaveBeenCalledWith('https://example.com/avatar.png');
   });
 
   it('shows a client-side error for unsupported file types', async () => {
