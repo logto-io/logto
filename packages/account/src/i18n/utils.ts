@@ -1,9 +1,4 @@
-import { matchSupportedLanguageTag } from '@logto/language-kit';
-import resource, {
-  builtInLanguages,
-  type BuiltInLanguageTag,
-  type LocalePhrase,
-} from '@logto/phrases-experience';
+import resource, { type LocalePhrase } from '@logto/phrases-experience';
 import type { LanguageInfo } from '@logto/schemas';
 import type { Resource } from 'i18next';
 import i18next from 'i18next';
@@ -14,27 +9,11 @@ import { getUiLocales } from '@ac/utils/account-center-route';
 
 const storageKey = 'i18nextLogtoUiLng';
 
-export const resolveLanguage = (language?: string): BuiltInLanguageTag | undefined =>
-  language
-    ? builtInLanguages.find(
-        (tag): tag is BuiltInLanguageTag =>
-          tag === matchSupportedLanguageTag([language], builtInLanguages).match
-      )
-    : undefined;
-
-export const resolveUiLocalesLanguage = (uiLocales?: string) => {
-  if (!uiLocales) {
-    return;
+export const detectLanguage = (languageSettings?: LanguageInfo) => {
+  if (languageSettings?.autoDetect === false) {
+    return languageSettings.fallbackLanguage;
   }
 
-  return uiLocales
-    .trim()
-    .split(/\s+/)
-    .map((language) => resolveLanguage(language))
-    .find(Boolean);
-};
-
-const detectLanguages = () => {
   const languageDetector = new LanguageDetector();
   languageDetector.init(
     { languageUtils: {} },
@@ -44,21 +23,7 @@ const detectLanguages = () => {
     }
   );
 
-  const detected = languageDetector.detect();
-
-  if (Array.isArray(detected)) {
-    return detected;
-  }
-
-  return detected ? [detected] : [];
-};
-
-export const detectLanguage = (languageSettings?: LanguageInfo) => {
-  if (languageSettings?.autoDetect === false) {
-    return languageSettings.fallbackLanguage;
-  }
-
-  return matchSupportedLanguageTag(detectLanguages(), builtInLanguages).match ?? 'en';
+  return languageDetector.detect();
 };
 
 export const getPreferredLanguage = ({
@@ -67,14 +32,18 @@ export const getPreferredLanguage = ({
 }: {
   languageSettings?: LanguageInfo;
   uiLocales?: string;
-}) => {
+}): string | undefined => {
   const normalizedUiLocales = uiLocales?.trim();
 
   if (normalizedUiLocales) {
     return normalizedUiLocales;
   }
 
-  return detectLanguage(languageSettings);
+  if (languageSettings?.autoDetect === false) {
+    return languageSettings.fallbackLanguage;
+  }
+
+  return undefined;
 };
 
 const getPhrases = async (language?: string) => {
@@ -114,7 +83,7 @@ export const getI18nResource = async (
   }
 };
 
-export const changeLanguage = async (language: string) => {
+export const changeLanguage = async (language?: string) => {
   const { resources, lng } = await getI18nResource(language);
 
   for (const [namespace, resource] of Object.entries(resources[lng] ?? {})) {
