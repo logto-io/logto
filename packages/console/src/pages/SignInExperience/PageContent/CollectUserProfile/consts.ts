@@ -1,9 +1,9 @@
 export const collectUserProfilePathname = '/sign-in-experience/collect-user-profile';
 
 // TODO: Remove placeholder Console config once Experience and Account Center avatar upload is implemented.
-export const avatarBuiltInFieldKey = 'avatar' as const;
+export const avatarBuiltInFieldKey = 'avatar';
 
-export const userAvailableBuiltInFieldKeys = Object.freeze([
+const userAvailableBuiltInFieldKeys = Object.freeze([
   'name',
   'fullname',
   'nickname',
