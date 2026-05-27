@@ -50,7 +50,6 @@ import {
   verifiedActionRoute,
 } from './constants/routes';
 import initI18n from './i18n/init';
-import { resolveUiLocalesLanguage } from './i18n/utils';
 import BackupCodeBinding from './pages/BackupCodeBinding';
 import BackupCodeView from './pages/BackupCodeView';
 import Email from './pages/Email';
@@ -68,16 +67,12 @@ import UpdateSuccess from './pages/UpdateSuccess';
 import Username from './pages/Username';
 import VerifiedAction from './pages/VerifiedAction';
 import { useAuthRedirect } from './use-auth-redirect';
-import {
-  accountCenterBasePath,
-  getUiLocales,
-  handleAccountCenterRoute,
-} from './utils/account-center-route';
+import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
 import { hasVisibleSecuritySection } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
 
 handleAccountCenterRoute();
-void initI18n(resolveUiLocalesLanguage(getUiLocales()));
+void initI18n();
 
 export const Main = () => {
   const params = new URLSearchParams(window.location.search);

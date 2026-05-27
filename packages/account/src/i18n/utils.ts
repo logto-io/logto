@@ -1,32 +1,19 @@
-import { matchSupportedLanguageTag } from '@logto/language-kit';
-import { builtInLanguages, type BuiltInLanguageTag } from '@logto/phrases-experience';
+import resource, { type LocalePhrase } from '@logto/phrases-experience';
 import type { LanguageInfo } from '@logto/schemas';
+import type { Resource } from 'i18next';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+import { getPhrases as getPhrasesApi } from '@ac/apis/phrases';
+import { getUiLocales } from '@ac/utils/account-center-route';
+
 const storageKey = 'i18nextLogtoUiLng';
 
-export const resolveLanguage = (language?: string): BuiltInLanguageTag | undefined =>
-  language
-    ? builtInLanguages.find(
-        (tag): tag is BuiltInLanguageTag =>
-          tag === matchSupportedLanguageTag([language], builtInLanguages).match
-      )
-    : undefined;
-
-export const resolveUiLocalesLanguage = (uiLocales?: string) => {
-  if (!uiLocales) {
-    return;
+export const detectLanguage = (languageSettings?: LanguageInfo) => {
+  if (languageSettings?.autoDetect === false) {
+    return languageSettings.fallbackLanguage;
   }
 
-  return uiLocales
-    .trim()
-    .split(/\s+/)
-    .map((language) => resolveLanguage(language))
-    .find(Boolean);
-};
-
-const detectLanguages = () => {
   const languageDetector = new LanguageDetector();
   languageDetector.init(
     { languageUtils: {} },
@@ -36,21 +23,7 @@ const detectLanguages = () => {
     }
   );
 
-  const detected = languageDetector.detect();
-
-  if (Array.isArray(detected)) {
-    return detected;
-  }
-
-  return detected ? [detected] : [];
-};
-
-export const detectLanguage = (languageSettings?: LanguageInfo) => {
-  if (languageSettings?.autoDetect === false) {
-    return resolveLanguage(languageSettings.fallbackLanguage) ?? 'en';
-  }
-
-  return matchSupportedLanguageTag(detectLanguages(), builtInLanguages).match ?? 'en';
+  return languageDetector.detect();
 };
 
 export const getPreferredLanguage = ({
@@ -59,8 +32,63 @@ export const getPreferredLanguage = ({
 }: {
   languageSettings?: LanguageInfo;
   uiLocales?: string;
-}) => resolveUiLocalesLanguage(uiLocales) ?? detectLanguage(languageSettings);
+}): string | undefined => {
+  const normalizedUiLocales = uiLocales?.trim();
 
-export const changeLanguage = async (language: string) => {
-  await i18next.changeLanguage(resolveLanguage(language) ?? 'en');
+  if (normalizedUiLocales) {
+    return normalizedUiLocales;
+  }
+
+  if (languageSettings?.autoDetect === false) {
+    return languageSettings.fallbackLanguage;
+  }
+
+  return undefined;
+};
+
+const getPhrases = async (language?: string) => {
+  const uiLocales = getUiLocales();
+  const preferredLanguage = language ?? uiLocales;
+  const detectedLanguage = detectLanguage();
+  const response = await getPhrasesApi({
+    localLanguage: Array.isArray(detectedLanguage) ? detectedLanguage.join(' ') : detectedLanguage,
+    language: preferredLanguage,
+  });
+
+  const remotePhrases = await response.json<LocalePhrase>();
+  const lng = response.headers.get('Content-Language');
+
+  if (!lng) {
+    throw new Error('lng not found');
+  }
+
+  return { phrases: remotePhrases, lng };
+};
+
+export const getI18nResource = async (
+  language?: string
+): Promise<{ resources: Resource; lng: string }> => {
+  try {
+    const { phrases, lng } = await getPhrases(language);
+
+    return {
+      resources: { [lng]: phrases },
+      lng,
+    };
+  } catch {
+    return {
+      resources: { en: resource.en },
+      lng: 'en',
+    };
+  }
+};
+
+export const changeLanguage = async (language?: string) => {
+  const { resources, lng } = await getI18nResource(language);
+
+  for (const [namespace, resource] of Object.entries(resources[lng] ?? {})) {
+    i18next.addResourceBundle(lng, namespace, resource);
+  }
+
+  await i18next.changeLanguage(lng);
 };
