@@ -51,6 +51,15 @@ If a hook cannot be fixed safely within the current task, stop and report the bl
 4. If first run (empty database): `pnpm cli db seed` and `pnpm cli connector link -p .`
 5. Start dev: `pnpm start:dev` (skip `pnpm dev` which re-runs prepack; prepack is already done by the update script)
 
+### Optional dev workflows (skills)
+
+Skills live under [.agents/skills/](.agents/skills/) ([Agent Skills](https://agentskills.io) format; Cursor Cloud and other agents discover `.agents/skills/` and `.cursor/skills/`). Read a skill **only when the task needs it**—do not load full command lists into context unless relevant.
+
+| Skill | Read when |
+|-------|-----------|
+| [.agents/skills/logto-local-storage/SKILL.md](.agents/skills/logto-local-storage/SKILL.md) | Avatar/file upload, `storage.not_configured`, `user-assets`, collect-profile **avatar** field |
+| [.agents/skills/logto-sign-in-exp-demo-app/SKILL.md](.agents/skills/logto-sign-in-exp-demo-app/SKILL.md) | Experience **screenshots**, PR visuals, `/demo-app`, Live preview, `signUpProfileFields`, sign-up/sign-in walkthrough |
+
 ### Key caveats
 
 - `rsync` must be installed (needed by `@logto/core` for `copy:apidocs`). Install with `sudo apt-get install -y rsync` if missing.
