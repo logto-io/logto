@@ -150,6 +150,12 @@ describe('Test config guard', () => {
     expect(result.success && result.data).toMatchObject(expect.objectContaining(mockedConfig));
   });
 
+  it('config with login auth missing user/pass (e.g. IP-authorized SMTP relay)', () => {
+    const testConfig = { ...mockedConfig, auth: { type: 'login' as const } };
+    const result = smtpConfigGuard.safeParse(testConfig);
+    expect(result.success && result.data).toMatchObject(expect.objectContaining(testConfig));
+  });
+
   it('config with debugging and security options', () => {
     const testConfig = {
       ...mockedConfig,

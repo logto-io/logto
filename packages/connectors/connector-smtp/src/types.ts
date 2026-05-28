@@ -26,11 +26,23 @@ const templateGuard = z.object({
  * Auth Options
  * See https://nodemailer.com/smtp/#authentication and https://nodemailer.com/smtp/oauth2/.
  */
-const loginAuthGuard = z.object({
-  user: z.string(),
-  pass: z.string(),
-  type: z.enum(['login', 'Login', 'LOGIN']).optional(),
-});
+/**
+ * `user` and `pass` are optional so that SMTP relays which authorize by source
+ * (e.g. IP/VLAN) — and therefore don't take credentials — still validate after
+ * the route layer's `cleanDeep` strips empty-string values from the config.
+ * Nodemailer treats absent `user`/`pass` as "skip auth".
+ *
+ * `.strict()` is required: with both fields optional this guard would otherwise
+ * swallow oauth2 auth payloads in the `authGuard` union (which only differ by
+ * their extra keys), silently stripping `privateKey` / `clientId` / etc.
+ */
+const loginAuthGuard = z
+  .object({
+    user: z.string().optional(),
+    pass: z.string().optional(),
+    type: z.enum(['login', 'Login', 'LOGIN']).optional(),
+  })
+  .strict();
 
 const oauth2AuthWithKeyGuard = z.object({
   type: z.enum(['oauth2', 'OAuth2', 'OAUTH2']).optional(),
