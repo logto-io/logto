@@ -9,6 +9,8 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
+import { assertApplicationAccessControlHasRules } from './application-access-control/utils.js';
+
 // Keep this OpenAPI-friendly guard in sync with the canonical guard below. The canonical guard
 // uses transforms for dedupe/merge/limits, which do not round-trip cleanly through OpenAPI output.
 const applicationAccessControlOpenApiGuard = z.object({
@@ -99,7 +101,11 @@ export default function applicationAccessControlRoutes<T extends ManagementApiRo
       );
 
       assertNonEmptyOrganizationRoleRules(accessControl);
-      await findApplicationById(applicationId);
+      const { appLevelAccessControlEnabled } = await findApplicationById(applicationId);
+
+      if (appLevelAccessControlEnabled) {
+        assertApplicationAccessControlHasRules(accessControl);
+      }
 
       await replaceApplicationAccessControl(applicationId, accessControl);
 

@@ -27,6 +27,7 @@ import { parseSearchParamsForSearch } from '#src/utils/search.js';
 import { captureEvent } from '../../utils/posthog.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
+import { assertApplicationAccessControlHasRules } from './application-access-control/utils.js';
 import applicationAccessControlRoutes from './application-access-control.js';
 import applicationCustomDataRoutes from './application-custom-data.js';
 import { generateInternalSecret } from './application-secret.js';
@@ -329,6 +330,12 @@ export default function applicationRoutes<T extends ManagementApiRouter>(
 
       if (pendingUpdateApplication.type === ApplicationType.SAML) {
         throw new RequestError('application.saml.use_saml_app_api');
+      }
+
+      if (rest.appLevelAccessControlEnabled === true) {
+        assertApplicationAccessControlHasRules(
+          await queries.applicationAccessControl.findApplicationAccessControl(id)
+        );
       }
 
       assertThirdPartyApplicationTokenExchangeDisabled(

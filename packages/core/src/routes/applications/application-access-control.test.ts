@@ -73,9 +73,12 @@ describe('application access-control route', () => {
     const applicationRequest = createApplicationRequest();
 
     const patch = { appLevelAccessControlEnabled: true };
+    findApplicationAccessControl.mockResolvedValueOnce(buildAccessControl());
+
     const response = await applicationRequest.patch('/applications/foo').send(patch);
 
     expect(response.status).toEqual(200);
+    expect(findApplicationAccessControl).toHaveBeenCalledWith('foo');
     expect(updateApplicationById).toHaveBeenCalledWith('foo', patch, 'replace');
     expect(response.body).toMatchObject(patch);
 
@@ -86,6 +89,17 @@ describe('application access-control route', () => {
       .send(patch);
 
     expect(disabledResponse.status).toEqual(400);
+    expect(updateApplicationById).not.toHaveBeenCalled();
+  });
+
+  it('PATCH /applications/:applicationId should reject enabling app-level access control with empty rules', async () => {
+    const applicationRequest = createApplicationRequest();
+
+    const response = await applicationRequest
+      .patch('/applications/foo')
+      .send({ appLevelAccessControlEnabled: true });
+
+    expect(response.status).toEqual(422);
     expect(updateApplicationById).not.toHaveBeenCalled();
   });
 
@@ -152,6 +166,21 @@ describe('application access-control route', () => {
         organizationRoleRules: [{ organizationId: 'organization-2', organizationRoleIds: [] }],
       })
     );
+
+    expect(response.status).toEqual(422);
+    expect(replaceApplicationAccessControl).not.toHaveBeenCalled();
+  });
+
+  it('PUT /applications/:applicationId/access-control should reject empty rules when app-level access control is enabled', async () => {
+    const applicationRequest = createApplicationRequest();
+    findApplicationById.mockResolvedValueOnce({
+      ...mockApplication,
+      appLevelAccessControlEnabled: true,
+    });
+
+    const response = await applicationRequest
+      .put('/applications/foo/access-control')
+      .send(createDefaultApplicationAccessControl());
 
     expect(response.status).toEqual(422);
     expect(replaceApplicationAccessControl).not.toHaveBeenCalled();

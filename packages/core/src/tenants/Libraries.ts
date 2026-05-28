@@ -1,3 +1,4 @@
+import { createApplicationAccessControlLibrary } from '#src/libraries/application-access-control.js';
 import { createApplicationLibrary } from '#src/libraries/application.js';
 import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
@@ -41,6 +42,7 @@ export default class Libraries {
   );
 
   passcodes = createPasscodeLibrary(this.queries, this.connectors);
+  applicationAccessControl = createApplicationAccessControlLibrary(this.queries);
   applications = createApplicationLibrary(this.queries);
   verificationStatuses = createVerificationStatusLibrary(this.queries);
   samlApplications = createSamlApplicationsLibrary(this.queries);
