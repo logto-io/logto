@@ -61,16 +61,19 @@ describe('admin console application management (roles)', () => {
     expect(rolesWithSearchParams.find(({ id }) => id === role2.id)).toBeUndefined();
   });
 
-  it('should fail when assign duplicated role to app', async () => {
+  it('should silently ignore already-assigned roles on re-assign', async () => {
     const applicationType = ApplicationType.MachineToMachine;
     const application = await createApplication(generateStandardId(), applicationType);
     const role = await createRole({ type: RoleType.MachineToMachine });
 
-    await assignRolesToApplication(application.id, [role.id]);
-    await expectRejects(assignRolesToApplication(application.id, [role.id]), {
-      code: 'application.role_exists',
-      status: 422,
-    });
+    const firstResponse = await assignRolesToApplication(application.id, [role.id]);
+    expect(firstResponse).toEqual({ roleIds: [role.id], addedRoleIds: [role.id] });
+
+    const secondResponse = await assignRolesToApplication(application.id, [role.id]);
+    expect(secondResponse).toEqual({ roleIds: [role.id], addedRoleIds: [] });
+
+    const roles = await getApplicationRoles(application.id);
+    expect(roles).toHaveLength(1);
   });
 
   it('should fail when assign role to non-m2m app', async () => {

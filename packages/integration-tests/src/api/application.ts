@@ -86,9 +86,11 @@ export const getApplicationRoles = async (applicationId: string, keyword?: strin
 };
 
 export const assignRolesToApplication = async (applicationId: string, roleIds: string[]) =>
-  authedAdminApi.post(`applications/${applicationId}/roles`, {
-    json: { roleIds },
-  });
+  authedAdminApi
+    .post(`applications/${applicationId}/roles`, {
+      json: { roleIds },
+    })
+    .json<{ roleIds: string[]; addedRoleIds: string[] }>();
 
 export const putRolesToApplication = async (applicationId: string, roleIds: string[]) =>
   authedAdminApi.put(`applications/${applicationId}/roles`, {
