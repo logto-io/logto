@@ -1,5 +1,6 @@
 ---
 "@logto/cli": minor
+"@logto/schemas": patch
 ---
 
 add `--dapc` (alias `--disable-admin-pwned-password-check`) option to both `install` and `db seed` commands for air-gapped OSS deployments.
