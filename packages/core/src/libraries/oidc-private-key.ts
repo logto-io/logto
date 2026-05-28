@@ -1,18 +1,23 @@
+import crypto from 'node:crypto';
+
 import type { OidcPrivateKey } from '@logto/schemas';
 import {
   OidcSigningKeyStatus,
   getCurrentOidcPrivateKey,
   getImmediatelyRotatedOidcPrivateKeys,
   getOidcPrivateKeysAfterDeletion,
+  getOidcProviderPrivateKeys,
   getRotationStateForStagedRotation,
   getStagedRotatedOidcPrivateKeys,
   normalizeOidcPrivateKeys,
 } from '@logto/schemas';
+import type { JWK } from 'jose';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import type Queries from '#src/tenants/Queries.js';
 import { syncSigningKeyRotationStateCache } from '#src/tenants/signing-key-rotation-state.js';
+import { exportJWK } from '#src/utils/jwks.js';
 
 export {
   getCanonicalOidcPrivateKeys,
@@ -42,6 +47,17 @@ export const rotateOidcPrivateKeyStatuses = (privateKeys: OidcPrivateKey[]): Oid
     { ...nextKey, status: OidcSigningKeyStatus.Current },
     { ...currentKey, status: OidcSigningKeyStatus.Previous },
   ];
+};
+
+/**
+ * Export public JWKS from private signing keys in oidc-provider key order.
+ */
+export const getOidcProviderPublicJwks = async (privateKeys: OidcPrivateKey[]): Promise<JWK[]> => {
+  const publicKeys = getOidcProviderPrivateKeys(privateKeys).map(({ value }) =>
+    crypto.createPublicKey(value)
+  );
+
+  return Promise.all(publicKeys.map(async (key) => exportJWK(key)));
 };
 
 export class OidcPrivateKeyLibrary {
