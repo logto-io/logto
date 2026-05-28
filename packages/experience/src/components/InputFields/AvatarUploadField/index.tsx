@@ -1,11 +1,14 @@
 import { maxUploadFileSize } from '@logto/schemas';
+import classNames from 'classnames';
 import { HTTPError } from 'ky';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { uploadAvatar } from '@/apis/experience/avatar';
 import UserAvatar from '@/assets/icons/default-user-avatar.svg?react';
+import RotatingRingIcon from '@/shared/components/Button/RotatingRingIcon';
 import ErrorMessage from '@/shared/components/ErrorMessage';
+import NotchedBorder from '@/shared/components/InputFields/InputField/NotchedBorder';
 import {
   avatarFileAccept,
   avatarFileExtensions,
@@ -38,13 +41,17 @@ const AvatarUploadField = ({
   onBlur,
   onChange,
 }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'profile.avatar_upload' });
+  const { t } = useTranslation();
+  const { t: tAvatar } = useTranslation(undefined, { keyPrefix: 'profile.avatar_upload' });
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController>();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>();
   const [fileInputKey, setFileInputKey] = useState(0);
+
+  const labelWithOptionalSuffix =
+    label && (isRequired ? label : t('input.label_with_optional', { label }));
 
   useEffect(() => {
     return () => {
@@ -72,9 +79,9 @@ const AvatarUploadField = ({
         }
       }
 
-      setUploadError(t('error_upload'));
+      setUploadError(tAvatar('error_upload'));
     },
-    [t]
+    [tAvatar]
   );
 
   const handleFileChange = useCallback(
@@ -88,12 +95,14 @@ const AvatarUploadField = ({
       const validationError = validateAvatarFile(file);
 
       if (validationError === 'file_size_exceeded') {
-        setUploadError(t('error_file_size', { limit: formatFileSizeLimit(maxUploadFileSize) }));
+        setUploadError(
+          tAvatar('error_file_size', { limit: formatFileSizeLimit(maxUploadFileSize) })
+        );
         return;
       }
 
       if (validationError === 'file_type') {
-        setUploadError(t('error_file_type', { extensions: avatarFileExtensions }));
+        setUploadError(tAvatar('error_file_type', { extensions: avatarFileExtensions }));
         return;
       }
 
@@ -123,7 +132,7 @@ const AvatarUploadField = ({
         setFileInputKey((key) => key + 1);
       }
     },
-    [handleUploadError, onBlur, onChange, t]
+    [handleUploadError, onBlur, onChange, tAvatar]
   );
 
   const handleRemove = useCallback(() => {
@@ -133,28 +142,49 @@ const AvatarUploadField = ({
   }, [onBlur, onChange]);
 
   const displayError = uploadError ?? errorMessage;
+  const isDanger = Boolean(displayError);
+  const showHint = !value && !isUploading;
 
   return (
-    <div className={className}>
-      <div className={styles.field}>
-        {label && (
-          <label className={styles.label} htmlFor={inputId}>
-            {label}
-            {isRequired && ' *'}
-          </label>
-        )}
-        {description && <div className={styles.description}>{description}</div>}
-        <div className={styles.content}>
-          {value ? (
-            <img
-              className={styles.avatar}
-              src={value}
-              alt={label ?? name}
-              referrerPolicy="no-referrer"
-            />
-          ) : (
-            <UserAvatar className={styles.placeholder} />
-          )}
+    <div className={classNames(styles.container, isDanger && styles.danger, className)}>
+      <div className={styles.inputField}>
+        <div className={styles.row}>
+          <div className={styles.avatarSlot}>
+            {isUploading ? (
+              <div className={styles.loadingIcon}>
+                <RotatingRingIcon />
+              </div>
+            ) : value ? (
+              <img
+                className={styles.avatar}
+                src={value}
+                alt={label ?? name}
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <UserAvatar className={styles.placeholder} />
+            )}
+          </div>
+          <div className={styles.actions}>
+            <button
+              type="button"
+              className={styles.actionButton}
+              disabled={isUploading}
+              onClick={openFilePicker}
+            >
+              {isUploading ? tAvatar('uploading') : value ? tAvatar('replace') : tAvatar('upload')}
+            </button>
+            {value && !isUploading && (
+              <button type="button" className={styles.actionButton} onClick={handleRemove}>
+                {tAvatar('remove')}
+              </button>
+            )}
+            {showHint && (
+              <span className={styles.hint}>
+                {tAvatar('hint', { limit: formatFileSizeLimit(maxUploadFileSize) })}
+              </span>
+            )}
+          </div>
           <input
             key={fileInputKey}
             ref={inputRef}
@@ -165,24 +195,18 @@ const AvatarUploadField = ({
             accept={avatarFileAccept}
             onChange={handleFileChange}
           />
-          <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.uploadButton}
-              disabled={isUploading}
-              onClick={openFilePicker}
-            >
-              {isUploading ? t('uploading') : value ? t('replace') : t('upload')}
-            </button>
-            {value && !isUploading && (
-              <button type="button" className={styles.uploadButton} onClick={handleRemove}>
-                {t('remove')}
-              </button>
-            )}
-          </div>
         </div>
-        {displayError && <ErrorMessage className={styles.description}>{displayError}</ErrorMessage>}
+        {labelWithOptionalSuffix && (
+          <NotchedBorder
+            isActive
+            label={labelWithOptionalSuffix}
+            isDanger={isDanger}
+            isFocused={false}
+          />
+        )}
       </div>
+      {description && <div className={styles.description}>{description}</div>}
+      {displayError && <ErrorMessage className={styles.errorMessage}>{displayError}</ErrorMessage>}
     </div>
   );
 };

@@ -35,6 +35,7 @@ const profile = {
     replace: 'Replace photo',
     remove: 'Remove',
     uploading: 'Uploading...',
+    hint: 'JPG, PNG, GIF, WebP, or BMP up to {{limit}}.',
     error_file_type: 'File type must be {{extensions}}.',
     error_file_size: 'File size must not exceed {{limit}}.',
     error_upload: 'Failed to upload photo. Please try again.',

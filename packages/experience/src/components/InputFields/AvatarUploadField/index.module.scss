@@ -1,66 +1,103 @@
 @use '@/shared/scss/underscore' as _;
 
-.field {
+.container {
+  position: relative;
+
+  &.danger {
+    .inputField {
+      /* stylelint-disable-next-line no-descending-specificity */
+      .row {
+        caret-color: var(--color-danger-default);
+      }
+    }
+  }
+}
+
+.inputField {
+  position: relative;
+  min-height: 44px;
+  background: inherit;
+}
+
+.row {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-direction: column;
-  gap: _.unit(2);
-}
-
-.label {
-  font: var(--font-label-2);
-  color: var(--color-type-primary);
-}
-
-.description {
-  font: var(--font-body-3);
-  color: var(--color-type-secondary);
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   gap: _.unit(3);
+  padding: _.unit(2) _.unit(4);
+  min-height: 44px;
+}
+
+.avatarSlot {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .avatar {
-  width: 96px;
-  height: 96px;
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
   object-fit: cover;
   object-position: center;
 }
 
 .placeholder {
-  width: 96px;
-  height: 96px;
-  border-radius: 12px;
-  background: var(--color-bg-neutral);
-  color: var(--color-type-secondary);
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
 }
 
 .actions {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: _.unit(3);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: _.unit(1);
+  min-width: 0;
+}
+
+.actionButton {
+  cursor: pointer;
+  font: var(--font-label-2);
+  color: var(--color-brand-default);
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: start;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 50%;
+  }
+}
+
+.hint {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
 }
 
 .hiddenInput {
   display: none;
 }
 
-.uploadButton {
-  cursor: pointer;
-  font: var(--font-label-2);
+.description {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+  padding-top: _.unit(1);
+  margin-inline-start: _.unit(0.5);
+}
+
+.errorMessage {
+  margin-top: _.unit(1);
+  margin-inline-start: _.unit(0.5);
+}
+
+.loadingIcon {
+  width: 24px;
+  height: 24px;
   color: var(--color-brand-default);
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &.disabled {
-    cursor: not-allowed;
-    opacity: 50%;
-  }
 }
