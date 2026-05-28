@@ -5,6 +5,19 @@ import path from 'node:path';
 
 const isDependencyKey = (key) => key.toLowerCase().endsWith('dependencies');
 const allowedCustomKeys = Object.freeze(['name', 'version', 'description', 'author']);
+const logoFileRegex = /^logo(?:-dark)?\.(?:svg|png|webp|jpe?g)$/;
+const logoFileOrder = Object.freeze([
+  'logo.svg',
+  'logo.png',
+  'logo.webp',
+  'logo.jpg',
+  'logo.jpeg',
+  'logo-dark.svg',
+  'logo-dark.png',
+  'logo-dark.webp',
+  'logo-dark.jpg',
+  'logo-dark.jpeg',
+]);
 
 // Assuming execution context `packages/connectors`
 const templateJson = Object.fromEntries(
@@ -22,6 +35,22 @@ const templateKeys = Object.keys(templateJson);
  */
 const scriptExceptions = { 'connector-oauth2': ['prepack', 'build', 'build:test'] };
 
+const getLogoFiles = async (packageDirectory) => {
+  const files = await fs.readdir(packageDirectory);
+
+  return files
+    .filter((file) => logoFileRegex.test(file))
+    .toSorted(
+      (fileA, fileB) =>
+        logoFileOrder.indexOf(fileA) - logoFileOrder.indexOf(fileB) || fileA.localeCompare(fileB)
+    );
+};
+
+const getPackageFiles = async (packageDirectory) => [
+  ...templateJson.files.filter((file) => !logoFileRegex.test(file)),
+  ...(await getLogoFiles(packageDirectory)),
+];
+
 const sync = async () => {
   const packagesDirectory = './';
   const packages = await fs.readdir(packagesDirectory);
@@ -30,7 +59,8 @@ const sync = async () => {
     packages
       .filter((packageName) => packageName.startsWith('connector-'))
       .map(async (packageName) => {
-        const packageJsonPath = path.join(packagesDirectory, packageName, 'package.json');
+        const packageDirectory = path.join(packagesDirectory, packageName);
+        const packageJsonPath = path.join(packageDirectory, 'package.json');
 
         // Sync package.json
         const current = JSON.parse(await fs.readFile(packageJsonPath, 'utf8'));
@@ -61,6 +91,7 @@ const sync = async () => {
             {
               ...current,
               ...templateJson,
+              files: await getPackageFiles(packageDirectory),
               scripts: { ...templateJson.scripts, ...scriptOverrides },
             },
             undefined,
