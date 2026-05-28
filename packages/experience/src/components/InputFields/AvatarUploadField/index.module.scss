@@ -1,14 +1,11 @@
 @use '@/shared/scss/underscore' as _;
 
+$avatar-size: _.unit(20);
+
 .container {
   display: flex;
   flex-direction: column;
   gap: _.unit(1);
-}
-
-.label {
-  font: var(--font-body-3);
-  color: var(--color-type-secondary);
 }
 
 .row {
@@ -19,34 +16,40 @@
 
 .avatarSlot {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: $avatar-size;
+  height: $avatar-size;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
+  width: $avatar-size;
+  height: $avatar-size;
+  border-radius: _.unit(2);
   object-fit: cover;
   object-position: center;
 }
 
 .placeholder {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
+  width: $avatar-size;
+  height: $avatar-size;
+  border-radius: _.unit(2);
 }
 
 .controls {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: flex-start;
-  gap: _.unit(1);
+  gap: _.unit(2);
   min-width: 0;
-  padding-top: _.unit(0.5);
+  min-height: $avatar-size;
+}
+
+.label {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
 }
 
 .buttonRow {
@@ -84,6 +87,7 @@
 .hint {
   font: var(--font-body-3);
   color: var(--color-type-secondary);
+  margin-top: auto;
 }
 
 .description {
@@ -97,10 +101,11 @@
 
 .errorMessage {
   margin-top: _.unit(0.5);
+  margin-inline-start: calc($avatar-size + _.unit(3));
 }
 
 .loadingIcon {
-  width: 24px;
-  height: 24px;
+  width: _.unit(6);
+  height: _.unit(6);
   color: var(--color-brand-default);
 }

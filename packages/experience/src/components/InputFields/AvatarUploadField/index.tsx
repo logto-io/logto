@@ -146,11 +146,6 @@ const AvatarUploadField = ({
 
   return (
     <div className={classNames(styles.container, className)}>
-      {labelWithOptionalSuffix && (
-        <label className={styles.label} htmlFor={inputId}>
-          {labelWithOptionalSuffix}
-        </label>
-      )}
       <div className={styles.row}>
         <div className={styles.avatarSlot}>
           {isUploading ? (
@@ -169,6 +164,11 @@ const AvatarUploadField = ({
           )}
         </div>
         <div className={styles.controls}>
+          {labelWithOptionalSuffix && (
+            <label className={styles.label} htmlFor={inputId}>
+              {labelWithOptionalSuffix}
+            </label>
+          )}
           <div className={styles.buttonRow}>
             <button
               type="button"
