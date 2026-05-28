@@ -55,7 +55,7 @@ export const getTenantDatabaseDsn = async (tenantId: string) => {
 };
 
 /**
- * Read admin tenant signing keys through the shared pool.
+ * Read admin tenant signing keys through the shared pool for OSS admin token validation.
  *
  * Like `getTenantDatabaseDsn`, this cannot use tenant-scoped Queries because callers may need
  * admin tenant keys while running in a user tenant whose pool is scoped by RLS.
