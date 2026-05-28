@@ -81,6 +81,7 @@ export const secureWebhooks = '/developers/webhooks/secure-webhooks';
 export const auditLogs = '/developers/audit-logs';
 export const logtoCloud = '/logto-cloud';
 export const logtoCloudTenantSettings = '/logto-cloud/tenant-settings';
+export const logtoCloudDevTenantDataRetention = '/logto-cloud/dev-tenant-data-retention';
 export const customDomain = '/logto-cloud/custom-domain#use-custom-domain';
 export const customDomainFeatureLink = '/logto-cloud/custom-domain';
 export const retrieveTokenStorage = '/secret-vault/federated-token-set#token-retrieval';

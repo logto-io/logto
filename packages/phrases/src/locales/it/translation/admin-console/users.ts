@@ -22,6 +22,8 @@ const users = {
   placeholder_title: 'Gestione utenti',
   placeholder_description:
     "Ogni utente ha un profilo contenente tutte le informazioni dell'utente. È composto da dati di base, identità sociali e dati personalizzati.",
+  dev_tenant_data_retention_notice:
+    'Nei tenant di sviluppo, gli account utente più vecchi di 90 giorni vengono eliminati automaticamente. <a>Scopri di più</a>',
 };
 
 export default Object.freeze(users);

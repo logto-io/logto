@@ -22,6 +22,8 @@ const users = {
   placeholder_title: 'การจัดการผู้ใช้',
   placeholder_description:
     'ผู้ใช้แต่ละคนจะมีโปรไฟล์ที่รวบรวมข้อมูลทั้งหมดของผู้ใช้ ประกอบด้วยข้อมูลพื้นฐาน ตัวตนโซเชียล และข้อมูลแบบกำหนดเอง',
+  dev_tenant_data_retention_notice:
+    'ใน dev tenant บัญชีผู้ใช้ที่มีอายุเกิน 90 วันจะถูกลบโดยอัตโนมัติ <a>เรียนรู้เพิ่มเติม</a>',
 };
 
 export default Object.freeze(users);

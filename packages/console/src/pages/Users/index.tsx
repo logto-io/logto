@@ -28,6 +28,7 @@ import { buildUrl, formatSearchKeyword } from '@/utils/url';
 import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
 import CreateForm from './components/CreateForm';
+import DevTenantDataRetentionNotice from './components/DevTenantDataRetentionNotice';
 import SuspendedTag from './components/SuspendedTag';
 
 const pageSize = defaultPageSize;
@@ -78,6 +79,7 @@ function Users() {
           }}
         />
       </div>
+      <DevTenantDataRetentionNotice />
       <Table
         className={pageLayout.table}
         rowGroups={[{ key: 'users', data: users }]}
