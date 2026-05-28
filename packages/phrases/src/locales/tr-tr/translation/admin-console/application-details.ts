@@ -120,6 +120,38 @@ const application_details = {
   field_custom_data_tip:
     'Önceden tanımlanmış uygulama özelliklerinde listelenmeyen ek özel uygulama bilgileri, iş ile ilgili ayarlar ve yapılandırmalar gibi.',
   custom_data_invalid: 'Özel veri geçerli bir JSON nesnesi olmalıdır',
+  access_control: {
+    name: 'Kurallar',
+    title: 'Uygulama düzeyinde erişim kontrolü',
+    description:
+      'Erişim kuralları yapılandırarak bu uygulamada kimlerin oturum açabileceğini sınırlayın.',
+    enable: 'Erişim kontrolünü etkinleştir',
+    enable_description:
+      'Yapılandırılmış kurallardan en az biriyle eşleşen kullanıcılar bu uygulamaya erişebilir.',
+    enable_without_rules_notice:
+      'Erişim kontrolünü etkinleştirmeden önce en az bir erişim kuralı ekleyin.',
+    enabled_notice:
+      'Erişim kontrolü açık. En az bir kuralla eşleşen kullanıcılar bu uygulamaya erişebilir.',
+    disabled_notice: 'Erişim kontrolü kapalı. Tüm kayıtlı kullanıcılar bu uygulamaya erişebilir.',
+    load_error: 'Erişim kontrolü kuralları yüklenemedi.',
+    rules: 'Erişim kuralları',
+    rules_description:
+      'Kullanıcılar yapılandırılmış kurallardan herhangi biriyle eşleştiğinde bu uygulamaya erişebilir.',
+    empty_rules_description: 'Henüz yapılandırılmış kural yok.',
+    rule_count: '{{count}} kural',
+    rule_count_other: '{{count}} kural',
+    rule_users: 'Kullanıcılar',
+    rule_users_description: 'Belirli kullanıcılar bu uygulamaya erişebilir.',
+    rule_user_roles: 'Kullanıcı rolleri',
+    rule_user_roles_description:
+      'Seçilen kullanıcı rollerine atanmış kullanıcılar bu uygulamaya erişebilir.',
+    rule_organizations: 'Organizasyonlar',
+    rule_organizations_description:
+      'Seçilen organizasyonların mevcut ve gelecekteki tüm üyeleri bu uygulamaya erişebilir.',
+    rule_organization_roles: 'Organizasyon rolleri',
+    rule_organization_roles_description:
+      'Seçilen organizasyonlarda seçilen organizasyon rollerine sahip üyeler bu uygulamaya erişebilir.',
+  },
   branding: {
     name: 'Markalama',
     description: 'Uygulamanızın adını ve logosunu açıklama ekranında özelleştirin.',

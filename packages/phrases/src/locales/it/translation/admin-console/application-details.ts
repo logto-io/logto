@@ -122,6 +122,39 @@ const application_details = {
   field_custom_data_tip:
     "Ulteriori informazioni personalizzate sull'applicazione non elencate nelle proprietà predefinite dell'applicazione, come impostazioni e configurazioni specifiche del business.",
   custom_data_invalid: 'I dati personalizzati devono essere un oggetto JSON valido',
+  access_control: {
+    name: 'Regole',
+    title: 'Controllo accessi a livello di app',
+    description:
+      'Limita quali utenti possono accedere a questa applicazione configurando regole di accesso.',
+    enable: 'Abilita controllo accessi',
+    enable_description:
+      'Solo gli utenti che corrispondono ad almeno una regola configurata possono accedere a questa app.',
+    enable_without_rules_notice:
+      'Aggiungi almeno una regola di accesso prima di abilitare il controllo accessi.',
+    enabled_notice:
+      'Il controllo accessi è attivo. Solo gli utenti che corrispondono ad almeno una regola possono accedere a questa app.',
+    disabled_notice:
+      'Il controllo accessi è disattivato. Tutti gli utenti registrati possono accedere a questa app.',
+    load_error: 'Impossibile caricare le regole di controllo accessi.',
+    rules: 'Regole di accesso',
+    rules_description:
+      'Gli utenti possono accedere a questa app quando corrispondono a una qualsiasi delle regole configurate.',
+    empty_rules_description: 'Non è stata ancora configurata alcuna regola.',
+    rule_count: '{{count}} regola',
+    rule_count_other: '{{count}} regole',
+    rule_users: 'Utenti',
+    rule_users_description: 'Utenti specifici possono accedere a questa app.',
+    rule_user_roles: 'Ruoli utente',
+    rule_user_roles_description:
+      'Gli utenti assegnati ai ruoli utente selezionati possono accedere a questa app.',
+    rule_organizations: 'Organizzazioni',
+    rule_organizations_description:
+      'Tutti i membri attuali e futuri delle organizzazioni selezionate possono accedere a questa app.',
+    rule_organization_roles: 'Ruoli organizzazione',
+    rule_organization_roles_description:
+      'I membri con i ruoli organizzazione selezionati nelle organizzazioni selezionate possono accedere a questa app.',
+  },
   branding: {
     name: 'Marchio',
     description: "Personalizza il nome e il logo dell'applicazione sullo schermo del consenso.",

@@ -120,6 +120,33 @@ const application_details = {
   field_custom_data_tip:
     '사전 정의된 애플리케이션 속성에 나열되지 않은 추가 사용자 지정 애플리케이션 정보, 비즈니스 관련 설정 및 구성과 같은 항목들.',
   custom_data_invalid: '사용자 지정 데이터는 유효한 JSON 객체여야 합니다',
+  access_control: {
+    name: '규칙',
+    title: '앱 수준 접근 제어',
+    description: '접근 규칙을 구성하여 이 애플리케이션에 로그인할 수 있는 사용자를 제한합니다.',
+    enable: '접근 제어 사용',
+    enable_description: '구성된 규칙 중 하나 이상과 일치하는 사용자만 이 앱에 접근할 수 있습니다.',
+    enable_without_rules_notice: '접근 제어를 사용하기 전에 접근 규칙을 하나 이상 추가하세요.',
+    enabled_notice:
+      '접근 제어가 켜져 있습니다. 하나 이상의 규칙과 일치하는 사용자만 이 앱에 접근할 수 있습니다.',
+    disabled_notice: '접근 제어가 꺼져 있습니다. 등록된 모든 사용자가 이 앱에 접근할 수 있습니다.',
+    load_error: '접근 제어 규칙을 불러오지 못했습니다.',
+    rules: '접근 규칙',
+    rules_description: '사용자는 구성된 규칙 중 하나와 일치하면 이 앱에 접근할 수 있습니다.',
+    empty_rules_description: '아직 구성된 규칙이 없습니다.',
+    rule_count: '{{count}}개 규칙',
+    rule_count_other: '{{count}}개 규칙',
+    rule_users: '사용자',
+    rule_users_description: '특정 사용자가 이 앱에 접근할 수 있습니다.',
+    rule_user_roles: '사용자 역할',
+    rule_user_roles_description: '선택한 사용자 역할에 할당된 사용자가 이 앱에 접근할 수 있습니다.',
+    rule_organizations: '조직',
+    rule_organizations_description:
+      '선택한 조직의 현재 및 향후 모든 구성원이 이 앱에 접근할 수 있습니다.',
+    rule_organization_roles: '조직 역할',
+    rule_organization_roles_description:
+      '선택한 조직에서 선택한 조직 역할을 가진 구성원이 이 앱에 접근할 수 있습니다.',
+  },
   branding: {
     name: '브랜딩',
     description: '동의 화면에서 앱의 표시 이름과 로고를 사용자 정의하세요.',

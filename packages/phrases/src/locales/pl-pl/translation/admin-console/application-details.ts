@@ -121,6 +121,39 @@ const application_details = {
   field_custom_data_tip:
     'Dodatkowe niestandardowe informacje o aplikacji, które nie są wymienione w predefiniowanych właściwościach aplikacji, takie jak ustawienia i konfiguracje specyficzne dla biznesu.',
   custom_data_invalid: 'Dane niestandardowe muszą być poprawnym obiektem JSON',
+  access_control: {
+    name: 'Reguły',
+    title: 'Kontrola dostępu na poziomie aplikacji',
+    description:
+      'Ogranicz, którzy użytkownicy mogą logować się do tej aplikacji, konfigurując reguły dostępu.',
+    enable: 'Włącz kontrolę dostępu',
+    enable_description:
+      'Tylko użytkownicy pasujący do co najmniej jednej skonfigurowanej reguły mogą uzyskać dostęp do tej aplikacji.',
+    enable_without_rules_notice:
+      'Dodaj co najmniej jedną regułę dostępu przed włączeniem kontroli dostępu.',
+    enabled_notice:
+      'Kontrola dostępu jest włączona. Tylko użytkownicy pasujący do co najmniej jednej reguły mogą uzyskać dostęp do tej aplikacji.',
+    disabled_notice:
+      'Kontrola dostępu jest wyłączona. Wszyscy zarejestrowani użytkownicy mogą uzyskać dostęp do tej aplikacji.',
+    load_error: 'Nie udało się załadować reguł kontroli dostępu.',
+    rules: 'Reguły dostępu',
+    rules_description:
+      'Użytkownicy mogą uzyskać dostęp do tej aplikacji, gdy pasują do dowolnej skonfigurowanej reguły.',
+    empty_rules_description: 'Nie skonfigurowano jeszcze żadnych reguł.',
+    rule_count: '{{count}} reguła',
+    rule_count_other: '{{count}} reguł',
+    rule_users: 'Użytkownicy',
+    rule_users_description: 'Określeni użytkownicy mogą uzyskać dostęp do tej aplikacji.',
+    rule_user_roles: 'Role użytkowników',
+    rule_user_roles_description:
+      'Użytkownicy przypisani do wybranych ról użytkownika mogą uzyskać dostęp do tej aplikacji.',
+    rule_organizations: 'Organizacje',
+    rule_organizations_description:
+      'Wszyscy obecni i przyszli członkowie wybranych organizacji mogą uzyskać dostęp do tej aplikacji.',
+    rule_organization_roles: 'Role organizacji',
+    rule_organization_roles_description:
+      'Członkowie z wybranymi rolami organizacji w wybranych organizacjach mogą uzyskać dostęp do tej aplikacji.',
+  },
   branding: {
     name: 'Branding',
     description: 'Dostosuj nazwę i logo aplikacji na ekranie zgody.',

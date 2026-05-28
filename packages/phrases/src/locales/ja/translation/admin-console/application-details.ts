@@ -121,6 +121,38 @@ const application_details = {
   field_custom_data_tip:
     '事前定義されたアプリケーションプロパティにリストされていない追加のカスタムアプリケーション情報。例えば、ビジネス固有の設定と構成。',
   custom_data_invalid: 'カスタムデータは有効な JSON オブジェクトである必要があります',
+  access_control: {
+    name: 'ルール',
+    title: 'アプリレベルのアクセス制御',
+    description: 'アクセスルールを設定して、このアプリにサインインできるユーザーを制限します。',
+    enable: 'アクセス制御を有効化',
+    enable_description:
+      '設定済みのルールに少なくとも 1 つ一致するユーザーのみが、このアプリにアクセスできます。',
+    enable_without_rules_notice:
+      'アクセス制御を有効にする前に、少なくとも 1 つのアクセスルールを追加してください。',
+    enabled_notice:
+      'アクセス制御は有効です。少なくとも 1 つのルールに一致するユーザーのみが、このアプリにアクセスできます。',
+    disabled_notice:
+      'アクセス制御は無効です。登録済みのすべてのユーザーがこのアプリにアクセスできます。',
+    load_error: 'アクセス制御ルールの読み込みに失敗しました。',
+    rules: 'アクセスルール',
+    rules_description:
+      'ユーザーはいずれかの設定済みルールに一致すると、このアプリにアクセスできます。',
+    empty_rules_description: 'まだルールが設定されていません。',
+    rule_count: '{{count}} 件のルール',
+    rule_count_other: '{{count}} 件のルール',
+    rule_users: 'ユーザー',
+    rule_users_description: '特定のユーザーがこのアプリにアクセスできます。',
+    rule_user_roles: 'ユーザーロール',
+    rule_user_roles_description:
+      '選択したユーザーロールに割り当てられたユーザーがこのアプリにアクセスできます。',
+    rule_organizations: '組織',
+    rule_organizations_description:
+      '選択した組織の現在および将来のすべてのメンバーがこのアプリにアクセスできます。',
+    rule_organization_roles: '組織ロール',
+    rule_organization_roles_description:
+      '選択した組織内で選択した組織ロールを持つメンバーがこのアプリにアクセスできます。',
+  },
   branding: {
     name: 'ブランディング',
     description: 'Consent 画面上でアプリケーションの表示名とロゴをカスタマイズします。',
