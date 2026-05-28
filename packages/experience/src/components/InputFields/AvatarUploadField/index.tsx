@@ -8,7 +8,6 @@ import { uploadAvatar } from '@/apis/experience/avatar';
 import UserAvatar from '@/assets/icons/default-user-avatar.svg?react';
 import RotatingRingIcon from '@/shared/components/Button/RotatingRingIcon';
 import ErrorMessage from '@/shared/components/ErrorMessage';
-import NotchedBorder from '@/shared/components/InputFields/InputField/NotchedBorder';
 import {
   avatarFileAccept,
   avatarFileExtensions,
@@ -142,70 +141,67 @@ const AvatarUploadField = ({
   }, [onBlur, onChange]);
 
   const displayError = uploadError ?? errorMessage;
-  const isDanger = Boolean(displayError);
-  const showHint = !value && !isUploading;
+  const showRemove = Boolean(value) && !isRequired && !isUploading;
+  const showHint = !displayError && !isUploading;
 
   return (
-    <div className={classNames(styles.container, isDanger && styles.danger, className)}>
-      <div className={styles.inputField}>
-        <div className={styles.row}>
-          <div className={styles.avatarSlot}>
-            {isUploading ? (
-              <div className={styles.loadingIcon}>
-                <RotatingRingIcon />
-              </div>
-            ) : value ? (
-              <img
-                className={styles.avatar}
-                src={value}
-                alt={label ?? name}
-                referrerPolicy="no-referrer"
-              />
-            ) : (
-              <UserAvatar className={styles.placeholder} />
-            )}
-          </div>
-          <div className={styles.actions}>
+    <div className={classNames(styles.container, className)}>
+      {labelWithOptionalSuffix && (
+        <label className={styles.label} htmlFor={inputId}>
+          {labelWithOptionalSuffix}
+        </label>
+      )}
+      <div className={styles.row}>
+        <div className={styles.avatarSlot}>
+          {isUploading ? (
+            <div className={styles.loadingIcon}>
+              <RotatingRingIcon />
+            </div>
+          ) : value ? (
+            <img
+              className={styles.avatar}
+              src={value}
+              alt={label ?? name}
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <UserAvatar className={styles.placeholder} />
+          )}
+        </div>
+        <div className={styles.controls}>
+          <div className={styles.buttonRow}>
             <button
               type="button"
-              className={styles.actionButton}
+              className={styles.uploadButton}
               disabled={isUploading}
               onClick={openFilePicker}
             >
-              {isUploading ? tAvatar('uploading') : value ? tAvatar('replace') : tAvatar('upload')}
+              {isUploading ? tAvatar('uploading') : tAvatar('upload')}
             </button>
-            {value && !isUploading && (
-              <button type="button" className={styles.actionButton} onClick={handleRemove}>
+            {showRemove && (
+              <button type="button" className={styles.removeButton} onClick={handleRemove}>
                 {tAvatar('remove')}
               </button>
             )}
-            {showHint && (
-              <span className={styles.hint}>
-                {tAvatar('hint', { limit: formatFileSizeLimit(maxUploadFileSize) })}
-              </span>
-            )}
           </div>
-          <input
-            key={fileInputKey}
-            ref={inputRef}
-            id={inputId}
-            className={styles.hiddenInput}
-            type="file"
-            name={name}
-            accept={avatarFileAccept}
-            onChange={handleFileChange}
-          />
+          {showHint && (
+            <span className={styles.hint}>
+              {tAvatar('hint', { limit: formatFileSizeLimit(maxUploadFileSize) })}
+            </span>
+          )}
+          {description && <span className={styles.description}>{description}</span>}
         </div>
-        {labelWithOptionalSuffix && (
-          <NotchedBorder
-            isActive
-            label={labelWithOptionalSuffix}
-            isDanger={isDanger}
-            isFocused={false}
-          />
-        )}
+        <input
+          key={fileInputKey}
+          ref={inputRef}
+          id={inputId}
+          className={styles.hiddenInput}
+          type="file"
+          name={name}
+          accept={avatarFileAccept}
+          onChange={handleFileChange}
+        />
       </div>
-      {description && <div className={styles.description}>{description}</div>}
       {displayError && <ErrorMessage className={styles.errorMessage}>{displayError}</ErrorMessage>}
     </div>
   );

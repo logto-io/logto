@@ -95,4 +95,20 @@ describe('AvatarUploadField', () => {
 
     expect(onChange).toHaveBeenCalledWith('');
   });
+
+  it('does not show remove when the field is required', () => {
+    const onChange = jest.fn();
+
+    const { queryByText } = render(
+      <AvatarUploadField
+        name="avatar"
+        label="Avatar"
+        isRequired
+        value="https://example.com/avatar.png"
+        onChange={onChange}
+      />
+    );
+
+    expect(queryByText('remove')).toBeNull();
+  });
 });
