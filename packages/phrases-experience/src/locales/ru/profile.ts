@@ -31,14 +31,14 @@ const profile = {
     unchecked: 'Нет',
   },
   avatar_upload: {
-    upload: 'Upload',
-    replace: 'Upload',
-    remove: 'Remove',
-    uploading: 'Uploading...',
-    hint: 'Recommended size 1:1, up to {{limit}}.',
-    error_file_type: 'File type must be {{extensions}}.',
-    error_file_size: 'File size must not exceed {{limit}}.',
-    error_upload: 'Failed to upload photo. Please try again.',
+    upload: 'Загрузить',
+    replace: 'Загрузить',
+    remove: 'Удалить',
+    uploading: 'Загрузка...',
+    hint: 'Рекомендуемый размер 1:1, до {{limit}}.',
+    error_file_type: 'Тип файла должен быть {{extensions}}.',
+    error_file_size: 'Размер файла не должен превышать {{limit}}.',
+    error_upload: 'Не удалось загрузить фото. Попробуйте ещё раз.',
   },
 };
 

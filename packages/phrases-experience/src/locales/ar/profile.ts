@@ -31,14 +31,14 @@ const profile = {
     unchecked: 'لا',
   },
   avatar_upload: {
-    upload: 'Upload',
-    replace: 'Upload',
-    remove: 'Remove',
-    uploading: 'Uploading...',
-    hint: 'Recommended size 1:1, up to {{limit}}.',
-    error_file_type: 'File type must be {{extensions}}.',
-    error_file_size: 'File size must not exceed {{limit}}.',
-    error_upload: 'Failed to upload photo. Please try again.',
+    upload: 'رفع',
+    replace: 'رفع',
+    remove: 'إزالة',
+    uploading: 'جارٍ الرفع...',
+    hint: 'الحجم الموصى به 1:1، بحد أقصى {{limit}}.',
+    error_file_type: 'يجب أن يكون نوع الملف {{extensions}}.',
+    error_file_size: 'يجب ألا يتجاوز حجم الملف {{limit}}.',
+    error_upload: 'فشل رفع الصورة. يرجى المحاولة مرة أخرى.',
   },
 };
 

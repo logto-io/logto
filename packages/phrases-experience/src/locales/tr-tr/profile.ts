@@ -31,14 +31,14 @@ const profile = {
     unchecked: 'Hayır',
   },
   avatar_upload: {
-    upload: 'Upload',
-    replace: 'Upload',
-    remove: 'Remove',
-    uploading: 'Uploading...',
-    hint: 'Recommended size 1:1, up to {{limit}}.',
-    error_file_type: 'File type must be {{extensions}}.',
-    error_file_size: 'File size must not exceed {{limit}}.',
-    error_upload: 'Failed to upload photo. Please try again.',
+    upload: 'Yükle',
+    replace: 'Yükle',
+    remove: 'Kaldır',
+    uploading: 'Yükleniyor...',
+    hint: 'Önerilen boyut 1:1, en fazla {{limit}}.',
+    error_file_type: 'Dosya türü {{extensions}} olmalıdır.',
+    error_file_size: 'Dosya boyutu {{limit}} değerini aşmamalıdır.',
+    error_upload: 'Fotoğraf yüklenemedi. Lütfen tekrar deneyin.',
   },
 };
 

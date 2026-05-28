@@ -31,14 +31,14 @@ const profile = {
     unchecked: '아니오',
   },
   avatar_upload: {
-    upload: 'Upload',
-    replace: 'Upload',
-    remove: 'Remove',
-    uploading: 'Uploading...',
-    hint: 'Recommended size 1:1, up to {{limit}}.',
-    error_file_type: 'File type must be {{extensions}}.',
-    error_file_size: 'File size must not exceed {{limit}}.',
-    error_upload: 'Failed to upload photo. Please try again.',
+    upload: '업로드',
+    replace: '업로드',
+    remove: '제거',
+    uploading: '업로드 중...',
+    hint: '권장 크기 1:1, 최대 {{limit}}.',
+    error_file_type: '파일 형식은 {{extensions}}이어야 합니다.',
+    error_file_size: '파일 크기는 {{limit}}를 초과할 수 없습니다.',
+    error_upload: '사진 업로드에 실패했습니다. 다시 시도해 주세요.',
   },
 };
 

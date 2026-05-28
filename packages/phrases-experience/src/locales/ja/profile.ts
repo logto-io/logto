@@ -31,14 +31,14 @@ const profile = {
     unchecked: 'いいえ',
   },
   avatar_upload: {
-    upload: 'Upload',
-    replace: 'Upload',
-    remove: 'Remove',
-    uploading: 'Uploading...',
-    hint: 'Recommended size 1:1, up to {{limit}}.',
-    error_file_type: 'File type must be {{extensions}}.',
-    error_file_size: 'File size must not exceed {{limit}}.',
-    error_upload: 'Failed to upload photo. Please try again.',
+    upload: 'アップロード',
+    replace: 'アップロード',
+    remove: '削除',
+    uploading: 'アップロード中...',
+    hint: '推奨サイズ 1:1、最大 {{limit}}。',
+    error_file_type: 'ファイル形式は {{extensions}} である必要があります。',
+    error_file_size: 'ファイルサイズは {{limit}} を超えられません。',
+    error_upload: '写真のアップロードに失敗しました。もう一度お試しください。',
   },
 };
 

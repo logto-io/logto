@@ -31,14 +31,14 @@ const profile = {
     unchecked: '否',
   },
   avatar_upload: {
-    upload: 'Upload',
-    replace: 'Upload',
-    remove: 'Remove',
-    uploading: 'Uploading...',
-    hint: 'Recommended size 1:1, up to {{limit}}.',
-    error_file_type: 'File type must be {{extensions}}.',
-    error_file_size: 'File size must not exceed {{limit}}.',
-    error_upload: 'Failed to upload photo. Please try again.',
+    upload: '上傳',
+    replace: '上傳',
+    remove: '移除',
+    uploading: '上傳中...',
+    hint: '建議尺寸 1:1，最大 {{limit}}。',
+    error_file_type: '檔案類型必須為 {{extensions}}。',
+    error_file_size: '檔案大小不能超過 {{limit}}。',
+    error_upload: '照片上傳失敗，請重試。',
   },
 };
 
