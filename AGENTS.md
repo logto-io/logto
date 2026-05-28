@@ -58,7 +58,7 @@ Skills live under [.agents/skills/](.agents/skills/) ([Agent Skills](https://age
 | Skill | Read when |
 |-------|-----------|
 | [.agents/skills/logto-local-storage/SKILL.md](.agents/skills/logto-local-storage/SKILL.md) | Avatar/file upload, `storage.not_configured`, `user-assets`, collect-profile **avatar** field |
-| [.agents/skills/logto-sign-in-exp-demo-app/SKILL.md](.agents/skills/logto-sign-in-exp-demo-app/SKILL.md) | Experience **screenshots**, PR visuals, `/demo-app`, Live preview, `signUpProfileFields`, sign-up/sign-in walkthrough |
+| [.agents/skills/logto-sign-in-exp-demo-app/SKILL.md](.agents/skills/logto-sign-in-exp-demo-app/SKILL.md) | Experience **screenshots**, PR visuals, `/demo-app`, Live preview, sign-up/sign-in walkthrough |
 
 ### Key caveats
 

@@ -1,16 +1,16 @@
 ---
 name: logto-sign-in-exp-demo-app
-description: Configure Logto sign-in experience and open built-in demo-app for Experience UI screenshots, Live preview, sign-up/sign-in, or collect user profile flows. Use when capturing PR screenshots, /demo-app, signUpProfileFields, first_screen=register, or end-user auth walkthroughs.
+description: Configure Logto sign-in experience and open built-in demo-app for Experience UI screenshots, Live preview, or sign-up/sign-in walkthroughs. Use when capturing PR screenshots, /demo-app, first_screen=register, or end-user auth flows.
 ---
 
 # Sign-in experience + demo-app
 
 ## When to use
 
-- **PR or doc screenshots** of Experience (sign-in, sign-up, collect profile, consent)
+- **PR or doc screenshots** of Experience (sign-in, sign-up, consent)
 - Console **Live preview** in Sign-in experience editor
 - Reproducing a specific SIE configuration in the browser
-- Validating layout after `signUpProfileFields` / branding changes
+- Validating layout after branding or sign-up/sign-in setting changes
 
 **Not needed** for backend-only changes with no Experience UI.
 
@@ -19,7 +19,6 @@ Seed `sign-in-exp` defaults are minimal; configure before opening `/demo-app` or
 ## Prerequisites
 
 - [Development environment](../../../AGENTS.md#starting-the-development-environment) running
-- For **avatar** in collect profile: run [logto-local-storage](../logto-local-storage/SKILL.md) first
 
 ## Quick path
 
@@ -49,13 +48,7 @@ Seed `sign-in-exp` defaults are minimal; configure before opening `/demo-app` or
 
 Query params are forwarded to the OIDC authorize request. Endpoint is `window.location.origin` (Core on **3001**).
 
-## Collect user profile
-
-- Create fields via `POST /api/custom-profile-fields`, then list them in `signUpProfileFields`.
-- Use `[]` to enable with an explicit list; `null` means off.
-- Built-in field names: `avatar`, `givenName`, `familyName`, `birthdate`, `gender`, `fullname`, … (see Console → Collect user profile).
-
-Details and curl blocks: [references/api-setup.md](references/api-setup.md).
+For **collect user profile** or other SIE options beyond the baseline, use Console (Sign-in experience) or extend the API calls as needed for your scenario.
 
 ## Password policy note
 
