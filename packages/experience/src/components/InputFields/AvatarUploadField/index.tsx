@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { uploadAvatar } from '@/apis/experience/avatar';
 import UserAvatar from '@/assets/icons/default-user-avatar.svg?react';
 import RotatingRingIcon from '@/shared/components/Button/RotatingRingIcon';
-import ErrorMessage from '@/shared/components/ErrorMessage';
 import {
   avatarFileAccept,
   avatarFileExtensions,
@@ -184,10 +183,16 @@ const AvatarUploadField = ({
               </button>
             )}
           </div>
-          {showHint && (
-            <span className={styles.hint}>
-              {tAvatar('hint', { limit: formatFileSizeLimit(maxUploadFileSize) })}
+          {displayError ? (
+            <span className={styles.errorText} role="alert">
+              {displayError}
             </span>
+          ) : (
+            showHint && (
+              <span className={styles.hint}>
+                {tAvatar('hint', { limit: formatFileSizeLimit(maxUploadFileSize) })}
+              </span>
+            )
           )}
           {description && <span className={styles.description}>{description}</span>}
         </div>
@@ -202,7 +207,6 @@ const AvatarUploadField = ({
           onChange={handleFileChange}
         />
       </div>
-      {displayError && <ErrorMessage className={styles.errorMessage}>{displayError}</ErrorMessage>}
     </div>
   );
 };

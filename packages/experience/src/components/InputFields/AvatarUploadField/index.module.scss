@@ -84,10 +84,18 @@ $avatar-size: _.unit(20);
   padding: 0;
 }
 
-.hint {
+.hint,
+.errorText {
   font: var(--font-body-3);
-  color: var(--color-type-secondary);
   margin-top: auto;
+}
+
+.hint {
+  color: var(--color-type-secondary);
+}
+
+.errorText {
+  color: var(--color-danger-default);
 }
 
 .description {
@@ -97,11 +105,6 @@ $avatar-size: _.unit(20);
 
 .hiddenInput {
   display: none;
-}
-
-.errorMessage {
-  margin-top: _.unit(0.5);
-  margin-inline-start: calc($avatar-size + _.unit(3));
 }
 
 .loadingIcon {
