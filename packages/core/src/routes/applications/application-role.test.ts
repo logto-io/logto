@@ -72,6 +72,25 @@ describe('application role routes', () => {
     ]);
   });
 
+  it('POST /applications/:applicationId/roles deduplicates duplicates in the request body', async () => {
+    findApplicationsRolesByApplicationId.mockResolvedValueOnce([]);
+    findRolesByRoleIds.mockResolvedValueOnce([]);
+    insertApplicationsRoles.mockClear();
+    const response = await applicationRoleRequester
+      .post(`/applications/${mockM2mApplication.id}/roles`)
+      .send({
+        roleIds: [mockAdminApplicationRole.id, mockAdminApplicationRole.id],
+      });
+    expect(response.status).toEqual(201);
+    expect(response.body).toEqual({
+      roleIds: [mockAdminApplicationRole.id, mockAdminApplicationRole.id],
+      addedRoleIds: [mockAdminApplicationRole.id],
+    });
+    expect(insertApplicationsRoles).toHaveBeenCalledWith([
+      { id: mockId, applicationId: mockM2mApplication.id, roleId: mockAdminApplicationRole.id },
+    ]);
+  });
+
   it('POST /applications/:applicationId/roles silently ignores already-assigned roles', async () => {
     findApplicationsRolesByApplicationId.mockResolvedValueOnce([mockApplicationRole]);
     findRolesByRoleIds.mockResolvedValueOnce([]);

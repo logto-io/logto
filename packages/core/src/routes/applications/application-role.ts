@@ -105,7 +105,9 @@ export default function applicationRoleRoutes<T extends ManagementApiRouter>(
       );
       const applicationRoles = await findApplicationsRolesByApplicationId(applicationId);
       const existingRoleIds = new Set(applicationRoles.map(({ roleId }) => roleId));
-      const roleIdsToAdd = roleIds.filter((id) => !existingRoleIds.has(id)); // ignore existing roles.
+      // Deduplicate the input and drop role IDs already attached to the application.
+      // The `(application_id, role_id)` unique constraint would otherwise reject the bulk insert.
+      const roleIdsToAdd = [...new Set(roleIds)].filter((id) => !existingRoleIds.has(id));
 
       const roles = await findRolesByRoleIds(roleIdsToAdd);
 
