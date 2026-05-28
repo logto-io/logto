@@ -261,15 +261,11 @@
       "patch": {
         "tags": ["Dev feature"],
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": ["isExpired"],
                 "properties": {
                   "isExpired": {
-                    "type": "boolean",
                     "description": "Whether the user's password should be marked as expired."
                   }
                 }
