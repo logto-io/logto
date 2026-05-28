@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { type RegionId, regionIds } from './constant.js';
+
 export const sendEmailResponseGuard = z.object({
   EnvId: z.string(),
   RequestId: z.string(),
@@ -22,6 +24,7 @@ const templateGuard = z.object({
 export const aliyunDmConfigGuard = z.object({
   accessKeyId: z.string(),
   accessKeySecret: z.string(),
+  regionId: z.enum(regionIds).optional(),
   accountName: z.string(),
   fromAlias: z.string().optional(),
   templates: z.array(templateGuard).refine(
@@ -60,7 +63,7 @@ export type SingleSendMail = {
 export type PublicParameters = {
   AccessKeyId: string;
   Format?: string; // 'json' or 'xml', default: 'json'
-  RegionId?: string; // 'cn-hangzhou' | 'ap-southeast-1' | 'ap-southeast-2'
+  RegionId?: RegionId;
   Signature?: string;
   SignatureMethod?: string;
   SignatureNonce?: string;

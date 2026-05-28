@@ -3,6 +3,10 @@ import { TemplateType } from '@logto/connector-kit';
 import { mockedConfigWithAllRequiredTemplates, mockGenericI18nEmailTemplate } from './mock.js';
 
 const getConfig = vi.fn().mockResolvedValue(mockedConfigWithAllRequiredTemplates);
+const getConfigWithSingaporeRegion = vi.fn().mockResolvedValue({
+  ...mockedConfigWithAllRequiredTemplates,
+  regionId: 'ap-southeast-1',
+});
 
 const singleSendMail = vi.fn(() => ({
   body: JSON.stringify({ EnvId: 'env-id', RequestId: 'request-id' }),
@@ -33,6 +37,21 @@ describe('sendMessage()', () => {
       expect.objectContaining({
         HtmlBody: 'Your sign-in code is 1234, 1234 is your code',
         Subject: 'Sign-in code 1234',
+      }),
+      expect.anything()
+    );
+  });
+
+  it('should call singleSendMail() with configured region', async () => {
+    const connector = await createConnector({ getConfig: getConfigWithSingaporeRegion });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.SignIn,
+      payload: { code: '1234' },
+    });
+    expect(singleSendMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        RegionId: 'ap-southeast-1',
       }),
       expect.anything()
     );

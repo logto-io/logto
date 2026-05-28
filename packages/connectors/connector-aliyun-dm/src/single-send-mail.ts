@@ -1,4 +1,4 @@
-import { endpoint, staticConfigs } from './constant.js';
+import { defaultRegionId, getEndpoint, staticConfigs } from './constant.js';
 import type { PublicParameters, SingleSendMail } from './types.js';
 import { request } from './utils.js';
 
@@ -9,9 +9,11 @@ export const singleSendMail = async (
   parameters: PublicParameters & SingleSendMail,
   accessKeySecret: string
 ) => {
+  const { RegionId = defaultRegionId, ...restParameters } = parameters;
+
   return request(
-    endpoint,
-    { Action: 'SingleSendMail', ...staticConfigs, ...parameters },
+    getEndpoint(RegionId),
+    { Action: 'SingleSendMail', ...staticConfigs, ...restParameters, RegionId },
     accessKeySecret
   );
 };
