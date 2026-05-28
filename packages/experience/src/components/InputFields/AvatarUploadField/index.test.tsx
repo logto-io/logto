@@ -101,9 +101,9 @@ describe('AvatarUploadField', () => {
 
     const { queryByText } = render(
       <AvatarUploadField
+        isRequired
         name="avatar"
         label="Avatar"
-        isRequired
         value="https://example.com/avatar.png"
         onChange={onChange}
       />
