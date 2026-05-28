@@ -73,7 +73,7 @@ const install: CommandModule<
     ss: boolean;
     cloud: boolean;
     du?: string;
-    'disable-admin-pwned-password-check'?: boolean;
+    dapc?: boolean;
   }
 > = {
   command: ['init', 'i', 'install'],
@@ -103,20 +103,20 @@ const install: CommandModule<
         type: 'string',
         hidden: true,
       },
-      'disable-admin-pwned-password-check': {
+      dapc: {
         describe: disableAdminPwnedPasswordCheckDescription,
-        alias: 'dapc',
+        alias: 'disable-admin-pwned-password-check',
         type: 'boolean',
         default: false,
       },
     }),
-  handler: async ({ p, ss, cloud, du, disableAdminPwnedPasswordCheck }) => {
+  handler: async ({ p, ss, cloud, du, dapc }) => {
     await installLogto({
       path: p,
       skipSeed: ss,
       cloud,
       downloadUrl: du,
-      disableAdminPwnedPasswordCheck,
+      disableAdminPwnedPasswordCheck: dapc,
     });
   },
 };

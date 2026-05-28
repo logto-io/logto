@@ -71,7 +71,7 @@ const seed: CommandModule<
     test?: boolean;
     'legacy-test-data'?: boolean;
     'encrypt-base-role'?: boolean;
-    'disable-admin-pwned-password-check'?: boolean;
+    dapc?: boolean;
   }
 > = {
   command: 'seed [type]',
@@ -100,19 +100,12 @@ const seed: CommandModule<
         describe: 'Seed base role with password',
         type: 'boolean',
       })
-      .option('disable-admin-pwned-password-check', {
+      .option('dapc', {
         describe: disableAdminPwnedPasswordCheckDescription,
-        alias: 'dapc',
+        alias: 'disable-admin-pwned-password-check',
         type: 'boolean',
       }),
-  handler: async ({
-    swe,
-    cloud,
-    test,
-    legacyTestData,
-    encryptBaseRole,
-    disableAdminPwnedPasswordCheck,
-  }) => {
+  handler: async ({ swe, cloud, test, legacyTestData, encryptBaseRole, dapc }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
     if (legacyTestData) {
@@ -140,7 +133,7 @@ const seed: CommandModule<
         cloud,
         test,
         encryptBaseRole,
-        disablePwnedPasswordCheck: disableAdminPwnedPasswordCheck,
+        disablePwnedPasswordCheck: dapc,
       });
     } catch (error: unknown) {
       consoleLog.error(error);
