@@ -56,7 +56,31 @@ const raceWithTimeout = async <T>(
 abstract class RedisCacheBase implements CacheStore {
   readonly client?: RedisClientType | RedisClusterType;
 
+  /**
+   * Whether the client is connected and ready to accept commands. When it isn't (no client, or
+   * the socket is down/reconnecting), `get` and `set` short-circuit to a miss instead of issuing
+   * a command and paying the full {@link raceWithTimeout} deadline on every call — which is what
+   * piles up into request latency, and ultimately upstream 499s, during a Redis outage. `delete`
+   * is deliberately exempt so invalidations are not silently dropped (see its comment below).
+   *
+   * Standalone clients expose `isReady` (connected and past handshake); the cluster client only
+   * exposes `isOpen`, so fall back to that.
+   */
+  protected get isClientReady(): boolean {
+    const { client } = this;
+
+    if (!client) {
+      return false;
+    }
+
+    return 'isReady' in client ? client.isReady : client.isOpen;
+  }
+
   async set(key: string, value: string, expire: number = 30 * 60) {
+    if (!this.isClientReady) {
+      return;
+    }
+
     await raceWithTimeout(
       'SET',
       key,
@@ -66,11 +90,18 @@ abstract class RedisCacheBase implements CacheStore {
   }
 
   async get(key: string): Promise<Optional<string>> {
+    if (!this.isClientReady) {
+      return;
+    }
+
     return conditional(
       await raceWithTimeout('GET', key, this.client?.get(key), redisCacheReadTimeout)
     );
   }
 
+  // Unlike `get`/`set`, `delete` is not gated on `isClientReady`: a dropped invalidation could
+  // serve stale data until TTL, so let it queue and flush once the connection recovers. It stays
+  // bounded by `raceWithTimeout` and never blocks a request beyond the write deadline.
   async delete(key: string) {
     await raceWithTimeout('DEL', key, this.client?.del(key), redisCacheWriteTimeout);
   }
@@ -139,9 +170,12 @@ export class RedisCache extends RedisCacheBase {
       this.client = createClient({
         url: conditional(!yes(redisUrl) && redisUrl),
         socket: this.getSocketOptions(trySafe(() => new URL(redisUrl))),
-        // Azure redis has a 10 minutes idle timeout
+        // Keep the connection warm with a frequent heartbeat. The interval must stay below the
+        // shortest idle timeout on the network path: load balancers, NAT, and firewalls commonly
+        // drop idle TCP at 4-5 min, well under Azure Redis' 10 min. A silently dropped socket
+        // otherwise surfaces later as `read ETIMEDOUT`.
         // @see https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-best-practices-connection#idle-timeout
-        pingInterval: 8 * 60 * 1000, // 8 minutes
+        pingInterval: 60 * 1000, // 1 minute
       });
 
       this.client.on('error', (error) => {
