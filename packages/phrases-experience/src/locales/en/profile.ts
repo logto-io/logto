@@ -37,6 +37,7 @@ const profile = {
     hint: 'Recommended size 1:1, up to {{limit}}.',
     error_file_type: 'File type must be {{extensions}}.',
     error_file_size: 'File size must not exceed {{limit}}.',
+    error_storage_not_configured: 'Unable to upload your photo. Please try again later.',
     error_upload: 'Failed to upload photo. Please try again.',
   },
 };

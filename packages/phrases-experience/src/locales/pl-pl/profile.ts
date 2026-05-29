@@ -37,6 +37,7 @@ const profile = {
     hint: 'Zalecany rozmiar 1:1, do {{limit}}.',
     error_file_type: 'Typ pliku musi być {{extensions}}.',
     error_file_size: 'Rozmiar pliku nie może przekraczać {{limit}}.',
+    error_storage_not_configured: 'Nie udało się przesłać zdjęcia. Spróbuj ponownie później.',
     error_upload: 'Nie udało się przesłać zdjęcia. Spróbuj ponownie.',
   },
 };

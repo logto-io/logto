@@ -1,4 +1,4 @@
-import { maxUploadFileSize } from '@logto/schemas';
+import { maxUploadFileSize, type RequestErrorBody } from '@logto/schemas';
 import classNames from 'classnames';
 import { HTTPError } from 'ky';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
@@ -11,6 +11,7 @@ import {
   avatarFileAccept,
   avatarFileExtensions,
   formatFileSizeLimit,
+  getAvatarUploadErrorMessage,
   validateAvatarFile,
 } from '@/utils/avatar-upload';
 
@@ -86,12 +87,16 @@ const AvatarUploadField = ({
     inputRef.current?.click();
   }, [isUploading]);
 
+  const resetFileInput = useCallback(() => {
+    setFileInputKey((key) => key + 1);
+  }, []);
+
   const handleUploadError = useCallback(
     async (error: unknown) => {
       if (error instanceof HTTPError) {
         try {
-          const { message } = await error.response.json<{ message: string }>();
-          setUploadError(message);
+          const errorBody = await error.response.json<RequestErrorBody>();
+          setUploadError(getAvatarUploadErrorMessage(errorBody, tAvatar));
           return;
         } catch {
           // Fall through to generic error message.
@@ -117,11 +122,13 @@ const AvatarUploadField = ({
         setUploadError(
           tAvatar('error_file_size', { limit: formatFileSizeLimit(maxUploadFileSize) })
         );
+        resetFileInput();
         return;
       }
 
       if (validationError === 'file_type') {
         setUploadError(tAvatar('error_file_type', { extensions: avatarFileExtensions }));
+        resetFileInput();
         return;
       }
 
@@ -150,7 +157,7 @@ const AvatarUploadField = ({
         }
       }
     },
-    [handleUploadError, onBlur, onChange, tAvatar]
+    [handleUploadError, onBlur, onChange, resetFileInput, tAvatar]
   );
 
   const handleRemove = useCallback(() => {

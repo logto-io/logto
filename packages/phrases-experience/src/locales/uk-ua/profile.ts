@@ -37,6 +37,7 @@ const profile = {
     hint: 'Рекомендований розмір 1:1, до {{limit}}.',
     error_file_type: 'Тип файлу має бути {{extensions}}.',
     error_file_size: 'Розмір файлу не повинен перевищувати {{limit}}.',
+    error_storage_not_configured: 'Не вдалося завантажити фото. Спробуйте пізніше.',
     error_upload: 'Не вдалося завантажити фото. Спробуйте ще раз.',
   },
 };

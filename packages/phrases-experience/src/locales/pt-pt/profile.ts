@@ -37,6 +37,8 @@ const profile = {
     hint: 'Tamanho recomendado 1:1, até {{limit}}.',
     error_file_type: 'O tipo de ficheiro deve ser {{extensions}}.',
     error_file_size: 'O tamanho do ficheiro não pode exceder {{limit}}.',
+    error_storage_not_configured:
+      'Não foi possível carregar a fotografia. Tente novamente mais tarde.',
     error_upload: 'Falha ao carregar a fotografia. Tente novamente.',
   },
 };

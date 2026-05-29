@@ -108,7 +108,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
           isLoading={isSubmitting}
           isDisabled={isAvatarUploading}
         />
-        <input hidden type="submit" />
+        <input hidden type="submit" disabled={isAvatarUploading} />
       </form>
     </FormProvider>
   );

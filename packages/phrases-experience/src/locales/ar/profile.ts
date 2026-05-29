@@ -37,6 +37,7 @@ const profile = {
     hint: 'الحجم الموصى به 1:1، بحد أقصى {{limit}}.',
     error_file_type: 'يجب أن يكون نوع الملف {{extensions}}.',
     error_file_size: 'يجب ألا يتجاوز حجم الملف {{limit}}.',
+    error_storage_not_configured: 'تعذر رفع الصورة. يرجى المحاولة مرة أخرى لاحقًا.',
     error_upload: 'فشل رفع الصورة. يرجى المحاولة مرة أخرى.',
   },
 };

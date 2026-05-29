@@ -37,6 +37,8 @@ const profile = {
     hint: 'Taille recommandée 1:1, jusqu’à {{limit}}.',
     error_file_type: 'Le type de fichier doit être {{extensions}}.',
     error_file_size: 'La taille du fichier ne doit pas dépasser {{limit}}.',
+    error_storage_not_configured:
+      'Impossible de téléverser la photo. Veuillez réessayer plus tard.',
     error_upload: 'Échec du téléversement de la photo. Veuillez réessayer.',
   },
 };

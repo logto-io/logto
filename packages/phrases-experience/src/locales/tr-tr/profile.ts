@@ -37,6 +37,7 @@ const profile = {
     hint: 'Önerilen boyut 1:1, en fazla {{limit}}.',
     error_file_type: 'Dosya türü {{extensions}} olmalıdır.',
     error_file_size: 'Dosya boyutu {{limit}} değerini aşmamalıdır.',
+    error_storage_not_configured: 'Fotoğraf yüklenemedi. Lütfen daha sonra tekrar deneyin.',
     error_upload: 'Fotoğraf yüklenemedi. Lütfen tekrar deneyin.',
   },
 };
