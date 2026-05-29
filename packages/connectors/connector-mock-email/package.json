@@ -30,8 +30,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "engines": {
     "node": "^22.14.0"
