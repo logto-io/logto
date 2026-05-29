@@ -266,7 +266,8 @@ export default function initOidc(
     },
     loadExistingGrant: async (ctx) => {
       const { account, client, provider, result, session } = ctx.oidc;
-      const grantId = result?.consent?.grantId ?? (client && session?.grantIdFor(client.clientId));
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- Keep oidc-provider's default loadExistingGrant fallback semantics.
+      const grantId = result?.consent?.grantId || (client && session?.grantIdFor(client.clientId));
 
       if (grantId && account && client) {
         await assertUserHasApplicationAccessForOidc(

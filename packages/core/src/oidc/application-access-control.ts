@@ -3,6 +3,11 @@ import { errors } from 'oidc-provider';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 
+/**
+ * Use this wrapper for app-access checks inside oidc-provider hooks and grant handlers.
+ * The application-access-control library throws Logto `RequestError`s, while oidc-provider
+ * expects its own errors to produce the correct OAuth response.
+ */
 export const assertUserHasApplicationAccessForOidc = async (
   applicationAccessControl: Libraries['applicationAccessControl'],
   applicationId: string,
