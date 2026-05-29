@@ -23,6 +23,8 @@ const users = {
   placeholder_title: 'Zarządzanie użytkownikami',
   placeholder_description:
     'Każdy użytkownik ma profil zawierający wszystkie informacje o użytkowniku. Składa się z podstawowych danych, tożsamości społecznych i niestandardowych danych.',
+  dev_tenant_data_retention_notice:
+    'W tenantach deweloperskich konta użytkowników starsze niż 90 dni są automatycznie usuwane. <a>Dowiedz się więcej</a>',
 };
 
 export default Object.freeze(users);

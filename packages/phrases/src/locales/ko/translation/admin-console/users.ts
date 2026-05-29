@@ -21,6 +21,8 @@ const users = {
   placeholder_title: '사용자 관리',
   placeholder_description:
     '각 사용자에게는 모든 사용자 정보가 포함된 프로필이 있어요. 프로필은 기본 데이터, 소셜 인증, 사용자 지정 데이터로 구성돼요.',
+  dev_tenant_data_retention_notice:
+    '개발 테넌트에서는 90일이 지난 사용자 계정이 자동으로 삭제됩니다. <a>자세히 알아보기</a>',
 };
 
 export default Object.freeze(users);

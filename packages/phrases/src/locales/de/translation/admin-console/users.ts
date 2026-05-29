@@ -23,6 +23,8 @@ const users = {
   placeholder_title: 'Benutzerverwaltung',
   placeholder_description:
     'Jeder Benutzer hat ein Profil mit allen Benutzerinformationen. Es besteht aus grundlegenden Daten, sozialen Identitäten und benutzerdefinierten Daten.',
+  dev_tenant_data_retention_notice:
+    'In Entwicklungs-Tenants werden Benutzerkonten, die älter als 90 Tage sind, automatisch gelöscht. <a>Mehr erfahren</a>',
 };
 
 export default Object.freeze(users);

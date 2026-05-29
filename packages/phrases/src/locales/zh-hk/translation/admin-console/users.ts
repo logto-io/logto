@@ -22,6 +22,8 @@ const users = {
   placeholder_title: '用戶管理',
   placeholder_description:
     '每個用戶都有一個包含所有用戶信息的個人資料。它由基本數據、社交身份和自定義數據組成。',
+  dev_tenant_data_retention_notice:
+    '在開發租戶中，超過 90 天的用戶帳戶會被自動刪除。<a>了解更多</a>',
 };
 
 export default Object.freeze(users);

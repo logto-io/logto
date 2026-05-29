@@ -23,6 +23,8 @@ const users = {
   placeholder_title: 'ユーザー管理',
   placeholder_description:
     '各ユーザーには、基本データ、ソーシャルアイデンティティ、およびカスタムデータが含まれるプロフィールがあります。',
+  dev_tenant_data_retention_notice:
+    '開発テナントでは、90 日以上経過したユーザーアカウントは自動的に削除されます。<a>詳細はこちら</a>',
 };
 
 export default Object.freeze(users);

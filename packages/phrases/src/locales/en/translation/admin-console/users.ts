@@ -22,6 +22,8 @@ const users = {
   placeholder_title: 'User management',
   placeholder_description:
     'Each user has a profile containing all user information. It consists of basic data, social identities, and custom data.',
+  dev_tenant_data_retention_notice:
+    'In dev tenants, user accounts older than 90 days are automatically deleted. <a>Learn more</a>',
 };
 
 export default Object.freeze(users);

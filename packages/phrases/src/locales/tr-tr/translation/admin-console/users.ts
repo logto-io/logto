@@ -23,6 +23,8 @@ const users = {
   placeholder_title: 'Kullanıcı yönetimi',
   placeholder_description:
     'Her kullanıcının temel verileri, sosyal kimlikleri ve özel verilerini içeren bir profil vardır.',
+  dev_tenant_data_retention_notice:
+    'Geliştirme tenantlarında 90 günden eski kullanıcı hesapları otomatik olarak silinir. <a>Daha fazla bilgi edinin</a>',
 };
 
 export default Object.freeze(users);
