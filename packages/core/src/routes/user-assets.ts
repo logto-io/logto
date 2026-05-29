@@ -12,6 +12,7 @@ import { generateStandardId } from '@logto/shared';
 import { format } from 'date-fns';
 import { object } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
