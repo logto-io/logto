@@ -15,11 +15,11 @@ import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { hasVisibleSocialSection } from '@ac/utils/security-page';
+import { sessionStorage } from '@ac/utils/session-storage';
 import {
   getAvailableSocialConnectors,
   getLocalizedConnectorName,
 } from '@ac/utils/social-connector';
-import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from './index.module.scss';
 

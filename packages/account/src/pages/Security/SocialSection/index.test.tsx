@@ -1,4 +1,3 @@
-import type { SignInExperienceResponse } from '@experience/shared/types';
 import { AccountCenterControlValue, ConnectorPlatform } from '@logto/schemas';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { Route, Routes } from 'react-router-dom';
@@ -77,7 +76,7 @@ describe('SocialSection remove', () => {
           experienceSettings: {
             ...mockSignInExperienceSettings,
             socialConnectors: [googleWebConnector],
-          } as SignInExperienceResponse,
+          },
           userInfo: linkedUserInfo,
           verificationId: 'verification-id',
           setToast,
@@ -87,11 +86,16 @@ describe('SocialSection remove', () => {
     );
 
     fireEvent.click(getByText('account_center.security.remove'));
-    const confirmRemoveButtons = getAllByText('action.remove');
-    fireEvent.click(confirmRemoveButtons[confirmRemoveButtons.length - 1]!);
+    const confirmRemoveButton = getAllByText('action.remove').at(-1);
+    expect(confirmRemoveButton).toBeDefined();
+    fireEvent.click(confirmRemoveButton!);
 
     await waitFor(() => {
-      expect(mockDeleteSocialIdentity).toHaveBeenCalledWith('access-token', 'verification-id', 'google');
+      expect(mockDeleteSocialIdentity).toHaveBeenCalledWith(
+        'access-token',
+        'verification-id',
+        'google'
+      );
     });
     expect(refreshUserInfo).toHaveBeenCalled();
     expect(setToast).toHaveBeenCalled();
@@ -117,15 +121,16 @@ describe('SocialSection remove', () => {
           experienceSettings: {
             ...mockSignInExperienceSettings,
             socialConnectors: [googleWebConnector],
-          } as SignInExperienceResponse,
+          },
           userInfo: linkedUserInfo,
         },
       }
     );
 
     fireEvent.click(getByText('account_center.security.remove'));
-    const confirmRemoveButtons = getAllByText('action.remove');
-    fireEvent.click(confirmRemoveButtons[confirmRemoveButtons.length - 1]!);
+    const confirmRemoveButton = getAllByText('action.remove').at(-1);
+    expect(confirmRemoveButton).toBeDefined();
+    fireEvent.click(confirmRemoveButton!);
 
     await waitFor(() => {
       expect(getByText('verified action page')).not.toBeNull();

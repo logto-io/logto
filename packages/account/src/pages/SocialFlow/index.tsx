@@ -4,7 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import { createSocialVerification, linkSocialIdentity, replaceSocialIdentity } from '@ac/apis/social';
+import {
+  createSocialVerification,
+  linkSocialIdentity,
+  replaceSocialIdentity,
+} from '@ac/apis/social';
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
