@@ -12,6 +12,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  main-generated-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        with:
+          pnpm-version: 10
+          node-version: ^22.14.0
+
+      - name: Sync connector presets
+        run: pnpm run pnpm:devPreinstall
+
+      - name: Check connector generated files
+        run: |
+          if ! git diff --exit-code -- packages/connectors; then
+            echo "Connector package presets are out of sync. Run 'pnpm run pnpm:devPreinstall' and commit the changes."
+            exit 1
+          fi
+
   main-build:
     runs-on: ubuntu-latest
 
