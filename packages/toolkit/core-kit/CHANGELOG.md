@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.10.0
+
+### Minor Changes
+
+- e4eaa5aef5: add custom CSP utility methods
+
 ## 2.9.0
 
 ### Minor Changes
