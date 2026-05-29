@@ -41,7 +41,7 @@ const custom_profile_fields = {
     create_button: 'Créer un champ de profil',
     avatar: {
       description:
-        "Permet aux utilisateurs de téléverser et recadrer leur photo de profil lors de l'inscription. L'URL de l'image téléversée est enregistrée comme avatar de l'utilisateur.",
+        "Permet aux utilisateurs de téléverser leur photo de profil lors de l'inscription. L'URL de l'image téléversée est enregistrée comme avatar de l'utilisateur.",
       storage_not_configured:
         "Le téléversement d'avatar nécessite un fournisseur de stockage configuré. Configurez le storage avant d'ajouter ce champ.",
     },
@@ -105,7 +105,7 @@ const custom_profile_fields = {
     required_description:
       "Lorsqu'activé, ce champ doit être rempli par les utilisateurs. Lorsqu'désactivé, ce champ est facultatif.",
     avatar_upload_description:
-      "Les utilisateurs finaux téléversent et recadrent leur avatar lors de l'inscription. La valeur stockée est l'URL de l'image téléversée.",
+      "Les utilisateurs finaux téléversent leur avatar lors de l'inscription. La valeur stockée est l'URL de l'image téléversée.",
   },
 };
 

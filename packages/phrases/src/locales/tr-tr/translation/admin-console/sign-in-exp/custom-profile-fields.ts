@@ -41,7 +41,7 @@ const custom_profile_fields = {
     create_button: 'Profil alanı oluştur',
     avatar: {
       description:
-        "Kullanıcıların kayıt sırasında profil fotoğraflarını yüklemesine ve kırpmasına olanak tanır. Yüklenen görsel URL'si kullanıcı avatar'ı olarak saklanır.",
+        "Kullanıcıların kayıt sırasında profil fotoğraflarını yüklemesine olanak tanır. Yüklenen görsel URL'si kullanıcı avatar'ı olarak saklanır.",
       storage_not_configured:
         "Avatar yükleme, yapılandırılmış bir depolama sağlayıcısı gerektirir. Bu alanı eklemeden önce storage'ı yapılandırın.",
     },
@@ -104,7 +104,7 @@ const custom_profile_fields = {
     required_description:
       'Etkinleştirildiğinde, bu alan kullanıcılar tarafından doldurulmalıdır. Devre dışı bırakıldığında, bu alan isteğe bağlıdır.',
     avatar_upload_description:
-      "Son kullanıcılar kayıt sırasında avatar yükler ve kırpar. Saklanan değer, yüklenen görsel URL'sidir.",
+      "Son kullanıcılar kayıt sırasında avatar yükler. Saklanan değer, yüklenen görsel URL'sidir.",
   },
 };
 

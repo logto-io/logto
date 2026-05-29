@@ -48,8 +48,12 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { t: errorT } = useTranslation('errors');
   const api = useApi();
-  const { isReady: isUserAssetsServiceReady, isLoading: isUserAssetsServiceLoading } =
-    useUserAssetsService();
+  const shouldFetchUserAssetsService = isDevFeaturesEnabled;
+  const {
+    isReady: isUserAssetsServiceReady,
+    isLoading: isUserAssetsServiceLoading,
+    isExperienceAvatarUploadEnabled,
+  } = useUserAssetsService(shouldFetchUserAssetsService);
 
   const [selectedField, setSelectedField] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();

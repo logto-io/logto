@@ -18,7 +18,7 @@ import useSwrFetcher from './use-swr-fetcher';
  * you can use the `shouldUnregister` option from `react-hook-form` to unregister the field when
  * the component is unmounted.
  */
-const useUserAssetsService = () => {
+const useUserAssetsService = (enabled = true) => {
   const adminApi = useStaticApi({
     prefixUrl: adminTenantEndpoint,
     resourceIndicator: meApi.indicator,
@@ -31,7 +31,7 @@ const useUserAssetsService = () => {
 
   const fetcher = useSwrFetcher<UserAssetsServiceStatus>(shouldUseAdminApi ? adminApi : api);
   const { data, error } = useSWRImmutable<UserAssetsServiceStatus, RequestError>(
-    `${shouldUseAdminApi ? 'me' : 'api'}/user-assets/service-status`,
+    enabled ? `${shouldUseAdminApi ? 'me' : 'api'}/user-assets/service-status` : null,
     fetcher
   );
 
@@ -41,7 +41,8 @@ const useUserAssetsService = () => {
      * @see {@link useUserAssetsService} for caveats.
      */
     isReady: data?.status === 'ready',
-    isLoading: !error && !data,
+    isLoading: enabled && !error && !data,
+    isExperienceAvatarUploadEnabled: data?.isExperienceAvatarUploadEnabled,
   };
 };
 

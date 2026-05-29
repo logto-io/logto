@@ -32,7 +32,6 @@ const profile = {
   },
   avatar_upload: {
     upload: 'Завантажити',
-    replace: 'Завантажити',
     remove: 'Видалити',
     uploading: 'Завантаження...',
     hint: 'Рекомендований розмір 1:1, до {{limit}}.',

@@ -32,7 +32,6 @@ const profile = {
   },
   avatar_upload: {
     upload: 'アップロード',
-    replace: 'アップロード',
     remove: '削除',
     uploading: 'アップロード中...',
     hint: '推奨サイズ 1:1、最大 {{limit}}。',

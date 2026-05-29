@@ -79,6 +79,48 @@ describe('AvatarUploadField', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it('notifies the parent when upload state changes', async () => {
+    let resolveUpload: (value: { url: string }) => void = () => {};
+    jest.mocked(uploadAvatar).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveUpload = resolve;
+        })
+    );
+    const onUploadingChange = jest.fn();
+    const onChange = jest.fn();
+
+    const { container } = render(
+      <AvatarUploadField
+        name="avatar"
+        label="Avatar"
+        onChange={onChange}
+        onUploadingChange={onUploadingChange}
+      />
+    );
+
+    const input = container.querySelector('input[type="file"]');
+    if (!(input instanceof HTMLInputElement)) {
+      throw new TypeError('file input not found');
+    }
+
+    const file = new File([new Uint8Array([0xff, 0xd8, 0xff])], 'avatar.jpg', {
+      type: 'image/jpeg',
+    });
+
+    fireEvent.change(input, { target: { files: [file] } });
+
+    await waitFor(() => {
+      expect(onUploadingChange).toHaveBeenCalledWith(true);
+    });
+
+    resolveUpload({ url: 'https://example.com/avatar.png' });
+
+    await waitFor(() => {
+      expect(onUploadingChange).toHaveBeenCalledWith(false);
+    });
+  });
+
   it('clears the value when remove is clicked', async () => {
     const onChange = jest.fn();
 

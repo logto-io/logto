@@ -32,7 +32,6 @@ const profile = {
   },
   avatar_upload: {
     upload: 'رفع',
-    replace: 'رفع',
     remove: 'إزالة',
     uploading: 'جارٍ الرفع...',
     hint: 'الحجم الموصى به 1:1، بحد أقصى {{limit}}.',

@@ -32,7 +32,6 @@ const profile = {
   },
   avatar_upload: {
     upload: 'Hochladen',
-    replace: 'Hochladen',
     remove: 'Entfernen',
     uploading: 'Wird hochgeladen...',
     hint: 'Empfohlene Größe 1:1, maximal {{limit}}.',

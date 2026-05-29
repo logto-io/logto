@@ -32,7 +32,6 @@ const profile = {
   },
   avatar_upload: {
     upload: 'Importer',
-    replace: 'Importer',
     remove: 'Supprimer',
     uploading: 'Importation...',
     hint: 'Taille recommandée 1:1, jusqu’à {{limit}}.',

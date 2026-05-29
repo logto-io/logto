@@ -24,6 +24,8 @@ export const userAssetsServiceStatusGuard = z.object({
   status: z.union([z.literal('ready'), z.literal('not_configured')]),
   allowUploadMimeTypes: z.array(allowUploadMimeTypeGuard).optional(),
   maxUploadFileSize: z.number().optional(),
+  /** Whether Experience avatar upload during sign-up is available on this server. */
+  isExperienceAvatarUploadEnabled: z.boolean().optional(),
 });
 
 export type UserAssetsServiceStatus = z.infer<typeof userAssetsServiceStatusGuard>;

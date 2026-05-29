@@ -32,7 +32,6 @@ const profile = {
   },
   avatar_upload: {
     upload: 'Nahrát',
-    replace: 'Nahrát',
     remove: 'Odebrat',
     uploading: 'Nahrávání...',
     hint: 'Doporučená velikost 1:1, maximálně {{limit}}.',

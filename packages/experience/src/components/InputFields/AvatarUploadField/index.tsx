@@ -26,6 +26,7 @@ type Props = {
   readonly errorMessage?: string;
   readonly onBlur?: () => void;
   readonly onChange: (value: string) => void;
+  readonly onUploadingChange?: (isUploading: boolean) => void;
 };
 
 const AvatarUploadField = ({
@@ -38,6 +39,7 @@ const AvatarUploadField = ({
   errorMessage,
   onBlur,
   onChange,
+  onUploadingChange,
 }: Props) => {
   const { t } = useTranslation();
   const { t: tAvatar } = useTranslation(undefined, { keyPrefix: 'profile.avatar_upload' });
@@ -56,6 +58,16 @@ const AvatarUploadField = ({
       abortControllerRef.current?.abort();
     };
   }, []);
+
+  useEffect(() => {
+    onUploadingChange?.(isUploading);
+  }, [isUploading, onUploadingChange]);
+
+  useEffect(() => {
+    return () => {
+      onUploadingChange?.(false);
+    };
+  }, [onUploadingChange]);
 
   const openFilePicker = useCallback(() => {
     if (isUploading) {

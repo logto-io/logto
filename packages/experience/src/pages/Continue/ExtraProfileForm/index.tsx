@@ -1,5 +1,6 @@
 import { CustomProfileFieldType, type CustomProfileField } from '@logto/schemas';
 import { condString } from '@silverhand/essentials';
+import { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import * as s from 'superstruct';
 
@@ -22,6 +23,7 @@ type Props = {
 const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Props) => {
   const getFieldLabel = useFieldLabel();
   const validateField = useValidateField();
+  const [isAvatarUploading, setIsAvatarUploading] = useState(false);
   const methods = useForm<Record<string, unknown>>({
     reValidateMode: 'onBlur',
     defaultValues,
@@ -72,6 +74,7 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
                       errorMessage={errors[name]?.message}
                       onChange={onChange}
                       onBlur={onBlur}
+                      onUploadingChange={setIsAvatarUploading}
                     />
                   );
                 }
@@ -95,7 +98,12 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
             />
           );
         })}
-        <Button title="action.continue" htmlType="submit" isLoading={isSubmitting} />
+        <Button
+          title="action.continue"
+          htmlType="submit"
+          isLoading={isSubmitting}
+          isDisabled={isAvatarUploading}
+        />
         <input hidden type="submit" />
       </form>
     </FormProvider>

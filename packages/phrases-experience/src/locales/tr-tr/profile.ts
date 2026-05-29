@@ -32,7 +32,6 @@ const profile = {
   },
   avatar_upload: {
     upload: 'Yükle',
-    replace: 'Yükle',
     remove: 'Kaldır',
     uploading: 'Yükleniyor...',
     hint: 'Önerilen boyut 1:1, en fazla {{limit}}.',
