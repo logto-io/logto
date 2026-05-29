@@ -5,7 +5,6 @@ import { errors } from 'oidc-provider';
 
 import { consent, getMissingScopes } from '#src/libraries/session/index.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
-import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -17,11 +16,7 @@ export default function koaAutoConsent<
   StateT,
   ContextT extends WithInteractionDetailsContext,
   ResponseBodyT,
->(
-  provider: Provider,
-  query: Queries,
-  libraries: Libraries
-): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+>(provider: Provider, query: Queries): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
     const { interactionDetails } = ctx;
     const {
@@ -50,7 +45,6 @@ export default function koaAutoConsent<
 
       const redirectTo = await consent({
         ctx,
-        applicationAccessControl: libraries.applicationAccessControl,
         provider,
         queries: query,
         interactionDetails,

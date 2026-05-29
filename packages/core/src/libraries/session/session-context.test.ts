@@ -25,11 +25,6 @@ const userQueries = {
   findUserById: jest.fn(async (): Promise<User> => mockUser),
   updateUserById: jest.fn(async (..._args: unknown[]) => ({ id: 'id' })),
 };
-const applicationAccessControl = {
-  assertUserHasApplicationAccess: jest.fn(async () => {
-    await Promise.resolve();
-  }),
-};
 
 const queries = {
   users: userQueries,
@@ -58,7 +53,6 @@ describe('saveInteractionLastSubmissionToSession', () => {
 
     await consent({
       ctx: context,
-      applicationAccessControl,
       provider,
       queries,
       interactionDetails,

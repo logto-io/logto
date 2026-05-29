@@ -5,7 +5,6 @@ import type { PromptDetail, Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
-import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -87,7 +86,6 @@ const saveInteractionLastSubmissionToSession = async (
 
 export const consent = async ({
   ctx,
-  applicationAccessControl,
   provider,
   queries,
   interactionDetails,
@@ -96,7 +94,6 @@ export const consent = async ({
   resourceScopesToReject = {},
 }: {
   ctx: Context;
-  applicationAccessControl: Libraries['applicationAccessControl'];
   provider: Provider;
   queries: Queries;
   interactionDetails: Awaited<ReturnType<Provider['interactionDetails']>>;
@@ -117,8 +114,6 @@ export const consent = async ({
   );
 
   const { accountId } = session;
-
-  await applicationAccessControl.assertUserHasApplicationAccess(clientId, accountId);
 
   const grant =
     conditional(grantId && (await provider.Grant.find(grantId))) ??

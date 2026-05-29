@@ -17,6 +17,7 @@ import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
 import { consent, getMissingScopes } from '#src/libraries/session/index.js';
+import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -45,6 +46,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       }),
       status: [200],
     }),
+    koaAppAccessControl(libraries),
     async (ctx, next) => {
       const {
         interactionDetails,
@@ -179,7 +181,6 @@ export default function consentRoutes<T extends IRouterParamContext>(
 
       const redirectTo = await consent({
         ctx,
-        applicationAccessControl: libraries.applicationAccessControl,
         provider,
         queries,
         interactionDetails,

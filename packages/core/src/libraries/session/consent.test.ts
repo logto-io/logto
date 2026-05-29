@@ -39,11 +39,6 @@ const userQueries = {
   findUserById: jest.fn(async (): Promise<User> => mockUser),
   updateUserById: jest.fn(async (..._args: unknown[]) => ({ id: 'id' })),
 };
-const applicationAccessControl = {
-  assertUserHasApplicationAccess: jest.fn(async () => {
-    await Promise.resolve();
-  }),
-};
 
 // @ts-expect-error
 const queries: Queries = { users: userQueries };
@@ -66,7 +61,6 @@ describe('consent', () => {
     const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
     await consent({
       ctx: context,
-      applicationAccessControl,
       provider,
       queries,
       interactionDetails: baseInteractionDetails,
@@ -98,7 +92,6 @@ describe('consent', () => {
 
     await consent({
       ctx: context,
-      applicationAccessControl,
       provider,
       queries,
       interactionDetails,
@@ -128,7 +121,6 @@ describe('consent', () => {
     const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
     await consent({
       ctx: context,
-      applicationAccessControl,
       provider,
       queries,
       interactionDetails: baseInteractionDetails,
@@ -143,7 +135,6 @@ describe('consent', () => {
     const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
     await consent({
       ctx: context,
-      applicationAccessControl,
       provider,
       queries,
       interactionDetails: baseInteractionDetails,
@@ -160,25 +151,5 @@ describe('consent', () => {
       'resource1_scope1 resource1_scope2'
     );
     expect(grantAddResourceScope).toHaveBeenCalledWith('resource2', 'resource2_scope1');
-  });
-
-  it('should assert user application access before saving grant', async () => {
-    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
-
-    await consent({
-      ctx: context,
-      applicationAccessControl,
-      provider,
-      queries,
-      interactionDetails: baseInteractionDetails,
-    });
-
-    expect(applicationAccessControl.assertUserHasApplicationAccess).toHaveBeenCalledWith(
-      'clientId',
-      mockUser.id
-    );
-    expect(
-      applicationAccessControl.assertUserHasApplicationAccess.mock.invocationCallOrder[0]
-    ).toBeLessThan(grantSave.mock.invocationCallOrder[0] ?? 0);
   });
 });
