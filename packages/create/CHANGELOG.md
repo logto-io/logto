@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.40.1
+
+### Patch Changes
+
+- @logto/cli@1.40.1
+
 ## 1.40.0
 
 ### Patch Changes

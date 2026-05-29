@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.40.1
+
+### Patch Changes
+
+- Updated dependencies [e4eaa5aef5]
+  - @logto/core-kit@2.10.0
+  - @logto/account@0.4.1
+  - @logto/cli@1.40.1
+  - @logto/console@1.37.0
+  - @logto/demo-app@1.5.0
+  - @logto/device-demo-app@0.1.0
+  - @logto/experience@1.19.2
+  - @logto/phrases-experience@1.13.3
+  - @logto/schemas@1.40.1
+
 ## 1.40.0
 
 ### Minor Changes
