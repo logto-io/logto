@@ -82,6 +82,19 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     expect(connectSource).not.toContain(customScriptSource);
   });
 
+  it('allows local MinIO HTTP origins in experience img-src during development', async () => {
+    const run = koaExperienceSecurityHeaders('default', createQueries());
+    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+    await run(ctx, koaNoop);
+
+    const imageSource = getCspDirective(ctx, 'img-src');
+
+    expect(imageSource).toContain('https:');
+    expect(imageSource).toContain('http://localhost:9000');
+    expect(imageSource).toContain('http://127.0.0.1:9000');
+  });
+
   it('does not add Custom UI CSP sources when Custom UI assets are not configured', async () => {
     const run = koaExperienceSecurityHeaders(
       'default',
