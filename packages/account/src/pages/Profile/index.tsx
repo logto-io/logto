@@ -4,9 +4,13 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import { updateAvatar } from '@ac/apis/account';
 import AccountPageHeader from '@ac/components/AccountPageHeader';
+import AvatarUploadField from '@ac/components/AvatarUploadField';
 import PageFooter from '@ac/components/PageFooter';
 import { layoutClassNames } from '@ac/constants/layout';
+import useApi from '@ac/hooks/use-api';
+import useErrorHandler from '@ac/hooks/use-error-handler';
 
 import homeStyles from '../Home/index.module.scss';
 
@@ -79,6 +83,24 @@ const Profile = () => {
     userInfo,
   ]);
 
+  const updateAvatarRequest = useApi(updateAvatar);
+  const handleError = useErrorHandler();
+
+  const handleAvatarChange = useCallback(
+    async (avatarUrl: string) => {
+      const [error] = await updateAvatarRequest({ avatar: avatarUrl || null });
+
+      if (error) {
+        await handleError(error);
+        return;
+      }
+
+      await refreshUserInfo();
+      setToast(t('account_center.update_success.default.description'));
+    },
+    [handleError, refreshUserInfo, setToast, t, updateAvatarRequest]
+  );
+
   const handleUpdated = useCallback(async () => {
     await refreshUserInfo();
     setToast(t('account_center.update_success.default.description'));
@@ -97,6 +119,16 @@ const Profile = () => {
               <div className={classNames(styles.card, layoutClassNames.card)}>
                 {fieldRows.map((fieldRow) => {
                   const { name, label, value, controlValue } = fieldRow;
+
+                  if (name === 'avatar' && controlValue === AccountCenterControlValue.Edit) {
+                    return (
+                      <AvatarUploadField
+                        key={name}
+                        value={userInfo?.avatar ?? ''}
+                        onChange={handleAvatarChange}
+                      />
+                    );
+                  }
 
                   return (
                     <div key={name} className={classNames(styles.row, layoutClassNames.row)}>

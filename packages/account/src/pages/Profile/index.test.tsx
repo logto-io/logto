@@ -17,7 +17,7 @@ import renderWithPageContext, {
   mockUserInfo,
 } from '@ac/__mocks__/RenderWithPageContext';
 
-import { updateCustomData, updateName, updateProfile } from '../../apis/account';
+import { updateAvatar, updateCustomData, updateName, updateProfile } from '../../apis/account';
 
 import Profile from '.';
 
@@ -30,9 +30,14 @@ jest.mock('@logto/react', () => ({
 }));
 
 jest.mock('../../apis/account', () => ({
+  updateAvatar: jest.fn(),
   updateCustomData: jest.fn(),
   updateName: jest.fn(),
   updateProfile: jest.fn(),
+}));
+
+jest.mock('../../apis/avatar', () => ({
+  uploadAccountAvatar: jest.fn(),
 }));
 
 type ProfileRenderOptions = {
@@ -210,6 +215,7 @@ describe('<Profile />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    jest.mocked(updateAvatar).mockResolvedValue(undefined);
     jest.mocked(updateCustomData).mockResolvedValue(undefined);
     jest.mocked(updateName).mockResolvedValue(undefined);
     jest.mocked(updateProfile).mockResolvedValue(undefined);
@@ -224,8 +230,7 @@ describe('<Profile />', () => {
     expect(queryByText('name')).not.toBeNull();
     expect(queryByText('Alex')).not.toBeNull();
 
-    expect(queryByText('avatar')).not.toBeNull();
-    expect(queryByAltText('Alex')).not.toBeNull();
+    expect(queryByAltText('avatar')).not.toBeNull();
 
     expect(queryByText('birthdate')).not.toBeNull();
     expect(queryByText('2023-08-20')).not.toBeNull();
@@ -233,7 +238,7 @@ describe('<Profile />', () => {
     expect(queryByText('Favorite color')).not.toBeNull();
     expect(queryByText('Red')).not.toBeNull();
 
-    expect(queryAllByText('account_center.security.change')).toHaveLength(3);
+    expect(queryAllByText('account_center.security.change')).toHaveLength(4);
   });
 
   it('renders read-only profile fields in display-only state', () => {
@@ -300,8 +305,30 @@ describe('<Profile />', () => {
     expect(queryByText('account_center.security.change')).toBeNull();
   });
 
-  it('renders avatar image when available and not_set placeholder when missing', () => {
+  it('renders avatar image when available and upload placeholder when missing (edit mode)', () => {
     const { queryByAltText, unmount } = renderProfile();
+
+    expect(queryByAltText('avatar')).not.toBeNull();
+
+    unmount();
+
+    const { queryByAltText: queryMissingAvatarAltText } = renderProfile({
+      userInfo: {
+        avatar: null,
+      },
+    });
+
+    expect(queryMissingAvatarAltText('avatar')).toBeNull();
+  });
+
+  it('renders avatar image in read-only mode with label and not_set placeholder', () => {
+    const { queryByAltText, unmount } = renderProfile({
+      accountCenterSettings: {
+        fields: {
+          avatar: AccountCenterControlValue.ReadOnly,
+        },
+      },
+    });
 
     expect(queryByAltText('Alex')).not.toBeNull();
 
@@ -309,6 +336,11 @@ describe('<Profile />', () => {
 
     const { queryByAltText: queryMissingAvatarAltText, queryByText: queryMissingAvatarText } =
       renderProfile({
+        accountCenterSettings: {
+          fields: {
+            avatar: AccountCenterControlValue.ReadOnly,
+          },
+        },
         userInfo: {
           avatar: null,
         },
@@ -410,7 +442,7 @@ describe('<Profile />', () => {
   it('updates custom data fields without dropping existing custom data', async () => {
     const { getByText, queryAllByText } = renderProfile();
 
-    fireEvent.click(queryAllByText('account_center.security.change')[2]!);
+    fireEvent.click(queryAllByText('account_center.security.change')[3]!);
     fireEvent.click(document.querySelector('input[name="favoriteColor"]')!);
     fireEvent.click(getByText('Blue'));
     fireEvent.click(getByText('action.save'));
@@ -504,7 +536,7 @@ describe('<Profile />', () => {
   it('edits birthdate with segmented date inputs', async () => {
     const { getByText, queryAllByText } = renderProfile();
 
-    fireEvent.click(queryAllByText('account_center.security.change')[1]!);
+    fireEvent.click(queryAllByText('account_center.security.change')[2]!);
 
     const [yearInput, monthInput, dayInput] = document.querySelectorAll(
       'input[inputmode="numeric"]'
@@ -595,7 +627,7 @@ describe('<Profile />', () => {
   it('shows a validation error for invalid birthdate input', async () => {
     const { getByText, queryAllByText } = renderProfile();
 
-    fireEvent.click(queryAllByText('account_center.security.change')[1]!);
+    fireEvent.click(queryAllByText('account_center.security.change')[2]!);
 
     const [yearInput, monthInput, dayInput] = document.querySelectorAll(
       'input[inputmode="numeric"]'
