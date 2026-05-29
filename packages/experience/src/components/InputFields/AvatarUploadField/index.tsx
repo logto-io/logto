@@ -16,6 +16,9 @@ import {
 
 import styles from './index.module.scss';
 
+const isAbortError = (error: unknown) =>
+  (error instanceof DOMException || error instanceof Error) && error.name === 'AbortError';
+
 type Props = {
   readonly className?: string;
   readonly name: string;
@@ -46,6 +49,7 @@ const AvatarUploadField = ({
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController>();
+  const onUploadingChangeRef = useRef(onUploadingChange);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>();
   const [fileInputKey, setFileInputKey] = useState(0);
@@ -60,14 +64,19 @@ const AvatarUploadField = ({
   }, []);
 
   useEffect(() => {
-    onUploadingChange?.(isUploading);
-  }, [isUploading, onUploadingChange]);
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- keep latest parent callback in a ref
+    onUploadingChangeRef.current = onUploadingChange;
+  }, [onUploadingChange]);
+
+  useEffect(() => {
+    onUploadingChangeRef.current?.(isUploading);
+  }, [isUploading]);
 
   useEffect(() => {
     return () => {
-      onUploadingChange?.(false);
+      onUploadingChangeRef.current?.(false);
     };
-  }, [onUploadingChange]);
+  }, []);
 
   const openFilePicker = useCallback(() => {
     if (isUploading) {
@@ -129,7 +138,7 @@ const AvatarUploadField = ({
         onChange(url);
         onBlur?.();
       } catch (error: unknown) {
-        if (error instanceof Error && error.name === 'AbortError') {
+        if (isAbortError(error) || abortController.signal.aborted) {
           return;
         }
 
@@ -137,9 +146,8 @@ const AvatarUploadField = ({
       } finally {
         if (!abortController.signal.aborted) {
           setIsUploading(false);
+          setFileInputKey((key) => key + 1);
         }
-
-        setFileInputKey((key) => key + 1);
       }
     },
     [handleUploadError, onBlur, onChange, tAvatar]

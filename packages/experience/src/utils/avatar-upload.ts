@@ -1,30 +1,19 @@
-import { maxUploadFileSize } from '@logto/schemas';
+import { isAvatarMimeType, maxUploadFileSize } from '@logto/schemas';
 
-export const allowedAvatarMimeTypes = [
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'image/webp',
-  'image/bmp',
-] as const;
-
-export type AllowedAvatarMimeType = (typeof allowedAvatarMimeTypes)[number];
-
-export const avatarFileAccept = [...allowedAvatarMimeTypes].join(',');
-
-export const avatarFileExtensions = 'JPEG, PNG, GIF, WebP, BMP';
-
-const allowedAvatarMimeTypeSet = new Set<string>(allowedAvatarMimeTypes);
-
-export const isAllowedAvatarMimeType = (mimeType: string): mimeType is AllowedAvatarMimeType =>
-  allowedAvatarMimeTypeSet.has(mimeType);
+export type { AvatarMimeType as AllowedAvatarMimeType } from '@logto/schemas';
+export {
+  avatarFileAccept,
+  avatarFileExtensionsLabel as avatarFileExtensions,
+  avatarMimeTypes as allowedAvatarMimeTypes,
+  isAvatarMimeType as isAllowedAvatarMimeType,
+} from '@logto/schemas';
 
 export const validateAvatarFile = (file: File): 'file_size_exceeded' | 'file_type' | undefined => {
   if (file.size > maxUploadFileSize) {
     return 'file_size_exceeded';
   }
 
-  if (!isAllowedAvatarMimeType(file.type)) {
+  if (!isAvatarMimeType(file.type)) {
     return 'file_type';
   }
 

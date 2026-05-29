@@ -80,11 +80,12 @@ describe('AvatarUploadField', () => {
   });
 
   it('notifies the parent when upload state changes', async () => {
-    let resolveUpload: (value: { url: string }) => void = () => {};
     jest.mocked(uploadAvatar).mockImplementation(
-      () =>
+      async () =>
         new Promise((resolve) => {
-          resolveUpload = resolve;
+          setTimeout(() => {
+            resolve({ url: 'https://example.com/avatar.png' });
+          }, 50);
         })
     );
     const onUploadingChange = jest.fn();
@@ -113,8 +114,6 @@ describe('AvatarUploadField', () => {
     await waitFor(() => {
       expect(onUploadingChange).toHaveBeenCalledWith(true);
     });
-
-    resolveUpload({ url: 'https://example.com/avatar.png' });
 
     await waitFor(() => {
       expect(onUploadingChange).toHaveBeenCalledWith(false);

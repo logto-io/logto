@@ -36,6 +36,10 @@ const ExtraProfileForm = ({ customProfileFields, defaultValues, onSubmit }: Prop
   } = methods;
 
   const submit = handleSubmit(async (value) => {
+    if (isAvatarUploading) {
+      return;
+    }
+
     await onSubmit(value);
   });
 
