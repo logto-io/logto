@@ -107,9 +107,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
 
   // TODO: Remove placeholder avatar field picker UI once Experience and Account Center avatar upload is implemented.
   const isAvatarFieldAvailable =
-    isDevFeaturesEnabled &&
-    !isUserAssetsServiceLoading &&
-    isExperienceAvatarUploadEnabled === true;
+    isDevFeaturesEnabled && !isUserAssetsServiceLoading && isExperienceAvatarUploadEnabled === true;
   const builtInFields = useMemo(
     () =>
       getUserAvailableBuiltInFieldKeys(isAvatarFieldAvailable)
