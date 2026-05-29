@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-azuread",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Microsoft Azure AD connector implementation.",
   "author": "Mobilist Inc. <info@mobilist.com.tr>",
   "dependencies": {
@@ -19,8 +19,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "scripts": {
     "precommit": "lint-staged",

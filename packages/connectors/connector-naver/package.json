@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-naver",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Naver connector implementation.",
   "author": "Kyungyoon Kim. <ruddbs5302@gmail.com>",
   "dependencies": {
@@ -18,8 +18,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "scripts": {
     "precommit": "lint-staged",

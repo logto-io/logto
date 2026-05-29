@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-alipay-web",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Alipay implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
@@ -35,8 +35,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "scripts": {
     "precommit": "lint-staged",

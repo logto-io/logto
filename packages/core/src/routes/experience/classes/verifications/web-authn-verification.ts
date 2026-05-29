@@ -17,13 +17,13 @@ import { isoBase64URL } from '@simplewebauthn/server/helpers';
 import { type PublicKeyCredentialRequestOptionsJSON } from 'node_modules/@simplewebauthn/server/esm/deps.js';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import {
   generateWebAuthnAuthenticationOptions,
   generateWebAuthnRegistrationOptions,
   verifyWebAuthnAuthentication,
   verifyWebAuthnRegistration,
-} from '#src/routes/interaction/utils/webauthn.js';
+} from '#src/libraries/verification-helpers/webauthn.js';
+import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -78,9 +78,8 @@ abstract class BaseWebAuthnVerification {
    * This method is used to generate the WebAuthn registration options for the user.
    * The WebAuthn registration options is used to register a new WebAuthn credential for the user.
    *
-   * Refers to the {@link generateWebAuthnRegistrationOptions} function in  `interaction/utils/webauthn.ts` file.
+   * Refers to the {@link generateWebAuthnRegistrationOptions} function in `libraries/verification-helpers/webauthn.ts` file.
    * Keep it as the single source of truth for generating the WebAuthn registration options.
-   * TODO: Consider relocating the function under a shared folder
    */
   async generateWebAuthnRegistrationOptions(rpId: string): Promise<WebAuthnRegistrationOptions> {
     const user = await this.findUser();
@@ -182,9 +181,8 @@ export class WebAuthnVerification
    * This method is used to generate the WebAuthn authentication options for MFA verification.
    * The user must be already identified in the MFA flow.
    *
-   * Refers to the {@link generateWebAuthnAuthenticationOptions} function in  `interaction/utils/webauthn.ts` file.
+   * Refers to the {@link generateWebAuthnAuthenticationOptions} function in `libraries/verification-helpers/webauthn.ts` file.
    * Keep it as the single source of truth for generating the WebAuthn authentication options.
-   * TODO: Consider relocating the function under a shared folder
    *
    * @throws {RequestError} with status 400, if no WebAuthn credentials are found for the user.
    */

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-aliyun-dm",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Aliyun DM connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
@@ -17,8 +17,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "scripts": {
     "precommit": "lint-staged",

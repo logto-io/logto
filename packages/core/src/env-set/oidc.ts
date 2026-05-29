@@ -9,6 +9,7 @@ import {
 import { conditional } from '@silverhand/essentials';
 import { createLocalJWKSet } from 'jose';
 
+import { getOidcProviderPublicJwks } from '#src/libraries/oidc-private-key.js';
 import { exportJWK } from '#src/utils/jwks.js';
 
 const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
@@ -20,9 +21,8 @@ const loadOidcValues = async (issuer: string, configs: LogtoOidcConfigType) => {
     ({ value }) => crypto.createPrivateKey(value)
   );
   const session = configs[LogtoOidcConfigKey.Session];
-  const publicKeys = privateKeys.map((key) => crypto.createPublicKey(key));
   const privateJwks = await Promise.all(privateKeys.map(async (key) => exportJWK(key)));
-  const publicJwks = await Promise.all(publicKeys.map(async (key) => exportJWK(key)));
+  const publicJwks = await getOidcProviderPublicJwks(configs[LogtoOidcConfigKey.PrivateKeys]);
   const localJWKSet = createLocalJWKSet({ keys: publicJwks });
   const currentPrivateJwk = await exportJWK(currentPrivateKey);
 

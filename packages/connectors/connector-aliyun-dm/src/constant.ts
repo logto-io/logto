@@ -1,7 +1,43 @@
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
-export const endpoint = 'https://dm.aliyuncs.com/';
+export const defaultRegionId = 'cn-hangzhou';
+
+export const regionIds = [
+  'cn-hangzhou',
+  'ap-southeast-1',
+  'ap-southeast-2',
+  'eu-central-1',
+  'us-east-1',
+] as const;
+
+export type RegionId = (typeof regionIds)[number];
+
+export const regionConfigs: Record<RegionId, { title: string; endpoint: string }> = Object.freeze({
+  'cn-hangzhou': {
+    title: 'China (Hangzhou)',
+    endpoint: 'https://dm.aliyuncs.com/',
+  },
+  'ap-southeast-1': {
+    title: 'Singapore',
+    endpoint: 'https://dm.ap-southeast-1.aliyuncs.com/',
+  },
+  'ap-southeast-2': {
+    title: 'United States (formerly Sydney)',
+    endpoint: 'https://dm.ap-southeast-2.aliyuncs.com/',
+  },
+  'eu-central-1': {
+    title: 'Germany (Frankfurt)',
+    endpoint: 'https://dm.eu-central-1.aliyuncs.com/',
+  },
+  'us-east-1': {
+    title: 'US (Virginia)',
+    endpoint: 'https://dm.us-east-1.aliyuncs.com/',
+  },
+});
+
+export const getEndpoint = (regionId: RegionId = defaultRegionId) =>
+  regionConfigs[regionId].endpoint;
 
 export const staticConfigs = {
   Format: 'json',
@@ -43,6 +79,18 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<access-key-secret>',
+    },
+    {
+      key: 'regionId',
+      label: 'Region',
+      type: ConnectorConfigFormItemType.Select,
+      required: false,
+      defaultValue: defaultRegionId,
+      selectItems: regionIds.map((value) => ({
+        value,
+        title: regionConfigs[value].title,
+      })),
+      description: 'Select the Direct Mail region where the sender address is configured.',
     },
     {
       key: 'accountName',

@@ -70,6 +70,11 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
         'http://localhost:5173', // From local website
         'http://localhost:5174', // From local blog
       ];
+  /** Allow HTTP avatar URLs from local S3-compatible storage (e.g. MinIO) in dev. */
+  const developmentUserAssetImageSources = isProduction
+    ? []
+    : ['http://localhost:9000', 'http://127.0.0.1:9000'];
+  const userAssetImageSources = ["'self'", 'data:', 'https:', ...developmentUserAssetImageSources];
   const logtoOrigin = 'https://*.logto.io';
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';
@@ -161,7 +166,7 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
         useDefaults: true,
         directives: {
           'upgrade-insecure-requests': null,
-          imgSrc: ["'self'", 'data:', 'https:'],
+          imgSrc: userAssetImageSources,
           scriptSrc: appendCustomSources(experienceScriptSource, customUiCsp.scriptSrc),
           scriptSrcAttr: ["'unsafe-inline'"],
           connectSrc: appendCustomSources(experienceConnectSource, customUiCsp.connectSrc),
@@ -187,7 +192,7 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
       useDefaults: true,
       directives: {
         'upgrade-insecure-requests': null,
-        imgSrc: ["'self'", 'data:', 'https:'],
+        imgSrc: userAssetImageSources,
         scriptSrc: [
           "'self'",
           // Some of our users may use the Cloudflare Web Analytics service. We need to allow it to load its scripts.
@@ -209,7 +214,7 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
       useDefaults: true,
       directives: {
         'upgrade-insecure-requests': null,
-        imgSrc: ["'self'", 'data:', 'https:'],
+        imgSrc: userAssetImageSources,
         // Allow "unsafe-eval" and "unsafe-inline" for debugging purpose in non-production environment
         scriptSrc: [
           "'self'",

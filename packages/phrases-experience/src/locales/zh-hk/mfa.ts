@@ -1,6 +1,6 @@
 const mfa = {
   totp: '身份驗證應用 OTP',
-  webauthn: '通行證',
+  webauthn: '通行密鑰',
   backup_code: '備份代碼',
   email_verification_code: '電子郵件驗證碼',
   phone_verification_code: '短訊驗證碼',
@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: '發送至 {{identifier}}',
   onboarding: '開啟兩步驗證',
   onboarding_description:
-    '使用兩步驗證保護您的帳戶。選擇一種或多種方式：通行密碼、身份驗證器（OTP）、短訊驗證碼或備用碼。',
+    '使用兩步驗證保護您的帳戶。選擇一種或多種方式：通行密鑰、身份驗證器（OTP）、短訊驗證碼或備份代碼。',
   enable_mfa: '啟用兩步驗證',
   add_mfa_factors: '添加兩步驗證',
   add_mfa_description: '已啟用兩步驗證。選擇第二種驗證方法進行安全登錄。',
@@ -57,13 +57,13 @@ const mfa = {
   new_backup_codes_generated: '新的備份碼已取代了你的舊碼。請盡快將它們儲存在安全的地方。',
   enter_a_backup_code: '輸入備份代碼',
   enter_backup_code_description: '輸入初始啟用兩步驗證時保存的備份代碼。',
-  create_a_passkey: '創建通行證',
+  create_a_passkey: '創建通行密鑰',
   create_passkey_description:
-    '使用設備生物識別、安全密鑰（例如 YubiKey）或其他可用方法註冊您的通行證。',
+    '使用設備生物識別、安全密鑰（例如 YubiKey）或其他可用方法註冊您的通行密鑰。',
   try_another_verification_method: '嘗試其他驗證方法',
-  verify_via_passkey: '通過通行證驗證',
+  verify_via_passkey: '通過通行密鑰驗證',
   verify_via_passkey_description:
-    '使用通行證通過設備密碼或生物識別、掃描 QR 碼或使用 USB 安全密鑰（如 YubiKey）進行驗證。',
+    '使用通行密鑰通過設備密碼或生物識別、掃描 QR 碼或使用 USB 安全密鑰（如 YubiKey）進行驗證。',
   secret_key_copied: '密鑰已複製。',
   backup_code_copied: '備份代碼已複製。',
   webauthn_not_ready: 'WebAuthn 尚未準備就緒。請稍後重試。',

@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-linkedin",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "LinkedIn web connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
@@ -19,8 +19,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "scripts": {
     "precommit": "lint-staged",

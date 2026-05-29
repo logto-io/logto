@@ -16,6 +16,11 @@ import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 import RelationQueries from '#src/utils/RelationQueries.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
+type OrganizationRoleRuleMatch = {
+  organizationId: string;
+  organizationRoleId: string;
+};
+
 export class UserRoleRelationQueries extends RelationQueries<
   [typeof Organizations, typeof OrganizationRoles, typeof Users]
 > {
@@ -72,6 +77,30 @@ export class UserRoleRelationQueries extends RelationQueries<
       where ${fields.userId} = ${userId}
       and ${resources.fields.indicator} = ${resourceIndicator}
       ${conditionalSql(organizationId, (value) => sql`and ${fields.organizationId} = ${value}`)}
+    `);
+  }
+
+  async hasUserOrganizationRole(
+    userId: string,
+    organizationRoleRuleMatches: readonly OrganizationRoleRuleMatch[]
+  ): Promise<boolean> {
+    if (organizationRoleRuleMatches.length === 0) {
+      return false;
+    }
+
+    const { fields } = convertToIdentifiers(OrganizationRoleUserRelations, true);
+
+    return this.pool.exists(sql`
+      select 1
+      from ${this.table}
+      where ${fields.userId} = ${userId}
+        and (${fields.organizationId}, ${fields.organizationRoleId}) in (${sql.join(
+          organizationRoleRuleMatches.map(
+            ({ organizationId, organizationRoleId }) =>
+              sql`(${organizationId}, ${organizationRoleId})`
+          ),
+          sql`, `
+        )})
     `);
   }
 

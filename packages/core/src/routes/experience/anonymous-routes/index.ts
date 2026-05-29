@@ -3,12 +3,12 @@ import type Router from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { generateWebAuthnAuthenticationOptions } from '#src/libraries/verification-helpers/webauthn.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
-import { generateWebAuthnAuthenticationOptions } from '../../interaction/utils/webauthn.js';
 import { SignInExperienceValidator } from '../classes/libraries/sign-in-experience-validator.js';
 import { experienceRoutes } from '../const.js';
 

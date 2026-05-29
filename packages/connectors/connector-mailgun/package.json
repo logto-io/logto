@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-mailgun",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Mailgun connector for Logto.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
@@ -18,8 +18,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.png"
   ],
   "scripts": {
     "precommit": "lint-staged",

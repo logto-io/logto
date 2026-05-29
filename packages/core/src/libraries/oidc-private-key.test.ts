@@ -1,8 +1,11 @@
+import { createPublicKey, generateKeyPairSync } from 'node:crypto';
+
 import { OidcSigningKeyStatus } from '@logto/schemas';
 
 import Queries from '#src/tenants/Queries.js';
 import { createMockCommonQueryMethods } from '#src/test-utils/query.js';
 import { MockWellKnownCache } from '#src/test-utils/tenant.js';
+import { exportJWK } from '#src/utils/jwks.js';
 
 import {
   OidcPrivateKeyLibrary,
@@ -11,6 +14,7 @@ import {
   getImmediatelyRotatedOidcPrivateKeys,
   getOidcPrivateKeysAfterDeletion,
   getOidcProviderPrivateKeys,
+  getOidcProviderPublicJwks,
   getStagedRotatedOidcPrivateKeys,
   normalizeOidcPrivateKeys,
   rotateOidcPrivateKeyStatuses,
@@ -24,6 +28,27 @@ const createPrivateKey = (id: string, createdAt: number, status?: OidcSigningKey
   createdAt,
   status,
 });
+
+const createPemPrivateKey = (id: string, status: OidcSigningKeyStatus) => {
+  const { privateKey } = generateKeyPairSync('ec', {
+    namedCurve: 'P-384',
+    privateKeyEncoding: {
+      type: 'pkcs8',
+      format: 'pem',
+    },
+    publicKeyEncoding: {
+      type: 'spki',
+      format: 'pem',
+    },
+  });
+
+  return {
+    id,
+    value: privateKey,
+    createdAt: Date.now(),
+    status,
+  };
+};
 
 describe('normalizeOidcPrivateKeys', () => {
   it('normalizes legacy private keys without status into Current and Previous', () => {
@@ -103,6 +128,21 @@ describe('getOidcProviderPrivateKeys', () => {
       createPrivateKey('next', 1, OidcSigningKeyStatus.Next),
       createPrivateKey('previous', 3, OidcSigningKeyStatus.Previous),
     ]);
+  });
+});
+
+describe('getOidcProviderPublicJwks', () => {
+  it('exports public JWKS in oidc-provider key order', async () => {
+    const currentKey = createPemPrivateKey('current', OidcSigningKeyStatus.Current);
+    const nextKey = createPemPrivateKey('next', OidcSigningKeyStatus.Next);
+    const previousKey = createPemPrivateKey('previous', OidcSigningKeyStatus.Previous);
+    const expectedKeys = await Promise.all(
+      [currentKey, nextKey, previousKey].map(async ({ value }) => exportJWK(createPublicKey(value)))
+    );
+
+    await expect(getOidcProviderPublicJwks([previousKey, nextKey, currentKey])).resolves.toEqual(
+      expectedKeys
+    );
   });
 });
 

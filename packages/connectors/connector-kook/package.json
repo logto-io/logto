@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-kook",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "KOOK connector implementation.",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
@@ -10,8 +10,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "scripts": {
     "precommit": "lint-staged",

@@ -1,9 +1,7 @@
 import type { Profile } from '@logto/schemas';
 import { InteractionEvent } from '@logto/schemas';
-import { assert } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { Provider, InteractionResults } from 'oidc-provider';
-import { errors } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -136,51 +134,4 @@ export const clearInteractionStorage = async (ctx: Context, provider: Provider) 
   if (result) {
     await provider.interactionResult(ctx.req, ctx.res, {});
   }
-};
-
-/**
- * The following three methods (`getInteractionFromProviderByJti`, `assignResultToInteraction`
- * and `epochTime`) refer to implementation in
- * https://github.com/panva/node-oidc-provider/blob/main/lib/provider.js
- */
-type Interaction = Awaited<ReturnType<Provider['interactionDetails']>>;
-
-const epochTime = (date = Date.now()) => Math.floor(date / 1000);
-
-export const getInteractionFromProviderByJti = async (
-  jti: string,
-  provider: Provider
-): Promise<Interaction> => {
-  const interaction = await provider.Interaction.find(jti);
-
-  assert(interaction, new errors.SessionNotFound('interaction session not found'));
-
-  if (interaction.session?.uid) {
-    const session = await provider.Session.findByUid(interaction.session.uid);
-
-    assert(session, new errors.SessionNotFound('session not found'));
-
-    assert(
-      interaction.session.accountId === session.accountId,
-      new errors.SessionNotFound('session principal changed')
-    );
-  }
-
-  return interaction;
-};
-
-/**
- * Since we don't have the OIDC provider context here, `provider.interactionResult` cannot be used.
- * This method is forked from the original implementation in `provide.interactionResult` in oidc-provider.
- * Assign the result to the interaction and save it.
- */
-export const assignResultToInteraction = async (
-  interaction: Interaction,
-  result: InteractionResults
-) => {
-  const { lastSubmission, exp } = interaction;
-
-  // eslint-disable-next-line @silverhand/fp/no-mutation
-  interaction.result = { ...lastSubmission, ...result };
-  await interaction.save(exp - epochTime());
 };

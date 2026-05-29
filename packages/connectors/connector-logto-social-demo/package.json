@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-logto-social-demo",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "OAuth standard connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
@@ -18,8 +18,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "scripts": {
     "precommit": "lint-staged",

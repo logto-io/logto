@@ -21,9 +21,12 @@ await mockEsmWithActual('../utils/interaction.js', () => ({
   storeInteractionResult: jest.fn(),
 }));
 
-const { verifySsoOnlyEmailIdentifier } = mockEsm('../utils/single-sign-on-guard.js', () => ({
-  verifySsoOnlyEmailIdentifier: jest.fn(),
-}));
+const { verifySsoOnlyEmailIdentifier } = mockEsm(
+  '#src/libraries/verification-helpers/single-sign-on-guard.js',
+  () => ({
+    verifySsoOnlyEmailIdentifier: jest.fn(),
+  })
+);
 
 const { verifyIdentifierByVerificationCode } = mockEsm(
   '../utils/verification-code-validation.js',
@@ -32,9 +35,12 @@ const { verifyIdentifierByVerificationCode } = mockEsm(
   })
 );
 
-const { verifySocialIdentity } = mockEsm('../utils/social-verification.js', () => ({
-  verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
-}));
+const { verifySocialIdentity } = mockEsm(
+  '#src/libraries/verification-helpers/social-verification.js',
+  () => ({
+    verifySocialIdentity: jest.fn().mockResolvedValue({ id: 'foo' }),
+  })
+);
 
 const identifierPayloadVerification = await pickDefault(
   import('./identifier-payload-verification.js')

@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.37.0
+
+### Minor Changes
+
+- 8407ecd410: add a time-range picker to the audit logs page with a default of the last 7 days.
+
+  the picker offers preset windows (`Last 1 hour` / `Last 24 hours` / `Last 7 days` / `Last 30 days`) plus a custom date range. it scopes every request to a bounded `start_time` / `end_time` window — reducing latency on tenants with very large log volumes — while keeping older logs reachable by widening the range.
+
+- 42f3969840: add protected app ID token claim scopes and tenant custom domain SDK endpoint support
+
+  Protected App settings in Console let you choose which ID token claims (such as `roles`, `custom_data`, and `organizations`) are forwarded to your origin via the `Logto-ID-Token` header. When a tenant custom domain is active, Protected App remote config uses that domain as the SDK endpoint.
+
+### Patch Changes
+
+- 7b7a5c8f6: the Audit Logs page now opts into the count-cap behavior introduced in `@logto/core` by passing `?enableCap=true` to `GET /api/logs`.
+
+  For tenants with very large log volumes (more than 10,000 matching entries), the page renders a Prev/Next layout when the server reports a capped count instead of hitting `statement_timeout`.
+
 ## 1.36.0
 
 ### Minor Changes

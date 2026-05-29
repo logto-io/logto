@@ -61,6 +61,10 @@
     flex-direction: column;
   }
 
+  .fullPage {
+    background: var(--color-bg-float-base);
+  }
+
   .container {
     flex: 1;
     display: flex;
@@ -73,8 +77,12 @@
   .main {
     width: auto;
     flex: 1;
-    padding: _.unit(4);
+    padding: _.unit(4) _.unit(5);
     background: var(--color-bg-float-base);
+  }
+
+  .withMobileTabNav .main {
+    padding-top: _.unit(4);
   }
 
   .cardContainer {

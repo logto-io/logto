@@ -1,11 +1,21 @@
+import {
+  adminTenantId,
+  LogtoConfigs,
+  LogtoOidcConfigKey,
+  type OidcPrivateKey,
+  oidcPrivateKeyGuard,
+} from '@logto/schemas';
 import { Tenants } from '@logto/schemas/models';
 import { conditional } from '@silverhand/essentials';
 import { parseDsn, sql, stringifyDsn } from '@silverhand/slonik';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { convertToIdentifiers } from '#src/utils/sql.js';
 
 export class TenantNotFoundError extends Error {}
+
+const { table: logtoConfigsTable, fields: logtoConfigFields } = convertToIdentifiers(LogtoConfigs);
 
 /**
  * This function is to fetch the tenant password for the corresponding Postgres user.
@@ -42,4 +52,21 @@ export const getTenantDatabaseDsn = async (tenantId: string) => {
     username,
     password: conditional(typeof password === 'string' && password),
   });
+};
+
+/**
+ * Read admin tenant signing keys through the shared pool for OSS admin token validation.
+ *
+ * Like `getTenantDatabaseDsn`, this cannot use tenant-scoped Queries because callers may need
+ * admin tenant keys while running in a user tenant whose pool is scoped by RLS.
+ */
+export const getAdminTenantPrivateSigningKeys = async (): Promise<OidcPrivateKey[]> => {
+  const pool = await EnvSet.sharedPool;
+  const { value } = await pool.one<{ value: unknown }>(sql`
+    select ${logtoConfigFields.value} from ${logtoConfigsTable}
+      where ${logtoConfigFields.tenantId} = ${adminTenantId}
+      and ${logtoConfigFields.key} = ${LogtoOidcConfigKey.PrivateKeys}
+  `);
+
+  return oidcPrivateKeyGuard.array().parse(value);
 };

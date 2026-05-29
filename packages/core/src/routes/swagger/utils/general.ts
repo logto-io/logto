@@ -18,6 +18,8 @@ const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slic
 const cloudOnlyTag = 'Cloud only';
 /** The tag name is used in the supplement document to indicate that the corresponding API operation is a dev feature. */
 export const devFeatureTag = 'Dev feature';
+/** The OpenAPI schema extension that hides a schema property when dev features are disabled. */
+export const devFeatureSchemaExtension = 'x-logto-dev-feature';
 
 const reservedTags = new Set([cloudOnlyTag, devFeatureTag]);
 
@@ -258,8 +260,10 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
  * **CAUTION**: This function mutates the input document.
  *
  * Remove operations (path + method) that are tagged with `Cloud only` if the application is not
- * running in the cloud and remove operations with `Dev feature` tag if Logto's `isDevFeatureEnabled` flag
- * is set to be false.
+ * running in the cloud and remove operations with `Dev feature` tag if Logto's
+ * `isDevFeaturesEnabled` flag is set to be false. It also prunes schema properties marked with
+ * `x-logto-dev-feature` when dev features are disabled, and removes the internal marker when they
+ * are enabled.
  *
  * This will prevent the swagger validation from failing in the OSS environment.
  *
@@ -269,6 +273,9 @@ export const removeUnnecessaryOperations = (
   document: DeepPartial<OpenAPIV3.Document>
 ): DeepPartial<OpenAPIV3.Document> => {
   const { isCloud, isDevFeaturesEnabled } = EnvSet.values;
+
+  removeDevFeatureSchemaProperties(document);
+
   if ((isCloud && isDevFeaturesEnabled) || !document.paths) {
     return document;
   }
@@ -292,6 +299,82 @@ export const removeUnnecessaryOperations = (
   }
 
   return document;
+};
+
+const isRecord = (value: unknown): value is Record<string, unknown> => isObject(value);
+
+const removeRequiredProperty = (
+  schema: Record<string, unknown>,
+  required: unknown,
+  propertyName: string
+) => {
+  if (!Array.isArray(required)) {
+    return;
+  }
+
+  const nextRequired = required.filter((item) => item !== propertyName);
+
+  if (nextRequired.length === 0) {
+    Reflect.deleteProperty(schema, 'required');
+
+    return;
+  }
+
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- Pruning the supplement document is intentionally in-place.
+  schema.required = nextRequired;
+};
+
+const removeDevFeatureSchemaProperty = (
+  schema: Record<string, unknown>,
+  properties: Record<string, unknown>,
+  propertyName: string,
+  propertySchema: unknown
+) => {
+  if (!isRecord(propertySchema) || propertySchema[devFeatureSchemaExtension] !== true) {
+    return false;
+  }
+
+  if (!EnvSet.values.isDevFeaturesEnabled) {
+    Reflect.deleteProperty(properties, propertyName);
+    removeRequiredProperty(schema, schema.required, propertyName);
+
+    return true;
+  }
+
+  Reflect.deleteProperty(propertySchema, devFeatureSchemaExtension);
+
+  return false;
+};
+
+const removeDevFeatureSchemaProperties = (value: unknown) => {
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      removeDevFeatureSchemaProperties(item);
+    }
+
+    return;
+  }
+
+  if (!isRecord(value)) {
+    return;
+  }
+
+  const schema = value;
+  const { properties } = schema;
+
+  if (isRecord(properties)) {
+    for (const [propertyName, propertySchema] of Object.entries(properties)) {
+      if (removeDevFeatureSchemaProperty(schema, properties, propertyName, propertySchema)) {
+        continue;
+      }
+    }
+  }
+
+  Reflect.deleteProperty(schema, devFeatureSchemaExtension);
+
+  for (const item of Object.values(schema)) {
+    removeDevFeatureSchemaProperties(item);
+  }
 };
 
 export const shouldThrow = () => !EnvSet.values.isProduction || EnvSet.values.isIntegrationTest;

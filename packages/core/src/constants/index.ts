@@ -16,6 +16,9 @@ export const defaultIdPInitiatedSamlSsoSessionTtl = 10 * 60 * 1000; // 10 minute
 export const idpInitiatedSamlSsoSessionCookieName = '_logto_idp_saml_sso_session_id';
 export const spInitiatedSamlSsoSessionCookieName = '_logto_sp_saml_sso_session_id';
 
+/** URL path segment for SSO authentication endpoints (mounted as `/api/authn/${ssoPath}/...`). */
+export const ssoPath = 'single-sign-on';
+
 export const reservedBuiltInProfileKeySet = new Set<string>(reservedBuiltInProfileKeys);
 export const reservedCustomDataKeySet = new Set<string>(reservedCustomDataKeys);
 export const reservedSignInIdentifierKeySet = new Set<string>(reservedSignInIdentifierKeys);

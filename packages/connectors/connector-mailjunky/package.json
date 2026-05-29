@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-mailjunky",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "Logto email connector for MailJunky (transactional email API).",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
@@ -18,8 +18,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "scripts": {
     "precommit": "lint-staged",

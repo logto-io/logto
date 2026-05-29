@@ -1,5 +1,12 @@
 # @logto/connector-saml
 
+## 1.3.5
+
+### Patch Changes
+
+- Updated dependencies [41a56f79e3]
+  - @logto/connector-kit@5.0.1
+
 ## 1.3.4
 
 ### Patch Changes

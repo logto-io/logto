@@ -17,7 +17,7 @@ const { mockEsmWithActual } = createMockUtils(jest);
 const mockValidateTotpSecret = jest.fn();
 const mockValidateTotpToken = jest.fn();
 
-await mockEsmWithActual('../interaction/utils/totp-validation.js', () => ({
+await mockEsmWithActual('#src/libraries/verification-helpers/totp-validation.js', () => ({
   validateTotpSecret: mockValidateTotpSecret,
   validateTotpToken: mockValidateTotpToken,
 }));

@@ -1,5 +1,12 @@
 # @logto/connector-mock-email
 
+## 3.0.1
+
+### Patch Changes
+
+- Updated dependencies [41a56f79e3]
+  - @logto/connector-kit@5.0.1
+
 ## 3.0.0
 
 ### Major Changes

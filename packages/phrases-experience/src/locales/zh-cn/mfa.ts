@@ -1,6 +1,6 @@
 const mfa = {
   totp: '身份验证应用 OTP',
-  webauthn: '通行证',
+  webauthn: '通行密钥',
   backup_code: '备份代码',
   email_verification_code: '电子邮件验证码',
   phone_verification_code: '短信验证码',
@@ -57,13 +57,13 @@ const mfa = {
   new_backup_codes_generated: '新的备份码已替换了你的旧码。请尽快将它们保存在安全的地方。',
   enter_a_backup_code: '输入备份代码',
   enter_backup_code_description: '输入初始启用两步验证时保存的备份代码。',
-  create_a_passkey: '创建通行证',
+  create_a_passkey: '创建通行密钥',
   create_passkey_description:
-    '使用设备生物识别、安全密钥（例如 YubiKey）或其他可用方法注册您的通行证。',
+    '使用设备生物识别、安全密钥（例如 YubiKey）或其他可用方法注册您的通行密钥。',
   try_another_verification_method: '尝试其他验证方法',
-  verify_via_passkey: '通过通行证验证',
+  verify_via_passkey: '通过通行密钥验证',
   verify_via_passkey_description:
-    '使用通行证通过设备密码或生物识别、扫描 QR 码或使用 USB 安全密钥（如 YubiKey）进行验证。',
+    '使用通行密钥通过设备密码或生物识别、扫描 QR 码或使用 USB 安全密钥（如 YubiKey）进行验证。',
   secret_key_copied: '密钥已复制。',
   backup_code_copied: '备份代码已复制。',
   webauthn_not_ready: 'WebAuthn 尚未准备就绪。请稍后重试。',

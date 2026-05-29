@@ -1,5 +1,12 @@
 # @logto/connector-aliyun-sms
 
+## 1.5.3
+
+### Patch Changes
+
+- Updated dependencies [41a56f79e3]
+  - @logto/connector-kit@5.0.1
+
 ## 1.5.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.0.1
+
+### Patch Changes
+
+- 41a56f79e3: fix email branding URL detection for dotted abbreviations
+
 ## 5.0.0
 
 ### Major Changes

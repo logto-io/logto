@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-oidc",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "OIDC standard connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
@@ -21,8 +21,7 @@
   "files": [
     "lib",
     "docs",
-    "logo.svg",
-    "logo-dark.svg"
+    "logo.svg"
   ],
   "scripts": {
     "precommit": "lint-staged",

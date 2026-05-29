@@ -11,4 +11,20 @@ describe('aliyunDmConfigGuard', () => {
     const result = aliyunDmConfigGuard.safeParse(mockedConfigWithAllRequiredTemplates);
     expect(result.success).toEqual(true);
   });
+
+  it('passes with supported region', () => {
+    const result = aliyunDmConfigGuard.safeParse({
+      ...mockedConfigWithAllRequiredTemplates,
+      regionId: 'ap-southeast-1',
+    });
+    expect(result.success).toEqual(true);
+  });
+
+  it('throws with unsupported region', () => {
+    const result = aliyunDmConfigGuard.safeParse({
+      ...mockedConfigWithAllRequiredTemplates,
+      regionId: 'cn-shanghai',
+    });
+    expect(result.success).toEqual(false);
+  });
 });

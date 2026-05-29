@@ -44,4 +44,10 @@ export const layoutClassNames = Object.freeze({
   sidebar: 'logto_ac-sidebar',
   /** A navigation item inside the sidebar. */
   sidebarItem: 'logto_ac-sidebar-item',
+  /** Full-page layout with multiple account nav destinations (sidebar or mobile tabs). */
+  withTabNav: 'logto_ac-with-tab-nav',
+  /** Mobile top tab navigation on the Security / Profile page. */
+  mobileTabNav: 'logto_ac-mobile-tab-nav',
+  /** A tab item inside the mobile tab navigation. */
+  mobileTabNavItem: 'logto_ac-mobile-tab-nav-item',
 });

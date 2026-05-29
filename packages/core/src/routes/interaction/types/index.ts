@@ -13,7 +13,6 @@ import type {
 import type { z } from 'zod';
 
 import type {
-  socialAuthorizationUrlPayloadGuard,
   accountIdIdentifierGuard,
   verifiedEmailIdentifierGuard,
   verifiedPhoneIdentifierGuard,
@@ -29,13 +28,6 @@ export type PasswordIdentifierPayload =
   | PhonePasswordPayload;
 
 export type SocialVerifiedIdentifierPayload = SocialEmailPayload | SocialPhonePayload;
-
-/**
- * Legacy type for the interaction API.
- * Use the latest experience API instead.
- * Moved to `@logto/schemas`
- */
-export type SocialAuthorizationUrlPayload = z.infer<typeof socialAuthorizationUrlPayloadGuard>;
 
 /* Interaction Types */
 // Identifier

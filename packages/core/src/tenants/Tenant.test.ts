@@ -44,6 +44,7 @@ const adminMiddlewareList = middlewareList.map(
 
 mockEsm('./utils.js', () => ({
   getTenantDatabaseDsn: async () => 'postgres://mock.db.url',
+  getAdminTenantPrivateSigningKeys: async () => [],
 }));
 
 // eslint-disable-next-line unicorn/consistent-function-scoping
