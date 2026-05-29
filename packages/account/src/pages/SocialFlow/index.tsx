@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import {
   createSocialVerification,
+  deleteSocialIdentity,
   linkSocialIdentity,
   replaceSocialIdentity,
 } from '@ac/apis/social';
@@ -21,7 +22,7 @@ import { getLocalizedConnectorName } from '@ac/utils/social-connector';
 import { finalizeSocialFlowFailure, finalizeSocialFlowSuccess } from '@ac/utils/social-flow';
 
 type Props = {
-  readonly mode: 'add' | 'change';
+  readonly mode: 'add' | 'remove' | 'change';
 };
 
 const generateState = () => crypto.randomUUID().replaceAll('-', '');
@@ -43,6 +44,7 @@ const SocialFlow = ({ mode }: Props) => {
     setVerificationId,
   } = useContext(PageContext);
   const createSocialVerificationRequest = useApi(createSocialVerification);
+  const deleteSocialIdentityRequest = useApi(deleteSocialIdentity);
   const linkSocialIdentityRequest = useApi(linkSocialIdentity);
   const replaceSocialIdentityRequest = useApi(replaceSocialIdentity);
   const handleError = useErrorHandler();
@@ -104,6 +106,18 @@ const SocialFlow = ({ mode }: Props) => {
       navigate,
     });
   }, [connector, connectorId, connectorName, navigate, refreshUserInfo]);
+
+  const handleRemoveSuccess = useCallback(async () => {
+    if (!connectorId) {
+      return;
+    }
+
+    await finalizeSocialFlowSuccess({
+      connectorId,
+      refreshUserInfo,
+      navigate,
+    });
+  }, [connectorId, navigate, refreshUserInfo]);
 
   useEffect(() => {
     if (!verificationId) {
@@ -170,6 +184,17 @@ const SocialFlow = ({ mode }: Props) => {
       window.location.assign(result.authorizationUri);
     };
 
+    const startRemoveFlow = async () => {
+      const [error] = await deleteSocialIdentityRequest(verificationId, connector.target);
+
+      if (error) {
+        await handleFlowError(error);
+        return;
+      }
+
+      await handleRemoveSuccess();
+    };
+
     const startChangeFlow = async () => {
       // Post-callback phase: replace the social identity
       if (storedSocialFlow?.status === 'verified') {
@@ -214,14 +239,20 @@ const SocialFlow = ({ mode }: Props) => {
       window.location.assign(result.authorizationUri);
     };
 
-    void (mode === 'add' ? startAddFlow() : startChangeFlow());
+    void (mode === 'add'
+      ? startAddFlow()
+      : mode === 'remove'
+        ? startRemoveFlow()
+        : startChangeFlow());
   }, [
     connector,
     connectorId,
     connectorName,
     createSocialVerificationRequest,
+    deleteSocialIdentityRequest,
     handleFlowError,
     handleLinkSuccess,
+    handleRemoveSuccess,
     hasLinkedConnector,
     linkSocialIdentityRequest,
     replaceSocialIdentityRequest,

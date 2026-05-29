@@ -176,6 +176,10 @@ export const Main = () => {
         path={`${socialRoutePrefix}/:connectorId/change`}
         element={<SocialFlow mode="change" />}
       />
+      <Route
+        path={`${socialRoutePrefix}/:connectorId/remove`}
+        element={<SocialFlow mode="remove" />}
+      />
       {showsSecurityPage && <Route path={securityRoute} element={<Security />} />}
       {isDevFeaturesEnabled && <Route path={profileRoute} element={<Profile />} />}
       <Route index element={<Home />} />
