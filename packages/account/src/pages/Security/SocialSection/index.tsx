@@ -2,24 +2,24 @@ import DynamicT from '@experience/shared/components/DynamicT';
 import { getLogoUrl } from '@experience/shared/utils/logo';
 import { AccountCenterControlValue, type Identity } from '@logto/schemas';
 import classNames from 'classnames';
-import { useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import { deleteSocialIdentity } from '@ac/apis/social';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import { layoutClassNames } from '@ac/constants/layout';
-import {
-  getSocialAddRoute,
-  getSocialChangeRoute,
-  getSocialRemoveRoute,
-} from '@ac/constants/routes';
+import { getSocialAddRoute, getSocialChangeRoute, verifiedActionRoute } from '@ac/constants/routes';
+import useApi from '@ac/hooks/use-api';
+import useErrorHandler from '@ac/hooks/use-error-handler';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { hasVisibleSocialSection } from '@ac/utils/security-page';
 import {
   getAvailableSocialConnectors,
   getLocalizedConnectorName,
 } from '@ac/utils/social-connector';
+import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from './index.module.scss';
 
@@ -61,7 +61,18 @@ const SocialSection = () => {
     i18n: { language },
   } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, theme, userInfo } = useContext(PageContext);
+  const {
+    accountCenterSettings,
+    experienceSettings,
+    theme,
+    userInfo,
+    verificationId,
+    setVerificationId,
+    refreshUserInfo,
+    setToast,
+  } = useContext(PageContext);
+  const handleError = useErrorHandler();
+  const deleteSocialIdentityRequest = useApi(deleteSocialIdentity);
   const [selectedConnectorId, setSelectedConnectorId] = useState<string>();
 
   const socialControl = accountCenterSettings?.fields.social;
@@ -88,6 +99,88 @@ const SocialSection = () => {
   const selectedConnectorName =
     selectedConnector && getLocalizedConnectorName(selectedConnector, language);
   const currentPageUrl = `${window.location.origin}${window.location.pathname}`;
+
+  const navigateTo = useCallback(
+    (route: string) => {
+      setPendingReturn(getPendingReturn() ?? window.location.href);
+      navigate(route);
+    },
+    [navigate]
+  );
+
+  const removeSocialIdentityForConnector = useCallback(
+    async (connectorId: string, verifiedId: string) => {
+      const connector = connectors.find(({ id }) => id === connectorId);
+
+      if (!connector) {
+        return;
+      }
+
+      const connectorName = getLocalizedConnectorName(connector, language);
+      const [error] = await deleteSocialIdentityRequest(verifiedId, connector.target);
+
+      if (error) {
+        await handleError(error, {
+          'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
+            setToast(t('account_center.verification.verification_required'));
+          },
+        });
+        return;
+      }
+
+      await refreshUserInfo();
+      setToast(t('account_center.social.removed', { connector: connectorName }));
+    },
+    [
+      connectors,
+      deleteSocialIdentityRequest,
+      handleError,
+      language,
+      refreshUserInfo,
+      setToast,
+      setVerificationId,
+      t,
+    ]
+  );
+
+  const handleRemoveConfirm = useCallback(async () => {
+    if (!selectedConnectorId) {
+      return;
+    }
+
+    const connectorId = selectedConnectorId;
+    setSelectedConnectorId(undefined);
+
+    if (verificationId) {
+      await removeSocialIdentityForConnector(connectorId, verificationId);
+      return;
+    }
+
+    sessionStorage.setPendingVerifiedAction('remove-social');
+    sessionStorage.setPendingSocialRemoveConnectorId(connectorId);
+    navigateTo(verifiedActionRoute);
+  }, [navigateTo, removeSocialIdentityForConnector, selectedConnectorId, verificationId]);
+
+  useEffect(() => {
+    if (!verificationId) {
+      return;
+    }
+
+    if (sessionStorage.getPendingVerifiedAction() !== 'remove-social') {
+      return;
+    }
+
+    const connectorId = sessionStorage.getPendingSocialRemoveConnectorId();
+
+    if (!connectorId) {
+      return;
+    }
+
+    sessionStorage.clearPendingVerifiedAction();
+    sessionStorage.clearPendingSocialRemoveConnectorId();
+    void removeSocialIdentityForConnector(connectorId, verificationId);
+  }, [removeSocialIdentityForConnector, verificationId]);
 
   if (!hasVisibleSocialSection(socialControl, experienceSettings)) {
     return null;
@@ -159,7 +252,6 @@ const SocialSection = () => {
                           type="button"
                           className={`${styles.actionButton} ${styles.removeButton}`}
                           onClick={() => {
-                            setPendingReturn(getPendingReturn() ?? currentPageUrl);
                             setSelectedConnectorId(connector.id);
                           }}
                         >
@@ -195,8 +287,7 @@ const SocialSection = () => {
             setSelectedConnectorId(undefined);
           }}
           onConfirm={() => {
-            navigate(getSocialRemoveRoute(selectedConnector.id));
-            setSelectedConnectorId(undefined);
+            void handleRemoveConfirm();
           }}
         >
           <DynamicT

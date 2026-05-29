@@ -65,11 +65,6 @@ const prebuiltRoutes = [
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social_change',
     isPreviewHidden: true,
   },
-  {
-    path: '/account/social/:connectorId/remove',
-    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.social_remove',
-    isPreviewHidden: true,
-  },
 ] as const satisfies readonly PrebuiltRoute[];
 
 const accountCenterRoutes = [

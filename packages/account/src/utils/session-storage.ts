@@ -13,6 +13,7 @@ const storageKeys = Object.freeze({
   socialFlow: `${storagePrefix}social-verification`,
   pendingReturn: `${storagePrefix}pending-return`,
   pendingVerifiedAction: `${storagePrefix}pending-verified-action`,
+  pendingSocialRemoveConnectorId: `${storagePrefix}pending-social-remove-connector-id`,
 });
 
 export type StoredVerificationRecord = {
@@ -87,6 +88,7 @@ const pendingVerifiedActions = Object.freeze([
   'remove-username',
   'remove-email',
   'remove-phone',
+  'remove-social',
 ] as const);
 
 export type PendingVerifiedAction = (typeof pendingVerifiedActions)[number];
@@ -270,6 +272,15 @@ export const accountStorage = Object.freeze({
       removeItem(storageKeys.pendingVerifiedAction, 'session');
     },
   },
+  pendingSocialRemoveConnectorId: {
+    get: (): string | undefined => getString(storageKeys.pendingSocialRemoveConnectorId, 'session'),
+    set: (connectorId: string) => {
+      setString(storageKeys.pendingSocialRemoveConnectorId, connectorId, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.pendingSocialRemoveConnectorId, 'session');
+    },
+  },
 });
 
 export const sessionStorage = Object.freeze({
@@ -288,6 +299,9 @@ export const sessionStorage = Object.freeze({
   getPendingVerifiedAction: accountStorage.pendingVerifiedAction.get,
   setPendingVerifiedAction: accountStorage.pendingVerifiedAction.set,
   clearPendingVerifiedAction: accountStorage.pendingVerifiedAction.clear,
+  getPendingSocialRemoveConnectorId: accountStorage.pendingSocialRemoveConnectorId.get,
+  setPendingSocialRemoveConnectorId: accountStorage.pendingSocialRemoveConnectorId.set,
+  clearPendingSocialRemoveConnectorId: accountStorage.pendingSocialRemoveConnectorId.clear,
   getIdentifier: () => getString(storageKeys.identifier, 'session'),
   setIdentifier: (value: string) => {
     setString(storageKeys.identifier, value, 'session');

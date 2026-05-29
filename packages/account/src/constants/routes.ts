@@ -27,7 +27,5 @@ export const socialCallbackRoutePrefix = '/callback/social';
 export const getSocialAddRoute = (connectorId: string) => `${socialRoutePrefix}/${connectorId}`;
 export const getSocialChangeRoute = (connectorId: string) =>
   `${socialRoutePrefix}/${connectorId}/change`;
-export const getSocialRemoveRoute = (connectorId: string) =>
-  `${socialRoutePrefix}/${connectorId}/remove`;
 export const getSocialCallbackRoute = (connectorId: string) =>
   `${socialCallbackRoutePrefix}/${connectorId}`;
