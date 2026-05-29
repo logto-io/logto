@@ -45,7 +45,11 @@ import { i18next } from '#src/utils/i18n.js';
 import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 
-import { assertUserHasApplicationAccessForOidc } from './application-access-control.js';
+import {
+  assertUserHasApplicationAccessForOidc,
+  hasAppLevelAccessControlChecked,
+  markAppLevelAccessControlCheckedForOidcContext,
+} from './application-access-control.js';
 import defaults from './defaults.js';
 import { deviceFlowConfig, defaultDeviceCodeTtl } from './device-flow.js';
 import {
@@ -268,10 +272,19 @@ export default function initOidc(
       const { account, client, provider, result, session } = ctx.oidc;
       // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- Keep oidc-provider's default loadExistingGrant fallback semantics.
       const grantId = result?.consent?.grantId || (client && session?.grantIdFor(client.clientId));
+      const shouldCheckApplicationAccess =
+        account &&
+        client &&
+        !hasAppLevelAccessControlChecked(result, client.clientId, account.accountId);
 
-      if (grantId && account && client) {
+      if (grantId && account && client && shouldCheckApplicationAccess) {
         await assertUserHasApplicationAccessForOidc(
           libraries.applicationAccessControl,
+          client.clientId,
+          account.accountId
+        );
+        markAppLevelAccessControlCheckedForOidcContext(
+          ctx.oidc,
           client.clientId,
           account.accountId
         );
