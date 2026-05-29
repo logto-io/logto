@@ -10,6 +10,8 @@ const mockFunction = jest.fn();
 
 mockEsm('redis', () => ({
   createClient: () => ({
+    // Standalone clients report readiness via `isReady`; default to ready so commands run.
+    isReady: true,
     set: mockFunction,
     get: mockFunction,
     del: mockFunction,
@@ -19,6 +21,8 @@ mockEsm('redis', () => ({
     on: mockFunction,
   }),
   createCluster: () => ({
+    // The cluster client only exposes `isOpen`; default to open so commands run.
+    isOpen: true,
     set: mockFunction,
     get: mockFunction,
     del: mockFunction,
@@ -105,6 +109,27 @@ describe('RedisCache', () => {
       expect(mockFunction).toBeCalledTimes(6);
       stub.restore();
     }
+  });
+
+  it('should short-circuit get and set when the client is not ready, but still issue delete', async () => {
+    jest.clearAllMocks();
+    const cache = new RedisCache('redis://url');
+    // Simulate a down or reconnecting socket so the readiness guard kicks in.
+    Sinon.stub(cache.client!, 'isReady').value(false);
+    // Independent stubs per command — the shared `mockFunction` can't tell which method ran.
+    const getStub = Sinon.stub(cache.client!, 'get');
+    const setStub = Sinon.stub(cache.client!, 'set');
+    const deleteStub = Sinon.stub(cache.client!, 'del');
+
+    await expect(cache.get('foo')).resolves.toBeUndefined();
+    await cache.set('foo', 'bar');
+    await cache.delete('foo');
+
+    // `get`/`set` short-circuit without touching Redis; `delete` is exempt so its command still runs
+    // (and flushes on reconnect).
+    expect(getStub.called).toBe(false);
+    expect(setStub.called).toBe(false);
+    expect(deleteStub.calledOnce).toBe(true);
   });
 
   it('should fail fast when cache read hangs for more than 1 second', async () => {
