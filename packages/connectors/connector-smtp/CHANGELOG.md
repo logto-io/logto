@@ -1,5 +1,13 @@
 # @logto/connector-smtp
 
+## 1.5.3
+
+### Patch Changes
+
+- 556640ce38: allow SMTP connector `auth` to omit `user` and `pass` so relays that authorize by source (e.g. IP/VLAN) can be configured without forging credentials
+- Updated dependencies [41a56f79e3]
+  - @logto/connector-kit@5.0.1
+
 ## 1.5.2
 
 ### Patch Changes

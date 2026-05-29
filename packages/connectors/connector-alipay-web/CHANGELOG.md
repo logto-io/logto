@@ -1,5 +1,12 @@
 # @logto/connector-alipay-web
 
+## 1.6.4
+
+### Patch Changes
+
+- Updated dependencies [41a56f79e3]
+  - @logto/connector-kit@5.0.1
+
 ## 1.6.3
 
 ### Patch Changes

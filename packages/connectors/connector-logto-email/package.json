@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-logto-email",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "Logto email connector.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

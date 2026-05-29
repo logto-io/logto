@@ -1,5 +1,20 @@
 # @logto/account
 
+## 0.4.1
+
+### Patch Changes
+
+- 32c40b1ad: clarify Account Center 2-step verification toggle label
+- 2ae0a420f: fix social linking callback in Account Center to preserve connector id
+
+  Render the callback through React Router so `useParams()` can correctly read the `connectorId` from the URL and avoid incorrectly showing "social sign-in method is not enabled"
+
+- 7c30c2adb: fix: silently re-authenticate Account Center on user info error instead of forcing the login screen
+
+  When `/api/my-account` returns an error (e.g. a stale access token after a user switch on the same browser), Account Center now redirects with `prompt=none` so the OIDC provider can re-authenticate via the existing session cookie. If no valid session is available the provider answers with `error=login_required` and Account Center falls back to the previous `prompt=login` behavior, preserving the stale-state cleanup invariant from #8313 / #8554 / #8590.
+
+- be5fa483a2: redirect expired account center sessions without flashing the manual sign-in error
+
 ## 0.4.0
 
 ### Minor Changes

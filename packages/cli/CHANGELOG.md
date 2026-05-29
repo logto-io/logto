@@ -1,5 +1,23 @@
 # Change Log
 
+## 1.40.0
+
+### Minor Changes
+
+- 32c9ea4d81: add `--dapc` (alias `--disable-admin-pwned-password-check`) option to both `install` and `db seed` commands for air-gapped OSS deployments.
+
+  The admin tenant's seeded password policy enables the Have I Been Pwned (HIBP) breach check by default, which sends an outbound request to `api.pwnedpasswords.com` on every admin password submission. This causes the first admin sign-up to hang on deployments where the endpoint is unreachable. Passing the option seeds the policy with the breach check disabled, so admin sign-up no longer depends on outbound network access.
+
+### Patch Changes
+
+- Updated dependencies [fafe81e8f]
+- Updated dependencies [617275158]
+- Updated dependencies [41a56f79e3]
+- Updated dependencies [16553c027]
+- Updated dependencies [32c9ea4d81]
+  - @logto/schemas@1.40.0
+  - @logto/connector-kit@5.0.1
+
 ## 1.39.0
 
 ### Minor Changes
