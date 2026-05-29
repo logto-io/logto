@@ -3,6 +3,7 @@ import type { CommandModule } from 'yargs';
 
 import { getDatabaseUrlFromConfig } from '../../database.js';
 import { consoleLog } from '../../utils.js';
+import { disableAdminPwnedPasswordCheckDescription } from '../database/seed/options.js';
 
 import {
   validateNodeVersion,
@@ -21,9 +22,16 @@ export type InstallArgs = {
   skipSeed: boolean;
   cloud: boolean;
   downloadUrl?: string;
+  disableAdminPwnedPasswordCheck?: boolean;
 };
 
-const installLogto = async ({ path, skipSeed, downloadUrl, cloud }: InstallArgs) => {
+const installLogto = async ({
+  path,
+  skipSeed,
+  downloadUrl,
+  cloud,
+  disableAdminPwnedPasswordCheck,
+}: InstallArgs) => {
   validateNodeVersion();
 
   // Get install location path
@@ -45,7 +53,10 @@ const installLogto = async ({ path, skipSeed, downloadUrl, cloud }: InstallArgs)
       )} command to seed database when ready.\n`
     );
   } else {
-    await seedDatabase(installPath, cloud);
+    await seedDatabase(installPath, {
+      cloud,
+      disablePwnedPasswordCheck: disableAdminPwnedPasswordCheck,
+    });
   }
 
   // Save to dot env
@@ -62,6 +73,7 @@ const install: CommandModule<
     ss: boolean;
     cloud: boolean;
     du?: string;
+    dapc?: boolean;
   }
 > = {
   command: ['init', 'i', 'install'],
@@ -91,9 +103,21 @@ const install: CommandModule<
         type: 'string',
         hidden: true,
       },
+      dapc: {
+        describe: disableAdminPwnedPasswordCheckDescription,
+        alias: 'disable-admin-pwned-password-check',
+        type: 'boolean',
+        default: false,
+      },
     }),
-  handler: async ({ p, ss, cloud, du }) => {
-    await installLogto({ path: p, skipSeed: ss, cloud, downloadUrl: du });
+  handler: async ({ p, ss, cloud, du, dapc }) => {
+    await installLogto({
+      path: p,
+      skipSeed: ss,
+      cloud,
+      downloadUrl: du,
+      disableAdminPwnedPasswordCheck: dapc,
+    });
   },
 };
 
