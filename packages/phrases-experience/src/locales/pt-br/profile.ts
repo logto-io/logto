@@ -30,6 +30,16 @@ const profile = {
     checked: 'Sim',
     unchecked: 'Não',
   },
+  avatar_upload: {
+    upload: 'Enviar',
+    remove: 'Remover',
+    uploading: 'Enviando...',
+    hint: 'Tamanho recomendado 1:1, até {{limit}}.',
+    error_file_type: 'O tipo de arquivo deve ser {{extensions}}.',
+    error_file_size: 'O tamanho do arquivo não pode exceder {{limit}}.',
+    error_storage_not_configured: 'Não foi possível enviar a foto. Tente novamente mais tarde.',
+    error_upload: 'Falha ao enviar a foto. Tente novamente.',
+  },
 };
 
 export default Object.freeze(profile);

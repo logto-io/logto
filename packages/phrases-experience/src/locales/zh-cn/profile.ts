@@ -30,6 +30,16 @@ const profile = {
     checked: '是',
     unchecked: '否',
   },
+  avatar_upload: {
+    upload: '上传',
+    remove: '移除',
+    uploading: '上传中...',
+    hint: '建议尺寸 1:1，最大 {{limit}}。',
+    error_file_type: '文件类型必须为 {{extensions}}。',
+    error_file_size: '文件大小不能超过 {{limit}}。',
+    error_storage_not_configured: '无法上传照片，请稍后重试。',
+    error_upload: '照片上传失败，请重试。',
+  },
 };
 
 export default Object.freeze(profile);

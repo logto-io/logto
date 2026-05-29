@@ -24,6 +24,8 @@ export const userAssetsServiceStatusGuard = z.object({
   status: z.union([z.literal('ready'), z.literal('not_configured')]),
   allowUploadMimeTypes: z.array(allowUploadMimeTypeGuard).optional(),
   maxUploadFileSize: z.number().optional(),
+  /** Whether Experience avatar upload during sign-up is available on this server. */
+  isExperienceAvatarUploadEnabled: z.boolean().optional(),
 });
 
 export type UserAssetsServiceStatus = z.infer<typeof userAssetsServiceStatusGuard>;
@@ -57,3 +59,28 @@ export const mimeTypeToFileExtensionMappings: MimeTypeToFileExtensionMappings = 
   'image/bmp': ['bmp'],
   'application/zip': ['zip'],
 } as const);
+
+/** MIME types allowed for avatar uploads (Experience, Account Center, Console). */
+export const avatarMimeTypes = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/bmp',
+] as const satisfies readonly AllowedUploadMimeType[];
+
+export type AvatarMimeType = (typeof avatarMimeTypes)[number];
+
+const avatarMimeTypeSet = new Set<string>(avatarMimeTypes);
+
+export const isAvatarMimeType = (mimeType: string): mimeType is AvatarMimeType =>
+  avatarMimeTypeSet.has(mimeType);
+
+export const avatarFileAccept = avatarMimeTypes.join(',');
+
+const formatAvatarExtensionLabel = (extension: string) =>
+  extension === 'webp' ? 'WebP' : extension.toUpperCase();
+
+export const avatarFileExtensionsLabel = avatarMimeTypes
+  .map((mimeType) => formatAvatarExtensionLabel(mimeTypeToFileExtensionMappings[mimeType][0]))
+  .join(', ');

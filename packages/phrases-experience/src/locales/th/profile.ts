@@ -30,6 +30,16 @@ const profile = {
     checked: 'ใช่',
     unchecked: 'ไม่',
   },
+  avatar_upload: {
+    upload: 'อัปโหลด',
+    remove: 'ลบ',
+    uploading: 'กำลังอัปโหลด...',
+    hint: 'ขนาดที่แนะนำ 1:1 สูงสุด {{limit}}',
+    error_file_type: 'ประเภทไฟล์ต้องเป็น {{extensions}}',
+    error_file_size: 'ขนาดไฟล์ต้องไม่เกิน {{limit}}',
+    error_storage_not_configured: 'ไม่สามารถอัปโหลดรูปภาพได้ โปรดลองอีกครั้งในภายหลัง',
+    error_upload: 'อัปโหลดรูปภาพไม่สำเร็จ โปรดลองอีกครั้ง',
+  },
 };
 
 export default Object.freeze(profile);

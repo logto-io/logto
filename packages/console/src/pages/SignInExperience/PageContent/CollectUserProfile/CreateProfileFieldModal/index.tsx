@@ -48,8 +48,12 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { t: errorT } = useTranslation('errors');
   const api = useApi();
-  const { isReady: isUserAssetsServiceReady, isLoading: isUserAssetsServiceLoading } =
-    useUserAssetsService();
+  const shouldFetchUserAssetsService = isDevFeaturesEnabled;
+  const {
+    isReady: isUserAssetsServiceReady,
+    isLoading: isUserAssetsServiceLoading,
+    isExperienceAvatarUploadEnabled,
+  } = useUserAssetsService(shouldFetchUserAssetsService);
 
   const [selectedField, setSelectedField] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -102,9 +106,11 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   }, [customDataFieldName, errorT, existingFieldNames]);
 
   // TODO: Remove placeholder avatar field picker UI once Experience and Account Center avatar upload is implemented.
+  const isAvatarFieldAvailable =
+    isDevFeaturesEnabled && !isUserAssetsServiceLoading && isExperienceAvatarUploadEnabled === true;
   const builtInFields = useMemo(
     () =>
-      getUserAvailableBuiltInFieldKeys(isDevFeaturesEnabled)
+      getUserAvailableBuiltInFieldKeys(isAvatarFieldAvailable)
         .map((name) => ({
           name,
           label: t(`profile.fields.${name === 'address' ? 'address.formatted' : name}`),
@@ -114,7 +120,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
               : t(`profile.fields.${name}_description`),
         }))
         .filter(({ name }) => !existingFieldNames.includes(name)),
-    [t, existingFieldNames]
+    [t, existingFieldNames, isAvatarFieldAvailable]
   );
 
   const isAvatarSelected = selectedField === avatarBuiltInFieldKey;

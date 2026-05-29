@@ -30,6 +30,16 @@ const profile = {
     checked: 'Да',
     unchecked: 'Нет',
   },
+  avatar_upload: {
+    upload: 'Загрузить',
+    remove: 'Удалить',
+    uploading: 'Загрузка...',
+    hint: 'Рекомендуемый размер 1:1, до {{limit}}.',
+    error_file_type: 'Тип файла должен быть {{extensions}}.',
+    error_file_size: 'Размер файла не должен превышать {{limit}}.',
+    error_storage_not_configured: 'Не удалось загрузить фото. Повторите попытку позже.',
+    error_upload: 'Не удалось загрузить фото. Попробуйте ещё раз.',
+  },
 };
 
 export default Object.freeze(profile);

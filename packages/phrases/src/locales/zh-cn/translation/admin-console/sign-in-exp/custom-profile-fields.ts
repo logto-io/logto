@@ -36,7 +36,7 @@ const custom_profile_fields = {
     type_required: '请选择属性类型',
     create_button: '创建资料字段',
     avatar: {
-      description: '允许用户在注册时上传并裁剪头像，上传后的图片 URL 将保存为用户 avatar。',
+      description: '允许用户在注册时上传头像，上传后的图片 URL 将保存为用户 avatar。',
       storage_not_configured: 'Avatar 上传需要先配置存储服务，请先配置 storage 后再添加此字段。',
     },
   },
@@ -91,7 +91,7 @@ const custom_profile_fields = {
     checkbox_unchecked: '未选中 (False)',
     required: '必填',
     required_description: '启用时，用户必须填写此字段。禁用时，此字段为可选。',
-    avatar_upload_description: '终端用户在注册时上传并裁剪头像，保存的值为上传后的图片 URL。',
+    avatar_upload_description: '终端用户在注册时上传头像，保存的值为上传后的图片 URL。',
   },
 };
 

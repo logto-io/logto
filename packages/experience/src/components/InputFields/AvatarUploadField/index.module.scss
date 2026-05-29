@@ -1,0 +1,114 @@
+@use '@/shared/scss/underscore' as _;
+
+$avatar-size: _.unit(20);
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: _.unit(3);
+}
+
+.avatarSlot {
+  flex-shrink: 0;
+  width: $avatar-size;
+  height: $avatar-size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar {
+  width: $avatar-size;
+  height: $avatar-size;
+  border-radius: _.unit(2);
+  object-fit: cover;
+  object-position: center;
+}
+
+.placeholder {
+  width: $avatar-size;
+  height: $avatar-size;
+  border-radius: _.unit(2);
+}
+
+.controls {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: _.unit(2);
+  min-width: 0;
+  min-height: $avatar-size;
+}
+
+.label {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+}
+
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: _.unit(3);
+}
+
+.uploadButton {
+  cursor: pointer;
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-line-divider);
+  border-radius: var(--radius);
+  padding: _.unit(1.5) _.unit(4);
+  min-height: 32px;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 50%;
+  }
+}
+
+.removeButton {
+  cursor: pointer;
+  font: var(--font-label-2);
+  color: var(--color-danger-default);
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.hint,
+.errorText {
+  font: var(--font-body-3);
+  margin-top: auto;
+}
+
+.hint {
+  color: var(--color-type-secondary);
+}
+
+.errorText {
+  color: var(--color-danger-default);
+}
+
+.description {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.loadingIcon {
+  width: _.unit(6);
+  height: _.unit(6);
+  color: var(--color-brand-default);
+}

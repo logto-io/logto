@@ -41,7 +41,7 @@ const custom_profile_fields = {
     create_button: 'Crea campo profilo',
     avatar: {
       description:
-        "Permette agli utenti di caricare e ritagliare la foto del profilo durante la registrazione. L'URL dell'immagine caricata viene salvato come avatar dell'utente.",
+        "Permette agli utenti di caricare la foto del profilo durante la registrazione. L'URL dell'immagine caricata viene salvato come avatar dell'utente.",
       storage_not_configured:
         "Il caricamento dell'avatar richiede un provider di storage configurato. Configura lo storage prima di aggiungere questo campo.",
     },
@@ -104,7 +104,7 @@ const custom_profile_fields = {
     required_description:
       'Se abilitato, questo campo deve essere compilato dagli utenti. Se disabilitato, questo campo è opzionale.',
     avatar_upload_description:
-      "Gli utenti finali caricano e ritagliano il loro avatar durante la registrazione. Il valore memorizzato è l'URL dell'immagine caricata.",
+      "Gli utenti finali caricano il loro avatar durante la registrazione. Il valore memorizzato è l'URL dell'immagine caricata.",
   },
 };
 

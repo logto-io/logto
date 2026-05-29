@@ -30,6 +30,16 @@ const profile = {
     checked: 'Evet',
     unchecked: 'Hayır',
   },
+  avatar_upload: {
+    upload: 'Yükle',
+    remove: 'Kaldır',
+    uploading: 'Yükleniyor...',
+    hint: 'Önerilen boyut 1:1, en fazla {{limit}}.',
+    error_file_type: 'Dosya türü {{extensions}} olmalıdır.',
+    error_file_size: 'Dosya boyutu {{limit}} değerini aşmamalıdır.',
+    error_storage_not_configured: 'Fotoğraf yüklenemedi. Lütfen daha sonra tekrar deneyin.',
+    error_upload: 'Fotoğraf yüklenemedi. Lütfen tekrar deneyin.',
+  },
 };
 
 export default Object.freeze(profile);

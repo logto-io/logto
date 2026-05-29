@@ -30,6 +30,16 @@ const profile = {
     checked: 'Sí',
     unchecked: 'No',
   },
+  avatar_upload: {
+    upload: 'Subir',
+    remove: 'Eliminar',
+    uploading: 'Subiendo...',
+    hint: 'Tamaño recomendado 1:1, hasta {{limit}}.',
+    error_file_type: 'El tipo de archivo debe ser {{extensions}}.',
+    error_file_size: 'El tamaño del archivo no debe superar {{limit}}.',
+    error_storage_not_configured: 'No se pudo subir la foto. Inténtalo de nuevo más tarde.',
+    error_upload: 'No se pudo subir la foto. Inténtalo de nuevo.',
+  },
 };
 
 export default Object.freeze(profile);

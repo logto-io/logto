@@ -41,7 +41,7 @@ const custom_profile_fields = {
     create_button: 'Utwórz pole profilu',
     avatar: {
       description:
-        'Umożliwia użytkownikom przesyłanie i kadrowanie zdjęcia profilowego podczas rejestracji. URL przesłanego obrazu jest zapisywany jako avatar użytkownika.',
+        'Umożliwia użytkownikom przesyłanie zdjęcia profilowego podczas rejestracji. URL przesłanego obrazu jest zapisywany jako avatar użytkownika.',
       storage_not_configured:
         'Przesyłanie avatar wymaga skonfigurowanego dostawcy storage. Skonfiguruj storage przed dodaniem tego pola.',
     },
@@ -103,7 +103,7 @@ const custom_profile_fields = {
     required_description:
       'Po włączeniu to pole musi być wypełnione przez użytkowników. Po wyłączeniu to pole jest opcjonalne.',
     avatar_upload_description:
-      'Użytkownicy końcowi przesyłają i kadrują avatar podczas rejestracji. Zapisywaną wartością jest URL przesłanego obrazu.',
+      'Użytkownicy końcowi przesyłają avatar podczas rejestracji. Zapisywaną wartością jest URL przesłanego obrazu.',
   },
 };
 

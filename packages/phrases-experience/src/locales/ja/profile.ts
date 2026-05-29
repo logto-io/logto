@@ -30,6 +30,17 @@ const profile = {
     checked: 'はい',
     unchecked: 'いいえ',
   },
+  avatar_upload: {
+    upload: 'アップロード',
+    remove: '削除',
+    uploading: 'アップロード中...',
+    hint: '推奨サイズ 1:1、最大 {{limit}}。',
+    error_file_type: 'ファイル形式は {{extensions}} である必要があります。',
+    error_file_size: 'ファイルサイズは {{limit}} を超えられません。',
+    error_storage_not_configured:
+      '写真をアップロードできません。しばらくしてからもう一度お試しください。',
+    error_upload: '写真のアップロードに失敗しました。もう一度お試しください。',
+  },
 };
 
 export default Object.freeze(profile);
