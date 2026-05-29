@@ -11,8 +11,8 @@ import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import styles from './index.module.scss';
 
-function DevTenantDataRetentionNotice() {
-  const { currentTenant, isDevTenant } = useContext(TenantsContext);
+function DevTenantDataRetentionNoticeContent() {
+  const { currentTenant } = useContext(TenantsContext);
   const { getRegionByName } = useAvailableRegions();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -26,7 +26,7 @@ function DevTenantDataRetentionNotice() {
     return region ? region.isPrivate : false;
   }, [currentTenant, getRegionByName]);
 
-  if (!isCloud || !isDevTenant || isPrivateRegionTenant) {
+  if (isPrivateRegionTenant) {
     return null;
   }
 
@@ -46,6 +46,16 @@ function DevTenantDataRetentionNotice() {
       </Trans>
     </InlineNotification>
   );
+}
+
+function DevTenantDataRetentionNotice() {
+  const { isDevTenant } = useContext(TenantsContext);
+
+  if (!isCloud || !isDevTenant) {
+    return null;
+  }
+
+  return <DevTenantDataRetentionNoticeContent />;
 }
 
 export default DevTenantDataRetentionNotice;
