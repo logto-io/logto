@@ -1,5 +1,95 @@
 # Change Log
 
+## 1.40.0
+
+### Minor Changes
+
+- cc0d70335: add `enableCap=true` query parameter to `GET /logs` and `GET /hooks/:id/recent-logs` to reduce the chance of `statement_timeout` on tenants with very large log volumes.
+
+  When the param is passed:
+
+  - The count query short-circuits at ~10,000 rows, returning `10001` as a saturation sentinel.
+  - The response includes a `Total-Number-Is-Capped: true` header when the cap is hit.
+  - In capped responses, both `Link: rel="last"` and `Link: rel="next"` are omitted because the saturated count makes the derived page count unreliable. Clients should construct page URLs themselves and stop on an empty response.
+
+  Default request behavior (without `enableCap`) is unchanged.
+
+- 57c27d42f: add `start_time` and `end_time` query parameters to `GET /api/logs` and `GET /api/hooks/{id}/recent-logs` for filtering logs by a time window.
+
+  Both are exclusive bounds in unix milliseconds (`createdAt > start_time AND createdAt < end_time`). Either value is optional; when both are present, the endpoint returns `400` if `start_time >= end_time`. Either value being non-numeric also returns `400`.
+
+  On `GET /api/hooks/{id}/recent-logs`, supplying either `start_time` or `end_time` replaces the endpoint's default 24-hour lower bound so callers can query an arbitrary historical window. Default behavior (no time params supplied) is unchanged: the endpoint still returns logs from the last 24 hours.
+
+- c4c34e6af0: enrich `Organization.Membership.Updated` webhook payload with explicit delta fields describing the exact membership change:
+
+  - `addedUserIds` / `removedUserIds` on `POST /organizations/:id/users`, `PUT /organizations/:id/users`, and `DELETE /organizations/:id/users/:userId`.
+  - `addedApplicationIds` / `removedApplicationIds` on `POST /organizations/:id/applications`, `PUT /organizations/:id/applications`, and `DELETE /organizations/:id/applications/:applicationId`.
+  - `addedUserIds` on invitation accept (`PUT /organization-invitations/:id/status`) and experience-flow just-in-time provisioning (email-domain JIT and enterprise SSO JIT during sign-up / sign-in).
+
+  Each delta array is capped silently at 5000 entries; for bulk operations that exceed the cap, consumers should reconcile authoritative membership via `GET /organizations/:id/users` or `GET /organizations/:id/applications`. Empty deltas are omitted from the payload entirely, and consumers must treat a missing field as "no change on that side," not as "an empty change." The `PUT` replace handlers report the truly-new and truly-removed IDs (not the entire declared set). Re-accepting an invitation by a user who is already a member still produces the legacy `{ organizationId }`-only shape.
+
+  No breaking change: the four delta fields are additive optional fields; the previously emitted `data: null` field is unchanged. See the [webhook reference](https://docs.logto.io/developers/webhooks/webhooks-request#organizationmembershipupdated-payload) for the full payload contract.
+
+  Supersedes #8752, thanks @chiche84.
+
+- 42f3969840: add protected app ID token claim scopes and tenant custom domain SDK endpoint support
+
+  Protected App settings in Console let you choose which ID token claims (such as `roles`, `custom_data`, and `organizations`) are forwarded to your origin via the `Logto-ID-Token` header. When a tenant custom domain is active, Protected App remote config uses that domain as the SDK endpoint.
+
+### Patch Changes
+
+- ebbc8f43aa: declare `additionalProperties: true` on arbitrary JSON object schemas in the OpenAPI document. Generated TypeScript clients (e.g. `@logto/api`) now type fields such as `customData` as `{ [key: string]: unknown }` instead of `Record<string, never>`, which previously forbade every property at compile time
+- a27d81309: allow users who have no password, no primary email, and no primary phone to set their initial password without a verification record through Account API
+- 671a7b73d7: read admin tenant signing keys directly from the database in OSS to reduce self-hosted deployment friction
+
+  Self-hosted OSS deployments no longer need extra host or DNS mappings that let the Logto container fetch its own admin tenant OIDC configuration through the externally configured endpoint.
+
+- 3edda5243: speed up `GET /organizations/:id/users` on large memberships by aggregating roles via `LATERAL`
+
+  The entities query for `getUsersByOrganizationId` joined `organization_role_user_relations` and `organization_roles` before applying `GROUP BY users.id` + `LIMIT`. Postgres had to build the entire `members × roles_per_member` intermediate result on every paginated request, aggregate it, then slice. A 20-row page over a 10k-member org with 3 roles each materialized ~30k intermediate rows regardless of page size.
+
+  The rewrite moves the role aggregation into a `LATERAL` subquery joined per user row. `LIMIT` now prunes the outer user set before the role-table lookups fire, so the aggregation runs `limit` times instead of once over the full join, and each lateral lookup hits `organization_role_user_relations__tenant_id_org_id_user_id` (added in the prior Phase 0.5 migration) directly. The row ordering, previously incidental under the `GROUP BY` plan, is now pinned by an explicit `ORDER BY` so pagination is deterministic across calls.
+
+- 26c8c3f2ed: add `TwoRelationsQueries.replaceWithDelta()` for high-cardinality relation tables; switch `PUT /organizations/:id/users` to use it
+
+  The existing `replace()` runs `DELETE WHERE schema1_id = X` + bulk `INSERT` inside a transaction, rewriting O(N) rows on every call. The new `replaceWithDelta()` computes the added/removed sets in a single CTE statement, so a no-op call writes zero rows and a one-row delta writes exactly one row. It returns `{ added, removed }` so downstream consumers (notably the membership-webhook payload work in LOG-13462) can read the delta without a re-query.
+
+  `replace()` is unchanged. The new method is opt-in. This PR migrates one call site — `PUT /organizations/:id/users` — where organization membership can grow into the 10k+ range. The other nine `TwoRelationsQueries` subclasses continue to use `replace()`.
+
+  For relation tables upstream of an `on delete cascade` FK (e.g. `organization_user_relations` → `organization_role_user_relations`), `replace()` cascades for every current row on every call — silently dropping dependents of unchanged members. `replaceWithDelta()` only cascades for truly-departing rows, so dependents of surviving members are preserved. The migrated `PUT /organizations/:id/users` now keeps a member's role assignments when their membership survives the PUT; a new integration test guards this.
+
+- 16553c027: expose `isCurrent` on the Account API sessions response
+
+  `GET /api/my-account/sessions` now returns `isCurrent: boolean` on every entry. The session whose OIDC uid backs the calling access token is `true`; the others are `false`. Use this to mark the "This device" entry in session-management UIs and to avoid revoking the caller's own session.
+
+  The admin user-sessions endpoints (`GET /users/:userId/sessions` and `GET /users/:userId/sessions/:sessionId`) are unchanged — they have no caller-session concept and continue to use the original response shape.
+
+  Closes [#8681](https://github.com/logto-io/logto/issues/8681).
+
+- Updated dependencies [32c40b1ad]
+- Updated dependencies [8407ecd410]
+- Updated dependencies [346816a350]
+- Updated dependencies [2ae0a420f]
+- Updated dependencies [6b9944d01f]
+- Updated dependencies [fafe81e8f]
+- Updated dependencies [617275158]
+- Updated dependencies [7b7a5c8f6]
+- Updated dependencies [41a56f79e3]
+- Updated dependencies [42f3969840]
+- Updated dependencies [16553c027]
+- Updated dependencies [32c9ea4d81]
+- Updated dependencies [7c30c2adb]
+- Updated dependencies [be5fa483a2]
+  - @logto/account@0.4.1
+  - @logto/phrases-experience@1.13.2
+  - @logto/console@1.37.0
+  - @logto/experience@1.19.2
+  - @logto/schemas@1.40.0
+  - @logto/connector-kit@5.0.1
+  - @logto/cli@1.40.0
+  - @logto/demo-app@1.5.0
+  - @logto/device-demo-app@0.1.0
+
 ## 1.39.0
 
 ### Minor Changes

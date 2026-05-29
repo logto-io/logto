@@ -1,5 +1,16 @@
 # @logto/connector-aliyun-dm
 
+## 1.6.0
+
+### Minor Changes
+
+- 10d4c226dd: support configuring Direct Mail region for Aliyun DM connector
+
+### Patch Changes
+
+- Updated dependencies [41a56f79e3]
+  - @logto/connector-kit@5.0.1
+
 ## 1.5.2
 
 ### Patch Changes

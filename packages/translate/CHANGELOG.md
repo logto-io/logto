@@ -1,5 +1,13 @@
 # @logto/translate
 
+## 0.2.13
+
+### Patch Changes
+
+- Updated dependencies [32c40b1ad]
+- Updated dependencies [6b9944d01f]
+  - @logto/phrases-experience@1.13.2
+
 ## 0.2.12
 
 ### Patch Changes

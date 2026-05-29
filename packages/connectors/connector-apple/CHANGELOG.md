@@ -1,5 +1,12 @@
 # @logto/connector-apple
 
+## 1.6.6
+
+### Patch Changes
+
+- Updated dependencies [41a56f79e3]
+  - @logto/connector-kit@5.0.1
+
 ## 1.6.5
 
 ### Patch Changes

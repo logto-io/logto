@@ -1,5 +1,35 @@
 # Change Log
 
+## 1.40.0
+
+### Patch Changes
+
+- fafe81e8f: add secondary index on `organization_role_user_relations (tenant_id, organization_id, user_id)` to speed up per-user role lookups
+
+  The primary key column order is `(tenant_id, organization_id, organization_role_id, user_id)`, which prevents queries that filter by `(organization_id, user_id)` without specifying `organization_role_id` from using the index. This pattern is hit by `getUserScopes` (called on every `GET /organizations/:id/users/:userId/scopes`) and by the per-user role join in `getUsersByOrganizationId`.
+
+- 617275158: add secondary index on `organization_user_relations (tenant_id, user_id)` to speed up reverse lookups
+
+  The primary key column order is `(tenant_id, organization_id, user_id)`, which prevents queries that filter by `user_id` without specifying `organization_id` from using the index. This pattern is hit on every sign-in (via `getOrganizationsByUserId`) and on every request to the `/organizations/:id/users/:userId/roles` family (via the membership-existence middleware).
+
+- 16553c027: expose `isCurrent` on the Account API sessions response
+
+  `GET /api/my-account/sessions` now returns `isCurrent: boolean` on every entry. The session whose OIDC uid backs the calling access token is `true`; the others are `false`. Use this to mark the "This device" entry in session-management UIs and to avoid revoking the caller's own session.
+
+  The admin user-sessions endpoints (`GET /users/:userId/sessions` and `GET /users/:userId/sessions/:sessionId`) are unchanged — they have no caller-session concept and continue to use the original response shape.
+
+  Closes [#8681](https://github.com/logto-io/logto/issues/8681).
+
+- 32c9ea4d81: add `--dapc` (alias `--disable-admin-pwned-password-check`) option to both `install` and `db seed` commands for air-gapped OSS deployments.
+
+  The admin tenant's seeded password policy enables the Have I Been Pwned (HIBP) breach check by default, which sends an outbound request to `api.pwnedpasswords.com` on every admin password submission. This causes the first admin sign-up to hang on deployments where the endpoint is unreachable. Passing the option seeds the policy with the breach check disabled, so admin sign-up no longer depends on outbound network access.
+
+- Updated dependencies [32c40b1ad]
+- Updated dependencies [6b9944d01f]
+- Updated dependencies [41a56f79e3]
+  - @logto/phrases-experience@1.13.2
+  - @logto/connector-kit@5.0.1
+
 ## 1.39.0
 
 ### Minor Changes
