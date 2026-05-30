@@ -1,81 +1,16 @@
 @use '@experience/shared/scss/underscore' as _;
 
-$avatar-size: _.unit(10);
-
-.container {
+.valueContent {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  gap: _.unit(4);
-  padding: _.unit(5) _.unit(6);
-}
-
-.avatarSlot {
-  flex-shrink: 0;
-  width: $avatar-size;
-  height: $avatar-size;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatar {
-  width: $avatar-size;
-  height: $avatar-size;
-  border-radius: _.unit(2);
-  object-fit: cover;
-  object-position: center;
+  gap: _.unit(1);
 }
 
 .placeholder {
-  width: $avatar-size;
-  height: $avatar-size;
-  border-radius: _.unit(2);
-}
-
-.controls {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: _.unit(1.5);
-  min-width: 0;
-  min-height: $avatar-size;
-  justify-content: center;
-}
-
-.buttonRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: _.unit(3);
-}
-
-.uploadButton {
-  cursor: pointer;
-  font: var(--font-label-2);
-  color: var(--color-type-link);
-  background: none;
-  border: none;
-  padding: 0;
-  white-space: nowrap;
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 50%;
-  }
-}
-
-.removeButton {
-  cursor: pointer;
-  font: var(--font-label-2);
-  color: var(--color-danger-default);
-  background: none;
-  border: none;
-  padding: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
 }
 
 .hint,
@@ -96,14 +31,7 @@ $avatar-size: _.unit(10);
 }
 
 .loadingIcon {
-  width: _.unit(6);
-  height: _.unit(6);
+  width: 32px;
+  height: 32px;
   color: var(--color-brand-default);
-}
-
-:global(body.mobile) {
-  .container {
-    padding: _.unit(4);
-    gap: _.unit(3);
-  }
 }

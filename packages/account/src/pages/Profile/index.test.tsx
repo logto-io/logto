@@ -321,6 +321,13 @@ describe('<Profile />', () => {
     expect(queryMissingAvatarAltText('avatar')).toBeNull();
   });
 
+  it('shows only change action for avatar when an image is set', () => {
+    const { queryByText } = renderProfile();
+
+    expect(queryByText('profile.avatar_upload.remove')).toBeNull();
+    expect(queryByText('profile.avatar_upload.upload')).toBeNull();
+  });
+
   it('renders avatar image in read-only mode with label and not_set placeholder', () => {
     const { queryByAltText, unmount } = renderProfile({
       accountCenterSettings: {

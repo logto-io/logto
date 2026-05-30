@@ -124,6 +124,7 @@ const Profile = () => {
                     return (
                       <AvatarUploadField
                         key={name}
+                        label={label}
                         value={userInfo?.avatar ?? ''}
                         onChange={handleAvatarChange}
                       />

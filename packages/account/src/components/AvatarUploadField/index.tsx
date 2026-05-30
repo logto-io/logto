@@ -15,7 +15,9 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { uploadAccountAvatar } from '@ac/apis/avatar';
+import { layoutClassNames } from '@ac/constants/layout';
 
+import profileStyles from '../../pages/Profile/index.module.scss';
 import styles from './index.module.scss';
 
 const isAbortError = (error: unknown) =>
@@ -23,11 +25,12 @@ const isAbortError = (error: unknown) =>
 
 type Props = {
   readonly className?: string;
+  readonly label: string;
   readonly value?: string;
   readonly onChange: (value: string) => void;
 };
 
-const AvatarUploadField = ({ className, value = '', onChange }: Props) => {
+const AvatarUploadField = ({ className, label, value = '', onChange }: Props) => {
   const { t } = useTranslation();
   const { t: tAvatar } = useTranslation(undefined, { keyPrefix: 'profile.avatar_upload' });
   const { getAccessToken } = useLogto();
@@ -132,58 +135,57 @@ const AvatarUploadField = ({ className, value = '', onChange }: Props) => {
     [getAccessToken, handleUploadError, onChange, resetFileInput, tAvatar]
   );
 
-  const handleRemove = useCallback(() => {
-    setUploadError(undefined);
-    onChange('');
-  }, [onChange]);
+  const actionLabel = isUploading
+    ? tAvatar('uploading')
+    : value
+      ? t('account_center.security.change')
+      : tAvatar('upload');
 
-  const showRemove = Boolean(value) && !isUploading;
-  const showHint = !uploadError && !isUploading;
+  const showHint = !uploadError && !isUploading && !value;
 
   return (
-    <div className={classNames(styles.container, className)}>
-      <div className={styles.avatarSlot}>
-        {isUploading ? (
-          <div className={styles.loadingIcon}>
-            <RotatingRingIcon />
-          </div>
-        ) : value ? (
-          <img className={styles.avatar} src={value} alt="avatar" referrerPolicy="no-referrer" />
-        ) : (
-          <UserAvatar className={styles.placeholder} />
-        )}
-      </div>
-      <div className={styles.controls}>
-        <div className={styles.buttonRow}>
+    <div className={classNames(profileStyles.row, layoutClassNames.row, className)}>
+      <div className={profileStyles.topLine}>
+        <div className={profileStyles.name}>{label}</div>
+        <div className={profileStyles.actions}>
           <button
             type="button"
-            className={styles.uploadButton}
+            className={profileStyles.changeButton}
             disabled={isUploading}
             onClick={openFilePicker}
           >
-            {isUploading
-              ? tAvatar('uploading')
-              : value
-                ? t('account_center.security.change')
-                : tAvatar('upload')}
+            {actionLabel}
           </button>
-          {showRemove && (
-            <button type="button" className={styles.removeButton} onClick={handleRemove}>
-              {tAvatar('remove')}
-            </button>
+        </div>
+      </div>
+      <div className={profileStyles.value}>
+        <div className={styles.valueContent}>
+          {isUploading ? (
+            <div className={styles.loadingIcon}>
+              <RotatingRingIcon />
+            </div>
+          ) : value ? (
+            <img
+              className={profileStyles.avatar}
+              src={value}
+              alt="avatar"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <UserAvatar className={styles.placeholder} />
+          )}
+          {uploadError ? (
+            <span className={styles.errorText} role="alert">
+              {uploadError}
+            </span>
+          ) : (
+            showHint && (
+              <span className={styles.hint}>
+                {tAvatar('hint', { limit: formatFileSizeLimit(maxUploadFileSize) })}
+              </span>
+            )
           )}
         </div>
-        {uploadError ? (
-          <span className={styles.errorText} role="alert">
-            {uploadError}
-          </span>
-        ) : (
-          showHint && (
-            <span className={styles.hint}>
-              {tAvatar('hint', { limit: formatFileSizeLimit(maxUploadFileSize) })}
-            </span>
-          )
-        )}
       </div>
       <input
         key={fileInputKey}
