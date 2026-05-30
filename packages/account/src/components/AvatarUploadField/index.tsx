@@ -1,3 +1,5 @@
+import { uploadAccountAvatar } from '@ac/apis/avatar';
+import { layoutClassNames } from '@ac/constants/layout';
 import UserAvatar from '@experience/assets/icons/default-user-avatar.svg?react';
 import RotatingRingIcon from '@experience/shared/components/Button/RotatingRingIcon';
 import {
@@ -14,10 +16,8 @@ import { HTTPError } from 'ky';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { uploadAccountAvatar } from '@ac/apis/avatar';
-import { layoutClassNames } from '@ac/constants/layout';
-
 import profileStyles from '../../pages/Profile/index.module.scss';
+
 import styles from './index.module.scss';
 
 const isAbortError = (error: unknown) =>
