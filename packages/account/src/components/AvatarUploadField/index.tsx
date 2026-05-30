@@ -142,8 +142,6 @@ const AvatarUploadField = ({ className, label, value = '', onChange }: Props) =>
       ? t('account_center.security.change')
       : tAvatar('upload');
 
-  const showHint = !uploadError && !isUploading && !value;
-
   return (
     <div className={classNames(profileStyles.row, layoutClassNames.row, className)}>
       <div className={profileStyles.topLine}>
@@ -175,16 +173,10 @@ const AvatarUploadField = ({ className, label, value = '', onChange }: Props) =>
           ) : (
             <UserAvatar className={styles.placeholder} />
           )}
-          {uploadError ? (
+          {uploadError && (
             <span className={styles.errorText} role="alert">
               {uploadError}
             </span>
-          ) : (
-            showHint && (
-              <span className={styles.hint}>
-                {tAvatar('hint', { limit: formatFileSizeLimit(maxUploadFileSize) })}
-              </span>
-            )
           )}
         </div>
       </div>

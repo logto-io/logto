@@ -13,16 +13,8 @@
   border-radius: 8px;
 }
 
-.hint,
 .errorText {
   font: var(--font-body-3);
-}
-
-.hint {
-  color: var(--color-type-secondary);
-}
-
-.errorText {
   color: var(--color-danger-default);
 }
 
