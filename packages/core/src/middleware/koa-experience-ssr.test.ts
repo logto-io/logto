@@ -124,10 +124,33 @@ describe('koaExperienceSsr()', () => {
     };
     await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
 
-    // Custom content is NOT inlined into a <style> (only custom CSS is), so the sole `</script>` that
-    // should remain is the genuine close of the `window.logtoSsr` script. If the SSR data were not
-    // escaped, its `</script>` would appear too and break out of the inline script.
-    expect(ctx.body.match(/<\/script>/g)?.length).toBe(1);
+    // The `</script>` carried in the SSR data must be emitted as its escaped form (`</script>`),
+    // never as a literal tag that would close the inline `window.logtoSsr` <script> early. Asserting the
+    // escaped form (rather than counting `</script>` occurrences) is robust to the served template adding
+    // its own <script> tags.
+    expect(ctx.body).toContain('\\u003c/script\\u003e');
+  });
+
+  it('should produce SSR JSON that still parses back to the original data after escaping', async () => {
+    (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
+      { ...mockSignInExperience, customContent: { '/sign-in': '<a>&</a>' } }
+    );
+
+    const ctx = {
+      ...baseCtx,
+      path: '/',
+      body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+    };
+    await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+    // The `\uXXXX` escapes must decode back to the original characters when parsed, so the escaping is
+    // safe (no data corruption) while still preventing tag breakout.
+    const serialized = /Object\.freeze\((?<json>.+)\)/.exec(ctx.body)?.groups?.json;
+    expect(serialized).toBeTruthy();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- test parses known JSON
+    const parsed = JSON.parse(serialized!);
+    expect(parsed.signInExperience.data.customContent['/sign-in']).toBe('<a>&</a>');
   });
 
   it('should not inline custom CSS in preview mode', async () => {

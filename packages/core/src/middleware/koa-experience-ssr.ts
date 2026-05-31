@@ -74,13 +74,12 @@ export default function koaExperienceSsr<StateT, ContextT extends WithI18nContex
     // custom <style> a frame later. react-helmet still re-asserts the same CSS client-side (harmless)
     // and keeps live preview working.
     const { customCss } = signInExperience;
-    // Skip the inline in preview mode: the console preview iframe drives styling live via postMessage
-    // + react-helmet, so inlining the *saved* CSS here could briefly show it and even leak rules the
-    // user is editing out. Live preview has no FOUC to fix.
 
-    // Defuse `</style` in custom CSS so admin content can't terminate the element early: the HTML
-    // parser sees `<\/style` (not an end tag) while the CSS engine unescapes `\/` to `/`.
-    // No-op if `</head>` is absent (graceful fallback to client-side helmet injection).
+    // Inline the custom CSS only outside preview mode. In preview the console iframe drives styling live
+    // via postMessage + react-helmet, so inlining the *saved* CSS here could briefly show it and even
+    // leak rules the user is editing out — live preview has no FOUC to fix. `</style` is defused so admin
+    // CSS can't terminate the element early (the HTML parser sees `<\/style`; the CSS engine unescapes
+    // `\/`→`/`). The `</head>` replace is a no-op if absent, falling back to client-side helmet injection.
     const htmlWithCss =
       customCss && ctx.query.preview !== 'true'
         ? ctx.body.replace(
