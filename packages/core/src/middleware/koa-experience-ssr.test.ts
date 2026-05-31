@@ -77,4 +77,73 @@ describe('koaExperienceSsr()', () => {
       })});`
     );
   });
+
+  it('should inline custom CSS into the <head> when present', async () => {
+    (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
+      { ...mockSignInExperience, customCss: '.foo { color: red; }' }
+    );
+
+    const ctx = {
+      ...baseCtx,
+      path: '/',
+      body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+    };
+    await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+    expect(ctx.body).toContain('<style data-custom-css>.foo { color: red; }</style></head>');
+  });
+
+  it('should escape the `</style>` sequence in custom CSS to avoid breaking out of the tag', async () => {
+    (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
+      {
+        ...mockSignInExperience,
+        customCss: 'body::before { content: "</style>"; }',
+      }
+    );
+
+    const ctx = {
+      ...baseCtx,
+      path: '/',
+      body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+    };
+    await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+    // The dangerous `</style` becomes `<\/style`, which the HTML parser cannot treat as an end tag.
+    expect(ctx.body).toContain('content: "<\\/style>"');
+  });
+
+  it('should escape characters in the SSR JSON so embedded data cannot break out of the <script>', async () => {
+    (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
+      { ...mockSignInExperience, customContent: { '/sign-in': '</script>' } }
+    );
+
+    const ctx = {
+      ...baseCtx,
+      path: '/',
+      body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+    };
+    await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+    // Custom content is NOT inlined into a <style> (only custom CSS is), so the sole `</script>` that
+    // should remain is the genuine close of the `window.logtoSsr` script. If the SSR data were not
+    // escaped, its `</script>` would appear too and break out of the inline script.
+    expect(ctx.body.match(/<\/script>/g)?.length).toBe(1);
+  });
+
+  it('should not inline custom CSS in preview mode', async () => {
+    (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
+      { ...mockSignInExperience, customCss: '.foo { color: red; }' }
+    );
+
+    const ctx = {
+      ...baseCtx,
+      path: '/',
+      query: { preview: 'true' },
+      body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+    };
+    await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+    // Preview is driven live by postMessage + react-helmet; the server must not inline saved CSS.
+    expect(ctx.body).not.toContain('<style data-custom-css>');
+  });
 });
