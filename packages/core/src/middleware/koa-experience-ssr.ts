@@ -10,6 +10,18 @@ import { type WithI18nContext } from './koa-i18next.js';
 import { isIndexPath } from './koa-serve-static.js';
 
 /**
+ * Serialize SSR data for safe embedding inside an inline `<script>`. `JSON.stringify` alone is unsafe:
+ * a string such as `</script>` in the data (e.g. inside custom CSS or custom content) would close the
+ * script element early and enable injection. Escaping the HTML-significant characters keeps the values
+ * identical once parsed by JS, while preventing the HTML parser from recognizing any tag delimiters.
+ */
+const serializeSsrData = (data: SsrData): string =>
+  JSON.stringify(data)
+    .replaceAll('<', '\\u003c')
+    .replaceAll('>', '\\u003e')
+    .replaceAll('&', '\\u0026');
+
+/**
  * Create a middleware to prefetch the experience data and inject it into the HTML response. Some
  * conditions must be met:
  *
@@ -54,15 +66,38 @@ export default function koaExperienceSsr<StateT, ContextT extends WithI18nContex
     const phrases = await libraries.phrases.getPhrases(language);
 
     ctx.set('Content-Language', language);
-    ctx.body = ctx.body.replace(
+
+    // Inline custom CSS into the served HTML <head> BEFORE substituting the SSR placeholder, so the
+    // `</head>` match can only hit the genuine document head — never a `</head>` that might appear in
+    // the injected SSR JSON. Having the CSS in <head> on the first byte puts it in the cascade for the
+    // first paint, removing the flash where built-in styles render before react-helmet injects the
+    // custom <style> a frame later. react-helmet still re-asserts the same CSS client-side (harmless)
+    // and keeps live preview working.
+    const { customCss } = signInExperience;
+    // Skip the inline in preview mode: the console preview iframe drives styling live via postMessage
+    // + react-helmet, so inlining the *saved* CSS here could briefly show it and even leak rules the
+    // user is editing out. Live preview has no FOUC to fix.
+
+    // Defuse `</style` in custom CSS so admin content can't terminate the element early: the HTML
+    // parser sees `<\/style` (not an end tag) while the CSS engine unescapes `\/` to `/`.
+    // No-op if `</head>` is absent (graceful fallback to client-side helmet injection).
+    const htmlWithCss =
+      customCss && ctx.query.preview !== 'true'
+        ? ctx.body.replace(
+            '</head>',
+            `<style data-custom-css>${customCss.replaceAll(/<\/(style)/gi, '<\\/$1')}</style></head>`
+          )
+        : ctx.body;
+
+    ctx.body = htmlWithCss.replace(
       ssrPlaceholder,
-      `Object.freeze(${JSON.stringify({
+      `Object.freeze(${serializeSsrData({
         signInExperience: {
           ...pick(logtoUiCookie, 'appId', 'organizationId'),
           data: signInExperience,
         },
         phrases: { lng: language, data: phrases },
-      } satisfies SsrData)})`
+      })})`
     );
   };
 }
