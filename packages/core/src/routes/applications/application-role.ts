@@ -83,6 +83,10 @@ export default function applicationRoleRoutes<T extends ManagementApiRouter>(
     koaGuard({
       params: object({ applicationId: string() }),
       body: object({ roleIds: string().min(1).array() }),
+      response: object({
+        roleIds: string().min(1).array(),
+        addedRoleIds: string().min(1).array(),
+      }),
       status: [201, 404, 422],
     }),
     async (ctx, next) => {
@@ -100,18 +104,14 @@ export default function applicationRoleRoutes<T extends ManagementApiRouter>(
         })
       );
       const applicationRoles = await findApplicationsRolesByApplicationId(applicationId);
+      const existingRoleIds = new Set(applicationRoles.map(({ roleId }) => roleId));
+      // Deduplicate the input and drop role IDs already attached to the application.
+      // The `(application_id, role_id)` unique constraint would otherwise reject the bulk insert.
+      const roleIdsToAdd = [...new Set(roleIds)].filter((id) => !existingRoleIds.has(id));
 
-      const roles = await findRolesByRoleIds(roleIds);
+      const roles = await findRolesByRoleIds(roleIdsToAdd);
 
       for (const role of roles) {
-        assertThat(
-          !applicationRoles.some(({ roleId: _roleId }) => _roleId === role.id),
-          new RequestError({
-            code: 'application.role_exists',
-            status: 422,
-            roleId: role.id,
-          })
-        );
         assertThat(
           role.type === RoleType.MachineToMachine,
           new RequestError({
@@ -121,10 +121,14 @@ export default function applicationRoleRoutes<T extends ManagementApiRouter>(
         );
       }
 
-      await Promise.all(roleIds.map(async (roleId) => findRoleById(roleId)));
-      await insertApplicationsRoles(
-        roleIds.map((roleId) => ({ id: generateStandardId(), applicationId, roleId }))
-      );
+      if (roleIdsToAdd.length > 0) {
+        await Promise.all(roleIdsToAdd.map(async (roleId) => findRoleById(roleId)));
+        await insertApplicationsRoles(
+          roleIdsToAdd.map((roleId) => ({ id: generateStandardId(), applicationId, roleId }))
+        );
+      }
+
+      ctx.body = { roleIds, addedRoleIds: roleIdsToAdd };
       ctx.status = 201;
 
       return next();

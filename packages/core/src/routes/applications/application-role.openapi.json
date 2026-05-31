@@ -26,11 +26,25 @@
         },
         "responses": {
           "201": {
-            "description": "The API resource roles have been assigned to the application successfully."
+            "description": "The API resource roles have been assigned to the application successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "roleIds": {
+                      "description": "An array of API resource role IDs requested for assignment."
+                    },
+                    "addedRoleIds": {
+                      "description": "An array of API resource role IDs newly assigned to the application. Role IDs already attached to the application are silently ignored and not present in this array."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "summary": "Assign API resource roles to application",
-        "description": "Assign API resource roles to the specified application. The API resource roles will be added to the existing API resource roles."
+        "description": "Assign API resource roles to the specified application. The API resource roles will be added to the existing API resource roles. Role IDs that are already assigned to the application are silently ignored."
       },
       "put": {
         "requestBody": {
