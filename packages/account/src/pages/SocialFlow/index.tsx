@@ -19,6 +19,10 @@ import useErrorHandler from '@ac/hooks/use-error-handler';
 import { accountCenterBasePath } from '@ac/utils/account-center-route';
 import { accountStorage, sessionStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
+import {
+  canManageSocialIdentitiesWithoutVerification,
+  hasAvailableSecurityVerificationMethod,
+} from '@ac/utils/security-page';
 import { finalizeSocialFlowFailure, finalizeSocialFlowSuccess } from '@ac/utils/social-flow';
 
 type Props = {
@@ -59,8 +63,13 @@ const SocialFlow = ({ mode }: Props) => {
   const duplicateBindingMessage = 'You have already associated this social account.';
   const connectorName = connector ? getLocalizedConnectorName(connector, language) : undefined;
   const storedSocialFlow = connectorId ? accountStorage.socialFlow.get(connectorId) : undefined;
+  const canSkipVerification = canManageSocialIdentitiesWithoutVerification(userInfo);
+  const hasAvailableVerificationMethod = hasAvailableSecurityVerificationMethod(userInfo);
+  const isIdentityVerificationReady = Boolean(verificationId) || canSkipVerification;
   const flowKey =
-    verificationId && connectorId ? `${mode}:${connectorId}:${verificationId}` : undefined;
+    isIdentityVerificationReady && connectorId
+      ? `${mode}:${connectorId}:${verificationId ?? 'skip'}`
+      : undefined;
 
   const resetVerification = useCallback(() => {
     setStartedFlowKey(undefined);
@@ -120,7 +129,7 @@ const SocialFlow = ({ mode }: Props) => {
   }, [connectorId, navigate, refreshUserInfo]);
 
   useEffect(() => {
-    if (!verificationId) {
+    if (!isIdentityVerificationReady) {
       if (startedFlowKey) {
         setStartedFlowKey(undefined);
       }
@@ -259,6 +268,7 @@ const SocialFlow = ({ mode }: Props) => {
     mode,
     flowKey,
     startedFlowKey,
+    isIdentityVerificationReady,
     storedSocialFlow,
     verificationId,
   ]);
@@ -285,8 +295,17 @@ const SocialFlow = ({ mode }: Props) => {
     );
   }
 
-  if (!verificationId) {
+  if (!verificationId && hasAvailableVerificationMethod) {
     return <VerificationMethodList />;
+  }
+
+  if (!verificationId && !canSkipVerification) {
+    return (
+      <ErrorPage
+        titleKey="account_center.verification.no_available_methods_title"
+        messageKey="account_center.verification.no_available_methods_description"
+      />
+    );
   }
 
   if (mode === 'add' && hasLinkedConnector) {

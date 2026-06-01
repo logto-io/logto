@@ -15,6 +15,7 @@ import { assertCanDeleteSocialIdentity } from '#src/utils/user.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
+import { assertIdentityVerifiedIfRequired } from './utils/has-security-verification-method.js';
 
 export default function identitiesRoutes<T extends UserRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
@@ -114,10 +115,8 @@ export default function identitiesRoutes<T extends UserRouter>(
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      const user = await findUserById(userId);
+      assertIdentityVerifiedIfRequired(user, identityVerified);
       assertThat(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
@@ -149,10 +148,8 @@ export default function identitiesRoutes<T extends UserRouter>(
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      const user = await findUserById(userId);
+      assertIdentityVerifiedIfRequired(user, identityVerified);
       assertThat(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
@@ -182,10 +179,6 @@ export default function identitiesRoutes<T extends UserRouter>(
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
       const { target } = ctx.guard.params;
       const { fields } = ctx.accountCenter;
       assertThat(
@@ -199,6 +192,7 @@ export default function identitiesRoutes<T extends UserRouter>(
         findUserById(userId),
         userSsoIdentities.findUserSsoIdentitiesByUserId(userId),
       ]);
+      assertIdentityVerifiedIfRequired(user, identityVerified);
       assertCanDeleteSocialIdentity(user, target, ssoIdentities.length);
 
       const updatedUser = await deleteUserIdentity(userId, target);

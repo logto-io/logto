@@ -32,13 +32,7 @@ import accountSessionRoutes from './sessions.js';
 import thirdPartyTokensRoutes from './third-party-tokens.js';
 import accountUserAssetsRoutes from './user-assets.js';
 import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-scoped-profile.js';
-
-const hasSecurityVerificationMethod = ({
-  passwordEncrypted,
-  primaryEmail,
-  primaryPhone,
-}: Pick<User, 'passwordEncrypted' | 'primaryEmail' | 'primaryPhone'>) =>
-  Boolean(passwordEncrypted) || Boolean(primaryEmail) || Boolean(primaryPhone);
+import { hasSecurityVerificationMethod } from './utils/has-security-verification-method.js';
 
 export default function accountRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
   const [router, { queries, libraries }] = args;

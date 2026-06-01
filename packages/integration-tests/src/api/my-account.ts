@@ -57,31 +57,37 @@ export const deletePrimaryPhone = async (api: KyInstance, verificationRecordId: 
 
 export const updateIdentities = async (
   api: KyInstance,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   newIdentifierVerificationRecordId: string
 ) =>
   api.post('api/my-account/identities', {
     json: { newIdentifierVerificationRecordId },
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    ...conditional(
+      verificationRecordId && { headers: { [verificationRecordIdHeader]: verificationRecordId } }
+    ),
   });
 
 export const replaceIdentity = async (
   api: KyInstance,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   newIdentifierVerificationRecordId: string
 ) =>
   api.put('api/my-account/identities', {
     json: { newIdentifierVerificationRecordId },
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    ...conditional(
+      verificationRecordId && { headers: { [verificationRecordIdHeader]: verificationRecordId } }
+    ),
   });
 
 export const deleteIdentity = async (
   api: KyInstance,
   target: string,
-  verificationRecordId: string
+  verificationRecordId?: string
 ) =>
   api.delete(`api/my-account/identities/${target}`, {
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    ...conditional(
+      verificationRecordId && { headers: { [verificationRecordIdHeader]: verificationRecordId } }
+    ),
   });
 
 export const updateUser = async (

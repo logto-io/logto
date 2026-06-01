@@ -1,6 +1,7 @@
 import { AccountCenterControlValue, ConnectorPlatform, MfaPolicy } from '@logto/schemas';
 
 import {
+  canManageSocialIdentitiesWithoutVerification,
   canSetInitialPasswordWithoutVerification,
   isEditableField,
   canOpenPasswordEditFlow,
@@ -121,6 +122,22 @@ describe('security-page utils', () => {
     expect(hasAvailableSecurityVerificationMethod({ primaryPhone: '+15555555555' })).toBe(true);
     expect(hasAvailableSecurityVerificationMethod({ hasPassword: false })).toBe(false);
     expect(hasAvailableSecurityVerificationMethod()).toBe(false);
+  });
+
+  it('canManageSocialIdentitiesWithoutVerification requires explicit no-password user info', () => {
+    expect(
+      canManageSocialIdentitiesWithoutVerification({
+        hasPassword: false,
+      })
+    ).toBe(true);
+    expect(canManageSocialIdentitiesWithoutVerification({})).toBe(false);
+    expect(canManageSocialIdentitiesWithoutVerification()).toBe(false);
+    expect(
+      canManageSocialIdentitiesWithoutVerification({
+        hasPassword: false,
+        primaryEmail: 'foo@example.com',
+      })
+    ).toBe(false);
   });
 
   it('canSetInitialPasswordWithoutVerification requires explicit no-password user info', () => {
