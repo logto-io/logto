@@ -16,4 +16,4 @@ export const experience = Object.freeze({
 } as const);
 
 /** `postMessage` sender tag from admin Console sign-in experience live preview. */
-export const signInExperiencePreviewMessageSender = 'ac_preview' as const;
+export const signInExperiencePreviewMessageSender = 'ac_preview';
