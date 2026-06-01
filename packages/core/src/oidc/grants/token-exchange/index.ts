@@ -60,7 +60,7 @@ type Handler = (
   envSet: EnvSet,
   queries: Queries,
   applicationAccessControl: Libraries['applicationAccessControl']
-) => Parameters<Provider['registerGrantType']>['1'];
+) => Parameters<Provider['registerGrantType']>[1];
 
 export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;

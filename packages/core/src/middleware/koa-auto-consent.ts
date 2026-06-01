@@ -12,7 +12,7 @@ import assertThat from '#src/utils/assert-that.js';
  * Automatically consent for the first party apps.
  */
 
-export const shouldAutoConsentApplication = async (clientId: string, query: Queries) => {
+const shouldAutoConsentApplication = async (clientId: string, query: Queries) => {
   const {
     applications: { findApplicationById },
   } = query;
@@ -54,6 +54,7 @@ export default function koaAutoConsent<
         interactionDetails,
         missingOIDCScopes,
         resourceScopesToGrant,
+        markAppLevelAccessControlChecked: true,
       });
 
       ctx.redirect(redirectTo);

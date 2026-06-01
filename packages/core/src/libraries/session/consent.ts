@@ -5,6 +5,7 @@ import type { PromptDetail, Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
+import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -92,6 +93,7 @@ export const consent = async ({
   missingOIDCScopes = [],
   resourceScopesToGrant = {},
   resourceScopesToReject = {},
+  markAppLevelAccessControlChecked: shouldMarkAppLevelAccessControlChecked = false,
 }: {
   ctx: Context;
   provider: Provider;
@@ -100,6 +102,7 @@ export const consent = async ({
   missingOIDCScopes?: string[];
   resourceScopesToGrant?: Record<string, string[]>;
   resourceScopesToReject?: Record<string, string[]>;
+  markAppLevelAccessControlChecked?: boolean;
 }) => {
   const {
     session,
@@ -138,7 +141,17 @@ export const consent = async ({
   }
 
   const finalGrantId = await grant.save();
+  const result = {
+    consent: { grantId: finalGrantId },
+  };
 
   // Configure consent
-  return updateInteractionResult(ctx, provider, { consent: { grantId: finalGrantId } }, true);
+  return updateInteractionResult(
+    ctx,
+    provider,
+    shouldMarkAppLevelAccessControlChecked
+      ? markAppLevelAccessControlChecked(result, clientId, accountId)
+      : result,
+    true
+  );
 };

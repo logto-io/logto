@@ -46,7 +46,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       }),
       status: [200],
     }),
-    koaAppAccessControl(libraries, { markInteractionResult: true }),
+    koaAppAccessControl(libraries),
     async (ctx, next) => {
       const {
         interactionDetails,
@@ -187,6 +187,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
         missingOIDCScopes: missingOIDCScope,
         resourceScopesToGrant,
         resourceScopesToReject,
+        markAppLevelAccessControlChecked: true,
       });
 
       ctx.body = { redirectTo };
