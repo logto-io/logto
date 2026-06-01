@@ -26,6 +26,7 @@ const VerifiedAction = () => {
     () => () => {
       if (!verificationIdRef.current) {
         sessionStorage.clearPendingVerifiedAction();
+        sessionStorage.clearPendingSocialRemoveConnectorId();
       }
     },
     []
@@ -48,6 +49,9 @@ const VerifiedAction = () => {
       }
       case 'remove-phone': {
         return accountCenterSettings.fields.phone === AccountCenterControlValue.Edit;
+      }
+      case 'remove-social': {
+        return accountCenterSettings.fields.social === AccountCenterControlValue.Edit;
       }
       default: {
         return false;
