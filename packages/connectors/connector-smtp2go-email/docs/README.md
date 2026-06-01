@@ -9,7 +9,7 @@ The SMTP2GO connector enables Logto to send transactional emails through the SMT
 - ✅ Support for both plain text and HTML emails
 - ✅ Template-based email sending
 - ✅ Custom i18n template support
-- ✅ Handlebar variable replacement (e.g., `{{code}}`, `{{link}}`)
+- ✅ Handlebars variable replacement (e.g., `{{code}}`, `{{link}}`)
 - ✅ Verified sender support
 
 ## Prerequisites

@@ -19,6 +19,7 @@ import {
   getConfigTemplateByType,
   formatMailbox,
   parseSendFrom,
+  stripHeaderControlChars,
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
@@ -55,7 +56,9 @@ const buildRequestFromCustomTemplate = (
   const { email: senderEmail, name: senderName } = renderedSendFrom
     ? parseSendFrom(renderedSendFrom, config.sender, config.senderName)
     : { email: config.sender, name: config.senderName };
-  const processedReplyTo = replyTo ? replaceSendMessageHandlebars(replyTo, payload) : undefined;
+  const processedReplyTo = replyTo
+    ? stripHeaderControlChars(replaceSendMessageHandlebars(replyTo, payload))
+    : undefined;
 
   return {
     api_key: config.apiKey,

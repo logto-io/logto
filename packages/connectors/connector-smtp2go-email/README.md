@@ -63,7 +63,7 @@ You can add multiple SMTP2GO email connector templates for different cases. Here
 
 - Fill out the `subject` field, which works as the title of emails.
 - Fill out the `content` field with arbitrary string-typed contents. Do not forget to leave placeholders like `{{code}}` for the random verification code.
-- Fill out `usageType` field with either `Register`, `SignIn`, `ForgotPassword`, `Generic` for different use cases.
+- Fill out `usageType` with a Logto template type (e.g. `SignIn`, `Register`, `ForgotPassword`, `Generic`, `OrganizationInvitation`, …).
 - Fill out `type` field with either `text/plain` or `text/html` for different types of content.
 
 In order to enable full user flows, templates with usageType `Register`, `SignIn`, `ForgotPassword` and `Generic` are required.
@@ -118,5 +118,5 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 |---------------------|-------------|------------------------------------------------------|
 | subject             | string      | N/A                                                  |
 | content             | string      | N/A                                                  |
-| usageType           | enum string | 'Register' \| 'SignIn' \| 'ForgotPassword' \| 'Generic' |
+| usageType           | enum string | Logto `TemplateType` values (e.g. `Register`, `SignIn`, `ForgotPassword`, `Generic`, `OrganizationInvitation`, `UserPermissionValidation`, `BindNewIdentifier`, `MfaVerification`, `BindMfa`) |
 | type                | enum string | 'text/plain' \| 'text/html'                          |

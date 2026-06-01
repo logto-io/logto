@@ -16,5 +16,5 @@ Initial release of the SMTP2GO email connector for Logto.
 - Template-based email system
 - Support for plain text and HTML emails
 - Custom i18n template support
-- Handlebar variable replacement
+- Handlebars variable replacement
 - All standard Logto email templates (Register, SignIn, ForgotPassword, Generic, etc.)
