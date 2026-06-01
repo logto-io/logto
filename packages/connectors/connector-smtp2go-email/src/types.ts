@@ -28,22 +28,6 @@ export type Smtp2goEmailRequest = {
 };
 
 /**
- * SMTP2GO API success response for `/v3/email/send`.
- *
- * @see https://developers.smtp2go.com/reference/send-standard-email
- */
-export type Smtp2goEmailResponse = {
-  request_id: string;
-  data: {
-    succeeded?: number;
-    failed?: number;
-    failures?: string[];
-    email_id?: string;
-    schedule_id?: string;
-  };
-};
-
-/**
  * Template configuration for different usage types
  */
 const templateGuard = z.object({
