@@ -9,6 +9,7 @@ import { InputField } from '@/components/InputFields';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useSendMfaPayload from '@/hooks/use-send-mfa-payload';
+import useShouldHideMfaBackNavigation from '@/hooks/use-should-hide-mfa-back-navigation';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
 import { UserMfaFlow } from '@/types';
@@ -21,6 +22,7 @@ type FormState = {
 
 const BackupCodeVerification = () => {
   const flowState = useMfaFlowState();
+  const shouldHideBack = useShouldHideMfaBackNavigation();
   const sendMfaPayload = useSendMfaPayload();
   const {
     register,
@@ -45,7 +47,7 @@ const BackupCodeVerification = () => {
   }
 
   return (
-    <SecondaryPageLayout title="mfa.verify_mfa_factors">
+    <SecondaryPageLayout isBackHidden={shouldHideBack} title="mfa.verify_mfa_factors">
       <SectionLayout
         title="mfa.enter_a_backup_code"
         description="mfa.enter_backup_code_description"
