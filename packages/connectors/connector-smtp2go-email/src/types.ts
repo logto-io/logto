@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { templateTypeGuard, TemplateType } from '@logto/connector-kit';
+
 /**
  * @doc https://apidoc.smtp2go.com/documentation/#/POST/email/send
  */
@@ -45,7 +47,7 @@ export type Smtp2goEmailResponse = {
  * Template configuration for different usage types
  */
 const templateGuard = z.object({
-  usageType: z.string(),
+  usageType: templateTypeGuard,
   type: z.nativeEnum(ContentType),
   subject: z.string(),
   content: z.string(), // With variable {{code}}, supports HTML
@@ -60,11 +62,21 @@ export const smtp2goEmailConfigGuard = z.object({
   senderName: z.string().optional(),
   templates: z.array(templateGuard).refine(
     (templates) =>
-      ['Register', 'SignIn', 'ForgotPassword', 'Generic'].every((requiredType) =>
+      [
+        TemplateType.Register,
+        TemplateType.SignIn,
+        TemplateType.ForgotPassword,
+        TemplateType.Generic,
+      ].every((requiredType) =>
         templates.map((template) => template.usageType).includes(requiredType)
       ),
     (templates) => ({
-      message: `Template with UsageType (${['Register', 'SignIn', 'ForgotPassword', 'Generic']
+      message: `Template with UsageType (${[
+        TemplateType.Register,
+        TemplateType.SignIn,
+        TemplateType.ForgotPassword,
+        TemplateType.Generic,
+      ]
         .filter(
           (requiredType) => !templates.map((template) => template.usageType).includes(requiredType)
         )

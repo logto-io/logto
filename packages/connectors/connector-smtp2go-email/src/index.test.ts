@@ -22,25 +22,25 @@ const mockedConfig: Smtp2goEmailConfig = {
   senderName: 'Logto Test',
   templates: [
     {
-      usageType: 'SignIn',
+      usageType: TemplateType.SignIn,
       type: ContentType.Text,
       subject: 'Sign-In Code',
       content: 'Your code is {{code}}',
     },
     {
-      usageType: 'Register',
+      usageType: TemplateType.Register,
       type: ContentType.Text,
       subject: 'Registration Code',
       content: 'Your code is {{code}}',
     },
     {
-      usageType: 'ForgotPassword',
+      usageType: TemplateType.ForgotPassword,
       type: ContentType.Text,
       subject: 'Password Reset Code',
       content: 'Your code is {{code}}',
     },
     {
-      usageType: 'Generic',
+      usageType: TemplateType.Generic,
       type: ContentType.Text,
       subject: 'Verification Code',
       content: 'Your code is {{code}}',
