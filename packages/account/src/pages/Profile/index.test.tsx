@@ -18,6 +18,7 @@ import renderWithPageContext, {
 } from '@ac/__mocks__/RenderWithPageContext';
 
 import { updateAvatar, updateCustomData, updateName, updateProfile } from '../../apis/account';
+import { uploadAccountAvatar } from '../../apis/avatar';
 
 import Profile from '.';
 
@@ -326,6 +327,26 @@ describe('<Profile />', () => {
 
     expect(queryByText('profile.avatar_upload.remove')).toBeNull();
     expect(queryByText('profile.avatar_upload.upload')).toBeNull();
+  });
+
+  it('uploads avatar and persists URL via updateAvatar', async () => {
+    const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
+    const setToast = jest.fn();
+    const mockUrl = 'https://example.com/new-avatar.png';
+    jest.mocked(uploadAccountAvatar).mockResolvedValueOnce({ url: mockUrl });
+
+    const { container } = renderProfile({ refreshUserInfo, setToast });
+    const fileInput = container.querySelector('input[type="file"]')!;
+    const file = new File(['avatar'], 'avatar.png', { type: 'image/png' });
+
+    fireEvent.change(fileInput, { target: { files: [file] } });
+
+    await waitFor(() => {
+      expect(uploadAccountAvatar).toHaveBeenCalledWith('access-token', file, expect.any(Object));
+    });
+    await waitFor(() => {
+      expect(updateAvatar).toHaveBeenCalledWith('access-token', { avatar: mockUrl });
+    });
   });
 
   it('renders avatar image in read-only mode with label and not_set placeholder', () => {

@@ -28,7 +28,7 @@ type Props = {
   readonly className?: string;
   readonly label: string;
   readonly value?: string;
-  readonly onChange: (value: string) => void;
+  readonly onChange: (value: string) => void | Promise<void>;
 };
 
 const AvatarUploadField = ({ className, label, value = '', onChange }: Props) => {
@@ -96,7 +96,7 @@ const AvatarUploadField = ({ className, label, value = '', onChange }: Props) =>
       }
 
       if (validationError === 'file_type') {
-        setUploadError(tAvatar('error_file_type', { extensions: String(avatarFileExtensions) }));
+        setUploadError(tAvatar('error_file_type', { extensions: avatarFileExtensions }));
         resetFileInput();
         return;
       }
@@ -119,7 +119,7 @@ const AvatarUploadField = ({ className, label, value = '', onChange }: Props) =>
         const { url } = await uploadAccountAvatar(accessToken, file, {
           signal: abortController.signal,
         });
-        onChange(url);
+        await onChange(url);
       } catch (error: unknown) {
         if (isAbortError(error) || abortController.signal.aborted) {
           return;
