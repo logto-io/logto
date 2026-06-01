@@ -17,72 +17,13 @@ import {
   ConnectorType,
   replaceSendMessageHandlebars,
   getConfigTemplateByType,
+  formatMailbox,
+  parseSendFrom,
 } from '@logto/connector-kit';
 
 import { defaultMetadata, endpoint } from './constant.js';
 import { ContentType, smtp2goEmailConfigGuard } from './types.js';
 import type { Smtp2goEmailConfig, Smtp2goEmailRequest } from './types.js';
-
-/** Strip ASCII control characters that must not appear in SMTP header fields (RFC 5322). */
-const stripHeaderControlChars = (value: string): string =>
-  [...value]
-    .filter((character) => {
-      const code = character.codePointAt(0);
-      return code !== undefined && code > 31 && code !== 127;
-    })
-    .join('');
-
-const sanitizeMailboxDisplayName = (name: string): string =>
-  stripHeaderControlChars(name).replaceAll('<', '').replaceAll('>', '').trim();
-
-const sanitizeMailboxAddress = (address: string): string =>
-  stripHeaderControlChars(address).replaceAll('<', '').replaceAll('>', '').trim();
-
-const formatSender = (email: string, name?: string): string => {
-  const sanitizedEmail = sanitizeMailboxAddress(email);
-  if (!name) {
-    return sanitizedEmail;
-  }
-
-  const safeName = sanitizeMailboxDisplayName(name);
-  return safeName.length > 0 ? `${safeName} <${sanitizedEmail}>` : sanitizedEmail;
-};
-
-const parseSendFrom = (
-  renderedSendFrom: string,
-  fallbackEmail: string,
-  fallbackName?: string
-): { email: string; name?: string } => {
-  const value = stripHeaderControlChars(renderedSendFrom).trim();
-  const match = /^(.*?)<\s*([^>]+)\s*>$/.exec(value);
-
-  if (match) {
-    const name = match[1]?.trim();
-    const email = match[2]?.trim();
-
-    if (email) {
-      return {
-        email: sanitizeMailboxAddress(email),
-        name: name?.length ? sanitizeMailboxDisplayName(name) : undefined,
-      };
-    }
-  }
-
-  if (value.includes('@') && !value.includes(' ')) {
-    return { email: sanitizeMailboxAddress(value), name: undefined };
-  }
-
-  const rawDisplay = value.length > 0 ? value : fallbackName;
-  if (!rawDisplay) {
-    return { email: sanitizeMailboxAddress(fallbackEmail), name: undefined };
-  }
-
-  const safeName = sanitizeMailboxDisplayName(rawDisplay);
-  return {
-    email: sanitizeMailboxAddress(fallbackEmail),
-    name: safeName.length > 0 ? safeName : undefined,
-  };
-};
 
 const buildRequestFromDefaultTemplate = (
   to: string,
@@ -96,7 +37,7 @@ const buildRequestFromDefaultTemplate = (
   return {
     api_key: config.apiKey,
     to: [to],
-    sender: formatSender(config.sender, config.senderName),
+    sender: formatMailbox(config.sender, config.senderName),
     subject,
     ...(template.type === ContentType.Html ? { html_body: content } : { text_body: content }),
   };
@@ -119,7 +60,7 @@ const buildRequestFromCustomTemplate = (
   return {
     api_key: config.apiKey,
     to: [to],
-    sender: formatSender(senderEmail, senderName),
+    sender: formatMailbox(senderEmail, senderName),
     subject: processedSubject,
     ...(contentType === 'text/html'
       ? { html_body: processedContent }

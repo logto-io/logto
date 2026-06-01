@@ -14,7 +14,9 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorType,
+  formatMailbox,
   getConfigTemplateByType,
+  parseSendFrom,
   replaceSendMessageHandlebars,
   validateConfig,
 } from '@logto/connector-kit';
@@ -22,77 +24,6 @@ import { convert as htmlToText } from 'html-to-text';
 
 import { defaultMetadata, endpoint } from './constant.js';
 import { mailJunkyConfigGuard, type PublicParameters } from './types.js';
-
-/** Strip ASCII control characters that must not appear in SMTP header fields (RFC 5322). */
-const stripHeaderControlChars = (value: string): string =>
-  [...value]
-    .filter((character) => {
-      const code = character.codePointAt(0);
-      return code !== undefined && code > 31 && code !== 127;
-    })
-    .join('');
-
-/**
- * Sanitize a display name for `From: Name <addr>` so CR/LF cannot inject extra headers and
- * angle brackets cannot break the mailbox token.
- */
-const sanitizeMailboxDisplayName = (name: string): string =>
-  stripHeaderControlChars(name).replaceAll('<', '').replaceAll('>', '').trim();
-
-/** Local-part angle brackets from malformed `Name <…>` input must not break the outer mailbox token. */
-const sanitizeMailboxAddress = (address: string): string =>
-  stripHeaderControlChars(address).replaceAll('<', '').replaceAll('>', '').trim();
-
-const formatFrom = (fromEmail: string, fromName?: string): string => {
-  const email = sanitizeMailboxAddress(fromEmail);
-  if (!fromName) {
-    return email;
-  }
-
-  const safeName = sanitizeMailboxDisplayName(fromName);
-  return safeName.length > 0 ? `${safeName} <${email}>` : email;
-};
-
-const parseSendFrom = (
-  renderedSendFrom: string,
-  fallbackEmail: string,
-  fallbackName?: string
-): { fromEmail: string; fromName?: string } => {
-  // Normalize SMTP header control characters first so mailbox parsing cannot be bypassed by
-  // embedding CR/LF before `<` (the `.` token in the mailbox regex does not match line breaks).
-  const value = stripHeaderControlChars(renderedSendFrom).trim();
-
-  // Format: "Name <email@domain>"
-  const match = /^(.*?)<\s*([^>]+)\s*>$/.exec(value);
-  if (match) {
-    const name = match[1]?.trim();
-    const email = match[2]?.trim();
-
-    if (email) {
-      return {
-        fromEmail: sanitizeMailboxAddress(email),
-        fromName: name?.length ? sanitizeMailboxDisplayName(name) : undefined,
-      };
-    }
-  }
-
-  // Format: "email@domain" (no display name)
-  if (value.includes('@') && !value.includes(' ')) {
-    return { fromEmail: sanitizeMailboxAddress(value), fromName: undefined };
-  }
-
-  // Otherwise treat as display name only
-  const rawDisplay = value.length > 0 ? value : fallbackName;
-  if (!rawDisplay) {
-    return { fromEmail: sanitizeMailboxAddress(fallbackEmail), fromName: undefined };
-  }
-
-  const safeName = sanitizeMailboxDisplayName(rawDisplay);
-  return {
-    fromEmail: sanitizeMailboxAddress(fallbackEmail),
-    fromName: safeName.length > 0 ? safeName : undefined,
-  };
-};
 
 /**
  * Derive multipart `text` from HTML templates.
@@ -130,7 +61,7 @@ const buildParameters = (input: BuildMailJunkyBodyInput): PublicParameters => {
   const renderedContent = replaceSendMessageHandlebars(content, payload);
 
   const base: PublicParameters = {
-    from: formatFrom(fromEmail, fromName),
+    from: formatMailbox(fromEmail, fromName),
     to,
     subject: renderedSubject,
   };
@@ -174,9 +105,9 @@ const sendMessage =
       const renderedSendFrom = sendFrom
         ? replaceSendMessageHandlebars(sendFrom, payload)
         : undefined;
-      const overriddenFrom = renderedSendFrom
+      const { email: parsedFromEmail, name: parsedFromName } = renderedSendFrom
         ? parseSendFrom(renderedSendFrom, fromEmail, fromName)
-        : { fromEmail, fromName };
+        : { email: fromEmail, name: fromName };
 
       return buildParameters({
         to,
@@ -184,8 +115,8 @@ const sendMessage =
         content,
         contentType,
         payload,
-        fromEmail: overriddenFrom.fromEmail,
-        fromName: overriddenFrom.fromName,
+        fromEmail: parsedFromEmail,
+        fromName: parsedFromName,
       });
     };
 
