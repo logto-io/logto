@@ -82,8 +82,6 @@ export const mfaErrorDataGuard = s.object({
   suggestion: s.optional(s.boolean()),
   // Whether the current WebAuthn factor is used as a sign-in passkey.
   isWebAuthnUsedAsSignInPasskey: s.optional(s.boolean()),
-  // Hide back navigation (e.g. one-time token sign-in where back re-consumes the token).
-  hideBack: s.optional(s.boolean()),
 });
 
 export const mfaFlowStateGuard = mfaErrorDataGuard;

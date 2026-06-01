@@ -42,16 +42,4 @@ describe('guard', () => {
       );
     }).not.toThrow();
   });
-
-  it('mfaErrorDataGuard should accept hideBack for one-time token sign-in', () => {
-    expect(() => {
-      s.assert(
-        {
-          availableFactors: [MfaFactor.TOTP],
-          hideBack: true,
-        },
-        mfaErrorDataGuard
-      );
-    }).not.toThrow();
-  });
 });

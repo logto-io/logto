@@ -1,9 +1,4 @@
-import {
-  experience,
-  ExtraParamsKey,
-  type SsoConnectorMetadata,
-  type VerificationType,
-} from '@logto/schemas';
+import { ExtraParamsKey, type SsoConnectorMetadata, type VerificationType } from '@logto/schemas';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -96,7 +91,11 @@ const UserInteractionContextProvider = ({ children }: Props) => {
   }, [verificationIdsMap, remove, set]);
 
   useEffect(() => {
-    const isOneTimeTokenRoute = pathname.includes(experience.routes.oneTimeToken);
+    if (typeof pathname !== 'string') {
+      return;
+    }
+
+    const isOneTimeTokenRoute = pathname.includes('one-time-token');
     const hasOneTimeTokenParam = searchParams.has(ExtraParamsKey.OneTimeToken);
     const isMfaRoute =
       pathname.includes(`/${UserMfaFlow.MfaBinding}`) ||

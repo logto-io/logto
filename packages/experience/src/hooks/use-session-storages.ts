@@ -40,7 +40,7 @@ const useSessionStorage = () => {
       return;
     }
 
-    sessionStorage.setItem(`${logtoStorageKeyPrefix}:${key}`, value);
+    sessionStorage.setItem(`${logtoStorageKeyPrefix}:${key}`, String(value));
   }, []);
 
   const remove = useCallback((key: StorageKeys) => {
