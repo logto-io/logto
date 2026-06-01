@@ -1,3 +1,5 @@
+import { uploadAccountAvatar } from '@ac/apis/avatar';
+import { layoutClassNames } from '@ac/constants/layout';
 import UserAvatar from '@experience/assets/icons/default-user-avatar.svg?react';
 import RotatingRingIcon from '@experience/shared/components/Button/RotatingRingIcon';
 import {
@@ -13,9 +15,6 @@ import classNames from 'classnames';
 import { HTTPError } from 'ky';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import { uploadAccountAvatar } from '@ac/apis/avatar';
-import { layoutClassNames } from '@ac/constants/layout';
 
 import profileStyles from '../../pages/Profile/index.module.scss';
 
@@ -145,7 +144,9 @@ const AvatarUploadField = ({ className, label, value = '', onChange }: Props) =>
   return (
     <div className={classNames(profileStyles.row, layoutClassNames.row, className)}>
       <div className={profileStyles.topLine}>
-        <div className={profileStyles.name}>{label}</div>
+        <label className={profileStyles.name} htmlFor={inputId}>
+          {label}
+        </label>
         <div className={profileStyles.actions}>
           <button
             type="button"
@@ -167,7 +168,7 @@ const AvatarUploadField = ({ className, label, value = '', onChange }: Props) =>
             <img
               className={profileStyles.avatar}
               src={value}
-              alt="avatar"
+              alt={label}
               referrerPolicy="no-referrer"
             />
           ) : (
