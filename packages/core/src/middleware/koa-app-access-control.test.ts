@@ -49,7 +49,56 @@ describe('koaAppAccessControl middleware', () => {
     await guard(ctx, next);
 
     expect(assertUserHasApplicationAccess).toHaveBeenCalledWith('app-id', 'user-id');
+    expect(ctx.interactionDetails.persist).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('should mark application access checked when configured', async () => {
+    const ctx = createContext({
+      params: { client_id: 'app-id' },
+      // @ts-expect-error
+      session: { accountId: 'user-id' },
+    });
+    const guard = koaAppAccessControl(mockTenant.libraries, { markInteractionResult: true });
+
+    await guard(ctx, next);
+
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith('app-id', 'user-id');
     expect(ctx.interactionDetails.persist).toHaveBeenCalled();
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('should mark application access checked when the mark predicate returns true', async () => {
+    const ctx = createContext({
+      params: { client_id: 'app-id' },
+      // @ts-expect-error
+      session: { accountId: 'user-id' },
+    });
+    const guard = koaAppAccessControl(mockTenant.libraries, {
+      markInteractionResult: async () => true,
+    });
+
+    await guard(ctx, next);
+
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith('app-id', 'user-id');
+    expect(ctx.interactionDetails.persist).toHaveBeenCalled();
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('should not mark application access checked when the mark predicate returns false', async () => {
+    const ctx = createContext({
+      params: { client_id: 'app-id' },
+      // @ts-expect-error
+      session: { accountId: 'user-id' },
+    });
+    const guard = koaAppAccessControl(mockTenant.libraries, {
+      markInteractionResult: async () => false,
+    });
+
+    await guard(ctx, next);
+
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith('app-id', 'user-id');
+    expect(ctx.interactionDetails.persist).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalled();
   });
 

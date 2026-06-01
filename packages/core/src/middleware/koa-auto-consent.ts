@@ -12,6 +12,18 @@ import assertThat from '#src/utils/assert-that.js';
  * Automatically consent for the first party apps.
  */
 
+export const shouldAutoConsentApplication = async (clientId: string, query: Queries) => {
+  const {
+    applications: { findApplicationById },
+  } = query;
+
+  const application = isBuiltInApplicationId(clientId)
+    ? buildBuiltInApplicationDataForTenant('', clientId)
+    : await findApplicationById(clientId);
+
+  return !application.isThirdParty;
+};
+
 export default function koaAutoConsent<
   StateT,
   ContextT extends WithInteractionDetailsContext,
@@ -24,20 +36,12 @@ export default function koaAutoConsent<
       prompt,
     } = interactionDetails;
 
-    const {
-      applications: { findApplicationById },
-    } = query;
-
     assertThat(
       clientId && typeof clientId === 'string',
       new errors.InvalidClient('client must be available')
     );
 
-    const application = isBuiltInApplicationId(clientId)
-      ? buildBuiltInApplicationDataForTenant('', clientId)
-      : await findApplicationById(clientId);
-
-    const shouldAutoConsent = !application.isThirdParty;
+    const shouldAutoConsent = await shouldAutoConsentApplication(clientId, query);
 
     if (shouldAutoConsent) {
       const { missingOIDCScope: missingOIDCScopes, missingResourceScopes: resourceScopesToGrant } =

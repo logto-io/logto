@@ -46,7 +46,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       }),
       status: [200],
     }),
-    koaAppAccessControl(libraries),
+    koaAppAccessControl(libraries, { markInteractionResult: true }),
     async (ctx, next) => {
       const {
         interactionDetails,

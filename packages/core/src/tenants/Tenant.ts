@@ -14,7 +14,7 @@ import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
-import koaAutoConsent from '#src/middleware/koa-auto-consent.js';
+import koaAutoConsent, { shouldAutoConsentApplication } from '#src/middleware/koa-auto-consent.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
 import koaDeviceFlowShortcut from '#src/middleware/koa-device-flow-shortcut.js';
@@ -246,7 +246,15 @@ export default class Tenant implements TenantContext {
           compose([
             koaInteractionDetails(provider),
             koaConsentGuard(libraries, queries),
-            koaAppAccessControl(libraries),
+            koaAppAccessControl(libraries, {
+              markInteractionResult: async (ctx) => {
+                const { client_id: clientId } = ctx.interactionDetails.params;
+
+                return (
+                  typeof clientId === 'string' && shouldAutoConsentApplication(clientId, queries)
+                );
+              },
+            }),
             koaAutoConsent(provider, queries),
           ])
         ),
