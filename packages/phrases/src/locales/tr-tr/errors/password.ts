@@ -4,6 +4,7 @@ const password = {
   rejected: 'Şifre reddedildi. Lütfen şifrenizin gereksinimleri karşıladığından emin olun.',
   invalid_legacy_password_format: 'Geçersiz eski şifre formatı.',
   unsupported_legacy_hash_algorithm: 'Desteklenmeyen eski hash algoritması: {{algorithm}}.',
+  expired: 'Parolanızın süresi doldu. Devam etmek için lütfen parolanızı sıfırlayın.',
 };
 
 export default Object.freeze(password);

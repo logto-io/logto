@@ -21,6 +21,14 @@ const user_details = {
     new_password: 'Nuova password:',
     password: 'Password:',
   },
+  expire_password: {
+    button: 'Fai scadere',
+    title: 'Sei sicuro di voler far scadere questa password?',
+    content:
+      "L'utente dovrà reimpostare la password al prossimo accesso. Questa azione non può essere annullata.",
+    success: "La password dell'utente è stata contrassegnata come scaduta.",
+    not_enabled_tooltip: 'La politica di scadenza della password non è abilitata.',
+  },
   tab_settings: 'Impostazioni',
   tab_roles: 'Ruoli utente',
   tab_logs: 'Log utente',

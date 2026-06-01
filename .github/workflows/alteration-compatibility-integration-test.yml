@@ -77,12 +77,13 @@ jobs:
       STATUS_API_KEY: test-status-api-key
 
     steps:
-      - uses: logto-io/actions-run-logto-integration-tests@v4.0.1
+      - uses: logto-io/actions-run-logto-integration-tests@v4.1.0
         with:
           branch: ${{ github.base_ref }}
           logto-artifact: alteration-integration-test-${{ github.sha }}
           test-target: ${{ matrix.target }}
           db-alteration-target: ${{ github.head_ref }}
+          db-alteration-repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           pnpm-version: 10
           node-version: ^22.14.0
 

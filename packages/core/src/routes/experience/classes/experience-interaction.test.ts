@@ -4,6 +4,7 @@ import {
   adminTenantId,
   type CreateUser,
   InteractionEvent,
+  type SignInExperience,
   SignInIdentifier,
   SignInMode,
   type User,
@@ -71,10 +72,16 @@ const createSignInInteraction = ({
   headers,
   interactionEvent = InteractionEvent.SignIn,
   adaptiveMfaEnabled = false,
+  user = mockUser,
+  interactionResult = {},
+  signInExperienceOverrides = {},
 }: {
   headers?: Record<string, string>;
   interactionEvent?: InteractionEvent;
   adaptiveMfaEnabled?: boolean;
+  user?: User;
+  interactionResult?: Record<string, unknown>;
+  signInExperienceOverrides?: Partial<SignInExperience>;
 } = {}) => {
   const userGeoLocations = {
     upsertUserGeoLocation: jest.fn().mockResolvedValue(null),
@@ -87,12 +94,16 @@ const createSignInInteraction = ({
     findDefaultSignInExperience: jest.fn().mockResolvedValue({
       ...mockSignInExperience,
       adaptiveMfa: { enabled: adaptiveMfaEnabled },
+      passwordExpiration: {
+        enabled: false,
+      },
+      ...signInExperienceOverrides,
     }),
   };
   const signInUserQueries = {
     ...userQueries,
-    findUserById: jest.fn().mockResolvedValue(mockUser),
-    updateUserById: jest.fn().mockResolvedValue(mockUser),
+    findUserById: jest.fn().mockResolvedValue(user),
+    updateUserById: jest.fn().mockResolvedValue(user),
   };
   const signInTenant = new MockTenant(
     createMockProvider(),
@@ -129,7 +140,8 @@ const createSignInInteraction = ({
   const interactionDetails = {
     result: {
       interactionEvent,
-      userId: mockUser.id,
+      userId: user.id,
+      ...interactionResult,
     },
   } as unknown as Interaction;
 

@@ -11,6 +11,7 @@ import DetailsForm from '@/components/DetailsForm';
 import FormCard from '@/components/FormCard';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { passwordPolicy } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import RadioGroup, { Radio } from '@/ds-components/RadioGroup';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
@@ -22,6 +23,7 @@ import { trySubmitSafe } from '@/utils/form';
 import PasswordOption from '../PasswordOption';
 import { passwordPolicyFormParser, type PasswordPolicyFormData } from '../use-password-policy';
 
+import PasswordExpirationCard from './PasswordExpirationCard';
 import styles from './index.module.scss';
 
 type Props = {
@@ -76,6 +78,8 @@ function PasswordPolicyForm({ data }: Props) {
       toast.success(globalT('general.saved'));
     })
   );
+
+  const { hasAvailableForgotPasswordMethod } = data;
 
   return (
     <>
@@ -206,6 +210,11 @@ function PasswordPolicyForm({ data }: Props) {
               )}
             </FormField>
           </FormCard>
+          {isDevFeaturesEnabled && (
+            <PasswordExpirationCard
+              hasAvailableForgotPasswordMethod={hasAvailableForgotPasswordMethod}
+            />
+          )}
         </DetailsForm>
       </FormProvider>
       <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />

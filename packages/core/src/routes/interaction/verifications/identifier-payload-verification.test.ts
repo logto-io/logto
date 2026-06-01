@@ -48,7 +48,7 @@ const identifierPayloadVerification = await pickDefault(
 
 const verifyUserPassword = jest.fn();
 const logContext = createMockLogContext();
-const tenant = new MockTenant(undefined, undefined, undefined, {
+const tenant = new MockTenant(undefined, {}, undefined, {
   users: { verifyUserPassword },
 });
 

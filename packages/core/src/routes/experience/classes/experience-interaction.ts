@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+
 import { appInsights } from '@logto/app-insights/node';
 import {
   InteractionEvent,
@@ -11,6 +12,7 @@ import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -147,7 +149,6 @@ export default class ExperienceInteraction {
     this.profile = new Profile(libraries, queries, profile, interactionContext);
     this.mfa = new Mfa(libraries, queries, mfa, interactionContext);
     this.captcha = captcha;
-
     for (const record of verificationRecords) {
       const instance = buildVerificationRecord(libraries, queries, record);
       this.verificationRecords.setValue(instance);
@@ -494,8 +495,10 @@ export default class ExperienceInteraction {
       );
 
       const updatedUser = await userQueries.updateUserById(user.id, {
-        passwordEncrypted,
-        passwordEncryptionMethod,
+        ...buildUserPasswordPayload({
+          passwordEncrypted,
+          passwordEncryptionMethod,
+        }),
       });
 
       await this.cleanUp();
@@ -540,6 +543,8 @@ export default class ExperienceInteraction {
       jitOrganizationIds,
       socialConnectorTokenSetSecret,
       enterpriseSsoConnectorTokenSetSecret,
+      passwordEncrypted,
+      passwordEncryptionMethod,
       ...rest
     } = this.profile.data;
     const userMfaVerifications = this.mfa.toUserMfaVerifications();
@@ -548,6 +553,14 @@ export default class ExperienceInteraction {
     // Update user profile
     const updatedUser = await userQueries.updateUserById(user.id, {
       ...rest,
+      ...conditional(
+        passwordEncrypted &&
+          passwordEncryptionMethod &&
+          buildUserPasswordPayload({
+            passwordEncrypted,
+            passwordEncryptionMethod,
+          })
+      ),
       ...conditional(
         socialIdentity && {
           identities: {

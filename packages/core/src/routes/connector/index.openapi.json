@@ -126,6 +126,9 @@
           },
           "404": {
             "description": "Connector not found."
+          },
+          "422": {
+            "description": "The connector cannot be deleted because password expiration requires at least one available forgot password method."
           }
         }
       }

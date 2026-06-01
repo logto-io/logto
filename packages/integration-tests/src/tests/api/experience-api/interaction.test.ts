@@ -5,13 +5,18 @@ import {
   VerificationType,
 } from '@logto/schemas';
 
-import { mockEmailConnectorId, mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
+import {
+  mockEmailConnectorId,
+  mockSmsConnectorId,
+  mockSocialConnectorId,
+} from '#src/__mocks__/connectors-mock.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
+  setSmsConnector,
   setSocialConnector,
 } from '#src/helpers/connector.js';
 import {
@@ -100,12 +105,15 @@ describe('GET /experience/interaction', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Social, ConnectorType.Email]);
 
-    const [emailConnector, socialConnector] = await Promise.all([
+    const [emailConnector, socialConnector, smsConnector] = await Promise.all([
       setEmailConnector(),
       setSocialConnector(),
+      setSmsConnector(),
     ]);
+
     connectorIdMap.set(mockEmailConnectorId, emailConnector.id);
     connectorIdMap.set(mockSocialConnectorId, socialConnector.id);
+    connectorIdMap.set(mockSmsConnectorId, smsConnector.id);
   });
 
   afterAll(async () => {

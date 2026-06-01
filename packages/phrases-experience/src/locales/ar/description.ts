@@ -105,6 +105,11 @@ const description = {
   identifier_register_description:
     'أدخل {{types, list(type: disjunction;)}} الخاص بك لإنشاء حساب جديد.',
   all_account_creation_options: 'جميع خيارات إنشاء الحساب',
+  password_expired: 'انتهت صلاحية كلمة المرور الخاصة بك ويجب إعادة تعيينها قبل تسجيل الدخول.',
+  password_expiration_reminder:
+    'ستنتهي صلاحية كلمة المرور الخاصة بك خلال {{days}} يوم (أيام). نوصي بإعادة تعيينها الآن.',
+  password_expiration_reminder_skip: 'تخطي الآن',
+  password_expiration_reset: 'إعادة تعيين كلمة المرور',
   back_to_sign_in: 'العودة إلى تسجيل الدخول',
   support_email: 'البريد الإلكتروني للدعم: <link></link>',
   support_website: 'موقع الدعم: <link></link>',

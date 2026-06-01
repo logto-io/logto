@@ -4,6 +4,7 @@ const password = {
   rejected: '비밀번호가 거부되었습니다. 비밀번호가 요구 사항을 충족하는지 확인해 주세요.',
   invalid_legacy_password_format: '잘못된 레거시 비밀번호 형식입니다.',
   unsupported_legacy_hash_algorithm: '지원되지 않는 레거시 해시 알고리즘: {{algorithm}}.',
+  expired: '비밀번호가 만료되었습니다. 계속하려면 비밀번호를 재설정하세요.',
 };
 
 export default Object.freeze(password);

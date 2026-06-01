@@ -4,6 +4,7 @@ const password = {
   rejected: 'تم رفض كلمة المرور. يرجى التحقق مما إذا كانت كلمة المرور تلبي المتطلبات.',
   invalid_legacy_password_format: 'تنسيق كلمة المرور القديمة غير صالح.',
   unsupported_legacy_hash_algorithm: 'خوارزمية التجزئة القديمة غير مدعومة: {{algorithm}}.',
+  expired: 'انتهت صلاحية كلمة المرور الخاصة بك. يرجى إعادة تعيين كلمة المرور للمتابعة.',
 };
 
 export default Object.freeze(password);
