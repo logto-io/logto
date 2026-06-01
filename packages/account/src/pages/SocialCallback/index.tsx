@@ -19,9 +19,9 @@ import {
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { accountCenterBasePath } from '@ac/utils/account-center-route';
+import { canManageSocialIdentitiesWithoutVerification } from '@ac/utils/security-page';
 import { accountStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
-import { canManageSocialIdentitiesWithoutVerification } from '@ac/utils/security-page';
 import { finalizeSocialFlowFailure, finalizeSocialFlowSuccess } from '@ac/utils/social-flow';
 
 const SocialCallback = () => {
