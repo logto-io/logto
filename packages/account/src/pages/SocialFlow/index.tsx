@@ -71,11 +71,12 @@ const SocialFlow = ({ mode }: Props) => {
       ? `${mode}:${connectorId}:${verificationId ?? 'skip'}`
       : undefined;
 
-  const resetVerification = useCallback(() => {
+  const resetVerification = useCallback(async () => {
+    await refreshUserInfo();
     setStartedFlowKey(undefined);
     setVerificationId(undefined);
     setToast(t('account_center.verification.verification_required'));
-  }, [setToast, setVerificationId, t]);
+  }, [refreshUserInfo, setToast, setVerificationId, t]);
 
   const handleFlowError = useCallback(
     async (error: unknown) => {
