@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { validate } from 'superstruct';
 
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState, mfaErrorDataGuard } from '@/types/guard';
 import { isNativeWebview } from '@/utils/native-sdk';
@@ -22,6 +23,7 @@ export type Options = {
 
 const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const navigate = useNavigateWithPreservedSearchParams();
+  const { get } = useSessionStorage();
   const { t } = useTranslation();
   const { setToast } = useToast();
   const startTotpBinding = useStartTotpBinding();
@@ -136,16 +138,19 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
             ? factors.filter((factor) => factor !== MfaFactor.WebAuthn)
             : factors;
 
+        const hideBack = Boolean(get(StorageKeys.OneTimeTokenSignIn));
+
         await handleMfaRedirect(flow, {
           availableFactors,
           skippable,
           maskedIdentifiers,
           suggestion,
           isWebAuthnUsedAsSignInPasskey,
+          hideBack,
         });
       };
     },
-    [handleMfaRedirect, navigate, replace, setToast]
+    [get, handleMfaRedirect, navigate, replace, setToast]
   );
 
   const mfaVerificationErrorHandler = useMemo<ErrorHandlers>(

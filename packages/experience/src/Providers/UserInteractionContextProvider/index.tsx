@@ -95,6 +95,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
     remove(StorageKeys.IdentifierInputValue);
     remove(StorageKeys.ForgotPasswordIdentifierInputValue);
     remove(StorageKeys.verificationIds);
+    remove(StorageKeys.OneTimeTokenSignIn);
   }, [remove]);
 
   const setVerificationId = useCallback((type: VerificationType, id: string) => {

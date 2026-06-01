@@ -8,6 +8,7 @@ import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import Divider from '@/components/Divider';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
+import useShouldHideMfaBackNavigation from '@/hooks/use-should-hide-mfa-back-navigation';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import ErrorPage from '@/pages/ErrorPage';
@@ -26,6 +27,7 @@ const TotpBinding = () => {
 
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
+  const shouldHideBack = useShouldHideMfaBackNavigation();
 
   if (!totpBindingState || !verificationId) {
     return <ErrorPage title="error.invalid_session" />;
@@ -35,6 +37,7 @@ const TotpBinding = () => {
 
   return (
     <SecondaryPageLayout
+      isNavBarHidden={shouldHideBack}
       title="mfa.add_authenticator_app"
       onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
     >

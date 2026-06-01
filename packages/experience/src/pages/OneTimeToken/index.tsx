@@ -16,6 +16,7 @@ import {
   signInWithOneTimeToken,
 } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
+import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
@@ -30,6 +31,7 @@ const OneTimeToken = () => {
   const hasTermsAgreed = useRef(false);
   const isSubmitted = useRef(false);
 
+  const { set: setSessionStorage } = useSessionStorage();
   const asyncIdentifyUserAndSubmit = useApi(identifyAndSubmitInteraction);
   const asyncSignInWithOneTimeToken = useApi(signInWithOneTimeToken);
   const asyncRegisterWithVerifiedIdentifier = useApi(registerWithVerifiedIdentifier);
@@ -184,6 +186,8 @@ const OneTimeToken = () => {
         return;
       }
 
+      setSessionStorage(StorageKeys.OneTimeTokenSignIn, true);
+
       // Set email identifier to the <HiddenIdentifierInput />, so that when being asked for fulfilling
       // the password later, the browser password manager can pick up both the email and the password.
       setIdentifierInputValue({ type: SignInIdentifier.Email, value: email });
@@ -198,6 +202,7 @@ const OneTimeToken = () => {
     handleError,
     navigate,
     setIdentifierInputValue,
+    setSessionStorage,
     submit,
     termsValidation,
   ]);
