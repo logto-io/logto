@@ -28,24 +28,44 @@ export const formatMailbox = (email: string, name?: string): string => {
   return safeName.length > 0 ? `${safeName} <${sanitizedEmail}>` : sanitizedEmail;
 };
 
+/** Parse `Name <email@domain>` without regex to avoid polynomial backtracking on untrusted input. */
+const parseMailboxFormat = (value: string): { name?: string; email: string } | undefined => {
+  if (!value.endsWith('>')) {
+    return undefined;
+  }
+
+  const openBracket = value.indexOf('<');
+  if (openBracket === -1) {
+    return undefined;
+  }
+
+  const closeBracket = value.length - 1;
+  if (closeBracket <= openBracket) {
+    return undefined;
+  }
+
+  const email = value.slice(openBracket + 1, closeBracket).trim();
+  if (!email) {
+    return undefined;
+  }
+
+  const name = value.slice(0, openBracket).trim();
+  return { name: name.length > 0 ? name : undefined, email };
+};
+
 export const parseSendFrom = (
   renderedSendFrom: string,
   fallbackEmail: string,
   fallbackName?: string
 ): { email: string; name?: string } => {
   const value = stripHeaderControlChars(renderedSendFrom).trim();
-  const match = /^(.*?)<\s*([^>]+)\s*>$/.exec(value);
+  const parsed = parseMailboxFormat(value);
 
-  if (match) {
-    const name = match[1]?.trim();
-    const email = match[2]?.trim();
-
-    if (email) {
-      return {
-        email: sanitizeMailboxAddress(email),
-        name: name?.length ? sanitizeMailboxDisplayName(name) : undefined,
-      };
-    }
+  if (parsed) {
+    return {
+      email: sanitizeMailboxAddress(parsed.email),
+      name: parsed.name ? sanitizeMailboxDisplayName(parsed.name) : undefined,
+    };
   }
 
   if (value.includes('@') && !value.includes(' ')) {
