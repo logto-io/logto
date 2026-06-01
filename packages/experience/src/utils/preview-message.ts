@@ -1,6 +1,17 @@
+import { signInExperiencePreviewMessageSender } from '@logto/schemas';
 import { isObject } from '@silverhand/essentials';
 
-export const previewMessageSender = 'ac_preview';
+type PreviewMessageEvent = Pick<MessageEvent, 'data' | 'source'>;
+
+type PreviewMessageContext = {
+  parent: Window;
+  self: Window;
+};
+
+const defaultContext = (): PreviewMessageContext => ({
+  parent: window.parent,
+  self: window,
+});
 
 /**
  * Validates a `postMessage` event for sign-in experience live preview.
@@ -15,14 +26,23 @@ export const previewMessageSender = 'ac_preview';
  * `window.parent`. Embedding by non-admin origins is already restricted by CSP
  * `frame-ancestors` on the Experience app.
  */
-export const isTrustedPreviewMessage = (event: MessageEvent): boolean => {
-  if (!isObject(event.data) || event.data.sender !== previewMessageSender) {
+export const isTrustedPreviewMessage = (
+  event: PreviewMessageEvent,
+  context: PreviewMessageContext = defaultContext()
+): boolean => {
+  if (
+    !isObject(event.data) ||
+    !('sender' in event.data) ||
+    event.data.sender !== signInExperiencePreviewMessageSender
+  ) {
     return false;
   }
 
-  if (window.parent === window) {
+  const { parent, self } = context;
+
+  if (parent === self) {
     return false;
   }
 
-  return event.source === window.parent;
+  return event.source === parent;
 };

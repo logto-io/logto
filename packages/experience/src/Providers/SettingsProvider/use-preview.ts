@@ -23,7 +23,7 @@ const usePreview = () => {
       // eslint-disable-next-line no-restricted-syntax
       const previewConfig = event.data.config as PreviewConfig;
 
-        // Wait for i18n to be initialized
+      // Wait for i18n to be initialized
       await initI18n(previewConfig.language);
 
       setPreviewConfig(previewConfig);

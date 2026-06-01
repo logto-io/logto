@@ -1,73 +1,71 @@
-import { isTrustedPreviewMessage, previewMessageSender } from './preview-message';
+import { signInExperiencePreviewMessageSender } from '@logto/schemas';
+
+import { isTrustedPreviewMessage } from './preview-message';
+
+const parentWindow = { id: 'parent' } as unknown as Window;
+const otherWindow = { id: 'other' } as unknown as Window;
+const selfWindow = { id: 'self' } as unknown as Window;
 
 const createMessageEvent = (
   data: unknown,
-  options?: { source?: MessageEventSource | null; origin?: string }
-): MessageEvent =>
-  ({
-    data,
-    source: options?.source ?? null,
-    origin: options?.origin ?? 'https://console.example.com',
-  }) as MessageEvent;
+  source: MessageEvent['source'] = null
+): Pick<MessageEvent, 'data' | 'source'> => ({
+  data,
+  source,
+});
 
 describe('isTrustedPreviewMessage', () => {
-  const originalParent = window.parent;
-
-  afterEach(() => {
-    Object.defineProperty(window, 'parent', {
-      configurable: true,
-      value: originalParent,
-    });
-  });
-
   it('accepts a message from the direct parent frame', () => {
-    const parent = {} as Window;
-    Object.defineProperty(window, 'parent', { configurable: true, value: parent });
-
     expect(
       isTrustedPreviewMessage(
-        createMessageEvent({ sender: previewMessageSender, config: {} }, { source: parent })
+        createMessageEvent(
+          { sender: signInExperiencePreviewMessageSender, config: {} },
+          parentWindow
+        ),
+        { parent: parentWindow, self: selfWindow }
       )
     ).toBe(true);
   });
 
   it('rejects messages when not embedded in a parent frame', () => {
-    Object.defineProperty(window, 'parent', { configurable: true, value: window });
-
     expect(
       isTrustedPreviewMessage(
-        createMessageEvent({ sender: previewMessageSender, config: {} }, { source: window })
+        createMessageEvent(
+          { sender: signInExperiencePreviewMessageSender, config: {} },
+          selfWindow
+        ),
+        { parent: selfWindow, self: selfWindow }
       )
     ).toBe(false);
   });
 
   it('rejects messages from a non-parent window', () => {
-    const parent = {} as Window;
-    const otherWindow = {} as Window;
-    Object.defineProperty(window, 'parent', { configurable: true, value: parent });
-
     expect(
       isTrustedPreviewMessage(
-        createMessageEvent({ sender: previewMessageSender, config: {} }, { source: otherWindow })
+        createMessageEvent(
+          { sender: signInExperiencePreviewMessageSender, config: {} },
+          otherWindow
+        ),
+        { parent: parentWindow, self: selfWindow }
       )
     ).toBe(false);
   });
 
   it('rejects messages with an unexpected sender', () => {
-    const parent = {} as Window;
-    Object.defineProperty(window, 'parent', { configurable: true, value: parent });
-
     expect(
-      isTrustedPreviewMessage(
-        createMessageEvent({ sender: 'other', config: {} }, { source: parent })
-      )
+      isTrustedPreviewMessage(createMessageEvent({ sender: 'other', config: {} }, parentWindow), {
+        parent: parentWindow,
+        self: selfWindow,
+      })
     ).toBe(false);
   });
 
   it('rejects non-object message data', () => {
-    const parent = {} as Window;
-    Object.defineProperty(window, 'parent', { configurable: true, value: parent });
-
-    expect(isTrustedPreviewMessage(createMessageEvent('1', { source: parent }))).toBe(false);
+    expect(
+      isTrustedPreviewMessage(createMessageEvent('1', parentWindow), {
+        parent: parentWindow,
+        self: selfWindow,
+      })
+    ).toBe(false);
   });
 });
