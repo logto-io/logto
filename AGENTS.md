@@ -62,6 +62,8 @@ Skills live under [.agents/skills/](.agents/skills/) ([Agent Skills](https://age
 
 ### Key caveats
 
+- If Core exits with `Undeployed database alterations found`, run `pnpm cli db alteration deploy next` (with `DB_URL` set), then restart `pnpm start:dev`.
+- If `pnpm install` fails in `sync-preset.js` with `ENOENT` for a `connector-*` `package.json`, remove that orphan directory under `packages/connectors/` (it is not in git) and re-run install.
 - `rsync` must be installed (needed by `@logto/core` for `copy:apidocs`). Install with `sudo apt-get install -y rsync` if missing.
 - Connector load errors at startup are expected in dev mode — connectors are not built by default (`pnpm start:dev` excludes them).
 - `@logto/core` unit tests require `pnpm build:test` in `packages/core` before running `pnpm test:only`, because Jest reads from `./build` (the tsup dev bundle doesn't include test files).
