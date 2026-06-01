@@ -1,6 +1,7 @@
 import nock from 'nock';
 
-import { TemplateType } from '@logto/connector-kit';
+import { ConnectorErrorCodes, TemplateType } from '@logto/connector-kit';
+import * as connectorKit from '@logto/connector-kit';
 
 import createConnector from './index.js';
 import type { Smtp2goEmailConfig } from './types.js';
@@ -58,6 +59,9 @@ const nockMessages = (expectation: Record<string, unknown>, endpoint = 'https://
 describe('SMTP2GO Email connector', () => {
   beforeEach(() => {
     nock.cleanAll();
+    getI18nEmailTemplate.mockReset();
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    getI18nEmailTemplate.mockResolvedValue(undefined);
   });
 
   it('should send generic email with default config', async () => {
@@ -106,6 +110,31 @@ describe('SMTP2GO Email connector', () => {
     });
   });
 
+  it('should allow sendFrom to override email address when formatted as mailbox', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Mailbox {{code}}',
+      content: 'Your code is {{code}}',
+      contentType: 'text/plain',
+      sendFrom: 'Support <support@example.com>',
+    });
+
+    nockMessages({
+      api_key: mockedConfig.apiKey,
+      to: [toEmail],
+      sender: 'Support <support@example.com>',
+      subject: 'Mailbox 123456',
+      text_body: 'Your code is 123456',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+  });
+
   it('should send email with replyTo custom header from i18n template', async () => {
     getI18nEmailTemplate.mockResolvedValue({
       subject: 'Custom Passcode {{code}}',
@@ -135,13 +164,12 @@ describe('SMTP2GO Email connector', () => {
     });
   });
 
-  it('should throw error if required template (generic) is not found', async () => {
-    getConfig.mockResolvedValue({
-      ...mockedConfig,
-      templates: mockedConfig.templates.filter(
-        (template) => template.usageType !== TemplateType.Generic
-      ),
-    });
+  it('should throw TemplateNotFound when no template is available', async () => {
+    vi.spyOn(connectorKit, 'getConfigTemplateByType').mockReturnValue(
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      undefined
+    );
+    getConfig.mockResolvedValue(mockedConfig);
 
     await expect(
       connector.sendMessage({
@@ -149,6 +177,8 @@ describe('SMTP2GO Email connector', () => {
         type: TemplateType.OrganizationInvitation,
         payload: { link: 'https://example.com' },
       })
-    ).rejects.toThrow();
+    ).rejects.toMatchObject({ code: ConnectorErrorCodes.TemplateNotFound });
+
+    vi.restoreAllMocks();
   });
 });
