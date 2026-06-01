@@ -1,3 +1,8 @@
+import { AccountCenterControlValue, type CustomProfileField } from '@logto/schemas';
+import classNames from 'classnames';
+import { useCallback, useContext, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { updateAvatar } from '@ac/apis/account';
 import AccountPageHeader from '@ac/components/AccountPageHeader';
@@ -6,10 +11,6 @@ import PageFooter from '@ac/components/PageFooter';
 import { layoutClassNames } from '@ac/constants/layout';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
-import { AccountCenterControlValue, type CustomProfileField } from '@logto/schemas';
-import classNames from 'classnames';
-import { useCallback, useContext, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import homeStyles from '../Home/index.module.scss';
 
