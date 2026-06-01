@@ -7,7 +7,6 @@ import {
   userMfaDataKey,
   userMfaSettingsResponseGuard,
   jsonObjectGuard,
-  type User,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
