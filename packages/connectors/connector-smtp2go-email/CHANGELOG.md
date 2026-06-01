@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* **connector:** add SMTP2GO email connector ([#8288](https://github.com/logto-io/logto/pull/8288))
+* **connector:** add SMTP2GO email connector ([#8920](https://github.com/logto-io/logto/pull/8920))
 
 Initial release of the SMTP2GO email connector for Logto.
 
