@@ -11,7 +11,6 @@ import { sendVerificationCode } from '@/apis/experience';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
-import useShouldHideMfaBackNavigation from '@/hooks/use-should-hide-mfa-back-navigation';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import IdentifierProfileForm from '@/pages/Continue/IdentifierProfileForm';
@@ -43,7 +42,6 @@ const VerificationCodeMfaBinding = ({
 
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
-  const shouldHideBack = useShouldHideMfaBackNavigation();
   const handleError = useErrorHandler();
 
   const clearErrorMessage = useCallback(() => {
@@ -93,7 +91,6 @@ const VerificationCodeMfaBinding = ({
 
   return (
     <SecondaryPageLayout
-      isBackHidden={shouldHideBack}
       title={titleKey}
       description={descriptionKey}
       onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}

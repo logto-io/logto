@@ -7,7 +7,6 @@ import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import SectionLayout from '@/Layout/SectionLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
-import useShouldHideMfaBackNavigation from '@/hooks/use-should-hide-mfa-back-navigation';
 import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
@@ -24,7 +23,6 @@ const WebAuthnVerification = () => {
   const verificationId = verificationIdsMap[VerificationType.WebAuthn];
 
   const handleWebAuthn = useWebAuthnOperation();
-  const shouldHideBack = useShouldHideMfaBackNavigation();
   const [isVerifying, setIsVerifying] = useState(false);
 
   if (!webAuthnState || !verificationId) {
@@ -38,7 +36,7 @@ const WebAuthnVerification = () => {
   }
 
   return (
-    <SecondaryPageLayout isBackHidden={shouldHideBack} title="mfa.verify_mfa_factors">
+    <SecondaryPageLayout title="mfa.verify_mfa_factors">
       <SectionLayout
         title="mfa.verify_via_passkey"
         description="mfa.verify_via_passkey_description"

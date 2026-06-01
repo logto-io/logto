@@ -7,7 +7,6 @@ import { validate } from 'superstruct';
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
-import useShouldHideMfaBackNavigation from '@/hooks/use-should-hide-mfa-back-navigation';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useWebAuthnOperation from '@/hooks/use-webauthn-operation';
 import ErrorPage from '@/pages/ErrorPage';
@@ -26,7 +25,6 @@ const WebAuthnBinding = () => {
 
   const handleWebAuthn = useWebAuthnOperation();
   const skipMfa = useSkipMfa();
-  const shouldHideBack = useShouldHideMfaBackNavigation();
   const [isCreatingPasskey, setIsCreatingPasskey] = useState(false);
 
   if (!webAuthnState || !verificationId) {
@@ -41,7 +39,6 @@ const WebAuthnBinding = () => {
 
   return (
     <SecondaryPageLayout
-      isBackHidden={shouldHideBack}
       title="mfa.create_a_passkey"
       description="mfa.create_passkey_description"
       onSkip={conditional(skippable && skipMfa)}

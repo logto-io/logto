@@ -7,7 +7,6 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
 import MfaCodeVerification from '@/containers/MfaCodeVerification';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
-import useShouldHideMfaBackNavigation from '@/hooks/use-should-hide-mfa-back-navigation';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
@@ -16,7 +15,6 @@ import styles from './index.module.scss';
 
 const EmailVerificationCode = () => {
   const flowState = useMfaFlowState();
-  const shouldHideBack = useShouldHideMfaBackNavigation();
   const { verificationIdsMap } = useContext(UserInteractionContext);
 
   if (!flowState) {
@@ -32,7 +30,7 @@ const EmailVerificationCode = () => {
   const maskedEmail = flowState.maskedIdentifiers?.[MfaFactor.EmailVerificationCode];
 
   return (
-    <SecondaryPageLayout isBackHidden={shouldHideBack} title="mfa.verify_mfa_factors">
+    <SecondaryPageLayout title="mfa.verify_mfa_factors">
       <SectionLayout
         title="mfa.enter_email_verification_code"
         description="mfa.enter_email_verification_code_description"

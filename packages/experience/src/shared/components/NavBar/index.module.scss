@@ -44,10 +44,6 @@
     display: none;
   }
 
-  .navButton.hidden {
-    visibility: hidden;
-  }
-
   .navBar.hidden {
     visibility: hidden;
   }
@@ -57,10 +53,6 @@
   .navButton {
     &:hover {
       text-decoration: underline;
-    }
-
-    &.hidden {
-      display: none;
     }
   }
 

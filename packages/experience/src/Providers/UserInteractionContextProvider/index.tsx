@@ -1,11 +1,9 @@
-import { ExtraParamsKey, type SsoConnectorMetadata, type VerificationType } from '@logto/schemas';
+import { type SsoConnectorMetadata, type VerificationType } from '@logto/schemas';
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
 
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { useSieMethods } from '@/hooks/use-sie';
 import { type IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
-import { UserMfaFlow } from '@/types';
 
 import UserInteractionContext, { type UserInteractionContextType } from './UserInteractionContext';
 
@@ -23,8 +21,6 @@ type Props = {
  * The cached data provided by this provider primarily helps improve the sign-in experience for end users.
  */
 const UserInteractionContextProvider = ({ children }: Props) => {
-  const { pathname } = useLocation();
-  const [searchParams] = useSearchParams();
   const { ssoConnectors } = useSieMethods();
   const { get, set, remove } = useSessionStorage();
   const [ssoEmail, setSsoEmail] = useState<string | undefined>(get(StorageKeys.SsoEmail));
@@ -90,23 +86,6 @@ const UserInteractionContextProvider = ({ children }: Props) => {
     set(StorageKeys.verificationIds, verificationIdsMap);
   }, [verificationIdsMap, remove, set]);
 
-  useEffect(() => {
-    if (typeof pathname !== 'string') {
-      return;
-    }
-
-    const isOneTimeTokenRoute = pathname.includes('one-time-token');
-    const hasOneTimeTokenParam = searchParams.has(ExtraParamsKey.OneTimeToken);
-    const isMfaRoute =
-      pathname.includes(`/${UserMfaFlow.MfaBinding}`) ||
-      pathname.includes(`/${UserMfaFlow.MfaVerification}`) ||
-      pathname.includes('/mfa-onboarding');
-
-    if (!isOneTimeTokenRoute && !hasOneTimeTokenParam && !isMfaRoute) {
-      remove(StorageKeys.OneTimeTokenSignIn);
-    }
-  }, [pathname, remove, searchParams]);
-
   const ssoConnectorsMap = useMemo(
     () => new Map(ssoConnectors.map((connector) => [connector.id, connector])),
     [ssoConnectors]
@@ -116,7 +95,6 @@ const UserInteractionContextProvider = ({ children }: Props) => {
     remove(StorageKeys.IdentifierInputValue);
     remove(StorageKeys.ForgotPasswordIdentifierInputValue);
     remove(StorageKeys.verificationIds);
-    remove(StorageKeys.OneTimeTokenSignIn);
   }, [remove]);
 
   const setVerificationId = useCallback((type: VerificationType, id: string) => {

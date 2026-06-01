@@ -28,17 +28,6 @@ describe('useSessionStorage', () => {
     expect(get(StorageKeys.SsoConnectors)).toBeUndefined();
   });
 
-  it('should set and get one-time token sign-in flag', () => {
-    const { result } = renderHook(() => useSessionStorage());
-    const { get, set, remove } = result.current;
-
-    expect(get(StorageKeys.OneTimeTokenSignIn)).toBeUndefined();
-    set(StorageKeys.OneTimeTokenSignIn, true);
-    expect(get(StorageKeys.OneTimeTokenSignIn)).toBe(true);
-    remove(StorageKeys.OneTimeTokenSignIn);
-    expect(get(StorageKeys.OneTimeTokenSignIn)).toBeUndefined();
-  });
-
   it('should return undefined if the value is invalid', () => {
     const { result } = renderHook(() => useSessionStorage());
     const { get, set } = result.current;

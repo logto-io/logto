@@ -19,7 +19,6 @@ import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
-import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useTerms from '@/hooks/use-terms';
 import LoadingLayer from '@/shared/components/LoadingLayer';
@@ -31,7 +30,6 @@ const OneTimeToken = () => {
   const hasTermsAgreed = useRef(false);
   const isSubmitted = useRef(false);
 
-  const { set: setSessionStorage } = useSessionStorage();
   const asyncIdentifyUserAndSubmit = useApi(identifyAndSubmitInteraction);
   const asyncSignInWithOneTimeToken = useApi(signInWithOneTimeToken);
   const asyncRegisterWithVerifiedIdentifier = useApi(registerWithVerifiedIdentifier);
@@ -40,8 +38,12 @@ const OneTimeToken = () => {
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
-  const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn);
-  const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register);
+  const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
+    replace: true,
+  });
+  const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
+    replace: true,
+  });
 
   /**
    * Update interaction event to `Register`, and then identify user and submit.
@@ -186,8 +188,6 @@ const OneTimeToken = () => {
         return;
       }
 
-      setSessionStorage(StorageKeys.OneTimeTokenSignIn, true);
-
       // Set email identifier to the <HiddenIdentifierInput />, so that when being asked for fulfilling
       // the password later, the browser password manager can pick up both the email and the password.
       setIdentifierInputValue({ type: SignInIdentifier.Email, value: email });
@@ -202,7 +202,6 @@ const OneTimeToken = () => {
     handleError,
     navigate,
     setIdentifierInputValue,
-    setSessionStorage,
     submit,
     termsValidation,
   ]);

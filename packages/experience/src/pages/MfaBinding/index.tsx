@@ -3,7 +3,6 @@ import { conditional } from '@silverhand/essentials';
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import MfaFactorList from '@/containers/MfaFactorList';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
-import useShouldHideMfaBackNavigation from '@/hooks/use-should-hide-mfa-back-navigation';
 import useSkipMfa from '@/hooks/use-skip-mfa';
 import useSkipOptionalMfa from '@/hooks/use-skip-optional-mfa';
 import { UserMfaFlow } from '@/types';
@@ -12,7 +11,6 @@ import ErrorPage from '../ErrorPage';
 
 const MfaBinding = () => {
   const flowState = useMfaFlowState();
-  const shouldHideBack = useShouldHideMfaBackNavigation();
   const skipMfa = useSkipMfa();
   const skipOptionalMfa = useSkipOptionalMfa();
 
@@ -22,7 +20,6 @@ const MfaBinding = () => {
 
   return (
     <SecondaryPageLayout
-      isBackHidden={shouldHideBack}
       title={flowState.suggestion ? 'mfa.add_another_mfa_factor' : 'mfa.add_mfa_factors'}
       description={
         flowState.suggestion ? 'mfa.add_another_mfa_description' : 'mfa.add_mfa_description'

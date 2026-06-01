@@ -18,7 +18,6 @@ export enum StorageKeys {
   IdentifierInputValue = 'identifier-input-value',
   ForgotPasswordIdentifierInputValue = 'forgot-password-identifier-input-value',
   verificationIds = 'verification-ids',
-  OneTimeTokenSignIn = 'one-time-token-sign-in',
 }
 
 const valueGuard = Object.freeze({
@@ -27,7 +26,6 @@ const valueGuard = Object.freeze({
   [StorageKeys.IdentifierInputValue]: identifierInputValueGuard,
   [StorageKeys.ForgotPasswordIdentifierInputValue]: identifierInputValueGuard,
   [StorageKeys.verificationIds]: verificationIdsMapGuard,
-  [StorageKeys.OneTimeTokenSignIn]: s.literal(true),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- we  don't care about the superstruct details
 } satisfies { [key in StorageKeys]: s.Struct<any> });
 
@@ -40,7 +38,7 @@ const useSessionStorage = () => {
       return;
     }
 
-    sessionStorage.setItem(`${logtoStorageKeyPrefix}:${key}`, String(value));
+    sessionStorage.setItem(`${logtoStorageKeyPrefix}:${key}`, value);
   }, []);
 
   const remove = useCallback((key: StorageKeys) => {

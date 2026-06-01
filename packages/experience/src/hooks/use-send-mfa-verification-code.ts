@@ -10,7 +10,12 @@ import { type VerificationCodeIdentifier } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
-const useSendMfaVerificationCode = () => {
+type Options = {
+  /** Whether to replace the current page in the history stack on navigation. */
+  replace?: boolean;
+};
+
+const useSendMfaVerificationCode = ({ replace }: Options = {}) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigateWithPreservedSearchParams();
 
@@ -38,11 +43,11 @@ const useSendMfaVerificationCode = () => {
 
         navigate(
           `/mfa-verification/${identifier === 'email' ? MfaFactor.EmailVerificationCode : MfaFactor.PhoneVerificationCode}`,
-          { state: flowState }
+          { replace, state: flowState }
         );
       }
     },
-    [asyncSendVerificationCode, handleError, navigate, setVerificationId]
+    [asyncSendVerificationCode, handleError, navigate, replace, setVerificationId]
   );
 
   return {
