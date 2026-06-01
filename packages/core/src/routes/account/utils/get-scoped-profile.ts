@@ -2,6 +2,7 @@ import { UserScope } from '@logto/core-kit';
 import {
   type AccountCenter,
   AccountCenterControlValue,
+  type User,
   type UserProfileResponse,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -9,6 +10,8 @@ import { conditional } from '@silverhand/essentials';
 import type Libraries from '../../../tenants/Libraries.js';
 import type Queries from '../../../tenants/Queries.js';
 import { transpileUserProfileResponse } from '../../../utils/user.js';
+
+import { hasSecurityVerificationMethod } from './has-security-verification-method.js';
 
 /**
  * Get the user profile, and filter the fields according to the scopes.
@@ -78,7 +81,8 @@ const isFieldReadable = (field?: AccountCenterControlValue): boolean => {
 
 export const getAccountCenterFilteredProfile = (
   user: Partial<UserProfileResponse>,
-  accountCenter: AccountCenter
+  accountCenter: AccountCenter,
+  securityVerificationUser?: Pick<User, 'passwordEncrypted' | 'primaryEmail' | 'primaryPhone'>
 ): Partial<UserProfileResponse> => {
   const {
     username,
@@ -106,5 +110,8 @@ export const getAccountCenterFilteredProfile = (
     ...conditional(isFieldReadable(fields.customData) && { customData }),
     ...conditional(isFieldReadable(fields.social) && { identities }),
     ...conditional(isFieldReadable(fields.password) && { hasPassword }),
+    ...conditional(securityVerificationUser && {
+      hasSecurityVerificationMethod: hasSecurityVerificationMethod(securityVerificationUser),
+    }),
   };
 };

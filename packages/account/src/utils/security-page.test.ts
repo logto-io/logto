@@ -124,20 +124,19 @@ describe('security-page utils', () => {
     expect(hasAvailableSecurityVerificationMethod()).toBe(false);
   });
 
-  it('canManageSocialIdentitiesWithoutVerification requires explicit no-password user info', () => {
+  it('canManageSocialIdentitiesWithoutVerification uses backend hasSecurityVerificationMethod', () => {
     expect(
       canManageSocialIdentitiesWithoutVerification({
-        hasPassword: false,
+        hasSecurityVerificationMethod: false,
       })
     ).toBe(true);
-    expect(canManageSocialIdentitiesWithoutVerification({})).toBe(false);
-    expect(canManageSocialIdentitiesWithoutVerification()).toBe(false);
     expect(
       canManageSocialIdentitiesWithoutVerification({
-        hasPassword: false,
-        primaryEmail: 'foo@example.com',
+        hasSecurityVerificationMethod: true,
       })
     ).toBe(false);
+    expect(canManageSocialIdentitiesWithoutVerification({})).toBe(false);
+    expect(canManageSocialIdentitiesWithoutVerification()).toBe(false);
   });
 
   it('canSetInitialPasswordWithoutVerification requires explicit no-password user info', () => {

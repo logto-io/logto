@@ -1,6 +1,6 @@
 import { appInsights } from '@logto/app-insights/node';
 import { UserScope } from '@logto/core-kit';
-import { VerificationType, AccountCenterControlValue } from '@logto/schemas';
+import { VerificationType, AccountCenterControlValue, type User } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -31,7 +31,7 @@ export default function identitiesRoutes<T extends UserRouter>(
   } = libraries;
 
   type LinkSocialIdentityCoreParams = {
-    userId: string;
+    user: User;
     newIdentifierVerificationRecordId: string;
     allowReplace: boolean;
     appendDataHookContext: HookContextManager['appendDataHookContext'];
@@ -44,7 +44,7 @@ export default function identitiesRoutes<T extends UserRouter>(
    * by the callers before invoking this function.
    */
   const linkSocialIdentityCore = async ({
-    userId,
+    user,
     newIdentifierVerificationRecordId,
     allowReplace,
     appendDataHookContext,
@@ -62,9 +62,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       socialIdentity: { target, userInfo },
     } = await newVerificationRecord.toUserProfile();
 
-    await checkIdentifierCollision({ identity: { target, id: userInfo.id } }, userId);
-
-    const user = await findUserById(userId);
+    await checkIdentifierCollision({ identity: { target, id: userInfo.id } }, user.id);
 
     const existingIdentity = user.identities[target];
 
@@ -72,7 +70,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       assertThat(!existingIdentity, 'user.identity_already_in_use');
     }
 
-    const updatedUser = await updateUserById(userId, {
+    const updatedUser = await updateUserById(user.id, {
       identities: {
         ...user.identities,
         [target]: {
@@ -127,7 +125,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       );
 
       await linkSocialIdentityCore({
-        userId,
+        user,
         newIdentifierVerificationRecordId: ctx.guard.body.newIdentifierVerificationRecordId,
         allowReplace: false,
         appendDataHookContext: ctx.appendDataHookContext,
@@ -160,7 +158,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       );
 
       await linkSocialIdentityCore({
-        userId,
+        user,
         newIdentifierVerificationRecordId: ctx.guard.body.newIdentifierVerificationRecordId,
         allowReplace: true,
         appendDataHookContext: ctx.appendDataHookContext,

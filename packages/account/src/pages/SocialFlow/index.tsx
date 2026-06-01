@@ -17,10 +17,7 @@ import { getSocialCallbackRoute, securityRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { accountCenterBasePath } from '@ac/utils/account-center-route';
-import {
-  canManageSocialIdentitiesWithoutVerification,
-  hasAvailableSecurityVerificationMethod,
-} from '@ac/utils/security-page';
+import { canManageSocialIdentitiesWithoutVerification } from '@ac/utils/security-page';
 import { accountStorage, sessionStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
 import { finalizeSocialFlowFailure, finalizeSocialFlowSuccess } from '@ac/utils/social-flow';
@@ -64,7 +61,7 @@ const SocialFlow = ({ mode }: Props) => {
   const connectorName = connector ? getLocalizedConnectorName(connector, language) : undefined;
   const storedSocialFlow = connectorId ? accountStorage.socialFlow.get(connectorId) : undefined;
   const canSkipVerification = canManageSocialIdentitiesWithoutVerification(userInfo);
-  const hasAvailableVerificationMethod = hasAvailableSecurityVerificationMethod(userInfo);
+  const needsLegacyIdentityVerification = userInfo?.hasSecurityVerificationMethod === true;
   const isIdentityVerificationReady = Boolean(verificationId) || canSkipVerification;
   const flowKey =
     isIdentityVerificationReady && connectorId
@@ -81,7 +78,9 @@ const SocialFlow = ({ mode }: Props) => {
   const handleFlowError = useCallback(
     async (error: unknown) => {
       await handleError(error, {
-        'verification_record.permission_denied': resetVerification,
+        'verification_record.permission_denied': async () => {
+          await resetVerification();
+        },
         'user.social_account_exists_in_profile': async (requestError) => {
           finalizeSocialFlowFailure({
             connectorId,
@@ -296,7 +295,7 @@ const SocialFlow = ({ mode }: Props) => {
     );
   }
 
-  if (!verificationId && hasAvailableVerificationMethod) {
+  if (!verificationId && needsLegacyIdentityVerification) {
     return <VerificationMethodList />;
   }
 

@@ -59,13 +59,7 @@ export const hasAvailableSecurityVerificationMethod = (
 
 export const canManageSocialIdentitiesWithoutVerification = (
   userInfo?: Partial<UserProfileResponse>
-): boolean => {
-  if (userInfo?.hasPassword !== false) {
-    return false;
-  }
-
-  return !hasAvailableSecurityVerificationMethod(userInfo);
-};
+): boolean => userInfo?.hasSecurityVerificationMethod === false;
 
 export const canSetInitialPasswordWithoutVerification = (
   userInfo?: Partial<UserProfileResponse>,
