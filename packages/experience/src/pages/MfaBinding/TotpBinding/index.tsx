@@ -37,7 +37,7 @@ const TotpBinding = () => {
 
   return (
     <SecondaryPageLayout
-      isNavBarHidden={shouldHideBack}
+      isBackHidden={shouldHideBack}
       title="mfa.add_authenticator_app"
       onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
     >

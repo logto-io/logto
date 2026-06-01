@@ -22,7 +22,7 @@ const MfaBinding = () => {
 
   return (
     <SecondaryPageLayout
-      isNavBarHidden={shouldHideBack}
+      isBackHidden={shouldHideBack}
       title={flowState.suggestion ? 'mfa.add_another_mfa_factor' : 'mfa.add_mfa_factors'}
       description={
         flowState.suggestion ? 'mfa.add_another_mfa_description' : 'mfa.add_mfa_description'

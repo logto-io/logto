@@ -19,6 +19,7 @@ type Props = {
   readonly notification?: TFuncKey;
   readonly onSkip?: () => void;
   readonly isNavBarHidden?: boolean;
+  readonly isBackHidden?: boolean;
   readonly children: React.ReactNode;
 };
 
@@ -30,6 +31,7 @@ const SecondaryPageLayout = ({
   notification,
   onSkip,
   isNavBarHidden,
+  isBackHidden,
   children,
 }: Props) => {
   const { isMobile } = usePlatform();
@@ -40,6 +42,7 @@ const SecondaryPageLayout = ({
       <PageMeta titleKey={title} />
       <NavBar
         isHidden={isNavBarHidden}
+        isBackHidden={isBackHidden}
         onSkip={onSkip}
         onBack={() => {
           navigate(-1);

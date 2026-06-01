@@ -11,7 +11,7 @@ const MfaOnboarding = () => {
 
   return (
     <SecondaryPageLayout
-      isNavBarHidden={shouldHideBack}
+      isBackHidden={shouldHideBack}
       title="mfa.onboarding"
       description="mfa.onboarding_description"
       onSkip={skipMfa}

@@ -41,7 +41,7 @@ const WebAuthnBinding = () => {
 
   return (
     <SecondaryPageLayout
-      isNavBarHidden={shouldHideBack}
+      isBackHidden={shouldHideBack}
       title="mfa.create_a_passkey"
       description="mfa.create_passkey_description"
       onSkip={conditional(skippable && skipMfa)}

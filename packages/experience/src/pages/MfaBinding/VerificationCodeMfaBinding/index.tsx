@@ -93,7 +93,7 @@ const VerificationCodeMfaBinding = ({
 
   return (
     <SecondaryPageLayout
-      isNavBarHidden={shouldHideBack}
+      isBackHidden={shouldHideBack}
       title={titleKey}
       description={descriptionKey}
       onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
