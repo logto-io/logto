@@ -57,7 +57,7 @@ const buildRequestFromCustomTemplate = (
     ? parseSendFrom(renderedSendFrom, config.sender, config.senderName)
     : { email: config.sender, name: config.senderName };
   const processedReplyTo = replyTo
-    ? stripHeaderControlChars(replaceSendMessageHandlebars(replyTo, payload))
+    ? stripHeaderControlChars(replaceSendMessageHandlebars(replyTo, payload)).trim()
     : undefined;
 
   return {
@@ -104,20 +104,10 @@ const sendMessage =
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const {
-          response: { body: rawBody },
+          response: { body, statusCode },
         } = error;
 
-        assert(
-          typeof rawBody === 'string' || typeof rawBody === 'object',
-          new ConnectorError(
-            ConnectorErrorCodes.InvalidResponse,
-            `Invalid response raw body type: ${typeof rawBody}`
-          )
-        );
-
-        const errorMessage = typeof rawBody === 'string' ? rawBody : JSON.stringify(rawBody);
-
-        throw new ConnectorError(ConnectorErrorCodes.General, errorMessage);
+        throw new ConnectorError(ConnectorErrorCodes.General, { statusCode, body });
       }
 
       // Re-throw if already a ConnectorError

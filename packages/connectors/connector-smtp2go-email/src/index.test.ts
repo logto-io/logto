@@ -135,6 +135,31 @@ describe('SMTP2GO Email connector', () => {
     });
   });
 
+  it('should parse sendFrom when display name contains angle brackets', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Mailbox {{code}}',
+      content: 'Your code is {{code}}',
+      contentType: 'text/plain',
+      sendFrom: 'My <App> <support@example.com>',
+    });
+
+    nockMessages({
+      api_key: mockedConfig.apiKey,
+      to: [toEmail],
+      sender: 'My App <support@example.com>',
+      subject: 'Mailbox 123456',
+      text_body: 'Your code is 123456',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+  });
+
   it('should send email with replyTo custom header from i18n template', async () => {
     getI18nEmailTemplate.mockResolvedValue({
       subject: 'Custom Passcode {{code}}',
@@ -160,6 +185,28 @@ describe('SMTP2GO Email connector', () => {
       payload: {
         code: '123456',
         user: { primaryEmail: 'user@example.com' },
+      },
+    });
+  });
+
+  it('should preserve statusCode and body on HTTP errors', async () => {
+    nock('https://api.smtp2go.com')
+      .post('/v3/email/send')
+      .reply(400, { request_id: 'req-1', data: { error: 'invalid sender' } });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await expect(
+      connector.sendMessage({
+        to: toEmail,
+        type: TemplateType.Generic,
+        payload: { code: '123456' },
+      })
+    ).rejects.toMatchObject({
+      code: ConnectorErrorCodes.General,
+      data: {
+        statusCode: 400,
+        body: { request_id: 'req-1', data: { error: 'invalid sender' } },
       },
     });
   });

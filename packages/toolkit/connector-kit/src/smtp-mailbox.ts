@@ -34,13 +34,13 @@ const parseMailboxFormat = (value: string): { name?: string; email: string } | u
     return undefined;
   }
 
-  const openBracket = value.indexOf('<');
-  if (openBracket === -1) {
-    return undefined;
-  }
-
   const closeBracket = value.length - 1;
-  if (closeBracket <= openBracket) {
+  const prefix = value.slice(0, closeBracket);
+  const lastGtBeforeEnd = prefix.lastIndexOf('>');
+  const searchFrom = lastGtBeforeEnd === -1 ? 0 : lastGtBeforeEnd + 1;
+  const openBracket = value.indexOf('<', searchFrom);
+
+  if (openBracket === -1 || closeBracket <= openBracket) {
     return undefined;
   }
 
