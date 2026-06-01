@@ -11,25 +11,22 @@ import {
   deleteApplication,
   getApplicationSecrets,
 } from '#src/api/application.js';
+import { updateConnectorConfig } from '#src/api/connector.js';
 import { getUserInfo, updateIdentities } from '#src/api/my-account.js';
 import { createSubjectToken } from '#src/api/subject-token.js';
-import { updateConnectorConfig } from '#src/api/connector.js';
 import {
   createSocialVerificationRecord,
   createVerificationRecordByPassword,
   verifySocialAuthorization,
 } from '#src/api/verification-record.js';
-import {
-  clearConnectorsByTypes,
-  setSocialConnector,
-} from '#src/helpers/connector.js';
+import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
+import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateName, generateUsername } from '#src/utils.js';
 
 import {
@@ -43,10 +40,12 @@ const impersonationTokenType = 'urn:logto:token-type:impersonation_token';
 /* eslint-disable @silverhand/fp/no-let */
 let testApplicationId: string;
 let authorizationHeader: string;
-let socialConnectorId: string;
 /* eslint-enable @silverhand/fp/no-let */
 
-const createAccountApi = async (userId: string, scopes = [UserScope.Profile, UserScope.Identities]) => {
+const createAccountApi = async (
+  userId: string,
+  scopes = [UserScope.Profile, UserScope.Identities]
+) => {
   const { subjectToken } = await createSubjectToken(userId);
   const { access_token } = await oidcApi
     .post('token', {
@@ -71,7 +70,8 @@ const createAccountApi = async (userId: string, scopes = [UserScope.Profile, Use
 };
 
 const linkSocialIdentityWithoutIdentityVerification = async (
-  api: Awaited<ReturnType<typeof createAccountApi>>
+  api: Awaited<ReturnType<typeof createAccountApi>>,
+  socialConnectorId: string
 ) => {
   const { verificationRecordId: newVerificationRecordId } = await createSocialVerificationRecord(
     api,
@@ -93,12 +93,15 @@ const linkSocialIdentityWithoutIdentityVerification = async (
 };
 
 describe('my-account social identities without identity verification', () => {
+  const connectorIdMap = new Map<string, string>();
+
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await enableAllAccountCenterFields();
 
     await clearConnectorsByTypes([ConnectorType.Social]);
-    ({ id: socialConnectorId } = await setSocialConnector());
+    const { id: socialConnectorId } = await setSocialConnector();
+    connectorIdMap.set('social', socialConnectorId);
     await updateConnectorConfig(socialConnectorId, {
       enableTokenStorage: true,
     });
@@ -125,9 +128,10 @@ describe('my-account social identities without identity verification', () => {
   it('should link social identity without identity verification when no security verification method exists', async () => {
     const user = await createUser({ username: generateUsername() });
     const api = await createAccountApi(user.id);
+    const socialConnectorId = connectorIdMap.get('social')!;
 
     try {
-      await linkSocialIdentityWithoutIdentityVerification(api);
+      await linkSocialIdentityWithoutIdentityVerification(api, socialConnectorId);
       const userInfo = await getUserInfo(api);
       expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);
     } finally {
@@ -140,6 +144,7 @@ describe('my-account social identities without identity verification', () => {
     const api = await signInAndGetUserApi(username, password, {
       scopes: [UserScope.Profile, UserScope.Identities],
     });
+    const socialConnectorId = connectorIdMap.get('social')!;
 
     const { verificationRecordId: newVerificationRecordId } = await createSocialVerificationRecord(
       api,
@@ -172,14 +177,16 @@ describe('my-account social identities without identity verification', () => {
     const api = await signInAndGetUserApi(username, password, {
       scopes: [UserScope.Profile, UserScope.Identities],
     });
+    const socialConnectorId = connectorIdMap.get('social')!;
 
     try {
-      const { verificationRecordId: newVerificationRecordId } = await createSocialVerificationRecord(
-        api,
-        socialConnectorId,
-        socialVerificationState,
-        socialVerificationRedirectUri
-      );
+      const { verificationRecordId: newVerificationRecordId } =
+        await createSocialVerificationRecord(
+          api,
+          socialConnectorId,
+          socialVerificationState,
+          socialVerificationRedirectUri
+        );
 
       await verifySocialAuthorization(api, newVerificationRecordId, {
         code: socialVerificationAuthorizationCode,
