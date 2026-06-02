@@ -31,6 +31,9 @@ const error = {
   terms_acceptance_required_description:
     'يجب أن توافق على الشروط للمتابعة. يرجى المحاولة مرة أخرى.',
   something_went_wrong: 'حدث خطأ ما',
+  access_denied: 'تم رفض الوصول',
+  application_access_denied:
+    'ليس لديك إذن للوصول إلى هذا التطبيق. يرجى الاتصال بالمسؤول للحصول على المساعدة.',
   feature_not_enabled:
     'ليس لديك إذن للوصول إلى هذه الميزة. يرجى الاتصال بالمسؤول للحصول على المساعدة.',
 };

@@ -34,6 +34,9 @@ const error = {
   terms_acceptance_required_description:
     'Debes aceptar los términos para continuar. Por favor, inténtalo de nuevo.',
   something_went_wrong: 'Algo salió mal',
+  access_denied: 'Acceso denegado',
+  application_access_denied:
+    'No tiene permiso para acceder a esta aplicación. Por favor, contacte a su administrador para obtener ayuda.',
   feature_not_enabled:
     'No tiene permiso para acceder a esta función. Por favor, contacte a su administrador para obtener ayuda.',
 };

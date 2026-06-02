@@ -30,6 +30,9 @@ const error = {
   terms_acceptance_required: '약관 동의가 필요해요',
   terms_acceptance_required_description: '계속하려면 약관에 동의해야 해요.',
   something_went_wrong: '문제가 발생했어요',
+  access_denied: '접근이 거부되었어요',
+  application_access_denied:
+    '이 애플리케이션에 액세스할 권한이 없습니다. 관리자에게 도움을 요청하세요.',
   feature_not_enabled: '이 기능에 액세스할 권한이 없습니다. 관리자에게 도움을 요청하세요.',
 };
 

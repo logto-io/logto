@@ -172,8 +172,17 @@ devFeatureTest.describe('application access control OIDC enforcement', () => {
         throwHttpErrors: false,
       });
 
-      expect(consentResponse.status).toBe(400);
-      await expect(consentResponse.json()).resolves.toMatchObject({
+      expect(consentResponse.status).toBe(200);
+
+      const consentInfoResponse = await ky.get(`${logtoUrl}/api/interaction/consent`, {
+        headers: {
+          cookie: client.interactionCookie,
+        },
+        throwHttpErrors: false,
+      });
+
+      expect(consentInfoResponse.status).toBe(400);
+      await expect(consentInfoResponse.json()).resolves.toMatchObject({
         code: 'oidc.access_denied',
       });
     } finally {

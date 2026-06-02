@@ -31,6 +31,9 @@ const error = {
   terms_acceptance_required: 'Wymagana akceptacja warunków',
   terms_acceptance_required_description: 'Musisz zaakceptować warunki, aby kontynuować.',
   something_went_wrong: 'Coś poszło nie tak',
+  access_denied: 'Odmowa dostępu',
+  application_access_denied:
+    'Nie masz uprawnień do dostępu do tej aplikacji. Skontaktuj się z administratorem, aby uzyskać pomoc.',
   feature_not_enabled:
     'Nie masz uprawnień do dostępu do tej funkcji. Skontaktuj się z administratorem, aby uzyskać pomoc.',
 };
