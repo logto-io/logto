@@ -32,6 +32,9 @@ const error = {
   terms_acceptance_required: 'Zustimmung zu den Bedingungen erforderlich',
   terms_acceptance_required_description: 'Du musst den Bedingungen zustimmen, um fortzufahren.',
   something_went_wrong: 'Etwas ist schiefgegangen',
+  access_denied: 'Zugriff verweigert',
+  application_access_denied:
+    'Sie haben keine Berechtigung, auf diese Anwendung zuzugreifen. Bitte kontaktieren Sie Ihren Administrator um Hilfe.',
   feature_not_enabled:
     'Sie haben keine Berechtigung, auf diese Funktion zuzugreifen. Bitte kontaktieren Sie Ihren Administrator um Hilfe.',
 };

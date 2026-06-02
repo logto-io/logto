@@ -44,7 +44,7 @@ export default function consentRoutes<T extends IRouterParamContext>(
       body: z.object({
         organizationIds: z.string().array().optional(),
       }),
-      status: [200],
+      status: [200, 400],
     }),
     koaAppAccessControl(libraries),
     async (ctx, next) => {
@@ -202,9 +202,10 @@ export default function consentRoutes<T extends IRouterParamContext>(
   router.get(
     consentPath,
     koaGuard({
-      status: [200],
+      status: [200, 400],
       response: consentInfoResponseGuard,
     }),
+    koaAppAccessControl(libraries),
     async (ctx, next) => {
       const { interactionDetails } = ctx;
 

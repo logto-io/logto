@@ -30,6 +30,8 @@ const error = {
   terms_acceptance_required: '需要同意条款',
   terms_acceptance_required_description: '必须同意条款后才能继续。',
   something_went_wrong: '出现错误',
+  access_denied: '访问被拒绝',
+  application_access_denied: '您没有权限访问此应用。请联系管理员寻求帮助。',
   feature_not_enabled: '您没有权限访问此功能。请联系管理员寻求帮助。',
 };
 

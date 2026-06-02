@@ -13,7 +13,6 @@ import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
-import koaAppAccessControl from '#src/middleware/koa-app-access-control.js';
 import koaAutoConsent from '#src/middleware/koa-auto-consent.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
@@ -246,8 +245,7 @@ export default class Tenant implements TenantContext {
           compose([
             koaInteractionDetails(provider),
             koaConsentGuard(libraries, queries),
-            koaAppAccessControl(libraries),
-            koaAutoConsent(provider, queries),
+            koaAutoConsent(provider, queries, libraries),
           ])
         ),
         koaSpaProxy({ mountedApps, queries }),

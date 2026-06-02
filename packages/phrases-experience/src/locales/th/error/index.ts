@@ -30,6 +30,9 @@ const error = {
   terms_acceptance_required: 'จำเป็นต้องยอมรับเงื่อนไข',
   terms_acceptance_required_description: 'คุณต้องยอมรับเงื่อนไขเพื่อดำเนินการต่อ',
   something_went_wrong: 'เกิดข้อผิดพลาดบางอย่าง',
+  access_denied: 'ปฏิเสธการเข้าถึง',
+  application_access_denied:
+    'คุณไม่มีสิทธิ์เข้าถึงแอปพลิเคชันนี้ กรุณาติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
   feature_not_enabled: 'คุณไม่มีสิทธิ์เข้าถึงฟีเจอร์นี้ กรุณาติดต่อผู้ดูแลระบบเพื่อขอความช่วยเหลือ',
 };
 
