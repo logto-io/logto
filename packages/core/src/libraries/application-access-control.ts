@@ -1,4 +1,4 @@
-import type { ApplicationAccessControl } from '@logto/schemas';
+import { isBuiltInApplicationId, type ApplicationAccessControl } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -25,7 +25,7 @@ export const createApplicationAccessControlLibrary = (queries: Queries) => {
   } = queries;
 
   const assertUserHasApplicationAccess = async (applicationId: string, userId: string) => {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
+    if (!EnvSet.values.isDevFeaturesEnabled || isBuiltInApplicationId(applicationId)) {
       return;
     }
 

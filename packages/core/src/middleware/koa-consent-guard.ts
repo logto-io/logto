@@ -1,9 +1,8 @@
 import { experience, OneTimeTokenStatus } from '@logto/schemas';
 import { type MiddlewareType } from 'koa';
-import { type IRouterParamContext } from 'koa-router';
-import { type Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -14,19 +13,14 @@ import assertThat from '#src/utils/assert-that.js';
  */
 export default function koaConsentGuard<
   StateT,
-  ContextT extends IRouterParamContext,
+  ContextT extends WithInteractionDetailsContext,
   ResponseBodyT,
->(
-  provider: Provider,
-  libraries: Libraries,
-  queries: Queries
-): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+>(libraries: Libraries, queries: Queries): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
-    const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
     const {
       params: { one_time_token: token, login_hint: loginHint },
       session,
-    } = interactionDetails;
+    } = ctx.interactionDetails;
 
     assertThat(session, new RequestError({ code: 'session.not_found' }));
 
