@@ -41,6 +41,7 @@ const SocialFlow = ({ mode }: Props) => {
     refreshUserInfo,
     setToast,
     userInfo,
+    isLoadingUserInfo,
     verificationId,
     setVerificationId,
   } = useContext(PageContext);
@@ -293,6 +294,10 @@ const SocialFlow = ({ mode }: Props) => {
         messageKey="account_center.social.not_enabled"
       />
     );
+  }
+
+  if (isLoadingUserInfo || userInfo === undefined) {
+    return <GlobalLoading />;
   }
 
   if (!verificationId && needsLegacyIdentityVerification) {

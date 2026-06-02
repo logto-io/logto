@@ -4,7 +4,7 @@ import { formUrlEncodedHeaders } from '@logto/shared';
 
 import { mockSocialConnectorTarget } from '#src/__mocks__/connectors-mock.js';
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
-import { createUser, deleteUser } from '#src/api/admin-user.js';
+import { createUser, deleteUser, updateUser as adminUpdateUser } from '#src/api/admin-user.js';
 import { baseApi, oidcApi } from '#src/api/api.js';
 import {
   createApplication,
@@ -12,7 +12,12 @@ import {
   getApplicationSecrets,
 } from '#src/api/application.js';
 import { updateConnectorConfig } from '#src/api/connector.js';
-import { getUserInfo, updateIdentities } from '#src/api/my-account.js';
+import {
+  deleteIdentity,
+  getUserInfo,
+  replaceIdentity,
+  updateIdentities,
+} from '#src/api/my-account.js';
 import { createSubjectToken } from '#src/api/subject-token.js';
 import {
   createSocialVerificationRecord,
@@ -90,6 +95,32 @@ const linkSocialIdentityWithoutIdentityVerification = async (
   });
 
   await updateIdentities(api, undefined, newVerificationRecordId);
+};
+
+const replaceSocialIdentityWithoutIdentityVerification = async (
+  api: Awaited<ReturnType<typeof createAccountApi>>,
+  socialConnectorId: string
+) => {
+  await linkSocialIdentityWithoutIdentityVerification(api, socialConnectorId);
+
+  const { verificationRecordId: newVerificationRecordId } = await createSocialVerificationRecord(
+    api,
+    socialConnectorId,
+    socialVerificationState,
+    socialVerificationRedirectUri
+  );
+
+  await verifySocialAuthorization(api, newVerificationRecordId, {
+    code: socialVerificationAuthorizationCode,
+    userId: 'replaced-social-user-id',
+    tokenResponse: {
+      access_token: 'access_token',
+      expires_in: 3600,
+      scope: 'profile',
+    },
+  });
+
+  await replaceIdentity(api, undefined, newVerificationRecordId);
 };
 
 describe('my-account social identities without identity verification', () => {
@@ -203,6 +234,125 @@ describe('my-account social identities without identity verification', () => {
       expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);
     } finally {
       await deleteDefaultTenantUser(user.id);
+    }
+  });
+
+  it('should replace social identity without identity verification when no security verification method exists', async () => {
+    const user = await createUser({ username: generateUsername() });
+    const api = await createAccountApi(user.id);
+    const socialConnectorId = connectorIdMap.get('social')!;
+
+    try {
+      await replaceSocialIdentityWithoutIdentityVerification(api, socialConnectorId);
+      const userInfo = await getUserInfo(api);
+      expect(userInfo.identities?.[mockSocialConnectorTarget]?.userId).toBe(
+        'replaced-social-user-id'
+      );
+    } finally {
+      await deleteUser(user.id);
+    }
+  });
+
+  it('should require identity verification when replacing with password available', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile, UserScope.Identities],
+    });
+    const socialConnectorId = connectorIdMap.get('social')!;
+
+    const { verificationRecordId: newVerificationRecordId } = await createSocialVerificationRecord(
+      api,
+      socialConnectorId,
+      socialVerificationState,
+      socialVerificationRedirectUri
+    );
+
+    await verifySocialAuthorization(api, newVerificationRecordId, {
+      code: socialVerificationAuthorizationCode,
+      tokenResponse: {
+        access_token: 'access_token',
+        expires_in: 3600,
+        scope: 'profile',
+      },
+    });
+
+    try {
+      await expectRejects(replaceIdentity(api, undefined, newVerificationRecordId), {
+        code: 'verification_record.permission_denied',
+        status: 401,
+      });
+    } finally {
+      await deleteDefaultTenantUser(user.id);
+    }
+  });
+
+  it('should delete social identity without identity verification when another identifier remains', async () => {
+    const user = await createUser({ username: generateUsername() });
+    const api = await createAccountApi(user.id);
+    const socialConnectorId = connectorIdMap.get('social')!;
+
+    try {
+      await linkSocialIdentityWithoutIdentityVerification(api, socialConnectorId);
+      await deleteIdentity(api, mockSocialConnectorTarget);
+      const userInfo = await getUserInfo(api);
+      expect(userInfo.identities).not.toHaveProperty(mockSocialConnectorTarget);
+      expect(userInfo.username).toBeTruthy();
+    } finally {
+      await deleteUser(user.id);
+    }
+  });
+
+  it('should require identity verification when deleting with password available', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [UserScope.Profile, UserScope.Identities],
+    });
+    const socialConnectorId = connectorIdMap.get('social')!;
+
+    const { verificationRecordId } = await createSocialVerificationRecord(
+      api,
+      socialConnectorId,
+      socialVerificationState,
+      socialVerificationRedirectUri
+    );
+
+    await verifySocialAuthorization(api, verificationRecordId, {
+      code: socialVerificationAuthorizationCode,
+      tokenResponse: {
+        access_token: 'access_token',
+        expires_in: 3600,
+        scope: 'profile',
+      },
+    });
+
+    const passwordVerificationRecordId = await createVerificationRecordByPassword(api, password);
+    await updateIdentities(api, passwordVerificationRecordId, verificationRecordId);
+
+    try {
+      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget), {
+        code: 'verification_record.permission_denied',
+        status: 401,
+      });
+    } finally {
+      await deleteDefaultTenantUser(user.id);
+    }
+  });
+
+  it('should reject deleting the last identifier without identity verification', async () => {
+    const user = await createUser({ username: generateUsername() });
+    const api = await createAccountApi(user.id);
+    const socialConnectorId = connectorIdMap.get('social')!;
+
+    try {
+      await linkSocialIdentityWithoutIdentityVerification(api, socialConnectorId);
+      await adminUpdateUser(user.id, { username: null });
+
+      await expectRejects(deleteIdentity(api, mockSocialConnectorTarget), {
+        code: 'user.last_sign_in_method_required',
+        status: 400,
+      });
+    } finally {
+      await deleteUser(user.id);
     }
   });
 });
