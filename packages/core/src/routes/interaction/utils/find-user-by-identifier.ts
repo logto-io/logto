@@ -21,7 +21,10 @@ export default async function findUserByIdentifier(
   const { getLogtoConnectorById } = connectors;
 
   if ('username' in identity) {
-    return findUserByUsername(identity.username);
+    return findUserByUsername(
+      identity.username,
+      await queries.signInExperiences.getUsernameCaseSensitive()
+    );
   }
 
   if ('email' in identity) {

@@ -26,7 +26,18 @@ const findUserByIdentifier = await pickDefault(import('./find-user-by-identifier
 describe('findUserByIdentifier', () => {
   it('username', async () => {
     await findUserByIdentifier(tenantContext, { username: 'foo' });
-    expect(queries.findUserByUsername).toBeCalledWith('foo');
+    expect(queries.findUserByUsername).toBeCalledWith('foo', true);
+  });
+
+  it('username (case insensitive) forwards the resolved value', async () => {
+    const caseInsensitiveTenant = new MockTenant(
+      undefined,
+      { users: queries, signInExperiences: { getUsernameCaseSensitive: async () => false } },
+      { getLogtoConnectorById }
+    );
+    queries.findUserByUsername.mockClear();
+    await findUserByIdentifier(caseInsensitiveTenant, { username: 'foo' });
+    expect(queries.findUserByUsername).toBeCalledWith('foo', false);
   });
 
   it('email', async () => {

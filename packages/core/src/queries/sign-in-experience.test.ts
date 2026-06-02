@@ -1,6 +1,7 @@
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
 import { mockSignInExperience } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { MockWellKnownCache } from '#src/test-utils/tenant.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
@@ -88,4 +89,39 @@ describe('sign-in-experience query', () => {
 
     await expect(updateDefaultSignInExperience({ termsOfUseUrl })).resolves.toEqual(databaseValue);
   });
+});
+
+describe('getUsernameCaseSensitive', () => {
+  const originalIsCaseSensitiveUsername = EnvSet.values.isCaseSensitiveUsername;
+
+  afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- restore env override after each case
+    (EnvSet.values as { isCaseSensitiveUsername: boolean }).isCaseSensitiveUsername =
+      originalIsCaseSensitiveUsername;
+  });
+
+  it.each([
+    [true, true, true],
+    [true, false, false],
+    [false, true, false],
+    [false, false, false],
+  ])(
+    'policy caseSensitive=%s AND env=%s resolves to %s',
+    async (policyCaseSensitive, envCaseSensitive, expected) => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- toggle the legacy env var for this case
+      (EnvSet.values as { isCaseSensitiveUsername: boolean }).isCaseSensitiveUsername =
+        envCaseSensitive;
+      // Fresh instance so the memoized findDefaultSignInExperience isn't shared across cases.
+      const { getUsernameCaseSensitive } = createSignInExperienceQueries(
+        pool,
+        new MockWellKnownCache()
+      );
+      mockQuery.mockImplementationOnce(async () =>
+        // @ts-expect-error -- the mock returns a pre-parsed SIE row; createMockQueryResult's primitive row type can't express the jsonb object the resolver reads
+        createMockQueryResult([{ usernamePolicy: { caseSensitive: policyCaseSensitive } }])
+      );
+
+      expect(await getUsernameCaseSensitive()).toBe(expected);
+    }
+  );
 });

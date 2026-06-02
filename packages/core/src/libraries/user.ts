@@ -49,6 +49,7 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     oidcModelInstances: { revokeInstanceByUserId },
     userSsoIdentities,
     oidcSessionExtensions,
+    signInExperiences: { getUsernameCaseSensitive },
   } = queries;
 
   const generateUserId = async (retries = 500) =>
@@ -128,7 +129,7 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
       throw new RequestError({ code: 'user.phone_already_in_use', status: 422 });
     }
 
-    if (username && (await hasUser(username, excludeUserId))) {
+    if (username && (await hasUser(username, await getUsernameCaseSensitive(), excludeUserId))) {
       throw new RequestError({ code: 'user.username_already_in_use', status: 422 });
     }
 

@@ -150,7 +150,7 @@ abstract class CodeVerification<T extends CodeVerificationType>
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
-    const user = await findUserByIdentifier(this.queries.users, this.identifier);
+    const user = await findUserByIdentifier(this.queries, this.identifier);
 
     assertThat(
       user,

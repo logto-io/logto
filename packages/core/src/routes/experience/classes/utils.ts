@@ -13,21 +13,22 @@ import type Queries from '#src/tenants/Queries.js';
 import type { InteractionProfile } from '../types.js';
 
 export const findUserByIdentifier = async (
-  userQuery: Queries['users'],
+  queries: Queries,
   { type, value }: VerificationIdentifier
 ) => {
+  const { users, signInExperiences } = queries;
   switch (type) {
     case SignInIdentifier.Username: {
-      return userQuery.findUserByUsername(value);
+      return users.findUserByUsername(value, await signInExperiences.getUsernameCaseSensitive());
     }
     case SignInIdentifier.Email: {
-      return userQuery.findUserByEmail(value);
+      return users.findUserByEmail(value);
     }
     case SignInIdentifier.Phone: {
-      return userQuery.findUserByNormalizedPhone(value);
+      return users.findUserByNormalizedPhone(value);
     }
     case AdditionalIdentifier.UserId: {
-      return userQuery.findUserById(value);
+      return users.findUserById(value);
     }
   }
 };

@@ -253,7 +253,8 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       assertThat(!passwordDigest || passwordAlgorithm, 'user.password_algorithm_required');
 
       assertThat(
-        !username || !(await hasUser(username)),
+        !username ||
+          !(await hasUser(username, await queries.signInExperiences.getUsernameCaseSensitive())),
         new RequestError({
           code: 'user.username_already_in_use',
           status: 422,
