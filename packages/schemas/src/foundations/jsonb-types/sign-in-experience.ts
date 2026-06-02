@@ -143,6 +143,10 @@ export const signInGuard = z.object({
 
 export type SignIn = z.infer<typeof signInGuard>;
 
+// The username policy is owned by @logto/core-kit (like passwordPolicyGuard) so core, experience,
+// and console share one source of truth; re-exported here for the `@use UsernamePolicy` column.
+export { defaultUsernamePolicy, usernamePolicyGuard, type UsernamePolicy } from '@logto/core-kit';
+
 export type SocialSignIn = {
   /**
    * If account linking should be performed when a user signs in with a social identity that is new

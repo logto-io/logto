@@ -112,6 +112,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           emailBlocklistPolicy,
           signUpProfileFields,
           customUiCsp,
+          usernamePolicy,
           ...rest
         },
       } = ctx.guard;
@@ -381,6 +382,8 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             passwordExpiration &&
             currentPasswordExpiration && { passwordExpiration: currentPasswordExpiration }
         ),
+        // Username policy is gated until the feature ships: ignore writes when the flag is off.
+        ...conditional(EnvSet.values.isDevFeaturesEnabled && usernamePolicy && { usernamePolicy }),
       };
 
       ctx.body = await updateDefaultSignInExperience(payload);

@@ -7,6 +7,7 @@ import {
   SignInIdentifier,
   SignInMode,
   Theme,
+  defaultUsernamePolicy,
   type AccountCenter,
   type UserProfileResponse,
 } from '@logto/schemas';
@@ -125,6 +126,7 @@ export const mockSignInExperienceSettings = {
   isDevelopmentTenant: false,
   signUpProfileFields: null,
   passwordExpiration: {},
+  usernamePolicy: defaultUsernamePolicy,
 } satisfies SignInExperienceResponse;
 
 export const mockUserInfo = {

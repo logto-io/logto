@@ -45,12 +45,13 @@ describe('sign-in-experience query', () => {
     forgotPasswordMethods: JSON.stringify(mockSignInExperience.forgotPasswordMethods),
     passkeySignIn: JSON.stringify(mockSignInExperience.passkeySignIn),
     signUpProfileFields: JSON.stringify(mockSignInExperience.signUpProfileFields),
+    usernamePolicy: JSON.stringify(mockSignInExperience.usernamePolicy),
   };
 
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
-      select "tenant_id", "id", "color", "branding", "hide_logto_branding", "language_info", "terms_of_use_url", "privacy_policy_url", "agree_to_terms_policy", "sign_in", "sign_up", "social_sign_in", "social_sign_in_connector_targets", "sign_in_mode", "custom_css", "custom_content", "custom_ui_assets", "custom_ui_csp", "password_policy", "mfa", "adaptive_mfa", "single_sign_on_enabled", "support_email", "support_website_url", "unknown_session_redirect_url", "captcha_policy", "sentinel_policy", "email_blocklist_policy", "forgot_password_methods", "passkey_sign_in", "sign_up_profile_fields", "password_expiration"
+      select "tenant_id", "id", "color", "branding", "hide_logto_branding", "language_info", "terms_of_use_url", "privacy_policy_url", "agree_to_terms_policy", "sign_in", "sign_up", "social_sign_in", "social_sign_in_connector_targets", "sign_in_mode", "custom_css", "custom_content", "custom_ui_assets", "custom_ui_csp", "password_policy", "mfa", "adaptive_mfa", "single_sign_on_enabled", "support_email", "support_website_url", "unknown_session_redirect_url", "captcha_policy", "sentinel_policy", "email_blocklist_policy", "forgot_password_methods", "passkey_sign_in", "sign_up_profile_fields", "password_expiration", "username_policy"
       from "sign_in_experiences"
       where "id"=$1
     `;

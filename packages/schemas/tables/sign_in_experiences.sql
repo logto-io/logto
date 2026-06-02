@@ -37,5 +37,16 @@ create table sign_in_experiences (
   /** Nullable by design: null keeps legacy full-catalog behavior and [] collects no custom profile fields. */
   sign_up_profile_fields jsonb /* @use SignUpProfileFields */,
   password_expiration jsonb /* @use PasswordExpirationPolicy */ not null default '{}'::jsonb,
+  username_policy jsonb /* @use UsernamePolicy */ not null default ('{
+    "caseSensitive": true,
+    "minLength": 1,
+    "maxLength": 128,
+    "allowedChars": {
+      "lowercase": true,
+      "uppercase": true,
+      "numbers": true,
+      "underscore": true
+    }
+  }'::jsonb),
   primary key (tenant_id, id)
 );
