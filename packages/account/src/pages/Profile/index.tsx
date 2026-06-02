@@ -111,7 +111,7 @@ const Profile = () => {
           descriptionKey="account_center.page.profile_description"
         />
         <div className={classNames(homeStyles.content, layoutClassNames.pageContent)}>
-          {fieldRows.length > 0 && (
+          {fieldRows.length > 0 ? (
             <div className={classNames(styles.section, layoutClassNames.section)}>
               <div className={classNames(styles.card, layoutClassNames.card)}>
                 {fieldRows.map((fieldRow) => {
@@ -154,6 +154,8 @@ const Profile = () => {
                 })}
               </div>
             </div>
+          ) : (
+            <div className={styles.empty} />
           )}
         </div>
         <PageFooter />
