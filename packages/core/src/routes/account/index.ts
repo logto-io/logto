@@ -12,7 +12,7 @@ import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { encryptUserPassword } from '#src/libraries/user.utils.js';
+import { buildUserPasswordPayloadFromPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { assertUserHasRemainingIdentifier } from '#src/utils/user.js';
@@ -200,11 +200,10 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       const passwordPolicyChecker = new PasswordValidator(signInExperience.passwordPolicy, user);
       await passwordPolicyChecker.validatePassword(password, user);
 
-      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
-      const updatedUser = await updateUserById(userId, {
-        passwordEncrypted,
-        passwordEncryptionMethod,
-      });
+      const updatedUser = await updateUserById(
+        userId,
+        await buildUserPasswordPayloadFromPassword(password)
+      );
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 

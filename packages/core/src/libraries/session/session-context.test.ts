@@ -51,7 +51,12 @@ describe('saveInteractionLastSubmissionToSession', () => {
 
     const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
 
-    await consent({ ctx: context, provider, queries, interactionDetails });
+    await consent({
+      ctx: context,
+      provider,
+      queries,
+      interactionDetails,
+    });
 
     expect(oidcSessionExtensionsInsert).toHaveBeenCalledWith({
       sessionUid: 'sessionUid',

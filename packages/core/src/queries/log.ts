@@ -30,8 +30,9 @@ type LogCondition = {
 
 /**
  * Bounds the rows counted to avoid a full `count(*)` traversal on tenants with
- * very large `logs` tables. The inner subquery walks `logs__created_at_id`
- * newest-first and stops at `LOGS_COUNT_CAP + 1` matches, sharply reducing the
+ * very large `logs` tables. The inner subquery is capped at `LOGS_COUNT_CAP + 1`
+ * rows via `LIMIT`, so the outer `count(*)` never scans beyond that; a result
+ * exceeding `LOGS_COUNT_CAP` is then reported as capped. This sharply reduces the
  * chance of hitting `statement_timeout`.
  */
 const LOGS_COUNT_CAP = 10_000;
@@ -91,16 +92,12 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     }
 
     const cappedLimit = LOGS_COUNT_CAP + 1;
-    // `order by created_at desc` lets Postgres use `logs__created_at_id` so
-    // `LIMIT` acts as a true scan boundary even when the residual filter is
-    // sparse. Matches the order `findLogs` returns rows in.
     const { count } = await pool.one<{ count: string }>(sql`
       select count(*)
       from (
         select 1
         from ${table}
         ${buildLogConditionSql(condition)}
-        order by ${fields.createdAt} desc
         limit ${cappedLimit}
       ) s
     `);

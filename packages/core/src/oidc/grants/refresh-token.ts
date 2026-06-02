@@ -31,6 +31,8 @@ import validatePresence from 'oidc-provider/lib/helpers/validate_presence.js';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { type EnvSet } from '#src/env-set/index.js';
+import { assertUserHasApplicationAccessForOidc } from '#src/oidc/application-access-control.js';
+import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -63,12 +65,14 @@ const requiredParameters = Object.freeze(['refresh_token']) satisfies ReadonlyAr
 
 // We have to disable the rules because the original implementation is written in JavaScript and
 // uses mutable variables.
-/* eslint-disable @silverhand/fp/no-let, @typescript-eslint/no-non-null-assertion, @silverhand/fp/no-mutation, unicorn/no-array-method-this-argument */
-export const buildHandler: (
+/* eslint-disable complexity, @silverhand/fp/no-let, @typescript-eslint/no-non-null-assertion, @silverhand/fp/no-mutation, unicorn/no-array-method-this-argument */
+type Handler = (
   envSet: EnvSet,
-  queries: Queries
-  // eslint-disable-next-line complexity
-) => Parameters<Provider['registerGrantType']>[1] = (envSet, queries) => async (ctx, next) => {
+  queries: Queries,
+  applicationAccessControl: Libraries['applicationAccessControl']
+) => Parameters<Provider['registerGrantType']>[1];
+
+export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx, next) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
   const { RefreshToken, Account, AccessToken, Grant, IdToken } = provider;
 
@@ -158,6 +162,8 @@ export const buildHandler: (
     await Promise.all([refreshToken.destroy(), revoke(ctx, refreshToken.grantId)]);
     throw new InvalidGrant('refresh token already used');
   }
+
+  await assertUserHasApplicationAccessForOidc(appAccess, client.clientId, account.accountId);
 
   const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
 
@@ -322,4 +328,4 @@ export const buildHandler: (
 
   await next();
 };
-/* eslint-enable @silverhand/fp/no-let, @typescript-eslint/no-non-null-assertion, @silverhand/fp/no-mutation, unicorn/no-array-method-this-argument */
+/* eslint-enable complexity, @silverhand/fp/no-let, @typescript-eslint/no-non-null-assertion, @silverhand/fp/no-mutation, unicorn/no-array-method-this-argument */

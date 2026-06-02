@@ -52,6 +52,9 @@ const mockSignInExperience: SignInExperience = {
   customUiAssets: null,
   customUiCsp: {},
   passwordPolicy: {},
+  passwordExpiration: {
+    enabled: false,
+  },
   mfa: {
     policy: MfaPolicy.Mandatory,
     factors: [MfaFactor.TOTP],

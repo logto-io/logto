@@ -7,6 +7,10 @@ import {
 import { generateStandardId } from '@logto/shared';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  type PasswordExpirationResult,
+  verifyPasswordExpirationPolicy,
+} from '#src/libraries/password-expiration.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -62,23 +66,25 @@ export class PasswordVerification
   }
 
   /**
-   * Verifies if the password matches the record in database with the current identifier.
-   * `userId` will be set if the password can be verified.
+   * Verifies the password against the current identifier and returns the authenticated user.
    *
-   * @throws RequestError with 400 status if sentinel policy blocks the action (failed too many times).
    * @throws RequestError with 401 status if user id suspended.
    * @throws RequestError with 422 status if the user is not found or the password is incorrect.
    */
-  async verify(password: string) {
+  async verify(password: string): Promise<User> {
     const user = await findUserByIdentifier(this.queries.users, this.identifier);
 
     // Throws an 422 error if the user is not found or the password is incorrect
-    const { isSuspended } = await this.libraries.users.verifyUserPassword(user, password);
-    assertThat(!isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
+    const verifiedUser = await this.libraries.users.verifyUserPassword(user, password);
+
+    assertThat(
+      !verifiedUser.isSuspended,
+      new RequestError({ code: 'user.suspended', status: 401 })
+    );
 
     this.verified = true;
 
-    return user;
+    return verifiedUser;
   }
 
   async identifyUser(): Promise<User> {
@@ -115,5 +121,21 @@ export class PasswordVerification
 
   toSanitizedJson(): PasswordVerificationRecordData {
     return this.toJson();
+  }
+
+  /**
+   * Checks the password expiration policy after the password has already been verified.
+   *
+   * The route keeps this outside the sentinel guard so expired passwords do not count as failed
+   * credential attempts.
+   *
+   * @throws RequestError with 422 status if the password is already expired.
+   * @throws RequestError with 500 status if the expiration policy is misconfigured.
+   */
+  async verifyPasswordExpiration(user: User): Promise<PasswordExpirationResult> {
+    const { passwordExpiration } =
+      await this.queries.signInExperiences.findDefaultSignInExperience();
+
+    return verifyPasswordExpirationPolicy(passwordExpiration, user);
   }
 }

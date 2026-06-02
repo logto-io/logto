@@ -1,10 +1,10 @@
 import { buildBuiltInApplicationDataForTenant, isBuiltInApplicationId } from '@logto/schemas';
 import { type MiddlewareType } from 'koa';
-import { type IRouterParamContext } from 'koa-router';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
 
 import { consent, getMissingScopes } from '#src/libraries/session/index.js';
+import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -12,31 +12,36 @@ import assertThat from '#src/utils/assert-that.js';
  * Automatically consent for the first party apps.
  */
 
-export default function koaAutoConsent<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
-  provider: Provider,
-  query: Queries
-): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+const shouldAutoConsentApplication = async (clientId: string, query: Queries) => {
+  const {
+    applications: { findApplicationById },
+  } = query;
+
+  const application = isBuiltInApplicationId(clientId)
+    ? buildBuiltInApplicationDataForTenant('', clientId)
+    : await findApplicationById(clientId);
+
+  return !application.isThirdParty;
+};
+
+export default function koaAutoConsent<
+  StateT,
+  ContextT extends WithInteractionDetailsContext,
+  ResponseBodyT,
+>(provider: Provider, query: Queries): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
-    const interactionDetails = await provider.interactionDetails(ctx.req, ctx.res);
+    const { interactionDetails } = ctx;
     const {
       params: { client_id: clientId },
       prompt,
     } = interactionDetails;
-
-    const {
-      applications: { findApplicationById },
-    } = query;
 
     assertThat(
       clientId && typeof clientId === 'string',
       new errors.InvalidClient('client must be available')
     );
 
-    const application = isBuiltInApplicationId(clientId)
-      ? buildBuiltInApplicationDataForTenant('', clientId)
-      : await findApplicationById(clientId);
-
-    const shouldAutoConsent = !application.isThirdParty;
+    const shouldAutoConsent = await shouldAutoConsentApplication(clientId, query);
 
     if (shouldAutoConsent) {
       const { missingOIDCScope: missingOIDCScopes, missingResourceScopes: resourceScopesToGrant } =
@@ -49,6 +54,7 @@ export default function koaAutoConsent<StateT, ContextT extends IRouterParamCont
         interactionDetails,
         missingOIDCScopes,
         resourceScopesToGrant,
+        markAppLevelAccessControlChecked: true,
       });
 
       ctx.redirect(redirectTo);

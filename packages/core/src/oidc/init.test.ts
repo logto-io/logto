@@ -1,14 +1,19 @@
 import assert from 'node:assert';
 
 import { GrantType, type Scope } from '@logto/schemas';
-import type { KoaContextWithOIDC } from 'oidc-provider';
+import { errors, type KoaContextWithOIDC } from 'oidc-provider';
 import instance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { mockResource } from '#src/__mocks__/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
+import {
+  hasAppLevelAccessControlChecked,
+  markAppLevelAccessControlChecked,
+} from './application-access-control.js';
 import initOidc from './init.js';
 
 const { jest } = import.meta;
@@ -46,6 +51,18 @@ const createProvider = (tenant: MockTenant) =>
     tenant.logtoConfigs,
     tenant.subscription
   );
+
+const createTestClient = (): KoaContextWithOIDC['oidc']['client'] => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
+  return { clientId } as KoaContextWithOIDC['oidc']['client'];
+};
+
+const mockGrantFound = (provider: KoaContextWithOIDC['oidc']['provider']) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal grant stub for OIDC context testing
+  const grant = {} as Awaited<ReturnType<typeof provider.Grant.find>>;
+
+  return jest.spyOn(provider.Grant, 'find').mockResolvedValueOnce(grant);
+};
 
 const createContext = (
   provider: KoaContextWithOIDC['oidc']['provider'],
@@ -166,6 +183,126 @@ describe('oidc provider init', () => {
     expect(result2.scope).toBe('write:api');
     expect(findResourceByIndicator).toHaveBeenCalledTimes(2);
     expect(findUserScopesForResourceIndicator).toHaveBeenCalledTimes(2);
+  });
+
+  it('should translate application access denial to an OIDC access denied error when loading existing grant', async () => {
+    const assertUserHasApplicationAccess = jest
+      .fn()
+      .mockRejectedValueOnce(new RequestError('oidc.access_denied'));
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess },
+    });
+
+    const provider = createProvider(tenant);
+    const configuration = instance(provider).configuration();
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId },
+      client: createTestClient(),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).rejects.toThrow(errors.AccessDenied);
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(clientId, accountId);
+  });
+
+  it('should check application access for consent prompt without existing marker when loading existing grant', async () => {
+    const assertUserHasApplicationAccess = jest.fn();
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess },
+    });
+
+    const provider = createProvider(tenant);
+    const findGrant = mockGrantFound(provider);
+    const configuration = instance(provider).configuration();
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient(),
+      prompts: new Set(['consent']),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(clientId, accountId);
+    expect(findGrant).toHaveBeenCalledWith('grant_id');
+  });
+
+  it('should skip duplicated application access check when loading existing grant', async () => {
+    const assertUserHasApplicationAccess = jest.fn();
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess },
+    });
+
+    const provider = createProvider(tenant);
+    const findGrant = mockGrantFound(provider);
+    const configuration = instance(provider).configuration();
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient(),
+      result: markAppLevelAccessControlChecked(
+        { consent: { grantId: 'grant_id' } },
+        clientId,
+        accountId
+      ),
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
+    expect(assertUserHasApplicationAccess).not.toHaveBeenCalled();
+    expect(findGrant).toHaveBeenCalledWith('grant_id');
+  });
+
+  it('should mark application access as checked after loading existing grant', async () => {
+    const assertUserHasApplicationAccess = jest.fn();
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess },
+    });
+
+    const provider = createProvider(tenant);
+    const findGrant = mockGrantFound(provider);
+    const configuration = instance(provider).configuration();
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: createTestClient(),
+      result: { consent: { grantId: 'grant_id' } },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(clientId, accountId);
+    expect(hasAppLevelAccessControlChecked(ctx.oidc.result, clientId, accountId)).toBe(true);
+    expect(findGrant).toHaveBeenCalledWith('grant_id');
+  });
+
+  it('should defer application access check to consent prompt when no existing grant is loaded', async () => {
+    const assertUserHasApplicationAccess = jest
+      .fn()
+      .mockRejectedValueOnce(new RequestError('oidc.access_denied'));
+    const tenant = new MockTenant();
+
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess },
+    });
+
+    const provider = createProvider(tenant);
+    const configuration = instance(provider).configuration();
+    const ctx = createOidcContext({
+      provider,
+      account: { accountId },
+      client: { clientId },
+    } as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(ctx)).resolves.toBeUndefined();
+    expect(assertUserHasApplicationAccess).not.toHaveBeenCalled();
   });
 
   it('should reflect updated resource data outside token exchange read path', async () => {

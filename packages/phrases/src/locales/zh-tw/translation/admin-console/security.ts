@@ -81,6 +81,21 @@ const security = {
     custom_words: '自訂字詞',
     custom_words_description: '個性化上下文相關的字詞，不區分大小寫，每行一個。',
     custom_words_placeholder: '你的服務名稱，公司名稱等。',
+    password_expiration: '密碼過期',
+    password_expiration_description:
+      '要求用戶在設定的天數後重置密碼。通過 SSO 或通行金鑰登錄的用戶不受影響。',
+    enable_password_expiration: '啟用密碼過期',
+    enable_password_expiration_description:
+      '要求用戶定期重置密碼。對於沒有記錄密碼更改日期的現有用戶，將根據其帳戶創建日期進行評估。',
+    enable_password_expiration_tip:
+      '只有在登入體驗中配置至少一種帶有有效連接器的忘記密碼方式後，才能啟用密碼過期。',
+    expiration_period: '密碼有效期限（天）',
+    expiration_period_description: '密碼在過期前保持有效的天數。密碼有效期限必須至少為 1 天。',
+    expiration_period_error: '密碼有效期限必須至少為 1 天。',
+    expiration_reminder: '過期提醒（過期前天數）',
+    expiration_reminder_description:
+      '在過期前多少天提醒用戶並提示重置密碼。用戶可以跳過提醒並繼續登錄。過期提醒期限必須在 0 和有效期限（{{max}} 天）之間。',
+    expiration_reminder_error: '過期提醒期限必須在 0 和有效期限（{{max}} 天）之間。',
   },
   sentinel_policy: {
     card_title: '識別符鎖定',

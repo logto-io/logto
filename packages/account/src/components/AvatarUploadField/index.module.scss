@@ -1,0 +1,29 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.valueContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: _.unit(1);
+}
+
+.placeholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.errorText {
+  font: var(--font-body-3);
+  color: var(--color-danger-default);
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.loadingIcon {
+  width: 32px;
+  height: 32px;
+  color: var(--color-brand-default);
+}

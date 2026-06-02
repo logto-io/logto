@@ -286,7 +286,6 @@ export default async function submitInteraction(
   const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(
     profile.password
   );
-
   const user = await updateUserById(accountId, {
     passwordEncrypted,
     passwordEncryptionMethod,

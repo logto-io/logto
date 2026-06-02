@@ -9,7 +9,11 @@ import { type ContinueFlowInteractionEvent } from '@/types';
 
 import api from '../api';
 
-import { experienceApiRoutes, type VerificationResponse } from './const';
+import {
+  experienceApiRoutes,
+  type PasswordVerificationResponse,
+  type VerificationResponse,
+} from './const';
 import {
   initInteraction,
   identifyUser,
@@ -75,7 +79,7 @@ export const signInWithPasswordIdentifier = async (
     .post(`${experienceApiRoutes.verification}/password`, {
       json: payload,
     })
-    .json<VerificationResponse>();
+    .json<PasswordVerificationResponse>();
 
   return identifyAndSubmitInteraction({ verificationId });
 };

@@ -27,7 +27,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const startTotpBinding = useStartTotpBinding();
   const startWebAuthnProcessing = useStartWebAuthnProcessing();
   const startBackupCodeBinding = useStartBackupCodeBinding();
-  const { onSubmit: startMfaVerificationCodeProcessing } = useSendMfaVerificationCode();
+  const { onSubmit: startMfaVerificationCodeProcessing } = useSendMfaVerificationCode({ replace });
 
   /**
    * Redirect the user to the corresponding MFA page.

@@ -394,6 +394,7 @@ describe('<SocialFlow />', () => {
     });
 
     it('resets verification when permission denied on link', async () => {
+      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
       const setVerificationId = jest.fn();
       const setToast = jest.fn();
 
@@ -409,10 +410,11 @@ describe('<SocialFlow />', () => {
 
       renderSocialFlow({
         mode: 'add',
-        pageContext: { setVerificationId, setToast },
+        pageContext: { refreshUserInfo, setVerificationId, setToast },
       });
 
       await waitFor(() => {
+        expect(refreshUserInfo).toHaveBeenCalled();
         expect(setVerificationId).toHaveBeenCalledWith(undefined);
         expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
       });
@@ -480,6 +482,7 @@ describe('<SocialFlow />', () => {
     });
 
     it('resets verification when permission denied on remove', async () => {
+      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
       const setVerificationId = jest.fn();
       const setToast = jest.fn();
 
@@ -490,6 +493,7 @@ describe('<SocialFlow />', () => {
       renderSocialFlow({
         mode: 'remove',
         pageContext: {
+          refreshUserInfo,
           setVerificationId,
           setToast,
           userInfo: {
@@ -504,6 +508,7 @@ describe('<SocialFlow />', () => {
       });
 
       await waitFor(() => {
+        expect(refreshUserInfo).toHaveBeenCalled();
         expect(setVerificationId).toHaveBeenCalledWith(undefined);
         expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
       });

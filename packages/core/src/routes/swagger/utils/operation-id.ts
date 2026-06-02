@@ -30,6 +30,7 @@ type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
+  'patch /users/:userId/password/expiration': 'UpdateUserPasswordExpiration',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({

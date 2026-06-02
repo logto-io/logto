@@ -3,6 +3,7 @@ import { generateStandardId } from '@logto/shared';
 import type { Provider } from 'oidc-provider';
 
 import { mockUser } from '#src/__mocks__/user.js';
+import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
 import type Queries from '#src/tenants/Queries.js';
 import { GrantMock, createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
@@ -59,7 +60,12 @@ describe('consent', () => {
 
   it('should update with new grantId if not exist', async () => {
     const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
-    await consent({ ctx: context, provider, queries, interactionDetails: baseInteractionDetails });
+    await consent({
+      ctx: context,
+      provider,
+      queries,
+      interactionDetails: baseInteractionDetails,
+    });
 
     expect(grantSave).toHaveBeenCalled();
 
@@ -85,7 +91,12 @@ describe('consent', () => {
 
     const provider = createMockProvider(jest.fn().mockResolvedValue(interactionDetails), Grant);
 
-    await consent({ ctx: context, provider, queries, interactionDetails });
+    await consent({
+      ctx: context,
+      provider,
+      queries,
+      interactionDetails,
+    });
 
     expect(grantSave).toHaveBeenCalled();
 
@@ -102,6 +113,36 @@ describe('consent', () => {
     );
   });
 
+  it('should mark app-level access control checked when configured', async () => {
+    const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
+    await consent({
+      ctx: context,
+      provider,
+      queries,
+      interactionDetails: baseInteractionDetails,
+      markAppLevelAccessControlChecked: true,
+    });
+
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      context.req,
+      context.res,
+      {
+        ...baseInteractionDetails.result,
+        ...markAppLevelAccessControlChecked(
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            consent: { grantId: expect.any(String) },
+          },
+          'clientId',
+          mockUser.id
+        ),
+      },
+      {
+        mergeWithLastSubmission: true,
+      }
+    );
+  });
+
   it('should save first consented app id', async () => {
     userQueries.findUserById.mockImplementationOnce(async () => ({
       ...mockUser,
@@ -109,7 +150,12 @@ describe('consent', () => {
     }));
 
     const provider = createMockProvider(jest.fn().mockResolvedValue(baseInteractionDetails), Grant);
-    await consent({ ctx: context, provider, queries, interactionDetails: baseInteractionDetails });
+    await consent({
+      ctx: context,
+      provider,
+      queries,
+      interactionDetails: baseInteractionDetails,
+    });
 
     expect(userQueries.updateUserById).toHaveBeenCalledWith(mockUser.id, {
       applicationId: baseInteractionDetails.params.client_id,

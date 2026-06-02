@@ -109,6 +109,9 @@ export const mockSignInExperience: SignInExperience = {
   customUiAssets: null,
   customUiCsp: {},
   passwordPolicy: {},
+  passwordExpiration: {
+    enabled: false,
+  },
   mfa: {
     policy: MfaPolicy.PromptAtSignInAndSignUp,
     factors: [],
@@ -156,6 +159,9 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   customUiAssets: null,
   customUiCsp: {},
   passwordPolicy: {},
+  passwordExpiration: {
+    enabled: false,
+  },
   mfa: {
     policy: MfaPolicy.PromptAtSignInAndSignUp,
     factors: [],

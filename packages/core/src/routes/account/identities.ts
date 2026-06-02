@@ -113,8 +113,6 @@ export default function identitiesRoutes<T extends UserRouter>(
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
-      const user = await findUserById(userId);
-      assertIdentityVerifiedIfRequired(user, identityVerified);
       assertThat(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
@@ -123,6 +121,8 @@ export default function identitiesRoutes<T extends UserRouter>(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
+      const user = await findUserById(userId);
+      assertIdentityVerifiedIfRequired(user, identityVerified);
 
       await linkSocialIdentityCore({
         user,
@@ -146,8 +146,6 @@ export default function identitiesRoutes<T extends UserRouter>(
     }),
     async (ctx, next) => {
       const { id: userId, scopes, identityVerified } = ctx.auth;
-      const user = await findUserById(userId);
-      assertIdentityVerifiedIfRequired(user, identityVerified);
       assertThat(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
@@ -156,6 +154,8 @@ export default function identitiesRoutes<T extends UserRouter>(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
+      const user = await findUserById(userId);
+      assertIdentityVerifiedIfRequired(user, identityVerified);
 
       await linkSocialIdentityCore({
         user,

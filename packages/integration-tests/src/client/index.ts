@@ -186,6 +186,10 @@ export default class MockClient {
     this.rawCookies = cookie.split(';').map((value) => value.trim());
   }
 
+  public assignRawCookies(cookies: string[]) {
+    this.rawCookies = cookies;
+  }
+
   public async send<Args extends unknown[], T>(
     api: (cookie: string, ...args: Args) => Promise<T>,
     ...payload: Args

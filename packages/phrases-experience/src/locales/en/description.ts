@@ -108,6 +108,11 @@ const description = {
     'Enter you {{types, list(type: disjunction;)}} to create a new account.',
   all_account_creation_options: 'All account creation options',
   back_to_sign_in: 'Back to sign in',
+  password_expired: 'Your password has expired and must be reset before you can sign in.',
+  password_expiration_reminder:
+    'Your password will expire in {{days}} day(s). We recommend resetting it now.',
+  password_expiration_reminder_skip: 'Skip for now',
+  password_expiration_reset: 'Reset password',
   support_email: 'Support email: <link></link>',
   support_website: 'Support website: <link></link>',
   switch_account_title: 'You are currently signed in as {{account}}',

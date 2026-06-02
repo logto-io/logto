@@ -22,6 +22,7 @@ type OmittedSignInExperienceKeys = keyof Pick<
   | 'sentinelPolicy'
   | 'passwordPolicy'
   | 'emailBlocklistPolicy'
+  | 'passwordExpiration'
 >;
 
 export enum SignInExperienceTab {
