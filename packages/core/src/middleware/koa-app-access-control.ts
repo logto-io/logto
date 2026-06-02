@@ -25,12 +25,7 @@ export default function koaAppAccessControl<
     );
 
     if (
-      hasAppLevelAccessControlChecked(ctx.interactionDetails.result, clientId, session.accountId) ||
-      hasAppLevelAccessControlChecked(
-        ctx.interactionDetails.lastSubmission,
-        clientId,
-        session.accountId
-      )
+      hasAppLevelAccessControlChecked(ctx.interactionDetails.result, clientId, session.accountId)
     ) {
       return next();
     }

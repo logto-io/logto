@@ -277,7 +277,7 @@ export default function initOidc(
         client &&
         !hasAppLevelAccessControlChecked(result, client.clientId, account.accountId);
 
-      if (grantId && account && client && shouldCheckApplicationAccess) {
+      if (grantId && shouldCheckApplicationAccess) {
         await assertUserHasApplicationAccessForOidc(
           libraries.applicationAccessControl,
           client.clientId,

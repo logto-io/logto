@@ -69,6 +69,22 @@ describe('koaAppAccessControl middleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
+  it('should not skip application access check with last submission marker', async () => {
+    const ctx = createContext({
+      params: { client_id: 'app-id' },
+      // @ts-expect-error
+      session: { accountId: 'user-id' },
+      lastSubmission: markAppLevelAccessControlChecked(undefined, 'app-id', 'user-id'),
+    });
+    const guard = koaAppAccessControl(mockTenant.libraries);
+
+    await guard(ctx, next);
+
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith('app-id', 'user-id');
+    expect(ctx.interactionDetails.persist).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalled();
+  });
+
   it('should throw when access is denied', async () => {
     const ctx = createContext({
       params: { client_id: 'app-id' },
