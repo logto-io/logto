@@ -39,6 +39,10 @@ const profile = {
     error_file_size: '파일 크기는 {{limit}}를 초과할 수 없습니다.',
     error_storage_not_configured: '사진을 업로드할 수 없습니다. 나중에 다시 시도해 주세요.',
     error_upload: '사진 업로드에 실패했습니다. 다시 시도해 주세요.',
+    error_save: '사진을 저장하지 못했습니다. 다시 시도해 주세요.',
+    crop_title: '사진 자르기',
+    zoom: '확대/축소',
+    error_crop: '이미지를 자르지 못했습니다. 다시 시도해 주세요.',
   },
 };
 

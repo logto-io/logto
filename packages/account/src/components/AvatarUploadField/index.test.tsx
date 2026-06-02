@@ -1,14 +1,22 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 
-import { uploadAvatar } from '@/apis/experience/avatar';
+import { uploadAccountAvatar } from '@ac/apis/avatar';
 
 import AvatarUploadField from '.';
 
-jest.mock('@/apis/experience/avatar', () => ({
-  uploadAvatar: jest.fn(),
+const mockGetAccessToken = jest.fn();
+
+jest.mock('@logto/react', () => ({
+  useLogto: () => ({
+    getAccessToken: mockGetAccessToken,
+  }),
 }));
 
-jest.mock('@/utils/image-crop', () => ({
+jest.mock('@ac/apis/avatar', () => ({
+  uploadAccountAvatar: jest.fn(),
+}));
+
+jest.mock('@experience/utils/image-crop', () => ({
   getCroppedImageBlob: jest.fn(async () => new Blob([new Uint8Array([1])], { type: 'image/jpeg' })),
 }));
 
@@ -32,17 +40,6 @@ jest.mock('react-easy-crop', () => ({
   },
 }));
 
-const selectFile = (container: HTMLElement, file: File) => {
-  const input = container.querySelector('input[type="file"]');
-  if (!(input instanceof HTMLInputElement)) {
-    throw new TypeError('file input not found');
-  }
-  fireEvent.change(input, { target: { files: [file] } });
-};
-
-const validImageFile = () =>
-  new File([new Uint8Array([0xff, 0xd8, 0xff])], 'avatar.jpg', { type: 'image/jpeg' });
-
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, options?: Record<string, string>) => {
@@ -58,12 +55,23 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
+const selectFile = (container: HTMLElement, file: File) => {
+  const input = container.querySelector('input[type="file"]');
+  if (!(input instanceof HTMLInputElement)) {
+    throw new TypeError('file input not found');
+  }
+  fireEvent.change(input, { target: { files: [file] } });
+};
+
+const validImageFile = () =>
+  new File([new Uint8Array([0xff, 0xd8, 0xff])], 'avatar.jpg', { type: 'image/jpeg' });
+
 const urlObjectHelpersSnapshot = {
   createObjectURL: undefined as typeof URL.createObjectURL | undefined,
   revokeObjectURL: undefined as typeof URL.revokeObjectURL | undefined,
 };
 
-describe('AvatarUploadField', () => {
+describe('AvatarUploadField (account center)', () => {
   beforeAll(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     urlObjectHelpersSnapshot.createObjectURL = globalThis.URL.createObjectURL;
@@ -73,7 +81,8 @@ describe('AvatarUploadField', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // The jsdom environment does not implement object URL helpers used by the crop flow.
+    mockGetAccessToken.mockResolvedValue('access-token');
+    // Jsdom does not implement object URL helpers used by the crop flow.
     // eslint-disable-next-line @silverhand/fp/no-mutation
     globalThis.URL.createObjectURL = jest.fn(() => 'blob:mock-avatar');
     // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -89,11 +98,11 @@ describe('AvatarUploadField', () => {
   });
 
   it('opens the crop modal on selection and uploads the cropped image after confirming', async () => {
-    jest.mocked(uploadAvatar).mockResolvedValue({ url: 'https://example.com/avatar.png' });
+    jest.mocked(uploadAccountAvatar).mockResolvedValue({ url: 'https://example.com/avatar.png' });
     const onChange = jest.fn();
 
     const { container, getByTestId, getByText } = render(
-      <AvatarUploadField name="avatar" label="Avatar" onChange={onChange} />
+      <AvatarUploadField label="Avatar" onChange={onChange} />
     );
 
     selectFile(container, validImageFile());
@@ -102,26 +111,28 @@ describe('AvatarUploadField', () => {
     await waitFor(() => {
       expect(getByTestId('crop-modal')).toBeTruthy();
     });
-    expect(uploadAvatar).not.toHaveBeenCalled();
+    expect(uploadAccountAvatar).not.toHaveBeenCalled();
 
     fireEvent.click(getByText('action.save'));
 
     await waitFor(() => {
-      expect(uploadAvatar).toHaveBeenCalledTimes(1);
+      expect(uploadAccountAvatar).toHaveBeenCalledTimes(1);
     });
 
-    const [uploadedFile, options] = jest.mocked(uploadAvatar).mock.calls[0] ?? [];
+    const [accessToken, uploadedFile, options] =
+      jest.mocked(uploadAccountAvatar).mock.calls[0] ?? [];
+    expect(accessToken).toBe('access-token');
     expect(uploadedFile).toBeInstanceOf(File);
     expect(uploadedFile?.type).toBe('image/jpeg');
     expect(options?.signal).toBeInstanceOf(AbortSignal);
     expect(onChange).toHaveBeenCalledWith('https://example.com/avatar.png');
   });
 
-  it('shows a client-side error for unsupported file types', async () => {
+  it('shows a client-side error for unsupported file types and does not open the modal', async () => {
     const onChange = jest.fn();
 
     const { container, getByRole, queryByTestId } = render(
-      <AvatarUploadField name="avatar" label="Avatar" onChange={onChange} />
+      <AvatarUploadField label="Avatar" onChange={onChange} />
     );
 
     selectFile(container, new File(['text'], 'notes.txt', { type: 'text/plain' }));
@@ -130,74 +141,29 @@ describe('AvatarUploadField', () => {
       expect(getByRole('alert').textContent).toBe('error_file_type:JPEG, PNG, GIF, WebP, BMP');
     });
     expect(queryByTestId('crop-modal')).toBeNull();
-    expect(uploadAvatar).not.toHaveBeenCalled();
+    expect(uploadAccountAvatar).not.toHaveBeenCalled();
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  it('notifies the parent when upload state changes', async () => {
-    jest.mocked(uploadAvatar).mockImplementation(
-      async () =>
-        new Promise((resolve) => {
-          setTimeout(() => {
-            resolve({ url: 'https://example.com/avatar.png' });
-          }, 50);
-        })
-    );
-    const onUploadingChange = jest.fn();
+  it('surfaces a generic error and does not update the value when upload fails', async () => {
+    jest.mocked(uploadAccountAvatar).mockRejectedValue(new Error('network error'));
     const onChange = jest.fn();
 
-    const { container, getByText } = render(
-      <AvatarUploadField
-        name="avatar"
-        label="Avatar"
-        onChange={onChange}
-        onUploadingChange={onUploadingChange}
-      />
+    const { container, getByTestId, getByText, getByRole } = render(
+      <AvatarUploadField label="Avatar" onChange={onChange} />
     );
 
     selectFile(container, validImageFile());
 
+    await waitFor(() => {
+      expect(getByTestId('crop-modal')).toBeTruthy();
+    });
+
     fireEvent.click(getByText('action.save'));
 
     await waitFor(() => {
-      expect(onUploadingChange).toHaveBeenCalledWith(true);
+      expect(getByRole('alert').textContent).toBe('error_upload');
     });
-
-    await waitFor(() => {
-      expect(onUploadingChange).toHaveBeenCalledWith(false);
-    });
-  });
-
-  it('clears the value when remove is clicked', async () => {
-    const onChange = jest.fn();
-
-    const { getByText } = render(
-      <AvatarUploadField
-        name="avatar"
-        label="Avatar"
-        value="https://example.com/avatar.png"
-        onChange={onChange}
-      />
-    );
-
-    fireEvent.click(getByText('remove'));
-
-    expect(onChange).toHaveBeenCalledWith('');
-  });
-
-  it('does not show remove when the field is required', () => {
-    const onChange = jest.fn();
-
-    const { queryByText } = render(
-      <AvatarUploadField
-        isRequired
-        name="avatar"
-        label="Avatar"
-        value="https://example.com/avatar.png"
-        onChange={onChange}
-      />
-    );
-
-    expect(queryByText('remove')).toBeNull();
+    expect(onChange).not.toHaveBeenCalled();
   });
 });
