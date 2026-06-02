@@ -5,9 +5,9 @@ import { mockedConfig } from './mock.js';
 const getConfig = vi.fn().mockResolvedValue(mockedConfig);
 const sendEmailWithTemplate = vi.fn();
 vi.mock('postmark', () => ({
-  ServerClient: vi.fn(() => ({
-    sendEmailWithTemplate,
-  })),
+  ServerClient: vi.fn(function () {
+    return { sendEmailWithTemplate };
+  }),
 }));
 
 const { default: createConnector } = await import('./index.js');

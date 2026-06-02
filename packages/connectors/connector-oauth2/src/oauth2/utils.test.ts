@@ -8,10 +8,12 @@ import { constructAuthorizationUri, type RequestTokenEndpointOptions } from './u
 const kyPostMock = vi.spyOn(ky, 'post');
 
 vi.mock('jose', () => ({
-  SignJWT: vi.fn(() => ({
-    setProtectedHeader: vi.fn().mockReturnThis(),
-    sign: vi.fn().mockResolvedValue('signed-jwt'),
-  })),
+  SignJWT: vi.fn(function () {
+    return {
+      setProtectedHeader: vi.fn().mockReturnThis(),
+      sign: vi.fn().mockResolvedValue('signed-jwt'),
+    };
+  }),
 }));
 
 const { requestTokenEndpoint } = await import('./utils.js');
