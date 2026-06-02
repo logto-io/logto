@@ -43,6 +43,31 @@ export const getAvatarUploadErrorMessage = (
   }
 };
 
+/**
+ * Wrap a cropped JPEG blob into a `File` for upload, deriving the filename from the original
+ * selection so the backend can build a stable, human-readable object key.
+ */
+export const buildCroppedAvatarFile = (blob: Blob, originalFileName?: string): File => {
+  const baseName = originalFileName?.replace(/\.[^./\\]+$/, '').trim();
+  const fileName = baseName ? `${baseName}.jpg` : 'avatar.jpg';
+
+  return new File([blob], fileName, { type: blob.type || 'image/jpeg' });
+};
+
+export const getAvatarPersistErrorMessage = (
+  { code }: Pick<RequestErrorBody, 'code'>,
+  translate: AvatarUploadTranslate
+) => {
+  switch (code) {
+    case 'storage.not_configured': {
+      return translate('error_storage_not_configured');
+    }
+    default: {
+      return translate('error_save');
+    }
+  }
+};
+
 export const formatFileSizeLimit = (bytes: number) => {
   const megabytes = bytes / (1024 * 1024);
 

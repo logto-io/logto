@@ -40,6 +40,10 @@ const profile = {
     error_storage_not_configured:
       'Não foi possível carregar a fotografia. Tente novamente mais tarde.',
     error_upload: 'Falha ao carregar a fotografia. Tente novamente.',
+    error_save: 'Não foi possível guardar a sua fotografia. Tente novamente.',
+    crop_title: 'Recortar fotografia',
+    zoom: 'Zoom',
+    error_crop: 'Falha ao recortar a imagem. Tente novamente.',
   },
 };
 

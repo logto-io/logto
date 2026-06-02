@@ -40,6 +40,10 @@ const profile = {
     error_storage_not_configured:
       'Impossible de téléverser la photo. Veuillez réessayer plus tard.',
     error_upload: 'Échec du téléversement de la photo. Veuillez réessayer.',
+    error_save: 'Impossible d’enregistrer votre photo. Veuillez réessayer.',
+    crop_title: 'Recadrer la photo',
+    zoom: 'Zoom',
+    error_crop: "Échec du recadrage de l'image. Veuillez réessayer.",
   },
 };
 

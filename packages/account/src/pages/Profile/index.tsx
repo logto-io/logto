@@ -10,7 +10,6 @@ import AvatarUploadField from '@ac/components/AvatarUploadField';
 import PageFooter from '@ac/components/PageFooter';
 import { layoutClassNames } from '@ac/constants/layout';
 import useApi from '@ac/hooks/use-api';
-import useErrorHandler from '@ac/hooks/use-error-handler';
 
 import homeStyles from '../Home/index.module.scss';
 
@@ -84,21 +83,19 @@ const Profile = () => {
   ]);
 
   const updateAvatarRequest = useApi(updateAvatar);
-  const handleError = useErrorHandler();
 
   const handleAvatarChange = useCallback(
     async (avatarUrl: string) => {
       const [error] = await updateAvatarRequest({ avatar: avatarUrl });
 
       if (error) {
-        await handleError(error);
-        return;
+        throw error instanceof Error ? error : new Error(String(error));
       }
 
       await refreshUserInfo();
       setToast(t('account_center.update_success.default.description'));
     },
-    [handleError, refreshUserInfo, setToast, t, updateAvatarRequest]
+    [refreshUserInfo, setToast, t, updateAvatarRequest]
   );
 
   const handleUpdated = useCallback(async () => {

@@ -39,6 +39,10 @@ const profile = {
     error_file_size: '文件大小不能超过 {{limit}}。',
     error_storage_not_configured: '无法上传照片，请稍后重试。',
     error_upload: '照片上传失败，请重试。',
+    error_save: '照片保存失败，请重试。',
+    crop_title: '裁剪照片',
+    zoom: '缩放',
+    error_crop: '图片裁剪失败，请重试。',
   },
 };
 

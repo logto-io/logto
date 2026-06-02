@@ -1,0 +1,91 @@
+@use '@/shared/scss/underscore' as _;
+
+.modal {
+  position: absolute;
+  width: 480px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  outline: none;
+  border-radius: 16px;
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.container {
+  background: var(--color-bg-float-overlay);
+  border-radius: 16px;
+  padding: _.unit(6);
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+.header {
+  font: var(--font-title-2);
+  color: var(--color-type-primary);
+  @include _.flex-row;
+  justify-content: space-between;
+  margin-bottom: _.unit(4);
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.cropArea {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  border-radius: _.unit(2);
+  overflow: hidden;
+  background: var(--color-bg-layer-2);
+}
+
+.zoomRow {
+  @include _.flex-row;
+  gap: _.unit(3);
+  margin-top: _.unit(4);
+}
+
+.zoomLabel {
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+}
+
+.zoomSlider {
+  flex: 1;
+  accent-color: var(--color-brand-default);
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 50%;
+  }
+}
+
+.errorText {
+  font: var(--font-body-3);
+  color: var(--color-danger-default);
+  margin-top: _.unit(3);
+}
+
+.footer {
+  @include _.flex-row;
+  justify-content: flex-end;
+  margin-top: _.unit(6);
+
+  > button:first-child {
+    margin-inline-end: _.unit(3);
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .modal {
+    width: calc(100% - 40px);
+  }
+}

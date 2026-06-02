@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import type { SignInExperienceResponse } from '@experience/shared/types';
+import { getCroppedImageBlob } from '@experience/utils/image-crop';
 import {
   AccountCenterControlValue,
   CustomProfileFieldType,
@@ -39,6 +40,23 @@ jest.mock('../../apis/account', () => ({
 
 jest.mock('../../apis/avatar', () => ({
   uploadAccountAvatar: jest.fn(),
+}));
+
+// The avatar field opens a crop modal on selection; stub the cropper/canvas so the flow runs in jsdom.
+jest.mock('@experience/utils/image-crop', () => ({
+  getCroppedImageBlob: jest.fn(async () => new Blob([new Uint8Array([1])], { type: 'image/jpeg' })),
+}));
+
+jest.mock('react-easy-crop', () => ({
+  __esModule: true,
+  default: ({
+    onCropComplete,
+  }: {
+    onCropComplete: (area: unknown, areaPixels: unknown) => void;
+  }) => {
+    onCropComplete({}, { x: 0, y: 0, width: 100, height: 100 });
+    return null;
+  },
 }));
 
 type ProfileRenderOptions = {
@@ -212,7 +230,19 @@ const renderProfile = ({
   );
 };
 
+const urlObjectHelpersSnapshot = {
+  createObjectURL: undefined as typeof URL.createObjectURL | undefined,
+  revokeObjectURL: undefined as typeof URL.revokeObjectURL | undefined,
+};
+
 describe('<Profile />', () => {
+  beforeAll(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    urlObjectHelpersSnapshot.createObjectURL = globalThis.URL.createObjectURL;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    urlObjectHelpersSnapshot.revokeObjectURL = globalThis.URL.revokeObjectURL;
+  });
+
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
@@ -220,6 +250,23 @@ describe('<Profile />', () => {
     jest.mocked(updateCustomData).mockResolvedValue(undefined);
     jest.mocked(updateName).mockResolvedValue(undefined);
     jest.mocked(updateProfile).mockResolvedValue(undefined);
+    // `resetAllMocks` clears the factory implementation, so restore the cropper stub each run.
+    jest
+      .mocked(getCroppedImageBlob)
+      .mockResolvedValue(new Blob([new Uint8Array([1])], { type: 'image/jpeg' }));
+    // Jsdom does not implement object URL helpers used by the avatar crop flow.
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    globalThis.URL.createObjectURL = jest.fn(() => 'blob:mock-avatar');
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    globalThis.URL.revokeObjectURL = jest.fn();
+  });
+
+  afterAll(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    globalThis.URL.createObjectURL =
+      urlObjectHelpersSnapshot.createObjectURL ?? (() => 'blob:restored');
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    globalThis.URL.revokeObjectURL = urlObjectHelpersSnapshot.revokeObjectURL ?? jest.fn();
   });
 
   it('renders editable profile fields with expected sections and edit entries', () => {
@@ -329,24 +376,68 @@ describe('<Profile />', () => {
     expect(queryByText('profile.avatar_upload.upload')).toBeNull();
   });
 
-  it('uploads avatar and persists URL via updateAvatar', async () => {
+  it('crops then uploads avatar and persists URL via updateAvatar', async () => {
     const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
     const setToast = jest.fn();
     const mockUrl = 'https://example.com/new-avatar.png';
     jest.mocked(uploadAccountAvatar).mockResolvedValueOnce({ url: mockUrl });
 
-    const { container } = renderProfile({ refreshUserInfo, setToast });
+    const { container, getByText } = renderProfile({ refreshUserInfo, setToast });
     const fileInput = container.querySelector('input[type="file"]')!;
-    const file = new File(['avatar'], 'avatar.png', { type: 'image/png' });
+    const file = new File([new Uint8Array([0xff, 0xd8, 0xff])], 'avatar.jpg', {
+      type: 'image/jpeg',
+    });
 
+    // Selecting a file opens the crop modal; the upload only happens after confirming.
     fireEvent.change(fileInput, { target: { files: [file] } });
+    expect(uploadAccountAvatar).not.toHaveBeenCalled();
+
+    fireEvent.click(getByText('action.save'));
 
     await waitFor(() => {
-      expect(uploadAccountAvatar).toHaveBeenCalledWith('access-token', file, expect.any(Object));
+      expect(uploadAccountAvatar).toHaveBeenCalledWith(
+        'access-token',
+        expect.any(File),
+        expect.any(Object)
+      );
     });
     await waitFor(() => {
       expect(updateAvatar).toHaveBeenCalledWith('access-token', { avatar: mockUrl });
     });
+  });
+
+  it('keeps the crop modal open when persist fails after upload', async () => {
+    const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
+    const setToast = jest.fn();
+    const mockUrl = 'https://example.com/new-avatar.png';
+    jest.mocked(uploadAccountAvatar).mockResolvedValueOnce({ url: mockUrl });
+    jest.mocked(updateAvatar).mockRejectedValue(new Error('network error'));
+
+    const { container, getByText } = renderProfile({ refreshUserInfo, setToast });
+    const fileInput = container.querySelector('input[type="file"]')!;
+    const file = new File([new Uint8Array([0xff, 0xd8, 0xff])], 'avatar.jpg', {
+      type: 'image/jpeg',
+    });
+
+    fireEvent.change(fileInput, { target: { files: [file] } });
+    fireEvent.click(getByText('action.save'));
+
+    await waitFor(() => {
+      expect(updateAvatar).toHaveBeenCalledWith('access-token', { avatar: mockUrl });
+    });
+    await waitFor(() => {
+      expect(getByText('profile.avatar_upload.error_save')).toBeTruthy();
+    });
+    expect(getByText('action.save')).toBeTruthy();
+    expect(refreshUserInfo).not.toHaveBeenCalled();
+    expect(setToast).not.toHaveBeenCalled();
+
+    fireEvent.click(getByText('action.save'));
+
+    await waitFor(() => {
+      expect(updateAvatar).toHaveBeenCalledTimes(2);
+    });
+    expect(uploadAccountAvatar).toHaveBeenCalledTimes(1);
   });
 
   it('renders avatar image in read-only mode with label and not_set placeholder', () => {

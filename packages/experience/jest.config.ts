@@ -27,6 +27,8 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     // Ensure CSS modules are stubbed before applying path aliases.
     '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
+    // Stub plain stylesheet imports (e.g. third-party CSS like react-easy-crop).
+    '\\.(css|sass|scss)$': 'identity-obj-proxy',
     '^@/([^?]*)(\\?.*)?$': '<rootDir>/src/$1',
     '^@logto/shared/(.*)$': '<rootDir>/../shared/lib/$1',
   },
