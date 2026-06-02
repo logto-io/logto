@@ -28,6 +28,7 @@ export type Props<TEntry extends DataEntry> = {
   readonly setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
   readonly availableDataList?: TEntry[];
   readonly availableDataGroups?: Array<DataGroup<TEntry>>;
+  readonly getSelectedDataTitle?: (data: SelectedDataEntry<TEntry>) => string;
   readonly className?: string;
   readonly containerClassName?: string;
 };
@@ -38,6 +39,7 @@ function DataTransferBox<TEntry extends DataEntry = DataEntry>({
   setSelectedData,
   availableDataList,
   availableDataGroups,
+  getSelectedDataTitle,
   className,
   containerClassName,
 }: Props<TEntry>) {
@@ -55,7 +57,7 @@ function DataTransferBox<TEntry extends DataEntry = DataEntry>({
           }}
         />
         <div className={transferLayout.verticalBar} />
-        <TargetPanel {...{ selectedData, setSelectedData }} />
+        <TargetPanel {...{ selectedData, setSelectedData, getSelectedDataTitle }} />
       </div>
     </FormField>
   );

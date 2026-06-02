@@ -125,27 +125,33 @@ const application_details = {
   custom_data_invalid: 'Benutzerdefinierte Daten müssen ein gültiges JSON-Objekt sein',
   access_control: {
     name: 'Regeln',
-    title: 'App-level Zugriffskontrolle',
-    description:
-      'Schränken Sie ein, welche Benutzer sich bei dieser Anwendung anmelden können, indem Sie Zugriffsregeln konfigurieren.',
-    enable: 'Zugriffskontrolle aktivieren',
+    title: 'Zugriffskontrolle',
+    description: 'Passen Sie Ihre Regeln für die App-level-Zugriffskontrolle an.',
+    enable: 'App-level-Zugriffskontrolle aktivieren',
     enable_description:
-      'Nur Benutzer, die mindestens einer konfigurierten Regel entsprechen, können auf diese App zugreifen.',
+      'Aktivieren Sie granulare Zugriffskontrolle, um einzuschränken, welche Benutzer auf diese Anwendung zugreifen können. Wenn deaktiviert, können alle registrierten Benutzer im System darauf zugreifen.',
     enable_without_rules_notice:
       'Fügen Sie mindestens eine Zugriffsregel hinzu, bevor Sie die Zugriffskontrolle aktivieren.',
-    enabled_notice:
-      'Die Zugriffskontrolle ist aktiviert. Nur Benutzer, die mindestens einer Regel entsprechen, können auf diese App zugreifen.',
-    disabled_notice:
-      'Die Zugriffskontrolle ist deaktiviert. Alle registrierten Benutzer können auf diese App zugreifen.',
     load_error: 'Zugriffsregeln konnten nicht geladen werden.',
+    custom_allow_rules: 'Benutzerdefinierte Erlaubnisregeln',
+    custom_allow_rules_description:
+      'Erstellen Sie Regeln, damit Benutzer mit bestimmten Attributen automatisch zugreifen können. Bei Aktivierung ist mindestens eine Regel erforderlich.',
     rules: 'Zugriffsregeln',
+    add_rules: 'Regeln hinzufügen',
     rules_description:
       'Benutzer können auf diese App zugreifen, wenn sie einer der konfigurierten Regeln entsprechen.',
     empty_rules_description: 'Es sind noch keine Regeln konfiguriert.',
+    delete_rule_confirmation: 'Möchten Sie diese Regel wirklich entfernen?',
+    rule_table_rules: 'Regeln',
+    rule_table_description: 'Beschreibung',
+    rule_table_users: 'Benutzer',
+    rule_table_members: 'Mitglieder',
+    rule_table_user_id: 'Benutzer-ID',
     rule_count: '{{count}} Regel',
     rule_count_other: '{{count}} Regeln',
     rule_users: 'Benutzer',
     rule_users_description: 'Bestimmte Benutzer können auf diese App zugreifen.',
+    rule_roles: 'Rollen',
     rule_user_roles: 'Benutzerrollen',
     rule_user_roles_description:
       'Benutzer mit ausgewählten Benutzerrollen können auf diese App zugreifen.',

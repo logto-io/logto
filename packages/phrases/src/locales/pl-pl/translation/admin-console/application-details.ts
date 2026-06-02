@@ -123,27 +123,33 @@ const application_details = {
   custom_data_invalid: 'Dane niestandardowe muszą być poprawnym obiektem JSON',
   access_control: {
     name: 'Reguły',
-    title: 'Kontrola dostępu na poziomie aplikacji',
-    description:
-      'Ogranicz, którzy użytkownicy mogą logować się do tej aplikacji, konfigurując reguły dostępu.',
-    enable: 'Włącz kontrolę dostępu',
+    title: 'Kontrola dostępu',
+    description: 'Dostosuj reguły kontroli dostępu na poziomie aplikacji.',
+    enable: 'Włącz kontrolę dostępu na poziomie aplikacji',
     enable_description:
-      'Tylko użytkownicy pasujący do co najmniej jednej skonfigurowanej reguły mogą uzyskać dostęp do tej aplikacji.',
+      'Włącz szczegółową kontrolę dostępu, aby ograniczyć, którzy użytkownicy mogą uzyskać dostęp do tej aplikacji. Jeśli jest wyłączona, wszyscy zarejestrowani użytkownicy w systemie mogą uzyskać do niej dostęp.',
     enable_without_rules_notice:
       'Dodaj co najmniej jedną regułę dostępu przed włączeniem kontroli dostępu.',
-    enabled_notice:
-      'Kontrola dostępu jest włączona. Tylko użytkownicy pasujący do co najmniej jednej reguły mogą uzyskać dostęp do tej aplikacji.',
-    disabled_notice:
-      'Kontrola dostępu jest wyłączona. Wszyscy zarejestrowani użytkownicy mogą uzyskać dostęp do tej aplikacji.',
     load_error: 'Nie udało się załadować reguł kontroli dostępu.',
+    custom_allow_rules: 'Niestandardowe reguły zezwalania',
+    custom_allow_rules_description:
+      'Utwórz reguły, aby użytkownicy z określonymi atrybutami mogli uzyskiwać dostęp automatycznie. Po włączeniu wymagana jest co najmniej jedna reguła.',
     rules: 'Reguły dostępu',
+    add_rules: 'Dodaj reguły',
     rules_description:
       'Użytkownicy mogą uzyskać dostęp do tej aplikacji, gdy pasują do dowolnej skonfigurowanej reguły.',
     empty_rules_description: 'Nie skonfigurowano jeszcze żadnych reguł.',
+    delete_rule_confirmation: 'Czy na pewno chcesz usunąć tę regułę?',
+    rule_table_rules: 'Reguły',
+    rule_table_description: 'Opis',
+    rule_table_users: 'Użytkownicy',
+    rule_table_members: 'Członkowie',
+    rule_table_user_id: 'ID użytkownika',
     rule_count: '{{count}} reguła',
     rule_count_other: '{{count}} reguł',
     rule_users: 'Użytkownicy',
     rule_users_description: 'Określeni użytkownicy mogą uzyskać dostęp do tej aplikacji.',
+    rule_roles: 'Role',
     rule_user_roles: 'Role użytkowników',
     rule_user_roles_description:
       'Użytkownicy przypisani do wybranych ról użytkownika mogą uzyskać dostęp do tej aplikacji.',
