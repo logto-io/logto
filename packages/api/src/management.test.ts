@@ -49,8 +49,9 @@ describe('Management API', () => {
     beforeEach(() => {
       // @ts-expect-error
       mockCreateClient.mockReturnValue(mockApiClient);
-      // @ts-expect-error
-      MockClientCredentials.mockImplementation(() => mockClientCredentials);
+      MockClientCredentials.mockImplementation(function () {
+        return mockClientCredentials;
+      });
     });
 
     it('should create management API with default options', () => {
