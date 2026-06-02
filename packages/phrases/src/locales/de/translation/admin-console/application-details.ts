@@ -123,6 +123,39 @@ const application_details = {
   field_custom_data_tip:
     'Zusätzliche benutzerdefinierte Anwendungsinformationen, die nicht in den vordefinierten Anwendungseigenschaften aufgeführt sind, wie z. B. geschäftsspezifische Einstellungen und Konfigurationen.',
   custom_data_invalid: 'Benutzerdefinierte Daten müssen ein gültiges JSON-Objekt sein',
+  access_control: {
+    name: 'Regeln',
+    title: 'App-level Zugriffskontrolle',
+    description:
+      'Schränken Sie ein, welche Benutzer sich bei dieser Anwendung anmelden können, indem Sie Zugriffsregeln konfigurieren.',
+    enable: 'Zugriffskontrolle aktivieren',
+    enable_description:
+      'Nur Benutzer, die mindestens einer konfigurierten Regel entsprechen, können auf diese App zugreifen.',
+    enable_without_rules_notice:
+      'Fügen Sie mindestens eine Zugriffsregel hinzu, bevor Sie die Zugriffskontrolle aktivieren.',
+    enabled_notice:
+      'Die Zugriffskontrolle ist aktiviert. Nur Benutzer, die mindestens einer Regel entsprechen, können auf diese App zugreifen.',
+    disabled_notice:
+      'Die Zugriffskontrolle ist deaktiviert. Alle registrierten Benutzer können auf diese App zugreifen.',
+    load_error: 'Zugriffsregeln konnten nicht geladen werden.',
+    rules: 'Zugriffsregeln',
+    rules_description:
+      'Benutzer können auf diese App zugreifen, wenn sie einer der konfigurierten Regeln entsprechen.',
+    empty_rules_description: 'Es sind noch keine Regeln konfiguriert.',
+    rule_count: '{{count}} Regel',
+    rule_count_other: '{{count}} Regeln',
+    rule_users: 'Benutzer',
+    rule_users_description: 'Bestimmte Benutzer können auf diese App zugreifen.',
+    rule_user_roles: 'Benutzerrollen',
+    rule_user_roles_description:
+      'Benutzer mit ausgewählten Benutzerrollen können auf diese App zugreifen.',
+    rule_organizations: 'Organisationen',
+    rule_organizations_description:
+      'Alle aktuellen und zukünftigen Mitglieder der ausgewählten Organisationen können auf diese App zugreifen.',
+    rule_organization_roles: 'Organisationsrollen',
+    rule_organization_roles_description:
+      'Mitglieder mit ausgewählten Organisationsrollen in ausgewählten Organisationen können auf diese App zugreifen.',
+  },
   branding: {
     name: 'Branding',
     description:

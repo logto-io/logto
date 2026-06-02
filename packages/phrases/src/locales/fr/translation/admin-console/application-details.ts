@@ -121,6 +121,39 @@ const application_details = {
   field_custom_data_tip:
     'Informations supplémentaires personnalisées de l’application non listées dans les propriétés prédéfinies de l’application, telles que les paramètres et configurations spécifiques à l’entreprise.',
   custom_data_invalid: 'Les données personnalisées doivent être un objet JSON valide.',
+  access_control: {
+    name: 'Règles',
+    title: 'Contrôle d’accès au niveau de l’application',
+    description:
+      'Limitez les utilisateurs autorisés à se connecter à cette application en configurant des règles d’accès.',
+    enable: 'Activer le contrôle d’accès',
+    enable_description:
+      'Seuls les utilisateurs correspondant à au moins une règle configurée peuvent accéder à cette application.',
+    enable_without_rules_notice:
+      'Ajoutez au moins une règle d’accès avant d’activer le contrôle d’accès.',
+    enabled_notice:
+      'Le contrôle d’accès est activé. Seuls les utilisateurs correspondant à au moins une règle peuvent accéder à cette application.',
+    disabled_notice:
+      'Le contrôle d’accès est désactivé. Tous les utilisateurs inscrits peuvent accéder à cette application.',
+    load_error: 'Échec du chargement des règles de contrôle d’accès.',
+    rules: 'Règles d’accès',
+    rules_description:
+      'Les utilisateurs peuvent accéder à cette application lorsqu’ils correspondent à l’une des règles configurées.',
+    empty_rules_description: 'Aucune règle n’est encore configurée.',
+    rule_count: '{{count}} règle',
+    rule_count_other: '{{count}} règles',
+    rule_users: 'Utilisateurs',
+    rule_users_description: 'Des utilisateurs spécifiques peuvent accéder à cette application.',
+    rule_user_roles: 'Rôles utilisateur',
+    rule_user_roles_description:
+      'Les utilisateurs associés aux rôles utilisateur sélectionnés peuvent accéder à cette application.',
+    rule_organizations: 'Organisations',
+    rule_organizations_description:
+      'Tous les membres actuels et futurs des organisations sélectionnées peuvent accéder à cette application.',
+    rule_organization_roles: 'Rôles d’organisation',
+    rule_organization_roles_description:
+      'Les membres disposant des rôles d’organisation sélectionnés dans les organisations sélectionnées peuvent accéder à cette application.',
+  },
   branding: {
     name: 'Marque',
     description:

@@ -120,6 +120,34 @@ const application_details = {
   field_custom_data_tip:
     'Additional custom application info not listed in the pre-defined application properties, such as business-specific settings and configurations.',
   custom_data_invalid: 'Custom data must be a valid JSON object',
+  access_control: {
+    name: 'Rules',
+    title: 'App-level access control',
+    description:
+      'Restrict which users can sign in to this application by configuring access rules.',
+    enable: 'Enable access control',
+    enable_description: 'Only users who match at least one configured rule can access this app.',
+    enable_without_rules_notice: 'Add at least one access rule before enabling access control.',
+    enabled_notice:
+      'Access control is on. Only users who match at least one rule can access this app.',
+    disabled_notice: 'Access control is off. All registered users can access this app.',
+    load_error: 'Failed to load access control rules.',
+    rules: 'Access rules',
+    rules_description: 'Users can access this app when they match any one of the configured rules.',
+    empty_rules_description: 'No rules are configured yet.',
+    rule_count: '{{count}} rule',
+    rule_count_other: '{{count}} rules',
+    rule_users: 'Users',
+    rule_users_description: 'Specific users can access this app.',
+    rule_user_roles: 'User roles',
+    rule_user_roles_description: 'Users assigned to selected user roles can access this app.',
+    rule_organizations: 'Organizations',
+    rule_organizations_description:
+      'All current and future members of selected organizations can access this app.',
+    rule_organization_roles: 'Organization roles',
+    rule_organization_roles_description:
+      'Members with selected organization roles in selected organizations can access this app.',
+  },
   branding: {
     name: 'Branding',
     description: 'Customize your app logo and branding color for the app-level experience.',
