@@ -38,8 +38,12 @@ const OneTimeToken = () => {
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
-  const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn);
-  const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register);
+  const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
+    replace: true,
+  });
+  const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
+    replace: true,
+  });
 
   /**
    * Update interaction event to `Register`, and then identify user and submit.
