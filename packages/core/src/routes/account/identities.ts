@@ -15,10 +15,7 @@ import { assertCanDeleteSocialIdentity } from '#src/utils/user.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
-import {
-  assertIdentityVerifiedIfRequired,
-  hasSecurityVerificationMethod,
-} from './utils/has-security-verification-method.js';
+import { assertIdentityVerifiedIfRequired } from './utils/has-security-verification-method.js';
 
 export default function identitiesRoutes<T extends UserRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
@@ -176,11 +173,6 @@ export default function identitiesRoutes<T extends UserRouter>(
     `${accountApiPrefix}/identities/:target`,
     koaGuard({
       params: z.object({ target: z.string() }),
-      body: z
-        .object({
-          newIdentifierVerificationRecordId: z.string(),
-        })
-        .optional(),
       status: [204, 400, 401, 404, 422],
     }),
     async (ctx, next) => {
@@ -199,32 +191,6 @@ export default function identitiesRoutes<T extends UserRouter>(
         userSsoIdentities.findUserSsoIdentitiesByUserId(userId),
       ]);
       assertIdentityVerifiedIfRequired(user, identityVerified);
-
-      if (!hasSecurityVerificationMethod(user)) {
-        const { newIdentifierVerificationRecordId } = ctx.guard.body ?? {};
-        assertThat(
-          newIdentifierVerificationRecordId,
-          new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-        );
-
-        const verificationRecord = await buildVerificationRecordByIdAndType({
-          type: VerificationType.Social,
-          id: newIdentifierVerificationRecordId,
-          queries,
-          libraries,
-        });
-        assertThat(verificationRecord.isVerified, 'verification_record.not_found');
-
-        const {
-          socialIdentity: { target: verifiedTarget, userInfo },
-        } = await verificationRecord.toUserProfile();
-        const existingIdentity = user.identities[target];
-
-        assertThat(verifiedTarget === target && existingIdentity?.userId === userInfo.id, {
-          code: 'user.identity_not_exist',
-          status: 404,
-        });
-      }
 
       assertCanDeleteSocialIdentity(user, target, ssoIdentities.length);
 
