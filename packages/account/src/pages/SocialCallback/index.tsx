@@ -57,11 +57,12 @@ const SocialCallback = () => {
   const connectorName = connector ? getLocalizedConnectorName(connector, language) : undefined;
   const storedSocialFlow = connectorId ? accountStorage.socialFlow.get(connectorId) : undefined;
 
-  const redirectToReverify = useCallback(() => {
+  const redirectToReverify = useCallback(async () => {
     if (!connectorId) {
       return;
     }
 
+    await refreshUserInfo();
     setStartedConnectorId(undefined);
     setVerificationId(undefined);
     setToast(t('account_center.verification.verification_required'));
@@ -71,7 +72,15 @@ const SocialCallback = () => {
         : getSocialAddRoute(connectorId),
       { replace: true }
     );
-  }, [connectorId, navigate, setToast, setVerificationId, storedSocialFlow?.mode, t]);
+  }, [
+    connectorId,
+    navigate,
+    refreshUserInfo,
+    setToast,
+    setVerificationId,
+    storedSocialFlow?.mode,
+    t,
+  ]);
 
   const finishLinkFlow = useCallback(async () => {
     if (!connectorId || !connectorName) {

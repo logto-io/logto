@@ -64,7 +64,8 @@ export default function identitiesRoutes<T extends UserRouter>(
 
     await checkIdentifierCollision({ identity: { target, id: userInfo.id } }, user.id);
 
-    const existingIdentity = user.identities[target];
+    const currentUser = await findUserById(user.id);
+    const existingIdentity = currentUser.identities[target];
 
     if (!allowReplace) {
       assertThat(!existingIdentity, 'user.identity_already_in_use');
@@ -72,7 +73,7 @@ export default function identitiesRoutes<T extends UserRouter>(
 
     const updatedUser = await updateUserById(user.id, {
       identities: {
-        ...user.identities,
+        ...currentUser.identities,
         [target]: {
           userId: userInfo.id,
           details: userInfo,

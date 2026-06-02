@@ -362,6 +362,15 @@
         "responses": {
           "204": {
             "description": "The identity was added successfully."
+          },
+          "400": {
+            "description": "The request body is invalid or the social identity field is not editable."
+          },
+          "401": {
+            "description": "Permission denied, identity verification is required or insufficient scope."
+          },
+          "422": {
+            "description": "The new verification record is invalid or the identity is already in use."
           }
         }
       },
