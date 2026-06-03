@@ -53,6 +53,12 @@ const VerifiedAction = () => {
       case 'remove-social': {
         return accountCenterSettings.fields.social === AccountCenterControlValue.Edit;
       }
+      case 'load-sessions': {
+        return (
+          accountCenterSettings.fields.session !== undefined &&
+          accountCenterSettings.fields.session !== AccountCenterControlValue.Off
+        );
+      }
       default: {
         return false;
       }
