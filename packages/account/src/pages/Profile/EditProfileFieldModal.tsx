@@ -109,6 +109,7 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
 
   const [values, setValues] = useState<Record<string, EditableValue>>({});
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!field) {
@@ -136,6 +137,7 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
       return;
     }
 
+    setIsSubmitting(true);
     const [error] = await submitFieldUpdate({
       field,
       fields,
@@ -147,11 +149,13 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
     });
 
     if (error) {
+      setIsSubmitting(false);
       await handleError(error);
       return;
     }
 
     await onUpdated();
+    setIsSubmitting(false);
     onClose();
   }, [
     field,
@@ -274,6 +278,7 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
             <Button
               title="action.save"
               type="primary"
+              isLoading={isSubmitting}
               onClick={() => {
                 void handleSubmit();
               }}
