@@ -185,6 +185,35 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
 
+  /**
+   * Groups of usernames that collide once compared case-insensitively (i.e. would clash under a
+   * case-insensitive policy). Each row is one `lower(username)` value shared by more than one user,
+   * with the colliding user ids. Ordered oldest-group-first and capped by `limit` for sampling.
+   */
+  const findUsernameCaseConflicts = async (limit: number) =>
+    pool.any<{ usernameLower: string; userIds: string[] }>(sql`
+      select lower(${fields.username}) as "usernameLower",
+             array_agg(${fields.id}) as "userIds"
+      from ${table}
+      where ${fields.username} is not null
+      group by lower(${fields.username})
+      having count(*) > 1
+      order by min(${fields.createdAt})
+      limit ${limit}
+    `);
+
+  /** Total number of case-insensitive username collision groups (see {@link findUsernameCaseConflicts}). */
+  const countUsernameCaseConflicts = async () =>
+    pool.oneFirst<number>(sql`
+      select count(*)::int from (
+        select 1
+        from ${table}
+        where ${fields.username} is not null
+        group by lower(${fields.username})
+        having count(*) > 1
+      ) as conflicts
+    `);
+
   const hasUserWithId = async (id: string) =>
     pool.exists(sql`
       select ${fields.id}
@@ -443,6 +472,8 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     findUserByWebAuthnCredential,
     findUserByIdentity,
     hasUser,
+    findUsernameCaseConflicts,
+    countUsernameCaseConflicts,
     hasUserWithId,
     hasUserWithEmail,
     hasUserWithPhone,

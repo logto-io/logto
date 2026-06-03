@@ -47,6 +47,9 @@ const sign_in_experiences = {
     "La politique d'expiration du mot de passe n'est pas activée. Activez-la dans les paramètres de l'expérience de connexion avant de faire expirer les mots de passe.",
   password_expiration_invalid_period_days:
     'Lorsque l’expiration du mot de passe est activée, reminderPeriodDays doit être inférieur à validPeriodDays.',
+  /** UNTRANSLATED */
+  username_policy_case_conflicts_exist:
+    'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
 };
 
 export default Object.freeze(sign_in_experiences);

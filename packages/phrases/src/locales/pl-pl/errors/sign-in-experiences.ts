@@ -44,6 +44,9 @@ const sign_in_experiences = {
     'Polityka wygasania haseł nie jest włączona. Włącz ją w ustawieniach logowania przed wygaszeniem haseł.',
   password_expiration_invalid_period_days:
     'Gdy wygaśnięcie hasła jest włączone, reminderPeriodDays musi być mniejsze niż validPeriodDays.',
+  /** UNTRANSLATED */
+  username_policy_case_conflicts_exist:
+    'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
 };
 
 export default Object.freeze(sign_in_experiences);
