@@ -105,6 +105,15 @@ const account_center = {
     disable_2_step_verification: 'Вимкнути',
     no_verification_method_warning:
       'Ви не додали другий метод верифікації. Додайте принаймні один, щоб увімкнути двоетапну верифікацію при вході.',
+    sessions: 'Sessions',
+    session_current: 'Current session',
+    session_other: 'Other session',
+    session_signed_in: 'Signed in {{date}}',
+    session_revoke: 'Sign out',
+    session_revoke_confirmation_title: 'Sign out session',
+    session_revoke_confirmation_description:
+      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
+    session_no_other: 'No other active sessions.',
     account_removal: 'Видалення акаунта',
     delete_your_account: 'Видаліть свій акаунт',
     delete_account: 'Видалити акаунт',

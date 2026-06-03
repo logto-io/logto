@@ -109,6 +109,15 @@ const account_center = {
     disable_2_step_verification: 'Désactiver',
     no_verification_method_warning:
       "Vous n'avez pas ajouté de deuxième méthode de vérification. Ajoutez-en au moins une pour activer la vérification en deux étapes lors de la connexion.",
+    sessions: 'Sessions',
+    session_current: 'Current session',
+    session_other: 'Other session',
+    session_signed_in: 'Signed in {{date}}',
+    session_revoke: 'Sign out',
+    session_revoke_confirmation_title: 'Sign out session',
+    session_revoke_confirmation_description:
+      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
+    session_no_other: 'No other active sessions.',
     account_removal: 'Suppression du compte',
     delete_your_account: 'Supprimez votre compte',
     delete_account: 'Supprimer le compte',
