@@ -44,6 +44,8 @@ jest.mock('@ac/apis/social', () => ({
 
 jest.mock('@ac/components/VerificationMethodList', () => () => <div>Verification methods</div>);
 
+jest.mock('@ac/components/GlobalLoading', () => () => <div>Global loading</div>);
+
 const connectorId = 'google-web';
 
 const googleConnector = {
@@ -215,10 +217,47 @@ describe('<SocialFlow />', () => {
         mode: 'add',
         pageContext: {
           verificationId: undefined,
+          userInfo: {
+            hasSecurityVerificationMethod: true,
+          },
         },
       });
 
       expect(getByText('Verification methods')).toBeTruthy();
+    });
+
+    it('shows loading while userInfo is loading', () => {
+      const { getByText } = renderSocialFlow({
+        mode: 'add',
+        pageContext: {
+          verificationId: undefined,
+          userInfo: undefined,
+          isLoadingUserInfo: true,
+        },
+      });
+
+      expect(getByText('Global loading')).toBeTruthy();
+    });
+
+    it('skips verification methods when user has no security verification method', async () => {
+      jest.mocked(createSocialVerification).mockResolvedValue(mockCreateSocialVerificationResult);
+
+      renderSocialFlow({
+        mode: 'add',
+        pageContext: {
+          verificationId: undefined,
+          userInfo: {
+            hasPassword: false,
+            primaryEmail: undefined,
+            primaryPhone: undefined,
+            hasSecurityVerificationMethod: false,
+          },
+        },
+      });
+
+      await waitFor(() => {
+        expect(createSocialVerification).toHaveBeenCalled();
+      });
     });
   });
 
@@ -355,6 +394,7 @@ describe('<SocialFlow />', () => {
     });
 
     it('resets verification when permission denied on link', async () => {
+      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
       const setVerificationId = jest.fn();
       const setToast = jest.fn();
 
@@ -370,10 +410,11 @@ describe('<SocialFlow />', () => {
 
       renderSocialFlow({
         mode: 'add',
-        pageContext: { setVerificationId, setToast },
+        pageContext: { refreshUserInfo, setVerificationId, setToast },
       });
 
       await waitFor(() => {
+        expect(refreshUserInfo).toHaveBeenCalled();
         expect(setVerificationId).toHaveBeenCalledWith(undefined);
         expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
       });
@@ -441,6 +482,7 @@ describe('<SocialFlow />', () => {
     });
 
     it('resets verification when permission denied on remove', async () => {
+      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
       const setVerificationId = jest.fn();
       const setToast = jest.fn();
 
@@ -451,6 +493,7 @@ describe('<SocialFlow />', () => {
       renderSocialFlow({
         mode: 'remove',
         pageContext: {
+          refreshUserInfo,
           setVerificationId,
           setToast,
           userInfo: {
@@ -465,6 +508,7 @@ describe('<SocialFlow />', () => {
       });
 
       await waitFor(() => {
+        expect(refreshUserInfo).toHaveBeenCalled();
         expect(setVerificationId).toHaveBeenCalledWith(undefined);
         expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
       });

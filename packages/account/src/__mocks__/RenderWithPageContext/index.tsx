@@ -138,6 +138,7 @@ export const mockUserInfo = {
   identities: {},
   profile: {},
   hasPassword: true,
+  hasSecurityVerificationMethod: true,
 } satisfies Partial<UserProfileResponse>;
 
 const noopAsync = async (): Promise<void> => undefined;

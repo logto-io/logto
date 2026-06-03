@@ -57,6 +57,10 @@ export const hasAvailableSecurityVerificationMethod = (
   Boolean(userInfo?.primaryEmail) ||
   Boolean(userInfo?.primaryPhone);
 
+export const canManageSocialIdentitiesWithoutVerification = (
+  userInfo?: Partial<UserProfileResponse>
+): boolean => userInfo?.hasSecurityVerificationMethod === false;
+
 export const canSetInitialPasswordWithoutVerification = (
   userInfo?: Partial<UserProfileResponse>,
   accountCenterFields?: AccountCenter['fields']

@@ -302,6 +302,7 @@ describe('<SocialCallback />', () => {
     });
 
     it('resets verification when permission denied on link', async () => {
+      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
       const setVerificationId = jest.fn();
       const setToast = jest.fn();
 
@@ -310,10 +311,11 @@ describe('<SocialCallback />', () => {
         .mockRejectedValue(createHttpError('verification_record.permission_denied', 401));
 
       renderSocialCallback({
-        pageContext: { setVerificationId, setToast },
+        pageContext: { refreshUserInfo, setVerificationId, setToast },
       });
 
       await waitFor(() => {
+        expect(refreshUserInfo).toHaveBeenCalled();
         expect(setVerificationId).toHaveBeenCalledWith(undefined);
         expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
       });
@@ -373,6 +375,7 @@ describe('<SocialCallback />', () => {
     });
 
     it('resets verification when permission denied during change flow', async () => {
+      const refreshUserInfo = jest.fn().mockResolvedValue(undefined);
       const setVerificationId = jest.fn();
       const setToast = jest.fn();
 
@@ -382,6 +385,7 @@ describe('<SocialCallback />', () => {
 
       renderSocialCallback({
         pageContext: {
+          refreshUserInfo,
           setVerificationId,
           setToast,
           userInfo: {
@@ -396,6 +400,7 @@ describe('<SocialCallback />', () => {
       });
 
       await waitFor(() => {
+        expect(refreshUserInfo).toHaveBeenCalled();
         expect(setVerificationId).toHaveBeenCalledWith(undefined);
         expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
       });
