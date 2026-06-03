@@ -16,16 +16,13 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import DetailsForm from '@/components/DetailsForm';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
-import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
-import OrganizationList from '@/components/OrganizationList';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedApp } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
-import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
-import { organizations } from '@/hooks/use-console-routes/routes/organizations';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
@@ -34,12 +31,12 @@ import { trySubmitSafe } from '@/utils/form';
 import Branding from '../components/Branding';
 import Permissions from '../components/Permissions';
 
+import ApplicationAccessControl from './ApplicationAccessControl';
 import BackchannelLogout from './BackchannelLogout';
 import ConcurrentDeviceLimit from './ConcurrentDeviceLimit';
 import EndpointsAndCredentials, { type ApplicationSecretRow } from './EndpointsAndCredentials';
 import GuideDrawer from './GuideDrawer';
-import MachineLogs from './MachineLogs';
-import MachineToMachineApplicationRoles from './MachineToMachineApplicationRoles';
+import MachineToMachineTabs from './MachineToMachineTabs';
 import RefreshTokenSettings from './RefreshTokenSettings';
 import Settings from './Settings';
 import TokenExchangeSettings from './TokenExchangeSettings';
@@ -81,6 +78,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
     ApplicationType.Traditional,
     ApplicationType.Protected,
   ].includes(data.type);
+  const hasRules = isDevFeaturesEnabled && data.type !== ApplicationType.MachineToMachine;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -214,6 +212,11 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
             {t('application_details.branding.name')}
           </TabNavItem>
         )}
+        {hasRules && (
+          <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Rules}`}>
+            {t('application_details.access_control.name')}
+          </TabNavItem>
+        )}
       </TabNav>
       <TabWrapper
         isActive={tab === ApplicationDetailsTabs.Settings}
@@ -227,7 +230,6 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
             onSubmit={onSubmit}
           >
             <Settings data={data} />
-            {/* Protected apps will reference this section in <ProtectedAppSettings /> component */}
             {data.type !== ApplicationType.Protected && (
               <EndpointsAndCredentials
                 app={data}
@@ -250,44 +252,12 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         )}
       </TabWrapper>
       {data.type === ApplicationType.MachineToMachine && (
-        <>
-          <TabWrapper
-            isActive={tab === ApplicationDetailsTabs.Roles}
-            className={styles.tabContainer}
-          >
-            <MachineToMachineApplicationRoles application={data} />
-          </TabWrapper>
-          <TabWrapper
-            isActive={tab === ApplicationDetailsTabs.Logs}
-            className={styles.tabContainer}
-          >
-            <MachineLogs applicationId={data.id} />
-          </TabWrapper>
-          <TabWrapper
-            isActive={tab === ApplicationDetailsTabs.Organizations}
-            className={styles.tabContainer}
-          >
-            <OrganizationList
-              type="application"
-              data={data}
-              placeholder={
-                <EmptyDataPlaceholder
-                  title={
-                    <Trans
-                      i18nKey="admin_console.application_details.no_organization_placeholder"
-                      components={{ a: <TextLink to={'/' + organizations.path} /> }}
-                    />
-                  }
-                />
-              }
-            />
-          </TabWrapper>
-        </>
+        <MachineToMachineTabs application={data} activeTab={tab} />
       )}
       {data.isThirdParty && (
         <TabWrapper
-          isActive={tab === ApplicationDetailsTabs.Permissions}
           className={styles.tabContainer}
+          isActive={tab === ApplicationDetailsTabs.Permissions}
         >
           <Permissions application={data} />
         </TabWrapper>
@@ -299,6 +269,15 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         >
           {/* isActive is needed to support conditional render UnsavedChangesAlertModal */}
           <Branding application={data} isActive={tab === ApplicationDetailsTabs.Branding} />
+        </TabWrapper>
+      )}
+      {hasRules && (
+        <TabWrapper isActive={tab === ApplicationDetailsTabs.Rules} className={styles.tabContainer}>
+          <ApplicationAccessControl
+            application={data}
+            isActive={tab === ApplicationDetailsTabs.Rules}
+            onApplicationUpdated={onApplicationUpdated}
+          />
         </TabWrapper>
       )}
     </>

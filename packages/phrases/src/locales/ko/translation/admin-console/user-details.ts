@@ -19,6 +19,13 @@ const user_details = {
     new_password: '새로운 비밀번호:',
     password: '비밀번호:',
   },
+  expire_password: {
+    button: '만료',
+    title: '이 비밀번호를 만료시키시겠습니까?',
+    content: '사용자는 다음 로그인 시 비밀번호를 재설정해야 합니다. 이 작업은 되돌릴 수 없습니다.',
+    success: '사용자의 비밀번호가 만료된 것으로 표시되었습니다.',
+    not_enabled_tooltip: '비밀번호 만료 정책이 활성화되지 않았습니다.',
+  },
   tab_settings: '설정',
   tab_roles: '사용자 역할',
   tab_logs: '사용자 기록',

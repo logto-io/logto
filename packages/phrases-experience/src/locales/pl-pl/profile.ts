@@ -39,6 +39,10 @@ const profile = {
     error_file_size: 'Rozmiar pliku nie może przekraczać {{limit}}.',
     error_storage_not_configured: 'Nie udało się przesłać zdjęcia. Spróbuj ponownie później.',
     error_upload: 'Nie udało się przesłać zdjęcia. Spróbuj ponownie.',
+    error_save: 'Nie udało się zapisać zdjęcia. Spróbuj ponownie.',
+    crop_title: 'Przytnij zdjęcie',
+    zoom: 'Powiększenie',
+    error_crop: 'Nie udało się przyciąć obrazu. Spróbuj ponownie.',
   },
 };
 

@@ -37,6 +37,7 @@ export type UserInfo = z.infer<typeof userInfoGuard>;
 
 export const userProfileResponseGuard = userInfoGuard.extend({
   hasPassword: z.boolean().optional(),
+  hasSecurityVerificationMethod: z.boolean().optional(),
   ssoIdentities: z.array(UserSsoIdentities.guard).optional(),
 });
 

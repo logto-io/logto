@@ -121,6 +121,39 @@ const application_details = {
   field_custom_data_tip:
     'Informações adicionais personalizadas da aplicação não listadas nas propriedades pré-definidas da aplicação, como configurações e configurações específicas dos negócios.',
   custom_data_invalid: 'Os dados personalizados devem ser um objeto JSON válido',
+  access_control: {
+    name: 'Regras',
+    title: 'Controle de acesso no nível do aplicativo',
+    description:
+      'Restrinja quais usuários podem entrar neste aplicativo configurando regras de acesso.',
+    enable: 'Ativar controle de acesso',
+    enable_description:
+      'Somente usuários que corresponderem a pelo menos uma regra configurada podem acessar este app.',
+    enable_without_rules_notice:
+      'Adicione pelo menos uma regra de acesso antes de ativar o controle de acesso.',
+    enabled_notice:
+      'O controle de acesso está ativado. Somente usuários que corresponderem a pelo menos uma regra podem acessar este app.',
+    disabled_notice:
+      'O controle de acesso está desativado. Todos os usuários registrados podem acessar este app.',
+    load_error: 'Falha ao carregar as regras de controle de acesso.',
+    rules: 'Regras de acesso',
+    rules_description:
+      'Os usuários podem acessar este app quando corresponderem a qualquer uma das regras configuradas.',
+    empty_rules_description: 'Nenhuma regra foi configurada ainda.',
+    rule_count: '{{count}} regra',
+    rule_count_other: '{{count}} regras',
+    rule_users: 'Usuários',
+    rule_users_description: 'Usuários específicos podem acessar este app.',
+    rule_user_roles: 'Funções de usuário',
+    rule_user_roles_description:
+      'Usuários atribuídos às funções de usuário selecionadas podem acessar este app.',
+    rule_organizations: 'Organizações',
+    rule_organizations_description:
+      'Todos os membros atuais e futuros das organizações selecionadas podem acessar este app.',
+    rule_organization_roles: 'Funções da organização',
+    rule_organization_roles_description:
+      'Membros com as funções da organização selecionadas nas organizações selecionadas podem acessar este app.',
+  },
   branding: {
     name: 'Branding',
     description:

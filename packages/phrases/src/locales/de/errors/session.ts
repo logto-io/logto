@@ -56,6 +56,10 @@ const session = {
       'Die Relying-Party-ID stimmt nicht überein. Bitte verwenden Sie den richtigen Client zum Anmelden.',
     sso_users_not_allowed: 'Die Passkey-Anmeldeoption ist für SSO-Benutzer nicht verfügbar.',
   },
+  password_expiration: {
+    reset_not_allowed:
+      'Das Zurücksetzen des Passworts ist nur erlaubt, nachdem das Passwort in der aktuellen Anmeldesitzung abgelaufen ist.',
+  },
   sso_enabled:
     'Einmaliges Anmelden ist für diese gegebene E-Mail aktiviert. Bitte melden Sie sich mit SSO an.',
   captcha_required: 'Captcha ist erforderlich.',

@@ -4,6 +4,7 @@ export enum ApplicationDetailsTabs {
   Logs = 'logs',
   Branding = 'branding',
   Permissions = 'permissions',
+  Rules = 'rules',
   Organizations = 'organizations',
   AttributeMapping = 'attribute-mapping',
 }

@@ -40,6 +40,10 @@ const profile = {
     error_storage_not_configured:
       'Foto konnte nicht hochgeladen werden. Bitte versuchen Sie es später erneut.',
     error_upload: 'Foto konnte nicht hochgeladen werden. Bitte versuchen Sie es erneut.',
+    error_save: 'Ihr Foto konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.',
+    crop_title: 'Foto zuschneiden',
+    zoom: 'Zoom',
+    error_crop: 'Bild konnte nicht zugeschnitten werden. Bitte versuchen Sie es erneut.',
   },
 };
 

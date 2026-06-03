@@ -1,3 +1,5 @@
+import { conditional } from '@silverhand/essentials';
+
 import { verificationRecordIdHeader } from './account';
 import { createAuthenticatedKy } from './base-ky';
 
@@ -39,42 +41,48 @@ export const verifySocialVerification = async (
 
 export const linkSocialIdentity = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   socialVerificationRecordId: string
 ) => {
   await createAuthenticatedKy(accessToken).post('/api/my-account/identities', {
     json: {
       newIdentifierVerificationRecordId: socialVerificationRecordId,
     },
-    headers: {
-      [verificationRecordIdHeader]: verificationRecordId,
-    },
+    ...conditional(
+      verificationRecordId && {
+        headers: { [verificationRecordIdHeader]: verificationRecordId },
+      }
+    ),
   });
 };
 
 export const deleteSocialIdentity = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   target: string
 ) => {
   await createAuthenticatedKy(accessToken).delete(`/api/my-account/identities/${target}`, {
-    headers: {
-      [verificationRecordIdHeader]: verificationRecordId,
-    },
+    ...conditional(
+      verificationRecordId && {
+        headers: { [verificationRecordIdHeader]: verificationRecordId },
+      }
+    ),
   });
 };
 
 export const replaceSocialIdentity = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   socialVerificationRecordId: string
 ): Promise<void> => {
   await createAuthenticatedKy(accessToken).put('/api/my-account/identities', {
     json: {
       newIdentifierVerificationRecordId: socialVerificationRecordId,
     },
-    headers: {
-      [verificationRecordIdHeader]: verificationRecordId,
-    },
+    ...conditional(
+      verificationRecordId && {
+        headers: { [verificationRecordIdHeader]: verificationRecordId },
+      }
+    ),
   });
 };

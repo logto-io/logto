@@ -2,8 +2,10 @@ import { jsonObjectGuard } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import type { Context } from 'koa';
 import type { PromptDetail, Provider } from 'oidc-provider';
+import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
+import { markAppLevelAccessControlChecked } from '#src/oidc/application-access-control.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -91,6 +93,7 @@ export const consent = async ({
   missingOIDCScopes = [],
   resourceScopesToGrant = {},
   resourceScopesToReject = {},
+  markAppLevelAccessControlChecked: shouldMarkAppLevelAccessControlChecked = false,
 }: {
   ctx: Context;
   provider: Provider;
@@ -99,23 +102,28 @@ export const consent = async ({
   missingOIDCScopes?: string[];
   resourceScopesToGrant?: Record<string, string[]>;
   resourceScopesToReject?: Record<string, string[]>;
+  markAppLevelAccessControlChecked?: boolean;
 }) => {
   const {
     session,
     grantId,
-    params: { client_id },
+    params: { client_id: clientId },
   } = interactionDetails;
 
   assertThat(session, 'session.not_found');
+  assertThat(
+    clientId && typeof clientId === 'string',
+    new errors.InvalidClient('client must be available')
+  );
 
   const { accountId } = session;
 
   const grant =
     conditional(grantId && (await provider.Grant.find(grantId))) ??
-    new provider.Grant({ accountId, clientId: String(client_id) });
+    new provider.Grant({ accountId, clientId });
 
   await Promise.all([
-    saveUserFirstConsentedAppId(queries, accountId, String(client_id)),
+    saveUserFirstConsentedAppId(queries, accountId, clientId),
     saveInteractionLastSubmissionToSession(queries, interactionDetails),
   ]);
 
@@ -133,7 +141,17 @@ export const consent = async ({
   }
 
   const finalGrantId = await grant.save();
+  const result = {
+    consent: { grantId: finalGrantId },
+  };
 
   // Configure consent
-  return updateInteractionResult(ctx, provider, { consent: { grantId: finalGrantId } }, true);
+  return updateInteractionResult(
+    ctx,
+    provider,
+    shouldMarkAppLevelAccessControlChecked
+      ? markAppLevelAccessControlChecked(result, clientId, accountId)
+      : result,
+    true
+  );
 };

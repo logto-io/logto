@@ -32,6 +32,9 @@ const error = {
   terms_acceptance_required: 'Şartların kabulü gerekli',
   terms_acceptance_required_description: 'Devam etmek için şartları kabul etmelisiniz.',
   something_went_wrong: 'Bir şeyler yanlış gitti',
+  access_denied: 'Erişim reddedildi',
+  application_access_denied:
+    'Bu uygulamaya erişim izniniz yok. Yardım için lütfen yöneticinizle iletişime geçin.',
   feature_not_enabled:
     'Bu özelliğe erişim izniniz yok. Yardım için lütfen yöneticinizle iletişime geçin.',
 };

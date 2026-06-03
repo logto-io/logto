@@ -80,6 +80,11 @@
   }
 }
 
+.empty {
+  flex: 1;
+  min-height: 200px;
+}
+
 :global(body.mobile) {
   .row {
     display: flex;

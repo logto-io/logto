@@ -365,4 +365,57 @@ export const signUpProfileFieldsGuard = z.array(signUpProfileFieldItemGuard);
 
 export type SignUpProfileFields = z.infer<typeof signUpProfileFieldsGuard>;
 
+/**
+ * Password lifecycle policy for configuring password expiration and rotation.
+ *
+ * @remarks
+ * This policy is evaluated server-side during sign-in (after local password verification) to determine
+ * whether the user's password has expired or is nearing expiration.
+ *
+ * - If the password age >= `validPeriodDays`, the sign-in is blocked and the user
+ *   must reset their password before continuing.
+ * - If the password age is within `reminderPeriodDays` of expiration, the user is
+ *   shown a skip-able prompt to reset their password.
+ */
+export type PasswordExpirationPolicy =
+  | {
+      /**
+       * Whether the password expiration policy is enabled.
+       * @default false
+       */
+      enabled?: false;
+    }
+  | {
+      enabled: true;
+      /**
+       * Number of days a password is valid before it expires and the user is
+       * forced to reset it on sign-in.
+       */
+      validPeriodDays: number;
+      /**
+       * Number of days before expiration at which the user will be reminded to
+       * reset their password. The reminder is skip-able.
+       */
+      reminderPeriodDays: number;
+    };
+
+export const passwordExpirationPolicyGuard = z
+  .union([
+    z
+      .object({
+        enabled: z.literal(false).optional(),
+      })
+      .strict(),
+    z
+      .object({
+        enabled: z.literal(true),
+        validPeriodDays: z.number().int().min(1),
+        reminderPeriodDays: z.number().int().min(0),
+      })
+      .strict(),
+  ])
+  .refine((policy) => !policy.enabled || policy.reminderPeriodDays < policy.validPeriodDays, {
+    path: ['reminderPeriodDays'],
+  }) satisfies z.ZodType<PasswordExpirationPolicy>;
+
 export { customUiCspGuard, type CustomUiCsp } from '@logto/core-kit';

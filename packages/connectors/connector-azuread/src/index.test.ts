@@ -70,7 +70,6 @@ describe('getUserInfo', () => {
 
     const connector = await createConnector({ getConfig: getConnectorConfig });
     const userInfo = connector.getUserInfo({ code: 'code', redirectUri: 'redirectUri' }, vi.fn());
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     await expect(userInfo).rejects.toThrow(expect.objectContaining({ code: 'invalid_response' }));
   });
 });

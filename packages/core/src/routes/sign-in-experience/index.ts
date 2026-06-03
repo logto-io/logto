@@ -4,16 +4,18 @@ import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
   ConnectorType,
   SignInExperiences,
-  ForgotPasswordMethod,
   MfaPolicy,
   ProductEvent,
   type SignInExperience,
+  ForgotPasswordMethod,
+  passwordExpirationPolicyGuard,
 } from '@logto/schemas';
 import { conditional, type Optional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import {
+  getForgotPasswordAvailability,
   validateSignUp,
   validateSignIn,
   parseEmailBlocklistPolicy,
@@ -85,6 +87,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           supportEmail: true,
           supportWebsiteUrl: true,
           unknownSessionRedirectUrl: true,
+          passwordExpiration: true,
         })
         .merge(
           object({
@@ -93,6 +96,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             supportEmail: string().email().optional().nullable().or(literal('')),
             supportWebsiteUrl: string().url().optional().nullable().or(literal('')),
             unknownSessionRedirectUrl: string().url().optional().nullable().or(literal('')),
+            passwordExpiration: passwordExpirationPolicyGuard,
           })
         )
         .partial(),
@@ -122,11 +126,22 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         forgotPasswordMethods,
         hideLogtoBranding,
         passkeySignIn,
+        passwordExpiration,
       } = rest;
 
       const normalizedSignUpProfileFields = await normalizeProfileFields(signUpProfileFields);
       const normalizedCustomUiCsp = conditional(customUiCsp && normalizeCustomUiCsp(customUiCsp));
       const hasCustomUiCsp = hasCustomUiCspSources(normalizedCustomUiCsp);
+
+      if (passwordExpiration) {
+        assertThat(
+          EnvSet.values.isDevFeaturesEnabled,
+          new RequestError({
+            code: 'request.invalid_input',
+            details: 'Password expiration is not available',
+          })
+        );
+      }
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -213,23 +228,73 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         mfa && !isMfaEnabled(mfa) && adaptiveMfa === undefined ? { enabled: false } : adaptiveMfa;
 
       if (forgotPasswordMethods) {
-        const hasEmailConnector = connectors.some(({ type }) => type === ConnectorType.Email);
-        const hasSmsConnector = connectors.some(({ type }) => type === ConnectorType.Sms);
+        const forgotPasswordAvailability = getForgotPasswordAvailability(
+          connectors,
+          forgotPasswordMethods
+        );
 
         for (const method of forgotPasswordMethods) {
-          if (method === ForgotPasswordMethod.EmailVerificationCode && !hasEmailConnector) {
+          if (
+            method === ForgotPasswordMethod.EmailVerificationCode &&
+            !forgotPasswordAvailability.email
+          ) {
             throw new RequestError({
               code: 'sign_in_experiences.forgot_password_method_requires_connector',
               method: 'email',
             });
           }
-          if (method === ForgotPasswordMethod.PhoneVerificationCode && !hasSmsConnector) {
+
+          if (
+            method === ForgotPasswordMethod.PhoneVerificationCode &&
+            !forgotPasswordAvailability.phone
+          ) {
             throw new RequestError({
               code: 'sign_in_experiences.forgot_password_method_requires_connector',
               method: 'sms',
             });
           }
         }
+      }
+
+      const passwordExpirationPayload =
+        passwordExpiration?.enabled === false
+          ? { enabled: false }
+          : {
+              ...currentSettings.passwordExpiration,
+              ...passwordExpiration,
+            };
+
+      const passwordExpirationResult = conditional(
+        EnvSet.values.isDevFeaturesEnabled &&
+          passwordExpirationPolicyGuard.safeParse(passwordExpirationPayload)
+      );
+
+      if (passwordExpirationResult) {
+        assertThat(
+          passwordExpirationResult.success,
+          new RequestError({
+            code: 'sign_in_experiences.password_expiration_invalid_period_days',
+            status: 422,
+          })
+        );
+      }
+
+      const currentPasswordExpiration =
+        passwordExpirationResult?.success === true ? passwordExpirationResult.data : undefined;
+
+      if (currentPasswordExpiration?.enabled) {
+        const forgotPasswordAvailability = getForgotPasswordAvailability(
+          connectors,
+          forgotPasswordMethods ?? currentSettings.forgotPasswordMethods
+        );
+
+        assertThat(
+          forgotPasswordAvailability.email || forgotPasswordAvailability.phone,
+          new RequestError({
+            code: 'sign_in_experiences.password_expiration_requires_forgot_password',
+            status: 422,
+          })
+        );
       }
 
       /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
@@ -310,6 +375,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           normalizedCustomUiCsp !== undefined && {
             customUiCsp: normalizedCustomUiCsp,
           }
+        ),
+        ...conditional(
+          EnvSet.values.isDevFeaturesEnabled &&
+            passwordExpiration &&
+            currentPasswordExpiration && { passwordExpiration: currentPasswordExpiration }
         ),
       };
 

@@ -39,6 +39,10 @@ const profile = {
     error_file_size: 'El tamaño del archivo no debe superar {{limit}}.',
     error_storage_not_configured: 'No se pudo subir la foto. Inténtalo de nuevo más tarde.',
     error_upload: 'No se pudo subir la foto. Inténtalo de nuevo.',
+    error_save: 'No se pudo guardar tu foto. Inténtalo de nuevo.',
+    crop_title: 'Recortar foto',
+    zoom: 'Zoom',
+    error_crop: 'No se pudo recortar la imagen. Inténtalo de nuevo.',
   },
 };
 

@@ -121,6 +121,39 @@ const application_details = {
   field_custom_data_tip:
     'Informações personalizadas adicionais da aplicação não listadas nas propriedades predefinidas da aplicação, como configurações e configurações específicas de negócios.',
   custom_data_invalid: 'Os dados personalizados devem ser um objeto JSON válido',
+  access_control: {
+    name: 'Regras',
+    title: 'Controlo de acesso ao nível da aplicação',
+    description:
+      'Restrinja que utilizadores podem iniciar sessão nesta aplicação configurando regras de acesso.',
+    enable: 'Ativar controlo de acesso',
+    enable_description:
+      'Apenas os utilizadores que correspondam a pelo menos uma regra configurada podem aceder a esta aplicação.',
+    enable_without_rules_notice:
+      'Adicione pelo menos uma regra de acesso antes de ativar o controlo de acesso.',
+    enabled_notice:
+      'O controlo de acesso está ativo. Apenas os utilizadores que correspondam a pelo menos uma regra podem aceder a esta aplicação.',
+    disabled_notice:
+      'O controlo de acesso está desativado. Todos os utilizadores registados podem aceder a esta aplicação.',
+    load_error: 'Falha ao carregar as regras de controlo de acesso.',
+    rules: 'Regras de acesso',
+    rules_description:
+      'Os utilizadores podem aceder a esta aplicação quando corresponderem a qualquer uma das regras configuradas.',
+    empty_rules_description: 'Ainda não foram configuradas regras.',
+    rule_count: '{{count}} regra',
+    rule_count_other: '{{count}} regras',
+    rule_users: 'Utilizadores',
+    rule_users_description: 'Utilizadores específicos podem aceder a esta aplicação.',
+    rule_user_roles: 'Funções de utilizador',
+    rule_user_roles_description:
+      'Utilizadores atribuídos às funções de utilizador selecionadas podem aceder a esta aplicação.',
+    rule_organizations: 'Organizações',
+    rule_organizations_description:
+      'Todos os membros atuais e futuros das organizações selecionadas podem aceder a esta aplicação.',
+    rule_organization_roles: 'Funções da organização',
+    rule_organization_roles_description:
+      'Membros com as funções da organização selecionadas nas organizações selecionadas podem aceder a esta aplicação.',
+  },
   branding: {
     name: 'Marca',
     description: 'Personalize o nome e o logótipo da sua aplicação no ecrã de consentimento.',

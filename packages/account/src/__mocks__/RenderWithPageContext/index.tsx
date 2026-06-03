@@ -124,6 +124,7 @@ export const mockSignInExperienceSettings = {
   passkeySignIn: {},
   isDevelopmentTenant: false,
   signUpProfileFields: null,
+  passwordExpiration: {},
 } satisfies SignInExperienceResponse;
 
 export const mockUserInfo = {
@@ -137,6 +138,7 @@ export const mockUserInfo = {
   identities: {},
   profile: {},
   hasPassword: true,
+  hasSecurityVerificationMethod: true,
 } satisfies Partial<UserProfileResponse>;
 
 const noopAsync = async (): Promise<void> => undefined;

@@ -38,6 +38,12 @@ const sign_in_experiences = {
     'รายการบล็อคอีเมลแบบกำหนดเองไม่ถูกต้อง: {{items, list(type:conjunction)}} แต่ละรายการต้องเป็นอีเมลหรือโดเมนอีเมลที่ถูกต้อง เช่น foo@example.com หรือ @example.com',
   forgot_password_method_requires_connector:
     'วิธีกู้คืนรหัสผ่านต้องมีตัวเชื่อมต่อ {{method}} ที่เกี่ยวข้องกำหนดค่าไว้',
+  password_expiration_requires_forgot_password:
+    'การหมดอายุของรหัสผ่านต้องมีวิธีลืมรหัสผ่านอย่างน้อยหนึ่งวิธีพร้อมคอนเน็กเตอร์ที่ใช้งานได้',
+  password_expiration_not_enabled:
+    'นโยบายการหมดอายุของรหัสผ่านไม่ได้เปิดใช้งาน โปรดเปิดใช้งานในการตั้งค่าประสบการณ์การลงชื่อเข้าใช้ก่อนที่จะกำหนดวันหมดอายุของรหัสผ่าน',
+  password_expiration_invalid_period_days:
+    'เมื่อเปิดใช้การหมดอายุรหัสผ่าน reminderPeriodDays ต้องน้อยกว่า validPeriodDays',
 };
 
 export default Object.freeze(sign_in_experiences);

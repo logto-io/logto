@@ -1,5 +1,10 @@
 import type { LanguageTag } from '@logto/language-kit';
-import { Theme, ConnectorType, ForgotPasswordMethod } from '@logto/schemas';
+import {
+  Theme,
+  ConnectorType,
+  ForgotPasswordMethod,
+  signInExperiencePreviewMessageSender,
+} from '@logto/schemas';
 import type { ConnectorMetadata, ConnectorResponse } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
@@ -119,7 +124,7 @@ function SignInExperiencePreview({
     }
 
     previewRef.current?.contentWindow?.postMessage(
-      { sender: 'ac_preview', config: configForUiPage },
+      { sender: signInExperiencePreviewMessageSender, config: configForUiPage },
       endpoint?.origin ?? ''
     );
   }, [endpoint?.origin, configForUiPage, customPhrases]);

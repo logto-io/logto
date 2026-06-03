@@ -5,6 +5,7 @@ import PageContext from '@/Providers/PageContextProvider/PageContext';
 import initI18n from '@/i18n/init';
 import { changeLanguage } from '@/i18n/utils';
 import type { PreviewConfig, SignInExperienceResponse } from '@/types';
+import { isTrustedPreviewMessage } from '@/utils/preview-message';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
 
 const usePreview = () => {
@@ -15,16 +16,17 @@ const usePreview = () => {
   useEffect(() => {
     // Listen to the message from the ancestor window
     const previewMessageHandler = async (event: MessageEvent) => {
-      // #event.data should be guarded at the provider's side
-      if (event.data.sender === 'ac_preview') {
-        // eslint-disable-next-line no-restricted-syntax
-        const previewConfig = event.data.config as PreviewConfig;
-
-        // Wait for i18n to be initialized
-        await initI18n(previewConfig.language);
-
-        setPreviewConfig(previewConfig);
+      if (!isTrustedPreviewMessage(event)) {
+        return;
       }
+
+      // eslint-disable-next-line no-restricted-syntax
+      const previewConfig = event.data.config as PreviewConfig;
+
+      // Wait for i18n to be initialized
+      await initI18n(previewConfig.language);
+
+      setPreviewConfig(previewConfig);
     };
 
     window.addEventListener('message', previewMessageHandler);

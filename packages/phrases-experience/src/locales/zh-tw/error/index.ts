@@ -30,6 +30,8 @@ const error = {
   terms_acceptance_required: '需要同意條款',
   terms_acceptance_required_description: '必須同意條款後才能繼續。',
   something_went_wrong: '出了些問題',
+  access_denied: '拒絕存取',
+  application_access_denied: '您沒有權限存取此應用程式。請聯繫管理員尋求協助。',
   feature_not_enabled: '您沒有權限存取此功能。請聯繫管理員尋求協助。',
 };
 

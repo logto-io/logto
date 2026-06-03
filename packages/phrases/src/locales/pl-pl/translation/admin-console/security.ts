@@ -87,6 +87,23 @@ const security = {
     custom_words: 'Niestandardowe słowa',
     custom_words_description: 'Słowa kontekstowe, niezależne od wielkości liter, jeden na linię.',
     custom_words_placeholder: 'Nazwa twojej usługi, nazwa firmy itp.',
+    password_expiration: 'Wygasanie haseł',
+    password_expiration_description:
+      'Wymagaj od użytkowników zresetowania hasła po określonej liczbie dni. Użytkownicy logujący się przez SSO lub klucz dostępu nie są objęci tą zasadą.',
+    enable_password_expiration: 'Włącz wygasanie haseł',
+    enable_password_expiration_description:
+      'Wymagaj od użytkowników okresowego resetowania hasła. Istniejący użytkownicy bez zapisanej daty zmiany hasła zostaną ocenieni na podstawie daty utworzenia konta.',
+    enable_password_expiration_tip:
+      'Wygasanie hasła można włączyć dopiero po skonfigurowaniu w doświadczeniu logowania co najmniej jednej metody odzyskiwania hasła z poprawnym konektorem.',
+    expiration_period: 'Okres ważności hasła (dni)',
+    expiration_period_description:
+      'Liczba dni, przez które hasło pozostaje ważne przed wygaśnięciem.',
+    expiration_period_error: 'Okres ważności hasła musi wynosić co najmniej 1 dzień.',
+    expiration_reminder: 'Przypomnienie o wygaśnięciu (dni przed wygaśnięciem)',
+    expiration_reminder_description:
+      'Liczba dni przed wygaśnięciem, aby ostrzec użytkowników i zachęcić do resetowania hasła. Użytkownicy mogą pominąć przypomnienie i kontynuować logowanie.',
+    expiration_reminder_error:
+      'Okres przypomnienia o wygaśnięciu musi mieścić się w przedziale od 0 do okresu ważności ({{max}} dni).',
   },
   sentinel_policy: {
     card_title: 'Blokada identyfikatora',

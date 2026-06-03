@@ -4,6 +4,7 @@ const password = {
   rejected: '密碼被拒絕。請檢查您的密碼是否符合要求。',
   invalid_legacy_password_format: '無效的舊密碼格式。',
   unsupported_legacy_hash_algorithm: '不支援的舊雜湊演算法：{{algorithm}}。',
+  expired: '您的密碼已過期。請重置密碼以繼續。',
 };
 
 export default Object.freeze(password);

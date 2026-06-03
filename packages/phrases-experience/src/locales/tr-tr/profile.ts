@@ -39,6 +39,10 @@ const profile = {
     error_file_size: 'Dosya boyutu {{limit}} değerini aşmamalıdır.',
     error_storage_not_configured: 'Fotoğraf yüklenemedi. Lütfen daha sonra tekrar deneyin.',
     error_upload: 'Fotoğraf yüklenemedi. Lütfen tekrar deneyin.',
+    error_save: 'Fotoğrafınız kaydedilemedi. Lütfen tekrar deneyin.',
+    crop_title: 'Fotoğrafı kırp',
+    zoom: 'Yakınlaştır',
+    error_crop: 'Görüntü kırpılamadı. Lütfen tekrar deneyin.',
   },
 };
 

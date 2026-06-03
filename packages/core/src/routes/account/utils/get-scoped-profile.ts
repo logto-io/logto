@@ -2,6 +2,7 @@ import { UserScope } from '@logto/core-kit';
 import {
   type AccountCenter,
   AccountCenterControlValue,
+  type User,
   type UserProfileResponse,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -9,6 +10,8 @@ import { conditional } from '@silverhand/essentials';
 import type Libraries from '../../../tenants/Libraries.js';
 import type Queries from '../../../tenants/Queries.js';
 import { transpileUserProfileResponse } from '../../../utils/user.js';
+
+import { hasSecurityVerificationMethod } from './has-security-verification-method.js';
 
 /**
  * Get the user profile, and filter the fields according to the scopes.
@@ -19,7 +22,7 @@ export const getScopedProfile = async (
   libraries: Libraries,
   scopes: Set<string>,
   userId: string
-): Promise<Partial<UserProfileResponse>> => {
+): Promise<{ profile: Partial<UserProfileResponse>; user: User }> => {
   const user = await queries.users.findUserById(userId);
 
   const ssoIdentities = scopes.has(UserScope.Identities) && [
@@ -45,30 +48,33 @@ export const getScopedProfile = async (
   } = transpileUserProfileResponse(user);
 
   return {
-    id,
-    ...conditional(ssoIdentities),
-    ...conditional(scopes.has(UserScope.Identities) && { identities }),
-    ...conditional(scopes.has(UserScope.CustomData) && { customData }),
-    ...conditional(scopes.has(UserScope.Email) && { primaryEmail }),
-    ...conditional(scopes.has(UserScope.Phone) && { primaryPhone }),
-    ...conditional(
-      // Basic profile and all custom claims not defined in the scope are included
-      scopes.has(UserScope.Profile) && {
-        name,
-        avatar,
-        username,
-        profile: {
-          ...restProfile,
-          ...conditional(scopes.has(UserScope.Address) && { address }),
-        },
-        lastSignInAt,
-        createdAt,
-        updatedAt,
-        applicationId,
-        isSuspended,
-        hasPassword,
-      }
-    ),
+    user,
+    profile: {
+      id,
+      ...conditional(ssoIdentities),
+      ...conditional(scopes.has(UserScope.Identities) && { identities }),
+      ...conditional(scopes.has(UserScope.CustomData) && { customData }),
+      ...conditional(scopes.has(UserScope.Email) && { primaryEmail }),
+      ...conditional(scopes.has(UserScope.Phone) && { primaryPhone }),
+      ...conditional(
+        // Basic profile and all custom claims not defined in the scope are included
+        scopes.has(UserScope.Profile) && {
+          name,
+          avatar,
+          username,
+          profile: {
+            ...restProfile,
+            ...conditional(scopes.has(UserScope.Address) && { address }),
+          },
+          lastSignInAt,
+          createdAt,
+          updatedAt,
+          applicationId,
+          isSuspended,
+          hasPassword,
+        }
+      ),
+    },
   };
 };
 
@@ -78,7 +84,8 @@ const isFieldReadable = (field?: AccountCenterControlValue): boolean => {
 
 export const getAccountCenterFilteredProfile = (
   user: Partial<UserProfileResponse>,
-  accountCenter: AccountCenter
+  accountCenter: AccountCenter,
+  securityVerificationUser?: Pick<User, 'passwordEncrypted' | 'primaryEmail' | 'primaryPhone'>
 ): Partial<UserProfileResponse> => {
   const {
     username,
@@ -106,5 +113,10 @@ export const getAccountCenterFilteredProfile = (
     ...conditional(isFieldReadable(fields.customData) && { customData }),
     ...conditional(isFieldReadable(fields.social) && { identities }),
     ...conditional(isFieldReadable(fields.password) && { hasPassword }),
+    ...conditional(
+      securityVerificationUser && {
+        hasSecurityVerificationMethod: hasSecurityVerificationMethod(securityVerificationUser),
+      }
+    ),
   };
 };

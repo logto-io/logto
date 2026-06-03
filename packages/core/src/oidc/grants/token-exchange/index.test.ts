@@ -2,6 +2,7 @@ import { type SubjectToken } from '@logto/schemas';
 import { type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -28,9 +29,12 @@ const mockQueries = {
     updateSubjectTokenById,
   },
 };
+const assertUserHasApplicationAccess = jest.fn(async () => {
+  await Promise.resolve();
+});
 const mockTenant = new MockTenant(undefined, mockQueries);
 const mockHandler = (tenant = mockTenant) => {
-  return buildHandler(tenant.envSet, tenant.queries);
+  return buildHandler(tenant.envSet, tenant.queries, { assertUserHasApplicationAccess });
 };
 
 const clientId = 'some_client_id';
@@ -102,6 +106,7 @@ describe('token exchange', () => {
   afterEach(() => {
     findSubjectToken.mockClear();
     updateSubjectTokenById.mockClear();
+    assertUserHasApplicationAccess.mockClear();
   });
 
   it('should throw when client is not available', async () => {
@@ -153,6 +158,21 @@ describe('token exchange', () => {
     findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
     Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves();
     await expect(mockHandler()(ctx, noop)).rejects.toThrow(errors.InvalidGrant);
+  });
+
+  it('should throw before creating token continuation when the user has no application access', async () => {
+    const ctx = createPreparedContext();
+    findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
+    Sinon.stub(ctx.oidc.provider.Account, 'findAccount').resolves({ accountId });
+    const tenant = new MockTenant(undefined, mockQueries);
+    const accessError = new RequestError('oidc.access_denied');
+    assertUserHasApplicationAccess.mockRejectedValueOnce(accessError);
+    const noopStub = Sinon.stub().resolves();
+
+    await expect(mockHandler(tenant)(ctx, noopStub)).rejects.toThrow(errors.AccessDenied);
+
+    expect(updateSubjectTokenById).not.toHaveBeenCalled();
+    expect(noopStub.callCount).toBe(0);
   });
 
   // The handler returns void so we cannot check the return value, and it's also not

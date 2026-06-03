@@ -39,6 +39,10 @@ const profile = {
     error_file_size: 'Velikost souboru nesmí překročit {{limit}}.',
     error_storage_not_configured: 'Fotografii se nepodařilo nahrát. Zkuste to znovu později.',
     error_upload: 'Nepodařilo se nahrát fotografii. Zkuste to znovu.',
+    error_save: 'Nepodařilo se uložit vaši fotku. Zkuste to prosím znovu.',
+    crop_title: 'Oříznout fotku',
+    zoom: 'Přiblížení',
+    error_crop: 'Oříznutí obrázku se nezdařilo. Zkuste to znovu.',
   },
 };
 

@@ -1,24 +1,16 @@
-import { maxUploadFileSize, type RequestErrorBody } from '@logto/schemas';
+import { maxUploadFileSize } from '@logto/schemas';
 import classNames from 'classnames';
-import { HTTPError } from 'ky';
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { uploadAvatar } from '@/apis/experience/avatar';
 import UserAvatar from '@/assets/icons/default-user-avatar.svg?react';
+import AvatarCropModal from '@/components/AvatarCropModal';
+import useAvatarCropUpload from '@/hooks/use-avatar-crop-upload';
 import RotatingRingIcon from '@/shared/components/Button/RotatingRingIcon';
-import {
-  avatarFileAccept,
-  avatarFileExtensions,
-  formatFileSizeLimit,
-  getAvatarUploadErrorMessage,
-  validateAvatarFile,
-} from '@/utils/avatar-upload';
+import { avatarFileAccept, formatFileSizeLimit } from '@/utils/avatar-upload';
 
 import styles from './index.module.scss';
-
-const isAbortError = (error: unknown) =>
-  (error instanceof DOMException || error instanceof Error) && error.name === 'AbortError';
 
 type Props = {
   readonly className?: string;
@@ -29,7 +21,7 @@ type Props = {
   readonly value?: string;
   readonly errorMessage?: string;
   readonly onBlur?: () => void;
-  readonly onChange: (value: string) => void;
+  readonly onChange: (value: string) => void | Promise<void>;
   readonly onUploadingChange?: (isUploading: boolean) => void;
 };
 
@@ -49,20 +41,21 @@ const AvatarUploadField = ({
   const { t: tAvatar } = useTranslation(undefined, { keyPrefix: 'profile.avatar_upload' });
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const abortControllerRef = useRef<AbortController>();
   const onUploadingChangeRef = useRef(onUploadingChange);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string>();
-  const [fileInputKey, setFileInputKey] = useState(0);
+
+  const {
+    cropImageSource,
+    isUploading,
+    uploadError,
+    fileInputKey,
+    clearUploadError,
+    handleFileChange,
+    handleCropCancel,
+    handleCropConfirm,
+  } = useAvatarCropUpload({ upload: uploadAvatar, onChange, onBlur });
 
   const labelWithOptionalSuffix =
     label && (isRequired ? label : t('input.label_with_optional', { label }));
-
-  useEffect(() => {
-    return () => {
-      abortControllerRef.current?.abort();
-    };
-  }, []);
 
   useEffect(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- keep latest parent callback in a ref
@@ -87,86 +80,13 @@ const AvatarUploadField = ({
     inputRef.current?.click();
   }, [isUploading]);
 
-  const resetFileInput = useCallback(() => {
-    setFileInputKey((key) => key + 1);
-  }, []);
-
-  const handleUploadError = useCallback(
-    async (error: unknown) => {
-      if (error instanceof HTTPError) {
-        try {
-          const errorBody = await error.response.json<RequestErrorBody>();
-          setUploadError(getAvatarUploadErrorMessage(errorBody, tAvatar));
-          return;
-        } catch {
-          // Fall through to generic error message.
-        }
-      }
-
-      setUploadError(tAvatar('error_upload'));
-    },
-    [tAvatar]
-  );
-
-  const handleFileChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-
-      if (!file) {
-        return;
-      }
-
-      const validationError = validateAvatarFile(file);
-
-      if (validationError === 'file_size_exceeded') {
-        setUploadError(
-          tAvatar('error_file_size', { limit: formatFileSizeLimit(maxUploadFileSize) })
-        );
-        resetFileInput();
-        return;
-      }
-
-      if (validationError === 'file_type') {
-        setUploadError(tAvatar('error_file_type', { extensions: avatarFileExtensions }));
-        resetFileInput();
-        return;
-      }
-
-      abortControllerRef.current?.abort();
-      const abortController = new AbortController();
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      abortControllerRef.current = abortController;
-
-      setUploadError(undefined);
-      setIsUploading(true);
-
-      try {
-        const { url } = await uploadAvatar(file, { signal: abortController.signal });
-        onChange(url);
-        onBlur?.();
-      } catch (error: unknown) {
-        if (isAbortError(error) || abortController.signal.aborted) {
-          return;
-        }
-
-        await handleUploadError(error);
-      } finally {
-        if (!abortController.signal.aborted) {
-          setIsUploading(false);
-          setFileInputKey((key) => key + 1);
-        }
-      }
-    },
-    [handleUploadError, onBlur, onChange, resetFileInput, tAvatar]
-  );
-
-  const handleRemove = useCallback(() => {
-    setUploadError(undefined);
-    onChange('');
+  const handleRemove = useCallback(async () => {
+    clearUploadError();
+    await onChange('');
     onBlur?.();
-  }, [onBlur, onChange]);
+  }, [clearUploadError, onBlur, onChange]);
 
-  const displayError = uploadError ?? errorMessage;
+  const displayError = cropImageSource ? errorMessage : (uploadError ?? errorMessage);
   const showRemove = Boolean(value) && !isRequired && !isUploading;
   const showHint = !displayError && !isUploading;
 
@@ -205,7 +125,13 @@ const AvatarUploadField = ({
               {isUploading ? tAvatar('uploading') : tAvatar('upload')}
             </button>
             {showRemove && (
-              <button type="button" className={styles.removeButton} onClick={handleRemove}>
+              <button
+                type="button"
+                className={styles.removeButton}
+                onClick={() => {
+                  void handleRemove();
+                }}
+              >
                 {tAvatar('remove')}
               </button>
             )}
@@ -234,6 +160,13 @@ const AvatarUploadField = ({
           onChange={handleFileChange}
         />
       </div>
+      <AvatarCropModal
+        imageSource={cropImageSource}
+        isUploading={isUploading}
+        uploadError={uploadError}
+        onCancel={handleCropCancel}
+        onConfirm={handleCropConfirm}
+      />
     </div>
   );
 };

@@ -4,6 +4,7 @@ const password = {
   rejected: 'รหัสผ่านถูกปฏิเสธ กรุณาตรวจสอบว่ารหัสผ่านของคุณตรงตามข้อกำหนดหรือไม่',
   invalid_legacy_password_format: 'รูปแบบรหัสผ่านเก่าไม่ถูกต้อง',
   unsupported_legacy_hash_algorithm: 'ไม่รองรับอัลกอริทึมแฮชแบบเก่า: {{algorithm}}',
+  expired: 'รหัสผ่านของคุณหมดอายุแล้ว โปรดรีเซ็ตรหัสผ่านเพื่อดำเนินการต่อ',
 };
 
 export default Object.freeze(password);

@@ -19,6 +19,7 @@ import {
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import { accountCenterBasePath } from '@ac/utils/account-center-route';
+import { canManageSocialIdentitiesWithoutVerification } from '@ac/utils/security-page';
 import { accountStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
 import { finalizeSocialFlowFailure, finalizeSocialFlowSuccess } from '@ac/utils/social-flow';
@@ -37,9 +38,11 @@ const SocialCallback = () => {
     isLoadingExperience,
     refreshUserInfo,
     setToast,
+    userInfo,
     verificationId,
     setVerificationId,
   } = useContext(PageContext);
+  const canSkipVerification = canManageSocialIdentitiesWithoutVerification(userInfo);
   const verifySocialVerificationRequest = useApi(verifySocialVerification);
   const linkSocialIdentityRequest = useApi(linkSocialIdentity);
   const replaceSocialIdentityRequest = useApi(replaceSocialIdentity);
@@ -54,11 +57,12 @@ const SocialCallback = () => {
   const connectorName = connector ? getLocalizedConnectorName(connector, language) : undefined;
   const storedSocialFlow = connectorId ? accountStorage.socialFlow.get(connectorId) : undefined;
 
-  const redirectToReverify = useCallback(() => {
+  const redirectToReverify = useCallback(async () => {
     if (!connectorId) {
       return;
     }
 
+    await refreshUserInfo();
     setStartedConnectorId(undefined);
     setVerificationId(undefined);
     setToast(t('account_center.verification.verification_required'));
@@ -68,7 +72,15 @@ const SocialCallback = () => {
         : getSocialAddRoute(connectorId),
       { replace: true }
     );
-  }, [connectorId, navigate, setToast, setVerificationId, storedSocialFlow?.mode, t]);
+  }, [
+    connectorId,
+    navigate,
+    refreshUserInfo,
+    setToast,
+    setVerificationId,
+    storedSocialFlow?.mode,
+    t,
+  ]);
 
   const finishLinkFlow = useCallback(async () => {
     if (!connectorId || !connectorName) {
@@ -87,7 +99,7 @@ const SocialCallback = () => {
       return;
     }
 
-    if (!verificationId) {
+    if (!verificationId && !canSkipVerification) {
       return;
     }
 
@@ -201,6 +213,7 @@ const SocialCallback = () => {
     setToast,
     startedConnectorId,
     storedSocialFlow,
+    canSkipVerification,
     verificationId,
     verifySocialVerificationRequest,
     t,

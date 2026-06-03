@@ -4,9 +4,12 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import { updateAvatar } from '@ac/apis/account';
 import AccountPageHeader from '@ac/components/AccountPageHeader';
+import AvatarUploadField from '@ac/components/AvatarUploadField';
 import PageFooter from '@ac/components/PageFooter';
 import { layoutClassNames } from '@ac/constants/layout';
+import useApi from '@ac/hooks/use-api';
 
 import homeStyles from '../Home/index.module.scss';
 
@@ -79,6 +82,22 @@ const Profile = () => {
     userInfo,
   ]);
 
+  const updateAvatarRequest = useApi(updateAvatar);
+
+  const handleAvatarChange = useCallback(
+    async (avatarUrl: string) => {
+      const [error] = await updateAvatarRequest({ avatar: avatarUrl });
+
+      if (error) {
+        throw error instanceof Error ? error : new Error(String(error));
+      }
+
+      await refreshUserInfo();
+      setToast(t('account_center.update_success.default.description'));
+    },
+    [refreshUserInfo, setToast, t, updateAvatarRequest]
+  );
+
   const handleUpdated = useCallback(async () => {
     await refreshUserInfo();
     setToast(t('account_center.update_success.default.description'));
@@ -92,11 +111,22 @@ const Profile = () => {
           descriptionKey="account_center.page.profile_description"
         />
         <div className={classNames(homeStyles.content, layoutClassNames.pageContent)}>
-          {fieldRows.length > 0 && (
+          {fieldRows.length > 0 ? (
             <div className={classNames(styles.section, layoutClassNames.section)}>
               <div className={classNames(styles.card, layoutClassNames.card)}>
                 {fieldRows.map((fieldRow) => {
                   const { name, label, value, controlValue } = fieldRow;
+
+                  if (name === 'avatar' && controlValue === AccountCenterControlValue.Edit) {
+                    return (
+                      <AvatarUploadField
+                        key={name}
+                        label={label}
+                        value={userInfo?.avatar ?? ''}
+                        onChange={handleAvatarChange}
+                      />
+                    );
+                  }
 
                   return (
                     <div key={name} className={classNames(styles.row, layoutClassNames.row)}>
@@ -124,6 +154,8 @@ const Profile = () => {
                 })}
               </div>
             </div>
+          ) : (
+            <div className={styles.empty} />
           )}
         </div>
         <PageFooter />

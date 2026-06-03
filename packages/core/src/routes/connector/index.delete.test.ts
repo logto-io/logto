@@ -1,7 +1,14 @@
 import { ConnectorType } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
 
-import { mockConnector, mockConnectorFactory } from '#src/__mocks__/index.js';
+import {
+  mockAliyunDmConnector,
+  mockAliyunSmsConnector,
+  mockConnector,
+  mockConnectorFactory,
+} from '#src/__mocks__/index.js';
+import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -42,6 +49,7 @@ const connectorQueries = {
   deleteConnectorById: jest.fn(),
 } satisfies Partial<Queries['connectors']>;
 const { findConnectorById, deleteConnectorById } = connectorQueries;
+const findDefaultSignInExperience = jest.fn();
 
 const { loadConnectorFactories } = await mockEsmWithActual(
   '#src/utils/connectors/index.js',
@@ -52,7 +60,10 @@ const { loadConnectorFactories } = await mockEsmWithActual(
 
 const tenantContext = new MockTenant(
   undefined,
-  { connectors: connectorQueries },
+  {
+    connectors: connectorQueries,
+    signInExperiences: { findDefaultSignInExperience },
+  },
   {
     getLogtoConnectors,
     getLogtoConnectorById,
@@ -63,6 +74,7 @@ const tenantContext = new MockTenant(
 );
 
 const connectorDataRoutes = await pickDefault(import('./index.js'));
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 describe('connector data routes', () => {
   const connectorRequest = createRequester({ authedRoutes: connectorDataRoutes, tenantContext });
@@ -70,10 +82,16 @@ describe('connector data routes', () => {
   describe('DELETE /connectors/:id', () => {
     beforeEach(() => {
       jest.resetAllMocks();
+      findDefaultSignInExperience.mockResolvedValue(mockSignInExperience);
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for password expiration feature-gate tests.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
     });
 
     afterEach(() => {
       jest.clearAllMocks();
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after password expiration feature-gate tests.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+        originalIsDevFeaturesEnabled;
     });
 
     it('delete connector instance and remove unavailable social connector targets', async () => {
@@ -90,6 +108,89 @@ describe('connector data routes', () => {
         { ...mockConnectorFactory, type: ConnectorType.Sms },
       ]);
       await connectorRequest.delete('/connectors/id').send({});
+      expect(deleteConnectorById).toHaveBeenCalledTimes(1);
+      expect(removeUnavailableSocialConnectorTargets).toHaveBeenCalledTimes(0);
+    });
+
+    it('rejects deleting the last forgot password connector when password expiration is enabled', async () => {
+      findConnectorById.mockResolvedValueOnce(mockConnector);
+      loadConnectorFactories.mockResolvedValueOnce([
+        { ...mockConnectorFactory, type: ConnectorType.Email },
+      ]);
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        passwordExpiration: {
+          enabled: true,
+          validPeriodDays: 30,
+          reminderPeriodDays: 5,
+        },
+      });
+      getLogtoConnectors.mockResolvedValueOnce([
+        {
+          ...mockAliyunDmConnector,
+          dbEntry: {
+            ...mockAliyunDmConnector.dbEntry,
+            id: mockConnector.id,
+          },
+        },
+      ]);
+
+      const response = await connectorRequest.delete('/connectors/id').send({});
+
+      expect(response).toMatchObject({
+        status: 422,
+      });
+      expect(deleteConnectorById).not.toHaveBeenCalled();
+    });
+
+    it('allows deleting a passwordless connector when dev features are disabled', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+      findConnectorById.mockResolvedValueOnce(mockConnector);
+      loadConnectorFactories.mockResolvedValueOnce([
+        { ...mockConnectorFactory, type: ConnectorType.Email },
+      ]);
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        passwordExpiration: {
+          enabled: true,
+          validPeriodDays: 30,
+          reminderPeriodDays: 5,
+        },
+      });
+
+      await connectorRequest.delete('/connectors/id').send({});
+
+      expect(getLogtoConnectors).not.toHaveBeenCalled();
+      expect(deleteConnectorById).toHaveBeenCalledTimes(1);
+    });
+
+    it('allows deleting a passwordless connector when another recovery connector remains', async () => {
+      findConnectorById.mockResolvedValueOnce(mockConnector);
+      loadConnectorFactories.mockResolvedValueOnce([
+        { ...mockConnectorFactory, type: ConnectorType.Email },
+      ]);
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        passwordExpiration: {
+          enabled: true,
+          validPeriodDays: 30,
+          reminderPeriodDays: 5,
+        },
+      });
+      getLogtoConnectors.mockResolvedValueOnce([
+        {
+          ...mockAliyunDmConnector,
+          dbEntry: {
+            ...mockAliyunDmConnector.dbEntry,
+            id: mockConnector.id,
+          },
+        },
+        mockAliyunSmsConnector,
+      ]);
+
+      await connectorRequest.delete('/connectors/id').send({});
+
       expect(deleteConnectorById).toHaveBeenCalledTimes(1);
       expect(removeUnavailableSocialConnectorTargets).toHaveBeenCalledTimes(0);
     });

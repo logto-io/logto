@@ -52,6 +52,10 @@ const session = {
     conflict_rp_id: 'Relying Party ID が一致しません。正しいクライアントでサインインしてください。',
     sso_users_not_allowed: 'パスキーサインインオプションは SSO ユーザーには利用できません。',
   },
+  password_expiration: {
+    reset_not_allowed:
+      'パスワードのリセットは、現在のサインイン セッションでパスワードの有効期限が切れた後にのみ許可されます。',
+  },
   sso_enabled:
     'このメールアドレスではシングルサインオンが有効になっています。SSO でサインインしてください。',
   captcha_required: 'Captcha が必要です。',

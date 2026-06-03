@@ -31,6 +31,9 @@ const error = {
   terms_acceptance_required: 'Accettazione dei termini richiesta',
   terms_acceptance_required_description: 'Devi accettare i termini per continuare.',
   something_went_wrong: 'Qualcosa è andato storto',
+  access_denied: 'Accesso negato',
+  application_access_denied:
+    'Non hai il permesso di accedere a questa applicazione. Per assistenza, contatta il tuo amministratore.',
   feature_not_enabled:
     'Non hai il permesso di accedere a questa funzionalità. Per assistenza, contatta il tuo amministratore.',
 };

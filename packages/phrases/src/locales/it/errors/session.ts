@@ -55,6 +55,10 @@ const session = {
       "L'ID della Relying Party non corrisponde. Usa il client corretto per accedere.",
     sso_users_not_allowed: "L'opzione di accesso con passkey non è disponibile per gli utenti SSO.",
   },
+  password_expiration: {
+    reset_not_allowed:
+      'Il ripristino della password è consentito solo dopo la scadenza della password nella sessione di accesso corrente.',
+  },
   sso_enabled: "L'accesso singolo è abilitato per questa email. Accedi con SSO.",
   captcha_required: 'È richiesto il Captcha.',
   captcha_failed: 'La verifica del Captcha non è riuscita.',

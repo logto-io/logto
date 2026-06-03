@@ -345,7 +345,7 @@
       "post": {
         "operationId": "AddUserIdentities",
         "summary": "Add a user identity",
-        "description": "Add an identity (social identity) to the user, a logto-verification-id in header is required for checking sensitive permissions, and a verification record for the social identity is required.",
+        "description": "Add an identity (social identity) to the user. A logto-verification-id header is required when the user has at least one security verification method: password, primary email, or primary phone. The header can be omitted only when the user has none of these methods. A verification record for the new social identity is always required.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -362,13 +362,22 @@
         "responses": {
           "204": {
             "description": "The identity was added successfully."
+          },
+          "400": {
+            "description": "The request body is invalid or the social identity field is not editable."
+          },
+          "401": {
+            "description": "Permission denied, identity verification is required or insufficient scope."
+          },
+          "422": {
+            "description": "The new verification record is invalid or the identity is already in use."
           }
         }
       },
       "put": {
         "operationId": "ReplaceMyAccountIdentity",
         "summary": "Replace a user identity",
-        "description": "Replace (upsert) an identity (social identity) for the user. Creates the identity if absent, replaces it otherwise. Idempotent. Unlike POST, this allows replacing an existing identity for the same social target. When replacing with a different social user ID, previously stored third-party tokens for the old identity are cleared. A logto-verification-id header is required for checking sensitive permissions, and a verification record for the social identity is required.",
+        "description": "Replace (upsert) an identity (social identity) for the user. Creates the identity if absent, replaces it otherwise. Idempotent. Unlike POST, this allows replacing an existing identity for the same social target. When replacing with a different social user ID, previously stored third-party tokens for the old identity are cleared. A logto-verification-id header is required when the user has at least one security verification method: password, primary email, or primary phone. The header can be omitted only when the user has none of these methods. A verification record for the new social identity is always required.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -402,7 +411,7 @@
       "delete": {
         "operationId": "DeleteIdentity",
         "summary": "Delete a user identity",
-        "description": "Delete an identity (social identity) from the user, a logto-verification-id in header is required for checking sensitive permissions. The request is rejected if it would remove the user's last identifier.",
+        "description": "Delete an identity (social identity) from the user. A logto-verification-id header is required when the user has at least one security verification method: password, primary email, or primary phone. The header can be omitted only when the user has none of these methods. The request is rejected if it would remove the user's last identifier.",
         "responses": {
           "204": {
             "description": "The identity was deleted successfully."

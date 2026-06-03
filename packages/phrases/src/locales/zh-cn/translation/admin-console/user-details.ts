@@ -19,6 +19,13 @@ const user_details = {
     new_password: '新密码：',
     password: '密码：',
   },
+  expire_password: {
+    button: '过期',
+    title: '确定要使此密码过期吗？',
+    content: '用户将被要求在下次登录时重置密码。此操作无法撤销。',
+    success: '用户的密码已标记为过期。',
+    not_enabled_tooltip: '密码过期策略未启用。',
+  },
   tab_settings: '设置',
   tab_roles: '用户角色',
   tab_logs: '用户日志',

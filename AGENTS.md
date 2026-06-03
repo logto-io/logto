@@ -49,7 +49,8 @@ If a hook cannot be fixed safely within the current task, stop and report the bl
 2. Start PostgreSQL: `docker run -d --name logto-postgres -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=p0stgr3s -e POSTGRES_DB=logto postgres:17-alpine`
 3. Set env: `export DB_URL="postgres://postgres:p0stgr3s@localhost:5432/logto"`
 4. If first run (empty database): `pnpm cli db seed` and `pnpm cli connector link -p .`
-5. Start dev: `pnpm start:dev` (skip `pnpm dev` which re-runs prepack; prepack is already done by the update script)
+5. If Core exits with undeployed alterations on an existing database: `pnpm alteration deploy` with the version in `packages/schemas/package.json`, then `pnpm alteration deploy next`
+6. Start dev: `pnpm start:dev` (skip `pnpm dev` which re-runs prepack; prepack is already done by the update script)
 
 ### Optional dev workflows (skills)
 
@@ -67,6 +68,7 @@ Skills live under [.agents/skills/](.agents/skills/) ([Agent Skills](https://age
 - `@logto/core` unit tests require `pnpm build:test` in `packages/core` before running `pnpm test:only`, because Jest reads from `./build` (the tsup dev bundle doesn't include test files).
 - `@logto/elements` tests require Playwright browsers: run `pnpm exec playwright install chromium --with-deps` inside `packages/elements`.
 - The pre-commit hook runs `lint-staged` on changed packages; if it fails due to stale outputs, run `pnpm prepack` first.
+- `pnpm install` runs `sync-preset` over every `packages/connectors/connector-*` directory; orphan connector folders without `package.json` (not in git) will break install—remove them before `pnpm install`.
 
 ### Running tests and lint
 

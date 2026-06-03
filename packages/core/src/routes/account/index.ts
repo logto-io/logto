@@ -7,13 +7,12 @@ import {
   userMfaDataKey,
   userMfaSettingsResponseGuard,
   jsonObjectGuard,
-  type User,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { encryptUserPassword } from '#src/libraries/user.utils.js';
+import { buildUserPasswordPayloadFromPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { assertUserHasRemainingIdentifier } from '#src/utils/user.js';
@@ -32,13 +31,7 @@ import accountSessionRoutes from './sessions.js';
 import thirdPartyTokensRoutes from './third-party-tokens.js';
 import accountUserAssetsRoutes from './user-assets.js';
 import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-scoped-profile.js';
-
-const hasSecurityVerificationMethod = ({
-  passwordEncrypted,
-  primaryEmail,
-  primaryPhone,
-}: Pick<User, 'passwordEncrypted' | 'primaryEmail' | 'primaryPhone'>) =>
-  Boolean(passwordEncrypted) || Boolean(primaryEmail) || Boolean(primaryPhone);
+import { hasSecurityVerificationMethod } from './utils/has-security-verification-method.js';
 
 export default function accountRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
   const [router, { queries, libraries }] = args;
@@ -62,8 +55,8 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
     }),
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
-      const profile = await getScopedProfile(queries, libraries, scopes, userId);
-      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter);
+      const { profile, user } = await getScopedProfile(queries, libraries, scopes, userId);
+      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, user);
       return next();
     }
   );
@@ -137,8 +130,8 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
-      const profile = await getScopedProfile(queries, libraries, scopes, userId);
-      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter);
+      const { profile } = await getScopedProfile(queries, libraries, scopes, userId);
+      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, updatedUser);
 
       return next();
     }
@@ -172,7 +165,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
-      const profile = await getScopedProfile(queries, libraries, scopes, userId);
+      const { profile } = await getScopedProfile(queries, libraries, scopes, userId);
       ctx.body = profile.profile;
 
       return next();
@@ -207,11 +200,10 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       const passwordPolicyChecker = new PasswordValidator(signInExperience.passwordPolicy, user);
       await passwordPolicyChecker.validatePassword(password, user);
 
-      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
-      const updatedUser = await updateUserById(userId, {
-        passwordEncrypted,
-        passwordEncryptionMethod,
-      });
+      const updatedUser = await updateUserById(
+        userId,
+        await buildUserPasswordPayloadFromPassword(password)
+      );
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 

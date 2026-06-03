@@ -51,6 +51,12 @@ export const updateName = async (accessToken: string, payload: { name: Nullable<
   });
 };
 
+export const updateAvatar = async (accessToken: string, payload: { avatar: Nullable<string> }) => {
+  await createAuthenticatedKy(accessToken).patch('/api/my-account', {
+    json: payload,
+  });
+};
+
 export const updateProfile = async (accessToken: string, payload: UserProfile) => {
   await createAuthenticatedKy(accessToken).patch('/api/my-account/profile', {
     json: payload,
