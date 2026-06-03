@@ -1,6 +1,6 @@
 ---
 "@logto/connector-smtp2go-email": minor
-"@logto/connector-kit": patch
+"@logto/connector-kit": minor
 "@logto/connector-mailjunky": patch
 ---
 
