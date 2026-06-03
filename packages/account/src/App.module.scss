@@ -129,6 +129,13 @@
     padding-bottom: _.unit(7);
   }
 
+  @media only screen and (max-width: 1060px) {
+    .withSidebar {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
   @media only screen and (max-width: 800px) {
     .main:not(.cardMain) {
       width: auto;

@@ -94,6 +94,7 @@ const SelectField = ({
       <div ref={ref} className={styles.select}>
         <InputField
           readOnly
+          className={styles.inputWrapper}
           name={name}
           label={label}
           placeholder={placeholder}

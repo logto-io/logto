@@ -41,6 +41,14 @@
   flex-shrink: 0;
 }
 
+:global(body.desktop) {
+  @media only screen and (max-width: 1060px) {
+    .sidebar {
+      display: none;
+    }
+  }
+}
+
 :global(body.mobile) {
   .sidebar {
     display: none;
