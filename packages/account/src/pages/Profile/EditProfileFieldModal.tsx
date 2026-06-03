@@ -119,6 +119,7 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
     const initialFields = buildEditableFields(field, userInfo, t);
     setValues(Object.fromEntries(initialFields.map(({ name, value }) => [name, value])));
     setErrors({});
+    setIsSubmitting(false);
     // Only reset when switching fields; ignore background userInfo refreshes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [field?.name]);
@@ -138,25 +139,29 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
     }
 
     setIsSubmitting(true);
-    const [error] = await submitFieldUpdate({
-      field,
-      fields,
-      userInfo,
-      values,
-      updateNameRequest,
-      updateCustomDataRequest,
-      updateProfileRequest,
-    });
+    try {
+      const [error] = await submitFieldUpdate({
+        field,
+        fields,
+        userInfo,
+        values,
+        updateNameRequest,
+        updateCustomDataRequest,
+        updateProfileRequest,
+      });
 
-    if (error) {
-      setIsSubmitting(false);
+      if (error) {
+        await handleError(error);
+        return;
+      }
+
+      await onUpdated();
+      onClose();
+    } catch (error: unknown) {
       await handleError(error);
-      return;
+    } finally {
+      setIsSubmitting(false);
     }
-
-    await onUpdated();
-    setIsSubmitting(false);
-    onClose();
   }, [
     field,
     fields,
