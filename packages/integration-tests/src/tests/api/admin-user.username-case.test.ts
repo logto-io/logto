@@ -1,7 +1,7 @@
 import { defaultUsernamePolicy } from '@logto/core-kit';
 import { type User } from '@logto/schemas';
 
-import { authedAdminApi, deleteUser, updateSignInExperience } from '#src/api/index.js';
+import { authedAdminApi, deleteUser, updateSignInExperience, updateUser } from '#src/api/index.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import { devFeatureTest, generateUsername } from '#src/utils.js';
 
@@ -38,6 +38,16 @@ describe('admin console user management (username case sensitive)', () => {
     await deleteUser(user.id);
     await deleteUser(user2.id);
   });
+
+  it('should allow updating a username that differs only by case', async () => {
+    const base = generateUsername();
+    const user = await createUserByAdmin({ username: base.toLowerCase() });
+    const user2 = await createUserByAdmin();
+    const updated = await updateUser(user2.id, { username: base.toUpperCase() });
+    expect(updated).toHaveProperty('username', base.toUpperCase());
+    await deleteUser(user.id);
+    await deleteUser(user2.id);
+  });
 });
 
 // Gated to dev features: the sign-in experience write path drops `usernamePolicy` unless dev
@@ -71,6 +81,21 @@ devFeatureTest.describe(
         status: 422,
       });
       await deleteUser(user.id);
+    });
+
+    it('should reject updating a username to differ only by case when case-insensitive', async () => {
+      await updateSignInExperience({
+        usernamePolicy: { ...defaultUsernamePolicy, caseSensitive: false },
+      });
+      const base = generateUsername();
+      const user = await createUserByAdmin({ username: base.toLowerCase() });
+      const user2 = await createUserByAdmin();
+      await expectRejects(updateUser(user2.id, { username: base.toUpperCase() }), {
+        code: 'user.username_already_in_use',
+        status: 422,
+      });
+      await deleteUser(user.id);
+      await deleteUser(user2.id);
     });
   }
 );
