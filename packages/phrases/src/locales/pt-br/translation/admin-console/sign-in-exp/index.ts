@@ -197,13 +197,13 @@ const sign_in_exp = {
         go_to: 'outros campos de perfil agora.',
       },
       disabled_hint: {
-        name: 'Para adicionar este campo, defina primeiro a permissão "Nome" como "Editar/Somente leitura" em Dados do perfil acima.',
+        name: 'Para adicionar este campo, defina primeiro a permissão "Nome" como "Editar/Somente leitura" na seção Perfil do usuário abaixo.',
         avatar:
-          'Para adicionar este campo, defina primeiro a permissão "Avatar" como "Editar/Somente leitura" em Dados do perfil acima.',
+          'Para adicionar este campo, defina primeiro a permissão "Avatar" como "Editar/Somente leitura" na seção Perfil do usuário abaixo.',
         profile:
-          'Para adicionar este campo, defina primeiro a permissão "Perfil" como "Editar/Somente leitura" em Dados do perfil acima.',
+          'Para adicionar este campo, defina primeiro a permissão "Perfil" como "Editar/Somente leitura" na seção Perfil do usuário abaixo.',
         custom_data:
-          'Para adicionar este campo, defina primeiro a permissão "Dados personalizados" como "Editar/Somente leitura" em Dados do perfil acima.',
+          'Para adicionar este campo, defina primeiro a permissão "Dados personalizados" como "Editar/Somente leitura" na seção Perfil do usuário abaixo.',
       },
     },
     webauthn_related_origins: 'Origens relacionadas ao WebAuthn',
