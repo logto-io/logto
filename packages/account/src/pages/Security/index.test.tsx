@@ -118,6 +118,7 @@ const renderSecurity = ({
             ...mockAccountCenterSettings.fields,
             social: AccountCenterControlValue.Off,
             mfa: AccountCenterControlValue.Off,
+            session: AccountCenterControlValue.Off,
             ...fields,
           },
           deleteAccountUrl: null,
