@@ -1,0 +1,112 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1.5);
+}
+
+.sectionTitle {
+  padding-left: _.unit(1);
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
+.card {
+  background: var(--color-bg-body);
+  border-radius: 12px;
+  overflow: clip;
+}
+
+.sessionRow {
+  display: flex;
+  align-items: center;
+  gap: _.unit(4);
+  padding: _.unit(4) _.unit(6);
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-line-divider);
+  }
+}
+
+.sessionInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
+.sessionHeader {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+}
+
+.sessionDevice {
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
+.currentTag {
+  display: inline-flex;
+  align-items: center;
+  gap: _.unit(1);
+  padding: _.unit(0.5) _.unit(2);
+  border-radius: 14px;
+  background: rgba(78, 162, 84, 12%);
+  font: var(--font-label-3);
+  color: var(--color-type-primary);
+  flex-shrink: 0;
+}
+
+.currentDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-success-default);
+}
+
+.sessionMeta {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+}
+
+.revokeButton {
+  font: var(--font-label-2);
+  color: var(--color-type-link);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: _.unit(0.5) 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.emptyState {
+  padding: _.unit(5) _.unit(6);
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+  text-align: center;
+}
+
+:global(body.mobile) {
+  .sectionTitle {
+    padding-left: 0;
+  }
+
+  .sessionRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: _.unit(2);
+    padding: _.unit(4);
+  }
+
+  .revokeButton {
+    align-self: flex-end;
+  }
+}

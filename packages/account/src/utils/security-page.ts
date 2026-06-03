@@ -36,7 +36,7 @@ export const hasVisibleSecuritySection = (
     return false;
   }
 
-  const { username, email, phone, password, social, mfa } = accountCenterSettings.fields;
+  const { username, email, phone, password, social, mfa, session } = accountCenterSettings.fields;
   const hasDeleteAccountUrl = Boolean(accountCenterSettings.deleteAccountUrl?.trim());
 
   return (
@@ -44,6 +44,7 @@ export const hasVisibleSecuritySection = (
     isVisibleField(email) ||
     isVisibleField(phone) ||
     isVisibleField(password) ||
+    isVisibleField(session) ||
     hasDeleteAccountUrl ||
     hasVisibleSocialSection(social, experienceSettings) ||
     hasVisibleMfaSection(mfa, experienceSettings)

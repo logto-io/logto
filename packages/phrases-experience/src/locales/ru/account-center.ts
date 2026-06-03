@@ -103,6 +103,15 @@ const account_center = {
     disable_2_step_verification: 'Отключить',
     no_verification_method_warning:
       'Вы не добавили второй способ верификации. Добавьте хотя бы один, чтобы включить двухэтапную верификацию при входе.',
+    sessions: 'Sessions',
+    session_current: 'Current session',
+    session_other: 'Other session',
+    session_signed_in: 'Signed in {{date}}',
+    session_revoke: 'Sign out',
+    session_revoke_confirmation_title: 'Sign out session',
+    session_revoke_confirmation_description:
+      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
+    session_no_other: 'No other active sessions.',
     account_removal: 'Удаление аккаунта',
     delete_your_account: 'Удалите свой аккаунт',
     delete_account: 'Удалить аккаунт',

@@ -101,6 +101,15 @@ const account_center = {
     disable_2_step_verification: '關閉',
     no_verification_method_warning:
       '你尚未添加第二種驗證方式。請至少添加一種以在登入時啟用兩步驗證。',
+    sessions: 'Sessions',
+    session_current: 'Current session',
+    session_other: 'Other session',
+    session_signed_in: 'Signed in {{date}}',
+    session_revoke: 'Sign out',
+    session_revoke_confirmation_title: 'Sign out session',
+    session_revoke_confirmation_description:
+      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
+    session_no_other: 'No other active sessions.',
     account_removal: '帳戶刪除',
     delete_your_account: '刪除你的帳戶',
     delete_account: '刪除帳戶',

@@ -89,6 +89,7 @@ const pendingVerifiedActions = Object.freeze([
   'remove-email',
   'remove-phone',
   'remove-social',
+  'load-sessions',
 ] as const);
 
 export type PendingVerifiedAction = (typeof pendingVerifiedActions)[number];
