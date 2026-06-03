@@ -19,6 +19,9 @@ const security = {
     settings: '设置',
     enable_captcha: '启用验证码',
     enable_captcha_description: '为注册、登录和密码恢复流程启用验证码验证。',
+    /** UNTRANSLATED */
+    custom_ui_captcha_notice:
+      'You are using Bring your UI. Additional configuration is required to enable CAPTCHA in your custom UI. <a>View setup guide</a>.',
   },
   create_captcha: {
     setup_captcha: '设置验证码',

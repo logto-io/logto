@@ -21,6 +21,9 @@ const security = {
     enable_captcha: 'Abilita CAPTCHA',
     enable_captcha_description:
       'Abilita la verifica CAPTCHA per i flussi di registrazione, accesso e recupero password.',
+    /** UNTRANSLATED */
+    custom_ui_captcha_notice:
+      'You are using Bring your UI. Additional configuration is required to enable CAPTCHA in your custom UI. <a>View setup guide</a>.',
   },
   create_captcha: {
     setup_captcha: 'Configura CAPTCHA',

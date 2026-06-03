@@ -20,6 +20,9 @@ const security = {
     enable_captcha: 'تفعيل CAPTCHA',
     enable_captcha_description:
       'تفعيل التحقق CAPTCHA لعمليات التسجيل وتسجيل الدخول واستعادة كلمة المرور.',
+    /** UNTRANSLATED */
+    custom_ui_captcha_notice:
+      'You are using Bring your UI. Additional configuration is required to enable CAPTCHA in your custom UI. <a>View setup guide</a>.',
   },
   create_captcha: {
     setup_captcha: 'إعداد CAPTCHA',

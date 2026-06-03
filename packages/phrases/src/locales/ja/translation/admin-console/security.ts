@@ -21,6 +21,9 @@ const security = {
     enable_captcha: 'CAPTCHA を有効化',
     enable_captcha_description:
       'サインアップ、サインイン、パスワード回復フローに CAPTCHA 検証を有効にします。',
+    /** UNTRANSLATED */
+    custom_ui_captcha_notice:
+      'You are using Bring your UI. Additional configuration is required to enable CAPTCHA in your custom UI. <a>View setup guide</a>.',
   },
   create_captcha: {
     setup_captcha: 'CAPTCHA をセットアップ',

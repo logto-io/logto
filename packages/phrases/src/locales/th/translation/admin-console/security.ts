@@ -21,6 +21,9 @@ const security = {
     enable_captcha: 'เปิดใช้งาน CAPTCHA',
     enable_captcha_description:
       'เปิดใช้งานการตรวจสอบ CAPTCHA สำหรับขั้นตอนการสมัครสมาชิก การเข้าสู่ระบบ และการกู้คืนรหัสผ่าน',
+    /** UNTRANSLATED */
+    custom_ui_captcha_notice:
+      'You are using Bring your UI. Additional configuration is required to enable CAPTCHA in your custom UI. <a>View setup guide</a>.',
   },
   create_captcha: {
     setup_captcha: 'ตั้งค่า CAPTCHA',

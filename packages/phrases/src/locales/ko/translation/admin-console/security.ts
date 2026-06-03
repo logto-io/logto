@@ -21,6 +21,9 @@ const security = {
     enable_captcha: 'CAPTCHA 활성화',
     enable_captcha_description:
       '회원가입, 로그인, 비밀번호 복구 흐름에 대해 CAPTCHA 검증을 활성화합니다.',
+    /** UNTRANSLATED */
+    custom_ui_captcha_notice:
+      'You are using Bring your UI. Additional configuration is required to enable CAPTCHA in your custom UI. <a>View setup guide</a>.',
   },
   create_captcha: {
     setup_captcha: 'CAPTCHA 설정',
