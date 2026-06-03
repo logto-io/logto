@@ -46,6 +46,7 @@ import { type SubscriptionLibrary } from '../libraries/subscription.js';
 import koaTokenUsageGuard from '../middleware/koa-token-usage-guard.js';
 
 import {
+  appLevelAccessControlMetadataKey,
   assertUserHasApplicationAccessForOidc,
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlCheckedForOidcContext,
@@ -281,7 +282,8 @@ export default function initOidc(
         await assertUserHasApplicationAccessForOidc(
           libraries.applicationAccessControl,
           client.clientId,
-          account.accountId
+          account.accountId,
+          client.metadata().appLevelAccessControlEnabled
         );
         markAppLevelAccessControlCheckedForOidcContext(
           ctx.oidc,
@@ -324,8 +326,16 @@ export default function initOidc(
       };
     },
     extraClientMetadata: {
-      properties: Object.values(CustomClientMetadataKey),
+      properties: [...Object.values(CustomClientMetadataKey), appLevelAccessControlMetadataKey],
       validator: (_, key, value) => {
+        if (key === appLevelAccessControlMetadataKey) {
+          assert(
+            typeof value === 'boolean',
+            `${appLevelAccessControlMetadataKey} must be a boolean`
+          );
+          return;
+        }
+
         validateCustomClientMetadata(key, value);
       },
     },

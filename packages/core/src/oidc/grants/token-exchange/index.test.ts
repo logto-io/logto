@@ -43,12 +43,12 @@ const accountId = 'some_account_id';
 
 type Client = InstanceType<KoaContextWithOIDC['oidc']['provider']['Client']>;
 
-// @ts-expect-error
 const validClient: Client = {
   clientId,
   grantTypeAllowed: jest.fn().mockResolvedValue(true),
   clientAuthMethod: 'none',
-};
+  metadata: jest.fn(() => ({ client_id: clientId, appLevelAccessControlEnabled: false })),
+} as unknown as Client;
 
 const createValidSubjectToken = (): SubjectToken => ({
   id: subjectTokenId,

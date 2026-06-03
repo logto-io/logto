@@ -40,12 +40,12 @@ type RefreshToken = InstanceType<KoaContextWithOIDC['oidc']['provider']['Refresh
 type Grant = InstanceType<KoaContextWithOIDC['oidc']['provider']['Grant']>;
 type Client = InstanceType<KoaContextWithOIDC['oidc']['provider']['Client']>;
 
-// @ts-expect-error
 const validClient: Client = {
   clientId,
   grantTypeAllowed: jest.fn().mockResolvedValue(true),
   clientAuthMethod: 'none',
-};
+  metadata: jest.fn(() => ({ client_id: clientId, appLevelAccessControlEnabled: false })),
+} as unknown as Client;
 
 const validRefreshToken: RefreshToken = {
   kind: 'RefreshToken',

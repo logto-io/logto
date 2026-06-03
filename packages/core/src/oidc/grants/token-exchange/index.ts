@@ -98,7 +98,12 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
 
   ctx.oidc.entity('Account', account);
 
-  await assertUserHasApplicationAccessForOidc(appAccess, client.clientId, account.accountId);
+  await assertUserHasApplicationAccessForOidc(
+    appAccess,
+    client.clientId,
+    account.accountId,
+    client.metadata().appLevelAccessControlEnabled
+  );
 
   // Pre-generate grant ID to avoid a separate DB write just to obtain it.
   // oidc-provider's BaseModel.save() skips ID generation when jti is already set.

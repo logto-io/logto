@@ -3,6 +3,8 @@ import { errors, type InteractionResults } from 'oidc-provider';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 
+export const appLevelAccessControlMetadataKey = 'appLevelAccessControlEnabled';
+
 const appLevelAccessControlInteractionResultKey = 'appLevelAccessControl';
 
 const isObjectRecord = (value: unknown): value is Record<string, unknown> =>
@@ -57,10 +59,15 @@ export const markAppLevelAccessControlCheckedForOidcContext = (
 export const assertUserHasApplicationAccessForOidc = async (
   applicationAccessControl: Libraries['applicationAccessControl'],
   applicationId: string,
-  userId: string
+  userId: string,
+  appLevelAccessControlEnabled?: boolean
 ) => {
   try {
-    await applicationAccessControl.assertUserHasApplicationAccess(applicationId, userId);
+    await applicationAccessControl.assertUserHasApplicationAccess(
+      applicationId,
+      userId,
+      appLevelAccessControlEnabled
+    );
   } catch (error: unknown) {
     if (error instanceof RequestError && error.code === 'oidc.access_denied') {
       throw new errors.AccessDenied(error.message);

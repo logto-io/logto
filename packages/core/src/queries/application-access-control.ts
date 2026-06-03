@@ -6,6 +6,9 @@ import {
   ApplicationAccessControlOrganizationRelations,
   ApplicationAccessControlUserRelations,
   ApplicationAccessControlUserRoleRelations,
+  OrganizationRoleUserRelations,
+  OrganizationUserRelations,
+  UsersRoles,
 } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
@@ -19,6 +22,22 @@ const userRelations = convertToIdentifiers(ApplicationAccessControlUserRelations
 const userRoleRelations = convertToIdentifiers(ApplicationAccessControlUserRoleRelations);
 const organizationRelations = convertToIdentifiers(ApplicationAccessControlOrganizationRelations);
 const organizationRoleRelations = convertToIdentifiers(ApplicationAccessControlOrgRoleRelations);
+const lookupUserRelations = convertToIdentifiers(ApplicationAccessControlUserRelations, true);
+const lookupUserRoleRelations = convertToIdentifiers(
+  ApplicationAccessControlUserRoleRelations,
+  true
+);
+const lookupOrganizationRelations = convertToIdentifiers(
+  ApplicationAccessControlOrganizationRelations,
+  true
+);
+const lookupOrganizationRoleRelations = convertToIdentifiers(
+  ApplicationAccessControlOrgRoleRelations,
+  true
+);
+const usersRoles = convertToIdentifiers(UsersRoles, true);
+const organizationUserRelations = convertToIdentifiers(OrganizationUserRelations, true);
+const organizationRoleUserRelations = convertToIdentifiers(OrganizationRoleUserRelations, true);
 
 export const createApplicationAccessControlQueries = (pool: CommonQueryMethods) => {
   const findApplicationAccessControl = async (
@@ -71,6 +90,42 @@ export const createApplicationAccessControlQueries = (pool: CommonQueryMethods) 
 
     return applicationAccessControlGuard.parse(accessControl);
   };
+
+  const hasUserApplicationAccess = async (applicationId: string, userId: string) =>
+    pool.exists(sql`
+      select 1
+      where exists (
+        select 1
+        from ${lookupUserRelations.table}
+        where ${lookupUserRelations.fields.applicationId} = ${applicationId}
+          and ${lookupUserRelations.fields.userId} = ${userId}
+      ) or exists (
+        select 1
+        from ${lookupUserRoleRelations.table}
+        join ${usersRoles.table}
+          on ${usersRoles.fields.roleId} = ${lookupUserRoleRelations.fields.roleId}
+        where ${lookupUserRoleRelations.fields.applicationId} = ${applicationId}
+          and ${usersRoles.fields.userId} = ${userId}
+      ) or exists (
+        select 1
+        from ${lookupOrganizationRelations.table}
+        join ${organizationUserRelations.table}
+          on ${organizationUserRelations.fields.organizationId} =
+            ${lookupOrganizationRelations.fields.organizationId}
+        where ${lookupOrganizationRelations.fields.applicationId} = ${applicationId}
+          and ${organizationUserRelations.fields.userId} = ${userId}
+      ) or exists (
+        select 1
+        from ${lookupOrganizationRoleRelations.table}
+        join ${organizationRoleUserRelations.table}
+          on ${organizationRoleUserRelations.fields.organizationId} =
+              ${lookupOrganizationRoleRelations.fields.organizationId}
+            and ${organizationRoleUserRelations.fields.organizationRoleId} =
+              ${lookupOrganizationRoleRelations.fields.organizationRoleId}
+        where ${lookupOrganizationRoleRelations.fields.applicationId} = ${applicationId}
+          and ${organizationRoleUserRelations.fields.userId} = ${userId}
+      )
+    `);
 
   const replaceApplicationAccessControl = async (
     applicationId: string,
@@ -183,6 +238,7 @@ export const createApplicationAccessControlQueries = (pool: CommonQueryMethods) 
 
   return {
     findApplicationAccessControl,
+    hasUserApplicationAccess,
     replaceApplicationAccessControl,
   };
 };
