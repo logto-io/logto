@@ -152,7 +152,7 @@ describe('koaExperienceSsr()', () => {
     };
     await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
 
-    // The `</script>` carried in the SSR data must be emitted as its escaped form (`</script>`),
+    // The `</script>` carried in the SSR data must be emitted as `\u003c/script\u003e`,
     // never as a literal tag that would close the inline `window.logtoSsr` <script> early. Asserting the
     // escaped form (rather than counting `</script>` occurrences) is robust to the served template adding
     // its own <script> tags.
