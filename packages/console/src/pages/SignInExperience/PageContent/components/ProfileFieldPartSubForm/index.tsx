@@ -152,7 +152,7 @@ function ProfileFieldPartSubForm({ index }: Props) {
       </FormField>
       {/* TODO: Replace placeholder avatar help text once Experience and Account Center avatar upload is implemented. */}
       {isAvatarField && (
-        <InlineNotification hasIcon variant="plain">
+        <InlineNotification hasIcon className={styles.avatarNotification} variant="plain">
           {t('sign_in_exp.custom_profile_fields.details.avatar_upload_description')}
         </InlineNotification>
       )}

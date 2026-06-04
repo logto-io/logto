@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.avatarNotification {
+  margin-top: _.unit(6);
+}
+
 .dropdownTitleWrapper {
   display: flex;
   align-items: center;
