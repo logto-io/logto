@@ -105,7 +105,6 @@ const account_center = {
       '2つ目の認証方法が追加されていません。サインイン時の2段階認証を有効にするには、少なくとも1つ追加してください。',
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',

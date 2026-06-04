@@ -105,7 +105,6 @@ const account_center = {
       'لم تقم بإضافة طريقة تحقق ثانية. أضف طريقة واحدة على الأقل لتفعيل التحقق بخطوتين عند تسجيل الدخول.',
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',

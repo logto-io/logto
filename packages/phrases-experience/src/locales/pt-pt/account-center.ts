@@ -109,7 +109,6 @@ const account_center = {
       'Não adicionou um segundo método de verificação. Adicione pelo menos um para ativar a verificação em duas etapas ao iniciar sessão.',
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',

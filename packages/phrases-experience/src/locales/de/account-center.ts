@@ -112,7 +112,6 @@ const account_center = {
       'Sie haben keine zweite Verifizierungsmethode hinzugefügt. Fügen Sie mindestens eine hinzu, um die 2-Faktor-Verifizierung bei der Anmeldung zu aktivieren.',
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',

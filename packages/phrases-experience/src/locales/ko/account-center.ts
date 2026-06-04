@@ -104,7 +104,6 @@ const account_center = {
       '두 번째 인증 방법을 추가하지 않았습니다. 로그인 시 2단계 인증을 활성화하려면 최소 하나를 추가하세요.',
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',

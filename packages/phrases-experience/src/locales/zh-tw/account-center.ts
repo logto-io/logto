@@ -103,7 +103,6 @@ const account_center = {
       '你尚未新增第二種驗證方式。請至少新增一種以在登入時啟用兩步驟驗證。',
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',
