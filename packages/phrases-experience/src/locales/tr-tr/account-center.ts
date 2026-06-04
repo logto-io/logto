@@ -106,7 +106,6 @@ const account_center = {
       'İkinci bir doğrulama yöntemi eklemediniz. Oturum açarken 2 adımlı doğrulamayı etkinleştirmek için en az bir tane ekleyin.',
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',

@@ -110,7 +110,6 @@ const account_center = {
       "Non hai aggiunto un secondo metodo di verifica. Aggiungine almeno uno per attivare la verifica in due passaggi all'accesso.",
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',

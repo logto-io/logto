@@ -106,7 +106,6 @@ const account_center = {
       'Nie dodałeś drugiej metody weryfikacji. Dodaj co najmniej jedną, aby włączyć weryfikację dwuetapową podczas logowania.',
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',

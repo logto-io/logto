@@ -107,7 +107,6 @@ const account_center = {
       'Ви не додали другий метод верифікації. Додайте принаймні один, щоб увімкнути двоетапну верифікацію при вході.',
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',
