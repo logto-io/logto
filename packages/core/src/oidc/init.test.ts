@@ -11,6 +11,7 @@ import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 import {
+  appLevelAccessControlMetadataKey,
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlChecked,
 } from './application-access-control.js';
@@ -101,6 +102,22 @@ describe('oidc provider init', () => {
 
     expect(() =>
       initOidc(id, mockEnvSet, queries, libraries, logtoConfigs, subscription)
+    ).not.toThrow();
+  });
+
+  it('should allow missing application access control client metadata', async () => {
+    const tenant = new MockTenant();
+    const provider = createProvider(tenant);
+    const configuration = instance(provider).configuration();
+    const ctx = createOidcContext({ provider });
+
+    expect(() =>
+      configuration.extraClientMetadata.validator(
+        ctx,
+        appLevelAccessControlMetadataKey,
+        undefined,
+        { client_id: clientId }
+      )
     ).not.toThrow();
   });
 

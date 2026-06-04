@@ -329,6 +329,10 @@ export default function initOidc(
       properties: [...Object.values(CustomClientMetadataKey), appLevelAccessControlMetadataKey],
       validator: (_, key, value) => {
         if (key === appLevelAccessControlMetadataKey) {
+          if (value === undefined) {
+            return;
+          }
+
           assert(
             typeof value === 'boolean',
             `${appLevelAccessControlMetadataKey} must be a boolean`
