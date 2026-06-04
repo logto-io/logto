@@ -67,19 +67,14 @@ export default function koaExperienceSsr<StateT, ContextT extends WithI18nContex
 
     ctx.set('Content-Language', language);
 
-    // Inline custom CSS into the served HTML <head> BEFORE substituting the SSR placeholder, so the
-    // `</head>` match can only hit the genuine document head — never a `</head>` that might appear in
-    // the injected SSR JSON. Having the CSS in <head> on the first byte puts it in the cascade for the
-    // first paint, removing the flash where built-in styles render before react-helmet injects the
-    // custom <style> a frame later. react-helmet still re-asserts the same CSS client-side (harmless)
-    // and keeps live preview working.
+    // Inline custom CSS into <head> on the first byte so it is in the cascade for the first paint,
+    // removing the flash before react-helmet injects the same <style> client-side. Done BEFORE the SSR
+    // placeholder substitution so the `</head>` match can only hit the genuine document head. Skipped in
+    // preview mode (`?preview=true`), where the console iframe drives styling live via postMessage and
+    // inlining the *saved* CSS could leak rules being edited. `</style` is defused so admin CSS can't
+    // terminate the element early (parser sees `<\/style`; the CSS engine unescapes `\/`→`/`). See PR #8917.
     const { customCss } = signInExperience;
 
-    // Inline the custom CSS only outside preview mode. In preview the console iframe drives styling live
-    // via postMessage + react-helmet, so inlining the *saved* CSS here could briefly show it and even
-    // leak rules the user is editing out — live preview has no FOUC to fix. `</style` is defused so admin
-    // CSS can't terminate the element early (the HTML parser sees `<\/style`; the CSS engine unescapes
-    // `\/`→`/`). The `</head>` replace is a no-op if absent, falling back to client-side helmet injection.
     const htmlWithCss =
       customCss && ctx.query.preview !== 'true'
         ? ctx.body.replace(
