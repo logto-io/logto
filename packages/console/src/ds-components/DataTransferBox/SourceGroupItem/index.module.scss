@@ -15,10 +15,6 @@
       cursor: pointer;
       overflow: hidden;
 
-      .caret {
-        margin-inline-end: _.unit(2);
-      }
-
       .name {
         font: var(--font-label-2);
         @include _.text-ellipsis;

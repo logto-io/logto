@@ -65,7 +65,7 @@ function SourceGroupItem<TEntry extends DataEntry>({
             setIsDataListHidden(!isDataListHidden);
           }}
         >
-          <IconButton size="medium" className={styles.caret}>
+          <IconButton size="medium">
             {isDataListHidden ? <CaretFolded /> : <CaretExpanded />}
           </IconButton>
           <div className={styles.name}>{groupName}</div>

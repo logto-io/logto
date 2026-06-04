@@ -32,6 +32,7 @@ function SourceEntityItem<T extends Identifiable>({
       }}
     >
       <Checkbox
+        className={styles.checkbox}
         checked={isSelected}
         onChange={() => {
           onSelect();
