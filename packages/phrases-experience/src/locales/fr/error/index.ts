@@ -13,6 +13,18 @@ const error = {
     "Le nom d'utilisateur ne doit pas commencer par un chiffre",
   username_invalid_charset:
     "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres ou des caractères de soulignement.",
+  /** UNTRANSLATED */
+  username_too_short: 'Username must be at least {{min}} characters long.',
+  /** UNTRANSLATED */
+  username_too_long: 'Username must be at most {{max}} characters long.',
+  /** UNTRANSLATED */
+  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
+  /** UNTRANSLATED */
+  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
+  /** UNTRANSLATED */
+  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
+  /** UNTRANSLATED */
+  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
   invalid_email: "L'email n'est pas valide",
   invalid_phone: "Le numéro de téléphone n'est pas valide",
   passwords_do_not_match: 'Les mots de passe ne correspondent pas',

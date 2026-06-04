@@ -1,8 +1,9 @@
 import classNames from 'classnames';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { SmartInputField } from '@/components/InputFields';
 import Button from '@/shared/components/Button';
 import ErrorMessage from '@/shared/components/ErrorMessage';
@@ -40,6 +41,7 @@ const IdentifierProfileForm = ({
   clearErrorMessage,
 }: Props) => {
   const { t } = useTranslation();
+  const { experienceSettings } = useContext(PageContext);
   const {
     handleSubmit,
     control,
@@ -88,7 +90,11 @@ const IdentifierProfileForm = ({
               return getGeneralIdentifierErrorMessage(enabledTypes, 'required');
             }
 
-            const errorMessage = validateIdentifierField(type, value);
+            const errorMessage = validateIdentifierField(
+              type,
+              value,
+              experienceSettings?.usernamePolicy
+            );
 
             if (errorMessage) {
               return typeof errorMessage === 'string'
