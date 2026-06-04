@@ -199,13 +199,13 @@ const sign_in_exp = {
         go_to: "d'autres champs de profil maintenant.",
       },
       disabled_hint: {
-        name: "Pour ajouter ce champ, définissez d'abord l'autorisation « Nom » sur « Modifier/Lecture seule » dans Données de profil ci-dessus.",
+        name: "Pour ajouter ce champ, définissez d'abord l'autorisation « Nom » sur « Modifier/Lecture seule » dans la section Profil utilisateur ci-dessous.",
         avatar:
-          "Pour ajouter ce champ, définissez d'abord l'autorisation « Avatar » sur « Modifier/Lecture seule » dans Données de profil ci-dessus.",
+          "Pour ajouter ce champ, définissez d'abord l'autorisation « Avatar » sur « Modifier/Lecture seule » dans la section Profil utilisateur ci-dessous.",
         profile:
-          "Pour ajouter ce champ, définissez d'abord l'autorisation « Profil » sur « Modifier/Lecture seule » dans Données de profil ci-dessus.",
+          "Pour ajouter ce champ, définissez d'abord l'autorisation « Profil » sur « Modifier/Lecture seule » dans la section Profil utilisateur ci-dessous.",
         custom_data:
-          "Pour ajouter ce champ, définissez d'abord l'autorisation « Données personnalisées » sur « Modifier/Lecture seule » dans Données de profil ci-dessus.",
+          "Pour ajouter ce champ, définissez d'abord l'autorisation « Données personnalisées » sur « Modifier/Lecture seule » dans la section Profil utilisateur ci-dessous.",
       },
     },
     webauthn_related_origins: 'Origines associées à WebAuthn',

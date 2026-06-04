@@ -196,13 +196,13 @@ const sign_in_exp = {
         go_to: 'inne pola profilu teraz.',
       },
       disabled_hint: {
-        name: 'Aby dodać to pole, najpierw ustaw uprawnienie „Imię i nazwisko” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+        name: 'Aby dodać to pole, najpierw ustaw uprawnienie „Imię i nazwisko” na „Edytuj/Tylko do odczytu” w sekcji Profil użytkownika poniżej.',
         avatar:
-          'Aby dodać to pole, najpierw ustaw uprawnienie „Awatar” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+          'Aby dodać to pole, najpierw ustaw uprawnienie „Awatar” na „Edytuj/Tylko do odczytu” w sekcji Profil użytkownika poniżej.',
         profile:
-          'Aby dodać to pole, najpierw ustaw uprawnienie „Profil” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+          'Aby dodać to pole, najpierw ustaw uprawnienie „Profil” na „Edytuj/Tylko do odczytu” w sekcji Profil użytkownika poniżej.',
         custom_data:
-          'Aby dodać to pole, najpierw ustaw uprawnienie „Dane niestandardowe” na „Edytuj/Tylko do odczytu” w Danych profilu powyżej.',
+          'Aby dodać to pole, najpierw ustaw uprawnienie „Dane niestandardowe” na „Edytuj/Tylko do odczytu” w sekcji Profil użytkownika poniżej.',
       },
     },
     webauthn_related_origins: 'Powiązane źródła WebAuthn',

@@ -196,13 +196,13 @@ const sign_in_exp = {
         go_to: 'other profile fields now.',
       },
       disabled_hint: {
-        name: "To add this field, set the 'Name' permission to 'Edit / Read only' in the Profile data above first.",
+        name: "To add this field, set the 'Name' permission to 'Edit / Read only' in the User profile section below first.",
         avatar:
-          "To add this field, set the 'Avatar' permission to 'Edit / Read only' in the Profile data above first.",
+          "To add this field, set the 'Avatar' permission to 'Edit / Read only' in the User profile section below first.",
         profile:
-          "To add this field, set the 'Profile' permission to 'Edit / Read only' in the Profile data above first.",
+          "To add this field, set the 'Profile' permission to 'Edit / Read only' in the User profile section below first.",
         custom_data:
-          "To add this field, set the 'Custom data' permission to 'Edit / Read only' in the Profile data above first.",
+          "To add this field, set the 'Custom data' permission to 'Edit / Read only' in the User profile section below first.",
       },
     },
     webauthn_related_origins: 'WebAuthn Related Origins',

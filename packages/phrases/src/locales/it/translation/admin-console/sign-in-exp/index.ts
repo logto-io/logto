@@ -197,13 +197,13 @@ const sign_in_exp = {
         go_to: 'altri campi del profilo ora.',
       },
       disabled_hint: {
-        name: 'Per aggiungere questo campo, imposta prima il permesso "Nome" su "Modifica/Sola lettura" nei Dati del profilo sopra.',
+        name: 'Per aggiungere questo campo, imposta prima il permesso "Nome" su "Modifica/Sola lettura" nella sezione Profilo utente sotto.',
         avatar:
-          'Per aggiungere questo campo, imposta prima il permesso "Avatar" su "Modifica/Sola lettura" nei Dati del profilo sopra.',
+          'Per aggiungere questo campo, imposta prima il permesso "Avatar" su "Modifica/Sola lettura" nella sezione Profilo utente sotto.',
         profile:
-          'Per aggiungere questo campo, imposta prima il permesso "Profilo" su "Modifica/Sola lettura" nei Dati del profilo sopra.',
+          'Per aggiungere questo campo, imposta prima il permesso "Profilo" su "Modifica/Sola lettura" nella sezione Profilo utente sotto.',
         custom_data:
-          'Per aggiungere questo campo, imposta prima il permesso "Dati personalizzati" su "Modifica/Sola lettura" nei Dati del profilo sopra.',
+          'Per aggiungere questo campo, imposta prima il permesso "Dati personalizzati" su "Modifica/Sola lettura" nella sezione Profilo utente sotto.',
       },
     },
     webauthn_related_origins: 'Origini correlate a WebAuthn',
