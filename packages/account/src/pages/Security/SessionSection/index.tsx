@@ -17,7 +17,7 @@ import useApi from '../../../hooks/use-api';
 import useErrorHandler from '../../../hooks/use-error-handler';
 
 import styles from './index.module.scss';
-import { formatSessionMeta, parseUserAgent } from './utils';
+import { getSessionDisplayInfo } from './utils';
 
 type AccountSession = GetAccountUserSessionsResponse['sessions'][number];
 
@@ -156,29 +156,28 @@ const SessionSection = () => {
           {hasLoaded ? (
             <>
               {currentSession && (
-                <SessionRow isCurrentLabel session={currentSession} isEditable={false} />
+                <SessionRow isCurrent session={currentSession} isEditable={false} />
               )}
-              {otherSessions.length > 0 ? (
-                otherSessions.map((session) => (
-                  <SessionRow
-                    key={session.payload.uid}
-                    session={session}
-                    isEditable={isEditable}
-                    onRevoke={() => {
-                      setRevokeTarget(session);
-                    }}
-                  />
-                ))
-              ) : (
+              {otherSessions.map((session) => (
+                <SessionRow
+                  key={session.payload.uid}
+                  session={session}
+                  isEditable={isEditable}
+                  onRevoke={() => {
+                    setRevokeTarget(session);
+                  }}
+                />
+              ))}
+              {otherSessions.length === 0 && !currentSession && (
                 <div className={styles.emptyState}>
                   {t('account_center.security.session_no_other')}
                 </div>
               )}
             </>
           ) : (
-            <div className={styles.sessionRow}>
+            <div className={classNames(styles.row, layoutClassNames.row)}>
               <div className={styles.sessionInfo}>
-                <button type="button" className={styles.revokeButton} onClick={handleViewSessions}>
+                <button type="button" className={styles.actionButton} onClick={handleViewSessions}>
                   {t('account_center.security.manage')}
                 </button>
               </div>
@@ -205,47 +204,57 @@ const SessionSection = () => {
   );
 };
 
+const formatTimestamp = (value?: number) => {
+  if (!value) {
+    return '-';
+  }
+
+  const timestamp = value < 1_000_000_000_000 ? value * 1000 : value;
+
+  return new Date(timestamp).toLocaleString();
+};
+
 type SessionRowProps = {
   readonly session: AccountSession;
   readonly isEditable: boolean;
-  readonly isCurrentLabel?: boolean;
+  readonly isCurrent?: boolean;
   readonly onRevoke?: () => void;
 };
 
-const SessionRow = ({ session, isEditable, isCurrentLabel, onRevoke }: SessionRowProps) => {
+const SessionRow = ({ session, isEditable, isCurrent, onRevoke }: SessionRowProps) => {
   const { t } = useTranslation();
 
-  const userAgent = session.lastSubmission?.signInContext?.userAgent;
-  const deviceLabel = parseUserAgent(userAgent);
-  const meta = formatSessionMeta(session);
-  const signedInDate = new Date(session.payload.loginTs * 1000).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+  const { name, location, ip } = getSessionDisplayInfo(session);
+  const deviceName = name ?? '-';
+  const signedInAt = formatTimestamp(session.payload.loginTs);
+
+  const metaParts = [location, ip].filter(Boolean);
+  const metaText = metaParts.length > 0 ? metaParts.join(' · ') : undefined;
 
   return (
-    <div className={styles.sessionRow}>
+    <div className={classNames(styles.row, layoutClassNames.row)}>
       <div className={styles.sessionInfo}>
-        <div className={styles.sessionHeader}>
-          <span className={styles.sessionDevice}>{deviceLabel}</span>
-          {isCurrentLabel && (
-            <span className={styles.currentTag}>
-              <span className={styles.currentDot} />
-              {t('account_center.security.session_current')}
-            </span>
-          )}
-        </div>
-        {meta && <div className={styles.sessionMeta}>{meta}</div>}
-        <div className={styles.sessionMeta}>
-          {t('account_center.security.session_signed_in', { date: signedInDate })}
+        <div className={styles.deviceName}>{deviceName}</div>
+        {metaText && <div className={styles.meta}>{metaText}</div>}
+        <div className={styles.meta}>
+          {t('account_center.security.session_signed_in', { date: signedInAt })}
         </div>
       </div>
-      {isEditable && onRevoke && (
-        <button type="button" className={styles.revokeButton} onClick={onRevoke}>
-          {t('account_center.security.session_revoke')}
-        </button>
-      )}
+      <div className={styles.actions}>
+        {isCurrent ? (
+          <span className={styles.currentTag}>
+            <span className={styles.currentDot} />
+            {t('account_center.security.session_current')}
+          </span>
+        ) : (
+          isEditable &&
+          onRevoke && (
+            <button type="button" className={styles.revokeButton} onClick={onRevoke}>
+              {t('account_center.security.session_revoke')}
+            </button>
+          )
+        )}
+      </div>
     </div>
   );
 };
