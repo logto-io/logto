@@ -2,7 +2,7 @@ import { demoAppApplicationId, fullSignInExperienceGuard } from '@logto/schemas'
 import { z } from 'zod';
 
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { demoAppUrl } from '#src/constants.js';
+import { demoAppUrl, logtoUrl } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 import { Trace } from '#src/ui-helpers/trace.js';
@@ -135,7 +135,10 @@ describe('server-side rendering', () => {
     it('should not inline custom CSS in preview mode', async () => {
       await updateSignInExperience({ customCss });
       const experience = new ExpectExperience(await browser.newPage());
-      await experience.navigateTo(`${demoAppUrl.href}?preview=true`);
+      // Hit the experience entry directly with `?preview=true`, mirroring how the console preview
+      // iframe loads it. Going through the demo app instead would OIDC-redirect to `/sign-in` and
+      // drop the query param, so the server would never see preview mode.
+      await experience.navigateTo(new URL('/sign-in?preview=true', logtoUrl).href);
 
       // Preview is driven live by the console iframe via postMessage; the server must not inline saved CSS.
       const html = await experience.page.content();
