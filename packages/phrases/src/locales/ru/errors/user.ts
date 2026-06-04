@@ -1,21 +1,14 @@
 const user = {
   username_already_in_use: 'Это имя пользователя уже используется.',
-  /** UNTRANSLATED */
-  username_starts_with_number: 'Username cannot start with a number.',
-  /** UNTRANSLATED */
-  username_invalid_charset_hard: 'Username can only contain letters, numbers, and underscores.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username is too short.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username is too long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Username cannot contain uppercase letters.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Username cannot contain lowercase letters.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Username cannot contain numbers.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Username cannot contain underscores.',
+  username_starts_with_number: 'Имя пользователя не может начинаться с цифры.',
+  username_invalid_charset_hard:
+    'Имя пользователя может содержать только буквы, цифры и подчеркивания.',
+  username_too_short: 'Имя пользователя слишком короткое.',
+  username_too_long: 'Имя пользователя слишком длинное.',
+  username_uppercase_not_allowed: 'Имя пользователя не может содержать заглавные буквы.',
+  username_lowercase_not_allowed: 'Имя пользователя не может содержать строчные буквы.',
+  username_numbers_not_allowed: 'Имя пользователя не может содержать цифры.',
+  username_underscore_not_allowed: 'Имя пользователя не может содержать подчеркивания.',
   email_already_in_use: 'Этот адрес электронной почты связан с существующей учетной записью.',
   phone_already_in_use: 'Этот номер телефона связан с существующей учетной записью.',
   invalid_email: 'Некорректный адрес электронной почты.',

@@ -46,9 +46,8 @@ const sign_in_experiences = {
     'Политика истечения срока действия пароля не включена. Включите ее в настройках входа в систему перед истечением срока действия паролей.',
   password_expiration_invalid_period_days:
     'Когда включено истечение срока действия пароля, reminderPeriodDays должен быть меньше validPeriodDays.',
-  /** UNTRANSLATED */
   username_policy_case_conflicts_exist:
-    'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
+    'Невозможно переключиться на нечувствительные к регистру имена пользователей, пока существуют имена пользователей, отличающиеся только регистром. Устраните конфликты и повторите попытку.',
 };
 
 export default Object.freeze(sign_in_experiences);

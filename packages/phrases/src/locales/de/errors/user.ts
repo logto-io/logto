@@ -1,21 +1,14 @@
 const user = {
   username_already_in_use: 'Dieser Benutzername wird bereits verwendet.',
-  /** UNTRANSLATED */
-  username_starts_with_number: 'Username cannot start with a number.',
-  /** UNTRANSLATED */
-  username_invalid_charset_hard: 'Username can only contain letters, numbers, and underscores.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username is too short.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username is too long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Username cannot contain uppercase letters.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Username cannot contain lowercase letters.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Username cannot contain numbers.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Username cannot contain underscores.',
+  username_starts_with_number: 'Benutzername darf nicht mit einer Zahl beginnen.',
+  username_invalid_charset_hard:
+    'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.',
+  username_too_short: 'Benutzername ist zu kurz.',
+  username_too_long: 'Benutzername ist zu lang.',
+  username_uppercase_not_allowed: 'Benutzername darf keine Großbuchstaben enthalten.',
+  username_lowercase_not_allowed: 'Benutzername darf keine Kleinbuchstaben enthalten.',
+  username_numbers_not_allowed: 'Benutzername darf keine Zahlen enthalten.',
+  username_underscore_not_allowed: 'Benutzername darf keine Unterstriche enthalten.',
   email_already_in_use: 'Diese E-Mail-Adresse ist mit einem vorhandenen Konto verknüpft.',
   phone_already_in_use: 'Diese Telefonnummer ist mit einem vorhandenen Konto verknüpft.',
   invalid_email: 'Ungültige E-Mail.',

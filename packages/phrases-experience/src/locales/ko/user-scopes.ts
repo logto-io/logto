@@ -9,8 +9,7 @@ const user_scopes = {
     'urn:logto:scope:organizations': '조직 정보',
     'urn:logto:scope:organization_roles': '조직 역할',
     address: '주소',
-    /** UNTRANSLATED */
-    'urn:logto:scope:sessions': 'Your active sessions',
+    'urn:logto:scope:sessions': '활성 세션',
   },
 };
 

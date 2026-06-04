@@ -11,18 +11,12 @@ const error = {
   username_exists: 'Kullanıcı adı mevcut.',
   username_should_not_start_with_number: 'Kullanıcı adı sayı ile başlayamaz.',
   username_invalid_charset: 'Kullanıcı adı yalnızca harf,sayı veya alt çizgi içermeli.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username must be at least {{min}} characters long.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username must be at most {{max}} characters long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
+  username_too_short: 'Kullanıcı adı en az {{min}} karakter uzunluğunda olmalıdır.',
+  username_too_long: 'Kullanıcı adı en fazla {{max}} karakter uzunluğunda olmalıdır.',
+  username_uppercase_not_allowed: 'Kullanıcı adlarında büyük harflere izin verilmiyor.',
+  username_lowercase_not_allowed: 'Kullanıcı adlarında küçük harflere izin verilmiyor.',
+  username_numbers_not_allowed: 'Kullanıcı adlarında rakamlara izin verilmiyor.',
+  username_underscore_not_allowed: 'Kullanıcı adlarında alt çizgilere izin verilmiyor.',
   invalid_email: 'E-posta adresi geçersiz',
   invalid_phone: 'Telefon numarası geçersiz',
   passwords_do_not_match: 'Şifreler eşleşmiyor',

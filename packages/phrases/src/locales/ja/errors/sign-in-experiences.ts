@@ -45,9 +45,8 @@ const sign_in_experiences = {
     'パスワードの有効期限ポリシーが有効になっていません。パスワードを期限切れにする前に、サインイン体験の設定で有効にしてください。',
   password_expiration_invalid_period_days:
     'パスワード有効期限が有効な場合、reminderPeriodDays は validPeriodDays より小さくする必要があります。',
-  /** UNTRANSLATED */
   username_policy_case_conflicts_exist:
-    'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
+    'ユーザー名が大文字と小文字のみで異なる場合、ケースに依存しないユーザー名に切り替えることはできません。競合を解決してからもう一度お試しください。',
 };
 
 export default Object.freeze(sign_in_experiences);

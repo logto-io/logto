@@ -1,21 +1,14 @@
 const user = {
   username_already_in_use: 'Este nome de utilizador já está em uso.',
-  /** UNTRANSLATED */
-  username_starts_with_number: 'Username cannot start with a number.',
-  /** UNTRANSLATED */
-  username_invalid_charset_hard: 'Username can only contain letters, numbers, and underscores.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username is too short.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username is too long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Username cannot contain uppercase letters.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Username cannot contain lowercase letters.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Username cannot contain numbers.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Username cannot contain underscores.',
+  username_starts_with_number: 'O nome de utilizador não pode começar com um número.',
+  username_invalid_charset_hard:
+    'O nome de utilizador só pode conter letras, números e sublinhados.',
+  username_too_short: 'O nome de utilizador é muito curto.',
+  username_too_long: 'O nome de utilizador é muito longo.',
+  username_uppercase_not_allowed: 'O nome de utilizador não pode conter letras maiúsculas.',
+  username_lowercase_not_allowed: 'O nome de utilizador não pode conter letras minúsculas.',
+  username_numbers_not_allowed: 'O nome de utilizador não pode conter números.',
+  username_underscore_not_allowed: 'O nome de utilizador não pode conter sublinhados.',
   email_already_in_use: 'Este email já está associado a uma conta existente.',
   phone_already_in_use: 'Este número de telefone já está associado a uma conta existente.',
   invalid_email: 'Endereço de email inválido.',

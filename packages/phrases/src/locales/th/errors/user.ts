@@ -1,21 +1,13 @@
 const user = {
   username_already_in_use: 'ชื่อผู้ใช้นี้ถูกใช้ไปแล้ว',
-  /** UNTRANSLATED */
-  username_starts_with_number: 'Username cannot start with a number.',
-  /** UNTRANSLATED */
-  username_invalid_charset_hard: 'Username can only contain letters, numbers, and underscores.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username is too short.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username is too long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Username cannot contain uppercase letters.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Username cannot contain lowercase letters.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Username cannot contain numbers.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Username cannot contain underscores.',
+  username_starts_with_number: 'ชื่อผู้ใช้ต้องไม่เริ่มต้นด้วยตัวเลข',
+  username_invalid_charset_hard: 'ชื่อผู้ใช้สามารถประกอบด้วยตัวอักษร ตัวเลข และขีดล่างเท่านั้น',
+  username_too_short: 'ชื่อผู้ใช้สั้นเกินไป',
+  username_too_long: 'ชื่อผู้ใช้ยาวเกินไป',
+  username_uppercase_not_allowed: 'ชื่อผู้ใช้ต้องไม่มีตัวอักษรตัวใหญ่',
+  username_lowercase_not_allowed: 'ชื่อผู้ใช้ต้องไม่มีตัวอักษรตัวเล็ก',
+  username_numbers_not_allowed: 'ชื่อผู้ใช้ต้องไม่มีตัวเลข',
+  username_underscore_not_allowed: 'ชื่อผู้ใช้ต้องไม่มีขีดล่าง',
   email_already_in_use: 'อีเมลนี้ถูกเชื่อมโยงกับบัญชีที่มีอยู่แล้ว',
   phone_already_in_use: 'เบอร์โทรศัพท์นี้ถูกเชื่อมโยงกับบัญชีที่มีอยู่แล้ว',
   invalid_email: 'ที่อยู่อีเมลไม่ถูกต้อง',

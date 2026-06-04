@@ -10,18 +10,12 @@ const error = {
   username_exists: '사용자 이름이 이미 존재해요.',
   username_should_not_start_with_number: '사용자 이름은 숫자로 시작하면 안 돼요.',
   username_invalid_charset: '사용자 이름은 문자, 숫자, _(밑줄 문자) 로만 이루어져야 해요.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username must be at least {{min}} characters long.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username must be at most {{max}} characters long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
+  username_too_short: '사용자 이름은 최소 {{min}}자 이상이어야 해요.',
+  username_too_long: '사용자 이름은 최대 {{max}}자 이하여야 해요.',
+  username_uppercase_not_allowed: '사용자 이름에는 대문자가 허용되지 않아요.',
+  username_lowercase_not_allowed: '사용자 이름에는 소문자가 허용되지 않아요.',
+  username_numbers_not_allowed: '사용자 이름에는 숫자가 허용되지 않아요.',
+  username_underscore_not_allowed: '사용자 이름에는 밑줄 문자가 허용되지 않아요.',
   invalid_email: '이메일이 유효하지 않아요.',
   invalid_phone: '휴대전화번호가 유효하지 않아요.',
   passwords_do_not_match: '비밀번호가 일치하지 않아요.',

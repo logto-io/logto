@@ -12,18 +12,12 @@ const error = {
   username_should_not_start_with_number: 'ユーザー名は数字で始めることはできません',
   username_invalid_charset:
     'ユーザー名は文字、数字、またはアンダースコアのみを含める必要があります。',
-  /** UNTRANSLATED */
-  username_too_short: 'Username must be at least {{min}} characters long.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username must be at most {{max}} characters long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
+  username_too_short: 'ユーザー名は少なくとも {{min}} 文字である必要があります。',
+  username_too_long: 'ユーザー名は最大で {{max}} 文字である必要があります。',
+  username_uppercase_not_allowed: 'ユーザー名に大文字は使用できません。',
+  username_lowercase_not_allowed: 'ユーザー名に小文字は使用できません。',
+  username_numbers_not_allowed: 'ユーザー名に数字は使用できません。',
+  username_underscore_not_allowed: 'ユーザー名にアンダースコアは使用できません。',
   invalid_email: 'メールアドレスが無効です',
   invalid_phone: '電話番号が無効です',
   passwords_do_not_match: 'パスワードが一致しません。もう一度お試しください。',
