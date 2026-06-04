@@ -121,6 +121,19 @@ describe('oidc provider init', () => {
     ).not.toThrow();
   });
 
+  it('should reject invalid application access control client metadata', async () => {
+    const tenant = new MockTenant();
+    const provider = createProvider(tenant);
+    const configuration = instance(provider).configuration();
+    const ctx = createOidcContext({ provider });
+
+    expect(() =>
+      configuration.extraClientMetadata.validator(ctx, appLevelAccessControlMetadataKey, 'true', {
+        client_id: clientId,
+      })
+    ).toThrow(errors.InvalidClientMetadata);
+  });
+
   it('should reflect updated resource data on token exchange read path', async () => {
     const findResourceByIndicator = jest
       .fn()

@@ -333,10 +333,10 @@ export default function initOidc(
             return;
           }
 
-          assert(
-            typeof value === 'boolean',
-            `${appLevelAccessControlMetadataKey} must be a boolean`
-          );
+          if (typeof value !== 'boolean') {
+            throw new errors.InvalidClientMetadata(appLevelAccessControlMetadataKey);
+          }
+
           return;
         }
 

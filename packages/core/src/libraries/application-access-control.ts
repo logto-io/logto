@@ -13,6 +13,20 @@ export const createApplicationAccessControlLibrary = (queries: Queries) => {
     applicationAccessControl: { hasUserApplicationAccess },
   } = queries;
 
+  const findAppLevelAccessControlEnabled = async (applicationId: string) => {
+    try {
+      const { appLevelAccessControlEnabled } = await findApplicationById(applicationId);
+
+      return appLevelAccessControlEnabled;
+    } catch (error: unknown) {
+      if (isApplicationNotFoundError(error)) {
+        throw new RequestError('oidc.access_denied');
+      }
+
+      throw error;
+    }
+  };
+
   const assertUserHasApplicationAccess = async (
     applicationId: string,
     userId: string,
@@ -23,16 +37,7 @@ export const createApplicationAccessControlLibrary = (queries: Queries) => {
     }
 
     const isEnabled =
-      appLevelAccessControlEnabled ??
-      (await findApplicationById(applicationId)
-        .then(({ appLevelAccessControlEnabled }) => appLevelAccessControlEnabled)
-        .catch((error: unknown) => {
-          if (isApplicationNotFoundError(error)) {
-            throw new RequestError('oidc.access_denied');
-          }
-
-          throw error;
-        }));
+      appLevelAccessControlEnabled ?? (await findAppLevelAccessControlEnabled(applicationId));
 
     if (!isEnabled) {
       return;
