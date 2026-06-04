@@ -83,9 +83,7 @@ function Tooltip({
     const dom = anchorRef.current;
 
     const enterHandler = () => {
-      if (!isVisible) {
-        setIsVisible(true);
-      }
+      setIsVisible(true);
     };
 
     const leaveHandler = () => {
@@ -103,7 +101,7 @@ function Tooltip({
       dom.removeEventListener('focusin', enterHandler);
       dom.removeEventListener('focusout', leaveHandler);
     };
-  }, [anchorRef, isVisible, isKeepOpen]);
+  }, [anchorRef, isKeepOpen]);
 
   useEffect(() => {
     if (!isVisible) {
