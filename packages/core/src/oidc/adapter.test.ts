@@ -83,9 +83,31 @@ describe('postgres Adapter', () => {
       client_id,
       client_name,
       client_secret,
+      appLevelAccessControlEnabled: mockApplication.appLevelAccessControlEnabled,
       ...getConstantClientMetadata(mockEnvSet, type),
       ...snakecaseKeys(oidcClientMetadata),
       ...customClientMetadata,
+    });
+  });
+
+  it('includes app-level access-control gate in client metadata', async () => {
+    const adapter = postgresAdapter(
+      mockEnvSet,
+      new MockQueries({
+        applications: {
+          findApplicationById: jest.fn(
+            async (): Promise<Application> => ({
+              ...mockApplication,
+              appLevelAccessControlEnabled: true,
+            })
+          ),
+        },
+      }),
+      'Client'
+    );
+
+    await expect(adapter.find('foo')).resolves.toMatchObject({
+      appLevelAccessControlEnabled: true,
     });
   });
 

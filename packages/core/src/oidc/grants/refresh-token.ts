@@ -163,7 +163,12 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx,
     throw new InvalidGrant('refresh token already used');
   }
 
-  await assertUserHasApplicationAccessForOidc(appAccess, client.clientId, account.accountId);
+  await assertUserHasApplicationAccessForOidc(
+    appAccess,
+    client.clientId,
+    account.accountId,
+    client.metadata().appLevelAccessControlEnabled
+  );
 
   const { organizationId } = await checkOrganizationAccess(ctx, queries, account);
 
