@@ -102,7 +102,6 @@ const account_center = {
       "You haven't added a second verification method. Add at least one to enable 2-step verification at sign-in.",
     sessions: 'Sessions',
     session_current: 'Current session',
-    session_other: 'Other session',
     session_signed_in: 'Signed in {{date}}',
     session_revoke: 'Sign out',
     session_revoke_confirmation_title: 'Sign out session',

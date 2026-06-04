@@ -18,11 +18,13 @@
   overflow: clip;
 }
 
-.sessionRow {
-  display: flex;
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: _.unit(4);
   align-items: center;
-  gap: _.unit(4);
-  padding: _.unit(4) _.unit(6);
+  padding: _.unit(4.5) _.unit(6);
+  min-height: 76px;
 
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-line-divider);
@@ -30,22 +32,48 @@
 }
 
 .sessionInfo {
-  flex: 1;
-  min-width: 0;
+  grid-column: 1;
   display: flex;
   flex-direction: column;
   gap: _.unit(1);
+  min-width: 0;
 }
 
-.sessionHeader {
-  display: flex;
-  align-items: center;
-  gap: _.unit(2);
-}
-
-.sessionDevice {
+.deviceName {
   font: var(--font-label-2);
   color: var(--color-type-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.actionButton {
+  font: var(--font-label-2);
+  color: var(--color-type-link);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: _.unit(0.5) 0;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .currentTag {
@@ -57,7 +85,7 @@
   background: rgba(78, 162, 84, 12%);
   font: var(--font-label-3);
   color: var(--color-type-primary);
-  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .currentDot {
@@ -67,20 +95,14 @@
   background: var(--color-success-default);
 }
 
-.sessionMeta {
-  font: var(--font-body-3);
-  color: var(--color-type-secondary);
-}
-
 .revokeButton {
   font: var(--font-label-2);
-  color: var(--color-type-link);
+  color: var(--color-danger-default);
   cursor: pointer;
   background: none;
   border: none;
   padding: _.unit(0.5) 0;
   white-space: nowrap;
-  flex-shrink: 0;
 
   &:hover {
     text-decoration: underline;
@@ -94,19 +116,41 @@
   text-align: center;
 }
 
-:global(body.mobile) {
+@mixin mobile-layout {
   .sectionTitle {
     padding-left: 0;
   }
 
-  .sessionRow {
-    flex-direction: column;
-    align-items: stretch;
-    gap: _.unit(2);
+  .row {
+    min-height: 0;
+    gap: _.unit(2) _.unit(3);
     padding: _.unit(4);
   }
 
-  .revokeButton {
-    align-self: flex-end;
+  .actions {
+    grid-row: 1;
+    place-self: start end;
+  }
+
+  .deviceName {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .meta {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+:global(body.mobile) {
+  @include mobile-layout;
+}
+
+:global(body.desktop) {
+  @media only screen and (max-width: 800px) {
+    @include mobile-layout;
   }
 }
