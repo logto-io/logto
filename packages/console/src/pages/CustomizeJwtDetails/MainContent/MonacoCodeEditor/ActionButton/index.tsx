@@ -37,8 +37,6 @@ function ActionButton({
   });
 
   const handleClick = useCallback<MouseEventHandler<HTMLButtonElement>>(async () => {
-    iconButtonRef.current?.blur();
-
     if (actionLoadingTip) {
       setTipContent(actionLoadingTip);
     }
