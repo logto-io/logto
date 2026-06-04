@@ -6,6 +6,7 @@ import {
   MfaPolicy,
   SignInIdentifier,
   SignInMode,
+  defaultUsernamePolicy,
 } from '@logto/schemas';
 
 import type { SignInExperienceResponse } from '@/types';
@@ -129,6 +130,7 @@ export const mockSignInExperience: SignInExperience = {
   hideLogtoBranding: false,
   passkeySignIn: {},
   signUpProfileFields: null,
+  usernamePolicy: defaultUsernamePolicy,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceResponse = {
@@ -178,6 +180,7 @@ export const mockSignInExperienceSettings: SignInExperienceResponse = {
   emailBlocklistPolicy: {},
   passkeySignIn: {},
   signUpProfileFields: null,
+  usernamePolicy: defaultUsernamePolicy,
 };
 
 const usernameSettings = {
