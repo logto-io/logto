@@ -70,12 +70,15 @@ describe('koaExperienceSsr()', () => {
     await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
     expect(next).toHaveBeenCalledTimes(1);
     expect(ctx.body).not.toContain(ssrPlaceholder);
-    expect(ctx.body).toContain(
-      `const logtoSsr=Object.freeze(${JSON.stringify({
-        signInExperience: { data: mockSignInExperience },
-        phrases: { lng: 'en', data: phrases },
-      })});`
-    );
+    expect(ctx.body).toContain('const logtoSsr=Object.freeze(');
+
+    // Extract and parse the injected JSON rather than comparing against a bare `JSON.stringify`, which
+    // would diverge from `serializeSsrData`'s `<`/`>`/`&` escaping the moment the mock gains such a char.
+    const serialized = /Object\.freeze\((?<json>.+)\)/.exec(ctx.body)?.groups?.json;
+    expect(JSON.parse(serialized!)).toEqual({
+      signInExperience: { data: mockSignInExperience },
+      phrases: { lng: 'en', data: phrases },
+    });
   });
 
   it('should inline custom CSS into the <head> when present', async () => {
@@ -111,6 +114,31 @@ describe('koaExperienceSsr()', () => {
     // The dangerous `</style` becomes `<\/style`, which the HTML parser cannot treat as an end tag.
     expect(ctx.body).toContain('content: "<\\/style>"');
   });
+
+  // The regex matches the `</style` prefix without requiring the closing `>`, so every end-tag variant
+  // the HTML parser accepts — uppercase, or whitespace before `>` — is defused the same way.
+  it.each(['</STYLE>', '</style >', '</style\n>'])(
+    'should escape the `%s` end-tag variant in custom CSS',
+    async (variant) => {
+      (
+        tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock
+      ).mockResolvedValueOnce({
+        ...mockSignInExperience,
+        customCss: `body::before { content: "${variant}"; }`,
+      });
+
+      const ctx = {
+        ...baseCtx,
+        path: '/',
+        body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+      };
+      await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+      // `</style`/`</STYLE` is broken to `<\/...`; the literal text after it (space/newline/`>`) is intact.
+      expect(ctx.body).toContain(`content: "${variant.replace(/<\/(style)/i, '<\\/$1')}"`);
+      expect(ctx.body).not.toMatch(/content: "<\/(?:style|STYLE)/);
+    }
+  );
 
   it('should escape characters in the SSR JSON so embedded data cannot break out of the <script>', async () => {
     (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
