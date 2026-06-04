@@ -1,6 +1,7 @@
 import { demoAppApplicationId, fullSignInExperienceGuard } from '@logto/schemas';
 import { z } from 'zod';
 
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
@@ -107,5 +108,40 @@ describe('server-side rendering', () => {
 
     // Check network requests
     await expectTraceNotToHaveWellKnownEndpoints();
+  });
+
+  describe('custom CSS inlining', () => {
+    // A marker the server adds (`<style data-custom-css>`) but the client-side react-helmet `<style>`
+    // does not, so its presence in the served HTML proves the CSS was inlined server-side for the first
+    // paint rather than injected later by the client.
+    const customCss = '.ssr-custom-css-probe { color: rgb(1, 2, 3); }';
+
+    afterEach(async () => {
+      await updateSignInExperience({ customCss: null });
+    });
+
+    it('should inline custom CSS into the served <head> so it applies on the first paint', async () => {
+      await updateSignInExperience({ customCss });
+      const experience = new ExpectExperience(await browser.newPage());
+      await experience.navigateTo(demoAppUrl.href);
+
+      const html = await experience.page.content();
+      expect(html).toContain('data-custom-css');
+      expect(html).toContain(customCss);
+
+      await experience.page.close();
+    });
+
+    it('should not inline custom CSS in preview mode', async () => {
+      await updateSignInExperience({ customCss });
+      const experience = new ExpectExperience(await browser.newPage());
+      await experience.navigateTo(`${demoAppUrl.href}?preview=true`);
+
+      // Preview is driven live by the console iframe via postMessage; the server must not inline saved CSS.
+      const html = await experience.page.content();
+      expect(html).not.toContain('data-custom-css');
+
+      await experience.page.close();
+    });
   });
 });
