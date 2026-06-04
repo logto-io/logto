@@ -19,7 +19,13 @@ const serializeSsrData = (data: SsrData): string =>
   JSON.stringify(data)
     .replaceAll('<', '\\u003c')
     .replaceAll('>', '\\u003e')
-    .replaceAll('&', '\\u0026');
+    .replaceAll('&', '\\u0026')
+    // U+2028 (LINE SEPARATOR) and U+2029 (PARAGRAPH SEPARATOR) are valid inside JSON strings but are
+    // line terminators in a JavaScript string literal (pre-ES2019). Since this payload is embedded as a
+    // JS expression (`Object.freeze(...)`), leaving them literal can break parsing in older engines.
+    // Escape to their `\uXXXX` form, which JS decodes back to the original characters.
+    .replaceAll('\u2028', '\\u2028') // U+2028 LINE SEPARATOR
+    .replaceAll('\u2029', '\\u2029'); // U+2029 PARAGRAPH SEPARATOR
 
 /**
  * Create a middleware to prefetch the experience data and inject it into the HTML response. Some

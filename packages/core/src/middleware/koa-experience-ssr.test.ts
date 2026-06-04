@@ -74,7 +74,9 @@ describe('koaExperienceSsr()', () => {
 
     // Extract and parse the injected JSON rather than comparing against a bare `JSON.stringify`, which
     // would diverge from `serializeSsrData`'s `<`/`>`/`&` escaping the moment the mock gains such a char.
-    const serialized = /Object\.freeze\((?<json>.+)\)/.exec(ctx.body)?.groups?.json;
+    // Anchor on the trailing `);` so the greedy capture stops at the genuine `Object.freeze(...)` close.
+    const serialized = /Object\.freeze\((?<json>.+)\);/.exec(ctx.body)?.groups?.json;
+    expect(serialized).toBeTruthy();
     expect(JSON.parse(serialized!)).toEqual({
       signInExperience: { data: mockSignInExperience },
       phrases: { lng: 'en', data: phrases },
@@ -173,12 +175,42 @@ describe('koaExperienceSsr()', () => {
 
     // The `\uXXXX` escapes must decode back to the original characters when parsed, so the escaping is
     // safe (no data corruption) while still preventing tag breakout.
-    const serialized = /Object\.freeze\((?<json>.+)\)/.exec(ctx.body)?.groups?.json;
+    const serialized = /Object\.freeze\((?<json>.+)\);/.exec(ctx.body)?.groups?.json;
     expect(serialized).toBeTruthy();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- test parses known JSON
     const parsed = JSON.parse(serialized!);
     expect(parsed.signInExperience.data.customContent['/sign-in']).toBe('<a>&</a>');
+  });
+
+  it('should escape U+2028/U+2029 so the inline `Object.freeze(...)` expression stays parseable', async () => {
+    // U+2028 (LINE SEPARATOR) and U+2029 (PARAGRAPH SEPARATOR) are valid in JSON but are line
+    // terminators in a JS string literal, so left literal they would break the embedded expression.
+    // Build the value from code points so this source file stays pure ASCII.
+    const original = `a${String.fromCodePoint(0x20_28)}b${String.fromCodePoint(0x20_29)}c`;
+    (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
+      { ...mockSignInExperience, customContent: { '/sign-in': original } }
+    );
+
+    const ctx = {
+      ...baseCtx,
+      path: '/',
+      body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+    };
+    await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+    // The literal separators must not survive in the emitted source, but their escapes must.
+    expect(ctx.body).not.toContain(String.fromCodePoint(0x20_28));
+    expect(ctx.body).not.toContain(String.fromCodePoint(0x20_29));
+    expect(ctx.body).toContain('\\u2028');
+    expect(ctx.body).toContain('\\u2029');
+
+    // The escaped form must still decode back to the original once parsed.
+    const serialized = /Object\.freeze\((?<json>.+)\);/.exec(ctx.body)?.groups?.json;
+    expect(serialized).toBeTruthy();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- test parses known JSON
+    const parsed = JSON.parse(serialized!);
+    expect(parsed.signInExperience.data.customContent['/sign-in']).toBe(original);
   });
 
   it('should not inline custom CSS in preview mode', async () => {

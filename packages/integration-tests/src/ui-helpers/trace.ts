@@ -49,10 +49,11 @@ export class Trace {
   async cleanup() {
     if (this.tracePath) {
       // Clear the path first so a repeated cleanup (e.g. a later test in the same suite that never
-      // started a trace) is a no-op instead of unlinking an already-removed file.
+      // started a trace) is a no-op instead of unlinking an already-removed file. `force: true` makes
+      // a missing file a no-op too, while still surfacing real FS errors instead of swallowing them.
       const { tracePath } = this;
       this.tracePath = undefined;
-      await fs.unlink(tracePath);
+      await fs.rm(tracePath, { force: true });
     }
   }
 }

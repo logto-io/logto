@@ -123,28 +123,34 @@ describe('server-side rendering', () => {
     it('should inline custom CSS into the served <head> so it applies on the first paint', async () => {
       await updateSignInExperience({ customCss });
       const experience = new ExpectExperience(await browser.newPage());
-      await experience.navigateTo(demoAppUrl.href);
+      try {
+        await experience.navigateTo(demoAppUrl.href);
 
-      const html = await experience.page.content();
-      expect(html).toContain('data-custom-css');
-      expect(html).toContain(customCss);
-
-      await experience.page.close();
+        const html = await experience.page.content();
+        expect(html).toContain('data-custom-css');
+        expect(html).toContain(customCss);
+      } finally {
+        // Close in `finally` so a failed assertion/navigation does not leak the page across the suite.
+        await experience.page.close();
+      }
     });
 
     it('should not inline custom CSS in preview mode', async () => {
       await updateSignInExperience({ customCss });
       const experience = new ExpectExperience(await browser.newPage());
-      // Hit the experience entry directly with `?preview=true`, mirroring how the console preview
-      // iframe loads it. Going through the demo app instead would OIDC-redirect to `/sign-in` and
-      // drop the query param, so the server would never see preview mode.
-      await experience.navigateTo(new URL('/sign-in?preview=true', logtoUrl).href);
+      try {
+        // Hit the experience entry directly with `?preview=true`, mirroring how the console preview
+        // iframe loads it. Going through the demo app instead would OIDC-redirect to `/sign-in` and
+        // drop the query param, so the server would never see preview mode.
+        await experience.navigateTo(new URL('/sign-in?preview=true', logtoUrl).href);
 
-      // Preview is driven live by the console iframe via postMessage; the server must not inline saved CSS.
-      const html = await experience.page.content();
-      expect(html).not.toContain('data-custom-css');
-
-      await experience.page.close();
+        // Preview is driven live by the console iframe via postMessage; the server must not inline saved CSS.
+        const html = await experience.page.content();
+        expect(html).not.toContain('data-custom-css');
+      } finally {
+        // Close in `finally` so a failed assertion/navigation does not leak the page across the suite.
+        await experience.page.close();
+      }
     });
   });
 });
