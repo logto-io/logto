@@ -242,6 +242,12 @@ export class SignInExperienceValidator {
     return passwordPolicy;
   }
 
+  public async getUsernamePolicy() {
+    const { usernamePolicy } = await this.getSignInExperienceData();
+
+    return usernamePolicy;
+  }
+
   public async getPasswordExpirationPolicy() {
     const { passwordExpiration } = await this.getSignInExperienceData();
 

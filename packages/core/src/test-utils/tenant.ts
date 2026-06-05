@@ -36,6 +36,14 @@ export class MockQueries extends Queries {
       wellKnownCache
     );
 
+    // The real `getUsernameCaseSensitive` closes over the real `findDefaultSignInExperience`, which
+    // the per-key merge below cannot swap, so it would hit the empty mock pool. Default it to a
+    // working stub (case-sensitive — the prod default); tests needing case-insensitive override it.
+    this.signInExperiences = {
+      ...this.signInExperiences,
+      getUsernameCaseSensitive: async () => true,
+    };
+
     if (!queriesOverride) {
       return;
     }

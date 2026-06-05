@@ -8,16 +8,11 @@ const account_center = {
     security_title: 'Güvenlik',
     security_description:
       'Hesabınızın güvenliğini sağlamak için hesap ayarlarınızı burada değiştirebilirsiniz.',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: 'Kişisel bilgiler',
+    profile_description: 'Kişisel bilgilerinizi burada değiştirin.',
+    sidebar_personal_info: 'Kişisel bilgiler',
+    sidebar_security: 'Güvenlik',
+    sidebar_sessions: 'Oturumlar',
     support: 'Destek',
   },
   verification: {
@@ -256,27 +251,27 @@ const account_center = {
       'Bu cihazı 2 adımlı kimlik doğrulama için başarıyla doğruladınız. Birden fazla anahtarınız varsa tanımak için adı özelleştirin.',
     name_input_label: 'Ad',
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
+    page_title: 'Oturumlar',
+    page_description:
+      'Aktif oturumlarınızı ve yetkilendirilmiş üçüncü taraf uygulamalarını yönetin.',
+    title: 'Oturumlar',
+    current_session: 'Mevcut oturum',
+    signed_in_at: '{{date}} tarihinde giriş yapıldı',
+    revoke_session: 'Çıkış yap',
+    revoke_session_title: 'Oturumu kapat',
     revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
+      'Bu, oturumu kapatacak ve ilgili tüm erişimi iptal edecektir. Devam etmek istediğinizden emin misiniz?',
+    no_other_sessions: 'Başka aktif oturum yok.',
+    loading: 'Yükleniyor...',
+    third_party_apps_title: 'Üçüncü taraf uygulamalar',
+    no_third_party_apps: 'Yetkilendirilmiş üçüncü taraf uygulama yok.',
+    granted_at: '{{date}} tarihinde yetkilendirildi',
+    revoke_grant: 'Kaldır',
+    revoke_grant_title: 'Üçüncü taraf uygulama erişimini kaldır',
     revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+      'Bu, bu uygulamaya verilen tüm erişimi iptal edecektir. Devam etmek istediğinizden emin misiniz?',
+    revoke_grant_failed: 'Bazı izinler iptal edilemedi. Lütfen tekrar deneyin.',
   },
 };
 

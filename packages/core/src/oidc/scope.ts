@@ -12,6 +12,7 @@ import { cond, pick } from '@silverhand/essentials';
 import { snakeCase } from 'snake-case';
 import { type SnakeCaseKeys } from 'snakecase-keys';
 
+import { EnvSet } from '#src/env-set/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -62,6 +63,23 @@ const claimToUserProfileKey: Readonly<Record<UserProfileClaimSnakeCase, keyof Us
 
 const isUserProfileClaim = (claim: string): claim is UserProfileClaimSnakeCase =>
   userProfileKeys.some((key) => snakeCase(key) === claim);
+
+/**
+ * Resolve the standard `preferred_username` claim. Falls back to `user.username` when the user has
+ * no explicit `profile.preferredUsername`, so standards-compliant clients (e.g. Gitea, Forgejo,
+ * Mealie) receive a usable value out of the box. The explicit profile value always wins. Falls back
+ * to `undefined` (not `null`) to keep it stripped from tokens, matching the other profile claims.
+ * Gated until the feature ships.
+ */
+const getPreferredUsername = (user: User): string | undefined => {
+  const explicit = user.profile.preferredUsername;
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    return explicit ?? user.username ?? undefined;
+  }
+
+  return explicit ?? undefined;
+};
 
 /**
  * Get user claims data according to the claims.
@@ -124,6 +142,9 @@ export const getUserClaimsData = async (
             claim,
             ssoIdentities.map(({ issuer, identityId, detail }) => ({ issuer, identityId, detail })),
           ];
+        }
+        case 'preferred_username': {
+          return [claim, getPreferredUsername(user)];
         }
         default: {
           if (isUserProfileClaim(claim)) {

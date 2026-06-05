@@ -1,5 +1,13 @@
 const user = {
   username_already_in_use: '이 사용자 이름은 다른 사람이 이미 사용 중이에요.',
+  username_starts_with_number: '사용자 이름은 숫자로 시작할 수 없습니다.',
+  username_invalid_charset_hard: '사용자 이름에는 문자, 숫자 및 밑줄만 포함될 수 있습니다.',
+  username_too_short: '사용자 이름이 너무 짧습니다.',
+  username_too_long: '사용자 이름이 너무 깁니다.',
+  username_uppercase_not_allowed: '사용자 이름에는 대문자를 포함할 수 없습니다.',
+  username_lowercase_not_allowed: '사용자 이름에는 소문자를 포함할 수 없습니다.',
+  username_numbers_not_allowed: '사용자 이름에는 숫자를 포함할 수 없습니다.',
+  username_underscore_not_allowed: '사용자 이름에는 밑줄을 포함할 수 없습니다.',
   email_already_in_use: '이 이메일은 다른 계정에서 이미 사용 중이에요.',
   phone_already_in_use: '이 휴대전화번호는 다른 계정에서 이미 사용 중이에요.',
   invalid_email: '유효하지 않은 이메일이에요.',

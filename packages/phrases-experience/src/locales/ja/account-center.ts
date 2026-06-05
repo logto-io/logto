@@ -7,16 +7,11 @@ const account_center = {
     title: 'アカウント',
     security_title: 'セキュリティ',
     security_description: 'アカウントの安全を確保するために、ここでアカウント設定を変更できます。',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: '個人情報',
+    profile_description: 'ここで個人情報を変更できます。',
+    sidebar_personal_info: '個人情報',
+    sidebar_security: 'セキュリティ',
+    sidebar_sessions: 'セッション',
     support: 'サポート',
   },
   verification: {
@@ -253,27 +248,27 @@ const account_center = {
       'このデバイスの2段階認証の確認が完了しました。複数のキーがある場合に識別できるよう名前をカスタマイズしてください。',
     name_input_label: '名前',
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
+    page_title: 'セッション',
+    page_description:
+      'アクティブなセッションと認可済みサードパーティアプリケーションを管理します。',
+    title: 'セッション',
+    current_session: '現在のセッション',
+    signed_in_at: '{{date}} にサインイン',
+    revoke_session: 'サインアウト',
+    revoke_session_title: 'セッションからサインアウト',
     revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
+      'このセッションからサインアウトし、関連するすべてのアクセスを取り消します。続行しますか？',
+    no_other_sessions: '他にアクティブなセッションはありません。',
+    loading: '読み込み中...',
+    third_party_apps_title: 'サードパーティアプリ',
+    no_third_party_apps: '認可済みのサードパーティアプリケーションはありません。',
+    granted_at: '{{date}} に認可',
+    revoke_grant: '削除',
+    revoke_grant_title: 'サードパーティアプリのアクセスを削除',
     revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+      'このアプリケーションに付与されたすべてのアクセスを取り消します。続行しますか？',
+    revoke_grant_failed: '一部の認可の取り消しに失敗しました。もう一度お試しください。',
   },
 };
 

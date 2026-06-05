@@ -42,6 +42,8 @@ const sign_in_experiences = {
     'سياسة انتهاء صلاحية كلمة المرور غير مفعلة. قم بتفعيلها في إعدادات تجربة تسجيل الدخول قبل إنهاء صلاحية كلمات المرور.',
   password_expiration_invalid_period_days:
     'عند تفعيل انتهاء صلاحية كلمة المرور، يجب أن تكون reminderPeriodDays أقل من validPeriodDays.',
+  username_policy_case_conflicts_exist:
+    'لا يمكن التبديل إلى أسماء المستخدمين غير حساسة لحالة الأحرف بينما توجد أسماء مستخدمين تختلف فقط في حالة الأحرف. قم بحل النزاعات وحاول مرة أخرى.',
 };
 
 export default Object.freeze(sign_in_experiences);

@@ -8,16 +8,11 @@ const account_center = {
     security_title: 'Sicurezza',
     security_description:
       'Modifica qui le impostazioni del tuo account per garantirne la sicurezza.',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: 'Informazioni personali',
+    profile_description: 'Modifica qui le tue informazioni personali.',
+    sidebar_personal_info: 'Informazioni personali',
+    sidebar_security: 'Sicurezza',
+    sidebar_sessions: 'Sessioni',
     support: 'Supporto',
   },
   verification: {
@@ -97,7 +92,7 @@ const account_center = {
     email_verification_code: 'Codice di verifica e-mail',
     phone_verification_code: 'Codice di verifica telefonico',
     passkeys_count_one: '{{count}} passkey',
-    passkeys_count_other: '{{count}} passkeys',
+    passkeys_count_other: '{{count}} passkey',
     backup_codes_count_one: '{{count}} codice rimanente',
     backup_codes_count_other: '{{count}} codici rimanenti',
     view: 'Visualizza',
@@ -262,27 +257,27 @@ const account_center = {
       "Hai verificato con successo questo dispositivo per l'autenticazione a due fattori. Personalizza il nome per riconoscerlo se hai più chiavi.",
     name_input_label: 'Nome',
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
+    page_title: 'Sessioni',
+    page_description:
+      'Gestisci le tue sessioni attive e le applicazioni di terze parti autorizzate.',
+    title: 'Sessioni',
+    current_session: 'Sessione corrente',
+    signed_in_at: 'Accesso effettuato {{date}}',
+    revoke_session: 'Disconnetti',
+    revoke_session_title: 'Disconnetti sessione',
     revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
+      'Questo disconnetterà la sessione e revocherà tutti gli accessi associati. Sei sicuro di voler continuare?',
+    no_other_sessions: 'Nessuna altra sessione attiva.',
+    loading: 'Caricamento...',
+    third_party_apps_title: 'App di terze parti',
+    no_third_party_apps: 'Nessuna applicazione di terze parti autorizzata.',
+    granted_at: 'Autorizzato {{date}}',
+    revoke_grant: 'Rimuovi',
+    revoke_grant_title: 'Rimuovi accesso app di terze parti',
     revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+      'Questo revocherà tutti gli accessi concessi a questa applicazione. Sei sicuro di voler continuare?',
+    revoke_grant_failed: 'Revoca di alcune autorizzazioni non riuscita. Riprova.',
   },
 };
 

@@ -1,5 +1,13 @@
 const user = {
   username_already_in_use: 'Bu kullanıcı adı zaten kullanımda.',
+  username_starts_with_number: 'Kullanıcı adı bir sayı ile başlayamaz.',
+  username_invalid_charset_hard: 'Kullanıcı adı yalnızca harfler, sayılar ve alt çizgi içerebilir.',
+  username_too_short: 'Kullanıcı adı çok kısa.',
+  username_too_long: 'Kullanıcı adı çok uzun.',
+  username_uppercase_not_allowed: 'Kullanıcı adı büyük harf içeremez.',
+  username_lowercase_not_allowed: 'Kullanıcı adı küçük harf içeremez.',
+  username_numbers_not_allowed: 'Kullanıcı adı rakam içeremez.',
+  username_underscore_not_allowed: 'Kullanıcı adı alt çizgi içeremez.',
   email_already_in_use: 'Bu e-posta mevcut bir hesapla ilişkilendirilmiştir.',
   phone_already_in_use: 'Bu telefon numarası mevcut bir hesapla ilişkilendirilmiştir.',
   invalid_email: 'Geçersiz e-posta adresi.',

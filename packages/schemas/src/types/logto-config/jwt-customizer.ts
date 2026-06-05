@@ -277,7 +277,7 @@ export type CustomJwtErrorBody = z.infer<typeof customJwtErrorBodyGuard>;
 
 export type CustomJwtApiContext = {
   /**
-   * Reject the the current token request.
+   * Reject the current token request.
    *
    * @remarks
    * By calling this function, the current token request will be rejected,

@@ -72,10 +72,6 @@ function CopyToClipboard(
   }, []);
 
   const copy: MouseEventHandler<HTMLButtonElement> = async () => {
-    /**
-     * Note: should blur the copy icon button before the tooltip is shown, or it will remain focused after the tooltip is closed.
-     */
-    copyIconReference.current?.blur();
     setCopyState('copying');
     await navigator.clipboard.writeText(value);
     setCopyState('copied');

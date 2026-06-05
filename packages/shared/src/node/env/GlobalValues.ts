@@ -190,7 +190,13 @@ export default class GlobalValues {
    */
   public readonly databaseStatementTimeout = parseTimeoutEnv(getEnv('DATABASE_STATEMENT_TIMEOUT'));
 
-  /** Global switch for enabling/disabling case-sensitive usernames. */
+  /**
+   * Global switch for enabling/disabling case-sensitive usernames.
+   *
+   * @deprecated Superseded by per-tenant `signInExperience.usernamePolicy.caseSensitive`.
+   * AND-combined as a runtime override: `false` forces case-insensitive for every tenant.
+   * Slated for removal in the next major.
+   */
   public readonly isCaseSensitiveUsername = yes(getEnv('CASE_SENSITIVE_USERNAME', 'true'));
 
   /**
@@ -273,6 +279,14 @@ export default class GlobalValues {
           '- The Admin Console may display incorrect user endpoints on multiple pages, such as guide, config, etc.' +
           ' This issue is caused by the native URL constructor new URL(), which overrides the base pathname.\n\n' +
           '****** END LOGTO WARNING ******\n'
+      );
+    }
+
+    if (process.env.CASE_SENSITIVE_USERNAME !== undefined && !this.isCaseSensitiveUsername) {
+      console.warn(
+        '[deprecated] CASE_SENSITIVE_USERNAME=false overrides every tenant to case-insensitive' +
+          ' username matching, ignoring the per-tenant username policy. Configure case sensitivity' +
+          ' per-tenant via Sign-in experience > Username policy, then remove this env var.'
       );
     }
   }

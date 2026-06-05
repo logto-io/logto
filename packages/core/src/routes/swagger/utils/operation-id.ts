@@ -31,6 +31,8 @@ const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
   'patch /users/:userId/password/expiration': 'UpdateUserPasswordExpiration',
+  'get /sign-in-exp/username-policy/case-sensitivity-conflicts':
+    'GetUsernameCaseSensitivityConflicts',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({

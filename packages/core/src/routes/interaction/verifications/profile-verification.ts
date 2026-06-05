@@ -67,7 +67,7 @@ const verifyProfileNotRegisteredByOtherUserAccount = async (
 
   if (username) {
     assertThat(
-      !(await hasUser(username)),
+      !(await hasUser(username, await queries.signInExperiences.getUsernameCaseSensitive())),
       new RequestError({
         code: 'user.username_already_in_use',
         status: 422,

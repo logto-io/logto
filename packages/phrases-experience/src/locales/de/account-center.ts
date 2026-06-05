@@ -8,16 +8,11 @@ const account_center = {
     security_title: 'Sicherheit',
     security_description:
       'Ändern Sie hier Ihre Kontoeinstellungen, um die Sicherheit Ihres Kontos zu gewährleisten.',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: 'Persönliche Informationen',
+    profile_description: 'Ändere hier deine persönlichen Informationen.',
+    sidebar_personal_info: 'Persönliche Informationen',
+    sidebar_security: 'Sicherheit',
+    sidebar_sessions: 'Sitzungen',
     support: 'Hilfe',
   },
   verification: {
@@ -268,27 +263,28 @@ const account_center = {
       'Sie haben dieses Gerät erfolgreich für die 2-Schritt-Authentifizierung verifiziert. Passen Sie den Namen an, um ihn zu erkennen, wenn Sie mehrere Schlüssel haben.',
     name_input_label: 'Name',
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
+    page_title: 'Sitzungen',
+    page_description:
+      'Verwalten Sie Ihre aktiven Sitzungen und autorisierte Drittanbieter-Anwendungen.',
+    title: 'Sitzungen',
+    current_session: 'Aktuelle Sitzung',
+    signed_in_at: 'Angemeldet {{date}}',
+    revoke_session: 'Abmelden',
+    revoke_session_title: 'Sitzung abmelden',
     revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
+      'Dadurch wird die Sitzung abgemeldet und alle zugehörigen Zugriffe widerrufen. Möchten Sie wirklich fortfahren?',
+    no_other_sessions: 'Keine weiteren aktiven Sitzungen.',
+    loading: 'Laden...',
+    third_party_apps_title: 'Drittanbieter-Apps',
+    no_third_party_apps: 'Keine autorisierten Drittanbieter-Anwendungen.',
+    granted_at: 'Autorisiert {{date}}',
+    revoke_grant: 'Entfernen',
+    revoke_grant_title: 'Drittanbieter-App-Zugriff entfernen',
     revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+      'Dadurch wird der gesamte dieser Anwendung gewährte Zugriff widerrufen. Möchten Sie wirklich fortfahren?',
+    revoke_grant_failed:
+      'Einige Berechtigungen konnten nicht widerrufen werden. Bitte versuchen Sie es erneut.',
   },
 };
 

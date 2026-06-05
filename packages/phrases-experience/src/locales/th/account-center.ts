@@ -7,16 +7,11 @@ const account_center = {
     title: 'บัญชี',
     security_title: 'ความปลอดภัย',
     security_description: 'เปลี่ยนการตั้งค่าบัญชีของคุณที่นี่เพื่อให้บัญชีของคุณปลอดภัย',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: 'ข้อมูลส่วนบุคคล',
+    profile_description: 'เปลี่ยนข้อมูลส่วนบุคคลของคุณที่นี่',
+    sidebar_personal_info: 'ข้อมูลส่วนบุคคล',
+    sidebar_security: 'ความปลอดภัย',
+    sidebar_sessions: 'เซสชัน',
     support: 'ฝ่ายช่วยเหลือ',
   },
   verification: {
@@ -249,27 +244,26 @@ const account_center = {
       'คุณยืนยันอุปกรณ์นี้สำหรับการยืนยันตัวตนแบบ 2 ขั้นตอนสำเร็จแล้ว ปรับแต่งชื่อเพื่อให้จดจำได้หากคุณมีหลายคีย์',
     name_input_label: 'ชื่อ',
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
+    page_title: 'เซสชัน',
+    page_description: 'จัดการเซสชันที่ใช้งานอยู่และแอปพลิเคชันบุคคลที่สามที่ได้รับอนุญาต',
+    title: 'เซสชัน',
+    current_session: 'เซสชันปัจจุบัน',
+    signed_in_at: 'เข้าสู่ระบบเมื่อ {{date}}',
+    revoke_session: 'ออกจากระบบ',
+    revoke_session_title: 'ออกจากระบบเซสชัน',
     revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
+      'การดำเนินการนี้จะออกจากระบบเซสชันและเพิกถอนการเข้าถึงที่เกี่ยวข้องทั้งหมด คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
+    no_other_sessions: 'ไม่มีเซสชันที่ใช้งานอยู่อื่น',
+    loading: 'กำลังโหลด...',
+    third_party_apps_title: 'แอปบุคคลที่สาม',
+    no_third_party_apps: 'ไม่มีแอปพลิเคชันบุคคลที่สามที่ได้รับอนุญาต',
+    granted_at: 'อนุญาตเมื่อ {{date}}',
+    revoke_grant: 'ลบ',
+    revoke_grant_title: 'ลบการเข้าถึงแอปบุคคลที่สาม',
     revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+      'การดำเนินการนี้จะเพิกถอนการเข้าถึงทั้งหมดที่มอบให้แอปพลิเคชันนี้ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
+    revoke_grant_failed: 'การเพิกถอนสิทธิ์บางรายการล้มเหลว กรุณาลองอีกครั้ง',
   },
 };
 

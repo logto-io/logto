@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { defaultUsernamePolicy } from '@logto/core-kit';
 import {
   ForgotPasswordMethod,
   MfaFactor,
@@ -998,6 +999,102 @@ describe('PATCH /sign-in-exp customUiCsp', () => {
         },
       })
     ).resolves.toMatchObject({ status: 400 });
+  });
+});
+
+describe('PATCH /sign-in-exp username policy', () => {
+  const findCaseConflicts = jest.fn();
+
+  const buildRequester = (currentCaseSensitive = true) =>
+    createRequester({
+      authedRoutes: signInExperiencesRoutes,
+      tenantContext: new MockTenant(
+        undefined,
+        {
+          signInExperiences: {
+            updateDefaultSignInExperience: async (
+              data: Partial<CreateSignInExperience>
+            ): Promise<SignInExperience> => ({ ...mockSignInExperience, ...data }),
+            findDefaultSignInExperience: jest.fn().mockResolvedValue({
+              ...mockSignInExperience,
+              usernamePolicy: { ...defaultUsernamePolicy, caseSensitive: currentCaseSensitive },
+            }),
+          },
+          customPhrases: { findAllCustomLanguageTags: async () => [] },
+        },
+        { getLogtoConnectors: jest.fn().mockResolvedValue([]) },
+        { signInExperiences: { validateLanguageInfo: jest.fn(), findCaseConflicts } }
+      ),
+    });
+
+  beforeEach(() => {
+    // The `usernamePolicy` body field (and therefore the 409 guard) is only honored with dev features on.
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet without reloading mocked modules.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+  });
+
+  afterEach(() => {
+    findCaseConflicts.mockReset();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
+  });
+
+  it('returns 409 when flipping to case-insensitive while conflicts exist', async () => {
+    findCaseConflicts.mockResolvedValueOnce({
+      totalConflicts: 1,
+      samples: [{ usernameLower: 'foo', userIds: ['u1', 'u2'] }],
+    });
+
+    const response = await buildRequester()
+      .patch('/sign-in-exp')
+      .send({ usernamePolicy: { ...defaultUsernamePolicy, caseSensitive: false } });
+
+    expect(response.status).toBe(409);
+    expect(findCaseConflicts).toHaveBeenCalled();
+  });
+
+  it('updates successfully when flipping to case-insensitive without conflicts', async () => {
+    findCaseConflicts.mockResolvedValueOnce({ totalConflicts: 0, samples: [] });
+
+    const response = await buildRequester()
+      .patch('/sign-in-exp')
+      .send({ usernamePolicy: { ...defaultUsernamePolicy, caseSensitive: false } });
+
+    expect(response.status).toBe(200);
+    expect(findCaseConflicts).toHaveBeenCalled();
+  });
+
+  it('skips the conflict check when the policy is already case-insensitive', async () => {
+    // The tenant is already case-insensitive (no case-sensitive -> case-insensitive transition), so
+    // the guard must not run the scan even though conflicts would be reported.
+    findCaseConflicts.mockResolvedValueOnce({
+      totalConflicts: 3,
+      samples: [{ usernameLower: 'foo', userIds: ['u1', 'u2'] }],
+    });
+
+    const response = await buildRequester(false)
+      .patch('/sign-in-exp')
+      .send({ usernamePolicy: { ...defaultUsernamePolicy, caseSensitive: false } });
+
+    expect(response.status).toBe(200);
+    expect(findCaseConflicts).not.toHaveBeenCalled();
+  });
+
+  it('rejects a numbers-only username policy', async () => {
+    const response = await buildRequester()
+      .patch('/sign-in-exp')
+      .send({
+        usernamePolicy: {
+          ...defaultUsernamePolicy,
+          allowedChars: { lowercase: false, uppercase: false, numbers: true, underscore: false },
+        },
+      });
+
+    // The `usernamePolicyGuard` refine rejects this at koaGuard (400). The exact human-readable
+    // message is asserted in core-kit's `username-policy.test.ts`; the test requester here does not
+    // mount the error handler that serializes the refine message into the response body.
+    expect(response.status).toBe(400);
   });
 });
 /* eslint-enable max-lines */

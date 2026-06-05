@@ -1,6 +1,7 @@
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
 import { mockSignInExperience } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { MockWellKnownCache } from '#src/test-utils/tenant.js';
 import type { QueryType } from '#src/utils/test-utils.js';
 import { expectSqlAssert } from '#src/utils/test-utils.js';
@@ -45,12 +46,13 @@ describe('sign-in-experience query', () => {
     forgotPasswordMethods: JSON.stringify(mockSignInExperience.forgotPasswordMethods),
     passkeySignIn: JSON.stringify(mockSignInExperience.passkeySignIn),
     signUpProfileFields: JSON.stringify(mockSignInExperience.signUpProfileFields),
+    usernamePolicy: JSON.stringify(mockSignInExperience.usernamePolicy),
   };
 
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
-      select "tenant_id", "id", "color", "branding", "hide_logto_branding", "language_info", "terms_of_use_url", "privacy_policy_url", "agree_to_terms_policy", "sign_in", "sign_up", "social_sign_in", "social_sign_in_connector_targets", "sign_in_mode", "custom_css", "custom_content", "custom_ui_assets", "custom_ui_csp", "password_policy", "mfa", "adaptive_mfa", "single_sign_on_enabled", "support_email", "support_website_url", "unknown_session_redirect_url", "captcha_policy", "sentinel_policy", "email_blocklist_policy", "forgot_password_methods", "passkey_sign_in", "sign_up_profile_fields", "password_expiration"
+      select "tenant_id", "id", "color", "branding", "hide_logto_branding", "language_info", "terms_of_use_url", "privacy_policy_url", "agree_to_terms_policy", "sign_in", "sign_up", "social_sign_in", "social_sign_in_connector_targets", "sign_in_mode", "custom_css", "custom_content", "custom_ui_assets", "custom_ui_csp", "password_policy", "mfa", "adaptive_mfa", "single_sign_on_enabled", "support_email", "support_website_url", "unknown_session_redirect_url", "captcha_policy", "sentinel_policy", "email_blocklist_policy", "forgot_password_methods", "passkey_sign_in", "sign_up_profile_fields", "password_expiration", "username_policy"
       from "sign_in_experiences"
       where "id"=$1
     `;
@@ -87,4 +89,39 @@ describe('sign-in-experience query', () => {
 
     await expect(updateDefaultSignInExperience({ termsOfUseUrl })).resolves.toEqual(databaseValue);
   });
+});
+
+describe('getUsernameCaseSensitive', () => {
+  const originalIsCaseSensitiveUsername = EnvSet.values.isCaseSensitiveUsername;
+
+  afterEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- restore env override after each case
+    (EnvSet.values as { isCaseSensitiveUsername: boolean }).isCaseSensitiveUsername =
+      originalIsCaseSensitiveUsername;
+  });
+
+  it.each([
+    [true, true, true],
+    [true, false, false],
+    [false, true, false],
+    [false, false, false],
+  ])(
+    'policy caseSensitive=%s AND env=%s resolves to %s',
+    async (policyCaseSensitive, envCaseSensitive, expected) => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- toggle the legacy env var for this case
+      (EnvSet.values as { isCaseSensitiveUsername: boolean }).isCaseSensitiveUsername =
+        envCaseSensitive;
+      // Fresh instance so the memoized findDefaultSignInExperience isn't shared across cases.
+      const { getUsernameCaseSensitive } = createSignInExperienceQueries(
+        pool,
+        new MockWellKnownCache()
+      );
+      mockQuery.mockImplementationOnce(async () =>
+        // @ts-expect-error -- the mock returns a pre-parsed SIE row; createMockQueryResult's primitive row type can't express the jsonb object the resolver reads
+        createMockQueryResult([{ usernamePolicy: { caseSensitive: policyCaseSensitive } }])
+      );
+
+      expect(await getUsernameCaseSensitive()).toBe(expected);
+    }
+  );
 });

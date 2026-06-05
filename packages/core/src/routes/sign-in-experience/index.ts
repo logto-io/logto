@@ -32,6 +32,7 @@ import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import customUiAssetsRoutes from './custom-ui-assets/index.js';
 import { hasCustomUiCspSources, normalizeCustomUiCsp } from './custom-ui-csp.js';
+import usernamePolicyRoutes from './username-policy.js';
 
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
@@ -53,7 +54,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   const { findUserById } = queries.users;
   const { normalizeProfileFields } = libraries.customProfileFields;
   const {
-    signInExperiences: { validateLanguageInfo },
+    signInExperiences: { validateLanguageInfo, findCaseConflicts },
     quota,
   } = libraries;
   const { getLogtoConnectors } = connectors;
@@ -101,7 +102,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         )
         .partial(),
       response: signInExperienceResponseGuard,
-      status: [200, 400, 404, 422, 403],
+      status: [200, 400, 404, 422, 403, 409],
     }),
     // eslint-disable-next-line complexity
     async (ctx, next) => {
@@ -112,6 +113,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           emailBlocklistPolicy,
           signUpProfileFields,
           customUiCsp,
+          usernamePolicy,
           ...rest
         },
       } = ctx.guard;
@@ -151,6 +153,29 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         getLogtoConnectors(),
         findDefaultSignInExperience(),
       ]);
+
+      // Flipping usernames to case-insensitive would merge accounts that differ only by case, so
+      // reject the flip while such conflicts exist. Only the actual case-sensitive ->
+      // case-insensitive transition needs checking: a tenant that is already case-insensitive
+      // cannot have accumulated case conflicts (uniqueness was enforced case-insensitively), so we
+      // skip the (potentially expensive) scan otherwise. The `usernamePolicy` write is itself
+      // dev-gated, so this guard is too.
+      if (
+        EnvSet.values.isDevFeaturesEnabled &&
+        usernamePolicy?.caseSensitive === false &&
+        currentSettings.usernamePolicy.caseSensitive
+      ) {
+        const { totalConflicts, samples } = await findCaseConflicts(20);
+        if (totalConflicts > 0) {
+          throw new RequestError(
+            {
+              code: 'sign_in_experiences.username_policy_case_conflicts_exist',
+              status: 409,
+            },
+            { totalConflicts, samples }
+          );
+        }
+      }
 
       // Remove unavailable connectors
       const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>
@@ -381,6 +406,8 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             passwordExpiration &&
             currentPasswordExpiration && { passwordExpiration: currentPasswordExpiration }
         ),
+        // Username policy is gated until the feature ships: ignore writes when the flag is off.
+        ...conditional(EnvSet.values.isDevFeaturesEnabled && usernamePolicy && { usernamePolicy }),
       };
 
       ctx.body = await updateDefaultSignInExperience(payload);
@@ -449,5 +476,11 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   );
 
   customUiAssetsRoutes(...args);
+
+  // Username policy conflict-detection API is gated until the feature ships, so the endpoint is
+  // absent (not just hidden) when dev features are off — keeping prod and its OpenAPI doc clean.
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    usernamePolicyRoutes(...args);
+  }
 }
 /* eslint-enable max-lines */

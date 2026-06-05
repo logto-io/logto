@@ -7,16 +7,11 @@ const account_center = {
     title: 'Акаунт',
     security_title: 'Безпека',
     security_description: 'Тут можна змінити налаштування акаунта, щоб забезпечити його безпеку.',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: 'Особиста інформація',
+    profile_description: 'Змініть свою особисту інформацію тут.',
+    sidebar_personal_info: 'Особиста інформація',
+    sidebar_security: 'Безпека',
+    sidebar_sessions: 'Сесії',
     support: 'Підтримка',
   },
   verification: {
@@ -258,27 +253,26 @@ const account_center = {
       'Ви успішно підтвердили цей пристрій для двоетапної автентифікації. Налаштуйте назву для розпізнавання, якщо у вас кілька ключів.',
     name_input_label: "Ім'я",
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
+    page_title: 'Сесії',
+    page_description: 'Керуйте активними сесіями та авторизованими сторонніми додатками.',
+    title: 'Сесії',
+    current_session: 'Поточна сесія',
+    signed_in_at: 'Вхід виконано {{date}}',
+    revoke_session: 'Вийти',
+    revoke_session_title: 'Завершити сесію',
     revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
+      "Це завершить сесію та відкличе весь пов'язаний доступ. Ви впевнені, що хочете продовжити?",
+    no_other_sessions: 'Немає інших активних сесій.',
+    loading: 'Завантаження...',
+    third_party_apps_title: 'Сторонні додатки',
+    no_third_party_apps: 'Немає авторизованих сторонніх додатків.',
+    granted_at: 'Авторизовано {{date}}',
+    revoke_grant: 'Видалити',
+    revoke_grant_title: 'Видалити доступ стороннього додатку',
     revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+      'Це відкличе весь доступ, наданий цьому додатку. Ви впевнені, що хочете продовжити?',
+    revoke_grant_failed: 'Не вдалося відкликати деякі дозволи. Будь ласка, спробуйте ще раз.',
   },
 };
 

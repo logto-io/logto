@@ -11,6 +11,10 @@ import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
+import type { AccountCenterFormValues, SignInExperienceForm } from '../../../types';
+import { collectUserProfilePathname } from '../../CollectUserProfile/consts';
+import ProfileFieldsEditBox from '../../components/ProfileFieldsEditBox';
+
 import PrebuiltUiUrlItem from './PrebuiltUiUrlItem';
 import styles from './index.module.scss';
 
@@ -87,7 +91,11 @@ const accountCenterRoutes = [
     : []),
 ] as const satisfies ReadonlyArray<{ path: string; tooltipKey: string }>;
 
-function IntegratePrebuiltUi() {
+type Props = {
+  readonly getProfileFieldDisabledReason?: (fieldName: string) => string | undefined;
+};
+
+function IntegratePrebuiltUi({ getProfileFieldDisabledReason }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tenantEndpoint } = useContext(AppDataContext);
   const { getDocumentationUrl } = useDocumentationUrl();
@@ -159,6 +167,30 @@ function IntegratePrebuiltUi() {
             ))}
           </div>
         </FormField>
+        {isDevFeaturesEnabled && (
+          <FormField
+            title="sign_in_exp.account_center.profile_fields.title"
+            headlineSpacing="large"
+          >
+            <ProfileFieldsEditBox<
+              SignInExperienceForm & { accountCenter: AccountCenterFormValues },
+              'accountCenter.profileFields'
+            >
+              name="accountCenter.profileFields"
+              addProfileFieldsButtonTitle="sign_in_exp.account_center.profile_fields.add_profile_fields"
+              getFieldDisabledReason={getProfileFieldDisabledReason}
+              hint={
+                <>
+                  {t('sign_in_exp.account_center.profile_fields.hint.not_in_list')}
+                  <TextLink to={collectUserProfilePathname}>
+                    {t('sign_in_exp.account_center.profile_fields.hint.set_up')}
+                  </TextLink>
+                  {t('sign_in_exp.account_center.profile_fields.hint.go_to')}
+                </>
+              }
+            />
+          </FormField>
+        )}
         <div className={styles.customizeNote}>
           <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.customize_note" />
           <TextLink

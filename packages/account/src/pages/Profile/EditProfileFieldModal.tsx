@@ -109,6 +109,7 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
 
   const [values, setValues] = useState<Record<string, EditableValue>>({});
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!field) {
@@ -118,6 +119,7 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
     const initialFields = buildEditableFields(field, userInfo, t);
     setValues(Object.fromEntries(initialFields.map(({ name, value }) => [name, value])));
     setErrors({});
+    setIsSubmitting(false);
     // Only reset when switching fields; ignore background userInfo refreshes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [field?.name]);
@@ -136,23 +138,30 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
       return;
     }
 
-    const [error] = await submitFieldUpdate({
-      field,
-      fields,
-      userInfo,
-      values,
-      updateNameRequest,
-      updateCustomDataRequest,
-      updateProfileRequest,
-    });
+    setIsSubmitting(true);
+    try {
+      const [error] = await submitFieldUpdate({
+        field,
+        fields,
+        userInfo,
+        values,
+        updateNameRequest,
+        updateCustomDataRequest,
+        updateProfileRequest,
+      });
 
-    if (error) {
+      if (error) {
+        await handleError(error);
+        return;
+      }
+
+      await onUpdated();
+      onClose();
+    } catch (error: unknown) {
       await handleError(error);
-      return;
+    } finally {
+      setIsSubmitting(false);
     }
-
-    await onUpdated();
-    onClose();
   }, [
     field,
     fields,
@@ -274,6 +283,7 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
             <Button
               title="action.save"
               type="primary"
+              isLoading={isSubmitting}
               onClick={() => {
                 void handleSubmit();
               }}

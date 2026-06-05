@@ -19,6 +19,7 @@
   flex: 1;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .withSidebar {
@@ -127,6 +128,13 @@
     transform: translateY(calc(100% + _.unit(7)));
     // Have to use padding instead of margin. Overflow margin spacing will be ignored by the browser.
     padding-bottom: _.unit(7);
+  }
+
+  @media only screen and (max-width: 1060px) {
+    .withSidebar {
+      display: flex;
+      justify-content: center;
+    }
   }
 
   @media only screen and (max-width: 800px) {

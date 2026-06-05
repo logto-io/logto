@@ -30,8 +30,11 @@
     }
   }
 
-  &:active,
-  &:focus {
+  &:focus-visible {
+    outline: 3px solid var(--color-focused);
+  }
+
+  &:active {
     background: var(--color-pressed);
   }
 

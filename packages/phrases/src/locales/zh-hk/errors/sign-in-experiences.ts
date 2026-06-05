@@ -36,6 +36,8 @@ const sign_in_experiences = {
   password_expiration_not_enabled: '密碼過期策略未啟用。在過期密碼前，請在登錄體驗設置中啟用它。',
   password_expiration_invalid_period_days:
     '啟用密碼到期策略時，reminderPeriodDays 必須小於 validPeriodDays。',
+  username_policy_case_conflicts_exist:
+    '無法在用戶名僅因大小寫區分的情況下切換為不區分大小寫的用戶名。請解決衝突後重試。',
 };
 
 export default Object.freeze(sign_in_experiences);

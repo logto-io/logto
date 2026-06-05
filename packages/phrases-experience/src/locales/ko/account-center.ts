@@ -7,16 +7,11 @@ const account_center = {
     title: '계정',
     security_title: '보안',
     security_description: '계정 보안을 위해 여기에서 계정 설정을 변경하세요.',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: '개인 정보',
+    profile_description: '여기에서 개인 정보를 변경하세요.',
+    sidebar_personal_info: '개인 정보',
+    sidebar_security: '보안',
+    sidebar_sessions: '세션',
     support: '지원',
   },
   verification: {
@@ -249,27 +244,26 @@ const account_center = {
       '2단계 인증을 위해 이 기기가 성공적으로 확인되었습니다. 여러 키가 있는 경우 식별할 수 있도록 이름을 사용자 지정하세요.',
     name_input_label: '이름',
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
+    page_title: '세션',
+    page_description: '활성 세션과 승인된 서드파티 애플리케이션을 관리합니다.',
+    title: '세션',
+    current_session: '현재 세션',
+    signed_in_at: '{{date}}에 로그인',
+    revoke_session: '로그아웃',
+    revoke_session_title: '세션 로그아웃',
     revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
+      '이 세션에서 로그아웃하고 관련된 모든 액세스를 철회합니다. 계속하시겠습니까?',
+    no_other_sessions: '다른 활성 세션이 없습니다.',
+    loading: '로딩 중...',
+    third_party_apps_title: '서드파티 앱',
+    no_third_party_apps: '승인된 서드파티 애플리케이션이 없습니다.',
+    granted_at: '{{date}}에 승인',
+    revoke_grant: '제거',
+    revoke_grant_title: '서드파티 앱 액세스 제거',
     revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+      '이 애플리케이션에 부여된 모든 액세스를 철회합니다. 계속하시겠습니까?',
+    revoke_grant_failed: '일부 권한 철회에 실패했습니다. 다시 시도해 주세요.',
   },
 };
 

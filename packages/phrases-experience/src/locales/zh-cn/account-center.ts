@@ -7,16 +7,11 @@ const account_center = {
     title: '账户',
     security_title: '安全',
     security_description: '你可以在这里修改账户设置，以确保账户安全。',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: '个人信息',
+    profile_description: '在这里更改你的个人信息。',
+    sidebar_personal_info: '个人信息',
+    sidebar_security: '安全',
+    sidebar_sessions: '会话',
     support: '支持',
   },
   verification: {
@@ -240,27 +235,24 @@ const account_center = {
       '您已成功验证此设备用于两步验证。自定义名称以便在拥有多个密钥时进行识别。',
     name_input_label: '名称',
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
-    revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
-    revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+    page_title: '会话',
+    page_description: '管理你的活跃会话和已授权的第三方应用。',
+    title: '会话',
+    current_session: '当前会话',
+    signed_in_at: '登录于 {{date}}',
+    revoke_session: '退出登录',
+    revoke_session_title: '退出会话',
+    revoke_session_description: '这将退出该会话并撤销所有关联的访问权限。确定要继续吗？',
+    no_other_sessions: '没有其他活跃会话。',
+    loading: '加载中...',
+    third_party_apps_title: '第三方应用',
+    no_third_party_apps: '没有已授权的第三方应用。',
+    granted_at: '授权于 {{date}}',
+    revoke_grant: '移除',
+    revoke_grant_title: '移除第三方应用访问权限',
+    revoke_grant_description: '这将撤销授予该应用的所有访问权限。确定要继续吗？',
+    revoke_grant_failed: '部分授权撤销失败，请重试。',
   },
 };
 

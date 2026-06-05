@@ -1,5 +1,13 @@
 const user = {
   username_already_in_use: '該使用者名稱已被使用。',
+  username_starts_with_number: '使用者名稱不能以數字開頭。',
+  username_invalid_charset_hard: '使用者名稱只能包含字母、數字和下劃線。',
+  username_too_short: '使用者名稱太短。',
+  username_too_long: '使用者名稱太長。',
+  username_uppercase_not_allowed: '使用者名稱不能包含大寫字母。',
+  username_lowercase_not_allowed: '使用者名稱不能包含小寫字母。',
+  username_numbers_not_allowed: '使用者名稱不能包含數字。',
+  username_underscore_not_allowed: '使用者名稱不能包含下劃線。',
   email_already_in_use: '該電子郵件地址已被使用。',
   phone_already_in_use: '該手機號碼已被使用。',
   invalid_email: '電子郵件地址不正確。',

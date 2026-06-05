@@ -1,9 +1,4 @@
-import {
-  accountCenterApplicationId,
-  createDefaultApplicationAccessControl,
-  type Application,
-  type ApplicationAccessControl,
-} from '@logto/schemas';
+import { accountCenterApplicationId, type Application } from '@logto/schemas';
 
 import { mockApplication } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
@@ -26,33 +21,15 @@ const disabledApplication: Application = {
   appLevelAccessControlEnabled: false,
 };
 
-const buildAccessControl = (
-  patch: Partial<ApplicationAccessControl> = {}
-): ApplicationAccessControl => ({
-  ...createDefaultApplicationAccessControl(),
-  ...patch,
-});
-
 const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 const findApplicationById = jest.fn(async () => enabledApplication);
-const findApplicationAccessControl = jest.fn(async () => createDefaultApplicationAccessControl());
-const hasUserRole = jest.fn(async () => false);
-const getExistingOrganizationIds = jest.fn(async (): Promise<string[]> => []);
-const hasUserOrganizationRole = jest.fn(async () => false);
+const hasUserApplicationAccess = jest.fn(async () => false);
 
 const createLibrary = () => {
   const queries = new MockQueries({
     applications: { findApplicationById },
-    applicationAccessControl: { findApplicationAccessControl },
-    usersRoles: { hasUserRole },
+    applicationAccessControl: { hasUserApplicationAccess },
   });
-
-  jest
-    .spyOn(queries.organizations.relations.users, 'getExistingOrganizationIds')
-    .mockImplementation(getExistingOrganizationIds);
-  jest
-    .spyOn(queries.organizations.relations.usersRoles, 'hasUserOrganizationRole')
-    .mockImplementation(hasUserOrganizationRole);
 
   return createApplicationAccessControlLibrary(queries);
 };
@@ -64,10 +41,7 @@ const setDevFeaturesEnabled = (value: boolean) => {
 beforeEach(() => {
   setDevFeaturesEnabled(true);
   findApplicationById.mockResolvedValue(enabledApplication);
-  findApplicationAccessControl.mockResolvedValue(createDefaultApplicationAccessControl());
-  hasUserRole.mockResolvedValue(false);
-  getExistingOrganizationIds.mockResolvedValue([]);
-  hasUserOrganizationRole.mockResolvedValue(false);
+  hasUserApplicationAccess.mockResolvedValue(false);
 });
 
 afterEach(() => {
@@ -84,7 +58,7 @@ describe('assertUserHasApplicationAccess()', () => {
     ).resolves.not.toThrow();
 
     expect(findApplicationById).not.toHaveBeenCalled();
-    expect(findApplicationAccessControl).not.toHaveBeenCalled();
+    expect(hasUserApplicationAccess).not.toHaveBeenCalled();
   });
 
   it('allows built-in applications without querying the application', async () => {
@@ -93,7 +67,7 @@ describe('assertUserHasApplicationAccess()', () => {
     ).resolves.not.toThrow();
 
     expect(findApplicationById).not.toHaveBeenCalled();
-    expect(findApplicationAccessControl).not.toHaveBeenCalled();
+    expect(hasUserApplicationAccess).not.toHaveBeenCalled();
   });
 
   it('allows without querying rule tables when app-level access control is disabled', async () => {
@@ -104,10 +78,27 @@ describe('assertUserHasApplicationAccess()', () => {
     ).resolves.not.toThrow();
 
     expect(findApplicationById).toHaveBeenCalledWith(applicationId);
-    expect(findApplicationAccessControl).not.toHaveBeenCalled();
-    expect(hasUserRole).not.toHaveBeenCalled();
-    expect(getExistingOrganizationIds).not.toHaveBeenCalled();
-    expect(hasUserOrganizationRole).not.toHaveBeenCalled();
+    expect(hasUserApplicationAccess).not.toHaveBeenCalled();
+  });
+
+  it('allows disabled app-level access control from a request-local gate hint', async () => {
+    await expect(
+      createLibrary().assertUserHasApplicationAccess(applicationId, userId, false)
+    ).resolves.not.toThrow();
+
+    expect(findApplicationById).not.toHaveBeenCalled();
+    expect(hasUserApplicationAccess).not.toHaveBeenCalled();
+  });
+
+  it('uses request-local enabled gate hint without querying the application', async () => {
+    hasUserApplicationAccess.mockResolvedValueOnce(true);
+
+    await expect(
+      createLibrary().assertUserHasApplicationAccess(applicationId, userId, true)
+    ).resolves.not.toThrow();
+
+    expect(findApplicationById).not.toHaveBeenCalled();
+    expect(hasUserApplicationAccess).toHaveBeenCalledWith(applicationId, userId);
   });
 
   it('denies access without revealing missing applications', async () => {
@@ -125,109 +116,21 @@ describe('assertUserHasApplicationAccess()', () => {
     ).rejects.toMatchObject(new RequestError('oidc.access_denied'));
   });
 
-  it('allows direct selected user', async () => {
-    findApplicationAccessControl.mockResolvedValueOnce(buildAccessControl({ userIds: [userId] }));
+  it('allows when the evaluator finds any matching access rule', async () => {
+    hasUserApplicationAccess.mockResolvedValueOnce(true);
 
     await expect(
       createLibrary().assertUserHasApplicationAccess(applicationId, userId)
     ).resolves.not.toThrow();
 
-    expect(hasUserRole).not.toHaveBeenCalled();
-    expect(getExistingOrganizationIds).not.toHaveBeenCalled();
-    expect(hasUserOrganizationRole).not.toHaveBeenCalled();
-  });
-
-  it('allows selected user role membership', async () => {
-    findApplicationAccessControl.mockResolvedValueOnce(
-      buildAccessControl({ userRoleIds: ['role-id'] })
-    );
-    hasUserRole.mockResolvedValueOnce(true);
-
-    await expect(
-      createLibrary().assertUserHasApplicationAccess(applicationId, userId)
-    ).resolves.not.toThrow();
-
-    expect(hasUserRole).toHaveBeenCalledWith(userId, ['role-id']);
-    expect(getExistingOrganizationIds).not.toHaveBeenCalled();
-    expect(hasUserOrganizationRole).not.toHaveBeenCalled();
-  });
-
-  it('allows selected organization membership', async () => {
-    findApplicationAccessControl.mockResolvedValueOnce(
-      buildAccessControl({ organizationIds: ['organization-id'] })
-    );
-    getExistingOrganizationIds.mockResolvedValueOnce(['organization-id']);
-
-    await expect(
-      createLibrary().assertUserHasApplicationAccess(applicationId, userId)
-    ).resolves.not.toThrow();
-
-    expect(getExistingOrganizationIds).toHaveBeenCalledWith(userId, ['organization-id']);
-    expect(hasUserOrganizationRole).not.toHaveBeenCalled();
-  });
-
-  it('allows selected organization-role assignment in the selected organization', async () => {
-    findApplicationAccessControl.mockResolvedValueOnce(
-      buildAccessControl({
-        organizationRoleRules: [
-          { organizationId: 'organization-id', organizationRoleIds: ['organization-role-id'] },
-        ],
-      })
-    );
-    hasUserOrganizationRole.mockResolvedValueOnce(true);
-
-    await expect(
-      createLibrary().assertUserHasApplicationAccess(applicationId, userId)
-    ).resolves.not.toThrow();
-
-    expect(hasUserOrganizationRole).toHaveBeenCalledWith(userId, [
-      { organizationId: 'organization-id', organizationRoleId: 'organization-role-id' },
-    ]);
-  });
-
-  it('denies organization membership when that organization is not selected', async () => {
-    findApplicationAccessControl.mockResolvedValueOnce(
-      buildAccessControl({ organizationIds: ['selected-organization-id'] })
-    );
-
-    await expect(
-      createLibrary().assertUserHasApplicationAccess(applicationId, userId)
-    ).rejects.toMatchObject(new RequestError('oidc.access_denied'));
-
-    expect(getExistingOrganizationIds).toHaveBeenCalledWith(userId, ['selected-organization-id']);
-  });
-
-  it('denies selected organization role when it belongs to a different organization', async () => {
-    findApplicationAccessControl.mockResolvedValueOnce(
-      buildAccessControl({
-        organizationRoleRules: [
-          { organizationId: 'selected-organization-id', organizationRoleIds: ['role-id'] },
-        ],
-      })
-    );
-
-    await expect(
-      createLibrary().assertUserHasApplicationAccess(applicationId, userId)
-    ).rejects.toMatchObject(new RequestError('oidc.access_denied'));
-
-    expect(hasUserOrganizationRole).toHaveBeenCalledWith(userId, [
-      { organizationId: 'selected-organization-id', organizationRoleId: 'role-id' },
-    ]);
+    expect(hasUserApplicationAccess).toHaveBeenCalledWith(applicationId, userId);
   });
 
   it('denies enabled config with no matching rules', async () => {
     await expect(
       createLibrary().assertUserHasApplicationAccess(applicationId, userId)
     ).rejects.toMatchObject(new RequestError('oidc.access_denied'));
-  });
 
-  it('delegates empty rule arrays to guarded query helpers', async () => {
-    await expect(
-      createLibrary().assertUserHasApplicationAccess(applicationId, userId)
-    ).rejects.toMatchObject(new RequestError('oidc.access_denied'));
-
-    expect(hasUserRole).toHaveBeenCalledWith(userId, []);
-    expect(getExistingOrganizationIds).toHaveBeenCalledWith(userId, []);
-    expect(hasUserOrganizationRole).toHaveBeenCalledWith(userId, []);
+    expect(hasUserApplicationAccess).toHaveBeenCalledWith(applicationId, userId);
   });
 });

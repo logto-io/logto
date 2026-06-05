@@ -1,5 +1,13 @@
 const user = {
   username_already_in_use: '该用户名已被使用。',
+  username_starts_with_number: '用户名不能以数字开头。',
+  username_invalid_charset_hard: '用户名只能包含字母、数字和下划线。',
+  username_too_short: '用户名太短。',
+  username_too_long: '用户名太长。',
+  username_uppercase_not_allowed: '用户名不能包含大写字母。',
+  username_lowercase_not_allowed: '用户名不能包含小写字母。',
+  username_numbers_not_allowed: '用户名不能包含数字。',
+  username_underscore_not_allowed: '用户名不能包含下划线。',
   email_already_in_use: '该邮箱地址已被使用。',
   phone_already_in_use: '该手机号码已被使用。',
   invalid_email: '邮箱地址不正确。',

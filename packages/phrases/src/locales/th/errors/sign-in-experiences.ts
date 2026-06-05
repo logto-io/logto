@@ -44,6 +44,8 @@ const sign_in_experiences = {
     'นโยบายการหมดอายุของรหัสผ่านไม่ได้เปิดใช้งาน โปรดเปิดใช้งานในการตั้งค่าประสบการณ์การลงชื่อเข้าใช้ก่อนที่จะกำหนดวันหมดอายุของรหัสผ่าน',
   password_expiration_invalid_period_days:
     'เมื่อเปิดใช้การหมดอายุรหัสผ่าน reminderPeriodDays ต้องน้อยกว่า validPeriodDays',
+  username_policy_case_conflicts_exist:
+    'ไม่สามารถเปลี่ยนไปใช้นโยบายชื่อผู้ใช้ที่ไม่แยกตัวพิมพ์ใหญ่เล็กได้ในขณะที่ชื่อผู้ใช้ที่แตกต่างกันเพียงตัวพิมพ์เล็กยังคงอยู่ โปรดยุติปัญหาความขัดแย้งแล้วลองอีกครั้ง',
 };
 
 export default Object.freeze(sign_in_experiences);

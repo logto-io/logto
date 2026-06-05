@@ -107,6 +107,7 @@ const DateField = ({
         {formatConfig.parts.map((part, index) => (
           <div key={`${name}-${part}`} className={styles.part}>
             <input
+              className={classNames((isFocused || valueString) && styles.active)}
               name={`${name}.${part}`}
               aria-label={`${label} ${part}`}
               value={dateParts[index] ?? ''}
@@ -131,7 +132,14 @@ const DateField = ({
               }}
             />
             {index < formatConfig.parts.length - 1 && (
-              <span className={styles.separator}>{formatConfig.separator}</span>
+              <span
+                className={classNames(
+                  styles.separator,
+                  (isFocused || valueString) && styles.active
+                )}
+              >
+                {formatConfig.separator}
+              </span>
             )}
           </div>
         ))}

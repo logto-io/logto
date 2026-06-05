@@ -16,6 +16,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import { getTenantUrls } from '#src/env-set/utils.js';
 import type Queries from '#src/tenants/Queries.js';
 
+import { appLevelAccessControlMetadataKey } from './application-access-control.js';
 import { getConstantClientMetadata } from './utils.js';
 
 /**
@@ -156,12 +157,14 @@ export default function postgresAdapter(
         type,
         oidcClientMetadata,
         customClientMetadata,
+        appLevelAccessControlEnabled,
       }: CreateApplication,
       clientScopes?: string[]
     ): AllClientMetadata => ({
       client_id,
       client_secret,
       client_name,
+      [appLevelAccessControlMetadataKey]: appLevelAccessControlEnabled,
       ...getConstantClientMetadata(envSet, type, customClientMetadata),
       ...transpileMetadata(client_id, snakecaseKeys(oidcClientMetadata)),
       // `node-oidc-provider` won't camelCase custom parameter keys, so we need to keep the keys camelCased

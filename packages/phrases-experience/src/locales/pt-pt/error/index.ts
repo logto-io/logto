@@ -12,6 +12,12 @@ const error = {
   username_should_not_start_with_number: 'O nome de utilizador não deve começar com um número',
   username_invalid_charset:
     'O nome de utilizador deve conter apenas letras, números ou underscores.',
+  username_too_short: 'O nome de utilizador deve ter pelo menos {{min}} caracteres.',
+  username_too_long: 'O nome de utilizador deve ter, no máximo, {{max}} caracteres.',
+  username_uppercase_not_allowed: 'Letras maiúsculas não são permitidas nos nomes de utilizador.',
+  username_lowercase_not_allowed: 'Letras minúsculas não são permitidas nos nomes de utilizador.',
+  username_numbers_not_allowed: 'Números não são permitidos nos nomes de utilizador.',
+  username_underscore_not_allowed: 'Underscores não são permitidos nos nomes de utilizador.',
   invalid_email: 'O email é inválido',
   invalid_phone: 'O número de telefone é inválido',
   passwords_do_not_match: 'As passwords não coincidem',

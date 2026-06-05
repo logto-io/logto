@@ -7,16 +7,11 @@ const account_center = {
     title: '帳戶',
     security_title: '安全',
     security_description: '你可以在這裡變更帳戶設定，以確保帳戶安全。',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: '個人資料',
+    profile_description: '在這裡變更你的個人資訊。',
+    sidebar_personal_info: '個人資料',
+    sidebar_security: '安全',
+    sidebar_sessions: '工作階段',
     support: '支援',
   },
   verification: {
@@ -242,27 +237,24 @@ const account_center = {
       '您已成功驗證此裝置用於兩步驗證。自訂名稱以便在擁有多個密鑰時進行識別。',
     name_input_label: '名稱',
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
-    revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
-    revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+    page_title: '工作階段',
+    page_description: '管理你的活躍工作階段和已授權的第三方應用程式。',
+    title: '工作階段',
+    current_session: '目前工作階段',
+    signed_in_at: '登入於 {{date}}',
+    revoke_session: '登出',
+    revoke_session_title: '登出工作階段',
+    revoke_session_description: '這將登出該工作階段並撤銷所有相關的存取權限。確定要繼續嗎？',
+    no_other_sessions: '沒有其他活躍的工作階段。',
+    loading: '載入中...',
+    third_party_apps_title: '第三方應用程式',
+    no_third_party_apps: '沒有已授權的第三方應用程式。',
+    granted_at: '授權於 {{date}}',
+    revoke_grant: '移除',
+    revoke_grant_title: '移除第三方應用程式存取權限',
+    revoke_grant_description: '這將撤銷授予該應用程式的所有存取權限。確定要繼續嗎？',
+    revoke_grant_failed: '部分授權撤銷失敗，請重試。',
   },
 };
 

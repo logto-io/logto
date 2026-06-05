@@ -7,16 +7,11 @@ const account_center = {
     title: 'Conta',
     security_title: 'Segurança',
     security_description: 'Altere aqui as definições da sua conta para garantir a sua segurança.',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
-    /** UNTRANSLATED */
-    sidebar_sessions: 'Sessions',
+    profile_title: 'Informações pessoais',
+    profile_description: 'Altere as suas informações pessoais aqui.',
+    sidebar_personal_info: 'Informações pessoais',
+    sidebar_security: 'Segurança',
+    sidebar_sessions: 'Sessões',
     support: 'Suporte',
   },
   verification: {
@@ -261,27 +256,26 @@ const account_center = {
       'Verificou este dispositivo com sucesso para autenticação em duas etapas. Personalize o nome para o reconhecer se tiver várias chaves.',
     name_input_label: 'Nome',
   },
-  /** UNTRANSLATED */
   sessions: {
-    page_title: 'Sessions',
-    page_description: 'Manage your active sessions and authorized third-party applications.',
-    title: 'Sessions',
-    current_session: 'Current session',
-    signed_in_at: 'Signed in {{date}}',
-    revoke_session: 'Sign out',
-    revoke_session_title: 'Sign out session',
+    page_title: 'Sessões',
+    page_description: 'Gerir as suas sessões ativas e aplicações de terceiros autorizadas.',
+    title: 'Sessões',
+    current_session: 'Sessão atual',
+    signed_in_at: 'Sessão iniciada em {{date}}',
+    revoke_session: 'Terminar sessão',
+    revoke_session_title: 'Terminar sessão',
     revoke_session_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    no_other_sessions: 'No other active sessions.',
-    loading: 'Loading...',
-    third_party_apps_title: 'Third-party apps',
-    no_third_party_apps: 'No authorized third-party applications.',
-    granted_at: 'Authorized {{date}}',
-    revoke_grant: 'Remove',
-    revoke_grant_title: 'Remove third-party app access',
+      'Isto terminará a sessão e revogará todos os acessos associados. Tem a certeza de que pretende continuar?',
+    no_other_sessions: 'Nenhuma outra sessão ativa.',
+    loading: 'A carregar...',
+    third_party_apps_title: 'Aplicações de terceiros',
+    no_third_party_apps: 'Nenhuma aplicação de terceiros autorizada.',
+    granted_at: 'Autorizado em {{date}}',
+    revoke_grant: 'Remover',
+    revoke_grant_title: 'Remover acesso da aplicação de terceiros',
     revoke_grant_description:
-      'This will revoke all access granted to this application. Are you sure you want to continue?',
-    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
+      'Isto revogará todos os acessos concedidos a esta aplicação. Tem a certeza de que pretende continuar?',
+    revoke_grant_failed: 'Falha ao revogar algumas permissões. Tente novamente.',
   },
 };
 

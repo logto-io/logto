@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useCallback, useRef, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import 'react-easy-crop/react-easy-crop.css';
@@ -108,7 +109,7 @@ const AvatarCropModal = ({
       role="dialog"
       isOpen={Boolean(imageSource)}
       className={styles.modal}
-      overlayClassName={modalStyles.overlay}
+      overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
       onAfterClose={resetState}
       onRequestClose={handleCancel}
     >

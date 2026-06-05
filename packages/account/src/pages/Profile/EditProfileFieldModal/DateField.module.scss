@@ -62,6 +62,11 @@
     background: inherit;
     color: var(--color-type-primary);
     font: var(--font-body-2);
+    opacity: 0%;
+
+    &.active {
+      opacity: 100%;
+    }
 
     &::placeholder {
       color: var(--color-type-secondary);
@@ -72,6 +77,11 @@
 .separator {
   color: var(--color-line-border);
   font: var(--font-body-2);
+  opacity: 0%;
+
+  &.active {
+    opacity: 100%;
+  }
 }
 
 .description,

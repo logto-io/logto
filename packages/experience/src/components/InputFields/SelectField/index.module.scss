@@ -10,12 +10,6 @@
     cursor: pointer;
     position: relative;
 
-    input {
-      text-overflow: ellipsis;
-      padding-inline-end: _.unit(8);
-      cursor: pointer;
-    }
-
     .arrow {
       position: absolute;
       inset-inline-end: _.unit(2);
@@ -38,6 +32,12 @@
         transform: translateY(-50%) rotate(180deg);
       }
     }
+  }
+
+  .select .inputWrapper input {
+    text-overflow: ellipsis;
+    padding-inline-end: _.unit(8);
+    cursor: pointer;
   }
 
   .description,

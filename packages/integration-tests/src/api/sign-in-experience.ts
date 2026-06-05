@@ -15,3 +15,18 @@ export const updateSignInExperience = async (
       json: signInExperience,
     })
     .json<SignInExperience>();
+
+export type UsernameCaseSensitivityConflicts = {
+  totalConflicts: number;
+  samples: Array<{ usernameLower: string; userIds: string[] }>;
+};
+
+export const getUsernameCaseSensitivityConflicts = async (
+  limit = 20,
+  api: KyInstance = authedAdminApi
+) =>
+  api
+    .get('sign-in-exp/username-policy/case-sensitivity-conflicts', {
+      searchParams: { limit },
+    })
+    .json<UsernameCaseSensitivityConflicts>();

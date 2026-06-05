@@ -66,6 +66,7 @@ export const createSignInExperienceLibrary = (
     applicationSignInExperiences: { safeFindSignInExperienceByApplicationId },
     captchaProviders: { findCaptchaProvider },
     customProfileFields: { findAllCustomProfileFields },
+    users: { findUsernameCaseConflicts, countUsernameCaseConflicts },
     organizations,
   } = queries;
 
@@ -340,10 +341,24 @@ export const createSignInExperienceLibrary = (
     };
   };
 
+  /**
+   * Username case-sensitivity conflicts: groups of usernames that would clash if the tenant
+   * switched to a case-insensitive policy. Returns the total group count plus a capped sample,
+   * powering the diagnostic GET endpoint and the PATCH `/sign-in-exp` 409 guard.
+   */
+  const findCaseConflicts = async (limit: number) => {
+    const [totalConflicts, samples] = await Promise.all([
+      countUsernameCaseConflicts(),
+      findUsernameCaseConflicts(limit),
+    ]);
+    return { totalConflicts, samples };
+  };
+
   return {
     validateLanguageInfo,
     removeUnavailableSocialConnectorTargets,
     getFullSignInExperience,
     findCaptchaPublicConfig,
+    findCaseConflicts,
   };
 };

@@ -1,5 +1,9 @@
 @use '@/shared/scss/underscore' as _;
 
+.overlay {
+  z-index: 100;
+}
+
 .modal {
   position: absolute;
   width: 480px;

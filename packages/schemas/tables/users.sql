@@ -46,6 +46,11 @@ create index users__name
 create index users_mfa_verifications_gin
   on users using gin (mfa_verifications jsonb_path_ops);
 
+/* Supports case-insensitive username lookups and case-flip conflict detection. */
+create index users__tenant_lower_username
+  on users (tenant_id, lower(username))
+  where username is not null;
+
 create trigger set_updated_at
   before update on users
   for each row

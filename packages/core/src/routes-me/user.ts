@@ -3,6 +3,7 @@ import { userInfoSelectFields, jsonObjectGuard } from '@logto/schemas';
 import { condArray, conditional, pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayloadFromPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -10,6 +11,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import type { RouterInitArgs } from '../routes/types.js';
 import { checkPasswordPolicyForUser } from '../utils/password.js';
+import { assertUsernameAllowed } from '../utils/user.js';
 
 import type { AuthedMeRouter } from './types.js';
 
@@ -59,10 +61,17 @@ export default function userRoutes<T extends AuthedMeRouter>(
       const user = await findUserById(userId);
       assertThat(!user.isSuspended, new RequestError({ code: 'user.suspended', status: 401 }));
 
-      const { primaryEmail } = body;
+      const { primaryEmail, username } = body;
       if (primaryEmail) {
         // Check if user has verified email within 10 minutes.
         await checkVerificationStatus(userId, primaryEmail);
+      }
+
+      // Per-tenant policy enforcement is gated until the feature ships; the regex guard above is the
+      // always-on hard floor, so prod behavior is unchanged when the flag is off.
+      if (username !== undefined && EnvSet.values.isDevFeaturesEnabled) {
+        const { usernamePolicy } = await findDefaultSignInExperience();
+        assertUsernameAllowed(usernamePolicy, username);
       }
 
       await checkIdentifierCollision(body, userId);

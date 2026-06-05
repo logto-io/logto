@@ -1,5 +1,16 @@
 const user = {
   username_already_in_use: "Ce nom d'utilisateur est déjà utilisé.",
+  username_starts_with_number: "Le nom d'utilisateur ne peut pas commencer par un chiffre.",
+  username_invalid_charset_hard:
+    "Le nom d'utilisateur peut uniquement contenir des lettres, des chiffres et des underscores.",
+  username_too_short: "Le nom d'utilisateur est trop court.",
+  username_too_long: "Le nom d'utilisateur est trop long.",
+  username_uppercase_not_allowed:
+    "Le nom d'utilisateur ne peut pas contenir de lettres majuscules.",
+  username_lowercase_not_allowed:
+    "Le nom d'utilisateur ne peut pas contenir de lettres minuscules.",
+  username_numbers_not_allowed: "Le nom d'utilisateur ne peut pas contenir de chiffres.",
+  username_underscore_not_allowed: "Le nom d'utilisateur ne peut pas contenir de underscores.",
   email_already_in_use: 'Cet e-mail est associé à un compte existant.',
   phone_already_in_use: 'Ce numéro de téléphone est associé à un compte existant.',
   invalid_email: 'Addresse email incorrecte.',

@@ -5,6 +5,7 @@ import {
   MfaPolicy,
   SignInIdentifier,
   SignInMode,
+  defaultUsernamePolicy,
   type SignInExperience,
 } from '@logto/schemas';
 
@@ -55,6 +56,7 @@ const mockSignInExperience: SignInExperience = {
   passwordExpiration: {
     enabled: false,
   },
+  usernamePolicy: defaultUsernamePolicy,
   mfa: {
     policy: MfaPolicy.Mandatory,
     factors: [MfaFactor.TOTP],

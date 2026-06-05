@@ -1,4 +1,10 @@
-import { getAcceptedUserClaims } from './scope.js';
+import { type UserClaim } from '@logto/core-kit';
+import { type User } from '@logto/schemas';
+
+import { mockUser } from '#src/__mocks__/user.js';
+import { EnvSet } from '#src/env-set/index.js';
+
+import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
 
 const use = {
   idToken: 'id_token',
@@ -139,5 +145,57 @@ describe('OIDC getUserClaims()', () => {
         rejected: [],
       })
     ).toEqual(profileExpectation);
+  });
+});
+
+describe('OIDC getUserClaimsData() preferred_username', () => {
+  // Unused for the `preferred_username` claim, but required by the function signature.
+  const userLibrary = {} as unknown as Parameters<typeof getUserClaimsData>[2];
+  const organizationQueries = {} as unknown as Parameters<typeof getUserClaimsData>[3];
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+  const getPreferredUsername = async (user: User): Promise<unknown> => {
+    const claims: UserClaim[] = ['preferred_username'];
+    const data = await getUserClaimsData(user, claims, userLibrary, organizationQueries);
+    return data.find(([claim]) => claim === 'preferred_username')?.[1];
+  };
+
+  afterAll(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+  });
+
+  describe('when dev features are enabled', () => {
+    beforeAll(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+    });
+
+    it('falls back to username when profile.preferredUsername is unset', async () => {
+      await expect(getPreferredUsername(mockUser)).resolves.toBe(mockUser.username);
+    });
+
+    it('uses profile.preferredUsername when set', async () => {
+      const user = { ...mockUser, profile: { preferredUsername: 'alice_the_great' } };
+      await expect(getPreferredUsername(user)).resolves.toBe('alice_the_great');
+    });
+
+    it('returns undefined when both username and profile.preferredUsername are unset', async () => {
+      const user = { ...mockUser, username: null };
+      await expect(getPreferredUsername(user)).resolves.toBeUndefined();
+    });
+  });
+
+  describe('when dev features are disabled', () => {
+    beforeAll(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    });
+
+    it('does not fall back to username (preserves prior behavior)', async () => {
+      await expect(getPreferredUsername(mockUser)).resolves.toBeUndefined();
+    });
+
+    it('still uses an explicit profile.preferredUsername', async () => {
+      const user = { ...mockUser, profile: { preferredUsername: 'alice_the_great' } };
+      await expect(getPreferredUsername(user)).resolves.toBe('alice_the_great');
+    });
   });
 });

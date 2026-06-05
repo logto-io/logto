@@ -42,6 +42,8 @@ const sign_in_experiences = {
     '비밀번호 만료 정책이 활성화되지 않았습니다. 비밀번호를 만료시키기 전에 로그인 경험 설정에서 이를 활성화하세요.',
   password_expiration_invalid_period_days:
     '비밀번호 만료가 활성화된 경우 reminderPeriodDays는 validPeriodDays보다 작아야 합니다.',
+  username_policy_case_conflicts_exist:
+    '대소문자만 다른 사용자 이름이 존재하는 경우 대소문자 구분 안 함으로 전환할 수 없습니다. 충돌을 해결한 후 다시 시도하세요.',
 };
 
 export default Object.freeze(sign_in_experiences);

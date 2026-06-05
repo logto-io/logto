@@ -196,13 +196,13 @@ const sign_in_exp = {
         go_to: 'diğer profil alanları.',
       },
       disabled_hint: {
-        name: 'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Ad" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+        name: 'Bu alanı eklemek için önce aşağıdaki Kullanıcı profili bölümünde "Ad" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
         avatar:
-          'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Avatar" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+          'Bu alanı eklemek için önce aşağıdaki Kullanıcı profili bölümünde "Avatar" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
         profile:
-          'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Profil" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+          'Bu alanı eklemek için önce aşağıdaki Kullanıcı profili bölümünde "Profil" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
         custom_data:
-          'Bu alanı eklemek için önce yukarıdaki Profil verilerinde "Özel veriler" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
+          'Bu alanı eklemek için önce aşağıdaki Kullanıcı profili bölümünde "Özel veriler" iznini "Düzenle/Yalnızca okuma" olarak ayarlayın.',
       },
     },
     webauthn_related_origins: 'WebAuthn İlgili Kaynaklar',

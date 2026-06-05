@@ -11,11 +11,12 @@ import {
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayloadFromPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
-import { assertUserHasRemainingIdentifier } from '#src/utils/user.js';
+import { assertUserHasRemainingIdentifier, assertUsernameAllowed } from '#src/utils/user.js';
 
 import { PasswordValidator } from '../experience/classes/libraries/password-validator.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
@@ -113,6 +114,12 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
           ]);
           assertUserHasRemainingIdentifier(user, { username: null }, ssoIdentities.length);
         } else {
+          // Per-tenant policy enforcement is gated until the feature ships; the regex guard above
+          // is the always-on hard floor, so prod behavior is unchanged when the flag is off.
+          if (EnvSet.values.isDevFeaturesEnabled) {
+            const { usernamePolicy } = await findDefaultSignInExperience();
+            assertUsernameAllowed(usernamePolicy, username);
+          }
           await checkIdentifierCollision({ username }, userId);
         }
       }

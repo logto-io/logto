@@ -11,6 +11,7 @@ import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 import {
+  appLevelAccessControlMetadataKey,
   hasAppLevelAccessControlChecked,
   markAppLevelAccessControlChecked,
 } from './application-access-control.js';
@@ -54,7 +55,10 @@ const createProvider = (tenant: MockTenant) =>
 
 const createTestClient = (): KoaContextWithOIDC['oidc']['client'] => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
-  return { clientId } as KoaContextWithOIDC['oidc']['client'];
+  return {
+    clientId,
+    metadata: () => ({ appLevelAccessControlEnabled: true }),
+  } as KoaContextWithOIDC['oidc']['client'];
 };
 
 const mockGrantFound = (provider: KoaContextWithOIDC['oidc']['provider']) => {
@@ -99,6 +103,35 @@ describe('oidc provider init', () => {
     expect(() =>
       initOidc(id, mockEnvSet, queries, libraries, logtoConfigs, subscription)
     ).not.toThrow();
+  });
+
+  it('should allow missing application access control client metadata', async () => {
+    const tenant = new MockTenant();
+    const provider = createProvider(tenant);
+    const configuration = instance(provider).configuration();
+    const ctx = createOidcContext({ provider });
+
+    expect(() =>
+      configuration.extraClientMetadata.validator(
+        ctx,
+        appLevelAccessControlMetadataKey,
+        undefined,
+        { client_id: clientId }
+      )
+    ).not.toThrow();
+  });
+
+  it('should reject invalid application access control client metadata', async () => {
+    const tenant = new MockTenant();
+    const provider = createProvider(tenant);
+    const configuration = instance(provider).configuration();
+    const ctx = createOidcContext({ provider });
+
+    expect(() =>
+      configuration.extraClientMetadata.validator(ctx, appLevelAccessControlMetadataKey, 'true', {
+        client_id: clientId,
+      })
+    ).toThrow(errors.InvalidClientMetadata);
   });
 
   it('should reflect updated resource data on token exchange read path', async () => {
@@ -205,7 +238,7 @@ describe('oidc provider init', () => {
     } as Partial<KoaContextWithOIDC['oidc']>);
 
     await expect(configuration.loadExistingGrant(ctx)).rejects.toThrow(errors.AccessDenied);
-    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(clientId, accountId);
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(clientId, accountId, true);
   });
 
   it('should check application access for consent prompt without existing marker when loading existing grant', async () => {
@@ -228,7 +261,7 @@ describe('oidc provider init', () => {
     } as Partial<KoaContextWithOIDC['oidc']>);
 
     await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
-    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(clientId, accountId);
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(clientId, accountId, true);
     expect(findGrant).toHaveBeenCalledWith('grant_id');
   });
 
@@ -278,7 +311,7 @@ describe('oidc provider init', () => {
     } as Partial<KoaContextWithOIDC['oidc']>);
 
     await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
-    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(clientId, accountId);
+    expect(assertUserHasApplicationAccess).toHaveBeenCalledWith(clientId, accountId, true);
     expect(hasAppLevelAccessControlChecked(ctx.oidc.result, clientId, accountId)).toBe(true);
     expect(findGrant).toHaveBeenCalledWith('grant_id');
   });
