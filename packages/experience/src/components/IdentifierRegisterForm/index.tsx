@@ -4,6 +4,7 @@ import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import LockIcon from '@/assets/icons/lock.svg?react';
 import { SmartInputField } from '@/components/InputFields';
@@ -38,6 +39,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
   const { errorMessage, clearErrorMessage, onSubmit } = useOnSubmit();
 
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
+  const { experienceSettings } = useContext(PageContext);
   const prefilledIdentifier = usePrefilledIdentifier({ enabledIdentifiers: signUpMethods });
 
   const {
@@ -111,7 +113,11 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
               return getGeneralIdentifierErrorMessage(signUpMethods, 'required');
             }
 
-            const errorMessage = validateIdentifierField(type, value);
+            const errorMessage = validateIdentifierField(
+              type,
+              value,
+              experienceSettings?.usernamePolicy
+            );
 
             if (errorMessage) {
               return typeof errorMessage === 'string'

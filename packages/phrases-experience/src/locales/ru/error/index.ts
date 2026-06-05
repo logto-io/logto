@@ -11,6 +11,18 @@ const error = {
   username_should_not_start_with_number: 'Имя пользователя не должно начинаться с цифры',
   username_invalid_charset:
     'Имя пользователя должно содержать только буквы, цифры или символы подчеркивания',
+  /** UNTRANSLATED */
+  username_too_short: 'Username must be at least {{min}} characters long.',
+  /** UNTRANSLATED */
+  username_too_long: 'Username must be at most {{max}} characters long.',
+  /** UNTRANSLATED */
+  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
+  /** UNTRANSLATED */
+  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
+  /** UNTRANSLATED */
+  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
+  /** UNTRANSLATED */
+  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
   invalid_email: 'Электронная почта указана неправильно',
   invalid_phone: 'Номер телефона указан неправильно',
   passwords_do_not_match: 'Пароли не совпадают. Пожалуйста, попробуйте еще раз.',

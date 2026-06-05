@@ -1,10 +1,11 @@
 import { emailRegEx } from '@logto/core-kit';
-import { SignInIdentifier } from '@logto/schemas';
+import { SignInIdentifier, type UsernamePolicy } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared/universal';
 import i18next from 'i18next';
 import type { TFuncKey } from 'i18next';
 import { ParseError } from 'libphonenumber-js/mobile';
 
+import { isDevFeaturesEnabled } from '@/constants/env';
 import type { ErrorType } from '@/shared/components/ErrorMessage';
 import type { IdentifierInputType } from '@/shared/components/InputFields/SmartInputField';
 import { validateUsername } from '@/shared/utils/validate-username';
@@ -34,10 +35,16 @@ export const validatePhone = (value: string): ErrorType | undefined => {
   }
 };
 
-export const validateIdentifierField = (type: IdentifierInputType, value: string) => {
+export const validateIdentifierField = (
+  type: IdentifierInputType,
+  value: string,
+  usernamePolicy?: UsernamePolicy
+) => {
   switch (type) {
     case SignInIdentifier.Username: {
-      return validateUsername(value);
+      // Per-tenant policy enforcement is gated until the feature ships; without the flag the
+      // always-on hard floor is the only client-side check, matching production behavior.
+      return validateUsername(value, isDevFeaturesEnabled ? usernamePolicy : undefined);
     }
 
     case SignInIdentifier.Email: {

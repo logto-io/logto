@@ -10,6 +10,18 @@ const error = {
   username_exists: '用户名已存在',
   username_should_not_start_with_number: '用户名不能以数字开头',
   username_invalid_charset: '用户名只能包含英文字母、数字或下划线。',
+  /** UNTRANSLATED */
+  username_too_short: 'Username must be at least {{min}} characters long.',
+  /** UNTRANSLATED */
+  username_too_long: 'Username must be at most {{max}} characters long.',
+  /** UNTRANSLATED */
+  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
+  /** UNTRANSLATED */
+  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
+  /** UNTRANSLATED */
+  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
+  /** UNTRANSLATED */
+  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
   invalid_email: '无效的邮箱',
   invalid_phone: '无效的手机号',
   passwords_do_not_match: '两次输入的密码不一致。',

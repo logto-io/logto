@@ -1,4 +1,9 @@
-import { SignInIdentifier, experience, type SsoConnectorMetadata } from '@logto/schemas';
+import {
+  SignInIdentifier,
+  experience,
+  type SsoConnectorMetadata,
+  type UsernamePolicy,
+} from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { fireEvent, act, waitFor, renderHook } from '@testing-library/react';
 
@@ -41,13 +46,15 @@ jest.mock('@/apis/experience', () => ({
 
 const renderForm = (
   signUpMethods: SignInIdentifier[] = [SignInIdentifier.Username],
-  ssoConnectors: SsoConnectorMetadata[] = []
+  ssoConnectors: SsoConnectorMetadata[] = [],
+  usernamePolicy: UsernamePolicy = mockSignInExperienceSettings.usernamePolicy
 ) => {
   return renderWithPageContext(
     <SettingsProvider
       settings={{
         ...mockSignInExperienceSettings,
         ssoConnectors,
+        usernamePolicy,
       }}
     >
       <ConfirmModalProvider>
@@ -187,6 +194,45 @@ describe('<IdentifierRegisterForm />', () => {
       await waitFor(() => {
         expect(registerWithUsername).toBeCalledWith('username', undefined);
       });
+    });
+  });
+
+  test('username violating the per-tenant policy should throw, then clear when valid', async () => {
+    // Dev features are on under jest (NODE_ENV=test), so the per-tenant policy is enforced. This
+    // verifies the policy flows from the SIE context through the form into the validator.
+    const restrictivePolicy: UsernamePolicy = {
+      caseSensitive: true,
+      minLength: 4,
+      maxLength: 8,
+      allowedChars: { lowercase: true, uppercase: false, numbers: false, underscore: false },
+    };
+    const { queryByText, getByText, container } = renderForm(
+      [SignInIdentifier.Username],
+      [],
+      restrictivePolicy
+    );
+    const submitButton = getByText('action.create_account');
+    const usernameInput = container.querySelector('input[name=identifier]');
+
+    assert(usernameInput, new Error('username input not found'));
+
+    // Shorter than the policy minimum (min 4).
+    act(() => {
+      fireEvent.change(usernameInput, { target: { value: 'abc' } });
+      fireEvent.submit(submitButton);
+    });
+    await waitFor(() => {
+      expect(queryByText('error.username_too_short')).not.toBeNull();
+      expect(registerWithUsername).not.toBeCalled();
+    });
+
+    // A username satisfying the policy clears the error.
+    act(() => {
+      fireEvent.change(usernameInput, { target: { value: 'abcd' } });
+      fireEvent.blur(usernameInput);
+    });
+    await waitFor(() => {
+      expect(queryByText('error.username_too_short')).toBeNull();
     });
   });
 
