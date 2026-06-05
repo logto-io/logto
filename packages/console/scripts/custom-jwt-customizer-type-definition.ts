@@ -12,7 +12,7 @@ import { CustomJwtApiContext } from '@logto/schemas';
  */
 export const jwtCustomizerApiContextTypeDefinition = `type CustomJwtApiContext = {
   /**
-   * Reject the the current token request.
+   * Reject the current token request.
    *
    * @remarks
    * This function will reject the current token request and throw
