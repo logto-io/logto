@@ -17,12 +17,13 @@ const preventDisabledRowActivation = (event: KeyboardEvent<HTMLDivElement>) => {
 
 type Props = {
   readonly label: string;
+  readonly fieldKey?: string;
   readonly onDelete: () => void;
   readonly isDisabled?: boolean;
   readonly disabledHint?: ReactNode;
 };
 
-function ProfileFieldItem({ label, onDelete, isDisabled = false, disabledHint }: Props) {
+function ProfileFieldItem({ label, fieldKey, onDelete, isDisabled = false, disabledHint }: Props) {
   const shouldShowDisabledHint = isDisabled && Boolean(disabledHint);
   const fieldRow = (
     <div
@@ -34,6 +35,7 @@ function ProfileFieldItem({ label, onDelete, isDisabled = false, disabledHint }:
     >
       <Draggable className={styles.draggableIcon} />
       {label}
+      {fieldKey && <span className={styles.fieldKey}>{fieldKey}</span>}
     </div>
   );
 
