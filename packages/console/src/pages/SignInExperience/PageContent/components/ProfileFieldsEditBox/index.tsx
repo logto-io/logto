@@ -168,8 +168,10 @@ function ProfileFieldsEditBox<
                   append({ name: fieldName } as never);
                 }}
               >
-                {label || getI18nLabel(fieldName)}
-                <span className={styles.dropdownFieldKey}>{fieldName}</span>
+                <span>
+                  {label || getI18nLabel(fieldName)}
+                  <span className={styles.dropdownFieldKey}>{fieldName}</span>
+                </span>
               </DropdownItem>
             );
           })}
