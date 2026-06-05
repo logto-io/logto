@@ -72,7 +72,7 @@ export class PasswordVerification
    * @throws RequestError with 422 status if the user is not found or the password is incorrect.
    */
   async verify(password: string): Promise<User> {
-    const user = await findUserByIdentifier(this.queries.users, this.identifier);
+    const user = await findUserByIdentifier(this.queries, this.identifier);
 
     // Throws an 422 error if the user is not found or the password is incorrect
     const verifiedUser = await this.libraries.users.verifyUserPassword(user, password);
@@ -93,7 +93,7 @@ export class PasswordVerification
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
-    const user = await findUserByIdentifier(this.queries.users, this.identifier);
+    const user = await findUserByIdentifier(this.queries, this.identifier);
 
     assertThat(
       user,

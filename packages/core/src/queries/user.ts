@@ -7,7 +7,6 @@ import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import type { Search } from '#src/utils/search.js';
 import { buildConditionsFromSearch } from '#src/utils/search.js';
@@ -65,12 +64,12 @@ export const userSearchKeys = Object.freeze([
 export const userSearchFields = Object.freeze(Object.values(pick(Users.fields, ...userSearchKeys)));
 
 export const createUserQueries = (pool: CommonQueryMethods) => {
-  const findUserByUsername = async (username: string) =>
+  const findUserByUsername = async (username: string, caseSensitive: boolean) =>
     pool.maybeOne<User>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
       ${
-        EnvSet.values.isCaseSensitiveUsername
+        caseSensitive
           ? sql`where ${fields.username}=${username}`
           : sql`where lower(${fields.username})=lower(${username})`
       }
@@ -174,12 +173,12 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `
     );
 
-  const hasUser = async (username: string, excludeUserId?: string) =>
+  const hasUser = async (username: string, caseSensitive: boolean, excludeUserId?: string) =>
     pool.exists(sql`
       select ${fields.id}
       from ${table}
       ${
-        EnvSet.values.isCaseSensitiveUsername
+        caseSensitive
           ? sql`where ${fields.username}=${username}`
           : sql`where lower(${fields.username})=lower(${username})`
       }
