@@ -122,26 +122,33 @@ const application_details = {
   custom_data_invalid: 'Özel veri geçerli bir JSON nesnesi olmalıdır',
   access_control: {
     name: 'Kurallar',
-    title: 'Uygulama düzeyinde erişim kontrolü',
-    description:
-      'Erişim kuralları yapılandırarak bu uygulamada kimlerin oturum açabileceğini sınırlayın.',
-    enable: 'Erişim kontrolünü etkinleştir',
+    title: 'Erişim kontrolü',
+    description: 'Uygulama düzeyinde erişim kontrolü için kurallarınızı özelleştirin.',
+    enable: 'Uygulama düzeyinde erişim kontrolünü etkinleştir',
     enable_description:
-      'Yapılandırılmış kurallardan en az biriyle eşleşen kullanıcılar bu uygulamaya erişebilir.',
+      'Bu uygulamaya hangi kullanıcıların erişebileceğini kısıtlamak için ayrıntılı erişim kontrolünü etkinleştirin. Devre dışıysa, sistemdeki tüm kayıtlı kullanıcılar buna erişebilir.',
     enable_without_rules_notice:
       'Erişim kontrolünü etkinleştirmeden önce en az bir erişim kuralı ekleyin.',
-    enabled_notice:
-      'Erişim kontrolü açık. En az bir kuralla eşleşen kullanıcılar bu uygulamaya erişebilir.',
-    disabled_notice: 'Erişim kontrolü kapalı. Tüm kayıtlı kullanıcılar bu uygulamaya erişebilir.',
     load_error: 'Erişim kontrolü kuralları yüklenemedi.',
+    custom_allow_rules: 'Özel izin kuralları',
+    custom_allow_rules_description:
+      'Belirli özelliklere sahip kullanıcıların otomatik olarak erişebilmesi için kurallar oluşturun. Etkinleştirildiğinde en az bir kural gereklidir.',
     rules: 'Erişim kuralları',
+    add_rules: 'Kural ekle',
     rules_description:
       'Kullanıcılar yapılandırılmış kurallardan herhangi biriyle eşleştiğinde bu uygulamaya erişebilir.',
     empty_rules_description: 'Henüz yapılandırılmış kural yok.',
+    delete_rule_confirmation: 'Bu kuralı kaldırmak istediğinizden emin misiniz?',
+    rule_table_rules: 'Kurallar',
+    rule_table_description: 'Açıklama',
+    rule_table_users: 'Kullanıcılar',
+    rule_table_members: 'Üyeler',
+    rule_table_user_id: 'Kullanıcı ID’si',
     rule_count: '{{count}} kural',
     rule_count_other: '{{count}} kural',
     rule_users: 'Kullanıcılar',
     rule_users_description: 'Belirli kullanıcılar bu uygulamaya erişebilir.',
+    rule_roles: 'Roller',
     rule_user_roles: 'Kullanıcı rolleri',
     rule_user_roles_description:
       'Seçilen kullanıcı rollerine atanmış kullanıcılar bu uygulamaya erişebilir.',

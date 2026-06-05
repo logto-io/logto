@@ -124,27 +124,33 @@ const application_details = {
   custom_data_invalid: 'I dati personalizzati devono essere un oggetto JSON valido',
   access_control: {
     name: 'Regole',
-    title: 'Controllo accessi a livello di app',
-    description:
-      'Limita quali utenti possono accedere a questa applicazione configurando regole di accesso.',
-    enable: 'Abilita controllo accessi',
+    title: 'Controllo accessi',
+    description: 'Personalizza le regole per il controllo accessi a livello di app.',
+    enable: 'Abilita controllo accessi a livello di app',
     enable_description:
-      'Solo gli utenti che corrispondono ad almeno una regola configurata possono accedere a questa app.',
+      'Abilita un controllo accessi granulare per limitare quali utenti possono accedere a questa applicazione. Se disabilitato, tutti gli utenti registrati nel sistema possono accedervi.',
     enable_without_rules_notice:
       'Aggiungi almeno una regola di accesso prima di abilitare il controllo accessi.',
-    enabled_notice:
-      'Il controllo accessi è attivo. Solo gli utenti che corrispondono ad almeno una regola possono accedere a questa app.',
-    disabled_notice:
-      'Il controllo accessi è disattivato. Tutti gli utenti registrati possono accedere a questa app.',
     load_error: 'Impossibile caricare le regole di controllo accessi.',
+    custom_allow_rules: 'Regole di autorizzazione personalizzate',
+    custom_allow_rules_description:
+      'Crea regole affinché gli utenti con determinati attributi possano accedere automaticamente. Quando è abilitato, è richiesta almeno una regola.',
     rules: 'Regole di accesso',
+    add_rules: 'Aggiungi regole',
     rules_description:
       'Gli utenti possono accedere a questa app quando corrispondono a una qualsiasi delle regole configurate.',
     empty_rules_description: 'Non è stata ancora configurata alcuna regola.',
+    delete_rule_confirmation: 'Vuoi davvero rimuovere questa regola?',
+    rule_table_rules: 'Regole',
+    rule_table_description: 'Descrizione',
+    rule_table_users: 'Utenti',
+    rule_table_members: 'Membri',
+    rule_table_user_id: 'ID utente',
     rule_count: '{{count}} regola',
     rule_count_other: '{{count}} regole',
     rule_users: 'Utenti',
     rule_users_description: 'Utenti specifici possono accedere a questa app.',
+    rule_roles: 'Ruoli',
     rule_user_roles: 'Ruoli utente',
     rule_user_roles_description:
       'Gli utenti assegnati ai ruoli utente selezionati possono accedere a questa app.',
