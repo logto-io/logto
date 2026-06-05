@@ -10,18 +10,12 @@ const error = {
   username_exists: 'Uživatelské jméno již existuje',
   username_should_not_start_with_number: 'Uživatelské jméno nesmí začínat číslem',
   username_invalid_charset: 'Uživatelské jméno může obsahovat pouze písmena, čísla a podtržítka',
-  /** UNTRANSLATED */
-  username_too_short: 'Username must be at least {{min}} characters long.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username must be at most {{max}} characters long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
+  username_too_short: 'Uživatelské jméno musí být alespoň {{min}} znaků dlouhé.',
+  username_too_long: 'Uživatelské jméno musí být nejvýše {{max}} znaků dlouhé.',
+  username_uppercase_not_allowed: 'Velká písmena nejsou povolena v uživatelských jménech.',
+  username_lowercase_not_allowed: 'Malá písmena nejsou povolena v uživatelských jménech.',
+  username_numbers_not_allowed: 'Čísla nejsou povolena v uživatelských jménech.',
+  username_underscore_not_allowed: 'Podtržítka nejsou povolena v uživatelských jménech.',
   invalid_email: 'E-mailová adresa je neplatná',
   invalid_phone: 'Telefonní číslo je neplatné',
   passwords_do_not_match: 'Hesla se neshodují. Zkus to prosím znovu.',

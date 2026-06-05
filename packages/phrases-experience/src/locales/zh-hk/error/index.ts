@@ -10,18 +10,12 @@ const error = {
   username_exists: '用戶名已存在',
   username_should_not_start_with_number: '用戶名不能以數字開頭',
   username_invalid_charset: '用戶名只能包含英文字母、數字或下劃線。',
-  /** UNTRANSLATED */
-  username_too_short: 'Username must be at least {{min}} characters long.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username must be at most {{max}} characters long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
+  username_too_short: '用戶名必須至少有 {{min}} 個字符。',
+  username_too_long: '用戶名最多只能有 {{max}} 個字符。',
+  username_uppercase_not_allowed: '用戶名不允許使用大寫字母。',
+  username_lowercase_not_allowed: '用戶名不允許使用小寫字母。',
+  username_numbers_not_allowed: '用戶名不允許使用數字。',
+  username_underscore_not_allowed: '用戶名不允許使用下劃線。',
   invalid_email: '無效的電子郵件',
   invalid_phone: '無效的手機號碼',
   passwords_do_not_match: '兩次輸入的密碼不一致。',

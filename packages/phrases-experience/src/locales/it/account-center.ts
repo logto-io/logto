@@ -8,14 +8,10 @@ const account_center = {
     security_title: 'Sicurezza',
     security_description:
       'Modifica qui le impostazioni del tuo account per garantirne la sicurezza.',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
+    profile_title: 'Informazioni personali',
+    profile_description: 'Modifica qui le tue informazioni personali.',
+    sidebar_personal_info: 'Informazioni personali',
+    sidebar_security: 'Sicurezza',
     support: 'Supporto',
   },
   verification: {
@@ -95,7 +91,7 @@ const account_center = {
     email_verification_code: 'Codice di verifica e-mail',
     phone_verification_code: 'Codice di verifica telefonico',
     passkeys_count_one: '{{count}} passkey',
-    passkeys_count_other: '{{count}} passkeys',
+    passkeys_count_other: '{{count}} passkey',
     backup_codes_count_one: '{{count}} codice rimanente',
     backup_codes_count_other: '{{count}} codici rimanenti',
     view: 'Visualizza',

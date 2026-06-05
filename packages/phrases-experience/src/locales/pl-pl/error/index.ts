@@ -11,18 +11,12 @@ const error = {
   username_should_not_start_with_number: 'Nazwa użytkownika nie powinna zaczynać się od liczby',
   username_invalid_charset:
     'Nazwa użytkownika powinna zawierać tylko litery, liczby lub podkreślenia.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username must be at least {{min}} characters long.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username must be at most {{max}} characters long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
+  username_too_short: 'Nazwa użytkownika musi mieć co najmniej {{min}} znaków.',
+  username_too_long: 'Nazwa użytkownika może mieć maksymalnie {{max}} znaków.',
+  username_uppercase_not_allowed: 'Duże litery nie są dozwolone w nazwach użytkowników.',
+  username_lowercase_not_allowed: 'Małe litery nie są dozwolone w nazwach użytkowników.',
+  username_numbers_not_allowed: 'Liczby nie są dozwolone w nazwach użytkowników.',
+  username_underscore_not_allowed: 'Podkreślenia nie są dozwolone w nazwach użytkowników.',
   invalid_email: 'Nieprawidłowy adres e-mail',
   invalid_phone: 'Nieprawidłowy numer telefonu',
   passwords_do_not_match: 'Hasła nie pasują do siebie.',

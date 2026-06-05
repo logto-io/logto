@@ -11,18 +11,12 @@ const error = {
   username_exists: 'O nome de usuário já existe',
   username_should_not_start_with_number: 'O nome de usuário não deve começar com um número',
   username_invalid_charset: 'O nome de usuário deve conter apenas letras, números ou sublinhados.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username must be at least {{min}} characters long.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username must be at most {{max}} characters long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
+  username_too_short: 'O nome de usuário deve ter pelo menos {{min}} caracteres.',
+  username_too_long: 'O nome de usuário deve ter no máximo {{max}} caracteres.',
+  username_uppercase_not_allowed: 'Letras maiúsculas não são permitidas em nomes de usuário.',
+  username_lowercase_not_allowed: 'Letras minúsculas não são permitidas em nomes de usuário.',
+  username_numbers_not_allowed: 'Números não são permitidos em nomes de usuário.',
+  username_underscore_not_allowed: 'Sublinhados não são permitidos em nomes de usuário.',
   invalid_email: 'O e-mail é inválido',
   invalid_phone: 'O número de telefone é inválido',
   passwords_do_not_match: 'Suas senhas não correspondem.',

@@ -8,14 +8,10 @@ const account_center = {
     security_title: 'Bezpieczeństwo',
     security_description:
       'Tutaj możesz zmienić ustawienia konta, aby zadbać o jego bezpieczeństwo.',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
+    profile_title: 'Informacje osobiste',
+    profile_description: 'Zmień swoje dane osobowe tutaj.',
+    sidebar_personal_info: 'Informacje osobiste',
+    sidebar_security: 'Bezpieczeństwo',
     support: 'Pomoc',
   },
   verification: {

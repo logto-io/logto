@@ -9,8 +9,7 @@ const user_scopes = {
     'urn:logto:scope:organizations': 'Les informations de vos organisations',
     'urn:logto:scope:organization_roles': "Vos rôles dans l'organisation",
     address: 'Votre adresse',
-    /** UNTRANSLATED */
-    'urn:logto:scope:sessions': 'Your active sessions',
+    'urn:logto:scope:sessions': 'Vos sessions actives',
   },
 };
 

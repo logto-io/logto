@@ -10,18 +10,12 @@ const error = {
   username_exists: 'اسم المستخدم موجود بالفعل',
   username_should_not_start_with_number: 'يجب ألا يبدأ اسم المستخدم برقم',
   username_invalid_charset: 'يجب أن يحتوي اسم المستخدم فقط على الحروف والأرقام والشرطات السفلية.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username must be at least {{min}} characters long.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username must be at most {{max}} characters long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Uppercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Lowercase letters are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Numbers are not allowed in usernames.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Underscores are not allowed in usernames.',
+  username_too_short: 'يجب أن يكون اسم المستخدم على الأقل {{min}} حرفًا.',
+  username_too_long: 'يجب أن يكون اسم المستخدم بحد أقصى {{max}} حرفًا.',
+  username_uppercase_not_allowed: 'لا يُسمح بالأحرف الكبيرة في أسماء المستخدمين.',
+  username_lowercase_not_allowed: 'لا يُسمح بالأحرف الصغيرة في أسماء المستخدمين.',
+  username_numbers_not_allowed: 'لا يُسمح بالأرقام في أسماء المستخدمين.',
+  username_underscore_not_allowed: 'لا يُسمح بالشرطات السفلية في أسماء المستخدمين.',
   invalid_email: 'البريد الإلكتروني غير صالح',
   invalid_phone: 'رقم الهاتف غير صالح',
   passwords_do_not_match: 'كلمات المرور غير متطابقة. يرجى المحاولة مرة أخرى.',

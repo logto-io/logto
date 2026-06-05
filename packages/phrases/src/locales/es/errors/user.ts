@@ -1,21 +1,14 @@
 const user = {
   username_already_in_use: 'Este nombre de usuario ya está en uso.',
-  /** UNTRANSLATED */
-  username_starts_with_number: 'Username cannot start with a number.',
-  /** UNTRANSLATED */
-  username_invalid_charset_hard: 'Username can only contain letters, numbers, and underscores.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username is too short.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username is too long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Username cannot contain uppercase letters.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Username cannot contain lowercase letters.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Username cannot contain numbers.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Username cannot contain underscores.',
+  username_starts_with_number: 'El nombre de usuario no puede comenzar con un número.',
+  username_invalid_charset_hard:
+    'El nombre de usuario solo puede contener letras, números y guiones bajos.',
+  username_too_short: 'El nombre de usuario es demasiado corto.',
+  username_too_long: 'El nombre de usuario es demasiado largo.',
+  username_uppercase_not_allowed: 'El nombre de usuario no puede contener letras mayúsculas.',
+  username_lowercase_not_allowed: 'El nombre de usuario no puede contener letras minúsculas.',
+  username_numbers_not_allowed: 'El nombre de usuario no puede contener números.',
+  username_underscore_not_allowed: 'El nombre de usuario no puede contener guiones bajos.',
   email_already_in_use: 'Este correo electrónico está asociado a una cuenta existente.',
   phone_already_in_use: 'Este número de teléfono está asociado a una cuenta existente.',
   invalid_email: 'Dirección de correo electrónico inválida.',

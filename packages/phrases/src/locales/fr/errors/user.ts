@@ -1,21 +1,16 @@
 const user = {
   username_already_in_use: "Ce nom d'utilisateur est déjà utilisé.",
-  /** UNTRANSLATED */
-  username_starts_with_number: 'Username cannot start with a number.',
-  /** UNTRANSLATED */
-  username_invalid_charset_hard: 'Username can only contain letters, numbers, and underscores.',
-  /** UNTRANSLATED */
-  username_too_short: 'Username is too short.',
-  /** UNTRANSLATED */
-  username_too_long: 'Username is too long.',
-  /** UNTRANSLATED */
-  username_uppercase_not_allowed: 'Username cannot contain uppercase letters.',
-  /** UNTRANSLATED */
-  username_lowercase_not_allowed: 'Username cannot contain lowercase letters.',
-  /** UNTRANSLATED */
-  username_numbers_not_allowed: 'Username cannot contain numbers.',
-  /** UNTRANSLATED */
-  username_underscore_not_allowed: 'Username cannot contain underscores.',
+  username_starts_with_number: "Le nom d'utilisateur ne peut pas commencer par un chiffre.",
+  username_invalid_charset_hard:
+    "Le nom d'utilisateur peut uniquement contenir des lettres, des chiffres et des underscores.",
+  username_too_short: "Le nom d'utilisateur est trop court.",
+  username_too_long: "Le nom d'utilisateur est trop long.",
+  username_uppercase_not_allowed:
+    "Le nom d'utilisateur ne peut pas contenir de lettres majuscules.",
+  username_lowercase_not_allowed:
+    "Le nom d'utilisateur ne peut pas contenir de lettres minuscules.",
+  username_numbers_not_allowed: "Le nom d'utilisateur ne peut pas contenir de chiffres.",
+  username_underscore_not_allowed: "Le nom d'utilisateur ne peut pas contenir de underscores.",
   email_already_in_use: 'Cet e-mail est associé à un compte existant.',
   phone_already_in_use: 'Ce numéro de téléphone est associé à un compte existant.',
   invalid_email: 'Addresse email incorrecte.',

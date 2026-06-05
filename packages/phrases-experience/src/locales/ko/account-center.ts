@@ -7,14 +7,10 @@ const account_center = {
     title: '계정',
     security_title: '보안',
     security_description: '계정 보안을 위해 여기에서 계정 설정을 변경하세요.',
-    /** UNTRANSLATED */
-    profile_title: 'Personal info',
-    /** UNTRANSLATED */
-    profile_description: 'Change your personal information here.',
-    /** UNTRANSLATED */
-    sidebar_personal_info: 'Personal info',
-    /** UNTRANSLATED */
-    sidebar_security: 'Security',
+    profile_title: '개인 정보',
+    profile_description: '여기에서 개인 정보를 변경하세요.',
+    sidebar_personal_info: '개인 정보',
+    sidebar_security: '보안',
     support: '지원',
   },
   verification: {
