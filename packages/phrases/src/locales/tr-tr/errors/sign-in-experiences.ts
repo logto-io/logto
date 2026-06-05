@@ -44,6 +44,9 @@ const sign_in_experiences = {
     'Parola sona erme politikası etkinleştirilmemiş. Parolaların süresini doldurmadan önce oturum açma deneyimi ayarlarından etkinleştirin.',
   password_expiration_invalid_period_days:
     'Parola süresi dolma politikası etkin olduğunda, reminderPeriodDays değeri validPeriodDays değerinden küçük olmalıdır.',
+  /** UNTRANSLATED */
+  username_policy_case_conflicts_exist:
+    'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
 };
 
 export default Object.freeze(sign_in_experiences);

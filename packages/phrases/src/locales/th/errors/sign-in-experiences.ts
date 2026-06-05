@@ -44,6 +44,9 @@ const sign_in_experiences = {
     'นโยบายการหมดอายุของรหัสผ่านไม่ได้เปิดใช้งาน โปรดเปิดใช้งานในการตั้งค่าประสบการณ์การลงชื่อเข้าใช้ก่อนที่จะกำหนดวันหมดอายุของรหัสผ่าน',
   password_expiration_invalid_period_days:
     'เมื่อเปิดใช้การหมดอายุรหัสผ่าน reminderPeriodDays ต้องน้อยกว่า validPeriodDays',
+  /** UNTRANSLATED */
+  username_policy_case_conflicts_exist:
+    'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
 };
 
 export default Object.freeze(sign_in_experiences);

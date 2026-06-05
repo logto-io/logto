@@ -35,6 +35,9 @@ const sign_in_experiences = {
   password_expiration_not_enabled: '密碼過期策略未啟用。在過期密碼前，請在登錄體驗設置中啟用它。',
   password_expiration_invalid_period_days:
     '啟用密碼到期策略時，reminderPeriodDays 必須小於 validPeriodDays。',
+  /** UNTRANSLATED */
+  username_policy_case_conflicts_exist:
+    'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
 };
 
 export default Object.freeze(sign_in_experiences);

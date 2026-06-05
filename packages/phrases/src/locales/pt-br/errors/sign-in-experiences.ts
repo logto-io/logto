@@ -45,6 +45,9 @@ const sign_in_experiences = {
     'A política de expiração de senha não está ativada. Ative-a nas configurações de experiência de login antes de expirar senhas.',
   password_expiration_invalid_period_days:
     'Quando a expiração de senha estiver habilitada, reminderPeriodDays deve ser menor que validPeriodDays.',
+  /** UNTRANSLATED */
+  username_policy_case_conflicts_exist:
+    'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
 };
 
 export default Object.freeze(sign_in_experiences);

@@ -45,6 +45,9 @@ const sign_in_experiences = {
     'A política de expiração de palavra-passe não está ativada. Ative-a nas definições de experiência de início de sessão antes de expirar palavras-passe.',
   password_expiration_invalid_period_days:
     'Quando a expiração de palavra-passe estiver ativada, reminderPeriodDays deve ser inferior a validPeriodDays.',
+  /** UNTRANSLATED */
+  username_policy_case_conflicts_exist:
+    'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
 };
 
 export default Object.freeze(sign_in_experiences);
