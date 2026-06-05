@@ -108,6 +108,41 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       'Sometimes, Logto may not recognize a user’s session on the sign-in page, like when a session expires or the user bookmarks or shares the sign-in link. By default, an “unknown session” 404 error appears. To enhance user experience, set a fallback URL to redirect users back to your app and restart authentication.',
   },
+  username_policy: {
+    title: 'Username policy',
+    description:
+      'Customize username requirements, including length, allowed characters, and case sensitivity.',
+    manage_button: 'Manage',
+    modal_title: 'Username policy',
+    modal_description: 'Customize username requirements for your end-users.',
+    length: {
+      title: 'Username length',
+      minimum: 'Minimum',
+      maximum: 'Maximum',
+      min_greater_than_max: 'The minimum length cannot be greater than the maximum length.',
+    },
+    allowed_chars: {
+      title: 'Allowed character types',
+      uppercase: 'Uppercase letters (A-Z)',
+      lowercase: 'Lowercase letters (a-z)',
+      numbers: 'Numbers (0-9)',
+      underscore: 'Underscores (_)',
+      no_valid_leading_char:
+        'Numbers alone aren’t allowed. Enable at least one of uppercase, lowercase, or underscores.',
+      no_char_selected: 'Select at least one character type.',
+    },
+    case_sensitive: {
+      title: 'Case-sensitive usernames',
+      description:
+        'Treat uppercase and lowercase letters as distinct. ‘user123’ and ‘User123’ are treated as different usernames.',
+    },
+    case_conflicts: {
+      title: 'Existing username conflicts detected',
+      description:
+        'Some usernames would collide if case sensitivity is turned off. Resolve the {{count}} conflicting group(s) below before saving.',
+      sample_title: 'Conflicting usernames',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

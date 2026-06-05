@@ -111,6 +111,41 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       'Czasami Logto może nie rozpoznać sesji użytkownika na stronie logowania, na przykład gdy sesja wygasa lub użytkownik dodaje stronę logowania do zakładek lub udostępnia link do logowania. Domyślnie pojawia się błąd 404 „nieznana sesja”. Aby poprawić doświadczenia użytkowników, ustaw domyślny URL na przekierowanie użytkowników z powrotem do Twojej aplikacji i ponowne rozpoczęcie uwierzytelniania.',
   },
+  username_policy: {
+    title: 'Zasady nazwy użytkownika',
+    description:
+      'Dostosuj wymagania dotyczące nazwy użytkownika, w tym długość, dozwolone znaki i rozróżnianie wielkości liter.',
+    manage_button: 'Zarządzaj',
+    modal_title: 'Zasady nazwy użytkownika',
+    modal_description: 'Dostosuj wymagania dotyczące nazwy użytkownika dla użytkowników końcowych.',
+    length: {
+      title: 'Długość nazwy użytkownika',
+      minimum: 'Minimum',
+      maximum: 'Maksimum',
+      min_greater_than_max: 'Minimalna długość nie może być większa niż maksymalna długość.',
+    },
+    allowed_chars: {
+      title: 'Dozwolone typy znaków',
+      uppercase: 'Wielkie litery (A-Z)',
+      lowercase: 'Małe litery (a-z)',
+      numbers: 'Cyfry (0-9)',
+      underscore: 'Podkreślenia (_)',
+      no_valid_leading_char:
+        'Same cyfry są niedozwolone. Włącz co najmniej jedną z opcji: wielkie litery, małe litery lub podkreślenia.',
+      no_char_selected: 'Wybierz co najmniej jeden typ znaków.',
+    },
+    case_sensitive: {
+      title: 'Nazwy użytkownika z rozróżnianiem wielkości liter',
+      description:
+        'Traktuj wielkie i małe litery jako różne. „user123” i „User123” są traktowane jako różne nazwy użytkownika.',
+    },
+    case_conflicts: {
+      title: 'Wykryto istniejące konflikty nazw użytkownika',
+      description:
+        'Niektóre nazwy użytkownika będą kolidować, jeśli rozróżnianie wielkości liter zostanie wyłączone. Rozwiąż poniższe {{count}} grup konfliktów przed zapisaniem.',
+      sample_title: 'Konfliktujące nazwy użytkownika',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

@@ -109,6 +109,41 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       "Bazen oturumun süresi dolduğunda veya kullanıcı oturum açma bağlantısını yer imlerine eklediğinde ya da paylaştığında Logto, kullanıcının oturumunu oturum açma sayfasında tanımayabilir. Varsayılan olarak, “bilinmeyen oturum” 404 hatası görünür. Kullanıcı deneyimini geliştirmek için, kullanıcıları uygulamanıza geri yönlendirmek ve kimlik doğrulamasını yeniden başlatmak için bir geri dönüş URL'si ayarlayın.",
   },
+  username_policy: {
+    title: 'Kullanıcı adı politikası',
+    description:
+      'Uzunluk, izin verilen karakterler ve büyük/küçük harf duyarlılığı dahil olmak üzere kullanıcı adı gereksinimlerini özelleştirin.',
+    manage_button: 'Yönet',
+    modal_title: 'Kullanıcı adı politikası',
+    modal_description: 'Son kullanıcılarınız için kullanıcı adı gereksinimlerini özelleştirin.',
+    length: {
+      title: 'Kullanıcı adı uzunluğu',
+      minimum: 'Minimum',
+      maximum: 'Maksimum',
+      min_greater_than_max: 'Minimum uzunluk, maksimum uzunluktan büyük olamaz.',
+    },
+    allowed_chars: {
+      title: 'İzin verilen karakter türleri',
+      uppercase: 'Büyük harfler (A-Z)',
+      lowercase: 'Küçük harfler (a-z)',
+      numbers: 'Sayılar (0-9)',
+      underscore: 'Alt çizgiler (_)',
+      no_valid_leading_char:
+        'Yalnızca sayılara izin verilmez. Büyük harfler, küçük harfler veya alt çizgilerden en az birini etkinleştirin.',
+      no_char_selected: 'En az bir karakter türü seçin.',
+    },
+    case_sensitive: {
+      title: 'Büyük/küçük harfe duyarlı kullanıcı adları',
+      description:
+        'Büyük ve küçük harfleri farklı olarak değerlendirin. ‘user123’ ve ‘User123’ farklı kullanıcı adları olarak değerlendirilir.',
+    },
+    case_conflicts: {
+      title: 'Mevcut kullanıcı adı çakışmaları algılandı',
+      description:
+        'Büyük/küçük harf duyarlılığı kapatılırsa bazı kullanıcı adları çakışır. Kaydetmeden önce aşağıdaki {{count}} çakışan grubu çözün.',
+      sample_title: 'Çakışan kullanıcı adları',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);
