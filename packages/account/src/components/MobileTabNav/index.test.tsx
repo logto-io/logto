@@ -7,7 +7,7 @@ import MobileTabNav from '.';
 
 describe('<MobileTabNav />', () => {
   it('renders profile and security tabs when both are enabled', () => {
-    const items = buildAccountNavItems({ hasProfile: true, hasSecurity: true });
+    const items = buildAccountNavItems({ hasProfile: true, hasSecurity: true, hasSessions: false });
 
     render(
       <MemoryRouter>
@@ -20,7 +20,11 @@ describe('<MobileTabNav />', () => {
   });
 
   it('renders nothing when only security is available', () => {
-    const items = buildAccountNavItems({ hasProfile: false, hasSecurity: true });
+    const items = buildAccountNavItems({
+      hasProfile: false,
+      hasSecurity: true,
+      hasSessions: false,
+    });
     const { container } = render(
       <MemoryRouter>
         <MobileTabNav items={items} />

@@ -10,7 +10,6 @@ import DeleteAccountSection from './DeleteAccountSection';
 import EmailPhoneSection from './EmailPhoneSection';
 import MfaSection from './MfaSection';
 import PasswordSection from './PasswordSection';
-import SessionSection from './SessionSection';
 import SocialSection from './SocialSection';
 import UsernameSection from './UsernameSection';
 
@@ -27,7 +26,6 @@ const Security = () => {
         <PasswordSection />
         <SocialSection />
         <MfaSection />
-        <SessionSection />
         <DeleteAccountSection />
       </div>
       <PageFooter />

@@ -15,6 +15,8 @@ const account_center = {
     sidebar_personal_info: 'Personal info',
     /** UNTRANSLATED */
     sidebar_security: 'Security',
+    /** UNTRANSLATED */
+    sidebar_sessions: 'Sessions',
     support: 'ฝ่ายช่วยเหลือ',
   },
   verification: {
@@ -103,14 +105,6 @@ const account_center = {
     disable_2_step_verification: 'ปิด',
     no_verification_method_warning:
       'คุณยังไม่ได้เพิ่มวิธีการยืนยันตัวตนที่สอง เพิ่มอย่างน้อยหนึ่งวิธีเพื่อเปิดใช้งานการยืนยันตัวตนสองขั้นตอนเมื่อลงชื่อเข้าใช้',
-    sessions: 'Sessions',
-    session_current: 'Current session',
-    session_signed_in: 'Signed in {{date}}',
-    session_revoke: 'Sign out',
-    session_revoke_confirmation_title: 'Sign out session',
-    session_revoke_confirmation_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    session_no_other: 'No other active sessions.',
     account_removal: 'การลบบัญชี',
     delete_your_account: 'ลบบัญชีของคุณ',
     delete_account: 'ลบบัญชี',
@@ -254,6 +248,28 @@ const account_center = {
     name_passkey_description:
       'คุณยืนยันอุปกรณ์นี้สำหรับการยืนยันตัวตนแบบ 2 ขั้นตอนสำเร็จแล้ว ปรับแต่งชื่อเพื่อให้จดจำได้หากคุณมีหลายคีย์',
     name_input_label: 'ชื่อ',
+  },
+  /** UNTRANSLATED */
+  sessions: {
+    page_title: 'Sessions',
+    page_description: 'Manage your active sessions and authorized third-party applications.',
+    title: 'Sessions',
+    current_session: 'Current session',
+    signed_in_at: 'Signed in {{date}}',
+    revoke_session: 'Sign out',
+    revoke_session_title: 'Sign out session',
+    revoke_session_description:
+      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
+    no_other_sessions: 'No other active sessions.',
+    loading: 'Loading...',
+    third_party_apps_title: 'Third-party apps',
+    no_third_party_apps: 'No authorized third-party applications.',
+    granted_at: 'Authorized {{date}}',
+    revoke_grant: 'Remove',
+    revoke_grant_title: 'Remove third-party app access',
+    revoke_grant_description:
+      'This will revoke all access granted to this application. Are you sure you want to continue?',
+    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
   },
 };
 
