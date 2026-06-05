@@ -36,7 +36,7 @@ export const hasVisibleSecuritySection = (
     return false;
   }
 
-  const { username, email, phone, password, social, mfa, session } = accountCenterSettings.fields;
+  const { username, email, phone, password, social, mfa } = accountCenterSettings.fields;
   const hasDeleteAccountUrl = Boolean(accountCenterSettings.deleteAccountUrl?.trim());
 
   return (
@@ -44,11 +44,18 @@ export const hasVisibleSecuritySection = (
     isVisibleField(email) ||
     isVisibleField(phone) ||
     isVisibleField(password) ||
-    isVisibleField(session) ||
     hasDeleteAccountUrl ||
     hasVisibleSocialSection(social, experienceSettings) ||
     hasVisibleMfaSection(mfa, experienceSettings)
   );
+};
+
+export const hasVisibleSessionsPage = (accountCenterSettings?: SecurityPageSettings): boolean => {
+  if (!accountCenterSettings?.enabled) {
+    return false;
+  }
+
+  return isVisibleField(accountCenterSettings.fields.session);
 };
 
 export const hasAvailableSecurityVerificationMethod = (

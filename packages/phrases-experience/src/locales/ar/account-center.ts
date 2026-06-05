@@ -15,6 +15,8 @@ const account_center = {
     sidebar_personal_info: 'Personal info',
     /** UNTRANSLATED */
     sidebar_security: 'Security',
+    /** UNTRANSLATED */
+    sidebar_sessions: 'Sessions',
     support: 'الدعم',
   },
   verification: {
@@ -103,14 +105,6 @@ const account_center = {
     disable_2_step_verification: 'تعطيل',
     no_verification_method_warning:
       'لم تقم بإضافة طريقة تحقق ثانية. أضف طريقة واحدة على الأقل لتفعيل التحقق بخطوتين عند تسجيل الدخول.',
-    sessions: 'Sessions',
-    session_current: 'Current session',
-    session_signed_in: 'Signed in {{date}}',
-    session_revoke: 'Sign out',
-    session_revoke_confirmation_title: 'Sign out session',
-    session_revoke_confirmation_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    session_no_other: 'No other active sessions.',
     account_removal: 'حذف الحساب',
     delete_your_account: 'احذف حسابك',
     delete_account: 'حذف الحساب',
@@ -255,6 +249,28 @@ const account_center = {
     name_passkey_description:
       'لقد نجحت في التحقق من هذا الجهاز للمصادقة بخطوتين. خصص الاسم للتعرف عليه إذا كان لديك مفاتيح متعددة.',
     name_input_label: 'الاسم',
+  },
+  /** UNTRANSLATED */
+  sessions: {
+    page_title: 'Sessions',
+    page_description: 'Manage your active sessions and authorized third-party applications.',
+    title: 'Sessions',
+    current_session: 'Current session',
+    signed_in_at: 'Signed in {{date}}',
+    revoke_session: 'Sign out',
+    revoke_session_title: 'Sign out session',
+    revoke_session_description:
+      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
+    no_other_sessions: 'No other active sessions.',
+    loading: 'Loading...',
+    third_party_apps_title: 'Third-party apps',
+    no_third_party_apps: 'No authorized third-party applications.',
+    granted_at: 'Authorized {{date}}',
+    revoke_grant: 'Remove',
+    revoke_grant_title: 'Remove third-party app access',
+    revoke_grant_description:
+      'This will revoke all access granted to this application. Are you sure you want to continue?',
+    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
   },
 };
 

@@ -12,6 +12,12 @@
   color: var(--color-type-primary);
 }
 
+.sectionDescription {
+  padding-left: _.unit(1);
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+}
+
 .card {
   background: var(--color-bg-body);
   border-radius: 12px;
@@ -114,6 +120,13 @@
   font: var(--font-body-2);
   color: var(--color-type-secondary);
   text-align: center;
+}
+
+.loadingState {
+  padding: _.unit(5) _.unit(6);
+  text-align: center;
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
 }
 
 @mixin mobile-layout {

@@ -15,6 +15,8 @@ const account_center = {
     sidebar_personal_info: 'Personal info',
     /** UNTRANSLATED */
     sidebar_security: 'Security',
+    /** UNTRANSLATED */
+    sidebar_sessions: 'Sessions',
     support: 'Podpora',
   },
   verification: {
@@ -103,14 +105,6 @@ const account_center = {
     disable_2_step_verification: 'Vypnout',
     no_verification_method_warning:
       'Nepřidali jste druhou ověřovací metodu. Přidejte alespoň jednu pro povolení dvoufázového ověření při přihlášení.',
-    sessions: 'Sessions',
-    session_current: 'Current session',
-    session_signed_in: 'Signed in {{date}}',
-    session_revoke: 'Sign out',
-    session_revoke_confirmation_title: 'Sign out session',
-    session_revoke_confirmation_description:
-      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
-    session_no_other: 'No other active sessions.',
     account_removal: 'Smazání účtu',
     delete_your_account: 'Smazat svůj účet',
     delete_account: 'Smazat účet',
@@ -261,6 +255,28 @@ const account_center = {
     name_passkey_description:
       'Úspěšně jsi ověřil/a toto zařízení pro dvoufázové ověření. Přizpůsob název, abys mohl/a rozpoznat více klíčů.',
     name_input_label: 'Název',
+  },
+  /** UNTRANSLATED */
+  sessions: {
+    page_title: 'Sessions',
+    page_description: 'Manage your active sessions and authorized third-party applications.',
+    title: 'Sessions',
+    current_session: 'Current session',
+    signed_in_at: 'Signed in {{date}}',
+    revoke_session: 'Sign out',
+    revoke_session_title: 'Sign out session',
+    revoke_session_description:
+      'This will sign out the session and revoke all associated access. Are you sure you want to continue?',
+    no_other_sessions: 'No other active sessions.',
+    loading: 'Loading...',
+    third_party_apps_title: 'Third-party apps',
+    no_third_party_apps: 'No authorized third-party applications.',
+    granted_at: 'Authorized {{date}}',
+    revoke_grant: 'Remove',
+    revoke_grant_title: 'Remove third-party app access',
+    revoke_grant_description:
+      'This will revoke all access granted to this application. Are you sure you want to continue?',
+    revoke_grant_failed: 'Failed to revoke some grants. Please try again.',
   },
 };
 
