@@ -133,6 +133,7 @@ function ProfileFieldsEditBox<
                   return (
                     <ProfileFieldItem
                       label={fieldLabelByName.get(fieldName) ?? fieldName}
+                      fieldKey={fieldName}
                       isDisabled={isDisabled}
                       disabledHint={disabledReason}
                       onDelete={() => {
@@ -168,6 +169,7 @@ function ProfileFieldsEditBox<
                 }}
               >
                 {label || getI18nLabel(fieldName)}
+                <span className={styles.dropdownFieldKey}>{fieldName}</span>
               </DropdownItem>
             );
           })}

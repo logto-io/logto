@@ -8,6 +8,12 @@
   min-width: 208px;
 }
 
+.dropdownFieldKey {
+  color: var(--color-text-secondary);
+  font: var(--font-body-3);
+  margin-left: _.unit(1);
+}
+
 .setUpHint {
   font: var(--font-body-2);
   color: var(--color-text-secondary);
