@@ -42,6 +42,11 @@ describe('usernamePolicyGuard', () => {
       allowedChars: { lowercase: false, uppercase: false, numbers: true, underscore: false },
     });
     expect(result.success).toBe(false);
+    // Lock the human-readable acknowledgement so the "numbers-only not allowed" message can't
+    // silently regress (koaGuard surfaces it verbatim on the Management API).
+    expect(result.success ? undefined : result.error.issues[0]?.message).toContain(
+      'numbers alone are not allowed'
+    );
   });
 
   it('accepts underscore as the only leading char class', () => {

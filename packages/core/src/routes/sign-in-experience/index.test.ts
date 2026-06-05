@@ -1080,5 +1080,21 @@ describe('PATCH /sign-in-exp username policy', () => {
     expect(response.status).toBe(200);
     expect(findCaseConflicts).not.toHaveBeenCalled();
   });
+
+  it('rejects a numbers-only username policy', async () => {
+    const response = await buildRequester()
+      .patch('/sign-in-exp')
+      .send({
+        usernamePolicy: {
+          ...defaultUsernamePolicy,
+          allowedChars: { lowercase: false, uppercase: false, numbers: true, underscore: false },
+        },
+      });
+
+    // The `usernamePolicyGuard` refine rejects this at koaGuard (400). The exact human-readable
+    // message is asserted in core-kit's `username-policy.test.ts`; the test requester here does not
+    // mount the error handler that serializes the refine message into the response body.
+    expect(response.status).toBe(400);
+  });
 });
 /* eslint-enable max-lines */

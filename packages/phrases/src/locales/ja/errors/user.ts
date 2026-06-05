@@ -1,5 +1,21 @@
 const user = {
   username_already_in_use: 'このユーザー名はすでに使用されています。',
+  /** UNTRANSLATED */
+  username_starts_with_number: 'Username cannot start with a number.',
+  /** UNTRANSLATED */
+  username_invalid_charset_hard: 'Username can only contain letters, numbers, and underscores.',
+  /** UNTRANSLATED */
+  username_too_short: 'Username is too short.',
+  /** UNTRANSLATED */
+  username_too_long: 'Username is too long.',
+  /** UNTRANSLATED */
+  username_uppercase_not_allowed: 'Username cannot contain uppercase letters.',
+  /** UNTRANSLATED */
+  username_lowercase_not_allowed: 'Username cannot contain lowercase letters.',
+  /** UNTRANSLATED */
+  username_numbers_not_allowed: 'Username cannot contain numbers.',
+  /** UNTRANSLATED */
+  username_underscore_not_allowed: 'Username cannot contain underscores.',
   email_already_in_use: 'このメールアドレスは既に別のアカウントに関連付けされています。',
   phone_already_in_use: 'この電話番号は既に別のアカウントに関連付けされています。',
   invalid_email: '無効なメールアドレスです。',
