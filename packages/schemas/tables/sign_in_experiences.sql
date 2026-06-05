@@ -34,8 +34,8 @@ create table sign_in_experiences (
   email_blocklist_policy jsonb /* @use EmailBlocklistPolicy */ not null default '{}'::jsonb,
   forgot_password_methods jsonb /* @use ForgotPasswordMethods */ default '[]'::jsonb,
   passkey_sign_in jsonb /* @use PasskeySignIn */ not null default '{}'::jsonb,
-  /** Nullable by design: null keeps legacy full-catalog behavior and [] collects no custom profile fields. */
-  sign_up_profile_fields jsonb /* @use SignUpProfileFields */,
+  /** Nullable by design: null keeps legacy full-catalog behavior, and new rows default to [] to collect no custom profile fields. */
+  sign_up_profile_fields jsonb /* @use SignUpProfileFields */ default '[]'::jsonb,
   password_expiration jsonb /* @use PasswordExpirationPolicy */ not null default '{}'::jsonb,
   username_policy jsonb /* @use UsernamePolicy */ not null default ('{
     "caseSensitive": true,
