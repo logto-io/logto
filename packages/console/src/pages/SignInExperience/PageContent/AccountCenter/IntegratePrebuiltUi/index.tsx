@@ -176,6 +176,7 @@ function IntegratePrebuiltUi({ getProfileFieldDisabledReason }: Props) {
               SignInExperienceForm & { accountCenter: AccountCenterFormValues },
               'accountCenter.profileFields'
             >
+              isFieldKeyShown
               name="accountCenter.profileFields"
               addProfileFieldsButtonTitle="sign_in_exp.account_center.profile_fields.add_profile_fields"
               getFieldDisabledReason={getProfileFieldDisabledReason}

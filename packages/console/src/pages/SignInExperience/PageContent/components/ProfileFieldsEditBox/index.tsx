@@ -40,6 +40,8 @@ type Props<TFieldValues extends FieldValues, TName extends FieldArrayPath<TField
    * removed; if already added, the row is shown in a disabled state with a tooltip.
    */
   readonly getFieldDisabledReason?: (fieldName: string) => string | undefined;
+  /** When enabled, show each field's key alongside its label in the list and dropdown. */
+  readonly isFieldKeyShown?: boolean;
 };
 
 function ProfileFieldsEditBox<
@@ -51,6 +53,7 @@ function ProfileFieldsEditBox<
   hint,
   onFieldsChange,
   getFieldDisabledReason,
+  isFieldKeyShown = false,
 }: Props<TFieldValues, TName>) {
   const { control } = useFormContext<TFieldValues>();
   const getI18nLabel = useI18nFieldLabel();
@@ -133,6 +136,7 @@ function ProfileFieldsEditBox<
                   return (
                     <ProfileFieldItem
                       label={fieldLabelByName.get(fieldName) ?? fieldName}
+                      fieldKey={isFieldKeyShown ? fieldName : undefined}
                       isDisabled={isDisabled}
                       disabledHint={disabledReason}
                       onDelete={() => {
@@ -167,7 +171,10 @@ function ProfileFieldsEditBox<
                   append({ name: fieldName } as never);
                 }}
               >
-                {label || getI18nLabel(fieldName)}
+                <span className={styles.dropdownOption}>
+                  <span>{label || getI18nLabel(fieldName)}</span>
+                  {isFieldKeyShown && <span className={styles.fieldKey}>{fieldName}</span>}
+                </span>
               </DropdownItem>
             );
           })}

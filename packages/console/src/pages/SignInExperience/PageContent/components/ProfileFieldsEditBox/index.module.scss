@@ -8,6 +8,19 @@
   min-width: 208px;
 }
 
+.dropdownOption {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(0.5);
+  min-width: 0;
+}
+
+.fieldKey {
+  font: var(--font-label-3);
+  font-family: 'Roboto Mono', monospace;
+  color: var(--color-text-secondary);
+}
+
 .setUpHint {
   font: var(--font-body-2);
   color: var(--color-text-secondary);

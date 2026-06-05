@@ -25,6 +25,19 @@
   }
 }
 
+.labelContent {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(0.5);
+  min-width: 0;
+}
+
+.fieldKey {
+  font: var(--font-label-3);
+  font-family: 'Roboto Mono', monospace;
+  color: var(--color-text-secondary);
+}
+
 .disabled {
   color: var(--color-text-secondary);
   cursor: not-allowed;
