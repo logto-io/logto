@@ -1,0 +1,4 @@
+interface:
+  display_name: "Logto Dev Environment"
+  short_description: "Bring up and verify local Logto dev"
+  default_prompt: "Use $logto-dev-environment to bring up local Logto dev and run the right health checks or smoke tests."
