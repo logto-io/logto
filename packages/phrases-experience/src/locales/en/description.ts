@@ -84,6 +84,17 @@ const description = {
     character_types_other:
       'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
   },
+  username_requirements: 'Username {{items, list}}.',
+  username_requirement: {
+    length: 'must be {{min}} to {{max}} characters',
+    characters: 'can only contain {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'uppercase letters',
+    lowercase: 'lowercase letters',
+    number: 'numbers',
+    underscore: 'underscores',
+  },
   use: 'Use',
   single_sign_on_email_form: 'Enter your enterprise email address',
   single_sign_on_connectors_list:

@@ -273,6 +273,23 @@ describe('<Username />', () => {
       });
     });
 
+    // The test i18n returns the key, so the rendered hint surfaces as its frame key.
+    it('shows the requirements hint for a restrictive policy', () => {
+      const { getByText } = renderWithPolicy();
+      expect(getByText('description.username_requirements')).toBeTruthy();
+    });
+
+    it('hides the requirements hint for the permissive default policy', () => {
+      const { queryByText } = renderUsername();
+      expect(queryByText('description.username_requirements')).toBeNull();
+    });
+
+    it('hides the requirements hint when dev features are off', () => {
+      mockIsDevFeaturesEnabled.mockReturnValue(false);
+      const { queryByText } = renderWithPolicy();
+      expect(queryByText('description.username_requirements')).toBeNull();
+    });
+
     it('does not block a policy-only violation when dev features are off', async () => {
       mockIsDevFeaturesEnabled.mockReturnValue(false);
       const { getByText, container } = renderWithPolicy();

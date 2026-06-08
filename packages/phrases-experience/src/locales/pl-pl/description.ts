@@ -85,6 +85,17 @@ const description = {
     character_types_other:
       'powinno zawierać co najmniej {{count}} rodzaje liter wielkich, małych liter, cyfr i symboli',
   },
+  username_requirements: 'Nazwa użytkownika {{items, list}}.',
+  username_requirement: {
+    length: 'musi mieć od {{min}} do {{max}} znaków',
+    characters: 'może zawierać tylko {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'wielkie litery',
+    lowercase: 'małe litery',
+    number: 'cyfry',
+    underscore: 'podkreślenia',
+  },
   use: 'Użyj',
   single_sign_on_email_form: 'Wpisz swój służbowy adres email',
   single_sign_on_connectors_list:

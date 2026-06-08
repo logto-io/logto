@@ -83,6 +83,17 @@ const description = {
     character_types_other:
       'musí obsahovat alespoň {{count}} typů velkých písmen, malých písmen, číslic a symbolů',
   },
+  username_requirements: 'Uživatelské jméno {{items, list}}.',
+  username_requirement: {
+    length: 'musí mít {{min}} až {{max}} znaků',
+    characters: 'může obsahovat pouze {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'velká písmena',
+    lowercase: 'malá písmena',
+    number: 'číslice',
+    underscore: 'podtržítka',
+  },
   use: 'Použít',
   single_sign_on_email_form: 'Zadej svou firemní e-mailovou adresu',
   single_sign_on_connectors_list:

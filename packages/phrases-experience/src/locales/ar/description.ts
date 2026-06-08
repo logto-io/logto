@@ -81,6 +81,17 @@ const description = {
     character_types_other:
       'يجب أن يحتوي على {{count}} أنواع على الأقل من الأحرف الكبيرة والصغيرة والأرقام والرموز',
   },
+  username_requirements: 'اسم المستخدم {{items, list}}.',
+  username_requirement: {
+    length: 'يجب أن يتكون من {{min}} إلى {{max}} حرفًا',
+    characters: 'لا يمكن أن يحتوي إلا على {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'الأحرف الكبيرة',
+    lowercase: 'الأحرف الصغيرة',
+    number: 'الأرقام',
+    underscore: 'الشرطات السفلية',
+  },
   use: 'استخدام',
   single_sign_on_email_form: 'أدخل عنوان بريدك الإلكتروني الخاص بالشركة',
   single_sign_on_connectors_list:

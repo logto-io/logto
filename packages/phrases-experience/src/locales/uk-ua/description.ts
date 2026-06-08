@@ -86,6 +86,17 @@ const description = {
     character_types_other:
       'має містити щонайменше {{count}} типів символів: великі літери, малі літери, цифри та спеціальні символи',
   },
+  username_requirements: "Ім'я користувача {{items, list}}.",
+  username_requirement: {
+    length: 'має містити від {{min}} до {{max}} символів',
+    characters: 'може містити лише {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'великі літери',
+    lowercase: 'малі літери',
+    number: 'цифри',
+    underscore: 'підкреслення',
+  },
   use: 'Використовувати',
   single_sign_on_email_form: 'Введіть вашу корпоративну електронну адресу',
   single_sign_on_connectors_list:

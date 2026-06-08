@@ -84,6 +84,17 @@ const description = {
     character_types_other:
       'dovrebbe contenere almeno {{count}} tipi di lettere maiuscole, lettere minuscole, numeri e simboli',
   },
+  username_requirements: 'Nome utente {{items, list}}.',
+  username_requirement: {
+    length: 'deve contenere da {{min}} a {{max}} caratteri',
+    characters: 'può contenere solo {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'lettere maiuscole',
+    lowercase: 'lettere minuscole',
+    number: 'numeri',
+    underscore: 'trattini bassi',
+  },
   use: 'Utilizzare',
   single_sign_on_email_form: 'Inserisci il tuo indirizzo email aziendale',
   single_sign_on_connectors_list:

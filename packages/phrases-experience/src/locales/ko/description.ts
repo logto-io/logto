@@ -75,6 +75,17 @@ const description = {
     character_types_many: '최소 {{count}} 종류의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
     character_types_other: '최소 {{count}} 개의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
   },
+  username_requirements: '사용자 이름 조건: {{items, list}}.',
+  username_requirement: {
+    length: '{{min}}~{{max}}자',
+    characters: '{{characters, list}}만 사용 가능',
+  },
+  username_character: {
+    uppercase: '대문자',
+    lowercase: '소문자',
+    number: '숫자',
+    underscore: '밑줄',
+  },
   use: '사용',
   single_sign_on_email_form: '기업 이메일 주소를 입력하세요',
   single_sign_on_connectors_list:

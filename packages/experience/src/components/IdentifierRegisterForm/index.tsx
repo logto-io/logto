@@ -1,4 +1,4 @@
-import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
+import { AgreeToTermsPolicy, SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import { SmartInputField } from '@/components/InputFields';
 import CaptchaBox from '@/containers/CaptchaBox';
 import TermsAndPrivacyCheckbox from '@/containers/TermsAndPrivacyCheckbox';
 import usePrefilledIdentifier from '@/hooks/use-prefilled-identifier';
+import { useUsernamePolicyDescription } from '@/hooks/use-sie';
 import useSingleSignOnWatch from '@/hooks/use-single-sign-on-watch';
 import useTerms from '@/hooks/use-terms';
 import Button from '@/shared/components/Button';
@@ -41,6 +42,7 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { experienceSettings } = useContext(PageContext);
   const prefilledIdentifier = usePrefilledIdentifier({ enabledIdentifiers: signUpMethods });
+  const usernamePolicyDescription = useUsernamePolicyDescription();
 
   const {
     watch,
@@ -138,6 +140,9 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={signUpMethods}
+            description={
+              field.value.type === SignInIdentifier.Username ? usernamePolicyDescription : undefined
+            }
           />
         )}
       />

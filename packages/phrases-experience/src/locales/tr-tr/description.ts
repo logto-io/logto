@@ -80,6 +80,17 @@ const description = {
     character_types_other:
       'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
   },
+  username_requirements: 'Kullanıcı adı {{items, list}}.',
+  username_requirement: {
+    length: '{{min}} ile {{max}} karakter arasında olmalıdır',
+    characters: 'yalnızca {{characters, list}} içerebilir',
+  },
+  username_character: {
+    uppercase: 'büyük harfler',
+    lowercase: 'küçük harfler',
+    number: 'rakamlar',
+    underscore: 'alt çizgiler',
+  },
   use: 'Kullan',
   single_sign_on_email_form: 'Kurumsal e-posta adresinizi girin',
   single_sign_on_connectors_list:
