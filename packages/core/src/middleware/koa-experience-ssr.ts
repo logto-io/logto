@@ -10,6 +10,24 @@ import { type WithI18nContext } from './koa-i18next.js';
 import { isIndexPath } from './koa-serve-static.js';
 
 /**
+ * Serialize SSR data for safe embedding inside an inline `<script>`. `JSON.stringify` alone is unsafe:
+ * a string such as `</script>` in the data (e.g. inside custom CSS or custom content) would close the
+ * script element early and enable injection. Escaping the HTML-significant characters keeps the values
+ * identical once parsed by JS, while preventing the HTML parser from recognizing any tag delimiters.
+ */
+const serializeSsrData = (data: SsrData): string =>
+  JSON.stringify(data)
+    .replaceAll('<', '\\u003c')
+    .replaceAll('>', '\\u003e')
+    .replaceAll('&', '\\u0026')
+    // U+2028 (LINE SEPARATOR) and U+2029 (PARAGRAPH SEPARATOR) are valid inside JSON strings but are
+    // line terminators in a JavaScript string literal (pre-ES2019). Since this payload is embedded as a
+    // JS expression (`Object.freeze(...)`), leaving them literal can break parsing in older engines.
+    // Escape to their `\uXXXX` form, which JS decodes back to the original characters.
+    .replaceAll('\u2028', '\\u2028') // U+2028 LINE SEPARATOR
+    .replaceAll('\u2029', '\\u2029'); // U+2029 PARAGRAPH SEPARATOR
+
+/**
  * Create a middleware to prefetch the experience data and inject it into the HTML response. Some
  * conditions must be met:
  *
@@ -54,15 +72,32 @@ export default function koaExperienceSsr<StateT, ContextT extends WithI18nContex
     const phrases = await libraries.phrases.getPhrases(language);
 
     ctx.set('Content-Language', language);
-    ctx.body = ctx.body.replace(
+
+    // Inline custom CSS into <head> on the first byte so it is in the cascade for the first paint,
+    // removing the flash before react-helmet injects the same <style> client-side. Done BEFORE the SSR
+    // placeholder substitution so the `</head>` match can only hit the genuine document head. Skipped in
+    // preview mode (`?preview=true`), where the console iframe drives styling live via postMessage and
+    // inlining the *saved* CSS could leak rules being edited. `</style` is defused so admin CSS can't
+    // terminate the element early (parser sees `<\/style`; the CSS engine unescapes `\/`→`/`). See PR #8917.
+    const { customCss } = signInExperience;
+
+    const htmlWithCss =
+      customCss && ctx.query.preview !== 'true'
+        ? ctx.body.replace(
+            '</head>',
+            `<style data-custom-css>${customCss.replaceAll(/<\/(style)/gi, '<\\/$1')}</style></head>`
+          )
+        : ctx.body;
+
+    ctx.body = htmlWithCss.replace(
       ssrPlaceholder,
-      `Object.freeze(${JSON.stringify({
+      `Object.freeze(${serializeSsrData({
         signInExperience: {
           ...pick(logtoUiCookie, 'appId', 'organizationId'),
           data: signInExperience,
         },
         phrases: { lng: language, data: phrases },
-      } satisfies SsrData)})`
+      })})`
     );
   };
 }
