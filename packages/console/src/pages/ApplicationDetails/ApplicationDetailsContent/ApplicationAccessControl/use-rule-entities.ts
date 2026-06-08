@@ -12,6 +12,7 @@ import { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 
 import useApi, { type RequestError } from '@/hooks/use-api';
+import useBatchEntityDetailsFetch from '@/hooks/use-batch-entity-details-fetch';
 import { buildUrl } from '@/utils/url';
 
 import {
@@ -21,12 +22,12 @@ import {
 } from './utils';
 
 const useEntitiesByIds = <TEntity>(key: string, pathname: string, ids: string[] | undefined) => {
-  const api = useApi();
+  const fetchBatchEntityDetails = useBatchEntityDetailsFetch();
 
   const fetchEntitiesByIds = useCallback(
     async ([, entityIds]: readonly [string, string[]]) =>
-      Promise.all(entityIds.map(async (id) => api.get(`${pathname}/${id}`).json<TEntity>())),
-    [api, pathname]
+      fetchBatchEntityDetails<TEntity>(pathname, entityIds),
+    [fetchBatchEntityDetails, pathname]
   );
 
   return useSWR<TEntity[], RequestError>(
