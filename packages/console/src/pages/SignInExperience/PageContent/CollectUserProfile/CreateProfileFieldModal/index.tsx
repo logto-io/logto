@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 
 import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import QuotaGuardFooter from '@/components/QuotaGuardFooter';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Button from '@/ds-components/Button';
@@ -48,7 +48,7 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { t: errorT } = useTranslation('errors');
   const api = useApi();
-  const shouldFetchUserAssetsService = isDevFeaturesEnabled;
+  const shouldFetchUserAssetsService = true;
   const {
     isReady: isUserAssetsServiceReady,
     isLoading: isUserAssetsServiceLoading,
@@ -105,9 +105,8 @@ function CreateProfileFieldModal({ existingFieldNames, onClose }: Props) {
     return true;
   }, [customDataFieldName, errorT, existingFieldNames]);
 
-  // TODO: Remove placeholder avatar field picker UI once Experience and Account Center avatar upload is implemented.
   const isAvatarFieldAvailable =
-    isDevFeaturesEnabled && !isUserAssetsServiceLoading && isExperienceAvatarUploadEnabled === true;
+    !isUserAssetsServiceLoading && isExperienceAvatarUploadEnabled === true;
   const builtInFields = useMemo(
     () =>
       getUserAvailableBuiltInFieldKeys(isAvatarFieldAvailable)

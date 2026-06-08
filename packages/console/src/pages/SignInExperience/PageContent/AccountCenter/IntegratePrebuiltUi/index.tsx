@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -81,14 +80,10 @@ const accountCenterRoutes = [
     path: '/account/security',
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.account_center',
   },
-  ...(isDevFeaturesEnabled
-    ? ([
-        {
-          path: '/account/profile',
-          tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.profile',
-        },
-      ] as const)
-    : []),
+  {
+    path: '/account/profile',
+    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.profile',
+  },
 ] as const satisfies ReadonlyArray<{ path: string; tooltipKey: string }>;
 
 type Props = {
@@ -167,30 +162,25 @@ function IntegratePrebuiltUi({ getProfileFieldDisabledReason }: Props) {
             ))}
           </div>
         </FormField>
-        {isDevFeaturesEnabled && (
-          <FormField
-            title="sign_in_exp.account_center.profile_fields.title"
-            headlineSpacing="large"
+        <FormField title="sign_in_exp.account_center.profile_fields.title" headlineSpacing="large">
+          <ProfileFieldsEditBox<
+            SignInExperienceForm & { accountCenter: AccountCenterFormValues },
+            'accountCenter.profileFields'
           >
-            <ProfileFieldsEditBox<
-              SignInExperienceForm & { accountCenter: AccountCenterFormValues },
-              'accountCenter.profileFields'
-            >
-              name="accountCenter.profileFields"
-              addProfileFieldsButtonTitle="sign_in_exp.account_center.profile_fields.add_profile_fields"
-              getFieldDisabledReason={getProfileFieldDisabledReason}
-              hint={
-                <>
-                  {t('sign_in_exp.account_center.profile_fields.hint.not_in_list')}
-                  <TextLink to={collectUserProfilePathname}>
-                    {t('sign_in_exp.account_center.profile_fields.hint.set_up')}
-                  </TextLink>
-                  {t('sign_in_exp.account_center.profile_fields.hint.go_to')}
-                </>
-              }
-            />
-          </FormField>
-        )}
+            name="accountCenter.profileFields"
+            addProfileFieldsButtonTitle="sign_in_exp.account_center.profile_fields.add_profile_fields"
+            getFieldDisabledReason={getProfileFieldDisabledReason}
+            hint={
+              <>
+                {t('sign_in_exp.account_center.profile_fields.hint.not_in_list')}
+                <TextLink to={collectUserProfilePathname}>
+                  {t('sign_in_exp.account_center.profile_fields.hint.set_up')}
+                </TextLink>
+                {t('sign_in_exp.account_center.profile_fields.hint.go_to')}
+              </>
+            }
+          />
+        </FormField>
         <div className={styles.customizeNote}>
           <DynamicT forKey="sign_in_exp.account_center.prebuilt_ui.customize_note" />
           <TextLink

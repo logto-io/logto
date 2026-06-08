@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Card from '@/ds-components/Card';
 import Checkbox from '@/ds-components/Checkbox';
 import FormField from '@/ds-components/FormField';
@@ -116,24 +115,22 @@ function SignUpForm({ signInExperience }: Props) {
           </div>
         </FormField>
       )}
-      {isDevFeaturesEnabled && (
-        <FormField title="sign_in_exp.sign_up_and_sign_in.sign_up.collect_user_profile">
-          <ProfileFieldsEditBox<SignInExperienceForm, 'signUpProfileFields'>
-            name="signUpProfileFields"
-            addProfileFieldsButtonTitle="sign_in_exp.sign_up_and_sign_in.sign_up.add_profile_fields"
-            hint={
-              <>
-                {t('sign_in_exp.sign_up_and_sign_in.sign_up.profile_fields_hint.not_in_list')}
-                <TextLink to={collectUserProfilePathname}>
-                  {t('sign_in_exp.sign_up_and_sign_in.sign_up.profile_fields_hint.set_up')}
-                </TextLink>
-                {t('sign_in_exp.sign_up_and_sign_in.sign_up.profile_fields_hint.go_to')}
-              </>
-            }
-            onFieldsChange={markSignUpProfileFieldsAsConfigured}
-          />
-        </FormField>
-      )}
+      <FormField title="sign_in_exp.sign_up_and_sign_in.sign_up.collect_user_profile">
+        <ProfileFieldsEditBox<SignInExperienceForm, 'signUpProfileFields'>
+          name="signUpProfileFields"
+          addProfileFieldsButtonTitle="sign_in_exp.sign_up_and_sign_in.sign_up.add_profile_fields"
+          hint={
+            <>
+              {t('sign_in_exp.sign_up_and_sign_in.sign_up.profile_fields_hint.not_in_list')}
+              <TextLink to={collectUserProfilePathname}>
+                {t('sign_in_exp.sign_up_and_sign_in.sign_up.profile_fields_hint.set_up')}
+              </TextLink>
+              {t('sign_in_exp.sign_up_and_sign_in.sign_up.profile_fields_hint.go_to')}
+            </>
+          }
+          onFieldsChange={markSignUpProfileFieldsAsConfigured}
+        />
+      </FormField>
     </Card>
   );
 }

@@ -1,7 +1,6 @@
 import { type AccountCenter, CustomProfileFields, type SignInExperience } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 
 const { jest } = import.meta;
@@ -45,7 +44,6 @@ const { MockQueries } = await import('#src/test-utils/tenant.js');
 const { createCustomProfileFieldsLibrary } = await import('./index.js');
 
 describe('createCustomProfileFieldsLibrary', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
   const queries = new MockQueries({
     customProfileFields: {
       findCustomProfileFieldsByNames,
@@ -55,13 +53,7 @@ describe('createCustomProfileFieldsLibrary', () => {
   const { deleteCustomProfileField, normalizeProfileFields, updateCustomProfileFieldsSieOrder } =
     createCustomProfileFieldsLibrary(queries);
 
-  const setDevFeaturesEnabled = (enabled: boolean) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
-  };
-
   beforeEach(() => {
-    setDevFeaturesEnabled(true);
     findCustomProfileFieldsByNames.mockReset();
     updateFieldOrderInSignInExperience.mockReset();
     deleteCustomProfileFieldsByName.mockReset();
@@ -69,17 +61,6 @@ describe('createCustomProfileFieldsLibrary', () => {
     updateSignInExperience.mockReset();
     findAccountCenterById.mockReset();
     updateAccountCenter.mockReset();
-  });
-
-  afterAll(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
-  });
-
-  it('should drop signUpProfileFields when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-
-    await expect(normalizeProfileFields([{ name: 'company' }])).resolves.toBeUndefined();
-    expect(findCustomProfileFieldsByNames).not.toHaveBeenCalled();
   });
 
   it('should return null signUpProfileFields without reading the catalog', async () => {
