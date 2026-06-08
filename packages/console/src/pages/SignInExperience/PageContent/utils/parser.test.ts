@@ -171,6 +171,20 @@ describe('sign-in experience parser', () => {
     expect(comparePayload).not.toHaveProperty('adaptiveMfa');
   });
 
+  it('should omit usernamePolicy from sign-up and sign-in page data (modal-owned)', () => {
+    const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
+
+    expect(formData).not.toHaveProperty('usernamePolicy');
+
+    const submitPayload = sieFormDataParser.toSignInExperience(formData);
+
+    expect(submitPayload).not.toHaveProperty('usernamePolicy');
+
+    const comparePayload = signInExperienceToUpdatedDataParser(mockSignInExperience);
+
+    expect(comparePayload).not.toHaveProperty('usernamePolicy');
+  });
+
   it('should map createAccountEnabled and customCss when building payload', () => {
     const formData = sieFormDataParser.fromSignInExperience(mockSignInExperience);
 

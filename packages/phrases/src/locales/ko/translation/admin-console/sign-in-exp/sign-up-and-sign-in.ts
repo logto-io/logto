@@ -105,6 +105,40 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       '때때로 Logto는 로그인 페이지에서 사용자의 세션을 인식하지 못할 수 있어요. 예를 들어 세션이 만료되었거나 사용자가 로그인 링크를 즐겨찾기하거나 공유한 경우입니다. 기본적으로는 "알 수 없는 세션" 404 오류가 나타납니다. 사용자 경험을 향상시키기 위해, 대체 URL을 설정하여 사용자들이 다시 앱으로 리다이렉트되어 인증을 재시작할 수 있게 하세요.',
   },
+  username_policy: {
+    title: '사용자 이름 정책',
+    description: '길이, 허용되는 문자, 대소문자 구분 등 사용자 이름 요구 사항을 사용자 지정합니다.',
+    manage_button: '관리',
+    modal_title: '사용자 이름 정책',
+    modal_description: '최종 사용자를 위한 사용자 이름 요구 사항을 사용자 지정합니다.',
+    length: {
+      title: '사용자 이름 길이',
+      minimum: '최소',
+      maximum: '최대',
+      min_greater_than_max: '최소 길이는 최대 길이보다 클 수 없습니다.',
+    },
+    allowed_chars: {
+      title: '허용되는 문자 유형',
+      uppercase: '대문자 (A-Z)',
+      lowercase: '소문자 (a-z)',
+      numbers: '숫자 (0-9)',
+      underscore: '밑줄 (_)',
+      no_valid_leading_char:
+        '숫자만으로는 사용할 수 없습니다. 대문자, 소문자 또는 밑줄 중 하나 이상을 활성화하세요.',
+      no_char_selected: '문자 유형을 하나 이상 선택하세요.',
+    },
+    case_sensitive: {
+      title: '대소문자를 구분하는 사용자 이름',
+      description:
+        '대문자와 소문자를 서로 다른 문자로 취급합니다. ‘user123’과 ‘User123’은 서로 다른 사용자 이름으로 취급됩니다.',
+    },
+    case_conflicts: {
+      title: '기존 사용자 이름 충돌이 감지됨',
+      description:
+        '대소문자 구분을 끄면 일부 사용자 이름이 충돌합니다. 저장하기 전에 아래의 {{count}}개 충돌 그룹을 해결하세요.',
+      sample_title: '충돌하는 사용자 이름',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

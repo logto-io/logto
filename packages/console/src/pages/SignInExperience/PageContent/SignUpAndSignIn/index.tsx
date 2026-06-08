@@ -1,4 +1,4 @@
-import type { SignInExperience } from '@logto/schemas';
+import { type SignInExperience } from '@logto/schemas';
 
 import PageMeta from '@/components/PageMeta';
 
@@ -25,7 +25,7 @@ function SignUpAndSignIn({ isActive, data }: Props) {
       <SignInForm signInExperience={data} />
       <SocialSignInForm />
       <PasskeySignInForm />
-      <AdvancedOptions />
+      <AdvancedOptions signInExperience={data} />
     </SignInExperienceTabWrapper>
   );
 }

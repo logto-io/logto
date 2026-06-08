@@ -111,6 +111,41 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       "A volte, Logto potrebbe non riconoscere la sessione di un utente nella pagina di accesso, come quando una sessione scade o l'utente aggiunge ai segnalibri o condivide il link di accesso. Per impostazione predefinita, appare un errore 404 di \"sessione sconosciuta\". Per migliorare l'esperienza utente, imposta un URL di fallback per reindirizzare gli utenti alla tua app e riavviare l'autenticazione.",
   },
+  username_policy: {
+    title: 'Criterio nome utente',
+    description:
+      'Personalizza i requisiti del nome utente, inclusi lunghezza, caratteri consentiti e distinzione tra maiuscole e minuscole.',
+    manage_button: 'Gestisci',
+    modal_title: 'Criterio nome utente',
+    modal_description: 'Personalizza i requisiti del nome utente per i tuoi utenti finali.',
+    length: {
+      title: 'Lunghezza del nome utente',
+      minimum: 'Minimo',
+      maximum: 'Massimo',
+      min_greater_than_max: 'La lunghezza minima non può essere maggiore della lunghezza massima.',
+    },
+    allowed_chars: {
+      title: 'Tipi di caratteri consentiti',
+      uppercase: 'Lettere maiuscole (A-Z)',
+      lowercase: 'Lettere minuscole (a-z)',
+      numbers: 'Numeri (0-9)',
+      underscore: 'Trattini bassi (_)',
+      no_valid_leading_char:
+        'I numeri da soli non sono consentiti. Abilita almeno una tra maiuscole, minuscole o trattini bassi.',
+      no_char_selected: 'Seleziona almeno un tipo di carattere.',
+    },
+    case_sensitive: {
+      title: 'Nomi utente con distinzione tra maiuscole e minuscole',
+      description:
+        'Tratta le lettere maiuscole e minuscole come distinte. «user123» e «User123» vengono trattati come nomi utente diversi.',
+    },
+    case_conflicts: {
+      title: 'Rilevati conflitti tra nomi utente esistenti',
+      description:
+        'Alcuni nomi utente entrerebbero in conflitto se la distinzione tra maiuscole e minuscole venisse disattivata. Risolvi i {{count}} gruppi in conflitto qui sotto prima di salvare.',
+      sample_title: 'Nomi utente in conflitto',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

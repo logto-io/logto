@@ -171,6 +171,7 @@ export const sieFormDataParser = {
       sentinelPolicy,
       emailBlocklistPolicy,
       passwordExpiration,
+      usernamePolicy,
       socialSignIn,
       // End: Remove the omitted fields from the data
       ...rest
@@ -261,6 +262,7 @@ export const sieFormDataParser = {
  * - `sentinelPolicy`
  * - `emailBlocklistPolicy`
  * - `passwordExpiration`
+ * - `usernamePolicy`
  */
 export const signInExperienceToUpdatedDataParser = (
   data: SignInExperience,
@@ -281,6 +283,7 @@ export const signInExperienceToUpdatedDataParser = (
     emailBlocklistPolicy,
     hideLogtoBranding,
     passwordExpiration,
+    usernamePolicy,
     // End: Remove the omitted fields from the data
     ...rest
   } = data;
