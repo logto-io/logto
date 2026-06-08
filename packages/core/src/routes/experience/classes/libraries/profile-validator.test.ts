@@ -2,7 +2,6 @@ import { consoleUserPreferenceKey } from '@logto/schemas';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUser } from '#src/__mocks__/user.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -259,19 +258,11 @@ describe('ProfileValidator', () => {
     });
 
     describe('with signUpProfileFields subset', () => {
-      const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-      const setDevFeaturesEnabled = (enabled: boolean) => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
-      };
-
       afterEach(() => {
-        setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
         mockGetSignInExperienceData.mockResolvedValue(mockSignInExperience);
       });
 
-      it('should only enforce configured fields when dev features are enabled', async () => {
-        setDevFeaturesEnabled(true);
+      it('should only enforce configured fields', async () => {
         mockFindAllCustomProfileFields.mockResolvedValue([
           { type: 'Text', name: 'company', required: true },
           { type: 'Text', name: 'inviteCode', required: true },
@@ -291,27 +282,7 @@ describe('ProfileValidator', () => {
         expect(await profileValidator.hasMissingExtraProfileFields({})).toBe(true);
       });
 
-      it('should fall back to the full catalog when dev features are disabled', async () => {
-        setDevFeaturesEnabled(false);
-        mockFindAllCustomProfileFields.mockResolvedValue([
-          { type: 'Text', name: 'company', required: true },
-          { type: 'Text', name: 'inviteCode', required: true },
-        ]);
-        mockGetSignInExperienceData.mockResolvedValue({
-          ...mockSignInExperience,
-          signUpProfileFields: [{ name: 'company' }],
-        });
-
-        // Legacy behavior: every required field in the catalog must be present.
-        expect(
-          await profileValidator.hasMissingExtraProfileFields({
-            customData: { company: 'Logto' },
-          })
-        ).toBe(true);
-      });
-
       it('should fall back to the full catalog when signUpProfileFields is null', async () => {
-        setDevFeaturesEnabled(true);
         mockFindAllCustomProfileFields.mockResolvedValue([
           { type: 'Text', name: 'company', required: true },
           { type: 'Text', name: 'inviteCode', required: true },
