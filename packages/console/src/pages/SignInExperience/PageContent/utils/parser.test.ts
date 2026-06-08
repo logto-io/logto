@@ -71,6 +71,7 @@ const mockSignInExperience: SignInExperience = {
   unknownSessionRedirectUrl: null,
   captchaPolicy: {},
   sentinelPolicy: {},
+  verificationCodePolicy: {},
   emailBlocklistPolicy: {},
   forgotPasswordMethods: null,
   passkeySignIn: {

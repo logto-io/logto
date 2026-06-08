@@ -3,6 +3,7 @@ import type { SendMessagePayload, TemplateType } from '@logto/connector-kit';
 import { templateTypeGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import {
   buildBuiltInApplicationDataForTenant,
+  defaultVerificationCodePolicy,
   isBuiltInApplicationId,
   type Passcode,
   type User,
@@ -25,7 +26,9 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 export const passcodeLength = 6;
 const randomCode = customAlphabet('1234567890', passcodeLength);
 
+/** @deprecated Use tenant-level verification code policy instead. Kept for backward compatibility in tests. */
 export const passcodeExpiration = 10 * 60 * 1000; // 10 minutes.
+/** @deprecated Use tenant-level verification code policy instead. Kept for backward compatibility in tests. */
 export const passcodeMaxTryCount = 10;
 
 export type PasscodeLibrary = ReturnType<typeof createPasscodeLibrary>;
@@ -116,6 +119,7 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     return { dbEntry, metadata, response };
   };
 
+  // eslint-disable-next-line complexity
   const verifyPasscode = async (
     jti: string | undefined,
     type: TemplateType,
@@ -140,11 +144,19 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
       throw new RequestError('verification_code.email_mismatch');
     }
 
-    if (passcode.createdAt + passcodeExpiration < Date.now()) {
+    const { verificationCodePolicy } =
+      await queries.signInExperiences.findDefaultSignInExperience();
+    const expirationMs =
+      (verificationCodePolicy.expirationDuration ??
+        defaultVerificationCodePolicy.expirationDuration) * 1000;
+    const maxTryCount =
+      verificationCodePolicy.maxRetryAttempts ?? defaultVerificationCodePolicy.maxRetryAttempts;
+
+    if (passcode.createdAt + expirationMs < Date.now()) {
       throw new RequestError('verification_code.expired');
     }
 
-    if (passcode.tryCount >= passcodeMaxTryCount) {
+    if (passcode.tryCount >= maxTryCount) {
       throw new RequestError('verification_code.exceed_max_try');
     }
 

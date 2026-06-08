@@ -9,6 +9,7 @@ import {
   type SignInExperience,
   ForgotPasswordMethod,
   passwordExpirationPolicyGuard,
+  verificationCodePolicyGuard,
 } from '@logto/schemas';
 import { conditional, type Optional, tryThat } from '@silverhand/essentials';
 import { literal, object, string, z } from 'zod';
@@ -89,6 +90,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           supportWebsiteUrl: true,
           unknownSessionRedirectUrl: true,
           passwordExpiration: true,
+          verificationCodePolicy: true,
         })
         .merge(
           object({
@@ -98,6 +100,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             supportWebsiteUrl: string().url().optional().nullable().or(literal('')),
             unknownSessionRedirectUrl: string().url().optional().nullable().or(literal('')),
             passwordExpiration: passwordExpirationPolicyGuard,
+            verificationCodePolicy: verificationCodePolicyGuard,
           })
         )
         .partial(),
@@ -129,6 +132,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         hideLogtoBranding,
         passkeySignIn,
         passwordExpiration,
+        verificationCodePolicy,
       } = rest;
 
       const normalizedSignUpProfileFields = await normalizeProfileFields(signUpProfileFields);
@@ -141,6 +145,16 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           new RequestError({
             code: 'request.invalid_input',
             details: 'Password expiration is not available',
+          })
+        );
+      }
+
+      if (verificationCodePolicy) {
+        assertThat(
+          EnvSet.values.isDevFeaturesEnabled,
+          new RequestError({
+            code: 'request.invalid_input',
+            details: 'Verification code policy is not available',
           })
         );
       }
@@ -421,6 +435,10 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         ),
         // Username policy is gated until the feature ships: ignore writes when the flag is off.
         ...conditional(EnvSet.values.isDevFeaturesEnabled && usernamePolicy && { usernamePolicy }),
+        // Verification code policy is gated until the feature ships.
+        ...conditional(
+          EnvSet.values.isDevFeaturesEnabled && verificationCodePolicy && { verificationCodePolicy }
+        ),
       };
 
       ctx.body = await updateDefaultSignInExperience(payload);

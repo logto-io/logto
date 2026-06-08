@@ -6,5 +6,6 @@ export * from './tenant.js';
 export * from './subscriptions.js';
 export * from './experience.js';
 export * from './sentinel.js';
+export * from './verification-code.js';
 export * from './product-event.js';
 export * from './application.js';

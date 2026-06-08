@@ -100,6 +100,28 @@ const security = {
     expiration_period_description: 'Number of days a password remains valid before it expires.',
     expiration_period_error: 'Password valid period must be at least 1 day.',
   },
+  verification_code_policy: {
+    card_title: 'Verification code',
+    card_description:
+      'Configure the expiration duration and maximum retry attempts for verification codes used in sign-in, sign-up, and password reset flows.',
+    enable: {
+      title: 'Customize verification code settings',
+      description:
+        'Allow customization of the verification code expiration duration and maximum retry attempts.',
+    },
+    expiration_duration: {
+      title: 'Expiration duration (seconds)',
+      description:
+        'The duration in seconds that a verification code remains valid after being sent.',
+      error_message: 'Expiration duration must be between 60 and 3600 seconds.',
+    },
+    max_retry_attempts: {
+      title: 'Maximum retry attempts',
+      description:
+        'Maximum number of failed verification attempts allowed before the code is invalidated.',
+      error_message: 'Maximum retry attempts must be between 1 and 100.',
+    },
+  },
   sentinel_policy: {
     card_title: 'Identifier lockout',
     card_description:
