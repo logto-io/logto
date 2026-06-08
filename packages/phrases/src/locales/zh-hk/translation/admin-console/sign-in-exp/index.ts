@@ -233,6 +233,7 @@ const sign_in_exp = {
         account_center:
           '訪問帳戶中心以管理電郵地址、電話號碼、使用者名稱、密碼、MFA 和關聯帳號等安全設定',
         profile: '管理個人資料（如姓名、頭像）的中心樞紐',
+        sessions: '查看和管理你在各裝置上的活躍會話',
       },
       customize_note: '不想要開箱即用的體驗？你可以完全',
       customize_link: '使用 Account API 自定義你的流程。',

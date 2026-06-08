@@ -240,6 +240,7 @@ const sign_in_exp = {
         account_center:
           '계정 센터에 액세스하여 이메일, 전화번호, 사용자 이름, 비밀번호, MFA 및 연결된 계정 등 보안 설정 관리',
         profile: '개인 정보(예: 이름, 아바타)를 관리하는 중앙 허브',
+        sessions: '여러 기기에서 활성 세션을 조회하고 관리',
       },
       customize_note: '기본 제공 경험이 원치 않으시나요? 대신 계정 API 를 사용하여',
       customize_link: '흐름을 완전히 사용자화할 수 있습니다.',

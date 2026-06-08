@@ -87,6 +87,10 @@ const accountCenterRoutes = [
           path: '/account/profile',
           tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.profile',
         },
+        {
+          path: '/account/sessions',
+          tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.sessions',
+        },
       ] as const)
     : []),
 ] as const satisfies ReadonlyArray<{ path: string; tooltipKey: string }>;
