@@ -100,6 +100,38 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       '有時，Logto 可能無法識別使用者在登入頁面的會話，例如當會話過期或使用者收藏或分享登入連結時。預設情況下，會出現 "unknown session" 404 錯誤。為了增強使用者體驗，請設置一個回退 URL，將使用者重定向回你的應用程式並重新開始身分驗證。',
   },
+  username_policy: {
+    title: '使用者名稱政策',
+    description: '自訂使用者名稱要求，包括長度、允許的字元以及是否區分大小寫。',
+    manage_button: '管理',
+    modal_title: '使用者名稱政策',
+    modal_description: '為你的終端使用者自訂使用者名稱要求。',
+    length: {
+      title: '使用者名稱長度',
+      minimum: '最小值',
+      maximum: '最大值',
+      min_greater_than_max: '最小長度不能大於最大長度。',
+    },
+    allowed_chars: {
+      title: '允許的字元類型',
+      uppercase: '大寫字母（A-Z）',
+      lowercase: '小寫字母（a-z）',
+      numbers: '數字（0-9）',
+      underscore: '底線（_）',
+      no_valid_leading_char: '不允許僅使用數字。請至少啟用大寫字母、小寫字母或底線其中一項。',
+      no_char_selected: '請至少選擇一種字元類型。',
+    },
+    case_sensitive: {
+      title: '區分大小寫的使用者名稱',
+      description: '將大寫和小寫字母視為不同。「user123」和「User123」將被視為不同的使用者名稱。',
+    },
+    case_conflicts: {
+      title: '偵測到現有的使用者名稱衝突',
+      description:
+        '如果關閉區分大小寫，部分使用者名稱將會衝突。請在儲存前解決下方的 {{count}} 個衝突群組。',
+      sample_title: '衝突的使用者名稱',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

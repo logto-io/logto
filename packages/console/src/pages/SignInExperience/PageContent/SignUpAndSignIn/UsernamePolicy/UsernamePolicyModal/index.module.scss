@@ -1,0 +1,57 @@
+@use '@/scss/underscore' as _;
+
+.lengthFields {
+  display: flex;
+  align-items: flex-start;
+  gap: _.unit(2);
+}
+
+.lengthField {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+  flex: 1;
+}
+
+.lengthLabel {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
+.separator {
+  color: var(--color-text-secondary);
+  /* Align the dash with the inputs, accounting for the label row above each field. */
+  padding-top: _.unit(6);
+}
+
+.allowedChars {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: _.unit(3);
+}
+
+.error {
+  font: var(--font-body-2);
+  color: var(--color-error);
+  margin-top: _.unit(2);
+}
+
+.conflicts {
+  margin-top: _.unit(3);
+}
+
+.conflictsTitle {
+  font: var(--font-label-2);
+  margin-bottom: _.unit(1);
+}
+
+.conflictsSampleTitle {
+  font: var(--font-label-3);
+  margin-top: _.unit(2);
+}
+
+.conflictsSamples {
+  margin: _.unit(1) 0 0;
+  padding-inline-start: _.unit(4);
+  font: var(--font-body-2);
+}

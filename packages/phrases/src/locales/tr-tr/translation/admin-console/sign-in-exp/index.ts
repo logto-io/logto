@@ -245,6 +245,7 @@ const sign_in_exp = {
         account_center:
           'E-posta, telefon, kullanıcı adı, parola, MFA ve bağlı hesaplar gibi güvenlik ayarlarını yönetmek için hesap merkezine erişin',
         profile: 'Kişisel bilgilerinizi (örneğin, ad, avatar) yönetmek için merkezi merkez',
+        sessions: 'Tüm cihazlardaki aktif oturumlarınızı görüntüleyin ve yönetin',
       },
       customize_note: 'Hazır deneyimi istemiyor musunuz? Bunun yerine, Akın API ile',
       customize_link: 'akışlarınızı tamamen özelleştirebilirsiniz.',

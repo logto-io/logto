@@ -248,6 +248,7 @@ const sign_in_exp = {
           'Greifen Sie auf das Kontocenter zu, um Sicherheitseinstellungen wie E-Mail, Telefon, Benutzername, Passwort, MFA und verbundene Konten zu verwalten',
         profile:
           'Die zentrale Anlaufstelle zur Verwaltung Ihrer persönlichen Informationen (z. B. Name, Avatar)',
+        sessions: 'Aktive Sitzungen auf allen Geräten anzeigen und verwalten',
       },
       customize_note:
         'Möchten Sie nicht das vorgefertigte Erlebnis? Sie können mit der Account-API stattdessen vollständig',

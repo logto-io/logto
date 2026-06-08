@@ -1,6 +1,8 @@
+import { type SignInExperience } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Card from '@/ds-components/Card';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
@@ -10,10 +12,15 @@ import { uriValidator } from '@/utils/validator';
 
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
+import UsernamePolicy from '../UsernamePolicy';
 
 import styles from './index.module.scss';
 
-function AdvancedOptions() {
+type Props = {
+  readonly signInExperience: SignInExperience;
+};
+
+function AdvancedOptions({ signInExperience }: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
@@ -60,6 +67,7 @@ function AdvancedOptions() {
           placeholder="https://"
         />
       </FormField>
+      {isDevFeaturesEnabled && <UsernamePolicy signInExperience={signInExperience} />}
     </Card>
   );
 }
