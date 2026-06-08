@@ -352,7 +352,6 @@ describe('adminUserRoutes', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 10,
-        reminderPeriodDays: 0,
       },
     });
 

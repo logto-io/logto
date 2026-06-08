@@ -100,11 +100,6 @@ const security = {
     expiration_period_description:
       'Anzahl der Tage, die ein Passwort gültig bleibt, bevor es abläuft.',
     expiration_period_error: 'Die Passwort-Gültigkeitsdauer muss mindestens 1 Tag betragen.',
-    expiration_reminder: 'Ablauf-Erinnerung (Tage vor Ablauf)',
-    expiration_reminder_description:
-      'Anzahl der Tage vor Ablauf, um Benutzer zu warnen und sie zum Zurücksetzen des Passworts aufzufordern. Benutzer können die Erinnerung überspringen und mit der Anmeldung fortfahren.',
-    expiration_reminder_error:
-      'Der Zeitraum für die Ablauf-Erinnerung muss zwischen 0 und der Gültigkeitsdauer ({{max}} Tage) liegen.',
   },
   sentinel_policy: {
     card_title: 'Identifier-Sperre',

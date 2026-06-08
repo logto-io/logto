@@ -42,7 +42,6 @@ devFeatureTest.describe('password expiration', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     });
 

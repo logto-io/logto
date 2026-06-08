@@ -106,9 +106,6 @@ const description = {
   identifier_register_description: 'กรอก {{types, list(type: disjunction;)}} เพื่อสร้างบัญชีใหม่',
   all_account_creation_options: 'ตัวเลือกการสร้างบัญชีทั้งหมด',
   password_expired: 'รหัสผ่านของคุณหมดอายุแล้วและต้องรีเซ็ตก่อนจึงจะสามารถลงชื่อเข้าใช้ได้',
-  password_expiration_reminder:
-    'รหัสผ่านของคุณจะหมดอายุในอีก {{days}} วัน เราขอแนะนำให้รีเซ็ตตอนนี้',
-  password_expiration_reminder_skip: 'ข้ามไปก่อน',
   password_expiration_reset: 'รีเซ็ตรหัสผ่าน',
   back_to_sign_in: 'กลับไปหน้าเข้าสู่ระบบ',
   support_email: 'อีเมลติดต่อ: <link></link>',

@@ -100,11 +100,6 @@ const security = {
     expiration_period_description:
       'Número de días que una contraseña permanece válida antes de expirar.',
     expiration_period_error: 'El periodo de validez de la contraseña debe ser de al menos 1 día.',
-    expiration_reminder: 'Recordatorio de expiración (días antes del vencimiento)',
-    expiration_reminder_description:
-      'Número de días antes del vencimiento para advertir a los usuarios y solicitar un restablecimiento de contraseña. Los usuarios pueden omitir el recordatorio y continuar con el inicio de sesión.',
-    expiration_reminder_error:
-      'El periodo del recordatorio de expiración debe estar entre 0 y el periodo de validez ({{max}} días).',
   },
   sentinel_policy: {
     card_title: 'Bloqueo de identificador',

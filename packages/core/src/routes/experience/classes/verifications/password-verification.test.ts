@@ -82,7 +82,6 @@ describe('PasswordVerification', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     } satisfies SignInExperience);
 
@@ -95,10 +94,10 @@ describe('PasswordVerification', () => {
     );
   });
 
-  it('should return reminder metadata when password is in reminder window', async () => {
+  it('should not throw when password is still within the valid period', async () => {
     const user = {
       ...mockUser,
-      passwordUpdatedAt: now.getTime() - 28 * dayInMs,
+      passwordUpdatedAt: now.getTime() - 20 * dayInMs,
     } satisfies User;
 
     findUserByUsername.mockResolvedValueOnce(user);
@@ -108,20 +107,13 @@ describe('PasswordVerification', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     } satisfies SignInExperience);
 
     const verification = createVerification();
 
     await expect(verification.verify(password)).resolves.toEqual(user);
-    await expect(verification.verifyPasswordExpiration(user)).resolves.toEqual({
-      kind: 'reminder',
-      user,
-      reminder: {
-        daysUntilExpiration: 2,
-      },
-    });
+    await expect(verification.verifyPasswordExpiration(user)).resolves.toBeUndefined();
     expect(verification.isVerified).toBe(true);
   });
 
@@ -139,7 +131,6 @@ describe('PasswordVerification', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     } satisfies SignInExperience);
 

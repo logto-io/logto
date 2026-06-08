@@ -98,11 +98,6 @@ const security = {
     expiration_period: 'パスワード有効期間 (日)',
     expiration_period_description: 'パスワードが期限切れになるまでの有効日数。',
     expiration_period_error: 'パスワードの有効期間は 1 日以上である必要があります。',
-    expiration_reminder: '有効期限のリマインダー (期限切れの何日前か)',
-    expiration_reminder_description:
-      'ユーザーに警告し、パスワードのリセットを促す期限切れまでの日数。ユーザーはリマインダーをスキップしてサインインを続行できます。',
-    expiration_reminder_error:
-      '有効期限のリマインダー期間は、0 から有効期間 ({{max}} 日) の間である必要があります。',
   },
   sentinel_policy: {
     card_title: '識別子によるロックアウト',

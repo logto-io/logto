@@ -101,11 +101,6 @@ const security = {
     expiration_period_description:
       "Nombre de jours pendant lesquels un mot de passe reste valide avant d'expirer.",
     expiration_period_error: "La période de validité du mot de passe doit être d'au moins 1 jour.",
-    expiration_reminder: "Rappel d'expiration (jours avant l'expiration)",
-    expiration_reminder_description:
-      "Nombre de jours avant l'expiration pour avertir les utilisateurs et les inviter à réinitialiser leur mot de passe. Les utilisateurs peuvent ignorer le rappel et poursuivre la connexion.",
-    expiration_reminder_error:
-      "La période de rappel d'expiration doit être comprise entre 0 et la période de validité ({{max}} jours).",
   },
   sentinel_policy: {
     card_title: 'Verrouillage des identifiants',

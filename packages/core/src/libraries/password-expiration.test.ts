@@ -16,7 +16,6 @@ describe('verifyPasswordExpirationPolicy()', () => {
   const enabledPolicy = {
     enabled: true,
     validPeriodDays: 30,
-    reminderPeriodDays: 5,
   } satisfies SignInExperience['passwordExpiration'];
 
   beforeEach(() => {
@@ -30,11 +29,10 @@ describe('verifyPasswordExpirationPolicy()', () => {
       originalIsDevFeaturesEnabled;
   });
 
-  it('returns success when password expiration is disabled', () => {
-    expect(verifyPasswordExpirationPolicy({ enabled: false }, mockUser)).toEqual({
-      kind: 'success',
-      user: mockUser,
-    });
+  it('does not throw when password expiration is disabled', () => {
+    expect(() => {
+      verifyPasswordExpirationPolicy({ enabled: false }, mockUser);
+    }).not.toThrow();
   });
 
   it('throws password.expired when the user is manually expired', () => {
@@ -49,7 +47,7 @@ describe('verifyPasswordExpirationPolicy()', () => {
     }).toThrow(new RequestError({ code: 'password.expired', status: 422 }));
   });
 
-  it('returns success when dev features are disabled', () => {
+  it('does not throw when dev features are disabled', () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
     (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
 
@@ -59,10 +57,9 @@ describe('verifyPasswordExpirationPolicy()', () => {
       passwordUpdatedAt: now.getTime(),
     } satisfies User;
 
-    expect(verifyPasswordExpirationPolicy(enabledPolicy, user)).toEqual({
-      kind: 'success',
-      user,
-    });
+    expect(() => {
+      verifyPasswordExpirationPolicy(enabledPolicy, user);
+    }).not.toThrow();
   });
 
   it('throws password.expired when password age reaches the valid period', () => {
@@ -88,31 +85,15 @@ describe('verifyPasswordExpirationPolicy()', () => {
     }).toThrow(new RequestError({ code: 'password.expired', status: 422 }));
   });
 
-  it('returns reminder metadata when password is in the reminder window', () => {
-    const user = {
-      ...mockUser,
-      passwordUpdatedAt: now.getTime() - 28 * dayInMs,
-    } satisfies User;
-
-    expect(verifyPasswordExpirationPolicy(enabledPolicy, user)).toEqual({
-      kind: 'reminder',
-      user,
-      reminder: {
-        daysUntilExpiration: 2,
-      },
-    });
-  });
-
-  it('returns success when password is outside the reminder window', () => {
+  it('does not throw when password is still within the valid period', () => {
     const user = {
       ...mockUser,
       passwordUpdatedAt: now.getTime() - 20 * dayInMs,
     } satisfies User;
 
-    expect(verifyPasswordExpirationPolicy(enabledPolicy, user)).toEqual({
-      kind: 'success',
-      user,
-    });
+    expect(() => {
+      verifyPasswordExpirationPolicy(enabledPolicy, user);
+    }).not.toThrow();
   });
 
   it('throws when password expiration is enabled without validPeriodDays', () => {

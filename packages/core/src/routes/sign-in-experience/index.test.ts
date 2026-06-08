@@ -468,12 +468,11 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
-  it('should reject password expiration updates when reminderPeriodDays is not less than validPeriodDays', async () => {
+  it('should reject password expiration updates with an invalid validPeriodDays', async () => {
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       passwordExpiration: {
         enabled: true,
-        validPeriodDays: 30,
-        reminderPeriodDays: 30,
+        validPeriodDays: 0,
       },
     });
 
@@ -482,12 +481,11 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
-  it('should accept password expiration updates with reminderPeriodDays as 0', async () => {
+  it('should accept enabled password expiration updates', async () => {
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 0,
       },
     });
 
@@ -498,7 +496,6 @@ describe('PATCH /sign-in-exp', () => {
         passwordExpiration: {
           enabled: true,
           validPeriodDays: 30,
-          reminderPeriodDays: 0,
         },
       },
     });
@@ -510,7 +507,6 @@ describe('PATCH /sign-in-exp', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     });
 
@@ -677,7 +673,6 @@ describe('PATCH /sign-in-exp', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     });
 
@@ -691,7 +686,6 @@ describe('PATCH /sign-in-exp', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     });
 
@@ -702,7 +696,6 @@ describe('PATCH /sign-in-exp', () => {
         passwordExpiration: {
           enabled: true,
           validPeriodDays: 30,
-          reminderPeriodDays: 5,
         },
       },
     });
@@ -716,7 +709,6 @@ describe('PATCH /sign-in-exp', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     });
 
@@ -729,7 +721,6 @@ describe('PATCH /sign-in-exp', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     });
 
@@ -750,7 +741,6 @@ describe('PATCH /sign-in-exp', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     });
 

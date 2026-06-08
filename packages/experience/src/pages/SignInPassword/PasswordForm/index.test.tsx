@@ -131,42 +131,4 @@ describe('PasswordSignInForm', () => {
       }
     }
   );
-
-  test('should ignore password expiration reminder and continue sign-in', async () => {
-    (signInWithPasswordIdentifier as jest.Mock).mockResolvedValueOnce({
-      redirectTo: '/',
-      reminder: {
-        daysUntilExpiration: 1,
-      },
-    });
-
-    const { getByText, queryByText, container } = renderPasswordForm(
-      {
-        identifier: SignInIdentifier.Email,
-        value: email,
-        isVerificationCodeEnabled: true,
-      },
-      {
-        forgotPassword: { email: true, phone: false },
-      }
-    );
-
-    const submitButton = getByText('action.continue');
-    const passwordInput = container.querySelector('input[name="password"]');
-
-    if (passwordInput) {
-      fireEvent.change(passwordInput, { target: { value: password } });
-    }
-
-    act(() => {
-      fireEvent.submit(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(signInWithPasswordIdentifier).toBeCalled();
-    });
-
-    expect(queryByText('description.password_expiration_reminder')).toBeNull();
-    expect(queryByText('description.password_expiration_reminder_skip')).toBeNull();
-  });
 });

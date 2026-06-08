@@ -91,10 +91,6 @@ const security = {
     expiration_period: '密码有效期限（天）',
     expiration_period_description: '密码在过期前保持有效的天数。',
     expiration_period_error: '密码有效期限必须至少为 1 天。',
-    expiration_reminder: '过期提醒（过期前天数）',
-    expiration_reminder_description:
-      '在过期前多少天提醒用户并提示重置密码。用户可以跳过提醒并继续登录。',
-    expiration_reminder_error: '过期提醒期限必须在 0 和有效期限（{{max}} 天）之间。',
   },
   sentinel_policy: {
     card_title: '标识符锁定',
