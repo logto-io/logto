@@ -28,12 +28,13 @@ describe('koaConsentGuard middleware', () => {
     },
   });
   const provisionOrganizations = jest.fn();
+  const findUserById = jest.fn().mockResolvedValue({ primaryEmail: 'foo@example.com' });
 
   const mockTenant = new MockTenant(
     provider,
     {
       users: {
-        findUserById: jest.fn().mockResolvedValue({ primaryEmail: 'foo@example.com' }),
+        findUserById,
       },
     },
     undefined,
@@ -73,7 +74,7 @@ describe('koaConsentGuard middleware', () => {
   it('should not block if token or login_hint are not provided', async () => {
     const ctx = createContext({
       params: { one_time_token: '', login_hint: '' },
-      // @ts-expect-error
+      // @ts-expect-error -- Only accountId is needed by this middleware.
       session: { accountId: 'foo' },
     });
     const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
@@ -86,24 +87,25 @@ describe('koaConsentGuard middleware', () => {
   it('should redirect to switch account page if email does not match', async () => {
     const ctx = createContext({
       params: { one_time_token: 'abcdefg', login_hint: 'bar@example.com' },
-      // @ts-expect-error
+      // @ts-expect-error -- Only accountId is needed by this middleware.
       session: { accountId: 'bar' },
     });
     const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
 
     await guard(ctx, jest.fn());
+    expect(checkOneTimeToken).toHaveBeenCalledWith('abcdefg', 'bar@example.com');
     expect(ctx.redirect).toHaveBeenCalledWith(
       expect.stringContaining('switch-account?login_hint=bar%40example.com&one_time_token=abcdefg')
     );
   });
 
-  it('should provision user to organizations on consent, if a valid one-time token is provided and there are organizations in token context', async () => {
+  it('should redirect to one-time-token page if valid token matches the current session user', async () => {
     const ctx = createContext({
       params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
-      // @ts-expect-error
+      // @ts-expect-error -- Only accountId is needed by this middleware.
       session: { accountId: 'foo' },
     });
-    checkOneTimeToken.mockResolvedValue({
+    checkOneTimeToken.mockResolvedValueOnce({
       token: 'token_value',
       email: 'foo@example.com',
       status: OneTimeTokenStatus.Active,
@@ -115,33 +117,130 @@ describe('koaConsentGuard middleware', () => {
 
     await guard(ctx, next);
 
-    expect(provisionOrganizations).toHaveBeenCalledWith({
-      userId: 'foo',
-      organizationIds: ['org_id'],
-    });
-    expect(updateOneTimeTokenStatus).toHaveBeenCalledWith(
-      'token_value',
-      OneTimeTokenStatus.Consumed
+    expect(ctx.redirect).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'one-time-token?login_hint=foo%40example.com&one_time_token=token_value'
+      )
     );
-    expect(next).toHaveBeenCalled();
+    expect(provisionOrganizations).not.toHaveBeenCalled();
+    expect(updateOneTimeTokenStatus).not.toHaveBeenCalled();
+    expect(next).not.toHaveBeenCalled();
   });
 
-  it('should call next middleware if validations pass', async () => {
+  it('should redirect to one-time-token page if the original prompt contains login', async () => {
     const ctx = createContext({
-      params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
-      // @ts-expect-error
+      params: {
+        one_time_token: 'token_value',
+        login_hint: 'bar@example.com',
+        prompt: 'login consent',
+      },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
       session: { accountId: 'foo' },
     });
     const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
 
     await guard(ctx, next);
+
+    expect(ctx.redirect).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'one-time-token?login_hint=bar%40example.com&one_time_token=token_value'
+      )
+    );
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it('should call next middleware if token is consumed and session matches the token email', async () => {
+    const ctx = createContext({
+      params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+    });
+    checkOneTimeToken.mockImplementationOnce(() => {
+      throw new RequestError('one_time_token.token_consumed');
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
     expect(next).toHaveBeenCalled();
+    expect(ctx.redirect).not.toHaveBeenCalled();
+  });
+
+  it('should call next middleware if token is consumed and last submitted login matches the token email', async () => {
+    const ctx = createContext({
+      params: { one_time_token: 'token_value', login_hint: 'bar@example.com' },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+      lastSubmission: {
+        login: {
+          accountId: 'bar',
+        },
+      },
+    });
+    findUserById
+      .mockResolvedValueOnce({ primaryEmail: 'foo@example.com' })
+      .mockResolvedValueOnce({ primaryEmail: 'bar@example.com' });
+    checkOneTimeToken.mockImplementationOnce(() => {
+      throw new RequestError('one_time_token.token_consumed');
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(next).toHaveBeenCalled();
+    expect(ctx.redirect).not.toHaveBeenCalled();
+  });
+
+  it('should not call next middleware if token is consumed but neither session nor last submitted login matches the token email', async () => {
+    const ctx = createContext({
+      params: { one_time_token: 'token_value', login_hint: 'bar@example.com' },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+    });
+    checkOneTimeToken.mockImplementationOnce(() => {
+      throw new RequestError('one_time_token.token_consumed');
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(next).not.toHaveBeenCalled();
+    expect(ctx.redirect).toHaveBeenCalledWith(
+      expect.stringContaining('one-time-token?errorMessage=The+token+has+been+consumed.')
+    );
+  });
+
+  it('should redirect to error if token is consumed and last submitted login lookup fails', async () => {
+    const ctx = createContext({
+      params: { one_time_token: 'token_value', login_hint: 'bar@example.com' },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+      lastSubmission: {
+        login: {
+          accountId: 'bar',
+        },
+      },
+    });
+    findUserById
+      .mockResolvedValueOnce({ primaryEmail: 'foo@example.com' })
+      .mockRejectedValueOnce(new Error('user not found'));
+    checkOneTimeToken.mockImplementationOnce(() => {
+      throw new RequestError('one_time_token.token_consumed');
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(next).not.toHaveBeenCalled();
+    expect(ctx.redirect).toHaveBeenCalledWith(
+      expect.stringContaining('one-time-token?errorMessage=The+token+has+been+consumed.')
+    );
   });
 
   it('should navigate to `/one-time-token` route with error message in URL params, if the one-time token is not valid', async () => {
     const ctx = createContext({
       params: { one_time_token: 'token_value', login_hint: 'foo@example.com' },
-      // @ts-expect-error
+      // @ts-expect-error -- Only accountId is needed by this middleware.
       session: { accountId: 'foo' },
     });
     checkOneTimeToken.mockImplementationOnce(() => {
@@ -151,7 +250,7 @@ describe('koaConsentGuard middleware', () => {
 
     await guard(ctx, next);
     expect(ctx.redirect).toHaveBeenCalledWith(
-      expect.stringContaining('one-time-token?errorMessage=The token is expired.')
+      expect.stringContaining('one-time-token?errorMessage=The+token+is+expired.')
     );
   });
 });

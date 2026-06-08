@@ -61,19 +61,8 @@ export default class MockClient {
     redirectUri = demoAppRedirectUri,
     options: Omit<SignInOptions, 'redirectUri'> = {}
   ) {
-    await this.logto.signIn({ redirectUri, ...options });
-
-    assert(this.navigateUrl, new Error('Unable to navigate to sign in uri'));
-    assert(
-      this.navigateUrl.startsWith(`${this.config.endpoint}/oidc/auth`),
-      new Error('Unable to navigate to sign in uri')
-    );
-
     // Mock SDK sign-in navigation
-    const response = await ky(this.navigateUrl, {
-      redirect: 'manual',
-      throwHttpErrors: false,
-    });
+    const response = await this.startAuthorization(redirectUri, options);
 
     // Note: should redirect to sign-in page
     assert(
@@ -87,6 +76,26 @@ export default class MockClient {
     // Get session cookie
     this.rawCookies = response.headers.getSetCookie();
     assert(this.interactionCookie, new Error('Get cookie from authorization endpoint failed'));
+  }
+
+  public async startAuthorization(
+    redirectUri = demoAppRedirectUri,
+    options: Omit<SignInOptions, 'redirectUri'> = {},
+    cookie?: string
+  ) {
+    await this.logto.signIn({ redirectUri, ...options });
+
+    assert(this.navigateUrl, new Error('Unable to navigate to sign in uri'));
+    assert(
+      this.navigateUrl.startsWith(`${this.config.endpoint}/oidc/auth`),
+      new Error('Unable to navigate to sign in uri')
+    );
+
+    return ky(this.navigateUrl, {
+      headers: cookie ? { cookie } : undefined,
+      redirect: 'manual',
+      throwHttpErrors: false,
+    });
   }
 
   /**
@@ -108,13 +117,21 @@ export default class MockClient {
       redirect: 'manual',
       throwHttpErrors: false,
     });
+    const authResponseLocation = authResponse.headers.get('location');
 
     // Note: Should redirect to logto consent page
-    assert(
-      authResponse.status === 303 &&
-        authResponse.headers.get('location') === `/consent?app_id=${this.config.appId}`,
-      new Error('Invoke auth before consent failed')
-    );
+    if (
+      authResponse.status !== 303 ||
+      authResponseLocation !== `/consent?app_id=${this.config.appId}`
+    ) {
+      const body = await authResponse.text();
+
+      throw new Error(
+        `Invoke auth before consent failed: ${authResponse.status} ${
+          authResponseLocation ?? ''
+        } ${body.slice(0, 200)}`
+      );
+    }
 
     this.rawCookies = authResponse.headers.getSetCookie();
 
@@ -190,6 +207,22 @@ export default class MockClient {
     this.rawCookies = cookies;
   }
 
+  public mergeRawCookies(cookies: string[]) {
+    const cookieMap = new Map(
+      this.rawCookies.map((cookie) => [cookie.split(';')[0]?.split('=')[0], cookie])
+    );
+
+    for (const cookie of cookies) {
+      const key = cookie.split(';')[0]?.split('=')[0];
+
+      if (key) {
+        cookieMap.set(key, cookie);
+      }
+    }
+
+    this.rawCookies = [...cookieMap.values()];
+  }
+
   public async send<Args extends unknown[], T>(
     api: (cookie: string, ...args: Args) => Promise<T>,
     ...payload: Args
@@ -242,6 +275,7 @@ export default class MockClient {
     assert(authCodeResponse.status === 303, new Error('Complete auth failed'));
     const signInCallbackUri = authCodeResponse.headers.get('location');
     assert(signInCallbackUri, new Error('Get sign in callback uri failed'));
+    this.mergeRawCookies(authCodeResponse.headers.getSetCookie());
 
     return signInCallbackUri;
   };
