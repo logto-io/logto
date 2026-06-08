@@ -142,12 +142,24 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
   async getUsersByOrganizationId(
     organizationId: string,
     { limit, offset }: GetEntitiesOptions,
-    search?: SearchOptions<(typeof userSearchKeys)[number]>
+    search?: SearchOptions<(typeof userSearchKeys)[number]>,
+    { organizationRoleId }: { organizationRoleId?: string } = {}
   ): Promise<[totalNumber: number, entities: Readonly<UserWithOrganizationRoles[]>]> {
     const roles = convertToIdentifiers(OrganizationRoles, true);
     const users = convertToIdentifiers(Users, true);
     const { fields } = convertToIdentifiers(OrganizationUserRelations, true);
     const relations = convertToIdentifiers(OrganizationRoleUserRelations, true);
+    const organizationRoleFilterSql = organizationRoleId
+      ? sql`
+        and exists (
+          select 1
+          from ${relations.table}
+          where ${relations.fields.organizationId} = ${organizationId}
+            and ${relations.fields.userId} = ${fields.userId}
+            and ${relations.fields.organizationRoleId} = ${organizationRoleId}
+        )
+      `
+      : sql``;
 
     const [{ count }, entities] = await Promise.all([
       this.pool.one<{ count: string }>(sql`
@@ -156,6 +168,7 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
         left join ${users.table}
           on ${fields.userId} = ${users.fields.id}
         where ${fields.organizationId} = ${organizationId}
+        ${organizationRoleFilterSql}
         ${buildSearchSql(Users, search, sql`and `)}
       `),
       // Aggregate roles via LATERAL so the per-user role lookup runs at most `limit` times
@@ -190,6 +203,7 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
             and ${relations.fields.userId} = ${users.fields.id}
         ) as user_roles on true
         where ${fields.organizationId} = ${organizationId}
+        ${organizationRoleFilterSql}
         ${buildSearchSql(Users, search, sql`and `)}
         order by ${fields.userId}
         limit ${limit}

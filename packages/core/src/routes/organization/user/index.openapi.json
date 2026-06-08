@@ -81,6 +81,11 @@
             "name": "q",
             "in": "query",
             "description": "The query to filter users. It will match multiple fields of users, including ID, name, username, email, and phone number.\n\nIf not provided, all users will be returned."
+          },
+          {
+            "name": "organizationRoleId",
+            "in": "query",
+            "description": "The organization role ID used to filter organization members.\n\nIf not provided, all organization members will be returned."
           }
         ],
         "responses": {
