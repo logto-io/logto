@@ -11,6 +11,11 @@ if (typeof document !== 'undefined') {
   ReactModal.setAppElement(document.body);
 }
 
+jest.mock('./constants/env', () => ({
+  __esModule: true,
+  isDevFeaturesEnabled: false,
+}));
+
 jest.mock('overlayscrollbars-react', () => {
   const OverlayScrollbarsComponent = forwardRef<HTMLDivElement, Readonly<{ children?: ReactNode }>>(
     ({ children }, ref) => createElement('div', { ref }, children)
