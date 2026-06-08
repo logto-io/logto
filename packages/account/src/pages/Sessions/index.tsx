@@ -257,13 +257,13 @@ const Sessions = () => {
             </div>
           </div>
 
-          {hasLoaded && (
+          {hasLoaded && grantRows !== undefined && (
             <div className={classNames(styles.section, layoutClassNames.section)}>
               <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
                 {t('account_center.sessions.third_party_apps_title')}
               </div>
               <div className={classNames(styles.card, layoutClassNames.card)}>
-                {grantRows && grantRows.length > 0 ? (
+                {grantRows.length > 0 ? (
                   grantRows.map((app) => (
                     <GrantRow
                       key={app.applicationId}
