@@ -39,7 +39,7 @@ description: Configure local object storage for Logto user-asset uploads (MinIO 
 | `AzureStorage` | Azure Blob |
 | `GoogleStorage` | GCS |
 
-If screenshots need a specific sign-in experience, configure SIE via [logto-sign-in-exp-demo-app](../logto-sign-in-exp-demo-app/SKILL.md) separately.
+If screenshots need a specific sign-in experience, configure SIE via [logto-dev-environment](../logto-dev-environment/SKILL.md) separately.
 
 ## Troubleshooting
 
