@@ -245,6 +245,7 @@ const sign_in_exp = {
         account_center:
           'Uzyskaj dostęp do centrum konta, aby zarządzać ustawieniami bezpieczeństwa, takimi jak e-mail, telefon, nazwa użytkownika, hasło, MFA i połączone konta',
         profile: 'Centralne miejsce do zarządzania danymi osobowymi (np. imię, awatar)',
+        sessions: 'Przeglądaj i zarządzaj aktywnymi sesjami na wszystkich urządzeniach',
       },
       customize_note: 'Nie chcesz korzystać z gotowego rozwiązania? Możesz całkowicie',
       customize_link: 'dostosować swoje przepływy za pomocą Account API.',
