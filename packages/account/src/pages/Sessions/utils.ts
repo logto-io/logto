@@ -125,14 +125,11 @@ export const normalizeGrantRows = (grants: AccountGrant[]): GrantedAppRow[] => {
   }
 
   return Array.from(groupedByApplicationId.entries())
+    .slice()
+    .sort(([, previous], [, next]) => next.iat - previous.iat)
     .map(([applicationId, group]) => ({
       applicationId,
       createdAt: new Date(group.iat * 1000).toLocaleString(),
       grantIds: group.grantIds,
-    }))
-    .slice()
-    .sort(
-      (previous, next) =>
-        new Date(next.createdAt).getTime() - new Date(previous.createdAt).getTime()
-    );
+    }));
 };

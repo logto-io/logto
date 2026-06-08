@@ -65,8 +65,16 @@ const Sessions = () => {
         setSessions(sessionResult.sessions);
       }
 
-      const [, grantResult] = await getGrantsApi(verifiedId);
-      if (grantResult) {
+      const [grantError, grantResult] = await getGrantsApi(verifiedId);
+
+      if (grantError) {
+        await handleError(grantError, {
+          'verification_record.permission_denied': async () => {
+            setVerificationId(undefined);
+            setToast(t('account_center.verification.verification_required'));
+          },
+        });
+      } else if (grantResult) {
         setGrantRows(normalizeGrantRows(grantResult.grants));
       }
 
@@ -177,6 +185,8 @@ const Sessions = () => {
       const hasFailure = results.some((result) => result.status === 'rejected');
       if (hasFailure) {
         setToast(t('account_center.sessions.revoke_grant_failed'));
+        setRemovingAppId(undefined);
+        return;
       }
 
       setGrantRows((previous) =>
@@ -248,13 +258,13 @@ const Sessions = () => {
             </div>
           </div>
 
-          {hasLoaded && (
+          {hasLoaded && grantRows !== undefined && (
             <div className={classNames(styles.section, layoutClassNames.section)}>
               <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
                 {t('account_center.sessions.third_party_apps_title')}
               </div>
               <div className={classNames(styles.card, layoutClassNames.card)}>
-                {grantRows && grantRows.length > 0 ? (
+                {grantRows.length > 0 ? (
                   grantRows.map((app) => (
                     <GrantRow
                       key={app.applicationId}
