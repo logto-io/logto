@@ -4,7 +4,10 @@ import {
   userSessionSignInContextGuard,
   type UserSessionSignInContext,
 } from '@logto/schemas';
+import { format } from 'date-fns';
 import { UAParser } from 'ua-parser-js';
+
+import { getDateFnsLocale } from '@ac/utils/date';
 
 export type AccountSession = GetAccountUserSessionsResponse['sessions'][number];
 export type AccountGrant = GetUserApplicationGrantsResponse['grants'][number];
@@ -85,22 +88,22 @@ export const getSessionDisplayInfo = (session: AccountSession): SessionDisplayIn
 };
 
 /**
- * Format a timestamp to a human-readable string.
+ * Format a timestamp to a locale-aware human-readable string.
  * Handles both seconds and milliseconds (if < 1 trillion, treated as seconds).
  */
-export const formatTimestamp = (value?: number) => {
+export const formatTimestamp = (value?: number, language?: string) => {
   if (!value) {
     return '-';
   }
 
   const timestamp = value < 1_000_000_000_000 ? value * 1000 : value;
 
-  return new Date(timestamp).toLocaleString();
+  return format(new Date(timestamp), 'PPp', { locale: getDateFnsLocale(language ?? 'en') });
 };
 
 export type GrantedAppRow = {
   applicationId: string;
-  createdAt: string;
+  iat: number;
   grantIds: string[];
 };
 
@@ -129,7 +132,7 @@ export const normalizeGrantRows = (grants: AccountGrant[]): GrantedAppRow[] => {
     .sort(([, previous], [, next]) => next.iat - previous.iat)
     .map(([applicationId, group]) => ({
       applicationId,
-      createdAt: new Date(group.iat * 1000).toLocaleString(),
+      iat: group.iat,
       grantIds: group.grantIds,
     }));
 };

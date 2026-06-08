@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,6 +36,7 @@ const Sessions = () => {
   const [revokeGrantTarget, setRevokeGrantTarget] = useState<GrantedAppRow>();
   const [removingAppId, setRemovingAppId] = useState<string>();
   const handleError = useErrorHandler();
+  const isFetchingRef = useRef(false);
 
   const getSessionsApi = useApi(getSessions, { silent: true });
   const revokeSessionApi = useApi(revokeSession);
@@ -45,19 +46,35 @@ const Sessions = () => {
   const sessionControl = accountCenterSettings?.fields.session;
   const isEditable = isEditableField(sessionControl);
 
+  const handlePermissionDenied = useCallback(async () => {
+    setVerificationId(undefined);
+    setToast(t('account_center.verification.verification_required'));
+  }, [setVerificationId, setToast, t]);
+
   const fetchData = useCallback(
     async (verifiedId: string) => {
+      if (isFetchingRef.current) {
+        return;
+      }
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      isFetchingRef.current = true;
       setIsLoading(true);
-      const [sessionError, sessionResult] = await getSessionsApi(verifiedId);
+
+      const [sessionResponse, grantResponse] = await Promise.all([
+        getSessionsApi(verifiedId),
+        getGrantsApi(verifiedId),
+      ]);
+
+      const [sessionError, sessionResult] = sessionResponse;
+      const [grantError, grantResult] = grantResponse;
 
       if (sessionError) {
         await handleError(sessionError, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setToast(t('account_center.verification.verification_required'));
-          },
+          'verification_record.permission_denied': handlePermissionDenied,
         });
         setIsLoading(false);
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        isFetchingRef.current = false;
         return;
       }
 
@@ -65,14 +82,9 @@ const Sessions = () => {
         setSessions(sessionResult.sessions);
       }
 
-      const [grantError, grantResult] = await getGrantsApi(verifiedId);
-
       if (grantError) {
         await handleError(grantError, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setToast(t('account_center.verification.verification_required'));
-          },
+          'verification_record.permission_denied': handlePermissionDenied,
         });
       } else if (grantResult) {
         setGrantRows(normalizeGrantRows(grantResult.grants));
@@ -80,39 +92,26 @@ const Sessions = () => {
 
       setHasLoaded(true);
       setIsLoading(false);
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      isFetchingRef.current = false;
     },
-    [getSessionsApi, getGrantsApi, handleError, setToast, setVerificationId, t]
+    [getSessionsApi, getGrantsApi, handleError, handlePermissionDenied]
   );
 
   useEffect(() => {
-    if (!verificationId) {
+    if (!verificationId || hasLoaded || isLoading) {
       return;
     }
 
     const pendingAction = sessionStorage.getPendingVerifiedAction();
 
-    if (pendingAction !== 'load-sessions') {
-      return;
+    if (pendingAction === 'load-sessions') {
+      sessionStorage.clearPendingVerifiedAction();
     }
 
-    sessionStorage.clearPendingVerifiedAction();
     void fetchData(verificationId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [verificationId]);
-
-  useEffect(() => {
-    if (hasLoaded || isLoading || !verificationId) {
-      return;
-    }
-
-    const pendingAction = sessionStorage.getPendingVerifiedAction();
-    if (pendingAction === 'load-sessions') {
-      return;
-    }
-
-    void fetchData(verificationId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [verificationId, hasLoaded, isLoading]);
 
   const navigateTo = useCallback(
     (route: string) => {
@@ -258,13 +257,13 @@ const Sessions = () => {
             </div>
           </div>
 
-          {hasLoaded && grantRows !== undefined && (
+          {hasLoaded && (
             <div className={classNames(styles.section, layoutClassNames.section)}>
               <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
                 {t('account_center.sessions.third_party_apps_title')}
               </div>
               <div className={classNames(styles.card, layoutClassNames.card)}>
-                {grantRows.length > 0 ? (
+                {grantRows && grantRows.length > 0 ? (
                   grantRows.map((app) => (
                     <GrantRow
                       key={app.applicationId}

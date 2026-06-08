@@ -2,6 +2,8 @@ import type { SignInExperienceResponse } from '@experience/shared/types';
 import type { AccountCenter, UserProfileResponse } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
 
+import { isDevFeaturesEnabled } from '@ac/constants/env';
+
 import { getAvailableSocialConnectors } from './social-connector.js';
 
 type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'deleteAccountUrl'>;
@@ -51,7 +53,7 @@ export const hasVisibleSecuritySection = (
 };
 
 export const hasVisibleSessionsPage = (accountCenterSettings?: SecurityPageSettings): boolean => {
-  if (!accountCenterSettings?.enabled) {
+  if (!isDevFeaturesEnabled || !accountCenterSettings?.enabled) {
     return false;
   }
 

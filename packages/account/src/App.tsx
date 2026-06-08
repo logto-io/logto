@@ -131,7 +131,7 @@ export const Main = () => {
   }
 
   const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
-  const showsSessionsPage = isDevFeaturesEnabled && hasVisibleSessionsPage(accountCenterSettings);
+  const showsSessionsPage = hasVisibleSessionsPage(accountCenterSettings);
 
   return (
     <Routes>
@@ -198,7 +198,7 @@ const Layout = () => {
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
   const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
-  const showsSessionsPage = isDevFeaturesEnabled && hasVisibleSessionsPage(accountCenterSettings);
+  const showsSessionsPage = hasVisibleSessionsPage(accountCenterSettings);
   const hasProfilePage = isDevFeaturesEnabled;
   const isFullPage =
     (pathname === securityRoute && showsSecurityPage) ||

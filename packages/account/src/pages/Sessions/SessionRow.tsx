@@ -14,11 +14,11 @@ type SessionRowProps = {
 };
 
 const SessionRow = ({ session, isEditable, isCurrent, onRevoke }: SessionRowProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { name, location, ip } = getSessionDisplayInfo(session);
-  const deviceName = name ?? '-';
-  const signedInAt = formatTimestamp(session.payload.loginTs);
+  const signedInAt = formatTimestamp(session.payload.loginTs, i18n.language);
+  const deviceName = name ?? ip ?? signedInAt;
 
   const metaParts = [location, ip].filter(Boolean);
   const metaText = metaParts.length > 0 ? metaParts.join(' · ') : undefined;
