@@ -57,6 +57,41 @@ const isCookiePathMatched = (cookiePath: string, requestPath: string) =>
   requestPath === cookiePath ||
   requestPath.startsWith(cookiePath.endsWith('/') ? cookiePath : `${cookiePath}/`);
 
+const decodeHtmlAttribute = (value: string) =>
+  value
+    .replaceAll('&quot;', '"')
+    .replaceAll('&#34;', '"')
+    .replaceAll('&apos;', "'")
+    .replaceAll('&#39;', "'")
+    .replaceAll('&amp;', '&');
+
+const getHtmlAttribute = (html: string, attribute: string) =>
+  new RegExp(`\\b${attribute}=(["'])(.*?)\\1`, 'i').exec(html)?.[2];
+
+const getSubmittingCallbackUri = (html: string) => {
+  const form = /<form\b[^>]*>/i.exec(html)?.[0];
+  assert(form, new Error('Missing callback form'));
+
+  const action = getHtmlAttribute(form, 'action');
+  assert(action, new Error('Missing callback form action'));
+
+  const callbackUrl = new URL(decodeHtmlAttribute(action));
+  const callbackParameters = new URLSearchParams();
+
+  for (const [input] of html.matchAll(/<input\b[^>]*>/gi)) {
+    const name = getHtmlAttribute(input, 'name');
+    const value = getHtmlAttribute(input, 'value');
+
+    if (name && value) {
+      callbackParameters.set(decodeHtmlAttribute(name), decodeHtmlAttribute(value));
+    }
+  }
+
+  const search = callbackParameters.toString();
+
+  return `${callbackUrl.origin}${callbackUrl.pathname}${search && `?${search}`}${callbackUrl.hash}`;
+};
+
 export default class MockClient {
   public rawCookies: string[] = [];
   protected readonly config: LogtoConfig;
@@ -173,6 +208,16 @@ export default class MockClient {
       throwHttpErrors: false,
     });
     const authResponseLocation = authResponse.headers.get('location');
+
+    if (authResponse.status === 200) {
+      const body = await authResponse.text();
+      const signInCallbackUri = getSubmittingCallbackUri(body);
+
+      this.mergeRawCookies(authResponse.headers.getSetCookie());
+      await this.logto.handleSignInCallback(signInCallbackUri);
+
+      return;
+    }
 
     // Note: Should redirect to logto consent page
     if (
