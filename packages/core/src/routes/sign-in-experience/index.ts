@@ -149,16 +149,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         );
       }
 
-      if (verificationCodePolicy) {
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError({
-            code: 'request.invalid_input',
-            details: 'Verification code policy is not available',
-          })
-        );
-      }
-
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
       }
