@@ -1,5 +1,4 @@
-import type { LogtoConfig, SignInOptions } from '@logto/node';
-import LogtoClient from '@logto/node';
+import LogtoClient, { PersistKey, type LogtoConfig, type SignInOptions } from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
@@ -68,16 +67,13 @@ const decodeHtmlAttribute = (value: string) =>
 const getHtmlAttribute = (html: string, attribute: string) =>
   new RegExp(`\\b${attribute}=(["'])(.*?)\\1`, 'i').exec(html)?.[2];
 
-const getSubmittingCallbackUri = (html: string) => {
+const getSubmittingCallbackUri = (html: string, redirectUri?: string) => {
   const form = /<form\b[^>]*>/i.exec(html)?.[0];
   assert(form, new Error('Missing callback form'));
-
   const action = getHtmlAttribute(form, 'action');
   assert(action, new Error('Missing callback form action'));
-
-  const callbackUrl = new URL(decodeHtmlAttribute(action));
-  const callbackParameters = new URLSearchParams();
-
+  const callbackUrl = new URL(redirectUri ?? decodeHtmlAttribute(action));
+  const callbackParameters = new URLSearchParams(callbackUrl.search);
   for (const [input] of html.matchAll(/<input\b[^>]*>/gi)) {
     const name = getHtmlAttribute(input, 'name');
     const value = getHtmlAttribute(input, 'value');
@@ -86,7 +82,6 @@ const getSubmittingCallbackUri = (html: string) => {
       callbackParameters.set(decodeHtmlAttribute(name), decodeHtmlAttribute(value));
     }
   }
-
   const search = callbackParameters.toString();
 
   return `${callbackUrl.origin}${callbackUrl.pathname}${search && `?${search}`}${callbackUrl.hash}`;
@@ -211,7 +206,17 @@ export default class MockClient {
 
     if (authResponse.status === 200) {
       const body = await authResponse.text();
-      const signInCallbackUri = getSubmittingCallbackUri(body);
+      const signInSession: unknown = JSON.parse(
+        (await this.storage.getItem(PersistKey.SignInSession)) ?? 'null'
+      );
+      const redirectUri =
+        typeof signInSession === 'object' &&
+        signInSession !== null &&
+        'redirectUri' in signInSession &&
+        typeof signInSession.redirectUri === 'string'
+          ? signInSession.redirectUri
+          : undefined;
+      const signInCallbackUri = getSubmittingCallbackUri(body, redirectUri);
 
       this.mergeRawCookies(authResponse.headers.getSetCookie());
       await this.logto.handleSignInCallback(signInCallbackUri);
