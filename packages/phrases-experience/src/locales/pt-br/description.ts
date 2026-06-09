@@ -82,6 +82,17 @@ const description = {
     character_types_other:
       'deve conter pelo menos {{count}} tipos de letra maiúscula, letra minúscula, dígito e símbolo.',
   },
+  username_requirements: 'Nome de usuário {{items, list}}.',
+  username_requirement: {
+    length: 'deve ter de {{min}} a {{max}} caracteres',
+    characters: 'pode conter apenas {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'letras maiúsculas',
+    lowercase: 'letras minúsculas',
+    number: 'números',
+    underscore: 'sublinhados',
+  },
   use: 'Usar',
   single_sign_on_email_form: 'Insira o endereço de e-mail corporativo',
   single_sign_on_connectors_list:

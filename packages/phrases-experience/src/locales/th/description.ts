@@ -83,6 +83,17 @@ const description = {
     character_types_other:
       'ต้องมีอย่างน้อย {{count}} ประเภทในตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก ตัวเลข และสัญลักษณ์',
   },
+  username_requirements: 'ชื่อผู้ใช้{{items, list}}',
+  username_requirement: {
+    length: 'ต้องมี {{min}} ถึง {{max}} อักขระ',
+    characters: 'มีได้เฉพาะ {{characters, list}} เท่านั้น',
+  },
+  username_character: {
+    uppercase: 'ตัวพิมพ์ใหญ่',
+    lowercase: 'ตัวพิมพ์เล็ก',
+    number: 'ตัวเลข',
+    underscore: 'ขีดล่าง',
+  },
   use: 'ใช้',
   single_sign_on_email_form: 'กรอกอีเมลบริษัทของคุณ',
   single_sign_on_connectors_list:

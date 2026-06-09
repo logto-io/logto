@@ -1,5 +1,6 @@
 import Button from '@experience/shared/components/Button';
 import SmartInputField from '@experience/shared/components/InputFields/SmartInputField';
+import { buildUsernamePolicyDescription } from '@experience/shared/utils/username-policy-description';
 import { validateUsername } from '@experience/shared/utils/validate-username';
 import { AccountCenterControlValue, SignInIdentifier } from '@logto/schemas';
 import { useContext, useEffect, useState, type FormEvent } from 'react';
@@ -142,6 +143,11 @@ const Username = () => {
           enabledTypes={[SignInIdentifier.Username]}
           errorMessage={usernameError}
           isDanger={Boolean(usernameError)}
+          description={
+            isDevFeaturesEnabled
+              ? buildUsernamePolicyDescription(experienceSettings?.usernamePolicy, t)
+              : undefined
+          }
           onChange={(inputValue) => {
             setPendingUsername(inputValue.value);
           }}

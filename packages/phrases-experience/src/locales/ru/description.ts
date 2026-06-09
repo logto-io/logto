@@ -86,6 +86,17 @@ const description = {
     character_types_other:
       'должен содержать по крайней мере {{count}} типа прописных букв, строчных букв, цифр и символов',
   },
+  username_requirements: 'Имя пользователя {{items, list}}.',
+  username_requirement: {
+    length: 'должно содержать от {{min}} до {{max}} символов',
+    characters: 'может содержать только {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'прописные буквы',
+    lowercase: 'строчные буквы',
+    number: 'цифры',
+    underscore: 'подчёркивания',
+  },
   use: 'Использовать',
   single_sign_on_email_form: 'Введите корпоративный адрес электронной почты',
   single_sign_on_connectors_list:

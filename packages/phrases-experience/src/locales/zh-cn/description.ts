@@ -71,6 +71,17 @@ const description = {
     character_types_many: '至少应包含大写字母、小写字母、数字和符号中的 {{count}} 种',
     character_types_other: '至少应包含大写字母、小写字母、数字和符号中的 {{count}} 种',
   },
+  username_requirements: '用户名{{items, list}}。',
+  username_requirement: {
+    length: '必须为 {{min}} 到 {{max}} 个字符',
+    characters: '只能包含{{characters, list}}',
+  },
+  username_character: {
+    uppercase: '大写字母',
+    lowercase: '小写字母',
+    number: '数字',
+    underscore: '下划线',
+  },
   use: '使用',
   single_sign_on_email_form: '输入你的企业电子邮件地址',
   single_sign_on_connectors_list:
