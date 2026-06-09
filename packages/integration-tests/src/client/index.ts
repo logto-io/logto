@@ -6,7 +6,7 @@ import ky, { type KyInstance } from 'ky';
 
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 
-import { getSubmittingCallbackUri } from './callback-uri.js';
+import { getSignInCallbackContext, getSubmittingCallbackUri } from './callback-uri.js';
 import { MemoryStorage } from './storage.js';
 
 export const defaultConfig = {
@@ -178,14 +178,12 @@ export default class MockClient {
       const signInSession: unknown = JSON.parse(
         (await this.storage.getItem(PersistKey.SignInSession)) ?? 'null'
       );
-      const redirectUri =
-        typeof signInSession === 'object' &&
-        signInSession !== null &&
-        'redirectUri' in signInSession &&
-        typeof signInSession.redirectUri === 'string'
-          ? signInSession.redirectUri
-          : undefined;
-      const signInCallbackUri = getSubmittingCallbackUri(await authResponse.text(), redirectUri);
+      const { redirectUri, state } = getSignInCallbackContext(signInSession);
+      const signInCallbackUri = getSubmittingCallbackUri(
+        await authResponse.text(),
+        redirectUri,
+        state
+      );
 
       this.mergeRawCookies(authResponse.headers.getSetCookie());
       await this.logto.handleSignInCallback(signInCallbackUri);

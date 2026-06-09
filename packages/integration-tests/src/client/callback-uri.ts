@@ -11,7 +11,28 @@ const decodeHtmlAttribute = (value: string) =>
 const getHtmlAttribute = (html: string, attribute: string) =>
   new RegExp(`\\b${attribute}=(["'])(.*?)\\1`, 'i').exec(html)?.[2];
 
-export const getSubmittingCallbackUri = (html: string, redirectUri?: string) => {
+export const getSignInCallbackContext = (signInSession: unknown) => {
+  if (typeof signInSession !== 'object' || signInSession === null) {
+    return {};
+  }
+
+  return {
+    redirectUri:
+      'redirectUri' in signInSession && typeof signInSession.redirectUri === 'string'
+        ? signInSession.redirectUri
+        : undefined,
+    state:
+      'state' in signInSession && typeof signInSession.state === 'string'
+        ? signInSession.state
+        : undefined,
+  };
+};
+
+export const getSubmittingCallbackUri = (
+  html: string,
+  redirectUri?: string,
+  fallbackState?: string
+) => {
   const form = /<form\b[^>]*>/i.exec(html)?.[0];
   assert(form, new Error('Missing callback form'));
   const action = getHtmlAttribute(form, 'action');
@@ -30,6 +51,9 @@ export const getSubmittingCallbackUri = (html: string, redirectUri?: string) => 
     if (name && value) {
       callbackParameters.set(decodeHtmlAttribute(name), decodeHtmlAttribute(value));
     }
+  }
+  if (fallbackState && !callbackParameters.has('state')) {
+    callbackParameters.set('state', fallbackState);
   }
   const search = callbackParameters.toString();
 
