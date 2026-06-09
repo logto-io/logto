@@ -89,6 +89,7 @@ const getConsentRedirectLocation = async (client: ExperienceClient) => {
   });
 
   expect([302, 303]).toContain(response.status);
+  client.mergeRawCookies(response.headers.getSetCookie());
   const location = response.headers.get('location');
   assert(location, new Error('Missing consent redirect location'));
 

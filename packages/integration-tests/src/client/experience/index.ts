@@ -11,11 +11,18 @@ import {
   type WebAuthnAuthenticationOptions,
   type WebAuthnVerificationPayload,
 } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 
 import MockClient from '#src/client/index.js';
 
 import { experienceRoutes } from './const.js';
 import type { SanitizedInteractionStorageData, RedirectResponse } from './types.js';
+
+const isRedirectResponse = (data: unknown): data is RedirectResponse =>
+  typeof data === 'object' &&
+  data !== null &&
+  'redirectTo' in data &&
+  typeof data.redirectTo === 'string';
 
 export class ExperienceClient extends MockClient {
   public extraHeaders: Record<string, string> = {};
@@ -56,7 +63,16 @@ export class ExperienceClient extends MockClient {
 
     this.mergeRawCookies(response.headers.getSetCookie());
 
-    return response.json<RedirectResponse>();
+    const body = await response.text();
+
+    if (!body) {
+      return { redirectTo: '' };
+    }
+
+    const data: unknown = JSON.parse(body);
+    assert(isRedirectResponse(data), new Error('Invalid submit interaction response'));
+
+    return data;
   }
 
   public async verifyPassword(payload: PasswordVerificationPayload) {
