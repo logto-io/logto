@@ -215,25 +215,17 @@ describe('Sign-in interaction with one-time token', () => {
         status: OneTimeTokenStatus.Active,
       });
 
-      const tokenClient = await initExperienceClient({
-        interactionEvent: InteractionEvent.SignIn,
+      const redirectTo = await submitOneTimeTokenSignIn(
+        client,
+        userProfile.primaryEmail,
+        oneTimeToken.token
+      );
+      const userId = await processSession(client, redirectTo);
+
+      expect(userId).toBe(user.id);
+      await expect(getOneTimeTokenById(oneTimeToken.id)).resolves.toMatchObject({
+        status: OneTimeTokenStatus.Consumed,
       });
-
-      try {
-        const redirectTo = await submitOneTimeTokenSignIn(
-          tokenClient,
-          userProfile.primaryEmail,
-          oneTimeToken.token
-        );
-        const userId = await processSession(tokenClient, redirectTo);
-
-        expect(userId).toBe(user.id);
-        await expect(getOneTimeTokenById(oneTimeToken.id)).resolves.toMatchObject({
-          status: OneTimeTokenStatus.Consumed,
-        });
-      } finally {
-        await logoutClient(tokenClient);
-      }
     } finally {
       await Promise.allSettled([
         logoutClient(client),

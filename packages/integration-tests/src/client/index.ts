@@ -14,6 +14,28 @@ export const defaultConfig = {
   appId: demoAppApplicationId,
   persistAccessToken: false,
 };
+
+const getCookieMergeKey = (cookie: string) => {
+  const [nameValue, ...attributes] = cookie.split(';').map((value) => value.trim());
+  const name = nameValue?.split('=')[0];
+
+  if (!name) {
+    return;
+  }
+
+  const scope = new Map<string, string | undefined>();
+
+  for (const attribute of attributes) {
+    const [key, value] = attribute.split('=');
+
+    if (key) {
+      scope.set(key.toLowerCase(), value);
+    }
+  }
+
+  return [name, scope.get('domain') ?? '', scope.get('path') ?? ''].join('|');
+};
+
 export default class MockClient {
   public rawCookies: string[] = [];
   protected readonly config: LogtoConfig;
@@ -208,12 +230,18 @@ export default class MockClient {
   }
 
   public mergeRawCookies(cookies: string[]) {
-    const cookieMap = new Map(
-      this.rawCookies.map((cookie) => [cookie.split(';')[0]?.split('=')[0], cookie])
-    );
+    const cookieMap = new Map<string, string>();
+
+    for (const cookie of this.rawCookies) {
+      const key = getCookieMergeKey(cookie);
+
+      if (key) {
+        cookieMap.set(key, cookie);
+      }
+    }
 
     for (const cookie of cookies) {
-      const key = cookie.split(';')[0]?.split('=')[0];
+      const key = getCookieMergeKey(cookie);
 
       if (key) {
         cookieMap.set(key, cookie);

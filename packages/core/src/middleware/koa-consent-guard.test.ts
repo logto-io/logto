@@ -1,4 +1,5 @@
 import { OneTimeTokenStatus } from '@logto/schemas';
+import { NotFoundError } from '@silverhand/slonik';
 import { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -11,22 +12,24 @@ const { jest } = import.meta;
 
 describe('koaConsentGuard middleware', () => {
   const provider = new Provider('https://logto.test');
-
-  const checkOneTimeToken = jest.fn().mockResolvedValue({
+  const activeOneTimeToken = {
     token: 'token_value',
     email: 'foo@example.com',
     status: OneTimeTokenStatus.Active,
     context: {
       jitOrganizationIds: ['org_id'],
     },
-  });
-  const updateOneTimeTokenStatus = jest.fn().mockResolvedValue({
+  };
+  const consumedOneTimeToken = {
     token: 'token_value',
     status: OneTimeTokenStatus.Consumed,
     context: {
       jitOrganizationIds: ['org_id'],
     },
-  });
+  };
+
+  const checkOneTimeToken = jest.fn().mockResolvedValue(activeOneTimeToken);
+  const updateOneTimeTokenStatus = jest.fn().mockResolvedValue(consumedOneTimeToken);
   const provisionOrganizations = jest.fn();
   const findUserById = jest.fn().mockResolvedValue({ primaryEmail: 'foo@example.com' });
 
@@ -46,8 +49,14 @@ describe('koaConsentGuard middleware', () => {
 
   const next = jest.fn();
 
+  beforeEach(() => {
+    checkOneTimeToken.mockResolvedValue(activeOneTimeToken);
+    updateOneTimeTokenStatus.mockResolvedValue(consumedOneTimeToken);
+    findUserById.mockResolvedValue({ primaryEmail: 'foo@example.com' });
+  });
+
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   const createContext = (
@@ -93,9 +102,27 @@ describe('koaConsentGuard middleware', () => {
     const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
 
     await guard(ctx, jest.fn());
-    expect(checkOneTimeToken).toHaveBeenCalledWith('abcdefg', 'bar@example.com');
+    expect(checkOneTimeToken).not.toHaveBeenCalled();
     expect(ctx.redirect).toHaveBeenCalledWith(
       expect.stringContaining('switch-account?login_hint=bar%40example.com&one_time_token=abcdefg')
+    );
+  });
+
+  it('should redirect to switch account page without checking token state if email does not match', async () => {
+    const ctx = createContext({
+      params: { one_time_token: 'token_value', login_hint: 'bar@example.com' },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+    });
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await guard(ctx, next);
+
+    expect(checkOneTimeToken).not.toHaveBeenCalled();
+    expect(ctx.redirect).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'switch-account?login_hint=bar%40example.com&one_time_token=token_value'
+      )
     );
   });
 
@@ -191,26 +218,26 @@ describe('koaConsentGuard middleware', () => {
     expect(ctx.redirect).not.toHaveBeenCalled();
   });
 
-  it('should not call next middleware if token is consumed but neither session nor last submitted login matches the token email', async () => {
+  it('should redirect to switch account page if token email does not match the session and no submitted login is found', async () => {
     const ctx = createContext({
       params: { one_time_token: 'token_value', login_hint: 'bar@example.com' },
       // @ts-expect-error -- Only accountId is needed by this middleware.
       session: { accountId: 'foo' },
-    });
-    checkOneTimeToken.mockImplementationOnce(() => {
-      throw new RequestError('one_time_token.token_consumed');
     });
     const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
 
     await guard(ctx, next);
 
     expect(next).not.toHaveBeenCalled();
+    expect(checkOneTimeToken).not.toHaveBeenCalled();
     expect(ctx.redirect).toHaveBeenCalledWith(
-      expect.stringContaining('one-time-token?errorMessage=The+token+has+been+consumed.')
+      expect.stringContaining(
+        'switch-account?login_hint=bar%40example.com&one_time_token=token_value'
+      )
     );
   });
 
-  it('should redirect to error if token is consumed and last submitted login lookup fails', async () => {
+  it('should redirect to switch account page if the last submitted login user is not found', async () => {
     const ctx = createContext({
       params: { one_time_token: 'token_value', login_hint: 'bar@example.com' },
       // @ts-expect-error -- Only accountId is needed by this middleware.
@@ -223,18 +250,40 @@ describe('koaConsentGuard middleware', () => {
     });
     findUserById
       .mockResolvedValueOnce({ primaryEmail: 'foo@example.com' })
-      .mockRejectedValueOnce(new Error('user not found'));
-    checkOneTimeToken.mockImplementationOnce(() => {
-      throw new RequestError('one_time_token.token_consumed');
-    });
+      .mockRejectedValueOnce(new NotFoundError());
     const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
 
     await guard(ctx, next);
 
     expect(next).not.toHaveBeenCalled();
+    expect(checkOneTimeToken).not.toHaveBeenCalled();
     expect(ctx.redirect).toHaveBeenCalledWith(
-      expect.stringContaining('one-time-token?errorMessage=The+token+has+been+consumed.')
+      expect.stringContaining(
+        'switch-account?login_hint=bar%40example.com&one_time_token=token_value'
+      )
     );
+  });
+
+  it('should throw if the last submitted login lookup fails unexpectedly', async () => {
+    const ctx = createContext({
+      params: { one_time_token: 'token_value', login_hint: 'bar@example.com' },
+      // @ts-expect-error -- Only accountId is needed by this middleware.
+      session: { accountId: 'foo' },
+      lastSubmission: {
+        login: {
+          accountId: 'bar',
+        },
+      },
+    });
+    const databaseError = new Error('database unavailable');
+    findUserById
+      .mockResolvedValueOnce({ primaryEmail: 'foo@example.com' })
+      .mockRejectedValueOnce(databaseError);
+    const guard = koaConsentGuard(mockTenant.libraries, mockTenant.queries);
+
+    await expect(guard(ctx, next)).rejects.toThrow(databaseError);
+
+    expect(checkOneTimeToken).not.toHaveBeenCalled();
   });
 
   it('should navigate to `/one-time-token` route with error message in URL params, if the one-time token is not valid', async () => {
