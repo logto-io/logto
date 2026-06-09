@@ -93,7 +93,7 @@ const security = {
       'Benutzer müssen ihr Passwort nach einer festgelegten Anzahl von Tagen zurücksetzen. Benutzer, die sich über SSO oder Passkey anmelden, sind nicht betroffen.',
     enable_password_expiration: 'Passwortablauf aktivieren',
     enable_password_expiration_description:
-      'Benutzer müssen ihr Passwort regelmäßig zurücksetzen. Bestehende Benutzer ohne aufgezeichnetes Datum der Passwortänderung werden anhand ihres Erstellungsdatums bewertet.',
+      'Benutzer müssen ihr Passwort regelmäßig zurücksetzen. Bestehende Benutzer ohne aufgezeichnetes Datum der Passwortänderung werden ab dem Datum bewertet, an dem diese Richtlinie aktiviert wurde.',
     enable_password_expiration_tip:
       'Du kannst den Passwortablauf erst aktivieren, nachdem du in der Anmeldeerfahrung mindestens eine Methode zum Zurücksetzen des Passworts mit einem gültigen Connector konfiguriert hast.',
     expiration_period: 'Passwort-Gültigkeitsdauer (Tage)',

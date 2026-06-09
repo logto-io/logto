@@ -93,7 +93,7 @@ const security = {
       'Require users to reset their password after a set number of days. Users signing in via SSO or passkey are not affected.',
     enable_password_expiration: 'Enable password expiration',
     enable_password_expiration_description:
-      'Require users to periodically reset their password. Existing users without a recorded password change date will be evaluated against their account creation date.',
+      'Require users to periodically reset their password. Existing users without a recorded password change date will be evaluated from the date this policy is enabled.',
     enable_password_expiration_tip:
       'Password expiration can only be enabled after you configure at least one forgot password method with a valid connector in sign-in experience.',
     expiration_period: 'Password valid period (days)',

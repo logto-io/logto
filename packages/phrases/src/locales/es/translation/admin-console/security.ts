@@ -93,7 +93,7 @@ const security = {
       'Requerir a los usuarios que restablezcan su contraseña después de un número determinado de días. Los usuarios que inician sesión a través de SSO o clave de acceso no se ven afectados.',
     enable_password_expiration: 'Habilitar expiración de contraseña',
     enable_password_expiration_description:
-      'Requerir a los usuarios que restablezcan periódicamente su contraseña. Los usuarios existentes sin una fecha de cambio de contraseña registrada serán evaluados con respecto a su fecha de creación de cuenta.',
+      'Requerir a los usuarios que restablezcan periódicamente su contraseña. Los usuarios existentes sin una fecha de cambio de contraseña registrada serán evaluados a partir de la fecha en que se habilitó esta política.',
     enable_password_expiration_tip:
       'Solo puedes habilitar la expiración de contraseña después de configurar al menos un método de recuperación de contraseña con un conector válido en la experiencia de inicio de sesión.',
     expiration_period: 'Periodo de validez de la contraseña (dias)',

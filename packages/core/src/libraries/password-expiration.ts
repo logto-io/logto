@@ -30,7 +30,9 @@ export const verifyPasswordExpirationPolicy = (
     })
   );
 
-  const referenceTime = user.passwordUpdatedAt ?? user.createdAt;
+  // Legacy users have no `passwordUpdatedAt`; anchor them to when the policy was enabled so they
+  // get a full valid period, falling back to `createdAt` only when neither is available.
+  const referenceTime = user.passwordUpdatedAt ?? passwordExpiration.enabledAt ?? user.createdAt;
   const expiresAt = referenceTime + passwordExpiration.validPeriodDays * dayInMs;
 
   const isPasswordExpired = user.isPasswordExpired || Date.now() >= expiresAt;

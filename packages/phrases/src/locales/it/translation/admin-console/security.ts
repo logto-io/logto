@@ -94,7 +94,7 @@ const security = {
       'Richiedi agli utenti di reimpostare la password dopo un numero stabilito di giorni. Gli utenti che accedono tramite SSO o passkey non sono interessati.',
     enable_password_expiration: 'Abilita la scadenza della password',
     enable_password_expiration_description:
-      'Richiedi agli utenti di reimpostare periodicamente la password. Gli utenti esistenti senza una data di modifica della password registrata verranno valutati in base alla data di creazione del loro account.',
+      'Richiedi agli utenti di reimpostare periodicamente la password. Gli utenti esistenti senza una data di modifica della password registrata verranno valutati a partire dalla data di attivazione di questa politica.',
     enable_password_expiration_tip:
       'Puoi abilitare la scadenza della password solo dopo aver configurato almeno un metodo di recupero password con un connettore valido nell’esperienza di accesso.',
     expiration_period: 'Periodo di validità della password (giorni)',

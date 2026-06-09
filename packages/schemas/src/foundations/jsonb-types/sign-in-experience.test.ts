@@ -40,6 +40,20 @@ describe('passwordExpirationPolicyGuard', () => {
     });
   });
 
+  it('accepts enabled policy with an enabledAt timestamp', () => {
+    expect(
+      passwordExpirationPolicyGuard.parse({
+        enabled: true,
+        validPeriodDays: 30,
+        enabledAt: 1_700_000_000_000,
+      })
+    ).toEqual({
+      enabled: true,
+      validPeriodDays: 30,
+      enabledAt: 1_700_000_000_000,
+    });
+  });
+
   it('strips unknown keys from legacy rows (e.g. the removed reminderPeriodDays)', () => {
     expect(
       passwordExpirationPolicyGuard.parse({
@@ -58,6 +72,8 @@ describe('passwordExpirationPolicyGuard', () => {
     { enabled: true, validPeriodDays: 0 },
     { enabled: true, validPeriodDays: 1.5 },
     { enabled: true, reminderPeriodDays: 5 },
+    { enabled: true, validPeriodDays: 30, enabledAt: -1 },
+    { enabled: true, validPeriodDays: 30, enabledAt: 1.5 },
   ])('rejects invalid policy %p', (value) => {
     expect(passwordExpirationPolicyGuard.safeParse(value).success).toBe(false);
   });

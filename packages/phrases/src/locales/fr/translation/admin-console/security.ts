@@ -94,7 +94,7 @@ const security = {
       "Exiger des utilisateurs qu'ils réinitialisent leur mot de passe après un nombre de jours défini. Les utilisateurs se connectant via SSO ou passkey ne sont pas affectés.",
     enable_password_expiration: "Activer l'expiration du mot de passe",
     enable_password_expiration_description:
-      "Exiger des utilisateurs qu'ils réinitialisent périodiquement leur mot de passe. Les utilisateurs existants sans date de changement de mot de passe enregistrée seront évalués par rapport à leur date de création de compte.",
+      "Exiger des utilisateurs qu'ils réinitialisent périodiquement leur mot de passe. Les utilisateurs existants sans date de changement de mot de passe enregistrée seront évalués à partir de la date d'activation de cette politique.",
     enable_password_expiration_tip:
       'Vous ne pouvez activer l’expiration du mot de passe qu’après avoir configuré au moins une méthode de mot de passe oublié avec un connecteur valide dans l’expérience de connexion.',
     expiration_period: 'Période de validité du mot de passe (jours)',

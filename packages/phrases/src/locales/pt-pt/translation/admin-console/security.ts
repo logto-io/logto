@@ -93,7 +93,7 @@ const security = {
       'Exigir que os utilizadores redefinam a sua palavra-passe após um número definido de dias. Os utilizadores que iniciam sessão via SSO ou passkey não são afetados.',
     enable_password_expiration: 'Ativar expiração de palavra-passe',
     enable_password_expiration_description:
-      'Exigir que os utilizadores redefinam periodicamente a sua palavra-passe. Os utilizadores existentes sem uma data de alteração de palavra-passe registada serão avaliados em relação à data de criação da conta.',
+      'Exigir que os utilizadores redefinam periodicamente a sua palavra-passe. Os utilizadores existentes sem uma data de alteração de palavra-passe registada serão avaliados a partir da data em que esta política foi ativada.',
     enable_password_expiration_tip:
       'Só pode ativar a expiração da palavra-passe depois de configurar, na experiência de início de sessão, pelo menos um método de recuperação da palavra-passe com um conector válido.',
     expiration_period: 'Período de validade da palavra-passe (dias)',

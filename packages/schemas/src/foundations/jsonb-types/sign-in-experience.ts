@@ -394,6 +394,12 @@ export type PasswordExpirationPolicy =
        * forced to reset it on sign-in.
        */
       validPeriodDays: number;
+      /**
+       * Epoch milliseconds when the policy was enabled. Used as the expiry anchor for users
+       * that have no `passwordUpdatedAt` (e.g. legacy accounts), so enabling the policy grants
+       * them a full valid period instead of expiring them against their account creation date.
+       */
+      enabledAt?: number;
     };
 
 // Intentionally not `.strict()` for backward compatibility: legacy rows may carry removed fields
@@ -405,6 +411,7 @@ export const passwordExpirationPolicyGuard = z.union([
   z.object({
     enabled: z.literal(true),
     validPeriodDays: z.number().int().min(1),
+    enabledAt: z.number().int().nonnegative().optional(),
   }),
 ]) satisfies z.ZodType<PasswordExpirationPolicy>;
 

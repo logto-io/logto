@@ -91,7 +91,7 @@ const security = {
       'Kullanıcıların belirli bir gün sayısından sonra parolalarını sıfırlamasını gerektirir. SSO veya geçiş anahtarı (passkey) ile oturum açan kullanıcılar etkilenmez.',
     enable_password_expiration: 'Parola sona ermeyi etkinleştir',
     enable_password_expiration_description:
-      'Kullanıcıların parolalarını periyodik olarak sıfırlamasını gerektirir. Kayıtlı bir parola değiştirme tarihi olmayan mevcut kullanıcılar, hesap oluşturma tarihlerine göre değerlendirilecektir.',
+      'Kullanıcıların parolalarını periyodik olarak sıfırlamasını gerektirir. Kayıtlı bir parola değiştirme tarihi olmayan mevcut kullanıcılar, bu politikanın etkinleştirildiği tarihten itibaren değerlendirilecektir.',
     enable_password_expiration_tip:
       'Parola sona ermesini yalnızca oturum açma deneyiminde geçerli bir bağlayıcıya sahip en az bir şifremi unuttum yöntemi yapılandırdıktan sonra etkinleştirebilirsiniz.',
     expiration_period: 'Parola geçerlilik süresi (gün)',
