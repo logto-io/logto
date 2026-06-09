@@ -200,6 +200,9 @@ describe('Sign-in interaction with one-time token', () => {
       password: true,
     });
     const client = await signInWithPassword(activeUserProfile);
+    const signInClient = await initExperienceClient({
+      interactionEvent: InteractionEvent.SignIn,
+    });
     const oneTimeToken = await createOneTimeToken({
       email: userProfile.primaryEmail,
     });
@@ -216,12 +219,11 @@ describe('Sign-in interaction with one-time token', () => {
         status: OneTimeTokenStatus.Active,
       });
 
-      const redirectTo = await submitOneTimeTokenSignIn(
-        client,
+      const userId = await completeOneTimeTokenSignIn(
+        signInClient,
         userProfile.primaryEmail,
         oneTimeToken.token
       );
-      const userId = await processSession(client, redirectTo);
 
       expect(userId).toBe(user.id);
       await expect(getOneTimeTokenById(oneTimeToken.id)).resolves.toMatchObject({
@@ -230,6 +232,7 @@ describe('Sign-in interaction with one-time token', () => {
     } finally {
       await Promise.allSettled([
         logoutClient(client),
+        logoutClient(signInClient),
         deleteUser(activeUser.id),
         deleteOneTimeTokenById(oneTimeToken.id),
       ]);
