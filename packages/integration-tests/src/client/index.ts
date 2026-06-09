@@ -36,6 +36,8 @@ const getCookieMergeKey = (cookie: string) => {
   return [name, scope.get('domain') ?? '', scope.get('path') ?? ''].join('|');
 };
 
+const getCookieHeaderValue = (cookie: string) => cookie.split(';')[0]?.trim();
+
 export default class MockClient {
   public rawCookies: string[] = [];
   protected readonly config: LogtoConfig;
@@ -60,7 +62,10 @@ export default class MockClient {
 
   // TODO: Rename to sessionCookies or something accurate
   public get interactionCookie(): string {
-    return this.rawCookies.join('; ');
+    return this.rawCookies
+      .map((cookie) => getCookieHeaderValue(cookie))
+      .filter(Boolean)
+      .join('; ');
   }
 
   public get parsedCookies(): Map<string, Optional<string>> {
