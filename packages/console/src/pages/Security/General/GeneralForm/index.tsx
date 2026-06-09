@@ -231,13 +231,13 @@ function GeneralForm({ formData }: Props) {
                           t('verification_code_policy.expiration_duration.error_message')
                         }
                         onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-                          onChange(value && Number(value));
+                          onChange(value === '' ? 60 : Number(value));
                         }}
                         onValueUp={() => {
-                          onChange(value + 60);
+                          onChange(Math.min(value + 60, 3600));
                         }}
                         onValueDown={() => {
-                          onChange(value - 60);
+                          onChange(Math.max(value - 60, 60));
                         }}
                       />
                     )}
@@ -266,13 +266,13 @@ function GeneralForm({ formData }: Props) {
                           t('verification_code_policy.max_retry_attempts.error_message')
                         }
                         onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-                          onChange(value && Number(value));
+                          onChange(value === '' ? 1 : Number(value));
                         }}
                         onValueUp={() => {
-                          onChange(value + 1);
+                          onChange(Math.min(value + 1, 100));
                         }}
                         onValueDown={() => {
-                          onChange(value - 1);
+                          onChange(Math.max(value - 1, 1));
                         }}
                       />
                     )}

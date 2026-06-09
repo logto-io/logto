@@ -300,10 +300,10 @@ export const sentinelPolicyGuard = z.object({
 }) satisfies ToZodObject<SentinelPolicy>;
 
 /**
- * Email blocklist policy.
+ * Verification code policy.
  *
  * @remarks
- * This policy is used to block specific email addresses or domains from signing up.
+ * This policy controls the expiration duration and maximum retry attempts for verification codes.
  */
 export type VerificationCodePolicy = {
   /**
