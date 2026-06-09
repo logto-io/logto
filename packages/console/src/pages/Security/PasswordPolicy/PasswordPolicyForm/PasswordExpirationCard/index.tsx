@@ -10,6 +10,9 @@ import NumericInput from '@/ds-components/TextInput/NumericInput';
 import { type PasswordPolicyFormData } from '../../use-password-policy';
 import styles from '../index.module.scss';
 
+const minValidPeriodDays = 1;
+const maxValidPeriodDays = 9999;
+
 type Props = {
   readonly hasAvailableForgotPasswordMethod: boolean;
 };
@@ -51,26 +54,32 @@ function PasswordExpirationCard({ hasAvailableForgotPasswordMethod }: Props) {
           <Controller
             name="passwordExpirationDays"
             control={control}
-            rules={{ min: 1 }}
+            rules={{ min: minValidPeriodDays, max: maxValidPeriodDays }}
             render={({ field: { onChange, value, name } }) => (
               <NumericInput
                 className={styles.minLength}
                 name={name}
                 value={String(value)}
-                min={1}
-                error={errors.passwordExpirationDays && t('expiration_period_error')}
+                min={minValidPeriodDays}
+                max={maxValidPeriodDays}
+                error={
+                  errors.passwordExpirationDays &&
+                  t('expiration_period_error', { min: minValidPeriodDays, max: maxValidPeriodDays })
+                }
                 onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-                  onChange(value === '' ? 1 : Number(value));
+                  onChange(value === '' ? minValidPeriodDays : Number(value));
                 }}
                 onValueUp={() => {
-                  onChange(value + 1);
+                  onChange(Math.min(maxValidPeriodDays, value + 1));
                 }}
                 onValueDown={() => {
-                  onChange(value - 1);
+                  onChange(Math.max(minValidPeriodDays, value - 1));
                 }}
                 onBlur={() => {
-                  if (value < 1) {
-                    onChange(1);
+                  if (value < minValidPeriodDays) {
+                    onChange(minValidPeriodDays);
+                  } else if (value > maxValidPeriodDays) {
+                    onChange(maxValidPeriodDays);
                   }
                 }}
               />

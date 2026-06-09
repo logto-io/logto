@@ -98,7 +98,7 @@ const security = {
     expiration_period: 'Срок действия пароля (дни)',
     expiration_period_description:
       'Количество дней, в течение которых пароль остается действительным до истечения срока его действия.',
-    expiration_period_error: 'Срок действия пароля должен составлять не менее 1 дня.',
+    expiration_period_error: 'Срок действия пароля должен составлять от {{min}} до {{max}} дней.',
   },
   sentinel_policy: {
     card_title: 'Блокировка идентификатора',
