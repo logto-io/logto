@@ -5,9 +5,11 @@ import {
   type SignInExperience,
   type VerificationCodePolicy,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { type RequestError } from '@/hooks/use-api';
 
 type RequiredSentinelPolicy = Required<Pick<SentinelPolicy, keyof SentinelPolicy>>;
@@ -63,9 +65,7 @@ export const generalFormParser = {
         : defaultVerificationCodePolicy,
     };
   },
-  toSignInExperience: (
-    formData: GeneralFormData
-  ): Pick<SignInExperience, 'sentinelPolicy' | 'verificationCodePolicy'> => {
+  toSignInExperience: (formData: GeneralFormData) => {
     const {
       sentinelPolicyEnabled,
       sentinelPolicy,
@@ -75,7 +75,11 @@ export const generalFormParser = {
 
     return {
       sentinelPolicy: sentinelPolicyEnabled ? sentinelPolicy : {},
-      verificationCodePolicy: verificationCodePolicyEnabled ? verificationCodePolicy : {},
+      ...conditional(
+        isDevFeaturesEnabled && {
+          verificationCodePolicy: verificationCodePolicyEnabled ? verificationCodePolicy : {},
+        }
+      ),
     };
   },
 };
