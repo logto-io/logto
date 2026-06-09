@@ -41,18 +41,24 @@ export class ExperienceClient extends MockClient {
   }
 
   public async initInteraction(payload: CreateExperienceApiPayload) {
-    return this.api
-      .put(experienceRoutes.prefix, {
-        headers: this.headers,
-        json: payload,
-      })
-      .json();
+    const response = await this.api.put(experienceRoutes.prefix, {
+      headers: this.headers,
+      json: payload,
+    });
+
+    this.mergeRawCookies(response.headers.getSetCookie());
+
+    return response.json();
   }
 
   public override async submitInteraction(): Promise<RedirectResponse> {
-    return this.api
-      .post(`${experienceRoutes.prefix}/submit`, { headers: this.headers })
-      .json<RedirectResponse>();
+    const response = await this.api.post(`${experienceRoutes.prefix}/submit`, {
+      headers: this.headers,
+    });
+
+    this.mergeRawCookies(response.headers.getSetCookie());
+
+    return response.json<RedirectResponse>();
   }
 
   public async verifyPassword(payload: PasswordVerificationPayload) {
