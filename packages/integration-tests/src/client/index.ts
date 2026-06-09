@@ -38,6 +38,25 @@ const getCookieMergeKey = (cookie: string) => {
 
 const getCookieHeaderValue = (cookie: string) => cookie.split(';')[0]?.trim();
 
+const getCookiePath = (cookie: string) => {
+  const [, ...attributes] = cookie.split(';').map((value) => value.trim());
+
+  for (const attribute of attributes) {
+    const [key, value] = attribute.split('=');
+
+    if (key?.toLowerCase() === 'path') {
+      return value ?? '/';
+    }
+  }
+
+  return '/';
+};
+
+const isCookiePathMatched = (cookiePath: string, requestPath: string) =>
+  cookiePath === '/' ||
+  requestPath === cookiePath ||
+  requestPath.startsWith(cookiePath.endsWith('/') ? cookiePath : `${cookiePath}/`);
+
 export default class MockClient {
   public rawCookies: string[] = [];
   protected readonly config: LogtoConfig;
@@ -62,7 +81,16 @@ export default class MockClient {
 
   // TODO: Rename to sessionCookies or something accurate
   public get interactionCookie(): string {
-    return this.rawCookies
+    return this.getCookieHeader();
+  }
+
+  public getCookieHeader(pathname?: string): string {
+    const cookies = pathname
+      ? this.rawCookies.filter((cookie) => isCookiePathMatched(getCookiePath(cookie), pathname))
+      : this.rawCookies;
+
+    return cookies
+      .toSorted((cookieA, cookieB) => getCookiePath(cookieB).length - getCookiePath(cookieA).length)
       .map((cookie) => getCookieHeaderValue(cookie))
       .filter(Boolean)
       .join('; ');
@@ -139,7 +167,7 @@ export default class MockClient {
 
     const authResponse = await ky.get(redirectTo, {
       headers: {
-        cookie: this.interactionCookie,
+        cookie: this.getCookieHeader(new URL(redirectTo).pathname),
       },
       redirect: 'manual',
       throwHttpErrors: false,
@@ -174,7 +202,7 @@ export default class MockClient {
   public async manualConsent(redirectTo: string) {
     const authCodeResponse = await ky.get(redirectTo, {
       headers: {
-        cookie: this.interactionCookie,
+        cookie: this.getCookieHeader(new URL(redirectTo).pathname),
       },
       redirect: 'manual',
       throwHttpErrors: false,
@@ -283,7 +311,7 @@ export default class MockClient {
 
     const consentResponse = await ky.get(`${this.config.endpoint}/consent`, {
       headers: {
-        cookie: this.interactionCookie,
+        cookie: this.getCookieHeader('/consent'),
       },
       redirect: 'manual',
       throwHttpErrors: false,
@@ -298,7 +326,7 @@ export default class MockClient {
 
     const authCodeResponse = await ky.get(redirectTo, {
       headers: {
-        cookie: this.interactionCookie,
+        cookie: this.getCookieHeader(new URL(redirectTo).pathname),
       },
       redirect: 'manual',
       throwHttpErrors: false,

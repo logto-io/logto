@@ -71,7 +71,7 @@ const startOneTimeTokenAuthorization = async (
         [ExtraParamsKey.OneTimeToken]: token,
       },
     },
-    client.interactionCookie
+    client.getCookieHeader('/oidc/auth')
   );
 
   expect([302, 303]).toContain(response.status);
@@ -82,7 +82,7 @@ const startOneTimeTokenAuthorization = async (
 const getConsentRedirectLocation = async (client: ExperienceClient) => {
   const response = await ky.get(`${logtoUrl}/consent`, {
     headers: {
-      cookie: client.interactionCookie,
+      cookie: client.getCookieHeader('/consent'),
     },
     redirect: 'manual',
     throwHttpErrors: false,
