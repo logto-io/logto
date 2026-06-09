@@ -267,6 +267,7 @@ const account_center = {
     loading: 'Завантаження...',
     third_party_apps_title: 'Сторонні додатки',
     no_third_party_apps: 'Немає авторизованих сторонніх додатків.',
+    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
     granted_at: 'Авторизовано {{date}}',
     revoke_grant: 'Видалити',
     revoke_grant_title: 'Видалити доступ стороннього додатку',

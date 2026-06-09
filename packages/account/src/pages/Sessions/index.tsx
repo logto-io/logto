@@ -30,6 +30,7 @@ const Sessions = () => {
     useContext(PageContext);
   const [sessions, setSessions] = useState<AccountSession[]>();
   const [grantRows, setGrantRows] = useState<GrantedAppRow[]>();
+  const [hasGrantLoadingError, setHasGrantLoadingError] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [revokeTarget, setRevokeTarget] = useState<AccountSession>();
@@ -58,6 +59,7 @@ const Sessions = () => {
       }
       // eslint-disable-next-line @silverhand/fp/no-mutation
       isFetchingRef.current = true;
+      setHasGrantLoadingError(false);
       setIsLoading(true);
 
       const [sessionResponse, grantResponse] = await Promise.all([
@@ -86,8 +88,10 @@ const Sessions = () => {
         await handleError(grantError, {
           'verification_record.permission_denied': handlePermissionDenied,
         });
+        setHasGrantLoadingError(true);
       } else if (grantResult) {
         setGrantRows(normalizeGrantRows(grantResult.grants));
+        setHasGrantLoadingError(false);
       }
 
       setHasLoaded(true);
@@ -257,13 +261,17 @@ const Sessions = () => {
             </div>
           </div>
 
-          {hasLoaded && grantRows !== undefined && (
+          {hasLoaded && (grantRows !== undefined || hasGrantLoadingError) && (
             <div className={classNames(styles.section, layoutClassNames.section)}>
               <div className={classNames(styles.sectionTitle, layoutClassNames.sectionTitle)}>
                 {t('account_center.sessions.third_party_apps_title')}
               </div>
               <div className={classNames(styles.card, layoutClassNames.card)}>
-                {grantRows.length > 0 ? (
+                {hasGrantLoadingError ? (
+                  <div className={styles.emptyState}>
+                    {t('account_center.sessions.third_party_apps_load_failed')}
+                  </div>
+                ) : grantRows && grantRows.length > 0 ? (
                   grantRows.map((app) => (
                     <GrantRow
                       key={app.applicationId}

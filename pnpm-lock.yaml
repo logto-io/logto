@@ -5133,6 +5133,9 @@ importers:
       nanoid:
         specifier: ^5.0.9
         version: 5.0.9
+      ua-parser-js:
+        specifier: ^2.0.3
+        version: 2.0.3
     devDependencies:
       '@jest/globals':
         specifier: ^29.7.0

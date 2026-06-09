@@ -265,6 +265,7 @@ const account_center = {
     loading: 'Načítání...',
     third_party_apps_title: 'Aplikace třetích stran',
     no_third_party_apps: 'Žádné autorizované aplikace třetích stran.',
+    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
     granted_at: 'Autorizováno {{date}}',
     revoke_grant: 'Odebrat',
     revoke_grant_title: 'Odebrat přístup aplikace třetí strany',

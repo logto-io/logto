@@ -258,6 +258,7 @@ const account_center = {
     loading: 'กำลังโหลด...',
     third_party_apps_title: 'แอปบุคคลที่สาม',
     no_third_party_apps: 'ไม่มีแอปพลิเคชันบุคคลที่สามที่ได้รับอนุญาต',
+    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
     granted_at: 'อนุญาตเมื่อ {{date}}',
     revoke_grant: 'ลบ',
     revoke_grant_title: 'ลบการเข้าถึงแอปบุคคลที่สาม',

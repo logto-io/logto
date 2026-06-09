@@ -250,6 +250,7 @@ const account_center = {
     loading: '載入中...',
     third_party_apps_title: '第三方應用程式',
     no_third_party_apps: '沒有已授權的第三方應用程式。',
+    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
     granted_at: '授權於 {{date}}',
     revoke_grant: '移除',
     revoke_grant_title: '移除第三方應用程式存取權限',

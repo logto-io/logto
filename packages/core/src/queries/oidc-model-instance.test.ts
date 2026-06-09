@@ -376,7 +376,11 @@ describe('oidc-model-instance query', () => {
   it('findUserActiveApplicationGrants with thirdparty', async () => {
     const userId = 'user-id';
     const expectSql = sql`
-      select "oidc_model_instance"."id", "oidc_model_instance"."payload", "oidc_model_instance"."expires_at"
+      select "oidc_model_instance"."id", "oidc_model_instance"."payload", "oidc_model_instance"."expires_at",
+        json_build_object(
+          'id', "application"."id",
+          'name', "application"."name"
+        ) as application
       from ${table} as "oidc_model_instance"
       inner join ${applicationTable} as "application"
         on "oidc_model_instance"."payload"->>'clientId'="application"."id"
@@ -389,21 +393,34 @@ describe('oidc-model-instance query', () => {
     const grant = createMockOidcGrantInstance({
       payload: { kind: 'Grant', clientId: 'demo-app', accountId: userId },
     });
+    const grantWithApplication = {
+      ...grant,
+      application: {
+        id: 'demo-app',
+        name: 'Demo App',
+      },
+    };
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
       expect(values).toEqual([userId, true, expect.any(Number)]);
 
-      return createMockQueryResult([grant as never]);
+      return createMockQueryResult([grantWithApplication as never]);
     });
 
-    await expect(findUserActiveApplicationGrants(userId, 'thirdParty')).resolves.toEqual([grant]);
+    await expect(findUserActiveApplicationGrants(userId, 'thirdParty')).resolves.toEqual([
+      grantWithApplication,
+    ]);
   });
 
   it('findUserActiveApplicationGrants with firstparty', async () => {
     const userId = 'user-id';
     const expectSql = sql`
-      select "oidc_model_instance"."id", "oidc_model_instance"."payload", "oidc_model_instance"."expires_at"
+      select "oidc_model_instance"."id", "oidc_model_instance"."payload", "oidc_model_instance"."expires_at",
+        json_build_object(
+          'id', "application"."id",
+          'name', "application"."name"
+        ) as application
       from ${table} as "oidc_model_instance"
       inner join ${applicationTable} as "application"
         on "oidc_model_instance"."payload"->>'clientId'="application"."id"
@@ -426,7 +443,11 @@ describe('oidc-model-instance query', () => {
   it('findUserActiveApplicationGrants with all', async () => {
     const userId = 'user-id';
     const expectSql = sql`
-      select "oidc_model_instance"."id", "oidc_model_instance"."payload", "oidc_model_instance"."expires_at"
+      select "oidc_model_instance"."id", "oidc_model_instance"."payload", "oidc_model_instance"."expires_at",
+        json_build_object(
+          'id', "application"."id",
+          'name', "application"."name"
+        ) as application
       from ${table} as "oidc_model_instance"
       inner join ${applicationTable} as "application"
         on "oidc_model_instance"."payload"->>'clientId'="application"."id"

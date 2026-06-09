@@ -264,6 +264,7 @@ const account_center = {
     loading: 'Загрузка...',
     third_party_apps_title: 'Сторонние приложения',
     no_third_party_apps: 'Нет авторизованных сторонних приложений.',
+    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
     granted_at: 'Авторизовано {{date}}',
     revoke_grant: 'Удалить',
     revoke_grant_title: 'Удалить доступ стороннего приложения',

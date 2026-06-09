@@ -269,6 +269,7 @@ const account_center = {
     loading: 'Loading...',
     third_party_apps_title: 'Third-party apps',
     no_third_party_apps: 'No authorized third-party applications.',
+    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
     granted_at: 'Authorized {{date}}',
     revoke_grant: 'Remove',
     revoke_grant_title: 'Remove third-party app access',
