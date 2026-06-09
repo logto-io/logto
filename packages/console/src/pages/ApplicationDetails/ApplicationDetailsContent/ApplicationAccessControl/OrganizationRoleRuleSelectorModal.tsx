@@ -1,13 +1,15 @@
 import { RoleType, type Organization, type OrganizationRole } from '@logto/schemas';
-import { useEffect, useMemo, useState } from 'react';
+import { conditional } from '@silverhand/essentials';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import { defaultPageSize } from '@/consts';
 import DataTransferBox from '@/ds-components/DataTransferBox';
 import { type DataGroup, type SelectedDataEntry } from '@/ds-components/DataTransferBox/type';
 import InlineNotification from '@/ds-components/InlineNotification';
 import type { RequestError } from '@/hooks/use-api';
-import { buildUrl } from '@/utils/url';
+import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import RuleSelectorModal from './RuleSelectorModal';
 import {
@@ -42,7 +44,8 @@ type Props = {
   ) => Promise<void>;
 };
 
-const maxPageSize = 100;
+const organizationPageSize = defaultPageSize;
+const organizationRolePageSize = 100;
 
 const toOrganizationRoleRuleEntry = (
   organization: Organization,
@@ -68,18 +71,42 @@ function OrganizationRoleRuleSelectorModal({
   const [selectedData, setSelectedData] = useState<
     Array<SelectedDataEntry<OrganizationRoleRuleEntry>>
   >([]);
+  const [organizationPage, setOrganizationPage] = useState(1);
+  const [organizationKeyword, setOrganizationKeyword] = useState('');
 
   const { data: organizationsResponse, error: organizationsError } = useSWR<
     [Organization[], number],
     RequestError
-  >(isOpen && buildUrl('api/organizations', { page: '1', page_size: String(maxPageSize) }));
+  >(
+    isOpen &&
+      buildUrl('api/organizations', {
+        page: String(organizationPage),
+        page_size: String(organizationPageSize),
+        ...conditional(organizationKeyword && { q: formatSearchKeyword(organizationKeyword) }),
+      })
+  );
   const { data: organizationRolesResponse, error: organizationRolesError } = useSWR<
     [OrganizationRole[], number],
     RequestError
-  >(isOpen && buildUrl('api/organization-roles', { page: '1', page_size: String(maxPageSize) }));
+  >(
+    isOpen &&
+      buildUrl('api/organization-roles', {
+        page: '1',
+        page_size: String(organizationRolePageSize),
+      })
+  );
 
-  const [organizations = []] = organizationsResponse ?? [];
+  const [organizations = [], organizationsCount] = organizationsResponse ?? [];
   const [organizationRoles = []] = organizationRolesResponse ?? [];
+  const hasOrganizationRoleOptionsError = Boolean(organizationsError ?? organizationRolesError);
+  const isSourceLoading =
+    isOpen &&
+    !hasOrganizationRoleOptionsError &&
+    (!organizationsResponse || !organizationRolesResponse);
+  const userOrganizationRoles = useMemo(
+    () => organizationRoles.filter(({ type }) => type === RoleType.User),
+    [organizationRoles]
+  );
 
   const organizationRoleRuleEntries = useMemo(() => {
     const organizationsById = new Map(selectedOrganizations.map((entity) => [entity.id, entity]));
@@ -110,9 +137,19 @@ function OrganizationRoleRuleSelectorModal({
     }
   }, [isOpen, organizationRoleRuleEntries]);
 
-  const availableDataGroups: Array<DataGroup<OrganizationRoleRuleEntry>> = useMemo(() => {
-    const userOrganizationRoles = organizationRoles.filter(({ type }) => type === RoleType.User);
+  useEffect(() => {
+    if (!isOpen) {
+      setOrganizationPage(1);
+      setOrganizationKeyword('');
+    }
+  }, [isOpen]);
 
+  const handleSourceSearch = useCallback((keyword: string) => {
+    setOrganizationPage(1);
+    setOrganizationKeyword(keyword);
+  }, []);
+
+  const availableDataGroups: Array<DataGroup<OrganizationRoleRuleEntry>> = useMemo(() => {
     return organizations.map((organization) => ({
       groupId: organization.id,
       groupName: organization.name,
@@ -120,14 +157,10 @@ function OrganizationRoleRuleSelectorModal({
         toOrganizationRoleRuleEntry(organization, organizationRole)
       ),
     }));
-  }, [organizationRoles, organizations]);
+  }, [organizations, userOrganizationRoles]);
 
-  const hasOrganizationRoleOptionsError = Boolean(organizationsError ?? organizationRolesError);
   const isOrganizationRoleOptionsLoading =
-    isLoading ||
-    (isOpen &&
-      !hasOrganizationRoleOptionsError &&
-      (!organizationsResponse || !organizationRolesResponse));
+    isLoading || (isOpen && !hasOrganizationRoleOptionsError && isSourceLoading);
 
   return (
     <RuleSelectorModal
@@ -155,6 +188,14 @@ function OrganizationRoleRuleSelectorModal({
           setSelectedData={setSelectedData}
           availableDataGroups={availableDataGroups}
           getSelectedDataTitle={({ displayName }) => displayName}
+          isSourceLoading={isSourceLoading}
+          sourcePagination={{
+            page: organizationPage,
+            pageSize: organizationPageSize,
+            totalCount: organizationsCount,
+            onChange: setOrganizationPage,
+          }}
+          onSourceSearch={handleSourceSearch}
         />
       )}
     </RuleSelectorModal>

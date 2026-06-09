@@ -26,6 +26,12 @@
         color: var(--color-text-secondary);
         margin-inline-start: _.unit(2);
       }
+
+      .spinner {
+        width: 16px;
+        height: 16px;
+        color: var(--color-text-secondary);
+      }
     }
   }
 

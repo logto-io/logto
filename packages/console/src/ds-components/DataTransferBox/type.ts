@@ -7,6 +7,8 @@ export type DataGroup<T extends DataEntry> = {
   groupId: string;
   groupName: string;
   dataList: T[];
+  dataInfo?: string;
+  isLoading?: boolean;
 };
 
 type DataWithGroupInfo<T extends DataEntry> = T & {

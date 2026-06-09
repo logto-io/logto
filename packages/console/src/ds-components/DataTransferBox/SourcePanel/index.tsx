@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 
 import Search from '@/assets/icons/search.svg?react';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
+import Pagination, { type Props as PaginationProps } from '@/ds-components/Pagination';
 import TextInput from '@/ds-components/TextInput';
+import useDebounce from '@/hooks/use-debounce';
 import transferLayout from '@/scss/transfer.module.scss';
 
 import SourceDataItem from '../SourceDataItem';
@@ -24,22 +26,43 @@ type Props<TEntry extends DataEntry> = {
   readonly setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
   readonly availableDataList?: TEntry[];
   readonly availableDataGroups?: Array<DataGroup<TEntry>>;
+  readonly isSourceLoading?: boolean;
+  readonly sourcePagination?: Omit<PaginationProps, 'className' | 'mode'>;
+  readonly onSourceSearch?: (keyword: string) => void;
+  readonly onExpandDataGroup?: (group: DataGroup<TEntry>) => void;
 };
+
+const skeletonRowCount = 6;
 
 function SourcePanel<TEntry extends DataEntry>({
   selectedData,
   setSelectedData,
   availableDataList,
   availableDataGroups,
+  isSourceLoading = false,
+  sourcePagination,
+  onSourceSearch,
+  onExpandDataGroup,
 }: Props<TEntry>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const debounce = useDebounce();
 
   // Keyword search
   const [keyword, setKeyword] = useState('');
 
-  const handleSearchInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setKeyword(event.target.value);
-  }, []);
+  const handleSearchInput = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.target;
+      setKeyword(value);
+
+      if (onSourceSearch) {
+        debounce(() => {
+          onSourceSearch(value);
+        });
+      }
+    },
+    [debounce, onSourceSearch]
+  );
 
   const isDataEntrySelected = useCallback(
     (data: TEntry) => selectedData.findIndex(({ id }) => id === data.id) >= 0,
@@ -99,6 +122,10 @@ function SourcePanel<TEntry extends DataEntry>({
       return;
     }
 
+    if (onSourceSearch) {
+      return availableDataList;
+    }
+
     const lowerCasedKeyword = keyword.toLowerCase();
 
     if (!lowerCasedKeyword) {
@@ -106,12 +133,16 @@ function SourcePanel<TEntry extends DataEntry>({
     }
 
     return availableDataList.filter(({ name }) => name.toLowerCase().includes(lowerCasedKeyword));
-  }, [availableDataList, keyword]);
+  }, [availableDataList, keyword, onSourceSearch]);
 
   // Get the keyword filtered available dataGroups
   const filteredAvailableDataGroups = useMemo(() => {
     if (!availableDataGroups) {
       return;
+    }
+
+    if (onSourceSearch) {
+      return availableDataGroups;
     }
 
     const lowerCasedKeyword = keyword.toLowerCase();
@@ -143,9 +174,10 @@ function SourcePanel<TEntry extends DataEntry>({
             dataGroup.dataList.length > 0
         )
     );
-  }, [availableDataGroups, keyword]);
+  }, [availableDataGroups, keyword, onSourceSearch]);
 
-  const isEmpty = !filteredAvailableDataList?.length && !filteredAvailableDataGroups?.length;
+  const isEmpty =
+    !isSourceLoading && !filteredAvailableDataList?.length && !filteredAvailableDataGroups?.length;
 
   return (
     <div className={transferLayout.box}>
@@ -160,7 +192,20 @@ function SourcePanel<TEntry extends DataEntry>({
       <div
         className={classNames(transferLayout.boxContent, isEmpty && transferLayout.emptyBoxContent)}
       >
-        {isEmpty ? (
+        {isSourceLoading ? (
+          <div className={styles.skeletonList}>
+            {Array.from({ length: skeletonRowCount }).map((_, index) => (
+              // eslint-disable-next-line react/no-array-index-key -- Static skeleton placeholders have no stable IDs.
+              <div key={index} className={styles.skeletonRow}>
+                <div className={styles.skeletonCheckbox} />
+                <div className={styles.skeletonGroup}>
+                  <div className={styles.skeletonIcon} />
+                  <div className={styles.skeletonContent} />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : isEmpty ? (
           <EmptyDataPlaceholder size="small" title={t('role_details.permission.empty')} />
         ) : (
           <>
@@ -171,6 +216,7 @@ function SourcePanel<TEntry extends DataEntry>({
                 selectedGroupDataList={getSelectedDataInGroup(dataGroup)}
                 onSelectData={onSelectData}
                 onSelectDataGroup={onSelectDataGroup}
+                onExpandDataGroup={onExpandDataGroup}
               />
             ))}
             {filteredAvailableDataList?.map((data) => (
@@ -184,6 +230,9 @@ function SourcePanel<TEntry extends DataEntry>({
           </>
         )}
       </div>
+      {sourcePagination && (
+        <Pagination {...sourcePagination} mode="pico" className={transferLayout.boxPagination} />
+      )}
     </div>
   );
 }
