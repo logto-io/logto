@@ -13,6 +13,7 @@ import AssignedEntities from '@/pages/Roles/components/AssignedEntities';
 import styles from './index.module.scss';
 import { type RuleEntities } from './use-rule-entities';
 import {
+  buildOrganizationRoleRuleId,
   getOrganizationRoleRuleDisplayName,
   getUserDisplayName,
   hasApplicationAccessControlRules,
@@ -164,11 +165,9 @@ function RulesTable({ accessControl, ruleEntities, onChange }: Props) {
                 <AssignedEntities
                   type={RoleType.User}
                   entities={
-                    ruleEntities.organizationMembers[organizationId]?.users
-                      .slice(0, 3)
-                      .map(({ id, avatar, name }) => ({ id, avatar, name })) ?? []
+                    ruleEntities.organizationMemberPreviews[organizationId]?.featuredUsers ?? []
                   }
-                  count={ruleEntities.organizationMembers[organizationId]?.usersCount ?? 0}
+                  count={ruleEntities.organizationMemberPreviews[organizationId]?.usersCount ?? 0}
                 />
               ),
               onDelete: async () =>
@@ -201,11 +200,10 @@ function RulesTable({ accessControl, ruleEntities, onChange }: Props) {
                 return [];
               }
 
-              const organizationRoleUsers =
-                ruleEntities.organizationMembers[organizationId]?.users.filter(
-                  ({ organizationRoles }) =>
-                    organizationRoles.some(({ id }) => id === organizationRoleId)
-                ) ?? [];
+              const organizationRoleMemberPreview =
+                ruleEntities.organizationRoleMemberPreviews[
+                  buildOrganizationRoleRuleId(organizationId, organizationRoleId)
+                ];
 
               return [
                 {
@@ -222,10 +220,8 @@ function RulesTable({ accessControl, ruleEntities, onChange }: Props) {
                   description: (
                     <AssignedEntities
                       type={RoleType.User}
-                      entities={organizationRoleUsers
-                        .slice(0, 3)
-                        .map(({ id, avatar, name }) => ({ id, avatar, name }))}
-                      count={organizationRoleUsers.length}
+                      entities={organizationRoleMemberPreview?.featuredUsers ?? []}
+                      count={organizationRoleMemberPreview?.usersCount ?? 0}
                     />
                   ),
                   onDelete: async () =>

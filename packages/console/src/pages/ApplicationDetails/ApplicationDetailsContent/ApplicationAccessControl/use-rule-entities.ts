@@ -1,12 +1,10 @@
 import {
   type ApplicationAccessControl,
-  type FeaturedUser,
   type Organization,
   type OrganizationRole,
   type Role,
   type User,
   type UserInfo,
-  type UserWithOrganizationRoles,
 } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
@@ -15,6 +13,7 @@ import useApi, { type RequestError } from '@/hooks/use-api';
 import useBatchEntityDetailsFetch from '@/hooks/use-batch-entity-details-fetch';
 import { buildUrl } from '@/utils/url';
 
+import useMemberPreviews, { type UsersPreview } from './use-member-previews';
 import {
   getOrganizationRoleRuleDisplayName,
   getOrganizationRoleRuleCount,
@@ -53,14 +52,15 @@ export type RuleEntities = {
   organizationRoleRuleOrganizations: Organization[];
   organizationRoleRules: OrganizationRole[];
   roleUserPreviews: Record<string, UsersPreview>;
-  organizationMembers: Record<string, OrganizationMembers>;
+  organizationMemberPreviews: Record<string, UsersPreview>;
+  organizationRoleMemberPreviews: Record<string, UsersPreview>;
   hasError: boolean;
   isLoading: {
     users: boolean;
     userRoles: boolean;
     organizations: boolean;
     roleUserPreviews: boolean;
-    organizationMembers: boolean;
+    memberPreviews: boolean;
     organizationRoleRules: boolean;
   };
   selectedNames: {
@@ -101,20 +101,13 @@ const isLoadingOrganizationRoleRules = ({
         (!organizationRoleRules && !organizationRoleRulesError))
   );
 
-type UsersPreview = {
-  featuredUsers: FeaturedUser[];
-  usersCount: number;
-};
-
-type OrganizationMembers = {
-  users: UserWithOrganizationRoles[];
-  usersCount: number;
-};
-
 const previewPageSize = 3;
-const maxPageSize = 100;
 
-const toFeaturedUser = ({ id, avatar, name }: UserInfo): FeaturedUser => ({ id, avatar, name });
+const toFeaturedUser = ({ id, avatar, name }: UserInfo): UsersPreview['featuredUsers'][number] => ({
+  id,
+  avatar,
+  name,
+});
 
 const useRoleUserPreviewsByRoleIds = (roleIds: string[] | undefined) => {
   const api = useApi();
@@ -154,62 +147,6 @@ const useRoleUserPreviewsByRoleIds = (roleIds: string[] | undefined) => {
   );
 };
 
-const useOrganizationMembersByOrganizationIds = (organizationIds: string[] | undefined) => {
-  const api = useApi();
-
-  const fetchOrganizationMembers = useCallback(
-    async ([, ids]: readonly [string, string[]]) => {
-      const entries = await Promise.all(
-        ids.map(async (organizationId): Promise<readonly [string, OrganizationMembers]> => {
-          const firstResponse = await api.get(
-            buildUrl(`api/organizations/${organizationId}/users`, {
-              page: '1',
-              page_size: String(maxPageSize),
-            })
-          );
-          const firstPageUsers = await firstResponse.json<UserWithOrganizationRoles[]>();
-          const usersCount = Number(firstResponse.headers.get('Total-Number') ?? 0);
-          const totalPages = Math.ceil(usersCount / maxPageSize);
-
-          const remainingPages =
-            totalPages > 1
-              ? await Promise.all(
-                  Array.from({ length: totalPages - 1 }, async (_, index) =>
-                    api
-                      .get(
-                        buildUrl(`api/organizations/${organizationId}/users`, {
-                          page: String(index + 2),
-                          page_size: String(maxPageSize),
-                        })
-                      )
-                      .json<UserWithOrganizationRoles[]>()
-                  )
-                )
-              : [];
-
-          return [
-            organizationId,
-            {
-              users: [...firstPageUsers, ...remainingPages.flat()],
-              usersCount,
-            },
-          ];
-        })
-      );
-
-      return Object.fromEntries(entries);
-    },
-    [api]
-  );
-
-  return useSWR<Record<string, OrganizationMembers>, RequestError>(
-    organizationIds && organizationIds.length > 0
-      ? ['application-access-control-organization-members', organizationIds]
-      : null,
-    fetchOrganizationMembers
-  );
-};
-
 function useRuleEntities(accessControl?: ApplicationAccessControl): RuleEntities {
   const userIds = accessControl?.userIds;
   const userRoleIds = accessControl?.userRoleIds;
@@ -217,10 +154,6 @@ function useRuleEntities(accessControl?: ApplicationAccessControl): RuleEntities
   const organizationRoleRuleOrganizationIds =
     accessControl && getOrganizationRoleRuleOrganizationIds(accessControl);
   const organizationRoleIds = accessControl && getUniqueOrganizationRoleRuleIds(accessControl);
-  const organizationMemberIds = accessControl && [
-    ...new Set([...(organizationIds ?? []), ...(organizationRoleRuleOrganizationIds ?? [])]),
-  ];
-
   const { data: users, error: usersError } = useEntitiesByIds<User>(
     'application-access-control-users',
     'api/users',
@@ -250,8 +183,12 @@ function useRuleEntities(accessControl?: ApplicationAccessControl): RuleEntities
     );
   const { data: roleUserPreviews, error: roleUserPreviewsError } =
     useRoleUserPreviewsByRoleIds(userRoleIds);
-  const { data: organizationMembers, error: organizationMembersError } =
-    useOrganizationMembersByOrganizationIds(organizationMemberIds);
+  const {
+    organizationMemberPreviews,
+    organizationRoleMemberPreviews,
+    error: memberPreviewsError,
+    isLoading: isMemberPreviewsLoading,
+  } = useMemberPreviews(accessControl);
 
   const hasError = hasAnyRequestError(
     usersError,
@@ -260,7 +197,7 @@ function useRuleEntities(accessControl?: ApplicationAccessControl): RuleEntities
     organizationRoleRuleOrganizationsError,
     organizationRoleRulesError,
     roleUserPreviewsError,
-    organizationMembersError
+    memberPreviewsError
   );
 
   const selectedNames = useMemo(() => {
@@ -308,18 +245,15 @@ function useRuleEntities(accessControl?: ApplicationAccessControl): RuleEntities
     organizationRoleRuleOrganizations: organizationRoleRuleOrganizations ?? [],
     organizationRoleRules: organizationRoleRules ?? [],
     roleUserPreviews: roleUserPreviews ?? {},
-    organizationMembers: organizationMembers ?? {},
+    organizationMemberPreviews,
+    organizationRoleMemberPreviews,
     hasError,
     isLoading: {
       users: isLoadingIds(userIds, users, usersError),
       userRoles: isLoadingIds(userRoleIds, userRoles, userRolesError),
       organizations: isLoadingIds(organizationIds, organizations, organizationsError),
       roleUserPreviews: isLoadingIds(userRoleIds, roleUserPreviews, roleUserPreviewsError),
-      organizationMembers: isLoadingIds(
-        organizationMemberIds,
-        organizationMembers,
-        organizationMembersError
-      ),
+      memberPreviews: isMemberPreviewsLoading,
       organizationRoleRules: isLoadingOrganizationRoleRules({
         accessControl,
         organizationRoleRuleOrganizations,

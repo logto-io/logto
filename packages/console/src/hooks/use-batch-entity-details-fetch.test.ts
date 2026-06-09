@@ -59,6 +59,40 @@ describe('useBatchEntityDetailsFetch', () => {
     expect(api.get).toHaveBeenCalledWith('api/entities/3');
   });
 
+  it('supports a custom fetcher', async () => {
+    const api = createApi();
+    const fetchEntity = jest.fn(async ({ id }: { id: string }) => ({
+      id,
+      name: `custom-${id}`,
+    }));
+    mockedUseApi.mockReturnValue(api as unknown as ReturnType<typeof useApi>);
+    const { result } = renderHook(() => useBatchEntityDetailsFetch());
+
+    const entities = await result.current<TestEntity, { id: string }>(
+      'api/entities',
+      [{ id: '1' }, { id: '2' }],
+      fetchEntity
+    );
+
+    expect(entities).toEqual([
+      { id: '1', name: 'custom-1' },
+      { id: '2', name: 'custom-2' },
+    ]);
+    expect(fetchEntity).toHaveBeenCalledTimes(2);
+    expect(api.get).not.toHaveBeenCalled();
+  });
+
+  it('requires a custom fetcher for non-string items', async () => {
+    const api = createApi();
+    mockedUseApi.mockReturnValue(api as unknown as ReturnType<typeof useApi>);
+    const { result } = renderHook(() => useBatchEntityDetailsFetch());
+
+    await expect(
+      result.current<TestEntity, { id: string }>('api/entities', [{ id: '1' }])
+    ).rejects.toThrow('A custom fetcher is required for non-string entity detail items.');
+    expect(api.get).not.toHaveBeenCalled();
+  });
+
   it('respects the concurrency limit', async () => {
     const pendingEntities = new Map<string, ReturnType<typeof createDeferredEntity>>();
     const api = {
