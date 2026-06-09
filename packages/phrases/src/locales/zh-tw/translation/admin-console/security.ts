@@ -92,10 +92,6 @@ const security = {
     expiration_period: '密碼有效期限（天）',
     expiration_period_description: '密碼在過期前保持有效的天數。密碼有效期限必須至少為 1 天。',
     expiration_period_error: '密碼有效期限必須至少為 1 天。',
-    expiration_reminder: '過期提醒（過期前天數）',
-    expiration_reminder_description:
-      '在過期前多少天提醒用戶並提示重置密碼。用戶可以跳過提醒並繼續登錄。過期提醒期限必須在 0 和有效期限（{{max}} 天）之間。',
-    expiration_reminder_error: '過期提醒期限必須在 0 和有效期限（{{max}} 天）之間。',
   },
   sentinel_policy: {
     card_title: '識別符鎖定',

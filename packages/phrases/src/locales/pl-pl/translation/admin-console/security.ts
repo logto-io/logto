@@ -99,11 +99,6 @@ const security = {
     expiration_period_description:
       'Liczba dni, przez które hasło pozostaje ważne przed wygaśnięciem.',
     expiration_period_error: 'Okres ważności hasła musi wynosić co najmniej 1 dzień.',
-    expiration_reminder: 'Przypomnienie o wygaśnięciu (dni przed wygaśnięciem)',
-    expiration_reminder_description:
-      'Liczba dni przed wygaśnięciem, aby ostrzec użytkowników i zachęcić do resetowania hasła. Użytkownicy mogą pominąć przypomnienie i kontynuować logowanie.',
-    expiration_reminder_error:
-      'Okres przypomnienia o wygaśnięciu musi mieścić się w przedziale od 0 do okresu ważności ({{max}} dni).',
   },
   sentinel_policy: {
     card_title: 'Blokada identyfikatora',

@@ -120,9 +120,6 @@ const description = {
   all_account_creation_options: 'Todas as opções de criação de conta',
   password_expired:
     'A sua palavra-passe expirou e deve ser redefinida antes de poder iniciar sessão.',
-  password_expiration_reminder:
-    'A sua palavra-passe expira em {{days}} dia(s). Recomendamos que a redefina agora.',
-  password_expiration_reminder_skip: 'Ignorar por agora',
   password_expiration_reset: 'Redefinir palavra-passe',
   back_to_sign_in: 'Voltar para o login',
   support_email: 'Email de suporte: <link></link>',

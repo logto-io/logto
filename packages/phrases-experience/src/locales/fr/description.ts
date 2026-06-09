@@ -123,9 +123,6 @@ const description = {
   all_account_creation_options: 'Toutes les options de création de compte',
   password_expired:
     'Votre mot de passe a expiré et doit être réinitialisé avant de pouvoir vous connecter.',
-  password_expiration_reminder:
-    'Votre mot de passe expirera dans {{days}} jour(s). Nous vous recommandons de le réinitialiser maintenant.',
-  password_expiration_reminder_skip: 'Ignorer pour l’instant',
   password_expiration_reset: 'Réinitialiser le mot de passe',
   back_to_sign_in: 'Retour à la connexion',
   support_email: 'Email de support: <link></link>',

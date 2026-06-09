@@ -122,9 +122,6 @@ const description = {
   all_account_creation_options: 'Tutte le opzioni di creazione account',
   password_expired:
     'La tua password è scaduta e deve essere reimpostata prima di poter effettuare l’accesso.',
-  password_expiration_reminder:
-    'La tua password scadrà tra {{days}} giorno/i. Ti consigliamo di reimpostarla ora.',
-  password_expiration_reminder_skip: 'Ignora per ora',
   password_expiration_reset: 'Reimposta password',
   back_to_sign_in: 'Torna al login',
   support_email: 'Email di supporto: <link></link>',

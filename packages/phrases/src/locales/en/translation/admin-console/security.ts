@@ -99,11 +99,6 @@ const security = {
     expiration_period: 'Password valid period (days)',
     expiration_period_description: 'Number of days a password remains valid before it expires.',
     expiration_period_error: 'Password valid period must be at least 1 day.',
-    expiration_reminder: 'Expiration reminder (days before expiry)',
-    expiration_reminder_description:
-      'Number of days before expiry to warn users and prompt a password reset. Users can skip the reminder and proceed with sign-in.',
-    expiration_reminder_error:
-      'Expiration reminder period must be between 0 and the valid period ({{max}} days).',
   },
   sentinel_policy: {
     card_title: 'Identifier lockout',

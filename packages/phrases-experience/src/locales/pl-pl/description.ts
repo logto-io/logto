@@ -121,8 +121,6 @@ const description = {
     'Wprowadź swoje {{types, list(type: disjunction;)}} aby utworzyć nowe konto.',
   all_account_creation_options: 'Wszystkie opcje tworzenia konta',
   password_expired: 'Twoje hasło wygasło i musi zostać zresetowane przed zalogowaniem się.',
-  password_expiration_reminder: 'Twoje hasło wygaśnie za {{days}} dni. Zalecamy jego reset teraz.',
-  password_expiration_reminder_skip: 'Pomiń na razie',
   password_expiration_reset: 'Resetuj hasło',
   back_to_sign_in: 'Wróć do logowania',
   support_email: 'Email wsparcia: <link></link>',

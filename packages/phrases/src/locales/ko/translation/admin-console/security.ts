@@ -96,10 +96,6 @@ const security = {
     expiration_period: '비밀번호 유효 기간 (일)',
     expiration_period_description: '비밀번호가 만료되기 전까지 유효한 일수입니다.',
     expiration_period_error: '비밀번호 유효 기간은 최소 1일이어야 합니다.',
-    expiration_reminder: '만료 알림 (만료 며칠 전)',
-    expiration_reminder_description:
-      '만료 전에 사용자에게 경고하고 비밀번호 재설정을 유도하는 일수입니다. 사용자는 알림을 건너뛰고 로그인을 진행할 수 있습니다.',
-    expiration_reminder_error: '만료 알림 기간은 0일에서 유효 기간({{max}}일) 사이여야 합니다.',
   },
   sentinel_policy: {
     card_title: '식별자 잠금',
