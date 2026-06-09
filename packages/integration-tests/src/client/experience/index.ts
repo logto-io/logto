@@ -47,8 +47,6 @@ export class ExperienceClient extends MockClient {
     });
 
     this.mergeRawCookies(response.headers.getSetCookie());
-
-    return response.json();
   }
 
   public override async submitInteraction(): Promise<RedirectResponse> {
