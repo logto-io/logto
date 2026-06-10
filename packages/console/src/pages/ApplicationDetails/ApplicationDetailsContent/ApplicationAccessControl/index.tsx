@@ -31,7 +31,7 @@ import { areApplicationAccessControlsEqual, hasApplicationAccessControlRules } f
 type Props = {
   readonly application: ApplicationResponse;
   readonly isActive: boolean;
-  readonly onApplicationUpdated: () => void;
+  readonly onApplicationUpdated: (application?: ApplicationResponse) => void | Promise<void>;
 };
 
 type ApplicationAccessControlForm = {
@@ -133,12 +133,12 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
       }
 
       if (shouldUpdateEnabled) {
-        await api
+        const updatedApplication = await api
           .patch(`api/applications/${id}`, {
             json: { appLevelAccessControlEnabled },
           })
           .json<ApplicationResponse>();
-        onApplicationUpdated();
+        await onApplicationUpdated(updatedApplication);
       }
 
       reset({
