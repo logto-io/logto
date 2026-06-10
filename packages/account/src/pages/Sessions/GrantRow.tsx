@@ -19,7 +19,7 @@ const GrantRow = ({ app, isEditable, isRemoving, onRevoke }: GrantRowProps) => {
   return (
     <div className={classNames(styles.row, layoutClassNames.row)}>
       <div className={styles.sessionInfo}>
-        <div className={styles.deviceName}>{app.applicationName ?? app.applicationId}</div>
+        <div className={styles.deviceName}>{app.applicationName}</div>
         <div className={styles.meta}>
           {t('account_center.sessions.granted_at', {
             date: formatTimestamp(app.iat, i18n.language),

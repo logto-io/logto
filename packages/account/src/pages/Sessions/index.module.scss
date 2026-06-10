@@ -122,13 +122,6 @@
   text-align: center;
 }
 
-.loadingState {
-  padding: _.unit(5) _.unit(6);
-  text-align: center;
-  font: var(--font-body-2);
-  color: var(--color-type-secondary);
-}
-
 @mixin mobile-layout {
   .sectionTitle {
     padding-left: 0;

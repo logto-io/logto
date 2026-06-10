@@ -33,7 +33,7 @@ type UserApplicationGrant = {
     readonly clientId: string;
     readonly iat: number;
   };
-  readonly application?: {
+  readonly application: {
     readonly id: string;
     readonly name: string;
   };
@@ -42,7 +42,7 @@ type UserApplicationGrant = {
 export type UserApplicationGrantGroup = {
   readonly id: string;
   readonly applicationId: string;
-  readonly applicationName?: string;
+  readonly applicationName: string;
   readonly iat: number;
   readonly grantIds: string[];
 };
@@ -128,7 +128,7 @@ export const normalizeUserApplicationGrantGroups = (
 ): UserApplicationGrantGroup[] => {
   const groupedByApplicationId = new Map<
     string,
-    { applicationName?: string; iat: number; grantIds: string[] }
+    { applicationName: string; iat: number; grantIds: string[] }
   >();
 
   for (const grant of grants) {
@@ -136,7 +136,7 @@ export const normalizeUserApplicationGrantGroups = (
 
     if (!group) {
       groupedByApplicationId.set(grant.payload.clientId, {
-        applicationName: grant.application?.name,
+        applicationName: grant.application.name,
         iat: grant.payload.iat,
         grantIds: [grant.id],
       });
@@ -144,7 +144,7 @@ export const normalizeUserApplicationGrantGroups = (
     }
 
     groupedByApplicationId.set(grant.payload.clientId, {
-      applicationName: group.applicationName ?? grant.application?.name,
+      applicationName: group.applicationName,
       iat: Math.min(group.iat, grant.payload.iat),
       grantIds: [...group.grantIds, grant.id],
     });

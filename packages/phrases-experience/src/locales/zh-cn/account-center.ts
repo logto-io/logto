@@ -248,7 +248,7 @@ const account_center = {
     loading: '加载中...',
     third_party_apps_title: '第三方应用',
     no_third_party_apps: '没有已授权的第三方应用。',
-    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
+    third_party_apps_load_failed: '第三方应用加载失败，请重试。',
     granted_at: '授权于 {{date}}',
     revoke_grant: '移除',
     revoke_grant_title: '移除第三方应用访问权限',
