@@ -84,6 +84,17 @@ const description = {
     character_types_other:
       'should contain at least {{count}} types of uppercase letters, lowercase letters, digits, and symbols',
   },
+  username_requirements: 'Username {{items, list}}.',
+  username_requirement: {
+    length: 'must be {{min}} to {{max}} characters',
+    characters: 'can only contain {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'uppercase letters',
+    lowercase: 'lowercase letters',
+    number: 'numbers',
+    underscore: 'underscores',
+  },
   use: 'Use',
   single_sign_on_email_form: 'Enter your enterprise email address',
   single_sign_on_connectors_list:
@@ -109,9 +120,6 @@ const description = {
   all_account_creation_options: 'All account creation options',
   back_to_sign_in: 'Back to sign in',
   password_expired: 'Your password has expired and must be reset before you can sign in.',
-  password_expiration_reminder:
-    'Your password will expire in {{days}} day(s). We recommend resetting it now.',
-  password_expiration_reminder_skip: 'Skip for now',
   password_expiration_reset: 'Reset password',
   support_email: 'Support email: <link></link>',
   support_website: 'Support website: <link></link>',

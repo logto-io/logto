@@ -83,6 +83,17 @@ const description = {
     character_types_other:
       'musí obsahovat alespoň {{count}} typů velkých písmen, malých písmen, číslic a symbolů',
   },
+  username_requirements: 'Uživatelské jméno {{items, list}}.',
+  username_requirement: {
+    length: 'musí mít {{min}} až {{max}} znaků',
+    characters: 'může obsahovat pouze {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'velká písmena',
+    lowercase: 'malá písmena',
+    number: 'číslice',
+    underscore: 'podtržítka',
+  },
   use: 'Použít',
   single_sign_on_email_form: 'Zadej svou firemní e-mailovou adresu',
   single_sign_on_connectors_list:
@@ -107,9 +118,6 @@ const description = {
     'Zadej své {{types, list(type: disjunction;)}} pro vytvoření nového účtu.',
   all_account_creation_options: 'Všechny možnosti vytvoření účtu',
   password_expired: 'Platnost vašeho hesla vypršela a před přihlášením musí být resetováno.',
-  password_expiration_reminder:
-    'Platnost vašeho hesla vyprší za {{days}} dní. Doporučujeme jej resetovat nyní.',
-  password_expiration_reminder_skip: 'Zatím přeskočit',
   password_expiration_reset: 'Resetovat heslo',
   back_to_sign_in: 'Zpět k přihlášení',
   support_email: 'E-mail podpory: <link></link>',

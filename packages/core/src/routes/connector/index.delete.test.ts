@@ -122,7 +122,6 @@ describe('connector data routes', () => {
         passwordExpiration: {
           enabled: true,
           validPeriodDays: 30,
-          reminderPeriodDays: 5,
         },
       });
       getLogtoConnectors.mockResolvedValueOnce([
@@ -155,7 +154,6 @@ describe('connector data routes', () => {
         passwordExpiration: {
           enabled: true,
           validPeriodDays: 30,
-          reminderPeriodDays: 5,
         },
       });
 
@@ -175,7 +173,6 @@ describe('connector data routes', () => {
         passwordExpiration: {
           enabled: true,
           validPeriodDays: 30,
-          reminderPeriodDays: 5,
         },
       });
       getLogtoConnectors.mockResolvedValueOnce([

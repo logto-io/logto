@@ -249,6 +249,7 @@ const sign_in_exp = {
           "Accédez au centre de compte pour gérer les paramètres de sécurité tels que l'e-mail, le téléphone, le nom d'utilisateur, le mot de passe, la MFA et les comptes connectés",
         profile:
           'Le centre névralgique pour gérer vos informations personnelles (par exemple, nom, avatar)',
+        sessions: 'Consultez et gérez vos sessions actives sur tous les appareils',
       },
       customize_note:
         "Vous ne voulez pas d'une expérience prête à l'emploi ? Vous pouvez pleinement",

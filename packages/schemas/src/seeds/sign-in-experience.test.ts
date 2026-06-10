@@ -28,9 +28,14 @@ describe('createAdminTenantSignInExperience', () => {
   });
 });
 
-describe('createDefaultSignInExperience (unchanged contract)', () => {
+describe('createDefaultSignInExperience', () => {
   it('still has a two-parameter signature and seeds an empty passwordPolicy', () => {
     const row = createDefaultSignInExperience('some-tenant-id', false);
     expect(row.passwordPolicy).toEqual({});
+  });
+
+  it('keeps legacy null signUpProfileFields for seeded default tenants', () => {
+    const row = createDefaultSignInExperience('some-tenant-id', false);
+    expect(row.signUpProfileFields).toBeNull();
   });
 });

@@ -2,7 +2,7 @@ import { ConnectorType, ForgotPasswordMethod, SignInIdentifier, SignInMode } fro
 import { trySafe } from '@silverhand/essentials';
 
 import { deleteUser, expireUserPassword } from '#src/api/admin-user.js';
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { getSignInExperience, updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
@@ -42,7 +42,6 @@ devFeatureTest.describe('password expiration', () => {
       passwordExpiration: {
         enabled: true,
         validPeriodDays: 30,
-        reminderPeriodDays: 5,
       },
     });
 
@@ -58,6 +57,17 @@ devFeatureTest.describe('password expiration', () => {
   afterAll(async () => {
     await disablePasswordExpiration();
     await trySafe(deleteUser(context.userId!));
+  });
+
+  it('should record enabledAt when password expiration is enabled', async () => {
+    const { passwordExpiration } = await getSignInExperience();
+
+    expect(passwordExpiration).toMatchObject({
+      enabled: true,
+      validPeriodDays: 30,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- jest `expect.any` is typed as `any`
+      enabledAt: expect.any(Number),
+    });
   });
 
   it('should force password reset on next sign-in after password is marked as expired', async () => {

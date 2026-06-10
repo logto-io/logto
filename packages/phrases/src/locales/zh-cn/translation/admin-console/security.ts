@@ -85,16 +85,12 @@ const security = {
       '要求用户在设定的天数后重置密码。通过 SSO 或通行密钥登录的用户不受影响。',
     enable_password_expiration: '启用密码过期',
     enable_password_expiration_description:
-      '要求用户定期重置密码。对于没有记录密码更改日期的现有用户，将根据其账户创建日期进行评估。',
+      '要求用户定期重置密码。对于没有记录密码更改日期的现有用户，将从此策略启用之日起进行评估。',
     enable_password_expiration_tip:
       '只有在登录体验中配置至少一种带有有效连接器的忘记密码方式后，才能启用密码过期。',
     expiration_period: '密码有效期限（天）',
     expiration_period_description: '密码在过期前保持有效的天数。',
     expiration_period_error: '密码有效期限必须至少为 1 天。',
-    expiration_reminder: '过期提醒（过期前天数）',
-    expiration_reminder_description:
-      '在过期前多少天提醒用户并提示重置密码。用户可以跳过提醒并继续登录。',
-    expiration_reminder_error: '过期提醒期限必须在 0 和有效期限（{{max}} 天）之间。',
   },
   sentinel_policy: {
     card_title: '标识符锁定',

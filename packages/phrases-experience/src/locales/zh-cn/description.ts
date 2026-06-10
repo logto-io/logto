@@ -71,6 +71,17 @@ const description = {
     character_types_many: '至少应包含大写字母、小写字母、数字和符号中的 {{count}} 种',
     character_types_other: '至少应包含大写字母、小写字母、数字和符号中的 {{count}} 种',
   },
+  username_requirements: '用户名{{items, list}}。',
+  username_requirement: {
+    length: '必须为 {{min}} 到 {{max}} 个字符',
+    characters: '只能包含{{characters, list}}',
+  },
+  username_character: {
+    uppercase: '大写字母',
+    lowercase: '小写字母',
+    number: '数字',
+    underscore: '下划线',
+  },
   use: '使用',
   single_sign_on_email_form: '输入你的企业电子邮件地址',
   single_sign_on_connectors_list:
@@ -94,8 +105,6 @@ const description = {
   identifier_register_description: '输入您的{{types, list(type: disjunction;)}}以创建新账户。',
   all_account_creation_options: '所有账户创建选项',
   password_expired: '您的密码已过期，必须重置后才能登录。',
-  password_expiration_reminder: '您的密码将在 {{days}} 天后过期。建议立即重置。',
-  password_expiration_reminder_skip: '暂不处理',
   password_expiration_reset: '重置密码',
   back_to_sign_in: '返回登录',
   support_email: '支持邮箱：<link></link>',

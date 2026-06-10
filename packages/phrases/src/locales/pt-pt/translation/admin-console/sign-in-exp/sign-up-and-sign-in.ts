@@ -110,6 +110,42 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       'Às vezes, o Logto pode não reconhecer a sessão de um utilizador na página de início de sessão, como quando uma sessão expira ou o utilizador adiciona aos favoritos ou partilha o link de início de sessão. Por padrão, aparece um erro "sessão desconhecida" 404. Para melhorar a experiência do utilizador, defina um URL de fallback para redirecionar os utilizadores de volta para a sua aplicação e reiniciar a autenticação.',
   },
+  username_policy: {
+    title: 'Política de nome de utilizador',
+    description:
+      'Personalize os requisitos do nome de utilizador, incluindo comprimento, caracteres permitidos e sensibilidade a maiúsculas e minúsculas.',
+    manage_button: 'Gerir',
+    modal_title: 'Política de nome de utilizador',
+    modal_description:
+      'Personalize os requisitos do nome de utilizador para os seus utilizadores finais.',
+    length: {
+      title: 'Comprimento do nome de utilizador',
+      minimum: 'Mínimo',
+      maximum: 'Máximo',
+      min_greater_than_max: 'O comprimento mínimo não pode ser maior que o comprimento máximo.',
+    },
+    allowed_chars: {
+      title: 'Tipos de caracteres permitidos',
+      uppercase: 'Letras maiúsculas (A-Z)',
+      lowercase: 'Letras minúsculas (a-z)',
+      numbers: 'Números (0-9)',
+      underscore: 'Sublinhados (_)',
+      no_valid_leading_char:
+        'Apenas números não são permitidos. Ative pelo menos uma das opções: maiúsculas, minúsculas ou sublinhados.',
+      no_char_selected: 'Selecione pelo menos um tipo de caractere.',
+    },
+    case_sensitive: {
+      title: 'Nomes de utilizador sensíveis a maiúsculas e minúsculas',
+      description:
+        'Tratar letras maiúsculas e minúsculas como distintas. "user123" e "User123" são tratados como nomes de utilizador diferentes.',
+    },
+    case_conflicts: {
+      title: 'Conflitos de nomes de utilizador existentes detetados',
+      description:
+        'Alguns nomes de utilizador entrariam em conflito se a sensibilidade a maiúsculas e minúsculas fosse desativada. Resolva os {{count}} grupos em conflito abaixo antes de guardar.',
+      sample_title: 'Nomes de utilizador em conflito',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

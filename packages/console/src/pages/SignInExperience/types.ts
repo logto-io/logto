@@ -11,8 +11,8 @@ import {
   type AccountCenterFieldControl,
 } from '@logto/schemas';
 /**
- * Omit the `mfa`, `adaptiveMfa`, `captchaPolicy`, `passwordPolicy`, `sentinelPolicy` and `emailBlocklistPolicy` fields from the sign-in experience.
- * Since those fields are not managed by the sign-in experience page.
+ * Fields not managed by the sign-in experience page form. `usernamePolicy` is owned by its own
+ * modal (see `SignUpAndSignIn/UsernamePolicy`), mirroring how `passwordPolicy` lives on its own page.
  */
 type OmittedSignInExperienceKeys = keyof Pick<
   SignInExperience,
@@ -23,6 +23,7 @@ type OmittedSignInExperienceKeys = keyof Pick<
   | 'passwordPolicy'
   | 'emailBlocklistPolicy'
   | 'passwordExpiration'
+  | 'usernamePolicy'
 >;
 
 export enum SignInExperienceTab {

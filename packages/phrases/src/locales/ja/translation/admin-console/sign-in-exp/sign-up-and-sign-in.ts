@@ -107,6 +107,41 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       'Logto がサインインページでユーザーのセッションを認識できないことがあります。例えば、セッションが期限切れになった場合や、ユーザーがサインインリンクをブックマークまたは共有した場合です。デフォルトでは、「不明なセッション」404 エラーが表示されます。ユーザーエクスペリエンスを向上させるために、ユーザーをアプリに戻して認証を再開するためのフォールバック URL を設定します。',
   },
+  username_policy: {
+    title: 'ユーザー名ポリシー',
+    description:
+      'ユーザー名の要件（長さ、使用できる文字、大文字と小文字の区別など）をカスタマイズします。',
+    manage_button: '管理',
+    modal_title: 'ユーザー名ポリシー',
+    modal_description: 'エンドユーザー向けのユーザー名の要件をカスタマイズします。',
+    length: {
+      title: 'ユーザー名の長さ',
+      minimum: '最小',
+      maximum: '最大',
+      min_greater_than_max: '最小の長さは最大の長さを超えることはできません。',
+    },
+    allowed_chars: {
+      title: '使用できる文字の種類',
+      uppercase: '大文字（A-Z）',
+      lowercase: '小文字（a-z）',
+      numbers: '数字（0-9）',
+      underscore: 'アンダースコア（_）',
+      no_valid_leading_char:
+        '数字のみは使用できません。大文字、小文字、アンダースコアのうち少なくとも1つを有効にしてください。',
+      no_char_selected: '少なくとも1つの文字タイプを選択してください。',
+    },
+    case_sensitive: {
+      title: '大文字と小文字を区別するユーザー名',
+      description:
+        '大文字と小文字を別の文字として扱います。「user123」と「User123」は異なるユーザー名として扱われます。',
+    },
+    case_conflicts: {
+      title: '既存のユーザー名の競合が検出されました',
+      description:
+        '大文字と小文字の区別を無効にすると、一部のユーザー名が競合します。保存する前に、以下の{{count}}件の競合グループを解決してください。',
+      sample_title: '競合しているユーザー名',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

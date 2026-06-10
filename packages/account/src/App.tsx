@@ -21,7 +21,6 @@ import LogtoErrorBoundary from './Providers/AppBoundary/LogtoErrorBoundary';
 import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
 import GlobalLoading from './components/GlobalLoading';
-import { isDevFeaturesEnabled } from './constants/env';
 import {
   securityRoute,
   sessionsRoute,
@@ -185,7 +184,7 @@ export const Main = () => {
       />
       {showsSecurityPage && <Route path={securityRoute} element={<Security />} />}
       {showsSessionsPage && <Route path={sessionsRoute} element={<Sessions />} />}
-      {isDevFeaturesEnabled && <Route path={profileRoute} element={<Profile />} />}
+      <Route path={profileRoute} element={<Profile />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>
@@ -199,7 +198,7 @@ const Layout = () => {
   const { pathname } = useLocation();
   const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
   const showsSessionsPage = hasVisibleSessionsPage(accountCenterSettings);
-  const hasProfilePage = isDevFeaturesEnabled;
+  const hasProfilePage = true;
   const isFullPage =
     (pathname === securityRoute && showsSecurityPage) ||
     (pathname === sessionsRoute && showsSessionsPage) ||

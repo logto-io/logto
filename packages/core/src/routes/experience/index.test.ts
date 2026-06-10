@@ -56,7 +56,7 @@ const createRequesterWithMocks = ({
   user?: typeof mockUser;
   mfa?: Mfa;
   singleSignOnEnabled?: boolean;
-  passwordExpiration?: { enabled: boolean; validPeriodDays?: number; reminderPeriodDays?: number };
+  passwordExpiration?: { enabled: boolean; validPeriodDays?: number };
   interactionResult?: Record<string, unknown>;
   persistInteractionResult?: boolean;
 } = {}) => {

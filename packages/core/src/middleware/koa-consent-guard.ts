@@ -1,11 +1,104 @@
-import { experience, OneTimeTokenStatus } from '@logto/schemas';
+import { Prompt } from '@logto/js';
+import { experience, ExtraParamsKey } from '@logto/schemas';
+import { NotFoundError } from '@silverhand/slonik';
 import { type MiddlewareType } from 'koa';
+import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+
+const buildExperienceUrl = (route: string, token: string, loginHint: string) => {
+  const searchParams = new URLSearchParams({
+    [ExtraParamsKey.LoginHint]: loginHint,
+    [ExtraParamsKey.OneTimeToken]: token,
+  });
+
+  return `${route}?${searchParams.toString()}`;
+};
+
+const buildOneTimeTokenErrorUrl = (message: string) => {
+  const searchParams = new URLSearchParams({ errorMessage: message });
+
+  return `${experience.routes.oneTimeToken}?${searchParams.toString()}`;
+};
+
+const hasLoginPrompt = (prompt: unknown) =>
+  typeof prompt === 'string' && prompt.split(' ').includes(Prompt.Login);
+
+const getOneTimeTokenParams = ({
+  one_time_token: token,
+  login_hint: loginHint,
+  prompt,
+}: {
+  one_time_token?: unknown;
+  login_hint?: unknown;
+  prompt?: unknown;
+}) => {
+  if (!token || !loginHint || typeof token !== 'string' || typeof loginHint !== 'string') {
+    return;
+  }
+
+  return { token, loginHint, prompt };
+};
+
+const lastSubmittedLoginGuard = z.object({
+  login: z.object({
+    accountId: z.string(),
+  }),
+});
+
+const getLastSubmittedLoginAccountId = (lastSubmission: unknown) => {
+  const result = lastSubmittedLoginGuard.safeParse(lastSubmission);
+
+  if (!result.success) {
+    return;
+  }
+
+  return result.data.login.accountId;
+};
+
+const isUserNotFoundOrEmailMissingError = (error: unknown) =>
+  error instanceof NotFoundError ||
+  (error instanceof RequestError && error.code === 'user.email_not_exist');
+
+const doesLastSubmittedLoginMatchLoginHint = async ({
+  loginHint,
+  lastSubmission,
+  getPrimaryEmailByUserId,
+}: {
+  loginHint: string;
+  lastSubmission: unknown;
+  getPrimaryEmailByUserId: (userId: string) => Promise<string>;
+}) => {
+  const submittedAccountId = getLastSubmittedLoginAccountId(lastSubmission);
+
+  if (!submittedAccountId) {
+    return false;
+  }
+
+  try {
+    return (await getPrimaryEmailByUserId(submittedAccountId)) === loginHint;
+  } catch (error: unknown) {
+    if (isUserNotFoundOrEmailMissingError(error)) {
+      return false;
+    }
+
+    throw error;
+  }
+};
+
+const shouldContinueWithConsumedOneTimeToken = ({
+  primaryEmail,
+  loginHint,
+  hasMatchingLastSubmittedLogin,
+}: {
+  primaryEmail: string;
+  loginHint: string;
+  hasMatchingLastSubmittedLogin: boolean;
+}) => primaryEmail === loginHint || hasMatchingLastSubmittedLogin;
 
 /**
  * Guard before allowing auto-consent.
@@ -17,53 +110,56 @@ export default function koaConsentGuard<
   ResponseBodyT,
 >(libraries: Libraries, queries: Queries): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
-    const {
-      params: { one_time_token: token, login_hint: loginHint },
-      session,
-    } = ctx.interactionDetails;
+    const { params, session } = ctx.interactionDetails;
 
     assertThat(session, new RequestError({ code: 'session.not_found' }));
 
-    // Handle one-time token before auto-consent
-    if (token && loginHint && typeof token === 'string' && typeof loginHint === 'string') {
-      const { primaryEmail } = await queries.users.findUserById(session.accountId);
+    const oneTimeTokenParams = getOneTimeTokenParams(params);
+
+    if (!oneTimeTokenParams) {
+      return next();
+    }
+
+    const { token, loginHint, prompt } = oneTimeTokenParams;
+    const getPrimaryEmailByUserId = async (userId: string) => {
+      const { primaryEmail } = await queries.users.findUserById(userId);
 
       assertThat(primaryEmail, 'user.email_not_exist');
 
-      if (primaryEmail !== loginHint) {
-        const searchParams = new URLSearchParams({ login_hint: loginHint, one_time_token: token });
-        ctx.redirect(`${experience.routes.switchAccount}?${searchParams.toString()}`);
-        return;
-      }
+      return primaryEmail;
+    };
+    const primaryEmail = await getPrimaryEmailByUserId(session.accountId);
+    const hasMatchingLastSubmittedLogin = await doesLastSubmittedLoginMatchLoginHint({
+      loginHint,
+      lastSubmission: ctx.interactionDetails.lastSubmission,
+      getPrimaryEmailByUserId,
+    });
 
-      try {
-        await libraries.oneTimeTokens.checkOneTimeToken(token, loginHint);
-        const {
-          context: { jitOrganizationIds },
-        } = await libraries.oneTimeTokens.updateOneTimeTokenStatus(
-          token,
-          OneTimeTokenStatus.Consumed
-        );
-
-        if (jitOrganizationIds) {
-          await libraries.users.provisionOrganizations({
-            userId: session.accountId,
-            organizationIds: jitOrganizationIds,
-          });
-        }
-      } catch (error: unknown) {
-        if (error instanceof RequestError) {
-          // Green light for token in consumed state
-          if (error.code === 'one_time_token.token_consumed') {
-            return next();
-          }
-          ctx.redirect(`${experience.routes.oneTimeToken}?errorMessage=${error.message}`);
-          return;
-        }
-        throw error;
-      }
+    if (primaryEmail !== loginHint && !hasLoginPrompt(prompt) && !hasMatchingLastSubmittedLogin) {
+      ctx.redirect(buildExperienceUrl(experience.routes.switchAccount, token, loginHint));
+      return;
     }
 
-    return next();
+    try {
+      await libraries.oneTimeTokens.checkOneTimeToken(token, loginHint);
+    } catch (error: unknown) {
+      if (error instanceof RequestError) {
+        if (
+          error.code === 'one_time_token.token_consumed' &&
+          shouldContinueWithConsumedOneTimeToken({
+            primaryEmail,
+            loginHint,
+            hasMatchingLastSubmittedLogin,
+          })
+        ) {
+          return next();
+        }
+        ctx.redirect(buildOneTimeTokenErrorUrl(error.message));
+        return;
+      }
+      throw error;
+    }
+
+    ctx.redirect(buildExperienceUrl(experience.routes.oneTimeToken, token, loginHint));
   };
 }

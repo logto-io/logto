@@ -123,26 +123,33 @@ const application_details = {
   custom_data_invalid: 'カスタムデータは有効な JSON オブジェクトである必要があります',
   access_control: {
     name: 'ルール',
-    title: 'アプリレベルのアクセス制御',
-    description: 'アクセスルールを設定して、このアプリにサインインできるユーザーを制限します。',
-    enable: 'アクセス制御を有効化',
+    title: 'アクセス制御',
+    description: 'アプリレベルのアクセス制御ルールをカスタマイズします。',
+    enable: 'アプリレベルのアクセス制御を有効化',
     enable_description:
-      '設定済みのルールに少なくとも 1 つ一致するユーザーのみが、このアプリにアクセスできます。',
+      'きめ細かなアクセス制御を有効にして、このアプリケーションにアクセスできるユーザーを制限します。無効の場合、システム内の登録済みユーザー全員がアクセスできます。',
     enable_without_rules_notice:
       'アクセス制御を有効にする前に、少なくとも 1 つのアクセスルールを追加してください。',
-    enabled_notice:
-      'アクセス制御は有効です。少なくとも 1 つのルールに一致するユーザーのみが、このアプリにアクセスできます。',
-    disabled_notice:
-      'アクセス制御は無効です。登録済みのすべてのユーザーがこのアプリにアクセスできます。',
     load_error: 'アクセス制御ルールの読み込みに失敗しました。',
+    custom_allow_rules: 'カスタム許可ルール',
+    custom_allow_rules_description:
+      '特定の属性を持つユーザーが自動的にアクセスできるようにルールを作成します。有効にするには少なくとも 1 つのルールが必要です。',
     rules: 'アクセスルール',
+    add_rules: 'ルールを追加',
     rules_description:
       'ユーザーはいずれかの設定済みルールに一致すると、このアプリにアクセスできます。',
     empty_rules_description: 'まだルールが設定されていません。',
+    delete_rule_confirmation: 'このルールを削除してもよろしいですか？',
+    rule_table_rules: 'ルール',
+    rule_table_description: '説明',
+    rule_table_users: 'ユーザー',
+    rule_table_members: 'メンバー',
+    rule_table_user_id: 'ユーザー ID',
     rule_count: '{{count}} 件のルール',
     rule_count_other: '{{count}} 件のルール',
     rule_users: 'ユーザー',
     rule_users_description: '特定のユーザーがこのアプリにアクセスできます。',
+    rule_roles: 'ロール',
     rule_user_roles: 'ユーザーロール',
     rule_user_roles_description:
       '選択したユーザーロールに割り当てられたユーザーがこのアプリにアクセスできます。',

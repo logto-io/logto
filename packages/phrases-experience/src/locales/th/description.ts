@@ -83,6 +83,17 @@ const description = {
     character_types_other:
       'ต้องมีอย่างน้อย {{count}} ประเภทในตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก ตัวเลข และสัญลักษณ์',
   },
+  username_requirements: 'ชื่อผู้ใช้{{items, list}}',
+  username_requirement: {
+    length: 'ต้องมี {{min}} ถึง {{max}} อักขระ',
+    characters: 'มีได้เฉพาะ {{characters, list}} เท่านั้น',
+  },
+  username_character: {
+    uppercase: 'ตัวพิมพ์ใหญ่',
+    lowercase: 'ตัวพิมพ์เล็ก',
+    number: 'ตัวเลข',
+    underscore: 'ขีดล่าง',
+  },
   use: 'ใช้',
   single_sign_on_email_form: 'กรอกอีเมลบริษัทของคุณ',
   single_sign_on_connectors_list:
@@ -106,9 +117,6 @@ const description = {
   identifier_register_description: 'กรอก {{types, list(type: disjunction;)}} เพื่อสร้างบัญชีใหม่',
   all_account_creation_options: 'ตัวเลือกการสร้างบัญชีทั้งหมด',
   password_expired: 'รหัสผ่านของคุณหมดอายุแล้วและต้องรีเซ็ตก่อนจึงจะสามารถลงชื่อเข้าใช้ได้',
-  password_expiration_reminder:
-    'รหัสผ่านของคุณจะหมดอายุในอีก {{days}} วัน เราขอแนะนำให้รีเซ็ตตอนนี้',
-  password_expiration_reminder_skip: 'ข้ามไปก่อน',
   password_expiration_reset: 'รีเซ็ตรหัสผ่าน',
   back_to_sign_in: 'กลับไปหน้าเข้าสู่ระบบ',
   support_email: 'อีเมลติดต่อ: <link></link>',

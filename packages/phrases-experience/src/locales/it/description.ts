@@ -84,6 +84,17 @@ const description = {
     character_types_other:
       'dovrebbe contenere almeno {{count}} tipi di lettere maiuscole, lettere minuscole, numeri e simboli',
   },
+  username_requirements: 'Nome utente {{items, list}}.',
+  username_requirement: {
+    length: 'deve contenere da {{min}} a {{max}} caratteri',
+    characters: 'può contenere solo {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'lettere maiuscole',
+    lowercase: 'lettere minuscole',
+    number: 'numeri',
+    underscore: 'trattini bassi',
+  },
   use: 'Utilizzare',
   single_sign_on_email_form: 'Inserisci il tuo indirizzo email aziendale',
   single_sign_on_connectors_list:
@@ -111,9 +122,6 @@ const description = {
   all_account_creation_options: 'Tutte le opzioni di creazione account',
   password_expired:
     'La tua password è scaduta e deve essere reimpostata prima di poter effettuare l’accesso.',
-  password_expiration_reminder:
-    'La tua password scadrà tra {{days}} giorno/i. Ti consigliamo di reimpostarla ora.',
-  password_expiration_reminder_skip: 'Ignora per ora',
   password_expiration_reset: 'Reimposta password',
   back_to_sign_in: 'Torna al login',
   support_email: 'Email di supporto: <link></link>',

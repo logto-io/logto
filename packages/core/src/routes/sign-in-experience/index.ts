@@ -307,6 +307,19 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       const currentPasswordExpiration =
         passwordExpirationResult?.success === true ? passwordExpirationResult.data : undefined;
 
+      // `enabledAt` is server-managed and never editable via the API: preserve the stored value
+      // while the policy stays enabled, stamp a fresh timestamp when toggling disabled -> enabled,
+      // and ignore any client-provided value.
+      const storedEnabledAt = currentSettings.passwordExpiration.enabled
+        ? currentSettings.passwordExpiration.enabledAt
+        : undefined;
+      const passwordExpirationToPersist = currentPasswordExpiration?.enabled
+        ? {
+            ...currentPasswordExpiration,
+            enabledAt: storedEnabledAt ?? Date.now(),
+          }
+        : currentPasswordExpiration;
+
       if (currentPasswordExpiration?.enabled) {
         const forgotPasswordAvailability = getForgotPasswordAvailability(
           connectors,
@@ -404,7 +417,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         ...conditional(
           EnvSet.values.isDevFeaturesEnabled &&
             passwordExpiration &&
-            currentPasswordExpiration && { passwordExpiration: currentPasswordExpiration }
+            passwordExpirationToPersist && { passwordExpiration: passwordExpirationToPersist }
         ),
         // Username policy is gated until the feature ships: ignore writes when the flag is off.
         ...conditional(EnvSet.values.isDevFeaturesEnabled && usernamePolicy && { usernamePolicy }),

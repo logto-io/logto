@@ -11,11 +11,18 @@ import {
   type WebAuthnAuthenticationOptions,
   type WebAuthnVerificationPayload,
 } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 
 import MockClient from '#src/client/index.js';
 
 import { experienceRoutes } from './const.js';
 import type { SanitizedInteractionStorageData, RedirectResponse } from './types.js';
+
+const isRedirectResponse = (data: unknown): data is RedirectResponse =>
+  typeof data === 'object' &&
+  data !== null &&
+  'redirectTo' in data &&
+  typeof data.redirectTo === 'string';
 
 export class ExperienceClient extends MockClient {
   public extraHeaders: Record<string, string> = {};
@@ -41,18 +48,31 @@ export class ExperienceClient extends MockClient {
   }
 
   public async initInteraction(payload: CreateExperienceApiPayload) {
-    return this.api
-      .put(experienceRoutes.prefix, {
-        headers: this.headers,
-        json: payload,
-      })
-      .json();
+    const response = await this.api.put(experienceRoutes.prefix, {
+      headers: this.headers,
+      json: payload,
+    });
+
+    this.mergeRawCookies(response.headers.getSetCookie());
   }
 
   public override async submitInteraction(): Promise<RedirectResponse> {
-    return this.api
-      .post(`${experienceRoutes.prefix}/submit`, { headers: this.headers })
-      .json<RedirectResponse>();
+    const response = await this.api.post(`${experienceRoutes.prefix}/submit`, {
+      headers: this.headers,
+    });
+
+    this.mergeRawCookies(response.headers.getSetCookie());
+
+    const body = await response.text();
+
+    if (!body) {
+      return { redirectTo: '' };
+    }
+
+    const data: unknown = JSON.parse(body);
+    assert(isRedirectResponse(data), new Error('Invalid submit interaction response'));
+
+    return data;
   }
 
   public async verifyPassword(payload: PasswordVerificationPayload) {
@@ -61,7 +81,7 @@ export class ExperienceClient extends MockClient {
         headers: this.headers,
         json: payload,
       })
-      .json<{ verificationId: string; reminder?: { daysUntilExpiration: number } }>();
+      .json<{ verificationId: string }>();
   }
 
   public async sendVerificationCode(payload: {

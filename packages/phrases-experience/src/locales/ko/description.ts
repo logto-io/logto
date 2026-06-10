@@ -75,6 +75,17 @@ const description = {
     character_types_many: '최소 {{count}} 종류의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
     character_types_other: '최소 {{count}} 개의 대문자, 소문자, 숫자, 특수 기호를 포함해야 함',
   },
+  username_requirements: '사용자 이름 조건: {{items, list}}.',
+  username_requirement: {
+    length: '{{min}}~{{max}}자',
+    characters: '{{characters, list}}만 사용 가능',
+  },
+  username_character: {
+    uppercase: '대문자',
+    lowercase: '소문자',
+    number: '숫자',
+    underscore: '밑줄',
+  },
   use: '사용',
   single_sign_on_email_form: '기업 이메일 주소를 입력하세요',
   single_sign_on_connectors_list:
@@ -100,9 +111,6 @@ const description = {
     '새 계정을 만들려면 {{types, list(type: disjunction;)}}을(를) 입력하세요.',
   all_account_creation_options: '모든 계정 생성 옵션',
   password_expired: '비밀번호가 만료되었습니다. 로그인하기 전에 재설정해야 합니다.',
-  password_expiration_reminder:
-    '비밀번호가 {{days}}일 후에 만료됩니다. 지금 재설정하는 것이 좋습니다.',
-  password_expiration_reminder_skip: '지금은 건너뛰기',
   password_expiration_reset: '비밀번호 재설정',
   back_to_sign_in: '로그인으로 돌아가기',
   support_email: '지원 이메일: <link></link>',

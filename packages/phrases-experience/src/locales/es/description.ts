@@ -86,6 +86,17 @@ const description = {
     character_types_other:
       'debe contener al menos {{count}} tipos de letras mayúsculas, letras minúsculas, dígitos y símbolos',
   },
+  username_requirements: 'Nombre de usuario {{items, list}}.',
+  username_requirement: {
+    length: 'debe tener entre {{min}} y {{max}} caracteres',
+    characters: 'solo puede contener {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'letras mayúsculas',
+    lowercase: 'letras minúsculas',
+    number: 'números',
+    underscore: 'guiones bajos',
+  },
   use: 'Usar',
   single_sign_on_email_form: 'Ingrese su dirección de correo electrónico corporativo',
   single_sign_on_connectors_list:
@@ -113,9 +124,6 @@ const description = {
   all_account_creation_options: 'Todas las opciones de creación de cuenta',
   password_expired:
     'Tu contraseña ha caducado y debe ser restablecida antes de que puedas iniciar sesión.',
-  password_expiration_reminder:
-    'Tu contraseña caducará en {{days}} día(s). Recomendamos restablecerla ahora.',
-  password_expiration_reminder_skip: 'Omitir por ahora',
   password_expiration_reset: 'Restablecer contraseña',
   back_to_sign_in: 'Volver a iniciar sesión',
   support_email: 'Correo electrónico de soporte: <link></link>',

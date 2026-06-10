@@ -1,5 +1,21 @@
 @use '@/scss/underscore' as _;
 
+.container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: _.unit(2);
+  gap: _.unit(4);
+
+  &.withSubmitActionBar {
+    padding-bottom: 0;
+  }
+}
+
+.fields {
+  flex: 1;
+}
+
 .notification {
   margin-block-start: _.unit(3);
 }
@@ -11,58 +27,103 @@
   color: var(--color-primary-50);
 }
 
-.ruleRows {
+.rulesSection {
   display: flex;
   flex-direction: column;
   gap: _.unit(3);
   margin-block-start: _.unit(5);
 }
 
-.ruleRowsHeader {
+.rulesHeader {
   display: flex;
   flex-direction: column;
   gap: _.unit(1);
 }
 
-.ruleRowsTitle {
+.rulesTitle {
   font: var(--font-title-3);
   color: var(--color-text);
 }
 
-.ruleRowsDescription {
+.rulesDescription {
   font: var(--font-body-2);
   color: var(--color-text-secondary);
 }
 
-.ruleRow {
+.emptyRules {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: _.unit(4);
-  padding: _.unit(4);
+}
+
+.addAnother {
+  display: flex;
+}
+
+.dropdown {
+  min-width: 208px;
+}
+
+.plusIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.rulesTable {
+  width: 100%;
+  overflow: hidden;
   border: 1px solid var(--color-divider);
+  border-spacing: 0;
   border-radius: 8px;
+  table-layout: fixed;
+
+  th,
+  td {
+    padding: _.unit(4);
+    border-block-start: 1px solid var(--color-divider);
+    font: var(--font-body-2);
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  thead {
+    th {
+      border-block-start: none;
+      color: var(--color-text);
+      font: var(--font-label-2);
+    }
+
+    th:first-child {
+      width: 44%;
+    }
+
+    th:last-child {
+      width: 52px;
+    }
+  }
+
+  tbody {
+    tr {
+      height: 56px;
+    }
+  }
 }
 
-.ruleContent {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  gap: _.unit(1);
+.ruleGroupRow {
+  background: var(--color-layer-2);
+
+  td {
+    color: var(--color-text-secondary);
+    font: var(--font-label-2);
+  }
 }
 
-.ruleTitle {
-  font: var(--font-body-1);
-  color: var(--color-text);
+.ruleName {
+  color: var(--color-primary-50);
 }
 
-.ruleDescription {
-  font: var(--font-body-2);
-  color: var(--color-text-secondary);
+.ruleDelete {
+  text-align: end;
 }
 
-.ruleCount {
-  flex-shrink: 0;
-  font: var(--font-label-2);
+.ruleDelete svg {
   color: var(--color-text-secondary);
 }

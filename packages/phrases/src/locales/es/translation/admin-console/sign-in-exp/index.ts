@@ -250,6 +250,7 @@ const sign_in_exp = {
           'Accede al centro de cuentas para gestionar la configuración de seguridad como correo electrónico, teléfono, nombre de usuario, contraseña, MFA y cuentas conectadas',
         profile:
           'El centro principal para gestionar tu información personal (por ejemplo, nombre, avatar)',
+        sessions: 'Ver y gestionar tus sesiones activas en todos los dispositivos',
       },
       customize_note: '¿No quieres la experiencia predefinida? Puedes',
       customize_link: 'personalizar totalmente tus flujos con la Account API.',

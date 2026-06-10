@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { type ReactElement } from 'react';
 
 import FormField from '@/ds-components/FormField';
+import { type Props as PaginationProps } from '@/ds-components/Pagination';
 import transferLayout from '@/scss/transfer.module.scss';
 
 import type DangerousRaw from '../DangerousRaw';
@@ -28,6 +29,11 @@ export type Props<TEntry extends DataEntry> = {
   readonly setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
   readonly availableDataList?: TEntry[];
   readonly availableDataGroups?: Array<DataGroup<TEntry>>;
+  readonly getSelectedDataTitle?: (data: SelectedDataEntry<TEntry>) => string;
+  readonly isSourceLoading?: boolean;
+  readonly sourcePagination?: Omit<PaginationProps, 'className' | 'mode'>;
+  readonly onSourceSearch?: (keyword: string) => void;
+  readonly onExpandDataGroup?: (group: DataGroup<TEntry>) => void;
   readonly className?: string;
   readonly containerClassName?: string;
 };
@@ -38,6 +44,11 @@ function DataTransferBox<TEntry extends DataEntry = DataEntry>({
   setSelectedData,
   availableDataList,
   availableDataGroups,
+  getSelectedDataTitle,
+  isSourceLoading,
+  sourcePagination,
+  onSourceSearch,
+  onExpandDataGroup,
   className,
   containerClassName,
 }: Props<TEntry>) {
@@ -52,10 +63,14 @@ function DataTransferBox<TEntry extends DataEntry = DataEntry>({
             setSelectedData,
             availableDataList,
             availableDataGroups,
+            isSourceLoading,
+            sourcePagination,
+            onSourceSearch,
+            onExpandDataGroup,
           }}
         />
         <div className={transferLayout.verticalBar} />
-        <TargetPanel {...{ selectedData, setSelectedData }} />
+        <TargetPanel {...{ selectedData, setSelectedData, getSelectedDataTitle }} />
       </div>
     </FormField>
   );

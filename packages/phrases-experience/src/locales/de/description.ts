@@ -86,6 +86,17 @@ const description = {
     character_types_other:
       'sollte mindestens {{count}} Kategorien der folgenden Zeichenarten enthalten: Großbuchstaben, Kleinbuchstaben, Zahlen und Symbole',
   },
+  username_requirements: 'Benutzername {{items, list}}.',
+  username_requirement: {
+    length: 'muss {{min}} bis {{max}} Zeichen lang sein',
+    characters: 'darf nur {{characters, list}} enthalten',
+  },
+  username_character: {
+    uppercase: 'Großbuchstaben',
+    lowercase: 'Kleinbuchstaben',
+    number: 'Zahlen',
+    underscore: 'Unterstriche',
+  },
   use: 'Verwenden',
   single_sign_on_email_form: 'Gib deine Unternehmens-E-Mail-Adresse ein.',
   single_sign_on_connectors_list:
@@ -112,9 +123,6 @@ const description = {
   all_account_creation_options: 'Alle Kontoerstellungsoptionen',
   password_expired:
     'Ihr Passwort ist abgelaufen und muss zurückgesetzt werden, bevor Sie sich anmelden können.',
-  password_expiration_reminder:
-    'Ihr Passwort läuft in {{days}} Tag(en) ab. Wir empfehlen, es jetzt zurückzusetzen.',
-  password_expiration_reminder_skip: 'Vorerst überspringen',
   password_expiration_reset: 'Passwort zurücksetzen',
   back_to_sign_in: 'Zurück zur Anmeldung',
   support_email: 'Support-E-Mail: <link></link>',

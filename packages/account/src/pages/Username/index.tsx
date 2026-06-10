@@ -1,5 +1,6 @@
 import Button from '@experience/shared/components/Button';
 import SmartInputField from '@experience/shared/components/InputFields/SmartInputField';
+import { buildUsernamePolicyDescription } from '@experience/shared/utils/username-policy-description';
 import { validateUsername } from '@experience/shared/utils/validate-username';
 import { AccountCenterControlValue, SignInIdentifier } from '@logto/schemas';
 import { useContext, useEffect, useState, type FormEvent } from 'react';
@@ -11,6 +12,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { updateUsername } from '@ac/apis/account';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { usernameSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
@@ -26,6 +28,7 @@ const Username = () => {
   const { loading } = useContext(LoadingContext);
   const {
     accountCenterSettings,
+    experienceSettings,
     refreshUserInfo,
     verificationId,
     setVerificationId,
@@ -79,7 +82,12 @@ const Username = () => {
       return;
     }
 
-    const validationError = validateUsername(username);
+    // Per-tenant policy enforcement is gated until the feature ships; without the flag the
+    // always-on hard floor is the only client-side check, matching production behavior.
+    const validationError = validateUsername(
+      username,
+      isDevFeaturesEnabled ? experienceSettings?.usernamePolicy : undefined
+    );
 
     if (validationError) {
       const message =
@@ -135,6 +143,11 @@ const Username = () => {
           enabledTypes={[SignInIdentifier.Username]}
           errorMessage={usernameError}
           isDanger={Boolean(usernameError)}
+          description={
+            isDevFeaturesEnabled
+              ? buildUsernamePolicyDescription(experienceSettings?.usernamePolicy, t)
+              : undefined
+          }
           onChange={(inputValue) => {
             setPendingUsername(inputValue.value);
           }}

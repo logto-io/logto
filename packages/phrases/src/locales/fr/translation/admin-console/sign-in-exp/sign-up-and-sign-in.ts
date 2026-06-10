@@ -116,6 +116,43 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       "Parfois, Logto peut ne pas reconnaître la session d’un utilisateur sur la page de connexion, comme lorsque la session expire ou que l’utilisateur met en signet ou partage le lien de connexion. Par défaut, une erreur 404 de “session inconnue” apparaît. Pour améliorer l'expérience utilisateur, définissez une URL de secours pour rediriger les utilisateurs vers votre application et redémarrer l'authentification.",
   },
+  username_policy: {
+    title: 'Politique de nom d’utilisateur',
+    description:
+      'Personnalisez les exigences relatives au nom d’utilisateur, notamment la longueur, les caractères autorisés et la sensibilité à la casse.',
+    manage_button: 'Gérer',
+    modal_title: 'Politique de nom d’utilisateur',
+    modal_description:
+      'Personnalisez les exigences de nom d’utilisateur pour vos utilisateurs finaux.',
+    length: {
+      title: 'Longueur du nom d’utilisateur',
+      minimum: 'Minimum',
+      maximum: 'Maximum',
+      min_greater_than_max:
+        'La longueur minimale ne peut pas être supérieure à la longueur maximale.',
+    },
+    allowed_chars: {
+      title: 'Types de caractères autorisés',
+      uppercase: 'Lettres majuscules (A-Z)',
+      lowercase: 'Lettres minuscules (a-z)',
+      numbers: 'Chiffres (0-9)',
+      underscore: 'Traits de soulignement (_)',
+      no_valid_leading_char:
+        'Les chiffres seuls ne sont pas autorisés. Activez au moins l’une des options : majuscules, minuscules ou traits de soulignement.',
+      no_char_selected: 'Sélectionnez au moins un type de caractère.',
+    },
+    case_sensitive: {
+      title: 'Noms d’utilisateur sensibles à la casse',
+      description:
+        'Traiter les lettres majuscules et minuscules comme distinctes. « user123 » et « User123 » sont considérés comme des noms d’utilisateur différents.',
+    },
+    case_conflicts: {
+      title: 'Conflits de noms d’utilisateur existants détectés',
+      description:
+        'Certains noms d’utilisateur entreraient en conflit si la sensibilité à la casse est désactivée. Résolvez les {{count}} groupes en conflit ci-dessous avant d’enregistrer.',
+      sample_title: 'Noms d’utilisateur en conflit',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

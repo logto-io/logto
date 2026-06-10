@@ -80,6 +80,17 @@ const description = {
     character_types_other:
       'en az {{count}} tane büyük harf, küçük harf, rakam ve sembol içermelidir',
   },
+  username_requirements: 'Kullanıcı adı {{items, list}}.',
+  username_requirement: {
+    length: '{{min}} ile {{max}} karakter arasında olmalıdır',
+    characters: 'yalnızca {{characters, list}} içerebilir',
+  },
+  username_character: {
+    uppercase: 'büyük harfler',
+    lowercase: 'küçük harfler',
+    number: 'rakamlar',
+    underscore: 'alt çizgiler',
+  },
   use: 'Kullan',
   single_sign_on_email_form: 'Kurumsal e-posta adresinizi girin',
   single_sign_on_connectors_list:
@@ -104,9 +115,6 @@ const description = {
     'Yeni bir hesap oluşturmak için {{types, list(type: disjunction;)}} girin.',
   all_account_creation_options: 'Tüm hesap oluşturma seçenekleri',
   password_expired: 'Şifrenizin süresi doldu ve giriş yapmadan önce sıfırlanması gerekiyor.',
-  password_expiration_reminder:
-    'Şifrenizin süresi {{days}} gün içinde dolacak. Şimdi sıfırlamanızı öneririz.',
-  password_expiration_reminder_skip: 'Şimdilik atla',
   password_expiration_reset: 'Şifreyi sıfırla',
   back_to_sign_in: 'Girişe dön',
   support_email: 'Destek e-postası: <link></link>',

@@ -46,5 +46,11 @@ export const handleSearchParametersData = () => {
 
   const conditionalParamString = condString(parameters.size > 0 && `?${parameters.toString()}`);
 
-  window.history.replaceState({}, '', window.location.pathname + conditionalParamString);
+  // Preserve the existing history state (e.g. React Router's location state) to avoid
+  // losing in-progress flow data (like Continue page's interactionEvent) on page refresh.
+  window.history.replaceState(
+    window.history.state,
+    '',
+    window.location.pathname + conditionalParamString
+  );
 };

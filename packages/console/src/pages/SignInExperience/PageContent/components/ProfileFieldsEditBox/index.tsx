@@ -19,6 +19,7 @@ import { DropdownItem } from '@/ds-components/Dropdown';
 import { type RequestError } from '@/hooks/use-api';
 
 import useI18nFieldLabel from '../../CollectUserProfile/use-i18n-field-label';
+import { isBuiltInCustomProfileFieldKey } from '../../CollectUserProfile/utils';
 
 import ProfileFieldItem from './ProfileFieldItem';
 import styles from './index.module.scss';
@@ -133,6 +134,11 @@ function ProfileFieldsEditBox<
                   return (
                     <ProfileFieldItem
                       label={fieldLabelByName.get(fieldName) ?? fieldName}
+                      fieldKey={
+                        isBuiltInCustomProfileFieldKey(fieldName)
+                          ? fieldName
+                          : `customData.${fieldName}`
+                      }
                       isDisabled={isDisabled}
                       disabledHint={disabledReason}
                       onDelete={() => {
@@ -167,7 +173,14 @@ function ProfileFieldsEditBox<
                   append({ name: fieldName } as never);
                 }}
               >
-                {label || getI18nLabel(fieldName)}
+                <span>
+                  {label || getI18nLabel(fieldName)}
+                  <span className={styles.dropdownFieldKey}>
+                    {isBuiltInCustomProfileFieldKey(fieldName)
+                      ? fieldName
+                      : `customData.${fieldName}`}
+                  </span>
+                </span>
               </DropdownItem>
             );
           })}

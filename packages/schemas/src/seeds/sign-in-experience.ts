@@ -56,6 +56,7 @@ export const createDefaultSignInExperience = (
     customCss: null,
     customContent: {},
     customUiAssets: null,
+    signUpProfileFields: null,
     passwordPolicy: {},
     mfa: {
       factors: [],

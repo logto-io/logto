@@ -41,7 +41,7 @@ const sign_in_experiences = {
   password_expiration_not_enabled:
     'Password expiration policy is not enabled. Enable it in the sign-in experience settings before expiring passwords.',
   password_expiration_invalid_period_days:
-    'Reminder period days must be less than valid period days when password expiration is enabled.',
+    'Valid period days must be a positive integer when password expiration is enabled.',
   username_policy_case_conflicts_exist:
     'Cannot switch to case-insensitive usernames while usernames that differ only by case exist. Resolve the conflicts and try again.',
 };

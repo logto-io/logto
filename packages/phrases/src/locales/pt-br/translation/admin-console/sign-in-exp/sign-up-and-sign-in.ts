@@ -110,6 +110,41 @@ const sign_up_and_sign_in = {
     unknown_session_redirect_url_tip:
       'Às vezes, o Logto pode não reconhecer a sessão de um usuário na página de login, como quando uma sessão expira ou o usuário salva ou compartilha o link de login. Por padrão, um erro 404 de “sessão desconhecida” aparece. Para melhorar a experiência do usuário, defina uma URL de fallback para redirecionar os usuários de volta ao seu aplicativo e reiniciar a autenticação.',
   },
+  username_policy: {
+    title: 'Política de nome de usuário',
+    description:
+      'Personalize os requisitos de nome de usuário, incluindo comprimento, caracteres permitidos e diferenciação de maiúsculas e minúsculas.',
+    manage_button: 'Gerenciar',
+    modal_title: 'Política de nome de usuário',
+    modal_description: 'Personalize os requisitos de nome de usuário para seus usuários finais.',
+    length: {
+      title: 'Comprimento do nome de usuário',
+      minimum: 'Mínimo',
+      maximum: 'Máximo',
+      min_greater_than_max: 'O comprimento mínimo não pode ser maior que o comprimento máximo.',
+    },
+    allowed_chars: {
+      title: 'Tipos de caracteres permitidos',
+      uppercase: 'Letras maiúsculas (A-Z)',
+      lowercase: 'Letras minúsculas (a-z)',
+      numbers: 'Números (0-9)',
+      underscore: 'Sublinhados (_)',
+      no_valid_leading_char:
+        'Apenas números não são permitidos. Habilite pelo menos uma das opções: maiúsculas, minúsculas ou sublinhados.',
+      no_char_selected: 'Selecione pelo menos um tipo de caractere.',
+    },
+    case_sensitive: {
+      title: 'Nomes de usuário com diferenciação de maiúsculas e minúsculas',
+      description:
+        'Tratar letras maiúsculas e minúsculas como distintas. "user123" e "User123" são tratados como nomes de usuário diferentes.',
+    },
+    case_conflicts: {
+      title: 'Conflitos de nomes de usuário existentes detectados',
+      description:
+        'Alguns nomes de usuário entrariam em conflito se a diferenciação de maiúsculas e minúsculas fosse desativada. Resolva os {{count}} grupos em conflito abaixo antes de salvar.',
+      sample_title: 'Nomes de usuário em conflito',
+    },
+  },
 };
 
 export default Object.freeze(sign_up_and_sign_in);

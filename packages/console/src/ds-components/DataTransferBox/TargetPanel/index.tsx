@@ -11,9 +11,14 @@ import styles from './index.module.scss';
 type Props<TEntry extends DataEntry> = {
   readonly selectedData: Array<SelectedDataEntry<TEntry>>;
   readonly setSelectedData: (dataList: Array<SelectedDataEntry<TEntry>>) => void;
+  readonly getSelectedDataTitle?: (data: SelectedDataEntry<TEntry>) => string;
 };
 
-function TargetPanel<TEntry extends DataEntry>({ selectedData, setSelectedData }: Props<TEntry>) {
+function TargetPanel<TEntry extends DataEntry>({
+  selectedData,
+  setSelectedData,
+  getSelectedDataTitle,
+}: Props<TEntry>) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const onDelete = useCallback(
@@ -32,7 +37,12 @@ function TargetPanel<TEntry extends DataEntry>({ selectedData, setSelectedData }
       </div>
       <div className={transferLayout.boxContent}>
         {selectedData.map((data) => (
-          <TargetDataItem key={data.id} data={data} onDelete={onDelete} />
+          <TargetDataItem
+            key={data.id}
+            data={data}
+            getTitle={getSelectedDataTitle}
+            onDelete={onDelete}
+          />
         ))}
       </div>
     </div>

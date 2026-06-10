@@ -83,6 +83,17 @@ const description = {
     character_types_other:
       'deve conter pelo menos {{count}} tipos de letras maiúsculas, letras minúsculas, dígitos e símbolos',
   },
+  username_requirements: 'Nome de utilizador {{items, list}}.',
+  username_requirement: {
+    length: 'deve ter de {{min}} a {{max}} caracteres',
+    characters: 'pode conter apenas {{characters, list}}',
+  },
+  username_character: {
+    uppercase: 'letras maiúsculas',
+    lowercase: 'letras minúsculas',
+    number: 'números',
+    underscore: 'sublinhados',
+  },
   use: 'Usar',
   single_sign_on_email_form: 'Insira o endereço de email corporativo',
   single_sign_on_connectors_list:
@@ -109,9 +120,6 @@ const description = {
   all_account_creation_options: 'Todas as opções de criação de conta',
   password_expired:
     'A sua palavra-passe expirou e deve ser redefinida antes de poder iniciar sessão.',
-  password_expiration_reminder:
-    'A sua palavra-passe expira em {{days}} dia(s). Recomendamos que a redefina agora.',
-  password_expiration_reminder_skip: 'Ignorar por agora',
   password_expiration_reset: 'Redefinir palavra-passe',
   back_to_sign_in: 'Voltar para o login',
   support_email: 'Email de suporte: <link></link>',

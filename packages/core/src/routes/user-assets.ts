@@ -12,7 +12,6 @@ import { generateStandardId } from '@logto/shared';
 import { format } from 'date-fns';
 import { object } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SystemContext from '#src/tenants/SystemContext.js';
@@ -33,7 +32,7 @@ export default function userAssetsRoutes<T extends ManagementApiRouter>(
     }),
     async (ctx, next) => {
       const { storageProviderConfig } = SystemContext.shared;
-      const isExperienceAvatarUploadEnabled = EnvSet.values.isDevFeaturesEnabled;
+      const isExperienceAvatarUploadEnabled = true;
       const status = storageProviderConfig
         ? {
             status: 'ready',

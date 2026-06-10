@@ -7,10 +7,7 @@ import {
 import { generateStandardId } from '@logto/shared';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import {
-  type PasswordExpirationResult,
-  verifyPasswordExpirationPolicy,
-} from '#src/libraries/password-expiration.js';
+import { verifyPasswordExpirationPolicy } from '#src/libraries/password-expiration.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -129,13 +126,13 @@ export class PasswordVerification
    * The route keeps this outside the sentinel guard so expired passwords do not count as failed
    * credential attempts.
    *
-   * @throws RequestError with 422 status if the password is already expired.
-   * @throws RequestError with 500 status if the expiration policy is misconfigured.
+   * @throws RequestError with 422 status if the password is already expired, or if an enabled
+   * policy has an invalid valid period.
    */
-  async verifyPasswordExpiration(user: User): Promise<PasswordExpirationResult> {
+  async verifyPasswordExpiration(user: User): Promise<void> {
     const { passwordExpiration } =
       await this.queries.signInExperiences.findDefaultSignInExperience();
 
-    return verifyPasswordExpirationPolicy(passwordExpiration, user);
+    verifyPasswordExpirationPolicy(passwordExpiration, user);
   }
 }

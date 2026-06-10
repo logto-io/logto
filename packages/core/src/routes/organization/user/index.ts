@@ -28,18 +28,24 @@ export default function userRoutes(
     '/:id/users',
     koaPagination(),
     koaGuard({
-      query: z.object({ q: z.string().optional() }),
+      query: z.object({
+        q: z.string().optional(),
+        organizationRoleId: z.string().min(1).optional(),
+      }),
       params: z.object({ id: z.string().min(1) }),
       response: userWithOrganizationRolesGuard.array(),
       status: [200, 404],
     }),
     async (ctx, next) => {
       const search = parseSearchOptions(userSearchKeys, ctx.guard.query);
+      const { organizationRoleId } = ctx.guard.query;
+      const organizationRoleFilter = organizationRoleId ? { organizationRoleId } : {};
 
       const [totalCount, entities] = await organizations.relations.users.getUsersByOrganizationId(
         ctx.guard.params.id,
         ctx.pagination,
-        search
+        search,
+        organizationRoleFilter
       );
 
       ctx.pagination.totalCount = totalCount;
