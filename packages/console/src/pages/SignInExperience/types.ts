@@ -10,6 +10,9 @@ import {
   type SignUpProfileFields,
   type AccountCenterFieldControl,
 } from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
+
+import { isDevFeaturesEnabled } from '@/consts/env';
 /**
  * Fields not managed by the sign-in experience page form. `usernamePolicy` is owned by its own
  * modal (see `SignUpAndSignIn/UsernamePolicy`), mirroring how `passwordPolicy` lives on its own page.
@@ -40,7 +43,7 @@ const accountCenterFieldKeys: Array<keyof AccountCenterFieldControl> = [
   'social',
   'password',
   'mfa',
-  'passkey',
+  ...conditionalArray(isDevFeaturesEnabled && ('passkey' as const)),
   'username',
   'name',
   'avatar',
