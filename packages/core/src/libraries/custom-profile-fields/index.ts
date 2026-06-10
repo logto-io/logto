@@ -14,7 +14,6 @@ import { sql } from '@silverhand/slonik';
 import { BaseCache } from '#src/caches/base-cache.js';
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildUpdateWhereWithPool } from '#src/database/update-where.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { createCustomProfileFieldsQueries } from '#src/queries/custom-profile-fields.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -218,16 +217,9 @@ export const createCustomProfileFieldsLibrary = (queries: Queries) => {
     }
   };
 
-  /**
-   * Returns `undefined` when the dev feature is off (the field is silently dropped) so callers can
-   * conditionally spread the value into the update payload without changing legacy behavior.
-   */
   const normalizeProfileFields = async <ProfileFields extends NormalizableProfileFields>(
     profileFields: ProfileFields
   ): Promise<ProfileFields | undefined> => {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return undefined;
-    }
     if (!profileFields) {
       return profileFields;
     }

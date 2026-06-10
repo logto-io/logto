@@ -21,7 +21,6 @@ import LogtoErrorBoundary from './Providers/AppBoundary/LogtoErrorBoundary';
 import PageContextProvider from './Providers/PageContextProvider';
 import PageContext from './Providers/PageContextProvider/PageContext';
 import GlobalLoading from './components/GlobalLoading';
-import { isDevFeaturesEnabled } from './constants/env';
 import {
   securityRoute,
   profileRoute,
@@ -181,7 +180,7 @@ export const Main = () => {
         element={<SocialFlow mode="remove" />}
       />
       {showsSecurityPage && <Route path={securityRoute} element={<Security />} />}
-      {isDevFeaturesEnabled && <Route path={profileRoute} element={<Profile />} />}
+      <Route path={profileRoute} element={<Profile />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>
@@ -193,7 +192,7 @@ const Layout = () => {
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
   const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
-  const hasProfilePage = isDevFeaturesEnabled;
+  const hasProfilePage = true;
   const isSecurityFullPage = pathname === securityRoute && showsSecurityPage;
   const isProfileFullPage = pathname === profileRoute && hasProfilePage;
   const isFullPage = isSecurityFullPage || isProfileFullPage;

@@ -20,7 +20,6 @@ import {
   reservedCustomDataKeySet,
   reservedSignInIdentifierKeySet,
 } from '#src/constants/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -145,17 +144,17 @@ const validateFieldName = (name: string) => {
 /**
  * Resolve the ordered list of custom profile fields that should be collected during sign-up.
  *
- * - When the dev feature is OFF, or `signUpProfileFields` is `null`/`undefined` (legacy tenants),
- *   fall back to returning the full catalog as-is (the caller already orders by `sie_order`).
- * - When the dev feature is ON and `signUpProfileFields` is an explicit array, filter the catalog
- *   down to entries in that list and preserve the list order. Unknown names are dropped silently,
- *   since they may have been deleted since the config was saved.
+ * - When `signUpProfileFields` is `null`/`undefined` (legacy tenants), fall back to returning the
+ *   full catalog as-is (the caller already orders by `sie_order`).
+ * - When `signUpProfileFields` is an explicit array, filter the catalog down to entries in that
+ *   list and preserve the list order. Unknown names are dropped silently, since they may have been
+ *   deleted since the config was saved.
  */
 export const resolveSignUpCustomProfileFields = (
   catalog: Readonly<CustomProfileField[]>,
   signUpProfileFields: SignInExperience['signUpProfileFields']
 ): Readonly<CustomProfileField[]> => {
-  if (!EnvSet.values.isDevFeaturesEnabled || !signUpProfileFields) {
+  if (!signUpProfileFields) {
     return catalog;
   }
 
