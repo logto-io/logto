@@ -18,10 +18,19 @@
   color: var(--color-text-secondary);
 }
 
+.separatorColumn {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+}
+
 .separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Match the input box height so the dash centers on the input, not the label + input column. */
+  height: 36px;
   color: var(--color-text-secondary);
-  /* Align the dash with the inputs, accounting for the label row above each field. */
-  padding-top: _.unit(6);
 }
 
 .allowedChars {
