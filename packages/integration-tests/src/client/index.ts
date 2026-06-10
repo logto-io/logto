@@ -1,5 +1,4 @@
-import type { LogtoConfig, SignInOptions } from '@logto/node';
-import LogtoClient from '@logto/node';
+import LogtoClient, { PersistKey, type LogtoConfig, type SignInOptions } from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas';
 import type { Nullable, Optional } from '@silverhand/essentials';
 import { assert } from '@silverhand/essentials';
@@ -7,6 +6,7 @@ import ky, { type KyInstance } from 'ky';
 
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 
+import { getSignInCallbackContext, getSubmittingCallbackUri } from './callback-uri.js';
 import { MemoryStorage } from './storage.js';
 
 export const defaultConfig = {
@@ -14,6 +14,49 @@ export const defaultConfig = {
   appId: demoAppApplicationId,
   persistAccessToken: false,
 };
+
+const getCookieMergeKey = (cookie: string) => {
+  const [nameValue, ...attributes] = cookie.split(';').map((value) => value.trim());
+  const name = nameValue?.split('=')[0];
+
+  if (!name) {
+    return;
+  }
+
+  const scope = new Map<string, string | undefined>();
+
+  for (const attribute of attributes) {
+    const [key, value] = attribute.split('=');
+
+    if (key) {
+      scope.set(key.toLowerCase(), value);
+    }
+  }
+
+  return [name, scope.get('domain') ?? '', scope.get('path') ?? ''].join('|');
+};
+
+const getCookieHeaderValue = (cookie: string) => cookie.split(';')[0]?.trim();
+
+const getCookiePath = (cookie: string) => {
+  const [, ...attributes] = cookie.split(';').map((value) => value.trim());
+
+  for (const attribute of attributes) {
+    const [key, value] = attribute.split('=');
+
+    if (key?.toLowerCase() === 'path') {
+      return value ?? '/';
+    }
+  }
+
+  return '/';
+};
+
+const isCookiePathMatched = (cookiePath: string, requestPath: string) =>
+  cookiePath === '/' ||
+  requestPath === cookiePath ||
+  requestPath.startsWith(cookiePath.endsWith('/') ? cookiePath : `${cookiePath}/`);
+
 export default class MockClient {
   public rawCookies: string[] = [];
   protected readonly config: LogtoConfig;
@@ -38,7 +81,19 @@ export default class MockClient {
 
   // TODO: Rename to sessionCookies or something accurate
   public get interactionCookie(): string {
-    return this.rawCookies.join('; ');
+    return this.getCookieHeader();
+  }
+
+  public getCookieHeader(pathname?: string): string {
+    const cookies = pathname
+      ? this.rawCookies.filter((cookie) => isCookiePathMatched(getCookiePath(cookie), pathname))
+      : this.rawCookies;
+
+    return cookies
+      .toSorted((cookieA, cookieB) => getCookiePath(cookieB).length - getCookiePath(cookieA).length)
+      .map((cookie) => getCookieHeaderValue(cookie))
+      .filter(Boolean)
+      .join('; ');
   }
 
   public get parsedCookies(): Map<string, Optional<string>> {
@@ -61,19 +116,8 @@ export default class MockClient {
     redirectUri = demoAppRedirectUri,
     options: Omit<SignInOptions, 'redirectUri'> = {}
   ) {
-    await this.logto.signIn({ redirectUri, ...options });
-
-    assert(this.navigateUrl, new Error('Unable to navigate to sign in uri'));
-    assert(
-      this.navigateUrl.startsWith(`${this.config.endpoint}/oidc/auth`),
-      new Error('Unable to navigate to sign in uri')
-    );
-
     // Mock SDK sign-in navigation
-    const response = await ky(this.navigateUrl, {
-      redirect: 'manual',
-      throwHttpErrors: false,
-    });
+    const response = await this.startAuthorization(redirectUri, options);
 
     // Note: should redirect to sign-in page
     assert(
@@ -87,6 +131,26 @@ export default class MockClient {
     // Get session cookie
     this.rawCookies = response.headers.getSetCookie();
     assert(this.interactionCookie, new Error('Get cookie from authorization endpoint failed'));
+  }
+
+  public async startAuthorization(
+    redirectUri = demoAppRedirectUri,
+    options: Omit<SignInOptions, 'redirectUri'> = {},
+    cookie?: string
+  ) {
+    await this.logto.signIn({ redirectUri, ...options });
+
+    assert(this.navigateUrl, new Error('Unable to navigate to sign in uri'));
+    assert(
+      this.navigateUrl.startsWith(`${this.config.endpoint}/oidc/auth`),
+      new Error('Unable to navigate to sign in uri')
+    );
+
+    return ky(this.navigateUrl, {
+      headers: cookie ? { cookie } : undefined,
+      redirect: 'manual',
+      throwHttpErrors: false,
+    });
   }
 
   /**
@@ -103,18 +167,43 @@ export default class MockClient {
 
     const authResponse = await ky.get(redirectTo, {
       headers: {
-        cookie: this.interactionCookie,
+        cookie: this.getCookieHeader(new URL(redirectTo).pathname),
       },
       redirect: 'manual',
       throwHttpErrors: false,
     });
+    const authResponseLocation = authResponse.headers.get('location');
+
+    if (authResponse.status === 200) {
+      const signInSession: unknown = JSON.parse(
+        (await this.storage.getItem(PersistKey.SignInSession)) ?? 'null'
+      );
+      const { redirectUri, state } = getSignInCallbackContext(signInSession);
+      const signInCallbackUri = getSubmittingCallbackUri(
+        await authResponse.text(),
+        redirectUri,
+        state
+      );
+
+      this.mergeRawCookies(authResponse.headers.getSetCookie());
+      await this.logto.handleSignInCallback(signInCallbackUri);
+
+      return;
+    }
 
     // Note: Should redirect to logto consent page
-    assert(
-      authResponse.status === 303 &&
-        authResponse.headers.get('location') === `/consent?app_id=${this.config.appId}`,
-      new Error('Invoke auth before consent failed')
-    );
+    if (
+      authResponse.status !== 303 ||
+      authResponseLocation !== `/consent?app_id=${this.config.appId}`
+    ) {
+      const body = await authResponse.text();
+
+      throw new Error(
+        `Invoke auth before consent failed: ${authResponse.status} ${
+          authResponseLocation ?? ''
+        } ${body.slice(0, 200)}`
+      );
+    }
 
     this.rawCookies = authResponse.headers.getSetCookie();
 
@@ -130,7 +219,7 @@ export default class MockClient {
   public async manualConsent(redirectTo: string) {
     const authCodeResponse = await ky.get(redirectTo, {
       headers: {
-        cookie: this.interactionCookie,
+        cookie: this.getCookieHeader(new URL(redirectTo).pathname),
       },
       redirect: 'manual',
       throwHttpErrors: false,
@@ -190,6 +279,28 @@ export default class MockClient {
     this.rawCookies = cookies;
   }
 
+  public mergeRawCookies(cookies: string[]) {
+    const cookieMap = new Map<string, string>();
+
+    for (const cookie of this.rawCookies) {
+      const key = getCookieMergeKey(cookie);
+
+      if (key) {
+        cookieMap.set(key, cookie);
+      }
+    }
+
+    for (const cookie of cookies) {
+      const key = getCookieMergeKey(cookie);
+
+      if (key) {
+        cookieMap.set(key, cookie);
+      }
+    }
+
+    this.rawCookies = [...cookieMap.values()];
+  }
+
   public async send<Args extends unknown[], T>(
     api: (cookie: string, ...args: Args) => Promise<T>,
     ...payload: Args
@@ -217,7 +328,7 @@ export default class MockClient {
 
     const consentResponse = await ky.get(`${this.config.endpoint}/consent`, {
       headers: {
-        cookie: this.interactionCookie,
+        cookie: this.getCookieHeader('/consent'),
       },
       redirect: 'manual',
       throwHttpErrors: false,
@@ -232,7 +343,7 @@ export default class MockClient {
 
     const authCodeResponse = await ky.get(redirectTo, {
       headers: {
-        cookie: this.interactionCookie,
+        cookie: this.getCookieHeader(new URL(redirectTo).pathname),
       },
       redirect: 'manual',
       throwHttpErrors: false,
@@ -242,6 +353,7 @@ export default class MockClient {
     assert(authCodeResponse.status === 303, new Error('Complete auth failed'));
     const signInCallbackUri = authCodeResponse.headers.get('location');
     assert(signInCallbackUri, new Error('Get sign in callback uri failed'));
+    this.mergeRawCookies(authCodeResponse.headers.getSetCookie());
 
     return signInCallbackUri;
   };
