@@ -158,7 +158,13 @@ function UsernamePolicyModal({ policy, onClose }: Props) {
                   )}
                 />
               </div>
-              <span className={styles.separator}>–</span>
+              <div className={styles.separatorColumn}>
+                {/* Empty label keeps the dash on the same baseline as the inputs below the labels. */}
+                <span aria-hidden className={styles.lengthLabel}>
+                  &nbsp;
+                </span>
+                <span className={styles.separator}>–</span>
+              </div>
               <div className={styles.lengthField}>
                 <span className={styles.lengthLabel}>{t('length.maximum')}</span>
                 <Controller
