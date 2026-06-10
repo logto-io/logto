@@ -31,6 +31,38 @@ const sanitise = (value: unknown): unknown => {
   return value;
 };
 
+/**
+ * Recursively strip null characters (U+0000) from every string in the value. PostgreSQL rejects
+ * null bytes in `jsonb` (error code `22P05`), so leaving them in would make `insertLog` throw. Since
+ * logs are inserted in a `finally` block, that throw would replace the original response with a 500.
+ */
+const nullCharacter = String.fromCodePoint(0);
+
+const stripFromString = (value: string): string =>
+  value.includes(nullCharacter) ? value.replaceAll(nullCharacter, '') : value;
+
+const stripNullCharacters = (value: unknown): unknown => {
+  if (typeof value === 'string') {
+    return stripFromString(value);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((element) => stripNullCharacters(element));
+  }
+
+  if (isRecord(value)) {
+    // Strip from keys as well: PostgreSQL rejects null bytes anywhere in `jsonb`, keys included.
+    return Object.fromEntries(
+      Object.entries(value).map(([key, element]) => [
+        stripFromString(key),
+        stripNullCharacters(element),
+      ])
+    );
+  }
+
+  return value;
+};
+
 const filterSensitiveData = (data: Record<string, unknown>): Record<string, unknown> => {
   return Object.fromEntries(
     Object.entries(data).map(([key, value]) => {
@@ -187,10 +219,12 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
 
       await Promise.all(
         entries.map(async ({ payload }) => {
+          const fullPayload = { ...basePayload, ...payload };
           return insertLog({
             id: generateStandardId(),
             key: payload.key,
-            payload: { ...basePayload, ...payload },
+            // eslint-disable-next-line no-restricted-syntax -- structural identity transform preserves the payload shape
+            payload: stripNullCharacters(fullPayload) as typeof fullPayload,
           });
         })
       );

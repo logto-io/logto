@@ -483,6 +483,7 @@ export default function initOidc(
   oidc.use(async (ctx, next) => {
     const jsonContentType = 'application/json';
     const formUrlEncodedContentType = 'application/x-www-form-urlencoded';
+    const nullByte = String.fromCodePoint(0);
 
     // Replicate the behavior of `oidc-provider` for parsing the request body
     if (ctx.req.readable) {
@@ -496,6 +497,13 @@ export default function initOidc(
         limit: '56kb',
         encoding: charset ?? 'utf8',
       });
+
+      // Reject null bytes: they are invalid in request bodies and, once parsed, a value can reach
+      // the `jsonb` audit log column, which PostgreSQL rejects (error `22P05`) and surfaces as a 500
+      // instead of a clean client error. `InvalidRequest` is rendered as a 400 by `koaOidcErrorHandler`.
+      if (body.includes(nullByte)) {
+        throw new errors.InvalidRequest('null bytes are not allowed in the request body');
+      }
 
       // WARNING: [Registration actions](https://github.com/panva/node-oidc-provider/blob/6a0bcbcd35ed3e6179e81f0ab97a45f5e4e58f48/lib/actions/registration.js#L4) are using
       // 'application/json' for body parsing. Update relatively when we enable that feature.
