@@ -273,7 +273,8 @@ const account_center = {
     loading: 'Chargement...',
     third_party_apps_title: 'Applications tierces',
     no_third_party_apps: 'Aucune application tierce autorisée.',
-    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
+    third_party_apps_load_failed:
+      'Impossible de charger les applications tierces. Veuillez réessayer.',
     granted_at: 'Autorisé le {{date}}',
     revoke_grant: 'Supprimer',
     revoke_grant_title: "Supprimer l'accès de l'application tierce",

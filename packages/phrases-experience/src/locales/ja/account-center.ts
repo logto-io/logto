@@ -263,7 +263,8 @@ const account_center = {
     loading: '読み込み中...',
     third_party_apps_title: 'サードパーティアプリ',
     no_third_party_apps: '認可済みのサードパーティアプリケーションはありません。',
-    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
+    third_party_apps_load_failed:
+      'サードパーティアプリを読み込めませんでした。もう一度お試しください。',
     granted_at: '{{date}} に認可',
     revoke_grant: '削除',
     revoke_grant_title: 'サードパーティアプリのアクセスを削除',

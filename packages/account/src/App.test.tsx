@@ -6,7 +6,7 @@ import renderWithPageContext, {
   mockAccountCenterSettings,
 } from './__mocks__/RenderWithPageContext';
 
-jest.mock('./constants/env', () => ({
+jest.mock('@ac/constants/env', () => ({
   __esModule: true,
   isDevFeaturesEnabled: false,
 }));

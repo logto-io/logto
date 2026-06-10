@@ -258,7 +258,7 @@ const account_center = {
     loading: '로딩 중...',
     third_party_apps_title: '서드파티 앱',
     no_third_party_apps: '승인된 서드파티 애플리케이션이 없습니다.',
-    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
+    third_party_apps_load_failed: '서드파티 앱을 불러오지 못했습니다. 다시 시도해 주세요.',
     granted_at: '{{date}}에 승인',
     revoke_grant: '제거',
     revoke_grant_title: '서드파티 앱 액세스 제거',

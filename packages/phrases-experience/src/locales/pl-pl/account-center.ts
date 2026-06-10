@@ -268,7 +268,8 @@ const account_center = {
     loading: 'Ładowanie...',
     third_party_apps_title: 'Aplikacje firm trzecich',
     no_third_party_apps: 'Brak autoryzowanych aplikacji firm trzecich.',
-    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
+    third_party_apps_load_failed:
+      'Nie udało się załadować aplikacji firm trzecich. Spróbuj ponownie.',
     granted_at: 'Autoryzowano {{date}}',
     revoke_grant: 'Usuń',
     revoke_grant_title: 'Usuń dostęp aplikacji firmy trzeciej',

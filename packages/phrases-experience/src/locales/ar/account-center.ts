@@ -259,7 +259,7 @@ const account_center = {
     loading: 'جارٍ التحميل...',
     third_party_apps_title: 'تطبيقات الطرف الثالث',
     no_third_party_apps: 'لا توجد تطبيقات طرف ثالث معتمدة.',
-    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
+    third_party_apps_load_failed: 'فشل تحميل تطبيقات الطرف الثالث. يُرجى المحاولة مرة أخرى.',
     granted_at: 'تم التفويض {{date}}',
     revoke_grant: 'إزالة',
     revoke_grant_title: 'إزالة وصول تطبيق الطرف الثالث',

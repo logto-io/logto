@@ -11,7 +11,7 @@ if (typeof document !== 'undefined') {
   ReactModal.setAppElement(document.body);
 }
 
-jest.mock('./constants/env', () => ({
+jest.mock('@ac/constants/env', () => ({
   __esModule: true,
   isDevFeaturesEnabled: false,
 }));

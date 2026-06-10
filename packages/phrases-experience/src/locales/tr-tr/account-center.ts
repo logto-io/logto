@@ -266,7 +266,7 @@ const account_center = {
     loading: 'Yükleniyor...',
     third_party_apps_title: 'Üçüncü taraf uygulamalar',
     no_third_party_apps: 'Yetkilendirilmiş üçüncü taraf uygulama yok.',
-    third_party_apps_load_failed: 'Failed to load third-party apps. Please try again.',
+    third_party_apps_load_failed: 'Üçüncü taraf uygulamalar yüklenemedi. Lütfen tekrar deneyin.',
     granted_at: '{{date}} tarihinde yetkilendirildi',
     revoke_grant: 'Kaldır',
     revoke_grant_title: 'Üçüncü taraf uygulama erişimini kaldır',
