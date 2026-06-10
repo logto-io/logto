@@ -47,6 +47,7 @@ const description = {
   enter_username: 'ユーザー名を入力する',
   enter_username_description:
     'ユーザー名はサインインの代替手段です。ユーザー名には、文字、数字、アンダースコアのみを含める必要があります。',
+  enter_username_policy_description: 'ユーザー名はサインインの代替手段です。{{requirements}}',
   link_email: 'メールアドレスをリンクする',
   link_phone: '電話番号をリンクする',
   link_email_or_phone: 'メールアドレスまたは電話番号をリンクする',

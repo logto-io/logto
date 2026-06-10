@@ -65,6 +65,7 @@ const account_center = {
   username: {
     title: 'Nastavit uživatelské jméno',
     description: 'Uživatelské jméno může obsahovat pouze písmena, čísla a podtržítka.',
+    policy_description: '{{requirements}}',
     success: 'Uživatelské jméno bylo úspěšně změněno.',
   },
   security: {

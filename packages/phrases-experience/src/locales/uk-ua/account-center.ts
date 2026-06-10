@@ -67,6 +67,7 @@ const account_center = {
   username: {
     title: "Встановити ім'я користувача",
     description: "Ім'я користувача може містити лише літери, цифри та символи підкреслення.",
+    policy_description: '{{requirements}}',
     success: "Ім'я користувача успішно оновлено.",
   },
   security: {

@@ -46,6 +46,7 @@ const description = {
   enter_username: 'Imposta username',
   enter_username_description:
     "L'username è un'alternativa per l'accesso. L'username deve contenere solo lettere, numeri e trattini bassi.",
+  enter_username_policy_description: "L'username è un'alternativa per l'accesso. {{requirements}}",
   link_email: 'Collega emails',
   link_phone: 'Collega telefono',
   link_email_or_phone: 'Collega email o telefono',

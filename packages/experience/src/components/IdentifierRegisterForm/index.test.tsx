@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- exhaustive matrix of sign-up methods, SSO, and username policy cases */
 import {
   SignInIdentifier,
   experience,
@@ -197,42 +198,90 @@ describe('<IdentifierRegisterForm />', () => {
     });
   });
 
-  test('username violating the per-tenant policy should throw, then clear when valid', async () => {
+  describe('username policy violations', () => {
     // Dev features are on under jest (NODE_ENV=test), so the per-tenant policy is enforced. This
-    // verifies the policy flows from the SIE context through the form into the validator.
+    // verifies the policy flows from the SIE context through the form into the validator. The test
+    // i18n returns the key, so the requirements sentence surfaces as its frame key.
     const restrictivePolicy: UsernamePolicy = {
       caseSensitive: true,
       minLength: 4,
       maxLength: 8,
       allowedChars: { lowercase: true, uppercase: false, numbers: false, underscore: false },
     };
-    const { queryByText, getByText, container } = renderForm(
-      [SignInIdentifier.Username],
-      [],
-      restrictivePolicy
-    );
-    const submitButton = getByText('action.create_account');
-    const usernameInput = container.querySelector('input[name=identifier]');
 
-    assert(usernameInput, new Error('username input not found'));
+    test('a policy violation shows the full requirements sentence, then clears when valid', async () => {
+      const { queryByText, getByText, container } = renderForm(
+        [SignInIdentifier.Username],
+        [],
+        restrictivePolicy
+      );
+      const submitButton = getByText('action.create_account');
+      const usernameInput = container.querySelector('input[name=identifier]');
 
-    // Shorter than the policy minimum (min 4).
-    act(() => {
-      fireEvent.change(usernameInput, { target: { value: 'abc' } });
-      fireEvent.submit(submitButton);
-    });
-    await waitFor(() => {
-      expect(queryByText('error.username_too_short')).not.toBeNull();
-      expect(registerWithUsername).not.toBeCalled();
+      assert(usernameInput, new Error('username input not found'));
+
+      // Shorter than the policy minimum (min 4): full requirements, not the specific violation.
+      act(() => {
+        fireEvent.change(usernameInput, { target: { value: 'abc' } });
+        fireEvent.submit(submitButton);
+      });
+      await waitFor(() => {
+        expect(queryByText('description.username_requirements')).not.toBeNull();
+        expect(queryByText('error.username_too_short')).toBeNull();
+        expect(registerWithUsername).not.toBeCalled();
+      });
+
+      // A username satisfying the policy clears the error.
+      act(() => {
+        fireEvent.change(usernameInput, { target: { value: 'abcd' } });
+        fireEvent.blur(usernameInput);
+      });
+      await waitFor(() => {
+        expect(queryByText('description.username_requirements')).toBeNull();
+      });
     });
 
-    // A username satisfying the policy clears the error.
-    act(() => {
-      fireEvent.change(usernameInput, { target: { value: 'abcd' } });
-      fireEvent.blur(usernameInput);
+    test('a hard-floor violation keeps its specific error under a restrictive policy', async () => {
+      const { queryByText, getByText, container } = renderForm(
+        [SignInIdentifier.Username],
+        [],
+        restrictivePolicy
+      );
+      const submitButton = getByText('action.create_account');
+      const usernameInput = container.querySelector('input[name=identifier]');
+
+      assert(usernameInput, new Error('username input not found'));
+
+      // Leading digit is a hard-floor rule the requirements sentence does not describe.
+      act(() => {
+        fireEvent.change(usernameInput, { target: { value: '1abc' } });
+        fireEvent.submit(submitButton);
+      });
+      await waitFor(() => {
+        expect(queryByText('error.username_should_not_start_with_number')).not.toBeNull();
+        expect(queryByText('description.username_requirements')).toBeNull();
+        expect(registerWithUsername).not.toBeCalled();
+      });
     });
-    await waitFor(() => {
-      expect(queryByText('error.username_too_short')).toBeNull();
+
+    test('a policy violation falls back to the specific error when the policy is permissive', async () => {
+      // The permissive default produces no requirements sentence, yet its max length (128) can
+      // still be violated — the specific error must remain.
+      const { queryByText, getByText, container } = renderForm([SignInIdentifier.Username]);
+      const submitButton = getByText('action.create_account');
+      const usernameInput = container.querySelector('input[name=identifier]');
+
+      assert(usernameInput, new Error('username input not found'));
+
+      act(() => {
+        fireEvent.change(usernameInput, { target: { value: `a${'b'.repeat(128)}` } });
+        fireEvent.submit(submitButton);
+      });
+      await waitFor(() => {
+        expect(queryByText('error.username_too_long')).not.toBeNull();
+        expect(queryByText('description.username_requirements')).toBeNull();
+        expect(registerWithUsername).not.toBeCalled();
+      });
     });
   });
 
@@ -496,3 +545,4 @@ describe('<IdentifierRegisterForm />', () => {
     });
   });
 });
+/* eslint-enable max-lines */

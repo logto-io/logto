@@ -65,6 +65,7 @@ const account_center = {
   username: {
     title: 'ตั้งชื่อผู้ใช้',
     description: 'ชื่อผู้ใช้ต้องมีเฉพาะตัวอักษร ตัวเลข และขีดล่างเท่านั้น',
+    policy_description: '{{requirements}}',
     success: 'อัปเดตชื่อผู้ใช้เรียบร้อยแล้ว',
   },
   security: {

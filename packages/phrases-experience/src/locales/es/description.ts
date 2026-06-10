@@ -47,6 +47,8 @@ const description = {
   enter_username: 'Establecer nombre de usuario',
   enter_username_description:
     'El nombre de usuario es una alternativa para iniciar sesión. Debe contener solo letras, números y guiones bajos.',
+  enter_username_policy_description:
+    'El nombre de usuario es una alternativa para iniciar sesión. {{requirements}}',
   link_email: 'Vincular correo electrónico',
   link_phone: 'Vincular teléfono',
   link_email_or_phone: 'Vincular correo electrónico o teléfono',

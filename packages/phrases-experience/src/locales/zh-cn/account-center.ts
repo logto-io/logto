@@ -64,6 +64,7 @@ const account_center = {
   username: {
     title: '设置用户名',
     description: '用户名只能包含字母、数字和下划线。',
+    policy_description: '{{requirements}}',
     success: '用户名更新成功。',
   },
   security: {

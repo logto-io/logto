@@ -65,6 +65,7 @@ const account_center = {
   username: {
     title: 'Установить имя пользователя',
     description: 'Имя пользователя может содержать только буквы, цифры и символы подчеркивания.',
+    policy_description: '{{requirements}}',
     success: 'Имя пользователя успешно обновлено.',
   },
   security: {

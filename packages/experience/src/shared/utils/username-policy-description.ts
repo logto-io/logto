@@ -11,8 +11,9 @@ const characterTypes = [
 ] as const;
 
 /**
- * Build a localized requirements hint for the username field from the tenant policy, e.g.
+ * Build a localized username requirements sentence from the tenant policy, e.g.
  * "Username must be 4 to 8 characters and contain only lowercase letters, numbers, and underscores."
+ * Surfaced as a field hint or page description depending on the consumer.
  *
  * Returns `undefined` when the policy matches the permissive default (length and character types
  * both unrestricted) — there is nothing worth surfacing. Mirrors the password policy's

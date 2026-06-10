@@ -46,6 +46,7 @@ const description = {
   enter_username: 'ตั้งชื่อผู้ใช้',
   enter_username_description:
     'ชื่อผู้ใช้สามารถใช้เข้าสู่ระบบแทนได้ ต้องประกอบด้วยตัวอักษร ตัวเลข และขีดล่างเท่านั้น',
+  enter_username_policy_description: 'ชื่อผู้ใช้สามารถใช้เข้าสู่ระบบแทนได้ {{requirements}}',
   link_email: 'เชื่อมโยงอีเมล',
   link_phone: 'เชื่อมโยงเบอร์โทรศัพท์',
   link_email_or_phone: 'เชื่อมโยงอีเมลหรือเบอร์โทรศัพท์',

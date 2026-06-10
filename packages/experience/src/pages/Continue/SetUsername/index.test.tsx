@@ -1,8 +1,9 @@
-import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, SignInIdentifier, type UsernamePolicy } from '@logto/schemas';
 import { act, waitFor, fireEvent } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import { fulfillProfile } from '@/apis/experience';
 
 import SetUsername from '.';
@@ -57,6 +58,38 @@ describe('SetUsername', () => {
         { type: SignInIdentifier.Username, value: 'username' },
         InteractionEvent.Register
       );
+    });
+  });
+
+  // The test i18n returns the key, so the rendered description surfaces as its phrase key.
+  describe('page description', () => {
+    const restrictivePolicy: UsernamePolicy = {
+      caseSensitive: true,
+      minLength: 4,
+      maxLength: 8,
+      allowedChars: { lowercase: true, uppercase: false, numbers: false, underscore: false },
+    };
+
+    it('keeps the static description for the permissive default policy', () => {
+      const { getByText, queryByText } = renderWithPageContext(
+        <SettingsProvider>
+          <SetUsername interactionEvent={InteractionEvent.Register} />
+        </SettingsProvider>
+      );
+      expect(getByText('description.enter_username_description')).not.toBeNull();
+      expect(queryByText('description.enter_username_policy_description')).toBeNull();
+    });
+
+    it('swaps to the policy description for a restrictive policy', () => {
+      const { getByText, queryByText } = renderWithPageContext(
+        <SettingsProvider
+          settings={{ ...mockSignInExperienceSettings, usernamePolicy: restrictivePolicy }}
+        >
+          <SetUsername interactionEvent={InteractionEvent.Register} />
+        </SettingsProvider>
+      );
+      expect(getByText('description.enter_username_policy_description')).not.toBeNull();
+      expect(queryByText('description.enter_username_description')).toBeNull();
     });
   });
 });

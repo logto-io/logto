@@ -1,4 +1,3 @@
-import { SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -6,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { SmartInputField } from '@/components/InputFields';
-import { useUsernamePolicyDescription } from '@/hooks/use-sie';
 import Button from '@/shared/components/Button';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import type {
@@ -44,7 +42,6 @@ const IdentifierProfileForm = ({
 }: Props) => {
   const { t } = useTranslation();
   const { experienceSettings } = useContext(PageContext);
-  const usernamePolicyDescription = useUsernamePolicyDescription();
   const {
     handleSubmit,
     control,
@@ -117,9 +114,6 @@ const IdentifierProfileForm = ({
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={enabledTypes}
-            description={
-              field.value.type === SignInIdentifier.Username ? usernamePolicyDescription : undefined
-            }
           />
         )}
       />

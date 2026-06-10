@@ -46,6 +46,8 @@ const description = {
   enter_username: 'Definir nome de usuário',
   enter_username_description:
     'O nome de usuário é uma alternativa para o login. O nome de usuário deve conter apenas letras, números e sublinhados.',
+  enter_username_policy_description:
+    'O nome de usuário é uma alternativa para o login. {{requirements}}',
   link_email: 'Vincular email',
   link_phone: 'Vincular telefone',
   link_email_or_phone: 'Vincular email ou telefone',

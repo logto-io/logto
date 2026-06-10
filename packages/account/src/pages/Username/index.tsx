@@ -3,7 +3,7 @@ import SmartInputField from '@experience/shared/components/InputFields/SmartInpu
 import { buildUsernamePolicyDescription } from '@experience/shared/utils/username-policy-description';
 import { validateUsername } from '@experience/shared/utils/validate-username';
 import { AccountCenterControlValue, SignInIdentifier } from '@logto/schemas';
-import { useContext, useEffect, useState, type FormEvent } from 'react';
+import { useContext, useEffect, useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -53,6 +53,18 @@ const Username = () => {
       sessionStorage.clearRouteRestore();
     }
   }, [verificationId]);
+
+  /**
+   * Replaces the static page description (which states the default hard-floor rules) when the
+   * tenant policy is restrictive, so the page never contradicts the enforced policy.
+   */
+  const usernamePolicyDescription = useMemo(
+    () =>
+      isDevFeaturesEnabled
+        ? buildUsernamePolicyDescription(experienceSettings?.usernamePolicy, t)
+        : undefined,
+    [experienceSettings?.usernamePolicy, t]
+  );
 
   if (
     !accountCenterSettings?.enabled ||
@@ -129,7 +141,12 @@ const Username = () => {
   return (
     <SecondaryPageLayout
       title="account_center.username.title"
-      description="account_center.username.description"
+      description={
+        usernamePolicyDescription
+          ? 'account_center.username.policy_description'
+          : 'account_center.username.description'
+      }
+      descriptionProps={{ requirements: usernamePolicyDescription }}
     >
       <form className={styles.container} onSubmit={handleSubmit}>
         <SmartInputField
@@ -143,11 +160,6 @@ const Username = () => {
           enabledTypes={[SignInIdentifier.Username]}
           errorMessage={usernameError}
           isDanger={Boolean(usernameError)}
-          description={
-            isDevFeaturesEnabled
-              ? buildUsernamePolicyDescription(experienceSettings?.usernamePolicy, t)
-              : undefined
-          }
           onChange={(inputValue) => {
             setPendingUsername(inputValue.value);
           }}

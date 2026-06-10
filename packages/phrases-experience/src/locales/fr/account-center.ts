@@ -71,6 +71,7 @@ const account_center = {
     title: "Définir le nom d'utilisateur",
     description:
       "Le nom d'utilisateur doit contenir uniquement des lettres, des chiffres et des tirets bas.",
+    policy_description: '{{requirements}}',
     success: "Nom d'utilisateur mis à jour avec succès.",
   },
   security: {

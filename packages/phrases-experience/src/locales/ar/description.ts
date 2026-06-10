@@ -45,6 +45,7 @@ const description = {
   enter_username: 'تعيين اسم المستخدم',
   enter_username_description:
     'اسم المستخدم هو بديل لتسجيل الدخول. يجب أن يحتوي اسم المستخدم فقط على الأحرف والأرقام وشرطات السفل.',
+  enter_username_policy_description: 'اسم المستخدم هو بديل لتسجيل الدخول. {{requirements}}',
   link_email: 'ربط البريد الإلكتروني',
   link_phone: 'ربط الهاتف',
   link_email_or_phone: 'ربط البريد الإلكتروني أو الهاتف',
