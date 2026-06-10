@@ -1,9 +1,10 @@
 import type { UserProfileResponse } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import FormCard from '@/components/FormCard';
 import UserAvatar from '@/components/UserAvatar';
+import { adminTenantEndpoint } from '@/consts';
 import { isCloud } from '@/consts/env';
 
 import type { BasicUserField } from '../../containers/BasicUserInfoUpdateModal';
@@ -20,6 +21,14 @@ function BasicUserInfoSection({ user, onUpdate }: Props) {
   const [editingField, setEditingField] = useState<BasicUserField>();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
+  const navigateToAccountPage = useCallback((path: string) => {
+    const currentProfileUrl = `${window.location.origin}${window.location.pathname}`;
+    const accountUrl = new URL(path, adminTenantEndpoint);
+    accountUrl.searchParams.set('redirect', currentProfileUrl);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    window.location.href = accountUrl.toString();
+  }, []);
+
   const { name, username, avatar } = user;
 
   const conditionalUsername: Array<Row<Nullable<string> | undefined>> = isCloud
@@ -32,8 +41,7 @@ function BasicUserInfoSection({ user, onUpdate }: Props) {
           action: {
             name: 'profile.change',
             handler: () => {
-              setEditingField('username');
-              setIsUpdateModalOpen(true);
+              navigateToAccountPage('/account/username');
             },
           },
         },
