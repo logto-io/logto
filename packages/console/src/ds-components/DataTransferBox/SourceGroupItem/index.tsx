@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import CaretExpanded from '@/assets/icons/caret-expanded.svg?react';
 import CaretFolded from '@/assets/icons/caret-folded.svg?react';
 import Checkbox from '@/ds-components/Checkbox';
 import IconButton from '@/ds-components/IconButton';
+import { Ring as Spinner } from '@/ds-components/Spinner';
 import { onKeyDownHandler } from '@/utils/a11y';
 
 import SourceDataItem from '../SourceDataItem';
@@ -17,7 +17,8 @@ type Props<TEntry extends DataEntry> = {
   readonly dataGroup: DataGroup<TEntry>;
   readonly selectedGroupDataList: Array<SelectedDataEntry<TEntry>>;
   readonly onSelectDataGroup: (group: DataGroup<TEntry>) => void;
-  readonly onSelectData: (data: TEntry) => void;
+  readonly onSelectData: (data: SelectedDataEntry<TEntry>) => void;
+  readonly onExpandDataGroup?: (group: DataGroup<TEntry>) => void;
 };
 
 /**
@@ -35,21 +36,32 @@ function SourceGroupItem<TEntry extends DataEntry>({
   selectedGroupDataList,
   onSelectDataGroup,
   onSelectData,
+  onExpandDataGroup,
 }: Props<TEntry>) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { groupName, groupId, dataList } = dataGroup;
+  const { groupName, groupId, dataList, dataInfo, isLoading } = dataGroup;
   const selectedDataIdSet = new Set(selectedGroupDataList.map(({ id }) => id));
   const selectedCount = selectedDataIdSet.size;
   const totalCount = dataList.length;
+  const isCheckboxDisabled = Boolean(isLoading) || totalCount === 0;
 
   const [isDataListHidden, setIsDataListHidden] = useState(true);
+  const toggleDataListVisibility = () => {
+    setIsDataListHidden((isHidden) => {
+      if (isHidden) {
+        onExpandDataGroup?.(dataGroup);
+      }
+
+      return !isHidden;
+    });
+  };
 
   return (
     <div className={styles.groupItem}>
       <div className={styles.title}>
         <Checkbox
-          checked={selectedCount === totalCount}
+          checked={totalCount > 0 && selectedCount === totalCount}
           indeterminate={selectedCount > 0 && selectedCount < totalCount}
+          disabled={isCheckboxDisabled}
           onChange={() => {
             onSelectDataGroup(dataGroup);
           }}
@@ -58,20 +70,20 @@ function SourceGroupItem<TEntry extends DataEntry>({
           role="button"
           tabIndex={0}
           className={styles.group}
-          onKeyDown={onKeyDownHandler(() => {
-            setIsDataListHidden(!isDataListHidden);
-          })}
-          onClick={() => {
-            setIsDataListHidden(!isDataListHidden);
-          }}
+          onKeyDown={onKeyDownHandler(toggleDataListVisibility)}
+          onClick={toggleDataListVisibility}
         >
           <IconButton size="medium">
-            {isDataListHidden ? <CaretFolded /> : <CaretExpanded />}
+            {isLoading ? (
+              <Spinner className={styles.spinner} />
+            ) : isDataListHidden ? (
+              <CaretFolded />
+            ) : (
+              <CaretExpanded />
+            )}
           </IconButton>
           <div className={styles.name}>{groupName}</div>
-          <div className={styles.dataInfo}>
-            ({t('role_details.permission.api_permission_count', { count: dataList.length })})
-          </div>
+          {dataInfo && <div className={styles.dataInfo}>{dataInfo}</div>}
         </div>
       </div>
       <div className={classNames(isDataListHidden && styles.invisible, styles.dataList)}>

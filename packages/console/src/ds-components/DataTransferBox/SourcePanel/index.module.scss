@@ -7,3 +7,41 @@
 .icon {
   color: var(--color-text-secondary);
 }
+
+.skeletonList {
+  padding: 0;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  padding: _.unit(1.5) _.unit(4);
+
+  .skeletonCheckbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    @include _.shimmering-animation;
+  }
+
+  .skeletonGroup {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .skeletonIcon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  .skeletonContent {
+    width: 48%;
+    height: 16px;
+    border-radius: 6px;
+    @include _.shimmering-animation;
+  }
+}
