@@ -40,6 +40,7 @@ const accountCenterFieldKeys: Array<keyof AccountCenterFieldControl> = [
   'social',
   'password',
   'mfa',
+  'passkey',
   'username',
   'name',
   'avatar',
