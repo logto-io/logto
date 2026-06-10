@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- exhaustive matrix of sign-up methods, SSO, and username policy cases */
 import {
   SignInIdentifier,
   experience,
@@ -233,6 +234,44 @@ describe('<IdentifierRegisterForm />', () => {
     });
     await waitFor(() => {
       expect(queryByText('error.username_too_short')).toBeNull();
+    });
+  });
+
+  describe('username policy hint', () => {
+    const restrictivePolicy: UsernamePolicy = {
+      caseSensitive: true,
+      minLength: 4,
+      maxLength: 8,
+      allowedChars: { lowercase: true, uppercase: false, numbers: false, underscore: false },
+    };
+
+    test('shows on initial render for username-only sign-up', () => {
+      const { queryByText } = renderForm([SignInIdentifier.Username], [], restrictivePolicy);
+      expect(queryByText('description.username_requirements')).not.toBeNull();
+    });
+
+    test('hidden for the permissive default policy', () => {
+      const { queryByText } = renderForm([SignInIdentifier.Username]);
+      expect(queryByText('description.username_requirements')).toBeNull();
+    });
+
+    test('in a multi-identifier form, appears only once the input is detected as a username', async () => {
+      const { queryByText, container } = renderForm(
+        [SignInIdentifier.Username, SignInIdentifier.Email],
+        [],
+        restrictivePolicy
+      );
+      expect(queryByText('description.username_requirements')).toBeNull();
+
+      const identifierInput = container.querySelector('input[name=identifier]');
+      assert(identifierInput, new Error('identifier input not found'));
+
+      act(() => {
+        fireEvent.change(identifierInput, { target: { value: 'abc' } });
+      });
+      await waitFor(() => {
+        expect(queryByText('description.username_requirements')).not.toBeNull();
+      });
     });
   });
 
@@ -496,3 +535,4 @@ describe('<IdentifierRegisterForm />', () => {
     });
   });
 });
+/* eslint-enable max-lines */

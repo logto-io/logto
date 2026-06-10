@@ -44,6 +44,12 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
   const prefilledIdentifier = usePrefilledIdentifier({ enabledIdentifiers: signUpMethods });
   const usernamePolicyDescription = useUsernamePolicyDescription();
 
+  /**
+   * The form value's identifier type stays undefined until it is detected from user input, so
+   * for a single-method form fall back to that method to show the policy hint on initial render.
+   */
+  const fallbackIdentifierType = signUpMethods.length === 1 ? signUpMethods[0] : undefined;
+
   const {
     watch,
     handleSubmit,
@@ -141,7 +147,9 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             errorMessage={errors.identifier?.message}
             enabledTypes={signUpMethods}
             description={
-              field.value.type === SignInIdentifier.Username ? usernamePolicyDescription : undefined
+              (field.value.type ?? fallbackIdentifierType) === SignInIdentifier.Username
+                ? usernamePolicyDescription
+                : undefined
             }
           />
         )}
