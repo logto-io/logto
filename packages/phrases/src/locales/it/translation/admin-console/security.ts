@@ -101,7 +101,7 @@ const security = {
     expiration_period_description:
       'Numero di giorni in cui una password rimane valida prima di scadere.',
     expiration_period_error:
-      'Il periodo di validità della password deve essere di almeno 1 giorno.',
+      'Il periodo di validità della password deve essere compreso tra {{min}} e {{max}} giorni.',
   },
   sentinel_policy: {
     card_title: 'Blocco identificatore',

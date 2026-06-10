@@ -99,7 +99,8 @@ const security = {
     expiration_period: 'Período de validade da senha (dias)',
     expiration_period_description:
       'Número de dias que uma senha permanece válida antes de expirar.',
-    expiration_period_error: 'O período de validade da senha deve ser de pelo menos 1 dia.',
+    expiration_period_error:
+      'O período de validade da senha deve estar entre {{min}} e {{max}} dias.',
   },
   sentinel_policy: {
     card_title: 'Bloqueio de identificador',

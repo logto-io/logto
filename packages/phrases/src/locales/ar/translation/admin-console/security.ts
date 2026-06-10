@@ -96,7 +96,7 @@ const security = {
     expiration_period: 'فترة صلاحية كلمة المرور (أيام)',
     expiration_period_description:
       'عدد الأيام التي تظل فيها كلمة المرور صالحة قبل أن تنتهي صلاحيتها.',
-    expiration_period_error: 'يجب أن تكون فترة صلاحية كلمة المرور يومًا واحدًا على الأقل.',
+    expiration_period_error: 'يجب أن تكون فترة صلاحية كلمة المرور بين {{min}} و{{max}} يومًا.',
   },
   sentinel_policy: {
     card_title: 'قفل الهوية',

@@ -98,7 +98,7 @@ const security = {
       'Password expiration can only be enabled after you configure at least one forgot password method with a valid connector in sign-in experience.',
     expiration_period: 'Password valid period (days)',
     expiration_period_description: 'Number of days a password remains valid before it expires.',
-    expiration_period_error: 'Password valid period must be at least 1 day.',
+    expiration_period_error: 'Password valid period must be between {{min}} and {{max}} days.',
   },
   sentinel_policy: {
     card_title: 'Identifier lockout',

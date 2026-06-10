@@ -100,7 +100,8 @@ const security = {
     expiration_period: 'Période de validité du mot de passe (jours)',
     expiration_period_description:
       "Nombre de jours pendant lesquels un mot de passe reste valide avant d'expirer.",
-    expiration_period_error: "La période de validité du mot de passe doit être d'au moins 1 jour.",
+    expiration_period_error:
+      'La période de validité du mot de passe doit être comprise entre {{min}} et {{max}} jours.',
   },
   sentinel_policy: {
     card_title: 'Verrouillage des identifiants',
