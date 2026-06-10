@@ -501,6 +501,75 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
+  it('should stamp enabledAt when enabling the policy', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        passwordExpiration: {
+          enabled: true,
+          validPeriodDays: 30,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- jest `expect.any` is typed as `any`
+          enabledAt: expect.any(Number),
+        },
+      },
+    });
+  });
+
+  it('should preserve the stored enabledAt and ignore a client-provided one', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+        enabledAt: 1_700_000_000_000,
+      },
+    });
+
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 60,
+        // Client-provided value must be ignored; the stored anchor is preserved.
+        enabledAt: 1,
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        passwordExpiration: {
+          enabled: true,
+          validPeriodDays: 60,
+          enabledAt: 1_700_000_000_000,
+        },
+      },
+    });
+  });
+
+  it('should ignore a client-provided enabledAt when enabling the policy', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      passwordExpiration: {
+        enabled: true,
+        validPeriodDays: 30,
+        // The disabled-to-enabled transition stamps a fresh server timestamp, not this value.
+        enabledAt: 1,
+      },
+    });
+
+    expect(response.status).toBe(200);
+
+    const body = response.body as { passwordExpiration: { enabledAt: number } };
+    expect(body.passwordExpiration.enabledAt).not.toBe(1);
+    expect(body.passwordExpiration.enabledAt).toBeGreaterThan(1);
+  });
+
   it('should normalize disabled password expiration updates', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,

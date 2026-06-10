@@ -93,7 +93,7 @@ const security = {
       'Exigir que os usuários redefinam sua senha após um número definido de dias. Usuários que entram via SSO ou passkey não são afetados.',
     enable_password_expiration: 'Ativar expiração de senha',
     enable_password_expiration_description:
-      'Exigir que os usuários redefinam periodicamente sua senha. Usuários existentes sem uma data de alteração de senha registrada serão avaliados em relação à data de criação da conta.',
+      'Exigir que os usuários redefinam periodicamente sua senha. Usuários existentes sem uma data de alteração de senha registrada serão avaliados a partir da data em que esta política foi ativada.',
     enable_password_expiration_tip:
       'Você só pode ativar a expiração de senha depois de configurar ao menos um método de recuperação de senha com um conector válido na experiência de login.',
     expiration_period: 'Período de validade da senha (dias)',

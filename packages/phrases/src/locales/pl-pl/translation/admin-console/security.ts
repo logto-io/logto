@@ -92,7 +92,7 @@ const security = {
       'Wymagaj od użytkowników zresetowania hasła po określonej liczbie dni. Użytkownicy logujący się przez SSO lub klucz dostępu nie są objęci tą zasadą.',
     enable_password_expiration: 'Włącz wygasanie haseł',
     enable_password_expiration_description:
-      'Wymagaj od użytkowników okresowego resetowania hasła. Istniejący użytkownicy bez zapisanej daty zmiany hasła zostaną ocenieni na podstawie daty utworzenia konta.',
+      'Wymagaj od użytkowników okresowego resetowania hasła. Istniejący użytkownicy bez zapisanej daty zmiany hasła zostaną ocenieni na podstawie daty włączenia tej zasady.',
     enable_password_expiration_tip:
       'Wygasanie hasła można włączyć dopiero po skonfigurowaniu w doświadczeniu logowania co najmniej jednej metody odzyskiwania hasła z poprawnym konektorem.',
     expiration_period: 'Okres ważności hasła (dni)',
