@@ -1,14 +1,14 @@
 import type { UserProfileResponse } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import FormCard from '@/components/FormCard';
 import UserAvatar from '@/components/UserAvatar';
-import { adminTenantEndpoint } from '@/consts';
 import { isCloud } from '@/consts/env';
 
 import type { BasicUserField } from '../../containers/BasicUserInfoUpdateModal';
 import BasicUserInfoUpdateModal from '../../containers/BasicUserInfoUpdateModal';
+import { useNavigateToAccountCenter } from '../../hooks';
 import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 
@@ -20,14 +20,7 @@ type Props = {
 function BasicUserInfoSection({ user, onUpdate }: Props) {
   const [editingField, setEditingField] = useState<BasicUserField>();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-
-  const navigateToAccountPage = useCallback((path: string) => {
-    const currentProfileUrl = `${window.location.origin}${window.location.pathname}`;
-    const accountUrl = new URL(path, adminTenantEndpoint);
-    accountUrl.searchParams.set('redirect', currentProfileUrl);
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    window.location.href = accountUrl.toString();
-  }, []);
+  const navigateToAccountCenter = useNavigateToAccountCenter();
 
   const { name, username, avatar } = user;
 
@@ -41,7 +34,7 @@ function BasicUserInfoSection({ user, onUpdate }: Props) {
           action: {
             name: 'profile.change',
             handler: () => {
-              navigateToAccountPage('/account/username');
+              navigateToAccountCenter('/account/username');
             },
           },
         },
