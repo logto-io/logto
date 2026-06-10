@@ -13,7 +13,7 @@ import {
   resetMfaSettings,
   resetPasswordPolicy,
 } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateUsername, generatePassword } from '#src/utils.js';
+import { generateUsername, generatePassword } from '#src/utils.js';
 
 const password = generatePassword();
 
@@ -77,57 +77,52 @@ describe('experience API username case sensitivity', () => {
   });
 });
 
-// Gated to dev features: the sign-in experience write path drops `usernamePolicy` unless dev
-// features are enabled, so case-insensitivity can only be configured (and exercised) here.
-devFeatureTest.describe(
-  'experience API username case sensitivity (case-insensitive policy)',
-  () => {
-    beforeAll(async () => {
-      await enableUsernameAuth();
-      await updateSignInExperience({
-        usernamePolicy: { ...defaultUsernamePolicy, caseSensitive: false },
-      });
+describe('experience API username case sensitivity (case-insensitive policy)', () => {
+  beforeAll(async () => {
+    await enableUsernameAuth();
+    await updateSignInExperience({
+      usernamePolicy: { ...defaultUsernamePolicy, caseSensitive: false },
+    });
+  });
+
+  afterAll(async () => {
+    await resetSignInExperience();
+  });
+
+  it('registration: rejects a username that differs only by case', async () => {
+    const base = generateUsername();
+    const lowerId = await registerNewUserUsernamePassword(base.toLowerCase(), password);
+
+    await expectRejects(registerNewUserUsernamePassword(base.toUpperCase(), password), {
+      code: 'user.username_already_in_use',
+      status: 422,
     });
 
-    afterAll(async () => {
-      await resetSignInExperience();
+    await deleteUser(lowerId);
+  });
+
+  it('sign-in: a username that differs only by case matches the existing user', async () => {
+    const base = generateUsername();
+    const user = await createUserByAdmin({ username: base.toLowerCase(), password });
+
+    await signInWithPassword({
+      identifier: { type: SignInIdentifier.Username, value: base.toUpperCase() },
+      password,
     });
 
-    it('registration: rejects a username that differs only by case', async () => {
-      const base = generateUsername();
-      const lowerId = await registerNewUserUsernamePassword(base.toLowerCase(), password);
+    await deleteUser(user.id);
+  });
 
-      await expectRejects(registerNewUserUsernamePassword(base.toUpperCase(), password), {
-        code: 'user.username_already_in_use',
-        status: 422,
-      });
+  it('profile update: rejects staging a username that differs only by case', async () => {
+    const base = generateUsername();
+    const other = await createUserByAdmin({ username: base.toLowerCase() });
+    const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
 
-      await deleteUser(lowerId);
-    });
+    await expectRejects(
+      client.updateProfile({ type: SignInIdentifier.Username, value: base.toUpperCase() }),
+      { code: 'user.username_already_in_use', status: 422 }
+    );
 
-    it('sign-in: a username that differs only by case matches the existing user', async () => {
-      const base = generateUsername();
-      const user = await createUserByAdmin({ username: base.toLowerCase(), password });
-
-      await signInWithPassword({
-        identifier: { type: SignInIdentifier.Username, value: base.toUpperCase() },
-        password,
-      });
-
-      await deleteUser(user.id);
-    });
-
-    it('profile update: rejects staging a username that differs only by case', async () => {
-      const base = generateUsername();
-      const other = await createUserByAdmin({ username: base.toLowerCase() });
-      const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
-
-      await expectRejects(
-        client.updateProfile({ type: SignInIdentifier.Username, value: base.toUpperCase() }),
-        { code: 'user.username_already_in_use', status: 422 }
-      );
-
-      await deleteUser(other.id);
-    });
-  }
-);
+    await deleteUser(other.id);
+  });
+});

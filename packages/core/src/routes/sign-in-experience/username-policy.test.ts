@@ -1,25 +1,11 @@
-import { createMockUtils, pickDefault } from '@logto/shared/esm';
+import { pickDefault } from '@logto/shared/esm';
 
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { mockEsmWithActual } = createMockUtils(jest);
 
 const findCaseConflicts = jest.fn();
-
-// The conflict-detection route is only registered when dev features are enabled, so mock EnvSet
-// with the flag on before importing the routes.
-await mockEsmWithActual('#src/env-set/index.js', () => ({
-  EnvSet: {
-    values: {
-      isDevFeaturesEnabled: true,
-      isCloud: false,
-      isProduction: false,
-      isUnitTest: true,
-    },
-  },
-}));
 
 const signInExperiencesRoutes = await pickDefault(import('./index.js'));
 

@@ -10,7 +10,7 @@ import {
   defaultSignInSignUpConfigs,
   enableAllPasswordSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateUsername } from '#src/utils.js';
+import { generateUsername } from '#src/utils.js';
 
 // Restore a known baseline so this suite does not leak its sign-in or username-policy changes.
 const resetSignInExperience = async () =>
@@ -41,9 +41,7 @@ describe('account API username case sensitivity', () => {
   });
 });
 
-// Gated to dev features: the sign-in experience write path drops `usernamePolicy` unless dev
-// features are enabled, so case-insensitivity can only be configured (and exercised) here.
-devFeatureTest.describe('account API username case sensitivity (case-insensitive policy)', () => {
+describe('account API username case sensitivity (case-insensitive policy)', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await enableAllAccountCenterFields();

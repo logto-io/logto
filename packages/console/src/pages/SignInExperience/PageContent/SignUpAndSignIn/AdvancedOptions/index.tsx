@@ -2,7 +2,6 @@ import { type SignInExperience } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Card from '@/ds-components/Card';
 import FormField from '@/ds-components/FormField';
 import Switch from '@/ds-components/Switch';
@@ -67,7 +66,7 @@ function AdvancedOptions({ signInExperience }: Props) {
           placeholder="https://"
         />
       </FormField>
-      {isDevFeaturesEnabled && <UsernamePolicy signInExperience={signInExperience} />}
+      <UsernamePolicy signInExperience={signInExperience} />
     </Card>
   );
 }

@@ -7,7 +7,6 @@ import {
 } from '@logto/schemas';
 import { pick, trySafe } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -157,11 +156,9 @@ export class Profile {
       this.profileValidator.guardProfileNotExistInCurrentUserAccount(user, profile);
     }
 
-    // Per-tenant username policy enforcement is gated until the feature ships. The hard-floor regex
-    // on each entry route stays on regardless, so prod behavior is unchanged when the flag is off.
     // Runs before the uniqueness check so a format/policy violation is reported ahead of
     // "username already in use", matching the account and /me routes.
-    if (EnvSet.values.isDevFeaturesEnabled && profile.username) {
+    if (profile.username) {
       assertUsernameAllowed(
         await this.signInExperienceValidator.getUsernamePolicy(),
         profile.username

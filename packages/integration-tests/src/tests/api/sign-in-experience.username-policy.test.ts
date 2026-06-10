@@ -6,10 +6,9 @@ import {
   updateSignInExperience,
 } from '#src/api/index.js';
 import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest, generateUsername } from '#src/utils.js';
+import { generateUsername } from '#src/utils.js';
 
-// Dev-gated: the conflict-detection endpoint is only registered when dev features are enabled.
-devFeatureTest.describe('GET /sign-in-exp/username-policy/case-sensitivity-conflicts', () => {
+describe('GET /sign-in-exp/username-policy/case-sensitivity-conflicts', () => {
   it('reports usernames that collide case-insensitively', async () => {
     const base = generateUsername();
     const { totalConflicts: before } = await getUsernameCaseSensitivityConflicts(100);
@@ -31,9 +30,7 @@ devFeatureTest.describe('GET /sign-in-exp/username-policy/case-sensitivity-confl
   });
 });
 
-// Dev-gated: the PATCH `usernamePolicy` body field and the 409 guard only activate under dev
-// features (the write path strips `usernamePolicy` otherwise).
-devFeatureTest.describe('PATCH /sign-in-exp case-sensitivity conflict guard', () => {
+describe('PATCH /sign-in-exp case-sensitivity conflict guard', () => {
   afterAll(async () => {
     await updateSignInExperience({ usernamePolicy: defaultUsernamePolicy });
   });
