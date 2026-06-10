@@ -12,6 +12,7 @@ const account_center = {
     profile_description: 'Changez vos informations personnelles ici.',
     sidebar_personal_info: 'Informations personnelles',
     sidebar_security: 'Sécurité',
+    sidebar_sessions: 'Sessions',
     support: 'Assistance',
   },
   verification: {
@@ -257,6 +258,29 @@ const account_center = {
     name_passkey_description:
       "Vous avez vérifié cet appareil avec succès pour l'authentification en deux étapes. Personnalisez le nom pour le reconnaître si vous avez plusieurs clés.",
     name_input_label: 'Nom',
+  },
+  sessions: {
+    page_title: 'Sessions',
+    page_description: 'Gérez vos sessions actives et les applications tierces autorisées.',
+    title: 'Sessions',
+    current_session: 'Session actuelle',
+    signed_in_at: 'Connecté le {{date}}',
+    revoke_session: 'Déconnecter',
+    revoke_session_title: 'Déconnecter la session',
+    revoke_session_description:
+      'Cela déconnectera la session et révoquera tous les accès associés. Êtes-vous sûr de vouloir continuer ?',
+    no_other_sessions: 'Aucune autre session active.',
+    loading: 'Chargement...',
+    third_party_apps_title: 'Applications tierces',
+    no_third_party_apps: 'Aucune application tierce autorisée.',
+    third_party_apps_load_failed:
+      'Impossible de charger les applications tierces. Veuillez réessayer.',
+    granted_at: 'Autorisé le {{date}}',
+    revoke_grant: 'Supprimer',
+    revoke_grant_title: "Supprimer l'accès de l'application tierce",
+    revoke_grant_description:
+      'Cela révoquera tous les accès accordés à cette application. Êtes-vous sûr de vouloir continuer ?',
+    revoke_grant_failed: 'Échec de la révocation de certaines autorisations. Veuillez réessayer.',
   },
 };
 

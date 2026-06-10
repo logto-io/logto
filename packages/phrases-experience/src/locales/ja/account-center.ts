@@ -11,6 +11,7 @@ const account_center = {
     profile_description: 'ここで個人情報を変更できます。',
     sidebar_personal_info: '個人情報',
     sidebar_security: 'セキュリティ',
+    sidebar_sessions: 'セッション',
     support: 'サポート',
   },
   verification: {
@@ -246,6 +247,30 @@ const account_center = {
     name_passkey_description:
       'このデバイスの2段階認証の確認が完了しました。複数のキーがある場合に識別できるよう名前をカスタマイズしてください。',
     name_input_label: '名前',
+  },
+  sessions: {
+    page_title: 'セッション',
+    page_description:
+      'アクティブなセッションと認可済みサードパーティアプリケーションを管理します。',
+    title: 'セッション',
+    current_session: '現在のセッション',
+    signed_in_at: '{{date}} にサインイン',
+    revoke_session: 'サインアウト',
+    revoke_session_title: 'セッションからサインアウト',
+    revoke_session_description:
+      'このセッションからサインアウトし、関連するすべてのアクセスを取り消します。続行しますか？',
+    no_other_sessions: '他にアクティブなセッションはありません。',
+    loading: '読み込み中...',
+    third_party_apps_title: 'サードパーティアプリ',
+    no_third_party_apps: '認可済みのサードパーティアプリケーションはありません。',
+    third_party_apps_load_failed:
+      'サードパーティアプリを読み込めませんでした。もう一度お試しください。',
+    granted_at: '{{date}} に認可',
+    revoke_grant: '削除',
+    revoke_grant_title: 'サードパーティアプリのアクセスを削除',
+    revoke_grant_description:
+      'このアプリケーションに付与されたすべてのアクセスを取り消します。続行しますか？',
+    revoke_grant_failed: '一部の認可の取り消しに失敗しました。もう一度お試しください。',
   },
 };
 

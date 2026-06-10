@@ -11,6 +11,7 @@ const account_center = {
     profile_description: 'Измените здесь свою личную информацию.',
     sidebar_personal_info: 'Личная информация',
     sidebar_security: 'Безопасность',
+    sidebar_sessions: 'Сессии',
     support: 'Поддержка',
   },
   verification: {
@@ -248,6 +249,28 @@ const account_center = {
     name_passkey_description:
       'Вы успешно подтвердили это устройство для двухэтапной аутентификации. Настройте имя, чтобы различать ключи, если их несколько.',
     name_input_label: 'Имя',
+  },
+  sessions: {
+    page_title: 'Сессии',
+    page_description: 'Управляйте активными сессиями и авторизованными сторонними приложениями.',
+    title: 'Сессии',
+    current_session: 'Текущая сессия',
+    signed_in_at: 'Вход выполнен {{date}}',
+    revoke_session: 'Выйти',
+    revoke_session_title: 'Завершить сессию',
+    revoke_session_description:
+      'Это завершит сессию и отзовёт весь связанный доступ. Вы уверены, что хотите продолжить?',
+    no_other_sessions: 'Нет других активных сессий.',
+    loading: 'Загрузка...',
+    third_party_apps_title: 'Сторонние приложения',
+    no_third_party_apps: 'Нет авторизованных сторонних приложений.',
+    third_party_apps_load_failed: 'Не удалось загрузить сторонние приложения. Повторите попытку.',
+    granted_at: 'Авторизовано {{date}}',
+    revoke_grant: 'Удалить',
+    revoke_grant_title: 'Удалить доступ стороннего приложения',
+    revoke_grant_description:
+      'Это отзовёт весь доступ, предоставленный этому приложению. Вы уверены, что хотите продолжить?',
+    revoke_grant_failed: 'Не удалось отозвать некоторые разрешения. Пожалуйста, попробуйте снова.',
   },
 };
 

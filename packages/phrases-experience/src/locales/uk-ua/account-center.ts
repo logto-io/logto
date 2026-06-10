@@ -11,6 +11,7 @@ const account_center = {
     profile_description: 'Змініть свою особисту інформацію тут.',
     sidebar_personal_info: 'Особиста інформація',
     sidebar_security: 'Безпека',
+    sidebar_sessions: 'Сесії',
     support: 'Підтримка',
   },
   verification: {
@@ -251,6 +252,28 @@ const account_center = {
     name_passkey_description:
       'Ви успішно підтвердили цей пристрій для двоетапної автентифікації. Налаштуйте назву для розпізнавання, якщо у вас кілька ключів.',
     name_input_label: "Ім'я",
+  },
+  sessions: {
+    page_title: 'Сесії',
+    page_description: 'Керуйте активними сесіями та авторизованими сторонніми додатками.',
+    title: 'Сесії',
+    current_session: 'Поточна сесія',
+    signed_in_at: 'Вхід виконано {{date}}',
+    revoke_session: 'Вийти',
+    revoke_session_title: 'Завершити сесію',
+    revoke_session_description:
+      "Це завершить сесію та відкличе весь пов'язаний доступ. Ви впевнені, що хочете продовжити?",
+    no_other_sessions: 'Немає інших активних сесій.',
+    loading: 'Завантаження...',
+    third_party_apps_title: 'Сторонні додатки',
+    no_third_party_apps: 'Немає авторизованих сторонніх додатків.',
+    third_party_apps_load_failed: 'Не вдалося завантажити сторонні додатки. Спробуйте ще раз.',
+    granted_at: 'Авторизовано {{date}}',
+    revoke_grant: 'Видалити',
+    revoke_grant_title: 'Видалити доступ стороннього додатку',
+    revoke_grant_description:
+      'Це відкличе весь доступ, наданий цьому додатку. Ви впевнені, що хочете продовжити?',
+    revoke_grant_failed: 'Не вдалося відкликати деякі дозволи. Будь ласка, спробуйте ще раз.',
   },
 };
 

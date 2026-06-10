@@ -11,6 +11,7 @@ const account_center = {
     profile_description: 'Altere as suas informações pessoais aqui.',
     sidebar_personal_info: 'Informações pessoais',
     sidebar_security: 'Segurança',
+    sidebar_sessions: 'Sessões',
     support: 'Suporte',
   },
   verification: {
@@ -254,6 +255,28 @@ const account_center = {
     name_passkey_description:
       'Verificou este dispositivo com sucesso para autenticação em duas etapas. Personalize o nome para o reconhecer se tiver várias chaves.',
     name_input_label: 'Nome',
+  },
+  sessions: {
+    page_title: 'Sessões',
+    page_description: 'Gerir as suas sessões ativas e aplicações de terceiros autorizadas.',
+    title: 'Sessões',
+    current_session: 'Sessão atual',
+    signed_in_at: 'Sessão iniciada em {{date}}',
+    revoke_session: 'Terminar sessão',
+    revoke_session_title: 'Terminar sessão',
+    revoke_session_description:
+      'Isto terminará a sessão e revogará todos os acessos associados. Tem a certeza de que pretende continuar?',
+    no_other_sessions: 'Nenhuma outra sessão ativa.',
+    loading: 'A carregar...',
+    third_party_apps_title: 'Aplicações de terceiros',
+    no_third_party_apps: 'Nenhuma aplicação de terceiros autorizada.',
+    third_party_apps_load_failed: 'Falha ao carregar aplicações de terceiros. Tente novamente.',
+    granted_at: 'Autorizado em {{date}}',
+    revoke_grant: 'Remover',
+    revoke_grant_title: 'Remover acesso da aplicação de terceiros',
+    revoke_grant_description:
+      'Isto revogará todos os acessos concedidos a esta aplicação. Tem a certeza de que pretende continuar?',
+    revoke_grant_failed: 'Falha ao revogar algumas permissões. Tente novamente.',
   },
 };
 

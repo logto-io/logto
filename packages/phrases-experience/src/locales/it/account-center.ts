@@ -12,6 +12,7 @@ const account_center = {
     profile_description: 'Modifica qui le tue informazioni personali.',
     sidebar_personal_info: 'Informazioni personali',
     sidebar_security: 'Sicurezza',
+    sidebar_sessions: 'Sessioni',
     support: 'Supporto',
   },
   verification: {
@@ -255,6 +256,29 @@ const account_center = {
     name_passkey_description:
       "Hai verificato con successo questo dispositivo per l'autenticazione a due fattori. Personalizza il nome per riconoscerlo se hai più chiavi.",
     name_input_label: 'Nome',
+  },
+  sessions: {
+    page_title: 'Sessioni',
+    page_description:
+      'Gestisci le tue sessioni attive e le applicazioni di terze parti autorizzate.',
+    title: 'Sessioni',
+    current_session: 'Sessione corrente',
+    signed_in_at: 'Accesso effettuato {{date}}',
+    revoke_session: 'Disconnetti',
+    revoke_session_title: 'Disconnetti sessione',
+    revoke_session_description:
+      'Questo disconnetterà la sessione e revocherà tutti gli accessi associati. Sei sicuro di voler continuare?',
+    no_other_sessions: 'Nessuna altra sessione attiva.',
+    loading: 'Caricamento...',
+    third_party_apps_title: 'App di terze parti',
+    no_third_party_apps: 'Nessuna applicazione di terze parti autorizzata.',
+    third_party_apps_load_failed: 'Impossibile caricare le app di terze parti. Riprova.',
+    granted_at: 'Autorizzato {{date}}',
+    revoke_grant: 'Rimuovi',
+    revoke_grant_title: 'Rimuovi accesso app di terze parti',
+    revoke_grant_description:
+      'Questo revocherà tutti gli accessi concessi a questa applicazione. Sei sicuro di voler continuare?',
+    revoke_grant_failed: 'Revoca di alcune autorizzazioni non riuscita. Riprova.',
   },
 };
 

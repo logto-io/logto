@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { sessionStorage } from '@ac/utils/session-storage';
 import type { PendingVerifiedAction } from '@ac/utils/session-storage';
 
@@ -52,6 +53,13 @@ const VerifiedAction = () => {
       }
       case 'remove-social': {
         return accountCenterSettings.fields.social === AccountCenterControlValue.Edit;
+      }
+      case 'load-sessions': {
+        return (
+          isDevFeaturesEnabled &&
+          accountCenterSettings.fields.session !== undefined &&
+          accountCenterSettings.fields.session !== AccountCenterControlValue.Off
+        );
       }
       default: {
         return false;

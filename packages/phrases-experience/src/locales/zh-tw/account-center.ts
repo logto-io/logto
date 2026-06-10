@@ -11,6 +11,7 @@ const account_center = {
     profile_description: '在這裡變更你的個人資訊。',
     sidebar_personal_info: '個人資料',
     sidebar_security: '安全',
+    sidebar_sessions: '工作階段',
     support: '支援',
   },
   verification: {
@@ -235,6 +236,26 @@ const account_center = {
     name_passkey_description:
       '您已成功驗證此裝置用於兩步驗證。自訂名稱以便在擁有多個密鑰時進行識別。',
     name_input_label: '名稱',
+  },
+  sessions: {
+    page_title: '工作階段',
+    page_description: '管理你的活躍工作階段和已授權的第三方應用程式。',
+    title: '工作階段',
+    current_session: '目前工作階段',
+    signed_in_at: '登入於 {{date}}',
+    revoke_session: '登出',
+    revoke_session_title: '登出工作階段',
+    revoke_session_description: '這將登出該工作階段並撤銷所有相關的存取權限。確定要繼續嗎？',
+    no_other_sessions: '沒有其他活躍的工作階段。',
+    loading: '載入中...',
+    third_party_apps_title: '第三方應用程式',
+    no_third_party_apps: '沒有已授權的第三方應用程式。',
+    third_party_apps_load_failed: '無法載入第三方應用程式。請再試一次。',
+    granted_at: '授權於 {{date}}',
+    revoke_grant: '移除',
+    revoke_grant_title: '移除第三方應用程式存取權限',
+    revoke_grant_description: '這將撤銷授予該應用程式的所有存取權限。確定要繼續嗎？',
+    revoke_grant_failed: '部分授權撤銷失敗，請重試。',
   },
 };
 

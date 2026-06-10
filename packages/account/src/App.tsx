@@ -23,6 +23,7 @@ import PageContext from './Providers/PageContextProvider/PageContext';
 import GlobalLoading from './components/GlobalLoading';
 import {
   securityRoute,
+  sessionsRoute,
   profileRoute,
   emailRoute,
   emailSuccessRoute,
@@ -59,6 +60,7 @@ import Password from './pages/Password';
 import Phone from './pages/Phone';
 import Profile from './pages/Profile';
 import Security from './pages/Security';
+import Sessions from './pages/Sessions';
 import SocialCallback from './pages/SocialCallback';
 import SocialFlow from './pages/SocialFlow';
 import TotpBinding from './pages/TotpBinding';
@@ -67,7 +69,7 @@ import Username from './pages/Username';
 import VerifiedAction from './pages/VerifiedAction';
 import { useAuthRedirect } from './use-auth-redirect';
 import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
-import { hasVisibleSecuritySection } from './utils/security-page';
+import { hasVisibleSecuritySection, hasVisibleSessionsPage } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
 
 handleAccountCenterRoute();
@@ -128,6 +130,7 @@ export const Main = () => {
   }
 
   const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
+  const showsSessionsPage = hasVisibleSessionsPage(accountCenterSettings);
 
   return (
     <Routes>
@@ -180,6 +183,7 @@ export const Main = () => {
         element={<SocialFlow mode="remove" />}
       />
       {showsSecurityPage && <Route path={securityRoute} element={<Security />} />}
+      {showsSessionsPage && <Route path={sessionsRoute} element={<Sessions />} />}
       <Route path={profileRoute} element={<Profile />} />
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
@@ -187,18 +191,26 @@ export const Main = () => {
   );
 };
 
+// eslint-disable-next-line complexity
 const Layout = () => {
   const { accountCenterSettings, experienceSettings, theme, platform } = useContext(PageContext);
   const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
   const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
+  const showsSessionsPage = hasVisibleSessionsPage(accountCenterSettings);
   const hasProfilePage = true;
-  const isSecurityFullPage = pathname === securityRoute && showsSecurityPage;
-  const isProfileFullPage = pathname === profileRoute && hasProfilePage;
-  const isFullPage = isSecurityFullPage || isProfileFullPage;
+  const isFullPage =
+    (pathname === securityRoute && showsSecurityPage) ||
+    (pathname === sessionsRoute && showsSessionsPage) ||
+    (pathname === profileRoute && hasProfilePage);
   const accountNavItems = useMemo(
-    () => buildAccountNavItems({ hasProfile: hasProfilePage, hasSecurity: showsSecurityPage }),
-    [hasProfilePage, showsSecurityPage]
+    () =>
+      buildAccountNavItems({
+        hasProfile: hasProfilePage,
+        hasSecurity: showsSecurityPage,
+        hasSessions: showsSessionsPage,
+      }),
+    [hasProfilePage, showsSecurityPage, showsSessionsPage]
   );
   const showsMultiPageNav = isFullPage && accountNavItems.length > 1;
   const showsMobileTabNav = platform === 'mobile' && showsMultiPageNav;
@@ -273,6 +285,7 @@ const App = () => (
           UserScope.Address,
           UserScope.Identities,
           UserScope.CustomData,
+          UserScope.Sessions,
         ],
       }}
     >

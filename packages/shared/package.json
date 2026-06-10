@@ -64,6 +64,7 @@
     "chalk": "^5.3.0",
     "find-up": "^7.0.0",
     "libphonenumber-js": "^1.12.6",
-    "nanoid": "^5.0.9"
+    "nanoid": "^5.0.9",
+    "ua-parser-js": "^2.0.3"
   }
 }
