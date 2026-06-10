@@ -174,6 +174,7 @@ const sign_in_exp = {
       password: '비밀번호',
       mfa: '다중 요소 인증',
       mfa_description: '사용자가 계정 센터에서 MFA 방법을 관리하도록 허용합니다.',
+      passkey: 'Passkey',
       username: '사용자 이름',
       name: '이름',
       avatar: '아바타',

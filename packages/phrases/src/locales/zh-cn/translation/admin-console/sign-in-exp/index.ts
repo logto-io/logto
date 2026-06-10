@@ -171,6 +171,7 @@ const sign_in_exp = {
       password: '密码',
       mfa: '多因素认证',
       mfa_description: '允许用户在账户中心管理其多因素认证方式。',
+      passkey: 'Passkey',
       username: '用户名',
       name: '姓名',
       avatar: '头像',
