@@ -14,6 +14,8 @@
 
 <body>
   <script>
+    // Keep this blocking script in the HTML so the theme, platform class, and brand color
+    // are applied before React loads and the browser has a chance to paint the wrong UI.
     (function () {
       try {
         var ssr = window.logtoSsr;
