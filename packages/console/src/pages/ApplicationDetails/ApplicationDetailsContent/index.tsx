@@ -4,7 +4,7 @@ import {
   type SnakeCaseOidcConfig,
 } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -98,6 +98,19 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
       await onApplicationUpdated(updatedData);
       toast.success(t('general.saved'));
     })
+  );
+
+  const onAppLevelAccessControlUpdated = useCallback(
+    async (appLevelAccessControlEnabled: boolean) => {
+      const updatedApplication = await api
+        .patch(`api/applications/${data.id}`, {
+          json: { appLevelAccessControlEnabled },
+        })
+        .json<ApplicationResponse>();
+
+      await onApplicationUpdated(updatedApplication);
+    },
+    [api, data.id, onApplicationUpdated]
   );
 
   const onDelete = async () => {
@@ -276,7 +289,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
           <ApplicationAccessControl
             application={data}
             isActive={tab === ApplicationDetailsTabs.Rules}
-            onApplicationUpdated={onApplicationUpdated}
+            onAppLevelAccessControlUpdated={onAppLevelAccessControlUpdated}
           />
         </TabWrapper>
       )}

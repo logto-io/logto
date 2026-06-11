@@ -31,7 +31,7 @@ import { areApplicationAccessControlsEqual, hasApplicationAccessControlRules } f
 type Props = {
   readonly application: ApplicationResponse;
   readonly isActive: boolean;
-  readonly onApplicationUpdated: (application?: ApplicationResponse) => void | Promise<void>;
+  readonly onAppLevelAccessControlUpdated: (enabled: boolean) => Promise<void>;
 };
 
 type ApplicationAccessControlForm = {
@@ -54,7 +54,11 @@ function RulesSectionHeader() {
   );
 }
 
-function ApplicationAccessControl({ application, isActive, onApplicationUpdated }: Props) {
+function ApplicationAccessControl({
+  application,
+  isActive,
+  onAppLevelAccessControlUpdated,
+}: Props) {
   const { id, appLevelAccessControlEnabled } = application;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
@@ -135,16 +139,13 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
         !appLevelAccessControlEnabled &&
         !hasApplicationAccessControlRules(draftAccessControl);
 
-      const updateAppLevelAccessControlEnabled = async () =>
-        api
-          .patch(`api/applications/${id}`, {
-            json: { appLevelAccessControlEnabled },
-          })
-          .json<ApplicationResponse>();
+      const updateAppLevelAccessControlEnabled = async () => {
+        await onAppLevelAccessControlUpdated(appLevelAccessControlEnabled);
+      };
 
-      const updatedApplication = shouldDisableBeforeUpdatingEmptyRules
-        ? await updateAppLevelAccessControlEnabled()
-        : undefined;
+      if (shouldDisableBeforeUpdatingEmptyRules) {
+        await updateAppLevelAccessControlEnabled();
+      }
 
       const savedAccessControl = shouldUpdateRules
         ? await api
@@ -158,10 +159,8 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
         await mutate(savedAccessControl, { revalidate: false });
       }
 
-      if (shouldUpdateEnabled && !updatedApplication) {
-        await onApplicationUpdated(await updateAppLevelAccessControlEnabled());
-      } else if (updatedApplication) {
-        await onApplicationUpdated(updatedApplication);
+      if (shouldUpdateEnabled && !shouldDisableBeforeUpdatingEmptyRules) {
+        await updateAppLevelAccessControlEnabled();
       }
 
       reset({

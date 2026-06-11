@@ -82,9 +82,16 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     id: string,
     patchApplicationObject: PatchSamlApplication
   ): Promise<SamlApplicationResponse> => {
-    const { name, description, customData, ...config } = patchApplicationObject;
+    const { name, description, customData, appLevelAccessControlEnabled, ...config } =
+      patchApplicationObject;
     const applicationData = removeUndefinedKeys(
-      pick(patchApplicationObject, 'name', 'description', 'customData')
+      pick(
+        patchApplicationObject,
+        'name',
+        'description',
+        'customData',
+        'appLevelAccessControlEnabled'
+      )
     );
 
     const originalApplication = await findApplicationById(id);

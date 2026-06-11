@@ -143,6 +143,11 @@
                     "type": "object",
                     "description": "Custom data for the application."
                   },
+                  "appLevelAccessControlEnabled": {
+                    "type": "boolean",
+                    "description": "Whether app-level access control is enabled for this application. This field is available only when dev features are enabled.",
+                    "x-logto-dev-feature": true
+                  },
                   "acsUrl": {
                     "type": "string",
                     "description": "The Assertion Consumer Service (ACS) URL."
