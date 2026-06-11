@@ -270,6 +270,37 @@ describe('koaAuditLog middleware', () => {
     });
   });
 
+  it('should strip null characters so the payload is safe to store as jsonb', async () => {
+    const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
+    ctx.request.ip = ip;
+
+    const next = async () => {
+      const log = ctx.createLog(logKey);
+      const nul = String.fromCodePoint(0);
+      log.append({
+        params: {
+          grant_type: `authorization_code${nul}`,
+          nested: [`a${nul}b`],
+          [`field${nul}name`]: 'value',
+        },
+      });
+    };
+    await koaLog(queries)(ctx, next);
+
+    expect(insertLog).toBeCalledWith({
+      id: mockId,
+      key: logKey,
+      payload: {
+        params: { grant_type: 'authorization_code', nested: ['ab'], fieldname: 'value' },
+        key: logKey,
+        result: LogResult.Success,
+        ip,
+        userAgent,
+        userAgentParsed,
+      },
+    });
+  });
+
   describe('should insert an error log with the error message when next() throws an error', () => {
     it('should log with error message when next throws a normal Error', async () => {
       const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
