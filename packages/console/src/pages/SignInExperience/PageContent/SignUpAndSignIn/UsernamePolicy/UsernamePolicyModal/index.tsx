@@ -77,13 +77,11 @@ function UsernamePolicyModal({ policy, onClose }: Props) {
   );
   const hasConflicts = Boolean(conflicts && conflicts.totalConflicts > 0);
 
+  // `isCheckingConflicts` intentionally does not disable Save: keeping the button active avoids a
+  // flicker when the operator toggles case sensitivity on an already-dirty form. The save click
+  // handler below swallows clicks while the probe is in flight instead.
   const isSaveDisabled =
-    !isDirty ||
-    hasNoValidLeadingChar ||
-    !isLengthValid ||
-    hasConflicts ||
-    isCheckingConflicts ||
-    isSubmitting;
+    !isDirty || hasNoValidLeadingChar || !isLengthValid || hasConflicts || isSubmitting;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {
@@ -97,6 +95,15 @@ function UsernamePolicyModal({ policy, onClose }: Props) {
       onClose();
     })
   );
+
+  const onSaveClick = () => {
+    // Gate before react-hook-form so an ignored click can't flash `isSubmitting`.
+    if (isCheckingConflicts) {
+      return;
+    }
+
+    void onSubmit();
+  };
 
   return (
     <ReactModal
@@ -117,7 +124,7 @@ function UsernamePolicyModal({ policy, onClose }: Props) {
             htmlType="submit"
             disabled={isSaveDisabled}
             isLoading={isSubmitting}
-            onClick={onSubmit}
+            onClick={onSaveClick}
           />
         }
         onClose={onClose}
