@@ -47,7 +47,7 @@ type Props = {
   readonly data: ApplicationResponse;
   readonly secrets: ApplicationSecretRow[];
   readonly oidcConfig: SnakeCaseOidcConfig;
-  readonly onApplicationUpdated: () => void;
+  readonly onApplicationUpdated: (application?: ApplicationResponse) => void | Promise<void>;
 };
 
 function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpdated }: Props) {
@@ -95,7 +95,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
         .json<ApplicationResponse>();
 
       reset(applicationFormDataParser.fromResponse(updatedData));
-      onApplicationUpdated();
+      await onApplicationUpdated(updatedData);
       toast.success(t('general.saved'));
     })
   );
@@ -115,7 +115,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
 
   const onCloseDrawer = () => {
     // The guide drawer may have updated the application data
-    onApplicationUpdated();
+    void onApplicationUpdated();
     setIsReadmeOpen(false);
   };
 
