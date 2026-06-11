@@ -201,10 +201,13 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
         imgSrc: avatarCropImageSources,
         scriptSrc: [
           "'self'",
+          "'unsafe-inline'",
+          "'unsafe-hashes'",
           // Some of our users may use the Cloudflare Web Analytics service. We need to allow it to load its scripts.
           'https://static.cloudflareinsights.com/',
-          ...conditionalArray(!isProduction && ["'unsafe-eval'"]),
+          ...conditionalArray(!isProduction && "'unsafe-eval'"),
         ],
+        scriptSrcAttr: ["'unsafe-inline'"],
         connectSrc: ["'self'", tenantEndpointOrigin, ...developmentOrigins],
         frameSrc: ["'self'"],
       },
