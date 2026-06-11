@@ -91,6 +91,8 @@ const security = {
     expiration_period: '密码有效期限（天）',
     expiration_period_description: '密码在过期前保持有效的天数。',
     expiration_period_error: '密码有效期限必须在 {{min}} 到 {{max}} 天之间。',
+    password_expiration_recovery_reminder:
+      '部分用户可能没有电子邮箱或电话号码来接收密码恢复验证码，因此无法重置已过期的密码。请在注册时要求提供电子邮箱或电话号码，以确保每位用户都能恢复其密码。',
   },
   verification_code_policy: {
     card_title: '验证码',

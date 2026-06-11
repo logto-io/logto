@@ -101,6 +101,8 @@ const security = {
       'Número de dias que uma senha permanece válida antes de expirar.',
     expiration_period_error:
       'O período de validade da senha deve estar entre {{min}} e {{max}} dias.',
+    password_expiration_recovery_reminder:
+      'Alguns usuários podem não ter um endereço de e-mail ou número de telefone para receber um código de recuperação de senha, portanto não poderão redefinir uma senha expirada. Exija um endereço de e-mail ou número de telefone no cadastro para garantir que todos os usuários possam recuperar sua senha.',
   },
   verification_code_policy: {
     card_title: 'Código de verificação',
