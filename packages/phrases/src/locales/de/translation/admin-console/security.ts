@@ -101,6 +101,8 @@ const security = {
       'Anzahl der Tage, die ein Passwort gültig bleibt, bevor es abläuft.',
     expiration_period_error:
       'Die Passwort-Gültigkeitsdauer muss zwischen {{min}} und {{max}} Tagen liegen.',
+    password_expiration_recovery_reminder:
+      'Einige Benutzer haben möglicherweise keine E-Mail-Adresse oder Telefonnummer, um einen Code zur Passwortwiederherstellung zu erhalten, und können daher ein abgelaufenes Passwort nicht zurücksetzen. Verlange bei der Registrierung eine E-Mail-Adresse oder Telefonnummer, damit jeder Benutzer sein Passwort wiederherstellen kann.',
   },
   verification_code_policy: {
     card_title: 'Verifizierungscode',

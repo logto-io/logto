@@ -96,6 +96,8 @@ const security = {
     expiration_period: '비밀번호 유효 기간 (일)',
     expiration_period_description: '비밀번호가 만료되기 전까지 유효한 일수입니다.',
     expiration_period_error: '비밀번호 유효 기간은 {{min}}일에서 {{max}}일 사이여야 합니다.',
+    password_expiration_recovery_reminder:
+      '일부 사용자는 비밀번호 복구 코드를 받을 이메일 주소나 전화번호가 없어 만료된 비밀번호를 재설정하지 못할 수 있습니다. 모든 사용자가 비밀번호를 복구할 수 있도록 가입 시 이메일 주소 또는 전화번호를 필수로 요구하세요.',
   },
   verification_code_policy: {
     card_title: '인증 코드',
