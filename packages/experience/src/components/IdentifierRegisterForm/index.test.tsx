@@ -199,8 +199,7 @@ describe('<IdentifierRegisterForm />', () => {
   });
 
   describe('username policy violations', () => {
-    // Dev features are on under jest (NODE_ENV=test), so the per-tenant policy is enforced. This
-    // verifies the policy flows from the SIE context through the form into the validator. The test
+    // Verifies the policy flows from the SIE context through the form into the validator. The test
     // i18n returns the key, so the requirements sentence surfaces as its frame key.
     const restrictivePolicy: UsernamePolicy = {
       caseSensitive: true,

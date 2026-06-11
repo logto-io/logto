@@ -12,7 +12,6 @@ import { cond, pick } from '@silverhand/essentials';
 import { snakeCase } from 'snake-case';
 import { type SnakeCaseKeys } from 'snakecase-keys';
 
-import { EnvSet } from '#src/env-set/index.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -69,17 +68,9 @@ const isUserProfileClaim = (claim: string): claim is UserProfileClaimSnakeCase =
  * no explicit `profile.preferredUsername`, so standards-compliant clients (e.g. Gitea, Forgejo,
  * Mealie) receive a usable value out of the box. The explicit profile value always wins. Falls back
  * to `undefined` (not `null`) to keep it stripped from tokens, matching the other profile claims.
- * Gated until the feature ships.
  */
-const getPreferredUsername = (user: User): string | undefined => {
-  const explicit = user.profile.preferredUsername;
-
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    return explicit ?? user.username ?? undefined;
-  }
-
-  return explicit ?? undefined;
-};
+const getPreferredUsername = (user: User): string | undefined =>
+  user.profile.preferredUsername ?? user.username ?? undefined;
 
 /**
  * Get user claims data according to the claims.

@@ -162,13 +162,8 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       // reject the flip while such conflicts exist. Only the actual case-sensitive ->
       // case-insensitive transition needs checking: a tenant that is already case-insensitive
       // cannot have accumulated case conflicts (uniqueness was enforced case-insensitively), so we
-      // skip the (potentially expensive) scan otherwise. The `usernamePolicy` write is itself
-      // dev-gated, so this guard is too.
-      if (
-        EnvSet.values.isDevFeaturesEnabled &&
-        usernamePolicy?.caseSensitive === false &&
-        currentSettings.usernamePolicy.caseSensitive
-      ) {
+      // skip the (potentially expensive) scan otherwise.
+      if (usernamePolicy?.caseSensitive === false && currentSettings.usernamePolicy.caseSensitive) {
         const { totalConflicts, samples } = await findCaseConflicts(20);
         if (totalConflicts > 0) {
           throw new RequestError(
@@ -423,8 +418,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             passwordExpiration &&
             passwordExpirationToPersist && { passwordExpiration: passwordExpirationToPersist }
         ),
-        // Username policy is gated until the feature ships: ignore writes when the flag is off.
-        ...conditional(EnvSet.values.isDevFeaturesEnabled && usernamePolicy && { usernamePolicy }),
+        ...conditional(usernamePolicy && { usernamePolicy }),
         // Verification code policy is gated until the feature ships.
         ...conditional(
           EnvSet.values.isDevFeaturesEnabled && verificationCodePolicy && { verificationCodePolicy }
@@ -498,10 +492,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
   customUiAssetsRoutes(...args);
 
-  // Username policy conflict-detection API is gated until the feature ships, so the endpoint is
-  // absent (not just hidden) when dev features are off — keeping prod and its OpenAPI doc clean.
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    usernamePolicyRoutes(...args);
-  }
+  usernamePolicyRoutes(...args);
 }
 /* eslint-enable max-lines */

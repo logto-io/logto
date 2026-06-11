@@ -3,7 +3,6 @@ import { userInfoSelectFields, jsonObjectGuard } from '@logto/schemas';
 import { condArray, conditional, pick } from '@silverhand/essentials';
 import { literal, object, string } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayloadFromPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -67,9 +66,7 @@ export default function userRoutes<T extends AuthedMeRouter>(
         await checkVerificationStatus(userId, primaryEmail);
       }
 
-      // Per-tenant policy enforcement is gated until the feature ships; the regex guard above is the
-      // always-on hard floor, so prod behavior is unchanged when the flag is off.
-      if (username !== undefined && EnvSet.values.isDevFeaturesEnabled) {
+      if (username !== undefined) {
         const { usernamePolicy } = await findDefaultSignInExperience();
         assertUsernameAllowed(usernamePolicy, username);
       }
