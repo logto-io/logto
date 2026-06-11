@@ -13,6 +13,31 @@
 </head>
 
 <body>
+  <script>
+    (function () {
+      try {
+        var ssr = window.logtoSsr;
+        var darkOk = typeof ssr === 'object' && ssr !== null
+          && ssr.signInExperience && ssr.signInExperience.data
+          && ssr.signInExperience.data.color.isDarkModeEnabled;
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = (darkOk && prefersDark) ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        document.body.classList.add(
+          /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop');
+        if (typeof ssr === 'object' && ssr !== null && ssr.signInExperience
+          && ssr.signInExperience.data && ssr.signInExperience.data.color) {
+          var color = ssr.signInExperience.data.color;
+          var primaryColor = theme === 'dark' && color.darkPrimaryColor
+            ? color.darkPrimaryColor
+            : color.primaryColor;
+          if (primaryColor) {
+            document.body.style.setProperty('--color-brand-default', primaryColor);
+          }
+        }
+      } catch (e) { /* noop */ }
+    })();
+  </script>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="app"></div>
   <script type="module" src="src/index.tsx"></script>
