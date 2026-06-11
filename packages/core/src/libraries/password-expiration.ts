@@ -1,6 +1,5 @@
 import { type SignInExperience, type User } from '@logto/schemas';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -18,7 +17,7 @@ export const verifyPasswordExpirationPolicy = (
   passwordExpiration: SignInExperience['passwordExpiration'],
   user: User
 ): void => {
-  if (!EnvSet.values.isDevFeaturesEnabled || !passwordExpiration.enabled) {
+  if (!passwordExpiration.enabled) {
     return;
   }
 

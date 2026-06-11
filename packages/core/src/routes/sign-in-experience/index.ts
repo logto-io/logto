@@ -139,16 +139,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       const normalizedCustomUiCsp = conditional(customUiCsp && normalizeCustomUiCsp(customUiCsp));
       const hasCustomUiCsp = hasCustomUiCspSources(normalizedCustomUiCsp);
 
-      if (passwordExpiration) {
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError({
-            code: 'request.invalid_input',
-            details: 'Password expiration is not available',
-          })
-        );
-      }
-
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
       }
@@ -288,23 +278,18 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
               ...passwordExpiration,
             };
 
-      const passwordExpirationResult = conditional(
-        EnvSet.values.isDevFeaturesEnabled &&
-          passwordExpirationPolicyGuard.safeParse(passwordExpirationPayload)
+      const passwordExpirationResult =
+        passwordExpirationPolicyGuard.safeParse(passwordExpirationPayload);
+
+      assertThat(
+        passwordExpirationResult.success,
+        new RequestError({
+          code: 'sign_in_experiences.password_expiration_invalid_period_days',
+          status: 422,
+        })
       );
 
-      if (passwordExpirationResult) {
-        assertThat(
-          passwordExpirationResult.success,
-          new RequestError({
-            code: 'sign_in_experiences.password_expiration_invalid_period_days',
-            status: 422,
-          })
-        );
-      }
-
-      const currentPasswordExpiration =
-        passwordExpirationResult?.success === true ? passwordExpirationResult.data : undefined;
+      const currentPasswordExpiration = passwordExpirationResult.data;
 
       // `enabledAt` is server-managed and never editable via the API: preserve the stored value
       // while the policy stays enabled, stamp a fresh timestamp when toggling disabled -> enabled,
@@ -312,14 +297,14 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
       const storedEnabledAt = currentSettings.passwordExpiration.enabled
         ? currentSettings.passwordExpiration.enabledAt
         : undefined;
-      const passwordExpirationToPersist = currentPasswordExpiration?.enabled
+      const passwordExpirationToPersist = currentPasswordExpiration.enabled
         ? {
             ...currentPasswordExpiration,
             enabledAt: storedEnabledAt ?? Date.now(),
           }
         : currentPasswordExpiration;
 
-      if (currentPasswordExpiration?.enabled) {
+      if (currentPasswordExpiration.enabled) {
         const forgotPasswordAvailability = getForgotPasswordAvailability(
           connectors,
           forgotPasswordMethods ?? currentSettings.forgotPasswordMethods
@@ -413,11 +398,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             customUiCsp: normalizedCustomUiCsp,
           }
         ),
-        ...conditional(
-          EnvSet.values.isDevFeaturesEnabled &&
-            passwordExpiration &&
-            passwordExpirationToPersist && { passwordExpiration: passwordExpirationToPersist }
-        ),
+        ...conditional(passwordExpiration && { passwordExpiration: passwordExpirationToPersist }),
         ...conditional(usernamePolicy && { usernamePolicy }),
         // Verification code policy is gated until the feature ships.
         ...conditional(

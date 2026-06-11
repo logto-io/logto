@@ -8,9 +8,9 @@ import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connecto
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { disablePasswordExpiration } from '#src/helpers/sign-in-experience.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { devFeatureTest, generatePassword, generateUsername } from '#src/utils.js';
+import { generatePassword, generateUsername } from '#src/utils.js';
 
-devFeatureTest.describe('password expiration', () => {
+describe('password expiration', () => {
   const context = new (class Context {
     username = generateUsername();
     password = generatePassword();

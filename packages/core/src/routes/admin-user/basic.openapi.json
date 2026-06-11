@@ -259,7 +259,6 @@
     },
     "/api/users/{userId}/password/expiration": {
       "patch": {
-        "tags": ["Dev feature"],
         "requestBody": {
           "content": {
             "application/json": {

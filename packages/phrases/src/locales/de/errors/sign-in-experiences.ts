@@ -45,7 +45,7 @@ const sign_in_experiences = {
   password_expiration_not_enabled:
     'Die Passwort-Ablaufrichtlinie ist nicht aktiviert. Aktivieren Sie diese in den Einstellungen für das Anmeldeerlebnis, bevor Sie Passwörter ablaufen lassen.',
   password_expiration_invalid_period_days:
-    'Wenn die Passwortablaufregel aktiviert ist, muss reminderPeriodDays kleiner als validPeriodDays sein.',
+    'Die Anzahl der gültigen Tage muss eine positive Ganzzahl sein, wenn die Passwortablaufregel aktiviert ist.',
   username_policy_case_conflicts_exist:
     'Kann nicht auf Groß-/Kleinschreibung empfindliche Benutzernamen umschalten, während Benutzernamen vorhanden sind, die sich nur durch Groß-/Kleinschreibung unterscheiden. Löse die Konflikte und versuche es erneut.',
 };

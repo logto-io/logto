@@ -32,8 +32,7 @@ const sign_in_experiences = {
   password_expiration_requires_forgot_password:
     '密码过期需要至少配置一种带有有效连接器的忘记密码方式。',
   password_expiration_not_enabled: '密码过期策略未启用。在过期密码前，请在登录体验设置中启用它。',
-  password_expiration_invalid_period_days:
-    '启用密码过期策略时，reminderPeriodDays 必须小于 validPeriodDays。',
+  password_expiration_invalid_period_days: '启用密码过期策略时，有效期天数必须为正整数。',
   username_policy_case_conflicts_exist:
     '无法在存在仅大小写不同的用户名时切换为不区分大小写的用户名。请解决这些冲突，然后重试。',
 };

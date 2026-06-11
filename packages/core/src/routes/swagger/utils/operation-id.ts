@@ -30,7 +30,6 @@ type RouteDictionary = Record<`${OpenAPIV3.HttpMethods} ${string}`, string>;
 const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
-  'patch /users/:userId/password/expiration': 'UpdateUserPasswordExpiration',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
@@ -74,6 +73,7 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Users
   'post /users/:userId/roles': 'AssignUserRoles',
   'post /users/:userId/password/verify': 'VerifyUserPassword',
+  'patch /users/:userId/password/expiration': 'UpdateUserPasswordExpiration',
   'post /users/:userId/personal-access-tokens/delete': 'DeletePersonalAccessTokenByName',
   'patch /users/:userId/personal-access-tokens': 'UpdatePersonalAccessTokenByName',
   // Dashboard

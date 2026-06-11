@@ -7,11 +7,9 @@ import {
   type SignInExperience,
   type PasswordExpirationPolicy,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { type RequestError } from '@/hooks/use-api';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
@@ -87,7 +85,7 @@ export const passwordPolicyFormParser = {
           words: isCustomWordsEnabled ? customWords.split('\n').filter(Boolean) : [],
         },
       },
-      ...conditional(isDevFeaturesEnabled && { passwordExpiration }),
+      passwordExpiration,
     };
   },
 };
