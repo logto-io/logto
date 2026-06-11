@@ -19,6 +19,16 @@ export type SsrData = {
 };
 
 /**
+ * The server-side rendering data type for **account center**. Only sign-in experience color/theme
+ * data is needed for theme flash prevention.
+ */
+export type AccountCenterSsrData = {
+  signInExperience: {
+    data: FullSignInExperience;
+  };
+};
+
+/**
  * Variable placeholder for **experience** server-side rendering. The value should be replaced by
  * the server.
  *

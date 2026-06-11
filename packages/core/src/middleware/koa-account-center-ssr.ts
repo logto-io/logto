@@ -1,3 +1,4 @@
+import { type AccountCenterSsrData } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 
@@ -46,7 +47,7 @@ export default function koaAccountCenterSsr<StateT, ContextT extends WithI18nCon
       accountCenterSsrPlaceholder,
       `Object.freeze(${JSON.stringify({
         signInExperience: { data: signInExperience },
-      })})`
+      } satisfies AccountCenterSsrData)})`
     );
   };
 }
