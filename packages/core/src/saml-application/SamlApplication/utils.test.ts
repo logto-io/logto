@@ -87,8 +87,8 @@ describe('generateAutoSubmitForm', () => {
 
     const result = generateAutoSubmitForm(actionUrl, samlResponse);
 
-    expect(result).toContain('action="https://example.com/acs?param=value&other=123"');
-    expect(result).toContain('value="response+with/special=characters&"');
+    expect(result).toContain('action="https://example.com/acs?param=value&amp;other=123"');
+    expect(result).toContain('value="response+with/special=characters&amp;"');
   });
 
   it('should include RelayState field when relayState is provided', () => {
@@ -119,6 +119,36 @@ describe('generateAutoSubmitForm', () => {
 
     const result = generateAutoSubmitForm(actionUrl, samlResponse, relayState);
 
-    expect(result).toContain(`<input type="hidden" name="RelayState" value="${relayState}" />`);
+    expect(result).toContain(
+      '<input type="hidden" name="RelayState" value="relay+state/with&amp;special=characters" />'
+    );
+  });
+
+  it('should html-escape double quotes in relayState so the attribute value is not truncated', () => {
+    // Some SPs (e.g. HubSpot membership SSO) send a JSON string as RelayState. Without
+    // escaping, the attribute value is cut off at the first inner double quote and the
+    // SP receives only `{`.
+    const actionUrl = 'https://example.com/acs';
+    const samlResponse = 'base64EncodedSamlResponse';
+    const relayState = '{"pageId":12345,"redirectUrl":"https://example.com/private"}';
+
+    const result = generateAutoSubmitForm(actionUrl, samlResponse, relayState);
+
+    expect(result).toContain(
+      '<input type="hidden" name="RelayState" value="{&quot;pageId&quot;:12345,&quot;redirectUrl&quot;:&quot;https://example.com/private&quot;}" />'
+    );
+  });
+
+  it('should html-escape markup characters in samlResponse and relayState', () => {
+    const actionUrl = 'https://example.com/acs';
+    const samlResponse = '<script>alert(1)</script>';
+    const relayState = `'"><img src=x onerror=alert(1)>`;
+
+    const result = generateAutoSubmitForm(actionUrl, samlResponse, relayState);
+
+    expect(result).not.toContain('<script>alert(1)</script>');
+    expect(result).not.toContain('<img');
+    expect(result).toContain('value="&lt;script&gt;alert(1)&lt;/script&gt;"');
+    expect(result).toContain('value="&#39;&quot;&gt;&lt;img src=x onerror=alert(1)&gt;"');
   });
 });

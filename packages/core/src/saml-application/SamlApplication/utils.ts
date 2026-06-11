@@ -54,6 +54,14 @@ export const buildSamlAssertionNameId = (
   });
 };
 
+const escapeHtmlAttributeValue = (value: string): string =>
+  value
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+
 export const generateAutoSubmitForm = (
   actionUrl: string,
   samlResponse: string,
@@ -62,9 +70,17 @@ export const generateAutoSubmitForm = (
   return `
     <html>
       <body>
-        <form id="redirectForm" action="${actionUrl}" method="POST">
-          <input type="hidden" name="SAMLResponse" value="${samlResponse}" />
-          ${relayState ? `<input type="hidden" name="RelayState" value="${relayState}" />` : ''}
+        <form id="redirectForm" action="${escapeHtmlAttributeValue(actionUrl)}" method="POST">
+          <input type="hidden" name="SAMLResponse" value="${escapeHtmlAttributeValue(
+            samlResponse
+          )}" />
+          ${
+            relayState
+              ? `<input type="hidden" name="RelayState" value="${escapeHtmlAttributeValue(
+                  relayState
+                )}" />`
+              : ''
+          }
         </form>
         <script>
           window.onload = function() {
