@@ -65,6 +65,7 @@ const account_center = {
   username: {
     title: 'تعيين اسم المستخدم',
     description: 'يجب أن يحتوي اسم المستخدم على أحرف وأرقام وشرطات سفلية فقط.',
+    policy_description: '{{requirements}}',
     success: 'تم تحديث اسم المستخدم بنجاح.',
   },
   security: {

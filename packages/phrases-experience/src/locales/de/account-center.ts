@@ -72,6 +72,7 @@ const account_center = {
   username: {
     title: 'Benutzernamen festlegen',
     description: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.',
+    policy_description: '{{requirements}}',
     success: 'Benutzername erfolgreich aktualisiert.',
   },
   security: {

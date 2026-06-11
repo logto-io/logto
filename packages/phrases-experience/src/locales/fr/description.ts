@@ -47,6 +47,8 @@ const description = {
   enter_username: "Définir un nom d'utilisateur",
   enter_username_description:
     "Le nom d'utilisateur est une alternative pour la connexion. Le nom d'utilisateur doit contenir uniquement des lettres, des chiffres et des underscores.",
+  enter_username_policy_description:
+    "Le nom d'utilisateur est une alternative pour la connexion. {{requirements}}",
   link_email: "Lier l'adresse e-mail",
   link_phone: 'Lier le numéro de téléphone',
   link_email_or_phone: "Lier l'adresse e-mail ou le numéro de téléphone",

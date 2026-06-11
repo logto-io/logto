@@ -68,6 +68,7 @@ const account_center = {
   username: {
     title: 'Definir nome de usuário',
     description: 'O nome de usuário deve conter apenas letras, números e sublinhados.',
+    policy_description: '{{requirements}}',
     success: 'Nome de usuário atualizado com sucesso.',
   },
   security: {

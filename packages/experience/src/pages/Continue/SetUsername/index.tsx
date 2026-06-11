@@ -3,6 +3,7 @@ import { useContext } from 'react';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import { useUsernamePolicyDescription } from '@/hooks/use-sie';
 import { type ContinueFlowInteractionEvent } from '@/types';
 
 import IdentifierProfileForm from '../IdentifierProfileForm';
@@ -15,6 +16,7 @@ type Props = {
 
 const SetUsername = ({ interactionEvent }: Props) => {
   const { onSubmit, errorMessage, clearErrorMessage } = useSetUsername(interactionEvent);
+  const usernamePolicyDescription = useUsernamePolicyDescription();
 
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
 
@@ -31,7 +33,12 @@ const SetUsername = ({ interactionEvent }: Props) => {
   return (
     <SecondaryPageLayout
       title="description.enter_username"
-      description="description.enter_username_description"
+      description={
+        usernamePolicyDescription
+          ? 'description.enter_username_policy_description'
+          : 'description.enter_username_description'
+      }
+      descriptionProps={{ requirements: usernamePolicyDescription }}
     >
       <IdentifierProfileForm
         autoFocus

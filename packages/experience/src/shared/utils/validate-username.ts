@@ -20,6 +20,29 @@ const violationToErrorType: Readonly<
 });
 
 /**
+ * Keep in sync with the policy-driven members of {@link UsernameViolation}; `violationToErrorType`
+ * above is exhaustive over the union, so a new violation type fails the build there first and must
+ * be classified here at the same time.
+ */
+const policyViolationErrorCodes: ReadonlySet<string> = new Set([
+  'username_too_short',
+  'username_too_long',
+  'username_uppercase_not_allowed',
+  'username_lowercase_not_allowed',
+  'username_numbers_not_allowed',
+  'username_underscore_not_allowed',
+]);
+
+/**
+ * Whether the validation error is a per-tenant policy violation, as opposed to the always-on hard
+ * floor (non-empty, no leading digit, valid charset). Consumers that show no upfront policy
+ * description can swap policy violations for the full requirements sentence, while hard-floor
+ * violations stay specific — the requirements sentence does not describe the hard floor.
+ */
+export const isUsernamePolicyViolation = (error: ErrorType): boolean =>
+  policyViolationErrorCodes.has(typeof error === 'string' ? error : error.code);
+
+/**
  * Validate a username for the experience UI.
  *
  * Without a policy, only the always-on hard floor is applied (non-empty, no leading digit, valid

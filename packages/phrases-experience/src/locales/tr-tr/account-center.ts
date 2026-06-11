@@ -66,6 +66,7 @@ const account_center = {
   username: {
     title: 'Kullanıcı adını ayarla',
     description: 'Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir.',
+    policy_description: '{{requirements}}',
     success: 'Kullanıcı adı başarıyla güncellendi.',
   },
   security: {

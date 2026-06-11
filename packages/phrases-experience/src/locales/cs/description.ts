@@ -46,6 +46,8 @@ const description = {
   enter_username: 'Nastavit uživatelské jméno',
   enter_username_description:
     'Uživatelské jméno slouží jako alternativa pro přihlášení. Mělo by obsahovat pouze písmena, čísla a podtržítka.',
+  enter_username_policy_description:
+    'Uživatelské jméno slouží jako alternativa pro přihlášení. {{requirements}}',
   link_email: 'Propojit e-mail',
   link_phone: 'Propojit telefonní číslo',
   link_email_or_phone: 'Propojit e-mail nebo telefonní číslo',

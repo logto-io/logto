@@ -70,6 +70,7 @@ const account_center = {
   username: {
     title: 'Imposta nome utente',
     description: 'Il nome utente può contenere solo lettere, numeri e trattini bassi.',
+    policy_description: '{{requirements}}',
     success: 'Nome utente aggiornato con successo.',
   },
   security: {

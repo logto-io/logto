@@ -47,6 +47,7 @@ const description = {
   enter_username: 'Set username',
   enter_username_description:
     'Username is an alternative for sign-in. Username should contain only letters, numbers, and underscores.',
+  enter_username_policy_description: 'Username is an alternative for sign-in. {{requirements}}',
   link_email: 'Link email',
   link_phone: 'Link phone',
   link_email_or_phone: 'Link email or phone',

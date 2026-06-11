@@ -44,6 +44,7 @@ const description = {
   enter_username: '사용자 이름 설정하기',
   enter_username_description:
     '사용자 이름은 로그인을 할 때 사용되요. 사용자 이름에는 문자, 숫자 및 밑줄만 포함되어야 해요.',
+  enter_username_policy_description: '사용자 이름은 로그인을 할 때 사용되요. {{requirements}}',
   link_email: '이메일 연동',
   link_phone: '휴대전화번호 연동',
   link_email_or_phone: '이메일 또는 휴대전화번호 연동',

@@ -1,6 +1,6 @@
 import { defaultUsernamePolicy, type UsernamePolicy } from '@logto/schemas';
 
-import { validateUsername } from './validate-username';
+import { isUsernamePolicyViolation, validateUsername } from './validate-username';
 
 const lowercaseOnly: UsernamePolicy = {
   caseSensitive: true,
@@ -89,5 +89,26 @@ describe('validateUsername (experience)', () => {
     it('accepts pure uppercase within bounds', () => {
       expect(validateUsername('ABCD', uppercaseOnly)).toBeUndefined();
     });
+  });
+});
+
+describe('isUsernamePolicyViolation', () => {
+  it('classifies length and character-type errors as policy violations', () => {
+    expect(isUsernamePolicyViolation({ code: 'username_too_short', data: { min: 4 } })).toBe(true);
+    expect(isUsernamePolicyViolation({ code: 'username_too_long', data: { max: 8 } })).toBe(true);
+    expect(isUsernamePolicyViolation('username_uppercase_not_allowed')).toBe(true);
+    expect(isUsernamePolicyViolation('username_lowercase_not_allowed')).toBe(true);
+    expect(isUsernamePolicyViolation('username_numbers_not_allowed')).toBe(true);
+    expect(isUsernamePolicyViolation('username_underscore_not_allowed')).toBe(true);
+  });
+
+  it('classifies hard-floor errors as non-policy violations', () => {
+    expect(isUsernamePolicyViolation('username_required')).toBe(false);
+    expect(isUsernamePolicyViolation('username_should_not_start_with_number')).toBe(false);
+    expect(isUsernamePolicyViolation('username_invalid_charset')).toBe(false);
+  });
+
+  it('ignores errors from other identifier types', () => {
+    expect(isUsernamePolicyViolation('invalid_email')).toBe(false);
   });
 });
