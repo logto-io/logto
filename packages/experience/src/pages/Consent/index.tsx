@@ -12,6 +12,7 @@ import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import ErrorPage from '@/pages/ErrorPage';
 import Button from '@/shared/components/Button';
+import { searchKeys } from '@/shared/utils/search-parameters';
 
 import OrganizationSelector, { type Organization } from './OrganizationSelector';
 import ScopesListCard from './ScopesListCard';
@@ -48,6 +49,19 @@ const Consent = () => {
     },
     [consentErrorHandlers, handleError]
   );
+
+  const signOut = useCallback(() => {
+    const applicationId =
+      new URLSearchParams(window.location.search).get(searchKeys.appId) ??
+      consentData?.application.id;
+    const signOutUrl = new URL('/oidc/session/end', window.location.origin);
+
+    if (applicationId) {
+      signOutUrl.searchParams.set('client_id', applicationId);
+    }
+
+    window.location.assign(signOutUrl.href);
+  }, [consentData?.application.id]);
 
   const consentHandler = useCallback(async () => {
     setIsConsentLoading(true);
@@ -94,6 +108,10 @@ const Consent = () => {
         isNavbarHidden
         title="error.access_denied"
         message="error.application_access_denied"
+        primaryAction={{
+          title: 'account_center.sessions.revoke_session',
+          onClick: signOut,
+        }}
       />
     );
   }

@@ -1,12 +1,14 @@
 import { Theme } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import { useContext } from 'react';
+import { type To } from 'react-router-dom';
 
 import StaticPageLayout from '@/Layout/StaticPageLayout';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import EmptyStateDark from '@/assets/icons/empty-state-dark.svg?react';
 import EmptyState from '@/assets/icons/empty-state.svg?react';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import Button from '@/shared/components/Button';
 import DynamicT from '@/shared/components/DynamicT';
 import NavBar from '@/shared/components/NavBar';
 import PageMeta from '@/shared/components/PageMeta';
@@ -19,6 +21,12 @@ type Props = {
   readonly message?: TFuncKey;
   readonly rawMessage?: string;
   readonly isNavbarHidden?: boolean;
+  readonly primaryAction?: {
+    readonly title: TFuncKey;
+    readonly to?: To;
+    readonly replace?: boolean;
+    readonly onClick?: () => void;
+  };
 };
 
 const ErrorPage = ({
@@ -26,6 +34,7 @@ const ErrorPage = ({
   message,
   rawMessage,
   isNavbarHidden,
+  primaryAction,
 }: Props) => {
   const { theme } = useContext(PageContext);
   const navigate = useNavigateWithPreservedSearchParams();
@@ -49,6 +58,22 @@ const ErrorPage = ({
         </div>
         {errorMessage && (
           <div className={styles.message}>{rawMessage ?? <DynamicT forKey={message} />}</div>
+        )}
+        {primaryAction && (
+          <Button
+            className={styles.backButton}
+            title={primaryAction.title}
+            onClick={() => {
+              if (primaryAction.onClick) {
+                primaryAction.onClick();
+                return;
+              }
+
+              if (primaryAction.to) {
+                navigate(primaryAction.to, { replace: primaryAction.replace });
+              }
+            }}
+          />
         )}
         <SupportInfo />
       </div>

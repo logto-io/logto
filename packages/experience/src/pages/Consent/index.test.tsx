@@ -6,6 +6,7 @@ import UserInteractionContextProvider from '@/Providers/UserInteractionContextPr
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { consent, getConsentInfo } from '@/apis/consent';
+import { searchKeys } from '@/shared/utils/search-parameters';
 
 import Consent from '.';
 
@@ -16,6 +17,8 @@ jest.mock('@/apis/consent', () => ({
 
 const mockedConsent = consent as jest.MockedFunction<typeof consent>;
 const mockedGetConsentInfo = getConsentInfo as jest.MockedFunction<typeof getConsentInfo>;
+const originalLocation = window.location;
+const assign = jest.fn();
 
 const consentInfo: ConsentInfoResponse = {
   application: {
@@ -68,9 +71,38 @@ const renderConsent = () =>
     </SettingsProvider>
   );
 
+const renderConsentWithSearchParams = () =>
+  renderWithPageContext(
+    <SettingsProvider>
+      <UserInteractionContextProvider>
+        <Consent />
+      </UserInteractionContextProvider>
+    </SettingsProvider>
+  );
+
 describe('Consent', () => {
+  beforeAll(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: {
+        assign,
+        origin: 'http://localhost',
+        search: `?${searchKeys.appId}=application_id`,
+      },
+    });
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: originalLocation,
+    });
   });
 
   it('renders generic access denied page when consent info is denied', async () => {
@@ -83,6 +115,7 @@ describe('Consent', () => {
     });
 
     expect(queryByText('error.application_access_denied')).not.toBeNull();
+    expect(queryByText('account_center.sessions.revoke_session')).not.toBeNull();
     expect(queryByText('action.authorize')).toBeNull();
     expect(queryByText('action.cancel')).toBeNull();
   });
@@ -104,7 +137,22 @@ describe('Consent', () => {
     });
 
     expect(queryByText('error.application_access_denied')).not.toBeNull();
+    expect(queryByText('account_center.sessions.revoke_session')).not.toBeNull();
     expect(queryByText('action.authorize')).toBeNull();
     expect(queryByText('action.cancel')).toBeNull();
+  });
+
+  it('signs out from the access denied page', async () => {
+    mockedGetConsentInfo.mockRejectedValueOnce(accessDeniedError());
+
+    const { getByText, queryByText } = renderConsentWithSearchParams();
+
+    await waitFor(() => {
+      expect(queryByText('account_center.sessions.revoke_session')).not.toBeNull();
+    });
+
+    fireEvent.click(getByText('account_center.sessions.revoke_session'));
+
+    expect(assign).toBeCalledWith('http://localhost/oidc/session/end?client_id=application_id');
   });
 });
