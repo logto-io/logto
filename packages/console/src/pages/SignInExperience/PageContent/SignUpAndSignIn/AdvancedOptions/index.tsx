@@ -54,6 +54,7 @@ function AdvancedOptions({ signInExperience }: Props) {
           )}
         />
       </FormField>
+      <UsernamePolicy signInExperience={signInExperience} />
       <FormField
         title="sign_in_exp.sign_up_and_sign_in.advanced_options.unknown_session_redirect_url"
         tip={t('sign_in_exp.sign_up_and_sign_in.advanced_options.unknown_session_redirect_url_tip')}
@@ -66,7 +67,6 @@ function AdvancedOptions({ signInExperience }: Props) {
           placeholder="https://"
         />
       </FormField>
-      <UsernamePolicy signInExperience={signInExperience} />
     </Card>
   );
 }
