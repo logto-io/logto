@@ -46,6 +46,7 @@ const description = {
   enter_username: 'Встановити ім’я користувача',
   enter_username_description:
     'Ім’я користувача є альтернативою для входу. Воно має містити лише літери, цифри та підкреслення.',
+  enter_username_policy_description: 'Ім’я користувача є альтернативою для входу. {{requirements}}',
   link_email: 'Зв’язати електронну пошту',
   link_phone: 'Зв’язати телефон',
   link_email_or_phone: 'Зв’язати електронну пошту або телефон',

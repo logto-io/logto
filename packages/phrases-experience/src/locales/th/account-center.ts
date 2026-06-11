@@ -11,6 +11,7 @@ const account_center = {
     profile_description: 'เปลี่ยนข้อมูลส่วนบุคคลของคุณที่นี่',
     sidebar_personal_info: 'ข้อมูลส่วนบุคคล',
     sidebar_security: 'ความปลอดภัย',
+    sidebar_sessions: 'เซสชัน',
     support: 'ฝ่ายช่วยเหลือ',
   },
   verification: {
@@ -64,6 +65,7 @@ const account_center = {
   username: {
     title: 'ตั้งชื่อผู้ใช้',
     description: 'ชื่อผู้ใช้ต้องมีเฉพาะตัวอักษร ตัวเลข และขีดล่างเท่านั้น',
+    policy_description: '{{requirements}}',
     success: 'อัปเดตชื่อผู้ใช้เรียบร้อยแล้ว',
   },
   security: {
@@ -242,6 +244,28 @@ const account_center = {
     name_passkey_description:
       'คุณยืนยันอุปกรณ์นี้สำหรับการยืนยันตัวตนแบบ 2 ขั้นตอนสำเร็จแล้ว ปรับแต่งชื่อเพื่อให้จดจำได้หากคุณมีหลายคีย์',
     name_input_label: 'ชื่อ',
+  },
+  sessions: {
+    page_title: 'เซสชัน',
+    page_description: 'จัดการเซสชันที่ใช้งานอยู่และแอปพลิเคชันบุคคลที่สามที่ได้รับอนุญาต',
+    title: 'เซสชัน',
+    current_session: 'เซสชันปัจจุบัน',
+    signed_in_at: 'เข้าสู่ระบบเมื่อ {{date}}',
+    revoke_session: 'ออกจากระบบ',
+    revoke_session_title: 'ออกจากระบบเซสชัน',
+    revoke_session_description:
+      'การดำเนินการนี้จะออกจากระบบเซสชันและเพิกถอนการเข้าถึงที่เกี่ยวข้องทั้งหมด คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
+    no_other_sessions: 'ไม่มีเซสชันที่ใช้งานอยู่อื่น',
+    loading: 'กำลังโหลด...',
+    third_party_apps_title: 'แอปบุคคลที่สาม',
+    no_third_party_apps: 'ไม่มีแอปพลิเคชันบุคคลที่สามที่ได้รับอนุญาต',
+    third_party_apps_load_failed: 'โหลดแอปบุคคลที่สามไม่สำเร็จ โปรดลองอีกครั้ง',
+    granted_at: 'อนุญาตเมื่อ {{date}}',
+    revoke_grant: 'ลบ',
+    revoke_grant_title: 'ลบการเข้าถึงแอปบุคคลที่สาม',
+    revoke_grant_description:
+      'การดำเนินการนี้จะเพิกถอนการเข้าถึงทั้งหมดที่มอบให้แอปพลิเคชันนี้ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
+    revoke_grant_failed: 'การเพิกถอนสิทธิ์บางรายการล้มเหลว กรุณาลองอีกครั้ง',
   },
 };
 

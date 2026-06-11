@@ -90,7 +90,7 @@ const security = {
       '只有在登录体验中配置至少一种带有有效连接器的忘记密码方式后，才能启用密码过期。',
     expiration_period: '密码有效期限（天）',
     expiration_period_description: '密码在过期前保持有效的天数。',
-    expiration_period_error: '密码有效期限必须至少为 1 天。',
+    expiration_period_error: '密码有效期限必须在 {{min}} 到 {{max}} 天之间。',
   },
   verification_code_policy: {
     card_title: '验证码',
@@ -110,6 +110,7 @@ const security = {
       error_message: '最大重试次数必须在 1 到 100 之间。',
     },
   },
+
   sentinel_policy: {
     card_title: '标识符锁定',
     card_description:

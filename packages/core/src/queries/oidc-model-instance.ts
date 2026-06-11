@@ -1,4 +1,4 @@
-import type { OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
+import type { Application, OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
 import { Applications, OidcModelInstances } from '@logto/schemas';
 import type { Nullable } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
@@ -15,10 +15,10 @@ export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
 const { table: applicationTable } = convertToIdentifiers(Applications);
 
-export type ActiveApplicationGrantInstance = Pick<
-  OidcModelInstance,
-  'id' | 'payload' | 'expiresAt'
->;
+export type ActiveGrantInstance = Pick<OidcModelInstance, 'id' | 'payload' | 'expiresAt'>;
+export type ActiveApplicationGrantInstance = ActiveGrantInstance & {
+  application: Pick<Application, 'id' | 'name'>;
+};
 export type GrantApplicationType = 'thirdParty' | 'firstParty';
 const sessionModelName = 'Session';
 
@@ -237,13 +237,18 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
       OidcModelInstances.fields.modelName,
     ]);
     const applicationId = sql.identifier([applicationAlias, Applications.fields.id]);
+    const applicationName = sql.identifier([applicationAlias, Applications.fields.name]);
     const applicationIsThirdParty = sql.identifier([
       applicationAlias,
       Applications.fields.isThirdParty,
     ]);
 
     return pool.any<ActiveApplicationGrantInstance>(sql`
-      select ${oidcModelInstanceId}, ${oidcModelInstancePayload}, ${oidcModelInstanceExpiresAt}
+      select ${oidcModelInstanceId}, ${oidcModelInstancePayload}, ${oidcModelInstanceExpiresAt},
+        json_build_object(
+          'id', ${applicationId},
+          'name', ${applicationName}
+        ) as application
       from ${table} as ${oidcModelInstanceTableIdentifier}
       inner join ${applicationTable} as ${applicationTableIdentifier}
         on ${oidcModelInstancePayload}->>'clientId'=${applicationId}
@@ -259,7 +264,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   const findUserActiveGrantsByClientId = async (userId: string, clientId: string) => {
-    return pool.any<ActiveApplicationGrantInstance>(sql`
+    return pool.any<ActiveGrantInstance>(sql`
       select ${fields.id}, ${fields.payload}, ${fields.expiresAt}
       from ${table}
       where ${fields.modelName}='Grant'

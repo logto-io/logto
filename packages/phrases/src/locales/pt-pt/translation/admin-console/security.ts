@@ -99,7 +99,8 @@ const security = {
     expiration_period: 'Período de validade da palavra-passe (dias)',
     expiration_period_description:
       'Número de dias que uma palavra-passe permanece válida antes de expirar.',
-    expiration_period_error: 'O período de validade da palavra-passe deve ser de pelo menos 1 dia.',
+    expiration_period_error:
+      'O período de validade da palavra-passe deve estar entre {{min}} e {{max}} dias.',
   },
   verification_code_policy: {
     card_title: 'Código de verificação',
@@ -123,6 +124,7 @@ const security = {
       error_message: 'O número máximo de novas tentativas deve estar entre 1 e 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Bloqueio de identificador',
     card_description:

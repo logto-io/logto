@@ -11,6 +11,7 @@ const account_center = {
     profile_description: '在这里更改你的个人信息。',
     sidebar_personal_info: '个人信息',
     sidebar_security: '安全',
+    sidebar_sessions: '会话',
     support: '支持',
   },
   verification: {
@@ -63,6 +64,7 @@ const account_center = {
   username: {
     title: '设置用户名',
     description: '用户名只能包含字母、数字和下划线。',
+    policy_description: '{{requirements}}',
     success: '用户名更新成功。',
   },
   security: {
@@ -233,6 +235,26 @@ const account_center = {
     name_passkey_description:
       '您已成功验证此设备用于两步验证。自定义名称以便在拥有多个密钥时进行识别。',
     name_input_label: '名称',
+  },
+  sessions: {
+    page_title: '会话',
+    page_description: '管理你的活跃会话和已授权的第三方应用。',
+    title: '会话',
+    current_session: '当前会话',
+    signed_in_at: '登录于 {{date}}',
+    revoke_session: '退出登录',
+    revoke_session_title: '退出会话',
+    revoke_session_description: '这将退出该会话并撤销所有关联的访问权限。确定要继续吗？',
+    no_other_sessions: '没有其他活跃会话。',
+    loading: '加载中...',
+    third_party_apps_title: '第三方应用',
+    no_third_party_apps: '没有已授权的第三方应用。',
+    third_party_apps_load_failed: '第三方应用加载失败，请重试。',
+    granted_at: '授权于 {{date}}',
+    revoke_grant: '移除',
+    revoke_grant_title: '移除第三方应用访问权限',
+    revoke_grant_description: '这将撤销授予该应用的所有访问权限。确定要继续吗？',
+    revoke_grant_failed: '部分授权撤销失败，请重试。',
   },
 };
 

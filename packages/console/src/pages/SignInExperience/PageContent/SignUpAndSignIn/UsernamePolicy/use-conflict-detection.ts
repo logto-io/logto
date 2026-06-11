@@ -12,8 +12,8 @@ const conflictsEndpoint = 'api/sign-in-exp/username-policy/case-sensitivity-conf
 
 /**
  * Reads username case-sensitivity conflicts, debounced by 300 ms, while `enabled` (the operator is
- * switching the policy to case-insensitive). Surfacing them lets the modal block the save before
- * the server rejects the PATCH with a 409.
+ * switching the policy to case-insensitive). Surfacing them lets the modal warn about conflicts and
+ * guard the save before the server rejects the PATCH with a 409.
  */
 const useConflictDetection = (enabled: boolean) => {
   const [debouncedEnabled, setDebouncedEnabled] = useState(false);
@@ -33,17 +33,19 @@ const useConflictDetection = (enabled: boolean) => {
     };
   }, [enabled]);
 
-  const { data, error, isLoading } = useSWR<CaseConflicts, RequestError>(
+  const { data, error, isValidating } = useSWR<CaseConflicts, RequestError>(
     debouncedEnabled && conflictsEndpoint
   );
 
   return {
-    conflicts: debouncedEnabled ? data : undefined,
-    // Block from the moment the operator switches to case-insensitive until a settled answer
-    // arrives — including the pre-debounce window, so Save can't be clicked before the probe runs.
-    // On error we stop blocking and fall back to the server-side 409 guard instead of leaving Save
-    // stuck disabled forever.
-    isChecking: enabled && !error && (!debouncedEnabled || isLoading || !data),
+    // SWR retains the last `data` when a revalidation fails; hide it on error so stale conflicts
+    // can't keep Save disabled while the probe itself is broken.
+    conflicts: debouncedEnabled && !error ? data : undefined,
+    // True from the moment the operator switches to case-insensitive until the probe settles
+    // (pre-debounce window included). `isValidating` rather than `isLoading`, so a cached entry
+    // mid-revalidation still gates the save instead of letting it through on stale results. On
+    // error we stop gating and fall back to the server-side 409 guard.
+    isChecking: enabled && !error && (!debouncedEnabled || isValidating || !data),
   };
 };
 

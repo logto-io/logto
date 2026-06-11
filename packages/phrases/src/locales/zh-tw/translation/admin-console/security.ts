@@ -91,7 +91,7 @@ const security = {
       '只有在登入體驗中配置至少一種帶有有效連接器的忘記密碼方式後，才能啟用密碼過期。',
     expiration_period: '密碼有效期限（天）',
     expiration_period_description: '密碼在過期前保持有效的天數。密碼有效期限必須至少為 1 天。',
-    expiration_period_error: '密碼有效期限必須至少為 1 天。',
+    expiration_period_error: '密碼有效期限必須在 {{min}} 至 {{max}} 天之間。',
   },
   verification_code_policy: {
     card_title: '驗證碼',
@@ -111,6 +111,7 @@ const security = {
       error_message: '最大重試次數必須介於 1 到 100 之間。',
     },
   },
+
   sentinel_policy: {
     card_title: '識別符鎖定',
     card_description:

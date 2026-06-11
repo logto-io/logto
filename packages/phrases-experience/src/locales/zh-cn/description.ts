@@ -41,6 +41,7 @@ const description = {
   enter_password_for: '输入{{method}} {{value}} 对应的密码进行登录',
   enter_username: '设置用户名',
   enter_username_description: '用户名可以用来进行登录。用户名仅可以包含字母、数字和下划线。',
+  enter_username_policy_description: '用户名可以用来进行登录。{{requirements}}',
   link_email: '绑定邮箱',
   link_phone: '绑定手机',
   link_email_or_phone: '绑定邮箱或手机号',

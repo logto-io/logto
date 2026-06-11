@@ -96,7 +96,7 @@ const security = {
       'Parola sona ermesini yalnızca oturum açma deneyiminde geçerli bir bağlayıcıya sahip en az bir şifremi unuttum yöntemi yapılandırdıktan sonra etkinleştirebilirsiniz.',
     expiration_period: 'Parola geçerlilik süresi (gün)',
     expiration_period_description: 'Bir parolanın süresi dolmadan önce geçerli kaldığı gün sayısı.',
-    expiration_period_error: 'Parola geçerlilik süresi en az 1 gün olmalıdır.',
+    expiration_period_error: 'Parola geçerlilik süresi {{min}} ile {{max}} gün arasında olmalıdır.',
   },
   verification_code_policy: {
     card_title: 'Doğrulama kodu',
@@ -120,6 +120,7 @@ const security = {
       error_message: 'Maksimum yeniden deneme sayısı 1 ile 100 arasında olmalıdır.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Kimlik kilitleme',
     card_description:

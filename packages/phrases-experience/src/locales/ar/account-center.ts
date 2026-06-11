@@ -11,6 +11,7 @@ const account_center = {
     profile_description: 'قم بتغيير معلوماتك الشخصية هنا.',
     sidebar_personal_info: 'المعلومات الشخصية',
     sidebar_security: 'الأمان',
+    sidebar_sessions: 'الجلسات',
     support: 'الدعم',
   },
   verification: {
@@ -64,6 +65,7 @@ const account_center = {
   username: {
     title: 'تعيين اسم المستخدم',
     description: 'يجب أن يحتوي اسم المستخدم على أحرف وأرقام وشرطات سفلية فقط.',
+    policy_description: '{{requirements}}',
     success: 'تم تحديث اسم المستخدم بنجاح.',
   },
   security: {
@@ -243,6 +245,28 @@ const account_center = {
     name_passkey_description:
       'لقد نجحت في التحقق من هذا الجهاز للمصادقة بخطوتين. خصص الاسم للتعرف عليه إذا كان لديك مفاتيح متعددة.',
     name_input_label: 'الاسم',
+  },
+  sessions: {
+    page_title: 'الجلسات',
+    page_description: 'إدارة جلساتك النشطة والتطبيقات المعتمدة من جهات خارجية.',
+    title: 'الجلسات',
+    current_session: 'الجلسة الحالية',
+    signed_in_at: 'تم تسجيل الدخول {{date}}',
+    revoke_session: 'تسجيل الخروج',
+    revoke_session_title: 'تسجيل الخروج من الجلسة',
+    revoke_session_description:
+      'سيؤدي هذا إلى تسجيل الخروج من الجلسة وإلغاء جميع الوصول المرتبط. هل أنت متأكد أنك تريد المتابعة؟',
+    no_other_sessions: 'لا توجد جلسات نشطة أخرى.',
+    loading: 'جارٍ التحميل...',
+    third_party_apps_title: 'تطبيقات الطرف الثالث',
+    no_third_party_apps: 'لا توجد تطبيقات طرف ثالث معتمدة.',
+    third_party_apps_load_failed: 'فشل تحميل تطبيقات الطرف الثالث. يُرجى المحاولة مرة أخرى.',
+    granted_at: 'تم التفويض {{date}}',
+    revoke_grant: 'إزالة',
+    revoke_grant_title: 'إزالة وصول تطبيق الطرف الثالث',
+    revoke_grant_description:
+      'سيؤدي هذا إلى إلغاء جميع الوصول الممنوح لهذا التطبيق. هل أنت متأكد أنك تريد المتابعة؟',
+    revoke_grant_failed: 'فشل إلغاء بعض التفويضات. يرجى المحاولة مرة أخرى.',
   },
 };
 

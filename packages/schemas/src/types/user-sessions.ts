@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { Applications } from '../db-entries/index.js';
 import { oidcSessionInstancePayloadGuard } from '../foundations/index.js';
 
 import { jwtCustomizerUserInteractionContextGuard } from './logto-config/jwt-customizer.js';
@@ -95,6 +96,10 @@ export const userApplicationGrantGuard = z.object({
   id: z.string(),
   payload: userApplicationGrantPayloadGuard,
   expiresAt: z.number(),
+  application: Applications.guard.pick({
+    id: true,
+    name: true,
+  }),
 });
 
 export type UserApplicationGrant = z.infer<typeof userApplicationGrantGuard>;

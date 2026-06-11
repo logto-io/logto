@@ -1,4 +1,5 @@
 export const securityRoute = '/security';
+export const sessionsRoute = '/sessions';
 export const profileRoute = '/profile';
 export const emailRoute = '/email';
 export const phoneRoute = '/phone';

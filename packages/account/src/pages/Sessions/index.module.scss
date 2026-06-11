@@ -1,0 +1,162 @@
+@use '@experience/shared/scss/underscore' as _;
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1.5);
+}
+
+.sectionTitle {
+  padding-left: _.unit(1);
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+}
+
+.sectionDescription {
+  padding-left: _.unit(1);
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+}
+
+.card {
+  background: var(--color-bg-body);
+  border-radius: 12px;
+  overflow: clip;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: _.unit(4);
+  align-items: center;
+  padding: _.unit(4.5) _.unit(6);
+  min-height: 76px;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--color-line-divider);
+  }
+}
+
+.sessionInfo {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(1);
+  min-width: 0;
+}
+
+.deviceName {
+  font: var(--font-label-2);
+  color: var(--color-type-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  font: var(--font-body-3);
+  color: var(--color-type-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.actionButton {
+  font: var(--font-label-2);
+  color: var(--color-type-link);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: _.unit(0.5) 0;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.currentTag {
+  display: inline-flex;
+  align-items: center;
+  gap: _.unit(1);
+  padding: _.unit(0.5) _.unit(2);
+  border-radius: 14px;
+  background: rgba(78, 162, 84, 12%);
+  font: var(--font-label-3);
+  color: var(--color-type-primary);
+  white-space: nowrap;
+}
+
+.currentDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-success-default);
+}
+
+.revokeButton {
+  font: var(--font-label-2);
+  color: var(--color-danger-default);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: _.unit(0.5) 0;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.emptyState {
+  padding: _.unit(5) _.unit(6);
+  font: var(--font-body-2);
+  color: var(--color-type-secondary);
+  text-align: center;
+}
+
+@mixin mobile-layout {
+  .sectionTitle {
+    padding-left: 0;
+  }
+
+  .row {
+    min-height: 0;
+    gap: _.unit(2) _.unit(3);
+    padding: _.unit(4);
+  }
+
+  .actions {
+    grid-row: 1;
+    place-self: start end;
+  }
+
+  .deviceName {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .meta {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+:global(body.mobile) {
+  @include mobile-layout;
+}
+
+:global(body.desktop) {
+  @media only screen and (max-width: 800px) {
+    @include mobile-layout;
+  }
+}

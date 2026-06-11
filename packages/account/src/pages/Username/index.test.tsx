@@ -273,21 +273,24 @@ describe('<Username />', () => {
       });
     });
 
-    // The test i18n returns the key, so the rendered hint surfaces as its frame key.
-    it('shows the requirements hint for a restrictive policy', () => {
-      const { getByText } = renderWithPolicy();
-      expect(getByText('description.username_requirements')).toBeTruthy();
+    // The test i18n returns the key, so the rendered description surfaces as its phrase key.
+    it('swaps the page description to the policy requirements for a restrictive policy', () => {
+      const { getByText, queryByText } = renderWithPolicy();
+      expect(getByText('account_center.username.policy_description')).toBeTruthy();
+      expect(queryByText('account_center.username.description')).toBeNull();
     });
 
-    it('hides the requirements hint for the permissive default policy', () => {
-      const { queryByText } = renderUsername();
-      expect(queryByText('description.username_requirements')).toBeNull();
+    it('keeps the static page description for the permissive default policy', () => {
+      const { getByText, queryByText } = renderUsername();
+      expect(getByText('account_center.username.description')).toBeTruthy();
+      expect(queryByText('account_center.username.policy_description')).toBeNull();
     });
 
-    it('hides the requirements hint when dev features are off', () => {
+    it('keeps the static page description when dev features are off', () => {
       mockIsDevFeaturesEnabled.mockReturnValue(false);
-      const { queryByText } = renderWithPolicy();
-      expect(queryByText('description.username_requirements')).toBeNull();
+      const { getByText, queryByText } = renderWithPolicy();
+      expect(getByText('account_center.username.description')).toBeTruthy();
+      expect(queryByText('account_center.username.policy_description')).toBeNull();
     });
 
     it('does not block a policy-only violation when dev features are off', async () => {

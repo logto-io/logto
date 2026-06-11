@@ -99,7 +99,8 @@ const security = {
     expiration_period: 'Passwort-Gültigkeitsdauer (Tage)',
     expiration_period_description:
       'Anzahl der Tage, die ein Passwort gültig bleibt, bevor es abläuft.',
-    expiration_period_error: 'Die Passwort-Gültigkeitsdauer muss mindestens 1 Tag betragen.',
+    expiration_period_error:
+      'Die Passwort-Gültigkeitsdauer muss zwischen {{min}} und {{max}} Tagen liegen.',
   },
   verification_code_policy: {
     card_title: 'Verifizierungscode',
@@ -123,6 +124,7 @@ const security = {
       error_message: 'Die maximale Anzahl erneuter Versuche muss zwischen 1 und 100 liegen.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Identifier-Sperre',
     card_description:

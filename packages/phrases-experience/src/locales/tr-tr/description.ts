@@ -45,6 +45,8 @@ const description = {
   enter_username: 'Kullanıcı adını ayarla',
   enter_username_description:
     'Kullanıcı adı, oturum açmak için bir alternatiftir. Kullanıcı adı yalnızca harf, sayı ve alt çizgi içermelidir.',
+  enter_username_policy_description:
+    'Kullanıcı adı, oturum açmak için bir alternatiftir. {{requirements}}',
   link_email: 'E-postayı bağla',
   link_phone: 'Telefonu bağla',
   link_email_or_phone: 'E-posta veya telefon bağlantısı',

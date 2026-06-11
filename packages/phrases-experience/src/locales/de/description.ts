@@ -47,6 +47,8 @@ const description = {
   enter_username: 'Benutzernamen festlegen',
   enter_username_description:
     'Der Benutzername kann für die Anmeldung verwendet werden. Der Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.',
+  enter_username_policy_description:
+    'Der Benutzername kann für die Anmeldung verwendet werden. {{requirements}}',
   link_email: 'Email verknüpfen',
   link_phone: 'Telefonnummer verknüpfen',
   link_email_or_phone: 'Email oder Telefonnummer verknüpfen',

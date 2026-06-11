@@ -64,6 +64,7 @@ const formatApplicationGrant = (
     id: grant.id,
     payload: payloadResult.data,
     expiresAt: grant.expiresAt,
+    application: grant.application,
   };
 };
 

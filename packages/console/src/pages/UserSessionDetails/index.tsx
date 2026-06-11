@@ -1,5 +1,6 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 import { Theme, isBuiltInApplicationId, type GetUserSessionResponse } from '@logto/schemas';
+import { getSessionDisplayInfo } from '@logto/shared/universal';
 import { Fragment, type ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -20,8 +21,6 @@ import FormField from '@/ds-components/FormField';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import { type RequestError } from '@/hooks/use-api';
 import useTheme from '@/hooks/use-theme';
-
-import { getSessionDisplayInfo } from '../UserDetails/UserSettings/UserSessions/utils';
 
 import RevokeSessionConfirmModal from './RevokeSessionConfirmModal';
 import styles from './index.module.scss';

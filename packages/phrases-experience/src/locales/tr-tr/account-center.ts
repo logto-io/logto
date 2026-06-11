@@ -12,6 +12,7 @@ const account_center = {
     profile_description: 'Kişisel bilgilerinizi burada değiştirin.',
     sidebar_personal_info: 'Kişisel bilgiler',
     sidebar_security: 'Güvenlik',
+    sidebar_sessions: 'Oturumlar',
     support: 'Destek',
   },
   verification: {
@@ -65,6 +66,7 @@ const account_center = {
   username: {
     title: 'Kullanıcı adını ayarla',
     description: 'Kullanıcı adı yalnızca harf, rakam ve alt çizgi içerebilir.',
+    policy_description: '{{requirements}}',
     success: 'Kullanıcı adı başarıyla güncellendi.',
   },
   security: {
@@ -249,6 +251,29 @@ const account_center = {
     name_passkey_description:
       'Bu cihazı 2 adımlı kimlik doğrulama için başarıyla doğruladınız. Birden fazla anahtarınız varsa tanımak için adı özelleştirin.',
     name_input_label: 'Ad',
+  },
+  sessions: {
+    page_title: 'Oturumlar',
+    page_description:
+      'Aktif oturumlarınızı ve yetkilendirilmiş üçüncü taraf uygulamalarını yönetin.',
+    title: 'Oturumlar',
+    current_session: 'Mevcut oturum',
+    signed_in_at: '{{date}} tarihinde giriş yapıldı',
+    revoke_session: 'Çıkış yap',
+    revoke_session_title: 'Oturumu kapat',
+    revoke_session_description:
+      'Bu, oturumu kapatacak ve ilgili tüm erişimi iptal edecektir. Devam etmek istediğinizden emin misiniz?',
+    no_other_sessions: 'Başka aktif oturum yok.',
+    loading: 'Yükleniyor...',
+    third_party_apps_title: 'Üçüncü taraf uygulamalar',
+    no_third_party_apps: 'Yetkilendirilmiş üçüncü taraf uygulama yok.',
+    third_party_apps_load_failed: 'Üçüncü taraf uygulamalar yüklenemedi. Lütfen tekrar deneyin.',
+    granted_at: '{{date}} tarihinde yetkilendirildi',
+    revoke_grant: 'Kaldır',
+    revoke_grant_title: 'Üçüncü taraf uygulama erişimini kaldır',
+    revoke_grant_description:
+      'Bu, bu uygulamaya verilen tüm erişimi iptal edecektir. Devam etmek istediğinizden emin misiniz?',
+    revoke_grant_failed: 'Bazı izinler iptal edilemedi. Lütfen tekrar deneyin.',
   },
 };
 

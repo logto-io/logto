@@ -98,7 +98,7 @@ const security = {
     expiration_period: 'Okres ważności hasła (dni)',
     expiration_period_description:
       'Liczba dni, przez które hasło pozostaje ważne przed wygaśnięciem.',
-    expiration_period_error: 'Okres ważności hasła musi wynosić co najmniej 1 dzień.',
+    expiration_period_error: 'Okres ważności hasła musi wynosić od {{min}} do {{max}} dni.',
   },
   verification_code_policy: {
     card_title: 'Kod weryfikacyjny',
@@ -121,6 +121,7 @@ const security = {
       error_message: 'Maksymalna liczba ponownych prób musi wynosić od 1 do 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Blokada identyfikatora',
     card_description:

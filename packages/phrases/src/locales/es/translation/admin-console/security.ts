@@ -99,7 +99,8 @@ const security = {
     expiration_period: 'Periodo de validez de la contraseña (dias)',
     expiration_period_description:
       'Número de días que una contraseña permanece válida antes de expirar.',
-    expiration_period_error: 'El periodo de validez de la contraseña debe ser de al menos 1 día.',
+    expiration_period_error:
+      'El período de validez de la contraseña debe estar entre {{min}} y {{max}} días.',
   },
   verification_code_policy: {
     card_title: 'Código de verificación',
@@ -123,6 +124,7 @@ const security = {
       error_message: 'El número máximo de reintentos debe estar entre 1 y 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Bloqueo de identificador',
     card_description:

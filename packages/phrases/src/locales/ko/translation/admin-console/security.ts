@@ -95,7 +95,7 @@ const security = {
       '로그인 환경에서 유효한 커넥터가 연결된 비밀번호 찾기 방법을 하나 이상 구성한 후에만 비밀번호 만료를 활성화할 수 있습니다.',
     expiration_period: '비밀번호 유효 기간 (일)',
     expiration_period_description: '비밀번호가 만료되기 전까지 유효한 일수입니다.',
-    expiration_period_error: '비밀번호 유효 기간은 최소 1일이어야 합니다.',
+    expiration_period_error: '비밀번호 유효 기간은 {{min}}일에서 {{max}}일 사이여야 합니다.',
   },
   verification_code_policy: {
     card_title: '인증 코드',
@@ -116,6 +116,7 @@ const security = {
       error_message: '최대 재시도 횟수는 1에서 100 사이여야 해요.',
     },
   },
+
   sentinel_policy: {
     card_title: '식별자 잠금',
     card_description:

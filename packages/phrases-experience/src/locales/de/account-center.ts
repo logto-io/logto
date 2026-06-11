@@ -12,6 +12,7 @@ const account_center = {
     profile_description: 'Ändere hier deine persönlichen Informationen.',
     sidebar_personal_info: 'Persönliche Informationen',
     sidebar_security: 'Sicherheit',
+    sidebar_sessions: 'Sitzungen',
     support: 'Hilfe',
   },
   verification: {
@@ -71,6 +72,7 @@ const account_center = {
   username: {
     title: 'Benutzernamen festlegen',
     description: 'Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten.',
+    policy_description: '{{requirements}}',
     success: 'Benutzername erfolgreich aktualisiert.',
   },
   security: {
@@ -261,6 +263,31 @@ const account_center = {
     name_passkey_description:
       'Sie haben dieses Gerät erfolgreich für die 2-Schritt-Authentifizierung verifiziert. Passen Sie den Namen an, um ihn zu erkennen, wenn Sie mehrere Schlüssel haben.',
     name_input_label: 'Name',
+  },
+  sessions: {
+    page_title: 'Sitzungen',
+    page_description:
+      'Verwalten Sie Ihre aktiven Sitzungen und autorisierte Drittanbieter-Anwendungen.',
+    title: 'Sitzungen',
+    current_session: 'Aktuelle Sitzung',
+    signed_in_at: 'Angemeldet {{date}}',
+    revoke_session: 'Abmelden',
+    revoke_session_title: 'Sitzung abmelden',
+    revoke_session_description:
+      'Dadurch wird die Sitzung abgemeldet und alle zugehörigen Zugriffe widerrufen. Möchten Sie wirklich fortfahren?',
+    no_other_sessions: 'Keine weiteren aktiven Sitzungen.',
+    loading: 'Laden...',
+    third_party_apps_title: 'Drittanbieter-Apps',
+    no_third_party_apps: 'Keine autorisierten Drittanbieter-Anwendungen.',
+    third_party_apps_load_failed:
+      'Drittanbieter-Apps konnten nicht geladen werden. Bitte versuche es erneut.',
+    granted_at: 'Autorisiert {{date}}',
+    revoke_grant: 'Entfernen',
+    revoke_grant_title: 'Drittanbieter-App-Zugriff entfernen',
+    revoke_grant_description:
+      'Dadurch wird der gesamte dieser Anwendung gewährte Zugriff widerrufen. Möchten Sie wirklich fortfahren?',
+    revoke_grant_failed:
+      'Einige Berechtigungen konnten nicht widerrufen werden. Bitte versuchen Sie es erneut.',
   },
 };
 

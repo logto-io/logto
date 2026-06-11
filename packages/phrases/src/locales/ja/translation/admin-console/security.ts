@@ -97,7 +97,8 @@ const security = {
       'パスワードの有効期限は、サインイン体験で有効なコネクタを持つ「パスワードを忘れた場合」方法を少なくとも 1 つ設定した後でのみ有効にできます。',
     expiration_period: 'パスワード有効期間 (日)',
     expiration_period_description: 'パスワードが期限切れになるまでの有効日数。',
-    expiration_period_error: 'パスワードの有効期間は 1 日以上である必要があります。',
+    expiration_period_error:
+      'パスワードの有効期間は {{min}} 日から {{max}} 日の間である必要があります。',
   },
   verification_code_policy: {
     card_title: '認証コード',
@@ -118,6 +119,7 @@ const security = {
       error_message: '最大再試行回数は 1 から 100 の間である必要があります。',
     },
   },
+
   sentinel_policy: {
     card_title: '識別子によるロックアウト',
     card_description:

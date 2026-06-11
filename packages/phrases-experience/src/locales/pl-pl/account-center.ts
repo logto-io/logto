@@ -12,6 +12,7 @@ const account_center = {
     profile_description: 'Zmień swoje dane osobowe tutaj.',
     sidebar_personal_info: 'Informacje osobiste',
     sidebar_security: 'Bezpieczeństwo',
+    sidebar_sessions: 'Sesje',
     support: 'Pomoc',
   },
   verification: {
@@ -65,6 +66,7 @@ const account_center = {
   username: {
     title: 'Ustaw nazwę użytkownika',
     description: 'Nazwa użytkownika może zawierać tylko litery, cyfry i podkreślenia.',
+    policy_description: '{{requirements}}',
     success: 'Nazwa użytkownika została pomyślnie zaktualizowana.',
   },
   security: {
@@ -251,6 +253,30 @@ const account_center = {
     name_passkey_description:
       'Pomyślnie zweryfikowano to urządzenie do uwierzytelniania dwuetapowego. Dostosuj nazwę, aby rozpoznać go, jeśli masz wiele kluczy.',
     name_input_label: 'Nazwa',
+  },
+  sessions: {
+    page_title: 'Sesje',
+    page_description:
+      'Zarządzaj swoimi aktywnymi sesjami i autoryzowanymi aplikacjami firm trzecich.',
+    title: 'Sesje',
+    current_session: 'Bieżąca sesja',
+    signed_in_at: 'Zalogowano {{date}}',
+    revoke_session: 'Wyloguj',
+    revoke_session_title: 'Wyloguj sesję',
+    revoke_session_description:
+      'Spowoduje to wylogowanie sesji i cofnięcie wszystkich powiązanych uprawnień. Czy na pewno chcesz kontynuować?',
+    no_other_sessions: 'Brak innych aktywnych sesji.',
+    loading: 'Ładowanie...',
+    third_party_apps_title: 'Aplikacje firm trzecich',
+    no_third_party_apps: 'Brak autoryzowanych aplikacji firm trzecich.',
+    third_party_apps_load_failed:
+      'Nie udało się załadować aplikacji firm trzecich. Spróbuj ponownie.',
+    granted_at: 'Autoryzowano {{date}}',
+    revoke_grant: 'Usuń',
+    revoke_grant_title: 'Usuń dostęp aplikacji firmy trzeciej',
+    revoke_grant_description:
+      'Spowoduje to cofnięcie wszystkich uprawnień przyznanych tej aplikacji. Czy na pewno chcesz kontynuować?',
+    revoke_grant_failed: 'Nie udało się cofnąć niektórych uprawnień. Spróbuj ponownie.',
   },
 };
 

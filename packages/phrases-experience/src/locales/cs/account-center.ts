@@ -11,6 +11,7 @@ const account_center = {
     profile_description: 'Zde změňte své osobní údaje.',
     sidebar_personal_info: 'Osobní informace',
     sidebar_security: 'Zabezpečení',
+    sidebar_sessions: 'Relace',
     support: 'Podpora',
   },
   verification: {
@@ -64,6 +65,7 @@ const account_center = {
   username: {
     title: 'Nastavit uživatelské jméno',
     description: 'Uživatelské jméno může obsahovat pouze písmena, čísla a podtržítka.',
+    policy_description: '{{requirements}}',
     success: 'Uživatelské jméno bylo úspěšně změněno.',
   },
   security: {
@@ -249,6 +251,29 @@ const account_center = {
     name_passkey_description:
       'Úspěšně jsi ověřil/a toto zařízení pro dvoufázové ověření. Přizpůsob název, abys mohl/a rozpoznat více klíčů.',
     name_input_label: 'Název',
+  },
+  sessions: {
+    page_title: 'Relace',
+    page_description: 'Spravujte své aktivní relace a autorizované aplikace třetích stran.',
+    title: 'Relace',
+    current_session: 'Aktuální relace',
+    signed_in_at: 'Přihlášeno {{date}}',
+    revoke_session: 'Odhlásit',
+    revoke_session_title: 'Odhlásit relaci',
+    revoke_session_description:
+      'Tímto se relace odhlásí a zruší veškerý přidružený přístup. Opravdu chcete pokračovat?',
+    no_other_sessions: 'Žádné další aktivní relace.',
+    loading: 'Načítání...',
+    third_party_apps_title: 'Aplikace třetích stran',
+    no_third_party_apps: 'Žádné autorizované aplikace třetích stran.',
+    third_party_apps_load_failed:
+      'Nepodařilo se načíst aplikace třetích stran. Zkuste to prosím znovu.',
+    granted_at: 'Autorizováno {{date}}',
+    revoke_grant: 'Odebrat',
+    revoke_grant_title: 'Odebrat přístup aplikace třetí strany',
+    revoke_grant_description:
+      'Tímto se zruší veškerý přístup udělený této aplikaci. Opravdu chcete pokračovat?',
+    revoke_grant_failed: 'Nepodařilo se zrušit některá oprávnění. Zkuste to prosím znovu.',
   },
 };
 

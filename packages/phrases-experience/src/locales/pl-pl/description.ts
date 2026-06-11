@@ -46,6 +46,8 @@ const description = {
   enter_username: 'Ustaw nazwę użytkownika',
   enter_username_description:
     'Nazwa użytkownika jest alternatywną formą logowania. Nazwa użytkownika powinna zawierać tylko litery, cyfry i podkreślenia.',
+  enter_username_policy_description:
+    'Nazwa użytkownika jest alternatywną formą logowania. {{requirements}}',
   link_email: 'Połącz adres email',
   link_phone: 'Połącz numer telefonu',
   link_email_or_phone: 'Połącz adres email lub numer telefonu',

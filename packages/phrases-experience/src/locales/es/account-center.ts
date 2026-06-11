@@ -11,6 +11,7 @@ const account_center = {
     profile_description: 'Cambia tu información personal aquí.',
     sidebar_personal_info: 'Información personal',
     sidebar_security: 'Seguridad',
+    sidebar_sessions: 'Sesiones',
     support: 'Soporte',
   },
   verification: {
@@ -68,6 +69,7 @@ const account_center = {
   username: {
     title: 'Establecer nombre de usuario',
     description: 'El nombre de usuario solo puede contener letras, números y guiones bajos.',
+    policy_description: '{{requirements}}',
     success: 'Nombre de usuario actualizado correctamente.',
   },
   security: {
@@ -254,6 +256,29 @@ const account_center = {
     name_passkey_description:
       'Has verificado correctamente este dispositivo para la autenticación en dos pasos. Personaliza el nombre para reconocerlo si tienes varias claves.',
     name_input_label: 'Nombre',
+  },
+  sessions: {
+    page_title: 'Sesiones',
+    page_description: 'Administra tus sesiones activas y aplicaciones de terceros autorizadas.',
+    title: 'Sesiones',
+    current_session: 'Sesión actual',
+    signed_in_at: 'Inicio de sesión {{date}}',
+    revoke_session: 'Cerrar sesión',
+    revoke_session_title: 'Cerrar sesión',
+    revoke_session_description:
+      'Esto cerrará la sesión y revocará todo el acceso asociado. ¿Estás seguro de que deseas continuar?',
+    no_other_sessions: 'No hay otras sesiones activas.',
+    loading: 'Cargando...',
+    third_party_apps_title: 'Aplicaciones de terceros',
+    no_third_party_apps: 'No hay aplicaciones de terceros autorizadas.',
+    third_party_apps_load_failed:
+      'No se pudieron cargar las aplicaciones de terceros. Inténtalo de nuevo.',
+    granted_at: 'Autorizado {{date}}',
+    revoke_grant: 'Eliminar',
+    revoke_grant_title: 'Eliminar acceso de aplicación de terceros',
+    revoke_grant_description:
+      'Esto revocará todo el acceso otorgado a esta aplicación. ¿Estás seguro de que deseas continuar?',
+    revoke_grant_failed: 'Error al revocar algunos permisos. Por favor, inténtalo de nuevo.',
   },
 };
 

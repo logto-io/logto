@@ -1,4 +1,4 @@
-import { AgreeToTermsPolicy, SignInIdentifier } from '@logto/schemas';
+import { AgreeToTermsPolicy, type SignInIdentifier } from '@logto/schemas';
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -17,6 +17,7 @@ import useTerms from '@/hooks/use-terms';
 import Button from '@/shared/components/Button';
 import ErrorMessage from '@/shared/components/ErrorMessage';
 import type { IdentifierInputValue } from '@/shared/components/InputFields/SmartInputField';
+import { isUsernamePolicyViolation } from '@/shared/utils/validate-username';
 import { getGeneralIdentifierErrorMessage, validateIdentifierField } from '@/utils/form';
 
 import styles from './index.module.scss';
@@ -122,6 +123,16 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             );
 
             if (errorMessage) {
+              /**
+               * This page shows no upfront policy description (the smart input may hold any
+               * identifier type), so a policy violation surfaces the full requirements sentence
+               * instead of the specific violation. Hard-floor violations stay specific — the
+               * requirements sentence does not describe them.
+               */
+              if (usernamePolicyDescription && isUsernamePolicyViolation(errorMessage)) {
+                return usernamePolicyDescription;
+              }
+
               return typeof errorMessage === 'string'
                 ? t(`error.${errorMessage}`)
                 : t(`error.${errorMessage.code}`, errorMessage.data ?? {});
@@ -140,9 +151,6 @@ const IdentifierRegisterForm = ({ className, autoFocus, signUpMethods }: Props) 
             isDanger={!!errors.identifier || !!errorMessage}
             errorMessage={errors.identifier?.message}
             enabledTypes={signUpMethods}
-            description={
-              field.value.type === SignInIdentifier.Username ? usernamePolicyDescription : undefined
-            }
           />
         )}
       />

@@ -1,4 +1,5 @@
 import type { GetUserApplicationGrantsResponse } from '@logto/schemas';
+import { normalizeUserApplicationGrantGroups } from '@logto/shared/universal';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -21,40 +22,14 @@ function useUserThirdPartyGrants(userId: string) {
   );
 
   const rowData = useMemo<GrantedThirdPartyAppRow[]>(() => {
-    const grants = data?.grants ?? [];
-
-    const groupedByApplicationId = new Map<string, { iat: number; grantIds: string[] }>();
-
-    for (const grant of grants) {
-      const group = groupedByApplicationId.get(grant.payload.clientId);
-
-      if (!group) {
-        groupedByApplicationId.set(grant.payload.clientId, {
-          iat: grant.payload.iat,
-          grantIds: [grant.id],
-        });
-        continue;
-      }
-
-      groupedByApplicationId.set(grant.payload.clientId, {
-        // The createdAt of the app should be the earliest iat among its grants
-        iat: Math.min(group.iat, grant.payload.iat),
-        grantIds: [...group.grantIds, grant.id],
-      });
-    }
-
-    return Array.from(groupedByApplicationId.entries())
-      .map(([applicationId, group]) => ({
-        id: applicationId,
+    return normalizeUserApplicationGrantGroups(data?.grants ?? []).map(
+      ({ id, applicationId, iat, grantIds }) => ({
+        id,
         applicationId,
-        createdAt: new Date(group.iat * 1000).toLocaleString(i18n.language),
-        grantIds: group.grantIds,
-      }))
-      .slice()
-      .sort(
-        (previous, next) =>
-          new Date(next.createdAt).getTime() - new Date(previous.createdAt).getTime()
-      );
+        createdAt: new Date(iat * 1000).toLocaleString(i18n.language),
+        grantIds,
+      })
+    );
   }, [data?.grants, i18n.language]);
 
   const removeByApplication = useCallback(
