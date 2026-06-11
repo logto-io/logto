@@ -1,13 +1,3 @@
-@use '@experience/shared/scss/colors' as colors;
-
-html[data-theme='light'] body {
-  @include colors.light;
-}
-
-html[data-theme='dark'] body {
-  @include colors.dark;
-}
-
 html[data-theme] body {
   background: var(--color-bg-float-base);
 }
