@@ -425,10 +425,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         ),
         // Username policy is gated until the feature ships: ignore writes when the flag is off.
         ...conditional(EnvSet.values.isDevFeaturesEnabled && usernamePolicy && { usernamePolicy }),
-        // Verification code policy is gated until the feature ships.
-        ...conditional(
-          EnvSet.values.isDevFeaturesEnabled && verificationCodePolicy && { verificationCodePolicy }
-        ),
+        ...conditional(verificationCodePolicy && { verificationCodePolicy }),
       };
 
       ctx.body = await updateDefaultSignInExperience(payload);
