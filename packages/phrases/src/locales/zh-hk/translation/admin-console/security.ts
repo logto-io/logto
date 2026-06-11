@@ -92,6 +92,24 @@ const security = {
     expiration_period_description: '密碼在過期前保持有效的天數。',
     expiration_period_error: '密碼有效期限必須至少為 1 天。',
   },
+  verification_code_policy: {
+    card_title: '驗證碼',
+    card_description: '配置登入、註冊和密碼重設流程中驗證碼的過期時長和最大重試次數。',
+    enable: {
+      title: '自定義驗證碼設定',
+      description: '允許自定義驗證碼的過期時長和最大重試次數。',
+    },
+    expiration_duration: {
+      title: '過期時長（秒）',
+      description: '驗證碼發送後保持有效的時長（秒）。',
+      error_message: '過期時長必須在 60 到 3600 秒之間。',
+    },
+    max_retry_attempts: {
+      title: '最大重試次數',
+      description: '驗證碼失效前允許的最大驗證失敗次數。',
+      error_message: '最大重試次數必須在 1 到 100 之間。',
+    },
+  },
   sentinel_policy: {
     card_title: '識別鎖定',
     card_description:

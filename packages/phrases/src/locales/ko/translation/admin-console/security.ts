@@ -97,6 +97,25 @@ const security = {
     expiration_period_description: '비밀번호가 만료되기 전까지 유효한 일수입니다.',
     expiration_period_error: '비밀번호 유효 기간은 최소 1일이어야 합니다.',
   },
+  verification_code_policy: {
+    card_title: '인증 코드',
+    card_description:
+      '로그인, 가입, 비밀번호 재설정 흐름에서 사용되는 인증 코드의 만료 시간과 최대 재시도 횟수를 설정하세요.',
+    enable: {
+      title: '인증 코드 설정 사용자 지정',
+      description: '인증 코드 만료 시간과 최대 재시도 횟수를 사용자 지정할 수 있도록 허용해요.',
+    },
+    expiration_duration: {
+      title: '만료 시간(초)',
+      description: '인증 코드가 전송된 후 유효하게 유지되는 시간(초)이에요.',
+      error_message: '만료 시간은 60초에서 3600초 사이여야 해요.',
+    },
+    max_retry_attempts: {
+      title: '최대 재시도 횟수',
+      description: '코드가 무효화되기 전에 허용되는 최대 인증 실패 횟수예요.',
+      error_message: '최대 재시도 횟수는 1에서 100 사이여야 해요.',
+    },
+  },
   sentinel_policy: {
     card_title: '식별자 잠금',
     card_description:

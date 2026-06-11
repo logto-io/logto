@@ -99,6 +99,25 @@ const security = {
     expiration_period_description: 'パスワードが期限切れになるまでの有効日数。',
     expiration_period_error: 'パスワードの有効期間は 1 日以上である必要があります。',
   },
+  verification_code_policy: {
+    card_title: '認証コード',
+    card_description:
+      'サインイン、サインアップ、パスワードリセットのフローで使用される認証コードの有効期限と最大再試行回数を設定します。',
+    enable: {
+      title: '認証コード設定をカスタマイズ',
+      description: '認証コードの有効期限と最大再試行回数のカスタマイズを許可します。',
+    },
+    expiration_duration: {
+      title: '有効期限（秒）',
+      description: '認証コードが送信後に有効である秒数です。',
+      error_message: '有効期限は 60 秒から 3600 秒の間である必要があります。',
+    },
+    max_retry_attempts: {
+      title: '最大再試行回数',
+      description: 'コードが無効になるまでに許可される認証失敗回数の上限です。',
+      error_message: '最大再試行回数は 1 から 100 の間である必要があります。',
+    },
+  },
   sentinel_policy: {
     card_title: '識別子によるロックアウト',
     card_description:

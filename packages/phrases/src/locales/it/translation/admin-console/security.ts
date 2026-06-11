@@ -103,6 +103,27 @@ const security = {
     expiration_period_error:
       'Il periodo di validità della password deve essere di almeno 1 giorno.',
   },
+  verification_code_policy: {
+    card_title: 'Codice di verifica',
+    card_description:
+      'Configura la durata di scadenza e il numero massimo di tentativi per i codici di verifica usati nei flussi di accesso, registrazione e reimpostazione della password.',
+    enable: {
+      title: 'Personalizza le impostazioni del codice di verifica',
+      description:
+        'Consenti la personalizzazione della durata di scadenza del codice di verifica e del numero massimo di tentativi.',
+    },
+    expiration_duration: {
+      title: 'Durata di scadenza (secondi)',
+      description: "La durata in secondi per cui un codice di verifica rimane valido dopo l'invio.",
+      error_message: 'La durata di scadenza deve essere compresa tra 60 e 3600 secondi.',
+    },
+    max_retry_attempts: {
+      title: 'Numero massimo di tentativi',
+      description:
+        'Numero massimo di tentativi di verifica non riusciti consentiti prima che il codice venga invalidato.',
+      error_message: 'Il numero massimo di tentativi deve essere compreso tra 1 e 100.',
+    },
+  },
   sentinel_policy: {
     card_title: 'Blocco identificatore',
     card_description:

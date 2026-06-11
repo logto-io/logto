@@ -101,6 +101,28 @@ const security = {
       'Número de dias que uma senha permanece válida antes de expirar.',
     expiration_period_error: 'O período de validade da senha deve ser de pelo menos 1 dia.',
   },
+  verification_code_policy: {
+    card_title: 'Código de verificação',
+    card_description:
+      'Configure a duração da expiração e o número máximo de novas tentativas para códigos de verificação usados nos fluxos de entrada, cadastro e redefinição de senha.',
+    enable: {
+      title: 'Personalizar configurações do código de verificação',
+      description:
+        'Permitir a personalização da duração da expiração do código de verificação e do número máximo de novas tentativas.',
+    },
+    expiration_duration: {
+      title: 'Duração da expiração (segundos)',
+      description:
+        'A duração em segundos pela qual um código de verificação permanece válido após ser enviado.',
+      error_message: 'A duração da expiração deve estar entre 60 e 3600 segundos.',
+    },
+    max_retry_attempts: {
+      title: 'Número máximo de novas tentativas',
+      description:
+        'Número máximo de tentativas de verificação com falha permitido antes que o código seja invalidado.',
+      error_message: 'O número máximo de novas tentativas deve estar entre 1 e 100.',
+    },
+  },
   sentinel_policy: {
     card_title: 'Bloqueio de identificador',
     card_description:
