@@ -92,6 +92,24 @@ const security = {
     expiration_period_description: '密码在过期前保持有效的天数。',
     expiration_period_error: '密码有效期限必须在 {{min}} 到 {{max}} 天之间。',
   },
+  verification_code_policy: {
+    card_title: '验证码',
+    card_description: '配置登录、注册和密码重置流程中验证码的过期时长和最大重试次数。',
+    enable: {
+      title: '自定义验证码设置',
+      description: '允许自定义验证码的过期时长和最大重试次数。',
+    },
+    expiration_duration: {
+      title: '过期时长（秒）',
+      description: '验证码发送后保持有效的时长（秒）。',
+      error_message: '过期时长必须在 60 到 3600 秒之间。',
+    },
+    max_retry_attempts: {
+      title: '最大重试次数',
+      description: '验证码失效前允许的最大验证失败次数。',
+      error_message: '最大重试次数必须在 1 到 100 之间。',
+    },
+  },
   sentinel_policy: {
     card_title: '标识符锁定',
     card_description:

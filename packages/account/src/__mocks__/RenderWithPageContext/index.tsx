@@ -121,6 +121,7 @@ export const mockSignInExperienceSettings = {
   unknownSessionRedirectUrl: null,
   captchaPolicy: {},
   sentinelPolicy: {},
+  verificationCodePolicy: {},
   emailBlocklistPolicy: {},
   passkeySignIn: {},
   isDevelopmentTenant: false,

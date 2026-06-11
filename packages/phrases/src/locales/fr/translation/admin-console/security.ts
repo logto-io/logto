@@ -103,6 +103,28 @@ const security = {
     expiration_period_error:
       'La période de validité du mot de passe doit être comprise entre {{min}} et {{max}} jours.',
   },
+  verification_code_policy: {
+    card_title: 'Code de vérification',
+    card_description:
+      "Configurez la durée d'expiration et le nombre maximal de nouvelles tentatives pour les codes de vérification utilisés dans les flux de connexion, d'inscription et de réinitialisation du mot de passe.",
+    enable: {
+      title: 'Personnaliser les paramètres du code de vérification',
+      description:
+        "Permettre la personnalisation de la durée d'expiration du code de vérification et du nombre maximal de nouvelles tentatives.",
+    },
+    expiration_duration: {
+      title: "Durée d'expiration (secondes)",
+      description:
+        "La durée en secondes pendant laquelle un code de vérification reste valide après l'envoi.",
+      error_message: "La durée d'expiration doit être comprise entre 60 et 3600 secondes.",
+    },
+    max_retry_attempts: {
+      title: 'Nombre maximal de nouvelles tentatives',
+      description:
+        "Nombre maximal de tentatives de vérification échouées autorisées avant l'invalidation du code.",
+      error_message: 'Le nombre maximal de nouvelles tentatives doit être compris entre 1 et 100.',
+    },
+  },
   sentinel_policy: {
     card_title: 'Verrouillage des identifiants',
     card_description:

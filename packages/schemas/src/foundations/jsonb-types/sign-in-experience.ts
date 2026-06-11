@@ -300,11 +300,29 @@ export const sentinelPolicyGuard = z.object({
 }) satisfies ToZodObject<SentinelPolicy>;
 
 /**
- * Email blocklist policy.
+ * Verification code policy.
  *
  * @remarks
- * This policy is used to block specific email addresses or domains from signing up.
+ * This policy controls the expiration duration and maximum retry attempts for verification codes.
  */
+export type VerificationCodePolicy = {
+  /**
+   * The duration in seconds that a verification code remains valid.
+   * @default 600 (10 minutes)
+   */
+  expirationDuration?: number;
+  /**
+   * Maximum number of failed verification attempts allowed before the code is invalidated.
+   * @default 10
+   */
+  maxRetryAttempts?: number;
+};
+
+export const verificationCodePolicyGuard = z.object({
+  expirationDuration: z.number().int().min(60).max(3600).optional(),
+  maxRetryAttempts: z.number().int().min(1).max(100).optional(),
+}) satisfies ToZodObject<VerificationCodePolicy>;
+
 export type EmailBlocklistPolicy = {
   blockDisposableAddresses?: boolean;
   blockSubaddressing?: boolean;

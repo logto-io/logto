@@ -1,14 +1,27 @@
-import { defaultSentinelPolicy, type SentinelPolicy, type SignInExperience } from '@logto/schemas';
+import {
+  defaultSentinelPolicy,
+  defaultVerificationCodePolicy,
+  type SentinelPolicy,
+  type SignInExperience,
+  type VerificationCodePolicy,
+} from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { type RequestError } from '@/hooks/use-api';
 
 type RequiredSentinelPolicy = Required<Pick<SentinelPolicy, keyof SentinelPolicy>>;
+type RequiredVerificationCodePolicy = Required<
+  Pick<VerificationCodePolicy, keyof VerificationCodePolicy>
+>;
 
 export type GeneralFormData = {
   sentinelPolicyEnabled: boolean; // Can be true or false
   sentinelPolicy: RequiredSentinelPolicy; // Optional, but will be required if sentinelPolicyEnabled is true
+  verificationCodePolicyEnabled: boolean;
+  verificationCodePolicy: RequiredVerificationCodePolicy;
 };
 
 export const generalFormParser = {
@@ -21,8 +34,12 @@ export const generalFormParser = {
    * If it contains properties, it is treated as enabled.
    *
    */
-  fromSignInExperience: ({ sentinelPolicy }: SignInExperience): GeneralFormData => {
+  fromSignInExperience: ({
+    sentinelPolicy,
+    verificationCodePolicy,
+  }: SignInExperience): GeneralFormData => {
     const sentinelPolicyEnabled = Object.keys(sentinelPolicy).length > 0;
+    const verificationCodePolicyEnabled = Object.keys(verificationCodePolicy).length > 0;
 
     return {
       sentinelPolicyEnabled,
@@ -39,19 +56,30 @@ export const generalFormParser = {
             ...sentinelPolicy,
           }
         : defaultSentinelPolicy,
+      verificationCodePolicyEnabled,
+      verificationCodePolicy: verificationCodePolicyEnabled
+        ? {
+            ...defaultVerificationCodePolicy,
+            ...verificationCodePolicy,
+          }
+        : defaultVerificationCodePolicy,
     };
   },
-  toSignInExperience: (formData: GeneralFormData): Pick<SignInExperience, 'sentinelPolicy'> => {
-    const { sentinelPolicyEnabled, sentinelPolicy } = formData;
-
-    if (!sentinelPolicyEnabled) {
-      return {
-        sentinelPolicy: {},
-      };
-    }
+  toSignInExperience: (formData: GeneralFormData) => {
+    const {
+      sentinelPolicyEnabled,
+      sentinelPolicy,
+      verificationCodePolicyEnabled,
+      verificationCodePolicy,
+    } = formData;
 
     return {
-      sentinelPolicy,
+      sentinelPolicy: sentinelPolicyEnabled ? sentinelPolicy : {},
+      ...conditional(
+        isDevFeaturesEnabled && {
+          verificationCodePolicy: verificationCodePolicyEnabled ? verificationCodePolicy : {},
+        }
+      ),
     };
   },
 };

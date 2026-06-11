@@ -102,6 +102,28 @@ const security = {
     expiration_period_error:
       'Die Passwort-Gültigkeitsdauer muss zwischen {{min}} und {{max}} Tagen liegen.',
   },
+  verification_code_policy: {
+    card_title: 'Verifizierungscode',
+    card_description:
+      'Konfigurieren Sie die Ablaufdauer und die maximale Anzahl erneuter Versuche für Verifizierungscodes, die bei Anmeldung, Registrierung und Passwortzurücksetzung verwendet werden.',
+    enable: {
+      title: 'Verifizierungscode-Einstellungen anpassen',
+      description:
+        'Erlaubt die Anpassung der Ablaufdauer des Verifizierungscodes und der maximalen Anzahl erneuter Versuche.',
+    },
+    expiration_duration: {
+      title: 'Ablaufdauer (Sekunden)',
+      description:
+        'Die Dauer in Sekunden, während der ein Verifizierungscode nach dem Senden gültig bleibt.',
+      error_message: 'Die Ablaufdauer muss zwischen 60 und 3600 Sekunden liegen.',
+    },
+    max_retry_attempts: {
+      title: 'Maximale Anzahl erneuter Versuche',
+      description:
+        'Maximale Anzahl fehlgeschlagener Verifizierungsversuche, bevor der Code ungültig wird.',
+      error_message: 'Die maximale Anzahl erneuter Versuche muss zwischen 1 und 100 liegen.',
+    },
+  },
   sentinel_policy: {
     card_title: 'Identifier-Sperre',
     card_description:

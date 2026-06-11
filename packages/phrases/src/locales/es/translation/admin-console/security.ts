@@ -102,6 +102,28 @@ const security = {
     expiration_period_error:
       'El período de validez de la contraseña debe estar entre {{min}} y {{max}} días.',
   },
+  verification_code_policy: {
+    card_title: 'Código de verificación',
+    card_description:
+      'Configura la duración de expiración y el número máximo de reintentos para los códigos de verificación usados en los flujos de inicio de sesión, registro y restablecimiento de contraseña.',
+    enable: {
+      title: 'Personalizar ajustes del código de verificación',
+      description:
+        'Permitir la personalización de la duración de expiración del código de verificación y el número máximo de reintentos.',
+    },
+    expiration_duration: {
+      title: 'Duración de expiración (segundos)',
+      description:
+        'La duración en segundos durante la cual un código de verificación permanece válido después de enviarse.',
+      error_message: 'La duración de expiración debe estar entre 60 y 3600 segundos.',
+    },
+    max_retry_attempts: {
+      title: 'Número máximo de reintentos',
+      description:
+        'Número máximo de intentos de verificación fallidos permitidos antes de invalidar el código.',
+      error_message: 'El número máximo de reintentos debe estar entre 1 y 100.',
+    },
+  },
   sentinel_policy: {
     card_title: 'Bloqueo de identificador',
     card_description:

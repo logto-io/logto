@@ -100,6 +100,27 @@ const security = {
       'Liczba dni, przez które hasło pozostaje ważne przed wygaśnięciem.',
     expiration_period_error: 'Okres ważności hasła musi wynosić od {{min}} do {{max}} dni.',
   },
+  verification_code_policy: {
+    card_title: 'Kod weryfikacyjny',
+    card_description:
+      'Skonfiguruj czas wygaśnięcia i maksymalną liczbę ponownych prób dla kodów weryfikacyjnych używanych podczas logowania, rejestracji i resetowania hasła.',
+    enable: {
+      title: 'Dostosuj ustawienia kodu weryfikacyjnego',
+      description:
+        'Zezwalaj na dostosowanie czasu wygaśnięcia kodu weryfikacyjnego i maksymalnej liczby ponownych prób.',
+    },
+    expiration_duration: {
+      title: 'Czas wygaśnięcia (sekundy)',
+      description: 'Czas w sekundach, przez jaki kod weryfikacyjny pozostaje ważny po wysłaniu.',
+      error_message: 'Czas wygaśnięcia musi wynosić od 60 do 3600 sekund.',
+    },
+    max_retry_attempts: {
+      title: 'Maksymalna liczba ponownych prób',
+      description:
+        'Maksymalna liczba nieudanych prób weryfikacji dozwolona przed unieważnieniem kodu.',
+      error_message: 'Maksymalna liczba ponownych prób musi wynosić od 1 do 100.',
+    },
+  },
   sentinel_policy: {
     card_title: 'Blokada identyfikatora',
     card_description:
