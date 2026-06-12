@@ -14,6 +14,7 @@ import qrcode from 'qrcode';
 
 import {
   generateTotpSecret,
+  getTotpTokenTimeStep,
   validateTotpToken,
 } from '#src/libraries/verification-helpers/totp-validation.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -135,7 +136,14 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
     // Can not found totp verification, this is an invalid request, throw invalid code error anyway for security reason
     assertThat(totpVerification, 'session.mfa.invalid_totp_code');
 
-    assertThat(validateTotpToken(totpVerification.key, code), 'session.mfa.invalid_totp_code');
+    const usedTimeStep = getTotpTokenTimeStep(totpVerification.key, code);
+
+    assertThat(usedTimeStep !== undefined, 'session.mfa.invalid_totp_code');
+    assertThat(
+      totpVerification.lastUsedTimeStep === undefined ||
+        usedTimeStep > totpVerification.lastUsedTimeStep,
+      'session.mfa.invalid_totp_code'
+    );
 
     this.verified = true;
 
@@ -149,6 +157,7 @@ export class TotpVerification implements MfaVerificationRecord<VerificationType.
         return {
           ...mfa,
           lastUsedAt: new Date().toISOString(),
+          lastUsedTimeStep: usedTimeStep,
         };
       }),
     });

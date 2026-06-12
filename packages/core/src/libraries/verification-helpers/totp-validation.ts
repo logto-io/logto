@@ -26,3 +26,17 @@ export const validateTotpSecret = (secret: string) => {
 export const validateTotpToken = (secret: string, token: string) => {
   return authenticator.check(token, secret);
 };
+
+export const getTotpTokenTimeStep = (secret: string, token: string) => {
+  const epoch = Date.now();
+  const authenticatorAtEpoch = authenticator.clone({ epoch });
+  const delta = authenticatorAtEpoch.checkDelta(token, secret);
+
+  if (delta === null) {
+    return;
+  }
+
+  const { step } = authenticatorAtEpoch.allOptions();
+
+  return Math.floor(epoch / step / 1000) + delta;
+};
