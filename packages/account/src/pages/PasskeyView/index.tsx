@@ -159,7 +159,8 @@ const PasskeyView = () => {
 
   if (
     !accountCenterSettings?.enabled ||
-    accountCenterSettings.fields.mfa !== AccountCenterControlValue.Edit
+    (accountCenterSettings.fields.passkey ?? accountCenterSettings.fields.mfa) !==
+      AccountCenterControlValue.Edit
   ) {
     return (
       <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />

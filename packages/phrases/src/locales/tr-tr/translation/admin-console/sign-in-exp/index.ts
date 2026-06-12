@@ -178,6 +178,7 @@ const sign_in_exp = {
       password: 'Parola',
       mfa: 'Çok faktörlü kimlik doğrulama',
       mfa_description: 'Kullanıcıların MFA yöntemlerini hesap merkezinden yönetmesine izin verin.',
+      passkey: 'Passkey',
       username: 'Kullanıcı adı',
       name: 'Ad',
       avatar: 'Avatar',

@@ -180,6 +180,7 @@ const sign_in_exp = {
       mfa: 'Authentification multifacteur',
       mfa_description:
         'Permettez aux utilisateurs de gérer leurs méthodes MFA depuis le centre de compte.',
+      passkey: 'Passkey',
       username: "Nom d'utilisateur",
       name: 'Nom',
       avatar: 'Avatar',

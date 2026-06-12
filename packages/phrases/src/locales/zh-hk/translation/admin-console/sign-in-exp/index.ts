@@ -171,6 +171,7 @@ const sign_in_exp = {
       password: '密碼',
       mfa: '多重驗證',
       mfa_description: '允許使用者於帳戶中心管理其多重驗證方式。',
+      passkey: 'Passkey',
       username: '使用者名稱',
       name: '姓名',
       avatar: '頭像',

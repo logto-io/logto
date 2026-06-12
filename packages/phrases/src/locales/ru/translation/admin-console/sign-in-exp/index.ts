@@ -177,6 +177,7 @@ const sign_in_exp = {
       password: 'Пароль',
       mfa: 'Многофакторная аутентификация',
       mfa_description: 'Разрешите пользователям управлять методами MFA в центре учётной записи.',
+      passkey: 'Passkey',
       username: 'Имя пользователя',
       name: 'Имя',
       avatar: 'Аватар',

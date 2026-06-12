@@ -177,6 +177,7 @@ const sign_in_exp = {
       password: 'Hasło',
       mfa: 'Uwierzytelnianie wieloskładnikowe',
       mfa_description: 'Pozwól użytkownikom zarządzać metodami MFA w centrum konta.',
+      passkey: 'Passkey',
       username: 'Nazwa użytkownika',
       name: 'Imię i nazwisko',
       avatar: 'Awatar',

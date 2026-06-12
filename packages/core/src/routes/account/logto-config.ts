@@ -40,11 +40,10 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
       );
 
       const { fields } = ctx.accountCenter;
-      // MFA and passkey sign-in data are both exposed in logto_config.
-      // Passkey is a WebAuthn MFA factor, so it reuses the MFA field access control.
+      const passkeyControl = fields.passkey ?? fields.mfa;
       assertThat(
-        fields.mfa === AccountCenterControlValue.Edit ||
-          fields.mfa === AccountCenterControlValue.ReadOnly,
+        passkeyControl === AccountCenterControlValue.Edit ||
+          passkeyControl === AccountCenterControlValue.ReadOnly,
         new RequestError({ code: 'account_center.field_not_enabled', status: 400 })
       );
 
@@ -72,10 +71,9 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
         new RequestError({ code: 'auth.unauthorized', status: 401 })
       );
       const { fields } = ctx.accountCenter;
-      // MFA and passkey sign-in data are both exposed in logto_config.
-      // Passkey is a WebAuthn MFA factor, so it reuses the MFA field access control.
+      const passkeyControl = fields.passkey ?? fields.mfa;
       assertThat(
-        fields.mfa === AccountCenterControlValue.Edit,
+        passkeyControl === AccountCenterControlValue.Edit,
         new RequestError({ code: 'account_center.field_not_editable', status: 400 })
       );
 
