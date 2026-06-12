@@ -84,20 +84,39 @@ export const appendPathname = (pathname: string, baseUrl: URL) =>
  * Run an action and simultaneously wait for navigation to complete. This is
  * useful for actions that trigger navigation, such as clicking a link or
  * submitting a form.
+ *
+ * When the action triggers a full-page navigation, the execution context may be destroyed
+ * before the action's Promise resolves (e.g., expect-puppeteer's `toClick` polls the DOM
+ * via `evaluateHandle`, and if the navigation fires mid-poll the context is gone). This is
+ * expected and harmless — the navigation itself is what we care about — so we catch these
+ * errors instead of letting them fail the test.
  */
 export const expectNavigation = async <T>(
   action: Promise<T>,
   page: Page = global.page
-): Promise<T> => {
-  const [_, result] = await Promise.all([
-    /**
-     * We should call `waitForNavigation` before the action or the `waitForNavigation` will encounter a timeout error randomly,
-     * since sometimes the action is too fast and the `waitForNavigation` is not called before the navigation is completed.
-     */
+): Promise<void> => {
+  await Promise.all([
     page.waitForNavigation({ waitUntil: 'networkidle0' }),
-    action,
+    action.catch((error: unknown) => {
+      const message =
+        error instanceof Error
+          ? error.message
+          : typeof error === 'object' && error !== null && 'message' in error
+            ? String(error.message)
+            : String(error);
+      if (
+        message.includes('Execution context was destroyed') ||
+        message.includes('not available in detached frame') ||
+        message.includes('Navigating frame was detached') ||
+        message.includes('Argument should belong to the same JavaScript world') ||
+        message.includes('Attempted to use detached Frame') ||
+        message.includes('Cannot find context with specified id')
+      ) {
+        return;
+      }
+      throw error;
+    }),
   ]);
-  return result;
 };
 
 /**
