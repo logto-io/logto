@@ -32,6 +32,8 @@ const application = {
     reach_oss_limit:
       'لا يمكنك إنشاء المزيد من تطبيقات SAML لأن الحد الأقصى {{limit}} تم الوصول إليه.',
     acs_url_binding_not_supported: 'يدعم فقط التوزيع HTTP-POST لاستقبال إقرارات SAML.',
+    acs_url_scheme_not_supported:
+      'يتم دعم مخططي HTTP و HTTPS فقط لعنوان URL الخاص بخدمة استهلاك التأكيد (ACS).',
     can_not_delete_active_secret: 'لا يمكن حذف السر النشط.',
     no_active_secret: 'لم يتم العثور على سر نشط.',
     entity_id_required: 'معرف الكيان مطلوب لإنشاء بيانات وصفية.',

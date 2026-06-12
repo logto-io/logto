@@ -34,6 +34,8 @@ const application = {
       'Вы не можете создать больше приложений SAML, так как достигнут лимит {{limit}}.',
     acs_url_binding_not_supported:
       'Только HTTP-POST привязка поддерживается для получения утверждений SAML.',
+    acs_url_scheme_not_supported:
+      'Для URL-адреса Assertion Consumer Service поддерживаются только схемы HTTP и HTTPS.',
     can_not_delete_active_secret: 'Невозможно удалить активный секрет.',
     no_active_secret: 'Активный секрет не найден.',
     entity_id_required: 'Для создания метаданных требуется идентификатор сущности.',

@@ -30,6 +30,8 @@ const application = {
     reach_oss_limit: 'คุณไม่สามารถสร้าง SAML แอปเพิ่มเติมได้ เนื่องจากถึงขีดจำกัด {{limit}} แล้ว',
     acs_url_binding_not_supported:
       'รองรับเฉพาะ HTTP-POST binding สำหรับรับ SAML assertion เท่านั้น',
+    acs_url_scheme_not_supported:
+      'รองรับเฉพาะรูปแบบ HTTP และ HTTPS สำหรับ URL ของ Assertion Consumer Service เท่านั้น',
     can_not_delete_active_secret: 'ไม่สามารถลบ secret ที่ถูกใช้งานอยู่ได้',
     no_active_secret: 'ไม่พบ secret ที่ถูกใช้งานอยู่',
     entity_id_required: 'ต้องระบุ Entity ID เพื่อสร้าง metadata',

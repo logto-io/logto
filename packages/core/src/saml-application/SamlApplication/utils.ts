@@ -54,17 +54,47 @@ export const buildSamlAssertionNameId = (
   });
 };
 
+const escapeHtmlAttributeValue = (value: string): string =>
+  value
+    .replaceAll('&', '&amp;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;');
+
+const safeActionUrlProtocols = Object.freeze(['http:', 'https:']);
+
+// HTML-escaping the action attribute prevents markup breakouts but not scriptable schemes
+// (e.g. `javascript:`), which the browser would execute on form submission.
+const isSafeActionUrl = (actionUrl: string): boolean => {
+  try {
+    return safeActionUrlProtocols.includes(new URL(actionUrl).protocol);
+  } catch {
+    return false;
+  }
+};
+
 export const generateAutoSubmitForm = (
   actionUrl: string,
   samlResponse: string,
   relayState?: string
 ): string => {
+  assertThat(isSafeActionUrl(actionUrl), 'application.saml.acs_url_scheme_not_supported', 400);
+
   return `
     <html>
       <body>
-        <form id="redirectForm" action="${actionUrl}" method="POST">
-          <input type="hidden" name="SAMLResponse" value="${samlResponse}" />
-          ${relayState ? `<input type="hidden" name="RelayState" value="${relayState}" />` : ''}
+        <form id="redirectForm" action="${escapeHtmlAttributeValue(actionUrl)}" method="POST">
+          <input type="hidden" name="SAMLResponse" value="${escapeHtmlAttributeValue(
+            samlResponse
+          )}" />
+          ${
+            relayState
+              ? `<input type="hidden" name="RelayState" value="${escapeHtmlAttributeValue(
+                  relayState
+                )}" />`
+              : ''
+          }
         </form>
         <script>
           window.onload = function() {

@@ -35,6 +35,8 @@ const application = {
       'Du kannst keine weiteren SAML-Apps erstellen, da das Limit von {{limit}} erreicht wurde.',
     acs_url_binding_not_supported:
       'Nur HTTP-POST-Bindung wird für den Empfang von SAML-Aussagen unterstützt.',
+    acs_url_scheme_not_supported:
+      'Nur die HTTP- und HTTPS-Schemata werden für die Assertion Consumer Service-URL unterstützt.',
     can_not_delete_active_secret: 'Das aktive Geheimnis kann nicht gelöscht werden.',
     no_active_secret: 'Kein aktives Geheimnis gefunden.',
     entity_id_required: 'Entity ID ist erforderlich, um Metadaten zu generieren.',

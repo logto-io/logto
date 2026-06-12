@@ -27,6 +27,7 @@ const application = {
     saml_application_only: '该 API 仅适用于 SAML 应用。',
     reach_oss_limit: '你不能创建更多 SAML 应用，因为已达到 {{limit}} 的限制。',
     acs_url_binding_not_supported: '仅支持用于接收 SAML 断言的 HTTP-POST 绑定。',
+    acs_url_scheme_not_supported: '断言消费者服务（ACS）URL 仅支持 HTTP 和 HTTPS 协议。',
     can_not_delete_active_secret: '不能删除活动密钥。',
     no_active_secret: '未找到活动密钥。',
     entity_id_required: '生成元数据需要实体 ID。',
