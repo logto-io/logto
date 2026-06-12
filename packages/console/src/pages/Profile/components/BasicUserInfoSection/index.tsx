@@ -8,6 +8,7 @@ import { isCloud } from '@/consts/env';
 
 import type { BasicUserField } from '../../containers/BasicUserInfoUpdateModal';
 import BasicUserInfoUpdateModal from '../../containers/BasicUserInfoUpdateModal';
+import { useNavigateToAccountCenter } from '../../hooks';
 import type { Row } from '../CardContent';
 import CardContent from '../CardContent';
 
@@ -19,6 +20,7 @@ type Props = {
 function BasicUserInfoSection({ user, onUpdate }: Props) {
   const [editingField, setEditingField] = useState<BasicUserField>();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const navigateToAccountCenter = useNavigateToAccountCenter();
 
   const { name, username, avatar } = user;
 
@@ -32,8 +34,7 @@ function BasicUserInfoSection({ user, onUpdate }: Props) {
           action: {
             name: 'profile.change',
             handler: () => {
-              setEditingField('username');
-              setIsUpdateModalOpen(true);
+              navigateToAccountCenter('/account/username');
             },
           },
         },
