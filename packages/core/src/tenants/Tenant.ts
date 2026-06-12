@@ -13,6 +13,7 @@ import { AdminApps, EnvSet, UserApps } from '#src/env-set/index.js';
 import { createCloudConnectionLibrary } from '#src/libraries/cloud-connection.js';
 import { createConnectorLibrary } from '#src/libraries/connector.js';
 import { createLogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import koaAccountCenterSsr from '#src/middleware/koa-account-center-ssr.js';
 import koaAutoConsent from '#src/middleware/koa-auto-consent.js';
 import koaConnectorErrorHandler from '#src/middleware/koa-connector-error-handler.js';
 import koaConsoleRedirectProxy from '#src/middleware/koa-console-redirect-proxy.js';
@@ -224,13 +225,16 @@ export default class Tenant implements TenantContext {
     app.use(
       mount(
         '/' + UserApps.AccountCenter,
-        koaSpaProxy({
-          mountedApps,
-          queries,
-          packagePath: UserApps.AccountCenter,
-          port: 5004,
-          prefix: UserApps.AccountCenter,
-        })
+        compose([
+          ...(EnvSet.values.isDevFeaturesEnabled ? [koaAccountCenterSsr(libraries)] : []),
+          koaSpaProxy({
+            mountedApps,
+            queries,
+            packagePath: UserApps.AccountCenter,
+            port: 5004,
+            prefix: UserApps.AccountCenter,
+          }),
+        ])
       )
     );
 

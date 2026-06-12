@@ -151,6 +151,21 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     expect(mountedAppCspHeaders).toEqual(['', '', '']);
   });
 
+  it('allows inline scripts in account center for SSR bootstrap', async () => {
+    const run = koaSecurityHeaders(['api', 'oidc', '.well-known', 'demo-app'], 'default');
+    const ctx = createMockContext({ method: 'GET', url: '/account' });
+
+    await run(ctx, koaNoop);
+
+    const scriptSource = getCspDirective(ctx, 'script-src');
+    const scriptSourceAttribute = getCspDirective(ctx, 'script-src-attr');
+
+    expect(scriptSource).toContain("'self'");
+    expect(scriptSource).toContain("'unsafe-inline'");
+    expect(scriptSource).toContain("'unsafe-hashes'");
+    expect(scriptSourceAttribute).toBe("script-src-attr 'unsafe-inline'");
+  });
+
   it('does not override mounted app CSP when the experience middleware is reached later', async () => {
     const queries = createQueries({
       customUiAssets,
