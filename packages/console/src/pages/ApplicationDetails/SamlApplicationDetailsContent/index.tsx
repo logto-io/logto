@@ -81,6 +81,20 @@ function SamlApplicationDetailsContent({ data, onApplicationUpdated }: Props) {
     }
   }, [api, data.id, navigate, samlApplicationData?.isThirdParty, samlApplicationData?.name, t]);
 
+  const onAppLevelAccessControlUpdated = useCallback(
+    async (appLevelAccessControlEnabled: boolean) => {
+      const updatedSamlApplication = await api
+        .patch(`api/saml-applications/${data.id}`, {
+          json: { appLevelAccessControlEnabled },
+        })
+        .json<SamlApplicationResponse>();
+
+      await mutateSamlApplication(updatedSamlApplication, { revalidate: false });
+      await onApplicationUpdated();
+    },
+    [api, data.id, mutateSamlApplication, onApplicationUpdated]
+  );
+
   if (isLoading) {
     return <Skeleton />;
   }
@@ -179,7 +193,7 @@ function SamlApplicationDetailsContent({ data, onApplicationUpdated }: Props) {
           <ApplicationAccessControl
             application={data}
             isActive={tab === ApplicationDetailsTabs.Rules}
-            onApplicationUpdated={onApplicationUpdated}
+            onAppLevelAccessControlUpdated={onAppLevelAccessControlUpdated}
           />
         </TabWrapper>
       )}

@@ -34,6 +34,11 @@ export const samlApplicationPatchGuard = applicationPatchGuard
     description: true,
     customData: true,
   })
+  .merge(
+    Applications.createGuard.pick({
+      appLevelAccessControlEnabled: true,
+    })
+  )
   // The reason for encapsulating attributeMapping and spMetadata into an object within the config field is that you cannot provide only one of `attributeMapping` or `spMetadata`. Due to the structure of the `saml_application_configs` table, both must be not null.
   .merge(samlAppConfigGuard.partial())
   .extend({ nameIdFormat: nameIdFormatGuard.optional() });

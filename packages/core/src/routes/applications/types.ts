@@ -9,7 +9,7 @@ import { EnvSet } from '#src/env-set/index.js';
 
 const protectedAppAdditionalScopeGuard = z.enum(protectedAppAdditionalScopes);
 
-const appLevelAccessControlEnabledGuard = z
+export const appLevelAccessControlEnabledGuard = z
   .boolean()
   .refine(() => EnvSet.values.isDevFeaturesEnabled, {
     message: 'appLevelAccessControlEnabled is not available when dev features are disabled',
