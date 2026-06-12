@@ -1,7 +1,6 @@
 import { useLogto } from '@logto/react';
 import { Theme } from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 
 import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
@@ -24,10 +23,21 @@ type Props = {
   readonly children: React.ReactNode;
 };
 
+const getInitialTheme = () => {
+  if (document.documentElement.dataset.theme === Theme.Dark) {
+    return Theme.Dark;
+  }
+
+  return Theme.Light;
+};
+
+const getInitialPlatform = (): PageContextType['platform'] =>
+  document.body.classList.contains('mobile') ? 'mobile' : 'web';
+
 const PageContextProvider = ({ children }: Props) => {
   const { isAuthenticated } = useLogto();
   const getUserInfoRequest = useApi(getUserInfo, { silent: true });
-  const [theme, setTheme] = useState(getThemeBySystemPreference);
+  const [theme, setTheme] = useState(getInitialTheme);
   const [toast, setToast] = useState('');
   const [experienceSettings, setExperienceSettings] =
     useState<PageContextType['experienceSettings']>(undefined);
@@ -199,7 +209,7 @@ const PageContextProvider = ({ children }: Props) => {
     };
   }, [experienceSettings]);
 
-  const platform = isMobile ? 'mobile' : 'web';
+  const platform = getInitialPlatform();
 
   const value = useMemo<PageContextType>(
     () => ({

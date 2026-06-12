@@ -13,6 +13,40 @@
 </head>
 
 <body>
+  <script>
+    // Keep this blocking script in the HTML so the theme, platform class, and brand color
+    // are applied before React loads and the browser has a chance to paint the wrong UI.
+    (function () {
+      var theme = 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      var isMobile = navigator.userAgentData
+        ? navigator.userAgentData.mobile
+        : /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+          || (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+      document.body.classList.add(isMobile ? 'mobile' : 'desktop');
+
+      try {
+        var ssr = window.logtoSsr;
+        var darkOk = typeof ssr === 'object' && ssr !== null
+          && ssr.signInExperience && ssr.signInExperience.data
+          && ssr.signInExperience.data.color.isDarkModeEnabled;
+        var prefersDark = typeof window.matchMedia === 'function'
+          && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        theme = (darkOk && prefersDark) ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (typeof ssr === 'object' && ssr !== null && ssr.signInExperience
+          && ssr.signInExperience.data && ssr.signInExperience.data.color) {
+          var color = ssr.signInExperience.data.color;
+          var primaryColor = theme === 'dark' && color.darkPrimaryColor
+            ? color.darkPrimaryColor
+            : color.primaryColor;
+          if (primaryColor) {
+            document.body.style.setProperty('--color-brand-default', primaryColor);
+          }
+        }
+      } catch (e) { /* noop */ }
+    })();
+  </script>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="app"></div>
   <script type="module" src="src/index.tsx"></script>

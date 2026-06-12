@@ -1,6 +1,5 @@
 import { Theme } from '@logto/schemas';
 import { useState, useMemo } from 'react';
-import { isMobile } from 'react-device-detect';
 import { useSearchParams } from 'react-router-dom';
 
 import type { SignInExperienceResponse, Platform } from '@/types';
@@ -24,16 +23,25 @@ type Props = {
   >;
 };
 
+const getInitialTheme = () => {
+  if (document.documentElement.dataset.theme === Theme.Dark) {
+    return Theme.Dark;
+  }
+
+  return Theme.Light;
+};
+
+const getInitialPlatform = (): Platform =>
+  document.body.classList.contains('mobile') ? 'mobile' : 'web';
+
 const PageContextProvider = ({ children, preset }: Props) => {
   const [searchParameters] = useSearchParams();
 
   const [loading, setLoading] = useState(preset?.loading ?? false);
   const [toast, setToast] = useState(preset?.toast ?? '');
-  const [theme, setTheme] = useState<Theme>(preset?.theme ?? Theme.Light);
+  const [theme, setTheme] = useState<Theme>(preset?.theme ?? getInitialTheme);
 
-  const [platform, setPlatform] = useState<Platform>(
-    preset?.platform ?? (isMobile ? 'mobile' : 'web')
-  );
+  const [platform, setPlatform] = useState<Platform>(preset?.platform ?? getInitialPlatform);
   const [termsAgreement, setTermsAgreement] = useState(preset?.termsAgreement ?? false);
   const [experienceSettings, setExperienceSettings] = useState<
     SignInExperienceResponse | undefined
