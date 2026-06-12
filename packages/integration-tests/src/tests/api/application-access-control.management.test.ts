@@ -11,10 +11,16 @@ import {
   deleteApplication,
   getApplication,
   getApplicationAccessControl,
+  getApplications,
   replaceApplicationAccessControl,
   updateApplication,
 } from '#src/api/application.js';
 import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
+import {
+  deleteSamlApplication,
+  getSamlApplication,
+  updateSamlApplication,
+} from '#src/api/saml-application.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import {
   createDefaultTenantUserWithPassword,
@@ -50,6 +56,158 @@ const expectPutApplicationAccessControlError = async (
 
   expect(response.status).toBe(status);
   await expect(response.json()).resolves.toMatchObject({ code });
+};
+
+const createOrReuseSamlApplication = async () => {
+  const response = await authedAdminApi.post('saml-applications', {
+    json: {
+      name: generateTestName(),
+      description: null,
+    },
+    throwHttpErrors: false,
+  });
+
+  if (response.ok) {
+    return {
+      application: await response.json<Awaited<ReturnType<typeof getSamlApplication>>>(),
+      shouldDelete: true,
+    };
+  }
+
+  const error = await response.json<{ code?: string }>();
+  if (response.status === 403 && error.code === 'application.saml.reach_oss_limit') {
+    const [application] = await getApplications([ApplicationType.SAML]);
+
+    expect(application).toBeDefined();
+
+    return {
+      application: application!,
+      shouldDelete: false,
+    };
+  }
+
+  throw new Error(`Failed to create SAML application: ${response.status} ${error.code ?? ''}`);
+};
+
+const createProtectedApplication = async () =>
+  createApplication(generateTestName(), ApplicationType.Protected, {
+    protectedAppMetadata: {
+      origin: 'https://example.com',
+      subDomain: generateTestName().replaceAll('_', '-'),
+    },
+  });
+
+type TestApplication = {
+  id: string;
+  type: ApplicationType;
+  isThirdParty?: boolean;
+  updateEnabled: (enabled: boolean) => Promise<unknown>;
+  cleanup: () => Promise<unknown>;
+};
+
+const createApplicationMatrix = async (): Promise<TestApplication[]> => {
+  const [
+    spaApplication,
+    traditionalApplication,
+    thirdPartyApplication,
+    nativeApplication,
+    protectedApplication,
+    samlResult,
+  ] = await Promise.all([
+    createApplication(generateTestName(), ApplicationType.SPA),
+    createApplication(generateTestName(), ApplicationType.Traditional),
+    createApplication(generateTestName(), ApplicationType.Traditional, { isThirdParty: true }),
+    createApplication(generateTestName(), ApplicationType.Native),
+    createProtectedApplication(),
+    createOrReuseSamlApplication(),
+  ]);
+
+  const createOidcAppEntry = (application: Awaited<ReturnType<typeof createApplication>>) => ({
+    id: application.id,
+    type: application.type,
+    isThirdParty: application.isThirdParty,
+    updateEnabled: async (enabled: boolean) =>
+      updateApplication(application.id, { appLevelAccessControlEnabled: enabled }),
+    cleanup: async () => deleteApplication(application.id),
+  });
+
+  return [
+    createOidcAppEntry(spaApplication),
+    createOidcAppEntry(traditionalApplication),
+    createOidcAppEntry(thirdPartyApplication),
+    createOidcAppEntry(nativeApplication),
+    createOidcAppEntry(protectedApplication),
+    {
+      id: samlResult.application.id,
+      type: ApplicationType.SAML,
+      updateEnabled: async (enabled: boolean) =>
+        updateSamlApplication(samlResult.application.id, {
+          appLevelAccessControlEnabled: enabled,
+        }),
+      cleanup: async () => {
+        if (samlResult.shouldDelete) {
+          await deleteSamlApplication(samlResult.application.id);
+          return;
+        }
+
+        await updateSamlApplication(samlResult.application.id, {
+          appLevelAccessControlEnabled: false,
+        });
+        await replaceApplicationAccessControl(
+          samlResult.application.id,
+          createDefaultApplicationAccessControl()
+        );
+      },
+    },
+  ];
+};
+
+const createRuleMatrix = async () => {
+  const organizationApi = new OrganizationApiTest();
+  const { user } = await createDefaultTenantUserWithPassword();
+  const userRole = await createRole({ type: RoleType.User });
+  const [organization, organizationWithRole] = await Promise.all([
+    organizationApi.create({ name: generateTestName() }),
+    organizationApi.create({ name: generateTestName() }),
+  ]);
+  const organizationRole = await organizationApi.roleApi.create({
+    name: generateTestName(),
+    type: RoleType.User,
+  });
+
+  return {
+    rules: [
+      {
+        name: 'User IDs',
+        accessControl: buildAccessControl({ userIds: [user.id] }),
+      },
+      {
+        name: 'User roles',
+        accessControl: buildAccessControl({ userRoleIds: [userRole.id] }),
+      },
+      {
+        name: 'Organizations',
+        accessControl: buildAccessControl({ organizationIds: [organization.id] }),
+      },
+      {
+        name: 'Organization roles',
+        accessControl: buildAccessControl({
+          organizationRoleRules: [
+            {
+              organizationId: organizationWithRole.id,
+              organizationRoleIds: [organizationRole.id],
+            },
+          ],
+        }),
+      },
+    ],
+    cleanup: async () =>
+      Promise.allSettled([
+        deleteDefaultTenantUser(user.id),
+        deleteRole(userRole.id),
+        organizationApi.cleanUp(),
+      ]),
+  };
 };
 
 devFeatureTest.describe('application access control Management API', () => {
@@ -145,6 +303,47 @@ devFeatureTest.describe('application access control Management API', () => {
       });
     } finally {
       await deleteApplication(application.id);
+    }
+  });
+
+  it('saves and enables every rule type for each supported user-facing application type', async () => {
+    const applications = await createApplicationMatrix();
+    const ruleMatrix = await createRuleMatrix();
+
+    try {
+      for (const application of applications) {
+        for (const { accessControl } of ruleMatrix.rules) {
+          // eslint-disable-next-line no-await-in-loop
+          await expect(
+            replaceApplicationAccessControl(application.id, accessControl)
+          ).resolves.toEqual(accessControl);
+          // eslint-disable-next-line no-await-in-loop
+          await application.updateEnabled(true);
+          // eslint-disable-next-line no-await-in-loop
+          await expect(getApplicationAccessControl(application.id)).resolves.toEqual(accessControl);
+        }
+
+        const expectedApplication =
+          application.type === ApplicationType.SAML
+            ? getSamlApplication(application.id)
+            : getApplication(application.id);
+        const expectedProperties =
+          application.type === ApplicationType.SAML
+            ? { appLevelAccessControlEnabled: true }
+            : {
+                type: application.type,
+                isThirdParty: application.isThirdParty ?? false,
+                appLevelAccessControlEnabled: true,
+              };
+
+        // eslint-disable-next-line no-await-in-loop
+        await expect(expectedApplication).resolves.toMatchObject(expectedProperties);
+      }
+    } finally {
+      await Promise.allSettled([
+        ...applications.map(async ({ cleanup }) => cleanup()),
+        ruleMatrix.cleanup(),
+      ]);
     }
   });
 
