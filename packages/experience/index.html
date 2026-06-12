@@ -17,16 +17,20 @@
     // Keep this blocking script in the HTML so the theme, platform class, and brand color
     // are applied before React loads and the browser has a chance to paint the wrong UI.
     (function () {
+      var theme = 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.body.classList.add(
+        /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop');
+
       try {
         var ssr = window.logtoSsr;
         var darkOk = typeof ssr === 'object' && ssr !== null
           && ssr.signInExperience && ssr.signInExperience.data
           && ssr.signInExperience.data.color.isDarkModeEnabled;
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var theme = (darkOk && prefersDark) ? 'dark' : 'light';
+        var prefersDark = typeof window.matchMedia === 'function'
+          && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        theme = (darkOk && prefersDark) ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', theme);
-        document.body.classList.add(
-          /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop');
         if (typeof ssr === 'object' && ssr !== null && ssr.signInExperience
           && ssr.signInExperience.data && ssr.signInExperience.data.color) {
           var color = ssr.signInExperience.data.color;
