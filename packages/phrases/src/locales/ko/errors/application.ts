@@ -31,6 +31,8 @@ const application = {
     saml_application_only: '이 API 는 SAML 응용 프로그램에만 사용할 수 있습니다.',
     reach_oss_limit: '{{limit}} 개의 제한에 도달했기 때문에 더 이상 SAML 앱을 만들 수 없습니다.',
     acs_url_binding_not_supported: 'SAML 어설션을 받기 위해서는 HTTP-POST 바인딩만 지원됩니다.',
+    acs_url_scheme_not_supported:
+      'Assertion Consumer Service URL에는 HTTP 및 HTTPS 체계만 지원됩니다.',
     can_not_delete_active_secret: '활성 비밀을 삭제할 수 없습니다.',
     no_active_secret: '활성 비밀을 찾을 수 없습니다.',
     entity_id_required: '메타데이터 생성을 위해 엔터티 ID 가 필요합니다.',

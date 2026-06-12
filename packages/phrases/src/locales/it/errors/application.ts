@@ -36,6 +36,8 @@ const application = {
       'Non puoi creare più app SAML poiché è stato raggiunto il limite di {{limit}}.',
     acs_url_binding_not_supported:
       'Solo il binding HTTP-POST è supportato per ricevere assertion SAML.',
+    acs_url_scheme_not_supported:
+      'Solo gli schemi HTTP e HTTPS sono supportati per l’URL dell’Assertion Consumer Service.',
     can_not_delete_active_secret: 'Non è possibile eliminare il segreto attivo.',
     no_active_secret: 'Non è stato trovato alcun segreto attivo.',
     entity_id_required: 'È richiesto un Entity ID per generare i metadati.',

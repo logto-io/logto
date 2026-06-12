@@ -32,6 +32,8 @@ const application = {
       '{{limit}} sınırına ulaşıldığı için daha fazla SAML uygulaması oluşturamazsınız.',
     acs_url_binding_not_supported:
       'SAML iddialarını almak için sadece HTTP-POST bağlaması desteklenir.',
+    acs_url_scheme_not_supported:
+      'Assertion Consumer Service URL’si için yalnızca HTTP ve HTTPS şemaları desteklenir.',
     can_not_delete_active_secret: 'Aktif gizli anahtar silinemez.',
     no_active_secret: 'Aktif gizli anahtar bulunamadı.',
     entity_id_required: 'Meta verileri oluşturmak için Kimlik Varlığı gereklidir.',
