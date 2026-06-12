@@ -25,12 +25,17 @@ export const goToAdminConsole = async () => {
   const logtoConsoleUrl = new URL(logtoConsoleUrlString);
   await expectNavigation(page.goto(logtoConsoleUrl.href));
 
-  if (page.url() === new URL('sign-in', logtoConsoleUrl).href) {
+  if (new URL(page.url()).pathname === '/sign-in') {
     await expect(page).toFillForm('form', {
       identifier: consoleUsername,
       password: consolePassword,
     });
-    await expectNavigation(expect(page).toClick('button[name=submit]'));
+    await expect(page).toClick('button[name=submit]');
+    await page.waitForFunction(
+      () =>
+        window.location.pathname.startsWith('/console') &&
+        window.location.pathname !== '/console/callback'
+    );
   }
 };
 
