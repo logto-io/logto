@@ -15,7 +15,6 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { appLevelAccessControl } from '@/consts';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
-import { Ring } from '@/ds-components/Spinner';
 import Switch from '@/ds-components/Switch';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { trySubmitSafe } from '@/utils/form';
@@ -23,6 +22,7 @@ import { trySubmitSafe } from '@/utils/form';
 import AddRuleMenu from './AddRuleMenu';
 import RuleSelectorModals from './RuleSelectorModals';
 import RulesTable from './RulesTable';
+import RulesTableSkeleton from './RulesTableSkeleton';
 import styles from './index.module.scss';
 import { type RuleType } from './types';
 import useRuleEntities from './use-rule-entities';
@@ -38,6 +38,21 @@ type ApplicationAccessControlForm = {
   appLevelAccessControlEnabled: boolean;
   accessControl?: ApplicationAccessControlRules;
 };
+
+function RulesSectionHeader() {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  return (
+    <div className={styles.rulesHeader}>
+      <div className={styles.rulesTitle}>
+        {t('application_details.access_control.custom_allow_rules')}
+      </div>
+      <div className={styles.rulesDescription}>
+        {t('application_details.access_control.custom_allow_rules_description')}
+      </div>
+    </div>
+  );
+}
 
 function ApplicationAccessControl({ application, isActive, onApplicationUpdated }: Props) {
   const { id, appLevelAccessControlEnabled } = application;
@@ -186,8 +201,9 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
             )}
           />
           {isLoading && (
-            <div className={styles.loading}>
-              <Ring />
+            <div className={styles.rulesSection}>
+              <RulesSectionHeader />
+              <RulesTableSkeleton />
             </div>
           )}
           {error && (
@@ -204,19 +220,8 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
           )}
           {visibleAccessControl && (
             <div className={styles.rulesSection}>
-              <div className={styles.rulesHeader}>
-                <div className={styles.rulesTitle}>
-                  {t('application_details.access_control.custom_allow_rules')}
-                </div>
-                <div className={styles.rulesDescription}>
-                  {t('application_details.access_control.custom_allow_rules_description')}
-                </div>
-              </div>
-              {isRuleEntitiesLoading && (
-                <div className={styles.loading}>
-                  <Ring />
-                </div>
-              )}
+              <RulesSectionHeader />
+              {isRuleEntitiesLoading && <RulesTableSkeleton accessControl={draftAccessControl} />}
               {!isRuleEntitiesLoading && ruleEntities.hasError && (
                 <InlineNotification className={styles.notification} severity="error">
                   {t('application_details.access_control.load_error')}
