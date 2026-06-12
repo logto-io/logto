@@ -71,6 +71,7 @@ import { useAuthRedirect } from './use-auth-redirect';
 import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
 import { hasVisibleSecuritySection, hasVisibleSessionsPage } from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
+import './scss/normalized.scss';
 
 handleAccountCenterRoute();
 void initI18n();

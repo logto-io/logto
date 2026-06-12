@@ -2,7 +2,6 @@
   "paths": {
     "/api/sign-in-exp/username-policy/case-sensitivity-conflicts": {
       "get": {
-        "tags": ["Dev feature"],
         "summary": "Get username case-sensitivity conflicts",
         "description": "List groups of usernames that collide when compared case-insensitively (i.e. usernames that would clash if the tenant switched to a case-insensitive username policy), with the total group count and a capped sample. Useful for surfacing conflicts before disabling case sensitivity.",
         "responses": {

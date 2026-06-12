@@ -1,7 +1,7 @@
 import { Prompt } from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas';
 
-import { assignRolesToUser, putRolesToUser } from '#src/api/index.js';
+import { assignRolesToUser, putRolesToUser, updateUser } from '#src/api/index.js';
 import { createRole } from '#src/api/role.js';
 import { demoAppRedirectUri } from '#src/constants.js';
 import { initExperienceClient, processSession } from '#src/helpers/client.js';
@@ -91,5 +91,15 @@ describe('OpenID Connect ID token', () => {
 
     expect(organizationRoles).toHaveLength(1);
     expect(organizationRoles).toContainEqual(`${org1.id}:${role.name}`);
+  });
+
+  it('should mirror `preferred_username` from the username when `profile.preferredUsername` is unset', async () => {
+    await fetchIdToken(['profile'], { preferred_username: username });
+  });
+
+  // Mutates the shared user's profile, so it runs last.
+  it('should prefer an explicit `profile.preferredUsername` over the mirrored username', async () => {
+    await updateUser(userId, { profile: { preferredUsername: `${username}_preferred` } });
+    await fetchIdToken(['profile'], { preferred_username: `${username}_preferred` });
   });
 });

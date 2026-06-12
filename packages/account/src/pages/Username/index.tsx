@@ -12,7 +12,6 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { updateUsername } from '@ac/apis/account';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { usernameSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
@@ -59,10 +58,7 @@ const Username = () => {
    * tenant policy is restrictive, so the page never contradicts the enforced policy.
    */
   const usernamePolicyDescription = useMemo(
-    () =>
-      isDevFeaturesEnabled
-        ? buildUsernamePolicyDescription(experienceSettings?.usernamePolicy, t)
-        : undefined,
+    () => buildUsernamePolicyDescription(experienceSettings?.usernamePolicy, t),
     [experienceSettings?.usernamePolicy, t]
   );
 
@@ -94,12 +90,7 @@ const Username = () => {
       return;
     }
 
-    // Per-tenant policy enforcement is gated until the feature ships; without the flag the
-    // always-on hard floor is the only client-side check, matching production behavior.
-    const validationError = validateUsername(
-      username,
-      isDevFeaturesEnabled ? experienceSettings?.usernamePolicy : undefined
-    );
+    const validationError = validateUsername(username, experienceSettings?.usernamePolicy);
 
     if (validationError) {
       const message =

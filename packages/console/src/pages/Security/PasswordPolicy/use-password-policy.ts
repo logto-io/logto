@@ -1,7 +1,9 @@
 import { passwordPolicyGuard, type PasswordPolicy } from '@logto/core-kit';
 import {
+  AlternativeSignUpIdentifier,
   ConnectorType,
   ForgotPasswordMethod,
+  SignInIdentifier,
   type SignInExperience,
   type PasswordExpirationPolicy,
 } from '@logto/schemas';
@@ -33,13 +35,22 @@ export type PasswordPolicyFormData = PasswordPolicy & {
   passwordExpirationDays: number;
   /** Whether some forgot password method are configured. */
   hasAvailableForgotPasswordMethod: boolean;
+  /**
+   * Whether sign-up requires a contact identifier (email, phone, or emailOrPhone) that every
+   * account is guaranteed to have. When false, some accounts may lack any contact to receive a
+   * password recovery code, so an expired password cannot be reset.
+   */
+  hasContactSignUpIdentifier: boolean;
 };
 
 export const passwordPolicyFormParser = {
   fromSignInExperience: ({
     passwordPolicy,
     passwordExpiration,
-  }: SignInExperience): Omit<PasswordPolicyFormData, 'hasAvailableForgotPasswordMethod'> => ({
+  }: SignInExperience): Omit<
+    PasswordPolicyFormData,
+    'hasAvailableForgotPasswordMethod' | 'hasContactSignUpIdentifier'
+  > => ({
     ...passwordPolicyGuard.parse(passwordPolicy),
     customWords: passwordPolicy.rejects?.words?.join('\n') ?? '',
     isCustomWordsEnabled: Boolean(passwordPolicy.rejects?.words?.length),
@@ -56,6 +67,7 @@ export const passwordPolicyFormParser = {
       isPasswordExpirationEnabled,
       passwordExpirationDays,
       hasAvailableForgotPasswordMethod: _,
+      hasContactSignUpIdentifier: __,
       ...passwordPolicy
     } = formData;
     const passwordExpiration: PasswordExpirationPolicy = isPasswordExpirationEnabled
@@ -92,7 +104,20 @@ const usePasswordPolicy = () => {
       return;
     }
 
-    const { forgotPasswordMethods } = data;
+    const { forgotPasswordMethods, signUp } = data;
+
+    // `signUp.identifiers` only holds primary `SignInIdentifier`s; the `emailOrPhone` alternative
+    // appears in `secondaryIdentifiers`. Check both so any required contact suppresses the reminder.
+    const requiredSignUpIdentifiers = [
+      ...signUp.identifiers,
+      ...(signUp.secondaryIdentifiers?.map(({ identifier }) => identifier) ?? []),
+    ];
+    const hasContactSignUpIdentifier = requiredSignUpIdentifiers.some(
+      (identifier) =>
+        identifier === SignInIdentifier.Email ||
+        identifier === SignInIdentifier.Phone ||
+        identifier === AlternativeSignUpIdentifier.EmailOrPhone
+    );
 
     const hasEmailConnector = isConnectorTypeEnabled(ConnectorType.Email);
     const hasSmsConnector = isConnectorTypeEnabled(ConnectorType.Sms);
@@ -110,6 +135,7 @@ const usePasswordPolicy = () => {
       hasAvailableForgotPasswordMethod: forgotPasswordMethods
         ? hasEmailForgotPasswordMethod || hasSmsForgotPasswordMethod
         : hasEmailConnector || hasSmsConnector,
+      hasContactSignUpIdentifier,
     };
 
     return formData;

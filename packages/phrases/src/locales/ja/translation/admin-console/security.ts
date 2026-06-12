@@ -99,6 +99,8 @@ const security = {
     expiration_period_description: 'パスワードが期限切れになるまでの有効日数。',
     expiration_period_error:
       'パスワードの有効期間は {{min}} 日から {{max}} 日の間である必要があります。',
+    password_expiration_recovery_reminder:
+      '一部のユーザーは、パスワード回復コードを受け取るためのメールアドレスや電話番号を持っていない場合があり、期限切れのパスワードをリセットできないことがあります。すべてのユーザーがパスワードを回復できるよう、サインアップ時にメールアドレスまたは電話番号を必須にしてください。',
   },
   verification_code_policy: {
     card_title: '認証コード',

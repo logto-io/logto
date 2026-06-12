@@ -25,16 +25,6 @@ jest.mock('../../apis/account', () => ({
   updateUsername: jest.fn(),
 }));
 
-// The policy gate is read per submit; control it per test (and sidestep `import.meta.env`). Default
-// off — matching production and the suite's original hard-floor-only behavior; the policy block
-// turns it on.
-const mockIsDevFeaturesEnabled = jest.fn(() => false);
-jest.mock('@ac/constants/env', () => ({
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled();
-  },
-}));
-
 jest.mock('@ac/components/VerificationMethodList', () => () => <div>Verification methods</div>);
 
 // Lowercase-only, length 4–8: violations here are policy-only (not caught by the hard floor).
@@ -107,7 +97,6 @@ describe('<Username />', () => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
     jest.mocked(updateUsername).mockResolvedValue(undefined);
-    mockIsDevFeaturesEnabled.mockReturnValue(false);
   });
 
   it('shows an error page when username editing is disabled', () => {
@@ -229,10 +218,6 @@ describe('<Username />', () => {
   });
 
   describe('username policy', () => {
-    beforeEach(() => {
-      mockIsDevFeaturesEnabled.mockReturnValue(true);
-    });
-
     it('blocks a too-short username with an inline policy error', async () => {
       const { getByText, container } = renderWithPolicy();
 
@@ -284,30 +269,6 @@ describe('<Username />', () => {
       const { getByText, queryByText } = renderUsername();
       expect(getByText('account_center.username.description')).toBeTruthy();
       expect(queryByText('account_center.username.policy_description')).toBeNull();
-    });
-
-    it('keeps the static page description when dev features are off', () => {
-      mockIsDevFeaturesEnabled.mockReturnValue(false);
-      const { getByText, queryByText } = renderWithPolicy();
-      expect(getByText('account_center.username.description')).toBeTruthy();
-      expect(queryByText('account_center.username.policy_description')).toBeNull();
-    });
-
-    it('does not block a policy-only violation when dev features are off', async () => {
-      mockIsDevFeaturesEnabled.mockReturnValue(false);
-      const { getByText, container } = renderWithPolicy();
-
-      // 'abc' is too short for the policy but passes the always-on hard floor, so with the gate off
-      // it submits unchanged — proving the policy is not enforced client-side in production.
-      const usernameInput = container.querySelector('input[name="username"]');
-      fireEvent.change(usernameInput!, { target: { value: 'abc' } });
-      fireEvent.click(getByText('action.save'));
-
-      await waitFor(() => {
-        expect(updateUsername).toHaveBeenCalledWith('access-token', 'verification-record-id', {
-          username: 'abc',
-        });
-      });
     });
   });
 });

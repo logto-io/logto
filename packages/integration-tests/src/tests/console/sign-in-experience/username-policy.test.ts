@@ -11,7 +11,7 @@ import {
   goToAdminConsole,
   waitForToast,
 } from '#src/ui-helpers/index.js';
-import { appendPathname, devFeatureTest, expectNavigation, generateUsername } from '#src/utils.js';
+import { appendPathname, expectNavigation, generateUsername } from '#src/utils.js';
 
 await page.setViewport({ width: 1920, height: 1080 });
 
@@ -50,9 +50,7 @@ const setLengthInput = async (input: ElementHandle<HTMLInputElement>, value: str
   await input.type(value);
 };
 
-// The username policy card is gated behind `isDevFeaturesEnabled` in the console, so these tests
-// only run when dev features are on (matching when the card is rendered).
-devFeatureTest.describe('sign-in experience (username policy)', () => {
+describe('sign-in experience (username policy)', () => {
   beforeAll(async () => {
     await goToAdminConsole();
     await goToSignUpAndSignInTab();

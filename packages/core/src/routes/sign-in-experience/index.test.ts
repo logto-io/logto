@@ -1086,17 +1086,8 @@ describe('PATCH /sign-in-exp username policy', () => {
       ),
     });
 
-  beforeEach(() => {
-    // The `usernamePolicy` body field (and therefore the 409 guard) is only honored with dev features on.
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet without reloading mocked modules.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-  });
-
   afterEach(() => {
     findCaseConflicts.mockReset();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
   });
 
   it('returns 409 when flipping to case-insensitive while conflicts exist', async () => {

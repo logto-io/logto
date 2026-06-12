@@ -15,6 +15,7 @@ import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Skeleton from '@/components/FormCard/Skeleton';
 import RequestDataError from '@/components/RequestDataError';
 import { ApplicationDetailsTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -22,6 +23,7 @@ import useApi, { type RequestError } from '@/hooks/use-api';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
 import { applicationTypeI18nKey } from '@/types/applications';
 
+import ApplicationAccessControl from '../ApplicationDetailsContent/ApplicationAccessControl';
 import Branding from '../components/Branding';
 
 import AttributeMapping from './AttributeMapping';
@@ -37,9 +39,10 @@ export const isSamlApplication = (data: ApplicationResponse): data is SamlApplic
 
 type Props = {
   readonly data: SamlApplication;
+  readonly onApplicationUpdated: (application?: ApplicationResponse) => void | Promise<void>;
 };
 
-function SamlApplicationDetailsContent({ data }: Props) {
+function SamlApplicationDetailsContent({ data, onApplicationUpdated }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { navigate } = useTenantPathname();
@@ -57,6 +60,7 @@ function SamlApplicationDetailsContent({ data }: Props) {
   const api = useApi();
 
   const isLoading = !samlApplicationData && !samlApplicationError;
+  const hasRules = isDevFeaturesEnabled;
 
   const onDelete = useCallback(async () => {
     setIsDeleting(true);
@@ -137,6 +141,11 @@ function SamlApplicationDetailsContent({ data }: Props) {
         <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
           {t('application_details.branding.name')}
         </TabNavItem>
+        {hasRules && (
+          <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Rules}`}>
+            {t('application_details.access_control.name')}
+          </TabNavItem>
+        )}
       </TabNav>
       <TabWrapper
         isActive={tab === ApplicationDetailsTabs.Settings}
@@ -165,6 +174,15 @@ function SamlApplicationDetailsContent({ data }: Props) {
         {/* isActive is needed to support conditional render UnsavedChangesAlertModal */}
         <Branding application={data} isActive={tab === ApplicationDetailsTabs.Branding} />
       </TabWrapper>
+      {hasRules && (
+        <TabWrapper isActive={tab === ApplicationDetailsTabs.Rules} className={styles.tabContainer}>
+          <ApplicationAccessControl
+            application={data}
+            isActive={tab === ApplicationDetailsTabs.Rules}
+            onApplicationUpdated={onApplicationUpdated}
+          />
+        </TabWrapper>
+      )}
     </>
   );
 }

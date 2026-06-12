@@ -23,6 +23,8 @@ Changeset text should use this format:
 - First paragraph: one concise summary sentence.
 - The summary must start with a lowercase letter and omit the trailing period.
 - Optional following paragraph: detailed description when needed.
+- Write changeset text for the user-facing changelog. Describe the final product capability or behavior users can use.
+- Do not describe the release mechanics or implementation process, such as releasing a feature, removing a feature flag, or enabling an already-built feature.
 
 ## Commit Hook Discipline
 

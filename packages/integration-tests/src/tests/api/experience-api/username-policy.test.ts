@@ -10,7 +10,7 @@ import {
   resetMfaSettings,
   resetPasswordPolicy,
 } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateUsername, generatePassword } from '#src/utils.js';
+import { generateUsername, generatePassword } from '#src/utils.js';
 
 const password = generatePassword();
 
@@ -23,9 +23,7 @@ const uppercaseDisabledPolicy = {
   allowedChars: { lowercase: true, uppercase: false, numbers: true, underscore: true },
 };
 
-// Dev-gated: policy enforcement only activates under dev features, and the policy can only be
-// written to the sign-in experience when dev features are enabled.
-devFeatureTest.describe('experience API username policy enforcement', () => {
+describe('experience API username policy enforcement', () => {
   beforeAll(async () => {
     await updateSignInExperience({ ...defaultSignInSignUpConfigs, passwordPolicy: {} });
     await resetMfaSettings();

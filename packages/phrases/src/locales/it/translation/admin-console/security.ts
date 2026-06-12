@@ -102,6 +102,8 @@ const security = {
       'Numero di giorni in cui una password rimane valida prima di scadere.',
     expiration_period_error:
       'Il periodo di validità della password deve essere compreso tra {{min}} e {{max}} giorni.',
+    password_expiration_recovery_reminder:
+      'Alcuni utenti potrebbero non avere un indirizzo email o un numero di telefono per ricevere un codice di recupero della password e quindi non potranno reimpostare una password scaduta. Richiedi un indirizzo email o un numero di telefono durante la registrazione per assicurarti che ogni utente possa recuperare la propria password.',
   },
   verification_code_policy: {
     card_title: 'Codice di verifica',

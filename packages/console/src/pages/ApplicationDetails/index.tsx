@@ -1,4 +1,5 @@
 import { type ApplicationResponse, type SnakeCaseOidcConfig } from '@logto/schemas';
+import { useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -24,6 +25,18 @@ function ApplicationDetails() {
   );
   const secrets = useSWR<ApplicationSecretRow[], RequestError>(`api/applications/${id}/secrets`);
   const oidcConfig = useSWR<SnakeCaseOidcConfig, RequestError>(openIdProviderConfigPath);
+
+  const handleApplicationUpdated = useCallback(
+    async (application?: ApplicationResponse) => {
+      if (application) {
+        await mutate(application, { revalidate: false });
+        return;
+      }
+
+      await mutate();
+    },
+    [mutate]
+  );
 
   const isLoading =
     (!data && !error) ||
@@ -65,13 +78,16 @@ function ApplicationDetails() {
         oidcConfig.data &&
         secrets.data &&
         (isSamlApplication(data) ? (
-          <SamlApplicationDetailsContent data={data} />
+          <SamlApplicationDetailsContent
+            data={data}
+            onApplicationUpdated={handleApplicationUpdated}
+          />
         ) : (
           <ApplicationDetailsContent
             data={data}
             oidcConfig={oidcConfig.data}
             secrets={secrets.data}
-            onApplicationUpdated={mutate}
+            onApplicationUpdated={handleApplicationUpdated}
           />
         ))}
     </DetailsPage>

@@ -97,6 +97,8 @@ const security = {
     expiration_period: 'Parola geçerlilik süresi (gün)',
     expiration_period_description: 'Bir parolanın süresi dolmadan önce geçerli kaldığı gün sayısı.',
     expiration_period_error: 'Parola geçerlilik süresi {{min}} ile {{max}} gün arasında olmalıdır.',
+    password_expiration_recovery_reminder:
+      'Bazı kullanıcıların parola kurtarma kodu almak için bir e-posta adresi veya telefon numarası olmayabilir, bu nedenle süresi dolmuş bir parolayı sıfırlayamazlar. Her kullanıcının parolasını kurtarabilmesini sağlamak için kayıt sırasında bir e-posta adresi veya telefon numarası zorunlu kılın.',
   },
   verification_code_policy: {
     card_title: 'Doğrulama kodu',

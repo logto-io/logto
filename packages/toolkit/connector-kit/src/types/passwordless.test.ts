@@ -30,6 +30,11 @@ describe('urlRegEx', () => {
     expect(urlRegEx.test('x.y')).toBe(true);
     expect(urlRegEx.test('a.b.c.com')).toBe(true);
   });
+
+  // Lookbehind is unsupported in Safari < 16.4 and throws at module load, breaking iOS 15 and older.
+  it('does not use a lookbehind assertion (breaks iOS 15 and older Safari)', () => {
+    expect(urlRegEx.source.includes('(?<')).toBe(false);
+  });
 });
 
 describe('emailServiceBrandingGuard companyInformation', () => {

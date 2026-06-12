@@ -75,6 +75,32 @@ describe('content-type: application/json compatibility', () => {
     );
   });
 
+  it('rejects a null byte in the request body with a 400 instead of a 500', async () => {
+    const nullByte = String.fromCodePoint(0);
+    await trySafe(
+      api
+        .post('token', {
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+          },
+          body: `grant_type=authorization_code${nullByte}&client_id=test&code=test`,
+        })
+        .json(),
+      async (error) => {
+        if (!(error instanceof HTTPError)) {
+          throw new TypeError('Error is not a HTTPError instance.');
+        }
+
+        // The null byte must be rejected cleanly, not surface as a 500.
+        expect(error.response.status).toBe(400);
+        expect(await error.response.json()).toHaveProperty(
+          'error_description',
+          'null bytes are not allowed in the request body'
+        );
+      }
+    );
+  });
+
   it('should be ok when `content-type` is json for GET requests', async () => {
     await expect(
       api.get('.well-known/openid-configuration', {

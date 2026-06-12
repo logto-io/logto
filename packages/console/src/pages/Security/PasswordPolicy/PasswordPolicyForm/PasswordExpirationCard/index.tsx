@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import FormField from '@/ds-components/FormField';
+import InlineNotification from '@/ds-components/InlineNotification';
 import Switch from '@/ds-components/Switch';
 import NumericInput from '@/ds-components/TextInput/NumericInput';
 
@@ -15,9 +16,13 @@ const maxValidPeriodDays = 9999;
 
 type Props = {
   readonly hasAvailableForgotPasswordMethod: boolean;
+  readonly hasContactSignUpIdentifier: boolean;
 };
 
-function PasswordExpirationCard({ hasAvailableForgotPasswordMethod }: Props) {
+function PasswordExpirationCard({
+  hasAvailableForgotPasswordMethod,
+  hasContactSignUpIdentifier,
+}: Props) {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.security.password_policy',
   });
@@ -46,6 +51,11 @@ function PasswordExpirationCard({ hasAvailableForgotPasswordMethod }: Props) {
           {...register('isPasswordExpirationEnabled')}
         />
       </FormField>
+      {isEnabled && hasAvailableForgotPasswordMethod && !hasContactSignUpIdentifier && (
+        <InlineNotification severity="alert" className={styles.recoveryReminder}>
+          {t('password_expiration_recovery_reminder')}
+        </InlineNotification>
+      )}
       {isEnabled && (
         <FormField
           title="security.password_policy.expiration_period"

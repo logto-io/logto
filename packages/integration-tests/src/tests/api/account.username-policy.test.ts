@@ -10,7 +10,7 @@ import {
   defaultSignInSignUpConfigs,
   enableAllPasswordSignInMethods,
 } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateUsername } from '#src/utils.js';
+import { generateUsername } from '#src/utils.js';
 
 const uppercaseUsername = () => `A${generateUsername()}`;
 
@@ -19,8 +19,7 @@ const uppercaseDisabledPolicy = {
   allowedChars: { lowercase: true, uppercase: false, numbers: true, underscore: true },
 };
 
-// Dev-gated: policy enforcement only activates under dev features.
-devFeatureTest.describe('account API username policy enforcement', () => {
+describe('account API username policy enforcement', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await enableAllAccountCenterFields();

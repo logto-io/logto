@@ -31,8 +31,6 @@ const devFeatureCustomRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
   'patch /users/:userId/password/expiration': 'UpdateUserPasswordExpiration',
-  'get /sign-in-exp/username-policy/case-sensitivity-conflicts':
-    'GetUsernameCaseSensitivityConflicts',
 });
 
 export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
@@ -91,6 +89,9 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /.well-known/sign-in-exp': 'GetSignInExperienceConfig',
   // Custom UI assets
   'post /sign-in-exp/default/custom-ui-assets': 'UploadCustomUiAssets',
+  // Username policy
+  'get /sign-in-exp/username-policy/case-sensitivity-conflicts':
+    'GetUsernameCaseSensitivityConflicts',
   // One-time tokens
   'post /one-time-tokens': 'AddOneTimeTokens',
   'post /one-time-tokens/verify': 'VerifyOneTimeToken',

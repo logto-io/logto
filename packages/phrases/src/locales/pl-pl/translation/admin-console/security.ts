@@ -99,6 +99,8 @@ const security = {
     expiration_period_description:
       'Liczba dni, przez które hasło pozostaje ważne przed wygaśnięciem.',
     expiration_period_error: 'Okres ważności hasła musi wynosić od {{min}} do {{max}} dni.',
+    password_expiration_recovery_reminder:
+      'Niektórzy użytkownicy mogą nie mieć adresu e-mail ani numeru telefonu, aby otrzymać kod odzyskiwania hasła, więc nie będą mogli zresetować wygasłego hasła. Wymagaj adresu e-mail lub numeru telefonu podczas rejestracji, aby każdy użytkownik mógł odzyskać swoje hasło.',
   },
   verification_code_policy: {
     card_title: 'Kod weryfikacyjny',

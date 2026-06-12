@@ -5,7 +5,6 @@ import i18next from 'i18next';
 import type { TFuncKey } from 'i18next';
 import { ParseError } from 'libphonenumber-js/mobile';
 
-import { isDevFeaturesEnabled } from '@/constants/env';
 import type { ErrorType } from '@/shared/components/ErrorMessage';
 import type { IdentifierInputType } from '@/shared/components/InputFields/SmartInputField';
 import { validateUsername } from '@/shared/utils/validate-username';
@@ -42,9 +41,7 @@ export const validateIdentifierField = (
 ) => {
   switch (type) {
     case SignInIdentifier.Username: {
-      // Per-tenant policy enforcement is gated until the feature ships; without the flag the
-      // always-on hard floor is the only client-side check, matching production behavior.
-      return validateUsername(value, isDevFeaturesEnabled ? usernamePolicy : undefined);
+      return validateUsername(value, usernamePolicy);
     }
 
     case SignInIdentifier.Email: {
