@@ -19,8 +19,11 @@
     (function () {
       var theme = 'light';
       document.documentElement.setAttribute('data-theme', theme);
-      document.body.classList.add(
-        /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop');
+      var isMobile = navigator.userAgentData
+        ? navigator.userAgentData.mobile
+        : /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+          || (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+      document.body.classList.add(isMobile ? 'mobile' : 'desktop');
 
       try {
         var ssr = window.logtoSsr;
