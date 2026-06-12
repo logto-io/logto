@@ -68,7 +68,8 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
 
   const draftEnabled = useWatch({ control, name: 'appLevelAccessControlEnabled' });
   const draftAccessControl = useWatch({ control, name: 'accessControl' });
-  const ruleEntities = useRuleEntities(draftAccessControl);
+  const visibleAccessControl = draftEnabled ? draftAccessControl : undefined;
+  const ruleEntities = useRuleEntities(visibleAccessControl);
 
   useEffect(() => {
     if (accessControl && !isDirty) {
@@ -83,16 +84,11 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
 
   const updateDraftAccessControl = useCallback(
     (nextAccessControl: ApplicationAccessControlRules) => {
-      if (draftEnabled && !hasApplicationAccessControlRules(nextAccessControl)) {
-        toast.error(t('application_details.access_control.enable_without_rules_notice'));
-        return false;
-      }
-
       setValue('accessControl', nextAccessControl, { shouldDirty: true });
       setActiveRuleType(undefined);
       return true;
     },
-    [draftEnabled, setValue, t]
+    [setValue]
   );
 
   const discardChanges = useCallback(() => {
@@ -119,6 +115,21 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
       );
       const shouldUpdateEnabled =
         appLevelAccessControlEnabled !== application.appLevelAccessControlEnabled;
+      const shouldDisableBeforeUpdatingEmptyRules =
+        shouldUpdateEnabled &&
+        !appLevelAccessControlEnabled &&
+        !hasApplicationAccessControlRules(draftAccessControl);
+
+      const updateAppLevelAccessControlEnabled = async () =>
+        api
+          .patch(`api/applications/${id}`, {
+            json: { appLevelAccessControlEnabled },
+          })
+          .json<ApplicationResponse>();
+
+      const updatedApplication = shouldDisableBeforeUpdatingEmptyRules
+        ? await updateAppLevelAccessControlEnabled()
+        : undefined;
 
       const savedAccessControl = shouldUpdateRules
         ? await api
@@ -132,12 +143,9 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
         await mutate(savedAccessControl, { revalidate: false });
       }
 
-      if (shouldUpdateEnabled) {
-        const updatedApplication = await api
-          .patch(`api/applications/${id}`, {
-            json: { appLevelAccessControlEnabled },
-          })
-          .json<ApplicationResponse>();
+      if (shouldUpdateEnabled && !updatedApplication) {
+        await onApplicationUpdated(await updateAppLevelAccessControlEnabled());
+      } else if (updatedApplication) {
         await onApplicationUpdated(updatedApplication);
       }
 
@@ -168,6 +176,10 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
                   label={t('application_details.access_control.enable_description')}
                   onChange={({ currentTarget: { checked } }) => {
                     onChange(checked);
+
+                    if (!checked) {
+                      setActiveRuleType(undefined);
+                    }
                   }}
                 />
               </FormField>
@@ -190,7 +202,7 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
               {t('application_details.access_control.load_error')}
             </InlineNotification>
           )}
-          {draftAccessControl && (
+          {visibleAccessControl && (
             <div className={styles.rulesSection}>
               <div className={styles.rulesHeader}>
                 <div className={styles.rulesTitle}>
@@ -212,10 +224,10 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
               )}
               {!isRuleEntitiesLoading &&
                 !ruleEntities.hasError &&
-                hasApplicationAccessControlRules(draftAccessControl) && (
+                hasApplicationAccessControlRules(visibleAccessControl) && (
                   <>
                     <RulesTable
-                      accessControl={draftAccessControl}
+                      accessControl={visibleAccessControl}
                       ruleEntities={ruleEntities}
                       onChange={async (nextAccessControl) =>
                         updateDraftAccessControl(nextAccessControl)
@@ -233,7 +245,7 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
                 )}
               {!isRuleEntitiesLoading &&
                 !ruleEntities.hasError &&
-                !hasApplicationAccessControlRules(draftAccessControl) && (
+                !hasApplicationAccessControlRules(visibleAccessControl) && (
                   <div className={styles.emptyRules}>
                     <AddRuleMenu
                       hasRules={false}
@@ -257,10 +269,10 @@ function ApplicationAccessControl({ application, isActive, onApplicationUpdated 
       {isActive && (
         <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} onConfirm={discardChanges} />
       )}
-      {draftAccessControl && (
+      {visibleAccessControl && (
         <RuleSelectorModals
           activeRuleType={activeRuleType}
-          accessControl={draftAccessControl}
+          accessControl={visibleAccessControl}
           ruleEntities={ruleEntities}
           isSubmitting={isSubmitting}
           onClose={() => {
