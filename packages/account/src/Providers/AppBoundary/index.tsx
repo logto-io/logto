@@ -1,6 +1,7 @@
 import useColorTheme from '@/Providers/AppBoundary/use-color-theme';
 import type { ReactElement } from 'react';
 
+import ReauthPromptProvider from '../ReauthPromptProvider';
 import ToastProvider from '../ToastProvider';
 
 import AppMeta from './AppMeta';
@@ -15,7 +16,9 @@ const AppBoundary = ({ children }: Props) => {
   return (
     <>
       <AppMeta />
-      <ToastProvider>{children}</ToastProvider>
+      <ToastProvider>
+        <ReauthPromptProvider>{children}</ReauthPromptProvider>
+      </ToastProvider>
     </>
   );
 };

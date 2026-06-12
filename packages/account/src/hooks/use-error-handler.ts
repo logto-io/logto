@@ -4,6 +4,7 @@ import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
+import ReauthPromptContext from '@ac/Providers/ReauthPromptProvider/ReauthPromptContext';
 
 export type ErrorHandlers = {
   [code: string]: ((error: RequestErrorBody) => void | Promise<void>) | undefined;
@@ -14,6 +15,7 @@ export type ErrorHandlers = {
 const useErrorHandler = () => {
   const { t } = useTranslation();
   const { setToast } = useContext(PageContext);
+  const { requestReauthPrompt } = useContext(ReauthPromptContext);
 
   const handleError = useCallback(
     async (error: unknown, errorHandlers?: ErrorHandlers) => {
@@ -27,6 +29,8 @@ const useErrorHandler = () => {
 
           if (handler) {
             await handler(logtoError);
+          } else if (error.response.status === 401 && code === 'auth.unauthorized') {
+            requestReauthPrompt();
           } else {
             setToast(message);
           }
@@ -49,7 +53,7 @@ const useErrorHandler = () => {
       setToast(t('error.unknown'));
       console.error(error);
     },
-    [setToast, t]
+    [requestReauthPrompt, setToast, t]
   );
 
   return handleError;
