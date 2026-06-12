@@ -81,6 +81,11 @@ export const replaceApplicationAccessControl = async (
     })
     .json<ApplicationAccessControl>();
 
+export const getApplicationAccessControl = async (applicationId: string) =>
+  authedAdminApi
+    .get(`applications/${applicationId}/access-control`)
+    .json<ApplicationAccessControl>();
+
 export const deleteApplication = async (applicationId: string) =>
   authedAdminApi.delete(`applications/${applicationId}`);
 
