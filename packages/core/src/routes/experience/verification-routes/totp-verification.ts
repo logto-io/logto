@@ -92,7 +92,6 @@ export default function totpVerificationRoutes<T extends ExperienceInteractionRo
       verificationAuditLog.append({
         payload: {
           verificationId,
-          code,
         },
       });
 

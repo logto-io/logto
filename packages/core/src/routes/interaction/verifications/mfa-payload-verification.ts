@@ -21,7 +21,10 @@ import {
 import { pick } from '@silverhand/essentials';
 import { isoBase64URL } from '@simplewebauthn/server/helpers';
 
-import { validateTotpToken } from '#src/libraries/verification-helpers/totp-validation.js';
+import {
+  getTotpTokenTimeStep,
+  validateTotpToken,
+} from '#src/libraries/verification-helpers/totp-validation.js';
 import {
   verifyWebAuthnAuthentication,
   verifyWebAuthnRegistration,
@@ -31,6 +34,10 @@ import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { AnonymousInteractionResult } from '../types/index.js';
+
+export type VerifyMfaPayloadVerificationResult = VerifyMfaResult & {
+  usedTimeStep?: number;
+};
 
 const verifyBindTotp = async (
   interactionStorage: AnonymousInteractionResult,
@@ -59,18 +66,23 @@ const findUserTotp = (
 const verifyTotp = async (
   mfaVerifications: User['mfaVerifications'],
   payload: TotpVerificationPayload
-): Promise<VerifyMfaResult> => {
+): Promise<VerifyMfaPayloadVerificationResult> => {
   const totp = findUserTotp(mfaVerifications);
 
   // Can not found totp verification, this is an invalid request, throw invalid code error anyway for security reason
   assertThat(totp, 'session.mfa.invalid_totp_code');
 
   const { code } = payload;
-  const { key, id, type } = totp;
+  const { key, id, type, lastUsedTimeStep } = totp;
+  const usedTimeStep = getTotpTokenTimeStep(key, code);
 
-  assertThat(validateTotpToken(key, code), 'session.mfa.invalid_totp_code');
+  assertThat(usedTimeStep !== undefined, 'session.mfa.invalid_totp_code');
+  assertThat(
+    lastUsedTimeStep === undefined || usedTimeStep > lastUsedTimeStep,
+    'session.mfa.invalid_totp_code'
+  );
 
-  return { type, id };
+  return { type, id, usedTimeStep };
 };
 
 const verifyBindWebAuthn = async (
@@ -215,7 +227,7 @@ export async function verifyMfaPayloadVerification(
     origin: string;
     accountId: string;
   }
-): Promise<VerifyMfaResult> {
+): Promise<VerifyMfaPayloadVerificationResult> {
   const user = await tenant.queries.users.findUserById(accountId);
 
   if (verifyMfaPayload.type === MfaFactor.TOTP) {

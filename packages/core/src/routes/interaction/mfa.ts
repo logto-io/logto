@@ -128,6 +128,7 @@ export default function mfaRoutes<T extends IRouterParamContext>(
         interactionStorage,
         { accountId, rpId: hostname, origin }
       );
+      const { usedTimeStep, ...verifiedMfaResult } = verifiedMfa;
 
       // Update last used time
       const user = await queries.users.findUserById(accountId);
@@ -140,11 +141,12 @@ export default function mfaRoutes<T extends IRouterParamContext>(
           return {
             ...mfa,
             lastUsedAt: new Date().toISOString(),
+            ...(usedTimeStep !== undefined && { lastUsedTimeStep: usedTimeStep }),
           };
         }),
       });
 
-      await storeInteractionResult({ verifiedMfa }, ctx, provider, true);
+      await storeInteractionResult({ verifiedMfa: verifiedMfaResult }, ctx, provider, true);
 
       ctx.status = 204;
 
