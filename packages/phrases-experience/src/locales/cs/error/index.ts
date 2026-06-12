@@ -38,7 +38,7 @@ const error = {
   something_went_wrong: 'Něco se pokazilo.',
   access_denied: 'Přístup odepřen',
   application_access_denied:
-    'Nemáš oprávnění k přístupu k této aplikaci. Kontaktuj prosím svého administrátora pro pomoc.',
+    'Nemáš oprávnění k přístupu k této aplikaci.\nKontaktuj prosím svého administrátora pro pomoc.',
   feature_not_enabled:
     'Nemáš oprávnění k přístupu k této funkci. Kontaktuj prosím svého administrátora pro pomoc.',
 };

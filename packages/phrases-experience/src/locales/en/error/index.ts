@@ -39,7 +39,7 @@ const error = {
   something_went_wrong: 'Something went wrong',
   access_denied: 'Access denied',
   application_access_denied:
-    'You do not have permission to access this application. Please contact your administrator for assistance.',
+    'You do not have permission to access this application.\nPlease contact your administrator for assistance.',
   feature_not_enabled:
     'You do not have permission to access this feature. Please contact your administrator for assistance.',
 };

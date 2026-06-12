@@ -41,7 +41,7 @@ const error = {
   something_went_wrong: '問題が発生しました',
   access_denied: 'アクセスが拒否されました',
   application_access_denied:
-    'このアプリケーションにアクセスする権限がありません。管理者にお問い合わせください。',
+    'このアプリケーションにアクセスする権限がありません。\n管理者にお問い合わせください。',
   feature_not_enabled: 'この機能にアクセスする権限がありません。管理者にお問い合わせください。',
 };
 

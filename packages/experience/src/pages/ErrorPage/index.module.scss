@@ -14,12 +14,17 @@
 .message {
   @include _.text-hint;
   text-align: center;
+  white-space: pre-wrap;
 }
 
 .support {
   margin-top: _.unit(4);
 }
 
+.actionButton {
+  @include _.full-width;
+  margin-top: _.unit(4);
+}
 
 :global(body.mobile) {
   .title {
@@ -27,8 +32,7 @@
     margin-bottom: _.unit(4);
   }
 
-  .backButton {
-    @include _.full-width;
+  .actionButton {
     margin-bottom: _.unit(4);
   }
 }
@@ -39,8 +43,7 @@
     margin-bottom: _.unit(2);
   }
 
-  .backButton {
-    @include _.full-width;
+  .actionButton {
     margin-bottom: _.unit(12);
   }
 }

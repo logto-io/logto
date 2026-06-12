@@ -39,7 +39,7 @@ const error = {
   something_went_wrong: 'Algo deu errado',
   access_denied: 'Acesso negado',
   application_access_denied:
-    'Você não tem permissão para acessar este aplicativo. Entre em contato com seu administrador para obter ajuda.',
+    'Você não tem permissão para acessar este aplicativo.\nEntre em contato com seu administrador para obter ajuda.',
   feature_not_enabled:
     'Você não tem permissão para acessar esse recurso. Entre em contato com seu administrador para obter ajuda.',
 };

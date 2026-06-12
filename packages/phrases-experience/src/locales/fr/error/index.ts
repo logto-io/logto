@@ -44,7 +44,7 @@ const error = {
   something_went_wrong: 'Quelque chose a mal tourné',
   access_denied: 'Accès refusé',
   application_access_denied:
-    "Vous n'avez pas la permission d'accéder à cette application. Veuillez contacter votre administrateur pour obtenir de l'aide.",
+    "Vous n'avez pas la permission d'accéder à cette application.\nVeuillez contacter votre administrateur pour obtenir de l'aide.",
   feature_not_enabled:
     "Vous n'avez pas la permission d'accéder à cette fonctionnalité. Veuillez contacter votre administrateur pour obtenir de l'aide.",
 };

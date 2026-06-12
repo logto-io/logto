@@ -40,7 +40,7 @@ const error = {
   something_went_wrong: 'Etwas ist schiefgegangen',
   access_denied: 'Zugriff verweigert',
   application_access_denied:
-    'Sie haben keine Berechtigung, auf diese Anwendung zuzugreifen. Bitte kontaktieren Sie Ihren Administrator um Hilfe.',
+    'Sie haben keine Berechtigung, auf diese Anwendung zuzugreifen.\nBitte kontaktieren Sie Ihren Administrator um Hilfe.',
   feature_not_enabled:
     'Sie haben keine Berechtigung, auf diese Funktion zuzugreifen. Bitte kontaktieren Sie Ihren Administrator um Hilfe.',
 };
