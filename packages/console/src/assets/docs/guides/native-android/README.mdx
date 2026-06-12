@@ -2,6 +2,8 @@ import UriInputField from '@/mdx-components/UriInputField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Steps from '@/mdx-components/Steps';
 import Step from '@/mdx-components/Step';
+import Tabs from '@/mdx-components/Tabs';
+import TabItem from '@/mdx-components/TabItem';
 import CustomDomainEndpointNotice from '@/mdx-components/CustomDomainEndpointNotice';
 import RedirectUrisNative from '../../fragments/_redirect-uris-native.mdx';
 import Checkpoint from '../../fragments/_checkpoint.md';
@@ -10,10 +12,17 @@ import Checkpoint from '../../fragments/_checkpoint.md';
 
 <Step
   title="Installation"
-  subtitle="Install Logto Logto SDK for your project"
+  subtitle="Install Logto SDK for your project"
 >
 
 <InlineNotification>The minimum supported Android API is level 24.</InlineNotification>
+
+Logto Android SDK comes in two major versions:
+
+- **v2**: Opens the sign-in experience in an embedded WebView, which is required by the native social connectors, but does not support [passkey sign-in](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) (WebView does not support WebAuthn, the underlying standard of passkeys).
+- **v3 (beta)**: Opens the sign-in experience in [Chrome Custom Tabs](https://developer.android.com/develop/ui/views/layout/webapps/overview-of-android-custom-tabs) (the system browser), which unlocks passkey sign-in and shares the browser session. Note that v3 removes support for the [WeChat (Native)](https://docs.logto.io/integrations/wechat-native) and [Alipay (Native)](https://docs.logto.io/integrations/alipay-native) connectors; you can use [WeChat (Web)](https://docs.logto.io/integrations/wechat-web) and [Alipay (Web)](https://docs.logto.io/integrations/alipay-web) instead, which work through the browser. If you depend on the native connectors, stay on v2.
+
+This guide covers both versions. Pick the same version in the tabs throughout this guide.
 
 Before you install Logto Android SDK, ensure `mavenCentral()` is added to your repository configuration in the Gradle project build file:
 
@@ -27,11 +36,31 @@ Before you install Logto Android SDK, ensure `mavenCentral()` is added to your r
 
 Add Logto Android SDK to your dependencies:
 
+<Tabs>
+
+<TabItem value="v2" label="v2">
+
 ```kotlin title="build.gradle.kts"
 dependencies {
-    implementation("io.logto.sdk:android:2.0.2")
+    implementation("io.logto.sdk:android:2.0.3")
 }
 ```
+
+</TabItem>
+
+<TabItem value="v3" label="v3 (beta)">
+
+v3 is released as `3.0.0-beta` prereleases until GA. Use the latest prerelease as the version:
+
+```kotlin title="build.gradle.kts"
+dependencies {
+    implementation("io.logto.sdk:android:3.0.0-beta")
+}
+```
+
+</TabItem>
+
+</Tabs>
 
 Since the SDK needs internet access, you need to add the following permission to your `AndroidManifest.xml` file:
 
@@ -114,11 +143,87 @@ In Android, the redirect URI follows the pattern: `$(LOGTO_REDIRECT_SCHEME)://$(
 
 Assuming you treat `io.logto.android` as the custom `LOGTO_REDIRECT_SCHEME`, and `io.logto.sample` is your app package name, the Redirect URI should be `io.logto.android://io.logto.sample/callback`.
 
+<Tabs>
+
+<TabItem value="v2" label="v2">
+
+No additional setup is required. The sign-in experience opens in an embedded WebView, and the SDK intercepts the redirect inside the WebView.
+
+</TabItem>
+
+<TabItem value="v3" label="v3 (beta)">
+
+In v3, the sign-in experience opens in a [Custom Tab](https://developer.android.com/develop/ui/views/layout/webapps/overview-of-android-custom-tabs) (the system browser), and the redirect is routed back to your app through an OS-level intent filter. You need to declare the scheme of your redirect URI with the `logtoRedirectScheme` manifest placeholder in your app's build file:
+
+```kotlin title="build.gradle.kts"
+android {
+    defaultConfig {
+        manifestPlaceholders["logtoRedirectScheme"] = "io.logto.android"
+    }
+}
+```
+
+In addition, v3 enforces the redirect URI pattern through Android's intent filter matching, so a redirect URI that deviates from the pattern is never delivered to your app:
+
+- The scheme must equal the `logtoRedirectScheme` manifest placeholder.
+- The host must be your `applicationId`.
+- The path must be `/callback`.
+
+Keep the scheme and the host lowercase, since intent filter matching is case-sensitive and browsers lowercase the scheme.
+
+<details>
+
+<summary>Use App Links instead of a custom scheme?</summary>
+
+<div>
+
+Custom schemes have no ownership: any app can declare the same scheme and race for the redirect. [Android App Links](https://developer.android.com/training/app-links) bind an `https` redirect URI to a domain you own through a verified [Digital Asset Links](https://developers.google.com/digital-asset-links/v1/getting-started) file, so the OS guarantees only your app receives the redirect. This is the redirect option recommended for native apps by [RFC 8252](https://datatracker.ietf.org/doc/html/rfc8252#section-7.2).
+
+To use App Links:
+
+1. Host the Digital Asset Links file at `https://your.domain/.well-known/assetlinks.json`, declaring your application ID and the SHA-256 fingerprints of your signing certificates. When publishing with Play App Signing, you can find the release fingerprint in Play Console under **Setup** > **App signing**. The file must be served as `Content-Type: application/json` with HTTP 200 and no redirects.
+
+2. Declare the App Links intent filter on the SDK's redirect receiver activity `io.logto.sdk.android.auth.logto.LogtoRedirectReceiverActivity` in your `AndroidManifest.xml` file. If you do not use the custom scheme at all, drop the SDK's built-in filter with `tools:node="removeAll"`, and the `logtoRedirectScheme` manifest placeholder is then no longer required:
+
+   ```xml title="AndroidManifest.xml"
+   <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools">
+     <application>
+       <activity android:name="io.logto.sdk.android.auth.logto.LogtoRedirectReceiverActivity">
+         <!-- Omit this line to keep the custom-scheme redirect working alongside. -->
+         <intent-filter tools:node="removeAll" />
+         <intent-filter android:autoVerify="true">
+           <action android:name="android.intent.action.VIEW" />
+           <category android:name="android.intent.category.DEFAULT" />
+           <category android:name="android.intent.category.BROWSABLE" />
+           <data android:scheme="https" android:host="your.domain" android:path="/callback" />
+         </intent-filter>
+       </activity>
+     </application>
+   </manifest>
+   ```
+
+3. Add `https://your.domain/callback` to the "Redirect URIs" field above (and, if it is used for sign-out, to the "Post sign-out redirect URIs" field), and pass it to `signIn` / `signOut`.
+
+Keep in mind that the callback is now a real URL on your domain, so serve a fallback page there (e.g., a "Return to app" button) for browsers that do not launch App Links on a server redirect. On Android 12+ an unverified domain never opens the app, so a broken `assetlinks.json` fails silently. You can check the verification state with `adb shell pm get-app-links <applicationId>`.
+
+</div>
+
+</details>
+
+</TabItem>
+
+</Tabs>
+
 </Step>
 
 <Step title="Implement sign-in and sign-out">
 
 After the redirect URI is configured, we can use `logtoClient.signIn` to sign in the user and `logtoClient.signOut` to sign out the user.
+
+<Tabs>
+
+<TabItem value="v2" label="v2">
 
 Now let's use them in your `LogtoViewModel.kt`:
 
@@ -188,6 +293,93 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+
+</TabItem>
+
+<TabItem value="v3" label="v3 (beta)">
+
+In v3, `logtoClient.signOut` performs a complete sign-out: it clears the local credentials, revokes the refresh token, and ends the Logto session by opening the end session endpoint in the browser. The browser then navigates back to your app through the post sign-out redirect URI. The post sign-out redirect URI follows the same pattern as the redirect URI, and its scheme must also match the `logtoRedirectScheme` manifest placeholder. Let's configure it first:
+
+<UriInputField name="postLogoutRedirectUris" />
+
+Now let's use `signIn` and `signOut` in your `LogtoViewModel.kt`:
+
+<Code title="LogtoViewModel.kt" className="language-kotlin">
+    {`//...with other imports
+class LogtoViewModel(application: Application) : AndroidViewModel(application) {
+    // ...other codes
+
+    // Add a live data to observe the authentication status
+    private val _authenticated = MutableLiveData(logtoClient.isAuthenticated)
+    val authenticated: LiveData<Boolean>
+        get() = _authenticated
+
+    fun signIn(context: Activity) {
+        logtoClient.signIn(context, "${props.redirectUris[0] ?? '<your-redirect-uri>'}") { logtoException ->
+            logtoException?.let { println(it) }
+            // Update the live data
+            _authenticated.postValue(logtoClient.isAuthenticated)
+        }
+    }
+
+    fun signOut(context: Activity) {
+        logtoClient.signOut(context, "${props.postLogoutRedirectUris[0] ?? '<your-post-sign-out-redirect-uri>'}") { logtoException ->
+            logtoException?.let { println(it) }
+            // Update the live data
+            _authenticated.postValue(logtoClient.isAuthenticated)
+        }
+    }
+}`}
+</Code>
+
+Now setup on-click listener for the sign-in button and sign-out button in your `MainActivity.kt`:
+
+```kotlin title="MainActivity.kt"
+//...with other imports
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        //...other codes
+
+        // Assume you have a button with id "sign_in_button" in your layout
+        val signInButton = findViewById<Button>(R.id.sign_in_button)
+        signInButton.setOnClickListener {
+            logtoViewModel.signIn(this)
+        }
+
+        // Assume you have a button with id "sign_out_button" in your layout
+        val signOutButton = findViewById<Button>(R.id.sign_out_button)
+        signOutButton.setOnClickListener {
+            if (logtoViewModel.authenticated) { // Check if the user is authenticated
+                logtoViewModel.signOut(this)
+            }
+        }
+
+        // Observe the authentication status to update the UI
+        logtoViewModel.authenticated.observe(this) { authenticated ->
+            if (authenticated) {
+                // The user is authenticated
+                signInButton.visibility = View.GONE
+                signOutButton.visibility = View.VISIBLE
+            } else {
+                // The user is not authenticated
+                signInButton.visibility = View.VISIBLE
+                signOutButton.visibility = View.GONE
+            }
+        }
+
+    }
+}
+```
+
+<InlineNotification>
+
+You can also call `logtoClient.signOut(context)` without a post sign-out redirect URI. No configuration is needed in this case: the browser shows the Logto sign-out page, and the user returns to the app by dismissing it manually. If no UI context is available, you can call `logtoClient.clearCredentials` to clear the local credentials and revoke the refresh token. Note that this keeps the Logto session in the browser, so the next `signIn` may silently sign the user back in through that session.
+
+</InlineNotification>
+
+</TabItem>
+
+</Tabs>
 
 </Step>
 
