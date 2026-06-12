@@ -20,13 +20,6 @@
   margin-block-start: _.unit(3);
 }
 
-.loading {
-  display: flex;
-  justify-content: center;
-  padding: _.unit(6) 0;
-  color: var(--color-primary-50);
-}
-
 .rulesSection {
   display: flex;
   flex-direction: column;
@@ -126,4 +119,87 @@
 
 .ruleDelete svg {
   color: var(--color-text-secondary);
+}
+
+.ruleSkeletonName {
+  display: flex;
+  align-items: center;
+}
+
+.ruleSkeletonUserAvatar {
+  width: 24px;
+  height: 24px;
+  margin-inline-end: _.unit(3);
+  flex-shrink: 0;
+  border-radius: 6px;
+  @include _.shimmering-animation;
+}
+
+.ruleSkeletonGroupTitle {
+  width: min(140px, 70%);
+  height: 16px;
+  border-radius: 6px;
+  @include _.shimmering-animation;
+}
+
+.ruleSkeletonGroupDescription {
+  width: min(160px, 70%);
+  height: 16px;
+  border-radius: 6px;
+  @include _.shimmering-animation;
+}
+
+.ruleSkeletonTitle {
+  width: min(220px, 70%);
+  height: 16px;
+  border-radius: 6px;
+  @include _.shimmering-animation;
+}
+
+.ruleSkeletonUserId {
+  width: min(260px, 80%);
+  height: 16px;
+  border-radius: 6px;
+  @include _.shimmering-animation;
+}
+
+.ruleSkeletonAssignedEntities {
+  display: flex;
+  align-items: center;
+  gap: _.unit(2);
+}
+
+.ruleSkeletonAvatars {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.ruleSkeletonAvatar {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  border: 2px solid var(--color-layer-1);
+  border-radius: 6px;
+  box-sizing: content-box;
+  @include _.shimmering-animation;
+
+  &:not(:last-child) {
+    margin-inline-start: _.unit(-2);
+  }
+}
+
+.ruleSkeletonCount {
+  width: 72px;
+  height: 16px;
+  border-radius: 6px;
+  @include _.shimmering-animation;
+}
+
+.ruleSkeletonDelete {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  @include _.shimmering-animation;
 }
