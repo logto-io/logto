@@ -41,9 +41,7 @@ const PageContextProvider = ({ children, preset }: Props) => {
   const [toast, setToast] = useState(preset?.toast ?? '');
   const [theme, setTheme] = useState<Theme>(preset?.theme ?? getInitialTheme);
 
-  const [platform, setPlatform] = useState<Platform>(
-    preset?.platform ?? getInitialPlatform
-  );
+  const [platform, setPlatform] = useState<Platform>(preset?.platform ?? getInitialPlatform);
   const [termsAgreement, setTermsAgreement] = useState(preset?.termsAgreement ?? false);
   const [experienceSettings, setExperienceSettings] = useState<
     SignInExperienceResponse | undefined
