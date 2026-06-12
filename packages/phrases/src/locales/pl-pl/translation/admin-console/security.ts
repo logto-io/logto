@@ -123,6 +123,7 @@ const security = {
       error_message: 'Maksymalna liczba ponownych prób musi wynosić od 1 do 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Blokada identyfikatora',
     card_description:

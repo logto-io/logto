@@ -120,6 +120,7 @@ const security = {
       error_message: 'يجب أن يكون الحد الأقصى لمحاولات إعادة المحاولة بين 1 و 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'قفل الهوية',
     card_description:

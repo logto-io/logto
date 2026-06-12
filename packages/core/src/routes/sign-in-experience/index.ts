@@ -419,10 +419,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             passwordExpirationToPersist && { passwordExpiration: passwordExpirationToPersist }
         ),
         ...conditional(usernamePolicy && { usernamePolicy }),
-        // Verification code policy is gated until the feature ships.
-        ...conditional(
-          EnvSet.values.isDevFeaturesEnabled && verificationCodePolicy && { verificationCodePolicy }
-        ),
+        ...conditional(verificationCodePolicy && { verificationCodePolicy }),
       };
 
       ctx.body = await updateDefaultSignInExperience(payload);

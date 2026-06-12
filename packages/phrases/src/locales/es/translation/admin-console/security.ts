@@ -126,6 +126,7 @@ const security = {
       error_message: 'El número máximo de reintentos debe estar entre 1 y 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Bloqueo de identificador',
     card_description:

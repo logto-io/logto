@@ -126,6 +126,7 @@ const security = {
       error_message: 'O número máximo de novas tentativas deve estar entre 1 e 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Bloqueio de identificador',
     card_description:

@@ -118,6 +118,7 @@ const security = {
       error_message: 'จำนวนครั้งสูงสุดที่ลองใหม่ได้ต้องอยู่ระหว่าง 1 ถึง 100',
     },
   },
+
   sentinel_policy: {
     card_title: 'ล็อกเอาต์ตามตัวระบุ',
     card_description:

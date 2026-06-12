@@ -124,6 +124,7 @@ const security = {
       error_message: 'Maximum retry attempts must be between 1 and 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Identifier lockout',
     card_description:

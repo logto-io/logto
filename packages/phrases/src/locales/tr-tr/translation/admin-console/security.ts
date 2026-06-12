@@ -122,6 +122,7 @@ const security = {
       error_message: 'Maksimum yeniden deneme sayısı 1 ile 100 arasında olmalıdır.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Kimlik kilitleme',
     card_description:

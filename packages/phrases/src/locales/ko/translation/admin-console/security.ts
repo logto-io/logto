@@ -118,6 +118,7 @@ const security = {
       error_message: '최대 재시도 횟수는 1에서 100 사이여야 해요.',
     },
   },
+
   sentinel_policy: {
     card_title: '식별자 잠금',
     card_description:

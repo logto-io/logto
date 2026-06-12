@@ -124,6 +124,7 @@ const security = {
       error_message: 'Максимальное количество повторных попыток должно быть от 1 до 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Блокировка идентификатора',
     card_description:

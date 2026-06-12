@@ -112,6 +112,7 @@ const security = {
       error_message: '最大重试次数必须在 1 到 100 之间。',
     },
   },
+
   sentinel_policy: {
     card_title: '标识符锁定',
     card_description:

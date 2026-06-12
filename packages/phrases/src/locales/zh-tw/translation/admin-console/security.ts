@@ -113,6 +113,7 @@ const security = {
       error_message: '最大重試次數必須介於 1 到 100 之間。',
     },
   },
+
   sentinel_policy: {
     card_title: '識別符鎖定',
     card_description:

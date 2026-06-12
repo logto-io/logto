@@ -126,6 +126,7 @@ const security = {
       error_message: 'Il numero massimo di tentativi deve essere compreso tra 1 e 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Blocco identificatore',
     card_description:

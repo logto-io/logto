@@ -127,6 +127,7 @@ const security = {
       error_message: 'Le nombre maximal de nouvelles tentatives doit être compris entre 1 et 100.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Verrouillage des identifiants',
     card_description:

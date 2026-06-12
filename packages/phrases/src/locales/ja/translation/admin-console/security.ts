@@ -121,6 +121,7 @@ const security = {
       error_message: '最大再試行回数は 1 から 100 の間である必要があります。',
     },
   },
+
   sentinel_policy: {
     card_title: '識別子によるロックアウト',
     card_description:

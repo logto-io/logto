@@ -126,6 +126,7 @@ const security = {
       error_message: 'Die maximale Anzahl erneuter Versuche muss zwischen 1 und 100 liegen.',
     },
   },
+
   sentinel_policy: {
     card_title: 'Identifier-Sperre',
     card_description:
