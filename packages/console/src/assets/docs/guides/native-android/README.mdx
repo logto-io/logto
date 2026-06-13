@@ -177,7 +177,7 @@ Keep the scheme and the host lowercase, since intent filter matching is case-sen
 
 <div>
 
-Custom schemes have no ownership: any app can declare the same scheme and race for the redirect. [Android App Links](https://developer.android.com/training/app-links) bind an `https` redirect URI to a domain you own through a verified [Digital Asset Links](https://developers.google.com/digital-asset-links/v1/getting-started) file, so the OS guarantees only your app receives the redirect.
+If you prefer an `https` redirect URI bound to a domain you own, you can use [Android App Links](https://developer.android.com/training/app-links) instead of the custom scheme. Your domain ownership is verified through a [Digital Asset Links](https://developers.google.com/digital-asset-links/v1/getting-started) file, so the OS guarantees that only your app receives the redirect.
 
 To use App Links:
 
