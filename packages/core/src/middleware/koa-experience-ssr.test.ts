@@ -75,7 +75,7 @@ describe('koaExperienceSsr()', () => {
     // Extract and parse the injected JSON rather than comparing against a bare `JSON.stringify`, which
     // would diverge from `serializeSsrData`'s `<`/`>`/`&` escaping the moment the mock gains such a char.
     // Anchor on the trailing `);` so the greedy capture stops at the genuine `Object.freeze(...)` close.
-    const serialized = /Object\.freeze\((?<json>.+)\);/.exec(ctx.body)?.groups?.json;
+    const serialized = /Object\.freeze\((?<json>[\S\s]+)\);/.exec(ctx.body)?.groups?.json;
     expect(serialized).toBeTruthy();
     expect(JSON.parse(serialized!)).toEqual({
       signInExperience: { data: mockSignInExperience },
@@ -175,7 +175,7 @@ describe('koaExperienceSsr()', () => {
 
     // The `\uXXXX` escapes must decode back to the original characters when parsed, so the escaping is
     // safe (no data corruption) while still preventing tag breakout.
-    const serialized = /Object\.freeze\((?<json>.+)\);/.exec(ctx.body)?.groups?.json;
+    const serialized = /Object\.freeze\((?<json>[\S\s]+)\);/.exec(ctx.body)?.groups?.json;
     expect(serialized).toBeTruthy();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- test parses known JSON
@@ -206,7 +206,7 @@ describe('koaExperienceSsr()', () => {
     expect(ctx.body).toContain('\\u2029');
 
     // The escaped form must still decode back to the original once parsed.
-    const serialized = /Object\.freeze\((?<json>.+)\);/.exec(ctx.body)?.groups?.json;
+    const serialized = /Object\.freeze\((?<json>[\S\s]+)\);/.exec(ctx.body)?.groups?.json;
     expect(serialized).toBeTruthy();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- test parses known JSON
     const parsed = JSON.parse(serialized!);
