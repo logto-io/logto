@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { HTTPError } from 'ky';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -180,14 +181,18 @@ const Sessions = () => {
         app.grantIds.map(async (grantId) => {
           const [error] = await revokeGrantApi(verificationId, grantId);
           if (error) {
-            throw new Error('revoke_failed');
+            throw error instanceof Error ? error : new Error('revoke_failed');
           }
         })
       );
 
-      const hasFailure = results.some((result) => result.status === 'rejected');
-      if (hasFailure) {
-        setToast(t('account_center.sessions.revoke_grant_failed'));
+      const failure = results.find((result) => result.status === 'rejected');
+      if (failure) {
+        if (failure.reason instanceof HTTPError) {
+          await handleError(failure.reason);
+        } else {
+          setToast(t('account_center.sessions.revoke_grant_failed'));
+        }
         setRemovingAppId(undefined);
         return;
       }
@@ -197,7 +202,7 @@ const Sessions = () => {
       );
       setRemovingAppId(undefined);
     },
-    [verificationId, revokeGrantApi, setToast, t]
+    [verificationId, revokeGrantApi, handleError, setToast, t]
   );
 
   const handleConfirmRevokeGrant = useCallback(async () => {

@@ -123,6 +123,11 @@ describe('account-center-route', () => {
       expect(accountStorage.routeRestore.get()).toBe('/account/password');
     });
 
+    it('stores sessions route', () => {
+      setRouteRestore('/account/sessions');
+      expect(accountStorage.routeRestore.get()).toBe('/account/sessions');
+    });
+
     it('does not store unknown routes', () => {
       setRouteRestore('/account/unknown-page');
       expect(accountStorage.routeRestore.get()).toBeUndefined();
