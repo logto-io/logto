@@ -177,11 +177,9 @@ Keep the scheme and the host lowercase, since intent filter matching is case-sen
 
 <div>
 
-If you prefer an `https` redirect URI bound to a domain you own, you can use [Android App Links](https://developer.android.com/training/app-links) instead of the custom scheme. Your domain ownership is verified through a [Digital Asset Links](https://developers.google.com/digital-asset-links/v1/getting-started) file, so the OS guarantees that only your app receives the redirect.
+To use [Android App Links](https://developer.android.com/training/app-links) (an `https` redirect URI on a domain you own) instead of the custom scheme:
 
-To use App Links:
-
-1. Host the Digital Asset Links file at `https://your.domain/.well-known/assetlinks.json`, declaring your application ID and the SHA-256 fingerprints of your signing certificates. When publishing with Play App Signing, you can find the release fingerprint in Play Console under **Setup** > **App signing**. The file must be served as `Content-Type: application/json` with HTTP 200 and no redirects.
+1. Host the [Digital Asset Links](https://developers.google.com/digital-asset-links/v1/getting-started) file at `https://your.domain/.well-known/assetlinks.json`, declaring your application ID and the SHA-256 fingerprints of your signing certificates. When publishing with Play App Signing, you can find the release fingerprint in Play Console under **Setup** > **App signing**. The file must be served as `Content-Type: application/json` with HTTP 200 and no redirects.
 
 2. Declare the App Links intent filter on the SDK's redirect receiver activity `io.logto.sdk.android.auth.logto.LogtoRedirectReceiverActivity` in your `AndroidManifest.xml` file. If you do not use the custom scheme at all, drop the SDK's built-in filter with `tools:node="removeAll"`, and the `logtoRedirectScheme` manifest placeholder is then no longer required:
 
