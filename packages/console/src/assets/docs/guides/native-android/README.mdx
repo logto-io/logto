@@ -203,7 +203,7 @@ To use [Android App Links](https://developer.android.com/training/app-links) (an
 
 3. Add `https://your.domain/callback` to the "Redirect URIs" field above (and, if it is used for sign-out, to the "Post sign-out redirect URIs" field), and pass it to `signIn` / `signOut`.
 
-Keep in mind that the callback is now a real URL on your domain, so serve a fallback page there (e.g., a "Return to app" button) for browsers that do not launch App Links on a server redirect. On Android 12+ an unverified domain never opens the app, so a broken `assetlinks.json` fails silently. You can check the verification state with `adb shell pm get-app-links <applicationId>`.
+Keep in mind that the callback is now a real URL on your domain, so serve a fallback page there (e.g., a "Return to app" button) for browsers that do not launch App Links on a server redirect. The button only needs to link to the current URL (e.g., setting `href` to `window.location.href`): the authorization parameters are in the query string, and a user-initiated click gives the same URL another chance to be routed to your app. On Android 12+ an unverified domain never opens the app, so a broken `assetlinks.json` fails silently. You can check the verification state with `adb shell pm get-app-links <applicationId>`.
 
 </div>
 
