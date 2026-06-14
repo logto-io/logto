@@ -18,7 +18,6 @@ import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Drawer from '@/components/Drawer';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { ApplicationDetailsTabs, logtoThirdPartyGuideLink, protectedApp } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -78,7 +77,7 @@ function ApplicationDetailsContent({ data, secrets, oidcConfig, onApplicationUpd
     ApplicationType.Traditional,
     ApplicationType.Protected,
   ].includes(data.type);
-  const hasRules = isDevFeaturesEnabled && data.type !== ApplicationType.MachineToMachine;
+  const hasRules = data.type !== ApplicationType.MachineToMachine;
 
   const onSubmit = handleSubmit(
     trySubmitSafe(async (formData) => {

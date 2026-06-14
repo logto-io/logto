@@ -29,7 +29,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
 } from '#src/helpers/profile.js';
-import { devFeatureTest, generateTestName } from '#src/utils.js';
+import { generateTestName } from '#src/utils.js';
 
 const signInAndGetRefreshToken = async ({
   appId,
@@ -119,7 +119,7 @@ const assertRefreshTokenExchangeAllowed = async (
   }
 };
 
-devFeatureTest.describe('application access control OIDC enforcement', () => {
+describe('application access control OIDC enforcement', () => {
   it('allows refresh token exchange through each app access rule type', async () => {
     const organizationApi = new OrganizationApiTest();
     const userRole = await createRole({ type: RoleType.User });

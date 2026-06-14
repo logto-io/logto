@@ -1,6 +1,5 @@
 import { isBuiltInApplicationId } from '@logto/schemas';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -32,7 +31,7 @@ export const createApplicationAccessControlLibrary = (queries: Queries) => {
     userId: string,
     appLevelAccessControlEnabled?: boolean
   ) => {
-    if (!EnvSet.values.isDevFeaturesEnabled || isBuiltInApplicationId(applicationId)) {
+    if (isBuiltInApplicationId(applicationId)) {
       return;
     }
 

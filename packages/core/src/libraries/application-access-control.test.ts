@@ -1,7 +1,6 @@
 import { accountCenterApplicationId, type Application } from '@logto/schemas';
 
 import { mockApplication } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -21,7 +20,6 @@ const disabledApplication: Application = {
   appLevelAccessControlEnabled: false,
 };
 
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 const findApplicationById = jest.fn(async () => enabledApplication);
 const hasUserApplicationAccess = jest.fn(async () => false);
 
@@ -34,33 +32,16 @@ const createLibrary = () => {
   return createApplicationAccessControlLibrary(queries);
 };
 
-const setDevFeaturesEnabled = (value: boolean) => {
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', value);
-};
-
 beforeEach(() => {
-  setDevFeaturesEnabled(true);
   findApplicationById.mockResolvedValue(enabledApplication);
   hasUserApplicationAccess.mockResolvedValue(false);
 });
 
 afterEach(() => {
-  setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   jest.clearAllMocks();
 });
 
 describe('assertUserHasApplicationAccess()', () => {
-  it('allows without querying the application when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-
-    await expect(
-      createLibrary().assertUserHasApplicationAccess(applicationId, userId)
-    ).resolves.not.toThrow();
-
-    expect(findApplicationById).not.toHaveBeenCalled();
-    expect(hasUserApplicationAccess).not.toHaveBeenCalled();
-  });
-
   it('allows built-in applications without querying the application', async () => {
     await expect(
       createLibrary().assertUserHasApplicationAccess(accountCenterApplicationId, userId)

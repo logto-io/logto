@@ -2,7 +2,6 @@ import { applicationAccessControlGuard, type ApplicationAccessControl } from '@l
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard, { parse } from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -56,15 +55,6 @@ export default function applicationAccessControlRoutes<T extends ManagementApiRo
 
   const pathname = '/applications/:applicationId/access-control';
   const params = z.object({ applicationId: z.string().min(1) });
-
-  router.use(pathname, koaGuard({ params }), async (_, next) => {
-    assertThat(
-      EnvSet.values.isDevFeaturesEnabled,
-      new RequestError({ code: 'entity.not_found', status: 404 })
-    );
-
-    return next();
-  });
 
   router.get(
     pathname,

@@ -8,7 +8,6 @@ import {
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockApplication } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
 const { jest } = import.meta;
@@ -49,18 +48,8 @@ const tenantContext = new MockTenant(
 
 const { createRequester } = await import('#src/utils/test-utils.js');
 const samlApplicationRoutes = await pickDefault(import('./index.js'));
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Tests need to cover both dev-feature states.
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
-};
-
-const createSamlApplicationRequest = (isDevFeaturesEnabled = true) => {
-  setDevFeaturesEnabled(isDevFeaturesEnabled);
-
-  return createRequester({ authedRoutes: samlApplicationRoutes, tenantContext });
-};
+const createSamlApplicationRequest = () =>
+  createRequester({ authedRoutes: samlApplicationRoutes, tenantContext });
 
 const buildAccessControl = (
   patch: Partial<ApplicationAccessControl> = {}
@@ -74,7 +63,6 @@ const buildAccessControl = (
 
 describe('SAML application route', () => {
   afterEach(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
     updateSamlApplicationById.mockClear();
     findApplicationAccessControl.mockClear();
   });
@@ -103,16 +91,6 @@ describe('SAML application route', () => {
       .send({ appLevelAccessControlEnabled: true });
 
     expect(response.status).toEqual(422);
-    expect(updateSamlApplicationById).not.toHaveBeenCalled();
-  });
-
-  it('PATCH /saml-applications/:id should reject app-level access control updates without dev features', async () => {
-    const response = await createSamlApplicationRequest(false)
-      .patch('/saml-applications/foo')
-      .send({ appLevelAccessControlEnabled: true });
-
-    expect(response.status).toEqual(400);
-    expect(findApplicationAccessControl).not.toHaveBeenCalled();
     expect(updateSamlApplicationById).not.toHaveBeenCalled();
   });
 });

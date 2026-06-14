@@ -15,7 +15,6 @@ import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Skeleton from '@/components/FormCard/Skeleton';
 import RequestDataError from '@/components/RequestDataError';
 import { ApplicationDetailsTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import DeleteConfirmModal from '@/ds-components/DeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TabWrapper from '@/ds-components/TabWrapper';
@@ -60,7 +59,6 @@ function SamlApplicationDetailsContent({ data, onApplicationUpdated }: Props) {
   const api = useApi();
 
   const isLoading = !samlApplicationData && !samlApplicationError;
-  const hasRules = isDevFeaturesEnabled;
 
   const onDelete = useCallback(async () => {
     setIsDeleting(true);
@@ -155,11 +153,9 @@ function SamlApplicationDetailsContent({ data, onApplicationUpdated }: Props) {
         <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Branding}`}>
           {t('application_details.branding.name')}
         </TabNavItem>
-        {hasRules && (
-          <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Rules}`}>
-            {t('application_details.access_control.name')}
-          </TabNavItem>
-        )}
+        <TabNavItem href={`/applications/${data.id}/${ApplicationDetailsTabs.Rules}`}>
+          {t('application_details.access_control.name')}
+        </TabNavItem>
       </TabNav>
       <TabWrapper
         isActive={tab === ApplicationDetailsTabs.Settings}
@@ -188,15 +184,13 @@ function SamlApplicationDetailsContent({ data, onApplicationUpdated }: Props) {
         {/* isActive is needed to support conditional render UnsavedChangesAlertModal */}
         <Branding application={data} isActive={tab === ApplicationDetailsTabs.Branding} />
       </TabWrapper>
-      {hasRules && (
-        <TabWrapper isActive={tab === ApplicationDetailsTabs.Rules} className={styles.tabContainer}>
-          <ApplicationAccessControl
-            application={data}
-            isActive={tab === ApplicationDetailsTabs.Rules}
-            onAppLevelAccessControlUpdated={onAppLevelAccessControlUpdated}
-          />
-        </TabWrapper>
-      )}
+      <TabWrapper isActive={tab === ApplicationDetailsTabs.Rules} className={styles.tabContainer}>
+        <ApplicationAccessControl
+          application={data}
+          isActive={tab === ApplicationDetailsTabs.Rules}
+          onAppLevelAccessControlUpdated={onAppLevelAccessControlUpdated}
+        />
+      </TabWrapper>
     </>
   );
 }
