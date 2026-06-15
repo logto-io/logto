@@ -112,6 +112,7 @@ export const googleWorkSpaceSsoConnectorFactory: SingleSignOnFactory<SsoProvider
       de: 'Vereinheitlichte und sichere Verwaltung des Benutzerzugriffs innerhalb des Google-Ökosystems.',
       en: 'Unified and secure management of user access within the Google ecosystem.',
       es: 'Gestión unificada y segura del acceso de usuarios dentro del ecosistema de Google.',
+      'fa-IR': 'مدیریت یکپارچه و امن دسترسی کاربران در اکوسیستم گوگل.',
       fr: "Gestion unifiée et sécurisée de l'accès utilisateur au sein de l'écosystème Google.",
       it: "Gestione unificata e sicura dell'accesso degli utenti all'interno dell'ecosistema Google.",
       ja: 'Google エコシステム内でのユーザーアクセスの統合およびセキュアな管理。',

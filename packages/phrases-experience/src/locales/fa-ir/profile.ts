@@ -1,0 +1,50 @@
+const profile = {
+  name: 'نام',
+  avatar: 'تصویر نمایه',
+  givenName: 'نام',
+  familyName: 'نام خانوادگی',
+  middleName: 'نام میانی',
+  fullname: 'نام کامل',
+  nickname: 'نام مستعار',
+  preferredUsername: 'نام کاربری ترجیحی',
+  profile: 'پروفایل',
+  website: 'وب‌سایت',
+  gender: 'جنسیت',
+  birthdate: 'تاریخ تولد',
+  zoneinfo: 'منطقه زمانی',
+  locale: 'زبان و منطقه',
+  address: {
+    formatted: 'نشانی',
+    streetAddress: 'آدرس خیابان',
+    locality: 'شهر',
+    region: 'استان/ایالت',
+    postalCode: 'کد پستی',
+    country: 'کشور',
+  },
+  gender_options: {
+    female: 'زن',
+    male: 'مرد',
+    prefer_not_to_say: 'ترجیح می‌دهم اعلام نکنم',
+  },
+  checkbox_value: {
+    checked: 'بله',
+    unchecked: 'خیر',
+  },
+  avatar_upload: {
+    upload: 'بارگذاری',
+    remove: 'حذف',
+    uploading: 'در حال بارگذاری...',
+    hint: 'نسبت تصویر پیشنهادی ۱:۱ و حداکثر اندازه {{limit}} است.',
+    error_file_type: 'نوع فایل باید {{extensions}} باشد.',
+    error_file_size: 'حجم فایل نباید از {{limit}} بیشتر باشد.',
+    error_storage_not_configured:
+      'امکان بارگذاری تصویر شما وجود ندارد. لطفاً بعداً دوباره تلاش کنید.',
+    error_upload: 'بارگذاری تصویر ناموفق بود. لطفاً دوباره تلاش کنید.',
+    error_save: 'ذخیره تصویر ناموفق بود. لطفاً دوباره تلاش کنید.',
+    crop_title: 'برش تصویر',
+    zoom: 'بزرگ‌نمایی',
+    error_crop: 'برش تصویر ناموفق بود. لطفاً دوباره تلاش کنید.',
+  },
+};
+
+export default Object.freeze(profile);

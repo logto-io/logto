@@ -128,6 +128,8 @@ export const azureOidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.A
     en: 'OpenID Connect on the Microsoft identity platform. Formerly known as Azure AD OIDC.',
     de: 'OpenID Connect auf der Microsoft-Identitätsplattform. Früher bekannt als Azure AD OIDC.',
     es: 'OpenID Connect en la plataforma de identidad de Microsoft. Anteriormente conocido como Azure AD OIDC.',
+    'fa-IR':
+      'OpenID Connect در پلتفرم هویت مایکروسافت؛ که پیش‌تر با نام Azure AD OIDC شناخته می‌شد.',
     fr: 'OpenID Connect sur la plateforme d’identité Microsoft. Anciennement connu sous le nom de Azure AD OIDC.',
     it: 'OpenID Connect sulla piattaforma di identità Microsoft. Precedentemente noto come Azure AD OIDC.',
     ja: 'Microsoft アイデンティティ プラットフォーム上の OpenID Connect. 以前は Azure AD OIDC として知られていました。',
