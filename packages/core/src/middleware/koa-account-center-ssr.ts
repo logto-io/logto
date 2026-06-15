@@ -5,7 +5,6 @@ import type { MiddlewareType } from 'koa';
 import type Libraries from '#src/tenants/Libraries.js';
 
 import { type WithI18nContext } from './koa-i18next.js';
-import { isIndexPath } from './koa-serve-static.js';
 
 /**
  * Placeholder for account center SSR data injection. The value should be kept in sync with
@@ -19,7 +18,6 @@ const accountCenterSsrPlaceholder = '"__LOGTO_ACCOUNT_CENTER_SSR__"';
  *
  * Conditions for injection:
  * - The response body should be a string after the middleware chain (calling `next()`).
- * - The request path should be an index path.
  * - The SSR placeholder string should be present in the response body.
  */
 export default function koaAccountCenterSsr<StateT, ContextT extends WithI18nContext>(
@@ -28,10 +26,7 @@ export default function koaAccountCenterSsr<StateT, ContextT extends WithI18nCon
   return async (ctx, next) => {
     await next();
 
-    if (
-      !(typeof ctx.body === 'string' && isIndexPath(ctx.path)) ||
-      !ctx.body.includes(accountCenterSsrPlaceholder)
-    ) {
+    if (typeof ctx.body !== 'string' || !ctx.body.includes(accountCenterSsrPlaceholder)) {
       return;
     }
 

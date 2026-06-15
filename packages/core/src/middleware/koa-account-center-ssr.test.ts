@@ -33,13 +33,6 @@ describe('koaAccountCenterSsr()', () => {
     expect(ctx.body).toBe(symbol);
   });
 
-  it('should call next() and do nothing if the request path is not an index path', async () => {
-    const ctx = { ...baseCtx, path: '/foo', body: '...' };
-    await koaAccountCenterSsr(tenant.libraries)(ctx, next);
-    expect(next).toHaveBeenCalledTimes(1);
-    expect(ctx.body).toBe('...');
-  });
-
   it('should call next() and do nothing if the placeholder is not present', async () => {
     const ctx = { ...baseCtx, path: '/', body: '...' };
     await koaAccountCenterSsr(tenant.libraries)(ctx, next);
@@ -51,6 +44,24 @@ describe('koaAccountCenterSsr()', () => {
     const ctx = {
       ...baseCtx,
       path: '/',
+      body: `<script>
+        const logtoSsr=${accountCenterSsrPlaceholder};
+      </script>`,
+    };
+    await koaAccountCenterSsr(tenant.libraries)(ctx, next);
+    expect(next).toHaveBeenCalledTimes(1);
+    expect(ctx.body).not.toContain(accountCenterSsrPlaceholder);
+    expect(ctx.body).toContain(
+      `const logtoSsr=Object.freeze(${JSON.stringify({
+        signInExperience: { data: mockSignInExperience },
+      })});`
+    );
+  });
+
+  it('should inject SSR data for Account Center deep links', async () => {
+    const ctx = {
+      ...baseCtx,
+      path: '/profile',
       body: `<script>
         const logtoSsr=${accountCenterSsrPlaceholder};
       </script>`,
