@@ -17,6 +17,7 @@ export const oktaSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OKTA> 
     de: 'Zentralisiertes Identitätsmanagement für Kunden, Mitarbeiter und Partner.',
     en: 'Centralizes identity management for customers, employees, and partners.',
     es: 'Gestión centralizada de identidad para clientes, empleados y socios.',
+    'fa-IR': 'مدیریت هویت مشتریان، کارکنان و شرکای تجاری را به‌صورت متمرکز انجام می‌دهد.',
     fr: "Gestion centralisée de l'identité pour les clients, les employés et les partenaires.",
     it: "Gestione centralizzata dell'identità per clienti, dipendenti e partner.",
     ja: '顧客、従業員、パートナーのためのアイデンティティ管理の集中化。',

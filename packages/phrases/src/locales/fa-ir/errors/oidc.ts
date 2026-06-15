@@ -1,0 +1,31 @@
+const oidc = {
+  aborted: 'کاربر نهایی تعامل را لغو کرد.',
+  invalid_scope: 'scope نامعتبر: {{error_description}}.',
+  invalid_token: 'توکن ارائه‌شده نامعتبر است.',
+  invalid_client_metadata: 'متادیتای کلاینت ارائه‌شده نامعتبر است.',
+  insufficient_scope: 'توکن فاقد scope `{{scope}}` است.',
+  invalid_request: 'درخواست نامعتبر است.',
+  invalid_grant: 'درخواست grant نامعتبر است.',
+  invalid_issuer: 'صادرکننده نامعتبر است.',
+  invalid_redirect_uri: '`redirect_uri` با هیچ‌یک از `redirect_uris` ثبت‌شده کلاینت مطابقت نداشت.',
+  access_denied: 'دسترسی رد شد.',
+  invalid_target: 'نشانگر منبع نامعتبر است.',
+  unsupported_grant_type: 'نوع `grant_type` درخواستی پشتیبانی نمی‌شود.',
+  unsupported_response_mode: 'نوع `response_mode` درخواستی پشتیبانی نمی‌شود.',
+  unsupported_response_type: 'نوع `response_type` درخواستی پشتیبانی نمی‌شود.',
+  /** @deprecated Use {@link oidc.server_error} or {@link oidc.provider_error_fallback} instead. */
+  provider_error: 'خطای داخلی OIDC: {{message}}.',
+  server_error: 'خطای OIDC ناشناخته‌ای رخ داد. لطفاً بعداً دوباره تلاش کنید.',
+  provider_error_fallback: 'خطای OIDC رخ داد: {{code}}.',
+  custom_claims_script_error: 'خطای اسکریپت ادعاهای سفارشی: {{error_description}}',
+  key_required: 'حداقل یک کلید لازم است.',
+  key_not_found: 'کلید با شناسه {{id}} یافت نشد.',
+  only_previous_key_can_be_deleted: 'فقط کلید قبلی قابل حذف است.',
+  invalid_session_payload: 'بار نشست نامعتبر است.',
+  session_not_found: 'نشست یافت نشد.',
+  invalid_session_account_id: 'accountId نشست مطابقت ندارد.',
+  failed_to_revoke_grant: 'لغو grant ناموفق بود.',
+  failed_to_cleanup_session_authorization: 'پاک‌سازی مجوز نشست ناموفق بود.',
+};
+
+export default Object.freeze(oidc);

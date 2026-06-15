@@ -113,6 +113,7 @@ export const samlSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.SAML> 
     de: 'XML-basierter Open Standard für das Single Sign-On im Web und die Identitätsföderation.',
     en: 'XML-based open standard for web single sign-on and identity federation.',
     es: 'Estándar abierto basado en XML para la autenticación única en la web y la federación de identidades.',
+    'fa-IR': 'استاندارد باز مبتنی بر XML برای ورود یکپارچه (SSO) در وب و فدراسیون هویت.',
     fr: "Norme ouverte basée sur XML pour la connexion unique sur le web et la fédération d'identité.",
     it: 'Standard aperto basato su XML per il single sign-on e la federazione delle identità web.',
     ja: 'ウェブのシングルサインオンとアイデンティティフェデレーションのためのXMLベースのオープンスタンダード。',

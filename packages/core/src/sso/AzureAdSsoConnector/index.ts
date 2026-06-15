@@ -16,6 +16,7 @@ export const azureAdSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.AZU
     de: 'Früher Azure AD, ein umfassender cloudbasierter Identitätsverwaltungsdienst.',
     en: 'Formerly Azure AD, a comprehensive cloud-based identity management service.',
     es: 'Antiguamente Azure AD, un completo servicio de gestión de identidad basado en la nube.',
+    'fa-IR': 'سرویس جامع مدیریت هویت مبتنی بر ابر که پیش‌تر با نام Azure AD شناخته می‌شد.',
     fr: "Anciennement Azure AD, un service complet de gestion d'identité basé sur le cloud.",
     it: "Precedentemente Azure AD, un servizio completo di gestione dell'identità basato su cloud.",
     ja: '以前は Azure AD、包括的なクラウドベースのアイデンティティ管理サービス。',

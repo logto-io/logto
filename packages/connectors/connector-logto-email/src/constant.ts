@@ -9,6 +9,7 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Logto email service',
     de: 'Logto e-mail-dienst',
     es: 'Servicio de correo electrónico de Logto',
+    'fa-IR': 'سرویس ایمیل لاگتو',
     fr: 'Service de messagerie électronique Logto',
     it: 'Servizio di posta elettronica Logto',
     ja: 'Logto メールサービス',
@@ -28,6 +29,8 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'An out-of-the-box email solution, completely free to use, guaranteeing  reliable email delivery.',
     de: 'Eine sofort einsatzbereite E-Mail-Lösung, vollständig kostenlos und garantiert zuverlässige E-Mail-Zustellung.',
     es: 'Una solución de correo electrónico lista para usar, completamente gratuita y garantizando una entrega de correo confiable.',
+    'fa-IR':
+      'یک راهکار ایمیل آماده برای استفاده، کاملاً رایگان، با تضمین ارسال مطمئن و قابل‌اعتماد ایمیل‌ها.',
     fr: "Une solution de messagerie clé en main, totalement gratuite à utiliser, garantissant une livraison d'e-mails fiable.",
     it: "Una soluzione di posta elettronica pronta all'uso, completamente gratuita e che garantisce una consegna affidabile delle e-mail.",
     ja: '即座に利用可能なメールソリューションで、完全に無料で信頼性の高いメール配信を保証します。',

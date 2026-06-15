@@ -44,6 +44,7 @@ export const oidcSsoConnectorFactory: SingleSignOnFactory<SsoProviderName.OIDC> 
     de: 'Modernes Protokoll auf Basis von OAuth 2.0 für Identitätsprüfung in Web- und Mobilanwendungen.',
     en: 'Modern protocol built on OAuth 2.0 for identity verification in web and mobile apps.',
     es: 'Protocolo moderno basado en OAuth 2.0 para verificación de identidad en aplicaciones web y móviles.',
+    'fa-IR': 'پروتکل مدرنی مبتنی بر OAuth 2.0 برای تأیید هویت در اپلیکیشن‌های وب و موبایل.',
     fr: "Protocole moderne basé sur OAuth 2.0 pour la vérification d'identité dans les applications web et mobiles.",
     it: "Protocollo moderno basato su OAuth 2.0 per la verifica dell'identità nelle applicazioni web e mobile.",
     ja: 'ウェブおよびモバイルアプリのアイデンティティ検証のための OAuth 2.0 に基づくモダンなプロトコル。',
