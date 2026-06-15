@@ -43,7 +43,7 @@ const sign_in_experiences = {
   password_expiration_not_enabled:
     'Parola sona erme politikası etkinleştirilmemiş. Parolaların süresini doldurmadan önce oturum açma deneyimi ayarlarından etkinleştirin.',
   password_expiration_invalid_period_days:
-    'Parola süresi dolma politikası etkin olduğunda, reminderPeriodDays değeri validPeriodDays değerinden küçük olmalıdır.',
+    'Parola süresi dolma politikası etkin olduğunda, geçerli gün sayısı pozitif bir tam sayı olmalıdır.',
   username_policy_case_conflicts_exist:
     'Büyük/küçük harf farkı olan kullanıcı adları varken büyük/küçük harf duyarsız kullanıcı adlarına geçilemiyor. Çakışmaları çözün ve tekrar deneyin.',
 };

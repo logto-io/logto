@@ -390,7 +390,7 @@ export default function connectorRoutes<T extends ManagementApiRouter>(
       if (connectorFactory && passwordlessConnector.has(connectorFactory.type)) {
         const { passwordExpiration, forgotPasswordMethods } = await findDefaultSignInExperience();
 
-        if (EnvSet.values.isDevFeaturesEnabled && passwordExpiration.enabled) {
+        if (passwordExpiration.enabled) {
           const logtoConnectors = await getLogtoConnectors();
           const remainingConnectors = logtoConnectors.filter(({ dbEntry }) => dbEntry.id !== id);
           const forgotPasswordAvailability = getForgotPasswordAvailability(

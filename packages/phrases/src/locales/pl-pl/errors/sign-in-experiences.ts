@@ -43,7 +43,7 @@ const sign_in_experiences = {
   password_expiration_not_enabled:
     'Polityka wygasania haseł nie jest włączona. Włącz ją w ustawieniach logowania przed wygaszeniem haseł.',
   password_expiration_invalid_period_days:
-    'Gdy wygaśnięcie hasła jest włączone, reminderPeriodDays musi być mniejsze niż validPeriodDays.',
+    'Liczba dni okresu ważności musi być dodatnią liczbą całkowitą, gdy wygaśnięcie hasła jest włączone.',
   username_policy_case_conflicts_exist:
     'Nie można zmienić na nazwy użytkowników nie uwzględniające wielkości liter, gdy istnieją nazwy różniące się wyłącznie wielkością liter. Rozwiąż konflikty i spróbuj ponownie.',
 };

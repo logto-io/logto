@@ -44,7 +44,7 @@ const sign_in_experiences = {
   password_expiration_not_enabled:
     "La politica di scadenza della password non è abilitata. Abilitala nelle impostazioni dell'esperienza di accesso prima di far scadere le password.",
   password_expiration_invalid_period_days:
-    'Quando la scadenza della password è abilitata, reminderPeriodDays deve essere minore di validPeriodDays.',
+    'I giorni del periodo di validità devono essere un numero intero positivo quando la scadenza della password è abilitata.',
   username_policy_case_conflicts_exist:
     'Non è possibile passare a nomi utente senza distinzione tra maiuscole e minuscole mentre esistono nomi utente che differiscono solo per maiuscole e minuscole. Risolvi i conflitti e riprova.',
 };

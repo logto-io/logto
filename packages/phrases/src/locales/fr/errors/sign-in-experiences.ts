@@ -46,7 +46,7 @@ const sign_in_experiences = {
   password_expiration_not_enabled:
     "La politique d'expiration du mot de passe n'est pas activée. Activez-la dans les paramètres de l'expérience de connexion avant de faire expirer les mots de passe.",
   password_expiration_invalid_period_days:
-    'Lorsque l’expiration du mot de passe est activée, reminderPeriodDays doit être inférieur à validPeriodDays.',
+    'La période de validité en jours doit être un entier positif lorsque l’expiration du mot de passe est activée.',
   username_policy_case_conflicts_exist:
     "Impossible de passer à des noms d'utilisateur insensibles à la casse tant que des noms d'utilisateur qui ne diffèrent que par la casse existent. Résolvez les conflits et réessayez.",
 };

@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { signInWithPasswordIdentifier } from '@/apis/experience';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useCheckSingleSignOn from '@/hooks/use-check-single-sign-on';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
@@ -58,21 +57,20 @@ const usePasswordSignIn = () => {
         setErrorMessage(error.message);
       },
       ...conditional(
-        isDevFeaturesEnabled &&
-          isForgotPasswordEnabled && {
-            'password.expired': () => {
-              show({
-                type: 'alert',
-                ModalContent: t('description.password_expired'),
-                cancelText: 'description.password_expiration_reset',
-                shouldCloseOnEsc: false,
-                shouldCloseOnOverlayClick: false,
-                onCancel: () => {
-                  handleRedirectToForgotPassword();
-                },
-              });
-            },
-          }
+        isForgotPasswordEnabled && {
+          'password.expired': () => {
+            show({
+              type: 'alert',
+              ModalContent: t('description.password_expired'),
+              cancelText: 'description.password_expiration_reset',
+              shouldCloseOnEsc: false,
+              shouldCloseOnOverlayClick: false,
+              onCancel: () => {
+                handleRedirectToForgotPassword();
+              },
+            });
+          },
+        }
       ),
       ...preSignInErrorHandler,
     }),

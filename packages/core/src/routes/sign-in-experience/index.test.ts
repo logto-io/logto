@@ -242,9 +242,6 @@ describe('PATCH /sign-in-exp', () => {
 
     findDefaultSignInExperience.mockReset();
     findDefaultSignInExperience.mockImplementation(async () => mockSignInExperience);
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
   });
 
   it('should update social connector targets in correct sorting order', async () => {
@@ -770,20 +767,6 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
-  it('should reject password expiration updates when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-
-    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
-      passwordExpiration: {
-        enabled: true,
-        validPeriodDays: 30,
-      },
-    });
-
-    expect(response.status).toEqual(400);
-  });
-
   it('should reject disabling forgot password methods when password expiration is already enabled', async () => {
     findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
@@ -800,24 +783,6 @@ describe('PATCH /sign-in-exp', () => {
     expect(response).toMatchObject({
       status: 422,
     });
-  });
-
-  it('should ignore existing password expiration when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-    findDefaultSignInExperience.mockResolvedValueOnce({
-      ...mockSignInExperience,
-      passwordExpiration: {
-        enabled: true,
-        validPeriodDays: 30,
-      },
-    });
-
-    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
-      forgotPasswordMethods: [],
-    });
-
-    expect(response.status).toEqual(200);
   });
 });
 

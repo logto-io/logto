@@ -12,7 +12,6 @@ import {
 import { conditional, yes } from '@silverhand/essentials';
 import { boolean, literal, nativeEnum, object, string } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import {
@@ -362,42 +361,40 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
     }
   );
 
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.patch(
-      '/users/:userId/password/expiration',
-      koaGuard({
-        params: object({ userId: string() }),
-        body: object({ isExpired: boolean() }),
-        response: adminUserProfileResponseGuard,
-        status: [200, 400, 404],
-      }),
-      async (ctx, next) => {
-        const {
-          params: { userId },
-          body: { isExpired },
-        } = ctx.guard;
+  router.patch(
+    '/users/:userId/password/expiration',
+    koaGuard({
+      params: object({ userId: string() }),
+      body: object({ isExpired: boolean() }),
+      response: adminUserProfileResponseGuard,
+      status: [200, 400, 404],
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { isExpired },
+      } = ctx.guard;
 
-        const { findDefaultSignInExperience } = queries.signInExperiences;
+      const { findDefaultSignInExperience } = queries.signInExperiences;
 
-        await findUserById(userId);
-        const { passwordExpiration } = await findDefaultSignInExperience();
+      await findUserById(userId);
+      const { passwordExpiration } = await findDefaultSignInExperience();
 
-        assertThat(
-          !isExpired || (passwordExpiration.enabled && passwordExpiration.validPeriodDays),
-          new RequestError({
-            code: 'sign_in_experiences.password_expiration_not_enabled',
-            status: 400,
-          })
-        );
+      assertThat(
+        !isExpired || (passwordExpiration.enabled && passwordExpiration.validPeriodDays),
+        new RequestError({
+          code: 'sign_in_experiences.password_expiration_not_enabled',
+          status: 400,
+        })
+      );
 
-        const user = await updateUserById(userId, { isPasswordExpired: isExpired });
+      const user = await updateUserById(userId, { isPasswordExpired: isExpired });
 
-        ctx.body = transpileAdminUserProfileResponse(user);
+      ctx.body = transpileAdminUserProfileResponse(user);
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 
   router.post(
     '/users/:userId/password/verify',

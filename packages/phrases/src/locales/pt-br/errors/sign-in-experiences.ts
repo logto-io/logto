@@ -44,7 +44,7 @@ const sign_in_experiences = {
   password_expiration_not_enabled:
     'A política de expiração de senha não está ativada. Ative-a nas configurações de experiência de login antes de expirar senhas.',
   password_expiration_invalid_period_days:
-    'Quando a expiração de senha estiver habilitada, reminderPeriodDays deve ser menor que validPeriodDays.',
+    'Os dias do período de validade devem ser um número inteiro positivo quando a expiração de senha estiver habilitada.',
   username_policy_case_conflicts_exist:
     'Não é possível mudar para nomes de usuário sem diferenciação de maiúsculas/minúsculas enquanto existirem nomes de usuário que diferem apenas por caso. Resolva os conflitos e tente novamente.',
 };

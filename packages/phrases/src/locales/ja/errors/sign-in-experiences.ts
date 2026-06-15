@@ -44,7 +44,7 @@ const sign_in_experiences = {
   password_expiration_not_enabled:
     'パスワードの有効期限ポリシーが有効になっていません。パスワードを期限切れにする前に、サインイン体験の設定で有効にしてください。',
   password_expiration_invalid_period_days:
-    'パスワード有効期限が有効な場合、reminderPeriodDays は validPeriodDays より小さくする必要があります。',
+    'パスワード有効期限が有効な場合、有効期間の日数は正の整数である必要があります。',
   username_policy_case_conflicts_exist:
     'ユーザー名が大文字と小文字のみで異なる場合、ケースに依存しないユーザー名に切り替えることはできません。競合を解決してからもう一度お試しください。',
 };
