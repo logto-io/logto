@@ -199,8 +199,10 @@ describe('account mfa verification routes', () => {
         newIdentifierVerificationRecordId: 'fake_record_id',
       });
 
-      // Will fail at verification record lookup, but should pass binding check
-      expect(response.status).not.toBe(400);
+      // Binding check passed — findDefaultSignInExperience was reached
+      expect(findDefaultSignInExperience).toHaveBeenCalled();
+      // Error is from verification record lookup, not binding check
+      expect(response.body).not.toHaveProperty('code', 'session.mfa.mfa_factor_not_enabled');
     });
 
     it('should reject WebAuthn binding when both mfa.factors and passkeySignIn.enabled are off', async () => {
@@ -219,6 +221,7 @@ describe('account mfa verification routes', () => {
       });
 
       expect(response.status).toBe(400);
+      expect(findDefaultSignInExperience).toHaveBeenCalled();
     });
 
     it('should use fields.passkey for WebAuthn permission when isDevFeaturesEnabled', async () => {
@@ -261,8 +264,10 @@ describe('account mfa verification routes', () => {
         newIdentifierVerificationRecordId: 'fake_record_id',
       });
 
-      // Should pass permission check (passkey=Edit) even though mfa=Off
-      expect(response.status).not.toBe(400);
+      // Permission check passed — findDefaultSignInExperience was reached
+      expect(findDefaultSignInExperience).toHaveBeenCalled();
+      // Error is from verification record lookup, not permission check
+      expect(response.body).not.toHaveProperty('code', 'account_center.field_not_editable');
     });
 
     it('should fall back to fields.mfa for non-WebAuthn types even when isDevFeaturesEnabled', async () => {
