@@ -142,6 +142,28 @@ describe('koaExperienceSsr()', () => {
     }
   );
 
+  it('should insert `$`-sequences in custom CSS verbatim, not expand them as replacement patterns', async () => {
+    // `$$`/`$&`/`` $` ``/`$'` are `String.prototype.replace` patterns; in a *string* replacement `$'` would
+    // expand to the document tail after the `</head>` match and corrupt the stylesheet. The replacement
+    // function must insert the CSS literally.
+    const css = 'a::before { content: "$$ $& $` $\'"; }';
+    (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
+      {
+        ...mockSignInExperience,
+        customCss: css,
+      }
+    );
+
+    const ctx = {
+      ...baseCtx,
+      path: '/',
+      body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+    };
+    await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+    expect(ctx.body).toContain(`<style data-custom-css>${css}</style></head>`);
+  });
+
   it('should escape characters in the SSR JSON so embedded data cannot break out of the <script>', async () => {
     (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
       { ...mockSignInExperience, customContent: { '/sign-in': '</script>' } }
@@ -159,6 +181,38 @@ describe('koaExperienceSsr()', () => {
     // escaped form (rather than counting `</script>` occurrences) is robust to the served template adding
     // its own <script> tags.
     expect(ctx.body).toContain('\\u003c/script\\u003e');
+  });
+
+  it('should not let a `$`-sequence in SSR data re-inject document text into the inline <script>', async () => {
+    // `String.prototype.replace` interprets `$'` (and `$&`/`` $` ``/`$$`) in a *string* replacement, so a
+    // `$'` value would expand to the document text after the placeholder — re-injecting an unescaped
+    // `</script>` that `serializeSsrData`'s escaping cannot defuse. The replacement function inserts it
+    // verbatim instead.
+    (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
+      {
+        ...mockSignInExperience,
+        customContent: { '/sign-in': "x$'y" },
+      }
+    );
+
+    const ctx = {
+      ...baseCtx,
+      path: '/',
+      body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+    };
+    await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
+    // The template carries exactly one `</script>`; a `$'` breakout would emit a second, unescaped one.
+    // Counting directly (not via the greedy `Object.freeze(...)` capture, which could swallow the
+    // injected tail and still parse a valid prefix) is what actually catches the breakout.
+    expect(ctx.body.match(/<\/script>/g)).toHaveLength(1);
+
+    // And the `$'` must round-trip unchanged — it is data, not a replacement pattern.
+    const serialized = /Object\.freeze\((?<json>[\S\s]+)\);/.exec(ctx.body)?.groups?.json;
+    expect(serialized).toBeTruthy();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- test parses known JSON
+    const parsed = JSON.parse(serialized!);
+    expect(parsed.signInExperience.data.customContent['/sign-in']).toBe("x$'y");
   });
 
   it('should produce SSR JSON that still parses back to the original data after escaping', async () => {
@@ -227,6 +281,27 @@ describe('koaExperienceSsr()', () => {
     await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
 
     // Preview is driven live by postMessage + react-helmet; the server must not inline saved CSS.
+    expect(ctx.body).not.toContain('<style data-custom-css>');
+  });
+
+  it('should treat an array-valued `preview` query param as preview mode and skip inlining', async () => {
+    // Koa parses `?preview=true&preview=x` into `['true', 'x']`; a bare `!== 'true'` check would treat it
+    // as non-preview and inline the saved CSS during a preview load.
+    (tenant.libraries.signInExperiences.getFullSignInExperience as jest.Mock).mockResolvedValueOnce(
+      {
+        ...mockSignInExperience,
+        customCss: '.foo { color: red; }',
+      }
+    );
+
+    const ctx = {
+      ...baseCtx,
+      path: '/',
+      query: { preview: ['true', 'x'] },
+      body: `<head><script>const logtoSsr=${ssrPlaceholder};</script></head>`,
+    };
+    await koaExperienceSsr(tenant.libraries, tenant.queries)(ctx, next);
+
     expect(ctx.body).not.toContain('<style data-custom-css>');
   });
 });
