@@ -5,16 +5,9 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
-
 const protectedAppAdditionalScopeGuard = z.enum(protectedAppAdditionalScopes);
 
-export const appLevelAccessControlEnabledGuard = z
-  .boolean()
-  .refine(() => EnvSet.values.isDevFeaturesEnabled, {
-    message: 'appLevelAccessControlEnabled is not available when dev features are disabled',
-  })
-  .optional();
+export const appLevelAccessControlEnabledGuard = z.boolean().optional();
 
 export const applicationCreateGuard = originalApplicationCreateGuard
   .omit({

@@ -2,7 +2,6 @@
   "paths": {
     "/api/applications/{applicationId}/access-control": {
       "get": {
-        "tags": ["Dev feature"],
         "summary": "Get application access-control rules",
         "description": "Get the app-level access-control rule configuration for the specified application.",
         "responses": {
@@ -10,12 +9,11 @@
             "description": "The app-level access-control rule configuration."
           },
           "404": {
-            "description": "The application was not found, or app-level access control is unavailable."
+            "description": "The application was not found."
           }
         }
       },
       "put": {
-        "tags": ["Dev feature"],
         "summary": "Replace application access-control rules",
         "description": "Replace the app-level access-control rule configuration for the specified application.",
         "requestBody": {
@@ -52,7 +50,7 @@
             "description": "The app-level access-control rule configuration was replaced successfully."
           },
           "404": {
-            "description": "The application or referenced entities were not found, or app-level access control is unavailable."
+            "description": "The application or referenced entities were not found."
           },
           "422": {
             "description": "The access-control rule payload contains invalid role types or empty organization-role groups."
