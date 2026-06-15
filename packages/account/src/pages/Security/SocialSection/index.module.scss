@@ -7,7 +7,7 @@
 }
 
 .sectionTitle {
-  padding-left: _.unit(1);
+  padding-inline-start: _.unit(1);
   font: var(--font-label-2);
   color: var(--color-type-primary);
 }
@@ -123,7 +123,7 @@
 
 @mixin mobile-layout {
   .sectionTitle {
-    padding-left: 0;
+    padding-inline-start: 0;
   }
 
   .row {
@@ -176,7 +176,7 @@
   .actionButton {
     padding: 0;
     white-space: normal;
-    text-align: left;
+    text-align: start;
   }
 }
 

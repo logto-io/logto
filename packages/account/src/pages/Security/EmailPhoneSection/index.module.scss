@@ -7,7 +7,7 @@
 }
 
 .sectionTitle {
-  padding-left: _.unit(1);
+  padding-inline-start: _.unit(1);
   font: var(--font-label-2);
   color: var(--color-type-primary);
 }
@@ -57,7 +57,7 @@
   grid-column: 1;
   grid-row: 1;
   min-width: 0;
-  padding-left: calc(20px + #{_.unit(4)});
+  padding-inline-start: calc(20px + #{_.unit(4)});
   font: var(--font-label-2);
   color: var(--color-type-primary);
 }
@@ -111,7 +111,7 @@
 
 :global(body.mobile) {
   .sectionTitle {
-    padding-left: 0;
+    padding-inline-start: 0;
   }
 
   .row {
@@ -146,13 +146,13 @@
   }
 
   .title {
-    padding-left: 0;
+    padding-inline-start: 0;
   }
 
   .changeButton,
   .removeButton {
     padding: 0;
     white-space: normal;
-    text-align: left;
+    text-align: start;
   }
 }
