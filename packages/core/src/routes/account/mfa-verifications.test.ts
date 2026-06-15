@@ -6,7 +6,9 @@ import {
   mockSignInExperience,
   mockUser,
   mockUserTotpMfaVerification,
+  mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -42,8 +44,11 @@ const mockedQueries = {
 } satisfies Partial2<Queries>;
 
 const { findUserById, updateUserById } = mockedQueries.users;
+const { findDefaultSignInExperience } = mockedQueries.signInExperiences;
 
 const accountMfaRoutes = await pickDefault(import('./mfa-verifications.js'));
+
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 
 describe('account mfa verification routes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries);
@@ -80,6 +85,9 @@ describe('account mfa verification routes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
   });
 
   describe('PUT /api/my-account/mfa-verifications/totp', () => {
@@ -172,6 +180,286 @@ describe('account mfa verification routes', () => {
       expect(response.status).toBe(400);
       expect(mockValidateTotpToken).toHaveBeenCalledWith('new_totp_secret', 'bad-code');
       expect(updateUserById).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('POST /api/my-account/mfa-verifications passkey permission and binding', () => {
+    it('should allow WebAuthn binding when passkeySignIn.enabled is true (without MFA factor)', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: { ...mockSignInExperience.mfa, factors: [] },
+        passkeySignIn: { enabled: true, showPasskeyButton: true, allowAutofill: false },
+      });
+
+      const response = await accountRequest.post('/my-account/mfa-verifications').send({
+        type: MfaFactor.WebAuthn,
+        newIdentifierVerificationRecordId: 'fake_record_id',
+      });
+
+      // Will fail at verification record lookup, but should pass binding check
+      expect(response.status).not.toBe(400);
+    });
+
+    it('should reject WebAuthn binding when both mfa.factors and passkeySignIn.enabled are off', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: { ...mockSignInExperience.mfa, factors: [] },
+        passkeySignIn: { enabled: false, showPasskeyButton: false, allowAutofill: false },
+      });
+
+      const response = await accountRequest.post('/my-account/mfa-verifications').send({
+        type: MfaFactor.WebAuthn,
+        newIdentifierVerificationRecordId: 'fake_record_id',
+      });
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should use fields.passkey for WebAuthn permission when isDevFeaturesEnabled', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+
+      const passkeyRequest = createRequester({
+        authedRoutes: [
+          (router) => {
+            router.use(async (ctx, next) => {
+              ctx.auth = {
+                ...ctx.auth,
+                id: mockUser.id,
+                identityVerified: true,
+                scopes: new Set([UserScope.Identities]),
+              };
+              ctx.accountCenter = {
+                enabled: true,
+                fields: {
+                  mfa: AccountCenterControlValue.Off,
+                  passkey: AccountCenterControlValue.Edit,
+                },
+              };
+              ctx.appendDataHookContext = jest.fn();
+              return next();
+            });
+          },
+          accountMfaRoutes as never,
+        ],
+        tenantContext,
+      });
+
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: { ...mockSignInExperience.mfa, factors: [MfaFactor.WebAuthn] },
+      });
+
+      const response = await passkeyRequest.post('/my-account/mfa-verifications').send({
+        type: MfaFactor.WebAuthn,
+        newIdentifierVerificationRecordId: 'fake_record_id',
+      });
+
+      // Should pass permission check (passkey=Edit) even though mfa=Off
+      expect(response.status).not.toBe(400);
+    });
+
+    it('should fall back to fields.mfa for non-WebAuthn types even when isDevFeaturesEnabled', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+
+      const response = await accountRequest.post('/my-account/mfa-verifications').send({
+        type: MfaFactor.TOTP,
+        secret: 'totp_secret',
+      });
+
+      // Uses fields.mfa which is Edit, so permission passes; TOTP is in factors
+      expect(response.status).toBe(204);
+    });
+  });
+
+  describe('PATCH /api/my-account/mfa-verifications/:id/name passkey permission', () => {
+    it('should use fields.passkey for permission when isDevFeaturesEnabled', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+
+      const passkeyRequest = createRequester({
+        authedRoutes: [
+          (router) => {
+            router.use(async (ctx, next) => {
+              ctx.auth = {
+                ...ctx.auth,
+                id: mockUser.id,
+                identityVerified: true,
+                scopes: new Set([UserScope.Identities]),
+              };
+              ctx.accountCenter = {
+                enabled: true,
+                fields: {
+                  mfa: AccountCenterControlValue.Off,
+                  passkey: AccountCenterControlValue.Edit,
+                },
+              };
+              ctx.appendDataHookContext = jest.fn();
+              return next();
+            });
+          },
+          accountMfaRoutes as never,
+        ],
+        tenantContext,
+      });
+
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [mockUserWebAuthnMfaVerification],
+      });
+
+      const response = await passkeyRequest
+        .patch(`/my-account/mfa-verifications/${mockUserWebAuthnMfaVerification.id}/name`)
+        .send({ name: 'new-name' });
+
+      expect(response.status).toBe(200);
+    });
+
+    it('should reject when passkey field is not editable with isDevFeaturesEnabled', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+
+      const passkeyRequest = createRequester({
+        authedRoutes: [
+          (router) => {
+            router.use(async (ctx, next) => {
+              ctx.auth = {
+                ...ctx.auth,
+                id: mockUser.id,
+                identityVerified: true,
+                scopes: new Set([UserScope.Identities]),
+              };
+              ctx.accountCenter = {
+                enabled: true,
+                fields: {
+                  mfa: AccountCenterControlValue.Edit,
+                  passkey: AccountCenterControlValue.ReadOnly,
+                },
+              };
+              ctx.appendDataHookContext = jest.fn();
+              return next();
+            });
+          },
+          accountMfaRoutes as never,
+        ],
+        tenantContext,
+      });
+
+      const response = await passkeyRequest
+        .patch(`/my-account/mfa-verifications/${mockUserWebAuthnMfaVerification.id}/name`)
+        .send({ name: 'new-name' });
+
+      expect(response.status).toBe(400);
+    });
+  });
+
+  describe('DELETE /api/my-account/mfa-verifications/:id passkey permission', () => {
+    it('should use fields.passkey for WebAuthn verification deletion when isDevFeaturesEnabled', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+
+      const passkeyRequest = createRequester({
+        authedRoutes: [
+          (router) => {
+            router.use(async (ctx, next) => {
+              ctx.auth = {
+                ...ctx.auth,
+                id: mockUser.id,
+                identityVerified: true,
+                scopes: new Set([UserScope.Identities]),
+              };
+              ctx.accountCenter = {
+                enabled: true,
+                fields: {
+                  mfa: AccountCenterControlValue.Off,
+                  passkey: AccountCenterControlValue.Edit,
+                },
+              };
+              ctx.appendDataHookContext = jest.fn();
+              return next();
+            });
+          },
+          accountMfaRoutes as never,
+        ],
+        tenantContext,
+      });
+
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [mockUserWebAuthnMfaVerification],
+      });
+
+      const response = await passkeyRequest.delete(
+        `/my-account/mfa-verifications/${mockUserWebAuthnMfaVerification.id}`
+      );
+
+      expect(response.status).toBe(204);
+    });
+
+    it('should use fields.mfa for non-WebAuthn verification deletion when isDevFeaturesEnabled', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [mockUserTotpMfaVerification],
+      });
+
+      const response = await accountRequest.delete(
+        `/my-account/mfa-verifications/${mockUserTotpMfaVerification.id}`
+      );
+
+      // Fields.mfa = Edit, so should pass
+      expect(response.status).toBe(204);
+    });
+
+    it('should reject WebAuthn deletion when passkey field is not editable', async () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
+      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+
+      const passkeyRequest = createRequester({
+        authedRoutes: [
+          (router) => {
+            router.use(async (ctx, next) => {
+              ctx.auth = {
+                ...ctx.auth,
+                id: mockUser.id,
+                identityVerified: true,
+                scopes: new Set([UserScope.Identities]),
+              };
+              ctx.accountCenter = {
+                enabled: true,
+                fields: {
+                  mfa: AccountCenterControlValue.Edit,
+                  passkey: AccountCenterControlValue.ReadOnly,
+                },
+              };
+              ctx.appendDataHookContext = jest.fn();
+              return next();
+            });
+          },
+          accountMfaRoutes as never,
+        ],
+        tenantContext,
+      });
+
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [mockUserWebAuthnMfaVerification],
+      });
+
+      const response = await passkeyRequest.delete(
+        `/my-account/mfa-verifications/${mockUserWebAuthnMfaVerification.id}`
+      );
+
+      expect(response.status).toBe(400);
     });
   });
 });
