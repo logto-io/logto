@@ -42,6 +42,21 @@ export enum SentinelActivityAction {
    * The subject tries to pass a backup code MFA verification.
    */
   MfaBackupCode = 'MfaBackupCode',
+  /**
+   * A verification code is sent to the target (email/phone), e.g. sign-in,
+   * register, forgot-password, or identifier-binding codes.
+   *
+   * Used by the message rate limit to throttle sends, distinct from the
+   * failure-based lockout actions above.
+   */
+  VerificationCodeSend = 'VerificationCodeSend',
+  /**
+   * A non-verification-code message is sent to the target (email/phone),
+   * e.g. an organization invitation.
+   *
+   * Used by the message rate limit to throttle sends.
+   */
+  MessageSend = 'MessageSend',
 }
 export const sentinelActivityActionGuard = z.nativeEnum(SentinelActivityAction);
 

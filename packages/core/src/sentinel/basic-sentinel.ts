@@ -70,8 +70,11 @@ export default class BasicSentinel extends Sentinel {
    * @throws {Error} If the action is not supported.
    */
   static assertAction(action: unknown): asserts action is SentinelActivityAction {
-    // eslint-disable-next-line no-restricted-syntax
-    if (!BasicSentinel.supportedActions.includes(action as SentinelActivityAction)) {
+    // `supportedActions` is a narrow tuple of the actions this sentinel handles; widen it so
+    // `includes` accepts any `SentinelActivityAction` (e.g. the send actions handled elsewhere).
+    const actionAllowlist: readonly SentinelActivityAction[] = BasicSentinel.supportedActions;
+    // eslint-disable-next-line no-restricted-syntax -- check membership against the allowlist
+    if (!actionAllowlist.includes(action as SentinelActivityAction)) {
       // Update to use the new error class later.
       throw new Error(`Unsupported action: ${String(action)}`);
     }
