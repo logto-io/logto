@@ -98,6 +98,7 @@
     "roarr": "^7.11.0",
     "samlify": "2.10.0",
     "semver": "^7.3.8",
+    "sha512crypt-node": "^1.0.2",
     "snake-case": "^4.0.0",
     "snakecase-keys": "^8.0.1",
     "tinypool": "^1.0.2",

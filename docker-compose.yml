@@ -4,7 +4,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    image: svhd/logto:${TAG-latest}
+#    image: svhd/logto:${TAG-latest}
+    build: .
     entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
     ports:
       - 3001:3001

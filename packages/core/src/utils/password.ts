@@ -3,6 +3,8 @@ import crypto from 'node:crypto';
 import { type PasswordPolicyChecker } from '@logto/core-kit';
 import { type User, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { condObject } from '@silverhand/essentials';
+// @ts-expect-error No type definitions for sha512crypt-node
+import { sha512crypt } from 'sha512crypt-node'; // CUSTOM-change
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -29,7 +31,11 @@ function isFirebaseScryptAlgorithm(algorithm: string): boolean {
 }
 
 function isLegacyHashAlgorithm(algorithm: string): boolean {
-  if (isPbkdf2Algorithm(algorithm) || isFirebaseScryptAlgorithm(algorithm)) {
+  if (
+    isPbkdf2Algorithm(algorithm) ||
+    isFirebaseScryptAlgorithm(algorithm) ||
+    algorithm === 'sha512crypt'
+  ) {
     return true;
   }
 
@@ -118,10 +124,16 @@ export const executeLegacyHash = async (
   parsedExpression: LegacyPassword,
   inputPassword: string
 ): Promise<string> => {
-  const { algorithm, args } = parsedExpression;
+  const { algorithm, args, encryptedPassword } = parsedExpression;
 
   if (isFirebaseScryptAlgorithm(algorithm)) {
     return executeFirebaseScryptHash(args, inputPassword);
+  }
+
+  if (algorithm === 'sha512crypt') {
+    // For sha512crypt, the encryptedPassword is the shadow hash which also serves as the salt
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unsafe-call
+    return sha512crypt(inputPassword, encryptedPassword) as string; // CUSTOM-change
   }
 
   // Replace @ with input password

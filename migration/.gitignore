@@ -1,0 +1,4 @@
+# migration
+*.csv
+node_modules
+errors.log
