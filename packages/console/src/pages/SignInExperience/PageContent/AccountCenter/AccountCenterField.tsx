@@ -17,6 +17,7 @@ type Props = {
   readonly item: AccountCenterFieldItem;
   readonly value: AccountCenterControlValue;
   readonly isMfaEnabled: boolean;
+  readonly isPasskeySignInEnabled: boolean;
   readonly isGlobalDisabled: boolean;
   readonly onChange: (field: AccountCenterFieldKey, value?: AccountCenterControlValue) => void;
   readonly fieldOptions: Array<Option<AccountCenterControlValue>>;
@@ -39,6 +40,7 @@ function AccountCenterField({
   item,
   value,
   isMfaEnabled,
+  isPasskeySignInEnabled,
   // When Account Center is disabled, all fields should show "off" state but keep the current value
   // then when Account Center is enabled again, the fields will restore to previous values
   isGlobalDisabled,
@@ -59,7 +61,8 @@ function AccountCenterField({
     item.key === 'mfa' &&
     value !== AccountCenterControlValue.Off &&
     !isGlobalDisabled &&
-    !isMfaEnabled;
+    !isMfaEnabled &&
+    !isPasskeySignInEnabled;
 
   return (
     <div>
