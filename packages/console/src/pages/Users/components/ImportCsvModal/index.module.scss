@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.fileName {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.progress,
+.finished {
+  font: var(--font-body-2);
+  margin-top: 12px;
+}
+
+.finished {
+  color: var(--color-success);
+}

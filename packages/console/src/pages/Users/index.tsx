@@ -1,9 +1,11 @@
 import type { User } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
+import Upload from '@/assets/icons/cloud-upload.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import UsersEmptyDark from '@/assets/images/users-empty-dark.svg?react';
 import UsersEmpty from '@/assets/images/users-empty.svg?react';
@@ -29,6 +31,7 @@ import { getUserTitle, getUserSubtitle } from '@/utils/user';
 
 import CreateForm from './components/CreateForm';
 import DevTenantDataRetentionNotice from './components/DevTenantDataRetentionNotice';
+import ImportCsvModal from './components/ImportCsvModal';
 import SuspendedTag from './components/SuspendedTag';
 
 const pageSize = defaultPageSize;
@@ -56,6 +59,7 @@ function Users() {
   const { navigate, match } = useTenantPathname();
   const [users, totalCount] = data ?? [];
   const isCreating = match(createUserPathname);
+  const [isImportingCsv, setIsImportingCsv] = useState(false);
 
   return (
     <div className={pageLayout.container}>
@@ -65,6 +69,15 @@ function Users() {
           title="users.title"
           subtitle="users.subtitle"
           learnMoreLink={{ href: userManagement }}
+        />
+        <Button
+          icon={<Upload />}
+          type="outline"
+          size="large"
+          title="users.import_csv"
+          onClick={() => {
+            setIsImportingCsv(true);
+          }}
         />
         <Button
           icon={<Plus />}
@@ -178,6 +191,16 @@ function Users() {
               pathname: usersPathname,
               search,
             });
+          }}
+          onCreate={() => {
+            void mutate();
+          }}
+        />
+      )}
+      {isImportingCsv && (
+        <ImportCsvModal
+          onClose={() => {
+            setIsImportingCsv(false);
           }}
           onCreate={() => {
             void mutate();
