@@ -75,9 +75,11 @@ const useMfaRows = (
     );
 
     const buildWebAuthnRow = (): Row[] => {
+      // When passkey sign-in is enabled, WebAuthn is surfaced in its own passkey section, so it
+      // is excluded here to avoid showing it twice.
       if (
-        !enabledFactors.includes(MfaFactor.WebAuthn) &&
-        !isPasskeySignInEnabled(experienceSettings)
+        !enabledFactors.includes(MfaFactor.WebAuthn) ||
+        isPasskeySignInEnabled(experienceSettings)
       ) {
         return [];
       }

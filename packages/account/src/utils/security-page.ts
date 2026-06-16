@@ -2,6 +2,8 @@ import type { SignInExperienceResponse } from '@experience/shared/types';
 import type { AccountCenter, UserProfileResponse } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
 
+import { isDevFeaturesEnabled } from '@ac/constants/env';
+
 import { getAvailableSocialConnectors } from './social-connector.js';
 
 type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'deleteAccountUrl'>;
@@ -31,10 +33,21 @@ export const isPasskeySignInEnabled = (
 export const hasVisibleMfaSection = (
   mfaControl: AccountCenterControlValue | undefined,
   experienceSettings?: SecurityPageExperienceSettings
-): boolean =>
-  isVisibleField(mfaControl) &&
-  ((experienceSettings?.mfa.factors ?? []).length > 0 ||
-    isPasskeySignInEnabled(experienceSettings));
+): boolean => isVisibleField(mfaControl) && (experienceSettings?.mfa.factors ?? []).length > 0;
+
+/**
+ * Resolve the account-center control for the dedicated passkey section. Passkey shares the
+ * MFA control until a dedicated `passkey` field control is configured.
+ */
+export const getPasskeyFieldControl = (
+  passkeyControl: AccountCenterControlValue | undefined,
+  mfaControl: AccountCenterControlValue | undefined
+): AccountCenterControlValue | undefined => passkeyControl ?? mfaControl;
+
+export const hasVisiblePasskeySection = (
+  passkeyControl: AccountCenterControlValue | undefined,
+  experienceSettings?: SecurityPageExperienceSettings
+): boolean => isVisibleField(passkeyControl) && isPasskeySignInEnabled(experienceSettings);
 
 export const hasVisibleSecuritySection = (
   accountCenterSettings?: SecurityPageSettings,
@@ -44,7 +57,7 @@ export const hasVisibleSecuritySection = (
     return false;
   }
 
-  const { username, email, phone, password, social, mfa } = accountCenterSettings.fields;
+  const { username, email, phone, password, social, mfa, passkey } = accountCenterSettings.fields;
   const hasDeleteAccountUrl = Boolean(accountCenterSettings.deleteAccountUrl?.trim());
 
   return (
@@ -54,7 +67,8 @@ export const hasVisibleSecuritySection = (
     isVisibleField(password) ||
     hasDeleteAccountUrl ||
     hasVisibleSocialSection(social, experienceSettings) ||
-    hasVisibleMfaSection(mfa, experienceSettings)
+    hasVisibleMfaSection(mfa, experienceSettings) ||
+    hasVisiblePasskeySection(getPasskeyFieldControl(passkey, mfa), experienceSettings)
   );
 };
 
