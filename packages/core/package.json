@@ -101,7 +101,7 @@
     "snake-case": "^4.0.0",
     "snakecase-keys": "^8.0.1",
     "tinypool": "^1.0.2",
-    "ua-parser-js": "^2.0.3",
+    "ua-parser-js": "^2.0.10",
     "zod": "3.24.3"
   },
   "devDependencies": {

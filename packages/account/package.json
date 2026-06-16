@@ -97,6 +97,6 @@
     "date-fns": "^2.29.3",
     "qrcode": "^1.5.4",
     "react-router-dom": "^6.30.2",
-    "ua-parser-js": "^2.0.3"
+    "ua-parser-js": "^2.0.10"
   }
 }

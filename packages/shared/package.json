@@ -65,6 +65,6 @@
     "find-up": "^7.0.0",
     "libphonenumber-js": "^1.12.6",
     "nanoid": "^5.0.9",
-    "ua-parser-js": "^2.0.3"
+    "ua-parser-js": "^2.0.10"
   }
 }
