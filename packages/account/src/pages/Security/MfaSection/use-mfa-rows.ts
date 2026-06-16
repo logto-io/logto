@@ -23,7 +23,11 @@ import {
   passkeyManageRoute,
   phoneRoute,
 } from '@ac/constants/routes';
-import { hasVisibleMfaSection, isEditableField } from '@ac/utils/security-page';
+import {
+  hasVisibleMfaSection,
+  isEditableField,
+  isPasskeySignInEnabled,
+} from '@ac/utils/security-page';
 
 const factorIcon = {
   [MfaFactor.TOTP]: TotpIcon,
@@ -71,7 +75,10 @@ const useMfaRows = (
     );
 
     const buildWebAuthnRow = (): Row[] => {
-      if (!enabledFactors.includes(MfaFactor.WebAuthn)) {
+      if (
+        !enabledFactors.includes(MfaFactor.WebAuthn) &&
+        !isPasskeySignInEnabled(experienceSettings)
+      ) {
         return [];
       }
       const isConfigured = webAuthnVerifications.length > 0;

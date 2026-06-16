@@ -1,11 +1,13 @@
-import { AccountCenterControlValue, ConnectorPlatform, MfaPolicy } from '@logto/schemas';
+import { AccountCenterControlValue, ConnectorPlatform, MfaFactor, MfaPolicy } from '@logto/schemas';
 
 import {
   canManageSocialIdentitiesWithoutVerification,
   canSetInitialPasswordWithoutVerification,
   isEditableField,
+  isPasskeySignInEnabled,
   canOpenPasswordEditFlow,
   hasAvailableSecurityVerificationMethod,
+  hasVisibleMfaSection,
   hasVisibleSecuritySection,
   hasVisibleSocialSection,
 } from './security-page';
@@ -106,6 +108,35 @@ describe('security-page utils', () => {
           },
         ],
         mfa: { factors: [], policy: MfaPolicy.UserControlled },
+      })
+    ).toBe(false);
+  });
+
+  it('hasVisibleMfaSection returns true when MFA factors are enabled', () => {
+    expect(
+      hasVisibleMfaSection(AccountCenterControlValue.Edit, {
+        socialConnectors: [],
+        mfa: { factors: [MfaFactor.TOTP], policy: MfaPolicy.UserControlled },
+      })
+    ).toBe(true);
+  });
+
+  it('hasVisibleMfaSection ignores passkey sign-in when dev features are disabled', () => {
+    expect(
+      hasVisibleMfaSection(AccountCenterControlValue.Edit, {
+        socialConnectors: [],
+        mfa: { factors: [], policy: MfaPolicy.UserControlled },
+        passkeySignIn: { enabled: true },
+      })
+    ).toBe(false);
+  });
+
+  it('isPasskeySignInEnabled returns false when dev features are disabled', () => {
+    expect(
+      isPasskeySignInEnabled({
+        socialConnectors: [],
+        mfa: { factors: [], policy: MfaPolicy.UserControlled },
+        passkeySignIn: { enabled: true },
       })
     ).toBe(false);
   });

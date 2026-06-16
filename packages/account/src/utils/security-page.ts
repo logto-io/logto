@@ -7,7 +7,8 @@ import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { getAvailableSocialConnectors } from './social-connector.js';
 
 type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'deleteAccountUrl'>;
-type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConnectors' | 'mfa'>;
+type SecurityPageExperienceSettings = Pick<SignInExperienceResponse, 'socialConnectors' | 'mfa'> &
+  Partial<Pick<SignInExperienceResponse, 'passkeySignIn'>>;
 
 const isVisibleField = (value?: AccountCenterControlValue): boolean =>
   value !== undefined && value !== AccountCenterControlValue.Off;
@@ -25,10 +26,17 @@ export const hasVisibleSocialSection = (
   isVisibleField(socialControl) &&
   getAvailableSocialConnectors(experienceSettings?.socialConnectors ?? []).length > 0;
 
+export const isPasskeySignInEnabled = (
+  experienceSettings?: SecurityPageExperienceSettings
+): boolean => isDevFeaturesEnabled && Boolean(experienceSettings?.passkeySignIn?.enabled);
+
 export const hasVisibleMfaSection = (
   mfaControl: AccountCenterControlValue | undefined,
   experienceSettings?: SecurityPageExperienceSettings
-): boolean => isVisibleField(mfaControl) && (experienceSettings?.mfa.factors ?? []).length > 0;
+): boolean =>
+  isVisibleField(mfaControl) &&
+  ((experienceSettings?.mfa.factors ?? []).length > 0 ||
+    isPasskeySignInEnabled(experienceSettings));
 
 export const hasVisibleSecuritySection = (
   accountCenterSettings?: SecurityPageSettings,
