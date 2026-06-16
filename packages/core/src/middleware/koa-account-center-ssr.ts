@@ -31,7 +31,7 @@ export default function koaAccountCenterSsr<StateT, ContextT extends WithI18nCon
     }
 
     const signInExperience = await trySafe(
-      libraries.signInExperiences.getFullSignInExperience({ locale: ctx.locale })
+      libraries.signInExperiences.getAccountCenterSsrSignInExperience()
     );
 
     if (!signInExperience) {

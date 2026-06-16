@@ -1,6 +1,7 @@
 import { GoogleConnector } from '@logto/connector-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
 import type {
+  AccountCenterSsrSignInExperience,
   ConnectorMetadata,
   ForgotPasswordMethods,
   FullSignInExperience,
@@ -341,6 +342,13 @@ export const createSignInExperienceLibrary = (
     };
   };
 
+  const getAccountCenterSsrSignInExperience =
+    async (): Promise<AccountCenterSsrSignInExperience> => {
+      const { color } = await findDefaultSignInExperience();
+
+      return { color };
+    };
+
   /**
    * Username case-sensitivity conflicts: groups of usernames that would clash if the tenant
    * switched to a case-insensitive policy. Returns the total group count plus a capped sample,
@@ -358,6 +366,7 @@ export const createSignInExperienceLibrary = (
     validateLanguageInfo,
     removeUnavailableSocialConnectorTargets,
     getFullSignInExperience,
+    getAccountCenterSsrSignInExperience,
     findCaptchaPublicConfig,
     findCaseConflicts,
   };

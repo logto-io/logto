@@ -77,6 +77,7 @@ const {
   validateLanguageInfo,
   removeUnavailableSocialConnectorTargets,
   getFullSignInExperience,
+  getAccountCenterSsrSignInExperience,
   findCaptchaPublicConfig,
 } = createSignInExperienceLibrary(
   'tenant_foo',
@@ -156,6 +157,21 @@ describe('remove unavailable social connector targets', () => {
     expect(updateDefaultSignInExperience).toBeCalledWith({
       socialSignInConnectorTargets: [socialTarget01, socialTarget02],
     });
+  });
+});
+
+describe('getAccountCenterSsrSignInExperience()', () => {
+  it('should return only sign-in experience color data', async () => {
+    findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
+
+    await expect(getAccountCenterSsrSignInExperience()).resolves.toStrictEqual({
+      color: mockSignInExperience.color,
+    });
+    expect(findDefaultSignInExperience).toBeCalledTimes(1);
+    expect(getLogtoConnectors).not.toBeCalled();
+    expect(mockSsoConnectorLibrary.getAvailableSsoConnectors).not.toBeCalled();
+    expect(findCaptchaProvider).not.toBeCalled();
+    expect(findAllCustomProfileFields).not.toBeCalled();
   });
 });
 
