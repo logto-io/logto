@@ -41,8 +41,8 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       response: z.object({
         verificationId: z.string(),
       }),
-      // 501: connector not found
-      status: [200, 400, 404, 422, 501],
+      // 429: rate limited; 501: connector not found
+      status: [200, 400, 404, 422, 429, 501],
     }),
     async (ctx, next) => {
       const { identifier, interactionEvent } = ctx.guard.body;
@@ -123,7 +123,8 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       response: z.object({
         verificationId: z.string(),
       }),
-      status: [200, 400, 404, 501],
+      // 429: rate limited; 501: connector not found
+      status: [200, 400, 404, 429, 501],
     }),
     async (ctx, next) => {
       const { identifierType } = ctx.guard.body;
