@@ -34,13 +34,21 @@ describe('organization invitation API with i18n email templates', () => {
   const organizationApi = new OrganizationApiTest();
   const useApi = new UserApiTest();
 
-  const mockEmail = generateEmail();
+  // A fresh recipient per test keeps each invitee under the per-recipient message send rate limit,
+  // which counts sends across the whole run.
+  // eslint-disable-next-line @silverhand/fp/no-let -- reassigned per test in beforeEach
+  let mockEmail = generateEmail();
 
   beforeAll(async () => {
     await Promise.all([
       emailTemplatesApi.create([mockEnTemplate, mockDeTemplate, mockFrSignInTemplate]),
       setEmailConnector(),
     ]);
+  });
+
+  beforeEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- fresh recipient per test
+    mockEmail = generateEmail();
   });
 
   afterAll(async () => {

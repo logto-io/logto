@@ -67,7 +67,7 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
           messagePayload: sendMessagePayloadGuard.or(z.literal(false)).default(false),
         }),
       response: organizationInvitationEntityGuard,
-      status: [201, 400, 422, 501],
+      status: [201, 400, 422, 429, 501],
     }),
     async (ctx, next) => {
       const {
@@ -93,7 +93,7 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
     koaGuard({
       params: z.object({ id: z.string() }),
       body: sendMessagePayloadGuard,
-      status: [204],
+      status: [204, 429],
     }),
     async (ctx, next) => {
       const {
