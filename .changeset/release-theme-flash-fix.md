@@ -1,8 +1,8 @@
 ---
-"@logto/core": minor
-"@logto/schemas": minor
-"@logto/experience": minor
-"@logto/account": minor
+"@logto/core": patch
+"@logto/schemas": patch
+"@logto/experience": patch
+"@logto/account": patch
 ---
 
 prevent theme flash in sign-in experience and account center

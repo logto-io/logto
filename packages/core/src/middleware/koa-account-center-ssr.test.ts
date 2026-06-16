@@ -79,7 +79,7 @@ describe('koaAccountCenterSsr()', () => {
     expect(ctx.body).not.toContain(accountCenterSsrPlaceholder);
     expect(ctx.body).toContain(
       `const logtoSsr=Object.freeze(${JSON.stringify({
-        signInExperience: { data: mockSignInExperience },
+        signInExperience: { data: mockAccountCenterSsrSignInExperience },
       })});`
     );
   });
