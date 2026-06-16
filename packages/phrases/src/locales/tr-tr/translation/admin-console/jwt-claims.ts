@@ -59,6 +59,11 @@ const jwt_claims = {
     subtitle:
       'Token ile ilişkili uygulama bilgilerini sağlamak için `context.application` giriş parametresini kullanın.',
   },
+  organization_data: {
+    title: 'Kuruluş bağlamı',
+    subtitle:
+      'Hedef kuruluş bilgilerini sağlamak için `context.organization` giriş parametresini kullanın, yalnızca kuruluş tokenları için kullanılabilir.',
+  },
   token_data: {
     title: 'Belge verisi',
     subtitle: '`belge` giriş parametresini mevcut erişim belgesi yükü için kullanın. ',

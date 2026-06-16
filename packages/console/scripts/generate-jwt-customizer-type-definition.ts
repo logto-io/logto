@@ -5,6 +5,7 @@ import {
   clientCredentialsPayloadGuard,
   jwtCustomizerApplicationContextGuard,
   jwtCustomizerGrantContextGuard,
+  jwtCustomizerOrganizationContextGuard,
   jwtCustomizerUserContextGuard,
   jwtCustomizerUserInteractionContextGuard,
 } from '@logto/schemas';
@@ -21,6 +22,7 @@ const typeIdentifiers = `export enum JwtCustomizerTypeDefinitionKey {
   JwtCustomizerGrantContext = 'JwtCustomizerGrantContext',
   JwtCustomizerUserInteractionContext = 'JwtCustomizerUserInteractionContext',
   JwtCustomizerApplicationContext = 'JwtCustomizerApplicationContext',
+  JwtCustomizerOrganizationContext = 'JwtCustomizerOrganizationContext',
   AccessTokenPayload = 'AccessTokenPayload',
   ClientCredentialsPayload = 'ClientCredentialsPayload',
   EnvironmentVariables = 'EnvironmentVariables',
@@ -94,6 +96,11 @@ const createJwtCustomizerTypeDefinitions = async () => {
     'JwtCustomizerApplicationContext'
   );
 
+  const jwtCustomizerOrganizationContextTypeDefinition = inferTsDefinitionFromZod(
+    jwtCustomizerOrganizationContextGuard,
+    'JwtCustomizerOrganizationContext'
+  );
+
   const accessTokenPayloadTypeDefinition = inferTsDefinitionFromZod(
     accessTokenPayloadGuard,
     'AccessTokenPayload'
@@ -114,6 +121,8 @@ export const jwtCustomizerGrantContextTypeDefinition = \`${jwtCustomizerGrantCon
 export const jwtCustomizerUserInteractionContextTypeDefinition = \`${jwtCustomizerUserInteractionContextTypeDefinition}\`;
 
 export const jwtCustomizerApplicationContextTypeDefinition = \`${jwtCustomizerApplicationContextTypeDefinition}\`;
+
+export const jwtCustomizerOrganizationContextTypeDefinition = \`${jwtCustomizerOrganizationContextTypeDefinition}\`;
 
 export const accessTokenPayloadTypeDefinition = \`${accessTokenPayloadTypeDefinition}\`;
 

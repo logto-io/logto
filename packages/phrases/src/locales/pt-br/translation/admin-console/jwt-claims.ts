@@ -59,6 +59,11 @@ const jwt_claims = {
     subtitle:
       'Use o parâmetro de entrada `context.application` para fornecer as informações da aplicação associadas ao token.',
   },
+  organization_data: {
+    title: 'Contexto da organização',
+    subtitle:
+      'Use o parâmetro de entrada `context.organization` para fornecer as informações da organização de destino, disponível apenas para tokens de organização.',
+  },
   token_data: {
     title: 'Dados do token',
     subtitle: 'Use o parâmetro de entrada `token` para a carga útil do token de acesso atual. ',

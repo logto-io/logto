@@ -27,10 +27,11 @@ jest.unstable_mockModule('#src/libraries/jwt-customizer.js', () => ({
 const { EnvSet } = await import('#src/env-set/index.js');
 const { getExtraTokenClaimsForJwtCustomization } = await import('./extra-token-claims.js');
 
-const buildContextAndToken = () => {
+const buildContextAndToken = ({ organizationId }: { organizationId?: string } = {}) => {
   const ctx = createOidcContext({
     session: { uid: sessionUid } as unknown as KoaContextWithOIDC['oidc']['session'],
     client: { clientId: 'app-1' } as unknown as KoaContextWithOIDC['oidc']['client'],
+    params: { organization_id: organizationId },
   });
 
   const logEntry = { append: jest.fn() };
@@ -54,6 +55,13 @@ const buildContextAndToken = () => {
   }) as AccessToken;
 
   return { ctxWithLog, token };
+};
+
+const mockOrganization = {
+  id: 'org-1',
+  name: 'My Organization',
+  description: null,
+  customData: { internalId: 'internal-1' },
 };
 
 const createTenant = ({
@@ -84,6 +92,7 @@ const createTenant = ({
         getUserContext: jest.fn().mockResolvedValue({ id: accountId }),
         // eslint-disable-next-line unicorn/no-useless-undefined
         getApplicationContext: jest.fn().mockResolvedValue(undefined),
+        getOrganizationContext: jest.fn().mockResolvedValue(mockOrganization),
       },
     },
     {
@@ -98,12 +107,14 @@ const createTenant = ({
 const callGetExtraTokenClaimsForJwtCustomization = async ({
   blockIssuanceOnError,
   signInContext,
+  organizationId,
 }: {
   blockIssuanceOnError?: boolean;
   signInContext?: Record<string, string>;
+  organizationId?: string;
 }) => {
   const tenant = createTenant({ blockIssuanceOnError, signInContext });
-  const { ctxWithLog, token } = buildContextAndToken();
+  const { ctxWithLog, token } = buildContextAndToken({ organizationId });
 
   return getExtraTokenClaimsForJwtCustomization(ctxWithLog, token, {
     envSet: tenant.envSet,
@@ -158,6 +169,35 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
         },
       },
     });
+  });
+
+  it('includes target organization context for organization (API resource) tokens', async () => {
+    await callGetExtraTokenClaimsForJwtCustomization({ organizationId: 'org-1' });
+
+    expect(runScriptInLocalVm.mock.calls[0]?.[0]).toMatchObject({
+      context: {
+        organization: {
+          id: 'org-1',
+          name: 'My Organization',
+          description: null,
+          customData: { internalId: 'internal-1' },
+        },
+      },
+    });
+  });
+
+  it('omits organization context when no organization_id is present', async () => {
+    await callGetExtraTokenClaimsForJwtCustomization({});
+
+    expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
+  });
+
+  it('omits organization context when dev features are disabled', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+    await callGetExtraTokenClaimsForJwtCustomization({ organizationId: 'org-1' });
+
+    expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
   });
 
   it('throws invalid request with original error message on script failure when blocking is enabled', async () => {

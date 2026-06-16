@@ -248,6 +248,19 @@ export const getExtraTokenClaimsForJwtCustomization = async (
       clientId && (await libraries.jwtCustomizers.getApplicationContext(envSet.tenantId, clientId))
     );
 
+    // For organization (API resource) tokens, expose the target organization so the customizer
+    // can attach per-org claims. The `organization_id` claim itself is added afterwards in
+    // `getExtraTokenClaimsForOrganizationApiResource`, so it is not visible on `token` here.
+    const organizationId =
+      EnvSet.values.isDevFeaturesEnabled && typeof ctx.oidc.params?.organization_id === 'string'
+        ? ctx.oidc.params.organization_id
+        : undefined;
+    const organizationContext = conditional(
+      !isClientCredentialsToken &&
+        organizationId &&
+        (await libraries.jwtCustomizers.getOrganizationContext(organizationId))
+    );
+
     const logEntry = ctx.createLog(
       `${jwtCustomizerLog.prefix}.${
         isClientCredentialsToken
@@ -302,6 +315,11 @@ export const getExtraTokenClaimsForJwtCustomization = async (
               ...conditional(
                 applicationContext && {
                   application: applicationContext,
+                }
+              ),
+              ...conditional(
+                organizationContext && {
+                  organization: organizationContext,
                 }
               ),
             },
