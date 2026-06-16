@@ -30,7 +30,7 @@
 }
 
 .sectionTitle {
-  padding-left: _.unit(1);
+  padding-inline-start: _.unit(1);
   font: var(--font-label-2);
   color: var(--color-type-primary);
 }
@@ -81,7 +81,7 @@
   grid-column: 1;
   grid-row: 1;
   min-width: 0;
-  padding-left: calc(20px + #{_.unit(4)});
+  padding-inline-start: calc(20px + #{_.unit(4)});
   font: var(--font-label-2);
   color: var(--color-type-primary);
 }
@@ -196,7 +196,7 @@
   grid-column: 1;
   grid-row: 1;
   min-width: 0;
-  padding-left: calc(20px + #{_.unit(4)});
+  padding-inline-start: calc(20px + #{_.unit(4)});
 }
 
 .skeletonTitle {
@@ -243,7 +243,7 @@
 
 :global(body.mobile) {
   .sectionTitle {
-    padding-left: 0;
+    padding-inline-start: 0;
   }
 
   .toggleRow {
@@ -282,7 +282,7 @@
   }
 
   .title {
-    padding-left: 0;
+    padding-inline-start: 0;
     width: 100%;
   }
 
@@ -305,11 +305,11 @@
   .actionButton {
     padding: 0;
     white-space: normal;
-    text-align: left;
+    text-align: start;
   }
 
   .skeletonTitleWrap {
-    padding-left: 0;
+    padding-inline-start: 0;
     width: 100%;
   }
 
