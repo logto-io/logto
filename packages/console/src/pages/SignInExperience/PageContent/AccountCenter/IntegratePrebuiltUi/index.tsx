@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -85,14 +84,10 @@ const accountCenterRoutes = [
     path: '/account/profile',
     tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.profile',
   },
-  ...(isDevFeaturesEnabled
-    ? ([
-        {
-          path: '/account/sessions',
-          tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.sessions',
-        },
-      ] as const)
-    : []),
+  {
+    path: '/account/sessions',
+    tooltipKey: 'sign_in_exp.account_center.prebuilt_ui.tooltips.sessions',
+  },
 ] as const satisfies ReadonlyArray<{ path: string; tooltipKey: string }>;
 
 type Props = {
