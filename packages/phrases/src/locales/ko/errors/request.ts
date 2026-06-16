@@ -3,6 +3,7 @@ const request = {
   general: '요청 중에 오류가 발생했어요.',
   range_not_satisfiable: '범위가 충족되지 않습니다.',
   feature_not_supported: '이 기능은 현재 환경에서 지원되지 않습니다.',
+  rate_limited: '요청이 너무 많습니다. 나중에 다시 시도해 주세요.',
 };
 
 export default Object.freeze(request);
