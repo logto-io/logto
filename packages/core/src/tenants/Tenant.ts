@@ -226,7 +226,7 @@ export default class Tenant implements TenantContext {
       mount(
         '/' + UserApps.AccountCenter,
         compose([
-          ...(EnvSet.values.isDevFeaturesEnabled ? [koaAccountCenterSsr(libraries)] : []),
+          koaAccountCenterSsr(libraries),
           koaSpaProxy({
             mountedApps,
             queries,

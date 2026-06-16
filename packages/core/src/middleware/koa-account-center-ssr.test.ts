@@ -7,6 +7,7 @@ import koaAccountCenterSsr from './koa-account-center-ssr.js';
 const { jest } = import.meta;
 
 const accountCenterSsrPlaceholder = '"__LOGTO_ACCOUNT_CENTER_SSR__"';
+const mockAccountCenterSsrSignInExperience = { color: mockSignInExperience.color };
 
 describe('koaAccountCenterSsr()', () => {
   const baseCtx = Object.freeze({
@@ -15,7 +16,10 @@ describe('koaAccountCenterSsr()', () => {
   });
   const tenant = new MockTenant(undefined, undefined, undefined, {
     signInExperiences: {
-      getFullSignInExperience: jest.fn().mockResolvedValue(mockSignInExperience),
+      getAccountCenterSsrSignInExperience: jest
+        .fn()
+        .mockResolvedValue(mockAccountCenterSsrSignInExperience),
+      getFullSignInExperience: jest.fn(),
     },
   });
 
@@ -40,7 +44,7 @@ describe('koaAccountCenterSsr()', () => {
     expect(ctx.body).toBe('...');
   });
 
-  it('should prefetch sign-in experience data and inject it into the HTML response', async () => {
+  it('should prefetch sign-in experience color data and inject it into the HTML response', async () => {
     const ctx = {
       ...baseCtx,
       path: '/',
@@ -50,10 +54,14 @@ describe('koaAccountCenterSsr()', () => {
     };
     await koaAccountCenterSsr(tenant.libraries)(ctx, next);
     expect(next).toHaveBeenCalledTimes(1);
+    expect(
+      tenant.libraries.signInExperiences.getAccountCenterSsrSignInExperience
+    ).toHaveBeenCalledTimes(1);
+    expect(tenant.libraries.signInExperiences.getFullSignInExperience).not.toHaveBeenCalled();
     expect(ctx.body).not.toContain(accountCenterSsrPlaceholder);
     expect(ctx.body).toContain(
       `const logtoSsr=Object.freeze(${JSON.stringify({
-        signInExperience: { data: mockSignInExperience },
+        signInExperience: { data: mockAccountCenterSsrSignInExperience },
       })});`
     );
   });
@@ -71,7 +79,7 @@ describe('koaAccountCenterSsr()', () => {
     expect(ctx.body).not.toContain(accountCenterSsrPlaceholder);
     expect(ctx.body).toContain(
       `const logtoSsr=Object.freeze(${JSON.stringify({
-        signInExperience: { data: mockSignInExperience },
+        signInExperience: { data: mockAccountCenterSsrSignInExperience },
       })});`
     );
   });
