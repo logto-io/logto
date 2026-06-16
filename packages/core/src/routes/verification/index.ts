@@ -12,7 +12,9 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 
 import {
   buildVerificationRecordByIdAndType,
@@ -90,7 +92,7 @@ export default function verificationRoutes<T extends UserRouter>(
           .optional(),
       }),
       response: z.object({ verificationRecordId: z.string(), expiresAt: z.string() }),
-      status: [201, 501],
+      status: [201, 429, 501],
     }),
     async (ctx, next) => {
       const { id: userId, clientId: applicationId } = ctx.auth;
@@ -118,10 +120,19 @@ export default function verificationRoutes<T extends UserRouter>(
           ? await libraries.passcodes.buildVerificationCodeContext({ user, applicationId }, ctx)
           : undefined;
 
-      await codeVerification.sendVerificationCode({
-        ...ctx.emailI18n,
-        ...emailContextPayload,
-      });
+      const send = async () =>
+        codeVerification.sendVerificationCode({
+          ...ctx.emailI18n,
+          ...emailContextPayload,
+        });
+
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withMessageRateGuard(
+            new MessageRateGuard(queries.sentinelActivities),
+            { action: SentinelActivityAction.VerificationCodeSend, recipient: identifier.value },
+            send
+          )
+        : send());
 
       const { expiresAt } = await insertVerificationRecord(
         codeVerification,

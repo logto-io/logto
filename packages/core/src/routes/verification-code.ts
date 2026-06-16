@@ -1,17 +1,20 @@
 import { TemplateType } from '@logto/connector-kit';
 import {
   requestVerificationCodePayloadGuard,
+  SentinelActivityAction,
   verifyVerificationCodePayloadGuard,
 } from '@logto/schemas';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
 const codeType = TemplateType.Generic;
 
 export default function verificationCodeRoutes<T extends ManagementApiRouter>(
-  ...[router, { libraries }]: RouterInitArgs<T>
+  ...[router, { libraries, queries }]: RouterInitArgs<T>
 ) {
   const {
     passcodes: { createPasscode, sendPasscode, verifyPasscode },
@@ -21,11 +24,24 @@ export default function verificationCodeRoutes<T extends ManagementApiRouter>(
     '/verification-codes',
     koaGuard({
       body: requestVerificationCodePayloadGuard,
-      status: [204, 400, 501],
+      status: [204, 400, 429, 501],
     }),
     async (ctx, next) => {
-      const code = await createPasscode(undefined, codeType, ctx.guard.body);
-      await sendPasscode(code, { ip: ctx.request.ip });
+      const recipient = 'email' in ctx.guard.body ? ctx.guard.body.email : ctx.guard.body.phone;
+      // Create the passcode inside `send` so a rate-limited request neither creates a passcode nor
+      // deletes the recipient's existing unconsumed one (createPasscode replaces prior codes).
+      const send = async () => {
+        const code = await createPasscode(undefined, codeType, ctx.guard.body);
+        return sendPasscode(code, { ip: ctx.request.ip });
+      };
+
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withMessageRateGuard(
+            new MessageRateGuard(queries.sentinelActivities),
+            { action: SentinelActivityAction.VerificationCodeSend, recipient },
+            send
+          )
+        : send());
 
       ctx.status = 204;
 
