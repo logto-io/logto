@@ -13,6 +13,7 @@ import {
   successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { generateEmail } from '#src/utils.js';
 
 describe('social verification', () => {
   const state = 'fake_state';
@@ -134,7 +135,9 @@ describe('social verification', () => {
       const { verificationId } = await client.sendVerificationCode({
         identifier: {
           type: SignInIdentifier.Email,
-          value: 'foo@logto.io',
+          // A fresh recipient avoids tripping the per-recipient message rate guard, which counts
+          // sends across the whole test run.
+          value: generateEmail(),
         },
         interactionEvent: InteractionEvent.SignIn,
       });

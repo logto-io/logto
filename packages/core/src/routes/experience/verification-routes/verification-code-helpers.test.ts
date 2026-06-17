@@ -23,6 +23,12 @@ async function resolveVoid(): Promise<void> {
 
 const { sendCode } = await import('./verification-code-helpers.js');
 
+// The message rate guard runs when dev features are enabled; provide a permissive activity store.
+const mockSentinelActivities = {
+  countActivities: jest.fn().mockResolvedValue(0),
+  insertActivity: jest.fn().mockImplementation(resolveVoid),
+};
+
 describe('sendCode parameter passing', () => {
   // To make a void callable function/method
   const mockSendVerificationCode = jest.fn().mockImplementation(resolveVoid);
@@ -47,6 +53,7 @@ describe('sendCode parameter passing', () => {
   };
 
   const mockQueries = {
+    sentinelActivities: mockSentinelActivities,
     users: {
       hasUserWithEmail: jest.fn().mockResolvedValue(true),
       hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(true),
@@ -92,6 +99,7 @@ describe('sendCode parameter passing', () => {
 
   it('should skip delivery for forgot-password with non-existing email user', async () => {
     const mockQueriesNoUser = {
+      sentinelActivities: mockSentinelActivities,
       users: {
         hasUserWithEmail: jest.fn().mockResolvedValue(false),
         hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
@@ -130,6 +138,7 @@ describe('sendCode parameter passing', () => {
 
   it('should not skip delivery for forgot-password with existing user', async () => {
     const mockQueriesWithUser = {
+      sentinelActivities: mockSentinelActivities,
       users: {
         hasUserWithEmail: jest.fn().mockResolvedValue(true),
         hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(true),
@@ -167,6 +176,7 @@ describe('sendCode parameter passing', () => {
 
   it('should not check user existence for non-ForgotPassword events', async () => {
     const mockQueriesTracking = {
+      sentinelActivities: mockSentinelActivities,
       users: {
         hasUserWithEmail: jest.fn().mockResolvedValue(false),
         hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
@@ -195,5 +205,31 @@ describe('sendCode parameter passing', () => {
       expect.any(Object),
       expect.objectContaining({ skipDelivery: false })
     );
+  });
+
+  it('rejects with 429 and does not send when the recipient is over the rate-limit cap', async () => {
+    // Default policy allows 5 sends per recipient per window; simulate the cap being reached.
+    mockSentinelActivities.countActivities.mockResolvedValueOnce(5);
+
+    const ctx = {
+      request: { ip: '127.0.0.1' },
+      createLog: jest.fn(() => ({ append: jest.fn().mockImplementation(resolveVoid) })),
+      experienceInteraction: mockExperienceInteraction,
+      emailI18n: {},
+    };
+    const libraries = { passcodes: mockPasscodeLibrary } as unknown as Partial<Libraries>;
+
+    await expect(
+      sendCode({
+        identifier: { type: SignInIdentifier.Email, value: 'spammed@example.com' },
+        interactionEvent: InteractionEvent.SignIn,
+        createVerificationRecord: () => mockCodeVerification,
+        libraries: libraries as unknown as Libraries,
+        queries: mockQueries,
+        ctx: ctx as unknown as ExperienceInteractionRouterContext,
+      })
+    ).rejects.toMatchObject({ code: 'request.rate_limited', status: 429 });
+
+    expect(mockSendVerificationCode).not.toHaveBeenCalled();
   });
 });

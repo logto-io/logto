@@ -1,10 +1,5 @@
 import { ConnectorType, TemplateType } from '@logto/connector-kit';
-import {
-  AlternativeSignUpIdentifier,
-  InteractionEvent,
-  SignInIdentifier,
-  type VerificationCodeIdentifier,
-} from '@logto/schemas';
+import { AlternativeSignUpIdentifier, InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -19,25 +14,26 @@ import {
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
 import { createUserByAdmin, expectRejects, readConnectorMessage } from '#src/helpers/index.js';
-import { generateEmail, generatePassword, generateUsername } from '#src/utils.js';
+import { generateEmail, generatePassword, generatePhone, generateUsername } from '#src/utils.js';
 
 describe('Verification code verification APIs', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
 
-  const identifiers: VerificationCodeIdentifier[] = [
-    {
-      type: SignInIdentifier.Email,
-      value: 'foo@logto.io',
-    },
-    {
-      type: SignInIdentifier.Phone,
-      value: '1234567890',
-    },
-  ];
+  const identifierTypes = [SignInIdentifier.Email, SignInIdentifier.Phone] as const;
 
-  describe.each(identifiers)('Verification code verification APIs for %p', ({ type, value }) => {
+  describe.each(identifierTypes)('Verification code verification APIs for %s', (type) => {
+    // The message rate guard counts verification-code sends per recipient across the whole run, so
+    // each test uses a fresh recipient to stay under the cap instead of sharing one address.
+    // eslint-disable-next-line @silverhand/fp/no-let -- reassigned per test in beforeEach
+    let value: string;
+
+    beforeEach(() => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- fresh recipient per test
+      value = type === SignInIdentifier.Email ? generateEmail() : generatePhone();
+    });
+
     it(`should throw an 501 error if the ${type} connector is not set`, async () => {
       const client = await initExperienceClient();
 
