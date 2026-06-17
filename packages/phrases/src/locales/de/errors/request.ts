@@ -3,6 +3,7 @@ const request = {
   general: 'Es ist ein Fehler bei der Anfrage aufgetreten.',
   range_not_satisfiable: 'Der Bereich ist nicht erfüllbar.',
   feature_not_supported: 'Diese Funktion wird in der aktuellen Umgebung nicht unterstützt.',
+  rate_limited: 'Zu viele Anfragen. Bitte versuchen Sie es später erneut.',
 };
 
 export default Object.freeze(request);

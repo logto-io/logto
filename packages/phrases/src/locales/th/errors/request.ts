@@ -3,6 +3,7 @@ const request = {
   general: 'เกิดข้อผิดพลาดในการร้องขอ',
   range_not_satisfiable: 'ช่วงข้อมูลไม่ตรงตามข้อกำหนด',
   feature_not_supported: 'ฟีเจอร์นี้ไม่รองรับในสภาพแวดล้อมปัจจุบัน',
+  rate_limited: 'มีคำขอมากเกินไป โปรดลองใหม่อีกครั้งในภายหลัง',
 };
 
 export default Object.freeze(request);
