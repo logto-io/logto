@@ -15,7 +15,7 @@ import ToggleSwitch from '@ac/components/ToggleSwitch';
 import { layoutClassNames } from '@ac/constants/layout';
 import { verifiedActionRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
-import { hasVisibleMfaSection } from '@ac/utils/security-page';
+import { hasConfiguredSecondFactor, hasVisibleMfaSection } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../../apis/mfa';
@@ -161,7 +161,7 @@ const MfaSection = () => {
     enabledFactors.length > 0;
 
   const isTwoStepEnabled = skipMfaOnSignIn === false;
-  const hasConfiguredMfa = (mfaVerifications?.length ?? 0) > 0;
+  const hasConfiguredMfa = hasConfiguredSecondFactor(mfaVerifications, experienceSettings);
   const isMfaSectionLoading =
     (isMfaSectionVisible && (!hasLoadedMfaVerifications || isLoadingMfaVerifications)) ||
     (showToggle && (!hasLoadedMfaSettings || isLoadingMfaSettings));

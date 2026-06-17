@@ -1,7 +1,13 @@
-import { AccountCenterControlValue, MfaFactor, MfaPolicy } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  MfaFactor,
+  MfaPolicy,
+  type UserMfaVerificationResponse,
+} from '@logto/schemas';
 
 import {
   getPasskeyFieldControl,
+  hasConfiguredSecondFactor,
   hasVisibleMfaSection,
   hasVisiblePasskeySection,
   isPasskeySignInEnabled,
@@ -62,5 +68,25 @@ describe('security-page utils with passkey sign-in enabled', () => {
 
     const noControl: AccountCenterControlValue | undefined = undefined;
     expect(getPasskeyFieldControl(noControl, noControl)).toBeUndefined();
+  });
+
+  it('hasConfiguredSecondFactor does not count WebAuthn while passkey sign-in is enabled', () => {
+    const webAuthnOnly = [
+      { id: 'webauthn', createdAt: '2026-05-13T00:00:00.000Z', type: MfaFactor.WebAuthn },
+    ] satisfies UserMfaVerificationResponse;
+    const webAuthnAndTotp = [
+      ...webAuthnOnly,
+      { id: 'totp', createdAt: '2026-05-13T00:00:00.000Z', type: MfaFactor.TOTP },
+    ] satisfies UserMfaVerificationResponse;
+
+    // Passkey sign-in on: a lone WebAuthn credential is a sign-in passkey, not a second factor.
+    expect(hasConfiguredSecondFactor(webAuthnOnly, experienceSettings)).toBe(false);
+    expect(hasConfiguredSecondFactor(webAuthnAndTotp, experienceSettings)).toBe(true);
+    expect(hasConfiguredSecondFactor([], experienceSettings)).toBe(false);
+    expect(hasConfiguredSecondFactor(undefined, experienceSettings)).toBe(false);
+
+    // Passkey sign-in off: WebAuthn counts as a configured second factor as before.
+    const passkeySignInOff = { ...experienceSettings, passkeySignIn: { enabled: false } };
+    expect(hasConfiguredSecondFactor(webAuthnOnly, passkeySignInOff)).toBe(true);
   });
 });

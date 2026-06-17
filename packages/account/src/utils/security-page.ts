@@ -1,6 +1,10 @@
 import type { SignInExperienceResponse } from '@experience/shared/types';
-import type { AccountCenter, UserProfileResponse } from '@logto/schemas';
-import { AccountCenterControlValue } from '@logto/schemas';
+import type {
+  AccountCenter,
+  UserMfaVerificationResponse,
+  UserProfileResponse,
+} from '@logto/schemas';
+import { AccountCenterControlValue, MfaFactor } from '@logto/schemas';
 
 import { isDevFeaturesEnabled } from '@ac/constants/env';
 
@@ -48,6 +52,24 @@ export const hasVisiblePasskeySection = (
   passkeyControl: AccountCenterControlValue | undefined,
   experienceSettings?: SecurityPageExperienceSettings
 ): boolean => isVisibleField(passkeyControl) && isPasskeySignInEnabled(experienceSettings);
+
+/**
+ * Whether the user has configured a verification method that counts as a real second factor.
+ * When passkey sign-in is enabled, a WebAuthn credential acts as a sign-in passkey rather than a
+ * dedicated second factor, so it is excluded here. This mirrors the backend's additional-MFA
+ * suggestion logic, which does not treat WebAuthn as a standalone MFA factor while passkey sign-in
+ * is on.
+ */
+export const hasConfiguredSecondFactor = (
+  mfaVerifications: UserMfaVerificationResponse | undefined,
+  experienceSettings?: SecurityPageExperienceSettings
+): boolean => {
+  const verifications = mfaVerifications ?? [];
+  if (isPasskeySignInEnabled(experienceSettings)) {
+    return verifications.some((verification) => verification.type !== MfaFactor.WebAuthn);
+  }
+  return verifications.length > 0;
+};
 
 export const hasVisibleSecuritySection = (
   accountCenterSettings?: SecurityPageSettings,

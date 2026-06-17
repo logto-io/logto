@@ -129,4 +129,46 @@ describe('<Security /> with passkey sign-in enabled', () => {
     // The MFA section is still present alongside its non-passkey factors.
     expect(getAllByText('account_center.security.two_step_verification').length).toBeGreaterThan(0);
   });
+
+  it('warns to add a second verification method when only a passkey is configured', async () => {
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    const { queryByText } = renderSecurity({
+      factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+      mfaVerifications: [
+        {
+          id: 'passkey-verification-id',
+          createdAt: '2026-05-13T00:00:00.000Z',
+          type: MfaFactor.WebAuthn,
+        },
+      ],
+    });
+
+    await waitFor(() => {
+      expect(queryByText('account_center.security.no_verification_method_warning')).not.toBeNull();
+    });
+  });
+
+  it('does not warn when a non-passkey second factor is configured alongside the passkey', async () => {
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    const { queryByText } = renderSecurity({
+      factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+      mfaVerifications: [
+        {
+          id: 'passkey-verification-id',
+          createdAt: '2026-05-13T00:00:00.000Z',
+          type: MfaFactor.WebAuthn,
+        },
+        {
+          id: 'totp-verification-id',
+          createdAt: '2026-05-13T00:00:00.000Z',
+          type: MfaFactor.TOTP,
+        },
+      ],
+    });
+
+    await waitFor(() => {
+      expect(queryByText('account_center.security.authenticator_app')).not.toBeNull();
+    });
+    expect(queryByText('account_center.security.no_verification_method_warning')).toBeNull();
+  });
 });
