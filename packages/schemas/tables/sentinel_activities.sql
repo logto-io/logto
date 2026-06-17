@@ -33,3 +33,7 @@ create index sentinel_activities__target_type_target_hash
 
 create index sentinel_activities__target_type_target_hash_action_action_result_decision
   on sentinel_activities (tenant_id, target_type, target_hash, action, action_result, decision);
+
+/** Supports the cross-tenant retention prune of stale activity rows by age. */
+create index sentinel_activities__created_at
+  on sentinel_activities (created_at);
