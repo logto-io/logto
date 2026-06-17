@@ -34,10 +34,37 @@ export const isPasskeySignInEnabled = (
   experienceSettings?: SecurityPageExperienceSettings
 ): boolean => isDevFeaturesEnabled && Boolean(experienceSettings?.passkeySignIn?.enabled);
 
+/**
+ * Whether a WebAuthn passkey credential can be registered or managed. Mirrors the backend binding
+ * rule: WebAuthn is configurable when it is an enabled MFA factor, or when passkey sign-in is
+ * enabled (the passkey then doubles as the sign-in credential).
+ */
+export const isWebAuthnConfigurable = (
+  experienceSettings?: SecurityPageExperienceSettings
+): boolean =>
+  (experienceSettings?.mfa.factors ?? []).includes(MfaFactor.WebAuthn) ||
+  isPasskeySignInEnabled(experienceSettings);
+
+/**
+ * Whether the sign-in experience enables at least one real second factor. When passkey sign-in is
+ * enabled, WebAuthn acts as a sign-in passkey (surfaced in its own passkey section) rather than a
+ * standalone second factor, so it does not count here. This mirrors the backend, which does not
+ * treat WebAuthn as a standalone MFA factor while passkey sign-in is on.
+ */
+export const hasEnabledSecondFactor = (
+  experienceSettings?: SecurityPageExperienceSettings
+): boolean => {
+  const factors = experienceSettings?.mfa.factors ?? [];
+  if (isPasskeySignInEnabled(experienceSettings)) {
+    return factors.some((factor) => factor !== MfaFactor.WebAuthn);
+  }
+  return factors.length > 0;
+};
+
 export const hasVisibleMfaSection = (
   mfaControl: AccountCenterControlValue | undefined,
   experienceSettings?: SecurityPageExperienceSettings
-): boolean => isVisibleField(mfaControl) && (experienceSettings?.mfa.factors ?? []).length > 0;
+): boolean => isVisibleField(mfaControl) && hasEnabledSecondFactor(experienceSettings);
 
 /**
  * Resolve the account-center control for the dedicated passkey section. Passkey shares the

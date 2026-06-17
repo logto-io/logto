@@ -106,6 +106,28 @@ describe('<Security /> with passkey sign-in enabled', () => {
     expect(queryByText('account_center.security.two_step_verification')).toBeNull();
   });
 
+  it('does not render an empty MFA section when WebAuthn is the only enabled factor', async () => {
+    const { getAllByText, queryByText } = renderSecurity({
+      factors: [MfaFactor.WebAuthn],
+      mfaVerifications: [
+        {
+          id: 'passkey-verification-id',
+          createdAt: '2026-05-13T00:00:00.000Z',
+          type: MfaFactor.WebAuthn,
+        },
+      ],
+    });
+
+    // Wait until the passkey section finishes loading (section title + row title).
+    await waitFor(() => {
+      expect(getAllByText('account_center.security.passkeys')).toHaveLength(2);
+    });
+
+    // WebAuthn is the only factor and is surfaced as a passkey, so there is no real second factor
+    // to manage: the Two-step verification section must not render a toggle-only card.
+    expect(queryByText('account_center.security.two_step_verification')).toBeNull();
+  });
+
   it('does not duplicate passkey in the MFA section when both WebAuthn factor and passkey sign-in are enabled', async () => {
     const { getAllByText, queryByText } = renderSecurity({
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],

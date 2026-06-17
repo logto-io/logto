@@ -15,7 +15,11 @@ import ToggleSwitch from '@ac/components/ToggleSwitch';
 import { layoutClassNames } from '@ac/constants/layout';
 import { verifiedActionRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
-import { hasConfiguredSecondFactor, hasVisibleMfaSection } from '@ac/utils/security-page';
+import {
+  hasConfiguredSecondFactor,
+  hasEnabledSecondFactor,
+  hasVisibleMfaSection,
+} from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../../apis/mfa';
@@ -149,7 +153,6 @@ const MfaSection = () => {
   const updateMfaSettingsApi = useApi(updateMfaSettings);
 
   const mfaControl = accountCenterSettings?.fields.mfa;
-  const enabledFactors = experienceSettings?.mfa.factors ?? [];
   const mfaPolicy = experienceSettings?.mfa.policy;
   const isEditable = mfaControl === AccountCenterControlValue.Edit;
   const isMfaSectionVisible = hasVisibleMfaSection(mfaControl, experienceSettings);
@@ -158,7 +161,7 @@ const MfaSection = () => {
     isEditable &&
     mfaPolicy !== undefined &&
     !mandatoryMfaPolicies.has(mfaPolicy) &&
-    enabledFactors.length > 0;
+    hasEnabledSecondFactor(experienceSettings);
 
   const isTwoStepEnabled = skipMfaOnSignIn === false;
   const hasConfiguredMfa = hasConfiguredSecondFactor(mfaVerifications, experienceSettings);

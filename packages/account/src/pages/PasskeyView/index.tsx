@@ -4,7 +4,6 @@ import InputField from '@experience/shared/components/InputFields/InputField';
 import {
   AccountCenterControlValue,
   MfaFactor,
-  type Mfa,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
 import { format } from 'date-fns';
@@ -23,6 +22,7 @@ import useErrorHandler from '@ac/hooks/use-error-handler';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { getDateFnsLocale } from '@ac/utils/date';
 import { formatPasskeyName } from '@ac/utils/passkey';
+import { isWebAuthnConfigurable } from '@ac/utils/security-page';
 
 import styles from './index.module.scss';
 
@@ -33,8 +33,6 @@ type PasskeyInfo = {
   createdAt: string;
   lastUsedAt?: string;
 };
-
-const isWebAuthnEnabled = (mfa?: Mfa) => mfa?.factors.includes(MfaFactor.WebAuthn) ?? false;
 
 const formatDate = (dateString: string, language: string): string =>
   format(new Date(dateString), 'PPP', { locale: getDateFnsLocale(language) });
@@ -167,7 +165,7 @@ const PasskeyView = () => {
     );
   }
 
-  if (!isWebAuthnEnabled(experienceSettings?.mfa)) {
+  if (!isWebAuthnConfigurable(experienceSettings)) {
     return (
       <ErrorPage
         titleKey="error.something_went_wrong"
