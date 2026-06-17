@@ -9,16 +9,28 @@ import {
 } from '#src/helpers/connector.js';
 import { expectRejects, readConnectorMessage, removeConnectorMessage } from '#src/helpers/index.js';
 import { enableAllVerificationCodeSignInMethods } from '#src/helpers/sign-in-experience.js';
+import { generateEmail, generatePhone } from '#src/utils.js';
 
 describe('Generic verification code through management API', () => {
-  const mockEmail = 'foo@bar.com';
-  const mockPhone = '1234567890';
+  // The message rate guard counts verification-code sends per recipient across the whole run, so
+  // each test uses a fresh recipient to stay under the cap instead of sharing one address.
+  // eslint-disable-next-line @silverhand/fp/no-let -- reassigned per test in beforeEach
+  let mockEmail: string;
+  // eslint-disable-next-line @silverhand/fp/no-let -- reassigned per test in beforeEach
+  let mockPhone: string;
 
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
     await setEmailConnector();
     await setSmsConnector();
     await enableAllVerificationCodeSignInMethods();
+  });
+
+  beforeEach(() => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- fresh recipients per test
+    mockEmail = generateEmail();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- fresh recipients per test
+    mockPhone = generatePhone();
   });
 
   afterAll(async () => {

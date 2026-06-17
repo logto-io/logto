@@ -1,9 +1,12 @@
 import { TemplateType } from '@logto/connector-kit';
 import { emailRegEx } from '@logto/core-kit';
+import { SentinelActivityAction } from '@logto/schemas';
 import { object, string } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
+import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 
 import RequestError from '../errors/RequestError/index.js';
 import assertThat from '../utils/assert-that.js';
@@ -17,6 +20,7 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
   const codeType = TemplateType.Generic;
   const {
     queries: {
+      sentinelActivities,
       users: { findUserById },
     },
     libraries: {
@@ -31,13 +35,28 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
       body: object({ email: string().regex(emailRegEx) }),
     }),
     async (ctx, next) => {
-      const code = await createPasscode(undefined, codeType, ctx.guard.body);
       const { uiLocales } = getLogtoCookie(ctx);
-      await sendPasscode(code, {
-        locale: ctx.locale,
-        ...(uiLocales && { uiLocales }),
-        ip: ctx.request.ip,
-      });
+      // Create the passcode inside `send` so a rate-limited request neither creates a passcode nor
+      // deletes the recipient's existing unconsumed one (createPasscode replaces prior codes).
+      const send = async () => {
+        const code = await createPasscode(undefined, codeType, ctx.guard.body);
+        return sendPasscode(code, {
+          locale: ctx.locale,
+          ...(uiLocales && { uiLocales }),
+          ip: ctx.request.ip,
+        });
+      };
+
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withMessageRateGuard(
+            new MessageRateGuard(sentinelActivities),
+            {
+              action: SentinelActivityAction.VerificationCodeSend,
+              recipient: ctx.guard.body.email,
+            },
+            send
+          )
+        : send());
 
       ctx.status = 204;
 
