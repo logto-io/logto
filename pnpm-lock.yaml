@@ -96,7 +96,7 @@ importers:
         version: 5.5.3
       vite:
         specifier: ^6.4.2
-        version: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
+        version: 6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
 
   packages/account:
     dependencies:
@@ -142,7 +142,7 @@ importers:
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.5.14)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
+        version: 6.0.2(eslint@8.57.0)(postcss@8.5.15)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
       '@silverhand/essentials':
         specifier: ^2.9.1
         version: 2.9.2
@@ -202,7 +202,7 @@ importers:
         version: 1.2.0
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.3.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       classnames:
         specifier: ^2.3.1
         version: 2.3.1
@@ -286,13 +286,13 @@ importers:
         version: 0.1.1(react@18.3.1)
       vite:
         specifier: ^6.4.2
-        version: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
+        version: 6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
       vite-plugin-compression:
         specifier: ^0.5.1
-        version: 0.5.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 0.5.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       vite-plugin-svgr:
         specifier: ^4.3.0
-        version: 4.3.0(rollup@4.62.0)(typescript@5.5.3)(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.3.0(rollup@4.62.0)(typescript@5.5.3)(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/api:
     dependencies:
@@ -3797,7 +3797,7 @@ importers:
         version: 3.0.1(@types/react@18.3.3)(react@18.3.1)
       '@mdx-js/rollup':
         specifier: ^3.0.1
-        version: 3.0.1(rollup@4.60.4)
+        version: 3.0.1(rollup@4.62.0)
       '@monaco-editor/react':
         specifier: ^4.6.0
         version: 4.6.0(monaco-editor@0.47.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3860,7 +3860,7 @@ importers:
         version: 15.5.1
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.3.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       '@withtyped/client':
         specifier: ^0.8.8
         version: 0.8.8(zod@3.24.3)
@@ -4052,13 +4052,13 @@ importers:
         version: 2.0.10
       vite:
         specifier: ^6.4.2
-        version: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
+        version: 6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
       vite-plugin-compression:
         specifier: ^0.5.1
-        version: 0.5.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 0.5.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       vite-plugin-svgr:
         specifier: ^4.3.0
-        version: 4.3.0(rollup@4.60.4)(typescript@5.5.3)(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.3.0(rollup@4.62.0)(typescript@5.5.3)(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       zod:
         specifier: 3.24.3
         version: 3.24.3
@@ -4443,7 +4443,7 @@ importers:
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.5.14)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
+        version: 6.0.2(eslint@8.57.0)(postcss@8.5.15)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.5.3)
@@ -4461,7 +4461,7 @@ importers:
         version: 6.1.6
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.3.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4500,10 +4500,10 @@ importers:
         version: 5.5.3
       vite:
         specifier: ^6.4.2
-        version: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
+        version: 6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
       vite-plugin-compression:
         specifier: ^0.5.1
-        version: 0.5.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 0.5.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       zod:
         specifier: 3.24.3
         version: 3.24.3
@@ -4521,7 +4521,7 @@ importers:
         version: 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.9.3)
       '@silverhand/eslint-config-react':
         specifier: 6.0.2
-        version: 6.0.2(eslint@8.57.0)(postcss@8.5.14)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)
+        version: 6.0.2(eslint@8.57.0)(postcss@8.5.15)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)
       '@silverhand/ts-config':
         specifier: 6.0.0
         version: 6.0.0(typescript@5.9.3)
@@ -4539,7 +4539,7 @@ importers:
         version: 18.3.0
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.3.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
@@ -4569,10 +4569,10 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^6.4.2
-        version: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
+        version: 6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
       vite-plugin-compression:
         specifier: ^0.5.1
-        version: 0.5.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 0.5.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/elements:
     dependencies:
@@ -4735,7 +4735,7 @@ importers:
         version: 5.3.2
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.3.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.3.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       browserslist:
         specifier: ^4.23.2
         version: 4.23.2
@@ -4861,13 +4861,13 @@ importers:
         version: 0.1.1(react@18.3.1)
       vite:
         specifier: ^6.4.2
-        version: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
+        version: 6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
       vite-plugin-compression:
         specifier: ^0.5.1
-        version: 0.5.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 0.5.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
       vite-plugin-svgr:
         specifier: ^4.3.0
-        version: 4.3.0(rollup@4.62.0)(typescript@5.5.3)(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.3.0(rollup@4.62.0)(typescript@5.5.3)(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/integration-tests:
     dependencies:
@@ -13538,7 +13538,7 @@ packages:
     resolution: {integrity: sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ==}
 
   oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/5570006785b44e0f125ee4cb6bf540338721b1f3:
-    resolution: {gitHosted: true, integrity: sha512-2hC26cxZs26hsNPcia+nm91MLgK9e++vVp7bSmd2uLe2y+G0fbMyLRKSX8b1Ayqm1fiuwTRJ+jpkiFZSJf4Edg==, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/5570006785b44e0f125ee4cb6bf540338721b1f3}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/5570006785b44e0f125ee4cb6bf540338721b1f3}
     version: 8.6.1
 
   oidc-token-hash@5.0.3:
@@ -15804,46 +15804,6 @@ packages:
     resolution: {integrity: sha512-Jy9qLB2/PyWklpYy0xk0UU3TlU0t2UMpJXZvf+hWII1lAmRHrOUKi11Uw8N3rxoNk7atZNYO3pR3vI1f7oi+6w==}
     peerDependencies:
       vite: ^6.4.2
-
-  vite@6.4.2:
-    resolution: {integrity: sha512-2N/55r4JDJ4gdrCvGgINMy+HH3iRpNIz8K6SFwVsA+JbQScLiC+clmAxBgwiSPgcG9U15QmvqCGWzMbqda5zGQ==}
-    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || ^20.0.0 || >=22.0.0
-      jiti: '>=1.21.0'
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      sass-embedded: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.16.0
-      tsx: ^4.8.1
-      yaml: ^2.8.3
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      jiti:
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      sass-embedded:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-      tsx:
-        optional: true
-      yaml:
-        optional: true
 
   vite@6.4.3:
     resolution: {integrity: sha512-NTKlcQjlAK7MlQoyb6LgaqHc8sso/pVyUJYWMws3jg21uTJw/LddqIFPcPqP6PzpgbIcZyKI85sFE4HBrQDA8A==}
@@ -18240,11 +18200,11 @@ snapshots:
       '@types/react': 18.3.3
       react: 18.3.1
 
-  '@mdx-js/rollup@3.0.1(rollup@4.60.4)':
+  '@mdx-js/rollup@3.0.1(rollup@4.62.0)':
     dependencies:
       '@mdx-js/mdx': 3.0.1
-      '@rollup/pluginutils': 5.1.0(rollup@4.60.4)
-      rollup: 4.60.4
+      '@rollup/pluginutils': 5.1.0(rollup@4.62.0)
+      rollup: 4.62.0
       source-map: 0.7.4
       vfile: 6.0.1
     transitivePeerDependencies:
@@ -19164,32 +19124,24 @@ snapshots:
 
   '@remix-run/router@1.23.2': {}
 
-  '@rollup/plugin-node-resolve@15.2.3(rollup@4.60.4)':
+  '@rollup/plugin-node-resolve@15.2.3(rollup@4.62.0)':
     dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@4.60.4)
+      '@rollup/pluginutils': 5.1.0(rollup@4.62.0)
       '@types/resolve': 1.20.2
       deepmerge: 4.3.1
       is-builtin-module: 3.2.1
       is-module: 1.0.0
       resolve: 1.22.8
     optionalDependencies:
-      rollup: 4.60.4
+      rollup: 4.62.0
 
-  '@rollup/pluginutils@5.1.0(rollup@4.60.4)':
+  '@rollup/pluginutils@5.1.0(rollup@4.62.0)':
     dependencies:
       '@types/estree': 1.0.8
       estree-walker: 2.0.2
       picomatch: 2.3.2
     optionalDependencies:
-      rollup: 4.60.4
-
-  '@rollup/pluginutils@5.1.3(rollup@4.60.4)':
-    dependencies:
-      '@types/estree': 1.0.6
-      estree-walker: 2.0.2
-      picomatch: 4.0.4
-    optionalDependencies:
-      rollup: 4.60.4
+      rollup: 4.62.0
 
   '@rollup/pluginutils@5.1.3(rollup@4.62.0)':
     dependencies:
@@ -19390,14 +19342,35 @@ snapshots:
       - supports-color
       - typescript
 
-  '@silverhand/eslint-config-react@6.0.2(eslint@8.57.0)(postcss@8.5.14)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)':
+  '@silverhand/eslint-config-react@6.0.2(eslint@8.57.0)(postcss@8.5.15)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.5.3))(typescript@5.5.3)':
+    dependencies:
+      '@silverhand/eslint-config': 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.5.3)
+      eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0(eslint@8.57.0))(eslint-plugin-react@7.34.1(eslint@8.57.0))(eslint@8.57.0)
+      eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
+      eslint-plugin-react: 7.34.1(eslint@8.57.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
+      postcss-scss: 4.0.9(postcss@8.5.15)
+      stylelint: 15.11.0(typescript@5.5.3)
+      stylelint-config-xo: 0.22.0(stylelint@15.11.0(typescript@5.5.3))
+      stylelint-scss: 6.2.1(stylelint@15.11.0(typescript@5.5.3))
+    transitivePeerDependencies:
+      - '@types/eslint'
+      - eslint
+      - eslint-import-resolver-node
+      - eslint-import-resolver-webpack
+      - postcss
+      - prettier
+      - supports-color
+      - typescript
+
+  '@silverhand/eslint-config-react@6.0.2(eslint@8.57.0)(postcss@8.5.15)(prettier@3.5.3)(stylelint@15.11.0(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@silverhand/eslint-config': 6.0.1(eslint@8.57.0)(prettier@3.5.3)(typescript@5.9.3)
       eslint-config-xo-react: 0.27.0(eslint-plugin-react-hooks@4.6.0(eslint@8.57.0))(eslint-plugin-react@7.34.1(eslint@8.57.0))(eslint@8.57.0)
       eslint-plugin-jsx-a11y: 6.8.0(eslint@8.57.0)
       eslint-plugin-react: 7.34.1(eslint@8.57.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
-      postcss-scss: 4.0.9(postcss@8.5.14)
+      postcss-scss: 4.0.9(postcss@8.5.15)
       stylelint: 15.11.0(typescript@5.9.3)
       stylelint-config-xo: 0.22.0(stylelint@15.11.0(typescript@5.9.3))
       stylelint-scss: 6.2.1(stylelint@15.11.0(typescript@5.9.3))
@@ -20103,7 +20076,7 @@ snapshots:
 
   '@types/acorn@4.0.6':
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
 
   '@types/adm-zip@0.5.5':
     dependencies:
@@ -20723,14 +20696,14 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react@4.3.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))':
+  '@vitejs/plugin-react@4.3.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))':
     dependencies:
       '@babel/core': 7.24.9
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.24.9)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.24.9)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
+      vite: 6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -21041,11 +21014,11 @@ snapshots:
 
   '@web/dev-server-rollup@0.6.4':
     dependencies:
-      '@rollup/plugin-node-resolve': 15.2.3(rollup@4.60.4)
+      '@rollup/plugin-node-resolve': 15.2.3(rollup@4.62.0)
       '@web/dev-server-core': 0.7.2
       nanocolors: 0.2.13
       parse5: 6.0.1
-      rollup: 4.60.4
+      rollup: 4.62.0
       whatwg-url: 14.2.0
     transitivePeerDependencies:
       - bufferutil
@@ -26039,7 +26012,7 @@ snapshots:
 
   micromark-extension-mdx-expression@3.0.0:
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       devlop: 1.1.0
       micromark-factory-mdx-expression: 2.0.1
       micromark-factory-space: 2.0.0
@@ -26051,7 +26024,7 @@ snapshots:
   micromark-extension-mdx-jsx@3.0.0:
     dependencies:
       '@types/acorn': 4.0.6
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       devlop: 1.1.0
       estree-util-is-identifier-name: 3.0.0
       micromark-factory-mdx-expression: 2.0.1
@@ -26067,7 +26040,7 @@ snapshots:
 
   micromark-extension-mdxjs-esm@3.0.0:
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.0
       micromark-util-character: 2.0.1
@@ -26116,7 +26089,7 @@ snapshots:
 
   micromark-factory-mdx-expression@2.0.1:
     dependencies:
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       devlop: 1.1.0
       micromark-util-character: 2.0.1
       micromark-util-events-to-acorn: 2.0.2
@@ -26264,7 +26237,7 @@ snapshots:
   micromark-util-events-to-acorn@2.0.2:
     dependencies:
       '@types/acorn': 4.0.6
-      '@types/estree': 1.0.8
+      '@types/estree': 1.0.9
       '@types/unist': 3.0.3
       devlop: 1.1.0
       estree-util-visit: 2.0.0
@@ -27236,14 +27209,18 @@ snapshots:
     dependencies:
       postcss: 8.5.14
 
+  postcss-scss@4.0.9(postcss@8.5.15):
+    dependencies:
+      postcss: 8.5.15
+
   postcss-selector-parser@6.1.2:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-sorting@8.0.2(postcss@8.5.14):
+  postcss-sorting@8.0.2(postcss@8.5.15):
     dependencies:
-      postcss: 8.5.14
+      postcss: 8.5.15
 
   postcss-value-parser@3.3.1: {}
 
@@ -28586,14 +28563,14 @@ snapshots:
 
   stylelint-order@6.0.4(stylelint@15.11.0(typescript@5.5.3)):
     dependencies:
-      postcss: 8.5.14
-      postcss-sorting: 8.0.2(postcss@8.5.14)
+      postcss: 8.5.15
+      postcss-sorting: 8.0.2(postcss@8.5.15)
       stylelint: 15.11.0(typescript@5.5.3)
 
   stylelint-order@6.0.4(stylelint@15.11.0(typescript@5.9.3)):
     dependencies:
-      postcss: 8.5.14
-      postcss-sorting: 8.0.2(postcss@8.5.14)
+      postcss: 8.5.15
+      postcss-sorting: 8.0.2(postcss@8.5.15)
       stylelint: 15.11.0(typescript@5.9.3)
 
   stylelint-scss@6.2.1(stylelint@15.11.0(typescript@5.5.3)):
@@ -29345,52 +29322,25 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-plugin-compression@0.5.1(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)):
+  vite-plugin-compression@0.5.1(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)):
     dependencies:
       chalk: 4.1.2
       debug: 4.4.1(supports-color@5.5.0)
       fs-extra: 10.1.0
-      vite: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
+      vite: 6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-svgr@4.3.0(rollup@4.60.4)(typescript@5.5.3)(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)):
-    dependencies:
-      '@rollup/pluginutils': 5.1.3(rollup@4.60.4)
-      '@svgr/core': 8.1.0(typescript@5.5.3)
-      '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0(typescript@5.5.3))
-      vite: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-      - typescript
-
-  vite-plugin-svgr@4.3.0(rollup@4.62.0)(typescript@5.5.3)(vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)):
+  vite-plugin-svgr@4.3.0(rollup@4.62.0)(typescript@5.5.3)(vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)):
     dependencies:
       '@rollup/pluginutils': 5.1.3(rollup@4.62.0)
       '@svgr/core': 8.1.0(typescript@5.5.3)
       '@svgr/plugin-jsx': 8.1.0(@svgr/core@8.1.0(typescript@5.5.3))
-      vite: 6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
+      vite: 6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
     transitivePeerDependencies:
       - rollup
       - supports-color
       - typescript
-
-  vite@6.4.2(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4):
-    dependencies:
-      esbuild: 0.25.3
-      fdir: 6.4.6(picomatch@4.0.4)
-      picomatch: 4.0.4
-      postcss: 8.5.14
-      rollup: 4.60.4
-      tinyglobby: 0.2.14
-    optionalDependencies:
-      '@types/node': 22.14.1
-      fsevents: 2.3.3
-      jiti: 1.21.0
-      lightningcss: 1.25.1
-      sass: 1.77.8
-      yaml: 2.8.4
 
   vite@6.4.3(@types/node@22.14.1)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4):
     dependencies:
