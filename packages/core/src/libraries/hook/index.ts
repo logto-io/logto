@@ -71,7 +71,7 @@ export const createHookLibrary = (queries: Queries) => {
       logEntry.append({
         result: LogResult.Error,
         response: conditional(error instanceof HTTPError && (await parseResponse(error.response))),
-        error: String(normalizeError(error)),
+        error: error instanceof RequestError ? error.code : String(normalizeError(error)),
       });
     }
 
@@ -229,6 +229,10 @@ export const createHookLibrary = (queries: Queries) => {
         })
       );
     } catch (error: unknown) {
+      if (error instanceof RequestError && error.code === 'hook.endpoint_not_allowed') {
+        throw error;
+      }
+
       if (error instanceof HTTPError) {
         throw new RequestError(
           {

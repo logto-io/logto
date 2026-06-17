@@ -10,8 +10,9 @@ import {
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
-import ky, { type KyResponse } from 'ky';
+import { type KyResponse } from 'ky';
 
+import { safeKyPost } from '#src/utils/outbound-request.js';
 import { sign } from '#src/utils/sign.js';
 
 export const parseResponse = async (response: KyResponse) => {
@@ -36,7 +37,7 @@ export const sendWebhookRequest = async ({
 }: SendWebhookRequest) => {
   const { url, headers, retries } = hookConfig;
 
-  return ky.post(url, {
+  return safeKyPost(url, {
     headers: {
       'user-agent': 'Logto (https://logto.io/)',
       ...headers,

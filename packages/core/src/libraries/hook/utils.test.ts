@@ -16,6 +16,10 @@ mockEsm('#src/utils/sign.js', () => ({
   sign: () => mockSignature,
 }));
 
+mockEsm('#src/utils/outbound-request.js', () => ({
+  safeKyPost: async (url: string, options: Parameters<typeof ky.post>[1]) => ky.post(url, options),
+}));
+
 const {
   generateHookTestPayload,
   sendWebhookRequest,

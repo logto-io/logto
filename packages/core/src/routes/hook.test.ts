@@ -9,7 +9,7 @@ import {
   type HookEvents,
   type Log,
 } from '@logto/schemas';
-import { pickDefault } from '@logto/shared/esm';
+import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { subDays } from 'date-fns';
 
 import {
@@ -19,11 +19,21 @@ import {
   mockNanoIdForHook,
   mockTenantIdForHook,
 } from '#src/__mocks__/hook.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+const { mockEsm } = createMockUtils(jest);
+
+const assertSafeWebhookEndpointUrl = jest.fn(async () => {
+  await Promise.resolve();
+});
+
+mockEsm('#src/utils/outbound-request.js', () => ({
+  assertSafeWebhookEndpointUrl,
+}));
 
 const hooks = {
   getTotalNumberOfHooks: async (): Promise<{ count: number }> => ({ count: mockHookList.length }),
@@ -287,6 +297,21 @@ describe('hook routes', () => {
       enabled: true,
       createdAt: mockCreatedAtForHook,
     });
+    expect(assertSafeWebhookEndpointUrl).toHaveBeenCalledWith(config.url);
+  });
+
+  it('POST /hooks rejects disallowed endpoints', async () => {
+    assertSafeWebhookEndpointUrl.mockRejectedValueOnce(
+      new RequestError({ code: 'hook.endpoint_not_allowed', status: 422 })
+    );
+
+    const response = await hookRequest.post('/hooks').send({
+      name: 'fooName',
+      events: [InteractionHookEvent.PostRegister],
+      config: { url: 'http://127.0.0.1:3000' },
+    });
+
+    expect(response.status).toEqual(422);
   });
 
   it('POST /hooks should be able to create a hook with multi events', async () => {
@@ -365,11 +390,28 @@ describe('hook routes', () => {
 
   it('POST /hooks/:id/test should return 204 if test is successful', async () => {
     const targetMockHook = mockHookList[0] ?? mockHook;
+    const config = { url: 'https://example.com' };
     const response = await hookRequest.post(`/hooks/${targetMockHook.id}/test`).send({
       events: [InteractionHookEvent.PostRegister],
-      config: { url: 'https://example.com' },
+      config,
     });
     expect(response.status).toEqual(204);
+    expect(assertSafeWebhookEndpointUrl).toHaveBeenCalledWith(config.url);
+  });
+
+  it('POST /hooks/:id/test rejects disallowed endpoints', async () => {
+    assertSafeWebhookEndpointUrl.mockRejectedValueOnce(
+      new RequestError({ code: 'hook.endpoint_not_allowed', status: 422 })
+    );
+
+    const targetMockHook = mockHookList[0] ?? mockHook;
+    const response = await hookRequest.post(`/hooks/${targetMockHook.id}/test`).send({
+      events: [InteractionHookEvent.PostRegister],
+      config: { url: 'http://127.0.0.1:3000' },
+    });
+
+    expect(response.status).toEqual(422);
+    expect(triggerTestHook).not.toHaveBeenCalled();
   });
 
   it('POST /hooks/:id/test should support adaptive MFA event', async () => {
@@ -401,6 +443,20 @@ describe('hook routes', () => {
       config,
       enabled: false,
     });
+    expect(assertSafeWebhookEndpointUrl).toHaveBeenCalledWith(config.url);
+  });
+
+  it('PATCH /hooks/:id rejects disallowed endpoints', async () => {
+    assertSafeWebhookEndpointUrl.mockRejectedValueOnce(
+      new RequestError({ code: 'hook.endpoint_not_allowed', status: 422 })
+    );
+
+    const targetMockHook = mockHookList[0] ?? mockHook;
+    const response = await hookRequest.patch(`/hooks/${targetMockHook.id}`).send({
+      config: { url: 'http://127.0.0.1:3000' },
+    });
+
+    expect(response.status).toEqual(422);
   });
 
   it('PATCH /hooks/:id should success when update a hook with multi events', async () => {

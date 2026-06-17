@@ -21,6 +21,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { koaReportSubscriptionUpdates, koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { assertSafeWebhookEndpointUrl } from '#src/utils/outbound-request.js';
 import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.js';
 
 import { captureEvent } from '../utils/posthog.js';
@@ -188,7 +189,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         events: nonemptyUniqueHookEventsGuard.optional(),
       }),
       response: Hooks.guard,
-      status: [201, 400],
+      status: [201, 400, 422],
     }),
     koaReportSubscriptionUpdates({
       key: 'hooksLimit',
@@ -198,6 +199,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       const { event, events, enabled, ...rest } = ctx.guard.body;
 
       assertThat(events ?? event, new RequestError({ code: 'hook.missing_events', status: 400 }));
+      await assertSafeWebhookEndpointUrl(rest.config.url);
 
       ctx.body = await insertHook({
         ...rest,
@@ -228,6 +230,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         body: { events, config },
       } = ctx.guard;
 
+      await assertSafeWebhookEndpointUrl(config.url);
       await triggerTestHook(id, events, config);
 
       ctx.status = 204;
@@ -247,13 +250,17 @@ export default function hookRoutes<T extends ManagementApiRouter>(
         })
         .partial(),
       response: Hooks.guard,
-      status: [200, 404],
+      status: [200, 404, 422],
     }),
     async (ctx, next) => {
       const {
         params: { id },
         body,
       } = ctx.guard;
+
+      if (body.config) {
+        await assertSafeWebhookEndpointUrl(body.config.url);
+      }
 
       ctx.body = await updateHookById(id, body, 'replace');
 
