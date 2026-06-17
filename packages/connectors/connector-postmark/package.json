@@ -20,7 +20,7 @@
     "nock": "^14.0.3",
     "prettier": "^3.5.3",
     "supertest": "^7.0.0",
-    "tsup": "^8.5.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.5.3",
     "vitest": "^4.1.8"
   },
