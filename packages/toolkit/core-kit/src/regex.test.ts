@@ -1,8 +1,26 @@
 import { describe, expect, it } from 'vitest';
 
-import { domainRegEx, emailOrEmailDomainRegEx } from './regex.js';
+import { domainRegEx, emailOrEmailDomainRegEx, usernameRegEx } from './regex.js';
 
 describe('Regular expressions should work as expected', () => {
+  describe('usernameRegEx', () => {
+    it('should allow dots and hyphens after the leading username character', () => {
+      expect(usernameRegEx.test('john.doe')).toBe(true);
+      expect(usernameRegEx.test('user-name')).toBe(true);
+      expect(usernameRegEx.test('john.doe123')).toBe(true);
+      expect(usernameRegEx.test('user-name_123')).toBe(true);
+      expect(usernameRegEx.test('_service.user-name')).toBe(true);
+    });
+
+    it('should reject usernames with unsupported leading or inner characters', () => {
+      expect(usernameRegEx.test('1abc')).toBe(false);
+      expect(usernameRegEx.test('.john')).toBe(false);
+      expect(usernameRegEx.test('-john')).toBe(false);
+      expect(usernameRegEx.test('john doe')).toBe(false);
+      expect(usernameRegEx.test('john@doe')).toBe(false);
+    });
+  });
+
   it('should allow valid domains that consists of 3 parts. E.g. foo.bar.com', () => {
     expect(domainRegEx.test('foo.bar.com')).toBe(true);
     expect(domainRegEx.test('foo1.bar.com')).toBe(true);

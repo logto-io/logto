@@ -80,6 +80,11 @@ describe('validateUsernameHardFloor', () => {
   it('returns undefined for a valid username', () => {
     expect(validateUsernameHardFloor('abc')).toBeUndefined();
   });
+  it('returns undefined for a username containing dots and hyphens', () => {
+    expect(validateUsernameHardFloor('john.doe')).toBeUndefined();
+    expect(validateUsernameHardFloor('user-name')).toBeUndefined();
+    expect(validateUsernameHardFloor('user-name_123')).toBeUndefined();
+  });
 });
 
 describe('validateUsernameAgainstPolicy (default policy)', () => {
@@ -88,6 +93,10 @@ describe('validateUsernameAgainstPolicy (default policy)', () => {
   });
   it('accepts a mixed-case username with digits and underscore', () => {
     expect(validateUsernameAgainstPolicy('AbC_123', defaultUsernamePolicy)).toBeUndefined();
+  });
+  it('accepts usernames with dots and hyphens', () => {
+    expect(validateUsernameAgainstPolicy('john.doe', defaultUsernamePolicy)).toBeUndefined();
+    expect(validateUsernameAgainstPolicy('user-name_123', defaultUsernamePolicy)).toBeUndefined();
   });
   it('applies the hard floor before policy checks', () => {
     expect(validateUsernameAgainstPolicy('1abc', defaultUsernamePolicy)).toBe('starts_with_number');
