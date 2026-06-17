@@ -60,7 +60,7 @@
     "lint-staged": "^15.0.2",
     "nock": "^14.0.3",
     "prettier": "^3.5.3",
-    "tsup": "^8.5.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.5.3",
     "vitest": "^4.1.8"
   }
