@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
 import { getUserInfo } from '@ac/apis/user';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import useApi from '@ac/hooks/use-api';
 import { changeLanguage, getPreferredLanguage } from '@ac/i18n/utils';
 import { getUiLocales } from '@ac/utils/account-center-route';
@@ -168,31 +167,11 @@ const PageContextProvider = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (isDevFeaturesEnabled) {
-      // Don't change theme while settings are loading; the initial state from
-      // getThemeBySystemPreference() is already correct.
-      if (!experienceSettings) {
-        return;
-      }
-
-      if (!experienceSettings.color.isDarkModeEnabled) {
-        setTheme(Theme.Light);
-        return;
-      }
-
-      const updateTheme = () => {
-        setTheme(getThemeBySystemPreference());
-      };
-
-      updateTheme();
-      const unsubscribe = subscribeToSystemTheme(updateTheme);
-
-      return () => {
-        unsubscribe();
-      };
+    if (!experienceSettings) {
+      return;
     }
 
-    if (!experienceSettings?.color.isDarkModeEnabled) {
+    if (!experienceSettings.color.isDarkModeEnabled) {
       setTheme(Theme.Light);
       return;
     }
