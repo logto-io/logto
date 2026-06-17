@@ -174,15 +174,19 @@ export default class BasicSentinel extends Sentinel {
     }
 
     const actionArray = BasicSentinel.getActionArray(query.action);
-    const failedAttempts = await this.pool.oneFirst<number>(sql`
-      select count(*) from ${table}
-      where ${fields.targetType} = ${query.targetType}
-        and ${fields.targetHash} = ${query.targetHash}
-        and ${fields.action} = any(${actionArray})
-        and ${fields.actionResult} = ${SentinelActionResult.Failed}
-        and ${fields.decision} != ${SentinelDecision.Blocked}
-        and ${fields.createdAt} > now() - interval '1 hour'
-    `);
+    // Postgres returns a bigint for count(*), which Slonik surfaces as a string. Convert it to a
+    // number so the threshold arithmetic below is numeric rather than string concatenation.
+    const failedAttempts = Number(
+      await this.pool.oneFirst<string>(sql`
+        select count(*) from ${table}
+        where ${fields.targetType} = ${query.targetType}
+          and ${fields.targetHash} = ${query.targetHash}
+          and ${fields.action} = any(${actionArray})
+          and ${fields.actionResult} = ${SentinelActionResult.Failed}
+          and ${fields.decision} != ${SentinelDecision.Blocked}
+          and ${fields.createdAt} > now() - interval '1 hour'
+      `)
+    );
 
     const { maxAttempts, lockoutDuration } = await this.getSentinelPolicy();
 

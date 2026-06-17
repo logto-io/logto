@@ -135,6 +135,18 @@ describe('BasicSentinel -> decide()', () => {
     const decision = await sentinel.decide(activity);
     expect(decision).toEqual([SentinelDecision.Blocked, mockedDefaultBlockedTime]);
   });
+
+  it('coerces the bigint count(*) string to a number instead of concatenating', async () => {
+    methods.maybeOne.mockResolvedValueOnce(null);
+    // Slonik surfaces count(*) (a bigint) as a string in production; the decision must coerce it.
+    methods.oneFirst.mockResolvedValueOnce('10');
+
+    const decision = await sentinel.decide(createMockActivityReport());
+
+    // 10 is well below the default max of 100, so it must be allowed. The pre-fix code computed
+    // '10' + 0 = '100' >= 100 and wrongly blocked.
+    expect(decision).toEqual([SentinelDecision.Allowed, mockedTime]);
+  });
 });
 
 describe('BasicSentinel -> action pools', () => {
