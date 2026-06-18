@@ -1,4 +1,9 @@
-import { defaultMessageRateLimitPolicy, InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import {
+  defaultMessageRateLimitPolicy,
+  InteractionEvent,
+  SentinelActivityAction,
+  SignInIdentifier,
+} from '@logto/schemas';
 
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -216,6 +221,7 @@ describe('sendCode parameter passing', () => {
     const ctx = {
       request: { ip: '127.0.0.1' },
       createLog: jest.fn(() => ({ append: jest.fn().mockImplementation(resolveVoid) })),
+      appendExceptionHookContext: jest.fn(),
       experienceInteraction: mockExperienceInteraction,
       emailI18n: {},
     };
@@ -230,8 +236,13 @@ describe('sendCode parameter passing', () => {
         queries: mockQueries,
         ctx: ctx as unknown as ExperienceInteractionRouterContext,
       })
-    ).rejects.toMatchObject({ code: 'request.rate_limited', status: 429 });
+    ).rejects.toMatchObject({ code: 'request.message_rate_limited', status: 429 });
 
     expect(mockSendVerificationCode).not.toHaveBeenCalled();
+    // The throttle emits the `Message.RateLimited` exception hook for webhook delivery.
+    expect(ctx.appendExceptionHookContext).toHaveBeenCalledWith('Message.RateLimited', {
+      action: SentinelActivityAction.VerificationCodeSend,
+      recipient: 'spammed@example.com',
+    });
   });
 });

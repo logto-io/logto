@@ -146,11 +146,21 @@ export const sendCode = async ({
   // is sent, so the rate guard is bypassed.
   const send = async () => codeVerification.sendVerificationCode(payload, { skipDelivery });
 
+  const messageRateLimit = {
+    action: SentinelActivityAction.VerificationCodeSend,
+    recipient: identifier.value,
+  };
+
   await (skipDelivery || !EnvSet.values.isDevFeaturesEnabled
     ? send()
     : withMessageRateGuard(
         new MessageRateGuard(queries.sentinelActivities),
-        { action: SentinelActivityAction.VerificationCodeSend, recipient: identifier.value },
+        {
+          ...messageRateLimit,
+          onRateLimited: () => {
+            ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
+          },
+        },
         send
       ));
 

@@ -41,7 +41,7 @@ devFeatureTest.describe('Account center (/me) verification code send rate limit'
         expect(response.status).toBe(204);
       }
 
-      await expectRejects(sendCode(), { code: 'request.rate_limited', status: 429 });
+      await expectRejects(sendCode(), { code: 'request.message_rate_limited', status: 429 });
     } finally {
       await deleteUser(id);
     }

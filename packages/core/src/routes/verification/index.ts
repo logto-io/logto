@@ -126,10 +126,20 @@ export default function verificationRoutes<T extends UserRouter>(
           ...emailContextPayload,
         });
 
+      const messageRateLimit = {
+        action: SentinelActivityAction.VerificationCodeSend,
+        recipient: identifier.value,
+      };
+
       await (EnvSet.values.isDevFeaturesEnabled
         ? withMessageRateGuard(
             new MessageRateGuard(queries.sentinelActivities),
-            { action: SentinelActivityAction.VerificationCodeSend, recipient: identifier.value },
+            {
+              ...messageRateLimit,
+              onRateLimited: () => {
+                ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
+              },
+            },
             send
           )
         : send());

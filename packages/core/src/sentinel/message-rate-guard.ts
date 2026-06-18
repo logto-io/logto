@@ -54,7 +54,10 @@ export class MessageRateGuard {
     );
 
     if (count !== undefined && count >= this.policy.maxSendsPerRecipient) {
-      throw new RequestError({ code: 'request.rate_limited', status: 429 });
+      // Dedicated code (not the generic `request.rate_limited`) so a send throttle is distinctly
+      // identifiable in the audit log and to API consumers, mirroring the verify-time lockout's
+      // own `session.verification_blocked_too_many_attempts`.
+      throw new RequestError({ code: 'request.message_rate_limited', status: 429 });
     }
   }
 
@@ -85,10 +88,33 @@ export class MessageRateGuard {
  */
 export const withMessageRateGuard = async <T>(
   guard: MessageRateGuard,
-  { action, recipient }: { action: SentinelActivityAction; recipient: string },
+  {
+    action,
+    recipient,
+    onRateLimited,
+  }: {
+    action: SentinelActivityAction;
+    recipient: string;
+    /**
+     * Invoked when the guard rejects the send as over the per-recipient cap, just before the 429 is
+     * rethrown. End-user-facing routes use it to emit the `Message.RateLimited` exception hook
+     * context; callers without a request context (e.g. library-level senders) omit it.
+     */
+    onRateLimited?: () => void;
+  },
   send: () => Promise<T>
 ): Promise<T> => {
-  await guard.guard(action, recipient);
+  try {
+    await guard.guard(action, recipient);
+  } catch (error) {
+    // Only the per-recipient cap rejection (a 429) is an abuse signal; don't emit the hook for an
+    // unexpected error from the guard, which would be a false `Message.RateLimited` event.
+    if (error instanceof RequestError && error.status === 429) {
+      onRateLimited?.();
+    }
+    throw error;
+  }
+
   const result = await send();
   await guard.record(action, recipient);
 

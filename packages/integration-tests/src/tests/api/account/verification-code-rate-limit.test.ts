@@ -45,7 +45,7 @@ devFeatureTest.describe('Account verification code send rate limit', () => {
       }
 
       await expectRejects(sendAccountVerificationCode(api, email), {
-        code: 'request.rate_limited',
+        code: 'request.message_rate_limited',
         status: 429,
       });
     } finally {
