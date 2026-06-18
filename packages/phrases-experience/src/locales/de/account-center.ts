@@ -108,6 +108,9 @@ const account_center = {
     disable_2_step_verification: 'Deaktivieren',
     no_verification_method_warning:
       'Sie haben keine zweite Verifizierungsmethode hinzugefügt. Fügen Sie mindestens eine hinzu, um die 2-Faktor-Verifizierung bei der Anmeldung zu aktivieren.',
+    passkey_sign_in_prompt: 'Zur Einrichtung eines Passkeys auffordern',
+    passkey_sign_in_prompt_description:
+      'Wenn aktiviert, werden Sie aufgefordert, einen Passkey für eine schnellere und sicherere Anmeldung einzurichten.',
     account_removal: 'Kontolöschung',
     delete_your_account: 'Ihr Konto löschen',
     delete_account: 'Konto löschen',

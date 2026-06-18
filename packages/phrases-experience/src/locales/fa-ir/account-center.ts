@@ -101,6 +101,9 @@ const account_center = {
     disable_2_step_verification: 'غیرفعال کردن',
     no_verification_method_warning:
       'شما روش تأیید دومی اضافه نکرده‌اید. برای فعال کردن تأیید دو مرحله‌ای هنگام ورود، حداقل یک روش اضافه کنید.',
+    passkey_sign_in_prompt: 'درخواست تنظیم کلید عبور',
+    passkey_sign_in_prompt_description:
+      'وقتی فعال باشد، از شما خواسته می‌شود برای ورود سریع‌تر و امن‌تر یک کلید عبور تنظیم کنید.',
     account_removal: 'حذف حساب',
     delete_your_account: 'حساب خود را حذف کنید',
     delete_account: 'حذف حساب',

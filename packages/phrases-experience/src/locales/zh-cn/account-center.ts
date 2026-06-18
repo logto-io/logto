@@ -99,6 +99,9 @@ const account_center = {
     disable_2_step_verification: '关闭',
     no_verification_method_warning:
       '你尚未添加第二种验证方式。请至少添加一种以在登录时启用两步验证。',
+    passkey_sign_in_prompt: '提示设置通行密钥',
+    passkey_sign_in_prompt_description:
+      '开启后，系统会提示你设置通行密钥，以实现更快速、更安全的登录。',
     account_removal: '账号删除',
     delete_your_account: '删除你的账号',
     delete_account: '删除账号',
