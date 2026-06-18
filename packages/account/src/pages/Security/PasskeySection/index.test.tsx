@@ -14,6 +14,7 @@ import renderWithPageContext, {
 import { passkeyAddRoute, passkeyManageRoute, securityRoute } from '@ac/constants/routes';
 
 import { getMfaVerifications } from '../../../apis/mfa';
+import MfaVerificationsProvider from '../MfaVerificationsProvider';
 
 import PasskeySection from '.';
 
@@ -53,7 +54,14 @@ const renderPasskeySection = ({
 
   return renderWithPageContext(
     <Routes>
-      <Route path={securityRoute} element={<PasskeySection />} />
+      <Route
+        path={securityRoute}
+        element={
+          <MfaVerificationsProvider>
+            <PasskeySection />
+          </MfaVerificationsProvider>
+        }
+      />
       <Route path={passkeyAddRoute} element={<div>passkey add page</div>} />
       <Route path={passkeyManageRoute} element={<div>passkey manage page</div>} />
     </Routes>,

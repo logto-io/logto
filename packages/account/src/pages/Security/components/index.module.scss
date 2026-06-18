@@ -1,27 +1,5 @@
 @use '@experience/shared/scss/underscore' as _;
-
-@mixin skeleton-block($radius: 8px) {
-  position: relative;
-  overflow: hidden;
-  border-radius: $radius;
-  background: var(--color-bg-state-disabled);
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    transform: translateX(-100%);
-    background-image:
-      linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0%),
-        rgba(255, 255, 255, 20%),
-        rgba(255, 255, 255, 45%),
-        rgba(255, 255, 255, 0%)
-      );
-    animation: shimmer 2s infinite;
-  }
-}
+@use './skeleton';
 
 .section {
   display: flex;
@@ -111,6 +89,11 @@
   background: var(--color-success-default);
 }
 
+.plainValue {
+  font: var(--font-body-2);
+  color: var(--color-type-primary);
+}
+
 .notConfigured {
   font: var(--font-body-2);
   color: var(--color-type-secondary);
@@ -144,7 +127,7 @@
 }
 
 .skeletonBlock {
-  @include skeleton-block;
+  @include skeleton.skeleton-block;
 }
 
 .skeletonIcon {
@@ -177,17 +160,14 @@
   height: 16px;
 }
 
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
+@include skeleton.shimmer-keyframes;
 
 :global(body.mobile) {
   .sectionTitle {
     padding-inline-start: 0;
   }
 
+  .plainValue,
   .title,
   .notConfigured {
     overflow-wrap: anywhere;

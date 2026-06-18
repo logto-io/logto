@@ -1,0 +1,30 @@
+@mixin skeleton-block($radius: 8px) {
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius;
+  background: var(--color-bg-state-disabled);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background-image:
+      linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0%),
+        rgba(255, 255, 255, 20%),
+        rgba(255, 255, 255, 45%),
+        rgba(255, 255, 255, 0%)
+      );
+    animation: shimmer 2s infinite;
+  }
+}
+
+@mixin shimmer-keyframes {
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}

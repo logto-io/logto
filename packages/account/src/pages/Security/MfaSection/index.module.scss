@@ -1,147 +1,5 @@
 @use '@experience/shared/scss/underscore' as _;
-
-@mixin skeleton-block($radius: 8px) {
-  position: relative;
-  overflow: hidden;
-  border-radius: $radius;
-  background: var(--color-bg-state-disabled);
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    transform: translateX(-100%);
-    background-image:
-      linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0%),
-        rgba(255, 255, 255, 20%),
-        rgba(255, 255, 255, 45%),
-        rgba(255, 255, 255, 0%)
-      );
-    animation: shimmer 2s infinite;
-  }
-}
-
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: _.unit(1.5);
-}
-
-.sectionTitle {
-  padding-inline-start: _.unit(1);
-  font: var(--font-label-2);
-  color: var(--color-type-primary);
-}
-
-.card {
-  background: var(--color-bg-body);
-  border-radius: 12px;
-  overflow: clip;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: minmax(0, 200px) minmax(0, 1fr) auto;
-  grid-auto-flow: dense;
-  column-gap: _.unit(6);
-  align-items: center;
-  padding: _.unit(5) _.unit(6);
-  min-height: 76px;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-line-divider);
-  }
-}
-
-.topLine {
-  display: contents;
-}
-
-// Icon and title share the same grid cell so the name slot stays within 200px,
-// matching the original non-grid layout. Title offsets via padding to sit after the icon.
-.iconWrap {
-  grid-column: 1;
-  grid-row: 1;
-  display: flex;
-  align-items: center;
-  justify-self: start;
-  flex-shrink: 0;
-}
-
-.icon {
-  width: 20px;
-  height: 20px;
-  color: var(--color-type-primary);
-  flex-shrink: 0;
-}
-
-.title {
-  grid-column: 1;
-  grid-row: 1;
-  min-width: 0;
-  padding-inline-start: calc(20px + #{_.unit(4)});
-  font: var(--font-label-2);
-  color: var(--color-type-primary);
-}
-
-.value {
-  grid-column: 2;
-  min-width: 0;
-  display: flex;
-  align-items: center;
-}
-
-.statusTag {
-  display: flex;
-  align-items: center;
-  gap: _.unit(2);
-  padding: _.unit(0.5) _.unit(2);
-  border-radius: 14px;
-  background: rgba(78, 162, 84, 12%);
-  font: var(--font-label-3);
-  color: var(--color-type-primary);
-}
-
-.statusDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--color-success-default);
-}
-
-.plainValue {
-  font: var(--font-body-2);
-  color: var(--color-type-primary);
-}
-
-.notConfigured {
-  font: var(--font-body-2);
-  color: var(--color-type-secondary);
-}
-
-.actions {
-  grid-column: 3;
-  display: flex;
-  align-items: center;
-  gap: _.unit(4);
-  flex-shrink: 0;
-}
-
-.actionButton {
-  font: var(--font-label-2);
-  color: var(--color-type-link);
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: _.unit(0.5) 0;
-  white-space: nowrap;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
+@use '../components/skeleton';
 
 .notification {
   margin: _.unit(1) 0 0;
@@ -177,43 +35,8 @@
   background: var(--color-line-divider);
 }
 
-.skeletonContent {
-  display: flex;
-  flex-direction: column;
-}
-
 .skeletonBlock {
-  @include skeleton-block;
-}
-
-.skeletonIcon {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.skeletonTitleWrap {
-  grid-column: 1;
-  grid-row: 1;
-  min-width: 0;
-  padding-inline-start: calc(20px + #{_.unit(4)});
-}
-
-.skeletonTitle {
-  width: 120px;
-  max-width: 100%;
-  height: 16px;
-}
-
-.skeletonValue {
-  width: 160px;
-  max-width: 70%;
-  height: 24px;
-}
-
-.skeletonAction {
-  width: 56px;
-  height: 16px;
+  @include skeleton.skeleton-block;
 }
 
 .skeletonToggleTitle {
@@ -235,17 +58,9 @@
   border-radius: 12px;
 }
 
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
+@include skeleton.shimmer-keyframes;
 
 :global(body.mobile) {
-  .sectionTitle {
-    padding-inline-start: 0;
-  }
-
   .toggleRow {
     gap: _.unit(3);
     padding: _.unit(4);
@@ -256,70 +71,9 @@
   }
 
   .toggleTitle,
-  .toggleDescription,
-  .plainValue,
-  .title,
-  .notConfigured {
+  .toggleDescription {
     overflow-wrap: anywhere;
     word-break: break-word;
-  }
-
-  .row {
-    display: flex;
-    min-height: 0;
-    flex-direction: column;
-    align-items: stretch;
-    gap: _.unit(1);
-    padding: _.unit(4);
-  }
-
-  .topLine {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: _.unit(3);
-    width: 100%;
-  }
-
-  .title {
-    padding-inline-start: 0;
-    width: 100%;
-  }
-
-  .value {
-    width: 100%;
-    align-items: flex-start;
-  }
-
-  .statusTag {
-    max-width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-
-  .actionButton {
-    padding: 0;
-    white-space: normal;
-    text-align: start;
-  }
-
-  .skeletonTitleWrap {
-    padding-inline-start: 0;
-    width: 100%;
-  }
-
-  .skeletonTitle {
-    width: 140px;
-  }
-
-  .skeletonValue {
-    width: 180px;
-    max-width: 100%;
   }
 
   .skeletonToggleTitle,

@@ -150,6 +150,9 @@ describe('<Security /> with passkey sign-in enabled', () => {
     });
     // The MFA section is still present alongside its non-passkey factors.
     expect(getAllByText('account_center.security.two_step_verification').length).toBeGreaterThan(0);
+
+    // Both the passkey section and the MFA section read from a single shared request.
+    expect(mockGetMfaVerifications).toHaveBeenCalledTimes(1);
   });
 
   it('warns to add a second verification method when only a passkey is configured', async () => {
