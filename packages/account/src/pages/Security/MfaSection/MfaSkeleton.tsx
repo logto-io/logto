@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import { layoutClassNames } from '@ac/constants/layout';
+import { SecurityRowSkeleton } from '../components/SecuritySkeleton';
 
 import styles from './index.module.scss';
 
@@ -25,24 +25,7 @@ const MfaSkeleton = ({ hasToggle, rows }: Props) => (
     )}
     {hasToggle && rows.length > 0 && <div className={styles.divider} />}
     {rows.map(({ key, action }) => (
-      <div key={key} className={classNames(styles.row, layoutClassNames.row)}>
-        <div className={styles.topLine}>
-          <div className={styles.iconWrap}>
-            <div className={classNames(styles.skeletonBlock, styles.skeletonIcon)} />
-          </div>
-          {Boolean(action) && (
-            <div className={styles.actions}>
-              <div className={classNames(styles.skeletonBlock, styles.skeletonAction)} />
-            </div>
-          )}
-        </div>
-        <div className={styles.skeletonTitleWrap}>
-          <div className={classNames(styles.skeletonBlock, styles.skeletonTitle)} />
-        </div>
-        <div className={styles.value}>
-          <div className={classNames(styles.skeletonBlock, styles.skeletonValue)} />
-        </div>
-      </div>
+      <SecurityRowSkeleton key={key} hasAction={Boolean(action)} />
     ))}
   </>
 );
