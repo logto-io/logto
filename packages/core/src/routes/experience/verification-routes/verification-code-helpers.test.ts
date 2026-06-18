@@ -1,4 +1,4 @@
-import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import { defaultMessageRateLimitPolicy, InteractionEvent, SignInIdentifier } from '@logto/schemas';
 
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -208,8 +208,10 @@ describe('sendCode parameter passing', () => {
   });
 
   it('rejects with 429 and does not send when the recipient is over the rate-limit cap', async () => {
-    // Default policy allows 5 sends per recipient per window; simulate the cap being reached.
-    mockSentinelActivities.countActivities.mockResolvedValueOnce(5);
+    // Simulate the per-recipient cap being reached for the default policy.
+    mockSentinelActivities.countActivities.mockResolvedValueOnce(
+      defaultMessageRateLimitPolicy.maxSendsPerRecipient
+    );
 
     const ctx = {
       request: { ip: '127.0.0.1' },
