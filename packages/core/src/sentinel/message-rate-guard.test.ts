@@ -67,6 +67,42 @@ describe('MessageRateGuard', () => {
     await expect(buildGuard().guard(action, recipient)).resolves.toBeUndefined();
   });
 
+  it('buckets email casing/whitespace variants together', async () => {
+    countActivities.mockResolvedValue(0);
+    const guard = buildGuard();
+
+    await guard.guard(action, '  Foo@Example.com ');
+    await guard.guard(action, 'foo@example.com');
+
+    expect(countActivities.mock.calls[0]?.[0].targetHash).toBe(
+      countActivities.mock.calls[1]?.[0].targetHash
+    );
+  });
+
+  it('buckets phone formatting variants together', async () => {
+    countActivities.mockResolvedValue(0);
+    const guard = buildGuard();
+
+    await guard.guard(action, '+1 (650) 253-0000');
+    await guard.guard(action, '16502530000');
+
+    expect(countActivities.mock.calls[0]?.[0].targetHash).toBe(
+      countActivities.mock.calls[1]?.[0].targetHash
+    );
+  });
+
+  it('hashes the normalized recipient on both guard and record', async () => {
+    countActivities.mockResolvedValue(0);
+    const guard = buildGuard();
+
+    await guard.guard(action, 'Foo@Example.com');
+    await guard.record(action, 'foo@example.com');
+
+    expect(insertActivity.mock.calls[0]?.[0].targetHash).toBe(
+      countActivities.mock.calls[0]?.[0].targetHash
+    );
+  });
+
   it('does not throw when recording the send fails', async () => {
     insertActivity.mockRejectedValueOnce(new Error('db unavailable'));
 
