@@ -27,7 +27,7 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { type WithI18nContext } from '#src/middleware/koa-i18next.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
-import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
+import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getLogtoCookie } from '#src/utils/cookie.js';
@@ -80,6 +80,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
     queries: {
       users: { findUserById },
       sentinelActivities,
+      logtoConfigs,
     },
   } = tenant;
 
@@ -150,7 +151,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
 
       await (EnvSet.values.isDevFeaturesEnabled
         ? withMessageRateGuard(
-            new MessageRateGuard(sentinelActivities),
+            await buildMessageRateGuard({ sentinelActivities, logtoConfigs }),
             { action: SentinelActivityAction.VerificationCodeSend, recipient },
             send
           )

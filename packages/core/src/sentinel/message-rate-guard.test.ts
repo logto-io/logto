@@ -3,12 +3,15 @@ import {
   SentinelActivityAction,
   SentinelActivityTargetType,
   SentinelDecision,
+  defaultMessageRateLimitPolicy,
   type MessageRateLimitPolicy,
 } from '@logto/schemas';
 
 const { jest } = import.meta;
 
-const { MessageRateGuard, withMessageRateGuard } = await import('./message-rate-guard.js');
+const { MessageRateGuard, withMessageRateGuard, buildMessageRateGuard } = await import(
+  './message-rate-guard.js'
+);
 
 const policy: MessageRateLimitPolicy = { sendWindow: 60, maxSendsPerRecipient: 3 };
 const action = SentinelActivityAction.VerificationCodeSend;
@@ -16,12 +19,19 @@ const recipient = 'recipient@example.com';
 
 const countActivities = jest.fn();
 const insertActivity = jest.fn();
+const getMessageRateLimitOverride = jest.fn();
 
 const buildGuard = () => new MessageRateGuard({ countActivities, insertActivity }, policy);
+
+const buildFactoryQueries = () => ({
+  sentinelActivities: { countActivities, insertActivity },
+  logtoConfigs: { getMessageRateLimitOverride },
+});
 
 beforeEach(() => {
   countActivities.mockReset();
   insertActivity.mockReset();
+  getMessageRateLimitOverride.mockReset();
 });
 
 describe('MessageRateGuard', () => {
@@ -126,5 +136,55 @@ describe('withMessageRateGuard', () => {
       'sent'
     );
     expect(send).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('buildMessageRateGuard', () => {
+  it('uses the system default policy when no override is set', async () => {
+    getMessageRateLimitOverride.mockResolvedValueOnce(null);
+    countActivities.mockResolvedValueOnce(0);
+
+    const guard = await buildMessageRateGuard(buildFactoryQueries());
+    await guard.guard(action, recipient);
+
+    expect(countActivities).toHaveBeenCalledWith(
+      expect.objectContaining({ windowSeconds: defaultMessageRateLimitPolicy.sendWindow })
+    );
+  });
+
+  it('merges a partial override over the system default per field', async () => {
+    // Override only the cap; the window is left to fall back to the system default.
+    getMessageRateLimitOverride.mockResolvedValueOnce({ maxSendsPerRecipient: 100 });
+    // A count that would block at the default cap (10) but is allowed under the overridden cap (100).
+    countActivities.mockResolvedValueOnce(50);
+
+    const guard = await buildMessageRateGuard(buildFactoryQueries());
+
+    await expect(guard.guard(action, recipient)).resolves.toBeUndefined();
+    expect(countActivities).toHaveBeenCalledWith(
+      expect.objectContaining({ windowSeconds: defaultMessageRateLimitPolicy.sendWindow })
+    );
+  });
+
+  it('applies an overridden window', async () => {
+    getMessageRateLimitOverride.mockResolvedValueOnce({ sendWindow: 60 });
+    countActivities.mockResolvedValueOnce(0);
+
+    const guard = await buildMessageRateGuard(buildFactoryQueries());
+    await guard.guard(action, recipient);
+
+    expect(countActivities).toHaveBeenCalledWith(expect.objectContaining({ windowSeconds: 60 }));
+  });
+
+  it('falls back to the system default when the override read fails (fails open)', async () => {
+    getMessageRateLimitOverride.mockRejectedValueOnce(new Error('cache unavailable'));
+    countActivities.mockResolvedValueOnce(0);
+
+    const guard = await buildMessageRateGuard(buildFactoryQueries());
+
+    await expect(guard.guard(action, recipient)).resolves.toBeUndefined();
+    expect(countActivities).toHaveBeenCalledWith(
+      expect.objectContaining({ windowSeconds: defaultMessageRateLimitPolicy.sendWindow })
+    );
   });
 });

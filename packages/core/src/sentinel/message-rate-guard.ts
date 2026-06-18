@@ -11,6 +11,7 @@ import { trySafe } from '@silverhand/essentials';
 import { sha256 } from 'hash-wasm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { type createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import { type createSentinelActivitiesQueries } from '#src/queries/sentinel-activities.js';
 
 type SentinelActivitiesQueries = ReturnType<typeof createSentinelActivitiesQueries>;
@@ -19,6 +20,8 @@ type MessageRateGuardQueries = Pick<
   SentinelActivitiesQueries,
   'countActivities' | 'insertActivity'
 >;
+
+type LogtoConfigQueries = ReturnType<typeof createLogtoConfigQueries>;
 
 /**
  * A mandatory, system-level rate limit on outbound messages (verification codes, organization
@@ -78,6 +81,26 @@ export class MessageRateGuard {
     );
   }
 }
+
+/**
+ * Builds a {@link MessageRateGuard} with the effective policy for the current tenant: the
+ * system-wide {@link defaultMessageRateLimitPolicy} with any per-field values from the internal,
+ * ops-only `messageRateLimitOverride` config applied on top. The override is read through the
+ * tenant config cache, so the common (no-override) path adds no per-send database hit.
+ */
+export const buildMessageRateGuard = async (queries: {
+  sentinelActivities: MessageRateGuardQueries;
+  logtoConfigs: Pick<LogtoConfigQueries, 'getMessageRateLimitOverride'>;
+}): Promise<MessageRateGuard> => {
+  // Fail open: a failed override read must not block a legitimate send, mirroring the guard's own
+  // best-effort count query. `trySafe` returns `undefined` on error, so we fall back to the default.
+  const override = await trySafe(queries.logtoConfigs.getMessageRateLimitOverride());
+  const policy: MessageRateLimitPolicy = override
+    ? { ...defaultMessageRateLimitPolicy, ...override }
+    : defaultMessageRateLimitPolicy;
+
+  return new MessageRateGuard(queries.sentinelActivities, policy);
+};
 
 /**
  * Wraps a message send with the {@link MessageRateGuard}: rejects with a 429 before sending if the
