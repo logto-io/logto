@@ -32,10 +32,14 @@ export const messageRateLimitPolicyGuard = z.object({
  * The default message rate limit policy. Applied to every tenant and not
  * tenant-configurable.
  *
- * - `sendWindow`: 3600 seconds (1 hour)
- * - `maxSendsPerRecipient`: 5 per window
+ * - `sendWindow`: 600 seconds (10 minutes)
+ * - `maxSendsPerRecipient`: 10 per window
+ *
+ * The window is short and rolling on purpose: a falsely-throttled recipient
+ * regains capacity within ~10 minutes rather than being unable to receive a
+ * message for up to an hour.
  */
 export const defaultMessageRateLimitPolicy = Object.freeze({
-  sendWindow: 3600,
-  maxSendsPerRecipient: 5,
+  sendWindow: 600,
+  maxSendsPerRecipient: 10,
 } satisfies MessageRateLimitPolicy);
