@@ -1,5 +1,4 @@
 import {
-  builtInCustomProfileFieldKeys,
   CustomProfileFieldType,
   fullnameKeys,
   userProfileAddressKeys,
@@ -11,40 +10,16 @@ import {
 } from '@logto/schemas';
 import type { ReactNode } from 'react';
 
-import { getSelectOptionLabel } from './select-options';
-import type { ProfileFieldControlKey } from './types';
+import { isBuiltInProfileField } from '@ac/utils/profile-field-control';
 
-const builtInCustomProfileFieldKeySet = new Set<string>(builtInCustomProfileFieldKeys);
+import { getSelectOptionLabel } from './select-options';
+
 const fullnameKeySet = new Set<string>(fullnameKeys);
 const addressKeySet = new Set<string>(userProfileAddressKeys);
 
 export const getAccountCenterProfileFields = (
   settings?: AccountCenter
 ): AccountCenterProfileFields => settings?.profileFields ?? [];
-
-const isCompositeProfileField = (field?: CustomProfileField): boolean =>
-  field?.type === CustomProfileFieldType.Fullname || field?.type === CustomProfileFieldType.Address;
-
-const isBuiltInProfileField = (fieldName: string, field?: CustomProfileField): boolean =>
-  (builtInCustomProfileFieldKeySet.has(fieldName) &&
-    fieldName !== 'name' &&
-    fieldName !== 'avatar') ||
-  (fieldName === 'fullname' && field === undefined);
-
-export const getProfileFieldControlKey = (
-  fieldName: string,
-  field?: CustomProfileField
-): ProfileFieldControlKey => {
-  if (fieldName === 'name' || fieldName === 'avatar') {
-    return fieldName;
-  }
-
-  if (isBuiltInProfileField(fieldName, field) || isCompositeProfileField(field)) {
-    return 'profile';
-  }
-
-  return 'customData';
-};
 
 const joinValues = (values: Array<string | undefined>, separator = ' '): string | undefined => {
   const value = values.filter(Boolean).join(separator);

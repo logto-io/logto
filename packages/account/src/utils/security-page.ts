@@ -5,15 +5,11 @@ import type {
   UserMfaVerificationResponse,
   UserProfileResponse,
 } from '@logto/schemas';
-import {
-  AccountCenterControlValue,
-  builtInCustomProfileFieldKeys,
-  CustomProfileFieldType,
-  MfaFactor,
-} from '@logto/schemas';
+import { AccountCenterControlValue, MfaFactor } from '@logto/schemas';
 
 import { isDevFeaturesEnabled } from '@ac/constants/env';
 
+import { getProfileFieldControlKey } from './profile-field-control';
 import { getAvailableSocialConnectors } from './social-connector.js';
 
 type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'deleteAccountUrl'>;
@@ -175,32 +171,6 @@ export const canOpenPasswordEditFlow = (
   (hasAvailableSecurityVerificationMethod(userInfo) ||
     canSetInitialPasswordWithoutVerification(userInfo, accountCenterFields));
 
-const builtInCustomProfileFieldKeySet = new Set<string>(builtInCustomProfileFieldKeys);
-
-const getProfileFieldControlKeyForVisibility = (
-  fieldName: string,
-  field?: CustomProfileField
-): 'name' | 'avatar' | 'profile' | 'customData' => {
-  if (fieldName === 'name' || fieldName === 'avatar') {
-    return fieldName;
-  }
-
-  const isBuiltIn =
-    (builtInCustomProfileFieldKeySet.has(fieldName) &&
-      fieldName !== 'name' &&
-      fieldName !== 'avatar') ||
-    (fieldName === 'fullname' && field === undefined);
-  const isComposite =
-    field?.type === CustomProfileFieldType.Fullname ||
-    field?.type === CustomProfileFieldType.Address;
-
-  if (isBuiltIn || isComposite) {
-    return 'profile';
-  }
-
-  return 'customData';
-};
-
 type ProfilePageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'profileFields'>;
 type ProfilePageExperienceSettings = Partial<
   Pick<SignInExperienceResponse, 'customProfileFieldCatalog' | 'customProfileFields'>
@@ -228,7 +198,7 @@ export const hasVisibleProfilePage = (
 
   return profileFields.some(({ name }) => {
     const field = catalogMap.get(name);
-    const controlKey = getProfileFieldControlKeyForVisibility(name, field);
+    const controlKey = getProfileFieldControlKey(name, field);
     return isVisibleField(accountCenterSettings.fields[controlKey]);
   });
 };
