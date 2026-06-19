@@ -69,7 +69,11 @@ import Username from './pages/Username';
 import VerifiedAction from './pages/VerifiedAction';
 import { useAuthRedirect } from './use-auth-redirect';
 import { accountCenterBasePath, handleAccountCenterRoute } from './utils/account-center-route';
-import { hasVisibleSecuritySection, hasVisibleSessionsPage } from './utils/security-page';
+import {
+  hasVisibleProfilePage,
+  hasVisibleSecuritySection,
+  hasVisibleSessionsPage,
+} from './utils/security-page';
 import '@experience/shared/scss/normalized.scss';
 import './scss/normalized.scss';
 
@@ -132,6 +136,7 @@ export const Main = () => {
 
   const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
   const showsSessionsPage = hasVisibleSessionsPage(accountCenterSettings);
+  const showsProfilePage = hasVisibleProfilePage(accountCenterSettings, experienceSettings);
 
   return (
     <Routes>
@@ -185,7 +190,7 @@ export const Main = () => {
       />
       {showsSecurityPage && <Route path={securityRoute} element={<Security />} />}
       {showsSessionsPage && <Route path={sessionsRoute} element={<Sessions />} />}
-      <Route path={profileRoute} element={<Profile />} />
+      {showsProfilePage && <Route path={profileRoute} element={<Profile />} />}
       <Route index element={<Home />} />
       <Route path="*" element={<Home />} />
     </Routes>
@@ -199,19 +204,19 @@ const Layout = () => {
   const { pathname } = useLocation();
   const showsSecurityPage = hasVisibleSecuritySection(accountCenterSettings, experienceSettings);
   const showsSessionsPage = hasVisibleSessionsPage(accountCenterSettings);
-  const hasProfilePage = true;
+  const showsProfilePage = hasVisibleProfilePage(accountCenterSettings, experienceSettings);
   const isFullPage =
     (pathname === securityRoute && showsSecurityPage) ||
     (pathname === sessionsRoute && showsSessionsPage) ||
-    (pathname === profileRoute && hasProfilePage);
+    (pathname === profileRoute && showsProfilePage);
   const accountNavItems = useMemo(
     () =>
       buildAccountNavItems({
-        hasProfile: hasProfilePage,
+        hasProfile: showsProfilePage,
         hasSecurity: showsSecurityPage,
         hasSessions: showsSessionsPage,
       }),
-    [hasProfilePage, showsSecurityPage, showsSessionsPage]
+    [showsProfilePage, showsSecurityPage, showsSessionsPage]
   );
   const showsMultiPageNav = isFullPage && accountNavItems.length > 1;
   const showsMobileTabNav = platform === 'mobile' && showsMultiPageNav;

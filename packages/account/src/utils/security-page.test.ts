@@ -1,4 +1,10 @@
-import { AccountCenterControlValue, ConnectorPlatform, MfaFactor, MfaPolicy } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  ConnectorPlatform,
+  CustomProfileFieldType,
+  MfaFactor,
+  MfaPolicy,
+} from '@logto/schemas';
 
 import {
   canManageSocialIdentitiesWithoutVerification,
@@ -8,6 +14,7 @@ import {
   canOpenPasswordEditFlow,
   hasAvailableSecurityVerificationMethod,
   hasVisibleMfaSection,
+  hasVisibleProfilePage,
   hasVisibleSecuritySection,
   hasVisibleSocialSection,
 } from './security-page';
@@ -242,5 +249,151 @@ describe('security-page utils', () => {
       })
     ).toBe(false);
     expect(canOpenPasswordEditFlow(AccountCenterControlValue.Edit)).toBe(false);
+  });
+
+  describe('hasVisibleProfilePage', () => {
+    it('returns false when account center is disabled', () => {
+      expect(
+        hasVisibleProfilePage({
+          enabled: false,
+          fields: { name: AccountCenterControlValue.Edit },
+          profileFields: [{ name: 'name' }],
+        })
+      ).toBe(false);
+    });
+
+    it('returns false when settings are undefined', () => {
+      expect(hasVisibleProfilePage()).toBe(false);
+    });
+
+    it('returns false when profileFields is empty', () => {
+      expect(
+        hasVisibleProfilePage({
+          enabled: true,
+          fields: { name: AccountCenterControlValue.Edit },
+          profileFields: [],
+        })
+      ).toBe(false);
+    });
+
+    it('returns false when all profile fields have their control set to Off', () => {
+      expect(
+        hasVisibleProfilePage({
+          enabled: true,
+          fields: {
+            name: AccountCenterControlValue.Off,
+            avatar: AccountCenterControlValue.Off,
+          },
+          profileFields: [{ name: 'name' }, { name: 'avatar' }],
+        })
+      ).toBe(false);
+    });
+
+    it('returns true when at least one built-in field (name) is visible', () => {
+      expect(
+        hasVisibleProfilePage({
+          enabled: true,
+          fields: {
+            name: AccountCenterControlValue.Edit,
+            avatar: AccountCenterControlValue.Off,
+          },
+          profileFields: [{ name: 'name' }, { name: 'avatar' }],
+        })
+      ).toBe(true);
+    });
+
+    it('returns true when a built-in profile field (nickname) uses the profile control', () => {
+      expect(
+        hasVisibleProfilePage({
+          enabled: true,
+          fields: { profile: AccountCenterControlValue.ReadOnly },
+          profileFields: [{ name: 'nickname' }],
+        })
+      ).toBe(true);
+    });
+
+    it('returns true when a custom field uses the customData control', () => {
+      expect(
+        hasVisibleProfilePage(
+          {
+            enabled: true,
+            fields: { customData: AccountCenterControlValue.Edit },
+            profileFields: [{ name: 'company' }],
+          },
+          {
+            customProfileFields: [
+              {
+                tenantId: 'default',
+                id: 'field-1',
+                name: 'company',
+                type: CustomProfileFieldType.Text,
+                label: 'Company',
+                description: null,
+                required: false,
+                config: {},
+                createdAt: 0,
+                sieOrder: 0,
+              },
+            ],
+          }
+        )
+      ).toBe(true);
+    });
+
+    it('returns false when custom field control (customData) is Off', () => {
+      expect(
+        hasVisibleProfilePage(
+          {
+            enabled: true,
+            fields: { customData: AccountCenterControlValue.Off },
+            profileFields: [{ name: 'company' }],
+          },
+          {
+            customProfileFields: [
+              {
+                tenantId: 'default',
+                id: 'field-1',
+                name: 'company',
+                type: CustomProfileFieldType.Text,
+                label: 'Company',
+                description: null,
+                required: false,
+                config: {},
+                createdAt: 0,
+                sieOrder: 0,
+              },
+            ],
+          }
+        )
+      ).toBe(false);
+    });
+
+    it('returns true for composite field type (Address) using profile control', () => {
+      expect(
+        hasVisibleProfilePage(
+          {
+            enabled: true,
+            fields: { profile: AccountCenterControlValue.Edit },
+            profileFields: [{ name: 'address' }],
+          },
+          {
+            customProfileFields: [
+              {
+                tenantId: 'default',
+                id: 'field-2',
+                name: 'address',
+                type: CustomProfileFieldType.Address,
+                label: 'Address',
+                description: null,
+                required: false,
+                config: {},
+                createdAt: 0,
+                sieOrder: 0,
+              },
+            ],
+          }
+        )
+      ).toBe(true);
+    });
   });
 });

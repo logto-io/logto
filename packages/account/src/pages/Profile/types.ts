@@ -1,13 +1,8 @@
-import {
-  type AccountCenterControlValue,
-  type AccountCenterFieldControl,
-  type CustomProfileField,
-} from '@logto/schemas';
+import { type AccountCenterControlValue, type CustomProfileField } from '@logto/schemas';
 
-export type ProfileFieldControlKey = Extract<
-  keyof AccountCenterFieldControl,
-  'name' | 'avatar' | 'profile' | 'customData'
->;
+import type { ProfileFieldControlKey } from '@ac/utils/profile-field-control';
+
+export type { ProfileFieldControlKey } from '@ac/utils/profile-field-control';
 
 export type ProfileFieldRow = {
   name: string;

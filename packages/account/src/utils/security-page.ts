@@ -1,6 +1,7 @@
 import type { SignInExperienceResponse } from '@experience/shared/types';
 import type {
   AccountCenter,
+  CustomProfileField,
   UserMfaVerificationResponse,
   UserProfileResponse,
 } from '@logto/schemas';
@@ -8,6 +9,7 @@ import { AccountCenterControlValue, MfaFactor } from '@logto/schemas';
 
 import { isDevFeaturesEnabled } from '@ac/constants/env';
 
+import { getProfileFieldControlKey } from './profile-field-control';
 import { getAvailableSocialConnectors } from './social-connector.js';
 
 type SecurityPageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'deleteAccountUrl'>;
@@ -168,3 +170,35 @@ export const canOpenPasswordEditFlow = (
   userInfo !== undefined &&
   (hasAvailableSecurityVerificationMethod(userInfo) ||
     canSetInitialPasswordWithoutVerification(userInfo, accountCenterFields));
+
+type ProfilePageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'profileFields'>;
+type ProfilePageExperienceSettings = Partial<
+  Pick<SignInExperienceResponse, 'customProfileFieldCatalog' | 'customProfileFields'>
+>;
+
+export const hasVisibleProfilePage = (
+  accountCenterSettings?: ProfilePageSettings,
+  experienceSettings?: ProfilePageExperienceSettings
+): boolean => {
+  if (!accountCenterSettings?.enabled) {
+    return false;
+  }
+
+  const profileFields = accountCenterSettings.profileFields ?? [];
+
+  if (profileFields.length === 0) {
+    return false;
+  }
+
+  const catalog =
+    experienceSettings?.customProfileFieldCatalog ?? experienceSettings?.customProfileFields ?? [];
+  const catalogMap = new Map<string, CustomProfileField>(
+    catalog.map((field) => [field.name, field])
+  );
+
+  return profileFields.some(({ name }) => {
+    const field = catalogMap.get(name);
+    const controlKey = getProfileFieldControlKey(name, field);
+    return isVisibleField(accountCenterSettings.fields[controlKey]);
+  });
+};

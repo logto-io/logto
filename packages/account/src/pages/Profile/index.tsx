@@ -10,16 +10,13 @@ import AvatarUploadField from '@ac/components/AvatarUploadField';
 import PageFooter from '@ac/components/PageFooter';
 import { layoutClassNames } from '@ac/constants/layout';
 import useApi from '@ac/hooks/use-api';
+import { getProfileFieldControlKey } from '@ac/utils/profile-field-control';
 
 import homeStyles from '../Home/index.module.scss';
 
 import EditProfileFieldModal from './EditProfileFieldModal';
 import styles from './index.module.scss';
-import {
-  getAccountCenterProfileFields,
-  getProfileFieldControlKey,
-  getProfileFieldValue,
-} from './profile-field-values';
+import { getAccountCenterProfileFields, getProfileFieldValue } from './profile-field-values';
 import type { ProfileFieldRow } from './types';
 
 const profileLabelKeys: Record<string, string> = {
