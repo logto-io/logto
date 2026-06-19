@@ -1,10 +1,16 @@
 import type { SignInExperienceResponse } from '@experience/shared/types';
 import type {
   AccountCenter,
+  CustomProfileField,
   UserMfaVerificationResponse,
   UserProfileResponse,
 } from '@logto/schemas';
-import { AccountCenterControlValue, MfaFactor } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  builtInCustomProfileFieldKeys,
+  CustomProfileFieldType,
+  MfaFactor,
+} from '@logto/schemas';
 
 import { isDevFeaturesEnabled } from '@ac/constants/env';
 
@@ -168,3 +174,61 @@ export const canOpenPasswordEditFlow = (
   userInfo !== undefined &&
   (hasAvailableSecurityVerificationMethod(userInfo) ||
     canSetInitialPasswordWithoutVerification(userInfo, accountCenterFields));
+
+const builtInCustomProfileFieldKeySet = new Set<string>(builtInCustomProfileFieldKeys);
+
+const getProfileFieldControlKeyForVisibility = (
+  fieldName: string,
+  field?: CustomProfileField
+): 'name' | 'avatar' | 'profile' | 'customData' => {
+  if (fieldName === 'name' || fieldName === 'avatar') {
+    return fieldName;
+  }
+
+  const isBuiltIn =
+    (builtInCustomProfileFieldKeySet.has(fieldName) &&
+      fieldName !== 'name' &&
+      fieldName !== 'avatar') ||
+    (fieldName === 'fullname' && field === undefined);
+  const isComposite =
+    field?.type === CustomProfileFieldType.Fullname ||
+    field?.type === CustomProfileFieldType.Address;
+
+  if (isBuiltIn || isComposite) {
+    return 'profile';
+  }
+
+  return 'customData';
+};
+
+type ProfilePageSettings = Pick<AccountCenter, 'enabled' | 'fields' | 'profileFields'>;
+type ProfilePageExperienceSettings = Partial<
+  Pick<SignInExperienceResponse, 'customProfileFieldCatalog' | 'customProfileFields'>
+>;
+
+export const hasVisibleProfilePage = (
+  accountCenterSettings?: ProfilePageSettings,
+  experienceSettings?: ProfilePageExperienceSettings
+): boolean => {
+  if (!accountCenterSettings?.enabled) {
+    return false;
+  }
+
+  const profileFields = accountCenterSettings.profileFields ?? [];
+
+  if (profileFields.length === 0) {
+    return false;
+  }
+
+  const catalog =
+    experienceSettings?.customProfileFieldCatalog ?? experienceSettings?.customProfileFields ?? [];
+  const catalogMap = new Map<string, CustomProfileField>(
+    catalog.map((field) => [field.name, field])
+  );
+
+  return profileFields.some(({ name }) => {
+    const field = catalogMap.get(name);
+    const controlKey = getProfileFieldControlKeyForVisibility(name, field);
+    return isVisibleField(accountCenterSettings.fields[controlKey]);
+  });
+};
