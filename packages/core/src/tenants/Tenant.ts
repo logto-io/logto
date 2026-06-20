@@ -86,6 +86,11 @@ export default class Tenant implements TenantContext {
   readonly #createdAt = Date.now();
   #requestCount = 0;
   #onRequestEmpty?: () => Promise<void>;
+  /**
+   * Whether the database pool of this instance has been (or is about to be) ended by
+   * {@link dispose}. Once `true`, the instance must not serve new requests.
+   */
+  #disposed = false;
 
   // eslint-disable-next-line max-params
   private constructor(
@@ -269,8 +274,24 @@ export default class Tenant implements TenantContext {
         : mount(this.app);
   }
 
-  public requestStart() {
+  /**
+   * Register the start of a request so that {@link dispose} waits for it to finish before
+   * ending the database pool.
+   *
+   * This is synchronous and must be called right after acquiring the instance (see
+   * {@link TenantPool.get}) to avoid a window where the instance is disposed while a request
+   * is about to use it.
+   *
+   * @returns `true` if the slot was reserved, or `false` if the instance has already been
+   * disposed and must not be used. Callers should acquire another instance when `false`.
+   */
+  public requestStart(): boolean {
+    if (this.#disposed) {
+      return false;
+    }
+
     this.#requestCount += 1;
+    return true;
   }
 
   public requestEnd() {
@@ -291,6 +312,10 @@ export default class Tenant implements TenantContext {
    * @returns Resolves `true` for a normal disposal and `'timeout'` for a timeout.
    */
   public async dispose() {
+    // Mark as disposed *synchronously* (no `await` before this point) so a concurrent
+    // `requestStart()` cannot reserve a slot after we have decided to end the pool.
+    this.#disposed = true;
+
     if (this.#requestCount <= 0) {
       await this.envSet.end();
 

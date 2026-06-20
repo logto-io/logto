@@ -89,6 +89,48 @@ describe('Tenant `.run()`', () => {
   });
 });
 
+describe('Tenant request lifecycle and disposal', () => {
+  it('reserves and releases request slots', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+
+    expect(tenant.requestStart()).toBe(true);
+    tenant.requestEnd();
+  });
+
+  it('ends the database pool and rejects new requests once disposed', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const end = Sinon.stub(tenant.envSet, 'end').resolves();
+
+    expect(await tenant.dispose()).toBe(true);
+
+    expect(end.calledOnce).toBe(true);
+    // The instance must not serve new requests after disposal.
+    expect(tenant.requestStart()).toBe(false);
+  });
+
+  it('waits for in-flight requests before ending the database pool', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const end = Sinon.stub(tenant.envSet, 'end').resolves();
+
+    expect(tenant.requestStart()).toBe(true);
+
+    const disposed = tenant.dispose();
+    await Promise.resolve();
+
+    // The pool must stay alive while a request is still in flight.
+    expect(end.called).toBe(false);
+    // New requests must be rejected while draining.
+    expect(tenant.requestStart()).toBe(false);
+    expect(end.called).toBe(false);
+
+    tenant.requestEnd();
+    expect(await disposed).toBe(true);
+
+    expect(end.calledOnce).toBe(true);
+    expect(tenant.requestStart()).toBe(false);
+  });
+});
+
 describe('Tenant cache health check', () => {
   it('uses the qualified rotation-state update query when invalidating cache', async () => {
     const redisCache = new RedisCache();
