@@ -129,6 +129,20 @@ describe('Tenant request lifecycle and disposal', () => {
     expect(end.calledOnce).toBe(true);
     expect(tenant.requestStart()).toBe(false);
   });
+
+  it('rejects when ending the database pool fails while draining requests', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const error = new Error('failed to end database pool');
+    const end = Sinon.stub(tenant.envSet, 'end').rejects(error);
+
+    expect(tenant.requestStart()).toBe(true);
+
+    const disposed = tenant.dispose();
+    tenant.requestEnd();
+
+    await expect(disposed).rejects.toThrow(error);
+    expect(end.calledOnce).toBe(true);
+  });
 });
 
 describe('Tenant cache health check', () => {

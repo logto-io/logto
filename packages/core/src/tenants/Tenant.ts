@@ -322,17 +322,24 @@ export default class Tenant implements TenantContext {
       return true;
     }
 
-    return new Promise<true | 'timeout'>((resolve) => {
-      const timeout = setTimeout(async () => {
+    return new Promise<true | 'timeout'>((resolve, reject) => {
+      const endEnvSet = async (result: true | 'timeout') => {
+        try {
+          await this.envSet.end();
+          resolve(result);
+        } catch (error: unknown) {
+          reject(error instanceof Error ? error : new Error(String(error)));
+        }
+      };
+
+      const timeout = setTimeout(() => {
         this.#onRequestEmpty = undefined;
-        await this.envSet.end();
-        resolve('timeout');
+        void endEnvSet('timeout');
       }, 5000);
 
       this.#onRequestEmpty = async () => {
         clearTimeout(timeout);
-        await this.envSet.end();
-        resolve(true);
+        await endEnvSet(true);
       };
     });
   }

@@ -26,16 +26,17 @@ class TenantPool {
   });
 
   /**
-   * Resolve a healthy tenant instance and atomically reserve a request slot on it (see
+   * Resolve a tenant instance and atomically reserve a request slot on it (see
    * {@link Tenant.requestStart}). The caller owns the slot and must call
-   * {@link Tenant.requestEnd} exactly once when the request finishes.
+   * {@link Tenant.requestEnd} exactly once when the request finishes. Acquisition retries to
+   * converge on a healthy instance, with a capped fallback to avoid looping forever.
    */
   async get(tenantId: string, customDomain?: string, attempt = 0): Promise<Tenant> {
     const cacheKey = `${tenantId}-${customDomain ?? 'default'}`;
     const tenantPromise = this.cache.get(cacheKey);
 
     if (tenantPromise && attempt < maxTenantAcquireAttempts) {
-      const tenant = await tenantPromise;
+      const tenant = await this.resolveCachedTenant(cacheKey, tenantPromise);
 
       // Reserve a request slot *before* the async health check. If the instance has been
       // disposed concurrently, `requestStart()` returns `false` and we retry to acquire a
@@ -78,7 +79,7 @@ class TenantPool {
     }
 
     // Attempt limit reached: reserve a slot on whatever is cached, dropping a disposed instance.
-    const tenant = await tenantPromise;
+    const tenant = await this.resolveCachedTenant(cacheKey, tenantPromise);
 
     if (!tenant.requestStart()) {
       this.cache.delete(cacheKey);
@@ -97,6 +98,21 @@ class TenantPool {
         return tenant.envSet.end();
       })
     );
+  }
+
+  private async resolveCachedTenant(
+    cacheKey: string,
+    tenantPromise: Promise<Tenant>
+  ): Promise<Tenant> {
+    try {
+      return await tenantPromise;
+    } catch (error: unknown) {
+      if (this.cache.get(cacheKey) === tenantPromise) {
+        this.cache.delete(cacheKey);
+      }
+
+      throw error;
+    }
   }
 }
 
