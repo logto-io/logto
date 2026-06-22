@@ -13,10 +13,12 @@ import type { ExperienceInteractionRouterContext } from '../types.js';
 
 type MockExperienceInteraction = {
   interactionEvent: InteractionEvent;
+  identifiedUserId?: string;
   setVerificationRecord: jest.MockedFunction<() => Promise<void>>;
   save: jest.MockedFunction<() => Promise<void>>;
   signInExperienceValidator: {
     guardEmailBlocklist: jest.MockedFunction<() => Promise<void>>;
+    isRegistrationDisabled: jest.MockedFunction<() => Promise<boolean>>;
   };
 };
 
@@ -54,6 +56,8 @@ describe('sendCode parameter passing', () => {
     save: jest.fn().mockImplementation(resolveVoid),
     signInExperienceValidator: {
       guardEmailBlocklist: jest.fn().mockImplementation(resolveVoid),
+      // Default: registration is enabled, so delivery is never suppressed for sign-in.
+      isRegistrationDisabled: jest.fn().mockResolvedValue(false),
     },
   };
 
@@ -76,6 +80,10 @@ describe('sendCode parameter passing', () => {
     mockSendVerificationCode.mockImplementation(resolveVoid);
     mockExperienceInteraction.save.mockImplementation(resolveVoid);
     mockBuildVerificationCodeContext.mockResolvedValue({});
+    // Restore the default: registration is enabled, so sign-in delivery is not suppressed.
+    mockExperienceInteraction.signInExperienceValidator.isRegistrationDisabled.mockResolvedValue(
+      false
+    );
   });
 
   it('should pass ctx.request.ip to sendVerificationCode', async () => {
@@ -253,5 +261,102 @@ describe('sendCode parameter passing', () => {
       action: SentinelActivityAction.VerificationCodeSend,
       recipient: 'spammed@example.com',
     });
+  });
+
+  const buildUnknownUserQueries = () =>
+    ({
+      sentinelActivities: mockSentinelActivities,
+      logtoConfigs: mockLogtoConfigs,
+      users: {
+        hasUserWithEmail: jest.fn().mockResolvedValue(false),
+        hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
+      },
+    }) as unknown as Queries;
+
+  const buildSignInCtx = (
+    experienceInteraction: MockExperienceInteraction = mockExperienceInteraction
+  ) => ({
+    request: { ip: '127.0.0.1' },
+    createLog: jest.fn(() => ({ append: jest.fn().mockImplementation(resolveVoid) })),
+    appendExceptionHookContext: jest.fn(),
+    experienceInteraction,
+    emailI18n: {},
+  });
+
+  it('skips delivery for sign-in to an unknown recipient when registration is disabled', async () => {
+    mockExperienceInteraction.signInExperienceValidator.isRegistrationDisabled.mockResolvedValueOnce(
+      true
+    );
+    const ctx = buildSignInCtx();
+    const libraries = { passcodes: mockPasscodeLibrary } as unknown as Partial<Libraries>;
+
+    await sendCode({
+      identifier: { type: SignInIdentifier.Email, value: 'stranger@example.com' },
+      interactionEvent: InteractionEvent.SignIn,
+      createVerificationRecord: () => mockCodeVerification,
+      libraries: libraries as unknown as Libraries,
+      queries: buildUnknownUserQueries(),
+      ctx: ctx as unknown as ExperienceInteractionRouterContext,
+    });
+
+    // The passcode record is still created, but nothing is delivered and the rate guard is bypassed.
+    expect(mockSendVerificationCode).toHaveBeenCalledWith(
+      undefined,
+      expect.objectContaining({ skipDelivery: true })
+    );
+    expect(mockSentinelActivities.countActivities).not.toHaveBeenCalled();
+  });
+
+  it('delivers for sign-in to an unknown recipient when registration is enabled', async () => {
+    mockExperienceInteraction.signInExperienceValidator.isRegistrationDisabled.mockResolvedValueOnce(
+      false
+    );
+    const ctx = buildSignInCtx();
+    const libraries = { passcodes: mockPasscodeLibrary } as unknown as Partial<Libraries>;
+
+    await sendCode({
+      identifier: { type: SignInIdentifier.Email, value: 'newcomer@example.com' },
+      interactionEvent: InteractionEvent.SignIn,
+      createVerificationRecord: () => mockCodeVerification,
+      libraries: libraries as unknown as Libraries,
+      queries: buildUnknownUserQueries(),
+      ctx: ctx as unknown as ExperienceInteractionRouterContext,
+    });
+
+    expect(mockSendVerificationCode).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({ skipDelivery: false })
+    );
+  });
+
+  it('delivers for sign-in binding when a user is already identified, even with registration disabled', async () => {
+    // Binding a new MFA identifier: identified session, unknown recipient, registration disabled.
+    mockExperienceInteraction.signInExperienceValidator.isRegistrationDisabled.mockResolvedValueOnce(
+      true
+    );
+    const identifiedInteraction: MockExperienceInteraction = {
+      ...mockExperienceInteraction,
+      identifiedUserId: 'identified-user-id',
+    };
+    const ctx = buildSignInCtx(identifiedInteraction);
+    const libraries = { passcodes: mockPasscodeLibrary } as unknown as Partial<Libraries>;
+
+    await sendCode({
+      identifier: { type: SignInIdentifier.Email, value: 'binding@example.com' },
+      interactionEvent: InteractionEvent.SignIn,
+      createVerificationRecord: () => mockCodeVerification,
+      libraries: libraries as unknown as Libraries,
+      queries: buildUnknownUserQueries(),
+      ctx: ctx as unknown as ExperienceInteractionRouterContext,
+    });
+
+    expect(mockSendVerificationCode).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({ skipDelivery: false })
+    );
+    // The identified-session guard short-circuits before consulting the registration mode.
+    expect(
+      mockExperienceInteraction.signInExperienceValidator.isRegistrationDisabled
+    ).not.toHaveBeenCalled();
   });
 });
