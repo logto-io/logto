@@ -11,7 +11,8 @@ import Profile from '@/assets/icons/profile.svg?react';
 import SignOut from '@/assets/icons/sign-out.svg?react';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
-import { isCloud } from '@/consts/env';
+import { adminTenantEndpoint } from '@/consts';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import FlipOnRtl from '@/ds-components/FlipOnRtl';
@@ -80,6 +81,14 @@ function UserInfo() {
           className={classNames(styles.dropdownItem, isLoading && styles.loading)}
           icon={<Profile className={styles.icon} />}
           onClick={() => {
+            if (isDevFeaturesEnabled) {
+              const redirectUrl = isCloud ? window.location.origin : getUrl('/').href;
+              const accountUrl = new URL('/account/security', adminTenantEndpoint.href);
+              accountUrl.searchParams.set('redirect', redirectUrl);
+              window.open(accountUrl.toString(), '_blank');
+              return;
+            }
+
             // In OSS version, there will be a `/console` context path in the URL.
             const profileRouteWithConsoleContext = getUrl('/profile');
 
