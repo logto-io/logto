@@ -14,6 +14,7 @@ import {
   type LogtoOidcConfigType,
   signingKeyRotationStateGuard,
   type SigningKeyRotationState,
+  messageRateLimitOverrideGuard,
 } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
@@ -238,6 +239,19 @@ export const createLogtoConfigQueries = (
     ['id-token-config']
   );
 
+  // Internal, ops-only per-tenant override of the system message send-rate-limit policy. There is
+  // intentionally no upsert counterpart: the key is set by direct DB write only (no API), so the
+  // cache picks it up on its next expiry (or tenant restart).
+  const getMessageRateLimitOverride = wellKnownCache.memoize(async () => {
+    const { rows } = await getRowsByKeys([LogtoTenantConfigKey.MessageRateLimitOverride]);
+
+    if (rows.length === 0) {
+      return null;
+    }
+
+    return messageRateLimitOverrideGuard.parse(rows[0]?.value);
+  }, ['message-rate-limit-override']);
+
   return {
     getAdminConsoleConfig,
     updateAdminConsoleConfig,
@@ -256,5 +270,6 @@ export const createLogtoConfigQueries = (
     deleteJwtCustomizer,
     getIdTokenConfig,
     upsertIdTokenConfig,
+    getMessageRateLimitOverride,
   };
 };

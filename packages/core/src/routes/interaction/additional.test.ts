@@ -116,6 +116,10 @@ const tenantContext = new MockTenant(
       countActivities,
       insertActivity,
     },
+    // `buildMessageRateGuard` reads the per-tenant override; default to none so the system policy applies.
+    logtoConfigs: {
+      getMessageRateLimitOverride: jest.fn().mockResolvedValue(null),
+    },
   },
   {
     getLogtoConnectorById: async (connectorId: string) => {

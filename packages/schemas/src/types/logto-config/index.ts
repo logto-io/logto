@@ -4,6 +4,11 @@ import type { ZodType } from 'zod';
 import { z } from 'zod';
 
 import {
+  type MessageRateLimitOverride,
+  messageRateLimitOverrideGuard,
+} from '../../consts/message-rate-limit.js';
+
+import {
   type AccessTokenJwtCustomizer,
   type ClientCredentialsJwtCustomizer,
   accessTokenJwtCustomizerGuard,
@@ -171,6 +176,8 @@ export enum LogtoTenantConfigKey {
   IdToken = 'idToken',
   /** Tenant-scoped rotation state for staged private signing key activation. */
   SigningKeyRotationState = 'signingKeyRotationState',
+  /** Internal, ops-only override of the system message send-rate-limit policy. Not exposed by any API. */
+  MessageRateLimitOverride = 'messageRateLimitOverride',
 }
 export type LogtoTenantConfigType = {
   [LogtoTenantConfigKey.AdminConsole]: AdminConsoleData;
@@ -178,6 +185,7 @@ export type LogtoTenantConfigType = {
   [LogtoTenantConfigKey.SessionNotFoundRedirectUrl]: { url: string };
   [LogtoTenantConfigKey.IdToken]: IdTokenConfig;
   [LogtoTenantConfigKey.SigningKeyRotationState]: SigningKeyRotationState;
+  [LogtoTenantConfigKey.MessageRateLimitOverride]: MessageRateLimitOverride;
 };
 
 export const logtoTenantConfigGuard: Readonly<{
@@ -188,6 +196,7 @@ export const logtoTenantConfigGuard: Readonly<{
   [LogtoTenantConfigKey.SessionNotFoundRedirectUrl]: z.object({ url: z.string() }),
   [LogtoTenantConfigKey.IdToken]: idTokenConfigGuard,
   [LogtoTenantConfigKey.SigningKeyRotationState]: signingKeyRotationStateGuard,
+  [LogtoTenantConfigKey.MessageRateLimitOverride]: messageRateLimitOverrideGuard,
 });
 
 /* --- Summary --- */

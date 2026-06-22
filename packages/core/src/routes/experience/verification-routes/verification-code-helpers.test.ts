@@ -34,6 +34,11 @@ const mockSentinelActivities = {
   insertActivity: jest.fn().mockImplementation(resolveVoid),
 };
 
+// `buildMessageRateGuard` reads the per-tenant override; default to none so the system policy applies.
+const mockLogtoConfigs = {
+  getMessageRateLimitOverride: jest.fn().mockResolvedValue(null),
+};
+
 describe('sendCode parameter passing', () => {
   // To make a void callable function/method
   const mockSendVerificationCode = jest.fn().mockImplementation(resolveVoid);
@@ -59,6 +64,7 @@ describe('sendCode parameter passing', () => {
 
   const mockQueries = {
     sentinelActivities: mockSentinelActivities,
+    logtoConfigs: mockLogtoConfigs,
     users: {
       hasUserWithEmail: jest.fn().mockResolvedValue(true),
       hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(true),
@@ -105,6 +111,7 @@ describe('sendCode parameter passing', () => {
   it('should skip delivery for forgot-password with non-existing email user', async () => {
     const mockQueriesNoUser = {
       sentinelActivities: mockSentinelActivities,
+      logtoConfigs: mockLogtoConfigs,
       users: {
         hasUserWithEmail: jest.fn().mockResolvedValue(false),
         hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
@@ -144,6 +151,7 @@ describe('sendCode parameter passing', () => {
   it('should not skip delivery for forgot-password with existing user', async () => {
     const mockQueriesWithUser = {
       sentinelActivities: mockSentinelActivities,
+      logtoConfigs: mockLogtoConfigs,
       users: {
         hasUserWithEmail: jest.fn().mockResolvedValue(true),
         hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(true),
@@ -182,6 +190,7 @@ describe('sendCode parameter passing', () => {
   it('should not check user existence for non-ForgotPassword events', async () => {
     const mockQueriesTracking = {
       sentinelActivities: mockSentinelActivities,
+      logtoConfigs: mockLogtoConfigs,
       users: {
         hasUserWithEmail: jest.fn().mockResolvedValue(false),
         hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),

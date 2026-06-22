@@ -13,7 +13,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUserQueries } from '#src/queries/user.js';
-import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
+import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 import type Queries from '#src/tenants/Queries.js';
 import {
   buildOrganizationContextInfo,
@@ -268,7 +268,7 @@ export class OrganizationInvitationLibrary {
 
     return EnvSet.values.isDevFeaturesEnabled
       ? withMessageRateGuard(
-          new MessageRateGuard(this.queries.sentinelActivities),
+          await buildMessageRateGuard(this.queries),
           { action: SentinelActivityAction.MessageSend, recipient: to },
           send
         )
