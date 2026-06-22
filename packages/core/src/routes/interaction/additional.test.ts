@@ -173,8 +173,8 @@ describe('interaction routes', () => {
     });
 
     it('should reject with 429 and not send when the recipient is over the rate-limit cap', async () => {
-      // Default policy allows 5 sends per recipient per window; simulate the cap being reached.
-      countActivities.mockResolvedValueOnce(5);
+      // Default policy allows 10 sends per recipient per window; simulate the cap being reached.
+      countActivities.mockResolvedValueOnce(10);
 
       const response = await sessionRequest.post(path).send({ email: 'spammed@logto.io' });
 
