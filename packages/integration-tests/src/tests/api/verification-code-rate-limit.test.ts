@@ -31,7 +31,7 @@ devFeatureTest.describe('Management verification code send rate limit', () => {
     }
 
     await expectRejects(requestVerificationCode({ email }), {
-      code: 'request.rate_limited',
+      code: 'request.message_rate_limited',
       status: 429,
     });
   });
@@ -46,7 +46,7 @@ devFeatureTest.describe('Management verification code send rate limit', () => {
     }
 
     await expectRejects(requestVerificationCode({ phone }), {
-      code: 'request.rate_limited',
+      code: 'request.message_rate_limited',
       status: 429,
     });
   });

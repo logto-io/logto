@@ -12,7 +12,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
-import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
+import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getLogtoCookie } from '#src/utils/cookie.js';
@@ -146,11 +146,21 @@ export const sendCode = async ({
   // is sent, so the rate guard is bypassed.
   const send = async () => codeVerification.sendVerificationCode(payload, { skipDelivery });
 
+  const messageRateLimit = {
+    action: SentinelActivityAction.VerificationCodeSend,
+    recipient: identifier.value,
+  };
+
   await (skipDelivery || !EnvSet.values.isDevFeaturesEnabled
     ? send()
     : withMessageRateGuard(
-        new MessageRateGuard(queries.sentinelActivities),
-        { action: SentinelActivityAction.VerificationCodeSend, recipient: identifier.value },
+        await buildMessageRateGuard(queries),
+        {
+          ...messageRateLimit,
+          onRateLimited: () => {
+            ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
+          },
+        },
         send
       ));
 

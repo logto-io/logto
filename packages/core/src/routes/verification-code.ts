@@ -7,7 +7,7 @@ import {
 
 import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
+import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
@@ -37,7 +37,7 @@ export default function verificationCodeRoutes<T extends ManagementApiRouter>(
 
       await (EnvSet.values.isDevFeaturesEnabled
         ? withMessageRateGuard(
-            new MessageRateGuard(queries.sentinelActivities),
+            await buildMessageRateGuard(queries),
             { action: SentinelActivityAction.VerificationCodeSend, recipient },
             send
           )

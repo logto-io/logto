@@ -43,3 +43,15 @@ export const defaultMessageRateLimitPolicy = Object.freeze({
   sendWindow: 600,
   maxSendsPerRecipient: 10,
 } satisfies MessageRateLimitPolicy);
+
+/**
+ * Internal, ops-only per-tenant override of {@link defaultMessageRateLimitPolicy}. Stored under the
+ * `messageRateLimitOverride` key in `logto_configs` and not exposed by any API — it exists solely
+ * as a relief valve for a legitimately high-volume tenant that trips the system cap.
+ *
+ * Every field is optional: the effective policy is resolved per field as `override ?? system
+ * default`, so a partial override only changes the fields it sets.
+ */
+export const messageRateLimitOverrideGuard = messageRateLimitPolicyGuard.partial();
+
+export type MessageRateLimitOverride = z.infer<typeof messageRateLimitOverrideGuard>;

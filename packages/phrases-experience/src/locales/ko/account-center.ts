@@ -100,6 +100,9 @@ const account_center = {
     disable_2_step_verification: '비활성화',
     no_verification_method_warning:
       '두 번째 인증 방법을 추가하지 않았습니다. 로그인 시 2단계 인증을 활성화하려면 최소 하나를 추가하세요.',
+    passkey_sign_in_prompt: '패스키 설정 안내 표시',
+    passkey_sign_in_prompt_description:
+      '켜면 더 빠르고 안전한 로그인을 위해 패스키를 설정하라는 안내를 받게 됩니다.',
     account_removal: '계정 삭제',
     delete_your_account: '내 계정 삭제',
     delete_account: '계정 삭제',

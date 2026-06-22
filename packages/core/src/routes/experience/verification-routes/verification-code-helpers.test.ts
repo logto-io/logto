@@ -1,4 +1,9 @@
-import { defaultMessageRateLimitPolicy, InteractionEvent, SignInIdentifier } from '@logto/schemas';
+import {
+  defaultMessageRateLimitPolicy,
+  InteractionEvent,
+  SentinelActivityAction,
+  SignInIdentifier,
+} from '@logto/schemas';
 
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -29,6 +34,11 @@ const mockSentinelActivities = {
   insertActivity: jest.fn().mockImplementation(resolveVoid),
 };
 
+// `buildMessageRateGuard` reads the per-tenant override; default to none so the system policy applies.
+const mockLogtoConfigs = {
+  getMessageRateLimitOverride: jest.fn().mockResolvedValue(null),
+};
+
 describe('sendCode parameter passing', () => {
   // To make a void callable function/method
   const mockSendVerificationCode = jest.fn().mockImplementation(resolveVoid);
@@ -54,6 +64,7 @@ describe('sendCode parameter passing', () => {
 
   const mockQueries = {
     sentinelActivities: mockSentinelActivities,
+    logtoConfigs: mockLogtoConfigs,
     users: {
       hasUserWithEmail: jest.fn().mockResolvedValue(true),
       hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(true),
@@ -100,6 +111,7 @@ describe('sendCode parameter passing', () => {
   it('should skip delivery for forgot-password with non-existing email user', async () => {
     const mockQueriesNoUser = {
       sentinelActivities: mockSentinelActivities,
+      logtoConfigs: mockLogtoConfigs,
       users: {
         hasUserWithEmail: jest.fn().mockResolvedValue(false),
         hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
@@ -139,6 +151,7 @@ describe('sendCode parameter passing', () => {
   it('should not skip delivery for forgot-password with existing user', async () => {
     const mockQueriesWithUser = {
       sentinelActivities: mockSentinelActivities,
+      logtoConfigs: mockLogtoConfigs,
       users: {
         hasUserWithEmail: jest.fn().mockResolvedValue(true),
         hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(true),
@@ -177,6 +190,7 @@ describe('sendCode parameter passing', () => {
   it('should not check user existence for non-ForgotPassword events', async () => {
     const mockQueriesTracking = {
       sentinelActivities: mockSentinelActivities,
+      logtoConfigs: mockLogtoConfigs,
       users: {
         hasUserWithEmail: jest.fn().mockResolvedValue(false),
         hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
@@ -216,6 +230,7 @@ describe('sendCode parameter passing', () => {
     const ctx = {
       request: { ip: '127.0.0.1' },
       createLog: jest.fn(() => ({ append: jest.fn().mockImplementation(resolveVoid) })),
+      appendExceptionHookContext: jest.fn(),
       experienceInteraction: mockExperienceInteraction,
       emailI18n: {},
     };
@@ -230,8 +245,13 @@ describe('sendCode parameter passing', () => {
         queries: mockQueries,
         ctx: ctx as unknown as ExperienceInteractionRouterContext,
       })
-    ).rejects.toMatchObject({ code: 'request.rate_limited', status: 429 });
+    ).rejects.toMatchObject({ code: 'request.message_rate_limited', status: 429 });
 
     expect(mockSendVerificationCode).not.toHaveBeenCalled();
+    // The throttle emits the `Message.RateLimited` exception hook for webhook delivery.
+    expect(ctx.appendExceptionHookContext).toHaveBeenCalledWith('Message.RateLimited', {
+      action: SentinelActivityAction.VerificationCodeSend,
+      recipient: 'spammed@example.com',
+    });
   });
 });

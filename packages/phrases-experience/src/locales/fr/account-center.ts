@@ -107,6 +107,9 @@ const account_center = {
     disable_2_step_verification: 'Désactiver',
     no_verification_method_warning:
       "Vous n'avez pas ajouté de deuxième méthode de vérification. Ajoutez-en au moins une pour activer la vérification en deux étapes lors de la connexion.",
+    passkey_sign_in_prompt: 'Inviter à configurer un passkey',
+    passkey_sign_in_prompt_description:
+      'Lorsque cette option est activée, il vous sera demandé de configurer un passkey pour une connexion plus rapide et plus sécurisée.',
     account_removal: 'Suppression du compte',
     delete_your_account: 'Supprimez votre compte',
     delete_account: 'Supprimer le compte',

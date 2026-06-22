@@ -103,6 +103,9 @@ const account_center = {
     disable_2_step_verification: 'Вимкнути',
     no_verification_method_warning:
       'Ви не додали другий метод верифікації. Додайте принаймні один, щоб увімкнути двоетапну верифікацію при вході.',
+    passkey_sign_in_prompt: 'Пропонувати налаштувати passkey',
+    passkey_sign_in_prompt_description:
+      'Коли ввімкнено, вам буде запропоновано налаштувати passkey для швидшого та безпечнішого входу.',
     account_removal: 'Видалення акаунта',
     delete_your_account: 'Видаліть свій акаунт',
     delete_account: 'Видалити акаунт',

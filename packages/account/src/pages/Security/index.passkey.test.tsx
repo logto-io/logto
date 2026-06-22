@@ -13,6 +13,7 @@ import renderWithPageContext, {
 } from '@ac/__mocks__/RenderWithPageContext';
 import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
 
+import { getLogtoConfig, updateLogtoConfig } from '../../apis/logto-config';
 import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../apis/mfa';
 
 import Security from '.';
@@ -36,11 +37,23 @@ jest.mock('../../apis/mfa', () => ({
   updateMfaSettings: jest.fn(),
 }));
 
+jest.mock('../../apis/logto-config', () => ({
+  getLogtoConfig: jest.fn(),
+  updateLogtoConfig: jest.fn(),
+}));
+
 const mockGetMfaSettings = getMfaSettings as jest.MockedFunction<typeof getMfaSettings>;
 const mockGetMfaVerifications = getMfaVerifications as jest.MockedFunction<
   typeof getMfaVerifications
 >;
 const mockUpdateMfaSettings = updateMfaSettings as jest.MockedFunction<typeof updateMfaSettings>;
+const mockGetLogtoConfig = getLogtoConfig as jest.MockedFunction<typeof getLogtoConfig>;
+const mockUpdateLogtoConfig = updateLogtoConfig as jest.MockedFunction<typeof updateLogtoConfig>;
+
+const mockLogtoConfigResponse = {
+  mfa: { skipped: false, skipMfaOnSignIn: true },
+  passkeySignIn: { skipped: false },
+};
 
 const renderSecurity = ({
   factors,
@@ -91,6 +104,8 @@ describe('<Security /> with passkey sign-in enabled', () => {
     mockGetAccessToken.mockResolvedValue('access-token');
     mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
     mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    mockGetLogtoConfig.mockResolvedValue(mockLogtoConfigResponse);
+    mockUpdateLogtoConfig.mockResolvedValue(mockLogtoConfigResponse);
     window.sessionStorage.clear();
   });
 

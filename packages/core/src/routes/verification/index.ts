@@ -14,7 +14,7 @@ import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
+import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 
 import {
   buildVerificationRecordByIdAndType,
@@ -126,10 +126,20 @@ export default function verificationRoutes<T extends UserRouter>(
           ...emailContextPayload,
         });
 
+      const messageRateLimit = {
+        action: SentinelActivityAction.VerificationCodeSend,
+        recipient: identifier.value,
+      };
+
       await (EnvSet.values.isDevFeaturesEnabled
         ? withMessageRateGuard(
-            new MessageRateGuard(queries.sentinelActivities),
-            { action: SentinelActivityAction.VerificationCodeSend, recipient: identifier.value },
+            await buildMessageRateGuard(queries),
+            {
+              ...messageRateLimit,
+              onRateLimited: () => {
+                ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
+              },
+            },
             send
           )
         : send());

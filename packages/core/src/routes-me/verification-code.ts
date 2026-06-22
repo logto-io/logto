@@ -6,7 +6,7 @@ import { object, string } from 'zod';
 import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
-import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
+import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 
 import RequestError from '../errors/RequestError/index.js';
 import assertThat from '../utils/assert-that.js';
@@ -20,7 +20,6 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
   const codeType = TemplateType.Generic;
   const {
     queries: {
-      sentinelActivities,
       users: { findUserById },
     },
     libraries: {
@@ -49,7 +48,7 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
 
       await (EnvSet.values.isDevFeaturesEnabled
         ? withMessageRateGuard(
-            new MessageRateGuard(sentinelActivities),
+            await buildMessageRateGuard(tenant.queries),
             {
               action: SentinelActivityAction.VerificationCodeSend,
               recipient: ctx.guard.body.email,
