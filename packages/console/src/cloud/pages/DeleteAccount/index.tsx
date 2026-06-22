@@ -85,7 +85,12 @@ export default function DeleteAccount() {
   const [step, setStep] = useState(hasIssues ? Step.Issues : Step.Confirmation);
 
   useEffect(() => {
-    setStep(hasIssues ? Step.Issues : Step.Confirmation);
+    setStep((previous) => {
+      if (previous === Step.FinalConfirmation) {
+        return previous;
+      }
+      return hasIssues ? Step.Issues : Step.Confirmation;
+    });
   }, [hasIssues]);
 
   useEffect(() => {
@@ -94,6 +99,7 @@ export default function DeleteAccount() {
       const claims = await getIdTokenClaims();
       if (!claims) {
         toast.error(t('error_occurred'));
+        handleCancel();
         return;
       }
       setClaims(claims);
