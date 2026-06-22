@@ -101,6 +101,9 @@ const account_center = {
     disable_2_step_verification: 'ปิด',
     no_verification_method_warning:
       'คุณยังไม่ได้เพิ่มวิธีการยืนยันตัวตนที่สอง เพิ่มอย่างน้อยหนึ่งวิธีเพื่อเปิดใช้งานการยืนยันตัวตนสองขั้นตอนเมื่อลงชื่อเข้าใช้',
+    passkey_sign_in_prompt: 'แจ้งให้ตั้งค่า passkey',
+    passkey_sign_in_prompt_description:
+      'เมื่อเปิดใช้งาน คุณจะถูกขอให้ตั้งค่า passkey เพื่อการลงชื่อเข้าใช้ที่รวดเร็วและปลอดภัยยิ่งขึ้น',
     account_removal: 'การลบบัญชี',
     delete_your_account: 'ลบบัญชีของคุณ',
     delete_account: 'ลบบัญชี',

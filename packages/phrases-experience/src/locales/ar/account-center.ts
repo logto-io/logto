@@ -101,6 +101,9 @@ const account_center = {
     disable_2_step_verification: 'تعطيل',
     no_verification_method_warning:
       'لم تقم بإضافة طريقة تحقق ثانية. أضف طريقة واحدة على الأقل لتفعيل التحقق بخطوتين عند تسجيل الدخول.',
+    passkey_sign_in_prompt: 'مطالبة بإعداد مفتاح مرور',
+    passkey_sign_in_prompt_description:
+      'عند التفعيل، سيُطلب منك إعداد مفتاح مرور لتسجيل دخول أسرع وأكثر أمانًا.',
     account_removal: 'حذف الحساب',
     delete_your_account: 'احذف حسابك',
     delete_account: 'حذف الحساب',

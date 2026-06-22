@@ -65,7 +65,12 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
       status: [200, 400, 401],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes } = ctx.auth;
+      const { id: userId, identityVerified, scopes } = ctx.auth;
+
+      assertThat(
+        identityVerified,
+        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
+      );
       assertThat(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })

@@ -102,6 +102,9 @@ const account_center = {
     disable_2_step_verification: 'Devre dışı bırak',
     no_verification_method_warning:
       'İkinci bir doğrulama yöntemi eklemediniz. Oturum açarken 2 adımlı doğrulamayı etkinleştirmek için en az bir tane ekleyin.',
+    passkey_sign_in_prompt: 'Passkey kurulumu için sor',
+    passkey_sign_in_prompt_description:
+      'Açık olduğunda, daha hızlı ve daha güvenli oturum açma için bir passkey kurmanız istenir.',
     account_removal: 'Hesap silme',
     delete_your_account: 'Hesabını sil',
     delete_account: 'Hesabı sil',

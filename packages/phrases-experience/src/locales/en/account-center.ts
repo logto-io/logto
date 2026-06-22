@@ -102,6 +102,9 @@ const account_center = {
     disable_2_step_verification: 'Disable',
     no_verification_method_warning:
       "You haven't added a second verification method. Add at least one to enable 2-step verification at sign-in.",
+    passkey_sign_in_prompt: 'Prompt to set up a passkey',
+    passkey_sign_in_prompt_description:
+      "When on, you'll be asked to set up a passkey for faster, more secure sign-in.",
     account_removal: 'Account removal',
     delete_your_account: 'Delete your account',
     delete_account: 'Delete account',

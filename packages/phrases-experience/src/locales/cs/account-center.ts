@@ -101,6 +101,9 @@ const account_center = {
     disable_2_step_verification: 'Vypnout',
     no_verification_method_warning:
       'Nepřidali jste druhou ověřovací metodu. Přidejte alespoň jednu pro povolení dvoufázového ověření při přihlášení.',
+    passkey_sign_in_prompt: 'Vyzvat k nastavení přístupového klíče',
+    passkey_sign_in_prompt_description:
+      'Když je zapnuto, budete vyzváni k nastavení přístupového klíče pro rychlejší a bezpečnější přihlášení.',
     account_removal: 'Smazání účtu',
     delete_your_account: 'Smazat svůj účet',
     delete_account: 'Smazat účet',

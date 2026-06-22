@@ -99,6 +99,9 @@ const account_center = {
     disable_2_step_verification: '關閉',
     no_verification_method_warning:
       '你尚未新增第二種驗證方式。請至少新增一種以在登入時啟用兩步驟驗證。',
+    passkey_sign_in_prompt: '提示設定通行密鑰',
+    passkey_sign_in_prompt_description:
+      '開啟後，系統會提示你設定通行密鑰，以實現更快速、更安全的登入。',
     account_removal: '帳戶刪除',
     delete_your_account: '刪除你的帳戶',
     delete_account: '刪除帳戶',

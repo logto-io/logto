@@ -101,6 +101,9 @@ const account_center = {
     disable_2_step_verification: '無効にする',
     no_verification_method_warning:
       '2つ目の認証方法が追加されていません。サインイン時の2段階認証を有効にするには、少なくとも1つ追加してください。',
+    passkey_sign_in_prompt: 'パスキーの設定を促す',
+    passkey_sign_in_prompt_description:
+      'オンにすると、より速く安全なサインインのためにパスキーの設定を求められます。',
     account_removal: 'アカウント削除',
     delete_your_account: 'アカウントを削除',
     delete_account: 'アカウントを削除',
