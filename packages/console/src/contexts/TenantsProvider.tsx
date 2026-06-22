@@ -32,6 +32,7 @@ export enum GlobalRoute {
   Profile = '/profile',
   HandleSocial = '/handle-social',
   EnterpriseSubscription = '/subscriptions',
+  DeleteAccount = '/delete-account',
 }
 
 const reservedRoutes: Readonly<string[]> = Object.freeze([
