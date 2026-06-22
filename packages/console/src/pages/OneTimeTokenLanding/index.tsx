@@ -1,11 +1,10 @@
-import { useLogto } from '@logto/react';
+import { Prompt, useLogto } from '@logto/react';
 import { ExtraParamsKey } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import AppLoading from '@/components/AppLoading';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 import { saveRedirect } from '@/utils/storage';
 
@@ -18,9 +17,8 @@ enum OneTimeTokenLandingSearchParams {
 /** The one-time token landing page for sign-in with one-time tokens. */
 function OneTimeTokenLanding() {
   const navigate = useNavigate();
-  const { isAuthenticated, signIn } = useLogto();
+  const { isLoading, signIn } = useLogto();
   const [searchParams] = useSearchParams();
-  const { navigateTenant } = useContext(TenantsContext);
   const redirectUri = useRedirectUri();
 
   const oneTimeToken = searchParams.get(OneTimeTokenLandingSearchParams.OneTimeToken);
@@ -28,7 +26,11 @@ function OneTimeTokenLanding() {
   const redirectPath = searchParams.get(OneTimeTokenLandingSearchParams.Redirect);
 
   useEffect(() => {
-    if (isAuthenticated || !oneTimeToken || !email) {
+    if (isLoading) {
+      return;
+    }
+
+    if (!oneTimeToken || !email) {
       // Navigate to root, which will handle tenant selection
       navigate('/', { replace: true });
       return;
@@ -43,21 +45,13 @@ function OneTimeTokenLanding() {
        * We can hence clear tokens in the <Callback /> page.
        */
       clearTokens: false,
+      prompt: Prompt.Consent,
       extraParams: {
         [ExtraParamsKey.OneTimeToken]: oneTimeToken,
         [ExtraParamsKey.LoginHint]: email,
       },
     });
-  }, [
-    isAuthenticated,
-    navigate,
-    navigateTenant,
-    signIn,
-    redirectUri,
-    oneTimeToken,
-    email,
-    redirectPath,
-  ]);
+  }, [isLoading, navigate, signIn, redirectUri, oneTimeToken, email, redirectPath]);
 
   return <AppLoading />;
 }
