@@ -173,7 +173,10 @@ export const updateMfaSettings = async (
     .json<{ skipMfaOnSignIn: boolean }>();
 
 export const getMyLogtoConfig = async (api: KyInstance) =>
-  api.get('api/my-account/logto-configs').json<{ mfa: { skipped: boolean } }>();
+  api.get('api/my-account/logto-configs').json<{
+    mfa: { enabled?: boolean; skipped: boolean; skipMfaOnSignIn: boolean };
+    passkeySignIn: { skipped: boolean };
+  }>();
 
 export const updateMyLogtoConfig = async (
   api: KyInstance,
@@ -187,7 +190,10 @@ export const updateMyLogtoConfig = async (
         headers: { [verificationRecordIdHeader]: verificationRecordId },
       }),
     })
-    .json<{ mfa: { skipped: boolean }; passkeySignIn: { skipped: boolean } }>();
+    .json<{
+      mfa: { enabled?: boolean; skipped: boolean; skipMfaOnSignIn: boolean };
+      passkeySignIn: { skipped: boolean };
+    }>();
 
 export const getSocialAccessToken = async (api: KyInstance, target: string) => {
   return api
