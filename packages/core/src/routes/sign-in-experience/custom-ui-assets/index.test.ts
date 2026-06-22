@@ -128,6 +128,23 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
     const response = await uploadCustomUiAssets(pathToZip);
     expect(response.status).toBe(500);
     expect(response.text).toBe('Failed to upload file to the storage provider.');
-    expect(mockedIsFileExisted).toHaveBeenCalledTimes(10);
+    expect(mockedIsFileExisted).toHaveBeenCalledTimes(12);
+  });
+
+  it('should succeed if the upload zip is removed on the final retry', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-let
+    let assetsZipChecks = 0;
+    mockedIsFileExisted.mockImplementation(async (filename) => {
+      if (filename.endsWith('assets.zip')) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        assetsZipChecks += 1;
+        return assetsZipChecks < 6;
+      }
+
+      return false;
+    });
+    const response = await uploadCustomUiAssets(pathToZip);
+    expect(response.status).toBe(200);
+    expect(mockedIsFileExisted).toHaveBeenCalledTimes(12);
   });
 });

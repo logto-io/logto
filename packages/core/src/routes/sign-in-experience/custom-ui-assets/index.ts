@@ -77,21 +77,22 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
         });
 
         const hasUnzipCompleted = async (retryTimes: number) => {
-          if (retryTimes > maxRetryCount) {
-            throw new AbortError('Unzip timeout. Max retry count reached.');
-          }
           const [hasZip, hasError] = await Promise.all([
             isFileExisted(objectKey),
             isFileExisted(errorLogObjectKey),
           ]);
-          if (hasZip) {
-            throw new Error('Unzip in progress...');
-          }
           if (hasError) {
             const errorLogBlob = await downloadFile(errorLogObjectKey);
             const errorLog = await streamToString(errorLogBlob.readableStreamBody);
             throw new AbortError(errorLog || 'Unzipping failed.');
           }
+          if (!hasZip) {
+            return;
+          }
+          if (retryTimes > maxRetryCount) {
+            throw new AbortError('Unzip timeout. Max retry count reached.');
+          }
+          throw new Error('Unzip in progress...');
         };
 
         await pRetry(hasUnzipCompleted, {
