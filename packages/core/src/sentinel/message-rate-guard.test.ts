@@ -42,7 +42,7 @@ describe('MessageRateGuard', () => {
     countActivities.mockResolvedValueOnce(3);
 
     await expect(buildGuard().guard(action, recipient)).rejects.toMatchObject({
-      code: 'request.rate_limited',
+      code: 'request.message_rate_limited',
       status: 429,
     });
   });
@@ -95,6 +95,27 @@ describe('withMessageRateGuard', () => {
     ).rejects.toMatchObject({ status: 429 });
     expect(send).not.toHaveBeenCalled();
     expect(insertActivity).not.toHaveBeenCalled();
+  });
+
+  it('invokes onRateLimited then rethrows when over the cap', async () => {
+    countActivities.mockResolvedValueOnce(3);
+    const send = jest.fn();
+    const onRateLimited = jest.fn();
+
+    await expect(
+      withMessageRateGuard(buildGuard(), { action, recipient, onRateLimited }, send)
+    ).rejects.toMatchObject({ code: 'request.message_rate_limited', status: 429 });
+    expect(onRateLimited).toHaveBeenCalledTimes(1);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('does not invoke onRateLimited when under the cap', async () => {
+    countActivities.mockResolvedValueOnce(0);
+    const send = jest.fn().mockResolvedValueOnce('sent');
+    const onRateLimited = jest.fn();
+
+    await withMessageRateGuard(buildGuard(), { action, recipient, onRateLimited }, send);
+    expect(onRateLimited).not.toHaveBeenCalled();
   });
 
   it('still sends when the rate-limit query fails (fails open)', async () => {

@@ -36,7 +36,7 @@ devFeatureTest.describe('Verification code send rate limit', () => {
         interactionEvent: InteractionEvent.SignIn,
         identifier,
       }),
-      { code: 'request.rate_limited', status: 429 }
+      { code: 'request.message_rate_limited', status: 429 }
     );
   });
 
@@ -57,7 +57,7 @@ devFeatureTest.describe('Verification code send rate limit', () => {
         interactionEvent: InteractionEvent.SignIn,
         identifier: cappedIdentifier,
       }),
-      { code: 'request.rate_limited', status: 429 }
+      { code: 'request.message_rate_limited', status: 429 }
     );
 
     // The same session sending to a different recipient still succeeds: the bucket is keyed by

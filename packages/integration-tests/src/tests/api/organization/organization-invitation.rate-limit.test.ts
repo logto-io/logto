@@ -41,6 +41,6 @@ devFeatureTest.describe('organization invitation send rate limit', () => {
       expect(response.status).toBe(204);
     }
 
-    await expectRejects(resend(), { code: 'request.rate_limited', status: 429 });
+    await expectRejects(resend(), { code: 'request.message_rate_limited', status: 429 });
   });
 });
