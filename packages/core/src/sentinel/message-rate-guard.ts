@@ -6,7 +6,7 @@ import {
   SentinelDecision,
   defaultMessageRateLimitPolicy,
 } from '@logto/schemas';
-import { generateStandardId } from '@logto/shared';
+import { generateStandardId, parsePhoneNumber } from '@logto/shared';
 import { trySafe } from '@silverhand/essentials';
 import { sha256 } from 'hash-wasm';
 
@@ -22,6 +22,19 @@ type MessageRateGuardQueries = Pick<
 >;
 
 type LogtoConfigQueries = ReturnType<typeof createLogtoConfigQueries>;
+
+/**
+ * Canonicalizes a recipient so casing/formatting variants of the same address share one rate-limit
+ * bucket — otherwise the per-recipient cap is trivially bypassed by re-casing an email or
+ * reformatting a phone number. Emails are lower-cased; everything else is treated as a phone number
+ * and reduced to its E.164 digits (the form Logto stores), falling back to the trimmed input when
+ * it is not a valid number.
+ */
+const normalizeRecipient = (recipient: string): string => {
+  const trimmed = recipient.trim();
+  // Email is the only messaging recipient that contains `@`; anything else is a phone number.
+  return trimmed.includes('@') ? trimmed.toLowerCase() : parsePhoneNumber(trimmed);
+};
 
 /**
  * A mandatory, system-level rate limit on outbound messages (verification codes, organization
@@ -43,7 +56,7 @@ export class MessageRateGuard {
    * per-recipient cap within the policy window. Call before performing the send.
    */
   async guard(action: SentinelActivityAction, recipient: string): Promise<void> {
-    const targetHash = await sha256(recipient);
+    const targetHash = await sha256(normalizeRecipient(recipient));
     // Fail open: this is a best-effort spam guard, not a hard dependency of the send flow. If the
     // count query fails, `trySafe` returns `undefined` and we allow the send rather than block a
     // legitimate user.
@@ -66,7 +79,7 @@ export class MessageRateGuard {
 
   /** Record a successful send so it counts toward the recipient's cap. */
   async record(action: SentinelActivityAction, recipient: string): Promise<void> {
-    const targetHash = await sha256(recipient);
+    const targetHash = await sha256(normalizeRecipient(recipient));
     // Best-effort: a failure to record must not surface to the caller after the message was sent.
     await trySafe(
       this.queries.insertActivity({
