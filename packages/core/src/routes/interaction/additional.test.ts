@@ -95,6 +95,9 @@ const baseProviderMock = {
 };
 
 const findUserById = jest.fn().mockResolvedValue(mockUser);
+// The message rate guard runs when dev features are enabled; provide a permissive activity store.
+const countActivities = jest.fn().mockResolvedValue(0);
+const insertActivity = jest.fn();
 const tenantContext = new MockTenant(
   createMockProvider(jest.fn().mockResolvedValue(baseProviderMock)),
   {
@@ -103,6 +106,10 @@ const tenantContext = new MockTenant(
     },
     users: {
       findUserById,
+    },
+    sentinelActivities: {
+      countActivities,
+      insertActivity,
     },
   },
   {
@@ -163,6 +170,16 @@ describe('interaction routes', () => {
         tenantContext.libraries.passcodes
       );
       expect(response.status).toEqual(204);
+    });
+
+    it('should reject with 429 and not send when the recipient is over the rate-limit cap', async () => {
+      // Default policy allows 5 sends per recipient per window; simulate the cap being reached.
+      countActivities.mockResolvedValueOnce(5);
+
+      const response = await sessionRequest.post(path).send({ email: 'spammed@logto.io' });
+
+      expect(response.status).toEqual(429);
+      expect(sendVerificationCodeToIdentifier).not.toBeCalled();
     });
   });
 

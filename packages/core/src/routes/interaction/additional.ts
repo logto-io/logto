@@ -3,6 +3,7 @@ import {
   MfaFactor,
   type RequestVerificationCodePayload,
   requestVerificationCodePayloadGuard,
+  SentinelActivityAction,
   webAuthnAuthenticationOptionsGuard,
   webAuthnRegistrationOptionsGuard,
 } from '@logto/schemas';
@@ -13,6 +14,7 @@ import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { createSocialAuthorizationUrl } from '#src/libraries/verification-helpers/social-verification.js';
@@ -25,6 +27,7 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { type WithI18nContext } from '#src/middleware/koa-i18next.js';
 import type { WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
+import { MessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getLogtoCookie } from '#src/utils/cookie.js';
@@ -76,6 +79,7 @@ export default function additionalRoutes<T extends IRouterParamContext>(
     },
     queries: {
       users: { findUserById },
+      sentinelActivities,
     },
   } = tenant;
 
@@ -117,7 +121,8 @@ export default function additionalRoutes<T extends IRouterParamContext>(
     `${interactionPrefix}/${verificationPath}/verification-code`,
     koaGuard({
       body: requestVerificationCodePayloadGuard,
-      status: [204, 400, 404, 501],
+      // 429: rate limited; 501: connector not found
+      status: [204, 400, 404, 429, 501],
     }),
     async (ctx, next) => {
       const { interactionDetails, guard, createLog } = ctx;
@@ -127,19 +132,29 @@ export default function additionalRoutes<T extends IRouterParamContext>(
       const messageContext = await buildVerificationCodeTemplateContext(passcodes, ctx, guard.body);
       const { uiLocales } = getLogtoCookie(ctx);
 
-      await sendVerificationCodeToIdentifier(
-        {
-          event,
-          ...guard.body,
-          locale: ctx.locale,
-          ...(uiLocales && { uiLocales }),
-          messageContext,
-          ip: ctx.request.ip,
-        },
-        interactionDetails.jti,
-        createLog,
-        passcodes
-      );
+      const recipient = 'email' in guard.body ? guard.body.email : guard.body.phone;
+      const send = async () =>
+        sendVerificationCodeToIdentifier(
+          {
+            event,
+            ...guard.body,
+            locale: ctx.locale,
+            ...(uiLocales && { uiLocales }),
+            messageContext,
+            ip: ctx.request.ip,
+          },
+          interactionDetails.jti,
+          createLog,
+          passcodes
+        );
+
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withMessageRateGuard(
+            new MessageRateGuard(sentinelActivities),
+            { action: SentinelActivityAction.VerificationCodeSend, recipient },
+            send
+          )
+        : send());
 
       ctx.status = 204;
 
