@@ -37,11 +37,11 @@ function AppRoutes() {
             path={GlobalAnonymousRoute.ExternalGoogleOneTapLanding}
             element={<ExternalGoogleOneTapLanding />}
           />
+          <Route
+            path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
+            element={<AcceptInvitation />}
+          />
           <Route element={<ProtectedRoutes />}>
-            <Route
-              path={`${GlobalRoute.AcceptInvitation}/:invitationId`}
-              element={<AcceptInvitation />}
-            />
             <Route path={GlobalRoute.Profile + '/*'} element={<Profile />} />
             <Route path={GlobalRoute.HandleSocial} element={<HandleSocialCallback />} />
             <Route
