@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useCloudApi, useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
+import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -15,9 +16,8 @@ import CardTitle from '@/ds-components/CardTitle';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 import useSignOut from '@/hooks/use-sign-out';
+import TenantsList from '@/pages/Profile/containers/DeleteAccountModal/components/TenantsList';
 import { isPaidPlan } from '@/utils/subscription';
-
-import TenantsList from '../../../pages/Profile/containers/DeleteAccountModal/components/TenantsList';
 
 import styles from './index.module.scss';
 
@@ -101,8 +101,12 @@ export default function DeleteAccount() {
     void fetchClaims();
   }, [getIdTokenClaims, t]);
 
-  const roleMap = claims && getRoleMap(claims.organization_roles ?? []);
-  const tenantsToDelete = tenants.filter(({ id }) => roleMap?.[id]?.includes(TenantRole.Admin));
+  if (!claims) {
+    return <AppLoading />;
+  }
+
+  const roleMap = getRoleMap(claims.organization_roles ?? []);
+  const tenantsToDelete = tenants.filter(({ id }) => roleMap[id]?.includes(TenantRole.Admin));
   const tenantsToQuit = tenants.filter(({ id }) =>
     tenantsToDelete.every(({ id: tenantId }) => tenantId !== id)
   );
@@ -113,7 +117,7 @@ export default function DeleteAccount() {
       : null;
 
   const deleteAccount = async () => {
-    if (isDeleting || !claims) {
+    if (isDeleting) {
       return;
     }
 
