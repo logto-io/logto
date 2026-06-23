@@ -27,13 +27,9 @@ import { MfaValidator } from './libraries/mfa-validator.js';
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-const mockEnvSetValues = {
-  isDevFeaturesEnabled: true,
-};
-
 await mockEsmWithActual('#src/env-set/index.js', () => ({
   EnvSet: {
-    values: mockEnvSetValues,
+    values: {},
   },
 }));
 
@@ -72,8 +68,6 @@ describe('ExperienceInteraction adaptive MFA', () => {
         factors: [MfaFactor.TOTP],
       },
     });
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockEnvSetValues.isDevFeaturesEnabled = true;
   });
 
   // Truth table for MfaValidator.isMfaRequired
@@ -812,8 +806,6 @@ describe('ExperienceInteraction adaptive MFA', () => {
   });
 
   it('does not force adaptive MFA binding on submit when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockEnvSetValues.isDevFeaturesEnabled = false;
     signInExperiences.findDefaultSignInExperience.mockResolvedValue({
       ...mockSignInExperience,
       adaptiveMfa: { enabled: true },
@@ -957,8 +949,6 @@ describe('ExperienceInteraction adaptive MFA', () => {
   });
 
   it('still triggers adaptive MFA hook result when dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockEnvSetValues.isDevFeaturesEnabled = false;
     signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       adaptiveMfa: { enabled: true },
@@ -1026,8 +1016,6 @@ describe('ExperienceInteraction adaptive MFA', () => {
   });
 
   it('does not allow skipMfaOnSignIn when adaptive MFA triggers and dev features are disabled', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockEnvSetValues.isDevFeaturesEnabled = false;
     signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
       ...mockSignInExperience,
       adaptiveMfa: { enabled: true },

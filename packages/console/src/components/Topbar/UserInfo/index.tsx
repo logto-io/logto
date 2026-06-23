@@ -12,7 +12,7 @@ import SignOut from '@/assets/icons/sign-out.svg?react';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
 import { adminTenantEndpoint } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
 import FlipOnRtl from '@/ds-components/FlipOnRtl';
@@ -81,20 +81,10 @@ function UserInfo() {
           className={classNames(styles.dropdownItem, isLoading && styles.loading)}
           icon={<Profile className={styles.icon} />}
           onClick={() => {
-            if (isDevFeaturesEnabled) {
-              const redirectUrl = isCloud ? window.location.origin : getUrl('/').href;
-              const accountUrl = new URL('/account/security', adminTenantEndpoint.href);
-              accountUrl.searchParams.set('redirect', redirectUrl);
-              window.open(accountUrl.toString(), '_blank');
-              return;
-            }
-
-            // In OSS version, there will be a `/console` context path in the URL.
-            const profileRouteWithConsoleContext = getUrl('/profile');
-
-            // Open the profile page in a new tab. In Logto Cloud, the profile page is not nested in the tenant independent,
-            // whereas in OSS version, it is under the `/console` context path.
-            window.open(isCloud ? '/profile' : profileRouteWithConsoleContext, '_blank');
+            const redirectUrl = isCloud ? window.location.origin : getUrl('/').href;
+            const accountUrl = new URL('/account/security', adminTenantEndpoint.href);
+            accountUrl.searchParams.set('redirect', redirectUrl);
+            window.open(accountUrl.toString(), '_blank');
           }}
         >
           {t('menu.profile')}

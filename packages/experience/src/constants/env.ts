@@ -1,4 +1,1 @@
-import { yes } from '@silverhand/essentials';
-
-export const isDevFeaturesEnabled =
-  process.env.NODE_ENV !== 'production' || yes(process.env.DEV_FEATURES_ENABLED);
+export {}; // Keep module declaration

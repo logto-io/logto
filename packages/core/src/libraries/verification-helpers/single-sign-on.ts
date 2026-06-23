@@ -14,7 +14,6 @@ import { conditional, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { idpInitiatedSamlSsoSessionCookieName } from '#src/constants/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type HookContextManager } from '#src/libraries/hook/context-manager.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
@@ -72,11 +71,7 @@ export const getSsoAuthorizationUrl = async (
 
     const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    if (
-      // TODO: Remove this check when IdP-initiated SSO is fully supported
-      EnvSet.values.isDevFeaturesEnabled &&
-      connectorInstance instanceof SamlConnector
-    ) {
+    if (connectorInstance instanceof SamlConnector) {
       // Check if a IdP-initiated SSO session exists
       const sessionId = ctx.cookies.get(idpInitiatedSamlSsoSessionCookieName);
 

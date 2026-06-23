@@ -5,8 +5,6 @@ import type { OssOnboardingFormData } from './utils';
 
 // Module-level mocks for env constants. Must be declared before importing the module under test.
 // eslint-disable-next-line @silverhand/fp/no-let
-let mockIsDevFeaturesEnabled = true;
-// eslint-disable-next-line @silverhand/fp/no-let
 let mockOssSurveyEndpoint: string | undefined = 'https://survey.example.com';
 
 const mockKyPost = jest.fn<Promise<{ ok: boolean }>, [URL, Options?]>();
@@ -45,9 +43,6 @@ jest.mock('ky', () => ({
 }));
 
 jest.mock('@/consts/env', () => ({
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled;
-  },
   get ossSurveyEndpoint() {
     return mockOssSurveyEndpoint;
   },
@@ -93,8 +88,6 @@ describe('submitOssOnboarding', () => {
     mockKyPost.mockResolvedValue({ ok: true });
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockKyOptions.current = undefined;
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockIsDevFeaturesEnabled = true;
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockOssSurveyEndpoint = 'https://survey.example.com';
   });
@@ -309,25 +302,6 @@ describe('submitOssOnboarding', () => {
     });
 
     expect(mockKyPost).toHaveBeenCalledTimes(2);
-    expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
-  });
-
-  it('does not report when isDevFeaturesEnabled is false', async () => {
-    const submitOssOnboarding = await getSubmitOssOnboarding();
-    const update = jest.fn<Promise<void>, [Partial<OssUserOnboardingData>]>();
-    const navigate = jest.fn<void, [string, { replace: boolean }]>();
-
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    mockIsDevFeaturesEnabled = false;
-    update.mockResolvedValue();
-
-    await submitOssOnboarding({
-      formData: mockFormData,
-      navigate,
-      update,
-    });
-
-    expect(mockKyPost).not.toHaveBeenCalled();
     expect(navigate).toHaveBeenCalledWith('/get-started', { replace: true });
   });
 

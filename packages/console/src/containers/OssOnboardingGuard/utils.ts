@@ -1,6 +1,5 @@
 type GetOssOnboardingRedirectPathOptions = {
   isCloud: boolean;
-  isDevFeaturesEnabled: boolean;
   isProduction: boolean;
   hasError: boolean;
   isLoading: boolean;
@@ -13,7 +12,6 @@ const onboardingPath = 'onboarding';
 
 export const getOssOnboardingRedirectPath = ({
   isCloud,
-  isDevFeaturesEnabled,
   isProduction,
   hasError,
   isLoading,
@@ -23,7 +21,6 @@ export const getOssOnboardingRedirectPath = ({
 }: GetOssOnboardingRedirectPathOptions): string | undefined => {
   if (
     isCloud ||
-    !isDevFeaturesEnabled ||
     !isProduction ||
     hasError ||
     isLoading ||

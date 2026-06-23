@@ -4,7 +4,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import { guides } from '@/assets/docs/guides';
 import { type Guide } from '@/assets/docs/guides/types';
-import { isCloud as isCloudEnv, isDevFeaturesEnabled, isProtectedAppEnabled } from '@/consts/env';
+import { isCloud as isCloudEnv, isProtectedAppEnabled } from '@/consts/env';
 import { thirdPartyApp } from '@/consts/external-links';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -50,8 +50,7 @@ export const useAppGuideMetadata = (): {
           target !== 'API' &&
           (isCloudEnv ||
             !isCloud ||
-            (isProtectedAppEnabled && target === ApplicationType.Protected)) &&
-          (isDevFeaturesEnabled || !isDevFeature)
+            (isProtectedAppEnabled && target === ApplicationType.Protected))
       ),
     []
   );

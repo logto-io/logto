@@ -111,7 +111,7 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Session config
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
-  ...(EnvSet.values.isDevFeaturesEnabled ? devFeatureCustomRoutes : {}),
+  ...devFeatureCustomRoutes,
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 
 /**

@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Switch from '@/ds-components/Switch';
@@ -54,10 +53,6 @@ function InstructionTab({ isActive, section, action }: Props) {
   const tokenType = watch('tokenType');
   const isDataSourceSection = section === InstructionTabSection.DataSource;
   const isErrorHandlingSection = section === InstructionTabSection.ErrorHandling;
-
-  if (isErrorHandlingSection && !isDevFeaturesEnabled) {
-    return null;
-  }
 
   return (
     <div className={classNames(tabContentStyles.tabContent, isActive && tabContentStyles.active)}>
@@ -230,7 +225,7 @@ function InstructionTab({ isActive, section, action }: Props) {
           </GuideCard>
         </>
       )}
-      {isErrorHandlingSection && isDevFeaturesEnabled && (
+      {isErrorHandlingSection && (
         <GuideCard
           name={CardType.ErrorHandling}
           isExpanded={expendCard === CardType.ErrorHandling}
