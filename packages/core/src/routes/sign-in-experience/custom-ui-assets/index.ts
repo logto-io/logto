@@ -33,6 +33,24 @@ const getBlobEndpointHost = (connectionString: string) => {
   return /(?:^|;)AccountName=([^;]+)/u.exec(connectionString)?.[1];
 };
 
+const getErrorProperty = (error: unknown, property: string) => {
+  if (typeof error !== 'object' || error === null || !(property in error)) {
+    return;
+  }
+
+  const value: unknown = Reflect.get(error, property);
+
+  return typeof value === 'string' || typeof value === 'number' ? String(value) : undefined;
+};
+
+const getStorageErrorDiagnostics = (error: unknown) => ({
+  name: error instanceof Error ? error.name : undefined,
+  message: error instanceof Error ? error.message : String(error),
+  code: getErrorProperty(error, 'code'),
+  errno: getErrorProperty(error, 'errno'),
+  type: getErrorProperty(error, 'type'),
+});
+
 export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
   ...[
     router,
@@ -102,17 +120,49 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
 
         const hasUnzipCompleted = async (retryTimes: number) => {
           const startedAt = Date.now();
-          const [hasZip, hasError] = await Promise.all([
-            isFileExisted(objectKey),
-            isFileExisted(errorLogObjectKey),
-          ]);
-          consoleLog.info('[custom-ui-assets] unzip polling status', {
+          const logContext = {
             retryTimes,
             maxRetryCount,
             tenantId,
             customUiAssetId,
             container,
             blobEndpointHost,
+          };
+          const checkFileExisted = async (objectKeyToCheck: string, target: 'zip' | 'errorLog') => {
+            const checkStartedAt = Date.now();
+            consoleLog.info('[custom-ui-assets] unzip polling exists check started', {
+              ...logContext,
+              target,
+              objectKey: objectKeyToCheck,
+            });
+
+            try {
+              const exists = await isFileExisted(objectKeyToCheck);
+              consoleLog.info('[custom-ui-assets] unzip polling exists check succeeded', {
+                ...logContext,
+                target,
+                objectKey: objectKeyToCheck,
+                exists,
+                durationMs: Date.now() - checkStartedAt,
+              });
+              return exists;
+            } catch (error: unknown) {
+              consoleLog.error('[custom-ui-assets] unzip polling exists check failed', {
+                ...logContext,
+                target,
+                objectKey: objectKeyToCheck,
+                durationMs: Date.now() - checkStartedAt,
+                error: getStorageErrorDiagnostics(error),
+              });
+              throw error;
+            }
+          };
+          const [hasZip, hasError] = await Promise.all([
+            checkFileExisted(objectKey, 'zip'),
+            checkFileExisted(errorLogObjectKey, 'errorLog'),
+          ]);
+          consoleLog.info('[custom-ui-assets] unzip polling status', {
+            ...logContext,
             objectKey,
             errorLogObjectKey,
             hasZip,
