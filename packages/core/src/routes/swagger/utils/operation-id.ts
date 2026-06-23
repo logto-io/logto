@@ -112,6 +112,7 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'patch /configs/inline-hooks/:hookType': 'UpdateInlineHook',
   'get /configs/inline-hooks/:hookType': 'GetInlineHook',
   'delete /configs/inline-hooks/:hookType': 'DeleteInlineHook',
+  'post /configs/inline-hooks/test': 'TestInlineHook',
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 
 /**
