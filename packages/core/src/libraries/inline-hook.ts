@@ -1,4 +1,8 @@
-import { adminTenantId, type LogtoInlineHookKey } from '@logto/schemas';
+import {
+  adminTenantId,
+  LogtoInlineHookKey,
+  type InlineHookExecutionErrorPolicy,
+} from '@logto/schemas';
 import { ZodError } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -12,6 +16,21 @@ import {
 } from '#src/utils/local-vm/index.js';
 
 const inlineHookFunctionName = 'runInlineHook';
+const defaultInlineHookExecutionErrorPolicy = 'block' satisfies InlineHookExecutionErrorPolicy;
+
+export type InlineHookExecutionErrorFallback = {
+  action: 'rejectInvalidCredentials';
+};
+
+export type InlineHookExecutionErrorPolicyDecision =
+  | {
+      action: 'throw';
+      error: RequestError;
+    }
+  | {
+      action: 'continue';
+    }
+  | InlineHookExecutionErrorFallback;
 
 type InlineHookScriptPayload<Event> = {
   event: Event;
@@ -22,6 +41,50 @@ type InlineHookRunnerData<Event> = {
   script: string;
   event: Event;
   environmentVariables?: Record<string, string>;
+};
+
+type InlineHookExecutionErrorHandlingData = {
+  key: LogtoInlineHookKey;
+  onExecutionError?: InlineHookExecutionErrorPolicy;
+};
+
+const getInlineHookErrorFallback = (
+  key: LogtoInlineHookKey
+): InlineHookExecutionErrorPolicyDecision => {
+  switch (key) {
+    case LogtoInlineHookKey.PostFirstFactorVerification: {
+      return { action: 'rejectInvalidCredentials' };
+    }
+    case LogtoInlineHookKey.PostSignIn: {
+      return {
+        action: 'throw',
+        error: new RequestError({ code: 'session.verification_failed', status: 400 }),
+      };
+    }
+  }
+};
+
+export const getInlineHookExecutionErrorPolicyDecision = ({
+  key,
+  onExecutionError = defaultInlineHookExecutionErrorPolicy,
+}: InlineHookExecutionErrorHandlingData): InlineHookExecutionErrorPolicyDecision => {
+  if (onExecutionError === 'allow') {
+    return key === LogtoInlineHookKey.PostFirstFactorVerification
+      ? { action: 'rejectInvalidCredentials' }
+      : { action: 'continue' };
+  }
+
+  return getInlineHookErrorFallback(key);
+};
+
+const handleInlineHookExecutionError = (data: InlineHookExecutionErrorHandlingData) => {
+  const decision = getInlineHookExecutionErrorPolicyDecision(data);
+
+  if (decision.action === 'throw') {
+    throw decision.error;
+  }
+
+  return decision.action === 'rejectInvalidCredentials' ? decision : undefined;
 };
 
 export class InlineHookLibrary {
@@ -88,12 +151,11 @@ export class InlineHookLibrary {
         event,
         environmentVariables: inlineHook.environmentVariables,
       });
-    } catch (error: unknown) {
-      if (inlineHook.onExecutionError === 'allow') {
-        return;
-      }
-
-      throw error;
+    } catch {
+      return handleInlineHookExecutionError({
+        key,
+        onExecutionError: inlineHook.onExecutionError,
+      });
     }
   }
 
