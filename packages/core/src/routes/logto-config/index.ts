@@ -21,6 +21,7 @@ import { getConsoleLogFromContext } from '#src/utils/console.js';
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
 import idTokenRoutes from './id-token.js';
+import logtoConfigInlineHookRoutes from './inline-hook.js';
 import logtoConfigJwtCustomizerRoutes from './jwt-customizer.js';
 
 /**
@@ -228,6 +229,9 @@ export default function logtoConfigRoutes<T extends ManagementApiRouter>(
   );
 
   logtoConfigJwtCustomizerRoutes(router, tenant);
-
   idTokenRoutes(router, tenant);
+
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    logtoConfigInlineHookRoutes(router, tenant);
+  }
 }
