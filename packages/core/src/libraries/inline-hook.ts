@@ -2,14 +2,17 @@ import {
   adminTenantId,
   LogtoInlineHookKey,
   type InlineHookExecutionErrorPolicy,
+  type InlineHookTestRequestBody,
 } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
+import { got, HTTPError } from 'got';
 import { z, ZodError } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
+import { parseAzureFunctionsResponseError } from '#src/utils/custom-jwt/index.js';
 import {
   buildLocalVmErrorBody,
   LocalVmError,
@@ -210,6 +213,44 @@ export class InlineHookLibrary {
     private readonly logtoConfigs: LogtoConfigLibrary,
     private readonly subscription: SubscriptionLibrary
   ) {}
+
+  get isRegionalAzureFunctionAppConfigured(): boolean {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+
+    return Boolean(azureFunctionUntrustedAppKey && azureFunctionUntrustedAppEndpoint);
+  }
+
+  /**
+   * For Logto Cloud use only. Run the inline hook script remotely in an isolated environment.
+   * For OSS version, use @see InlineHookLibrary.runScriptInLocalVm instead.
+   */
+  async runScriptRemotely(payload: InlineHookTestRequestBody): Promise<unknown> {
+    const { azureFunctionUntrustedAppKey, azureFunctionUntrustedAppEndpoint } = EnvSet.values;
+
+    if (!this.isRegionalAzureFunctionAppConfigured) {
+      throw new RequestError(
+        { code: 'session.hook_denied_access', status: 422 },
+        { message: 'Remote inline hook runner is not configured.' }
+      );
+    }
+
+    try {
+      return await got
+        .post(new URL('/api/inline-hooks/test', azureFunctionUntrustedAppEndpoint), {
+          json: payload,
+          headers: {
+            'x-functions-key': azureFunctionUntrustedAppKey,
+          },
+        })
+        .json<unknown>();
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        throw parseAzureFunctionsResponseError(error);
+      }
+
+      throw error;
+    }
+  }
 
   async runHook<Event>({
     key,

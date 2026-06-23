@@ -1,6 +1,15 @@
-import { LogtoInlineHookKey, inlineHookGuard } from '@logto/schemas';
+import {
+  LogtoInlineHookKey,
+  inlineHookGuard,
+  inlineHookTestRequestBodyGuard,
+  jsonGuard,
+} from '@logto/schemas';
+import { ResponseError } from '@withtyped/client';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { InlineHookLibrary, isAccessDeniedError } from '#src/libraries/inline-hook.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
@@ -11,8 +20,28 @@ const inlineHookConfigsGuard = z.object({
   value: inlineHookGuard,
 });
 
+const inlineHookResponseErrorGuard = z.object({
+  message: z.string(),
+  error: z.unknown().optional(),
+});
+
+const parseInlineHookResponseError = async (error: ResponseError) => {
+  const responseBody: unknown = await error.response.json();
+
+  if (isAccessDeniedError(responseBody)) {
+    return {
+      message: responseBody.message,
+      error: responseBody,
+    };
+  }
+
+  const errorResponseResult = inlineHookResponseErrorGuard.safeParse(responseBody);
+
+  return errorResponseResult.success ? errorResponseResult.data : { message: error.message };
+};
+
 export default function logtoConfigInlineHookRoutes<T extends ManagementApiRouter>(
-  ...[router, { queries, logtoConfigs }]: RouterInitArgs<T>
+  ...[router, { queries, logtoConfigs, libraries }]: RouterInitArgs<T>
 ) {
   const { getRowsByKeys, deleteInlineHook } = queries.logtoConfigs;
   const { upsertInlineHook, getInlineHook, getInlineHooks, updateInlineHook } = logtoConfigs;
@@ -28,6 +57,40 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
       ctx.body = Object.values(LogtoInlineHookKey)
         .filter((key) => inlineHooks[key])
         .map((key) => ({ key, value: inlineHooks[key] }));
+      return next();
+    }
+  );
+
+  router.post(
+    '/configs/inline-hooks/test',
+    koaGuard({
+      body: inlineHookTestRequestBodyGuard,
+      response: jsonGuard.optional(),
+      status: [200, 400, 403, 422],
+    }),
+    async (ctx, next) => {
+      const { body } = ctx.guard;
+
+      try {
+        ctx.body = EnvSet.values.isCloud
+          ? await libraries.inlineHooks.runScriptRemotely(body)
+          : await InlineHookLibrary.runScriptInLocalVm(body);
+        ctx.status = 200;
+      } catch (error: unknown) {
+        if (error instanceof ResponseError) {
+          const responseBody = await parseInlineHookResponseError(error);
+          const { message, error: originalError } = responseBody;
+          const status = isAccessDeniedError(originalError) ? 403 : 422;
+
+          throw new RequestError(
+            { code: 'session.hook_denied_access', status },
+            { message, error: originalError }
+          );
+        }
+
+        throw error;
+      }
+
       return next();
     }
   );

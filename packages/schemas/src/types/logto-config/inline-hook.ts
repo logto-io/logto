@@ -32,6 +32,17 @@ export const inlineHookGuard = z
   })
   .strict() satisfies z.ZodType<InlineHook>;
 
+export const inlineHookTestRequestBodyGuard = z
+  .object({
+    script: z.string(),
+    hookType: z.nativeEnum(LogtoInlineHookKey),
+    event: jsonGuard,
+    environmentVariables: z.record(z.string()).optional(),
+  })
+  .strict();
+
+export type InlineHookTestRequestBody = z.infer<typeof inlineHookTestRequestBodyGuard>;
+
 export type HookUser = Pick<
   UserInfo,
   | 'id'
