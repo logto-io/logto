@@ -2,6 +2,7 @@ import { type Hook, type HookConfig, type HookEvent } from '@logto/schemas';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import {
   dataHookEventsLabel,
   interactionHookEvents,
@@ -31,7 +32,11 @@ const hookEventGroups: Array<CheckboxOptionGroup<HookEvent>> = [
   },
   {
     title: 'webhooks.schemas.security',
-    options: [{ value: 'Identifier.Lockout' }],
+    options: [
+      { value: 'Identifier.Lockout' },
+      // `Message.RateLimited` stays behind the dev-features flag until the email-security feature ships.
+      ...(isDevFeaturesEnabled ? [{ value: 'Message.RateLimited' as const }] : []),
+    ],
   },
 ];
 
