@@ -1,4 +1,5 @@
 import { Prompt, useLogto } from '@logto/react';
+import { AccountCenterControlValue } from '@logto/schemas';
 import { type ReactNode } from 'react';
 
 import { Main } from './App';
@@ -31,6 +32,20 @@ jest.mock('@logto/react', () => ({
   useLogto: jest.fn(),
   useHandleSignInCallback: jest.fn(() => ({ error: undefined })),
 }));
+
+jest.mock('react-router-dom', () => {
+  const actual = jest.requireActual('react-router-dom') as unknown as Record<string, unknown>;
+  const React = jest.requireActual('react') as unknown as {
+    createElement: (type: string, props: Record<string, string>) => unknown;
+  };
+
+  return {
+    __esModule: true,
+    ...actual,
+    Navigate: ({ to }: { readonly to: string }) =>
+      React.createElement('div', { 'data-testid': 'navigate', 'data-to': to }),
+  };
+});
 
 const setLocation = (pathname: string, search = '') => {
   // eslint-disable-next-line @silverhand/fp/no-mutating-methods
@@ -72,12 +87,12 @@ describe('Account Center <Main /> auth-redirect effects', () => {
 
   describe('userInfoError while authenticated', () => {
     it('attempts silent re-auth via Prompt.None when account center is enabled', () => {
-      setLocation('/account');
+      setLocation('/account/profile');
       const { signIn } = setupUseLogto();
 
       renderWithPageContext(
         <Main />,
-        { initialEntries: ['/account'] },
+        { initialEntries: ['/profile'] },
         { pageContext: { userInfoError: new Error('userinfo failed') } }
       );
 
@@ -105,18 +120,25 @@ describe('Account Center <Main /> auth-redirect effects', () => {
   });
 
   describe('silent re-auth failure fallback', () => {
-    it('falls back to Prompt.Login when redirected back with error=login_required', () => {
+    it('redirects the root account route before falling back to tab-level auth', () => {
       setLocation('/account', '?error=login_required');
       const { signIn } = setupUseLogto({ isAuthenticated: false });
 
-      renderWithPageContext(
+      const { getByTestId } = renderWithPageContext(
         <Main />,
         { initialEntries: ['/account?error=login_required'] },
-        { pageContext: {} }
+        {
+          pageContext: {
+            accountCenterSettings: {
+              ...mockAccountCenterSettings,
+              profileFields: [{ name: 'name' }],
+            },
+          },
+        }
       );
 
-      expect(signIn).toHaveBeenCalledTimes(1);
-      expect(signIn).toHaveBeenCalledWith(expect.objectContaining({ prompt: Prompt.Login }));
+      expect(getByTestId('navigate').dataset.to).toBe('/profile');
+      expect(signIn).not.toHaveBeenCalled();
     });
 
     it('does not trigger any signIn when account center is disabled', () => {
@@ -138,11 +160,11 @@ describe('Account Center <Main /> auth-redirect effects', () => {
   });
 
   describe('unauthenticated landing', () => {
-    it('starts a regular sign-in without a prompt when account center is enabled', () => {
-      setLocation('/account');
+    it('starts a regular sign-in without a prompt when landing on a tab', () => {
+      setLocation('/account/profile');
       const { signIn } = setupUseLogto({ isAuthenticated: false });
 
-      renderWithPageContext(<Main />, { initialEntries: ['/account'] }, { pageContext: {} });
+      renderWithPageContext(<Main />, { initialEntries: ['/profile'] }, { pageContext: {} });
 
       expect(signIn).toHaveBeenCalledTimes(1);
       expect(signIn.mock.calls[0]?.[0]).toEqual(
@@ -150,6 +172,110 @@ describe('Account Center <Main /> auth-redirect effects', () => {
         expect.objectContaining({ redirectUri: expect.any(String) })
       );
       expect(signIn.mock.calls[0]?.[0]?.prompt).toBeUndefined();
+    });
+  });
+
+  describe('root account route redirect', () => {
+    it('redirects to the profile tab when it is available', () => {
+      setLocation('/account');
+      const { signIn } = setupUseLogto({ isAuthenticated: false, isLoading: true });
+
+      const { getByTestId } = renderWithPageContext(
+        <Main />,
+        { initialEntries: ['/account'] },
+        {
+          pageContext: {
+            accountCenterSettings: {
+              ...mockAccountCenterSettings,
+              profileFields: [{ name: 'name' }],
+            },
+            userInfo: undefined,
+            isLoadingUserInfo: true,
+          },
+        }
+      );
+
+      expect(getByTestId('navigate').dataset.to).toBe('/profile');
+      expect(signIn).not.toHaveBeenCalled();
+    });
+
+    it('redirects to the security tab when profile is unavailable', () => {
+      setLocation('/account');
+      setupUseLogto({ isAuthenticated: false });
+
+      const { getByTestId } = renderWithPageContext(
+        <Main />,
+        { initialEntries: ['/account'] },
+        {
+          pageContext: {
+            accountCenterSettings: {
+              ...mockAccountCenterSettings,
+              profileFields: [],
+            },
+          },
+        }
+      );
+
+      expect(getByTestId('navigate').dataset.to).toBe('/security');
+    });
+
+    it('redirects to the sessions tab when profile and security are unavailable', () => {
+      setLocation('/account');
+      setupUseLogto({ isAuthenticated: false });
+
+      const { getByTestId } = renderWithPageContext(
+        <Main />,
+        { initialEntries: ['/account'] },
+        {
+          pageContext: {
+            accountCenterSettings: {
+              ...mockAccountCenterSettings,
+              profileFields: [],
+              fields: {
+                ...mockAccountCenterSettings.fields,
+                email: AccountCenterControlValue.Off,
+                mfa: AccountCenterControlValue.Off,
+                password: AccountCenterControlValue.Off,
+                phone: AccountCenterControlValue.Off,
+                session: AccountCenterControlValue.Edit,
+                username: AccountCenterControlValue.Off,
+              },
+            },
+          },
+        }
+      );
+
+      expect(getByTestId('navigate').dataset.to).toBe('/sessions');
+    });
+
+    it('shows the home error page when no tab is available', () => {
+      setLocation('/account');
+      const { signIn } = setupUseLogto({ isAuthenticated: false });
+
+      const { getByText } = renderWithPageContext(
+        <Main />,
+        { initialEntries: ['/account'] },
+        {
+          pageContext: {
+            accountCenterSettings: {
+              ...mockAccountCenterSettings,
+              profileFields: [],
+              fields: {
+                ...mockAccountCenterSettings.fields,
+                email: AccountCenterControlValue.Off,
+                mfa: AccountCenterControlValue.Off,
+                password: AccountCenterControlValue.Off,
+                phone: AccountCenterControlValue.Off,
+                session: AccountCenterControlValue.Off,
+                username: AccountCenterControlValue.Off,
+              },
+            },
+          },
+        }
+      );
+
+      expect(getByText('account_center.home.title')).toBeTruthy();
+      expect(signIn).not.toHaveBeenCalled();
     });
   });
 
