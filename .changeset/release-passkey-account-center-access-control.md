@@ -2,7 +2,6 @@
 "@logto/core": minor
 "@logto/console": minor
 "@logto/account": minor
-"@logto/schemas": minor
 ---
 
 add independent Account Center passkey controls for passkey sign-in

@@ -95,6 +95,19 @@ export const convertAccountCenterToForm = (
   profileFields: accountCenter?.profileFields ?? [],
 });
 
+export const normalizeAccountCenterFieldsForSubmit = (
+  fields: AccountCenterFormValues['fields'],
+  originalFields?: AccountCenterConfig['fields']
+): AccountCenterFieldControl => {
+  const { passkey, ...fieldsWithoutPasskey } = fields;
+
+  if (originalFields?.passkey === undefined && passkey === AccountCenterControlValue.Off) {
+    return fieldsWithoutPasskey;
+  }
+
+  return fields;
+};
+
 /**
  * @deprecated
  */
