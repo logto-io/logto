@@ -2,7 +2,9 @@ import { Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
+import RedirectToAccountCenter from '@/components/RedirectToAccountCenter';
 import { EnterpriseSubscriptionTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -42,7 +44,10 @@ function AppRoutes() {
             element={<AcceptInvitation />}
           />
           <Route element={<ProtectedRoutes />}>
-            <Route path={GlobalRoute.Profile + '/*'} element={<Profile />} />
+            <Route
+              path={GlobalRoute.Profile + '/*'}
+              element={isDevFeaturesEnabled ? <RedirectToAccountCenter /> : <Profile />}
+            />
             <Route path={GlobalRoute.HandleSocial} element={<HandleSocialCallback />} />
             <Route
               path={GlobalRoute.CheckoutSuccessCallback}
