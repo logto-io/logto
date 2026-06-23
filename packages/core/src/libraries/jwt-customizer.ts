@@ -36,6 +36,7 @@ import { type UserLibrary } from '#src/libraries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 import {
   LocalVmError,
+  LocalVmTimeoutError,
   getJwtCustomizerScripts,
   runScriptFunctionInLocalVm,
   buildLocalVmErrorBody,
@@ -78,6 +79,10 @@ export class JwtCustomizerLibrary {
     } catch (error: unknown) {
       if (error instanceof LocalVmError) {
         throw error;
+      }
+
+      if (error instanceof LocalVmTimeoutError) {
+        throw new LocalVmError(buildLocalVmErrorBody(error), 504);
       }
 
       // Assuming we only use zod for request body validation

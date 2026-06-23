@@ -6,6 +6,7 @@ import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import {
   buildLocalVmErrorBody,
   LocalVmError,
+  LocalVmTimeoutError,
   runScriptFunctionInLocalVm,
 } from '#src/utils/custom-jwt/index.js';
 
@@ -59,6 +60,10 @@ export class InlineHookLibrary {
     } catch (error: unknown) {
       if (error instanceof LocalVmError) {
         throw error;
+      }
+
+      if (error instanceof LocalVmTimeoutError) {
+        throw new LocalVmError(buildLocalVmErrorBody(error), 504);
       }
 
       if (error instanceof ZodError) {
