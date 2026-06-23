@@ -9,6 +9,21 @@ import type { UploadFile } from './types.js';
 
 const defaultPublicDomain = 'blob.core.windows.net';
 
+const getErrorProperty = (error: unknown, property: string) => {
+  if (typeof error !== 'object' || error === null || !(property in error)) {
+    return;
+  }
+
+  const value: unknown = Reflect.get(error, property);
+
+  return typeof value === 'string' || typeof value === 'number' ? String(value) : undefined;
+};
+
+const isPrematureCloseStorageFetchError = (error: unknown) =>
+  error instanceof Error &&
+  error.message.includes('Invalid response body while trying to fetch') &&
+  getErrorProperty(error, 'code') === 'ERR_STREAM_PREMATURE_CLOSE';
+
 export const buildAzureStorage = (
   connectionString: string,
   container: string
@@ -54,7 +69,16 @@ export const buildAzureStorage = (
 
   const isFileExisted = async (objectKey: string) => {
     const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
-    return blockBlobClient.exists();
+    try {
+      return await blockBlobClient.exists();
+    } catch (error: unknown) {
+      // Azure Blob `exists()` may throw this when the blob is missing in some runtime/proxy paths.
+      if (isPrematureCloseStorageFetchError(error)) {
+        return false;
+      }
+
+      throw error;
+    }
   };
 
   const getFileProperties = async (objectKey: string) => {
