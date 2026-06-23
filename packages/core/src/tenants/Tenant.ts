@@ -1,5 +1,6 @@
 import { adminTenantId, experience } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
+import { once } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import Koa from 'koa';
 import compose from 'koa-compose';
@@ -50,6 +51,9 @@ import {
 import { getTenantDatabaseDsn } from './utils.js';
 
 const consoleLog = new ConsoleLog('tenant');
+// Keep tenant disposal draining longer than the HTTP server timeout (120s in app/init.ts) so
+// ordinary in-flight requests can finish before the database pool is closed.
+const tenantDisposeDrainTimeout = 130_000;
 
 /** Data for creating a tenant instance. */
 type CreateTenant = {
@@ -85,7 +89,7 @@ export default class Tenant implements TenantContext {
 
   readonly #createdAt = Date.now();
   #requestCount = 0;
-  #onRequestEmpty?: () => Promise<void>;
+  #onRequestEmpty?: () => void;
   /**
    * Whether the database pool of this instance has been (or is about to be) ended by
    * {@link dispose}. Once `true`, the instance must not serve new requests.
@@ -299,13 +303,14 @@ export default class Tenant implements TenantContext {
       this.#requestCount -= 1;
 
       if (this.#requestCount === 0) {
-        void this.#onRequestEmpty?.();
+        this.#onRequestEmpty?.();
       }
     }
   }
 
   /**
-   * Try to dispose the tenant resources. If there are any pending requests, this function will wait for them to end with 5s timeout.
+   * Try to dispose the tenant resources. If there are any pending requests, this function
+   * waits up to the tenant disposal drain timeout for them to end.
    *
    * Currently this function only ends the database pool.
    *
@@ -323,23 +328,26 @@ export default class Tenant implements TenantContext {
     }
 
     return new Promise<true | 'timeout'>((resolve, reject) => {
-      const endEnvSet = async (result: true | 'timeout') => {
-        try {
-          await this.envSet.end();
-          resolve(result);
-        } catch (error: unknown) {
-          reject(error instanceof Error ? error : new Error(String(error)));
-        }
-      };
+      const endEnvSet = once((result: true | 'timeout', timeout: ReturnType<typeof setTimeout>) => {
+        this.#onRequestEmpty = undefined;
+        clearTimeout(timeout);
+
+        void (async () => {
+          try {
+            await this.envSet.end();
+            resolve(result);
+          } catch (error: unknown) {
+            reject(error instanceof Error ? error : new Error(String(error)));
+          }
+        })();
+      });
 
       const timeout = setTimeout(() => {
-        this.#onRequestEmpty = undefined;
-        void endEnvSet('timeout');
-      }, 5000);
+        endEnvSet('timeout', timeout);
+      }, tenantDisposeDrainTimeout);
 
-      this.#onRequestEmpty = async () => {
-        clearTimeout(timeout);
-        await endEnvSet(true);
+      this.#onRequestEmpty = () => {
+        endEnvSet(true, timeout);
       };
     });
   }

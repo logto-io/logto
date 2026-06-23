@@ -55,6 +55,7 @@ const Tenant = await pickDefault(import('./Tenant.js'));
 describe('Tenant', () => {
   afterEach(() => {
     jest.clearAllMocks();
+    jest.useRealTimers();
   });
 
   it('should call middleware factories for user tenants', async () => {
@@ -128,6 +129,25 @@ describe('Tenant request lifecycle and disposal', () => {
 
     expect(end.calledOnce).toBe(true);
     expect(tenant.requestStart()).toBe(false);
+  });
+
+  it('keeps the database pool open until the disposal drain timeout elapses', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const end = Sinon.stub(tenant.envSet, 'end').resolves();
+
+    expect(tenant.requestStart()).toBe(true);
+
+    jest.useFakeTimers();
+    const disposed = tenant.dispose();
+    await Promise.resolve();
+
+    jest.advanceTimersByTime(129_999);
+    expect(end.called).toBe(false);
+
+    jest.advanceTimersByTime(1);
+
+    await expect(disposed).resolves.toBe('timeout');
+    expect(end.calledOnce).toBe(true);
   });
 
   it('rejects when ending the database pool fails while draining requests', async () => {
@@ -308,8 +328,12 @@ describe('Tenant cache health check', () => {
 
   it('invalidates tenant instances when staged activation is due', async () => {
     const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const signingKeyRotationAt = Date.now() + 1000;
+
+    jest.useFakeTimers().setSystemTime(signingKeyRotationAt);
+
     Sinon.stub(tenant.queries.logtoConfigs, 'getSigningKeyRotationState').value(
-      jest.fn(async () => ({ signingKeyRotationAt: Date.now() - 1 }))
+      jest.fn(async () => ({ signingKeyRotationAt }))
     );
 
     expect(await tenant.checkHealth()).toBe(false);
