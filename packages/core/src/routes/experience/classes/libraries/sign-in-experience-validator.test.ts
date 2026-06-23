@@ -37,6 +37,15 @@ const ssoConnectors = {
 
 const mockTenant = new MockTenant(undefined, { signInExperiences }, undefined, { ssoConnectors });
 
+const buildValidatorWithSignInMode = (signInMode: SignInMode) => {
+  signInExperiences.findDefaultSignInExperience.mockResolvedValueOnce({
+    ...mockSignInExperience,
+    signInMode,
+  });
+
+  return new SignInExperienceValidator(mockTenant.libraries, mockTenant.queries);
+};
+
 const passwordVerificationRecords = Object.fromEntries(
   Object.values(SignInIdentifier).map((identifier) => [
     identifier,
@@ -784,6 +793,20 @@ describe('SignInExperienceValidator', () => {
         const result = await signInExperienceValidator.getMandatoryUserProfileBySignUpMethods();
         expect(result).toEqual(expected);
       });
+    });
+  });
+
+  describe('isRegistrationDisabled', () => {
+    it('returns true when the sign-in mode is sign-in only', async () => {
+      const validator = buildValidatorWithSignInMode(SignInMode.SignIn);
+
+      await expect(validator.isRegistrationDisabled()).resolves.toBe(true);
+    });
+
+    it('returns false when registration is enabled', async () => {
+      const validator = buildValidatorWithSignInMode(SignInMode.SignInAndRegister);
+
+      await expect(validator.isRegistrationDisabled()).resolves.toBe(false);
     });
   });
 });

@@ -267,6 +267,18 @@ export class SignInExperienceValidator {
     return this.signInExperienceDataCache;
   }
 
+  /**
+   * Whether new-user registration is disabled for the tenant (sign-in only). Used by the
+   * verification-code send flow to suppress delivery to unknown recipients: when registration is
+   * off, an unregistered recipient can never use the code to authenticate, so a delivered code
+   * would only serve account enumeration / spam.
+   */
+  public async isRegistrationDisabled(): Promise<boolean> {
+    const { signInMode } = await this.getSignInExperienceData();
+
+    return signInMode === SignInMode.SignIn;
+  }
+
   public async getMandatoryUserProfileBySignUpMethods(): Promise<Set<MissingProfile>> {
     const {
       signUp: { identifiers, password, secondaryIdentifiers = [] },

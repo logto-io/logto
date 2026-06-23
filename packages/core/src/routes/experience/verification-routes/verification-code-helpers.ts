@@ -75,11 +75,7 @@ type SendCodeParams = {
   ctx: ExperienceInteractionRouterContext;
 };
 
-/**
- * Check if a user exists with the given identifier (email or phone).
- * Used to determine whether to actually deliver verification codes
- * in the forgot-password flow, preventing account enumeration and spam.
- */
+/** Whether a user exists with the given identifier (email or phone). */
 const hasUserWithIdentifier = async (
   queries: Queries,
   identifier: VerificationCodeIdentifier
@@ -91,6 +87,39 @@ const hasUserWithIdentifier = async (
   }
 
   return queries.users.hasUserWithNormalizedPhone(value);
+};
+
+/**
+ * Whether to create the passcode record but suppress delivery, for a recipient with no legitimate
+ * reason to receive a code (anti-enumeration / anti-spam). The record is still created, so a later
+ * verify returns `code_mismatch`, not `not_found`. Two cases:
+ *
+ * - Forgot-password to an identifier no user owns (always on).
+ * - Sign-in from an unidentified session to an identifier no user owns when registration is
+ *   disabled (behind `isDevFeaturesEnabled`); identified sessions always deliver.
+ */
+const shouldSkipDelivery = async (
+  experienceInteraction: ExperienceInteraction,
+  queries: Queries,
+  identifier: VerificationCodeIdentifier,
+  interactionEvent?: InteractionEvent
+): Promise<boolean> => {
+  if (interactionEvent === InteractionEvent.ForgotPassword) {
+    return !(await hasUserWithIdentifier(queries, identifier));
+  }
+
+  if (
+    EnvSet.values.isDevFeaturesEnabled &&
+    interactionEvent === InteractionEvent.SignIn &&
+    !experienceInteraction.identifiedUserId
+  ) {
+    const registrationDisabled =
+      await experienceInteraction.signInExperienceValidator.isRegistrationDisabled();
+
+    return registrationDisabled && !(await hasUserWithIdentifier(queries, identifier));
+  }
+
+  return false;
 };
 
 /**
@@ -126,12 +155,12 @@ export const sendCode = async ({
     await experienceInteraction.signInExperienceValidator.guardEmailBlocklist(codeVerification);
   }
 
-  // For forgot-password requests, unknown identifiers still create the passcode record
-  // (so verification returns `code_mismatch` instead of `not_found`), but skip
-  // delivery and connector/template validation to avoid leaking configuration errors.
-  const skipDelivery =
-    interactionEvent === InteractionEvent.ForgotPassword &&
-    !(await hasUserWithIdentifier(queries, identifier));
+  const skipDelivery = await shouldSkipDelivery(
+    experienceInteraction,
+    queries,
+    identifier,
+    interactionEvent
+  );
 
   const payload = skipDelivery
     ? undefined
@@ -142,8 +171,8 @@ export const sendCode = async ({
         ...(ctx.request.ip && { ip: ctx.request.ip }),
       };
 
-  // Send verification code. When delivery is skipped (forgot-password to an unknown user) nothing
-  // is sent, so the rate guard is bypassed.
+  // Send verification code. When delivery is skipped (see `shouldSkipDelivery`) nothing is sent, so
+  // the rate guard is bypassed.
   const send = async () => codeVerification.sendVerificationCode(payload, { skipDelivery });
 
   const messageRateLimit = {
