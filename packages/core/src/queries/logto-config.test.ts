@@ -1,6 +1,7 @@
 import {
   type LogtoConfigKey,
   LogtoConfigs,
+  LogtoInlineHookKey,
   LogtoOidcConfigKey,
   LogtoTenantConfigKey,
   OidcSigningKeyStatus,
@@ -31,9 +32,11 @@ const {
   getSigningKeyRotationState,
   setSigningKeyRotationAt,
   setTenantCacheExpiresAt,
+  upsertInlineHook,
   upsertSigningKeyRotationState,
   updateAdminConsoleConfig,
   updateOidcConfigsByKey,
+  deleteInlineHook,
 } = createLogtoConfigQueries(pool, new MockWellKnownCache());
 
 describe('connector queries', () => {
@@ -150,6 +153,59 @@ describe('connector queries', () => {
     });
 
     void updateOidcConfigsByKey(LogtoOidcConfigKey.Session, targetValue);
+  });
+
+  test('upsertInlineHook', async () => {
+    const targetValue = {
+      script: 'export default async () => ({ action: "updateUser" });',
+      environmentVariables: {
+        API_KEY: '<api-key>',
+      },
+      enabled: true,
+      onExecutionError: 'allow' as const,
+    };
+    const targetRowData = [{ key: LogtoInlineHookKey.PostSignIn, value: targetValue }];
+    const expectSql = sql`
+      insert into ${table} (${fields.key}, ${fields.value})
+        values (${LogtoInlineHookKey.PostSignIn}, ${sql.jsonb(targetValue)})
+        on conflict (${fields.tenantId}, ${fields.key}) do update set ${fields.value} = ${sql.jsonb(
+          targetValue
+        )}
+        returning *
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toMatchObject([
+        LogtoInlineHookKey.PostSignIn,
+        JSON.stringify(targetValue),
+        JSON.stringify(targetValue),
+      ]);
+
+      return createMockQueryResult(targetRowData as never);
+    });
+
+    await expect(upsertInlineHook(LogtoInlineHookKey.PostSignIn, targetValue)).resolves.toEqual(
+      targetRowData[0]
+    );
+  });
+
+  test('deleteInlineHook', async () => {
+    const expectSql = sql`
+      delete from ${table}
+      where ${fields.key}=${LogtoInlineHookKey.PostFirstFactorVerification}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([LogtoInlineHookKey.PostFirstFactorVerification]);
+
+      return { ...createMockQueryResult([]), rowCount: 1 };
+    });
+
+    await expect(
+      deleteInlineHook(LogtoInlineHookKey.PostFirstFactorVerification)
+    ).resolves.toBeUndefined();
   });
 
   test('getSigningKeyRotationState', async () => {

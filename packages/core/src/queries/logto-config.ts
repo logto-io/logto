@@ -1,4 +1,5 @@
 import {
+  type inlineHookConfigGuard,
   type jwtCustomizerConfigGuard,
   LogtoConfigs,
   LogtoTenantConfigKey,
@@ -6,6 +7,7 @@ import {
   type IdTokenConfig,
   type LogtoConfig,
   type LogtoConfigKey,
+  type LogtoInlineHookKey,
   LogtoOidcConfigKey,
   type LogtoJwtTokenKey,
   type OidcPrivateKey,
@@ -218,6 +220,23 @@ export const createLogtoConfigQueries = (
 
   const deleteJwtCustomizer = async <T extends LogtoJwtTokenKey>(key: T) => deleteRowByKey(key);
 
+  const upsertInlineHook = async <T extends LogtoInlineHookKey>(
+    key: T,
+    value: z.infer<(typeof inlineHookConfigGuard)[T]>
+  ) =>
+    pool.one<{ key: T; value: z.infer<(typeof inlineHookConfigGuard)[T]> }>(
+      sql`
+        insert into ${table} (${fields.key}, ${fields.value})
+          values (${key}, ${sql.jsonb(value)})
+          on conflict (${fields.tenantId}, ${fields.key}) do update set ${
+            fields.value
+          } = ${sql.jsonb(value)}
+          returning *
+      `
+    );
+
+  const deleteInlineHook = async <T extends LogtoInlineHookKey>(key: T) => deleteRowByKey(key);
+
   const getIdTokenConfig = wellKnownCache.memoize(async () => {
     const { rows } = await getRowsByKeys([LogtoTenantConfigKey.IdToken]);
 
@@ -268,6 +287,8 @@ export const createLogtoConfigQueries = (
     setSigningKeyRotationAt,
     upsertJwtCustomizer,
     deleteJwtCustomizer,
+    upsertInlineHook,
+    deleteInlineHook,
     getIdTokenConfig,
     upsertIdTokenConfig,
     getMessageRateLimitOverride,

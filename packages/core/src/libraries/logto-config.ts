@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import type {
   CloudConnectionData,
   IdTokenConfig,
+  InlineHookType,
   JwtCustomizerType,
   LogtoOidcConfigType,
   OidcConfigKey,
@@ -11,6 +12,7 @@ import type {
 } from '@logto/schemas';
 import {
   LogtoConfigs,
+  LogtoInlineHookKey,
   LogtoJwtTokenKey,
   LogtoOidcConfigKey,
   OidcSigningKeyStatus,
@@ -20,6 +22,7 @@ import {
   oidcConfigKeysResponseGuard,
   rotateOidcPrivateKeyStatuses,
   idTokenConfigGuard,
+  inlineHookConfigGuard,
   jwtCustomizerConfigGuard,
   logtoOidcConfigGuard,
 } from '@logto/schemas';
@@ -39,6 +42,7 @@ export const createLogtoConfigLibrary = ({
     getRowsByKeys,
     getCloudConnectionData: queryCloudConnectionData,
     upsertJwtCustomizer: queryUpsertJwtCustomizer,
+    upsertInlineHook: queryUpsertInlineHook,
     upsertIdTokenConfig: queryUpsertIdTokenConfig,
     getSigningKeyRotationState,
   },
@@ -156,6 +160,66 @@ export const createLogtoConfigLibrary = ({
     return updatedRow.value;
   };
 
+  const upsertInlineHook = async <T extends LogtoInlineHookKey>(
+    key: T,
+    value: InlineHookType[T]
+  ) => {
+    const { value: rawValue } = await queryUpsertInlineHook(key, value);
+
+    return {
+      key,
+      value: inlineHookConfigGuard[key].parse(rawValue),
+    };
+  };
+
+  const getInlineHook = async <T extends LogtoInlineHookKey>(key: T) => {
+    const { rows } = await getRowsByKeys([key]);
+
+    if (rows.length === 0) {
+      throw new RequestError({
+        code: 'entity.not_exists_with_id',
+        name: LogtoConfigs.tableSingular,
+        id: key,
+        status: 404,
+      });
+    }
+
+    return z.object({ value: inlineHookConfigGuard[key] }).parse(rows[0]).value;
+  };
+
+  const getInlineHooks = async (consoleLog: ConsoleLog): Promise<Partial<InlineHookType>> => {
+    try {
+      const { rows } = await getRowsByKeys(Object.values(LogtoInlineHookKey));
+
+      return z
+        .object(inlineHookConfigGuard)
+        .partial()
+        .parse(Object.fromEntries(rows.map(({ key, value }) => [key, value])));
+    } catch (error: unknown) {
+      if (error instanceof ZodError) {
+        consoleLog.error(
+          error.issues
+            .map(({ message, path }) => `${message} at ${chalk.green(path.join('.'))}`)
+            .join('\n')
+        );
+      } else {
+        consoleLog.error(error);
+      }
+
+      throw new Error('Failed to get inline hooks');
+    }
+  };
+
+  const updateInlineHook = async <T extends LogtoInlineHookKey>(
+    key: T,
+    value: InlineHookType[T]
+  ): Promise<InlineHookType[T]> => {
+    const originValue = await getInlineHook(key);
+    const result = inlineHookConfigGuard[key].parse({ ...originValue, ...value });
+    const updatedRow = await upsertInlineHook(key, result);
+    return updatedRow.value;
+  };
+
   const upsertIdTokenConfig = async (idTokenConfig: IdTokenConfig) => {
     const { value } = await queryUpsertIdTokenConfig(idTokenConfig);
     return idTokenConfigGuard.parse(value);
@@ -235,6 +299,10 @@ export const createLogtoConfigLibrary = ({
     getJwtCustomizer,
     getJwtCustomizers,
     updateJwtCustomizer,
+    upsertInlineHook,
+    getInlineHook,
+    getInlineHooks,
+    updateInlineHook,
     upsertIdTokenConfig,
     getRedactedOidcKeyResponse,
     promoteScheduledSigningKeyRotation,
