@@ -292,40 +292,10 @@ export const removeUnnecessaryOperations = (
 
 const isRecord = (value: unknown): value is Record<string, unknown> => isObject(value);
 
-const removeRequiredProperty = (
-  schema: Record<string, unknown>,
-  required: unknown,
-  propertyName: string
-) => {
-  if (!Array.isArray(required)) {
-    return;
+const removeDevFeatureExtensionMarker = (propertySchema: unknown) => {
+  if (isRecord(propertySchema) && propertySchema[devFeatureSchemaExtension] === true) {
+    Reflect.deleteProperty(propertySchema, devFeatureSchemaExtension);
   }
-
-  const nextRequired = required.filter((item) => item !== propertyName);
-
-  if (nextRequired.length === 0) {
-    Reflect.deleteProperty(schema, 'required');
-
-    return;
-  }
-
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Pruning the supplement document is intentionally in-place.
-  schema.required = nextRequired;
-};
-
-const removeDevFeatureSchemaProperty = (
-  schema: Record<string, unknown>,
-  properties: Record<string, unknown>,
-  propertyName: string,
-  propertySchema: unknown
-) => {
-  if (!isRecord(propertySchema) || propertySchema[devFeatureSchemaExtension] !== true) {
-    return false;
-  }
-
-  Reflect.deleteProperty(propertySchema, devFeatureSchemaExtension);
-
-  return false;
 };
 
 const removeDevFeatureSchemaProperties = (value: unknown) => {
@@ -345,10 +315,8 @@ const removeDevFeatureSchemaProperties = (value: unknown) => {
   const { properties } = schema;
 
   if (isRecord(properties)) {
-    for (const [propertyName, propertySchema] of Object.entries(properties)) {
-      if (removeDevFeatureSchemaProperty(schema, properties, propertyName, propertySchema)) {
-        continue;
-      }
+    for (const propertySchema of Object.values(properties)) {
+      removeDevFeatureExtensionMarker(propertySchema);
     }
   }
 

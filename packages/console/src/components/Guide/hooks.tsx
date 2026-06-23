@@ -46,7 +46,7 @@ export const useAppGuideMetadata = (): {
   const appGuides = useMemo(
     () =>
       guides.filter(
-        ({ metadata: { target, isCloud, isDevFeature } }) =>
+        ({ metadata: { target, isCloud } }) =>
           target !== 'API' &&
           (isCloudEnv ||
             !isCloud ||

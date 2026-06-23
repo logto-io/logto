@@ -43,7 +43,6 @@ function Sidebar() {
               )}
             </Section>
           ))}
-          <div aria-hidden className={styles.devStatusSpacer} />
           <OssCloudCard />
         </div>
       </OverlayScrollbar>
