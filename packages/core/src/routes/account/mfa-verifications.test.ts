@@ -8,7 +8,6 @@ import {
   mockUserTotpMfaVerification,
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -48,8 +47,6 @@ const { findDefaultSignInExperience } = mockedQueries.signInExperiences;
 
 const accountMfaRoutes = await pickDefault(import('./mfa-verifications.js'));
 
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
 describe('account mfa verification routes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries);
   const accountRequest = createRequester({
@@ -85,9 +82,6 @@ describe('account mfa verification routes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
   });
 
   describe('PUT /api/my-account/mfa-verifications/totp', () => {
@@ -185,9 +179,6 @@ describe('account mfa verification routes', () => {
 
   describe('POST /api/my-account/mfa-verifications passkey permission and binding', () => {
     it('should allow WebAuthn binding when passkeySignIn.enabled is true (without MFA factor)', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-
       findDefaultSignInExperience.mockResolvedValueOnce({
         ...mockSignInExperience,
         mfa: { ...mockSignInExperience.mfa, factors: [] },
@@ -206,9 +197,6 @@ describe('account mfa verification routes', () => {
     });
 
     it('should reject WebAuthn binding when both mfa.factors and passkeySignIn.enabled are off', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-
       findDefaultSignInExperience.mockResolvedValueOnce({
         ...mockSignInExperience,
         mfa: { ...mockSignInExperience.mfa, factors: [] },
@@ -224,10 +212,7 @@ describe('account mfa verification routes', () => {
       expect(findDefaultSignInExperience).toHaveBeenCalled();
     });
 
-    it('should use fields.passkey for WebAuthn permission when isDevFeaturesEnabled', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-
+    it('should use fields.passkey for WebAuthn permission', async () => {
       const passkeyRequest = createRequester({
         authedRoutes: [
           (router) => {
@@ -270,10 +255,7 @@ describe('account mfa verification routes', () => {
       expect(response.body).not.toHaveProperty('code', 'account_center.field_not_editable');
     });
 
-    it('should fall back to fields.mfa for non-WebAuthn types even when isDevFeaturesEnabled', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-
+    it('should fall back to fields.mfa for non-WebAuthn types', async () => {
       const response = await accountRequest.post('/my-account/mfa-verifications').send({
         type: MfaFactor.TOTP,
         secret: 'totp_secret',
@@ -285,10 +267,7 @@ describe('account mfa verification routes', () => {
   });
 
   describe('PATCH /api/my-account/mfa-verifications/:id/name passkey permission', () => {
-    it('should use fields.passkey for permission when isDevFeaturesEnabled', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-
+    it('should use fields.passkey for permission', async () => {
       const passkeyRequest = createRequester({
         authedRoutes: [
           (router) => {
@@ -327,10 +306,7 @@ describe('account mfa verification routes', () => {
       expect(response.status).toBe(200);
     });
 
-    it('should reject when passkey field is not editable with isDevFeaturesEnabled', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-
+    it('should reject when passkey field is not editable', async () => {
       const passkeyRequest = createRequester({
         authedRoutes: [
           (router) => {
@@ -366,10 +342,7 @@ describe('account mfa verification routes', () => {
   });
 
   describe('DELETE /api/my-account/mfa-verifications/:id passkey permission', () => {
-    it('should use fields.passkey for WebAuthn verification deletion when isDevFeaturesEnabled', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-
+    it('should use fields.passkey for WebAuthn verification deletion', async () => {
       const passkeyRequest = createRequester({
         authedRoutes: [
           (router) => {
@@ -408,10 +381,7 @@ describe('account mfa verification routes', () => {
       expect(response.status).toBe(204);
     });
 
-    it('should use fields.mfa for non-WebAuthn verification deletion when isDevFeaturesEnabled', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-
+    it('should use fields.mfa for non-WebAuthn verification deletion', async () => {
       findUserById.mockResolvedValueOnce({
         ...mockUser,
         mfaVerifications: [mockUserTotpMfaVerification],
@@ -426,9 +396,6 @@ describe('account mfa verification routes', () => {
     });
 
     it('should reject WebAuthn deletion when passkey field is not editable', async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for this feature-gate test.
-      (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-
       const passkeyRequest = createRequester({
         authedRoutes: [
           (router) => {

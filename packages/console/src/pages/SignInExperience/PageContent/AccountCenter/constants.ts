@@ -1,7 +1,5 @@
 import type { AdminConsoleKey } from '@logto/phrases';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
-
 import type { AccountCenterFieldKey } from '../../types';
 
 export type AccountCenterFieldItem = {
@@ -49,9 +47,7 @@ export const accountCenterSections: AccountCenterFieldSection[] = [
             key: 'mfa',
             title: 'sign_in_exp.account_center.fields.mfa',
           },
-          ...(isDevFeaturesEnabled
-            ? ([{ key: 'passkey', title: 'sign_in_exp.account_center.fields.passkey' }] as const)
-            : []),
+          { key: 'passkey', title: 'sign_in_exp.account_center.fields.passkey' },
         ],
       },
       {
