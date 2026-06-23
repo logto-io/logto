@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { useCloudApi, useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { useCloudApi, createTenantApi } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
@@ -54,13 +54,14 @@ const handleCancel = () => {
 };
 
 export default function DeleteAccount() {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.profile.delete_account' });
+  const { t, i18n } = useTranslation(undefined, {
+    keyPrefix: 'admin_console.profile.delete_account',
+  });
   const { tenants, removeTenant } = useContext(TenantsContext);
-  const { getIdTokenClaims } = useLogto();
+  const { getIdTokenClaims, isAuthenticated, getOrganizationToken } = useLogto();
   const { signOut } = useSignOut();
   const postSignOutRedirectUri = useRedirectUri('signOut');
   const cloudApi = useCloudApi();
-  const authedCloudApi = useAuthedCloudApi();
 
   const [claims, setClaims] = useState<IdTokenClaims>();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -139,8 +140,14 @@ export default function DeleteAccount() {
       }
 
       for (const tenant of tenantsToQuit) {
+        const tenantApi = createTenantApi({
+          isAuthenticated,
+          getOrganizationToken,
+          tenantId: tenant.id,
+          language: i18n.language,
+        });
         // eslint-disable-next-line no-await-in-loop
-        await authedCloudApi.delete('/api/tenants/:tenantId/members/:userId', {
+        await tenantApi.delete('/api/tenants/:tenantId/members/:userId', {
           params: { tenantId: tenant.id, userId: claims.sub },
         });
         removeTenant(tenant.id);
