@@ -48,11 +48,6 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /configs/jwt-customizer/:tokenTypePath': 'GetJwtCustomizer',
   'delete /configs/jwt-customizer/:tokenTypePath': 'DeleteJwtCustomizer',
   'post /configs/jwt-customizer/test': 'TestJwtCustomizer',
-  'get /configs/inline-hooks': 'ListInlineHooks',
-  'put /configs/inline-hooks/:hookType': 'UpsertInlineHook',
-  'patch /configs/inline-hooks/:hookType': 'UpdateInlineHook',
-  'get /configs/inline-hooks/:hookType': 'GetInlineHook',
-  'delete /configs/inline-hooks/:hookType': 'DeleteInlineHook',
   'get /configs/oidc/:keyType': 'GetOidcKeys',
   'delete /configs/oidc/:keyType/:keyId': 'DeleteOidcKey',
   'post /configs/oidc/:keyType/rotate': 'RotateOidcKeys',
@@ -111,6 +106,12 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   // Session config
   'get /configs/oidc/session': 'GetOidcSessionConfig',
   'patch /configs/oidc/session': 'UpdateOidcSessionConfig',
+  // Inline hooks
+  'get /configs/inline-hooks': 'ListInlineHooks',
+  'put /configs/inline-hooks/:hookType': 'UpsertInlineHook',
+  'patch /configs/inline-hooks/:hookType': 'UpdateInlineHook',
+  'get /configs/inline-hooks/:hookType': 'GetInlineHook',
+  'delete /configs/inline-hooks/:hookType': 'DeleteInlineHook',
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 
 /**
