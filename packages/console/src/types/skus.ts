@@ -6,7 +6,7 @@ export enum LogtoSkuType {
   AddOn = 'AddOn',
 }
 
-export type LogtoSkuQuota = SubscriptionQuota & {
+export type LogtoSkuQuota = Omit<SubscriptionQuota, 'inlineHooksEnabled'> & {
   // Add ticket support quota item to the plan since it will be compared in the downgrade plan notification modal.
   ticketSupportResponseTime: number;
 };

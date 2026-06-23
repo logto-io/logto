@@ -10,6 +10,14 @@ import {
   allReportSubscriptionUpdatesUsageKeys,
 } from './types.js';
 
+type CloudSubscriptionQuota = Omit<SubscriptionQuota, 'inlineHooksEnabled'> &
+  Partial<Pick<SubscriptionQuota, 'inlineHooksEnabled'>>;
+
+const withInlineHooksQuota = (quota: CloudSubscriptionQuota): SubscriptionQuota => ({
+  ...quota,
+  inlineHooksEnabled: quota.inlineHooksEnabled ?? false,
+});
+
 export const getTenantSubscription = async (
   cloudConnection: CloudConnectionLibrary
 ): Promise<Subscription> => {
@@ -24,6 +32,7 @@ export const getTenantSubscription = async (
     ...rest,
     currentPeriodStart: new Date(currentPeriodStart).toISOString(),
     currentPeriodEnd: new Date(currentPeriodEnd).toISOString(),
+    quota: withInlineHooksQuota(subscription.quota),
   };
 };
 

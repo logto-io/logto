@@ -53,6 +53,7 @@ export const mockQuota = {
   thirdPartyApplicationsLimit: 0,
   tenantMembersLimit: 1,
   customJwtEnabled: false,
+  inlineHooksEnabled: false,
   subjectTokenEnabled: false,
   bringYourUiEnabled: false,
   collectUserProfileEnabled: false,
