@@ -19,6 +19,20 @@ import { type ManagementApiRouter, type RouterInitArgs } from '../../types.js';
 
 const maxRetryCount = 5;
 
+const getBlobEndpointHost = (connectionString: string) => {
+  const blobEndpoint = /(?:^|;)BlobEndpoint=([^;]+)/u.exec(connectionString)?.[1];
+
+  if (blobEndpoint) {
+    try {
+      return new URL(blobEndpoint).host;
+    } catch {
+      return 'invalid-blob-endpoint';
+    }
+  }
+
+  return /(?:^|;)AccountName=([^;]+)/u.exec(connectionString)?.[1];
+};
+
 export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
   ...[
     router,
@@ -57,6 +71,7 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
         'storage.not_configured'
       );
       const { connectionString, container } = experienceZipsProviderConfig;
+      const blobEndpointHost = getBlobEndpointHost(connectionString);
 
       const { uploadFile, downloadFile, isFileExisted } = buildAzureStorage(
         connectionString,
@@ -66,6 +81,7 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
       const customUiAssetId = generateStandardId(8);
       const objectKey = `${tenantId}/${customUiAssetId}/assets.zip`;
       const errorLogObjectKey = `${tenantId}/${customUiAssetId}/error.log`;
+      const consoleLog = getConsoleLogFromContext(ctx);
 
       try {
         // Upload the zip file to `experience-zips` container, in which a blob trigger is configured,
@@ -75,21 +91,62 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
         await uploadFile(await readFile(file.filepath), objectKey, {
           contentType: file.mimetype,
         });
+        consoleLog.info('[custom-ui-assets] uploaded zip for unzip polling', {
+          tenantId,
+          customUiAssetId,
+          container,
+          blobEndpointHost,
+          objectKey,
+          errorLogObjectKey,
+        });
 
         const hasUnzipCompleted = async (retryTimes: number) => {
+          const startedAt = Date.now();
           const [hasZip, hasError] = await Promise.all([
             isFileExisted(objectKey),
             isFileExisted(errorLogObjectKey),
           ]);
+          consoleLog.info('[custom-ui-assets] unzip polling status', {
+            retryTimes,
+            maxRetryCount,
+            tenantId,
+            customUiAssetId,
+            container,
+            blobEndpointHost,
+            objectKey,
+            errorLogObjectKey,
+            hasZip,
+            hasError,
+            durationMs: Date.now() - startedAt,
+          });
           if (hasError) {
             const errorLogBlob = await downloadFile(errorLogObjectKey);
             const errorLog = await streamToString(errorLogBlob.readableStreamBody);
             throw new AbortError(errorLog || 'Unzipping failed.');
           }
           if (!hasZip) {
+            consoleLog.info('[custom-ui-assets] unzip polling completed', {
+              retryTimes,
+              maxRetryCount,
+              tenantId,
+              customUiAssetId,
+              container,
+              blobEndpointHost,
+              objectKey,
+            });
             return;
           }
           if (retryTimes > maxRetryCount) {
+            consoleLog.warn('[custom-ui-assets] unzip polling timeout', {
+              retryTimes,
+              maxRetryCount,
+              tenantId,
+              customUiAssetId,
+              container,
+              blobEndpointHost,
+              objectKey,
+              errorLogObjectKey,
+            });
             throw new AbortError('Unzip timeout. Max retry count reached.');
           }
           throw new Error('Unzip in progress...');
@@ -99,7 +156,7 @@ export default function customUiAssetsRoutes<T extends ManagementApiRouter>(
           retries: maxRetryCount,
         });
       } catch (error: unknown) {
-        getConsoleLogFromContext(ctx).error(error);
+        consoleLog.error(error);
         throw new RequestError(
           {
             code: 'storage.upload_error',
