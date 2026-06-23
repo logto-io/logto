@@ -55,6 +55,7 @@ const Tenant = await pickDefault(import('./Tenant.js'));
 describe('Tenant', () => {
   afterEach(() => {
     jest.clearAllMocks();
+    jest.useRealTimers();
   });
 
   it('should call middleware factories for user tenants', async () => {
@@ -86,6 +87,81 @@ describe('Tenant `.run()`', () => {
   it('should return a function ', async () => {
     const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
     expect(typeof tenant.run).toBe('function');
+  });
+});
+
+describe('Tenant request lifecycle and disposal', () => {
+  it('reserves and releases request slots', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+
+    expect(tenant.requestStart()).toBe(true);
+    tenant.requestEnd();
+  });
+
+  it('ends the database pool and rejects new requests once disposed', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const end = Sinon.stub(tenant.envSet, 'end').resolves();
+
+    expect(await tenant.dispose()).toBe(true);
+
+    expect(end.calledOnce).toBe(true);
+    // The instance must not serve new requests after disposal.
+    expect(tenant.requestStart()).toBe(false);
+  });
+
+  it('waits for in-flight requests before ending the database pool', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const end = Sinon.stub(tenant.envSet, 'end').resolves();
+
+    expect(tenant.requestStart()).toBe(true);
+
+    const disposed = tenant.dispose();
+    await Promise.resolve();
+
+    // The pool must stay alive while a request is still in flight.
+    expect(end.called).toBe(false);
+    // New requests must be rejected while draining.
+    expect(tenant.requestStart()).toBe(false);
+    expect(end.called).toBe(false);
+
+    tenant.requestEnd();
+    expect(await disposed).toBe(true);
+
+    expect(end.calledOnce).toBe(true);
+    expect(tenant.requestStart()).toBe(false);
+  });
+
+  it('keeps the database pool open until the disposal drain timeout elapses', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const end = Sinon.stub(tenant.envSet, 'end').resolves();
+
+    expect(tenant.requestStart()).toBe(true);
+
+    jest.useFakeTimers();
+    const disposed = tenant.dispose();
+    await Promise.resolve();
+
+    jest.advanceTimersByTime(129_999);
+    expect(end.called).toBe(false);
+
+    jest.advanceTimersByTime(1);
+
+    await expect(disposed).resolves.toBe('timeout');
+    expect(end.calledOnce).toBe(true);
+  });
+
+  it('rejects when ending the database pool fails while draining requests', async () => {
+    const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const error = new Error('failed to end database pool');
+    const end = Sinon.stub(tenant.envSet, 'end').rejects(error);
+
+    expect(tenant.requestStart()).toBe(true);
+
+    const disposed = tenant.dispose();
+    tenant.requestEnd();
+
+    await expect(disposed).rejects.toThrow(error);
+    expect(end.calledOnce).toBe(true);
   });
 });
 
@@ -252,8 +328,12 @@ describe('Tenant cache health check', () => {
 
   it('invalidates tenant instances when staged activation is due', async () => {
     const tenant = await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache() });
+    const signingKeyRotationAt = Date.now() + 1000;
+
+    jest.useFakeTimers().setSystemTime(signingKeyRotationAt);
+
     Sinon.stub(tenant.queries.logtoConfigs, 'getSigningKeyRotationState').value(
-      jest.fn(async () => ({ signingKeyRotationAt: Date.now() - 1 }))
+      jest.fn(async () => ({ signingKeyRotationAt }))
     );
 
     expect(await tenant.checkHealth()).toBe(false);

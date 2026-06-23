@@ -75,15 +75,16 @@ export default async function initApp(app: Koa): Promise<void> {
       return next();
     }
 
+    // The request slot is reserved by `tenantPool.get()` so the database pool stays alive until
+    // this request finishes; release it exactly once here.
     try {
-      tenant.requestStart();
       await tenant.run(ctx, next);
-      tenant.requestEnd();
     } catch (error: unknown) {
-      tenant.requestEnd();
       void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
 
       throw error;
+    } finally {
+      tenant.requestEnd();
     }
   });
 

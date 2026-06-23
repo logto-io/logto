@@ -1,5 +1,6 @@
 import { adminTenantId, experience } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
+import { once } from '@silverhand/essentials';
 import type { MiddlewareType } from 'koa';
 import Koa from 'koa';
 import compose from 'koa-compose';
@@ -50,6 +51,9 @@ import {
 import { getTenantDatabaseDsn } from './utils.js';
 
 const consoleLog = new ConsoleLog('tenant');
+// Keep tenant disposal draining longer than the HTTP server timeout (120s in app/init.ts) so
+// ordinary in-flight requests can finish before the database pool is closed.
+const tenantDisposeDrainTimeout = 130_000;
 
 /** Data for creating a tenant instance. */
 type CreateTenant = {
@@ -85,7 +89,12 @@ export default class Tenant implements TenantContext {
 
   readonly #createdAt = Date.now();
   #requestCount = 0;
-  #onRequestEmpty?: () => Promise<void>;
+  #onRequestEmpty?: () => void;
+  /**
+   * Whether the database pool of this instance has been (or is about to be) ended by
+   * {@link dispose}. Once `true`, the instance must not serve new requests.
+   */
+  #disposed = false;
 
   // eslint-disable-next-line max-params
   private constructor(
@@ -269,8 +278,24 @@ export default class Tenant implements TenantContext {
         : mount(this.app);
   }
 
-  public requestStart() {
+  /**
+   * Register the start of a request so that {@link dispose} waits for it to finish before
+   * ending the database pool.
+   *
+   * This is synchronous and must be called right after acquiring the instance (see
+   * {@link TenantPool.get}) to avoid a window where the instance is disposed while a request
+   * is about to use it.
+   *
+   * @returns `true` if the slot was reserved, or `false` if the instance has already been
+   * disposed and must not be used. Callers should acquire another instance when `false`.
+   */
+  public requestStart(): boolean {
+    if (this.#disposed) {
+      return false;
+    }
+
     this.#requestCount += 1;
+    return true;
   }
 
   public requestEnd() {
@@ -278,36 +303,51 @@ export default class Tenant implements TenantContext {
       this.#requestCount -= 1;
 
       if (this.#requestCount === 0) {
-        void this.#onRequestEmpty?.();
+        this.#onRequestEmpty?.();
       }
     }
   }
 
   /**
-   * Try to dispose the tenant resources. If there are any pending requests, this function will wait for them to end with 5s timeout.
+   * Try to dispose the tenant resources. If there are any pending requests, this function
+   * waits up to the tenant disposal drain timeout for them to end.
    *
    * Currently this function only ends the database pool.
    *
    * @returns Resolves `true` for a normal disposal and `'timeout'` for a timeout.
    */
   public async dispose() {
+    // Mark as disposed *synchronously* (no `await` before this point) so a concurrent
+    // `requestStart()` cannot reserve a slot after we have decided to end the pool.
+    this.#disposed = true;
+
     if (this.#requestCount <= 0) {
       await this.envSet.end();
 
       return true;
     }
 
-    return new Promise<true | 'timeout'>((resolve) => {
-      const timeout = setTimeout(async () => {
+    return new Promise<true | 'timeout'>((resolve, reject) => {
+      const endEnvSet = once((result: true | 'timeout', timeout: ReturnType<typeof setTimeout>) => {
         this.#onRequestEmpty = undefined;
-        await this.envSet.end();
-        resolve('timeout');
-      }, 5000);
-
-      this.#onRequestEmpty = async () => {
         clearTimeout(timeout);
-        await this.envSet.end();
-        resolve(true);
+
+        void (async () => {
+          try {
+            await this.envSet.end();
+            resolve(result);
+          } catch (error: unknown) {
+            reject(error instanceof Error ? error : new Error(String(error)));
+          }
+        })();
+      });
+
+      const timeout = setTimeout(() => {
+        endEnvSet('timeout', timeout);
+      }, tenantDisposeDrainTimeout);
+
+      this.#onRequestEmpty = () => {
+        endEnvSet(true, timeout);
       };
     });
   }
