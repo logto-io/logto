@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  LogtoInlineHookKey,
   type LogtoOidcConfigType,
   LogtoOidcConfigKey,
   LogtoTenantConfigKey,
   OidcSigningKeyStatus,
+  inlineHookConfigGuard,
   logtoOidcConfigGuard,
+  logtoConfigGuards,
+  logtoConfigKeys,
   logtoTenantConfigGuard,
   oidcConfigKeysResponseGuard,
 } from './index.js';
@@ -41,5 +45,36 @@ describe('logto config guards', () => {
     });
 
     expect(result.success).toBe(true);
+  });
+
+  it('accepts inline hook configs', () => {
+    const result = inlineHookConfigGuard[LogtoInlineHookKey.PostFirstFactorVerification].safeParse({
+      script: 'export default async () => ({ action: "createUser" });',
+      environmentVariables: {
+        endpoint: 'https://example.com',
+      },
+      contextSample: ['json', { value: true }],
+      enabled: true,
+      onExecutionError: 'block',
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects invalid inline hook execution error policy', () => {
+    const result = inlineHookConfigGuard[LogtoInlineHookKey.PostSignIn].safeParse({
+      script: 'export default async () => ({ action: "updateUser" });',
+      onExecutionError: 'ignore',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('includes inline hook keys in the logto config summary guards', () => {
+    expect(logtoConfigKeys).toContain(LogtoInlineHookKey.PostFirstFactorVerification);
+    expect(logtoConfigKeys).toContain(LogtoInlineHookKey.PostSignIn);
+    expect(logtoConfigGuards[LogtoInlineHookKey.PostSignIn]).toBe(
+      inlineHookConfigGuard[LogtoInlineHookKey.PostSignIn]
+    );
   });
 });
