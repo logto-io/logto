@@ -128,14 +128,14 @@ describe('security-page utils', () => {
     ).toBe(true);
   });
 
-  it('hasVisibleMfaSection returns true when passkey sign-in is enabled', () => {
+  it('hasVisibleMfaSection returns false when only passkey sign-in is enabled without MFA factors', () => {
     expect(
       hasVisibleMfaSection(AccountCenterControlValue.Edit, {
         socialConnectors: [],
         mfa: { factors: [], policy: MfaPolicy.UserControlled },
         passkeySignIn: { enabled: true },
       })
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it('isPasskeySignInEnabled returns true when passkey sign-in is enabled', () => {
