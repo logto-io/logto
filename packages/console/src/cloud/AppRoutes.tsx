@@ -17,6 +17,7 @@ import Profile from '@/pages/Profile';
 import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 
 import styles from './AppRoutes.module.scss';
+import DeleteAccount from './pages/DeleteAccount';
 import EnterpriseSubscription from './pages/EnterpriseSubscription';
 import BillingHistory from './pages/EnterpriseSubscription/BillingHistory';
 import Subscription from './pages/EnterpriseSubscription/Subscription';
@@ -54,6 +55,9 @@ function AppRoutes() {
               element={<CheckoutSuccessCallback />}
             />
             <Route path={GlobalRoute.Onboarding + '/*'} element={<OnboardingApp />} />
+            {isDevFeaturesEnabled && (
+              <Route path={GlobalRoute.DeleteAccount} element={<DeleteAccount />} />
+            )}
             <Route index element={<Main />} />
             <Route
               path={`${GlobalRoute.EnterpriseSubscription}/:logtoEnterpriseId`}
