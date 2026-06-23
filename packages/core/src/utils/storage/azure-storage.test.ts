@@ -34,6 +34,16 @@ class PrematureCloseError extends Error {
   type = 'system';
 }
 
+class TransientStorageError extends Error {
+  constructor(
+    message: string,
+    readonly code: string,
+    readonly errno = code
+  ) {
+    super(message);
+  }
+}
+
 describe('buildAzureStorage()', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -50,14 +60,30 @@ describe('buildAzureStorage()', () => {
     });
 
     it('should treat Azure premature close errors as missing blobs', async () => {
-      mockedExists.mockRejectedValueOnce(
-        new PrematureCloseError(
-          'Invalid response body while trying to fetch https://example.com/foo.txt: Premature close'
-        )
-      );
+      mockedExists.mockRejectedValue(new PrematureCloseError('Premature close'));
       const { isFileExisted } = buildAzureStorage('connectionString', 'container');
 
       await expect(isFileExisted('foo.txt')).resolves.toBe(false);
+      expect(mockedExists).toHaveBeenCalledTimes(3);
+    });
+
+    it('should retry Azure premature close errors before returning the blob exists result', async () => {
+      mockedExists
+        .mockRejectedValueOnce(new PrematureCloseError('Premature close'))
+        .mockResolvedValueOnce(true);
+      const { isFileExisted } = buildAzureStorage('connectionString', 'container');
+
+      await expect(isFileExisted('foo.txt')).resolves.toBe(true);
+      expect(mockedExists).toHaveBeenCalledTimes(2);
+    });
+
+    it('should rethrow Azure premature close errors when requested', async () => {
+      const error = new PrematureCloseError('Premature close');
+      mockedExists.mockRejectedValue(error);
+      const { isFileExisted } = buildAzureStorage('connectionString', 'container');
+
+      await expect(isFileExisted('foo.txt', { throwOnTransientError: true })).rejects.toBe(error);
+      expect(mockedExists).toHaveBeenCalledTimes(3);
     });
 
     it('should rethrow other blob exists errors', async () => {
@@ -66,6 +92,32 @@ describe('buildAzureStorage()', () => {
       const { isFileExisted } = buildAzureStorage('connectionString', 'container');
 
       await expect(isFileExisted('foo.txt')).rejects.toBe(error);
+    });
+  });
+
+  describe('downloadFile()', () => {
+    it('should retry transient Azure storage download errors', async () => {
+      const downloadResponse = { contentLength: 42 };
+      mockedDownload
+        .mockRejectedValueOnce(new TransientStorageError('Socket reset', 'ECONNRESET'))
+        .mockResolvedValueOnce(downloadResponse);
+      const { downloadFile } = buildAzureStorage('connectionString', 'container');
+
+      await expect(downloadFile('foo.txt')).resolves.toBe(downloadResponse);
+      expect(mockedDownload).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('getFileProperties()', () => {
+    it('should retry transient Azure storage get properties errors', async () => {
+      const propertiesResponse = { contentLength: 42 };
+      mockedGetProperties
+        .mockRejectedValueOnce(new TransientStorageError('Timed out', 'ETIMEDOUT'))
+        .mockResolvedValueOnce(propertiesResponse);
+      const { getFileProperties } = buildAzureStorage('connectionString', 'container');
+
+      await expect(getFileProperties('foo.txt')).resolves.toBe(propertiesResponse);
+      expect(mockedGetProperties).toHaveBeenCalledTimes(2);
     });
   });
 });
