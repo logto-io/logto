@@ -76,6 +76,7 @@ describe('koaServeCustomUiAssets middleware', () => {
 
     expect(ctx.type).toEqual('text/javascript');
     expect(ctx.body).toEqual(mockBodyStream);
+    expect(mockedGetFileProperties).not.toHaveBeenCalled();
   });
 
   it('should serve the index.html', async () => {
@@ -94,6 +95,7 @@ describe('koaServeCustomUiAssets middleware', () => {
 
     expect(ctx.type).toEqual('text/html');
     expect(ctx.body).toEqual(mockBodyStream);
+    expect(mockedGetFileProperties).not.toHaveBeenCalled();
   });
 
   it('should return 404 if the file does not exist', async () => {
@@ -132,7 +134,7 @@ describe('koaServeCustomUiAssets middleware', () => {
   it('should return 502 if reading blob properties hits a transient storage error', async () => {
     mockedDownloadFile.mockResolvedValueOnce({ readableStreamBody: Readable.from('content') });
     mockedGetFileProperties.mockRejectedValueOnce(new TransientStorageError('Premature close'));
-    const ctx = createMockContext({ url: '/fake.txt' });
+    const ctx = createMockContext({ url: '/fake.txt', headers: { range: 'bytes=0-10' } });
 
     await expect(koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next)).rejects.toMatchError(
       new RequestError(
@@ -162,6 +164,7 @@ describe('koaServeCustomUiAssets middleware', () => {
     await koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next);
 
     expect(mockedDownloadFile).toHaveBeenCalledWith('default/custom-ui-asset-id/video.mp4', 0, 11);
+    expect(mockedGetFileProperties).toHaveBeenCalledWith('default/custom-ui-asset-id/video.mp4');
     expect(ctx.type).toEqual('video/mp4');
     expect(ctx.body).toEqual(mockBodyStream);
     expect(ctx.status).toEqual(206);

@@ -55,13 +55,9 @@ export default function koaServeCustomUiAssets(customUiAssetId: string) {
         new RequestError({ code: 'request.range_not_satisfiable', status: 416 })
       );
 
-      const [
-        { contentLength = 0, readableStreamBody, contentType },
-        { contentLength: totalFileSize = 0 },
-      ] = await Promise.all([
-        downloadFile(fileObjectKey, start, count),
-        getFileProperties(fileObjectKey),
-      ]);
+      const downloadFilePromise = downloadFile(fileObjectKey, start, count);
+      const filePropertiesPromise = range ? getFileProperties(fileObjectKey) : undefined;
+      const { contentLength = 0, readableStreamBody, contentType } = await downloadFilePromise;
 
       ctx.body = readableStreamBody;
       ctx.type = contentType ?? 'application/octet-stream';
@@ -69,7 +65,9 @@ export default function koaServeCustomUiAssets(customUiAssetId: string) {
 
       ctx.set('Cache-Control', isFileAssetRequest ? maxAgeSevenDays : noCache);
       ctx.set('Content-Length', contentLength.toString());
-      if (range) {
+      if (filePropertiesPromise) {
+        const { contentLength: totalFileSize = 0 } = await filePropertiesPromise;
+
         ctx.set('Accept-Ranges', 'bytes');
         ctx.set(
           'Content-Range',
