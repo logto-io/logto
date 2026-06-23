@@ -467,9 +467,7 @@
       "post": {
         "summary": "Test inline hook",
         "description": "Test an inline hook script with a sample context.",
-        "tags": [
-          "Dev feature"
-        ],
+        "tags": ["Dev feature"],
         "requestBody": {
           "content": {
             "application/json": {
