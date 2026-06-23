@@ -11,6 +11,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { InlineHookLibrary, isAccessDeniedError } from '#src/libraries/inline-hook.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -68,6 +69,7 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
       response: jsonGuard.optional(),
       status: [200, 400, 403, 422],
     }),
+    koaQuotaGuard({ key: 'inlineHooksEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { body } = ctx.guard;
 
@@ -124,6 +126,7 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
       response: inlineHookGuard,
       status: [200, 201, 400],
     }),
+    koaQuotaGuard({ key: 'inlineHooksEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const {
         params: { hookType },
@@ -152,6 +155,7 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
       response: inlineHookGuard,
       status: [200, 400, 404],
     }),
+    koaQuotaGuard({ key: 'inlineHooksEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const {
         params: { hookType },
