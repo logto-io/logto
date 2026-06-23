@@ -1,5 +1,5 @@
 import { type IdTokenClaims, useLogto } from '@logto/react';
-import { TenantRole, getTenantIdFromOrganizationId } from '@logto/schemas';
+import { TenantRole } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -17,31 +17,10 @@ import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 import useSignOut from '@/hooks/use-sign-out';
 import TenantsList from '@/pages/Profile/containers/DeleteAccountModal/components/TenantsList';
+import { getRoleMap } from '@/pages/Profile/containers/DeleteAccountModal/utils';
 import { isPaidPlan } from '@/utils/subscription';
 
 import styles from './index.module.scss';
-
-type RoleMap = { [key in string]?: string[] };
-
-const getRoleMap = (organizationRoles: string[]) =>
-  organizationRoles.reduce<RoleMap>((accumulator, value) => {
-    const [organizationId, roleName] = value.split(':');
-
-    if (!organizationId || !roleName) {
-      return accumulator;
-    }
-
-    const tenantId = getTenantIdFromOrganizationId(organizationId);
-
-    if (!tenantId) {
-      return accumulator;
-    }
-
-    return {
-      ...accumulator,
-      [tenantId]: [...(accumulator[tenantId] ?? []), roleName],
-    };
-  }, {});
 
 enum Step {
   Issues = 'issues',

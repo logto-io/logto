@@ -1,5 +1,5 @@
 import { type IdTokenClaims, useLogto } from '@logto/react';
-import { TenantRole, getTenantIdFromOrganizationId } from '@logto/schemas';
+import { TenantRole } from '@logto/schemas';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -10,34 +10,9 @@ import Button from '@/ds-components/Button';
 import ModalLayout from '@/ds-components/ModalLayout';
 
 import styles from '../../index.module.scss';
+import { getRoleMap } from '../../utils';
 import FinalConfirmationModal from '../FinalConfirmationModal';
 import TenantsList from '../TenantsList';
-
-type RoleMap = { [key in string]?: string[] };
-
-/**
- * Given a list of organization roles from the user's claims, returns a tenant ID - role names map.
- * A user may have multiple roles in the same tenant.
- */
-const getRoleMap = (organizationRoles: string[]) =>
-  organizationRoles.reduce<RoleMap>((accumulator, value) => {
-    const [organizationId, roleName] = value.split(':');
-
-    if (!organizationId || !roleName) {
-      return accumulator;
-    }
-
-    const tenantId = getTenantIdFromOrganizationId(organizationId);
-
-    if (!tenantId) {
-      return accumulator;
-    }
-
-    return {
-      ...accumulator,
-      [tenantId]: [...(accumulator[tenantId] ?? []), roleName],
-    };
-  }, {});
 
 type Props = {
   readonly onClose: () => void;

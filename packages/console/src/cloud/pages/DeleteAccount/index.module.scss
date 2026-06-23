@@ -26,18 +26,18 @@
 
 .container {
   font: var(--font-body-2);
-}
 
-p {
-  margin: 0;
-}
+  p {
+    margin: 0;
+  }
 
-p + p {
-  margin-top: _.unit(4);
-}
+  p + p {
+    margin-top: _.unit(4);
+  }
 
-.actions {
-  display: flex;
-  gap: _.unit(3);
-  margin-top: _.unit(6);
+  .actions {
+    display: flex;
+    gap: _.unit(3);
+    margin-top: _.unit(6);
+  }
 }
