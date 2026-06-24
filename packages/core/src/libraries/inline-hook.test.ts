@@ -1,6 +1,6 @@
 import { LogtoInlineHookKey } from '@logto/schemas';
 
-import { LocalVmError } from '#src/utils/custom-jwt/index.js';
+import { LocalVmError } from '#src/utils/local-vm/index.js';
 
 import { InlineHookLibrary } from './inline-hook.js';
 import type { LogtoConfigLibrary } from './logto-config.js';

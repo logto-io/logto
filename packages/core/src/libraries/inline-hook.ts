@@ -6,7 +6,7 @@ import {
   buildLocalVmErrorBody,
   LocalVmError,
   runScriptFunctionInLocalVm,
-} from '#src/utils/custom-jwt/index.js';
+} from '#src/utils/local-vm/index.js';
 
 const inlineHookFunctionName = 'runInlineHook';
 
