@@ -1,5 +1,10 @@
 import { ConnectorType } from '@logto/connector-kit';
-import { InteractionEvent, SignInIdentifier, SignInMode } from '@logto/schemas';
+import {
+  defaultMessageRateLimitPolicy,
+  InteractionEvent,
+  SignInIdentifier,
+  SignInMode,
+} from '@logto/schemas';
 
 import { deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
@@ -97,5 +102,32 @@ devFeatureTest.describe('suppress sign-in verification-code delivery to unknown 
     expect(emailMessage.code).toBeTruthy();
 
     await deleteUser(userId);
+  });
+
+  it('still counts suppressed sends toward the per-recipient rate-limit cap', async () => {
+    // A suppressed send must consume the recipient's quota; otherwise an unregistered recipient never
+    // hits 429 while a registered one does, leaking registration status. Use a fresh recipient so the
+    // count is isolated from other tests sharing the activity store.
+    const email = generateEmail();
+    const client = await initExperienceClient({ interactionEvent: InteractionEvent.SignIn });
+
+    // Sends up to the cap all return 200 even though delivery is suppressed (no message is sent).
+    for (const _ of Array.from({ length: defaultMessageRateLimitPolicy.maxSendsPerRecipient })) {
+      // eslint-disable-next-line no-await-in-loop -- sequential sends to accumulate the per-recipient count
+      await client.sendVerificationCode({
+        interactionEvent: InteractionEvent.SignIn,
+        identifier: { type: SignInIdentifier.Email, value: email },
+      });
+    }
+
+    // The next suppressed send to the same recipient exceeds the cap and is rejected, exactly as it
+    // would be for a registered recipient — so the rate-limit response cannot be used to enumerate.
+    await expectRejects(
+      client.sendVerificationCode({
+        interactionEvent: InteractionEvent.SignIn,
+        identifier: { type: SignInIdentifier.Email, value: email },
+      }),
+      { code: 'request.message_rate_limited', status: 429 }
+    );
   });
 });
