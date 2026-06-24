@@ -24,7 +24,6 @@ jest.unstable_mockModule('#src/libraries/jwt-customizer.js', () => ({
   },
 }));
 
-const { EnvSet } = await import('#src/env-set/index.js');
 const { getExtraTokenClaimsForJwtCustomization } = await import('./extra-token-claims.js');
 
 const buildContextAndToken = ({ organizationId }: { organizationId?: string } = {}) => {
@@ -180,14 +179,6 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
 
   it('omits organization context when no organization_id is present', async () => {
     await callGetExtraTokenClaimsForJwtCustomization({});
-
-    expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
-  });
-
-  it('omits organization context when dev features are disabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    await callGetExtraTokenClaimsForJwtCustomization({ organizationId: 'org-1' });
 
     expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
   });
