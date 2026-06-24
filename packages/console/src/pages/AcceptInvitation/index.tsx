@@ -38,21 +38,32 @@ function AcceptInvitation() {
   );
 
   useEffect(() => {
-    if (isLoading || isAuthenticated || !invitationId || hasStartedSignIn.current) {
+    if (isLoading || !invitationId || hasStartedSignIn.current) {
+      return;
+    }
+
+    if (!isAuthenticated) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- React ref guards against duplicate sign-in redirects
+      hasStartedSignIn.current = true;
+
+      if (!isDevFeaturesEnabled || !oneTimeToken) {
+        saveRedirect(buildInvitationAcceptUrl(invitationId));
+        void signIn(redirectUri.href, 'signUp');
+        return;
+      }
+
+      authFormRef.current?.requestSubmit();
+      return;
+    }
+
+    if (!isDevFeaturesEnabled || !oneTimeToken || error?.status !== 403) {
       return;
     }
 
     // eslint-disable-next-line @silverhand/fp/no-mutation -- React ref guards against duplicate sign-in redirects
     hasStartedSignIn.current = true;
-
-    if (!isDevFeaturesEnabled || !oneTimeToken) {
-      saveRedirect(buildInvitationAcceptUrl(invitationId));
-      void signIn(redirectUri.href, 'signUp');
-      return;
-    }
-
     authFormRef.current?.requestSubmit();
-  }, [invitationId, isAuthenticated, isLoading, oneTimeToken, redirectUri, signIn]);
+  }, [error?.status, invitationId, isAuthenticated, isLoading, oneTimeToken, redirectUri, signIn]);
 
   useEffect(() => {
     if (!invitation || invitation.status !== OrganizationInvitationStatus.Pending) {
@@ -98,6 +109,15 @@ function AcceptInvitation() {
 
   // No invitation returned, indicating the current signed-in user is not the invitee.
   if (error?.status === 403) {
+    if (isDevFeaturesEnabled && oneTimeToken) {
+      return (
+        <>
+          {invitationAuthForm}
+          <AppLoading />
+        </>
+      );
+    }
+
     return (
       <SwitchAccount
         onClickSwitch={() => {
