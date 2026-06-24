@@ -5,7 +5,6 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -69,7 +68,7 @@ function AccountCenter({ isActive, data }: Props) {
 
   // When passkey sign-in is enabled, passkey can serve as a verification method, so the
   // "no MFA factor configured" warning on the MFA field is no longer relevant.
-  const isPasskeySignInEnabled = isDevFeaturesEnabled && Boolean(data.passkeySignIn.enabled);
+  const isPasskeySignInEnabled = Boolean(data.passkeySignIn.enabled);
 
   const handleToggle = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {

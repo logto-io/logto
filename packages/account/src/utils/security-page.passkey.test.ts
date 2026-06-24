@@ -15,11 +15,6 @@ import {
   isWebAuthnConfigurable,
 } from './security-page';
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 describe('security-page utils with passkey sign-in enabled', () => {
   const experienceSettings = {
     socialConnectors: [],

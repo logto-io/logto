@@ -25,11 +25,6 @@ import MfaVerificationsProvider from '../MfaVerificationsProvider';
 
 import PasskeySection from '.';
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 
 jest.mock('@logto/react', () => ({

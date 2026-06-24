@@ -7,8 +7,6 @@ import type {
 } from '@logto/schemas';
 import { AccountCenterControlValue, MfaFactor } from '@logto/schemas';
 
-import { isDevFeaturesEnabled } from '@ac/constants/env';
-
 import { getProfileFieldControlKey } from './profile-field-control';
 import { getAvailableSocialConnectors } from './social-connector.js';
 
@@ -34,7 +32,7 @@ export const hasVisibleSocialSection = (
 
 export const isPasskeySignInEnabled = (
   experienceSettings?: SecurityPageExperienceSettings
-): boolean => isDevFeaturesEnabled && Boolean(experienceSettings?.passkeySignIn?.enabled);
+): boolean => Boolean(experienceSettings?.passkeySignIn?.enabled);
 
 /**
  * Whether a WebAuthn passkey credential can be registered or managed. Mirrors the backend binding
