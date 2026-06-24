@@ -8,7 +8,6 @@ import {
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
@@ -96,7 +95,7 @@ const hasUserWithIdentifier = async (
  *
  * - Forgot-password to an identifier no user owns (always on).
  * - Sign-in from an unidentified session to an identifier no user owns when registration is
- *   disabled (behind `isDevFeaturesEnabled`); identified sessions always deliver.
+ *   disabled; identified sessions always deliver.
  */
 const shouldSkipDelivery = async (
   experienceInteraction: ExperienceInteraction,
@@ -108,11 +107,7 @@ const shouldSkipDelivery = async (
     return !(await hasUserWithIdentifier(queries, identifier));
   }
 
-  if (
-    EnvSet.values.isDevFeaturesEnabled &&
-    interactionEvent === InteractionEvent.SignIn &&
-    !experienceInteraction.identifiedUserId
-  ) {
+  if (interactionEvent === InteractionEvent.SignIn && !experienceInteraction.identifiedUserId) {
     const registrationDisabled =
       await experienceInteraction.signInExperienceValidator.isRegistrationDisabled();
 
@@ -183,18 +178,16 @@ export const sendCode = async ({
   // The rate guard runs even for suppressed sends: a suppressed send must still count toward the
   // per-recipient cap, otherwise an unknown recipient never hits 429 while a registered one does —
   // leaking registration status (account enumeration) and defeating the point of suppression.
-  await (EnvSet.values.isDevFeaturesEnabled
-    ? withMessageRateGuard(
-        await buildMessageRateGuard(queries),
-        {
-          ...messageRateLimit,
-          onRateLimited: () => {
-            ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
-          },
-        },
-        send
-      )
-    : send());
+  await withMessageRateGuard(
+    await buildMessageRateGuard(queries),
+    {
+      ...messageRateLimit,
+      onRateLimited: () => {
+        ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
+      },
+    },
+    send
+  );
 
   // Save state
   experienceInteraction.setVerificationRecord(codeVerification);
