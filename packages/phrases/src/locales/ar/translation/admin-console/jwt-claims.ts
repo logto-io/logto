@@ -56,6 +56,11 @@ const jwt_claims = {
     subtitle:
       'استخدم معامل الإدخال `context.application` لتوفير معلومات التطبيق المرتبطة بالرمز المميز.',
   },
+  organization_data: {
+    title: 'سياق المؤسسة',
+    subtitle:
+      'استخدم معامل الإدخال `context.organization` لتوفير معلومات المؤسسة المستهدفة، متاح فقط لرموز المؤسسة.',
+  },
   token_data: {
     title: 'بيانات الرمز',
     subtitle: 'استخدم معلمة الإدخال `token` لحمولة رمز الوصول الحالي.',

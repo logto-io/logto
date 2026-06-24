@@ -56,6 +56,11 @@ const jwt_claims = {
     subtitle:
       'ใช้พารามิเตอร์อินพุต `context.application` เพื่อให้ข้อมูลแอปพลิเคชันที่เกี่ยวข้องกับโทเค็น',
   },
+  organization_data: {
+    title: 'บริบทขององค์กร',
+    subtitle:
+      'ใช้พารามิเตอร์อินพุต `context.organization` เพื่อให้ข้อมูลองค์กรเป้าหมาย ใช้ได้เฉพาะกับโทเค็นขององค์กรเท่านั้น',
+  },
   token_data: {
     title: 'payload ของ token',
     subtitle: 'ใช้พารามิเตอร์ `token` เพื่อ payload ของ access token ปัจจุบัน',

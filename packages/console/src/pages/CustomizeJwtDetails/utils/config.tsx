@@ -8,12 +8,14 @@ import {
   type JwtCustomizerUserContext,
   type JwtCustomizerGrantContext,
   type JwtCustomizerUserInteractionContext,
+  type JwtCustomizerOrganizationContext,
   InteractionEvent,
 } from '@logto/schemas';
 import { type EditorProps } from '@monaco-editor/react';
 
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg?react';
 import UserFileIcon from '@/assets/icons/user-file-icon.svg?react';
+import { isDevFeaturesEnabled } from '@/consts/env';
 
 import type { ModelSettings } from '../MainContent/MonacoCodeEditor/type.js';
 
@@ -22,6 +24,19 @@ import {
   buildAccessTokenJwtCustomizerContextTsDefinition,
   buildClientCredentialsJwtCustomizerContextTsDefinition,
 } from './type-definitions.js';
+
+// TODO: remove dev-features gating once the organization context is launched
+const accessTokenOrganizationContextParamDefinition = isDevFeaturesEnabled
+  ? `\n * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerOrganizationContext}} [organization] - The target organization, present only for organization (API resource) tokens.`
+  : '';
+
+const accessTokenOrganizationContextFieldDefinition = isDevFeaturesEnabled
+  ? `
+  /**
+   * The target organization, present only for organization (API resource) tokens.
+   */
+  organization?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerOrganizationContext};`
+  : '';
 
 /**
  * Define the user access token JwtCustomizer payload type definitions
@@ -36,7 +51,7 @@ declare interface CustomJwtClaims extends Record<string, any> {}
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserContext}} user - The user info associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerGrantContext}} [grant] - The grant context associated with the token.
  * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerUserInteractionContext}} [interaction] - The user interaction context associated with the token.
- * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerApplicationContext}} [application] - The application info associated with the token.
+ * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerApplicationContext}} [application] - The application info associated with the token.${accessTokenOrganizationContextParamDefinition}
  */
 declare type Context = {
   /**
@@ -54,7 +69,7 @@ declare type Context = {
   /**
    * The application data associated with the token.
    */
-  application?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerApplicationContext};
+  application?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerApplicationContext};${accessTokenOrganizationContextFieldDefinition}
 }
 
 declare type Payload = {
@@ -306,6 +321,15 @@ const defaultUserInteractionContext: Partial<JwtCustomizerUserInteractionContext
   },
 };
 
+const defaultOrganizationContext: Partial<JwtCustomizerOrganizationContext> = {
+  id: 'organization_123',
+  name: 'My Organization',
+  description: null,
+  customData: {
+    internalId: 'internal_123',
+  },
+};
+
 const defaultApplicationContext: Partial<JwtCustomizerApplicationContext> = {
   id: 'my_app',
   name: 'My App',
@@ -328,6 +352,8 @@ export const defaultUserTokenContextData = {
   grant: defaultGrantContext,
   interaction: defaultUserInteractionContext,
   application: defaultApplicationContext,
+  // TODO: remove dev-features gating once the organization context is launched
+  ...(isDevFeaturesEnabled && { organization: defaultOrganizationContext }),
 };
 
 export const defaultM2mTokenContextData = {
