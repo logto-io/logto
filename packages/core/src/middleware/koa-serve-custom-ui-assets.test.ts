@@ -42,8 +42,22 @@ await mockEsmWithActual('#src/utils/tenant.js', () => ({
 
 const koaServeCustomUiAssets = await pickDefault(import('./koa-serve-custom-ui-assets.js'));
 
+class TransientStorageError extends Error {
+  code = 'ERR_STREAM_PREMATURE_CLOSE';
+  errno = 'ERR_STREAM_PREMATURE_CLOSE';
+}
+
 describe('koaServeCustomUiAssets middleware', () => {
   const next = jest.fn();
+
+  beforeEach(() => {
+    mockedIsFileExisted.mockReset();
+    mockedIsFileExisted.mockResolvedValue(true);
+    mockedDownloadFile.mockReset();
+    mockedGetFileProperties.mockReset();
+    mockedGetFileProperties.mockResolvedValue({ contentLength: 100 });
+    next.mockClear();
+  });
 
   it('should serve the file directly if the request path contains a dot', async () => {
     const mockBodyStream = Readable.from('javascript content');
@@ -88,6 +102,43 @@ describe('koaServeCustomUiAssets middleware', () => {
 
     await expect(koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next)).rejects.toMatchError(
       new RequestError({ code: 'entity.not_found', status: 404 })
+    );
+  });
+
+  it('should return 502 if the blob existence check hits a transient storage error', async () => {
+    mockedIsFileExisted.mockRejectedValueOnce(new TransientStorageError('Premature close'));
+    const ctx = createMockContext({ url: '/fake.txt' });
+
+    await expect(koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next)).rejects.toMatchError(
+      new RequestError(
+        { code: 'storage.download_error', status: 502 },
+        { details: 'Premature close' }
+      )
+    );
+  });
+
+  it('should return 502 if downloading the blob hits a transient storage error', async () => {
+    mockedDownloadFile.mockRejectedValueOnce(new TransientStorageError('Premature close'));
+    const ctx = createMockContext({ url: '/fake.txt' });
+
+    await expect(koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next)).rejects.toMatchError(
+      new RequestError(
+        { code: 'storage.download_error', status: 502 },
+        { details: 'Premature close' }
+      )
+    );
+  });
+
+  it('should return 502 if reading blob properties hits a transient storage error', async () => {
+    mockedDownloadFile.mockResolvedValueOnce({ readableStreamBody: Readable.from('content') });
+    mockedGetFileProperties.mockRejectedValueOnce(new TransientStorageError('Premature close'));
+    const ctx = createMockContext({ url: '/fake.txt' });
+
+    await expect(koaServeCustomUiAssets('custom-ui-asset-id')(ctx, next)).rejects.toMatchError(
+      new RequestError(
+        { code: 'storage.download_error', status: 502 },
+        { details: 'Premature close' }
+      )
     );
   });
 
