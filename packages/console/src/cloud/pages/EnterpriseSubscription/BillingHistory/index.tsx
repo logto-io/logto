@@ -72,9 +72,9 @@ function BillingHistory() {
           },
           {
             title: <DynamicT forKey="subscription.billing_history.amount_column" />,
-            dataIndex: 'amountPaid',
-            render: ({ amountPaid }) => {
-              return `$${(amountPaid / 100).toFixed(2)}`;
+            dataIndex: 'amountDue',
+            render: ({ amountDue }) => {
+              return `$${(amountDue / 100).toFixed(2)}`;
             },
           },
           {
