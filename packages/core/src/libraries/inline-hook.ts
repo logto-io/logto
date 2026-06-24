@@ -1,7 +1,6 @@
 import { type LogtoInlineHookKey } from '@logto/schemas';
 import { ZodError } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import {
   buildLocalVmErrorBody,
@@ -87,10 +86,6 @@ export class InlineHookLibrary {
     key: LogtoInlineHookKey;
     event: Event;
   }): Promise<unknown> {
-    if (!EnvSet.values.isDevFeaturesEnabled) {
-      return;
-    }
-
     const inlineHook = await this.logtoConfigs.getInlineHook(key);
 
     if (!inlineHook?.enabled) {
