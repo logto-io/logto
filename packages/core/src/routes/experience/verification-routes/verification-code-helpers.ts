@@ -171,8 +171,8 @@ export const sendCode = async ({
         ...(ctx.request.ip && { ip: ctx.request.ip }),
       };
 
-  // Send verification code. When delivery is skipped (see `shouldSkipDelivery`) nothing is sent, so
-  // the rate guard is bypassed.
+  // Send verification code. When delivery is skipped (see `shouldSkipDelivery`) the passcode record is
+  // still created but nothing is sent.
   const send = async () => codeVerification.sendVerificationCode(payload, { skipDelivery });
 
   const messageRateLimit = {
@@ -180,9 +180,11 @@ export const sendCode = async ({
     recipient: identifier.value,
   };
 
-  await (skipDelivery || !EnvSet.values.isDevFeaturesEnabled
-    ? send()
-    : withMessageRateGuard(
+  // The rate guard runs even for suppressed sends: a suppressed send must still count toward the
+  // per-recipient cap, otherwise an unknown recipient never hits 429 while a registered one does —
+  // leaking registration status (account enumeration) and defeating the point of suppression.
+  await (EnvSet.values.isDevFeaturesEnabled
+    ? withMessageRateGuard(
         await buildMessageRateGuard(queries),
         {
           ...messageRateLimit,
@@ -191,7 +193,8 @@ export const sendCode = async ({
           },
         },
         send
-      ));
+      )
+    : send());
 
   // Save state
   experienceInteraction.setVerificationRecord(codeVerification);
