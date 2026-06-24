@@ -1,5 +1,7 @@
 import { yes } from '@silverhand/essentials';
 
+import { storageKeys } from './storage';
+
 const normalizeEnv = (value: unknown) =>
   value === null || value === undefined ? undefined : String(value);
 
@@ -9,6 +11,12 @@ export const isProtectedAppLocalDevEnabled =
   !isProduction && yes(normalizeEnv(import.meta.env.PROTECTED_APP_LOCAL_DEV));
 export const isProtectedAppEnabled = isCloud || isProtectedAppLocalDevEnabled;
 export const adminEndpoint = normalizeEnv(import.meta.env.ADMIN_ENDPOINT);
+
+// eslint-disable-next-line import/no-unused-modules
+export const isDevFeaturesEnabled =
+  !isProduction ||
+  yes(normalizeEnv(import.meta.env.DEV_FEATURES_ENABLED)) ||
+  yes(localStorage.getItem(storageKeys.isDevFeaturesEnabled));
 
 export const consoleEmbeddedPricingUrl =
   normalizeEnv(import.meta.env.CONSOLE_EMBEDDED_PRICING_URL) ??
