@@ -85,7 +85,7 @@ export const defaultLogtoSku: LogtoSkuResponse = {
     thirdPartyApplicationsLimit: null,
     tenantMembersLimit: 20,
     customJwtEnabled: true,
-    inlineHooksEnabled: true,
+    inlineHooksEnabled: false,
     subjectTokenEnabled: true,
     bringYourUiEnabled: true,
     collectUserProfileEnabled: true,
