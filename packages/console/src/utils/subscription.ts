@@ -9,23 +9,13 @@ import { ticketSupportResponseTimeMap } from '@/consts/plan-quotas';
 import { featuredPlanIds, planIdOrder } from '@/consts/subscriptions';
 import { type LogtoSkuQuota } from '@/types/skus';
 
-const getInlineHooksEnabled = (quota: Record<string, unknown>) =>
-  'inlineHooksEnabled' in quota && typeof quota.inlineHooksEnabled === 'boolean'
-    ? quota.inlineHooksEnabled
-    : false;
-
-export const addInlineHooksQuotaDefault = <T extends Record<string, unknown>>(quota: T) => ({
-  ...quota,
-  inlineHooksEnabled: getInlineHooksEnabled(quota),
-});
-
 const addSupportQuota = (logtoSkuResponse: LogtoSkuResponse) => {
   const { id, quota } = logtoSkuResponse;
 
   return {
     ...logtoSkuResponse,
     quota: {
-      ...addInlineHooksQuotaDefault(quota),
+      ...quota,
       /**
        * Manually add this support quota item to the plan since it will be compared in the downgrade plan notification modal.
        */

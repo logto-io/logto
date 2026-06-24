@@ -7,11 +7,7 @@ type GetTenantAuthRoutes = RouterRoutes<typeof tenantAuthRouter>['get'];
 
 export type GetArrayElementType<T> = T extends Array<infer U> ? U : never;
 
-type CompleteLogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>;
-
-export type LogtoSkuResponse = CompleteLogtoSkuResponse & {
-  quota: CompleteLogtoSkuResponse['quota'] & Partial<Pick<SubscriptionQuota, 'inlineHooksEnabled'>>;
-};
+export type LogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>;
 
 export type Subscription = GuardedResponse<GetRoutes['/api/tenants/:tenantId/subscription']>;
 
@@ -21,37 +17,24 @@ export type TenantUsageAddOnSkus = GuardedResponse<
 
 export type SystemLimit = GuardedResponse<GetRoutes['/api/tenants/my/subscription']>['systemLimit'];
 
-type CompleteSubscriptionUsageResponse = GuardedResponse<
+export type SubscriptionUsageResponse = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription-usage']
 >;
 
 export type SubscriptionQuota = Omit<
-  CompleteSubscriptionUsageResponse['quota'],
+  SubscriptionUsageResponse['quota'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
   'organizationsEnabled'
-> & {
-  inlineHooksEnabled: boolean;
-};
-
-export type SubscriptionUsageResponse = Omit<
-  CompleteSubscriptionUsageResponse,
-  'basicQuota' | 'quota' | 'usage'
-> & {
-  basicQuota: SubscriptionQuota;
-  quota: SubscriptionQuota;
-  usage: SubscriptionCountBasedUsage;
-};
+>;
 
 export type SubscriptionCountBasedUsage = Omit<
-  CompleteSubscriptionUsageResponse['usage'],
+  SubscriptionUsageResponse['usage'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
-> & {
-  inlineHooksEnabled: boolean;
-};
-export type SubscriptionResourceScopeUsage = CompleteSubscriptionUsageResponse['resources'];
+>;
+export type SubscriptionResourceScopeUsage = SubscriptionUsageResponse['resources'];
 export type SubscriptionRoleScopeUsage = Omit<
-  CompleteSubscriptionUsageResponse['roles'],
+  SubscriptionUsageResponse['roles'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
   'organizationsEnabled'
 >;

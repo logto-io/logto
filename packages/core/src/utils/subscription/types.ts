@@ -19,9 +19,7 @@ export type SubscriptionQuota = Omit<
   | 'auditLogsRetentionDays'
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'
-> & {
-  inlineHooksEnabled: boolean;
-};
+>;
 
 /**
  * The subscription data is fetched from the Cloud API.
@@ -48,9 +46,7 @@ export type SubscriptionUsage = Omit<
   CompleteSubscriptionUsage['usage'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
-> & {
-  inlineHooksEnabled: boolean;
-};
+>;
 
 export type ReportSubscriptionUpdatesUsageKey = Exclude<
   RouteRequestBodyType<PostRoutes['/api/tenants/my/subscription/item-updates']>['usageKey'],

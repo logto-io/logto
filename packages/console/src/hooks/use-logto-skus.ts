@@ -11,7 +11,7 @@ import TenantAccess from '@/containers/TenantAccess';
 // eslint-disable-next-line unused-imports/no-unused-imports -- for jsDoc use
 import type { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { LogtoSkuType } from '@/types/skus';
-import { addInlineHooksQuotaDefault, formatLogtoSkusResponses } from '@/utils/subscription';
+import { formatLogtoSkusResponses } from '@/utils/subscription';
 
 /**
  * Fetch public Logto SKUs from the cloud API.
@@ -27,16 +27,10 @@ const useLogtoSkus = () => {
 
   const useSwrResponse = useSWRImmutable<LogtoSkuResponse[], Error>(
     isCloud && '/api/skus',
-    async (): Promise<LogtoSkuResponse[]> => {
-      const data = await cloudApi.get('/api/skus', {
+    async () =>
+      cloudApi.get('/api/skus', {
         search: { type: LogtoSkuType.Basic },
-      });
-
-      return data.map((sku) => ({
-        ...sku,
-        quota: addInlineHooksQuotaDefault(sku.quota),
-      }));
-    }
+      })
   );
 
   const { data: logtoSkuResponse } = useSwrResponse;

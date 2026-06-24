@@ -3,12 +3,7 @@ import { useContext, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import {
-  type LogtoSkuResponse,
-  type SubscriptionQuota,
-  type SubscriptionCountBasedUsage,
-  type SubscriptionUsageResponse,
-} from '@/cloud/types/router';
+import { type LogtoSkuResponse, type SubscriptionUsageResponse } from '@/cloud/types/router';
 import {
   defaultLogtoSku,
   defaultTenantResponse,
@@ -18,26 +13,11 @@ import {
 import { isCloud } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { LogtoSkuType } from '@/types/skus';
-import { addInlineHooksQuotaDefault, formatLogtoSkusResponses } from '@/utils/subscription';
+import { formatLogtoSkusResponses } from '@/utils/subscription';
 
 import useSubscription from '../../hooks/use-subscription';
 
 import { type SubscriptionContext } from './types';
-
-type CloudSubscriptionQuota = Omit<SubscriptionQuota, 'inlineHooksEnabled'> &
-  Partial<Pick<SubscriptionQuota, 'inlineHooksEnabled'>>;
-type CloudSubscriptionUsage = Omit<SubscriptionCountBasedUsage, 'inlineHooksEnabled'> &
-  Partial<Pick<SubscriptionCountBasedUsage, 'inlineHooksEnabled'>>;
-
-const withInlineHooksQuota = (quota: CloudSubscriptionQuota): SubscriptionQuota => ({
-  ...quota,
-  inlineHooksEnabled: quota.inlineHooksEnabled ?? false,
-});
-
-const withInlineHooksUsage = (usage: CloudSubscriptionUsage): SubscriptionCountBasedUsage => ({
-  ...usage,
-  inlineHooksEnabled: usage.inlineHooksEnabled ?? false,
-});
 
 const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = () => {
   const cloudApi = useCloudApi();
@@ -56,18 +36,10 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
     mutate: mutateSubscriptionQuotaAndUsages,
   } = useSWR<SubscriptionUsageResponse, Error>(
     isCloud && currentTenantId && `/api/tenants/${currentTenantId}/subscription-usage`,
-    async (): Promise<SubscriptionUsageResponse> => {
-      const data = await cloudApi.get('/api/tenants/:tenantId/subscription-usage', {
+    async () =>
+      cloudApi.get('/api/tenants/:tenantId/subscription-usage', {
         params: { tenantId: currentTenantId },
-      });
-
-      return {
-        ...data,
-        basicQuota: withInlineHooksQuota(data.basicQuota),
-        quota: withInlineHooksQuota(data.quota),
-        usage: withInlineHooksUsage(data.usage),
-      };
-    }
+      })
   );
 
   // Fetch tenant specific available SKUs
@@ -77,19 +49,11 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
   const { isLoading: isLogtoSkusLoading, data: fetchedLogtoSkus } = useSWR<
     LogtoSkuResponse[],
     Error
-  >(
-    isCloud && currentTenantId && `/api/tenants/${currentTenantId}/available-skus`,
-    async (): Promise<LogtoSkuResponse[]> => {
-      const data = await cloudApi.get('/api/tenants/:tenantId/available-skus', {
-        params: { tenantId: currentTenantId },
-        search: { type: LogtoSkuType.Basic },
-      });
-
-      return data.map((sku) => ({
-        ...sku,
-        quota: addInlineHooksQuotaDefault(sku.quota),
-      }));
-    }
+  >(isCloud && currentTenantId && `/api/tenants/${currentTenantId}/available-skus`, async () =>
+    cloudApi.get('/api/tenants/:tenantId/available-skus', {
+      params: { tenantId: currentTenantId },
+      search: { type: LogtoSkuType.Basic },
+    })
   );
 
   const logtoSkus = useMemo(() => formatLogtoSkusResponses(fetchedLogtoSkus), [fetchedLogtoSkus]);
