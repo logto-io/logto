@@ -159,6 +159,12 @@ const quota_item = {
     unlimited: 'JWT แบบกำหนดเอง',
     not_eligible: 'ลบตัวปรับแต่ง claim ของ JWT ของคุณ',
   },
+  inline_hooks_enabled: {
+    name: 'Inline hooks',
+    limited: 'Inline hooks',
+    unlimited: 'Inline hooks',
+    not_eligible: 'Disable your inline hooks',
+  },
   impersonation_enabled: {
     name: 'การสวมตัวตน',
     limited: 'การสวมตัวตน',

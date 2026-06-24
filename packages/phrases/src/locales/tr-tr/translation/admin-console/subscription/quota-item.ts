@@ -159,6 +159,12 @@ const quota_item = {
     unlimited: 'Özel JWT',
     not_eligible: 'JWT taleplerinizin özelleştiricisini kaldırın',
   },
+  inline_hooks_enabled: {
+    name: 'Inline hooks',
+    limited: 'Inline hooks',
+    unlimited: 'Inline hooks',
+    not_eligible: 'Disable your inline hooks',
+  },
   impersonation_enabled: {
     name: 'Kişileştirme',
     limited: 'Kişileştirme',

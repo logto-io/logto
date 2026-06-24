@@ -159,6 +159,12 @@ const quota_item = {
     unlimited: 'Niestandardowy JWT',
     not_eligible: 'Usuń swoje niestandardowe narzędzie tworzące JWT',
   },
+  inline_hooks_enabled: {
+    name: 'Inline hooks',
+    limited: 'Inline hooks',
+    unlimited: 'Inline hooks',
+    not_eligible: 'Disable your inline hooks',
+  },
   impersonation_enabled: {
     name: 'Impersonacja',
     limited: 'Impersonacja',

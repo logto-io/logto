@@ -33,6 +33,7 @@ export const skuQuotaItemOrder: Array<keyof LogtoSkuQuota> = [
   'auditLogsRetentionDays',
   'hooksLimit',
   'customJwtEnabled',
+  'inlineHooksEnabled',
   'subjectTokenEnabled',
   'bringYourUiEnabled',
   'collectUserProfileEnabled',

@@ -7,7 +7,11 @@ type GetTenantAuthRoutes = RouterRoutes<typeof tenantAuthRouter>['get'];
 
 export type GetArrayElementType<T> = T extends Array<infer U> ? U : never;
 
-export type LogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>;
+type CompleteLogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>;
+
+export type LogtoSkuResponse = CompleteLogtoSkuResponse & {
+  quota: CompleteLogtoSkuResponse['quota'] & Partial<Pick<SubscriptionQuota, 'inlineHooksEnabled'>>;
+};
 
 export type Subscription = GuardedResponse<GetRoutes['/api/tenants/:tenantId/subscription']>;
 
@@ -31,17 +35,20 @@ export type SubscriptionQuota = Omit<
 
 export type SubscriptionUsageResponse = Omit<
   CompleteSubscriptionUsageResponse,
-  'basicQuota' | 'quota'
+  'basicQuota' | 'quota' | 'usage'
 > & {
   basicQuota: SubscriptionQuota;
   quota: SubscriptionQuota;
+  usage: SubscriptionCountBasedUsage;
 };
 
 export type SubscriptionCountBasedUsage = Omit<
   CompleteSubscriptionUsageResponse['usage'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
->;
+> & {
+  inlineHooksEnabled: boolean;
+};
 export type SubscriptionResourceScopeUsage = CompleteSubscriptionUsageResponse['resources'];
 export type SubscriptionRoleScopeUsage = Omit<
   CompleteSubscriptionUsageResponse['roles'],

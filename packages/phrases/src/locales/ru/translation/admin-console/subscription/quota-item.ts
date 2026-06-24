@@ -159,6 +159,12 @@ const quota_item = {
     unlimited: 'Пользовательский JWT',
     not_eligible: 'Удалите свой настраиваемый создатель токенов JWT',
   },
+  inline_hooks_enabled: {
+    name: 'Inline hooks',
+    limited: 'Inline hooks',
+    unlimited: 'Inline hooks',
+    not_eligible: 'Disable your inline hooks',
+  },
   impersonation_enabled: {
     name: 'Выдача за другого пользователя',
     limited: 'Выдача за другого пользователя',
