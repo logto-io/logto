@@ -159,12 +159,6 @@ const quota_item = {
     unlimited: '自定義JWT',
     not_eligible: '刪除您的JWT聲明自訂程式',
   },
-  inline_hooks_enabled: {
-    name: 'Inline hooks',
-    limited: 'Inline hooks',
-    unlimited: 'Inline hooks',
-    not_eligible: 'Disable your inline hooks',
-  },
   impersonation_enabled: {
     name: '假扮',
     limited: '假扮',

@@ -159,12 +159,6 @@ const quota_item = {
     unlimited: '自訂 JWT',
     not_eligible: '移除你的 JWT 声明自訂器',
   },
-  inline_hooks_enabled: {
-    name: 'Inline hooks',
-    limited: 'Inline hooks',
-    unlimited: 'Inline hooks',
-    not_eligible: 'Disable your inline hooks',
-  },
   impersonation_enabled: {
     name: '模擬',
     limited: '模擬',

@@ -159,12 +159,6 @@ const quota_item = {
     unlimited: 'JWT سفارشی',
     not_eligible: 'سفارشی‌ساز ادعاهای JWT خود را حذف کنید',
   },
-  inline_hooks_enabled: {
-    name: 'Inline hooks',
-    limited: 'Inline hooks',
-    unlimited: 'Inline hooks',
-    not_eligible: 'Disable your inline hooks',
-  },
   impersonation_enabled: {
     name: 'جعل هویت',
     limited: 'جعل هویت',

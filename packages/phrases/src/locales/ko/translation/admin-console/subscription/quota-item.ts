@@ -159,12 +159,6 @@ const quota_item = {
     unlimited: '사용자 정의 JWT',
     not_eligible: '사용자 정의 JWT 클레임 사용자를 제거하십시오',
   },
-  inline_hooks_enabled: {
-    name: 'Inline hooks',
-    limited: 'Inline hooks',
-    unlimited: 'Inline hooks',
-    not_eligible: 'Disable your inline hooks',
-  },
   impersonation_enabled: {
     name: '임퍼소네이션',
     limited: '임퍼소네이션',

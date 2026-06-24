@@ -159,12 +159,6 @@ const quota_item = {
     unlimited: 'JWT المخصص',
     not_eligible: 'قم بإزالة مُعدّل العبارات JWT الخاص بك',
   },
-  inline_hooks_enabled: {
-    name: 'Inline hooks',
-    limited: 'Inline hooks',
-    unlimited: 'Inline hooks',
-    not_eligible: 'Disable your inline hooks',
-  },
   impersonation_enabled: {
     name: 'التمثيل',
     limited: 'التمثيل',

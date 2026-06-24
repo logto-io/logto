@@ -2,9 +2,14 @@ import { type TFuncKey } from 'i18next';
 
 import { type LogtoSkuQuota } from '@/types/skus';
 
+type SkuQuotaItemPhraseKey = Exclude<keyof LogtoSkuQuota, 'inlineHooksEnabled'>;
+
+export const isSkuQuotaItemPhraseKey = (key: keyof LogtoSkuQuota): key is SkuQuotaItemPhraseKey =>
+  key !== 'inlineHooksEnabled';
+
 /* === for new pricing model === */
 export const skuQuotaItemPhrasesMap: Record<
-  keyof LogtoSkuQuota,
+  SkuQuotaItemPhraseKey,
   TFuncKey<'translation', 'admin_console.subscription.quota_item'>
 > = {
   mauLimit: 'mau_limit.name',
@@ -26,7 +31,6 @@ export const skuQuotaItemPhrasesMap: Record<
   enterpriseSsoLimit: 'sso_enabled.name',
   tenantMembersLimit: 'tenant_members_limit.name',
   customJwtEnabled: 'custom_jwt_enabled.name',
-  inlineHooksEnabled: 'inline_hooks_enabled.name',
   subjectTokenEnabled: 'impersonation_enabled.name',
   bringYourUiEnabled: 'bring_your_ui_enabled.name',
   collectUserProfileEnabled: 'collect_user_profile_enabled.name',
@@ -38,7 +42,7 @@ export const skuQuotaItemPhrasesMap: Record<
 };
 
 export const skuQuotaItemUnlimitedPhrasesMap: Record<
-  keyof LogtoSkuQuota,
+  SkuQuotaItemPhraseKey,
   TFuncKey<'translation', 'admin_console.subscription.quota_item'>
 > = {
   mauLimit: 'mau_limit.unlimited',
@@ -60,7 +64,6 @@ export const skuQuotaItemUnlimitedPhrasesMap: Record<
   enterpriseSsoLimit: 'sso_enabled.unlimited',
   tenantMembersLimit: 'tenant_members_limit.unlimited',
   customJwtEnabled: 'custom_jwt_enabled.unlimited',
-  inlineHooksEnabled: 'inline_hooks_enabled.unlimited',
   subjectTokenEnabled: 'impersonation_enabled.unlimited',
   bringYourUiEnabled: 'bring_your_ui_enabled.unlimited',
   collectUserProfileEnabled: 'collect_user_profile_enabled.unlimited',
@@ -72,7 +75,7 @@ export const skuQuotaItemUnlimitedPhrasesMap: Record<
 };
 
 export const skuQuotaItemLimitedPhrasesMap: Record<
-  keyof LogtoSkuQuota,
+  SkuQuotaItemPhraseKey,
   TFuncKey<'translation', 'admin_console.subscription.quota_item'>
 > = {
   mauLimit: 'mau_limit.limited',
@@ -94,7 +97,6 @@ export const skuQuotaItemLimitedPhrasesMap: Record<
   enterpriseSsoLimit: 'sso_enabled.limited',
   tenantMembersLimit: 'tenant_members_limit.limited',
   customJwtEnabled: 'custom_jwt_enabled.limited',
-  inlineHooksEnabled: 'inline_hooks_enabled.limited',
   subjectTokenEnabled: 'impersonation_enabled.limited',
   bringYourUiEnabled: 'bring_your_ui_enabled.limited',
   collectUserProfileEnabled: 'collect_user_profile_enabled.limited',
@@ -106,7 +108,7 @@ export const skuQuotaItemLimitedPhrasesMap: Record<
 };
 
 export const skuQuotaItemNotEligiblePhrasesMap: Record<
-  keyof LogtoSkuQuota,
+  SkuQuotaItemPhraseKey,
   TFuncKey<'translation', 'admin_console.subscription.quota_item'>
 > = {
   mauLimit: 'mau_limit.not_eligible',
@@ -128,7 +130,6 @@ export const skuQuotaItemNotEligiblePhrasesMap: Record<
   enterpriseSsoLimit: 'sso_enabled.not_eligible',
   tenantMembersLimit: 'tenant_members_limit.not_eligible',
   customJwtEnabled: 'custom_jwt_enabled.not_eligible',
-  inlineHooksEnabled: 'inline_hooks_enabled.not_eligible',
   subjectTokenEnabled: 'impersonation_enabled.not_eligible',
   bringYourUiEnabled: 'bring_your_ui_enabled.not_eligible',
   collectUserProfileEnabled: 'collect_user_profile_enabled.not_eligible',

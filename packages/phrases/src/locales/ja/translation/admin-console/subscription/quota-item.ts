@@ -159,12 +159,6 @@ const quota_item = {
     unlimited: 'カスタム JWT',
     not_eligible: 'JWT クレームカスタマイザーを削除してください',
   },
-  inline_hooks_enabled: {
-    name: 'Inline hooks',
-    limited: 'Inline hooks',
-    unlimited: 'Inline hooks',
-    not_eligible: 'Disable your inline hooks',
-  },
   impersonation_enabled: {
     name: 'インパーソネーション',
     limited: 'インパーソネーション',
