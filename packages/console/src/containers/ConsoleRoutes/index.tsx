@@ -49,9 +49,7 @@ export function ConsoleRoutes() {
         <Route path="/:tenantId" element={<Layout />}>
           <Route path="callback" element={<Callback />} />
           <Route path="welcome" element={<Welcome />} />
-          {!isProduction && (
-            <Route path="__internal__/import-error" element={<__Internal__ImportError />} />
-          )}
+          <Route path="__internal__/import-error" element={<__Internal__ImportError />} />
           <Route element={<ProtectedRoutes />}>
             <Route
               path={dropLeadingSlash(GlobalRoute.Profile) + '/*'}
