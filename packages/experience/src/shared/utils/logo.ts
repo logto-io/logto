@@ -6,11 +6,10 @@ export type GetLogoUrl = {
   theme: Theme;
   logoUrl: string;
   darkLogoUrl?: Nullable<string>;
-  isApple?: boolean;
 };
 
-export const getLogoUrl = ({ theme, logoUrl, darkLogoUrl, isApple }: GetLogoUrl) => {
-  if (theme === (isApple ? Theme.Light : Theme.Dark)) {
+export const getLogoUrl = ({ theme, logoUrl, darkLogoUrl }: GetLogoUrl) => {
+  if (theme === Theme.Dark) {
     return darkLogoUrl ?? logoUrl;
   }
 
