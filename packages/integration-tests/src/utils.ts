@@ -161,11 +161,6 @@ export const devFeatureTest = Object.freeze({
   describe,
 });
 
-export const devFeatureDisabledTest = Object.freeze({
-  it: it.skip,
-  describe: describe.skip,
-});
-
 export const parseInteractionCookie = (cookie: string): Record<string, string> => {
   try {
     // eslint-disable-next-line no-restricted-syntax

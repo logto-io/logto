@@ -18,7 +18,7 @@ const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slic
 const cloudOnlyTag = 'Cloud only';
 /** The tag name is used in the supplement document to indicate that the corresponding API operation is a dev feature. */
 const devFeatureTag = 'Dev feature';
-/** The OpenAPI schema extension that hides a schema property when dev features are disabled. */
+/** The OpenAPI schema extension used as an internal marker on dev-feature schema properties. */
 export const devFeatureSchemaExtension = 'x-logto-dev-feature';
 
 const reservedTags = new Set([cloudOnlyTag, devFeatureTag]);
@@ -256,8 +256,8 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
  * **CAUTION**: This function mutates the input document.
  *
  * Remove operations (path + method) that are tagged with `Cloud only` if the application is not
- * running in the cloud. It also prunes schema properties marked with
- * `x-logto-dev-feature` (removing the internal marker).
+ * running in the cloud. It also strips the `x-logto-dev-feature` internal marker from schema
+ * properties (the properties themselves are kept).
  *
  * This will prevent the swagger validation from failing in the OSS environment.
  *
