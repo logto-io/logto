@@ -9,7 +9,6 @@ const mfa = {
   webauthn: 'Passkeys',
   webauthn_description:
     '브라우저에서 지원하는 방법으로 확인합니다: 생체 인식, 휴대폰 스캔 또는 보안 키 등.',
-  webauthn_native_tip: '네이티브 애플리케이션에서는 WebAuthn이 지원되지 않습니다.',
   webauthn_domain_tip:
     'WebAuthn은 공개 키를 특정 도메인에 바인딩합니다. 서비스 도메인을 수정하면 기존 패스키를 사용한 사용자의 인증이 차단됩니다.',
   backup_code: '백업 코드',

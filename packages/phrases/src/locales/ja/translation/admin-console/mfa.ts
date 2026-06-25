@@ -11,7 +11,6 @@ const mfa = {
   webauthn: 'Passkeys',
   webauthn_description:
     'ブラウザでサポートされている方法を使用して検証します：生体認証、電話のスキャン、またはセキュリティキーなど。',
-  webauthn_native_tip: 'WebAuthnはネイティブアプリケーションではサポートされていません。',
   webauthn_domain_tip:
     'WebAuthnは公開鍵を特定のドメインにバインドします。サービスのドメインを変更すると、既存のパスキーを使用したユーザーの認証がブロックされます。',
   backup_code: 'バックアップコード',
