@@ -86,6 +86,7 @@ export const isSystemUsageKey = (key: UsageKey): key is SystemUsageKey =>
 const quotaUsageKeyGuard = z.enum([
   ...sharedUsageKeyGuard.options,
   'customJwtEnabled',
+  'inlineHooksEnabled',
   'subjectTokenEnabled',
   'bringYourUiEnabled',
   'collectUserProfileEnabled',
@@ -132,6 +133,7 @@ type BooleanQuotaUsageKey = {
 
 const booleanQuotaUsageKeyGuard = z.enum([
   'customJwtEnabled',
+  'inlineHooksEnabled',
   'subjectTokenEnabled',
   'bringYourUiEnabled',
   'collectUserProfileEnabled',

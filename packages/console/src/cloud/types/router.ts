@@ -7,7 +7,7 @@ type GetTenantAuthRoutes = RouterRoutes<typeof tenantAuthRouter>['get'];
 
 export type GetArrayElementType<T> = T extends Array<infer U> ? U : never;
 
-export type LogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>;
+type CloudLogtoSkuResponse = GetArrayElementType<GuardedResponse<GetRoutes['/api/skus']>>;
 
 export type Subscription = GuardedResponse<GetRoutes['/api/tenants/:tenantId/subscription']>;
 
@@ -21,21 +21,31 @@ export type SubscriptionUsageResponse = GuardedResponse<
   GetRoutes['/api/tenants/:tenantId/subscription-usage']
 >;
 
+type InlineHookSubscriptionQuota = {
+  inlineHooksEnabled: boolean;
+};
+
 export type SubscriptionQuota = Omit<
   SubscriptionUsageResponse['quota'],
-  // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
+  // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
   'organizationsEnabled'
->;
+> &
+  InlineHookSubscriptionQuota;
+
+export type LogtoSkuResponse = Omit<CloudLogtoSkuResponse, 'quota'> & {
+  quota: CloudLogtoSkuResponse['quota'] & Partial<InlineHookSubscriptionQuota>;
+};
 
 export type SubscriptionCountBasedUsage = Omit<
   SubscriptionUsageResponse['usage'],
-  // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
+  // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
->;
+> &
+  InlineHookSubscriptionQuota;
 export type SubscriptionResourceScopeUsage = SubscriptionUsageResponse['resources'];
 export type SubscriptionRoleScopeUsage = Omit<
   SubscriptionUsageResponse['roles'],
-  // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
+  // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the quota keys for now to avoid confusion.
   'organizationsEnabled'
 >;
 

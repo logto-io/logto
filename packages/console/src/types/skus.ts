@@ -1,6 +1,6 @@
 import { type SubscriptionQuota } from '@/cloud/types/router';
 
-// TODO: This is a copy from `@logto/cloud-models`, make a SSoT for this later
+// This is a copy from `@logto/cloud-models`; make a SSoT for this later.
 export enum LogtoSkuType {
   Basic = 'Basic',
   AddOn = 'AddOn',

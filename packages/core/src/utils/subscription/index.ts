@@ -19,9 +19,17 @@ export const getTenantSubscription = async (
   // All the dates will be converted to the ISO 8601 format after json serialization.
   // Convert the dates to ISO 8601 format to match the exact type of the response.
   const { currentPeriodStart, currentPeriodEnd, ...rest } = subscription;
+  const inlineHooksEnabled =
+    'inlineHooksEnabled' in rest.quota && typeof rest.quota.inlineHooksEnabled === 'boolean'
+      ? rest.quota.inlineHooksEnabled
+      : false;
 
   return {
     ...rest,
+    quota: {
+      ...rest.quota,
+      inlineHooksEnabled,
+    },
     currentPeriodStart: new Date(currentPeriodStart).toISOString(),
     currentPeriodEnd: new Date(currentPeriodEnd).toISOString(),
   };
