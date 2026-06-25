@@ -192,14 +192,6 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
   });
 
-  it('omits organization context when dev features are disabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    await callGetExtraTokenClaimsForJwtCustomization({ organizationId: 'org-1' });
-
-    expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
-  });
-
   it('throws invalid request with original error message on script failure when blocking is enabled', async () => {
     runScriptInLocalVm.mockRejectedValue(new Error('boom'));
 

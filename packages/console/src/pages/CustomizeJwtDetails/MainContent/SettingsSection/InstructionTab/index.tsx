@@ -154,7 +154,7 @@ function InstructionTab({ isActive, section, action }: Props) {
               options={typeDefinitionCodeEditorOptions}
             />
           </GuideCard>
-          {tokenType === LogtoJwtTokenKeyType.AccessToken && isDevFeaturesEnabled && (
+          {tokenType === LogtoJwtTokenKeyType.AccessToken && (
             <GuideCard
               name={CardType.OrganizationData}
               isExpanded={expendCard === CardType.OrganizationData}
