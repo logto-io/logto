@@ -25,15 +25,16 @@ function AcceptInvitation() {
   const [searchParameters] = useSearchParams();
   const oneTimeToken = searchParameters.get('one_time_token');
   const cloudApi = useCloudApi();
+  const silentCloudApi = useCloudApi({ hideErrorToast: true });
   const { navigateTenant, resetTenants } = useContext(TenantsContext);
   const hasStartedSignIn = useRef(false);
   const authFormRef = useRef<HTMLFormElement>(null);
 
   // The request is only made when the user has signed-in and the invitation ID is available.
-  // The response data is returned only when the current user matches the invitee email. Otherwise, it returns 404.
+  // The response data is returned only when the current user matches the invitee email. Otherwise, it returns 403.
   const { data: invitation, error } = useSWR<InvitationResponse, RequestError>(
     isAuthenticated && invitationId && `/api/invitations/${invitationId}`,
-    async () => cloudApi.get('/api/invitations/:invitationId', { params: { invitationId } })
+    async () => silentCloudApi.get('/api/invitations/:invitationId', { params: { invitationId } })
   );
 
   useEffect(() => {
