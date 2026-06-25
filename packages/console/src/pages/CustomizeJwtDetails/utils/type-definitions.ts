@@ -1,4 +1,3 @@
-import { isDevFeaturesEnabled } from '@/consts/env';
 import {
   JwtCustomizerTypeDefinitionKey,
   accessTokenPayloadTypeDefinition,
@@ -35,10 +34,9 @@ export const buildAccessTokenJwtCustomizerContextTsDefinition = () => {
 
   declare ${jwtCustomizerUserInteractionContextTypeDefinition}
 
-  declare ${jwtCustomizerApplicationContextTypeDefinition}${
-    // TODO: remove dev-features gating once the organization context is launched
-    isDevFeaturesEnabled ? `\n\n  declare ${jwtCustomizerOrganizationContextTypeDefinition}` : ''
-  }`;
+  declare ${jwtCustomizerApplicationContextTypeDefinition}
+
+  declare ${jwtCustomizerOrganizationContextTypeDefinition}`;
 };
 
 export const buildClientCredentialsJwtCustomizerContextTsDefinition = () =>

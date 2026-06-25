@@ -4,7 +4,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import DelayedSuspenseFallback from '@/components/DelayedSuspenseFallback';
 import RedirectToAccountCenter from '@/components/RedirectToAccountCenter';
 import { EnterpriseSubscriptionTabs } from '@/consts';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import ProtectedRoutes from '@/containers/ProtectedRoutes';
 import { GlobalAnonymousRoute, GlobalRoute } from '@/contexts/TenantsProvider';
 import { OnboardingApp } from '@/onboarding';
@@ -13,8 +12,6 @@ import Callback from '@/pages/Callback';
 import CheckoutSuccessCallback from '@/pages/CheckoutSuccessCallback';
 import ExternalGoogleOneTapLanding from '@/pages/ExternalGoogleOneTapLanding';
 import OneTimeTokenLanding from '@/pages/OneTimeTokenLanding';
-import Profile from '@/pages/Profile';
-import HandleSocialCallback from '@/pages/Profile/containers/HandleSocialCallback';
 
 import styles from './AppRoutes.module.scss';
 import DeleteAccount from './pages/DeleteAccount';
@@ -45,19 +42,13 @@ function AppRoutes() {
             element={<AcceptInvitation />}
           />
           <Route element={<ProtectedRoutes />}>
-            <Route
-              path={GlobalRoute.Profile + '/*'}
-              element={isDevFeaturesEnabled ? <RedirectToAccountCenter /> : <Profile />}
-            />
-            <Route path={GlobalRoute.HandleSocial} element={<HandleSocialCallback />} />
+            <Route path={GlobalRoute.Profile + '/*'} element={<RedirectToAccountCenter />} />
             <Route
               path={GlobalRoute.CheckoutSuccessCallback}
               element={<CheckoutSuccessCallback />}
             />
             <Route path={GlobalRoute.Onboarding + '/*'} element={<OnboardingApp />} />
-            {isDevFeaturesEnabled && (
-              <Route path={GlobalRoute.DeleteAccount} element={<DeleteAccount />} />
-            )}
+            <Route path={GlobalRoute.DeleteAccount} element={<DeleteAccount />} />
             <Route index element={<Main />} />
             <Route
               path={`${GlobalRoute.EnterpriseSubscription}/:logtoEnterpriseId`}

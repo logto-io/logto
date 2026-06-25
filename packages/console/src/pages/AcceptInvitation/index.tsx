@@ -9,7 +9,6 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type InvitationResponse } from '@/cloud/types/router';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { type RequestError } from '@/hooks/use-api';
 import useRedirectUri from '@/hooks/use-redirect-uri';
@@ -46,7 +45,7 @@ function AcceptInvitation() {
       // eslint-disable-next-line @silverhand/fp/no-mutation -- React ref guards against duplicate sign-in redirects
       hasStartedSignIn.current = true;
 
-      if (!isDevFeaturesEnabled || !oneTimeToken) {
+      if (!oneTimeToken) {
         saveRedirect(buildInvitationAcceptUrl(invitationId));
         void signIn(redirectUri.href, 'signUp');
         return;
@@ -56,7 +55,7 @@ function AcceptInvitation() {
       return;
     }
 
-    if (!isDevFeaturesEnabled || !oneTimeToken || error?.status !== 403) {
+    if (!oneTimeToken || error?.status !== 403) {
       return;
     }
 
@@ -89,7 +88,7 @@ function AcceptInvitation() {
     return <AppError errorMessage={t('invitation.invitation_not_found')} />;
   }
 
-  const invitationAuthForm = isDevFeaturesEnabled && oneTimeToken && (
+  const invitationAuthForm = oneTimeToken && (
     <form
       ref={authFormRef}
       hidden
@@ -109,7 +108,7 @@ function AcceptInvitation() {
 
   // No invitation returned, indicating the current signed-in user is not the invitee.
   if (error?.status === 403) {
-    if (isDevFeaturesEnabled && oneTimeToken) {
+    if (oneTimeToken) {
       return (
         <>
           {invitationAuthForm}

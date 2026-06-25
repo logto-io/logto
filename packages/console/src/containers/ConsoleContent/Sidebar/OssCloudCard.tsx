@@ -1,5 +1,4 @@
 import { Theme } from '@logto/schemas';
-import classNames from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +7,7 @@ import CloudIconDark from '@/assets/icons/cloud-icon-dark.svg?react';
 import CloudIcon from '@/assets/icons/cloud-icon.svg?react';
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import { storageKeys } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import IconButton from '@/ds-components/IconButton';
 import TextLink from '@/ds-components/TextLink';
 import useTheme from '@/hooks/use-theme';
@@ -62,7 +61,7 @@ function OssCloudCard() {
   };
 
   return (
-    <div className={classNames(styles.wrapper, isDevFeaturesEnabled && styles.withDevStatusOffset)}>
+    <div className={styles.wrapper}>
       <div className={styles.card}>
         <div className={styles.header}>
           <div className={styles.icon}>

@@ -24,7 +24,6 @@ jest.unstable_mockModule('#src/libraries/jwt-customizer.js', () => ({
   },
 }));
 
-const { EnvSet } = await import('#src/env-set/index.js');
 const { getExtraTokenClaimsForJwtCustomization } = await import('./extra-token-claims.js');
 
 const buildContextAndToken = ({ organizationId }: { organizationId?: string } = {}) => {
@@ -133,15 +132,8 @@ const createResponseError = (status: number, body: Record<string, unknown>) =>
   );
 
 describe('getExtraTokenClaimsForJwtCustomization', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
   beforeEach(() => {
     runScriptInLocalVm.mockReset().mockResolvedValue({});
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-  });
-
-  afterAll(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('includes sign-in context in interaction context when lastSubmission has it', async () => {
@@ -156,9 +148,8 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     });
   });
 
-  it('includes adaptive MFA sign-in context in custom claims payload when dev features are disabled', async () => {
+  it('includes adaptive MFA sign-in context in custom claims payload', async () => {
     const signInContext = { country: 'US', botScore: '10' };
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
 
     await callGetExtraTokenClaimsForJwtCustomization({ signInContext });
 
@@ -192,14 +183,6 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
   });
 
-  it('omits organization context when dev features are disabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    await callGetExtraTokenClaimsForJwtCustomization({ organizationId: 'org-1' });
-
-    expect(runScriptInLocalVm.mock.calls[0]?.[0]?.context).not.toHaveProperty('organization');
-  });
-
   it('throws invalid request with original error message on script failure when blocking is enabled', async () => {
     runScriptInLocalVm.mockRejectedValue(new Error('boom'));
 
@@ -226,15 +209,6 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
       error_description: "Custom claims script error: 'abc' not exists in 'context'.",
       statusCode: 400,
     });
-  });
-
-  it('keeps fail-open on script failure when dev features are disabled', async () => {
-    runScriptInLocalVm.mockRejectedValue(new Error('boom'));
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    await expect(
-      callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
-    ).resolves.toBeUndefined();
   });
 
   it('throws access denied when denyAccess is called in custom script', async () => {

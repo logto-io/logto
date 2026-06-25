@@ -19,14 +19,9 @@ await mockEsmWithActual('@logto/connector-kit', () => ({
   isExternalGoogleOneTap: isExternalGoogleOneTapChecker,
 }));
 
-// Mock EnvSet
-const mockEnvSetValues = {
-  isDevFeaturesEnabled: false,
-};
-
 jest.mock('#src/env-set/index.js', () => ({
   EnvSet: {
-    values: mockEnvSetValues,
+    values: {},
   },
 }));
 
@@ -95,12 +90,6 @@ describe('SocialVerification', () => {
   });
 
   describe('verify method with legacy implementation', () => {
-    beforeEach(() => {
-      // Set mock to false to use legacy implementation
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      mockEnvSetValues.isDevFeaturesEnabled = false;
-    });
-
     it('should skip CSRF token validation for external website Google One Tap via legacy verify', async () => {
       const verification = new SocialVerification(tenant.libraries, tenant.queries, {
         id: 'test-id',
@@ -188,12 +177,6 @@ describe('SocialVerification', () => {
   });
 
   describe('verifySocialIdentity (dev features enabled)', () => {
-    beforeEach(() => {
-      // Set mock to true to enable dev features
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      mockEnvSetValues.isDevFeaturesEnabled = true;
-    });
-
     it('should skip CSRF token validation for external website Google One Tap with interactionSession', async () => {
       const verification = new SocialVerification(tenant.libraries, tenant.queries, {
         id: 'test-id',

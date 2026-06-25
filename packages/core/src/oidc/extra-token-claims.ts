@@ -210,8 +210,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     return;
   }
 
-  const shouldBlockIssuanceOnError =
-    EnvSet.values.isDevFeaturesEnabled && Boolean(blockIssuanceOnError);
+  const shouldBlockIssuanceOnError = Boolean(blockIssuanceOnError);
   const defaultJwtCustomizerErrorMessage = 'Failed to customize token claims';
 
   try {
@@ -252,7 +251,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     // can attach per-org claims. The `organization_id` claim itself is added afterwards in
     // `getExtraTokenClaimsForOrganizationApiResource`, so it is not visible on `token` here.
     const organizationId =
-      EnvSet.values.isDevFeaturesEnabled && typeof ctx.oidc.params?.organization_id === 'string'
+      typeof ctx.oidc.params?.organization_id === 'string'
         ? ctx.oidc.params.organization_id
         : undefined;
     const organizationContext = conditional(

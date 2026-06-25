@@ -14,7 +14,6 @@ import type { IRouterParamContext } from 'koa-router';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUser, mockUserTotpMfaVerification } from '#src/__mocks__/user.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -182,19 +181,11 @@ describe('POST /experience/profile', () => {
 });
 
 describe('POST /experience/submit', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const setDevFeaturesEnabled = (enabled: boolean) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
-  };
-
   afterEach(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
     jest.useRealTimers();
   });
 
   it('should record geo context when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester
@@ -213,7 +204,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should record geo location and sign-in country after successful sign-in', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester
@@ -232,7 +222,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should append adaptive MFA context to submit audit log', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, mockAppend } = createRequesterWithMocks({ adaptiveMfaEnabled: true });
 
     const response = await requester
@@ -262,7 +251,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should append adaptive MFA result to submit audit log', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, mockAppend } = createRequesterWithMocks({ adaptiveMfaEnabled: true });
 
     const response = await requester.post('/experience/submit').set('x-logto-cf-bot-score', '10');
@@ -283,7 +271,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should allow zero coordinates and record them', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations } = createRequesterWithMocks();
 
     const response = await requester
@@ -297,7 +284,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should skip invalid coordinates but still record valid country', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester
@@ -312,7 +298,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should skip out-of-range latitude but still record valid country', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester
@@ -327,7 +312,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should skip invalid country codes but record coordinates', async () => {
-    setDevFeaturesEnabled(true);
     const invalidCountries = ['JPN', 'jpn'];
 
     for (const country of invalidCountries) {
@@ -354,7 +338,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should normalize lowercase country codes', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester
@@ -368,7 +351,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should record country when coordinates are missing', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester.post('/experience/submit').set('x-logto-cf-country', 'JP');
@@ -379,7 +361,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should skip recording coordinates when only latitude is provided', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester
@@ -395,7 +376,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should record coordinates when country is missing', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester
@@ -416,7 +396,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should skip recording when no geo headers are provided', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks();
 
     const response = await requester.post('/experience/submit');
@@ -427,7 +406,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should record geo context when adaptive MFA is disabled', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks({
       adaptiveMfaEnabled: false,
     });
@@ -448,7 +426,6 @@ describe('POST /experience/submit', () => {
   });
 
   it('should record geo context for register interactions', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, userGeoLocations, userSignInCountries } = createRequesterWithMocks({
       interactionEvent: InteractionEvent.Register,
     });
@@ -488,7 +465,6 @@ describe('POST /experience/submit', () => {
   ])(
     'should allow adaptive MFA submit after binding $name via /experience/profile/mfa',
     async ({ factor, verificationType, identifierType, identifierValue, updatePatch }) => {
-      setDevFeaturesEnabled(true);
       const verificationId = `mock-${identifierType}-verification-id`;
       const user = {
         ...mockUser,

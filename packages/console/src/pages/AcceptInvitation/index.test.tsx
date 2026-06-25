@@ -15,10 +15,6 @@ jest.mock('@logto/react', () => ({
   useLogto: jest.fn(),
 }));
 
-jest.mock('@/consts/env', () => ({
-  isDevFeaturesEnabled: true,
-}));
-
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({
   useCloudApi: jest.fn(() => ({
     get: jest.fn(),
