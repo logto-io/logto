@@ -32,6 +32,8 @@ export class LocalVmError extends ResponseError {
  * @param payload The input payload for the function.
  * @returns The result of the function execution.
  */
+const localVmTimeout = 3000;
+
 export const runScriptFunctionInLocalVm = async (
   script: string,
   functionName: string,
@@ -40,7 +42,9 @@ export const runScriptFunctionInLocalVm = async (
   const globalContext = Object.freeze({
     fetch: async (...args: Parameters<typeof fetch>) => fetch(...args),
   });
-  const customFunction: unknown = runInNewContext(script + `;${functionName};`, globalContext);
+  const customFunction: unknown = runInNewContext(script + `;${functionName};`, globalContext, {
+    timeout: localVmTimeout,
+  });
 
   if (typeof customFunction !== 'function') {
     throw new TypeError(`The script does not have a function named \`${functionName}\``);
@@ -57,7 +61,7 @@ export const runScriptFunctionInLocalVm = async (
     '(async () => customFunction(payload))();',
     Object.freeze({ customFunction, payload }),
     // Limit the execution time to 3 seconds, throws error if the script takes too long to execute.
-    { timeout: 3000 }
+    { timeout: localVmTimeout }
   );
 
   return result;

@@ -32,7 +32,7 @@ export default class Libraries {
   users = createUserLibrary(this.tenantId, this.queries);
   phrases = createPhraseLibrary(this.queries);
   hooks = createHookLibrary(this.queries);
-  inlineHooks = new InlineHookLibrary(this.logtoConfigs);
+  inlineHooks = new InlineHookLibrary(this.tenantId, this.logtoConfigs, this.subscription);
   scopes = createScopeLibrary(this.queries);
   socials = createSocialLibrary(this.queries, this.connectors);
   jwtCustomizers = new JwtCustomizerLibrary(

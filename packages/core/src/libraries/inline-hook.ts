@@ -1,7 +1,10 @@
-import { type LogtoInlineHookKey } from '@logto/schemas';
+import { adminTenantId, type LogtoInlineHookKey } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import { ZodError } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
+import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import {
   buildLocalVmErrorBody,
   LocalVmError,
@@ -41,6 +44,18 @@ const apiContext: InlineHookApiContext = Object.freeze({
   },
 });
 
+const isAccessDeniedErrorBody = (body: unknown): boolean => {
+  if (!body || typeof body !== 'object' || !('error' in body)) {
+    return false;
+  }
+
+  const { error } = body;
+
+  return (
+    typeof error === 'object' && error !== null && 'code' in error && error.code === 'AccessDenied'
+  );
+};
+
 export class InlineHookLibrary {
   static async runScriptInLocalVm<Event>({
     script,
@@ -77,7 +92,11 @@ export class InlineHookLibrary {
     }
   }
 
-  constructor(private readonly logtoConfigs: LogtoConfigLibrary) {}
+  constructor(
+    private readonly tenantId: string,
+    private readonly logtoConfigs: LogtoConfigLibrary,
+    private readonly subscription: SubscriptionLibrary
+  ) {}
 
   async runHook<Event>({
     key,
@@ -86,16 +105,48 @@ export class InlineHookLibrary {
     key: LogtoInlineHookKey;
     event: Event;
   }): Promise<unknown> {
-    const inlineHook = await this.logtoConfigs.getInlineHook(key);
+    const inlineHook = await trySafe(async () => this.logtoConfigs.getInlineHook(key));
 
     if (!inlineHook?.enabled) {
       return;
     }
 
-    return InlineHookLibrary.runScriptInLocalVm({
-      script: inlineHook.script,
-      event,
-      environmentVariables: inlineHook.environmentVariables,
-    });
+    if (!(await this.isInlineHooksEnabledByQuota())) {
+      return;
+    }
+
+    try {
+      return await InlineHookLibrary.runScriptInLocalVm({
+        script: inlineHook.script,
+        event,
+        environmentVariables: inlineHook.environmentVariables,
+      });
+    } catch (error: unknown) {
+      if (error instanceof LocalVmError) {
+        const errorBody: unknown = await trySafe(async () => error.response.json());
+
+        if (isAccessDeniedErrorBody(errorBody)) {
+          throw error;
+        }
+      }
+
+      if (inlineHook.onExecutionError === 'allow') {
+        return;
+      }
+
+      throw error;
+    }
+  }
+
+  private async isInlineHooksEnabledByQuota(): Promise<boolean> {
+    const { isCloud } = EnvSet.values;
+
+    if (!isCloud || this.tenantId === adminTenantId) {
+      return true;
+    }
+
+    const { quota } = await this.subscription.getSubscriptionData();
+
+    return quota.inlineHooksEnabled;
   }
 }
