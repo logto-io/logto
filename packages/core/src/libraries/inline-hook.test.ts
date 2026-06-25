@@ -115,6 +115,21 @@ describe('InlineHookLibrary', () => {
     ).resolves.toBeUndefined();
   });
 
+  it('rethrows non-404 errors when loading inline hook config', async () => {
+    const requestError = new RequestError({
+      code: 'entity.not_exists_with_id',
+      status: 500,
+    });
+    getInlineHook.mockRejectedValueOnce(requestError);
+
+    await expect(
+      library.runHook({
+        key: LogtoInlineHookKey.PostSignIn,
+        event: {},
+      })
+    ).rejects.toBe(requestError);
+  });
+
   it('does not run when inline hooks quota is disabled', async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet for cloud quota test.
     (EnvSet.values as { isCloud: boolean }).isCloud = true;

@@ -3,6 +3,7 @@ import { trySafe } from '@silverhand/essentials';
 import { ZodError } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
 import type { SubscriptionLibrary } from '#src/libraries/subscription.js';
 import {
@@ -105,9 +106,9 @@ export class InlineHookLibrary {
     key: LogtoInlineHookKey;
     event: Event;
   }): Promise<unknown> {
-    const inlineHook = await trySafe(async () => this.logtoConfigs.getInlineHook(key));
+    const inlineHook = await this.findEnabledInlineHook(key);
 
-    if (!inlineHook?.enabled) {
+    if (!inlineHook) {
       return;
     }
 
@@ -123,7 +124,7 @@ export class InlineHookLibrary {
       });
     } catch (error: unknown) {
       if (error instanceof LocalVmError) {
-        const errorBody: unknown = await trySafe(async () => error.response.json());
+        const errorBody: unknown = await trySafe(async () => error.response.clone().json());
 
         if (isAccessDeniedErrorBody(errorBody)) {
           throw error;
@@ -131,6 +132,28 @@ export class InlineHookLibrary {
       }
 
       if (inlineHook.onExecutionError === 'allow') {
+        return;
+      }
+
+      throw error;
+    }
+  }
+
+  private async findEnabledInlineHook(key: LogtoInlineHookKey) {
+    try {
+      const inlineHook = await this.logtoConfigs.getInlineHook(key);
+
+      if (!inlineHook?.enabled) {
+        return;
+      }
+
+      return inlineHook;
+    } catch (error: unknown) {
+      if (
+        error instanceof RequestError &&
+        error.code === 'entity.not_exists_with_id' &&
+        error.status === 404
+      ) {
         return;
       }
 
