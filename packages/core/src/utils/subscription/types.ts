@@ -21,7 +21,7 @@ type InlineHookSubscriptionQuota = {
 export type SubscriptionQuota = Omit<
   CompleteSubscriptionUsage['quota'],
   | 'auditLogsRetentionDays'
-  // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
+  // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'
 > &
   InlineHookSubscriptionQuota;
@@ -49,14 +49,14 @@ export type Subscription = Omit<
 
 export type SubscriptionUsage = Omit<
   CompleteSubscriptionUsage['usage'],
-  // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
+  // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
 > &
   InlineHookSubscriptionQuota;
 
 export type ReportSubscriptionUpdatesUsageKey = Exclude<
   RouteRequestBodyType<PostRoutes['/api/tenants/my/subscription/item-updates']>['usageKey'],
-  // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
+  // Since we are deprecating the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
 >;
 
