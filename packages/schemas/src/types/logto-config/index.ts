@@ -8,6 +8,7 @@ import {
   messageRateLimitOverrideGuard,
 } from '../../consts/message-rate-limit.js';
 
+import { type InlineHook, LogtoInlineHookKey, inlineHookGuard } from './inline-hook.js';
 import {
   type AccessTokenJwtCustomizer,
   type ClientCredentialsJwtCustomizer,
@@ -17,6 +18,7 @@ import {
 
 export * from './oidc-provider.js';
 export * from './jwt-customizer.js';
+export * from './inline-hook.js';
 
 /**
  * Logto OIDC signing key types, used mainly in REST API routes.
@@ -101,6 +103,18 @@ export const jwtCustomizerConfigGuard: Readonly<{
 }> = Object.freeze({
   [LogtoJwtTokenKey.AccessToken]: accessTokenJwtCustomizerGuard,
   [LogtoJwtTokenKey.ClientCredentials]: clientCredentialsJwtCustomizerGuard,
+});
+
+export type InlineHookType = {
+  [LogtoInlineHookKey.PostFirstFactorVerification]: InlineHook;
+  [LogtoInlineHookKey.PostSignIn]: InlineHook;
+};
+
+export const inlineHookConfigGuard: Readonly<{
+  [key in LogtoInlineHookKey]: ZodType<InlineHookType[key]>;
+}> = Object.freeze({
+  [LogtoInlineHookKey.PostFirstFactorVerification]: inlineHookGuard,
+  [LogtoInlineHookKey.PostSignIn]: inlineHookGuard,
 });
 
 export const jwtCustomizerConfigsGuard = z.discriminatedUnion('key', [
@@ -200,21 +214,32 @@ export const logtoTenantConfigGuard: Readonly<{
 });
 
 /* --- Summary --- */
-export type LogtoConfigKey = LogtoOidcConfigKey | LogtoJwtTokenKey | LogtoTenantConfigKey;
-export type LogtoConfigType = LogtoOidcConfigType | JwtCustomizerType | LogtoTenantConfigType;
+export type LogtoConfigKey =
+  | LogtoOidcConfigKey
+  | LogtoJwtTokenKey
+  | LogtoInlineHookKey
+  | LogtoTenantConfigKey;
+export type LogtoConfigType =
+  | LogtoOidcConfigType
+  | JwtCustomizerType
+  | InlineHookType
+  | LogtoTenantConfigType;
 export type LogtoConfigGuard = typeof logtoOidcConfigGuard &
   typeof jwtCustomizerConfigGuard &
+  typeof inlineHookConfigGuard &
   typeof logtoTenantConfigGuard;
 
 export const logtoConfigKeys: readonly LogtoConfigKey[] = Object.freeze([
   ...Object.values(LogtoOidcConfigKey),
   ...Object.values(LogtoJwtTokenKey),
+  ...Object.values(LogtoInlineHookKey),
   ...Object.values(LogtoTenantConfigKey),
 ]);
 
 export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
   ...logtoOidcConfigGuard,
   ...jwtCustomizerConfigGuard,
+  ...inlineHookConfigGuard,
   ...logtoTenantConfigGuard,
 });
 
