@@ -7,16 +7,31 @@
 
 import type { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { useState, isValidElement, type ReactElement, cloneElement, useRef, Children } from 'react';
+import {
+  useState,
+  isValidElement,
+  type ReactElement,
+  cloneElement,
+  useRef,
+  useEffect,
+  Children,
+} from 'react';
 
 import type { Props as TabItemProps } from '../TabItem';
 
 import styles from './index.module.scss';
+import useTabGroupChoice from './use-tab-group-choice';
 
 type MaybeArray<T> = T | T[];
 
 type Props = {
   readonly className?: string;
+  /**
+   * Tab groups sharing the same `groupId` stay in sync and remember the selected
+   * value across visits. Useful when the same choice (e.g. an SDK version) is
+   * repeated across a guide.
+   */
+  readonly groupId?: string;
   readonly children: MaybeArray<ReactElement<TabItemProps>>;
 };
 
@@ -26,7 +41,7 @@ function isTabItem(comp: ReactElement): comp is ReactElement<TabItemProps> {
   return comp.props.value !== undefined;
 }
 
-function Tabs({ className, children }: Props): JSX.Element {
+function Tabs({ className, groupId, children }: Props): JSX.Element {
   const verifiedChildren = Children.map(children, (child) => {
     if (isValidElement(child) && isTabItem(child)) {
       return child;
@@ -40,10 +55,32 @@ function Tabs({ className, children }: Props): JSX.Element {
       label,
     }));
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [groupChoice, setGroupChoice] = useTabGroupChoice(groupId);
+  const isValidValue = (value: Nullable<string>) =>
+    values.some((tabValue) => tabValue.value === value);
+
+  // Selection is tracked by value (instead of index) so synced groups can share
+  // the same choice even when their tabs are declared in a different order.
+  const [selectedValue, setSelectedValue] = useState(() =>
+    isValidValue(groupChoice) ? groupChoice : values[0]?.value
+  );
+
+  // Sync the persisted choice (changed by another tab group) into local state.
+  useEffect(() => {
+    if (isValidValue(groupChoice) && groupChoice !== selectedValue) {
+      setSelectedValue(groupChoice);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to external choice changes
+  }, [groupChoice]);
+
+  const selectValue = (value: string) => {
+    setSelectedValue(value);
+    setGroupChoice(value);
+  };
+
   const tabReferences = useRef<Array<Nullable<HTMLLIElement>>>(
     // eslint-disable-next-line @typescript-eslint/ban-types
-    Array.from<null>({ length }).fill(null)
+    Array.from<null>({ length: values.length }).fill(null)
   );
 
   const handleKeydown = (event: React.KeyboardEvent<HTMLLIElement>) => {
@@ -88,14 +125,14 @@ function Tabs({ className, children }: Props): JSX.Element {
               tabReferences.current[index] = element;
             }}
             role="tab"
-            tabIndex={selectedIndex === index ? 0 : -1}
-            aria-selected={selectedIndex === index}
+            tabIndex={selectedValue === value ? 0 : -1}
+            aria-selected={selectedValue === value}
             onKeyDown={handleKeydown}
             onFocus={() => {
-              setSelectedIndex(index);
+              selectValue(value);
             }}
             onClick={() => {
-              setSelectedIndex(index);
+              selectValue(value);
             }}
           >
             {label ?? value}
@@ -103,10 +140,10 @@ function Tabs({ className, children }: Props): JSX.Element {
         ))}
       </ul>
       <div>
-        {verifiedChildren.map((tabItem, index) =>
+        {verifiedChildren.map((tabItem) =>
           cloneElement(tabItem, {
             key: tabItem.props.value,
-            className: index === selectedIndex ? undefined : styles.hidden,
+            className: tabItem.props.value === selectedValue ? undefined : styles.hidden,
           })
         )}
       </div>
