@@ -32,65 +32,35 @@ export class LocalVmError extends ResponseError {
  * @param payload The input payload for the function.
  * @returns The result of the function execution.
  */
-const localVmTimeout = 3000;
-
-const localVmTimeoutErrorMessage = `Script execution timed out after ${localVmTimeout}ms`;
-
 export const runScriptFunctionInLocalVm = async (
   script: string,
   functionName: string,
   payload: unknown
 ) => {
-  const abortController = new AbortController();
-
-  const execute = async () => {
-    const globalContext = Object.freeze({
-      fetch: async (input: RequestInfo | URL, init?: RequestInit) =>
-        fetch(input, { ...init, signal: abortController.signal }),
-    });
-    const customFunction: unknown = runInNewContext(script + `;${functionName};`, globalContext, {
-      timeout: localVmTimeout,
-    });
-
-    if (typeof customFunction !== 'function') {
-      throw new TypeError(`The script does not have a function named \`${functionName}\``);
-    }
-
-    /**
-     * We can not use top-level await in `vm`, use the following implementation instead.
-     *
-     * Ref:
-     * 1. https://github.com/nodejs/node/issues/40898
-     * 2. https://github.com/n-riesco/ijavascript/issues/173#issuecomment-693924098
-     */
-    return runInNewContext(
-      '(async () => customFunction(payload))();',
-      Object.freeze({ customFunction, payload }),
-      // Limit the execution time to 3 seconds, throws error if the script takes too long to execute.
-      { timeout: localVmTimeout }
-    );
-  };
-
-  let timeoutId: ReturnType<typeof setTimeout> | undefined;
-  const executionPromise = execute();
-
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    timeoutId = setTimeout(() => {
-      abortController.abort();
-      reject(new Error(localVmTimeoutErrorMessage));
-    }, localVmTimeout);
+  const globalContext = Object.freeze({
+    fetch: async (...args: Parameters<typeof fetch>) => fetch(...args),
   });
+  const customFunction: unknown = runInNewContext(script + `;${functionName};`, globalContext);
 
-  try {
-    return await Promise.race([executionPromise, timeoutPromise]);
-  } finally {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    // The losing task may reject after the race settles (e.g. aborted fetch).
-    void executionPromise.catch(() => {});
+  if (typeof customFunction !== 'function') {
+    throw new TypeError(`The script does not have a function named \`${functionName}\``);
   }
+
+  /**
+   * We can not use top-level await in `vm`, use the following implementation instead.
+   *
+   * Ref:
+   * 1. https://github.com/nodejs/node/issues/40898
+   * 2. https://github.com/n-riesco/ijavascript/issues/173#issuecomment-693924098
+   */
+  const result: unknown = await runInNewContext(
+    '(async () => customFunction(payload))();',
+    Object.freeze({ customFunction, payload }),
+    // Limit the execution time to 3 seconds, throws error if the script takes too long to execute.
+    { timeout: 3000 }
+  );
+
+  return result;
 };
 
 /**
