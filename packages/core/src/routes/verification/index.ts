@@ -12,6 +12,7 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 
@@ -130,16 +131,18 @@ export default function verificationRoutes<T extends UserRouter>(
         recipient: identifier.value,
       };
 
-      await withMessageRateGuard(
-        await buildMessageRateGuard(queries),
-        {
-          ...messageRateLimit,
-          onRateLimited: () => {
-            ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
-          },
-        },
-        send
-      );
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withMessageRateGuard(
+            await buildMessageRateGuard(queries),
+            {
+              ...messageRateLimit,
+              onRateLimited: () => {
+                ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
+              },
+            },
+            send
+          )
+        : send());
 
       const { expiresAt } = await insertVerificationRecord(
         codeVerification,

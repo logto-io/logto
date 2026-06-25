@@ -15,6 +15,7 @@ import { type EditorProps } from '@monaco-editor/react';
 
 import TokenFileIcon from '@/assets/icons/token-file-icon.svg?react';
 import UserFileIcon from '@/assets/icons/user-file-icon.svg?react';
+import { isDevFeaturesEnabled } from '@/consts/env';
 
 import type { ModelSettings } from '../MainContent/MonacoCodeEditor/type.js';
 
@@ -24,13 +25,18 @@ import {
   buildClientCredentialsJwtCustomizerContextTsDefinition,
 } from './type-definitions.js';
 
-const accessTokenOrganizationContextParamDefinition = `\n * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerOrganizationContext}} [organization] - The target organization, present only for organization (API resource) tokens.`;
+// TODO: remove dev-features gating once the organization context is launched
+const accessTokenOrganizationContextParamDefinition = isDevFeaturesEnabled
+  ? `\n * @param {${JwtCustomizerTypeDefinitionKey.JwtCustomizerOrganizationContext}} [organization] - The target organization, present only for organization (API resource) tokens.`
+  : '';
 
-const accessTokenOrganizationContextFieldDefinition = `
+const accessTokenOrganizationContextFieldDefinition = isDevFeaturesEnabled
+  ? `
   /**
    * The target organization, present only for organization (API resource) tokens.
    */
-  organization?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerOrganizationContext};`;
+  organization?: ${JwtCustomizerTypeDefinitionKey.JwtCustomizerOrganizationContext};`
+  : '';
 
 /**
  * Define the user access token JwtCustomizer payload type definitions
@@ -346,8 +352,8 @@ export const defaultUserTokenContextData = {
   grant: defaultGrantContext,
   interaction: defaultUserInteractionContext,
   application: defaultApplicationContext,
-
-  organization: defaultOrganizationContext,
+  // TODO: remove dev-features gating once the organization context is launched
+  ...(isDevFeaturesEnabled && { organization: defaultOrganizationContext }),
 };
 
 export const defaultM2mTokenContextData = {

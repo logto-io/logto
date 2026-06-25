@@ -4,7 +4,7 @@ import {
   demoAppApplicationId,
   type CreateSsoConnector,
 } from '@logto/schemas';
-import { appendPath, getEnv } from '@silverhand/essentials';
+import { appendPath, getEnv, yes } from '@silverhand/essentials';
 
 export const logtoUrl = getEnv('INTEGRATION_TESTS_LOGTO_URL', 'http://localhost:3001');
 export const logtoOidcUrl = appendPath(new URL(logtoUrl), 'oidc').toString();
@@ -47,3 +47,5 @@ export const newOidcSsoConnectorPayload = {
     issuer: `${logtoUrl}/oidc`,
   },
 } satisfies Partial<CreateSsoConnector>;
+
+export const isDevFeaturesEnabled = yes(getEnv('DEV_FEATURES_ENABLED'));

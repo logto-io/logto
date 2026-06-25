@@ -5,6 +5,7 @@ describe('OSS onboarding guard utils', () => {
     expect(
       getOssOnboardingRedirectPath({
         isCloud: false,
+        isDevFeaturesEnabled: true,
         isProduction: true,
         hasError: false,
         isLoading: false,
@@ -19,6 +20,7 @@ describe('OSS onboarding guard utils', () => {
     expect(
       getOssOnboardingRedirectPath({
         isCloud: false,
+        isDevFeaturesEnabled: true,
         isProduction: true,
         hasError: false,
         isLoading: false,
@@ -31,6 +33,7 @@ describe('OSS onboarding guard utils', () => {
     expect(
       getOssOnboardingRedirectPath({
         isCloud: false,
+        isDevFeaturesEnabled: true,
         isProduction: true,
         hasError: false,
         isLoading: false,
@@ -45,6 +48,7 @@ describe('OSS onboarding guard utils', () => {
     expect(
       getOssOnboardingRedirectPath({
         isCloud: true,
+        isDevFeaturesEnabled: true,
         isProduction: true,
         hasError: false,
         isLoading: false,
@@ -59,7 +63,23 @@ describe('OSS onboarding guard utils', () => {
     expect(
       getOssOnboardingRedirectPath({
         isCloud: false,
+        isDevFeaturesEnabled: true,
         isProduction: false,
+        hasError: false,
+        isLoading: false,
+        isOnboardingDone: false,
+        tenantId: 'console',
+        pathname: '/console/get-started',
+      })
+    ).toBeUndefined();
+  });
+
+  test('does not redirect when dev features are disabled', () => {
+    expect(
+      getOssOnboardingRedirectPath({
+        isCloud: false,
+        isDevFeaturesEnabled: false,
+        isProduction: true,
         hasError: false,
         isLoading: false,
         isOnboardingDone: false,
@@ -73,6 +93,7 @@ describe('OSS onboarding guard utils', () => {
     expect(
       getOssOnboardingRedirectPath({
         isCloud: false,
+        isDevFeaturesEnabled: true,
         isProduction: true,
         hasError: true,
         isLoading: false,

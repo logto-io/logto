@@ -9,6 +9,7 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type InvitationResponse } from '@/cloud/types/router';
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { type RequestError } from '@/hooks/use-api';
 import useRedirectUri from '@/hooks/use-redirect-uri';
@@ -25,16 +26,15 @@ function AcceptInvitation() {
   const [searchParameters] = useSearchParams();
   const oneTimeToken = searchParameters.get('one_time_token');
   const cloudApi = useCloudApi();
-  const silentCloudApi = useCloudApi({ hideErrorToast: true });
   const { navigateTenant, resetTenants } = useContext(TenantsContext);
   const hasStartedSignIn = useRef(false);
   const authFormRef = useRef<HTMLFormElement>(null);
 
   // The request is only made when the user has signed-in and the invitation ID is available.
-  // The response data is returned only when the current user matches the invitee email. Otherwise, it returns 403.
+  // The response data is returned only when the current user matches the invitee email. Otherwise, it returns 404.
   const { data: invitation, error } = useSWR<InvitationResponse, RequestError>(
     isAuthenticated && invitationId && `/api/invitations/${invitationId}`,
-    async () => silentCloudApi.get('/api/invitations/:invitationId', { params: { invitationId } })
+    async () => cloudApi.get('/api/invitations/:invitationId', { params: { invitationId } })
   );
 
   useEffect(() => {
@@ -46,7 +46,7 @@ function AcceptInvitation() {
       // eslint-disable-next-line @silverhand/fp/no-mutation -- React ref guards against duplicate sign-in redirects
       hasStartedSignIn.current = true;
 
-      if (!oneTimeToken) {
+      if (!isDevFeaturesEnabled || !oneTimeToken) {
         saveRedirect(buildInvitationAcceptUrl(invitationId));
         void signIn(redirectUri.href, 'signUp');
         return;
@@ -56,7 +56,7 @@ function AcceptInvitation() {
       return;
     }
 
-    if (!oneTimeToken || error?.status !== 403) {
+    if (!isDevFeaturesEnabled || !oneTimeToken || error?.status !== 403) {
       return;
     }
 
@@ -89,7 +89,7 @@ function AcceptInvitation() {
     return <AppError errorMessage={t('invitation.invitation_not_found')} />;
   }
 
-  const invitationAuthForm = oneTimeToken && (
+  const invitationAuthForm = isDevFeaturesEnabled && oneTimeToken && (
     <form
       ref={authFormRef}
       hidden
@@ -109,7 +109,7 @@ function AcceptInvitation() {
 
   // No invitation returned, indicating the current signed-in user is not the invitee.
   if (error?.status === 403) {
-    if (oneTimeToken) {
+    if (isDevFeaturesEnabled && oneTimeToken) {
       return (
         <>
           {invitationAuthForm}

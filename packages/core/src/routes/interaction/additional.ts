@@ -14,6 +14,7 @@ import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { createSocialAuthorizationUrl } from '#src/libraries/verification-helpers/social-verification.js';
@@ -148,11 +149,13 @@ export default function additionalRoutes<T extends IRouterParamContext>(
           passcodes
         );
 
-      await withMessageRateGuard(
-        await buildMessageRateGuard({ sentinelActivities, logtoConfigs }),
-        { action: SentinelActivityAction.VerificationCodeSend, recipient },
-        send
-      );
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withMessageRateGuard(
+            await buildMessageRateGuard({ sentinelActivities, logtoConfigs }),
+            { action: SentinelActivityAction.VerificationCodeSend, recipient },
+            send
+          )
+        : send());
 
       ctx.status = 204;
 
