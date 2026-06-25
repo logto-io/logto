@@ -5,6 +5,7 @@ import {
   verifyVerificationCodePayloadGuard,
 } from '@logto/schemas';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
 
@@ -34,11 +35,13 @@ export default function verificationCodeRoutes<T extends ManagementApiRouter>(
         return sendPasscode(code, { ip: ctx.request.ip });
       };
 
-      await withMessageRateGuard(
-        await buildMessageRateGuard(queries),
-        { action: SentinelActivityAction.VerificationCodeSend, recipient },
-        send
-      );
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withMessageRateGuard(
+            await buildMessageRateGuard(queries),
+            { action: SentinelActivityAction.VerificationCodeSend, recipient },
+            send
+          )
+        : send());
 
       ctx.status = 204;
 

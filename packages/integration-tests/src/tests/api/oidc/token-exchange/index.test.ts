@@ -29,6 +29,7 @@ import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import {
+  devFeatureDisabledTest,
   devFeatureTest,
   getAccessTokenPayload,
   randomString,
@@ -531,6 +532,40 @@ describe('Token Exchange', () => {
         expect(
           oidcInvalidRequestErrorGuard.safeParse(await (error as HTTPError).response.json()).success
         ).toBe(true);
+
+        await deleteJwtCustomizer('access-token');
+      }
+    );
+
+    devFeatureDisabledTest.it(
+      'should keep fail-open when access-token script throws and blocking is enabled',
+      async () => {
+        const { subjectToken } = await createSubjectToken(testUserId, { foo: 'bar' });
+
+        await upsertJwtCustomizer('access-token', {
+          script: `const getCustomJwtClaims = async () => {
+  throw new Error('boom');
+};`,
+          blockIssuanceOnError: true,
+        });
+
+        const { access_token } = await oidcApi
+          .post('token', {
+            headers: {
+              ...formUrlEncodedHeaders,
+              Authorization: authorizationHeader,
+            },
+            body: new URLSearchParams({
+              grant_type: GrantType.TokenExchange,
+              subject_token: subjectToken,
+              subject_token_type: impersonationTokenType,
+              resource: testApiResourceInfo.indicator,
+            }),
+          })
+          .json<{
+            access_token: string;
+          }>();
+        expect(getAccessTokenPayload(access_token).sub).toBe(testUserId);
 
         await deleteJwtCustomizer('access-token');
       }

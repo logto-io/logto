@@ -3,6 +3,7 @@ import { emailRegEx } from '@logto/core-kit';
 import { SentinelActivityAction } from '@logto/schemas';
 import { object, string } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
 import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
@@ -45,14 +46,16 @@ export default function verificationCodeRoutes<T extends AuthedMeRouter>(
         });
       };
 
-      await withMessageRateGuard(
-        await buildMessageRateGuard(tenant.queries),
-        {
-          action: SentinelActivityAction.VerificationCodeSend,
-          recipient: ctx.guard.body.email,
-        },
-        send
-      );
+      await (EnvSet.values.isDevFeaturesEnabled
+        ? withMessageRateGuard(
+            await buildMessageRateGuard(tenant.queries),
+            {
+              action: SentinelActivityAction.VerificationCodeSend,
+              recipient: ctx.guard.body.email,
+            },
+            send
+          )
+        : send());
 
       ctx.status = 204;
 

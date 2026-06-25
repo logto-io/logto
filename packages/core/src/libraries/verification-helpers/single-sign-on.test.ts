@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { createMockUtils } from '@logto/shared/esm';
 import type { Provider } from 'oidc-provider';
+import Sinon from 'sinon';
 
 import {
   mockSsoConnector,
@@ -356,6 +357,11 @@ describe('Single sign on util methods tests', () => {
   });
 
   describe('getSsoAuthorizationUrl tests with idp initiated sso session', () => {
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isDevFeaturesEnabled: true,
+    });
+
     const payload = {
       state: 'state',
       redirectUri: 'https://example.com',
@@ -372,6 +378,10 @@ describe('Single sign on util methods tests', () => {
         },
       }),
     };
+
+    afterAll(() => {
+      stub.restore();
+    });
 
     beforeEach(() => {
       getAuthorizationUrlMock.mockResolvedValueOnce(samlAuthorizationUrl);
