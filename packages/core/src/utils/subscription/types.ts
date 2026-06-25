@@ -14,12 +14,17 @@ type RouteRequestBodyType<T extends { search?: unknown; body?: ZodType; response
 type CompleteSubscription = RouteResponseType<GetRoutes['/api/tenants/my/subscription']>;
 type CompleteSubscriptionUsage = RouteResponseType<GetRoutes['/api/tenants/my/subscription-usage']>;
 
+type InlineHookSubscriptionQuota = {
+  inlineHooksEnabled: boolean;
+};
+
 export type SubscriptionQuota = Omit<
   CompleteSubscriptionUsage['quota'],
   | 'auditLogsRetentionDays'
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   | 'organizationsEnabled'
->;
+> &
+  InlineHookSubscriptionQuota;
 
 /**
  * The subscription data is fetched from the Cloud API.
@@ -46,7 +51,8 @@ export type SubscriptionUsage = Omit<
   CompleteSubscriptionUsage['usage'],
   // Since we are deprecation the `organizationsEnabled` key soon (use `organizationsLimit` instead), we exclude it from the usage keys for now to avoid confusion.
   'organizationsEnabled'
->;
+> &
+  InlineHookSubscriptionQuota;
 
 export type ReportSubscriptionUpdatesUsageKey = Exclude<
   RouteRequestBodyType<PostRoutes['/api/tenants/my/subscription/item-updates']>['usageKey'],

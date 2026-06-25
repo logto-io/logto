@@ -210,8 +210,7 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     return;
   }
 
-  const shouldBlockIssuanceOnError =
-    EnvSet.values.isDevFeaturesEnabled && Boolean(blockIssuanceOnError);
+  const shouldBlockIssuanceOnError = Boolean(blockIssuanceOnError);
   const defaultJwtCustomizerErrorMessage = 'Failed to customize token claims';
 
   try {
@@ -246,6 +245,19 @@ export const getExtraTokenClaimsForJwtCustomization = async (
     const clientId = token.clientId ?? ctx.oidc.client?.clientId;
     const applicationContext = conditional(
       clientId && (await libraries.jwtCustomizers.getApplicationContext(envSet.tenantId, clientId))
+    );
+
+    // For organization (API resource) tokens, expose the target organization so the customizer
+    // can attach per-org claims. The `organization_id` claim itself is added afterwards in
+    // `getExtraTokenClaimsForOrganizationApiResource`, so it is not visible on `token` here.
+    const organizationId =
+      typeof ctx.oidc.params?.organization_id === 'string'
+        ? ctx.oidc.params.organization_id
+        : undefined;
+    const organizationContext = conditional(
+      !isClientCredentialsToken &&
+        organizationId &&
+        (await libraries.jwtCustomizers.getOrganizationContext(organizationId))
     );
 
     const logEntry = ctx.createLog(
@@ -302,6 +314,11 @@ export const getExtraTokenClaimsForJwtCustomization = async (
               ...conditional(
                 applicationContext && {
                   application: applicationContext,
+                }
+              ),
+              ...conditional(
+                organizationContext && {
+                  organization: organizationContext,
                 }
               ),
             },

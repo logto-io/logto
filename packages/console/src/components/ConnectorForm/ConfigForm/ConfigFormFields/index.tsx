@@ -5,7 +5,6 @@ import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { CheckboxGroup } from '@/ds-components/Checkbox';
 import CodeEditor from '@/ds-components/CodeEditor';
 import DangerousRaw from '@/ds-components/DangerousRaw';
@@ -39,10 +38,6 @@ function ConfigFormFields({ formItems }: Props) {
 
   const showFormItems = useCallback(
     (formItem: ConnectorConfigFormItem) => {
-      if (formItem.isDevFeature && !isDevFeaturesEnabled) {
-        return false;
-      }
-
       if (!formItem.showConditions) {
         return true;
       }

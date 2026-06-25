@@ -22,6 +22,10 @@ export const getTenantSubscription = async (
 
   return {
     ...rest,
+    quota: {
+      inlineHooksEnabled: false,
+      ...rest.quota,
+    },
     currentPeriodStart: new Date(currentPeriodStart).toISOString(),
     currentPeriodEnd: new Date(currentPeriodEnd).toISOString(),
   };

@@ -19,10 +19,10 @@ import Checkpoint from '../../fragments/_checkpoint.md';
 
 Logto Android SDK comes in two major versions:
 
-- **v2**: Opens the sign-in experience in an embedded WebView, which is required by the native social connectors, but does not support [passkey sign-in](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) (WebView does not support WebAuthn, the underlying standard of passkeys).
 - **v3 (beta)**: Opens the sign-in experience in [Chrome Custom Tabs](https://developer.android.com/develop/ui/views/layout/webapps/overview-of-android-custom-tabs) (the system browser), which unlocks passkey sign-in and shares the browser session. Note that v3 removes support for the [WeChat (Native)](https://docs.logto.io/integrations/wechat-native) and [Alipay (Native)](https://docs.logto.io/integrations/alipay-native) connectors; you can use [WeChat (Web)](https://docs.logto.io/integrations/wechat-web) and [Alipay (Web)](https://docs.logto.io/integrations/alipay-web) instead, which work through the browser. If you depend on the native connectors, stay on v2.
+- **v2**: Opens the sign-in experience in an embedded WebView, which is required by the native social connectors, but does not support [passkey sign-in](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) (WebView does not support WebAuthn, the underlying standard of passkeys).
 
-This guide covers both versions. Pick the same version in the tabs throughout this guide.
+This guide covers both versions.
 
 Before you install Logto Android SDK, ensure `mavenCentral()` is added to your repository configuration in the Gradle project build file:
 
@@ -36,17 +36,7 @@ Before you install Logto Android SDK, ensure `mavenCentral()` is added to your r
 
 Add Logto Android SDK to your dependencies:
 
-<Tabs>
-
-<TabItem value="v2" label="v2">
-
-```kotlin title="build.gradle.kts"
-dependencies {
-    implementation("io.logto.sdk:android:2.0.3")
-}
-```
-
-</TabItem>
+<Tabs groupId="android-sdk-version">
 
 <TabItem value="v3" label="v3 (beta)">
 
@@ -55,6 +45,16 @@ v3 is released as `3.0.0-beta` prereleases until GA. Use the latest prerelease a
 ```kotlin title="build.gradle.kts"
 dependencies {
     implementation("io.logto.sdk:android:3.0.0-beta")
+}
+```
+
+</TabItem>
+
+<TabItem value="v2" label="v2">
+
+```kotlin title="build.gradle.kts"
+dependencies {
+    implementation("io.logto.sdk:android:2.0.3")
 }
 ```
 
@@ -143,13 +143,7 @@ In Android, the redirect URI follows the pattern: `$(LOGTO_REDIRECT_SCHEME)://$(
 
 Assuming you treat `io.logto.android` as the custom `LOGTO_REDIRECT_SCHEME`, and `io.logto.sample` is your app package name, the Redirect URI should be `io.logto.android://io.logto.sample/callback`.
 
-<Tabs>
-
-<TabItem value="v2" label="v2">
-
-No additional setup is required. The sign-in experience opens in an embedded WebView, and the SDK intercepts the redirect inside the WebView.
-
-</TabItem>
+<Tabs groupId="android-sdk-version">
 
 <TabItem value="v3" label="v3 (beta)">
 
@@ -211,6 +205,12 @@ Keep in mind that the callback is now a real URL on your domain, so serve a fall
 
 </TabItem>
 
+<TabItem value="v2" label="v2">
+
+No additional setup is required. The sign-in experience opens in an embedded WebView, and the SDK intercepts the redirect inside the WebView.
+
+</TabItem>
+
 </Tabs>
 
 </Step>
@@ -219,80 +219,7 @@ Keep in mind that the callback is now a real URL on your domain, so serve a fall
 
 After the redirect URI is configured, we can use `logtoClient.signIn` to sign in the user and `logtoClient.signOut` to sign out the user.
 
-<Tabs>
-
-<TabItem value="v2" label="v2">
-
-Now let's use them in your `LogtoViewModel.kt`:
-
-<Code title="LogtoViewModel.kt" className="language-kotlin">
-    {`//...with other imports
-class LogtoViewModel(application: Application) : AndroidViewModel(application) {
-    // ...other codes
-
-    // Add a live data to observe the authentication status
-    private val _authenticated = MutableLiveData(logtoClient.isAuthenticated)
-    val authenticated: LiveData<Boolean>
-        get() = _authenticated
-
-    fun signIn(context: Activity) {
-        logtoClient.signIn(context, "${props.redirectUris[0] ?? '<your-redirect-uri>'}") { logtoException ->
-            logtoException?.let { println(it) }
-            // Update the live data
-            _authenticated.postValue(logtoClient.isAuthenticated)
-        }
-    }
-
-    fun signOut() {
-        logtoClient.signOut { logtoException ->
-            logtoException?.let { println(it) }
-            // Update the live data
-            _authenticated.postValue(logtoClient.isAuthenticated)
-        }
-    }
-}`}
-</Code>
-
-Now setup on-click listener for the sign-in button and sign-out button in your `MainActivity.kt`:
-
-```kotlin title="MainActivity.kt"
-//...with other imports
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        //...other codes
-
-        // Assume you have a button with id "sign_in_button" in your layout
-        val signInButton = findViewById<Button>(R.id.sign_in_button)
-        signInButton.setOnClickListener {
-            logtoViewModel.signIn(this)
-        }
-
-        // Assume you have a button with id "sign_out_button" in your layout
-        val signOutButton = findViewById<Button>(R.id.sign_out_button)
-        signOutButton.setOnClickListener {
-            if (logtoViewModel.authenticated) { // Check if the user is authenticated
-                logtoViewModel.signOut()
-            }
-        }
-
-        // Observe the authentication status to update the UI
-        logtoViewModel.authenticated.observe(this) { authenticated ->
-            if (authenticated) {
-                // The user is authenticated
-                signInButton.visibility = View.GONE
-                signOutButton.visibility = View.VISIBLE
-            } else {
-                // The user is not authenticated
-                signInButton.visibility = View.VISIBLE
-                signOutButton.visibility = View.GONE
-            }
-        }
-
-    }
-}
-```
-
-</TabItem>
+<Tabs groupId="android-sdk-version">
 
 <TabItem value="v3" label="v3 (beta)">
 
@@ -374,6 +301,79 @@ class MainActivity : AppCompatActivity() {
 You can also call `logtoClient.signOut(context)` without a post sign-out redirect URI. No configuration is needed in this case: the browser shows the Logto sign-out page, and the user returns to the app by dismissing it manually. If no UI context is available, you can call `logtoClient.clearCredentials` to clear the local credentials and revoke the refresh token. Note that this keeps the Logto session in the browser, so the next `signIn` may silently sign the user back in through that session.
 
 </InlineNotification>
+
+</TabItem>
+
+<TabItem value="v2" label="v2">
+
+Now let's use them in your `LogtoViewModel.kt`:
+
+<Code title="LogtoViewModel.kt" className="language-kotlin">
+    {`//...with other imports
+class LogtoViewModel(application: Application) : AndroidViewModel(application) {
+    // ...other codes
+
+    // Add a live data to observe the authentication status
+    private val _authenticated = MutableLiveData(logtoClient.isAuthenticated)
+    val authenticated: LiveData<Boolean>
+        get() = _authenticated
+
+    fun signIn(context: Activity) {
+        logtoClient.signIn(context, "${props.redirectUris[0] ?? '<your-redirect-uri>'}") { logtoException ->
+            logtoException?.let { println(it) }
+            // Update the live data
+            _authenticated.postValue(logtoClient.isAuthenticated)
+        }
+    }
+
+    fun signOut() {
+        logtoClient.signOut { logtoException ->
+            logtoException?.let { println(it) }
+            // Update the live data
+            _authenticated.postValue(logtoClient.isAuthenticated)
+        }
+    }
+}`}
+</Code>
+
+Now setup on-click listener for the sign-in button and sign-out button in your `MainActivity.kt`:
+
+```kotlin title="MainActivity.kt"
+//...with other imports
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        //...other codes
+
+        // Assume you have a button with id "sign_in_button" in your layout
+        val signInButton = findViewById<Button>(R.id.sign_in_button)
+        signInButton.setOnClickListener {
+            logtoViewModel.signIn(this)
+        }
+
+        // Assume you have a button with id "sign_out_button" in your layout
+        val signOutButton = findViewById<Button>(R.id.sign_out_button)
+        signOutButton.setOnClickListener {
+            if (logtoViewModel.authenticated) { // Check if the user is authenticated
+                logtoViewModel.signOut()
+            }
+        }
+
+        // Observe the authentication status to update the UI
+        logtoViewModel.authenticated.observe(this) { authenticated ->
+            if (authenticated) {
+                // The user is authenticated
+                signInButton.visibility = View.GONE
+                signOutButton.visibility = View.VISIBLE
+            } else {
+                // The user is not authenticated
+                signInButton.visibility = View.VISIBLE
+                signOutButton.visibility = View.GONE
+            }
+        }
+
+    }
+}
+```
 
 </TabItem>
 

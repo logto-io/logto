@@ -23,6 +23,40 @@ const isPrematureCloseStorageError = (error: unknown) =>
   getErrorProperty(error, 'code') === 'ERR_STREAM_PREMATURE_CLOSE' ||
   getErrorProperty(error, 'errno') === 'ERR_STREAM_PREMATURE_CLOSE';
 
+const transientAzureStorageErrorCodes = new Set([
+  'ERR_STREAM_PREMATURE_CLOSE',
+  'ECONNRESET',
+  'ETIMEDOUT',
+  'EPIPE',
+]);
+
+const maxTransientAzureStorageRetries = 2;
+
+export const isTransientAzureStorageError = (error: unknown) => {
+  const code = getErrorProperty(error, 'code');
+  const errno = getErrorProperty(error, 'errno');
+
+  return (
+    (code !== undefined && transientAzureStorageErrorCodes.has(code)) ||
+    (errno !== undefined && transientAzureStorageErrorCodes.has(errno))
+  );
+};
+
+const retryOnTransientAzureStorageError = async <T>(
+  operation: () => Promise<T>,
+  retriesLeft = maxTransientAzureStorageRetries
+): Promise<T> => {
+  try {
+    return await operation();
+  } catch (error: unknown) {
+    if (!isTransientAzureStorageError(error) || retriesLeft === 0) {
+      throw error;
+    }
+
+    return retryOnTransientAzureStorageError(operation, retriesLeft - 1);
+  }
+};
+
 export const buildAzureStorage = (
   connectionString: string,
   container: string
@@ -34,7 +68,10 @@ export const buildAzureStorage = (
     count?: number,
     options?: BlobDownloadOptions
   ) => Promise<BlobDownloadResponseParsed>;
-  isFileExisted: (objectKey: string) => Promise<boolean>;
+  isFileExisted: (
+    objectKey: string,
+    options?: { throwOnTransientError?: boolean }
+  ) => Promise<boolean>;
   getFileProperties: (objectKey: string) => Promise<BlobGetPropertiesResponse>;
 } => {
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
@@ -63,16 +100,21 @@ export const buildAzureStorage = (
     options?: BlobDownloadOptions
   ) => {
     const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
-    return blockBlobClient.download(offset, count, options);
+    return retryOnTransientAzureStorageError(async () =>
+      blockBlobClient.download(offset, count, options)
+    );
   };
 
-  const isFileExisted = async (objectKey: string) => {
+  const isFileExisted = async (
+    objectKey: string,
+    { throwOnTransientError = false }: { throwOnTransientError?: boolean } = {}
+  ) => {
     const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
     try {
-      return await blockBlobClient.exists();
+      return await retryOnTransientAzureStorageError(async () => blockBlobClient.exists());
     } catch (error: unknown) {
       // Azure Blob `exists()` may throw this when the blob is missing in some runtime/proxy paths.
-      if (isPrematureCloseStorageError(error)) {
+      if (!throwOnTransientError && isPrematureCloseStorageError(error)) {
         return false;
       }
 
@@ -82,7 +124,7 @@ export const buildAzureStorage = (
 
   const getFileProperties = async (objectKey: string) => {
     const blockBlobClient = containerClient.getBlockBlobClient(objectKey);
-    return blockBlobClient.getProperties();
+    return retryOnTransientAzureStorageError(async () => blockBlobClient.getProperties());
   };
 
   return { uploadFile, downloadFile, isFileExisted, getFileProperties };

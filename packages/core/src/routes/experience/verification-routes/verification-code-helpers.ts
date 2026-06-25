@@ -8,7 +8,6 @@ import {
 } from '@logto/schemas';
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
@@ -94,9 +93,9 @@ const hasUserWithIdentifier = async (
  * reason to receive a code (anti-enumeration / anti-spam). The record is still created, so a later
  * verify returns `code_mismatch`, not `not_found`. Two cases:
  *
- * - Forgot-password to an identifier no user owns (always on).
+ * - Forgot-password to an identifier no user owns.
  * - Sign-in from an unidentified session to an identifier no user owns when registration is
- *   disabled (behind `isDevFeaturesEnabled`); identified sessions always deliver.
+ *   disabled; identified sessions always deliver.
  */
 const shouldSkipDelivery = async (
   experienceInteraction: ExperienceInteraction,
@@ -108,11 +107,7 @@ const shouldSkipDelivery = async (
     return !(await hasUserWithIdentifier(queries, identifier));
   }
 
-  if (
-    EnvSet.values.isDevFeaturesEnabled &&
-    interactionEvent === InteractionEvent.SignIn &&
-    !experienceInteraction.identifiedUserId
-  ) {
+  if (interactionEvent === InteractionEvent.SignIn && !experienceInteraction.identifiedUserId) {
     const registrationDisabled =
       await experienceInteraction.signInExperienceValidator.isRegistrationDisabled();
 
@@ -171,8 +166,8 @@ export const sendCode = async ({
         ...(ctx.request.ip && { ip: ctx.request.ip }),
       };
 
-  // Send verification code. When delivery is skipped (see `shouldSkipDelivery`) nothing is sent, so
-  // the rate guard is bypassed.
+  // Send verification code. When delivery is skipped (see `shouldSkipDelivery`) the passcode record is
+  // still created but nothing is sent.
   const send = async () => codeVerification.sendVerificationCode(payload, { skipDelivery });
 
   const messageRateLimit = {
@@ -180,18 +175,16 @@ export const sendCode = async ({
     recipient: identifier.value,
   };
 
-  await (skipDelivery || !EnvSet.values.isDevFeaturesEnabled
-    ? send()
-    : withMessageRateGuard(
-        await buildMessageRateGuard(queries),
-        {
-          ...messageRateLimit,
-          onRateLimited: () => {
-            ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
-          },
-        },
-        send
-      ));
+  await withMessageRateGuard(
+    await buildMessageRateGuard(queries),
+    {
+      ...messageRateLimit,
+      onRateLimited: () => {
+        ctx.appendExceptionHookContext('Message.RateLimited', messageRateLimit);
+      },
+    },
+    send
+  );
 
   // Save state
   experienceInteraction.setVerificationRecord(codeVerification);

@@ -8,7 +8,6 @@ const mfa = {
   otp_description: '将 Google Authenticator 等链接，以验证一次性密码。',
   webauthn: 'Passkeys',
   webauthn_description: '通过浏览器支持的方法进行验证：生物识别、手机扫描或安全密钥等。',
-  webauthn_native_tip: 'WebAuthn 不支持原生应用。',
   webauthn_domain_tip:
     'WebAuthn 将公钥绑定到特定域。修改服务域将阻止用户通过现有的密码进行身份验证。',
   backup_code: '备份代码',

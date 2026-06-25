@@ -58,6 +58,13 @@
       }
     }
 
+    // Notes (`InlineNotification`) are custom block components without the
+    // vertical rhythm that markdown paragraphs get, so they can hug an adjacent
+    // code block or tab bar. Give them the same spacing as paragraphs.
+    [class*='inlineNotification'] {
+      margin-block: _.unit(4);
+    }
+
     hr {
       border-color: var(--color-border);
 

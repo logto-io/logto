@@ -12,7 +12,6 @@ const mfa = {
   webauthn: 'Passkeys',
   webauthn_description:
     'Vérifiez via une méthode prise en charge par le navigateur : biométrie, scan de téléphone ou clé de sécurité, etc.',
-  webauthn_native_tip: "WebAuthn n'est pas pris en charge pour les applications natives.",
   webauthn_domain_tip:
     "WebAuthn lie les clés publiques au domaine spécifique. Modifier votre domaine de service bloquera les utilisateurs pour l'authentification via les passkeys existantes.",
   backup_code: 'Codes de secours',

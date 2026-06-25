@@ -11,7 +11,6 @@ const mfa = {
   webauthn: 'Passkeys',
   webauthn_description:
     'Überprüfen Sie über browserunterstützte Methoden: Biometrie, Handy-Scan oder Sicherheitsschlüssel usw.',
-  webauthn_native_tip: 'WebAuthn wird für native Anwendungen nicht unterstützt.',
   webauthn_domain_tip:
     'WebAuthn bindet öffentliche Schlüssel an die spezifische Domain. Das Ändern Ihrer Servicedomain blockiert Benutzer daran, sich über vorhandene Passwörter zu authentifizieren.',
   backup_code: 'Backup-Codes',

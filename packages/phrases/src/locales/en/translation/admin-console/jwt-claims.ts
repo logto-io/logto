@@ -57,6 +57,11 @@ const jwt_claims = {
     subtitle:
       'Use `context.application` input parameter to provide the application info associated with the token.',
   },
+  organization_data: {
+    title: 'Organization context',
+    subtitle:
+      'Use `context.organization` input parameter to provide the target organization info, available only for organization tokens.',
+  },
   token_data: {
     title: 'Token payload',
     subtitle: 'Use `token` input parameter for current access token payload. ',

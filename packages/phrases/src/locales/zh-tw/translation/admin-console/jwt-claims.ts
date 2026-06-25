@@ -51,6 +51,10 @@ const jwt_claims = {
     title: '應用程式上下文',
     subtitle: '使用 `context.application` 輸入參數提供與令牌關聯的應用程式資訊。',
   },
+  organization_data: {
+    title: '組織上下文',
+    subtitle: '使用 `context.organization` 輸入參數提供目標組織資訊，僅適用於組織令牌。',
+  },
   token_data: {
     title: '令牌數據',
     subtitle: '使用 `token` 輸入參數獲取當前訪問令牌有效載荷。',

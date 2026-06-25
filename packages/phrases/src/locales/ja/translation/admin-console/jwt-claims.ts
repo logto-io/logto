@@ -57,6 +57,11 @@ const jwt_claims = {
     subtitle:
       '`context.application` 入力パラメータを使用して、トークンに関連するアプリケーション情報を提供します。',
   },
+  organization_data: {
+    title: '組織コンテキスト',
+    subtitle:
+      '`context.organization` 入力パラメータを使用して、対象組織の情報を提供します。組織トークンでのみ利用可能です。',
+  },
   token_data: {
     title: 'トークンデータ',
     subtitle: '現在のアクセストークンペイロードに対して`token`入力パラメータを使用します。',

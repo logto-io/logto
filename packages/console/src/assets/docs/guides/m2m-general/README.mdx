@@ -69,7 +69,7 @@ scope=all`}
 </Step>
 <Step title="Request an access token">
 
-<Tabs>
+<Tabs groupId="m2m-api-target">
 
 <TabItem value="Logto Management API" label="For Logto Management API">
 
@@ -86,7 +86,7 @@ Logto also provides a pre-configured "Logto Management API access" M2M role for 
 
 Now, compose all we have and send the request:
 
-<Tabs>
+<Tabs groupId="m2m-client">
 <TabItem value="Node.js" label="Node.js">
 
 <Code className="language-js">
@@ -161,7 +161,7 @@ Before accessing your API resource, make sure your M2M app has been assigned wit
 
 Now, compose all we have and send the request:
 
-<Tabs>
+<Tabs groupId="m2m-client">
 
 <TabItem value="Node.js" label="Node.js">
 
@@ -227,12 +227,12 @@ A successful access token response body would be like:
 
 You may notice the token response has a `token_type` field, which it's fixed to `Bearer`. Thus you should put the access token in the `Authorization` field of HTTP headers with the Bearer format (`Bearer <your-access-token>`).
 
-<Tabs>
+<Tabs groupId="m2m-api-target">
 <TabItem value="Logto Management API" label="Interact with Logto Management API">
 
 Using the requested access token with the built-in Logto Management API resource `https://[your-tenant-id].logto.app/api` to get all applications in your Logto tenant:
 
-<Tabs>
+<Tabs groupId="m2m-client">
 <TabItem value="Node.js" label="Node.js">
 
 <Code className="language-js">
@@ -269,7 +269,7 @@ const fetchLogtoApplications = async () => {
 
 Using the requested access token with the API resource `https://shopping.api` to get all products in the shopping API:
 
-<Tabs>
+<Tabs groupId="m2m-client">
 <TabItem value="Node.js" label="Node.js">
 
 ```js

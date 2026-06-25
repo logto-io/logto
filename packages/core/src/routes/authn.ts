@@ -4,7 +4,6 @@ import { jsonObjectGuard, SsoAuthenticationQueryKey } from '@logto/schemas';
 import { z } from 'zod';
 
 import { idpInitiatedSamlSsoSessionCookieName, ssoPath } from '#src/constants/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth/index.js';
@@ -206,7 +205,7 @@ export default function authnRoutes<T extends AnonymousRouter>(
       const { RelayState: jti } = body;
 
       // IdP initiated SSO does not provide the RelayState, we need to check if the IdP initiated SSO flow is enabled.
-      if (!jti && EnvSet.values.isDevFeaturesEnabled) {
+      if (!jti) {
         const idpInitiatedAuthConfig =
           await queries.ssoConnectors.getIdpInitiatedAuthConfigByConnectorId(connectorId);
 

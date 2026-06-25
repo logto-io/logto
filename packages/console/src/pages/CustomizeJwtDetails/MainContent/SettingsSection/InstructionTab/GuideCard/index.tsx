@@ -12,6 +12,7 @@ export enum CardType {
   GrantData = 'grant_data',
   InteractionData = 'interaction_data',
   ApplicationData = 'application_data',
+  OrganizationData = 'organization_data',
   TokenData = 'token_data',
   FetchExternalData = 'fetch_external_data',
   EnvironmentVariables = 'environment_variables',

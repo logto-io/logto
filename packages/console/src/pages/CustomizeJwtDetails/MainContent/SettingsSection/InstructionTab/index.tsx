@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Switch from '@/ds-components/Switch';
@@ -25,6 +24,7 @@ import {
   jwtCustomizerGrantContextTypeDefinition,
   jwtCustomizerUserInteractionContextTypeDefinition,
   jwtCustomizerApplicationContextTypeDefinition,
+  jwtCustomizerOrganizationContextTypeDefinition,
 } from '@/pages/CustomizeJwtDetails/utils/type-definitions';
 
 import tabContentStyles from '../index.module.scss';
@@ -53,10 +53,6 @@ function InstructionTab({ isActive, section, action }: Props) {
   const tokenType = watch('tokenType');
   const isDataSourceSection = section === InstructionTabSection.DataSource;
   const isErrorHandlingSection = section === InstructionTabSection.ErrorHandling;
-
-  if (isErrorHandlingSection && !isDevFeaturesEnabled) {
-    return null;
-  }
 
   return (
     <div className={classNames(tabContentStyles.tabContent, isActive && tabContentStyles.active)}>
@@ -153,6 +149,24 @@ function InstructionTab({ isActive, section, action }: Props) {
               options={typeDefinitionCodeEditorOptions}
             />
           </GuideCard>
+          {tokenType === LogtoJwtTokenKeyType.AccessToken && (
+            <GuideCard
+              name={CardType.OrganizationData}
+              isExpanded={expendCard === CardType.OrganizationData}
+              setExpanded={(expand) => {
+                setExpendCard(expand ? CardType.OrganizationData : undefined);
+              }}
+            >
+              <Editor
+                language="typescript"
+                className={styles.sampleCode}
+                value={`declare ${jwtCustomizerOrganizationContextTypeDefinition}`}
+                height="200px"
+                theme="logto-dark"
+                options={typeDefinitionCodeEditorOptions}
+              />
+            </GuideCard>
+          )}
           <GuideCard
             name={CardType.FetchExternalData}
             isExpanded={expendCard === CardType.FetchExternalData}
@@ -211,7 +225,7 @@ function InstructionTab({ isActive, section, action }: Props) {
           </GuideCard>
         </>
       )}
-      {isErrorHandlingSection && isDevFeaturesEnabled && (
+      {isErrorHandlingSection && (
         <GuideCard
           name={CardType.ErrorHandling}
           isExpanded={expendCard === CardType.ErrorHandling}

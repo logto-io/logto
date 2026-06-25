@@ -101,7 +101,7 @@ export const getInjectedHeaderValues = (
   headers: IncomingHttpHeaders
 ): Optional<InjectedHeaderValues> => {
   const debugInjectedHeaderValues = conditional(
-    EnvSet.values.isDevFeaturesEnabled &&
+    !EnvSet.values.isProduction &&
       parseDebugInjectedHeaderValues(EnvSet.values.debugInjectedHeadersJson)
   );
 
