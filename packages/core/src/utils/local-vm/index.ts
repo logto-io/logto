@@ -72,6 +72,7 @@ export const runScriptFunctionInLocalVm = async (
   };
 
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const executionPromise = execute();
 
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(() => {
@@ -81,11 +82,14 @@ export const runScriptFunctionInLocalVm = async (
   });
 
   try {
-    return await Promise.race([execute(), timeoutPromise]);
+    return await Promise.race([executionPromise, timeoutPromise]);
   } finally {
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
+
+    // The losing task may reject after the race settles (e.g. aborted fetch).
+    void executionPromise.catch(() => {});
   }
 };
 

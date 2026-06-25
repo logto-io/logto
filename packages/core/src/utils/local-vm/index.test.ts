@@ -68,6 +68,15 @@ describe('runScriptFunctionInLocalVm', () => {
         expect.objectContaining({ signal: expect.any(AbortSignal) })
       );
       expect(fetchMock.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+
+      const unhandledRejections: unknown[] = [];
+      const handler = (reason: unknown) => {
+        unhandledRejections.push(reason);
+      };
+      process.on('unhandledRejection', handler);
+      await Promise.resolve();
+      process.off('unhandledRejection', handler);
+      expect(unhandledRejections).toEqual([]);
     } finally {
       globalThis.fetch = originalFetch;
       jest.useRealTimers();
