@@ -90,6 +90,18 @@ describe('account-center-route', () => {
       expect(getPendingReturn()).toBe('https://example.com/dashboard');
     });
 
+    it('does not store redirect query parameter on account center tab routes', () => {
+      setLocation(
+        '/account/security',
+        '?redirect=https%3A%2F%2Fexample.com%2Fdashboard&show_success=1'
+      );
+
+      handleAccountCenterRoute();
+
+      expect(getPendingReturn()).toBeUndefined();
+      expect(accountStorage.showSuccess.get()).toBe(false);
+    });
+
     it('stores show_success flag from query parameters', () => {
       setLocation('/account/email', '?redirect=https%3A%2F%2Fexample.com&show_success=1');
 

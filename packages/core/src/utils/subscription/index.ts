@@ -10,14 +10,6 @@ import {
   allReportSubscriptionUpdatesUsageKeys,
 } from './types.js';
 
-type CloudSubscriptionQuota = Omit<SubscriptionQuota, 'inlineHooksEnabled'> &
-  Partial<Pick<SubscriptionQuota, 'inlineHooksEnabled'>>;
-
-const withInlineHooksQuota = (quota: CloudSubscriptionQuota): SubscriptionQuota => ({
-  ...quota,
-  inlineHooksEnabled: quota.inlineHooksEnabled ?? false,
-});
-
 export const getTenantSubscription = async (
   cloudConnection: CloudConnectionLibrary
 ): Promise<Subscription> => {
@@ -27,12 +19,19 @@ export const getTenantSubscription = async (
   // All the dates will be converted to the ISO 8601 format after json serialization.
   // Convert the dates to ISO 8601 format to match the exact type of the response.
   const { currentPeriodStart, currentPeriodEnd, ...rest } = subscription;
+  const inlineHooksEnabled =
+    'inlineHooksEnabled' in rest.quota && typeof rest.quota.inlineHooksEnabled === 'boolean'
+      ? rest.quota.inlineHooksEnabled
+      : false;
 
   return {
     ...rest,
+    quota: {
+      ...rest.quota,
+      inlineHooksEnabled,
+    },
     currentPeriodStart: new Date(currentPeriodStart).toISOString(),
     currentPeriodEnd: new Date(currentPeriodEnd).toISOString(),
-    quota: withInlineHooksQuota(subscription.quota),
   };
 };
 

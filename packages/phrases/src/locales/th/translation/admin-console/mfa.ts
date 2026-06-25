@@ -11,7 +11,6 @@ const mfa = {
   webauthn: 'Passkeys',
   webauthn_description:
     'ยืนยันผ่านวิธีที่เบราว์เซอร์รองรับ: ไบโอเมตริกส์, สแกนโทรศัพท์ หรือคีย์ความปลอดภัย ฯลฯ',
-  webauthn_native_tip: 'WebAuthn ไม่รองรับสำหรับแอปพลิเคชัน Native',
   webauthn_domain_tip:
     'WebAuthn จะผูกคีย์สาธารณะกับโดเมนโดยเฉพาะ หากมีการเปลี่ยนแปลงโดเมนของบริการ จะทำให้ผู้ใช้ไม่สามารถยืนยันตัวตนผ่าน Passkey เดิมได้',
   backup_code: 'รหัสสำรอง',

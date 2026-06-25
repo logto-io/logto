@@ -46,12 +46,13 @@ export type HookUser = Pick<
   | 'isSuspended'
 >;
 
-export type HookUserPatch = Partial<HookUser>;
+export type HookUserPatch = Partial<Omit<HookUser, 'id'>>;
 
 export type PostFirstFactorVerificationEvent = {
   key: LogtoInlineHookKey.PostFirstFactorVerification;
   interactionEvent: InteractionEvent.SignIn;
   identifier: InteractionIdentifier;
+  /** Sensitive credential provided for inline hook controlled password verification. */
   password: string;
 };
 

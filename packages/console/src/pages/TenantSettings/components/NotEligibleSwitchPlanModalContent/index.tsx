@@ -7,6 +7,7 @@ import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import SkuName from '@/components/SkuName';
 import { skuQuotaItemOrder } from '@/consts/plan-quotas';
 import {
+  isSkuQuotaItemPhraseKey,
   skuQuotaItemLimitedPhrasesMap,
   skuQuotaItemNotEligiblePhrasesMap,
 } from '@/consts/quota-item-phrases';
@@ -19,6 +20,7 @@ import styles from './index.module.scss';
 
 const excludedSkuQuotaKeys = new Set<keyof LogtoSkuQuota>([
   'auditLogsRetentionDays',
+  'inlineHooksEnabled',
   'ticketSupportResponseTime',
 ]);
 
@@ -70,6 +72,7 @@ export function NotEligibleSwitchSkuModalContent({
         {orderedEntries.map(([quotaKey, quotaValue]) => {
           if (
             excludedSkuQuotaKeys.has(quotaKey) ||
+            !isSkuQuotaItemPhraseKey(quotaKey) ||
             quotaValue === null || // Unlimited items
             quotaValue === true // Eligible items
           ) {

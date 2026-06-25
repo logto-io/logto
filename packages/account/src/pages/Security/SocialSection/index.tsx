@@ -205,7 +205,6 @@ const SocialSection = () => {
                       theme,
                       logoUrl: connector.logo,
                       darkLogoUrl: connector.logoDark,
-                      isApple: connector.target === 'apple',
                     })}
                     alt={connectorName}
                   />

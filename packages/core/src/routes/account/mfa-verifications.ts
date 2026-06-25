@@ -9,7 +9,6 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   generateBackupCodes,
@@ -94,10 +93,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       );
       const { fields } = ctx.accountCenter;
       const isWebAuthn = ctx.guard.body.type === MfaFactor.WebAuthn;
-      const passkeyControl =
-        EnvSet.values.isDevFeaturesEnabled && isWebAuthn
-          ? (fields.passkey ?? fields.mfa)
-          : fields.mfa;
+      const passkeyControl = isWebAuthn ? (fields.passkey ?? fields.mfa) : fields.mfa;
       assertThat(
         passkeyControl === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
@@ -112,10 +108,9 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
 
       // Check sign in experience, if mfa factor is enabled
       const { mfa, passkeySignIn } = await findDefaultSignInExperience();
-      const isFactorEnabled =
-        EnvSet.values.isDevFeaturesEnabled && isWebAuthn
-          ? mfa.factors.includes(MfaFactor.WebAuthn) || passkeySignIn.enabled
-          : mfa.factors.includes(ctx.guard.body.type);
+      const isFactorEnabled = isWebAuthn
+        ? mfa.factors.includes(MfaFactor.WebAuthn) || passkeySignIn.enabled
+        : mfa.factors.includes(ctx.guard.body.type);
       assertThat(isFactorEnabled, 'session.mfa.mfa_factor_not_enabled');
 
       switch (ctx.guard.body.type) {
@@ -400,9 +395,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       );
       const { name } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
-      const passkeyControl = EnvSet.values.isDevFeaturesEnabled
-        ? (fields.passkey ?? fields.mfa)
-        : fields.mfa;
+      const passkeyControl = fields.passkey ?? fields.mfa;
       assertThat(
         passkeyControl === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
@@ -464,10 +457,7 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
 
       const { fields } = ctx.accountCenter;
       const isWebAuthnVerification = mfaVerification.type === MfaFactor.WebAuthn;
-      const deleteControl =
-        EnvSet.values.isDevFeaturesEnabled && isWebAuthnVerification
-          ? (fields.passkey ?? fields.mfa)
-          : fields.mfa;
+      const deleteControl = isWebAuthnVerification ? (fields.passkey ?? fields.mfa) : fields.mfa;
       assertThat(
         deleteControl === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'

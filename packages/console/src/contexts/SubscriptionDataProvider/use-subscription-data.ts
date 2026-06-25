@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import {
   type LogtoSkuResponse,
+  type SubscriptionCountBasedUsage,
   type SubscriptionQuota,
   type SubscriptionUsageResponse,
 } from '@/cloud/types/router';
@@ -23,12 +24,18 @@ import useSubscription from '../../hooks/use-subscription';
 
 import { type SubscriptionContext } from './types';
 
-type CloudSubscriptionQuota = Omit<SubscriptionQuota, 'inlineHooksEnabled'> &
-  Partial<Pick<SubscriptionQuota, 'inlineHooksEnabled'>>;
-
-const withInlineHooksQuota = (quota: CloudSubscriptionQuota): SubscriptionQuota => ({
+const normalizeSubscriptionQuota = (
+  quota?: SubscriptionUsageResponse['quota']
+): SubscriptionQuota => ({
+  ...defaultSubscriptionQuota,
   ...quota,
-  inlineHooksEnabled: quota.inlineHooksEnabled ?? false,
+});
+
+const normalizeSubscriptionUsage = (
+  usage?: SubscriptionUsageResponse['usage']
+): SubscriptionCountBasedUsage => ({
+  ...defaultSubscriptionUsage,
+  ...usage,
 });
 
 const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = () => {
@@ -48,17 +55,10 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
     mutate: mutateSubscriptionQuotaAndUsages,
   } = useSWR<SubscriptionUsageResponse, Error>(
     isCloud && currentTenantId && `/api/tenants/${currentTenantId}/subscription-usage`,
-    async () => {
-      const data = await cloudApi.get('/api/tenants/:tenantId/subscription-usage', {
+    async () =>
+      cloudApi.get('/api/tenants/:tenantId/subscription-usage', {
         params: { tenantId: currentTenantId },
-      });
-
-      return {
-        ...data,
-        basicQuota: withInlineHooksQuota(data.basicQuota),
-        quota: withInlineHooksQuota(data.quota),
-      };
-    }
+      })
   );
 
   // Fetch tenant specific available SKUs
@@ -76,6 +76,21 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
   );
 
   const logtoSkus = useMemo(() => formatLogtoSkusResponses(fetchedLogtoSkus), [fetchedLogtoSkus]);
+
+  const currentSubscriptionQuota = useMemo(
+    () => normalizeSubscriptionQuota(subscriptionUsageData?.quota),
+    [subscriptionUsageData?.quota]
+  );
+
+  const currentSubscriptionBasicQuota = useMemo(
+    () => normalizeSubscriptionQuota(subscriptionUsageData?.basicQuota),
+    [subscriptionUsageData?.basicQuota]
+  );
+
+  const currentSubscriptionUsage = useMemo(
+    () => normalizeSubscriptionUsage(subscriptionUsageData?.usage),
+    [subscriptionUsageData?.usage]
+  );
 
   const currentSku = useMemo(
     () => logtoSkus.find((logtoSku) => logtoSku.id === currentTenant?.planId) ?? defaultLogtoSku,
@@ -98,26 +113,26 @@ const useSubscriptionData: () => SubscriptionContext & { isLoading: boolean } = 
       currentSubscription: currentSubscription ?? defaultTenantResponse.subscription,
       onCurrentSubscriptionUpdated: mutateSubscription,
       mutateSubscriptionQuotaAndUsages,
-      currentSubscriptionQuota: subscriptionUsageData?.quota ?? defaultSubscriptionQuota,
-      currentSubscriptionBasicQuota: subscriptionUsageData?.basicQuota ?? defaultSubscriptionQuota,
-      currentSubscriptionUsage: subscriptionUsageData?.usage ?? defaultSubscriptionUsage,
+      currentSubscriptionQuota,
+      currentSubscriptionBasicQuota,
+      currentSubscriptionUsage,
       currentSubscriptionResourceScopeUsage: subscriptionUsageData?.resources ?? {},
       currentSubscriptionRoleScopeUsage: subscriptionUsageData?.roles ?? {},
     }),
     [
       currentSku,
       currentSubscription,
+      currentSubscriptionBasicQuota,
+      currentSubscriptionQuota,
+      currentSubscriptionUsage,
       isLogtoSkusLoading,
       isSubscriptionLoading,
       isSubscriptionUsageDataLoading,
       logtoSkus,
       mutateSubscription,
       mutateSubscriptionQuotaAndUsages,
-      subscriptionUsageData?.quota,
-      subscriptionUsageData?.basicQuota,
       subscriptionUsageData?.resources,
       subscriptionUsageData?.roles,
-      subscriptionUsageData?.usage,
     ]
   );
 };

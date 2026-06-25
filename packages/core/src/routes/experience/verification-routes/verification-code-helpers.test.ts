@@ -154,6 +154,8 @@ describe('sendCode parameter passing', () => {
       undefined,
       expect.objectContaining({ skipDelivery: true })
     );
+    // The suppressed send still passes through the rate guard so it counts toward the cap.
+    expect(mockSentinelActivities.countActivities).toHaveBeenCalled();
   });
 
   it('should not skip delivery for forgot-password with existing user', async () => {
@@ -273,6 +275,44 @@ describe('sendCode parameter passing', () => {
       },
     }) as unknown as Queries;
 
+  it('rejects with 429 for a suppressed send over the cap, so suppression cannot be enumerated', async () => {
+    // Forgot-password to an unknown user suppresses delivery, but the send must still be rate-limited:
+    // hitting the cap here proves an unregistered recipient is throttled exactly like a registered one.
+    mockSentinelActivities.countActivities.mockResolvedValueOnce(
+      defaultMessageRateLimitPolicy.maxSendsPerRecipient
+    );
+
+    const ctx = {
+      request: { ip: '127.0.0.1' },
+      createLog: jest.fn(() => ({ append: jest.fn().mockImplementation(resolveVoid) })),
+      appendExceptionHookContext: jest.fn(),
+      experienceInteraction: {
+        ...mockExperienceInteraction,
+        interactionEvent: InteractionEvent.ForgotPassword,
+      },
+      emailI18n: {},
+    };
+    const libraries = { passcodes: mockPasscodeLibrary } as unknown as Partial<Libraries>;
+
+    await expect(
+      sendCode({
+        identifier: { type: SignInIdentifier.Email, value: 'unknown@example.com' },
+        interactionEvent: InteractionEvent.ForgotPassword,
+        createVerificationRecord: () => mockCodeVerification,
+        libraries: libraries as unknown as Libraries,
+        queries: buildUnknownUserQueries(),
+        ctx: ctx as unknown as ExperienceInteractionRouterContext,
+      })
+    ).rejects.toMatchObject({ code: 'request.message_rate_limited', status: 429 });
+
+    // The guard rejects before the (suppressed) send runs, and the throttle still emits the hook.
+    expect(mockSendVerificationCode).not.toHaveBeenCalled();
+    expect(ctx.appendExceptionHookContext).toHaveBeenCalledWith('Message.RateLimited', {
+      action: SentinelActivityAction.VerificationCodeSend,
+      recipient: 'unknown@example.com',
+    });
+  });
+
   const buildSignInCtx = (
     experienceInteraction: MockExperienceInteraction = mockExperienceInteraction
   ) => ({
@@ -299,12 +339,13 @@ describe('sendCode parameter passing', () => {
       ctx: ctx as unknown as ExperienceInteractionRouterContext,
     });
 
-    // The passcode record is still created, but nothing is delivered and the rate guard is bypassed.
+    // The passcode record is still created and nothing is delivered, but the rate guard still runs:
+    // a suppressed send must consume the recipient's quota so registration status cannot be probed.
     expect(mockSendVerificationCode).toHaveBeenCalledWith(
       undefined,
       expect.objectContaining({ skipDelivery: true })
     );
-    expect(mockSentinelActivities.countActivities).not.toHaveBeenCalled();
+    expect(mockSentinelActivities.countActivities).toHaveBeenCalled();
   });
 
   it('delivers for sign-in to an unknown recipient when registration is enabled', async () => {

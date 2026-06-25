@@ -56,6 +56,11 @@ const jwt_claims = {
     subtitle:
       '`context.application` 입력 매개변수를 사용하여 토큰과 관련된 애플리케이션 정보를 제공합니다.',
   },
+  organization_data: {
+    title: '조직 컨텍스트',
+    subtitle:
+      '`context.organization` 입력 매개변수를 사용하여 대상 조직 정보를 제공합니다. 조직 토큰에서만 사용할 수 있습니다.',
+  },
   token_data: {
     title: '토큰 데이터',
     subtitle: '현재 액세스 토큰 페이로드에 대한 `token` 입력 매개변수 사용.',

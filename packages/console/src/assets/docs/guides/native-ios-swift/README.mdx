@@ -23,13 +23,45 @@ https://github.com/logto-io/swift.git
 
 Since Xcode 11, you can [directly import a swift package](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app) w/o any additional tool.
 
+Logto Swift SDK comes in two major versions:
+
+- **v1**: Opens the sign-in experience in an embedded WebView, which is required by the native social connectors, but does not support [passkey sign-in](https://docs.logto.io/end-user-flows/sign-up-and-sign-in/passkey-sign-in) (WebView does not support WebAuthn, the underlying standard of passkeys).
+- **v2 (beta)**: Opens the sign-in experience in [ASWebAuthenticationSession](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession) (the system browser), which unlocks passkey sign-in and shares the browser session. Note that v2 removes support for the [WeChat (Native)](https://docs.logto.io/integrations/wechat-native) and [Alipay (Native)](https://docs.logto.io/integrations/alipay-native) connectors; you can use [WeChat (Web)](https://docs.logto.io/integrations/wechat-web) and [Alipay (Web)](https://docs.logto.io/integrations/alipay-web) instead, which work through the browser. If you depend on the native connectors, stay on v1.
+
+This guide covers both versions.
+
+When Xcode asks for the package version, select the version according to the SDK line:
+
+<Tabs groupId="swift-sdk-version">
+
+<TabItem value="v2" label="v2 (beta)">
+
+v2 is released as `v2.0.0-beta.x` prerelease tags until GA. Use the latest prerelease tag:
+
+```text
+v2.0.0-beta.1
+```
+
+</TabItem>
+
+<TabItem value="v1" label="v1">
+
+Use the latest stable v1 release:
+
+```text
+v1.2.0
+```
+
+</TabItem>
+
+</Tabs>
+
 We do not support **Carthage** and **CocoaPods** at the time due to some technical issues.
 
 <Details>
   <summary>Carthage</summary>
 
-Carthage [needs a `xcodeproj` file to build](https://github.com/Carthage/Carthage/issues/1226#issuecomment-290931385), but `swift package generate-xcodeproj` will report a failure since we are using binary targets
-for native social plugins. We will try to find a workaround later.
+Carthage [needs a `xcodeproj` file to build](https://github.com/Carthage/Carthage/issues/1226#issuecomment-290931385). We will try to find a workaround later.
 
 </Details>
 
@@ -75,23 +107,149 @@ let config = try? LogtoConfig(
 )
 ```
 
+In v2, the system browser session is shared by default. To request an isolated browser session, set `prefersEphemeralWebBrowserSession` to `true`:
+
+```swift
+let config = try? LogtoConfig(
+  // ...
+  prefersEphemeralWebBrowserSession: true
+)
+```
+
 </Step>
 
 <Step title="Configure redirect URI">
 
 <RedirectUrisNative />
 
+<Tabs groupId="swift-sdk-version">
+
+<TabItem value="v2" label="v2 (beta)">
+
+In v2, the sign-in experience opens in `ASWebAuthenticationSession` (the system browser), and the redirect is routed back to your app through the redirect URI. For a custom scheme redirect URI, register only the scheme part in your app's `Info.plist`, not the full redirect URI.
+
+For example, if the redirect URI is `io.logto://callback`, register `io.logto` as a URL scheme:
+
+```xml title="Info.plist"
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleTypeRole</key>
+    <string>Editor</string>
+    <key>CFBundleURLName</key>
+    <string>io.logto</string>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>io.logto</string>
+    </array>
+  </dict>
+</array>
+```
+
+Replace `io.logto` with your redirect URI's scheme. In Xcode, you can also open your app target, select **Info**, expand **URL Types**, and add the scheme to **URL Schemes**.
+
+<details>
+
+<summary>Use Universal Links instead of a custom scheme?</summary>
+
+<div>
+
+To use an HTTPS redirect URI such as `https://example.com/callback`:
+
+1. Add the Associated Domains capability to your app.
+2. Configure `webcredentials:example.com` so `ASWebAuthenticationSession` can match HTTPS callbacks on iOS 17.4 and newer.
+3. If the same URL should also open your app as a Universal Link outside the authentication session, configure `applinks:example.com` and host a valid `apple-app-site-association` file for the domain and path.
+4. Add the HTTPS URI to the "Redirect URIs" field above and pass it to `signInWithBrowser`.
+
+On iOS 17.4 and newer, the SDK uses `ASWebAuthenticationSession`'s HTTPS callback API so HTTPS redirects can automatically complete and dismiss the session. On older iOS versions, the authorization request can still use the HTTPS redirect URI, but the session may not close automatically unless your app handles the Universal Link callback itself. Keep a custom scheme redirect as a compatibility option if you need automatic completion on older iOS versions.
+
+</div>
+
+</details>
+
+</TabItem>
+
+<TabItem value="v1" label="v1">
+
 <InlineNotification>
   The Redirect URI in iOS SDK is only for internal use. There's <em>NO NEED</em> to add a [Custom URL Scheme](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) until a connector asks.
 </InlineNotification>
+
+</TabItem>
+
+</Tabs>
 
 </Step>
 
 <Step title="Implement sign-in and sign-out">
 
-You can use `client.signInWithBrowser(redirectUri:)` to sign in the user and `client.signOut()` to sign out the user.
+After the redirect URI is configured, use `client.signInWithBrowser(redirectUri:)` to sign in the user. Sign-out differs by SDK version.
 
 For example, in a SwiftUI app:
+
+<Tabs groupId="swift-sdk-version">
+
+<TabItem value="v2" label="v2 (beta)">
+
+In v2, `client.signOut(postLogoutRedirectUri:)` performs a complete sign-out: it clears the local credentials, revokes the refresh token, and ends the Logto session by opening the end session endpoint in the browser. The browser then navigates back to your app through the post sign-out redirect URI. If the post sign-out redirect URI uses a custom scheme, register that scheme in `Info.plist` as well. Let's configure it first:
+
+<UriInputField name="postLogoutRedirectUris" />
+
+<Code title="ContentView.swift" className="language-swift">
+    {`struct ContentView: View {
+  @State var isAuthenticated: Bool
+
+  init() {
+    isAuthenticated = client.isAuthenticated
+  }
+
+  var body: some View {
+    VStack {
+      if isAuthenticated {
+        Button("Sign Out") {
+          Task { [self] in
+            let error = await client.signOut(
+              postLogoutRedirectUri: "${props.postLogoutRedirectUris[0] ?? '<your-post-sign-out-redirect-uri>'}"
+            )
+
+            if let error {
+              // error occurred during sign out
+              print(error)
+            }
+
+            isAuthenticated = client.isAuthenticated
+          }
+        }
+      } else {
+        Button("Sign In") {
+          Task { [self] in
+            do {
+              try await client.signInWithBrowser(redirectUri: "${
+                props.redirectUris[0] ?? defaultRedirectUri
+              }")
+              isAuthenticated = true
+            } catch let error as LogtoClientErrors.SignIn {
+              // error occurred during sign in
+            } catch {
+              // other errors
+            }
+          }
+        }
+      }
+    }
+  }
+}`}
+</Code>
+
+<InlineNotification>
+
+You can also call `client.signOut()` without a post sign-out redirect URI. No configuration is needed in this case: the browser shows the Logto sign-out page, and the user returns to the app by dismissing it manually. If no UI context is available, call `client.clearCredentials()` to clear the local credentials and revoke the refresh token. Note that this keeps the Logto session in the browser, so the next `signInWithBrowser` may silently sign the user back in through that session.
+
+</InlineNotification>
+
+</TabItem>
+
+<TabItem value="v1" label="v1">
 
 <Code title="ContentView.swift" className="language-swift">
     {`struct ContentView: View {
@@ -107,7 +265,7 @@ For example, in a SwiftUI app:
         Button("Sign Out") {
           Task { [self] in
             await client.signOut()
-            isAuthenticated = false
+            isAuthenticated = client.isAuthenticated
           }
         }
       } else {
@@ -119,7 +277,7 @@ For example, in a SwiftUI app:
               }")
               isAuthenticated = true
             } catch let error as LogtoClientErrors.SignIn {
-              // error occured during sign in
+              // error occurred during sign in
             } catch {
               // other errors
             }
@@ -130,6 +288,10 @@ For example, in a SwiftUI app:
   }
 }`}
 </Code>
+
+</TabItem>
+
+</Tabs>
 
 </Step>
 

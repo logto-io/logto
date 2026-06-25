@@ -85,12 +85,15 @@ export const defaultLogtoSku: LogtoSkuResponse = {
     thirdPartyApplicationsLimit: null,
     tenantMembersLimit: 20,
     customJwtEnabled: true,
+    inlineHooksEnabled: false,
     subjectTokenEnabled: true,
     bringYourUiEnabled: true,
     collectUserProfileEnabled: true,
     passkeySignInEnabled: true,
     idpInitiatedSsoEnabled: false,
+    samlApplicationsLimit: 3,
     securityFeaturesEnabled: true,
+    customDomainsLimit: 2,
   },
 };
 
@@ -141,6 +144,7 @@ export const defaultSubscriptionUsage: SubscriptionCountBasedUsage = {
   thirdPartyApplicationsLimit: 0,
   tenantMembersLimit: 0,
   customJwtEnabled: false,
+  inlineHooksEnabled: false,
   bringYourUiEnabled: false,
   collectUserProfileEnabled: false,
   passkeySignInEnabled: false,

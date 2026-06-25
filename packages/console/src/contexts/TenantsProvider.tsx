@@ -30,7 +30,7 @@ export enum GlobalRoute {
   Onboarding = '/onboarding',
   AcceptInvitation = '/accept',
   Profile = '/profile',
-  HandleSocial = '/handle-social',
+
   EnterpriseSubscription = '/subscriptions',
   DeleteAccount = '/delete-account',
 }

@@ -16,11 +16,11 @@ import CardTitle from '@/ds-components/CardTitle';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 import useSignOut from '@/hooks/use-sign-out';
-import TenantsList from '@/pages/Profile/containers/DeleteAccountModal/components/TenantsList';
-import { getRoleMap } from '@/pages/Profile/containers/DeleteAccountModal/utils';
 import { isPaidPlan } from '@/utils/subscription';
 
+import TenantsList from './TenantsList';
 import styles from './index.module.scss';
+import { getRoleMap } from './utils';
 
 enum Step {
   Issues = 'issues',

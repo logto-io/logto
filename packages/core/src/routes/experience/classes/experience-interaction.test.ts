@@ -14,7 +14,6 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUser, mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
@@ -161,12 +160,6 @@ const createSignInInteraction = ({
 };
 
 describe('ExperienceInteraction class', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const setDevFeaturesEnabled = (enabled: boolean) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
-  };
-
   const tenant = new MockTenant(
     createMockProvider(mockProviderInteractionDetails),
     {
@@ -200,10 +193,6 @@ describe('ExperienceInteraction class', () => {
 
   beforeAll(() => {
     jest.clearAllMocks();
-  });
-
-  afterEach(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
   });
 
   describe('new user registration', () => {
@@ -241,7 +230,6 @@ describe('ExperienceInteraction class', () => {
 
   describe('sign-in submission', () => {
     it('should record geo context when dev features are disabled', async () => {
-      setDevFeaturesEnabled(false);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction();
 
@@ -256,7 +244,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should record geo location and sign-in country when dev features are enabled', async () => {
-      setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction();
 
@@ -271,7 +258,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should allow zero coordinates and record them', async () => {
-      setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations } = createSignInInteraction({
         headers: {
           'x-logto-cf-country': 'US',
@@ -286,7 +272,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should skip invalid coordinates but still record valid country', async () => {
-      setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction({
           headers: {
@@ -303,7 +288,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should skip out-of-range latitude but still record valid country', async () => {
-      setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction({
           headers: {
@@ -320,7 +304,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should skip invalid country codes but record coordinates', async () => {
-      setDevFeaturesEnabled(true);
       const invalidCountries = ['USA', 'jpn'];
 
       for (const country of invalidCountries) {
@@ -349,7 +332,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should normalize lowercase country codes', async () => {
-      setDevFeaturesEnabled(true);
       const { experienceInteraction, userSignInCountries } = createSignInInteraction({
         headers: {
           'x-logto-cf-country': 'jp',
@@ -364,7 +346,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should record country when coordinates are missing', async () => {
-      setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction({
           headers: {
@@ -379,7 +360,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should skip recording coordinates when only latitude is provided', async () => {
-      setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction({
           headers: {
@@ -397,7 +377,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should record geo context when adaptive MFA is disabled', async () => {
-      setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction({ adaptiveMfaEnabled: false });
 
@@ -412,7 +391,6 @@ describe('ExperienceInteraction class', () => {
     });
 
     it('should record geo context for register interactions', async () => {
-      setDevFeaturesEnabled(true);
       const { experienceInteraction, userGeoLocations, userSignInCountries } =
         createSignInInteraction({ interactionEvent: InteractionEvent.Register });
 

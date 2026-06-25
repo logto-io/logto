@@ -128,7 +128,7 @@ describe('security-page utils', () => {
     ).toBe(true);
   });
 
-  it('hasVisibleMfaSection ignores passkey sign-in when dev features are disabled', () => {
+  it('hasVisibleMfaSection returns false when only passkey sign-in is enabled without MFA factors', () => {
     expect(
       hasVisibleMfaSection(AccountCenterControlValue.Edit, {
         socialConnectors: [],
@@ -138,14 +138,14 @@ describe('security-page utils', () => {
     ).toBe(false);
   });
 
-  it('isPasskeySignInEnabled returns false when dev features are disabled', () => {
+  it('isPasskeySignInEnabled returns true when passkey sign-in is enabled', () => {
     expect(
       isPasskeySignInEnabled({
         socialConnectors: [],
         mfa: { factors: [], policy: MfaPolicy.UserControlled },
         passkeySignIn: { enabled: true },
       })
-    ).toBe(false);
+    ).toBe(true);
   });
 
   it('isEditableField returns true only for edit control', () => {

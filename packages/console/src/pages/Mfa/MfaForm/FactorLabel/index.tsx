@@ -4,7 +4,6 @@ import { MfaFactor } from '@logto/schemas';
 import MfaFactorTitle from '@/components/MfaFactorTitle';
 import DynamicT from '@/ds-components/DynamicT';
 
-import WebAuthnTipContent from './WebAuthnTipContent';
 import styles from './index.module.scss';
 
 type Props = {
@@ -25,7 +24,7 @@ function FactorLabel({ type }: Props) {
       <div className={styles.factorTitleWrapper}>
         <MfaFactorTitle
           type={type}
-          tooltip={type === MfaFactor.WebAuthn && <WebAuthnTipContent />}
+          tooltip={type === MfaFactor.WebAuthn && <DynamicT forKey="mfa.webauthn_domain_tip" />}
         />
       </div>
       <div className={styles.factorDescription}>

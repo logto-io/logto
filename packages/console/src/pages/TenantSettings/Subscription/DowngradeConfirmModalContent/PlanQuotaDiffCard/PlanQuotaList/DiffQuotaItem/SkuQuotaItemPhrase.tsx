@@ -4,6 +4,7 @@ import {
   skuQuotaItemUnlimitedPhrasesMap,
   skuQuotaItemPhrasesMap,
   skuQuotaItemLimitedPhrasesMap,
+  isSkuQuotaItemPhraseKey,
 } from '@/consts/quota-item-phrases';
 import DynamicT from '@/ds-components/DynamicT';
 import { type LogtoSkuQuota } from '@/types/skus';
@@ -16,6 +17,10 @@ type Props = {
 };
 
 function SkuQuotaItemPhrase({ skuQuotaKey, skuQuotaValue }: Props) {
+  if (!isSkuQuotaItemPhraseKey(skuQuotaKey)) {
+    return null;
+  }
+
   const isUnlimited = skuQuotaValue === null;
   const isNotCapable = skuQuotaValue === 0 || skuQuotaValue === false;
   const isLimited = Boolean(skuQuotaValue);
