@@ -33,4 +33,5 @@ export const createAdminTenantAccountCenter = (): Readonly<CreateAccountCenter> 
       customData: AccountCenterControlValue.Edit,
       mfa: AccountCenterControlValue.Edit,
     },
+    profileFields: [{ name: 'name' }, { name: 'avatar' }],
   });
