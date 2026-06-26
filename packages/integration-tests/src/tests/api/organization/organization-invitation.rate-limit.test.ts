@@ -4,14 +4,13 @@ import { authedAdminApi } from '#src/api/api.js';
 import { setEmailConnector } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { OrganizationApiTest, OrganizationInvitationApiTest } from '#src/helpers/organization.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 const { maxSendsPerRecipient } = defaultMessageRateLimitPolicy;
 
 const resendPayload = { link: 'https://example.com' };
 
-// The message rate guard is gated behind dev features, so only assert its behavior when enabled.
-devFeatureTest.describe('organization invitation send rate limit', () => {
+describe('organization invitation send rate limit', () => {
   const invitationApi = new OrganizationInvitationApiTest();
   const organizationApi = new OrganizationApiTest();
 

@@ -4,9 +4,8 @@ import {
   type InlineHookExecutionErrorPolicy,
   type InlineHookTestRequestBody,
 } from '@logto/schemas';
-import { ResponseError } from '@withtyped/client';
 import { got, HTTPError } from 'got';
-import { z, ZodError } from 'zod';
+import { ZodError } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
@@ -20,20 +19,7 @@ import {
 } from '#src/utils/local-vm/index.js';
 
 const inlineHookFunctionName = 'runInlineHook';
-const inlineHookAccessDeniedErrorCode = 'AccessDenied';
 const defaultInlineHookExecutionErrorPolicy = 'block' satisfies InlineHookExecutionErrorPolicy;
-
-const inlineHookAccessDeniedErrorGuard = z.object({
-  code: z.literal(inlineHookAccessDeniedErrorCode),
-  message: z.string(),
-});
-
-const inlineHookResponseErrorGuard = z.object({
-  message: z.string(),
-  error: z.unknown().optional(),
-});
-
-export type InlineHookAccessDeniedError = z.infer<typeof inlineHookAccessDeniedErrorGuard>;
 
 export type InlineHookExecutionErrorFallback = {
   action: 'rejectInvalidCredentials';
@@ -49,14 +35,9 @@ export type InlineHookExecutionErrorPolicyDecision =
     }
   | InlineHookExecutionErrorFallback;
 
-type InlineHookApiContext = {
-  denyAccess: (message?: string) => never;
-};
-
 type InlineHookScriptPayload<Event> = {
   event: Event;
   environmentVariables?: Record<string, string>;
-  api: InlineHookApiContext;
 };
 
 type InlineHookRunnerData<Event> = {
@@ -71,95 +52,33 @@ type InlineHookExecutionErrorHandlingData = {
   onExecutionError?: InlineHookExecutionErrorPolicy;
 };
 
-const apiContext: InlineHookApiContext = Object.freeze({
-  denyAccess: (message = 'Access denied') => {
-    throw new LocalVmError(
-      {
-        message,
-        error: {
-          code: 'AccessDenied',
-          message,
-        },
-      },
-      403
-    );
-  },
-});
-
-export const isAccessDeniedError = (error: unknown): error is InlineHookAccessDeniedError =>
-  inlineHookAccessDeniedErrorGuard.safeParse(error).success;
-
-const getInlineHookDeniedErrorCode = (key: LogtoInlineHookKey) => {
+const getInlineHookErrorFallback = (
+  key: LogtoInlineHookKey
+): InlineHookExecutionErrorPolicyDecision => {
   switch (key) {
     case LogtoInlineHookKey.PostFirstFactorVerification: {
-      return 'session.invalid_credentials';
+      return { action: 'rejectInvalidCredentials' };
     }
     case LogtoInlineHookKey.PostSignIn: {
-      return 'session.hook_denied_access';
+      return {
+        action: 'throw',
+        error: new RequestError({ code: 'session.verification_failed', status: 400 }),
+      };
     }
   }
-};
-
-const createInlineHookDeniedError = (key: LogtoInlineHookKey, status: number, message?: string) =>
-  new RequestError(
-    {
-      code: getInlineHookDeniedErrorCode(key),
-      status,
-    },
-    message && { message }
-  );
-
-const tryParseInlineHookResponseError = async (error: unknown) => {
-  if (!(error instanceof ResponseError)) {
-    return;
-  }
-
-  const responseBody: unknown = await error.response.clone().json();
-  const accessDeniedError = isAccessDeniedError(responseBody);
-
-  if (accessDeniedError) {
-    return {
-      message: responseBody.message,
-      error: responseBody,
-    };
-  }
-
-  return inlineHookResponseErrorGuard.safeParse(responseBody).data;
 };
 
 export const getInlineHookExecutionErrorPolicyDecision = async ({
   key,
-  error,
   onExecutionError = defaultInlineHookExecutionErrorPolicy,
 }: InlineHookExecutionErrorHandlingData): Promise<InlineHookExecutionErrorPolicyDecision> => {
-  const responseError = await tryParseInlineHookResponseError(error);
-  const accessDeniedError = isAccessDeniedError(error)
-    ? error
-    : isAccessDeniedError(responseError?.error)
-      ? responseError.error
-      : undefined;
-
-  if (accessDeniedError) {
-    return {
-      action: 'throw',
-      error: createInlineHookDeniedError(key, 403, accessDeniedError.message),
-    };
-  }
-
   if (onExecutionError === 'allow') {
     return key === LogtoInlineHookKey.PostFirstFactorVerification
       ? { action: 'rejectInvalidCredentials' }
       : { action: 'continue' };
   }
 
-  return {
-    action: 'throw',
-    error: createInlineHookDeniedError(
-      key,
-      403,
-      error instanceof Error ? error.message : responseError?.message
-    ),
-  };
+  return getInlineHookErrorFallback(key);
 };
 
 const handleInlineHookExecutionError = async (data: InlineHookExecutionErrorHandlingData) => {
@@ -182,7 +101,6 @@ export class InlineHookLibrary {
       const payload: InlineHookScriptPayload<Event> = {
         event,
         environmentVariables,
-        api: apiContext,
       };
 
       return await runScriptFunctionInLocalVm(script, inlineHookFunctionName, payload);
@@ -229,7 +147,7 @@ export class InlineHookLibrary {
 
     if (!this.isRegionalAzureFunctionAppConfigured) {
       throw new RequestError(
-        { code: 'session.hook_denied_access', status: 422 },
+        { code: 'session.verification_failed', status: 422 },
         { message: 'Remote inline hook runner is not configured.' }
       );
     }

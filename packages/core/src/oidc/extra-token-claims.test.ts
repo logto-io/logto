@@ -24,6 +24,7 @@ jest.unstable_mockModule('#src/libraries/jwt-customizer.js', () => ({
   },
 }));
 
+const { EnvSet } = await import('#src/env-set/index.js');
 const { getExtraTokenClaimsForJwtCustomization } = await import('./extra-token-claims.js');
 
 const buildContextAndToken = ({ organizationId }: { organizationId?: string } = {}) => {
@@ -132,8 +133,15 @@ const createResponseError = (status: number, body: Record<string, unknown>) =>
   );
 
 describe('getExtraTokenClaimsForJwtCustomization', () => {
+  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
   beforeEach(() => {
     runScriptInLocalVm.mockReset().mockResolvedValue({});
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+  });
+
+  afterAll(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it('includes sign-in context in interaction context when lastSubmission has it', async () => {
@@ -148,8 +156,9 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
     });
   });
 
-  it('includes adaptive MFA sign-in context in custom claims payload', async () => {
+  it('includes adaptive MFA sign-in context in custom claims payload when dev features are disabled', async () => {
     const signInContext = { country: 'US', botScore: '10' };
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
 
     await callGetExtraTokenClaimsForJwtCustomization({ signInContext });
 
@@ -209,6 +218,15 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
       error_description: "Custom claims script error: 'abc' not exists in 'context'.",
       statusCode: 400,
     });
+  });
+
+  it('keeps fail-open on script failure when dev features are disabled', async () => {
+    runScriptInLocalVm.mockRejectedValue(new Error('boom'));
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+    await expect(
+      callGetExtraTokenClaimsForJwtCustomization({ blockIssuanceOnError: true })
+    ).resolves.toBeUndefined();
   });
 
   it('throws access denied when denyAccess is called in custom script', async () => {

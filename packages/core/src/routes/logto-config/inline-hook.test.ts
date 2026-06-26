@@ -208,20 +208,6 @@ describe('configs inline hook routes', () => {
     });
   });
 
-  it('POST /configs/inline-hooks/test should map AccessDenied errors to 403', async () => {
-    const payload: InlineHookTestRequestBody = {
-      hookType: LogtoInlineHookKey.PostSignIn,
-      script: `const runInlineHook = ({ api }) => api.denyAccess('Nope');`,
-      event: {
-        key: LogtoInlineHookKey.PostSignIn,
-      },
-    };
-
-    const response = await routeRequester.post('/configs/inline-hooks/test').send(payload);
-
-    expect(response.status).toEqual(403);
-  });
-
   it('POST /configs/inline-hooks/test should map general execution errors to 422', async () => {
     const payload: InlineHookTestRequestBody = {
       hookType: LogtoInlineHookKey.PostSignIn,

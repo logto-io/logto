@@ -12,7 +12,7 @@ import {
   signInAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 const { maxSendsPerRecipient } = defaultMessageRateLimitPolicy;
 
@@ -21,8 +21,7 @@ const sendAccountVerificationCode = async (api: KyInstance, email: string) =>
     json: { identifier: { type: SignInIdentifier.Email, value: email } },
   });
 
-// The message rate guard is gated behind dev features, so only assert its behavior when enabled.
-devFeatureTest.describe('Account verification code send rate limit', () => {
+describe('Account verification code send rate limit', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await setEmailConnector(authedAdminApi);

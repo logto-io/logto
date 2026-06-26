@@ -17,11 +17,11 @@ import {
   removeConnectorMessage,
 } from '#src/helpers/index.js';
 import { defaultSignInSignUpConfigs } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 // Registration is disabled (sign-in only) with email verification-code sign-in enabled. So an
 // unregistered email has no path to become a user and must not receive a code.
-devFeatureTest.describe('suppress sign-in verification-code delivery to unknown recipients', () => {
+describe('suppress sign-in verification-code delivery to unknown recipients', () => {
   beforeAll(async () => {
     await setEmailConnector();
     await updateSignInExperience({
