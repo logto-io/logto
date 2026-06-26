@@ -48,12 +48,12 @@ describe('InlineHookLibrary', () => {
         NAME_SUFFIX: ' updated',
       },
       script: `
-        const runInlineHook = ({ event, environmentVariables, api }) => ({
+        const runInlineHook = (payload) => ({
           action: 'updateUser',
           user: {
-            name: event.user.name + environmentVariables.NAME_SUFFIX,
+            name: payload.event.user.name + payload.environmentVariables.NAME_SUFFIX,
           },
-          apiFrozen: Object.isFrozen(api),
+          hasApi: Object.hasOwn(payload, 'api'),
         });
       `,
     });
@@ -75,7 +75,7 @@ describe('InlineHookLibrary', () => {
       user: {
         name: 'Foo updated',
       },
-      apiFrozen: true,
+      hasApi: false,
     });
 
     expect(getInlineHook).toHaveBeenCalledWith(LogtoInlineHookKey.PostSignIn);
@@ -181,52 +181,6 @@ describe('InlineHookLibrary', () => {
         const runInlineHook = () => {
           throw new Error('boom');
         };
-      `,
-    });
-
-    await expect(
-      library.runHook({
-        key: LogtoInlineHookKey.PostSignIn,
-        event: {},
-      })
-    ).rejects.toBeInstanceOf(LocalVmError);
-  });
-
-  it('throws LocalVmError when inline hook denies access', async () => {
-    const script = `
-      const runInlineHook = ({ api }) => api.denyAccess('Nope');
-    `;
-
-    await expect(
-      InlineHookLibrary.runScriptInLocalVm({
-        script,
-        event: {},
-      })
-    ).rejects.toBeInstanceOf(LocalVmError);
-
-    try {
-      await InlineHookLibrary.runScriptInLocalVm({
-        script,
-        event: {},
-      });
-    } catch (error: unknown) {
-      expect(error).toBeInstanceOf(LocalVmError);
-      await expect((error as LocalVmError).response.json()).resolves.toEqual({
-        message: 'Nope',
-        error: {
-          code: 'AccessDenied',
-          message: 'Nope',
-        },
-      });
-    }
-  });
-
-  it('still blocks access when onExecutionError is allow', async () => {
-    getInlineHook.mockResolvedValueOnce({
-      enabled: true,
-      onExecutionError: 'allow',
-      script: `
-        const runInlineHook = ({ api }) => api.denyAccess('Nope');
       `,
     });
 

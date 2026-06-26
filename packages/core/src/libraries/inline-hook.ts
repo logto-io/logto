@@ -1,5 +1,4 @@
 import { adminTenantId, type LogtoInlineHookKey } from '@logto/schemas';
-import { trySafe } from '@silverhand/essentials';
 import { ZodError } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -14,47 +13,15 @@ import {
 
 const inlineHookFunctionName = 'runInlineHook';
 
-type InlineHookApiContext = {
-  denyAccess: (message?: string) => never;
-};
-
 type InlineHookScriptPayload<Event> = {
   event: Event;
   environmentVariables?: Record<string, string>;
-  api: InlineHookApiContext;
 };
 
 type InlineHookRunnerData<Event> = {
   script: string;
   event: Event;
   environmentVariables?: Record<string, string>;
-};
-
-const apiContext: InlineHookApiContext = Object.freeze({
-  denyAccess: (message = 'Access denied') => {
-    throw new LocalVmError(
-      {
-        message,
-        error: {
-          code: 'AccessDenied',
-          message,
-        },
-      },
-      403
-    );
-  },
-});
-
-const isAccessDeniedErrorBody = (body: unknown): boolean => {
-  if (!body || typeof body !== 'object' || !('error' in body)) {
-    return false;
-  }
-
-  const { error } = body;
-
-  return (
-    typeof error === 'object' && error !== null && 'code' in error && error.code === 'AccessDenied'
-  );
 };
 
 export class InlineHookLibrary {
@@ -67,7 +34,6 @@ export class InlineHookLibrary {
       const payload: InlineHookScriptPayload<Event> = {
         event,
         environmentVariables,
-        api: apiContext,
       };
 
       return await runScriptFunctionInLocalVm(script, inlineHookFunctionName, payload);
@@ -123,14 +89,6 @@ export class InlineHookLibrary {
         environmentVariables: inlineHook.environmentVariables,
       });
     } catch (error: unknown) {
-      if (error instanceof LocalVmError) {
-        const errorBody: unknown = await trySafe(async () => error.response.clone().json());
-
-        if (isAccessDeniedErrorBody(errorBody)) {
-          throw error;
-        }
-      }
-
       if (inlineHook.onExecutionError === 'allow') {
         return;
       }
