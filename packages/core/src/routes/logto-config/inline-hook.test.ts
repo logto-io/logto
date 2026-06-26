@@ -240,13 +240,7 @@ describe('configs inline hook routes', () => {
       ),
     });
 
-    const response = await requester.post('/configs/inline-hooks/test').send({
-      hookType: LogtoInlineHookKey.PostSignIn,
-      script: `const runInlineHook = () => ({ action: 'updateUser' });`,
-      event: {
-        key: LogtoInlineHookKey.PostSignIn,
-      },
-    } satisfies InlineHookTestRequestBody);
+    const response = await requester.get('/configs/inline-hooks');
 
     expect(response.status).toEqual(404);
   });

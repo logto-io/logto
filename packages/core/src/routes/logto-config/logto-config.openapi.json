@@ -356,6 +356,12 @@
                   },
                   "contextSample": {
                     "description": "The sample context for inline hook script testing."
+                  },
+                  "enabled": {
+                    "description": "Whether the inline hook is enabled."
+                  },
+                  "onExecutionError": {
+                    "description": "The inline hook execution error handling policy."
                   }
                 }
               }
@@ -401,6 +407,12 @@
                   },
                   "contextSample": {
                     "description": "The sample context for inline hook script testing."
+                  },
+                  "enabled": {
+                    "description": "Whether the inline hook is enabled."
+                  },
+                  "onExecutionError": {
+                    "description": "The inline hook execution error handling policy."
                   }
                 }
               }
