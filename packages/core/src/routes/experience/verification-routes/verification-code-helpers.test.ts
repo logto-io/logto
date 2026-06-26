@@ -30,7 +30,7 @@ async function resolveVoid(): Promise<void> {
 
 const { sendCode } = await import('./verification-code-helpers.js');
 
-// The message rate guard runs when dev features are enabled; provide a permissive activity store.
+// Provide a permissive activity store so the message rate guard allows sends by default.
 const mockSentinelActivities = {
   countActivities: jest.fn().mockResolvedValue(0),
   insertActivity: jest.fn().mockImplementation(resolveVoid),

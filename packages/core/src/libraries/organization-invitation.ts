@@ -9,7 +9,6 @@ import {
 import { generateStandardId } from '@logto/shared';
 import { conditional, type Nullable, removeUndefinedKeys } from '@silverhand/essentials';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import OrganizationQueries from '#src/queries/organization/index.js';
 import { createUserQueries } from '#src/queries/user.js';
@@ -266,12 +265,10 @@ export class OrganizationInvitationLibrary {
         ...(ip && { ip }),
       });
 
-    return EnvSet.values.isDevFeaturesEnabled
-      ? withMessageRateGuard(
-          await buildMessageRateGuard(this.queries),
-          { action: SentinelActivityAction.MessageSend, recipient: to },
-          send
-        )
-      : send();
+    return withMessageRateGuard(
+      await buildMessageRateGuard(this.queries),
+      { action: SentinelActivityAction.MessageSend, recipient: to },
+      send
+    );
   }
 }

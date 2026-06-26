@@ -11,12 +11,11 @@ import {
 } from '#src/helpers/admin-tenant.js';
 import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureTest, generateEmail } from '#src/utils.js';
+import { generateEmail } from '#src/utils.js';
 
 const { maxSendsPerRecipient } = defaultMessageRateLimitPolicy;
 
-// The message rate guard is gated behind dev features, so only assert its behavior when enabled.
-devFeatureTest.describe('Account center (/me) verification code send rate limit', () => {
+describe('Account center (/me) verification code send rate limit', () => {
   beforeAll(async () => {
     await clearConnectorsByTypes([ConnectorType.Email], api);
     await setEmailConnector(api);
