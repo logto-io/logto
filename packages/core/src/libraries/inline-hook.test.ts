@@ -189,6 +189,27 @@ describe('InlineHookLibrary', () => {
     expect(decision).toEqual(expectedDecision);
   });
 
+  it('returns the invalid-credentials fallback for PostFirstFactorVerification allow-mode execution errors', async () => {
+    getInlineHook.mockResolvedValueOnce({
+      enabled: true,
+      onExecutionError: 'allow',
+      script: `
+        const runInlineHook = () => {
+          throw new Error('Broken');
+        };
+      `,
+    });
+
+    await expect(
+      library.runHook({
+        key: LogtoInlineHookKey.PostFirstFactorVerification,
+        event: {},
+      })
+    ).resolves.toEqual({
+      action: 'rejectInvalidCredentials',
+    });
+  });
+
   it('blocks PostSignIn execution errors with the owning flow failure by default', async () => {
     getInlineHook.mockResolvedValueOnce({
       enabled: true,

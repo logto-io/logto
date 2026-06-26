@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import {
   adminTenantId,
   LogtoInlineHookKey,
@@ -151,7 +152,9 @@ export class InlineHookLibrary {
         event,
         environmentVariables: inlineHook.environmentVariables,
       });
-    } catch {
+    } catch (error: unknown) {
+      void appInsights.trackException(error);
+
       return handleInlineHookExecutionError({
         key,
         onExecutionError: inlineHook.onExecutionError,
