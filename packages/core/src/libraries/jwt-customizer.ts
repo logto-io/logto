@@ -37,13 +37,15 @@ import { type ScopeLibrary } from '#src/libraries/scope.js';
 import { type UserLibrary } from '#src/libraries/user.js';
 import type Queries from '#src/tenants/Queries.js';
 import {
-  LocalVmError,
   getJwtCustomizerScripts,
-  runScriptFunctionInLocalVm,
-  buildLocalVmErrorBody,
   type CustomJwtDeployRequestBody,
   parseAzureFunctionsResponseError,
 } from '#src/utils/custom-jwt/index.js';
+import {
+  buildLocalVmErrorBody,
+  LocalVmError,
+  runScriptFunctionInLocalVm,
+} from '#src/utils/local-vm/index.js';
 
 import { type CloudConnectionLibrary } from './cloud-connection.js';
 

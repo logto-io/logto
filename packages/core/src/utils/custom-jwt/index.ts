@@ -15,7 +15,6 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { type CustomJwtDeployRequestBody } from './types.js';
 
 export * from './types.js';
-export * from './local-vm.js';
 
 export const getJwtCustomizerScripts = (jwtCustomizers: Partial<JwtCustomizerType>) => {
   // eslint-disable-next-line no-restricted-syntax -- enable to infer the type using `Object.fromEntries`
