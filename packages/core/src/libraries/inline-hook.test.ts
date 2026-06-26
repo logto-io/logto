@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import { LogtoInlineHookKey } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -39,6 +40,7 @@ describe('InlineHookLibrary', () => {
   });
 
   afterEach(() => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after quota tests.
     (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
@@ -51,12 +53,12 @@ describe('InlineHookLibrary', () => {
         NAME_SUFFIX: ' updated',
       },
       script: `
-        const runInlineHook = ({ event, environmentVariables, api }) => ({
+        const runInlineHook = (payload) => ({
           action: 'updateUser',
           user: {
-            name: event.user.name + environmentVariables.NAME_SUFFIX,
+            name: payload.event.user.name + payload.environmentVariables.NAME_SUFFIX,
           },
-          apiType: typeof api,
+          hasApi: Object.hasOwn(payload, 'api'),
         });
       `,
     });
@@ -78,7 +80,7 @@ describe('InlineHookLibrary', () => {
       user: {
         name: 'Foo updated',
       },
-      apiType: 'undefined',
+      hasApi: false,
     });
 
     expect(getInlineHook).toHaveBeenCalledWith(LogtoInlineHookKey.PostSignIn);
@@ -177,10 +179,9 @@ describe('InlineHookLibrary', () => {
     ).resolves.toBeUndefined();
   });
 
-  it('keeps PostFirstFactorVerification allow-mode errors from granting access', async () => {
-    const decision = await getInlineHookExecutionErrorPolicyDecision({
+  it('keeps PostFirstFactorVerification allow-mode errors from granting access', () => {
+    const decision = getInlineHookExecutionErrorPolicyDecision({
       key: LogtoInlineHookKey.PostFirstFactorVerification,
-      error: new Error('Broken'),
       onExecutionError: 'allow',
     });
     const expectedDecision: InlineHookExecutionErrorFallback = {
@@ -211,6 +212,37 @@ describe('InlineHookLibrary', () => {
     });
   });
 
+  it('redacts the PostFirstFactorVerification password from tracked execution errors', async () => {
+    const password = 'secret-password';
+    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
+    jest
+      .spyOn(InlineHookLibrary, 'runScriptInLocalVm')
+      .mockRejectedValueOnce(new Error(`Inline hook failed with ${password}`));
+    getInlineHook.mockResolvedValueOnce({
+      enabled: true,
+      onExecutionError: 'allow',
+      script: '',
+    });
+
+    await expect(
+      library.runHook({
+        key: LogtoInlineHookKey.PostFirstFactorVerification,
+        event: {
+          password,
+        },
+      })
+    ).resolves.toEqual({
+      action: 'rejectInvalidCredentials',
+    });
+
+    const trackedError = trackException.mock.calls[0]?.[0];
+    expect(trackedError).toBeInstanceOf(Error);
+    expect(trackedError).toMatchObject({
+      message: 'Inline hook failed with [redacted]',
+    });
+    expect((trackedError as Error).stack).not.toContain(password);
+  });
+
   it('blocks PostSignIn execution errors with the owning flow failure by default', async () => {
     getInlineHook.mockResolvedValueOnce({
       enabled: true,
@@ -232,11 +264,10 @@ describe('InlineHookLibrary', () => {
     });
   });
 
-  it('returns the owning flow failure for block-mode execution errors', async () => {
+  it('returns the owning flow failure for block-mode execution errors', () => {
     const decision: InlineHookExecutionErrorPolicyDecision =
-      await getInlineHookExecutionErrorPolicyDecision({
+      getInlineHookExecutionErrorPolicyDecision({
         key: LogtoInlineHookKey.PostSignIn,
-        error: new Error('Broken'),
         onExecutionError: 'block',
       });
 

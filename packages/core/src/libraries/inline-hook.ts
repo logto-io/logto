@@ -46,8 +46,57 @@ type InlineHookRunnerData<Event> = {
 
 type InlineHookExecutionErrorHandlingData = {
   key: LogtoInlineHookKey;
-  error: unknown;
   onExecutionError?: InlineHookExecutionErrorPolicy;
+};
+
+type InlineHookExecutionErrorTelemetryData<Event> = InlineHookExecutionErrorHandlingData & {
+  event: Event;
+};
+
+const sensitiveValueReplacement = '[redacted]';
+
+const getPostFirstFactorVerificationPassword = (event: unknown) => {
+  if (
+    typeof event === 'object' &&
+    event !== null &&
+    'password' in event &&
+    typeof event.password === 'string'
+  ) {
+    return event.password;
+  }
+};
+
+const redactSensitiveValue = (value: string, sensitiveValue: string) =>
+  value.split(sensitiveValue).join(sensitiveValueReplacement);
+
+const buildInlineHookExecutionErrorTelemetryPayload = <Event>({
+  key,
+  event,
+  error,
+}: InlineHookExecutionErrorTelemetryData<Event> & {
+  error: unknown;
+}) => {
+  const password =
+    key === LogtoInlineHookKey.PostFirstFactorVerification
+      ? getPostFirstFactorVerificationPassword(event)
+      : undefined;
+
+  if (!password) {
+    return error;
+  }
+
+  const telemetryError = new Error(
+    redactSensitiveValue(error instanceof Error ? error.message : String(error), password)
+  );
+
+  if (error instanceof Error) {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Keep the original error type for telemetry while redacting secrets.
+    telemetryError.name = error.name;
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Preserve the useful stack without leaking the inline-hook password.
+    telemetryError.stack = error.stack && redactSensitiveValue(error.stack, password);
+  }
+
+  return telemetryError;
 };
 
 const getInlineHookErrorFallback = (
@@ -66,10 +115,10 @@ const getInlineHookErrorFallback = (
   }
 };
 
-export const getInlineHookExecutionErrorPolicyDecision = async ({
+export const getInlineHookExecutionErrorPolicyDecision = ({
   key,
   onExecutionError = defaultInlineHookExecutionErrorPolicy,
-}: InlineHookExecutionErrorHandlingData): Promise<InlineHookExecutionErrorPolicyDecision> => {
+}: InlineHookExecutionErrorHandlingData): InlineHookExecutionErrorPolicyDecision => {
   if (onExecutionError === 'allow') {
     return key === LogtoInlineHookKey.PostFirstFactorVerification
       ? { action: 'rejectInvalidCredentials' }
@@ -79,8 +128,8 @@ export const getInlineHookExecutionErrorPolicyDecision = async ({
   return getInlineHookErrorFallback(key);
 };
 
-const handleInlineHookExecutionError = async (data: InlineHookExecutionErrorHandlingData) => {
-  const decision = await getInlineHookExecutionErrorPolicyDecision(data);
+const handleInlineHookExecutionError = (data: InlineHookExecutionErrorHandlingData) => {
+  const decision = getInlineHookExecutionErrorPolicyDecision(data);
 
   if (decision.action === 'throw') {
     throw decision.error;
@@ -154,11 +203,12 @@ export class InlineHookLibrary {
         environmentVariables: inlineHook.environmentVariables,
       });
     } catch (error: unknown) {
-      void appInsights.trackException(error);
+      void appInsights.trackException(
+        buildInlineHookExecutionErrorTelemetryPayload({ key, event, error })
+      );
 
       return handleInlineHookExecutionError({
         key,
-        error,
         onExecutionError: inlineHook.onExecutionError,
       });
     }
