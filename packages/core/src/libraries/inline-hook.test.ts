@@ -1,3 +1,4 @@
+import { appInsights } from '@logto/app-insights/node';
 import { LogtoInlineHookKey } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
@@ -39,6 +40,7 @@ describe('InlineHookLibrary', () => {
   });
 
   afterEach(() => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after quota tests.
     (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
@@ -208,6 +210,37 @@ describe('InlineHookLibrary', () => {
     ).resolves.toEqual({
       action: 'rejectInvalidCredentials',
     });
+  });
+
+  it('redacts the PostFirstFactorVerification password from tracked execution errors', async () => {
+    const password = 'secret-password';
+    const trackException = jest.spyOn(appInsights, 'trackException').mockResolvedValue();
+    jest
+      .spyOn(InlineHookLibrary, 'runScriptInLocalVm')
+      .mockRejectedValueOnce(new Error(`Inline hook failed with ${password}`));
+    getInlineHook.mockResolvedValueOnce({
+      enabled: true,
+      onExecutionError: 'allow',
+      script: '',
+    });
+
+    await expect(
+      library.runHook({
+        key: LogtoInlineHookKey.PostFirstFactorVerification,
+        event: {
+          password,
+        },
+      })
+    ).resolves.toEqual({
+      action: 'rejectInvalidCredentials',
+    });
+
+    const trackedError = trackException.mock.calls[0]?.[0];
+    expect(trackedError).toBeInstanceOf(Error);
+    expect(trackedError).toMatchObject({
+      message: 'Inline hook failed with [redacted]',
+    });
+    expect((trackedError as Error).stack).not.toContain(password);
   });
 
   it('blocks PostSignIn execution errors with the owning flow failure by default', async () => {
