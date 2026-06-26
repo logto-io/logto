@@ -74,7 +74,7 @@ const apiContext: InlineHookApiContext = Object.freeze({
       {
         message,
         error: {
-          code: 'AccessDenied',
+          code: inlineHookAccessDeniedErrorCode,
           message,
         },
       },
@@ -93,6 +93,22 @@ const getInlineHookDeniedErrorCode = (key: LogtoInlineHookKey) => {
     }
     case LogtoInlineHookKey.PostSignIn: {
       return 'session.hook_denied_access';
+    }
+  }
+};
+
+const getInlineHookErrorFallback = (
+  key: LogtoInlineHookKey
+): InlineHookExecutionErrorPolicyDecision => {
+  switch (key) {
+    case LogtoInlineHookKey.PostFirstFactorVerification: {
+      return { action: 'rejectInvalidCredentials' };
+    }
+    case LogtoInlineHookKey.PostSignIn: {
+      return {
+        action: 'throw',
+        error: new RequestError({ code: 'session.verification_failed', status: 400 }),
+      };
     }
   }
 };
@@ -149,14 +165,7 @@ export const getInlineHookExecutionErrorPolicyDecision = async ({
       : { action: 'continue' };
   }
 
-  return {
-    action: 'throw',
-    error: createInlineHookDeniedError(
-      key,
-      403,
-      error instanceof Error ? error.message : responseError?.message
-    ),
-  };
+  return getInlineHookErrorFallback(key);
 };
 
 const handleInlineHookExecutionError = async (data: InlineHookExecutionErrorHandlingData) => {

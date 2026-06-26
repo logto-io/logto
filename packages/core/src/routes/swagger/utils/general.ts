@@ -256,8 +256,9 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
  * **CAUTION**: This function mutates the input document.
  *
  * Remove operations (path + method) that are tagged with `Cloud only` if the application is not
- * running in the cloud. It also strips the `x-logto-dev-feature` internal marker from schema
- * properties (the properties themselves are kept).
+ * running in the cloud, and operations tagged with `Dev feature` if dev features are not enabled.
+ * It also strips the `x-logto-dev-feature` internal marker from schema properties (the properties
+ * themselves are kept).
  *
  * This will prevent the swagger validation from failing in the OSS environment.
  *
@@ -265,23 +266,32 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
 export const removeUnnecessaryOperations = (
   document: DeepPartial<OpenAPIV3.Document>
 ): DeepPartial<OpenAPIV3.Document> => {
-  const { isCloud } = EnvSet.values;
+  const { isCloud, isDevFeaturesEnabled } = EnvSet.values;
 
   removeDevFeatureSchemaProperties(document);
 
-  if (isCloud || !document.paths) {
+  if (!document.paths) {
     return document;
   }
 
   for (const [path, pathItem] of Object.entries(document.paths)) {
+    if (!pathItem) {
+      continue;
+    }
+
     for (const method of Object.values(OpenAPIV3.HttpMethods)) {
-      if (pathItem?.[method]?.tags?.includes(cloudOnlyTag)) {
+      const tags = pathItem[method]?.tags;
+      const shouldRemoveCloudOnlyOperation = !isCloud && tags?.includes(cloudOnlyTag) === true;
+      const shouldRemoveDevFeatureOperation =
+        !isDevFeaturesEnabled && tags?.includes(devFeatureTag) === true;
+
+      if (shouldRemoveCloudOnlyOperation || shouldRemoveDevFeatureOperation) {
         // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete -- intended
         delete pathItem[method];
       }
     }
 
-    if (Object.keys(pathItem ?? {}).length === 0) {
+    if (Object.keys(pathItem).length === 0) {
       // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete -- intended
       delete document.paths[path];
     }

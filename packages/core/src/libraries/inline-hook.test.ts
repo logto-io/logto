@@ -259,27 +259,6 @@ describe('InlineHookLibrary', () => {
     });
   });
 
-  it('blocks inline hook execution errors by default', async () => {
-    getInlineHook.mockResolvedValueOnce({
-      enabled: true,
-      script: `
-        const runInlineHook = () => {
-          throw new Error('Broken');
-        };
-      `,
-    });
-
-    await expect(
-      library.runHook({
-        key: LogtoInlineHookKey.PostSignIn,
-        event: {},
-      })
-    ).rejects.toMatchObject({
-      code: 'session.hook_denied_access',
-      status: 403,
-    });
-  });
-
   it('allows PostSignIn execution errors to continue without hook enrichment', async () => {
     getInlineHook.mockResolvedValueOnce({
       enabled: true,
@@ -312,7 +291,28 @@ describe('InlineHookLibrary', () => {
     expect(decision).toEqual(expectedDecision);
   });
 
-  it('returns RequestError decision for block-mode execution errors', async () => {
+  it('blocks PostSignIn execution errors with the owning flow failure by default', async () => {
+    getInlineHook.mockResolvedValueOnce({
+      enabled: true,
+      script: `
+        const runInlineHook = () => {
+          throw new Error('Broken');
+        };
+      `,
+    });
+
+    await expect(
+      library.runHook({
+        key: LogtoInlineHookKey.PostSignIn,
+        event: {},
+      })
+    ).rejects.toMatchObject({
+      code: 'session.verification_failed',
+      status: 400,
+    });
+  });
+
+  it('returns the owning flow failure for block-mode execution errors', async () => {
     const decision: InlineHookExecutionErrorPolicyDecision =
       await getInlineHookExecutionErrorPolicyDecision({
         key: LogtoInlineHookKey.PostSignIn,
@@ -325,8 +325,8 @@ describe('InlineHookLibrary', () => {
       throw new Error('Expected throw decision');
     }
     expect(decision.error).toMatchObject({
-      code: 'session.hook_denied_access',
-      status: 403,
+      code: 'session.verification_failed',
+      status: 400,
     });
   });
 });

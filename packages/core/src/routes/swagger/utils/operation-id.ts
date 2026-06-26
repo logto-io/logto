@@ -114,6 +114,14 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'delete /configs/inline-hooks/:hookType': 'DeleteInlineHook',
 } satisfies RouteDictionary); // Key assertion doesn't work without `satisfies`
 
+const devFeatureCustomRoutes = new Set<string>([
+  'get /configs/inline-hooks',
+  'put /configs/inline-hooks/:hookType',
+  'patch /configs/inline-hooks/:hookType',
+  'get /configs/inline-hooks/:hookType',
+  'delete /configs/inline-hooks/:hookType',
+]);
+
 /**
  * Given a set of built custom routes, throws an error if there are any differences between the
  * built routes and the routes defined in `customRoutes`.
@@ -124,10 +132,12 @@ export const throwByDifference = (builtCustomRoutes: Set<string>) => {
     return;
   }
 
-  if (shouldThrow() && builtCustomRoutes.size !== Object.keys(customRoutes).length) {
-    const missingRoutes = Object.entries(customRoutes).filter(
-      ([path]) => !builtCustomRoutes.has(path)
-    );
+  const expectedRoutes = Object.entries(customRoutes).filter(
+    ([path]) => EnvSet.values.isDevFeaturesEnabled || !devFeatureCustomRoutes.has(path)
+  );
+
+  if (shouldThrow() && builtCustomRoutes.size !== expectedRoutes.length) {
+    const missingRoutes = expectedRoutes.filter(([path]) => !builtCustomRoutes.has(path));
 
     if (missingRoutes.length > 0) {
       throw new Error(
@@ -137,7 +147,7 @@ export const throwByDifference = (builtCustomRoutes: Set<string>) => {
     }
 
     const extraRoutes = [...builtCustomRoutes].filter(
-      (path) => !Object.keys(customRoutes).includes(path)
+      (path) => !expectedRoutes.some(([expectedPath]) => expectedPath === path)
     );
 
     if (extraRoutes.length > 0) {
