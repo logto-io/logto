@@ -281,18 +281,23 @@ export const removeUnnecessaryOperations = (
   }
 
   for (const [path, pathItem] of Object.entries(document.paths)) {
+    if (!pathItem) {
+      continue;
+    }
+
     for (const method of Object.values(OpenAPIV3.HttpMethods)) {
-      if (
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        (!isCloud && pathItem?.[method]?.tags?.includes(cloudOnlyTag)) ||
-        (!isDevFeaturesEnabled && pathItem?.[method]?.tags?.includes(devFeatureTag))
-      ) {
+      const tags = pathItem[method]?.tags;
+      const shouldRemoveCloudOnlyOperation = !isCloud && tags?.includes(cloudOnlyTag) === true;
+      const shouldRemoveDevFeatureOperation =
+        !isDevFeaturesEnabled && tags?.includes(devFeatureTag) === true;
+
+      if (shouldRemoveCloudOnlyOperation || shouldRemoveDevFeatureOperation) {
         // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete -- intended
         delete pathItem[method];
       }
     }
 
-    if (Object.keys(pathItem ?? {}).length === 0) {
+    if (Object.keys(pathItem).length === 0) {
       // eslint-disable-next-line @silverhand/fp/no-delete, @typescript-eslint/no-dynamic-delete -- intended
       delete document.paths[path];
     }

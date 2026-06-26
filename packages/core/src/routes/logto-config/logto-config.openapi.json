@@ -319,6 +319,162 @@
         }
       }
     },
+    "/api/configs/inline-hooks": {
+      "get": {
+        "summary": "Get all inline hooks",
+        "description": "Get all inline hook configurations for the tenant.",
+        "tags": ["Dev feature"],
+        "responses": {
+          "200": {
+            "description": "The inline hook configurations."
+          }
+        }
+      }
+    },
+    "/api/configs/inline-hooks/{hookType}": {
+      "put": {
+        "summary": "Create or update inline hook",
+        "description": "Create or update an inline hook configuration for the given hook type.",
+        "tags": ["Dev feature"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "hookType",
+            "description": "The inline hook type to create or update."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "script": {
+                    "description": "The inline hook script."
+                  },
+                  "environmentVariables": {
+                    "description": "The environment variables for the inline hook script."
+                  },
+                  "contextSample": {
+                    "description": "The sample context for inline hook script testing."
+                  },
+                  "enabled": {
+                    "description": "Whether the inline hook is enabled."
+                  },
+                  "onExecutionError": {
+                    "description": "The inline hook execution error handling policy."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated inline hook configuration."
+          },
+          "201": {
+            "description": "The created inline hook configuration."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "403": {
+            "description": "The tenant's subscription plan does not support this feature."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update inline hook",
+        "description": "Update the inline hook configuration for the given hook type.",
+        "tags": ["Dev feature"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "hookType",
+            "description": "The inline hook type to update."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "script": {
+                    "description": "The inline hook script."
+                  },
+                  "environmentVariables": {
+                    "description": "The environment variables for the inline hook script."
+                  },
+                  "contextSample": {
+                    "description": "The sample context for inline hook script testing."
+                  },
+                  "enabled": {
+                    "description": "Whether the inline hook is enabled."
+                  },
+                  "onExecutionError": {
+                    "description": "The inline hook execution error handling policy."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated inline hook configuration."
+          },
+          "400": {
+            "description": "The request body is invalid."
+          },
+          "403": {
+            "description": "The tenant's subscription plan does not support this feature."
+          },
+          "404": {
+            "description": "The inline hook configuration does not exist."
+          }
+        }
+      },
+      "get": {
+        "summary": "Get inline hook",
+        "description": "Get the inline hook configuration for the given hook type.",
+        "tags": ["Dev feature"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "hookType",
+            "description": "The inline hook type to get."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The inline hook configuration."
+          },
+          "404": {
+            "description": "The inline hook configuration does not exist."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete inline hook",
+        "description": "Delete the inline hook configuration for the given hook type.",
+        "tags": ["Dev feature"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "hookType",
+            "description": "The inline hook type to delete."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The inline hook configuration was deleted successfully."
+          },
+          "404": {
+            "description": "The inline hook configuration does not exist."
+          }
+        }
+      }
+    },
     "/api/configs/id-token": {
       "get": {
         "summary": "Get ID token claims configuration",

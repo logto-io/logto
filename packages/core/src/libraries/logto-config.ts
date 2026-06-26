@@ -212,7 +212,7 @@ export const createLogtoConfigLibrary = ({
 
   const updateInlineHook = async <T extends LogtoInlineHookKey>(
     key: T,
-    value: InlineHookType[T]
+    value: Partial<InlineHookType[T]>
   ): Promise<InlineHookType[T]> => {
     const originValue = await getInlineHook(key);
     const result = inlineHookConfigGuard[key].parse({ ...originValue, ...value });
