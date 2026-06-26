@@ -488,18 +488,14 @@
                   "hookType": {
                     "description": "The inline hook type to test."
                   },
-                  "payload": {
-                    "properties": {
-                      "script": {
-                        "description": "The inline hook script to test."
-                      },
-                      "environmentVariables": {
-                        "description": "The environment variables for the inline hook script."
-                      },
-                      "contextSample": {
-                        "description": "The sample context for inline hook script testing."
-                      }
-                    }
+                  "script": {
+                    "description": "The inline hook script to test."
+                  },
+                  "event": {
+                    "description": "The sample event for inline hook script testing."
+                  },
+                  "environmentVariables": {
+                    "description": "The environment variables for the inline hook script."
                   }
                 }
               }
@@ -512,6 +508,9 @@
           },
           "400": {
             "description": "The request body or response body is invalid."
+          },
+          "403": {
+            "description": "The tenant's subscription plan does not support this feature."
           },
           "422": {
             "description": "The inline hook script failed to execute."

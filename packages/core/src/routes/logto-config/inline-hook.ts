@@ -11,6 +11,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { InlineHookLibrary } from '#src/libraries/inline-hook.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -29,7 +30,9 @@ const parseInlineHookResponseError = async (error: ResponseError) => {
   const responseBody: unknown = await error.response.json();
   const errorResponseResult = inlineHookResponseErrorGuard.safeParse(responseBody);
 
-  return errorResponseResult.success ? errorResponseResult.data : { message: error.message };
+  return errorResponseResult.success
+    ? errorResponseResult.data
+    : { message: error.message, error: responseBody };
 };
 
 export default function logtoConfigInlineHookRoutes<T extends ManagementApiRouter>(
@@ -58,8 +61,9 @@ export default function logtoConfigInlineHookRoutes<T extends ManagementApiRoute
     koaGuard({
       body: inlineHookTestRequestBodyGuard,
       response: jsonGuard.optional(),
-      status: [200, 400, 422],
+      status: [200, 400, 403, 422],
     }),
+    koaQuotaGuard({ key: 'inlineHooksEnabled', quota: libraries.quota }),
     async (ctx, next) => {
       const { body } = ctx.guard;
 
