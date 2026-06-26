@@ -1,4 +1,5 @@
 @use '@/scss/underscore' as _;
+@use '../dev-status-spacing' as devStatusSpacing;
 
 .sidebar {
   width: 248px;
@@ -17,6 +18,12 @@
   min-height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.devStatusSpacer {
+  // Keep the last sidebar item clear of the floating "Dev features enabled" status badge.
+  height: devStatusSpacing.$dev-status-reserved-space;
+  pointer-events: none;
 }
 
 .skeleton {

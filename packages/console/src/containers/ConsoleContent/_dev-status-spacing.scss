@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+$dev-status-bottom-offset-factor: 3;
+$dev-status-gap-factor: 3;
+$dev-status-height-factor: 5;
+
+$dev-status-bottom-offset: _.unit($dev-status-bottom-offset-factor);
+$dev-status-reserved-space: _.unit(
+  $dev-status-bottom-offset-factor + $dev-status-gap-factor + $dev-status-height-factor
+);

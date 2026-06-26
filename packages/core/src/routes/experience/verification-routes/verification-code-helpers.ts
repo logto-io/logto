@@ -93,7 +93,7 @@ const hasUserWithIdentifier = async (
  * reason to receive a code (anti-enumeration / anti-spam). The record is still created, so a later
  * verify returns `code_mismatch`, not `not_found`. Two cases:
  *
- * - Forgot-password to an identifier no user owns.
+ * - Forgot-password to an identifier no user owns (always on).
  * - Sign-in from an unidentified session to an identifier no user owns when registration is
  *   disabled; identified sessions always deliver.
  */
@@ -175,6 +175,9 @@ export const sendCode = async ({
     recipient: identifier.value,
   };
 
+  // The rate guard runs even for suppressed sends: a suppressed send must still count toward the
+  // per-recipient cap, otherwise an unknown recipient never hits 429 while a registered one does —
+  // leaking registration status (account enumeration) and defeating the point of suppression.
   await withMessageRateGuard(
     await buildMessageRateGuard(queries),
     {

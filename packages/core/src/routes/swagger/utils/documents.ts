@@ -17,6 +17,7 @@ import { managementApiAuthDescription, userApiAuthDescription } from '../consts.
 
 import {
   type FindSupplementFilesOptions,
+  devFeatureTag,
   findSupplementFiles,
   pruneSwaggerDocument,
   removeUnnecessaryOperations,
@@ -252,7 +253,12 @@ export const getSupplementDocuments = async (
     )
   );
 
-  const supplementDocuments = allSupplementDocuments;
+  // Filter out supplement documents that are for dev features when dev features are disabled.
+  const supplementDocuments = allSupplementDocuments.filter(
+    (supplement) =>
+      EnvSet.values.isDevFeaturesEnabled ||
+      !supplement.tags?.find((tag) => tag?.name === devFeatureTag)
+  );
 
   return supplementDocuments;
 };
