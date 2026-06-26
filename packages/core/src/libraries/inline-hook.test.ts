@@ -2,15 +2,9 @@ import { LogtoInlineHookKey } from '@logto/schemas';
 
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
-import { LocalVmError } from '#src/utils/local-vm/index.js';
 
-import {
-  getInlineHookExecutionErrorPolicyDecision,
-  InlineHookLibrary,
-  isAccessDeniedError,
-} from './inline-hook.js';
+import { getInlineHookExecutionErrorPolicyDecision, InlineHookLibrary } from './inline-hook.js';
 import type {
-  InlineHookAccessDeniedError,
   InlineHookExecutionErrorFallback,
   InlineHookExecutionErrorPolicyDecision,
 } from './inline-hook.js';
@@ -62,7 +56,7 @@ describe('InlineHookLibrary', () => {
           user: {
             name: event.user.name + environmentVariables.NAME_SUFFIX,
           },
-          apiFrozen: Object.isFrozen(api),
+          apiType: typeof api,
         });
       `,
     });
@@ -84,7 +78,7 @@ describe('InlineHookLibrary', () => {
       user: {
         name: 'Foo updated',
       },
-      apiFrozen: true,
+      apiType: 'undefined',
     });
 
     expect(getInlineHook).toHaveBeenCalledWith(LogtoInlineHookKey.PostSignIn);
@@ -162,101 +156,6 @@ describe('InlineHookLibrary', () => {
         event: {},
       })
     ).resolves.toBeUndefined();
-  });
-
-  it('throws LocalVmError when inline hook denies access in local VM execution', async () => {
-    const script = `
-      const runInlineHook = ({ api }) => api.denyAccess('Nope');
-    `;
-
-    await expect(
-      InlineHookLibrary.runScriptInLocalVm({
-        script,
-        event: {},
-      })
-    ).rejects.toBeInstanceOf(LocalVmError);
-
-    try {
-      await InlineHookLibrary.runScriptInLocalVm({
-        script,
-        event: {},
-      });
-    } catch (error: unknown) {
-      expect(error).toBeInstanceOf(LocalVmError);
-      await expect((error as LocalVmError).response.json()).resolves.toEqual({
-        message: 'Nope',
-        error: {
-          code: 'AccessDenied',
-          message: 'Nope',
-        },
-      });
-    }
-  });
-
-  it('identifies inline hook AccessDenied errors', () => {
-    const accessDeniedError: InlineHookAccessDeniedError = {
-      code: 'AccessDenied',
-      message: 'Nope',
-    };
-
-    expect(isAccessDeniedError(accessDeniedError)).toBe(true);
-    expect(isAccessDeniedError({ code: 'OtherError', message: 'Nope' })).toBe(false);
-  });
-
-  it('maps inline hook AccessDenied to hook-specific RequestError', async () => {
-    getInlineHook.mockResolvedValueOnce({
-      enabled: true,
-      script: `
-        const runInlineHook = ({ api }) => api.denyAccess('Nope');
-      `,
-    });
-
-    await expect(
-      library.runHook({
-        key: LogtoInlineHookKey.PostSignIn,
-        event: {},
-      })
-    ).rejects.toMatchObject({
-      code: 'session.hook_denied_access',
-      status: 403,
-    });
-
-    getInlineHook.mockResolvedValueOnce({
-      enabled: true,
-      script: `
-        const runInlineHook = ({ api }) => api.denyAccess('Nope');
-      `,
-    });
-
-    await expect(
-      library.runHook({
-        key: LogtoInlineHookKey.PostFirstFactorVerification,
-        event: {},
-      })
-    ).rejects.toMatchObject({
-      code: 'session.invalid_credentials',
-      status: 403,
-    });
-  });
-
-  it('maps direct AccessDenied error bodies to RequestError decisions', async () => {
-    const decision = await getInlineHookExecutionErrorPolicyDecision({
-      key: LogtoInlineHookKey.PostSignIn,
-      error: {
-        code: 'AccessDenied',
-        message: 'Nope',
-      },
-      onExecutionError: 'allow',
-    });
-
-    expect(decision.action).toBe('throw');
-    if (decision.action !== 'throw') {
-      throw new Error('Expected throw decision');
-    }
-    expect(decision.error).toMatchObject({
-      code: 'session.hook_denied_access',
-      status: 403,
-    });
   });
 
   it('allows PostSignIn execution errors to continue without hook enrichment', async () => {
